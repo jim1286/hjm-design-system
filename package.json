@@ -1,6 +1,6 @@
 {
   "name": "@hjm/design-system",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Platform-neutral design tokens and component recipes shared by HJM products.",
   "private": true,
   "type": "module",
@@ -12,11 +12,17 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "default": "./dist/index.js"
+    },
+    "./showcase": {
+      "types": "./dist/showcase.d.ts",
+      "import": "./dist/showcase.js",
+      "default": "./dist/showcase.js"
     }
   },
   "files": [
     "dist",
     "src",
+    "docs",
     "README.md"
   ],
   "scripts": {
@@ -24,6 +30,9 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
     "check": "pnpm typecheck && pnpm test && pnpm build",
+    "showcase:web": "pnpm build && pnpm --filter @hjm/showcase-web storybook",
+    "showcase:web:build": "pnpm build && pnpm --filter @hjm/showcase-web build && pnpm --filter @hjm/showcase-web verify:static",
+    "showcase:web:check": "pnpm build && pnpm --filter @hjm/showcase-web check",
     "prepack": "pnpm build"
   },
   "engines": {

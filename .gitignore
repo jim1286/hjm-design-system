@@ -1,4 +1,5 @@
 node_modules/
 coverage/
+showcase/web/storybook-static/
 *.tsbuildinfo
 .DS_Store

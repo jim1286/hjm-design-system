@@ -1,0 +1,67 @@
+name: Design System Showcase
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: design-system-showcase-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check-and-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.18.0
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.13.1
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check design-system contracts
+        run: pnpm check
+
+      - name: Check showcase contracts
+        run: pnpm showcase:web:check
+
+      - name: Build static Storybook
+        run: pnpm showcase:web:build
+
+      - name: Upload static Storybook
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: showcase/web/storybook-static
+
+  deploy:
+    if: github.event_name != 'pull_request'
+    needs: check-and-build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy Storybook to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

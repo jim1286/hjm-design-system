@@ -42,7 +42,7 @@ const light = {
   textWeak: "#8b95a1",
   primary: "#0369a1",
   contentBrand: "#075985",
-  danger: "#dc2626",
+  danger: "#b71919",
   onPrimary: "#ffffff",
   dangerFill: "#b91c1c",
   onDanger: "#ffffff",

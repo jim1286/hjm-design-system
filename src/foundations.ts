@@ -49,6 +49,80 @@ export const motion = {
   slow: 320,
 } as const;
 
+/**
+ * Curves are stored as normalized cubic-bezier tuples so CSS and native
+ * animation drivers can translate the same motion intent without sharing a
+ * renderer dependency.
+ */
+export const easing = {
+  standard: [0.2, 0, 0, 1],
+  enter: [0, 0, 0, 1],
+  exit: [0.3, 0, 1, 1],
+  emphasized: [0.2, 0, 0, 1],
+} as const;
+
+export type ReducedMotionBehavior = "instant" | "opacity" | "static";
+
+/** Shared transition intent; renderers translate easing tuples to their animation API. */
+export const motionPreset = {
+  micro: {
+    duration: motion.fast,
+    easing: "standard",
+    reducedMotion: "instant",
+  },
+  enter: {
+    duration: motion.normal,
+    easing: "enter",
+    reducedMotion: "opacity",
+  },
+  exit: {
+    duration: motion.fast,
+    easing: "exit",
+    reducedMotion: "instant",
+  },
+  context: {
+    duration: motion.slow,
+    easing: "emphasized",
+    reducedMotion: "opacity",
+  },
+} as const satisfies Record<
+  "micro" | "enter" | "exit" | "context",
+  {
+    duration: number;
+    easing: keyof typeof easing;
+    reducedMotion: ReducedMotionBehavior;
+  }
+>;
+
+/** Native renderers may use these values directly; web renderers use easing. */
+export const spring = {
+  responsive: { stiffness: 760, damping: 52, mass: 1 },
+  expressive: { stiffness: 520, damping: 38, mass: 1 },
+} as const;
+
+/** Reusable state strengths. Components still decide which states are valid. */
+export const opacity = {
+  disabled: 0.5,
+  muted: 0.72,
+  pressed: 0.86,
+  dragged: 0.64,
+} as const;
+
+/** Overlaying the content color at these strengths creates predictable states. */
+export const stateLayer = {
+  hover: 0.06,
+  focus: 0.08,
+  pressed: 0.1,
+  selected: 0.1,
+} as const;
+
+export const stroke = {
+  subtle: 1,
+  default: 1,
+  strong: 2,
+  focus: 2,
+} as const;
+
 export const control = {
   minTouchTarget: 44,
   buttonHeight: {
@@ -61,12 +135,65 @@ export const control = {
     medium: 0,
     large: 0,
   },
+  fieldHeight: 44,
+  chipHeight: {
+    small: 36,
+    medium: 44,
+  },
+  selectionIndicator: 24,
+} as const;
+
+/** Product renderers may narrow these widths, but should not invent new rhythm. */
+export const layout = {
+  pagePadding: {
+    compact: spacing.md,
+    regular: spacing.lg,
+    spacious: spacing.xl,
+  },
+  sectionGap: spacing.xl,
+  contentGap: spacing.md,
+  rowHeight: {
+    singleLine: 56,
+    twoLine: 68,
+  },
+  readingMaxWidth: 720,
+  contentMaxWidth: 1200,
+} as const;
+
+/** Breakpoints are web hints; native renderers may map them to window classes. */
+export const breakpoint = {
+  compact: 0,
+  medium: 600,
+  expanded: 960,
+  wide: 1280,
+} as const;
+
+/** Shared stacking intent. Values remain sparse to leave room for app layers. */
+export const layer = {
+  base: 0,
+  sticky: 100,
+  dropdown: 400,
+  overlay: 800,
+  modal: 900,
+  tooltip: 950,
+  toast: 1000,
 } as const;
 
 export const overlay = {
   scrim: 0.6,
   veil: 0.25,
 } as const;
+
+export type BackdropReference = Readonly<{
+  color: "#000000";
+  opacity: number;
+}>;
+
+/** Fixed backdrop contracts avoid renderer-specific names such as CSS `scrim`. */
+export const backdrop = {
+  modal: { color: "#000000", opacity: overlay.scrim },
+  veil: { color: "#000000", opacity: overlay.veil },
+} as const satisfies Record<"modal" | "veil", BackdropReference>;
 
 export const scrim = `rgba(0, 0, 0, ${overlay.scrim})`;
 
@@ -77,5 +204,17 @@ export const shadow = {
     opacity: 0.08,
     radius: 4,
     offsetY: 1,
+  },
+  floating: {
+    color: "#000000",
+    opacity: 0.12,
+    radius: 12,
+    offsetY: 4,
+  },
+  overlay: {
+    color: "#000000",
+    opacity: 0.16,
+    radius: 24,
+    offsetY: 8,
   },
 } as const;

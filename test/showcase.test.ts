@@ -1,0 +1,79 @@
+import { describe, expect, it } from "vitest";
+
+import { componentCatalog } from "../src/catalog.js";
+import {
+  assertShowcaseCoverage,
+  createShowcaseCoverage,
+  createShowcaseManifest,
+  getRequiredShowcaseScenarios,
+  getRequiredShowcaseSurfaces,
+  showcaseEnvironmentMatrix,
+  showcaseScenarios,
+  summarizeShowcaseMaturity,
+} from "../src/showcase.js";
+
+describe("showcase contract", () => {
+  it("defines unique environment and scenario identifiers", () => {
+    expect(new Set(showcaseEnvironmentMatrix.map(({ id }) => id)).size).toBe(
+      showcaseEnvironmentMatrix.length,
+    );
+    expect(new Set(showcaseScenarios.map(({ id }) => id)).size).toBe(showcaseScenarios.length);
+  });
+
+  it("creates one stable story id for every catalog entry", () => {
+    const manifest = createShowcaseManifest();
+    expect(manifest).toHaveLength(componentCatalog.length);
+    expect(new Set(manifest.map(({ storyId }) => storyId)).size).toBe(manifest.length);
+    expect(manifest.find(({ component }) => component.name === "BottomNavigation")?.storyId).toBe(
+      "navigation/bottom-navigation",
+    );
+  });
+
+  it("keeps planned entries contract-only", () => {
+    const planned = componentCatalog.find(({ status }) => status === "planned");
+    expect(planned).toBeDefined();
+    expect(getRequiredShowcaseScenarios(planned!)).toEqual(["contract"]);
+  });
+
+  it("requires behavior and adaptive evidence where applicable", () => {
+    const select = componentCatalog.find(({ name }) => name === "Select");
+    expect(select).toBeDefined();
+    expect(getRequiredShowcaseScenarios(select!)).toEqual(
+      expect.arrayContaining(["keyboard", "platform-parity", "accessibility", "large-text"]),
+    );
+  });
+
+  it("summarizes every catalog entry exactly once", () => {
+    const summary = summarizeShowcaseMaturity();
+    expect(summary.stable + summary.beta + summary.planned).toBe(componentCatalog.length);
+  });
+
+  it("requires renderer evidence only on supported surfaces", () => {
+    expect(getRequiredShowcaseSurfaces(componentCatalog.find(({ name }) => name === "Button")!)).toEqual([
+      "contract",
+      "web",
+      "native",
+    ]);
+    expect(getRequiredShowcaseSurfaces(componentCatalog.find(({ name }) => name === "Tooltip")!)).toEqual([
+      "contract",
+      "web",
+    ]);
+    expect(getRequiredShowcaseSurfaces(componentCatalog.find(({ name }) => name === "TopBar")!)).toEqual([
+      "contract",
+      "native",
+    ]);
+    expect(getRequiredShowcaseSurfaces(componentCatalog.find(({ name }) => name === "Stack")!)).toEqual([
+      "contract",
+    ]);
+  });
+
+  it("reports missing surfaces and scenarios before accepting evidence", () => {
+    const button = createShowcaseManifest().filter(({ component }) => component.name === "Button");
+    const evidence = [{ storyId: button[0]!.storyId, surface: "contract" as const, scenarios: ["contract" as const] }];
+    expect(createShowcaseCoverage(evidence, button)[0]).toMatchObject({
+      missingSurfaces: ["web", "native"],
+      complete: false,
+    });
+    expect(() => assertShowcaseCoverage(evidence, button)).toThrow(/Showcase evidence is incomplete/);
+  });
+});
