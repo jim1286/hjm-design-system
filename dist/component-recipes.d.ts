@@ -223,6 +223,7 @@ export declare const selectionGroupRecipe: {
             readonly gap: {
                 readonly plain: 4;
                 readonly card: 8;
+                readonly grouped: 0;
             };
         };
         readonly horizontal: {
@@ -230,6 +231,7 @@ export declare const selectionGroupRecipe: {
             readonly gap: {
                 readonly plain: 12;
                 readonly card: 16;
+                readonly grouped: 0;
             };
         };
     };
@@ -361,7 +363,17 @@ export declare const iconButtonRecipe: {
         readonly disabledOpacity: 0.5;
     };
 };
-export type BadgeTone = "neutral" | "brand" | "info" | "success" | "warning" | "attention" | "danger";
+export type BadgeTone = "neutral"
+/**
+ * One step stronger than `neutral`: solid ink plate instead of a muted
+ * label + sunken plate. A product author needed this for a result screen
+ * where win/loss is the fact itself, not a side note, and `neutral` plus
+ * its `outline` variant read as nearly the same grey — the one place the
+ * distinction had to be unmistakable at a glance. Use it where a badge must
+ * outrank `neutral` without borrowing an accent or the brand tint (both of
+ * which already carry other meanings — see the `brand` tone below).
+ */
+ | "strong" | "brand" | "info" | "success" | "warning" | "attention" | "danger";
 export type BadgeSize = "small" | "medium";
 export declare const badgeRecipe: {
     readonly slots: readonly ["root", "icon", "label"];
@@ -383,6 +395,19 @@ export declare const badgeRecipe: {
             }>;
             readonly border: null;
         };
+        readonly strong: {
+            readonly content: Readonly<{
+                source: "theme";
+                key: "onPrimary";
+                alpha?: number;
+            }>;
+            readonly background: Readonly<{
+                source: "theme";
+                key: "text";
+                alpha?: number;
+            }>;
+            readonly border: null;
+        };
         readonly brand: {
             readonly content: Readonly<{
                 source: "theme";
@@ -391,7 +416,7 @@ export declare const badgeRecipe: {
             }>;
             readonly background: Readonly<{
                 source: "theme";
-                key: "surfaceAccent";
+                key: "surfaceAlt";
                 alpha?: number;
             }>;
             readonly border: null;
@@ -592,6 +617,7 @@ export declare const searchFieldRecipe: {
     readonly slots: readonly ["root", "leading", "input", "trailing", "clear", "spinner"];
     readonly defaults: {
         readonly size: "medium";
+        readonly shape: "medium";
     };
     readonly sizes: {
         readonly medium: {
@@ -655,7 +681,24 @@ export declare const searchFieldRecipe: {
             alpha?: number;
         }>;
     };
-    readonly radius: "full";
+    /**
+     * 모양은 **축이다** — 값 하나로 못 박지 않는다.
+     *
+     * 원래 여기는 `radius: "full"` 하나였다. 그런데 `fieldRecipe`는 같은 결정을
+     * `shapes: { medium, large, full }` 축으로 열어 두고 있었고, 그래서 **한 앱 안에서
+     * 평범한 입력과 찾기 입력이 서로 다른 모양이 되는 것을 계약이 막지 못했다.** 실제로
+     * 갈라졌다 — app-rn은 `"md"`로 그리고 있었는데 이 계약은 `"full"`이라고 말하고
+     * 있었고, 어느 쪽이 옳은지 양쪽 문서 어디에도 없었다.
+     *
+     * 찾기 입력이 알약이어야 하는지는 **제품이 정할 일**이고(iOS 관례는 알약, 이 앱은
+     * 사각), 계약이 할 일은 그 선택지를 `fieldRecipe`와 **같은 이름으로** 주는 것이다.
+     * 그러면 두 입력의 모양을 나란히 맞추는 것과 일부러 다르게 하는 것이 둘 다 표현된다.
+     */
+    readonly shapes: {
+        readonly medium: "md";
+        readonly large: "lg";
+        readonly full: "full";
+    };
     readonly borderWidth: 1;
     readonly focusRingWidth: 2;
     readonly focusRingOffset: 2;
@@ -701,7 +744,7 @@ export declare const chipRecipe: {
             }>;
             readonly border: Readonly<{
                 source: "theme";
-                key: "textMuted";
+                key: "border";
                 alpha?: number;
             }>;
         };
@@ -1887,12 +1930,12 @@ export declare const segmentedControlRecipe: {
         readonly fontWeight: "600";
         readonly selectedBackground: Readonly<{
             source: "theme";
-            key: "surface";
+            key: "surfaceAccent";
             alpha?: number;
         }>;
         readonly selectedContent: Readonly<{
             source: "theme";
-            key: "text";
+            key: "contentBrand";
             alpha?: number;
         }>;
         /**
@@ -1971,12 +2014,43 @@ export declare const switchRecipe: {
             key: "bg";
             alpha?: number;
         }>;
+        readonly trackOffDisabled: Readonly<{
+            source: "theme";
+            key: "border";
+            alpha?: number;
+        }>;
+        readonly trackOffBorderDisabled: Readonly<{
+            source: "theme";
+            key: "border";
+            alpha?: number;
+        }>;
+        readonly trackOnDisabled: {
+            readonly alpha: 0.38;
+            readonly source: "theme";
+            readonly key: "contentBrand";
+        };
+        readonly trackOnBorderDisabled: {
+            readonly alpha: 0.38;
+            readonly source: "theme";
+            readonly key: "contentBrand";
+        };
+        readonly thumbDisabled: Readonly<{
+            source: "theme";
+            key: "bg";
+            alpha?: number;
+        }>;
+        readonly thumbDisabledBorder: Readonly<{
+            source: "theme";
+            key: "textWeak";
+            alpha?: number;
+        }>;
     };
     readonly states: {
         readonly disabledOpacity: 0.5;
         readonly pressedOpacity: 0.86;
     };
     readonly rowMinHeight: 44;
+    readonly rowTwoLineMinHeight: 68;
 };
 export type SelectionControlKind = "checkbox" | "radio";
 export declare const selectionControlRecipe: {
@@ -2021,6 +2095,7 @@ export declare const selectionControlRecipe: {
             readonly borderWidth: 0;
             readonly radius: "md";
             readonly useSizePadding: false;
+            readonly labelColor: null;
         };
         readonly card: {
             readonly background: Readonly<{
@@ -2036,6 +2111,19 @@ export declare const selectionControlRecipe: {
             readonly borderWidth: 1;
             readonly radius: "md";
             readonly useSizePadding: true;
+            readonly labelColor: null;
+        };
+        readonly grouped: {
+            readonly background: null;
+            readonly border: null;
+            readonly borderWidth: 0;
+            readonly radius: "lg";
+            readonly useSizePadding: true;
+            readonly labelColor: Readonly<{
+                source: "theme";
+                key: "text";
+                alpha?: number;
+            }>;
         };
     };
     readonly label: {
@@ -2101,7 +2189,7 @@ export declare const selectionControlRecipe: {
         }>;
         readonly selectedBackground: Readonly<{
             source: "theme";
-            key: "primary";
+            key: "surfaceAccent";
             alpha?: number;
         }>;
         readonly selectedBorder: Readonly<{
@@ -2421,12 +2509,12 @@ export declare const noticeRecipe: {
     };
     readonly tones: {
         readonly info: {
-            readonly foreground: Readonly<{
-                source: "accent";
-                key: "info";
+            readonly background: Readonly<{
+                source: "theme";
+                key: "surfaceAlt";
                 alpha?: number;
             }>;
-            readonly background: Readonly<{
+            readonly foreground: Readonly<{
                 source: "accent";
                 key: "info";
                 alpha?: number;
@@ -3547,7 +3635,7 @@ export declare const bottomCtaRecipe: {
     readonly gap: 12;
     readonly background: Readonly<{
         source: "theme";
-        key: "bg";
+        key: "surface";
         alpha?: number;
     }>;
     readonly border: Readonly<{
@@ -3556,6 +3644,13 @@ export declare const bottomCtaRecipe: {
         alpha?: number;
     }>;
     readonly borderWidth: 1;
+    readonly shadow: {
+        readonly color: "#000000";
+        readonly opacity: 0.08;
+        readonly radius: 8;
+        readonly offsetY: -2;
+        readonly elevation: 8;
+    };
 };
 export declare const sectionRecipe: {
     readonly slots: readonly ["root", "header", "copy", "title", "description", "action", "content"];

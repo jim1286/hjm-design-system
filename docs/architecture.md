@@ -51,10 +51,17 @@ scenario를 통과해야 합니다.
 - `stable`: 두 제품 이상 또는 두 플랫폼에서 사용되고 계약·접근성 검증이 있음
 - `beta`: 실제 앱 패턴을 공용 recipe로 승격했지만 renderer parity 또는 시각 회귀가 진행 중
 - `planned`: 범위에 포함되지만 API를 아직 안정화하지 않음
+- `deprecated`: 새 사용을 막고 대체 경로와 제거 예정 버전을 문서화한 호환 계약
 
 현재 전체 범위와 목표 플랫폼 분류는 `componentCatalog`가 기계 판독 가능한 형태로 제공합니다.
 계획된 컴포넌트를 catalog에 올리는 것은 구현 완료를 의미하지 않습니다.
 `recipeRegistry`가 실제 recipe와 catalog 이름을 타입으로 묶어 오타나 유령 계약을 막습니다.
+
+새 소비자는 `componentDefinitions`를 우선합니다. 이 normalized view는 display name이나 category가
+바뀌어도 유지되는 `ComponentId`, `primitive | component | provider | utility` kind, 복수
+recipe/behavior 배열, Web/Native별 status와 고정 documentation story ID를 제공합니다. v0.2의
+평면 `componentCatalog`는 호환 view로 유지하며 renderer가 순차적으로 definition schema로
+이동합니다.
 
 ## 플랫폼 분류
 
@@ -282,3 +289,19 @@ renderer를 유지해 API를 검증하고, 안정화된 구현만 패키지로 �
 Figma와 코드 생성이 필요해지면 [Design Tokens Community Group 형식](https://www.w3.org/community/design-tokens/)
 으로 foundations와 semantic roles를 직렬화합니다. JSON 파일을 당장 source of truth로
 도입하기보다 현재 TypeScript 계약과 동등성 테스트를 먼저 만든 뒤 전환합니다.
+
+## 오버레이 어휘 규칙
+
+병렬 저작에서 같은 개념이 다른 이름을 갖는 일이 실제로 일어났다(`docs/consistency-audit.md`).
+다음 둘은 이제 규칙이다.
+
+- **여는 사유는 `"trigger"`다.** `"trigger-activation"`이라 부르지 않는다. 그 문자열은
+  `src/tooltip.ts`에서 **닫는** 사유(열려 있는 툴팁의 트리거를 눌러 닫는다)로 이미 쓰인다.
+  한 문자열이 여는 뜻과 닫는 뜻을 겸하면 렌더러가 조용히 반대로 처리한다 — 두 값 모두
+  유효한 문자열이라 컴파일러가 잡지 않는다.
+- **바깥 닫힘은 모달이면 `"outside"` 하나, 비모달이면 `"outside-pointer"`와
+  `"outside-focus"`로 나눈다.** 모달은 바깥이 불활성이라 입력 양식을 구분할 필요가 없지만,
+  비모달은 Tab으로 초점이 빠져나가는 것이 포인터 클릭과 다른 사건이다.
+
+공용 `BehaviorContract.dismiss`가 각 모듈의 사유보다 거친 것은 버그가 아니다. 레지스트리는
+렌더러 테스트가 읽는 **요약**이고, 정밀한 계약은 모듈 자신의 타입이 갖는다.

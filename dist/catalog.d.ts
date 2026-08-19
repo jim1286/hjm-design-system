@@ -1,14 +1,26 @@
 import type { BehaviorName } from "./behaviors.js";
-export type ComponentCategory = "foundation" | "layout" | "action" | "input" | "navigation" | "data-display" | "feedback" | "overlay";
+export type ComponentCategory = "foundation" | "layout" | "action" | "input" | "navigation" | "data-display" | "feedback" | "overlay" | "provider" | "utility";
 export type ComponentPlatform = "shared" | "adaptive" | "web" | "native";
-export type ComponentStatus = "stable" | "beta" | "planned";
+export type ComponentStatus = "stable" | "beta" | "planned" | "deprecated";
 export type ComponentCatalogEntry = Readonly<{
     name: string;
     category: ComponentCategory;
     platform: ComponentPlatform;
     status: ComponentStatus;
+    /** Search terms and familiar ecosystem names; never an API compatibility promise. */
+    aliases?: readonly string[];
     recipe?: RecipeName;
     behavior?: BehaviorName;
+    /**
+     * 만들지 않기로 **확정한** 항목의 사유. `status`는 구현 성숙도 축이고 이것은
+     * "만들 것인가"라는 다른 질문이라 직교 필드로 둔다.
+     *
+     * 이 필드가 필요한 이유: crosswalk의 `targets`가 이 항목들을 가리키고
+     * `targets.length > 0`이 테스트로 강제되므로, 흡수할 다른 이름이 없으면 행을 지울 수
+     * 없다. 그렇다고 `planned`로 두면 "아직 안 만들었지만 만들 것"이라는 거짓을 말한다.
+     * 근거는 `docs/<id>.md`에 있고, 그 문서의 존재를 테스트가 강제한다.
+     */
+    declinedReason?: string;
 }>;
 /**
  * The catalog is a scope and maturity contract, not an implementation claim.
@@ -51,11 +63,33 @@ export declare const componentCatalog: readonly [{
     readonly platform: "shared";
     readonly status: "planned";
     readonly recipe: "stackRecipe";
+    readonly aliases: readonly ["Flex", "Space", "Inline"];
 }, {
     readonly name: "Grid";
     readonly category: "layout";
     readonly platform: "adaptive";
     readonly status: "planned";
+}, {
+    readonly name: "Layout";
+    readonly category: "layout";
+    readonly platform: "adaptive";
+    readonly status: "planned";
+    readonly aliases: readonly ["AppShell"];
+    readonly recipe: "layoutRecipe";
+    readonly behavior: "layout";
+}, {
+    readonly name: "Masonry";
+    readonly category: "layout";
+    readonly platform: "adaptive";
+    readonly status: "planned";
+}, {
+    readonly name: "Splitter";
+    readonly category: "layout";
+    readonly platform: "web";
+    readonly status: "planned";
+    readonly aliases: readonly ["SplitPane"];
+    readonly recipe: "splitterRecipe";
+    readonly behavior: "splitter";
 }, {
     readonly name: "Button";
     readonly category: "action";
@@ -82,6 +116,14 @@ export declare const componentCatalog: readonly [{
     readonly status: "beta";
     readonly recipe: "bottomCtaRecipe";
 }, {
+    readonly name: "FloatingActionButton";
+    readonly category: "action";
+    readonly platform: "adaptive";
+    readonly status: "planned";
+    readonly recipe: "floatingActionButtonRecipe";
+    readonly behavior: "floatingActionButton";
+    readonly aliases: readonly ["FloatButton", "FAB"];
+}, {
     readonly name: "Field";
     readonly category: "input";
     readonly platform: "shared";
@@ -101,6 +143,22 @@ export declare const componentCatalog: readonly [{
     readonly platform: "shared";
     readonly status: "stable";
     readonly recipe: "fieldRecipe";
+}, {
+    readonly name: "PasswordField";
+    readonly category: "input";
+    readonly platform: "adaptive";
+    readonly status: "planned";
+    readonly aliases: readonly ["Input.Password"];
+    readonly recipe: "passwordFieldRecipe";
+    readonly behavior: "passwordField";
+}, {
+    readonly name: "OtpField";
+    readonly category: "input";
+    readonly platform: "adaptive";
+    readonly status: "planned";
+    readonly aliases: readonly ["Input.OTP"];
+    readonly recipe: "otpFieldRecipe";
+    readonly behavior: "otpField";
 }, {
     readonly name: "Checkbox";
     readonly category: "input";
@@ -154,11 +212,15 @@ export declare const componentCatalog: readonly [{
     readonly category: "input";
     readonly platform: "shared";
     readonly status: "planned";
+    readonly recipe: "sliderRecipe";
+    readonly behavior: "slider";
 }, {
     readonly name: "NumberField";
     readonly category: "input";
     readonly platform: "shared";
     readonly status: "planned";
+    readonly recipe: "numberFieldRecipe";
+    readonly behavior: "numberField";
 }, {
     readonly name: "Select";
     readonly category: "input";
@@ -178,6 +240,8 @@ export declare const componentCatalog: readonly [{
     readonly category: "input";
     readonly platform: "adaptive";
     readonly status: "planned";
+    readonly recipe: "datePickerRecipe";
+    readonly behavior: "datePicker";
 }, {
     readonly name: "TimePicker";
     readonly category: "input";
@@ -193,11 +257,54 @@ export declare const componentCatalog: readonly [{
     readonly category: "input";
     readonly platform: "adaptive";
     readonly status: "planned";
+    readonly recipe: "filePickerRecipe";
+    readonly behavior: "filePicker";
+    readonly aliases: readonly ["Upload"];
+}, {
+    readonly name: "Cascader";
+    readonly category: "input";
+    readonly platform: "adaptive";
+    readonly status: "planned";
+}, {
+    readonly name: "Form";
+    readonly category: "input";
+    readonly platform: "shared";
+    readonly status: "planned";
+    readonly recipe: "formRecipe";
+    readonly behavior: "form";
+}, {
+    readonly name: "Mentions";
+    readonly category: "input";
+    readonly platform: "adaptive";
+    readonly status: "planned";
+    readonly recipe: "comboboxRecipe";
+    readonly behavior: "combobox";
+}, {
+    readonly name: "Rating";
+    readonly category: "input";
+    readonly platform: "shared";
+    readonly status: "planned";
+    readonly aliases: readonly ["Rate"];
+}, {
+    readonly name: "TransferList";
+    readonly category: "input";
+    readonly platform: "adaptive";
+    readonly status: "planned";
+    readonly aliases: readonly ["Transfer"];
+    readonly recipe: "transferListRecipe";
+    readonly behavior: "transferList";
+}, {
+    readonly name: "TreeSelect";
+    readonly category: "input";
+    readonly platform: "web";
+    readonly status: "planned";
 }, {
     readonly name: "UploadItem";
     readonly category: "data-display";
     readonly platform: "shared";
     readonly status: "planned";
+    readonly recipe: "uploadItemRecipe";
+    readonly behavior: "uploadItem";
 }, {
     readonly name: "Tabs";
     readonly category: "navigation";
@@ -223,11 +330,15 @@ export declare const componentCatalog: readonly [{
     readonly category: "navigation";
     readonly platform: "web";
     readonly status: "planned";
+    readonly recipe: "breadcrumbRecipe";
+    readonly behavior: "breadcrumb";
 }, {
     readonly name: "Pagination";
     readonly category: "navigation";
     readonly platform: "web";
     readonly status: "planned";
+    readonly recipe: "paginationRecipe";
+    readonly behavior: "pagination";
 }, {
     readonly name: "LoadMore";
     readonly category: "navigation";
@@ -240,6 +351,7 @@ export declare const componentCatalog: readonly [{
     readonly category: "navigation";
     readonly platform: "shared";
     readonly status: "planned";
+    readonly recipe: "stepsRecipe";
 }, {
     readonly name: "Menu";
     readonly category: "navigation";
@@ -247,6 +359,12 @@ export declare const componentCatalog: readonly [{
     readonly status: "beta";
     readonly recipe: "menuRecipe";
     readonly behavior: "menu";
+    readonly aliases: readonly ["Dropdown"];
+}, {
+    readonly name: "Anchor";
+    readonly category: "navigation";
+    readonly platform: "web";
+    readonly status: "planned";
 }, {
     readonly name: "Avatar";
     readonly category: "data-display";
@@ -284,6 +402,12 @@ export declare const componentCatalog: readonly [{
     readonly status: "beta";
     readonly recipe: "listRowRecipe";
 }, {
+    readonly name: "VirtualList";
+    readonly category: "data-display";
+    readonly platform: "adaptive";
+    readonly status: "planned";
+    readonly aliases: readonly ["Listy"];
+}, {
     readonly name: "Accordion";
     readonly category: "data-display";
     readonly platform: "shared";
@@ -301,16 +425,67 @@ export declare const componentCatalog: readonly [{
     readonly category: "data-display";
     readonly platform: "shared";
     readonly status: "planned";
+    readonly recipe: "timelineRecipe";
 }, {
     readonly name: "DataTable";
     readonly category: "data-display";
     readonly platform: "web";
     readonly status: "planned";
+    readonly recipe: "dataTableRecipe";
+    readonly behavior: "dataTable";
 }, {
     readonly name: "Tree";
     readonly category: "data-display";
     readonly platform: "web";
     readonly status: "planned";
+    readonly recipe: "treeRecipe";
+    readonly behavior: "tree";
+}, {
+    readonly name: "Calendar";
+    readonly category: "data-display";
+    readonly platform: "shared";
+    readonly status: "planned";
+    readonly recipe: "calendarRecipe";
+    readonly behavior: "calendar";
+}, {
+    readonly name: "Carousel";
+    readonly category: "data-display";
+    readonly platform: "adaptive";
+    readonly status: "planned";
+    readonly recipe: "carouselRecipe";
+    readonly behavior: "carousel";
+}, {
+    readonly name: "DescriptionList";
+    readonly category: "data-display";
+    readonly platform: "shared";
+    readonly status: "planned";
+    readonly recipe: "descriptionListRecipe";
+    readonly aliases: readonly ["Descriptions"];
+}, {
+    readonly name: "Image";
+    readonly category: "data-display";
+    readonly platform: "shared";
+    readonly status: "planned";
+    readonly recipe: "imageRecipe";
+}, {
+    readonly name: "QRCode";
+    readonly category: "data-display";
+    readonly platform: "shared";
+    readonly status: "planned";
+}, {
+    readonly name: "Tag";
+    readonly category: "data-display";
+    readonly platform: "shared";
+    readonly status: "planned";
+    readonly recipe: "tagRecipe";
+}, {
+    readonly name: "Tour";
+    readonly category: "overlay";
+    readonly platform: "web";
+    readonly status: "planned";
+    readonly recipe: "tourRecipe";
+    readonly behavior: "tour";
+    readonly aliases: readonly ["CoachMark"];
 }, {
     readonly name: "EmptyState";
     readonly category: "feedback";
@@ -346,6 +521,7 @@ export declare const componentCatalog: readonly [{
     readonly category: "feedback";
     readonly platform: "shared";
     readonly status: "planned";
+    readonly recipe: "resultRecipe";
 }, {
     readonly name: "Toast";
     readonly category: "feedback";
@@ -353,6 +529,12 @@ export declare const componentCatalog: readonly [{
     readonly status: "beta";
     readonly recipe: "toastRecipe";
     readonly behavior: "toast";
+    readonly aliases: readonly ["Notification"];
+}, {
+    readonly name: "Watermark";
+    readonly category: "feedback";
+    readonly platform: "web";
+    readonly status: "planned";
 }, {
     readonly name: "Dialog";
     readonly category: "overlay";
@@ -379,16 +561,21 @@ export declare const componentCatalog: readonly [{
     readonly category: "overlay";
     readonly platform: "web";
     readonly status: "planned";
-}, {
-    readonly name: "ContextPanel";
-    readonly category: "overlay";
-    readonly platform: "adaptive";
-    readonly status: "planned";
+    readonly recipe: "sidePanelRecipe";
+    readonly behavior: "sidePanel";
 }, {
     readonly name: "Popover";
     readonly category: "overlay";
     readonly platform: "web";
     readonly status: "planned";
+    readonly recipe: "popoverRecipe";
+    readonly behavior: "popover";
+}, {
+    readonly name: "ConfirmPopover";
+    readonly category: "overlay";
+    readonly platform: "web";
+    readonly status: "planned";
+    readonly aliases: readonly ["Popconfirm"];
 }, {
     readonly name: "Tooltip";
     readonly category: "overlay";
@@ -401,7 +588,41 @@ export declare const componentCatalog: readonly [{
     readonly category: "overlay";
     readonly platform: "web";
     readonly status: "planned";
+    readonly recipe: "commandPaletteRecipe";
+    readonly behavior: "commandPalette";
+}, {
+    readonly name: "Affix";
+    readonly category: "utility";
+    readonly platform: "web";
+    readonly status: "planned";
+}, {
+    readonly name: "AppProvider";
+    readonly category: "provider";
+    readonly platform: "adaptive";
+    readonly status: "planned";
+    readonly aliases: readonly ["App"];
+    readonly declinedReason: "message·notification·modal 세 표면이 이미 Toast·Dialog·AlertDialog에 있고, 남는 것은 Context 배선뿐이라 값 계약이 없다";
+}, {
+    readonly name: "BorderBeam";
+    readonly category: "utility";
+    readonly platform: "web";
+    readonly status: "planned";
+    readonly declinedReason: "장식으로 브랜드를 증명하지 않는다는 정체성과 충돌하고, reduced motion에서 남는 것이 없으며, 없어도 화면의 뜻이 같다";
+}, {
+    readonly name: "DesignSystemProvider";
+    readonly category: "provider";
+    readonly platform: "shared";
+    readonly status: "planned";
+    readonly aliases: readonly ["ConfigProvider"];
+}, {
+    readonly name: "Utility";
+    readonly category: "utility";
+    readonly platform: "web";
+    readonly status: "planned";
+    readonly aliases: readonly ["Util"];
+    readonly declinedReason: "antd Util은 theme.useToken()으로 토큰을 읽는 법을 설명하는 문서 페이지다. 이 패키지는 토큰을 정적 export로 주므로 그 문제가 발생하지 않는다";
 }];
+export type ComponentName = (typeof componentCatalog)[number]["name"];
 /** One typed registry prevents catalog recipe names from drifting into strings. */
 export declare const recipeRegistry: {
     readonly accordionRecipe: {
@@ -668,6 +889,19 @@ export declare const recipeRegistry: {
                 }>;
                 readonly border: null;
             };
+            readonly strong: {
+                readonly content: Readonly<{
+                    source: "theme";
+                    key: "onPrimary";
+                    alpha?: number;
+                }>;
+                readonly background: Readonly<{
+                    source: "theme";
+                    key: "text";
+                    alpha?: number;
+                }>;
+                readonly border: null;
+            };
             readonly brand: {
                 readonly content: Readonly<{
                     source: "theme";
@@ -676,7 +910,7 @@ export declare const recipeRegistry: {
                 }>;
                 readonly background: Readonly<{
                     source: "theme";
-                    key: "surfaceAccent";
+                    key: "surfaceAlt";
                     alpha?: number;
                 }>;
                 readonly border: null;
@@ -978,7 +1212,7 @@ export declare const recipeRegistry: {
         readonly gap: 12;
         readonly background: Readonly<{
             source: "theme";
-            key: "bg";
+            key: "surface";
             alpha?: number;
         }>;
         readonly border: Readonly<{
@@ -987,6 +1221,145 @@ export declare const recipeRegistry: {
             alpha?: number;
         }>;
         readonly borderWidth: 1;
+        readonly shadow: {
+            readonly color: "#000000";
+            readonly opacity: 0.08;
+            readonly radius: 8;
+            readonly offsetY: -2;
+            readonly elevation: 8;
+        };
+    };
+    readonly breadcrumbRecipe: {
+        readonly slots: readonly ["root", "list", "item", "link", "current", "separator"];
+        readonly gap: 4;
+        readonly link: {
+            readonly color: Readonly<{
+                source: "theme";
+                key: "textMuted";
+                alpha?: number;
+            }>;
+            readonly textVariant: "label";
+            readonly focus: {
+                readonly color: Readonly<{
+                    source: "theme";
+                    key: "contentBrand";
+                    alpha?: number;
+                }>;
+                readonly width: 2;
+                readonly offset: 2;
+            };
+        };
+        readonly current: {
+            readonly color: Readonly<{
+                source: "theme";
+                key: "text";
+                alpha?: number;
+            }>;
+            readonly textVariant: "label";
+            readonly fontWeight: "600";
+        };
+        readonly separator: {
+            readonly color: Readonly<{
+                source: "theme";
+                key: "textWeak";
+                alpha?: number;
+            }>;
+            readonly glyph: "xs";
+            readonly icon: "chevronEnd";
+            readonly decorative: true;
+        };
+    };
+    readonly calendarRecipe: {
+        readonly slots: readonly ["root", "header", "monthLabel", "previousMonth", "nextMonth", "weekdayRow", "weekdayLabel", "grid", "week", "day", "dayLabel", "content"];
+        readonly defaults: {
+            readonly size: "medium";
+        };
+        readonly header: {
+            readonly gap: 8;
+            readonly monthLabel: {
+                readonly textVariant: "title";
+                readonly fontWeight: "700";
+                readonly color: Readonly<{
+                    source: "theme";
+                    key: "text";
+                    alpha?: number;
+                }>;
+            };
+            readonly navButton: {
+                readonly diameter: 44;
+                readonly color: Readonly<{
+                    source: "theme";
+                    key: "textMuted";
+                    alpha?: number;
+                }>;
+            };
+            readonly navIcon: {
+                readonly previous: "chevronStart";
+                readonly next: "chevronEnd";
+            };
+        };
+        readonly weekdayLabel: {
+            readonly textVariant: "label";
+            readonly color: Readonly<{
+                source: "theme";
+                key: "textMuted";
+                alpha?: number;
+            }>;
+        };
+        readonly sizes: {
+            readonly medium: {
+                readonly cellDiameter: 44;
+                readonly textVariant: "body";
+                readonly glyph: "sm";
+            };
+            readonly large: {
+                readonly cellDiameter: 44;
+                readonly textVariant: "bodyLarge";
+                readonly glyph: "md";
+            };
+        };
+        readonly day: {
+            readonly radius: "full";
+            readonly label: {
+                readonly color: Readonly<{
+                    source: "theme";
+                    key: "textBody";
+                    alpha?: number;
+                }>;
+                readonly numericVariant: "tabular";
+            };
+            readonly outsideFocusedMonthOpacity: 0.72;
+            readonly disabledOpacity: 0.5;
+            readonly today: {
+                readonly border: Readonly<{
+                    source: "theme";
+                    key: "contentBrand";
+                    alpha?: number;
+                }>;
+                readonly borderWidth: 1;
+            };
+            readonly selected: {
+                readonly background: Readonly<{
+                    source: "theme";
+                    key: "primary";
+                    alpha?: number;
+                }>;
+                readonly content: Readonly<{
+                    source: "theme";
+                    key: "onPrimary";
+                    alpha?: number;
+                }>;
+            };
+            readonly focus: {
+                readonly color: Readonly<{
+                    source: "theme";
+                    key: "contentBrand";
+                    alpha?: number;
+                }>;
+                readonly width: 2;
+                readonly offset: 2;
+            };
+        };
     };
     readonly buttonRecipe: {
         readonly slots: readonly ["root", "leading", "label", "trailing", "spinner"];
@@ -1015,6 +1388,11 @@ export declare const recipeRegistry: {
                 readonly content: "onDanger";
                 readonly border: null;
             };
+            readonly link: {
+                readonly background: null;
+                readonly content: "contentBrand";
+                readonly border: null;
+            };
         };
         readonly sizes: {
             readonly small: {
@@ -1039,6 +1417,58 @@ export declare const recipeRegistry: {
         readonly opacity: {
             readonly disabled: 0.5;
             readonly pressed: 0.86;
+        };
+    };
+    readonly carouselRecipe: {
+        readonly slots: readonly ["root", "track", "slide", "dots", "dot", "previousControl", "nextControl"];
+        readonly defaults: {
+            readonly size: "medium";
+        };
+        readonly sizes: {
+            readonly medium: {
+                readonly gap: 12;
+                readonly controlHitTarget: 44;
+                readonly controlIcon: "sm";
+            };
+        };
+        readonly dot: {
+            readonly diameter: 8;
+            readonly hitTarget: 44;
+            readonly color: {
+                readonly inactive: Readonly<{
+                    source: "theme";
+                    key: "textWeak";
+                    alpha?: number;
+                }>;
+                readonly current: Readonly<{
+                    source: "theme";
+                    key: "contentBrand";
+                    alpha?: number;
+                }>;
+            };
+        };
+        readonly control: {
+            readonly icons: {
+                readonly previous: "chevronStart";
+                readonly next: "chevronEnd";
+            };
+        };
+        readonly states: {
+            readonly focus: {
+                readonly color: Readonly<{
+                    source: "theme";
+                    key: "contentBrand";
+                    alpha?: number;
+                }>;
+                readonly width: 2;
+                readonly offset: 2;
+            };
+            readonly draggedOpacity: 0.64;
+        };
+        readonly transition: {
+            readonly duration: 320;
+            readonly easing: "emphasized";
+            readonly reducedMotion: "opacity";
         };
     };
     readonly chipRecipe: {
@@ -1077,7 +1507,7 @@ export declare const recipeRegistry: {
                 }>;
                 readonly border: Readonly<{
                     source: "theme";
-                    key: "textMuted";
+                    key: "border";
                     alpha?: number;
                 }>;
             };
@@ -1473,6 +1903,37 @@ export declare const recipeRegistry: {
             };
         };
     };
+    readonly descriptionListRecipe: {
+        readonly slots: readonly ["root", "group", "item", "label", "value"];
+        readonly defaults: {
+            readonly columns: 2;
+        };
+        readonly group: {
+            readonly gap: 12;
+            readonly minItemWidth: 160;
+            readonly columns: readonly [1, 2];
+        };
+        readonly item: {
+            readonly gap: 4;
+        };
+        readonly label: {
+            readonly textVariant: "label";
+            readonly color: Readonly<{
+                source: "theme";
+                key: "textMuted";
+                alpha?: number;
+            }>;
+        };
+        readonly value: {
+            readonly textVariant: "body";
+            readonly color: Readonly<{
+                source: "theme";
+                key: "text";
+                alpha?: number;
+            }>;
+            readonly maxLines: null;
+        };
+    };
     readonly counterBadgeRecipe: {
         readonly slots: readonly ["root", "label"];
         readonly defaults: {
@@ -1608,6 +2069,265 @@ export declare const recipeRegistry: {
             };
         };
     };
+    readonly dataTableRecipe: {
+        readonly slots: readonly ["root", "header", "headerCell", "sortButton", "sortIcon", "row", "cell", "selectionCell", "emptyState", "errorState"];
+        readonly defaults: {
+            readonly density: "regular";
+        };
+        readonly density: {
+            readonly compact: {
+                readonly paddingVertical: 8;
+                readonly paddingHorizontal: 12;
+            };
+            readonly regular: {
+                readonly paddingVertical: 12;
+                readonly paddingHorizontal: 16;
+            };
+        };
+        readonly header: {
+            readonly background: Readonly<{
+                source: "theme";
+                key: "surfaceAlt";
+                alpha?: number;
+            }>;
+            readonly color: Readonly<{
+                source: "theme";
+                key: "textMuted";
+                alpha?: number;
+            }>;
+            readonly textVariant: "label";
+            readonly fontWeight: "700";
+            readonly borderBottom: Readonly<{
+                source: "theme";
+                key: "border";
+                alpha?: number;
+            }>;
+        };
+        readonly row: {
+            readonly borderBottom: Readonly<{
+                source: "theme";
+                key: "border";
+                alpha?: number;
+            }>;
+            readonly hoverBackground: Readonly<{
+                source: "theme";
+                key: "text";
+                alpha?: number;
+            }>;
+            readonly selectedBackground: Readonly<{
+                source: "theme";
+                key: "primary";
+                alpha?: number;
+            }>;
+        };
+        readonly cell: {
+            readonly color: Readonly<{
+                source: "theme";
+                key: "textBody";
+                alpha?: number;
+            }>;
+            readonly textVariant: "body";
+        };
+        readonly sortButton: {
+            readonly minTarget: 44;
+            readonly color: Readonly<{
+                source: "theme";
+                key: "textMuted";
+                alpha?: number;
+            }>;
+            readonly activeColor: Readonly<{
+                source: "theme";
+                key: "contentBrand";
+                alpha?: number;
+            }>;
+        };
+        readonly selectionCell: {
+            readonly width: 44;
+        };
+        readonly emptyState: {
+            readonly color: Readonly<{
+                source: "theme";
+                key: "textMuted";
+                alpha?: number;
+            }>;
+            readonly textVariant: "body";
+        };
+        readonly errorState: {
+            readonly color: Readonly<{
+                source: "theme";
+                key: "danger";
+                alpha?: number;
+            }>;
+            readonly textVariant: "body";
+        };
+        readonly states: {
+            readonly focus: {
+                readonly color: Readonly<{
+                    source: "theme";
+                    key: "contentBrand";
+                    alpha?: number;
+                }>;
+                readonly width: 2;
+                readonly offset: 2;
+            };
+        };
+    };
+    readonly datePickerRecipe: {
+        readonly slots: readonly ["root", "label", "trigger", "leading", "value", "placeholder", "clear", "indicator", "description", "error", "popover"];
+        readonly defaults: {
+            readonly size: "medium";
+        };
+        readonly adaptive: {
+            readonly web: "popover";
+            readonly native: "sheet";
+        };
+        readonly frame: {
+            readonly background: Readonly<{
+                source: "theme";
+                key: "surface";
+                alpha?: number;
+            }>;
+            readonly border: Readonly<{
+                source: "theme";
+                key: "textMuted";
+                alpha?: number;
+            }>;
+            readonly focusBorder: Readonly<{
+                source: "theme";
+                key: "contentBrand";
+                alpha?: number;
+            }>;
+            readonly invalidBorder: Readonly<{
+                source: "theme";
+                key: "danger";
+                alpha?: number;
+            }>;
+            readonly radius: "md";
+            readonly borderWidth: 1;
+            readonly minHeight: 44;
+            readonly paddingHorizontal: 16;
+        };
+        readonly sizes: {
+            readonly medium: {
+                readonly minHeight: 44;
+                readonly paddingHorizontal: 16;
+                readonly textVariant: "body";
+                readonly glyph: "sm";
+            };
+            readonly large: {
+                readonly minHeight: 52;
+                readonly paddingHorizontal: 20;
+                readonly textVariant: "bodyLarge";
+                readonly glyph: "md";
+            };
+        };
+        readonly support: {
+            readonly label: {
+                readonly color: Readonly<{
+                    source: "theme";
+                    key: "textBody";
+                    alpha?: number;
+                }>;
+                readonly textVariant: "body";
+                readonly fontWeight: "600";
+            };
+            readonly hint: {
+                readonly color: Readonly<{
+                    source: "theme";
+                    key: "textMuted";
+                    alpha?: number;
+                }>;
+                readonly textVariant: "label";
+            };
+            readonly error: {
+                readonly color: Readonly<{
+                    source: "theme";
+                    key: "danger";
+                    alpha?: number;
+                }>;
+                readonly textVariant: "label";
+            };
+            readonly gap: 8;
+        };
+        readonly value: {
+            readonly color: Readonly<{
+                source: "theme";
+                key: "textBody";
+                alpha?: number;
+            }>;
+            readonly placeholderColor: Readonly<{
+                source: "theme";
+                key: "textMuted";
+                alpha?: number;
+            }>;
+        };
+        readonly leading: {
+            readonly color: Readonly<{
+                source: "theme";
+                key: "textMuted";
+                alpha?: number;
+            }>;
+            readonly icon: "calendar";
+        };
+        readonly indicator: {
+            readonly color: Readonly<{
+                source: "theme";
+                key: "textMuted";
+                alpha?: number;
+            }>;
+        };
+        readonly clear: {
+            readonly diameter: 36;
+            readonly hitSlop: 4;
+            readonly glyph: "xs";
+            readonly color: Readonly<{
+                source: "theme";
+                key: "textMuted";
+                alpha?: number;
+            }>;
+        };
+        readonly popover: {
+            readonly minWidth: 300;
+            readonly maxWidth: 360;
+            readonly sideOffset: 8;
+            readonly collisionPadding: 8;
+            readonly background: Readonly<{
+                source: "theme";
+                key: "bg";
+                alpha?: number;
+            }>;
+            readonly border: Readonly<{
+                source: "theme";
+                key: "border";
+                alpha?: number;
+            }>;
+            readonly borderWidth: 1;
+            readonly radius: "md";
+            readonly shadow: {
+                readonly color: "#000000";
+                readonly opacity: 0.12;
+                readonly radius: 12;
+                readonly offsetY: 4;
+            };
+            readonly padding: 8;
+        };
+        readonly states: {
+            readonly focus: {
+                readonly color: Readonly<{
+                    source: "theme";
+                    key: "contentBrand";
+                    alpha?: number;
+                }>;
+                readonly width: 2;
+                readonly offset: 2;
+            };
+            readonly invalidBorder: Readonly<{
+                source: "theme";
+                key: "danger";
+                alpha?: number;
+            }>;
+        };
+    };
     readonly dividerRecipe: {
         readonly slots: readonly ["root", "label"];
         readonly defaults: {
@@ -1624,6 +2344,24 @@ export declare const recipeRegistry: {
             readonly none: 0;
             readonly start: 16;
             readonly both: 16;
+        };
+    };
+    readonly formRecipe: {
+        readonly slots: readonly ["root", "field", "formError", "actions"];
+        readonly defaults: {
+            readonly density: "comfortable";
+        };
+        readonly density: {
+            readonly compact: {
+                readonly fieldGap: 12;
+            };
+            readonly comfortable: {
+                readonly fieldGap: 20;
+            };
+        };
+        readonly formError: {
+            readonly position: "beforeActions";
+            readonly gap: 12;
         };
     };
     readonly emptyStateRecipe: {
@@ -1721,6 +2459,73 @@ export declare const recipeRegistry: {
             readonly color: "textMuted";
         };
         readonly disabledOpacity: 0.6;
+    };
+    readonly filePickerRecipe: {
+        readonly slots: readonly ["root", "trigger", "dropzone", "hint", "error"];
+        readonly defaults: {
+            readonly density: "regular";
+        };
+        readonly trigger: {
+            readonly minHeight: 44;
+            readonly paddingHorizontal: 16;
+            readonly radius: "md";
+            readonly color: Readonly<{
+                source: "theme";
+                key: "contentBrand";
+                alpha?: number;
+            }>;
+            readonly textVariant: "label";
+            readonly fontWeight: "700";
+        };
+        readonly dropzone: {
+            readonly borderStyle: "dashed";
+            readonly borderWidth: 1;
+            readonly borderColor: Readonly<{
+                source: "theme";
+                key: "border";
+                alpha?: number;
+            }>;
+            readonly activeBorderColor: Readonly<{
+                source: "theme";
+                key: "contentBrand";
+                alpha?: number;
+            }>;
+            readonly activeBackground: Readonly<{
+                source: "theme";
+                key: "contentBrand";
+                alpha?: number;
+            }>;
+            readonly radius: "lg";
+            readonly padding: 24;
+        };
+        readonly hint: {
+            readonly color: Readonly<{
+                source: "theme";
+                key: "textMuted";
+                alpha?: number;
+            }>;
+            readonly textVariant: "label";
+        };
+        readonly error: {
+            readonly color: Readonly<{
+                source: "theme";
+                key: "danger";
+                alpha?: number;
+            }>;
+            readonly textVariant: "label";
+        };
+        readonly states: {
+            readonly focus: {
+                readonly color: Readonly<{
+                    source: "theme";
+                    key: "contentBrand";
+                    alpha?: number;
+                }>;
+                readonly width: 2;
+                readonly offset: 2;
+            };
+            readonly disabledOpacity: 0.5;
+        };
     };
     readonly iconButtonRecipe: {
         readonly slots: readonly ["root", "icon", "spinner"];
@@ -1882,6 +2687,32 @@ export declare const recipeRegistry: {
             readonly lineJoin: "round";
             readonly scaling: "proportional";
         };
+    };
+    readonly imageRecipe: {
+        readonly slots: readonly ["root", "image", "placeholder", "fallbackIcon"];
+        readonly defaults: {
+            readonly fit: "cover";
+        };
+        readonly fits: readonly import("./image.js").ImageFit[];
+        readonly placeholder: {
+            readonly background: Readonly<{
+                source: "theme";
+                key: "surfaceAlt";
+                alpha?: number;
+            }>;
+        };
+        readonly fallback: {
+            readonly background: Readonly<{
+                source: "theme";
+                key: "surfaceAlt";
+                alpha?: number;
+            }>;
+            readonly icon: {
+                readonly name: "error";
+                readonly tone: "secondary";
+            };
+        };
+        readonly radius: "md";
     };
     readonly linkRecipe: {
         readonly slots: readonly ["root", "leading", "label", "trailing"];
@@ -2307,12 +3138,12 @@ export declare const recipeRegistry: {
         };
         readonly tones: {
             readonly info: {
-                readonly foreground: Readonly<{
-                    source: "accent";
-                    key: "info";
+                readonly background: Readonly<{
+                    source: "theme";
+                    key: "surfaceAlt";
                     alpha?: number;
                 }>;
-                readonly background: Readonly<{
+                readonly foreground: Readonly<{
                     source: "accent";
                     key: "info";
                     alpha?: number;
@@ -2436,6 +3267,215 @@ export declare const recipeRegistry: {
             readonly textVariant: "body";
         };
     };
+    readonly paginationRecipe: {
+        readonly slots: readonly ["root", "item", "ellipsis", "previous", "next"];
+        readonly gap: 4;
+        readonly item: {
+            readonly minSize: 44;
+            readonly radius: "md";
+            readonly color: {
+                readonly default: Readonly<{
+                    source: "theme";
+                    key: "textBody";
+                    alpha?: number;
+                }>;
+                readonly current: Readonly<{
+                    source: "theme";
+                    key: "contentBrand";
+                    alpha?: number;
+                }>;
+            };
+            readonly background: {
+                readonly hover: Readonly<{
+                    source: "theme";
+                    key: "text";
+                    alpha?: number;
+                }>;
+            };
+            readonly border: {
+                readonly current: Readonly<{
+                    source: "theme";
+                    key: "contentBrand";
+                    alpha?: number;
+                }>;
+            };
+        };
+        readonly ellipsis: {
+            readonly color: Readonly<{
+                source: "theme";
+                key: "textMuted";
+                alpha?: number;
+            }>;
+            readonly icon: "more";
+        };
+        readonly navIcon: {
+            readonly previous: "chevronStart";
+            readonly next: "chevronEnd";
+        };
+        readonly focus: {
+            readonly color: Readonly<{
+                source: "theme";
+                key: "contentBrand";
+                alpha?: number;
+            }>;
+            readonly width: 2;
+            readonly offset: 2;
+        };
+        readonly states: {
+            readonly disabledOpacity: 0.5;
+        };
+    };
+    readonly popoverRecipe: {
+        readonly slots: readonly ["trigger", "content", "arrow", "closeAction"];
+        readonly surface: {
+            readonly background: Readonly<{
+                source: "theme";
+                key: "bg";
+                alpha?: number;
+            }>;
+            readonly border: Readonly<{
+                source: "theme";
+                key: "border";
+                alpha?: number;
+            }>;
+            readonly borderWidth: 1;
+            readonly radius: "md";
+            readonly shadow: {
+                readonly color: "#000000";
+                readonly opacity: 0.12;
+                readonly radius: 12;
+                readonly offsetY: 4;
+            };
+            readonly padding: 8;
+        };
+        readonly arrow: {
+            readonly size: 4;
+            readonly offset: 4;
+        };
+        readonly sideOffset: 8;
+        readonly collisionPadding: 8;
+        readonly minWidth: 240;
+        readonly maxWidth: 360;
+        readonly transition: {
+            readonly enter: {
+                readonly duration: 200;
+                readonly easing: "enter";
+                readonly reducedMotion: "opacity";
+            };
+            readonly exit: {
+                readonly duration: 120;
+                readonly easing: "exit";
+                readonly reducedMotion: "instant";
+            };
+        };
+    };
+    readonly numberFieldRecipe: {
+        readonly slots: readonly ["root", "frame", "input", "decrement", "increment", "description", "error"];
+        readonly defaults: {
+            readonly size: "medium";
+        };
+        readonly frame: {
+            readonly background: Readonly<{
+                source: "theme";
+                key: "surface";
+                alpha?: number;
+            }>;
+            readonly border: Readonly<{
+                source: "theme";
+                key: "textMuted";
+                alpha?: number;
+            }>;
+            readonly focusBorder: Readonly<{
+                source: "theme";
+                key: "contentBrand";
+                alpha?: number;
+            }>;
+            readonly invalidBorder: Readonly<{
+                source: "theme";
+                key: "danger";
+                alpha?: number;
+            }>;
+            readonly radius: "md";
+            readonly borderWidth: 1;
+            readonly minHeight: 44;
+            readonly paddingHorizontal: 16;
+        };
+        readonly support: {
+            readonly label: {
+                readonly color: Readonly<{
+                    source: "theme";
+                    key: "textBody";
+                    alpha?: number;
+                }>;
+                readonly textVariant: "body";
+                readonly fontWeight: "600";
+            };
+            readonly hint: {
+                readonly color: Readonly<{
+                    source: "theme";
+                    key: "textMuted";
+                    alpha?: number;
+                }>;
+                readonly textVariant: "label";
+            };
+            readonly error: {
+                readonly color: Readonly<{
+                    source: "theme";
+                    key: "danger";
+                    alpha?: number;
+                }>;
+                readonly textVariant: "label";
+            };
+            readonly gap: 8;
+        };
+        readonly sizes: {
+            readonly medium: {
+                readonly minHeight: 44;
+                readonly paddingHorizontal: 16;
+                readonly textVariant: "body";
+                readonly stepperDiameter: 44;
+            };
+            readonly large: {
+                readonly minHeight: 52;
+                readonly paddingHorizontal: 20;
+                readonly textVariant: "bodyLarge";
+                readonly stepperDiameter: 44;
+            };
+        };
+        readonly value: {
+            readonly color: Readonly<{
+                source: "theme";
+                key: "textBody";
+                alpha?: number;
+            }>;
+            readonly numericVariant: "tabular";
+        };
+        readonly stepper: {
+            readonly color: Readonly<{
+                source: "theme";
+                key: "textMuted";
+                alpha?: number;
+            }>;
+            readonly minTarget: 44;
+        };
+        readonly states: {
+            readonly focus: {
+                readonly color: Readonly<{
+                    source: "theme";
+                    key: "contentBrand";
+                    alpha?: number;
+                }>;
+                readonly width: 2;
+                readonly offset: 2;
+            };
+            readonly invalidBorder: Readonly<{
+                source: "theme";
+                key: "danger";
+                alpha?: number;
+            }>;
+            readonly disabledOpacity: 0.5;
+        };
+    };
     readonly progressRecipe: {
         readonly slots: readonly ["root", "track", "indicator", "label", "value"];
         readonly defaults: {
@@ -2476,10 +3516,77 @@ export declare const recipeRegistry: {
         }>;
         readonly radius: "full";
     };
+    readonly resultRecipe: {
+        readonly slots: readonly ["root", "icon", "title", "description", "primaryAction", "secondaryAction"];
+        readonly defaults: {
+            readonly status: "info";
+        };
+        readonly tones: {
+            readonly success: {
+                readonly icon: Readonly<{
+                    source: "accent";
+                    key: "success";
+                    alpha?: number;
+                }>;
+                readonly iconBackground: Readonly<{
+                    source: "accent";
+                    key: "success";
+                    alpha?: number;
+                }>;
+            };
+            readonly failure: {
+                readonly icon: Readonly<{
+                    source: "theme";
+                    key: "danger";
+                    alpha?: number;
+                }>;
+                readonly iconBackground: Readonly<{
+                    source: "theme";
+                    key: "danger";
+                    alpha?: number;
+                }>;
+            };
+            readonly info: {
+                readonly icon: Readonly<{
+                    source: "accent";
+                    key: "info";
+                    alpha?: number;
+                }>;
+                readonly iconBackground: Readonly<{
+                    source: "accent";
+                    key: "info";
+                    alpha?: number;
+                }>;
+            };
+        };
+        readonly iconSize: "xl";
+        readonly paddingVertical: 40;
+        readonly paddingHorizontal: 24;
+        readonly gap: 12;
+        readonly title: {
+            readonly textVariant: "titleLarge";
+            readonly color: Readonly<{
+                source: "theme";
+                key: "text";
+                alpha?: number;
+            }>;
+            readonly fontWeight: "700";
+        };
+        readonly description: {
+            readonly textVariant: "body";
+            readonly color: Readonly<{
+                source: "theme";
+                key: "textMuted";
+                alpha?: number;
+            }>;
+        };
+        readonly actionsGap: 12;
+    };
     readonly searchFieldRecipe: {
         readonly slots: readonly ["root", "leading", "input", "trailing", "clear", "spinner"];
         readonly defaults: {
             readonly size: "medium";
+            readonly shape: "medium";
         };
         readonly sizes: {
             readonly medium: {
@@ -2543,7 +3650,11 @@ export declare const recipeRegistry: {
                 alpha?: number;
             }>;
         };
-        readonly radius: "full";
+        readonly shapes: {
+            readonly medium: "md";
+            readonly large: "lg";
+            readonly full: "full";
+        };
         readonly borderWidth: 1;
         readonly focusRingWidth: 2;
         readonly focusRingOffset: 2;
@@ -2902,6 +4013,7 @@ export declare const recipeRegistry: {
                 readonly gap: {
                     readonly plain: 4;
                     readonly card: 8;
+                    readonly grouped: 0;
                 };
             };
             readonly horizontal: {
@@ -2909,6 +4021,7 @@ export declare const recipeRegistry: {
                 readonly gap: {
                     readonly plain: 12;
                     readonly card: 16;
+                    readonly grouped: 0;
                 };
             };
         };
@@ -3018,12 +4131,12 @@ export declare const recipeRegistry: {
             readonly fontWeight: "600";
             readonly selectedBackground: Readonly<{
                 source: "theme";
-                key: "surface";
+                key: "surfaceAccent";
                 alpha?: number;
             }>;
             readonly selectedContent: Readonly<{
                 source: "theme";
-                key: "text";
+                key: "contentBrand";
                 alpha?: number;
             }>;
             readonly selectedBorder: Readonly<{
@@ -3084,6 +4197,7 @@ export declare const recipeRegistry: {
                 readonly borderWidth: 0;
                 readonly radius: "md";
                 readonly useSizePadding: false;
+                readonly labelColor: null;
             };
             readonly card: {
                 readonly background: Readonly<{
@@ -3099,6 +4213,19 @@ export declare const recipeRegistry: {
                 readonly borderWidth: 1;
                 readonly radius: "md";
                 readonly useSizePadding: true;
+                readonly labelColor: null;
+            };
+            readonly grouped: {
+                readonly background: null;
+                readonly border: null;
+                readonly borderWidth: 0;
+                readonly radius: "lg";
+                readonly useSizePadding: true;
+                readonly labelColor: Readonly<{
+                    source: "theme";
+                    key: "text";
+                    alpha?: number;
+                }>;
             };
         };
         readonly label: {
@@ -3164,7 +4291,7 @@ export declare const recipeRegistry: {
             }>;
             readonly selectedBackground: Readonly<{
                 source: "theme";
-                key: "primary";
+                key: "surfaceAccent";
                 alpha?: number;
             }>;
             readonly selectedBorder: Readonly<{
@@ -3298,6 +4425,692 @@ export declare const recipeRegistry: {
             };
         };
     };
+    readonly sidePanelRecipe: {
+        readonly slots: readonly ["backdrop", "positioner", "content", "header", "title", "body", "footer", "close"];
+        readonly defaults: {
+            readonly edge: "end";
+            readonly size: "regular";
+        };
+        readonly sizes: {
+            readonly compact: 320;
+            readonly regular: 400;
+            readonly wide: 560;
+        };
+        readonly backdrop: {
+            readonly color: "#000000";
+            readonly opacity: 0.6;
+        };
+        readonly content: {
+            readonly background: Readonly<{
+                source: "theme";
+                key: "bg";
+                alpha?: number;
+            }>;
+            readonly border: Readonly<{
+                source: "theme";
+                key: "border";
+                alpha?: number;
+            }>;
+            readonly borderWidth: 1;
+            readonly radius: null;
+            readonly shadow: {
+                readonly color: "#000000";
+                readonly opacity: 0.16;
+                readonly radius: 24;
+                readonly offsetY: 8;
+            };
+            readonly paddingHorizontal: 20;
+            readonly paddingTop: 12;
+            readonly paddingBottom: 12;
+        };
+        readonly header: {
+            readonly minHeight: 44;
+            readonly gap: 12;
+        };
+        readonly title: {
+            readonly color: Readonly<{
+                source: "theme";
+                key: "text";
+                alpha?: number;
+            }>;
+            readonly textVariant: "title";
+            readonly fontWeight: "700";
+        };
+        readonly body: {
+            readonly color: Readonly<{
+                source: "theme";
+                key: "textBody";
+                alpha?: number;
+            }>;
+            readonly textVariant: "body";
+            readonly gap: 16;
+        };
+        readonly footer: {
+            readonly color: Readonly<{
+                source: "theme";
+                key: "textBody";
+                alpha?: number;
+            }>;
+            readonly textVariant: "body";
+            readonly gap: 12;
+            readonly paddingTop: 12;
+        };
+        readonly transition: {
+            readonly enter: {
+                readonly duration: 200;
+                readonly easing: "enter";
+                readonly reducedMotion: "opacity";
+            };
+            readonly exit: {
+                readonly duration: 120;
+                readonly easing: "exit";
+                readonly reducedMotion: "instant";
+            };
+        };
+        readonly states: {
+            readonly focus: {
+                readonly color: Readonly<{
+                    source: "theme";
+                    key: "contentBrand";
+                    alpha?: number;
+                }>;
+                readonly width: 2;
+                readonly offset: 2;
+            };
+        };
+    };
+    readonly commandPaletteRecipe: {
+        readonly slots: readonly ["backdrop", "positioner", "content", "searchField", "viewport", "section", "sectionLabel", "item", "leading", "copy", "label", "description", "shortcut", "emptyState"];
+        readonly backdrop: {
+            readonly color: "#000000";
+            readonly opacity: 0.6;
+        };
+        readonly content: {
+            readonly background: Readonly<{
+                source: "theme";
+                key: "bg";
+                alpha?: number;
+            }>;
+            readonly border: Readonly<{
+                source: "theme";
+                key: "border";
+                alpha?: number;
+            }>;
+            readonly borderWidth: 1;
+            readonly radius: "lg";
+            readonly shadow: {
+                readonly color: "#000000";
+                readonly opacity: 0.12;
+                readonly radius: 12;
+                readonly offsetY: 4;
+            };
+            readonly maxWidth: 560;
+            readonly maxHeight: 420;
+        };
+        readonly searchField: {
+            readonly minHeight: 44;
+            readonly paddingHorizontal: 16;
+            readonly borderColor: Readonly<{
+                source: "theme";
+                key: "textMuted";
+                alpha?: number;
+            }>;
+        };
+        readonly item: {
+            readonly minHeight: 44;
+            readonly paddingHorizontal: 12;
+            readonly gap: 12;
+            readonly radius: "md";
+            readonly label: {
+                readonly color: Readonly<{
+                    source: "theme";
+                    key: "textBody";
+                    alpha?: number;
+                }>;
+                readonly textVariant: "body";
+            };
+            readonly description: {
+                readonly color: Readonly<{
+                    source: "theme";
+                    key: "textMuted";
+                    alpha?: number;
+                }>;
+                readonly textVariant: "label";
+            };
+            readonly highlightedBackground: Readonly<{
+                source: "theme";
+                key: "text";
+                alpha?: number;
+            }>;
+            readonly focus: {
+                readonly color: Readonly<{
+                    source: "theme";
+                    key: "contentBrand";
+                    alpha?: number;
+                }>;
+                readonly width: 2;
+                readonly offset: 2;
+            };
+            readonly selectedBackground: Readonly<{
+                source: "theme";
+                key: "primary";
+                alpha?: number;
+            }>;
+            readonly selectedIndicator: Readonly<{
+                source: "theme";
+                key: "contentBrand";
+                alpha?: number;
+            }>;
+            readonly danger: Readonly<{
+                source: "theme";
+                key: "danger";
+                alpha?: number;
+            }>;
+        };
+        readonly sectionLabel: {
+            readonly color: Readonly<{
+                source: "theme";
+                key: "textMuted";
+                alpha?: number;
+            }>;
+            readonly textVariant: "label";
+            readonly paddingHorizontal: 12;
+            readonly paddingVertical: 8;
+        };
+        readonly emptyState: {
+            readonly color: Readonly<{
+                source: "theme";
+                key: "textMuted";
+                alpha?: number;
+            }>;
+            readonly textVariant: "body";
+            readonly paddingVertical: 24;
+        };
+        readonly transition: {
+            readonly enter: {
+                readonly duration: 200;
+                readonly easing: "enter";
+                readonly reducedMotion: "opacity";
+            };
+            readonly exit: {
+                readonly duration: 120;
+                readonly easing: "exit";
+                readonly reducedMotion: "instant";
+            };
+        };
+    };
+    readonly layoutRecipe: {
+        readonly slots: readonly ["root", "skipLink", "header", "sidebar", "main", "footer"];
+        readonly defaults: {};
+        readonly main: {
+            readonly maxWidth: 1200;
+            readonly paddingHorizontal: 20;
+        };
+        readonly sidebar: {
+            readonly width: 280;
+        };
+        readonly skipLink: {
+            readonly visibility: "focus-only";
+            readonly background: Readonly<{
+                source: "theme";
+                key: "primary";
+                alpha?: number;
+            }>;
+            readonly color: Readonly<{
+                source: "theme";
+                key: "onPrimary";
+                alpha?: number;
+            }>;
+            readonly paddingHorizontal: 16;
+            readonly paddingVertical: 12;
+        };
+        readonly states: {
+            readonly focus: {
+                readonly color: Readonly<{
+                    source: "theme";
+                    key: "contentBrand";
+                    alpha?: number;
+                }>;
+                readonly width: 2;
+                readonly offset: 2;
+            };
+        };
+    };
+    readonly otpFieldRecipe: {
+        readonly slots: readonly ["root", "input", "slot", "description", "error"];
+        readonly defaults: {
+            readonly size: "medium";
+        };
+        readonly support: {
+            readonly label: {
+                readonly color: Readonly<{
+                    source: "theme";
+                    key: "textBody";
+                    alpha?: number;
+                }>;
+                readonly textVariant: "body";
+                readonly fontWeight: "600";
+            };
+            readonly hint: {
+                readonly color: Readonly<{
+                    source: "theme";
+                    key: "textMuted";
+                    alpha?: number;
+                }>;
+                readonly textVariant: "label";
+            };
+            readonly error: {
+                readonly color: Readonly<{
+                    source: "theme";
+                    key: "danger";
+                    alpha?: number;
+                }>;
+                readonly textVariant: "label";
+            };
+            readonly gap: 8;
+        };
+        readonly sizes: {
+            readonly medium: {
+                readonly slotSize: 44;
+                readonly gap: 8;
+                readonly textVariant: "title";
+            };
+            readonly large: {
+                readonly slotSize: 52;
+                readonly gap: 12;
+                readonly textVariant: "titleLarge";
+            };
+        };
+        readonly slot: {
+            readonly border: Readonly<{
+                source: "theme";
+                key: "textMuted";
+                alpha?: number;
+            }>;
+            readonly focusBorder: Readonly<{
+                source: "theme";
+                key: "contentBrand";
+                alpha?: number;
+            }>;
+            readonly invalidBorder: Readonly<{
+                source: "theme";
+                key: "danger";
+                alpha?: number;
+            }>;
+            readonly filledBorder: Readonly<{
+                source: "theme";
+                key: "contentBrand";
+                alpha?: number;
+            }>;
+            readonly radius: "md";
+            readonly borderWidth: 1;
+            readonly content: Readonly<{
+                source: "theme";
+                key: "text";
+                alpha?: number;
+            }>;
+        };
+        readonly states: {
+            readonly focus: {
+                readonly color: Readonly<{
+                    source: "theme";
+                    key: "contentBrand";
+                    alpha?: number;
+                }>;
+                readonly width: 2;
+                readonly offset: 2;
+            };
+            readonly disabledOpacity: 0.5;
+        };
+    };
+    readonly passwordFieldRecipe: {
+        readonly slots: readonly ["root", "frame", "input", "toggle", "description", "error"];
+        readonly defaults: {
+            readonly size: "medium";
+        };
+        readonly frame: {
+            readonly background: Readonly<{
+                source: "theme";
+                key: "surface";
+                alpha?: number;
+            }>;
+            readonly border: Readonly<{
+                source: "theme";
+                key: "textMuted";
+                alpha?: number;
+            }>;
+            readonly focusBorder: Readonly<{
+                source: "theme";
+                key: "contentBrand";
+                alpha?: number;
+            }>;
+            readonly invalidBorder: Readonly<{
+                source: "theme";
+                key: "danger";
+                alpha?: number;
+            }>;
+            readonly radius: "md";
+            readonly borderWidth: 1;
+            readonly minHeight: 44;
+            readonly paddingHorizontal: 16;
+        };
+        readonly support: {
+            readonly label: {
+                readonly color: Readonly<{
+                    source: "theme";
+                    key: "textBody";
+                    alpha?: number;
+                }>;
+                readonly textVariant: "body";
+                readonly fontWeight: "600";
+            };
+            readonly hint: {
+                readonly color: Readonly<{
+                    source: "theme";
+                    key: "textMuted";
+                    alpha?: number;
+                }>;
+                readonly textVariant: "label";
+            };
+            readonly error: {
+                readonly color: Readonly<{
+                    source: "theme";
+                    key: "danger";
+                    alpha?: number;
+                }>;
+                readonly textVariant: "label";
+            };
+            readonly gap: 8;
+        };
+        readonly sizes: {
+            readonly medium: {
+                readonly minHeight: 44;
+                readonly paddingHorizontal: 16;
+                readonly textVariant: "body";
+                readonly toggleDiameter: 44;
+            };
+            readonly large: {
+                readonly minHeight: 52;
+                readonly paddingHorizontal: 20;
+                readonly textVariant: "bodyLarge";
+                readonly toggleDiameter: 44;
+            };
+        };
+        readonly value: {
+            readonly color: Readonly<{
+                source: "theme";
+                key: "textBody";
+                alpha?: number;
+            }>;
+        };
+        readonly toggle: {
+            readonly icons: {
+                readonly concealed: "visibility";
+                readonly revealed: "visibilityOff";
+            };
+            readonly color: Readonly<{
+                source: "theme";
+                key: "textMuted";
+                alpha?: number;
+            }>;
+        };
+        readonly states: {
+            readonly focus: {
+                readonly color: Readonly<{
+                    source: "theme";
+                    key: "contentBrand";
+                    alpha?: number;
+                }>;
+                readonly width: 2;
+                readonly offset: 2;
+            };
+            readonly invalidBorder: Readonly<{
+                source: "theme";
+                key: "danger";
+                alpha?: number;
+            }>;
+            readonly disabledOpacity: 0.5;
+        };
+    };
+    readonly splitterRecipe: {
+        readonly slots: readonly ["root", "pane", "separator", "handle"];
+        readonly defaults: {
+            readonly axis: "horizontal";
+        };
+        readonly separator: {
+            readonly thickness: 1;
+            readonly hitTarget: 44;
+            readonly color: Readonly<{
+                source: "theme";
+                key: "border";
+                alpha?: number;
+            }>;
+            readonly hoverColor: Readonly<{
+                source: "theme";
+                key: "textWeak";
+                alpha?: number;
+            }>;
+            readonly activeColor: Readonly<{
+                source: "theme";
+                key: "contentBrand";
+                alpha?: number;
+            }>;
+        };
+        readonly states: {
+            readonly focus: {
+                readonly color: Readonly<{
+                    source: "theme";
+                    key: "contentBrand";
+                    alpha?: number;
+                }>;
+                readonly width: 2;
+                readonly offset: 2;
+            };
+        };
+    };
+    readonly floatingActionButtonRecipe: {
+        readonly slots: readonly ["root", "icon", "label"];
+        readonly defaults: {
+            readonly layoutMode: "expanded";
+        };
+        readonly circle: {
+            readonly diameter: 52;
+            readonly hitSlop: 0;
+            readonly glyph: "lg";
+        };
+        readonly tone: {
+            readonly background: Readonly<{
+                source: "theme";
+                key: "primary";
+                alpha?: number;
+            }>;
+            readonly content: Readonly<{
+                source: "theme";
+                key: "onPrimary";
+                alpha?: number;
+            }>;
+            readonly border: null;
+        };
+        readonly shape: "full";
+        readonly expandedLabel: {
+            readonly textVariant: "bodyLarge";
+            readonly paddingHorizontal: 20;
+        };
+        readonly margin: 16;
+        readonly shadow: {
+            readonly color: "#000000";
+            readonly opacity: 0.12;
+            readonly radius: 12;
+            readonly offsetY: 4;
+        };
+        readonly transition: {
+            readonly duration: 120;
+            readonly easing: "standard";
+            readonly reducedMotion: "instant";
+        };
+    };
+    readonly tourRecipe: {
+        readonly slots: readonly ["backdrop", "card", "title", "description", "counter", "previousAction", "nextAction", "skipAction"];
+        readonly card: {
+            readonly background: Readonly<{
+                source: "theme";
+                key: "bg";
+                alpha?: number;
+            }>;
+            readonly border: Readonly<{
+                source: "theme";
+                key: "border";
+                alpha?: number;
+            }>;
+            readonly borderWidth: 1;
+            readonly radius: "md";
+            readonly shadow: {
+                readonly color: "#000000";
+                readonly opacity: 0.12;
+                readonly radius: 12;
+                readonly offsetY: 4;
+            };
+            readonly padding: 8;
+        };
+        readonly backdrop: {
+            readonly color: "#000000";
+            readonly opacity: 0.6;
+        };
+        readonly maxWidth: 320;
+        readonly gap: 12;
+        readonly sideOffset: 8;
+        readonly transition: {
+            readonly enter: {
+                readonly duration: 320;
+                readonly easing: "emphasized";
+                readonly reducedMotion: "opacity";
+            };
+            readonly exit: {
+                readonly duration: 120;
+                readonly easing: "exit";
+                readonly reducedMotion: "instant";
+            };
+        };
+    };
+    readonly transferListRecipe: {
+        readonly slots: readonly ["root", "panel", "panelHeader", "panelTitle", "panelCount", "list", "item", "itemCheckbox", "emptyState", "moveControls", "moveButton"];
+        readonly panel: {
+            readonly background: Readonly<{
+                source: "theme";
+                key: "surface";
+                alpha?: number;
+            }>;
+            readonly border: Readonly<{
+                source: "theme";
+                key: "border";
+                alpha?: number;
+            }>;
+            readonly borderWidth: 1;
+            readonly radius: "md";
+        };
+        readonly panelHeader: {
+            readonly minHeight: 44;
+            readonly paddingHorizontal: 12;
+            readonly title: {
+                readonly color: Readonly<{
+                    source: "theme";
+                    key: "textBody";
+                    alpha?: number;
+                }>;
+                readonly textVariant: "body";
+            };
+            readonly count: {
+                readonly color: Readonly<{
+                    source: "theme";
+                    key: "textMuted";
+                    alpha?: number;
+                }>;
+                readonly textVariant: "label";
+            };
+        };
+        readonly item: {
+            readonly minHeight: 44;
+            readonly paddingHorizontal: 12;
+            readonly gap: 12;
+            readonly radius: "md";
+            readonly label: {
+                readonly color: Readonly<{
+                    source: "theme";
+                    key: "textBody";
+                    alpha?: number;
+                }>;
+                readonly textVariant: "body";
+            };
+            readonly description: {
+                readonly color: Readonly<{
+                    source: "theme";
+                    key: "textMuted";
+                    alpha?: number;
+                }>;
+                readonly textVariant: "label";
+            };
+            readonly highlightedBackground: Readonly<{
+                source: "theme";
+                key: "text";
+                alpha?: number;
+            }>;
+            readonly focus: {
+                readonly color: Readonly<{
+                    source: "theme";
+                    key: "contentBrand";
+                    alpha?: number;
+                }>;
+                readonly width: 2;
+                readonly offset: 2;
+            };
+            readonly selectedBackground: Readonly<{
+                source: "theme";
+                key: "primary";
+                alpha?: number;
+            }>;
+            readonly selectedIndicator: Readonly<{
+                source: "theme";
+                key: "contentBrand";
+                alpha?: number;
+            }>;
+            readonly danger: Readonly<{
+                source: "theme";
+                key: "danger";
+                alpha?: number;
+            }>;
+        };
+        readonly emptyState: {
+            readonly color: Readonly<{
+                source: "theme";
+                key: "textMuted";
+                alpha?: number;
+            }>;
+            readonly textVariant: "label";
+        };
+        readonly moveControls: {
+            readonly gap: 12;
+        };
+        readonly moveButton: {
+            readonly minTarget: 44;
+            readonly color: Readonly<{
+                source: "theme";
+                key: "contentBrand";
+                alpha?: number;
+            }>;
+            readonly disabledOpacity: 0.4;
+        };
+        readonly states: {
+            readonly focus: {
+                readonly color: Readonly<{
+                    source: "theme";
+                    key: "contentBrand";
+                    alpha?: number;
+                }>;
+                readonly width: 2;
+                readonly offset: 2;
+            };
+        };
+    };
     readonly skeletonRecipe: {
         readonly slots: readonly ["root"];
         readonly defaults: {
@@ -3330,6 +5143,72 @@ export declare const recipeRegistry: {
             readonly toOpacity: 1;
             readonly reducedMotion: "static";
         };
+    };
+    readonly sliderRecipe: {
+        readonly slots: readonly ["root", "track", "filledTrack", "thumb", "label", "valueLabel"];
+        readonly defaults: {
+            readonly size: "medium";
+        };
+        readonly sizes: {
+            readonly medium: {
+                readonly trackHeight: 4;
+                readonly thumbDiameter: 20;
+                readonly hitTarget: 44;
+                readonly labelVariant: "body";
+                readonly valueLabelVariant: "label";
+            };
+        };
+        readonly colors: {
+            readonly trackFilled: Readonly<{
+                source: "theme";
+                key: "contentBrand";
+                alpha?: number;
+            }>;
+            readonly trackUnfilled: Readonly<{
+                source: "theme";
+                key: "surfaceAlt";
+                alpha?: number;
+            }>;
+            readonly trackUnfilledBorder: Readonly<{
+                source: "theme";
+                key: "textMuted";
+                alpha?: number;
+            }>;
+            readonly thumb: Readonly<{
+                source: "theme";
+                key: "bg";
+                alpha?: number;
+            }>;
+            readonly thumbBorder: Readonly<{
+                source: "theme";
+                key: "contentBrand";
+                alpha?: number;
+            }>;
+            readonly label: Readonly<{
+                source: "theme";
+                key: "textBody";
+                alpha?: number;
+            }>;
+            readonly valueLabel: Readonly<{
+                source: "theme";
+                key: "textMuted";
+                alpha?: number;
+            }>;
+        };
+        readonly states: {
+            readonly focus: {
+                readonly color: Readonly<{
+                    source: "theme";
+                    key: "contentBrand";
+                    alpha?: number;
+                }>;
+                readonly width: 2;
+                readonly offset: 2;
+            };
+            readonly disabledOpacity: 0.5;
+            readonly draggedOpacity: 0.64;
+        };
+        readonly radius: "full";
     };
     readonly spinnerRecipe: {
         readonly slots: readonly ["root"];
@@ -3508,24 +5387,156 @@ export declare const recipeRegistry: {
             };
         };
     };
+    readonly stepsRecipe: {
+        readonly slots: readonly ["root", "step", "indicator", "marker", "connector", "label", "description"];
+        readonly gap: 8;
+        readonly indicator: {
+            readonly size: 24;
+            readonly borderWidth: 1;
+            readonly activeBorderWidth: 2;
+            readonly marks: {
+                readonly pending: null;
+                readonly current: null;
+                readonly complete: "check";
+                readonly error: "error";
+            };
+            readonly border: {
+                readonly pending: Readonly<{
+                    source: "theme";
+                    key: "border";
+                    alpha?: number;
+                }>;
+                readonly current: Readonly<{
+                    source: "theme";
+                    key: "contentBrand";
+                    alpha?: number;
+                }>;
+                readonly complete: Readonly<{
+                    source: "accent";
+                    key: "success";
+                    alpha?: number;
+                }>;
+                readonly error: Readonly<{
+                    source: "theme";
+                    key: "danger";
+                    alpha?: number;
+                }>;
+            };
+            readonly background: {
+                readonly pending: null;
+                readonly current: null;
+                readonly complete: Readonly<{
+                    source: "accent";
+                    key: "success";
+                    alpha?: number;
+                }>;
+                readonly error: Readonly<{
+                    source: "theme";
+                    key: "danger";
+                    alpha?: number;
+                }>;
+            };
+            readonly content: {
+                readonly pending: Readonly<{
+                    source: "theme";
+                    key: "textMuted";
+                    alpha?: number;
+                }>;
+                readonly current: Readonly<{
+                    source: "theme";
+                    key: "contentBrand";
+                    alpha?: number;
+                }>;
+                readonly complete: Readonly<{
+                    source: "accent";
+                    key: "success";
+                    alpha?: number;
+                }>;
+                readonly error: Readonly<{
+                    source: "theme";
+                    key: "danger";
+                    alpha?: number;
+                }>;
+            };
+        };
+        readonly connector: {
+            readonly height: 1;
+            readonly tone: {
+                readonly reached: Readonly<{
+                    source: "theme";
+                    key: "contentBrand";
+                    alpha?: number;
+                }>;
+                readonly unreached: Readonly<{
+                    source: "theme";
+                    key: "border";
+                    alpha?: number;
+                }>;
+            };
+        };
+        readonly label: {
+            readonly textVariant: "label";
+            readonly fontWeight: "600";
+            readonly color: {
+                readonly pending: Readonly<{
+                    source: "theme";
+                    key: "textMuted";
+                    alpha?: number;
+                }>;
+                readonly current: Readonly<{
+                    source: "theme";
+                    key: "text";
+                    alpha?: number;
+                }>;
+                readonly complete: Readonly<{
+                    source: "theme";
+                    key: "text";
+                    alpha?: number;
+                }>;
+                readonly error: Readonly<{
+                    source: "theme";
+                    key: "danger";
+                    alpha?: number;
+                }>;
+            };
+        };
+        readonly description: {
+            readonly textVariant: "caption";
+            readonly color: Readonly<{
+                source: "theme";
+                key: "textMuted";
+                alpha?: number;
+            }>;
+        };
+    };
     readonly surfaceRecipe: {
         readonly default: {
             readonly background: "surface";
             readonly border: "border";
             readonly borderAlpha: 1;
             readonly elevated: false;
+            readonly borderAlways: false;
         };
         readonly raised: {
             readonly background: "bg";
             readonly border: "border";
             readonly borderAlpha: 1;
             readonly elevated: true;
+            readonly borderAlways: false;
         };
         readonly accent: {
             readonly background: "surfaceAccent";
             readonly border: "primary";
             readonly borderAlpha: 0.3;
             readonly elevated: false;
+            readonly borderAlways: false;
+        };
+        readonly subtle: {
+            readonly background: "bg";
+            readonly border: "border";
+            readonly borderAlpha: 1;
+            readonly elevated: false;
+            readonly borderAlways: true;
         };
     };
     readonly switchRecipe: {
@@ -3583,12 +5594,43 @@ export declare const recipeRegistry: {
                 key: "bg";
                 alpha?: number;
             }>;
+            readonly trackOffDisabled: Readonly<{
+                source: "theme";
+                key: "border";
+                alpha?: number;
+            }>;
+            readonly trackOffBorderDisabled: Readonly<{
+                source: "theme";
+                key: "border";
+                alpha?: number;
+            }>;
+            readonly trackOnDisabled: {
+                readonly alpha: 0.38;
+                readonly source: "theme";
+                readonly key: "contentBrand";
+            };
+            readonly trackOnBorderDisabled: {
+                readonly alpha: 0.38;
+                readonly source: "theme";
+                readonly key: "contentBrand";
+            };
+            readonly thumbDisabled: Readonly<{
+                source: "theme";
+                key: "bg";
+                alpha?: number;
+            }>;
+            readonly thumbDisabledBorder: Readonly<{
+                source: "theme";
+                key: "textWeak";
+                alpha?: number;
+            }>;
         };
         readonly states: {
             readonly disabledOpacity: 0.5;
             readonly pressedOpacity: 0.86;
         };
         readonly rowMinHeight: 44;
+        readonly rowTwoLineMinHeight: 68;
     };
     readonly tabsRecipe: {
         readonly slots: readonly ["root", "list", "tab", "label", "indicator", "panel"];
@@ -3676,6 +5718,100 @@ export declare const recipeRegistry: {
             readonly disabledOpacity: 0.5;
         };
     };
+    readonly tagRecipe: {
+        readonly slots: readonly ["root", "label"];
+        readonly defaults: {
+            readonly tone: "neutral";
+        };
+        readonly tones: {
+            readonly neutral: {
+                readonly background: Readonly<{
+                    source: "theme";
+                    key: "surfaceAlt";
+                    alpha?: number;
+                }>;
+                readonly content: Readonly<{
+                    source: "theme";
+                    key: "textMuted";
+                    alpha?: number;
+                }>;
+                readonly border: null;
+            };
+            readonly brand: {
+                readonly background: Readonly<{
+                    source: "theme";
+                    key: "surfaceAccent";
+                    alpha?: number;
+                }>;
+                readonly content: Readonly<{
+                    source: "theme";
+                    key: "contentBrand";
+                    alpha?: number;
+                }>;
+                readonly border: null;
+            };
+            readonly info: {
+                readonly background: Readonly<{
+                    source: "accent";
+                    key: "info";
+                    alpha?: number;
+                }>;
+                readonly content: Readonly<{
+                    source: "accent";
+                    key: "info";
+                    alpha?: number;
+                }>;
+                readonly border: Readonly<{
+                    source: "accent";
+                    key: "info";
+                    alpha?: number;
+                }>;
+            };
+            readonly success: {
+                readonly background: Readonly<{
+                    source: "accent";
+                    key: "success";
+                    alpha?: number;
+                }>;
+                readonly content: Readonly<{
+                    source: "accent";
+                    key: "success";
+                    alpha?: number;
+                }>;
+                readonly border: Readonly<{
+                    source: "accent";
+                    key: "success";
+                    alpha?: number;
+                }>;
+            };
+            readonly attention: {
+                readonly background: Readonly<{
+                    source: "accent";
+                    key: "attention";
+                    alpha?: number;
+                }>;
+                readonly content: Readonly<{
+                    source: "accent";
+                    key: "attention";
+                    alpha?: number;
+                }>;
+                readonly border: Readonly<{
+                    source: "accent";
+                    key: "attention";
+                    alpha?: number;
+                }>;
+            };
+        };
+        readonly size: {
+            readonly height: 20;
+            readonly paddingHorizontal: 4;
+            readonly gap: 4;
+            readonly textVariant: "caption";
+            readonly fontWeight: "600";
+        };
+        readonly radius: "sm";
+        readonly borderWidth: 1;
+    };
     readonly textRecipe: {
         readonly slots: readonly ["root"];
         readonly defaults: {
@@ -3729,6 +5865,93 @@ export declare const recipeRegistry: {
             readonly regular: "400";
             readonly medium: "600";
             readonly strong: "700";
+        };
+    };
+    readonly timelineRecipe: {
+        readonly slots: readonly ["root", "item", "dot", "connector", "content", "timestamp", "label", "description"];
+        readonly gap: 16;
+        readonly dot: {
+            readonly diameter: 10;
+            readonly borderWidth: 1;
+            readonly tones: {
+                readonly neutral: {
+                    readonly border: null;
+                    readonly fill: Readonly<{
+                        source: "theme";
+                        key: "textMuted";
+                        alpha?: number;
+                    }>;
+                };
+                readonly info: {
+                    readonly border: Readonly<{
+                        source: "accent";
+                        key: "info";
+                        alpha?: number;
+                    }>;
+                    readonly fill: Readonly<{
+                        source: "accent";
+                        key: "info";
+                        alpha?: number;
+                    }>;
+                };
+                readonly success: {
+                    readonly border: Readonly<{
+                        source: "accent";
+                        key: "success";
+                        alpha?: number;
+                    }>;
+                    readonly fill: Readonly<{
+                        source: "accent";
+                        key: "success";
+                        alpha?: number;
+                    }>;
+                };
+                readonly attention: {
+                    readonly border: Readonly<{
+                        source: "accent";
+                        key: "attention";
+                        alpha?: number;
+                    }>;
+                    readonly fill: Readonly<{
+                        source: "accent";
+                        key: "attention";
+                        alpha?: number;
+                    }>;
+                };
+            };
+        };
+        readonly connector: {
+            readonly width: 1;
+            readonly tone: Readonly<{
+                source: "theme";
+                key: "border";
+                alpha?: number;
+            }>;
+        };
+        readonly timestamp: {
+            readonly textVariant: "caption";
+            readonly color: Readonly<{
+                source: "theme";
+                key: "textMuted";
+                alpha?: number;
+            }>;
+        };
+        readonly label: {
+            readonly textVariant: "body";
+            readonly fontWeight: "600";
+            readonly color: Readonly<{
+                source: "theme";
+                key: "text";
+                alpha?: number;
+            }>;
+        };
+        readonly description: {
+            readonly textVariant: "body";
+            readonly color: Readonly<{
+                source: "theme";
+                key: "textBody";
+                alpha?: number;
+            }>;
         };
     };
     readonly toastRecipe: {
@@ -4048,6 +6271,154 @@ export declare const recipeRegistry: {
             key: "bg";
             alpha?: number;
         }>;
+    };
+    readonly treeRecipe: {
+        readonly slots: readonly ["root", "node", "toggle", "indent", "label", "description"];
+        readonly indentPerLevel: 20;
+        readonly node: {
+            readonly minHeight: 44;
+            readonly paddingHorizontal: 12;
+            readonly gap: 12;
+            readonly radius: "md";
+            readonly label: {
+                readonly color: Readonly<{
+                    source: "theme";
+                    key: "textBody";
+                    alpha?: number;
+                }>;
+                readonly textVariant: "body";
+            };
+            readonly description: {
+                readonly color: Readonly<{
+                    source: "theme";
+                    key: "textMuted";
+                    alpha?: number;
+                }>;
+                readonly textVariant: "label";
+            };
+            readonly highlightedBackground: Readonly<{
+                source: "theme";
+                key: "text";
+                alpha?: number;
+            }>;
+            readonly focus: {
+                readonly color: Readonly<{
+                    source: "theme";
+                    key: "contentBrand";
+                    alpha?: number;
+                }>;
+                readonly width: 2;
+                readonly offset: 2;
+            };
+            readonly selectedBackground: Readonly<{
+                source: "theme";
+                key: "primary";
+                alpha?: number;
+            }>;
+            readonly selectedIndicator: Readonly<{
+                source: "theme";
+                key: "contentBrand";
+                alpha?: number;
+            }>;
+            readonly danger: Readonly<{
+                source: "theme";
+                key: "danger";
+                alpha?: number;
+            }>;
+        };
+        readonly toggle: {
+            readonly size: "sm";
+            readonly icons: {
+                readonly collapsed: "chevronEnd";
+                readonly expanded: "chevronDown";
+            };
+            readonly color: Readonly<{
+                source: "theme";
+                key: "textMuted";
+                alpha?: number;
+            }>;
+            readonly hitTarget: 44;
+        };
+    };
+    readonly uploadItemRecipe: {
+        readonly slots: readonly ["root", "icon", "name", "meta", "progress", "statusText", "cancel", "retry"];
+        readonly defaults: {
+            readonly size: "medium";
+        };
+        readonly row: {
+            readonly minHeight: 68;
+            readonly paddingHorizontal: 16;
+            readonly gap: 12;
+            readonly radius: "md";
+        };
+        readonly name: {
+            readonly color: Readonly<{
+                source: "theme";
+                key: "textBody";
+                alpha?: number;
+            }>;
+            readonly textVariant: "body";
+        };
+        readonly meta: {
+            readonly color: Readonly<{
+                source: "theme";
+                key: "textMuted";
+                alpha?: number;
+            }>;
+            readonly textVariant: "label";
+        };
+        readonly statusTones: {
+            readonly pending: Readonly<{
+                source: "theme";
+                key: "textMuted";
+                alpha?: number;
+            }>;
+            readonly uploading: Readonly<{
+                source: "theme";
+                key: "contentBrand";
+                alpha?: number;
+            }>;
+            readonly success: Readonly<{
+                source: "accent";
+                key: "success";
+                alpha?: number;
+            }>;
+            readonly error: Readonly<{
+                source: "theme";
+                key: "danger";
+                alpha?: number;
+            }>;
+        };
+        readonly progress: {
+            readonly size: "medium";
+            readonly tone: "brand";
+            readonly errorTone: "danger";
+        };
+        readonly action: {
+            readonly minTarget: 44;
+            readonly color: Readonly<{
+                source: "theme";
+                key: "contentBrand";
+                alpha?: number;
+            }>;
+            readonly dangerColor: Readonly<{
+                source: "theme";
+                key: "danger";
+                alpha?: number;
+            }>;
+        };
+        readonly states: {
+            readonly focus: {
+                readonly color: Readonly<{
+                    source: "theme";
+                    key: "contentBrand";
+                    alpha?: number;
+                }>;
+                readonly width: 2;
+                readonly offset: 2;
+            };
+            readonly disabledOpacity: 0.5;
+        };
     };
 };
 export type RecipeName = keyof typeof recipeRegistry;

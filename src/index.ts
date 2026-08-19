@@ -357,10 +357,34 @@ export {
   recipeRegistry,
   type ComponentCatalogEntry,
   type ComponentCategory,
+  type ComponentName,
   type ComponentPlatform,
   type ComponentStatus,
   type RecipeName,
 } from "./catalog.js";
+
+export {
+  antDesignReferenceComponents,
+  antDesignReferenceSystem,
+  getAntDesignReferencesFor,
+  summarizeAntDesignCoverage,
+  type AntDesignCategory,
+  type AntDesignComponentName,
+  type AntDesignReferenceComponent,
+  type ReferenceCoverageSummary,
+  type ReferenceRelationship,
+} from "./component-references.js";
+
+export {
+  componentDefinitions,
+  componentIds,
+  getComponentDefinition,
+  type ComponentDefinition,
+  type ComponentId,
+  type ComponentKind,
+  type ComponentSurface,
+  type ComponentSurfaceStatus,
+} from "./component-definitions.js";
 
 export { semanticColors } from "./semantic-colors.js";
 
@@ -458,6 +482,7 @@ export {
   createShowcaseCoverage,
   createShowcaseManifest,
   getRequiredShowcaseScenarios,
+  getRequiredShowcaseEvidence,
   getRequiredShowcaseSurfaces,
   getShowcaseStoryId,
   showcaseEnvironmentMatrix,
@@ -469,6 +494,7 @@ export {
   type ShowcaseDirection,
   type ShowcaseEnvironment,
   type ShowcaseEvidenceEntry,
+  type ShowcaseEvidenceRequirement,
   type ShowcaseMotionPreference,
   type ShowcaseScenario,
   type ShowcaseScenarioId,
@@ -476,3 +502,44 @@ export {
   type ShowcaseTextScale,
   type ShowcaseTheme,
 } from "./showcase.js";
+
+/*
+  Batch 2 — 계약과 recipe가 준비된 컴포넌트.
+
+  catalog의 status는 여전히 `planned`다. 로드맵의 maturity gate가 `planned → beta` 승격에
+  **실제 제품 vertical slice 한 번**을 요구하므로, 계약이 준비된 것과 검증된 것을 섞지
+  않는다. 여기 있는 심볼은 제품이 renderer를 붙일 수 있다는 뜻이고, 붙여서 검증되면
+  그때 리드가 catalog를 올린다.
+*/
+export * from "./breadcrumb.js";
+export * from "./calendar.js";
+export * from "./carousel.js";
+export * from "./command-palette.js";
+export * from "./design-system-provider.js";
+export * from "./floating-action-button.js";
+export * from "./content-state.js";
+export * from "./data-table.js";
+export * from "./mentions.js";
+export * from "./transfer-list.js";
+export * from "./tour.js";
+export * from "./layout.js";
+export * from "./otp-field.js";
+export * from "./password-field.js";
+export * from "./splitter.js";
+export * from "./tree-select.js";
+export * from "./date-picker.js";
+export * from "./side-panel.js";
+export * from "./file-picker.js";
+export * from "./pagination.js";
+export * from "./popover.js";
+export * from "./upload-item.js";
+export * from "./timeline.js";
+export * from "./tree.js";
+export * from "./steps.js";
+export * from "./number-field.js";
+export * from "./slider.js";
+export * from "./form.js";
+export * from "./tag.js";
+export * from "./description-list.js";
+export * from "./result.js";
+export * from "./image.js";

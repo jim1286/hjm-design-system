@@ -3,6 +3,32 @@ import { loadMoreBehaviorDefaults } from "./load-more.js";
 import { toastBehaviorDefaults } from "./toast.js";
 import { bottomNavigationBehaviorDefaults } from "./bottom-navigation.js";
 import { tooltipBehaviorDefaults } from "./tooltip.js";
+/*
+  Batch 2 저작 모듈의 행동 계약. 각 컴포넌트가 자기 모듈에 spec을 두고 레지스트리는
+  경로만 모은다 — 여러 저작자가 병렬로 이 파일을 고치면 서로의 변경을 덮어쓴다
+  (`docs/authoring-brief.md`).
+*/
+import { breadcrumbBehaviorSpec } from "./breadcrumb.js";
+import { calendarBehavior } from "./calendar.js";
+import { carouselBehavior } from "./carousel.js";
+import { commandPaletteBehaviorScenarios } from "./command-palette.js";
+import { floatingActionButtonBehaviorScenarios } from "./floating-action-button.js";
+import { tourBehaviorScenarios } from "./tour.js";
+import { dataTableBehavior } from "./data-table.js";
+import { layoutBehavior } from "./layout.js";
+import { otpFieldBehavior } from "./otp-field.js";
+import { passwordFieldBehavior } from "./password-field.js";
+import { splitterBehavior } from "./splitter.js";
+import { datePickerBehavior } from "./date-picker.js";
+import { sidePanelBehavior } from "./side-panel.js";
+import { filePickerBehavior } from "./file-picker.js";
+import { paginationBehaviorScenarios } from "./pagination.js";
+import { popoverBehaviorDefaults, popoverBehaviorScenarios } from "./popover.js";
+import { treeBehavior } from "./tree.js";
+import { uploadItemBehavior } from "./upload-item.js";
+import { formBehaviorSpec } from "./form.js";
+import { numberFieldBehavior } from "./number-field.js";
+import { sliderBehavior } from "./slider.js";
 /** Resolves a renderer's required name while rejecting type-valid blank copy. */
 export function resolveControlAccessibleName(label, accessibilityLabel, controlName = "Control") {
     if (label !== undefined && (typeof label !== "string" || !label.trim())) {
@@ -846,5 +872,132 @@ export const behaviorRegistry = {
             "reduced-motion-exit-completes-exactly-once",
         ],
     },
+    breadcrumb: breadcrumbBehaviorSpec,
+    calendar: calendarBehavior,
+    carousel: carouselBehavior,
+    commandPalette: {
+        controlled: [
+            "open",
+            "defaultOpen",
+            "onOpenChange",
+            "inputValue",
+            "defaultInputValue",
+            "onInputValueChange",
+        ],
+        inputs: ["queryValue", "resultQuery", "asyncState", "accessibilityLabel", "searchPlaceholder"],
+        events: ["onActivate", "onActivateAfterDismiss"],
+        stateAxes: { value: ["open"], content: ["idle", "loading", "loadingMore", "empty", "error"] },
+        // 저작자 명세의 dismiss 사유 "activation"은 채택하지 않았다. 같은 뜻의 "action"이
+        // 이미 유니언에 있고(Menu가 onAction으로 쓴다), 공용 어휘에 동의어를 하나 더 두면
+        // 렌더러가 둘을 구별해야 하는지 매번 물어야 한다.
+        web: { roles: ["dialog", "listbox", "option"], keyboard: ["Tab", "Enter", "Escape", "ArrowUp", "ArrowDown"], focus: "trap", dismiss: ["escape", "outside", "action"] },
+        native: { roles: [], states: [], actions: [] },
+        scenarios: [...commandPaletteBehaviorScenarios],
+    },
+    floatingActionButton: {
+        controlled: [],
+        inputs: ["label", "icon", "layoutMode", "scrollSignal", "safeAreaInset"],
+        events: ["onPress"],
+        stateAxes: { interaction: ["idle", "hover", "pressed", "focusVisible"] },
+        web: { roles: ["button"], keyboard: ["Tab", "Enter", "Space"], focus: "native" },
+        native: { roles: ["button"], states: [], actions: ["activate"] },
+        scenarios: [...floatingActionButtonBehaviorScenarios],
+    },
+    // 이 항목은 `transfer-list.ts`에서 import하지 않고 여기에 직접 쓴다. 그 모듈은
+    // 이 파일에서 **값**을(getCheckboxNextState 등) 가져오므로, 여기서 되받으면
+    // 실제 순환이 닫혀 레지스트리가 undefined를 담는다(타입만 가져오는
+    // data-table과 다른 점이다). 두 정의가 어긋나지 않는지는 테스트로 잠근다.
+    transferList: {
+        controlled: ["targetKeys", "defaultTargetKeys", "onTargetKeysChange"],
+        inputs: ["items"],
+        events: ["onMove"],
+        stateAxes: {
+            availability: ["enabled", "disabled"],
+            value: ["empty", "filled", "selected", "mixed"],
+        },
+        web: {
+            roles: ["group", "listbox", "option", "checkbox", "button"],
+            keyboard: ["Tab", "Space", "Enter", "ArrowUp", "ArrowDown", "Home", "End"],
+            focus: "roving",
+        },
+        native: {
+            roles: ["list", "checkbox", "button"],
+            states: ["disabled", "selected", "checked"],
+            actions: ["toggle", "toggleSelectAll", "moveSelection", "moveItem"],
+        },
+        scenarios: [
+            "moving-is-reachable-entirely-by-keyboard-select-with-space-then-activate-the-move-button",
+            "moving-a-single-focused-row-does-not-require-first-opening-multi-select",
+            "focus-after-a-move-lands-on-the-item-that-slid-into-the-removed-rows-position",
+            "focus-after-emptying-a-panel-falls-back-to-its-empty-state-never-lost-to-the-document",
+            "every-move-emits-which-ids-moved-so-the-product-can-announce-a-formatted-sentence",
+            "disabled-items-are-never-selectable-and-never-move",
+            "moved-items-are-cleared-from-the-origin-panels-selection-and-left-unselected-at-the-destination",
+            "select-all-in-a-panel-excludes-disabled-items-from-both-the-denominator-and-the-count",
+            "an-item-with-nothing-selected-in-its-panel-still-supports-direct-single-item-move",
+            "search-and-pagination-inside-a-panel-are-product-composition-not-this-contract",
+        ],
+    },
+    dataTable: dataTableBehavior,
+    tour: {
+        controlled: ["open", "defaultOpen", "onOpenChange", "currentStepId", "defaultCurrentStepId", "onStepChange"],
+        inputs: ["steps", "labels", "anchorId"],
+        events: ["onClose"],
+        stateAxes: { value: ["open", "currentStep"] },
+        // outside 닫힘이 없다. 실수로 워크스루가 끊기지 않게 하려는 고정 규칙이라
+        // 저작자가 policy 객체조차 두지 않았고, 요약에도 그 사실을 그대로 옮긴다.
+        web: { roles: ["dialog"], keyboard: ["Tab", "Enter", "Escape", "ArrowLeft", "ArrowRight"], focus: "trap", dismiss: ["escape", "close-action", "programmatic"] },
+        native: { roles: [], states: [], actions: [] },
+        scenarios: [...tourBehaviorScenarios],
+    },
+    layout: layoutBehavior,
+    otpField: otpFieldBehavior,
+    passwordField: passwordFieldBehavior,
+    splitter: splitterBehavior,
+    datePicker: datePickerBehavior,
+    sidePanel: sidePanelBehavior,
+    filePicker: filePickerBehavior,
+    pagination: {
+        controlled: ["currentPage", "onPageChange"],
+        inputs: ["totalCount", "totalPages", "pageSize", "labels"],
+        configuration: { window: ["siblingCount", "boundaryCount"] },
+        stateAxes: {},
+        web: {
+            roles: ["navigation"],
+            keyboard: ["Tab", "Enter", "Space"],
+            focus: "native",
+        },
+        native: { roles: [], states: [], actions: [] },
+        scenarios: [...paginationBehaviorScenarios],
+    },
+    /*
+      비모달이라 `busy` 축이 없다. Sheet/AlertDialog는 진행 중 dismiss를 막지만 Popover는
+      포커스가 정당하게 밖으로 나갈 수 있어 그 축이 성립하지 않는다 — 대신 나가는 것
+      자체가 dismiss 신호이므로 `outside-focus`를 별도 reason으로 둔다.
+    */
+    popover: {
+        controlled: ["open", "defaultOpen", "onOpenChange"],
+        defaults: popoverBehaviorDefaults,
+        stateAxes: { value: ["open"] },
+        /*
+          `trap`이 아니라 `restore`다 — Dialog·Sheet·AlertDialog는 모달이라 포커스를 가두지만
+          Popover는 비모달이라 Tab이 **정당하게 밖으로 나갈 수 있다.** 그래서 가두지 않고,
+          닫힐 때 트리거로 돌려보낸다. 같은 자리에 있는 것은 Menu다(역시 `restore`).
+          나가는 것 자체가 dismiss 신호이므로 `outside-focus`를 별도 reason으로 둔다.
+        */
+        web: {
+            roles: ["dialog"],
+            keyboard: ["Tab", "Escape"],
+            focus: "restore",
+            dismiss: ["escape", "outside"],
+        },
+        native: { roles: [], states: [], actions: [] },
+        scenarios: [...popoverBehaviorScenarios],
+    },
+    tree: treeBehavior,
+    uploadItem: uploadItemBehavior,
+    form: formBehaviorSpec,
+    numberField: numberFieldBehavior,
+    slider: sliderBehavior,
 };
 //# sourceMappingURL=behaviors.js.map

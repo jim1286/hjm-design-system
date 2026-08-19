@@ -19,6 +19,8 @@ Link의 실제 목적지·Web anchor·Native router 경계는
 [`docs/link.md`](./docs/link.md)에 고정되어 있습니다.
 공통 계약을 Web과 Native에서 검증하는 showcase 규칙과 실행 방법은
 [`docs/showcase.md`](./docs/showcase.md)에 정리되어 있습니다.
+Ant Design 6.6.0 core 73개를 HJM의 canonical component scope로 번역한 crosswalk는
+[`docs/ant-design-coverage.md`](./docs/ant-design-coverage.md)에 정리되어 있습니다.
 
 ## Showcase
 
@@ -29,7 +31,7 @@ pnpm showcase:web:check # story 계약과 타입 검사
 pnpm showcase:web:build # 배포 가능한 정적 Storybook
 ```
 
-Web Storybook은 foundation·catalog·환경 매트릭스를 보여주고, 실제 React Native
+Web Storybook은 탐색 가능한 component home, foundation·catalog·환경 매트릭스를 보여주고, 실제 React Native
 renderer는 소비 앱의 on-device Storybook에서 같은 story identifier로 검증합니다.
 light/dark, LTR/RTL, 100–200% 글자 크기, reduced motion이 공통 필수 환경입니다.
 
@@ -41,7 +43,7 @@ light/dark, LTR/RTL, 100–200% 글자 크기, reduced motion이 공통 필수 �
 - spacing, radius, typography, glyph, motion, touch target, shadow, layout, layer
 - semantic color reference와 플랫폼 독립 resolver
 - button, surface, field 및 확장 컴포넌트의 typed recipe
-- shared/adaptive/web/native 범위와 stable/beta/planned 상태를 담은 component catalog
+- shared/adaptive/web/native 범위와 stable/beta/planned/deprecated 상태를 담은 component catalog
 - 브랜드 그라디언트와 접근성 계약 테스트
 
 각 소비 앱이 소유하는 것:
@@ -130,11 +132,10 @@ const successText = resolveColorReference(
 
 릴리즈 태그가 생성된 뒤 소비 저장소에서는 정확한 태그를 고정합니다.
 
-현재 배포된 기준은 `v0.1.0`이며, 이 작업 트리의 확장 계약은 `v0.2.0` 후보입니다.
-소비 앱은 `v0.2.0` 태그와 `dist/`가 원격에 올라가기 전까지 기존 태그를 유지합니다.
+현재 배포된 기준은 `v0.3.0`입니다.
 
 ```bash
-pnpm add '@hjm/design-system@git+https://github.com/jim1286/hjm-design-system.git#v0.1.0'
+pnpm add '@hjm/design-system@git+https://github.com/jim1286/hjm-design-system.git#v0.3.0'
 ```
 
 태그에는 `dist/` 빌드 결과를 함께 포함해야 합니다. 브랜치나 커밋되지 않은 로컬 경로에

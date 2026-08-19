@@ -688,6 +688,472 @@ export declare const behaviorRegistry: {
         };
         readonly scenarios: readonly ["plain-localized-copy-never-contains-interaction", "keyboard-focus-opens-immediately-and-pointer-respects-delay", "recent-sibling-tooltip-uses-skip-delay", "one-tooltip-is-visible-per-provider", "trigger-content-hover-and-pointer-corridor-keep-open", "escape-dismisses-and-suppresses-reopen-until-input-reset", "blur-or-pointer-leave-closes-only-after-all-active-inputs-end", "trigger-activation-closes-without-cancelling-trigger-action", "trigger-keeps-focus-and-tooltip-has-no-tab-stop", "existing-aria-describedby-is-preserved", "touch-pointer-hover-is-ignored", "controlled-close-rejection-never-exposes-two-tooltips", "timer-and-global-listener-cleanup-on-unmount", "reduced-motion-exit-completes-exactly-once"];
     };
+    readonly breadcrumb: {
+        readonly controlled: readonly [];
+        readonly inputs: readonly ["items"];
+        readonly stateAxes: {};
+        readonly web: {
+            readonly roles: readonly ["navigation", "list", "listitem", "link"];
+            readonly keyboard: readonly ["Tab", "Enter"];
+            readonly focus: "native";
+        };
+        readonly native: {
+            readonly roles: readonly [];
+            readonly states: readonly [];
+            readonly actions: readonly [];
+        };
+        readonly scenarios: readonly ["only-the-last-item-is-current-and-has-no-destination", "every-ancestor-item-reuses-the-link-destination-contract", "current-item-is-marked-aria-current-page-and-is-not-a-tab-stop", "separators-are-decorative-and-excluded-from-the-accessibility-tree", "duplicate-or-empty-item-identity-is-rejected-before-render", "no-automatic-truncation-collapses-items"];
+    };
+    readonly calendar: {
+        readonly controlled: readonly ["selectedDate", "defaultSelectedDate", "onSelectionChange", "focusedMonth", "defaultFocusedMonth", "onFocusedMonthChange"];
+        readonly inputs: readonly ["grid", "monthLabel"];
+        readonly stateAxes: {
+            readonly availability: readonly ["enabled", "disabled"];
+            readonly value: readonly ["selected"];
+        };
+        readonly web: {
+            readonly roles: readonly ["grid", "row", "gridcell", "button"];
+            readonly keyboard: readonly ["Tab", "Enter", "Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Home", "End"];
+            readonly focus: "roving";
+        };
+        readonly native: {
+            readonly roles: readonly ["button"];
+            readonly states: readonly ["disabled", "selected"];
+            readonly actions: readonly ["activate"];
+        };
+        readonly scenarios: readonly ["today-and-selected-are-independent-and-both-non-color-marked", "disabled-dates-remain-focusable-but-never-activate", "arrow-keys-move-by-day-and-week-inside-the-visible-month-page", "home-and-end-move-to-the-first-and-last-dated-cell-of-the-focused-row", "moving-past-the-visible-grid-edge-requests-a-month-change-instead-of-wrapping", "filler-cells-carry-no-accessible-name-and-are-hidden-from-assistive-tech", "every-dated-cell-accessible-name-is-composed-by-the-product", "changing-the-focused-month-never-changes-or-clears-the-selection", "range-selection-is-not-part-of-the-contract"];
+    };
+    readonly carousel: {
+        readonly controlled: readonly ["currentKey", "defaultCurrentKey", "onCurrentKeyChange"];
+        readonly inputs: readonly ["autoplay", "reducedMotion", "dragged"];
+        readonly defaults: {
+            readonly autoplay: false;
+        };
+        readonly stateAxes: {
+            readonly interaction: readonly ["idle", "dragged"];
+            readonly value: readonly ["selected"];
+        };
+        readonly web: {
+            readonly roles: readonly ["region", "group"];
+            readonly keyboard: readonly ["Tab", "Enter", "Space", "ArrowLeft", "ArrowRight"];
+            readonly focus: "roving";
+        };
+        readonly native: {
+            readonly roles: readonly ["adjustable"];
+            readonly states: readonly ["selected"];
+            readonly actions: readonly ["increment", "decrement"];
+        };
+        readonly scenarios: readonly ["current-position-is-announced-with-a-readable-name-not-dots-alone", "inactive-slide-content-is-excluded-from-focus-and-the-accessibility-tree", "previous-next-and-dot-controls-stay-in-tab-order-regardless-of-current-slide", "arrow-keys-move-one-slide-on-web-swipe-moves-one-slide-on-native", "boundary-slides-clamp-instead-of-wrapping-because-loop-is-out-of-scope", "autoplay-is-opt-in-and-off-by-default", "autoplay-never-runs-when-reduced-motion-is-active", "autoplay-pauses-on-hover-focus-or-drag-and-does-not-announce-automatic-transitions"];
+    };
+    readonly commandPalette: {
+        readonly controlled: readonly ["open", "defaultOpen", "onOpenChange", "inputValue", "defaultInputValue", "onInputValueChange"];
+        readonly inputs: readonly ["queryValue", "resultQuery", "asyncState", "accessibilityLabel", "searchPlaceholder"];
+        readonly events: readonly ["onActivate", "onActivateAfterDismiss"];
+        readonly stateAxes: {
+            readonly value: readonly ["open"];
+            readonly content: readonly ["idle", "loading", "loadingMore", "empty", "error"];
+        };
+        readonly web: {
+            readonly roles: readonly ["dialog", "listbox", "option"];
+            readonly keyboard: readonly ["Tab", "Enter", "Escape", "ArrowUp", "ArrowDown"];
+            readonly focus: "trap";
+            readonly dismiss: readonly ["escape", "outside", "action"];
+        };
+        readonly native: {
+            readonly roles: readonly [];
+            readonly states: readonly [];
+            readonly actions: readonly [];
+        };
+        readonly scenarios: readonly ["activating-a-result-always-closes-the-palette-regardless-of-dismiss-policy", "escape-and-outside-close-without-running-any-command", "sections-merge-recents-static-commands-and-search-results-without-a-new-data-model", "keyboard-navigation-and-typeahead-reuse-the-shared-collection-helpers-unchanged", "local-vs-external-filtering-reuses-comboboxcollectionstate-staleness-guard-unchanged", "empty-result-state-is-announced-once-not-per-section", "no-global-shortcut-binding-is-owned-here-the-product-decides-the-trigger-key", "activate-after-dismiss-lets-a-command-open-the-next-overlay-only-once-exit-completes"];
+    };
+    readonly floatingActionButton: {
+        readonly controlled: readonly [];
+        readonly inputs: readonly ["label", "icon", "layoutMode", "scrollSignal", "safeAreaInset"];
+        readonly events: readonly ["onPress"];
+        readonly stateAxes: {
+            readonly interaction: readonly ["idle", "hover", "pressed", "focusVisible"];
+        };
+        readonly web: {
+            readonly roles: readonly ["button"];
+            readonly keyboard: readonly ["Tab", "Enter", "Space"];
+            readonly focus: "native";
+        };
+        readonly native: {
+            readonly roles: readonly ["button"];
+            readonly states: readonly [];
+            readonly actions: readonly ["activate"];
+        };
+        readonly scenarios: readonly ["collapses-on-scroll-away-from-start-without-losing-the-44-unit-target", "expands-on-scroll-toward-start", "idle-scroll-signal-does-not-change-the-current-mode", "accessible-name-is-the-full-label-in-both-layout-modes", "content-clearance-accounts-for-the-safe-area-inset-additively", "root-sits-after-scrollable-content-in-reading-and-tab-order", "reduced-motion-crossfades-icon-and-label-without-a-shape-tween"];
+    };
+    readonly transferList: {
+        readonly controlled: readonly ["targetKeys", "defaultTargetKeys", "onTargetKeysChange"];
+        readonly inputs: readonly ["items"];
+        readonly events: readonly ["onMove"];
+        readonly stateAxes: {
+            readonly availability: readonly ["enabled", "disabled"];
+            readonly value: readonly ["empty", "filled", "selected", "mixed"];
+        };
+        readonly web: {
+            readonly roles: readonly ["group", "listbox", "option", "checkbox", "button"];
+            readonly keyboard: readonly ["Tab", "Space", "Enter", "ArrowUp", "ArrowDown", "Home", "End"];
+            readonly focus: "roving";
+        };
+        readonly native: {
+            readonly roles: readonly ["list", "checkbox", "button"];
+            readonly states: readonly ["disabled", "selected", "checked"];
+            readonly actions: readonly ["toggle", "toggleSelectAll", "moveSelection", "moveItem"];
+        };
+        readonly scenarios: readonly ["moving-is-reachable-entirely-by-keyboard-select-with-space-then-activate-the-move-button", "moving-a-single-focused-row-does-not-require-first-opening-multi-select", "focus-after-a-move-lands-on-the-item-that-slid-into-the-removed-rows-position", "focus-after-emptying-a-panel-falls-back-to-its-empty-state-never-lost-to-the-document", "every-move-emits-which-ids-moved-so-the-product-can-announce-a-formatted-sentence", "disabled-items-are-never-selectable-and-never-move", "moved-items-are-cleared-from-the-origin-panels-selection-and-left-unselected-at-the-destination", "select-all-in-a-panel-excludes-disabled-items-from-both-the-denominator-and-the-count", "an-item-with-nothing-selected-in-its-panel-still-supports-direct-single-item-move", "search-and-pagination-inside-a-panel-are-product-composition-not-this-contract"];
+    };
+    readonly dataTable: {
+        readonly controlled: readonly ["selection"];
+        readonly inputs: readonly ["columns", "rows", "sortState", "asyncState"];
+        readonly events: readonly ["onSortChange"];
+        readonly configuration: {
+            readonly sortCycle: readonly ["two-state", "three-state"];
+        };
+        readonly defaults: {
+            readonly sortCycle: "three-state";
+        };
+        readonly stateAxes: {
+            readonly value: readonly ["selected"];
+            readonly content: readonly ["idle", "loading", "loadingMore", "empty", "error"];
+        };
+        readonly web: {
+            readonly roles: readonly ["table", "row", "columnheader", "cell", "button", "checkbox", "radio"];
+            readonly keyboard: readonly ["Tab", "Enter", "Space"];
+            readonly focus: "native";
+        };
+        readonly native: {
+            readonly roles: readonly [];
+            readonly states: readonly [];
+            readonly actions: readonly [];
+        };
+        readonly scenarios: readonly ["row-selection-reuses-the-shared-collection-selection-model-unchanged", "select-all-reuses-the-shared-tri-state-checkbox-value", "async-state-reuses-the-shared-collection-async-state-unchanged", "sortable-header-is-a-button-inside-the-columnheader-not-the-header-itself", "sort-direction-values-pass-through-to-aria-sort-without-translation", "disabled-rows-are-excluded-from-select-all-accounting", "pagination-or-load-more-is-composed-beneath-the-table-not-owned-by-it", "row-expansion-is-not-owned-here-compose-the-disclosure-group-contract-per-row", "a-data-cell-exposes-at-most-one-focusable-control", "no-roving-tabindex-grid-navigation-is-implied"];
+    };
+    readonly tour: {
+        readonly controlled: readonly ["open", "defaultOpen", "onOpenChange", "currentStepId", "defaultCurrentStepId", "onStepChange"];
+        readonly inputs: readonly ["steps", "labels", "anchorId"];
+        readonly events: readonly ["onClose"];
+        readonly stateAxes: {
+            readonly value: readonly ["open", "currentStep"];
+        };
+        readonly web: {
+            readonly roles: readonly ["dialog"];
+            readonly keyboard: readonly ["Tab", "Enter", "Escape", "ArrowLeft", "ArrowRight"];
+            readonly focus: "trap";
+            readonly dismiss: readonly ["escape", "close-action", "programmatic"];
+        };
+        readonly native: {
+            readonly roles: readonly [];
+            readonly states: readonly [];
+            readonly actions: readonly [];
+        };
+        readonly scenarios: readonly ["focus-moves-to-the-step-card-on-every-step-change-not-the-anchor", "background-is-inert-while-a-tour-is-open", "escape-and-skip-always-exit-regardless-of-step", "outside-pointer-does-not-dismiss", "next-on-the-last-step-closes-with-reason-complete", "previous-on-the-first-step-is-a-no-op", "controlled-owner-programmatic-close-always-wins", "unmount-or-route-change-settles-as-interrupted-exactly-once", "reduced-motion-crossfades-the-card-without-traveling-between-anchors"];
+    };
+    readonly layout: {
+        readonly controlled: readonly [];
+        readonly inputs: readonly ["hasHeader", "hasFooter", "sidebar", "skipLinkLabel"];
+        readonly configuration: {
+            readonly "sidebar.mode": readonly ["persistent", "overlay"];
+            readonly "sidebar.role": readonly ["navigation", "complementary"];
+        };
+        readonly stateAxes: {};
+        readonly web: {
+            readonly roles: readonly ["banner", "navigation", "complementary", "main", "contentinfo"];
+            readonly keyboard: readonly ["Tab"];
+            readonly focus: "native";
+        };
+        readonly native: {
+            readonly roles: readonly [];
+            readonly states: readonly [];
+            readonly actions: readonly [];
+        };
+        readonly scenarios: readonly ["exactly-one-main-landmark-exists-per-layout", "skip-link-is-required-whenever-a-header-or-sidebar-precedes-main", "sidebar-role-navigation-or-complementary-is-chosen-independent-of-persistent-or-overlay-mode", "overlay-sidebar-reuses-sidepanel-open-state-and-dismiss-policy-unchanged", "header-and-footer-content-is-not-owned-here-compose-topbar-and-bottomnavigation", "skip-link-is-visually-hidden-until-keyboard-focus-reaches-it", "native-has-no-landmark-role-equivalent-translation-relies-on-order-and-accessibilityviewismodal"];
+    };
+    readonly otpField: {
+        readonly controlled: readonly ["value", "defaultValue", "onValueChange"];
+        readonly stateAxes: {
+            readonly availability: readonly ["enabled", "disabled", "readOnly", "busy"];
+            readonly value: readonly ["empty", "filled"];
+            readonly validation: readonly ["valid", "invalid"];
+        };
+        readonly web: {
+            readonly roles: readonly ["textbox"];
+            readonly keyboard: readonly ["Tab", "ArrowLeft", "ArrowRight", "Home", "End"];
+            readonly focus: "native";
+        };
+        readonly native: {
+            readonly roles: readonly ["text"];
+            readonly states: readonly ["disabled", "busy"];
+            readonly actions: readonly ["focus", "setText"];
+        };
+        readonly scenarios: readonly ["one-accessible-name-and-value-for-the-whole-field-never-per-slot-announcement", "one-tab-stop-native-text-editing-owns-typing-backspacing-and-paste", "paste-anywhere-in-the-value-is-sanitized-to-digits-and-clamped-to-length", "non-digit-characters-are-stripped-not-rejected-outright", "resolveOtpFieldValue-truncates-typed-or-pasted-overflow-instead-of-throwing", "a-too-long-committed-descriptor-still-throws-as-malformed-state", "alphanumeric-otp-is-out-of-scope-until-a-real-product-need-exists"];
+    };
+    readonly passwordField: {
+        readonly controlled: readonly ["value", "defaultValue", "onValueChange", "revealed", "defaultRevealed", "onRevealedChange"];
+        readonly inputs: readonly ["autofillHint"];
+        readonly stateAxes: {
+            readonly availability: readonly ["enabled", "disabled", "readOnly"];
+            readonly value: readonly ["empty", "filled"];
+            readonly validation: readonly ["valid", "invalid"];
+        };
+        readonly web: {
+            readonly roles: readonly ["textbox", "button"];
+            readonly keyboard: readonly ["Tab", "Enter", "Space"];
+            readonly focus: "native";
+        };
+        readonly native: {
+            readonly roles: readonly ["text", "button"];
+            readonly states: readonly ["disabled"];
+            readonly actions: readonly ["focus", "setText", "toggleReveal"];
+        };
+        readonly scenarios: readonly ["toggle-never-changes-the-controlled-value", "toggle-and-value-are-independent-controlled-axes", "toggle-accessible-name-describes-the-action-not-the-current-state", "toggle-icon-mirrors-the-same-action-not-state-judgment", "toggle-is-its-own-tab-stop-after-the-field-like-searchfields-clear-button", "autofill-hint-is-a-required-product-decision-not-a-renderer-guess", "strength-meter-is-out-of-scope-product-policy"];
+    };
+    readonly splitter: {
+        readonly controlled: readonly ["value", "defaultValue", "onValueChange"];
+        readonly inputs: readonly ["min", "max", "step", "label", "valueText"];
+        readonly stateAxes: {
+            readonly interaction: readonly ["idle", "hover", "focusVisible", "pressed", "dragged"];
+            readonly availability: readonly ["enabled", "disabled"];
+        };
+        readonly web: {
+            readonly roles: readonly ["separator"];
+            readonly keyboard: readonly ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End"];
+            readonly focus: "native";
+        };
+        readonly native: {
+            readonly roles: readonly [];
+            readonly states: readonly [];
+            readonly actions: readonly [];
+        };
+        readonly scenarios: readonly ["separator-role-carries-aria-valuenow-min-max-and-optional-valuetext", "separator-orientation-is-perpendicular-to-the-splitter-axis-not-equal-to-it", "keyboard-arrow-keys-step-like-numberfield-home-and-end-jump-to-the-boundary", "drag-and-keyboard-resize-produce-the-same-snapped-value", "reuses-number-field-range-judgment-instead-of-a-new-numeric-domain", "no-collapse-to-hidden-pane-or-multi-separator-layout-in-this-contract"];
+    };
+    readonly datePicker: {
+        readonly controlled: readonly ["selectedDate", "defaultSelectedDate", "onSelectionChange", "open", "defaultOpen", "onOpenChange"];
+        readonly inputs: readonly ["grid", "displayValue", "focusedMonth", "defaultFocusedMonth"];
+        readonly stateAxes: {
+            readonly availability: readonly ["enabled", "disabled", "readOnly", "busy"];
+            readonly value: readonly ["empty", "selected", "open"];
+            readonly validation: readonly ["valid", "invalid"];
+        };
+        readonly web: {
+            readonly roles: readonly ["button", "dialog", "grid", "row", "gridcell"];
+            readonly keyboard: readonly ["Tab", "Enter", "Space", "Escape", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Home", "End"];
+            readonly focus: "roving";
+            readonly dismiss: readonly ["selection", "escape", "outside", "blur"];
+        };
+        readonly native: {
+            readonly roles: readonly ["button", "dialog"];
+            readonly states: readonly ["disabled", "expanded"];
+            readonly actions: readonly ["activate", "dismiss"];
+            readonly dismiss: readonly ["selection", "back", "outside"];
+        };
+        readonly scenarios: readonly ["visible-label-or-accessibility-label-names-trigger", "trigger-shows-the-product-formatted-display-value-or-placeholder", "popover-and-sheet-content-reuse-the-calendar-grid-contract-unchanged", "activating-an-enabled-date-commits-selection-and-closes", "disabled-dates-remain-focusable-but-never-commit-or-close", "clear-commits-null-and-closes-without-reopening", "escape-closes-without-commit-and-restores-trigger-focus", "outside-press-closes-without-commit", "controlled-owner-may-defer-a-selection-close-request", "changing-the-focused-month-never-changes-or-clears-the-selection", "range-selection-is-not-part-of-the-contract"];
+    };
+    readonly sidePanel: {
+        readonly controlled: readonly ["open", "defaultOpen", "onOpenChange", "dismissPolicy"];
+        readonly defaults: {
+            readonly modal: true;
+            readonly dismissible: true;
+            readonly dismissWhileBusy: false;
+            readonly escapeDismiss: true;
+            readonly outsideDismiss: true;
+        };
+        readonly configuration: {
+            readonly edge: readonly ["start", "end"];
+            readonly modal: readonly ["true", "false"];
+        };
+        readonly stateAxes: {
+            readonly availability: readonly ["enabled", "busy"];
+            readonly value: readonly ["open"];
+        };
+        readonly web: {
+            readonly roles: readonly ["dialog"];
+            readonly keyboard: readonly ["Tab", "Escape"];
+            readonly focus: "trap";
+            readonly dismiss: readonly ["escape", "outside"];
+        };
+        readonly native: {
+            readonly roles: readonly [];
+            readonly states: readonly [];
+            readonly actions: readonly [];
+        };
+        readonly scenarios: readonly ["edge-is-a-logical-start-or-end-direction-never-left-or-right", "modal-panels-trap-focus-and-lock-scroll-non-modal-panels-do-neither", "non-modal-panels-never-expose-outside-dismiss-the-type-forbids-it", "single-dismiss-callback-reports-the-concrete-reason", "busy-blocks-user-dismiss-programmatic-owner-close-is-always-allowed", "escape-dismisses-in-both-modal-and-non-modal-panels", "no-back-or-swipe-dismiss-reason-exists-on-this-web-only-platform", "reduced-motion-still-completes-the-exit-callback-once"];
+    };
+    readonly filePicker: {
+        readonly controlled: readonly [];
+        readonly inputs: readonly ["descriptor", "existingCount"];
+        readonly events: readonly ["onSelect"];
+        readonly configuration: {
+            readonly mode: readonly ["single", "multiple"];
+        };
+        readonly defaults: {
+            readonly mode: "single";
+        };
+        readonly stateAxes: {
+            readonly availability: readonly ["enabled", "disabled"];
+            readonly interaction: readonly ["idle", "hover", "focusVisible", "pressed", "dragged"];
+        };
+        readonly web: {
+            readonly roles: readonly ["button"];
+            readonly keyboard: readonly ["Tab", "Enter", "Space"];
+            readonly focus: "native";
+        };
+        readonly native: {
+            readonly roles: readonly ["button"];
+            readonly states: readonly ["disabled"];
+            readonly actions: readonly ["activate"];
+        };
+        readonly scenarios: readonly ["selecting-files-never-mutates-already-accepted-items", "rejected-files-report-a-reason-without-blocking-the-rest-of-the-batch", "type-and-size-are-judged-at-selection-time-not-upload-time", "count-cap-accounts-for-already-selected-items-across-repeated-picks", "single-mode-behaves-as-an-implicit-one-file-count-cap", "web-dropzone-is-always-paired-with-a-reachable-button-trigger", "native-never-exposes-a-dropzone-trigger", "rejection-is-announced-without-relying-on-color-alone"];
+    };
+    readonly pagination: {
+        readonly controlled: readonly ["currentPage", "onPageChange"];
+        readonly inputs: readonly ["totalCount", "totalPages", "pageSize", "labels"];
+        readonly configuration: {
+            readonly window: readonly ["siblingCount", "boundaryCount"];
+        };
+        readonly stateAxes: {};
+        readonly web: {
+            readonly roles: readonly ["navigation"];
+            readonly keyboard: readonly ["Tab", "Enter", "Space"];
+            readonly focus: "native";
+        };
+        readonly native: {
+            readonly roles: readonly [];
+            readonly states: readonly [];
+            readonly actions: readonly [];
+        };
+        readonly scenarios: readonly ["current-page-marked-and-announced-without-a-composed-live-region-spam", "ellipsis-is-decorative-and-excluded-from-the-accessible-tree", "previous-disabled-on-first-page-next-disabled-on-last-page", "single-page-renders-no-ellipsis-and-no-disabled-dead-buttons", "page-window-never-produces-two-consecutive-ellipses", "nav-landmark-present-with-a-localized-accessible-name"];
+    };
+    readonly popover: {
+        readonly controlled: readonly ["open", "defaultOpen", "onOpenChange"];
+        readonly defaults: {
+            readonly dismissible: true;
+            readonly outsideDismiss: true;
+            readonly escapeDismiss: true;
+            readonly focusOutDismiss: true;
+        };
+        readonly stateAxes: {
+            readonly value: readonly ["open"];
+        };
+        readonly web: {
+            readonly roles: readonly ["dialog"];
+            readonly keyboard: readonly ["Tab", "Escape"];
+            readonly focus: "restore";
+            readonly dismiss: readonly ["escape", "outside"];
+        };
+        readonly native: {
+            readonly roles: readonly [];
+            readonly states: readonly [];
+            readonly actions: readonly [];
+        };
+        readonly scenarios: readonly ["focus-enters-surface-on-open", "escape-closes-and-restores-trigger-focus", "outside-pointer-close-does-not-cancel-the-original-interaction", "tabbing-past-last-focusable-child-closes-without-trapping", "controlled-owner-programmatic-close-always-wins", "close-action-inside-content-closes-exactly-once", "trigger-while-open-does-not-reopen", "one-visible-popover-per-trigger"];
+    };
+    readonly tree: {
+        readonly controlled: readonly ["expandedKeys", "defaultExpandedKeys", "onExpandedKeysChange", "selection", "asyncState"];
+        readonly defaults: {
+            readonly loop: false;
+        };
+        readonly stateAxes: {
+            readonly availability: readonly ["enabled", "disabled"];
+            readonly value: readonly ["selected", "expanded"];
+            readonly content: readonly ["idle", "loading", "loadingMore", "empty", "error"];
+        };
+        readonly web: {
+            readonly roles: readonly ["tree", "treeitem", "group"];
+            readonly keyboard: readonly ["Tab", "Enter", "Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Home", "End", "Typeahead"];
+            readonly focus: "roving";
+        };
+        readonly native: {
+            readonly roles: readonly [];
+            readonly states: readonly [];
+            readonly actions: readonly [];
+        };
+        readonly scenarios: readonly ["depth-and-sibling-position-are-announced-not-only-visual-indent", "arrow-expands-or-moves-to-the-first-child-arrow-collapses-or-moves-to-the-parent-respecting-rtl", "up-down-home-end-move-across-visible-nodes-only-collapsed-subtrees-are-skipped", "typeahead-matches-only-currently-visible-nodes", "disabled-gates-selection-only-expand-and-collapse-remain-available", "empty-children-array-is-rejected-a-node-either-omits-children-or-lists-at-least-one", "one-tab-stop-per-node-the-expand-collapse-glyph-is-decorative-not-a-nested-control", "drag-reorder-is-out-of-scope-until-a-real-product-need-exists"];
+    };
+    readonly uploadItem: {
+        readonly controlled: readonly [];
+        readonly inputs: readonly ["descriptor", "labels"];
+        readonly events: readonly ["onCancel", "onRetry"];
+        readonly stateAxes: {
+            readonly content: readonly ["idle", "loading", "complete", "error"];
+        };
+        readonly web: {
+            readonly roles: readonly ["group", "progressbar", "button"];
+            readonly keyboard: readonly ["Tab", "Enter", "Space"];
+            readonly focus: "native";
+        };
+        readonly native: {
+            readonly roles: readonly ["progressbar", "button"];
+            readonly states: readonly ["busy"];
+            readonly actions: readonly ["cancel", "retry"];
+        };
+        readonly scenarios: readonly ["progress-is-announced-as-a-sentence-not-only-a-filled-bar", "cancel-is-reachable-only-while-uploading", "retry-is-reachable-only-while-error", "pending-and-success-expose-no-destructive-or-retry-action", "indeterminate-progress-falls-back-to-a-static-uploading-label", "reuses-the-shared-progress-recipe-instead-of-a-new-bar", "duplicate-ids-in-a-rendered-list-are-rejected"];
+    };
+    readonly form: {
+        readonly controlled: readonly [];
+        readonly inputs: readonly ["status", "formError", "fieldOrder"];
+        readonly events: readonly ["onSubmit"];
+        readonly defaults: {
+            readonly errorAnnouncementPriority: "high";
+        };
+        readonly stateAxes: {
+            readonly availability: readonly ["enabled", "busy"];
+            readonly content: readonly ["idle", "loading", "error"];
+        };
+        readonly web: {
+            readonly roles: readonly ["alert"];
+            readonly keyboard: readonly ["Tab", "Enter"];
+            readonly focus: "native";
+        };
+        readonly native: {
+            readonly roles: readonly ["alert"];
+            readonly states: readonly ["busy"];
+            readonly actions: readonly ["submit"];
+        };
+        readonly scenarios: readonly ["submitting-blocks-every-concurrent-submit-attempt", "each-submit-attempt-settles-its-result-exactly-once", "failed-submit-returns-to-a-resting-state-that-still-allows-retry", "succeeded-submit-returns-to-idle-and-allows-resubmission", "dispose-during-submit-settles-the-pending-attempt-as-interrupted", "disposed-session-rejects-further-submit-attempts", "form-level-error-never-carries-a-per-field-message", "first-invalid-field-in-render-order-receives-focus-on-submit-failure", "form-level-error-is-announced-when-no-field-target-exists"];
+    };
+    readonly numberField: {
+        readonly controlled: readonly ["value", "defaultValue", "onValueChange"];
+        readonly stateAxes: {
+            readonly availability: readonly ["enabled", "disabled", "readOnly"];
+            readonly value: readonly ["empty", "filled"];
+            readonly validation: readonly ["valid", "invalid"];
+        };
+        readonly web: {
+            readonly roles: readonly ["spinbutton"];
+            readonly keyboard: readonly ["Tab", "ArrowUp", "ArrowDown"];
+            readonly focus: "native";
+        };
+        readonly native: {
+            readonly roles: readonly ["text", "button"];
+            readonly states: readonly ["disabled"];
+            readonly actions: readonly ["focus", "setText", "increment", "decrement"];
+        };
+        readonly scenarios: readonly ["value-and-range-are-independent-controlled-inputs", "stepper-buttons-disable-at-min-and-max", "empty-disables-neither-stepper-direction", "keyboard-arrow-up-down-step-like-the-stepper-buttons", "invalid-is-a-numberfield-only-axis-independent-of-range", "held-repeat-is-not-part-of-the-contract"];
+    };
+    readonly slider: {
+        readonly controlled: readonly ["value", "defaultValue", "onValueChange"];
+        readonly defaults: {
+            readonly pageMultiplier: 10;
+        };
+        readonly stateAxes: {
+            readonly interaction: readonly ["idle", "hover", "focusVisible", "pressed", "dragged"];
+            readonly availability: readonly ["enabled", "disabled"];
+        };
+        readonly web: {
+            readonly roles: readonly ["slider"];
+            readonly keyboard: readonly ["Tab", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End", "PageUp", "PageDown"];
+            readonly focus: "native";
+        };
+        readonly native: {
+            readonly roles: readonly ["adjustable"];
+            readonly states: readonly ["disabled"];
+            readonly actions: readonly ["increment", "decrement"];
+        };
+        readonly scenarios: readonly ["label-then-value-then-range-announcement-order", "arrow-keys-step-by-one-increment", "page-keys-step-by-the-page-multiplier", "home-and-end-jump-to-min-and-max", "value-is-always-present-no-empty-state", "fill-color-is-never-the-only-value-cue", "range-two-handle-selection-is-out-of-scope-until-a-real-product-need-exists"];
+    };
 };
 export type BehaviorName = keyof typeof behaviorRegistry;
 export type CollectionKey = string;

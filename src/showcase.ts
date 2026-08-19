@@ -153,8 +153,14 @@ const visualRequirements = [
 export type ShowcaseComponentEntry = Readonly<{
   storyId: string;
   component: ComponentCatalogEntry;
+  requirements: readonly ShowcaseEvidenceRequirement[];
   requiredScenarios: readonly ShowcaseScenarioId[];
   requiredSurfaces: readonly ShowcaseSurface[];
+}>;
+
+export type ShowcaseEvidenceRequirement = Readonly<{
+  surface: ShowcaseSurface;
+  scenarios: readonly ShowcaseScenarioId[];
 }>;
 
 export type ShowcaseEvidenceEntry = Readonly<{
@@ -166,6 +172,10 @@ export type ShowcaseEvidenceEntry = Readonly<{
 export type ShowcaseCoverageEntry = Readonly<{
   storyId: string;
   component: ComponentCatalogEntry;
+  missingEvidence: readonly Readonly<{
+    surface: ShowcaseSurface;
+    scenario: ShowcaseScenarioId;
+  }>[];
   missingSurfaces: readonly ShowcaseSurface[];
   missingScenarios: readonly ShowcaseScenarioId[];
   complete: boolean;
@@ -183,7 +193,7 @@ export function getShowcaseStoryId(entry: ComponentCatalogEntry): string {
 export function getRequiredShowcaseScenarios(
   entry: ComponentCatalogEntry,
 ): readonly ShowcaseScenarioId[] {
-  if (entry.status === "planned") {
+  if (entry.status === "planned" || entry.status === "deprecated") {
     return plannedRequirements;
   }
 
@@ -200,10 +210,29 @@ export function getRequiredShowcaseScenarios(
 export function getRequiredShowcaseSurfaces(
   entry: ComponentCatalogEntry,
 ): readonly ShowcaseSurface[] {
-  if (entry.status === "planned") return ["contract"];
-  if (entry.platform === "web") return ["contract", "web"];
-  if (entry.platform === "native") return ["contract", "native"];
-  return ["contract", "web", "native"];
+  return getRequiredShowcaseEvidence(entry).map(({ surface }) => surface);
+}
+
+export function getRequiredShowcaseEvidence(
+  entry: ComponentCatalogEntry,
+): readonly ShowcaseEvidenceRequirement[] {
+  if (entry.status === "planned" || entry.status === "deprecated") {
+    return [{ surface: "contract", scenarios: ["contract"] }];
+  }
+
+  const rendererScenarios = getRequiredShowcaseScenarios(entry).filter(
+    (scenario) => scenario !== "contract",
+  );
+  const requirements: ShowcaseEvidenceRequirement[] = [
+    { surface: "contract", scenarios: ["contract"] },
+  ];
+  if (entry.platform !== "native") {
+    requirements.push({ surface: "web", scenarios: rendererScenarios });
+  }
+  if (entry.platform !== "web") {
+    requirements.push({ surface: "native", scenarios: rendererScenarios });
+  }
+  return requirements;
 }
 
 export function createShowcaseManifest(
@@ -212,6 +241,7 @@ export function createShowcaseManifest(
   return entries.map((component) => ({
     storyId: getShowcaseStoryId(component),
     component,
+    requirements: getRequiredShowcaseEvidence(component),
     requiredScenarios: getRequiredShowcaseScenarios(component),
     requiredSurfaces: getRequiredShowcaseSurfaces(component),
   }));
@@ -223,15 +253,24 @@ export function createShowcaseCoverage(
   evidence: readonly ShowcaseEvidenceEntry[],
   manifest: readonly ShowcaseComponentEntry[] = showcaseManifest,
 ): readonly ShowcaseCoverageEntry[] {
-  return manifest.map(({ storyId, component, requiredScenarios, requiredSurfaces }) => {
+  return manifest.map(({ storyId, component, requirements }) => {
     const componentEvidence = evidence.filter((entry) => entry.storyId === storyId);
-    const coveredSurfaces = new Set(componentEvidence.map(({ surface }) => surface));
-    const coveredScenarios = new Set(componentEvidence.flatMap(({ scenarios }) => scenarios));
-    const missingSurfaces = requiredSurfaces.filter((surface) => !coveredSurfaces.has(surface));
-    const missingScenarios = requiredScenarios.filter((scenario) => !coveredScenarios.has(scenario));
+    const missingEvidence = requirements.flatMap(({ surface, scenarios }) =>
+      scenarios
+        .filter(
+          (scenario) =>
+            !componentEvidence.some(
+              (entry) => entry.surface === surface && entry.scenarios.includes(scenario),
+            ),
+        )
+        .map((scenario) => ({ surface, scenario })),
+    );
+    const missingSurfaces = [...new Set(missingEvidence.map(({ surface }) => surface))];
+    const missingScenarios = [...new Set(missingEvidence.map(({ scenario }) => scenario))];
     return {
       storyId,
       component,
+      missingEvidence,
       missingSurfaces,
       missingScenarios,
       complete: missingSurfaces.length === 0 && missingScenarios.length === 0,
@@ -246,8 +285,8 @@ export function assertShowcaseCoverage(
   const missing = createShowcaseCoverage(evidence, manifest).filter(({ complete }) => !complete);
   if (missing.length === 0) return;
   const details = missing
-    .map(({ storyId, missingSurfaces, missingScenarios }) =>
-      `${storyId} (surfaces: ${missingSurfaces.join(", ") || "none"}; scenarios: ${missingScenarios.join(", ") || "none"})`,
+    .map(({ storyId, missingEvidence }) =>
+      `${storyId} (${missingEvidence.map(({ surface, scenario }) => `${surface}/${scenario}`).join(", ") || "none"})`,
     )
     .join("\n");
   throw new Error(`Showcase evidence is incomplete:\n${details}`);
@@ -261,6 +300,6 @@ export function summarizeShowcaseMaturity(
       summary[entry.status] += 1;
       return summary;
     },
-    { stable: 0, beta: 0, planned: 0 },
+    { stable: 0, beta: 0, planned: 0, deprecated: 0 },
   );
 }

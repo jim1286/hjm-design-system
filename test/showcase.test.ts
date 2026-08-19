@@ -5,6 +5,7 @@ import {
   assertShowcaseCoverage,
   createShowcaseCoverage,
   createShowcaseManifest,
+  getRequiredShowcaseEvidence,
   getRequiredShowcaseScenarios,
   getRequiredShowcaseSurfaces,
   showcaseEnvironmentMatrix,
@@ -45,7 +46,9 @@ describe("showcase contract", () => {
 
   it("summarizes every catalog entry exactly once", () => {
     const summary = summarizeShowcaseMaturity();
-    expect(summary.stable + summary.beta + summary.planned).toBe(componentCatalog.length);
+    expect(summary.stable + summary.beta + summary.planned + summary.deprecated).toBe(
+      componentCatalog.length,
+    );
   });
 
   it("requires renderer evidence only on supported surfaces", () => {
@@ -65,6 +68,60 @@ describe("showcase contract", () => {
     expect(getRequiredShowcaseSurfaces(componentCatalog.find(({ name }) => name === "Stack")!)).toEqual([
       "contract",
     ]);
+  });
+
+  it("keeps evidence requirements paired to each renderer surface", () => {
+    const button = componentCatalog.find(({ name }) => name === "Button")!;
+    expect(getRequiredShowcaseEvidence(button)).toEqual([
+      { surface: "contract", scenarios: ["contract"] },
+      {
+        surface: "web",
+        scenarios: [
+          "default",
+          "dark",
+          "long-copy",
+          "large-text",
+          "rtl",
+          "reduced-motion",
+          "accessibility",
+        ],
+      },
+      {
+        surface: "native",
+        scenarios: [
+          "default",
+          "dark",
+          "long-copy",
+          "large-text",
+          "rtl",
+          "reduced-motion",
+          "accessibility",
+        ],
+      },
+    ]);
+  });
+
+  it("does not combine evidence from different surfaces into a false pass", () => {
+    const buttonManifest = createShowcaseManifest().filter(
+      ({ component }) => component.name === "Button",
+    );
+    const storyId = buttonManifest[0]!.storyId;
+    const coverage = createShowcaseCoverage(
+      [
+        { storyId, surface: "contract", scenarios: ["contract"] },
+        { storyId, surface: "web", scenarios: ["default"] },
+        { storyId, surface: "native", scenarios: ["dark"] },
+      ],
+      buttonManifest,
+    )[0]!;
+
+    expect(coverage.complete).toBe(false);
+    expect(coverage.missingEvidence).toEqual(
+      expect.arrayContaining([
+        { surface: "web", scenario: "dark" },
+        { surface: "native", scenario: "default" },
+      ]),
+    );
   });
 
   it("reports missing surfaces and scenarios before accepting evidence", () => {

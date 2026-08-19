@@ -102,8 +102,13 @@ export declare const showcaseScenarios: readonly [{
 export type ShowcaseComponentEntry = Readonly<{
     storyId: string;
     component: ComponentCatalogEntry;
+    requirements: readonly ShowcaseEvidenceRequirement[];
     requiredScenarios: readonly ShowcaseScenarioId[];
     requiredSurfaces: readonly ShowcaseSurface[];
+}>;
+export type ShowcaseEvidenceRequirement = Readonly<{
+    surface: ShowcaseSurface;
+    scenarios: readonly ShowcaseScenarioId[];
 }>;
 export type ShowcaseEvidenceEntry = Readonly<{
     storyId: string;
@@ -113,6 +118,10 @@ export type ShowcaseEvidenceEntry = Readonly<{
 export type ShowcaseCoverageEntry = Readonly<{
     storyId: string;
     component: ComponentCatalogEntry;
+    missingEvidence: readonly Readonly<{
+        surface: ShowcaseSurface;
+        scenario: ShowcaseScenarioId;
+    }>[];
     missingSurfaces: readonly ShowcaseSurface[];
     missingScenarios: readonly ShowcaseScenarioId[];
     complete: boolean;
@@ -120,10 +129,12 @@ export type ShowcaseCoverageEntry = Readonly<{
 export declare function getShowcaseStoryId(entry: ComponentCatalogEntry): string;
 export declare function getRequiredShowcaseScenarios(entry: ComponentCatalogEntry): readonly ShowcaseScenarioId[];
 export declare function getRequiredShowcaseSurfaces(entry: ComponentCatalogEntry): readonly ShowcaseSurface[];
+export declare function getRequiredShowcaseEvidence(entry: ComponentCatalogEntry): readonly ShowcaseEvidenceRequirement[];
 export declare function createShowcaseManifest(entries?: readonly ComponentCatalogEntry[]): readonly ShowcaseComponentEntry[];
 export declare const showcaseManifest: readonly Readonly<{
     storyId: string;
     component: ComponentCatalogEntry;
+    requirements: readonly ShowcaseEvidenceRequirement[];
     requiredScenarios: readonly ShowcaseScenarioId[];
     requiredSurfaces: readonly ShowcaseSurface[];
 }>[];

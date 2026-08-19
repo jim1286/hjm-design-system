@@ -19,6 +19,26 @@ HJM은 외부 라이브러리의 외형이나 public prop 이름을 복사하지
 공식 참고 링크는 `docs/identity.md`의 참고 원칙에 고정합니다. 새 라이브러리를 참고할 때도
 `문제 → 일반화한 계약 → HJM 기본값 → 플랫폼 번역 → 검증 화면`을 기록해야 합니다.
 
+### 「검증 화면」에 후보를 적을 때
+
+**구체적인 화면·컴포넌트 이름은 실제 코드에서 확인한 뒤에만 적습니다.** 확인하지 않았으면
+`아직 없음`이 정확한 값이고, 그것만 적는 것이 정직한 문서입니다.
+
+이 규칙이 필요한 이유는 **게이트가 여기를 못 보기 때문**입니다. `pnpm typecheck && pnpm test`는
+이 저장소 안만 검사합니다. 그래서 "만들지 않는다" 판정은 근거가 저장소 안(다른 모듈의 계약)에
+있어 어긋나면 테스트가 잡지만, 「검증 화면」은 근거가 **저장소 밖**(제품 코드)에 있어 같은
+실수라도 걸리는 그물이 없습니다. 실제로 네 문서가 존재하지 않는 화면을 후보로 적어 두었고,
+승격을 실측하기 전까지 아무도 몰랐습니다(`docs/consistency-audit.md` 3차).
+
+그래서 후보를 적을 때는 **`파일:줄` 형태로 인용합니다.** 인용이 그 자체로 증명은 아니지만,
+적는 사람이 파일을 열게 하고 읽는 사람이 반증할 수 있게 합니다. 인용할 수 없으면 그것은
+후보가 아니라 짐작이고, 짐작은 적지 않습니다.
+
+Ant Design의 현재 전체 범위는 [`ant-design-coverage.md`](./ant-design-coverage.md)와
+`antDesignReferenceComponents`에 6.6.0 core 73개로 고정합니다. 73/73은 scope tracking이며
+renderer 완료를 뜻하지 않습니다. 홈과 Showcase는 fully previewable, partial renderer,
+contract-only 수치를 분리해 표시합니다.
+
 ## 확장 구조
 
 ```text
@@ -147,7 +167,11 @@ tone을 고유 icon mark와 함께 표시합니다. 상세 계약은 `docs/toast
 ### Batch 2 — 입력과 탐색 (beta 적용 중)
 
 - shared: Steps, Statistic, Slider, NumberField, LoadMore
-- adaptive: Select, Combobox, ContextPanel, BottomNavigation
+- adaptive: Select, Combobox, BottomNavigation
+  - `ContextPanel`은 이 목록에서 뺐다. 선택 대상의 상세를 옆에 보여 주는 문제는
+    `Drawer`를 분해할 때 이미 **Web `SidePanel`(+`modal: false`) / Native `Sheet`**로
+    답이 나와 있었다. 로드맵이 컴포넌트 이름을 먼저 적어 두고 문제 정의를 나중으로
+    미루면 이런 중복이 생긴다 — 근거는 `docs/context-panel.md`.
 - web: Pagination, Breadcrumb
 
 Statistic은 제품이 포맷한 문자열을 받아 label/value/hint/trend 위계만 통일합니다. trend 방향과
@@ -190,6 +214,25 @@ committed item snapshot만 공개하고 임의 값 생성이나 option 내부 ac
 `reconcileSelectSelection`은 먼저 공개합니다. item ID는 section 전체에서 유일하고 보이는
 label·typeahead용 textValue·section accessible name은 비어 있을 수 없습니다. Select의 open
 state도 selection state와 별도 controlled/uncontrolled 축으로 유지합니다.
+
+### vertical slice가 없는 계약 — 승격 전 확인할 것
+
+`planned → beta` gate는 **실제 제품 한 vertical slice**를 요구한다. 그런데 계약을 쓰는
+과정에서 **전제가 이미 바뀌어 있던 사례**가 나왔다.
+
+`Calendar`·`DatePicker`를 위임할 때 "야잘알 일정 찾기가 월 달력 격자를 자체 구현 중"이라는
+전제를 줬는데, 저작자가 소스를 직접 확인해 그 전제가 **커밋 `0f4887c`(「일정 탐색기 월
+그리드를 날짜 레일로 교체」)에서 이미 깨졌다**는 것을 찾아냈다. `buildCalendarCells`는
+남아 있지만 렌더되지 않고 월 범위 쿼리의 내부 계산일 뿐이며, 화면은 월 헤더 + 7일
+날짜 레일이다. 앱 전체에 값 하나를 고르는 압축 트리거 UI도 없다.
+
+그래서 두 컴포넌트는 **계약은 있으나 승격할 근거가 없는 상태**다. `Notification`·`Dropdown`
+처럼 "안 만든다"로 판정하지는 않았다 — 그 둘의 근거는 "문제가 이미 다른 컴포넌트로
+완결됐다"였는데, 날짜 격자를 보여 주거나 고르는 문제는 어느 기존 컴포넌트에도 흡수되지
+않는다.
+
+**교훈**: 위임할 때 준 실사용처 전제를 저작자가 **확인하게** 해야 한다. 리드의 기억은
+커밋 하나로 낡는다.
 
 ### Batch 3 — 복합 데이터와 파일
 

@@ -189,11 +189,15 @@ export const selectionGroupRecipe = {
   orientations: {
     vertical: {
       direction: "column",
-      gap: { plain: spacing.xxs, card: spacing.xs },
+      // `grouped` rows sit flush inside one shared card, so the group owns
+      // the only outer radius and the rows share edges instead of floating
+      // apart with their own gap — the same shape as `selectionControlRecipe`'s
+      // `grouped` presentation, which this gap pairs with.
+      gap: { plain: spacing.xxs, card: spacing.xs, grouped: 0 },
     },
     horizontal: {
       direction: "row",
-      gap: { plain: spacing.sm, card: spacing.md },
+      gap: { plain: spacing.sm, card: spacing.md, grouped: 0 },
     },
   },
   label: formSupportContract.label,
@@ -263,6 +267,16 @@ export const iconButtonRecipe = {
 
 export type BadgeTone =
   | "neutral"
+  /**
+   * One step stronger than `neutral`: solid ink plate instead of a muted
+   * label + sunken plate. A product author needed this for a result screen
+   * where win/loss is the fact itself, not a side note, and `neutral` plus
+   * its `outline` variant read as nearly the same grey — the one place the
+   * distinction had to be unmistakable at a glance. Use it where a badge must
+   * outrank `neutral` without borrowing an accent or the brand tint (both of
+   * which already carry other meanings — see the `brand` tone below).
+   */
+  | "strong"
   | "brand"
   | "info"
   | "success"
@@ -280,9 +294,20 @@ export const badgeRecipe = {
       background: semanticColors.surface.sunken,
       border: null,
     },
+    strong: {
+      content: semanticColors.content.inverse,
+      background: semanticColors.content.primary,
+      border: null,
+    },
     brand: {
       content: semanticColors.content.brand,
-      background: semanticColors.surface.brand,
+      // The brand tint now means "selected" everywhere (see
+      // `selectionControlRecipe`/`segmentedControlRecipe`), so a badge that
+      // only labels something — a season, a grade, a question number —
+      // cannot wear it: rows of static badges started reading as a filter
+      // with one option switched on. The plate goes neutral and the brand
+      // stays in the copy.
+      background: semanticColors.surface.sunken,
       border: null,
     },
     info: {
@@ -426,7 +451,7 @@ export type SearchFieldSize = "medium" | "large";
 /** Search is a field specialization with stable affordance and clear targets. */
 export const searchFieldRecipe = {
   slots: ["root", "leading", "input", "trailing", "clear", "spinner"] as const,
-  defaults: { size: "medium" },
+  defaults: { size: "medium", shape: "medium" },
   sizes: {
     medium: {
       minHeight: control.minTouchTarget,
@@ -457,7 +482,20 @@ export const searchFieldRecipe = {
     focus: focusIndicatorContract.color,
     invalid: semanticColors.border.danger,
   },
-  radius: "full",
+  /**
+   * 모양은 **축이다** — 값 하나로 못 박지 않는다.
+   *
+   * 원래 여기는 `radius: "full"` 하나였다. 그런데 `fieldRecipe`는 같은 결정을
+   * `shapes: { medium, large, full }` 축으로 열어 두고 있었고, 그래서 **한 앱 안에서
+   * 평범한 입력과 찾기 입력이 서로 다른 모양이 되는 것을 계약이 막지 못했다.** 실제로
+   * 갈라졌다 — app-rn은 `"md"`로 그리고 있었는데 이 계약은 `"full"`이라고 말하고
+   * 있었고, 어느 쪽이 옳은지 양쪽 문서 어디에도 없었다.
+   *
+   * 찾기 입력이 알약이어야 하는지는 **제품이 정할 일**이고(iOS 관례는 알약, 이 앱은
+   * 사각), 계약이 할 일은 그 선택지를 `fieldRecipe`와 **같은 이름으로** 주는 것이다.
+   * 그러면 두 입력의 모양을 나란히 맞추는 것과 일부러 다르게 하는 것이 둘 다 표현된다.
+   */
+  shapes: { medium: "md", large: "lg", full: "full" },
   borderWidth: stroke.default,
   focusRingWidth: focusIndicatorContract.width,
   focusRingOffset: focusIndicatorContract.offset,
@@ -467,7 +505,7 @@ export const searchFieldRecipe = {
   },
 } as const satisfies {
   slots: readonly ["root", "leading", "input", "trailing", "clear", "spinner"];
-  defaults: { size: SearchFieldSize };
+  defaults: { size: SearchFieldSize; shape: "medium" | "large" | "full" };
   sizes: Record<
     SearchFieldSize,
     {
@@ -484,7 +522,7 @@ export const searchFieldRecipe = {
     "background" | "content" | "placeholder" | "leading" | "clear" | "border" | "focus" | "invalid",
     ColorReference
   >;
-  radius: keyof typeof radius;
+  shapes: Record<"medium" | "large" | "full", keyof typeof radius>;
   borderWidth: number;
   focusRingWidth: number;
   focusRingOffset: number;
@@ -516,7 +554,11 @@ export const chipRecipe = {
     idle: {
       background: semanticColors.surface.default,
       content: semanticColors.content.secondary,
-      border: semanticColors.content.secondary,
+      // A resting chip wears the shared hairline, not a text-strength
+      // outline. Drawing it in `content.secondary` made an unselected chip
+      // read heavier than the selected one beside it, inverting the one
+      // signal that matters in a filter row.
+      border: semanticColors.border.default,
     },
     selected: {
       background: semanticColors.surface.brand,
@@ -974,8 +1016,17 @@ export const segmentedControlRecipe = {
     gap: spacing.xxs,
     idleContent: semanticColors.content.secondary,
     fontWeight: "600",
-    selectedBackground: semanticColors.surface.default,
-    selectedContent: semanticColors.content.primary,
+    // "Selected" is the brand tint, not a plain raised plate — a raised
+    // white segment beside a selected brand-tinted chip spoke two different
+    // visual languages for the same state. `surface.brand` is also the one
+    // *opaque* brand role: a product author who tried a translucent wash of
+    // `primary` here instead (same idea, see
+    // `selectionControlRecipe.states.selectedBackground` below) found it
+    // changed value with whatever sat behind it — #E8EFFB on a white card,
+    // #DCE5F3 on the canvas — so the same "selected" read as three different
+    // colors. Using the opaque tint keeps it one color everywhere.
+    selectedBackground: semanticColors.surface.brand,
+    selectedContent: semanticColors.content.brand,
     /**
      * The ring stays the selection signal so the control keeps a non-text
      * contrast of at least 3:1; a fill-only thumb cannot reach that against a
@@ -1005,12 +1056,30 @@ export const switchRecipe = {
     thumbOff: semanticColors.canvas,
     thumbOffBorder: semanticColors.content.secondary,
     thumbOn: semanticColors.canvas,
+    // A disabled switch still has to report what it is set to, so disabled
+    // state changes hue instead of fading uniformly with `states.disabledOpacity`
+    // — a product author found that a flat opacity made "on" and "off" nearly
+    // identical, turning a saved setting unreadable while its backing request
+    // was in flight. The on track keeps a recognisable (if muted) brand wash,
+    // the off track and both thumbs drop to neutral tones, and every part
+    // keeps a hairline border so the shape stays legible at reduced contrast.
+    trackOffDisabled: semanticColors.border.default,
+    trackOffBorderDisabled: semanticColors.border.default,
+    trackOnDisabled: { ...semanticColors.content.brand, alpha: 0.38 },
+    trackOnBorderDisabled: { ...semanticColors.content.brand, alpha: 0.38 },
+    thumbDisabled: semanticColors.canvas,
+    thumbDisabledBorder: semanticColors.content.decorative,
   },
   states: {
     disabledOpacity: opacity.disabled,
     pressedOpacity: opacity.pressed,
   },
   rowMinHeight: control.minTouchTarget,
+  // A switch with a description is a two-line row like any other list row,
+  // and a product author found that letting content decide the height gave
+  // neighbouring rows different heights — this pins it to the same value as
+  // `listRowRecipe.density.comfortable.twoLineMinHeight`.
+  rowTwoLineMinHeight: 68,
 } as const;
 
 export type SelectionControlKind = "checkbox" | "radio";
@@ -1058,6 +1127,7 @@ export const selectionControlRecipe = {
       borderWidth: 0,
       radius: "md",
       useSizePadding: false,
+      labelColor: null,
     },
     card: {
       background: semanticColors.surface.default,
@@ -1065,6 +1135,23 @@ export const selectionControlRecipe = {
       borderWidth: stroke.default,
       radius: "md",
       useSizePadding: true,
+      labelColor: null,
+    },
+    // A row inside a card shared by the whole group (paired with
+    // `selectionGroupRecipe.orientations.*.gap.grouped`). The item owns its
+    // own padding so the selected fill runs the full width of the group, and
+    // only the first and last rows round — an item-level radius on every row
+    // left a visible white sliver in the group's corners. `labelColor` is
+    // pinned here (rather than left to the row) because a grouped row's
+    // label sits directly on the shared card background, not on its own
+    // plate — the row needs to know the label reads correctly there.
+    grouped: {
+      background: null,
+      border: null,
+      borderWidth: 0,
+      radius: "lg",
+      useSizePadding: true,
+      labelColor: semanticColors.content.primary,
     },
   },
   label: {
@@ -1085,7 +1172,13 @@ export const selectionControlRecipe = {
     checkedBackground: semanticColors.action.brand.background,
     checkedBorder: semanticColors.border.focus,
     indicator: semanticColors.action.brand.content,
-    selectedBackground: semanticColors.interaction.selected,
+    // The brand tint is one opaque role, not a translucent wash. A product
+    // author found that a 10% wash of `primary` (the previous value here)
+    // changed value with whatever sat behind it — #E8EFFB on a white card,
+    // #DCE5F3 on the canvas — so the same "selected" read as three different
+    // colors. `surface.brand` is the one opaque fill (same fix, same reason,
+    // as `segmentedControlRecipe.item.selectedBackground` above).
+    selectedBackground: semanticColors.surface.brand,
     selectedBorder: semanticColors.border.focus,
     hoverBackground: semanticColors.interaction.hover,
     pressedBackground: semanticColors.interaction.pressed,
@@ -1272,7 +1365,20 @@ export type NoticeTone = "info" | "success" | "warning" | "attention" | "danger"
 export const noticeRecipe = {
   slots: ["root", "icon", "content", "title", "description", "action"] as const,
   defaults: { tone: "info" },
-  tones: semanticColors.feedback,
+  tones: {
+    ...semanticColors.feedback,
+    info: {
+      ...semanticColors.feedback.info,
+      // The informational wash landed bluer and darker than the selection
+      // tint itself over canvas, so a banner outranked the control the
+      // reader was supposed to act on. `info` alone goes neutral — its
+      // accent stays in the icon, the title, and the border; `success`/
+      // `warning`/`attention`/`danger` keep the tinted surface because a
+      // product author confirmed those readings didn't have the same
+      // conflict with a selection state.
+      background: semanticColors.surface.sunken,
+    },
+  },
   radius: "md",
   padding: spacing.md,
   gap: spacing.sm,
@@ -1915,9 +2021,29 @@ export const bottomCtaRecipe = {
   paddingTop: spacing.sm,
   paddingBottom: spacing.sm,
   gap: spacing.sm,
-  background: semanticColors.canvas,
+  // A footer painted in the canvas tone left only a 1pt hairline between it
+  // and the content scrolling underneath — a product author found that the
+  // line cut a glyph in half at whatever scroll position the reader stopped
+  // at, reading as a broken card rather than a footer. Layering by surface
+  // (one step up from canvas) instead of by shadow alone is how this
+  // component builds the separation; `shadow` below is reserved for the one
+  // case that still needs it — see its comment.
+  background: semanticColors.surface.default,
   border: semanticColors.border.default,
   borderWidth: stroke.default,
+  // The cut described above is the scroll viewport's edge, not a spacing
+  // problem — content clips mid-glyph, and a hairline between two
+  // similarly-light planes can't carry that on its own. The footer casts
+  // upward instead: the one case where a shadow, rather than a surface step,
+  // is the right tool, because the footer genuinely overlaps the content
+  // beneath it.
+  shadow: {
+    color: "#000000",
+    opacity: 0.08,
+    radius: 8,
+    offsetY: -2,
+    elevation: 8,
+  },
 } as const;
 
 export const sectionRecipe = {

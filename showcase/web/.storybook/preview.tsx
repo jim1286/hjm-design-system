@@ -108,7 +108,7 @@ const preview: Preview = {
     a11y: { test: "error" },
     options: {
       storySort: {
-        order: ["Introduction", "Foundations", "Components", "Patterns", "Accessibility"],
+        order: ["Home", "Foundations", "Components", ["Overview", "Reference Gallery", "Catalog"], "Patterns", "Accessibility"],
       },
     },
   },

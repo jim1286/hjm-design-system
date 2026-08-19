@@ -309,6 +309,7 @@ describe("foundation and recipe contracts", () => {
       "secondary",
       "ghost",
       "danger",
+      "link",
     ]);
     expect(Object.keys(buttonRecipe.sizes)).toEqual(["small", "medium", "large"]);
     for (const size of Object.values(buttonRecipe.sizes)) {
@@ -425,8 +426,8 @@ describe("expanded cross-platform component contracts", () => {
       presentation: "card",
     });
     expect(selectionGroupRecipe.orientations).toEqual({
-      vertical: { direction: "column", gap: { plain: 4, card: 8 } },
-      horizontal: { direction: "row", gap: { plain: 12, card: 16 } },
+      vertical: { direction: "column", gap: { plain: 4, card: 8, grouped: 0 } },
+      horizontal: { direction: "row", gap: { plain: 12, card: 16, grouped: 0 } },
     });
     expect(selectionControlRecipe.defaults).toEqual({
       kind: "checkbox",
@@ -1289,8 +1290,14 @@ describe("expanded cross-platform component contracts", () => {
         statusAccentFills: accentFill,
       };
       const backgrounds = [theme.bg, theme.surface, theme.surfaceAlt];
+      // chipRecipe.states.idle.border is intentionally excluded here: it is
+      // the shared hairline (`semanticColors.border.default`), which equals
+      // `surfaceAlt` by design in both themes (same as `dividerRecipe.color`).
+      // A resting chip's border is a quiet separator, not an interactive
+      // boundary held to the 3:1 non-text contrast bar the way a selected or
+      // focus indicator is — see chipRecipe's own comment for why it moved
+      // off `content.secondary`.
       for (const reference of [
-        chipRecipe.states.idle.border,
         chipRecipe.states.selected.border,
         selectionControlRecipe.states.idleBorder,
         selectionControlRecipe.states.checkedBorder,
@@ -1389,6 +1396,7 @@ describe("expanded cross-platform component contracts", () => {
   it("keeps feedback recipes on generic semantic roles", () => {
     expect(Object.keys(badgeRecipe.tones)).toEqual([
       "neutral",
+      "strong",
       "brand",
       "info",
       "success",

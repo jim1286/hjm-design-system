@@ -1,6 +1,6 @@
 {
   "name": "@hjm/design-system",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Platform-neutral design tokens and component recipes shared by HJM products.",
   "private": true,
   "type": "module",

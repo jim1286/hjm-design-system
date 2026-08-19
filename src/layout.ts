@@ -1,0 +1,158 @@
+import type { ColorReference } from "./color-references.js";
+import type { BehaviorContract } from "./behaviors.js";
+import { focusIndicatorContract } from "./component-contracts.js";
+import { layout as layoutFoundation, spacing } from "./foundations.js";
+import { semanticColors } from "./semantic-colors.js";
+
+/**
+ * `Layout` (alias `AppShell`) does NOT own header or footer chrome — that is
+ * already `TopBar` (native, beta) and `BottomNavigation` (adaptive, beta).
+ * What is left after subtracting those: landmark composition (one `main`,
+ * an optional sidebar, a required skip link whenever repeated navigation
+ * precedes `main`), and a sidebar that is either always-visible chrome or a
+ * dismissible overlay. The overlay case reuses `SidePanel` unchanged — see
+ * docs/layout.md for why this module does not redeclare open/dismiss state.
+ */
+export type LayoutSidebarRole = "navigation" | "complementary";
+export type LayoutSidebarMode = "persistent" | "overlay";
+
+export type LayoutSidebarDescriptor = Readonly<{
+  /** Primary site navigation vs. supplementary content (filters, related items) — independent of `mode`. */
+  role: LayoutSidebarRole;
+  /** `persistent`: always-visible landmark. `overlay`: a `SidePanel` — Layout does not re-contract its open/dismiss lifecycle. */
+  mode: LayoutSidebarMode;
+  label: string;
+}>;
+
+export type LayoutDescriptor = Readonly<{
+  hasHeader?: boolean;
+  hasFooter?: boolean;
+  sidebar?: LayoutSidebarDescriptor;
+  /** Required whenever a header or sidebar precedes `main` (WCAG 2.4.1 bypass blocks). */
+  skipLinkLabel?: string;
+}>;
+
+function assertNonEmpty(value: string, field: string): void {
+  if (typeof value !== "string" || value.trim().length === 0) {
+    throw new TypeError(`Layout ${field} must not be empty`);
+  }
+}
+
+export function validateLayoutDescriptor(descriptor: LayoutDescriptor): void {
+  if (descriptor.sidebar !== undefined) {
+    const { role, mode, label } = descriptor.sidebar;
+    if (role !== "navigation" && role !== "complementary") {
+      throw new TypeError(`Unsupported Layout sidebar role: ${String(role)}`);
+    }
+    if (mode !== "persistent" && mode !== "overlay") {
+      throw new TypeError(`Unsupported Layout sidebar mode: ${String(mode)}`);
+    }
+    assertNonEmpty(label, "sidebar.label");
+  }
+  if (descriptor.skipLinkLabel !== undefined) {
+    assertNonEmpty(descriptor.skipLinkLabel, "skipLinkLabel");
+  }
+  const needsSkipLink = descriptor.hasHeader === true || descriptor.sidebar !== undefined;
+  if (needsSkipLink && descriptor.skipLinkLabel === undefined) {
+    throw new TypeError(
+      "Layout requires skipLinkLabel when a header or sidebar region precedes main",
+    );
+  }
+}
+
+export type LayoutLandmarkRole =
+  | "banner"
+  | "navigation"
+  | "complementary"
+  | "main"
+  | "contentinfo";
+
+/**
+ * Web-only translation: real landmark elements exist there. Native has no
+ * landmark-role equivalent at all (`accessibilityRole` covers headings and
+ * controls, not page regions) — RN renderers instead rely on visual/DOM
+ * order plus `accessibilityViewIsModal` for the overlay sidebar case. That
+ * asymmetry is documented, not papered over with a fake mapping.
+ */
+export function resolveLayoutWebLandmarks(
+  descriptor: LayoutDescriptor,
+): readonly LayoutLandmarkRole[] {
+  validateLayoutDescriptor(descriptor);
+  const roles: LayoutLandmarkRole[] = [];
+  if (descriptor.hasHeader) roles.push("banner");
+  if (descriptor.sidebar) roles.push(descriptor.sidebar.role);
+  roles.push("main");
+  if (descriptor.hasFooter) roles.push("contentinfo");
+  return roles;
+}
+
+/**
+ * Skip link is hidden until it matters — visible only on keyboard focus.
+ * A skip link visible at rest fights identity.md's "조용한 화면 위에 중요한
+ * 순간만 선명하게": for a mouse/touch user it is noise every screen, for a
+ * keyboard user it is the first landmark on the page.
+ */
+export const layoutRecipe = {
+  slots: ["root", "skipLink", "header", "sidebar", "main", "footer"] as const,
+  defaults: {},
+  main: {
+    maxWidth: layoutFoundation.contentMaxWidth,
+    paddingHorizontal: layoutFoundation.pagePadding.regular,
+  },
+  sidebar: {
+    width: 280,
+  },
+  skipLink: {
+    visibility: "focus-only",
+    background: semanticColors.action.brand.background,
+    color: semanticColors.action.brand.content,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+  },
+  states: { focus: focusIndicatorContract },
+} as const satisfies {
+  slots: readonly ["root", "skipLink", "header", "sidebar", "main", "footer"];
+  defaults: Record<string, never>;
+  main: { maxWidth: number; paddingHorizontal: number };
+  sidebar: { width: number };
+  skipLink: {
+    visibility: "focus-only";
+    background: ColorReference;
+    color: ColorReference;
+    paddingHorizontal: number;
+    paddingVertical: number;
+  };
+  states: { focus: typeof focusIndicatorContract };
+};
+
+/**
+ * `controlled: []` on purpose: an overlay sidebar's open/dismiss lifecycle
+ * is a `SidePanel` (`src/side-panel.ts`) composed as-is. Redeclaring
+ * `open`/`defaultOpen`/`onOpenChange`/`dismissPolicy` here would be the same
+ * mistake DataTable avoided with Pagination/LoadMore — two places owning
+ * one piece of state that will drift the first time either one changes.
+ */
+export const layoutBehavior = {
+  controlled: [],
+  inputs: ["hasHeader", "hasFooter", "sidebar", "skipLinkLabel"],
+  configuration: {
+    "sidebar.mode": ["persistent", "overlay"],
+    "sidebar.role": ["navigation", "complementary"],
+  },
+  stateAxes: {},
+  web: {
+    roles: ["banner", "navigation", "complementary", "main", "contentinfo"],
+    keyboard: ["Tab"],
+    focus: "native",
+  },
+  native: { roles: [], states: [], actions: [] },
+  scenarios: [
+    "exactly-one-main-landmark-exists-per-layout",
+    "skip-link-is-required-whenever-a-header-or-sidebar-precedes-main",
+    "sidebar-role-navigation-or-complementary-is-chosen-independent-of-persistent-or-overlay-mode",
+    "overlay-sidebar-reuses-sidepanel-open-state-and-dismiss-policy-unchanged",
+    "header-and-footer-content-is-not-owned-here-compose-topbar-and-bottomnavigation",
+    "skip-link-is-visually-hidden-until-keyboard-focus-reaches-it",
+    "native-has-no-landmark-role-equivalent-translation-relies-on-order-and-accessibilityviewismodal",
+  ],
+} as const satisfies BehaviorContract;

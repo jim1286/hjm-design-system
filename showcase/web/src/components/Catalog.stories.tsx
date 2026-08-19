@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
+import { getAntDesignReferencesFor } from "@hjm/design-system";
 import { showcaseManifest, showcaseScenarios } from "@hjm/design-system/showcase";
 
 const scenarioLabels = new Map(showcaseScenarios.map(({ id, label }) => [id, label]));
@@ -22,21 +23,24 @@ function Catalog() {
                 <th>Category</th>
                 <th>Platform</th>
                 <th>Status</th>
+                <th>Reference coverage</th>
                 <th>Required surfaces</th>
                 <th>Required stories</th>
               </tr>
             </thead>
             <tbody>
-              {showcaseManifest.map(({ storyId, component, requiredScenarios, requiredSurfaces }) => (
-                <tr key={storyId}>
+              {showcaseManifest.map(({ storyId, component, requiredScenarios, requiredSurfaces }) => {
+                const references = getAntDesignReferencesFor(component.name);
+                return <tr key={storyId}>
                   <td><strong>{component.name}</strong><br /><span className="hjm-muted">{storyId}</span></td>
                   <td>{component.category}</td>
                   <td>{component.platform}</td>
                   <td><span className="hjm-pill" data-status={component.status}>{component.status}</span></td>
+                  <td>{references.length > 0 ? references.map(({ name }) => name).join(" · ") : "HJM native scope"}</td>
                   <td>{requiredSurfaces.join(" · ")}</td>
                   <td>{requiredScenarios.map((id) => scenarioLabels.get(id)).join(" · ")}</td>
-                </tr>
-              ))}
+                </tr>;
+              })}
             </tbody>
           </table>
         </div>
