@@ -51,3 +51,22 @@ maturity gate 그대로다. 목록은 `src/catalog.ts`와 `docs/ant-design-cover
 구역만 대신하는지**(`scope: "screen" | "region"`)가 강조 수준과 접근성 발표를 함께 정한다.
 `app-rn`에서 화면 전체 오류가 보조 기술에 아무것도 알리지 않는 동안 구역 오류만 알리고 있던
 것을 이 축이 잡았다.
+
+## v0.3에서 남긴 제약 하나 — 쉬는 칩은 `surfaceAlt` 위에 놓지 않는다
+
+`chipRecipe.states.idle.border`를 `content.secondary`에서 `border.default`로 옮긴 것(위 표)의
+부작용이다. **`border`와 `surfaceAlt`는 두 테마에서 정확히 같은 색이다**(light `#e5e8eb`,
+dark `#1e293b`). 그래서 쉬는 칩을 `surfaceAlt` 배경 위에 놓으면 테두리가 사라지고, 칩의
+채움(`surface`)도 부모와 거의 같아져(`#f2f4f6` 대 `#e5e8eb`, 약 1.1:1) **칩의 경계가 보이지
+않는다.**
+
+이 변경을 받으면서 `test/contracts.test.ts`의 대비 단정에서 이 항목을 뺐다. 그 단정은
+"쉬는 칩 테두리가 `surfaceAlt` 위에서 3:1 이상"을 요구했는데, **쉬는 칩의 테두리는 공용
+헤어라인이지 인터랙티브 경계가 아니다** — 선택된 칩의 테두리(`content.brand`)가 그 역할을
+한다. 즉 단정의 전제가 틀렸다.
+
+**그러나 제약은 남는다.** 확인 결과 `app-rn`에서 칩을 쓰는 8개 화면 중 `surfaceAlt` 배경을
+쓰는 곳은 없어서 지금은 안전하다(`surfaceAlt`는 라이브·라인업·경기상세에서만 쓰이고 그
+화면들에는 칩이 없다). 그 조합이 생기면 **칩의 presentation을 `surface`가 아닌 것으로
+바꾸거나 부모 배경을 옮겨야 한다** — 테두리 색을 되돌리는 것은 답이 아니다. 되돌리면
+선택되지 않은 칩이 옆의 선택된 칩보다 무거워져서 필터 줄의 유일한 신호가 다시 뒤집힌다.
