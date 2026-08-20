@@ -932,15 +932,31 @@ export const bottomNavigationRecipe = {
     colors: {
         idle: semanticColors.content.secondary,
         selectedIcon: semanticColors.content.brand,
-        selectedLabel: semanticColors.content.primary,
-        selectedIndicator: semanticColors.surface.brand,
+        selectedLabel: semanticColors.content.brand,
     },
+    /**
+     * Stable icon/badge layout anchor. Selection never paints this slot as a
+     * pill: the icon and label below own the non-color selected evidence.
+     */
     indicator: {
         minWidth: 40,
         minHeight: 28,
         radius: "full",
-        border: semanticColors.border.focus,
-        borderWidth: stroke.strong,
+        visual: "none",
+        background: null,
+        border: null,
+        borderWidth: 0,
+    },
+    icon: {
+        /**
+         * Adapters apply at least one supported emphasis. Stroke-oriented glyphs
+         * use strokeWidth; renderers without stroke control use scale instead.
+         */
+        selectedEmphasis: {
+            minimumAdaptations: 1,
+            strokeWidth: { idle: stroke.strong, selected: 3 },
+            scale: { idle: 1, selected: 1.06 },
+        },
     },
     label: {
         fontWeight: fontWeight.semibold,
@@ -979,9 +995,13 @@ export const bottomNavigationRecipe = {
         pressedBackground: semanticColors.interaction.pressed,
         focus: focusIndicatorContract,
         disabledOpacity: opacity.disabled,
-        selectedUsesNonColorIndicator: true,
+        selectedNonColorEvidence: {
+            target: "icon-and-label",
+            label: "font-weight",
+            icon: "emphasis",
+        },
         selectedFocusSeparation: {
-            selectedTarget: "indicator",
+            selectedTarget: "icon-and-label",
             focusTarget: "item",
             minimumGap: focusIndicatorContract.offset,
         },

@@ -122,14 +122,14 @@ export function Introduction() {
         <div className="hjm-section-heading">
           <div>
             <p className="hjm-eyebrow">Roadmap clarity</p>
-            <h2 className="hjm-section-title" id="roadmap-title">Planned가 모두 같은 뜻은 아닙니다.</h2>
+            <h2 className="hjm-section-title" id="roadmap-title">다음 성숙도 단계가 모두 같은 뜻은 아닙니다.</h2>
           </div>
           <p className="hjm-muted">결정과 다음 신호를 기계 판독 가능한 데이터로 관리합니다.</p>
         </div>
         <div className="hjm-roadmap-grid">
           <article><strong>{roadmap["contract-ready"]}</strong><span>Contract ready</span><p>recipe·behavior·core logic을 제품 renderer에서 검증할 차례입니다.</p></article>
           <article><strong>{roadmap.composed}</strong><span>Composed</span><p>기존 canonical 컴포넌트 조합으로 문제를 이미 흡수했습니다.</p></article>
-          <article><strong>{roadmap["evidence-needed"]}</strong><span>Evidence needed</span><p>실제 제품 화면이 생길 때 공개 계약을 열 후보입니다.</p></article>
+          <article><strong>{roadmap["evidence-needed"]}</strong><span>Evidence needed</span><p>실제 제품 증거를 더 쌓아 계약을 열거나 stable로 옮길 후보입니다.</p></article>
           <article><strong>{roadmap.prerequisite}</strong><span>Prerequisite</span><p>흡수 대상에 필요한 축을 먼저 추가해야 합니다.</p></article>
           <article><strong>{roadmap.declined}</strong><span>Declined</span><p>정체성 또는 런타임 경계 때문에 의도적으로 만들지 않습니다.</p></article>
         </div>

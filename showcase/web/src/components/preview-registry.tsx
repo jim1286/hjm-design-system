@@ -27,6 +27,10 @@ type CatalogEntry = (typeof componentCatalog)[number];
 type MatureCatalogEntry = Extract<CatalogEntry, { readonly status: "stable" | "beta" }>;
 type WebRendererLiteralEntry = Exclude<MatureCatalogEntry, { readonly platform: "native" }>;
 export type WebRendererComponentName = WebRendererLiteralEntry["name"];
+type RecipeWebRendererComponentName = Exclude<
+  WebRendererComponentName,
+  "DesignSystemProvider"
+>;
 type WebRendererCatalogEntry = ComponentCatalogEntry & Readonly<{
   name: WebRendererComponentName;
   platform: Exclude<ComponentPlatform, "native">;
@@ -40,7 +44,7 @@ type BehaviorBinding = {
   [Name in BehaviorName]: Readonly<{ name: Name; value: (typeof behaviorRegistry)[Name] }>;
 }[BehaviorName];
 
-export type WebRendererDefinition = Readonly<{
+type RecipeWebRendererDefinition = Readonly<{
   component: WebRendererCatalogEntry;
   recipe: RecipeBinding;
   behavior: BehaviorBinding | null;
@@ -51,8 +55,30 @@ export type WebRendererDefinition = Readonly<{
     behavior: BehaviorBinding | null;
   }>;
   resolvePresentation(providerValue: DesignSystemProviderValue): RendererPresentation;
-  render(): ReactNode;
+  render(providerValue: DesignSystemProviderValue): ReactNode;
 }>;
+
+type ProviderWebRendererDefinition = Readonly<{
+  component: WebRendererCatalogEntry & Readonly<{
+    name: "DesignSystemProvider";
+    nonVisualEvidence: "provider-adapter";
+  }>;
+  recipe: null;
+  behavior: null;
+  adapterKind: "provider-value-presentation";
+  evidenceSource: Readonly<{
+    owner: "@hjm/design-system";
+    contract: "resolveDesignSystemProviderValue";
+    recipe: null;
+    behavior: null;
+  }>;
+  resolvePresentation(providerValue: DesignSystemProviderValue): RendererPresentation;
+  render(providerValue: DesignSystemProviderValue): ReactNode;
+}>;
+
+export type WebRendererDefinition =
+  | RecipeWebRendererDefinition
+  | ProviderWebRendererDefinition;
 
 type RendererStyle = CSSProperties &
   Record<`--hjm-evidence-${string}`, string | number>;
@@ -74,10 +100,11 @@ export type RendererPresentation = Readonly<{
   attributes: Readonly<{
     "data-hjm-adapter-kind": WebRendererDefinition["adapterKind"];
     "data-hjm-consumed-paths": string;
-    "data-hjm-evidence-source": RecipeName;
+    "data-hjm-evidence-source": RecipeName | "resolveDesignSystemProviderValue";
     "data-hjm-presentation-signature": string;
   }>;
   consumption: Readonly<{
+    sourcePaths: readonly string[];
     recipePaths: readonly string[];
     resolvedColor: string | null;
     resolvedMetric: number | null;
@@ -109,6 +136,36 @@ function ChoicePreview({ radio = false, group = false }: { radio?: boolean; grou
   return group ? <fieldset className="hjm-choice-group"><legend>선택 그룹</legend>{content}</fieldset> : <div className="hjm-preview-row">{content}</div>;
 }
 
+function ProviderValuePreview({
+  providerValue,
+}: {
+  providerValue: DesignSystemProviderValue;
+}) {
+  const { environment, palette } = providerValue;
+  return (
+    <section
+      aria-label="Resolved DesignSystemProvider value"
+      className="hjm-demo-surface"
+      style={{ backgroundColor: palette.theme.surface, color: palette.theme.text }}
+    >
+      <h3>Resolved environment + palette</h3>
+      <dl className="hjm-config">
+        <div><dt>Theme</dt><dd>{environment.theme}</dd></div>
+        <div><dt>Direction</dt><dd>{environment.direction}</dd></div>
+        <div><dt>Text scale</dt><dd>{environment.textScale}</dd></div>
+        <div><dt>Reduced motion</dt><dd>{String(environment.reducedMotion)}</dd></div>
+      </dl>
+      <div className="hjm-preview-row" aria-label="Resolved status accent palette">
+        {Object.entries(palette.statusAccents).map(([tone, color]) => (
+          <span className="hjm-pill" key={tone} style={{ borderColor: color }}>
+            {tone}: {color}
+          </span>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function OverlayPreview({ kind }: { kind: "Dialog" | "AlertDialog" | "Sheet" | "Tooltip" }) {
   const [open, setOpen] = useState(false);
   if (kind === "Tooltip") {
@@ -135,7 +192,7 @@ function assertNever(value: never): never {
 }
 
 /** Only mature, Web-supported contracts can reach this renderer. */
-function WebPreviewRenderer({ name }: { name: WebRendererComponentName }) {
+function WebPreviewRenderer({ name }: { name: RecipeWebRendererComponentName }) {
   const [selected, setSelected] = useState("첫 번째");
   switch (name) {
     case "Text": return <div className="hjm-type-sample"><h2>제목 텍스트</h2><p>본문 텍스트는 의미와 위계를 보존합니다.</p><small>보조 정보</small></div>;
@@ -260,7 +317,7 @@ function resolveMetricProperty(path: string): RendererMetricProperty {
 
 function resolveRecipePresentation(
   recipe: RecipeBinding,
-  adapterKind: WebRendererDefinition["adapterKind"],
+  adapterKind: RecipeWebRendererDefinition["adapterKind"],
   providerValue: DesignSystemProviderValue,
 ): RendererPresentation {
   const leaves = collectRecipeLeaves(recipe.value);
@@ -344,6 +401,7 @@ function resolveRecipePresentation(
       "data-hjm-presentation-signature": signature,
     },
     consumption: {
+      sourcePaths: recipePaths,
       recipePaths,
       resolvedColor: resolvedColor?.value ?? null,
       resolvedMetric: typeof metric?.value === "number" ? metric.value : null,
@@ -352,11 +410,64 @@ function resolveRecipePresentation(
   };
 }
 
+const providerValueSourcePaths = [
+  "environment.theme",
+  "environment.direction",
+  "environment.textScale",
+  "environment.reducedMotion",
+  "palette.theme.bg",
+  "palette.theme.surface",
+  "palette.theme.text",
+  "palette.statusAccents.info",
+  "palette.statusAccents.success",
+  "palette.statusAccents.warning",
+  "palette.statusAccents.attention",
+] as const;
+
+function resolveProviderValuePresentation(
+  providerValue: DesignSystemProviderValue,
+): RendererPresentation {
+  const { environment, palette } = providerValue;
+  const signature = presentationSignature(JSON.stringify({
+    environment,
+    palette: {
+      background: palette.theme.bg,
+      surface: palette.theme.surface,
+      text: palette.theme.text,
+      statusAccents: palette.statusAccents,
+    },
+  }));
+  return {
+    style: {
+      "--hjm-evidence-color": palette.theme.text,
+      "--hjm-evidence-leaf-count": providerValueSourcePaths.length,
+      "--hjm-evidence-signature": signature,
+      backgroundColor: palette.theme.bg,
+      color: palette.theme.text,
+      direction: environment.direction,
+      fontSize: `calc(var(--hjm-type-body-size) * ${environment.textScale})`,
+    },
+    attributes: {
+      "data-hjm-adapter-kind": "provider-value-presentation",
+      "data-hjm-consumed-paths": providerValueSourcePaths.join(","),
+      "data-hjm-evidence-source": "resolveDesignSystemProviderValue",
+      "data-hjm-presentation-signature": signature,
+    },
+    consumption: {
+      sourcePaths: providerValueSourcePaths,
+      recipePaths: [],
+      resolvedColor: palette.theme.text,
+      resolvedMetric: null,
+      resolvedMetricProperty: null,
+    },
+  };
+}
+
 function createWebRendererDefinition(
-  name: WebRendererComponentName,
+  name: RecipeWebRendererComponentName,
   recipeName: RecipeName,
   behaviorName: BehaviorName | null = null,
-): WebRendererDefinition {
+): RecipeWebRendererDefinition {
   const component = componentCatalog.find((entry) => entry.name === name);
   if (!component || component.status === "planned" || component.platform === "native") {
     throw new Error(`Invalid Web renderer registration: ${name}`);
@@ -388,6 +499,40 @@ function createWebRendererDefinition(
     resolvePresentation: (providerValue) =>
       resolveRecipePresentation(recipe, adapterKind, providerValue),
     render: () => <WebPreviewRenderer name={name} />,
+  };
+}
+
+function createProviderWebRendererDefinition(): ProviderWebRendererDefinition {
+  const component = componentCatalog.find(
+    (entry) => entry.name === "DesignSystemProvider",
+  );
+  if (!component) {
+    throw new Error("DesignSystemProvider is missing from the canonical catalog");
+  }
+  const contract: ComponentCatalogEntry = component;
+  if (
+    contract.status !== "beta" ||
+    contract.platform === "native" ||
+    contract.nonVisualEvidence !== "provider-adapter" ||
+    contract.recipe !== undefined ||
+    contract.behavior !== undefined
+  ) {
+    throw new Error("DesignSystemProvider must bind the nonvisual provider-adapter evidence");
+  }
+  const providerComponent = component as ProviderWebRendererDefinition["component"];
+  return {
+    component: providerComponent,
+    recipe: null,
+    behavior: null,
+    adapterKind: "provider-value-presentation",
+    evidenceSource: {
+      owner: "@hjm/design-system",
+      contract: "resolveDesignSystemProviderValue",
+      recipe: null,
+      behavior: null,
+    },
+    resolvePresentation: resolveProviderValuePresentation,
+    render: (providerValue) => <ProviderValuePreview providerValue={providerValue} />,
   };
 }
 
@@ -442,6 +587,7 @@ export const webRendererRegistry = {
   AlertDialog: createWebRendererDefinition("AlertDialog", "alertDialogRecipe", "alertDialog"),
   Sheet: createWebRendererDefinition("Sheet", "sheetRecipe", "sheet"),
   Tooltip: createWebRendererDefinition("Tooltip", "tooltipRecipe", "tooltip"),
+  DesignSystemProvider: createProviderWebRendererDefinition(),
 } satisfies Readonly<Record<WebRendererComponentName, WebRendererDefinition>>;
 
 export const webRendererComponentNames = Object.keys(
@@ -486,11 +632,11 @@ export function ComponentPreview({ name }: { name: WebRendererComponentName }) {
     <div
       {...presentation.attributes}
       data-hjm-behavior={definition.behavior?.name ?? "none"}
-      data-hjm-recipe={definition.recipe.name}
+      data-hjm-recipe={definition.recipe?.name ?? "none"}
       data-hjm-renderer={name}
       style={presentation.style}
     >
-      {definition.render()}
+      {definition.render(providerValue)}
     </div>
   );
 }

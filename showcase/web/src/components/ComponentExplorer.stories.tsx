@@ -162,7 +162,7 @@ export function ComponentExplorer({ initialCategory = "all" }: ExplorerProps) {
                     <span className="hjm-pill" data-status={entry.status}>{entry.status}</span>
                   </div>
                   <h3>{entry.name}</h3>
-                  <p className="hjm-component-meta">{entry.platform} · {entry.recipe ? "visual recipe" : "scope contract"}{entry.behavior ? ` · ${entry.behavior}` : ""}</p>
+                  <p className="hjm-component-meta">{entry.platform} · {entry.recipe ? "visual recipe" : entry.nonVisualEvidence === "provider-adapter" ? "provider adapter" : "scope contract"}{entry.behavior ? ` · ${entry.behavior}` : ""}</p>
                   {entry.roadmap && <p className="hjm-component-roadmap" data-roadmap={entry.roadmap.state}><strong>{entry.roadmap.state}</strong>{entry.roadmap.summary}</p>}
                   {references.length > 0 && (
                     <div className="hjm-reference-tags" aria-label="Reference system mappings">

@@ -112,15 +112,16 @@ describe("component reference coverage", () => {
     });
   });
 
-  it("explains why every planned row still exists", () => {
+  it("explains every roadmap transition and every planned row", () => {
     const planned: readonly ComponentCatalogEntry[] = componentCatalog.filter(
       ({ status }) => status === "planned",
     );
     for (const entry of planned) {
       expect(entry.roadmap?.summary.trim().length, entry.name).toBeGreaterThan(0);
     }
+    const roadmapEntries = componentCatalog.filter((entry) => "roadmap" in entry);
     expect(Object.values(summarizeComponentRoadmap()).reduce((sum, count) => sum + count, 0)).toBe(
-      planned.length,
+      roadmapEntries.length,
     );
     expect(summarizeComponentRoadmap()).toMatchObject({
       composed: 3,
@@ -173,12 +174,12 @@ describe("component reference coverage", () => {
     expect(summary).toMatchObject({
       total: 73,
       tracked: 73,
-      fullyMature: 36,
+      fullyMature: 37,
       partiallyMature: 3,
-      plannedOnly: 34,
-      fullyPreviewable: 36,
+      plannedOnly: 33,
+      fullyPreviewable: 37,
       partiallyPreviewable: 3,
-      contractOnly: 34,
+      contractOnly: 33,
     });
     expect(
       summary.fullyMature + summary.partiallyMature + summary.plannedOnly,

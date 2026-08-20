@@ -9,6 +9,7 @@ export type ComponentRoadmap = Readonly<{
     /** Canonical components that solve this reference problem together. */
     targets?: readonly string[];
 }>;
+export type ComponentNonVisualEvidence = "provider-adapter";
 export type ComponentCatalogEntry = Readonly<{
     name: string;
     category: ComponentCategory;
@@ -18,7 +19,9 @@ export type ComponentCatalogEntry = Readonly<{
     aliases?: readonly string[];
     recipe?: RecipeName;
     behavior?: BehaviorName;
-    /** Why a planned row still exists and what event moves it forward. */
+    /** Explicit evidence for a mature contract whose value is not a visual recipe. */
+    nonVisualEvidence?: ComponentNonVisualEvidence;
+    /** Why the row exists at its current maturity and what event moves it forward. */
     roadmap?: ComponentRoadmap;
     /**
      * 만들지 않기로 **확정한** 항목의 사유. `status`는 구현 성숙도 축이고 이것은
@@ -775,14 +778,15 @@ export declare const componentCatalog: readonly [{
     readonly status: "planned";
 }, {
     readonly roadmap: {
-        readonly state: "contract-ready";
+        readonly state: "evidence-needed";
         readonly summary: string;
     };
     readonly name: "DesignSystemProvider";
     readonly category: "provider";
     readonly platform: "shared";
-    readonly status: "planned";
+    readonly status: "beta";
     readonly aliases: readonly ["ConfigProvider"];
+    readonly nonVisualEvidence: "provider-adapter";
 }, {
     readonly declinedReason: string;
     readonly roadmap: {
@@ -1290,12 +1294,7 @@ export declare const recipeRegistry: {
             }>;
             readonly selectedLabel: Readonly<{
                 source: "theme";
-                key: "text";
-                alpha?: number;
-            }>;
-            readonly selectedIndicator: Readonly<{
-                source: "theme";
-                key: "surfaceAccent";
+                key: "contentBrand";
                 alpha?: number;
             }>;
         };
@@ -1303,12 +1302,23 @@ export declare const recipeRegistry: {
             readonly minWidth: 40;
             readonly minHeight: 28;
             readonly radius: "full";
-            readonly border: Readonly<{
-                source: "theme";
-                key: "contentBrand";
-                alpha?: number;
-            }>;
-            readonly borderWidth: 2;
+            readonly visual: "none";
+            readonly background: null;
+            readonly border: null;
+            readonly borderWidth: 0;
+        };
+        readonly icon: {
+            readonly selectedEmphasis: {
+                readonly minimumAdaptations: 1;
+                readonly strokeWidth: {
+                    readonly idle: 2;
+                    readonly selected: 3;
+                };
+                readonly scale: {
+                    readonly idle: 1;
+                    readonly selected: 1.06;
+                };
+            };
         };
         readonly label: {
             readonly fontWeight: "600";
@@ -1365,9 +1375,13 @@ export declare const recipeRegistry: {
                 readonly offset: 2;
             };
             readonly disabledOpacity: 0.5;
-            readonly selectedUsesNonColorIndicator: true;
+            readonly selectedNonColorEvidence: {
+                readonly target: "icon-and-label";
+                readonly label: "font-weight";
+                readonly icon: "emphasis";
+            };
             readonly selectedFocusSeparation: {
-                readonly selectedTarget: "indicator";
+                readonly selectedTarget: "icon-and-label";
                 readonly focusTarget: "item";
                 readonly minimumGap: 2;
             };

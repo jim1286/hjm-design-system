@@ -111,9 +111,25 @@ adapter가 자체 병합 로직을 다시 만들 필요가 없다. `parent`에�
   semantic reference는 유지돼도 WCAG 보장은 사라진다. 별도 브랜드 제품 요구와 전체
   대비 fixture가 생길 때 완전한 theme definition 단위로 연다. |
 
-## 검증 화면
+## 제품 adapter 증거
 
-코어 resolver와 Showcase fixture 연결은 계약 검증일 뿐 실제 제품 adapter 증거가 아니다.
-따라서 catalog 상태는 `planned`이고 roadmap은 `contract-ready`다. 실제 제품이 이 값으로
-Web/RN Context를 연결하고 theme/direction/textScale/reducedMotion 수용 테스트를 통과한 뒤
-`beta`로 승격한다.
+Showcase fixture만으로 성숙도를 올리지 않는다. 현재는 다음 실제 제품 경계가
+`resolveDesignSystemProviderValue()`의 `environment + palette`를 Context에 저장하고 renderer에
+내려준다.
+
+| 제품 표면 | 실제 adapter 증거 | 검증 경계 |
+| --- | --- | --- |
+| BurnTok Web | `../BurnTok/apps/web/src/components/ThemeProvider.tsx` | `matchMedia`, root `dir`, 저장된 theme preference를 resolver에 넣고 Context가 `providerValue`, `environment`, `palette`를 공개한다. `palette.theme.bg`는 브라우저 theme color에 실제 적용된다. `ThemeProvider.test.tsx`가 이 경계를 검증한다. |
+| BurnTok RN | `../BurnTok/apps/mobile/src/components/ThemeProvider.tsx` | `useColorScheme`, `I18nManager`, `useWindowDimensions().fontScale`, `AccessibilityInfo`의 신호를 해석하고 `palette.theme`을 Native style renderer의 `colors`로 제공한다. |
+| Yajalal RN | `../yajalal/modules/app-rn/src/lib/theme/provider-adapter.ts`, `ThemeProvider.tsx` | HJM resolver로 환경 우선순위를 해석하고 `validateResolvedDesignSystemEnvironment()`로 검증한 뒤, 기존 제품 팔레트만 검토된 adapter로 바꾼다. `ThemeProvider.test.ts`가 해석된 환경과 팔레트를 검증한다. |
+
+Showcase의 `DesignSystemProvider` Web reference는 이 증거를 대신하는 가상 UI가 아니다.
+동일한 provider value의 theme, direction, textScale, reducedMotion과 해석된 palette를
+직접 표시하는 비시각 adapter presentation이다.
+
+## 현재 성숙도
+
+catalog 상태는 `beta`다. Web과 RN, 두 제품에서 값 해석·Context 전파·palette
+소비 경계가 확인됐으나, 중첩 Provider의 parent 상속과 추가 제품 릴리스 증거는
+아직 부족하다. roadmap은 이 다음 승격 조건을 `evidence-needed`로 기록하며,
+그 증거가 쌓인 뒤 `stable`을 검토한다.

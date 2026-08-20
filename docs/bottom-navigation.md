@@ -90,9 +90,15 @@ status/live role이나 별도 accessibility label을 추가하면 같은 정보�
 ## Visual and layout requirements
 
 - inactive icon/label도 필수 정보이므로 `content.secondary` 이상을 사용합니다.
-- selected 상태는 brand tint pill, 2px `border.focus`, label weight 변화로 보여 색 하나에 의존하지
-  않습니다. selected mark는 indicator 안에, keyboard focus ring은 item 바깥에 그려 동시에
-  보이게 합니다.
+- `indicator` slot은 icon target과 badge의 안정된 layout anchor일 뿐이며 selected pill을 그리지
+  않습니다(`visual: none`, `background`/`border`: `null`). renderer는 이 null paint를 플랫폼의
+  transparent 값으로 번역합니다. selected 상태는 label weight와 icon
+  emphasis를 함께 바꿔 색 하나에 의존하지 않습니다. stroke를 제어할 수 있는 icon adapter는
+  `strokeWidth`, 그렇지 않은 adapter는 `scale` 중 최소 하나를 recipe 값으로 적용합니다.
+- selected icon과 label의 색 intent는 모두 `content.brand`이며 renderer는 각각
+  `colors.selectedIcon`과 `colors.selectedLabel`을 소비합니다.
+- keyboard focus ring은 item 바깥에 그려 selected icon/label evidence와 별개로 동시에 보이게
+  합니다.
 - item target은 최소 44×44입니다. label은 항상 보이고 font scaling을 허용하며 고정 item 높이와
   한 줄 clipping을 사용하지 않습니다. 모든 destination을 동시에 유지해야 하는 persistent chrome의
   visual label은 최대 `1.4×`까지만 커지고, 원문 전체는 item의 접근성 이름으로 유지합니다.
@@ -102,7 +108,8 @@ status/live role이나 별도 accessibility label을 추가하면 같은 정보�
   올려 입력 영역을 가리지 않습니다.
 - RTL에서는 item 순서와 badge의 inline-end anchor가 함께 뒤집힙니다. icon 자체의 mirror 여부는
   semantic Icon contract가 결정합니다.
-- Reduce Motion에서는 transform을 제거해도 selected/focus/route 상태와 press 결과는 같습니다.
+- Reduce Motion에서는 transform을 제거해도 label weight evidence는 유지되며
+  selected/focus/route 상태와 press 결과는 같습니다.
 
 ## Centered primary action
 

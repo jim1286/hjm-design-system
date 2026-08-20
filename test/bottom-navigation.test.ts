@@ -354,40 +354,47 @@ describe("BottomNavigation visual and behavior contracts", () => {
     expect(bottomNavigationRecipe.colors.idle).toEqual(
       semanticColors.content.secondary,
     );
-    expect(bottomNavigationRecipe.states.selectedUsesNonColorIndicator).toBe(true);
-    expect(bottomNavigationRecipe.indicator).toMatchObject({
+    expect(bottomNavigationRecipe.colors.selectedLabel).toEqual(
+      bottomNavigationRecipe.colors.selectedIcon,
+    );
+    expect(bottomNavigationRecipe.colors).not.toHaveProperty(
+      "selectedIndicator",
+    );
+    expect(bottomNavigationRecipe.indicator).toEqual({
       minWidth: 40,
       minHeight: 28,
       radius: "full",
-      border: semanticColors.border.focus,
-      borderWidth: 2,
+      visual: "none",
+      background: null,
+      border: null,
+      borderWidth: 0,
     });
     expect(bottomNavigationRecipe.label.selectedFontWeight).not.toBe(
       bottomNavigationRecipe.label.fontWeight,
     );
+    expect(bottomNavigationRecipe.icon.selectedEmphasis).toEqual({
+      minimumAdaptations: 1,
+      strokeWidth: { idle: 2, selected: 3 },
+      scale: { idle: 1, selected: 1.06 },
+    });
+    expect(
+      bottomNavigationRecipe.icon.selectedEmphasis.strokeWidth.selected,
+    ).not.toBe(
+      bottomNavigationRecipe.icon.selectedEmphasis.strokeWidth.idle,
+    );
+    expect(
+      bottomNavigationRecipe.icon.selectedEmphasis.scale.selected,
+    ).not.toBe(bottomNavigationRecipe.icon.selectedEmphasis.scale.idle);
+    expect(bottomNavigationRecipe.states.selectedNonColorEvidence).toEqual({
+      target: "icon-and-label",
+      label: "font-weight",
+      icon: "emphasis",
+    });
     expect(bottomNavigationRecipe.states.selectedFocusSeparation).toEqual({
-      selectedTarget: "indicator",
+      selectedTarget: "icon-and-label",
       focusTarget: "item",
       minimumGap: 2,
     });
-  });
-
-  it("keeps the selected indicator boundary above 3:1 in light and dark", () => {
-    for (const themeName of ["light", "dark"] as const) {
-      const theme = THEMES[themeName];
-      const palette = {
-        theme,
-        statusAccents: ACCENTS[themeName],
-        statusAccentFills: accentFill,
-      };
-      const border = resolveColorReference(
-        bottomNavigationRecipe.indicator.border,
-        palette,
-      );
-      for (const background of [theme.bg, theme.surface, theme.surfaceAccent]) {
-        expect(contrast(border, background)).toBeGreaterThanOrEqual(3);
-      }
-    }
   });
 
   it("keeps every persistent inactive label readable on navigation surfaces", () => {
@@ -519,7 +526,8 @@ describe("BottomNavigation visual and behavior contracts", () => {
         "native-forwards-tab-long-press",
         "native-ios-may-use-button-plus-selected-when-tab-role-is-not-reliably-supported",
         "badge-subtree-is-hidden-and-item-uses-one-resolved-accessibility-name",
-        "selected-and-focus-indicators-remain-simultaneously-visible",
+        "selected-content-and-focus-indicator-remain-simultaneously-visible",
+        "selected-state-uses-icon-emphasis-and-label-weight-not-color-alone",
         "safe-area-padding-is-additive",
         "two-hundred-percent-text-wraps-without-fixed-item-height",
         "rtl-order-and-badge-anchor-follow-logical-direction",

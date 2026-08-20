@@ -1,6 +1,7 @@
 import { readFileSync, readdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { describe, expect, expectTypeOf, it } from "vitest";
+import type { ComponentCatalogEntry } from "../src/catalog.js";
 import * as designSystem from "../src/index.js";
 import {
   ACCENTS,
@@ -532,8 +533,18 @@ describe("expanded cross-platform component contracts", () => {
     expect(new Set(names).size).toBe(names.length);
 
     for (const component of componentCatalog) {
+      const contract: ComponentCatalogEntry = component;
+      const hasRecipe = contract.recipe !== undefined;
+      const hasNonVisualEvidence = contract.nonVisualEvidence !== undefined;
       if (component.status !== "planned") {
-        expect(component).toHaveProperty("recipe");
+        expect(hasRecipe || hasNonVisualEvidence, component.name).toBe(true);
+      }
+      if (hasNonVisualEvidence) {
+        expect(contract).toMatchObject({
+          category: "provider",
+          nonVisualEvidence: "provider-adapter",
+        });
+        expect(contract.recipe, component.name).toBeUndefined();
       }
       if ("recipe" in component && component.recipe) {
         expect(recipeRegistry).toHaveProperty(component.recipe);

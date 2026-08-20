@@ -273,13 +273,17 @@ describe("canonical direction aliases", () => {
 });
 
 describe("DesignSystemProvider maturity", () => {
-  it("stays contract-ready until real Web and Native adapters provide evidence", () => {
+  it("is beta after real Web and Native adapters consume the provider value", () => {
     expect(
       componentCatalog.find(({ name }) => name === "DesignSystemProvider"),
     ).toMatchObject({
       platform: "shared",
-      status: "planned",
-      roadmap: { state: "contract-ready" },
+      status: "beta",
+      nonVisualEvidence: "provider-adapter",
+      roadmap: {
+        state: "evidence-needed",
+        summary: expect.stringMatching(/두 실제 제품.*Web\/RN.*environment\+palette/),
+      },
     });
   });
 });

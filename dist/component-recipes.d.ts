@@ -2332,25 +2332,39 @@ export declare const bottomNavigationRecipe: {
         }>;
         readonly selectedLabel: Readonly<{
             source: "theme";
-            key: "text";
-            alpha?: number;
-        }>;
-        readonly selectedIndicator: Readonly<{
-            source: "theme";
-            key: "surfaceAccent";
+            key: "contentBrand";
             alpha?: number;
         }>;
     };
+    /**
+     * Stable icon/badge layout anchor. Selection never paints this slot as a
+     * pill: the icon and label below own the non-color selected evidence.
+     */
     readonly indicator: {
         readonly minWidth: 40;
         readonly minHeight: 28;
         readonly radius: "full";
-        readonly border: Readonly<{
-            source: "theme";
-            key: "contentBrand";
-            alpha?: number;
-        }>;
-        readonly borderWidth: 2;
+        readonly visual: "none";
+        readonly background: null;
+        readonly border: null;
+        readonly borderWidth: 0;
+    };
+    readonly icon: {
+        /**
+         * Adapters apply at least one supported emphasis. Stroke-oriented glyphs
+         * use strokeWidth; renderers without stroke control use scale instead.
+         */
+        readonly selectedEmphasis: {
+            readonly minimumAdaptations: 1;
+            readonly strokeWidth: {
+                readonly idle: 2;
+                readonly selected: 3;
+            };
+            readonly scale: {
+                readonly idle: 1;
+                readonly selected: 1.06;
+            };
+        };
     };
     readonly label: {
         readonly fontWeight: "600";
@@ -2407,9 +2421,13 @@ export declare const bottomNavigationRecipe: {
             readonly offset: 2;
         };
         readonly disabledOpacity: 0.5;
-        readonly selectedUsesNonColorIndicator: true;
+        readonly selectedNonColorEvidence: {
+            readonly target: "icon-and-label";
+            readonly label: "font-weight";
+            readonly icon: "emphasis";
+        };
         readonly selectedFocusSeparation: {
-            readonly selectedTarget: "indicator";
+            readonly selectedTarget: "icon-and-label";
             readonly focusTarget: "item";
             readonly minimumGap: 2;
         };

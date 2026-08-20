@@ -127,36 +127,50 @@ describe("web showcase coverage", () => {
     expect(Object.keys(webRendererRegistry).sort()).toEqual(expected);
     expect(summarizeWebShowcaseCoverage()).toEqual({
       canonical: componentCatalog.length,
-      webReferences: 49,
-      contractOnly: 40,
+      webReferences: 50,
+      contractOnly: 39,
       nativeOnly: 2,
     });
   });
 
-  it("renders the canonical 49/40/2 evidence split in Home and Explorer", () => {
+  it("renders the canonical 50/39/2 evidence split in Home and Explorer", () => {
     const homeHtml = renderToStaticMarkup(createElement(Introduction));
-    expect(homeHtml).toContain("<strong>49</strong><span>Web references</span>");
-    expect(homeHtml).toContain("<strong>40</strong><span>contract-only stories</span>");
+    expect(homeHtml).toContain("<strong>50</strong><span>Web references</span>");
+    expect(homeHtml).toContain("<strong>39</strong><span>contract-only stories</span>");
     expect(homeHtml).toContain("<strong>2</strong><span>Native-only stories</span>");
     expect(homeHtml).toContain(componentCategoryExplorerHref("input"));
     expect(homeHtml).not.toContain("args=initialCategory");
 
     const explorerHtml = renderToStaticMarkup(createElement(ComponentExplorer));
-    expect(explorerHtml).toContain("<strong>49</strong> Web references");
-    expect(explorerHtml).toContain("<strong>40</strong> contract-only stories");
+    expect(explorerHtml).toContain("<strong>50</strong> Web references");
+    expect(explorerHtml).toContain("<strong>39</strong> contract-only stories");
     expect(explorerHtml).toContain("<strong>2</strong> Native-only stories");
     expect(explorerHtml.match(/Open Native-only contract/g)).toHaveLength(2);
     expect(explorerHtml).toContain("Open Web reference");
     expect(explorerHtml).toContain("Open contract &amp; decision");
   });
 
-  it("binds the canonical recipe objects and behavior metadata by identity", () => {
+  it("binds recipe evidence or the explicit nonvisual provider adapter", () => {
     for (const definition of Object.values(webRendererRegistry)) {
       const component = definition.component;
+      expect(definition.evidenceSource.owner).toBe("@hjm/design-system");
+      if (definition.adapterKind === "provider-value-presentation") {
+        expect(component).toMatchObject({
+          name: "DesignSystemProvider",
+          nonVisualEvidence: "provider-adapter",
+        });
+        expect(definition.recipe).toBeNull();
+        expect(definition.behavior).toBeNull();
+        expect(definition.evidenceSource).toMatchObject({
+          contract: "resolveDesignSystemProviderValue",
+          recipe: null,
+          behavior: null,
+        });
+        continue;
+      }
       expect(component.recipe).toBeDefined();
       expect(definition.recipe.name).toBe(component.recipe);
       expect(definition.recipe.value).toBe(recipeRegistry[definition.recipe.name]);
-      expect(definition.evidenceSource.owner).toBe("@hjm/design-system");
       expect(definition.evidenceSource.recipe).toBe(definition.recipe);
       if (component.behavior) {
         expect(definition.behavior?.name).toBe(component.behavior);
@@ -181,6 +195,7 @@ describe("web showcase coverage", () => {
     );
 
     for (const [name, definition] of Object.entries(webRendererRegistry)) {
+      if (definition.adapterKind === "provider-value-presentation") continue;
       const presentation = definition.resolvePresentation(light);
       const alternate = definition.resolvePresentation(darkRtl);
       const consumedRecipeValues = presentation.consumption.recipePaths.map((path) =>
@@ -188,6 +203,9 @@ describe("web showcase coverage", () => {
       );
 
       expect(presentation.consumption.recipePaths.length, name).toBeGreaterThan(0);
+      expect(presentation.consumption.sourcePaths, name).toEqual(
+        presentation.consumption.recipePaths,
+      );
       expect(consumedRecipeValues.every((value) => value !== undefined), name).toBe(true);
       expect(presentation.attributes["data-hjm-evidence-source"], name).toBe(
         definition.recipe.name,
@@ -279,6 +297,59 @@ describe("web showcase coverage", () => {
     );
   });
 
+  it("presents the resolved provider environment and palette without a fake recipe", () => {
+    const light = resolveDesignSystemProviderValue(
+      { theme: "light", direction: "ltr", textScale: 1, reducedMotion: false },
+      { systemTheme: "light" },
+    );
+    const darkRtl = resolveDesignSystemProviderValue(
+      { theme: "dark", direction: "rtl", textScale: 1.5, reducedMotion: true },
+      { systemTheme: "dark" },
+    );
+    const definition = webRendererRegistry.DesignSystemProvider;
+    const presentation = definition.resolvePresentation(light);
+    const alternate = definition.resolvePresentation(darkRtl);
+
+    expect(definition.recipe).toBeNull();
+    expect(presentation.consumption.recipePaths).toEqual([]);
+    expect(presentation.consumption.sourcePaths).toEqual(expect.arrayContaining([
+      "environment.theme",
+      "environment.direction",
+      "environment.textScale",
+      "environment.reducedMotion",
+      "palette.theme.bg",
+      "palette.theme.text",
+      "palette.statusAccents.info",
+    ]));
+    expect(presentation.attributes).toMatchObject({
+      "data-hjm-adapter-kind": "provider-value-presentation",
+      "data-hjm-evidence-source": "resolveDesignSystemProviderValue",
+    });
+    expect(presentation.style).toMatchObject({
+      backgroundColor: light.palette.theme.bg,
+      color: light.palette.theme.text,
+      direction: "ltr",
+      fontSize: "calc(var(--hjm-type-body-size) * 1)",
+    });
+    expect(alternate.style).toMatchObject({
+      backgroundColor: darkRtl.palette.theme.bg,
+      color: darkRtl.palette.theme.text,
+      direction: "rtl",
+      fontSize: "calc(var(--hjm-type-body-size) * 1.5)",
+    });
+    expect(
+      presentation.attributes["data-hjm-presentation-signature"],
+    ).not.toBe(alternate.attributes["data-hjm-presentation-signature"]);
+
+    const html = renderWithProvider(
+      createElement(ContractStory, { name: "DesignSystemProvider" }),
+    );
+    expect(html).toContain('data-hjm-recipe="none"');
+    expect(html).toContain("Resolved environment + palette");
+    expect(html).toContain("<dd>light</dd>");
+    expect(html).toContain(`info: ${light.palette.statusAccents.info}`);
+  });
+
   it("marks Native-only mature stories as Web unsupported", () => {
     const nativeOnly = componentCatalog.filter(
       ({ platform, status }) => platform === "native" && isMatureStatus(status),
@@ -305,7 +376,9 @@ describe("web showcase coverage", () => {
       expect(html, name).toContain("data-hjm-adapter-kind=");
       expect(html, name).toContain("data-hjm-consumed-paths=");
       expect(html, name).toContain("--hjm-evidence-signature:");
-      expect(html, name).toContain(`data-hjm-recipe="${definition.recipe.name}"`);
+      expect(html, name).toContain(
+        `data-hjm-recipe="${definition.recipe?.name ?? "none"}"`,
+      );
     }
   });
 
