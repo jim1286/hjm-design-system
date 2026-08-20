@@ -3,7 +3,9 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   antDesignReferenceSystem,
   componentCatalog,
+  designSystemVersion,
   summarizeAntDesignCoverage,
+  summarizeComponentRoadmap,
   summarizeShowcaseMaturity,
   type ComponentCatalogEntry,
   type ComponentCategory,
@@ -82,6 +84,7 @@ function LiveComposition() {
 
 function Introduction() {
   const maturity = summarizeShowcaseMaturity();
+  const roadmap = summarizeComponentRoadmap();
   const referenceCoverage = summarizeAntDesignCoverage();
   const previewable = maturity.stable + maturity.beta;
   const categoryCounts = categoryOrder.map((category) => ({
@@ -96,7 +99,7 @@ function Introduction() {
     <main className="hjm-page hjm-home">
       <header className="hjm-home-hero">
         <div className="hjm-home-copy">
-          <p className="hjm-eyebrow">HJM Design System · v0.2.0</p>
+          <p className="hjm-eyebrow">HJM Design System · v{designSystemVersion}</p>
           <h1 className="hjm-title">조용한 화면 위에<br />중요한 순간만 선명하게.</h1>
           <p className="hjm-lead">
             Web과 Native가 같은 의미를 공유하도록 토큰, visual recipe, behavior contract와
@@ -114,8 +117,25 @@ function Introduction() {
       <section className="hjm-home-stat-strip" aria-label="Design system coverage">
         <article><strong>{catalog.length}</strong><span>canonical scope</span></article>
         <article><strong>{previewable}</strong><span>interactive references</span></article>
-        <article><strong>{maturity.planned}</strong><span>contract-first roadmap</span></article>
+        <article><strong>{roadmap["contract-ready"]}</strong><span>contracts ready to validate</span></article>
         <article><strong>{referenceCoverage.tracked}/{referenceCoverage.total}</strong><span>Ant Design scope tracked</span></article>
+      </section>
+
+      <section className="hjm-section" aria-labelledby="roadmap-title">
+        <div className="hjm-section-heading">
+          <div>
+            <p className="hjm-eyebrow">Roadmap clarity</p>
+            <h2 className="hjm-section-title" id="roadmap-title">Planned가 모두 같은 뜻은 아닙니다.</h2>
+          </div>
+          <p className="hjm-muted">결정과 다음 신호를 기계 판독 가능한 데이터로 관리합니다.</p>
+        </div>
+        <div className="hjm-roadmap-grid">
+          <article><strong>{roadmap["contract-ready"]}</strong><span>Contract ready</span><p>recipe·behavior·core logic을 제품 renderer에서 검증할 차례입니다.</p></article>
+          <article><strong>{roadmap.composed}</strong><span>Composed</span><p>기존 canonical 컴포넌트 조합으로 문제를 이미 흡수했습니다.</p></article>
+          <article><strong>{roadmap["evidence-needed"]}</strong><span>Evidence needed</span><p>실제 제품 화면이 생길 때 공개 계약을 열 후보입니다.</p></article>
+          <article><strong>{roadmap.prerequisite}</strong><span>Prerequisite</span><p>흡수 대상에 필요한 축을 먼저 추가해야 합니다.</p></article>
+          <article><strong>{roadmap.declined}</strong><span>Declined</span><p>정체성 또는 런타임 경계 때문에 의도적으로 만들지 않습니다.</p></article>
+        </div>
       </section>
 
       <section className="hjm-section" aria-labelledby="featured-title">

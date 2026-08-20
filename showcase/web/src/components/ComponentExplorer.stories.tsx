@@ -6,6 +6,7 @@ import {
   antDesignReferenceSystem,
   componentCatalog,
   getAntDesignReferencesFor,
+  summarizeComponentRoadmap,
   type ComponentCatalogEntry,
   type ComponentCategory,
   type ComponentPlatform,
@@ -71,6 +72,8 @@ function ComponentExplorer({ initialCategory = "all" }: ExplorerProps) {
       entries: filtered.filter((entry) => entry.category === currentCategory),
     }))
     .filter(({ entries }) => entries.length > 0);
+  const roadmap = summarizeComponentRoadmap();
+  const validated = catalog.filter(({ status: maturity }) => maturity === "stable" || maturity === "beta").length;
 
   return (
     <main className="hjm-page hjm-explorer">
@@ -83,6 +86,9 @@ function ComponentExplorer({ initialCategory = "all" }: ExplorerProps) {
 
       <section className="hjm-explorer-summary" aria-label="Explorer summary">
         <span><strong>{catalog.length}</strong> HJM components</span>
+        <span><strong>{validated}</strong> validated renderers</span>
+        <span><strong>{roadmap["contract-ready"]}</strong> contracts ready</span>
+        <span><strong>{roadmap.composed}</strong> composed decisions</span>
         <span><strong>{antDesignReferenceComponents.length}</strong> {antDesignReferenceSystem.name} references</span>
         <span><strong>{filtered.length}</strong> visible results</span>
       </section>
@@ -141,7 +147,6 @@ function ComponentExplorer({ initialCategory = "all" }: ExplorerProps) {
           <div className="hjm-component-card-grid">
             {entries.map((entry) => {
               const references = getAntDesignReferencesFor(entry.name);
-              const isPreviewable = entry.status === "stable" || entry.status === "beta";
               return (
                 <article className="hjm-component-card" key={entry.name}>
                   <div className="hjm-component-card-topline">
@@ -150,6 +155,7 @@ function ComponentExplorer({ initialCategory = "all" }: ExplorerProps) {
                   </div>
                   <h3>{entry.name}</h3>
                   <p className="hjm-component-meta">{entry.platform} · {entry.recipe ? "visual recipe" : "scope contract"}{entry.behavior ? ` · ${entry.behavior}` : ""}</p>
+                  {entry.roadmap && <p className="hjm-component-roadmap" data-roadmap={entry.roadmap.state}><strong>{entry.roadmap.state}</strong>{entry.roadmap.summary}</p>}
                   {references.length > 0 && (
                     <div className="hjm-reference-tags" aria-label="Reference system mappings">
                       {references.map((reference) => (
@@ -158,11 +164,7 @@ function ComponentExplorer({ initialCategory = "all" }: ExplorerProps) {
                     </div>
                   )}
                   <div className="hjm-component-card-footer">
-                    {isPreviewable ? (
-                      <a href={componentStoryHref(entry.name)}>Open interactive reference <span aria-hidden>→</span></a>
-                    ) : (
-                      <span>Contract reserved · renderer next</span>
-                    )}
+                    <a href={componentStoryHref(entry.name)}>{entry.status === "planned" ? "Open concept & decision" : "Open interactive reference"} <span aria-hidden>→</span></a>
                   </div>
                 </article>
               );

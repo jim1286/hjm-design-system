@@ -1,4 +1,4 @@
-import { type ComponentCategory, type ComponentName, type ComponentPlatform, type ComponentStatus, type RecipeName } from "./catalog.js";
+import { type ComponentCatalogEntry, type ComponentCategory, type ComponentName, type ComponentPlatform, type ComponentStatus, type RecipeName } from "./catalog.js";
 import type { BehaviorName } from "./behaviors.js";
 export type ComponentKind = "primitive" | "component" | "pattern" | "provider" | "utility";
 export type ComponentSurface = "web" | "native";
@@ -107,6 +107,7 @@ export type ComponentDefinition = Readonly<{
         status: ComponentStatus;
         recipes: readonly RecipeName[];
         behaviors: readonly BehaviorName[];
+        roadmap?: ComponentCatalogEntry["roadmap"];
     }>;
     surfaces: Readonly<{
         parity: ComponentPlatform;

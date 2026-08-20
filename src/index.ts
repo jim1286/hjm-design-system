@@ -355,13 +355,18 @@ export {
 export {
   componentCatalog,
   recipeRegistry,
+  summarizeComponentRoadmap,
   type ComponentCatalogEntry,
   type ComponentCategory,
   type ComponentName,
   type ComponentPlatform,
+  type ComponentRoadmap,
+  type ComponentRoadmapState,
   type ComponentStatus,
   type RecipeName,
 } from "./catalog.js";
+
+export { designSystemVersion } from "./version.js";
 
 export {
   antDesignReferenceComponents,

@@ -130,6 +130,7 @@ export const componentDefinitions = componentCatalog.map((rawEntry) => {
             status: entry.status,
             recipes: entry.recipe ? [entry.recipe] : [],
             behaviors: entry.behavior ? [entry.behavior] : [],
+            roadmap: entry.roadmap,
         },
         surfaces: {
             parity: entry.platform,

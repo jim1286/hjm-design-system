@@ -2,6 +2,13 @@ import type { BehaviorName } from "./behaviors.js";
 export type ComponentCategory = "foundation" | "layout" | "action" | "input" | "navigation" | "data-display" | "feedback" | "overlay" | "provider" | "utility";
 export type ComponentPlatform = "shared" | "adaptive" | "web" | "native";
 export type ComponentStatus = "stable" | "beta" | "planned" | "deprecated";
+export type ComponentRoadmapState = "contract-ready" | "composed" | "evidence-needed" | "prerequisite" | "declined";
+export type ComponentRoadmap = Readonly<{
+    state: ComponentRoadmapState;
+    summary: string;
+    /** Canonical components that solve this reference problem together. */
+    targets?: readonly string[];
+}>;
 export type ComponentCatalogEntry = Readonly<{
     name: string;
     category: ComponentCategory;
@@ -11,6 +18,8 @@ export type ComponentCatalogEntry = Readonly<{
     aliases?: readonly string[];
     recipe?: RecipeName;
     behavior?: BehaviorName;
+    /** Why a planned row still exists and what event moves it forward. */
+    roadmap?: ComponentRoadmap;
     /**
      * 만들지 않기로 **확정한** 항목의 사유. `status`는 구현 성숙도 축이고 이것은
      * "만들 것인가"라는 다른 질문이라 직교 필드로 둔다.
@@ -58,6 +67,10 @@ export declare const componentCatalog: readonly [{
     readonly status: "beta";
     readonly recipe: "sectionRecipe";
 }, {
+    readonly roadmap: {
+        readonly state: "contract-ready";
+        readonly summary: string;
+    };
     readonly name: "Stack";
     readonly category: "layout";
     readonly platform: "shared";
@@ -65,11 +78,19 @@ export declare const componentCatalog: readonly [{
     readonly recipe: "stackRecipe";
     readonly aliases: readonly ["Flex", "Space", "Inline"];
 }, {
+    readonly roadmap: {
+        readonly state: "evidence-needed";
+        readonly summary: string;
+    };
     readonly name: "Grid";
     readonly category: "layout";
     readonly platform: "adaptive";
     readonly status: "planned";
 }, {
+    readonly roadmap: {
+        readonly state: "contract-ready";
+        readonly summary: string;
+    };
     readonly name: "Layout";
     readonly category: "layout";
     readonly platform: "adaptive";
@@ -78,11 +99,19 @@ export declare const componentCatalog: readonly [{
     readonly recipe: "layoutRecipe";
     readonly behavior: "layout";
 }, {
+    readonly roadmap: {
+        readonly state: "evidence-needed";
+        readonly summary: string;
+    };
     readonly name: "Masonry";
     readonly category: "layout";
     readonly platform: "adaptive";
     readonly status: "planned";
 }, {
+    readonly roadmap: {
+        readonly state: "contract-ready";
+        readonly summary: string;
+    };
     readonly name: "Splitter";
     readonly category: "layout";
     readonly platform: "web";
@@ -116,6 +145,10 @@ export declare const componentCatalog: readonly [{
     readonly status: "beta";
     readonly recipe: "bottomCtaRecipe";
 }, {
+    readonly roadmap: {
+        readonly state: "contract-ready";
+        readonly summary: string;
+    };
     readonly name: "FloatingActionButton";
     readonly category: "action";
     readonly platform: "adaptive";
@@ -144,6 +177,10 @@ export declare const componentCatalog: readonly [{
     readonly status: "stable";
     readonly recipe: "fieldRecipe";
 }, {
+    readonly roadmap: {
+        readonly state: "contract-ready";
+        readonly summary: string;
+    };
     readonly name: "PasswordField";
     readonly category: "input";
     readonly platform: "adaptive";
@@ -152,6 +189,10 @@ export declare const componentCatalog: readonly [{
     readonly recipe: "passwordFieldRecipe";
     readonly behavior: "passwordField";
 }, {
+    readonly roadmap: {
+        readonly state: "contract-ready";
+        readonly summary: string;
+    };
     readonly name: "OtpField";
     readonly category: "input";
     readonly platform: "adaptive";
@@ -208,6 +249,10 @@ export declare const componentCatalog: readonly [{
     readonly recipe: "segmentedControlRecipe";
     readonly behavior: "segmentedControl";
 }, {
+    readonly roadmap: {
+        readonly state: "contract-ready";
+        readonly summary: string;
+    };
     readonly name: "Slider";
     readonly category: "input";
     readonly platform: "shared";
@@ -215,6 +260,10 @@ export declare const componentCatalog: readonly [{
     readonly recipe: "sliderRecipe";
     readonly behavior: "slider";
 }, {
+    readonly roadmap: {
+        readonly state: "contract-ready";
+        readonly summary: string;
+    };
     readonly name: "NumberField";
     readonly category: "input";
     readonly platform: "shared";
@@ -236,6 +285,10 @@ export declare const componentCatalog: readonly [{
     readonly recipe: "comboboxRecipe";
     readonly behavior: "combobox";
 }, {
+    readonly roadmap: {
+        readonly state: "contract-ready";
+        readonly summary: string;
+    };
     readonly name: "DatePicker";
     readonly category: "input";
     readonly platform: "adaptive";
@@ -243,16 +296,29 @@ export declare const componentCatalog: readonly [{
     readonly recipe: "datePickerRecipe";
     readonly behavior: "datePicker";
 }, {
+    readonly roadmap: {
+        readonly state: "composed";
+        readonly summary: string;
+        readonly targets: readonly string[];
+    };
     readonly name: "TimePicker";
     readonly category: "input";
     readonly platform: "adaptive";
     readonly status: "planned";
 }, {
+    readonly roadmap: {
+        readonly state: "evidence-needed";
+        readonly summary: string;
+    };
     readonly name: "ColorPicker";
     readonly category: "input";
     readonly platform: "web";
     readonly status: "planned";
 }, {
+    readonly roadmap: {
+        readonly state: "contract-ready";
+        readonly summary: string;
+    };
     readonly name: "FilePicker";
     readonly category: "input";
     readonly platform: "adaptive";
@@ -261,11 +327,20 @@ export declare const componentCatalog: readonly [{
     readonly behavior: "filePicker";
     readonly aliases: readonly ["Upload"];
 }, {
+    readonly roadmap: {
+        readonly state: "prerequisite";
+        readonly summary: string;
+        readonly targets: readonly string[];
+    };
     readonly name: "Cascader";
     readonly category: "input";
     readonly platform: "adaptive";
     readonly status: "planned";
 }, {
+    readonly roadmap: {
+        readonly state: "contract-ready";
+        readonly summary: string;
+    };
     readonly name: "Form";
     readonly category: "input";
     readonly platform: "shared";
@@ -273,6 +348,10 @@ export declare const componentCatalog: readonly [{
     readonly recipe: "formRecipe";
     readonly behavior: "form";
 }, {
+    readonly roadmap: {
+        readonly state: "contract-ready";
+        readonly summary: string;
+    };
     readonly name: "Mentions";
     readonly category: "input";
     readonly platform: "adaptive";
@@ -280,12 +359,21 @@ export declare const componentCatalog: readonly [{
     readonly recipe: "comboboxRecipe";
     readonly behavior: "combobox";
 }, {
+    readonly roadmap: {
+        readonly state: "composed";
+        readonly summary: string;
+        readonly targets: readonly string[];
+    };
     readonly name: "Rating";
     readonly category: "input";
     readonly platform: "shared";
     readonly status: "planned";
     readonly aliases: readonly ["Rate"];
 }, {
+    readonly roadmap: {
+        readonly state: "contract-ready";
+        readonly summary: string;
+    };
     readonly name: "TransferList";
     readonly category: "input";
     readonly platform: "adaptive";
@@ -294,11 +382,19 @@ export declare const componentCatalog: readonly [{
     readonly recipe: "transferListRecipe";
     readonly behavior: "transferList";
 }, {
+    readonly roadmap: {
+        readonly state: "contract-ready";
+        readonly summary: string;
+    };
     readonly name: "TreeSelect";
     readonly category: "input";
     readonly platform: "web";
     readonly status: "planned";
 }, {
+    readonly roadmap: {
+        readonly state: "contract-ready";
+        readonly summary: string;
+    };
     readonly name: "UploadItem";
     readonly category: "data-display";
     readonly platform: "shared";
@@ -326,6 +422,10 @@ export declare const componentCatalog: readonly [{
     readonly recipe: "bottomNavigationRecipe";
     readonly behavior: "bottomNavigation";
 }, {
+    readonly roadmap: {
+        readonly state: "contract-ready";
+        readonly summary: string;
+    };
     readonly name: "Breadcrumb";
     readonly category: "navigation";
     readonly platform: "web";
@@ -333,6 +433,10 @@ export declare const componentCatalog: readonly [{
     readonly recipe: "breadcrumbRecipe";
     readonly behavior: "breadcrumb";
 }, {
+    readonly roadmap: {
+        readonly state: "contract-ready";
+        readonly summary: string;
+    };
     readonly name: "Pagination";
     readonly category: "navigation";
     readonly platform: "web";
@@ -347,6 +451,10 @@ export declare const componentCatalog: readonly [{
     readonly recipe: "loadMoreRecipe";
     readonly behavior: "loadMore";
 }, {
+    readonly roadmap: {
+        readonly state: "contract-ready";
+        readonly summary: string;
+    };
     readonly name: "Steps";
     readonly category: "navigation";
     readonly platform: "shared";
@@ -361,6 +469,10 @@ export declare const componentCatalog: readonly [{
     readonly behavior: "menu";
     readonly aliases: readonly ["Dropdown"];
 }, {
+    readonly roadmap: {
+        readonly state: "evidence-needed";
+        readonly summary: string;
+    };
     readonly name: "Anchor";
     readonly category: "navigation";
     readonly platform: "web";
@@ -402,6 +514,10 @@ export declare const componentCatalog: readonly [{
     readonly status: "beta";
     readonly recipe: "listRowRecipe";
 }, {
+    readonly roadmap: {
+        readonly state: "evidence-needed";
+        readonly summary: string;
+    };
     readonly name: "VirtualList";
     readonly category: "data-display";
     readonly platform: "adaptive";
@@ -421,12 +537,20 @@ export declare const componentCatalog: readonly [{
     readonly status: "beta";
     readonly recipe: "statisticRecipe";
 }, {
+    readonly roadmap: {
+        readonly state: "contract-ready";
+        readonly summary: string;
+    };
     readonly name: "Timeline";
     readonly category: "data-display";
     readonly platform: "shared";
     readonly status: "planned";
     readonly recipe: "timelineRecipe";
 }, {
+    readonly roadmap: {
+        readonly state: "contract-ready";
+        readonly summary: string;
+    };
     readonly name: "DataTable";
     readonly category: "data-display";
     readonly platform: "web";
@@ -434,6 +558,10 @@ export declare const componentCatalog: readonly [{
     readonly recipe: "dataTableRecipe";
     readonly behavior: "dataTable";
 }, {
+    readonly roadmap: {
+        readonly state: "contract-ready";
+        readonly summary: string;
+    };
     readonly name: "Tree";
     readonly category: "data-display";
     readonly platform: "web";
@@ -441,6 +569,10 @@ export declare const componentCatalog: readonly [{
     readonly recipe: "treeRecipe";
     readonly behavior: "tree";
 }, {
+    readonly roadmap: {
+        readonly state: "contract-ready";
+        readonly summary: string;
+    };
     readonly name: "Calendar";
     readonly category: "data-display";
     readonly platform: "shared";
@@ -448,6 +580,10 @@ export declare const componentCatalog: readonly [{
     readonly recipe: "calendarRecipe";
     readonly behavior: "calendar";
 }, {
+    readonly roadmap: {
+        readonly state: "contract-ready";
+        readonly summary: string;
+    };
     readonly name: "Carousel";
     readonly category: "data-display";
     readonly platform: "adaptive";
@@ -455,6 +591,10 @@ export declare const componentCatalog: readonly [{
     readonly recipe: "carouselRecipe";
     readonly behavior: "carousel";
 }, {
+    readonly roadmap: {
+        readonly state: "contract-ready";
+        readonly summary: string;
+    };
     readonly name: "DescriptionList";
     readonly category: "data-display";
     readonly platform: "shared";
@@ -462,23 +602,39 @@ export declare const componentCatalog: readonly [{
     readonly recipe: "descriptionListRecipe";
     readonly aliases: readonly ["Descriptions"];
 }, {
+    readonly roadmap: {
+        readonly state: "contract-ready";
+        readonly summary: string;
+    };
     readonly name: "Image";
     readonly category: "data-display";
     readonly platform: "shared";
     readonly status: "planned";
     readonly recipe: "imageRecipe";
 }, {
+    readonly roadmap: {
+        readonly state: "evidence-needed";
+        readonly summary: string;
+    };
     readonly name: "QRCode";
     readonly category: "data-display";
     readonly platform: "shared";
     readonly status: "planned";
 }, {
+    readonly roadmap: {
+        readonly state: "contract-ready";
+        readonly summary: string;
+    };
     readonly name: "Tag";
     readonly category: "data-display";
     readonly platform: "shared";
     readonly status: "planned";
     readonly recipe: "tagRecipe";
 }, {
+    readonly roadmap: {
+        readonly state: "contract-ready";
+        readonly summary: string;
+    };
     readonly name: "Tour";
     readonly category: "overlay";
     readonly platform: "web";
@@ -517,6 +673,10 @@ export declare const componentCatalog: readonly [{
     readonly status: "beta";
     readonly recipe: "skeletonRecipe";
 }, {
+    readonly roadmap: {
+        readonly state: "contract-ready";
+        readonly summary: string;
+    };
     readonly name: "Result";
     readonly category: "feedback";
     readonly platform: "shared";
@@ -531,6 +691,10 @@ export declare const componentCatalog: readonly [{
     readonly behavior: "toast";
     readonly aliases: readonly ["Notification"];
 }, {
+    readonly roadmap: {
+        readonly state: "evidence-needed";
+        readonly summary: string;
+    };
     readonly name: "Watermark";
     readonly category: "feedback";
     readonly platform: "web";
@@ -557,6 +721,10 @@ export declare const componentCatalog: readonly [{
     readonly recipe: "sheetRecipe";
     readonly behavior: "sheet";
 }, {
+    readonly roadmap: {
+        readonly state: "contract-ready";
+        readonly summary: string;
+    };
     readonly name: "SidePanel";
     readonly category: "overlay";
     readonly platform: "web";
@@ -564,6 +732,10 @@ export declare const componentCatalog: readonly [{
     readonly recipe: "sidePanelRecipe";
     readonly behavior: "sidePanel";
 }, {
+    readonly roadmap: {
+        readonly state: "contract-ready";
+        readonly summary: string;
+    };
     readonly name: "Popover";
     readonly category: "overlay";
     readonly platform: "web";
@@ -571,6 +743,11 @@ export declare const componentCatalog: readonly [{
     readonly recipe: "popoverRecipe";
     readonly behavior: "popover";
 }, {
+    readonly roadmap: {
+        readonly state: "composed";
+        readonly summary: string;
+        readonly targets: readonly string[];
+    };
     readonly name: "ConfirmPopover";
     readonly category: "overlay";
     readonly platform: "web";
@@ -584,6 +761,10 @@ export declare const componentCatalog: readonly [{
     readonly recipe: "tooltipRecipe";
     readonly behavior: "tooltip";
 }, {
+    readonly roadmap: {
+        readonly state: "contract-ready";
+        readonly summary: string;
+    };
     readonly name: "CommandPalette";
     readonly category: "overlay";
     readonly platform: "web";
@@ -591,38 +772,59 @@ export declare const componentCatalog: readonly [{
     readonly recipe: "commandPaletteRecipe";
     readonly behavior: "commandPalette";
 }, {
+    readonly roadmap: {
+        readonly state: "evidence-needed";
+        readonly summary: string;
+    };
     readonly name: "Affix";
     readonly category: "utility";
     readonly platform: "web";
     readonly status: "planned";
 }, {
+    readonly declinedReason: string;
+    readonly roadmap: {
+        readonly state: "declined";
+        readonly summary: string;
+    };
     readonly name: "AppProvider";
     readonly category: "provider";
     readonly platform: "adaptive";
     readonly status: "planned";
     readonly aliases: readonly ["App"];
-    readonly declinedReason: "message·notification·modal 세 표면이 이미 Toast·Dialog·AlertDialog에 있고, 남는 것은 Context 배선뿐이라 값 계약이 없다";
 }, {
+    readonly declinedReason: string;
+    readonly roadmap: {
+        readonly state: "declined";
+        readonly summary: string;
+    };
     readonly name: "BorderBeam";
     readonly category: "utility";
     readonly platform: "web";
     readonly status: "planned";
-    readonly declinedReason: "장식으로 브랜드를 증명하지 않는다는 정체성과 충돌하고, reduced motion에서 남는 것이 없으며, 없어도 화면의 뜻이 같다";
 }, {
+    readonly roadmap: {
+        readonly state: "contract-ready";
+        readonly summary: string;
+    };
     readonly name: "DesignSystemProvider";
     readonly category: "provider";
     readonly platform: "shared";
     readonly status: "planned";
     readonly aliases: readonly ["ConfigProvider"];
 }, {
+    readonly declinedReason: string;
+    readonly roadmap: {
+        readonly state: "declined";
+        readonly summary: string;
+    };
     readonly name: "Utility";
     readonly category: "utility";
     readonly platform: "web";
     readonly status: "planned";
     readonly aliases: readonly ["Util"];
-    readonly declinedReason: "antd Util은 theme.useToken()으로 토큰을 읽는 법을 설명하는 문서 페이지다. 이 패키지는 토큰을 정적 export로 주므로 그 문제가 발생하지 않는다";
 }];
 export type ComponentName = (typeof componentCatalog)[number]["name"];
+export declare function summarizeComponentRoadmap(entries?: readonly ComponentCatalogEntry[]): Readonly<Record<ComponentRoadmapState, number>>;
 /** One typed registry prevents catalog recipe names from drifting into strings. */
 export declare const recipeRegistry: {
     readonly accordionRecipe: {

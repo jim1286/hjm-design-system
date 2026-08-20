@@ -13,5 +13,6 @@ addons.setConfig({
   }),
   brandTitle: "HJM Design System",
   panelPosition: "bottom",
+  showPanel: false,
   sidebar: { showRoots: true },
 });

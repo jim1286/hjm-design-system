@@ -1,7 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { readFile } from "node:fs/promises";
 
-import { componentCatalog, type ComponentCatalogEntry } from "../src/catalog.js";
+import {
+  componentCatalog,
+  summarizeComponentRoadmap,
+  type ComponentCatalogEntry,
+} from "../src/catalog.js";
 import {
   componentDefinitions,
   componentIds,
@@ -62,6 +66,23 @@ describe("component reference coverage", () => {
     expect(getComponentDefinition("utility")).toMatchObject({
       kind: "utility",
       contract: { recipes: [], behaviors: [] },
+    });
+  });
+
+  it("explains why every planned row still exists", () => {
+    const planned: readonly ComponentCatalogEntry[] = componentCatalog.filter(
+      ({ status }) => status === "planned",
+    );
+    for (const entry of planned) {
+      expect(entry.roadmap?.summary.trim().length, entry.name).toBeGreaterThan(0);
+    }
+    expect(Object.values(summarizeComponentRoadmap()).reduce((sum, count) => sum + count, 0)).toBe(
+      planned.length,
+    );
+    expect(summarizeComponentRoadmap()).toMatchObject({
+      composed: 3,
+      prerequisite: 1,
+      declined: 3,
     });
   });
 

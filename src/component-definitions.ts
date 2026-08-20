@@ -119,6 +119,7 @@ export type ComponentDefinition = Readonly<{
     status: ComponentStatus;
     recipes: readonly RecipeName[];
     behaviors: readonly BehaviorName[];
+    roadmap?: ComponentCatalogEntry["roadmap"];
   }>;
   surfaces: Readonly<{
     parity: ComponentPlatform;
@@ -172,6 +173,7 @@ export const componentDefinitions: readonly ComponentDefinition[] = componentCat
       status: entry.status,
       recipes: entry.recipe ? [entry.recipe] : [],
       behaviors: entry.behavior ? [entry.behavior] : [],
+      roadmap: entry.roadmap,
     },
     surfaces: {
       parity: entry.platform,

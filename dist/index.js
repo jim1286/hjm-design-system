@@ -12,7 +12,8 @@ export { ACCENTS, THEMES, accentFill, accentTint, brandGradient, isThemePreferen
 export { backdrop, breakpoint, control, easing, glyph, layer, layout, motion, motionPreset, opacity, overlay, radius, scrim, shadow, spacing, spring, stateLayer, stroke, typography, } from "./foundations.js";
 export { accordionRecipe, alertDialogRecipe, avatarRecipe, badgeRecipe, bottomNavigationRecipe, bottomCtaRecipe, buttonRecipe, chipRecipe, comboboxRecipe, counterBadgeRecipe, dialogRecipe, dividerRecipe, emptyStateRecipe, fieldRecipe, formatCounterBadgeCount, iconButtonRecipe, iconRecipe, linkRecipe, listRecipe, listRowRecipe, loadMoreRecipe, menuRecipe, noticeRecipe, progressRecipe, searchFieldRecipe, selectRecipe, selectionGroupRecipe, sectionRecipe, segmentedControlRecipe, selectionControlRecipe, sheetRecipe, skeletonRecipe, spinnerRecipe, stackRecipe, statisticRecipe, surfaceRecipe, switchRecipe, tabsRecipe, textRecipe, toastRecipe, tooltipRecipe, topBarRecipe, } from "./recipes.js";
 export { accentColor, resolveColorReference, solidAccentColor, themeColor, } from "./color-references.js";
-export { componentCatalog, recipeRegistry, } from "./catalog.js";
+export { componentCatalog, recipeRegistry, summarizeComponentRoadmap, } from "./catalog.js";
+export { designSystemVersion } from "./version.js";
 export { antDesignReferenceComponents, antDesignReferenceSystem, getAntDesignReferencesFor, summarizeAntDesignCoverage, } from "./component-references.js";
 export { componentDefinitions, componentIds, getComponentDefinition, } from "./component-definitions.js";
 export { semanticColors } from "./semantic-colors.js";

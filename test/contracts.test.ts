@@ -473,6 +473,14 @@ describe("expanded cross-platform component contracts", () => {
     }
   });
 
+  it("keeps the documentation version aligned with package.json", async () => {
+    const packageJson = JSON.parse(
+      readFileSync(fileURLToPath(new URL("../package.json", import.meta.url)), "utf8"),
+    ) as { version: string };
+    const { designSystemVersion } = await import("../src/version.js");
+    expect(designSystemVersion).toBe(packageJson.version);
+  });
+
   it("keeps behavior contracts executable by both renderer test suites", () => {
     for (const behavior of Object.values(behaviorRegistry)) {
       expect(
