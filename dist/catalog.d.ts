@@ -67,14 +67,10 @@ export declare const componentCatalog: readonly [{
     readonly status: "beta";
     readonly recipe: "sectionRecipe";
 }, {
-    readonly roadmap: {
-        readonly state: "contract-ready";
-        readonly summary: string;
-    };
     readonly name: "Stack";
     readonly category: "layout";
     readonly platform: "shared";
-    readonly status: "planned";
+    readonly status: "beta";
     readonly recipe: "stackRecipe";
     readonly aliases: readonly ["Flex", "Space", "Inline"];
 }, {
@@ -87,14 +83,10 @@ export declare const componentCatalog: readonly [{
     readonly platform: "adaptive";
     readonly status: "planned";
 }, {
-    readonly roadmap: {
-        readonly state: "contract-ready";
-        readonly summary: string;
-    };
     readonly name: "Layout";
     readonly category: "layout";
     readonly platform: "adaptive";
-    readonly status: "planned";
+    readonly status: "beta";
     readonly aliases: readonly ["AppShell"];
     readonly recipe: "layoutRecipe";
     readonly behavior: "layout";
@@ -537,14 +529,10 @@ export declare const componentCatalog: readonly [{
     readonly status: "beta";
     readonly recipe: "statisticRecipe";
 }, {
-    readonly roadmap: {
-        readonly state: "contract-ready";
-        readonly summary: string;
-    };
     readonly name: "Timeline";
     readonly category: "data-display";
     readonly platform: "shared";
-    readonly status: "planned";
+    readonly status: "beta";
     readonly recipe: "timelineRecipe";
 }, {
     readonly roadmap: {
@@ -591,25 +579,17 @@ export declare const componentCatalog: readonly [{
     readonly recipe: "carouselRecipe";
     readonly behavior: "carousel";
 }, {
-    readonly roadmap: {
-        readonly state: "contract-ready";
-        readonly summary: string;
-    };
     readonly name: "DescriptionList";
     readonly category: "data-display";
     readonly platform: "shared";
-    readonly status: "planned";
+    readonly status: "beta";
     readonly recipe: "descriptionListRecipe";
     readonly aliases: readonly ["Descriptions"];
 }, {
-    readonly roadmap: {
-        readonly state: "contract-ready";
-        readonly summary: string;
-    };
     readonly name: "Image";
     readonly category: "data-display";
     readonly platform: "shared";
-    readonly status: "planned";
+    readonly status: "beta";
     readonly recipe: "imageRecipe";
 }, {
     readonly roadmap: {
@@ -621,14 +601,10 @@ export declare const componentCatalog: readonly [{
     readonly platform: "shared";
     readonly status: "planned";
 }, {
-    readonly roadmap: {
-        readonly state: "contract-ready";
-        readonly summary: string;
-    };
     readonly name: "Tag";
     readonly category: "data-display";
     readonly platform: "shared";
-    readonly status: "planned";
+    readonly status: "beta";
     readonly recipe: "tagRecipe";
 }, {
     readonly roadmap: {
@@ -673,14 +649,10 @@ export declare const componentCatalog: readonly [{
     readonly status: "beta";
     readonly recipe: "skeletonRecipe";
 }, {
-    readonly roadmap: {
-        readonly state: "contract-ready";
-        readonly summary: string;
-    };
     readonly name: "Result";
     readonly category: "feedback";
     readonly platform: "shared";
-    readonly status: "planned";
+    readonly status: "beta";
     readonly recipe: "resultRecipe";
 }, {
     readonly name: "Toast";
@@ -802,14 +774,10 @@ export declare const componentCatalog: readonly [{
     readonly platform: "web";
     readonly status: "planned";
 }, {
-    readonly roadmap: {
-        readonly state: "contract-ready";
-        readonly summary: string;
-    };
     readonly name: "DesignSystemProvider";
     readonly category: "provider";
     readonly platform: "shared";
-    readonly status: "planned";
+    readonly status: "beta";
     readonly aliases: readonly ["ConfigProvider"];
 }, {
     readonly declinedReason: string;

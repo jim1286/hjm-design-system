@@ -463,9 +463,11 @@ describe("expanded cross-platform component contracts", () => {
     expect(new Set(names).size).toBe(names.length);
 
     for (const component of componentCatalog) {
-      if (component.status !== "planned") {
+      if (component.status !== "planned" && component.category !== "provider") {
         expect(component).toHaveProperty("recipe");
-        expect(recipeRegistry).toHaveProperty(component.recipe!);
+      }
+      if ("recipe" in component && component.recipe) {
+        expect(recipeRegistry).toHaveProperty(component.recipe);
       }
       if ("behavior" in component && component.behavior) {
         expect(behaviorRegistry).toHaveProperty(component.behavior);

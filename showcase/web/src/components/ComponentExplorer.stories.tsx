@@ -12,6 +12,7 @@ import {
   type ComponentPlatform,
   type ComponentStatus,
 } from "@hjm/design-system";
+import { componentStoryHref } from "./story-factory";
 
 type CategoryFilter = ComponentCategory | "all";
 type PlatformFilter = ComponentPlatform | "all";
@@ -34,15 +35,6 @@ const categoryLabels: Readonly<Record<ComponentCategory, string>> = {
 };
 
 const categories = Object.keys(categoryLabels) as ComponentCategory[];
-
-function componentStoryHref(name: string): string {
-  const slug = name
-    .replace(/([a-z0-9])([A-Z])/g, "$1-$2")
-    .replace(/[^a-zA-Z0-9]+/g, "-")
-    .replace(/^-|-$/g, "")
-    .toLowerCase();
-  return `?path=/story/components-reference-gallery--${slug}`;
-}
 
 function ComponentExplorer({ initialCategory = "all" }: ExplorerProps) {
   const [query, setQuery] = useState("");
@@ -164,7 +156,7 @@ function ComponentExplorer({ initialCategory = "all" }: ExplorerProps) {
                     </div>
                   )}
                   <div className="hjm-component-card-footer">
-                    <a href={componentStoryHref(entry.name)}>{entry.status === "planned" ? "Open concept & decision" : "Open interactive reference"} <span aria-hidden>→</span></a>
+                    <a href={componentStoryHref(entry)}>{entry.status === "planned" ? "Open concept & decision" : "Open interactive reference"} <span aria-hidden>→</span></a>
                   </div>
                 </article>
               );

@@ -108,7 +108,26 @@ const preview: Preview = {
     a11y: { test: "error" },
     options: {
       storySort: {
-        order: ["Home", "Foundations", "Components", ["Overview", "Reference Gallery", "Catalog"], "Patterns", "Accessibility"],
+        order: [
+          "Home",
+          "Foundations",
+          "Components",
+          [
+            "Overview",
+            "Foundation",
+            "Layout",
+            "Actions",
+            "Inputs",
+            "Navigation",
+            "Data Display",
+            "Feedback",
+            "Overlays",
+            "Infrastructure",
+            "Catalog",
+          ],
+          "Patterns",
+          "Accessibility",
+        ],
       },
     },
   },

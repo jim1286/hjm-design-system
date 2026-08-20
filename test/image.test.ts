@@ -115,11 +115,11 @@ describe("Image visual identity", () => {
     expect(imageRecipe).not.toHaveProperty("focus");
   });
 
-  it("links the planned contract to the catalog entry", () => {
+  it("links the product-validated beta contract to the catalog entry", () => {
     expect(componentCatalog.find((entry) => entry.name === "Image")).toMatchObject({
       category: "data-display",
       platform: "shared",
-      status: "planned",
+      status: "beta",
     });
   });
 });

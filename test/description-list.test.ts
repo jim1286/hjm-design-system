@@ -110,13 +110,13 @@ describe("DescriptionList visual identity", () => {
     );
   });
 
-  it("links the planned contract to the catalog entry", () => {
+  it("links the product-validated beta contract to the catalog entry", () => {
     expect(
       componentCatalog.find((entry) => entry.name === "DescriptionList"),
     ).toMatchObject({
       category: "data-display",
       platform: "shared",
-      status: "planned",
+      status: "beta",
     });
   });
 

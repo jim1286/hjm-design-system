@@ -3,7 +3,10 @@ import { componentCatalog } from "@hjm/design-system";
 
 const index = JSON.parse(await readFile(new URL("../storybook-static/index.json", import.meta.url), "utf8"));
 const entries = Object.values(index.entries ?? {});
-const referenceStories = entries.filter((entry) => entry.title === "Components/Reference Gallery");
+const navigationTitles = new Set(["Components/Overview", "Components/Catalog"]);
+const referenceStories = entries.filter(
+  (entry) => entry.title?.startsWith("Components/") && !navigationTitles.has(entry.title),
+);
 const expectedNames = componentCatalog.map(({ name }) => name);
 const canonicalName = (name) => name.replaceAll(" ", "");
 const actualNames = new Set(referenceStories.map((entry) => canonicalName(entry.name)));
@@ -23,4 +26,4 @@ if (missingPages.length > 0) {
   throw new Error(`Static Storybook is missing navigation pages: ${missingPages.map(([title, name]) => `${title}/${name}`).join(", ")}`);
 }
 
-console.log(`Verified ${referenceStories.length} canonical component stories and ${requiredPages.length} navigation pages.`);
+console.log(`Verified ${referenceStories.length} canonical component stories across category groups and ${requiredPages.length} navigation pages.`);

@@ -1,10 +1,13 @@
 import { useState, type ReactNode } from "react";
-import type { Meta, StoryObj } from "@storybook/react-vite";
-
-import { componentCatalog, recipeRegistry, type ComponentCatalogEntry } from "@hjm/design-system";
+import {
+  componentCatalog,
+  recipeRegistry,
+  type ComponentCatalogEntry,
+  type ComponentName,
+} from "@hjm/design-system";
 import { showcaseManifest, showcaseScenarios } from "@hjm/design-system/showcase";
 
-type Props = { name: string };
+export type ContractStoryProps = { name: ComponentName };
 
 const scenarioLabels = new Map(showcaseScenarios.map(({ id, label }) => [id, label]));
 const catalog: readonly ComponentCatalogEntry[] = componentCatalog;
@@ -52,7 +55,7 @@ function OverlayPreview({ kind }: { kind: "Dialog" | "AlertDialog" | "Sheet" | "
   );
 }
 
-function ReferencePreview({ name }: Props) {
+function PreviewRenderer({ name }: ContractStoryProps) {
   const [selected, setSelected] = useState("첫 번째");
   switch (name) {
     case "Text": return <div className="hjm-type-sample"><h2>제목 텍스트</h2><p>본문 텍스트는 의미와 위계를 보존합니다.</p><small>보조 정보</small></div>;
@@ -146,7 +149,28 @@ function ReferencePreview({ name }: Props) {
   }
 }
 
-function ContractStory({ name }: Props) {
+export type PreviewDefinition = Readonly<{
+  render(): ReactNode;
+}>;
+
+/**
+ * One complete, typed renderer lookup derived from the canonical catalog.
+ * Category story files only describe navigation; preview ownership stays here
+ * and cannot silently omit a component when the catalog grows.
+ */
+export const previewRegistry: Readonly<Record<ComponentName, PreviewDefinition>> =
+  Object.fromEntries(
+    catalog.map((entry) => [
+      entry.name,
+      { render: () => <PreviewRenderer name={entry.name as ComponentName} /> },
+    ]),
+  ) as Record<ComponentName, PreviewDefinition>;
+
+export function ComponentPreview({ name }: ContractStoryProps) {
+  return previewRegistry[name].render();
+}
+
+export function ContractStory({ name }: ContractStoryProps) {
   const entry = showcaseManifest.find(({ component }) => component.name === name);
   if (!entry) throw new Error(`Unknown showcase component: ${name}`);
   const recipe = entry.component.recipe ? recipeRegistry[entry.component.recipe] : undefined;
@@ -156,27 +180,8 @@ function ContractStory({ name }: Props) {
       <h1 className="hjm-title">{name}</h1>
       <div className="hjm-meta-row"><span className="hjm-pill" data-status={entry.component.status}>{entry.component.status}</span>{entry.component.behavior && <span className="hjm-pill">behavior: {entry.component.behavior}</span>}{entry.component.recipe && <span className="hjm-pill">recipe: {entry.component.recipe}</span>}</div>
       {entry.component.roadmap && <section className="hjm-roadmap-callout" data-roadmap={entry.component.roadmap.state}><span>{entry.component.roadmap.state}</span><p>{entry.component.roadmap.summary}</p>{entry.component.roadmap.targets && <small>Composed with: {entry.component.roadmap.targets.join(" + ")}</small>}</section>}
-      <section className="hjm-section" aria-labelledby={`${name}-preview`}><h2 className="hjm-section-title" id={`${name}-preview`}>{entry.component.status === "planned" ? "Concept & decision" : "Interactive reference"}</h2><div className="hjm-stage"><ReferencePreview name={name} /></div></section>
+      <section className="hjm-section" aria-labelledby={`${name}-preview`}><h2 className="hjm-section-title" id={`${name}-preview`}>{entry.component.status === "planned" ? "Concept & decision" : "Interactive reference"}</h2><div className="hjm-stage"><ComponentPreview name={name} /></div></section>
       <section className="hjm-section" aria-labelledby={`${name}-evidence`}><h2 className="hjm-section-title" id={`${name}-evidence`}>Required evidence</h2><div className="hjm-grid"><article className="hjm-card"><h3>Surfaces</h3><p>{entry.requiredSurfaces.join(" · ")}</p></article><article className="hjm-card"><h3>Scenarios</h3><ul className="hjm-check-list">{entry.requiredScenarios.map((id) => <li key={id}>{scenarioLabels.get(id)}</li>)}</ul></article><article className="hjm-card"><h3>Contract</h3><p>{recipe ? `${Object.keys(recipe).length} top-level recipe branches` : "Behavior/API contract only"}</p></article></div></section>
     </main>
   );
 }
-
-const meta = { title: "Components/Reference Gallery", component: ContractStory, parameters: { controls: { disable: true } } } satisfies Meta<typeof ContractStory>;
-export default meta;
-type Story = StoryObj<typeof meta>;
-const story = (name: string): Story => ({ name, args: { name } });
-
-export const Text = story("Text"); export const Icon = story("Icon"); export const Surface = story("Surface"); export const Divider = story("Divider"); export const Section = story("Section");
-export const Button = story("Button"); export const IconButton = story("IconButton"); export const Link = story("Link"); export const BottomCTA = story("BottomCTA");
-export const Field = story("Field"); export const SearchField = story("SearchField"); export const TextArea = story("TextArea"); export const Checkbox = story("Checkbox"); export const Radio = story("Radio"); export const CheckboxGroup = story("CheckboxGroup"); export const RadioGroup = story("RadioGroup"); export const Switch = story("Switch"); export const Chip = story("Chip"); export const SegmentedControl = story("SegmentedControl"); export const Select = story("Select"); export const Combobox = story("Combobox");
-export const Tabs = story("Tabs"); export const TopBar = story("TopBar"); export const BottomNavigation = story("BottomNavigation"); export const LoadMore = story("LoadMore"); export const Menu = story("Menu");
-export const Avatar = story("Avatar"); export const Badge = story("Badge"); export const CounterBadge = story("CounterBadge"); export const Card = story("Card"); export const List = story("List"); export const ListRow = story("ListRow"); export const Accordion = story("Accordion"); export const Statistic = story("Statistic");
-export const EmptyState = story("EmptyState"); export const Notice = story("Notice"); export const Progress = story("Progress"); export const Spinner = story("Spinner"); export const Skeleton = story("Skeleton"); export const Toast = story("Toast");
-export const Dialog = story("Dialog"); export const AlertDialog = story("AlertDialog"); export const Sheet = story("Sheet"); export const Tooltip = story("Tooltip");
-export const Stack = story("Stack"); export const Grid = story("Grid"); export const Layout = story("Layout"); export const Masonry = story("Masonry"); export const Splitter = story("Splitter");
-export const FloatingActionButton = story("FloatingActionButton");
-export const PasswordField = story("PasswordField"); export const OtpField = story("OtpField"); export const Slider = story("Slider"); export const NumberField = story("NumberField"); export const DatePicker = story("DatePicker"); export const TimePicker = story("TimePicker"); export const ColorPicker = story("ColorPicker"); export const FilePicker = story("FilePicker"); export const Cascader = story("Cascader"); export const Form = story("Form"); export const Mentions = story("Mentions"); export const Rating = story("Rating"); export const TransferList = story("TransferList"); export const TreeSelect = story("TreeSelect"); export const UploadItem = story("UploadItem");
-export const Breadcrumb = story("Breadcrumb"); export const Pagination = story("Pagination"); export const Steps = story("Steps"); export const Anchor = story("Anchor");
-export const VirtualList = story("VirtualList"); export const Timeline = story("Timeline"); export const DataTable = story("DataTable"); export const Tree = story("Tree"); export const Calendar = story("Calendar"); export const Carousel = story("Carousel"); export const DescriptionList = story("DescriptionList"); export const Image = story("Image"); export const QRCode = story("QRCode"); export const Tag = story("Tag");
-export const Tour = story("Tour"); export const Result = story("Result"); export const Watermark = story("Watermark"); export const SidePanel = story("SidePanel"); export const Popover = story("Popover"); export const ConfirmPopover = story("ConfirmPopover"); export const CommandPalette = story("CommandPalette"); export const Affix = story("Affix"); export const AppProvider = story("AppProvider"); export const BorderBeam = story("BorderBeam"); export const DesignSystemProvider = story("DesignSystemProvider"); export const Utility = story("Utility");

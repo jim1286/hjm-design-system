@@ -77,11 +77,11 @@ describe("Tag visual identity vs. Chip", () => {
     expect(chipRecipe.radius).toBe("full");
   });
 
-  it("links the planned contract to the catalog entry", () => {
+  it("links the product-validated beta contract to the catalog entry", () => {
     expect(componentCatalog.find((entry) => entry.name === "Tag")).toMatchObject({
       category: "data-display",
       platform: "shared",
-      status: "planned",
+      status: "beta",
     });
   });
 

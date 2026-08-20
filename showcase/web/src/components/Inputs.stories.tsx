@@ -1,0 +1,34 @@
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { ContractStory } from "./preview-registry";
+import { componentStory } from "./story-factory";
+
+const meta = { title: "Components/Inputs", component: ContractStory, parameters: { controls: { disable: true } } } satisfies Meta<typeof ContractStory>;
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Field: Story = componentStory("Field");
+export const SearchField: Story = componentStory("SearchField");
+export const TextArea: Story = componentStory("TextArea");
+export const PasswordField: Story = componentStory("PasswordField");
+export const OtpField: Story = componentStory("OtpField");
+export const Checkbox: Story = componentStory("Checkbox");
+export const Radio: Story = componentStory("Radio");
+export const CheckboxGroup: Story = componentStory("CheckboxGroup");
+export const RadioGroup: Story = componentStory("RadioGroup");
+export const Switch: Story = componentStory("Switch");
+export const Chip: Story = componentStory("Chip");
+export const SegmentedControl: Story = componentStory("SegmentedControl");
+export const Slider: Story = componentStory("Slider");
+export const NumberField: Story = componentStory("NumberField");
+export const Select: Story = componentStory("Select");
+export const Combobox: Story = componentStory("Combobox");
+export const DatePicker: Story = componentStory("DatePicker");
+export const TimePicker: Story = componentStory("TimePicker");
+export const ColorPicker: Story = componentStory("ColorPicker");
+export const FilePicker: Story = componentStory("FilePicker");
+export const Cascader: Story = componentStory("Cascader");
+export const Form: Story = componentStory("Form");
+export const Mentions: Story = componentStory("Mentions");
+export const Rating: Story = componentStory("Rating");
+export const TransferList: Story = componentStory("TransferList");
+export const TreeSelect: Story = componentStory("TreeSelect");

@@ -122,11 +122,11 @@ describe("Result visual identity", () => {
     ]);
   });
 
-  it("links the planned contract to the catalog entry", () => {
+  it("links the product-validated beta contract to the catalog entry", () => {
     expect(componentCatalog.find((entry) => entry.name === "Result")).toMatchObject({
       category: "feedback",
       platform: "shared",
-      status: "planned",
+      status: "beta",
     });
   });
 

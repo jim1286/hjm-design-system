@@ -144,10 +144,10 @@ const successText = resolveColorReference(
 
 릴리즈 태그가 생성된 뒤 소비 저장소에서는 정확한 태그를 고정합니다.
 
-현재 배포된 기준은 `v0.3.0`입니다.
+현재 배포된 기준은 `v0.4.0`입니다.
 
 ```bash
-pnpm add '@hjm/design-system@git+https://github.com/jim1286/hjm-design-system.git#v0.3.0'
+pnpm add '@hjm/design-system@git+https://github.com/jim1286/hjm-design-system.git#v0.4.0'
 ```
 
 태그에는 `dist/` 빌드 결과를 함께 포함해야 합니다. 브랜치나 커밋되지 않은 로컬 경로에

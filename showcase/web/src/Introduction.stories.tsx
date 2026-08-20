@@ -11,6 +11,7 @@ import {
   type ComponentCategory,
 } from "@hjm/design-system";
 import { showcaseEnvironmentMatrix } from "@hjm/design-system/showcase";
+import { componentStoryHref } from "./components/story-factory";
 
 const catalog: readonly ComponentCatalogEntry[] = componentCatalog;
 
@@ -41,15 +42,6 @@ const categoryOrder: readonly ComponentCategory[] = [
   "provider",
   "utility",
 ];
-
-function componentStoryHref(name: string): string {
-  const slug = name
-    .replace(/([a-z0-9])([A-Z])/g, "$1-$2")
-    .replace(/[^a-zA-Z0-9]+/g, "-")
-    .replace(/^-|-$/g, "")
-    .toLowerCase();
-  return `?path=/story/components-reference-gallery--${slug}`;
-}
 
 function LiveComposition() {
   return (
@@ -161,7 +153,7 @@ function Introduction() {
                 <span className="hjm-pill" data-status={entry.status}>{entry.status}</span>
                 <h3>{entry.name}</h3>
                 <p>{categoryMetadata[entry.category].description}</p>
-                <a href={componentStoryHref(entry.name)}>Open reference <span aria-hidden>→</span></a>
+                <a href={componentStoryHref(entry)}>Open reference <span aria-hidden>→</span></a>
               </div>
             </article>
           ))}

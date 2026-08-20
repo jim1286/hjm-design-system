@@ -67,6 +67,8 @@ describe("showcase contract", () => {
     ]);
     expect(getRequiredShowcaseSurfaces(componentCatalog.find(({ name }) => name === "Stack")!)).toEqual([
       "contract",
+      "web",
+      "native",
     ]);
   });
 

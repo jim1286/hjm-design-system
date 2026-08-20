@@ -6,6 +6,7 @@ import {
   summarizeAntDesignCoverage,
 } from "@hjm/design-system";
 import { showcaseManifest, showcaseScenarios } from "@hjm/design-system/showcase";
+import { previewRegistry } from "./components/preview-registry";
 
 describe("web showcase coverage", () => {
   it("has a documented definition for every required scenario", () => {
@@ -34,5 +35,12 @@ describe("web showcase coverage", () => {
     expect(new Set(componentDefinitions.map(({ docs }) => docs.storyId)).size).toBe(
       componentDefinitions.length,
     );
+  });
+
+  it("keeps one preview registry entry for every canonical component", () => {
+    expect(Object.keys(previewRegistry)).toHaveLength(componentDefinitions.length);
+    for (const definition of componentDefinitions) {
+      expect(previewRegistry).toHaveProperty(definition.name);
+    }
   });
 });
