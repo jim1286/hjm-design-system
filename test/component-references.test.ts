@@ -174,11 +174,11 @@ describe("component reference coverage", () => {
     expect(summary).toMatchObject({
       total: 73,
       tracked: 73,
-      fullyMature: 37,
-      partiallyMature: 3,
+      fullyMature: 38,
+      partiallyMature: 2,
       plannedOnly: 33,
-      fullyPreviewable: 37,
-      partiallyPreviewable: 3,
+      fullyPreviewable: 38,
+      partiallyPreviewable: 2,
       contractOnly: 33,
     });
     expect(

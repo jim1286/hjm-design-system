@@ -333,13 +333,13 @@ export declare const componentCatalog: readonly [{
     readonly status: "planned";
 }, {
     readonly roadmap: {
-        readonly state: "contract-ready";
+        readonly state: "evidence-needed";
         readonly summary: string;
     };
     readonly name: "Form";
     readonly category: "input";
     readonly platform: "shared";
-    readonly status: "planned";
+    readonly status: "beta";
     readonly recipe: "formRecipe";
     readonly behavior: "form";
 }, {

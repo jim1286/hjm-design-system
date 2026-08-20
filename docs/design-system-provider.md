@@ -119,9 +119,9 @@ Showcase fixture만으로 성숙도를 올리지 않는다. 현재는 다음 실
 
 | 제품 표면 | 실제 adapter 증거 | 검증 경계 |
 | --- | --- | --- |
-| BurnTok Web | `../BurnTok/apps/web/src/components/ThemeProvider.tsx` | `matchMedia`, root `dir`, 저장된 theme preference를 resolver에 넣고 Context가 `providerValue`, `environment`, `palette`를 공개한다. `palette.theme.bg`는 브라우저 theme color에 실제 적용된다. `ThemeProvider.test.tsx`가 이 경계를 검증한다. |
-| BurnTok RN | `../BurnTok/apps/mobile/src/components/ThemeProvider.tsx` | `useColorScheme`, `I18nManager`, `useWindowDimensions().fontScale`, `AccessibilityInfo`의 신호를 해석하고 `palette.theme`을 Native style renderer의 `colors`로 제공한다. |
-| Yajalal RN | `../yajalal/modules/app-rn/src/lib/theme/provider-adapter.ts`, `ThemeProvider.tsx` | HJM resolver로 환경 우선순위를 해석하고 `validateResolvedDesignSystemEnvironment()`로 검증한 뒤, 기존 제품 팔레트만 검토된 adapter로 바꾼다. `ThemeProvider.test.ts`가 해석된 환경과 팔레트를 검증한다. |
+| BurnTok Web | `../BurnTok/apps/web/src/components/ThemeProvider.tsx` | `matchMedia`, root `dir`, 저장된 theme preference를 resolver에 넣고 Context가 `providerValue`, `environment`, `palette`를 공개한다. OS 축은 system option으로 전달하므로 nested `parentEnvironment`가 omitted axis보다 먼저 적용된다. `palette.theme.bg`는 브라우저 theme color에 실제 적용된다. `ThemeProvider.test.tsx`가 이 경계를 검증한다. |
+| BurnTok RN | `../BurnTok/apps/mobile/src/components/ThemeProvider.tsx` | `useColorScheme`, `I18nManager`, `useWindowDimensions().fontScale`, `AccessibilityInfo`의 신호를 system option으로 해석하고 `parentEnvironment` 상속 및 명시 fixture를 지원하며 `palette.theme`을 Native style renderer의 `colors`로 제공한다. |
+| Yajalal RN | `../yajalal/modules/app-rn/src/lib/theme/provider-adapter.ts`, `ThemeProvider.tsx` | HJM resolver로 환경 우선순위와 `parentEnvironment`의 omitted axis 상속을 해석하고 `validateResolvedDesignSystemEnvironment()`로 검증한 뒤, 기존 제품 팔레트만 검토된 adapter로 바꾼다. `ThemeProvider.test.ts`가 해석된 환경과 팔레트를 검증한다. |
 
 Showcase의 `DesignSystemProvider` Web reference는 이 증거를 대신하는 가상 UI가 아니다.
 동일한 provider value의 theme, direction, textScale, reducedMotion과 해석된 palette를
@@ -129,7 +129,7 @@ Showcase의 `DesignSystemProvider` Web reference는 이 증거를 대신하는 �
 
 ## 현재 성숙도
 
-catalog 상태는 `beta`다. Web과 RN, 두 제품에서 값 해석·Context 전파·palette
-소비 경계가 확인됐으나, 중첩 Provider의 parent 상속과 추가 제품 릴리스 증거는
-아직 부족하다. roadmap은 이 다음 승격 조건을 `evidence-needed`로 기록하며,
-그 증거가 쌓인 뒤 `stable`을 검토한다.
+catalog 상태는 `beta`다. Web과 RN, 두 제품에서 값 해석·Context 전파·palette 소비,
+중첩 Provider의 omitted axis 상속 경계까지 확인됐다. 다만 이 상속 adapter가 포함된
+추가 제품 릴리스 증거는 아직 없으므로 roadmap은 다음 승격 조건을
+`evidence-needed`로 기록하고 `stable`을 과장하지 않는다.

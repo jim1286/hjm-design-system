@@ -56,7 +56,7 @@ export const componentCatalog = [
     { name: "ColorPicker", category: "input", platform: "web", status: "planned", ...evidenceNeeded("임의 색 선택이 실제 제품 요구로 확인될 때 색공간·키보드 계약을 엽니다.") },
     { name: "FilePicker", category: "input", platform: "adaptive", status: "planned", recipe: "filePickerRecipe", behavior: "filePicker", aliases: ["Upload"], ...contractReady("파일 선택 intent·제약·취소 계약은 준비됐고 실제 업로드 흐름을 기다립니다.") },
     { name: "Cascader", category: "input", platform: "adaptive", status: "planned", ...prerequisite("TreeSelect에 path value와 중간 단계 commit 축을 먼저 추가해야 흡수할 수 있습니다.", ["TreeSelect"]) },
-    { name: "Form", category: "input", platform: "shared", status: "planned", recipe: "formRecipe", behavior: "form", ...contractReady("submit session·첫 오류 포커스 계약은 준비됐고 다중 필드 제품 폼을 기다립니다.") },
+    { name: "Form", category: "input", platform: "shared", status: "beta", recipe: "formRecipe", behavior: "form", ...evidenceNeeded("실제 Web 2필드 생성 폼이 submit session·첫 오류 포커스·form-level alert를 소비합니다. Native 제품 renderer 증거가 쌓이면 stable을 검토합니다.") },
     { name: "Mentions", category: "input", platform: "adaptive", status: "planned", recipe: "comboboxRecipe", behavior: "combobox", ...contractReady("trigger 탐색·삽입 범위 계약은 준비됐고 메시지 작성 화면을 기다립니다.") },
     { name: "Rating", category: "input", platform: "shared", status: "planned", aliases: ["Rate"], ...composed("입력은 Slider, 읽기 전용 표시는 Statistic 조합으로 해결합니다.", ["Slider", "Statistic"]) },
     { name: "TransferList", category: "input", platform: "adaptive", status: "planned", aliases: ["Transfer"], recipe: "transferListRecipe", behavior: "transferList", ...contractReady("양쪽 collection·이동·선택 보존 계약은 준비됐고 제품 흐름을 기다립니다.") },
@@ -109,7 +109,7 @@ export const componentCatalog = [
     { name: "Affix", category: "utility", platform: "web", status: "planned", ...evidenceNeeded("임의 콘텐츠의 scroll threshold 고정 요구가 확인되면 Web 전용 계약을 엽니다.") },
     { name: "AppProvider", category: "provider", platform: "adaptive", status: "planned", aliases: ["App"], ...declined("message·notification·modal 세 표면이 이미 Toast·Dialog·AlertDialog에 있고, 남는 것은 Context 배선뿐이라 값 계약이 없다") },
     { name: "BorderBeam", category: "utility", platform: "web", status: "planned", ...declined("장식으로 브랜드를 증명하지 않는다는 정체성과 충돌하고, reduced motion에서 남는 것이 없으며, 없어도 화면의 뜻이 같다") },
-    { name: "DesignSystemProvider", category: "provider", platform: "shared", status: "beta", aliases: ["ConfigProvider"], nonVisualEvidence: "provider-adapter", ...evidenceNeeded("두 실제 제품의 Web/RN Context adapter가 environment+palette를 소비했습니다. 중첩 Provider와 추가 제품 릴리스 증거가 쌓이면 stable을 검토합니다.") },
+    { name: "DesignSystemProvider", category: "provider", platform: "shared", status: "beta", aliases: ["ConfigProvider"], nonVisualEvidence: "provider-adapter", ...evidenceNeeded("두 실제 제품의 Web/RN Context adapter가 environment+palette와 parent axis 상속을 소비합니다. 추가 제품 릴리스 증거가 쌓이면 stable을 검토합니다.") },
     { name: "Utility", category: "utility", platform: "web", status: "planned", aliases: ["Util"], ...declined("antd Util은 theme.useToken()으로 토큰을 읽는 법을 설명하는 문서 페이지다. 이 패키지는 토큰을 정적 export로 주므로 그 문제가 발생하지 않는다") },
 ];
 export function summarizeComponentRoadmap(entries = componentCatalog) {

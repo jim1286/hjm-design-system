@@ -100,9 +100,19 @@ dispose()가 submitting 중 호출되면 그 attempt는 interrupted로 한 번�
 
 ## 검증 화면
 
-아직 실제 제품 vertical slice가 없으므로 이 컴포넌트는 **"계약+recipe 준비됨"**이며
-`planned` 상태를 유지합니다. 실제 화면의 `파일:줄` 근거와 Web/Native renderer evidence가
-생기기 전에는 제품 이름만으로 후보를 추측하거나 승격 근거로 사용하지 않습니다.
+Form은 이제 `beta`입니다. BurnTok Web의
+`apps/web/src/app/ideas/page.tsx`가 실제 2필드 생성 흐름에서 아래 계약을 소비합니다.
+
+- `apps/web/src/lib/form-contract.ts`: `formRecipe` 간격, `createFormSubmitSession`,
+  `resolveFirstInvalidFieldFocusTarget`을 제품 validation과 React lifecycle에 연결합니다.
+- `apps/web/src/app/ideas/page.tsx`: 첫 invalid control에 실제 `.focus()`를 실행하고,
+  field error와 `role="alert"` form-level error를 분리하며 submitting 중 중복 제출을
+  canonical session으로 차단합니다.
+- `apps/web/src/components/ui/AppTextField.tsx`: input/textarea ref를 실제 control까지
+  전달해 focus 계약이 설명에 그치지 않게 합니다.
+
+Web 한 제품의 vertical slice만으로 `stable`을 주장하지 않습니다. Native renderer의
+accessibility focus와 busy 발표 증거가 추가되기 전까지 `beta`를 유지합니다.
 
 ## 공개하지 않기로 한 것
 

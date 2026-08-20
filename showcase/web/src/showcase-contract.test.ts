@@ -127,23 +127,23 @@ describe("web showcase coverage", () => {
     expect(Object.keys(webRendererRegistry).sort()).toEqual(expected);
     expect(summarizeWebShowcaseCoverage()).toEqual({
       canonical: componentCatalog.length,
-      webReferences: 50,
-      contractOnly: 39,
+      webReferences: 51,
+      contractOnly: 38,
       nativeOnly: 2,
     });
   });
 
-  it("renders the canonical 50/39/2 evidence split in Home and Explorer", () => {
+  it("renders the canonical 51/38/2 evidence split in Home and Explorer", () => {
     const homeHtml = renderToStaticMarkup(createElement(Introduction));
-    expect(homeHtml).toContain("<strong>50</strong><span>Web references</span>");
-    expect(homeHtml).toContain("<strong>39</strong><span>contract-only stories</span>");
+    expect(homeHtml).toContain("<strong>51</strong><span>Web references</span>");
+    expect(homeHtml).toContain("<strong>38</strong><span>contract-only stories</span>");
     expect(homeHtml).toContain("<strong>2</strong><span>Native-only stories</span>");
     expect(homeHtml).toContain(componentCategoryExplorerHref("input"));
     expect(homeHtml).not.toContain("args=initialCategory");
 
     const explorerHtml = renderToStaticMarkup(createElement(ComponentExplorer));
-    expect(explorerHtml).toContain("<strong>50</strong> Web references");
-    expect(explorerHtml).toContain("<strong>39</strong> contract-only stories");
+    expect(explorerHtml).toContain("<strong>51</strong> Web references");
+    expect(explorerHtml).toContain("<strong>38</strong> contract-only stories");
     expect(explorerHtml).toContain("<strong>2</strong> Native-only stories");
     expect(explorerHtml.match(/Open Native-only contract/g)).toHaveLength(2);
     expect(explorerHtml).toContain("Open Web reference");

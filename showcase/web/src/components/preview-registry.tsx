@@ -208,6 +208,7 @@ function WebPreviewRenderer({ name }: { name: RecipeWebRendererComponentName }) 
     case "Field": return <FieldPreview />;
     case "SearchField": return <FieldPreview search />;
     case "TextArea": return <FieldPreview multiline />;
+    case "Form": return <form className="hjm-demo-stack" onSubmit={(event) => event.preventDefault()}><FieldPreview /><FieldPreview multiline /><button className="hjm-demo-button" type="submit">저장하기</button></form>;
     case "Checkbox": return <ChoicePreview />;
     case "Radio": return <ChoicePreview radio />;
     case "CheckboxGroup": return <ChoicePreview group />;
@@ -551,6 +552,7 @@ export const webRendererRegistry = {
   Field: createWebRendererDefinition("Field", "fieldRecipe", "field"),
   SearchField: createWebRendererDefinition("SearchField", "searchFieldRecipe", "searchField"),
   TextArea: createWebRendererDefinition("TextArea", "fieldRecipe"),
+  Form: createWebRendererDefinition("Form", "formRecipe", "form"),
   Checkbox: createWebRendererDefinition("Checkbox", "selectionControlRecipe", "checkbox"),
   Radio: createWebRendererDefinition("Radio", "selectionControlRecipe"),
   CheckboxGroup: createWebRendererDefinition("CheckboxGroup", "selectionGroupRecipe", "checkboxGroup"),
