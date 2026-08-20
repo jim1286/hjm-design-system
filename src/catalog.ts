@@ -163,7 +163,7 @@ export const componentCatalog = [
   { name: "Affix", category: "utility", platform: "web", status: "planned", ...evidenceNeeded("임의 콘텐츠의 scroll threshold 고정 요구가 확인되면 Web 전용 계약을 엽니다.") },
   { name: "AppProvider", category: "provider", platform: "adaptive", status: "planned", aliases: ["App"], ...declined("message·notification·modal 세 표면이 이미 Toast·Dialog·AlertDialog에 있고, 남는 것은 Context 배선뿐이라 값 계약이 없다") },
   { name: "BorderBeam", category: "utility", platform: "web", status: "planned", ...declined("장식으로 브랜드를 증명하지 않는다는 정체성과 충돌하고, reduced motion에서 남는 것이 없으며, 없어도 화면의 뜻이 같다") },
-  { name: "DesignSystemProvider", category: "provider", platform: "shared", status: "beta", aliases: ["ConfigProvider"] },
+  { name: "DesignSystemProvider", category: "provider", platform: "shared", status: "planned", aliases: ["ConfigProvider"], ...contractReady("환경·상속·팔레트 계약은 준비됐고 실제 Web/RN Context adapter 검증을 기다립니다.") },
   { name: "Utility", category: "utility", platform: "web", status: "planned", aliases: ["Util"], ...declined("antd Util은 theme.useToken()으로 토큰을 읽는 법을 설명하는 문서 페이지다. 이 패키지는 토큰을 정적 export로 주므로 그 문제가 발생하지 않는다") },
 ] as const satisfies readonly ComponentCatalogEntry[];
 

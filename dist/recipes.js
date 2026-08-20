@@ -1,4 +1,4 @@
-import { control, radius, spacing, typography } from "./foundations.js";
+import { control, fontWeight, radius, spacing, typography } from "./foundations.js";
 /** Typed recipe; platform renderers translate the same intent to their own primitives. */
 export const buttonRecipe = {
     slots: ["root", "leading", "label", "trailing", "spinner"],
@@ -134,7 +134,7 @@ export const fieldRecipe = {
     label: {
         color: "textBody",
         textVariant: "body",
-        fontWeight: "600",
+        fontWeight: fontWeight.semibold,
         gap: spacing.xs,
     },
     support: {

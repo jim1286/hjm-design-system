@@ -1,5 +1,5 @@
 import { validateLinkDestination, type LinkDestination } from "./link.js";
-import { spacing } from "./foundations.js";
+import { fontWeight, spacing } from "./foundations.js";
 import { focusIndicatorContract } from "./component-contracts.js";
 import { semanticColors } from "./semantic-colors.js";
 
@@ -97,7 +97,7 @@ export const breadcrumbRecipe = {
   current: {
     color: semanticColors.content.primary,
     textVariant: "label",
-    fontWeight: "600",
+    fontWeight: fontWeight.semibold,
   },
   separator: {
     color: semanticColors.content.decorative,

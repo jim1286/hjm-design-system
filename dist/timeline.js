@@ -1,4 +1,4 @@
-import { spacing, stroke } from "./foundations.js";
+import { fontWeight, spacing, stroke } from "./foundations.js";
 import { semanticColors } from "./semantic-colors.js";
 export const timelineDefaults = {
     itemTone: "neutral",
@@ -116,7 +116,7 @@ export const timelineRecipe = {
     },
     label: {
         textVariant: "body",
-        fontWeight: "600",
+        fontWeight: fontWeight.semibold,
         color: semanticColors.content.primary,
     },
     description: {

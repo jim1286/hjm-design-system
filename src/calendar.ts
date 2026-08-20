@@ -1,7 +1,8 @@
 import type { ColorReference } from "./color-references.js";
 import type { BehaviorContract, WebKeyboardKey } from "./behaviors.js";
+import type { DesignSystemDirection } from "./design-system-provider.js";
 import type { SemanticIconName } from "./icon.js";
-import { control, glyph, opacity, spacing, stroke, type GlyphSize, type TextVariant } from "./foundations.js";
+import { control, fontWeight, glyph, opacity, spacing, stroke, type FontWeightValue, type GlyphSize, type TextVariant } from "./foundations.js";
 import { focusIndicatorContract } from "./component-contracts.js";
 import { semanticColors } from "./semantic-colors.js";
 
@@ -278,7 +279,7 @@ export type CalendarNavigationIntent =
  */
 export function getCalendarNavigationIntent(
   key: WebKeyboardKey,
-  direction: "ltr" | "rtl" = "ltr",
+  direction: DesignSystemDirection = "ltr",
 ): CalendarNavigationIntent | undefined {
   if (key === "Home") return "first-of-week";
   if (key === "End") return "last-of-week";
@@ -381,7 +382,7 @@ export const calendarRecipe = {
     gap: spacing.xs,
     monthLabel: {
       textVariant: "title",
-      fontWeight: "700",
+      fontWeight: fontWeight.bold,
       color: semanticColors.content.primary,
     },
     navButton: { diameter: control.buttonHeight.medium, color: semanticColors.content.secondary },
@@ -412,7 +413,7 @@ export const calendarRecipe = {
   defaults: { size: CalendarSize };
   header: {
     gap: number;
-    monthLabel: { textVariant: TextVariant; fontWeight: string; color: ColorReference };
+    monthLabel: { textVariant: TextVariant; fontWeight: FontWeightValue; color: ColorReference };
     navButton: { diameter: number; color: ColorReference };
     navIcon: { previous: SemanticIconName; next: SemanticIconName };
   };

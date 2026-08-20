@@ -774,10 +774,14 @@ export declare const componentCatalog: readonly [{
     readonly platform: "web";
     readonly status: "planned";
 }, {
+    readonly roadmap: {
+        readonly state: "contract-ready";
+        readonly summary: string;
+    };
     readonly name: "DesignSystemProvider";
     readonly category: "provider";
     readonly platform: "shared";
-    readonly status: "beta";
+    readonly status: "planned";
     readonly aliases: readonly ["ConfigProvider"];
 }, {
     readonly declinedReason: string;
@@ -1332,6 +1336,7 @@ export declare const recipeRegistry: {
         };
         readonly largeText: {
             readonly allowFontScaling: true;
+            readonly maxFontSizeMultiplier: 1.4;
             readonly fixedItemHeight: false;
             readonly labelWraps: true;
         };
@@ -4260,6 +4265,10 @@ export declare const recipeRegistry: {
         readonly defaults: {
             readonly size: "medium";
         };
+        readonly adaptive: {
+            readonly largeTextLayout: "stacked";
+            readonly stackAtFontScale: 1.6;
+        };
         readonly container: {
             readonly background: Readonly<{
                 source: "theme";
@@ -5973,7 +5982,7 @@ export declare const recipeRegistry: {
             };
         };
         readonly size: {
-            readonly height: 20;
+            readonly minHeight: 20;
             readonly paddingHorizontal: 4;
             readonly gap: 4;
             readonly textVariant: "caption";

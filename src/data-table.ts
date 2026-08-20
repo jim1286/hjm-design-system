@@ -7,7 +7,7 @@ import type {
   CollectionSelectionModel,
 } from "./behaviors.js";
 import { collectionItemContract, focusIndicatorContract } from "./component-contracts.js";
-import { control, spacing, type TextVariant } from "./foundations.js";
+import { control, fontWeight, spacing, type FontWeightValue, type TextVariant } from "./foundations.js";
 import { semanticColors } from "./semantic-colors.js";
 
 export type DataTableAlign = "start" | "center" | "end";
@@ -187,7 +187,7 @@ export const dataTableRecipe = {
     background: semanticColors.surface.sunken,
     color: semanticColors.content.secondary,
     textVariant: "label",
-    fontWeight: "700",
+    fontWeight: fontWeight.bold,
     borderBottom: semanticColors.border.default,
   },
   row: {
@@ -237,7 +237,7 @@ export const dataTableRecipe = {
     background: ColorReference;
     color: ColorReference;
     textVariant: TextVariant;
-    fontWeight: string;
+    fontWeight: FontWeightValue;
     borderBottom: ColorReference;
   };
   row: {

@@ -3,10 +3,12 @@ import type { BehaviorContract } from "./behaviors.js";
 import { focusIndicatorContract } from "./component-contracts.js";
 import {
   control,
+  fontWeight,
   opacity,
   radius,
   spacing,
   stroke,
+  type FontWeightValue,
   type TextVariant,
 } from "./foundations.js";
 import { semanticColors } from "./semantic-colors.js";
@@ -251,7 +253,7 @@ export const filePickerRecipe = {
     radius: "md",
     color: semanticColors.content.brand,
     textVariant: "label",
-    fontWeight: "700",
+    fontWeight: fontWeight.bold,
   },
   dropzone: {
     borderStyle: "dashed",
@@ -283,7 +285,7 @@ export const filePickerRecipe = {
     radius: keyof typeof radius;
     color: ColorReference;
     textVariant: TextVariant;
-    fontWeight: string;
+    fontWeight: FontWeightValue;
   };
   dropzone: {
     borderStyle: "dashed";

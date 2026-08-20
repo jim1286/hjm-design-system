@@ -1,5 +1,5 @@
 import { collectionItemContract, focusIndicatorContract } from "./component-contracts.js";
-import { control, spacing } from "./foundations.js";
+import { control, fontWeight, spacing } from "./foundations.js";
 import { semanticColors } from "./semantic-colors.js";
 export const dataTableColumnDefaults = {
     align: "start",
@@ -112,7 +112,7 @@ export const dataTableRecipe = {
         background: semanticColors.surface.sunken,
         color: semanticColors.content.secondary,
         textVariant: "label",
-        fontWeight: "700",
+        fontWeight: fontWeight.bold,
         borderBottom: semanticColors.border.default,
     },
     row: {

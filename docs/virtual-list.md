@@ -2,7 +2,7 @@
 
 ## 제약
 
-`docs/ant-design-coverage.md`의 lifecycle 절이 이미 선언했다 — Ant Design 6.6.0이 기존
+`docs/ant-design-coverage.md`의 lifecycle 절이 이미 선언했다 — Ant Design 6.6.1이 기존
 `List`를 deprecated로 두고 `Listy`를 successor로 추가했지만, **HJM은 기존 비가상
 `List`와 planned `VirtualList`를 서로 다른 사용 문제로 유지한다.** 이 문서는 그 선언을
 뒤집지 않는다. 두 catalog row(`List` beta, `VirtualList` planned + `aliases: ["Listy"]`)를

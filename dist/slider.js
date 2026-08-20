@@ -1,6 +1,6 @@
 import { focusIndicatorContract } from "./component-contracts.js";
 import { control, opacity } from "./foundations.js";
-import { assertFiniteNumber, numericRangeDefaults, snapToStep, validateNumericRangeConfig, } from "./number-field.js";
+import { assertFiniteNumber, numericRangeDefaults, snapToStep, stepNumericValue, validateNumericRangeConfig, } from "./number-field.js";
 import { semanticColors } from "./semantic-colors.js";
 function assertNonEmptyCopy(value, field) {
     if (value.trim().length === 0) {
@@ -43,10 +43,11 @@ export function getSliderStepTarget(descriptor, intent) {
         return descriptor.max;
     const step = descriptor.step ?? numericRangeDefaults.step;
     const config = { min: descriptor.min, max: descriptor.max, step };
-    const isPage = intent === "increment-page" || intent === "decrement-page";
-    const direction = intent === "increment" || intent === "increment-page" ? 1 : -1;
-    const magnitude = isPage ? step * sliderBehaviorDefaults.pageMultiplier : step;
-    return snapToStep(descriptor.value + direction * magnitude, config);
+    if (intent === "increment" || intent === "decrement") {
+        return stepNumericValue(descriptor.value, config, intent);
+    }
+    const direction = intent === "increment-page" ? 1 : -1;
+    return snapToStep(descriptor.value + direction * step * sliderBehaviorDefaults.pageMultiplier, config);
 }
 export const sliderRecipe = {
     slots: ["root", "track", "filledTrack", "thumb", "label", "valueLabel"],

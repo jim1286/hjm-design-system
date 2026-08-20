@@ -1,6 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
+import type { CSSProperties } from "react";
+
 import { motionPreset, radius, spacing } from "@hjm/design-system";
+
+type TokenSampleStyle = CSSProperties & Record<`--hjm-sample-${string}`, string>;
 
 function SpacingAndMotion() {
   return (
@@ -14,9 +18,13 @@ function SpacingAndMotion() {
         <h2 className="hjm-section-title" id="spacing-title">Spacing</h2>
         <div className="hjm-card">
           {Object.entries(spacing).map(([name, value]) => (
-            <div key={name} style={{ display: "grid", gridTemplateColumns: "56px 1fr 48px", gap: 12, alignItems: "center", marginBlock: 12 }}>
+            <div className="hjm-token-row" key={name}>
               <strong>{name}</strong>
-              <div aria-hidden="true" style={{ width: value, height: 16, borderRadius: 4, background: "var(--hjm-primary)" }} />
+              <div
+                aria-hidden="true"
+                className="hjm-spacing-sample"
+                style={{ "--hjm-sample-width": `var(--hjm-space-${name})` } as TokenSampleStyle}
+              />
               <span className="hjm-muted">{value}</span>
             </div>
           ))}
@@ -27,7 +35,11 @@ function SpacingAndMotion() {
         <div className="hjm-grid">
           {Object.entries(radius).map(([name, value]) => (
             <article className="hjm-card" key={name}>
-              <div aria-hidden="true" style={{ height: 96, borderRadius: value, background: "var(--hjm-surface-accent)" }} />
+              <div
+                aria-hidden="true"
+                className="hjm-radius-sample"
+                style={{ "--hjm-sample-radius": `var(--hjm-radius-${name})` } as TokenSampleStyle}
+              />
               <p><strong>{name}</strong> · {value}</p>
             </article>
           ))}
@@ -41,8 +53,27 @@ function SpacingAndMotion() {
               <span className="hjm-pill">{name}</span>
               <h3>{value.duration}ms</h3>
               <p className="hjm-muted">{value.easing} · reduced: {value.reducedMotion}</p>
+              <div
+                aria-label={`${name} motion sample`}
+                className="hjm-motion-sample"
+                data-reduced-strategy={value.reducedMotion}
+                style={{
+                  "--hjm-sample-motion-duration": `var(--hjm-motion-preset-${name}-effective-duration)`,
+                  "--hjm-sample-motion-easing": `var(--hjm-motion-preset-${name}-easing)`,
+                } as TokenSampleStyle}
+              >
+                <span aria-hidden="true" />
+              </div>
             </article>
           ))}
+          <article className="hjm-card">
+            <span className="hjm-pill">continuous</span>
+            <h3>Static fallback</h3>
+            <p className="hjm-muted">Continuous indicators pause at Reduce Motion.</p>
+            <div className="hjm-motion-sample" data-reduced-strategy="static">
+              <span aria-hidden="true" />
+            </div>
+          </article>
         </div>
       </section>
     </main>

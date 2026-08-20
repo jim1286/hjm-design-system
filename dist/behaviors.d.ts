@@ -1,3 +1,4 @@
+import type { DesignSystemDirection } from "./design-system-provider.js";
 /** Platform-neutral behavior vocabulary shared by renderer acceptance tests. */
 export type InteractionState = "idle" | "hover" | "focusVisible" | "pressed" | "dragged";
 export type AvailabilityState = "enabled" | "disabled" | "readOnly" | "busy";
@@ -8,9 +9,9 @@ export type TabsActivationMode = "automatic" | "manual";
 export type TabsMountPolicy = "active" | "visited" | "always";
 export type TabsPanelMode = "keyed" | "dynamic";
 export type TabsOrientation = "horizontal" | "vertical";
-export type TabsDirection = "ltr" | "rtl";
+export type TabsDirection = DesignSystemDirection;
 export type SelectionOrientation = "horizontal" | "vertical";
-export type SelectionDirection = "ltr" | "rtl";
+export type SelectionDirection = DesignSystemDirection;
 export type CheckboxState = boolean | "mixed";
 export type MixedCheckboxActivation = "check" | "uncheck";
 /** Stable option anatomy shared by CheckboxGroup and RadioGroup renderers. */
@@ -1112,7 +1113,7 @@ export declare const behaviorRegistry: {
             readonly states: readonly ["busy"];
             readonly actions: readonly ["submit"];
         };
-        readonly scenarios: readonly ["submitting-blocks-every-concurrent-submit-attempt", "each-submit-attempt-settles-its-result-exactly-once", "failed-submit-returns-to-a-resting-state-that-still-allows-retry", "succeeded-submit-returns-to-idle-and-allows-resubmission", "dispose-during-submit-settles-the-pending-attempt-as-interrupted", "disposed-session-rejects-further-submit-attempts", "form-level-error-never-carries-a-per-field-message", "first-invalid-field-in-render-order-receives-focus-on-submit-failure", "form-level-error-is-announced-when-no-field-target-exists"];
+        readonly scenarios: readonly ["submitting-blocks-every-concurrent-submit-attempt", "each-submit-attempt-settles-its-result-exactly-once", "failed-submit-returns-to-a-resting-state-that-still-allows-retry", "succeeded-submit-remains-resting-and-allows-resubmission", "dispose-during-submit-settles-the-pending-attempt-as-interrupted", "disposed-session-rejects-further-submit-attempts", "form-level-error-never-carries-a-per-field-message", "first-invalid-field-in-render-order-receives-focus-on-submit-failure", "form-level-error-is-announced-when-no-field-target-exists"];
     };
     readonly numberField: {
         readonly controlled: readonly ["value", "defaultValue", "onValueChange"];

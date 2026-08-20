@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
+import { spawnSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
+import { fileURLToPath } from "node:url";
 
 import {
   componentCatalog,
@@ -29,6 +31,47 @@ describe("component reference coverage", () => {
     ];
     expect(packageNames.filter((name) => name === "antd" || name.startsWith("@ant-design/"))).toEqual(
       [],
+    );
+  });
+
+  it("detects npm latest drift without putting a network check in normal push gates", async () => {
+    const packageJson = JSON.parse(
+      await readFile(new URL("../package.json", import.meta.url), "utf8"),
+    ) as { scripts?: Record<string, string> };
+    expect(packageJson.scripts?.["reference:antd:verify"]).toBe(
+      "node scripts/verify-antd-reference.mjs",
+    );
+
+    const workflow = await readFile(
+      new URL("../.github/workflows/antd-reference-drift.yml", import.meta.url),
+      "utf8",
+    );
+    expect(workflow).toMatch(/^  schedule:/m);
+    expect(workflow).toMatch(/^  workflow_dispatch:/m);
+    expect(workflow).not.toMatch(/^  (?:push|pull_request):/m);
+
+    const scriptPath = fileURLToPath(
+      new URL("../scripts/verify-antd-reference.mjs", import.meta.url),
+    );
+    const runAgainst = (latestVersion: string) =>
+      spawnSync(process.execPath, [scriptPath], {
+        encoding: "utf8",
+        env: {
+          ...process.env,
+          ANTD_REGISTRY_URL: `data:application/json,${encodeURIComponent(
+            JSON.stringify({ version: latestVersion }),
+          )}`,
+        },
+      });
+
+    const current = runAgainst("6.6.1");
+    expect(current.status, current.stderr).toBe(0);
+    expect(current.stdout).toContain("Ant Design reference is current: 6.6.1");
+
+    const drifted = runAgainst("6.6.2");
+    expect(drifted.status).toBe(1);
+    expect(drifted.stderr).toContain(
+      "Ant Design reference drift detected: pinned 6.6.1, npm latest 6.6.2",
     );
   });
 
@@ -86,10 +129,10 @@ describe("component reference coverage", () => {
     });
   });
 
-  it("tracks every Ant Design 6.6 core component exactly once", () => {
+  it("tracks every Ant Design 6.6.1 core component exactly once", () => {
     expect(antDesignReferenceSystem).toMatchObject({
       name: "Ant Design",
-      version: "6.6.0",
+      version: "6.6.1",
     });
     expect(antDesignReferenceComponents).toHaveLength(73);
     expect(new Set(antDesignReferenceComponents.map(({ name }) => name)).size).toBe(73);
@@ -125,10 +168,20 @@ describe("component reference coverage", () => {
     expect(summarizeAntDesignCoverage().tracked).toBe(73);
   });
 
-  it("distinguishes full, partial, and planned renderer coverage", () => {
+  it("distinguishes full, partial, and planned target maturity", () => {
     const summary = summarizeAntDesignCoverage();
+    expect(summary).toMatchObject({
+      total: 73,
+      tracked: 73,
+      fullyMature: 36,
+      partiallyMature: 3,
+      plannedOnly: 34,
+      fullyPreviewable: 36,
+      partiallyPreviewable: 3,
+      contractOnly: 34,
+    });
     expect(
-      summary.fullyPreviewable + summary.partiallyPreviewable + summary.contractOnly,
+      summary.fullyMature + summary.partiallyMature + summary.plannedOnly,
     ).toBe(summary.total);
     expect(summary.partiallyPreviewable).toBeGreaterThan(0);
     expect(summary.contractOnly).toBeGreaterThan(0);

@@ -101,9 +101,8 @@ dispose()가 submitting 중 호출되면 그 attempt는 interrupted로 한 번�
 ## 검증 화면
 
 아직 실제 제품 vertical slice가 없으므로 이 컴포넌트는 **"계약+recipe 준비됨"**이며
-`planned` 상태를 유지합니다. 후보 화면: 야잘알 알림 설정(현재는 필드 없이 스위치
-자동저장이라 `submitting`/`failed` 세션이 그대로 들어맞는 다음 화면 후보), BurnTok
-가입·프로필 편집(클라이언트 검증 실패 → 첫 필드 포커스 경로 검증에 적합).
+`planned` 상태를 유지합니다. 실제 화면의 `파일:줄` 근거와 Web/Native renderer evidence가
+생기기 전에는 제품 이름만으로 후보를 추측하거나 승격 근거로 사용하지 않습니다.
 
 ## 공개하지 않기로 한 것
 

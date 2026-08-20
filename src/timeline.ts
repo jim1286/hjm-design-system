@@ -1,6 +1,6 @@
 import type { ColorReference } from "./color-references.js";
-import type { TextVariant } from "./foundations.js";
-import { spacing, stroke } from "./foundations.js";
+import type { FontWeightValue, TextVariant } from "./foundations.js";
+import { fontWeight, spacing, stroke } from "./foundations.js";
 import { semanticColors } from "./semantic-colors.js";
 
 /**
@@ -193,7 +193,7 @@ export const timelineRecipe = {
   },
   label: {
     textVariant: "body",
-    fontWeight: "600",
+    fontWeight: fontWeight.semibold,
     color: semanticColors.content.primary,
   },
   description: {
@@ -216,6 +216,6 @@ export const timelineRecipe = {
     tone: ColorReference;
   };
   timestamp: { textVariant: TextVariant; color: ColorReference };
-  label: { textVariant: TextVariant; fontWeight: string; color: ColorReference };
+  label: { textVariant: TextVariant; fontWeight: FontWeightValue; color: ColorReference };
   description: { textVariant: TextVariant; color: ColorReference };
 };

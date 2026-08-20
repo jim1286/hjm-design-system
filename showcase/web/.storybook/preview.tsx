@@ -1,11 +1,7 @@
-import type { CSSProperties } from "react";
 import type { Preview } from "@storybook/react-vite";
 
-import { THEMES } from "@hjm/design-system";
-
+import { WebDesignSystemProvider } from "../src/runtime/WebDesignSystemProvider";
 import "../src/showcase.css";
-
-type ShowcaseStyle = CSSProperties & Record<`--hjm-${string}`, string | number>;
 
 const preview: Preview = {
   globalTypes: {
@@ -62,43 +58,19 @@ const preview: Preview = {
   },
   decorators: [
     (Story, context) => {
-      const themeName = context.globals.theme === "dark" ? "dark" : "light";
+      const theme = context.globals.theme === "dark" ? "dark" : "light";
       const direction = context.globals.direction === "rtl" ? "rtl" : "ltr";
-      const textScale = ["1", "1.5", "2"].includes(String(context.globals.textScale))
-        ? String(context.globals.textScale)
-        : "1";
-      const motion = context.globals.motion === "reduced" ? "reduced" : "full";
-      const colors = THEMES[themeName];
-      const style: ShowcaseStyle = {
-        "--hjm-bg": colors.bg,
-        "--hjm-surface": colors.surface,
-        "--hjm-surface-alt": colors.surfaceAlt,
-        "--hjm-surface-accent": colors.surfaceAccent,
-        "--hjm-border": colors.border,
-        "--hjm-text": colors.text,
-        "--hjm-text-body": colors.textBody,
-        "--hjm-text-muted": colors.textMuted,
-        "--hjm-text-sub": colors.textSub,
-        "--hjm-text-weak": colors.textWeak,
-        "--hjm-primary": colors.primary,
-        "--hjm-content-brand": colors.contentBrand,
-        "--hjm-danger": colors.danger,
-        "--hjm-on-primary": colors.onPrimary,
-        "--hjm-text-scale": textScale,
-        backgroundColor: colors.bg,
-        color: colors.text,
-      };
+      const rawTextScale = Number(context.globals.textScale);
+      const textScale = [1, 1.5, 2].includes(rawTextScale) ? rawTextScale : 1;
+      const reducedMotion = context.globals.motion === "reduced";
 
       return (
-        <div
-          className="hjm-story-root"
-          data-motion={motion}
-          data-theme={themeName}
-          dir={direction}
-          style={style}
+        <WebDesignSystemProvider
+          input={{ direction, reducedMotion, textScale, theme }}
+          systemTheme="light"
         >
           <Story />
-        </div>
+        </WebDesignSystemProvider>
       );
     },
   ],

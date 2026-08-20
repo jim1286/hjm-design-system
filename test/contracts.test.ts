@@ -1,6 +1,6 @@
 import { readFileSync, readdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { describe, expect, it } from "vitest";
+import { describe, expect, expectTypeOf, it } from "vitest";
 import * as designSystem from "../src/index.js";
 import {
   ACCENTS,
@@ -31,6 +31,9 @@ import {
   dialogRecipe,
   easing,
   fieldRecipe,
+  fontFamily,
+  fontWeight,
+  type FontWeightValue,
   flattenCollectionItems,
   getCollectionNavigationIntent,
   getCollectionNavigationTarget,
@@ -46,14 +49,17 @@ import {
   floatingSurfaceContract,
   focusIndicatorContract,
   iconButtonRecipe,
+  heading,
   isComboboxResultCurrent,
   isThemePreference,
   layer,
   layout,
+  letterSpacing,
   listRowRecipe,
   loadMoreRecipe,
   menuRecipe,
   motionPreset,
+  numeric,
   noticeRecipe,
   onAccentFill,
   onBrandGradient,
@@ -141,6 +147,19 @@ function composite(foreground: string, background: string, alpha: number): strin
     .join("")}`;
 }
 
+type FontWeightField = "fontWeight" | "selectedFontWeight" | "checkedFontWeight";
+type RecipeFontWeightViolation<Value> = Value extends readonly unknown[]
+  ? RecipeFontWeightViolation<Value[number]>
+  : Value extends object
+    ? {
+        [Key in keyof Value]-?: Key extends FontWeightField
+          ? Exclude<Value[Key], undefined> extends FontWeightValue
+            ? never
+            : Key
+          : RecipeFontWeightViolation<NonNullable<Value[Key]>>;
+      }[keyof Value]
+    : never;
+
 describe("platform-neutral public contract", () => {
   it("keeps platform imports out of runtime source", () => {
     const sourceDirectory = fileURLToPath(new URL("../src/", import.meta.url));
@@ -168,6 +187,24 @@ describe("platform-neutral public contract", () => {
       "warning",
       "attention",
     ]);
+  });
+
+  it("keeps recipe font weights on the shared foundation scale", () => {
+    const sourceDirectory = fileURLToPath(new URL("../src/", import.meta.url));
+    const files = readdirSync(sourceDirectory).filter(
+      (file) => file.endsWith(".ts") && file !== "foundations.ts",
+    );
+    for (const file of files) {
+      const path = fileURLToPath(new URL(`../src/${file}`, import.meta.url));
+      const source = readFileSync(path, "utf8");
+      expect(source).not.toMatch(
+        /(?:fontWeight|selectedFontWeight|checkedFontWeight):\s*["'](?:400|500|600|700|800)["']/,
+      );
+      expect(source).not.toMatch(
+        /(?:fontWeight|selectedFontWeight|checkedFontWeight)\??:\s*string/,
+      );
+      expect(source).not.toMatch(/emphasis:\s*Record<[^;]+,\s*string>/);
+    }
   });
 
   it("validates theme preferences without owning persistence", () => {
@@ -289,6 +326,38 @@ describe("foundation and recipe contracts", () => {
     for (const variant of Object.values(typography)) {
       expect(variant.lineHeight).toBeGreaterThan(variant.fontSize);
     }
+  });
+
+  it("publishes additive family, weight, tracking, numeric, and heading tokens", () => {
+    expect(fontFamily.ui).toContain("Pretendard");
+    expect(fontFamily.code.at(-1)).toBe("monospace");
+    expect(fontWeight).toEqual({
+      regular: "400",
+      medium: "500",
+      semibold: "600",
+      bold: "700",
+      heavy: "800",
+    });
+    expectTypeOf<FontWeightValue>().toEqualTypeOf<
+      "400" | "500" | "600" | "700" | "800"
+    >();
+    expectTypeOf(fontWeight.bold).toMatchTypeOf<FontWeightValue>();
+    expectTypeOf<"650">().not.toMatchTypeOf<FontWeightValue>();
+    expectTypeOf<
+      RecipeFontWeightViolation<typeof recipeRegistry>
+    >().toEqualTypeOf<never>();
+    expect(Object.values(letterSpacing)).toEqual(
+      [...Object.values(letterSpacing)].sort((a, b) => a - b),
+    );
+    expect(numeric).toEqual({
+      proportional: "proportional-nums",
+      tabular: "tabular-nums",
+    });
+    expect(heading.level3).toBe(typography.heading);
+    expect(heading.level4).toBe(typography.titleLarge);
+    expect(heading.level5).toBe(typography.title);
+    expect(heading.level1.fontSize).toBeGreaterThan(heading.level2.fontSize);
+    expect(heading.level2.fontSize).toBeGreaterThan(heading.level3.fontSize);
   });
 
   it("keeps every interactive control at least 44 units tall", () => {
@@ -463,7 +532,7 @@ describe("expanded cross-platform component contracts", () => {
     expect(new Set(names).size).toBe(names.length);
 
     for (const component of componentCatalog) {
-      if (component.status !== "planned" && component.category !== "provider") {
+      if (component.status !== "planned") {
         expect(component).toHaveProperty("recipe");
       }
       if ("recipe" in component && component.recipe) {
@@ -1132,6 +1201,10 @@ describe("expanded cross-platform component contracts", () => {
         control.minTouchTarget,
       );
     }
+    expect(segmentedControlRecipe.adaptive).toEqual({
+      largeTextLayout: "stacked",
+      stackAtFontScale: 1.6,
+    });
     for (const size of Object.values(tabsRecipe.sizes)) {
       expect(size.minHeight).toBeGreaterThanOrEqual(control.minTouchTarget);
     }

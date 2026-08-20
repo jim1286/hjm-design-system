@@ -112,9 +112,9 @@ export declare const formBehaviorDefaults: {
     readonly errorAnnouncementPriority: "high";
 };
 /**
- * Shaped like a `behaviorRegistry` entry so the lead can paste this under
- * `behaviorRegistry.form` once wired — kept local so authoring this module
- * never touches the shared `behaviors.ts` file.
+ * Kept beside the Form contract as the source value wired by
+ * `behaviorRegistry.form`; this lets the registry reuse the contract without
+ * redeclaring Form's inputs, events, states, or scenarios.
  */
 export declare const formBehaviorSpec: {
     readonly controlled: readonly [];
@@ -138,6 +138,6 @@ export declare const formBehaviorSpec: {
         readonly states: readonly ["busy"];
         readonly actions: readonly ["submit"];
     };
-    readonly scenarios: readonly ["submitting-blocks-every-concurrent-submit-attempt", "each-submit-attempt-settles-its-result-exactly-once", "failed-submit-returns-to-a-resting-state-that-still-allows-retry", "succeeded-submit-returns-to-idle-and-allows-resubmission", "dispose-during-submit-settles-the-pending-attempt-as-interrupted", "disposed-session-rejects-further-submit-attempts", "form-level-error-never-carries-a-per-field-message", "first-invalid-field-in-render-order-receives-focus-on-submit-failure", "form-level-error-is-announced-when-no-field-target-exists"];
+    readonly scenarios: readonly ["submitting-blocks-every-concurrent-submit-attempt", "each-submit-attempt-settles-its-result-exactly-once", "failed-submit-returns-to-a-resting-state-that-still-allows-retry", "succeeded-submit-remains-resting-and-allows-resubmission", "dispose-during-submit-settles-the-pending-attempt-as-interrupted", "disposed-session-rejects-further-submit-attempts", "form-level-error-never-carries-a-per-field-message", "first-invalid-field-in-render-order-receives-focus-on-submit-failure", "form-level-error-is-announced-when-no-field-target-exists"];
 };
 //# sourceMappingURL=form.d.ts.map

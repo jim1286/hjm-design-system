@@ -1,4 +1,5 @@
 import type { WebKeyboardKey } from "./behaviors.js";
+import type { DesignSystemDirection } from "./design-system-provider.js";
 /**
  * The grid never parses or computes dates — month/leap-year/timezone
  * arithmetic stays product-owned (see docs/calendar.md). This only checks the
@@ -134,7 +135,7 @@ export type CalendarNavigationIntent = "next-day" | "previous-day" | "next-week"
  * ArrowLeft/Right flip under RTL, matching `getSelectionNavigationIntent`'s
  * `direction` parameter.
  */
-export declare function getCalendarNavigationIntent(key: WebKeyboardKey, direction?: "ltr" | "rtl"): CalendarNavigationIntent | undefined;
+export declare function getCalendarNavigationIntent(key: WebKeyboardKey, direction?: DesignSystemDirection): CalendarNavigationIntent | undefined;
 export type CalendarNavigationResult = Readonly<{
     date: string;
     overflow?: never;

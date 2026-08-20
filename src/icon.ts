@@ -1,5 +1,6 @@
 import type { GlyphSize } from "./foundations.js";
 import type { IconTone, IconWeight } from "./component-recipes.js";
+import type { DesignSystemDirection } from "./design-system-provider.js";
 
 /**
  * Shared semantic names. Renderers map these roles to their tree-shakeable SVG
@@ -53,7 +54,7 @@ export const semanticIconNames = [
 ] as const;
 
 export type SemanticIconName = (typeof semanticIconNames)[number];
-export type IconDirection = "ltr" | "rtl";
+export type IconDirection = DesignSystemDirection;
 export type IconDirectionality = "fixed" | "mirror-in-rtl";
 export type IconTransform = "none" | "mirror-inline";
 

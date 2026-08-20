@@ -1,4 +1,4 @@
-import { glyph, spacing, stroke } from "./foundations.js";
+import { fontWeight, glyph, spacing, stroke } from "./foundations.js";
 import { semanticColors } from "./semantic-colors.js";
 export const stepsDefaults = {
     currentStepStatus: "current",
@@ -144,7 +144,7 @@ export const stepsRecipe = {
     },
     label: {
         textVariant: "label",
-        fontWeight: "600",
+        fontWeight: fontWeight.semibold,
         color: {
             pending: semanticColors.content.secondary,
             current: semanticColors.content.primary,

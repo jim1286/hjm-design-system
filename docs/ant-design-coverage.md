@@ -7,8 +7,8 @@ HJM은 Ant Design을 런타임 의존성이나 호환 API로 사용하지 않습
 ## 고정 기준
 
 - source: [Ant Design Components Overview](https://ant.design/components/overview/)
-- captured: 2026-08-16
-- version: 6.6.0
+- captured: 2026-08-20
+- version: 6.6.1
 - core scope: 73 entries
 - category counts: General 4, Layout 7, Navigation 7, Data Entry 18,
   Data Display 21, Feedback 11, Other 5
@@ -80,19 +80,22 @@ catalog 행 처리도 여기서 갈립니다. **흡수됨**은 행을 지우고 
 
 ## 범위와 구현을 분리한다
 
-crosswalk의 target이 catalog에 존재하면 `tracked`입니다. renderer가 있는지는 별도의
-`stable | beta | planned`와 Showcase evidence로 판단합니다.
+crosswalk의 target이 catalog에 존재하면 `tracked`입니다. 아래 분포는 target의
+`stable | beta | planned` **maturity만** 계산하며 renderer 존재 여부는 별도의 Showcase
+evidence registry로 판단합니다.
 
-- fully previewable: 모든 target이 stable 또는 beta
-- partial renderer: decomposed target 중 일부만 stable 또는 beta
-- contract only: 모든 target이 planned
+- fully mature: 모든 target이 stable 또는 beta
+- partial maturity: decomposed target 중 일부만 stable 또는 beta
+- planned only: 모든 target이 planned
 
-따라서 73/73 tracking은 73개 구현 완료를 의미하지 않습니다. 홈과 Component Explorer는 이
-수치를 분리해 표시합니다.
+2026-08-20 snapshot의 status 기반 분포는 **fully mature 36 / partial maturity 3 /
+planned only 34**입니다. 따라서 73/73 tracking은 73개 구현 완료를 의미하지 않습니다.
+홈과 Component Explorer는 이 수치를 분리해 표시합니다. 이 숫자는 source inventory 수가
+아니라 HJM target의 maturity에서 계산하므로 catalog status가 바뀌면 함께 갱신합니다.
 
 ## lifecycle
 
-Ant Design 6.6.0은 기존 `List`를 deprecated로 표시하고 `Listy`를 successor로 추가했습니다.
+Ant Design 6.6.1은 기존 `List`를 deprecated로 표시하고 `Listy`를 successor로 추가했습니다.
 reference inventory는 `List.lifecycle = deprecated`, `Listy.lifecycle = new`로 보존하지만 HJM
 `List`를 자동으로 deprecated 처리하지 않습니다. HJM은 기존 비가상 `List`와 planned
 `VirtualList`를 서로 다른 사용 문제로 유지합니다.
@@ -106,5 +109,11 @@ Ant Design 기준 버전을 올릴 때는 다음을 한 변경 세트에서 수�
 3. 새 source entry를 canonical HJM target에 연결
 4. 제거·deprecated·new lifecycle 기록
 5. `pnpm check`와 `pnpm showcase:web:build`로 public export와 정적 문서 검증
+
+`pnpm reference:antd:verify`는 npm registry의 현재 `latest`와 고정 version을 비교합니다.
+이 검사는 외부 네트워크와 upstream release 시점에 따라 결과가 달라지므로 일반 `push`/
+`pull_request` 게이트에 넣지 않습니다. `.github/workflows/antd-reference-drift.yml`이 주 1회
+예약 실행하고 필요할 때 `workflow_dispatch`로 수동 실행합니다. drift를 찾으면 자동으로 pin을
+바꾸지 않고 실패해, 위 다섯 항목을 한 변경 세트로 검토하게 합니다.
 
 외부 시스템의 외형, token 값, prop 이름, 전용 아이콘·자산은 복사하지 않습니다.

@@ -13,12 +13,14 @@ import {
   glyph,
   layer,
   layout,
+  fontWeight,
   motion,
   motionPreset,
   opacity,
   radius,
   spacing,
   stroke,
+  type FontWeightValue,
   type GlyphSize,
   type TextVariant,
 } from "./foundations.js";
@@ -49,9 +51,9 @@ export const textRecipe = {
     inverse: semanticColors.content.inverse,
   },
   emphasis: {
-    regular: "400",
-    medium: "600",
-    strong: "700",
+    regular: fontWeight.regular,
+    medium: fontWeight.semibold,
+    strong: fontWeight.bold,
   },
 } as const satisfies {
   slots: readonly ["root"];
@@ -61,7 +63,7 @@ export const textRecipe = {
     emphasis: "regular" | "medium" | "strong";
   };
   tones: Record<TextTone, ColorReference>;
-  emphasis: Record<"regular" | "medium" | "strong", string>;
+  emphasis: Record<"regular" | "medium" | "strong", FontWeightValue>;
 };
 
 export type IconTone =
@@ -145,13 +147,13 @@ export const linkRecipe = {
   variants: {
     inline: {
       textVariant: "body",
-      fontWeight: "600",
+      fontWeight: fontWeight.semibold,
       underline: "always",
       minHeight: null,
     },
     standalone: {
       textVariant: "body",
-      fontWeight: "700",
+      fontWeight: fontWeight.bold,
       underline: "hover",
       minHeight: control.minTouchTarget,
     },
@@ -170,7 +172,7 @@ export const linkRecipe = {
     LinkVariant,
     {
       textVariant: TextVariant;
-      fontWeight: string;
+      fontWeight: FontWeightValue;
       underline: "always" | "hover";
       minHeight: number | null;
     }
@@ -352,7 +354,7 @@ export const badgeRecipe = {
   },
   radius: "full",
   borderWidth: stroke.default,
-  fontWeight: "700",
+  fontWeight: fontWeight.bold,
 } as const;
 
 export type CounterBadgeTone = "danger" | "brand" | "neutral";
@@ -400,7 +402,7 @@ export const counterBadgeRecipe = {
     floating: { border: semanticColors.canvas, borderWidth: stroke.strong },
   },
   radius: "full",
-  fontWeight: "700",
+  fontWeight: fontWeight.bold,
 } as const satisfies {
   slots: readonly ["root", "label"];
   defaults: {
@@ -427,7 +429,7 @@ export const counterBadgeRecipe = {
     { border: ColorReference | null; borderWidth: number }
   >;
   radius: keyof typeof radius;
-  fontWeight: string;
+  fontWeight: FontWeightValue;
 };
 
 export function formatCounterBadgeCount(
@@ -570,7 +572,7 @@ export const chipRecipe = {
   },
   radius: "full",
   borderWidth: stroke.default,
-  label: { fontWeight: "600", selectedFontWeight: "700" },
+  label: { fontWeight: fontWeight.semibold, selectedFontWeight: fontWeight.bold },
   selectionIndicator: {
     color: semanticColors.content.brand,
     glyph: "xs",
@@ -622,7 +624,7 @@ export const listRowRecipe = {
   },
   gap: spacing.sm,
   leadingSize: 40,
-  title: { color: semanticColors.content.body, textVariant: "bodyLarge", fontWeight: "700" },
+  title: { color: semanticColors.content.body, textVariant: "bodyLarge", fontWeight: fontWeight.bold },
   description: { color: semanticColors.content.secondary, textVariant: "body" },
   trailing: {
     textColor: semanticColors.content.secondary,
@@ -648,7 +650,7 @@ export const accordionRecipe = {
   },
   paddingHorizontal: spacing.xs,
   gap: spacing.sm,
-  title: { color: semanticColors.content.body, textVariant: "bodyLarge", fontWeight: "700" },
+  title: { color: semanticColors.content.body, textVariant: "bodyLarge", fontWeight: fontWeight.bold },
   indicator: { color: semanticColors.content.secondary, glyph: "sm" },
   panel: {
     color: semanticColors.content.body,
@@ -828,7 +830,7 @@ export const selectRecipe = {
     paddingVertical: spacing.xs,
   },
   optionLeading: { color: semanticColors.content.secondary, glyph: "sm" },
-  optionLabel: { fontWeight: "600", selectedFontWeight: "700" },
+  optionLabel: { fontWeight: fontWeight.semibold, selectedFontWeight: fontWeight.bold },
   selectionIndicator: { color: semanticColors.border.focus, glyph: "sm" },
   stateMessage: {
     color: semanticColors.content.secondary,
@@ -885,7 +887,7 @@ export const selectRecipe = {
     paddingVertical: number;
   };
   optionLeading: { color: ColorReference; glyph: GlyphSize };
-  optionLabel: { fontWeight: string; selectedFontWeight: string };
+  optionLabel: { fontWeight: FontWeightValue; selectedFontWeight: FontWeightValue };
   selectionIndicator: { color: ColorReference; glyph: GlyphSize };
   stateMessage: {
     color: ColorReference;
@@ -982,6 +984,13 @@ export const comboboxRecipe = {
 export const segmentedControlRecipe = {
   slots: ["root", "item", "label", "indicator"] as const,
   defaults: { size: "medium" },
+  adaptive: {
+    // Equal-width rows stop being comparable when every short label wraps one
+    // Hangul syllable per line. Native renderers stack the options before that
+    // point so each choice remains a readable phrase and a 44pt target.
+    largeTextLayout: "stacked" as const,
+    stackAtFontScale: 1.6,
+  },
   /**
    * A recessed track with a raised white thumb. The fills used to be
    * inverted — a white track with a canvas-coloured selected segment — so the
@@ -1015,7 +1024,7 @@ export const segmentedControlRecipe = {
     radius: "md",
     gap: spacing.xxs,
     idleContent: semanticColors.content.secondary,
-    fontWeight: "600",
+    fontWeight: fontWeight.semibold,
     // "Selected" is the brand tint, not a plain raised plate — a raised
     // white segment beside a selected brand-tinted chip spoke two different
     // visual languages for the same state. `surface.brand` is also the one
@@ -1034,7 +1043,7 @@ export const segmentedControlRecipe = {
      */
     selectedBorder: semanticColors.border.focus,
     selectedBorderWidth: stroke.strong,
-    selectedFontWeight: "700",
+    selectedFontWeight: fontWeight.bold,
     focusRing: semanticColors.border.focus,
     pressedOpacity: opacity.pressed,
     disabledOpacity: opacity.disabled,
@@ -1156,8 +1165,8 @@ export const selectionControlRecipe = {
   },
   label: {
     color: semanticColors.content.body,
-    fontWeight: "600",
-    checkedFontWeight: "700",
+    fontWeight: fontWeight.semibold,
+    checkedFontWeight: fontWeight.bold,
   },
   leading: { size: "md", color: semanticColors.content.secondary },
   description: { color: semanticColors.content.secondary },
@@ -1279,8 +1288,8 @@ export const bottomNavigationRecipe = {
     borderWidth: stroke.strong,
   },
   label: {
-    fontWeight: "600",
-    selectedFontWeight: "700",
+    fontWeight: fontWeight.semibold,
+    selectedFontWeight: fontWeight.bold,
     textAlign: "center",
     wrap: true,
     fixedLines: null,
@@ -1298,6 +1307,11 @@ export const bottomNavigationRecipe = {
   keyboard: { defaultBehavior: "hide", movesAboveKeyboard: false },
   largeText: {
     allowFontScaling: true,
+    // Persistent navigation has to keep every destination visible at once.
+    // Let labels respond to Dynamic Type, but cap the visual chrome before a
+    // three-character destination turns into a three-line column. The full,
+    // uncapped label remains the item's accessible name.
+    maxFontSizeMultiplier: 1.4,
     fixedItemHeight: false,
     labelWraps: true,
   },
@@ -1343,7 +1357,7 @@ export const tabsRecipe = {
   },
   gap: spacing.xs,
   icon: { glyph: "xs" },
-  label: { fontWeight: "600", selectedFontWeight: "700" },
+  label: { fontWeight: fontWeight.semibold, selectedFontWeight: fontWeight.bold },
   layouts: {
     content: { fitted: false },
     fitted: { fitted: true },
@@ -1385,7 +1399,7 @@ export const noticeRecipe = {
   contentGap: spacing.xxs,
   iconSize: "sm",
   borderWidth: stroke.default,
-  title: { textVariant: "body", fontWeight: "700" },
+  title: { textVariant: "body", fontWeight: fontWeight.bold },
   description: { color: semanticColors.content.body, textVariant: "body" },
 } as const;
 
@@ -1417,7 +1431,7 @@ export const emptyStateRecipe = {
   paddingHorizontal: spacing.xl,
   gap: spacing.xs,
   icon: { size: "lg", color: semanticColors.content.decorative },
-  title: { textVariant: "body", color: semanticColors.content.primary, fontWeight: "600" },
+  title: { textVariant: "body", color: semanticColors.content.primary, fontWeight: fontWeight.semibold },
   description: { textVariant: "label", color: semanticColors.content.secondary },
 } as const;
 
@@ -1487,7 +1501,7 @@ export const loadMoreRecipe = {
     radius: "md",
     color: semanticColors.content.brand,
     textVariant: "label",
-    fontWeight: "700",
+    fontWeight: fontWeight.bold,
   },
   spinner: { size: "small", tone: "brand" },
   states: {
@@ -1508,7 +1522,7 @@ export const loadMoreRecipe = {
     radius: keyof typeof radius;
     color: ColorReference;
     textVariant: TextVariant;
-    fontWeight: string;
+    fontWeight: FontWeightValue;
   };
   spinner: { size: SpinnerSize; tone: SpinnerTone };
   states: {
@@ -1575,18 +1589,18 @@ export const statisticRecipe = {
   },
   label: {
     color: semanticColors.content.secondary,
-    fontWeight: "600",
+    fontWeight: fontWeight.semibold,
   },
   value: {
     color: semanticColors.content.primary,
-    fontWeight: "800",
+    fontWeight: fontWeight.heavy,
     numericVariant: "tabular",
     maxLines: null,
   },
   affix: {
     color: semanticColors.content.body,
     textVariant: "body",
-    fontWeight: "600",
+    fontWeight: fontWeight.semibold,
   },
   hint: {
     color: semanticColors.content.secondary,
@@ -1594,7 +1608,7 @@ export const statisticRecipe = {
   },
   trend: {
     textVariant: "caption",
-    fontWeight: "700",
+    fontWeight: fontWeight.bold,
     gap: spacing.xxs,
     marks: {
       up: "trendUp",
@@ -1638,18 +1652,18 @@ export const statisticRecipe = {
     minItemWidth: number;
     columns: readonly (1 | 2 | 3 | 4)[];
   };
-  label: { color: ColorReference; fontWeight: string };
+  label: { color: ColorReference; fontWeight: FontWeightValue };
   value: {
     color: ColorReference;
-    fontWeight: string;
+    fontWeight: FontWeightValue;
     numericVariant: "tabular";
     maxLines: null;
   };
-  affix: { color: ColorReference; textVariant: TextVariant; fontWeight: string };
+  affix: { color: ColorReference; textVariant: TextVariant; fontWeight: FontWeightValue };
   hint: { color: ColorReference; textVariant: TextVariant };
   trend: {
     textVariant: TextVariant;
-    fontWeight: string;
+    fontWeight: FontWeightValue;
     gap: number;
     marks: Record<"up" | "down" | "flat", string>;
     tones: Record<"neutral" | "success" | "warning" | "danger", ColorReference>;
@@ -1689,7 +1703,7 @@ export const sheetRecipe = {
   title: {
     color: semanticColors.content.primary,
     textVariant: "title",
-    fontWeight: "700",
+    fontWeight: fontWeight.bold,
     gap: spacing.xxs,
   },
   body: {
@@ -1764,7 +1778,7 @@ export const alertDialogRecipe = {
   title: {
     color: semanticColors.content.primary,
     textVariant: "title",
-    fontWeight: "700",
+    fontWeight: fontWeight.bold,
   },
   description: {
     color: semanticColors.content.secondary,
@@ -1793,7 +1807,7 @@ export const alertDialogRecipe = {
     }
   >;
   icon: { containerSize: number; glyph: GlyphSize; radius: keyof typeof radius };
-  title: { color: ColorReference; textVariant: TextVariant; fontWeight: string };
+  title: { color: ColorReference; textVariant: TextVariant; fontWeight: FontWeightValue };
   description: { color: ColorReference; textVariant: TextVariant };
   error: { color: ColorReference; textVariant: TextVariant };
   actions: { gap: number; stackBelow: number; minButtonWidth: number };
@@ -1888,7 +1902,7 @@ export const toastRecipe = {
   title: {
     color: semanticColors.content.primary,
     textVariant: "body",
-    fontWeight: "700",
+    fontWeight: fontWeight.bold,
   },
   description: {
     color: semanticColors.content.body,
@@ -1897,7 +1911,7 @@ export const toastRecipe = {
   action: {
     color: semanticColors.content.brand,
     textVariant: "body",
-    fontWeight: "700",
+    fontWeight: fontWeight.bold,
     minHeight: control.minTouchTarget,
     paddingHorizontal: spacing.xs,
   },
@@ -1953,12 +1967,12 @@ export const toastRecipe = {
   toneMark: { width: number; radius: keyof typeof radius };
   icon: { glyph: GlyphSize };
   content: { gap: number };
-  title: { color: ColorReference; textVariant: TextVariant; fontWeight: string };
+  title: { color: ColorReference; textVariant: TextVariant; fontWeight: FontWeightValue };
   description: { color: ColorReference; textVariant: TextVariant };
   action: {
     color: ColorReference;
     textVariant: TextVariant;
-    fontWeight: string;
+    fontWeight: FontWeightValue;
     minHeight: number;
     paddingHorizontal: number;
   };
@@ -2010,7 +2024,7 @@ export const topBarRecipe = {
   minHeight: control.buttonHeight.large,
   sideMinWidth: control.minTouchTarget,
   paddingHorizontal: spacing.md,
-  title: { textVariant: "bodyLarge", color: semanticColors.content.primary, fontWeight: "700" },
+  title: { textVariant: "bodyLarge", color: semanticColors.content.primary, fontWeight: fontWeight.bold },
   background: semanticColors.canvas,
 } as const;
 
@@ -2051,7 +2065,7 @@ export const sectionRecipe = {
   gap: spacing.xs,
   headerGap: spacing.sm,
   copyGap: spacing.xxs,
-  title: { textVariant: "title", color: semanticColors.content.body, fontWeight: "700" },
+  title: { textVariant: "title", color: semanticColors.content.body, fontWeight: fontWeight.bold },
   description: { textVariant: "caption", color: semanticColors.content.secondary },
 } as const;
 

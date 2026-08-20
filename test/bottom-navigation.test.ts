@@ -419,6 +419,7 @@ describe("BottomNavigation visual and behavior contracts", () => {
     });
     expect(bottomNavigationRecipe.largeText).toEqual({
       allowFontScaling: true,
+      maxFontSizeMultiplier: 1.4,
       fixedItemHeight: false,
       labelWraps: true,
     });

@@ -29,6 +29,7 @@ import { uploadItemBehavior } from "./upload-item.js";
 import { formBehaviorSpec } from "./form.js";
 import { numberFieldBehavior } from "./number-field.js";
 import { sliderBehavior } from "./slider.js";
+import type { DesignSystemDirection } from "./design-system-provider.js";
 
 /** Platform-neutral behavior vocabulary shared by renderer acceptance tests. */
 export type InteractionState =
@@ -58,10 +59,10 @@ export type TabsActivationMode = "automatic" | "manual";
 export type TabsMountPolicy = "active" | "visited" | "always";
 export type TabsPanelMode = "keyed" | "dynamic";
 export type TabsOrientation = "horizontal" | "vertical";
-export type TabsDirection = "ltr" | "rtl";
+export type TabsDirection = DesignSystemDirection;
 
 export type SelectionOrientation = "horizontal" | "vertical";
-export type SelectionDirection = "ltr" | "rtl";
+export type SelectionDirection = DesignSystemDirection;
 export type CheckboxState = boolean | "mixed";
 export type MixedCheckboxActivation = "check" | "uncheck";
 

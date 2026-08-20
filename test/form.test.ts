@@ -219,4 +219,13 @@ describe("Form behavior wiring reference", () => {
     expect(formBehaviorSpec.stateAxes).not.toHaveProperty("validation");
     expect(formBehaviorSpec.controlled).toEqual([]);
   });
+
+  it("describes succeeded as a reusable resting phase rather than an implicit idle reset", () => {
+    expect(formBehaviorSpec.scenarios).toContain(
+      "succeeded-submit-remains-resting-and-allows-resubmission",
+    );
+    expect(formBehaviorSpec.scenarios).not.toContain(
+      "succeeded-submit-returns-to-idle-and-allows-resubmission",
+    );
+  });
 });

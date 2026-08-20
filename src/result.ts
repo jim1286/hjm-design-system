@@ -1,5 +1,5 @@
 import { semanticColors } from "./semantic-colors.js";
-import { spacing } from "./foundations.js";
+import { fontWeight, spacing } from "./foundations.js";
 
 /**
  * Web-page HTTP status vocabulary (403/404/500) does not belong in a
@@ -146,7 +146,7 @@ export const resultRecipe = {
   title: {
     textVariant: "titleLarge",
     color: semanticColors.content.primary,
-    fontWeight: "700",
+    fontWeight: fontWeight.bold,
   },
   description: {
     textVariant: "body",

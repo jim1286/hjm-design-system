@@ -1,0 +1,565 @@
+{
+  "version": 2,
+  "exceptions": [
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-title",
+      "property": "max-width",
+      "value": "780px",
+      "reason": "Showcase editorial composition geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-grid",
+      "property": "grid-template-columns",
+      "value": "repeat(auto-fit, minmax(min(100%, 240px), 1fr))",
+      "reason": "Showcase editorial composition geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-table",
+      "property": "min-width",
+      "value": "760px",
+      "reason": "Showcase editorial composition geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-stage",
+      "property": "min-height",
+      "value": "220px",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-field",
+      "property": "max-width",
+      "value": "420px",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-field textarea",
+      "property": "min-height",
+      "value": "112px",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-choice-group",
+      "property": "max-width",
+      "value": "440px",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-menu",
+      "property": "width",
+      "value": "min(100%, 260px)",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-stat-grid",
+      "property": "grid-template-columns",
+      "value": "repeat(auto-fit, minmax(130px, 1fr))",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-notice",
+      "property": "max-width",
+      "value": "520px",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-stage progress",
+      "property": "width",
+      "value": "min(100%, 520px)",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-toast",
+      "property": "max-width",
+      "value": "420px",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-modal",
+      "property": "width",
+      "value": "min(100%, 460px)",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-demo-grid",
+      "property": "grid-template-columns",
+      "value": "repeat(2, minmax(110px, 1fr))",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-demo-layout",
+      "property": "min-width",
+      "value": "min(100%, 560px)",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-demo-layout",
+      "property": "grid-template",
+      "value": "\"header header\" var(--hjm-glyph-xxxl) \"aside main\" 150px / 150px 1fr",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-demo-masonry",
+      "property": "width",
+      "value": "min(100%, 520px)",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-demo-splitter",
+      "property": "min-width",
+      "value": "min(100%, 560px)",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-demo-splitter",
+      "property": "min-height",
+      "value": "180px",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-demo-fab-wrap",
+      "property": "width",
+      "value": "min(100%, 420px)",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-demo-fab-wrap",
+      "property": "min-height",
+      "value": "180px",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-stepper",
+      "property": "grid-template-columns",
+      "value": "var(--hjm-control-min-touch-target) minmax(80px, 120px) var(--hjm-control-min-touch-target)",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-file-drop",
+      "property": "width",
+      "value": "min(100%, 460px)",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-demo-columns",
+      "property": "grid-template-columns",
+      "value": "repeat(2, minmax(150px, 1fr))",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-demo-form",
+      "property": "width",
+      "value": "min(100%, 460px)",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-transfer",
+      "property": "grid-template-columns",
+      "value": "minmax(130px, 1fr) auto minmax(130px, 1fr)",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-transfer section",
+      "property": "min-height",
+      "value": "170px",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-tree",
+      "property": "min-width",
+      "value": "min(100%, 360px)",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-upload-item",
+      "property": "width",
+      "value": "min(100%, 520px)",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-steps",
+      "property": "width",
+      "value": "min(100%, 620px)",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-virtual-list",
+      "property": "width",
+      "value": "min(100%, 460px)",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-virtual-list",
+      "property": "height",
+      "value": "210px",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-timeline li",
+      "property": "grid-template-columns",
+      "value": "55px 1fr",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-timeline li",
+      "property": "min-height",
+      "value": "62px",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-calendar",
+      "property": "width",
+      "value": "min(100%, 520px)",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-carousel",
+      "property": "width",
+      "value": "min(100%, 570px)",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-carousel article",
+      "property": "min-height",
+      "value": "170px",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-description-list",
+      "property": "width",
+      "value": "min(100%, 560px)",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-description-list div",
+      "property": "grid-template-columns",
+      "value": "minmax(70px, .6fr) 1fr",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-image",
+      "property": "width",
+      "value": "min(100%, 420px)",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-qr-concept",
+      "property": "max-width",
+      "value": "420px",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-qr-concept > span",
+      "property": "width",
+      "value": "120px",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-qr-concept > span",
+      "property": "height",
+      "value": "120px",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-tour, .hjm-command, .hjm-popover-demo section",
+      "property": "width",
+      "value": "min(100%, 430px)",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-watermark",
+      "property": "width",
+      "value": "min(100%, 520px)",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-watermark",
+      "property": "min-height",
+      "value": "190px",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-watermark article",
+      "property": "max-width",
+      "value": "360px",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-side-panel-demo",
+      "property": "width",
+      "value": "min(100%, 620px)",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-side-panel-demo",
+      "property": "min-height",
+      "value": "230px",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-side-panel-demo",
+      "property": "grid-template-columns",
+      "value": "1fr minmax(190px, .55fr)",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-affix-demo",
+      "property": "width",
+      "value": "min(100%, 480px)",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-affix-demo",
+      "property": "min-height",
+      "value": "210px",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-config",
+      "property": "width",
+      "value": "min(100%, 520px)",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-home-hero",
+      "property": "grid-template-columns",
+      "value": "minmax(0, 1.05fr) minmax(360px, 0.75fr)",
+      "reason": "Showcase editorial composition geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-home-hero",
+      "property": "gap",
+      "value": "clamp(var(--hjm-control-button-small), 7vw, 96px)",
+      "reason": "Showcase editorial composition geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-home-hero",
+      "property": "min-height",
+      "value": "590px",
+      "reason": "Showcase editorial composition geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-home-copy .hjm-title",
+      "property": "max-width",
+      "value": "820px",
+      "reason": "Showcase editorial composition geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-home-composition::before",
+      "property": "inset",
+      "value": "-100px auto auto -80px",
+      "reason": "Showcase editorial composition geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-home-composition::before",
+      "property": "width",
+      "value": "260px",
+      "reason": "Showcase editorial composition geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-home-composition::before",
+      "property": "height",
+      "value": "260px",
+      "reason": "Showcase editorial composition geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-home-mini-chart",
+      "property": "height",
+      "value": "88px",
+      "reason": "Showcase editorial composition geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-feature-preview",
+      "property": "min-height",
+      "value": "160px",
+      "reason": "Showcase editorial composition geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-home-field-demo, .hjm-home-surface-demo, .hjm-home-empty-demo",
+      "property": "width",
+      "value": "min(100%, 260px)",
+      "reason": "Showcase editorial composition geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-reference-section",
+      "property": "grid-template-columns",
+      "value": "minmax(0, 1fr) minmax(340px, .7fr)",
+      "reason": "Showcase editorial composition geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-explorer-tools",
+      "property": "grid-template-columns",
+      "value": "minmax(260px, 1fr) repeat(3, minmax(140px, .35fr))",
+      "reason": "Showcase editorial composition geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-component-card",
+      "property": "min-height",
+      "value": "248px",
+      "reason": "Showcase editorial composition geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-stage",
+      "property": "min-height",
+      "value": "180px",
+      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-home-composition",
+      "property": "max-width",
+      "value": "540px",
+      "reason": "Showcase editorial composition geometry, not a product spacing or sizing contract."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": "@media",
+      "property": "condition",
+      "value": "(max-width: 640px)",
+      "reason": "Responsive fixture breakpoint; CSS custom properties are not valid in media-query conditions."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": "@media",
+      "property": "condition",
+      "value": "(min-width: 641px) and (max-width: 980px)",
+      "reason": "Responsive fixture breakpoint; CSS custom properties are not valid in media-query conditions."
+    }
+  ]
+}

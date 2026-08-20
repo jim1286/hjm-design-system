@@ -108,7 +108,7 @@ export declare const tagRecipe: {
         };
     };
     readonly size: {
-        readonly height: 20;
+        readonly minHeight: 20;
         readonly paddingHorizontal: 4;
         readonly gap: 4;
         readonly textVariant: "caption";

@@ -1,4 +1,4 @@
-import { control, glyph, opacity, spacing, stroke } from "./foundations.js";
+import { control, fontWeight, glyph, opacity, spacing, stroke } from "./foundations.js";
 import { focusIndicatorContract } from "./component-contracts.js";
 import { semanticColors } from "./semantic-colors.js";
 const ISO_DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
@@ -211,7 +211,7 @@ export const calendarRecipe = {
         gap: spacing.xs,
         monthLabel: {
             textVariant: "title",
-            fontWeight: "700",
+            fontWeight: fontWeight.bold,
             color: semanticColors.content.primary,
         },
         navButton: { diameter: control.buttonHeight.medium, color: semanticColors.content.secondary },

@@ -162,16 +162,16 @@ export const formRecipe = {
     },
 };
 // ---------------------------------------------------------------------------
-// Behavior — wiring reference only (not imported by behaviors.ts yet)
+// Behavior — source for the shared behaviorRegistry wiring
 // ---------------------------------------------------------------------------
 export const formBehaviorDefaults = {
     /** Reuses Toast's own `normal | high` vocabulary: a blocked submission is `high`/assertive. */
     errorAnnouncementPriority: "high",
 };
 /**
- * Shaped like a `behaviorRegistry` entry so the lead can paste this under
- * `behaviorRegistry.form` once wired — kept local so authoring this module
- * never touches the shared `behaviors.ts` file.
+ * Kept beside the Form contract as the source value wired by
+ * `behaviorRegistry.form`; this lets the registry reuse the contract without
+ * redeclaring Form's inputs, events, states, or scenarios.
  */
 export const formBehaviorSpec = {
     /*
@@ -195,7 +195,7 @@ export const formBehaviorSpec = {
         "submitting-blocks-every-concurrent-submit-attempt",
         "each-submit-attempt-settles-its-result-exactly-once",
         "failed-submit-returns-to-a-resting-state-that-still-allows-retry",
-        "succeeded-submit-returns-to-idle-and-allows-resubmission",
+        "succeeded-submit-remains-resting-and-allows-resubmission",
         "dispose-during-submit-settles-the-pending-attempt-as-interrupted",
         "disposed-session-rejects-further-submit-attempts",
         "form-level-error-never-carries-a-per-field-message",

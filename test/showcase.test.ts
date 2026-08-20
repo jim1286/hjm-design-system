@@ -8,6 +8,7 @@ import {
   getRequiredShowcaseEvidence,
   getRequiredShowcaseScenarios,
   getRequiredShowcaseSurfaces,
+  getShowcaseEnvironmentInput,
   showcaseEnvironmentMatrix,
   showcaseScenarios,
   summarizeShowcaseMaturity,
@@ -19,6 +20,20 @@ describe("showcase contract", () => {
       showcaseEnvironmentMatrix.length,
     );
     expect(new Set(showcaseScenarios.map(({ id }) => id)).size).toBe(showcaseScenarios.length);
+  });
+
+  it("maps every fixture to the canonical Provider environment", () => {
+    expect(
+      showcaseEnvironmentMatrix.map((environment) =>
+        getShowcaseEnvironmentInput(environment),
+      ),
+    ).toEqual([
+      { theme: "light", direction: "ltr", textScale: 1, reducedMotion: false },
+      { theme: "dark", direction: "ltr", textScale: 1, reducedMotion: false },
+      { theme: "light", direction: "ltr", textScale: 2, reducedMotion: false },
+      { theme: "light", direction: "rtl", textScale: 1, reducedMotion: false },
+      { theme: "light", direction: "ltr", textScale: 1, reducedMotion: true },
+    ]);
   });
 
   it("creates one stable story id for every catalog entry", () => {

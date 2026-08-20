@@ -19,8 +19,10 @@ Link의 실제 목적지·Web anchor·Native router 경계는
 [`docs/link.md`](./docs/link.md)에 고정되어 있습니다.
 공통 계약을 Web과 Native에서 검증하는 showcase 규칙과 실행 방법은
 [`docs/showcase.md`](./docs/showcase.md)에 정리되어 있습니다.
-Ant Design 6.6.0 core 73개를 HJM의 canonical component scope로 번역한 crosswalk는
+Ant Design 6.6.1 core 73개를 HJM의 canonical component scope로 번역한 crosswalk는
 [`docs/ant-design-coverage.md`](./docs/ant-design-coverage.md)에 정리되어 있습니다.
+v0.5의 Provider·typography·Showcase evidence 변경과 소비 절차는
+[`docs/migration-0.5.md`](./docs/migration-0.5.md)에 정리되어 있습니다.
 
 ## Showcase
 
@@ -144,10 +146,10 @@ const successText = resolveColorReference(
 
 릴리즈 태그가 생성된 뒤 소비 저장소에서는 정확한 태그를 고정합니다.
 
-현재 배포된 기준은 `v0.4.0`입니다.
+현재 배포된 기준은 `v0.5.0`입니다.
 
 ```bash
-pnpm add '@hjm/design-system@git+https://github.com/jim1286/hjm-design-system.git#v0.4.0'
+pnpm add '@hjm/design-system@git+https://github.com/jim1286/hjm-design-system.git#v0.5.0'
 ```
 
 태그에는 `dist/` 빌드 결과를 함께 포함해야 합니다. 브랜치나 커밋되지 않은 로컬 경로에

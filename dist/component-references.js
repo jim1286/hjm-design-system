@@ -3,8 +3,8 @@ import { componentDefinitions, componentIds, } from "./component-definitions.js"
 export const antDesignReferenceSystem = {
     id: "ant-design",
     name: "Ant Design",
-    version: "6.6.0",
-    capturedAt: "2026-08-16",
+    version: "6.6.1",
+    capturedAt: "2026-08-20",
     scope: "core",
     source: "https://ant.design/components/overview/",
 };
@@ -107,8 +107,8 @@ export function summarizeAntDesignCoverage(entries = componentCatalog) {
         decomposed: 0,
     };
     let tracked = 0;
-    let fullyPreviewable = 0;
-    let partiallyPreviewable = 0;
+    let fullyMature = 0;
+    let partiallyMature = 0;
     for (const reference of antDesignReferenceComponents) {
         relationships[reference.relationship] += 1;
         const targetStatuses = reference.targets
@@ -116,18 +116,24 @@ export function summarizeAntDesignCoverage(entries = componentCatalog) {
             .filter((status) => status !== undefined);
         if (targetStatuses.length === reference.targets.length)
             tracked += 1;
-        const interactiveTargets = targetStatuses.filter((status) => status === "stable" || status === "beta").length;
-        if (interactiveTargets === reference.targets.length)
-            fullyPreviewable += 1;
-        else if (interactiveTargets > 0)
-            partiallyPreviewable += 1;
+        const matureTargets = targetStatuses.filter((status) => status === "stable" || status === "beta").length;
+        if (matureTargets === reference.targets.length)
+            fullyMature += 1;
+        else if (matureTargets > 0)
+            partiallyMature += 1;
     }
+    const plannedOnly = antDesignReferenceComponents.length - fullyMature - partiallyMature;
     return {
         total: antDesignReferenceComponents.length,
         tracked,
-        fullyPreviewable,
-        partiallyPreviewable,
-        contractOnly: antDesignReferenceComponents.length - fullyPreviewable - partiallyPreviewable,
+        fullyMature,
+        partiallyMature,
+        plannedOnly,
+        // Backward-compatible aliases. These names predate the evidence registry
+        // and must not be used as renderer or preview counts in new UI.
+        fullyPreviewable: fullyMature,
+        partiallyPreviewable: partiallyMature,
+        contractOnly: plannedOnly,
         relationships,
     };
 }

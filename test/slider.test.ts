@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { stepNumericValue } from "../src/number-field.js";
 import {
   getSliderStepTarget,
   resolveSliderDescriptor,
@@ -82,6 +83,24 @@ describe("Slider keyboard and RN step intents", () => {
     };
     expect(getSliderStepTarget(battingAverage, "increment")).toBe(0.358);
     expect(getSliderStepTarget(battingAverage, "decrement")).toBe(0.356);
+  });
+
+  it("reuses NumberField's single-step judgment across offsets, decimals, and boundaries", () => {
+    const descriptors: readonly SliderDescriptor[] = [
+      base,
+      { label: "Offset range", value: 5.5, min: 0.5, max: 10.5, step: 2.5 },
+      { label: "Decimal range", value: 0.357, min: 0, max: 1, step: 0.001 },
+      { label: "Lower boundary", value: -20, min: -20, max: -10, step: 2 },
+      { label: "Upper boundary", value: -10, min: -20, max: -10, step: 2 },
+    ];
+
+    for (const descriptor of descriptors) {
+      for (const direction of ["increment", "decrement"] as const) {
+        expect(getSliderStepTarget(descriptor, direction)).toBe(
+          stepNumericValue(descriptor.value, descriptor, direction),
+        );
+      }
+    }
   });
 });
 

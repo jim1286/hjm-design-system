@@ -16,6 +16,39 @@ export declare const radius: {
     readonly xl: 24;
     readonly full: 999;
 };
+/**
+ * Ordered fallbacks keep the contract platform-neutral: Web renderers join
+ * the list as a CSS stack, while native renderers select the first family
+ * available on the device instead of receiving a CSS-only string.
+ */
+export declare const fontFamily: {
+    readonly ui: readonly ["Inter", "Pretendard", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"];
+    readonly code: readonly ["ui-monospace", "SFMono-Regular", "Consolas", "Liberation Mono", "monospace"];
+};
+export type FontFamily = keyof typeof fontFamily;
+/** String weights translate unchanged to CSS and React Native text styles. */
+export declare const fontWeight: {
+    readonly regular: "400";
+    readonly medium: "500";
+    readonly semibold: "600";
+    readonly bold: "700";
+    readonly heavy: "800";
+};
+export type FontWeight = keyof typeof fontWeight;
+export type FontWeightValue = (typeof fontWeight)[FontWeight];
+/** Numeric tracking uses CSS pixels on Web and density-independent points on Native. */
+export declare const letterSpacing: {
+    readonly tight: -0.2;
+    readonly normal: 0;
+    readonly wide: 0.2;
+};
+export type LetterSpacing = keyof typeof letterSpacing;
+/** Renderers map the shared intent to `font-variant-numeric` / `fontVariant`. */
+export declare const numeric: {
+    readonly proportional: "proportional-nums";
+    readonly tabular: "tabular-nums";
+};
+export type NumericVariant = keyof typeof numeric;
 export declare const typography: {
     readonly caption: {
         readonly fontSize: 11;
@@ -54,6 +87,39 @@ export declare const typography: {
     };
 };
 export type TextVariant = keyof typeof typography;
+/**
+ * Document heading hierarchy without widening the established `TextVariant`
+ * union. Levels 3–5 reuse the existing semantic styles; larger levels are
+ * additive display roles for dense product pages and documentation.
+ */
+export declare const heading: {
+    readonly level1: {
+        readonly fontSize: 40;
+        readonly lineHeight: 48;
+        readonly fontWeight: "800";
+    };
+    readonly level2: {
+        readonly fontSize: 32;
+        readonly lineHeight: 40;
+        readonly fontWeight: "800";
+    };
+    readonly level3: {
+        readonly fontSize: 24;
+        readonly lineHeight: 32;
+        readonly fontWeight: "800";
+    };
+    readonly level4: {
+        readonly fontSize: 20;
+        readonly lineHeight: 28;
+        readonly fontWeight: "800";
+    };
+    readonly level5: {
+        readonly fontSize: 18;
+        readonly lineHeight: 26;
+        readonly fontWeight: "700";
+    };
+};
+export type HeadingLevel = keyof typeof heading;
 /** Glyphs include icons and avatars; they do not inherit paragraph line-height. */
 export declare const glyph: {
     readonly xs: 14;

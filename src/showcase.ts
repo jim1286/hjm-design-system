@@ -3,9 +3,16 @@ import {
   type ComponentCatalogEntry,
   type ComponentStatus,
 } from "./catalog.js";
+import type { ResolvedTheme } from "./colors.js";
+import type {
+  DesignSystemDirection,
+  DesignSystemEnvironmentInput,
+  DesignSystemTextScale,
+} from "./design-system-provider.js";
 
-export type ShowcaseTheme = "light" | "dark";
-export type ShowcaseDirection = "ltr" | "rtl";
+export type ShowcaseTheme = ResolvedTheme;
+export type ShowcaseDirection = DesignSystemDirection;
+/** Closed fixture subset of the Provider's continuous text-scale signal. */
 export type ShowcaseTextScale = 1 | 1.5 | 2;
 export type ShowcaseMotionPreference = "full" | "reduced";
 
@@ -64,6 +71,19 @@ export const showcaseEnvironmentMatrix = [
     motion: "reduced",
   },
 ] as const satisfies readonly ShowcaseEnvironment[];
+
+/** Bridges documentation fixtures to the same environment contract products consume. */
+export function getShowcaseEnvironmentInput(
+  environment: ShowcaseEnvironment,
+): DesignSystemEnvironmentInput {
+  const textScale: DesignSystemTextScale = environment.textScale;
+  return {
+    theme: environment.theme,
+    direction: environment.direction,
+    textScale,
+    reducedMotion: environment.motion === "reduced",
+  };
+}
 
 export type ShowcaseScenarioId =
   | "contract"

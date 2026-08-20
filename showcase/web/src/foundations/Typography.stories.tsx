@@ -3,6 +3,13 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { typography } from "@hjm/design-system";
 
+type TypographySampleStyle = CSSProperties &
+  Record<"--hjm-sample-font-size" | "--hjm-sample-font-weight" | "--hjm-sample-line-height", string>;
+
+function kebabCase(value: string): string {
+  return value.replace(/[A-Z]/g, (match) => `-${match.toLowerCase()}`);
+}
+
 function Typography() {
   return (
     <main className="hjm-page">
@@ -14,15 +21,16 @@ function Typography() {
       <section className="hjm-section" aria-label="Typography scale">
         <div className="hjm-grid">
           {Object.entries(typography).map(([name, value]) => {
+            const tokenName = kebabCase(name);
             const style = {
-              fontSize: `calc(${value.fontSize}px * var(--hjm-text-scale))`,
-              lineHeight: `calc(${value.lineHeight}px * var(--hjm-text-scale))`,
-              fontWeight: value.fontWeight,
-            } satisfies CSSProperties;
+              "--hjm-sample-font-size": `var(--hjm-type-${tokenName}-size)`,
+              "--hjm-sample-font-weight": `var(--hjm-type-${tokenName}-weight)`,
+              "--hjm-sample-line-height": `var(--hjm-type-${tokenName}-line-height)`,
+            } as TypographySampleStyle;
             return (
               <article className="hjm-card" key={name}>
                 <span className="hjm-pill">{name}</span>
-                <p style={style}>중요한 순간을 분명하게 보여줘요.</p>
+                <p className="hjm-type-role-sample" style={style}>중요한 순간을 분명하게 보여줘요.</p>
                 <p className="hjm-muted">
                   {value.fontSize}/{value.lineHeight} · weight {value.fontWeight}
                 </p>

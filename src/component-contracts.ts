@@ -1,4 +1,4 @@
-import { shadow, spacing, stroke } from "./foundations.js";
+import { fontWeight, shadow, spacing, stroke } from "./foundations.js";
 import { semanticColors } from "./semantic-colors.js";
 
 /** Internal visual fragments keep future recipes from inventing new chrome. */
@@ -23,7 +23,7 @@ export const formSupportContract = {
   label: {
     color: semanticColors.content.body,
     textVariant: "body" as const,
-    fontWeight: "600",
+    fontWeight: fontWeight.semibold,
   },
   hint: { color: semanticColors.content.secondary, textVariant: "label" as const },
   error: { color: semanticColors.content.danger, textVariant: "label" as const },

@@ -77,6 +77,11 @@ describe("Tag visual identity vs. Chip", () => {
     expect(chipRecipe.radius).toBe("full");
   });
 
+  it("uses a growing minimum frame instead of clipping Dynamic Type", () => {
+    expect(tagRecipe.size.minHeight).toBe(20);
+    expect(tagRecipe.size).not.toHaveProperty("height");
+  });
+
   it("links the product-validated beta contract to the catalog entry", () => {
     expect(componentCatalog.find((entry) => entry.name === "Tag")).toMatchObject({
       category: "data-display",

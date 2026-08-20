@@ -1,5 +1,6 @@
 import { semanticColors } from "./semantic-colors.js";
 import { spacing } from "./foundations.js";
+import type { DesignSystemTextScale } from "./design-system-provider.js";
 
 export type DescriptionListColumns = 1 | 2;
 
@@ -103,8 +104,8 @@ export const descriptionListRecipe = {
 
 /**
  * Owns the large-text reflow so products stop re-deriving a per-screen
- * `fontScale >= 1.6` guard (five screens missed it in the last review). The
- * minimum item width grows with `fontScale`, so at a fixed `availableWidth`
+ * `textScale >= 1.6` guard (five screens missed it in the last review). The
+ * minimum item width grows with `textScale`, so at a fixed `availableWidth`
  * the same formula that reflows for narrow screens also reflows for large
  * text — mirrors `resolveStatisticColumnCount`'s shape in the Yajalal app-rn
  * renderer contract.
@@ -112,12 +113,12 @@ export const descriptionListRecipe = {
 export function resolveDescriptionListColumnCount(
   availableWidth: number,
   requestedColumns: DescriptionListColumns,
-  fontScale = 1,
+  textScale: DesignSystemTextScale = 1,
 ): DescriptionListColumns {
   if (!Number.isFinite(availableWidth) || availableWidth <= 0) {
     return requestedColumns;
   }
-  const scale = Number.isFinite(fontScale) ? Math.max(fontScale, 1) : 1;
+  const scale = Number.isFinite(textScale) ? Math.max(textScale, 1) : 1;
   const minItemWidth = descriptionListRecipe.group.minItemWidth * scale;
   for (let columns = requestedColumns; columns >= 1; columns -= 1) {
     const itemWidth =

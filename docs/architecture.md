@@ -43,6 +43,11 @@ scenario를 통과해야 합니다.
 - `states`: pressed, focused, selected, disabled, loading, invalid
 - 플랫폼 renderer가 번역할 semantic color reference
 
+Typography recipe의 `fontWeight`·`selectedFontWeight`·`checkedFontWeight`는 임의
+`string`이 아니라 `FontWeightValue`(`fontWeight` 토큰 값 union)를 사용합니다. 기존 런타임
+값은 `"400" | "500" | "600" | "700" | "800"` 그대로지만 새 weight가 recipe에서 먼저
+생기거나 `"650"` 같은 값이 우회해서 들어오는 것은 typecheck에서 막습니다.
+
 모든 조합을 열어두는 것이 목표가 아닙니다. HJM다운 승인 조합만 public API로 만들고,
 제품 화면의 임의 style override보다 recipe의 새 variant를 우선합니다.
 

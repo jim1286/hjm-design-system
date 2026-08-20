@@ -12,8 +12,8 @@ export type AntDesignReferenceComponent = Readonly<{
 export declare const antDesignReferenceSystem: {
     readonly id: "ant-design";
     readonly name: "Ant Design";
-    readonly version: "6.6.0";
-    readonly capturedAt: "2026-08-16";
+    readonly version: "6.6.1";
+    readonly capturedAt: "2026-08-20";
     readonly scope: "core";
     readonly source: "https://ant.design/components/overview/";
 };
@@ -396,8 +396,17 @@ export type AntDesignComponentName = (typeof antDesignReferenceSources)[number][
 export type ReferenceCoverageSummary = Readonly<{
     total: number;
     tracked: number;
+    /** Every HJM target has reached stable or beta maturity. */
+    fullyMature: number;
+    /** At least one, but not every, HJM target has reached stable or beta maturity. */
+    partiallyMature: number;
+    /** No HJM target has moved beyond planned maturity. */
+    plannedOnly: number;
+    /** @deprecated Status maturity is not proof that a preview renderer exists. */
     fullyPreviewable: number;
+    /** @deprecated Status maturity is not proof that a preview renderer exists. */
     partiallyPreviewable: number;
+    /** @deprecated Use `plannedOnly`. */
     contractOnly: number;
     relationships: Readonly<Record<ReferenceRelationship, number>>;
 }>;

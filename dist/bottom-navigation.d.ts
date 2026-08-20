@@ -1,6 +1,7 @@
 import { type BottomNavigationDensity, type BottomNavigationDistribution, type BottomNavigationPresentation } from "./component-recipes.js";
 import { type SemanticIconName } from "./icon.js";
-export type BottomNavigationDirection = "ltr" | "rtl";
+import type { DesignSystemDirection } from "./design-system-provider.js";
+export type BottomNavigationDirection = DesignSystemDirection;
 export type BottomNavigationKeyboardBehavior = "hide" | "remain";
 export type BottomNavigationConfiguration = Readonly<{
     presentation?: BottomNavigationPresentation;

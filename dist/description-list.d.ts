@@ -1,3 +1,4 @@
+import type { DesignSystemTextScale } from "./design-system-provider.js";
 export type DescriptionListColumns = 1 | 2;
 /**
  * One label-value pair. Like Statistic, DescriptionList never formats the
@@ -57,11 +58,11 @@ export declare const descriptionListRecipe: {
 };
 /**
  * Owns the large-text reflow so products stop re-deriving a per-screen
- * `fontScale >= 1.6` guard (five screens missed it in the last review). The
- * minimum item width grows with `fontScale`, so at a fixed `availableWidth`
+ * `textScale >= 1.6` guard (five screens missed it in the last review). The
+ * minimum item width grows with `textScale`, so at a fixed `availableWidth`
  * the same formula that reflows for narrow screens also reflows for large
  * text — mirrors `resolveStatisticColumnCount`'s shape in the Yajalal app-rn
  * renderer contract.
  */
-export declare function resolveDescriptionListColumnCount(availableWidth: number, requestedColumns: DescriptionListColumns, fontScale?: number): DescriptionListColumns;
+export declare function resolveDescriptionListColumnCount(availableWidth: number, requestedColumns: DescriptionListColumns, textScale?: DesignSystemTextScale): DescriptionListColumns;
 //# sourceMappingURL=description-list.d.ts.map

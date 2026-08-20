@@ -1,5 +1,5 @@
 import { semanticColors } from "./semantic-colors.js";
-import { spacing, stroke } from "./foundations.js";
+import { fontWeight, spacing, stroke } from "./foundations.js";
 export const tagDefaults = {
     tone: "neutral",
 };
@@ -66,11 +66,14 @@ export const tagRecipe = {
         },
     },
     size: {
-        height: 20,
+        // Static metadata still participates in Dynamic Type. A fixed 20px frame
+        // clips the label at accessibility sizes; minHeight preserves the compact
+        // base shape while allowing the intrinsic line box to grow.
+        minHeight: 20,
         paddingHorizontal: spacing.xxs,
         gap: spacing.xxs,
         textVariant: "caption",
-        fontWeight: "600",
+        fontWeight: fontWeight.semibold,
     },
     radius: "sm",
     borderWidth: stroke.default,

@@ -18,17 +18,86 @@ export const radius = {
   full: 999,
 } as const;
 
+/**
+ * Ordered fallbacks keep the contract platform-neutral: Web renderers join
+ * the list as a CSS stack, while native renderers select the first family
+ * available on the device instead of receiving a CSS-only string.
+ */
+export const fontFamily = {
+  ui: [
+    "Inter",
+    "Pretendard",
+    "-apple-system",
+    "BlinkMacSystemFont",
+    "Segoe UI",
+    "sans-serif",
+  ],
+  code: [
+    "ui-monospace",
+    "SFMono-Regular",
+    "Consolas",
+    "Liberation Mono",
+    "monospace",
+  ],
+} as const;
+
+export type FontFamily = keyof typeof fontFamily;
+
+/** String weights translate unchanged to CSS and React Native text styles. */
+export const fontWeight = {
+  regular: "400",
+  medium: "500",
+  semibold: "600",
+  bold: "700",
+  heavy: "800",
+} as const;
+
+export type FontWeight = keyof typeof fontWeight;
+export type FontWeightValue = (typeof fontWeight)[FontWeight];
+
+/** Numeric tracking uses CSS pixels on Web and density-independent points on Native. */
+export const letterSpacing = {
+  tight: -0.2,
+  normal: 0,
+  wide: 0.2,
+} as const;
+
+export type LetterSpacing = keyof typeof letterSpacing;
+
+/** Renderers map the shared intent to `font-variant-numeric` / `fontVariant`. */
+export const numeric = {
+  proportional: "proportional-nums",
+  tabular: "tabular-nums",
+} as const;
+
+export type NumericVariant = keyof typeof numeric;
+
 export const typography = {
-  caption: { fontSize: 11, lineHeight: 16, fontWeight: "400" },
-  label: { fontSize: 12, lineHeight: 18, fontWeight: "600" },
-  body: { fontSize: 14, lineHeight: 20, fontWeight: "400" },
-  bodyLarge: { fontSize: 16, lineHeight: 24, fontWeight: "400" },
-  title: { fontSize: 18, lineHeight: 26, fontWeight: "700" },
-  titleLarge: { fontSize: 20, lineHeight: 28, fontWeight: "800" },
-  heading: { fontSize: 24, lineHeight: 32, fontWeight: "800" },
+  caption: { fontSize: 11, lineHeight: 16, fontWeight: fontWeight.regular },
+  label: { fontSize: 12, lineHeight: 18, fontWeight: fontWeight.semibold },
+  body: { fontSize: 14, lineHeight: 20, fontWeight: fontWeight.regular },
+  bodyLarge: { fontSize: 16, lineHeight: 24, fontWeight: fontWeight.regular },
+  title: { fontSize: 18, lineHeight: 26, fontWeight: fontWeight.bold },
+  titleLarge: { fontSize: 20, lineHeight: 28, fontWeight: fontWeight.heavy },
+  heading: { fontSize: 24, lineHeight: 32, fontWeight: fontWeight.heavy },
 } as const;
 
 export type TextVariant = keyof typeof typography;
+
+/**
+ * Document heading hierarchy without widening the established `TextVariant`
+ * union. Levels 3–5 reuse the existing semantic styles; larger levels are
+ * additive display roles for dense product pages and documentation.
+ */
+export const heading = {
+  level1: { fontSize: 40, lineHeight: 48, fontWeight: fontWeight.heavy },
+  level2: { fontSize: 32, lineHeight: 40, fontWeight: fontWeight.heavy },
+  level3: typography.heading,
+  level4: typography.titleLarge,
+  level5: typography.title,
+} as const;
+
+export type HeadingLevel = keyof typeof heading;
 
 /** Glyphs include icons and avatars; they do not inherit paragraph line-height. */
 export const glyph = {

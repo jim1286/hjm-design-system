@@ -35,9 +35,10 @@ HJM은 외부 라이브러리의 외형이나 public prop 이름을 복사하지
 후보가 아니라 짐작이고, 짐작은 적지 않습니다.
 
 Ant Design의 현재 전체 범위는 [`ant-design-coverage.md`](./ant-design-coverage.md)와
-`antDesignReferenceComponents`에 6.6.0 core 73개로 고정합니다. 73/73은 scope tracking이며
-renderer 완료를 뜻하지 않습니다. 홈과 Showcase는 fully previewable, partial renderer,
-contract-only 수치를 분리해 표시합니다.
+`antDesignReferenceComponents`에 6.6.1 core 73개로 고정합니다. 73/73은 scope tracking이며
+renderer 완료를 뜻하지 않습니다. 홈과 Showcase는 Web reference, contract-only, Native-only
+증거를 표시하고, reference crosswalk의 fully mature, partial maturity, planned-only 수치와
+분리합니다.
 
 ## 확장 구조
 

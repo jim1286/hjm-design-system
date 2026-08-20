@@ -4,9 +4,11 @@ import { floatingSurfaceContract, focusIndicatorContract } from "./component-con
 import {
   backdrop,
   control,
+  fontWeight,
   motionPreset,
   shadow,
   spacing,
+  type FontWeightValue,
   type TextVariant,
 } from "./foundations.js";
 import { semanticColors } from "./semantic-colors.js";
@@ -119,7 +121,7 @@ export const sidePanelRecipe = {
   title: {
     color: semanticColors.content.primary,
     textVariant: "title",
-    fontWeight: "700",
+    fontWeight: fontWeight.bold,
   },
   body: {
     color: semanticColors.content.body,
@@ -150,7 +152,7 @@ export const sidePanelRecipe = {
     paddingBottom: number;
   };
   header: { minHeight: number; gap: number };
-  title: { color: ColorReference; textVariant: TextVariant; fontWeight: string };
+  title: { color: ColorReference; textVariant: TextVariant; fontWeight: FontWeightValue };
   body: { color: ColorReference; textVariant: TextVariant; gap: number };
   footer: { color: ColorReference; textVariant: TextVariant; gap: number; paddingTop: number };
   transition: { enter: typeof motionPreset.enter; exit: typeof motionPreset.exit };

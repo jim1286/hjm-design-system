@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import {
@@ -6,13 +6,18 @@ import {
   antDesignReferenceSystem,
   componentCatalog,
   getAntDesignReferencesFor,
-  summarizeComponentRoadmap,
   type ComponentCatalogEntry,
   type ComponentCategory,
   type ComponentPlatform,
   type ComponentStatus,
 } from "@hjm/design-system";
-import { componentStoryHref } from "./story-factory";
+import {
+  summarizeWebShowcaseCoverage,
+} from "./preview-registry";
+import {
+  componentStoryHref,
+  getComponentStoryClassification,
+} from "./story-factory";
 
 type CategoryFilter = ComponentCategory | "all";
 type PlatformFilter = ComponentPlatform | "all";
@@ -36,11 +41,15 @@ const categoryLabels: Readonly<Record<ComponentCategory, string>> = {
 
 const categories = Object.keys(categoryLabels) as ComponentCategory[];
 
-function ComponentExplorer({ initialCategory = "all" }: ExplorerProps) {
+export function ComponentExplorer({ initialCategory = "all" }: ExplorerProps) {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<CategoryFilter>(initialCategory);
   const [platform, setPlatform] = useState<PlatformFilter>("all");
   const [status, setStatus] = useState<StatusFilter>("all");
+
+  useEffect(() => {
+    setCategory(initialCategory);
+  }, [initialCategory]);
 
   const filtered = useMemo(() => {
     const normalizedQuery = query.trim().toLocaleLowerCase();
@@ -64,23 +73,22 @@ function ComponentExplorer({ initialCategory = "all" }: ExplorerProps) {
       entries: filtered.filter((entry) => entry.category === currentCategory),
     }))
     .filter(({ entries }) => entries.length > 0);
-  const roadmap = summarizeComponentRoadmap();
-  const validated = catalog.filter(({ status: maturity }) => maturity === "stable" || maturity === "beta").length;
+  const showcaseCoverage = summarizeWebShowcaseCoverage();
 
   return (
     <main className="hjm-page hjm-explorer">
       <p className="hjm-eyebrow">Components</p>
       <h1 className="hjm-title">Component explorer</h1>
       <p className="hjm-lead">
-        구현된 preview와 contract-first roadmap를 한곳에서 탐색합니다. 익숙한 ecosystem 이름도
-        검색할 수 있지만, API와 시각 언어는 HJM의 canonical contract를 따릅니다.
+        실제 Web reference, contract-only roadmap, Native-only 계약을 한곳에서 탐색합니다.
+        익숙한 ecosystem 이름도 검색할 수 있지만, API와 시각 언어는 HJM의 canonical contract를 따릅니다.
       </p>
 
       <section className="hjm-explorer-summary" aria-label="Explorer summary">
-        <span><strong>{catalog.length}</strong> HJM components</span>
-        <span><strong>{validated}</strong> validated renderers</span>
-        <span><strong>{roadmap["contract-ready"]}</strong> contracts ready</span>
-        <span><strong>{roadmap.composed}</strong> composed decisions</span>
+        <span><strong>{showcaseCoverage.canonical}</strong> HJM components</span>
+        <span><strong>{showcaseCoverage.webReferences}</strong> Web references</span>
+        <span><strong>{showcaseCoverage.contractOnly}</strong> contract-only stories</span>
+        <span><strong>{showcaseCoverage.nativeOnly}</strong> Native-only stories</span>
         <span><strong>{antDesignReferenceComponents.length}</strong> {antDesignReferenceSystem.name} references</span>
         <span><strong>{filtered.length}</strong> visible results</span>
       </section>
@@ -139,6 +147,14 @@ function ComponentExplorer({ initialCategory = "all" }: ExplorerProps) {
           <div className="hjm-component-card-grid">
             {entries.map((entry) => {
               const references = getAntDesignReferencesFor(entry.name);
+              const classification = getComponentStoryClassification(
+                entry.name as (typeof componentCatalog)[number]["name"],
+              );
+              const storyLinkLabel = classification === "web-renderer"
+                ? "Open Web reference"
+                : classification === "web-unsupported"
+                  ? "Open Native-only contract"
+                  : "Open contract & decision";
               return (
                 <article className="hjm-component-card" key={entry.name}>
                   <div className="hjm-component-card-topline">
@@ -156,7 +172,7 @@ function ComponentExplorer({ initialCategory = "all" }: ExplorerProps) {
                     </div>
                   )}
                   <div className="hjm-component-card-footer">
-                    <a href={componentStoryHref(entry)}>{entry.status === "planned" ? "Open concept & decision" : "Open interactive reference"} <span aria-hidden>→</span></a>
+                    <a href={componentStoryHref(entry)}>{storyLinkLabel} <span aria-hidden>→</span></a>
                   </div>
                 </article>
               );
@@ -171,6 +187,7 @@ function ComponentExplorer({ initialCategory = "all" }: ExplorerProps) {
 const meta = {
   title: "Components/Overview",
   component: ComponentExplorer,
+  excludeStories: ["ComponentExplorer"],
   args: { initialCategory: "all" },
   parameters: { controls: { disable: true } },
 } satisfies Meta<typeof ComponentExplorer>;
@@ -179,3 +196,13 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Explorer: Story = {};
+export const Foundation: Story = { args: { initialCategory: "foundation" }, name: "Foundations" };
+export const Layout: Story = { args: { initialCategory: "layout" } };
+export const Actions: Story = { args: { initialCategory: "action" } };
+export const Inputs: Story = { args: { initialCategory: "input" } };
+export const Navigation: Story = { args: { initialCategory: "navigation" } };
+export const DataDisplay: Story = { args: { initialCategory: "data-display" }, name: "Data display" };
+export const Feedback: Story = { args: { initialCategory: "feedback" } };
+export const Overlays: Story = { args: { initialCategory: "overlay" } };
+export const Providers: Story = { args: { initialCategory: "provider" } };
+export const Utilities: Story = { args: { initialCategory: "utility" } };

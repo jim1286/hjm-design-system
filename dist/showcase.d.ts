@@ -1,6 +1,9 @@
 import { type ComponentCatalogEntry, type ComponentStatus } from "./catalog.js";
-export type ShowcaseTheme = "light" | "dark";
-export type ShowcaseDirection = "ltr" | "rtl";
+import type { ResolvedTheme } from "./colors.js";
+import type { DesignSystemDirection, DesignSystemEnvironmentInput } from "./design-system-provider.js";
+export type ShowcaseTheme = ResolvedTheme;
+export type ShowcaseDirection = DesignSystemDirection;
+/** Closed fixture subset of the Provider's continuous text-scale signal. */
 export type ShowcaseTextScale = 1 | 1.5 | 2;
 export type ShowcaseMotionPreference = "full" | "reduced";
 export type ShowcaseEnvironment = Readonly<{
@@ -51,6 +54,8 @@ export declare const showcaseEnvironmentMatrix: readonly [{
     readonly textScale: 1;
     readonly motion: "reduced";
 }];
+/** Bridges documentation fixtures to the same environment contract products consume. */
+export declare function getShowcaseEnvironmentInput(environment: ShowcaseEnvironment): DesignSystemEnvironmentInput;
 export type ShowcaseScenarioId = "contract" | "default" | "dark" | "long-copy" | "large-text" | "rtl" | "reduced-motion" | "accessibility" | "keyboard" | "platform-parity";
 export type ShowcaseSurface = "contract" | "web" | "native";
 export type ShowcaseScenario = Readonly<{

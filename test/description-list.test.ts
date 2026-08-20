@@ -89,9 +89,9 @@ describe("DescriptionList large-text reflow", () => {
     expect(resolveDescriptionListColumnCount(400, 2, 1)).toBe(2);
   });
 
-  it("collapses to 1 column as fontScale grows, without a per-screen threshold", () => {
-    // Same fixed width; only the caller's measured fontScale changes. No
-    // screen-owned `fontScale >= 1.6` branch is required to get this right.
+  it("collapses to 1 column as textScale grows, without a per-screen threshold", () => {
+    // Same fixed width; only the Provider's measured textScale changes. No
+    // screen-owned `textScale >= 1.6` branch is required to get this right.
     expect(resolveDescriptionListColumnCount(340, 2, 1)).toBe(2);
     expect(resolveDescriptionListColumnCount(340, 2, 2)).toBe(1);
   });

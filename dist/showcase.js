@@ -45,6 +45,16 @@ export const showcaseEnvironmentMatrix = [
         motion: "reduced",
     },
 ];
+/** Bridges documentation fixtures to the same environment contract products consume. */
+export function getShowcaseEnvironmentInput(environment) {
+    const textScale = environment.textScale;
+    return {
+        theme: environment.theme,
+        direction: environment.direction,
+        textScale,
+        reducedMotion: environment.motion === "reduced",
+    };
+}
 export const showcaseScenarios = [
     {
         id: "contract",

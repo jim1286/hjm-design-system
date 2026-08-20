@@ -94,7 +94,8 @@ status/live role이나 별도 accessibility label을 추가하면 같은 정보�
   않습니다. selected mark는 indicator 안에, keyboard focus ring은 item 바깥에 그려 동시에
   보이게 합니다.
 - item target은 최소 44×44입니다. label은 항상 보이고 font scaling을 허용하며 고정 item 높이와
-  한 줄 clipping을 사용하지 않습니다.
+  한 줄 clipping을 사용하지 않습니다. 모든 destination을 동시에 유지해야 하는 persistent chrome의
+  visual label은 최대 `1.4×`까지만 커지고, 원문 전체는 item의 접근성 이름으로 유지합니다.
 - safe-area bottom inset은 recipe의 최소 padding에 더합니다. `max(base, inset)`으로 대체하지
   않습니다.
 - 기본 keyboard behavior는 `hide`입니다. software keyboard 위로 bottom navigation을 밀어

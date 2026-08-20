@@ -1,6 +1,6 @@
 import type { ThemeColors } from "./colors.js";
-import { control, radius, spacing, typography } from "./foundations.js";
-import type { TextVariant } from "./foundations.js";
+import { control, fontWeight, radius, spacing, typography } from "./foundations.js";
+import type { FontWeightValue, TextVariant } from "./foundations.js";
 
 export type ButtonTone = "primary" | "secondary" | "ghost" | "danger" | "link";
 export type ButtonSize = keyof typeof control.buttonHeight;
@@ -175,7 +175,7 @@ export const fieldRecipe = {
   label: {
     color: "textBody",
     textVariant: "body",
-    fontWeight: "600",
+    fontWeight: fontWeight.semibold,
     gap: spacing.xs,
   },
   support: {
@@ -206,7 +206,7 @@ export const fieldRecipe = {
   label: {
     color: keyof ThemeColors;
     textVariant: keyof typeof typography;
-    fontWeight: string;
+    fontWeight: FontWeightValue;
     gap: number;
   };
   support: {

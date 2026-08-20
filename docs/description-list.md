@@ -36,14 +36,15 @@ DescriptionList는 이 형태를 **코어 계약 안으로** 가져와 `resolveD
 소유합니다.
 
 ```ts
-resolveDescriptionListColumnCount(availableWidth, requestedColumns, fontScale);
+resolveDescriptionListColumnCount(availableWidth, requestedColumns, textScale);
 ```
 
 - `availableWidth`가 유효하지 않으면(0 이하, NaN) `requestedColumns`를 그대로 돌려줍니다 —
   renderer가 아직 레이아웃을 측정하지 못한 첫 프레임을 위한 안전한 폴백입니다.
-- `fontScale`은 최소 1로 clamp합니다. 배율이 1보다 작다고 칸을 더 좁히지 않습니다(§5가
+- `textScale`은 `DesignSystemProvider`의 연속값을 그대로 받으며 최소 1로 clamp합니다.
+  배율이 1보다 작다고 칸을 더 좁히지 않습니다(§5가
   막은 방향).
-- 같은 `availableWidth`에서 `fontScale`이 커지면 `minItemWidth`가 함께 커지므로 2열이
+- 같은 `availableWidth`에서 `textScale`이 커지면 `minItemWidth`가 함께 커지므로 2열이
   자연히 1열로 줄어듭니다 — 화면마다 반복해야 했던 임계값 분기가 사라집니다.
 
 ## Statistic과의 경계

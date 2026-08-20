@@ -1,5 +1,6 @@
 import type { GlyphSize } from "./foundations.js";
 import type { IconTone, IconWeight } from "./component-recipes.js";
+import type { DesignSystemDirection } from "./design-system-provider.js";
 /**
  * Shared semantic names. Renderers map these roles to their tree-shakeable SVG
  * or native glyph component instead of leaking a third-party icon name into a
@@ -7,7 +8,7 @@ import type { IconTone, IconWeight } from "./component-recipes.js";
  */
 export declare const semanticIconNames: readonly ["add", "ai", "alert", "back", "calendar", "check", "chevronDown", "chevronEnd", "chevronStart", "chevronUp", "close", "compare", "copy", "delete", "download", "edit", "error", "favorite", "filter", "forward", "help", "home", "info", "lock", "menu", "more", "notifications", "pause", "play", "refresh", "search", "settings", "share", "success", "trendDown", "trendFlat", "trendUp", "upload", "user", "users", "visibility", "visibilityOff", "warning"];
 export type SemanticIconName = (typeof semanticIconNames)[number];
-export type IconDirection = "ltr" | "rtl";
+export type IconDirection = DesignSystemDirection;
 export type IconDirectionality = "fixed" | "mirror-in-rtl";
 export type IconTransform = "none" | "mirror-inline";
 type IconAppearance = Readonly<{

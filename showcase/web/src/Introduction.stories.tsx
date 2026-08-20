@@ -6,12 +6,18 @@ import {
   designSystemVersion,
   summarizeAntDesignCoverage,
   summarizeComponentRoadmap,
-  summarizeShowcaseMaturity,
   type ComponentCatalogEntry,
   type ComponentCategory,
 } from "@hjm/design-system";
 import { showcaseEnvironmentMatrix } from "@hjm/design-system/showcase";
-import { componentStoryHref } from "./components/story-factory";
+import {
+  isWebRendererComponent,
+  summarizeWebShowcaseCoverage,
+} from "./components/preview-registry";
+import {
+  componentCategoryExplorerHref,
+  componentStoryHref,
+} from "./components/story-factory";
 
 const catalog: readonly ComponentCatalogEntry[] = componentCatalog;
 
@@ -74,11 +80,10 @@ function LiveComposition() {
   );
 }
 
-function Introduction() {
-  const maturity = summarizeShowcaseMaturity();
+export function Introduction() {
   const roadmap = summarizeComponentRoadmap();
   const referenceCoverage = summarizeAntDesignCoverage();
-  const previewable = maturity.stable + maturity.beta;
+  const showcaseCoverage = summarizeWebShowcaseCoverage();
   const categoryCounts = categoryOrder.map((category) => ({
     category,
     entries: catalog.filter((entry) => entry.category === category),
@@ -107,9 +112,9 @@ function Introduction() {
       </header>
 
       <section className="hjm-home-stat-strip" aria-label="Design system coverage">
-        <article><strong>{catalog.length}</strong><span>canonical scope</span></article>
-        <article><strong>{previewable}</strong><span>interactive references</span></article>
-        <article><strong>{roadmap["contract-ready"]}</strong><span>contracts ready to validate</span></article>
+        <article><strong>{showcaseCoverage.webReferences}</strong><span>Web references</span></article>
+        <article><strong>{showcaseCoverage.contractOnly}</strong><span>contract-only stories</span></article>
+        <article><strong>{showcaseCoverage.nativeOnly}</strong><span>Native-only stories</span></article>
         <article><strong>{referenceCoverage.tracked}/{referenceCoverage.total}</strong><span>Ant Design scope tracked</span></article>
       </section>
 
@@ -171,15 +176,17 @@ function Introduction() {
         <div className="hjm-category-grid">
           {categoryCounts.map(({ category, entries }) => {
             const meta = categoryMetadata[category];
-            const ready = entries.filter(({ status }) => status === "stable" || status === "beta").length;
+            const webReferences = entries.filter(({ name }) =>
+              isWebRendererComponent(name as (typeof componentCatalog)[number]["name"]),
+            ).length;
             return (
-              <a className="hjm-category-card" href={`?path=/story/components-overview--explorer&args=initialCategory:${category}`} key={category}>
+              <a className="hjm-category-card" href={componentCategoryExplorerHref(category)} key={category}>
                 <span className="hjm-category-mark" aria-hidden="true">{meta.mark}</span>
                 <span className="hjm-category-copy">
                   <strong>{meta.label}</strong>
                   <small>{meta.description}</small>
                 </span>
-                <span className="hjm-category-count"><b>{entries.length}</b><small>{ready} previewable</small></span>
+                <span className="hjm-category-count"><b>{entries.length}</b><small>{webReferences} Web refs</small></span>
               </a>
             );
           })}
@@ -203,9 +210,9 @@ function Introduction() {
             <div><dt>Direct</dt><dd>{referenceCoverage.relationships.direct}</dd></div>
             <div><dt>Adapted</dt><dd>{referenceCoverage.relationships.adapted}</dd></div>
             <div><dt>Decomposed</dt><dd>{referenceCoverage.relationships.decomposed}</dd></div>
-            <div><dt>Fully previewable</dt><dd>{referenceCoverage.fullyPreviewable}</dd></div>
-            <div><dt>Partial renderer</dt><dd>{referenceCoverage.partiallyPreviewable}</dd></div>
-            <div><dt>Contract only</dt><dd>{referenceCoverage.contractOnly}</dd></div>
+            <div><dt>Fully mature</dt><dd>{referenceCoverage.fullyMature}</dd></div>
+            <div><dt>Partial maturity</dt><dd>{referenceCoverage.partiallyMature}</dd></div>
+            <div><dt>Planned only</dt><dd>{referenceCoverage.plannedOnly}</dd></div>
           </dl>
         </div>
       </section>
@@ -226,6 +233,7 @@ function Introduction() {
 const meta = {
   title: "Home/Overview",
   component: Introduction,
+  excludeStories: ["Introduction"],
   parameters: { controls: { disable: true } },
 } satisfies Meta<typeof Introduction>;
 

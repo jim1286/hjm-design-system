@@ -7,12 +7,8 @@ function Swatch({ color, label, value }: { color: string; label: string; value: 
     <article className="hjm-card">
       <div
         aria-hidden="true"
+        className="hjm-color-swatch"
         style={{
-          height: 96,
-          margin: -12,
-          marginBottom: 16,
-          border: "1px solid color-mix(in srgb, currentColor 14%, transparent)",
-          borderRadius: 12,
           background: color,
         }}
       />

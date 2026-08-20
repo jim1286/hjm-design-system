@@ -6,6 +6,7 @@ import {
   assertFiniteNumber,
   numericRangeDefaults,
   snapToStep,
+  stepNumericValue,
   validateNumericRangeConfig,
   type NumericRangeConfig,
 } from "./number-field.js";
@@ -91,10 +92,14 @@ export function getSliderStepTarget(
   if (intent === "last") return descriptor.max;
   const step = descriptor.step ?? numericRangeDefaults.step;
   const config: NumericRangeConfig = { min: descriptor.min, max: descriptor.max, step };
-  const isPage = intent === "increment-page" || intent === "decrement-page";
-  const direction = intent === "increment" || intent === "increment-page" ? 1 : -1;
-  const magnitude = isPage ? step * sliderBehaviorDefaults.pageMultiplier : step;
-  return snapToStep(descriptor.value + direction * magnitude, config);
+  if (intent === "increment" || intent === "decrement") {
+    return stepNumericValue(descriptor.value, config, intent);
+  }
+  const direction = intent === "increment-page" ? 1 : -1;
+  return snapToStep(
+    descriptor.value + direction * step * sliderBehaviorDefaults.pageMultiplier,
+    config,
+  );
 }
 
 export type SliderSize = "medium";

@@ -8,8 +8,9 @@ import {
 import {
   type SemanticIconName,
 } from "./icon.js";
+import type { DesignSystemDirection } from "./design-system-provider.js";
 
-export type BottomNavigationDirection = "ltr" | "rtl";
+export type BottomNavigationDirection = DesignSystemDirection;
 export type BottomNavigationKeyboardBehavior = "hide" | "remain";
 
 export type BottomNavigationConfiguration = Readonly<{

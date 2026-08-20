@@ -1882,6 +1882,10 @@ export declare const segmentedControlRecipe: {
     readonly defaults: {
         readonly size: "medium";
     };
+    readonly adaptive: {
+        readonly largeTextLayout: "stacked";
+        readonly stackAtFontScale: 1.6;
+    };
     /**
      * A recessed track with a raised white thumb. The fills used to be
      * inverted — a white track with a canvas-coloured selected segment — so the
@@ -2374,6 +2378,7 @@ export declare const bottomNavigationRecipe: {
     };
     readonly largeText: {
         readonly allowFontScaling: true;
+        readonly maxFontSizeMultiplier: 1.4;
         readonly fixedItemHeight: false;
         readonly labelWraps: true;
     };

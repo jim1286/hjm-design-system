@@ -42,6 +42,9 @@ keyboard, focus, accessibilityState 계약이 필요 없습니다 — 접근성 
 노드 하나로 충분합니다. 여러 Tag를 한 줄에 나열할 때 간격 조합은 나중에 Stack/Inline
 recipe가 안정화되면 그쪽에 위임하고, 이 계약에는 넣지 않습니다.
 
+기본 높이는 20px이지만 고정 높이가 아닙니다. Dynamic Type에서 한 줄 라벨의 고유 높이만큼
+늘어나며, renderer는 라벨을 고정 프레임 안에서 자르지 않습니다.
+
 ## 검증 화면 (예정)
 
 야잘알 선수 카드의 포지션/등급 라벨, FA 등급 시트의 등급 칩을 첫 vertical slice 후보로

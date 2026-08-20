@@ -1,5 +1,5 @@
 import { focusIndicatorContract } from "./component-contracts.js";
-import { control, opacity, radius, spacing, stroke, } from "./foundations.js";
+import { control, fontWeight, opacity, radius, spacing, stroke, } from "./foundations.js";
 import { semanticColors } from "./semantic-colors.js";
 export const filePickerDefaults = {
     mode: "single",
@@ -162,7 +162,7 @@ export const filePickerRecipe = {
         radius: "md",
         color: semanticColors.content.brand,
         textVariant: "label",
-        fontWeight: "700",
+        fontWeight: fontWeight.bold,
     },
     dropzone: {
         borderStyle: "dashed",

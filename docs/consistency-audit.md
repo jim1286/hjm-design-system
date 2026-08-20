@@ -4,6 +4,10 @@
 배선된 것까지 포함해 서로 겹치거나 어긋난 자리를 찾았다. **코드는 고치지 않았다** —
 이 문서 하나만 새로 만들었다.
 
+> **최신 상태(2026-08-20):** 아래 최초 감사의 1번(Popover), 2번(Slider), 2차 감사의
+> 10번(Tour)은 모두 해결됐다. 각 항목과 오버레이 비교표는 현재 구현을 기준으로
+> 갱신했으며, 최초 발견 맥락은 회귀 이유를 남기기 위해 보존한다.
+
 ## 무엇을 어떻게 대조했는가
 
 1. `git status --short`로 이번 배치의 변경/신규 파일 전체 목록을 뽑았다(`src/*.ts`
@@ -31,52 +35,23 @@
 
 ## 발견
 
-### 1. [MEDIUM] Popover만 트리거-오픈 사유를 다른 이름으로 부른다
+### 1. [해결 확인] Popover 트리거-오픈 사유가 공통 `"trigger"`로 통합됐다
 
-- 파일·심볼: `src/popover.ts:34` `PopoverOpenChangeReason = "trigger-activation" |
-  PopoverDismissReason`
-- 무엇이 어긋났나: 같은 개념("트리거 상호작용으로 열렸다")을 `src/sheet.ts:15`,
-  `src/side-panel.ts:26`, `src/command-palette.ts:99`는 전부 리터럴 `"trigger"`로
-  부른다. Popover만 `"trigger-activation"`이다. `docs/popover.md`도 "Sheet가
-  dismiss reason을 추측하지 않고 값으로 보고하는 것과 같은 이유"라고만 적어
-  **왜 이 스펠링이 다른지는 설명하지 않는다** — 다른 값들(예:
-  `outside-pointer`/`outside-focus` 분리)은 전부 이유가 문서에 있는데 이것만 없다.
-- 왜 문제인가: 네 오버레이의 `onOpenChange`를 한 renderer 유틸로 묶어 "reason이
-  `"trigger"`면 열림 로그를 남긴다" 같은 공통 처리를 짜면 Popover에서만 조용히
-  안 걸린다 — 컴파일 에러 없이 값 비교가 실패하는 조용한 드리프트다(카테고리 2,
-  "같은 이름이 다른 뜻"의 변형인 "같은 뜻이 다른 이름").
-- 권고: **이름 변경.** `PopoverOpenChangeReason`을 `"trigger" | PopoverDismissReason`으로
-  맞춘다. Popover만 다르게 부를 근거(hover-trigger 구분 등)가 있다면 `docs/popover.md`에
-  그 이유를 추가하고 남긴다 — 지금 코드에도 문서에도 근거가 없으므로 이름 변경 쪽을
-  권한다.
-- 적용 시 건드릴 파일: `src/popover.ts`(`PopoverOpenChangeReason` 정의와
-  `commandPaletteBehaviorScenarios`처럼 문자열을 참조하는 곳 — 현재 `"trigger-activation"`을
-  직접 참조하는 곳은 타입 정의와 scenario 이름 문자열
-  `"trigger-activation-while-open-does-not-reopen"` 뿐이라 범위가 좁다),
-  `docs/popover.md`(48번째 줄 설명), `test/popover.test.ts`(이 리터럴을 직접
-  assert하는 테스트가 있으면 함께).
+- 현재 `PopoverOpenChangeReason`은 `"trigger" | PopoverDismissReason`이다.
+  `"trigger-activation"`은 Tooltip의 **재클릭 닫힘** 사유로만 남아 같은 문자열이
+  열림과 닫힘을 동시에 뜻하던 충돌이 사라졌다.
+- Popover의 `outside-pointer`/`outside-focus` 분리는 비모달 Tab 이탈과 포인터 이탈을
+  구분하기 위한 별도 축이므로 그대로 유지한다(3번 항목).
+- 남은 조치: 없음. `test/popover.test.ts`와 2차 감사 9번이 현재 어휘를 고정한다.
 
-### 2. [LOW] Slider가 NumberField의 스텝 공식을 다시 짰다(page/first/last를 빼면 결과는 같다)
+### 2. [해결 확인] Slider 단일 스텝이 NumberField 판정을 직접 재사용한다
 
-- 파일·심볼: `src/slider.ts:85-98` `getSliderStepTarget`
-- 무엇이 어긋났나: `src/number-field.ts`의 `stepNumericValue(value, config,
-  direction)`는 정확히 `snapToStep(value ± step, config)`를 계산한다. Slider의
-  `getSliderStepTarget`은 `"increment"`/`"decrement"`(페이지 아닌 단일 스텝) 경우에
-  **같은 공식을 다시 써서** `snapToStep(descriptor.value + direction * step, config)`를
-  계산한다 — `stepNumericValue`를 호출하지 않는다. (`"increment-page"`/
-  `"decrement-page"`/`"first"`/`"last"`는 `stepNumericValue`가애초에 표현할 수 없는
-  경우라 다시 쓰는 것이 불가피하다 — 문제는 단일 스텝 두 경우뿐이다.)
-- 왜 문제인가: 지금은 두 식이 수학적으로 동일해 렌더러가 틀리게 동작하지 않는다.
-  하지만 `stepNumericValue`가 나중에(예: step precision 처리 방식) 바뀌면
-  Slider의 사본은 자동으로 따라가지 않는다 — `docs/slider.md`가 이미
-  "half-star를 위한 새 수학이 필요 없다"고 Rating 판정에서 근거로 든 바로 그
-  재사용 사슬(NumberField → Slider → Rating 판정)의 중간 고리가 사실은 완전
-  위임이 아니라 부분 재구현이라는 뜻이다.
-- 권고: **통합.** `"increment"`/`"decrement"`일 때는
-  `stepNumericValue(descriptor.value, config, intent)`를 직접 호출하고,
-  `magnitude` 스케일링이 필요한 page 두 경우만 로컬 계산을 남긴다.
-- 적용 시 건드릴 파일: `src/slider.ts`만(공개 함수 시그니처는 그대로, 내부 구현만
-  변경 — `test/slider.test.ts`는 값이 같으므로 수정 불필요할 가능성이 높다).
+- `getSliderStepTarget`의 `"increment"`/`"decrement"` 경로는 이제
+  `stepNumericValue(descriptor.value, config, intent)`를 직접 호출한다.
+- `"increment-page"`/`"decrement-page"`만 Slider 고유 page multiplier를 적용한 뒤
+  공유 `snapToStep`으로 스냅하며, `"first"`/`"last"`는 경계값을 그대로 반환한다.
+- `test/slider.test.ts`는 min offset, 소수 step, 양쪽 경계에서 Slider 단일 스텝과
+  `stepNumericValue` 결과가 계속 같아야 한다는 회귀표를 고정한다.
 
 ### 3. [INFO] Popover의 `outside-pointer`/`outside-focus` 분리는 근거가 있다 — 다음 저작자를 위한 이정표만 필요
 
@@ -228,36 +203,15 @@
   용례이고, `docs/tooltip.md`가 이미 이 의미를 문서화하고 있다.
 - 권고: 없음(참고용 기록).
 
-### 10. [MEDIUM] Tour만 "트리거로 열렸다"는 사유가 없다 — 열림 사유 어휘의 마지막 예외
+### 10. [해결 확인] Tour 열림 사유도 공통 `"trigger"`를 사용한다
 
-- 파일·심볼: `src/tour.ts:64-71` `TourCloseReason`/`TourOpenChangeDetail`.
-- 무엇이 어긋났나: `src/` 전체에서 `OpenState`/`OpenChangeDetail`/`DismissReason`을
-  선언한 모듈 11개 중, 열림 사유를 보고하는 7개(Sheet, SidePanel, CommandPalette,
-  Popover — 수정 후, Select(`collection.ts`), DatePicker, AlertDialog) **전부**
-  `"trigger"`를 갖는다. Tour만 `TourOpenChangeDetail = { reason: TourCloseReason }`이고
-  `TourCloseReason = "skip"|"escape"|"complete"|"programmatic"|"interrupted"`에는
-  "그냥 열렸다"에 해당하는 값이 없다. 타입 이름은 `OpenChangeDetail`(연다/닫는다
-  전부를 가리키는 이름)인데 실제 값 목록은 `CloseReason`(닫는 사유만)이라 이름과
-  실제 내용이 어긋난다.
-- 왜 문제인가: `onOpenChange(open, detail)`이 `open === true`로 바뀌는 순간
-  실제로 호출되면 `detail.reason`에 다섯 값 중 뭐가 들어가는지 코드에도 문서
-  (`docs/tour.md`)에도 없다. 다른 여섯 모듈처럼 "이 오버레이가 왜 열렸는지"를
-  일관되게 로깅/분석하는 공용 renderer 유틸을 짜면 Tour에서만 값이 없거나
-  타입이 안 맞아 별도 분기가 필요하다 — Popover/Tooltip처럼 **같은 이름이 다른
-  뜻**은 아니지만, "이름이 약속하는 것을 실제로 못 지키는" 자리라 다음 사람이
-  또 이 질문을 하게 된다.
-- 권고: **이름 변경 또는 문서화, 둘 중 하나.**
-  - (a) `TourOpenChangeDetail`에 `"trigger"`를 추가해 나머지 여섯과 맞춘다(Tour가
-    일반적으로 "시작" 버튼이나 첫 실행 로직으로 열리므로 자연스러운 값이다), 또는
-  - (b) Tour는 열림 이벤트 자체를 보고할 필요가 없다고 판단했다면(예: "제품이
-    `open=true`로 설정하는 순간 이미 왜 여는지 알고 있다") 그 판단을 `docs/tour.md`에
-    명시하고 타입 이름을 `TourCloseDetail`처럼 실제 내용과 맞게 바꾼다.
-  - 이 저작자 권고는 (a)다 — 나머지 여섯 모듈과 한 가지 어휘를 유지하는 비용이
-    "Tour는 특별하다"는 예외를 하나 더 만드는 비용보다 낮다.
-- 적용 시 건드릴 파일: `src/tour.ts`(`TourCloseReason`/`TourOpenChangeDetail`
-  선언과 관련 scenario 문자열), `docs/tour.md`(어느 쪽을 택했는지 근거 한 단락),
-  `test/tour.test.ts`(열림 사유를 검증하는 테스트가 없다면 하나 추가하는 편이
-  이 축을 다시 놓치지 않게 한다).
+- `TourOpenReason = "trigger" | TourCloseReason`이 추가됐고
+  `TourOpenChangeDetail.reason`은 이 전체 union을 사용한다. 타입 이름과 실제 값 목록이
+  다시 일치한다.
+- `docs/tour.md`와 `test/tour.test.ts`가 트리거로 여는 경로를 기록한다. Tour도 Sheet,
+  SidePanel, CommandPalette, Popover, Select, DatePicker, AlertDialog와 같은 열림 어휘를
+  사용하므로 renderer 공용 로깅에서 예외 분기가 필요 없다.
+- 남은 조치: 없음.
 
 ### 11. [확인함, 정확함] DesignSystemProvider의 direction 이관 목록 — 6곳 전부 맞고 빠진 곳 없음
 
@@ -294,7 +248,7 @@
 | AlertDialog | `trigger` | `confirm`·`cancel`류(`AlertDialogCancelReason`) |
 | Tooltip | `pointer`·`focus` | `pointer-leave`·`blur`·`escape`·`trigger-activation`(재클릭 닫힘)·`another-tooltip` |
 | Toast | 없음(트리거 앵커가 없는 큐 모델) | `ToastDismissReason`(별도 체계, 오버레이 anchor 개념 자체가 없어 비교 대상 아님) |
-| Tour | **없음(10번 항목)** | `skip`·`escape`·`complete`·`programmatic`·`interrupted` |
+| Tour | `trigger` | `skip`·`escape`·`complete`·`programmatic`·`interrupted` |
 | Menu | (behaviorRegistry 문자열, 자체 파일 없음) | `escape`·`outside`·`selection` |
 
 결론: `programmatic`(controlled owner의 강제 닫힘은 항상 허용)과 `escape`는 전
