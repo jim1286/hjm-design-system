@@ -1,6 +1,6 @@
 {
   "name": "@hjm/react",
-  "version": "0.5.2",
+  "version": "0.6.0",
   "description": "Accessible React 19 renderers for HJM design contracts.",
   "private": true,
   "repository": {
