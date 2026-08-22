@@ -110,13 +110,14 @@ describe("DescriptionList visual identity", () => {
     );
   });
 
-  it("keeps the recipe planned until a responsive product grid is validated", () => {
+  it("tracks the paired responsive renderers as beta", () => {
     expect(
       componentCatalog.find((entry) => entry.name === "DescriptionList"),
     ).toMatchObject({
       category: "data-display",
       platform: "shared",
-      status: "planned",
+      status: "beta",
+      surfaceStatus: { web: "beta", native: "beta" },
     });
   });
 

@@ -95,6 +95,7 @@ describe("package boundaries", () => {
       "./tokens",
       "./foundations",
       "./colors",
+      "./color-references",
       "./responsive",
       "./grid",
       "./recipes",

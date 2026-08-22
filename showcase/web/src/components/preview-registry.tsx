@@ -7,11 +7,17 @@ import {
   Badge as HjmBadge,
   Card as HjmCard,
   CounterBadge as HjmCounterBadge,
+  DescriptionList as HjmDescriptionList,
   Icon as HjmIcon,
+  Image as HjmImage,
   ListRow as HjmListRow,
   Tag as HjmTag,
+  Timeline as HjmTimeline,
 } from "@hjm/react/display";
-import { EmptyState as HjmEmptyState } from "@hjm/react/feedback";
+import {
+  EmptyState as HjmEmptyState,
+  Result as HjmResult,
+} from "@hjm/react/feedback";
 import {
   Field as HjmField,
   SearchField as HjmSearchField,
@@ -20,11 +26,13 @@ import {
 } from "@hjm/react/forms";
 import {
   Grid as HjmGrid,
+  Layout as HjmLayout,
   Stack as HjmStack,
   Surface as HjmSurface,
   Text as HjmText,
 } from "@hjm/react/layout";
 import {
+  BottomNavigation as HjmBottomNavigation,
   LoadMore as HjmLoadMore,
   Tabs as HjmTabs,
 } from "@hjm/react/navigation";
@@ -75,6 +83,7 @@ export const webRendererComponentNames = [
   "Surface",
   "Stack",
   "Grid",
+  "Layout",
   "Button",
   "IconButton",
   "Field",
@@ -88,6 +97,7 @@ export const webRendererComponentNames = [
   "SegmentedControl",
   "Select",
   "Tabs",
+  "BottomNavigation",
   "LoadMore",
   "Menu",
   "Badge",
@@ -95,7 +105,11 @@ export const webRendererComponentNames = [
   "Card",
   "ListRow",
   "Tag",
+  "Timeline",
+  "DescriptionList",
+  "Image",
   "EmptyState",
+  "Result",
   "Toast",
   "Dialog",
   "AlertDialog",
@@ -234,6 +248,7 @@ function WebPreviewRenderer({ name }: { name: RecipeWebRendererComponentName }) 
     case "Card": return <HjmCard title="Card 제목" description="계약과 renderer를 함께 소비하는 제품 카드입니다." actions={<HjmButton size="small">자세히</HjmButton>} />;
     case "Stack": return <HjmStack gap="sm"><HjmButton tone="secondary">첫 번째</HjmButton><HjmButton tone="secondary">두 번째</HjmButton><HjmButton tone="secondary">세 번째</HjmButton></HjmStack>;
     case "Grid": return <HjmGrid columns={{ compact: 1, medium: 2, expanded: 3 }} gap={{ compact: "md" }}><HjmCard title="첫 번째">공통 window class</HjmCard><HjmCard title="두 번째">responsive columns</HjmCard><HjmCard title="세 번째">row-major order</HjmCard></HjmGrid>;
+    case "Layout": return <HjmLayout header={<HjmText as="strong">제품 헤더</HjmText>} skipLinkLabel="본문으로 건너뛰기"><HjmSurface as="section" bordered>하나의 main landmark 안에 놓이는 제품 본문입니다.</HjmSurface></HjmLayout>;
     case "Button": return <HjmStack axis="inline" gap="sm" wrap><HjmButton>Primary</HjmButton><HjmButton tone="secondary">Secondary</HjmButton><HjmButton disabled>Disabled</HjmButton></HjmStack>;
     case "IconButton": return <HjmStack axis="inline" gap="sm"><HjmIconButton label="좋아요">♡</HjmIconButton><HjmIconButton label="닫기" tone="ghost">×</HjmIconButton></HjmStack>;
     case "Field": return <HjmField controlId="showcase-player-name" label="이름" description="필수 정보는 입력 아래에서 설명합니다.">{(controlProps) => <input {...controlProps} className="hjm-field__control" defaultValue="홍길동" />}</HjmField>;
@@ -247,13 +262,18 @@ function WebPreviewRenderer({ name }: { name: RecipeWebRendererComponentName }) 
     case "SegmentedControl": return <HjmSegmentedControl label="보기 방식" defaultValue="list" items={[{ value: "list", label: "목록" }, { value: "grid", label: "격자" }]} />;
     case "Select": return <HjmSelect label="언어" name="language" placeholder="언어 선택" emptySelectionLabel="선택 안 함" defaultSelectedKey="ko" items={[{ id: "ko", label: "한국어", textValue: "한국어" }, { id: "en", label: "English", textValue: "English" }]} />;
     case "Tabs": return <HjmTabs label="선수 정보" items={[{ id: "first", label: "첫 번째", panel: "첫 번째 패널 내용" }, { id: "second", label: "두 번째", panel: "두 번째 패널 내용" }]} />;
+    case "BottomNavigation": return <HjmBottomNavigation descriptor={{ accessibilityLabel: "주요 탐색", selectedKey: "home", items: [{ id: "home", label: "홈", icon: { name: "home" } }, { id: "profile", label: "프로필", icon: { name: "user" } }] }} getHref={({ id }) => `#${id}`} renderIcon={({ name }) => <HjmIcon name={name} />} />;
     case "LoadMore": return <HjmLoadMore descriptor={{ state: { status: "ready", requestKey: "showcase-next" }, labels: { loadMore: "더 보기", loading: "불러오는 중", retry: "다시 시도", complete: "모두 불러왔습니다" } }} onLoadMore={async () => undefined} />;
     case "Menu": return <HjmMenu trigger={<button className="hjm-demo-button" type="button">작업 열기</button>} label="선수 작업" items={[{ id: "rename", label: "이름 바꾸기", onSelect: () => undefined }, { id: "share", label: "공유하기", onSelect: () => undefined }, { id: "delete", label: "삭제", tone: "danger", onSelect: () => undefined }]} />;
     case "Badge": return <HjmStack axis="inline" gap="sm"><HjmBadge>진행 중</HjmBadge><HjmBadge tone="success">완료</HjmBadge></HjmStack>;
     case "CounterBadge": return <HjmIconButton label="알림 12개"><HjmIcon name="notifications" /><HjmCounterBadge count={12} /></HjmIconButton>;
     case "ListRow": return <HjmListRow title="홍길동" description="선수 상세 보기" leading={<span className="hjm-avatar">홍</span>} trailing={<span aria-hidden>›</span>} onClick={() => undefined} />;
     case "Tag": return <HjmStack axis="inline" gap="sm" wrap><HjmTag>내야수</HjmTag><HjmTag tone="success">등록 선수</HjmTag><HjmTag>2026 시즌</HjmTag></HjmStack>;
+    case "Timeline": return <HjmTimeline composeAccessibleName={({ position, total, label }) => `${total}개 중 ${position}번째, ${label}`} items={[{ id: "created", label: "아이디어 생성", timestamp: "10:00", tone: "info" }, { id: "completed", label: "실행 완료", timestamp: "10:12", description: "결과를 저장했습니다.", tone: "success" }]} />;
+    case "DescriptionList": return <HjmDescriptionList items={[{ id: "status", label: "상태", value: "준비됨" }, { id: "owner", label: "담당", value: "홍길동" }]} />;
+    case "Image": return <HjmImage src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 180'%3E%3Crect width='320' height='180' fill='%23dbeafe'/%3E%3C/svg%3E" width={320} height={180} decorative={false} accessibilityLabel="연한 파란색 이미지 예시" />;
     case "EmptyState": return <HjmEmptyState icon="◇" title="아직 항목이 없어요" description="새 항목을 추가하면 여기에 표시됩니다." action={<HjmButton>추가하기</HjmButton>} />;
+    case "Result": return <HjmResult status="success" title="저장했어요" description="변경 사항이 모든 기기에 반영되었습니다." actions={[{ label: "확인", onAction: () => undefined }]} />;
     case "Toast": return <HjmToast descriptor={{ id: "showcase-saved", tone: "success", title: "저장했어요", description: "변경 사항이 반영되었습니다.", closeLabel: "닫기" }} onDismissRequest={() => undefined} />;
     case "Dialog": return <HjmDialog trigger={<button className="hjm-demo-button" type="button">Dialog 열기</button>} title="Dialog 제목" closeLabel="Dialog 닫기" description="긴 설명도 잘리지 않고 행동의 결과를 명확하게 전달합니다." footer={<HjmButton>확인</HjmButton>}><p>키보드 포커스는 이 대화상자 안에 유지됩니다.</p></HjmDialog>;
     case "AlertDialog": return <HjmAlertDialog trigger={<button className="hjm-demo-button" type="button">AlertDialog 열기</button>} request={{ mode: "confirm", tone: "danger", title: "기록 삭제", description: "이 작업은 되돌릴 수 없습니다.", confirmLabel: "삭제", cancelLabel: "취소", onConfirm: async () => undefined, fallbackErrorMessage: "삭제하지 못했습니다." }} />;
@@ -562,6 +582,7 @@ export const webRendererRegistry = {
   Surface: createWebRendererDefinition("Surface", "surfaceRecipe"),
   Stack: createWebRendererDefinition("Stack", "stackRecipe"),
   Grid: createWebRendererDefinition("Grid", "gridRecipe"),
+  Layout: createWebRendererDefinition("Layout", "layoutRecipe", "layout"),
   Button: createWebRendererDefinition("Button", "buttonRecipe"),
   IconButton: createWebRendererDefinition("IconButton", "iconButtonRecipe"),
   Field: createWebRendererDefinition("Field", "fieldRecipe", "field"),
@@ -575,6 +596,7 @@ export const webRendererRegistry = {
   SegmentedControl: createWebRendererDefinition("SegmentedControl", "segmentedControlRecipe", "segmentedControl"),
   Select: createWebRendererDefinition("Select", "selectRecipe", "select"),
   Tabs: createWebRendererDefinition("Tabs", "tabsRecipe", "tabs"),
+  BottomNavigation: createWebRendererDefinition("BottomNavigation", "bottomNavigationRecipe", "bottomNavigation"),
   LoadMore: createWebRendererDefinition("LoadMore", "loadMoreRecipe", "loadMore"),
   Menu: createWebRendererDefinition("Menu", "menuRecipe", "menu"),
   Badge: createWebRendererDefinition("Badge", "badgeRecipe"),
@@ -582,7 +604,11 @@ export const webRendererRegistry = {
   Card: createWebRendererDefinition("Card", "cardRecipe"),
   ListRow: createWebRendererDefinition("ListRow", "listRowRecipe"),
   Tag: createWebRendererDefinition("Tag", "tagRecipe"),
+  Timeline: createWebRendererDefinition("Timeline", "timelineRecipe"),
+  DescriptionList: createWebRendererDefinition("DescriptionList", "descriptionListRecipe"),
+  Image: createWebRendererDefinition("Image", "imageRecipe"),
   EmptyState: createWebRendererDefinition("EmptyState", "emptyStateRecipe"),
+  Result: createWebRendererDefinition("Result", "resultRecipe"),
   Toast: createWebRendererDefinition("Toast", "toastRecipe", "toast"),
   Dialog: createWebRendererDefinition("Dialog", "dialogRecipe", "dialog"),
   AlertDialog: createWebRendererDefinition("AlertDialog", "alertDialogRecipe", "alertDialog"),

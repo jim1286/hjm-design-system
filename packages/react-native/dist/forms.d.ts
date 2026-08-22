@@ -1,7 +1,16 @@
 import { formRecipe, type FormSubmitStatus } from "@hjm/design-contracts/components/form";
-import { type ComboboxCommitReason, type ComboboxFiltering, type SelectItemDescriptor } from "@hjm/design-contracts/behaviors";
+import { type ComboboxCommitReason, type ComboboxFiltering, type AsyncCollectionState, type SelectItemDescriptor } from "@hjm/design-contracts/behaviors";
+import { type SelectCollectionSectionDescriptor, type SelectCollectionSource, type SelectOpenChangeReason } from "@hjm/design-contracts/components/collection";
+import { type SelectDensity, type SelectSize } from "@hjm/design-contracts/recipes";
 import { type ReactNode } from "react";
 import { type ModalProps, type StyleProp, type ViewStyle } from "react-native";
+type NativeCollectionLeadingRenderProps = Readonly<{
+    placement: "trigger" | "option";
+    selected: boolean;
+    disabled: boolean;
+    color: string;
+    size: number;
+}>;
 export type FieldControlProps = Readonly<{
     accessibilityLabel: string;
     accessibilityHint?: string;
@@ -48,55 +57,101 @@ export type SelectOption<Value extends string = string> = Readonly<{
     disabled?: boolean;
     accessibilityHint?: string;
 }>;
-export type SelectProps<Value extends string = string> = Omit<ModalProps, "animationType" | "children" | "onRequestClose" | "onShow" | "transparent" | "visible"> & Readonly<{
-    label: string;
-    options: readonly SelectOption<Value>[];
+export type SelectSection<Value extends string = string, SectionKey extends string = string> = SelectCollectionSectionDescriptor<Value, SectionKey>;
+export type SelectLeadingRenderProps = NativeCollectionLeadingRenderProps;
+export type SelectProps<Value extends string = string, SectionKey extends string = string> = Omit<ModalProps, "animationType" | "children" | "onDismiss" | "onRequestClose" | "onShow" | "transparent" | "visible"> & Readonly<{
+    label?: string;
+    accessibilityLabel?: string;
+    /** Legacy flat source. Prefer source/sections for shared collection identity. */
+    options?: readonly SelectOption<Value>[];
+    source?: SelectCollectionSource<Value, SectionKey>;
+    items?: readonly SelectItemDescriptor<Value>[];
+    sections?: readonly SelectSection<Value, SectionKey>[];
     value?: Value | null;
     defaultValue?: Value | null;
     onValueChange?: (value: Value) => void;
+    selectedKey?: Value | null;
+    defaultSelectedKey?: Value | null;
+    onSelectionChange?: (value: Value | null) => void;
+    selectedItem?: SelectItemDescriptor<Value>;
+    disallowEmptySelection?: boolean;
     open?: boolean;
     defaultOpen?: boolean;
-    onOpenChange?: (open: boolean) => void;
+    onOpenChange?: (open: boolean, reason: SelectOpenChangeReason) => void;
     /** Localized text shown when no option is selected. */
     placeholder: string;
     description?: string;
     error?: string;
     required?: boolean;
     disabled?: boolean;
+    readOnly?: boolean;
+    busy?: boolean;
+    size?: SelectSize;
+    density?: SelectDensity;
+    asyncState?: AsyncCollectionState;
+    onRetry?: () => void;
+    retryLabel?: string;
+    readOnlyLabel?: string;
+    openHint?: string;
+    renderLeading?: (item: SelectItemDescriptor<Value> | null, props: SelectLeadingRenderProps) => ReactNode;
+    renderOptionLeading?: (item: SelectItemDescriptor<Value>, props: SelectLeadingRenderProps) => ReactNode;
+    onSelectionAfterDismiss?: (value: Value) => void | Promise<void>;
+    onDismiss?: (reason: SelectOpenChangeReason) => void;
     /** Localized accessible name and visible label for dismissing the option list. */
     dismissLabel: string;
     /** Optional localized name for the option-list region; defaults neutrally to label. */
     optionsAccessibilityLabel?: string;
     style?: StyleProp<ViewStyle>;
 }>;
-/** An accessible, router-free Native option picker backed by React Native Modal. */
-export declare function Select<Value extends string = string>({ label, options, value, defaultValue, onValueChange, open, defaultOpen, onOpenChange, placeholder, description, error, required, disabled, dismissLabel, optionsAccessibilityLabel, style, ...modalProps }: SelectProps<Value>): import("react").JSX.Element;
-export type ComboboxProps<Key extends string = string> = Omit<ModalProps, "animationType" | "children" | "onRequestClose" | "onShow" | "transparent" | "visible"> & Readonly<{
-    label: string;
-    items: readonly SelectItemDescriptor<Key>[];
+/** Native adaptive Select with shared sections, async states, and teardown-safe commits. */
+export declare function Select<Value extends string = string, SectionKey extends string = string>({ label, accessibilityLabel, options, source: sourceProp, items, sections, value, defaultValue, onValueChange, selectedKey, defaultSelectedKey, onSelectionChange, selectedItem, disallowEmptySelection, open, defaultOpen, onOpenChange, placeholder, description, error, required, disabled, readOnly, busy, size, density, asyncState, onRetry, retryLabel, readOnlyLabel, openHint, renderLeading, renderOptionLeading, onSelectionAfterDismiss, onDismiss, dismissLabel, optionsAccessibilityLabel, style, ...modalProps }: SelectProps<Value, SectionKey>): import("react").JSX.Element;
+export type ComboboxLeadingRenderProps = NativeCollectionLeadingRenderProps;
+export type ComboboxProps<Key extends string = string, SectionKey extends string = string> = Omit<ModalProps, "animationType" | "children" | "onDismiss" | "onRequestClose" | "onShow" | "transparent" | "visible"> & Readonly<{
+    label?: string;
+    accessibilityLabel?: string;
+    items?: readonly SelectItemDescriptor<Key>[];
+    sections?: readonly SelectSection<Key, SectionKey>[];
+    source?: SelectCollectionSource<Key, SectionKey>;
     selectedKey?: Key | null;
     defaultSelectedKey?: Key | null;
+    selectedItem?: SelectItemDescriptor<Key>;
     onSelectionChange?: (key: Key | null) => void;
     inputValue?: string;
     defaultInputValue?: string;
     onInputValueChange?: (value: string) => void;
     open?: boolean;
     defaultOpen?: boolean;
-    onOpenChange?: (open: boolean) => void;
+    onOpenChange?: (open: boolean, reason: SelectOpenChangeReason) => void;
     onCommit?: (key: Key | null, reason: ComboboxCommitReason) => void;
+    onCommitAfterDismiss?: (key: Key, reason: "selection") => void | Promise<void>;
+    onDismiss?: (reason: SelectOpenChangeReason) => void;
     filtering?: ComboboxFiltering;
+    queryValue?: string;
+    resultQuery?: string;
+    asyncState?: AsyncCollectionState;
     loading?: boolean;
     /** Localized text rendered when filtering returns no items. */
     emptyMessage: string;
     /** Localized text announced while results are loading. */
     loadingMessage: string;
+    loadingMoreMessage?: string;
+    errorMessage?: string;
+    promptMessage?: string;
+    minimumQueryLength?: number;
+    onRetry?: () => void;
+    retryLabel?: string;
     description?: string;
     error?: string;
     placeholder?: string;
     required?: boolean;
     disabled?: boolean;
     readOnly?: boolean;
+    busy?: boolean;
     openOnFocus?: boolean;
+    size?: SelectSize;
+    density?: SelectDensity;
+    readOnlyLabel?: string;
+    renderLeading?: (item: SelectItemDescriptor<Key>, props: ComboboxLeadingRenderProps) => ReactNode;
     /** Localized accessible name for clearing the committed selection/query. */
     clearLabel: string;
     /** Localized accessible name for dismissing the result list. */
@@ -105,6 +160,7 @@ export type ComboboxProps<Key extends string = string> = Omit<ModalProps, "anima
     resultsAccessibilityLabel?: string;
     style?: StyleProp<ViewStyle>;
 }>;
-/** Editable Native combobox with independent query, committed key, and Modal results. */
-export declare function Combobox<Key extends string = string>({ label, items, selectedKey, defaultSelectedKey, onSelectionChange, inputValue, defaultInputValue, onInputValueChange, open, defaultOpen, onOpenChange, onCommit, filtering, loading, emptyMessage, loadingMessage, description, error, placeholder, required, disabled, readOnly, openOnFocus, clearLabel, dismissLabel, resultsAccessibilityLabel, style, ...modalProps }: ComboboxProps<Key>): import("react").JSX.Element;
+/** Editable Native combobox with sectioned async results and teardown-safe commits. */
+export declare function Combobox<Key extends string = string, SectionKey extends string = string>({ label, accessibilityLabel, items, sections, source: sourceProp, selectedKey, defaultSelectedKey, selectedItem, onSelectionChange, inputValue, defaultInputValue, onInputValueChange, open, defaultOpen, onOpenChange, onCommit, onCommitAfterDismiss, onDismiss, filtering, queryValue, resultQuery, asyncState, loading, emptyMessage, loadingMessage, loadingMoreMessage, errorMessage, promptMessage, minimumQueryLength, onRetry, retryLabel, description, error, placeholder, required, disabled, readOnly, busy, openOnFocus, size, density, readOnlyLabel, renderLeading, clearLabel, dismissLabel, resultsAccessibilityLabel, style, ...modalProps }: ComboboxProps<Key, SectionKey>): import("react").JSX.Element;
+export {};
 //# sourceMappingURL=forms.d.ts.map

@@ -35,7 +35,7 @@ describe("component reference coverage", () => {
     );
   });
 
-  it("detects npm latest drift without putting a network check in normal push gates", async () => {
+  it("keeps npm latest drift as an explicit local check outside automatic CI", async () => {
     const packageJson = JSON.parse(
       await readFile(new URL("../package.json", import.meta.url), "utf8"),
     ) as { scripts?: Record<string, string> };
@@ -43,13 +43,13 @@ describe("component reference coverage", () => {
       "node scripts/verify-antd-reference.mjs",
     );
 
-    const workflow = await readFile(
-      new URL("../../../.github/workflows/antd-reference-drift.yml", import.meta.url),
-      "utf8",
+    const automaticWorkflows = await Promise.all(
+      ["showcase.yml", "version-packages.yml"].map((file) =>
+        readFile(new URL(`../../../.github/workflows/${file}`, import.meta.url), "utf8"),
+      ),
     );
-    expect(workflow).toMatch(/^  schedule:/m);
-    expect(workflow).toMatch(/^  workflow_dispatch:/m);
-    expect(workflow).not.toMatch(/^  (?:push|pull_request):/m);
+    expect(automaticWorkflows.join("\n")).not.toContain("reference:antd:verify");
+    expect(automaticWorkflows.join("\n")).not.toContain("verify-antd-reference.mjs");
 
     const scriptPath = fileURLToPath(
       new URL("../scripts/verify-antd-reference.mjs", import.meta.url),
@@ -102,7 +102,7 @@ describe("component reference coverage", () => {
     });
     expect(getComponentDefinition("select")).toMatchObject({
       contract: { status: "beta" },
-      surfaces: { web: { status: "beta" }, native: { status: "planned" } },
+      surfaces: { web: { status: "beta" }, native: { status: "beta" } },
     });
     expect(getComponentDefinition("form")).toMatchObject({
       contract: { status: "beta" },
@@ -121,8 +121,8 @@ describe("component reference coverage", () => {
       }
     }
 
-    expect(componentCatalog.filter(({ surfaceStatus }) => surfaceStatus.web === "beta")).toHaveLength(32);
-    expect(componentCatalog.filter(({ surfaceStatus }) => surfaceStatus.native === "beta")).toHaveLength(37);
+    expect(componentCatalog.filter(({ surfaceStatus }) => surfaceStatus.web === "beta")).toHaveLength(38);
+    expect(componentCatalog.filter(({ surfaceStatus }) => surfaceStatus.native === "beta")).toHaveLength(48);
     expect(componentCatalog.some((entry) => getComponentSurfaceStatus(entry, "web") === "stable")).toBe(false);
     expect(componentCatalog.some((entry) => getComponentSurfaceStatus(entry, "native") === "stable")).toBe(false);
   });
@@ -211,12 +211,12 @@ describe("component reference coverage", () => {
     expect(summary).toMatchObject({
       total: 73,
       tracked: 73,
-      fullyMature: 34,
+      fullyMature: 39,
       partiallyMature: 2,
-      plannedOnly: 37,
-      fullyPreviewable: 34,
+      plannedOnly: 32,
+      fullyPreviewable: 39,
       partiallyPreviewable: 2,
-      contractOnly: 37,
+      contractOnly: 32,
     });
     expect(
       summary.fullyMature + summary.partiallyMature + summary.plannedOnly,

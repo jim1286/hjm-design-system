@@ -140,11 +140,13 @@ describe("@hjm/react-native extended mobile renderer", () => {
     });
     act(() => trigger.props.onPress());
     expect(renderer.root.findByType(Modal).props).toMatchObject({ visible: true, animationType: "none" });
-    act(() => renderer.root.findByType(Modal).props.onShow());
+    const modal = renderer.root.findByType(Modal);
+    act(() => modal.props.onShow());
     expect(focus).toHaveBeenCalledWith(1);
     act(() => byA11y(renderer, "English").props.onPress());
     expect(onValueChange).toHaveBeenCalledWith("en");
     expect(renderer.root.findByType(Modal).props.visible).toBe(false);
+    act(() => modal.props.onDismiss());
     expect(focus).toHaveBeenCalledTimes(2);
   });
 
@@ -187,12 +189,14 @@ describe("@hjm/react-native extended mobile renderer", () => {
     expect(renderer.root.find((node) => node.props.accessibilityRole === "menu")).toBeTruthy();
     const item = byA11y(renderer, "수정");
     expect(item.props.accessibilityRole).toBe("menuitem");
-    expect(flattenStyle(item.props.style({ pressed: false }))).toMatchObject({
+    const itemStyle = flattenStyle(item.props.style({ pressed: false }));
+    expect(itemStyle).toMatchObject({
       direction: "rtl",
       flexDirection: "row",
-      minHeight: 44,
       minWidth: 44,
     });
+    expect(itemStyle.minHeight).toEqual(expect.any(Number));
+    expect(itemStyle.minHeight as number).toBeGreaterThanOrEqual(44);
     act(() => item.props.onPress());
     expect(renderer.root.findAllByType(Modal).at(-1)!.props.visible).toBe(false);
   });
@@ -243,17 +247,44 @@ describe("@hjm/react-native extended mobile renderer", () => {
     expect(renderer.root.findAll((node) => node.children.includes("이미지 없음"))).not.toHaveLength(0);
   });
 
-  it("gates automatic and manual LoadMore requests by contract state", async () => {
+  it("lets an optimized image host reuse canonical accessibility and fallback behavior", () => {
+    const renderImage = vi.fn((props: Parameters<NonNullable<React.ComponentProps<typeof Image>["renderImage"]>>[0]) => (
+      <View testID="optimized-image" {...props} />
+    ));
+    const renderer = renderWithProvider(
+      <Image
+        accessibilityLabel="최적화 이미지"
+        fallback={<Text>대체 이미지</Text>}
+        renderImage={renderImage}
+        source={{ uri: "https://example.com/optimized.png" }}
+      />,
+    );
+    const host = renderer.root.findByProps({ testID: "optimized-image" });
+    expect(host.props).toMatchObject({
+      accessible: true,
+      accessibilityLabel: "최적화 이미지",
+      accessibilityRole: "image",
+      source: { uri: "https://example.com/optimized.png" },
+    });
+    act(() => host.props.onError({}));
+    expect(renderer.root.findAll((node) => node.children.includes("대체 이미지"))).not.toHaveLength(0);
+  });
+
+  it("waits for a real viewport signal and preserves a manual LoadMore fallback", async () => {
     const onAutomatic = vi.fn(async () => undefined);
     const labels = { loadMore: "더 보기", loading: "불러오는 중", retry: "다시 시도", complete: "모두 불러옴" };
-    renderWithProvider(
+    const automatic = renderWithProvider(
       <LoadMore
         descriptor={{ state: { status: "ready", requestKey: "page-2" }, labels }}
         onLoadMore={onAutomatic}
       />,
     );
-    expect(onAutomatic).toHaveBeenCalledOnce();
-    expect(onAutomatic).toHaveBeenCalledWith({ requestKey: "page-2", reason: "viewport" });
+    expect(onAutomatic).not.toHaveBeenCalled();
+    await act(async () => {
+      byA11y(automatic, "더 보기").props.onPress();
+      await Promise.resolve();
+    });
+    expect(onAutomatic).toHaveBeenCalledWith({ requestKey: "page-2", reason: "manual" });
 
     const onManual = vi.fn(async () => undefined);
     const manual = renderWithProvider(

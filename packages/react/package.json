@@ -100,7 +100,7 @@
     "check": "pnpm typecheck && pnpm test && pnpm build"
   },
   "peerDependencies": {
-    "@hjm/design-contracts": ">=0.6.0 <0.7.0",
+    "@hjm/design-contracts": ">=0.7.0 <0.8.0",
     "react": ">=19.0.0",
     "react-dom": ">=19.0.0"
   },

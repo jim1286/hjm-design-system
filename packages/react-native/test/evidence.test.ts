@@ -43,8 +43,9 @@ describe("@hjm/react-native renderer evidence", () => {
     const componentIds = reactNativeRendererEvidence.components.map(
       ({ componentId }) => componentId,
     );
-    expect(componentIds).toHaveLength(37);
-    expect(componentIds).not.toContain("combobox");
+    expect(componentIds).toHaveLength(48);
+    expect(componentIds).toContain("combobox");
+    expect(componentIds).toContain("load-more");
     expect(new Set(componentIds).size).toBe(componentIds.length);
   });
 

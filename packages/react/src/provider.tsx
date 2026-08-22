@@ -1,5 +1,6 @@
 import {
   resolveDesignSystemProviderValue,
+  validateDesignSystemProviderValue,
   type DesignSystemDirection,
   type DesignSystemProviderValue,
   type DesignSystemTextScale,
@@ -37,13 +38,33 @@ function subscribeMedia(query: string, callback: () => void): () => void {
   return () => media.removeEventListener("change", callback);
 }
 
-function useMediaQuery(query: string): boolean {
+function useMediaQuery(query: string, observe = true): boolean {
   return useSyncExternalStore(
-    (callback) => subscribeMedia(query, callback),
-    () => window.matchMedia(query).matches,
+    (callback) => observe ? subscribeMedia(query, callback) : () => undefined,
+    () => observe && window.matchMedia(query).matches,
     () => false,
   );
 }
+
+type HjmProviderEnvironmentProps = Readonly<{
+  value?: never;
+  theme?: ThemePreference;
+  direction?: DesignSystemDirection;
+  textScale?: DesignSystemTextScale;
+  reducedMotion?: boolean;
+  /** Deterministic SSR/test override; otherwise prefers-color-scheme is observed. */
+  systemTheme?: ResolvedTheme;
+}>;
+
+type HjmProviderValueProps = Readonly<{
+  /** Complete, validated environment and semantic product palette. */
+  value: DesignSystemProviderValue;
+  theme?: never;
+  direction?: never;
+  textScale?: never;
+  reducedMotion?: never;
+  systemTheme?: never;
+}>;
 
 export type HjmProviderProps = Omit<
   HTMLAttributes<HTMLDivElement>,
@@ -51,13 +72,7 @@ export type HjmProviderProps = Omit<
 > &
   Readonly<{
     children: ReactNode;
-    theme?: ThemePreference;
-    direction?: DesignSystemDirection;
-    textScale?: DesignSystemTextScale;
-    reducedMotion?: boolean;
-    /** Deterministic SSR/test override; otherwise prefers-color-scheme is observed. */
-    systemTheme?: ResolvedTheme;
-  }>;
+  }> & (HjmProviderEnvironmentProps | HjmProviderValueProps);
 
 export const HjmProvider = forwardRef<HTMLDivElement, HjmProviderProps>(
   function HjmProvider(
@@ -68,6 +83,7 @@ export const HjmProvider = forwardRef<HTMLDivElement, HjmProviderProps>(
       textScale,
       reducedMotion,
       systemTheme,
+      value: suppliedValue,
       className,
       style,
       ...rest
@@ -75,8 +91,12 @@ export const HjmProvider = forwardRef<HTMLDivElement, HjmProviderProps>(
     ref,
   ) {
     const parent = useContext(HjmThemeContext);
-    const prefersDark = useMediaQuery("(prefers-color-scheme: dark)");
-    const prefersReducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
+    const observesSystem = suppliedValue === undefined;
+    const prefersDark = useMediaQuery("(prefers-color-scheme: dark)", observesSystem);
+    const prefersReducedMotion = useMediaQuery(
+      "(prefers-reduced-motion: reduce)",
+      observesSystem,
+    );
     const resolvedSystemTheme = systemTheme ?? (prefersDark ? "dark" : "light");
     const input = {
       ...(theme === undefined ? {} : { theme }),
@@ -84,13 +104,14 @@ export const HjmProvider = forwardRef<HTMLDivElement, HjmProviderProps>(
       ...(textScale === undefined ? {} : { textScale }),
       ...(reducedMotion === undefined ? {} : { reducedMotion }),
     };
-    const value = resolveDesignSystemProviderValue(input, {
+    const value = suppliedValue ?? resolveDesignSystemProviderValue(input, {
       systemTheme: resolvedSystemTheme,
       ...(parent === null ? {} : { parent: parent.environment }),
       ...(reducedMotion === undefined && parent === null
         ? { systemReducedMotion: prefersReducedMotion }
         : {}),
     });
+    validateDesignSystemProviderValue(value);
     const environment = value.environment;
     const [activeTooltipId, setActiveTooltipId] = useState<string | null>(null);
     const activeTooltipIdRef = useRef<string | null>(null);

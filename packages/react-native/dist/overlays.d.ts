@@ -1,5 +1,6 @@
 import { type AlertDialogOpenChangeReason, type AlertDialogRequest, type AlertDialogResult } from "@hjm/design-contracts/components/alert-dialog";
 import { type SheetDismissPolicy, type SheetDismissReason, type SheetOpenChangeDetails } from "@hjm/design-contracts/components/sheet";
+import { type DialogSize } from "@hjm/design-contracts/recipes";
 import { type ReactNode, type RefObject } from "react";
 import { View, type Insets, type ModalProps, type StyleProp, type ViewStyle } from "react-native";
 import { type ButtonTone } from "./actions.js";
@@ -27,13 +28,14 @@ export type DialogProps = NativeModalProps & ReasonedOpenProps<DialogOpenChangeR
     secondaryAction?: OverlayAction;
     dismissible?: boolean;
     busy?: boolean;
+    size?: DialogSize;
     /** Localized accessible name for the close action. */
     closeLabel: string;
     returnFocusRef?: RefObject<View | null>;
     contentStyle?: StyleProp<ViewStyle>;
 }>;
 /** Native modal boundary with one reasoned close intent for each user attempt. */
-export declare function Dialog({ open, defaultOpen, onOpenChange, title, description, children, primaryAction, secondaryAction, dismissible, busy, closeLabel, returnFocusRef, contentStyle, onShow, ...modalProps }: DialogProps): import("react").JSX.Element;
+export declare function Dialog({ open, defaultOpen, onOpenChange, title, description, children, primaryAction, secondaryAction, dismissible, busy, size, closeLabel, returnFocusRef, contentStyle, onShow, ...modalProps }: DialogProps): import("react").JSX.Element;
 export type AlertDialogProps = NativeModalProps & ReasonedOpenProps<AlertDialogOpenChangeReason> & Readonly<{
     request: AlertDialogRequest;
     returnFocusRef?: RefObject<View | null>;

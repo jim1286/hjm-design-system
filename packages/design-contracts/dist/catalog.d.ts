@@ -139,13 +139,13 @@ export declare const componentCatalog: readonly [{
     readonly recipe: "layoutRecipe";
     readonly behavior: "layout";
     readonly surfaceStatus: {
-        readonly web: "planned";
-        readonly native: "planned";
+        readonly web: "beta";
+        readonly native: "beta";
     };
     readonly name: "Layout";
     readonly category: "layout";
     readonly platform: "adaptive";
-    readonly status: "planned";
+    readonly status: "beta";
 }, {
     readonly roadmap: {
         readonly state: "evidence-needed";
@@ -301,7 +301,7 @@ export declare const componentCatalog: readonly [{
     readonly behavior: "checkbox";
     readonly surfaceStatus: {
         readonly web: "beta";
-        readonly native: "planned";
+        readonly native: "beta";
     };
     readonly name: "Checkbox";
     readonly category: "input";
@@ -322,7 +322,7 @@ export declare const componentCatalog: readonly [{
     readonly behavior: "checkboxGroup";
     readonly surfaceStatus: {
         readonly web: "beta";
-        readonly native: "planned";
+        readonly native: "beta";
     };
     readonly name: "CheckboxGroup";
     readonly category: "input";
@@ -407,7 +407,7 @@ export declare const componentCatalog: readonly [{
     readonly behavior: "select";
     readonly surfaceStatus: {
         readonly web: "beta";
-        readonly native: "planned";
+        readonly native: "beta";
     };
     readonly name: "Select";
     readonly category: "input";
@@ -418,7 +418,7 @@ export declare const componentCatalog: readonly [{
     readonly behavior: "combobox";
     readonly surfaceStatus: {
         readonly web: "planned";
-        readonly native: "planned";
+        readonly native: "beta";
     };
     readonly name: "Combobox";
     readonly category: "input";
@@ -607,10 +607,14 @@ export declare const componentCatalog: readonly [{
     readonly platform: "native";
     readonly status: "beta";
 }, {
+    readonly roadmap: {
+        readonly state: "evidence-needed";
+        readonly summary: string;
+    };
     readonly recipe: "bottomNavigationRecipe";
     readonly behavior: "bottomNavigation";
     readonly surfaceStatus: {
-        readonly web: "planned";
+        readonly web: "beta";
         readonly native: "beta";
     };
     readonly name: "BottomNavigation";
@@ -648,11 +652,15 @@ export declare const componentCatalog: readonly [{
     readonly platform: "web";
     readonly status: "planned";
 }, {
+    readonly roadmap: {
+        readonly state: "evidence-needed";
+        readonly summary: string;
+    };
     readonly recipe: "loadMoreRecipe";
     readonly behavior: "loadMore";
     readonly surfaceStatus: {
         readonly web: "beta";
-        readonly native: "planned";
+        readonly native: "beta";
     };
     readonly name: "LoadMore";
     readonly category: "navigation";
@@ -678,7 +686,7 @@ export declare const componentCatalog: readonly [{
     readonly aliases: readonly ["Dropdown"];
     readonly surfaceStatus: {
         readonly web: "beta";
-        readonly native: "planned";
+        readonly native: "beta";
     };
     readonly name: "Menu";
     readonly category: "navigation";
@@ -799,13 +807,13 @@ export declare const componentCatalog: readonly [{
     };
     readonly recipe: "timelineRecipe";
     readonly surfaceStatus: {
-        readonly web: "planned";
-        readonly native: "planned";
+        readonly web: "beta";
+        readonly native: "beta";
     };
     readonly name: "Timeline";
     readonly category: "data-display";
     readonly platform: "shared";
-    readonly status: "planned";
+    readonly status: "beta";
 }, {
     readonly roadmap: {
         readonly state: "contract-ready";
@@ -874,13 +882,13 @@ export declare const componentCatalog: readonly [{
     readonly recipe: "descriptionListRecipe";
     readonly aliases: readonly ["Descriptions"];
     readonly surfaceStatus: {
-        readonly web: "planned";
-        readonly native: "planned";
+        readonly web: "beta";
+        readonly native: "beta";
     };
     readonly name: "DescriptionList";
     readonly category: "data-display";
     readonly platform: "shared";
-    readonly status: "planned";
+    readonly status: "beta";
 }, {
     readonly roadmap: {
         readonly state: "evidence-needed";
@@ -888,13 +896,13 @@ export declare const componentCatalog: readonly [{
     };
     readonly recipe: "imageRecipe";
     readonly surfaceStatus: {
-        readonly web: "planned";
-        readonly native: "planned";
+        readonly web: "beta";
+        readonly native: "beta";
     };
     readonly name: "Image";
     readonly category: "data-display";
     readonly platform: "shared";
-    readonly status: "planned";
+    readonly status: "beta";
 }, {
     readonly roadmap: {
         readonly state: "evidence-needed";
@@ -991,13 +999,13 @@ export declare const componentCatalog: readonly [{
     };
     readonly recipe: "resultRecipe";
     readonly surfaceStatus: {
-        readonly web: "planned";
-        readonly native: "planned";
+        readonly web: "beta";
+        readonly native: "beta";
     };
     readonly name: "Result";
     readonly category: "feedback";
     readonly platform: "shared";
-    readonly status: "planned";
+    readonly status: "beta";
 }, {
     readonly recipe: "toastRecipe";
     readonly behavior: "toast";
@@ -1453,10 +1461,30 @@ export declare const recipeRegistry: {
         readonly defaults: {
             readonly tone: "neutral";
             readonly size: "medium";
+            readonly variant: "filled";
+        };
+        readonly variants: {
+            readonly filled: {
+                readonly usesToneBackground: true;
+                readonly borderFallback: null;
+            };
+            readonly outline: {
+                readonly usesToneBackground: false;
+                readonly borderFallback: Readonly<{
+                    source: "theme";
+                    key: "border";
+                    alpha?: number;
+                }>;
+            };
         };
         readonly tones: {
             readonly neutral: {
                 readonly content: Readonly<{
+                    source: "theme";
+                    key: "textMuted";
+                    alpha?: number;
+                }>;
+                readonly outlineContent: Readonly<{
                     source: "theme";
                     key: "textMuted";
                     alpha?: number;
@@ -1474,6 +1502,11 @@ export declare const recipeRegistry: {
                     key: "onPrimary";
                     alpha?: number;
                 }>;
+                readonly outlineContent: Readonly<{
+                    source: "theme";
+                    key: "text";
+                    alpha?: number;
+                }>;
                 readonly background: Readonly<{
                     source: "theme";
                     key: "text";
@@ -1487,6 +1520,11 @@ export declare const recipeRegistry: {
                     key: "contentBrand";
                     alpha?: number;
                 }>;
+                readonly outlineContent: Readonly<{
+                    source: "theme";
+                    key: "contentBrand";
+                    alpha?: number;
+                }>;
                 readonly background: Readonly<{
                     source: "theme";
                     key: "surfaceAlt";
@@ -1496,6 +1534,11 @@ export declare const recipeRegistry: {
             };
             readonly info: {
                 readonly content: Readonly<{
+                    source: "accent";
+                    key: "info";
+                    alpha?: number;
+                }>;
+                readonly outlineContent: Readonly<{
                     source: "accent";
                     key: "info";
                     alpha?: number;
@@ -1517,6 +1560,11 @@ export declare const recipeRegistry: {
                     key: "success";
                     alpha?: number;
                 }>;
+                readonly outlineContent: Readonly<{
+                    source: "accent";
+                    key: "success";
+                    alpha?: number;
+                }>;
                 readonly background: Readonly<{
                     source: "accent";
                     key: "success";
@@ -1530,6 +1578,11 @@ export declare const recipeRegistry: {
             };
             readonly warning: {
                 readonly content: Readonly<{
+                    source: "accent";
+                    key: "warning";
+                    alpha?: number;
+                }>;
+                readonly outlineContent: Readonly<{
                     source: "accent";
                     key: "warning";
                     alpha?: number;
@@ -1551,6 +1604,11 @@ export declare const recipeRegistry: {
                     key: "attention";
                     alpha?: number;
                 }>;
+                readonly outlineContent: Readonly<{
+                    source: "accent";
+                    key: "attention";
+                    alpha?: number;
+                }>;
                 readonly background: Readonly<{
                     source: "accent";
                     key: "attention";
@@ -1564,6 +1622,11 @@ export declare const recipeRegistry: {
             };
             readonly danger: {
                 readonly content: Readonly<{
+                    source: "theme";
+                    key: "danger";
+                    alpha?: number;
+                }>;
+                readonly outlineContent: Readonly<{
                     source: "theme";
                     key: "danger";
                     alpha?: number;
@@ -6892,13 +6955,15 @@ export declare const recipeRegistry: {
         };
     };
     readonly topBarRecipe: {
-        readonly slots: readonly ["root", "leading", "title", "trailing"];
+        readonly slots: readonly ["root", "leading", "title", "titleLeading", "titleAction", "trailing", "action", "actionLabel"];
         readonly defaults: {
             readonly centered: true;
         };
         readonly minHeight: 52;
         readonly sideMinWidth: 44;
         readonly paddingHorizontal: 16;
+        readonly gap: 8;
+        readonly largeTextThreshold: 1.6;
         readonly title: {
             readonly textVariant: "bodyLarge";
             readonly color: Readonly<{
@@ -6907,6 +6972,29 @@ export declare const recipeRegistry: {
                 alpha?: number;
             }>;
             readonly fontWeight: "700";
+        };
+        readonly titleAction: {
+            readonly minHeight: 44;
+            readonly minWidth: 44;
+            readonly gap: 8;
+            readonly pressedOpacity: 0.86;
+        };
+        readonly action: {
+            readonly minHeight: 44;
+            readonly minWidth: 44;
+            readonly gap: 4;
+            readonly paddingHorizontal: 4;
+            readonly pressedOpacity: 0.86;
+            readonly disabledOpacity: 0.5;
+        };
+        readonly actionLabel: {
+            readonly textVariant: "caption";
+            readonly color: Readonly<{
+                source: "theme";
+                key: "text";
+                alpha?: number;
+            }>;
+            readonly fontWeight: "500";
         };
         readonly background: Readonly<{
             source: "theme";

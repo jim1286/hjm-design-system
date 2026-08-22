@@ -3,11 +3,11 @@ import { getSliderStepTarget, resolveSliderDescriptor, resolveSliderFillFraction
 import { forwardRef, useEffect, useMemo, useRef, useState, } from "react";
 import { PanResponder, Text as NativeText, View, } from "react-native";
 import { useControllableState } from "./internal/state.js";
-import { logicalTextAlign, scalableTextDefaults } from "./internal/styles.js";
+import { logicalTextAlign, resolveNativeTextScaleProps } from "./internal/styles.js";
 import { useHjmNativeTheme } from "./provider.js";
 /** Dependency-free horizontal Slider using the Native responder system. */
 export const Slider = forwardRef(function Slider({ label, min, max, step, value, defaultValue, onValueChange, onValueChangeEnd, decrementLabel, incrementLabel, getValueText, disabled = false, onFocus, onBlur, onLayout, containerStyle, controlStyle, ...viewProps }, forwardedRef) {
-    const { colors, environment, tokens } = useHjmNativeTheme();
+    const { colors, environment, textScaling, tokens } = useHjmNativeTheme();
     const [currentValue, setCurrentValue] = useControllableState({
         ...(value === undefined ? {} : { value }),
         defaultValue: defaultValue ?? min,
@@ -113,6 +113,18 @@ export const Slider = forwardRef(function Slider({ label, min, max, step, value,
                     performAction("decrement");
             },
         };
+    const labelTextScaleProps = resolveNativeTextScaleProps(textScaling, [
+        tokens.typography[recipe.labelVariant],
+        { color: colors.textBody, textAlign: logicalTextAlign(environment.direction) },
+    ]);
+    const valueTextScaleProps = resolveNativeTextScaleProps(textScaling, [
+        tokens.typography[recipe.valueLabelVariant],
+        {
+            color: colors.textMuted,
+            fontVariant: ["tabular-nums"],
+            textAlign: logicalTextAlign(environment.direction),
+        },
+    ]);
     return (_jsxs(View, { style: [
             {
                 gap: tokens.spacing.xs,
@@ -124,17 +136,7 @@ export const Slider = forwardRef(function Slider({ label, min, max, step, value,
                     direction: environment.direction,
                     flexDirection: "row",
                     justifyContent: "space-between",
-                }, children: [_jsx(NativeText, { ...scalableTextDefaults, style: [
-                            tokens.typography[recipe.labelVariant],
-                            { color: colors.textBody, textAlign: logicalTextAlign(environment.direction) },
-                        ], children: label }), _jsx(NativeText, { ...scalableTextDefaults, style: [
-                            tokens.typography[recipe.valueLabelVariant],
-                            {
-                                color: colors.textMuted,
-                                fontVariant: ["tabular-nums"],
-                                textAlign: logicalTextAlign(environment.direction),
-                            },
-                        ], children: visibleValue })] }), _jsxs(View, { ...viewProps, ...panResponder.panHandlers, ...actionProps, ref: forwardedRef, accessible: true, accessibilityLabel: label, accessibilityRole: "adjustable", accessibilityState: { disabled }, accessibilityValue: {
+                }, children: [_jsx(NativeText, { ...labelTextScaleProps, children: label }), _jsx(NativeText, { ...valueTextScaleProps, children: visibleValue })] }), _jsxs(View, { ...viewProps, ...panResponder.panHandlers, ...actionProps, ref: forwardedRef, accessible: true, accessibilityLabel: label, accessibilityRole: "adjustable", accessibilityState: { disabled }, accessibilityValue: {
                     min,
                     max,
                     now: currentValue,

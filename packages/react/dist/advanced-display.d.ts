@@ -1,4 +1,5 @@
 import { type DescriptionItemDescriptor, type DescriptionListColumns } from "@hjm/design-contracts/components/description-list";
+import { type ComposeTimelineAccessibleName, type TimelineItemDescriptor } from "@hjm/design-contracts/components/timeline";
 import { dividerRecipe, type AccordionDensity, type AvatarShape, type AvatarSize } from "@hjm/design-contracts/recipes";
 import { type HTMLAttributes, type ImgHTMLAttributes, type ReactElement, type ReactNode, type RefAttributes, type TableHTMLAttributes } from "react";
 export type AccordionItem = Readonly<{
@@ -80,4 +81,9 @@ export type TableProps<Row> = Omit<TableHTMLAttributes<HTMLTableElement>, "child
     wrapperClassName?: string;
 }>;
 export declare const Table: <Row>(props: TableProps<Row> & RefAttributes<HTMLTableElement>) => ReactElement;
+export type TimelineProps<Id extends string = string> = Omit<HTMLAttributes<HTMLOListElement>, "children"> & Readonly<{
+    items: readonly TimelineItemDescriptor<Id>[];
+    composeAccessibleName: ComposeTimelineAccessibleName;
+}>;
+export declare const Timeline: <Id extends string = string>(props: TimelineProps<Id> & RefAttributes<HTMLOListElement>) => ReactElement;
 //# sourceMappingURL=advanced-display.d.ts.map

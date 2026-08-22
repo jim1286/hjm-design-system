@@ -4,9 +4,9 @@
 
 This document is the human-readable projection of the same catalog and Showcase manifest consumed by product CI.
 
-- Contract: stable 4 · beta 45 · planned 42
-- Web renderer: beta 32 · planned 57 · unsupported 2
-- Native renderer: beta 37 · planned 36 · unsupported 18
+- Contract: stable 4 · beta 50 · planned 37
+- Web renderer: beta 38 · planned 51 · unsupported 2
+- Native renderer: beta 48 · planned 25 · unsupported 18
 
 | Component | Canonical story ID | Contract | Web | Native | Documentation | Required evidence |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -17,7 +17,7 @@ This document is the human-readable projection of the same catalog and Showcase 
 | Section | `layout/section` | beta | planned | beta | generated only | contract: contract; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
 | Stack | `layout/stack` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
 | Grid | `layout/grid` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, platform-parity; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, platform-parity |
-| Layout | `layout/layout` | planned | planned | planned | [authored](../layout.md) | contract: contract |
+| Layout | `layout/layout` | beta | beta | beta | [authored](../layout.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard, platform-parity; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard, platform-parity |
 | Masonry | `layout/masonry` | planned | planned | planned | generated only | contract: contract |
 | Splitter | `layout/splitter` | planned | planned | unsupported | [authored](../splitter.md) | contract: contract |
 | Button | `action/button` | stable | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
@@ -30,17 +30,17 @@ This document is the human-readable projection of the same catalog and Showcase 
 | TextArea | `input/text-area` | stable | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
 | PasswordField | `input/password-field` | planned | planned | planned | [authored](../password-field.md) | contract: contract |
 | OtpField | `input/otp-field` | planned | planned | planned | [authored](../otp-field.md) | contract: contract |
-| Checkbox | `input/checkbox` | beta | beta | planned | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard |
+| Checkbox | `input/checkbox` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard |
 | Radio | `input/radio` | beta | beta | planned | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
-| CheckboxGroup | `input/checkbox-group` | beta | beta | planned | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard |
+| CheckboxGroup | `input/checkbox-group` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard |
 | RadioGroup | `input/radio-group` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard |
 | Switch | `input/switch` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard |
 | Chip | `input/chip` | beta | planned | beta | generated only | contract: contract; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard |
 | SegmentedControl | `input/segmented-control` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard |
 | Slider | `input/slider` | planned | planned | planned | [authored](../slider.md) | contract: contract |
 | NumberField | `input/number-field` | planned | planned | planned | [authored](../number-field.md) | contract: contract |
-| Select | `input/select` | beta | beta | planned | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard |
-| Combobox | `input/combobox` | beta | planned | planned | generated only | contract: contract |
+| Select | `input/select` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard, platform-parity; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard, platform-parity |
+| Combobox | `input/combobox` | beta | planned | beta | generated only | contract: contract; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard |
 | DatePicker | `input/date-picker` | planned | planned | planned | [authored](../date-picker.md) | contract: contract |
 | TimePicker | `input/time-picker` | planned | planned | planned | [authored](../time-picker.md) | contract: contract |
 | ColorPicker | `input/color-picker` | planned | planned | unsupported | [authored](../color-picker.md) | contract: contract |
@@ -54,12 +54,12 @@ This document is the human-readable projection of the same catalog and Showcase 
 | UploadItem | `data-display/upload-item` | planned | planned | planned | [authored](../upload-item.md) | contract: contract |
 | Tabs | `navigation/tabs` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard |
 | TopBar | `navigation/top-bar` | beta | unsupported | beta | generated only | contract: contract; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
-| BottomNavigation | `navigation/bottom-navigation` | beta | planned | beta | [authored](../bottom-navigation.md) | contract: contract; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard |
+| BottomNavigation | `navigation/bottom-navigation` | beta | beta | beta | [authored](../bottom-navigation.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard, platform-parity; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard, platform-parity |
 | Breadcrumb | `navigation/breadcrumb` | planned | planned | unsupported | [authored](../breadcrumb.md) | contract: contract |
 | Pagination | `navigation/pagination` | planned | planned | unsupported | [authored](../pagination.md) | contract: contract |
-| LoadMore | `navigation/load-more` | beta | beta | planned | [authored](../load-more.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard |
+| LoadMore | `navigation/load-more` | beta | beta | beta | [authored](../load-more.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard |
 | Steps | `navigation/steps` | planned | planned | planned | [authored](../steps.md) | contract: contract |
-| Menu | `navigation/menu` | beta | beta | planned | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard |
+| Menu | `navigation/menu` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard, platform-parity; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard, platform-parity |
 | Anchor | `navigation/anchor` | planned | planned | unsupported | [authored](../anchor.md) | contract: contract |
 | Avatar | `data-display/avatar` | beta | planned | planned | generated only | contract: contract |
 | Badge | `data-display/badge` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
@@ -70,13 +70,13 @@ This document is the human-readable projection of the same catalog and Showcase 
 | VirtualList | `data-display/virtual-list` | planned | planned | planned | [authored](../virtual-list.md) | contract: contract |
 | Accordion | `data-display/accordion` | beta | planned | beta | generated only | contract: contract; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard |
 | Statistic | `data-display/statistic` | beta | planned | beta | [authored](../statistic.md) | contract: contract; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
-| Timeline | `data-display/timeline` | planned | planned | planned | [authored](../timeline.md) | contract: contract |
+| Timeline | `data-display/timeline` | beta | beta | beta | [authored](../timeline.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
 | DataTable | `data-display/data-table` | planned | planned | unsupported | [authored](../data-table.md) | contract: contract |
 | Tree | `data-display/tree` | planned | planned | unsupported | [authored](../tree.md) | contract: contract |
 | Calendar | `data-display/calendar` | planned | planned | planned | [authored](../calendar.md) | contract: contract |
 | Carousel | `data-display/carousel` | planned | planned | planned | [authored](../carousel.md) | contract: contract |
-| DescriptionList | `data-display/description-list` | planned | planned | planned | [authored](../description-list.md) | contract: contract |
-| Image | `data-display/image` | planned | planned | planned | [authored](../image.md) | contract: contract |
+| DescriptionList | `data-display/description-list` | beta | beta | beta | [authored](../description-list.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
+| Image | `data-display/image` | beta | beta | beta | [authored](../image.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
 | QRCode | `data-display/qrcode` | planned | planned | planned | [authored](../qr-code.md) | contract: contract |
 | Tag | `data-display/tag` | beta | beta | beta | [authored](../tag.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
 | Tour | `overlay/tour` | planned | planned | unsupported | [authored](../tour.md) | contract: contract |
@@ -85,7 +85,7 @@ This document is the human-readable projection of the same catalog and Showcase 
 | Progress | `feedback/progress` | beta | planned | beta | generated only | contract: contract; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
 | Spinner | `feedback/spinner` | beta | planned | planned | generated only | contract: contract |
 | Skeleton | `feedback/skeleton` | beta | planned | beta | generated only | contract: contract; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
-| Result | `feedback/result` | planned | planned | planned | [authored](../result.md) | contract: contract |
+| Result | `feedback/result` | beta | beta | beta | [authored](../result.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
 | Toast | `feedback/toast` | beta | beta | beta | [authored](../toast.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard, platform-parity; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard, platform-parity |
 | Watermark | `feedback/watermark` | planned | planned | unsupported | [authored](../watermark.md) | contract: contract |
 | Dialog | `overlay/dialog` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard, platform-parity; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard, platform-parity |

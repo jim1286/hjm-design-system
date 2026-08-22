@@ -29,6 +29,41 @@ export const Switch = host("Switch");
 export const ActivityIndicator = host("ActivityIndicator");
 export const ScrollView = host("ScrollView");
 export const Image = host("Image");
+class AnimatedValue {
+  current: number;
+
+  constructor(value: number) {
+    this.current = value;
+  }
+
+  setValue(value: number) {
+    this.current = value;
+  }
+
+  stopAnimation() {}
+
+  interpolate(configuration: Readonly<Record<string, unknown>>) {
+    return { __animatedValue: this, configuration };
+  }
+}
+export const Animated = {
+  Value: AnimatedValue,
+  View: host("AnimatedView"),
+  timing: (value: AnimatedValue, configuration: Readonly<{ toValue: number }>) => ({
+    start: (callback?: (result: Readonly<{ finished: boolean }>) => void) => {
+      value.setValue(configuration.toValue);
+      callback?.({ finished: true });
+    },
+    stop: () => undefined,
+  }),
+};
+export const Easing = {
+  bezier: (..._coordinates: readonly number[]) => (value: number) => value,
+};
+export const StyleSheet = {
+  create: <Styles extends Readonly<Record<string, unknown>>>(styles: Styles) => styles,
+  flatten: (style: unknown) => style,
+};
 
 export const PanResponder = {
   create: (callbacks: Readonly<Record<string, unknown>>) => ({
@@ -72,6 +107,10 @@ export const PixelRatio = { getFontScale: () => windowDimensions.fontScale };
 export const AccessibilityInfo = {
   isReduceMotionEnabled: async () => false,
   addEventListener: () => ({ remove: () => undefined }),
+  announceForAccessibilityWithOptions: (
+    _announcement: string,
+    _options?: Readonly<{ queue?: boolean }>,
+  ) => undefined,
   setAccessibilityFocus: (_nativeHandle: number) => undefined,
 };
 export const AppState = {
@@ -79,6 +118,41 @@ export const AppState = {
   addEventListener: (_event: string, _listener: (state: string) => void) => ({
     remove: () => undefined,
   }),
+};
+export const Platform = {
+  OS: "android",
+  select: <Value,>(options: Readonly<Record<string, Value>> & { default?: Value }) =>
+    options.android ?? options.default,
+};
+export const InteractionManager = {
+  runAfterInteractions: (callback: () => void) => {
+    const timer = setTimeout(callback, 0);
+    return {
+      cancel: () => clearTimeout(timer),
+    };
+  },
+};
+type KeyboardEventName = "keyboardDidShow" | "keyboardDidHide";
+type MockKeyboardEvent = Readonly<{ endCoordinates: Readonly<{ height: number }> }>;
+const keyboardListeners = new Map<
+  KeyboardEventName,
+  Set<(event: MockKeyboardEvent) => void>
+>();
+let keyboardVisible = false;
+export const Keyboard = {
+  isVisible: () => keyboardVisible,
+  addListener: (event: KeyboardEventName, listener: (event: MockKeyboardEvent) => void) => {
+    const listeners = keyboardListeners.get(event) ?? new Set<(event: MockKeyboardEvent) => void>();
+    listeners.add(listener);
+    keyboardListeners.set(event, listeners);
+    return { remove: () => listeners.delete(listener) };
+  },
+  __emit(event: KeyboardEventName, height = 0) {
+    keyboardVisible = event === "keyboardDidShow";
+    for (const listener of keyboardListeners.get(event) ?? []) {
+      listener({ endCoordinates: { height } });
+    }
+  },
 };
 export const findNodeHandle = (_target: unknown) => 1;
 

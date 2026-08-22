@@ -68,7 +68,8 @@ value.palette;
 - Home/Explorer 수치는 실제 evidence registry에서 계산합니다.
 - Storybook manager와 preview가 foundation token을 사용합니다.
 - token-boundary 검사와 static classification 검사가 Showcase check에 포함됩니다.
-- Ant Design reference는 6.6.1로 고정되고 별도 주간 workflow가 npm latest drift를 알립니다.
+- Ant Design reference는 6.6.1로 고정됩니다. v0.7부터 외부 registry drift 검사는 자동 CI가
+  아니라 필요할 때 실행하는 `pnpm reference:antd:verify`로 단순화되었습니다.
 - GitHub Pages workflow는 Node 24 기반 action major를 사용합니다.
 
 ## 권장 전환 순서

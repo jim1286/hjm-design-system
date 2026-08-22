@@ -1,9 +1,92 @@
-import { jsx as _jsx } from "react/jsx-runtime";
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { resolveGridLayout, } from "@hjm/design-contracts/grid";
+import { layoutRecipe, validateLayoutWebDescriptor, } from "@hjm/design-contracts/components/layout";
 import { surfaceDefaults, surfaceGeometry, surfaceRecipe, } from "@hjm/design-contracts/recipes/base";
 import { stackRecipe, textRecipe, } from "@hjm/design-contracts/recipes";
-import { createElement, forwardRef, } from "react";
-import { classNames, useElementWidth, useWindowWidth } from "./internal.js";
+import { createElement, forwardRef, useId, useRef, } from "react";
+import { classNames, composeRefs, useElementWidth, useWindowWidth, } from "./internal.js";
+function hasRegionContent(content) {
+    return content !== undefined && content !== null && content !== false;
+}
+function assertMainId(id) {
+    if (id.trim().length === 0) {
+        throw new TypeError("Layout mainId must not be empty");
+    }
+    if (/\s/u.test(id)) {
+        throw new TypeError("Layout mainId must not contain whitespace");
+    }
+}
+/** Accessible Web app shell with real landmarks and bypass navigation. */
+export const Layout = forwardRef(function Layout({ children, header, footer, sidebar, skipLinkLabel, mainId: mainIdProp, mainRef: forwardedMainRef, headerProps, mainProps, footerProps, skipLinkProps, className, ...props }, ref) {
+    const generatedId = `hjm-main-${useId().replaceAll(":", "")}`;
+    const internalMainRef = useRef(null);
+    const mainId = mainIdProp ?? generatedId;
+    assertMainId(mainId);
+    const hasHeader = hasRegionContent(header);
+    const hasFooter = hasRegionContent(footer);
+    const descriptor = {
+        ...(hasHeader ? { hasHeader: true } : {}),
+        ...(hasFooter ? { hasFooter: true } : {}),
+        ...(sidebar === undefined
+            ? {}
+            : {
+                sidebar: {
+                    role: sidebar.role,
+                    mode: sidebar.mode,
+                    label: sidebar.label,
+                },
+            }),
+        ...(skipLinkLabel === undefined ? {} : { skipLinkLabel }),
+    };
+    validateLayoutWebDescriptor(descriptor);
+    if (sidebar?.mode === "overlay" &&
+        typeof sidebar.renderOverlay !== "function") {
+        throw new TypeError("Layout overlay sidebar requires renderOverlay so SidePanel owns its lifecycle");
+    }
+    const { className: headerClassName, ...restHeaderProps } = headerProps ?? {};
+    const { className: mainClassName, style: mainStyle, ...restMainProps } = mainProps ?? {};
+    const { className: footerClassName, ...restFooterProps } = footerProps ?? {};
+    const { className: skipLinkClassName, onClick: onSkipLinkClick, ...restSkipLinkProps } = skipLinkProps ?? {};
+    let sidebarNode;
+    if (sidebar !== undefined) {
+        const { className: sidebarClassName, style: sidebarStyle, ...restSidebarProps } = sidebar.landmarkProps ?? {};
+        const sidebarLandmark = createElement(sidebar.role === "navigation" ? "nav" : "aside", {
+            ...restSidebarProps,
+            ref: sidebar.landmarkRef,
+            className: classNames("hjm-layout__sidebar", sidebarClassName),
+            "aria-label": sidebar.label,
+            "data-mode": sidebar.mode,
+            style: {
+                ...(sidebar.mode === "persistent"
+                    ? { inlineSize: layoutRecipe.sidebar.width }
+                    : {}),
+                ...sidebarStyle,
+            },
+        }, sidebar.children);
+        sidebarNode = sidebar.mode === "overlay"
+            ? sidebar.renderOverlay(sidebarLandmark)
+            : sidebarLandmark;
+    }
+    const moveFocusToMain = (event) => {
+        onSkipLinkClick?.(event);
+        if (event.defaultPrevented)
+            return;
+        const main = internalMainRef.current;
+        if (main === null)
+            return;
+        event.preventDefault();
+        const url = new URL(window.location.href);
+        url.hash = mainId;
+        window.history.replaceState(window.history.state, "", url);
+        main.focus({ preventScroll: true });
+        main.scrollIntoView?.({ block: "start" });
+    };
+    return (_jsxs("div", { ...props, ref: ref, className: classNames("hjm-layout", className), "data-hjm-component": "Layout", "data-sidebar-mode": sidebar?.mode ?? "none", children: [skipLinkLabel === undefined ? null : (_jsx("a", { ...restSkipLinkProps, href: `#${mainId}`, className: classNames("hjm-layout__skip-link", skipLinkClassName), onClick: moveFocusToMain, children: skipLinkLabel })), hasHeader ? (_jsx("header", { ...restHeaderProps, className: classNames("hjm-layout__header", headerClassName), children: header })) : null, sidebarNode, _jsx("main", { ...restMainProps, ref: composeRefs(internalMainRef, forwardedMainRef), id: mainId, className: classNames("hjm-layout__main", mainClassName), tabIndex: -1, style: {
+                    maxInlineSize: layoutRecipe.main.maxWidth,
+                    paddingInline: layoutRecipe.main.paddingHorizontal,
+                    ...mainStyle,
+                }, children: children }), hasFooter ? (_jsx("footer", { ...restFooterProps, className: classNames("hjm-layout__footer", footerClassName), children: footer })) : null] }));
+});
 export const Text = forwardRef(function Text({ as = "span", variant = textRecipe.defaults.variant, tone = textRecipe.defaults.tone, emphasis = textRecipe.defaults.emphasis, className, ...props }, ref) {
     return createElement(as, {
         ...props,

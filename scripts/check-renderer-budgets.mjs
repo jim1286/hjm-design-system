@@ -5,7 +5,7 @@ import { gzipSync } from "node:zlib";
 
 const workspaceRoot = fileURLToPath(new URL("../", import.meta.url));
 
-// Baselines are the 0.6 renderer graphs with roughly 20-30% byte headroom.
+// Baselines are the reviewed 0.7 renderer graphs with roughly 15-25% byte headroom.
 // Module limits are deliberately tighter: adding an import edge must be an
 // explicit review instead of being hidden inside gzip variance.
 const rendererBudgets = [
@@ -14,23 +14,23 @@ const rendererBudgets = [
     directory: "packages/react",
     surface: "web",
     budgets: {
-      ".": { modules: 21, raw: 210_000, gzip: 40_500 },
-      "./provider": { modules: 3, raw: 9_500, gzip: 2_800 },
-      "./layout": { modules: 2, raw: 7_500, gzip: 2_300 },
-      "./actions": { modules: 2, raw: 6_500, gzip: 2_000 },
+      ".": { modules: 22, raw: 245_000, gzip: 47_000 },
+      "./provider": { modules: 3, raw: 11_500, gzip: 3_200 },
+      "./layout": { modules: 2, raw: 13_500, gzip: 3_900 },
+      "./actions": { modules: 2, raw: 7_000, gzip: 1_900 },
       "./forms": { modules: 7, raw: 70_000, gzip: 13_500 },
-      "./number-field": { modules: 2, raw: 12_000, gzip: 3_600 },
-      "./slider": { modules: 2, raw: 12_000, gzip: 3_300 },
-      "./selection": { modules: 2, raw: 21_000, gzip: 4_100 },
-      "./navigation": { modules: 7, raw: 31_000, gzip: 7_500 },
-      "./display": { modules: 8, raw: 42_000, gzip: 11_000 },
+      "./number-field": { modules: 2, raw: 11_500, gzip: 3_300 },
+      "./slider": { modules: 2, raw: 11_500, gzip: 3_100 },
+      "./selection": { modules: 2, raw: 24_000, gzip: 4_100 },
+      "./navigation": { modules: 8, raw: 45_000, gzip: 10_200 },
+      "./display": { modules: 8, raw: 52_000, gzip: 13_000 },
       "./overlays": { modules: 5, raw: 60_000, gzip: 12_200 },
-      "./feedback": { modules: 2, raw: 8_000, gzip: 2_300 },
-      "./toast": { modules: 4, raw: 22_000, gzip: 5_800 },
-      "./evidence": { modules: 1, raw: 7_000, gzip: 1_300 },
+      "./feedback": { modules: 3, raw: 13_500, gzip: 3_300 },
+      "./toast": { modules: 4, raw: 28_000, gzip: 6_800 },
+      "./evidence": { modules: 1, raw: 4_000, gzip: 1_150 },
     },
     cssBudgets: {
-      "./styles.css": { raw: 65_000, gzip: 12_000 },
+      "./styles.css": { raw: 80_000, gzip: 11_500 },
     },
   },
   {
@@ -38,19 +38,19 @@ const rendererBudgets = [
     directory: "packages/react-native",
     surface: "native",
     budgets: {
-      ".": { modules: 14, raw: 205_000, gzip: 35_500 },
-      "./provider": { modules: 1, raw: 4_000, gzip: 1_300 },
-      "./primitives": { modules: 3, raw: 13_000, gzip: 3_600 },
-      "./actions": { modules: 4, raw: 22_500, gzip: 5_200 },
-      "./inputs": { modules: 8, raw: 65_000, gzip: 12_000 },
-      "./number-field": { modules: 4, raw: 18_000, gzip: 4_500 },
-      "./slider": { modules: 4, raw: 18_000, gzip: 4_400 },
-      "./forms": { modules: 6, raw: 52_500, gzip: 10_500 },
-      "./navigation": { modules: 7, raw: 72_500, gzip: 14_600 },
-      "./data-display": { modules: 5, raw: 36_000, gzip: 8_000 },
-      "./feedback": { modules: 5, raw: 42_000, gzip: 9_100 },
-      "./overlays": { modules: 5, raw: 47_500, gzip: 9_200 },
-      "./evidence": { modules: 1, raw: 8_000, gzip: 1_300 },
+      ".": { modules: 15, raw: 353_000, gzip: 60_500 },
+      "./provider": { modules: 1, raw: 4_700, gzip: 1_550 },
+      "./primitives": { modules: 3, raw: 21_500, gzip: 5_650 },
+      "./actions": { modules: 4, raw: 34_700, gzip: 7_900 },
+      "./inputs": { modules: 8, raw: 89_500, gzip: 16_600 },
+      "./number-field": { modules: 4, raw: 20_200, gzip: 4_900 },
+      "./slider": { modules: 4, raw: 19_800, gzip: 4_800 },
+      "./forms": { modules: 7, raw: 83_000, gzip: 16_600 },
+      "./navigation": { modules: 8, raw: 135_500, gzip: 26_700 },
+      "./data-display": { modules: 5, raw: 77_000, gzip: 15_000 },
+      "./feedback": { modules: 5, raw: 73_500, gzip: 15_100 },
+      "./overlays": { modules: 6, raw: 84_500, gzip: 15_100 },
+      "./evidence": { modules: 1, raw: 4_800, gzip: 1_200 },
     },
     cssBudgets: {},
   },
@@ -58,6 +58,10 @@ const rendererBudgets = [
 
 function formatBytes(value) {
   return `${(value / 1_000).toFixed(1)} kB`;
+}
+
+function formatHeadroom(measured, limit) {
+  return `${((limit / measured - 1) * 100).toFixed(1)}%`;
 }
 
 function getRuntimeTarget(definition, surface) {
@@ -162,6 +166,7 @@ async function measureGraph(entryFile, distDirectory, availableFiles) {
     raw: bytes.byteLength,
     gzip: gzipSync(bytes, { level: 9 }).byteLength,
     externals: [...externals].sort(),
+    files: visited,
   };
 }
 
@@ -225,6 +230,12 @@ async function checkRenderer(renderer) {
     await access(entryFile);
     const measured = await measureGraph(entryFile, distDirectory, availableFiles);
     const regressions = [];
+    if (
+      exportPath !== "." &&
+      measured.files.has(resolve(distDirectory, "index.js"))
+    ) {
+      regressions.push("granular entry traverses the renderer root barrel");
+    }
     if (measured.modules > budget.modules) {
       regressions.push(`${measured.modules} modules > ${budget.modules}`);
     }
@@ -239,7 +250,9 @@ async function checkRenderer(renderer) {
       `${status.padEnd(4)} ${exportPath.padEnd(20)} ` +
         `${String(measured.modules).padStart(2)} modules  ` +
         `${formatBytes(measured.raw).padStart(9)} raw  ` +
-        `${formatBytes(measured.gzip).padStart(8)} gzip`,
+        `${formatBytes(measured.gzip).padStart(8)} gzip  ` +
+        `headroom=${formatHeadroom(measured.raw, budget.raw)} raw/` +
+        `${formatHeadroom(measured.gzip, budget.gzip)} gzip`,
     );
     for (const regression of regressions) failures.push(`${exportPath}: ${regression}`);
   }
@@ -260,7 +273,9 @@ async function checkRenderer(renderer) {
     console.log(
       `${status.padEnd(4)} ${exportPath.padEnd(20)} ` +
         `${formatBytes(measured.raw).padStart(9)} raw  ` +
-        `${formatBytes(measured.gzip).padStart(8)} gzip`,
+        `${formatBytes(measured.gzip).padStart(8)} gzip  ` +
+        `headroom=${formatHeadroom(measured.raw, budget.raw)} raw/` +
+        `${formatHeadroom(measured.gzip, budget.gzip)} gzip`,
     );
     for (const regression of regressions) failures.push(`${exportPath}: ${regression}`);
   }

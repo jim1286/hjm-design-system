@@ -4,6 +4,7 @@ import {
   designSystemEnvironmentDefaults,
   resolveDesignSystemEnvironment,
   resolveDesignSystemProviderValue,
+  validateDesignSystemProviderValue,
   validateDesignSystemEnvironmentInput,
   validateResolvedDesignSystemEnvironment,
   type DesignSystemDirection,
@@ -259,6 +260,32 @@ describe("DesignSystemEnvironment resolution", () => {
     expect(value.palette.theme).toBe(THEMES.dark);
     expect(value.palette.statusAccents).toBe(ACCENTS.dark);
     expect(value.palette.statusAccentFills).toBe(accentFill);
+    expect(() => validateDesignSystemProviderValue(value)).not.toThrow();
+  });
+
+  it("rejects partial or non-composable supplied product palettes", () => {
+    const value = resolveDesignSystemProviderValue(
+      { theme: "light" },
+      { systemTheme: "light" },
+    );
+    expect(() =>
+      validateDesignSystemProviderValue({
+        ...value,
+        palette: {
+          ...value.palette,
+          theme: { ...value.palette.theme, primary: "blue" },
+        },
+      }),
+    ).toThrow(/palette\.theme\.primary.*six-digit hex/);
+    expect(() =>
+      validateDesignSystemProviderValue({
+        ...value,
+        palette: {
+          ...value.palette,
+          statusAccents: { ...value.palette.statusAccents, info: undefined },
+        },
+      } as never),
+    ).toThrow(/palette\.statusAccents\.info/);
   });
 });
 

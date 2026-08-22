@@ -1,4 +1,4 @@
-import { act, useRef } from "react";
+import { act, useRef, useState } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
@@ -43,6 +43,146 @@ afterEach(async () => {
 });
 
 describe("modal overlay behavior", () => {
+  it("supports triggerless controlled dialogs and isolates nested or late background DOM", async () => {
+    const preserved = document.createElement("div");
+    preserved.setAttribute("aria-hidden", "false");
+    preserved.inert = true;
+    document.body.append(preserved);
+
+    function Fixture() {
+      const [outerOpen, setOuterOpen] = useState(true);
+      const [innerOpen, setInnerOpen] = useState(false);
+      return (
+        <HjmProvider systemTheme="light">
+          <Dialog
+            closeLabel="바깥 닫기"
+            open={outerOpen}
+            onOpenChange={setOuterOpen}
+            title="바깥 모달"
+          >
+            <button type="button" onClick={() => setInnerOpen(true)}>안쪽 열기</button>
+          </Dialog>
+          <Dialog
+            closeLabel="안쪽 닫기"
+            open={innerOpen}
+            onOpenChange={setInnerOpen}
+            title="안쪽 모달"
+          />
+        </HjmProvider>
+      );
+    }
+
+    await render(<Fixture />);
+    await flush();
+    expect(container.inert).toBe(true);
+    expect(container.getAttribute("aria-hidden")).toBe("true");
+    expect(preserved.inert).toBe(true);
+    expect(preserved.getAttribute("aria-hidden")).toBe("true");
+
+    const latePortal = document.createElement("div");
+    document.body.append(latePortal);
+    await flush();
+    expect(latePortal.inert).toBe(true);
+    expect(latePortal.getAttribute("aria-hidden")).toBe("true");
+
+    const outer = document.body.querySelector<HTMLElement>('[aria-labelledby$="-title"]')!;
+    const outerPortal = outer.closest<HTMLElement>(".hjm-portal")!;
+    const openInner = [...outer.querySelectorAll<HTMLButtonElement>("button")]
+      .find((button) => button.textContent === "안쪽 열기")!;
+    await act(async () => openInner.click());
+    await flush();
+    expect(document.body.querySelectorAll('[role="dialog"]')).toHaveLength(2);
+    expect(outerPortal.inert).toBe(true);
+    expect(outerPortal.getAttribute("aria-hidden")).toBe("true");
+
+    await act(async () => {
+      document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+    });
+    await flush();
+    expect(document.body.querySelectorAll('[role="dialog"]')).toHaveLength(1);
+    expect(outerPortal.inert).toBe(false);
+    expect(outerPortal.hasAttribute("aria-hidden")).toBe(false);
+
+    await act(async () => {
+      document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+    });
+    await flush();
+    expect(document.body.querySelector('[role="dialog"]')).toBeNull();
+    expect(container.inert).toBe(false);
+    expect(container.hasAttribute("aria-hidden")).toBe(false);
+    expect(preserved.inert).toBe(true);
+    expect(preserved.getAttribute("aria-hidden")).toBe("false");
+    expect(latePortal.inert).toBe(false);
+    expect(latePortal.hasAttribute("aria-hidden")).toBe(false);
+
+    latePortal.remove();
+    preserved.remove();
+  });
+
+  it("runs triggerless controlled AlertDialog and Sheet lifecycles", async () => {
+    const alertChanges = vi.fn();
+    const sheetChanges = vi.fn();
+
+    function Fixture() {
+      const [active, setActive] = useState<"alert" | "sheet" | "closed">("alert");
+      return (
+        <HjmProvider systemTheme="light">
+          <AlertDialog
+            open={active === "alert"}
+            onOpenChange={(open, detail) => {
+              alertChanges(open, detail);
+              if (!open) setActive("sheet");
+            }}
+            request={{
+              mode: "alert",
+              title: "저장 완료",
+              description: "변경 사항을 저장했습니다.",
+              confirmLabel: "확인",
+            }}
+          />
+          <Sheet
+            closeLabel="패널 닫기"
+            open={active === "sheet"}
+            onOpenChange={(open, detail) => {
+              sheetChanges(open, detail);
+              if (!open) setActive("closed");
+            }}
+            title="필터"
+          >
+            <button type="button">필터 적용</button>
+          </Sheet>
+        </HjmProvider>
+      );
+    }
+
+    await render(<Fixture />);
+    await flush();
+    const alert = document.body.querySelector<HTMLElement>('[role="alertdialog"]')!;
+    expect(alert).not.toBeNull();
+    expect(container.inert).toBe(true);
+
+    const confirm = [...alert.querySelectorAll<HTMLButtonElement>("button")]
+      .find((button) => button.textContent === "확인")!;
+    await act(async () => confirm.click());
+    await flush();
+
+    expect(document.body.querySelector('[role="alertdialog"]')).toBeNull();
+    expect(document.body.querySelector('[data-kind="sheet"] [role="dialog"]')).not.toBeNull();
+    expect(alertChanges).toHaveBeenLastCalledWith(false, { reason: "confirm" });
+    expect(container.inert).toBe(true);
+
+    await act(async () => {
+      document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+    });
+    await flush();
+
+    expect(document.body.querySelector('[data-kind="sheet"]')).toBeNull();
+    expect(sheetChanges).toHaveBeenLastCalledWith(false, { reason: "escape" });
+    expect(container.inert).toBe(false);
+    expect(container.hasAttribute("aria-hidden")).toBe(false);
+    expect(document.body.style.overflow).toBe("");
+  });
+
   it("enters, traps, and restores focus while Escape closes Dialog", async () => {
     function Fixture() {
       const initialRef = useRef<HTMLButtonElement>(null);

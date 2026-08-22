@@ -1,4 +1,4 @@
-import { act } from "react";
+import { StrictMode, act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
@@ -40,6 +40,7 @@ beforeEach(() => {
 afterEach(async () => {
   await act(async () => root.unmount());
   container.remove();
+  vi.unstubAllGlobals();
 });
 
 describe("Menu core behavior alignment", () => {
@@ -299,6 +300,63 @@ describe("Select core behavior alignment", () => {
     expect(onSelectionChange).toHaveBeenLastCalledWith(null);
     expect(container.querySelector('[role="listbox"]')).toBeNull();
   });
+
+  it("exposes Select icon appearances and keeps a busy trigger focusable but inert", async () => {
+    const onSelectionChange = vi.fn();
+    const renderLeading = vi.fn((_item, appearance) => (
+      <span data-select-leading data-size={appearance.glyphSize} data-color={appearance.color} />
+    ));
+    const renderOptionLeading = vi.fn((item, appearance) => (
+      <span
+        data-option-leading={item.id}
+        data-highlighted={String(appearance.highlighted)}
+        data-selected={String(appearance.selected)}
+      />
+    ));
+    await render(
+      <HjmProvider systemTheme="light">
+        <Select
+          key="slots"
+          accessibilityLabel="언어"
+          placeholder="언어 선택"
+          emptySelectionLabel="선택 안 함"
+          items={items}
+          defaultSelectedKey="alpha"
+          defaultOpen
+          locale="ko"
+          renderLeading={renderLeading}
+          renderOptionLeading={renderOptionLeading}
+          onSelectionChange={onSelectionChange}
+        />
+      </HjmProvider>,
+    );
+    expect(container.querySelector('[data-select-leading]')?.getAttribute("data-color"))
+      .toBe("currentColor");
+    expect(container.querySelector('[data-option-leading="alpha"]')?.getAttribute("data-selected"))
+      .toBe("true");
+
+    await render(
+      <HjmProvider systemTheme="light">
+        <Select
+          key="busy"
+          accessibilityLabel="언어"
+          placeholder="언어 선택"
+          emptySelectionLabel="선택 안 함"
+          items={items}
+          defaultSelectedKey="alpha"
+          busy
+          onSelectionChange={onSelectionChange}
+        />
+      </HjmProvider>,
+    );
+    const trigger = container.querySelector<HTMLButtonElement>('[role="combobox"]')!;
+    trigger.focus();
+    await act(async () => trigger.click());
+    expect(trigger.disabled).toBe(false);
+    expect(trigger.getAttribute("aria-disabled")).toBe("true");
+    expect(trigger.getAttribute("aria-busy")).toBe("true");
+    expect(container.querySelector('[role="listbox"]')).toBeNull();
+  });
 });
 
 describe("Tabs state and mount policies", () => {
@@ -536,6 +594,98 @@ describe("supplemental active renderers", () => {
     expect(onRequestOutcome).toHaveBeenCalledWith("started", "manual");
   });
 
+  it("keeps the first LoadMore request alive through StrictMode effect replay", async () => {
+    const onLoadMore = vi.fn(async () => undefined);
+    await render(
+      <StrictMode>
+        <HjmProvider systemTheme="light">
+          <LoadMore
+            descriptor={{
+              state: { status: "ready", requestKey: "strict-page" },
+              labels: {
+                loadMore: "더 보기",
+                loading: "불러오는 중",
+                retry: "다시 시도",
+                complete: "모두 불러옴",
+              },
+            }}
+            mode="manual"
+            onLoadMore={onLoadMore}
+          />
+        </HjmProvider>
+      </StrictMode>,
+    );
+    await act(async () => {
+      container.querySelector<HTMLButtonElement>(".hjm-load-more__trigger")?.click();
+      await Promise.resolve();
+    });
+    expect(onLoadMore).toHaveBeenCalledOnce();
+    expect(onLoadMore).toHaveBeenCalledWith({
+      requestKey: "strict-page",
+      reason: "manual",
+    });
+  });
+
+  it("retires a settled cursor and rejects queued callbacks from a disconnected observer", async () => {
+    const callbacks: IntersectionObserverCallback[] = [];
+    class ObserverMock {
+      readonly root = null;
+      readonly rootMargin = "0px";
+      readonly thresholds = [0];
+      constructor(callback: IntersectionObserverCallback) {
+        callbacks.push(callback);
+      }
+      observe() {}
+      unobserve() {}
+      disconnect() {}
+      takeRecords(): IntersectionObserverEntry[] { return []; }
+    }
+    vi.stubGlobal("IntersectionObserver", ObserverMock);
+    const onLoadMore = vi.fn(async () => undefined);
+    const labels = {
+      loadMore: "더 보기",
+      loading: "불러오는 중",
+      retry: "다시 시도",
+      complete: "모두 불러옴",
+    } as const;
+    const view = (requestKey: string) => (
+      <HjmProvider systemTheme="light">
+        <LoadMore
+          descriptor={{ state: { status: "ready", requestKey }, labels }}
+          onLoadMore={onLoadMore}
+        />
+      </HjmProvider>
+    );
+
+    await render(view("page-a"));
+    const pageAObserver = callbacks[0]!;
+    const entries = [{ isIntersecting: true } as IntersectionObserverEntry];
+    await act(async () => {
+      pageAObserver(entries, {} as IntersectionObserver);
+      await Promise.resolve();
+    });
+    expect(onLoadMore).toHaveBeenCalledTimes(1);
+
+    await act(async () => {
+      pageAObserver(entries, {} as IntersectionObserver);
+      await Promise.resolve();
+    });
+    expect(onLoadMore).toHaveBeenCalledTimes(1);
+
+    await render(view("page-b"));
+    const pageBObserver = callbacks.at(-1)!;
+    await act(async () => {
+      pageBObserver(entries, {} as IntersectionObserver);
+      pageAObserver(entries, {} as IntersectionObserver);
+      await Promise.resolve();
+    });
+    expect(onLoadMore).toHaveBeenCalledTimes(2);
+    expect(onLoadMore).toHaveBeenLastCalledWith({
+      requestKey: "page-b",
+      reason: "viewport",
+    });
+  });
+
   it("publishes, acts, and dismisses Toasts through the provider store", async () => {
     const action = vi.fn();
     const onDismiss = vi.fn();
@@ -580,5 +730,56 @@ describe("supplemental active renderers", () => {
     await flush();
     expect(onDismiss).toHaveBeenCalledWith("action");
     expect(document.body.querySelector('.hjm-toast')).toBeNull();
+  });
+
+  it("keeps an owned Toast store live through StrictMode and captures locale and viewport adapters", async () => {
+    function Publisher() {
+      const toast = useToast();
+      return (
+        <button
+          type="button"
+          onClick={() => toast.publish({
+            id: "localized",
+            description: "저장했습니다.",
+            closeLabel: "닫기",
+          })}
+        >
+          게시
+        </button>
+      );
+    }
+    const view = (locale: string) => (
+      <StrictMode>
+        <HjmProvider systemTheme="light">
+          <ToastProvider
+            label="알림 목록"
+            locale={locale}
+            bottomOffset={92}
+            hotkey="F8"
+            hotkeyHelp="F8 키를 눌러 알림으로 이동"
+          >
+            <Publisher />
+          </ToastProvider>
+        </HjmProvider>
+      </StrictMode>
+    );
+
+    await render(view("ko"));
+    const publisher = container.querySelector<HTMLButtonElement>("button")!;
+    publisher.focus();
+    await act(async () => publisher.click());
+    await flush();
+    const viewport = document.body.querySelector<HTMLElement>(".hjm-toast-viewport")!;
+    const toast = viewport.querySelector<HTMLElement>(".hjm-toast")!;
+    expect(toast.lang).toBe("ko");
+    expect(viewport.style.getPropertyValue("--hjm-toast-bottom-offset")).toBe("92px");
+    expect(viewport.getAttribute("aria-keyshortcuts")).toBe("F8");
+    await act(async () => {
+      document.dispatchEvent(new KeyboardEvent("keydown", { key: "F8", bubbles: true }));
+    });
+    expect(document.activeElement).toBe(viewport);
+
+    await render(view("en"));
+    expect(document.body.querySelector<HTMLElement>(".hjm-toast")?.lang).toBe("ko");
   });
 });

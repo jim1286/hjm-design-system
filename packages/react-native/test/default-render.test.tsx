@@ -11,8 +11,12 @@ import {
   BottomNavigation,
   Button,
   Card,
+  Checkbox,
+  CheckboxGroup,
   Chip,
+  Combobox,
   CounterBadge,
+  DescriptionList,
   Dialog,
   Divider,
   EmptyState,
@@ -21,13 +25,19 @@ import {
   HjmNativeProvider,
   Icon,
   IconButton,
+  Image,
+  Layout,
   List,
   ListRow,
+  LoadMore,
+  Menu,
   Notice,
   Progress,
   RadioGroup,
+  Result,
   SearchField,
   Section,
+  Select,
   SegmentedControl,
   Sheet,
   Skeleton,
@@ -39,8 +49,10 @@ import {
   Tag,
   Text,
   TextArea,
+  Timeline,
   ToastRegion,
   TopBar,
+  TopBarAction,
 } from "../src/index.js";
 import { reactNativeRendererEvidence } from "../src/evidence.js";
 
@@ -71,6 +83,7 @@ export const defaultRenderCases = [
       </Grid>
     ),
   },
+  { componentId: "layout", render: () => <Layout><Text>본문</Text></Layout> },
   {
     componentId: "icon",
     render: () => (
@@ -99,6 +112,11 @@ export const defaultRenderCases = [
     render: () => <SearchField busyLabel="검색 중" clearLabel="검색어 지우기" label="검색" />,
   },
   { componentId: "text-area", render: () => <TextArea label="설명" /> },
+  { componentId: "checkbox", render: () => <Checkbox label="동의" /> },
+  {
+    componentId: "checkbox-group",
+    render: () => <CheckboxGroup label="관심사" items={[{ id: "sports", label: "스포츠" }]} />,
+  },
   {
     componentId: "radio-group",
     render: () => <RadioGroup label="배송" options={[{ value: "standard", label: "일반" }]} />,
@@ -108,16 +126,96 @@ export const defaultRenderCases = [
     componentId: "segmented-control",
     render: () => <SegmentedControl label="보기" options={[{ value: "list", label: "목록" }]} />,
   },
+  {
+    componentId: "select",
+    render: () => (
+      <Select
+        dismissLabel="닫기"
+        label="언어"
+        options={[{ value: "ko", label: "한국어" }]}
+        placeholder="선택"
+      />
+    ),
+  },
+  {
+    componentId: "combobox",
+    render: () => (
+      <Combobox
+        clearLabel="검색어 지우기"
+        dismissLabel="닫기"
+        emptyMessage="결과 없음"
+        items={[{ id: "seoul", label: "서울", textValue: "서울" }]}
+        label="도시"
+        loadingMessage="검색 중"
+      />
+    ),
+  },
   { componentId: "chip", render: () => <Chip label="필터" onPress={noop} /> },
   {
     componentId: "tabs",
     render: () => <Tabs label="계정" options={[{ value: "profile", label: "프로필" }]} />,
   },
-  { componentId: "top-bar", render: () => <TopBar title="설정" /> },
+  {
+    componentId: "top-bar",
+    render: () => (
+      <TopBar
+        actions={(
+          <TopBarAction label="공유" onPress={noop}>
+            <View testID="share-icon" />
+          </TopBarAction>
+        )}
+        onTitlePress={noop}
+        title="설정"
+        titleLeading={<View testID="settings-avatar" />}
+      />
+    ),
+  },
+  {
+    componentId: "menu",
+    render: () => (
+      <Menu
+        dismissLabel="닫기"
+        items={[{ value: "edit", label: "수정" }]}
+        onSelect={noop}
+        triggerLabel="더 보기"
+      />
+    ),
+  },
   { componentId: "badge", render: () => <Badge label="새 항목" /> },
   { componentId: "card", render: () => <Card><Text>카드</Text></Card> },
   { componentId: "list-row", render: () => <ListRow title="행" /> },
   { componentId: "tag", render: () => <Tag>태그</Tag> },
+  {
+    componentId: "timeline",
+    render: () => (
+      <Timeline
+        composeAccessibleName={({ position, total, label }) =>
+          `${total}개 중 ${position}번째, ${label}`
+        }
+        items={[{ id: "created", label: "생성" }]}
+      />
+    ),
+  },
+  {
+    componentId: "description-list",
+    render: () => (
+      <DescriptionList
+        availableWidth={320}
+        label="상세 정보"
+        descriptor={{ items: [{ id: "status", label: "상태", value: "준비" }] }}
+      />
+    ),
+  },
+  {
+    componentId: "image",
+    render: () => (
+      <Image
+        src="https://example.com/image.png"
+        width={320}
+        height={180}
+      />
+    ),
+  },
   {
     componentId: "counter-badge",
     render: () => <CounterBadge accessibilityLabel="알림 3개" count={3} />,
@@ -128,6 +226,7 @@ export const defaultRenderCases = [
     render: () => <Statistic descriptor={{ id: "orders", label: "주문", value: "12" }} />,
   },
   { componentId: "empty-state", render: () => <EmptyState title="항목 없음" /> },
+  { componentId: "result", render: () => <Result status="success" title="저장됨" /> },
   { componentId: "notice", render: () => <Notice title="안내" /> },
   { componentId: "progress", render: () => <Progress label="업로드" value={0.5} /> },
   { componentId: "skeleton", render: () => <Skeleton accessibilityLabel="불러오는 중" /> },
@@ -160,6 +259,24 @@ export const defaultRenderCases = [
         }}
         onActivate={noop}
         renderIcon={({ name }) => <Text>{name}</Text>}
+      />
+    ),
+  },
+  {
+    componentId: "load-more",
+    render: () => (
+      <LoadMore
+        descriptor={{
+          labels: {
+            complete: "모두 불러옴",
+            loading: "불러오는 중",
+            loadMore: "더 보기",
+            retry: "다시 시도",
+          },
+          state: { status: "ready", requestKey: "default-page" },
+        }}
+        mode="manual"
+        onLoadMore={async () => undefined}
       />
     ),
   },

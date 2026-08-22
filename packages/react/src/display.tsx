@@ -3,6 +3,7 @@ import {
   listRowRecipe,
   type BadgeSize,
   type BadgeTone,
+  type BadgeVariant as ContractBadgeVariant,
   type ListRowDensity,
 } from "@hjm/design-contracts/recipes";
 import {
@@ -31,11 +32,13 @@ import { Surface, Text } from "./layout.js";
 
 export type { CardHeadingLevel } from "@hjm/design-contracts/components/card";
 export type { TagTone } from "@hjm/design-contracts/components/tag";
+export type BadgeVariant = ContractBadgeVariant;
 
 export type BadgeProps = HTMLAttributes<HTMLSpanElement> &
   Readonly<{
     tone?: BadgeTone;
     size?: BadgeSize;
+    variant?: BadgeVariant;
     leading?: ReactNode;
   }>;
 
@@ -43,6 +46,7 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(function Badge(
   {
     tone = badgeRecipe.defaults.tone,
     size = badgeRecipe.defaults.size,
+    variant = badgeRecipe.defaults.variant,
     leading,
     className,
     children,
@@ -57,9 +61,14 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(function Badge(
       className={classNames("hjm-badge", className)}
       data-tone={tone}
       data-size={size}
+      data-variant={variant}
     >
-      {leading}
-      <span>{children}</span>
+      {leading === undefined ? null : (
+        <span aria-hidden="true" className="hjm-badge__icon">
+          {leading}
+        </span>
+      )}
+      <span className="hjm-badge__label">{children}</span>
     </span>
   );
 });

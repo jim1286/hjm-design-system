@@ -4,22 +4,24 @@ import {
   layoutRecipe,
   resolveLayoutWebLandmarks,
   validateLayoutDescriptor,
+  validateLayoutRegions,
+  validateLayoutWebDescriptor,
   type LayoutDescriptor,
 } from "../src/layout.js";
 
 describe("Layout descriptor validation", () => {
   it("accepts the minimal shell: main only", () => {
-    expect(() => validateLayoutDescriptor({})).not.toThrow();
+    expect(() => validateLayoutRegions({})).not.toThrow();
   });
 
   it("rejects an unsupported sidebar role or mode", () => {
     expect(() =>
-      validateLayoutDescriptor({
+      validateLayoutRegions({
         sidebar: { role: "aside" as never, mode: "persistent", label: "Filters" },
       }),
     ).toThrow(/role/);
     expect(() =>
-      validateLayoutDescriptor({
+      validateLayoutRegions({
         sidebar: { role: "navigation", mode: "modal" as never, label: "Filters" },
       }),
     ).toThrow(/mode/);
@@ -27,30 +29,35 @@ describe("Layout descriptor validation", () => {
 
   it("rejects an empty sidebar label or skipLinkLabel", () => {
     expect(() =>
-      validateLayoutDescriptor({
+      validateLayoutRegions({
         sidebar: { role: "navigation", mode: "persistent", label: " " },
         skipLinkLabel: "본문으로 건너뛰기",
       }),
     ).toThrow(/label/);
     expect(() =>
-      validateLayoutDescriptor({ hasHeader: true, skipLinkLabel: " " }),
+      validateLayoutRegions({ hasHeader: true, skipLinkLabel: " " }),
     ).toThrow(/skipLinkLabel/);
   });
 
-  it("requires a skip link whenever a header or sidebar precedes main", () => {
-    expect(() => validateLayoutDescriptor({ hasHeader: true })).toThrow(/skipLinkLabel/);
+  it("keeps the bypass-link requirement Web-only", () => {
+    expect(() => validateLayoutRegions({ hasHeader: true })).not.toThrow();
+    expect(() => validateLayoutRegions({
+      sidebar: { role: "navigation", mode: "persistent", label: "Sidebar" },
+    })).not.toThrow();
+    expect(() => validateLayoutWebDescriptor({ hasHeader: true })).toThrow(/skipLinkLabel/);
     expect(() =>
-      validateLayoutDescriptor({
+      validateLayoutWebDescriptor({
         sidebar: { role: "navigation", mode: "persistent", label: "Sidebar" },
       }),
     ).toThrow(/skipLinkLabel/);
     expect(() =>
-      validateLayoutDescriptor({ hasHeader: true, skipLinkLabel: "본문으로 건너뛰기" }),
+      validateLayoutWebDescriptor({ hasHeader: true, skipLinkLabel: "본문으로 건너뛰기" }),
     ).not.toThrow();
+    expect(() => validateLayoutDescriptor({ hasHeader: true })).toThrow(/skipLinkLabel/);
   });
 
   it("does not require a skip link when only a footer is present", () => {
-    expect(() => validateLayoutDescriptor({ hasFooter: true })).not.toThrow();
+    expect(() => validateLayoutWebDescriptor({ hasFooter: true })).not.toThrow();
   });
 });
 

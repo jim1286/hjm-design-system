@@ -6,8 +6,8 @@ import { surfaceGeometry, } from "@hjm/design-contracts/recipes/base";
 import { createElement, forwardRef, } from "react";
 import { classNames } from "./internal.js";
 import { Surface, Text } from "./layout.js";
-export const Badge = forwardRef(function Badge({ tone = badgeRecipe.defaults.tone, size = badgeRecipe.defaults.size, leading, className, children, ...props }, ref) {
-    return (_jsxs("span", { ...props, ref: ref, className: classNames("hjm-badge", className), "data-tone": tone, "data-size": size, children: [leading, _jsx("span", { children: children })] }));
+export const Badge = forwardRef(function Badge({ tone = badgeRecipe.defaults.tone, size = badgeRecipe.defaults.size, variant = badgeRecipe.defaults.variant, leading, className, children, ...props }, ref) {
+    return (_jsxs("span", { ...props, ref: ref, className: classNames("hjm-badge", className), "data-tone": tone, "data-size": size, "data-variant": variant, children: [leading === undefined ? null : (_jsx("span", { "aria-hidden": "true", className: "hjm-badge__icon", children: leading })), _jsx("span", { className: "hjm-badge__label", children: children })] }));
 });
 export const Tag = forwardRef(function Tag({ children, tone, className, ...props }, ref) {
     const descriptor = resolveTagDescriptor({

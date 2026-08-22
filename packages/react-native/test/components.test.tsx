@@ -1,6 +1,6 @@
 import { act, create, type ReactTestInstance, type ReactTestRenderer } from "react-test-renderer";
 import { AccessibilityInfo, Modal, Pressable, TextInput, View } from "react-native";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
   Button,
@@ -36,6 +36,11 @@ function flattenStyle(style: unknown): Record<string, unknown> {
   if (!Array.isArray(style)) return (style ?? {}) as Record<string, unknown>;
   return Object.assign({}, ...style.map(flattenStyle));
 }
+
+afterEach(() => {
+  vi.useRealTimers();
+  vi.restoreAllMocks();
+});
 
 describe("@hjm/react-native vertical slice", () => {
   it("resolves native environment signals through the contracts Provider", () => {
@@ -156,6 +161,7 @@ describe("@hjm/react-native vertical slice", () => {
   });
 
   it("maps Dialog to a modal accessibility boundary and closes uncontrolled state", () => {
+    vi.useFakeTimers();
     const focusSpy = vi.spyOn(AccessibilityInfo, "setAccessibilityFocus");
     const returnFocusRef = { current: {} as View };
     const renderer = renderWithProvider(
@@ -180,6 +186,10 @@ describe("@hjm/react-native vertical slice", () => {
     );
     act(() => action?.props.onPress());
     expect(renderer.root.findByType(Modal).props.visible).toBe(false);
+    expect(focusSpy).not.toHaveBeenCalled();
+    act(() => {
+      vi.runOnlyPendingTimers();
+    });
     expect(focusSpy).toHaveBeenCalledWith(1);
   });
 });

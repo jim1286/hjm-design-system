@@ -18,6 +18,7 @@ import {
   type WebKeyboardKey,
 } from "@hjm/design-contracts/behaviors";
 import {
+  iconRecipe,
   selectRecipe,
   type SelectDensity,
   type SelectSize,
@@ -43,6 +44,18 @@ export type SelectSection<
   Key extends string = string,
   SectionKey extends string = string,
 > = SelectCollectionSectionDescriptor<Key, SectionKey>;
+
+export type SelectLeadingRenderProps = Readonly<{
+  color: "currentColor";
+  size: number;
+  glyphSize: number;
+}>;
+
+export type SelectOptionLeadingRenderProps = SelectLeadingRenderProps & Readonly<{
+  selected: boolean;
+  highlighted: boolean;
+  disabled: boolean;
+}>;
 
 const emptySelectionKey = Symbol("hjm-select-empty-selection");
 type SelectHighlightKey<Key extends string> = Key | typeof emptySelectionKey;
@@ -98,11 +111,22 @@ type SelectBaseProps<Key extends string> = Omit<
     selectedItem?: SelectItemDescriptor<Key>;
     disallowEmptySelection?: boolean;
     loop?: boolean;
+    /** Locks interaction without removing the trigger from the focus order. */
+    busy?: boolean;
     readOnly?: boolean;
     required?: boolean;
     size?: SelectSize;
     density?: SelectDensity;
     fieldClassName?: string;
+    locale?: string | readonly string[];
+    renderLeading?: (
+      item: SelectItemDescriptor<Key> | null,
+      appearance: SelectLeadingRenderProps,
+    ) => ReactNode;
+    renderOptionLeading?: (
+      item: SelectItemDescriptor<Key>,
+      appearance: SelectOptionLeadingRenderProps,
+    ) => ReactNode;
   }>;
 
 export type SelectProps<
@@ -131,10 +155,14 @@ function SelectInner<Key extends string, SectionKey extends string>(
     selectedItem,
     disallowEmptySelection = selectBehaviorDefaults.disallowEmptySelection,
     loop = selectBehaviorDefaults.loop,
+    busy = false,
     readOnly = false,
     size = selectRecipe.defaults.size,
     density = selectRecipe.defaults.density,
     fieldClassName,
+    locale,
+    renderLeading,
+    renderOptionLeading,
     className,
     id: idProp,
     name,
@@ -305,7 +333,7 @@ function SelectInner<Key extends string, SectionKey extends string>(
   }, [changeOpen, open]);
 
   const openWithIntent = (intent: "first" | "last" = "first") => {
-    if (disabled) return;
+    if (disabled || busy || readOnly) return;
     const selectedInSource = resolveCollectionItem(source, reconciledSelectedKey);
     const target = selectedInSource && !selectedInSource.disabled
       ? selectedInSource.id
@@ -364,7 +392,14 @@ function SelectInner<Key extends string, SectionKey extends string>(
       return;
     }
     const item = resolveCollectionItem(source, key);
-    if (!item || item.disabled || disabled || readOnly || asyncState.status === "loading") return;
+    if (
+      !item ||
+      item.disabled ||
+      disabled ||
+      busy ||
+      readOnly ||
+      asyncState.status === "loading"
+    ) return;
     setSelectedKey(key);
     restoreFocusRef.current = true;
     changeOpen(false, "selection");
@@ -381,6 +416,7 @@ function SelectInner<Key extends string, SectionKey extends string>(
       startsAfterKey: activeKey === emptySelectionKey
         ? reconciledSelectedKey
         : activeKey ?? reconciledSelectedKey,
+      ...(locale === undefined ? {} : { locale }),
     });
     if (match !== undefined) {
       setHighlightedKey(match);
@@ -389,7 +425,7 @@ function SelectInner<Key extends string, SectionKey extends string>(
   };
   const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
     onKeyDown?.(event);
-    if (event.defaultPrevented || disabled) return;
+    if (event.defaultPrevented || disabled || busy || readOnly) return;
     const navigationIntent = getCollectionNavigationIntent(
       event.key as WebKeyboardKey,
     );
@@ -442,6 +478,15 @@ function SelectInner<Key extends string, SectionKey extends string>(
   const renderOption = (item: SelectItemDescriptor<Key>) => {
     const selected = item.id === reconciledSelectedKey;
     const active = item.id === activeKey;
+    const leadingSize = iconRecipe.sizes[selectRecipe.optionLeading.glyph];
+    const leading = renderOptionLeading?.(item, {
+      selected,
+      highlighted: active,
+      disabled: item.disabled ?? false,
+      color: "currentColor",
+      size: leadingSize,
+      glyphSize: leadingSize,
+    });
     return (
       <div
         key={item.id}
@@ -462,6 +507,11 @@ function SelectInner<Key extends string, SectionKey extends string>(
         }}
         onClick={() => commit(item.id)}
       >
+        {leading ? (
+          <span className="hjm-select__option-leading" aria-hidden="true">
+            {leading}
+          </span>
+        ) : null}
         <span className="hjm-select__option-copy">
           <span>{item.label}</span>
           {item.description ? (
@@ -473,6 +523,13 @@ function SelectInner<Key extends string, SectionKey extends string>(
     );
   };
 
+  const triggerLeadingSize = iconRecipe.sizes[selectRecipe.sizes[size].glyph];
+  const triggerLeading = renderLeading?.(resolvedSelectedItem, {
+    color: "currentColor",
+    size: triggerLeadingSize,
+    glyphSize: triggerLeadingSize,
+  });
+
   return (
     <div
       ref={rootRef}
@@ -481,6 +538,7 @@ function SelectInner<Key extends string, SectionKey extends string>(
       data-size={size}
       data-density={density}
       data-async-state={asyncState.status}
+      data-busy={busy || undefined}
     >
       {label !== undefined ? (
         <label className="hjm-field__label" htmlFor={controlId}>
@@ -500,12 +558,13 @@ function SelectInner<Key extends string, SectionKey extends string>(
           role="combobox"
           className={classNames("hjm-field__control hjm-select__trigger", className)}
           disabled={disabled}
+          aria-disabled={busy || undefined}
           aria-label={accessibilityLabel ?? (label === undefined ? accessibleName : undefined)}
           aria-haspopup="listbox"
           aria-expanded={open}
           aria-controls={open ? listboxId : undefined}
           aria-activedescendant={open ? activeOptionId : undefined}
-          aria-busy={asyncState.status === "loading" || asyncState.status === "loadingMore" || undefined}
+          aria-busy={busy || asyncState.status === "loading" || asyncState.status === "loadingMore" || undefined}
           aria-invalid={error ? true : undefined}
           aria-describedby={describedBy}
           aria-readonly={readOnly || undefined}
@@ -515,18 +574,27 @@ function SelectInner<Key extends string, SectionKey extends string>(
           onKeyDown={handleKeyDown}
           onClick={(event) => {
             onClick?.(event);
-            if (event.defaultPrevented || disabled) return;
+            if (event.defaultPrevented || disabled || busy || readOnly) return;
             if (open) changeOpen(false, "trigger");
             else openWithIntent();
           }}
         >
+          {triggerLeading ? (
+            <span className="hjm-select__leading" aria-hidden="true">
+              {triggerLeading}
+            </span>
+          ) : null}
           <span
             className="hjm-select__value"
             data-state={resolvedSelectedItem ? "selected" : "placeholder"}
           >
             {resolvedSelectedItem?.label ?? placeholder}
           </span>
-          <span className="hjm-select__indicator" aria-hidden="true">⌄</span>
+          {busy ? (
+            <span className="hjm-select__busy-indicator" aria-hidden="true" />
+          ) : (
+            <span className="hjm-select__indicator" aria-hidden="true">⌄</span>
+          )}
         </button>
         {open ? (
           <div

@@ -24,7 +24,7 @@ import {
 } from "react-native";
 
 import { useControllableState } from "./internal/state.js";
-import { logicalTextAlign, scalableTextDefaults } from "./internal/styles.js";
+import { logicalTextAlign, resolveNativeTextScaleProps } from "./internal/styles.js";
 import { useHjmNativeTheme } from "./provider.js";
 
 type NativeSliderViewProps = Omit<
@@ -87,7 +87,7 @@ export const Slider = forwardRef<View, SliderProps>(function Slider(
   },
   forwardedRef,
 ) {
-  const { colors, environment, tokens } = useHjmNativeTheme();
+  const { colors, environment, textScaling, tokens } = useHjmNativeTheme();
   const [currentValue, setCurrentValue] = useControllableState<number>({
     ...(value === undefined ? {} : { value }),
     defaultValue: defaultValue ?? min,
@@ -196,6 +196,18 @@ export const Slider = forwardRef<View, SliderProps>(function Slider(
           if (event.nativeEvent.actionName === "decrement") performAction("decrement");
         },
       };
+  const labelTextScaleProps = resolveNativeTextScaleProps(textScaling, [
+    tokens.typography[recipe.labelVariant],
+    { color: colors.textBody, textAlign: logicalTextAlign(environment.direction) },
+  ]);
+  const valueTextScaleProps = resolveNativeTextScaleProps(textScaling, [
+    tokens.typography[recipe.valueLabelVariant],
+    {
+      color: colors.textMuted,
+      fontVariant: ["tabular-nums"],
+      textAlign: logicalTextAlign(environment.direction),
+    },
+  ]);
 
   return (
     <View
@@ -218,26 +230,10 @@ export const Slider = forwardRef<View, SliderProps>(function Slider(
           justifyContent: "space-between",
         }}
       >
-        <NativeText
-          {...scalableTextDefaults}
-          style={[
-            tokens.typography[recipe.labelVariant],
-            { color: colors.textBody, textAlign: logicalTextAlign(environment.direction) },
-          ]}
-        >
+        <NativeText {...labelTextScaleProps}>
           {label}
         </NativeText>
-        <NativeText
-          {...scalableTextDefaults}
-          style={[
-            tokens.typography[recipe.valueLabelVariant],
-            {
-              color: colors.textMuted,
-              fontVariant: ["tabular-nums"],
-              textAlign: logicalTextAlign(environment.direction),
-            },
-          ]}
-        >
+        <NativeText {...valueTextScaleProps}>
           {visibleValue}
         </NativeText>
       </View>

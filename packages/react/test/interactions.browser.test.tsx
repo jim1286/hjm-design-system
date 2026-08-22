@@ -1,4 +1,4 @@
-import { act, type FormEvent } from "react";
+import { act, useState, type FormEvent } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
@@ -7,8 +7,10 @@ import {
   Grid,
   HjmProvider,
   IconButton,
+  RadioGroup,
   SearchField,
   Switch,
+  TabPanel,
   Tabs,
 } from "../src/index.js";
 
@@ -30,6 +32,7 @@ beforeEach(() => {
 afterEach(async () => {
   await act(async () => root.unmount());
   container.remove();
+  vi.unstubAllGlobals();
 });
 
 describe("controlled and uncontrolled selection", () => {
@@ -70,6 +73,48 @@ describe("controlled and uncontrolled selection", () => {
     expect(onChange).toHaveBeenCalledWith(true);
     expect(button.getAttribute("aria-checked")).toBe("false");
     expect(button.dataset.state).toBe("unchecked");
+  });
+
+  it("keeps read-only choices focusable and exposes recipe-owned leading appearance", async () => {
+    const onCheckedChange = vi.fn();
+    const renderLeading = vi.fn(({ selected, size, color }) => (
+      <span data-choice-leading data-selected={String(selected)} data-size={size} data-color={color} />
+    ));
+    await render(
+      <HjmProvider systemTheme="light">
+        <Checkbox
+          label="고정"
+          checked={false}
+          onCheckedChange={onCheckedChange}
+          readOnly
+          presentation="plain"
+          size="small"
+          renderLeading={renderLeading}
+        />
+        <RadioGroup
+          accessibilityLabel="공개 범위"
+          items={[
+            { value: "public", label: "전체 공개" },
+            { value: "private", label: "비공개" },
+          ]}
+          defaultValue="public"
+          presentation="card"
+        />
+      </HjmProvider>,
+    );
+
+    const checkbox = container.querySelector<HTMLInputElement>('input[type="checkbox"]')!;
+    checkbox.focus();
+    await act(async () => checkbox.click());
+    expect(document.activeElement).toBe(checkbox);
+    expect(checkbox.getAttribute("aria-readonly")).toBe("true");
+    expect(onCheckedChange).not.toHaveBeenCalled();
+    expect(container.querySelector('[data-choice-leading]')?.getAttribute("data-color"))
+      .toBe("currentColor");
+    expect(container.querySelector(".hjm-radio-group")?.getAttribute("data-presentation"))
+      .toBe("card");
+    expect(container.querySelector(".hjm-radio-group legend")?.className)
+      .toContain("hjm-visually-hidden");
   });
 });
 
@@ -122,12 +167,14 @@ describe("form and keyboard interactions", () => {
 
   it("clears an uncontrolled SearchField, reports the value, and restores focus", async () => {
     const onValueChange = vi.fn();
+    const onClear = vi.fn();
     await render(
       <HjmProvider systemTheme="light">
         <SearchField
           clearLabel="검색어 지우기"
           label="검색"
           defaultValue="야구"
+          onClear={onClear}
           onValueChange={onValueChange}
         />
       </HjmProvider>,
@@ -137,7 +184,46 @@ describe("form and keyboard interactions", () => {
     await act(async () => clear.click());
     expect(input.value).toBe("");
     expect(onValueChange).toHaveBeenLastCalledWith("");
+    expect(onClear).toHaveBeenCalledOnce();
     expect(document.activeElement).toBe(input);
+  });
+
+  it("keeps SearchField semantics while product icon and progress adapters render", async () => {
+    const renderSearchIcon = vi.fn(({ size, color }) => (
+      <span data-search-icon data-size={size} data-color={color} />
+    ));
+    const renderClearIcon = vi.fn(({ size }) => <span data-clear-icon data-size={size} />);
+    const renderLoadingIndicator = vi.fn(({ size }) => (
+      <span data-loading-icon data-size={size} />
+    ));
+    const field = (loading: boolean) => (
+      <HjmProvider systemTheme="light">
+        <SearchField
+          aria-label="선수 검색"
+          clearLabel="검색어 지우기"
+          value="야구"
+          onValueChange={() => undefined}
+          loading={loading}
+          renderSearchIcon={renderSearchIcon}
+          renderClearIcon={renderClearIcon}
+          renderLoadingIndicator={renderLoadingIndicator}
+        />
+      </HjmProvider>
+    );
+
+    await render(field(true));
+    const input = container.querySelector<HTMLInputElement>('input[type="search"]')!;
+    expect(input.getAttribute("aria-busy")).toBe("true");
+    expect(container.querySelector('[data-search-icon]')?.getAttribute("data-color"))
+      .toBe("currentColor");
+    expect(container.querySelector('[data-loading-icon]')).not.toBeNull();
+    expect(container.querySelector('[data-clear-icon]')).toBeNull();
+
+    await render(field(false));
+    expect(input.hasAttribute("aria-busy")).toBe(false);
+    expect(container.querySelector('[data-loading-icon]')).toBeNull();
+    expect(container.querySelector('[data-clear-icon]')).not.toBeNull();
+    expect(renderSearchIcon.mock.calls[0]?.[0].size).toBeGreaterThan(0);
   });
 
   it("implements roving Tabs focus, disabled skipping, and RTL arrow reversal", async () => {
@@ -169,6 +255,53 @@ describe("form and keyboard interactions", () => {
     expect(container.querySelector('[role="tabpanel"]:not([hidden])')?.textContent).toBe(
       "C panel",
     );
+  });
+
+  it("binds external keyed panels and leading slots to stable value-based ids", async () => {
+    function Harness() {
+      const [value, setValue] = useState("overview");
+      return (
+        <HjmProvider systemTheme="light">
+          <Tabs
+            id="player-tabs"
+            label="선수 정보"
+            items={[
+              {
+                id: "overview",
+                label: "개요",
+                renderLeading: ({ color, glyphSize, size }) => (
+                  <span
+                    data-leading="overview"
+                    data-color={color}
+                    data-glyph-size={glyphSize}
+                    data-size={size}
+                  />
+                ),
+              },
+              { id: "game log", label: "경기 기록" },
+            ]}
+            renderPanels={false}
+            value={value}
+            onValueChange={setValue}
+          />
+          <TabPanel tabsId="player-tabs" value="overview" activeValue={value} mountPolicy="always">
+            개요 패널
+          </TabPanel>
+          <TabPanel tabsId="player-tabs" value="game log" activeValue={value} mountPolicy="always">
+            기록 패널
+          </TabPanel>
+        </HjmProvider>
+      );
+    }
+    await render(<Harness />);
+    const history = document.getElementById("player-tabs-tab-game%20log") as HTMLButtonElement;
+    expect(history.getAttribute("aria-controls")).toBe("player-tabs-panel-game%20log");
+    const leading = container.querySelector<HTMLElement>('[data-leading="overview"]')!;
+    expect(leading.dataset.color).toBe("currentColor");
+    expect(leading.dataset.glyphSize).toBe(leading.dataset.size);
+    await act(async () => history.click());
+    expect((document.getElementById("player-tabs-panel-game%20log") as HTMLElement).hidden).toBe(false);
+    expect((document.getElementById("player-tabs-panel-overview") as HTMLElement).hidden).toBe(true);
   });
 });
 

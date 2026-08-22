@@ -103,7 +103,7 @@ jobs:
           git diff --exit-code -- packages/design-contracts/dist packages/react/dist packages/react-native/dist packages/design-contracts/docs/generated
           test -z "$(git ls-files --others --exclude-standard -- packages/design-contracts/dist packages/react/dist packages/react-native/dist packages/design-contracts/docs/generated)"
 
-      - name: Require successful private consumer evidence
+      - name: Require successful private consumer surface evidence
         if: steps.release-candidate.outputs.should-tag == 'true'
         env:
           HJM_CONSUMER_SYNC_TOKEN: ${{ secrets.HJM_CONSUMER_SYNC_TOKEN }}

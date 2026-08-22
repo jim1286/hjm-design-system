@@ -86,7 +86,7 @@ recipe/behavior 배열, Web/Native별 status와 고정 documentation story ID를
   activation을 사용합니다.
 - `SegmentedControl`: 현재 화면 안의 값·필터·표현 모드를 고릅니다. 별도 tabpanel 관계를
   만들지 않습니다.
-- `BottomNavigation`: Web과 Native에서 앱의 2–5개 안정된 최상위 route를 이동합니다.
+- `BottomNavigation`: Web과 Native에서 앱의 2–6개 안정된 최상위 route를 이동합니다.
   콘텐츠 Tabs의 recipe, panel, roving focus를 재사용하지 않고 router의 현재 route를
   read-only `selectedKey`로 받습니다. Web은 navigation landmark 안의 실제 link와
   `aria-current="page"`, Native는 navigator의 selected state와 `tabPress`/`tabLongPress`를

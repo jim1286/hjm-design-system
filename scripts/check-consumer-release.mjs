@@ -16,18 +16,33 @@ const WORKSPACE_ROOT = fileURLToPath(new URL("..", import.meta.url));
 
 export const consumerReleaseTargets = [
   {
-    id: "burntok",
+    id: "burntok-web",
     repository: "jim1286/BurnTok",
     defaultBranch: "main",
+    surface: "web",
     artifactPrefix: "hjm-consumer-evidence-burntok-",
     evidenceSuffix: "hjm-evidence.json",
+    releaseBinding: "canonicalRelease",
   },
   {
-    id: "yajalal",
+    id: "burntok-native",
+    repository: "jim1286/BurnTok",
+    defaultBranch: "main",
+    surface: "native",
+    artifactPrefix: "hjm-consumer-evidence-burntok-native-",
+    evidenceSuffix: "native-storybook.json",
+    dispatchSuffix: "dispatch.json",
+    releaseBinding: "releaseCandidate",
+  },
+  {
+    id: "yajalal-native",
     repository: "jim1286/yajalal",
     defaultBranch: "develop",
+    surface: "native",
     artifactPrefix: "hjm-consumer-evidence-yajalal-",
     evidenceSuffix: "native-storybook.json",
+    dispatchSuffix: "dispatch.json",
+    releaseBinding: "releaseCandidate",
   },
 ];
 
@@ -102,6 +117,14 @@ function createCorrelationId(version, releaseSha) {
   return correlationId;
 }
 
+function bindTargetCorrelation(target, baseCorrelationId) {
+  const correlationId = `${baseCorrelationId}-${target.id}`;
+  if (!/^[0-9A-Za-z.-]{1,180}$/.test(correlationId)) {
+    throw new Error(`Target correlation id for ${target.id} is not artifact-safe or exceeds 180 characters`);
+  }
+  return { ...target, correlationId };
+}
+
 function sleep(milliseconds) {
   return new Promise((resolve) => setTimeout(resolve, milliseconds));
 }
@@ -141,32 +164,64 @@ function encodedRepository(repository) {
   return repository.split("/").map(encodeURIComponent).join("/");
 }
 
-async function resolveConsumerTarget(client, target) {
-  const repositoryPath = encodedRepository(target.repository);
+async function resolveConsumerRepository(client, targets) {
+  const [firstTarget] = targets;
+  if (!firstTarget) return [];
+  if (targets.some(
+    (target) =>
+      target.repository !== firstTarget.repository ||
+      target.defaultBranch !== firstTarget.defaultBranch,
+  )) {
+    throw new Error("Consumer repository group contains mixed repository or branch values");
+  }
+  const repositoryPath = encodedRepository(firstTarget.repository);
   const metadata = await client.json(`/repos/${repositoryPath}`);
-  if (metadata.default_branch !== target.defaultBranch) {
+  if (metadata.default_branch !== firstTarget.defaultBranch) {
     throw new Error(
-      `${target.repository} default branch changed from ${target.defaultBranch} to ${metadata.default_branch}`,
+      `${firstTarget.repository} default branch changed from ${firstTarget.defaultBranch} to ${metadata.default_branch}`,
     );
   }
   const commit = await client.json(
-    `/repos/${repositoryPath}/commits/${encodeURIComponent(target.defaultBranch)}`,
+    `/repos/${repositoryPath}/commits/${encodeURIComponent(firstTarget.defaultBranch)}`,
   );
   const consumerRef = commit.sha;
   if (!/^[0-9a-f]{40}$/.test(consumerRef ?? "")) {
-    throw new Error(`${target.repository}@${target.defaultBranch} did not resolve to a full Git SHA`);
+    throw new Error(`${firstTarget.repository}@${firstTarget.defaultBranch} did not resolve to a full Git SHA`);
   }
   const workflow = await client.json(
     `/repos/${repositoryPath}/contents/.github/workflows/${WORKFLOW_FILE}?ref=${consumerRef}`,
   );
   const source = Buffer.from(workflow.content ?? "", workflow.encoding ?? "base64").toString("utf8");
-  for (const invariant of ["repository_dispatch", EVENT_TYPE, "consumer_ref", target.artifactPrefix]) {
+  const invariants = [
+    "repository_dispatch",
+    EVENT_TYPE,
+    "consumer_ref",
+    "github.event.client_payload.surface",
+    ...targets.flatMap((target) => [target.artifactPrefix, target.evidenceSuffix]),
+  ];
+  for (const invariant of new Set(invariants)) {
     if (!source.includes(invariant)) {
-      throw new Error(`${target.repository}@${consumerRef} workflow is missing required invariant ${invariant}`);
+      throw new Error(`${firstTarget.repository}@${consumerRef} workflow is missing required invariant ${invariant}`);
     }
   }
-  console.log(`Captured ${target.repository}@${target.defaultBranch} at ${consumerRef}.`);
-  return { ...target, consumerRef };
+  console.log(
+    `Captured ${firstTarget.repository}@${firstTarget.defaultBranch} at ${consumerRef} for ` +
+    `${targets.map(({ surface }) => surface).join(", ")}.`,
+  );
+  return targets.map((target) => ({ ...target, consumerRef }));
+}
+
+async function resolveConsumerTargets(client, targets) {
+  const groups = new Map();
+  for (const target of targets) {
+    const key = `${target.repository}\0${target.defaultBranch}`;
+    const group = groups.get(key) ?? [];
+    group.push(target);
+    groups.set(key, group);
+  }
+  return (await Promise.all(
+    [...groups.values()].map((group) => resolveConsumerRepository(client, group)),
+  )).flat();
 }
 
 async function dispatchConsumer(client, target, release) {
@@ -179,18 +234,19 @@ async function dispatchConsumer(client, target, release) {
         repository: release.repository,
         release_sha: release.releaseSha,
         version: release.version,
-        correlation_id: release.correlationId,
+        correlation_id: target.correlationId,
         consumer_ref: target.consumerRef,
+        surface: target.surface,
       },
     }),
   });
-  console.log(`Dispatched ${target.repository} at captured consumer ${target.consumerRef}.`);
+  console.log(`Dispatched ${target.id} at captured consumer ${target.consumerRef}.`);
   return dispatchedAt;
 }
 
 async function findCorrelatedRun(client, target, release, dispatchedAt) {
   const repositoryPath = encodedRepository(target.repository);
-  const expectedTitle = `HJM ${release.version} · ${release.correlationId}`;
+  const expectedTitle = `HJM ${release.version} · ${target.correlationId}`;
   const response = await client.json(
     `/repos/${repositoryPath}/actions/workflows/${encodeURIComponent(WORKFLOW_FILE)}/runs?event=repository_dispatch&per_page=100`,
   );
@@ -207,7 +263,7 @@ async function findCorrelatedRun(client, target, release, dispatchedAt) {
   }
   const matches = correlatedRuns.filter((run) => run.head_sha === target.consumerRef);
   if (matches.length > 1) {
-    throw new Error(`${target.repository} produced multiple runs for correlation ${release.correlationId}`);
+    throw new Error(`${target.id} produced multiple runs for correlation ${target.correlationId}`);
   }
   return matches[0];
 }
@@ -320,41 +376,35 @@ export function validateEvidenceDocuments(target, documents, release) {
   requireEqual(manifest.packageName, "@hjm/design-contracts", `${target.id} manifest packageName`);
   requireEqual(manifest.designSystemVersion, release.version, `${target.id} manifest version`);
 
-  const surface = target.id === "burntok"
-    ? "web"
-    : target.id === "yajalal"
-      ? "native"
-      : undefined;
-  if (!surface) {
-    throw new Error(`Unknown consumer target ${target.id}`);
-  }
-  requireEqual(evidence.inventory?.surface, surface, `${target.id} inventory surface`);
-  assertExactInventoryStoryIds(target, evidence, manifest, surface);
+  requireEqual(evidence.source?.id, target.id, `${target.id} evidence source id`);
+  requireEqual(evidence.source?.surface, target.surface, `${target.id} evidence source surface`);
+  requireEqual(evidence.inventory?.surface, target.surface, `${target.id} inventory surface`);
+  assertExactInventoryStoryIds(target, evidence, manifest, target.surface);
 
-  if (target.id === "burntok") {
-    requireEqual(evidence.source?.id, "burntok-web", "BurnTok evidence source id");
-    requireEqual(evidence.source?.surface, "web", "BurnTok evidence surface");
-    requireEqual(evidence.canonicalRelease?.repository, release.repository, "BurnTok canonical repository");
-    requireEqual(evidence.canonicalRelease?.revision, release.releaseSha, "BurnTok release SHA");
-    requireEqual(evidence.canonicalRelease?.version, release.version, "BurnTok release version");
+  if (target.releaseBinding === "canonicalRelease") {
+    requireEqual(evidence.canonicalRelease?.repository, release.repository, `${target.id} canonical repository`);
+    requireEqual(evidence.canonicalRelease?.revision, release.releaseSha, `${target.id} release SHA`);
+    requireEqual(evidence.canonicalRelease?.version, release.version, `${target.id} release version`);
     requireEqual(
       evidence.canonicalRelease?.correlationId,
-      release.correlationId,
-      "BurnTok correlation id",
+      target.correlationId,
+      `${target.id} correlation id`,
     );
-  } else if (target.id === "yajalal") {
-    requireEqual(evidence.source?.id, "yajalal-native", "Yajalal evidence source id");
-    requireEqual(evidence.source?.surface, "native", "Yajalal evidence surface");
+  } else if (target.releaseBinding === "releaseCandidate") {
     const candidate = evidence.inventory?.releaseCandidate;
-    requireEqual(candidate?.repository, release.repository, "Yajalal canonical repository");
-    requireEqual(candidate?.release_sha, release.releaseSha, "Yajalal release SHA");
-    requireEqual(candidate?.version, release.version, "Yajalal release version");
-    requireEqual(candidate?.correlation_id, release.correlationId, "Yajalal correlation id");
-    requireEqual(dispatch?.repository, release.repository, "Yajalal dispatch repository");
-    requireEqual(dispatch?.release_sha, release.releaseSha, "Yajalal dispatch release SHA");
-    requireEqual(dispatch?.consumer_ref, target.consumerRef, "Yajalal dispatch consumer ref");
-    requireEqual(dispatch?.version, release.version, "Yajalal dispatch version");
-    requireEqual(dispatch?.correlation_id, release.correlationId, "Yajalal dispatch correlation id");
+    requireEqual(candidate?.repository, release.repository, `${target.id} canonical repository`);
+    requireEqual(candidate?.release_sha, release.releaseSha, `${target.id} release SHA`);
+    requireEqual(candidate?.version, release.version, `${target.id} release version`);
+    requireEqual(candidate?.correlation_id, target.correlationId, `${target.id} correlation id`);
+    requireEqual(candidate?.surface, target.surface, `${target.id} release-candidate surface`);
+    requireEqual(dispatch?.repository, release.repository, `${target.id} dispatch repository`);
+    requireEqual(dispatch?.release_sha, release.releaseSha, `${target.id} dispatch release SHA`);
+    requireEqual(dispatch?.consumer_ref, target.consumerRef, `${target.id} dispatch consumer ref`);
+    requireEqual(dispatch?.version, release.version, `${target.id} dispatch version`);
+    requireEqual(dispatch?.correlation_id, target.correlationId, `${target.id} dispatch correlation id`);
+    requireEqual(dispatch?.surface, target.surface, `${target.id} dispatch surface`);
+  } else {
+    throw new Error(`Unsupported release binding for ${target.id}: ${target.releaseBinding}`);
   }
 }
 
@@ -367,7 +417,7 @@ async function waitForConsumerArtifact(client, target, run, expectedName) {
     );
     const matches = (response.artifacts ?? []).filter((artifact) => artifact.name === expectedName);
     if (matches.length > 1) {
-      throw new Error(`${target.repository} must upload exactly one ${expectedName}; found ${matches.length}`);
+      throw new Error(`${target.id} must upload exactly one ${expectedName}; found ${matches.length}`);
     }
     if (matches.length === 1) {
       const [artifact] = matches;
@@ -376,20 +426,20 @@ async function waitForConsumerArtifact(client, target, run, expectedName) {
         !Number.isSafeInteger(artifact.size_in_bytes) ||
         artifact.size_in_bytes <= 0
       ) {
-        throw new Error(`${target.repository} evidence artifact is expired or empty`);
+        throw new Error(`${target.id} evidence artifact is expired or empty`);
       }
       return artifact;
     }
     await sleep(ARTIFACT_POLL_INTERVAL_MS);
   }
   throw new Error(
-    `${target.repository} did not expose ${expectedName} within ${ARTIFACT_TIMEOUT_MS}ms after its successful run`,
+    `${target.id} did not expose ${expectedName} within ${ARTIFACT_TIMEOUT_MS}ms after its successful run`,
   );
 }
 
 async function verifyConsumerArtifact(client, target, run, release) {
   const repositoryPath = encodedRepository(target.repository);
-  const expectedName = `${target.artifactPrefix}${release.correlationId}`;
+  const expectedName = `${target.artifactPrefix}${target.correlationId}`;
   const artifact = await waitForConsumerArtifact(client, target, run, expectedName);
 
   const temporaryDirectory = await mkdtemp(join(tmpdir(), `hjm-${target.id}-evidence-`));
@@ -397,19 +447,19 @@ async function verifyConsumerArtifact(client, target, run, release) {
   try {
     const archive = await client.bytes(`/repos/${repositoryPath}/actions/artifacts/${artifact.id}/zip`);
     if (archive.length === 0) {
-      throw new Error(`${target.repository} evidence artifact archive is empty`);
+      throw new Error(`${target.id} evidence artifact archive is empty`);
     }
     await writeFile(archivePath, archive);
     const evidence = readJsonFromZip(archivePath, target.evidenceSuffix);
     const manifest = readJsonFromZip(archivePath, "showcase-manifest.json");
-    const dispatch = target.id === "yajalal"
-      ? readJsonFromZip(archivePath, "dispatch.json")
+    const dispatch = target.dispatchSuffix
+      ? readJsonFromZip(archivePath, target.dispatchSuffix)
       : undefined;
     validateEvidenceDocuments(target, { evidence, manifest, dispatch }, release);
   } finally {
     await rm(temporaryDirectory, { recursive: true, force: true });
   }
-  console.log(`${target.repository} evidence artifact ${expectedName} is bound to the release payload.`);
+  console.log(`${target.id} evidence artifact ${expectedName} is bound to the release payload.`);
 }
 
 async function selfTest() {
@@ -433,70 +483,133 @@ async function selfTest() {
       { storyId: "contract/planned", requirements: [{ surface: "contract" }] },
     ],
   };
-  const burntokConfig = consumerReleaseTargets[0];
+  requireEqual(
+    JSON.stringify(consumerReleaseTargets.map(({ id }) => id)),
+    JSON.stringify(["burntok-web", "burntok-native", "yajalal-native"]),
+    "Self-test consumer surface target matrix",
+  );
+  const burntokConfigs = consumerReleaseTargets.filter(
+    ({ repository }) => repository === "jim1286/BurnTok",
+  );
+  const yajalalConfigs = consumerReleaseTargets.filter(
+    ({ repository }) => repository === "jim1286/yajalal",
+  );
   const burntokRef = "b".repeat(40);
-  const burntokRepositoryPath = encodedRepository(burntokConfig.repository);
-  let revisionRequests = 0;
-  const burntok = await resolveConsumerTarget(
+  const yajalalRef = "c".repeat(40);
+  const burntokRepositoryPath = encodedRepository("jim1286/BurnTok");
+  const yajalalRepositoryPath = encodedRepository("jim1286/yajalal");
+  const revisionRequests = new Map();
+  const workflowSource = (targets) => Buffer.from([
+    "repository_dispatch",
+    EVENT_TYPE,
+    "consumer_ref",
+    "github.event.client_payload.surface",
+    ...targets.flatMap((target) => [target.artifactPrefix, target.evidenceSuffix]),
+  ].join("\n")).toString("base64");
+  const resolvedTargets = await resolveConsumerTargets(
     {
       json: async (path) => {
         if (path === `/repos/${burntokRepositoryPath}`) {
-          return { default_branch: burntokConfig.defaultBranch };
+          return { default_branch: "main" };
         }
-        if (path === `/repos/${burntokRepositoryPath}/commits/${burntokConfig.defaultBranch}`) {
-          revisionRequests += 1;
+        if (path === `/repos/${burntokRepositoryPath}/commits/main`) {
+          revisionRequests.set("burntok", (revisionRequests.get("burntok") ?? 0) + 1);
           return { sha: burntokRef };
         }
         if (path.endsWith(`${WORKFLOW_FILE}?ref=${burntokRef}`)) {
           return {
-            content: Buffer.from(
-              ["repository_dispatch", EVENT_TYPE, "consumer_ref", burntokConfig.artifactPrefix].join("\n"),
-            ).toString("base64"),
+            content: workflowSource(burntokConfigs),
+            encoding: "base64",
+          };
+        }
+        if (path === `/repos/${yajalalRepositoryPath}`) {
+          return { default_branch: "develop" };
+        }
+        if (path === `/repos/${yajalalRepositoryPath}/commits/develop`) {
+          revisionRequests.set("yajalal", (revisionRequests.get("yajalal") ?? 0) + 1);
+          return { sha: yajalalRef };
+        }
+        if (path.endsWith(`${WORKFLOW_FILE}?ref=${yajalalRef}`)) {
+          return {
+            content: workflowSource(yajalalConfigs),
             encoding: "base64",
           };
         }
         throw new Error(`Unexpected self-test API request ${path}`);
       },
     },
-    burntokConfig,
+    consumerReleaseTargets,
   );
-  requireEqual(revisionRequests, 1, "Self-test consumer HEAD resolution count");
-  const burntokEvidence = {
-    schemaVersion: 1,
-    designSystemVersion: release.version,
-    source: { id: "burntok-web", surface: "web", revision: burntok.consumerRef },
-    inventory: { surface: "web", storyIds: ["foundation/text", "input/checkbox"] },
-    canonicalRelease: {
+  requireEqual(revisionRequests.get("burntok"), 1, "Self-test BurnTok HEAD resolution count");
+  requireEqual(revisionRequests.get("yajalal"), 1, "Self-test Yajalal HEAD resolution count");
+  const targets = resolvedTargets.map((target) =>
+    bindTargetCorrelation(target, release.correlationId)
+  );
+  const targetById = new Map(targets.map((target) => [target.id, target]));
+  const burntokWeb = targetById.get("burntok-web");
+  const burntokNative = targetById.get("burntok-native");
+  const yajalalNative = targetById.get("yajalal-native");
+  if (!burntokWeb || !burntokNative || !yajalalNative) {
+    throw new Error("Self-test failed to resolve the complete consumer surface target matrix");
+  }
+
+  let dispatchedPayload;
+  await dispatchConsumer(
+    {
+      json: async (_path, options) => {
+        dispatchedPayload = JSON.parse(options.body);
+      },
+    },
+    burntokNative,
+    release,
+  );
+  requireEqual(dispatchedPayload?.client_payload?.surface, "native", "Self-test dispatch surface");
+  requireEqual(
+    dispatchedPayload?.client_payload?.correlation_id,
+    burntokNative.correlationId,
+    "Self-test target correlation id",
+  );
+
+  function createEvidenceDocuments(target) {
+    const storyIds = target.surface === "web"
+      ? ["foundation/text", "input/checkbox"]
+      : ["foundation/text", "layout/divider"];
+    const evidence = {
+      schemaVersion: 1,
+      designSystemVersion: release.version,
+      source: { id: target.id, surface: target.surface, revision: target.consumerRef },
+      inventory: { surface: target.surface, storyIds },
+    };
+    if (target.releaseBinding === "canonicalRelease") {
+      evidence.canonicalRelease = {
+        repository: release.repository,
+        revision: release.releaseSha,
+        version: release.version,
+        correlationId: target.correlationId,
+      };
+      return { evidence, manifest };
+    }
+    const dispatch = {
       repository: release.repository,
-      revision: release.releaseSha,
+      release_sha: release.releaseSha,
+      consumer_ref: target.consumerRef,
       version: release.version,
-      correlationId: release.correlationId,
-    },
-  };
-  validateEvidenceDocuments(burntok, { evidence: burntokEvidence, manifest }, release);
-  const yajalal = { ...consumerReleaseTargets[1], consumerRef: "c".repeat(40) };
-  const dispatch = {
-    repository: release.repository,
-    release_sha: release.releaseSha,
-    consumer_ref: yajalal.consumerRef,
-    version: release.version,
-    correlation_id: release.correlationId,
-  };
-  const yajalalEvidence = {
-    schemaVersion: 1,
-    designSystemVersion: release.version,
-    source: { id: "yajalal-native", surface: "native", revision: yajalal.consumerRef },
-    inventory: {
-      surface: "native",
-      storyIds: ["foundation/text", "layout/divider"],
-      releaseCandidate: dispatch,
-    },
-  };
-  validateEvidenceDocuments(yajalal, { evidence: yajalalEvidence, manifest, dispatch }, release);
+      correlation_id: target.correlationId,
+      surface: target.surface,
+    };
+    evidence.inventory.releaseCandidate = dispatch;
+    return { evidence, manifest, dispatch };
+  }
+
+  for (const target of targets) {
+    validateEvidenceDocuments(target, createEvidenceDocuments(target), release);
+  }
+  const burntokWebDocuments = createEvidenceDocuments(burntokWeb);
+  const burntokEvidence = burntokWebDocuments.evidence;
 
   function expectRejected(label, evidence, pattern) {
     try {
-      validateEvidenceDocuments(burntok, { evidence, manifest }, release);
+      validateEvidenceDocuments(burntokWeb, { evidence, manifest }, release);
     } catch (error) {
       if (pattern.test(String(error))) return;
       throw error;
@@ -509,7 +622,7 @@ async function selfTest() {
       ...burntokEvidence,
       canonicalRelease: { ...burntokEvidence.canonicalRelease, revision: "b".repeat(40) },
     },
-    /BurnTok release SHA/,
+    /burntok-web release SHA/,
   );
   expectRejected(
     "a mismatched consumer revision",
@@ -519,6 +632,28 @@ async function selfTest() {
     },
     /evidence consumer revision/,
   );
+  expectRejected(
+    "a mismatched evidence surface",
+    {
+      ...burntokEvidence,
+      source: { ...burntokEvidence.source, surface: "native" },
+    },
+    /burntok-web evidence source surface/,
+  );
+  const burntokNativeDocuments = createEvidenceDocuments(burntokNative);
+  try {
+    validateEvidenceDocuments(
+      burntokNative,
+      {
+        ...burntokNativeDocuments,
+        dispatch: { ...burntokNativeDocuments.dispatch, surface: "web" },
+      },
+      release,
+    );
+    throw new Error("Consumer release evidence self-test accepted a cross-surface dispatch");
+  } catch (error) {
+    if (!/burntok-native dispatch surface/.test(String(error))) throw error;
+  }
   expectRejected(
     "a missing inventory story",
     { ...burntokEvidence, inventory: { ...burntokEvidence.inventory, storyIds: ["foundation/text"] } },
@@ -552,14 +687,14 @@ async function selfTest() {
         json: async () => ({
           workflow_runs: [{
             event: "repository_dispatch",
-            display_title: `HJM ${release.version} · ${release.correlationId}`,
+            display_title: `HJM ${release.version} · ${burntokWeb.correlationId}`,
             created_at: new Date().toISOString(),
             head_sha: "d".repeat(40),
             html_url: "https://example.invalid/wrong-head",
           }],
         }),
       },
-      burntok,
+      burntokWeb,
       release,
       Date.now(),
     );
@@ -568,7 +703,7 @@ async function selfTest() {
     if (!/used consumer revision/.test(String(error))) throw error;
   }
   console.log(
-    "Consumer release evidence self-test passed, including dynamic revision resolution, binding, wrong-head, and inventory rejection.",
+    "Consumer release evidence self-test passed for burntok-web, burntok-native, and yajalal-native, including dynamic revision resolution, binding, wrong-head, and inventory rejection.",
   );
 }
 
@@ -608,9 +743,8 @@ async function main() {
     (process.env.HJM_GITHUB_API_URL || "https://api.github.com").replace(/\/$/, ""),
   );
 
-  const resolvedTargets = await Promise.all(
-    consumerReleaseTargets.map((target) => resolveConsumerTarget(client, target)),
-  );
+  const resolvedTargets = (await resolveConsumerTargets(client, consumerReleaseTargets))
+    .map((target) => bindTargetCorrelation(target, release.correlationId));
   const dispatchTimes = await Promise.all(
     resolvedTargets.map((target) => dispatchConsumer(client, target, release)),
   );
@@ -631,7 +765,10 @@ async function main() {
       verifyConsumerArtifact(client, target, runs[index], release),
     ),
   );
-  console.log(`Verified all private consumer evidence for ${release.version}@${release.releaseSha}.`);
+  console.log(
+    `Verified ${resolvedTargets.map(({ id }) => id).join(", ")} private consumer evidence ` +
+    `for ${release.version}@${release.releaseSha}.`,
+  );
 }
 
 main().catch((error) => {

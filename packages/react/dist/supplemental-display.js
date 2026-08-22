@@ -1,7 +1,8 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import { getIconTransform, resolveIconDescriptor, } from "@hjm/design-contracts/components/icon";
+import { imageRecipe, resolveImageAspectRatio, resolveImageDescriptor, resolveImageFallbackAccessibilityLabel, } from "@hjm/design-contracts/components/image";
 import { counterBadgeRecipe, formatCounterBadgeCount, iconRecipe, } from "@hjm/design-contracts/recipes";
-import { forwardRef, } from "react";
+import { forwardRef, useState, } from "react";
 import { classNames } from "./internal.js";
 import { useOptionalHjmTheme } from "./provider.js";
 /** Internal, dependency-free semantic glyph registry. All marks share one 24px stroke grid. */
@@ -64,6 +65,64 @@ export const Icon = forwardRef(function Icon({ name, size, tone, weight, directi
     const transform = getIconTransform(descriptor.directionality, theme?.environment.direction ?? "ltr");
     const dimension = iconRecipe.sizes[descriptor.size];
     return (_jsx("svg", { ...props, ref: ref, viewBox: "0 0 24 24", fill: "none", xmlns: "http://www.w3.org/2000/svg", className: classNames("hjm-icon", className), "data-name": descriptor.name, "data-size": descriptor.size, "data-tone": descriptor.tone, "data-weight": descriptor.weight, "data-transform": transform, width: dimension, height: dimension, stroke: "currentColor", strokeWidth: iconRecipe.weights[descriptor.weight], strokeLinecap: "round", strokeLinejoin: "round", role: descriptor.decorative ? undefined : "img", "aria-hidden": descriptor.decorative || undefined, "aria-label": descriptor.decorative ? undefined : descriptor.accessibilityLabel, focusable: "false", style: style, children: _jsx("path", { d: iconPaths[descriptor.name] }) }));
+});
+/** Intrinsic-size image with canonical alt semantics and an accessible fallback. */
+export const Image = forwardRef(function Image({ src, width, height, fit, decorative, accessibilityLabel, imageProps, renderImage, fallback, imageRef, onLoad, onError, onLoadStatusChange, className, style, ...props }, ref) {
+    const descriptor = resolveImageDescriptor({
+        src,
+        width,
+        height,
+        ...(fit === undefined ? {} : { fit }),
+        ...(decorative === undefined ? {} : { decorative }),
+        ...(accessibilityLabel === undefined ? {} : { accessibilityLabel }),
+    });
+    const [state, setState] = useState({
+        src: descriptor.src,
+        status: "loading",
+    });
+    const status = state.src === descriptor.src ? state.status : "loading";
+    const { className: imageClassName, style: imageStyle, ...restImageProps } = imageProps ?? {};
+    const handleLoad = (event) => {
+        setState({ src: descriptor.src, status: "loaded" });
+        onLoadStatusChange?.("loaded");
+        onLoad?.(event);
+    };
+    const handleError = (event) => {
+        setState({ src: descriptor.src, status: "error" });
+        onLoadStatusChange?.("error");
+        onError?.(event);
+    };
+    const adapterProps = {
+        ...restImageProps,
+        src: descriptor.src,
+        alt: descriptor.decorative ? "" : descriptor.accessibilityLabel,
+        width: descriptor.width,
+        height: descriptor.height,
+        className: classNames("hjm-image__asset", imageClassName) ??
+            "hjm-image__asset",
+        style: { ...imageStyle, objectFit: descriptor.fit },
+        ...(descriptor.decorative ? { "aria-hidden": true } : {}),
+        onLoad: handleLoad,
+        onError: handleError,
+        ...(imageRef === undefined ? {} : { ref: imageRef }),
+    };
+    let visual;
+    if (status === "error") {
+        const fallbackLabel = resolveImageFallbackAccessibilityLabel(descriptor);
+        visual = (_jsx("span", { className: "hjm-image__fallback", role: descriptor.decorative ? undefined : "img", "aria-label": fallbackLabel, "aria-hidden": descriptor.decorative || undefined, children: _jsx("span", { className: "hjm-image__fallback-icon", "aria-hidden": "true", children: fallback ?? (_jsx(Icon, { name: imageRecipe.fallback.icon.name, tone: imageRecipe.fallback.icon.tone, decorative: true })) }) }));
+    }
+    else if (renderImage === undefined) {
+        const { ref: assetRef, ...nativeImageProps } = adapterProps;
+        visual = _jsx("img", { ...nativeImageProps, ref: assetRef });
+    }
+    else {
+        visual = renderImage(adapterProps);
+    }
+    return (_jsx("span", { ...props, ref: ref, className: classNames("hjm-image", className), "data-fit": descriptor.fit, "data-status": status, style: {
+            inlineSize: descriptor.width,
+            ...style,
+            aspectRatio: resolveImageAspectRatio(descriptor.width, descriptor.height),
+        }, children: visual }));
 });
 export const CounterBadge = forwardRef(function CounterBadge({ count, max = counterBadgeRecipe.defaults.max, tone = counterBadgeRecipe.defaults.tone, size = counterBadgeRecipe.defaults.size, variant = counterBadgeRecipe.defaults.variant, accessibilityLabel, className, ...props }, ref) {
     const label = formatCounterBadgeCount(count, max);

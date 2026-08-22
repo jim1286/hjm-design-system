@@ -4,6 +4,16 @@ import { type SelectDensity, type SelectSize } from "@hjm/design-contracts/recip
 import { type ButtonHTMLAttributes, type ReactElement, type ReactNode, type RefAttributes } from "react";
 export type SelectItem<Key extends string = string> = SelectItemDescriptor<Key>;
 export type SelectSection<Key extends string = string, SectionKey extends string = string> = SelectCollectionSectionDescriptor<Key, SectionKey>;
+export type SelectLeadingRenderProps = Readonly<{
+    color: "currentColor";
+    size: number;
+    glyphSize: number;
+}>;
+export type SelectOptionLeadingRenderProps = SelectLeadingRenderProps & Readonly<{
+    selected: boolean;
+    highlighted: boolean;
+    disabled: boolean;
+}>;
 type SelectSourceProps<Key extends string, SectionKey extends string> = SelectCollectionSource<Key, SectionKey>;
 type SelectSelectionProps<Key extends string> = Readonly<{
     selectedKey: Key | null;
@@ -41,11 +51,16 @@ type SelectBaseProps<Key extends string> = Omit<ButtonHTMLAttributes<HTMLButtonE
     selectedItem?: SelectItemDescriptor<Key>;
     disallowEmptySelection?: boolean;
     loop?: boolean;
+    /** Locks interaction without removing the trigger from the focus order. */
+    busy?: boolean;
     readOnly?: boolean;
     required?: boolean;
     size?: SelectSize;
     density?: SelectDensity;
     fieldClassName?: string;
+    locale?: string | readonly string[];
+    renderLeading?: (item: SelectItemDescriptor<Key> | null, appearance: SelectLeadingRenderProps) => ReactNode;
+    renderOptionLeading?: (item: SelectItemDescriptor<Key>, appearance: SelectOptionLeadingRenderProps) => ReactNode;
 }>;
 export type SelectProps<Key extends string = string, SectionKey extends string = string> = SelectBaseProps<Key> & SelectSourceProps<Key, SectionKey> & SelectSelectionProps<Key> & SelectOpenProps & SelectLabelProps;
 export declare const Select: <Key extends string = string, SectionKey extends string = string>(props: SelectProps<Key, SectionKey> & RefAttributes<HTMLButtonElement>) => ReactElement | null;

@@ -323,16 +323,44 @@
       "name": "Layout",
       "category": "layout",
       "platform": "adaptive",
-      "contractStatus": "planned",
+      "contractStatus": "beta",
       "surfaces": {
-        "web": "planned",
-        "native": "planned"
+        "web": "beta",
+        "native": "beta"
       },
       "requirements": [
         {
           "surface": "contract",
           "scenarios": [
             "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
           ]
         }
       ],
@@ -774,7 +802,7 @@
       "contractStatus": "beta",
       "surfaces": {
         "web": "beta",
-        "native": "planned"
+        "native": "beta"
       },
       "requirements": [
         {
@@ -785,6 +813,19 @@
         },
         {
           "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ]
+        },
+        {
+          "surface": "native",
           "scenarios": [
             "default",
             "dark",
@@ -847,7 +888,7 @@
       "contractStatus": "beta",
       "surfaces": {
         "web": "beta",
-        "native": "planned"
+        "native": "beta"
       },
       "requirements": [
         {
@@ -858,6 +899,19 @@
         },
         {
           "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ]
+        },
+        {
+          "surface": "native",
           "scenarios": [
             "default",
             "dark",
@@ -1119,7 +1173,7 @@
       "contractStatus": "beta",
       "surfaces": {
         "web": "beta",
-        "native": "planned"
+        "native": "beta"
       },
       "requirements": [
         {
@@ -1138,7 +1192,22 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard"
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
           ]
         }
       ],
@@ -1156,13 +1225,26 @@
       "contractStatus": "beta",
       "surfaces": {
         "web": "planned",
-        "native": "planned"
+        "native": "beta"
       },
       "requirements": [
         {
           "surface": "contract",
           "scenarios": [
             "contract"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
           ]
         }
       ],
@@ -1529,7 +1611,7 @@
       "platform": "adaptive",
       "contractStatus": "beta",
       "surfaces": {
-        "web": "planned",
+        "web": "beta",
         "native": "beta"
       },
       "requirements": [
@@ -1537,6 +1619,20 @@
           "surface": "contract",
           "scenarios": [
             "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
           ]
         },
         {
@@ -1549,7 +1645,8 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard"
+            "keyboard",
+            "platform-parity"
           ]
         }
       ],
@@ -1615,7 +1712,7 @@
       "contractStatus": "beta",
       "surfaces": {
         "web": "beta",
-        "native": "planned"
+        "native": "beta"
       },
       "requirements": [
         {
@@ -1626,6 +1723,19 @@
         },
         {
           "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ]
+        },
+        {
+          "surface": "native",
           "scenarios": [
             "default",
             "dark",
@@ -1676,7 +1786,7 @@
       "contractStatus": "beta",
       "surfaces": {
         "web": "beta",
-        "native": "planned"
+        "native": "beta"
       },
       "requirements": [
         {
@@ -1695,7 +1805,22 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard"
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
           ]
         }
       ],
@@ -2083,16 +2208,40 @@
       "name": "Timeline",
       "category": "data-display",
       "platform": "shared",
-      "contractStatus": "planned",
+      "contractStatus": "beta",
       "surfaces": {
-        "web": "planned",
-        "native": "planned"
+        "web": "beta",
+        "native": "beta"
       },
       "requirements": [
         {
           "surface": "contract",
           "scenarios": [
             "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
           ]
         }
       ],
@@ -2203,16 +2352,40 @@
       "name": "DescriptionList",
       "category": "data-display",
       "platform": "shared",
-      "contractStatus": "planned",
+      "contractStatus": "beta",
       "surfaces": {
-        "web": "planned",
-        "native": "planned"
+        "web": "beta",
+        "native": "beta"
       },
       "requirements": [
         {
           "surface": "contract",
           "scenarios": [
             "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
           ]
         }
       ],
@@ -2227,16 +2400,40 @@
       "name": "Image",
       "category": "data-display",
       "platform": "shared",
-      "contractStatus": "planned",
+      "contractStatus": "beta",
       "surfaces": {
-        "web": "planned",
-        "native": "planned"
+        "web": "beta",
+        "native": "beta"
       },
       "requirements": [
         {
           "surface": "contract",
           "scenarios": [
             "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
           ]
         }
       ],
@@ -2527,16 +2724,40 @@
       "name": "Result",
       "category": "feedback",
       "platform": "shared",
-      "contractStatus": "planned",
+      "contractStatus": "beta",
       "surfaces": {
-        "web": "planned",
-        "native": "planned"
+        "web": "beta",
+        "native": "beta"
       },
       "requirements": [
         {
           "surface": "contract",
           "scenarios": [
             "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
           ]
         }
       ],

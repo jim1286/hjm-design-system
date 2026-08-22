@@ -6,7 +6,11 @@ function assertNonEmpty(value, field) {
         throw new TypeError(`Layout ${field} must not be empty`);
     }
 }
-export function validateLayoutDescriptor(descriptor) {
+/**
+ * Cross-platform structure validation. This deliberately does not require a
+ * skip link: Native has no page-landmark or bypass-link equivalent.
+ */
+export function validateLayoutRegions(descriptor) {
     if (descriptor.sidebar !== undefined) {
         const { role, mode, label } = descriptor.sidebar;
         if (role !== "navigation" && role !== "complementary") {
@@ -20,10 +24,21 @@ export function validateLayoutDescriptor(descriptor) {
     if (descriptor.skipLinkLabel !== undefined) {
         assertNonEmpty(descriptor.skipLinkLabel, "skipLinkLabel");
     }
+}
+/** Web landmark validation, including the WCAG 2.4.1 bypass-link invariant. */
+export function validateLayoutWebDescriptor(descriptor) {
+    validateLayoutRegions(descriptor);
     const needsSkipLink = descriptor.hasHeader === true || descriptor.sidebar !== undefined;
     if (needsSkipLink && descriptor.skipLinkLabel === undefined) {
         throw new TypeError("Layout requires skipLinkLabel when a header or sidebar region precedes main");
     }
+}
+/**
+ * @deprecated Use `validateLayoutRegions` for shared/Native structure or
+ * `validateLayoutWebDescriptor` for a Web app shell.
+ */
+export function validateLayoutDescriptor(descriptor) {
+    validateLayoutWebDescriptor(descriptor);
 }
 /**
  * Web-only translation: real landmark elements exist there. Native has no
@@ -33,7 +48,7 @@ export function validateLayoutDescriptor(descriptor) {
  * asymmetry is documented, not papered over with a fake mapping.
  */
 export function resolveLayoutWebLandmarks(descriptor) {
-    validateLayoutDescriptor(descriptor);
+    validateLayoutWebDescriptor(descriptor);
     const roles = [];
     if (descriptor.hasHeader)
         roles.push("banner");
@@ -92,7 +107,7 @@ export const layoutBehavior = {
     native: { roles: [], states: [], actions: [] },
     scenarios: [
         "exactly-one-main-landmark-exists-per-layout",
-        "skip-link-is-required-whenever-a-header-or-sidebar-precedes-main",
+        "web-skip-link-is-required-whenever-a-header-or-sidebar-precedes-main",
         "sidebar-role-navigation-or-complementary-is-chosen-independent-of-persistent-or-overlay-mode",
         "overlay-sidebar-reuses-sidepanel-open-state-and-dismiss-policy-unchanged",
         "header-and-footer-content-is-not-owned-here-compose-topbar-and-bottomnavigation",

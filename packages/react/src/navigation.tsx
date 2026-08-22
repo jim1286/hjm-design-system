@@ -10,9 +10,11 @@ import {
   type TabsPanelMode,
 } from "@hjm/design-contracts/behaviors";
 import {
+  iconRecipe,
   tabsRecipe,
   type TabSize,
   type TabsLayout,
+  type TabsOverflow,
 } from "@hjm/design-contracts/recipes";
 import {
   forwardRef,
@@ -27,10 +29,21 @@ import {
 import { classNames, useControllableState } from "./internal.js";
 import { useOptionalHjmTheme } from "./provider.js";
 
+export type TabLeadingRenderProps = Readonly<{
+  selected: boolean;
+  disabled: boolean;
+  color: "currentColor";
+  /** Pixel size resolved from `tabsRecipe.icon.glyph`. */
+  size: number;
+  /** Compatibility alias for product icon libraries that name this value explicitly. */
+  glyphSize: number;
+}>;
+
 export type TabItem = Readonly<{
   id: string;
   label: ReactNode;
-  panel: ReactNode;
+  panel?: ReactNode;
+  renderLeading?: (state: TabLeadingRenderProps) => ReactNode;
   disabled?: boolean;
 }>;
 
@@ -59,6 +72,9 @@ export type TabsProps = Omit<HTMLAttributes<HTMLDivElement>, "dir" | "onChange">
     loop?: boolean;
     size?: TabSize;
     layout?: TabsLayout;
+    overflow?: TabsOverflow;
+    /** Set false when panels are rendered separately with `TabPanel`. */
+    renderPanels?: boolean;
   }>;
 
 function validateItems(items: readonly TabItem[]): void {
@@ -83,7 +99,7 @@ const panelFocusableSelector = [
   "[tabindex]:not([tabindex='-1'])",
 ].join(",");
 
-type TabPanelProps = Readonly<{
+type TabPanelHostProps = HTMLAttributes<HTMLDivElement> & Readonly<{
   id: string;
   labelledBy: string;
   selected: boolean;
@@ -91,7 +107,15 @@ type TabPanelProps = Readonly<{
   children: ReactNode;
 }>;
 
-function TabPanel({ id, labelledBy, selected, dynamic, children }: TabPanelProps) {
+function TabPanelHost({
+  id,
+  labelledBy,
+  selected,
+  dynamic,
+  children,
+  className,
+  ...props
+}: TabPanelHostProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [hasFocusableContent, setHasFocusableContent] = useState(false);
   useEffect(() => {
@@ -102,10 +126,11 @@ function TabPanel({ id, labelledBy, selected, dynamic, children }: TabPanelProps
 
   return (
     <div
+      {...props}
       ref={ref}
       id={id}
       role="tabpanel"
-      className="hjm-tabs__panel"
+      className={classNames("hjm-tabs__panel", className)}
       aria-labelledby={labelledBy}
       tabIndex={selected && !hasFocusableContent ? 0 : undefined}
       hidden={!selected}
@@ -115,6 +140,101 @@ function TabPanel({ id, labelledBy, selected, dynamic, children }: TabPanelProps
     >
       {children}
     </div>
+  );
+}
+
+function encodedTabId(value: string): string {
+  return encodeURIComponent(value);
+}
+
+export function getTabId(tabsId: string, value: string): string {
+  return `${tabsId}-tab-${encodedTabId(value)}`;
+}
+
+export function getTabPanelId(
+  tabsId: string,
+  value: string,
+  mode: TabsPanelMode = "keyed",
+): string {
+  return mode === "dynamic"
+    ? `${tabsId}-panel`
+    : `${tabsId}-panel-${encodedTabId(value)}`;
+}
+
+export function getDynamicTabPanelId(tabsId: string): string {
+  return getTabPanelId(tabsId, "", "dynamic");
+}
+
+type ExternalTabPanelBaseProps = Omit<HTMLAttributes<HTMLDivElement>, "id"> &
+  Readonly<{
+    tabsId: string;
+    activeValue: string;
+    children: ReactNode;
+  }>;
+
+export type TabPanelProps = ExternalTabPanelBaseProps &
+  (
+    | Readonly<{
+        mode: "dynamic";
+        value?: never;
+        mountPolicy?: never;
+      }>
+    | Readonly<{
+        mode?: "keyed";
+        value: string;
+        mountPolicy?: TabsMountPolicy;
+      }>
+  );
+
+/** External panel host for products that keep routing, query, or scroll state outside Tabs. */
+export function TabPanel(props: TabPanelProps) {
+  const { tabsId, activeValue, children } = props;
+  const dynamic = props.mode === "dynamic";
+  const value = dynamic ? activeValue : props.value;
+  const selected = value === activeValue;
+  const mountPolicy = dynamic ? "active" : props.mountPolicy ?? tabsBehaviorDefaults.mountPolicy;
+  let hostProps: Omit<HTMLAttributes<HTMLDivElement>, "id">;
+  if (props.mode === "dynamic") {
+    const {
+      tabsId: _tabsId,
+      activeValue: _activeValue,
+      children: _children,
+      mode: _mode,
+      ...htmlProps
+    } = props;
+    hostProps = htmlProps;
+  } else {
+    const {
+      tabsId: _tabsId,
+      activeValue: _activeValue,
+      children: _children,
+      mode: _mode,
+      value: _value,
+      mountPolicy: _mountPolicy,
+      ...htmlProps
+    } = props;
+    hostProps = htmlProps;
+  }
+  const [visited, setVisited] = useState(selected);
+  useEffect(() => {
+    if (selected) setVisited(true);
+  }, [selected]);
+  const mounted =
+    dynamic ||
+    selected ||
+    mountPolicy === "always" ||
+    (mountPolicy === "visited" && visited);
+  if (!mounted) return null;
+  return (
+    <TabPanelHost
+      {...hostProps}
+      id={getTabPanelId(tabsId, value, dynamic ? "dynamic" : "keyed")}
+      labelledBy={getTabId(tabsId, dynamic ? activeValue : value)}
+      selected={selected}
+      dynamic={dynamic}
+    >
+      {children}
+    </TabPanelHost>
   );
 }
 
@@ -133,7 +253,10 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
     loop = tabsBehaviorDefaults.loop,
     size = tabsRecipe.defaults.size,
     layout = tabsRecipe.defaults.layout,
+    overflow = tabsRecipe.defaults.overflow,
+    renderPanels = true,
     className,
+    id,
     value: valueProp,
     defaultValue,
     onValueChange,
@@ -179,7 +302,8 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
     : value;
   const [visited, setVisited] = useState<ReadonlySet<string>>(() => new Set([value]));
   const tabRefs = useRef(new Map<string, HTMLButtonElement>());
-  const baseId = useId().replaceAll(":", "");
+  const generatedId = useId().replaceAll(":", "");
+  const baseId = id ?? `hjm-${generatedId}`;
   const theme = useOptionalHjmTheme();
   const direction = directionProp ?? theme?.environment.direction ?? tabsBehaviorDefaults.direction;
 
@@ -231,16 +355,17 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
       setValue(id);
     }
   };
-  const panelId = (index: number) =>
-    panelMode === "dynamic" ? `${baseId}-panel` : `${baseId}-panel-${index}`;
+  const panelId = (value: string) => getTabPanelId(baseId, value, panelMode);
 
   return (
     <div
       {...rest}
       ref={ref}
+      id={baseId}
       className={classNames("hjm-tabs", className)}
       data-size={size}
       data-layout={layout}
+      data-overflow={overflow}
       data-orientation={orientation}
       data-mount-policy={mountPolicy}
       data-panel-mode={panelMode}
@@ -253,9 +378,10 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
         aria-label={label}
         aria-orientation={orientation}
       >
-        {items.map((item, index) => {
+        {items.map((item) => {
           const selected = item.id === value;
-          const tabId = `${baseId}-tab-${index}`;
+          const tabId = getTabId(baseId, item.id);
+          const leadingSize = iconRecipe.sizes[tabsRecipe.icon.glyph];
           return (
             <button
               key={item.id}
@@ -269,7 +395,7 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
               className="hjm-tabs__tab"
               data-state={selected ? "selected" : "idle"}
               aria-selected={selected}
-              aria-controls={panelId(index)}
+              aria-controls={panelId(item.id)}
               tabIndex={item.id === resolvedFocusValue ? 0 : -1}
               disabled={item.disabled}
               onClick={() => {
@@ -278,35 +404,46 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
               }}
               onKeyDown={(event) => handleKeyDown(event, item.id)}
             >
+              {item.renderLeading ? (
+                <span aria-hidden="true" className="hjm-tabs__leading">
+                  {item.renderLeading({
+                    selected,
+                    disabled: item.disabled ?? false,
+                    color: "currentColor",
+                    size: leadingSize,
+                    glyphSize: leadingSize,
+                  })}
+                </span>
+              ) : null}
               {item.label}
             </button>
           );
         })}
       </div>
-      {panelMode === "dynamic" ? (
-        <TabPanel
-          id={panelId(0)}
-          labelledBy={`${baseId}-tab-${items.findIndex((item) => item.id === value)}`}
+      {!renderPanels ? null : panelMode === "dynamic" ? (
+        <TabPanelHost
+          id={panelId(value)}
+          labelledBy={getTabId(baseId, value)}
           selected
           dynamic
         >
           {items.find((item) => item.id === value)?.panel}
-        </TabPanel>
-      ) : items.map((item, index) => {
+        </TabPanelHost>
+      ) : items.map((item) => {
         const selected = item.id === value;
         const mounted = mountPolicy === "always" ||
           (mountPolicy === "visited" && (visited.has(item.id) || selected)) ||
           (mountPolicy === "active" && selected);
         return mounted ? (
-          <TabPanel
+          <TabPanelHost
             key={item.id}
-            id={panelId(index)}
-            labelledBy={`${baseId}-tab-${index}`}
+            id={panelId(item.id)}
+            labelledBy={getTabId(baseId, item.id)}
             selected={selected}
             dynamic={false}
           >
             {item.panel}
-          </TabPanel>
+          </TabPanelHost>
         ) : null;
       })}
     </div>

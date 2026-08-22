@@ -7,11 +7,12 @@ import { semanticColors } from "./semantic-colors.js";
 /**
  * `Layout` (alias `AppShell`) does NOT own header or footer chrome — that is
  * already `TopBar` (native, beta) and `BottomNavigation` (adaptive, beta).
- * What is left after subtracting those: landmark composition (one `main`,
- * an optional sidebar, a required skip link whenever repeated navigation
- * precedes `main`), and a sidebar that is either always-visible chrome or a
- * dismissible overlay. The overlay case reuses `SidePanel` unchanged — see
- * docs/layout.md for why this module does not redeclare open/dismiss state.
+ * What is left after subtracting those: ordered regions, a sidebar that is
+ * either always-visible chrome or a dismissible overlay, and Web-only
+ * landmark composition (one `main` plus a required skip link whenever
+ * repeated navigation precedes it). The overlay case reuses `SidePanel`
+ * unchanged — see docs/layout.md for why this module does not redeclare
+ * open/dismiss state.
  */
 export type LayoutSidebarRole = "navigation" | "complementary";
 export type LayoutSidebarMode = "persistent" | "overlay";
@@ -28,7 +29,7 @@ export type LayoutDescriptor = Readonly<{
   hasHeader?: boolean;
   hasFooter?: boolean;
   sidebar?: LayoutSidebarDescriptor;
-  /** Required whenever a header or sidebar precedes `main` (WCAG 2.4.1 bypass blocks). */
+  /** Web-only: required whenever a header or sidebar precedes `main` (WCAG 2.4.1 bypass blocks). */
   skipLinkLabel?: string;
 }>;
 
@@ -38,7 +39,11 @@ function assertNonEmpty(value: string, field: string): void {
   }
 }
 
-export function validateLayoutDescriptor(descriptor: LayoutDescriptor): void {
+/**
+ * Cross-platform structure validation. This deliberately does not require a
+ * skip link: Native has no page-landmark or bypass-link equivalent.
+ */
+export function validateLayoutRegions(descriptor: LayoutDescriptor): void {
   if (descriptor.sidebar !== undefined) {
     const { role, mode, label } = descriptor.sidebar;
     if (role !== "navigation" && role !== "complementary") {
@@ -52,12 +57,25 @@ export function validateLayoutDescriptor(descriptor: LayoutDescriptor): void {
   if (descriptor.skipLinkLabel !== undefined) {
     assertNonEmpty(descriptor.skipLinkLabel, "skipLinkLabel");
   }
+}
+
+/** Web landmark validation, including the WCAG 2.4.1 bypass-link invariant. */
+export function validateLayoutWebDescriptor(descriptor: LayoutDescriptor): void {
+  validateLayoutRegions(descriptor);
   const needsSkipLink = descriptor.hasHeader === true || descriptor.sidebar !== undefined;
   if (needsSkipLink && descriptor.skipLinkLabel === undefined) {
     throw new TypeError(
       "Layout requires skipLinkLabel when a header or sidebar region precedes main",
     );
   }
+}
+
+/**
+ * @deprecated Use `validateLayoutRegions` for shared/Native structure or
+ * `validateLayoutWebDescriptor` for a Web app shell.
+ */
+export function validateLayoutDescriptor(descriptor: LayoutDescriptor): void {
+  validateLayoutWebDescriptor(descriptor);
 }
 
 export type LayoutLandmarkRole =
@@ -77,7 +95,7 @@ export type LayoutLandmarkRole =
 export function resolveLayoutWebLandmarks(
   descriptor: LayoutDescriptor,
 ): readonly LayoutLandmarkRole[] {
-  validateLayoutDescriptor(descriptor);
+  validateLayoutWebDescriptor(descriptor);
   const roles: LayoutLandmarkRole[] = [];
   if (descriptor.hasHeader) roles.push("banner");
   if (descriptor.sidebar) roles.push(descriptor.sidebar.role);
@@ -148,7 +166,7 @@ export const layoutBehavior = {
   native: { roles: [], states: [], actions: [] },
   scenarios: [
     "exactly-one-main-landmark-exists-per-layout",
-    "skip-link-is-required-whenever-a-header-or-sidebar-precedes-main",
+    "web-skip-link-is-required-whenever-a-header-or-sidebar-precedes-main",
     "sidebar-role-navigation-or-complementary-is-chosen-independent-of-persistent-or-overlay-mode",
     "overlay-sidebar-reuses-sidepanel-open-state-and-dismiss-policy-unchanged",
     "header-and-footer-content-is-not-owned-here-compose-topbar-and-bottomnavigation",

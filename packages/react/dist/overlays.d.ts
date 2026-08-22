@@ -30,11 +30,23 @@ type OpenState<Detail> = Readonly<{
     defaultOpen?: boolean;
     onOpenChange?: (open: boolean, detail: Detail) => void;
 }>;
+type ModalOpenState<Detail> = Readonly<{
+    open: boolean;
+    defaultOpen?: never;
+    onOpenChange: (open: boolean, detail: Detail) => void;
+    /** Optional for product-owned, programmatically controlled overlays. */
+    trigger?: OverlayTrigger;
+}> | Readonly<{
+    open?: never;
+    defaultOpen?: boolean;
+    onOpenChange?: (open: boolean, detail: Detail) => void;
+    /** Uncontrolled overlays need a first-party activation target. */
+    trigger: OverlayTrigger;
+}>;
 export type DialogOpenChangeReason = "trigger" | "close-action" | "escape" | "outside";
-export type DialogProps = OpenState<Readonly<{
+export type DialogProps = ModalOpenState<Readonly<{
     reason: DialogOpenChangeReason;
 }>> & Readonly<{
-    trigger: OverlayTrigger;
     title: ReactNode;
     description?: ReactNode;
     children?: ReactNode;
@@ -50,10 +62,9 @@ export type DialogProps = OpenState<Readonly<{
     className?: string;
 }>;
 export declare const Dialog: import("react").ForwardRefExoticComponent<DialogProps & import("react").RefAttributes<HTMLDivElement>>;
-export type AlertDialogProps = OpenState<Readonly<{
+export type AlertDialogProps = ModalOpenState<Readonly<{
     reason: AlertDialogOpenChangeReason;
 }>> & Readonly<{
-    trigger: OverlayTrigger;
     request: AlertDialogRequest;
     icon?: ReactNode;
     returnFocusRef?: React.RefObject<HTMLElement | null>;
@@ -62,8 +73,7 @@ export type AlertDialogProps = OpenState<Readonly<{
 }>;
 export declare const AlertDialog: import("react").ForwardRefExoticComponent<AlertDialogProps & import("react").RefAttributes<HTMLDivElement>>;
 export type SheetPlacement = "bottom" | "start" | "end";
-export type SheetProps = OpenState<SheetOpenChangeDetails> & Readonly<{
-    trigger: OverlayTrigger;
+export type SheetProps = ModalOpenState<SheetOpenChangeDetails> & Readonly<{
     title: ReactNode;
     description?: ReactNode;
     children?: ReactNode;

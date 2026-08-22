@@ -1,10 +1,60 @@
 import { type GridDescriptor, type GridGap } from "@hjm/design-contracts/grid";
+import { type LayoutSidebarRole } from "@hjm/design-contracts/components/layout";
 import { type SurfacePadding, type SurfaceRadius, type SurfaceTone } from "@hjm/design-contracts/recipes/base";
 import { type StackAlign, type StackAxis, type StackGap, type StackJustify, type TextEmphasis, type TextTone } from "@hjm/design-contracts/recipes";
 import type { TextVariant } from "@hjm/design-contracts/foundations";
-import { type HTMLAttributes, type ReactNode } from "react";
+import { type AnchorHTMLAttributes, type HTMLAttributes, type ReactElement, type ReactNode, type Ref } from "react";
 export type { SurfacePadding, SurfaceRadius, SurfaceTone, } from "@hjm/design-contracts/recipes/base";
 export type { StackAlign, StackAxis, StackGap, StackJustify, TextEmphasis, TextTone, } from "@hjm/design-contracts/recipes";
+type LayoutRegionProps = Omit<HTMLAttributes<HTMLElement>, "children" | "role">;
+type LayoutSidebarBase = Readonly<{
+    children: ReactNode;
+    role: LayoutSidebarRole;
+    label: string;
+    landmarkProps?: Omit<LayoutRegionProps, "aria-label">;
+    landmarkRef?: Ref<HTMLElement>;
+}>;
+/**
+ * A persistent sidebar is rendered in the shell grid. An overlay sidebar is
+ * deliberately handed to the product's SidePanel (or equivalent) through
+ * `renderOverlay`; Layout never owns a second open/dismiss lifecycle.
+ */
+export type LayoutSidebar = (LayoutSidebarBase & Readonly<{
+    mode: "persistent";
+    renderOverlay?: never;
+}>) | (LayoutSidebarBase & Readonly<{
+    mode: "overlay";
+    renderOverlay(sidebarLandmark: ReactElement): ReactNode;
+}>);
+export type LayoutProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> & Readonly<{
+    children: ReactNode;
+    header?: ReactNode;
+    footer?: ReactNode;
+    sidebar?: LayoutSidebar;
+    skipLinkLabel?: string;
+    /** Stable product id for deep links; a hydration-safe id is generated when omitted. */
+    mainId?: string;
+    mainRef?: Ref<HTMLElement>;
+    headerProps?: LayoutRegionProps;
+    mainProps?: Omit<LayoutRegionProps, "id" | "tabIndex">;
+    footerProps?: LayoutRegionProps;
+    skipLinkProps?: Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "children" | "href">;
+}>;
+/** Accessible Web app shell with real landmarks and bypass navigation. */
+export declare const Layout: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLDivElement>, "children"> & Readonly<{
+    children: ReactNode;
+    header?: ReactNode;
+    footer?: ReactNode;
+    sidebar?: LayoutSidebar;
+    skipLinkLabel?: string;
+    /** Stable product id for deep links; a hydration-safe id is generated when omitted. */
+    mainId?: string;
+    mainRef?: Ref<HTMLElement>;
+    headerProps?: LayoutRegionProps;
+    mainProps?: Omit<LayoutRegionProps, "id" | "tabIndex">;
+    footerProps?: LayoutRegionProps;
+    skipLinkProps?: Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "children" | "href">;
+}> & import("react").RefAttributes<HTMLDivElement>>;
 export type TextProps = Omit<HTMLAttributes<HTMLElement>, "children"> & Readonly<{
     children: ReactNode;
     as?: "span" | "p" | "div" | "strong" | "small";

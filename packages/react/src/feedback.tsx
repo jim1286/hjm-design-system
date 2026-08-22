@@ -11,12 +11,17 @@ import {
   type SpinnerTone,
 } from "@hjm/design-contracts/recipes";
 import {
+  resolveResultDescriptor,
+  type ResultDescriptor,
+} from "@hjm/design-contracts/components/result";
+import {
   forwardRef,
   type HTMLAttributes,
   type ProgressHTMLAttributes,
   type ReactNode,
 } from "react";
 import { classNames } from "./internal.js";
+import { Button } from "./actions.js";
 
 export type NoticeProps = HTMLAttributes<HTMLElement> &
   Readonly<{
@@ -99,6 +104,80 @@ export const EmptyState = forwardRef<HTMLDivElement, EmptyStateProps>(
     );
   },
 );
+
+export type ResultProps = Omit<
+  HTMLAttributes<HTMLDivElement>,
+  "children" | "title"
+> &
+  ResultDescriptor &
+  Readonly<{
+    headingLevel?: 1 | 2;
+    /** Optional product glyph; its meaning is already carried by title/status. */
+    icon?: ReactNode;
+  }>;
+
+/** A terminal flow outcome. EmptyState remains reserved for fillable content. */
+export const Result = forwardRef<HTMLDivElement, ResultProps>(function Result(
+  {
+    status,
+    title,
+    description,
+    actions,
+    headingLevel = 2,
+    icon,
+    className,
+    role,
+    ...props
+  },
+  ref,
+) {
+  const result = resolveResultDescriptor({
+    status,
+    title,
+    ...(description === undefined ? {} : { description }),
+    ...(actions === undefined ? {} : { actions }),
+  });
+  const Heading = headingLevel === 1 ? "h1" : "h2";
+
+  return (
+    <div
+      {...props}
+      ref={ref}
+      className={classNames("hjm-result", className)}
+      data-status={result.status}
+      role={role ?? (result.status === "failure" ? "alert" : "status")}
+    >
+      <span className="hjm-result__icon" aria-hidden="true">
+        {icon}
+      </span>
+      <Heading className="hjm-result__title">{result.title}</Heading>
+      {result.description ? (
+        <p className="hjm-result__description">{result.description}</p>
+      ) : null}
+      {result.primaryAction || result.secondaryAction ? (
+        <div className="hjm-result__actions">
+          {result.primaryAction ? (
+            <Button
+              aria-label={result.primaryAction.accessibilityLabel}
+              onClick={result.primaryAction.onAction}
+            >
+              {result.primaryAction.label}
+            </Button>
+          ) : null}
+          {result.secondaryAction ? (
+            <Button
+              aria-label={result.secondaryAction.accessibilityLabel}
+              onClick={result.secondaryAction.onAction}
+              tone="secondary"
+            >
+              {result.secondaryAction.label}
+            </Button>
+          ) : null}
+        </div>
+      ) : null}
+    </div>
+  );
+});
 
 export type ProgressProps = Omit<
   ProgressHTMLAttributes<HTMLProgressElement>,

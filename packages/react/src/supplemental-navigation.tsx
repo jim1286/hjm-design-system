@@ -1,6 +1,8 @@
 import {
   createLoadMoreController,
   validateLoadMoreDescriptor,
+  type LoadMoreController,
+  type LoadMoreControllerSnapshot,
   type LoadMoreDescriptor,
   type LoadMoreMode,
   type LoadMoreRequestHandler,
@@ -15,11 +17,40 @@ import {
   forwardRef,
   useCallback,
   useEffect,
-  useMemo,
+  useLayoutEffect,
   useRef,
+  useState,
   type HTMLAttributes,
 } from "react";
 import { classNames } from "./internal.js";
+
+function createLoadMoreControllerFacade(): Readonly<{
+  facade: LoadMoreController;
+  attach(controller: LoadMoreController): () => void;
+}> {
+  const detachedSnapshot: LoadMoreControllerSnapshot = {
+    mode: "automatic",
+    inFlightRequestKey: null,
+    disposed: true,
+  };
+  let active: LoadMoreController | null = null;
+  return {
+    facade: {
+      getSnapshot: () => active?.getSnapshot() ?? detachedSnapshot,
+      request: (state, reason) => {
+        if (!active) throw new Error("Cannot use a detached LoadMore controller");
+        return active.request(state, reason);
+      },
+      dispose: () => active?.dispose() ?? false,
+    },
+    attach(controller) {
+      active = controller;
+      return () => {
+        if (active === controller) active = null;
+      };
+    },
+  };
+}
 
 export type LoadMoreProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> &
   Readonly<{
@@ -59,26 +90,58 @@ export const LoadMore = forwardRef<HTMLDivElement, LoadMoreProps>(
     validateLoadMoreDescriptor(descriptor);
     const onLoadMoreRef = useRef(onLoadMore);
     onLoadMoreRef.current = onLoadMore;
-    const controller = useMemo(
-      () => createLoadMoreController({ mode, onLoadMore: (request) => onLoadMoreRef.current(request) }),
-      [mode],
-    );
+    const [controllerFacade] = useState(createLoadMoreControllerFacade);
+    const controller = controllerFacade.facade;
     const sentinelRef = useRef<HTMLSpanElement>(null);
+    const currentRequestIdentityRef = useRef<string | null>(null);
+    const completedRequestIdentityRef = useRef<string | null>(null);
+    const currentRequestIdentity =
+      descriptor.state.status === "ready" || descriptor.state.status === "error"
+        ? `${descriptor.state.status}:${descriptor.state.requestKey}`
+        : null;
+
+    useLayoutEffect(() => {
+      currentRequestIdentityRef.current = currentRequestIdentity;
+    }, [currentRequestIdentity]);
+
     const request = useCallback(
-      async (reason: LoadMoreRequestReason) => {
+      async (
+        state: LoadMoreDescriptor["state"],
+        reason: LoadMoreRequestReason,
+      ) => {
+        if (state.status === "loading" || state.status === "complete") return;
+        const requestIdentity = `${state.status}:${state.requestKey}`;
+        // IntersectionObserver may deliver an already queued callback after
+        // disconnect. Only events for the currently committed descriptor may
+        // enter the shared request controller.
+        if (currentRequestIdentityRef.current !== requestIdentity) return;
+        // Once a request settles successfully, retire that exact state/key
+        // until the product commits a new cursor or a retryable error state.
+        if (completedRequestIdentityRef.current === requestIdentity) return;
         try {
-          const outcome = await controller.request(descriptor.state, reason);
+          const outcome = await controller.request(state, reason);
+          if (outcome === "started") {
+            completedRequestIdentityRef.current = requestIdentity;
+          }
           onRequestOutcome?.(outcome, reason);
         } catch (error) {
           onRequestError?.(error, reason);
         }
       },
-      [controller, descriptor.state, onRequestError, onRequestOutcome],
+      [controller, onRequestError, onRequestOutcome],
     );
 
-    useEffect(() => () => {
-      controller.dispose();
-    }, [controller]);
+    useEffect(() => {
+      const attached = createLoadMoreController({
+        mode,
+        onLoadMore: (nextRequest) => onLoadMoreRef.current(nextRequest),
+      });
+      const detach = controllerFacade.attach(attached);
+      return () => {
+        detach();
+        attached.dispose();
+      };
+    }, [controllerFacade, mode]);
 
     useEffect(() => {
       if (
@@ -92,13 +155,15 @@ export const LoadMore = forwardRef<HTMLDivElement, LoadMoreProps>(
       if (!sentinel) return;
       const observer = new IntersectionObserver(
         (entries) => {
-          if (entries.some((entry) => entry.isIntersecting)) void request("viewport");
+          if (entries.some((entry) => entry.isIntersecting)) {
+            void request(descriptor.state, "viewport");
+          }
         },
         { root: intersectionRoot, rootMargin },
       );
       observer.observe(sentinel);
       return () => observer.disconnect();
-    }, [descriptor.state.status, intersectionRoot, mode, request, rootMargin]);
+    }, [descriptor.state, intersectionRoot, mode, request, rootMargin]);
 
     const { state, labels } = descriptor;
     return (
@@ -116,7 +181,7 @@ export const LoadMore = forwardRef<HTMLDivElement, LoadMoreProps>(
           <button
             type="button"
             className="hjm-load-more__trigger"
-            onClick={() => void request("manual")}
+            onClick={() => void request(state, "manual")}
           >
             {labels.loadMore}
           </button>
@@ -131,7 +196,7 @@ export const LoadMore = forwardRef<HTMLDivElement, LoadMoreProps>(
             <button
               type="button"
               className="hjm-load-more__trigger"
-              onClick={() => void request("retry")}
+              onClick={() => void request(state, "retry")}
             >
               {labels.retry}
             </button>

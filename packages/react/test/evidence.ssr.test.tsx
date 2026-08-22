@@ -43,7 +43,7 @@ describe("@hjm/react renderer evidence", () => {
     });
 
     const componentIds = reactRendererEvidence.components.map(({ componentId }) => componentId);
-    expect(componentIds).toHaveLength(32);
+    expect(componentIds).toHaveLength(38);
     expect(new Set(componentIds).size).toBe(componentIds.length);
   });
 

@@ -1,12 +1,42 @@
-import { control, radius, spacing, typography } from "@hjm/design-contracts/foundations";
+import { resolveColorReference } from "@hjm/design-contracts/color-references";
+import { glyph, radius, spacing, typography } from "@hjm/design-contracts/foundations";
 import {
+  fieldRecipe,
+  type FieldShape,
+  type FieldVariant,
+} from "@hjm/design-contracts/recipes/base";
+import {
+  chipRecipe,
+  searchFieldRecipe,
+  segmentedControlRecipe,
+  selectionControlRecipe,
+  selectionGroupRecipe,
+  switchRecipe,
+  type ChipSize,
+  type SearchFieldSize,
+  type SegmentedControlSize,
+  type SelectionControlPresentation,
+  type SelectionControlSize,
+  type SwitchSize,
+} from "@hjm/design-contracts/recipes";
+import {
+  getCheckboxNextState,
+  reconcileCheckboxSelection,
+  resolveControlAccessibleName,
   resolveInitialRadioValue,
   resolveInitialTabValue,
   reconcileRadioSelection,
+  selectionGroupBehaviorDefaults,
+  toggleCheckboxSelection,
+  validateCheckboxSelection,
   validateRadioSelection,
   validateSelectionItems,
+  type CheckboxGroupSelection,
+  type CheckboxState,
+  type SelectionItemDescriptor,
+  type SelectionOrientation,
 } from "@hjm/design-contracts/behaviors";
-import { forwardRef, useEffect, useId, useRef, type ReactNode } from "react";
+import { forwardRef, useEffect, useId, useRef, useState, type ReactNode } from "react";
 import {
   ActivityIndicator,
   Pressable,
@@ -14,6 +44,7 @@ import {
   TextInput,
   View,
   type StyleProp,
+  type GestureResponderEvent,
   type SwitchProps as NativeSwitchProps,
   type TextInputProps,
   type TextStyle,
@@ -23,12 +54,21 @@ import {
 import { useControllableState } from "./internal/state.js";
 import {
   logicalTextAlign,
-  minimumTargetHitSlop,
   minimumTargetStyle,
-  scalableTextDefaults,
+  resolveNativeTextScaleProps,
 } from "./internal/styles.js";
 import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
+
+type FieldAccessibleName =
+  | Readonly<{
+      label: string;
+      accessibilityLabel?: string;
+    }>
+  | Readonly<{
+      label?: undefined;
+      accessibilityLabel: string;
+    }>;
 
 type BaseFieldProps = Omit<
   TextInputProps,
@@ -40,7 +80,6 @@ type BaseFieldProps = Omit<
   | "value"
 > &
   Readonly<{
-    label: string;
     value?: string;
     defaultValue?: string;
     onValueChange?: (value: string) => void;
@@ -49,10 +88,29 @@ type BaseFieldProps = Omit<
     required?: boolean;
     disabled?: boolean;
     busy?: boolean;
-    accessibilityLabel?: string;
+    variant?: FieldVariant;
+    shape?: FieldShape;
     inputStyle?: StyleProp<TextStyle>;
     containerStyle?: StyleProp<ViewStyle>;
   }>;
+
+type AccessibleFieldProps = BaseFieldProps & FieldAccessibleName;
+
+function resolveFieldAccessibleName(
+  label: string | undefined,
+  accessibilityLabel: string | undefined,
+): Readonly<{ accessibleName: string; visibleLabel?: string }> {
+  const visibleLabel = label?.trim();
+  const explicitAccessibleName = accessibilityLabel?.trim();
+  const accessibleName = explicitAccessibleName || visibleLabel;
+  if (!accessibleName) {
+    throw new TypeError("Field requires a non-empty label or accessibilityLabel");
+  }
+  return {
+    accessibleName,
+    ...(visibleLabel ? { visibleLabel } : {}),
+  };
+}
 
 function FieldMessage({ error, supportText }: Pick<BaseFieldProps, "error" | "supportText">) {
   if (!error && !supportText) return null;
@@ -60,17 +118,20 @@ function FieldMessage({ error, supportText }: Pick<BaseFieldProps, "error" | "su
     <Text
       accessibilityLiveRegion={error ? "assertive" : "none"}
       tone={error ? "danger" : "muted"}
-      variant="caption"
+      variant={fieldRecipe.support.textVariant}
     >
       {error ?? supportText}
     </Text>
   );
 }
 
-type FieldRendererProps = BaseFieldProps &
+type FieldRendererProps = AccessibleFieldProps &
   Readonly<{
     multiline: boolean;
     search: boolean;
+    searchSize?: SearchFieldSize;
+    leading?: ReactNode;
+    trailing?: ReactNode;
   }>;
 
 const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(function FieldRenderer(
@@ -84,98 +145,213 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(function FieldRe
     required = false,
     disabled = false,
     busy = false,
+    variant = fieldRecipe.defaults.variant,
+    shape,
     accessibilityLabel,
     inputStyle,
     containerStyle,
+    allowFontScaling,
     multiline,
     search,
+    searchSize = searchFieldRecipe.defaults.size,
+    leading,
+    trailing,
+    onBlur,
+    onFocus,
     ...props
   },
   ref,
 ) {
-  const { colors, environment } = useHjmNativeTheme();
+  const theme = useHjmNativeTheme();
+  const { colors, environment, textScaling } = theme;
+  const [focused, setFocused] = useState(false);
   const [currentValue, setCurrentValue] = useControllableState({
     ...(value === undefined ? {} : { value }),
     defaultValue,
     ...(onValueChange === undefined ? {} : { onChange: onValueChange }),
   });
   const hint = error ?? supportText;
+  const { accessibleName, visibleLabel } = resolveFieldAccessibleName(
+    label,
+    accessibilityLabel,
+  );
+  const resolvedShape = shape ?? (
+    search ? searchFieldRecipe.defaults.shape : fieldRecipe.defaults.shape
+  );
+  const searchSizing = searchFieldRecipe.sizes[searchSize];
+  const minHeight = multiline
+    ? fieldRecipe.multilineMinHeight
+    : search
+      ? searchSizing.minHeight
+      : fieldRecipe.minHeight;
+  const borderWidth = search ? searchFieldRecipe.borderWidth : fieldRecipe.borderWidth;
+  const borderColor = search
+    ? resolveColorReference(
+        error
+          ? searchFieldRecipe.colors.invalid
+          : focused
+            ? searchFieldRecipe.colors.focus
+            : searchFieldRecipe.colors.border,
+        theme.palette,
+      )
+    : colors[
+        error
+          ? fieldRecipe.states.invalid.border
+          : focused
+            ? fieldRecipe.states.focused.border
+            : fieldRecipe.states.idle.border
+      ];
+  const backgroundColor = search && variant === fieldRecipe.defaults.variant
+    ? resolveColorReference(searchFieldRecipe.colors.background, theme.palette)
+    : colors[fieldRecipe.variants[variant].background];
+  const placeholderColor = search
+    ? resolveColorReference(searchFieldRecipe.colors.placeholder, theme.palette)
+    : colors[fieldRecipe.placeholder.color];
+  const textStyle = typography[search ? searchSizing.textVariant : fieldRecipe.textVariant];
+  const controlRadius = radius[
+    search ? searchFieldRecipe.shapes[resolvedShape] : fieldRecipe.shapes[resolvedShape]
+  ];
+  const inputTextScaleProps = resolveNativeTextScaleProps(
+    textScaling,
+    [
+      {
+        color: search
+          ? resolveColorReference(searchFieldRecipe.colors.content, theme.palette)
+          : colors.text,
+        flex: 1,
+        fontSize: textStyle.fontSize,
+        fontWeight: textStyle.fontWeight,
+        lineHeight: textStyle.lineHeight,
+        minHeight: minHeight - (borderWidth * 2),
+        paddingHorizontal: 0,
+        paddingVertical: fieldRecipe.paddingVertical,
+        textAlign: logicalTextAlign(environment.direction),
+        textAlignVertical: multiline ? "top" : "center",
+      },
+      inputStyle,
+    ],
+    allowFontScaling,
+  );
 
   return (
-    <View style={[{ gap: spacing.xs }, containerStyle]}>
-      <Text tone="primary" variant="label">
-        {label}
-        {required ? " *" : ""}
-      </Text>
-      <View
-        style={{
-          alignItems: multiline ? "stretch" : "center",
-          backgroundColor: colors.bg,
-          borderColor: error ? colors.danger : colors.border,
-          borderRadius: radius.md,
-          borderWidth: error ? 2 : 1,
-          direction: environment.direction,
-          flexDirection: "row",
-          minHeight: multiline ? 112 : 44,
-          paddingHorizontal: spacing.sm,
-        }}
-      >
-        <TextInput
-          {...scalableTextDefaults}
-          {...props}
-          ref={ref}
-          accessibilityHint={hint}
-          accessibilityLabel={accessibilityLabel ?? label}
-          accessibilityRole={search ? "search" : undefined}
-          accessibilityState={{ busy, disabled }}
-          editable={!disabled && !busy}
-          multiline={multiline}
-          onChangeText={setCurrentValue}
-          placeholderTextColor={colors.textWeak}
-          style={[
-            {
-              color: colors.text,
-              flex: 1,
-              fontSize: typography.bodyLarge.fontSize,
-              lineHeight: typography.bodyLarge.lineHeight,
-              minHeight: multiline ? 96 : 44,
-              paddingHorizontal: 0,
-              paddingVertical: multiline ? spacing.sm : 0,
-              textAlign: logicalTextAlign(environment.direction),
-              textAlignVertical: multiline ? "top" : "center",
-            },
-            inputStyle,
-          ]}
-          value={currentValue}
+    <View
+      style={[
+        {
+          gap: fieldRecipe.label.gap,
+          opacity: disabled
+            ? search
+              ? searchFieldRecipe.states.disabledOpacity
+              : fieldRecipe.disabledOpacity
+            : 1,
+        },
+        containerStyle,
+      ]}
+    >
+      {visibleLabel ? (
+        <Text
+          style={{
+            color: colors[fieldRecipe.label.color],
+            fontWeight: fieldRecipe.label.fontWeight,
+          }}
+          tone="body"
+          variant={fieldRecipe.label.textVariant}
+        >
+          {visibleLabel}
+          {required ? " *" : ""}
+        </Text>
+      ) : null}
+      <View style={{ gap: fieldRecipe.support.gap }}>
+        <View
+          style={{
+            alignItems: multiline ? "stretch" : "center",
+            backgroundColor,
+            borderColor,
+            borderRadius: controlRadius,
+            borderWidth,
+            direction: environment.direction,
+            flexDirection: "row",
+            gap: search ? searchSizing.gap : 0,
+            minHeight,
+            paddingHorizontal: search
+              ? searchSizing.paddingHorizontal
+              : fieldRecipe.paddingHorizontal,
+          }}
+        >
+          {leading ? (
+            <View
+              accessibilityElementsHidden
+              accessible={false}
+              importantForAccessibility="no-hide-descendants"
+            >
+              {leading}
+            </View>
+          ) : null}
+          <TextInput
+            {...props}
+            {...inputTextScaleProps}
+            ref={ref}
+            accessibilityHint={hint}
+            accessibilityLabel={accessibleName}
+            accessibilityRole={search ? "search" : undefined}
+            accessibilityState={{ busy, disabled }}
+            editable={!disabled && !busy}
+            multiline={multiline}
+            onBlur={(event) => {
+              setFocused(false);
+              onBlur?.(event);
+            }}
+            onChangeText={setCurrentValue}
+            onFocus={(event) => {
+              setFocused(true);
+              onFocus?.(event);
+            }}
+            placeholderTextColor={placeholderColor}
+            value={currentValue}
+          />
+          {trailing}
+        </View>
+        <FieldMessage
+          {...(error === undefined ? {} : { error })}
+          {...(supportText === undefined ? {} : { supportText })}
         />
       </View>
-      <FieldMessage
-        {...(error === undefined ? {} : { error })}
-        {...(supportText === undefined ? {} : { supportText })}
-      />
     </View>
   );
 });
 
-export type TextFieldProps = BaseFieldProps;
+export type TextFieldProps = AccessibleFieldProps;
 
 export const TextField = forwardRef<TextInput, TextFieldProps>(function TextField(props, ref) {
   return <FieldRenderer {...props} ref={ref} multiline={false} search={false} />;
 });
 
-export type TextAreaProps = BaseFieldProps;
+export type TextAreaProps = AccessibleFieldProps;
 
 export const TextArea = forwardRef<TextInput, TextAreaProps>(function TextArea(props, ref) {
   return <FieldRenderer {...props} ref={ref} multiline search={false} />;
 });
 
-export type SearchFieldProps = BaseFieldProps &
+export type SearchFieldAffordanceRenderProps = Readonly<{
+  color: string;
+  size: number;
+  disabled: boolean;
+}>;
+
+export type SearchFieldProps = AccessibleFieldProps &
   Readonly<{
+    size?: SearchFieldSize;
     /** Localized accessible name for the clear action. */
     clearLabel: string;
     /** Localized accessible name announced while search is busy. */
     busyLabel: string;
     onClear?: () => void;
+    /** Decorative leading content. Defaults to a neutral search glyph. */
+    leading?: ReactNode;
+    /** Product-owned trailing content shown only when clear/busy is absent. */
+    trailing?: ReactNode;
+    renderLeading?: (props: SearchFieldAffordanceRenderProps) => ReactNode;
+    renderClearIcon?: (props: SearchFieldAffordanceRenderProps) => ReactNode;
+    renderBusyIndicator?: (props: SearchFieldAffordanceRenderProps) => ReactNode;
   }>;
 
 export const SearchField = forwardRef<TextInput, SearchFieldProps>(function SearchField(
@@ -183,78 +359,347 @@ export const SearchField = forwardRef<TextInput, SearchFieldProps>(function Sear
     clearLabel,
     busyLabel,
     onClear,
+    leading: leadingNode,
+    trailing: trailingNode,
+    renderLeading,
+    renderClearIcon,
+    renderBusyIndicator,
     value,
     defaultValue,
     onValueChange,
+    size = searchFieldRecipe.defaults.size,
     busy = false,
     disabled = false,
     ...props
   },
   ref,
 ) {
+  const theme = useHjmNativeTheme();
+  const searchSizing = searchFieldRecipe.sizes[size];
+  const iconProps: SearchFieldAffordanceRenderProps = {
+    color: resolveColorReference(searchFieldRecipe.colors.leading, theme.palette),
+    size: glyph[searchSizing.glyph],
+    disabled,
+  };
   const [searchValue, setSearchValue] = useControllableState({
     ...(value === undefined ? {} : { value }),
     defaultValue: defaultValue ?? "",
     ...(onValueChange === undefined ? {} : { onChange: onValueChange }),
   });
-  return (
-    <View>
-      <FieldRenderer
-        {...props}
-        ref={ref}
-        busy={busy}
-        disabled={disabled}
-        multiline={false}
-        onValueChange={(next) => {
-          if (!busy && !disabled) setSearchValue(next);
-        }}
-        search
-        value={searchValue}
-      />
-      {busy ? (
-        <View
-          accessibilityLabel={busyLabel}
-          accessibilityRole="progressbar"
-          accessibilityState={{ busy: true }}
-          style={{ alignItems: "center", bottom: 0, end: spacing.xs, height: 44, justifyContent: "center", position: "absolute", width: 44 }}
-        >
-          <ActivityIndicator size="small" />
-        </View>
-      ) : searchValue.length > 0 ? (
-        <Pressable
-          accessibilityLabel={clearLabel}
-          accessibilityRole="button"
-          hitSlop={minimumTargetHitSlop}
-          disabled={disabled}
-          onPress={() => {
-            setSearchValue("");
-            onClear?.();
-          }}
-          style={{
-            alignItems: "center",
-            bottom: 0,
-            height: 44,
-            justifyContent: "center",
-            position: "absolute",
-            end: spacing.xs,
-            width: 44,
-          }}
-        >
-          <Text align="center" tone="muted" variant="title">×</Text>
-        </Pressable>
-      ) : null}
+  const leading = leadingNode ?? renderLeading?.(iconProps);
+  const trailing = busy ? (
+    <View
+      accessibilityLabel={busyLabel}
+      accessibilityRole="progressbar"
+      accessibilityState={{ busy: true }}
+      style={{
+        alignItems: "center",
+        height: searchSizing.clearDiameter,
+        justifyContent: "center",
+        width: searchSizing.clearDiameter,
+      }}
+    >
+      {renderBusyIndicator?.(iconProps) ?? (
+        <ActivityIndicator color={iconProps.color} size={iconProps.size} />
+      )}
     </View>
+  ) : searchValue.length > 0 ? (
+    <Pressable
+      accessibilityLabel={clearLabel}
+      accessibilityRole="button"
+      disabled={disabled}
+      hitSlop={searchSizing.clearHitSlop}
+      onPress={() => {
+        setSearchValue("");
+        onClear?.();
+      }}
+      style={{
+        alignItems: "center",
+        height: searchSizing.clearDiameter,
+        justifyContent: "center",
+        width: searchSizing.clearDiameter,
+      }}
+    >
+      {renderClearIcon?.(iconProps) ?? (
+        <Text
+          align="center"
+          style={{ fontSize: iconProps.size, lineHeight: iconProps.size }}
+          tone="muted"
+        >
+          ×
+        </Text>
+      )}
+    </Pressable>
+  ) : trailingNode;
+  return (
+    <FieldRenderer
+      {...props}
+      ref={ref}
+      busy={busy}
+      disabled={disabled}
+      leading={leading}
+      multiline={false}
+      onValueChange={(next) => {
+        if (!busy && !disabled) setSearchValue(next);
+      }}
+      search
+      searchSize={size}
+      trailing={trailing}
+      value={searchValue}
+    />
   );
 });
 
-export type CheckboxProps = Readonly<{
+export type ChoiceVisualRenderProps = Readonly<{
+  checked: CheckboxState;
+  selected: boolean;
+  disabled: boolean;
+  readOnly: boolean;
+  color: string;
+  size: number;
+}>;
+
+type ChoiceVisualProps = Readonly<{
+  presentation?: SelectionControlPresentation;
+  size?: SelectionControlSize;
+  indicator?: "default" | "none";
+  style?: StyleProp<ViewStyle>;
+  controlStyle?: StyleProp<ViewStyle>;
+  indicatorStyle?: StyleProp<ViewStyle>;
+  leadingStyle?: StyleProp<ViewStyle>;
+  contentStyle?: StyleProp<ViewStyle>;
+  labelStyle?: StyleProp<TextStyle>;
+  descriptionStyle?: StyleProp<TextStyle>;
+}>;
+
+type ChoiceRowProps = ChoiceVisualProps & Readonly<{
+  kind: "checkbox" | "radio";
   label: string;
-  checked?: boolean;
-  defaultChecked?: boolean;
+  description?: string | undefined;
+  checked: CheckboxState;
+  disabled: boolean;
+  readOnly: boolean;
+  required: boolean;
+  invalid: boolean;
+  readOnlyLabel?: string | undefined;
+  requiredLabel?: string | undefined;
+  invalidLabel?: string | undefined;
+  accessibilityHint?: string | undefined;
+  leading?: ReactNode | undefined;
+  renderLeading?: ((props: ChoiceVisualRenderProps) => ReactNode) | undefined;
+  renderIndicator?: ((props: ChoiceVisualRenderProps) => ReactNode) | undefined;
+  onActivate: () => void;
+}>;
+
+function ChoiceRow({
+  kind,
+  label,
+  description,
+  checked,
+  disabled,
+  readOnly,
+  required,
+  invalid,
+  readOnlyLabel,
+  requiredLabel,
+  invalidLabel,
+  accessibilityHint,
+  presentation = "plain",
+  size = selectionControlRecipe.defaults.size,
+  indicator = "default",
+  leading,
+  renderLeading,
+  renderIndicator,
+  onActivate,
+  style,
+  controlStyle,
+  indicatorStyle,
+  leadingStyle,
+  contentStyle,
+  labelStyle,
+  descriptionStyle,
+}: ChoiceRowProps) {
+  const theme = useHjmNativeTheme();
+  const metrics = selectionControlRecipe.sizes[size];
+  const plate = selectionControlRecipe.presentations[presentation];
+  const selected = checked === true || checked === "mixed";
+  const indicatorColor = resolveColorReference(
+    selectionControlRecipe.states.indicator,
+    theme.palette,
+  );
+  const appearance: ChoiceVisualRenderProps = {
+    checked,
+    selected,
+    disabled,
+    readOnly,
+    color: indicatorColor,
+    size: metrics.control,
+  };
+  const resolvedLeading = leading ?? renderLeading?.(appearance);
+  const plateBackground = selected
+    ? selectionControlRecipe.states.selectedBackground
+    : plate.background ?? selectionControlRecipe.states.idleBackground;
+  const plateBorder = invalid
+    ? selectionControlRecipe.states.invalidBorder
+    : selected
+      ? selectionControlRecipe.states.selectedBorder
+      : plate.border;
+  const controlBorder = invalid
+    ? selectionControlRecipe.states.invalidBorder
+    : selected
+      ? selectionControlRecipe.states.checkedBorder
+      : selectionControlRecipe.states.idleBorder;
+  const resolvedHint = [
+    accessibilityHint ?? description,
+    required ? requiredLabel : undefined,
+    readOnly ? readOnlyLabel : undefined,
+    invalid ? invalidLabel : undefined,
+  ].filter(Boolean).join(". ") || undefined;
+  const defaultIndicator = kind === "radio" ? (
+    checked === true ? (
+      <View
+        style={{
+          backgroundColor: indicatorColor,
+          borderRadius: radius.full,
+          height: metrics.control * selectionControlRecipe.radioDotRatio,
+          width: metrics.control * selectionControlRecipe.radioDotRatio,
+        }}
+      />
+    ) : null
+  ) : checked === "mixed" ? (
+    <Text accessible={false} align="center" style={{ color: indicatorColor }} variant="label">−</Text>
+  ) : checked ? (
+    <Text accessible={false} align="center" style={{ color: indicatorColor }} variant="label">✓</Text>
+  ) : null;
+
+  return (
+    <Pressable
+      accessibilityHint={resolvedHint}
+      accessibilityLabel={label}
+      accessibilityRole={kind}
+      accessibilityState={{ checked, disabled: disabled || readOnly }}
+      disabled={disabled || readOnly}
+      hitSlop={plate.useSizePadding ? 0 : metrics.hitSlop}
+      onPress={() => {
+        if (!readOnly) onActivate();
+      }}
+      style={({ pressed }) => [
+        {
+          alignItems: "center",
+          alignSelf: "stretch",
+          backgroundColor: resolveColorReference(plateBackground, theme.palette),
+          borderColor: plateBorder
+            ? resolveColorReference(plateBorder, theme.palette)
+            : "transparent",
+          borderRadius: radius[plate.radius],
+          borderWidth: plate.borderWidth,
+          direction: theme.environment.direction,
+          flexDirection: "row",
+          gap: metrics.gap,
+          minHeight: metrics.rowMinHeight,
+          opacity: disabled
+            ? selectionControlRecipe.states.disabledOpacity
+            : pressed && !readOnly
+              ? 0.86
+              : 1,
+          paddingHorizontal: plate.useSizePadding ? metrics.paddingHorizontal : 0,
+          paddingVertical: plate.useSizePadding ? metrics.paddingVertical : 0,
+        },
+        style,
+      ]}
+    >
+      {indicator === "default" ? (
+        <View
+          accessibilityElementsHidden
+          accessible={false}
+          importantForAccessibility="no-hide-descendants"
+          style={[
+            {
+              alignItems: "center",
+              backgroundColor: resolveColorReference(
+                selected
+                  ? selectionControlRecipe.states.checkedBackground
+                  : selectionControlRecipe.states.idleBackground,
+                theme.palette,
+              ),
+              borderColor: resolveColorReference(controlBorder, theme.palette),
+              borderRadius: radius[selectionControlRecipe.shapes[kind]],
+              borderWidth: 1,
+              height: metrics.control,
+              justifyContent: "center",
+              width: metrics.control,
+            },
+            controlStyle,
+          ]}
+        >
+          <View style={indicatorStyle}>
+            {renderIndicator?.(appearance) ?? defaultIndicator}
+          </View>
+        </View>
+      ) : null}
+      {resolvedLeading ? (
+        <View
+          accessibilityElementsHidden
+          accessible={false}
+          importantForAccessibility="no-hide-descendants"
+          style={leadingStyle}
+        >
+          {resolvedLeading}
+        </View>
+      ) : null}
+      <View style={[{ flex: 1, gap: spacing.xxs, minWidth: 0 }, contentStyle]}>
+        <Text
+          style={[
+            {
+              color: resolveColorReference(selectionControlRecipe.label.color, theme.palette),
+              fontWeight: selected
+                ? selectionControlRecipe.label.checkedFontWeight
+                : selectionControlRecipe.label.fontWeight,
+            },
+            labelStyle,
+          ]}
+          variant={metrics.labelVariant}
+        >
+          {label}
+        </Text>
+        {description ? (
+          <Text
+            style={[
+              {
+                color: resolveColorReference(
+                  selectionControlRecipe.description.color,
+                  theme.palette,
+                ),
+              },
+              descriptionStyle,
+            ]}
+            variant={metrics.descriptionVariant}
+          >
+            {description}
+          </Text>
+        ) : null}
+      </View>
+    </Pressable>
+  );
+}
+
+export type CheckboxProps = ChoiceVisualProps & Readonly<{
+  label: string;
+  checked?: CheckboxState;
+  defaultChecked?: CheckboxState;
   onCheckedChange?: (checked: boolean) => void;
   disabled?: boolean;
+  readOnly?: boolean;
+  required?: boolean;
+  invalid?: boolean;
+  description?: string;
+  readOnlyLabel?: string;
+  requiredLabel?: string;
+  invalidLabel?: string;
+  leading?: ReactNode;
+  renderLeading?: (props: ChoiceVisualRenderProps) => ReactNode;
+  renderIndicator?: (props: ChoiceVisualRenderProps) => ReactNode;
   accessibilityHint?: string;
-  style?: StyleProp<ViewStyle>;
 }>;
 
 export function Checkbox({
@@ -263,84 +708,165 @@ export function Checkbox({
   defaultChecked = false,
   onCheckedChange,
   disabled = false,
+  readOnly = false,
+  required = false,
+  invalid = false,
+  description,
+  readOnlyLabel,
+  requiredLabel,
+  invalidLabel,
+  leading,
+  renderLeading,
+  renderIndicator,
   accessibilityHint,
-  style,
+  ...visual
 }: CheckboxProps) {
-  const { colors, environment } = useHjmNativeTheme();
-  const [selected, setSelected] = useControllableState({
+  const [selected, setSelected] = useControllableState<CheckboxState>({
     ...(checked === undefined ? {} : { value: checked }),
     defaultValue: defaultChecked,
-    ...(onCheckedChange === undefined ? {} : { onChange: onCheckedChange }),
+    ...(onCheckedChange === undefined
+      ? {}
+      : { onChange: (next: CheckboxState) => onCheckedChange(next === true) }),
   });
   return (
-    <Pressable
+    <ChoiceRow
+      {...visual}
       accessibilityHint={accessibilityHint}
-      accessibilityLabel={label}
-      accessibilityRole="checkbox"
-      accessibilityState={{ checked: selected, disabled }}
+      checked={selected}
+      description={description}
       disabled={disabled}
-      hitSlop={minimumTargetHitSlop}
-      onPress={() => setSelected(!selected)}
-      style={({ pressed }) => [
-        minimumTargetStyle,
-        {
-          alignItems: "center",
-          direction: environment.direction,
-          flexDirection: "row",
-          gap: spacing.sm,
-          opacity: disabled ? 0.5 : pressed ? 0.86 : 1,
-        },
-        style,
-      ]}
-    >
-      <View
-        accessible={false}
-        style={{
-          alignItems: "center",
-          backgroundColor: selected ? colors.primary : colors.bg,
-          borderColor: selected ? colors.primary : colors.textWeak,
-          borderRadius: radius.sm / 2,
-          borderWidth: 2,
-          height: 24,
-          justifyContent: "center",
-          width: 24,
-        }}
-      >
-        {selected ? <Text align="center" tone="inverse" variant="label">✓</Text> : null}
-      </View>
-      <Text tone="body" variant="bodyLarge">{label}</Text>
-    </Pressable>
+      indicator={visual.indicator ?? "default"}
+      invalid={invalid}
+      invalidLabel={invalidLabel}
+      kind="checkbox"
+      label={label}
+      leading={leading}
+      onActivate={() => setSelected(getCheckboxNextState(selected))}
+      readOnly={readOnly}
+      readOnlyLabel={readOnlyLabel}
+      renderIndicator={renderIndicator}
+      renderLeading={renderLeading}
+      required={required}
+      requiredLabel={requiredLabel}
+    />
   );
 }
 
 export type RadioOption<Value extends string = string> = Readonly<{
   value: Value;
   label: string;
+  description?: string;
   disabled?: boolean;
   accessibilityHint?: string;
+  leading?: ReactNode;
 }>;
 
-export type RadioGroupProps<Value extends string = string> = Readonly<{
-  label: string;
-  options: readonly RadioOption<Value>[];
-  value?: Value | null;
-  defaultValue?: Value | null;
-  onValueChange?: (value: Value | null) => void;
-  required?: boolean;
+type ChoiceGroupVisualProps = ChoiceVisualProps & Readonly<{
+  orientation?: SelectionOrientation;
   disabled?: boolean;
   readOnly?: boolean;
   invalid?: boolean;
   description?: string;
   error?: string;
-  /** Optional localized qualifier; a neutral asterisk is used when omitted. */
+  required?: boolean;
   requiredLabel?: string;
-  /** Optional localized qualifier; disabled state remains available when omitted. */
   readOnlyLabel?: string;
-  style?: StyleProp<ViewStyle>;
+  invalidLabel?: string;
 }>;
+
+export type RadioGroupProps<Value extends string = string> = ChoiceGroupVisualProps & Readonly<{
+  label?: string | undefined;
+  accessibilityLabel?: string | undefined;
+  options: readonly RadioOption<Value>[];
+  value?: Value | null;
+  defaultValue?: Value | null;
+  onValueChange?: (value: Value | null) => void;
+  renderLeading?: (option: RadioOption<Value>, props: ChoiceVisualRenderProps) => ReactNode;
+  renderIndicator?: (option: RadioOption<Value>, props: ChoiceVisualRenderProps) => ReactNode;
+}>;
+
+function ChoiceGroupFrame({
+  label,
+  accessibilityLabel,
+  required,
+  requiredLabel,
+  readOnly,
+  readOnlyLabel,
+  disabled,
+  description,
+  error,
+  role,
+  orientation,
+  presentation,
+  style,
+  children,
+}: Readonly<{
+  label?: string | undefined;
+  accessibilityLabel?: string | undefined;
+  required: boolean;
+  requiredLabel?: string | undefined;
+  readOnly: boolean;
+  readOnlyLabel?: string | undefined;
+  disabled: boolean;
+  description?: string | undefined;
+  error?: string | undefined;
+  role?: "radiogroup" | undefined;
+  orientation: SelectionOrientation;
+  presentation: SelectionControlPresentation;
+  style?: StyleProp<ViewStyle>;
+  children: ReactNode;
+}>) {
+  const theme = useHjmNativeTheme();
+  const id = useId().replaceAll(":", "");
+  const labelId = `${id}-label`;
+  const accessibleName = resolveControlAccessibleName(label, accessibilityLabel, "Choice group");
+  const announcedName = [
+    accessibleName,
+    required ? requiredLabel ?? "*" : undefined,
+    readOnly ? readOnlyLabel : undefined,
+  ].filter(Boolean).join(", ");
+  const gap = selectionGroupRecipe.orientations[orientation].gap[presentation];
+  return (
+    <View
+      accessibilityHint={[error ?? description, readOnly ? readOnlyLabel : undefined]
+        .filter(Boolean).join(". ") || undefined}
+      accessibilityLabel={announcedName}
+      accessibilityLabelledBy={label ? labelId : undefined}
+      accessibilityRole={role}
+      accessibilityState={{ disabled: disabled || readOnly }}
+      accessibilityValue={error ? { text: error } : undefined}
+      style={[{ direction: theme.environment.direction, gap: selectionGroupRecipe.supportGap }, style]}
+    >
+      {label ? (
+        <Text nativeID={labelId} tone="primary" variant={selectionGroupRecipe.label.textVariant}>
+          {label}{required ? requiredLabel ? ` (${requiredLabel})` : " *" : ""}
+        </Text>
+      ) : null}
+      <View
+        style={{
+          direction: theme.environment.direction,
+          flexDirection: orientation === "horizontal" && theme.environment.textScale < 1.6
+            ? "row"
+            : "column",
+          gap,
+        }}
+      >
+        {children}
+      </View>
+      {error ? (
+        <Text accessibilityLiveRegion="assertive" accessibilityRole="alert" tone="danger" variant={selectionGroupRecipe.error.textVariant}>
+          {error}
+        </Text>
+      ) : description ? (
+        <Text tone="muted" variant={selectionGroupRecipe.description.textVariant}>{description}</Text>
+      ) : null}
+    </View>
+  );
+}
 
 export function RadioGroup<Value extends string = string>({
   label,
+  accessibilityLabel,
   options,
   value,
   defaultValue,
@@ -353,120 +879,177 @@ export function RadioGroup<Value extends string = string>({
   error,
   requiredLabel,
   readOnlyLabel,
+  invalidLabel,
+  orientation = selectionGroupBehaviorDefaults.orientation,
+  presentation = "plain",
+  size = selectionControlRecipe.defaults.size,
+  indicator = "default",
+  renderLeading,
+  renderIndicator,
   style,
+  ...slotStyles
 }: RadioGroupProps<Value>) {
-  const { colors, environment } = useHjmNativeTheme();
   const selectionItems = options.map((option) => ({
     id: option.value,
     label: option.label,
+    ...(option.description === undefined ? {} : { description: option.description }),
     ...(option.disabled === undefined ? {} : { disabled: option.disabled }),
   }));
   validateSelectionItems(selectionItems);
-  if (value !== undefined) {
-    validateRadioSelection(selectionItems, value);
-  }
+  if (value !== undefined) validateRadioSelection(selectionItems, value);
   const initialRef = useRef<Readonly<{ value: Value | null }> | null>(null);
-  if (initialRef.current === null) {
-    initialRef.current = {
-      value: resolveInitialRadioValue(selectionItems, value ?? defaultValue, required),
-    };
-  }
+  initialRef.current ??= {
+    value: resolveInitialRadioValue(selectionItems, value ?? defaultValue, required),
+  };
   const [storedValue, setSelected] = useControllableState<Value | null>({
     ...(value === undefined ? {} : { value }),
     defaultValue: initialRef.current.value,
     ...(onValueChange === undefined ? {} : { onChange: onValueChange }),
   });
-  const reconciledValue = reconcileRadioSelection(selectionItems, storedValue, required);
-  const controlled = value !== undefined;
+  const selected = reconcileRadioSelection(selectionItems, storedValue, required);
   useEffect(() => {
-    if (!controlled && reconciledValue !== storedValue) setSelected(reconciledValue);
-  }, [controlled, reconciledValue, setSelected, storedValue]);
-  const selected = reconciledValue;
-  const id = useId().replaceAll(":", "");
-  const labelId = `${id}-label`;
-  const messageId = `${id}-message`;
+    if (value === undefined && selected !== storedValue) setSelected(selected);
+  }, [selected, setSelected, storedValue, value]);
   const hasError = invalid || error !== undefined;
-  const resolvedGroupLabel = [
-    label,
-    required ? requiredLabel ?? "*" : undefined,
-    readOnly ? readOnlyLabel : undefined,
-  ].filter(Boolean).join(", ");
-
   return (
-    <View
-      accessibilityHint={error ?? description}
-      accessibilityLabel={resolvedGroupLabel}
-      accessibilityLabelledBy={labelId}
-      accessibilityRole="radiogroup"
-      accessibilityState={{ disabled: disabled || readOnly }}
-      accessibilityValue={hasError && error ? { text: error } : undefined}
-      style={[{ gap: spacing.xs }, style]}
+    <ChoiceGroupFrame
+      accessibilityLabel={accessibilityLabel}
+      description={description}
+      disabled={disabled}
+      error={error}
+      label={label}
+      orientation={orientation}
+      presentation={presentation}
+      readOnly={readOnly}
+      readOnlyLabel={readOnlyLabel}
+      required={required}
+      requiredLabel={requiredLabel}
+      role="radiogroup"
+      style={style}
     >
-      <Text nativeID={labelId} tone="primary" variant="label">
-        {label}{required ? requiredLabel ? ` (${requiredLabel})` : " *" : ""}
-      </Text>
       {options.map((option) => {
         const optionDisabled = disabled || option.disabled === true;
-        const isSelected = selected === option.value;
+        const optionSelected = selected === option.value;
         return (
-          <Pressable
+          <ChoiceRow
+            {...slotStyles}
             key={option.value}
-            accessibilityHint={[
-              option.accessibilityHint,
-              error ?? description,
-              readOnly ? readOnlyLabel : undefined,
-            ].filter(Boolean).join(". ") || undefined}
-            accessibilityLabel={option.label}
-            accessibilityRole="radio"
-            accessibilityState={{ checked: isSelected, disabled: optionDisabled || readOnly }}
-            accessibilityValue={hasError && error ? { text: error } : undefined}
-            disabled={optionDisabled || readOnly}
-            onPress={() => setSelected(option.value)}
-            style={({ pressed }) => [
-              minimumTargetStyle,
-              {
-                alignItems: "center",
-                direction: environment.direction,
-                flexDirection: "row",
-                gap: spacing.sm,
-                opacity: optionDisabled ? 0.5 : pressed ? 0.86 : 1,
-              },
-            ]}
-          >
-            <View
-              accessible={false}
-              style={{
-                alignItems: "center",
-                borderColor: isSelected ? colors.primary : colors.textWeak,
-                borderRadius: radius.full,
-                borderWidth: 2,
-                height: 24,
-                justifyContent: "center",
-                width: 24,
-              }}
-            >
-              {isSelected ? (
-                <View style={{ backgroundColor: colors.primary, borderRadius: radius.full, height: 12, width: 12 }} />
-              ) : null}
-            </View>
-            <Text tone="body" variant="bodyLarge">{option.label}</Text>
-          </Pressable>
+            accessibilityHint={option.accessibilityHint}
+            checked={optionSelected}
+            description={option.description}
+            disabled={optionDisabled}
+            indicator={indicator}
+            invalid={hasError}
+            invalidLabel={invalidLabel ?? error}
+            kind="radio"
+            label={option.label}
+            leading={option.leading}
+            onActivate={() => setSelected(option.value)}
+            presentation={presentation}
+            readOnly={readOnly}
+            readOnlyLabel={readOnlyLabel}
+            renderIndicator={renderIndicator ? (props) => renderIndicator(option, props) : undefined}
+            renderLeading={renderLeading ? (props) => renderLeading(option, props) : undefined}
+            required={required}
+            requiredLabel={requiredLabel}
+            size={size}
+          />
         );
       })}
-      {error ? (
-        <Text
-          nativeID={messageId}
-          accessibilityLiveRegion="assertive"
-          accessibilityRole="alert"
-          tone="danger"
-          variant="caption"
-        >
-          {error}
-        </Text>
-      ) : description ? (
-        <Text nativeID={messageId} tone="muted" variant="caption">{description}</Text>
-      ) : null}
-    </View>
+    </ChoiceGroupFrame>
+  );
+}
+
+export type CheckboxGroupProps<Value extends string = string> = ChoiceGroupVisualProps &
+  CheckboxGroupSelection<Value> & Readonly<{
+    label?: string;
+    accessibilityLabel?: string;
+    items: readonly SelectionItemDescriptor<Value>[];
+    renderLeading?: (item: SelectionItemDescriptor<Value>, props: ChoiceVisualRenderProps) => ReactNode;
+    renderIndicator?: (item: SelectionItemDescriptor<Value>, props: ChoiceVisualRenderProps) => ReactNode;
+  }>;
+
+/** Validated controlled/uncontrolled checkbox collection using immutable Sets. */
+export function CheckboxGroup<Value extends string = string>({
+  label,
+  accessibilityLabel,
+  items,
+  value,
+  defaultValue = new Set<Value>(),
+  onValueChange,
+  required = false,
+  disabled = false,
+  readOnly = false,
+  invalid = false,
+  description,
+  error,
+  requiredLabel,
+  readOnlyLabel,
+  invalidLabel,
+  orientation = selectionGroupBehaviorDefaults.orientation,
+  presentation = "plain",
+  size = selectionControlRecipe.defaults.size,
+  indicator = "default",
+  renderLeading,
+  renderIndicator,
+  style,
+  ...slotStyles
+}: CheckboxGroupProps<Value>) {
+  validateSelectionItems(items);
+  if (value !== undefined) validateCheckboxSelection(items, value);
+  const [storedValue, setSelected] = useControllableState<ReadonlySet<Value>>({
+    ...(value === undefined ? {} : { value }),
+    defaultValue,
+    ...(onValueChange === undefined ? {} : { onChange: onValueChange }),
+  });
+  const selected = reconcileCheckboxSelection(items, storedValue);
+  useEffect(() => {
+    if (value === undefined && selected !== storedValue) setSelected(selected);
+  }, [selected, setSelected, storedValue, value]);
+  const hasError = invalid || error !== undefined;
+  return (
+    <ChoiceGroupFrame
+      accessibilityLabel={accessibilityLabel}
+      description={description}
+      disabled={disabled}
+      error={error}
+      label={label}
+      orientation={orientation}
+      presentation={presentation}
+      readOnly={readOnly}
+      readOnlyLabel={readOnlyLabel}
+      required={required}
+      requiredLabel={requiredLabel}
+      style={style}
+    >
+      {items.map((item) => {
+        const optionDisabled = disabled || item.disabled === true;
+        const optionSelected = selected.has(item.id);
+        return (
+          <ChoiceRow
+            {...slotStyles}
+            key={item.id}
+            checked={optionSelected}
+            description={item.description}
+            disabled={optionDisabled}
+            indicator={indicator}
+            invalid={hasError}
+            invalidLabel={invalidLabel ?? error}
+            kind="checkbox"
+            label={item.label}
+            onActivate={() => setSelected(toggleCheckboxSelection(items, selected, item.id))}
+            presentation={presentation}
+            readOnly={readOnly}
+            readOnlyLabel={readOnlyLabel}
+            renderIndicator={renderIndicator ? (props) => renderIndicator(item, props) : undefined}
+            renderLeading={renderLeading ? (props) => renderLeading(item, props) : undefined}
+            required={required}
+            requiredLabel={requiredLabel}
+            size={size}
+          />
+        );
+      })}
+    </ChoiceGroupFrame>
   );
 }
 
@@ -476,24 +1059,31 @@ export type SwitchProps = Omit<
 > &
   Readonly<{
     label: string;
+    description?: string;
+    size?: SwitchSize;
     value?: boolean;
     defaultValue?: boolean;
     onValueChange?: (value: boolean) => void;
+    accessibilityLabel?: string;
     accessibilityHint?: string;
     style?: StyleProp<ViewStyle>;
   }>;
 
 export function Switch({
   label,
+  description,
+  size = switchRecipe.defaults.size,
   value,
   defaultValue = false,
   onValueChange,
   disabled = false,
+  accessibilityLabel,
   accessibilityHint,
   style,
   ...props
 }: SwitchProps) {
   const { colors, environment } = useHjmNativeTheme();
+  const dimensions = switchRecipe.sizes[size];
   const [enabled, setEnabled] = useControllableState({
     ...(value === undefined ? {} : { value }),
     defaultValue,
@@ -501,8 +1091,8 @@ export function Switch({
   });
   return (
     <Pressable
-      accessibilityHint={accessibilityHint}
-      accessibilityLabel={label}
+      accessibilityHint={accessibilityHint ?? description}
+      accessibilityLabel={accessibilityLabel ?? label}
       accessibilityRole="switch"
       accessibilityState={{ checked: enabled, disabled }}
       disabled={disabled}
@@ -514,18 +1104,27 @@ export function Switch({
           direction: environment.direction,
           flexDirection: "row",
           gap: spacing.sm,
+          minHeight: description
+            ? switchRecipe.rowTwoLineMinHeight
+            : switchRecipe.rowMinHeight,
           opacity: disabled ? 0.5 : pressed ? 0.86 : 1,
         },
         style,
       ]}
     >
-      <Text style={{ flex: 1 }} tone="body" variant="bodyLarge">{label}</Text>
+      <View style={{ flex: 1, gap: spacing.xxs }}>
+        <Text tone="body" variant="bodyLarge">{label}</Text>
+        {description ? (
+          <Text tone="muted" variant="caption">{description}</Text>
+        ) : null}
+      </View>
       <NativeSwitch
         {...props}
         accessible={false}
         disabled={disabled}
         ios_backgroundColor={colors.surfaceAlt}
         pointerEvents="none"
+        style={{ height: dimensions.height, width: dimensions.width }}
         thumbColor={colors.bg}
         trackColor={{ false: colors.surfaceAlt, true: colors.primary }}
         value={enabled}
@@ -538,6 +1137,15 @@ export type SegmentedControlOption<Value extends string = string> = Readonly<{
   value: Value;
   label: string;
   disabled?: boolean;
+  leading?: ReactNode;
+  renderLeading?: (props: SegmentedControlLeadingRenderProps) => ReactNode;
+}>;
+
+export type SegmentedControlLeadingRenderProps = Readonly<{
+  selected: boolean;
+  disabled: boolean;
+  color: string;
+  size: number;
 }>;
 
 export type SegmentedControlProps<Value extends string = string> = Readonly<{
@@ -546,6 +1154,7 @@ export type SegmentedControlProps<Value extends string = string> = Readonly<{
   value?: Value;
   defaultValue?: Value;
   onValueChange?: (value: Value) => void;
+  size?: SegmentedControlSize;
   disabled?: boolean;
   style?: StyleProp<ViewStyle>;
 }>;
@@ -556,10 +1165,15 @@ export function SegmentedControl<Value extends string = string>({
   value,
   defaultValue,
   onValueChange,
+  size = segmentedControlRecipe.defaults.size,
   disabled = false,
   style,
 }: SegmentedControlProps<Value>) {
-  const { colors, environment } = useHjmNativeTheme();
+  const theme = useHjmNativeTheme();
+  const { environment } = theme;
+  const sizeContract = segmentedControlRecipe.sizes[size];
+  const stacked = segmentedControlRecipe.adaptive.largeTextLayout === "stacked"
+    && environment.textScale >= segmentedControlRecipe.adaptive.stackAtFontScale;
   const descriptors = options.map((option) => ({
       id: option.value,
       label: option.label,
@@ -593,12 +1207,20 @@ export function SegmentedControl<Value extends string = string>({
       accessibilityRole="radiogroup"
       style={[
         {
-          backgroundColor: colors.surface,
-          borderRadius: radius.md,
+          backgroundColor: resolveColorReference(
+            segmentedControlRecipe.container.background,
+            theme.palette,
+          ),
+          borderColor: resolveColorReference(
+            segmentedControlRecipe.container.border,
+            theme.palette,
+          ),
+          borderRadius: radius[segmentedControlRecipe.container.radius],
+          borderWidth: segmentedControlRecipe.container.borderWidth,
           direction: environment.direction,
-          flexDirection: "row",
-          gap: spacing.xxs,
-          padding: spacing.xxs,
+          flexDirection: stacked ? "column" : "row",
+          gap: segmentedControlRecipe.container.gap,
+          padding: segmentedControlRecipe.container.padding,
         },
         style,
       ]}
@@ -606,6 +1228,18 @@ export function SegmentedControl<Value extends string = string>({
       {options.map((option) => {
         const isSelected = option.value === selected;
         const optionDisabled = disabled || option.disabled === true;
+        const contentColor = resolveColorReference(
+          isSelected
+            ? segmentedControlRecipe.item.selectedContent
+            : segmentedControlRecipe.item.idleContent,
+          theme.palette,
+        );
+        const leading = option.leading ?? option.renderLeading?.({
+          selected: isSelected,
+          disabled: optionDisabled,
+          color: contentColor,
+          size: glyph.sm,
+        });
         return (
           <Pressable
             key={option.value}
@@ -613,24 +1247,60 @@ export function SegmentedControl<Value extends string = string>({
             accessibilityRole="radio"
             accessibilityState={{ checked: isSelected, disabled: optionDisabled }}
             disabled={optionDisabled}
+            hitSlop={sizeContract.hitSlop}
             onPress={() => setSelected(option.value)}
             style={({ pressed }) => [
-              minimumTargetStyle,
               {
                 alignItems: "center",
-                backgroundColor: isSelected ? colors.bg : "transparent",
-                borderRadius: radius.sm,
-                flex: 1,
+                backgroundColor: isSelected
+                  ? resolveColorReference(
+                      segmentedControlRecipe.item.selectedBackground,
+                      theme.palette,
+                    )
+                  : "transparent",
+                borderColor: isSelected
+                  ? resolveColorReference(
+                      segmentedControlRecipe.item.selectedBorder,
+                      theme.palette,
+                    )
+                  : "transparent",
+                borderRadius: radius[segmentedControlRecipe.item.radius],
+                borderWidth: isSelected
+                  ? segmentedControlRecipe.item.selectedBorderWidth
+                  : 0,
+                flex: stacked ? undefined : 1,
+                gap: segmentedControlRecipe.item.gap,
                 justifyContent: "center",
-                opacity: optionDisabled ? 0.5 : pressed ? 0.86 : 1,
-                paddingHorizontal: spacing.xs,
+                minHeight: sizeContract.minHeight,
+                opacity: optionDisabled
+                  ? segmentedControlRecipe.item.disabledOpacity
+                  : pressed
+                    ? segmentedControlRecipe.item.pressedOpacity
+                    : 1,
+                paddingHorizontal: sizeContract.paddingHorizontal,
+                width: stacked ? "100%" : undefined,
               },
             ]}
           >
+            {leading ? (
+              <View
+                accessibilityElementsHidden
+                accessible={false}
+                importantForAccessibility="no-hide-descendants"
+              >
+                {leading}
+              </View>
+            ) : null}
             <Text
               align="center"
-              style={{ fontWeight: isSelected ? typography.label.fontWeight : typography.body.fontWeight }}
-              tone={isSelected ? "primary" : "muted"}
+              style={{
+                color: contentColor,
+                fontWeight: isSelected
+                  ? segmentedControlRecipe.item.selectedFontWeight
+                  : segmentedControlRecipe.item.fontWeight,
+              }}
+              tone={isSelected ? "brand" : "muted"}
+              variant={sizeContract.textVariant}
             >
               {option.label}
             </Text>
@@ -643,26 +1313,35 @@ export function SegmentedControl<Value extends string = string>({
 
 type ChipBaseProps = Readonly<{
   label: string;
-  size?: "small" | "medium";
+  size?: ChipSize;
   disabled?: boolean;
   leading?: ReactNode;
   trailing?: ReactNode;
   accessibilityLabel?: string;
   accessibilityHint?: string;
   style?: StyleProp<ViewStyle>;
+  leadingStyle?: StyleProp<ViewStyle>;
+  indicatorStyle?: StyleProp<ViewStyle>;
+  labelStyle?: StyleProp<TextStyle>;
+  trailingStyle?: StyleProp<ViewStyle>;
+  renderSelectionIndicator?: (props: Readonly<{
+    selected: boolean;
+    color: string;
+    size: number;
+  }>) => ReactNode;
 }>;
 
 type ActionChipProps = Readonly<{
   selectionMode?: "action";
   selected?: never;
-  onPress: () => void;
+  onPress: (event: GestureResponderEvent) => void;
 }>;
 
 type SelectionChipProps = Readonly<{
   selectionMode: "single" | "multiple";
   /** Product-owned controlled selection. */
   selected: boolean;
-  onPress: (selected: boolean) => void;
+  onPress: (selected: boolean, event: GestureResponderEvent) => void;
 }>;
 
 export type ChipProps = ChipBaseProps & (ActionChipProps | SelectionChipProps);
@@ -670,20 +1349,32 @@ export type ChipProps = ChipBaseProps & (ActionChipProps | SelectionChipProps);
 /** Action/filter chip with role-specific, controlled selection semantics. */
 export function Chip({
   label,
-  size = "small",
+  size = chipRecipe.defaults.size,
   disabled = false,
   leading,
   trailing,
   accessibilityLabel,
   accessibilityHint,
   style,
+  leadingStyle,
+  indicatorStyle,
+  labelStyle,
+  trailingStyle,
+  renderSelectionIndicator,
   selectionMode = "action",
   selected,
   onPress,
 }: ChipProps) {
-  const { colors, environment } = useHjmNativeTheme();
+  const theme = useHjmNativeTheme();
   const selectable = selectionMode !== "action";
   const active = selectable && selected === true;
+  const metrics = chipRecipe.sizes[size];
+  const presentation = chipRecipe.states[active ? "selected" : "idle"];
+  const contentColor = resolveColorReference(presentation.content, theme.palette);
+  const indicatorColor = resolveColorReference(
+    chipRecipe.selectionIndicator.color,
+    theme.palette,
+  );
   const role = selectionMode === "single" ? "radio" : selectionMode === "multiple" ? "checkbox" : "button";
   return (
     <Pressable
@@ -692,40 +1383,69 @@ export function Chip({
       accessibilityRole={role}
       accessibilityState={selectable ? { checked: active, disabled } : { disabled }}
       disabled={disabled}
-      hitSlop={size === "small" ? minimumTargetHitSlop : undefined}
-      onPress={() => {
-        if (selectionMode === "action") (onPress as () => void)();
-        else (onPress as (selected: boolean) => void)(!active);
+      hitSlop={metrics.hitSlop}
+      onPress={(event) => {
+        if (selectionMode === "action") {
+          (onPress as (event: GestureResponderEvent) => void)(event);
+        } else {
+          (onPress as (selected: boolean, event: GestureResponderEvent) => void)(
+            !active,
+            event,
+          );
+        }
       }}
       style={({ pressed }) => [
-        minimumTargetStyle,
         {
           alignItems: "center",
           alignSelf: "flex-start",
-          backgroundColor: active ? colors.surfaceAccent : colors.bg,
-          borderColor: active ? colors.primary : colors.border,
-          borderRadius: radius.full,
-          borderWidth: 1,
-          direction: environment.direction,
+          backgroundColor: resolveColorReference(presentation.background, theme.palette),
+          borderColor: resolveColorReference(presentation.border, theme.palette),
+          borderRadius: radius[chipRecipe.radius],
+          borderWidth: chipRecipe.borderWidth,
+          direction: theme.environment.direction,
           flexDirection: "row",
-          gap: size === "small" ? spacing.xxs : spacing.xs,
-          height: control.chipHeight[size],
-          opacity: disabled ? 0.5 : pressed ? 0.86 : 1,
-          paddingHorizontal: size === "small" ? spacing.sm : spacing.md,
+          gap: metrics.gap,
+          height: metrics.height,
+          opacity: disabled
+            ? chipRecipe.states.disabledOpacity
+            : pressed
+              ? chipRecipe.states.pressedOpacity
+              : 1,
+          paddingHorizontal: metrics.paddingHorizontal,
         },
         style,
       ]}
     >
-      {leading ? <View accessible={false}>{leading}</View> : null}
-      {active ? <Text accessible={false} tone="brand" variant="caption">✓</Text> : null}
+      {leading ? <View accessible={false} style={leadingStyle}>{leading}</View> : null}
+      {active ? (
+        <View accessible={false} style={indicatorStyle}>
+          {renderSelectionIndicator ? (
+            renderSelectionIndicator({
+              selected: active,
+              color: indicatorColor,
+              size: glyph[chipRecipe.selectionIndicator.glyph],
+            })
+          ) : (
+            <Text style={{ color: indicatorColor }} variant="caption">✓</Text>
+          )}
+        </View>
+      ) : null}
       <Text
         align="center"
-        style={{ fontWeight: active ? typography.label.fontWeight : typography.body.fontWeight }}
-        tone={active ? "brand" : "muted"}
+        style={[
+          {
+            color: contentColor,
+            fontWeight: active
+              ? chipRecipe.label.selectedFontWeight
+              : chipRecipe.label.fontWeight,
+          },
+          labelStyle,
+        ]}
+        variant={metrics.textVariant}
       >
         {label}
       </Text>
-      {trailing ? <View accessible={false}>{trailing}</View> : null}
+      {trailing ? <View accessible={false} style={trailingStyle}>{trailing}</View> : null}
     </Pressable>
   );
 }

@@ -142,6 +142,7 @@ describe("LoadMore identity contract", () => {
     expect(componentCatalog.find((entry) => entry.name === "LoadMore")).toMatchObject({
       platform: "shared",
       status: "beta",
+      surfaceStatus: { web: "beta", native: "beta" },
       recipe: "loadMoreRecipe",
       behavior: "loadMore",
     });

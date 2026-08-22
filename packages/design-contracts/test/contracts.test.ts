@@ -1488,6 +1488,13 @@ describe("expanded cross-platform component contracts", () => {
   });
 
   it("keeps feedback recipes on generic semantic roles", () => {
+    expect(badgeRecipe.defaults.variant).toBe("filled");
+    expect(badgeRecipe.variants.filled.usesToneBackground).toBe(true);
+    expect(badgeRecipe.variants.outline).toMatchObject({
+      usesToneBackground: false,
+      borderFallback: semanticColors.border.default,
+    });
+    expect(badgeRecipe.tones.strong.outlineContent).toBe(semanticColors.content.primary);
     expect(Object.keys(badgeRecipe.tones)).toEqual([
       "neutral",
       "strong",

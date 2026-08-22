@@ -8,10 +8,15 @@ import {
   resolveIconDescriptor,
   type IconDescriptor,
 } from "@hjm/design-contracts/components/icon";
+import {
+  validateLayoutRegions,
+  type LayoutSidebarDescriptor,
+  type LayoutSidebarRole,
+} from "@hjm/design-contracts/components/layout";
+import { resolveColorReference } from "@hjm/design-contracts/color-references";
 import { withAlpha, type ThemeColors } from "@hjm/design-contracts/colors";
 import {
   glyph,
-  spacing,
   typography,
   type TextVariant,
 } from "@hjm/design-contracts/foundations";
@@ -24,6 +29,7 @@ import {
   type SurfaceTone as ContractSurfaceTone,
 } from "@hjm/design-contracts/recipes/base";
 import {
+  sectionRecipe,
   stackRecipe,
   textRecipe,
   type StackAlign,
@@ -39,12 +45,15 @@ import {
   isValidElement,
   useEffect,
   useMemo,
+  useState,
+  type Ref,
   type ReactNode,
 } from "react";
 import {
   Text as NativeText,
   View,
   useWindowDimensions,
+  type LayoutChangeEvent,
   type StyleProp,
   type TextProps as NativeTextProps,
   type TextStyle,
@@ -53,7 +62,10 @@ import {
 } from "react-native";
 
 import { useHjmNativeTheme } from "./provider.js";
-import { logicalTextAlign, scalableTextDefaults } from "./internal/styles.js";
+import {
+  logicalTextAlign,
+  resolveNativeTextScaleProps,
+} from "./internal/styles.js";
 
 export type {
   StackAlign,
@@ -64,6 +76,87 @@ export type {
 } from "@hjm/design-contracts/recipes";
 
 export type TextTone = ContractTextTone;
+
+type LayoutRegionProps = Omit<ViewProps, "children">;
+
+type LayoutSidebarBase = Readonly<{
+  children: ReactNode;
+  role: LayoutSidebarRole;
+  label: string;
+  containerProps?: LayoutRegionProps;
+}>;
+
+export type LayoutSidebar =
+  | (LayoutSidebarBase & Readonly<{ mode: "persistent"; renderOverlay?: never }>)
+  | (LayoutSidebarBase & Readonly<{
+      mode: "overlay";
+      renderOverlay(sidebar: ReactNode): ReactNode;
+    }>);
+
+export type LayoutProps = Omit<ViewProps, "children"> & Readonly<{
+  children: ReactNode;
+  header?: ReactNode;
+  footer?: ReactNode;
+  sidebar?: LayoutSidebar;
+  /** @deprecated Native has no bypass-link equivalent; omit this Web-only copy. */
+  skipLinkLabel?: string;
+  headerProps?: LayoutRegionProps;
+  mainProps?: LayoutRegionProps;
+  footerProps?: LayoutRegionProps;
+  mainRef?: Ref<View>;
+}>;
+
+/** Native shell translation: ordered regions without inventing Web landmark roles. */
+export const Layout = forwardRef<View, LayoutProps>(function Layout({
+  children,
+  header,
+  footer,
+  sidebar,
+  skipLinkLabel,
+  headerProps,
+  mainProps,
+  footerProps,
+  mainRef,
+  style,
+  ...props
+}, ref) {
+  const hasHeader = header !== undefined && header !== null && header !== false;
+  const hasFooter = footer !== undefined && footer !== null && footer !== false;
+  validateLayoutRegions({
+    ...(hasHeader ? { hasHeader: true } : {}),
+    ...(hasFooter ? { hasFooter: true } : {}),
+    ...(sidebar === undefined
+      ? {}
+      : {
+          sidebar: {
+            role: sidebar.role,
+            mode: sidebar.mode,
+            label: sidebar.label,
+          } satisfies LayoutSidebarDescriptor,
+        }),
+    ...(skipLinkLabel === undefined ? {} : { skipLinkLabel }),
+  });
+  const sidebarNode = sidebar === undefined
+    ? null
+    : (
+        <View
+          {...sidebar.containerProps}
+          accessibilityLabel={sidebar.label}
+        >
+          {sidebar.children}
+        </View>
+      );
+  return (
+    <View {...props} ref={ref} style={[{ flex: 1 }, style]}>
+      {hasHeader ? <View {...headerProps}>{header}</View> : null}
+      {sidebar?.mode === "overlay" ? sidebar.renderOverlay(sidebarNode) : sidebarNode}
+      <View {...mainProps} ref={mainRef} style={[{ flex: 1 }, mainProps?.style]}>
+        {children}
+      </View>
+      {hasFooter ? <View {...footerProps}>{footer}</View> : null}
+    </View>
+  );
+});
 
 export type TextProps = Omit<NativeTextProps, "children"> &
   Readonly<{
@@ -81,12 +174,13 @@ export const Text = forwardRef<NativeText, TextProps>(function Text(
     tone = textRecipe.defaults.tone,
     emphasis = textRecipe.defaults.emphasis,
     align,
+    allowFontScaling,
     style,
     ...props
   },
   ref,
 ) {
-  const { colors, environment } = useHjmNativeTheme();
+  const { colors, environment, textScaling } = useHjmNativeTheme();
   const toneColors: Readonly<Record<TextTone, string>> = {
     primary: colors.text,
     body: colors.textBody,
@@ -97,21 +191,25 @@ export const Text = forwardRef<NativeText, TextProps>(function Text(
     brand: colors.contentBrand,
     inverse: colors.onPrimary,
   };
-  const typeStyle = typography[variant];
+  const resolvedText = resolveNativeTextScaleProps(
+    textScaling,
+    [
+      typography[variant],
+      {
+        color: toneColors[tone],
+        fontWeight: textRecipe.emphasis[emphasis],
+        textAlign: align ?? logicalTextAlign(environment.direction),
+      },
+      style,
+    ],
+    allowFontScaling,
+  );
   return (
     <NativeText
-      {...scalableTextDefaults}
       {...props}
+      allowFontScaling={resolvedText.allowFontScaling}
       ref={ref}
-      style={[
-        typeStyle,
-        {
-          color: toneColors[tone],
-          fontWeight: textRecipe.emphasis[emphasis],
-          textAlign: align ?? logicalTextAlign(environment.direction),
-        },
-        style,
-      ]}
+      style={resolvedText.style}
     >
       {children}
     </NativeText>
@@ -265,7 +363,7 @@ export type GridProps = Omit<ViewProps, "children"> &
   (GridCanonicalDescriptorProps | GridLegacyDescriptorProps) &
   Readonly<{
     children?: ReactNode;
-    /** Inner width after page padding. Defaults to the full Native window width. */
+    /** Inner width after page padding. When omitted, the rendered container is measured. */
     availableWidth?: number;
     onLayoutResolved?: (layout: ResolvedGridLayout) => void;
     itemStyle?: StyleProp<ViewStyle>;
@@ -281,11 +379,13 @@ export function Grid({
   onLayoutResolved,
   itemStyle,
   style,
+  onLayout,
   ...props
 }: GridProps) {
   const { width: windowWidth } = useWindowDimensions();
   const { environment } = useHjmNativeTheme();
-  const innerWidth = availableWidth ?? windowWidth;
+  const [measuredWidth, setMeasuredWidth] = useState<number | null>(null);
+  const innerWidth = availableWidth ?? measuredWidth ?? windowWidth;
   const resolvedDescriptor = useMemo<GridDescriptor>(
     () =>
       descriptor ?? {
@@ -299,6 +399,15 @@ export function Grid({
     () => resolveGridLayout(resolvedDescriptor, { windowWidth, availableWidth: innerWidth }),
     [innerWidth, resolvedDescriptor, windowWidth],
   );
+
+  const handleLayout = (event: LayoutChangeEvent) => {
+    onLayout?.(event);
+    if (availableWidth !== undefined) return;
+    const nextWidth = event.nativeEvent.layout.width;
+    if (Number.isFinite(nextWidth) && nextWidth > 0) {
+      setMeasuredWidth((current) => current === nextWidth ? current : nextWidth);
+    }
+  };
 
   useEffect(
     () => onLayoutResolved?.(layout),
@@ -316,6 +425,7 @@ export function Grid({
   return (
     <View
       {...props}
+      onLayout={handleLayout}
       style={[
         {
           direction: environment.direction,
@@ -409,10 +519,15 @@ export function Icon<Name extends string = string>({
 
 export type SectionProps = Omit<ViewProps, "children"> &
   Readonly<{
-    title: string;
+    title?: string;
     description?: string;
     action?: ReactNode;
     children: ReactNode;
+    headerStyle?: StyleProp<ViewStyle>;
+    copyStyle?: StyleProp<ViewStyle>;
+    titleStyle?: StyleProp<TextStyle>;
+    descriptionStyle?: StyleProp<TextStyle>;
+    actionStyle?: StyleProp<ViewStyle>;
     contentStyle?: StyleProp<ViewStyle>;
   }>;
 
@@ -422,28 +537,64 @@ export function Section({
   description,
   action,
   children,
+  headerStyle,
+  copyStyle,
+  titleStyle,
+  descriptionStyle,
+  actionStyle,
   contentStyle,
   style,
   ...props
 }: SectionProps) {
-  const { environment } = useHjmNativeTheme();
-  const stackHeader = environment.textScale >= 1.6;
+  const theme = useHjmNativeTheme();
+  const stackHeader = theme.environment.textScale >= 1.6;
+  const hasHeader = title !== undefined || description !== undefined || action !== undefined;
   return (
-    <View {...props} style={[{ gap: spacing.xs }, style]}>
-      <View
-        style={{
-          alignItems: stackHeader ? "stretch" : "center",
-          direction: environment.direction,
-          flexDirection: stackHeader ? "column" : "row",
-          gap: spacing.sm,
-        }}
+    <View {...props} style={[{ gap: sectionRecipe.gap }, style]}>
+      {hasHeader ? <View
+        style={[
+          {
+            alignItems: stackHeader ? "stretch" : "center",
+            direction: theme.environment.direction,
+            flexDirection: stackHeader ? "column" : "row",
+            gap: sectionRecipe.headerGap,
+          },
+          headerStyle,
+        ]}
       >
-        <View style={{ flex: 1, gap: spacing.xxs }}>
-          <Text accessibilityRole="header" tone="primary" variant="title">{title}</Text>
-          {description ? <Text tone="muted" variant="caption">{description}</Text> : null}
+        <View style={[{ flex: 1, gap: sectionRecipe.copyGap }, copyStyle]}>
+          {title === undefined ? null : <Text
+            accessibilityRole="header"
+            style={[
+              {
+                color: resolveColorReference(sectionRecipe.title.color, theme.palette),
+                fontWeight: sectionRecipe.title.fontWeight,
+              },
+              titleStyle,
+            ]}
+            variant={sectionRecipe.title.textVariant}
+          >
+            {title}
+          </Text>}
+          {description ? (
+            <Text
+              style={[
+                {
+                  color: resolveColorReference(
+                    sectionRecipe.description.color,
+                    theme.palette,
+                  ),
+                },
+                descriptionStyle,
+              ]}
+              variant={sectionRecipe.description.textVariant}
+            >
+              {description}
+            </Text>
+          ) : null}
         </View>
-        {action ? <View>{action}</View> : null}
-      </View>
+        {action ? <View style={actionStyle}>{action}</View> : null}
+      </View> : null}
       <View style={contentStyle}>{children}</View>
     </View>
   );

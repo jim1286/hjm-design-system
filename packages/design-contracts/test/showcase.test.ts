@@ -45,7 +45,7 @@ describe("showcase contract", () => {
     );
     expect(manifest.find(({ component }) => component.name === "Select")?.surfaceMaturity).toEqual({
       web: "beta",
-      native: "planned",
+      native: "beta",
     });
   });
 
@@ -67,8 +67,8 @@ describe("showcase contract", () => {
     const select = componentCatalog.find(({ name }) => name === "Select")!;
     const form = componentCatalog.find(({ name }) => name === "Form")!;
 
-    expect(getRequiredShowcaseSurfaces(select)).toEqual(["contract", "web"]);
-    expect(getRequiredShowcaseScenarios(select)).not.toContain("platform-parity");
+    expect(getRequiredShowcaseSurfaces(select)).toEqual(["contract", "web", "native"]);
+    expect(getRequiredShowcaseScenarios(select)).toContain("platform-parity");
     expect(getRequiredShowcaseSurfaces(form)).toEqual(["contract"]);
     expect(getRequiredShowcaseScenarios(form)).toEqual(["contract"]);
   });

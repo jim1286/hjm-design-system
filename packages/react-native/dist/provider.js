@@ -1,12 +1,17 @@
 import { jsx as _jsx } from "react/jsx-runtime";
-import { resolveDesignSystemProviderValue, } from "@hjm/design-contracts/components/design-system-provider";
+import { resolveDesignSystemProviderValue, validateDesignSystemProviderValue, } from "@hjm/design-contracts/components/design-system-provider";
 import { spacing, radius, typography } from "@hjm/design-contracts/foundations";
 import { createContext, useContext, useEffect, useMemo, useState, } from "react";
 import { AccessibilityInfo, I18nManager, useColorScheme, useWindowDimensions, } from "react-native";
 const HjmNativeThemeContext = createContext(null);
-function useSystemReducedMotion() {
-    const [reducedMotion, setReducedMotion] = useState(false);
+function useSystemReducedMotion(observe) {
+    // AccessibilityInfo resolves asynchronously. Treat the unknown first frame
+    // as reduced motion so a surface never starts an animation before the OS
+    // preference is known; an explicit Provider value still wins immediately.
+    const [reducedMotion, setReducedMotion] = useState(true);
     useEffect(() => {
+        if (!observe)
+            return undefined;
         let active = true;
         void AccessibilityInfo.isReduceMotionEnabled().then((enabled) => {
             if (active)
@@ -17,7 +22,7 @@ function useSystemReducedMotion() {
             active = false;
             subscription.remove();
         };
-    }, []);
+    }, [observe]);
     return reducedMotion;
 }
 function toEnvironmentInput(props) {
@@ -28,10 +33,10 @@ function toEnvironmentInput(props) {
         ...(props.reducedMotion === undefined ? {} : { reducedMotion: props.reducedMotion }),
     };
 }
-export function HjmNativeProvider({ children, theme, direction, textScale, reducedMotion, }) {
+export function HjmNativeProvider({ children, theme, direction, textScale, reducedMotion, value: suppliedValue, }) {
     const parent = useContext(HjmNativeThemeContext);
     const colorScheme = useColorScheme();
-    const systemReducedMotion = useSystemReducedMotion();
+    const systemReducedMotion = useSystemReducedMotion(suppliedValue === undefined && reducedMotion === undefined && parent === null);
     const { fontScale: systemTextScale } = useWindowDimensions();
     const environment = useMemo(() => toEnvironmentInput({
         ...(theme === undefined ? {} : { theme }),
@@ -39,21 +44,29 @@ export function HjmNativeProvider({ children, theme, direction, textScale, reduc
         ...(textScale === undefined ? {} : { textScale }),
         ...(reducedMotion === undefined ? {} : { reducedMotion }),
     }), [direction, reducedMotion, textScale, theme]);
-    const value = useMemo(() => {
-        const resolved = resolveDesignSystemProviderValue(environment, {
+    const contextValue = useMemo(() => {
+        const resolved = suppliedValue ?? resolveDesignSystemProviderValue(environment, {
             systemTheme: colorScheme === "dark" ? "dark" : "light",
             systemDirection: I18nManager.isRTL ? "rtl" : "ltr",
             systemTextScale,
             systemReducedMotion,
             ...(parent === null ? {} : { parent: parent.environment }),
         });
+        validateDesignSystemProviderValue(resolved);
+        const textScalingMode = suppliedValue !== undefined || textScale !== undefined
+            ? "controlled"
+            : parent?.textScaling.mode ?? "native";
         return {
             ...resolved,
             colors: resolved.palette.theme,
+            textScaling: {
+                mode: textScalingMode,
+                scale: resolved.environment.textScale,
+            },
             tokens: { spacing, radius, typography },
         };
-    }, [colorScheme, environment, parent, systemReducedMotion, systemTextScale]);
-    return _jsx(HjmNativeThemeContext.Provider, { value: value, children: children });
+    }, [colorScheme, environment, parent, suppliedValue, systemReducedMotion, systemTextScale]);
+    return _jsx(HjmNativeThemeContext.Provider, { value: contextValue, children: children });
 }
 export function useHjmNativeTheme() {
     const value = useContext(HjmNativeThemeContext);

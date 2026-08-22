@@ -4,6 +4,7 @@ import {
   type FieldVariant,
 } from "@hjm/design-contracts/recipes/base";
 import {
+  iconRecipe,
   searchFieldRecipe,
   type SearchFieldSize,
 } from "@hjm/design-contracts/recipes";
@@ -21,7 +22,7 @@ import {
 import { composeRefs, classNames, useControllableState } from "./internal.js";
 
 type FieldCopyProps = Readonly<{
-  label: ReactNode;
+  label?: ReactNode;
   description?: ReactNode;
   error?: ReactNode;
   required?: boolean;
@@ -65,10 +66,12 @@ function FieldFrame({
       data-variant={variant}
       data-shape={shape}
     >
-      <label className="hjm-field__label" htmlFor={controlId}>
-        {label}
-        {required ? <span aria-hidden="true"> *</span> : null}
-      </label>
+      {label !== undefined && label !== null ? (
+        <label className="hjm-field__label" htmlFor={controlId}>
+          {label}
+          {required ? <span aria-hidden="true"> *</span> : null}
+        </label>
+      ) : null}
       {children}
       {description && !error ? (
         <div id={descriptionId} className="hjm-field__description">
@@ -97,6 +100,7 @@ export type FieldProps = Omit<
   "children" | "descriptionId" | "errorId"
 > &
   Readonly<{
+    label: ReactNode;
     children: ReactNode | ((props: FieldControlProps) => ReactNode);
   }>;
 
@@ -161,6 +165,12 @@ function describedBy(
     .join(" ") || undefined;
 }
 
+function requireFieldAccessibleName(label: ReactNode | undefined, ariaLabel: string | undefined) {
+  if ((label === undefined || label === null) && !ariaLabel?.trim()) {
+    throw new TypeError("Field controls require either label or aria-label");
+  }
+}
+
 type SharedInputProps = FieldCopyProps &
   Readonly<{
     variant?: FieldVariant;
@@ -192,12 +202,14 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
       onBlur,
       "aria-describedby": ariaDescribedBy,
       "aria-invalid": ariaInvalid,
+      "aria-label": ariaLabel,
       ...props
     },
     ref,
   ) {
     const ids = useFieldIds(id);
     const [focused, setFocused] = useState(false);
+    requireFieldAccessibleName(label, ariaLabel);
     const handleFocus = (event: FocusEvent<HTMLInputElement>) => {
       setFocused(true);
       onFocus?.(event);
@@ -231,6 +243,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
             required={required}
             disabled={disabled}
             aria-invalid={error ? true : ariaInvalid}
+            aria-label={ariaLabel}
             aria-describedby={describedBy(
               ariaDescribedBy,
               description,
@@ -268,12 +281,14 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
       onBlur,
       "aria-describedby": ariaDescribedBy,
       "aria-invalid": ariaInvalid,
+      "aria-label": ariaLabel,
       ...props
     },
     ref,
   ) {
     const ids = useFieldIds(id);
     const [focused, setFocused] = useState(false);
+    requireFieldAccessibleName(label, ariaLabel);
     return (
       <FieldFrame
         controlId={ids.controlId}
@@ -298,6 +313,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
             required={required}
             disabled={disabled}
             aria-invalid={error ? true : ariaInvalid}
+            aria-label={ariaLabel}
             aria-describedby={describedBy(
               ariaDescribedBy,
               description,
@@ -332,7 +348,21 @@ export type SearchFieldProps = Omit<
     size?: SearchFieldSize;
     /** Localized accessible name for the clear action. */
     clearLabel: string;
+    onClear?: () => void;
+    /** Keeps the input mounted and named while replacing trailing actions with progress. */
+    loading?: boolean;
+    /** Product icon adapter; the renderer owns size and inherited color. */
+    renderSearchIcon?: (props: SearchFieldIconRenderProps) => ReactNode;
+    /** Product icon adapter for the clear action. */
+    renderClearIcon?: (props: SearchFieldIconRenderProps) => ReactNode;
+    /** Optional progress adapter. The default is the canonical CSS spinner. */
+    renderLoadingIndicator?: (props: SearchFieldIconRenderProps) => ReactNode;
   }>;
+
+export type SearchFieldIconRenderProps = Readonly<{
+  color: "currentColor";
+  size: number;
+}>;
 
 export const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(
   function SearchField(
@@ -343,7 +373,16 @@ export const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(
       onChange,
       size = searchFieldRecipe.defaults.size,
       clearLabel,
+      onClear,
+      loading = false,
+      renderSearchIcon,
+      renderClearIcon,
+      renderLoadingIndicator,
+      leading,
       trailing,
+      fieldClassName,
+      disabled,
+      "aria-busy": ariaBusy,
       ...props
     },
     forwardedRef,
@@ -354,6 +393,11 @@ export const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(
       ...(onValueChange === undefined ? {} : { onChange: onValueChange }),
     });
     const inputRef = useRef<HTMLInputElement>(null);
+    const iconAppearance: SearchFieldIconRenderProps = {
+      color: "currentColor",
+      size: iconRecipe.sizes[searchFieldRecipe.sizes[size].glyph],
+    };
+    const canClear = value.length > 0 && !disabled;
     return (
       <TextField
         {...props}
@@ -361,22 +405,35 @@ export const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(
         type="search"
         value={value}
         data-size={size}
+        data-loading={loading || undefined}
+        disabled={disabled}
+        aria-busy={loading || ariaBusy || undefined}
+        fieldClassName={classNames("hjm-search-field", fieldClassName)!}
+        leading={
+          leading ?? (renderSearchIcon ? renderSearchIcon(iconAppearance) : undefined)
+        }
         onChange={(event) => {
           setValue(event.currentTarget.value);
           onChange?.(event);
         }}
         trailing={
-          value.length > 0 ? (
+          loading ? (
+            <span className="hjm-search-field__spinner" aria-hidden="true">
+              {renderLoadingIndicator?.(iconAppearance)}
+            </span>
+          ) : canClear ? (
             <button
               type="button"
               className="hjm-search-field__clear"
               aria-label={clearLabel}
+              onMouseDown={(event) => event.preventDefault()}
               onClick={() => {
                 setValue("");
+                onClear?.();
                 inputRef.current?.focus();
               }}
             >
-              ×
+              {renderClearIcon?.(iconAppearance) ?? "×"}
             </button>
           ) : trailing
         }

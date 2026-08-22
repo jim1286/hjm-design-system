@@ -49,9 +49,10 @@ describe("GitHub Actions runtime contracts", () => {
       checker.indexOf("function parseArguments"),
     );
     expect(targetConfiguration).not.toContain("consumerRef");
-    expect(checker).toContain("async function resolveConsumerTarget");
-    expect(checker).toContain("return { ...target, consumerRef }");
-    expect(checker).toContain("consumerReleaseTargets.map((target) => resolveConsumerTarget");
+    expect(checker).toContain("async function resolveConsumerRepository");
+    expect(checker).toContain("async function resolveConsumerTargets");
+    expect(checker).toContain("return targets.map((target) => ({ ...target, consumerRef }))");
+    expect(checker).toContain("resolveConsumerTargets(client, consumerReleaseTargets)");
     expect(checker).toContain('artifactPrefix: "hjm-consumer-evidence-burntok-"');
     expect(checker).toContain('artifactPrefix: "hjm-consumer-evidence-yajalal-"');
     expect(checker).toContain('run.display_title === expectedTitle');

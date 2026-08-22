@@ -59,6 +59,7 @@ export {
   type AvatarSize,
   type BadgeSize,
   type BadgeTone,
+  type BadgeVariant,
   type BottomNavigationDensity,
   type BottomNavigationDistribution,
   type BottomNavigationPresentation,

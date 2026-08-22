@@ -28,6 +28,14 @@ export type ToastProviderProps = Readonly<{
     timerUpdatePolicy?: ToastTimerUpdatePolicy;
     overflowPolicy?: ToastOverflowPolicy;
     portalContainer?: HTMLElement;
+    /** Captured per publication so already-visible localized copy keeps its language. */
+    locale?: string;
+    /** Extra space above a fixed product dock, in pixels or any CSS length. */
+    bottomOffset?: number | string;
+    /** Optional discoverable keyboard shortcut, for example `F8`. */
+    hotkey?: string;
+    /** Screen-reader help associated with the viewport when `hotkey` is supplied. */
+    hotkeyHelp?: string;
 }>;
-export declare function ToastProvider({ children, label, placement, store, initialToasts, maxVisible, maxQueued, duplicatePolicy, timerUpdatePolicy, overflowPolicy, portalContainer, }: ToastProviderProps): import("react").JSX.Element;
+export declare function ToastProvider({ children, label, placement, store, initialToasts, maxVisible, maxQueued, duplicatePolicy, timerUpdatePolicy, overflowPolicy, portalContainer, locale, bottomOffset, hotkey, hotkeyHelp, }: ToastProviderProps): import("react").JSX.Element;
 //# sourceMappingURL=toast.d.ts.map

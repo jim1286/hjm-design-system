@@ -1,4 +1,4 @@
-import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { buttonRecipe, } from "@hjm/design-contracts/recipes/base";
 import { iconButtonRecipe, linkRecipe, } from "@hjm/design-contracts/recipes";
 import { forwardRef, } from "react";
@@ -27,7 +27,7 @@ export const IconButton = forwardRef(function IconButton({ label, tone = iconBut
     };
     return (_jsx("button", { ...props, ref: ref, type: type, className: classNames("hjm-icon-button", className), "data-tone": tone, "data-size": size, "data-shape": shape, "data-state": loading ? "loading" : unavailable ? "disabled" : "idle", "aria-label": label, "aria-busy": loading || undefined, "aria-disabled": loading || undefined, disabled: disabled, onClick: handleClick, children: loading ? _jsx("span", { className: "hjm-button__spinner", "aria-hidden": "true" }) : children }));
 });
-export const Link = forwardRef(function Link({ tone = linkRecipe.defaults.tone, variant = linkRecipe.defaults.variant, disabled = false, leading, trailing, target, rel, tabIndex, onClick, className, children, ...props }, ref) {
+export const Link = forwardRef(function Link({ tone = linkRecipe.defaults.tone, variant = linkRecipe.defaults.variant, disabled = false, leading, trailing, renderAnchor, target, rel, tabIndex, onClick, className, children, ...props }, ref) {
     const handleClick = (event) => {
         if (disabled) {
             event.preventDefault();
@@ -35,6 +35,20 @@ export const Link = forwardRef(function Link({ tone = linkRecipe.defaults.tone, 
         }
         onClick?.(event);
     };
-    return (_jsxs("a", { ...props, ref: ref, className: classNames("hjm-link", className), "data-tone": tone, "data-variant": variant, "data-state": disabled ? "disabled" : "idle", "aria-disabled": disabled || undefined, tabIndex: disabled ? -1 : tabIndex, target: target, rel: rel ?? (target === "_blank" ? "noreferrer noopener" : undefined), onClick: handleClick, children: [leading, _jsx("span", { children: children }), trailing] }));
+    const anchorProps = {
+        ...props,
+        ref,
+        className: classNames("hjm-link", className),
+        "data-tone": tone,
+        "data-variant": variant,
+        "data-state": disabled ? "disabled" : "idle",
+        "aria-disabled": disabled || undefined,
+        tabIndex: disabled ? -1 : tabIndex,
+        target,
+        rel: rel ?? (target === "_blank" ? "noreferrer noopener" : undefined),
+        onClick: handleClick,
+        children: (_jsxs(_Fragment, { children: [leading, _jsx("span", { children: children }), trailing] })),
+    };
+    return renderAnchor ? renderAnchor(anchorProps) : _jsx("a", { ...anchorProps });
 });
 //# sourceMappingURL=actions.js.map

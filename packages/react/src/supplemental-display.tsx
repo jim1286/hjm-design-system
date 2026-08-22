@@ -5,6 +5,14 @@ import {
   type SemanticIconName,
 } from "@hjm/design-contracts/components/icon";
 import {
+  imageRecipe,
+  resolveImageAspectRatio,
+  resolveImageDescriptor,
+  resolveImageFallbackAccessibilityLabel,
+  type ImageDescriptor,
+  type ImageLoadStatus,
+} from "@hjm/design-contracts/components/image";
+import {
   counterBadgeRecipe,
   formatCounterBadgeCount,
   iconRecipe,
@@ -14,7 +22,14 @@ import {
 } from "@hjm/design-contracts/recipes";
 import {
   forwardRef,
+  useState,
+  type CSSProperties,
   type HTMLAttributes,
+  type ImgHTMLAttributes,
+  type ReactElement,
+  type ReactEventHandler,
+  type ReactNode,
+  type Ref,
   type SVGAttributes,
 } from "react";
 import { classNames } from "./internal.js";
@@ -129,6 +144,187 @@ export const Icon = forwardRef<SVGSVGElement, IconProps>(function Icon(
     >
       <path d={iconPaths[descriptor.name]} />
     </svg>
+  );
+});
+
+type ImageElementProps = Omit<
+  ImgHTMLAttributes<HTMLImageElement>,
+  | "alt"
+  | "aria-hidden"
+  | "aria-label"
+  | "children"
+  | "className"
+  | "height"
+  | "onError"
+  | "onLoad"
+  | "role"
+  | "src"
+  | "style"
+  | "width"
+>;
+
+/** Canonical props handed to a framework adapter such as `next/image`. */
+export type ImageAdapterProps = ImageElementProps &
+  Readonly<{
+    src: string;
+    alt: string;
+    width: number;
+    height: number;
+    className?: string;
+    style: CSSProperties;
+    "aria-hidden"?: true;
+    onLoad: ReactEventHandler<HTMLImageElement>;
+    onError: ReactEventHandler<HTMLImageElement>;
+    ref?: Ref<HTMLImageElement>;
+  }>;
+
+type ImageRootProps = Omit<
+  HTMLAttributes<HTMLSpanElement>,
+  | "aria-hidden"
+  | "aria-label"
+  | "aria-labelledby"
+  | "children"
+  | "onError"
+  | "onLoad"
+  | "role"
+>;
+
+export type ImageProps = ImageRootProps &
+  ImageDescriptor &
+  Readonly<{
+    /** Additional native `<img>` props shared with the framework adapter. */
+    imageProps?: ImageElementProps &
+      Readonly<{ className?: string; style?: CSSProperties }>;
+    /**
+     * Receives the complete accessible image contract. The adapter must pass
+     * these props to its underlying image element so HJM can observe failure.
+     */
+    renderImage?: (props: ImageAdapterProps) => ReactElement;
+    /** Visual content only; HJM keeps the fallback's accessible name. */
+    fallback?: ReactNode;
+    imageRef?: Ref<HTMLImageElement>;
+    onLoad?: ReactEventHandler<HTMLImageElement>;
+    onError?: ReactEventHandler<HTMLImageElement>;
+    onLoadStatusChange?: (status: Extract<ImageLoadStatus, "loaded" | "error">) => void;
+  }>;
+
+type ImageState = Readonly<{
+  src: string;
+  status: Extract<ImageLoadStatus, "loading" | "loaded" | "error">;
+}>;
+
+/** Intrinsic-size image with canonical alt semantics and an accessible fallback. */
+export const Image = forwardRef<HTMLSpanElement, ImageProps>(function Image(
+  {
+    src,
+    width,
+    height,
+    fit,
+    decorative,
+    accessibilityLabel,
+    imageProps,
+    renderImage,
+    fallback,
+    imageRef,
+    onLoad,
+    onError,
+    onLoadStatusChange,
+    className,
+    style,
+    ...props
+  },
+  ref,
+) {
+  const descriptor = resolveImageDescriptor({
+    src,
+    width,
+    height,
+    ...(fit === undefined ? {} : { fit }),
+    ...(decorative === undefined ? {} : { decorative }),
+    ...(accessibilityLabel === undefined ? {} : { accessibilityLabel }),
+  } as ImageDescriptor);
+  const [state, setState] = useState<ImageState>({
+    src: descriptor.src,
+    status: "loading",
+  });
+  const status = state.src === descriptor.src ? state.status : "loading";
+  const {
+    className: imageClassName,
+    style: imageStyle,
+    ...restImageProps
+  } = imageProps ?? {};
+
+  const handleLoad: ReactEventHandler<HTMLImageElement> = (event) => {
+    setState({ src: descriptor.src, status: "loaded" });
+    onLoadStatusChange?.("loaded");
+    onLoad?.(event);
+  };
+  const handleError: ReactEventHandler<HTMLImageElement> = (event) => {
+    setState({ src: descriptor.src, status: "error" });
+    onLoadStatusChange?.("error");
+    onError?.(event);
+  };
+  const adapterProps: ImageAdapterProps = {
+    ...restImageProps,
+    src: descriptor.src,
+    alt: descriptor.decorative ? "" : descriptor.accessibilityLabel,
+    width: descriptor.width,
+    height: descriptor.height,
+    className: classNames("hjm-image__asset", imageClassName) ??
+      "hjm-image__asset",
+    style: { ...imageStyle, objectFit: descriptor.fit },
+    ...(descriptor.decorative ? { "aria-hidden": true } : {}),
+    onLoad: handleLoad,
+    onError: handleError,
+    ...(imageRef === undefined ? {} : { ref: imageRef }),
+  };
+
+  let visual: ReactNode;
+  if (status === "error") {
+    const fallbackLabel = resolveImageFallbackAccessibilityLabel(descriptor);
+    visual = (
+      <span
+        className="hjm-image__fallback"
+        role={descriptor.decorative ? undefined : "img"}
+        aria-label={fallbackLabel}
+        aria-hidden={descriptor.decorative || undefined}
+      >
+        <span className="hjm-image__fallback-icon" aria-hidden="true">
+          {fallback ?? (
+            <Icon
+              name={imageRecipe.fallback.icon.name}
+              tone={imageRecipe.fallback.icon.tone}
+              decorative
+            />
+          )}
+        </span>
+      </span>
+    );
+  } else if (renderImage === undefined) {
+    const { ref: assetRef, ...nativeImageProps } = adapterProps;
+    visual = <img {...nativeImageProps} ref={assetRef} />;
+  } else {
+    visual = renderImage(adapterProps);
+  }
+
+  return (
+    <span
+      {...props}
+      ref={ref}
+      className={classNames("hjm-image", className)}
+      data-fit={descriptor.fit}
+      data-status={status}
+      style={{
+        inlineSize: descriptor.width,
+        ...style,
+        aspectRatio: resolveImageAspectRatio(
+          descriptor.width,
+          descriptor.height,
+        ),
+      }}
+    >
+      {visual}
+    </span>
   );
 });
 

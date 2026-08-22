@@ -24,7 +24,7 @@ import { useControllableState } from "./internal/state.js";
 import {
   logicalTextAlign,
   minimumTargetStyle,
-  scalableTextDefaults,
+  resolveNativeTextScaleProps,
 } from "./internal/styles.js";
 import { useHjmNativeTheme } from "./provider.js";
 
@@ -117,7 +117,7 @@ export const NumberField = forwardRef<TextInput, NumberFieldProps>(
     },
     forwardedRef,
   ) {
-    const { colors, environment, tokens } = useHjmNativeTheme();
+    const { colors, environment, textScaling, tokens } = useHjmNativeTheme();
     const controlled = value !== undefined;
     const [currentValue, setCurrentValue] = useControllableState<NumberFieldValue>({
       ...(value === undefined ? {} : { value }),
@@ -185,19 +185,22 @@ export const NumberField = forwardRef<TextInput, NumberFieldProps>(
             if (event.nativeEvent.actionName === "decrement") stepValue("decrement");
           },
         };
+    const scaledText = (
+      style: StyleProp<TextStyle>,
+      allowFontScaling?: boolean,
+    ) => resolveNativeTextScaleProps(textScaling, style, allowFontScaling);
 
     return (
       <View style={[{ gap: numberFieldRecipe.support.gap }, containerStyle]}>
         <NativeText
-          {...scalableTextDefaults}
-          style={[
+          {...scaledText([
             tokens.typography[numberFieldRecipe.support.label.textVariant],
             {
               color: colors.textBody,
               fontWeight: numberFieldRecipe.support.label.fontWeight,
               textAlign: logicalTextAlign(environment.direction),
             },
-          ]}
+          ])}
         >
           {visibleLabel}
         </NativeText>
@@ -240,17 +243,36 @@ export const NumberField = forwardRef<TextInput, NumberFieldProps>(
             ]}
           >
             <NativeText
-              {...scalableTextDefaults}
+              {...scaledText([
+                tokens.typography.title,
+                { color: colors.textMuted, textAlign: "center" },
+              ])}
               accessible={false}
-              style={[tokens.typography.title, { color: colors.textMuted, textAlign: "center" }]}
             >
               −
             </NativeText>
           </Pressable>
           <TextInput
-            {...scalableTextDefaults}
             {...inputProps}
             {...actionProps}
+            {...scaledText(
+              [
+                {
+                  color: colors.text,
+                  flex: 1,
+                  fontSize: tokens.typography[recipe.textVariant].fontSize,
+                  fontWeight: tokens.typography[recipe.textVariant].fontWeight,
+                  fontVariant: ["tabular-nums"],
+                  lineHeight: tokens.typography[recipe.textVariant].lineHeight,
+                  minHeight: recipe.minHeight,
+                  paddingHorizontal: recipe.paddingHorizontal,
+                  paddingVertical: 0,
+                  textAlign: "center",
+                },
+                inputStyle,
+              ],
+              inputProps.allowFontScaling,
+            )}
             ref={forwardedRef}
             accessibilityHint={hint}
             accessibilityLabel={accessibilityLabel ?? visibleLabel}
@@ -276,21 +298,6 @@ export const NumberField = forwardRef<TextInput, NumberFieldProps>(
               onSubmitEditing?.(event);
             }}
             placeholderTextColor={colors.textWeak}
-            style={[
-              {
-                color: colors.text,
-                flex: 1,
-                fontSize: tokens.typography[recipe.textVariant].fontSize,
-                fontWeight: tokens.typography[recipe.textVariant].fontWeight,
-                fontVariant: ["tabular-nums"],
-                lineHeight: tokens.typography[recipe.textVariant].lineHeight,
-                minHeight: recipe.minHeight,
-                paddingHorizontal: recipe.paddingHorizontal,
-                paddingVertical: 0,
-                textAlign: "center",
-              },
-              inputStyle,
-            ]}
             value={draft}
           />
           <Pressable
@@ -314,9 +321,11 @@ export const NumberField = forwardRef<TextInput, NumberFieldProps>(
             ]}
           >
             <NativeText
-              {...scalableTextDefaults}
+              {...scaledText([
+                tokens.typography.title,
+                { color: colors.textMuted, textAlign: "center" },
+              ])}
               accessible={false}
-              style={[tokens.typography.title, { color: colors.textMuted, textAlign: "center" }]}
             >
               +
             </NativeText>
@@ -324,22 +333,20 @@ export const NumberField = forwardRef<TextInput, NumberFieldProps>(
         </View>
         {error ? (
           <NativeText
-            {...scalableTextDefaults}
-            accessibilityLiveRegion="assertive"
-            style={[
+            {...scaledText([
               tokens.typography.caption,
               { color: colors.danger, textAlign: logicalTextAlign(environment.direction) },
-            ]}
+            ])}
+            accessibilityLiveRegion="assertive"
           >
             {error}
           </NativeText>
         ) : description ? (
           <NativeText
-            {...scalableTextDefaults}
-            style={[
+            {...scaledText([
               tokens.typography.caption,
               { color: colors.textMuted, textAlign: logicalTextAlign(environment.direction) },
-            ]}
+            ])}
           >
             {description}
           </NativeText>

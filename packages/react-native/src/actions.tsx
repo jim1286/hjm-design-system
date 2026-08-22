@@ -6,6 +6,7 @@ import {
   type ButtonTone as ContractButtonTone,
 } from "@hjm/design-contracts/recipes/base";
 import {
+  bottomCtaRecipe,
   iconButtonRecipe,
   resolveIconButtonPresentation,
   type IconButtonShape,
@@ -17,13 +18,15 @@ import {
   type LinkDescriptor,
   type LinkDestination,
 } from "@hjm/design-contracts/components/link";
-import type { ReactNode } from "react";
+import { forwardRef, type ReactNode } from "react";
 import {
   ActivityIndicator,
   Pressable,
   View,
+  type View as NativeView,
   type PressableProps,
   type StyleProp,
+  type TextStyle,
   type ViewStyle,
 } from "react-native";
 
@@ -50,29 +53,50 @@ export type ButtonProps = Omit<
     size?: ButtonSize;
     disabled?: boolean;
     loading?: boolean;
+    /** Keep the busy control discoverable by default; opt in only for legacy disabled semantics. */
+    disableWhileLoading?: boolean;
+    /** Allow the control to grow beyond its recipe height for large or custom content. */
+    growWithContent?: boolean;
+    loadingLabel?: ReactNode;
     leading?: ReactNode;
     trailing?: ReactNode;
+    fullWidth?: boolean;
+    hitSlop?: PressableProps["hitSlop"];
+    accessibilityState?: PressableProps["accessibilityState"];
     style?: StyleProp<ViewStyle>;
+    labelStyle?: StyleProp<TextStyle>;
+    renderLoadingIndicator?: (props: Readonly<{ color: string; size: "small" }>) => ReactNode;
   }>;
 
-export function Button({
+export const Button = forwardRef<NativeView, ButtonProps>(function Button({
   label,
   children,
   tone = buttonRecipe.defaults.tone,
   size = buttonRecipe.defaults.size,
   disabled = false,
   loading = false,
+  disableWhileLoading = false,
+  growWithContent = false,
+  loadingLabel,
   leading,
   trailing,
+  fullWidth = false,
+  hitSlop,
   style,
+  labelStyle,
+  renderLoadingIndicator,
   accessibilityLabel,
+  accessibilityState,
   onPress,
   onLongPress,
   ...props
-}: ButtonProps) {
+}: ButtonProps, ref) {
   const { colors, environment } = useHjmNativeTheme();
   const inactive = disabled || loading;
-  const content = children ?? label;
+  const unavailable = disabled || (loading && disableWhileLoading);
+  const content = loading && loadingLabel !== undefined
+    ? loadingLabel
+    : children ?? label;
   if (content === undefined || content === null || content === false) {
     throw new TypeError("Button requires children (or the deprecated label prop)");
   }
@@ -84,13 +108,14 @@ export function Button({
   return (
     <Pressable
       {...props}
+      ref={ref}
       accessibilityLabel={
         accessibilityLabel ?? (typeof content === "string" ? content : undefined)
       }
       accessibilityRole="button"
-      accessibilityState={{ disabled, busy: loading }}
-      disabled={disabled}
-      hitSlop={sizeContract.hitSlop > 0 ? sizeContract.hitSlop : undefined}
+      accessibilityState={{ ...accessibilityState, disabled: unavailable, busy: loading }}
+      disabled={unavailable}
+      hitSlop={hitSlop ?? (sizeContract.hitSlop > 0 ? sizeContract.hitSlop : undefined)}
       onPress={loading ? () => undefined : onPress}
       onLongPress={loading ? () => undefined : onLongPress}
       style={({ pressed }) => [
@@ -99,11 +124,11 @@ export function Button({
           backgroundColor: resolveColor(toneContract.background),
           borderColor: resolveColor(toneContract.border),
           borderRadius: radius.md,
-          borderWidth: 1,
+          borderWidth: toneContract.border ? 1 : 0,
           direction: environment.direction,
           flexDirection: "row",
           gap: spacing.xs,
-          height: sizeContract.height,
+          ...(growWithContent ? {} : { height: sizeContract.height }),
           justifyContent: "center",
           minHeight: sizeContract.height,
           minWidth: control.minTouchTarget,
@@ -113,23 +138,30 @@ export function Button({
               ? buttonRecipe.opacity.pressed
               : 1,
           paddingHorizontal: sizeContract.paddingHorizontal,
+          ...(fullWidth ? { alignSelf: "stretch" } : {}),
         },
         style,
       ]}
     >
-      {loading ? <ActivityIndicator color={contentColor} size="small" /> : leading}
-      <Text
-        align="center"
-        emphasis="medium"
-        style={{ color: contentColor }}
-        variant={sizeContract.textVariant}
-      >
-        {content}
-      </Text>
+      {loading
+        ? renderLoadingIndicator?.({ color: contentColor, size: "small" }) ?? (
+            <ActivityIndicator color={contentColor} size="small" />
+          )
+        : leading}
+      {typeof content === "string" || typeof content === "number" ? (
+        <Text
+          align="center"
+          emphasis="medium"
+          style={[{ color: contentColor }, labelStyle]}
+          variant={sizeContract.textVariant}
+        >
+          {content}
+        </Text>
+      ) : content}
       {trailing}
     </Pressable>
   );
-}
+});
 
 export type IconButtonTone = ContractIconButtonTone;
 /** @deprecated `link` was never an IconButton recipe tone; use `ghost`. */
@@ -169,10 +201,15 @@ export type IconButtonProps = Omit<
     shape?: IconButtonShape;
     disabled?: boolean;
     loading?: boolean;
+    /** Keep the busy control discoverable by default; opt in only for legacy disabled semantics. */
+    disableWhileLoading?: boolean;
+    hitSlop?: PressableProps["hitSlop"];
+    accessibilityState?: PressableProps["accessibilityState"];
     style?: StyleProp<ViewStyle>;
+    renderLoadingIndicator?: (props: Readonly<{ color: string; size: "small" }>) => ReactNode;
   }>;
 
-export function IconButton({
+export const IconButton = forwardRef<NativeView, IconButtonProps>(function IconButton({
   label,
   accessibilityLabel,
   children,
@@ -182,11 +219,15 @@ export function IconButton({
   shape = iconButtonRecipe.defaults.shape,
   disabled = false,
   loading = false,
+  disableWhileLoading = false,
+  hitSlop,
   style,
+  renderLoadingIndicator,
   onPress,
   onLongPress,
+  accessibilityState,
   ...props
-}: IconButtonProps) {
+}: IconButtonProps, ref) {
   const theme = useHjmNativeTheme();
   const resolvedLabel = label ?? accessibilityLabel;
   const resolvedIcon = children ?? icon;
@@ -200,14 +241,16 @@ export function IconButton({
   const presentation = resolveIconButtonPresentation(resolvedTone, theme.palette);
   const sizeContract = iconButtonRecipe.sizes[size];
   const glyphSize = glyph[sizeContract.glyph];
+  const unavailable = disabled || (loading && disableWhileLoading);
   return (
     <Pressable
       {...props}
+      ref={ref}
       accessibilityLabel={resolvedLabel}
       accessibilityRole="button"
-      accessibilityState={{ disabled, busy: loading }}
-      disabled={disabled}
-      hitSlop={sizeContract.hitSlop > 0 ? sizeContract.hitSlop : undefined}
+      accessibilityState={{ ...accessibilityState, disabled: unavailable, busy: loading }}
+      disabled={unavailable}
+      hitSlop={hitSlop ?? (sizeContract.hitSlop > 0 ? sizeContract.hitSlop : undefined)}
       onPress={loading ? () => undefined : onPress}
       onLongPress={loading ? () => undefined : onLongPress}
       style={({ pressed }) => [
@@ -234,7 +277,9 @@ export function IconButton({
       ]}
     >
       {loading ? (
-        <ActivityIndicator color={presentation.content} size="small" />
+        renderLoadingIndicator?.({ color: presentation.content, size: "small" }) ?? (
+          <ActivityIndicator color={presentation.content} size="small" />
+        )
       ) : (
         <View
           accessible={false}
@@ -250,7 +295,7 @@ export function IconButton({
       )}
     </Pressable>
   );
-}
+});
 
 export type LinkProps = Omit<
   PressableProps,
@@ -312,15 +357,19 @@ export function Link({
 export type BottomCTAAction = Readonly<{
   label: string;
   onPress: NonNullable<PressableProps["onPress"]>;
+  accessibilityLabel?: string;
   accessibilityHint?: string;
   disabled?: boolean;
   loading?: boolean;
+  loadingLabel?: ReactNode;
+  size?: ButtonSize;
   tone?: ButtonTone;
 }>;
 
 export type BottomCTAProps = Readonly<{
   primaryAction: BottomCTAAction;
-  secondaryAction?: BottomCTAAction;
+  /** A second HJM action descriptor or an arbitrary product-owned action node. */
+  secondaryAction?: BottomCTAAction | ReactNode;
   description?: string;
   accessibilityLabel?: string;
   safeAreaBottom?: number;
@@ -333,15 +382,28 @@ function BottomCTAButton({
 }: Readonly<{ action: BottomCTAAction; fallbackTone: ButtonTone }>) {
   return (
     <Button
+      {...(action.accessibilityLabel === undefined ? {} : { accessibilityLabel: action.accessibilityLabel })}
       {...(action.accessibilityHint === undefined ? {} : { accessibilityHint: action.accessibilityHint })}
       {...(action.disabled === undefined ? {} : { disabled: action.disabled })}
       {...(action.loading === undefined ? {} : { loading: action.loading })}
+      {...(action.loadingLabel === undefined ? {} : { loadingLabel: action.loadingLabel })}
+      fullWidth
       onPress={action.onPress}
+      {...(action.size === undefined ? {} : { size: action.size })}
       tone={action.tone ?? fallbackTone}
     >
       {action.label}
     </Button>
   );
+}
+
+function isBottomCTAAction(value: BottomCTAAction | ReactNode): value is BottomCTAAction {
+  return typeof value === "object"
+    && value !== null
+    && "label" in value
+    && typeof value.label === "string"
+    && "onPress" in value
+    && typeof value.onPress === "function";
 }
 
 /** Native sticky-action content; products own its screen-edge positioning. */
@@ -358,6 +420,11 @@ export function BottomCTA({
   }
   const { colors, environment } = useHjmNativeTheme();
   const stackActions = environment.textScale >= 1.6;
+  const renderedSecondary = secondaryAction === undefined || secondaryAction === null
+    ? null
+    : isBottomCTAAction(secondaryAction)
+      ? <BottomCTAButton action={secondaryAction} fallbackTone="secondary" />
+      : secondaryAction;
   return (
     <View
       accessibilityLabel={accessibilityLabel}
@@ -366,17 +433,17 @@ export function BottomCTA({
         {
           backgroundColor: colors.surface,
           borderColor: colors.border,
-          borderTopWidth: 1,
-          elevation: 8,
-          gap: spacing.sm,
-          minHeight: 64,
-          paddingBottom: spacing.sm + safeAreaBottom,
-          paddingHorizontal: spacing.lg,
-          paddingTop: spacing.sm,
-          shadowColor: "#000000",
-          shadowOffset: { width: 0, height: -2 },
-          shadowOpacity: 0.08,
-          shadowRadius: 8,
+          borderTopWidth: bottomCtaRecipe.borderWidth,
+          elevation: bottomCtaRecipe.shadow.elevation,
+          gap: bottomCtaRecipe.gap,
+          minHeight: bottomCtaRecipe.minHeight + safeAreaBottom,
+          paddingBottom: Math.max(safeAreaBottom, bottomCtaRecipe.paddingBottom),
+          paddingHorizontal: bottomCtaRecipe.paddingHorizontal,
+          paddingTop: bottomCtaRecipe.paddingTop,
+          shadowColor: bottomCtaRecipe.shadow.color,
+          shadowOffset: { width: 0, height: bottomCtaRecipe.shadow.offsetY },
+          shadowOpacity: bottomCtaRecipe.shadow.opacity,
+          shadowRadius: bottomCtaRecipe.shadow.radius,
         },
         style,
       ]}
@@ -386,12 +453,12 @@ export function BottomCTA({
         style={{
           direction: environment.direction,
           flexDirection: stackActions ? "column-reverse" : "row",
-          gap: spacing.sm,
+          gap: bottomCtaRecipe.gap,
         }}
       >
-        {secondaryAction ? (
+        {renderedSecondary !== null ? (
           <View style={{ flex: stackActions ? undefined : 1 }}>
-            <BottomCTAButton action={secondaryAction} fallbackTone="secondary" />
+            {renderedSecondary}
           </View>
         ) : null}
         <View style={{ flex: stackActions ? undefined : 1 }}>

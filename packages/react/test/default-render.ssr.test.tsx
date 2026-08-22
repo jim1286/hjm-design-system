@@ -5,11 +5,13 @@ import { describe, expect, it } from "vitest";
 import {
   AlertDialog,
   Badge,
+  BottomNavigation,
   Button,
   Card,
   Checkbox,
   CheckboxGroup,
   CounterBadge,
+  DescriptionList,
   Dialog,
   EmptyState,
   Field,
@@ -17,11 +19,14 @@ import {
   HjmProvider,
   Icon,
   IconButton,
+  Image,
+  Layout,
   ListRow,
   LoadMore,
   Menu,
   Radio,
   RadioGroup,
+  Result,
   SearchField,
   SegmentedControl,
   Select,
@@ -34,6 +39,7 @@ import {
   Text,
   TextArea,
   TextField,
+  Timeline,
   Toast,
   Tooltip,
 } from "../src/index.js";
@@ -95,6 +101,11 @@ const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
         <span>Second</span>
       </Grid>
     ),
+  },
+  {
+    componentId: "layout",
+    marker: "hjm-layout",
+    render: () => <Layout>Primary content</Layout>,
   },
   {
     componentId: "button",
@@ -172,6 +183,24 @@ const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
     ),
   },
   {
+    componentId: "bottom-navigation",
+    marker: "hjm-bottom-navigation",
+    render: () => (
+      <BottomNavigation
+        descriptor={{
+          accessibilityLabel: "Primary navigation",
+          items: [
+            { id: "home", label: "Home", icon: { name: "home" } },
+            { id: "profile", label: "Profile", icon: { name: "user" } },
+          ],
+          selectedKey: "home",
+        }}
+        getHref={({ id }) => `/${id}`}
+        renderIcon={({ name }) => <span>{name}</span>}
+      />
+    ),
+  },
+  {
     componentId: "load-more",
     marker: "hjm-load-more",
     render: () => (
@@ -207,9 +236,38 @@ const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
     render: () => <Tag>Tag</Tag>,
   },
   {
+    componentId: "timeline",
+    marker: "hjm-timeline",
+    render: () => (
+      <Timeline
+        composeAccessibleName={({ position, total, label }) =>
+          `${position} of ${total}: ${label}`
+        }
+        items={[{ id: "created", label: "Created" }]}
+      />
+    ),
+  },
+  {
+    componentId: "description-list",
+    marker: "hjm-description-list",
+    render: () => (
+      <DescriptionList items={[{ id: "status", label: "Status", value: "Ready" }]} />
+    ),
+  },
+  {
+    componentId: "image",
+    marker: "hjm-image",
+    render: () => <Image src="/default-image.png" width={160} height={90} />,
+  },
+  {
     componentId: "empty-state",
     marker: "hjm-empty-state",
     render: () => <EmptyState title="Empty state" />,
+  },
+  {
+    componentId: "result",
+    marker: "hjm-result",
+    render: () => <Result status="success" title="Saved" />,
   },
   {
     componentId: "toast",

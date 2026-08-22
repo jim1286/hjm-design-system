@@ -66,14 +66,19 @@ Dialog·Sheet가 이미 소유한 문제입니다. 이 조합을 Image 자체에
 `resizeMode`는 `fill`에 해당하는 이름이 없어 `stretch`로 번역합니다 — `nativeResizeModes`가
 그 한 곳의 이름 차이를 소유하므로 제품이 각자 매핑표를 만들지 않습니다.
 
-## 검증 화면
+## 현재 검증과 남은 증거
 
-아직 없음. 이전 판정이 후보로 든 "야잘알 선수 프로필 사진과 FA 등급 차트 이미지"는
-재확인 결과 존재하지 않는다 — 두 자산 모두 코드베이스 어디에도 없다. 가장 가까운
-실사용은 `TeamMark.tsx`의 팀 엠블럼(`emblemUrl`을 RN `Image`로 그리되 실패 시 이니셜로
-폴백)이지만, 이건 작은 원형 배지에 이니셜 폴백이 붙은 **Avatar 성격의 조합**이라 Image가
-계약하는 "네트워크 로드 실패·404 자산의 fallback과 접근성 이름 유지"라는 문제와는 결이
-다르다. BurnTok Web(`apps/web/src/app/me/page.tsx`)의 아이콘도 확인했지만 data URI SVG라
-네트워크 로드 실패 케이스 자체가 성립하지 않는다. `planned → beta` 승격은 실제 네트워크
-이미지 자산을 쓰는 화면이 나오고 로드 실패·접근성 이름 유지가 실기기로 검증된 뒤 리드가
-진행한다.
+first-party Web/RN renderer가 추가되어 contract와 두 surface를 `beta`로 승격했다. Web은
+intrinsic ratio 예약, 장식/정보 이미지의 alt 의미, load/error 상태, fallback 접근성 이름
+유지와 `next/image` 같은 framework adapter 경계를 SSR·browser test로 검증한다. Native도
+같은 `src`/`width`/`height` descriptor를 직접 resolve해 intrinsic ratio를 예약하고,
+`nativeResizeModes`로 fit을 번역하며, 장식 기본값·정보 이미지의 fallback 이름 유지·built-in
+fallback·`src` 변경 후 재시도를 component test로 검증한다. `sourceAdapter`와 `renderImage`
+경계로 bare RN의 `ImageSourcePropType` 및 `expo-image` 같은 optimized host를 연결할 수 있다.
+이전 RN `source` API는 마이그레이션 호환용 deprecated 경계일 뿐 intrinsic-size 계약의
+증거로 세지 않는다.
+
+이전 후보였던 야잘알 팀 엠블럼은 여전히 Avatar 성격이므로 Image의 제품 증거로 세지 않고,
+BurnTok의 data URI 아이콘도 network failure 증거로 세지 않는다. 실제 network asset의
+404/재시도와 VoiceOver·TalkBack 접근성 이름 유지 증거는 stable 승격 전까지 명시적인
+debt로 남는다.

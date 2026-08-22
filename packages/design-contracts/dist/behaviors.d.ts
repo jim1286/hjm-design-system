@@ -863,7 +863,7 @@ export declare const behaviorRegistry: {
             readonly states: readonly [];
             readonly actions: readonly [];
         };
-        readonly scenarios: readonly ["exactly-one-main-landmark-exists-per-layout", "skip-link-is-required-whenever-a-header-or-sidebar-precedes-main", "sidebar-role-navigation-or-complementary-is-chosen-independent-of-persistent-or-overlay-mode", "overlay-sidebar-reuses-sidepanel-open-state-and-dismiss-policy-unchanged", "header-and-footer-content-is-not-owned-here-compose-topbar-and-bottomnavigation", "skip-link-is-visually-hidden-until-keyboard-focus-reaches-it", "native-has-no-landmark-role-equivalent-translation-relies-on-order-and-accessibilityviewismodal"];
+        readonly scenarios: readonly ["exactly-one-main-landmark-exists-per-layout", "web-skip-link-is-required-whenever-a-header-or-sidebar-precedes-main", "sidebar-role-navigation-or-complementary-is-chosen-independent-of-persistent-or-overlay-mode", "overlay-sidebar-reuses-sidepanel-open-state-and-dismiss-policy-unchanged", "header-and-footer-content-is-not-owned-here-compose-topbar-and-bottomnavigation", "skip-link-is-visually-hidden-until-keyboard-focus-reaches-it", "native-has-no-landmark-role-equivalent-translation-relies-on-order-and-accessibilityviewismodal"];
     };
     readonly otpField: {
         readonly controlled: readonly ["value", "defaultValue", "onValueChange"];

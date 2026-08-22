@@ -6,11 +6,14 @@ export {
 
 export {
   Grid,
+  Layout,
   Stack,
   Surface,
   Text,
   type GridGap,
   type GridProps,
+  type LayoutProps,
+  type LayoutSidebar,
   type StackAlign,
   type StackAxis,
   type StackGap,
@@ -36,6 +39,7 @@ export {
   type IconButtonShape,
   type IconButtonSize,
   type IconButtonTone,
+  type LinkRenderProps,
   type LinkProps,
 } from "./actions.js";
 
@@ -47,6 +51,7 @@ export {
   type FieldControlProps,
   type FieldProps,
   type SearchFieldProps,
+  type SearchFieldIconRenderProps,
   type TextAreaProps,
   type TextFieldProps,
 } from "./forms.js";
@@ -67,6 +72,8 @@ export {
 export {
   Select,
   type SelectItem,
+  type SelectLeadingRenderProps,
+  type SelectOptionLeadingRenderProps,
   type SelectProps,
   type SelectSection,
 } from "./select.js";
@@ -91,6 +98,7 @@ export {
   type CheckboxProps,
   type CheckboxGroupItem,
   type CheckboxGroupProps,
+  type ChoiceLeadingRenderProps,
   type RadioProps,
   type RadioGroupItem,
   type RadioGroupProps,
@@ -99,7 +107,17 @@ export {
   type SwitchProps,
 } from "./selection.js";
 
-export { Tabs, type TabItem, type TabsProps } from "./navigation.js";
+export {
+  TabPanel,
+  Tabs,
+  getDynamicTabPanelId,
+  getTabId,
+  getTabPanelId,
+  type TabLeadingRenderProps,
+  type TabItem,
+  type TabPanelProps,
+  type TabsProps,
+} from "./navigation.js";
 
 export {
   Breadcrumb,
@@ -114,11 +132,22 @@ export {
 } from "./supplemental-navigation.js";
 
 export {
+  BottomNavigation,
+  getBottomNavigationGridColumn,
+  isUnmodifiedPrimaryBottomNavigationClick,
+  shouldHideBottomNavigationForKeyboard,
+  type BottomNavigationIconRenderProps,
+  type BottomNavigationLinkRenderProps,
+  type BottomNavigationProps,
+} from "./bottom-navigation.js";
+
+export {
   Badge,
   Card,
   ListRow,
   Tag,
   type BadgeProps,
+  type BadgeVariant,
   type CardHeadingLevel,
   type CardProps,
   type ListRowProps,
@@ -129,8 +158,11 @@ export {
 export {
   CounterBadge,
   Icon,
+  Image,
   type CounterBadgeProps,
   type IconProps,
+  type ImageAdapterProps,
+  type ImageProps,
 } from "./supplemental-display.js";
 
 export {
@@ -139,6 +171,7 @@ export {
   DescriptionList,
   Divider,
   Table,
+  Timeline,
   type AccordionItem,
   type AccordionProps,
   type AvatarProps,
@@ -149,17 +182,20 @@ export {
   type TableColumn,
   type TableProps,
   type TableSortDirection,
+  type TimelineProps,
 } from "./advanced-display.js";
 
 export {
   EmptyState,
   Notice,
   Progress,
+  Result,
   Skeleton,
   Spinner,
   type EmptyStateProps,
   type NoticeProps,
   type ProgressProps,
+  type ResultProps,
   type SkeletonProps,
   type SpinnerProps,
 } from "./feedback.js";

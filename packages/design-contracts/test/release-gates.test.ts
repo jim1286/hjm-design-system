@@ -112,7 +112,7 @@ describe("generated Changesets version PR gate", () => {
 describe("private consumer release evidence gate", () => {
   const workspaceRoot = fileURLToPath(new URL("../../../", import.meta.url));
 
-  it("accepts exact inventory evidence and rejects mismatched, missing, unexpected, and duplicate data", () => {
+  it("accepts the exact repository-surface matrix and rejects mismatched, missing, unexpected, and duplicate data", () => {
     const output = execFileSync(
       process.execPath,
       ["scripts/check-consumer-release.mjs", "--self-test"],
@@ -124,6 +124,7 @@ describe("private consumer release evidence gate", () => {
     expect(output).toContain(
       "including dynamic revision resolution, binding, wrong-head, and inventory rejection",
     );
+    expect(output).toContain("burntok-web, burntok-native, and yajalal-native");
   });
 
   it("fails closed when the canonical consumer dispatch token is absent", async () => {

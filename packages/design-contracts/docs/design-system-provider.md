@@ -52,6 +52,10 @@ antd `ConfigProvider`는 테마·방향(RTL)·글자 배율·locale 같은 전�
 - `resolveDesignSystemProviderValue()`는 이 환경과 `THEMES`, `ACCENTS`, `accentFill`을 묶어
   `{ environment, palette }`를 반환한다. renderer는 `palette`를
   `resolveColorReference()`에 그대로 전달한다.
+- `validateDesignSystemProviderValue()`는 renderer에 직접 주입되는 완전한 제품 palette도
+  같은 런타임 경계에서 검사한다. 모든 semantic theme/accent role과 alpha 합성 가능한
+  6자리 hex 값이 필요하며, 일부 token만 덮는 partial override는 허용하지 않는다. 제품
+  palette의 대비 fixture와 승인 책임은 그 완전한 palette를 제공하는 제품 adapter가 가진다.
 - `validateDesignSystemEnvironmentInput()`은 선택형 input을 검사하고,
   `validateResolvedDesignSystemEnvironment()`는 parent 전용 invariant를 검사한다. 후자는
   `theme: "system"`, 누락된 축, 잘못된 direction, 0 이하/non-finite textScale, boolean이
@@ -106,10 +110,10 @@ adapter가 자체 병합 로직을 다시 만들 필요가 없다. `parent`에�
 | `size`(antd ConfigProvider의 컴포넌트 전역 사이즈 프리셋) | **배제** — 측정된 요구가
   없고, 있다 해도 그건 각 recipe의 `sizes`(예: `selectRecipe.sizes`)가 이미 컴포넌트별로
   갖고 있는 축이라 전역 오버라이드를 얹으면 두 곳이 같은 축을 다시 소유하게 된다. |
-| 임의 theme/component token override | **배제** — HJM light/dark는 대비 테스트를 함께
-  통과하는 고정 계약이다. 검증되지 않은 `Partial<ThemeColors>`를 Provider에 허용하면
-  semantic reference는 유지돼도 WCAG 보장은 사라진다. 별도 브랜드 제품 요구와 전체
-  대비 fixture가 생길 때 완전한 theme definition 단위로 연다. |
+| 임의 theme/component token override | **partial override는 배제** — HJM light/dark는 대비
+  테스트를 함께 통과하는 고정 계약이다. 별도 브랜드 제품은 모든 semantic role을 가진
+  완전한 `DesignSystemProviderValue`만 renderer의 `value` 경계로 주입하며, 런타임 shape 검사와
+  제품별 전체 대비 fixture를 함께 둔다. |
 
 ## 제품 adapter 증거
 

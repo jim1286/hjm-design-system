@@ -104,7 +104,7 @@
     "check": "pnpm typecheck && pnpm test && pnpm bundle:check"
   },
   "peerDependencies": {
-    "@hjm/design-contracts": ">=0.6.0 <0.7.0",
+    "@hjm/design-contracts": ">=0.7.0 <0.8.0",
     "react": ">=19",
     "react-native": ">=0.81"
   },

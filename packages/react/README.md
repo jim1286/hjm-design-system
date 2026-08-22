@@ -26,36 +26,50 @@ export function Example() {
 `HjmProvider` emits light/dark palette variables, logical direction, text
 scale, and reduced-motion state at one DOM boundary. Importing the JavaScript
 does not mutate global CSS; consumers opt into the stylesheet subpath.
+Products with a reviewed full semantic palette can pass a resolved
+`DesignSystemProviderValue` through the mutually exclusive `value` prop; the
+same runtime validation as Native rejects partial or malformed token overrides.
+
+`Badge` exposes the shared `filled | outline` recipe axis on both Web and Native. `filled` remains
+the default for backward compatibility; `outline` preserves each semantic tone while replacing the
+plate with the recipe border treatment.
 
 ## Public surface
 
 - `provider`: `HjmProvider`, `useHjmTheme`
-- `layout`: `Text`, `Surface`, `Stack`, responsive `Grid`
+- `layout`: `Text`, `Surface`, `Stack`, responsive `Grid`, adaptive app-shell `Layout`
 - `actions`: `Button`, `IconButton`, `Link`
 - `forms`: `Field`, `TextField`, `TextArea`, `SearchField`, custom accessible
   `Select`, opt-in `NativeSelect`, editable `Combobox`, exact `NumberField`,
   approximate `Slider`, async-safe `Form`
 - `selection`: `Checkbox`, `Radio`, `CheckboxGroup`, `RadioGroup`, `Switch`,
   `SegmentedControl`
-- `navigation`: `Tabs`, `Breadcrumb`, `Pagination`, `LoadMore`
+- `navigation`: `Tabs`, `BottomNavigation`, `Breadcrumb`, `Pagination`, `LoadMore`
 - `display`: `Badge`, `Tag`, `Card`, `ListRow`, `Accordion`, `Avatar`,
-  `Divider`, responsive `DescriptionList`, native `Table`, `Icon`, `CounterBadge`
-- `feedback`: `Notice`, `EmptyState`, `Progress`, `Spinner`, `Skeleton`
+  `Divider`, responsive `DescriptionList`, native `Table`, `Timeline`, intrinsic-size `Image`,
+  `Icon`, `CounterBadge`
+- `feedback`: `Notice`, `EmptyState`, `Result`, `Progress`, `Spinner`, `Skeleton`
 - `toast`: controlled `Toast`, queued `ToastProvider`/`useToast`
 - `overlays`: `Dialog`, `AlertDialog`, `Sheet`, `Tooltip`, `Menu`
 
-The root entry exports the complete renderer. Domain entry points keep feature
-imports explicit and let bundlers avoid unrelated code:
+The root entry exports the complete renderer. Public domain entry points are the supported
+granularity boundary: they keep feature imports explicit and are verified not to traverse the
+renderer root barrel:
 
 ```tsx
 import { Combobox, Form, Select } from "@hjm/react/forms";
 import { NumberField } from "@hjm/react/number-field";
 import { Slider } from "@hjm/react/slider";
-import { Accordion, Table } from "@hjm/react/display";
-import { Breadcrumb, Pagination, Tabs } from "@hjm/react/navigation";
+import { Accordion, Image, Table, Timeline } from "@hjm/react/display";
+import { BottomNavigation, Breadcrumb, Pagination, Tabs } from "@hjm/react/navigation";
 import { Dialog, Menu, Sheet } from "@hjm/react/overlays";
 import { ToastProvider, useToast } from "@hjm/react/toast";
 ```
+
+`pnpm bundle:renderer:check` measures every executable domain graph and the stylesheet against an
+explicit reviewed budget. This guarantees family-level entry isolation; it does not promise a
+separate file or component-level tree-shaking result for every named export. Final application
+chunks still depend on the consumer bundler and its configuration.
 
 Stateful components accept `value`/`checked` plus a change callback for
 controlled use, or `defaultValue`/`defaultChecked` for uncontrolled use. Native
@@ -66,10 +80,16 @@ replacement for browser semantics.
 Modal overlays are SSR-safe: their trigger renders on the server and portal
 content mounts in the browser. They enter and trap focus, restore it on close,
 lock body scrolling, and inherit provider theme, direction, text scale, and
-reduced-motion variables across the portal boundary. `AlertDialog` applies the
-shared least-destructive-focus and async-error contracts. `Menu`, `Combobox`,
-`Accordion`, and `Tabs` implement their documented Arrow/Home/End/Escape
-keyboard behavior; `Tooltip` only adds `aria-describedby` while visible.
+reduced-motion variables across the portal boundary. Controlled `Dialog`,
+`AlertDialog`, and `Sheet` instances may omit `trigger` when a product owns
+`open` and `onOpenChange`; uncontrolled instances still require a trigger.
+While a modal is open, siblings outside the topmost modal's ancestor path are
+made `inert` and `aria-hidden`. This isolation follows late-added portals,
+stacks across nested modals, and restores each element's previous values as the
+stack unwinds. `AlertDialog` applies the shared least-destructive-focus and
+async-error contracts. `Menu`, `Combobox`, `Accordion`, and `Tabs` implement
+their documented Arrow/Home/End/Escape keyboard behavior; `Tooltip` only adds
+`aria-describedby` while visible.
 
 Canonical `Select` implements the shared select-only combobox contract with a
 button trigger, listbox popup, active-descendant focus, async collection states,

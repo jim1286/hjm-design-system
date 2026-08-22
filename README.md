@@ -13,8 +13,10 @@ renderer를 한 이력과 한 release train에서 관리하는 pnpm monorepo입�
 ## Why one repository
 
 Contracts와 두 renderer는 같은 API 변화에 함께 반응해야 합니다. 한 PR에서 계약, Web,
-Native, Storybook, evidence를 원자적으로 변경하고 CI에서 함께 검증합니다. 패키지는 각각
-granular export를 유지하므로 저장소를 합쳐도 앱 bundle graph가 합쳐지지는 않습니다.
+Native, Storybook, evidence를 원자적으로 변경하고 CI에서 함께 검증합니다. Renderer는
+검증된 family-level granular export를 유지하므로 저장소를 합쳐도 앱 bundle graph가
+합쳐지지는 않습니다. 이 경계는 root barrel 비경유와 family별 source-graph budget을
+보증하며, named component별 별도 chunk나 tree-shaking 결과까지 보증하지는 않습니다.
 루트 `@hjm/design-system-workspace`는 배포하지 않는 `0.0.0` orchestrator입니다. release와
 Git tag의 버전 source of truth는 fixed train의 `packages/design-contracts/package.json`입니다.
 

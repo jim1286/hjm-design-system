@@ -1,5 +1,6 @@
 import {
   resolveDesignSystemProviderValue,
+  validateDesignSystemProviderValue,
   type DesignSystemDirection,
   type DesignSystemEnvironmentInput,
   type DesignSystemProviderValue,
@@ -22,9 +23,17 @@ import {
   useWindowDimensions,
 } from "react-native";
 
+import type { NativeTextScaling } from "./internal/styles.js";
+
 export type HjmNativeTheme = DesignSystemProviderValue &
   Readonly<{
     colors: DesignSystemProviderValue["palette"]["theme"];
+    /**
+     * Native lets the OS scale text automatically. A product-supplied scale,
+     * however, must be applied by HJM exactly once instead of being multiplied
+     * by the OS a second time.
+     */
+    textScaling: NativeTextScaling;
     tokens: Readonly<{
       spacing: typeof spacing;
       radius: typeof radius;
@@ -32,20 +41,37 @@ export type HjmNativeTheme = DesignSystemProviderValue &
     }>;
   }>;
 
-export type HjmNativeProviderProps = Readonly<{
-  children: ReactNode;
+type HjmNativeProviderEnvironmentProps = Readonly<{
+  value?: never;
   theme?: ThemePreference;
   direction?: DesignSystemDirection;
   textScale?: DesignSystemTextScale;
   reducedMotion?: boolean;
 }>;
 
+type HjmNativeProviderValueProps = Readonly<{
+  /** Pre-resolved environment and product palette for first-party renderer adaptation. */
+  value: DesignSystemProviderValue;
+  theme?: never;
+  direction?: never;
+  textScale?: never;
+  reducedMotion?: never;
+}>;
+
+export type HjmNativeProviderProps = Readonly<{
+  children: ReactNode;
+}> & (HjmNativeProviderEnvironmentProps | HjmNativeProviderValueProps);
+
 const HjmNativeThemeContext = createContext<HjmNativeTheme | null>(null);
 
-function useSystemReducedMotion(): boolean {
-  const [reducedMotion, setReducedMotion] = useState(false);
+function useSystemReducedMotion(observe: boolean): boolean {
+  // AccessibilityInfo resolves asynchronously. Treat the unknown first frame
+  // as reduced motion so a surface never starts an animation before the OS
+  // preference is known; an explicit Provider value still wins immediately.
+  const [reducedMotion, setReducedMotion] = useState(true);
 
   useEffect(() => {
+    if (!observe) return undefined;
     let active = true;
     void AccessibilityInfo.isReduceMotionEnabled().then((enabled) => {
       if (active) setReducedMotion(enabled);
@@ -58,13 +84,13 @@ function useSystemReducedMotion(): boolean {
       active = false;
       subscription.remove();
     };
-  }, []);
+  }, [observe]);
 
   return reducedMotion;
 }
 
 function toEnvironmentInput(
-  props: Omit<HjmNativeProviderProps, "children">,
+  props: HjmNativeProviderEnvironmentProps,
 ): DesignSystemEnvironmentInput {
   return {
     ...(props.theme === undefined ? {} : { theme: props.theme }),
@@ -80,10 +106,13 @@ export function HjmNativeProvider({
   direction,
   textScale,
   reducedMotion,
+  value: suppliedValue,
 }: HjmNativeProviderProps) {
   const parent = useContext(HjmNativeThemeContext);
   const colorScheme = useColorScheme();
-  const systemReducedMotion = useSystemReducedMotion();
+  const systemReducedMotion = useSystemReducedMotion(
+    suppliedValue === undefined && reducedMotion === undefined && parent === null,
+  );
   const { fontScale: systemTextScale } = useWindowDimensions();
   const environment = useMemo(
     () =>
@@ -96,8 +125,8 @@ export function HjmNativeProvider({
     [direction, reducedMotion, textScale, theme],
   );
 
-  const value = useMemo<HjmNativeTheme>(() => {
-    const resolved = resolveDesignSystemProviderValue(
+  const contextValue = useMemo<HjmNativeTheme>(() => {
+    const resolved = suppliedValue ?? resolveDesignSystemProviderValue(
       environment,
       {
         systemTheme: colorScheme === "dark" ? "dark" : "light",
@@ -107,14 +136,22 @@ export function HjmNativeProvider({
         ...(parent === null ? {} : { parent: parent.environment }),
       },
     );
+    validateDesignSystemProviderValue(resolved);
+    const textScalingMode = suppliedValue !== undefined || textScale !== undefined
+      ? "controlled"
+      : parent?.textScaling.mode ?? "native";
     return {
       ...resolved,
       colors: resolved.palette.theme,
+      textScaling: {
+        mode: textScalingMode,
+        scale: resolved.environment.textScale,
+      },
       tokens: { spacing, radius, typography },
     };
-  }, [colorScheme, environment, parent, systemReducedMotion, systemTextScale]);
+  }, [colorScheme, environment, parent, suppliedValue, systemReducedMotion, systemTextScale]);
 
-  return <HjmNativeThemeContext.Provider value={value}>{children}</HjmNativeThemeContext.Provider>;
+  return <HjmNativeThemeContext.Provider value={contextValue}>{children}</HjmNativeThemeContext.Provider>;
 }
 
 export function useHjmNativeTheme(): HjmNativeTheme {

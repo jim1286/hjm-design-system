@@ -59,6 +59,60 @@ function getFocusable(container) {
 let bodyLockCount = 0;
 let previousBodyOverflow = "";
 const activeModalStack = [];
+const isolatedModalBackground = new Map();
+let modalIsolationObserver = null;
+function restoreModalBackground() {
+    for (const [element, previous] of isolatedModalBackground) {
+        element.inert = previous.inert;
+        if (previous.ariaHidden === null)
+            element.removeAttribute("aria-hidden");
+        else
+            element.setAttribute("aria-hidden", previous.ariaHidden);
+    }
+    isolatedModalBackground.clear();
+}
+function isolateModalBackgroundElement(element) {
+    if (isolatedModalBackground.has(element))
+        return;
+    isolatedModalBackground.set(element, {
+        ariaHidden: element.getAttribute("aria-hidden"),
+        inert: element.inert,
+    });
+    element.inert = true;
+    element.setAttribute("aria-hidden", "true");
+}
+/** Keeps only the top modal's ancestor path interactive, including late portals. */
+function synchronizeModalBackgroundIsolation() {
+    restoreModalBackground();
+    while (activeModalStack.length > 0 && !activeModalStack.at(-1)?.isConnected) {
+        activeModalStack.pop();
+    }
+    const top = activeModalStack.at(-1);
+    if (!top) {
+        modalIsolationObserver?.disconnect();
+        modalIsolationObserver = null;
+        return;
+    }
+    let pathNode = top;
+    let parent = pathNode.parentElement;
+    while (parent) {
+        for (const sibling of parent.children) {
+            if (sibling !== pathNode && sibling instanceof HTMLElement) {
+                isolateModalBackgroundElement(sibling);
+            }
+        }
+        if (parent === document.body)
+            break;
+        pathNode = parent;
+        parent = pathNode.parentElement;
+    }
+    if (modalIsolationObserver === null) {
+        modalIsolationObserver = new MutationObserver(() => {
+            synchronizeModalBackgroundIsolation();
+        });
+        modalIsolationObserver.observe(document.body, { childList: true, subtree: true });
+    }
+}
 function lockBodyScroll() {
     if (bodyLockCount === 0) {
         previousBodyOverflow = document.body.style.overflow;
@@ -91,6 +145,7 @@ function useModalFocus({ active, contentRef, initialFocusRef, returnFocusRef, fa
                 : null;
             const releaseScroll = lockBodyScroll();
             activeModalStack.push(content);
+            synchronizeModalBackgroundIsolation();
             const initial = initialFocusRef?.current ?? getFocusable(content)[0] ?? content;
             initial.focus();
             const handleKeyDown = (event) => {
@@ -136,6 +191,7 @@ function useModalFocus({ active, contentRef, initialFocusRef, returnFocusRef, fa
                 const stackIndex = activeModalStack.lastIndexOf(content);
                 if (stackIndex >= 0)
                     activeModalStack.splice(stackIndex, 1);
+                synchronizeModalBackgroundIsolation();
                 releaseScroll();
                 const returnTarget = returnFocusRef?.current ?? fallbackReturnRef?.current ?? previouslyFocused;
                 queueMicrotask(() => returnTarget?.focus());
@@ -189,12 +245,10 @@ export const Dialog = forwardRef(function Dialog({ trigger, title, description, 
         contentRef,
         ...(initialFocusRef === undefined ? {} : { initialFocusRef }),
         ...(returnFocusRef === undefined ? {} : { returnFocusRef }),
-        fallbackReturnRef: triggerRef,
+        ...(trigger === undefined ? {} : { fallbackReturnRef: triggerRef }),
         onEscape: () => requestClose("escape"),
     });
-    return (_jsxs(_Fragment, { children: [renderTrigger(trigger, triggerRef, open, contentId, "dialog", () => {
-                changeOpen(true, { reason: "trigger" });
-            }), open ? (_jsx(Portal, { ...(portalContainer === undefined ? {} : { container: portalContainer }), children: _jsx("div", { className: "hjm-overlay", "data-kind": "dialog", "data-state": "open", onMouseDown: (event) => {
+    return (_jsxs(_Fragment, { children: [trigger === undefined ? null : renderTrigger(trigger, triggerRef, open, contentId, "dialog", () => changeOpen(true, { reason: "trigger" })), open ? (_jsx(Portal, { ...(portalContainer === undefined ? {} : { container: portalContainer }), children: _jsx("div", { className: "hjm-overlay", "data-kind": "dialog", "data-state": "open", onMouseDown: (event) => {
                         if (event.target === event.currentTarget)
                             requestClose("outside");
                     }, children: _jsxs("div", { ref: mergedContentRef, id: contentId, role: "dialog", "aria-modal": "true", "aria-labelledby": titleId, "aria-describedby": description ? descriptionId : undefined, "aria-busy": busy || undefined, tabIndex: -1, className: classNames("hjm-dialog", className), "data-size": size, "data-state": busy ? "busy" : "idle", children: [_jsxs("header", { className: "hjm-dialog__header", children: [_jsx("h2", { id: titleId, className: "hjm-dialog__title", children: title }), dismissible ? (_jsx("button", { type: "button", className: "hjm-dialog__close", "aria-label": closeLabel, disabled: busy, onClick: () => requestClose("close-action"), children: "\u00D7" })) : null] }), description ? _jsx("p", { id: descriptionId, className: "hjm-dialog__description", children: description }) : null, children ? _jsx("div", { className: "hjm-dialog__body", children: children }) : null, footer ? _jsx("footer", { className: "hjm-dialog__footer", children: footer }) : null] }) }) })) : null] }));
@@ -246,7 +300,7 @@ export const AlertDialog = forwardRef(function AlertDialog({ trigger, request, i
         contentRef,
         initialFocusRef,
         ...(returnFocusRef === undefined ? {} : { returnFocusRef }),
-        fallbackReturnRef: triggerRef,
+        ...(trigger === undefined ? {} : { fallbackReturnRef: triggerRef }),
         onEscape: () => cancel("escape"),
     });
     const confirm = async () => {
@@ -276,7 +330,7 @@ export const AlertDialog = forwardRef(function AlertDialog({ trigger, request, i
         sessionRef.current?.interrupt();
     }, []);
     const tone = request.tone ?? "attention";
-    return (_jsxs(_Fragment, { children: [renderTrigger(trigger, triggerRef, open, contentId, "dialog", () => {
+    return (_jsxs(_Fragment, { children: [trigger === undefined ? null : renderTrigger(trigger, triggerRef, open, contentId, "dialog", () => {
                 startSession();
                 changeOpen(true, { reason: "trigger" });
             }), open ? (_jsx(Portal, { ...(portalContainer === undefined ? {} : { container: portalContainer }), children: _jsx("div", { className: "hjm-overlay", "data-kind": "alert-dialog", "data-state": "open", children: _jsxs("div", { ref: composeRefs(contentRef, forwardedRef), id: contentId, role: "alertdialog", "aria-modal": "true", "aria-labelledby": titleId, "aria-describedby": `${descriptionId}${error ? ` ${errorId}` : ""}`, "aria-busy": busy || undefined, tabIndex: -1, className: classNames("hjm-alert-dialog", className), "data-tone": tone, "data-state": busy ? "busy" : error ? "error" : "idle", children: [icon ? _jsx("div", { className: "hjm-alert-dialog__icon", "aria-hidden": "true", children: icon }) : null, _jsx("h2", { id: titleId, className: "hjm-alert-dialog__title", children: request.title }), _jsx("p", { id: descriptionId, className: "hjm-alert-dialog__description", children: request.description }), error ? _jsx("p", { id: errorId, className: "hjm-alert-dialog__error", role: "alert", children: error }) : null, _jsxs("div", { className: "hjm-alert-dialog__actions", children: [request.mode === "confirm" ? (_jsx(Button, { ref: cancelRef, tone: "secondary", disabled: busy || closing, onClick: () => cancel("cancel-action"), children: request.cancelLabel })) : null, _jsx(Button, { ref: confirmRef, tone: tone === "danger" ? "danger" : "primary", loading: busy, disabled: closing, onClick: () => void confirm(), children: request.confirmLabel })] })] }) }) })) : null] }));
@@ -314,12 +368,10 @@ export const Sheet = forwardRef(function Sheet({ trigger, title, description, ch
         contentRef,
         ...(initialFocusRef === undefined ? {} : { initialFocusRef }),
         ...(returnFocusRef === undefined ? {} : { returnFocusRef }),
-        fallbackReturnRef: triggerRef,
+        ...(trigger === undefined ? {} : { fallbackReturnRef: triggerRef }),
         onEscape: () => requestClose("escape"),
     });
-    return (_jsxs(_Fragment, { children: [renderTrigger(trigger, triggerRef, open, contentId, "dialog", () => {
-                changeOpen(true, { reason: "trigger" });
-            }), open ? (_jsx(Portal, { ...(portalContainer === undefined ? {} : { container: portalContainer }), children: _jsx("div", { className: "hjm-overlay hjm-sheet-positioner", "data-kind": "sheet", "data-placement": placement, "data-state": "open", onMouseDown: (event) => {
+    return (_jsxs(_Fragment, { children: [trigger === undefined ? null : renderTrigger(trigger, triggerRef, open, contentId, "dialog", () => changeOpen(true, { reason: "trigger" })), open ? (_jsx(Portal, { ...(portalContainer === undefined ? {} : { container: portalContainer }), children: _jsx("div", { className: "hjm-overlay hjm-sheet-positioner", "data-kind": "sheet", "data-placement": placement, "data-state": "open", onMouseDown: (event) => {
                         if (event.target === event.currentTarget)
                             requestClose("outside");
                     }, children: _jsxs("div", { ref: composeRefs(contentRef, forwardedRef), id: contentId, role: "dialog", "aria-modal": "true", "aria-labelledby": titleId, "aria-describedby": description ? descriptionId : undefined, "aria-busy": busy || undefined, tabIndex: -1, className: classNames("hjm-sheet", className), "data-placement": placement, "data-state": busy ? "busy" : "idle", children: [_jsxs("header", { className: "hjm-sheet__header", children: [_jsxs("div", { children: [_jsx("h2", { id: titleId, className: "hjm-sheet__title", children: title }), description ? _jsx("p", { id: descriptionId, className: "hjm-sheet__description", children: description }) : null] }), policy.dismissible ? (_jsx("button", { type: "button", className: "hjm-dialog__close", "aria-label": closeLabel, disabled: busy && !policy.dismissWhileBusy, onClick: () => requestClose("close-action"), children: "\u00D7" })) : null] }), children ? _jsx("div", { className: "hjm-sheet__body", children: children }) : null, footer ? _jsx("footer", { className: "hjm-sheet__footer", children: footer }) : null] }) }) })) : null] }));

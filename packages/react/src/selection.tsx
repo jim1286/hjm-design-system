@@ -1,7 +1,11 @@
 import {
+  iconRecipe,
   segmentedControlRecipe,
+  selectionControlRecipe,
   selectionGroupRecipe,
   type SegmentedControlSize,
+  type SelectionControlPresentation,
+  type SelectionControlSize,
   type SelectionGroupOrientation,
   type SelectionGroupPresentation,
 } from "@hjm/design-contracts/recipes";
@@ -31,9 +35,15 @@ import {
 } from "react";
 import { classNames, composeRefs, useControllableState } from "./internal.js";
 
+export type ChoiceLeadingRenderProps = Readonly<{
+  selected: boolean;
+  color: "currentColor";
+  size: number;
+}>;
+
 export type CheckboxProps = Omit<
   InputHTMLAttributes<HTMLInputElement>,
-  "type" | "checked" | "defaultChecked" | "onChange" | "children"
+  "type" | "checked" | "defaultChecked" | "onChange" | "children" | "size"
 > &
   Readonly<{
     label: ReactNode;
@@ -43,6 +53,9 @@ export type CheckboxProps = Omit<
     indeterminate?: boolean;
     onCheckedChange?: (checked: boolean) => void;
     onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+    presentation?: SelectionControlPresentation;
+    size?: SelectionControlSize;
+    renderLeading?: (appearance: ChoiceLeadingRenderProps) => ReactNode;
   }>;
 
 export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
@@ -56,7 +69,12 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
       onCheckedChange,
       onChange,
       disabled,
+      readOnly = false,
+      presentation = selectionControlRecipe.defaults.presentation,
+      size = selectionControlRecipe.defaults.size,
+      renderLeading,
       className,
+      onClick,
       ...props
     },
     forwardedRef,
@@ -70,6 +88,8 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
     useEffect(() => {
       if (inputRef.current) inputRef.current.indeterminate = indeterminate;
     }, [indeterminate]);
+    const selected = checked || indeterminate;
+    const leadingSize = iconRecipe.sizes[selectionControlRecipe.leading.size];
 
     return (
       <label
@@ -77,6 +97,9 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
         data-kind="checkbox"
         data-state={indeterminate ? "mixed" : checked ? "checked" : "unchecked"}
         data-disabled={disabled || undefined}
+        data-readonly={readOnly || undefined}
+        data-presentation={presentation}
+        data-size={size}
       >
         <input
           {...props}
@@ -85,13 +108,27 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
           type="checkbox"
           checked={checked}
           disabled={disabled}
+          aria-readonly={readOnly || undefined}
           aria-checked={indeterminate ? "mixed" : checked}
+          onClick={(event) => {
+            onClick?.(event);
+            if (readOnly) event.preventDefault();
+          }}
           onChange={(event) => {
-            setChecked(event.currentTarget.checked);
+            if (!readOnly) setChecked(event.currentTarget.checked);
             onChange?.(event);
           }}
         />
         <span className="hjm-choice__indicator" aria-hidden="true" />
+        {renderLeading ? (
+          <span className="hjm-choice__leading" aria-hidden="true">
+            {renderLeading({
+              selected,
+              color: "currentColor",
+              size: leadingSize,
+            })}
+          </span>
+        ) : null}
         <span className="hjm-choice__copy">
           <span>{label}</span>
           {description ? <span className="hjm-choice__description">{description}</span> : null}
@@ -115,13 +152,16 @@ type RadioState =
 
 export type RadioProps = Omit<
   InputHTMLAttributes<HTMLInputElement>,
-  "type" | "checked" | "defaultChecked" | "onChange" | "children"
+  "type" | "checked" | "defaultChecked" | "onChange" | "children" | "size"
 > &
   RadioState &
   Readonly<{
     label: ReactNode;
     description?: ReactNode;
     onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+    presentation?: SelectionControlPresentation;
+    size?: SelectionControlSize;
+    renderLeading?: (appearance: ChoiceLeadingRenderProps) => ReactNode;
   }>;
 
 /** Native radio item primitive. Use RadioGroup when the renderer owns group state. */
@@ -134,7 +174,12 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(function Radio(
     onCheckedChange,
     onChange,
     disabled,
+    readOnly = false,
+    presentation = selectionControlRecipe.defaults.presentation,
+    size = selectionControlRecipe.defaults.size,
+    renderLeading,
     className,
+    onClick,
     ...props
   },
   ref,
@@ -152,6 +197,9 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(function Radio(
       data-kind="radio"
       data-state={checked ? "checked" : "unchecked"}
       data-disabled={disabled || undefined}
+      data-readonly={readOnly || undefined}
+      data-presentation={presentation}
+      data-size={size}
     >
       <input
         {...props}
@@ -160,12 +208,26 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(function Radio(
         type="radio"
         checked={checked}
         disabled={disabled}
+        aria-readonly={readOnly || undefined}
+        onClick={(event) => {
+          onClick?.(event);
+          if (readOnly) event.preventDefault();
+        }}
         onChange={(event) => {
-          if (event.currentTarget.checked) setChecked(true);
+          if (!readOnly && event.currentTarget.checked) setChecked(true);
           onChange?.(event);
         }}
       />
       <span className="hjm-choice__indicator" aria-hidden="true" />
+      {renderLeading ? (
+        <span className="hjm-choice__leading" aria-hidden="true">
+          {renderLeading({
+            selected: checked,
+            color: "currentColor",
+            size: iconRecipe.sizes[selectionControlRecipe.leading.size],
+          })}
+        </span>
+      ) : null}
       <span className="hjm-choice__copy">
         <span>{label}</span>
         {description ? <span className="hjm-choice__description">{description}</span> : null}
@@ -189,7 +251,14 @@ type CheckboxGroupBaseProps<Key extends string> = Omit<
     error?: ReactNode;
     orientation?: SelectionGroupOrientation;
     presentation?: SelectionGroupPresentation;
+    size?: SelectionControlSize;
     name?: string;
+    required?: boolean;
+    readOnly?: boolean;
+    renderLeading?: (
+      item: CheckboxGroupItem<Key>,
+      appearance: ChoiceLeadingRenderProps,
+    ) => ReactNode;
   }>;
 
 export type CheckboxGroupProps<Key extends string = string> =
@@ -204,7 +273,11 @@ function CheckboxGroupInner<Key extends string>(
     error,
     orientation = selectionGroupRecipe.defaults.orientation,
     presentation = selectionGroupRecipe.defaults.presentation,
+    size = selectionControlRecipe.defaults.size,
     name,
+    required = false,
+    readOnly = false,
+    renderLeading,
     value: valueProp,
     defaultValue,
     onValueChange,
@@ -242,10 +315,13 @@ function CheckboxGroupInner<Key extends string>(
       className={classNames("hjm-checkbox-group", className)}
       data-orientation={orientation}
       data-presentation={presentation}
+      data-size={size}
       data-state={error ? "invalid" : disabled ? "disabled" : "idle"}
       disabled={disabled}
       aria-label={accessibilityLabel}
       aria-describedby={error ? errorId : description ? descriptionId : undefined}
+      aria-required={required || undefined}
+      aria-readonly={readOnly || undefined}
     >
       <legend className={label === undefined ? "hjm-visually-hidden" : undefined}>
         {label ?? resolvedLabel}
@@ -263,6 +339,9 @@ function CheckboxGroupInner<Key extends string>(
               data-kind="checkbox"
               data-state={checked ? "checked" : "unchecked"}
               data-disabled={item.disabled || undefined}
+              data-readonly={readOnly || undefined}
+              data-presentation={presentation}
+              data-size={size}
             >
               <input
                 className="hjm-choice__input"
@@ -271,9 +350,24 @@ function CheckboxGroupInner<Key extends string>(
                 value={item.id}
                 checked={checked}
                 disabled={item.disabled}
-                onChange={() => setValue(toggleCheckboxSelection(items, reconciledValue, item.id))}
+                aria-readonly={readOnly || undefined}
+                onChange={() => {
+                  if (!readOnly) {
+                    setValue(toggleCheckboxSelection(items, reconciledValue, item.id));
+                  }
+                }}
+                onClick={readOnly ? (event) => event.preventDefault() : undefined}
               />
               <span className="hjm-choice__indicator" aria-hidden="true" />
+              {renderLeading ? (
+                <span className="hjm-choice__leading" aria-hidden="true">
+                  {renderLeading(item, {
+                    selected: checked,
+                    color: "currentColor",
+                    size: iconRecipe.sizes[selectionControlRecipe.leading.size],
+                  })}
+                </span>
+              ) : null}
               <span className="hjm-choice__copy">
                 <span>{item.label}</span>
                 {item.description ? (
@@ -300,23 +394,32 @@ export type RadioGroupItem = Readonly<{
   disabled?: boolean;
 }>;
 
+type RadioGroupLabelProps =
+  | Readonly<{ label: ReactNode; accessibilityLabel?: string }>
+  | Readonly<{ label?: never; accessibilityLabel: string }>;
+
 export type RadioGroupProps = Omit<
   FieldsetHTMLAttributes<HTMLFieldSetElement>,
   "defaultValue" | "onChange" | "value"
 > &
+  RadioGroupLabelProps &
   Readonly<{
-    label: ReactNode;
-    accessibilityLabel?: string;
     items: readonly RadioGroupItem[];
     value?: string | null;
     defaultValue?: string | null;
     onValueChange?: (value: string) => void;
     orientation?: SelectionGroupOrientation;
+    presentation?: SelectionGroupPresentation;
+    size?: SelectionControlSize;
     description?: ReactNode;
     error?: ReactNode;
     name?: string;
     required?: boolean;
     readOnly?: boolean;
+    renderLeading?: (
+      item: RadioGroupItem,
+      appearance: ChoiceLeadingRenderProps,
+    ) => ReactNode;
   }>;
 
 function validateItems(
@@ -348,11 +451,14 @@ export const RadioGroup = forwardRef<HTMLFieldSetElement, RadioGroupProps>(
       defaultValue = null,
       onValueChange,
       orientation = selectionGroupRecipe.defaults.orientation,
+      presentation = selectionGroupRecipe.defaults.presentation,
+      size = selectionControlRecipe.defaults.size,
       description,
       error,
       name,
       required = false,
       readOnly = false,
+      renderLeading,
       disabled,
       className,
       ...props
@@ -364,6 +470,9 @@ export const RadioGroup = forwardRef<HTMLFieldSetElement, RadioGroupProps>(
       accessibilityLabel !== undefined &&
       accessibilityLabel.trim().length === 0
     ) throw new TypeError("RadioGroup accessibilityLabel must not be empty");
+    const resolvedLabel = label === undefined || label === null
+      ? resolveControlAccessibleName(undefined, accessibilityLabel, "RadioGroup")
+      : label;
     const descriptors = items.map((item) => ({
       id: item.value,
       label: typeof item.label === "string" ? item.label : item.value,
@@ -406,13 +515,17 @@ export const RadioGroup = forwardRef<HTMLFieldSetElement, RadioGroupProps>(
         ref={ref}
         className={classNames("hjm-radio-group", className)}
         data-orientation={orientation}
+        data-presentation={presentation}
+        data-size={size}
         data-state={error ? "invalid" : disabled ? "disabled" : "idle"}
         disabled={disabled}
         aria-label={accessibilityLabel}
         aria-describedby={error ? errorId : description ? descriptionId : undefined}
         aria-readonly={readOnly || undefined}
       >
-        <legend>{label}</legend>
+        <legend className={label == null ? "hjm-visually-hidden" : undefined}>
+          {resolvedLabel}
+        </legend>
         {description && !error ? <div id={descriptionId} className="hjm-field__description">{description}</div> : null}
         <div className="hjm-radio-group__items">
           {items.map((item) => {
@@ -424,6 +537,9 @@ export const RadioGroup = forwardRef<HTMLFieldSetElement, RadioGroupProps>(
                 data-kind="radio"
                 data-state={selected ? "checked" : "unchecked"}
                 data-disabled={item.disabled || undefined}
+                data-readonly={readOnly || undefined}
+                data-presentation={presentation}
+                data-size={size}
               >
                 <input
                   className="hjm-choice__input"
@@ -440,6 +556,15 @@ export const RadioGroup = forwardRef<HTMLFieldSetElement, RadioGroupProps>(
                   }}
                 />
                 <span className="hjm-choice__indicator" aria-hidden="true" />
+                {renderLeading ? (
+                  <span className="hjm-choice__leading" aria-hidden="true">
+                    {renderLeading(item, {
+                      selected,
+                      color: "currentColor",
+                      size: iconRecipe.sizes[selectionControlRecipe.leading.size],
+                    })}
+                  </span>
+                ) : null}
                 <span className="hjm-choice__copy">
                   <span>{item.label}</span>
                   {item.description ? (

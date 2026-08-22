@@ -88,8 +88,8 @@ evidence registry로 판단합니다.
 - partial maturity: decomposed target 중 일부만 stable 또는 beta
 - planned only: 모든 target이 planned
 
-2026-08-21 snapshot의 status 기반 분포는 **fully mature 34 / partial maturity 2 /
-planned only 37**입니다. 따라서 73/73 tracking은 73개 구현 완료를 의미하지 않습니다.
+2026-08-22 snapshot의 status 기반 분포는 **fully mature 39 / partial maturity 2 /
+planned only 32**입니다. 따라서 73/73 tracking은 73개 구현 완료를 의미하지 않습니다.
 홈과 Component Explorer는 이 수치를 분리해 표시합니다. 이 숫자는 source inventory 수가
 아니라 HJM target의 maturity에서 계산하므로 catalog status가 바뀌면 함께 갱신합니다.
 
@@ -112,8 +112,8 @@ Ant Design 기준 버전을 올릴 때는 다음을 한 변경 세트에서 수�
 
 `pnpm reference:antd:verify`는 npm registry의 현재 `latest`와 고정 version을 비교합니다.
 이 검사는 외부 네트워크와 upstream release 시점에 따라 결과가 달라지므로 일반 `push`/
-`pull_request` 게이트에 넣지 않습니다. `.github/workflows/antd-reference-drift.yml`이 주 1회
-예약 실행하고 필요할 때 `workflow_dispatch`로 수동 실행합니다. drift를 찾으면 자동으로 pin을
-바꾸지 않고 실패해, 위 다섯 항목을 한 변경 세트로 검토하게 합니다.
+`pull_request` 또는 예약 CI 게이트에 넣지 않습니다. 기준 버전을 검토할 때만 로컬에서 명시적으로
+실행합니다. drift를 찾더라도 pin을 자동으로 바꾸지 않고 실패해, 위 다섯 항목을 한 변경 세트로
+검토하게 합니다.
 
 외부 시스템의 외형, token 값, prop 이름, 전용 아이콘·자산은 복사하지 않습니다.

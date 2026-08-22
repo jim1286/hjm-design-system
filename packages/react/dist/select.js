@@ -1,12 +1,12 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { getCollectionNavigationIntent, getCollectionNavigationTarget, getCollectionTypeaheadMatch, reconcileSelectSelection, resolveCollectionItem, resolveSelectSelectedItem, validateCollection, } from "@hjm/design-contracts/components/collection";
 import { resolveControlAccessibleName, selectBehaviorDefaults, } from "@hjm/design-contracts/behaviors";
-import { selectRecipe, } from "@hjm/design-contracts/recipes";
+import { iconRecipe, selectRecipe, } from "@hjm/design-contracts/recipes";
 import { forwardRef, useCallback, useEffect, useId, useRef, useState, } from "react";
 import { classNames, useControllableState } from "./internal.js";
 const emptySelectionKey = Symbol("hjm-select-empty-selection");
 function SelectInner(props, forwardedRef) {
-    const { items, sections, label, accessibilityLabel, description, error, placeholder, emptySelectionLabel, asyncState = { status: "idle" }, selectedItem, disallowEmptySelection = selectBehaviorDefaults.disallowEmptySelection, loop = selectBehaviorDefaults.loop, readOnly = false, size = selectRecipe.defaults.size, density = selectRecipe.defaults.density, fieldClassName, className, id: idProp, name, disabled = false, required = false, selectedKey: selectedKeyProp, defaultSelectedKey, onSelectionChange, open: openProp, defaultOpen = false, onOpenChange, onClick, onFocus, onBlur, onKeyDown, ...buttonProps } = props;
+    const { items, sections, label, accessibilityLabel, description, error, placeholder, emptySelectionLabel, asyncState = { status: "idle" }, selectedItem, disallowEmptySelection = selectBehaviorDefaults.disallowEmptySelection, loop = selectBehaviorDefaults.loop, busy = false, readOnly = false, size = selectRecipe.defaults.size, density = selectRecipe.defaults.density, fieldClassName, locale, renderLeading, renderOptionLeading, className, id: idProp, name, disabled = false, required = false, selectedKey: selectedKeyProp, defaultSelectedKey, onSelectionChange, open: openProp, defaultOpen = false, onOpenChange, onClick, onFocus, onBlur, onKeyDown, ...buttonProps } = props;
     const source = sections === undefined
         ? { items: items ?? [] }
         : { sections };
@@ -143,7 +143,7 @@ function SelectInner(props, forwardedRef) {
         return () => document.removeEventListener("pointerdown", handlePointerDown);
     }, [changeOpen, open]);
     const openWithIntent = (intent = "first") => {
-        if (disabled)
+        if (disabled || busy || readOnly)
             return;
         const selectedInSource = resolveCollectionItem(source, reconciledSelectedKey);
         const target = selectedInSource && !selectedInSource.disabled
@@ -199,7 +199,12 @@ function SelectInner(props, forwardedRef) {
             return;
         }
         const item = resolveCollectionItem(source, key);
-        if (!item || item.disabled || disabled || readOnly || asyncState.status === "loading")
+        if (!item ||
+            item.disabled ||
+            disabled ||
+            busy ||
+            readOnly ||
+            asyncState.status === "loading")
             return;
         setSelectedKey(key);
         restoreFocusRef.current = true;
@@ -217,6 +222,7 @@ function SelectInner(props, forwardedRef) {
             startsAfterKey: activeKey === emptySelectionKey
                 ? reconciledSelectedKey
                 : activeKey ?? reconciledSelectedKey,
+            ...(locale === undefined ? {} : { locale }),
         });
         if (match !== undefined) {
             setHighlightedKey(match);
@@ -226,7 +232,7 @@ function SelectInner(props, forwardedRef) {
     };
     const handleKeyDown = (event) => {
         onKeyDown?.(event);
-        if (event.defaultPrevented || disabled)
+        if (event.defaultPrevented || disabled || busy || readOnly)
             return;
         const navigationIntent = getCollectionNavigationIntent(event.key);
         if (navigationIntent !== undefined) {
@@ -279,6 +285,15 @@ function SelectInner(props, forwardedRef) {
     const renderOption = (item) => {
         const selected = item.id === reconciledSelectedKey;
         const active = item.id === activeKey;
+        const leadingSize = iconRecipe.sizes[selectRecipe.optionLeading.glyph];
+        const leading = renderOptionLeading?.(item, {
+            selected,
+            highlighted: active,
+            disabled: item.disabled ?? false,
+            color: "currentColor",
+            size: leadingSize,
+            glyphSize: leadingSize,
+        });
         return (_jsxs("div", { ref: (node) => {
                 if (node)
                     optionRefs.current.set(item.id, node);
@@ -287,23 +302,29 @@ function SelectInner(props, forwardedRef) {
             }, id: optionId(item.id), role: "option", className: "hjm-select__option", "aria-selected": selected, "aria-disabled": item.disabled || undefined, "data-state": item.disabled ? "disabled" : selected ? "selected" : "idle", "data-active": active || undefined, onMouseDown: (event) => event.preventDefault(), onMouseMove: () => {
                 if (!item.disabled)
                     setHighlightedKey(item.id);
-            }, onClick: () => commit(item.id), children: [_jsxs("span", { className: "hjm-select__option-copy", children: [_jsx("span", { children: item.label }), item.description ? (_jsx("span", { className: "hjm-select__option-description", children: item.description })) : null] }), selected ? _jsx("span", { className: "hjm-select__check", "aria-hidden": "true", children: "\u2713" }) : null] }, item.id));
+            }, onClick: () => commit(item.id), children: [leading ? (_jsx("span", { className: "hjm-select__option-leading", "aria-hidden": "true", children: leading })) : null, _jsxs("span", { className: "hjm-select__option-copy", children: [_jsx("span", { children: item.label }), item.description ? (_jsx("span", { className: "hjm-select__option-description", children: item.description })) : null] }), selected ? _jsx("span", { className: "hjm-select__check", "aria-hidden": "true", children: "\u2713" }) : null] }, item.id));
     };
-    return (_jsxs("div", { ref: rootRef, className: classNames("hjm-field hjm-select", fieldClassName), "data-state": disabled ? "disabled" : error ? "invalid" : open ? "focused" : "idle", "data-size": size, "data-density": density, "data-async-state": asyncState.status, children: [label !== undefined ? (_jsxs("label", { className: "hjm-field__label", htmlFor: controlId, children: [label, required ? _jsx("span", { "aria-hidden": "true", children: " *" }) : null] })) : null, _jsxs("div", { className: "hjm-select__anchor", children: [_jsxs("button", { ...buttonProps, ref: (node) => {
+    const triggerLeadingSize = iconRecipe.sizes[selectRecipe.sizes[size].glyph];
+    const triggerLeading = renderLeading?.(resolvedSelectedItem, {
+        color: "currentColor",
+        size: triggerLeadingSize,
+        glyphSize: triggerLeadingSize,
+    });
+    return (_jsxs("div", { ref: rootRef, className: classNames("hjm-field hjm-select", fieldClassName), "data-state": disabled ? "disabled" : error ? "invalid" : open ? "focused" : "idle", "data-size": size, "data-density": density, "data-async-state": asyncState.status, "data-busy": busy || undefined, children: [label !== undefined ? (_jsxs("label", { className: "hjm-field__label", htmlFor: controlId, children: [label, required ? _jsx("span", { "aria-hidden": "true", children: " *" }) : null] })) : null, _jsxs("div", { className: "hjm-select__anchor", children: [_jsxs("button", { ...buttonProps, ref: (node) => {
                             triggerRef.current = node;
                             if (typeof forwardedRef === "function")
                                 forwardedRef(node);
                             else if (forwardedRef)
                                 forwardedRef.current = node;
-                        }, id: controlId, type: "button", role: "combobox", className: classNames("hjm-field__control hjm-select__trigger", className), disabled: disabled, "aria-label": accessibilityLabel ?? (label === undefined ? accessibleName : undefined), "aria-haspopup": "listbox", "aria-expanded": open, "aria-controls": open ? listboxId : undefined, "aria-activedescendant": open ? activeOptionId : undefined, "aria-busy": asyncState.status === "loading" || asyncState.status === "loadingMore" || undefined, "aria-invalid": error ? true : undefined, "aria-describedby": describedBy, "aria-readonly": readOnly || undefined, "aria-required": required || undefined, onFocus: onFocus, onBlur: handleBlur, onKeyDown: handleKeyDown, onClick: (event) => {
+                        }, id: controlId, type: "button", role: "combobox", className: classNames("hjm-field__control hjm-select__trigger", className), disabled: disabled, "aria-disabled": busy || undefined, "aria-label": accessibilityLabel ?? (label === undefined ? accessibleName : undefined), "aria-haspopup": "listbox", "aria-expanded": open, "aria-controls": open ? listboxId : undefined, "aria-activedescendant": open ? activeOptionId : undefined, "aria-busy": busy || asyncState.status === "loading" || asyncState.status === "loadingMore" || undefined, "aria-invalid": error ? true : undefined, "aria-describedby": describedBy, "aria-readonly": readOnly || undefined, "aria-required": required || undefined, onFocus: onFocus, onBlur: handleBlur, onKeyDown: handleKeyDown, onClick: (event) => {
                             onClick?.(event);
-                            if (event.defaultPrevented || disabled)
+                            if (event.defaultPrevented || disabled || busy || readOnly)
                                 return;
                             if (open)
                                 changeOpen(false, "trigger");
                             else
                                 openWithIntent();
-                        }, children: [_jsx("span", { className: "hjm-select__value", "data-state": resolvedSelectedItem ? "selected" : "placeholder", children: resolvedSelectedItem?.label ?? placeholder }), _jsx("span", { className: "hjm-select__indicator", "aria-hidden": "true", children: "\u2304" })] }), open ? (_jsxs("div", { id: listboxId, role: "listbox", "aria-label": accessibleName, className: "hjm-select__listbox", children: [asyncState.status !== "idle" ? (_jsx("div", { className: "hjm-select__message", role: asyncState.status === "error" ? "alert" : "status", children: asyncState.message })) : null, showOptions ? (source.sections ? source.sections.map((section) => {
+                        }, children: [triggerLeading ? (_jsx("span", { className: "hjm-select__leading", "aria-hidden": "true", children: triggerLeading })) : null, _jsx("span", { className: "hjm-select__value", "data-state": resolvedSelectedItem ? "selected" : "placeholder", children: resolvedSelectedItem?.label ?? placeholder }), busy ? (_jsx("span", { className: "hjm-select__busy-indicator", "aria-hidden": "true" })) : (_jsx("span", { className: "hjm-select__indicator", "aria-hidden": "true", children: "\u2304" }))] }), open ? (_jsxs("div", { id: listboxId, role: "listbox", "aria-label": accessibleName, className: "hjm-select__listbox", children: [asyncState.status !== "idle" ? (_jsx("div", { className: "hjm-select__message", role: asyncState.status === "error" ? "alert" : "status", children: asyncState.message })) : null, showOptions ? (source.sections ? source.sections.map((section) => {
                                 const sectionLabelId = `${controlId}-section-${section.id}`;
                                 return (_jsxs("div", { role: "group", "aria-labelledby": section.label ? sectionLabelId : undefined, "aria-label": section.label ? undefined : section.accessibilityLabel, className: "hjm-select__section", children: [section.label ? (_jsx("div", { id: sectionLabelId, className: "hjm-select__section-label", children: section.label })) : null, section.items.map(renderOption)] }, section.id));
                             }) : source.items.map(renderOption)) : null, !disallowEmptySelection && showOptions ? (_jsx("div", { ref: (node) => {

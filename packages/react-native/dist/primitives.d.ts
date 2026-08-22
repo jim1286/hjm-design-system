@@ -1,12 +1,52 @@
 import { type GridDescriptor, type ResolvedGridLayout } from "@hjm/design-contracts/grid";
 import { type IconDescriptor } from "@hjm/design-contracts/components/icon";
+import { type LayoutSidebarRole } from "@hjm/design-contracts/components/layout";
 import { type TextVariant } from "@hjm/design-contracts/foundations";
 import { type SurfacePadding as ContractSurfacePadding, type SurfaceRadius as ContractSurfaceRadius, type SurfaceTone as ContractSurfaceTone } from "@hjm/design-contracts/recipes/base";
 import { type StackAlign, type StackAxis, type StackGap, type StackJustify, type TextEmphasis, type TextTone as ContractTextTone } from "@hjm/design-contracts/recipes";
-import { type ReactNode } from "react";
-import { Text as NativeText, type StyleProp, type TextProps as NativeTextProps, type TextStyle, type ViewProps, type ViewStyle } from "react-native";
+import { type Ref, type ReactNode } from "react";
+import { Text as NativeText, View, type StyleProp, type TextProps as NativeTextProps, type TextStyle, type ViewProps, type ViewStyle } from "react-native";
 export type { StackAlign, StackAxis, StackGap, StackJustify, TextEmphasis, } from "@hjm/design-contracts/recipes";
 export type TextTone = ContractTextTone;
+type LayoutRegionProps = Omit<ViewProps, "children">;
+type LayoutSidebarBase = Readonly<{
+    children: ReactNode;
+    role: LayoutSidebarRole;
+    label: string;
+    containerProps?: LayoutRegionProps;
+}>;
+export type LayoutSidebar = (LayoutSidebarBase & Readonly<{
+    mode: "persistent";
+    renderOverlay?: never;
+}>) | (LayoutSidebarBase & Readonly<{
+    mode: "overlay";
+    renderOverlay(sidebar: ReactNode): ReactNode;
+}>);
+export type LayoutProps = Omit<ViewProps, "children"> & Readonly<{
+    children: ReactNode;
+    header?: ReactNode;
+    footer?: ReactNode;
+    sidebar?: LayoutSidebar;
+    /** @deprecated Native has no bypass-link equivalent; omit this Web-only copy. */
+    skipLinkLabel?: string;
+    headerProps?: LayoutRegionProps;
+    mainProps?: LayoutRegionProps;
+    footerProps?: LayoutRegionProps;
+    mainRef?: Ref<View>;
+}>;
+/** Native shell translation: ordered regions without inventing Web landmark roles. */
+export declare const Layout: import("react").ForwardRefExoticComponent<Omit<ViewProps, "children"> & Readonly<{
+    children: ReactNode;
+    header?: ReactNode;
+    footer?: ReactNode;
+    sidebar?: LayoutSidebar;
+    /** @deprecated Native has no bypass-link equivalent; omit this Web-only copy. */
+    skipLinkLabel?: string;
+    headerProps?: LayoutRegionProps;
+    mainProps?: LayoutRegionProps;
+    footerProps?: LayoutRegionProps;
+    mainRef?: Ref<View>;
+}> & import("react").RefAttributes<View>>;
 export type TextProps = Omit<NativeTextProps, "children"> & Readonly<{
     children: ReactNode;
     variant?: TextVariant;
@@ -55,12 +95,12 @@ type GridLegacyDescriptorProps = Readonly<{
 }>;
 export type GridProps = Omit<ViewProps, "children"> & (GridCanonicalDescriptorProps | GridLegacyDescriptorProps) & Readonly<{
     children?: ReactNode;
-    /** Inner width after page padding. Defaults to the full Native window width. */
+    /** Inner width after page padding. When omitted, the rendered container is measured. */
     availableWidth?: number;
     onLayoutResolved?: (layout: ResolvedGridLayout) => void;
     itemStyle?: StyleProp<ViewStyle>;
 }>;
-export declare function Grid({ children, descriptor, columns, gap, minColumnWidth, availableWidth, onLayoutResolved, itemStyle, style, ...props }: GridProps): import("react").JSX.Element;
+export declare function Grid({ children, descriptor, columns, gap, minColumnWidth, availableWidth, onLayoutResolved, itemStyle, style, onLayout, ...props }: GridProps): import("react").JSX.Element;
 export type NativeIconRenderProps<Name extends string = string> = Readonly<{
     name: Name;
     size: number;
@@ -76,12 +116,17 @@ export type IconProps<Name extends string = string> = Readonly<{
 /** Semantic Native icon frame without an Expo or third-party icon dependency. */
 export declare function Icon<Name extends string = string>({ descriptor, renderGlyph, style, }: IconProps<Name>): import("react").JSX.Element;
 export type SectionProps = Omit<ViewProps, "children"> & Readonly<{
-    title: string;
+    title?: string;
     description?: string;
     action?: ReactNode;
     children: ReactNode;
+    headerStyle?: StyleProp<ViewStyle>;
+    copyStyle?: StyleProp<ViewStyle>;
+    titleStyle?: StyleProp<TextStyle>;
+    descriptionStyle?: StyleProp<TextStyle>;
+    actionStyle?: StyleProp<ViewStyle>;
     contentStyle?: StyleProp<ViewStyle>;
 }>;
 /** A large-text-safe content section with a logical header action slot. */
-export declare function Section({ title, description, action, children, contentStyle, style, ...props }: SectionProps): import("react").JSX.Element;
+export declare function Section({ title, description, action, children, headerStyle, copyStyle, titleStyle, descriptionStyle, actionStyle, contentStyle, style, ...props }: SectionProps): import("react").JSX.Element;
 //# sourceMappingURL=primitives.d.ts.map

@@ -56,10 +56,10 @@ jobs:
         run: pnpm check
 
       - name: Check showcase contracts
-        run: pnpm showcase:web:check
+        run: pnpm --filter @hjm/showcase-web check
 
       - name: Build static Storybook
-        run: pnpm showcase:web:build
+        run: pnpm --filter @hjm/showcase-web build && pnpm --filter @hjm/showcase-web verify:static
 
       - name: Verify committed Git package artifacts
         run: |

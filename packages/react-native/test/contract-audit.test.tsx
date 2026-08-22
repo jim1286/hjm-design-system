@@ -1,3 +1,13 @@
+import { resolveColorReference } from "@hjm/design-contracts/color-references";
+import { resolveDesignSystemProviderValue } from "@hjm/design-contracts/components/design-system-provider";
+import { glyph, radius, typography } from "@hjm/design-contracts/foundations";
+import { fieldRecipe } from "@hjm/design-contracts/recipes/base";
+import {
+  searchFieldRecipe,
+  segmentedControlRecipe,
+  sheetRecipe,
+  tabsRecipe,
+} from "@hjm/design-contracts/recipes";
 import { useEffect, type ReactNode } from "react";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import {
@@ -28,8 +38,11 @@ import {
   Sheet,
   Statistic,
   Switch,
+  TabPanel,
   Tabs,
   Text,
+  TextArea,
+  TextField,
   ToastRegion,
   TopBar,
   useToastRegion,
@@ -37,6 +50,11 @@ import {
 } from "../src/index.js";
 
 (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+
+const lightProviderValue = resolveDesignSystemProviderValue(
+  { theme: "light" },
+  { systemTheme: "light" },
+);
 
 function tree(
   node: ReactNode,
@@ -111,9 +129,10 @@ describe("selection contract alignment", () => {
     expect(panels).toHaveLength(3);
     expect(flattenStyle(panels.find((panel) => panel.props.accessibilityLabel === "보안 콘텐츠")!.props.style))
       .toMatchObject({ display: "flex" });
-    const tabList = renderer.root.findAllByType(View)
-      .find((node) => node.props.accessibilityRole === "tablist")!;
-    expect(flattenStyle(tabList.props.style)).toMatchObject({
+    const tabList = renderer.root.find(
+      (node) => node.props.accessibilityRole === "tablist",
+    );
+    expect(flattenStyle(tabList.props.contentContainerStyle)).toMatchObject({
       direction: "rtl",
       flexDirection: "column",
     });
@@ -122,6 +141,56 @@ describe("selection contract alignment", () => {
       return node.props.accessibilityLabel === "계정" && style.flexDirection === "row";
     });
     expect(flattenStyle(tabsLayout?.props.style).direction).toBe("rtl");
+  });
+
+  it("binds tab leading visuals and external dynamic panels without duplicating ownership", () => {
+    const leading = vi.fn(() => <View testID="feed-icon" />);
+    const renderer = render(
+      <>
+        <Tabs
+          id="feed"
+          label="피드"
+          options={[
+            { value: "all", label: "전체", renderLeading: leading },
+            { value: "following", label: "팔로잉" },
+          ]}
+          panelMode="dynamic"
+          renderPanels={false}
+          value="all"
+          onValueChange={vi.fn()}
+        />
+        <TabPanel activeValue="all" label="전체 피드" mode="dynamic" tabsId="feed">
+          <Text>피드 목록</Text>
+        </TabPanel>
+      </>,
+    );
+
+    expect(leading).toHaveBeenCalledWith(expect.objectContaining({
+      color: resolveColorReference(tabsRecipe.colors.selected, lightProviderValue.palette),
+      disabled: false,
+      glyphSize: glyph[tabsRecipe.icon.glyph],
+      selected: true,
+      size: glyph[tabsRecipe.icon.glyph],
+    }));
+    expect(renderer.root.findByProps({ accessibilityLabel: "전체" }).props)
+      .toMatchObject({
+        accessibilityRole: "tab",
+        nativeID: "feed-tab-all",
+      });
+    expect(renderer.root.findByProps({ testID: "feed-icon" }).parent?.props)
+      .toMatchObject({
+        accessible: false,
+        importantForAccessibility: "no-hide-descendants",
+      });
+    expect(renderer.root.findByProps({ accessibilityLabel: "전체 피드" }).props)
+      .toMatchObject({
+        accessibilityLabelledBy: "feed-tab-all",
+        nativeID: "feed-panel",
+        role: "tabpanel",
+      });
+    expect(renderer.root.findAll(
+      (node) => typeof node.type === "string" && node.props.role === "tabpanel",
+    )).toHaveLength(1);
   });
 
   it("rejects duplicate or invalid Tabs selection and reconciles removed uncontrolled values", () => {
@@ -238,6 +307,213 @@ describe("selection contract alignment", () => {
 });
 
 describe("Native input and navigation intent", () => {
+  it("allows accessibility-only field names and rejects unnamed fields", () => {
+    const textField = render(<TextField accessibilityLabel="이름 입력" />);
+    expect(textField.root.findByType(TextInput).props.accessibilityLabel).toBe("이름 입력");
+    expect(textField.root.findAllByType(Text)).toHaveLength(0);
+
+    const searchField = render(
+      <SearchField
+        accessibilityLabel="콘텐츠 검색"
+        busyLabel="검색 중"
+        clearLabel="검색어 지우기"
+      />,
+    );
+    expect(searchField.root.findByType(TextInput).props.accessibilityLabel).toBe("콘텐츠 검색");
+    expect(searchField.root.findAllByType(Text)).toHaveLength(0);
+
+    expect(() => render(<TextField label="   " />)).toThrow(
+      /non-empty label or accessibilityLabel/u,
+    );
+  });
+
+  it("binds field geometry, type, support spacing, and state colors to fieldRecipe", () => {
+    const renderer = render(
+      <TextField label="이름" placeholder="이름 입력" supportText="실명을 입력하세요" />,
+    );
+    const control = renderer.root.findAllByType(View).find((node) => {
+      const style = flattenStyle(node.props.style);
+      return style.borderWidth === fieldRecipe.borderWidth && style.minHeight === fieldRecipe.minHeight;
+    })!;
+    expect(flattenStyle(control.props.style)).toMatchObject({
+      backgroundColor: lightProviderValue.palette.theme[
+        fieldRecipe.variants[fieldRecipe.defaults.variant].background
+      ],
+      borderColor: lightProviderValue.palette.theme[fieldRecipe.states.idle.border],
+      borderRadius: radius[fieldRecipe.shapes[fieldRecipe.defaults.shape]],
+      borderWidth: fieldRecipe.borderWidth,
+      minHeight: fieldRecipe.minHeight,
+      paddingHorizontal: fieldRecipe.paddingHorizontal,
+    });
+    const input = renderer.root.findByType(TextInput);
+    expect(input.props.placeholderTextColor).toBe(
+      lightProviderValue.palette.theme[fieldRecipe.placeholder.color],
+    );
+    expect(flattenStyle(input.props.style)).toMatchObject({
+      fontSize: typography[fieldRecipe.textVariant].fontSize,
+      fontWeight: typography[fieldRecipe.textVariant].fontWeight,
+      lineHeight: typography[fieldRecipe.textVariant].lineHeight,
+      minHeight: fieldRecipe.minHeight - (fieldRecipe.borderWidth * 2),
+      paddingVertical: fieldRecipe.paddingVertical,
+    });
+    const copy = renderer.root.findAllByType(Text);
+    const label = copy.find((node) => node.props.tone === "body")!;
+    const support = copy.find((node) => node.props.children === "실명을 입력하세요")!;
+    expect(label.props.variant).toBe(fieldRecipe.label.textVariant);
+    expect(flattenStyle(label.props.style)).toMatchObject({
+      color: lightProviderValue.palette.theme[fieldRecipe.label.color],
+      fontWeight: fieldRecipe.label.fontWeight,
+    });
+    expect(support.props.variant).toBe(fieldRecipe.support.textVariant);
+    expect(renderer.root.findAllByType(View).map((node) => flattenStyle(node.props.style)))
+      .toEqual(expect.arrayContaining([
+        expect.objectContaining({ gap: fieldRecipe.label.gap }),
+        expect.objectContaining({ gap: fieldRecipe.support.gap }),
+      ]));
+
+    act(() => input.props.onFocus({}));
+    const focusedControl = renderer.root.findAllByType(View).find((node) => {
+      const style = flattenStyle(node.props.style);
+      return style.borderWidth === fieldRecipe.borderWidth && style.minHeight === fieldRecipe.minHeight;
+    })!;
+    expect(flattenStyle(focusedControl.props.style).borderColor).toBe(
+      lightProviderValue.palette.theme[fieldRecipe.states.focused.border],
+    );
+
+    const textArea = render(
+      <TextArea error="필수 입력입니다" label="설명" shape="large" variant="inset" />,
+    );
+    const areaControl = textArea.root.findAllByType(View).find((node) =>
+      flattenStyle(node.props.style).minHeight === fieldRecipe.multilineMinHeight
+    )!;
+    expect(flattenStyle(areaControl.props.style)).toMatchObject({
+      backgroundColor: lightProviderValue.palette.theme[fieldRecipe.variants.inset.background],
+      borderColor: lightProviderValue.palette.theme[fieldRecipe.states.invalid.border],
+      borderRadius: radius[fieldRecipe.shapes.large],
+      borderWidth: fieldRecipe.borderWidth,
+      minHeight: fieldRecipe.multilineMinHeight,
+      paddingHorizontal: fieldRecipe.paddingHorizontal,
+    });
+    expect(flattenStyle(textArea.root.findByType(TextInput).props.style)).toMatchObject({
+      minHeight: fieldRecipe.multilineMinHeight - (fieldRecipe.borderWidth * 2),
+      paddingVertical: fieldRecipe.paddingVertical,
+      textAlignVertical: "top",
+    });
+  });
+
+  it("binds SearchField sizing and affordances to searchFieldRecipe", () => {
+    const renderer = render(
+      <SearchField
+        accessibilityLabel="콘텐츠 검색"
+        busyLabel="검색 중"
+        clearLabel="검색어 지우기"
+        defaultValue="질문"
+        shape="full"
+        size="large"
+      />,
+    );
+    const sizing = searchFieldRecipe.sizes.large;
+    const control = renderer.root.findAllByType(View).find((node) => {
+      const style = flattenStyle(node.props.style);
+      return style.borderWidth === searchFieldRecipe.borderWidth && style.minHeight === sizing.minHeight;
+    })!;
+    expect(flattenStyle(control.props.style)).toMatchObject({
+      backgroundColor: resolveColorReference(
+        searchFieldRecipe.colors.background,
+        lightProviderValue.palette,
+      ),
+      borderColor: resolveColorReference(
+        searchFieldRecipe.colors.border,
+        lightProviderValue.palette,
+      ),
+      borderRadius: radius[searchFieldRecipe.shapes.full],
+      borderWidth: searchFieldRecipe.borderWidth,
+      gap: sizing.gap,
+      minHeight: sizing.minHeight,
+      paddingHorizontal: sizing.paddingHorizontal,
+    });
+    const input = renderer.root.findByType(TextInput);
+    expect(input.props.placeholderTextColor).toBe(resolveColorReference(
+      searchFieldRecipe.colors.placeholder,
+      lightProviderValue.palette,
+    ));
+    expect(flattenStyle(input.props.style)).toMatchObject({
+      fontSize: typography[sizing.textVariant].fontSize,
+      lineHeight: typography[sizing.textVariant].lineHeight,
+      minHeight: sizing.minHeight - (searchFieldRecipe.borderWidth * 2),
+    });
+    const clear = byLabel(renderer, "검색어 지우기");
+    expect(clear.props.hitSlop).toBe(sizing.clearHitSlop);
+    expect(flattenStyle(clear.props.style)).toMatchObject({
+      height: sizing.clearDiameter,
+      width: sizing.clearDiameter,
+    });
+  });
+
+  it("binds SegmentedControl surfaces, selection, sizes, and adaptation to its recipe", () => {
+    const renderer = render(
+      <SegmentedControl
+        defaultValue="list"
+        label="보기"
+        options={[{ value: "list", label: "목록" }, { value: "grid", label: "격자" }]}
+        size="small"
+      />,
+    );
+    const container = byLabel(renderer, "보기");
+    expect(flattenStyle(container.props.style)).toMatchObject({
+      backgroundColor: resolveColorReference(
+        segmentedControlRecipe.container.background,
+        lightProviderValue.palette,
+      ),
+      borderColor: resolveColorReference(
+        segmentedControlRecipe.container.border,
+        lightProviderValue.palette,
+      ),
+      borderRadius: radius[segmentedControlRecipe.container.radius],
+      borderWidth: segmentedControlRecipe.container.borderWidth,
+      flexDirection: "row",
+      gap: segmentedControlRecipe.container.gap,
+      padding: segmentedControlRecipe.container.padding,
+    });
+    const selected = byLabel(renderer, "목록");
+    expect(selected.props.hitSlop).toBe(segmentedControlRecipe.sizes.small.hitSlop);
+    expect(flattenStyle(selected.props.style({ pressed: false }))).toMatchObject({
+      backgroundColor: resolveColorReference(
+        segmentedControlRecipe.item.selectedBackground,
+        lightProviderValue.palette,
+      ),
+      borderColor: resolveColorReference(
+        segmentedControlRecipe.item.selectedBorder,
+        lightProviderValue.palette,
+      ),
+      borderRadius: radius[segmentedControlRecipe.item.radius],
+      borderWidth: segmentedControlRecipe.item.selectedBorderWidth,
+      minHeight: segmentedControlRecipe.sizes.small.minHeight,
+      paddingHorizontal: segmentedControlRecipe.sizes.small.paddingHorizontal,
+    });
+    const selectedLabel = renderer.root.findAllByType(Text)
+      .find((node) => node.props.children === "목록")!;
+    expect(selectedLabel.props.variant).toBe(segmentedControlRecipe.sizes.small.textVariant);
+    expect(flattenStyle(selectedLabel.props.style)).toMatchObject({
+      color: resolveColorReference(
+        segmentedControlRecipe.item.selectedContent,
+        lightProviderValue.palette,
+      ),
+      fontWeight: segmentedControlRecipe.item.selectedFontWeight,
+    });
+
+    const stacked = render(
+      <SegmentedControl
+        label="큰 글자 보기"
+        options={[{ value: "list", label: "목록" }, { value: "grid", label: "격자" }]}
+      />,
+      1.6,
+    );
+    expect(flattenStyle(byLabel(stacked, "큰 글자 보기").props.style).flexDirection).toBe(
+      segmentedControlRecipe.adaptive.largeTextLayout === "stacked" ? "column" : "row",
+    );
+  });
+
   it("preserves a busy SearchField query and invokes the explicit clear callback", () => {
     const onValueChange = vi.fn();
     const onClear = vi.fn();
@@ -276,22 +552,51 @@ describe("Native input and navigation intent", () => {
 
   it("makes the Switch row the only press and accessibility target", () => {
     const onValueChange = vi.fn();
-    const renderer = render(<Switch label="알림" onValueChange={onValueChange} />, 1, "rtl");
+    const renderer = render(
+      <Switch
+        accessibilityLabel="푸시 알림 설정"
+        description="새 소식을 알려드려요"
+        label="알림"
+        onValueChange={onValueChange}
+        size="small"
+      />,
+      1,
+      "rtl",
+    );
     const switches = renderer.root.findAllByType(Pressable)
       .filter((node) => node.props.accessibilityRole === "switch");
     expect(switches).toHaveLength(1);
+    expect(switches[0]!.props).toMatchObject({
+      accessibilityHint: "새 소식을 알려드려요",
+      accessibilityLabel: "푸시 알림 설정",
+    });
     expect(flattenStyle(switches[0]!.props.style({ pressed: false }))).toMatchObject({
       direction: "rtl",
       flexDirection: "row",
+      minHeight: 68,
     });
     const visual = renderer.root.findByType(NativeSwitch);
     expect(visual.props).toMatchObject({ accessible: false, pointerEvents: "none" });
+    expect(flattenStyle(visual.props.style)).toMatchObject({ height: 26, width: 44 });
+    expect(renderer.root.findAllByType(Text).some(
+      (node) => node.props.children === "새 소식을 알려드려요",
+    )).toBe(true);
     expect(visual.props.onValueChange).toBeUndefined();
     act(() => switches[0]!.props.onPress());
     expect(onValueChange).toHaveBeenCalledOnce();
+
+    const defaultRenderer = render(<Switch label="기본 알림" />);
+    const defaultRow = defaultRenderer.root.findByType(Pressable);
+    expect(flattenStyle(defaultRow.props.style({ pressed: false }))).toMatchObject({
+      minHeight: 44,
+    });
+    expect(flattenStyle(defaultRenderer.root.findByType(NativeSwitch).props.style)).toMatchObject({
+      height: 32,
+      width: 52,
+    });
   });
 
-  it("keeps BottomNavigation router-owned and rejects more than five destinations", () => {
+  it("keeps BottomNavigation router-owned and supports the shared six-destination ceiling", () => {
     const onActivate = vi.fn();
     const descriptor = {
       accessibilityLabel: "주요 메뉴",
@@ -311,21 +616,33 @@ describe("Native input and navigation intent", () => {
     act(() => byLabel(renderer, "프로필").props.onPress());
     expect(onActivate).toHaveBeenCalledWith({ key: "profile", reason: "navigate" });
     expect(byLabel(renderer, "홈").props.accessibilityState.selected).toBe(true);
+    const sixItems = Array.from({ length: 6 }, (_, index) => ({
+      id: `item-${index}`,
+      label: `항목 ${index}`,
+      icon: { name: "home" },
+    }));
     expect(() => render(
       <BottomNavigation
         descriptor={{
-          accessibilityLabel: "너무 많음",
-          items: Array.from({ length: 6 }, (_, index) => ({
-            id: `item-${index}`,
-            label: `항목 ${index}`,
-            icon: { name: "home" },
-          })),
+          accessibilityLabel: "여섯 메뉴",
+          items: sixItems,
           selectedKey: "item-0",
         }}
         onActivate={vi.fn()}
         renderIcon={({ name }) => <Text>{name}</Text>}
       />,
-    )).toThrow(/at most 5/u);
+    )).not.toThrow();
+    expect(() => render(
+      <BottomNavigation
+        descriptor={{
+          accessibilityLabel: "너무 많음",
+          items: [...sixItems, { id: "item-6", label: "항목 6", icon: { name: "home" } }],
+          selectedKey: "item-0",
+        }}
+        onActivate={vi.fn()}
+        renderIcon={({ name }) => <Text>{name}</Text>}
+      />,
+    )).toThrow(/2 to 6 destinations/u);
   });
 
   it("keeps TopBar logical slots in source order and lets Yoga place them in RTL", () => {
@@ -396,6 +713,7 @@ describe("identity and new first-party slices", () => {
         <Chip label="필터" onPress={vi.fn()} />
         <TopBar leading={<Text>이전</Text>} title="설정" trailing={<Text>완료</Text>} />
         <CounterBadge accessibilityLabel="알림 100개 이상" count={128} max={99} />
+        <CounterBadge count={3} />
         <List label="항목"><ListRow title="첫 행" /></List>
         <Statistic descriptor={{ id: "orders", label: "주문", value: "12", trend: { direction: "up", tone: "success", label: "전주 대비 2 증가" } }} />
       </>,
@@ -409,6 +727,9 @@ describe("identity and new first-party slices", () => {
     expect(flattenStyle(byLabel(renderer, "필터").props.style({ pressed: false })))
       .toMatchObject({ direction: "rtl", flexDirection: "row" });
     expect(byLabel(renderer, "알림 100개 이상").children).toBeTruthy();
+    expect(renderer.root.findAllByType(View).some((node) =>
+      node.props.importantForAccessibility === "no-hide-descendants" && node.props.accessible === false,
+    )).toBe(true);
     expect(renderer.root.find((node) => node.props.accessibilityRole === "list")).toBeTruthy();
     expect(byLabel(renderer, "주문, 12, 전주 대비 2 증가").props.accessible).toBe(true);
     expect(flattenStyle(byLabel(renderer, "계속").props.style({ pressed: false })))
@@ -563,7 +884,9 @@ describe("modal lifecycle contracts", () => {
     act(() => modal.props.onRequestClose());
     expect(onOpenChange).not.toHaveBeenCalled();
     const boundary = renderer.root.find((node) => node.props.role === "dialog");
-    expect(flattenStyle(boundary.props.style)).toMatchObject({ paddingBottom: 40 });
+    expect(flattenStyle(boundary.props.style)).toMatchObject({
+      paddingBottom: sheetRecipe.content.paddingBottom + 20,
+    });
     act(() => {
       renderer.update(tree(
         <Sheet

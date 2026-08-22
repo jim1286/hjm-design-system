@@ -37,6 +37,12 @@
       "import": "./dist/colors.js",
       "default": "./dist/colors.js"
     },
+    "./color-references": {
+      "types": "./dist/color-references.d.ts",
+      "react-native": "./dist/color-references.js",
+      "import": "./dist/color-references.js",
+      "default": "./dist/color-references.js"
+    },
     "./responsive": {
       "types": "./dist/responsive.d.ts",
       "react-native": "./dist/responsive.js",

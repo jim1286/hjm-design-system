@@ -1,0 +1,1 @@
+{"version":3,"file":"modal-lifecycle.d.ts","sourceRoot":"","sources":["../../src/internal/modal-lifecycle.ts"],"names":[],"mappings":"AAEA,MAAM,MAAM,uBAAuB,GAAG,QAAQ,CAAC;IAAE,MAAM,IAAI,IAAI,CAAA;CAAE,CAAC,CAAC;AAEnE;;;GAGG;AACH,wBAAgB,6BAA6B,CAAC,QAAQ,EAAE,OAAO,GAAG,OAAO,CAExE;AAED;;;;GAIG;AACH,wBAAgB,gCAAgC,CAC9C,QAAQ,EAAE,MAAM,IAAI,GACnB,uBAAuB,CAEzB"}

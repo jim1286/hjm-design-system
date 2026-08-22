@@ -293,15 +293,36 @@ export type BadgeTone = "neutral"
  */
  | "strong" | "brand" | "info" | "success" | "warning" | "attention" | "danger";
 export type BadgeSize = "small" | "medium";
+export type BadgeVariant = "filled" | "outline";
 export declare const badgeRecipe: {
     readonly slots: readonly ["root", "icon", "label"];
     readonly defaults: {
         readonly tone: "neutral";
         readonly size: "medium";
+        readonly variant: "filled";
+    };
+    readonly variants: {
+        readonly filled: {
+            readonly usesToneBackground: true;
+            readonly borderFallback: null;
+        };
+        readonly outline: {
+            readonly usesToneBackground: false;
+            readonly borderFallback: Readonly<{
+                source: "theme";
+                key: "border";
+                alpha?: number;
+            }>;
+        };
     };
     readonly tones: {
         readonly neutral: {
             readonly content: Readonly<{
+                source: "theme";
+                key: "textMuted";
+                alpha?: number;
+            }>;
+            readonly outlineContent: Readonly<{
                 source: "theme";
                 key: "textMuted";
                 alpha?: number;
@@ -319,6 +340,11 @@ export declare const badgeRecipe: {
                 key: "onPrimary";
                 alpha?: number;
             }>;
+            readonly outlineContent: Readonly<{
+                source: "theme";
+                key: "text";
+                alpha?: number;
+            }>;
             readonly background: Readonly<{
                 source: "theme";
                 key: "text";
@@ -332,6 +358,11 @@ export declare const badgeRecipe: {
                 key: "contentBrand";
                 alpha?: number;
             }>;
+            readonly outlineContent: Readonly<{
+                source: "theme";
+                key: "contentBrand";
+                alpha?: number;
+            }>;
             readonly background: Readonly<{
                 source: "theme";
                 key: "surfaceAlt";
@@ -341,6 +372,11 @@ export declare const badgeRecipe: {
         };
         readonly info: {
             readonly content: Readonly<{
+                source: "accent";
+                key: "info";
+                alpha?: number;
+            }>;
+            readonly outlineContent: Readonly<{
                 source: "accent";
                 key: "info";
                 alpha?: number;
@@ -362,6 +398,11 @@ export declare const badgeRecipe: {
                 key: "success";
                 alpha?: number;
             }>;
+            readonly outlineContent: Readonly<{
+                source: "accent";
+                key: "success";
+                alpha?: number;
+            }>;
             readonly background: Readonly<{
                 source: "accent";
                 key: "success";
@@ -375,6 +416,11 @@ export declare const badgeRecipe: {
         };
         readonly warning: {
             readonly content: Readonly<{
+                source: "accent";
+                key: "warning";
+                alpha?: number;
+            }>;
+            readonly outlineContent: Readonly<{
                 source: "accent";
                 key: "warning";
                 alpha?: number;
@@ -396,6 +442,11 @@ export declare const badgeRecipe: {
                 key: "attention";
                 alpha?: number;
             }>;
+            readonly outlineContent: Readonly<{
+                source: "accent";
+                key: "attention";
+                alpha?: number;
+            }>;
             readonly background: Readonly<{
                 source: "accent";
                 key: "attention";
@@ -409,6 +460,11 @@ export declare const badgeRecipe: {
         };
         readonly danger: {
             readonly content: Readonly<{
+                source: "theme";
+                key: "danger";
+                alpha?: number;
+            }>;
+            readonly outlineContent: Readonly<{
                 source: "theme";
                 key: "danger";
                 alpha?: number;
@@ -3416,13 +3472,15 @@ export declare const tooltipRecipe: {
     };
 };
 export declare const topBarRecipe: {
-    readonly slots: readonly ["root", "leading", "title", "trailing"];
+    readonly slots: readonly ["root", "leading", "title", "titleLeading", "titleAction", "trailing", "action", "actionLabel"];
     readonly defaults: {
         readonly centered: true;
     };
     readonly minHeight: 52;
     readonly sideMinWidth: 44;
     readonly paddingHorizontal: 16;
+    readonly gap: 8;
+    readonly largeTextThreshold: 1.6;
     readonly title: {
         readonly textVariant: "bodyLarge";
         readonly color: Readonly<{
@@ -3431,6 +3489,29 @@ export declare const topBarRecipe: {
             alpha?: number;
         }>;
         readonly fontWeight: "700";
+    };
+    readonly titleAction: {
+        readonly minHeight: 44;
+        readonly minWidth: 44;
+        readonly gap: 8;
+        readonly pressedOpacity: 0.86;
+    };
+    readonly action: {
+        readonly minHeight: 44;
+        readonly minWidth: 44;
+        readonly gap: 4;
+        readonly paddingHorizontal: 4;
+        readonly pressedOpacity: 0.86;
+        readonly disabledOpacity: 0.5;
+    };
+    readonly actionLabel: {
+        readonly textVariant: "caption";
+        readonly color: Readonly<{
+            source: "theme";
+            key: "text";
+            alpha?: number;
+        }>;
+        readonly fontWeight: "500";
     };
     readonly background: Readonly<{
         source: "theme";

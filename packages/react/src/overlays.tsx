@@ -112,6 +112,22 @@ type OpenState<Detail> =
       onOpenChange?: (open: boolean, detail: Detail) => void;
     }>;
 
+type ModalOpenState<Detail> =
+  | Readonly<{
+      open: boolean;
+      defaultOpen?: never;
+      onOpenChange: (open: boolean, detail: Detail) => void;
+      /** Optional for product-owned, programmatically controlled overlays. */
+      trigger?: OverlayTrigger;
+    }>
+  | Readonly<{
+      open?: never;
+      defaultOpen?: boolean;
+      onOpenChange?: (open: boolean, detail: Detail) => void;
+      /** Uncontrolled overlays need a first-party activation target. */
+      trigger: OverlayTrigger;
+    }>;
+
 function useOpenState<Detail>({
   open,
   defaultOpen = false,
@@ -170,6 +186,64 @@ function getFocusable(container: HTMLElement): HTMLElement[] {
 let bodyLockCount = 0;
 let previousBodyOverflow = "";
 const activeModalStack: HTMLElement[] = [];
+const isolatedModalBackground = new Map<
+  HTMLElement,
+  Readonly<{ ariaHidden: string | null; inert: boolean }>
+>();
+let modalIsolationObserver: MutationObserver | null = null;
+
+function restoreModalBackground(): void {
+  for (const [element, previous] of isolatedModalBackground) {
+    element.inert = previous.inert;
+    if (previous.ariaHidden === null) element.removeAttribute("aria-hidden");
+    else element.setAttribute("aria-hidden", previous.ariaHidden);
+  }
+  isolatedModalBackground.clear();
+}
+
+function isolateModalBackgroundElement(element: HTMLElement): void {
+  if (isolatedModalBackground.has(element)) return;
+  isolatedModalBackground.set(element, {
+    ariaHidden: element.getAttribute("aria-hidden"),
+    inert: element.inert,
+  });
+  element.inert = true;
+  element.setAttribute("aria-hidden", "true");
+}
+
+/** Keeps only the top modal's ancestor path interactive, including late portals. */
+function synchronizeModalBackgroundIsolation(): void {
+  restoreModalBackground();
+  while (activeModalStack.length > 0 && !activeModalStack.at(-1)?.isConnected) {
+    activeModalStack.pop();
+  }
+  const top = activeModalStack.at(-1);
+  if (!top) {
+    modalIsolationObserver?.disconnect();
+    modalIsolationObserver = null;
+    return;
+  }
+
+  let pathNode: HTMLElement = top;
+  let parent = pathNode.parentElement;
+  while (parent) {
+    for (const sibling of parent.children) {
+      if (sibling !== pathNode && sibling instanceof HTMLElement) {
+        isolateModalBackgroundElement(sibling);
+      }
+    }
+    if (parent === document.body) break;
+    pathNode = parent;
+    parent = pathNode.parentElement;
+  }
+
+  if (modalIsolationObserver === null) {
+    modalIsolationObserver = new MutationObserver(() => {
+      synchronizeModalBackgroundIsolation();
+    });
+    modalIsolationObserver.observe(document.body, { childList: true, subtree: true });
+  }
+}
 
 function lockBodyScroll(): () => void {
   if (bodyLockCount === 0) {
@@ -220,6 +294,7 @@ function useModalFocus({
         : null;
       const releaseScroll = lockBodyScroll();
       activeModalStack.push(content);
+      synchronizeModalBackgroundIsolation();
       const initial = initialFocusRef?.current ?? getFocusable(content)[0] ?? content;
       initial.focus();
 
@@ -261,6 +336,7 @@ function useModalFocus({
         document.removeEventListener("focusin", handleFocusIn, true);
         const stackIndex = activeModalStack.lastIndexOf(content);
         if (stackIndex >= 0) activeModalStack.splice(stackIndex, 1);
+        synchronizeModalBackgroundIsolation();
         releaseScroll();
         const returnTarget =
           returnFocusRef?.current ?? fallbackReturnRef?.current ?? previouslyFocused;
@@ -304,9 +380,8 @@ export type DialogOpenChangeReason =
   | "escape"
   | "outside";
 
-export type DialogProps = OpenState<Readonly<{ reason: DialogOpenChangeReason }>> &
+export type DialogProps = ModalOpenState<Readonly<{ reason: DialogOpenChangeReason }>> &
   Readonly<{
-    trigger: OverlayTrigger;
     title: ReactNode;
     description?: ReactNode;
     children?: ReactNode;
@@ -364,15 +439,20 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(function Dialog(
     contentRef,
     ...(initialFocusRef === undefined ? {} : { initialFocusRef }),
     ...(returnFocusRef === undefined ? {} : { returnFocusRef }),
-    fallbackReturnRef: triggerRef,
+    ...(trigger === undefined ? {} : { fallbackReturnRef: triggerRef }),
     onEscape: () => requestClose("escape"),
   });
 
   return (
     <>
-      {renderTrigger(trigger, triggerRef, open, contentId, "dialog", () => {
-        changeOpen(true, { reason: "trigger" });
-      })}
+      {trigger === undefined ? null : renderTrigger(
+        trigger,
+        triggerRef,
+        open,
+        contentId,
+        "dialog",
+        () => changeOpen(true, { reason: "trigger" }),
+      )}
       {open ? (
         <Portal {...(portalContainer === undefined ? {} : { container: portalContainer })}>
           <div
@@ -421,11 +501,10 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(function Dialog(
   );
 });
 
-export type AlertDialogProps = OpenState<
+export type AlertDialogProps = ModalOpenState<
   Readonly<{ reason: AlertDialogOpenChangeReason }>
 > &
   Readonly<{
-    trigger: OverlayTrigger;
     request: AlertDialogRequest;
     icon?: ReactNode;
     returnFocusRef?: React.RefObject<HTMLElement | null>;
@@ -498,7 +577,7 @@ export const AlertDialog = forwardRef<HTMLDivElement, AlertDialogProps>(
       contentRef,
       initialFocusRef,
       ...(returnFocusRef === undefined ? {} : { returnFocusRef }),
-      fallbackReturnRef: triggerRef,
+      ...(trigger === undefined ? {} : { fallbackReturnRef: triggerRef }),
       onEscape: () => cancel("escape"),
     });
 
@@ -529,10 +608,17 @@ export const AlertDialog = forwardRef<HTMLDivElement, AlertDialogProps>(
 
     return (
       <>
-        {renderTrigger(trigger, triggerRef, open, contentId, "dialog", () => {
-          startSession();
-          changeOpen(true, { reason: "trigger" });
-        })}
+        {trigger === undefined ? null : renderTrigger(
+          trigger,
+          triggerRef,
+          open,
+          contentId,
+          "dialog",
+          () => {
+            startSession();
+            changeOpen(true, { reason: "trigger" });
+          },
+        )}
         {open ? (
           <Portal {...(portalContainer === undefined ? {} : { container: portalContainer })}>
             <div className="hjm-overlay" data-kind="alert-dialog" data-state="open">
@@ -585,9 +671,8 @@ export const AlertDialog = forwardRef<HTMLDivElement, AlertDialogProps>(
 
 export type SheetPlacement = "bottom" | "start" | "end";
 
-export type SheetProps = OpenState<SheetOpenChangeDetails> &
+export type SheetProps = ModalOpenState<SheetOpenChangeDetails> &
   Readonly<{
-    trigger: OverlayTrigger;
     title: ReactNode;
     description?: ReactNode;
     children?: ReactNode;
@@ -655,15 +740,20 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(function Sheet(
     contentRef,
     ...(initialFocusRef === undefined ? {} : { initialFocusRef }),
     ...(returnFocusRef === undefined ? {} : { returnFocusRef }),
-    fallbackReturnRef: triggerRef,
+    ...(trigger === undefined ? {} : { fallbackReturnRef: triggerRef }),
     onEscape: () => requestClose("escape"),
   });
 
   return (
     <>
-      {renderTrigger(trigger, triggerRef, open, contentId, "dialog", () => {
-        changeOpen(true, { reason: "trigger" });
-      })}
+      {trigger === undefined ? null : renderTrigger(
+        trigger,
+        triggerRef,
+        open,
+        contentId,
+        "dialog",
+        () => changeOpen(true, { reason: "trigger" }),
+      )}
       {open ? (
         <Portal {...(portalContainer === undefined ? {} : { container: portalContainer })}>
           <div

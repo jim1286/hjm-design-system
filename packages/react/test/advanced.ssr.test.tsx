@@ -2,6 +2,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 import {
   Accordion,
+  AlertDialog,
   Avatar,
   Breadcrumb,
   Combobox,
@@ -12,6 +13,7 @@ import {
   HjmProvider,
   NativeSelect,
   Pagination,
+  Sheet,
   Table,
   TextField,
   Tooltip,
@@ -33,6 +35,39 @@ describe("advanced renderer SSR", () => {
     expect(markup).not.toContain('role="dialog"');
     expect(markup).toContain('role="tooltip"');
     expect(markup).toMatch(/aria-describedby="[^"]+-tooltip"/);
+  });
+
+  it("keeps controlled triggerless modal variants SSR-safe", () => {
+    const markup = renderToStaticMarkup(
+      <HjmProvider systemTheme="light">
+        <Dialog
+          closeLabel="닫기"
+          open
+          onOpenChange={() => undefined}
+          title="설정"
+        />
+        <AlertDialog
+          open
+          onOpenChange={() => undefined}
+          request={{
+            mode: "alert",
+            title: "완료",
+            description: "저장했습니다.",
+            confirmLabel: "확인",
+          }}
+        />
+        <Sheet
+          closeLabel="닫기"
+          open
+          onOpenChange={() => undefined}
+          title="필터"
+        />
+      </HjmProvider>,
+    );
+
+    expect(markup).not.toContain('aria-haspopup="dialog"');
+    expect(markup).not.toContain('role="dialog"');
+    expect(markup).not.toContain('role="alertdialog"');
   });
 
   it("renders native Select, editable Combobox, and Form semantics", () => {

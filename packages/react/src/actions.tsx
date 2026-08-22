@@ -16,7 +16,9 @@ import {
   forwardRef,
   type AnchorHTMLAttributes,
   type ButtonHTMLAttributes,
+  type ForwardedRef,
   type MouseEvent,
+  type ReactElement,
   type ReactNode,
 } from "react";
 import { classNames } from "./internal.js";
@@ -144,6 +146,15 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
   },
 );
 
+export type LinkRenderProps = AnchorHTMLAttributes<HTMLAnchorElement> &
+  Readonly<{
+    children: ReactNode;
+    ref: ForwardedRef<HTMLAnchorElement>;
+    "data-tone": LinkTone;
+    "data-variant": LinkVariant;
+    "data-state": "disabled" | "idle";
+  }>;
+
 export type LinkProps = AnchorHTMLAttributes<HTMLAnchorElement> &
   Readonly<{
     tone?: LinkTone;
@@ -151,6 +162,8 @@ export type LinkProps = AnchorHTMLAttributes<HTMLAnchorElement> &
     disabled?: boolean;
     leading?: ReactNode;
     trailing?: ReactNode;
+    /** Framework adapter, for example Next.js Link, while HJM keeps link semantics and state. */
+    renderAnchor?: (props: LinkRenderProps) => ReactElement;
   }>;
 
 export const Link = forwardRef<HTMLAnchorElement, LinkProps>(function Link(
@@ -160,6 +173,7 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(function Link(
     disabled = false,
     leading,
     trailing,
+    renderAnchor,
     target,
     rel,
     tabIndex,
@@ -177,23 +191,25 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(function Link(
     }
     onClick?.(event);
   };
-  return (
-    <a
-      {...props}
-      ref={ref}
-      className={classNames("hjm-link", className)}
-      data-tone={tone}
-      data-variant={variant}
-      data-state={disabled ? "disabled" : "idle"}
-      aria-disabled={disabled || undefined}
-      tabIndex={disabled ? -1 : tabIndex}
-      target={target}
-      rel={rel ?? (target === "_blank" ? "noreferrer noopener" : undefined)}
-      onClick={handleClick}
-    >
+  const anchorProps: LinkRenderProps = {
+    ...props,
+    ref,
+    className: classNames("hjm-link", className),
+    "data-tone": tone,
+    "data-variant": variant,
+    "data-state": disabled ? "disabled" : "idle",
+    "aria-disabled": disabled || undefined,
+    tabIndex: disabled ? -1 : tabIndex,
+    target,
+    rel: rel ?? (target === "_blank" ? "noreferrer noopener" : undefined),
+    onClick: handleClick,
+    children: (
+      <>
       {leading}
       <span>{children}</span>
       {trailing}
-    </a>
-  );
+      </>
+    ),
+  };
+  return renderAnchor ? renderAnchor(anchorProps) : <a {...anchorProps} />;
 });

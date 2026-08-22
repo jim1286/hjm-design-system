@@ -1,5 +1,5 @@
 import { jsx as _jsx } from "react/jsx-runtime";
-import { resolveDesignSystemProviderValue, } from "@hjm/design-contracts/components/design-system-provider";
+import { resolveDesignSystemProviderValue, validateDesignSystemProviderValue, } from "@hjm/design-contracts/components/design-system-provider";
 import { tooltipBehaviorDefaults } from "@hjm/design-contracts/components/tooltip";
 import { createContext, forwardRef, useCallback, useContext, useRef, useState, useSyncExternalStore, } from "react";
 import { classNames } from "./internal.js";
@@ -11,13 +11,14 @@ function subscribeMedia(query, callback) {
     media.addEventListener("change", callback);
     return () => media.removeEventListener("change", callback);
 }
-function useMediaQuery(query) {
-    return useSyncExternalStore((callback) => subscribeMedia(query, callback), () => window.matchMedia(query).matches, () => false);
+function useMediaQuery(query, observe = true) {
+    return useSyncExternalStore((callback) => observe ? subscribeMedia(query, callback) : () => undefined, () => observe && window.matchMedia(query).matches, () => false);
 }
-export const HjmProvider = forwardRef(function HjmProvider({ children, theme, direction, textScale, reducedMotion, systemTheme, className, style, ...rest }, ref) {
+export const HjmProvider = forwardRef(function HjmProvider({ children, theme, direction, textScale, reducedMotion, systemTheme, value: suppliedValue, className, style, ...rest }, ref) {
     const parent = useContext(HjmThemeContext);
-    const prefersDark = useMediaQuery("(prefers-color-scheme: dark)");
-    const prefersReducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
+    const observesSystem = suppliedValue === undefined;
+    const prefersDark = useMediaQuery("(prefers-color-scheme: dark)", observesSystem);
+    const prefersReducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)", observesSystem);
     const resolvedSystemTheme = systemTheme ?? (prefersDark ? "dark" : "light");
     const input = {
         ...(theme === undefined ? {} : { theme }),
@@ -25,13 +26,14 @@ export const HjmProvider = forwardRef(function HjmProvider({ children, theme, di
         ...(textScale === undefined ? {} : { textScale }),
         ...(reducedMotion === undefined ? {} : { reducedMotion }),
     };
-    const value = resolveDesignSystemProviderValue(input, {
+    const value = suppliedValue ?? resolveDesignSystemProviderValue(input, {
         systemTheme: resolvedSystemTheme,
         ...(parent === null ? {} : { parent: parent.environment }),
         ...(reducedMotion === undefined && parent === null
             ? { systemReducedMotion: prefersReducedMotion }
             : {}),
     });
+    validateDesignSystemProviderValue(value);
     const environment = value.environment;
     const [activeTooltipId, setActiveTooltipId] = useState(null);
     const activeTooltipIdRef = useRef(null);

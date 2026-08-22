@@ -8,7 +8,7 @@ navigation renderer에서 route lifecycle·접근성·큰 글자·safe area를 �
 
 ## Descriptor와 configuration
 
-descriptor에는 2–5개 destination, router가 확정한 `selectedKey`, navigation landmark 이름만
+descriptor에는 2–6개 destination, router가 확정한 `selectedKey`, navigation landmark 이름만
 둡니다. item icon은 label과 의미가 중복되므로 이름과 `decorative: true`만 허용하는
 `BottomNavigationIconDescriptor`를 사용합니다. 크기·tone·weight·RTL 방향은 recipe와
 semantic Icon registry가 소유하며 호출부에서 덮어쓸 수 없습니다.
@@ -45,6 +45,11 @@ const descriptor = {
 `center-gap`은 짝수 destination에서만 유효합니다. 이 gap은 별도 primary action의 시각적 자리만
 예약하며 action을 collection에 추가하지 않습니다.
 
+Web renderer도 이름이 있는 실제 link landmark, `aria-current`, modifier click 보존,
+keyboard viewport hide와 center-gap 배치를 first-party SSR·browser test로 검증하므로 Web
+surface 역시 `beta`입니다. 제품 router와 결합한 브라우저 릴리스 증거는 stable 승격 전
+debt로 남습니다.
+
 ## Route source of truth
 
 `selectedKey`는 controlled/uncontrolled selection API가 아니라 read-only input입니다.
@@ -71,7 +76,9 @@ status/live role이나 별도 accessibility label을 추가하면 같은 정보�
 
 ### Web
 
-- 이름이 있는 `nav` landmark와 list 안에 실제 link를 렌더링합니다.
+- 컴포넌트 root 자체가 이름이 있는 `nav` landmark이고 list 안에 실제 link를 렌더링합니다.
+  `footer`/contentinfo를 자체 생성하지 않으므로 `Layout`의 `footer` slot에 합성해도
+  `<footer>` 안에 `<footer>`가 중첩되지 않습니다.
 - 현재 link는 `aria-current="page"`를 사용합니다.
 - browser의 Tab/Enter, modifier click, context menu, 새 탭 열기를 보존합니다.
 - `tab`/`tablist` role, roving focus, 방향키 navigation을 적용하지 않습니다.

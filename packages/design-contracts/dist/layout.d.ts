@@ -1,11 +1,12 @@
 /**
  * `Layout` (alias `AppShell`) does NOT own header or footer chrome — that is
  * already `TopBar` (native, beta) and `BottomNavigation` (adaptive, beta).
- * What is left after subtracting those: landmark composition (one `main`,
- * an optional sidebar, a required skip link whenever repeated navigation
- * precedes `main`), and a sidebar that is either always-visible chrome or a
- * dismissible overlay. The overlay case reuses `SidePanel` unchanged — see
- * docs/layout.md for why this module does not redeclare open/dismiss state.
+ * What is left after subtracting those: ordered regions, a sidebar that is
+ * either always-visible chrome or a dismissible overlay, and Web-only
+ * landmark composition (one `main` plus a required skip link whenever
+ * repeated navigation precedes it). The overlay case reuses `SidePanel`
+ * unchanged — see docs/layout.md for why this module does not redeclare
+ * open/dismiss state.
  */
 export type LayoutSidebarRole = "navigation" | "complementary";
 export type LayoutSidebarMode = "persistent" | "overlay";
@@ -20,9 +21,20 @@ export type LayoutDescriptor = Readonly<{
     hasHeader?: boolean;
     hasFooter?: boolean;
     sidebar?: LayoutSidebarDescriptor;
-    /** Required whenever a header or sidebar precedes `main` (WCAG 2.4.1 bypass blocks). */
+    /** Web-only: required whenever a header or sidebar precedes `main` (WCAG 2.4.1 bypass blocks). */
     skipLinkLabel?: string;
 }>;
+/**
+ * Cross-platform structure validation. This deliberately does not require a
+ * skip link: Native has no page-landmark or bypass-link equivalent.
+ */
+export declare function validateLayoutRegions(descriptor: LayoutDescriptor): void;
+/** Web landmark validation, including the WCAG 2.4.1 bypass-link invariant. */
+export declare function validateLayoutWebDescriptor(descriptor: LayoutDescriptor): void;
+/**
+ * @deprecated Use `validateLayoutRegions` for shared/Native structure or
+ * `validateLayoutWebDescriptor` for a Web app shell.
+ */
 export declare function validateLayoutDescriptor(descriptor: LayoutDescriptor): void;
 export type LayoutLandmarkRole = "banner" | "navigation" | "complementary" | "main" | "contentinfo";
 /**
@@ -101,6 +113,6 @@ export declare const layoutBehavior: {
         readonly states: readonly [];
         readonly actions: readonly [];
     };
-    readonly scenarios: readonly ["exactly-one-main-landmark-exists-per-layout", "skip-link-is-required-whenever-a-header-or-sidebar-precedes-main", "sidebar-role-navigation-or-complementary-is-chosen-independent-of-persistent-or-overlay-mode", "overlay-sidebar-reuses-sidepanel-open-state-and-dismiss-policy-unchanged", "header-and-footer-content-is-not-owned-here-compose-topbar-and-bottomnavigation", "skip-link-is-visually-hidden-until-keyboard-focus-reaches-it", "native-has-no-landmark-role-equivalent-translation-relies-on-order-and-accessibilityviewismodal"];
+    readonly scenarios: readonly ["exactly-one-main-landmark-exists-per-layout", "web-skip-link-is-required-whenever-a-header-or-sidebar-precedes-main", "sidebar-role-navigation-or-complementary-is-chosen-independent-of-persistent-or-overlay-mode", "overlay-sidebar-reuses-sidepanel-open-state-and-dismiss-policy-unchanged", "header-and-footer-content-is-not-owned-here-compose-topbar-and-bottomnavigation", "skip-link-is-visually-hidden-until-keyboard-focus-reaches-it", "native-has-no-landmark-role-equivalent-translation-relies-on-order-and-accessibilityviewismodal"];
 };
 //# sourceMappingURL=layout.d.ts.map

@@ -114,20 +114,33 @@ export const selectionGroupRecipe = {
 };
 export const badgeRecipe = {
     slots: ["root", "icon", "label"],
-    defaults: { tone: "neutral", size: "medium" },
+    defaults: { tone: "neutral", size: "medium", variant: "filled" },
+    variants: {
+        filled: {
+            usesToneBackground: true,
+            borderFallback: null,
+        },
+        outline: {
+            usesToneBackground: false,
+            borderFallback: semanticColors.border.default,
+        },
+    },
     tones: {
         neutral: {
             content: semanticColors.content.secondary,
+            outlineContent: semanticColors.content.secondary,
             background: semanticColors.surface.sunken,
             border: null,
         },
         strong: {
             content: semanticColors.content.inverse,
+            outlineContent: semanticColors.content.primary,
             background: semanticColors.content.primary,
             border: null,
         },
         brand: {
             content: semanticColors.content.brand,
+            outlineContent: semanticColors.content.brand,
             // The brand tint now means "selected" everywhere (see
             // `selectionControlRecipe`/`segmentedControlRecipe`), so a badge that
             // only labels something — a season, a grade, a question number —
@@ -139,26 +152,31 @@ export const badgeRecipe = {
         },
         info: {
             content: semanticColors.feedback.info.foreground,
+            outlineContent: semanticColors.feedback.info.foreground,
             background: semanticColors.feedback.info.badgeBackground,
             border: semanticColors.feedback.info.border,
         },
         success: {
             content: semanticColors.feedback.success.foreground,
+            outlineContent: semanticColors.feedback.success.foreground,
             background: semanticColors.feedback.success.badgeBackground,
             border: semanticColors.feedback.success.border,
         },
         warning: {
             content: semanticColors.feedback.warning.foreground,
+            outlineContent: semanticColors.feedback.warning.foreground,
             background: semanticColors.feedback.warning.badgeBackground,
             border: semanticColors.feedback.warning.border,
         },
         attention: {
             content: semanticColors.feedback.attention.foreground,
+            outlineContent: semanticColors.feedback.attention.foreground,
             background: semanticColors.feedback.attention.badgeBackground,
             border: semanticColors.feedback.attention.border,
         },
         danger: {
             content: semanticColors.feedback.danger.foreground,
+            outlineContent: semanticColors.feedback.danger.foreground,
             background: semanticColors.feedback.danger.badgeBackground,
             border: semanticColors.feedback.danger.border,
         },
@@ -1405,12 +1423,42 @@ export const tooltipRecipe = {
     transition: { enter: motionPreset.micro, exit: motionPreset.exit },
 };
 export const topBarRecipe = {
-    slots: ["root", "leading", "title", "trailing"],
+    slots: [
+        "root",
+        "leading",
+        "title",
+        "titleLeading",
+        "titleAction",
+        "trailing",
+        "action",
+        "actionLabel",
+    ],
     defaults: { centered: true },
     minHeight: control.buttonHeight.large,
     sideMinWidth: control.minTouchTarget,
     paddingHorizontal: spacing.md,
+    gap: spacing.xs,
+    largeTextThreshold: 1.6,
     title: { textVariant: "bodyLarge", color: semanticColors.content.primary, fontWeight: fontWeight.bold },
+    titleAction: {
+        minHeight: control.minTouchTarget,
+        minWidth: control.minTouchTarget,
+        gap: spacing.xs,
+        pressedOpacity: opacity.pressed,
+    },
+    action: {
+        minHeight: control.minTouchTarget,
+        minWidth: control.minTouchTarget,
+        gap: spacing.xxs,
+        paddingHorizontal: spacing.xxs,
+        pressedOpacity: opacity.pressed,
+        disabledOpacity: opacity.disabled,
+    },
+    actionLabel: {
+        textVariant: "caption",
+        color: semanticColors.content.primary,
+        fontWeight: fontWeight.medium,
+    },
     background: semanticColors.canvas,
 };
 export const bottomCtaRecipe = {

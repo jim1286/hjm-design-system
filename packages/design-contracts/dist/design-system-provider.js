@@ -5,6 +5,42 @@ export const designSystemEnvironmentDefaults = {
     textScale: 1,
     reducedMotion: false,
 };
+const themeColorKeys = Object.keys(THEMES.light);
+const accentColorKeys = Object.keys(ACCENTS.light);
+const sixDigitHexColor = /^#[0-9a-f]{6}$/i;
+function assertColorRecord(value, keys, field) {
+    if (value === null || typeof value !== "object" || Array.isArray(value)) {
+        throw new TypeError(`DesignSystemProviderValue ${field} must be a color record`);
+    }
+    const record = value;
+    for (const key of keys) {
+        const color = record[key];
+        if (typeof color !== "string" || !sixDigitHexColor.test(color)) {
+            throw new TypeError(`DesignSystemProviderValue ${field}.${key} must be a six-digit hex color`);
+        }
+    }
+}
+/**
+ * Runtime boundary for reviewed full product palettes supplied to a renderer.
+ * Partial token overrides remain unsupported: every semantic role required by
+ * a recipe must be present, and alpha composition requires six-digit hex.
+ */
+export function validateDesignSystemProviderValue(value) {
+    if (value === null || typeof value !== "object") {
+        throw new TypeError("DesignSystemProviderValue must be an object");
+    }
+    if (value.environment === null || typeof value.environment !== "object") {
+        throw new TypeError("DesignSystemProviderValue environment must be an object");
+    }
+    validateResolvedDesignSystemEnvironment(value.environment);
+    const palette = value.palette;
+    if (palette === null || typeof palette !== "object") {
+        throw new TypeError("DesignSystemProviderValue palette must be an object");
+    }
+    assertColorRecord(palette.theme, themeColorKeys, "palette.theme");
+    assertColorRecord(palette.statusAccents, accentColorKeys, "palette.statusAccents");
+    assertColorRecord(palette.statusAccentFills, accentColorKeys, "palette.statusAccentFills");
+}
 function assertBoolean(value, field) {
     if (typeof value !== "boolean") {
         throw new TypeError(`DesignSystemEnvironment ${field} must be a boolean`);
@@ -97,7 +133,7 @@ export function resolveDesignSystemEnvironment(input, options) {
  */
 export function resolveDesignSystemProviderValue(input, options) {
     const environment = resolveDesignSystemEnvironment(input, options);
-    return {
+    const value = {
         environment,
         palette: {
             theme: THEMES[environment.theme],
@@ -105,5 +141,7 @@ export function resolveDesignSystemProviderValue(input, options) {
             statusAccentFills: accentFill,
         },
     };
+    validateDesignSystemProviderValue(value);
+    return value;
 }
 //# sourceMappingURL=design-system-provider.js.map

@@ -1,4 +1,5 @@
 import { emptyStateRecipe, skeletonRecipe, type NoticeTone, type ProgressSize, type ProgressTone, type SpinnerSize, type SpinnerTone } from "@hjm/design-contracts/recipes";
+import { type ResultDescriptor } from "@hjm/design-contracts/components/result";
 import { type HTMLAttributes, type ProgressHTMLAttributes, type ReactNode } from "react";
 export type NoticeProps = HTMLAttributes<HTMLElement> & Readonly<{
     title: ReactNode;
@@ -28,6 +29,22 @@ export declare const EmptyState: import("react").ForwardRefExoticComponent<HTMLA
     action?: ReactNode;
     icon?: ReactNode;
     density?: EmptyStateDensity;
+}> & import("react").RefAttributes<HTMLDivElement>>;
+export type ResultProps = Omit<HTMLAttributes<HTMLDivElement>, "children" | "title"> & ResultDescriptor & Readonly<{
+    headingLevel?: 1 | 2;
+    /** Optional product glyph; its meaning is already carried by title/status. */
+    icon?: ReactNode;
+}>;
+/** A terminal flow outcome. EmptyState remains reserved for fillable content. */
+export declare const Result: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLDivElement>, "children" | "title"> & Readonly<{
+    status: import("@hjm/design-contracts/components/result").ResultStatus;
+    title: string;
+    description?: string;
+    actions?: readonly import("@hjm/design-contracts/components/result").ResultActionDescriptor[];
+}> & Readonly<{
+    headingLevel?: 1 | 2;
+    /** Optional product glyph; its meaning is already carried by title/status. */
+    icon?: ReactNode;
 }> & import("react").RefAttributes<HTMLDivElement>>;
 export type ProgressProps = Omit<ProgressHTMLAttributes<HTMLProgressElement>, "children" | "max" | "size" | "value"> & Readonly<{
     label: ReactNode;

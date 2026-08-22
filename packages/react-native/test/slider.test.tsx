@@ -313,7 +313,7 @@ describe("Native Slider", () => {
     expect(secondEnd).toHaveBeenCalledWith(100);
   });
 
-  it("uses recipe typography with native scaling once and removes actions when disabled", () => {
+  it("applies the explicit Provider scale once and removes actions when disabled", () => {
     const renderer = render(
       <Slider
         decrementLabel="감소"
@@ -330,9 +330,13 @@ describe("Native Slider", () => {
     expect(slider.props.accessibilityActions).toBeUndefined();
     expect(slider.props.onStartShouldSetResponder()).toBe(false);
     const textStyles = renderer.root.findAllByType(Text).map((text) => flattenStyle(text.props.style));
-    expect(textStyles[0]).toMatchObject({ fontSize: 14, lineHeight: 20 });
-    expect(textStyles[1]).toMatchObject({ fontSize: 12, lineHeight: 18 });
-    expect(renderer.root.findAllByType(Text).every((text) => text.props.allowFontScaling)).toBe(true);
+    expect(textStyles[0]).toMatchObject({ fontSize: 14 * 1.6, lineHeight: 20 * 1.6 });
+    expect(textStyles[1]).toMatchObject({ fontSize: 12 * 1.6, lineHeight: 18 * 1.6 });
+    expect(renderer.root.findAllByType(Text).every((text) => text.props.allowFontScaling === false))
+      .toBe(true);
+    expect(renderer.root.findAllByType(Text).every(
+      (text) => text.props.maxFontSizeMultiplier === undefined,
+    )).toBe(true);
     expect(renderer.root.findAllByType(View).some(
       (view) => view.props.importantForAccessibility === "no-hide-descendants",
     )).toBe(true);

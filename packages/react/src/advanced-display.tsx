@@ -5,6 +5,11 @@ import {
   type DescriptionListColumns,
 } from "@hjm/design-contracts/components/description-list";
 import {
+  resolveTimelineDescriptor,
+  type ComposeTimelineAccessibleName,
+  type TimelineItemDescriptor,
+} from "@hjm/design-contracts/components/timeline";
+import {
   accordionRecipe,
   avatarRecipe,
   dividerRecipe,
@@ -464,4 +469,66 @@ function TableInner<Row>(
 
 export const Table = forwardRef(TableInner) as <Row>(
   props: TableProps<Row> & RefAttributes<HTMLTableElement>,
+) => ReactElement;
+
+export type TimelineProps<Id extends string = string> = Omit<
+  HTMLAttributes<HTMLOListElement>,
+  "children"
+> &
+  Readonly<{
+    items: readonly TimelineItemDescriptor<Id>[];
+    composeAccessibleName: ComposeTimelineAccessibleName;
+  }>;
+
+function TimelineInner<Id extends string = string>(
+  {
+    items,
+    composeAccessibleName,
+    className,
+    ...props
+  }: TimelineProps<Id>,
+  ref: ForwardedRef<HTMLOListElement>,
+) {
+  const resolved = resolveTimelineDescriptor(
+    { items },
+    { composeAccessibleName },
+  );
+  return (
+    <ol
+      {...props}
+      ref={ref}
+      className={classNames("hjm-timeline", className)}
+    >
+      {resolved.map((item, index) => (
+        <li
+          aria-label={item.accessibleName}
+          className="hjm-timeline__item"
+          data-tone={item.tone}
+          key={item.id}
+        >
+          <span className="hjm-timeline__rail" aria-hidden="true">
+            <span className="hjm-timeline__dot" />
+            {index < resolved.length - 1 ? (
+              <span className="hjm-timeline__connector" />
+            ) : null}
+          </span>
+          <span className="hjm-timeline__content">
+            <span className="hjm-timeline__heading">
+              <strong className="hjm-timeline__label">{item.label}</strong>
+              {item.timestamp ? (
+                <time className="hjm-timeline__timestamp">{item.timestamp}</time>
+              ) : null}
+            </span>
+            {item.description ? (
+              <span className="hjm-timeline__description">{item.description}</span>
+            ) : null}
+          </span>
+        </li>
+      ))}
+    </ol>
+  );
+}
+
+export const Timeline = forwardRef(TimelineInner) as <Id extends string = string>(
+  props: TimelineProps<Id> & RefAttributes<HTMLOListElement>,
 ) => ReactElement;

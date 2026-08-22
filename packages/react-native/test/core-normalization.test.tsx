@@ -1,4 +1,5 @@
 import { createRef } from "react";
+import { resolveDesignSystemProviderValue } from "@hjm/design-contracts/components/design-system-provider";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { ActivityIndicator, Pressable, Text as NativeText, View } from "react-native";
 import { describe, expect, it, vi } from "vitest";
@@ -12,6 +13,7 @@ import {
   Surface,
   Tag,
   Text,
+  useHjmNativeTheme,
 } from "../src/index.js";
 
 (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
@@ -37,6 +39,39 @@ function flattenStyle(style: unknown): Record<string, unknown> {
 }
 
 describe("Native core normalization", () => {
+  it("accepts a pre-resolved product palette without re-resolving environment axes", () => {
+    const canonical = resolveDesignSystemProviderValue(
+      { direction: "rtl", reducedMotion: true, textScale: 1.25, theme: "light" },
+      { systemTheme: "dark" },
+    );
+    const productValue = {
+      ...canonical,
+      palette: {
+        ...canonical.palette,
+        theme: { ...canonical.palette.theme, primary: "#123456" },
+      },
+    };
+    function Probe() {
+      const theme = useHjmNativeTheme();
+      return (
+        <View
+          testID="provider-value"
+          accessibilityLabel={`${theme.colors.primary}:${theme.environment.direction}:${theme.environment.textScale}`}
+        />
+      );
+    }
+    let renderer: ReactTestRenderer | undefined;
+    act(() => {
+      renderer = create(
+        <HjmNativeProvider value={productValue}>
+          <Probe />
+        </HjmNativeProvider>,
+      );
+    });
+    expect(renderer!.root.findByProps({ testID: "provider-value" }).props.accessibilityLabel)
+      .toBe("#123456:rtl:1.25");
+  });
+
   it("delegates inline RTL reversal to Yoga while preserving block and caller styles", () => {
     const ltr = renderWithProvider(<Stack axis="inline" testID="ltr" />, "ltr");
     const rtl = renderWithProvider(
@@ -114,8 +149,8 @@ describe("Native core normalization", () => {
     const renderer = renderWithProvider(<Text>기본 텍스트</Text>);
     expect(renderer.root.findByType(NativeText).props).toMatchObject({
       allowFontScaling: true,
-      maxFontSizeMultiplier: 2,
     });
+    expect(renderer.root.findByType(NativeText).props.maxFontSizeMultiplier).toBeUndefined();
   });
 
   it("uses canonical Text and Stack axes while retaining direction as an alias", () => {
@@ -181,6 +216,59 @@ describe("Native core normalization", () => {
     expect(onLongPress).not.toHaveBeenCalled();
     expect(renderer.root.findByType(ActivityIndicator)).toBeDefined();
     expect(button.props.accessibilityLabel).toBe("저장");
+  });
+
+  it("forwards action host refs, preserves caller state, and leaves rich Button content unwrapped", () => {
+    const buttonNode = { focus: vi.fn() } as unknown as View;
+    const iconButtonNode = { focus: vi.fn() } as unknown as View;
+    const buttonRef = createRef<View>();
+    const iconButtonRef = createRef<View>();
+    let renderer: ReactTestRenderer | undefined;
+    act(() => {
+      renderer = create(
+        <HjmNativeProvider reducedMotion theme="light">
+          <Button
+            accessibilityLabel="복합 버튼"
+            accessibilityState={{ expanded: true }}
+            ref={buttonRef}
+          >
+            <View testID="rich-content" />
+          </Button>
+          <IconButton
+            accessibilityState={{ selected: true }}
+            label="아이콘 버튼"
+            ref={iconButtonRef}
+          >
+            <View testID="icon-content" />
+          </IconButton>
+        </HjmNativeProvider>,
+        {
+          createNodeMock: (element) => {
+            const props = element.props as { accessibilityLabel?: string };
+            return props.accessibilityLabel === "복합 버튼"
+              ? buttonNode
+              : props.accessibilityLabel === "아이콘 버튼"
+                ? iconButtonNode
+                : {};
+          },
+        },
+      );
+    });
+    expect(buttonRef.current).toBe(buttonNode);
+    expect(iconButtonRef.current).toBe(iconButtonNode);
+    const actions = renderer!.root.findAllByType(Pressable);
+    expect(actions[0]!.props.accessibilityState).toEqual({
+      expanded: true,
+      disabled: false,
+      busy: false,
+    });
+    expect(actions[1]!.props.accessibilityState).toEqual({
+      selected: true,
+      disabled: false,
+      busy: false,
+    });
+    expect(actions[0]!.findAllByType(NativeText)).toHaveLength(0);
+    act(() => renderer?.unmount());
   });
 
   it("uses the shared IconButton axes and keeps pending activation separate from disabled", () => {

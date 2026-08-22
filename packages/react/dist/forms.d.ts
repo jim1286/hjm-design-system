@@ -2,7 +2,7 @@ import { type FieldShape, type FieldVariant } from "@hjm/design-contracts/recipe
 import { type SearchFieldSize } from "@hjm/design-contracts/recipes";
 import { type HTMLAttributes, type InputHTMLAttributes, type ReactNode, type TextareaHTMLAttributes } from "react";
 type FieldCopyProps = Readonly<{
-    label: ReactNode;
+    label?: ReactNode;
     description?: ReactNode;
     error?: ReactNode;
     required?: boolean;
@@ -25,6 +25,7 @@ export type FieldControlProps = Readonly<{
     "aria-describedby"?: string;
 }>;
 export type FieldProps = Omit<FieldFrameProps, "children" | "descriptionId" | "errorId"> & Readonly<{
+    label: ReactNode;
     children: ReactNode | ((props: FieldControlProps) => ReactNode);
 }>;
 /** Generic frame for custom native controls; `controlId` keeps the label explicit. */
@@ -38,7 +39,7 @@ type SharedInputProps = FieldCopyProps & Readonly<{
 }>;
 export type TextFieldProps = Omit<InputHTMLAttributes<HTMLInputElement>, "size"> & SharedInputProps;
 export declare const TextField: import("react").ForwardRefExoticComponent<Omit<InputHTMLAttributes<HTMLInputElement>, "size"> & Readonly<{
-    label: ReactNode;
+    label?: ReactNode;
     description?: ReactNode;
     error?: ReactNode;
     required?: boolean;
@@ -58,9 +59,22 @@ export type SearchFieldProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type
     size?: SearchFieldSize;
     /** Localized accessible name for the clear action. */
     clearLabel: string;
+    onClear?: () => void;
+    /** Keeps the input mounted and named while replacing trailing actions with progress. */
+    loading?: boolean;
+    /** Product icon adapter; the renderer owns size and inherited color. */
+    renderSearchIcon?: (props: SearchFieldIconRenderProps) => ReactNode;
+    /** Product icon adapter for the clear action. */
+    renderClearIcon?: (props: SearchFieldIconRenderProps) => ReactNode;
+    /** Optional progress adapter. The default is the canonical CSS spinner. */
+    renderLoadingIndicator?: (props: SearchFieldIconRenderProps) => ReactNode;
 }>;
-export declare const SearchField: import("react").ForwardRefExoticComponent<Omit<InputHTMLAttributes<HTMLInputElement>, "value" | "defaultValue" | "size" | "type"> & Readonly<{
-    label: ReactNode;
+export type SearchFieldIconRenderProps = Readonly<{
+    color: "currentColor";
+    size: number;
+}>;
+export declare const SearchField: import("react").ForwardRefExoticComponent<Omit<InputHTMLAttributes<HTMLInputElement>, "value" | "defaultValue" | "type" | "size"> & Readonly<{
+    label?: ReactNode;
     description?: ReactNode;
     error?: ReactNode;
     required?: boolean;
@@ -77,6 +91,15 @@ export declare const SearchField: import("react").ForwardRefExoticComponent<Omit
     size?: SearchFieldSize;
     /** Localized accessible name for the clear action. */
     clearLabel: string;
+    onClear?: () => void;
+    /** Keeps the input mounted and named while replacing trailing actions with progress. */
+    loading?: boolean;
+    /** Product icon adapter; the renderer owns size and inherited color. */
+    renderSearchIcon?: (props: SearchFieldIconRenderProps) => ReactNode;
+    /** Product icon adapter for the clear action. */
+    renderClearIcon?: (props: SearchFieldIconRenderProps) => ReactNode;
+    /** Optional progress adapter. The default is the canonical CSS spinner. */
+    renderLoadingIndicator?: (props: SearchFieldIconRenderProps) => ReactNode;
 }> & import("react").RefAttributes<HTMLInputElement>>;
 export {};
 //# sourceMappingURL=forms.d.ts.map

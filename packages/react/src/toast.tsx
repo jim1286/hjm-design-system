@@ -27,6 +27,8 @@ import {
   useRef,
   useState,
   useSyncExternalStore,
+  type CSSProperties,
+  type FocusEvent,
   type HTMLAttributes,
   type KeyboardEvent,
   type ReactNode,
@@ -53,6 +55,7 @@ type ToastCardProps = Readonly<{
   onPointerResume?(): void;
   onFocusPause?(): void;
   onFocusResume?(): void;
+  locale?: string;
   className?: string;
 }>;
 
@@ -66,6 +69,7 @@ const ToastCard = forwardRef<HTMLDivElement, ToastCardProps>(function ToastCard(
     onPointerResume,
     onFocusPause,
     onFocusResume,
+    locale,
     className,
   },
   ref,
@@ -85,6 +89,7 @@ const ToastCard = forwardRef<HTMLDivElement, ToastCardProps>(function ToastCard(
       className={classNames("hjm-toast", className)}
       data-tone={descriptor.tone}
       data-state={phase}
+      lang={locale}
       role="group"
       aria-labelledby={descriptor.title ? titleId : undefined}
       aria-describedby={descriptionId}
@@ -196,6 +201,14 @@ export type ToastProviderProps = Readonly<{
   timerUpdatePolicy?: ToastTimerUpdatePolicy;
   overflowPolicy?: ToastOverflowPolicy;
   portalContainer?: HTMLElement;
+  /** Captured per publication so already-visible localized copy keeps its language. */
+  locale?: string;
+  /** Extra space above a fixed product dock, in pixels or any CSS length. */
+  bottomOffset?: number | string;
+  /** Optional discoverable keyboard shortcut, for example `F8`. */
+  hotkey?: string;
+  /** Screen-reader help associated with the viewport when `hotkey` is supplied. */
+  hotkeyHelp?: string;
 }>;
 
 type ToastPortalProps = Readonly<{
@@ -229,6 +242,7 @@ function ToastPortal({ children, container }: ToastPortalProps) {
 function renderStoreToast(
   snapshot: ToastSessionSnapshot,
   store: ToastStore,
+  locale?: string,
 ): ReactNode {
   if (snapshot.phase !== "visible" && snapshot.phase !== "closing") return null;
   const id = snapshot.descriptor.id;
@@ -237,6 +251,7 @@ function renderStoreToast(
       key={id}
       descriptor={snapshot.descriptor}
       phase={snapshot.phase}
+      {...(locale === undefined ? {} : { locale })}
       onAction={() => store.invokeAction(id)}
       onDismiss={(reason) => store.dismiss(id, reason)}
       onPointerPause={() => store.pause(id, "pointer")}
@@ -259,9 +274,29 @@ export function ToastProvider({
   timerUpdatePolicy,
   overflowPolicy,
   portalContainer,
+  locale,
+  bottomOffset = 0,
+  hotkey,
+  hotkeyHelp,
 }: ToastProviderProps) {
   if (label.trim().length === 0) throw new TypeError("ToastProvider label must not be empty");
+  if ((hotkey === undefined) !== (hotkeyHelp === undefined)) {
+    throw new TypeError("ToastProvider hotkey and hotkeyHelp must be supplied together");
+  }
+  if (hotkey !== undefined && !hotkey.trim()) {
+    throw new TypeError("ToastProvider hotkey must not be empty");
+  }
+  if (hotkeyHelp !== undefined && !hotkeyHelp.trim()) {
+    throw new TypeError("ToastProvider hotkeyHelp must not be empty");
+  }
+  if (typeof bottomOffset === "number" && (!Number.isFinite(bottomOffset) || bottomOffset < 0)) {
+    throw new RangeError("ToastProvider bottomOffset must be a non-negative finite number");
+  }
+  if (typeof bottomOffset === "string" && !bottomOffset.trim()) {
+    throw new TypeError("ToastProvider bottomOffset must not be empty");
+  }
   const internalStoreRef = useRef<ToastStore | null>(null);
+  const localeByIdRef = useRef(new Map<ToastId, string>());
   if (store === undefined && internalStoreRef.current === null) {
     internalStoreRef.current = createToastStore({
       ...(maxVisible === undefined ? {} : { maxVisible }),
@@ -270,7 +305,15 @@ export function ToastProvider({
       ...(timerUpdatePolicy === undefined ? {} : { timerUpdatePolicy }),
       ...(overflowPolicy === undefined ? {} : { overflowPolicy }),
     });
-    for (const descriptor of initialToasts) internalStoreRef.current.publish(descriptor);
+    for (const descriptor of initialToasts) {
+      const result = internalStoreRef.current.publish(descriptor);
+      if (
+        locale !== undefined &&
+        (result.outcome === "added" || result.outcome === "updated")
+      ) {
+        localeByIdRef.current.set(descriptor.id, locale);
+      }
+    }
   }
   const activeStore = store ?? internalStoreRef.current;
   if (activeStore === null) throw new Error("ToastProvider could not create a store");
@@ -280,21 +323,57 @@ export function ToastProvider({
     activeStore.getSnapshot,
   );
   const theme = useOptionalHjmTheme();
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+  const viewportFocusedRef = useRef(false);
+  const hotkeyHelpId = useId().replaceAll(":", "");
   const api = useMemo<ToastApi>(
     () => ({
-      publish: (descriptor, options) => activeStore.publish(descriptor, options),
+      publish: (descriptor, options) => {
+        const previousLocale = localeByIdRef.current.get(descriptor.id);
+        if (locale === undefined) localeByIdRef.current.delete(descriptor.id);
+        else localeByIdRef.current.set(descriptor.id, locale);
+        try {
+          const result = activeStore.publish(descriptor, options);
+          if (result.outcome === "ignored" || result.outcome === "discarded") {
+            if (previousLocale === undefined) localeByIdRef.current.delete(descriptor.id);
+            else localeByIdRef.current.set(descriptor.id, previousLocale);
+          }
+          return result;
+        } catch (error) {
+          if (previousLocale === undefined) localeByIdRef.current.delete(descriptor.id);
+          else localeByIdRef.current.set(descriptor.id, previousLocale);
+          throw error;
+        }
+      },
       dismiss: (id, reason) => activeStore.dismiss(id, reason),
       close: (id) => activeStore.close(id),
     }),
-    [activeStore],
+    [activeStore, locale],
   );
 
+  const disposalTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => {
+    if (disposalTimerRef.current !== null) {
+      clearTimeout(disposalTimerRef.current);
+      disposalTimerRef.current = null;
+    }
     const ownedStore = internalStoreRef.current;
     return () => {
-      if (ownedStore) ownedStore.dispose();
+      if (ownedStore) {
+        disposalTimerRef.current = setTimeout(() => ownedStore.dispose(), 0);
+      }
     };
   }, []);
+
+  useEffect(() => {
+    const activeIds = new Set(
+      [...snapshot.visible, ...snapshot.queued].map((entry) => entry.descriptor.id),
+    );
+    for (const id of localeByIdRef.current.keys()) {
+      if (!activeIds.has(id)) localeByIdRef.current.delete(id);
+    }
+  }, [snapshot]);
 
   const hasRunningTimer = snapshot.visible.some(
     (entry) => entry.timer.status === "running",
@@ -325,13 +404,67 @@ export function ToastProvider({
   }, [activeStore, closingIds, theme?.environment.reducedMotion]);
 
   useEffect(() => {
-    const handleVisibility = () => {
-      if (document.visibilityState === "hidden") activeStore.pauseAll("window");
-      else activeStore.resumeAll("window");
+    const pause = () => activeStore.pauseAll("window");
+    const resume = () => {
+      if (!document.hidden) activeStore.resumeAll("window");
     };
+    const handleVisibility = () => (document.hidden ? pause() : resume());
+    window.addEventListener("blur", pause);
+    window.addEventListener("focus", resume);
+    window.addEventListener("pagehide", pause);
+    window.addEventListener("pageshow", resume);
     document.addEventListener("visibilitychange", handleVisibility);
-    return () => document.removeEventListener("visibilitychange", handleVisibility);
+    return () => {
+      window.removeEventListener("blur", pause);
+      window.removeEventListener("focus", resume);
+      window.removeEventListener("pagehide", pause);
+      window.removeEventListener("pageshow", resume);
+      document.removeEventListener("visibilitychange", handleVisibility);
+    };
   }, [activeStore]);
+
+  useEffect(() => {
+    if (hotkey === undefined || snapshot.visible.length === 0) return;
+    const handleKeyDown = (event: globalThis.KeyboardEvent) => {
+      if (event.key !== hotkey) return;
+      const viewport = viewportRef.current;
+      if (!viewport) return;
+      if (!viewport.contains(document.activeElement)) {
+        previousFocusRef.current = document.activeElement as HTMLElement | null;
+      }
+      event.preventDefault();
+      viewport.focus();
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [hotkey, snapshot.visible.length]);
+
+  useEffect(() => {
+    if (snapshot.visible.length > 0 || !viewportFocusedRef.current) return;
+    viewportFocusedRef.current = false;
+    previousFocusRef.current?.focus();
+    previousFocusRef.current = null;
+  }, [snapshot.visible.length]);
+
+  const handleViewportFocus = (event: FocusEvent<HTMLDivElement>) => {
+    const previous = event.relatedTarget;
+    if (previous instanceof HTMLElement && !event.currentTarget.contains(previous)) {
+      previousFocusRef.current = previous;
+    }
+    viewportFocusedRef.current = true;
+    activeStore.pauseAll("focus");
+  };
+  const handleViewportBlur = (event: FocusEvent<HTMLDivElement>) => {
+    const next = event.relatedTarget;
+    if (!(next instanceof Node) || !event.currentTarget.contains(next)) {
+      viewportFocusedRef.current = false;
+      activeStore.resumeAll("focus");
+    }
+  };
+  const viewportStyle = {
+    "--hjm-toast-bottom-offset":
+      typeof bottomOffset === "number" ? `${bottomOffset}px` : bottomOffset,
+  } as CSSProperties;
 
   return (
     <ToastContext.Provider value={api}>
@@ -339,12 +472,27 @@ export function ToastProvider({
       {snapshot.visible.length > 0 ? (
         <ToastPortal {...(portalContainer === undefined ? {} : { container: portalContainer })}>
           <div
+            ref={viewportRef}
             className="hjm-toast-viewport"
             data-placement={placement}
             role="region"
             aria-label={label}
+            aria-describedby={hotkeyHelp === undefined ? undefined : hotkeyHelpId}
+            aria-keyshortcuts={hotkey}
+            tabIndex={hotkey === undefined ? undefined : -1}
+            onFocusCapture={handleViewportFocus}
+            onBlurCapture={handleViewportBlur}
+            style={viewportStyle}
           >
-            {snapshot.visible.map((entry) => renderStoreToast(entry, activeStore))}
+            {hotkeyHelp === undefined ? null : (
+              <span id={hotkeyHelpId} className="hjm-visually-hidden">{hotkeyHelp}</span>
+            )}
+            {snapshot.visible.map((entry) =>
+              renderStoreToast(
+                entry,
+                activeStore,
+                localeByIdRef.current.get(entry.descriptor.id),
+              ))}
           </div>
         </ToastPortal>
       ) : null}

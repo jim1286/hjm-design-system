@@ -17,6 +17,10 @@ DOM event, focus trap 또는 navigation adapter를 렌더링하지 않고, 두 �
 [`docs/library-reference-decisions.md`](./docs/library-reference-decisions.md)에 기록합니다.
 Toast의 queue·announcement·timer 수명주기는 [`docs/toast.md`](./docs/toast.md)에 별도로
 고정되어 있습니다.
+
+`badgeRecipe`은 Web/Native 공통 `filled | outline` variant를 정의하며 기본값은 기존과 같은
+`filled`입니다. renderer가 별도 색을 추측하지 않도록 outline 배경 정책, border fallback,
+강한 tone의 outline content 역할까지 계약에 포함합니다.
 Icon의 semantic name·RTL·장식/정보 접근성 경계는 [`docs/icon.md`](./docs/icon.md)에
 고정되어 있습니다.
 Tooltip의 Web hover/focus·provider·positioning 경계는
@@ -99,6 +103,7 @@ recipe graph까지 노출하므로 앱 runtime에서는 필요한 subpath를 우
 | `@hjm/design-contracts/tokens` | 색·foundation·semantic reference 전체 |
 | `@hjm/design-contracts/foundations` | spacing·type·motion·layout foundation만 |
 | `@hjm/design-contracts/colors` | light/dark palette와 accent resolver만 |
+| `@hjm/design-contracts/color-references` | semantic color reference 생성·해석기만 |
 | `@hjm/design-contracts/responsive` | 공통 window class와 responsive value resolver |
 | `@hjm/design-contracts/grid` | Web/RN 공통 Grid descriptor와 geometry resolver |
 | `@hjm/design-contracts/recipes` | 공통 core component recipe |

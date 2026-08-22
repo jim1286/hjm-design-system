@@ -19,8 +19,11 @@ beta)이다. `Layout`이 그 콘텐츠나 상태를 다시 계약하면 두 곳�
 - **접근성 계약**: 있다 — 그리고 이게 Stack/Grid와 갈리는 지점이다. `main`
   랜드마크는 **정확히 하나**여야 하고, 헤더나 사이드바처럼 반복되는 내비게이션이
   `main` 앞에 있으면 WCAG 2.4.1(Bypass Blocks)에 따라 skip link가 있어야 한다.
-  `validateLayoutDescriptor`가 이 규칙을 강제한다 — `hasHeader`나 `sidebar`가
-  있는데 `skipLinkLabel`이 없으면 던진다.
+  Web 전용 `validateLayoutWebDescriptor`가 이 규칙을 강제한다 — `hasHeader`나
+  `sidebar`가 있는데 `skipLinkLabel`이 없으면 던진다. 공통
+  `validateLayoutRegions`는 region/sidebar 구조만 검사하므로, bypass-link 개념이
+  없는 Native에 Web 요구를 강제하지 않는다. 기존 `validateLayoutDescriptor`는
+  Web validator의 호환 alias다.
 - **플랫폼 번역**: 성립하지만 비대칭적으로 성립한다. Web은 실제 랜드마크
   엘리먼트(`<header>`/`<nav>`/`<main>`/`<footer>`)가 있다. Native는 랜드마크
   개념 자체가 없다 — `accessibilityRole`은 heading/control용이지 페이지 영역용이
@@ -63,5 +66,18 @@ beta)이다. `Layout`이 그 콘텐츠나 상태를 다시 계약하면 두 곳�
 사이드바의 `accessibilityViewIsModal`로 같은 사용자 의도(지금 이 콘텐츠가
 상시 골격인가 임시로 뜬 것인가)를 다른 방식으로 전달한다.
 
-**검증 화면.** 아직 실제 제품 vertical slice가 없다 — catalog는 `planned`으로
-남고, `beta` 승격은 로드맵 gate(실제 화면 검증)를 통과한 뒤 리드가 진행한다.
+Web의 `footer` slot은 `Layout`이 `<footer>` contentinfo를 정확히 한 번 소유한다.
+`BottomNavigation`은 자체 루트를 이름 있는 `<nav>`로 렌더링하고 contentinfo를
+만들지 않으므로 `footer={<BottomNavigation ... />}` 합성 결과도 `<footer>` 하나와
+`<nav>` 하나다. Native `Layout`은 같은 source order만 유지하며 skip link를
+렌더링하거나 요구하지 않는다. `skipLinkLabel` Native prop은 이전 호출부 호환을
+위해 deprecated 상태로만 남아 있다.
+
+**현재 검증과 남은 증거.** 공통 descriptor를 직접 소비하는 first-party Web/RN renderer가
+추가되어 catalog와 두 surface를 `beta`로 승격했다. Web renderer는 실제
+`header`/`nav|aside`/`main`/`footer` landmark, BottomNavigation과의 단일-landmark 합성,
+skip-link focus 이동, persistent/overlay sidebar 합성을 SSR·browser test로 검증한다.
+Native renderer는 같은 region 순서와 overlay
+adapter를 유지하되 존재하지 않는 landmark role을 만들지 않는 기본 실행 증거를 제공한다.
+실제 product shell의 브라우저·VoiceOver·TalkBack 검증과 200% 글자 크기 증거는 stable
+승격 전까지 명시적인 debt로 남는다.

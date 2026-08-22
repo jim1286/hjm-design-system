@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
+import { resolveDesignSystemProviderValue } from "@hjm/design-contracts/components/design-system-provider";
 import {
   Badge,
   Button,
@@ -70,6 +71,29 @@ describe("HjmProvider SSR contract", () => {
   it("requires useHjmTheme consumers to cross the provider boundary", () => {
     expect(() => renderToStaticMarkup(<ThemeProbe />)).toThrow(/HjmProvider/);
   });
+
+  it("preserves a complete reviewed product palette through the value boundary", () => {
+    const canonical = resolveDesignSystemProviderValue(
+      { direction: "rtl", reducedMotion: true, textScale: 1.25, theme: "light" },
+      { systemTheme: "dark" },
+    );
+    const value = {
+      ...canonical,
+      palette: {
+        ...canonical.palette,
+        theme: { ...canonical.palette.theme, primary: "#123456" },
+      },
+    };
+    const markup = renderToStaticMarkup(
+      <HjmProvider value={value}>
+        <ThemeProbe />
+      </HjmProvider>,
+    );
+    expect(markup).toContain("--hjm-color-primary:#123456");
+    expect(markup).toContain('data-motion="reduced"');
+    expect(markup).toContain('dir="rtl"');
+    expect(markup).toContain("light:rtl:1.25");
+  });
 });
 
 describe("native HTML and accessible relationships", () => {
@@ -97,12 +121,41 @@ describe("native HTML and accessible relationships", () => {
     expect(markup).toContain('aria-describedby="custom-error"');
   });
 
+  it("supports aria-only field names while rejecting unnamed controls", () => {
+    const markup = renderToStaticMarkup(
+      <HjmProvider systemTheme="light">
+        <TextField aria-label="선수 이름" />
+        <TextArea aria-label="선수 소개" />
+        <SearchField aria-label="선수 검색" clearLabel="검색어 지우기" />
+      </HjmProvider>,
+    );
+
+    expect(markup).not.toContain('class="hjm-field__label"');
+    expect(markup).toContain('aria-label="선수 이름"');
+    expect(markup).toContain('aria-label="선수 소개"');
+    expect(markup).toContain('aria-label="선수 검색"');
+    expect(() =>
+      renderToStaticMarkup(
+        <HjmProvider systemTheme="light">
+          <TextField />
+        </HjmProvider>,
+      ),
+    ).toThrow(/label or aria-label/);
+  });
+
   it("uses button, anchor, checkbox, radio, switch, and tab semantics", () => {
     const markup = renderToStaticMarkup(
       <HjmProvider systemTheme="light">
         <Button loading>저장</Button>
         <IconButton label="메뉴">☰</IconButton>
-        <Link href="/home">홈</Link>
+        <Link
+          href="/home"
+          renderAnchor={({ children, ...props }) => (
+            <a {...props} data-framework-link="next">{children}</a>
+          )}
+        >
+          홈
+        </Link>
         <Checkbox label="동의" defaultChecked />
         <RadioGroup
           label="등급"
@@ -121,13 +174,14 @@ describe("native HTML and accessible relationships", () => {
     expect(markup).toContain('aria-busy="true"');
     expect(markup).toContain('aria-label="메뉴"');
     expect(markup).toContain('<a href="/home"');
+    expect(markup).toContain('data-framework-link="next"');
     expect(markup).toContain('type="checkbox"');
     expect(markup).toContain('type="radio"');
     expect(markup).toContain('role="switch"');
     expect(markup).toContain('role="tablist"');
     expect(markup).toContain('aria-selected="true"');
     expect(markup).toContain('role="tabpanel"');
-    expect(markup).toMatch(/aria-controls="[^"]+-panel-0"/);
+    expect(markup).toMatch(/aria-controls="[^"]+-panel-overview"/);
   });
 });
 
@@ -161,6 +215,7 @@ describe("layout and display vertical slice", () => {
       <HjmProvider systemTheme="light">
         <Stack gap="md">
           <Badge tone="success">활성</Badge>
+          <Badge tone="strong" variant="outline">요약</Badge>
           <Tag tone="brand">유격수</Tag>
           <Card title="선수 카드" description="시즌 기록"><span>본문</span></Card>
           <ListRow title="경기 기록" description="오늘" href="/games" selected />
@@ -174,6 +229,7 @@ describe("layout and display vertical slice", () => {
     );
 
     expect(markup).toContain('class="hjm-card');
+    expect(markup).toContain('data-tone="strong" data-size="medium" data-variant="outline"');
     expect(markup).toContain('aria-current="page"');
     expect(markup).toContain('role="status"');
     expect(markup).toContain('<progress');
@@ -190,5 +246,8 @@ describe("layout and display vertical slice", () => {
     expect(css).toContain("padding-inline");
     expect(css).toContain('[dir="rtl"]');
     expect(css).toContain("prefers-reduced-motion");
+    expect(css).toContain('.hjm-badge[data-variant="outline"]');
+    expect(css).toContain("font-size: var(--hjm-type-caption-size)");
+    expect(css).toContain("font-weight: var(--hjm-font-weight-bold)");
   });
 });

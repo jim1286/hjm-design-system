@@ -1,5 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { resolveDescriptionListColumnCount, resolveDescriptionListDescriptor, } from "@hjm/design-contracts/components/description-list";
+import { resolveTimelineDescriptor, } from "@hjm/design-contracts/components/timeline";
 import { accordionRecipe, avatarRecipe, dividerRecipe, } from "@hjm/design-contracts/recipes";
 import { createElement, forwardRef, useEffect, useId, useRef, useState, } from "react";
 import { classNames, useControllableState, useElementWidth } from "./internal.js";
@@ -161,4 +162,9 @@ function TableInner({ columns, rows, getRowKey, caption, emptyState, onSortChang
                                                 : " ↕" })] })) : column.header }, column.id))) }) }), _jsx("tbody", { children: rows.length === 0 ? (_jsx("tr", { children: _jsx("td", { className: "hjm-table__empty", colSpan: columns.length, children: emptyState }) })) : (rows.map((row, rowIndex) => (_jsx("tr", { className: "hjm-table__row", children: columns.map((column) => (_jsx("td", { className: "hjm-table__cell", "data-align": column.align ?? "start", children: column.cell(row, rowIndex) }, column.id))) }, rowKeys[rowIndex])))) })] }) }));
 }
 export const Table = forwardRef(TableInner);
+function TimelineInner({ items, composeAccessibleName, className, ...props }, ref) {
+    const resolved = resolveTimelineDescriptor({ items }, { composeAccessibleName });
+    return (_jsx("ol", { ...props, ref: ref, className: classNames("hjm-timeline", className), children: resolved.map((item, index) => (_jsxs("li", { "aria-label": item.accessibleName, className: "hjm-timeline__item", "data-tone": item.tone, children: [_jsxs("span", { className: "hjm-timeline__rail", "aria-hidden": "true", children: [_jsx("span", { className: "hjm-timeline__dot" }), index < resolved.length - 1 ? (_jsx("span", { className: "hjm-timeline__connector" })) : null] }), _jsxs("span", { className: "hjm-timeline__content", children: [_jsxs("span", { className: "hjm-timeline__heading", children: [_jsx("strong", { className: "hjm-timeline__label", children: item.label }), item.timestamp ? (_jsx("time", { className: "hjm-timeline__timestamp", children: item.timestamp })) : null] }), item.description ? (_jsx("span", { className: "hjm-timeline__description", children: item.description })) : null] })] }, item.id))) }));
+}
+export const Timeline = forwardRef(TimelineInner);
 //# sourceMappingURL=advanced-display.js.map

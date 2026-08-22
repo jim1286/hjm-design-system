@@ -3,7 +3,7 @@ import { commitNumberFieldInput, numberFieldRecipe, parseNumberFieldInput, resol
 import { forwardRef, useEffect, useState } from "react";
 import { Pressable, Text as NativeText, TextInput, View, } from "react-native";
 import { useControllableState } from "./internal/state.js";
-import { logicalTextAlign, minimumTargetStyle, scalableTextDefaults, } from "./internal/styles.js";
+import { logicalTextAlign, minimumTargetStyle, resolveNativeTextScaleProps, } from "./internal/styles.js";
 import { useHjmNativeTheme } from "./provider.js";
 function valueToInput(value) {
     return value === null ? "" : String(value);
@@ -15,7 +15,7 @@ function defaultInputMode(min, step) {
 }
 /** Expo-independent exact numeric input sharing the Web range/step resolver. */
 export const NumberField = forwardRef(function NumberField({ label, min, max, step, value, defaultValue = null, onValueChange, description, error, required = false, disabled = false, readOnly = false, size = "medium", decrementLabel, incrementLabel, accessibilityLabel, accessibilityHint, getValueText, inputMode, inputStyle, containerStyle, onBlur, onFocus, onSubmitEditing, ...inputProps }, forwardedRef) {
-    const { colors, environment, tokens } = useHjmNativeTheme();
+    const { colors, environment, textScaling, tokens } = useHjmNativeTheme();
     const controlled = value !== undefined;
     const [currentValue, setCurrentValue] = useControllableState({
         ...(value === undefined ? {} : { value }),
@@ -84,14 +84,15 @@ export const NumberField = forwardRef(function NumberField({ label, min, max, st
                     stepValue("decrement");
             },
         };
-    return (_jsxs(View, { style: [{ gap: numberFieldRecipe.support.gap }, containerStyle], children: [_jsx(NativeText, { ...scalableTextDefaults, style: [
+    const scaledText = (style, allowFontScaling) => resolveNativeTextScaleProps(textScaling, style, allowFontScaling);
+    return (_jsxs(View, { style: [{ gap: numberFieldRecipe.support.gap }, containerStyle], children: [_jsx(NativeText, { ...scaledText([
                     tokens.typography[numberFieldRecipe.support.label.textVariant],
                     {
                         color: colors.textBody,
                         fontWeight: numberFieldRecipe.support.label.fontWeight,
                         textAlign: logicalTextAlign(environment.direction),
                     },
-                ], children: visibleLabel }), _jsxs(View, { style: {
+                ]), children: visibleLabel }), _jsxs(View, { style: {
                     alignItems: "center",
                     backgroundColor: colors.surface,
                     borderColor: error
@@ -118,17 +119,10 @@ export const NumberField = forwardRef(function NumberField({ label, min, max, st
                                 opacity: unavailable || stepper.decrementDisabled ? 0.5 : 1,
                                 width: recipe.stepperDiameter,
                             },
-                        ], children: _jsx(NativeText, { ...scalableTextDefaults, accessible: false, style: [tokens.typography.title, { color: colors.textMuted, textAlign: "center" }], children: "\u2212" }) }), _jsx(TextInput, { ...scalableTextDefaults, ...inputProps, ...actionProps, ref: forwardedRef, accessibilityHint: hint, accessibilityLabel: accessibilityLabel ?? visibleLabel, accessibilityRole: "text", accessibilityState: { disabled }, accessibilityValue: accessibilityValue, editable: !disabled, readOnly: readOnly, inputMode: inputMode ?? defaultInputMode(min, descriptor.step), multiline: false, onChangeText: setDraft, onFocus: (event) => {
-                            setFocused(true);
-                            onFocus?.(event);
-                        }, onBlur: (event) => {
-                            setFocused(false);
-                            commitDraft();
-                            onBlur?.(event);
-                        }, onSubmitEditing: (event) => {
-                            commitDraft();
-                            onSubmitEditing?.(event);
-                        }, placeholderTextColor: colors.textWeak, style: [
+                        ], children: _jsx(NativeText, { ...scaledText([
+                                tokens.typography.title,
+                                { color: colors.textMuted, textAlign: "center" },
+                            ]), accessible: false, children: "\u2212" }) }), _jsx(TextInput, { ...inputProps, ...actionProps, ...scaledText([
                             {
                                 color: colors.text,
                                 flex: 1,
@@ -142,7 +136,17 @@ export const NumberField = forwardRef(function NumberField({ label, min, max, st
                                 textAlign: "center",
                             },
                             inputStyle,
-                        ], value: draft }), _jsx(Pressable, { accessibilityLabel: incrementLabel, accessibilityRole: "button", accessibilityState: { disabled: unavailable || stepper.incrementDisabled }, disabled: unavailable || stepper.incrementDisabled, onPress: () => stepValue("increment"), style: ({ pressed }) => [
+                        ], inputProps.allowFontScaling), ref: forwardedRef, accessibilityHint: hint, accessibilityLabel: accessibilityLabel ?? visibleLabel, accessibilityRole: "text", accessibilityState: { disabled }, accessibilityValue: accessibilityValue, editable: !disabled, readOnly: readOnly, inputMode: inputMode ?? defaultInputMode(min, descriptor.step), multiline: false, onChangeText: setDraft, onFocus: (event) => {
+                            setFocused(true);
+                            onFocus?.(event);
+                        }, onBlur: (event) => {
+                            setFocused(false);
+                            commitDraft();
+                            onBlur?.(event);
+                        }, onSubmitEditing: (event) => {
+                            commitDraft();
+                            onSubmitEditing?.(event);
+                        }, placeholderTextColor: colors.textWeak, value: draft }), _jsx(Pressable, { accessibilityLabel: incrementLabel, accessibilityRole: "button", accessibilityState: { disabled: unavailable || stepper.incrementDisabled }, disabled: unavailable || stepper.incrementDisabled, onPress: () => stepValue("increment"), style: ({ pressed }) => [
                             minimumTargetStyle,
                             {
                                 alignItems: "center",
@@ -154,12 +158,15 @@ export const NumberField = forwardRef(function NumberField({ label, min, max, st
                                 opacity: unavailable || stepper.incrementDisabled ? 0.5 : 1,
                                 width: recipe.stepperDiameter,
                             },
-                        ], children: _jsx(NativeText, { ...scalableTextDefaults, accessible: false, style: [tokens.typography.title, { color: colors.textMuted, textAlign: "center" }], children: "+" }) })] }), error ? (_jsx(NativeText, { ...scalableTextDefaults, accessibilityLiveRegion: "assertive", style: [
+                        ], children: _jsx(NativeText, { ...scaledText([
+                                tokens.typography.title,
+                                { color: colors.textMuted, textAlign: "center" },
+                            ]), accessible: false, children: "+" }) })] }), error ? (_jsx(NativeText, { ...scaledText([
                     tokens.typography.caption,
                     { color: colors.danger, textAlign: logicalTextAlign(environment.direction) },
-                ], children: error })) : description ? (_jsx(NativeText, { ...scalableTextDefaults, style: [
+                ]), accessibilityLiveRegion: "assertive", children: error })) : description ? (_jsx(NativeText, { ...scaledText([
                     tokens.typography.caption,
                     { color: colors.textMuted, textAlign: logicalTextAlign(environment.direction) },
-                ], children: description })) : null] }));
+                ]), children: description })) : null] }));
 });
 //# sourceMappingURL=number-field.js.map

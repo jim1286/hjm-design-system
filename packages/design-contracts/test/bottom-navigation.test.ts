@@ -541,21 +541,21 @@ describe("BottomNavigation visual and behavior contracts", () => {
     });
   });
 
-  it("promotes the adaptive catalog entry after paired product evidence", () => {
+  it("tracks both first-party adaptive renderers as beta", () => {
     expect(componentCatalog).not.toEqual(
       expect.arrayContaining([expect.objectContaining({ name: "BottomTabs" })]),
     );
     expect(componentCatalog).toEqual(
       expect.arrayContaining([
-        {
+        expect.objectContaining({
           name: "BottomNavigation",
           category: "navigation",
           platform: "adaptive",
           status: "beta",
-          surfaceStatus: { web: "planned", native: "beta" },
+          surfaceStatus: { web: "beta", native: "beta" },
           recipe: "bottomNavigationRecipe",
           behavior: "bottomNavigation",
-        },
+        }),
       ]),
     );
   });

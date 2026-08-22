@@ -1,16 +1,12 @@
-import { type SegmentedControlSize, type SelectionGroupOrientation, type SelectionGroupPresentation } from "@hjm/design-contracts/recipes";
+import { type SegmentedControlSize, type SelectionControlPresentation, type SelectionControlSize, type SelectionGroupOrientation, type SelectionGroupPresentation } from "@hjm/design-contracts/recipes";
 import { type CheckboxGroupSelection, type SelectionItemDescriptor } from "@hjm/design-contracts/behaviors";
 import { type ButtonHTMLAttributes, type ChangeEvent, type FieldsetHTMLAttributes, type InputHTMLAttributes, type ReactElement, type ReactNode, type RefAttributes } from "react";
-export type CheckboxProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type" | "checked" | "defaultChecked" | "onChange" | "children"> & Readonly<{
-    label: ReactNode;
-    description?: ReactNode;
-    checked?: boolean;
-    defaultChecked?: boolean;
-    indeterminate?: boolean;
-    onCheckedChange?: (checked: boolean) => void;
-    onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+export type ChoiceLeadingRenderProps = Readonly<{
+    selected: boolean;
+    color: "currentColor";
+    size: number;
 }>;
-export declare const Checkbox: import("react").ForwardRefExoticComponent<Omit<InputHTMLAttributes<HTMLInputElement>, "onChange" | "children" | "defaultChecked" | "type" | "checked"> & Readonly<{
+export type CheckboxProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type" | "checked" | "defaultChecked" | "onChange" | "children" | "size"> & Readonly<{
     label: ReactNode;
     description?: ReactNode;
     checked?: boolean;
@@ -18,6 +14,21 @@ export declare const Checkbox: import("react").ForwardRefExoticComponent<Omit<In
     indeterminate?: boolean;
     onCheckedChange?: (checked: boolean) => void;
     onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+    presentation?: SelectionControlPresentation;
+    size?: SelectionControlSize;
+    renderLeading?: (appearance: ChoiceLeadingRenderProps) => ReactNode;
+}>;
+export declare const Checkbox: import("react").ForwardRefExoticComponent<Omit<InputHTMLAttributes<HTMLInputElement>, "onChange" | "children" | "defaultChecked" | "type" | "size" | "checked"> & Readonly<{
+    label: ReactNode;
+    description?: ReactNode;
+    checked?: boolean;
+    defaultChecked?: boolean;
+    indeterminate?: boolean;
+    onCheckedChange?: (checked: boolean) => void;
+    onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+    presentation?: SelectionControlPresentation;
+    size?: SelectionControlSize;
+    renderLeading?: (appearance: ChoiceLeadingRenderProps) => ReactNode;
 }> & RefAttributes<HTMLInputElement>>;
 type RadioState = Readonly<{
     checked: boolean;
@@ -28,10 +39,13 @@ type RadioState = Readonly<{
     defaultChecked?: boolean;
     onCheckedChange?: (checked: true) => void;
 }>;
-export type RadioProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type" | "checked" | "defaultChecked" | "onChange" | "children"> & RadioState & Readonly<{
+export type RadioProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type" | "checked" | "defaultChecked" | "onChange" | "children" | "size"> & RadioState & Readonly<{
     label: ReactNode;
     description?: ReactNode;
     onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+    presentation?: SelectionControlPresentation;
+    size?: SelectionControlSize;
+    renderLeading?: (appearance: ChoiceLeadingRenderProps) => ReactNode;
 }>;
 /** Native radio item primitive. Use RadioGroup when the renderer owns group state. */
 export declare const Radio: import("react").ForwardRefExoticComponent<RadioProps & RefAttributes<HTMLInputElement>>;
@@ -44,7 +58,11 @@ type CheckboxGroupBaseProps<Key extends string> = Omit<FieldsetHTMLAttributes<HT
     error?: ReactNode;
     orientation?: SelectionGroupOrientation;
     presentation?: SelectionGroupPresentation;
+    size?: SelectionControlSize;
     name?: string;
+    required?: boolean;
+    readOnly?: boolean;
+    renderLeading?: (item: CheckboxGroupItem<Key>, appearance: ChoiceLeadingRenderProps) => ReactNode;
 }>;
 export type CheckboxGroupProps<Key extends string = string> = CheckboxGroupBaseProps<Key> & CheckboxGroupSelection<Key>;
 export declare const CheckboxGroup: <Key extends string = string>(props: CheckboxGroupProps<Key> & RefAttributes<HTMLFieldSetElement>) => ReactElement;
@@ -54,34 +72,29 @@ export type RadioGroupItem = Readonly<{
     description?: ReactNode;
     disabled?: boolean;
 }>;
-export type RadioGroupProps = Omit<FieldsetHTMLAttributes<HTMLFieldSetElement>, "defaultValue" | "onChange" | "value"> & Readonly<{
+type RadioGroupLabelProps = Readonly<{
     label: ReactNode;
     accessibilityLabel?: string;
-    items: readonly RadioGroupItem[];
-    value?: string | null;
-    defaultValue?: string | null;
-    onValueChange?: (value: string) => void;
-    orientation?: SelectionGroupOrientation;
-    description?: ReactNode;
-    error?: ReactNode;
-    name?: string;
-    required?: boolean;
-    readOnly?: boolean;
+}> | Readonly<{
+    label?: never;
+    accessibilityLabel: string;
 }>;
-export declare const RadioGroup: import("react").ForwardRefExoticComponent<Omit<FieldsetHTMLAttributes<HTMLFieldSetElement>, "value" | "defaultValue" | "onChange"> & Readonly<{
-    label: ReactNode;
-    accessibilityLabel?: string;
+export type RadioGroupProps = Omit<FieldsetHTMLAttributes<HTMLFieldSetElement>, "defaultValue" | "onChange" | "value"> & RadioGroupLabelProps & Readonly<{
     items: readonly RadioGroupItem[];
     value?: string | null;
     defaultValue?: string | null;
     onValueChange?: (value: string) => void;
     orientation?: SelectionGroupOrientation;
+    presentation?: SelectionGroupPresentation;
+    size?: SelectionControlSize;
     description?: ReactNode;
     error?: ReactNode;
     name?: string;
     required?: boolean;
     readOnly?: boolean;
-}> & RefAttributes<HTMLFieldSetElement>>;
+    renderLeading?: (item: RadioGroupItem, appearance: ChoiceLeadingRenderProps) => ReactNode;
+}>;
+export declare const RadioGroup: import("react").ForwardRefExoticComponent<RadioGroupProps & RefAttributes<HTMLFieldSetElement>>;
 export type SwitchProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "role" | "onChange" | "value"> & Readonly<{
     label: ReactNode;
     checked?: boolean;

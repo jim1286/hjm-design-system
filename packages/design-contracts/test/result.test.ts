@@ -122,11 +122,12 @@ describe("Result visual identity", () => {
     ]);
   });
 
-  it("keeps the recipe planned until a real flow terminus is product-validated", () => {
+  it("promotes the shared recipe after product flow termini adopt both renderers", () => {
     expect(componentCatalog.find((entry) => entry.name === "Result")).toMatchObject({
       category: "feedback",
       platform: "shared",
-      status: "planned",
+      status: "beta",
+      surfaceStatus: { web: "beta", native: "beta" },
     });
   });
 

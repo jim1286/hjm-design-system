@@ -157,7 +157,7 @@ describe("Native NumberField", () => {
     expect(byLabel(renderer, "감소").props.accessibilityState.disabled).toBe(false);
   });
 
-  it("uses accessibility increment/decrement and does not double-scale type", () => {
+  it("uses accessibility actions and applies the explicit Provider scale once", () => {
     const onValueChange = vi.fn();
     const renderer = render(
       <NumberField
@@ -179,9 +179,12 @@ describe("Native NumberField", () => {
     ]);
     expect(input.props.accessibilityValue).toEqual({ min: 1, max: 8, now: 2, text: "2명" });
     expect(flattenStyle(input.props.style)).toMatchObject({
-      fontSize: 14,
+      fontSize: 14 * 1.6,
+      lineHeight: 20 * 1.6,
       fontVariant: ["tabular-nums"],
     });
+    expect(input.props.allowFontScaling).toBe(false);
+    expect(input.props.maxFontSizeMultiplier).toBeUndefined();
     const logicalFrame = renderer.root.findAllByType(View).find(
       (view) => {
         const style = flattenStyle(view.props.style);

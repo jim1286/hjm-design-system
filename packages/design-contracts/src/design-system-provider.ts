@@ -70,6 +70,61 @@ export type DesignSystemProviderValue = Readonly<{
   palette: ColorReferencePalette;
 }>;
 
+const themeColorKeys = Object.keys(THEMES.light) as readonly (keyof typeof THEMES.light)[];
+const accentColorKeys = Object.keys(ACCENTS.light) as readonly (keyof typeof ACCENTS.light)[];
+const sixDigitHexColor = /^#[0-9a-f]{6}$/i;
+
+function assertColorRecord(
+  value: unknown,
+  keys: readonly string[],
+  field: string,
+): asserts value is Readonly<Record<string, string>> {
+  if (value === null || typeof value !== "object" || Array.isArray(value)) {
+    throw new TypeError(`DesignSystemProviderValue ${field} must be a color record`);
+  }
+  const record = value as Readonly<Record<string, unknown>>;
+  for (const key of keys) {
+    const color = record[key];
+    if (typeof color !== "string" || !sixDigitHexColor.test(color)) {
+      throw new TypeError(
+        `DesignSystemProviderValue ${field}.${key} must be a six-digit hex color`,
+      );
+    }
+  }
+}
+
+/**
+ * Runtime boundary for reviewed full product palettes supplied to a renderer.
+ * Partial token overrides remain unsupported: every semantic role required by
+ * a recipe must be present, and alpha composition requires six-digit hex.
+ */
+export function validateDesignSystemProviderValue(
+  value: DesignSystemProviderValue,
+): void {
+  if (value === null || typeof value !== "object") {
+    throw new TypeError("DesignSystemProviderValue must be an object");
+  }
+  if (value.environment === null || typeof value.environment !== "object") {
+    throw new TypeError("DesignSystemProviderValue environment must be an object");
+  }
+  validateResolvedDesignSystemEnvironment(value.environment);
+  const palette = value.palette;
+  if (palette === null || typeof palette !== "object") {
+    throw new TypeError("DesignSystemProviderValue palette must be an object");
+  }
+  assertColorRecord(palette.theme, themeColorKeys, "palette.theme");
+  assertColorRecord(
+    palette.statusAccents,
+    accentColorKeys,
+    "palette.statusAccents",
+  );
+  assertColorRecord(
+    palette.statusAccentFills,
+    accentColorKeys,
+    "palette.statusAccentFills",
+  );
+}
+
 function assertBoolean(value: boolean, field: string): void {
   if (typeof value !== "boolean") {
     throw new TypeError(`DesignSystemEnvironment ${field} must be a boolean`);
@@ -191,7 +246,7 @@ export function resolveDesignSystemProviderValue(
   options: ResolveDesignSystemEnvironmentOptions,
 ): DesignSystemProviderValue {
   const environment = resolveDesignSystemEnvironment(input, options);
-  return {
+  const value = {
     environment,
     palette: {
       theme: THEMES[environment.theme],
@@ -199,4 +254,6 @@ export function resolveDesignSystemProviderValue(
       statusAccentFills: accentFill,
     },
   };
+  validateDesignSystemProviderValue(value);
+  return value;
 }
