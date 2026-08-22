@@ -16,7 +16,7 @@ fine-grained token으로 두 consumer에 `repository_dispatch`를 보내고 결�
 3. `scripts/check-consumer-release.mjs`는 두 consumer의 default branch HEAD가 코드에 고정된
    reviewed full SHA와 같은지 확인합니다.
    - BurnTok `main`: `58794d4bbd5597ab6d6101f8888307eea08f67ee`
-   - Yajalal `develop`: `e4164cc5207e48faf4a164dea3ce9475e63c0242`
+   - Yajalal `develop`: `67de581532ce6904aabdd94ada6fdac13706e809`
 4. script는 `{ repository, release_sha, version, correlation_id, consumer_ref }` payload로 두
    `hjm-release-candidate` event를 보냅니다. consumer workflow는 자체 checkout을
    `consumer_ref`에, public canonical checkout을 `release_sha`에 고정하고 실제 HEAD를 다시

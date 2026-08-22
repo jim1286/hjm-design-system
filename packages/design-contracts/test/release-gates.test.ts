@@ -112,13 +112,18 @@ describe("generated Changesets version PR gate", () => {
 describe("private consumer release evidence gate", () => {
   const workspaceRoot = fileURLToPath(new URL("../../../", import.meta.url));
 
-  it("accepts fully joined consumer evidence and rejects a mismatched release SHA", () => {
-    expect(() =>
-      execFileSync(process.execPath, ["scripts/check-consumer-release.mjs", "--self-test"], {
+  it("accepts exact inventory evidence and rejects mismatched, missing, unexpected, and duplicate data", () => {
+    const output = execFileSync(
+      process.execPath,
+      ["scripts/check-consumer-release.mjs", "--self-test"],
+      {
         cwd: workspaceRoot,
-        stdio: "pipe",
-      }),
-    ).not.toThrow();
+        encoding: "utf8",
+      },
+    );
+    expect(output).toContain(
+      "including missing, unexpected, and duplicate inventory rejection",
+    );
   });
 
   it("fails closed when the canonical consumer dispatch token is absent", async () => {

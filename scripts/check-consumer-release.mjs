@@ -7,6 +7,8 @@ import { randomUUID } from "node:crypto";
 const API_VERSION = "2026-03-10";
 const DEFAULT_POLL_INTERVAL_MS = 10_000;
 const DEFAULT_TIMEOUT_MS = 45 * 60_000;
+const ARTIFACT_POLL_INTERVAL_MS = 2_000;
+const ARTIFACT_TIMEOUT_MS = 45_000;
 const WORKFLOW_FILE = "hjm-release-candidate.yml";
 const EVENT_TYPE = "hjm-release-candidate";
 
@@ -23,7 +25,7 @@ export const consumerReleaseTargets = [
     id: "yajalal",
     repository: "jim1286/yajalal",
     defaultBranch: "develop",
-    consumerRef: "e4164cc5207e48faf4a164dea3ce9475e63c0242",
+    consumerRef: "67de581532ce6904aabdd94ada6fdac13706e809",
     artifactPrefix: "hjm-consumer-evidence-yajalal-",
     evidenceSuffix: "native-storybook.json",
   },
@@ -160,12 +162,18 @@ async function findCorrelatedRun(client, target, release, dispatchedAt) {
   const response = await client.json(
     `/repos/${repositoryPath}/actions/workflows/${encodeURIComponent(WORKFLOW_FILE)}/runs?event=repository_dispatch&per_page=100`,
   );
-  const matches = (response.workflow_runs ?? []).filter((run) =>
+  const correlatedRuns = (response.workflow_runs ?? []).filter((run) =>
     run.event === "repository_dispatch" &&
     run.display_title === expectedTitle &&
-    run.head_sha === target.consumerRef &&
     Date.parse(run.created_at) >= dispatchedAt - 5_000
   );
+  const wrongRevision = correlatedRuns.find((run) => run.head_sha !== target.consumerRef);
+  if (wrongRevision) {
+    throw new Error(
+      `${target.repository} correlated run ${wrongRevision.html_url} used consumer revision ${wrongRevision.head_sha}, expected ${target.consumerRef}`,
+    );
+  }
+  const matches = correlatedRuns.filter((run) => run.head_sha === target.consumerRef);
   if (matches.length > 1) {
     throw new Error(`${target.repository} produced multiple runs for correlation ${release.correlationId}`);
   }
@@ -222,18 +230,78 @@ function requireEqual(actual, expected, label) {
   }
 }
 
+function assertExactInventoryStoryIds(target, evidence, manifest, surface) {
+  if (!Array.isArray(manifest.components)) {
+    throw new Error(`${target.id} manifest components must be an array`);
+  }
+  const manifestStoryIds = new Set();
+  const expected = [];
+  for (const component of manifest.components) {
+    if (
+      typeof component?.storyId !== "string" ||
+      component.storyId.length === 0 ||
+      !Array.isArray(component.requirements)
+    ) {
+      throw new Error(`${target.id} manifest contains an invalid component projection`);
+    }
+    if (manifestStoryIds.has(component.storyId)) {
+      throw new Error(`${target.id} manifest repeats story id ${component.storyId}`);
+    }
+    manifestStoryIds.add(component.storyId);
+    if (component.requirements.some((requirement) => requirement?.surface === surface)) {
+      expected.push(component.storyId);
+    }
+  }
+
+  const actual = evidence.inventory?.storyIds;
+  if (!Array.isArray(actual) || actual.some((storyId) => typeof storyId !== "string")) {
+    throw new Error(`${target.id} inventory storyIds must be an array of strings`);
+  }
+  const occurrences = new Map();
+  for (const storyId of actual) {
+    occurrences.set(storyId, (occurrences.get(storyId) ?? 0) + 1);
+  }
+  const actualSet = new Set(actual);
+  const expectedSet = new Set(expected);
+  const duplicates = [...occurrences]
+    .filter(([, count]) => count > 1)
+    .map(([storyId]) => storyId)
+    .sort();
+  const missing = expected.filter((storyId) => !actualSet.has(storyId)).sort();
+  const unexpected = actual.filter((storyId) => !expectedSet.has(storyId)).sort();
+  if (duplicates.length > 0 || missing.length > 0 || unexpected.length > 0) {
+    throw new Error(
+      `${target.id} inventory story IDs do not match canonical ${surface} projection; ` +
+      `duplicates: ${duplicates.join(", ") || "none"}; ` +
+      `missing: ${missing.join(", ") || "none"}; ` +
+      `unexpected: ${unexpected.join(", ") || "none"}`,
+    );
+  }
+}
+
 export function validateEvidenceDocuments(target, documents, release) {
   const { evidence, manifest, dispatch } = documents;
   requireEqual(evidence.schemaVersion, 1, `${target.id} evidence schemaVersion`);
   requireEqual(evidence.designSystemVersion, release.version, `${target.id} evidence designSystemVersion`);
   requireEqual(evidence.source?.revision, target.consumerRef, `${target.id} evidence consumer revision`);
   requireEqual(manifest.schemaVersion, 2, `${target.id} manifest schemaVersion`);
+  requireEqual(manifest.packageName, "@hjm/design-contracts", `${target.id} manifest packageName`);
   requireEqual(manifest.designSystemVersion, release.version, `${target.id} manifest version`);
+
+  const surface = target.id === "burntok"
+    ? "web"
+    : target.id === "yajalal"
+      ? "native"
+      : undefined;
+  if (!surface) {
+    throw new Error(`Unknown consumer target ${target.id}`);
+  }
+  requireEqual(evidence.inventory?.surface, surface, `${target.id} inventory surface`);
+  assertExactInventoryStoryIds(target, evidence, manifest, surface);
 
   if (target.id === "burntok") {
     requireEqual(evidence.source?.id, "burntok-web", "BurnTok evidence source id");
     requireEqual(evidence.source?.surface, "web", "BurnTok evidence surface");
-    requireEqual(evidence.inventory?.surface, "web", "BurnTok inventory surface");
     requireEqual(evidence.canonicalRelease?.repository, release.repository, "BurnTok canonical repository");
     requireEqual(evidence.canonicalRelease?.revision, release.releaseSha, "BurnTok release SHA");
     requireEqual(evidence.canonicalRelease?.version, release.version, "BurnTok release version");
@@ -245,7 +313,6 @@ export function validateEvidenceDocuments(target, documents, release) {
   } else if (target.id === "yajalal") {
     requireEqual(evidence.source?.id, "yajalal-native", "Yajalal evidence source id");
     requireEqual(evidence.source?.surface, "native", "Yajalal evidence surface");
-    requireEqual(evidence.inventory?.surface, "native", "Yajalal inventory surface");
     const candidate = evidence.inventory?.releaseCandidate;
     requireEqual(candidate?.repository, release.repository, "Yajalal canonical repository");
     requireEqual(candidate?.release_sha, release.releaseSha, "Yajalal release SHA");
@@ -256,33 +323,51 @@ export function validateEvidenceDocuments(target, documents, release) {
     requireEqual(dispatch?.consumer_ref, target.consumerRef, "Yajalal dispatch consumer ref");
     requireEqual(dispatch?.version, release.version, "Yajalal dispatch version");
     requireEqual(dispatch?.correlation_id, release.correlationId, "Yajalal dispatch correlation id");
-  } else {
-    throw new Error(`Unknown consumer target ${target.id}`);
   }
+}
+
+async function waitForConsumerArtifact(client, target, run, expectedName) {
+  const repositoryPath = encodedRepository(target.repository);
+  const deadline = Date.now() + ARTIFACT_TIMEOUT_MS;
+  while (Date.now() < deadline) {
+    const response = await client.json(
+      `/repos/${repositoryPath}/actions/runs/${run.id}/artifacts?per_page=100`,
+    );
+    const matches = (response.artifacts ?? []).filter((artifact) => artifact.name === expectedName);
+    if (matches.length > 1) {
+      throw new Error(`${target.repository} must upload exactly one ${expectedName}; found ${matches.length}`);
+    }
+    if (matches.length === 1) {
+      const [artifact] = matches;
+      if (
+        artifact.expired !== false ||
+        !Number.isSafeInteger(artifact.size_in_bytes) ||
+        artifact.size_in_bytes <= 0
+      ) {
+        throw new Error(`${target.repository} evidence artifact is expired or empty`);
+      }
+      return artifact;
+    }
+    await sleep(ARTIFACT_POLL_INTERVAL_MS);
+  }
+  throw new Error(
+    `${target.repository} did not expose ${expectedName} within ${ARTIFACT_TIMEOUT_MS}ms after its successful run`,
+  );
 }
 
 async function verifyConsumerArtifact(client, target, run, release) {
   const repositoryPath = encodedRepository(target.repository);
-  const response = await client.json(
-    `/repos/${repositoryPath}/actions/runs/${run.id}/artifacts?per_page=100`,
-  );
   const expectedName = `${target.artifactPrefix}${release.correlationId}`;
-  const matches = (response.artifacts ?? []).filter((artifact) => artifact.name === expectedName);
-  if (matches.length !== 1) {
-    throw new Error(`${target.repository} must upload exactly one ${expectedName}; found ${matches.length}`);
-  }
-  const [artifact] = matches;
-  if (artifact.expired || artifact.size_in_bytes <= 0) {
-    throw new Error(`${target.repository} evidence artifact is expired or empty`);
-  }
+  const artifact = await waitForConsumerArtifact(client, target, run, expectedName);
 
   const temporaryDirectory = await mkdtemp(join(tmpdir(), `hjm-${target.id}-evidence-`));
   const archivePath = join(temporaryDirectory, "evidence.zip");
   try {
-    await writeFile(
-      archivePath,
-      await client.bytes(`/repos/${repositoryPath}/actions/artifacts/${artifact.id}/zip`),
-    );
+    const archive = await client.bytes(`/repos/${repositoryPath}/actions/artifacts/${artifact.id}/zip`);
+    if (archive.length === 0) {
+      throw new Error(`${target.repository} evidence artifact archive is empty`);
+    }
+    await writeFile(archivePath, archive);
     const evidence = readJsonFromZip(archivePath, target.evidenceSuffix);
     const manifest = readJsonFromZip(archivePath, "showcase-manifest.json");
     const dispatch = target.id === "yajalal"
@@ -302,13 +387,26 @@ function selfTest() {
     version: "0.6.0",
     correlationId: `hjm-0.6.0-${"a".repeat(40)}-test`,
   };
-  const manifest = { schemaVersion: 2, designSystemVersion: release.version };
+  const manifest = {
+    schemaVersion: 2,
+    packageName: "@hjm/design-contracts",
+    designSystemVersion: release.version,
+    components: [
+      {
+        storyId: "foundation/text",
+        requirements: [{ surface: "web" }, { surface: "native" }],
+      },
+      { storyId: "input/checkbox", requirements: [{ surface: "web" }] },
+      { storyId: "layout/divider", requirements: [{ surface: "native" }] },
+      { storyId: "contract/planned", requirements: [{ surface: "contract" }] },
+    ],
+  };
   const burntok = consumerReleaseTargets[0];
   const burntokEvidence = {
     schemaVersion: 1,
     designSystemVersion: release.version,
     source: { id: "burntok-web", surface: "web", revision: burntok.consumerRef },
-    inventory: { surface: "web" },
+    inventory: { surface: "web", storyIds: ["foundation/text", "input/checkbox"] },
     canonicalRelease: {
       repository: release.repository,
       revision: release.releaseSha,
@@ -331,24 +429,59 @@ function selfTest() {
     source: { id: "yajalal-native", surface: "native", revision: yajalal.consumerRef },
     inventory: {
       surface: "native",
+      storyIds: ["foundation/text", "layout/divider"],
       releaseCandidate: dispatch,
     },
   };
   validateEvidenceDocuments(yajalal, { evidence: yajalalEvidence, manifest, dispatch }, release);
-  try {
-    validateEvidenceDocuments(
-      burntok,
-      { evidence: { ...burntokEvidence, canonicalRelease: { ...burntokEvidence.canonicalRelease, revision: "b".repeat(40) } }, manifest },
-      release,
-    );
-  } catch (error) {
-    if (/BurnTok release SHA/.test(String(error))) {
-      console.log("Consumer release evidence self-test passed.");
-      return;
+
+  function expectRejected(label, evidence, pattern) {
+    try {
+      validateEvidenceDocuments(burntok, { evidence, manifest }, release);
+    } catch (error) {
+      if (pattern.test(String(error))) return;
+      throw error;
     }
-    throw error;
+    throw new Error(`Consumer release evidence self-test accepted ${label}`);
   }
-  throw new Error("Consumer release evidence self-test accepted a mismatched release SHA");
+  expectRejected(
+    "a mismatched release SHA",
+    {
+      ...burntokEvidence,
+      canonicalRelease: { ...burntokEvidence.canonicalRelease, revision: "b".repeat(40) },
+    },
+    /BurnTok release SHA/,
+  );
+  expectRejected(
+    "a missing inventory story",
+    { ...burntokEvidence, inventory: { ...burntokEvidence.inventory, storyIds: ["foundation/text"] } },
+    /missing: input\/checkbox/,
+  );
+  expectRejected(
+    "an unexpected inventory story",
+    {
+      ...burntokEvidence,
+      inventory: {
+        ...burntokEvidence.inventory,
+        storyIds: [...burntokEvidence.inventory.storyIds, "layout/divider"],
+      },
+    },
+    /unexpected: layout\/divider/,
+  );
+  expectRejected(
+    "a duplicate inventory story",
+    {
+      ...burntokEvidence,
+      inventory: {
+        ...burntokEvidence.inventory,
+        storyIds: [...burntokEvidence.inventory.storyIds, "foundation/text"],
+      },
+    },
+    /duplicates: foundation\/text/,
+  );
+  console.log(
+    "Consumer release evidence self-test passed, including missing, unexpected, and duplicate inventory rejection.",
+  );
 }
 
 async function main() {

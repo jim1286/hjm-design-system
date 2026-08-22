@@ -45,13 +45,16 @@ describe("GitHub Actions runtime contracts", () => {
       'consumerRef: "58794d4bbd5597ab6d6101f8888307eea08f67ee"',
     );
     expect(checker).toContain(
-      'consumerRef: "e4164cc5207e48faf4a164dea3ce9475e63c0242"',
+      'consumerRef: "67de581532ce6904aabdd94ada6fdac13706e809"',
     );
     expect(checker).toContain('artifactPrefix: "hjm-consumer-evidence-burntok-"');
     expect(checker).toContain('artifactPrefix: "hjm-consumer-evidence-yajalal-"');
     expect(checker).toContain('run.display_title === expectedTitle');
     expect(checker).toContain('run.head_sha === target.consumerRef');
-    expect(checker).toContain('artifact.size_in_bytes <= 0');
+    expect(checker).toContain('wrongRevision.head_sha');
+    expect(checker).toContain('const ARTIFACT_TIMEOUT_MS = 45_000');
+    expect(checker).toContain('artifact.expired !== false');
+    expect(checker).toContain('assertExactInventoryStoryIds');
     expect(checker).toContain("validateEvidenceDocuments");
     expect(workflow.indexOf("pnpm release:check")).toBeLessThan(
       workflow.indexOf("scripts/check-consumer-release.mjs"),
