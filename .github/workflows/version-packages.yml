@@ -58,9 +58,30 @@ jobs:
           if [[ -z "${BEFORE}" || "${BEFORE}" =~ ^0+$ ]]; then
             BEFORE="$(git rev-list --max-parents=0 "${AFTER}")"
           fi
-          RELEASE_COMMITS="$(git rev-list --first-parent "${BEFORE}..${AFTER}" -- packages/design-contracts/package.json packages/react/package.json packages/react-native/package.json)"
+          PACKAGE_MANIFESTS=(
+            packages/design-contracts/package.json
+            packages/react/package.json
+            packages/react-native/package.json
+          )
+          RELEASE_COMMITS="$(git rev-list --first-parent "${BEFORE}..${AFTER}" -- "${PACKAGE_MANIFESTS[@]}")"
           if [ -z "${RELEASE_COMMITS}" ]; then
-            echo "should-tag=false" >> "$GITHUB_OUTPUT"
+            VERSION="$(node -p "require('./packages/design-contracts/package.json').version")"
+            TAG="v${VERSION}"
+            if git show-ref --tags --verify --quiet "refs/tags/${TAG}"; then
+              echo "should-tag=false" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            LATEST_RELEASE_COMMIT="$(git log -1 --format=%H -- "${PACKAGE_MANIFESTS[@]}")"
+            UNSAFE_RECOVERY_CHANGES="$({
+              git diff --name-only "${LATEST_RELEASE_COMMIT}..${AFTER}" |
+                grep -Ev '^\.github/workflows/(showcase|version-packages)\.yml$'
+            } || true)"
+            if [ -n "${UNSAFE_RECOVERY_CHANGES}" ]; then
+              echo "::error::Refusing to recover untagged ${TAG}; non-workflow files changed after ${LATEST_RELEASE_COMMIT}: ${UNSAFE_RECOVERY_CHANGES//$'\n'/, }"
+              exit 1
+            fi
+            echo "::notice::Recovering untagged ${TAG} after release-workflow-only fixes."
+            echo "should-tag=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
           LATEST_RELEASE_COMMIT="$(printf '%s\n' "${RELEASE_COMMITS}" | head -n 1)"
