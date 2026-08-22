@@ -1,0 +1,81 @@
+import { type GridDescriptor, type ResolvedGridLayout } from "@hjm/design-contracts/grid";
+import { type IconDescriptor } from "@hjm/design-contracts/components/icon";
+import { type TextVariant } from "@hjm/design-contracts/foundations";
+import { type SurfacePadding as ContractSurfacePadding, type SurfaceRadius as ContractSurfaceRadius, type SurfaceTone as ContractSurfaceTone } from "@hjm/design-contracts/recipes/base";
+import { type StackAlign, type StackAxis, type StackGap, type StackJustify, type TextEmphasis, type TextTone as ContractTextTone } from "@hjm/design-contracts/recipes";
+import { type ReactNode } from "react";
+import { type StyleProp, type TextProps as NativeTextProps, type TextStyle, type ViewProps, type ViewStyle } from "react-native";
+export type { StackAlign, StackAxis, StackGap, StackJustify, TextEmphasis, } from "@hjm/design-contracts/recipes";
+export type TextTone = ContractTextTone;
+export type TextProps = Omit<NativeTextProps, "children"> & Readonly<{
+    children: ReactNode;
+    variant?: TextVariant;
+    tone?: TextTone;
+    emphasis?: TextEmphasis;
+    align?: TextStyle["textAlign"];
+}>;
+export declare function Text({ children, variant, tone, emphasis, align, style, ...props }: TextProps): import("react").JSX.Element;
+/** @deprecated Compatibility aliases; use `subtle` and `accent`. */
+export type LegacyNativeSurfaceTone = "sunken" | "brand";
+export type SurfaceTone = ContractSurfaceTone | LegacyNativeSurfaceTone;
+export type SurfacePadding = ContractSurfacePadding | number;
+export type SurfaceRadius = ContractSurfaceRadius | number;
+export type SurfaceProps = ViewProps & Readonly<{
+    tone?: SurfaceTone;
+    padding?: SurfacePadding;
+    radius?: SurfaceRadius;
+    bordered?: boolean;
+}>;
+export declare function Surface({ tone, padding, radius: radiusValue, bordered, style, ...props }: SurfaceProps): import("react").JSX.Element;
+export type StackProps = ViewProps & Readonly<{
+    axis?: StackAxis;
+    gap?: StackGap | number;
+    align?: StackAlign;
+    justify?: StackJustify;
+    wrap?: boolean;
+    /** @deprecated Use the renderer-neutral `axis` prop. */
+    direction?: "row" | "column";
+}>;
+export declare function Stack({ axis, direction, gap, align, justify, wrap, style, ...props }: StackProps): import("react").JSX.Element;
+type GridCanonicalDescriptorProps = Pick<GridDescriptor, "columns" | "gap" | "minColumnWidth"> & Readonly<{
+    descriptor?: never;
+}>;
+type GridLegacyDescriptorProps = Readonly<{
+    /** @deprecated Pass `columns`, `gap`, and `minColumnWidth` directly. */
+    descriptor: GridDescriptor;
+    columns?: never;
+    gap?: never;
+    minColumnWidth?: never;
+}>;
+export type GridProps = Omit<ViewProps, "children"> & (GridCanonicalDescriptorProps | GridLegacyDescriptorProps) & Readonly<{
+    children?: ReactNode;
+    /** Inner width after page padding. Defaults to the full Native window width. */
+    availableWidth?: number;
+    onLayoutResolved?: (layout: ResolvedGridLayout) => void;
+    itemStyle?: StyleProp<ViewStyle>;
+}>;
+export declare function Grid({ children, descriptor, columns, gap, minColumnWidth, availableWidth, onLayoutResolved, itemStyle, style, ...props }: GridProps): import("react").JSX.Element;
+export type NativeIconRenderProps<Name extends string = string> = Readonly<{
+    name: Name;
+    size: number;
+    color: string;
+    strokeWidth: number;
+}>;
+export type IconProps<Name extends string = string> = Readonly<{
+    descriptor: IconDescriptor<Name>;
+    /** Tree-shakeable product glyph boundary; HJM owns all appearance values. */
+    renderGlyph: (props: NativeIconRenderProps<Name>) => ReactNode;
+    style?: StyleProp<ViewStyle>;
+}>;
+/** Semantic Native icon frame without an Expo or third-party icon dependency. */
+export declare function Icon<Name extends string = string>({ descriptor, renderGlyph, style, }: IconProps<Name>): import("react").JSX.Element;
+export type SectionProps = Omit<ViewProps, "children"> & Readonly<{
+    title: string;
+    description?: string;
+    action?: ReactNode;
+    children: ReactNode;
+    contentStyle?: StyleProp<ViewStyle>;
+}>;
+/** A large-text-safe content section with a logical header action slot. */
+export declare function Section({ title, description, action, children, contentStyle, style, ...props }: SectionProps): import("react").JSX.Element;
+//# sourceMappingURL=primitives.d.ts.map

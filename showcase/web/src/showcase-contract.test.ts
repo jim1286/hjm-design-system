@@ -7,6 +7,7 @@ import {
   behaviorRegistry,
   componentCatalog,
   componentDefinitions,
+  getComponentSurfaceStatus,
   recipeRegistry,
   resolveColorReference,
   resolveDesignSystemProviderValue,
@@ -14,10 +15,11 @@ import {
   type ColorReference,
   type ComponentName,
   type ComponentStatus,
-} from "@hjm/design-system";
-import { showcaseManifest, showcaseScenarios } from "@hjm/design-system/showcase";
+} from "@hjm/design-contracts";
+import { showcaseManifest, showcaseScenarios } from "@hjm/design-contracts/showcase";
 import {
   ContractStory,
+  isWebRendererComponent,
   summarizeWebShowcaseCoverage,
   webRendererRegistry,
   webRendererComponentNames,
@@ -31,7 +33,7 @@ import { WebDesignSystemProvider } from "./runtime/WebDesignSystemProvider";
 import { Introduction } from "./Introduction.stories";
 import { ComponentExplorer } from "./components/ComponentExplorer.stories";
 
-function isMatureStatus(status: ComponentStatus): boolean {
+function isMatureStatus(status: ComponentStatus | "unsupported"): boolean {
   return status === "stable" || status === "beta";
 }
 
@@ -117,33 +119,30 @@ describe("web showcase coverage", () => {
 
   it("registers exactly the mature Web-supported component set", () => {
     const expected = componentCatalog
-      .filter(
-        ({ platform, status }) =>
-          (status === "stable" || status === "beta") && platform !== "native",
-      )
+      .filter((entry) => isMatureStatus(getComponentSurfaceStatus(entry, "web")))
       .map(({ name }) => name)
       .sort();
     expect([...webRendererComponentNames].sort()).toEqual(expected);
     expect(Object.keys(webRendererRegistry).sort()).toEqual(expected);
     expect(summarizeWebShowcaseCoverage()).toEqual({
       canonical: componentCatalog.length,
-      webReferences: 51,
-      contractOnly: 38,
+      webReferences: 32,
+      contractOnly: 57,
       nativeOnly: 2,
     });
   });
 
-  it("renders the canonical 51/38/2 evidence split in Home and Explorer", () => {
+  it("renders the canonical 32/57/2 surface-evidence split in Home and Explorer", () => {
     const homeHtml = renderToStaticMarkup(createElement(Introduction));
-    expect(homeHtml).toContain("<strong>51</strong><span>Web references</span>");
-    expect(homeHtml).toContain("<strong>38</strong><span>contract-only stories</span>");
+    expect(homeHtml).toContain("<strong>32</strong><span>Web references</span>");
+    expect(homeHtml).toContain("<strong>57</strong><span>contract-only stories</span>");
     expect(homeHtml).toContain("<strong>2</strong><span>Native-only stories</span>");
     expect(homeHtml).toContain(componentCategoryExplorerHref("input"));
     expect(homeHtml).not.toContain("args=initialCategory");
 
     const explorerHtml = renderToStaticMarkup(createElement(ComponentExplorer));
-    expect(explorerHtml).toContain("<strong>51</strong> Web references");
-    expect(explorerHtml).toContain("<strong>38</strong> contract-only stories");
+    expect(explorerHtml).toContain("<strong>32</strong> Web references");
+    expect(explorerHtml).toContain("<strong>57</strong> contract-only stories");
     expect(explorerHtml).toContain("<strong>2</strong> Native-only stories");
     expect(explorerHtml.match(/Open Native-only contract/g)).toHaveLength(2);
     expect(explorerHtml).toContain("Open Web reference");
@@ -153,7 +152,7 @@ describe("web showcase coverage", () => {
   it("binds recipe evidence or the explicit nonvisual provider adapter", () => {
     for (const definition of Object.values(webRendererRegistry)) {
       const component = definition.component;
-      expect(definition.evidenceSource.owner).toBe("@hjm/design-system");
+      expect(definition.evidenceSource.owner).toBe("@hjm/design-contracts");
       if (definition.adapterKind === "provider-value-presentation") {
         expect(component).toMatchObject({
           name: "DesignSystemProvider",
@@ -285,16 +284,6 @@ describe("web showcase coverage", () => {
       recipeRegistry.dialogRecipe.sizes.medium.maxWidth,
     );
 
-    const listPresentation = webRendererRegistry.List.resolvePresentation(light);
-    expect(listPresentation.consumption.resolvedMetric).toBe(
-      recipeRegistry.listRecipe.separators.indented.insetStart,
-    );
-    expect(listPresentation.consumption.resolvedMetricProperty).toBe(
-      "paddingInlineStart",
-    );
-    expect(listPresentation.style.paddingInlineStart).toBe(
-      recipeRegistry.listRecipe.separators.indented.insetStart,
-    );
   });
 
   it("presents the resolved provider environment and palette without a fake recipe", () => {
@@ -352,7 +341,7 @@ describe("web showcase coverage", () => {
 
   it("marks Native-only mature stories as Web unsupported", () => {
     const nativeOnly = componentCatalog.filter(
-      ({ platform, status }) => platform === "native" && isMatureStatus(status),
+      (entry) => getComponentSurfaceStatus(entry, "web") === "unsupported",
     );
     expect(nativeOnly.length).toBeGreaterThan(0);
     for (const entry of nativeOnly) {
@@ -367,7 +356,13 @@ describe("web showcase coverage", () => {
   });
 
   it("renders every registered component through the explicit Web path", () => {
-    for (const name of webRendererComponentNames) {
+    const activeNames = componentCatalog
+      .filter((entry) => isMatureStatus(getComponentSurfaceStatus(entry, "web")))
+      .map(({ name }) => name);
+    expect(activeNames).toHaveLength(32);
+    for (const name of activeNames) {
+      expect(webRendererComponentNames).toContain(name);
+      if (!isWebRendererComponent(name)) throw new Error(`Missing Web renderer registry entry: ${name}`);
       const definition = webRendererRegistry[name];
       const html = renderWithProvider(createElement(ContractStory, { name }));
       expect(html, name).toContain('data-showcase-mode="web-renderer"');
@@ -379,6 +374,12 @@ describe("web showcase coverage", () => {
       expect(html, name).toContain(
         `data-hjm-recipe="${definition.recipe?.name ?? "none"}"`,
       );
+    }
+
+    for (const name of webRendererComponentNames.filter((candidate) => !activeNames.includes(candidate))) {
+      const html = renderWithProvider(createElement(ContractStory, { name }));
+      expect(html, name).toContain('data-showcase-mode="contract-only"');
+      expect(html, name).not.toContain("data-hjm-renderer=");
     }
   });
 

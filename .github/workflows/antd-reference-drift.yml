@@ -24,4 +24,4 @@ jobs:
           node-version: 24
 
       - name: Compare the pinned reference with npm latest
-        run: npm run reference:antd:verify
+        run: node packages/design-contracts/scripts/verify-antd-reference.mjs

@@ -1,0 +1,120 @@
+name: Version Packages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: version-packages-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  version:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: 11.18.0
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Create or update the fixed-version release PR
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          version: pnpm release:version
+          commit: "chore: version HJM packages"
+          title: "chore: version HJM packages"
+        env:
+          GITHUB_TOKEN: ${{ secrets.HJM_RELEASE_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - name: Detect a fixed-version release commit
+        id: release-candidate
+        if: steps.changesets.outputs.hasChangesets == 'false' && github.event_name == 'push'
+        shell: bash
+        run: |
+          BEFORE="${{ github.event.before }}"
+          AFTER="${{ github.sha }}"
+          if [[ -z "${BEFORE}" || "${BEFORE}" =~ ^0+$ ]]; then
+            BEFORE="$(git rev-list --max-parents=0 "${AFTER}")"
+          fi
+          RELEASE_COMMITS="$(git rev-list --first-parent "${BEFORE}..${AFTER}" -- packages/design-contracts/package.json packages/react/package.json packages/react-native/package.json)"
+          if [ -z "${RELEASE_COMMITS}" ]; then
+            echo "should-tag=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          LATEST_RELEASE_COMMIT="$(printf '%s\n' "${RELEASE_COMMITS}" | head -n 1)"
+          if [ "${LATEST_RELEASE_COMMIT}" != "${AFTER}" ]; then
+            echo "::error::A fixed-package version changed earlier in this multi-commit push (${LATEST_RELEASE_COMMIT}), not at HEAD (${AFTER}). Merge or push the generated version PR separately so the canonical tag has an unambiguous commit."
+            exit 1
+          fi
+          echo "should-tag=true" >> "$GITHUB_OUTPUT"
+
+      - name: Install Chromium before release verification
+        if: steps.release-candidate.outputs.should-tag == 'true'
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Verify the canonical release candidate
+        if: steps.release-candidate.outputs.should-tag == 'true'
+        shell: bash
+        run: |
+          pnpm release:check
+          git diff --exit-code -- packages/design-contracts/dist packages/react/dist packages/react-native/dist packages/design-contracts/docs/generated
+          test -z "$(git ls-files --others --exclude-standard -- packages/design-contracts/dist packages/react/dist packages/react-native/dist packages/design-contracts/docs/generated)"
+
+      - name: Require successful private consumer evidence
+        if: steps.release-candidate.outputs.should-tag == 'true'
+        env:
+          HJM_CONSUMER_SYNC_TOKEN: ${{ secrets.HJM_CONSUMER_SYNC_TOKEN }}
+        run: |
+          VERSION="$(node -p "require('./packages/design-contracts/package.json').version")"
+          node scripts/check-consumer-release.mjs \
+            --repository "${GITHUB_REPOSITORY}" \
+            --release-sha "${GITHUB_SHA}" \
+            --version "${VERSION}"
+
+      - name: Create the canonical Git install tag
+        if: steps.release-candidate.outputs.should-tag == 'true'
+        shell: bash
+        run: |
+          HEAD_COMMIT="$(git rev-parse HEAD)"
+          if [ "${HEAD_COMMIT}" != "${GITHUB_SHA}" ]; then
+            echo "::error::Tag checkout ${HEAD_COMMIT} does not match verified release ${GITHUB_SHA}."
+            exit 1
+          fi
+          VERSION="$(node -p "require('./packages/design-contracts/package.json').version")"
+          TAG="v${VERSION}"
+          if git show-ref --tags --verify --quiet "refs/tags/${TAG}"; then
+            TAG_COMMIT="$(git rev-list -n 1 "${TAG}")"
+            if [ "${TAG_COMMIT}" != "${HEAD_COMMIT}" ]; then
+              echo "::error::${TAG} already points to ${TAG_COMMIT}, not this release commit ${HEAD_COMMIT}."
+              exit 1
+            fi
+            echo "${TAG} already points to this release commit; nothing to tag."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "${TAG}" -m "HJM design system ${VERSION}"
+          git push origin "${TAG}"

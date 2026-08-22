@@ -1,5 +1,5 @@
 import { readdir, readFile } from "node:fs/promises";
-import { componentCatalog } from "@hjm/design-system";
+import { componentCatalog, getComponentSurfaceStatus } from "@hjm/design-contracts";
 
 const index = JSON.parse(await readFile(new URL("../storybook-static/index.json", import.meta.url), "utf8"));
 const entries = Object.values(index.entries ?? {});
@@ -15,9 +15,10 @@ if (missing.length > 0 || referenceStories.length !== expectedNames.length) {
   throw new Error(`Static Storybook must contain every canonical component story. Missing: ${missing.join(", ") || "none"}; found: ${referenceStories.length}`);
 }
 
-const classificationFor = ({ platform, status }) => {
+const classificationFor = (component) => {
+  const status = getComponentSurfaceStatus(component, "web");
+  if (status === "unsupported") return "web-unsupported";
   if (status === "planned" || status === "deprecated") return "contract-only";
-  if (platform === "native") return "web-unsupported";
   return "web-renderer";
 };
 const storyByName = new Map(

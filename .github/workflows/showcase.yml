@@ -23,6 +23,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v6
@@ -39,6 +41,17 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Install Chromium for renderer interaction tests
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Require a Changeset for public package changes
+        if: github.event_name == 'pull_request' && (github.event.pull_request.head.repo.full_name != github.repository || !startsWith(github.head_ref, 'changeset-release/'))
+        run: pnpm changeset:check "${{ github.event.pull_request.base.sha }}"
+
+      - name: Verify generated Changesets version PR
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && startsWith(github.head_ref, 'changeset-release/')
+        run: pnpm release:version-pr:check "${{ github.event.pull_request.base.sha }}"
+
       - name: Check design-system contracts
         run: pnpm check
 
@@ -47,6 +60,11 @@ jobs:
 
       - name: Build static Storybook
         run: pnpm showcase:web:build
+
+      - name: Verify committed Git package artifacts
+        run: |
+          git diff --exit-code -- packages/design-contracts/dist packages/react/dist packages/react-native/dist packages/design-contracts/docs/generated
+          test -z "$(git ls-files --others --exclude-standard -- packages/design-contracts/dist packages/react/dist packages/react-native/dist packages/design-contracts/docs/generated)"
 
       - name: Upload static Storybook
         if: github.event_name != 'pull_request'

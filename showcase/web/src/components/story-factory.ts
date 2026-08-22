@@ -1,10 +1,11 @@
 import {
   componentCatalog,
   componentIds,
+  getComponentSurfaceStatus,
   type ComponentCatalogEntry,
   type ComponentCategory,
   type ComponentName,
-} from "@hjm/design-system";
+} from "@hjm/design-contracts";
 
 type ComponentStoryTarget = Readonly<{
   category: ComponentCategory;
@@ -49,8 +50,9 @@ export function getComponentStoryClassification(
     (component) => component.name === name,
   );
   if (!entry) throw new Error(`Unknown canonical component: ${name}`);
-  if (entry.status === "planned" || entry.status === "deprecated") return "contract-only";
-  if (entry.platform === "native") return "web-unsupported";
+  const webStatus = getComponentSurfaceStatus(entry, "web");
+  if (webStatus === "unsupported") return "web-unsupported";
+  if (webStatus === "planned" || webStatus === "deprecated") return "contract-only";
   return "web-renderer";
 }
 

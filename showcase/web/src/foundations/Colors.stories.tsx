@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { ACCENTS, THEMES, accentFill, brandGradient } from "@hjm/design-system";
+import { ACCENTS, THEMES, accentFill, brandGradient } from "@hjm/design-contracts";
 
 function Swatch({ color, label, value }: { color: string; label: string; value: string }) {
   return (

@@ -247,7 +247,7 @@ textarea {
   border-block-end: 0;
 }
 
-.hjm-check-list {
+.hjm-requirement-list {
   display: grid;
   gap: calc(var(--hjm-space-xs) + var(--hjm-stroke-strong));
   margin: 0;
@@ -255,7 +255,7 @@ textarea {
   list-style: none;
 }
 
-.hjm-check-list li {
+.hjm-requirement-list li {
   display: flex;
   gap: calc(var(--hjm-space-xs) + var(--hjm-stroke-strong));
   align-items: flex-start;
@@ -264,8 +264,8 @@ textarea {
   line-height: var(--hjm-type-body-line-height);
 }
 
-.hjm-check-list li::before {
-  content: "✓";
+.hjm-requirement-list li::before {
+  content: "•";
   color: var(--hjm-content-brand);
   font-weight: var(--hjm-font-weight-heavy);
 }

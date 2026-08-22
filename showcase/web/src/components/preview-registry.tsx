@@ -1,4 +1,49 @@
-import { useState, type CSSProperties, type ReactNode } from "react";
+import { type CSSProperties, type ReactNode } from "react";
+import {
+  Button as HjmButton,
+  IconButton as HjmIconButton,
+} from "@hjm/react/actions";
+import {
+  Badge as HjmBadge,
+  Card as HjmCard,
+  CounterBadge as HjmCounterBadge,
+  Icon as HjmIcon,
+  ListRow as HjmListRow,
+  Tag as HjmTag,
+} from "@hjm/react/display";
+import { EmptyState as HjmEmptyState } from "@hjm/react/feedback";
+import {
+  Field as HjmField,
+  SearchField as HjmSearchField,
+  Select as HjmSelect,
+  TextArea as HjmTextArea,
+} from "@hjm/react/forms";
+import {
+  Grid as HjmGrid,
+  Stack as HjmStack,
+  Surface as HjmSurface,
+  Text as HjmText,
+} from "@hjm/react/layout";
+import {
+  LoadMore as HjmLoadMore,
+  Tabs as HjmTabs,
+} from "@hjm/react/navigation";
+import {
+  Checkbox as HjmCheckbox,
+  CheckboxGroup as HjmCheckboxGroup,
+  Radio as HjmRadio,
+  RadioGroup as HjmRadioGroup,
+  SegmentedControl as HjmSegmentedControl,
+  Switch as HjmSwitch,
+} from "@hjm/react/selection";
+import { Toast as HjmToast } from "@hjm/react/toast";
+import {
+  AlertDialog as HjmAlertDialog,
+  Dialog as HjmDialog,
+  Menu as HjmMenu,
+  Sheet as HjmSheet,
+  Tooltip as HjmTooltip,
+} from "@hjm/react/overlays";
 import {
   behaviorRegistry,
   componentCatalog,
@@ -12,21 +57,53 @@ import {
   type ComponentPlatform,
   type DesignSystemProviderValue,
   type RecipeName,
-} from "@hjm/design-system";
+} from "@hjm/design-contracts";
 import {
   showcaseManifest,
   showcaseScenarios,
   type ShowcaseComponentEntry,
-} from "@hjm/design-system/showcase";
+} from "@hjm/design-contracts/showcase";
 
 import { useWebDesignSystemEnvironment } from "../runtime/WebDesignSystemProvider";
 
 export type ContractStoryProps = { name: ComponentName };
 
 type CatalogEntry = (typeof componentCatalog)[number];
-type MatureCatalogEntry = Extract<CatalogEntry, { readonly status: "stable" | "beta" }>;
-type WebRendererLiteralEntry = Exclude<MatureCatalogEntry, { readonly platform: "native" }>;
-export type WebRendererComponentName = WebRendererLiteralEntry["name"];
+export const webRendererComponentNames = [
+  "Text",
+  "Icon",
+  "Surface",
+  "Stack",
+  "Grid",
+  "Button",
+  "IconButton",
+  "Field",
+  "SearchField",
+  "TextArea",
+  "Checkbox",
+  "Radio",
+  "CheckboxGroup",
+  "RadioGroup",
+  "Switch",
+  "SegmentedControl",
+  "Select",
+  "Tabs",
+  "LoadMore",
+  "Menu",
+  "Badge",
+  "CounterBadge",
+  "Card",
+  "ListRow",
+  "Tag",
+  "EmptyState",
+  "Toast",
+  "Dialog",
+  "AlertDialog",
+  "Sheet",
+  "Tooltip",
+  "DesignSystemProvider",
+] as const satisfies readonly ComponentName[];
+export type WebRendererComponentName = (typeof webRendererComponentNames)[number];
 type RecipeWebRendererComponentName = Exclude<
   WebRendererComponentName,
   "DesignSystemProvider"
@@ -50,7 +127,7 @@ type RecipeWebRendererDefinition = Readonly<{
   behavior: BehaviorBinding | null;
   adapterKind: "recipe-presentation" | "recipe-behavior-presentation";
   evidenceSource: Readonly<{
-    owner: "@hjm/design-system";
+    owner: "@hjm/design-contracts";
     recipe: RecipeBinding;
     behavior: BehaviorBinding | null;
   }>;
@@ -67,7 +144,7 @@ type ProviderWebRendererDefinition = Readonly<{
   behavior: null;
   adapterKind: "provider-value-presentation";
   evidenceSource: Readonly<{
-    owner: "@hjm/design-system";
+    owner: "@hjm/design-contracts";
     contract: "resolveDesignSystemProviderValue";
     recipe: null;
     behavior: null;
@@ -114,28 +191,6 @@ export type RendererPresentation = Readonly<{
 
 const scenarioLabels = new Map(showcaseScenarios.map(({ id, label }) => [id, label]));
 
-function FieldPreview({ multiline = false, search = false }: { multiline?: boolean; search?: boolean }) {
-  return (
-    <label className="hjm-field">
-      <span>이름</span>
-      {multiline ? <textarea defaultValue="여러 줄 입력 예시" /> : <input type={search ? "search" : "text"} defaultValue={search ? "선수 검색" : "홍길동"} />}
-      <small>필수 정보는 입력 아래에서 설명합니다.</small>
-    </label>
-  );
-}
-
-function ChoicePreview({ radio = false, group = false }: { radio?: boolean; group?: boolean }) {
-  const type = radio ? "radio" : "checkbox";
-  const content = (
-    <>
-      <label className="hjm-choice"><input type={type} name="choice" defaultChecked /> 첫 번째 선택</label>
-      <label className="hjm-choice"><input type={type} name="choice" /> 두 번째 선택</label>
-      <label className="hjm-choice"><input type={type} name="choice" disabled /> 사용할 수 없음</label>
-    </>
-  );
-  return group ? <fieldset className="hjm-choice-group"><legend>선택 그룹</legend>{content}</fieldset> : <div className="hjm-preview-row">{content}</div>;
-}
-
 function ProviderValuePreview({
   providerValue,
 }: {
@@ -166,81 +221,44 @@ function ProviderValuePreview({
   );
 }
 
-function OverlayPreview({ kind }: { kind: "Dialog" | "AlertDialog" | "Sheet" | "Tooltip" }) {
-  const [open, setOpen] = useState(false);
-  if (kind === "Tooltip") {
-    return <button className="hjm-demo-button" title="자세한 도움말">도움말에 포커스하거나 가리키기</button>;
-  }
-  return (
-    <>
-      <button className="hjm-demo-button" onClick={() => setOpen(true)}>{kind} 열기</button>
-      {open && (
-        <div className="hjm-overlay" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && kind === "Dialog" && setOpen(false)}>
-          <section className={`hjm-modal ${kind === "Sheet" ? "hjm-sheet" : ""}`} role={kind === "AlertDialog" ? "alertdialog" : "dialog"} aria-modal="true" aria-labelledby={`${kind}-title`}>
-            <h3 id={`${kind}-title`}>{kind} 제목</h3>
-            <p>긴 설명도 잘리지 않고 행동의 결과를 명확하게 전달합니다.</p>
-            <div className="hjm-actions"><button onClick={() => setOpen(false)}>취소</button><button className="hjm-demo-button" onClick={() => setOpen(false)}>확인</button></div>
-          </section>
-        </div>
-      )}
-    </>
-  );
-}
-
 function assertNever(value: never): never {
   throw new Error(`Missing Web Showcase renderer: ${String(value)}`);
 }
 
 /** Only mature, Web-supported contracts can reach this renderer. */
 function WebPreviewRenderer({ name }: { name: RecipeWebRendererComponentName }) {
-  const [selected, setSelected] = useState("첫 번째");
   switch (name) {
-    case "Text": return <div className="hjm-type-sample"><h2>제목 텍스트</h2><p>본문 텍스트는 의미와 위계를 보존합니다.</p><small>보조 정보</small></div>;
-    case "Icon": return <div className="hjm-icon-grid" aria-label="Semantic icons"><span aria-hidden>⌂</span><span aria-hidden>✓</span><span aria-hidden>!</span><span aria-hidden>→</span></div>;
-    case "Surface": case "Card": return <article className="hjm-demo-surface"><strong>{name} 제목</strong><p>제품이 색·간격·모서리를 임의로 덮지 않는 의미 기반 컨테이너입니다.</p></article>;
-    case "Divider": return <div className="hjm-demo-surface">위 내용<hr />아래 내용</div>;
-    case "Section": return <section className="hjm-demo-surface"><h3>섹션 제목</h3><p>관련 콘텐츠를 하나의 의미 단위로 묶습니다.</p></section>;
-    case "Stack": return <div className="hjm-demo-stack"><button>첫 번째</button><button>두 번째</button><button>세 번째</button></div>;
-    case "Layout": return <div className="hjm-demo-layout"><header>Header</header><aside>Navigation</aside><main>Main landmark</main></div>;
-    case "Button": return <div className="hjm-preview-row"><button className="hjm-demo-button">Primary</button><button>Secondary</button><button disabled>Disabled</button></div>;
-    case "IconButton": return <div className="hjm-preview-row"><button className="hjm-icon-button" aria-label="좋아요">♡</button><button className="hjm-icon-button" aria-label="닫기">×</button></div>;
-    case "Link": return <p><a href="#link-target">실제 목적지 링크</a> · <a href="https://example.com">외부 링크</a></p>;
-    case "Field": return <FieldPreview />;
-    case "SearchField": return <FieldPreview search />;
-    case "TextArea": return <FieldPreview multiline />;
-    case "Form": return <form className="hjm-demo-stack" onSubmit={(event) => event.preventDefault()}><FieldPreview /><FieldPreview multiline /><button className="hjm-demo-button" type="submit">저장하기</button></form>;
-    case "Checkbox": return <ChoicePreview />;
-    case "Radio": return <ChoicePreview radio />;
-    case "CheckboxGroup": return <ChoicePreview group />;
-    case "RadioGroup": return <ChoicePreview radio group />;
-    case "Switch": return <label className="hjm-switch"><input type="checkbox" defaultChecked /><span>알림 받기</span></label>;
-    case "Chip": return <div className="hjm-preview-row"><button className="hjm-chip" aria-pressed="true">선택됨</button><button className="hjm-chip">기본</button></div>;
-    case "SegmentedControl": return <div className="hjm-segments" role="radiogroup" aria-label="보기 방식">{["목록", "격자"].map((item) => <button key={item} role="radio" aria-checked={selected === item} onClick={() => setSelected(item)}>{item}</button>)}</div>;
-    case "Select": return <label className="hjm-field"><span>언어</span><select defaultValue="ko"><option value="ko">한국어</option><option value="en">English</option></select></label>;
-    case "Combobox": return <label className="hjm-field"><span>선수 찾기</span><input list="players" placeholder="이름 입력" /><datalist id="players"><option value="김도영" /><option value="양현종" /></datalist></label>;
-    case "Tabs": return <div><div className="hjm-tabs" role="tablist">{["첫 번째", "두 번째"].map((item) => <button key={item} role="tab" aria-selected={selected === item} onClick={() => setSelected(item)}>{item}</button>)}</div><div className="hjm-demo-surface" role="tabpanel">{selected} 패널 내용</div></div>;
-    case "BottomNavigation": return <nav className="hjm-bottom-nav" aria-label="주요 메뉴">{["홈", "기록", "설정"].map((item, index) => <a key={item} href={`#nav-${index}`} aria-current={index === 0 ? "page" : undefined}><span aria-hidden>{index === 0 ? "⌂" : index === 1 ? "▤" : "⚙"}</span>{item}</a>)}</nav>;
-    case "LoadMore": return <button className="hjm-wide-button">더 보기</button>;
-    case "Menu": return <div className="hjm-menu" role="menu"><button role="menuitem">이름 바꾸기</button><button role="menuitem">공유하기</button><button role="menuitem" className="hjm-danger">삭제</button></div>;
-    case "Avatar": return <div className="hjm-avatar-row"><span className="hjm-avatar" role="img" aria-label="홍길동">홍</span><span className="hjm-avatar hjm-avatar-lg" role="img" aria-label="김민수">김</span></div>;
-    case "Badge": return <div className="hjm-preview-row"><span className="hjm-demo-badge">진행 중</span><span className="hjm-demo-badge hjm-success">완료</span></div>;
-    case "CounterBadge": return <button className="hjm-icon-button" aria-label="알림 12개">♢<span className="hjm-counter" aria-hidden>12</span></button>;
-    case "List": return <ul className="hjm-list"><li>첫 번째 항목</li><li>두 번째 항목</li><li>세 번째 항목</li></ul>;
-    case "ListRow": return <button className="hjm-list-row"><span className="hjm-avatar">홍</span><span><strong>홍길동</strong><small>선수 상세 보기</small></span><span aria-hidden>›</span></button>;
-    case "Accordion": return <div className="hjm-accordion"><details open><summary>자주 묻는 질문</summary><p>공개 상태와 키보드 조작을 함께 확인합니다.</p></details><details><summary>다른 질문</summary><p>두 번째 답변입니다.</p></details></div>;
-    case "Statistic": return <dl className="hjm-stat-grid"><div><dt>타율</dt><dd>.328</dd><small>↑ 리그 2위</small></div><div><dt>홈런</dt><dd>24</dd><small>시즌 누적</small></div></dl>;
-    case "Timeline": return <ol className="hjm-timeline"><li><time>10:32</time><strong>경기 시작</strong></li><li><time>11:04</time><strong>득점</strong><small>2루타로 주자 홈인</small></li><li><time>11:21</time><strong>투수 교체</strong></li></ol>;
-    case "DescriptionList": return <dl className="hjm-description-list"><div><dt>소속</dt><dd>서울 HJM</dd></div><div><dt>포지션</dt><dd>내야수</dd></div><div><dt>등번호</dt><dd>7</dd></div><div><dt>데뷔</dt><dd>2021</dd></div></dl>;
-    case "Image": return <figure className="hjm-image"><div role="img" aria-label="야구장 풍경">HJM</div><figcaption>콘텐츠 이미지와 대체 설명</figcaption></figure>;
-    case "Tag": return <div className="hjm-preview-row"><span className="hjm-demo-badge">내야수</span><span className="hjm-demo-badge hjm-success">등록 선수</span><span className="hjm-demo-badge">2026 시즌</span></div>;
-    case "EmptyState": return <div className="hjm-empty"><span aria-hidden>◇</span><h3>아직 항목이 없어요</h3><p>새 항목을 추가하면 여기에 표시됩니다.</p><button className="hjm-demo-button">추가하기</button></div>;
-    case "Notice": return <div className="hjm-notice" role="status"><strong>확인해 주세요</strong><p>저장하지 않은 변경 사항이 있습니다.</p></div>;
-    case "Progress": return <div><label htmlFor="progress">업로드 68%</label><progress id="progress" value="68" max="100" /></div>;
-    case "Spinner": return <div className="hjm-spinner" role="status" aria-label="불러오는 중" />;
-    case "Skeleton": return <div className="hjm-skeletons" aria-label="콘텐츠 불러오는 중"><span /><span /><span /></div>;
-    case "Result": return <div className="hjm-empty"><span aria-hidden>✓</span><h3>설정이 완료됐어요</h3><p>이제 새 환경으로 계속할 수 있습니다.</p><button className="hjm-demo-button">대시보드로</button></div>;
-    case "Toast": return <div className="hjm-toast" role="status"><span aria-hidden>✓</span><span><strong>저장했어요</strong><small>변경 사항이 반영되었습니다.</small></span><button aria-label="닫기">×</button></div>;
-    case "Dialog": case "AlertDialog": case "Sheet": case "Tooltip": return <OverlayPreview kind={name} />;
+    case "Text": return <HjmStack gap="xs"><HjmText as="p" variant="title" emphasis="strong">명확한 제목</HjmText><HjmText as="p">조용한 본문 위계</HjmText><HjmText as="p" tone="muted" variant="label">보조 정보는 한 단계 낮게 표시합니다.</HjmText></HjmStack>;
+    case "Icon": return <HjmStack axis="inline" gap="md" wrap role="group" aria-label="Semantic icons"><HjmIcon name="home" decorative={false} accessibilityLabel="홈" /><HjmIcon name="success" decorative={false} accessibilityLabel="성공" tone="success" /><HjmIcon name="warning" decorative={false} accessibilityLabel="경고" tone="warning" /><HjmIcon name="forward" decorative={false} accessibilityLabel="다음" /></HjmStack>;
+    case "Surface": return <HjmSurface as="article" bordered className="hjm-demo-surface"><HjmText as="strong">Surface 제목</HjmText><HjmText as="p" tone="muted">제품이 색·간격·모서리를 임의로 덮지 않는 의미 기반 컨테이너입니다.</HjmText></HjmSurface>;
+    case "Card": return <HjmCard title="Card 제목" description="계약과 renderer를 함께 소비하는 제품 카드입니다." actions={<HjmButton size="small">자세히</HjmButton>} />;
+    case "Stack": return <HjmStack gap="sm"><HjmButton tone="secondary">첫 번째</HjmButton><HjmButton tone="secondary">두 번째</HjmButton><HjmButton tone="secondary">세 번째</HjmButton></HjmStack>;
+    case "Grid": return <HjmGrid columns={{ compact: 1, medium: 2, expanded: 3 }} gap={{ compact: "md" }}><HjmCard title="첫 번째">공통 window class</HjmCard><HjmCard title="두 번째">responsive columns</HjmCard><HjmCard title="세 번째">row-major order</HjmCard></HjmGrid>;
+    case "Button": return <HjmStack axis="inline" gap="sm" wrap><HjmButton>Primary</HjmButton><HjmButton tone="secondary">Secondary</HjmButton><HjmButton disabled>Disabled</HjmButton></HjmStack>;
+    case "IconButton": return <HjmStack axis="inline" gap="sm"><HjmIconButton label="좋아요">♡</HjmIconButton><HjmIconButton label="닫기" tone="ghost">×</HjmIconButton></HjmStack>;
+    case "Field": return <HjmField controlId="showcase-player-name" label="이름" description="필수 정보는 입력 아래에서 설명합니다.">{(controlProps) => <input {...controlProps} className="hjm-field__control" defaultValue="홍길동" />}</HjmField>;
+    case "SearchField": return <HjmSearchField label="선수 검색" clearLabel="검색어 지우기" defaultValue="야구" description="검색어 지우기 버튼도 키보드로 사용할 수 있습니다." />;
+    case "TextArea": return <HjmTextArea label="설명" defaultValue="여러 줄 입력 예시" description="긴 설명도 레이아웃 안에서 줄바꿈됩니다." />;
+    case "Checkbox": return <HjmCheckbox label="동의합니다" description="선택 상태와 설명이 함께 노출됩니다." defaultChecked />;
+    case "Radio": return <HjmRadio label="단일 선택" description="독립 radio item renderer입니다." name="showcase-radio" defaultChecked />;
+    case "CheckboxGroup": return <HjmCheckboxGroup label="선택 그룹" defaultValue={new Set(["first"])} items={[{ id: "first", label: "첫 번째 선택" }, { id: "second", label: "두 번째 선택" }, { id: "disabled", label: "사용할 수 없음", disabled: true }]} />;
+    case "RadioGroup": return <HjmRadioGroup label="선택 그룹" defaultValue="first" items={[{ value: "first", label: "첫 번째 선택" }, { value: "second", label: "두 번째 선택" }, { value: "disabled", label: "사용할 수 없음", disabled: true }]} />;
+    case "Switch": return <HjmSwitch label="알림 받기" defaultChecked />;
+    case "SegmentedControl": return <HjmSegmentedControl label="보기 방식" defaultValue="list" items={[{ value: "list", label: "목록" }, { value: "grid", label: "격자" }]} />;
+    case "Select": return <HjmSelect label="언어" name="language" placeholder="언어 선택" emptySelectionLabel="선택 안 함" defaultSelectedKey="ko" items={[{ id: "ko", label: "한국어", textValue: "한국어" }, { id: "en", label: "English", textValue: "English" }]} />;
+    case "Tabs": return <HjmTabs label="선수 정보" items={[{ id: "first", label: "첫 번째", panel: "첫 번째 패널 내용" }, { id: "second", label: "두 번째", panel: "두 번째 패널 내용" }]} />;
+    case "LoadMore": return <HjmLoadMore descriptor={{ state: { status: "ready", requestKey: "showcase-next" }, labels: { loadMore: "더 보기", loading: "불러오는 중", retry: "다시 시도", complete: "모두 불러왔습니다" } }} onLoadMore={async () => undefined} />;
+    case "Menu": return <HjmMenu trigger={<button className="hjm-demo-button" type="button">작업 열기</button>} label="선수 작업" items={[{ id: "rename", label: "이름 바꾸기", onSelect: () => undefined }, { id: "share", label: "공유하기", onSelect: () => undefined }, { id: "delete", label: "삭제", tone: "danger", onSelect: () => undefined }]} />;
+    case "Badge": return <HjmStack axis="inline" gap="sm"><HjmBadge>진행 중</HjmBadge><HjmBadge tone="success">완료</HjmBadge></HjmStack>;
+    case "CounterBadge": return <HjmIconButton label="알림 12개"><HjmIcon name="notifications" /><HjmCounterBadge count={12} /></HjmIconButton>;
+    case "ListRow": return <HjmListRow title="홍길동" description="선수 상세 보기" leading={<span className="hjm-avatar">홍</span>} trailing={<span aria-hidden>›</span>} onClick={() => undefined} />;
+    case "Tag": return <HjmStack axis="inline" gap="sm" wrap><HjmTag>내야수</HjmTag><HjmTag tone="success">등록 선수</HjmTag><HjmTag>2026 시즌</HjmTag></HjmStack>;
+    case "EmptyState": return <HjmEmptyState icon="◇" title="아직 항목이 없어요" description="새 항목을 추가하면 여기에 표시됩니다." action={<HjmButton>추가하기</HjmButton>} />;
+    case "Toast": return <HjmToast descriptor={{ id: "showcase-saved", tone: "success", title: "저장했어요", description: "변경 사항이 반영되었습니다.", closeLabel: "닫기" }} onDismissRequest={() => undefined} />;
+    case "Dialog": return <HjmDialog trigger={<button className="hjm-demo-button" type="button">Dialog 열기</button>} title="Dialog 제목" closeLabel="Dialog 닫기" description="긴 설명도 잘리지 않고 행동의 결과를 명확하게 전달합니다." footer={<HjmButton>확인</HjmButton>}><p>키보드 포커스는 이 대화상자 안에 유지됩니다.</p></HjmDialog>;
+    case "AlertDialog": return <HjmAlertDialog trigger={<button className="hjm-demo-button" type="button">AlertDialog 열기</button>} request={{ mode: "confirm", tone: "danger", title: "기록 삭제", description: "이 작업은 되돌릴 수 없습니다.", confirmLabel: "삭제", cancelLabel: "취소", onConfirm: async () => undefined, fallbackErrorMessage: "삭제하지 못했습니다." }} />;
+    case "Sheet": return <HjmSheet trigger={<button className="hjm-demo-button" type="button">Sheet 열기</button>} title="필터" closeLabel="필터 닫기" description="화면 크기와 방향에 맞춰 배치되는 보조 작업 영역입니다." footer={<HjmButton>적용</HjmButton>}><p>조건을 선택한 뒤 적용하세요.</p></HjmSheet>;
+    case "Tooltip": return <HjmTooltip trigger={<button className="hjm-demo-button" type="button">도움말에 포커스하거나 가리키기</button>} content="자세한 도움말" />;
     default: return assertNever(name);
   }
 }
@@ -493,7 +511,7 @@ function createWebRendererDefinition(
     behavior,
     adapterKind,
     evidenceSource: {
-      owner: "@hjm/design-system",
+      owner: "@hjm/design-contracts",
       recipe,
       behavior,
     },
@@ -527,7 +545,7 @@ function createProviderWebRendererDefinition(): ProviderWebRendererDefinition {
     behavior: null,
     adapterKind: "provider-value-presentation",
     evidenceSource: {
-      owner: "@hjm/design-system",
+      owner: "@hjm/design-contracts",
       contract: "resolveDesignSystemProviderValue",
       recipe: null,
       behavior: null,
@@ -542,48 +560,29 @@ export const webRendererRegistry = {
   Text: createWebRendererDefinition("Text", "textRecipe"),
   Icon: createWebRendererDefinition("Icon", "iconRecipe"),
   Surface: createWebRendererDefinition("Surface", "surfaceRecipe"),
-  Divider: createWebRendererDefinition("Divider", "dividerRecipe"),
-  Section: createWebRendererDefinition("Section", "sectionRecipe"),
   Stack: createWebRendererDefinition("Stack", "stackRecipe"),
-  Layout: createWebRendererDefinition("Layout", "layoutRecipe", "layout"),
+  Grid: createWebRendererDefinition("Grid", "gridRecipe"),
   Button: createWebRendererDefinition("Button", "buttonRecipe"),
   IconButton: createWebRendererDefinition("IconButton", "iconButtonRecipe"),
-  Link: createWebRendererDefinition("Link", "linkRecipe", "link"),
   Field: createWebRendererDefinition("Field", "fieldRecipe", "field"),
   SearchField: createWebRendererDefinition("SearchField", "searchFieldRecipe", "searchField"),
   TextArea: createWebRendererDefinition("TextArea", "fieldRecipe"),
-  Form: createWebRendererDefinition("Form", "formRecipe", "form"),
   Checkbox: createWebRendererDefinition("Checkbox", "selectionControlRecipe", "checkbox"),
   Radio: createWebRendererDefinition("Radio", "selectionControlRecipe"),
   CheckboxGroup: createWebRendererDefinition("CheckboxGroup", "selectionGroupRecipe", "checkboxGroup"),
   RadioGroup: createWebRendererDefinition("RadioGroup", "selectionGroupRecipe", "radioGroup"),
   Switch: createWebRendererDefinition("Switch", "switchRecipe", "switch"),
-  Chip: createWebRendererDefinition("Chip", "chipRecipe", "chip"),
   SegmentedControl: createWebRendererDefinition("SegmentedControl", "segmentedControlRecipe", "segmentedControl"),
   Select: createWebRendererDefinition("Select", "selectRecipe", "select"),
-  Combobox: createWebRendererDefinition("Combobox", "comboboxRecipe", "combobox"),
   Tabs: createWebRendererDefinition("Tabs", "tabsRecipe", "tabs"),
-  BottomNavigation: createWebRendererDefinition("BottomNavigation", "bottomNavigationRecipe", "bottomNavigation"),
   LoadMore: createWebRendererDefinition("LoadMore", "loadMoreRecipe", "loadMore"),
   Menu: createWebRendererDefinition("Menu", "menuRecipe", "menu"),
-  Avatar: createWebRendererDefinition("Avatar", "avatarRecipe"),
   Badge: createWebRendererDefinition("Badge", "badgeRecipe"),
   CounterBadge: createWebRendererDefinition("CounterBadge", "counterBadgeRecipe"),
-  Card: createWebRendererDefinition("Card", "surfaceRecipe"),
-  List: createWebRendererDefinition("List", "listRecipe"),
+  Card: createWebRendererDefinition("Card", "cardRecipe"),
   ListRow: createWebRendererDefinition("ListRow", "listRowRecipe"),
-  Accordion: createWebRendererDefinition("Accordion", "accordionRecipe", "disclosureGroup"),
-  Statistic: createWebRendererDefinition("Statistic", "statisticRecipe"),
-  Timeline: createWebRendererDefinition("Timeline", "timelineRecipe"),
-  DescriptionList: createWebRendererDefinition("DescriptionList", "descriptionListRecipe"),
-  Image: createWebRendererDefinition("Image", "imageRecipe"),
   Tag: createWebRendererDefinition("Tag", "tagRecipe"),
   EmptyState: createWebRendererDefinition("EmptyState", "emptyStateRecipe"),
-  Notice: createWebRendererDefinition("Notice", "noticeRecipe"),
-  Progress: createWebRendererDefinition("Progress", "progressRecipe"),
-  Spinner: createWebRendererDefinition("Spinner", "spinnerRecipe"),
-  Skeleton: createWebRendererDefinition("Skeleton", "skeletonRecipe"),
-  Result: createWebRendererDefinition("Result", "resultRecipe"),
   Toast: createWebRendererDefinition("Toast", "toastRecipe", "toast"),
   Dialog: createWebRendererDefinition("Dialog", "dialogRecipe", "dialog"),
   AlertDialog: createWebRendererDefinition("AlertDialog", "alertDialogRecipe", "alertDialog"),
@@ -591,10 +590,6 @@ export const webRendererRegistry = {
   Tooltip: createWebRendererDefinition("Tooltip", "tooltipRecipe", "tooltip"),
   DesignSystemProvider: createProviderWebRendererDefinition(),
 } satisfies Readonly<Record<WebRendererComponentName, WebRendererDefinition>>;
-
-export const webRendererComponentNames = Object.keys(
-  webRendererRegistry,
-) as readonly WebRendererComponentName[];
 
 export type WebShowcaseCoverageSummary = Readonly<{
   canonical: number;
@@ -609,12 +604,12 @@ export function summarizeWebShowcaseCoverage(): WebShowcaseCoverageSummary {
   return {
     canonical: canonicalCatalog.length,
     webReferences: webRendererComponentNames.length,
-    contractOnly: canonicalCatalog.filter(
-      ({ status }) => status === "planned" || status === "deprecated",
-    ).length,
+    contractOnly: canonicalCatalog.filter((entry) => {
+      const status = entry.surfaceStatus?.web;
+      return status === "planned" || status === "deprecated";
+    }).length,
     nativeOnly: canonicalCatalog.filter(
-      ({ platform, status }) =>
-        platform === "native" && (status === "stable" || status === "beta"),
+      ({ surfaceStatus }) => surfaceStatus?.web === "unsupported",
     ).length,
   };
 }
@@ -649,7 +644,7 @@ function StoryHeader({ entry }: { entry: ShowcaseComponentEntry }) {
     <>
       <p className="hjm-eyebrow">{component.category} · {component.platform}</p>
       <h1 className="hjm-title">{component.name}</h1>
-      <div className="hjm-meta-row"><span className="hjm-pill" data-status={component.status}>{component.status}</span>{component.behavior && <span className="hjm-pill">behavior: {component.behavior}</span>}{component.recipe && <span className="hjm-pill">recipe: {component.recipe}</span>}</div>
+      <div className="hjm-meta-row"><span className="hjm-pill" data-status={component.status}>contract: {component.status}</span><span className="hjm-pill" data-status={entry.surfaceMaturity.web}>web: {entry.surfaceMaturity.web}</span><span className="hjm-pill" data-status={entry.surfaceMaturity.native}>native: {entry.surfaceMaturity.native}</span>{component.behavior && <span className="hjm-pill">behavior: {component.behavior}</span>}{component.recipe && <span className="hjm-pill">recipe: {component.recipe}</span>}</div>
       {component.roadmap && <section className="hjm-roadmap-callout" data-roadmap={component.roadmap.state}><span>{component.roadmap.state}</span><p>{component.roadmap.summary}</p>{component.roadmap.targets && <small>Composed with: {component.roadmap.targets.join(" + ")}</small>}</section>}
     </>
   );
@@ -659,7 +654,7 @@ function EvidenceSection({ entry, contract }: { entry: ShowcaseComponentEntry; c
   return (
     <section className="hjm-section" aria-labelledby={`${entry.component.name}-evidence`}>
       <h2 className="hjm-section-title" id={`${entry.component.name}-evidence`}>Required evidence</h2>
-      <div className="hjm-grid"><article className="hjm-card"><h3>Surfaces</h3><p>{entry.requiredSurfaces.join(" · ")}</p></article><article className="hjm-card"><h3>Scenarios</h3><ul className="hjm-check-list">{entry.requiredScenarios.map((id) => <li key={id}>{scenarioLabels.get(id)}</li>)}</ul></article><article className="hjm-card"><h3>Contract</h3><p>{contract}</p></article></div>
+      <div className="hjm-grid"><article className="hjm-card"><h3>Surfaces</h3><p>{entry.requiredSurfaces.join(" · ")}</p></article><article className="hjm-card"><h3>Required scenarios</h3><ul className="hjm-requirement-list">{entry.requiredScenarios.map((id) => <li key={id}>{scenarioLabels.get(id)}</li>)}</ul></article><article className="hjm-card"><h3>Contract</h3><p>{contract}</p></article></div>
     </section>
   );
 }
@@ -703,10 +698,11 @@ function InteractiveWebStory({ entry, name }: { entry: ShowcaseComponentEntry; n
 export function ContractStory({ name }: ContractStoryProps) {
   const entry = showcaseManifest.find(({ component }) => component.name === name);
   if (!entry) throw new Error(`Unknown showcase component: ${name}`);
-  if (entry.component.status === "planned" || entry.component.status === "deprecated") {
+  const webStatus = entry.surfaceMaturity.web;
+  if (webStatus === "planned" || webStatus === "deprecated") {
     return <ContractOnlyStory entry={entry} />;
   }
-  if (entry.component.platform === "native") {
+  if (webStatus === "unsupported") {
     return <UnsupportedWebStory entry={entry} />;
   }
   if (!isWebRendererComponent(name)) {

@@ -1,48 +1,42 @@
 {
-  "name": "@hjm/design-system",
-  "version": "0.5.2",
-  "description": "Platform-neutral design tokens and component recipes shared by HJM products.",
+  "name": "@hjm/design-system-workspace",
+  "version": "0.0.0",
+  "description": "HJM design contracts and first-party React and React Native renderers.",
   "private": true,
   "type": "module",
-  "sideEffects": false,
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "default": "./dist/index.js"
-    },
-    "./showcase": {
-      "types": "./dist/showcase.d.ts",
-      "import": "./dist/showcase.js",
-      "default": "./dist/showcase.js"
-    }
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jim1286/hjm-design-system.git"
   },
-  "files": [
-    "dist",
-    "src",
-    "docs",
-    "README.md"
-  ],
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
-    "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "vitest run",
-    "check": "pnpm typecheck && pnpm test && pnpm build",
-    "showcase:web": "pnpm build && pnpm --filter @hjm/showcase-web storybook",
-    "showcase:web:build": "pnpm build && pnpm --filter @hjm/showcase-web build && pnpm --filter @hjm/showcase-web verify:static",
-    "showcase:web:check": "pnpm build && pnpm --filter @hjm/showcase-web check",
-    "reference:antd:verify": "node scripts/verify-antd-reference.mjs",
-    "prepack": "pnpm build"
+    "build": "pnpm -r --filter './packages/**' run build",
+    "typecheck": "pnpm -r --filter './packages/**' run typecheck",
+    "test": "pnpm -r --filter './packages/**' run test",
+    "check": "pnpm -r --filter './packages/**' run check && pnpm bundle:renderer:check && pnpm workspace:check && pnpm evidence:check",
+    "contracts:sync": "pnpm --filter @hjm/design-contracts contracts:sync",
+    "contracts:check": "pnpm --filter @hjm/design-contracts contracts:check",
+    "bundle:check": "pnpm build && pnpm --filter @hjm/design-contracts bundle:check && pnpm bundle:renderer:check",
+    "bundle:renderer:check": "node scripts/check-renderer-budgets.mjs",
+    "workspace:check": "node scripts/check-workspace-sync.mjs",
+    "evidence:sync": "node scripts/sync-renderer-evidence.mjs --write",
+    "evidence:check": "node scripts/sync-renderer-evidence.mjs",
+    "showcase:web": "pnpm --filter @hjm/design-contracts build && pnpm --filter @hjm/react build && pnpm --filter @hjm/showcase-web storybook",
+    "showcase:web:check": "pnpm --filter @hjm/design-contracts build && pnpm --filter @hjm/react build && pnpm --filter @hjm/showcase-web check",
+    "showcase:web:build": "pnpm --filter @hjm/design-contracts build && pnpm --filter @hjm/react build && pnpm --filter @hjm/showcase-web build && pnpm --filter @hjm/showcase-web verify:static",
+    "reference:antd:verify": "pnpm --filter @hjm/design-contracts reference:antd:verify",
+    "changeset": "changeset",
+    "changeset:check": "node scripts/check-changeset-required.mjs",
+    "release:version-pr:check": "node scripts/check-version-pr.mjs",
+    "release:version": "changeset version && pnpm install --lockfile-only && node scripts/sync-release-version.mjs && pnpm contracts:sync && pnpm build && pnpm evidence:sync",
+    "release:status": "changeset status",
+    "release:plan:check": "node scripts/check-release-plan.mjs",
+    "release:check": "pnpm check && pnpm showcase:web:build && node scripts/check-release-artifacts.mjs"
   },
   "engines": {
     "node": ">=20"
   },
   "packageManager": "pnpm@11.18.0",
   "devDependencies": {
-    "@types/node": "^24.0.0",
-    "typescript": "^5.9.3",
-    "vitest": "^4.1.10"
+    "@changesets/cli": "^2.29.7"
   }
 }

@@ -1,11 +1,12 @@
 import { createContext, useContext, type ReactNode } from "react";
+import { HjmProvider } from "@hjm/react/provider";
 
 import {
   resolveDesignSystemProviderValue,
   type DesignSystemEnvironmentInput,
   type ResolvedDesignSystemEnvironment,
   type ResolvedTheme,
-} from "@hjm/design-system";
+} from "@hjm/design-contracts";
 
 import { createWebThemeStyle } from "./web-theme";
 
@@ -34,16 +35,17 @@ export function WebDesignSystemProvider({
 
   return (
     <WebDesignSystemEnvironmentContext.Provider value={environment}>
-      <div
+      <HjmProvider
         className="hjm-story-root"
-        data-motion={environment.reducedMotion ? "reduced" : "full"}
-        data-theme={environment.theme}
-        data-text-scale={environment.textScale}
-        dir={environment.direction}
+        direction={environment.direction}
+        reducedMotion={environment.reducedMotion}
+        systemTheme={environment.theme}
+        textScale={environment.textScale}
+        theme={environment.theme}
         style={style}
       >
         {children}
-      </div>
+      </HjmProvider>
     </WebDesignSystemEnvironmentContext.Provider>
   );
 }

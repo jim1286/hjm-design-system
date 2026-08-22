@@ -1,0 +1,119 @@
+{
+  "name": "@hjm/react",
+  "version": "0.5.2",
+  "description": "Accessible React 19 renderers for HJM design contracts.",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jim1286/hjm-design-system.git",
+    "directory": "packages/react"
+  },
+  "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./provider": {
+      "types": "./dist/provider.d.ts",
+      "import": "./dist/provider.js",
+      "default": "./dist/provider.js"
+    },
+    "./layout": {
+      "types": "./dist/layout.d.ts",
+      "import": "./dist/layout.js",
+      "default": "./dist/layout.js"
+    },
+    "./actions": {
+      "types": "./dist/actions.d.ts",
+      "import": "./dist/actions.js",
+      "default": "./dist/actions.js"
+    },
+    "./forms": {
+      "types": "./dist/forms-public.d.ts",
+      "import": "./dist/forms-public.js",
+      "default": "./dist/forms-public.js"
+    },
+    "./number-field": {
+      "types": "./dist/number-field.d.ts",
+      "import": "./dist/number-field.js",
+      "default": "./dist/number-field.js"
+    },
+    "./slider": {
+      "types": "./dist/slider.d.ts",
+      "import": "./dist/slider.js",
+      "default": "./dist/slider.js"
+    },
+    "./selection": {
+      "types": "./dist/selection.d.ts",
+      "import": "./dist/selection.js",
+      "default": "./dist/selection.js"
+    },
+    "./navigation": {
+      "types": "./dist/navigation-public.d.ts",
+      "import": "./dist/navigation-public.js",
+      "default": "./dist/navigation-public.js"
+    },
+    "./display": {
+      "types": "./dist/display-public.d.ts",
+      "import": "./dist/display-public.js",
+      "default": "./dist/display-public.js"
+    },
+    "./overlays": {
+      "types": "./dist/overlays.d.ts",
+      "import": "./dist/overlays.js",
+      "default": "./dist/overlays.js"
+    },
+    "./feedback": {
+      "types": "./dist/feedback.d.ts",
+      "import": "./dist/feedback.js",
+      "default": "./dist/feedback.js"
+    },
+    "./toast": {
+      "types": "./dist/toast.d.ts",
+      "import": "./dist/toast.js",
+      "default": "./dist/toast.js"
+    },
+    "./evidence": {
+      "types": "./dist/evidence.d.ts",
+      "import": "./dist/evidence.js",
+      "default": "./dist/evidence.js"
+    },
+    "./styles.css": "./dist/styles.css"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json && cp src/styles.css dist/styles.css",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test:ssr": "vitest run --config vitest.ssr.config.ts",
+    "test:browser": "vitest run --config vitest.browser.config.ts",
+    "test": "pnpm test:ssr && pnpm test:browser",
+    "check": "pnpm typecheck && pnpm test && pnpm build"
+  },
+  "peerDependencies": {
+    "@hjm/design-contracts": ">=0.6.0 <0.7.0",
+    "react": ">=19.0.0",
+    "react-dom": ">=19.0.0"
+  },
+  "devDependencies": {
+    "@hjm/design-contracts": "workspace:*",
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "@vitest/browser-playwright": "^4.1.10",
+    "playwright": "^1.58.2",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.10"
+  }
+}

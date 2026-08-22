@@ -13,7 +13,8 @@
     "check": "pnpm typecheck && pnpm test && pnpm verify:tokens"
   },
   "dependencies": {
-    "@hjm/design-system": "workspace:*",
+    "@hjm/design-contracts": "workspace:*",
+    "@hjm/react": "workspace:*",
     "react": "19.2.3",
     "react-dom": "19.2.3"
   },

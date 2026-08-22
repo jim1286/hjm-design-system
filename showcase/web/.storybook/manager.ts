@@ -1,6 +1,6 @@
 import { addons } from "storybook/manager-api";
 import { create } from "storybook/theming";
-import { THEMES, fontFamily, radius } from "@hjm/design-system";
+import { THEMES, fontFamily, radius } from "@hjm/design-contracts";
 
 addons.setConfig({
   theme: create({

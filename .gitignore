@@ -1,6 +1,8 @@
 node_modules/
 coverage/
 showcase/web/storybook-static/
+packages/*/.vitest-attachments/
+packages/*/test/__screenshots__/
 *.tsbuildinfo
 .DS_Store
 .playwright-mcp/

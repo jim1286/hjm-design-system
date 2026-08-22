@@ -1,0 +1,128 @@
+{
+  "name": "@hjm/react-native",
+  "version": "0.5.2",
+  "description": "Expo-independent React Native renderers for HJM design contracts.",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jim1286/hjm-design-system.git",
+    "directory": "packages/react-native"
+  },
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "react-native": "./dist/index.js",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./provider": {
+      "types": "./dist/provider.d.ts",
+      "react-native": "./dist/provider.js",
+      "import": "./dist/provider.js",
+      "default": "./dist/provider.js"
+    },
+    "./primitives": {
+      "types": "./dist/primitives.d.ts",
+      "react-native": "./dist/primitives.js",
+      "import": "./dist/primitives.js",
+      "default": "./dist/primitives.js"
+    },
+    "./actions": {
+      "types": "./dist/actions.d.ts",
+      "react-native": "./dist/actions.js",
+      "import": "./dist/actions.js",
+      "default": "./dist/actions.js"
+    },
+    "./inputs": {
+      "types": "./dist/inputs-public.d.ts",
+      "react-native": "./dist/inputs-public.js",
+      "import": "./dist/inputs-public.js",
+      "default": "./dist/inputs-public.js"
+    },
+    "./number-field": {
+      "types": "./dist/number-field.d.ts",
+      "react-native": "./dist/number-field.js",
+      "import": "./dist/number-field.js",
+      "default": "./dist/number-field.js"
+    },
+    "./slider": {
+      "types": "./dist/slider.d.ts",
+      "react-native": "./dist/slider.js",
+      "import": "./dist/slider.js",
+      "default": "./dist/slider.js"
+    },
+    "./forms": {
+      "types": "./dist/forms.d.ts",
+      "react-native": "./dist/forms.js",
+      "import": "./dist/forms.js",
+      "default": "./dist/forms.js"
+    },
+    "./navigation": {
+      "types": "./dist/navigation.d.ts",
+      "react-native": "./dist/navigation.js",
+      "import": "./dist/navigation.js",
+      "default": "./dist/navigation.js"
+    },
+    "./data-display": {
+      "types": "./dist/data-display.d.ts",
+      "react-native": "./dist/data-display.js",
+      "import": "./dist/data-display.js",
+      "default": "./dist/data-display.js"
+    },
+    "./feedback": {
+      "types": "./dist/feedback.d.ts",
+      "react-native": "./dist/feedback.js",
+      "import": "./dist/feedback.js",
+      "default": "./dist/feedback.js"
+    },
+    "./overlays": {
+      "types": "./dist/overlays.d.ts",
+      "react-native": "./dist/overlays.js",
+      "import": "./dist/overlays.js",
+      "default": "./dist/overlays.js"
+    },
+    "./evidence": {
+      "types": "./dist/evidence.d.ts",
+      "react-native": "./dist/evidence.js",
+      "import": "./dist/evidence.js",
+      "default": "./dist/evidence.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "bundle:check": "pnpm build && node scripts/check-metro-bundle.mjs",
+    "check": "pnpm typecheck && pnpm test && pnpm bundle:check"
+  },
+  "peerDependencies": {
+    "@hjm/design-contracts": ">=0.6.0 <0.7.0",
+    "react": ">=19",
+    "react-native": ">=0.81"
+  },
+  "devDependencies": {
+    "@babel/runtime": "7.29.7",
+    "@hjm/design-contracts": "workspace:*",
+    "@react-native/metro-config": "0.81.6",
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.2.0",
+    "@types/react-test-renderer": "^19.1.0",
+    "react": "19.2.3",
+    "react-native": "^0.81.0",
+    "metro": "0.83.8",
+    "react-test-renderer": "19.2.3",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.10"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

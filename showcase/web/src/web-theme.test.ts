@@ -13,7 +13,7 @@ import {
   resolveDesignSystemProviderValue,
   spacing,
   typography,
-} from "@hjm/design-system";
+} from "@hjm/design-contracts";
 import { createWebThemeStyle } from "./runtime/web-theme";
 
 describe("Showcase Web theme adapter", () => {

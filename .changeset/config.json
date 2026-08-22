@@ -1,0 +1,27 @@
+{
+  "$schema": "https://unpkg.com/@changesets/config@3.1.2/schema.json",
+  "changelog": false,
+  "commit": false,
+  "fixed": [
+    [
+      "@hjm/design-contracts",
+      "@hjm/react",
+      "@hjm/react-native"
+    ]
+  ],
+  "linked": [],
+  "access": "restricted",
+  "baseBranch": "main",
+  "updateInternalDependencies": "patch",
+  "ignore": [
+    "@hjm/showcase-web"
+  ],
+  "privatePackages": {
+    "version": true,
+    "tag": false
+  },
+  "___experimentalUnsafeOptions_WILL_CHANGE_IN_PATCH": {
+    "onlyUpdatePeerDependentsWhenOutOfRange": true,
+    "updateInternalDependents": "out-of-range"
+  }
+}

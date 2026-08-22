@@ -1,7 +1,7 @@
 import type { CSSProperties } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { typography } from "@hjm/design-system";
+import { typography } from "@hjm/design-contracts";
 
 type TypographySampleStyle = CSSProperties &
   Record<"--hjm-sample-font-size" | "--hjm-sample-font-weight" | "--hjm-sample-line-height", string>;

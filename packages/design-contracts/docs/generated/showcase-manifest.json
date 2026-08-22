@@ -1,0 +1,3058 @@
+{
+  "schemaVersion": 2,
+  "designSystemVersion": "0.5.2",
+  "packageName": "@hjm/design-contracts",
+  "components": [
+    {
+      "id": "text",
+      "storyId": "foundation/text",
+      "name": "Text",
+      "category": "foundation",
+      "platform": "shared",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "icon",
+      "storyId": "foundation/icon",
+      "name": "Icon",
+      "category": "foundation",
+      "platform": "shared",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/icon.md"
+      }
+    },
+    {
+      "id": "surface",
+      "storyId": "layout/surface",
+      "name": "Surface",
+      "category": "layout",
+      "platform": "shared",
+      "contractStatus": "stable",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "divider",
+      "storyId": "layout/divider",
+      "name": "Divider",
+      "category": "layout",
+      "platform": "shared",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "planned",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "section",
+      "storyId": "layout/section",
+      "name": "Section",
+      "category": "layout",
+      "platform": "shared",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "planned",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "stack",
+      "storyId": "layout/stack",
+      "name": "Stack",
+      "category": "layout",
+      "platform": "shared",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "grid",
+      "storyId": "layout/grid",
+      "name": "Grid",
+      "category": "layout",
+      "platform": "adaptive",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "platform-parity"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "platform-parity"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "layout",
+      "storyId": "layout/layout",
+      "name": "Layout",
+      "category": "layout",
+      "platform": "adaptive",
+      "contractStatus": "planned",
+      "surfaces": {
+        "web": "planned",
+        "native": "planned"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/layout.md"
+      }
+    },
+    {
+      "id": "masonry",
+      "storyId": "layout/masonry",
+      "name": "Masonry",
+      "category": "layout",
+      "platform": "adaptive",
+      "contractStatus": "planned",
+      "surfaces": {
+        "web": "planned",
+        "native": "planned"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "splitter",
+      "storyId": "layout/splitter",
+      "name": "Splitter",
+      "category": "layout",
+      "platform": "web",
+      "contractStatus": "planned",
+      "surfaces": {
+        "web": "planned",
+        "native": "unsupported"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/splitter.md"
+      }
+    },
+    {
+      "id": "button",
+      "storyId": "action/button",
+      "name": "Button",
+      "category": "action",
+      "platform": "shared",
+      "contractStatus": "stable",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "icon-button",
+      "storyId": "action/icon-button",
+      "name": "IconButton",
+      "category": "action",
+      "platform": "shared",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "link",
+      "storyId": "action/link",
+      "name": "Link",
+      "category": "action",
+      "platform": "adaptive",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "planned",
+        "native": "planned"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/link.md"
+      }
+    },
+    {
+      "id": "bottom-cta",
+      "storyId": "action/bottom-cta",
+      "name": "BottomCTA",
+      "category": "action",
+      "platform": "native",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "unsupported",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "floating-action-button",
+      "storyId": "action/floating-action-button",
+      "name": "FloatingActionButton",
+      "category": "action",
+      "platform": "adaptive",
+      "contractStatus": "planned",
+      "surfaces": {
+        "web": "planned",
+        "native": "planned"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/floating-action-button.md"
+      }
+    },
+    {
+      "id": "field",
+      "storyId": "input/field",
+      "name": "Field",
+      "category": "input",
+      "platform": "shared",
+      "contractStatus": "stable",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "search-field",
+      "storyId": "input/search-field",
+      "name": "SearchField",
+      "category": "input",
+      "platform": "shared",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "text-area",
+      "storyId": "input/text-area",
+      "name": "TextArea",
+      "category": "input",
+      "platform": "shared",
+      "contractStatus": "stable",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "password-field",
+      "storyId": "input/password-field",
+      "name": "PasswordField",
+      "category": "input",
+      "platform": "adaptive",
+      "contractStatus": "planned",
+      "surfaces": {
+        "web": "planned",
+        "native": "planned"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/password-field.md"
+      }
+    },
+    {
+      "id": "otp-field",
+      "storyId": "input/otp-field",
+      "name": "OtpField",
+      "category": "input",
+      "platform": "adaptive",
+      "contractStatus": "planned",
+      "surfaces": {
+        "web": "planned",
+        "native": "planned"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/otp-field.md"
+      }
+    },
+    {
+      "id": "checkbox",
+      "storyId": "input/checkbox",
+      "name": "Checkbox",
+      "category": "input",
+      "platform": "shared",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "planned"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "radio",
+      "storyId": "input/radio",
+      "name": "Radio",
+      "category": "input",
+      "platform": "shared",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "planned"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "checkbox-group",
+      "storyId": "input/checkbox-group",
+      "name": "CheckboxGroup",
+      "category": "input",
+      "platform": "shared",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "planned"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "radio-group",
+      "storyId": "input/radio-group",
+      "name": "RadioGroup",
+      "category": "input",
+      "platform": "shared",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "switch",
+      "storyId": "input/switch",
+      "name": "Switch",
+      "category": "input",
+      "platform": "shared",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "chip",
+      "storyId": "input/chip",
+      "name": "Chip",
+      "category": "input",
+      "platform": "shared",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "planned",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "segmented-control",
+      "storyId": "input/segmented-control",
+      "name": "SegmentedControl",
+      "category": "input",
+      "platform": "shared",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "slider",
+      "storyId": "input/slider",
+      "name": "Slider",
+      "category": "input",
+      "platform": "shared",
+      "contractStatus": "planned",
+      "surfaces": {
+        "web": "planned",
+        "native": "planned"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/slider.md"
+      }
+    },
+    {
+      "id": "number-field",
+      "storyId": "input/number-field",
+      "name": "NumberField",
+      "category": "input",
+      "platform": "shared",
+      "contractStatus": "planned",
+      "surfaces": {
+        "web": "planned",
+        "native": "planned"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/number-field.md"
+      }
+    },
+    {
+      "id": "select",
+      "storyId": "input/select",
+      "name": "Select",
+      "category": "input",
+      "platform": "adaptive",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "planned"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "combobox",
+      "storyId": "input/combobox",
+      "name": "Combobox",
+      "category": "input",
+      "platform": "adaptive",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "planned",
+        "native": "planned"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "date-picker",
+      "storyId": "input/date-picker",
+      "name": "DatePicker",
+      "category": "input",
+      "platform": "adaptive",
+      "contractStatus": "planned",
+      "surfaces": {
+        "web": "planned",
+        "native": "planned"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/date-picker.md"
+      }
+    },
+    {
+      "id": "time-picker",
+      "storyId": "input/time-picker",
+      "name": "TimePicker",
+      "category": "input",
+      "platform": "adaptive",
+      "contractStatus": "planned",
+      "surfaces": {
+        "web": "planned",
+        "native": "planned"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/time-picker.md"
+      }
+    },
+    {
+      "id": "color-picker",
+      "storyId": "input/color-picker",
+      "name": "ColorPicker",
+      "category": "input",
+      "platform": "web",
+      "contractStatus": "planned",
+      "surfaces": {
+        "web": "planned",
+        "native": "unsupported"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/color-picker.md"
+      }
+    },
+    {
+      "id": "file-picker",
+      "storyId": "input/file-picker",
+      "name": "FilePicker",
+      "category": "input",
+      "platform": "adaptive",
+      "contractStatus": "planned",
+      "surfaces": {
+        "web": "planned",
+        "native": "planned"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/file-picker.md"
+      }
+    },
+    {
+      "id": "cascader",
+      "storyId": "input/cascader",
+      "name": "Cascader",
+      "category": "input",
+      "platform": "adaptive",
+      "contractStatus": "planned",
+      "surfaces": {
+        "web": "planned",
+        "native": "planned"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/cascader.md"
+      }
+    },
+    {
+      "id": "form",
+      "storyId": "input/form",
+      "name": "Form",
+      "category": "input",
+      "platform": "shared",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "planned",
+        "native": "planned"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/form.md"
+      }
+    },
+    {
+      "id": "mentions",
+      "storyId": "input/mentions",
+      "name": "Mentions",
+      "category": "input",
+      "platform": "adaptive",
+      "contractStatus": "planned",
+      "surfaces": {
+        "web": "planned",
+        "native": "planned"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/mentions.md"
+      }
+    },
+    {
+      "id": "rating",
+      "storyId": "input/rating",
+      "name": "Rating",
+      "category": "input",
+      "platform": "shared",
+      "contractStatus": "planned",
+      "surfaces": {
+        "web": "planned",
+        "native": "planned"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/rating.md"
+      }
+    },
+    {
+      "id": "transfer-list",
+      "storyId": "input/transfer-list",
+      "name": "TransferList",
+      "category": "input",
+      "platform": "adaptive",
+      "contractStatus": "planned",
+      "surfaces": {
+        "web": "planned",
+        "native": "planned"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/transfer-list.md"
+      }
+    },
+    {
+      "id": "tree-select",
+      "storyId": "input/tree-select",
+      "name": "TreeSelect",
+      "category": "input",
+      "platform": "web",
+      "contractStatus": "planned",
+      "surfaces": {
+        "web": "planned",
+        "native": "unsupported"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/tree-select.md"
+      }
+    },
+    {
+      "id": "upload-item",
+      "storyId": "data-display/upload-item",
+      "name": "UploadItem",
+      "category": "data-display",
+      "platform": "shared",
+      "contractStatus": "planned",
+      "surfaces": {
+        "web": "planned",
+        "native": "planned"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/upload-item.md"
+      }
+    },
+    {
+      "id": "tabs",
+      "storyId": "navigation/tabs",
+      "name": "Tabs",
+      "category": "navigation",
+      "platform": "shared",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "top-bar",
+      "storyId": "navigation/top-bar",
+      "name": "TopBar",
+      "category": "navigation",
+      "platform": "native",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "unsupported",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "bottom-navigation",
+      "storyId": "navigation/bottom-navigation",
+      "name": "BottomNavigation",
+      "category": "navigation",
+      "platform": "adaptive",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "planned",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/bottom-navigation.md"
+      }
+    },
+    {
+      "id": "breadcrumb",
+      "storyId": "navigation/breadcrumb",
+      "name": "Breadcrumb",
+      "category": "navigation",
+      "platform": "web",
+      "contractStatus": "planned",
+      "surfaces": {
+        "web": "planned",
+        "native": "unsupported"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/breadcrumb.md"
+      }
+    },
+    {
+      "id": "pagination",
+      "storyId": "navigation/pagination",
+      "name": "Pagination",
+      "category": "navigation",
+      "platform": "web",
+      "contractStatus": "planned",
+      "surfaces": {
+        "web": "planned",
+        "native": "unsupported"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/pagination.md"
+      }
+    },
+    {
+      "id": "load-more",
+      "storyId": "navigation/load-more",
+      "name": "LoadMore",
+      "category": "navigation",
+      "platform": "shared",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "planned"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/load-more.md"
+      }
+    },
+    {
+      "id": "steps",
+      "storyId": "navigation/steps",
+      "name": "Steps",
+      "category": "navigation",
+      "platform": "shared",
+      "contractStatus": "planned",
+      "surfaces": {
+        "web": "planned",
+        "native": "planned"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/steps.md"
+      }
+    },
+    {
+      "id": "menu",
+      "storyId": "navigation/menu",
+      "name": "Menu",
+      "category": "navigation",
+      "platform": "adaptive",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "planned"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "anchor",
+      "storyId": "navigation/anchor",
+      "name": "Anchor",
+      "category": "navigation",
+      "platform": "web",
+      "contractStatus": "planned",
+      "surfaces": {
+        "web": "planned",
+        "native": "unsupported"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/anchor.md"
+      }
+    },
+    {
+      "id": "avatar",
+      "storyId": "data-display/avatar",
+      "name": "Avatar",
+      "category": "data-display",
+      "platform": "shared",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "planned",
+        "native": "planned"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "badge",
+      "storyId": "data-display/badge",
+      "name": "Badge",
+      "category": "data-display",
+      "platform": "shared",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "counter-badge",
+      "storyId": "data-display/counter-badge",
+      "name": "CounterBadge",
+      "category": "data-display",
+      "platform": "shared",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "card",
+      "storyId": "data-display/card",
+      "name": "Card",
+      "category": "data-display",
+      "platform": "shared",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "list",
+      "storyId": "data-display/list",
+      "name": "List",
+      "category": "data-display",
+      "platform": "shared",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "planned",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "list-row",
+      "storyId": "data-display/list-row",
+      "name": "ListRow",
+      "category": "data-display",
+      "platform": "shared",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "virtual-list",
+      "storyId": "data-display/virtual-list",
+      "name": "VirtualList",
+      "category": "data-display",
+      "platform": "adaptive",
+      "contractStatus": "planned",
+      "surfaces": {
+        "web": "planned",
+        "native": "planned"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/virtual-list.md"
+      }
+    },
+    {
+      "id": "accordion",
+      "storyId": "data-display/accordion",
+      "name": "Accordion",
+      "category": "data-display",
+      "platform": "shared",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "planned",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "statistic",
+      "storyId": "data-display/statistic",
+      "name": "Statistic",
+      "category": "data-display",
+      "platform": "shared",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "planned",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/statistic.md"
+      }
+    },
+    {
+      "id": "timeline",
+      "storyId": "data-display/timeline",
+      "name": "Timeline",
+      "category": "data-display",
+      "platform": "shared",
+      "contractStatus": "planned",
+      "surfaces": {
+        "web": "planned",
+        "native": "planned"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/timeline.md"
+      }
+    },
+    {
+      "id": "data-table",
+      "storyId": "data-display/data-table",
+      "name": "DataTable",
+      "category": "data-display",
+      "platform": "web",
+      "contractStatus": "planned",
+      "surfaces": {
+        "web": "planned",
+        "native": "unsupported"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/data-table.md"
+      }
+    },
+    {
+      "id": "tree",
+      "storyId": "data-display/tree",
+      "name": "Tree",
+      "category": "data-display",
+      "platform": "web",
+      "contractStatus": "planned",
+      "surfaces": {
+        "web": "planned",
+        "native": "unsupported"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/tree.md"
+      }
+    },
+    {
+      "id": "calendar",
+      "storyId": "data-display/calendar",
+      "name": "Calendar",
+      "category": "data-display",
+      "platform": "shared",
+      "contractStatus": "planned",
+      "surfaces": {
+        "web": "planned",
+        "native": "planned"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/calendar.md"
+      }
+    },
+    {
+      "id": "carousel",
+      "storyId": "data-display/carousel",
+      "name": "Carousel",
+      "category": "data-display",
+      "platform": "adaptive",
+      "contractStatus": "planned",
+      "surfaces": {
+        "web": "planned",
+        "native": "planned"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/carousel.md"
+      }
+    },
+    {
+      "id": "description-list",
+      "storyId": "data-display/description-list",
+      "name": "DescriptionList",
+      "category": "data-display",
+      "platform": "shared",
+      "contractStatus": "planned",
+      "surfaces": {
+        "web": "planned",
+        "native": "planned"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/description-list.md"
+      }
+    },
+    {
+      "id": "image",
+      "storyId": "data-display/image",
+      "name": "Image",
+      "category": "data-display",
+      "platform": "shared",
+      "contractStatus": "planned",
+      "surfaces": {
+        "web": "planned",
+        "native": "planned"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/image.md"
+      }
+    },
+    {
+      "id": "qr-code",
+      "storyId": "data-display/qrcode",
+      "name": "QRCode",
+      "category": "data-display",
+      "platform": "shared",
+      "contractStatus": "planned",
+      "surfaces": {
+        "web": "planned",
+        "native": "planned"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/qr-code.md"
+      }
+    },
+    {
+      "id": "tag",
+      "storyId": "data-display/tag",
+      "name": "Tag",
+      "category": "data-display",
+      "platform": "shared",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/tag.md"
+      }
+    },
+    {
+      "id": "tour",
+      "storyId": "overlay/tour",
+      "name": "Tour",
+      "category": "overlay",
+      "platform": "web",
+      "contractStatus": "planned",
+      "surfaces": {
+        "web": "planned",
+        "native": "unsupported"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/tour.md"
+      }
+    },
+    {
+      "id": "empty-state",
+      "storyId": "feedback/empty-state",
+      "name": "EmptyState",
+      "category": "feedback",
+      "platform": "shared",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "notice",
+      "storyId": "feedback/notice",
+      "name": "Notice",
+      "category": "feedback",
+      "platform": "shared",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "planned",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "progress",
+      "storyId": "feedback/progress",
+      "name": "Progress",
+      "category": "feedback",
+      "platform": "shared",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "planned",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "spinner",
+      "storyId": "feedback/spinner",
+      "name": "Spinner",
+      "category": "feedback",
+      "platform": "shared",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "planned",
+        "native": "planned"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "skeleton",
+      "storyId": "feedback/skeleton",
+      "name": "Skeleton",
+      "category": "feedback",
+      "platform": "shared",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "planned",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "result",
+      "storyId": "feedback/result",
+      "name": "Result",
+      "category": "feedback",
+      "platform": "shared",
+      "contractStatus": "planned",
+      "surfaces": {
+        "web": "planned",
+        "native": "planned"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/result.md"
+      }
+    },
+    {
+      "id": "toast",
+      "storyId": "feedback/toast",
+      "name": "Toast",
+      "category": "feedback",
+      "platform": "adaptive",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/toast.md"
+      }
+    },
+    {
+      "id": "watermark",
+      "storyId": "feedback/watermark",
+      "name": "Watermark",
+      "category": "feedback",
+      "platform": "web",
+      "contractStatus": "planned",
+      "surfaces": {
+        "web": "planned",
+        "native": "unsupported"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/watermark.md"
+      }
+    },
+    {
+      "id": "dialog",
+      "storyId": "overlay/dialog",
+      "name": "Dialog",
+      "category": "overlay",
+      "platform": "adaptive",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "alert-dialog",
+      "storyId": "overlay/alert-dialog",
+      "name": "AlertDialog",
+      "category": "overlay",
+      "platform": "adaptive",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "sheet",
+      "storyId": "overlay/sheet",
+      "name": "Sheet",
+      "category": "overlay",
+      "platform": "adaptive",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "side-panel",
+      "storyId": "overlay/side-panel",
+      "name": "SidePanel",
+      "category": "overlay",
+      "platform": "web",
+      "contractStatus": "planned",
+      "surfaces": {
+        "web": "planned",
+        "native": "unsupported"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/side-panel.md"
+      }
+    },
+    {
+      "id": "popover",
+      "storyId": "overlay/popover",
+      "name": "Popover",
+      "category": "overlay",
+      "platform": "web",
+      "contractStatus": "planned",
+      "surfaces": {
+        "web": "planned",
+        "native": "unsupported"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/popover.md"
+      }
+    },
+    {
+      "id": "confirm-popover",
+      "storyId": "overlay/confirm-popover",
+      "name": "ConfirmPopover",
+      "category": "overlay",
+      "platform": "web",
+      "contractStatus": "planned",
+      "surfaces": {
+        "web": "planned",
+        "native": "unsupported"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/confirm-popover.md"
+      }
+    },
+    {
+      "id": "tooltip",
+      "storyId": "overlay/tooltip",
+      "name": "Tooltip",
+      "category": "overlay",
+      "platform": "web",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "unsupported"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/tooltip.md"
+      }
+    },
+    {
+      "id": "command-palette",
+      "storyId": "overlay/command-palette",
+      "name": "CommandPalette",
+      "category": "overlay",
+      "platform": "web",
+      "contractStatus": "planned",
+      "surfaces": {
+        "web": "planned",
+        "native": "unsupported"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/command-palette.md"
+      }
+    },
+    {
+      "id": "affix",
+      "storyId": "utility/affix",
+      "name": "Affix",
+      "category": "utility",
+      "platform": "web",
+      "contractStatus": "planned",
+      "surfaces": {
+        "web": "planned",
+        "native": "unsupported"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/affix.md"
+      }
+    },
+    {
+      "id": "app-provider",
+      "storyId": "provider/app-provider",
+      "name": "AppProvider",
+      "category": "provider",
+      "platform": "adaptive",
+      "contractStatus": "planned",
+      "surfaces": {
+        "web": "planned",
+        "native": "planned"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/app-provider.md"
+      }
+    },
+    {
+      "id": "border-beam",
+      "storyId": "utility/border-beam",
+      "name": "BorderBeam",
+      "category": "utility",
+      "platform": "web",
+      "contractStatus": "planned",
+      "surfaces": {
+        "web": "planned",
+        "native": "unsupported"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/border-beam.md"
+      }
+    },
+    {
+      "id": "design-system-provider",
+      "storyId": "provider/design-system-provider",
+      "name": "DesignSystemProvider",
+      "category": "provider",
+      "platform": "shared",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/design-system-provider.md"
+      }
+    },
+    {
+      "id": "utility",
+      "storyId": "utility/utility",
+      "name": "Utility",
+      "category": "utility",
+      "platform": "web",
+      "contractStatus": "planned",
+      "surfaces": {
+        "web": "planned",
+        "native": "unsupported"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/utility.md"
+      }
+    }
+  ]
+}

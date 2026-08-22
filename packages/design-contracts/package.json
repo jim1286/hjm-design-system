@@ -1,0 +1,396 @@
+{
+  "name": "@hjm/design-contracts",
+  "version": "0.5.2",
+  "description": "Renderer-neutral design contracts, tokens, recipes, and behaviors shared by HJM products.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jim1286/hjm-design-system.git",
+    "directory": "packages/design-contracts"
+  },
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "react-native": "./dist/index.js",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./tokens": {
+      "types": "./dist/tokens.d.ts",
+      "react-native": "./dist/tokens.js",
+      "import": "./dist/tokens.js",
+      "default": "./dist/tokens.js"
+    },
+    "./foundations": {
+      "types": "./dist/foundations.d.ts",
+      "react-native": "./dist/foundations.js",
+      "import": "./dist/foundations.js",
+      "default": "./dist/foundations.js"
+    },
+    "./colors": {
+      "types": "./dist/colors.d.ts",
+      "react-native": "./dist/colors.js",
+      "import": "./dist/colors.js",
+      "default": "./dist/colors.js"
+    },
+    "./responsive": {
+      "types": "./dist/responsive.d.ts",
+      "react-native": "./dist/responsive.js",
+      "import": "./dist/responsive.js",
+      "default": "./dist/responsive.js"
+    },
+    "./grid": {
+      "types": "./dist/grid.d.ts",
+      "react-native": "./dist/grid.js",
+      "import": "./dist/grid.js",
+      "default": "./dist/grid.js"
+    },
+    "./recipes": {
+      "types": "./dist/component-recipes.d.ts",
+      "react-native": "./dist/component-recipes.js",
+      "import": "./dist/component-recipes.js",
+      "default": "./dist/component-recipes.js"
+    },
+    "./recipes/base": {
+      "types": "./dist/base-recipes.d.ts",
+      "react-native": "./dist/base-recipes.js",
+      "import": "./dist/base-recipes.js",
+      "default": "./dist/base-recipes.js"
+    },
+    "./recipes/all": {
+      "types": "./dist/recipes.d.ts",
+      "react-native": "./dist/recipes.js",
+      "import": "./dist/recipes.js",
+      "default": "./dist/recipes.js"
+    },
+    "./behaviors": {
+      "types": "./dist/behaviors.d.ts",
+      "react-native": "./dist/behaviors.js",
+      "import": "./dist/behaviors.js",
+      "default": "./dist/behaviors.js"
+    },
+    "./contracts": {
+      "types": "./dist/component-contracts.d.ts",
+      "react-native": "./dist/component-contracts.js",
+      "import": "./dist/component-contracts.js",
+      "default": "./dist/component-contracts.js"
+    },
+    "./catalog": {
+      "types": "./dist/catalog.d.ts",
+      "react-native": "./dist/catalog.js",
+      "import": "./dist/catalog.js",
+      "default": "./dist/catalog.js"
+    },
+    "./evidence": {
+      "types": "./dist/evidence.d.ts",
+      "react-native": "./dist/evidence.js",
+      "import": "./dist/evidence.js",
+      "default": "./dist/evidence.js"
+    },
+    "./version": {
+      "types": "./dist/version.d.ts",
+      "react-native": "./dist/version.js",
+      "import": "./dist/version.js",
+      "default": "./dist/version.js"
+    },
+    "./manifest.json": {
+      "default": "./docs/generated/showcase-manifest.json"
+    },
+    "./renderer-evidence.json": {
+      "default": "./docs/generated/renderer-evidence.json"
+    },
+    "./components/alert-dialog": {
+      "types": "./dist/alert-dialog.d.ts",
+      "react-native": "./dist/alert-dialog.js",
+      "import": "./dist/alert-dialog.js",
+      "default": "./dist/alert-dialog.js"
+    },
+    "./components/bottom-navigation": {
+      "types": "./dist/bottom-navigation.d.ts",
+      "react-native": "./dist/bottom-navigation.js",
+      "import": "./dist/bottom-navigation.js",
+      "default": "./dist/bottom-navigation.js"
+    },
+    "./components/breadcrumb": {
+      "types": "./dist/breadcrumb.d.ts",
+      "react-native": "./dist/breadcrumb.js",
+      "import": "./dist/breadcrumb.js",
+      "default": "./dist/breadcrumb.js"
+    },
+    "./components/calendar": {
+      "types": "./dist/calendar.d.ts",
+      "react-native": "./dist/calendar.js",
+      "import": "./dist/calendar.js",
+      "default": "./dist/calendar.js"
+    },
+    "./components/card": {
+      "types": "./dist/card.d.ts",
+      "react-native": "./dist/card.js",
+      "import": "./dist/card.js",
+      "default": "./dist/card.js"
+    },
+    "./components/carousel": {
+      "types": "./dist/carousel.d.ts",
+      "react-native": "./dist/carousel.js",
+      "import": "./dist/carousel.js",
+      "default": "./dist/carousel.js"
+    },
+    "./components/collection": {
+      "types": "./dist/collection.d.ts",
+      "react-native": "./dist/collection.js",
+      "import": "./dist/collection.js",
+      "default": "./dist/collection.js"
+    },
+    "./components/command-palette": {
+      "types": "./dist/command-palette.d.ts",
+      "react-native": "./dist/command-palette.js",
+      "import": "./dist/command-palette.js",
+      "default": "./dist/command-palette.js"
+    },
+    "./components/content-state": {
+      "types": "./dist/content-state.d.ts",
+      "react-native": "./dist/content-state.js",
+      "import": "./dist/content-state.js",
+      "default": "./dist/content-state.js"
+    },
+    "./components/data-table": {
+      "types": "./dist/data-table.d.ts",
+      "react-native": "./dist/data-table.js",
+      "import": "./dist/data-table.js",
+      "default": "./dist/data-table.js"
+    },
+    "./components/date-picker": {
+      "types": "./dist/date-picker.d.ts",
+      "react-native": "./dist/date-picker.js",
+      "import": "./dist/date-picker.js",
+      "default": "./dist/date-picker.js"
+    },
+    "./components/description-list": {
+      "types": "./dist/description-list.d.ts",
+      "react-native": "./dist/description-list.js",
+      "import": "./dist/description-list.js",
+      "default": "./dist/description-list.js"
+    },
+    "./components/design-system-provider": {
+      "types": "./dist/design-system-provider.d.ts",
+      "react-native": "./dist/design-system-provider.js",
+      "import": "./dist/design-system-provider.js",
+      "default": "./dist/design-system-provider.js"
+    },
+    "./components/file-picker": {
+      "types": "./dist/file-picker.d.ts",
+      "react-native": "./dist/file-picker.js",
+      "import": "./dist/file-picker.js",
+      "default": "./dist/file-picker.js"
+    },
+    "./components/floating-action-button": {
+      "types": "./dist/floating-action-button.d.ts",
+      "react-native": "./dist/floating-action-button.js",
+      "import": "./dist/floating-action-button.js",
+      "default": "./dist/floating-action-button.js"
+    },
+    "./components/form": {
+      "types": "./dist/form.d.ts",
+      "react-native": "./dist/form.js",
+      "import": "./dist/form.js",
+      "default": "./dist/form.js"
+    },
+    "./components/icon": {
+      "types": "./dist/icon.d.ts",
+      "react-native": "./dist/icon.js",
+      "import": "./dist/icon.js",
+      "default": "./dist/icon.js"
+    },
+    "./components/image": {
+      "types": "./dist/image.d.ts",
+      "react-native": "./dist/image.js",
+      "import": "./dist/image.js",
+      "default": "./dist/image.js"
+    },
+    "./components/layout": {
+      "types": "./dist/layout.d.ts",
+      "react-native": "./dist/layout.js",
+      "import": "./dist/layout.js",
+      "default": "./dist/layout.js"
+    },
+    "./components/link": {
+      "types": "./dist/link.d.ts",
+      "react-native": "./dist/link.js",
+      "import": "./dist/link.js",
+      "default": "./dist/link.js"
+    },
+    "./components/load-more": {
+      "types": "./dist/load-more.d.ts",
+      "react-native": "./dist/load-more.js",
+      "import": "./dist/load-more.js",
+      "default": "./dist/load-more.js"
+    },
+    "./components/mentions": {
+      "types": "./dist/mentions.d.ts",
+      "react-native": "./dist/mentions.js",
+      "import": "./dist/mentions.js",
+      "default": "./dist/mentions.js"
+    },
+    "./components/number-field": {
+      "types": "./dist/number-field.d.ts",
+      "react-native": "./dist/number-field.js",
+      "import": "./dist/number-field.js",
+      "default": "./dist/number-field.js"
+    },
+    "./components/otp-field": {
+      "types": "./dist/otp-field.d.ts",
+      "react-native": "./dist/otp-field.js",
+      "import": "./dist/otp-field.js",
+      "default": "./dist/otp-field.js"
+    },
+    "./components/pagination": {
+      "types": "./dist/pagination.d.ts",
+      "react-native": "./dist/pagination.js",
+      "import": "./dist/pagination.js",
+      "default": "./dist/pagination.js"
+    },
+    "./components/password-field": {
+      "types": "./dist/password-field.d.ts",
+      "react-native": "./dist/password-field.js",
+      "import": "./dist/password-field.js",
+      "default": "./dist/password-field.js"
+    },
+    "./components/popover": {
+      "types": "./dist/popover.d.ts",
+      "react-native": "./dist/popover.js",
+      "import": "./dist/popover.js",
+      "default": "./dist/popover.js"
+    },
+    "./components/result": {
+      "types": "./dist/result.d.ts",
+      "react-native": "./dist/result.js",
+      "import": "./dist/result.js",
+      "default": "./dist/result.js"
+    },
+    "./components/sheet": {
+      "types": "./dist/sheet.d.ts",
+      "react-native": "./dist/sheet.js",
+      "import": "./dist/sheet.js",
+      "default": "./dist/sheet.js"
+    },
+    "./components/side-panel": {
+      "types": "./dist/side-panel.d.ts",
+      "react-native": "./dist/side-panel.js",
+      "import": "./dist/side-panel.js",
+      "default": "./dist/side-panel.js"
+    },
+    "./components/slider": {
+      "types": "./dist/slider.d.ts",
+      "react-native": "./dist/slider.js",
+      "import": "./dist/slider.js",
+      "default": "./dist/slider.js"
+    },
+    "./components/splitter": {
+      "types": "./dist/splitter.d.ts",
+      "react-native": "./dist/splitter.js",
+      "import": "./dist/splitter.js",
+      "default": "./dist/splitter.js"
+    },
+    "./components/statistic": {
+      "types": "./dist/statistic.d.ts",
+      "react-native": "./dist/statistic.js",
+      "import": "./dist/statistic.js",
+      "default": "./dist/statistic.js"
+    },
+    "./components/steps": {
+      "types": "./dist/steps.d.ts",
+      "react-native": "./dist/steps.js",
+      "import": "./dist/steps.js",
+      "default": "./dist/steps.js"
+    },
+    "./components/tag": {
+      "types": "./dist/tag.d.ts",
+      "react-native": "./dist/tag.js",
+      "import": "./dist/tag.js",
+      "default": "./dist/tag.js"
+    },
+    "./components/timeline": {
+      "types": "./dist/timeline.d.ts",
+      "react-native": "./dist/timeline.js",
+      "import": "./dist/timeline.js",
+      "default": "./dist/timeline.js"
+    },
+    "./components/toast": {
+      "types": "./dist/toast.d.ts",
+      "react-native": "./dist/toast.js",
+      "import": "./dist/toast.js",
+      "default": "./dist/toast.js"
+    },
+    "./components/tooltip": {
+      "types": "./dist/tooltip.d.ts",
+      "react-native": "./dist/tooltip.js",
+      "import": "./dist/tooltip.js",
+      "default": "./dist/tooltip.js"
+    },
+    "./components/tour": {
+      "types": "./dist/tour.d.ts",
+      "react-native": "./dist/tour.js",
+      "import": "./dist/tour.js",
+      "default": "./dist/tour.js"
+    },
+    "./components/transfer-list": {
+      "types": "./dist/transfer-list.d.ts",
+      "react-native": "./dist/transfer-list.js",
+      "import": "./dist/transfer-list.js",
+      "default": "./dist/transfer-list.js"
+    },
+    "./components/tree": {
+      "types": "./dist/tree.d.ts",
+      "react-native": "./dist/tree.js",
+      "import": "./dist/tree.js",
+      "default": "./dist/tree.js"
+    },
+    "./components/tree-select": {
+      "types": "./dist/tree-select.d.ts",
+      "react-native": "./dist/tree-select.js",
+      "import": "./dist/tree-select.js",
+      "default": "./dist/tree-select.js"
+    },
+    "./components/upload-item": {
+      "types": "./dist/upload-item.d.ts",
+      "react-native": "./dist/upload-item.js",
+      "import": "./dist/upload-item.js",
+      "default": "./dist/upload-item.js"
+    },
+    "./showcase": {
+      "types": "./dist/showcase.d.ts",
+      "react-native": "./dist/showcase.js",
+      "import": "./dist/showcase.js",
+      "default": "./dist/showcase.js"
+    }
+  },
+  "files": [
+    "dist",
+    "docs",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "check": "pnpm typecheck && pnpm test && pnpm build && pnpm contracts:check && pnpm bundle:check",
+    "contracts:sync": "pnpm build && node scripts/sync-contract-artifacts.mjs --write",
+    "contracts:check": "node scripts/sync-contract-artifacts.mjs",
+    "bundle:check": "node scripts/check-bundle-budget.mjs",
+    "reference:antd:verify": "node scripts/verify-antd-reference.mjs",
+    "prepack": "pnpm build"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "pnpm@11.18.0",
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.10"
+  }
+}
