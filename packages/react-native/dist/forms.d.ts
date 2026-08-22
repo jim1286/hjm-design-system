@@ -143,6 +143,10 @@ export type ComboboxProps<Key extends string = string, SectionKey extends string
     description?: string;
     error?: string;
     placeholder?: string;
+    /** Optional localized hint explaining how the editable trigger opens results. */
+    openHint?: string;
+    /** Optional visible modal heading when it should differ from the field label. */
+    sheetTitle?: string;
     required?: boolean;
     disabled?: boolean;
     readOnly?: boolean;
@@ -161,6 +165,6 @@ export type ComboboxProps<Key extends string = string, SectionKey extends string
     style?: StyleProp<ViewStyle>;
 }>;
 /** Editable Native combobox with sectioned async results and teardown-safe commits. */
-export declare function Combobox<Key extends string = string, SectionKey extends string = string>({ label, accessibilityLabel, items, sections, source: sourceProp, selectedKey, defaultSelectedKey, selectedItem, onSelectionChange, inputValue, defaultInputValue, onInputValueChange, open, defaultOpen, onOpenChange, onCommit, onCommitAfterDismiss, onDismiss, filtering, queryValue, resultQuery, asyncState, loading, emptyMessage, loadingMessage, loadingMoreMessage, errorMessage, promptMessage, minimumQueryLength, onRetry, retryLabel, description, error, placeholder, required, disabled, readOnly, busy, openOnFocus, size, density, readOnlyLabel, renderLeading, clearLabel, dismissLabel, resultsAccessibilityLabel, style, ...modalProps }: ComboboxProps<Key, SectionKey>): import("react").JSX.Element;
+export declare function Combobox<Key extends string = string, SectionKey extends string = string>({ label, accessibilityLabel, items, sections, source: sourceProp, selectedKey, defaultSelectedKey, selectedItem, onSelectionChange, inputValue, defaultInputValue, onInputValueChange, open, defaultOpen, onOpenChange, onCommit, onCommitAfterDismiss, onDismiss, filtering, queryValue, resultQuery, asyncState, loading, emptyMessage, loadingMessage, loadingMoreMessage, errorMessage, promptMessage, minimumQueryLength, onRetry, retryLabel, description, error, placeholder, openHint, sheetTitle, required, disabled, readOnly, busy, openOnFocus, size, density, readOnlyLabel, renderLeading, clearLabel, dismissLabel, resultsAccessibilityLabel, style, ...modalProps }: ComboboxProps<Key, SectionKey>): import("react").JSX.Element;
 export {};
 //# sourceMappingURL=forms.d.ts.map

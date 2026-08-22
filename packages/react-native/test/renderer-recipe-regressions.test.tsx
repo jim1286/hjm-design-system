@@ -629,6 +629,7 @@ describe("Native canonical recipe bindings", () => {
       borderRadius: radius[surface.radius],
       borderWidth: surface.borderWidth,
       gap: density.gap,
+      minWidth: 0,
       padding: density.padding,
     });
     expect(renderTrendMark).toHaveBeenCalledWith({
@@ -647,9 +648,22 @@ describe("Native canonical recipe bindings", () => {
     expect(value.props.variant).toBe(density.valueVariant);
     expect(flattenStyle(value.props.style)).toMatchObject({
       color: resolveColorReference(statisticRecipe.value.color, lightValue.palette),
+      flexShrink: 1,
       fontSize: 31,
       fontVariant: ["tabular-nums"],
       fontWeight: statisticRecipe.value.fontWeight,
+    });
+    expect(flattenStyle(value.parent?.props.style)).toMatchObject({
+      flexDirection: "row",
+      flexWrap: "wrap",
+      minWidth: 0,
+    });
+    const trend = copy(renderer, "전주 대비 증가");
+    expect(flattenStyle(trend.props.style)).toMatchObject({ flexShrink: 1 });
+    expect(flattenStyle(trend.parent?.props.style)).toMatchObject({
+      flexDirection: "row",
+      flexWrap: "wrap",
+      minWidth: 0,
     });
     expect(flattenStyle(copy(renderer, "세전 금액").props.style)).toMatchObject({
       color: resolveColorReference(statisticRecipe.hint.color, lightValue.palette),
@@ -868,12 +882,14 @@ describe("Native canonical recipe bindings", () => {
   it("binds Progress visible copy, semantic value, track/indicator recipe, and slots", () => {
     const renderer = render(
       <Progress
+        accessibilityHint="업로드 완료까지 남은 비율"
         indicatorStyle={{ opacity: 0.75 }}
         label="업로드"
         labelStyle={{ letterSpacing: 1 }}
         max={200}
         size="large"
         tone="success"
+        testID="upload-progress"
         trackStyle={{ marginTop: 2 }}
         value={50}
         valueStyle={{ fontWeight: "700" }}
@@ -882,8 +898,10 @@ describe("Native canonical recipe bindings", () => {
     );
     const progress = byLabel(renderer, "업로드");
     expect(progress.props).toMatchObject({
+      accessibilityHint: "업로드 완료까지 남은 비율",
       accessibilityRole: "progressbar",
       accessibilityValue: { max: 100, min: 0, now: 25, text: "50 / 200" },
+      testID: "upload-progress",
     });
     const label = copy(renderer, "업로드");
     expect(label.props.variant).toBe("label");
@@ -911,5 +929,13 @@ describe("Native canonical recipe bindings", () => {
       opacity: 0.75,
       width: "25%",
     });
+
+    const accessibilityOnly = render(
+      <Progress accessibilityLabel="최신 기록을 불러오는 중" />,
+    );
+    expect(accessibilityOnly.root.findAllByType(View).find(
+      (node) => node.props.accessibilityLabel === "최신 기록을 불러오는 중",
+    )?.props).toMatchObject({ accessibilityRole: "progressbar" });
+    expect(accessibilityOnly.root.findAllByType(Text)).toHaveLength(0);
   });
 });

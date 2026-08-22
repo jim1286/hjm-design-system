@@ -136,8 +136,12 @@ describe("Native product renderer gaps", () => {
           size: "large",
         }}
         secondaryAction={<Pressable accessibilityLabel="도움말" />}
+        testID="save-actions"
       />,
     );
+    expect(renderer.root.findAllByType(View).find(
+      (node) => node.props.testID === "save-actions",
+    )?.props.accessibilityRole).toBe("toolbar");
     const primary = renderer.root.findAllByType(Pressable).find(
       (node) => node.props.accessibilityLabel === "저장",
     );

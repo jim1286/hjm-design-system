@@ -53,7 +53,7 @@ export function Badge({ label, tone = badgeRecipe.defaults.tone, size = badgeRec
                     labelStyle,
                 ], variant: metrics.textVariant, children: label })] }));
 }
-export function Tag({ children, label, tone, accessibilityLabel, style, labelStyle, }) {
+export function Tag({ children, label, tone, accessibilityLabel, style, labelStyle, ...props }) {
     const theme = useHjmNativeTheme();
     const resolvedLabel = children ?? label;
     if (resolvedLabel === undefined) {
@@ -64,7 +64,7 @@ export function Tag({ children, label, tone, accessibilityLabel, style, labelSty
         ...(tone === undefined ? {} : { tone }),
     });
     const presentation = resolveTagPresentation(descriptor.tone, theme.palette);
-    return (_jsx(View, { accessibilityLabel: accessibilityLabel ?? descriptor.label, style: [
+    return (_jsx(View, { ...props, accessibilityLabel: accessibilityLabel ?? descriptor.label, accessible: true, style: [
             {
                 alignItems: "center",
                 alignSelf: "flex-start",
@@ -623,6 +623,7 @@ export function Statistic({ descriptor, density = "comfortable", presentation = 
                 borderRadius: radius[presentationContract.radius],
                 borderWidth: presentationContract.borderWidth,
                 gap: densityContract.gap,
+                minWidth: 0,
                 padding: densityContract.padding,
             },
             style,
@@ -636,7 +637,9 @@ export function Statistic({ descriptor, density = "comfortable", presentation = 
                     alignItems: "baseline",
                     direction: theme.environment.direction,
                     flexDirection: "row",
+                    flexWrap: "wrap",
                     gap: spacing.xxs,
+                    minWidth: 0,
                 }, children: [resolved.prefix ? (_jsx(Text, { accessible: false, style: [
                             {
                                 color: resolveColorReference(statisticRecipe.affix.color, theme.palette),
@@ -646,6 +649,7 @@ export function Statistic({ descriptor, density = "comfortable", presentation = 
                         ], variant: statisticRecipe.affix.textVariant, children: resolved.prefix })) : null, _jsx(Text, { accessible: false, style: [
                             {
                                 color: resolveColorReference(statisticRecipe.value.color, theme.palette),
+                                flexShrink: 1,
                                 fontVariant: ["tabular-nums"],
                                 fontWeight: statisticRecipe.value.fontWeight,
                             },
@@ -656,8 +660,18 @@ export function Statistic({ descriptor, density = "comfortable", presentation = 
                                 fontWeight: statisticRecipe.affix.fontWeight,
                             },
                             affixStyle,
-                        ], variant: statisticRecipe.affix.textVariant, children: resolved.suffix })) : null] }), resolved.trend ? (_jsxs(View, { accessible: false, style: { alignItems: "center", flexDirection: "row", gap: statisticRecipe.trend.gap }, children: [renderTrendMark && trendMark && trendColor ? (_jsx(View, { accessible: false, children: renderTrendMark({ name: trendMark, color: trendColor, size: glyph.sm }) })) : (_jsx(Text, { accessible: false, style: { color: trendColor }, variant: "caption", children: resolved.trend.direction === "up" ? "↑" : resolved.trend.direction === "down" ? "↓" : "—" })), _jsx(Text, { accessible: false, style: [
-                            { color: trendColor, fontWeight: statisticRecipe.trend.fontWeight },
+                        ], variant: statisticRecipe.affix.textVariant, children: resolved.suffix })) : null] }), resolved.trend ? (_jsxs(View, { accessible: false, style: {
+                    alignItems: "center",
+                    flexDirection: "row",
+                    flexWrap: "wrap",
+                    gap: statisticRecipe.trend.gap,
+                    minWidth: 0,
+                }, children: [renderTrendMark && trendMark && trendColor ? (_jsx(View, { accessible: false, children: renderTrendMark({ name: trendMark, color: trendColor, size: glyph.sm }) })) : (_jsx(Text, { accessible: false, style: { color: trendColor }, variant: "caption", children: resolved.trend.direction === "up" ? "↑" : resolved.trend.direction === "down" ? "↓" : "—" })), _jsx(Text, { accessible: false, style: [
+                            {
+                                color: trendColor,
+                                flexShrink: 1,
+                                fontWeight: statisticRecipe.trend.fontWeight,
+                            },
                             trendStyle,
                         ], variant: statisticRecipe.trend.textVariant, children: resolved.trend.label })] })) : null, resolved.hint ? (_jsx(Text, { accessible: false, style: [
                     { color: resolveColorReference(statisticRecipe.hint.color, theme.palette) },

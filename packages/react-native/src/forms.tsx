@@ -761,6 +761,10 @@ export type ComboboxProps<
     description?: string;
     error?: string;
     placeholder?: string;
+    /** Optional localized hint explaining how the editable trigger opens results. */
+    openHint?: string;
+    /** Optional visible modal heading when it should differ from the field label. */
+    sheetTitle?: string;
     required?: boolean;
     disabled?: boolean;
     readOnly?: boolean;
@@ -821,6 +825,8 @@ export function Combobox<
   description,
   error,
   placeholder,
+  openHint,
+  sheetTitle,
   required = false,
   disabled = false,
   readOnly = false,
@@ -856,6 +862,12 @@ export function Combobox<
   }
   if (!emptyMessage.trim() || !loadingMessage.trim()) {
     throw new TypeError("Combobox state messages must not be empty");
+  }
+  if (openHint !== undefined && !openHint.trim()) {
+    throw new TypeError("Combobox openHint must not be empty");
+  }
+  if (sheetTitle !== undefined && !sheetTitle.trim()) {
+    throw new TypeError("Combobox sheetTitle must not be empty");
   }
   if (!Number.isInteger(minimumQueryLength) || minimumQueryLength < 0) {
     throw new RangeError("Combobox minimumQueryLength must be a non-negative integer");
@@ -1109,7 +1121,9 @@ export function Combobox<
         <TextInput
           {...inputTextScaleProps}
           ref={inputRef}
-          accessibilityHint={readOnly ? readOnlyLabel : error ?? description}
+          accessibilityHint={readOnly
+            ? readOnlyLabel
+            : [error ?? description, openHint].filter(Boolean).join(". ") || undefined}
           accessibilityLabel={accessibleName}
           accessibilityRole="combobox"
           accessibilityState={{
@@ -1199,7 +1213,7 @@ export function Combobox<
               padding: spacing.md,
             }}
           >
-            <Text tone="primary" variant="title">{label ?? accessibleName}</Text>
+            <Text tone="primary" variant="title">{sheetTitle ?? label ?? accessibleName}</Text>
             {viewStatus === "loading" || viewStatus === "prompt" || viewStatus === "error" || viewStatus === "empty" ? (
               <View style={{ gap: spacing.sm, minHeight: comboboxRecipe.stateMessage.minHeight }}>
                 {viewStatus === "loading" ? <ActivityIndicator /> : null}

@@ -2,6 +2,7 @@ import { type SelectCollectionSectionDescriptor, type SelectCollectionSource, ty
 import { type AsyncCollectionState, type SelectItemDescriptor } from "@hjm/design-contracts/behaviors";
 import { type SelectDensity, type SelectSize } from "@hjm/design-contracts/recipes";
 import { type ButtonHTMLAttributes, type ReactElement, type ReactNode, type RefAttributes } from "react";
+import { type AnchoredPopupAlign } from "./portal.js";
 export type SelectItem<Key extends string = string> = SelectItemDescriptor<Key>;
 export type SelectSection<Key extends string = string, SectionKey extends string = string> = SelectCollectionSectionDescriptor<Key, SectionKey>;
 export type SelectLeadingRenderProps = Readonly<{
@@ -57,7 +58,10 @@ type SelectBaseProps<Key extends string> = Omit<ButtonHTMLAttributes<HTMLButtonE
     required?: boolean;
     size?: SelectSize;
     density?: SelectDensity;
+    /** Logical listbox alignment against the trigger; automatically mirrors in RTL. */
+    align?: AnchoredPopupAlign;
     fieldClassName?: string;
+    portalContainer?: HTMLElement;
     locale?: string | readonly string[];
     renderLeading?: (item: SelectItemDescriptor<Key> | null, appearance: SelectLeadingRenderProps) => ReactNode;
     renderOptionLeading?: (item: SelectItemDescriptor<Key>, appearance: SelectOptionLeadingRenderProps) => ReactNode;

@@ -38,6 +38,11 @@ import {
   type RefAttributes,
 } from "react";
 import { classNames, useControllableState } from "./internal.js";
+import {
+  AnchoredPortal,
+  useAnchoredPopup,
+  type AnchoredPopupAlign,
+} from "./portal.js";
 
 export type SelectItem<Key extends string = string> = SelectItemDescriptor<Key>;
 export type SelectSection<
@@ -117,7 +122,10 @@ type SelectBaseProps<Key extends string> = Omit<
     required?: boolean;
     size?: SelectSize;
     density?: SelectDensity;
+    /** Logical listbox alignment against the trigger; automatically mirrors in RTL. */
+    align?: AnchoredPopupAlign;
     fieldClassName?: string;
+    portalContainer?: HTMLElement;
     locale?: string | readonly string[];
     renderLeading?: (
       item: SelectItemDescriptor<Key> | null,
@@ -159,7 +167,9 @@ function SelectInner<Key extends string, SectionKey extends string>(
     readOnly = false,
     size = selectRecipe.defaults.size,
     density = selectRecipe.defaults.density,
+    align = "start",
     fieldClassName,
+    portalContainer,
     locale,
     renderLeading,
     renderOptionLeading,
@@ -278,6 +288,8 @@ function SelectInner<Key extends string, SectionKey extends string>(
     `${controlId}-option-${flatItems.findIndex((item) => item.id === key)}`;
   const rootRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
+  const listboxRef = useRef<HTMLDivElement | null>(null);
+  const [listboxNode, setListboxNode] = useState<HTMLDivElement | null>(null);
   const optionRefs = useRef(new Map<SelectHighlightKey<Key>, HTMLDivElement>());
   const typeaheadRef = useRef({ value: "", time: 0 });
   const restoreFocusRef = useRef(false);
@@ -305,6 +317,15 @@ function SelectInner<Key extends string, SectionKey extends string>(
     : activeKey === null
       ? undefined
       : optionId(activeKey);
+  const popupPosition = useAnchoredPopup(triggerRef, listboxNode, {
+    align,
+    matchAnchorWidth: true,
+    zIndex: 800,
+  });
+  const setListboxRef = useCallback((node: HTMLDivElement | null) => {
+    listboxRef.current = node;
+    setListboxNode(node);
+  }, []);
 
   useEffect(() => {
     if (!open) {
@@ -324,7 +345,11 @@ function SelectInner<Key extends string, SectionKey extends string>(
   useEffect(() => {
     if (!open) return;
     const handlePointerDown = (event: PointerEvent) => {
-      if (event.target instanceof Node && !rootRef.current?.contains(event.target)) {
+      if (
+        event.target instanceof Node &&
+        !rootRef.current?.contains(event.target) &&
+        !listboxRef.current?.contains(event.target)
+      ) {
         changeOpen(false, "outside");
       }
     };
@@ -469,7 +494,8 @@ function SelectInner<Key extends string, SectionKey extends string>(
       if (
         open &&
         document.activeElement instanceof Node &&
-        !rootRef.current?.contains(document.activeElement)
+        !rootRef.current?.contains(document.activeElement) &&
+        !listboxRef.current?.contains(document.activeElement)
       ) changeOpen(false, "blur");
     });
   };
@@ -597,12 +623,22 @@ function SelectInner<Key extends string, SectionKey extends string>(
           )}
         </button>
         {open ? (
-          <div
-            id={listboxId}
-            role="listbox"
-            aria-label={accessibleName}
-            className="hjm-select__listbox"
+          <AnchoredPortal
+            anchorRef={triggerRef}
+            ssrFallback="inline"
+            {...(portalContainer === undefined ? {} : { container: portalContainer })}
           >
+            <div
+              ref={setListboxRef}
+              id={listboxId}
+              role="listbox"
+              aria-label={accessibleName}
+              className="hjm-select__listbox"
+              data-density={density}
+              data-placement={popupPosition.placement}
+              data-align={popupPosition.align}
+              style={popupPosition.style}
+            >
             {asyncState.status !== "idle" ? (
               <div
                 className="hjm-select__message"
@@ -651,7 +687,8 @@ function SelectInner<Key extends string, SectionKey extends string>(
                 {emptySelectionLabel}
               </div>
             ) : null}
-          </div>
+            </div>
+          </AnchoredPortal>
         ) : null}
       </div>
       {description && !error ? (

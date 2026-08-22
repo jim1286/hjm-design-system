@@ -1,6 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { resolveColorReference } from "@hjm/design-contracts/color-references";
 import { easing, glyph, radius, spacing } from "@hjm/design-contracts/foundations";
+import { resolveControlAccessibleName, } from "@hjm/design-contracts/behaviors";
 import { emptyStateRecipe, noticeRecipe, progressRecipe, toastRecipe, } from "@hjm/design-contracts/recipes";
 import { resolveResultDescriptor, resultRecipe, } from "@hjm/design-contracts/components/result";
 import { createToastSession, createToastStore, resolveToastDescriptor, toastBehaviorDefaults, } from "@hjm/design-contracts/components/toast";
@@ -153,7 +154,7 @@ export function Result({ status, title, description, actions, renderIcon, style,
                     marginTop: spacing.xs,
                 }, children: [result.primaryAction ? (_jsx(Button, { accessibilityLabel: result.primaryAction.accessibilityLabel, onPress: result.primaryAction.onAction, children: result.primaryAction.label })) : null, result.secondaryAction ? (_jsx(Button, { accessibilityLabel: result.secondaryAction.accessibilityLabel, onPress: result.secondaryAction.onAction, tone: "secondary", children: result.secondaryAction.label })) : null] })) : null] }));
 }
-export function Progress({ value, max = 1, label, valueText, valueLabel, size = progressRecipe.defaults.size, tone = progressRecipe.defaults.tone, style, labelStyle, valueStyle, trackStyle, indicatorStyle, }) {
+export function Progress({ value, max = 1, label, accessibilityLabel, valueText, valueLabel, accessibilityHint, size = progressRecipe.defaults.size, tone = progressRecipe.defaults.tone, style, labelStyle, valueStyle, trackStyle, indicatorStyle, testID, }) {
     if (!Number.isFinite(max) || max <= 0) {
         throw new RangeError("Progress max must be a positive finite number");
     }
@@ -161,19 +162,20 @@ export function Progress({ value, max = 1, label, valueText, valueLabel, size = 
         throw new RangeError("Progress value must be between zero and max");
     }
     const theme = useHjmNativeTheme();
+    const accessibleName = resolveControlAccessibleName(label, accessibilityLabel, "Progress");
     const percentage = value === undefined ? undefined : Math.round((value / max) * 100);
     const resolvedValueText = valueText ?? valueLabel ?? (percentage === undefined ? undefined : `${percentage}%`);
-    return (_jsxs(View, { accessibilityLabel: label, accessibilityRole: "progressbar", accessibilityState: value === undefined ? { busy: true } : undefined, accessibilityValue: {
+    return (_jsxs(View, { accessibilityHint: accessibilityHint, accessibilityLabel: accessibleName, accessibilityRole: "progressbar", accessibilityState: value === undefined ? { busy: true } : undefined, accessibilityValue: {
             min: 0,
             max: 100,
             ...(percentage === undefined ? {} : { now: percentage }),
             ...(resolvedValueText === undefined ? {} : { text: resolvedValueText }),
-        }, style: [{ gap: spacing.xs }, style], children: [_jsxs(View, { accessible: false, style: {
+        }, testID: testID, style: [{ gap: spacing.xs }, style], children: [label === undefined ? null : (_jsxs(View, { accessible: false, style: {
                     alignItems: "center",
                     direction: theme.environment.direction,
                     flexDirection: "row",
                     justifyContent: "space-between",
-                }, children: [_jsx(Text, { style: labelStyle, variant: "label", children: label }), resolvedValueText ? (_jsx(Text, { style: valueStyle, tone: "muted", variant: "caption", children: resolvedValueText })) : null] }), _jsx(View, { accessible: false, style: [
+                }, children: [_jsx(Text, { style: labelStyle, variant: "label", children: label }), resolvedValueText ? (_jsx(Text, { style: valueStyle, tone: "muted", variant: "caption", children: resolvedValueText })) : null] })), _jsx(View, { accessible: false, style: [
                     {
                         backgroundColor: resolveColorReference(progressRecipe.track, theme.palette),
                         borderRadius: radius[progressRecipe.radius],

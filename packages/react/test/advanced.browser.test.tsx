@@ -313,13 +313,13 @@ describe("non-modal popup behavior", () => {
     const trigger = container.querySelector<HTMLButtonElement>("button")!;
     await act(async () => trigger.focus());
     await flush();
-    const tooltip = container.querySelector<HTMLElement>('[role="tooltip"]')!;
+    const tooltip = document.body.querySelector<HTMLElement>('[role="tooltip"]')!;
     expect(tooltip.textContent).toBe("상세 설명");
     expect(trigger.getAttribute("aria-describedby")).toBe(tooltip.id);
 
     await act(async () => trigger.blur());
     await flush();
-    expect(container.querySelector('[role="tooltip"]')).toBeNull();
+    expect(document.body.querySelector('[role="tooltip"]')).toBeNull();
     expect(trigger.hasAttribute("aria-describedby")).toBe(false);
   });
 
@@ -342,7 +342,7 @@ describe("non-modal popup behavior", () => {
     const trigger = container.querySelector<HTMLButtonElement>("button")!;
     await act(async () => trigger.click());
     await flush();
-    const menu = container.querySelector<HTMLElement>('[role="menu"]')!;
+    const menu = document.body.querySelector<HTMLElement>('[role="menu"]')!;
     const items = [...menu.querySelectorAll<HTMLButtonElement>('[role="menuitem"]')];
     expect(document.activeElement).toBe(items[0]);
 
@@ -393,7 +393,7 @@ describe("advanced form and collection interactions", () => {
     );
     const select = container.querySelector<HTMLButtonElement>('.hjm-select [role="combobox"]')!;
     await act(async () => select.click());
-    const selectOptions = [...container.querySelectorAll<HTMLElement>('.hjm-select [role="option"]')];
+    const selectOptions = [...document.body.querySelectorAll<HTMLElement>('.hjm-select__listbox [role="option"]')];
     await act(async () => selectOptions.find((option) => option.textContent?.includes("KT"))!.click());
     expect(select.textContent).toContain("KT");
     expect(onSelect).toHaveBeenLastCalledWith("kt");
@@ -411,7 +411,7 @@ describe("advanced form and collection interactions", () => {
     expect(onCombo).toHaveBeenLastCalledWith("one");
     await flush();
     expect(input.validationMessage).toBe("");
-    expect(container.querySelector('[role="listbox"]')).toBeNull();
+    expect(document.body.querySelector('[role="listbox"]')).toBeNull();
     expect(document.activeElement).toBe(input);
   });
 

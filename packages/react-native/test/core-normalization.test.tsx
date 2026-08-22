@@ -363,7 +363,7 @@ describe("Native core normalization", () => {
   it("renders Tag independently from Badge and shares Card slots/defaults", () => {
     const renderer = renderWithProvider(
       <>
-        <Tag tone="attention">주의</Tag>
+        <Tag testID="attention-tag" tone="attention">주의</Tag>
         <Card
           actions={<Button>확인</Button>}
           description="설명"
@@ -378,6 +378,11 @@ describe("Native core normalization", () => {
     const tag = renderer.root.findAllByType(View).find(
       (node) => flattenStyle(node.props.style).minHeight === 20,
     );
+    expect(tag?.props).toMatchObject({
+      accessible: true,
+      accessibilityLabel: "주의",
+      testID: "attention-tag",
+    });
     expect(flattenStyle(tag?.props.style)).toMatchObject({
       borderRadius: 8,
       paddingHorizontal: 4,

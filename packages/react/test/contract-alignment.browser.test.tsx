@@ -65,7 +65,7 @@ describe("Menu core behavior alignment", () => {
       </HjmProvider>,
     );
     await flush();
-    const radios = [...container.querySelectorAll<HTMLButtonElement>('[role="menuitemradio"]')];
+    const radios = [...document.body.querySelectorAll<HTMLButtonElement>('[role="menuitemradio"]')];
     expect(radios.map((item) => item.getAttribute("aria-checked"))).toEqual([
       "true",
       "false",
@@ -79,7 +79,7 @@ describe("Menu core behavior alignment", () => {
     await act(async () => radios[2]!.click());
     await flush();
     expect(onSingleChange).toHaveBeenLastCalledWith("gamma");
-    expect(container.querySelector('[role="menu"]')).toBeNull();
+    expect(document.body.querySelector('[role="menu"]')).toBeNull();
 
     const onMultipleChange = vi.fn();
     await render(
@@ -100,14 +100,14 @@ describe("Menu core behavior alignment", () => {
       </HjmProvider>,
     );
     await flush();
-    const checks = [...container.querySelectorAll<HTMLButtonElement>('[role="menuitemcheckbox"]')];
+    const checks = [...document.body.querySelectorAll<HTMLButtonElement>('[role="menuitemcheckbox"]')];
     await act(async () => checks[1]!.click());
     expect(onMultipleChange).toHaveBeenCalledOnce();
     expect([...onMultipleChange.mock.calls[0]![0] as ReadonlySet<string>]).toEqual([
       "name",
       "team",
     ]);
-    expect(container.querySelector('[role="menu"]')).not.toBeNull();
+    expect(document.body.querySelector('[role="menu"]')).not.toBeNull();
   });
 
   it("announces async state and blocks actions while loading", async () => {
@@ -124,7 +124,7 @@ describe("Menu core behavior alignment", () => {
         />
       </HjmProvider>,
     );
-    const menu = container.querySelector<HTMLElement>('[role="menu"]')!;
+    const menu = document.body.querySelector<HTMLElement>('[role="menu"]')!;
     expect(menu.getAttribute("aria-busy")).toBe("true");
     expect(menu.querySelector('[role="status"]')?.textContent).toBe("불러오는 중");
     const item = menu.querySelector<HTMLButtonElement>('[role="menuitem"]')!;
@@ -174,7 +174,7 @@ describe("Select core behavior alignment", () => {
     });
     expect(onSelectionChange).toHaveBeenLastCalledWith("gamma");
     expect(onOpenChange).toHaveBeenLastCalledWith(false, "selection");
-    expect(container.querySelector('[role="listbox"]')).toBeNull();
+    expect(document.body.querySelector('[role="listbox"]')).toBeNull();
     expect(document.activeElement).toBe(trigger);
   });
 
@@ -195,7 +195,7 @@ describe("Select core behavior alignment", () => {
         />
       </HjmProvider>,
     );
-    const options = [...container.querySelectorAll<HTMLElement>('.hjm-select [role="option"]')];
+    const options = [...document.body.querySelectorAll<HTMLElement>('.hjm-select__listbox [role="option"]')];
     const gamma = options.find((option) => option.textContent?.includes("Gamma"))!;
     await act(async () => {
       gamma.click();
@@ -203,7 +203,7 @@ describe("Select core behavior alignment", () => {
     });
     expect(onOpenChange).toHaveBeenCalledTimes(1);
     expect(onOpenChange).toHaveBeenCalledWith(false, "selection");
-    expect(container.querySelector('[role="listbox"]')).not.toBeNull();
+    expect(document.body.querySelector('[role="listbox"]')).not.toBeNull();
 
     await render(
       <HjmProvider systemTheme="light">
@@ -224,7 +224,7 @@ describe("Select core behavior alignment", () => {
     const asyncTrigger = container.querySelector<HTMLButtonElement>('.hjm-select [role="combobox"]')!;
     expect(asyncTrigger.textContent).toContain("원격 선수");
     expect(asyncTrigger.hasAttribute("aria-activedescendant")).toBe(false);
-    expect(container.querySelector('[role="status"]')?.textContent).toBe("검색 중");
+    expect(document.body.querySelector('[role="listbox"] [role="status"]')?.textContent).toBe("검색 중");
   });
 
   it("reconciles an uncontrolled selection when its item is removed", async () => {
@@ -298,7 +298,7 @@ describe("Select core behavior alignment", () => {
       trigger.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
     });
     expect(onSelectionChange).toHaveBeenLastCalledWith(null);
-    expect(container.querySelector('[role="listbox"]')).toBeNull();
+    expect(document.body.querySelector('[role="listbox"]')).toBeNull();
   });
 
   it("exposes Select icon appearances and keeps a busy trigger focusable but inert", async () => {
@@ -332,7 +332,7 @@ describe("Select core behavior alignment", () => {
     );
     expect(container.querySelector('[data-select-leading]')?.getAttribute("data-color"))
       .toBe("currentColor");
-    expect(container.querySelector('[data-option-leading="alpha"]')?.getAttribute("data-selected"))
+    expect(document.body.querySelector('[data-option-leading="alpha"]')?.getAttribute("data-selected"))
       .toBe("true");
 
     await render(
@@ -447,7 +447,7 @@ describe("provider coordination and modal exactly-once lifecycles", () => {
     await act(async () => first!.focus());
     await flush();
     expect(first!.getAttribute("aria-describedby")?.split(" ")).toContain("existing-help");
-    expect(container.querySelectorAll('[role="tooltip"]')).toHaveLength(1);
+    expect(document.body.querySelectorAll('[role="tooltip"]')).toHaveLength(1);
 
     await act(async () => {
       second!.dispatchEvent(new PointerEvent("pointerover", {
@@ -456,7 +456,7 @@ describe("provider coordination and modal exactly-once lifecycles", () => {
       }));
     });
     await flush(20);
-    const visible = [...container.querySelectorAll<HTMLElement>('[role="tooltip"]')];
+    const visible = [...document.body.querySelectorAll<HTMLElement>('[role="tooltip"]')];
     expect(visible).toHaveLength(1);
     expect(visible[0]!.textContent).toBe("둘 설명");
     expect(first!.getAttribute("aria-describedby")).toBe("existing-help");
@@ -466,7 +466,7 @@ describe("provider coordination and modal exactly-once lifecycles", () => {
       second!.focus();
     });
     await flush();
-    expect(container.querySelector('[role="tooltip"]')).toBeNull();
+    expect(document.body.querySelector('[role="tooltip"]')).toBeNull();
   });
 
   it("deduplicates controlled Sheet dismiss requests", async () => {

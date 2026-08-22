@@ -1,6 +1,9 @@
 import { resolveColorReference } from "@hjm/design-contracts/color-references";
 import { easing, glyph, radius, spacing } from "@hjm/design-contracts/foundations";
 import {
+  resolveControlAccessibleName,
+} from "@hjm/design-contracts/behaviors";
+import {
   emptyStateRecipe,
   noticeRecipe,
   progressRecipe,
@@ -454,13 +457,17 @@ export function Result({
   );
 }
 
-export type ProgressProps = Readonly<{
+type ProgressName =
+  | Readonly<{ label: string; accessibilityLabel?: string }>
+  | Readonly<{ label?: never; accessibilityLabel: string }>;
+
+export type ProgressProps = ProgressName & Readonly<{
   value?: number;
   max?: number;
-  label: string;
   valueText?: string;
   /** @deprecated Prefer the renderer-neutral `valueText`. */
   valueLabel?: string;
+  accessibilityHint?: string;
   size?: ProgressSize;
   tone?: ProgressTone;
   style?: StyleProp<ViewStyle>;
@@ -468,14 +475,17 @@ export type ProgressProps = Readonly<{
   valueStyle?: StyleProp<TextStyle>;
   trackStyle?: StyleProp<ViewStyle>;
   indicatorStyle?: StyleProp<ViewStyle>;
+  testID?: string;
 }>;
 
 export function Progress({
   value,
   max = 1,
   label,
+  accessibilityLabel,
   valueText,
   valueLabel,
+  accessibilityHint,
   size = progressRecipe.defaults.size,
   tone = progressRecipe.defaults.tone,
   style,
@@ -483,6 +493,7 @@ export function Progress({
   valueStyle,
   trackStyle,
   indicatorStyle,
+  testID,
 }: ProgressProps) {
   if (!Number.isFinite(max) || max <= 0) {
     throw new RangeError("Progress max must be a positive finite number");
@@ -491,11 +502,13 @@ export function Progress({
     throw new RangeError("Progress value must be between zero and max");
   }
   const theme = useHjmNativeTheme();
+  const accessibleName = resolveControlAccessibleName(label, accessibilityLabel, "Progress");
   const percentage = value === undefined ? undefined : Math.round((value / max) * 100);
   const resolvedValueText = valueText ?? valueLabel ?? (percentage === undefined ? undefined : `${percentage}%`);
   return (
     <View
-      accessibilityLabel={label}
+      accessibilityHint={accessibilityHint}
+      accessibilityLabel={accessibleName}
       accessibilityRole="progressbar"
       accessibilityState={value === undefined ? { busy: true } : undefined}
       accessibilityValue={{
@@ -504,22 +517,25 @@ export function Progress({
         ...(percentage === undefined ? {} : { now: percentage }),
         ...(resolvedValueText === undefined ? {} : { text: resolvedValueText }),
       }}
+      testID={testID}
       style={[{ gap: spacing.xs }, style]}
     >
-      <View
-        accessible={false}
-        style={{
-          alignItems: "center",
-          direction: theme.environment.direction,
-          flexDirection: "row",
-          justifyContent: "space-between",
-        }}
-      >
-        <Text style={labelStyle} variant="label">{label}</Text>
-        {resolvedValueText ? (
-          <Text style={valueStyle} tone="muted" variant="caption">{resolvedValueText}</Text>
-        ) : null}
-      </View>
+      {label === undefined ? null : (
+        <View
+          accessible={false}
+          style={{
+            alignItems: "center",
+            direction: theme.environment.direction,
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <Text style={labelStyle} variant="label">{label}</Text>
+          {resolvedValueText ? (
+            <Text style={valueStyle} tone="muted" variant="caption">{resolvedValueText}</Text>
+          ) : null}
+        </View>
+      )}
       <View
         accessible={false}
         style={[

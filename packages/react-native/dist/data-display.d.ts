@@ -21,7 +21,7 @@ export type BadgeProps = Omit<ViewProps, "accessibilityLabel" | "accessible" | "
 }>;
 export declare function Badge({ label, tone, size, variant, leading, accessibilityLabel, style, labelStyle, ...props }: BadgeProps): import("react").JSX.Element;
 export type TagTone = ContractTagTone;
-export type TagProps = Readonly<{
+export type TagProps = Omit<ViewProps, "accessibilityLabel" | "accessible" | "children" | "style"> & Readonly<{
     children?: string;
     /** @deprecated Prefer renderer-neutral `children`. */
     label?: string;
@@ -30,7 +30,7 @@ export type TagProps = Readonly<{
     style?: StyleProp<ViewStyle>;
     labelStyle?: StyleProp<TextStyle>;
 }>;
-export declare function Tag({ children, label, tone, accessibilityLabel, style, labelStyle, }: TagProps): import("react").JSX.Element;
+export declare function Tag({ children, label, tone, accessibilityLabel, style, labelStyle, ...props }: TagProps): import("react").JSX.Element;
 export type CardProps = Omit<SurfaceProps, "children" | "padding"> & Readonly<{
     children?: ReactNode;
     title?: ReactNode;

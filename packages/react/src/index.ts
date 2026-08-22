@@ -222,6 +222,7 @@ export {
   type MenuAsyncState,
   type MenuOpenChangeReason,
   type MenuProps,
+  type MenuSection,
   type OverlayTrigger,
   type SheetPlacement,
   type SheetProps,

@@ -49,6 +49,7 @@ describe("advanced renderer SSR", () => {
         <AlertDialog
           open
           onOpenChange={() => undefined}
+          size="large"
           request={{
             mode: "alert",
             title: "완료",

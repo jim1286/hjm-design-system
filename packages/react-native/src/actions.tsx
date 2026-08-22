@@ -374,6 +374,7 @@ export type BottomCTAProps = Readonly<{
   accessibilityLabel?: string;
   safeAreaBottom?: number;
   style?: StyleProp<ViewStyle>;
+  testID?: string;
 }>;
 
 function BottomCTAButton({
@@ -414,6 +415,7 @@ export function BottomCTA({
   accessibilityLabel,
   safeAreaBottom = 0,
   style,
+  testID,
 }: BottomCTAProps) {
   if (!Number.isFinite(safeAreaBottom) || safeAreaBottom < 0) {
     throw new RangeError("BottomCTA safeAreaBottom must be non-negative");
@@ -429,6 +431,7 @@ export function BottomCTA({
     <View
       accessibilityLabel={accessibilityLabel}
       accessibilityRole="toolbar"
+      testID={testID}
       style={[
         {
           backgroundColor: colors.surface,

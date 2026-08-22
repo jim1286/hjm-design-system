@@ -1,9 +1,10 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { comboboxRecipe, selectRecipe, } from "@hjm/design-contracts/recipes";
 import { formRecipe, } from "@hjm/design-contracts/components/form";
-import { forwardRef, useEffect, useId, useMemo, useRef, useState, } from "react";
+import { forwardRef, useCallback, useEffect, useId, useMemo, useRef, useState, } from "react";
 import { Field } from "./forms.js";
 import { classNames, composeRefs, useControllableState } from "./internal.js";
+import { AnchoredPortal, useAnchoredPopup } from "./portal.js";
 function useControlId(id, prefix) {
     const generated = useId().replaceAll(":", "");
     return id ?? `hjm-${prefix}-${generated}`;
@@ -50,12 +51,24 @@ function nextEnabled(items, current, direction) {
     }
     return -1;
 }
-export const Combobox = forwardRef(function Combobox({ id, name, label, description, error, items, value: valueProp, defaultValue = "", onValueChange, inputValue: inputValueProp, defaultInputValue, onInputValueChange, open: openProp, defaultOpen = false, onOpenChange, emptyMessage, loading = false, loadingMessage, selectionRequiredMessage, openOnFocus = true, size = comboboxRecipe.defaults.size, density = comboboxRecipe.defaults.density, fieldClassName, className, disabled = false, required = false, autoComplete = "off", onFocus, onBlur, onKeyDown, ...props }, forwardedRef) {
+export const Combobox = forwardRef(function Combobox({ id, name, label, description, error, items, value: valueProp, defaultValue = "", onValueChange, inputValue: inputValueProp, defaultInputValue, onInputValueChange, open: openProp, defaultOpen = false, onOpenChange, emptyMessage, loading = false, loadingMessage, selectionRequiredMessage, openOnFocus = true, size = comboboxRecipe.defaults.size, density = comboboxRecipe.defaults.density, align = "start", fieldClassName, portalContainer, className, disabled = false, required = false, autoComplete = "off", onFocus, onBlur, onKeyDown, ...props }, forwardedRef) {
     validateOptions(items, "Combobox");
     const controlId = useControlId(id, "combobox");
     const listboxId = `${controlId}-listbox`;
     const rootRef = useRef(null);
     const inputRef = useRef(null);
+    const suppressFocusOpenRef = useRef(false);
+    const listboxRef = useRef(null);
+    const [listboxNode, setListboxNode] = useState(null);
+    const popupPosition = useAnchoredPopup(inputRef, listboxNode, {
+        align,
+        matchAnchorWidth: true,
+        zIndex: 800,
+    });
+    const setListboxRef = useCallback((node) => {
+        listboxRef.current = node;
+        setListboxNode(node);
+    }, []);
     const [selectedValue, setSelectedValue] = useControllableState({
         ...(valueProp === undefined ? {} : { value: valueProp }),
         defaultValue,
@@ -112,7 +125,16 @@ export const Combobox = forwardRef(function Combobox({ id, name, label, descript
         setSelectedValue(item.value);
         setQuery(item.label);
         setOpen(false, "selection");
-        queueMicrotask(() => inputRef.current?.focus());
+        queueMicrotask(() => {
+            const input = inputRef.current;
+            if (!input || document.activeElement === input)
+                return;
+            suppressFocusOpenRef.current = true;
+            input.focus();
+            queueMicrotask(() => {
+                suppressFocusOpenRef.current = false;
+            });
+        });
     };
     const handleKeyDown = (event) => {
         onKeyDown?.(event);
@@ -156,27 +178,30 @@ export const Combobox = forwardRef(function Combobox({ id, name, label, descript
     };
     const activeItem = activeIndex >= 0 ? filteredItems[activeIndex] : undefined;
     return (_jsx(Field, { controlId: controlId, label: label, description: description, error: error, required: required, disabled: disabled, className: classNames("hjm-combobox", fieldClassName), "data-size": size, "data-density": density, "data-state": disabled ? "disabled" : open ? "open" : "closed", children: (controlProps) => (_jsxs("div", { ref: rootRef, className: "hjm-combobox__anchor", onBlur: (event) => {
-                if (!event.currentTarget.contains(event.relatedTarget))
+                if (!event.currentTarget.contains(event.relatedTarget) &&
+                    !listboxRef.current?.contains(event.relatedTarget))
                     setOpen(false, "blur");
             }, children: [_jsxs("div", { className: "hjm-field__control hjm-combobox__control", children: [_jsx("input", { ...props, ...controlProps, ref: composeRefs(forwardedRef, inputRef), className: classNames("hjm-field__input hjm-combobox__input", className), value: query, role: "combobox", autoComplete: autoComplete, "aria-autocomplete": "list", "aria-controls": listboxId, "aria-expanded": open, "aria-activedescendant": open && activeItem ? `${controlId}-option-${activeIndex}` : undefined, onFocus: (event) => {
                                 onFocus?.(event);
-                                if (!event.defaultPrevented && openOnFocus)
+                                if (!event.defaultPrevented &&
+                                    openOnFocus &&
+                                    !suppressFocusOpenRef.current)
                                     setOpen(true, "focus");
                             }, onBlur: onBlur, onChange: (event) => {
                                 setQuery(event.target.value);
                                 setSelectedValue("");
                                 setOpen(true, "input");
                                 setActiveIndex(-1);
-                            }, onKeyDown: handleKeyDown }), loading ? _jsx("span", { className: "hjm-combobox__spinner", "aria-hidden": "true" }) : null, _jsx("span", { className: "hjm-select__indicator", "aria-hidden": "true", children: "\u2304" })] }), name ? _jsx("input", { type: "hidden", name: name, value: selectedValue }) : null, open ? (_jsx("div", { id: listboxId, role: "listbox", className: "hjm-combobox__listbox", "aria-label": typeof label === "string" ? label : undefined, "aria-busy": loading || undefined, children: loading ? (_jsx("div", { className: "hjm-combobox__message", role: "status", children: loadingMessage })) : filteredItems.length === 0 ? (_jsx("div", { className: "hjm-combobox__message", children: emptyMessage })) : (filteredItems.map((item, index) => (_jsx("div", { id: `${controlId}-option-${index}`, role: "option", "aria-selected": item.value === selectedValue, "aria-disabled": item.disabled || undefined, className: "hjm-combobox__option", "data-state": item.disabled
-                            ? "disabled"
-                            : index === activeIndex
-                                ? "active"
-                                : item.value === selectedValue
-                                    ? "selected"
-                                    : "idle", onMouseDown: (event) => event.preventDefault(), onMouseMove: () => {
-                            if (!item.disabled)
-                                setActiveIndex(index);
-                        }, onClick: () => selectItem(item), children: item.label }, item.value)))) })) : null] })) }));
+                            }, onKeyDown: handleKeyDown }), loading ? _jsx("span", { className: "hjm-combobox__spinner", "aria-hidden": "true" }) : null, _jsx("span", { className: "hjm-select__indicator", "aria-hidden": "true", children: "\u2304" })] }), name ? _jsx("input", { type: "hidden", name: name, value: selectedValue }) : null, open ? (_jsx(AnchoredPortal, { anchorRef: inputRef, ssrFallback: "inline", ...(portalContainer === undefined ? {} : { container: portalContainer }), children: _jsx("div", { ref: setListboxRef, id: listboxId, role: "listbox", className: "hjm-combobox__listbox", "data-density": density, "aria-label": typeof label === "string" ? label : undefined, "aria-busy": loading || undefined, "data-placement": popupPosition.placement, "data-align": popupPosition.align, style: popupPosition.style, children: loading ? (_jsx("div", { className: "hjm-combobox__message", role: "status", children: loadingMessage })) : filteredItems.length === 0 ? (_jsx("div", { className: "hjm-combobox__message", children: emptyMessage })) : (filteredItems.map((item, index) => (_jsx("div", { id: `${controlId}-option-${index}`, role: "option", "aria-selected": item.value === selectedValue, "aria-disabled": item.disabled || undefined, className: "hjm-combobox__option", "data-state": item.disabled
+                                ? "disabled"
+                                : index === activeIndex
+                                    ? "active"
+                                    : item.value === selectedValue
+                                        ? "selected"
+                                        : "idle", onMouseDown: (event) => event.preventDefault(), onMouseMove: () => {
+                                if (!item.disabled)
+                                    setActiveIndex(index);
+                            }, onClick: () => selectItem(item), children: item.label }, item.value)))) }) })) : null] })) }));
 });
 export const Form = forwardRef(function Form({ onSubmit, busy = false, formError, actions, density = formRecipe.defaults.density, className, children, ...props }, ref) {
     const [submitting, setSubmitting] = useState(false);

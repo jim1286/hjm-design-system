@@ -120,7 +120,7 @@ function isBottomCTAAction(value) {
         && typeof value.onPress === "function";
 }
 /** Native sticky-action content; products own its screen-edge positioning. */
-export function BottomCTA({ primaryAction, secondaryAction, description, accessibilityLabel, safeAreaBottom = 0, style, }) {
+export function BottomCTA({ primaryAction, secondaryAction, description, accessibilityLabel, safeAreaBottom = 0, style, testID, }) {
     if (!Number.isFinite(safeAreaBottom) || safeAreaBottom < 0) {
         throw new RangeError("BottomCTA safeAreaBottom must be non-negative");
     }
@@ -131,7 +131,7 @@ export function BottomCTA({ primaryAction, secondaryAction, description, accessi
         : isBottomCTAAction(secondaryAction)
             ? _jsx(BottomCTAButton, { action: secondaryAction, fallbackTone: "secondary" })
             : secondaryAction;
-    return (_jsxs(View, { accessibilityLabel: accessibilityLabel, accessibilityRole: "toolbar", style: [
+    return (_jsxs(View, { accessibilityLabel: accessibilityLabel, accessibilityRole: "toolbar", testID: testID, style: [
             {
                 backgroundColor: colors.surface,
                 borderColor: colors.border,

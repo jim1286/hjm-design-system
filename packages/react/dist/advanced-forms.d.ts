@@ -64,7 +64,10 @@ export type ComboboxProps = Omit<InputHTMLAttributes<HTMLInputElement>, "childre
     openOnFocus?: boolean;
     size?: SelectSize;
     density?: SelectDensity;
+    /** Logical listbox alignment against the input; automatically mirrors in RTL. */
+    align?: "start" | "end";
     fieldClassName?: string;
+    portalContainer?: HTMLElement;
 }>;
 export declare const Combobox: import("react").ForwardRefExoticComponent<Omit<InputHTMLAttributes<HTMLInputElement>, "value" | "defaultValue" | "onChange" | "children" | "role" | "size"> & Readonly<{
     label: ReactNode;
@@ -90,7 +93,10 @@ export declare const Combobox: import("react").ForwardRefExoticComponent<Omit<In
     openOnFocus?: boolean;
     size?: SelectSize;
     density?: SelectDensity;
+    /** Logical listbox alignment against the input; automatically mirrors in RTL. */
+    align?: "start" | "end";
     fieldClassName?: string;
+    portalContainer?: HTMLElement;
 }> & import("react").RefAttributes<HTMLInputElement>>;
 export type FormSubmitHandler = (event: FormEvent<HTMLFormElement>) => void | Promise<void>;
 export type FormProps = Omit<FormHTMLAttributes<HTMLFormElement>, "onSubmit"> & Readonly<{

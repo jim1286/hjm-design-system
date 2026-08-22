@@ -49,13 +49,20 @@ export type ResultProps = Omit<ViewProps, "children"> & ResultDescriptor & Reado
 }>;
 /** Terminal flow outcome with platform announcement and canonical actions. */
 export declare function Result({ status, title, description, actions, renderIcon, style, ...props }: ResultProps): import("react").JSX.Element;
-export type ProgressProps = Readonly<{
+type ProgressName = Readonly<{
+    label: string;
+    accessibilityLabel?: string;
+}> | Readonly<{
+    label?: never;
+    accessibilityLabel: string;
+}>;
+export type ProgressProps = ProgressName & Readonly<{
     value?: number;
     max?: number;
-    label: string;
     valueText?: string;
     /** @deprecated Prefer the renderer-neutral `valueText`. */
     valueLabel?: string;
+    accessibilityHint?: string;
     size?: ProgressSize;
     tone?: ProgressTone;
     style?: StyleProp<ViewStyle>;
@@ -63,8 +70,9 @@ export type ProgressProps = Readonly<{
     valueStyle?: StyleProp<TextStyle>;
     trackStyle?: StyleProp<ViewStyle>;
     indicatorStyle?: StyleProp<ViewStyle>;
+    testID?: string;
 }>;
-export declare function Progress({ value, max, label, valueText, valueLabel, size, tone, style, labelStyle, valueStyle, trackStyle, indicatorStyle, }: ProgressProps): import("react").JSX.Element;
+export declare function Progress({ value, max, label, accessibilityLabel, valueText, valueLabel, accessibilityHint, size, tone, style, labelStyle, valueStyle, trackStyle, indicatorStyle, testID, }: ProgressProps): import("react").JSX.Element;
 export type SpinnerProps = Readonly<{
     label: string;
     size?: "small" | "large";
@@ -136,4 +144,5 @@ export type ToastRegionProps = Readonly<{
 /** Bounded FIFO region with one clock, app-state pause and teardown interruption. */
 export declare function ToastRegion({ children, accessibilityLabel, toasts, defaultToasts, onToastsChange, maxVisible, maxQueued, duplicatePolicy, timerUpdatePolicy, overflowPolicy, placement, safeAreaInsets, avoidKeyboard, keyboardOffset, renderToneIcon, style, toastStyle, }: ToastRegionProps): import("react").JSX.Element;
 export declare function useToastRegion(): ToastRegionController;
+export {};
 //# sourceMappingURL=feedback.d.ts.map

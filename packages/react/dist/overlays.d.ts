@@ -1,7 +1,8 @@
 import { type AlertDialogOpenChangeReason, type AlertDialogRequest } from "@hjm/design-contracts/components/alert-dialog";
-import { type SheetDismissPolicy, type SheetOpenChangeDetails } from "@hjm/design-contracts/components/sheet";
+import { type SheetDismissPolicy, type SheetDismissReason, type SheetOpenChangeDetails } from "@hjm/design-contracts/components/sheet";
 import { type TooltipAlign, type TooltipOpenChangeDetails, type TooltipPlacement } from "@hjm/design-contracts/components/tooltip";
 import { type DialogSize, type MenuDensity, type MenuItemTone } from "@hjm/design-contracts/recipes";
+import type { MenuSectionDescriptor } from "@hjm/design-contracts/behaviors";
 import { type AriaAttributes, type MouseEventHandler, type ReactElement, type ReactNode, type Ref } from "react";
 type TriggerElementProps = Readonly<{
     ref?: Ref<HTMLElement>;
@@ -58,6 +59,8 @@ export type DialogProps = ModalOpenState<Readonly<{
     closeLabel: string;
     initialFocusRef?: React.RefObject<HTMLElement | null>;
     returnFocusRef?: React.RefObject<HTMLElement | null>;
+    /** Higher-priority modals remain interactive above later lower-priority modals. */
+    modalPriority?: number;
     portalContainer?: HTMLElement;
     className?: string;
 }>;
@@ -67,7 +70,10 @@ export type AlertDialogProps = ModalOpenState<Readonly<{
 }>> & Readonly<{
     request: AlertDialogRequest;
     icon?: ReactNode;
+    size?: DialogSize;
     returnFocusRef?: React.RefObject<HTMLElement | null>;
+    /** Higher-priority modals remain interactive above later lower-priority modals. */
+    modalPriority?: number;
     portalContainer?: HTMLElement;
     className?: string;
 }>;
@@ -85,6 +91,12 @@ export type SheetProps = ModalOpenState<SheetOpenChangeDetails> & Readonly<{
     closeLabel: string;
     initialFocusRef?: React.RefObject<HTMLElement | null>;
     returnFocusRef?: React.RefObject<HTMLElement | null>;
+    /** Fires once per visible cycle, after the Sheet portal has been removed. */
+    onDismissComplete?: (detail: Readonly<{
+        reason: SheetDismissReason;
+    }>) => void;
+    /** Higher-priority modals remain interactive above later lower-priority modals. */
+    modalPriority?: number;
     portalContainer?: HTMLElement;
     className?: string;
 }>;
@@ -96,6 +108,7 @@ export type TooltipProps = OpenState<TooltipOpenChangeDetails> & Readonly<{
     align?: TooltipAlign;
     pointerOpenDelayMs?: number;
     focusOpenDelayMs?: number;
+    portalContainer?: HTMLElement;
     className?: string;
 }>;
 export declare const Tooltip: import("react").ForwardRefExoticComponent<TooltipProps & import("react").RefAttributes<HTMLSpanElement>>;
@@ -111,6 +124,9 @@ export type MenuItem = Readonly<{
     disabled?: boolean;
     /** Backward-compatible item-local action; Menu onAction receives every activation. */
     onSelect?: () => void;
+}>;
+export type MenuSection = Omit<MenuSectionDescriptor<string, string>, "items"> & Readonly<{
+    items: readonly MenuItem[];
 }>;
 export type MenuOpenChangeReason = "trigger" | "selection" | "escape" | "outside" | "tab";
 export type MenuAsyncState = Readonly<{
@@ -147,18 +163,27 @@ type MenuMultipleSelection = Readonly<{
     defaultValue?: ReadonlySet<string>;
     onValueChange?: (value: ReadonlySet<string>) => void;
 }>;
+type MenuSourceProps = Readonly<{
+    items: readonly MenuItem[];
+    sections?: never;
+}> | Readonly<{
+    items?: never;
+    sections: readonly MenuSection[];
+}>;
 type MenuBaseProps = Readonly<{
     trigger: OverlayTrigger;
     label: string;
-    items: readonly MenuItem[];
     density?: MenuDensity;
+    /** Logical alignment against the trigger; automatically mirrors in RTL. */
+    align?: "start" | "end";
     disabled?: boolean;
     asyncState?: MenuAsyncState;
     onAction?: (id: string) => void;
     /** Runs only once the owner actually closes the menu. */
     onActionAfterDismiss?: (id: string) => void;
+    portalContainer?: HTMLElement;
     className?: string;
-}>;
+}> & MenuSourceProps;
 export type MenuProps = OpenState<Readonly<{
     reason: MenuOpenChangeReason;
 }>> & MenuBaseProps & (MenuActionSelection | MenuSingleSelection | MenuMultipleSelection);

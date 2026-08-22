@@ -121,7 +121,8 @@ export type BottomCTAProps = Readonly<{
     accessibilityLabel?: string;
     safeAreaBottom?: number;
     style?: StyleProp<ViewStyle>;
+    testID?: string;
 }>;
 /** Native sticky-action content; products own its screen-edge positioning. */
-export declare function BottomCTA({ primaryAction, secondaryAction, description, accessibilityLabel, safeAreaBottom, style, }: BottomCTAProps): import("react").JSX.Element;
+export declare function BottomCTA({ primaryAction, secondaryAction, description, accessibilityLabel, safeAreaBottom, style, testID, }: BottomCTAProps): import("react").JSX.Element;
 //# sourceMappingURL=actions.d.ts.map

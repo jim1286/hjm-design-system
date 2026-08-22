@@ -188,7 +188,10 @@ export function Badge({
 }
 
 export type TagTone = ContractTagTone;
-export type TagProps = Readonly<{
+export type TagProps = Omit<
+  ViewProps,
+  "accessibilityLabel" | "accessible" | "children" | "style"
+> & Readonly<{
   children?: string;
   /** @deprecated Prefer renderer-neutral `children`. */
   label?: string;
@@ -205,6 +208,7 @@ export function Tag({
   accessibilityLabel,
   style,
   labelStyle,
+  ...props
 }: TagProps) {
   const theme = useHjmNativeTheme();
   const resolvedLabel = children ?? label;
@@ -218,7 +222,9 @@ export function Tag({
   const presentation = resolveTagPresentation(descriptor.tone, theme.palette);
   return (
     <View
+      {...props}
       accessibilityLabel={accessibilityLabel ?? descriptor.label}
+      accessible
       style={[
         {
           alignItems: "center",
@@ -1518,6 +1524,7 @@ export function Statistic<Id extends string = string>({
           borderRadius: radius[presentationContract.radius],
           borderWidth: presentationContract.borderWidth,
           gap: densityContract.gap,
+          minWidth: 0,
           padding: densityContract.padding,
         },
         style,
@@ -1542,7 +1549,9 @@ export function Statistic<Id extends string = string>({
           alignItems: "baseline",
           direction: theme.environment.direction,
           flexDirection: "row",
+          flexWrap: "wrap",
           gap: spacing.xxs,
+          minWidth: 0,
         }}
       >
         {resolved.prefix ? (
@@ -1565,6 +1574,7 @@ export function Statistic<Id extends string = string>({
           style={[
             {
               color: resolveColorReference(statisticRecipe.value.color, theme.palette),
+              flexShrink: 1,
               fontVariant: ["tabular-nums"],
               fontWeight: statisticRecipe.value.fontWeight,
             },
@@ -1593,7 +1603,13 @@ export function Statistic<Id extends string = string>({
       {resolved.trend ? (
         <View
           accessible={false}
-          style={{ alignItems: "center", flexDirection: "row", gap: statisticRecipe.trend.gap }}
+          style={{
+            alignItems: "center",
+            flexDirection: "row",
+            flexWrap: "wrap",
+            gap: statisticRecipe.trend.gap,
+            minWidth: 0,
+          }}
         >
           {renderTrendMark && trendMark && trendColor ? (
             <View accessible={false}>
@@ -1607,7 +1623,11 @@ export function Statistic<Id extends string = string>({
           <Text
             accessible={false}
             style={[
-              { color: trendColor, fontWeight: statisticRecipe.trend.fontWeight },
+              {
+                color: trendColor,
+                flexShrink: 1,
+                fontWeight: statisticRecipe.trend.fontWeight,
+              },
               trendStyle,
             ]}
             variant={statisticRecipe.trend.textVariant}

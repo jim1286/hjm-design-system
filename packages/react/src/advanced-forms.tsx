@@ -10,6 +10,7 @@ import {
 } from "@hjm/design-contracts/components/form";
 import {
   forwardRef,
+  useCallback,
   useEffect,
   useId,
   useMemo,
@@ -25,6 +26,7 @@ import {
 } from "react";
 import { Field } from "./forms.js";
 import { classNames, composeRefs, useControllableState } from "./internal.js";
+import { AnchoredPortal, useAnchoredPopup } from "./portal.js";
 
 function useControlId(id: string | undefined, prefix: string): string {
   const generated = useId().replaceAll(":", "");
@@ -191,7 +193,10 @@ export type ComboboxProps = Omit<
     openOnFocus?: boolean;
     size?: SelectSize;
     density?: SelectDensity;
+    /** Logical listbox alignment against the input; automatically mirrors in RTL. */
+    align?: "start" | "end";
     fieldClassName?: string;
+    portalContainer?: HTMLElement;
   }>;
 
 function nextEnabled(
@@ -232,7 +237,9 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
       openOnFocus = true,
       size = comboboxRecipe.defaults.size,
       density = comboboxRecipe.defaults.density,
+      align = "start",
       fieldClassName,
+      portalContainer,
       className,
       disabled = false,
       required = false,
@@ -249,6 +256,18 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
     const listboxId = `${controlId}-listbox`;
     const rootRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
+    const suppressFocusOpenRef = useRef(false);
+    const listboxRef = useRef<HTMLDivElement>(null);
+    const [listboxNode, setListboxNode] = useState<HTMLDivElement | null>(null);
+    const popupPosition = useAnchoredPopup(inputRef, listboxNode, {
+      align,
+      matchAnchorWidth: true,
+      zIndex: 800,
+    });
+    const setListboxRef = useCallback((node: HTMLDivElement | null) => {
+      listboxRef.current = node;
+      setListboxNode(node);
+    }, []);
     const [selectedValue, setSelectedValue] = useControllableState({
       ...(valueProp === undefined ? {} : { value: valueProp }),
       defaultValue,
@@ -309,7 +328,15 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
       setSelectedValue(item.value);
       setQuery(item.label);
       setOpen(false, "selection");
-      queueMicrotask(() => inputRef.current?.focus());
+      queueMicrotask(() => {
+        const input = inputRef.current;
+        if (!input || document.activeElement === input) return;
+        suppressFocusOpenRef.current = true;
+        input.focus();
+        queueMicrotask(() => {
+          suppressFocusOpenRef.current = false;
+        });
+      });
     };
     const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
       onKeyDown?.(event);
@@ -370,7 +397,10 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
             ref={rootRef}
             className="hjm-combobox__anchor"
             onBlur={(event) => {
-              if (!event.currentTarget.contains(event.relatedTarget)) setOpen(false, "blur");
+              if (
+                !event.currentTarget.contains(event.relatedTarget) &&
+                !listboxRef.current?.contains(event.relatedTarget)
+              ) setOpen(false, "blur");
             }}
           >
             <div className="hjm-field__control hjm-combobox__control">
@@ -390,7 +420,11 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
                 }
                 onFocus={(event) => {
                   onFocus?.(event);
-                  if (!event.defaultPrevented && openOnFocus) setOpen(true, "focus");
+                  if (
+                    !event.defaultPrevented &&
+                    openOnFocus &&
+                    !suppressFocusOpenRef.current
+                  ) setOpen(true, "focus");
                 }}
                 onBlur={onBlur}
                 onChange={(event) => {
@@ -406,13 +440,23 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
             </div>
             {name ? <input type="hidden" name={name} value={selectedValue} /> : null}
             {open ? (
-              <div
-                id={listboxId}
-                role="listbox"
-                className="hjm-combobox__listbox"
-                aria-label={typeof label === "string" ? label : undefined}
-                aria-busy={loading || undefined}
+              <AnchoredPortal
+                anchorRef={inputRef}
+                ssrFallback="inline"
+                {...(portalContainer === undefined ? {} : { container: portalContainer })}
               >
+                <div
+                  ref={setListboxRef}
+                  id={listboxId}
+                  role="listbox"
+                  className="hjm-combobox__listbox"
+                  data-density={density}
+                  aria-label={typeof label === "string" ? label : undefined}
+                  aria-busy={loading || undefined}
+                  data-placement={popupPosition.placement}
+                  data-align={popupPosition.align}
+                  style={popupPosition.style}
+                >
                 {loading ? (
                   <div className="hjm-combobox__message" role="status">{loadingMessage}</div>
                 ) : filteredItems.length === 0 ? (
@@ -445,7 +489,8 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
                     </div>
                   ))
                 )}
-              </div>
+                </div>
+              </AnchoredPortal>
             ) : null}
           </div>
         )}

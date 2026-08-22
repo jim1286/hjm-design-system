@@ -30,6 +30,7 @@ import {
   type MenuDensity,
   type MenuItemTone,
 } from "@hjm/design-contracts/recipes";
+import type { MenuSectionDescriptor } from "@hjm/design-contracts/behaviors";
 import {
   cloneElement,
   forwardRef,
@@ -49,6 +50,10 @@ import {
 import { createPortal } from "react-dom";
 import { Button } from "./actions.js";
 import { classNames, composeRefs, useControllableState } from "./internal.js";
+import {
+  AnchoredPortal,
+  useAnchoredPopup,
+} from "./portal.js";
 import { useOptionalHjmTheme, useTooltipCoordinator } from "./provider.js";
 import { createHjmThemeStyle } from "./theme.js";
 
@@ -72,12 +77,12 @@ type TriggerElementProps = Readonly<{
 
 export type OverlayTrigger = ReactElement<TriggerElementProps>;
 
-type PortalProps = Readonly<{
+type ModalPortalProps = Readonly<{
   children: ReactNode;
   container?: HTMLElement;
 }>;
 
-function Portal({ children, container }: PortalProps) {
+function HjmPortal({ children, container }: ModalPortalProps) {
   const [mounted, setMounted] = useState(false);
   const theme = useOptionalHjmTheme();
   useEffect(() => setMounted(true), []);
@@ -185,12 +190,62 @@ function getFocusable(container: HTMLElement): HTMLElement[] {
 
 let bodyLockCount = 0;
 let previousBodyOverflow = "";
-const activeModalStack: HTMLElement[] = [];
+type ActiveModal = Readonly<{
+  element: HTMLElement;
+  order: number;
+  priority: number;
+}>;
+const activeModalStack: ActiveModal[] = [];
+let activeModalOrder = 0;
 const isolatedModalBackground = new Map<
   HTMLElement,
   Readonly<{ ariaHidden: string | null; inert: boolean }>
 >();
 let modalIsolationObserver: MutationObserver | null = null;
+
+function getOwnedPopupHosts(modal: ActiveModal): HTMLElement[] {
+  const ownerId = modal.element.id;
+  if (ownerId.length === 0) return [];
+  return [...document.querySelectorAll<HTMLElement>("[data-hjm-popup-owner]")]
+    .filter((host) => host.getAttribute("data-hjm-popup-owner") === ownerId);
+}
+
+function modalContainsNode(modal: ActiveModal, node: Node): boolean {
+  return modal.element.contains(node) ||
+    getOwnedPopupHosts(modal).some((host) => host.contains(node));
+}
+
+function getModalFocusable(modal: ActiveModal): HTMLElement[] {
+  return [
+    ...getFocusable(modal.element),
+    ...getOwnedPopupHosts(modal).flatMap((host) => getFocusable(host)),
+  ];
+}
+
+function getModalLayer(priority: number): number {
+  if (!Number.isSafeInteger(priority)) {
+    throw new TypeError("modalPriority must be a safe integer");
+  }
+  return 1000 + priority;
+}
+
+function getTopModal(): ActiveModal | undefined {
+  let top: ActiveModal | undefined;
+  for (const modal of activeModalStack) {
+    if (!modal.element.isConnected) continue;
+    if (
+      top === undefined ||
+      modal.priority > top.priority ||
+      (modal.priority === top.priority && modal.order > top.order)
+    ) top = modal;
+  }
+  return top;
+}
+
+function modalRanksAbove(candidate: ActiveModal, reference: ActiveModal): boolean {
+  return candidate.priority > reference.priority ||
+    (candidate.priority === reference.priority && candidate.order > reference.order);
+}
 
 function restoreModalBackground(): void {
   for (const [element, previous] of isolatedModalBackground) {
@@ -214,34 +269,47 @@ function isolateModalBackgroundElement(element: HTMLElement): void {
 /** Keeps only the top modal's ancestor path interactive, including late portals. */
 function synchronizeModalBackgroundIsolation(): void {
   restoreModalBackground();
-  while (activeModalStack.length > 0 && !activeModalStack.at(-1)?.isConnected) {
-    activeModalStack.pop();
+  for (let index = activeModalStack.length - 1; index >= 0; index -= 1) {
+    if (!activeModalStack[index]?.element.isConnected) activeModalStack.splice(index, 1);
   }
-  const top = activeModalStack.at(-1);
+  const top = getTopModal();
   if (!top) {
     modalIsolationObserver?.disconnect();
     modalIsolationObserver = null;
     return;
   }
 
-  let pathNode: HTMLElement = top;
-  let parent = pathNode.parentElement;
-  while (parent) {
+  const interactivePath = new Set<HTMLElement>();
+  for (const root of [top.element, ...getOwnedPopupHosts(top)]) {
+    let pathNode: HTMLElement | null = root;
+    while (pathNode) {
+      if (pathNode === document.body) break;
+      interactivePath.add(pathNode);
+      pathNode = pathNode.parentElement;
+    }
+  }
+  const inspectedParents = new Set<HTMLElement>();
+  for (const pathNode of interactivePath) {
+    const parent = pathNode.parentElement;
+    if (!parent || inspectedParents.has(parent)) continue;
+    inspectedParents.add(parent);
     for (const sibling of parent.children) {
-      if (sibling !== pathNode && sibling instanceof HTMLElement) {
+      if (sibling instanceof HTMLElement && !interactivePath.has(sibling)) {
         isolateModalBackgroundElement(sibling);
       }
     }
-    if (parent === document.body) break;
-    pathNode = parent;
-    parent = pathNode.parentElement;
   }
 
   if (modalIsolationObserver === null) {
     modalIsolationObserver = new MutationObserver(() => {
       synchronizeModalBackgroundIsolation();
     });
-    modalIsolationObserver.observe(document.body, { childList: true, subtree: true });
+    modalIsolationObserver.observe(document.body, {
+      attributes: true,
+      attributeFilter: ["data-hjm-popup-owner"],
+      childList: true,
+      subtree: true,
+    });
   }
 }
 
@@ -259,6 +327,7 @@ function lockBodyScroll(): () => void {
 
 type ModalFocusOptions = Readonly<{
   active: boolean;
+  priority?: number;
   contentRef: React.RefObject<HTMLElement | null>;
   initialFocusRef?: React.RefObject<HTMLElement | null>;
   returnFocusRef?: React.RefObject<HTMLElement | null>;
@@ -268,6 +337,7 @@ type ModalFocusOptions = Readonly<{
 
 function useModalFocus({
   active,
+  priority = 0,
   contentRef,
   initialFocusRef,
   returnFocusRef,
@@ -293,20 +363,25 @@ function useModalFocus({
         ? document.activeElement
         : null;
       const releaseScroll = lockBodyScroll();
-      activeModalStack.push(content);
+      const modal: ActiveModal = {
+        element: content,
+        order: activeModalOrder += 1,
+        priority,
+      };
+      activeModalStack.push(modal);
       synchronizeModalBackgroundIsolation();
       const initial = initialFocusRef?.current ?? getFocusable(content)[0] ?? content;
-      initial.focus();
+      if (getTopModal() === modal) initial.focus();
 
       const handleKeyDown = (event: KeyboardEvent) => {
-        if (activeModalStack.at(-1) !== content) return;
+        if (getTopModal() !== modal) return;
         if (event.key === "Escape") {
           event.preventDefault();
           escapeRef.current();
           return;
         }
         if (event.key !== "Tab") return;
-        const focusable = getFocusable(content);
+        const focusable = getModalFocusable(modal);
         if (focusable.length === 0) {
           event.preventDefault();
           content.focus();
@@ -315,32 +390,46 @@ function useModalFocus({
         const first = focusable[0]!;
         const last = focusable.at(-1)!;
         const current = document.activeElement;
-        if (event.shiftKey && (current === first || !content.contains(current))) {
+        if (event.shiftKey && (current === first || !(current instanceof Node) || !modalContainsNode(modal, current))) {
           event.preventDefault();
           last.focus();
-        } else if (!event.shiftKey && (current === last || !content.contains(current))) {
+        } else if (!event.shiftKey && (current === last || !(current instanceof Node) || !modalContainsNode(modal, current))) {
           event.preventDefault();
           first.focus();
         }
       };
       const handleFocusIn = (event: FocusEvent) => {
-        if (activeModalStack.at(-1) !== content) return;
-        if (event.target instanceof Node && !content.contains(event.target)) {
+        if (getTopModal() !== modal) return;
+        if (event.target instanceof Node && !modalContainsNode(modal, event.target)) {
           (initialFocusRef?.current ?? getFocusable(content)[0] ?? content).focus();
         }
       };
       document.addEventListener("keydown", handleKeyDown, true);
       document.addEventListener("focusin", handleFocusIn, true);
       release = () => {
+        const wasTop = !activeModalStack.some(
+          (candidate) =>
+            candidate !== modal && candidate.element.isConnected && modalRanksAbove(candidate, modal),
+        );
         document.removeEventListener("keydown", handleKeyDown, true);
         document.removeEventListener("focusin", handleFocusIn, true);
-        const stackIndex = activeModalStack.lastIndexOf(content);
+        const stackIndex = activeModalStack.lastIndexOf(modal);
         if (stackIndex >= 0) activeModalStack.splice(stackIndex, 1);
         synchronizeModalBackgroundIsolation();
         releaseScroll();
         const returnTarget =
           returnFocusRef?.current ?? fallbackReturnRef?.current ?? previouslyFocused;
-        queueMicrotask(() => returnTarget?.focus());
+        if (wasTop) {
+          queueMicrotask(() => {
+            const nextTop = getTopModal();
+            if (!nextTop) {
+              returnTarget?.focus();
+              return;
+            }
+            if (returnTarget && modalContainsNode(nextTop, returnTarget)) returnTarget.focus();
+            else (getModalFocusable(nextTop)[0] ?? nextTop.element).focus();
+          });
+        }
       };
       if (cancelled) release();
     };
@@ -350,7 +439,7 @@ function useModalFocus({
       if (retryTimer !== undefined) clearTimeout(retryTimer);
       release?.();
     };
-  }, [active, contentRef, fallbackReturnRef, initialFocusRef, returnFocusRef]);
+  }, [active, contentRef, fallbackReturnRef, initialFocusRef, priority, returnFocusRef]);
 }
 
 function renderTrigger(
@@ -393,6 +482,8 @@ export type DialogProps = ModalOpenState<Readonly<{ reason: DialogOpenChangeReas
     closeLabel: string;
     initialFocusRef?: React.RefObject<HTMLElement | null>;
     returnFocusRef?: React.RefObject<HTMLElement | null>;
+    /** Higher-priority modals remain interactive above later lower-priority modals. */
+    modalPriority?: number;
     portalContainer?: HTMLElement;
     className?: string;
   }>;
@@ -410,6 +501,7 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(function Dialog(
     closeLabel,
     initialFocusRef,
     returnFocusRef,
+    modalPriority = 0,
     portalContainer,
     open: openProp,
     defaultOpen,
@@ -418,6 +510,7 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(function Dialog(
   },
   forwardedRef,
 ) {
+  const modalLayer = getModalLayer(modalPriority);
   const [open, changeOpen] = useOpenState({
     ...(openProp === undefined ? {} : { open: openProp }),
     ...(defaultOpen === undefined ? {} : { defaultOpen }),
@@ -436,6 +529,7 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(function Dialog(
   };
   useModalFocus({
     active: open,
+    priority: modalPriority,
     contentRef,
     ...(initialFocusRef === undefined ? {} : { initialFocusRef }),
     ...(returnFocusRef === undefined ? {} : { returnFocusRef }),
@@ -454,11 +548,13 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(function Dialog(
         () => changeOpen(true, { reason: "trigger" }),
       )}
       {open ? (
-        <Portal {...(portalContainer === undefined ? {} : { container: portalContainer })}>
+        <HjmPortal {...(portalContainer === undefined ? {} : { container: portalContainer })}>
           <div
             className="hjm-overlay"
             data-kind="dialog"
+            data-modal-priority={modalPriority}
             data-state="open"
+            style={{ zIndex: modalLayer }}
             onMouseDown={(event) => {
               if (event.target === event.currentTarget) requestClose("outside");
             }}
@@ -473,6 +569,7 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(function Dialog(
               aria-busy={busy || undefined}
               tabIndex={-1}
               className={classNames("hjm-dialog", className)}
+              data-hjm-modal-content=""
               data-size={size}
               data-state={busy ? "busy" : "idle"}
             >
@@ -495,7 +592,7 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(function Dialog(
               {footer ? <footer className="hjm-dialog__footer">{footer}</footer> : null}
             </div>
           </div>
-        </Portal>
+        </HjmPortal>
       ) : null}
     </>
   );
@@ -507,7 +604,10 @@ export type AlertDialogProps = ModalOpenState<
   Readonly<{
     request: AlertDialogRequest;
     icon?: ReactNode;
+    size?: DialogSize;
     returnFocusRef?: React.RefObject<HTMLElement | null>;
+    /** Higher-priority modals remain interactive above later lower-priority modals. */
+    modalPriority?: number;
     portalContainer?: HTMLElement;
     className?: string;
   }>;
@@ -518,7 +618,9 @@ export const AlertDialog = forwardRef<HTMLDivElement, AlertDialogProps>(
       trigger,
       request,
       icon,
+      size = dialogRecipe.defaults.size,
       returnFocusRef,
+      modalPriority = 0,
       portalContainer,
       open: openProp,
       defaultOpen,
@@ -527,6 +629,7 @@ export const AlertDialog = forwardRef<HTMLDivElement, AlertDialogProps>(
     },
     forwardedRef,
   ) {
+    const modalLayer = getModalLayer(modalPriority);
     validateAlertDialogRequest(request);
     const [open, changeOpen] = useOpenState({
       ...(openProp === undefined ? {} : { open: openProp }),
@@ -574,6 +677,7 @@ export const AlertDialog = forwardRef<HTMLDivElement, AlertDialogProps>(
     };
     useModalFocus({
       active: open,
+      priority: modalPriority,
       contentRef,
       initialFocusRef,
       ...(returnFocusRef === undefined ? {} : { returnFocusRef }),
@@ -620,8 +724,14 @@ export const AlertDialog = forwardRef<HTMLDivElement, AlertDialogProps>(
           },
         )}
         {open ? (
-          <Portal {...(portalContainer === undefined ? {} : { container: portalContainer })}>
-            <div className="hjm-overlay" data-kind="alert-dialog" data-state="open">
+          <HjmPortal {...(portalContainer === undefined ? {} : { container: portalContainer })}>
+            <div
+              className="hjm-overlay"
+              data-kind="alert-dialog"
+              data-modal-priority={modalPriority}
+              data-state="open"
+              style={{ zIndex: modalLayer }}
+            >
               <div
                 ref={composeRefs(contentRef, forwardedRef)}
                 id={contentId}
@@ -632,6 +742,8 @@ export const AlertDialog = forwardRef<HTMLDivElement, AlertDialogProps>(
                 aria-busy={busy || undefined}
                 tabIndex={-1}
                 className={classNames("hjm-alert-dialog", className)}
+                data-hjm-modal-content=""
+                data-size={size}
                 data-tone={tone}
                 data-state={busy ? "busy" : error ? "error" : "idle"}
               >
@@ -662,7 +774,7 @@ export const AlertDialog = forwardRef<HTMLDivElement, AlertDialogProps>(
                 </div>
               </div>
             </div>
-          </Portal>
+          </HjmPortal>
         ) : null}
       </>
     );
@@ -684,6 +796,10 @@ export type SheetProps = ModalOpenState<SheetOpenChangeDetails> &
     closeLabel: string;
     initialFocusRef?: React.RefObject<HTMLElement | null>;
     returnFocusRef?: React.RefObject<HTMLElement | null>;
+    /** Fires once per visible cycle, after the Sheet portal has been removed. */
+    onDismissComplete?: (detail: Readonly<{ reason: SheetDismissReason }>) => void;
+    /** Higher-priority modals remain interactive above later lower-priority modals. */
+    modalPriority?: number;
     portalContainer?: HTMLElement;
     className?: string;
   }>;
@@ -701,6 +817,8 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(function Sheet(
     closeLabel,
     initialFocusRef,
     returnFocusRef,
+    onDismissComplete,
+    modalPriority = 0,
     portalContainer,
     open: openProp,
     defaultOpen,
@@ -709,6 +827,7 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(function Sheet(
   },
   forwardedRef,
 ) {
+  const modalLayer = getModalLayer(modalPriority);
   const [open, changeOpen] = useOpenState({
     ...(openProp === undefined ? {} : { open: openProp }),
     ...(defaultOpen === undefined ? {} : { defaultOpen }),
@@ -716,6 +835,21 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(function Sheet(
   });
   const policy: SheetDismissPolicy = { ...sheetBehaviorDefaults, ...dismissPolicy };
   const lifecycleRef = useRef(createSheetLifecycle(open));
+  const previousOpenRef = useRef(open);
+  const currentOpenRef = useRef(open);
+  currentOpenRef.current = open;
+  const dismissReasonRef = useRef<SheetDismissReason | undefined>(undefined);
+  const dismissCompleteRef = useRef(onDismissComplete);
+  dismissCompleteRef.current = onDismissComplete;
+  const settleDismissRef = useRef<(reason: SheetDismissReason) => void>(() => undefined);
+  settleDismissRef.current = (reason) => {
+    const cycle = lifecycleRef.current.beginDismiss();
+    if (cycle !== null && lifecycleRef.current.completeDismiss(cycle)) {
+      dismissReasonRef.current = undefined;
+      previousOpenRef.current = false;
+      dismissCompleteRef.current?.({ reason });
+    }
+  };
   const triggerRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const id = useId().replaceAll(":", "");
@@ -724,19 +858,37 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(function Sheet(
   const descriptionId = `${id}-description`;
   const requestClose = (reason: SheetDismissReason) => {
     if (lifecycleRef.current.requestClose(reason, busy, policy)) {
+      dismissReasonRef.current = reason;
       changeOpen(false, { reason });
     }
   };
   useEffect(() => {
     if (open) {
       lifecycleRef.current.open();
+      previousOpenRef.current = true;
+      dismissReasonRef.current = undefined;
       return;
     }
-    const cycle = lifecycleRef.current.beginDismiss();
-    if (cycle !== null) lifecycleRef.current.completeDismiss(cycle);
+    if (!previousOpenRef.current) return;
+    settleDismissRef.current(dismissReasonRef.current ?? "programmatic");
   }, [open]);
+  const mountEpochRef = useRef(0);
+  useEffect(() => {
+    const epoch = mountEpochRef.current + 1;
+    mountEpochRef.current = epoch;
+    return () => {
+      queueMicrotask(() => {
+        // React StrictMode immediately runs the setup again after its probe
+        // cleanup. A real unmount has no later epoch and is settled here,
+        // after the portal and focus-lock cleanups have completed.
+        if (mountEpochRef.current !== epoch || !currentOpenRef.current) return;
+        settleDismissRef.current(dismissReasonRef.current ?? "programmatic");
+      });
+    };
+  }, []);
   useModalFocus({
     active: open,
+    priority: modalPriority,
     contentRef,
     ...(initialFocusRef === undefined ? {} : { initialFocusRef }),
     ...(returnFocusRef === undefined ? {} : { returnFocusRef }),
@@ -755,12 +907,14 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(function Sheet(
         () => changeOpen(true, { reason: "trigger" }),
       )}
       {open ? (
-        <Portal {...(portalContainer === undefined ? {} : { container: portalContainer })}>
+        <HjmPortal {...(portalContainer === undefined ? {} : { container: portalContainer })}>
           <div
             className="hjm-overlay hjm-sheet-positioner"
             data-kind="sheet"
+            data-modal-priority={modalPriority}
             data-placement={placement}
             data-state="open"
+            style={{ zIndex: modalLayer }}
             onMouseDown={(event) => {
               if (event.target === event.currentTarget) requestClose("outside");
             }}
@@ -775,7 +929,9 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(function Sheet(
               aria-busy={busy || undefined}
               tabIndex={-1}
               className={classNames("hjm-sheet", className)}
+              data-hjm-modal-content=""
               data-placement={placement}
+              data-has-footer={footer ? true : undefined}
               data-state={busy ? "busy" : "idle"}
             >
               <header className="hjm-sheet__header">
@@ -799,7 +955,7 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(function Sheet(
               {footer ? <footer className="hjm-sheet__footer">{footer}</footer> : null}
             </div>
           </div>
-        </Portal>
+        </HjmPortal>
       ) : null}
     </>
   );
@@ -813,6 +969,7 @@ export type TooltipProps = OpenState<TooltipOpenChangeDetails> &
     align?: TooltipAlign;
     pointerOpenDelayMs?: number;
     focusOpenDelayMs?: number;
+    portalContainer?: HTMLElement;
     className?: string;
   }>;
 
@@ -824,6 +981,7 @@ export const Tooltip = forwardRef<HTMLSpanElement, TooltipProps>(function Toolti
     align,
     pointerOpenDelayMs = tooltipBehaviorDefaults.pointerOpenDelayMs,
     focusOpenDelayMs = tooltipBehaviorDefaults.focusOpenDelayMs,
+    portalContainer,
     open: openProp,
     defaultOpen,
     onOpenChange,
@@ -843,6 +1001,8 @@ export const Tooltip = forwardRef<HTMLSpanElement, TooltipProps>(function Toolti
   });
   const timerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const suppressedRef = useRef(false);
+  const triggerRef = useRef<HTMLElement>(null);
+  const [tooltipNode, setTooltipNode] = useState<HTMLSpanElement | null>(null);
   const id = `${useId().replaceAll(":", "")}-tooltip`;
   const coordinator = useTooltipCoordinator();
   const activeTooltipId = coordinator?.activeId ?? null;
@@ -893,6 +1053,7 @@ export const Tooltip = forwardRef<HTMLSpanElement, TooltipProps>(function Toolti
     ? [triggerProps["aria-describedby"], id].filter(Boolean).join(" ")
     : triggerProps["aria-describedby"];
   const renderedTrigger = cloneElement(trigger, {
+    ref: composeRefs(triggerProps.ref, triggerRef),
     ...(describedBy ? { "aria-describedby": describedBy } : {}),
     onPointerEnter: (event) => {
       triggerProps.onPointerEnter?.(event);
@@ -934,6 +1095,14 @@ export const Tooltip = forwardRef<HTMLSpanElement, TooltipProps>(function Toolti
       }
     },
   });
+  const popupPosition = useAnchoredPopup(triggerRef, tooltipNode, {
+    align: descriptor.align,
+    placement: descriptor.placement,
+    zIndex: 1100,
+  });
+  const setTooltipRef = useCallback((node: HTMLSpanElement | null) => {
+    setTooltipNode(node);
+  }, []);
 
   return (
     <span
@@ -953,9 +1122,31 @@ export const Tooltip = forwardRef<HTMLSpanElement, TooltipProps>(function Toolti
     >
       {renderedTrigger}
       {visible ? (
-        <span id={id} role="tooltip" className="hjm-tooltip__content">
-          {descriptor.content}
-        </span>
+        <AnchoredPortal
+          anchorRef={triggerRef}
+          ssrFallback="inline"
+          {...(portalContainer === undefined ? {} : { container: portalContainer })}
+        >
+          <span
+            ref={setTooltipRef}
+            id={id}
+            role="tooltip"
+            className="hjm-tooltip__content"
+            data-placement={popupPosition.placement}
+            data-align={popupPosition.align}
+            style={popupPosition.style}
+            onPointerEnter={(event) => {
+              if (event.pointerType !== "touch") clearTimer();
+            }}
+            onPointerLeave={(event) => {
+              if (event.pointerType === "touch") return;
+              suppressedRef.current = false;
+              schedule(false, 0, { reason: "pointer-leave" });
+            }}
+          >
+            {descriptor.content}
+          </span>
+        </AnchoredPortal>
       ) : null}
     </span>
   );
@@ -974,6 +1165,9 @@ export type MenuItem = Readonly<{
   /** Backward-compatible item-local action; Menu onAction receives every activation. */
   onSelect?: () => void;
 }>;
+
+export type MenuSection = Omit<MenuSectionDescriptor<string, string>, "items"> &
+  Readonly<{ items: readonly MenuItem[] }>;
 
 export type MenuOpenChangeReason =
   | "trigger"
@@ -1024,18 +1218,30 @@ type MenuMultipleSelection =
       onValueChange?: (value: ReadonlySet<string>) => void;
     }>;
 
+type MenuSourceProps =
+  | Readonly<{
+      items: readonly MenuItem[];
+      sections?: never;
+    }>
+  | Readonly<{
+      items?: never;
+      sections: readonly MenuSection[];
+    }>;
+
 type MenuBaseProps = Readonly<{
   trigger: OverlayTrigger;
   label: string;
-  items: readonly MenuItem[];
   density?: MenuDensity;
+  /** Logical alignment against the trigger; automatically mirrors in RTL. */
+  align?: "start" | "end";
   disabled?: boolean;
   asyncState?: MenuAsyncState;
   onAction?: (id: string) => void;
   /** Runs only once the owner actually closes the menu. */
   onActionAfterDismiss?: (id: string) => void;
+  portalContainer?: HTMLElement;
   className?: string;
-}>;
+}> & MenuSourceProps;
 
 export type MenuProps = OpenState<Readonly<{ reason: MenuOpenChangeReason }>> &
   MenuBaseProps &
@@ -1049,7 +1255,11 @@ function menuTextValue(item: MenuItem): string {
   return value.trim();
 }
 
-function validateMenuItems(items: readonly MenuItem[], asyncState: MenuAsyncState): void {
+function validateMenuItems(
+  items: readonly MenuItem[],
+  sections: readonly MenuSection[] | undefined,
+  asyncState: MenuAsyncState,
+): void {
   if (items.length === 0 && (asyncState.status === "idle" || asyncState.status === "loadingMore")) {
     throw new TypeError("Menu requires at least one item");
   }
@@ -1059,6 +1269,19 @@ function validateMenuItems(items: readonly MenuItem[], asyncState: MenuAsyncStat
     if (ids.has(item.id)) throw new TypeError(`Duplicate Menu item id: ${item.id}`);
     ids.add(item.id);
     menuTextValue(item);
+  }
+  if (sections !== undefined) {
+    const sectionIds = new Set<string>();
+    for (const section of sections) {
+      if (section.id.trim().length === 0) throw new TypeError("Menu section id must not be empty");
+      if (sectionIds.has(section.id)) throw new TypeError(`Duplicate Menu section id: ${section.id}`);
+      sectionIds.add(section.id);
+      if (section.items.length === 0) throw new TypeError(`Menu section ${section.id} must not be empty`);
+      if ((section.label?.trim().length ?? 0) === 0 &&
+        (section.accessibilityLabel?.trim().length ?? 0) === 0) {
+        throw new TypeError(`Menu section ${section.id} needs a label or accessibilityLabel`);
+      }
+    }
   }
   if (
     (asyncState.status === "idle" || asyncState.status === "loadingMore") &&
@@ -1072,19 +1295,22 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(function Menu(props, r
   const {
     trigger,
     label,
-    items,
     density = menuRecipe.defaults.density,
+    align = "start",
     disabled = false,
     asyncState = { status: "idle" },
     onAction,
     onActionAfterDismiss,
+    portalContainer,
     open: openProp,
     defaultOpen,
     onOpenChange,
     className,
   } = props;
+  const sections = props.sections;
+  const items = sections === undefined ? props.items : sections.flatMap((section) => section.items);
   if (label.trim().length === 0) throw new TypeError("Menu label must not be empty");
-  validateMenuItems(items, asyncState);
+  validateMenuItems(items, sections, asyncState);
   const selectionMode = props.selectionMode ?? "action";
   const [open, changeOpen] = useOpenState({
     ...(openProp === undefined ? {} : { open: openProp }),
@@ -1135,10 +1361,18 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(function Menu(props, r
   const itemRefs = useRef(new Map<number, HTMLButtonElement>());
   const wrapperRef = useRef<HTMLSpanElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+  const [contentNode, setContentNode] = useState<HTMLDivElement | null>(null);
   const restoreFocusRef = useRef(false);
   const afterDismissIdRef = useRef<string | undefined>(undefined);
   const typeaheadRef = useRef({ value: "", time: 0 });
   const id = `${useId().replaceAll(":", "")}-menu`;
+  const popupPosition = useAnchoredPopup(triggerRef, contentNode, { align, zIndex: 900 });
+  const setMenuContentRef = useCallback((node: HTMLDivElement | null) => {
+    contentRef.current = node;
+    setContentNode(node);
+    if (typeof ref === "function") ref(node);
+    else if (ref) ref.current = node;
+  }, [ref]);
 
   useEffect(() => {
     if (!open) {
@@ -1156,7 +1390,7 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(function Menu(props, r
     const item = itemRefs.current.get(focusIndex);
     if (item && !item.disabled) item.focus();
     else contentRef.current?.focus();
-  }, [focusIndex, onActionAfterDismiss, open]);
+  }, [contentNode, focusIndex, onActionAfterDismiss, open]);
 
   const itemIsDisabled = (item: MenuItem) =>
     disabled || asyncState.status === "loading" || Boolean(item.disabled);
@@ -1242,7 +1476,8 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(function Menu(props, r
     const handlePointerDown = (event: PointerEvent) => {
       if (
         event.target instanceof Node &&
-        !wrapperRef.current?.contains(event.target)
+        !wrapperRef.current?.contains(event.target) &&
+        !contentRef.current?.contains(event.target)
       ) {
         close("outside", false);
       }
@@ -1314,68 +1549,126 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(function Menu(props, r
     <span ref={wrapperRef} className="hjm-menu" data-state={open ? "open" : "closed"}>
       {renderedTrigger}
       {open ? (
-        <div
-          ref={composeRefs(contentRef, ref)}
-          id={id}
-          role="menu"
-          aria-label={label}
-          className={classNames("hjm-menu__content", className)}
-          data-density={density}
-          data-async-state={asyncState.status}
-          aria-busy={
-            asyncState.status === "loading" || asyncState.status === "loadingMore" || undefined
-          }
-          tabIndex={-1}
-          onKeyDown={handleMenuKeyDown}
+        <AnchoredPortal
+          anchorRef={triggerRef}
+          ssrFallback="inline"
+          {...(portalContainer === undefined ? {} : { container: portalContainer })}
         >
-          {asyncState.status !== "idle" ? (
-            <div
-              className="hjm-menu__state-message"
-              role={asyncState.status === "error" ? "alert" : "status"}
-            >
-              {asyncState.message}
-            </div>
-          ) : null}
-          {showItems ? items.map((item, index) => {
-            const selected = itemSelected(item.id);
-            const itemDisabled = itemIsDisabled(item);
-            const role = selectionMode === "single"
-              ? "menuitemradio"
-              : selectionMode === "multiple"
-                ? "menuitemcheckbox"
-                : "menuitem";
-            return (
-            <button
-              key={item.id}
-              ref={(node) => {
-                if (node) itemRefs.current.set(index, node);
-                else itemRefs.current.delete(index);
-              }}
-              type="button"
-              role={role}
-              aria-checked={selectionMode === "action" ? undefined : selected}
-              className="hjm-menu__item"
-              data-tone={item.tone ?? menuRecipe.defaults.itemTone}
-              data-state={itemDisabled ? "disabled" : selected ? "selected" : "idle"}
-              data-focus={index === focusIndex || undefined}
-              disabled={itemDisabled}
-              tabIndex={!itemDisabled && index === focusIndex ? 0 : -1}
-              onClick={() => activateItem(item, index)}
-            >
-              {item.tone === "danger" ? (
-                <span className="hjm-menu__danger-indicator" aria-hidden="true">!</span>
-              ) : null}
-              {item.leading ? <span className="hjm-menu__leading" aria-hidden="true">{item.leading}</span> : null}
-              <span className="hjm-menu__copy">
-                <span>{item.label}</span>
-                {item.description ? <span className="hjm-menu__description">{item.description}</span> : null}
-              </span>
-              {item.trailing ? <span className="hjm-menu__trailing">{item.trailing}</span> : null}
-            </button>
-            );
-          }) : null}
-        </div>
+          <div
+            ref={setMenuContentRef}
+            id={id}
+            role="menu"
+            aria-label={label}
+            className={classNames("hjm-menu__content", className)}
+            data-density={density}
+            data-async-state={asyncState.status}
+            data-placement={popupPosition.placement}
+            data-align={popupPosition.align}
+            aria-busy={
+              asyncState.status === "loading" || asyncState.status === "loadingMore" || undefined
+            }
+            style={popupPosition.style}
+            tabIndex={-1}
+            onKeyDown={handleMenuKeyDown}
+          >
+            {asyncState.status !== "idle" ? (
+              <div
+                className="hjm-menu__state-message"
+                role={asyncState.status === "error" ? "alert" : "status"}
+              >
+                {asyncState.message}
+              </div>
+            ) : null}
+            {showItems ? (sections === undefined ? items.map((item, index) => {
+              const selected = itemSelected(item.id);
+              const itemDisabled = itemIsDisabled(item);
+              const role = selectionMode === "single"
+                ? "menuitemradio"
+                : selectionMode === "multiple"
+                  ? "menuitemcheckbox"
+                  : "menuitem";
+              return renderMenuItem(item, index, role, selected, itemDisabled);
+            }) : sections.map((section, sectionIndex) => {
+              const sectionLabelId = `${id}-section-${sectionIndex}`;
+              const firstIndex = sections
+                .slice(0, sectionIndex)
+                .reduce((total, current) => total + current.items.length, 0);
+              return (
+                <div key={section.id} className="hjm-menu__section-boundary">
+                  {sectionIndex > 0 ? <div role="separator" className="hjm-menu__separator" /> : null}
+                  <div
+                    role="group"
+                    aria-labelledby={section.label ? sectionLabelId : undefined}
+                    aria-label={section.label ? undefined : section.accessibilityLabel}
+                    className="hjm-menu__section"
+                  >
+                    {section.label ? (
+                      <div id={sectionLabelId} className="hjm-menu__section-label">
+                        {section.label}
+                      </div>
+                    ) : null}
+                    {section.items.map((item, itemIndex) => {
+                      const index = firstIndex + itemIndex;
+                      const selected = itemSelected(item.id);
+                      const itemDisabled = itemIsDisabled(item);
+                      const role = selectionMode === "single"
+                        ? "menuitemradio"
+                        : selectionMode === "multiple"
+                          ? "menuitemcheckbox"
+                          : "menuitem";
+                      return renderMenuItem(item, index, role, selected, itemDisabled);
+                    })}
+                  </div>
+                </div>
+              );
+            })) : null}
+          </div>
+        </AnchoredPortal>
       ) : null}
     </span>
   );
+
+  function renderMenuItem(
+    item: MenuItem,
+    index: number,
+    role: "menuitem" | "menuitemradio" | "menuitemcheckbox",
+    selected: boolean,
+    itemDisabled: boolean,
+  ) {
+    return (
+      <button
+        key={item.id}
+        ref={(node) => {
+          if (node) {
+            itemRefs.current.set(index, node);
+            if (open && !itemDisabled && index === focusIndex) {
+              queueMicrotask(() => {
+                if (node.isConnected && open) node.focus();
+              });
+            }
+          } else itemRefs.current.delete(index);
+        }}
+        type="button"
+        role={role}
+        aria-checked={selectionMode === "action" ? undefined : selected}
+        className="hjm-menu__item"
+        data-tone={item.tone ?? menuRecipe.defaults.itemTone}
+        data-state={itemDisabled ? "disabled" : selected ? "selected" : "idle"}
+        data-focus={index === focusIndex || undefined}
+        disabled={itemDisabled}
+        tabIndex={!itemDisabled && index === focusIndex ? 0 : -1}
+        onClick={() => activateItem(item, index)}
+      >
+        {item.tone === "danger" ? (
+          <span className="hjm-menu__danger-indicator" aria-hidden="true">!</span>
+        ) : null}
+        {item.leading ? <span className="hjm-menu__leading" aria-hidden="true">{item.leading}</span> : null}
+        <span className="hjm-menu__copy">
+          <span>{item.label}</span>
+          {item.description ? <span className="hjm-menu__description">{item.description}</span> : null}
+        </span>
+        {item.trailing ? <span className="hjm-menu__trailing">{item.trailing}</span> : null}
+      </button>
+    );
+  }
 });

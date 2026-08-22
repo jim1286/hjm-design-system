@@ -280,6 +280,24 @@ describe("Native collection surfaces", () => {
     });
     expect(onCommitAfterDismiss).toHaveBeenCalledWith("seoul", "selection");
 
+    const localized = render(
+      <Combobox
+        accessibilityLabel="선수 검색"
+        clearLabel="지우기"
+        defaultOpen
+        dismissLabel="닫기"
+        emptyMessage="없음"
+        items={[{ id: "lee", label: "이정후", textValue: "이정후" }]}
+        loadingMessage="검색 중"
+        openHint="두 번 탭하여 선수 찾기를 열어요"
+        sheetTitle="비교 선수"
+      />,
+    );
+    expect(localized.root.findByType(TextInput).props.accessibilityHint)
+      .toBe("두 번 탭하여 선수 찾기를 열어요");
+    expect(localized.root.findAll((node) => node.children.includes("비교 선수")))
+      .toHaveLength(1);
+
     const onRetry = vi.fn();
     const error = render(
       <Combobox

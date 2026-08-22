@@ -7,9 +7,10 @@ import { cloneElement, forwardRef, useCallback, useEffect, useId, useRef, useSta
 import { createPortal } from "react-dom";
 import { Button } from "./actions.js";
 import { classNames, composeRefs, useControllableState } from "./internal.js";
+import { AnchoredPortal, useAnchoredPopup, } from "./portal.js";
 import { useOptionalHjmTheme, useTooltipCoordinator } from "./provider.js";
 import { createHjmThemeStyle } from "./theme.js";
-function Portal({ children, container }) {
+function HjmPortal({ children, container }) {
     const [mounted, setMounted] = useState(false);
     const theme = useOptionalHjmTheme();
     useEffect(() => setMounted(true), []);
@@ -59,8 +60,48 @@ function getFocusable(container) {
 let bodyLockCount = 0;
 let previousBodyOverflow = "";
 const activeModalStack = [];
+let activeModalOrder = 0;
 const isolatedModalBackground = new Map();
 let modalIsolationObserver = null;
+function getOwnedPopupHosts(modal) {
+    const ownerId = modal.element.id;
+    if (ownerId.length === 0)
+        return [];
+    return [...document.querySelectorAll("[data-hjm-popup-owner]")]
+        .filter((host) => host.getAttribute("data-hjm-popup-owner") === ownerId);
+}
+function modalContainsNode(modal, node) {
+    return modal.element.contains(node) ||
+        getOwnedPopupHosts(modal).some((host) => host.contains(node));
+}
+function getModalFocusable(modal) {
+    return [
+        ...getFocusable(modal.element),
+        ...getOwnedPopupHosts(modal).flatMap((host) => getFocusable(host)),
+    ];
+}
+function getModalLayer(priority) {
+    if (!Number.isSafeInteger(priority)) {
+        throw new TypeError("modalPriority must be a safe integer");
+    }
+    return 1000 + priority;
+}
+function getTopModal() {
+    let top;
+    for (const modal of activeModalStack) {
+        if (!modal.element.isConnected)
+            continue;
+        if (top === undefined ||
+            modal.priority > top.priority ||
+            (modal.priority === top.priority && modal.order > top.order))
+            top = modal;
+    }
+    return top;
+}
+function modalRanksAbove(candidate, reference) {
+    return candidate.priority > reference.priority ||
+        (candidate.priority === reference.priority && candidate.order > reference.order);
+}
 function restoreModalBackground() {
     for (const [element, previous] of isolatedModalBackground) {
         element.inert = previous.inert;
@@ -84,33 +125,48 @@ function isolateModalBackgroundElement(element) {
 /** Keeps only the top modal's ancestor path interactive, including late portals. */
 function synchronizeModalBackgroundIsolation() {
     restoreModalBackground();
-    while (activeModalStack.length > 0 && !activeModalStack.at(-1)?.isConnected) {
-        activeModalStack.pop();
+    for (let index = activeModalStack.length - 1; index >= 0; index -= 1) {
+        if (!activeModalStack[index]?.element.isConnected)
+            activeModalStack.splice(index, 1);
     }
-    const top = activeModalStack.at(-1);
+    const top = getTopModal();
     if (!top) {
         modalIsolationObserver?.disconnect();
         modalIsolationObserver = null;
         return;
     }
-    let pathNode = top;
-    let parent = pathNode.parentElement;
-    while (parent) {
+    const interactivePath = new Set();
+    for (const root of [top.element, ...getOwnedPopupHosts(top)]) {
+        let pathNode = root;
+        while (pathNode) {
+            if (pathNode === document.body)
+                break;
+            interactivePath.add(pathNode);
+            pathNode = pathNode.parentElement;
+        }
+    }
+    const inspectedParents = new Set();
+    for (const pathNode of interactivePath) {
+        const parent = pathNode.parentElement;
+        if (!parent || inspectedParents.has(parent))
+            continue;
+        inspectedParents.add(parent);
         for (const sibling of parent.children) {
-            if (sibling !== pathNode && sibling instanceof HTMLElement) {
+            if (sibling instanceof HTMLElement && !interactivePath.has(sibling)) {
                 isolateModalBackgroundElement(sibling);
             }
         }
-        if (parent === document.body)
-            break;
-        pathNode = parent;
-        parent = pathNode.parentElement;
     }
     if (modalIsolationObserver === null) {
         modalIsolationObserver = new MutationObserver(() => {
             synchronizeModalBackgroundIsolation();
         });
-        modalIsolationObserver.observe(document.body, { childList: true, subtree: true });
+        modalIsolationObserver.observe(document.body, {
+            attributes: true,
+            attributeFilter: ["data-hjm-popup-owner"],
+            childList: true,
+            subtree: true,
+        });
     }
 }
 function lockBodyScroll() {
@@ -125,7 +181,7 @@ function lockBodyScroll() {
             document.body.style.overflow = previousBodyOverflow;
     };
 }
-function useModalFocus({ active, contentRef, initialFocusRef, returnFocusRef, fallbackReturnRef, onEscape, }) {
+function useModalFocus({ active, priority = 0, contentRef, initialFocusRef, returnFocusRef, fallbackReturnRef, onEscape, }) {
     const escapeRef = useRef(onEscape);
     escapeRef.current = onEscape;
     useEffect(() => {
@@ -144,12 +200,18 @@ function useModalFocus({ active, contentRef, initialFocusRef, returnFocusRef, fa
                 ? document.activeElement
                 : null;
             const releaseScroll = lockBodyScroll();
-            activeModalStack.push(content);
+            const modal = {
+                element: content,
+                order: activeModalOrder += 1,
+                priority,
+            };
+            activeModalStack.push(modal);
             synchronizeModalBackgroundIsolation();
             const initial = initialFocusRef?.current ?? getFocusable(content)[0] ?? content;
-            initial.focus();
+            if (getTopModal() === modal)
+                initial.focus();
             const handleKeyDown = (event) => {
-                if (activeModalStack.at(-1) !== content)
+                if (getTopModal() !== modal)
                     return;
                 if (event.key === "Escape") {
                     event.preventDefault();
@@ -158,7 +220,7 @@ function useModalFocus({ active, contentRef, initialFocusRef, returnFocusRef, fa
                 }
                 if (event.key !== "Tab")
                     return;
-                const focusable = getFocusable(content);
+                const focusable = getModalFocusable(modal);
                 if (focusable.length === 0) {
                     event.preventDefault();
                     content.focus();
@@ -167,34 +229,47 @@ function useModalFocus({ active, contentRef, initialFocusRef, returnFocusRef, fa
                 const first = focusable[0];
                 const last = focusable.at(-1);
                 const current = document.activeElement;
-                if (event.shiftKey && (current === first || !content.contains(current))) {
+                if (event.shiftKey && (current === first || !(current instanceof Node) || !modalContainsNode(modal, current))) {
                     event.preventDefault();
                     last.focus();
                 }
-                else if (!event.shiftKey && (current === last || !content.contains(current))) {
+                else if (!event.shiftKey && (current === last || !(current instanceof Node) || !modalContainsNode(modal, current))) {
                     event.preventDefault();
                     first.focus();
                 }
             };
             const handleFocusIn = (event) => {
-                if (activeModalStack.at(-1) !== content)
+                if (getTopModal() !== modal)
                     return;
-                if (event.target instanceof Node && !content.contains(event.target)) {
+                if (event.target instanceof Node && !modalContainsNode(modal, event.target)) {
                     (initialFocusRef?.current ?? getFocusable(content)[0] ?? content).focus();
                 }
             };
             document.addEventListener("keydown", handleKeyDown, true);
             document.addEventListener("focusin", handleFocusIn, true);
             release = () => {
+                const wasTop = !activeModalStack.some((candidate) => candidate !== modal && candidate.element.isConnected && modalRanksAbove(candidate, modal));
                 document.removeEventListener("keydown", handleKeyDown, true);
                 document.removeEventListener("focusin", handleFocusIn, true);
-                const stackIndex = activeModalStack.lastIndexOf(content);
+                const stackIndex = activeModalStack.lastIndexOf(modal);
                 if (stackIndex >= 0)
                     activeModalStack.splice(stackIndex, 1);
                 synchronizeModalBackgroundIsolation();
                 releaseScroll();
                 const returnTarget = returnFocusRef?.current ?? fallbackReturnRef?.current ?? previouslyFocused;
-                queueMicrotask(() => returnTarget?.focus());
+                if (wasTop) {
+                    queueMicrotask(() => {
+                        const nextTop = getTopModal();
+                        if (!nextTop) {
+                            returnTarget?.focus();
+                            return;
+                        }
+                        if (returnTarget && modalContainsNode(nextTop, returnTarget))
+                            returnTarget.focus();
+                        else
+                            (getModalFocusable(nextTop)[0] ?? nextTop.element).focus();
+                    });
+                }
             };
             if (cancelled)
                 release();
@@ -206,7 +281,7 @@ function useModalFocus({ active, contentRef, initialFocusRef, returnFocusRef, fa
                 clearTimeout(retryTimer);
             release?.();
         };
-    }, [active, contentRef, fallbackReturnRef, initialFocusRef, returnFocusRef]);
+    }, [active, contentRef, fallbackReturnRef, initialFocusRef, priority, returnFocusRef]);
 }
 function renderTrigger(trigger, triggerRef, open, contentId, popup, onOpen) {
     const props = trigger.props;
@@ -222,7 +297,8 @@ function renderTrigger(trigger, triggerRef, open, contentId, popup, onOpen) {
         },
     });
 }
-export const Dialog = forwardRef(function Dialog({ trigger, title, description, children, footer, size = dialogRecipe.defaults.size, dismissible = dialogRecipe.defaults.dismissible, busy = false, closeLabel, initialFocusRef, returnFocusRef, portalContainer, open: openProp, defaultOpen, onOpenChange, className, }, forwardedRef) {
+export const Dialog = forwardRef(function Dialog({ trigger, title, description, children, footer, size = dialogRecipe.defaults.size, dismissible = dialogRecipe.defaults.dismissible, busy = false, closeLabel, initialFocusRef, returnFocusRef, modalPriority = 0, portalContainer, open: openProp, defaultOpen, onOpenChange, className, }, forwardedRef) {
+    const modalLayer = getModalLayer(modalPriority);
     const [open, changeOpen] = useOpenState({
         ...(openProp === undefined ? {} : { open: openProp }),
         ...(defaultOpen === undefined ? {} : { defaultOpen }),
@@ -242,18 +318,20 @@ export const Dialog = forwardRef(function Dialog({ trigger, title, description, 
     };
     useModalFocus({
         active: open,
+        priority: modalPriority,
         contentRef,
         ...(initialFocusRef === undefined ? {} : { initialFocusRef }),
         ...(returnFocusRef === undefined ? {} : { returnFocusRef }),
         ...(trigger === undefined ? {} : { fallbackReturnRef: triggerRef }),
         onEscape: () => requestClose("escape"),
     });
-    return (_jsxs(_Fragment, { children: [trigger === undefined ? null : renderTrigger(trigger, triggerRef, open, contentId, "dialog", () => changeOpen(true, { reason: "trigger" })), open ? (_jsx(Portal, { ...(portalContainer === undefined ? {} : { container: portalContainer }), children: _jsx("div", { className: "hjm-overlay", "data-kind": "dialog", "data-state": "open", onMouseDown: (event) => {
+    return (_jsxs(_Fragment, { children: [trigger === undefined ? null : renderTrigger(trigger, triggerRef, open, contentId, "dialog", () => changeOpen(true, { reason: "trigger" })), open ? (_jsx(HjmPortal, { ...(portalContainer === undefined ? {} : { container: portalContainer }), children: _jsx("div", { className: "hjm-overlay", "data-kind": "dialog", "data-modal-priority": modalPriority, "data-state": "open", style: { zIndex: modalLayer }, onMouseDown: (event) => {
                         if (event.target === event.currentTarget)
                             requestClose("outside");
-                    }, children: _jsxs("div", { ref: mergedContentRef, id: contentId, role: "dialog", "aria-modal": "true", "aria-labelledby": titleId, "aria-describedby": description ? descriptionId : undefined, "aria-busy": busy || undefined, tabIndex: -1, className: classNames("hjm-dialog", className), "data-size": size, "data-state": busy ? "busy" : "idle", children: [_jsxs("header", { className: "hjm-dialog__header", children: [_jsx("h2", { id: titleId, className: "hjm-dialog__title", children: title }), dismissible ? (_jsx("button", { type: "button", className: "hjm-dialog__close", "aria-label": closeLabel, disabled: busy, onClick: () => requestClose("close-action"), children: "\u00D7" })) : null] }), description ? _jsx("p", { id: descriptionId, className: "hjm-dialog__description", children: description }) : null, children ? _jsx("div", { className: "hjm-dialog__body", children: children }) : null, footer ? _jsx("footer", { className: "hjm-dialog__footer", children: footer }) : null] }) }) })) : null] }));
+                    }, children: _jsxs("div", { ref: mergedContentRef, id: contentId, role: "dialog", "aria-modal": "true", "aria-labelledby": titleId, "aria-describedby": description ? descriptionId : undefined, "aria-busy": busy || undefined, tabIndex: -1, className: classNames("hjm-dialog", className), "data-hjm-modal-content": "", "data-size": size, "data-state": busy ? "busy" : "idle", children: [_jsxs("header", { className: "hjm-dialog__header", children: [_jsx("h2", { id: titleId, className: "hjm-dialog__title", children: title }), dismissible ? (_jsx("button", { type: "button", className: "hjm-dialog__close", "aria-label": closeLabel, disabled: busy, onClick: () => requestClose("close-action"), children: "\u00D7" })) : null] }), description ? _jsx("p", { id: descriptionId, className: "hjm-dialog__description", children: description }) : null, children ? _jsx("div", { className: "hjm-dialog__body", children: children }) : null, footer ? _jsx("footer", { className: "hjm-dialog__footer", children: footer }) : null] }) }) })) : null] }));
 });
-export const AlertDialog = forwardRef(function AlertDialog({ trigger, request, icon, returnFocusRef, portalContainer, open: openProp, defaultOpen, onOpenChange, className, }, forwardedRef) {
+export const AlertDialog = forwardRef(function AlertDialog({ trigger, request, icon, size = dialogRecipe.defaults.size, returnFocusRef, modalPriority = 0, portalContainer, open: openProp, defaultOpen, onOpenChange, className, }, forwardedRef) {
+    const modalLayer = getModalLayer(modalPriority);
     validateAlertDialogRequest(request);
     const [open, changeOpen] = useOpenState({
         ...(openProp === undefined ? {} : { open: openProp }),
@@ -297,6 +375,7 @@ export const AlertDialog = forwardRef(function AlertDialog({ trigger, request, i
     };
     useModalFocus({
         active: open,
+        priority: modalPriority,
         contentRef,
         initialFocusRef,
         ...(returnFocusRef === undefined ? {} : { returnFocusRef }),
@@ -333,9 +412,10 @@ export const AlertDialog = forwardRef(function AlertDialog({ trigger, request, i
     return (_jsxs(_Fragment, { children: [trigger === undefined ? null : renderTrigger(trigger, triggerRef, open, contentId, "dialog", () => {
                 startSession();
                 changeOpen(true, { reason: "trigger" });
-            }), open ? (_jsx(Portal, { ...(portalContainer === undefined ? {} : { container: portalContainer }), children: _jsx("div", { className: "hjm-overlay", "data-kind": "alert-dialog", "data-state": "open", children: _jsxs("div", { ref: composeRefs(contentRef, forwardedRef), id: contentId, role: "alertdialog", "aria-modal": "true", "aria-labelledby": titleId, "aria-describedby": `${descriptionId}${error ? ` ${errorId}` : ""}`, "aria-busy": busy || undefined, tabIndex: -1, className: classNames("hjm-alert-dialog", className), "data-tone": tone, "data-state": busy ? "busy" : error ? "error" : "idle", children: [icon ? _jsx("div", { className: "hjm-alert-dialog__icon", "aria-hidden": "true", children: icon }) : null, _jsx("h2", { id: titleId, className: "hjm-alert-dialog__title", children: request.title }), _jsx("p", { id: descriptionId, className: "hjm-alert-dialog__description", children: request.description }), error ? _jsx("p", { id: errorId, className: "hjm-alert-dialog__error", role: "alert", children: error }) : null, _jsxs("div", { className: "hjm-alert-dialog__actions", children: [request.mode === "confirm" ? (_jsx(Button, { ref: cancelRef, tone: "secondary", disabled: busy || closing, onClick: () => cancel("cancel-action"), children: request.cancelLabel })) : null, _jsx(Button, { ref: confirmRef, tone: tone === "danger" ? "danger" : "primary", loading: busy, disabled: closing, onClick: () => void confirm(), children: request.confirmLabel })] })] }) }) })) : null] }));
+            }), open ? (_jsx(HjmPortal, { ...(portalContainer === undefined ? {} : { container: portalContainer }), children: _jsx("div", { className: "hjm-overlay", "data-kind": "alert-dialog", "data-modal-priority": modalPriority, "data-state": "open", style: { zIndex: modalLayer }, children: _jsxs("div", { ref: composeRefs(contentRef, forwardedRef), id: contentId, role: "alertdialog", "aria-modal": "true", "aria-labelledby": titleId, "aria-describedby": `${descriptionId}${error ? ` ${errorId}` : ""}`, "aria-busy": busy || undefined, tabIndex: -1, className: classNames("hjm-alert-dialog", className), "data-hjm-modal-content": "", "data-size": size, "data-tone": tone, "data-state": busy ? "busy" : error ? "error" : "idle", children: [icon ? _jsx("div", { className: "hjm-alert-dialog__icon", "aria-hidden": "true", children: icon }) : null, _jsx("h2", { id: titleId, className: "hjm-alert-dialog__title", children: request.title }), _jsx("p", { id: descriptionId, className: "hjm-alert-dialog__description", children: request.description }), error ? _jsx("p", { id: errorId, className: "hjm-alert-dialog__error", role: "alert", children: error }) : null, _jsxs("div", { className: "hjm-alert-dialog__actions", children: [request.mode === "confirm" ? (_jsx(Button, { ref: cancelRef, tone: "secondary", disabled: busy || closing, onClick: () => cancel("cancel-action"), children: request.cancelLabel })) : null, _jsx(Button, { ref: confirmRef, tone: tone === "danger" ? "danger" : "primary", loading: busy, disabled: closing, onClick: () => void confirm(), children: request.confirmLabel })] })] }) }) })) : null] }));
 });
-export const Sheet = forwardRef(function Sheet({ trigger, title, description, children, footer, placement = sheetRecipe.defaults.placement, busy = false, dismissPolicy, closeLabel, initialFocusRef, returnFocusRef, portalContainer, open: openProp, defaultOpen, onOpenChange, className, }, forwardedRef) {
+export const Sheet = forwardRef(function Sheet({ trigger, title, description, children, footer, placement = sheetRecipe.defaults.placement, busy = false, dismissPolicy, closeLabel, initialFocusRef, returnFocusRef, onDismissComplete, modalPriority = 0, portalContainer, open: openProp, defaultOpen, onOpenChange, className, }, forwardedRef) {
+    const modalLayer = getModalLayer(modalPriority);
     const [open, changeOpen] = useOpenState({
         ...(openProp === undefined ? {} : { open: openProp }),
         ...(defaultOpen === undefined ? {} : { defaultOpen }),
@@ -343,6 +423,21 @@ export const Sheet = forwardRef(function Sheet({ trigger, title, description, ch
     });
     const policy = { ...sheetBehaviorDefaults, ...dismissPolicy };
     const lifecycleRef = useRef(createSheetLifecycle(open));
+    const previousOpenRef = useRef(open);
+    const currentOpenRef = useRef(open);
+    currentOpenRef.current = open;
+    const dismissReasonRef = useRef(undefined);
+    const dismissCompleteRef = useRef(onDismissComplete);
+    dismissCompleteRef.current = onDismissComplete;
+    const settleDismissRef = useRef(() => undefined);
+    settleDismissRef.current = (reason) => {
+        const cycle = lifecycleRef.current.beginDismiss();
+        if (cycle !== null && lifecycleRef.current.completeDismiss(cycle)) {
+            dismissReasonRef.current = undefined;
+            previousOpenRef.current = false;
+            dismissCompleteRef.current?.({ reason });
+        }
+    };
     const triggerRef = useRef(null);
     const contentRef = useRef(null);
     const id = useId().replaceAll(":", "");
@@ -351,32 +446,51 @@ export const Sheet = forwardRef(function Sheet({ trigger, title, description, ch
     const descriptionId = `${id}-description`;
     const requestClose = (reason) => {
         if (lifecycleRef.current.requestClose(reason, busy, policy)) {
+            dismissReasonRef.current = reason;
             changeOpen(false, { reason });
         }
     };
     useEffect(() => {
         if (open) {
             lifecycleRef.current.open();
+            previousOpenRef.current = true;
+            dismissReasonRef.current = undefined;
             return;
         }
-        const cycle = lifecycleRef.current.beginDismiss();
-        if (cycle !== null)
-            lifecycleRef.current.completeDismiss(cycle);
+        if (!previousOpenRef.current)
+            return;
+        settleDismissRef.current(dismissReasonRef.current ?? "programmatic");
     }, [open]);
+    const mountEpochRef = useRef(0);
+    useEffect(() => {
+        const epoch = mountEpochRef.current + 1;
+        mountEpochRef.current = epoch;
+        return () => {
+            queueMicrotask(() => {
+                // React StrictMode immediately runs the setup again after its probe
+                // cleanup. A real unmount has no later epoch and is settled here,
+                // after the portal and focus-lock cleanups have completed.
+                if (mountEpochRef.current !== epoch || !currentOpenRef.current)
+                    return;
+                settleDismissRef.current(dismissReasonRef.current ?? "programmatic");
+            });
+        };
+    }, []);
     useModalFocus({
         active: open,
+        priority: modalPriority,
         contentRef,
         ...(initialFocusRef === undefined ? {} : { initialFocusRef }),
         ...(returnFocusRef === undefined ? {} : { returnFocusRef }),
         ...(trigger === undefined ? {} : { fallbackReturnRef: triggerRef }),
         onEscape: () => requestClose("escape"),
     });
-    return (_jsxs(_Fragment, { children: [trigger === undefined ? null : renderTrigger(trigger, triggerRef, open, contentId, "dialog", () => changeOpen(true, { reason: "trigger" })), open ? (_jsx(Portal, { ...(portalContainer === undefined ? {} : { container: portalContainer }), children: _jsx("div", { className: "hjm-overlay hjm-sheet-positioner", "data-kind": "sheet", "data-placement": placement, "data-state": "open", onMouseDown: (event) => {
+    return (_jsxs(_Fragment, { children: [trigger === undefined ? null : renderTrigger(trigger, triggerRef, open, contentId, "dialog", () => changeOpen(true, { reason: "trigger" })), open ? (_jsx(HjmPortal, { ...(portalContainer === undefined ? {} : { container: portalContainer }), children: _jsx("div", { className: "hjm-overlay hjm-sheet-positioner", "data-kind": "sheet", "data-modal-priority": modalPriority, "data-placement": placement, "data-state": "open", style: { zIndex: modalLayer }, onMouseDown: (event) => {
                         if (event.target === event.currentTarget)
                             requestClose("outside");
-                    }, children: _jsxs("div", { ref: composeRefs(contentRef, forwardedRef), id: contentId, role: "dialog", "aria-modal": "true", "aria-labelledby": titleId, "aria-describedby": description ? descriptionId : undefined, "aria-busy": busy || undefined, tabIndex: -1, className: classNames("hjm-sheet", className), "data-placement": placement, "data-state": busy ? "busy" : "idle", children: [_jsxs("header", { className: "hjm-sheet__header", children: [_jsxs("div", { children: [_jsx("h2", { id: titleId, className: "hjm-sheet__title", children: title }), description ? _jsx("p", { id: descriptionId, className: "hjm-sheet__description", children: description }) : null] }), policy.dismissible ? (_jsx("button", { type: "button", className: "hjm-dialog__close", "aria-label": closeLabel, disabled: busy && !policy.dismissWhileBusy, onClick: () => requestClose("close-action"), children: "\u00D7" })) : null] }), children ? _jsx("div", { className: "hjm-sheet__body", children: children }) : null, footer ? _jsx("footer", { className: "hjm-sheet__footer", children: footer }) : null] }) }) })) : null] }));
+                    }, children: _jsxs("div", { ref: composeRefs(contentRef, forwardedRef), id: contentId, role: "dialog", "aria-modal": "true", "aria-labelledby": titleId, "aria-describedby": description ? descriptionId : undefined, "aria-busy": busy || undefined, tabIndex: -1, className: classNames("hjm-sheet", className), "data-hjm-modal-content": "", "data-placement": placement, "data-has-footer": footer ? true : undefined, "data-state": busy ? "busy" : "idle", children: [_jsxs("header", { className: "hjm-sheet__header", children: [_jsxs("div", { children: [_jsx("h2", { id: titleId, className: "hjm-sheet__title", children: title }), description ? _jsx("p", { id: descriptionId, className: "hjm-sheet__description", children: description }) : null] }), policy.dismissible ? (_jsx("button", { type: "button", className: "hjm-dialog__close", "aria-label": closeLabel, disabled: busy && !policy.dismissWhileBusy, onClick: () => requestClose("close-action"), children: "\u00D7" })) : null] }), children ? _jsx("div", { className: "hjm-sheet__body", children: children }) : null, footer ? _jsx("footer", { className: "hjm-sheet__footer", children: footer }) : null] }) }) })) : null] }));
 });
-export const Tooltip = forwardRef(function Tooltip({ trigger, content, placement, align, pointerOpenDelayMs = tooltipBehaviorDefaults.pointerOpenDelayMs, focusOpenDelayMs = tooltipBehaviorDefaults.focusOpenDelayMs, open: openProp, defaultOpen, onOpenChange, className, }, ref) {
+export const Tooltip = forwardRef(function Tooltip({ trigger, content, placement, align, pointerOpenDelayMs = tooltipBehaviorDefaults.pointerOpenDelayMs, focusOpenDelayMs = tooltipBehaviorDefaults.focusOpenDelayMs, portalContainer, open: openProp, defaultOpen, onOpenChange, className, }, ref) {
     const descriptor = resolveTooltipDescriptor({
         content,
         ...(placement === undefined ? {} : { placement }),
@@ -389,6 +503,8 @@ export const Tooltip = forwardRef(function Tooltip({ trigger, content, placement
     });
     const timerRef = useRef(undefined);
     const suppressedRef = useRef(false);
+    const triggerRef = useRef(null);
+    const [tooltipNode, setTooltipNode] = useState(null);
     const id = `${useId().replaceAll(":", "")}-tooltip`;
     const coordinator = useTooltipCoordinator();
     const activeTooltipId = coordinator?.activeId ?? null;
@@ -435,6 +551,7 @@ export const Tooltip = forwardRef(function Tooltip({ trigger, content, placement
         ? [triggerProps["aria-describedby"], id].filter(Boolean).join(" ")
         : triggerProps["aria-describedby"];
     const renderedTrigger = cloneElement(trigger, {
+        ref: composeRefs(triggerProps.ref, triggerRef),
         ...(describedBy ? { "aria-describedby": describedBy } : {}),
         onPointerEnter: (event) => {
             triggerProps.onPointerEnter?.(event);
@@ -474,6 +591,14 @@ export const Tooltip = forwardRef(function Tooltip({ trigger, content, placement
             }
         },
     });
+    const popupPosition = useAnchoredPopup(triggerRef, tooltipNode, {
+        align: descriptor.align,
+        placement: descriptor.placement,
+        zIndex: 1100,
+    });
+    const setTooltipRef = useCallback((node) => {
+        setTooltipNode(node);
+    }, []);
     return (_jsxs("span", { ref: ref, className: classNames("hjm-tooltip", className), "data-placement": descriptor.placement, "data-align": descriptor.align, "data-state": visible ? "open" : "closed", onPointerEnter: (event) => {
             if (event.pointerType !== "touch")
                 clearTimer();
@@ -482,7 +607,15 @@ export const Tooltip = forwardRef(function Tooltip({ trigger, content, placement
                 return;
             suppressedRef.current = false;
             schedule(false, 0, { reason: "pointer-leave" });
-        }, children: [renderedTrigger, visible ? (_jsx("span", { id: id, role: "tooltip", className: "hjm-tooltip__content", children: descriptor.content })) : null] }));
+        }, children: [renderedTrigger, visible ? (_jsx(AnchoredPortal, { anchorRef: triggerRef, ssrFallback: "inline", ...(portalContainer === undefined ? {} : { container: portalContainer }), children: _jsx("span", { ref: setTooltipRef, id: id, role: "tooltip", className: "hjm-tooltip__content", "data-placement": popupPosition.placement, "data-align": popupPosition.align, style: popupPosition.style, onPointerEnter: (event) => {
+                        if (event.pointerType !== "touch")
+                            clearTimer();
+                    }, onPointerLeave: (event) => {
+                        if (event.pointerType === "touch")
+                            return;
+                        suppressedRef.current = false;
+                        schedule(false, 0, { reason: "pointer-leave" });
+                    }, children: descriptor.content }) })) : null] }));
 });
 function menuTextValue(item) {
     const value = item.textValue ?? (typeof item.label === "string" ? item.label : undefined);
@@ -491,7 +624,7 @@ function menuTextValue(item) {
     }
     return value.trim();
 }
-function validateMenuItems(items, asyncState) {
+function validateMenuItems(items, sections, asyncState) {
     if (items.length === 0 && (asyncState.status === "idle" || asyncState.status === "loadingMore")) {
         throw new TypeError("Menu requires at least one item");
     }
@@ -504,16 +637,34 @@ function validateMenuItems(items, asyncState) {
         ids.add(item.id);
         menuTextValue(item);
     }
+    if (sections !== undefined) {
+        const sectionIds = new Set();
+        for (const section of sections) {
+            if (section.id.trim().length === 0)
+                throw new TypeError("Menu section id must not be empty");
+            if (sectionIds.has(section.id))
+                throw new TypeError(`Duplicate Menu section id: ${section.id}`);
+            sectionIds.add(section.id);
+            if (section.items.length === 0)
+                throw new TypeError(`Menu section ${section.id} must not be empty`);
+            if ((section.label?.trim().length ?? 0) === 0 &&
+                (section.accessibilityLabel?.trim().length ?? 0) === 0) {
+                throw new TypeError(`Menu section ${section.id} needs a label or accessibilityLabel`);
+            }
+        }
+    }
     if ((asyncState.status === "idle" || asyncState.status === "loadingMore") &&
         !items.some((item) => !item.disabled)) {
         throw new TypeError("Menu requires at least one enabled item");
     }
 }
 export const Menu = forwardRef(function Menu(props, ref) {
-    const { trigger, label, items, density = menuRecipe.defaults.density, disabled = false, asyncState = { status: "idle" }, onAction, onActionAfterDismiss, open: openProp, defaultOpen, onOpenChange, className, } = props;
+    const { trigger, label, density = menuRecipe.defaults.density, align = "start", disabled = false, asyncState = { status: "idle" }, onAction, onActionAfterDismiss, portalContainer, open: openProp, defaultOpen, onOpenChange, className, } = props;
+    const sections = props.sections;
+    const items = sections === undefined ? props.items : sections.flatMap((section) => section.items);
     if (label.trim().length === 0)
         throw new TypeError("Menu label must not be empty");
-    validateMenuItems(items, asyncState);
+    validateMenuItems(items, sections, asyncState);
     const selectionMode = props.selectionMode ?? "action";
     const [open, changeOpen] = useOpenState({
         ...(openProp === undefined ? {} : { open: openProp }),
@@ -564,10 +715,20 @@ export const Menu = forwardRef(function Menu(props, ref) {
     const itemRefs = useRef(new Map());
     const wrapperRef = useRef(null);
     const contentRef = useRef(null);
+    const [contentNode, setContentNode] = useState(null);
     const restoreFocusRef = useRef(false);
     const afterDismissIdRef = useRef(undefined);
     const typeaheadRef = useRef({ value: "", time: 0 });
     const id = `${useId().replaceAll(":", "")}-menu`;
+    const popupPosition = useAnchoredPopup(triggerRef, contentNode, { align, zIndex: 900 });
+    const setMenuContentRef = useCallback((node) => {
+        contentRef.current = node;
+        setContentNode(node);
+        if (typeof ref === "function")
+            ref(node);
+        else if (ref)
+            ref.current = node;
+    }, [ref]);
     useEffect(() => {
         if (!open) {
             if (restoreFocusRef.current) {
@@ -586,7 +747,7 @@ export const Menu = forwardRef(function Menu(props, ref) {
             item.focus();
         else
             contentRef.current?.focus();
-    }, [focusIndex, onActionAfterDismiss, open]);
+    }, [contentNode, focusIndex, onActionAfterDismiss, open]);
     const itemIsDisabled = (item) => disabled || asyncState.status === "loading" || Boolean(item.disabled);
     const firstEnabled = () => items.findIndex((item) => !itemIsDisabled(item));
     const lastEnabled = () => {
@@ -670,7 +831,8 @@ export const Menu = forwardRef(function Menu(props, ref) {
             return;
         const handlePointerDown = (event) => {
             if (event.target instanceof Node &&
-                !wrapperRef.current?.contains(event.target)) {
+                !wrapperRef.current?.contains(event.target) &&
+                !contentRef.current?.contains(event.target)) {
                 close("outside", false);
             }
         };
@@ -742,20 +904,46 @@ export const Menu = forwardRef(function Menu(props, ref) {
         }
     };
     const showItems = asyncState.status !== "empty" && asyncState.status !== "error";
-    return (_jsxs("span", { ref: wrapperRef, className: "hjm-menu", "data-state": open ? "open" : "closed", children: [renderedTrigger, open ? (_jsxs("div", { ref: composeRefs(contentRef, ref), id: id, role: "menu", "aria-label": label, className: classNames("hjm-menu__content", className), "data-density": density, "data-async-state": asyncState.status, "aria-busy": asyncState.status === "loading" || asyncState.status === "loadingMore" || undefined, tabIndex: -1, onKeyDown: handleMenuKeyDown, children: [asyncState.status !== "idle" ? (_jsx("div", { className: "hjm-menu__state-message", role: asyncState.status === "error" ? "alert" : "status", children: asyncState.message })) : null, showItems ? items.map((item, index) => {
-                        const selected = itemSelected(item.id);
-                        const itemDisabled = itemIsDisabled(item);
-                        const role = selectionMode === "single"
-                            ? "menuitemradio"
-                            : selectionMode === "multiple"
-                                ? "menuitemcheckbox"
-                                : "menuitem";
-                        return (_jsxs("button", { ref: (node) => {
-                                if (node)
-                                    itemRefs.current.set(index, node);
-                                else
-                                    itemRefs.current.delete(index);
-                            }, type: "button", role: role, "aria-checked": selectionMode === "action" ? undefined : selected, className: "hjm-menu__item", "data-tone": item.tone ?? menuRecipe.defaults.itemTone, "data-state": itemDisabled ? "disabled" : selected ? "selected" : "idle", "data-focus": index === focusIndex || undefined, disabled: itemDisabled, tabIndex: !itemDisabled && index === focusIndex ? 0 : -1, onClick: () => activateItem(item, index), children: [item.tone === "danger" ? (_jsx("span", { className: "hjm-menu__danger-indicator", "aria-hidden": "true", children: "!" })) : null, item.leading ? _jsx("span", { className: "hjm-menu__leading", "aria-hidden": "true", children: item.leading }) : null, _jsxs("span", { className: "hjm-menu__copy", children: [_jsx("span", { children: item.label }), item.description ? _jsx("span", { className: "hjm-menu__description", children: item.description }) : null] }), item.trailing ? _jsx("span", { className: "hjm-menu__trailing", children: item.trailing }) : null] }, item.id));
-                    }) : null] })) : null] }));
+    return (_jsxs("span", { ref: wrapperRef, className: "hjm-menu", "data-state": open ? "open" : "closed", children: [renderedTrigger, open ? (_jsx(AnchoredPortal, { anchorRef: triggerRef, ssrFallback: "inline", ...(portalContainer === undefined ? {} : { container: portalContainer }), children: _jsxs("div", { ref: setMenuContentRef, id: id, role: "menu", "aria-label": label, className: classNames("hjm-menu__content", className), "data-density": density, "data-async-state": asyncState.status, "data-placement": popupPosition.placement, "data-align": popupPosition.align, "aria-busy": asyncState.status === "loading" || asyncState.status === "loadingMore" || undefined, style: popupPosition.style, tabIndex: -1, onKeyDown: handleMenuKeyDown, children: [asyncState.status !== "idle" ? (_jsx("div", { className: "hjm-menu__state-message", role: asyncState.status === "error" ? "alert" : "status", children: asyncState.message })) : null, showItems ? (sections === undefined ? items.map((item, index) => {
+                            const selected = itemSelected(item.id);
+                            const itemDisabled = itemIsDisabled(item);
+                            const role = selectionMode === "single"
+                                ? "menuitemradio"
+                                : selectionMode === "multiple"
+                                    ? "menuitemcheckbox"
+                                    : "menuitem";
+                            return renderMenuItem(item, index, role, selected, itemDisabled);
+                        }) : sections.map((section, sectionIndex) => {
+                            const sectionLabelId = `${id}-section-${sectionIndex}`;
+                            const firstIndex = sections
+                                .slice(0, sectionIndex)
+                                .reduce((total, current) => total + current.items.length, 0);
+                            return (_jsxs("div", { className: "hjm-menu__section-boundary", children: [sectionIndex > 0 ? _jsx("div", { role: "separator", className: "hjm-menu__separator" }) : null, _jsxs("div", { role: "group", "aria-labelledby": section.label ? sectionLabelId : undefined, "aria-label": section.label ? undefined : section.accessibilityLabel, className: "hjm-menu__section", children: [section.label ? (_jsx("div", { id: sectionLabelId, className: "hjm-menu__section-label", children: section.label })) : null, section.items.map((item, itemIndex) => {
+                                                const index = firstIndex + itemIndex;
+                                                const selected = itemSelected(item.id);
+                                                const itemDisabled = itemIsDisabled(item);
+                                                const role = selectionMode === "single"
+                                                    ? "menuitemradio"
+                                                    : selectionMode === "multiple"
+                                                        ? "menuitemcheckbox"
+                                                        : "menuitem";
+                                                return renderMenuItem(item, index, role, selected, itemDisabled);
+                                            })] })] }, section.id));
+                        })) : null] }) })) : null] }));
+    function renderMenuItem(item, index, role, selected, itemDisabled) {
+        return (_jsxs("button", { ref: (node) => {
+                if (node) {
+                    itemRefs.current.set(index, node);
+                    if (open && !itemDisabled && index === focusIndex) {
+                        queueMicrotask(() => {
+                            if (node.isConnected && open)
+                                node.focus();
+                        });
+                    }
+                }
+                else
+                    itemRefs.current.delete(index);
+            }, type: "button", role: role, "aria-checked": selectionMode === "action" ? undefined : selected, className: "hjm-menu__item", "data-tone": item.tone ?? menuRecipe.defaults.itemTone, "data-state": itemDisabled ? "disabled" : selected ? "selected" : "idle", "data-focus": index === focusIndex || undefined, disabled: itemDisabled, tabIndex: !itemDisabled && index === focusIndex ? 0 : -1, onClick: () => activateItem(item, index), children: [item.tone === "danger" ? (_jsx("span", { className: "hjm-menu__danger-indicator", "aria-hidden": "true", children: "!" })) : null, item.leading ? _jsx("span", { className: "hjm-menu__leading", "aria-hidden": "true", children: item.leading }) : null, _jsxs("span", { className: "hjm-menu__copy", children: [_jsx("span", { children: item.label }), item.description ? _jsx("span", { className: "hjm-menu__description", children: item.description }) : null] }), item.trailing ? _jsx("span", { className: "hjm-menu__trailing", children: item.trailing }) : null] }, item.id));
+    }
 });
 //# sourceMappingURL=overlays.js.map
