@@ -72,7 +72,7 @@ jobs:
 
       - name: Install Chromium before release verification
         if: steps.release-candidate.outputs.should-tag == 'true'
-        run: pnpm exec playwright install --with-deps chromium
+        run: pnpm --filter @hjm/react exec playwright install --with-deps chromium
 
       - name: Verify the canonical release candidate
         if: steps.release-candidate.outputs.should-tag == 'true'
