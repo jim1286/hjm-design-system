@@ -57,13 +57,11 @@ pnpm showcase:web:build
 - generated version commit이 `main`의 HEAD에 도달하면 전체 검증 후 canonical `v<version>` Git
   tag를 idempotent하게 생성하므로 위 Git package path가 실제 release를 가리킵니다. tag 전에는
   Yajalal/BurnTok의 release-SHA Storybook inventory gate도 fail closed로 통과해야 합니다.
-  두 consumer가 private이므로 canonical에만 최소 권한 `HJM_CONSUMER_SYNC_TOKEN`을 두고 immutable
-  consumer SHA에 `repository_dispatch`합니다. consumer의 canonical read token은 필요 없으며,
+  두 consumer가 private이므로 canonical에만 최소 권한 `HJM_CONSUMER_SYNC_TOKEN`을 두고 릴리스
+  시작 시 각 default branch HEAD를 full SHA로 캡처해 `repository_dispatch`합니다. consumer의
+  canonical read token은 필요 없으며,
   권한과 evidence 경계는
   [`consumer-release-gate.md`](packages/design-contracts/docs/consumer-release-gate.md)를 따릅니다.
-- 기본 `GITHUB_TOKEN`으로 만든 version PR의 CI는 GitHub 정책상 write 권한 사용자의
-  승인이 필요합니다. 승인 없는 자동 실행이 필요하면 contents/pull-requests write 권한을
-  가진 fine-grained PAT 또는 GitHub App token을 `HJM_RELEASE_TOKEN` secret으로 설정합니다.
 - source of truth는 `packages/design-contracts/src/catalog.ts`입니다.
 - catalog projection은 `pnpm contracts:sync`로 갱신합니다.
 - renderer claim과 scenario debt projection은 전체 package build 뒤

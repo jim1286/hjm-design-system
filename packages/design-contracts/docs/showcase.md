@@ -83,9 +83,10 @@ CI에서 별도로 빌드·번들 검증하며, HJM 카탈로그의 story identi
   candidate gate에서는 payload full SHA의 generated manifest를 읽어 해당 surface의 active ID와
   exported CSF registration을 비교하고 missing/unknown/duplicate를 실패 처리
 - 제품 evidence artifact: 검증된 story ID와 실제 실행된 scenario만 schema v1 JSON으로 출력
-- canonical tag gate: 최소 권한 token으로 두 private 제품의 reviewed default-branch full SHA에
-  `repository_dispatch`하고, 같은 canonical release SHA·consumer SHA·correlation ID가 run과
-  artifact JSON 내부까지 exact-join된 두 검증이 모두 성공하기 전에는 tag를 생성하지 않음
+- canonical tag gate: 최소 권한 token으로 릴리스 시작 시 두 private 제품의 default-branch
+  HEAD를 full SHA로 캡처해 `repository_dispatch`하고, 같은 canonical release SHA·consumer
+  SHA·correlation ID가 run과 artifact JSON 내부까지 exact-join된 두 검증이 모두 성공하기
+  전에는 tag를 생성하지 않음
 
 `compareShowcaseStoryIds`와 `assertShowcaseStoryIds`는 모든 Stable/Beta 컴포넌트를 제공하는
 first-party/full-coverage Storybook의 inventory gate입니다. 부분 채택 소비 앱이나 개별 화면은

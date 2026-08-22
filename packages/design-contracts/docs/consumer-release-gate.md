@@ -13,17 +13,15 @@ fine-grained token으로 두 consumer에 `repository_dispatch`를 보내고 결�
    방식이든 package version을 바꾼 commit이 push의 최종 commit이어야 합니다.
 2. `version` job은 fixed package version commit을 식별하고 package, renderer, Storybook,
    committed artifact를 검증합니다.
-3. `scripts/check-consumer-release.mjs`는 두 consumer의 default branch HEAD가 코드에 고정된
-   reviewed full SHA와 같은지 확인합니다.
-   - BurnTok `main`: `58794d4bbd5597ab6d6101f8888307eea08f67ee`
-   - Yajalal `develop`: `67de581532ce6904aabdd94ada6fdac13706e809`
+3. `scripts/check-consumer-release.mjs`는 설정된 default branch 이름을 확인하고, 두 consumer의
+   현재 HEAD를 full SHA로 한 번 캡처한 뒤 그 SHA의 workflow invariant를 검사합니다.
 4. script는 `{ repository, release_sha, version, correlation_id, consumer_ref }` payload로 두
    `hjm-release-candidate` event를 보냅니다. consumer workflow는 자체 checkout을
    `consumer_ref`에, public canonical checkout을 `release_sha`에 고정하고 실제 HEAD를 다시
    비교합니다.
-5. canonical은 workflow 파일, event, evaluated run name, 생성 시각, consumer `head_sha`가 모두
-   일치하는 단 하나의 run만 추적합니다. 다른 commit의 run이나 과거 성공 run은 재사용하지
-   않습니다.
+5. canonical은 workflow 파일, event, evaluated run name, 생성 시각, 캡처한 consumer
+   `head_sha`가 모두 일치하는 단 하나의 run만 추적합니다. 캡처 뒤 default branch가 이동해
+   다른 SHA에서 실행된 run이나 과거 성공 run은 재사용하지 않고 즉시 실패합니다.
 6. 두 run이 모두 `success`여야 하며, 각 run에서 다음 고유 artifact가 정확히 하나 생성되어야
    합니다.
    - `hjm-consumer-evidence-burntok-<correlation-id>`
@@ -50,9 +48,6 @@ consumer repository에는 `HJM_CANONICAL_READ_TOKEN`이 필요하지 않습니�
 consumer의 기본 `GITHUB_TOKEN`으로 full SHA를 읽을 수 있고, consumer 자체 private checkout은
 각 consumer run의 기본 token으로 수행합니다. broad classic PAT를 복제하거나 소비 앱에 canonical
 token을 저장하지 않습니다.
-
-`HJM_RELEASE_TOKEN`은 기본 `GITHUB_TOKEN`으로 Changesets PR을 만들 수 없는 운영 정책에서만 쓰는
-별도 선택 사항이며 consumer evidence 신뢰 경계와는 무관합니다.
 
 ## 이 gate가 증명하는 것과 증명하지 않는 것
 

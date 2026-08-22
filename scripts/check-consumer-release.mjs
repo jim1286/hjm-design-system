@@ -3,6 +3,7 @@ import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { randomUUID } from "node:crypto";
+import { fileURLToPath } from "node:url";
 
 const API_VERSION = "2026-03-10";
 const DEFAULT_POLL_INTERVAL_MS = 10_000;
@@ -11,13 +12,13 @@ const ARTIFACT_POLL_INTERVAL_MS = 2_000;
 const ARTIFACT_TIMEOUT_MS = 45_000;
 const WORKFLOW_FILE = "hjm-release-candidate.yml";
 const EVENT_TYPE = "hjm-release-candidate";
+const WORKSPACE_ROOT = fileURLToPath(new URL("..", import.meta.url));
 
 export const consumerReleaseTargets = [
   {
     id: "burntok",
     repository: "jim1286/BurnTok",
     defaultBranch: "main",
-    consumerRef: "58794d4bbd5597ab6d6101f8888307eea08f67ee",
     artifactPrefix: "hjm-consumer-evidence-burntok-",
     evidenceSuffix: "hjm-evidence.json",
   },
@@ -25,7 +26,6 @@ export const consumerReleaseTargets = [
     id: "yajalal",
     repository: "jim1286/yajalal",
     defaultBranch: "develop",
-    consumerRef: "67de581532ce6904aabdd94ada6fdac13706e809",
     artifactPrefix: "hjm-consumer-evidence-yajalal-",
     evidenceSuffix: "native-storybook.json",
   },
@@ -57,6 +57,37 @@ function assertReleaseInputs({ repository, releaseSha, version }) {
   }
   if (!/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/.test(version ?? "")) {
     throw new Error("version must be an exact stable SemVer without a v prefix");
+  }
+}
+
+function assertLocalReleaseCommit(releaseSha) {
+  let resolvedCommit;
+  try {
+    resolvedCommit = execFileSync(
+      "git",
+      ["rev-parse", "--verify", `${releaseSha}^{commit}`],
+      {
+        cwd: WORKSPACE_ROOT,
+        encoding: "utf8",
+        stdio: ["ignore", "pipe", "pipe"],
+      },
+    ).trim();
+  } catch {
+    throw new Error(`release-sha ${releaseSha} does not resolve to a local Git commit`);
+  }
+
+  const headCommit = execFileSync("git", ["rev-parse", "--verify", "HEAD^{commit}"], {
+    cwd: WORKSPACE_ROOT,
+    encoding: "utf8",
+    stdio: ["ignore", "pipe", "pipe"],
+  }).trim();
+  if (resolvedCommit !== releaseSha.toLowerCase()) {
+    throw new Error(`release-sha ${releaseSha} did not resolve exactly to ${resolvedCommit}`);
+  }
+  if (headCommit !== resolvedCommit) {
+    throw new Error(
+      `release-sha ${releaseSha} does not match current local HEAD ${headCommit}`,
+    );
   }
 }
 
@@ -110,7 +141,7 @@ function encodedRepository(repository) {
   return repository.split("/").map(encodeURIComponent).join("/");
 }
 
-async function verifyConsumerRevision(client, target) {
+async function resolveConsumerTarget(client, target) {
   const repositoryPath = encodedRepository(target.repository);
   const metadata = await client.json(`/repos/${repositoryPath}`);
   if (metadata.default_branch !== target.defaultBranch) {
@@ -121,20 +152,21 @@ async function verifyConsumerRevision(client, target) {
   const commit = await client.json(
     `/repos/${repositoryPath}/commits/${encodeURIComponent(target.defaultBranch)}`,
   );
-  if (commit.sha !== target.consumerRef) {
-    throw new Error(
-      `${target.repository}@${target.defaultBranch} is ${commit.sha}, but the reviewed consumer gate is pinned to ${target.consumerRef}`,
-    );
+  const consumerRef = commit.sha;
+  if (!/^[0-9a-f]{40}$/.test(consumerRef ?? "")) {
+    throw new Error(`${target.repository}@${target.defaultBranch} did not resolve to a full Git SHA`);
   }
   const workflow = await client.json(
-    `/repos/${repositoryPath}/contents/.github/workflows/${WORKFLOW_FILE}?ref=${target.consumerRef}`,
+    `/repos/${repositoryPath}/contents/.github/workflows/${WORKFLOW_FILE}?ref=${consumerRef}`,
   );
   const source = Buffer.from(workflow.content ?? "", workflow.encoding ?? "base64").toString("utf8");
   for (const invariant of ["repository_dispatch", EVENT_TYPE, "consumer_ref", target.artifactPrefix]) {
     if (!source.includes(invariant)) {
-      throw new Error(`${target.repository} pinned workflow is missing required invariant ${invariant}`);
+      throw new Error(`${target.repository}@${consumerRef} workflow is missing required invariant ${invariant}`);
     }
   }
+  console.log(`Captured ${target.repository}@${target.defaultBranch} at ${consumerRef}.`);
+  return { ...target, consumerRef };
 }
 
 async function dispatchConsumer(client, target, release) {
@@ -152,7 +184,7 @@ async function dispatchConsumer(client, target, release) {
       },
     }),
   });
-  console.log(`Dispatched ${target.repository} at immutable consumer ${target.consumerRef}.`);
+  console.log(`Dispatched ${target.repository} at captured consumer ${target.consumerRef}.`);
   return dispatchedAt;
 }
 
@@ -380,7 +412,7 @@ async function verifyConsumerArtifact(client, target, run, release) {
   console.log(`${target.repository} evidence artifact ${expectedName} is bound to the release payload.`);
 }
 
-function selfTest() {
+async function selfTest() {
   const release = {
     repository: "jim1286/hjm-design-system",
     releaseSha: "a".repeat(40),
@@ -401,7 +433,34 @@ function selfTest() {
       { storyId: "contract/planned", requirements: [{ surface: "contract" }] },
     ],
   };
-  const burntok = consumerReleaseTargets[0];
+  const burntokConfig = consumerReleaseTargets[0];
+  const burntokRef = "b".repeat(40);
+  const burntokRepositoryPath = encodedRepository(burntokConfig.repository);
+  let revisionRequests = 0;
+  const burntok = await resolveConsumerTarget(
+    {
+      json: async (path) => {
+        if (path === `/repos/${burntokRepositoryPath}`) {
+          return { default_branch: burntokConfig.defaultBranch };
+        }
+        if (path === `/repos/${burntokRepositoryPath}/commits/${burntokConfig.defaultBranch}`) {
+          revisionRequests += 1;
+          return { sha: burntokRef };
+        }
+        if (path.endsWith(`${WORKFLOW_FILE}?ref=${burntokRef}`)) {
+          return {
+            content: Buffer.from(
+              ["repository_dispatch", EVENT_TYPE, "consumer_ref", burntokConfig.artifactPrefix].join("\n"),
+            ).toString("base64"),
+            encoding: "base64",
+          };
+        }
+        throw new Error(`Unexpected self-test API request ${path}`);
+      },
+    },
+    burntokConfig,
+  );
+  requireEqual(revisionRequests, 1, "Self-test consumer HEAD resolution count");
   const burntokEvidence = {
     schemaVersion: 1,
     designSystemVersion: release.version,
@@ -415,7 +474,7 @@ function selfTest() {
     },
   };
   validateEvidenceDocuments(burntok, { evidence: burntokEvidence, manifest }, release);
-  const yajalal = consumerReleaseTargets[1];
+  const yajalal = { ...consumerReleaseTargets[1], consumerRef: "c".repeat(40) };
   const dispatch = {
     repository: release.repository,
     release_sha: release.releaseSha,
@@ -453,6 +512,14 @@ function selfTest() {
     /BurnTok release SHA/,
   );
   expectRejected(
+    "a mismatched consumer revision",
+    {
+      ...burntokEvidence,
+      source: { ...burntokEvidence.source, revision: "d".repeat(40) },
+    },
+    /evidence consumer revision/,
+  );
+  expectRejected(
     "a missing inventory story",
     { ...burntokEvidence, inventory: { ...burntokEvidence.inventory, storyIds: ["foundation/text"] } },
     /missing: input\/checkbox/,
@@ -479,14 +546,35 @@ function selfTest() {
     },
     /duplicates: foundation\/text/,
   );
+  try {
+    await findCorrelatedRun(
+      {
+        json: async () => ({
+          workflow_runs: [{
+            event: "repository_dispatch",
+            display_title: `HJM ${release.version} · ${release.correlationId}`,
+            created_at: new Date().toISOString(),
+            head_sha: "d".repeat(40),
+            html_url: "https://example.invalid/wrong-head",
+          }],
+        }),
+      },
+      burntok,
+      release,
+      Date.now(),
+    );
+    throw new Error("Consumer release evidence self-test accepted a wrong-head run");
+  } catch (error) {
+    if (!/used consumer revision/.test(String(error))) throw error;
+  }
   console.log(
-    "Consumer release evidence self-test passed, including missing, unexpected, and duplicate inventory rejection.",
+    "Consumer release evidence self-test passed, including dynamic revision resolution, binding, wrong-head, and inventory rejection.",
   );
 }
 
 async function main() {
   if (process.argv.includes("--self-test")) {
-    selfTest();
+    await selfTest();
     return;
   }
 
@@ -497,6 +585,7 @@ async function main() {
     version: args.version,
   };
   assertReleaseInputs(release);
+  assertLocalReleaseCommit(release.releaseSha);
   const manifest = JSON.parse(
     await readFile(new URL("../packages/design-contracts/package.json", import.meta.url), "utf8"),
   );
@@ -519,12 +608,14 @@ async function main() {
     (process.env.HJM_GITHUB_API_URL || "https://api.github.com").replace(/\/$/, ""),
   );
 
-  await Promise.all(consumerReleaseTargets.map((target) => verifyConsumerRevision(client, target)));
+  const resolvedTargets = await Promise.all(
+    consumerReleaseTargets.map((target) => resolveConsumerTarget(client, target)),
+  );
   const dispatchTimes = await Promise.all(
-    consumerReleaseTargets.map((target) => dispatchConsumer(client, target, release)),
+    resolvedTargets.map((target) => dispatchConsumer(client, target, release)),
   );
   const runs = await Promise.all(
-    consumerReleaseTargets.map((target, index) =>
+    resolvedTargets.map((target, index) =>
       waitForConsumerRun(
         client,
         target,
@@ -536,7 +627,7 @@ async function main() {
     ),
   );
   await Promise.all(
-    consumerReleaseTargets.map((target, index) =>
+    resolvedTargets.map((target, index) =>
       verifyConsumerArtifact(client, target, runs[index], release),
     ),
   );

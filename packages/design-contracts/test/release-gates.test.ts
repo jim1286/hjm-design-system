@@ -1,4 +1,4 @@
-import { execFileSync } from "node:child_process";
+import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -122,7 +122,7 @@ describe("private consumer release evidence gate", () => {
       },
     );
     expect(output).toContain(
-      "including missing, unexpected, and duplicate inventory rejection",
+      "including dynamic revision resolution, binding, wrong-head, and inventory rejection",
     );
   });
 
@@ -130,6 +130,7 @@ describe("private consumer release evidence gate", () => {
     const manifest = JSON.parse(
       await readFile(join(workspaceRoot, "packages/design-contracts/package.json"), "utf8"),
     );
+    const headCommit = git(workspaceRoot, "rev-parse", "HEAD");
     expect(() =>
       execFileSync(
         process.execPath,
@@ -138,7 +139,7 @@ describe("private consumer release evidence gate", () => {
           "--repository",
           "jim1286/hjm-design-system",
           "--release-sha",
-          "a".repeat(40),
+          headCommit,
           "--version",
           manifest.version,
         ],
@@ -149,6 +150,38 @@ describe("private consumer release evidence gate", () => {
         },
       ),
     ).toThrow(/Command failed/);
+  });
+
+  it("rejects an invalid or non-HEAD release SHA before consumer API access", async () => {
+    const manifest = JSON.parse(
+      await readFile(join(workspaceRoot, "packages/design-contracts/package.json"), "utf8"),
+    );
+    const run = (releaseSha: string) =>
+      spawnSync(
+        process.execPath,
+        [
+          "scripts/check-consumer-release.mjs",
+          "--repository",
+          "jim1286/hjm-design-system",
+          "--release-sha",
+          releaseSha,
+          "--version",
+          manifest.version,
+        ],
+        {
+          cwd: workspaceRoot,
+          encoding: "utf8",
+          env: { ...process.env, HJM_CONSUMER_SYNC_TOKEN: "must-not-be-used" },
+        },
+      );
+
+    const invalidCommit = run("a".repeat(40));
+    expect(invalidCommit.status).toBe(1);
+    expect(invalidCommit.stderr).toContain("does not resolve to a local Git commit");
+
+    const nonHeadCommit = run(git(workspaceRoot, "rev-parse", "HEAD^"));
+    expect(nonHeadCommit.status).toBe(1);
+    expect(nonHeadCommit.stderr).toContain("does not match current local HEAD");
   });
 });
 

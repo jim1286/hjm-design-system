@@ -36,26 +36,34 @@ describe("GitHub Actions runtime contracts", () => {
     expect(workflow).toContain("pnpm release:check");
     expect(workflow).toContain("scripts/check-consumer-release.mjs");
     expect(workflow).toContain("HJM_CONSUMER_SYNC_TOKEN");
+    expect(workflow).not.toContain("workflow_dispatch");
+    expect(workflow).not.toContain("HJM_RELEASE_TOKEN");
+    expect(workflow).toContain("GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}");
     expect(workflow).not.toContain("HJM_CANONICAL_READ_TOKEN");
     expect(workflow).not.toContain("uses: jim1286/BurnTok/");
     expect(workflow).not.toContain("uses: jim1286/yajalal/");
     expect(checker).toContain('repository: "jim1286/BurnTok"');
     expect(checker).toContain('repository: "jim1286/yajalal"');
-    expect(checker).toContain(
-      'consumerRef: "58794d4bbd5597ab6d6101f8888307eea08f67ee"',
+    const targetConfiguration = checker.slice(
+      checker.indexOf("export const consumerReleaseTargets"),
+      checker.indexOf("function parseArguments"),
     );
-    expect(checker).toContain(
-      'consumerRef: "67de581532ce6904aabdd94ada6fdac13706e809"',
-    );
+    expect(targetConfiguration).not.toContain("consumerRef");
+    expect(checker).toContain("async function resolveConsumerTarget");
+    expect(checker).toContain("return { ...target, consumerRef }");
+    expect(checker).toContain("consumerReleaseTargets.map((target) => resolveConsumerTarget");
     expect(checker).toContain('artifactPrefix: "hjm-consumer-evidence-burntok-"');
     expect(checker).toContain('artifactPrefix: "hjm-consumer-evidence-yajalal-"');
     expect(checker).toContain('run.display_title === expectedTitle');
     expect(checker).toContain('run.head_sha === target.consumerRef');
     expect(checker).toContain('wrongRevision.head_sha');
+    expect(checker).toContain("evidence.source?.revision, target.consumerRef");
     expect(checker).toContain('const ARTIFACT_TIMEOUT_MS = 45_000');
     expect(checker).toContain('artifact.expired !== false');
     expect(checker).toContain('assertExactInventoryStoryIds');
     expect(checker).toContain("validateEvidenceDocuments");
+    expect(checker).toContain('"HEAD^{commit}"');
+    expect(checker).toContain("does not match current local HEAD");
     expect(workflow.indexOf("pnpm release:check")).toBeLessThan(
       workflow.indexOf("scripts/check-consumer-release.mjs"),
     );

@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch:
 
 permissions:
   contents: write
@@ -47,11 +46,11 @@ jobs:
           commit: "chore: version HJM packages"
           title: "chore: version HJM packages"
         env:
-          GITHUB_TOKEN: ${{ secrets.HJM_RELEASE_TOKEN || secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Detect a fixed-version release commit
         id: release-candidate
-        if: steps.changesets.outputs.hasChangesets == 'false' && github.event_name == 'push'
+        if: steps.changesets.outputs.hasChangesets == 'false'
         shell: bash
         run: |
           BEFORE="${{ github.event.before }}"
