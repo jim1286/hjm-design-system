@@ -82,6 +82,7 @@ const allowedPath = (path) =>
   path === "pnpm-lock.yaml" ||
   /^\.changeset\/(?!README\.md$)[^/]+\.md$/.test(path) ||
   publicPackagePaths.includes(path) ||
+  /^packages\/(?:design-contracts|react|react-native)\/CHANGELOG\.md$/.test(path) ||
   path === "packages/design-contracts/src/version.ts" ||
   path === "packages/react/src/evidence.ts" ||
   path === "packages/react-native/src/evidence.ts" ||
