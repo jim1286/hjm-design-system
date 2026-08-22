@@ -4,7 +4,7 @@ import { type TextVariant } from "@hjm/design-contracts/foundations";
 import { type SurfacePadding as ContractSurfacePadding, type SurfaceRadius as ContractSurfaceRadius, type SurfaceTone as ContractSurfaceTone } from "@hjm/design-contracts/recipes/base";
 import { type StackAlign, type StackAxis, type StackGap, type StackJustify, type TextEmphasis, type TextTone as ContractTextTone } from "@hjm/design-contracts/recipes";
 import { type ReactNode } from "react";
-import { type StyleProp, type TextProps as NativeTextProps, type TextStyle, type ViewProps, type ViewStyle } from "react-native";
+import { Text as NativeText, type StyleProp, type TextProps as NativeTextProps, type TextStyle, type ViewProps, type ViewStyle } from "react-native";
 export type { StackAlign, StackAxis, StackGap, StackJustify, TextEmphasis, } from "@hjm/design-contracts/recipes";
 export type TextTone = ContractTextTone;
 export type TextProps = Omit<NativeTextProps, "children"> & Readonly<{
@@ -14,7 +14,13 @@ export type TextProps = Omit<NativeTextProps, "children"> & Readonly<{
     emphasis?: TextEmphasis;
     align?: TextStyle["textAlign"];
 }>;
-export declare function Text({ children, variant, tone, emphasis, align, style, ...props }: TextProps): import("react").JSX.Element;
+export declare const Text: import("react").ForwardRefExoticComponent<Omit<NativeTextProps, "children"> & Readonly<{
+    children: ReactNode;
+    variant?: TextVariant;
+    tone?: TextTone;
+    emphasis?: TextEmphasis;
+    align?: TextStyle["textAlign"];
+}> & import("react").RefAttributes<NativeText>>;
 /** @deprecated Compatibility aliases; use `subtle` and `accent`. */
 export type LegacyNativeSurfaceTone = "sunken" | "brand";
 export type SurfaceTone = ContractSurfaceTone | LegacyNativeSurfaceTone;

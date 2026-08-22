@@ -113,6 +113,14 @@ describe("Native Slider", () => {
     }));
     expect(onValueChange).toHaveBeenLastCalledWith(76);
     expect(onValueChangeEnd).toHaveBeenLastCalledWith(76);
+    const header = renderer.root.findAllByType(View).find((view) => {
+      const style = flattenStyle(view.props.style);
+      return style.alignItems === "baseline" && style.justifyContent === "space-between";
+    });
+    expect(flattenStyle(header?.props.style)).toMatchObject({
+      direction: "rtl",
+      flexDirection: "row",
+    });
   });
 
   it("exposes localized atomic adjustable actions and product-owned value text", () => {

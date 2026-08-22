@@ -1,3 +1,4 @@
+import { createRef } from "react";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { ActivityIndicator, Pressable, Text as NativeText, View } from "react-native";
 import { describe, expect, it, vi } from "vitest";
@@ -15,11 +16,16 @@ import {
 
 (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
-function renderWithProvider(node: React.ReactNode): ReactTestRenderer {
+function renderWithProvider(
+  node: React.ReactNode,
+  direction: "ltr" | "rtl" = "ltr",
+): ReactTestRenderer {
   let renderer: ReactTestRenderer | undefined;
   act(() => {
     renderer = create(
-      <HjmNativeProvider reducedMotion theme="light">{node}</HjmNativeProvider>,
+      <HjmNativeProvider direction={direction} reducedMotion theme="light">
+        {node}
+      </HjmNativeProvider>,
     );
   });
   return renderer!;
@@ -31,6 +37,87 @@ function flattenStyle(style: unknown): Record<string, unknown> {
 }
 
 describe("Native core normalization", () => {
+  it("delegates inline RTL reversal to Yoga while preserving block and caller styles", () => {
+    const ltr = renderWithProvider(<Stack axis="inline" testID="ltr" />, "ltr");
+    const rtl = renderWithProvider(
+      <View style={{ direction: "ltr" }}>
+        <Stack axis="inline" testID="rtl" />
+        <Stack axis="block" testID="block" />
+        <Stack
+          axis="inline"
+          style={{ direction: "ltr", flexDirection: "row-reverse", gap: 99 }}
+          testID="caller-final"
+        />
+      </View>,
+      "rtl",
+    );
+    const styleFor = (renderer: ReactTestRenderer, testID: string) =>
+      flattenStyle(
+        renderer.root.findAllByType(View).find((node) => node.props.testID === testID)?.props.style,
+      );
+
+    expect(styleFor(ltr, "ltr")).toMatchObject({ direction: "ltr", flexDirection: "row" });
+    expect(styleFor(rtl, "rtl")).toMatchObject({ direction: "rtl", flexDirection: "row" });
+    expect(styleFor(rtl, "block")).toMatchObject({ direction: "rtl", flexDirection: "column" });
+    expect(styleFor(rtl, "caller-final")).toMatchObject({
+      direction: "ltr",
+      flexDirection: "row-reverse",
+      gap: 99,
+    });
+  });
+
+  it("forwards the Native Text instance and keeps product props and style final", () => {
+    const nativeTextInstance = { measure: vi.fn() } as unknown as NativeText;
+    const ref = createRef<NativeText>();
+    let renderer: ReactTestRenderer | undefined;
+    act(() => {
+      renderer = create(
+        <HjmNativeProvider direction="rtl" reducedMotion theme="light">
+          <Text
+            accessibilityLabel="상품명"
+            allowFontScaling={false}
+            maxFontSizeMultiplier={3}
+            ref={ref}
+            style={{
+              color: "#123456",
+              fontFamily: "Product Sans",
+              fontSize: 31,
+              textAlign: "center",
+            }}
+          >
+            상품명
+          </Text>
+        </HjmNativeProvider>,
+        {
+          createNodeMock: (element) =>
+            element.type === "Text" ? nativeTextInstance : {},
+        },
+      );
+    });
+
+    expect(ref.current).toBe(nativeTextInstance);
+    const text = renderer!.root.findByType(NativeText);
+    expect(text.props).toMatchObject({
+      accessibilityLabel: "상품명",
+      allowFontScaling: false,
+      maxFontSizeMultiplier: 3,
+    });
+    expect(flattenStyle(text.props.style)).toMatchObject({
+      color: "#123456",
+      fontFamily: "Product Sans",
+      fontSize: 31,
+      textAlign: "center",
+    });
+  });
+
+  it("keeps accessible Text scaling defaults", () => {
+    const renderer = renderWithProvider(<Text>기본 텍스트</Text>);
+    expect(renderer.root.findByType(NativeText).props).toMatchObject({
+      allowFontScaling: true,
+      maxFontSizeMultiplier: 2,
+    });
+  });
+
   it("uses canonical Text and Stack axes while retaining direction as an alias", () => {
     const renderer = renderWithProvider(
       <>

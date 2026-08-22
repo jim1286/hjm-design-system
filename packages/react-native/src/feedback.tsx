@@ -263,7 +263,8 @@ function ToastSurface({
       <View
         style={{
           alignItems: "flex-start",
-          flexDirection: theme.environment.direction === "rtl" ? "row-reverse" : "row",
+          direction: theme.environment.direction,
+          flexDirection: "row",
           gap: spacing.sm,
         }}
       >

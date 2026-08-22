@@ -70,7 +70,8 @@ function OverlayActions({ primaryAction, secondaryAction, busy, onActionComplete
                 onActionComplete();
             }, tone: action.tone ?? fallbackTone, children: action.label }) }));
     return (_jsxs(View, { style: {
-            flexDirection: environment.direction === "rtl" ? "row-reverse" : "row",
+            direction: environment.direction,
+            flexDirection: "row",
             gap: spacing.sm,
         }, children: [secondaryAction ? renderAction(secondaryAction, "secondary") : null, primaryAction ? renderAction(primaryAction, "primary") : null] }));
 }
@@ -98,7 +99,12 @@ export function Dialog({ open, defaultOpen, onOpenChange, title, description, ch
                             width: "100%",
                         },
                         contentStyle,
-                    ], children: [_jsxs(View, { style: { alignItems: "flex-start", flexDirection: "row", gap: spacing.sm }, children: [_jsxs(View, { style: { flex: 1, gap: spacing.xs }, children: [_jsx(Text, { accessibilityRole: "header", tone: "primary", variant: "title", children: title }), description ? _jsx(Text, { tone: "muted", children: description }) : null] }), dismissible ? (_jsx(IconButton, { disabled: busy, label: closeLabel, onPress: () => requestClose("close-action"), children: _jsx(Text, { accessible: false, variant: "title", children: "\u00D7" }) })) : null] }), children, _jsx(OverlayActions, { busy: busy, onActionComplete: () => requestClose("close-action"), ...(primaryAction === undefined ? {} : { primaryAction }), ...(secondaryAction === undefined ? {} : { secondaryAction }) })] })] }) }));
+                    ], children: [_jsxs(View, { style: {
+                                alignItems: "flex-start",
+                                direction: environment.direction,
+                                flexDirection: "row",
+                                gap: spacing.sm,
+                            }, children: [_jsxs(View, { style: { flex: 1, gap: spacing.xs }, children: [_jsx(Text, { accessibilityRole: "header", tone: "primary", variant: "title", children: title }), description ? _jsx(Text, { tone: "muted", children: description }) : null] }), dismissible ? (_jsx(IconButton, { disabled: busy, label: closeLabel, onPress: () => requestClose("close-action"), children: _jsx(Text, { accessible: false, variant: "title", children: "\u00D7" }) })) : null] }), children, _jsx(OverlayActions, { busy: busy, onActionComplete: () => requestClose("close-action"), ...(primaryAction === undefined ? {} : { primaryAction }), ...(secondaryAction === undefined ? {} : { secondaryAction }) })] })] }) }));
 }
 /** Contract session owns duplicate confirms, busy dismissal, error and settlement. */
 export function AlertDialog({ open, defaultOpen, onOpenChange, request, returnFocusRef, onResult, contentStyle, onShow, ...modalProps }) {
@@ -204,7 +210,8 @@ export function AlertDialog({ open, defaultOpen, onOpenChange, request, returnFo
                         },
                         contentStyle,
                     ], children: [_jsxs(View, { style: { gap: spacing.xs }, children: [_jsx(Text, { accessibilityRole: "header", tone: "primary", variant: "title", children: request.title }), _jsx(Text, { tone: "muted", children: request.description }), error ? (_jsx(Text, { accessibilityLiveRegion: "assertive", accessibilityRole: "alert", style: { color: colors.danger }, children: error })) : null] }), _jsxs(View, { style: {
-                                flexDirection: environment.direction === "rtl" ? "row-reverse" : "row",
+                                direction: environment.direction,
+                                flexDirection: "row",
                                 gap: spacing.sm,
                             }, children: [request.mode === "confirm" ? (_jsx(Pressable, { ref: cancelRef, accessibilityLabel: request.cancelLabel, accessibilityRole: "button", accessibilityState: { disabled: busy }, disabled: busy, onPress: () => cancel("cancel-action"), style: ({ pressed }) => [
                                         minimumTargetStyle,
@@ -327,6 +334,11 @@ export function Sheet({ open, defaultOpen, onOpenChange, title, description, chi
                             width: side ? "88%" : "100%",
                         },
                         contentStyle,
-                    ], children: [_jsxs(View, { style: { alignItems: "flex-start", flexDirection: "row", gap: spacing.sm }, children: [_jsxs(View, { style: { flex: 1, gap: spacing.xs }, children: [_jsx(Text, { accessibilityRole: "header", tone: "primary", variant: "title", children: title }), description ? _jsx(Text, { tone: "muted", children: description }) : null] }), policy.dismissible ? (_jsx(IconButton, { disabled: busy && !policy.dismissWhileBusy, label: closeLabel, onPress: () => requestClose("close-action"), children: _jsx(Text, { accessible: false, variant: "title", children: "\u00D7" }) })) : null] }), children, footer] })] }) }));
+                    ], children: [_jsxs(View, { style: {
+                                alignItems: "flex-start",
+                                direction: environment.direction,
+                                flexDirection: "row",
+                                gap: spacing.sm,
+                            }, children: [_jsxs(View, { style: { flex: 1, gap: spacing.xs }, children: [_jsx(Text, { accessibilityRole: "header", tone: "primary", variant: "title", children: title }), description ? _jsx(Text, { tone: "muted", children: description }) : null] }), policy.dismissible ? (_jsx(IconButton, { disabled: busy && !policy.dismissWhileBusy, label: closeLabel, onPress: () => requestClose("close-action"), children: _jsx(Text, { accessible: false, variant: "title", children: "\u00D7" }) })) : null] }), children, footer] })] }) }));
 }
 //# sourceMappingURL=overlays.js.map

@@ -182,10 +182,13 @@ describe("Native NumberField", () => {
       fontSize: 14,
       fontVariant: ["tabular-nums"],
     });
-    const mirroredFrame = renderer.root.findAllByType(View).find(
-      (view) => flattenStyle(view.props.style).flexDirection === "row-reverse",
+    const logicalFrame = renderer.root.findAllByType(View).find(
+      (view) => {
+        const style = flattenStyle(view.props.style);
+        return style.direction === "rtl" && style.flexDirection === "row";
+      },
     );
-    expect(mirroredFrame).toBeDefined();
+    expect(logicalFrame).toBeDefined();
 
     act(() => input.props.onAccessibilityAction({ nativeEvent: { actionName: "increment" } }));
     expect(onValueChange).toHaveBeenLastCalledWith(3);

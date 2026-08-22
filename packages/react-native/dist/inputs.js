@@ -26,6 +26,7 @@ const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultV
                     borderColor: error ? colors.danger : colors.border,
                     borderRadius: radius.md,
                     borderWidth: error ? 2 : 1,
+                    direction: environment.direction,
                     flexDirection: "row",
                     minHeight: multiline ? 112 : 44,
                     paddingHorizontal: spacing.sm,
@@ -73,7 +74,7 @@ export const SearchField = forwardRef(function SearchField({ clearLabel, busyLab
                 }, children: _jsx(Text, { align: "center", tone: "muted", variant: "title", children: "\u00D7" }) })) : null] }));
 });
 export function Checkbox({ label, checked, defaultChecked = false, onCheckedChange, disabled = false, accessibilityHint, style, }) {
-    const { colors } = useHjmNativeTheme();
+    const { colors, environment } = useHjmNativeTheme();
     const [selected, setSelected] = useControllableState({
         ...(checked === undefined ? {} : { value: checked }),
         defaultValue: defaultChecked,
@@ -83,6 +84,7 @@ export function Checkbox({ label, checked, defaultChecked = false, onCheckedChan
             minimumTargetStyle,
             {
                 alignItems: "center",
+                direction: environment.direction,
                 flexDirection: "row",
                 gap: spacing.sm,
                 opacity: disabled ? 0.5 : pressed ? 0.86 : 1,
@@ -100,7 +102,7 @@ export function Checkbox({ label, checked, defaultChecked = false, onCheckedChan
                 }, children: selected ? _jsx(Text, { align: "center", tone: "inverse", variant: "label", children: "\u2713" }) : null }), _jsx(Text, { tone: "body", variant: "bodyLarge", children: label })] }));
 }
 export function RadioGroup({ label, options, value, defaultValue, onValueChange, required = false, disabled = false, readOnly = false, invalid = false, description, error, requiredLabel, readOnlyLabel, style, }) {
-    const { colors } = useHjmNativeTheme();
+    const { colors, environment } = useHjmNativeTheme();
     const selectionItems = options.map((option) => ({
         id: option.value,
         label: option.label,
@@ -148,6 +150,7 @@ export function RadioGroup({ label, options, value, defaultValue, onValueChange,
                         minimumTargetStyle,
                         {
                             alignItems: "center",
+                            direction: environment.direction,
                             flexDirection: "row",
                             gap: spacing.sm,
                             opacity: optionDisabled ? 0.5 : pressed ? 0.86 : 1,
@@ -164,7 +167,7 @@ export function RadioGroup({ label, options, value, defaultValue, onValueChange,
             }), error ? (_jsx(Text, { nativeID: messageId, accessibilityLiveRegion: "assertive", accessibilityRole: "alert", tone: "danger", variant: "caption", children: error })) : description ? (_jsx(Text, { nativeID: messageId, tone: "muted", variant: "caption", children: description })) : null] }));
 }
 export function Switch({ label, value, defaultValue = false, onValueChange, disabled = false, accessibilityHint, style, ...props }) {
-    const { colors } = useHjmNativeTheme();
+    const { colors, environment } = useHjmNativeTheme();
     const [enabled, setEnabled] = useControllableState({
         ...(value === undefined ? {} : { value }),
         defaultValue,
@@ -174,6 +177,7 @@ export function Switch({ label, value, defaultValue = false, onValueChange, disa
             minimumTargetStyle,
             {
                 alignItems: "center",
+                direction: environment.direction,
                 flexDirection: "row",
                 gap: spacing.sm,
                 opacity: disabled ? 0.5 : pressed ? 0.86 : 1,
@@ -182,7 +186,7 @@ export function Switch({ label, value, defaultValue = false, onValueChange, disa
         ], children: [_jsx(Text, { style: { flex: 1 }, tone: "body", variant: "bodyLarge", children: label }), _jsx(NativeSwitch, { ...props, accessible: false, disabled: disabled, ios_backgroundColor: colors.surfaceAlt, pointerEvents: "none", thumbColor: colors.bg, trackColor: { false: colors.surfaceAlt, true: colors.primary }, value: enabled })] }));
 }
 export function SegmentedControl({ label, options, value, defaultValue, onValueChange, disabled = false, style, }) {
-    const { colors } = useHjmNativeTheme();
+    const { colors, environment } = useHjmNativeTheme();
     const descriptors = options.map((option) => ({
         id: option.value,
         label: option.label,
@@ -216,6 +220,7 @@ export function SegmentedControl({ label, options, value, defaultValue, onValueC
             {
                 backgroundColor: colors.surface,
                 borderRadius: radius.md,
+                direction: environment.direction,
                 flexDirection: "row",
                 gap: spacing.xxs,
                 padding: spacing.xxs,
@@ -258,7 +263,8 @@ export function Chip({ label, size = "small", disabled = false, leading, trailin
                 borderColor: active ? colors.primary : colors.border,
                 borderRadius: radius.full,
                 borderWidth: 1,
-                flexDirection: environment.direction === "rtl" ? "row-reverse" : "row",
+                direction: environment.direction,
+                flexDirection: "row",
                 gap: size === "small" ? spacing.xxs : spacing.xs,
                 height: control.chipHeight[size],
                 opacity: disabled ? 0.5 : pressed ? 0.86 : 1,

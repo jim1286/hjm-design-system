@@ -70,7 +70,7 @@ export function Button({
   onLongPress,
   ...props
 }: ButtonProps) {
-  const { colors } = useHjmNativeTheme();
+  const { colors, environment } = useHjmNativeTheme();
   const inactive = disabled || loading;
   const content = children ?? label;
   if (content === undefined || content === null || content === false) {
@@ -100,6 +100,7 @@ export function Button({
           borderColor: resolveColor(toneContract.border),
           borderRadius: radius.md,
           borderWidth: 1,
+          direction: environment.direction,
           flexDirection: "row",
           gap: spacing.xs,
           height: sizeContract.height,
@@ -274,7 +275,7 @@ export function Link({
   style,
   ...props
 }: LinkProps) {
-  const { colors } = useHjmNativeTheme();
+  const { colors, environment } = useHjmNativeTheme();
   const resolved = resolveLinkDescriptor(descriptor);
   return (
     <Pressable
@@ -288,6 +289,7 @@ export function Link({
         {
           alignItems: "center",
           alignSelf: "flex-start",
+          direction: environment.direction,
           flexDirection: "row",
           gap: spacing.xs,
           opacity: pressed ? 0.72 : 1,
@@ -382,11 +384,8 @@ export function BottomCTA({
       {description ? <Text tone="muted" variant="caption">{description}</Text> : null}
       <View
         style={{
-          flexDirection: stackActions
-            ? "column-reverse"
-            : environment.direction === "rtl"
-              ? "row-reverse"
-              : "row",
+          direction: environment.direction,
+          flexDirection: stackActions ? "column-reverse" : "row",
           gap: spacing.sm,
         }}
       >

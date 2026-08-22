@@ -8,7 +8,7 @@ import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
 import { minimumTargetStyle } from "./internal/styles.js";
 export function Button({ label, children, tone = buttonRecipe.defaults.tone, size = buttonRecipe.defaults.size, disabled = false, loading = false, leading, trailing, style, accessibilityLabel, onPress, onLongPress, ...props }) {
-    const { colors } = useHjmNativeTheme();
+    const { colors, environment } = useHjmNativeTheme();
     const inactive = disabled || loading;
     const content = children ?? label;
     if (content === undefined || content === null || content === false) {
@@ -25,6 +25,7 @@ export function Button({ label, children, tone = buttonRecipe.defaults.tone, siz
                 borderColor: resolveColor(toneContract.border),
                 borderRadius: radius.md,
                 borderWidth: 1,
+                direction: environment.direction,
                 flexDirection: "row",
                 gap: spacing.xs,
                 height: sizeContract.height,
@@ -84,13 +85,14 @@ export function IconButton({ label, accessibilityLabel, children, icon, tone = i
             }, children: resolvedIcon })) }));
 }
 export function Link({ descriptor, onNavigate, leading, trailing, accessibilityHint, style, ...props }) {
-    const { colors } = useHjmNativeTheme();
+    const { colors, environment } = useHjmNativeTheme();
     const resolved = resolveLinkDescriptor(descriptor);
     return (_jsxs(Pressable, { ...props, accessibilityHint: accessibilityHint, accessibilityLabel: resolved.resolvedAccessibilityLabel, accessibilityRole: "link", onPress: () => void onNavigate(resolved.destination), style: ({ pressed }) => [
             minimumTargetStyle,
             {
                 alignItems: "center",
                 alignSelf: "flex-start",
+                direction: environment.direction,
                 flexDirection: "row",
                 gap: spacing.xs,
                 opacity: pressed ? 0.72 : 1,
@@ -126,11 +128,8 @@ export function BottomCTA({ primaryAction, secondaryAction, description, accessi
             },
             style,
         ], children: [description ? _jsx(Text, { tone: "muted", variant: "caption", children: description }) : null, _jsxs(View, { style: {
-                    flexDirection: stackActions
-                        ? "column-reverse"
-                        : environment.direction === "rtl"
-                            ? "row-reverse"
-                            : "row",
+                    direction: environment.direction,
+                    flexDirection: stackActions ? "column-reverse" : "row",
                     gap: spacing.sm,
                 }, children: [secondaryAction ? (_jsx(View, { style: { flex: stackActions ? undefined : 1 }, children: _jsx(BottomCTAButton, { action: secondaryAction, fallbackTone: "secondary" }) })) : null, _jsx(View, { style: { flex: stackActions ? undefined : 1 }, children: _jsx(BottomCTAButton, { action: primaryAction, fallbackTone: "primary" }) })] })] }));
 }

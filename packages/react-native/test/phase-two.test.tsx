@@ -29,11 +29,14 @@ import {
 
 (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
-function renderWithProvider(node: React.ReactNode): ReactTestRenderer {
+function renderWithProvider(
+  node: React.ReactNode,
+  direction: "ltr" | "rtl" = "ltr",
+): ReactTestRenderer {
   let renderer: ReactTestRenderer | undefined;
   act(() => {
     renderer = create(
-      <HjmNativeProvider reducedMotion theme="light">
+      <HjmNativeProvider direction={direction} reducedMotion theme="light">
         {node}
       </HjmNativeProvider>,
       { createNodeMock: () => ({}) },
@@ -67,10 +70,16 @@ describe("@hjm/react-native extended mobile renderer", () => {
         }}
         onNavigate={onNavigate}
       />,
+      "rtl",
     );
     const link = byA11y(renderer, "설정");
     expect(link.props.accessibilityRole).toBe("link");
-    expect(flattenStyle(link.props.style({ pressed: false }))).toMatchObject({ minHeight: 44, minWidth: 44 });
+    expect(flattenStyle(link.props.style({ pressed: false }))).toMatchObject({
+      direction: "rtl",
+      flexDirection: "row",
+      minHeight: 44,
+      minWidth: 44,
+    });
     act(() => link.props.onPress());
     expect(onNavigate).toHaveBeenCalledWith({ kind: "internal", href: "/settings" });
   });
@@ -120,10 +129,15 @@ describe("@hjm/react-native extended mobile renderer", () => {
           { value: "en", label: "English" },
         ]}
       />,
+      "rtl",
     );
     const trigger = byA11y(renderer, "언어");
     expect(trigger.props.accessibilityRole).toBe("combobox");
     expect(trigger.props.accessibilityValue).toEqual({ text: "한국어" });
+    expect(flattenStyle(trigger.props.style({ pressed: false }))).toMatchObject({
+      direction: "rtl",
+      flexDirection: "row",
+    });
     act(() => trigger.props.onPress());
     expect(renderer.root.findByType(Modal).props).toMatchObject({ visible: true, animationType: "none" });
     act(() => renderer.root.findByType(Modal).props.onShow());
@@ -157,8 +171,13 @@ describe("@hjm/react-native extended mobile renderer", () => {
           triggerLabel="더보기"
         />
       </>,
+      "rtl",
     );
-    expect(renderer.root.find((node) => node.props.accessibilityRole === "tablist")).toBeTruthy();
+    const tabList = renderer.root.find((node) => node.props.accessibilityRole === "tablist");
+    expect(flattenStyle(tabList.props.style)).toMatchObject({
+      direction: "rtl",
+      flexDirection: "row",
+    });
     const profile = byA11y(renderer, "프로필");
     act(() => profile.props.onPress());
     expect(onActivate).toHaveBeenCalledWith({ key: "profile", reason: "navigate" });
@@ -168,7 +187,12 @@ describe("@hjm/react-native extended mobile renderer", () => {
     expect(renderer.root.find((node) => node.props.accessibilityRole === "menu")).toBeTruthy();
     const item = byA11y(renderer, "수정");
     expect(item.props.accessibilityRole).toBe("menuitem");
-    expect(flattenStyle(item.props.style({ pressed: false }))).toMatchObject({ minHeight: 44, minWidth: 44 });
+    expect(flattenStyle(item.props.style({ pressed: false }))).toMatchObject({
+      direction: "rtl",
+      flexDirection: "row",
+      minHeight: 44,
+      minWidth: 44,
+    });
     act(() => item.props.onPress());
     expect(renderer.root.findAllByType(Modal).at(-1)!.props.visible).toBe(false);
   });
@@ -193,6 +217,7 @@ describe("@hjm/react-native extended mobile renderer", () => {
           source={{ uri: "https://example.com/mountain.png" }}
         />
       </>,
+      "rtl",
     );
     expect(renderer.root.find(
       (node) => node.props.accessibilityLabel === "김민 프로필" && node.props.accessibilityRole === "image",
@@ -200,9 +225,17 @@ describe("@hjm/react-native extended mobile renderer", () => {
     expect(renderer.root.findAll((node) => node.type === View && node.props.accessible === false).length).toBeGreaterThan(0);
     const accordion = byA11y(renderer, "배송");
     expect(accordion.props.accessibilityState.expanded).toBe(false);
+    expect(flattenStyle(accordion.props.style({ pressed: false }))).toMatchObject({
+      direction: "rtl",
+      flexDirection: "row",
+    });
     act(() => accordion.props.onPress());
     expect(byA11y(renderer, "배송").props.accessibilityState.expanded).toBe(true);
     expect(flattenStyle(byA11y(renderer, "국가, 대한민국").props.style).width).toBe(394);
+    expect(flattenStyle(byA11y(renderer, "계정 정보").props.style)).toMatchObject({
+      direction: "rtl",
+      flexDirection: "row",
+    });
     expect(renderer.root.find(
       (node) => node.props.accessibilityLabel === "산 이미지" && node.props.accessibilityRole === "image",
     )).toBeTruthy();

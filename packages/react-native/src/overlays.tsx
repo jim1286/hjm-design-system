@@ -162,7 +162,8 @@ function OverlayActions({
   return (
     <View
       style={{
-        flexDirection: environment.direction === "rtl" ? "row-reverse" : "row",
+        direction: environment.direction,
+        flexDirection: "row",
         gap: spacing.sm,
       }}
     >
@@ -258,7 +259,14 @@ export function Dialog({
             contentStyle,
           ]}
         >
-          <View style={{ alignItems: "flex-start", flexDirection: "row", gap: spacing.sm }}>
+          <View
+            style={{
+              alignItems: "flex-start",
+              direction: environment.direction,
+              flexDirection: "row",
+              gap: spacing.sm,
+            }}
+          >
             <View style={{ flex: 1, gap: spacing.xs }}>
               <Text accessibilityRole="header" tone="primary" variant="title">{title}</Text>
               {description ? <Text tone="muted">{description}</Text> : null}
@@ -453,7 +461,8 @@ export function AlertDialog({
           </View>
           <View
             style={{
-              flexDirection: environment.direction === "rtl" ? "row-reverse" : "row",
+              direction: environment.direction,
+              flexDirection: "row",
               gap: spacing.sm,
             }}
           >
@@ -679,7 +688,14 @@ export function Sheet({
             contentStyle,
           ]}
         >
-          <View style={{ alignItems: "flex-start", flexDirection: "row", gap: spacing.sm }}>
+          <View
+            style={{
+              alignItems: "flex-start",
+              direction: environment.direction,
+              flexDirection: "row",
+              gap: spacing.sm,
+            }}
+          >
             <View style={{ flex: 1, gap: spacing.xs }}>
               <Text accessibilityRole="header" tone="primary" variant="title">{title}</Text>
               {description ? <Text tone="muted">{description}</Text> : null}

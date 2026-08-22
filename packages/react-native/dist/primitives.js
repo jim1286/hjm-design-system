@@ -5,11 +5,11 @@ import { withAlpha } from "@hjm/design-contracts/colors";
 import { glyph, spacing, typography, } from "@hjm/design-contracts/foundations";
 import { surfaceDefaults, surfaceGeometry, surfaceRecipe, } from "@hjm/design-contracts/recipes/base";
 import { stackRecipe, textRecipe, } from "@hjm/design-contracts/recipes";
-import { Children, isValidElement, useEffect, useMemo } from "react";
+import { Children, forwardRef, isValidElement, useEffect, useMemo, } from "react";
 import { Text as NativeText, View, useWindowDimensions, } from "react-native";
 import { useHjmNativeTheme } from "./provider.js";
 import { logicalTextAlign, scalableTextDefaults } from "./internal/styles.js";
-export function Text({ children, variant = textRecipe.defaults.variant, tone = textRecipe.defaults.tone, emphasis = textRecipe.defaults.emphasis, align, style, ...props }) {
+export const Text = forwardRef(function Text({ children, variant = textRecipe.defaults.variant, tone = textRecipe.defaults.tone, emphasis = textRecipe.defaults.emphasis, align, style, ...props }, ref) {
     const { colors, environment } = useHjmNativeTheme();
     const toneColors = {
         primary: colors.text,
@@ -22,7 +22,7 @@ export function Text({ children, variant = textRecipe.defaults.variant, tone = t
         inverse: colors.onPrimary,
     };
     const typeStyle = typography[variant];
-    return (_jsx(NativeText, { ...scalableTextDefaults, ...props, style: [
+    return (_jsx(NativeText, { ...scalableTextDefaults, ...props, ref: ref, style: [
             typeStyle,
             {
                 color: toneColors[tone],
@@ -31,7 +31,7 @@ export function Text({ children, variant = textRecipe.defaults.variant, tone = t
             },
             style,
         ], children: children }));
-}
+});
 function normalizeSurfaceTone(tone) {
     if (tone === "sunken")
         return "subtle";
@@ -92,13 +92,11 @@ const justifyValues = {
 export function Stack({ axis, direction, gap = stackRecipe.defaults.gap, align = stackRecipe.defaults.align, justify = stackRecipe.defaults.justify, wrap = stackRecipe.defaults.wrap, style, ...props }) {
     const { environment } = useHjmNativeTheme();
     const resolvedAxis = axis ?? (direction === "row" ? "inline" : "block");
-    const contractDirection = stackRecipe.axes[resolvedAxis];
-    const flexDirection = contractDirection === "row" && environment.direction === "rtl"
-        ? "row-reverse"
-        : contractDirection;
+    const flexDirection = stackRecipe.axes[resolvedAxis];
     return (_jsx(View, { ...props, style: [
             {
                 alignItems: alignValues[align],
+                direction: environment.direction,
                 flexDirection,
                 flexWrap: wrap ? "wrap" : "nowrap",
                 gap: typeof gap === "number" ? gap : stackRecipe.gaps[gap],
@@ -109,6 +107,7 @@ export function Stack({ axis, direction, gap = stackRecipe.defaults.gap, align =
 }
 export function Grid({ children, descriptor, columns, gap, minColumnWidth, availableWidth, onLayoutResolved, itemStyle, style, ...props }) {
     const { width: windowWidth } = useWindowDimensions();
+    const { environment } = useHjmNativeTheme();
     const innerWidth = availableWidth ?? windowWidth;
     const resolvedDescriptor = useMemo(() => descriptor ?? {
         columns: columns,
@@ -127,6 +126,7 @@ export function Grid({ children, descriptor, columns, gap, minColumnWidth, avail
     ]);
     return (_jsx(View, { ...props, style: [
             {
+                direction: environment.direction,
                 flexDirection: "row",
                 flexWrap: "wrap",
                 columnGap: layout.columnGap,
@@ -180,11 +180,8 @@ export function Section({ title, description, action, children, contentStyle, st
     const stackHeader = environment.textScale >= 1.6;
     return (_jsxs(View, { ...props, style: [{ gap: spacing.xs }, style], children: [_jsxs(View, { style: {
                     alignItems: stackHeader ? "stretch" : "center",
-                    flexDirection: stackHeader
-                        ? "column"
-                        : environment.direction === "rtl"
-                            ? "row-reverse"
-                            : "row",
+                    direction: environment.direction,
+                    flexDirection: stackHeader ? "column" : "row",
                     gap: spacing.sm,
                 }, children: [_jsxs(View, { style: { flex: 1, gap: spacing.xxs }, children: [_jsx(Text, { accessibilityRole: "header", tone: "primary", variant: "title", children: title }), description ? _jsx(Text, { tone: "muted", variant: "caption", children: description }) : null] }), action ? _jsx(View, { children: action }) : null] }), _jsx(View, { style: contentStyle, children: children })] }));
 }

@@ -90,17 +90,15 @@ export function Tabs(props) {
     const hasPanels = children !== undefined || options.some((option) => option.panel !== undefined);
     return (_jsxs(View, { accessibilityLabel: label, style: [
             {
-                flexDirection: orientation === "vertical"
-                    ? direction === "rtl" ? "row-reverse" : "row"
-                    : "column",
+                direction,
+                flexDirection: orientation === "vertical" ? "row" : "column",
                 gap: spacing.md,
             },
             style,
         ], children: [_jsx(View, { accessibilityLabel: label, accessibilityRole: "tablist", style: [
                     {
-                        flexDirection: orientation === "vertical"
-                            ? "column"
-                            : direction === "rtl" ? "row-reverse" : "row",
+                        direction,
+                        flexDirection: orientation === "vertical" ? "column" : "row",
                     },
                     tabListStyle,
                 ], children: options.map((option) => {
@@ -139,6 +137,7 @@ export function Tabs(props) {
                                 borderBottomWidth: orientation === "horizontal" ? 2 : 0,
                                 borderStartColor: orientation === "vertical" && active ? colors.primary : "transparent",
                                 borderStartWidth: orientation === "vertical" ? 2 : 0,
+                                direction,
                                 flex: orientation === "horizontal" ? 1 : undefined,
                                 flexDirection: "row",
                                 gap: spacing.xs,
@@ -182,7 +181,8 @@ export function BottomNavigation({ descriptor, onActivate, renderIcon, configura
                 borderColor: colors.border,
                 borderRadius: presentation.presentation === "floating" ? radius.lg : 0,
                 borderTopWidth: 1,
-                flexDirection: presentation.direction === "rtl" ? "row-reverse" : "row",
+                direction: presentation.direction,
+                flexDirection: "row",
                 gap: presentation.distribution === "center-gap" ? spacing.md : 0,
                 marginHorizontal: presentation.presentation === "floating" ? spacing.md : 0,
                 paddingBottom: safeAreaBottom,
@@ -207,7 +207,12 @@ export function BottomNavigation({ descriptor, onActivate, renderIcon, configura
                         paddingHorizontal: spacing.xxs,
                         paddingVertical: spacing.xs,
                     },
-                ], children: [_jsx(View, { accessible: false, children: renderIcon({ name: item.icon.name, selected: active }) }), _jsxs(View, { accessible: false, style: { alignItems: "center", flexDirection: "row", gap: spacing.xxs }, children: [_jsx(Text, { align: "center", tone: active ? "brand" : "muted", variant: "caption", children: item.label }), item.badge ? (_jsx(View, { style: { backgroundColor: colors.dangerFill, borderRadius: radius.full, paddingHorizontal: spacing.xxs }, children: _jsx(Text, { align: "center", tone: "inverse", variant: "caption", children: item.badge.visibleLabel }) })) : null] })] }, item.id));
+                ], children: [_jsx(View, { accessible: false, children: renderIcon({ name: item.icon.name, selected: active }) }), _jsxs(View, { accessible: false, style: {
+                            alignItems: "center",
+                            direction: presentation.direction,
+                            flexDirection: "row",
+                            gap: spacing.xxs,
+                        }, children: [_jsx(Text, { align: "center", tone: active ? "brand" : "muted", variant: "caption", children: item.label }), item.badge ? (_jsx(View, { style: { backgroundColor: colors.dangerFill, borderRadius: radius.full, paddingHorizontal: spacing.xxs }, children: _jsx(Text, { align: "center", tone: "inverse", variant: "caption", children: item.badge.visibleLabel }) })) : null] })] }, item.id));
         }) }));
 }
 /** Native screen top bar with logical action slots and large-text reflow. */
@@ -217,12 +222,11 @@ export function TopBar({ title, leading, trailing, centered = true, accessibilit
     }
     const { colors, environment } = useHjmNativeTheme();
     const largeText = environment.textScale >= 1.6;
-    const logicalLeading = environment.direction === "rtl" ? trailing : leading;
-    const logicalTrailing = environment.direction === "rtl" ? leading : trailing;
     return (_jsx(View, { accessibilityLabel: accessibilityLabel, accessibilityRole: "toolbar", style: [
             {
                 alignItems: largeText ? "stretch" : "center",
                 backgroundColor: colors.bg,
+                direction: environment.direction,
                 flexDirection: largeText ? "column" : "row",
                 gap: spacing.xs,
                 minHeight: 52 + safeAreaTop,
@@ -230,7 +234,11 @@ export function TopBar({ title, leading, trailing, centered = true, accessibilit
                 paddingTop: safeAreaTop,
             },
             style,
-        ], children: largeText ? (_jsxs(_Fragment, { children: [_jsxs(View, { style: { flexDirection: environment.direction === "rtl" ? "row-reverse" : "row", justifyContent: "space-between" }, children: [_jsx(View, { style: { minWidth: 44 }, children: leading }), _jsx(View, { style: { minWidth: 44 }, children: trailing })] }), _jsx(Text, { accessibilityRole: "header", tone: "primary", variant: "bodyLarge", children: title })] })) : (_jsxs(_Fragment, { children: [_jsx(View, { style: { alignItems: "flex-start", flex: 1, minWidth: 44 }, children: logicalLeading }), _jsx(Text, { accessibilityRole: "header", align: centered ? "center" : undefined, numberOfLines: 1, style: { flex: 2 }, tone: "primary", variant: "bodyLarge", children: title }), _jsx(View, { style: { alignItems: "flex-end", flex: 1, minWidth: 44 }, children: logicalTrailing })] })) }));
+        ], children: largeText ? (_jsxs(_Fragment, { children: [_jsxs(View, { style: {
+                        direction: environment.direction,
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                    }, children: [_jsx(View, { style: { minWidth: 44 }, children: leading }), _jsx(View, { style: { minWidth: 44 }, children: trailing })] }), _jsx(Text, { accessibilityRole: "header", tone: "primary", variant: "bodyLarge", children: title })] })) : (_jsxs(_Fragment, { children: [_jsx(View, { style: { alignItems: "flex-start", flex: 1, minWidth: 44 }, children: leading }), _jsx(Text, { accessibilityRole: "header", align: centered ? "center" : undefined, numberOfLines: 1, style: { flex: 2 }, tone: "primary", variant: "bodyLarge", children: title }), _jsx(View, { style: { alignItems: "flex-end", flex: 1, minWidth: 44 }, children: trailing })] })) }));
 }
 /** A compact Modal-backed action menu suitable for touch and screen readers. */
 export function Menu({ triggerLabel, title = triggerLabel, items, onSelect, open, defaultOpen = false, onOpenChange, disabled = false, dismissLabel, trigger, style, ...modalProps }) {
@@ -306,7 +314,8 @@ export function Menu({ triggerLabel, title = triggerLabel, items, onSelect, open
                                             {
                                                 alignItems: "center",
                                                 borderRadius: radius.md,
-                                                flexDirection: environment.direction === "rtl" ? "row-reverse" : "row",
+                                                direction: environment.direction,
+                                                flexDirection: "row",
                                                 gap: spacing.sm,
                                                 opacity: item.disabled ? 0.5 : pressed ? 0.86 : 1,
                                                 paddingHorizontal: spacing.sm,

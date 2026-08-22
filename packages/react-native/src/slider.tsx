@@ -213,7 +213,8 @@ export const Slider = forwardRef<View, SliderProps>(function Slider(
         importantForAccessibility="no-hide-descendants"
         style={{
           alignItems: "baseline",
-          flexDirection: environment.direction === "rtl" ? "row-reverse" : "row",
+          direction: environment.direction,
+          flexDirection: "row",
           justifyContent: "space-between",
         }}
       >

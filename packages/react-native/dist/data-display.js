@@ -59,6 +59,7 @@ export function Tag({ children, label, tone, accessibilityLabel, style, }) {
                 borderColor: presentation.border ?? "transparent",
                 borderRadius: radius[tagRecipe.radius],
                 borderWidth: tagRecipe.borderWidth,
+                direction: theme.environment.direction,
                 flexDirection: "row",
                 gap: tagRecipe.size.gap,
                 minHeight: tagRecipe.size.minHeight,
@@ -68,8 +69,10 @@ export function Tag({ children, label, tone, accessibilityLabel, style, }) {
         ], children: _jsx(Text, { align: "center", emphasis: "medium", style: { color: presentation.content }, variant: tagRecipe.size.textVariant, children: descriptor.label }) }));
 }
 export function Card({ children, title, description, media, actions, selected = cardRecipe.defaults.selected, tone = cardRecipe.defaults.tone, bordered = cardRecipe.defaults.bordered, padding = cardRecipe.defaults.padding, style, ...props }) {
+    const { environment } = useHjmNativeTheme();
     const bodyPadding = typeof padding === "number" ? padding : surfaceGeometry.paddings[padding];
     return (_jsxs(Surface, { ...props, bordered: bordered, padding: "none", style: [{ overflow: "hidden" }, style], tone: selected ? cardRecipe.selectedTone : tone, children: [media === undefined ? null : _jsx(View, { children: media }), _jsxs(View, { style: { gap: cardRecipe.body.gap, padding: bodyPadding }, children: [title === undefined ? null : (_jsx(Text, { accessibilityRole: "header", emphasis: "strong", tone: "primary", variant: "title", children: title })), description === undefined ? null : (_jsx(Text, { emphasis: "regular", tone: "muted", variant: "body", children: description })), _jsx(View, { children: children })] }), actions === undefined ? null : (_jsx(View, { style: {
+                    direction: environment.direction,
                     flexDirection: "row",
                     flexWrap: "wrap",
                     gap: cardRecipe.actions.gap,
@@ -78,7 +81,7 @@ export function Card({ children, title, description, media, actions, selected = 
                 }, children: actions }))] }));
 }
 export function ListRow({ title, description, leading, trailing, onPress, accessibilityLabel, accessibilityHint, disabled = false, style, ...props }) {
-    const { colors } = useHjmNativeTheme();
+    const { colors, environment } = useHjmNativeTheme();
     const interactive = onPress !== undefined;
     return (_jsxs(Pressable, { ...props, accessibilityHint: accessibilityHint, accessibilityLabel: interactive ? accessibilityLabel ?? [title, description].filter(Boolean).join(", ") : undefined, accessibilityRole: interactive ? "button" : undefined, accessibilityState: interactive ? { disabled } : undefined, disabled: !interactive || disabled, onPress: onPress, style: ({ pressed }) => [
             minimumTargetStyle,
@@ -86,6 +89,7 @@ export function ListRow({ title, description, leading, trailing, onPress, access
                 alignItems: "center",
                 borderBottomColor: colors.border,
                 borderBottomWidth: 1,
+                direction: environment.direction,
                 flexDirection: "row",
                 gap: spacing.sm,
                 minHeight: description ? layout.rowHeight.twoLine : layout.rowHeight.singleLine,
@@ -170,7 +174,8 @@ export function Accordion({ label, items, expandedValues, defaultExpandedValues 
                             minimumTargetStyle,
                             {
                                 alignItems: "center",
-                                flexDirection: environment.direction === "rtl" ? "row-reverse" : "row",
+                                direction: environment.direction,
+                                flexDirection: "row",
                                 gap: spacing.sm,
                                 opacity: item.disabled ? 0.5 : pressed ? 0.86 : 1,
                                 paddingVertical: spacing.sm,
@@ -190,7 +195,8 @@ export function DescriptionList({ label, descriptor, availableWidth, style, item
     const itemWidth = (innerWidth - spacing.sm * (columns - 1)) / columns;
     return (_jsx(View, { accessibilityLabel: label, accessibilityRole: "list", style: [
             {
-                flexDirection: environment.direction === "rtl" ? "row-reverse" : "row",
+                direction: environment.direction,
+                flexDirection: "row",
                 flexWrap: "wrap",
                 gap: spacing.sm,
             },
@@ -283,7 +289,12 @@ export function Statistic({ descriptor, density = "comfortable", presentation = 
                 padding: compact ? spacing.sm : spacing.md,
             },
             style,
-        ], children: [_jsx(Text, { accessible: false, tone: "muted", variant: compact ? "caption" : "label", children: resolved.label }), _jsxs(View, { accessible: false, style: { alignItems: "baseline", flexDirection: theme.environment.direction === "rtl" ? "row-reverse" : "row", gap: spacing.xxs }, children: [resolved.prefix ? _jsx(Text, { tone: "muted", children: resolved.prefix }) : null, _jsx(Text, { tone: "primary", variant: compact ? "title" : "heading", children: resolved.value }), resolved.suffix ? _jsx(Text, { tone: "muted", children: resolved.suffix }) : null] }), resolved.trend ? (_jsxs(Text, { accessible: false, style: { color: statisticTrendColor(resolved.trend.tone, theme) }, variant: "caption", children: [trendMark, " ", resolved.trend.label] })) : null, resolved.hint ? _jsx(Text, { accessible: false, tone: "muted", variant: "caption", children: resolved.hint }) : null] }));
+        ], children: [_jsx(Text, { accessible: false, tone: "muted", variant: compact ? "caption" : "label", children: resolved.label }), _jsxs(View, { accessible: false, style: {
+                    alignItems: "baseline",
+                    direction: theme.environment.direction,
+                    flexDirection: "row",
+                    gap: spacing.xxs,
+                }, children: [resolved.prefix ? _jsx(Text, { tone: "muted", children: resolved.prefix }) : null, _jsx(Text, { tone: "primary", variant: compact ? "title" : "heading", children: resolved.value }), resolved.suffix ? _jsx(Text, { tone: "muted", children: resolved.suffix }) : null] }), resolved.trend ? (_jsxs(Text, { accessible: false, style: { color: statisticTrendColor(resolved.trend.tone, theme) }, variant: "caption", children: [trendMark, " ", resolved.trend.label] })) : null, resolved.hint ? _jsx(Text, { accessible: false, tone: "muted", variant: "caption", children: resolved.hint }) : null] }));
 }
 export function StatisticGroup({ label, descriptor, availableWidth, density, presentation, style, }) {
     validateStatisticGroup(descriptor);
@@ -302,7 +313,8 @@ export function StatisticGroup({ label, descriptor, availableWidth, density, pre
     const itemWidth = (innerWidth - spacing.xs * (columns - 1)) / columns;
     return (_jsx(View, { accessibilityLabel: label, accessibilityRole: "list", style: [
             {
-                flexDirection: environment.direction === "rtl" ? "row-reverse" : "row",
+                direction: environment.direction,
+                flexDirection: "row",
                 flexWrap: "wrap",
                 gap: spacing.xs,
             },

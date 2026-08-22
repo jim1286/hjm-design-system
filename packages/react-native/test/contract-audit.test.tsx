@@ -38,18 +38,31 @@ import {
 
 (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
-function tree(node: ReactNode, textScale: 1 | 1.6 = 1) {
+function tree(
+  node: ReactNode,
+  textScale: 1 | 1.6 = 1,
+  direction: "ltr" | "rtl" = "ltr",
+) {
   return (
-    <HjmNativeProvider reducedMotion textScale={textScale} theme="light">
+    <HjmNativeProvider
+      direction={direction}
+      reducedMotion
+      textScale={textScale}
+      theme="light"
+    >
       {node}
     </HjmNativeProvider>
   );
 }
 
-function render(node: ReactNode, textScale: 1 | 1.6 = 1): ReactTestRenderer {
+function render(
+  node: ReactNode,
+  textScale: 1 | 1.6 = 1,
+  direction: "ltr" | "rtl" = "ltr",
+): ReactTestRenderer {
   let renderer: ReactTestRenderer | undefined;
   act(() => {
-    renderer = create(tree(node, textScale), { createNodeMock: () => ({}) });
+    renderer = create(tree(node, textScale, direction), { createNodeMock: () => ({}) });
   });
   return renderer!;
 }
@@ -100,7 +113,15 @@ describe("selection contract alignment", () => {
       .toMatchObject({ display: "flex" });
     const tabList = renderer.root.findAllByType(View)
       .find((node) => node.props.accessibilityRole === "tablist")!;
-    expect(flattenStyle(tabList.props.style)).toMatchObject({ flexDirection: "column" });
+    expect(flattenStyle(tabList.props.style)).toMatchObject({
+      direction: "rtl",
+      flexDirection: "column",
+    });
+    const tabsLayout = renderer.root.findAllByType(View).find((node) => {
+      const style = flattenStyle(node.props.style);
+      return node.props.accessibilityLabel === "계정" && style.flexDirection === "row";
+    });
+    expect(flattenStyle(tabsLayout?.props.style).direction).toBe("rtl");
   });
 
   it("rejects duplicate or invalid Tabs selection and reconciles removed uncontrolled values", () => {
@@ -255,10 +276,14 @@ describe("Native input and navigation intent", () => {
 
   it("makes the Switch row the only press and accessibility target", () => {
     const onValueChange = vi.fn();
-    const renderer = render(<Switch label="알림" onValueChange={onValueChange} />);
+    const renderer = render(<Switch label="알림" onValueChange={onValueChange} />, 1, "rtl");
     const switches = renderer.root.findAllByType(Pressable)
       .filter((node) => node.props.accessibilityRole === "switch");
     expect(switches).toHaveLength(1);
+    expect(flattenStyle(switches[0]!.props.style({ pressed: false }))).toMatchObject({
+      direction: "rtl",
+      flexDirection: "row",
+    });
     const visual = renderer.root.findByType(NativeSwitch);
     expect(visual.props).toMatchObject({ accessible: false, pointerEvents: "none" });
     expect(visual.props.onValueChange).toBeUndefined();
@@ -302,6 +327,29 @@ describe("Native input and navigation intent", () => {
       />,
     )).toThrow(/at most 5/u);
   });
+
+  it("keeps TopBar logical slots in source order and lets Yoga place them in RTL", () => {
+    const renderer = render(
+      <TopBar
+        leading={<View testID="leading" />}
+        title="설정"
+        trailing={<View testID="trailing" />}
+      />,
+      1,
+      "rtl",
+    );
+    const toolbar = renderer.root.find(
+      (node) => node.props.accessibilityRole === "toolbar",
+    );
+    expect(flattenStyle(toolbar.props.style)).toMatchObject({
+      direction: "rtl",
+      flexDirection: "row",
+    });
+    const slotOrder = toolbar
+      .findAll((node) => node.props.testID === "leading" || node.props.testID === "trailing")
+      .map((node) => node.props.testID);
+    expect(slotOrder.indexOf("leading")).toBeLessThan(slotOrder.indexOf("trailing"));
+  });
 });
 
 describe("identity and new first-party slices", () => {
@@ -343,29 +391,65 @@ describe("identity and new first-party slices", () => {
           descriptor={{ name: "back", decorative: false, accessibilityLabel: "뒤로" }}
           renderGlyph={({ name }) => <Text>{name}</Text>}
         />
-        <Section title="개요"><Text>내용</Text></Section>
+        <Section action={<Text>더 보기</Text>} title="개요"><Text>내용</Text></Section>
         <BottomCTA primaryAction={{ label: "계속", onPress: vi.fn() }} safeAreaBottom={12} />
         <Chip label="필터" onPress={vi.fn()} />
-        <TopBar title="설정" />
+        <TopBar leading={<Text>이전</Text>} title="설정" trailing={<Text>완료</Text>} />
         <CounterBadge accessibilityLabel="알림 100개 이상" count={128} max={99} />
         <List label="항목"><ListRow title="첫 행" /></List>
         <Statistic descriptor={{ id: "orders", label: "주문", value: "12", trend: { direction: "up", tone: "success", label: "전주 대비 2 증가" } }} />
       </>,
       1.6,
+      "rtl",
     );
     expect(byLabel(renderer, "뒤로").props.accessibilityRole).toBe("image");
     expect(renderer.root.findAllByType(View)
       .filter((node) => node.props.accessibilityRole === "toolbar").length).toBeGreaterThanOrEqual(2);
     expect(byLabel(renderer, "필터").props.accessibilityRole).toBe("button");
+    expect(flattenStyle(byLabel(renderer, "필터").props.style({ pressed: false })))
+      .toMatchObject({ direction: "rtl", flexDirection: "row" });
     expect(byLabel(renderer, "알림 100개 이상").children).toBeTruthy();
     expect(renderer.root.find((node) => node.props.accessibilityRole === "list")).toBeTruthy();
     expect(byLabel(renderer, "주문, 12, 전주 대비 2 증가").props.accessible).toBe(true);
     expect(flattenStyle(byLabel(renderer, "계속").props.style({ pressed: false })))
       .toMatchObject({ minHeight: 44, minWidth: 44 });
+    const layoutStyles = renderer.root.findAllByType(View)
+      .map((node) => flattenStyle(node.props.style));
+    expect(layoutStyles).toEqual(expect.arrayContaining([
+      expect.objectContaining({ direction: "rtl", flexDirection: "column" }),
+      expect.objectContaining({ direction: "rtl", flexDirection: "column-reverse" }),
+    ]));
+    expect(layoutStyles.some((style) => style.flexDirection === "row-reverse")).toBe(false);
   });
 });
 
 describe("modal lifecycle contracts", () => {
+  it("passes RTL overlay action groups to Yoga as canonical rows", () => {
+    const renderer = render(
+      <AlertDialog
+        defaultOpen
+        request={{
+          mode: "confirm",
+          tone: "danger",
+          title: "삭제",
+          description: "되돌릴 수 없습니다.",
+          confirmLabel: "삭제하기",
+          cancelLabel: "취소",
+          fallbackErrorMessage: "삭제하지 못했습니다.",
+          onConfirm: vi.fn(),
+        }}
+      />,
+      1,
+      "rtl",
+    );
+    const styles = renderer.root.findAllByType(View)
+      .map((node) => flattenStyle(node.props.style));
+    expect(styles).toEqual(expect.arrayContaining([
+      expect.objectContaining({ direction: "rtl", flexDirection: "row" }),
+    ]));
+    expect(styles.some((style) => style.flexDirection === "row-reverse")).toBe(false);
+  });
+
   it("runs AlertDialog confirm once, blocks busy dismiss, announces failure, and settles after onDismiss", async () => {
     let rejectConfirm!: (reason: unknown) => void;
     const onConfirm = vi.fn(() => new Promise<void>((_resolve, reject) => { rejectConfirm = reject; }));
@@ -518,6 +602,8 @@ describe("Toast store adapter", () => {
       <ToastRegion maxQueued={1} maxVisible={1}>
         <Publisher expose={(next) => { controller = next; }} />
       </ToastRegion>,
+      1,
+      "rtl",
     );
     act(() => {
       controller!.show({ id: "visible", description: "첫째", durationMs: null, closeLabel: "첫째 닫기" });
@@ -528,6 +614,11 @@ describe("Toast store adapter", () => {
     expect(overflowDismiss).toHaveBeenCalledWith("queue-overflow");
     act(() => { controller!.dismiss("visible", "close-action"); });
     expect(byLabel(renderer, "셋째").props.accessibilityLiveRegion).toBe("polite");
+    const toastRow = renderer.root.findAllByType(View).find((node) => {
+      const style = flattenStyle(node.props.style);
+      return style.direction === "rtl" && style.flexDirection === "row";
+    });
+    expect(toastRow).toBeDefined();
     act(() => { controller!.pause("next"); });
     act(() => { vi.advanceTimersByTime(5_000); });
     expect(timeoutDismiss).not.toHaveBeenCalled();

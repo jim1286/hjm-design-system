@@ -76,7 +76,8 @@ function ToastSurface({ snapshot, onDismiss, onAction, onPause, onResume, style,
             style,
         ], children: [_jsx(Text, { accessibilityLabel: resolved.announcement, accessibilityLiveRegion: resolved.priority === "high" ? "assertive" : "polite", accessibilityRole: resolved.priority === "high" ? "alert" : undefined, accessible: true, style: { height: 1, opacity: 0, position: "absolute", width: 1 }, children: resolved.announcement }), _jsxs(View, { style: {
                     alignItems: "flex-start",
-                    flexDirection: theme.environment.direction === "rtl" ? "row-reverse" : "row",
+                    direction: theme.environment.direction,
+                    flexDirection: "row",
                     gap: spacing.sm,
                 }, children: [_jsxs(View, { style: { flex: 1, gap: spacing.xxs }, children: [resolved.title ? _jsx(Text, { style: { color: foreground }, variant: "label", children: resolved.title }) : null, _jsx(Text, { tone: "body", children: resolved.description })] }), _jsx(IconButton, { label: resolved.closeLabel, onBlur: resumeFocus, onFocus: pauseFocus, onPress: () => onDismiss("close-action"), children: _jsx(Text, { accessible: false, tone: "muted", variant: "title", children: "\u00D7" }) })] }), resolved.action ? (_jsx(View, { style: { alignSelf: "flex-start" }, children: _jsx(Button, { accessibilityLabel: resolved.action.accessibilityLabel, onBlur: resumeFocus, onFocus: pauseFocus, onPress: onAction, tone: "ghost", children: resolved.action.label }) })) : null] }));
 }

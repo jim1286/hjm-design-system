@@ -33,7 +33,14 @@ import {
   type TextEmphasis,
   type TextTone as ContractTextTone,
 } from "@hjm/design-contracts/recipes";
-import { Children, isValidElement, useEffect, useMemo, type ReactNode } from "react";
+import {
+  Children,
+  forwardRef,
+  isValidElement,
+  useEffect,
+  useMemo,
+  type ReactNode,
+} from "react";
 import {
   Text as NativeText,
   View,
@@ -67,15 +74,18 @@ export type TextProps = Omit<NativeTextProps, "children"> &
     align?: TextStyle["textAlign"];
   }>;
 
-export function Text({
-  children,
-  variant = textRecipe.defaults.variant,
-  tone = textRecipe.defaults.tone,
-  emphasis = textRecipe.defaults.emphasis,
-  align,
-  style,
-  ...props
-}: TextProps) {
+export const Text = forwardRef<NativeText, TextProps>(function Text(
+  {
+    children,
+    variant = textRecipe.defaults.variant,
+    tone = textRecipe.defaults.tone,
+    emphasis = textRecipe.defaults.emphasis,
+    align,
+    style,
+    ...props
+  },
+  ref,
+) {
   const { colors, environment } = useHjmNativeTheme();
   const toneColors: Readonly<Record<TextTone, string>> = {
     primary: colors.text,
@@ -92,6 +102,7 @@ export function Text({
     <NativeText
       {...scalableTextDefaults}
       {...props}
+      ref={ref}
       style={[
         typeStyle,
         {
@@ -105,7 +116,7 @@ export function Text({
       {children}
     </NativeText>
   );
-}
+});
 
 /** @deprecated Compatibility aliases; use `subtle` and `accent`. */
 export type LegacyNativeSurfaceTone = "sunken" | "brand";
@@ -217,17 +228,14 @@ export function Stack({
 }: StackProps) {
   const { environment } = useHjmNativeTheme();
   const resolvedAxis = axis ?? (direction === "row" ? "inline" : "block");
-  const contractDirection = stackRecipe.axes[resolvedAxis];
-  const flexDirection =
-    contractDirection === "row" && environment.direction === "rtl"
-      ? "row-reverse"
-      : contractDirection;
+  const flexDirection = stackRecipe.axes[resolvedAxis];
   return (
     <View
       {...props}
       style={[
         {
           alignItems: alignValues[align],
+          direction: environment.direction,
           flexDirection,
           flexWrap: wrap ? "wrap" : "nowrap",
           gap: typeof gap === "number" ? gap : stackRecipe.gaps[gap],
@@ -276,6 +284,7 @@ export function Grid({
   ...props
 }: GridProps) {
   const { width: windowWidth } = useWindowDimensions();
+  const { environment } = useHjmNativeTheme();
   const innerWidth = availableWidth ?? windowWidth;
   const resolvedDescriptor = useMemo<GridDescriptor>(
     () =>
@@ -309,6 +318,7 @@ export function Grid({
       {...props}
       style={[
         {
+          direction: environment.direction,
           flexDirection: "row",
           flexWrap: "wrap",
           columnGap: layout.columnGap,
@@ -423,11 +433,8 @@ export function Section({
       <View
         style={{
           alignItems: stackHeader ? "stretch" : "center",
-          flexDirection: stackHeader
-            ? "column"
-            : environment.direction === "rtl"
-              ? "row-reverse"
-              : "row",
+          direction: environment.direction,
+          flexDirection: stackHeader ? "column" : "row",
           gap: spacing.sm,
         }}
       >

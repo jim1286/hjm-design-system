@@ -114,6 +114,7 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(function FieldRe
           borderColor: error ? colors.danger : colors.border,
           borderRadius: radius.md,
           borderWidth: error ? 2 : 1,
+          direction: environment.direction,
           flexDirection: "row",
           minHeight: multiline ? 112 : 44,
           paddingHorizontal: spacing.sm,
@@ -265,7 +266,7 @@ export function Checkbox({
   accessibilityHint,
   style,
 }: CheckboxProps) {
-  const { colors } = useHjmNativeTheme();
+  const { colors, environment } = useHjmNativeTheme();
   const [selected, setSelected] = useControllableState({
     ...(checked === undefined ? {} : { value: checked }),
     defaultValue: defaultChecked,
@@ -284,6 +285,7 @@ export function Checkbox({
         minimumTargetStyle,
         {
           alignItems: "center",
+          direction: environment.direction,
           flexDirection: "row",
           gap: spacing.sm,
           opacity: disabled ? 0.5 : pressed ? 0.86 : 1,
@@ -353,7 +355,7 @@ export function RadioGroup<Value extends string = string>({
   readOnlyLabel,
   style,
 }: RadioGroupProps<Value>) {
-  const { colors } = useHjmNativeTheme();
+  const { colors, environment } = useHjmNativeTheme();
   const selectionItems = options.map((option) => ({
     id: option.value,
     label: option.label,
@@ -424,6 +426,7 @@ export function RadioGroup<Value extends string = string>({
               minimumTargetStyle,
               {
                 alignItems: "center",
+                direction: environment.direction,
                 flexDirection: "row",
                 gap: spacing.sm,
                 opacity: optionDisabled ? 0.5 : pressed ? 0.86 : 1,
@@ -490,7 +493,7 @@ export function Switch({
   style,
   ...props
 }: SwitchProps) {
-  const { colors } = useHjmNativeTheme();
+  const { colors, environment } = useHjmNativeTheme();
   const [enabled, setEnabled] = useControllableState({
     ...(value === undefined ? {} : { value }),
     defaultValue,
@@ -508,6 +511,7 @@ export function Switch({
         minimumTargetStyle,
         {
           alignItems: "center",
+          direction: environment.direction,
           flexDirection: "row",
           gap: spacing.sm,
           opacity: disabled ? 0.5 : pressed ? 0.86 : 1,
@@ -555,7 +559,7 @@ export function SegmentedControl<Value extends string = string>({
   disabled = false,
   style,
 }: SegmentedControlProps<Value>) {
-  const { colors } = useHjmNativeTheme();
+  const { colors, environment } = useHjmNativeTheme();
   const descriptors = options.map((option) => ({
       id: option.value,
       label: option.label,
@@ -591,6 +595,7 @@ export function SegmentedControl<Value extends string = string>({
         {
           backgroundColor: colors.surface,
           borderRadius: radius.md,
+          direction: environment.direction,
           flexDirection: "row",
           gap: spacing.xxs,
           padding: spacing.xxs,
@@ -701,7 +706,8 @@ export function Chip({
           borderColor: active ? colors.primary : colors.border,
           borderRadius: radius.full,
           borderWidth: 1,
-          flexDirection: environment.direction === "rtl" ? "row-reverse" : "row",
+          direction: environment.direction,
+          flexDirection: "row",
           gap: size === "small" ? spacing.xxs : spacing.xs,
           height: control.chipHeight[size],
           opacity: disabled ? 0.5 : pressed ? 0.86 : 1,

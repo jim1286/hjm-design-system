@@ -139,6 +139,7 @@ export function Tag({
           borderColor: presentation.border ?? "transparent",
           borderRadius: radius[tagRecipe.radius],
           borderWidth: tagRecipe.borderWidth,
+          direction: theme.environment.direction,
           flexDirection: "row",
           gap: tagRecipe.size.gap,
           minHeight: tagRecipe.size.minHeight,
@@ -183,6 +184,7 @@ export function Card({
   style,
   ...props
 }: CardProps) {
+  const { environment } = useHjmNativeTheme();
   const bodyPadding =
     typeof padding === "number" ? padding : surfaceGeometry.paddings[padding];
   return (
@@ -210,6 +212,7 @@ export function Card({
       {actions === undefined ? null : (
         <View
           style={{
+            direction: environment.direction,
             flexDirection: "row",
             flexWrap: "wrap",
             gap: cardRecipe.actions.gap,
@@ -252,7 +255,7 @@ export function ListRow({
   style,
   ...props
 }: ListRowProps) {
-  const { colors } = useHjmNativeTheme();
+  const { colors, environment } = useHjmNativeTheme();
   const interactive = onPress !== undefined;
   return (
     <Pressable
@@ -271,6 +274,7 @@ export function ListRow({
           alignItems: "center",
           borderBottomColor: colors.border,
           borderBottomWidth: 1,
+          direction: environment.direction,
           flexDirection: "row",
           gap: spacing.sm,
           minHeight: description ? layout.rowHeight.twoLine : layout.rowHeight.singleLine,
@@ -453,7 +457,8 @@ export function Accordion<Value extends string = string>({
                 minimumTargetStyle,
                 {
                   alignItems: "center",
-                  flexDirection: environment.direction === "rtl" ? "row-reverse" : "row",
+                  direction: environment.direction,
+                  flexDirection: "row",
                   gap: spacing.sm,
                   opacity: item.disabled ? 0.5 : pressed ? 0.86 : 1,
                   paddingVertical: spacing.sm,
@@ -515,7 +520,8 @@ export function DescriptionList<Id extends string = string>({
       accessibilityRole="list"
       style={[
         {
-          flexDirection: environment.direction === "rtl" ? "row-reverse" : "row",
+          direction: environment.direction,
+          flexDirection: "row",
           flexWrap: "wrap",
           gap: spacing.sm,
         },
@@ -734,7 +740,15 @@ export function Statistic<Id extends string = string>({
       ]}
     >
       <Text accessible={false} tone="muted" variant={compact ? "caption" : "label"}>{resolved.label}</Text>
-      <View accessible={false} style={{ alignItems: "baseline", flexDirection: theme.environment.direction === "rtl" ? "row-reverse" : "row", gap: spacing.xxs }}>
+      <View
+        accessible={false}
+        style={{
+          alignItems: "baseline",
+          direction: theme.environment.direction,
+          flexDirection: "row",
+          gap: spacing.xxs,
+        }}
+      >
         {resolved.prefix ? <Text tone="muted">{resolved.prefix}</Text> : null}
         <Text tone="primary" variant={compact ? "title" : "heading"}>{resolved.value}</Text>
         {resolved.suffix ? <Text tone="muted">{resolved.suffix}</Text> : null}
@@ -786,7 +800,8 @@ export function StatisticGroup<Id extends string = string>({
       accessibilityRole="list"
       style={[
         {
-          flexDirection: environment.direction === "rtl" ? "row-reverse" : "row",
+          direction: environment.direction,
+          flexDirection: "row",
           flexWrap: "wrap",
           gap: spacing.xs,
         },

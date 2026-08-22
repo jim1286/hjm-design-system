@@ -182,9 +182,8 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
       accessibilityLabel={label}
       style={[
         {
-          flexDirection: orientation === "vertical"
-            ? direction === "rtl" ? "row-reverse" : "row"
-            : "column",
+          direction,
+          flexDirection: orientation === "vertical" ? "row" : "column",
           gap: spacing.md,
         },
         style,
@@ -195,9 +194,8 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
         accessibilityRole="tablist"
         style={[
           {
-            flexDirection: orientation === "vertical"
-              ? "column"
-              : direction === "rtl" ? "row-reverse" : "row",
+            direction,
+            flexDirection: orientation === "vertical" ? "column" : "row",
           },
           tabListStyle,
         ]}
@@ -242,11 +240,12 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
                 minimumTargetStyle,
                 {
                   alignItems: "center",
-                borderBottomColor: orientation === "horizontal" && active ? colors.primary : "transparent",
-                borderBottomWidth: orientation === "horizontal" ? 2 : 0,
-                borderStartColor: orientation === "vertical" && active ? colors.primary : "transparent",
-                borderStartWidth: orientation === "vertical" ? 2 : 0,
-                flex: orientation === "horizontal" ? 1 : undefined,
+                  borderBottomColor: orientation === "horizontal" && active ? colors.primary : "transparent",
+                  borderBottomWidth: orientation === "horizontal" ? 2 : 0,
+                  borderStartColor: orientation === "vertical" && active ? colors.primary : "transparent",
+                  borderStartWidth: orientation === "vertical" ? 2 : 0,
+                  direction,
+                  flex: orientation === "horizontal" ? 1 : undefined,
                   flexDirection: "row",
                   gap: spacing.xs,
                   justifyContent: "center",
@@ -365,7 +364,8 @@ export function BottomNavigation<
           borderColor: colors.border,
           borderRadius: presentation.presentation === "floating" ? radius.lg : 0,
           borderTopWidth: 1,
-          flexDirection: presentation.direction === "rtl" ? "row-reverse" : "row",
+          direction: presentation.direction,
+          flexDirection: "row",
           gap: presentation.distribution === "center-gap" ? spacing.md : 0,
           marginHorizontal: presentation.presentation === "floating" ? spacing.md : 0,
           paddingBottom: safeAreaBottom,
@@ -402,7 +402,15 @@ export function BottomNavigation<
             ]}
           >
             <View accessible={false}>{renderIcon({ name: item.icon.name, selected: active })}</View>
-            <View accessible={false} style={{ alignItems: "center", flexDirection: "row", gap: spacing.xxs }}>
+            <View
+              accessible={false}
+              style={{
+                alignItems: "center",
+                direction: presentation.direction,
+                flexDirection: "row",
+                gap: spacing.xxs,
+              }}
+            >
               <Text align="center" tone={active ? "brand" : "muted"} variant="caption">{item.label}</Text>
               {item.badge ? (
                 <View style={{ backgroundColor: colors.dangerFill, borderRadius: radius.full, paddingHorizontal: spacing.xxs }}>
@@ -442,8 +450,6 @@ export function TopBar({
   }
   const { colors, environment } = useHjmNativeTheme();
   const largeText = environment.textScale >= 1.6;
-  const logicalLeading = environment.direction === "rtl" ? trailing : leading;
-  const logicalTrailing = environment.direction === "rtl" ? leading : trailing;
   return (
     <View
       accessibilityLabel={accessibilityLabel}
@@ -452,6 +458,7 @@ export function TopBar({
         {
           alignItems: largeText ? "stretch" : "center",
           backgroundColor: colors.bg,
+          direction: environment.direction,
           flexDirection: largeText ? "column" : "row",
           gap: spacing.xs,
           minHeight: 52 + safeAreaTop,
@@ -463,7 +470,13 @@ export function TopBar({
     >
       {largeText ? (
         <>
-          <View style={{ flexDirection: environment.direction === "rtl" ? "row-reverse" : "row", justifyContent: "space-between" }}>
+          <View
+            style={{
+              direction: environment.direction,
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
             <View style={{ minWidth: 44 }}>{leading}</View>
             <View style={{ minWidth: 44 }}>{trailing}</View>
           </View>
@@ -471,9 +484,9 @@ export function TopBar({
         </>
       ) : (
         <>
-          <View style={{ alignItems: "flex-start", flex: 1, minWidth: 44 }}>{logicalLeading}</View>
+          <View style={{ alignItems: "flex-start", flex: 1, minWidth: 44 }}>{leading}</View>
           <Text accessibilityRole="header" align={centered ? "center" : undefined} numberOfLines={1} style={{ flex: 2 }} tone="primary" variant="bodyLarge">{title}</Text>
-          <View style={{ alignItems: "flex-end", flex: 1, minWidth: 44 }}>{logicalTrailing}</View>
+          <View style={{ alignItems: "flex-end", flex: 1, minWidth: 44 }}>{trailing}</View>
         </>
       )}
     </View>
@@ -639,7 +652,8 @@ export function Menu<Value extends string = string>({
                     {
                       alignItems: "center",
                       borderRadius: radius.md,
-                      flexDirection: environment.direction === "rtl" ? "row-reverse" : "row",
+                      direction: environment.direction,
+                      flexDirection: "row",
                       gap: spacing.sm,
                       opacity: item.disabled ? 0.5 : pressed ? 0.86 : 1,
                       paddingHorizontal: spacing.sm,

@@ -121,7 +121,8 @@ export const Slider = forwardRef(function Slider({ label, min, max, step, value,
             containerStyle,
         ], children: [_jsxs(View, { accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: {
                     alignItems: "baseline",
-                    flexDirection: environment.direction === "rtl" ? "row-reverse" : "row",
+                    direction: environment.direction,
+                    flexDirection: "row",
                     justifyContent: "space-between",
                 }, children: [_jsx(NativeText, { ...scalableTextDefaults, style: [
                             tokens.typography[recipe.labelVariant],
