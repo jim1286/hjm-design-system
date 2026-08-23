@@ -29,6 +29,7 @@ export declare const Tag: import("react").ForwardRefExoticComponent<Omit<HTMLAtt
 export type CardProps = Omit<HTMLAttributes<HTMLElement>, "title"> & Readonly<{
     title?: ReactNode;
     description?: ReactNode;
+    leading?: ReactNode;
     media?: ReactNode;
     actions?: ReactNode;
     headingLevel?: CardHeadingLevel;
@@ -41,6 +42,7 @@ export type CardProps = Omit<HTMLAttributes<HTMLElement>, "title"> & Readonly<{
 export declare const Card: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLElement>, "title"> & Readonly<{
     title?: ReactNode;
     description?: ReactNode;
+    leading?: ReactNode;
     media?: ReactNode;
     actions?: ReactNode;
     headingLevel?: CardHeadingLevel;

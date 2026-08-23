@@ -103,6 +103,7 @@ export type CardProps = Omit<HTMLAttributes<HTMLElement>, "title"> &
   Readonly<{
     title?: ReactNode;
     description?: ReactNode;
+    leading?: ReactNode;
     media?: ReactNode;
     actions?: ReactNode;
     headingLevel?: CardHeadingLevel;
@@ -117,6 +118,7 @@ export const Card = forwardRef<HTMLElement, CardProps>(function Card(
   {
     title,
     description,
+    leading,
     media,
     actions,
     headingLevel = cardRecipe.defaults.headingLevel,
@@ -131,6 +133,9 @@ export const Card = forwardRef<HTMLElement, CardProps>(function Card(
   },
   ref,
 ) {
+  const hasHeader =
+    leading !== undefined || title !== undefined || description !== undefined;
+
   return (
     <Surface
       {...props}
@@ -148,19 +153,37 @@ export const Card = forwardRef<HTMLElement, CardProps>(function Card(
         data-slot="body"
         style={{ padding: surfaceGeometry.paddings[padding] }}
       >
-        {title === undefined
-          ? null
-          : createElement(
-              `h${headingLevel}`,
-              { className: "hjm-card__title", "data-slot": "title" },
-              title,
+        {hasHeader ? (
+          <div className="hjm-card__header" data-slot="header">
+            {leading === undefined ? null : (
+              <span className="hjm-card__leading" data-slot="leading">
+                {leading}
+              </span>
             )}
-        {description ? (
-          <Text as="p" tone="muted" className="hjm-card__description" data-slot="description">
-            {description}
-          </Text>
+            <div className="hjm-card__copy">
+              {title === undefined
+                ? null
+                : createElement(
+                    `h${headingLevel}`,
+                    { className: "hjm-card__title", "data-slot": "title" },
+                    title,
+                  )}
+              {description === undefined ? null : (
+                <Text
+                  as="p"
+                  tone="muted"
+                  className="hjm-card__description"
+                  data-slot="description"
+                >
+                  {description}
+                </Text>
+              )}
+            </div>
+          </div>
         ) : null}
-        <div className="hjm-card__content" data-slot="content">{children}</div>
+        {children === undefined ? null : (
+          <div className="hjm-card__content" data-slot="content">{children}</div>
+        )}
       </div>
       {actions ? <div className="hjm-card__actions" data-slot="actions">{actions}</div> : null}
     </Surface>

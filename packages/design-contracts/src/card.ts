@@ -12,7 +12,17 @@ export type CardHeadingLevel = 2 | 3 | 4;
  * `View` on Native), while these slots and defaults stay identical.
  */
 export const cardRecipe = {
-  slots: ["root", "media", "body", "title", "description", "content", "actions"] as const,
+  slots: [
+    "root",
+    "media",
+    "body",
+    "header",
+    "leading",
+    "title",
+    "description",
+    "content",
+    "actions",
+  ] as const,
   defaults: {
     tone: surfaceDefaults.tone,
     selected: false,
@@ -24,6 +34,9 @@ export const cardRecipe = {
   body: {
     padding: spacing.md,
     gap: spacing.xs,
+  },
+  header: {
+    gap: spacing.sm,
   },
   title: {
     variant: "title",
@@ -41,7 +54,17 @@ export const cardRecipe = {
     paddingBottom: spacing.md,
   },
 } as const satisfies {
-  slots: readonly ["root", "media", "body", "title", "description", "content", "actions"];
+  slots: readonly [
+    "root",
+    "media",
+    "body",
+    "header",
+    "leading",
+    "title",
+    "description",
+    "content",
+    "actions",
+  ];
   defaults: {
     tone: SurfaceTone;
     selected: boolean;
@@ -51,6 +74,7 @@ export const cardRecipe = {
   };
   selectedTone: SurfaceTone;
   body: { padding: number; gap: number };
+  header: { gap: number };
   title: {
     variant: "title";
     tone: "primary";

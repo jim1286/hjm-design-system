@@ -81,10 +81,16 @@ export function Tag({ children, label, tone, accessibilityLabel, style, labelSty
             style,
         ], children: _jsx(Text, { align: "center", emphasis: "medium", style: [{ color: presentation.content }, labelStyle], variant: tagRecipe.size.textVariant, children: descriptor.label }) }));
 }
-export function Card({ children, title, description, media, actions, selected = cardRecipe.defaults.selected, tone = cardRecipe.defaults.tone, bordered = cardRecipe.defaults.bordered, padding = cardRecipe.defaults.padding, style, ...props }) {
+export function Card({ children, title, description, leading, media, actions, selected = cardRecipe.defaults.selected, tone = cardRecipe.defaults.tone, bordered = cardRecipe.defaults.bordered, padding = cardRecipe.defaults.padding, style, ...props }) {
     const { environment } = useHjmNativeTheme();
     const bodyPadding = typeof padding === "number" ? padding : surfaceGeometry.paddings[padding];
-    return (_jsxs(Surface, { ...props, bordered: bordered, padding: "none", style: [{ overflow: "hidden" }, style], tone: selected ? cardRecipe.selectedTone : tone, children: [media === undefined ? null : _jsx(View, { children: media }), _jsxs(View, { style: { gap: cardRecipe.body.gap, padding: bodyPadding }, children: [title === undefined ? null : (_jsx(Text, { accessibilityRole: "header", emphasis: "strong", tone: "primary", variant: "title", children: title })), description === undefined ? null : (_jsx(Text, { emphasis: "regular", tone: "muted", variant: "body", children: description })), _jsx(View, { children: children })] }), actions === undefined ? null : (_jsx(View, { style: {
+    const hasHeader = leading !== undefined || title !== undefined || description !== undefined;
+    return (_jsxs(Surface, { ...props, bordered: bordered, padding: "none", style: [{ overflow: "hidden" }, style], tone: selected ? cardRecipe.selectedTone : tone, children: [media === undefined ? null : _jsx(View, { children: media }), _jsxs(View, { style: { gap: cardRecipe.body.gap, padding: bodyPadding }, children: [hasHeader ? (_jsxs(View, { style: {
+                            alignItems: "flex-start",
+                            direction: environment.direction,
+                            flexDirection: "row",
+                            gap: cardRecipe.header.gap,
+                        }, children: [leading === undefined ? null : (_jsx(View, { style: { flexShrink: 0 }, children: leading })), _jsxs(View, { style: { flex: 1, gap: cardRecipe.body.gap, minWidth: 0 }, children: [title === undefined ? null : (_jsx(Text, { accessibilityRole: "header", emphasis: "strong", tone: "primary", variant: "title", children: title })), description === undefined ? null : (_jsx(Text, { emphasis: "regular", tone: "muted", variant: "body", children: description }))] })] })) : null, children === undefined ? null : _jsx(View, { children: children })] }), actions === undefined ? null : (_jsx(View, { style: {
                     direction: environment.direction,
                     flexDirection: "row",
                     flexWrap: "wrap",

@@ -367,6 +367,7 @@ describe("Native core normalization", () => {
         <Card
           actions={<Button>확인</Button>}
           description="설명"
+          leading={<Text>✨</Text>}
           media={<Text>미디어</Text>}
           selected
           title="제목"

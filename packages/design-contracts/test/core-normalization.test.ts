@@ -56,6 +56,8 @@ describe("cross-platform core normalization", () => {
       "root",
       "media",
       "body",
+      "header",
+      "leading",
       "title",
       "description",
       "content",

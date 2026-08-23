@@ -213,7 +213,6 @@
 .hjm-button:focus-visible,
 .hjm-icon-button:focus-visible,
 .hjm-link:focus-visible,
-.hjm-field__input:focus-visible,
 .hjm-choice__input:focus-visible + .hjm-choice__indicator,
 .hjm-switch:focus-visible .hjm-switch__track,
 .hjm-segmented__item:has(input:focus-visible),
@@ -635,7 +634,11 @@
 .hjm-card { overflow: hidden; }
 .hjm-card__media > * { display: block; inline-size: 100%; }
 .hjm-card__body { display: grid; gap: var(--hjm-space-xs); padding: var(--hjm-space-md); }
+.hjm-card__header { display: flex; align-items: flex-start; gap: var(--hjm-space-sm); min-inline-size: 0; }
+.hjm-card__leading { flex: 0 0 auto; display: inline-grid; place-items: center; line-height: 1; }
+.hjm-card__copy { flex: 1 1 auto; min-inline-size: 0; display: grid; gap: var(--hjm-space-xs); }
 .hjm-card__title { margin: 0; color: var(--hjm-color-text); font-size: var(--hjm-type-title-size); line-height: var(--hjm-type-title-line-height); overflow-wrap: anywhere; }
+.hjm-card__description { margin: 0; overflow-wrap: anywhere; }
 .hjm-card__actions { display: flex; flex-wrap: wrap; gap: var(--hjm-space-sm); padding: 0 var(--hjm-space-md) var(--hjm-space-md); }
 .hjm-list-row { inline-size: 100%; display: flex; align-items: center; gap: var(--hjm-space-sm); min-block-size: 56px; padding: var(--hjm-space-xs); border: 0; color: inherit; background: transparent; text-align: start; text-decoration: none; font: inherit; }
 button.hjm-list-row, a.hjm-list-row { cursor: pointer; }

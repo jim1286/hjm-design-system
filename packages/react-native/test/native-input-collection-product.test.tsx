@@ -127,6 +127,42 @@ describe("Native field and choice product adapters", () => {
     )).toThrow(/must exist/u);
   });
 
+  it("uses the shared card presentation by default for standalone and grouped choices", () => {
+    const checkbox = render(<Checkbox checked label="기본 체크" />);
+    const [checkboxStyle] = byLabel(checkbox, "기본 체크").props.style({ pressed: false });
+    expect(checkboxStyle).toMatchObject({
+      borderWidth: 1,
+      paddingHorizontal: 16,
+      paddingVertical: 12,
+    });
+
+    const radio = render(
+      <RadioGroup
+        accessibilityLabel="기본 라디오 그룹"
+        options={[{ value: "standard", label: "기본 라디오" }]}
+      />,
+    );
+    const [radioStyle] = byLabel(radio, "기본 라디오").props.style({ pressed: false });
+    expect(radioStyle).toMatchObject({
+      borderWidth: 1,
+      paddingHorizontal: 16,
+      paddingVertical: 12,
+    });
+
+    const group = render(
+      <CheckboxGroup
+        accessibilityLabel="기본 체크 그룹"
+        items={[{ id: "email", label: "기본 그룹 체크" }]}
+      />,
+    );
+    const [groupStyle] = byLabel(group, "기본 그룹 체크").props.style({ pressed: false });
+    expect(groupStyle).toMatchObject({
+      borderWidth: 1,
+      paddingHorizontal: 16,
+      paddingVertical: 12,
+    });
+  });
+
   it("renders Radio and Segmented leading slots with recipe appearances", () => {
     const radioLeading = vi.fn(() => <Text>라디오 선행</Text>);
     const radio = render(

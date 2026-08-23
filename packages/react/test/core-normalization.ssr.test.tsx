@@ -39,6 +39,7 @@ describe("Web core normalization", () => {
         <Card
           actions={<Button>확인</Button>}
           description="설명"
+          leading={<span>✨</span>}
           media={<img alt="미디어" />}
           selected
           title="제목"
@@ -51,7 +52,15 @@ describe("Web core normalization", () => {
     expect(markup).toContain('data-state="selected"');
     expect(markup).toContain('data-tone="accent" data-bordered="true"');
     expect(markup).toContain('<h3 class="hjm-card__title" data-slot="title">제목</h3>');
-    for (const slot of ["media", "body", "description", "content", "actions"]) {
+    for (const slot of [
+      "media",
+      "body",
+      "header",
+      "leading",
+      "description",
+      "content",
+      "actions",
+    ]) {
       expect(markup).toContain(`data-slot="${slot}"`);
     }
   });
@@ -80,6 +89,15 @@ describe("Web core normalization", () => {
       '.hjm-tag[data-tone="info"] { background: color-mix(in srgb, var(--hjm-accent-info) 10%, transparent); }',
     );
     expect(css).toContain("font-size: var(--hjm-type-caption-size)");
+  });
+
+  it("keeps text-field focus on the shared rounded control instead of the inner input", () => {
+    const css = readFileSync(
+      fileURLToPath(new URL("../src/styles.css", import.meta.url)),
+      "utf8",
+    );
+    expect(css).toContain('.hjm-field[data-state="focused"] .hjm-field__control');
+    expect(css).not.toContain(".hjm-field__input:focus-visible");
   });
 
   it("emits shared IconButton defaults and preserves the small visual hit target", () => {

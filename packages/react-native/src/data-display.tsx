@@ -259,6 +259,7 @@ export type CardProps = Omit<SurfaceProps, "children" | "padding"> &
     children?: ReactNode;
     title?: ReactNode;
     description?: ReactNode;
+    leading?: ReactNode;
     media?: ReactNode;
     actions?: ReactNode;
     selected?: boolean;
@@ -269,6 +270,7 @@ export function Card({
   children,
   title,
   description,
+  leading,
   media,
   actions,
   selected = cardRecipe.defaults.selected,
@@ -281,6 +283,8 @@ export function Card({
   const { environment } = useHjmNativeTheme();
   const bodyPadding =
     typeof padding === "number" ? padding : surfaceGeometry.paddings[padding];
+  const hasHeader =
+    leading !== undefined || title !== undefined || description !== undefined;
   return (
     <Surface
       {...props}
@@ -291,17 +295,33 @@ export function Card({
     >
       {media === undefined ? null : <View>{media}</View>}
       <View style={{ gap: cardRecipe.body.gap, padding: bodyPadding }}>
-        {title === undefined ? null : (
-          <Text accessibilityRole="header" emphasis="strong" tone="primary" variant="title">
-            {title}
-          </Text>
-        )}
-        {description === undefined ? null : (
-          <Text emphasis="regular" tone="muted" variant="body">
-            {description}
-          </Text>
-        )}
-        <View>{children}</View>
+        {hasHeader ? (
+          <View
+            style={{
+              alignItems: "flex-start",
+              direction: environment.direction,
+              flexDirection: "row",
+              gap: cardRecipe.header.gap,
+            }}
+          >
+            {leading === undefined ? null : (
+              <View style={{ flexShrink: 0 }}>{leading}</View>
+            )}
+            <View style={{ flex: 1, gap: cardRecipe.body.gap, minWidth: 0 }}>
+              {title === undefined ? null : (
+                <Text accessibilityRole="header" emphasis="strong" tone="primary" variant="title">
+                  {title}
+                </Text>
+              )}
+              {description === undefined ? null : (
+                <Text emphasis="regular" tone="muted" variant="body">
+                  {description}
+                </Text>
+              )}
+            </View>
+          </View>
+        ) : null}
+        {children === undefined ? null : <View>{children}</View>}
       </View>
       {actions === undefined ? null : (
         <View

@@ -5,7 +5,17 @@ import { surfaceDefaults, } from "./base-recipes.js";
  * `View` on Native), while these slots and defaults stay identical.
  */
 export const cardRecipe = {
-    slots: ["root", "media", "body", "title", "description", "content", "actions"],
+    slots: [
+        "root",
+        "media",
+        "body",
+        "header",
+        "leading",
+        "title",
+        "description",
+        "content",
+        "actions",
+    ],
     defaults: {
         tone: surfaceDefaults.tone,
         selected: false,
@@ -17,6 +27,9 @@ export const cardRecipe = {
     body: {
         padding: spacing.md,
         gap: spacing.xs,
+    },
+    header: {
+        gap: spacing.sm,
     },
     title: {
         variant: "title",

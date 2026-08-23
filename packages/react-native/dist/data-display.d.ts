@@ -35,12 +35,13 @@ export type CardProps = Omit<SurfaceProps, "children" | "padding"> & Readonly<{
     children?: ReactNode;
     title?: ReactNode;
     description?: ReactNode;
+    leading?: ReactNode;
     media?: ReactNode;
     actions?: ReactNode;
     selected?: boolean;
     padding?: SurfacePadding;
 }>;
-export declare function Card({ children, title, description, media, actions, selected, tone, bordered, padding, style, ...props }: CardProps): import("react").JSX.Element;
+export declare function Card({ children, title, description, leading, media, actions, selected, tone, bordered, padding, style, ...props }: CardProps): import("react").JSX.Element;
 export type ListRowProps = Omit<PressableProps, "accessibilityLabel" | "accessibilityRole" | "children" | "disabled" | "style"> & Readonly<{
     title: string;
     description?: string;

@@ -1,0 +1,18 @@
+{
+  "expo": {
+    "name": "HJM Native Showcase",
+    "slug": "hjm-native-showcase",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "scheme": "hjm-showcase",
+    "userInterfaceStyle": "automatic",
+    "platforms": ["ios", "android"],
+    "ios": {
+      "bundleIdentifier": "dev.hjm.designsystem.showcase",
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "dev.hjm.designsystem.showcase"
+    }
+  }
+}

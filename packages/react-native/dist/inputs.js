@@ -156,7 +156,7 @@ export const SearchField = forwardRef(function SearchField({ clearLabel, busyLab
                 setSearchValue(next);
         }, search: true, searchSize: size, trailing: trailing, value: searchValue }));
 });
-function ChoiceRow({ kind, label, description, checked, disabled, readOnly, required, invalid, readOnlyLabel, requiredLabel, invalidLabel, accessibilityHint, presentation = "plain", size = selectionControlRecipe.defaults.size, indicator = "default", leading, renderLeading, renderIndicator, onActivate, style, controlStyle, indicatorStyle, leadingStyle, contentStyle, labelStyle, descriptionStyle, }) {
+function ChoiceRow({ kind, label, description, checked, disabled, readOnly, required, invalid, readOnlyLabel, requiredLabel, invalidLabel, accessibilityHint, presentation = selectionControlRecipe.defaults.presentation, size = selectionControlRecipe.defaults.size, indicator = "default", leading, renderLeading, renderIndicator, onActivate, style, controlStyle, indicatorStyle, leadingStyle, contentStyle, labelStyle, descriptionStyle, }) {
     const theme = useHjmNativeTheme();
     const metrics = selectionControlRecipe.sizes[size];
     const plate = selectionControlRecipe.presentations[presentation];
@@ -281,7 +281,7 @@ function ChoiceGroupFrame({ label, accessibilityLabel, required, requiredLabel, 
                     gap,
                 }, children: children }), error ? (_jsx(Text, { accessibilityLiveRegion: "assertive", accessibilityRole: "alert", tone: "danger", variant: selectionGroupRecipe.error.textVariant, children: error })) : description ? (_jsx(Text, { tone: "muted", variant: selectionGroupRecipe.description.textVariant, children: description })) : null] }));
 }
-export function RadioGroup({ label, accessibilityLabel, options, value, defaultValue, onValueChange, required = false, disabled = false, readOnly = false, invalid = false, description, error, requiredLabel, readOnlyLabel, invalidLabel, orientation = selectionGroupBehaviorDefaults.orientation, presentation = "plain", size = selectionControlRecipe.defaults.size, indicator = "default", renderLeading, renderIndicator, style, ...slotStyles }) {
+export function RadioGroup({ label, accessibilityLabel, options, value, defaultValue, onValueChange, required = false, disabled = false, readOnly = false, invalid = false, description, error, requiredLabel, readOnlyLabel, invalidLabel, orientation = selectionGroupBehaviorDefaults.orientation, presentation = selectionGroupRecipe.defaults.presentation, size = selectionControlRecipe.defaults.size, indicator = "default", renderLeading, renderIndicator, style, ...slotStyles }) {
     const selectionItems = options.map((option) => ({
         id: option.value,
         label: option.label,
@@ -313,7 +313,7 @@ export function RadioGroup({ label, accessibilityLabel, options, value, defaultV
         }) }));
 }
 /** Validated controlled/uncontrolled checkbox collection using immutable Sets. */
-export function CheckboxGroup({ label, accessibilityLabel, items, value, defaultValue = new Set(), onValueChange, required = false, disabled = false, readOnly = false, invalid = false, description, error, requiredLabel, readOnlyLabel, invalidLabel, orientation = selectionGroupBehaviorDefaults.orientation, presentation = "plain", size = selectionControlRecipe.defaults.size, indicator = "default", renderLeading, renderIndicator, style, ...slotStyles }) {
+export function CheckboxGroup({ label, accessibilityLabel, items, value, defaultValue = new Set(), onValueChange, required = false, disabled = false, readOnly = false, invalid = false, description, error, requiredLabel, readOnlyLabel, invalidLabel, orientation = selectionGroupBehaviorDefaults.orientation, presentation = selectionGroupRecipe.defaults.presentation, size = selectionControlRecipe.defaults.size, indicator = "default", renderLeading, renderIndicator, style, ...slotStyles }) {
     validateSelectionItems(items);
     if (value !== undefined)
         validateCheckboxSelection(items, value);

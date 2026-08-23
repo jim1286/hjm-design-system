@@ -2015,7 +2015,7 @@ export declare const recipeRegistry: {
         };
     };
     readonly cardRecipe: {
-        readonly slots: readonly ["root", "media", "body", "title", "description", "content", "actions"];
+        readonly slots: readonly ["root", "media", "body", "header", "leading", "title", "description", "content", "actions"];
         readonly defaults: {
             readonly tone: "default";
             readonly selected: false;
@@ -2027,6 +2027,9 @@ export declare const recipeRegistry: {
         readonly body: {
             readonly padding: 16;
             readonly gap: 8;
+        };
+        readonly header: {
+            readonly gap: 12;
         };
         readonly title: {
             readonly variant: "title";
