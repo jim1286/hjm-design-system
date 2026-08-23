@@ -1,5 +1,7 @@
 import { type FieldShape, type FieldVariant } from "@hjm/design-contracts/recipes/base";
 import { type ChipSize, type SearchFieldSize, type SegmentedControlSize, type SelectionControlPresentation, type SelectionControlSize, type SwitchSize } from "@hjm/design-contracts/recipes";
+import { type PasswordFieldAutofillHint, type PasswordFieldSize } from "@hjm/design-contracts/components/password-field";
+import { type OtpFieldSize } from "@hjm/design-contracts/components/otp-field";
 import { type CheckboxGroupSelection, type CheckboxState, type SelectionItemDescriptor, type SelectionOrientation } from "@hjm/design-contracts/behaviors";
 import { type ReactNode } from "react";
 import { TextInput, type StyleProp, type GestureResponderEvent, type SwitchProps as NativeSwitchProps, type TextInputProps, type TextStyle, type ViewStyle } from "react-native";
@@ -50,6 +52,40 @@ export type SearchFieldProps = AccessibleFieldProps & Readonly<{
     renderBusyIndicator?: (props: SearchFieldAffordanceRenderProps) => ReactNode;
 }>;
 export declare const SearchField: import("react").ForwardRefExoticComponent<SearchFieldProps & import("react").RefAttributes<TextInput>>;
+export type PasswordFieldToggleRenderProps = Readonly<{
+    name: "visibility" | "visibilityOff";
+    color: string;
+    size: number;
+    revealed: boolean;
+    disabled: boolean;
+}>;
+export type PasswordFieldProps = Omit<BaseFieldProps, "autoComplete" | "defaultValue" | "secureTextEntry" | "textContentType" | "value"> & FieldAccessibleName & Readonly<{
+    value?: string;
+    defaultValue?: string;
+    onValueChange?: (value: string) => void;
+    revealed?: boolean;
+    defaultRevealed?: boolean;
+    onRevealedChange?: (revealed: boolean) => void;
+    autofillHint: PasswordFieldAutofillHint;
+    revealLabel: string;
+    concealLabel: string;
+    size?: PasswordFieldSize;
+    renderToggleIcon?: (props: PasswordFieldToggleRenderProps) => ReactNode;
+}>;
+/** Password input with independent reveal state and native autofill translation. */
+export declare const PasswordField: import("react").ForwardRefExoticComponent<PasswordFieldProps & import("react").RefAttributes<TextInput>>;
+export type OtpFieldProps = Omit<BaseFieldProps, "autoComplete" | "defaultValue" | "inputStyle" | "keyboardType" | "multiline" | "onChangeText" | "secureTextEntry" | "textContentType" | "value"> & FieldAccessibleName & Readonly<{
+    length: number;
+    value?: string;
+    defaultValue?: string;
+    onValueChange?: (value: string) => void;
+    onComplete?: (value: string) => void;
+    size?: OtpFieldSize;
+    slotStyle?: StyleProp<ViewStyle>;
+    slotTextStyle?: StyleProp<TextStyle>;
+}>;
+/** One accessible numeric TextInput rendered through decorative OTP slots. */
+export declare const OtpField: import("react").ForwardRefExoticComponent<OtpFieldProps & import("react").RefAttributes<TextInput>>;
 export type ChoiceVisualRenderProps = Readonly<{
     checked: CheckboxState;
     selected: boolean;

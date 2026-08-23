@@ -13,6 +13,8 @@ import * as forms from "../src/forms.js";
 import * as inputs from "../src/inputs.js";
 import * as navigation from "../src/navigation.js";
 import * as overlays from "../src/overlays.js";
+import * as otpField from "../src/otp-field.js";
+import * as passwordField from "../src/password-field.js";
 import * as primitives from "../src/primitives.js";
 import * as provider from "../src/provider.js";
 
@@ -24,6 +26,8 @@ const publicModules: Readonly<Record<string, Readonly<Record<string, unknown>>>>
   "./inputs": inputs,
   "./navigation": navigation,
   "./overlays": overlays,
+  "./otp-field": otpField,
+  "./password-field": passwordField,
   "./primitives": primitives,
   "./provider": provider,
 };
@@ -43,7 +47,7 @@ describe("@hjm/react-native renderer evidence", () => {
     const componentIds = reactNativeRendererEvidence.components.map(
       ({ componentId }) => componentId,
     );
-    expect(componentIds).toHaveLength(48);
+    expect(componentIds).toHaveLength(50);
     expect(componentIds).toContain("combobox");
     expect(componentIds).toContain("load-more");
     expect(new Set(componentIds).size).toBe(componentIds.length);

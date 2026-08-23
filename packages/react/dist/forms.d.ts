@@ -1,5 +1,7 @@
 import { type FieldShape, type FieldVariant } from "@hjm/design-contracts/recipes/base";
 import { type SearchFieldSize } from "@hjm/design-contracts/recipes";
+import { type PasswordFieldAutofillHint, type PasswordFieldSize } from "@hjm/design-contracts/components/password-field";
+import { type OtpFieldSize } from "@hjm/design-contracts/components/otp-field";
 import { type HTMLAttributes, type InputHTMLAttributes, type ReactNode, type TextareaHTMLAttributes } from "react";
 type FieldCopyProps = Readonly<{
     label?: ReactNode;
@@ -100,6 +102,59 @@ export declare const SearchField: import("react").ForwardRefExoticComponent<Omit
     renderClearIcon?: (props: SearchFieldIconRenderProps) => ReactNode;
     /** Optional progress adapter. The default is the canonical CSS spinner. */
     renderLoadingIndicator?: (props: SearchFieldIconRenderProps) => ReactNode;
+}> & import("react").RefAttributes<HTMLInputElement>>;
+export type PasswordFieldToggleRenderProps = Readonly<{
+    name: "visibility" | "visibilityOff";
+    color: "currentColor";
+    size: number;
+    revealed: boolean;
+    disabled: boolean;
+}>;
+export type PasswordFieldProps = Omit<TextFieldProps, "autoComplete" | "defaultValue" | "size" | "trailing" | "type" | "value"> & Readonly<{
+    value?: string;
+    defaultValue?: string;
+    onValueChange?: (value: string) => void;
+    revealed?: boolean;
+    defaultRevealed?: boolean;
+    onRevealedChange?: (revealed: boolean) => void;
+    autofillHint: PasswordFieldAutofillHint;
+    revealLabel: string;
+    concealLabel: string;
+    size?: PasswordFieldSize;
+    renderToggleIcon?: (props: PasswordFieldToggleRenderProps) => ReactNode;
+}>;
+/** Password input with an independently controlled, selection-safe reveal action. */
+export declare const PasswordField: import("react").ForwardRefExoticComponent<Omit<TextFieldProps, "value" | "defaultValue" | "type" | "size" | "trailing" | "autoComplete"> & Readonly<{
+    value?: string;
+    defaultValue?: string;
+    onValueChange?: (value: string) => void;
+    revealed?: boolean;
+    defaultRevealed?: boolean;
+    onRevealedChange?: (revealed: boolean) => void;
+    autofillHint: PasswordFieldAutofillHint;
+    revealLabel: string;
+    concealLabel: string;
+    size?: PasswordFieldSize;
+    renderToggleIcon?: (props: PasswordFieldToggleRenderProps) => ReactNode;
+}> & import("react").RefAttributes<HTMLInputElement>>;
+export type OtpFieldProps = Omit<TextFieldProps, "autoComplete" | "defaultValue" | "leading" | "maxLength" | "shape" | "size" | "trailing" | "type" | "value" | "variant"> & Readonly<{
+    length: number;
+    value?: string;
+    defaultValue?: string;
+    onValueChange?: (value: string) => void;
+    onComplete?: (value: string) => void;
+    size?: OtpFieldSize;
+    busy?: boolean;
+}>;
+/** One accessible numeric input rendered as decorative OTP slots. */
+export declare const OtpField: import("react").ForwardRefExoticComponent<Omit<TextFieldProps, "value" | "defaultValue" | "type" | "variant" | "size" | "leading" | "trailing" | "shape" | "autoComplete" | "maxLength"> & Readonly<{
+    length: number;
+    value?: string;
+    defaultValue?: string;
+    onValueChange?: (value: string) => void;
+    onComplete?: (value: string) => void;
+    size?: OtpFieldSize;
+    busy?: boolean;
 }> & import("react").RefAttributes<HTMLInputElement>>;
 export {};
 //# sourceMappingURL=forms.d.ts.map

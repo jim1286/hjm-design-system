@@ -4,7 +4,7 @@ export const nativeRendererStoryGroups = {
   ],
   actions: ["button", "icon-button", "bottom-cta"],
   inputs: [
-    "field", "search-field", "text-area", "checkbox", "checkbox-group", "radio-group", "switch",
+    "field", "search-field", "text-area", "password-field", "otp-field", "checkbox", "checkbox-group", "radio-group", "switch",
     "segmented-control", "select", "combobox", "chip",
   ],
   navigation: ["tabs", "top-bar", "menu", "bottom-navigation", "load-more"],

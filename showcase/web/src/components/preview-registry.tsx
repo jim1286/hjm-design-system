@@ -24,6 +24,8 @@ import {
   Select as HjmSelect,
   TextArea as HjmTextArea,
 } from "@hjm/react/forms";
+import { OtpField as HjmOtpField } from "@hjm/react/otp-field";
+import { PasswordField as HjmPasswordField } from "@hjm/react/password-field";
 import {
   Grid as HjmGrid,
   Layout as HjmLayout,
@@ -89,6 +91,8 @@ export const webRendererComponentNames = [
   "Field",
   "SearchField",
   "TextArea",
+  "PasswordField",
+  "OtpField",
   "Checkbox",
   "Radio",
   "CheckboxGroup",
@@ -254,6 +258,8 @@ function WebPreviewRenderer({ name }: { name: RecipeWebRendererComponentName }) 
     case "Field": return <HjmField controlId="showcase-player-name" label="이름" description="필수 정보는 입력 아래에서 설명합니다.">{(controlProps) => <input {...controlProps} className="hjm-field__control" defaultValue="홍길동" />}</HjmField>;
     case "SearchField": return <HjmSearchField label="선수 검색" clearLabel="검색어 지우기" defaultValue="야구" description="검색어 지우기 버튼도 키보드로 사용할 수 있습니다." />;
     case "TextArea": return <HjmTextArea label="설명" defaultValue="여러 줄 입력 예시" description="긴 설명도 레이아웃 안에서 줄바꿈됩니다." />;
+    case "PasswordField": return <HjmPasswordField label="비밀번호" autofillHint="current" revealLabel="비밀번호 보기" concealLabel="비밀번호 숨기기" defaultValue="hjm-password" description="표시 전환은 값과 독립적으로 동작합니다." />;
+    case "OtpField": return <HjmOtpField label="인증번호" length={6} defaultValue="128" description="여섯 자리를 한 번에 입력하거나 붙여넣을 수 있습니다." />;
     case "Checkbox": return <HjmCheckbox label="동의합니다" description="선택 상태와 설명이 함께 노출됩니다." defaultChecked />;
     case "Radio": return <HjmRadio label="단일 선택" description="독립 radio item renderer입니다." name="showcase-radio" defaultChecked />;
     case "CheckboxGroup": return <HjmCheckboxGroup label="선택 그룹" defaultValue={new Set(["first"])} items={[{ id: "first", label: "첫 번째 선택" }, { id: "second", label: "두 번째 선택" }, { id: "disabled", label: "사용할 수 없음", disabled: true }]} />;
@@ -588,6 +594,8 @@ export const webRendererRegistry = {
   Field: createWebRendererDefinition("Field", "fieldRecipe", "field"),
   SearchField: createWebRendererDefinition("SearchField", "searchFieldRecipe", "searchField"),
   TextArea: createWebRendererDefinition("TextArea", "fieldRecipe"),
+  PasswordField: createWebRendererDefinition("PasswordField", "passwordFieldRecipe", "passwordField"),
+  OtpField: createWebRendererDefinition("OtpField", "otpFieldRecipe", "otpField"),
   Checkbox: createWebRendererDefinition("Checkbox", "selectionControlRecipe", "checkbox"),
   Radio: createWebRendererDefinition("Radio", "selectionControlRecipe"),
   CheckboxGroup: createWebRendererDefinition("CheckboxGroup", "selectionGroupRecipe", "checkboxGroup"),

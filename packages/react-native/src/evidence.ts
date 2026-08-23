@@ -72,6 +72,8 @@ export const reactNativeRendererEvidence = {
     defaultClaim("field", ["Field"], "./forms"),
     defaultClaim("search-field", ["SearchField"], "./inputs"),
     defaultClaim("text-area", ["TextArea"], "./inputs"),
+    defaultClaim("password-field", ["PasswordField"], "./password-field"),
+    defaultClaim("otp-field", ["OtpField"], "./otp-field"),
     defaultClaim("checkbox", ["Checkbox"], "./inputs"),
     defaultClaim("checkbox-group", ["CheckboxGroup"], "./inputs"),
     defaultClaim("radio-group", ["RadioGroup"], "./inputs"),

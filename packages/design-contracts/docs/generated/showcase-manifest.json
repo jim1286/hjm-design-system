@@ -751,16 +751,44 @@
       "name": "PasswordField",
       "category": "input",
       "platform": "adaptive",
-      "contractStatus": "planned",
+      "contractStatus": "beta",
       "surfaces": {
-        "web": "planned",
-        "native": "planned"
+        "web": "beta",
+        "native": "beta"
       },
       "requirements": [
         {
           "surface": "contract",
           "scenarios": [
             "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
           ]
         }
       ],
@@ -775,16 +803,44 @@
       "name": "OtpField",
       "category": "input",
       "platform": "adaptive",
-      "contractStatus": "planned",
+      "contractStatus": "beta",
       "surfaces": {
-        "web": "planned",
-        "native": "planned"
+        "web": "beta",
+        "native": "beta"
       },
       "requirements": [
         {
           "surface": "contract",
           "scenarios": [
             "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
           ]
         }
       ],

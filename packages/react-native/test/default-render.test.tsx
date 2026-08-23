@@ -32,6 +32,8 @@ import {
   LoadMore,
   Menu,
   Notice,
+  OtpField,
+  PasswordField,
   Progress,
   RadioGroup,
   Result,
@@ -112,6 +114,21 @@ export const defaultRenderCases = [
     render: () => <SearchField busyLabel="검색 중" clearLabel="검색어 지우기" label="검색" />,
   },
   { componentId: "text-area", render: () => <TextArea label="설명" /> },
+  {
+    componentId: "password-field",
+    render: () => (
+      <PasswordField
+        autofillHint="current"
+        concealLabel="비밀번호 숨기기"
+        label="비밀번호"
+        revealLabel="비밀번호 보기"
+      />
+    ),
+  },
+  {
+    componentId: "otp-field",
+    render: () => <OtpField label="인증번호" length={6} />,
+  },
   { componentId: "checkbox", render: () => <Checkbox label="동의" /> },
   {
     componentId: "checkbox-group",

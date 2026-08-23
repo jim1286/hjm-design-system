@@ -45,11 +45,16 @@ export {
 
 export {
   Field,
+  OtpField,
+  PasswordField,
   SearchField,
   TextArea,
   TextField,
   type FieldControlProps,
   type FieldProps,
+  type OtpFieldProps,
+  type PasswordFieldProps,
+  type PasswordFieldToggleRenderProps,
   type SearchFieldProps,
   type SearchFieldIconRenderProps,
   type TextAreaProps,

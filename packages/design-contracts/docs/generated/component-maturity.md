@@ -4,9 +4,9 @@
 
 This document is the human-readable projection of the same catalog and Showcase manifest consumed by product CI.
 
-- Contract: stable 4 · beta 50 · planned 37
-- Web renderer: beta 38 · planned 51 · unsupported 2
-- Native renderer: beta 48 · planned 25 · unsupported 18
+- Contract: stable 4 · beta 52 · planned 35
+- Web renderer: beta 40 · planned 49 · unsupported 2
+- Native renderer: beta 50 · planned 23 · unsupported 18
 
 | Component | Canonical story ID | Contract | Web | Native | Documentation | Required evidence |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -28,8 +28,8 @@ This document is the human-readable projection of the same catalog and Showcase 
 | Field | `input/field` | stable | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard |
 | SearchField | `input/search-field` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard |
 | TextArea | `input/text-area` | stable | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
-| PasswordField | `input/password-field` | planned | planned | planned | [authored](../password-field.md) | contract: contract |
-| OtpField | `input/otp-field` | planned | planned | planned | [authored](../otp-field.md) | contract: contract |
+| PasswordField | `input/password-field` | beta | beta | beta | [authored](../password-field.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard, platform-parity; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard, platform-parity |
+| OtpField | `input/otp-field` | beta | beta | beta | [authored](../otp-field.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard, platform-parity; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard, platform-parity |
 | Checkbox | `input/checkbox` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard |
 | Radio | `input/radio` | beta | beta | planned | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
 | CheckboxGroup | `input/checkbox-group` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard |

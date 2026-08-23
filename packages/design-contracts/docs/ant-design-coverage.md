@@ -25,7 +25,7 @@ HJM은 Ant Design을 런타임 의존성이나 호환 API로 사용하지 않습
 - `adapted`: 같은 문제를 HJM의 명명·플랫폼 의미로 번역
 - `decomposed`: 하나의 Web-first component를 여러 HJM 계약으로 분리
 
-예를 들어 Ant Design `Input`은 `Field`, `SearchField`, `TextArea`, planned `PasswordField`,
+예를 들어 Ant Design `Input`은 `Field`, `SearchField`, `TextArea`, `PasswordField`,
 `OtpField`로 분해하고, `Drawer`는 adaptive `Sheet`와 Web `SidePanel`로 분해합니다. `Message`와 `Notification`은 **둘 다** HJM `Toast`로,
 `Spin`은 `Spinner`, `Table`은 `DataTable`로 연결합니다.
 
@@ -88,7 +88,7 @@ evidence registry로 판단합니다.
 - partial maturity: decomposed target 중 일부만 stable 또는 beta
 - planned only: 모든 target이 planned
 
-2026-08-22 snapshot의 status 기반 분포는 **fully mature 39 / partial maturity 2 /
+2026-08-23 snapshot의 status 기반 분포는 **fully mature 40 / partial maturity 1 /
 planned only 32**입니다. 따라서 73/73 tracking은 73개 구현 완료를 의미하지 않습니다.
 홈과 Component Explorer는 이 수치를 분리해 표시합니다. 이 숫자는 source inventory 수가
 아니라 HJM target의 maturity에서 계산하므로 catalog status가 바뀌면 함께 갱신합니다.

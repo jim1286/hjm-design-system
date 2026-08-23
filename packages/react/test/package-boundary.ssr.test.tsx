@@ -16,6 +16,8 @@ describe("@hjm/react package boundary", () => {
       "./layout",
       "./actions",
       "./forms",
+      "./password-field",
+      "./otp-field",
       "./number-field",
       "./slider",
       "./selection",

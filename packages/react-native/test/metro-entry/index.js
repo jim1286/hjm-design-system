@@ -8,6 +8,8 @@ import { Notice, ToastRegion } from "@hjm/react-native/feedback";
 import { Combobox, Field, Select } from "@hjm/react-native/forms";
 import { Chip, SearchField } from "@hjm/react-native/inputs";
 import { NumberField } from "@hjm/react-native/number-field";
+import { OtpField } from "@hjm/react-native/otp-field";
+import { PasswordField } from "@hjm/react-native/password-field";
 import { Slider } from "@hjm/react-native/slider";
 import {
   BottomNavigation,
@@ -66,6 +68,16 @@ function MetroSmokeApp() {
         busyLabel: "검색 중",
         clearLabel: "검색어 지우기",
         label: "검색",
+      }),
+      React.createElement(PasswordField, {
+        autofillHint: "current",
+        concealLabel: "비밀번호 숨기기",
+        label: "비밀번호",
+        revealLabel: "비밀번호 보기",
+      }),
+      React.createElement(OtpField, {
+        label: "인증번호",
+        length: 6,
       }),
       React.createElement(NumberField, {
         decrementLabel: "인원 줄이기",

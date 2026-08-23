@@ -71,6 +71,8 @@ export const reactRendererEvidence = {
     defaultClaim("field", ["Field", "TextField"], "./forms"),
     defaultClaim("search-field", ["SearchField"], "./forms"),
     defaultClaim("text-area", ["TextArea"], "./forms"),
+    defaultClaim("password-field", ["PasswordField"], "./password-field"),
+    defaultClaim("otp-field", ["OtpField"], "./otp-field"),
     defaultClaim("checkbox", ["Checkbox"], "./selection"),
     defaultClaim("radio", ["Radio"], "./selection"),
     defaultClaim("checkbox-group", ["CheckboxGroup"], "./selection"),

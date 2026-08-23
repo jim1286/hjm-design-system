@@ -13,6 +13,8 @@ import * as forms from "../src/forms-public.js";
 import * as layout from "../src/layout.js";
 import * as navigation from "../src/navigation-public.js";
 import * as overlays from "../src/overlays.js";
+import * as otpField from "../src/otp-field.js";
+import * as passwordField from "../src/password-field.js";
 import * as provider from "../src/provider.js";
 import * as selection from "../src/selection.js";
 import * as toast from "../src/toast.js";
@@ -25,6 +27,8 @@ const publicModules: Readonly<Record<string, Readonly<Record<string, unknown>>>>
   "./layout": layout,
   "./navigation": navigation,
   "./overlays": overlays,
+  "./otp-field": otpField,
+  "./password-field": passwordField,
   "./provider": provider,
   "./selection": selection,
   "./toast": toast,
@@ -43,7 +47,7 @@ describe("@hjm/react renderer evidence", () => {
     });
 
     const componentIds = reactRendererEvidence.components.map(({ componentId }) => componentId);
-    expect(componentIds).toHaveLength(38);
+    expect(componentIds).toHaveLength(40);
     expect(new Set(componentIds).size).toBe(componentIds.length);
   });
 

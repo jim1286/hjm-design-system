@@ -4,8 +4,8 @@
 
 This projection joins the canonical surface maturity manifest with first-party renderer claims. Missing scenarios are explicit beta promotion debt; stable surfaces are blocked by CI until none remain.
 
-- web: 38/38 active implementations; 0/38 full scenario sets
-- native: 48/48 active implementations; 0/48 full scenario sets
+- web: 40/40 active implementations; 0/40 full scenario sets
+- native: 50/50 active implementations; 0/50 full scenario sets
 
 | Component | Surface | Maturity | Renderer package | Export | Claimed scenarios | Missing required scenarios | Executable proofs |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -20,6 +20,8 @@ This projection joins the canonical surface maturity manifest with first-party r
 | Field | web | beta | @hjm/react | ./forms | default | dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard | test/default-render.ssr.test.tsx#field |
 | SearchField | web | beta | @hjm/react | ./forms | default | dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard | test/default-render.ssr.test.tsx#search-field |
 | TextArea | web | beta | @hjm/react | ./forms | default | dark, long-copy, large-text, rtl, reduced-motion, accessibility | test/default-render.ssr.test.tsx#text-area |
+| PasswordField | web | beta | @hjm/react | ./password-field | default | dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard, platform-parity | test/default-render.ssr.test.tsx#password-field |
+| OtpField | web | beta | @hjm/react | ./otp-field | default | dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard, platform-parity | test/default-render.ssr.test.tsx#otp-field |
 | Checkbox | web | beta | @hjm/react | ./selection | default | dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard | test/default-render.ssr.test.tsx#checkbox |
 | Radio | web | beta | @hjm/react | ./selection | default | dark, long-copy, large-text, rtl, reduced-motion, accessibility | test/default-render.ssr.test.tsx#radio |
 | CheckboxGroup | web | beta | @hjm/react | ./selection | default | dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard | test/default-render.ssr.test.tsx#checkbox-group |
@@ -61,6 +63,8 @@ This projection joins the canonical surface maturity manifest with first-party r
 | Field | native | beta | @hjm/react-native | ./forms | default | dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard | test/default-render.test.tsx#field |
 | SearchField | native | beta | @hjm/react-native | ./inputs | default | dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard | test/default-render.test.tsx#search-field |
 | TextArea | native | beta | @hjm/react-native | ./inputs | default | dark, long-copy, large-text, rtl, reduced-motion, accessibility | test/default-render.test.tsx#text-area |
+| PasswordField | native | beta | @hjm/react-native | ./password-field | default | dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard, platform-parity | test/default-render.test.tsx#password-field |
+| OtpField | native | beta | @hjm/react-native | ./otp-field | default | dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard, platform-parity | test/default-render.test.tsx#otp-field |
 | Checkbox | native | beta | @hjm/react-native | ./inputs | default | dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard | test/default-render.test.tsx#checkbox |
 | CheckboxGroup | native | beta | @hjm/react-native | ./inputs | default | dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard | test/default-render.test.tsx#checkbox-group |
 | RadioGroup | native | beta | @hjm/react-native | ./inputs | default | dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard | test/default-render.test.tsx#radio-group |

@@ -1,7 +1,9 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { fieldRecipe, } from "@hjm/design-contracts/recipes/base";
 import { iconRecipe, searchFieldRecipe, } from "@hjm/design-contracts/recipes";
-import { forwardRef, useId, useRef, useState, } from "react";
+import { passwordFieldRecipe, resolvePasswordFieldDescriptor, } from "@hjm/design-contracts/components/password-field";
+import { getOtpFieldSlotValues, otpFieldRecipe, resolveOtpFieldValue, } from "@hjm/design-contracts/components/otp-field";
+import { forwardRef, useEffect, useId, useLayoutEffect, useRef, useState, } from "react";
 import { composeRefs, classNames, useControllableState } from "./internal.js";
 function FieldFrame({ controlId, label, description, error, descriptionId, errorId, required = false, disabled = false, focused = false, variant = fieldRecipe.defaults.variant, shape = fieldRecipe.defaults.shape, className, children, ...props }) {
     const state = disabled ? "disabled" : error ? "invalid" : focused ? "focused" : "idle";
@@ -89,5 +91,88 @@ export const SearchField = forwardRef(function SearchField({ value: valueProp, d
                 onClear?.();
                 inputRef.current?.focus();
             }, children: renderClearIcon?.(iconAppearance) ?? "×" })) : trailing }));
+});
+/** Password input with an independently controlled, selection-safe reveal action. */
+export const PasswordField = forwardRef(function PasswordField({ value: valueProp, defaultValue = "", onValueChange, onChange, revealed: revealedProp, defaultRevealed = false, onRevealedChange, autofillHint, revealLabel, concealLabel, size = passwordFieldRecipe.defaults.size, renderToggleIcon, fieldClassName, className, disabled, readOnly, ...props }, forwardedRef) {
+    const [value, setValue] = useControllableState({
+        ...(valueProp === undefined ? {} : { value: valueProp }),
+        defaultValue,
+        ...(onValueChange === undefined ? {} : { onChange: onValueChange }),
+    });
+    const [revealed, setRevealed] = useControllableState({
+        ...(revealedProp === undefined ? {} : { value: revealedProp }),
+        defaultValue: defaultRevealed,
+        ...(onRevealedChange === undefined ? {} : { onChange: onRevealedChange }),
+    });
+    const resolved = resolvePasswordFieldDescriptor({ revealed, autofillHint }, {
+        composeToggleAccessibleName: ({ willReveal }) => willReveal ? revealLabel : concealLabel,
+    });
+    const inputRef = useRef(null);
+    const selectionRef = useRef(null);
+    useLayoutEffect(() => {
+        const selection = selectionRef.current;
+        if (!selection || !inputRef.current)
+            return;
+        inputRef.current.setSelectionRange(selection.start, selection.end);
+        selectionRef.current = null;
+    }, [revealed]);
+    const toggleAppearance = {
+        name: revealed
+            ? passwordFieldRecipe.toggle.icons.revealed
+            : passwordFieldRecipe.toggle.icons.concealed,
+        color: "currentColor",
+        size: iconRecipe.sizes.sm,
+        revealed,
+        disabled: disabled ?? false,
+    };
+    return (_jsx(TextField, { ...props, ref: composeRefs(inputRef, forwardedRef), autoComplete: autofillHint === "current" ? "current-password" : "new-password", className: classNames("hjm-password-field__input", className), disabled: disabled, fieldClassName: classNames("hjm-password-field", `hjm-password-field--${size}`, fieldClassName), onChange: (event) => {
+            setValue(event.currentTarget.value);
+            onChange?.(event);
+        }, readOnly: readOnly, trailing: (_jsx("button", { "aria-label": resolved.toggleAccessibleName, "aria-pressed": revealed, className: "hjm-password-field__toggle", "data-revealed": revealed || undefined, disabled: disabled, onClick: () => {
+                const input = inputRef.current;
+                if (input && input.selectionStart !== null && input.selectionEnd !== null) {
+                    selectionRef.current = {
+                        start: input.selectionStart,
+                        end: input.selectionEnd,
+                    };
+                }
+                setRevealed(!revealed);
+            }, type: "button", children: renderToggleIcon?.(toggleAppearance) ?? _jsx("span", { "aria-hidden": "true" }) })), type: resolved.webInputType, value: value }));
+});
+/** One accessible numeric input rendered as decorative OTP slots. */
+export const OtpField = forwardRef(function OtpField({ id, label, description, error, required, disabled, readOnly, busy = false, length, value: valueProp, defaultValue = "", onValueChange, onComplete, onChange, size = otpFieldRecipe.defaults.size, fieldClassName, className, onFocus, onBlur, "aria-describedby": ariaDescribedBy, "aria-invalid": ariaInvalid, "aria-label": ariaLabel, ...props }, ref) {
+    const ids = useFieldIds(id);
+    const [focused, setFocused] = useState(false);
+    requireFieldAccessibleName(label, ariaLabel);
+    const [value, setValue] = useControllableState({
+        ...(valueProp === undefined ? {} : { value: valueProp }),
+        defaultValue: resolveOtpFieldValue(length, defaultValue),
+        ...(onValueChange === undefined ? {} : { onChange: onValueChange }),
+    });
+    const slots = getOtpFieldSlotValues({ length, value });
+    const complete = value.length === length;
+    const wasCompleteRef = useRef(complete);
+    useEffect(() => {
+        if (complete && !wasCompleteRef.current)
+            onComplete?.(value);
+        wasCompleteRef.current = complete;
+    }, [complete, onComplete, value]);
+    const activeIndex = Math.min(value.length, length - 1);
+    return (_jsx(FieldFrame, { className: classNames("hjm-otp-field", fieldClassName), controlId: ids.controlId, description: description, disabled: (disabled ?? false) || busy, error: error, focused: focused, label: label, required: required ?? false, ...(description ? { descriptionId: ids.descriptionId } : {}), ...(error ? { errorId: ids.errorId } : {}), children: _jsxs("div", { className: "hjm-otp-field__control", "data-complete": complete || undefined, "data-size": size, style: { "--hjm-otp-length": length }, children: [_jsx("input", { ...props, ref: ref, "aria-busy": busy || undefined, "aria-describedby": describedBy(ariaDescribedBy, description, error, ids.descriptionId, ids.errorId), "aria-invalid": error ? true : ariaInvalid, "aria-label": ariaLabel, autoComplete: "one-time-code", className: classNames("hjm-otp-field__input", className), disabled: disabled || busy, id: ids.controlId, inputMode: "numeric", maxLength: length, onBlur: (event) => {
+                        setFocused(false);
+                        onBlur?.(event);
+                    }, onChange: (event) => {
+                        setValue(resolveOtpFieldValue(length, event.currentTarget.value));
+                        onChange?.(event);
+                    }, onFocus: (event) => {
+                        setFocused(true);
+                        onFocus?.(event);
+                    }, pattern: "[0-9]*", readOnly: readOnly, required: required, type: "text", value: value }), _jsx("div", { "aria-hidden": "true", className: "hjm-otp-field__slots", children: slots.map((digit, index) => (_jsx("span", { className: "hjm-otp-field__slot", "data-state": error
+                            ? "invalid"
+                            : focused && index === activeIndex
+                                ? "focused"
+                                : digit
+                                    ? "filled"
+                                    : "idle", children: digit }, index))) })] }) }));
 });
 //# sourceMappingURL=forms.js.map

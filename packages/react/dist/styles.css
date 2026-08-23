@@ -259,6 +259,104 @@
 .hjm-search-field__clear { inline-size: 32px; block-size: 32px; display: inline-grid; place-items: center; border: 0; border-radius: 50%; color: inherit; background: transparent; font: inherit; cursor: pointer; }
 .hjm-search-field__spinner { inline-size: 32px; block-size: 32px; display: inline-grid; place-items: center; color: var(--hjm-color-content-brand); }
 .hjm-search-field__spinner:empty::before { content: ""; inline-size: 1em; block-size: 1em; border: 2px solid currentColor; border-inline-end-color: transparent; border-radius: 50%; animation: hjm-spin 800ms linear infinite; }
+.hjm-password-field--large .hjm-field__control { min-block-size: var(--hjm-control-button-large); padding-inline: var(--hjm-space-lg); }
+.hjm-password-field--large .hjm-field__input { min-block-size: calc(var(--hjm-control-button-large) - 2px); font-size: var(--hjm-type-body-large-size); line-height: var(--hjm-type-body-large-line-height); }
+.hjm-password-field__toggle {
+  position: relative;
+  flex: 0 0 var(--hjm-control-min-touch-target);
+  inline-size: var(--hjm-control-min-touch-target);
+  block-size: var(--hjm-control-min-touch-target);
+  display: inline-grid;
+  place-items: center;
+  margin-inline-end: calc(-1 * var(--hjm-space-xs));
+  padding: 0;
+  border: 0;
+  border-radius: var(--hjm-radius-full);
+  color: var(--hjm-color-text-muted);
+  background: transparent;
+  cursor: pointer;
+}
+.hjm-password-field__toggle:disabled { cursor: not-allowed; opacity: 0.6; }
+.hjm-password-field__toggle:focus-visible { outline: 2px solid var(--hjm-color-content-brand); outline-offset: -2px; }
+.hjm-password-field__toggle > span:empty {
+  position: relative;
+  inline-size: 18px;
+  block-size: 12px;
+  display: block;
+  border: 2px solid currentColor;
+  border-radius: 70% 20%;
+  transform: rotate(45deg);
+}
+.hjm-password-field__toggle > span:empty::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.hjm-password-field__toggle[data-revealed] > span:empty::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset-block-start: 4px;
+  inset-inline-start: -3px;
+  inline-size: 22px;
+  border-block-start: 2px solid currentColor;
+}
+.hjm-otp-field__control {
+  --hjm-otp-slot-size: var(--hjm-control-min-touch-target);
+  --hjm-otp-gap: var(--hjm-space-xs);
+  position: relative;
+  inline-size: 100%;
+  max-inline-size: calc(
+    (var(--hjm-otp-slot-size) * var(--hjm-otp-length)) +
+    (var(--hjm-otp-gap) * (var(--hjm-otp-length) - 1))
+  );
+  direction: ltr;
+}
+.hjm-otp-field__control[data-size="large"] {
+  --hjm-otp-slot-size: var(--hjm-control-button-large);
+  --hjm-otp-gap: var(--hjm-space-sm);
+}
+.hjm-otp-field__input {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  opacity: 0.001;
+  color: transparent;
+  background: transparent;
+  caret-color: transparent;
+  cursor: text;
+}
+.hjm-otp-field__slots {
+  display: grid;
+  grid-template-columns: repeat(var(--hjm-otp-length), minmax(0, var(--hjm-otp-slot-size)));
+  gap: var(--hjm-otp-gap);
+  pointer-events: none;
+}
+.hjm-otp-field__slot {
+  min-inline-size: 0;
+  min-block-size: var(--hjm-otp-slot-size);
+  display: grid;
+  place-items: center;
+  padding-block: var(--hjm-space-xxs);
+  border: 1px solid var(--hjm-color-text-muted);
+  border-radius: var(--hjm-radius-md);
+  color: var(--hjm-color-text);
+  background: var(--hjm-color-surface);
+  font-size: var(--hjm-type-title-size);
+  line-height: var(--hjm-type-title-line-height);
+  font-weight: var(--hjm-font-weight-semibold);
+}
+.hjm-otp-field__control[data-size="large"] .hjm-otp-field__slot { font-size: var(--hjm-type-title-large-size); line-height: var(--hjm-type-title-large-line-height); }
+.hjm-otp-field__slot[data-state="filled"] { border-color: var(--hjm-color-content-brand); }
+.hjm-otp-field__slot[data-state="focused"] { border-color: var(--hjm-color-content-brand); box-shadow: 0 0 0 1px var(--hjm-color-content-brand); }
+.hjm-otp-field__slot[data-state="invalid"] { border-color: var(--hjm-color-danger); }
 
 .hjm-bottom-navigation {
   position: fixed;

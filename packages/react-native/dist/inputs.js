@@ -4,8 +4,10 @@ import { resolveColorReference } from "@hjm/design-contracts/color-references";
 import { glyph, radius, spacing, typography } from "@hjm/design-contracts/foundations";
 import { fieldRecipe, } from "@hjm/design-contracts/recipes/base";
 import { chipRecipe, searchFieldRecipe, segmentedControlRecipe, selectionControlRecipe, selectionGroupRecipe, switchRecipe, } from "@hjm/design-contracts/recipes";
+import { passwordFieldRecipe, resolvePasswordFieldDescriptor, } from "@hjm/design-contracts/components/password-field";
+import { getOtpFieldSlotValues, otpFieldRecipe, resolveOtpFieldValue, } from "@hjm/design-contracts/components/otp-field";
 import { getCheckboxNextState, reconcileCheckboxSelection, resolveControlAccessibleName, resolveInitialRadioValue, resolveInitialTabValue, reconcileRadioSelection, selectionGroupBehaviorDefaults, toggleCheckboxSelection, validateCheckboxSelection, validateRadioSelection, validateSelectionItems, } from "@hjm/design-contracts/behaviors";
-import { forwardRef, useEffect, useId, useRef, useState } from "react";
+import { forwardRef, useEffect, useId, useImperativeHandle, useRef, useState, } from "react";
 import { ActivityIndicator, Pressable, Switch as NativeSwitch, TextInput, View, } from "react-native";
 import { useControllableState } from "./internal/state.js";
 import { logicalTextAlign, minimumTargetStyle, resolveNativeTextScaleProps, } from "./internal/styles.js";
@@ -155,6 +157,171 @@ export const SearchField = forwardRef(function SearchField({ clearLabel, busyLab
             if (!busy && !disabled)
                 setSearchValue(next);
         }, search: true, searchSize: size, trailing: trailing, value: searchValue }));
+});
+function DefaultPasswordToggleIcon({ color, revealed, size, }) {
+    const eyeWidth = size * 1.08;
+    const eyeHeight = size * 0.68;
+    const strokeWidth = Math.max(1.5, size * 0.1);
+    return (_jsxs(View, { accessible: false, style: {
+            alignItems: "center",
+            height: size,
+            justifyContent: "center",
+            width: eyeWidth,
+        }, children: [_jsx(View, { style: {
+                    alignItems: "center",
+                    borderColor: color,
+                    borderRadius: eyeHeight / 2,
+                    borderWidth: strokeWidth,
+                    height: eyeHeight,
+                    justifyContent: "center",
+                    width: eyeWidth,
+                }, children: _jsx(View, { style: {
+                        backgroundColor: color,
+                        borderRadius: size * 0.15,
+                        height: size * 0.3,
+                        width: size * 0.3,
+                    } }) }), revealed ? (_jsx(View, { style: {
+                    backgroundColor: color,
+                    borderRadius: strokeWidth,
+                    height: strokeWidth,
+                    position: "absolute",
+                    transform: [{ rotate: "-42deg" }],
+                    width: eyeWidth * 1.18,
+                } })) : null] }));
+}
+/** Password input with independent reveal state and native autofill translation. */
+export const PasswordField = forwardRef(function PasswordField({ revealed: revealedProp, defaultRevealed = false, onRevealedChange, autofillHint, revealLabel, concealLabel, size = passwordFieldRecipe.defaults.size, renderToggleIcon, disabled = false, onSelectionChange, ...props }, forwardedRef) {
+    const theme = useHjmNativeTheme();
+    const inputRef = useRef(null);
+    useImperativeHandle(forwardedRef, () => inputRef.current);
+    const selectionRef = useRef({ start: 0, end: 0 });
+    const [revealed, setRevealed] = useControllableState({
+        ...(revealedProp === undefined ? {} : { value: revealedProp }),
+        defaultValue: defaultRevealed,
+        ...(onRevealedChange === undefined ? {} : { onChange: onRevealedChange }),
+    });
+    const resolved = resolvePasswordFieldDescriptor({ revealed, autofillHint }, {
+        composeToggleAccessibleName: ({ willReveal }) => willReveal ? revealLabel : concealLabel,
+    });
+    const metrics = passwordFieldRecipe.sizes[size];
+    const toggleColor = resolveColorReference(passwordFieldRecipe.toggle.color, theme.palette);
+    const appearance = {
+        name: revealed
+            ? passwordFieldRecipe.toggle.icons.revealed
+            : passwordFieldRecipe.toggle.icons.concealed,
+        color: toggleColor,
+        size: glyph.sm,
+        revealed,
+        disabled,
+    };
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            inputRef.current?.setNativeProps({ selection: selectionRef.current });
+        }, 0);
+        return () => clearTimeout(timeout);
+    }, [revealed]);
+    return (_jsx(FieldRenderer, { ...props, ref: inputRef, autoComplete: autofillHint === "current" ? "current-password" : "new-password", disabled: disabled, inputStyle: [
+            size === "large"
+                ? {
+                    fontSize: typography.bodyLarge.fontSize,
+                    lineHeight: typography.bodyLarge.lineHeight,
+                    minHeight: metrics.minHeight - (passwordFieldRecipe.frame.borderWidth * 2),
+                }
+                : undefined,
+            props.inputStyle,
+        ], multiline: false, onSelectionChange: (event) => {
+            selectionRef.current = event.nativeEvent.selection;
+            onSelectionChange?.(event);
+        }, search: false, secureTextEntry: resolved.nativeSecureTextEntry, textContentType: autofillHint === "current" ? "password" : "newPassword", trailing: (_jsx(Pressable, { accessibilityLabel: resolved.toggleAccessibleName, accessibilityRole: "button", accessibilityState: { disabled, selected: revealed }, disabled: disabled, onPress: () => setRevealed(!revealed), style: ({ pressed }) => ({
+                alignItems: "center",
+                height: metrics.toggleDiameter,
+                justifyContent: "center",
+                opacity: pressed ? 0.72 : 1,
+                width: metrics.toggleDiameter,
+            }), children: renderToggleIcon?.(appearance) ?? _jsx(DefaultPasswordToggleIcon, { ...appearance }) })) }));
+});
+/** One accessible numeric TextInput rendered through decorative OTP slots. */
+export const OtpField = forwardRef(function OtpField({ label, accessibilityLabel, supportText, error, required = false, disabled = false, busy = false, readOnly = false, length, value: valueProp, defaultValue = "", onValueChange, onComplete, size = otpFieldRecipe.defaults.size, slotStyle, slotTextStyle, containerStyle, allowFontScaling, onBlur, onFocus, ...props }, ref) {
+    const theme = useHjmNativeTheme();
+    const { accessibleName, visibleLabel } = resolveFieldAccessibleName(label, accessibilityLabel);
+    const [focused, setFocused] = useState(false);
+    const [value, setValue] = useControllableState({
+        ...(valueProp === undefined ? {} : { value: valueProp }),
+        defaultValue: resolveOtpFieldValue(length, defaultValue),
+        ...(onValueChange === undefined ? {} : { onChange: onValueChange }),
+    });
+    const slots = getOtpFieldSlotValues({ length, value });
+    const complete = value.length === length;
+    const wasCompleteRef = useRef(complete);
+    useEffect(() => {
+        if (complete && !wasCompleteRef.current)
+            onComplete?.(value);
+        wasCompleteRef.current = complete;
+    }, [complete, onComplete, value]);
+    const metrics = otpFieldRecipe.sizes[size];
+    const activeIndex = Math.min(value.length, length - 1);
+    const slotHeight = Math.max(metrics.slotSize, typography[metrics.textVariant].lineHeight * theme.environment.textScale + spacing.xs * 2);
+    const baseBorder = resolveColorReference(otpFieldRecipe.slot.border, theme.palette);
+    const focusBorder = resolveColorReference(otpFieldRecipe.slot.focusBorder, theme.palette);
+    const invalidBorder = resolveColorReference(otpFieldRecipe.slot.invalidBorder, theme.palette);
+    const filledBorder = resolveColorReference(otpFieldRecipe.slot.filledBorder, theme.palette);
+    const contentColor = resolveColorReference(otpFieldRecipe.slot.content, theme.palette);
+    return (_jsxs(View, { style: [
+            {
+                gap: fieldRecipe.label.gap,
+                opacity: disabled || busy ? otpFieldRecipe.states.disabledOpacity : 1,
+            },
+            containerStyle,
+        ], children: [visibleLabel ? (_jsxs(Text, { style: {
+                    color: theme.colors[fieldRecipe.label.color],
+                    fontWeight: fieldRecipe.label.fontWeight,
+                }, tone: "body", variant: fieldRecipe.label.textVariant, children: [visibleLabel, required ? " *" : ""] })) : null, _jsxs(View, { style: { gap: otpFieldRecipe.support.gap }, children: [_jsxs(View, { style: {
+                            direction: "ltr",
+                            flexDirection: "row",
+                            gap: metrics.gap,
+                            maxWidth: metrics.slotSize * length + metrics.gap * (length - 1),
+                            position: "relative",
+                            width: "100%",
+                        }, children: [_jsx(TextInput, { ...props, ref: ref, accessibilityHint: error ?? supportText, accessibilityLabel: accessibleName, accessibilityState: { busy, disabled: disabled || readOnly }, allowFontScaling: allowFontScaling, autoComplete: "one-time-code", caretHidden: true, editable: !disabled && !busy && !readOnly, keyboardType: "number-pad", maxLength: length, onBlur: (event) => {
+                                    setFocused(false);
+                                    onBlur?.(event);
+                                }, onChangeText: (rawText) => setValue(resolveOtpFieldValue(length, rawText)), onFocus: (event) => {
+                                    setFocused(true);
+                                    onFocus?.(event);
+                                }, selectionColor: "transparent", style: {
+                                    bottom: 0,
+                                    color: "transparent",
+                                    left: 0,
+                                    opacity: 0.01,
+                                    padding: 0,
+                                    position: "absolute",
+                                    right: 0,
+                                    top: 0,
+                                    zIndex: 1,
+                                }, textContentType: "oneTimeCode", value: value }), slots.map((digit, index) => {
+                                const borderColor = error
+                                    ? invalidBorder
+                                    : focused && index === activeIndex
+                                        ? focusBorder
+                                        : digit
+                                            ? filledBorder
+                                            : baseBorder;
+                                return (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", style: [
+                                        {
+                                            alignItems: "center",
+                                            backgroundColor: theme.colors.surface,
+                                            borderColor,
+                                            borderRadius: radius[otpFieldRecipe.slot.radius],
+                                            borderWidth: otpFieldRecipe.slot.borderWidth,
+                                            flex: 1,
+                                            height: slotHeight,
+                                            justifyContent: "center",
+                                            maxWidth: metrics.slotSize,
+                                            minWidth: 0,
+                                        },
+                                        slotStyle,
+                                    ], children: _jsx(Text, { accessible: false, align: "center", allowFontScaling: allowFontScaling, style: [{ color: contentColor }, slotTextStyle], variant: metrics.textVariant, children: digit }) }, index));
+                            })] }), _jsx(FieldMessage, { ...(error === undefined ? {} : { error }), ...(supportText === undefined ? {} : { supportText }) })] })] }));
 });
 function ChoiceRow({ kind, label, description, checked, disabled, readOnly, required, invalid, readOnlyLabel, requiredLabel, invalidLabel, accessibilityHint, presentation = selectionControlRecipe.defaults.presentation, size = selectionControlRecipe.defaults.size, indicator = "default", leading, renderLeading, renderIndicator, onActivate, style, controlStyle, indicatorStyle, leadingStyle, contentStyle, labelStyle, descriptionStyle, }) {
     const theme = useHjmNativeTheme();

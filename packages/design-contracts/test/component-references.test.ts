@@ -121,8 +121,8 @@ describe("component reference coverage", () => {
       }
     }
 
-    expect(componentCatalog.filter(({ surfaceStatus }) => surfaceStatus.web === "beta")).toHaveLength(38);
-    expect(componentCatalog.filter(({ surfaceStatus }) => surfaceStatus.native === "beta")).toHaveLength(48);
+    expect(componentCatalog.filter(({ surfaceStatus }) => surfaceStatus.web === "beta")).toHaveLength(40);
+    expect(componentCatalog.filter(({ surfaceStatus }) => surfaceStatus.native === "beta")).toHaveLength(50);
     expect(componentCatalog.some((entry) => getComponentSurfaceStatus(entry, "web") === "stable")).toBe(false);
     expect(componentCatalog.some((entry) => getComponentSurfaceStatus(entry, "native") === "stable")).toBe(false);
   });
@@ -211,11 +211,11 @@ describe("component reference coverage", () => {
     expect(summary).toMatchObject({
       total: 73,
       tracked: 73,
-      fullyMature: 39,
-      partiallyMature: 2,
+      fullyMature: 40,
+      partiallyMature: 1,
       plannedOnly: 32,
-      fullyPreviewable: 39,
-      partiallyPreviewable: 2,
+      fullyPreviewable: 40,
+      partiallyPreviewable: 1,
       contractOnly: 32,
     });
     expect(

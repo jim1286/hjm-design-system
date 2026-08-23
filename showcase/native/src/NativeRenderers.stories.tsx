@@ -26,6 +26,8 @@ import {
   useToastRegion,
 } from "@hjm/react-native/feedback";
 import { Combobox, Field, Select } from "@hjm/react-native/forms";
+import { OtpField } from "@hjm/react-native/otp-field";
+import { PasswordField } from "@hjm/react-native/password-field";
 import {
   Checkbox,
   CheckboxGroup,
@@ -158,6 +160,20 @@ function InputsPreview() {
         onClear={() => setQuery("")}
       />
       <TextArea label="Notes" value={notes} onValueChange={setNotes} />
+      <PasswordField
+        autofillHint="current"
+        concealLabel="Hide password"
+        defaultValue="hjm-password"
+        label="Password"
+        revealLabel="Show password"
+        supportText="Reveal state never changes the password value."
+      />
+      <OtpField
+        defaultValue="128"
+        label="Verification code"
+        length={6}
+        supportText="Type or paste the full six-digit code."
+      />
       <Checkbox label="Accept terms" checked={checked} onCheckedChange={setChecked} />
       <CheckboxGroup
         label="Channels"

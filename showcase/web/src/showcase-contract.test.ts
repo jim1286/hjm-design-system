@@ -126,23 +126,23 @@ describe("web showcase coverage", () => {
     expect(Object.keys(webRendererRegistry).sort()).toEqual(expected);
     expect(summarizeWebShowcaseCoverage()).toEqual({
       canonical: componentCatalog.length,
-      webReferences: 38,
-      contractOnly: 51,
+      webReferences: 40,
+      contractOnly: 49,
       nativeOnly: 2,
     });
   });
 
-  it("renders the canonical 38/51/2 surface-evidence split in Home and Explorer", () => {
+  it("renders the canonical 40/49/2 surface-evidence split in Home and Explorer", () => {
     const homeHtml = renderToStaticMarkup(createElement(Introduction));
-    expect(homeHtml).toContain("<strong>38</strong><span>Web references</span>");
-    expect(homeHtml).toContain("<strong>51</strong><span>contract-only stories</span>");
+    expect(homeHtml).toContain("<strong>40</strong><span>Web references</span>");
+    expect(homeHtml).toContain("<strong>49</strong><span>contract-only stories</span>");
     expect(homeHtml).toContain("<strong>2</strong><span>Native-only stories</span>");
     expect(homeHtml).toContain(componentCategoryExplorerHref("input"));
     expect(homeHtml).not.toContain("args=initialCategory");
 
     const explorerHtml = renderToStaticMarkup(createElement(ComponentExplorer));
-    expect(explorerHtml).toContain("<strong>38</strong> Web references");
-    expect(explorerHtml).toContain("<strong>51</strong> contract-only stories");
+    expect(explorerHtml).toContain("<strong>40</strong> Web references");
+    expect(explorerHtml).toContain("<strong>49</strong> contract-only stories");
     expect(explorerHtml).toContain("<strong>2</strong> Native-only stories");
     expect(explorerHtml.match(/Open Native-only contract/g)).toHaveLength(2);
     expect(explorerHtml).toContain("Open Web reference");
@@ -359,7 +359,7 @@ describe("web showcase coverage", () => {
     const activeNames = componentCatalog
       .filter((entry) => isMatureStatus(getComponentSurfaceStatus(entry, "web")))
       .map(({ name }) => name);
-    expect(activeNames).toHaveLength(38);
+    expect(activeNames).toHaveLength(40);
     for (const name of activeNames) {
       expect(webRendererComponentNames).toContain(name);
       if (!isWebRendererComponent(name)) throw new Error(`Missing Web renderer registry entry: ${name}`);

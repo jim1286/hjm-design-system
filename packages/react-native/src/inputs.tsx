@@ -20,6 +20,18 @@ import {
   type SwitchSize,
 } from "@hjm/design-contracts/recipes";
 import {
+  passwordFieldRecipe,
+  resolvePasswordFieldDescriptor,
+  type PasswordFieldAutofillHint,
+  type PasswordFieldSize,
+} from "@hjm/design-contracts/components/password-field";
+import {
+  getOtpFieldSlotValues,
+  otpFieldRecipe,
+  resolveOtpFieldValue,
+  type OtpFieldSize,
+} from "@hjm/design-contracts/components/otp-field";
+import {
   getCheckboxNextState,
   reconcileCheckboxSelection,
   resolveControlAccessibleName,
@@ -36,7 +48,15 @@ import {
   type SelectionItemDescriptor,
   type SelectionOrientation,
 } from "@hjm/design-contracts/behaviors";
-import { forwardRef, useEffect, useId, useRef, useState, type ReactNode } from "react";
+import {
+  forwardRef,
+  useEffect,
+  useId,
+  useImperativeHandle,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 import {
   ActivityIndicator,
   Pressable,
@@ -447,6 +467,386 @@ export const SearchField = forwardRef<TextInput, SearchFieldProps>(function Sear
       trailing={trailing}
       value={searchValue}
     />
+  );
+});
+
+export type PasswordFieldToggleRenderProps = Readonly<{
+  name: "visibility" | "visibilityOff";
+  color: string;
+  size: number;
+  revealed: boolean;
+  disabled: boolean;
+}>;
+
+export type PasswordFieldProps = Omit<
+  BaseFieldProps,
+  | "autoComplete"
+  | "defaultValue"
+  | "secureTextEntry"
+  | "textContentType"
+  | "value"
+> & FieldAccessibleName &
+  Readonly<{
+    value?: string;
+    defaultValue?: string;
+    onValueChange?: (value: string) => void;
+    revealed?: boolean;
+    defaultRevealed?: boolean;
+    onRevealedChange?: (revealed: boolean) => void;
+    autofillHint: PasswordFieldAutofillHint;
+    revealLabel: string;
+    concealLabel: string;
+    size?: PasswordFieldSize;
+    renderToggleIcon?: (props: PasswordFieldToggleRenderProps) => ReactNode;
+  }>;
+
+function DefaultPasswordToggleIcon({
+  color,
+  revealed,
+  size,
+}: Pick<PasswordFieldToggleRenderProps, "color" | "revealed" | "size">) {
+  const eyeWidth = size * 1.08;
+  const eyeHeight = size * 0.68;
+  const strokeWidth = Math.max(1.5, size * 0.1);
+  return (
+    <View
+      accessible={false}
+      style={{
+        alignItems: "center",
+        height: size,
+        justifyContent: "center",
+        width: eyeWidth,
+      }}
+    >
+      <View
+        style={{
+          alignItems: "center",
+          borderColor: color,
+          borderRadius: eyeHeight / 2,
+          borderWidth: strokeWidth,
+          height: eyeHeight,
+          justifyContent: "center",
+          width: eyeWidth,
+        }}
+      >
+        <View
+          style={{
+            backgroundColor: color,
+            borderRadius: size * 0.15,
+            height: size * 0.3,
+            width: size * 0.3,
+          }}
+        />
+      </View>
+      {revealed ? (
+        <View
+          style={{
+            backgroundColor: color,
+            borderRadius: strokeWidth,
+            height: strokeWidth,
+            position: "absolute",
+            transform: [{ rotate: "-42deg" }],
+            width: eyeWidth * 1.18,
+          }}
+        />
+      ) : null}
+    </View>
+  );
+}
+
+/** Password input with independent reveal state and native autofill translation. */
+export const PasswordField = forwardRef<TextInput, PasswordFieldProps>(function PasswordField(
+  {
+    revealed: revealedProp,
+    defaultRevealed = false,
+    onRevealedChange,
+    autofillHint,
+    revealLabel,
+    concealLabel,
+    size = passwordFieldRecipe.defaults.size,
+    renderToggleIcon,
+    disabled = false,
+    onSelectionChange,
+    ...props
+  },
+  forwardedRef,
+) {
+  const theme = useHjmNativeTheme();
+  const inputRef = useRef<TextInput>(null);
+  useImperativeHandle(forwardedRef, () => inputRef.current as TextInput);
+  const selectionRef = useRef({ start: 0, end: 0 });
+  const [revealed, setRevealed] = useControllableState({
+    ...(revealedProp === undefined ? {} : { value: revealedProp }),
+    defaultValue: defaultRevealed,
+    ...(onRevealedChange === undefined ? {} : { onChange: onRevealedChange }),
+  });
+  const resolved = resolvePasswordFieldDescriptor(
+    { revealed, autofillHint },
+    {
+      composeToggleAccessibleName: ({ willReveal }) =>
+        willReveal ? revealLabel : concealLabel,
+    },
+  );
+  const metrics = passwordFieldRecipe.sizes[size];
+  const toggleColor = resolveColorReference(passwordFieldRecipe.toggle.color, theme.palette);
+  const appearance: PasswordFieldToggleRenderProps = {
+    name: revealed
+      ? passwordFieldRecipe.toggle.icons.revealed
+      : passwordFieldRecipe.toggle.icons.concealed,
+    color: toggleColor,
+    size: glyph.sm,
+    revealed,
+    disabled,
+  };
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      inputRef.current?.setNativeProps({ selection: selectionRef.current });
+    }, 0);
+    return () => clearTimeout(timeout);
+  }, [revealed]);
+
+  return (
+    <FieldRenderer
+      {...props}
+      ref={inputRef}
+      autoComplete={autofillHint === "current" ? "current-password" : "new-password"}
+      disabled={disabled}
+      inputStyle={[
+        size === "large"
+          ? {
+              fontSize: typography.bodyLarge.fontSize,
+              lineHeight: typography.bodyLarge.lineHeight,
+              minHeight: metrics.minHeight - (passwordFieldRecipe.frame.borderWidth * 2),
+            }
+          : undefined,
+        props.inputStyle,
+      ]}
+      multiline={false}
+      onSelectionChange={(event) => {
+        selectionRef.current = event.nativeEvent.selection;
+        onSelectionChange?.(event);
+      }}
+      search={false}
+      secureTextEntry={resolved.nativeSecureTextEntry}
+      textContentType={autofillHint === "current" ? "password" : "newPassword"}
+      trailing={(
+        <Pressable
+          accessibilityLabel={resolved.toggleAccessibleName}
+          accessibilityRole="button"
+          accessibilityState={{ disabled, selected: revealed }}
+          disabled={disabled}
+          onPress={() => setRevealed(!revealed)}
+          style={({ pressed }) => ({
+            alignItems: "center",
+            height: metrics.toggleDiameter,
+            justifyContent: "center",
+            opacity: pressed ? 0.72 : 1,
+            width: metrics.toggleDiameter,
+          })}
+        >
+          {renderToggleIcon?.(appearance) ?? <DefaultPasswordToggleIcon {...appearance} />}
+        </Pressable>
+      )}
+    />
+  );
+});
+
+export type OtpFieldProps = Omit<
+  BaseFieldProps,
+  | "autoComplete"
+  | "defaultValue"
+  | "inputStyle"
+  | "keyboardType"
+  | "multiline"
+  | "onChangeText"
+  | "secureTextEntry"
+  | "textContentType"
+  | "value"
+> & FieldAccessibleName &
+  Readonly<{
+    length: number;
+    value?: string;
+    defaultValue?: string;
+    onValueChange?: (value: string) => void;
+    onComplete?: (value: string) => void;
+    size?: OtpFieldSize;
+    slotStyle?: StyleProp<ViewStyle>;
+    slotTextStyle?: StyleProp<TextStyle>;
+  }>;
+
+/** One accessible numeric TextInput rendered through decorative OTP slots. */
+export const OtpField = forwardRef<TextInput, OtpFieldProps>(function OtpField(
+  {
+    label,
+    accessibilityLabel,
+    supportText,
+    error,
+    required = false,
+    disabled = false,
+    busy = false,
+    readOnly = false,
+    length,
+    value: valueProp,
+    defaultValue = "",
+    onValueChange,
+    onComplete,
+    size = otpFieldRecipe.defaults.size,
+    slotStyle,
+    slotTextStyle,
+    containerStyle,
+    allowFontScaling,
+    onBlur,
+    onFocus,
+    ...props
+  },
+  ref,
+) {
+  const theme = useHjmNativeTheme();
+  const { accessibleName, visibleLabel } = resolveFieldAccessibleName(label, accessibilityLabel);
+  const [focused, setFocused] = useState(false);
+  const [value, setValue] = useControllableState({
+    ...(valueProp === undefined ? {} : { value: valueProp }),
+    defaultValue: resolveOtpFieldValue(length, defaultValue),
+    ...(onValueChange === undefined ? {} : { onChange: onValueChange }),
+  });
+  const slots = getOtpFieldSlotValues({ length, value });
+  const complete = value.length === length;
+  const wasCompleteRef = useRef(complete);
+  useEffect(() => {
+    if (complete && !wasCompleteRef.current) onComplete?.(value);
+    wasCompleteRef.current = complete;
+  }, [complete, onComplete, value]);
+  const metrics = otpFieldRecipe.sizes[size];
+  const activeIndex = Math.min(value.length, length - 1);
+  const slotHeight = Math.max(
+    metrics.slotSize,
+    typography[metrics.textVariant].lineHeight * theme.environment.textScale + spacing.xs * 2,
+  );
+  const baseBorder = resolveColorReference(otpFieldRecipe.slot.border, theme.palette);
+  const focusBorder = resolveColorReference(otpFieldRecipe.slot.focusBorder, theme.palette);
+  const invalidBorder = resolveColorReference(otpFieldRecipe.slot.invalidBorder, theme.palette);
+  const filledBorder = resolveColorReference(otpFieldRecipe.slot.filledBorder, theme.palette);
+  const contentColor = resolveColorReference(otpFieldRecipe.slot.content, theme.palette);
+
+  return (
+    <View
+      style={[
+        {
+          gap: fieldRecipe.label.gap,
+          opacity: disabled || busy ? otpFieldRecipe.states.disabledOpacity : 1,
+        },
+        containerStyle,
+      ]}
+    >
+      {visibleLabel ? (
+        <Text
+          style={{
+            color: theme.colors[fieldRecipe.label.color],
+            fontWeight: fieldRecipe.label.fontWeight,
+          }}
+          tone="body"
+          variant={fieldRecipe.label.textVariant}
+        >
+          {visibleLabel}{required ? " *" : ""}
+        </Text>
+      ) : null}
+      <View style={{ gap: otpFieldRecipe.support.gap }}>
+        <View
+          style={{
+            direction: "ltr",
+            flexDirection: "row",
+            gap: metrics.gap,
+            maxWidth: metrics.slotSize * length + metrics.gap * (length - 1),
+            position: "relative",
+            width: "100%",
+          }}
+        >
+          <TextInput
+            {...props}
+            ref={ref}
+            accessibilityHint={error ?? supportText}
+            accessibilityLabel={accessibleName}
+            accessibilityState={{ busy, disabled: disabled || readOnly }}
+            allowFontScaling={allowFontScaling}
+            autoComplete="one-time-code"
+            caretHidden
+            editable={!disabled && !busy && !readOnly}
+            keyboardType="number-pad"
+            maxLength={length}
+            onBlur={(event) => {
+              setFocused(false);
+              onBlur?.(event);
+            }}
+            onChangeText={(rawText) => setValue(resolveOtpFieldValue(length, rawText))}
+            onFocus={(event) => {
+              setFocused(true);
+              onFocus?.(event);
+            }}
+            selectionColor="transparent"
+            style={{
+              bottom: 0,
+              color: "transparent",
+              left: 0,
+              opacity: 0.01,
+              padding: 0,
+              position: "absolute",
+              right: 0,
+              top: 0,
+              zIndex: 1,
+            }}
+            textContentType="oneTimeCode"
+            value={value}
+          />
+          {slots.map((digit, index) => {
+            const borderColor = error
+              ? invalidBorder
+              : focused && index === activeIndex
+                ? focusBorder
+                : digit
+                  ? filledBorder
+                  : baseBorder;
+            return (
+              <View
+                accessibilityElementsHidden
+                accessible={false}
+                importantForAccessibility="no-hide-descendants"
+                key={index}
+                style={[
+                  {
+                    alignItems: "center",
+                    backgroundColor: theme.colors.surface,
+                    borderColor,
+                    borderRadius: radius[otpFieldRecipe.slot.radius],
+                    borderWidth: otpFieldRecipe.slot.borderWidth,
+                    flex: 1,
+                    height: slotHeight,
+                    justifyContent: "center",
+                    maxWidth: metrics.slotSize,
+                    minWidth: 0,
+                  },
+                  slotStyle,
+                ]}
+              >
+                <Text
+                  accessible={false}
+                  align="center"
+                  allowFontScaling={allowFontScaling}
+                  style={[{ color: contentColor }, slotTextStyle]}
+                  variant={metrics.textVariant}
+                >
+                  {digit}
+                </Text>
+              </View>
+            );
+          })}
+        </View>
+        <FieldMessage
+          {...(error === undefined ? {} : { error })}
+          {...(supportText === undefined ? {} : { supportText })}
+        />
+      </View>
+    </View>
   );
 });
 

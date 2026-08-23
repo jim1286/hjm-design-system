@@ -40,6 +40,16 @@
       "import": "./dist/forms-public.js",
       "default": "./dist/forms-public.js"
     },
+    "./password-field": {
+      "types": "./dist/password-field.d.ts",
+      "import": "./dist/password-field.js",
+      "default": "./dist/password-field.js"
+    },
+    "./otp-field": {
+      "types": "./dist/otp-field.d.ts",
+      "import": "./dist/otp-field.js",
+      "default": "./dist/otp-field.js"
+    },
     "./number-field": {
       "types": "./dist/number-field.d.ts",
       "import": "./dist/number-field.js",

@@ -43,6 +43,18 @@
       "import": "./dist/inputs-public.js",
       "default": "./dist/inputs-public.js"
     },
+    "./password-field": {
+      "types": "./dist/password-field.d.ts",
+      "react-native": "./dist/password-field.js",
+      "import": "./dist/password-field.js",
+      "default": "./dist/password-field.js"
+    },
+    "./otp-field": {
+      "types": "./dist/otp-field.d.ts",
+      "react-native": "./dist/otp-field.js",
+      "import": "./dist/otp-field.js",
+      "default": "./dist/otp-field.js"
+    },
     "./number-field": {
       "types": "./dist/number-field.d.ts",
       "react-native": "./dist/number-field.js",

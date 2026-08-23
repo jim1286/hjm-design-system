@@ -266,36 +266,36 @@ export declare const componentCatalog: readonly [{
     readonly status: "stable";
 }, {
     readonly roadmap: {
-        readonly state: "contract-ready";
+        readonly state: "evidence-needed";
         readonly summary: string;
     };
     readonly aliases: readonly ["Input.Password"];
     readonly recipe: "passwordFieldRecipe";
     readonly behavior: "passwordField";
     readonly surfaceStatus: {
-        readonly web: "planned";
-        readonly native: "planned";
+        readonly web: "beta";
+        readonly native: "beta";
     };
     readonly name: "PasswordField";
     readonly category: "input";
     readonly platform: "adaptive";
-    readonly status: "planned";
+    readonly status: "beta";
 }, {
     readonly roadmap: {
-        readonly state: "contract-ready";
+        readonly state: "evidence-needed";
         readonly summary: string;
     };
     readonly aliases: readonly ["Input.OTP"];
     readonly recipe: "otpFieldRecipe";
     readonly behavior: "otpField";
     readonly surfaceStatus: {
-        readonly web: "planned";
-        readonly native: "planned";
+        readonly web: "beta";
+        readonly native: "beta";
     };
     readonly name: "OtpField";
     readonly category: "input";
     readonly platform: "adaptive";
-    readonly status: "planned";
+    readonly status: "beta";
 }, {
     readonly recipe: "selectionControlRecipe";
     readonly behavior: "checkbox";

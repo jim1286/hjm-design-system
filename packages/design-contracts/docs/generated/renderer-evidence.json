@@ -6,8 +6,8 @@
     "web": {
       "packageName": "@hjm/react",
       "packageVersion": "0.7.1",
-      "activeComponents": 38,
-      "claimedComponents": 38,
+      "activeComponents": 40,
+      "claimedComponents": 40,
       "completeScenarioComponents": 0,
       "components": [
         {
@@ -448,6 +448,92 @@
             "rtl",
             "reduced-motion",
             "accessibility"
+          ]
+        },
+        {
+          "componentId": "password-field",
+          "name": "PasswordField",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./password-field",
+          "exportNames": [
+            "PasswordField"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "password-field"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default"
+          ],
+          "missingScenarios": [
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "componentId": "otp-field",
+          "name": "OtpField",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./otp-field",
+          "exportNames": [
+            "OtpField"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "otp-field"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default"
+          ],
+          "missingScenarios": [
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
           ]
         },
         {
@@ -1555,8 +1641,8 @@
     "native": {
       "packageName": "@hjm/react-native",
       "packageVersion": "0.7.1",
-      "activeComponents": 48,
-      "claimedComponents": 48,
+      "activeComponents": 50,
+      "claimedComponents": 50,
       "completeScenarioComponents": 0,
       "components": [
         {
@@ -2113,6 +2199,92 @@
             "rtl",
             "reduced-motion",
             "accessibility"
+          ]
+        },
+        {
+          "componentId": "password-field",
+          "name": "PasswordField",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./password-field",
+          "exportNames": [
+            "PasswordField"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "password-field"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default"
+          ],
+          "missingScenarios": [
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "componentId": "otp-field",
+          "name": "OtpField",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./otp-field",
+          "exportNames": [
+            "OtpField"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "otp-field"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default"
+          ],
+          "missingScenarios": [
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
           ]
         },
         {

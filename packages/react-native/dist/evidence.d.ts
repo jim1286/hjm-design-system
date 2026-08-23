@@ -754,6 +754,36 @@ export declare const reactNativeRendererEvidence: {
             file: `test/${string}.test.tsx`;
             caseId: string;
         }>[];
+    }>, Readonly<{
+        /** Canonical component id from the design-contracts catalog. */
+        componentId: string;
+        /** Public symbols that implement this contract on the declared subpath. */
+        exportNames: readonly string[];
+        /** Granular @hjm/react-native export used by consumers. */
+        subpath: `./${string}`;
+        /** Scenarios supported by automated first-party renderer evidence. */
+        scenarios: readonly ReactNativeRendererEvidenceScenario[];
+        /** Repository-local executable proof for every claimed scenario. */
+        proofs: readonly Readonly<{
+            scenarios: readonly ReactNativeRendererEvidenceScenario[];
+            file: `test/${string}.test.tsx`;
+            caseId: string;
+        }>[];
+    }>, Readonly<{
+        /** Canonical component id from the design-contracts catalog. */
+        componentId: string;
+        /** Public symbols that implement this contract on the declared subpath. */
+        exportNames: readonly string[];
+        /** Granular @hjm/react-native export used by consumers. */
+        subpath: `./${string}`;
+        /** Scenarios supported by automated first-party renderer evidence. */
+        scenarios: readonly ReactNativeRendererEvidenceScenario[];
+        /** Repository-local executable proof for every claimed scenario. */
+        proofs: readonly Readonly<{
+            scenarios: readonly ReactNativeRendererEvidenceScenario[];
+            file: `test/${string}.test.tsx`;
+            caseId: string;
+        }>[];
     }>];
 };
 //# sourceMappingURL=evidence.d.ts.map

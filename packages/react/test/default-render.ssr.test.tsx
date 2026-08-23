@@ -24,6 +24,8 @@ import {
   ListRow,
   LoadMore,
   Menu,
+  OtpField,
+  PasswordField,
   Radio,
   RadioGroup,
   Result,
@@ -138,6 +140,23 @@ const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
     componentId: "text-area",
     marker: "textarea",
     render: () => <TextArea label="Notes" />,
+  },
+  {
+    componentId: "password-field",
+    marker: "hjm-password-field",
+    render: () => (
+      <PasswordField
+        autofillHint="current"
+        concealLabel="Hide password"
+        label="Password"
+        revealLabel="Show password"
+      />
+    ),
+  },
+  {
+    componentId: "otp-field",
+    marker: "hjm-otp-field__slots",
+    render: () => <OtpField label="Verification code" length={6} />,
   },
   {
     componentId: "checkbox",
