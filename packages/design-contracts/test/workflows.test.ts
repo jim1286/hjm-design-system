@@ -17,7 +17,7 @@ describe("GitHub Actions runtime contracts", () => {
     expect(workflow).not.toContain("ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION");
   });
 
-  it("runs the minimal manual tag gate only after immutable private-consumer evidence succeeds", async () => {
+  it("tags a pushed fixed-version release commit only after immutable private-consumer evidence succeeds", async () => {
     const [workflow, checker] = await Promise.all([
       readFile(
         new URL("../../../.github/workflows/version-packages.yml", import.meta.url),
@@ -37,7 +37,13 @@ describe("GitHub Actions runtime contracts", () => {
     expect(workflow).toContain("scripts/check-consumer-release.mjs");
     expect(workflow).toContain("HJM_CONSUMER_SYNC_TOKEN");
     expect(workflow).toContain("workflow_dispatch");
+    expect(workflow).toMatch(/on:\n\s+push:\n\s+branches:\n\s+- main\n/);
     expect(workflow).toContain("github.ref == 'refs/heads/main'");
+    expect(workflow).toContain("should-release=true");
+    expect(workflow).toContain("should-release=false");
+    expect(workflow).toContain(
+      "steps.release-candidate.outputs.should-release == 'true'",
+    );
     expect(workflow).not.toContain("changesets/action");
     expect(workflow).not.toContain("pull-requests: write");
     expect(workflow).not.toContain("HJM_RELEASE_TOKEN");
@@ -83,16 +89,52 @@ describe("GitHub Actions runtime contracts", () => {
     expect(workflow).toContain("git tag -a \"${TAG}\"");
   });
 
-  it("separates authored Changeset PRs from generated version PRs", async () => {
-    const workflow = await readFile(
-      new URL("../../../.github/workflows/showcase.yml", import.meta.url),
-      "utf8",
-    );
+  it("gates authored Changesets and deploys Storybook from main pushes alone", async () => {
+    const [workflow, changesetChecker] = await Promise.all([
+      readFile(
+        new URL("../../../.github/workflows/showcase.yml", import.meta.url),
+        "utf8",
+      ),
+      readFile(
+        new URL("../../../scripts/check-changeset-required.mjs", import.meta.url),
+        "utf8",
+      ),
+    ]);
 
-    expect(workflow).toContain("github.event.pull_request.head.repo.full_name == github.repository");
-    expect(workflow).toContain("startsWith(github.head_ref, 'changeset-release/')");
-    expect(workflow).toContain("pnpm release:version-pr:check");
+    expect(workflow).toMatch(/on:\n\s+push:\n\s+branches:\n\s+- main\n/);
+    expect(workflow).not.toContain("pull_request");
+    expect(workflow).not.toContain("github.head_ref");
     expect(workflow).toContain("pnpm changeset:check");
+    expect(workflow).toContain("github.event.before");
+    expect(workflow).toContain(
+      "0000000000000000000000000000000000000000",
+    );
+    // The generated release commit consumes Changesets, so the gate must defer to
+    // the fixed-version bump instead of demanding a newly authored Changeset.
+    expect(changesetChecker).toContain("readFixedVersionAt");
+    expect(changesetChecker).toContain("Fixed package version advanced");
+  });
+
+  it("verifies the pushed release commit against the authored Changeset plan", async () => {
+    const [workflow, releaseCommitChecker] = await Promise.all([
+      readFile(
+        new URL("../../../.github/workflows/version-packages.yml", import.meta.url),
+        "utf8",
+      ),
+      readFile(
+        new URL("../../../scripts/check-release-commit.mjs", import.meta.url),
+        "utf8",
+      ),
+    ]);
+
+    expect(workflow).toContain('pnpm release:commit:check "$(git rev-parse HEAD^)"');
+    expect(workflow.indexOf("pnpm release:commit:check")).toBeLessThan(
+      workflow.indexOf("pnpm release:check"),
+    );
+    expect(releaseCommitChecker).toContain("Release commit must consume");
+    expect(releaseCommitChecker).toContain("Release commit contains");
+    expect(releaseCommitChecker).toContain("Release commit must apply");
+    expect(releaseCommitChecker).not.toContain("version PR");
   });
 
   it("joins non-default renderer evidence to structured executed-scenario registries", async () => {

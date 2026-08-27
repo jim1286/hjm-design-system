@@ -43,17 +43,17 @@ afterEach(async () => {
   );
 });
 
-describe("generated Changesets version PR gate", () => {
+describe("generated Changesets release commit gate", () => {
   it("accepts the authored fixed minor bump and rejects an escalated major", async () => {
-    const directory = await mkdtemp(join(tmpdir(), "hjm-version-pr-test-"));
+    const directory = await mkdtemp(join(tmpdir(), "hjm-release-commit-test-"));
     temporaryDirectories.push(directory);
     await mkdir(join(directory, "scripts"), { recursive: true });
     await mkdir(join(directory, ".changeset"), { recursive: true });
     const checker = await readFile(
-      new URL("../../../scripts/check-version-pr.mjs", import.meta.url),
+      new URL("../../../scripts/check-release-commit.mjs", import.meta.url),
       "utf8",
     );
-    await writeFile(join(directory, "scripts/check-version-pr.mjs"), checker);
+    await writeFile(join(directory, "scripts/check-release-commit.mjs"), checker);
     for (const packageDirectory of ["design-contracts", "react", "react-native"]) {
       await writePackage(directory, packageDirectory, "0.5.2");
     }
@@ -87,7 +87,7 @@ describe("generated Changesets version PR gate", () => {
     git(directory, "commit", "-m", "version 0.6.0");
 
     expect(() =>
-      execFileSync(process.execPath, ["scripts/check-version-pr.mjs", baseRevision], {
+      execFileSync(process.execPath, ["scripts/check-release-commit.mjs", baseRevision], {
         cwd: directory,
         stdio: "pipe",
       }),
@@ -101,7 +101,7 @@ describe("generated Changesets version PR gate", () => {
     git(directory, "commit", "-m", "unexpected major escalation");
 
     expect(() =>
-      execFileSync(process.execPath, ["scripts/check-version-pr.mjs", baseRevision], {
+      execFileSync(process.execPath, ["scripts/check-release-commit.mjs", baseRevision], {
         cwd: directory,
         stdio: "pipe",
       }),

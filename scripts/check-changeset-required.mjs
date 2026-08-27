@@ -3,7 +3,25 @@ import { readFileSync } from "node:fs";
 
 const baseRevision = process.argv[2] || process.env.GITHUB_BASE_SHA;
 if (!baseRevision) {
-  throw new Error("Pass the pull request base revision to check-changeset-required.mjs");
+  throw new Error("Pass the compared base revision to check-changeset-required.mjs");
+}
+
+const readFixedVersionAt = (revision) =>
+  JSON.parse(
+    execFileSync(
+      "git",
+      ["show", `${revision}:packages/design-contracts/package.json`],
+      { encoding: "utf8" },
+    ),
+  ).version;
+
+const baseVersion = readFixedVersionAt(baseRevision);
+const headVersion = readFixedVersionAt("HEAD");
+if (baseVersion !== headVersion) {
+  console.log(
+    `Fixed package version advanced ${baseVersion} -> ${headVersion}; the generated release commit consumes authored Changesets.`,
+  );
+  process.exit(0);
 }
 
 const diff = execFileSync(

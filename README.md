@@ -55,9 +55,16 @@ pnpm check
 pnpm showcase:web:build
 ```
 
+- `main` 단일 branch로 운영합니다. 모든 commit은 `main`에 직접 push하고, CI는 `main` push에서만
+  돕니다.
 - 세 public package는 하나의 fixed version train으로 함께 versioning합니다.
-- 릴리스할 때만 로컬에서 `pnpm release:version`을 실행하고 생성 결과를 `main`에 커밋·push한 뒤,
-  `Release Packages` workflow를 수동 실행합니다. 전체 검증 후 canonical `v<version>` Git tag가
+- 일반 commit: public package source를 바꿨다면 `pnpm changeset`으로 Changeset을 함께 commit해야
+  `Design System Showcase` workflow의 gate를 통과합니다. 이 push는 Storybook을 GitHub Pages에
+  배포만 하고 릴리스는 하지 않습니다.
+- 릴리스 commit: 로컬에서 `pnpm release:version`을 실행하고 생성 결과를 하나의 commit으로
+  `main`에 push합니다. `Release Packages` workflow는 `main` push마다 돌지만 package version이
+  바뀐 push(= 아직 `v<version>` tag가 없고 남은 Changeset도 없는 push)에서만 릴리스를 진행하고,
+  같은 push가 Storybook도 함께 갱신합니다. 전체 검증 후 canonical `v<version>` Git tag가
   생성되므로 위 Git package path가 실제 release를 가리킵니다. tag 전에는
   Yajalal/BurnTok의 release-SHA Storybook inventory gate도 fail closed로 통과해야 합니다.
   두 consumer가 private이므로 canonical에만 최소 권한 `HJM_CONSUMER_SYNC_TOKEN`을 두고 릴리스

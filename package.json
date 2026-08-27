@@ -29,7 +29,7 @@
     "reference:antd:verify": "pnpm --filter @hjm/design-contracts reference:antd:verify",
     "changeset": "changeset",
     "changeset:check": "node scripts/check-changeset-required.mjs",
-    "release:version-pr:check": "node scripts/check-version-pr.mjs",
+    "release:commit:check": "node scripts/check-release-commit.mjs",
     "release:version": "changeset version && pnpm install --lockfile-only && node scripts/sync-release-version.mjs && pnpm contracts:sync && pnpm build && pnpm evidence:sync",
     "release:status": "changeset status",
     "release:plan:check": "node scripts/check-release-plan.mjs",

@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises";
 
 const baseRevision = process.argv[2] || process.env.GITHUB_BASE_SHA;
 if (!baseRevision) {
-  throw new Error("Pass the pull request base revision to check-version-pr.mjs");
+  throw new Error("Pass the release commit base revision to check-release-commit.mjs");
 }
 
 const publicPackagePaths = [
@@ -59,10 +59,10 @@ const addedChangesets = changes.filter(
     status.startsWith("A") && /^\.changeset\/(?!README\.md$)[^/]+\.md$/.test(path),
 );
 if (deletedChangesets.length === 0) {
-  throw new Error("Generated version PR must consume at least one non-empty Changeset");
+  throw new Error("Release commit must consume at least one non-empty Changeset");
 }
 if (addedChangesets.length > 0) {
-  throw new Error("Generated version PR must not add authored Changesets");
+  throw new Error("Release commit must not add authored Changesets");
 }
 
 const scheduledPackages = new Set();
@@ -92,13 +92,13 @@ const allowedPath = (path) =>
 const unexpectedPaths = changes.map(({ path }) => path).filter((path) => !allowedPath(path));
 if (unexpectedPaths.length > 0) {
   throw new Error(
-    `Generated version PR contains non-release source changes: ${unexpectedPaths.join(", ")}`,
+    `Release commit contains non-release source changes: ${unexpectedPaths.join(", ")}`,
   );
 }
 
 for (const packagePath of publicPackagePaths) {
   if (!changes.some(({ path }) => path === packagePath)) {
-    throw new Error(`Generated version PR did not update fixed package manifest ${packagePath}`);
+    throw new Error(`Release commit did not update fixed package manifest ${packagePath}`);
   }
 }
 
@@ -111,7 +111,7 @@ const previousPackages = publicPackagePaths.map((path) =>
 const currentVersions = new Set(currentPackages.map(({ version }) => version));
 const previousVersions = new Set(previousPackages.map(({ version }) => version));
 if (currentVersions.size !== 1 || previousVersions.size !== 1) {
-  throw new Error("Fixed package versions must be aligned before and after a version PR");
+  throw new Error("Fixed package versions must be aligned before and after a release commit");
 }
 const [currentVersion] = currentVersions;
 const [previousVersion] = previousVersions;
@@ -127,7 +127,7 @@ const expectedVersion = incrementVersion(
 parseVersion(currentVersion, "Current version");
 if (currentVersion !== expectedVersion) {
   throw new Error(
-    `Version PR must apply the highest authored ${authoredType} bump ${previousVersion} -> ${expectedVersion}; received ${currentVersion}`,
+    `Release commit must apply the highest authored ${authoredType} bump ${previousVersion} -> ${expectedVersion}; received ${currentVersion}`,
   );
 }
 
@@ -135,14 +135,14 @@ const contractsVersion = await readFile("packages/design-contracts/src/version.t
 const reactEvidence = await readFile("packages/react/src/evidence.ts", "utf8");
 const nativeEvidence = await readFile("packages/react-native/src/evidence.ts", "utf8");
 if (!contractsVersion.includes(`designSystemVersion = "${currentVersion}"`)) {
-  throw new Error("Contracts source version is not synchronized with the version PR");
+  throw new Error("Contracts source version is not synchronized with the release commit");
 }
 for (const [label, source] of [["React", reactEvidence], ["React Native", nativeEvidence]]) {
   if (!source.includes(`packageVersion: "${currentVersion}"`)) {
-    throw new Error(`${label} evidence version is not synchronized with the version PR`);
+    throw new Error(`${label} evidence version is not synchronized with the release commit`);
   }
 }
 
 console.log(
-  `Verified generated fixed-package version PR ${previousVersion} -> ${currentVersion} from ${deletedChangesets.length} consumed Changeset(s).`,
+  `Verified generated fixed-package release commit ${previousVersion} -> ${currentVersion} from ${deletedChangesets.length} consumed Changeset(s).`,
 );

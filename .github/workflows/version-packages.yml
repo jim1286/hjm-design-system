@@ -1,6 +1,9 @@
 name: Release Packages
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
@@ -33,21 +36,25 @@ jobs:
           node-version: 24
           cache: pnpm
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Verify an untagged fixed-version release commit
+      - name: Detect an untagged fixed-version release commit
+        id: release-candidate
         shell: bash
         run: |
           VERSION="$(node -p "require('./packages/design-contracts/package.json').version")"
           TAG="v${VERSION}"
           if git show-ref --tags --verify --quiet "refs/tags/${TAG}"; then
-            echo "::error::${TAG} already exists."
-            exit 1
+            echo "::notice::${TAG} already exists; this push did not change the fixed package version."
+            echo "should-release=false" >> "$GITHUB_OUTPUT"
+            exit 0
           fi
           if find .changeset -maxdepth 1 -name '*.md' ! -name README.md | grep -q .; then
-            echo "::error::Authored Changesets remain. Run pnpm release:version, commit the generated artifacts, and push that commit before dispatching this workflow."
-            exit 1
+            if [ "${GITHUB_EVENT_NAME}" = "workflow_dispatch" ]; then
+              echo "::error::Authored Changesets remain. Run pnpm release:version, commit the generated artifacts, and push that commit before dispatching this workflow."
+              exit 1
+            fi
+            echo "::warning::Authored Changesets remain; ${TAG} waits for a generated version commit."
+            echo "should-release=false" >> "$GITHUB_OUTPUT"
+            exit 0
           fi
           LATEST_TAG="$(git describe --tags --match 'v[0-9]*' --abbrev=0 2>/dev/null || true)"
           if [ -n "${LATEST_TAG}" ]; then
@@ -57,11 +64,23 @@ jobs:
               exit 1
             fi
           fi
+          echo "::notice::Releasing ${TAG}."
+          echo "should-release=true" >> "$GITHUB_OUTPUT"
+
+      - name: Install dependencies
+        if: steps.release-candidate.outputs.should-release == 'true'
+        run: pnpm install --frozen-lockfile
+
+      - name: Verify the pushed commit is a generated release commit
+        if: steps.release-candidate.outputs.should-release == 'true'
+        run: pnpm release:commit:check "$(git rev-parse HEAD^)"
 
       - name: Install Chromium before release verification
+        if: steps.release-candidate.outputs.should-release == 'true'
         run: pnpm --filter @hjm/react exec playwright install --with-deps chromium
 
       - name: Verify the canonical release candidate
+        if: steps.release-candidate.outputs.should-release == 'true'
         shell: bash
         run: |
           pnpm release:check
@@ -69,6 +88,7 @@ jobs:
           test -z "$(git ls-files --others --exclude-standard -- packages/design-contracts/dist packages/react/dist packages/react-native/dist packages/design-contracts/docs/generated)"
 
       - name: Require successful private consumer surface evidence
+        if: steps.release-candidate.outputs.should-release == 'true'
         env:
           HJM_CONSUMER_SYNC_TOKEN: ${{ secrets.HJM_CONSUMER_SYNC_TOKEN }}
         run: |
@@ -79,6 +99,7 @@ jobs:
             --version "${VERSION}"
 
       - name: Create the canonical Git install tag
+        if: steps.release-candidate.outputs.should-release == 'true'
         shell: bash
         run: |
           HEAD_COMMIT="$(git rev-parse HEAD)"

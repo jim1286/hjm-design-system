@@ -27,9 +27,15 @@ fine-grained token으로 두 consumer에 `repository_dispatch`를 보내고 결�
 1. authored Changeset을 포함한 source commit을 검증한 뒤 로컬에서 `pnpm release:version`을
    실행합니다. 생성된 fixed-package version, changelog, dist, generated docs를 하나의 release
    commit으로 `main`에 push합니다.
-2. GitHub Actions의 `Release Packages` workflow를 수동 실행합니다. `release` job은 남은
-   Changeset이 없고 현재 버전 tag가 아직 없음을 확인한 뒤 package, renderer, Storybook,
-   committed artifact를 검증합니다.
+2. `main` push마다 `Release Packages` workflow가 실행되고, `release-candidate` step이 package
+   version을 유일한 trigger로 씁니다. 현재 `v<version>` tag가 이미 있거나 authored Changeset이
+   남아 있으면 `should-release=false`로 두어 나머지 step을 모두 건너뜁니다. tag가 없고 남은
+   Changeset도 없는 push에서만 릴리스를 진행합니다. 이때 `pnpm release:commit:check HEAD^`가
+   push된 commit이 `pnpm release:version` 생성물과 정확히 같은 shape인지(소비된 Changeset,
+   허용된 path, 세 manifest의 lockstep bump, authored bump type과 일치하는 version, 동기화된
+   source version 상수) 먼저 검증하고, 그 다음 package, renderer, Storybook, committed artifact를
+   검증합니다. 실패한 release를 다시 시도할 때는 같은 gate를 그대로 통과하는 `workflow_dispatch`
+   수동 실행을 씁니다.
 3. `scripts/check-consumer-release.mjs`는 설정된 default branch 이름을 확인하고, 두 repository의
    현재 HEAD를 full SHA로 각각 한 번 캡처한 뒤 그 SHA의 workflow invariant를 검사합니다.
    BurnTok Web/Native tuple은 같은 캡처 SHA를 공유합니다.
