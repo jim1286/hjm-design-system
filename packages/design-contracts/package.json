@@ -7,7 +7,9 @@
     "url": "git+https://github.com/jim1286/hjm-design-system.git",
     "directory": "packages/design-contracts"
   },
-  "private": true,
+  "publishConfig": {
+    "access": "public"
+  },
   "type": "module",
   "sideEffects": false,
   "main": "./dist/index.js",

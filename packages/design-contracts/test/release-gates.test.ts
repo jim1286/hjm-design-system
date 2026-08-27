@@ -189,7 +189,7 @@ describe("private consumer release evidence gate", () => {
 describe("repository install guidance", () => {
   const workspaceRoot = fileURLToPath(new URL("../../../", import.meta.url));
 
-  it("binds the React Native package name to the React Native package path", async () => {
+  it("documents registry ranges and keeps the React Native package distinct", async () => {
     const [readme, migration] = await Promise.all([
       readFile(join(workspaceRoot, "README.md"), "utf8"),
       readFile(
@@ -198,9 +198,9 @@ describe("repository install guidance", () => {
       ),
     ]);
 
-    expect(readme).toMatch(
-      /"@hjm\/react-native":\s*"git\+[^"\n]+path:\/packages\/react-native"/,
-    );
+    expect(readme).toMatch(/"@hjm\/react-native":\s*"\^[^"\n]+"/);
+    expect(readme).toMatch(/"@hjm\/react":\s*"\^[^"\n]+"/);
+    expect(readme).not.toMatch(/git\+[^"\n]*path:\/packages\//);
     expect(migration).toMatch(
       /'@hjm\/react-native@git\+[^'\n]+path:\/packages\/react-native'/,
     );

@@ -35,6 +35,7 @@ jobs:
         with:
           node-version: 24
           cache: pnpm
+          registry-url: https://registry.npmjs.org
 
       - name: Detect an untagged fixed-version release commit
         id: release-candidate
@@ -98,6 +99,16 @@ jobs:
             --release-sha "${GITHUB_SHA}" \
             --version "${VERSION}"
 
+      - name: Verify publish credentials before tagging
+        if: steps.release-candidate.outputs.should-release == 'true'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          if [ -z "${NODE_AUTH_TOKEN}" ]; then
+            echo "::error::NPM_TOKEN is missing. Refusing to tag a release that cannot be published."
+            exit 1
+          fi
+
       - name: Create the canonical Git install tag
         if: steps.release-candidate.outputs.should-release == 'true'
         shell: bash
@@ -122,3 +133,19 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git tag -a "${TAG}" -m "HJM design system ${VERSION}"
           git push origin "${TAG}"
+
+      - name: Publish packages to npm
+        if: steps.release-candidate.outputs.should-release == 'true'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        shell: bash
+        run: |
+          VERSION="$(node -p "require('./packages/design-contracts/package.json').version")"
+          for directory in design-contracts react react-native; do
+            NAME="$(node -p "require('./packages/${directory}/package.json').name")"
+            if npm view "${NAME}@${VERSION}" version >/dev/null 2>&1; then
+              echo "::notice::${NAME}@${VERSION} is already published; skipping."
+              continue
+            fi
+            pnpm --filter "${NAME}" publish --access public --no-git-checks
+          done

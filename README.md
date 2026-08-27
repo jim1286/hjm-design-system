@@ -20,32 +20,36 @@ Native, Storybook, evidence를 원자적으로 변경하고 CI에서 함께 검�
 루트 `@hjm/design-system-workspace`는 배포하지 않는 `0.0.0` orchestrator입니다. release와
 Git tag의 버전 source of truth는 fixed train의 `packages/design-contracts/package.json`입니다.
 
-## Install from this repository
+## Install
 
-태그와 package path를 함께 고정합니다. renderer를 사용하는 앱은 contracts도 명시적으로
-설치합니다.
-
-```json
-{
-  "dependencies": {
-    "@hjm/design-contracts": "git+https://github.com/jim1286/hjm-design-system.git#v<version>&path:/packages/design-contracts",
-    "@hjm/react": "git+https://github.com/jim1286/hjm-design-system.git#v<version>&path:/packages/react"
-  }
-}
-```
-
-React Native 앱은 renderer의 package 이름과 path를 모두 Native package로 지정합니다.
+세 패키지는 npm registry에 함께 publish합니다. renderer를 사용하는 앱은 contracts도
+명시적으로 설치하고, 세 패키지는 하나의 fixed version train이므로 같은 range를 씁니다.
 
 ```json
 {
   "dependencies": {
-    "@hjm/design-contracts": "git+https://github.com/jim1286/hjm-design-system.git#v<version>&path:/packages/design-contracts",
-    "@hjm/react-native": "git+https://github.com/jim1286/hjm-design-system.git#v<version>&path:/packages/react-native"
+    "@hjm/design-contracts": "^<version>",
+    "@hjm/react": "^<version>"
   }
 }
 ```
 
-`<version>`은 세 패키지가 함께 릴리스된 정확한 SemVer(예: `0.7.1`)로 바꿉니다.
+React Native 앱은 renderer만 Native package로 바꿉니다.
+
+```json
+{
+  "dependencies": {
+    "@hjm/design-contracts": "^<version>",
+    "@hjm/react-native": "^<version>"
+  }
+}
+```
+
+`<version>`은 세 패키지가 함께 릴리스된 정확한 SemVer(예: `0.8.0`)로 바꿉니다.
+
+publish는 consumer evidence gate와 `v<version>` tag 생성을 모두 통과한 뒤에만 실행됩니다.
+tarball을 vendoring하거나 Git ref와 package path로 고정하지 않습니다. 두 방식 모두 참조
+문자열에 버전을 박아 `pnpm update`와 `npm outdated`를 무력화합니다.
 
 ## Development
 

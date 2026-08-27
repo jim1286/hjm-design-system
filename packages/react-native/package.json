@@ -2,7 +2,9 @@
   "name": "@hjm/react-native",
   "version": "0.8.0",
   "description": "Expo-independent React Native renderers for HJM design contracts.",
-  "private": true,
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jim1286/hjm-design-system.git",
