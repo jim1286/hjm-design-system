@@ -8,6 +8,9 @@ on:
 
 permissions:
   contents: write
+  # npm Trusted Publishing (OIDC). npm is restricting tokens that bypass 2FA,
+  # so the release exchanges this short-lived identity token instead.
+  id-token: write
 
 concurrency:
   group: release-packages-${{ github.ref }}
