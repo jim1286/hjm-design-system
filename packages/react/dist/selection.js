@@ -1,8 +1,22 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { iconRecipe, segmentedControlRecipe, selectionControlRecipe, selectionGroupRecipe, } from "@hjm/design-contracts/recipes";
+import { chipRecipe, iconRecipe, segmentedControlRecipe, selectionControlRecipe, selectionGroupRecipe, } from "@hjm/design-contracts/recipes";
 import { resolveControlAccessibleName, reconcileCheckboxSelection, reconcileRadioSelection, resolveInitialRadioValue, toggleCheckboxSelection, validateCheckboxSelection, validateRadioSelection, } from "@hjm/design-contracts/behaviors";
 import { forwardRef, useEffect, useId, useRef, } from "react";
 import { classNames, composeRefs, useControllableState } from "./internal.js";
+/** Action/filter chip with explicit selection semantics and no hidden state. */
+export const Chip = forwardRef(function Chip({ label, size = chipRecipe.defaults.size, leading, trailing, renderSelectionIndicator, selectionMode = "action", selected, onSelectedChange, onPress, disabled, className, ...props }, ref) {
+    const selectable = selectionMode !== "action";
+    const active = selectable && selected === true;
+    return (_jsxs("button", { ...props, ref: ref, "aria-checked": selectable ? active : undefined, className: classNames("hjm-chip", className), "data-selected": active || undefined, "data-size": size, disabled: disabled, onClick: (event) => {
+            onPress?.(event);
+            if (!event.defaultPrevented && selectable)
+                onSelectedChange?.(!active);
+        }, role: selectionMode === "single" ? "radio" : selectionMode === "multiple" ? "checkbox" : undefined, type: "button", children: [active ? (_jsx("span", { "aria-hidden": "true", className: "hjm-chip__indicator", children: renderSelectionIndicator?.({
+                    selected: true,
+                    color: "currentColor",
+                    size: iconRecipe.sizes[chipRecipe.selectionIndicator.glyph],
+                }) ?? "✓" })) : null, leading === undefined ? null : _jsx("span", { "aria-hidden": "true", className: "hjm-chip__leading", children: leading }), _jsx("span", { className: "hjm-chip__label", children: label }), trailing === undefined ? null : _jsx("span", { "aria-hidden": "true", className: "hjm-chip__trailing", children: trailing })] }));
+});
 export const Checkbox = forwardRef(function Checkbox({ label, description, checked: checkedProp, defaultChecked = false, indeterminate = false, onCheckedChange, onChange, disabled, readOnly = false, presentation = selectionControlRecipe.defaults.presentation, size = selectionControlRecipe.defaults.size, renderLeading, className, onClick, ...props }, forwardedRef) {
     const [checked, setChecked] = useControllableState({
         ...(checkedProp === undefined ? {} : { value: checkedProp }),

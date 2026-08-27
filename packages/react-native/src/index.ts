@@ -58,6 +58,7 @@ export {
   Chip,
   OtpField,
   PasswordField,
+  Radio,
   RadioGroup,
   SearchField,
   SegmentedControl,
@@ -71,6 +72,7 @@ export {
   type OtpFieldProps,
   type PasswordFieldProps,
   type PasswordFieldToggleRenderProps,
+  type RadioProps,
   type RadioGroupProps,
   type RadioOption,
   type SearchFieldProps,
@@ -92,6 +94,17 @@ export {
   Slider,
   type SliderProps,
 } from "./slider.js";
+
+export {
+  DatePicker,
+  type DatePickerMonthAction,
+  type DatePickerProps,
+} from "./date-picker.js";
+
+export {
+  FilePicker,
+  type FilePickerProps,
+} from "./file-picker.js";
 
 export {
   Combobox,
@@ -142,6 +155,11 @@ export {
 } from "./navigation.js";
 
 export {
+  Steps,
+  type StepsProps,
+} from "./steps.js";
+
+export {
   Accordion,
   Avatar,
   Badge,
@@ -183,6 +201,11 @@ export {
   type StatisticTrendMarkRenderProps,
   type TimelineProps,
 } from "./data-display.js";
+
+export {
+  UploadItem,
+  type UploadItemProps,
+} from "./upload-item.js";
 
 export {
   EmptyState,

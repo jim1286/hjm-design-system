@@ -159,4 +159,9 @@ export const Grid = forwardRef(function Grid({ columns, gap, minColumnWidth, win
             ...style,
         } }));
 });
+/** Large-text-safe semantic content section with an optional header action. */
+export const Section = forwardRef(function Section({ title, description, action, children, headingLevel = 2, className, ...props }, ref) {
+    const hasHeader = title !== undefined || description !== undefined || action !== undefined;
+    return (_jsxs("section", { ...props, ref: ref, className: classNames("hjm-section", className), children: [hasHeader ? (_jsxs("header", { className: "hjm-section__header", children: [_jsxs("div", { className: "hjm-section__copy", children: [title === undefined ? null : createElement(`h${headingLevel}`, { className: "hjm-section__title" }, title), description === undefined ? null : (_jsx("div", { className: "hjm-section__description", children: description }))] }), action === undefined ? null : _jsx("div", { className: "hjm-section__action", children: action })] })) : null, _jsx("div", { className: "hjm-section__content", children: children })] }));
+});
 //# sourceMappingURL=layout.js.map

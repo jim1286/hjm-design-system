@@ -16,11 +16,13 @@ const rendererRecords = [
     key: "web",
     surface: "web",
     evidenceExport: "reactRendererEvidence",
+    scenarioRegistry: "test/executed-scenarios.json",
   },
   {
     key: "native",
     surface: "native",
     evidenceExport: "reactNativeRendererEvidence",
+    scenarioRegistry: "test/executed-scenarios.json",
   },
 ];
 
@@ -274,6 +276,29 @@ for (const record of rendererRecords) {
     throw new Error(`${renderer.name} evidence must claim at least one component`);
   }
 
+  const scenarioRegistry = await readJson(`${renderer.path}/${record.scenarioRegistry}`);
+  if (scenarioRegistry.schemaVersion !== 1 || !Array.isArray(scenarioRegistry.executions)) {
+    throw new Error(`${renderer.name} has an invalid executed-scenario registry`);
+  }
+  const executionByProofFile = new Map();
+  for (const execution of scenarioRegistry.executions) {
+    const proofFile = requireString(execution.proofFile, `${renderer.name} registry proofFile`);
+    if (execution.coverageMode !== "all-cases") {
+      throw new Error(`${renderer.name} ${proofFile} must declare all-cases coverage`);
+    }
+    if (!Array.isArray(execution.scenarios) || execution.scenarios.length === 0) {
+      throw new Error(`${renderer.name} ${proofFile} registry has no scenarios`);
+    }
+    const scenarioIds = execution.scenarios.map(({ id }) => requireString(id, `${renderer.name} registry scenario`));
+    if (new Set(scenarioIds).size !== scenarioIds.length) {
+      throw new Error(`${renderer.name} ${proofFile} registry repeats a scenario`);
+    }
+    if (executionByProofFile.has(proofFile)) {
+      throw new Error(`${renderer.name} registry repeats ${proofFile}`);
+    }
+    executionByProofFile.set(proofFile, new Set(scenarioIds));
+  }
+
   const seenIds = new Set();
   const exportedNamesBySubpath = new Map();
   const proofSourcesByPath = new Map();
@@ -314,14 +339,6 @@ for (const record of rendererRecords) {
     if (!claim.scenarios.includes("default")) {
       throw new Error(`${renderer.name} ${componentId} beta/stable evidence must include default`);
     }
-    const nonDefaultScenarios = claim.scenarios.filter((scenario) => scenario !== "default");
-    if (nonDefaultScenarios.length > 0) {
-      throw new Error(
-        `${renderer.name} ${componentId} cannot claim non-default scenarios without a ` +
-          `structured executed-result registry: ${nonDefaultScenarios.join(", ")}`,
-      );
-    }
-
     if (!Array.isArray(claim.proofs) || claim.proofs.length === 0) {
       throw new Error(`${renderer.name} ${componentId} must attach executable scenario proofs`);
     }
@@ -374,10 +391,21 @@ for (const record of rendererRecords) {
           `${renderer.name} ${componentId} proof case ${caseId} is absent from ${proofFile}`,
         );
       }
+      const registeredScenarios = executionByProofFile.get(proofFile);
+      if (!registeredScenarios || !proofSource.includes(record.scenarioRegistry.split("/").at(-1))) {
+        throw new Error(
+          `${renderer.name} ${componentId} proof ${proofFile} is not joined to its executed-scenario registry`,
+        );
+      }
       for (const scenario of proof.scenarios) {
         if (!claim.scenarios.includes(scenario)) {
           throw new Error(
             `${renderer.name} ${componentId} proof covers unclaimed scenario ${scenario}`,
+          );
+        }
+        if (!registeredScenarios.has(scenario)) {
+          throw new Error(
+            `${renderer.name} ${componentId} proof ${proofFile} has no registered ${scenario} execution`,
           );
         }
         provenScenarios.add(scenario);

@@ -37,17 +37,17 @@ plate with the recipe border treatment.
 ## Public surface
 
 - `provider`: `HjmProvider`, `useHjmTheme`
-- `layout`: `Text`, `Surface`, `Stack`, responsive `Grid`, adaptive app-shell `Layout`
+- `layout`: `Text`, `Surface`, `Stack`, `Section`, responsive `Grid`, adaptive app-shell `Layout`
 - `actions`: `Button`, `IconButton`, `Link`
 - `forms`: `Field`, `TextField`, `TextArea`, `SearchField`, custom accessible
   `Select`, opt-in `NativeSelect`, editable `Combobox`, exact `NumberField`,
-  approximate `Slider`, async-safe `Form`
+  approximate `Slider`, async-safe `Form`, `DatePicker`, `FilePicker`
 - `selection`: `Checkbox`, `Radio`, `CheckboxGroup`, `RadioGroup`, `Switch`,
-  `SegmentedControl`
-- `navigation`: `Tabs`, `BottomNavigation`, `Breadcrumb`, `Pagination`, `LoadMore`
+  `SegmentedControl`, `Chip`
+- `navigation`: `Tabs`, `Steps`, `BottomNavigation`, `Breadcrumb`, `Pagination`, `LoadMore`
 - `display`: `Badge`, `Tag`, `Card`, `ListRow`, `Accordion`, `Avatar`,
-  `Divider`, responsive `DescriptionList`, native `Table`, `Timeline`, intrinsic-size `Image`,
-  `Icon`, `CounterBadge`
+  `Divider`, `List`, `Statistic`, `UploadItem`, responsive `DescriptionList`, native `Table`,
+  `Timeline`, intrinsic-size `Image`, `Icon`, `CounterBadge`
 - `feedback`: `Notice`, `EmptyState`, `Result`, `Progress`, `Spinner`, `Skeleton`
 - `toast`: controlled `Toast`, queued `ToastProvider`/`useToast`
 - `overlays`: `Dialog`, `AlertDialog`, `Sheet`, `Tooltip`, `Menu`
@@ -60,6 +60,10 @@ renderer root barrel:
 import { Combobox, Form, Select } from "@hjm/react/forms";
 import { NumberField } from "@hjm/react/number-field";
 import { Slider } from "@hjm/react/slider";
+import { DatePicker } from "@hjm/react/date-picker";
+import { FilePicker } from "@hjm/react/file-picker";
+import { Steps } from "@hjm/react/steps";
+import { UploadItem } from "@hjm/react/upload-item";
 import { Accordion, Image, Table, Timeline } from "@hjm/react/display";
 import { BottomNavigation, Breadcrumb, Pagination, Tabs } from "@hjm/react/navigation";
 import { Dialog, Menu, Sheet } from "@hjm/react/overlays";

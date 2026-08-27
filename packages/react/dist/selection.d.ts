@@ -1,11 +1,37 @@
-import { type SegmentedControlSize, type SelectionControlPresentation, type SelectionControlSize, type SelectionGroupOrientation, type SelectionGroupPresentation } from "@hjm/design-contracts/recipes";
+import { chipRecipe, type SegmentedControlSize, type SelectionControlPresentation, type SelectionControlSize, type SelectionGroupOrientation, type SelectionGroupPresentation } from "@hjm/design-contracts/recipes";
 import { type CheckboxGroupSelection, type SelectionItemDescriptor } from "@hjm/design-contracts/behaviors";
-import { type ButtonHTMLAttributes, type ChangeEvent, type FieldsetHTMLAttributes, type InputHTMLAttributes, type ReactElement, type ReactNode, type RefAttributes } from "react";
+import { type ButtonHTMLAttributes, type ChangeEvent, type FieldsetHTMLAttributes, type InputHTMLAttributes, type MouseEvent, type ReactElement, type ReactNode, type RefAttributes } from "react";
 export type ChoiceLeadingRenderProps = Readonly<{
     selected: boolean;
     color: "currentColor";
     size: number;
 }>;
+type ChipBaseProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "children" | "onChange" | "onClick" | "size"> & Readonly<{
+    label: ReactNode;
+    size?: keyof typeof chipRecipe.sizes;
+    leading?: ReactNode;
+    trailing?: ReactNode;
+    renderSelectionIndicator?: (props: Readonly<{
+        selected: boolean;
+        color: "currentColor";
+        size: number;
+    }>) => ReactNode;
+}>;
+type ActionChipProps = Readonly<{
+    selectionMode?: "action";
+    selected?: never;
+    onPress?: (event: MouseEvent<HTMLButtonElement>) => void;
+    onSelectedChange?: never;
+}>;
+type SelectionChipProps = Readonly<{
+    selectionMode: "single" | "multiple";
+    selected: boolean;
+    onSelectedChange: (selected: boolean) => void;
+    onPress?: (event: MouseEvent<HTMLButtonElement>) => void;
+}>;
+export type ChipProps = ChipBaseProps & (ActionChipProps | SelectionChipProps);
+/** Action/filter chip with explicit selection semantics and no hidden state. */
+export declare const Chip: import("react").ForwardRefExoticComponent<ChipProps & RefAttributes<HTMLButtonElement>>;
 export type CheckboxProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type" | "checked" | "defaultChecked" | "onChange" | "children" | "size"> & Readonly<{
     label: ReactNode;
     description?: ReactNode;

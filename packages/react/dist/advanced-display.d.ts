@@ -1,6 +1,7 @@
 import { type DescriptionItemDescriptor, type DescriptionListColumns } from "@hjm/design-contracts/components/description-list";
 import { type ComposeTimelineAccessibleName, type TimelineItemDescriptor } from "@hjm/design-contracts/components/timeline";
-import { dividerRecipe, type AccordionDensity, type AvatarShape, type AvatarSize } from "@hjm/design-contracts/recipes";
+import { type ResolvedStatisticDescriptor, type StatisticDescriptor, type StatisticGroupDescriptor } from "@hjm/design-contracts/components/statistic";
+import { dividerRecipe, listRecipe, type AccordionDensity, type AvatarShape, type AvatarSize, type StatisticDensity, type StatisticPresentation } from "@hjm/design-contracts/recipes";
 import { type HTMLAttributes, type ImgHTMLAttributes, type ReactElement, type ReactNode, type RefAttributes, type TableHTMLAttributes } from "react";
 export type AccordionItem = Readonly<{
     id: string;
@@ -56,6 +57,49 @@ export declare const Divider: import("react").ForwardRefExoticComponent<HTMLAttr
     inset?: DividerInset;
     decorative?: boolean;
 }> & RefAttributes<HTMLElement>>;
+export type ListAppearance = "grouped" | "plain";
+export type ListProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> & Readonly<{
+    label: string;
+    children: ReactNode;
+    separator?: keyof typeof listRecipe.separators;
+    appearance?: ListAppearance;
+}>;
+/** Semantic list container that owns separators around composed rows. */
+export declare const List: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLDivElement>, "children"> & Readonly<{
+    label: string;
+    children: ReactNode;
+    separator?: keyof typeof listRecipe.separators;
+    appearance?: ListAppearance;
+}> & RefAttributes<HTMLDivElement>>;
+export type StatisticTrendMarkRenderProps = Readonly<{
+    name: "trendUp" | "trendDown" | "trendFlat";
+    color: "currentColor";
+    size: number;
+}>;
+export type ComposeStatisticAccessibilityLabel<Id extends string = string> = (input: Readonly<{
+    contextLabel?: string;
+    descriptor: ResolvedStatisticDescriptor<Id>;
+    valueText: string;
+}>) => string;
+export type StatisticProps<Id extends string = string> = Omit<HTMLAttributes<HTMLElement>, "children"> & Readonly<{
+    descriptor: StatisticDescriptor<Id>;
+    density?: StatisticDensity;
+    presentation?: StatisticPresentation;
+    contextLabel?: string;
+    accessibilityLabel?: string;
+    composeAccessibilityLabel?: ComposeStatisticAccessibilityLabel<Id>;
+    renderTrendMark?: (props: StatisticTrendMarkRenderProps) => ReactNode;
+}>;
+export declare function Statistic<Id extends string = string>({ descriptor, density, presentation, contextLabel, accessibilityLabel, composeAccessibilityLabel, renderTrendMark, className, ...props }: StatisticProps<Id>): import("react").JSX.Element;
+export type StatisticGroupProps<Id extends string = string> = Omit<HTMLAttributes<HTMLDivElement>, "children"> & Readonly<{
+    label: string;
+    descriptor: StatisticGroupDescriptor<Id>;
+    density?: StatisticDensity;
+    presentation?: StatisticPresentation;
+    composeAccessibilityLabel?: ComposeStatisticAccessibilityLabel<Id>;
+    renderTrendMark?: (props: StatisticTrendMarkRenderProps) => ReactNode;
+}>;
+export declare function StatisticGroup<Id extends string = string>({ label, descriptor, density, presentation, composeAccessibilityLabel, renderTrendMark, className, style, ...props }: StatisticGroupProps<Id>): import("react").JSX.Element;
 export type DescriptionListProps<Id extends string = string> = Omit<HTMLAttributes<HTMLDListElement>, "children"> & Readonly<{
     items: readonly DescriptionItemDescriptor<Id>[];
     columns?: DescriptionListColumns;

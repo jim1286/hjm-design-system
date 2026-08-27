@@ -54,5 +54,6 @@ FilePicker는 파일 선택 의도만 소유하고, 진행·성공·실패 표�
 - 거부 발표는 색에 의존하지 않는다 — `reason`과 한계값으로 제품이 만든 문장을
   live 영역/에러 카피로 보여준다.
 
-**검증 화면.** 아직 실제 제품 vertical slice가 없다 — catalog는 `planned`으로
-남고, `beta` 승격은 로드맵 gate(실제 화면 검증)를 통과한 뒤 리드가 진행한다.
+**검증 화면.** first-party Web input/dropzone과 Native picker-adapter renderer, 선택 판정
+상호작용 테스트는 연결되어 surface는 `beta`다. 실제 제품 vertical slice와 플랫폼 picker
+실기기 증거는 아직 없으므로 `stable` 승격 gate는 닫혀 있다.

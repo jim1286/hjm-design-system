@@ -6,6 +6,7 @@ import { describe, expect, it } from "vitest";
 import {
   Accordion,
   AlertDialog,
+  Avatar,
   Badge,
   BottomCTA,
   BottomNavigation,
@@ -16,25 +17,30 @@ import {
   Chip,
   Combobox,
   CounterBadge,
+  DatePicker,
   DescriptionList,
   Dialog,
   Divider,
   EmptyState,
   Field,
+  FilePicker,
   Grid,
   HjmNativeProvider,
   Icon,
   IconButton,
   Image,
   Layout,
+  Link,
   List,
   ListRow,
   LoadMore,
   Menu,
   Notice,
+  NumberField,
   OtpField,
   PasswordField,
   Progress,
+  Radio,
   RadioGroup,
   Result,
   SearchField,
@@ -43,7 +49,10 @@ import {
   SegmentedControl,
   Sheet,
   Skeleton,
+  Slider,
+  Spinner,
   Stack,
+  Steps,
   Statistic,
   Surface,
   Switch,
@@ -55,8 +64,11 @@ import {
   ToastRegion,
   TopBar,
   TopBarAction,
+  Form,
+  UploadItem,
 } from "../src/index.js";
 import { reactNativeRendererEvidence } from "../src/evidence.js";
+import executedScenarioRegistry from "./executed-scenarios.json" with { type: "json" };
 
 (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -66,6 +78,26 @@ type DefaultRenderCase = Readonly<{
 }>;
 
 const noop = () => undefined;
+
+const defaultCalendarGrid = {
+  cells: [
+    ...Array.from({ length: 3 }, () => ({})),
+    ...Array.from({ length: 28 }, (_, index) => ({ date: `2027-02-${String(index + 1).padStart(2, "0")}` })),
+    ...Array.from({ length: 4 }, () => ({})),
+  ],
+  weekdayLabels: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+  todayDate: "2027-02-19",
+} as const;
+
+const rendererEnvironments = executedScenarioRegistry.executions[0]!.scenarios as readonly Readonly<{
+  id: "default" | "dark" | "long-copy" | "large-text" | "rtl" | "reduced-motion" | "accessibility";
+  theme: "light" | "dark";
+  direction: "ltr" | "rtl";
+  textScale: number;
+  reducedMotion: boolean;
+}>[];
+
+const longCopy = "아주 긴 제품 설명과 unexpectedly long English content must wrap without hiding the component meaning or required action.";
 
 /** Literal case ids are consumed by the fail-closed evidence checker. */
 export const defaultRenderCases = [
@@ -102,6 +134,15 @@ export const defaultRenderCases = [
     render: () => <IconButton label="닫기" onPress={noop}><Text>×</Text></IconButton>,
   },
   {
+    componentId: "link",
+    render: () => (
+      <Link
+        descriptor={{ label: "문서", destination: { kind: "internal", href: "/docs" } }}
+        onNavigate={noop}
+      />
+    ),
+  },
+  {
     componentId: "bottom-cta",
     render: () => <BottomCTA primaryAction={{ label: "계속", onPress: noop }} />,
   },
@@ -129,7 +170,80 @@ export const defaultRenderCases = [
     componentId: "otp-field",
     render: () => <OtpField label="인증번호" length={6} />,
   },
+  {
+    componentId: "number-field",
+    render: () => (
+      <NumberField
+        decrementLabel="감소"
+        incrementLabel="증가"
+        label="수량"
+        min={0}
+        max={10}
+      />
+    ),
+  },
+  {
+    componentId: "slider",
+    render: () => (
+      <Slider
+        decrementLabel="감소"
+        incrementLabel="증가"
+        label="점수"
+        min={0}
+        max={10}
+      />
+    ),
+  },
+  {
+    componentId: "form",
+    render: () => (
+      <Form
+        fallbackErrorMessage="제출 실패"
+        label="프로필"
+        onSubmit={noop}
+        submitLabel="저장"
+        values={{ name: "" }}
+      >
+        <Text>필드</Text>
+      </Form>
+    ),
+  },
+  {
+    componentId: "date-picker",
+    render: () => (
+      <DatePicker
+        clearLabel="날짜 지우기"
+        closeLabel="달력 닫기"
+        composeAccessibleName={({ date }) => date}
+        descriptor={{
+          grid: defaultCalendarGrid,
+          displayValue: null,
+          placeholder: "날짜 선택",
+          label: "날짜",
+          selectedDate: null,
+          onSelectionChange: noop,
+          open: false,
+          onOpenChange: noop,
+        }}
+        monthLabel="2027년 2월"
+      />
+    ),
+  },
+  {
+    componentId: "file-picker",
+    render: () => (
+      <FilePicker
+        buttonLabel="파일 선택"
+        descriptor={{ mode: "multiple", accept: ["image/*"] }}
+        label="첨부 파일"
+        onPick={async () => null}
+        onPickError={noop}
+        onSelect={noop}
+      />
+    ),
+  },
   { componentId: "checkbox", render: () => <Checkbox label="동의" /> },
+  { componentId: "radio", render: () => <Radio label="일반 배송" /> },
   {
     componentId: "checkbox-group",
     render: () => <CheckboxGroup label="관심사" items={[{ id: "sports", label: "스포츠" }]} />,
@@ -173,6 +287,16 @@ export const defaultRenderCases = [
     render: () => <Tabs label="계정" options={[{ value: "profile", label: "프로필" }]} />,
   },
   {
+    componentId: "steps",
+    render: () => (
+      <Steps
+        composeAccessibleName={({ position, total, label }) => `${total}단계 중 ${position}단계, ${label}`}
+        descriptor={{ steps: [{ id: "account", label: "계정" }, { id: "profile", label: "프로필" }], currentStepId: "profile" }}
+        statusLabels={{ pending: "예정", current: "현재", complete: "완료", error: "오류" }}
+      />
+    ),
+  },
+  {
     componentId: "top-bar",
     render: () => (
       <TopBar
@@ -199,6 +323,10 @@ export const defaultRenderCases = [
     ),
   },
   { componentId: "badge", render: () => <Badge label="새 항목" /> },
+  {
+    componentId: "avatar",
+    render: () => <Avatar accessibilityLabel="Ada Lovelace" name="Ada Lovelace" />,
+  },
   { componentId: "card", render: () => <Card><Text>카드</Text></Card> },
   { componentId: "list-row", render: () => <ListRow title="행" /> },
   { componentId: "tag", render: () => <Tag>태그</Tag> },
@@ -242,11 +370,22 @@ export const defaultRenderCases = [
     componentId: "statistic",
     render: () => <Statistic descriptor={{ id: "orders", label: "주문", value: "12" }} />,
   },
+  {
+    componentId: "upload-item",
+    render: () => (
+      <UploadItem
+        descriptor={{ id: "photo", name: "photo.png", sizeLabel: "1.2 MB", state: { status: "uploading", progress: 0.4 } }}
+        labels={{ pending: "대기", uploading: "업로드 중", success: "완료", cancel: "취소", retry: "재시도" }}
+        onCancel={noop}
+      />
+    ),
+  },
   { componentId: "empty-state", render: () => <EmptyState title="항목 없음" /> },
   { componentId: "result", render: () => <Result status="success" title="저장됨" /> },
   { componentId: "notice", render: () => <Notice title="안내" /> },
   { componentId: "progress", render: () => <Progress label="업로드" value={0.5} /> },
   { componentId: "skeleton", render: () => <Skeleton accessibilityLabel="불러오는 중" /> },
+  { componentId: "spinner", render: () => <Spinner label="불러오는 중" /> },
   { componentId: "dialog", render: () => <Dialog closeLabel="닫기" title="대화상자" /> },
   {
     componentId: "alert-dialog",
@@ -328,19 +467,36 @@ describe("@hjm/react-native default renderer evidence", () => {
     const caseIds = defaultRenderCases.map(({ componentId }) => componentId);
     expect(caseIds).toEqual(evidenceIds);
     expect(new Set(caseIds).size).toBe(caseIds.length);
+    expect(executedScenarioRegistry.executions[0]?.coverageMode).toBe("all-cases");
+    expect(executedScenarioRegistry.executions[0]?.proofFile).toBe("test/default-render.test.tsx");
+    expect(rendererEnvironments.map(({ id }) => id)).toEqual(reactNativeRendererEvidence.components[0]?.scenarios);
   });
 
   it.each(defaultRenderCases)("$componentId", ({ render: renderCase }) => {
-    let renderer: ReactTestRenderer | undefined;
-    act(() => {
-      renderer = create(
-        <HjmNativeProvider reducedMotion theme="light">
-          {renderCase()}
-        </HjmNativeProvider>,
-        { createNodeMock: () => ({}) },
-      );
-    });
-    expect(renderer?.root).toBeDefined();
-    act(() => { renderer?.unmount(); });
+    for (const environment of rendererEnvironments) {
+      let renderer: ReactTestRenderer | undefined;
+      act(() => {
+        renderer = create(
+          <HjmNativeProvider
+            direction={environment.direction}
+            reducedMotion={environment.reducedMotion}
+            textScale={environment.textScale}
+            theme={environment.theme}
+          >
+            <View accessibilityLabel={environment.id === "long-copy" ? longCopy : undefined} style={{ maxWidth: 320 }}>
+              {renderCase()}
+            </View>
+          </HjmNativeProvider>,
+          { createNodeMock: () => ({}) },
+        );
+      });
+      expect(renderer?.root).toBeDefined();
+      const serialized = JSON.stringify(renderer?.toJSON());
+      if (environment.id === "accessibility") {
+        expect(serialized).not.toContain('"accessibilityLabel":""');
+      }
+      if (environment.id === "long-copy") expect(serialized).toContain(longCopy);
+      act(() => { renderer?.unmount(); });
+    }
   });
 });

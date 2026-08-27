@@ -3,35 +3,47 @@ import { URL, fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
 import * as actions from "../src/actions.js";
+import * as datePicker from "../src/date-picker.js";
 import * as display from "../src/display-public.js";
 import {
   reactRendererEvidence,
   reactRendererEvidenceSchemaVersion,
 } from "../src/evidence.js";
 import * as feedback from "../src/feedback.js";
+import * as filePicker from "../src/file-picker.js";
 import * as forms from "../src/forms-public.js";
 import * as layout from "../src/layout.js";
 import * as navigation from "../src/navigation-public.js";
+import * as numberField from "../src/number-field.js";
 import * as overlays from "../src/overlays.js";
 import * as otpField from "../src/otp-field.js";
 import * as passwordField from "../src/password-field.js";
 import * as provider from "../src/provider.js";
 import * as selection from "../src/selection.js";
+import * as slider from "../src/slider.js";
+import * as steps from "../src/steps.js";
 import * as toast from "../src/toast.js";
+import * as uploadItem from "../src/upload-item.js";
 
 const publicModules: Readonly<Record<string, Readonly<Record<string, unknown>>>> = {
   "./actions": actions,
+  "./date-picker": datePicker,
   "./display": display,
   "./feedback": feedback,
+  "./file-picker": filePicker,
   "./forms": forms,
   "./layout": layout,
   "./navigation": navigation,
+  "./number-field": numberField,
   "./overlays": overlays,
   "./otp-field": otpField,
   "./password-field": passwordField,
   "./provider": provider,
   "./selection": selection,
+  "./slider": slider,
+  "./steps": steps,
   "./toast": toast,
+  "./upload-item": uploadItem,
 };
 
 describe("@hjm/react renderer evidence", () => {
@@ -47,7 +59,7 @@ describe("@hjm/react renderer evidence", () => {
     });
 
     const componentIds = reactRendererEvidence.components.map(({ componentId }) => componentId);
-    expect(componentIds).toHaveLength(40);
+    expect(componentIds).toHaveLength(60);
     expect(new Set(componentIds).size).toBe(componentIds.length);
   });
 

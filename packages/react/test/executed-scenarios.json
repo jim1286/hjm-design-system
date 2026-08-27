@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "executions": [
+    {
+      "proofFile": "test/default-render.ssr.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        { "id": "default", "theme": "light", "direction": "ltr", "textScale": 1, "reducedMotion": false },
+        { "id": "dark", "theme": "dark", "direction": "ltr", "textScale": 1, "reducedMotion": false },
+        { "id": "long-copy", "theme": "light", "direction": "ltr", "textScale": 1, "reducedMotion": false },
+        { "id": "large-text", "theme": "light", "direction": "ltr", "textScale": 2, "reducedMotion": false },
+        { "id": "rtl", "theme": "light", "direction": "rtl", "textScale": 1, "reducedMotion": false },
+        { "id": "reduced-motion", "theme": "light", "direction": "ltr", "textScale": 1, "reducedMotion": true },
+        { "id": "accessibility", "theme": "light", "direction": "ltr", "textScale": 1, "reducedMotion": false }
+      ]
+    }
+  ]
+}

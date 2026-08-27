@@ -428,6 +428,17 @@ export function Checkbox({ label, checked, defaultChecked = false, onCheckedChan
     });
     return (_jsx(ChoiceRow, { ...visual, accessibilityHint: accessibilityHint, checked: selected, description: description, disabled: disabled, indicator: visual.indicator ?? "default", invalid: invalid, invalidLabel: invalidLabel, kind: "checkbox", label: label, leading: leading, onActivate: () => setSelected(getCheckboxNextState(selected)), readOnly: readOnly, readOnlyLabel: readOnlyLabel, renderIndicator: renderIndicator, renderLeading: renderLeading, required: required, requiredLabel: requiredLabel }));
 }
+/** Standalone native radio item. Prefer RadioGroup when group state is owned here. */
+export function Radio({ label, checked, defaultChecked = false, onCheckedChange, disabled = false, readOnly = false, required = false, invalid = false, description, readOnlyLabel, requiredLabel, invalidLabel, leading, renderLeading, renderIndicator, accessibilityHint, ...visual }) {
+    const [selected, setSelected] = useControllableState({
+        ...(checked === undefined ? {} : { value: checked }),
+        defaultValue: defaultChecked,
+        ...(onCheckedChange === undefined
+            ? {}
+            : { onChange: (next) => next && onCheckedChange(true) }),
+    });
+    return (_jsx(ChoiceRow, { ...visual, accessibilityHint: accessibilityHint, checked: selected, description: description, disabled: disabled, indicator: visual.indicator ?? "default", invalid: invalid, invalidLabel: invalidLabel, kind: "radio", label: label, leading: leading, onActivate: () => setSelected(true), readOnly: readOnly, readOnlyLabel: readOnlyLabel, renderIndicator: renderIndicator, renderLeading: renderLeading, required: required, requiredLabel: requiredLabel }));
+}
 function ChoiceGroupFrame({ label, accessibilityLabel, required, requiredLabel, readOnly, readOnlyLabel, disabled, description, error, role, orientation, presentation, style, children, }) {
     const theme = useHjmNativeTheme();
     const id = useId().replaceAll(":", "");

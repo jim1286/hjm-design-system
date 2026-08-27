@@ -63,5 +63,6 @@
   `error`만 쓴다. `loadingMore`와 `empty`는 목록 페이지네이션 개념이라 한 파일의
   상태에는 적용되지 않는다.
 
-**검증 화면.** 아직 실제 제품 vertical slice가 없다 — catalog는 `planned`으로
-남고, `beta` 승격은 로드맵 gate(실제 화면 검증)를 통과한 뒤 리드가 진행한다.
+**검증 화면.** first-party Web·Native renderer와 cancel/retry 상태 테스트는 연결되어
+surface는 `beta`다. 실제 전송 lifecycle을 쓰는 제품 vertical slice는 아직 없으므로
+`stable` 승격 gate는 닫혀 있다.

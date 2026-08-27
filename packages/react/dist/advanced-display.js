@@ -1,8 +1,9 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { resolveDescriptionListColumnCount, resolveDescriptionListDescriptor, } from "@hjm/design-contracts/components/description-list";
 import { resolveTimelineDescriptor, } from "@hjm/design-contracts/components/timeline";
-import { accordionRecipe, avatarRecipe, dividerRecipe, } from "@hjm/design-contracts/recipes";
-import { createElement, forwardRef, useEffect, useId, useRef, useState, } from "react";
+import { resolveStatisticDescriptor, validateStatisticGroup, } from "@hjm/design-contracts/components/statistic";
+import { accordionRecipe, avatarRecipe, dividerRecipe, listRecipe, statisticRecipe, } from "@hjm/design-contracts/recipes";
+import { Children, createElement, forwardRef, isValidElement, useEffect, useId, useRef, useState, } from "react";
 import { classNames, useControllableState, useElementWidth } from "./internal.js";
 import { useOptionalHjmTheme } from "./provider.js";
 function validateAccordionItems(items) {
@@ -117,6 +118,36 @@ export const Divider = forwardRef(function Divider({ orientation = dividerRecipe
         "aria-orientation": decorative ? undefined : orientation,
     });
 });
+/** Semantic list container that owns separators around composed rows. */
+export const List = forwardRef(function List({ label, children, separator = listRecipe.defaults.separator, appearance = "plain", className, ...props }, ref) {
+    if (!label.trim())
+        throw new TypeError("List label must not be empty");
+    const items = Children.toArray(children);
+    return (_jsx("div", { ...props, ref: ref, "aria-label": label, className: classNames("hjm-list", className), "data-appearance": appearance, "data-separator": separator, role: "list", children: items.map((item, index) => (_jsx("div", { className: "hjm-list__item", role: "listitem", children: item }, isValidElement(item) && item.key !== null ? item.key : `hjm-list-${index}`))) }));
+});
+export function Statistic({ descriptor, density = "comfortable", presentation = "plain", contextLabel, accessibilityLabel, composeAccessibilityLabel, renderTrendMark, className, ...props }) {
+    const resolved = resolveStatisticDescriptor(descriptor);
+    const valueText = `${resolved.prefix ?? ""}${resolved.value}${resolved.suffix ?? ""}`;
+    const announcement = accessibilityLabel ?? composeAccessibilityLabel?.({
+        ...(contextLabel === undefined ? {} : { contextLabel }),
+        descriptor: resolved,
+        valueText,
+    }) ?? [contextLabel, resolved.label, valueText, resolved.trend?.label, resolved.hint]
+        .filter(Boolean)
+        .join(", ");
+    if (!announcement.trim())
+        throw new TypeError("Statistic accessibility label must not be empty");
+    const trendName = resolved.trend
+        ? statisticRecipe.trend.marks[resolved.trend.direction]
+        : undefined;
+    return (_jsxs("article", { ...props, "aria-label": announcement, className: classNames("hjm-statistic", className), "data-density": density, "data-presentation": presentation, children: [_jsx("span", { "aria-hidden": "true", className: "hjm-statistic__label", children: resolved.label }), _jsxs("span", { "aria-hidden": "true", className: "hjm-statistic__value-row", children: [resolved.prefix ? _jsx("span", { className: "hjm-statistic__affix", children: resolved.prefix }) : null, _jsx("strong", { className: "hjm-statistic__value", children: resolved.value }), resolved.suffix ? _jsx("span", { className: "hjm-statistic__affix", children: resolved.suffix }) : null] }), resolved.trend ? (_jsxs("span", { "aria-hidden": "true", className: "hjm-statistic__trend", "data-tone": resolved.trend.tone, children: [_jsx("span", { className: "hjm-statistic__trend-mark", children: renderTrendMark?.({ name: trendName, color: "currentColor", size: 16 }) ?? (resolved.trend.direction === "up" ? "↑" : resolved.trend.direction === "down" ? "↓" : "—") }), resolved.trend.label] })) : null, resolved.hint ? _jsx("span", { "aria-hidden": "true", className: "hjm-statistic__hint", children: resolved.hint }) : null] }));
+}
+export function StatisticGroup({ label, descriptor, density, presentation, composeAccessibilityLabel, renderTrendMark, className, style, ...props }) {
+    validateStatisticGroup(descriptor);
+    if (!label.trim())
+        throw new TypeError("StatisticGroup label must not be empty");
+    return (_jsx("div", { ...props, "aria-label": label, className: classNames("hjm-statistic-group", className), role: "list", style: { ...style, "--hjm-statistic-columns": descriptor.columns ?? statisticRecipe.defaults.columns }, children: descriptor.items.map((item) => (_jsx("div", { role: "listitem", children: _jsx(Statistic, { contextLabel: label, descriptor: item, ...(composeAccessibilityLabel === undefined ? {} : { composeAccessibilityLabel }), ...(density === undefined ? {} : { density }), ...(presentation === undefined ? {} : { presentation }), ...(renderTrendMark === undefined ? {} : { renderTrendMark }) }) }, item.id))) }));
+}
 function DescriptionListInner({ items, columns, className, style, ...props }, forwardedRef) {
     const descriptor = resolveDescriptionListDescriptor({
         items,

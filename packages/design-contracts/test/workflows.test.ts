@@ -91,14 +91,15 @@ describe("GitHub Actions runtime contracts", () => {
     expect(workflow).toContain("pnpm changeset:check");
   });
 
-  it("rejects non-default renderer evidence until executed results are structurally joined", async () => {
+  it("joins non-default renderer evidence to structured executed-scenario registries", async () => {
     const checker = await readFile(
       new URL("../../../scripts/check-workspace-sync.mjs", import.meta.url),
       "utf8",
     );
 
-    expect(checker).toContain('claim.scenarios.filter((scenario) => scenario !== "default")');
-    expect(checker).toContain("cannot claim non-default scenarios without a");
-    expect(checker).toContain("structured executed-result registry");
+    expect(checker).toContain("scenarioRegistry.executions");
+    expect(checker).toContain("executionByProofFile");
+    expect(checker).toContain("is not joined to its executed-scenario registry");
+    expect(checker).toContain("has no registered ${scenario} execution");
   });
 });

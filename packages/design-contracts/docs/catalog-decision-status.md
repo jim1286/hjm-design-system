@@ -145,7 +145,7 @@ it("every declined row has a doc explaining the reversal condition", async () =>
 | 종류 | 뜻 | 예 | 재검토 신호 |
 |---|---|---|---|
 | **흡수됨** | 그 문제를 이미 다른 컴포넌트가 완결한다 | `Notification`→Toast, `Dropdown`→Menu, `ContextPanel`→SidePanel/Sheet, `Flex`→Stack, `TimePicker`→Select 조합, `Rating`→Slider/Statistic | 흡수한 쪽이 못 푸는 요구가 나올 때 |
-| **검증할 화면이 없음** | 계약 자체는 유효하나 이를 확인할 제품 화면이 없다 | `Anchor`, `Calendar`·`DatePicker`(계약은 있으나 승격 근거 없음) | 그 화면이 실제로 생길 때 |
+| **검증할 화면이 없음** | 계약 자체는 유효하나 이를 확인할 제품 화면이 없다 | `Anchor`, `Calendar` | 그 화면이 실제로 생길 때 |
 | **거절됨** | 계약을 만들 수는 있지만 정체성·아키텍처 경계와 충돌하거나(`BorderBeam`), 문제 자체가 이 패키지의 기존 구조(export, 다른 컴포넌트)로 이미 해소돼 있는데 흡수 대상 이름이 없어 alias를 걸 수 없다(`Utility`, `AppProvider`) | `BorderBeam`, `Utility`, `AppProvider` | 원칙(identity)이나 이 패키지의 아키텍처 경계(런타임 허용 여부) 자체가 바뀔 때 — **제품 화면이 늘어나는 것만으로는 안 뒤집힌다**, 그 점이 "검증할 화면이 없음"과 다르다 |
 ```
 

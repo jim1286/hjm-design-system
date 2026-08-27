@@ -67,6 +67,30 @@
       "import": "./dist/slider.js",
       "default": "./dist/slider.js"
     },
+    "./date-picker": {
+      "types": "./dist/date-picker.d.ts",
+      "react-native": "./dist/date-picker.js",
+      "import": "./dist/date-picker.js",
+      "default": "./dist/date-picker.js"
+    },
+    "./file-picker": {
+      "types": "./dist/file-picker.d.ts",
+      "react-native": "./dist/file-picker.js",
+      "import": "./dist/file-picker.js",
+      "default": "./dist/file-picker.js"
+    },
+    "./steps": {
+      "types": "./dist/steps.d.ts",
+      "react-native": "./dist/steps.js",
+      "import": "./dist/steps.js",
+      "default": "./dist/steps.js"
+    },
+    "./upload-item": {
+      "types": "./dist/upload-item.d.ts",
+      "react-native": "./dist/upload-item.js",
+      "import": "./dist/upload-item.js",
+      "default": "./dist/upload-item.js"
+    },
     "./forms": {
       "types": "./dist/forms.d.ts",
       "react-native": "./dist/forms.js",
@@ -116,7 +140,7 @@
     "check": "pnpm typecheck && pnpm test && pnpm bundle:check"
   },
   "peerDependencies": {
-    "@hjm/design-contracts": ">=0.7.0 <0.8.0",
+    "@hjm/design-contracts": ">=0.8.0 <0.9.0",
     "react": ">=19",
     "react-native": ">=0.81"
   },

@@ -6,9 +6,9 @@
     "web": {
       "packageName": "@hjm/react",
       "packageVersion": "0.7.1",
-      "activeComponents": 40,
-      "claimedComponents": 40,
-      "completeScenarioComponents": 0,
+      "activeComponents": 60,
+      "claimedComponents": 60,
+      "completeScenarioComponents": 29,
       "components": [
         {
           "componentId": "text",
@@ -22,7 +22,13 @@
           "proofs": [
             {
               "scenarios": [
-                "default"
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
               ],
               "file": "test/default-render.ssr.test.tsx",
               "caseId": "text"
@@ -38,16 +44,15 @@
             "accessibility"
           ],
           "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
+            "default",
             "dark",
             "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
             "accessibility"
-          ]
+          ],
+          "missingScenarios": []
         },
         {
           "componentId": "icon",
@@ -61,7 +66,13 @@
           "proofs": [
             {
               "scenarios": [
-                "default"
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
               ],
               "file": "test/default-render.ssr.test.tsx",
               "caseId": "icon"
@@ -77,16 +88,15 @@
             "accessibility"
           ],
           "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
+            "default",
             "dark",
             "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
             "accessibility"
-          ]
+          ],
+          "missingScenarios": []
         },
         {
           "componentId": "surface",
@@ -100,7 +110,13 @@
           "proofs": [
             {
               "scenarios": [
-                "default"
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
               ],
               "file": "test/default-render.ssr.test.tsx",
               "caseId": "surface"
@@ -116,16 +132,103 @@
             "accessibility"
           ],
           "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
+            "default",
             "dark",
             "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
             "accessibility"
-          ]
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "divider",
+          "name": "Divider",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./display",
+          "exportNames": [
+            "Divider"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "divider"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "section",
+          "name": "Section",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./layout",
+          "exportNames": [
+            "Section"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "section"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": []
         },
         {
           "componentId": "stack",
@@ -139,7 +242,13 @@
           "proofs": [
             {
               "scenarios": [
-                "default"
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
               ],
               "file": "test/default-render.ssr.test.tsx",
               "caseId": "stack"
@@ -155,16 +264,15 @@
             "accessibility"
           ],
           "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
+            "default",
             "dark",
             "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
             "accessibility"
-          ]
+          ],
+          "missingScenarios": []
         },
         {
           "componentId": "grid",
@@ -178,7 +286,13 @@
           "proofs": [
             {
               "scenarios": [
-                "default"
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
               ],
               "file": "test/default-render.ssr.test.tsx",
               "caseId": "grid"
@@ -195,15 +309,15 @@
             "platform-parity"
           ],
           "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
+            "default",
             "dark",
             "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility",
+            "accessibility"
+          ],
+          "missingScenarios": [
             "platform-parity"
           ]
         },
@@ -219,7 +333,13 @@
           "proofs": [
             {
               "scenarios": [
-                "default"
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
               ],
               "file": "test/default-render.ssr.test.tsx",
               "caseId": "layout"
@@ -237,15 +357,15 @@
             "platform-parity"
           ],
           "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
+            "default",
             "dark",
             "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility",
+            "accessibility"
+          ],
+          "missingScenarios": [
             "keyboard",
             "platform-parity"
           ]
@@ -262,7 +382,13 @@
           "proofs": [
             {
               "scenarios": [
-                "default"
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
               ],
               "file": "test/default-render.ssr.test.tsx",
               "caseId": "button"
@@ -278,16 +404,15 @@
             "accessibility"
           ],
           "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
+            "default",
             "dark",
             "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
             "accessibility"
-          ]
+          ],
+          "missingScenarios": []
         },
         {
           "componentId": "icon-button",
@@ -301,7 +426,13 @@
           "proofs": [
             {
               "scenarios": [
-                "default"
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
               ],
               "file": "test/default-render.ssr.test.tsx",
               "caseId": "icon-button"
@@ -317,15 +448,63 @@
             "accessibility"
           ],
           "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
+            "default",
             "dark",
             "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
             "accessibility"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "link",
+          "name": "Link",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./actions",
+          "exportNames": [
+            "Link"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "link"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard",
+            "platform-parity"
           ]
         },
         {
@@ -341,7 +520,13 @@
           "proofs": [
             {
               "scenarios": [
-                "default"
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
               ],
               "file": "test/default-render.ssr.test.tsx",
               "caseId": "field"
@@ -358,15 +543,15 @@
             "keyboard"
           ],
           "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
+            "default",
             "dark",
             "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility",
+            "accessibility"
+          ],
+          "missingScenarios": [
             "keyboard"
           ]
         },
@@ -382,7 +567,13 @@
           "proofs": [
             {
               "scenarios": [
-                "default"
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
               ],
               "file": "test/default-render.ssr.test.tsx",
               "caseId": "search-field"
@@ -399,15 +590,15 @@
             "keyboard"
           ],
           "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
+            "default",
             "dark",
             "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility",
+            "accessibility"
+          ],
+          "missingScenarios": [
             "keyboard"
           ]
         },
@@ -423,7 +614,13 @@
           "proofs": [
             {
               "scenarios": [
-                "default"
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
               ],
               "file": "test/default-render.ssr.test.tsx",
               "caseId": "text-area"
@@ -439,16 +636,15 @@
             "accessibility"
           ],
           "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
+            "default",
             "dark",
             "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
             "accessibility"
-          ]
+          ],
+          "missingScenarios": []
         },
         {
           "componentId": "password-field",
@@ -462,7 +658,13 @@
           "proofs": [
             {
               "scenarios": [
-                "default"
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
               ],
               "file": "test/default-render.ssr.test.tsx",
               "caseId": "password-field"
@@ -480,15 +682,15 @@
             "platform-parity"
           ],
           "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
+            "default",
             "dark",
             "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility",
+            "accessibility"
+          ],
+          "missingScenarios": [
             "keyboard",
             "platform-parity"
           ]
@@ -505,7 +707,13 @@
           "proofs": [
             {
               "scenarios": [
-                "default"
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
               ],
               "file": "test/default-render.ssr.test.tsx",
               "caseId": "otp-field"
@@ -523,15 +731,15 @@
             "platform-parity"
           ],
           "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
+            "default",
             "dark",
             "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility",
+            "accessibility"
+          ],
+          "missingScenarios": [
             "keyboard",
             "platform-parity"
           ]
@@ -548,7 +756,13 @@
           "proofs": [
             {
               "scenarios": [
-                "default"
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
               ],
               "file": "test/default-render.ssr.test.tsx",
               "caseId": "checkbox"
@@ -565,15 +779,15 @@
             "keyboard"
           ],
           "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
+            "default",
             "dark",
             "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility",
+            "accessibility"
+          ],
+          "missingScenarios": [
             "keyboard"
           ]
         },
@@ -589,7 +803,13 @@
           "proofs": [
             {
               "scenarios": [
-                "default"
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
               ],
               "file": "test/default-render.ssr.test.tsx",
               "caseId": "radio"
@@ -605,16 +825,15 @@
             "accessibility"
           ],
           "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
+            "default",
             "dark",
             "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
             "accessibility"
-          ]
+          ],
+          "missingScenarios": []
         },
         {
           "componentId": "checkbox-group",
@@ -628,7 +847,13 @@
           "proofs": [
             {
               "scenarios": [
-                "default"
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
               ],
               "file": "test/default-render.ssr.test.tsx",
               "caseId": "checkbox-group"
@@ -645,15 +870,15 @@
             "keyboard"
           ],
           "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
+            "default",
             "dark",
             "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility",
+            "accessibility"
+          ],
+          "missingScenarios": [
             "keyboard"
           ]
         },
@@ -669,7 +894,13 @@
           "proofs": [
             {
               "scenarios": [
-                "default"
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
               ],
               "file": "test/default-render.ssr.test.tsx",
               "caseId": "radio-group"
@@ -686,15 +917,15 @@
             "keyboard"
           ],
           "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
+            "default",
             "dark",
             "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility",
+            "accessibility"
+          ],
+          "missingScenarios": [
             "keyboard"
           ]
         },
@@ -710,7 +941,13 @@
           "proofs": [
             {
               "scenarios": [
-                "default"
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
               ],
               "file": "test/default-render.ssr.test.tsx",
               "caseId": "switch"
@@ -727,289 +964,6 @@
             "keyboard"
           ],
           "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility",
-            "keyboard"
-          ]
-        },
-        {
-          "componentId": "segmented-control",
-          "name": "SegmentedControl",
-          "status": "beta",
-          "claimed": true,
-          "subpath": "./selection",
-          "exportNames": [
-            "SegmentedControl"
-          ],
-          "proofs": [
-            {
-              "scenarios": [
-                "default"
-              ],
-              "file": "test/default-render.ssr.test.tsx",
-              "caseId": "segmented-control"
-            }
-          ],
-          "requiredScenarios": [
-            "default",
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility",
-            "keyboard"
-          ],
-          "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility",
-            "keyboard"
-          ]
-        },
-        {
-          "componentId": "select",
-          "name": "Select",
-          "status": "beta",
-          "claimed": true,
-          "subpath": "./forms",
-          "exportNames": [
-            "Select"
-          ],
-          "proofs": [
-            {
-              "scenarios": [
-                "default"
-              ],
-              "file": "test/default-render.ssr.test.tsx",
-              "caseId": "select"
-            }
-          ],
-          "requiredScenarios": [
-            "default",
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility",
-            "keyboard",
-            "platform-parity"
-          ],
-          "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility",
-            "keyboard",
-            "platform-parity"
-          ]
-        },
-        {
-          "componentId": "tabs",
-          "name": "Tabs",
-          "status": "beta",
-          "claimed": true,
-          "subpath": "./navigation",
-          "exportNames": [
-            "Tabs"
-          ],
-          "proofs": [
-            {
-              "scenarios": [
-                "default"
-              ],
-              "file": "test/default-render.ssr.test.tsx",
-              "caseId": "tabs"
-            }
-          ],
-          "requiredScenarios": [
-            "default",
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility",
-            "keyboard"
-          ],
-          "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility",
-            "keyboard"
-          ]
-        },
-        {
-          "componentId": "bottom-navigation",
-          "name": "BottomNavigation",
-          "status": "beta",
-          "claimed": true,
-          "subpath": "./navigation",
-          "exportNames": [
-            "BottomNavigation"
-          ],
-          "proofs": [
-            {
-              "scenarios": [
-                "default"
-              ],
-              "file": "test/default-render.ssr.test.tsx",
-              "caseId": "bottom-navigation"
-            }
-          ],
-          "requiredScenarios": [
-            "default",
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility",
-            "keyboard",
-            "platform-parity"
-          ],
-          "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility",
-            "keyboard",
-            "platform-parity"
-          ]
-        },
-        {
-          "componentId": "load-more",
-          "name": "LoadMore",
-          "status": "beta",
-          "claimed": true,
-          "subpath": "./navigation",
-          "exportNames": [
-            "LoadMore"
-          ],
-          "proofs": [
-            {
-              "scenarios": [
-                "default"
-              ],
-              "file": "test/default-render.ssr.test.tsx",
-              "caseId": "load-more"
-            }
-          ],
-          "requiredScenarios": [
-            "default",
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility",
-            "keyboard"
-          ],
-          "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility",
-            "keyboard"
-          ]
-        },
-        {
-          "componentId": "menu",
-          "name": "Menu",
-          "status": "beta",
-          "claimed": true,
-          "subpath": "./overlays",
-          "exportNames": [
-            "Menu"
-          ],
-          "proofs": [
-            {
-              "scenarios": [
-                "default"
-              ],
-              "file": "test/default-render.ssr.test.tsx",
-              "caseId": "menu"
-            }
-          ],
-          "requiredScenarios": [
-            "default",
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility",
-            "keyboard",
-            "platform-parity"
-          ],
-          "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility",
-            "keyboard",
-            "platform-parity"
-          ]
-        },
-        {
-          "componentId": "badge",
-          "name": "Badge",
-          "status": "beta",
-          "claimed": true,
-          "subpath": "./display",
-          "exportNames": [
-            "Badge"
-          ],
-          "proofs": [
-            {
-              "scenarios": [
-                "default"
-              ],
-              "file": "test/default-render.ssr.test.tsx",
-              "caseId": "badge"
-            }
-          ],
-          "requiredScenarios": [
             "default",
             "dark",
             "long-copy",
@@ -1018,1436 +972,7 @@
             "reduced-motion",
             "accessibility"
           ],
-          "claimedScenarios": [
-            "default"
-          ],
           "missingScenarios": [
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility"
-          ]
-        },
-        {
-          "componentId": "counter-badge",
-          "name": "CounterBadge",
-          "status": "beta",
-          "claimed": true,
-          "subpath": "./display",
-          "exportNames": [
-            "CounterBadge"
-          ],
-          "proofs": [
-            {
-              "scenarios": [
-                "default"
-              ],
-              "file": "test/default-render.ssr.test.tsx",
-              "caseId": "counter-badge"
-            }
-          ],
-          "requiredScenarios": [
-            "default",
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility"
-          ],
-          "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility"
-          ]
-        },
-        {
-          "componentId": "card",
-          "name": "Card",
-          "status": "beta",
-          "claimed": true,
-          "subpath": "./display",
-          "exportNames": [
-            "Card"
-          ],
-          "proofs": [
-            {
-              "scenarios": [
-                "default"
-              ],
-              "file": "test/default-render.ssr.test.tsx",
-              "caseId": "card"
-            }
-          ],
-          "requiredScenarios": [
-            "default",
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility"
-          ],
-          "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility"
-          ]
-        },
-        {
-          "componentId": "list-row",
-          "name": "ListRow",
-          "status": "beta",
-          "claimed": true,
-          "subpath": "./display",
-          "exportNames": [
-            "ListRow"
-          ],
-          "proofs": [
-            {
-              "scenarios": [
-                "default"
-              ],
-              "file": "test/default-render.ssr.test.tsx",
-              "caseId": "list-row"
-            }
-          ],
-          "requiredScenarios": [
-            "default",
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility"
-          ],
-          "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility"
-          ]
-        },
-        {
-          "componentId": "timeline",
-          "name": "Timeline",
-          "status": "beta",
-          "claimed": true,
-          "subpath": "./display",
-          "exportNames": [
-            "Timeline"
-          ],
-          "proofs": [
-            {
-              "scenarios": [
-                "default"
-              ],
-              "file": "test/default-render.ssr.test.tsx",
-              "caseId": "timeline"
-            }
-          ],
-          "requiredScenarios": [
-            "default",
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility"
-          ],
-          "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility"
-          ]
-        },
-        {
-          "componentId": "description-list",
-          "name": "DescriptionList",
-          "status": "beta",
-          "claimed": true,
-          "subpath": "./display",
-          "exportNames": [
-            "DescriptionList"
-          ],
-          "proofs": [
-            {
-              "scenarios": [
-                "default"
-              ],
-              "file": "test/default-render.ssr.test.tsx",
-              "caseId": "description-list"
-            }
-          ],
-          "requiredScenarios": [
-            "default",
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility"
-          ],
-          "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility"
-          ]
-        },
-        {
-          "componentId": "image",
-          "name": "Image",
-          "status": "beta",
-          "claimed": true,
-          "subpath": "./display",
-          "exportNames": [
-            "Image"
-          ],
-          "proofs": [
-            {
-              "scenarios": [
-                "default"
-              ],
-              "file": "test/default-render.ssr.test.tsx",
-              "caseId": "image"
-            }
-          ],
-          "requiredScenarios": [
-            "default",
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility"
-          ],
-          "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility"
-          ]
-        },
-        {
-          "componentId": "tag",
-          "name": "Tag",
-          "status": "beta",
-          "claimed": true,
-          "subpath": "./display",
-          "exportNames": [
-            "Tag"
-          ],
-          "proofs": [
-            {
-              "scenarios": [
-                "default"
-              ],
-              "file": "test/default-render.ssr.test.tsx",
-              "caseId": "tag"
-            }
-          ],
-          "requiredScenarios": [
-            "default",
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility"
-          ],
-          "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility"
-          ]
-        },
-        {
-          "componentId": "empty-state",
-          "name": "EmptyState",
-          "status": "beta",
-          "claimed": true,
-          "subpath": "./feedback",
-          "exportNames": [
-            "EmptyState"
-          ],
-          "proofs": [
-            {
-              "scenarios": [
-                "default"
-              ],
-              "file": "test/default-render.ssr.test.tsx",
-              "caseId": "empty-state"
-            }
-          ],
-          "requiredScenarios": [
-            "default",
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility"
-          ],
-          "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility"
-          ]
-        },
-        {
-          "componentId": "result",
-          "name": "Result",
-          "status": "beta",
-          "claimed": true,
-          "subpath": "./feedback",
-          "exportNames": [
-            "Result"
-          ],
-          "proofs": [
-            {
-              "scenarios": [
-                "default"
-              ],
-              "file": "test/default-render.ssr.test.tsx",
-              "caseId": "result"
-            }
-          ],
-          "requiredScenarios": [
-            "default",
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility"
-          ],
-          "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility"
-          ]
-        },
-        {
-          "componentId": "toast",
-          "name": "Toast",
-          "status": "beta",
-          "claimed": true,
-          "subpath": "./toast",
-          "exportNames": [
-            "Toast",
-            "ToastProvider",
-            "useToast"
-          ],
-          "proofs": [
-            {
-              "scenarios": [
-                "default"
-              ],
-              "file": "test/default-render.ssr.test.tsx",
-              "caseId": "toast"
-            }
-          ],
-          "requiredScenarios": [
-            "default",
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility",
-            "keyboard",
-            "platform-parity"
-          ],
-          "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility",
-            "keyboard",
-            "platform-parity"
-          ]
-        },
-        {
-          "componentId": "dialog",
-          "name": "Dialog",
-          "status": "beta",
-          "claimed": true,
-          "subpath": "./overlays",
-          "exportNames": [
-            "Dialog"
-          ],
-          "proofs": [
-            {
-              "scenarios": [
-                "default"
-              ],
-              "file": "test/default-render.ssr.test.tsx",
-              "caseId": "dialog"
-            }
-          ],
-          "requiredScenarios": [
-            "default",
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility",
-            "keyboard",
-            "platform-parity"
-          ],
-          "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility",
-            "keyboard",
-            "platform-parity"
-          ]
-        },
-        {
-          "componentId": "alert-dialog",
-          "name": "AlertDialog",
-          "status": "beta",
-          "claimed": true,
-          "subpath": "./overlays",
-          "exportNames": [
-            "AlertDialog"
-          ],
-          "proofs": [
-            {
-              "scenarios": [
-                "default"
-              ],
-              "file": "test/default-render.ssr.test.tsx",
-              "caseId": "alert-dialog"
-            }
-          ],
-          "requiredScenarios": [
-            "default",
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility",
-            "keyboard",
-            "platform-parity"
-          ],
-          "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility",
-            "keyboard",
-            "platform-parity"
-          ]
-        },
-        {
-          "componentId": "sheet",
-          "name": "Sheet",
-          "status": "beta",
-          "claimed": true,
-          "subpath": "./overlays",
-          "exportNames": [
-            "Sheet"
-          ],
-          "proofs": [
-            {
-              "scenarios": [
-                "default"
-              ],
-              "file": "test/default-render.ssr.test.tsx",
-              "caseId": "sheet"
-            }
-          ],
-          "requiredScenarios": [
-            "default",
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility",
-            "keyboard",
-            "platform-parity"
-          ],
-          "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility",
-            "keyboard",
-            "platform-parity"
-          ]
-        },
-        {
-          "componentId": "tooltip",
-          "name": "Tooltip",
-          "status": "beta",
-          "claimed": true,
-          "subpath": "./overlays",
-          "exportNames": [
-            "Tooltip"
-          ],
-          "proofs": [
-            {
-              "scenarios": [
-                "default"
-              ],
-              "file": "test/default-render.ssr.test.tsx",
-              "caseId": "tooltip"
-            }
-          ],
-          "requiredScenarios": [
-            "default",
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility",
-            "keyboard"
-          ],
-          "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility",
-            "keyboard"
-          ]
-        },
-        {
-          "componentId": "design-system-provider",
-          "name": "DesignSystemProvider",
-          "status": "beta",
-          "claimed": true,
-          "subpath": "./provider",
-          "exportNames": [
-            "HjmProvider",
-            "useHjmTheme"
-          ],
-          "proofs": [
-            {
-              "scenarios": [
-                "default"
-              ],
-              "file": "test/default-render.ssr.test.tsx",
-              "caseId": "design-system-provider"
-            }
-          ],
-          "requiredScenarios": [
-            "default",
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility"
-          ],
-          "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility"
-          ]
-        }
-      ]
-    },
-    "native": {
-      "packageName": "@hjm/react-native",
-      "packageVersion": "0.7.1",
-      "activeComponents": 50,
-      "claimedComponents": 50,
-      "completeScenarioComponents": 0,
-      "components": [
-        {
-          "componentId": "text",
-          "name": "Text",
-          "status": "beta",
-          "claimed": true,
-          "subpath": "./primitives",
-          "exportNames": [
-            "Text"
-          ],
-          "proofs": [
-            {
-              "scenarios": [
-                "default"
-              ],
-              "file": "test/default-render.test.tsx",
-              "caseId": "text"
-            }
-          ],
-          "requiredScenarios": [
-            "default",
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility"
-          ],
-          "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility"
-          ]
-        },
-        {
-          "componentId": "icon",
-          "name": "Icon",
-          "status": "beta",
-          "claimed": true,
-          "subpath": "./primitives",
-          "exportNames": [
-            "Icon"
-          ],
-          "proofs": [
-            {
-              "scenarios": [
-                "default"
-              ],
-              "file": "test/default-render.test.tsx",
-              "caseId": "icon"
-            }
-          ],
-          "requiredScenarios": [
-            "default",
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility"
-          ],
-          "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility"
-          ]
-        },
-        {
-          "componentId": "surface",
-          "name": "Surface",
-          "status": "beta",
-          "claimed": true,
-          "subpath": "./primitives",
-          "exportNames": [
-            "Surface"
-          ],
-          "proofs": [
-            {
-              "scenarios": [
-                "default"
-              ],
-              "file": "test/default-render.test.tsx",
-              "caseId": "surface"
-            }
-          ],
-          "requiredScenarios": [
-            "default",
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility"
-          ],
-          "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility"
-          ]
-        },
-        {
-          "componentId": "divider",
-          "name": "Divider",
-          "status": "beta",
-          "claimed": true,
-          "subpath": "./data-display",
-          "exportNames": [
-            "Divider"
-          ],
-          "proofs": [
-            {
-              "scenarios": [
-                "default"
-              ],
-              "file": "test/default-render.test.tsx",
-              "caseId": "divider"
-            }
-          ],
-          "requiredScenarios": [
-            "default",
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility"
-          ],
-          "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility"
-          ]
-        },
-        {
-          "componentId": "section",
-          "name": "Section",
-          "status": "beta",
-          "claimed": true,
-          "subpath": "./primitives",
-          "exportNames": [
-            "Section"
-          ],
-          "proofs": [
-            {
-              "scenarios": [
-                "default"
-              ],
-              "file": "test/default-render.test.tsx",
-              "caseId": "section"
-            }
-          ],
-          "requiredScenarios": [
-            "default",
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility"
-          ],
-          "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility"
-          ]
-        },
-        {
-          "componentId": "stack",
-          "name": "Stack",
-          "status": "beta",
-          "claimed": true,
-          "subpath": "./primitives",
-          "exportNames": [
-            "Stack"
-          ],
-          "proofs": [
-            {
-              "scenarios": [
-                "default"
-              ],
-              "file": "test/default-render.test.tsx",
-              "caseId": "stack"
-            }
-          ],
-          "requiredScenarios": [
-            "default",
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility"
-          ],
-          "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility"
-          ]
-        },
-        {
-          "componentId": "grid",
-          "name": "Grid",
-          "status": "beta",
-          "claimed": true,
-          "subpath": "./primitives",
-          "exportNames": [
-            "Grid"
-          ],
-          "proofs": [
-            {
-              "scenarios": [
-                "default"
-              ],
-              "file": "test/default-render.test.tsx",
-              "caseId": "grid"
-            }
-          ],
-          "requiredScenarios": [
-            "default",
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility",
-            "platform-parity"
-          ],
-          "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility",
-            "platform-parity"
-          ]
-        },
-        {
-          "componentId": "layout",
-          "name": "Layout",
-          "status": "beta",
-          "claimed": true,
-          "subpath": "./primitives",
-          "exportNames": [
-            "Layout"
-          ],
-          "proofs": [
-            {
-              "scenarios": [
-                "default"
-              ],
-              "file": "test/default-render.test.tsx",
-              "caseId": "layout"
-            }
-          ],
-          "requiredScenarios": [
-            "default",
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility",
-            "keyboard",
-            "platform-parity"
-          ],
-          "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility",
-            "keyboard",
-            "platform-parity"
-          ]
-        },
-        {
-          "componentId": "button",
-          "name": "Button",
-          "status": "beta",
-          "claimed": true,
-          "subpath": "./actions",
-          "exportNames": [
-            "Button"
-          ],
-          "proofs": [
-            {
-              "scenarios": [
-                "default"
-              ],
-              "file": "test/default-render.test.tsx",
-              "caseId": "button"
-            }
-          ],
-          "requiredScenarios": [
-            "default",
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility"
-          ],
-          "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility"
-          ]
-        },
-        {
-          "componentId": "icon-button",
-          "name": "IconButton",
-          "status": "beta",
-          "claimed": true,
-          "subpath": "./actions",
-          "exportNames": [
-            "IconButton"
-          ],
-          "proofs": [
-            {
-              "scenarios": [
-                "default"
-              ],
-              "file": "test/default-render.test.tsx",
-              "caseId": "icon-button"
-            }
-          ],
-          "requiredScenarios": [
-            "default",
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility"
-          ],
-          "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility"
-          ]
-        },
-        {
-          "componentId": "bottom-cta",
-          "name": "BottomCTA",
-          "status": "beta",
-          "claimed": true,
-          "subpath": "./actions",
-          "exportNames": [
-            "BottomCTA"
-          ],
-          "proofs": [
-            {
-              "scenarios": [
-                "default"
-              ],
-              "file": "test/default-render.test.tsx",
-              "caseId": "bottom-cta"
-            }
-          ],
-          "requiredScenarios": [
-            "default",
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility"
-          ],
-          "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility"
-          ]
-        },
-        {
-          "componentId": "field",
-          "name": "Field",
-          "status": "beta",
-          "claimed": true,
-          "subpath": "./forms",
-          "exportNames": [
-            "Field"
-          ],
-          "proofs": [
-            {
-              "scenarios": [
-                "default"
-              ],
-              "file": "test/default-render.test.tsx",
-              "caseId": "field"
-            }
-          ],
-          "requiredScenarios": [
-            "default",
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility",
-            "keyboard"
-          ],
-          "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility",
-            "keyboard"
-          ]
-        },
-        {
-          "componentId": "search-field",
-          "name": "SearchField",
-          "status": "beta",
-          "claimed": true,
-          "subpath": "./inputs",
-          "exportNames": [
-            "SearchField"
-          ],
-          "proofs": [
-            {
-              "scenarios": [
-                "default"
-              ],
-              "file": "test/default-render.test.tsx",
-              "caseId": "search-field"
-            }
-          ],
-          "requiredScenarios": [
-            "default",
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility",
-            "keyboard"
-          ],
-          "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility",
-            "keyboard"
-          ]
-        },
-        {
-          "componentId": "text-area",
-          "name": "TextArea",
-          "status": "beta",
-          "claimed": true,
-          "subpath": "./inputs",
-          "exportNames": [
-            "TextArea"
-          ],
-          "proofs": [
-            {
-              "scenarios": [
-                "default"
-              ],
-              "file": "test/default-render.test.tsx",
-              "caseId": "text-area"
-            }
-          ],
-          "requiredScenarios": [
-            "default",
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility"
-          ],
-          "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility"
-          ]
-        },
-        {
-          "componentId": "password-field",
-          "name": "PasswordField",
-          "status": "beta",
-          "claimed": true,
-          "subpath": "./password-field",
-          "exportNames": [
-            "PasswordField"
-          ],
-          "proofs": [
-            {
-              "scenarios": [
-                "default"
-              ],
-              "file": "test/default-render.test.tsx",
-              "caseId": "password-field"
-            }
-          ],
-          "requiredScenarios": [
-            "default",
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility",
-            "keyboard",
-            "platform-parity"
-          ],
-          "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility",
-            "keyboard",
-            "platform-parity"
-          ]
-        },
-        {
-          "componentId": "otp-field",
-          "name": "OtpField",
-          "status": "beta",
-          "claimed": true,
-          "subpath": "./otp-field",
-          "exportNames": [
-            "OtpField"
-          ],
-          "proofs": [
-            {
-              "scenarios": [
-                "default"
-              ],
-              "file": "test/default-render.test.tsx",
-              "caseId": "otp-field"
-            }
-          ],
-          "requiredScenarios": [
-            "default",
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility",
-            "keyboard",
-            "platform-parity"
-          ],
-          "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility",
-            "keyboard",
-            "platform-parity"
-          ]
-        },
-        {
-          "componentId": "checkbox",
-          "name": "Checkbox",
-          "status": "beta",
-          "claimed": true,
-          "subpath": "./inputs",
-          "exportNames": [
-            "Checkbox"
-          ],
-          "proofs": [
-            {
-              "scenarios": [
-                "default"
-              ],
-              "file": "test/default-render.test.tsx",
-              "caseId": "checkbox"
-            }
-          ],
-          "requiredScenarios": [
-            "default",
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility",
-            "keyboard"
-          ],
-          "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility",
-            "keyboard"
-          ]
-        },
-        {
-          "componentId": "checkbox-group",
-          "name": "CheckboxGroup",
-          "status": "beta",
-          "claimed": true,
-          "subpath": "./inputs",
-          "exportNames": [
-            "CheckboxGroup"
-          ],
-          "proofs": [
-            {
-              "scenarios": [
-                "default"
-              ],
-              "file": "test/default-render.test.tsx",
-              "caseId": "checkbox-group"
-            }
-          ],
-          "requiredScenarios": [
-            "default",
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility",
-            "keyboard"
-          ],
-          "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility",
-            "keyboard"
-          ]
-        },
-        {
-          "componentId": "radio-group",
-          "name": "RadioGroup",
-          "status": "beta",
-          "claimed": true,
-          "subpath": "./inputs",
-          "exportNames": [
-            "RadioGroup"
-          ],
-          "proofs": [
-            {
-              "scenarios": [
-                "default"
-              ],
-              "file": "test/default-render.test.tsx",
-              "caseId": "radio-group"
-            }
-          ],
-          "requiredScenarios": [
-            "default",
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility",
-            "keyboard"
-          ],
-          "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility",
-            "keyboard"
-          ]
-        },
-        {
-          "componentId": "switch",
-          "name": "Switch",
-          "status": "beta",
-          "claimed": true,
-          "subpath": "./inputs",
-          "exportNames": [
-            "Switch"
-          ],
-          "proofs": [
-            {
-              "scenarios": [
-                "default"
-              ],
-              "file": "test/default-render.test.tsx",
-              "caseId": "switch"
-            }
-          ],
-          "requiredScenarios": [
-            "default",
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility",
-            "keyboard"
-          ],
-          "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
-            "dark",
-            "long-copy",
-            "large-text",
-            "rtl",
-            "reduced-motion",
-            "accessibility",
             "keyboard"
           ]
         },
@@ -2456,16 +981,22 @@
           "name": "Chip",
           "status": "beta",
           "claimed": true,
-          "subpath": "./inputs",
+          "subpath": "./selection",
           "exportNames": [
             "Chip"
           ],
           "proofs": [
             {
               "scenarios": [
-                "default"
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
               ],
-              "file": "test/default-render.test.tsx",
+              "file": "test/default-render.ssr.test.tsx",
               "caseId": "chip"
             }
           ],
@@ -2480,15 +1011,15 @@
             "keyboard"
           ],
           "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
+            "default",
             "dark",
             "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility",
+            "accessibility"
+          ],
+          "missingScenarios": [
             "keyboard"
           ]
         },
@@ -2497,16 +1028,22 @@
           "name": "SegmentedControl",
           "status": "beta",
           "claimed": true,
-          "subpath": "./inputs",
+          "subpath": "./selection",
           "exportNames": [
             "SegmentedControl"
           ],
           "proofs": [
             {
               "scenarios": [
-                "default"
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
               ],
-              "file": "test/default-render.test.tsx",
+              "file": "test/default-render.ssr.test.tsx",
               "caseId": "segmented-control"
             }
           ],
@@ -2521,15 +1058,109 @@
             "keyboard"
           ],
           "claimedScenarios": [
-            "default"
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
           ],
           "missingScenarios": [
+            "keyboard"
+          ]
+        },
+        {
+          "componentId": "slider",
+          "name": "Slider",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./slider",
+          "exportNames": [
+            "Slider"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "slider"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
             "dark",
             "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
             "accessibility",
+            "keyboard"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard"
+          ]
+        },
+        {
+          "componentId": "number-field",
+          "name": "NumberField",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./number-field",
+          "exportNames": [
+            "NumberField"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "number-field"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
             "keyboard"
           ]
         },
@@ -2545,9 +1176,15 @@
           "proofs": [
             {
               "scenarios": [
-                "default"
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
               ],
-              "file": "test/default-render.test.tsx",
+              "file": "test/default-render.ssr.test.tsx",
               "caseId": "select"
             }
           ],
@@ -2563,15 +1200,15 @@
             "platform-parity"
           ],
           "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
+            "default",
             "dark",
             "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility",
+            "accessibility"
+          ],
+          "missingScenarios": [
             "keyboard",
             "platform-parity"
           ]
@@ -2588,10 +1225,163 @@
           "proofs": [
             {
               "scenarios": [
-                "default"
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
               ],
-              "file": "test/default-render.test.tsx",
+              "file": "test/default-render.ssr.test.tsx",
               "caseId": "combobox"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "componentId": "date-picker",
+          "name": "DatePicker",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./date-picker",
+          "exportNames": [
+            "DatePicker"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "date-picker"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "componentId": "file-picker",
+          "name": "FilePicker",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./file-picker",
+          "exportNames": [
+            "FilePicker"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "file-picker"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "componentId": "form",
+          "name": "Form",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./forms",
+          "exportNames": [
+            "Form"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "form"
             }
           ],
           "requiredScenarios": [
@@ -2605,15 +1395,62 @@
             "keyboard"
           ],
           "claimedScenarios": [
-            "default"
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
           ],
           "missingScenarios": [
+            "keyboard"
+          ]
+        },
+        {
+          "componentId": "upload-item",
+          "name": "UploadItem",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./upload-item",
+          "exportNames": [
+            "UploadItem"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "upload-item"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
             "dark",
             "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
             "accessibility",
+            "keyboard"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
             "keyboard"
           ]
         },
@@ -2629,7 +1466,2831 @@
           "proofs": [
             {
               "scenarios": [
-                "default"
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "tabs"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard"
+          ]
+        },
+        {
+          "componentId": "bottom-navigation",
+          "name": "BottomNavigation",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./navigation",
+          "exportNames": [
+            "BottomNavigation"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "bottom-navigation"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "componentId": "load-more",
+          "name": "LoadMore",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./navigation",
+          "exportNames": [
+            "LoadMore"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "load-more"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard"
+          ]
+        },
+        {
+          "componentId": "steps",
+          "name": "Steps",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./steps",
+          "exportNames": [
+            "Steps"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "steps"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "menu",
+          "name": "Menu",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./overlays",
+          "exportNames": [
+            "Menu"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "menu"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "componentId": "avatar",
+          "name": "Avatar",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./display",
+          "exportNames": [
+            "Avatar"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "avatar"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "badge",
+          "name": "Badge",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./display",
+          "exportNames": [
+            "Badge"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "badge"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "counter-badge",
+          "name": "CounterBadge",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./display",
+          "exportNames": [
+            "CounterBadge"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "counter-badge"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "card",
+          "name": "Card",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./display",
+          "exportNames": [
+            "Card"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "card"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "list",
+          "name": "List",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./display",
+          "exportNames": [
+            "List"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "list"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "list-row",
+          "name": "ListRow",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./display",
+          "exportNames": [
+            "ListRow"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "list-row"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "accordion",
+          "name": "Accordion",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./display",
+          "exportNames": [
+            "Accordion"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "accordion"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard"
+          ]
+        },
+        {
+          "componentId": "statistic",
+          "name": "Statistic",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./display",
+          "exportNames": [
+            "Statistic",
+            "StatisticGroup"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "statistic"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "timeline",
+          "name": "Timeline",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./display",
+          "exportNames": [
+            "Timeline"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "timeline"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "description-list",
+          "name": "DescriptionList",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./display",
+          "exportNames": [
+            "DescriptionList"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "description-list"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "image",
+          "name": "Image",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./display",
+          "exportNames": [
+            "Image"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "image"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "tag",
+          "name": "Tag",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./display",
+          "exportNames": [
+            "Tag"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "tag"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "empty-state",
+          "name": "EmptyState",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./feedback",
+          "exportNames": [
+            "EmptyState"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "empty-state"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "notice",
+          "name": "Notice",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./feedback",
+          "exportNames": [
+            "Notice"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "notice"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "progress",
+          "name": "Progress",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./feedback",
+          "exportNames": [
+            "Progress"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "progress"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "spinner",
+          "name": "Spinner",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./feedback",
+          "exportNames": [
+            "Spinner"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "spinner"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "skeleton",
+          "name": "Skeleton",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./feedback",
+          "exportNames": [
+            "Skeleton"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "skeleton"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "result",
+          "name": "Result",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./feedback",
+          "exportNames": [
+            "Result"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "result"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "toast",
+          "name": "Toast",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./toast",
+          "exportNames": [
+            "Toast",
+            "ToastProvider",
+            "useToast"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "toast"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "componentId": "dialog",
+          "name": "Dialog",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./overlays",
+          "exportNames": [
+            "Dialog"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "dialog"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "componentId": "alert-dialog",
+          "name": "AlertDialog",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./overlays",
+          "exportNames": [
+            "AlertDialog"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "alert-dialog"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "componentId": "sheet",
+          "name": "Sheet",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./overlays",
+          "exportNames": [
+            "Sheet"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "sheet"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "componentId": "tooltip",
+          "name": "Tooltip",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./overlays",
+          "exportNames": [
+            "Tooltip"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "tooltip"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard"
+          ]
+        },
+        {
+          "componentId": "design-system-provider",
+          "name": "DesignSystemProvider",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./provider",
+          "exportNames": [
+            "HjmProvider",
+            "useHjmTheme"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "design-system-provider"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": []
+        }
+      ]
+    },
+    "native": {
+      "packageName": "@hjm/react-native",
+      "packageVersion": "0.7.1",
+      "activeComponents": 61,
+      "claimedComponents": 61,
+      "completeScenarioComponents": 31,
+      "components": [
+        {
+          "componentId": "text",
+          "name": "Text",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./primitives",
+          "exportNames": [
+            "Text"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "text"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "icon",
+          "name": "Icon",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./primitives",
+          "exportNames": [
+            "Icon"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "icon"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "surface",
+          "name": "Surface",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./primitives",
+          "exportNames": [
+            "Surface"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "surface"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "divider",
+          "name": "Divider",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./data-display",
+          "exportNames": [
+            "Divider"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "divider"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "section",
+          "name": "Section",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./primitives",
+          "exportNames": [
+            "Section"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "section"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "stack",
+          "name": "Stack",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./primitives",
+          "exportNames": [
+            "Stack"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "stack"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "grid",
+          "name": "Grid",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./primitives",
+          "exportNames": [
+            "Grid"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "grid"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "platform-parity"
+          ]
+        },
+        {
+          "componentId": "layout",
+          "name": "Layout",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./primitives",
+          "exportNames": [
+            "Layout"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "layout"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "componentId": "button",
+          "name": "Button",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./actions",
+          "exportNames": [
+            "Button"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "button"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "icon-button",
+          "name": "IconButton",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./actions",
+          "exportNames": [
+            "IconButton"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "icon-button"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "link",
+          "name": "Link",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./actions",
+          "exportNames": [
+            "Link"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "link"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "componentId": "bottom-cta",
+          "name": "BottomCTA",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./actions",
+          "exportNames": [
+            "BottomCTA"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "bottom-cta"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "field",
+          "name": "Field",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./forms",
+          "exportNames": [
+            "Field"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "field"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard"
+          ]
+        },
+        {
+          "componentId": "search-field",
+          "name": "SearchField",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./inputs",
+          "exportNames": [
+            "SearchField"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "search-field"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard"
+          ]
+        },
+        {
+          "componentId": "text-area",
+          "name": "TextArea",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./inputs",
+          "exportNames": [
+            "TextArea"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "text-area"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "password-field",
+          "name": "PasswordField",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./password-field",
+          "exportNames": [
+            "PasswordField"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "password-field"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "componentId": "otp-field",
+          "name": "OtpField",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./otp-field",
+          "exportNames": [
+            "OtpField"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "otp-field"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "componentId": "checkbox",
+          "name": "Checkbox",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./inputs",
+          "exportNames": [
+            "Checkbox"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "checkbox"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard"
+          ]
+        },
+        {
+          "componentId": "radio",
+          "name": "Radio",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./inputs",
+          "exportNames": [
+            "Radio"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "radio"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "checkbox-group",
+          "name": "CheckboxGroup",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./inputs",
+          "exportNames": [
+            "CheckboxGroup"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "checkbox-group"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard"
+          ]
+        },
+        {
+          "componentId": "radio-group",
+          "name": "RadioGroup",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./inputs",
+          "exportNames": [
+            "RadioGroup"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "radio-group"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard"
+          ]
+        },
+        {
+          "componentId": "switch",
+          "name": "Switch",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./inputs",
+          "exportNames": [
+            "Switch"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "switch"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard"
+          ]
+        },
+        {
+          "componentId": "chip",
+          "name": "Chip",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./inputs",
+          "exportNames": [
+            "Chip"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "chip"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard"
+          ]
+        },
+        {
+          "componentId": "segmented-control",
+          "name": "SegmentedControl",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./inputs",
+          "exportNames": [
+            "SegmentedControl"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "segmented-control"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard"
+          ]
+        },
+        {
+          "componentId": "slider",
+          "name": "Slider",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./slider",
+          "exportNames": [
+            "Slider"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "slider"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard"
+          ]
+        },
+        {
+          "componentId": "number-field",
+          "name": "NumberField",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./number-field",
+          "exportNames": [
+            "NumberField"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "number-field"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard"
+          ]
+        },
+        {
+          "componentId": "select",
+          "name": "Select",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./forms",
+          "exportNames": [
+            "Select"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "select"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "componentId": "combobox",
+          "name": "Combobox",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./forms",
+          "exportNames": [
+            "Combobox"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "combobox"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "componentId": "date-picker",
+          "name": "DatePicker",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./date-picker",
+          "exportNames": [
+            "DatePicker"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "date-picker"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "componentId": "file-picker",
+          "name": "FilePicker",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./file-picker",
+          "exportNames": [
+            "FilePicker"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "file-picker"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "componentId": "form",
+          "name": "Form",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./forms",
+          "exportNames": [
+            "Form"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "form"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard"
+          ]
+        },
+        {
+          "componentId": "upload-item",
+          "name": "UploadItem",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./upload-item",
+          "exportNames": [
+            "UploadItem"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "upload-item"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard"
+          ]
+        },
+        {
+          "componentId": "tabs",
+          "name": "Tabs",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./navigation",
+          "exportNames": [
+            "Tabs"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
               ],
               "file": "test/default-render.test.tsx",
               "caseId": "tabs"
@@ -2646,15 +4307,15 @@
             "keyboard"
           ],
           "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
+            "default",
             "dark",
             "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility",
+            "accessibility"
+          ],
+          "missingScenarios": [
             "keyboard"
           ]
         },
@@ -2671,7 +4332,13 @@
           "proofs": [
             {
               "scenarios": [
-                "default"
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
               ],
               "file": "test/default-render.test.tsx",
               "caseId": "top-bar"
@@ -2687,16 +4354,15 @@
             "accessibility"
           ],
           "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
+            "default",
             "dark",
             "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
             "accessibility"
-          ]
+          ],
+          "missingScenarios": []
         },
         {
           "componentId": "bottom-navigation",
@@ -2710,7 +4376,13 @@
           "proofs": [
             {
               "scenarios": [
-                "default"
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
               ],
               "file": "test/default-render.test.tsx",
               "caseId": "bottom-navigation"
@@ -2728,15 +4400,15 @@
             "platform-parity"
           ],
           "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
+            "default",
             "dark",
             "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility",
+            "accessibility"
+          ],
+          "missingScenarios": [
             "keyboard",
             "platform-parity"
           ]
@@ -2753,7 +4425,13 @@
           "proofs": [
             {
               "scenarios": [
-                "default"
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
               ],
               "file": "test/default-render.test.tsx",
               "caseId": "load-more"
@@ -2770,17 +4448,61 @@
             "keyboard"
           ],
           "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
+            "default",
             "dark",
             "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility",
+            "accessibility"
+          ],
+          "missingScenarios": [
             "keyboard"
           ]
+        },
+        {
+          "componentId": "steps",
+          "name": "Steps",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./steps",
+          "exportNames": [
+            "Steps"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "steps"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": []
         },
         {
           "componentId": "menu",
@@ -2794,7 +4516,13 @@
           "proofs": [
             {
               "scenarios": [
-                "default"
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
               ],
               "file": "test/default-render.test.tsx",
               "caseId": "menu"
@@ -2812,18 +4540,62 @@
             "platform-parity"
           ],
           "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
+            "default",
             "dark",
             "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility",
+            "accessibility"
+          ],
+          "missingScenarios": [
             "keyboard",
             "platform-parity"
           ]
+        },
+        {
+          "componentId": "avatar",
+          "name": "Avatar",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./data-display",
+          "exportNames": [
+            "Avatar"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "avatar"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": []
         },
         {
           "componentId": "badge",
@@ -2837,7 +4609,13 @@
           "proofs": [
             {
               "scenarios": [
-                "default"
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
               ],
               "file": "test/default-render.test.tsx",
               "caseId": "badge"
@@ -2853,16 +4631,15 @@
             "accessibility"
           ],
           "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
+            "default",
             "dark",
             "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
             "accessibility"
-          ]
+          ],
+          "missingScenarios": []
         },
         {
           "componentId": "counter-badge",
@@ -2876,7 +4653,13 @@
           "proofs": [
             {
               "scenarios": [
-                "default"
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
               ],
               "file": "test/default-render.test.tsx",
               "caseId": "counter-badge"
@@ -2892,16 +4675,15 @@
             "accessibility"
           ],
           "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
+            "default",
             "dark",
             "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
             "accessibility"
-          ]
+          ],
+          "missingScenarios": []
         },
         {
           "componentId": "card",
@@ -2915,7 +4697,13 @@
           "proofs": [
             {
               "scenarios": [
-                "default"
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
               ],
               "file": "test/default-render.test.tsx",
               "caseId": "card"
@@ -2931,16 +4719,15 @@
             "accessibility"
           ],
           "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
+            "default",
             "dark",
             "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
             "accessibility"
-          ]
+          ],
+          "missingScenarios": []
         },
         {
           "componentId": "list",
@@ -2954,7 +4741,13 @@
           "proofs": [
             {
               "scenarios": [
-                "default"
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
               ],
               "file": "test/default-render.test.tsx",
               "caseId": "list"
@@ -2970,16 +4763,15 @@
             "accessibility"
           ],
           "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
+            "default",
             "dark",
             "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
             "accessibility"
-          ]
+          ],
+          "missingScenarios": []
         },
         {
           "componentId": "list-row",
@@ -2993,7 +4785,13 @@
           "proofs": [
             {
               "scenarios": [
-                "default"
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
               ],
               "file": "test/default-render.test.tsx",
               "caseId": "list-row"
@@ -3009,16 +4807,15 @@
             "accessibility"
           ],
           "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
+            "default",
             "dark",
             "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
             "accessibility"
-          ]
+          ],
+          "missingScenarios": []
         },
         {
           "componentId": "accordion",
@@ -3032,7 +4829,13 @@
           "proofs": [
             {
               "scenarios": [
-                "default"
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
               ],
               "file": "test/default-render.test.tsx",
               "caseId": "accordion"
@@ -3049,15 +4852,15 @@
             "keyboard"
           ],
           "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
+            "default",
             "dark",
             "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility",
+            "accessibility"
+          ],
+          "missingScenarios": [
             "keyboard"
           ]
         },
@@ -3074,7 +4877,13 @@
           "proofs": [
             {
               "scenarios": [
-                "default"
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
               ],
               "file": "test/default-render.test.tsx",
               "caseId": "statistic"
@@ -3090,16 +4899,15 @@
             "accessibility"
           ],
           "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
+            "default",
             "dark",
             "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
             "accessibility"
-          ]
+          ],
+          "missingScenarios": []
         },
         {
           "componentId": "timeline",
@@ -3113,7 +4921,13 @@
           "proofs": [
             {
               "scenarios": [
-                "default"
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
               ],
               "file": "test/default-render.test.tsx",
               "caseId": "timeline"
@@ -3129,16 +4943,15 @@
             "accessibility"
           ],
           "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
+            "default",
             "dark",
             "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
             "accessibility"
-          ]
+          ],
+          "missingScenarios": []
         },
         {
           "componentId": "description-list",
@@ -3152,7 +4965,13 @@
           "proofs": [
             {
               "scenarios": [
-                "default"
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
               ],
               "file": "test/default-render.test.tsx",
               "caseId": "description-list"
@@ -3168,16 +4987,15 @@
             "accessibility"
           ],
           "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
+            "default",
             "dark",
             "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
             "accessibility"
-          ]
+          ],
+          "missingScenarios": []
         },
         {
           "componentId": "image",
@@ -3191,7 +5009,13 @@
           "proofs": [
             {
               "scenarios": [
-                "default"
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
               ],
               "file": "test/default-render.test.tsx",
               "caseId": "image"
@@ -3207,16 +5031,15 @@
             "accessibility"
           ],
           "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
+            "default",
             "dark",
             "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
             "accessibility"
-          ]
+          ],
+          "missingScenarios": []
         },
         {
           "componentId": "tag",
@@ -3230,7 +5053,13 @@
           "proofs": [
             {
               "scenarios": [
-                "default"
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
               ],
               "file": "test/default-render.test.tsx",
               "caseId": "tag"
@@ -3246,16 +5075,15 @@
             "accessibility"
           ],
           "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
+            "default",
             "dark",
             "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
             "accessibility"
-          ]
+          ],
+          "missingScenarios": []
         },
         {
           "componentId": "empty-state",
@@ -3269,7 +5097,13 @@
           "proofs": [
             {
               "scenarios": [
-                "default"
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
               ],
               "file": "test/default-render.test.tsx",
               "caseId": "empty-state"
@@ -3285,16 +5119,15 @@
             "accessibility"
           ],
           "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
+            "default",
             "dark",
             "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
             "accessibility"
-          ]
+          ],
+          "missingScenarios": []
         },
         {
           "componentId": "notice",
@@ -3308,7 +5141,13 @@
           "proofs": [
             {
               "scenarios": [
-                "default"
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
               ],
               "file": "test/default-render.test.tsx",
               "caseId": "notice"
@@ -3324,16 +5163,15 @@
             "accessibility"
           ],
           "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
+            "default",
             "dark",
             "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
             "accessibility"
-          ]
+          ],
+          "missingScenarios": []
         },
         {
           "componentId": "progress",
@@ -3347,7 +5185,13 @@
           "proofs": [
             {
               "scenarios": [
-                "default"
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
               ],
               "file": "test/default-render.test.tsx",
               "caseId": "progress"
@@ -3363,16 +5207,59 @@
             "accessibility"
           ],
           "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
+            "default",
             "dark",
             "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
             "accessibility"
-          ]
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "spinner",
+          "name": "Spinner",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./feedback",
+          "exportNames": [
+            "Spinner"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "spinner"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": []
         },
         {
           "componentId": "skeleton",
@@ -3386,7 +5273,13 @@
           "proofs": [
             {
               "scenarios": [
-                "default"
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
               ],
               "file": "test/default-render.test.tsx",
               "caseId": "skeleton"
@@ -3402,16 +5295,15 @@
             "accessibility"
           ],
           "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
+            "default",
             "dark",
             "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
             "accessibility"
-          ]
+          ],
+          "missingScenarios": []
         },
         {
           "componentId": "result",
@@ -3425,7 +5317,13 @@
           "proofs": [
             {
               "scenarios": [
-                "default"
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
               ],
               "file": "test/default-render.test.tsx",
               "caseId": "result"
@@ -3441,16 +5339,15 @@
             "accessibility"
           ],
           "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
+            "default",
             "dark",
             "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
             "accessibility"
-          ]
+          ],
+          "missingScenarios": []
         },
         {
           "componentId": "toast",
@@ -3465,7 +5362,13 @@
           "proofs": [
             {
               "scenarios": [
-                "default"
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
               ],
               "file": "test/default-render.test.tsx",
               "caseId": "toast"
@@ -3483,15 +5386,15 @@
             "platform-parity"
           ],
           "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
+            "default",
             "dark",
             "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility",
+            "accessibility"
+          ],
+          "missingScenarios": [
             "keyboard",
             "platform-parity"
           ]
@@ -3508,7 +5411,13 @@
           "proofs": [
             {
               "scenarios": [
-                "default"
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
               ],
               "file": "test/default-render.test.tsx",
               "caseId": "dialog"
@@ -3526,15 +5435,15 @@
             "platform-parity"
           ],
           "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
+            "default",
             "dark",
             "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility",
+            "accessibility"
+          ],
+          "missingScenarios": [
             "keyboard",
             "platform-parity"
           ]
@@ -3551,7 +5460,13 @@
           "proofs": [
             {
               "scenarios": [
-                "default"
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
               ],
               "file": "test/default-render.test.tsx",
               "caseId": "alert-dialog"
@@ -3569,15 +5484,15 @@
             "platform-parity"
           ],
           "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
+            "default",
             "dark",
             "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility",
+            "accessibility"
+          ],
+          "missingScenarios": [
             "keyboard",
             "platform-parity"
           ]
@@ -3594,7 +5509,13 @@
           "proofs": [
             {
               "scenarios": [
-                "default"
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
               ],
               "file": "test/default-render.test.tsx",
               "caseId": "sheet"
@@ -3612,15 +5533,15 @@
             "platform-parity"
           ],
           "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
+            "default",
             "dark",
             "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility",
+            "accessibility"
+          ],
+          "missingScenarios": [
             "keyboard",
             "platform-parity"
           ]
@@ -3638,7 +5559,13 @@
           "proofs": [
             {
               "scenarios": [
-                "default"
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
               ],
               "file": "test/default-render.test.tsx",
               "caseId": "design-system-provider"
@@ -3654,16 +5581,15 @@
             "accessibility"
           ],
           "claimedScenarios": [
-            "default"
-          ],
-          "missingScenarios": [
+            "default",
             "dark",
             "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
             "accessibility"
-          ]
+          ],
+          "missingScenarios": []
         }
       ]
     }

@@ -125,6 +125,26 @@ export type CheckboxProps = ChoiceVisualProps & Readonly<{
     accessibilityHint?: string;
 }>;
 export declare function Checkbox({ label, checked, defaultChecked, onCheckedChange, disabled, readOnly, required, invalid, description, readOnlyLabel, requiredLabel, invalidLabel, leading, renderLeading, renderIndicator, accessibilityHint, ...visual }: CheckboxProps): import("react").JSX.Element;
+export type RadioProps = ChoiceVisualProps & Readonly<{
+    label: string;
+    checked?: boolean;
+    defaultChecked?: boolean;
+    onCheckedChange?: (checked: true) => void;
+    disabled?: boolean;
+    readOnly?: boolean;
+    required?: boolean;
+    invalid?: boolean;
+    description?: string;
+    readOnlyLabel?: string;
+    requiredLabel?: string;
+    invalidLabel?: string;
+    leading?: ReactNode;
+    renderLeading?: (props: ChoiceVisualRenderProps) => ReactNode;
+    renderIndicator?: (props: ChoiceVisualRenderProps) => ReactNode;
+    accessibilityHint?: string;
+}>;
+/** Standalone native radio item. Prefer RadioGroup when group state is owned here. */
+export declare function Radio({ label, checked, defaultChecked, onCheckedChange, disabled, readOnly, required, invalid, description, readOnlyLabel, requiredLabel, invalidLabel, leading, renderLeading, renderIndicator, accessibilityHint, ...visual }: RadioProps): import("react").JSX.Element;
 export type RadioOption<Value extends string = string> = Readonly<{
     value: Value;
     label: string;

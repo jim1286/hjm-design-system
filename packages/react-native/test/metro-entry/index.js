@@ -3,14 +3,18 @@ import { AppRegistry, View } from "react-native";
 
 import { Button, Link } from "@hjm/react-native/actions";
 import { List, Statistic } from "@hjm/react-native/data-display";
+import { DatePicker } from "@hjm/react-native/date-picker";
 import { reactNativeRendererEvidence } from "@hjm/react-native/evidence";
 import { Notice, ToastRegion } from "@hjm/react-native/feedback";
+import { FilePicker } from "@hjm/react-native/file-picker";
 import { Combobox, Field, Select } from "@hjm/react-native/forms";
 import { Chip, SearchField } from "@hjm/react-native/inputs";
 import { NumberField } from "@hjm/react-native/number-field";
 import { OtpField } from "@hjm/react-native/otp-field";
 import { PasswordField } from "@hjm/react-native/password-field";
 import { Slider } from "@hjm/react-native/slider";
+import { Steps } from "@hjm/react-native/steps";
+import { UploadItem } from "@hjm/react-native/upload-item";
 import {
   BottomNavigation,
   Menu,
@@ -20,6 +24,15 @@ import { Icon, Text } from "@hjm/react-native/primitives";
 import { HjmNativeProvider } from "@hjm/react-native/provider";
 
 const noop = () => undefined;
+const calendarGrid = {
+  cells: [
+    ...Array.from({ length: 3 }, () => ({})),
+    ...Array.from({ length: 28 }, (_, index) => ({ date: `2027-02-${String(index + 1).padStart(2, "0")}` })),
+    ...Array.from({ length: 4 }, () => ({})),
+  ],
+  weekdayLabels: ["일", "월", "화", "수", "목", "금", "토"],
+  todayDate: "2027-02-19",
+};
 
 function MetroSmokeApp() {
   return React.createElement(
@@ -93,6 +106,28 @@ function MetroSmokeApp() {
         max: 100,
         min: 0,
       }),
+      React.createElement(DatePicker, {
+        clearLabel: "날짜 지우기",
+        closeLabel: "달력 닫기",
+        composeAccessibleName: ({ date }) => date,
+        descriptor: {
+          grid: calendarGrid,
+          displayValue: null,
+          placeholder: "날짜 선택",
+          label: "날짜",
+          defaultSelectedDate: null,
+          defaultOpen: false,
+        },
+        monthLabel: "2027년 2월",
+      }),
+      React.createElement(FilePicker, {
+        buttonLabel: "파일 선택",
+        descriptor: { accept: ["image/*"] },
+        label: "첨부 파일",
+        onPick: async () => null,
+        onPickError: noop,
+        onSelect: noop,
+      }),
       React.createElement(Chip, { label: "필터", onPress: noop }),
       React.createElement(BottomNavigation, {
         descriptor: {
@@ -105,6 +140,11 @@ function MetroSmokeApp() {
         },
         onActivate: noop,
         renderIcon: ({ name }) => React.createElement(Text, null, name),
+      }),
+      React.createElement(Steps, {
+        composeAccessibleName: ({ position, total, label }) => `${total} 중 ${position}, ${label}`,
+        descriptor: { steps: [{ id: "a", label: "계정" }, { id: "b", label: "확인" }], currentStepId: "b" },
+        statusLabels: { pending: "예정", current: "현재", complete: "완료", error: "오류" },
       }),
       React.createElement(Menu, {
         dismissLabel: "메뉴 닫기",
@@ -120,6 +160,11 @@ function MetroSmokeApp() {
         }),
       ),
       React.createElement(Notice, { title: "번들 확인", tone: "success" }),
+      React.createElement(UploadItem, {
+        descriptor: { id: "photo", name: "photo.png", state: { status: "uploading", progress: 0.5 } },
+        labels: { pending: "대기", uploading: "업로드 중", success: "완료", cancel: "취소", retry: "재시도" },
+        onCancel: noop,
+      }),
       React.createElement(ToastRegion, null),
       React.createElement(Dialog, { closeLabel: "닫기", defaultOpen: false, title: "확인" }),
     ),

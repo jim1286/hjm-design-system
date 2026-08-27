@@ -102,8 +102,8 @@ index > cursor  → pending
 
 ## 검증 화면
 
-아직 없음. `planned → beta` 승격은 실제 제품 vertical slice 이후 리드가 진행한다(로드맵
-maturity gate).
+first-party Web·Native renderer와 상태 파생·환경 matrix 증거는 연결되어 surface는 `beta`다.
+실제 제품 vertical slice는 아직 없으므로 `stable` 승격 gate는 닫혀 있다.
 
 유력 후보였던 "Yajalal 온보딩(`OnboardingScreen`의 `AppProgress` 대체)"은 검증 결과
 부정확했다 — `OnboardingScreen.tsx`는 지금도 그대로 `AppProgress`(연속 진행바,

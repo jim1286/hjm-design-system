@@ -10,16 +10,29 @@ import {
   type TimelineItemDescriptor,
 } from "@hjm/design-contracts/components/timeline";
 import {
+  resolveStatisticDescriptor,
+  validateStatisticGroup,
+  type ResolvedStatisticDescriptor,
+  type StatisticDescriptor,
+  type StatisticGroupDescriptor,
+} from "@hjm/design-contracts/components/statistic";
+import {
   accordionRecipe,
   avatarRecipe,
   dividerRecipe,
+  listRecipe,
+  statisticRecipe,
   type AccordionDensity,
   type AvatarShape,
   type AvatarSize,
+  type StatisticDensity,
+  type StatisticPresentation,
 } from "@hjm/design-contracts/recipes";
 import {
+  Children,
   createElement,
   forwardRef,
+  isValidElement,
   useEffect,
   useId,
   useRef,
@@ -296,6 +309,182 @@ export const Divider = forwardRef<HTMLElement, DividerProps>(function Divider(
     "aria-orientation": decorative ? undefined : orientation,
   });
 });
+
+export type ListAppearance = "grouped" | "plain";
+
+export type ListProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> &
+  Readonly<{
+    label: string;
+    children: ReactNode;
+    separator?: keyof typeof listRecipe.separators;
+    appearance?: ListAppearance;
+  }>;
+
+/** Semantic list container that owns separators around composed rows. */
+export const List = forwardRef<HTMLDivElement, ListProps>(function List(
+  {
+    label,
+    children,
+    separator = listRecipe.defaults.separator,
+    appearance = "plain",
+    className,
+    ...props
+  },
+  ref,
+) {
+  if (!label.trim()) throw new TypeError("List label must not be empty");
+  const items = Children.toArray(children);
+  return (
+    <div
+      {...props}
+      ref={ref}
+      aria-label={label}
+      className={classNames("hjm-list", className)}
+      data-appearance={appearance}
+      data-separator={separator}
+      role="list"
+    >
+      {items.map((item, index) => (
+        <div
+          className="hjm-list__item"
+          key={isValidElement(item) && item.key !== null ? item.key : `hjm-list-${index}`}
+          role="listitem"
+        >
+          {item}
+        </div>
+      ))}
+    </div>
+  );
+});
+
+export type StatisticTrendMarkRenderProps = Readonly<{
+  name: "trendUp" | "trendDown" | "trendFlat";
+  color: "currentColor";
+  size: number;
+}>;
+
+export type ComposeStatisticAccessibilityLabel<Id extends string = string> = (
+  input: Readonly<{
+    contextLabel?: string;
+    descriptor: ResolvedStatisticDescriptor<Id>;
+    valueText: string;
+  }>,
+) => string;
+
+export type StatisticProps<Id extends string = string> = Omit<
+  HTMLAttributes<HTMLElement>,
+  "children"
+> & Readonly<{
+  descriptor: StatisticDescriptor<Id>;
+  density?: StatisticDensity;
+  presentation?: StatisticPresentation;
+  contextLabel?: string;
+  accessibilityLabel?: string;
+  composeAccessibilityLabel?: ComposeStatisticAccessibilityLabel<Id>;
+  renderTrendMark?: (props: StatisticTrendMarkRenderProps) => ReactNode;
+}>;
+
+export function Statistic<Id extends string = string>({
+  descriptor,
+  density = "comfortable",
+  presentation = "plain",
+  contextLabel,
+  accessibilityLabel,
+  composeAccessibilityLabel,
+  renderTrendMark,
+  className,
+  ...props
+}: StatisticProps<Id>) {
+  const resolved = resolveStatisticDescriptor(descriptor);
+  const valueText = `${resolved.prefix ?? ""}${resolved.value}${resolved.suffix ?? ""}`;
+  const announcement = accessibilityLabel ?? composeAccessibilityLabel?.({
+    ...(contextLabel === undefined ? {} : { contextLabel }),
+    descriptor: resolved,
+    valueText,
+  }) ?? [contextLabel, resolved.label, valueText, resolved.trend?.label, resolved.hint]
+    .filter(Boolean)
+    .join(", ");
+  if (!announcement.trim()) throw new TypeError("Statistic accessibility label must not be empty");
+  const trendName = resolved.trend
+    ? statisticRecipe.trend.marks[resolved.trend.direction]
+    : undefined;
+  return (
+    <article
+      {...props}
+      aria-label={announcement}
+      className={classNames("hjm-statistic", className)}
+      data-density={density}
+      data-presentation={presentation}
+    >
+      <span aria-hidden="true" className="hjm-statistic__label">{resolved.label}</span>
+      <span aria-hidden="true" className="hjm-statistic__value-row">
+        {resolved.prefix ? <span className="hjm-statistic__affix">{resolved.prefix}</span> : null}
+        <strong className="hjm-statistic__value">{resolved.value}</strong>
+        {resolved.suffix ? <span className="hjm-statistic__affix">{resolved.suffix}</span> : null}
+      </span>
+      {resolved.trend ? (
+        <span aria-hidden="true" className="hjm-statistic__trend" data-tone={resolved.trend.tone}>
+          <span className="hjm-statistic__trend-mark">
+            {renderTrendMark?.({ name: trendName!, color: "currentColor", size: 16 }) ?? (
+              resolved.trend.direction === "up" ? "↑" : resolved.trend.direction === "down" ? "↓" : "—"
+            )}
+          </span>
+          {resolved.trend.label}
+        </span>
+      ) : null}
+      {resolved.hint ? <span aria-hidden="true" className="hjm-statistic__hint">{resolved.hint}</span> : null}
+    </article>
+  );
+}
+
+export type StatisticGroupProps<Id extends string = string> = Omit<
+  HTMLAttributes<HTMLDivElement>,
+  "children"
+> & Readonly<{
+  label: string;
+  descriptor: StatisticGroupDescriptor<Id>;
+  density?: StatisticDensity;
+  presentation?: StatisticPresentation;
+  composeAccessibilityLabel?: ComposeStatisticAccessibilityLabel<Id>;
+  renderTrendMark?: (props: StatisticTrendMarkRenderProps) => ReactNode;
+}>;
+
+export function StatisticGroup<Id extends string = string>({
+  label,
+  descriptor,
+  density,
+  presentation,
+  composeAccessibilityLabel,
+  renderTrendMark,
+  className,
+  style,
+  ...props
+}: StatisticGroupProps<Id>) {
+  validateStatisticGroup(descriptor);
+  if (!label.trim()) throw new TypeError("StatisticGroup label must not be empty");
+  return (
+    <div
+      {...props}
+      aria-label={label}
+      className={classNames("hjm-statistic-group", className)}
+      role="list"
+      style={{ ...style, "--hjm-statistic-columns": descriptor.columns ?? statisticRecipe.defaults.columns } as CSSProperties}
+    >
+      {descriptor.items.map((item) => (
+        <div key={item.id} role="listitem">
+          <Statistic
+            contextLabel={label}
+            descriptor={item}
+            {...(composeAccessibilityLabel === undefined ? {} : { composeAccessibilityLabel })}
+            {...(density === undefined ? {} : { density })}
+            {...(presentation === undefined ? {} : { presentation })}
+            {...(renderTrendMark === undefined ? {} : { renderTrendMark })}
+          />
+        </div>
+      ))}
+    </div>
+  );
+}
 
 export type DescriptionListProps<Id extends string = string> = Omit<
   HTMLAttributes<HTMLDListElement>,

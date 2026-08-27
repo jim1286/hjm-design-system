@@ -88,7 +88,7 @@ export declare const componentCatalog: readonly [{
 }, {
     readonly recipe: "dividerRecipe";
     readonly surfaceStatus: {
-        readonly web: "planned";
+        readonly web: "beta";
         readonly native: "beta";
     };
     readonly name: "Divider";
@@ -98,7 +98,7 @@ export declare const componentCatalog: readonly [{
 }, {
     readonly recipe: "sectionRecipe";
     readonly surfaceStatus: {
-        readonly web: "planned";
+        readonly web: "beta";
         readonly native: "beta";
     };
     readonly name: "Section";
@@ -199,8 +199,8 @@ export declare const componentCatalog: readonly [{
     readonly recipe: "linkRecipe";
     readonly behavior: "link";
     readonly surfaceStatus: {
-        readonly web: "planned";
-        readonly native: "planned";
+        readonly web: "beta";
+        readonly native: "beta";
     };
     readonly name: "Link";
     readonly category: "action";
@@ -311,7 +311,7 @@ export declare const componentCatalog: readonly [{
     readonly recipe: "selectionControlRecipe";
     readonly surfaceStatus: {
         readonly web: "beta";
-        readonly native: "planned";
+        readonly native: "beta";
     };
     readonly name: "Radio";
     readonly category: "input";
@@ -354,7 +354,7 @@ export declare const componentCatalog: readonly [{
     readonly recipe: "chipRecipe";
     readonly behavior: "chip";
     readonly surfaceStatus: {
-        readonly web: "planned";
+        readonly web: "beta";
         readonly native: "beta";
     };
     readonly name: "Chip";
@@ -374,34 +374,34 @@ export declare const componentCatalog: readonly [{
     readonly status: "beta";
 }, {
     readonly roadmap: {
-        readonly state: "contract-ready";
+        readonly state: "evidence-needed";
         readonly summary: string;
     };
     readonly recipe: "sliderRecipe";
     readonly behavior: "slider";
     readonly surfaceStatus: {
-        readonly web: "planned";
-        readonly native: "planned";
+        readonly web: "beta";
+        readonly native: "beta";
     };
     readonly name: "Slider";
     readonly category: "input";
     readonly platform: "shared";
-    readonly status: "planned";
+    readonly status: "beta";
 }, {
     readonly roadmap: {
-        readonly state: "contract-ready";
+        readonly state: "evidence-needed";
         readonly summary: string;
     };
     readonly recipe: "numberFieldRecipe";
     readonly behavior: "numberField";
     readonly surfaceStatus: {
-        readonly web: "planned";
-        readonly native: "planned";
+        readonly web: "beta";
+        readonly native: "beta";
     };
     readonly name: "NumberField";
     readonly category: "input";
     readonly platform: "shared";
-    readonly status: "planned";
+    readonly status: "beta";
 }, {
     readonly recipe: "selectRecipe";
     readonly behavior: "select";
@@ -417,7 +417,7 @@ export declare const componentCatalog: readonly [{
     readonly recipe: "comboboxRecipe";
     readonly behavior: "combobox";
     readonly surfaceStatus: {
-        readonly web: "planned";
+        readonly web: "beta";
         readonly native: "beta";
     };
     readonly name: "Combobox";
@@ -426,19 +426,19 @@ export declare const componentCatalog: readonly [{
     readonly status: "beta";
 }, {
     readonly roadmap: {
-        readonly state: "contract-ready";
+        readonly state: "evidence-needed";
         readonly summary: string;
     };
     readonly recipe: "datePickerRecipe";
     readonly behavior: "datePicker";
     readonly surfaceStatus: {
-        readonly web: "planned";
-        readonly native: "planned";
+        readonly web: "beta";
+        readonly native: "beta";
     };
     readonly name: "DatePicker";
     readonly category: "input";
     readonly platform: "adaptive";
-    readonly status: "planned";
+    readonly status: "beta";
 }, {
     readonly roadmap: {
         readonly state: "composed";
@@ -468,20 +468,20 @@ export declare const componentCatalog: readonly [{
     readonly status: "planned";
 }, {
     readonly roadmap: {
-        readonly state: "contract-ready";
+        readonly state: "evidence-needed";
         readonly summary: string;
     };
     readonly recipe: "filePickerRecipe";
     readonly behavior: "filePicker";
     readonly aliases: readonly ["Upload"];
     readonly surfaceStatus: {
-        readonly web: "planned";
-        readonly native: "planned";
+        readonly web: "beta";
+        readonly native: "beta";
     };
     readonly name: "FilePicker";
     readonly category: "input";
     readonly platform: "adaptive";
-    readonly status: "planned";
+    readonly status: "beta";
 }, {
     readonly roadmap: {
         readonly state: "prerequisite";
@@ -504,8 +504,8 @@ export declare const componentCatalog: readonly [{
     readonly recipe: "formRecipe";
     readonly behavior: "form";
     readonly surfaceStatus: {
-        readonly web: "planned";
-        readonly native: "planned";
+        readonly web: "beta";
+        readonly native: "beta";
     };
     readonly name: "Form";
     readonly category: "input";
@@ -572,19 +572,19 @@ export declare const componentCatalog: readonly [{
     readonly status: "planned";
 }, {
     readonly roadmap: {
-        readonly state: "contract-ready";
+        readonly state: "evidence-needed";
         readonly summary: string;
     };
     readonly recipe: "uploadItemRecipe";
     readonly behavior: "uploadItem";
     readonly surfaceStatus: {
-        readonly web: "planned";
-        readonly native: "planned";
+        readonly web: "beta";
+        readonly native: "beta";
     };
     readonly name: "UploadItem";
     readonly category: "data-display";
     readonly platform: "shared";
-    readonly status: "planned";
+    readonly status: "beta";
 }, {
     readonly recipe: "tabsRecipe";
     readonly behavior: "tabs";
@@ -668,18 +668,18 @@ export declare const componentCatalog: readonly [{
     readonly status: "beta";
 }, {
     readonly roadmap: {
-        readonly state: "contract-ready";
+        readonly state: "evidence-needed";
         readonly summary: string;
     };
     readonly recipe: "stepsRecipe";
     readonly surfaceStatus: {
-        readonly web: "planned";
-        readonly native: "planned";
+        readonly web: "beta";
+        readonly native: "beta";
     };
     readonly name: "Steps";
     readonly category: "navigation";
     readonly platform: "shared";
-    readonly status: "planned";
+    readonly status: "beta";
 }, {
     readonly recipe: "menuRecipe";
     readonly behavior: "menu";
@@ -708,8 +708,8 @@ export declare const componentCatalog: readonly [{
 }, {
     readonly recipe: "avatarRecipe";
     readonly surfaceStatus: {
-        readonly web: "planned";
-        readonly native: "planned";
+        readonly web: "beta";
+        readonly native: "beta";
     };
     readonly name: "Avatar";
     readonly category: "data-display";
@@ -748,7 +748,7 @@ export declare const componentCatalog: readonly [{
 }, {
     readonly recipe: "listRecipe";
     readonly surfaceStatus: {
-        readonly web: "planned";
+        readonly web: "beta";
         readonly native: "beta";
     };
     readonly name: "List";
@@ -783,7 +783,7 @@ export declare const componentCatalog: readonly [{
     readonly recipe: "accordionRecipe";
     readonly behavior: "disclosureGroup";
     readonly surfaceStatus: {
-        readonly web: "planned";
+        readonly web: "beta";
         readonly native: "beta";
     };
     readonly name: "Accordion";
@@ -793,7 +793,7 @@ export declare const componentCatalog: readonly [{
 }, {
     readonly recipe: "statisticRecipe";
     readonly surfaceStatus: {
-        readonly web: "planned";
+        readonly web: "beta";
         readonly native: "beta";
     };
     readonly name: "Statistic";
@@ -955,7 +955,7 @@ export declare const componentCatalog: readonly [{
 }, {
     readonly recipe: "noticeRecipe";
     readonly surfaceStatus: {
-        readonly web: "planned";
+        readonly web: "beta";
         readonly native: "beta";
     };
     readonly name: "Notice";
@@ -965,7 +965,7 @@ export declare const componentCatalog: readonly [{
 }, {
     readonly recipe: "progressRecipe";
     readonly surfaceStatus: {
-        readonly web: "planned";
+        readonly web: "beta";
         readonly native: "beta";
     };
     readonly name: "Progress";
@@ -975,8 +975,8 @@ export declare const componentCatalog: readonly [{
 }, {
     readonly recipe: "spinnerRecipe";
     readonly surfaceStatus: {
-        readonly web: "planned";
-        readonly native: "planned";
+        readonly web: "beta";
+        readonly native: "beta";
     };
     readonly name: "Spinner";
     readonly category: "feedback";
@@ -985,7 +985,7 @@ export declare const componentCatalog: readonly [{
 }, {
     readonly recipe: "skeletonRecipe";
     readonly surfaceStatus: {
-        readonly web: "planned";
+        readonly web: "beta";
         readonly native: "beta";
     };
     readonly name: "Skeleton";

@@ -474,4 +474,49 @@ export const Grid = forwardRef<HTMLDivElement, GridProps>(function Grid(
   );
 });
 
+export type SectionProps = Omit<HTMLAttributes<HTMLElement>, "children" | "title"> &
+  Readonly<{
+    title?: ReactNode;
+    description?: ReactNode;
+    action?: ReactNode;
+    children: ReactNode;
+    headingLevel?: 2 | 3 | 4 | 5 | 6;
+  }>;
+
+/** Large-text-safe semantic content section with an optional header action. */
+export const Section = forwardRef<HTMLElement, SectionProps>(function Section(
+  {
+    title,
+    description,
+    action,
+    children,
+    headingLevel = 2,
+    className,
+    ...props
+  },
+  ref,
+) {
+  const hasHeader = title !== undefined || description !== undefined || action !== undefined;
+  return (
+    <section {...props} ref={ref} className={classNames("hjm-section", className)}>
+      {hasHeader ? (
+        <header className="hjm-section__header">
+          <div className="hjm-section__copy">
+            {title === undefined ? null : createElement(
+              `h${headingLevel}`,
+              { className: "hjm-section__title" },
+              title,
+            )}
+            {description === undefined ? null : (
+              <div className="hjm-section__description">{description}</div>
+            )}
+          </div>
+          {action === undefined ? null : <div className="hjm-section__action">{action}</div>}
+        </header>
+      ) : null}
+      <div className="hjm-section__content">{children}</div>
+    </section>
+  );
+});
+
 export type { GridGap };

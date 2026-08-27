@@ -1152,6 +1152,76 @@ export function Checkbox({
   );
 }
 
+export type RadioProps = ChoiceVisualProps & Readonly<{
+  label: string;
+  checked?: boolean;
+  defaultChecked?: boolean;
+  onCheckedChange?: (checked: true) => void;
+  disabled?: boolean;
+  readOnly?: boolean;
+  required?: boolean;
+  invalid?: boolean;
+  description?: string;
+  readOnlyLabel?: string;
+  requiredLabel?: string;
+  invalidLabel?: string;
+  leading?: ReactNode;
+  renderLeading?: (props: ChoiceVisualRenderProps) => ReactNode;
+  renderIndicator?: (props: ChoiceVisualRenderProps) => ReactNode;
+  accessibilityHint?: string;
+}>;
+
+/** Standalone native radio item. Prefer RadioGroup when group state is owned here. */
+export function Radio({
+  label,
+  checked,
+  defaultChecked = false,
+  onCheckedChange,
+  disabled = false,
+  readOnly = false,
+  required = false,
+  invalid = false,
+  description,
+  readOnlyLabel,
+  requiredLabel,
+  invalidLabel,
+  leading,
+  renderLeading,
+  renderIndicator,
+  accessibilityHint,
+  ...visual
+}: RadioProps) {
+  const [selected, setSelected] = useControllableState<boolean>({
+    ...(checked === undefined ? {} : { value: checked }),
+    defaultValue: defaultChecked,
+    ...(onCheckedChange === undefined
+      ? {}
+      : { onChange: (next: boolean) => next && onCheckedChange(true) }),
+  });
+  return (
+    <ChoiceRow
+      {...visual}
+      accessibilityHint={accessibilityHint}
+      checked={selected}
+      description={description}
+      disabled={disabled}
+      indicator={visual.indicator ?? "default"}
+      invalid={invalid}
+      invalidLabel={invalidLabel}
+      kind="radio"
+      label={label}
+      leading={leading}
+      onActivate={() => setSelected(true)}
+      readOnly={readOnly}
+      readOnlyLabel={readOnlyLabel}
+      renderIndicator={renderIndicator}
+      renderLeading={renderLeading}
+      required={required}
+      requiredLabel={requiredLabel}
+    />
+  );
+}
+
 export type RadioOption<Value extends string = string> = Readonly<{
   value: Value;
   label: string;

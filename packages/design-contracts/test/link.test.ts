@@ -237,13 +237,13 @@ describe("Link visual and behavior contracts", () => {
     }
   });
 
-  it("promotes Link after the paired BurnTok destination slice lands", () => {
+  it("tracks Link as an active paired renderer", () => {
     expect(componentCatalog.find((entry) => entry.name === "Link")).toEqual({
       name: "Link",
       category: "action",
       platform: "adaptive",
       status: "beta",
-      surfaceStatus: { web: "planned", native: "planned" },
+      surfaceStatus: { web: "beta", native: "beta" },
       recipe: "linkRecipe",
       behavior: "link",
     });

@@ -106,7 +106,7 @@ describe("component reference coverage", () => {
     });
     expect(getComponentDefinition("form")).toMatchObject({
       contract: { status: "beta" },
-      surfaces: { web: { status: "planned" }, native: { status: "planned" } },
+      surfaces: { web: { status: "beta" }, native: { status: "beta" } },
     });
   });
 
@@ -121,8 +121,8 @@ describe("component reference coverage", () => {
       }
     }
 
-    expect(componentCatalog.filter(({ surfaceStatus }) => surfaceStatus.web === "beta")).toHaveLength(40);
-    expect(componentCatalog.filter(({ surfaceStatus }) => surfaceStatus.native === "beta")).toHaveLength(50);
+    expect(componentCatalog.filter(({ surfaceStatus }) => surfaceStatus.web === "beta")).toHaveLength(60);
+    expect(componentCatalog.filter(({ surfaceStatus }) => surfaceStatus.native === "beta")).toHaveLength(61);
     expect(componentCatalog.some((entry) => getComponentSurfaceStatus(entry, "web") === "stable")).toBe(false);
     expect(componentCatalog.some((entry) => getComponentSurfaceStatus(entry, "native") === "stable")).toBe(false);
   });
@@ -211,12 +211,12 @@ describe("component reference coverage", () => {
     expect(summary).toMatchObject({
       total: 73,
       tracked: 73,
-      fullyMature: 40,
+      fullyMature: 45,
       partiallyMature: 1,
-      plannedOnly: 32,
-      fullyPreviewable: 40,
+      plannedOnly: 27,
+      fullyPreviewable: 45,
       partiallyPreviewable: 1,
-      contractOnly: 32,
+      contractOnly: 27,
     });
     expect(
       summary.fullyMature + summary.partiallyMature + summary.plannedOnly,

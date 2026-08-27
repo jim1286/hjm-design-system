@@ -1,9 +1,10 @@
 import { useState, type ReactNode } from "react";
 import type { Meta, StoryObj } from "@storybook/react-native";
 import { ScrollView, StyleSheet, TextInput, View } from "react-native";
-import { Button, BottomCTA, IconButton } from "@hjm/react-native/actions";
+import { Button, BottomCTA, IconButton, Link } from "@hjm/react-native/actions";
 import {
   Accordion,
+  Avatar,
   Badge,
   Card,
   CounterBadge,
@@ -22,22 +23,30 @@ import {
   Progress,
   Result,
   Skeleton,
+  Spinner,
   ToastRegion,
   useToastRegion,
 } from "@hjm/react-native/feedback";
-import { Combobox, Field, Select } from "@hjm/react-native/forms";
+import { Combobox, Field, Form, Select } from "@hjm/react-native/forms";
+import { NumberField } from "@hjm/react-native/number-field";
+import { DatePicker } from "@hjm/react-native/date-picker";
+import { FilePicker } from "@hjm/react-native/file-picker";
 import { OtpField } from "@hjm/react-native/otp-field";
 import { PasswordField } from "@hjm/react-native/password-field";
 import {
   Checkbox,
   CheckboxGroup,
   Chip,
+  Radio,
   RadioGroup,
   SearchField,
   SegmentedControl,
   Switch,
   TextArea,
 } from "@hjm/react-native/inputs";
+import { Slider } from "@hjm/react-native/slider";
+import { Steps } from "@hjm/react-native/steps";
+import { UploadItem } from "@hjm/react-native/upload-item";
 import {
   BottomNavigation,
   LoadMore,
@@ -60,6 +69,16 @@ import {
 import { nativeRendererStoryGroups } from "./story-registry";
 
 const noop = () => undefined;
+
+const previewCalendarGrid = {
+  cells: [
+    ...Array.from({ length: 3 }, () => ({})),
+    ...Array.from({ length: 28 }, (_, index) => ({ date: `2027-02-${String(index + 1).padStart(2, "0")}` })),
+    ...Array.from({ length: 4 }, () => ({})),
+  ],
+  weekdayLabels: ["일", "월", "화", "수", "목", "금", "토"],
+  todayDate: "2027-02-19",
+} as const;
 
 function StoryFrame({ children }: { children: ReactNode }) {
   return (
@@ -125,6 +144,10 @@ function ActionsPreview() {
         </IconButton>
       </Stack>
       <Text tone="muted">Pressed {count} times</Text>
+      <Link
+        descriptor={{ label: "Open component docs", destination: { kind: "internal", href: "/components" } }}
+        onNavigate={noop}
+      />
       <BottomCTA
         primaryAction={{ label: "Continue", onPress: noop }}
         secondaryAction={{ label: "Later", onPress: noop }}
@@ -174,7 +197,50 @@ function InputsPreview() {
         length={6}
         supportText="Type or paste the full six-digit code."
       />
+      <NumberField
+        decrementLabel="Decrease quantity"
+        defaultValue={2}
+        incrementLabel="Increase quantity"
+        label="Quantity"
+        min={0}
+        max={10}
+      />
+      <Slider
+        decrementLabel="Decrease completion"
+        defaultValue={72}
+        incrementLabel="Increase completion"
+        label="Completion"
+        min={0}
+        max={100}
+        getValueText={(value) => `${value}%`}
+      />
+      <Form
+        fallbackErrorMessage="Could not save"
+        label="Profile form"
+        onSubmit={noop}
+        submitLabel="Save profile"
+        values={{ query }}
+      >
+        <Text tone="muted">Form owns submit feedback while products own values.</Text>
+      </Form>
+      <DatePicker
+        clearLabel="Clear date"
+        closeLabel="Close calendar"
+        composeAccessibleName={({ date, isToday, isSelected }) => `${date}${isToday ? ", today" : ""}${isSelected ? ", selected" : ""}`}
+        descriptor={{ grid: previewCalendarGrid, displayValue: null, placeholder: "Choose a date", label: "Visit date", defaultSelectedDate: null, defaultOpen: false }}
+        monthLabel="February 2027"
+      />
+      <FilePicker
+        buttonLabel="Choose images"
+        descriptor={{ mode: "multiple", accept: ["image/*"], maxCount: 4 }}
+        hint="PNG or JPG, up to four"
+        label="Attachments"
+        onPick={async () => [{ id: "preview", name: "preview.png", mimeType: "image/png", sizeBytes: 1024 }]}
+        onPickError={noop}
+        onSelect={noop}
+      />
       <Checkbox label="Accept terms" checked={checked} onCheckedChange={setChecked} />
+      <Radio label="Standalone choice" defaultChecked />
       <CheckboxGroup
         label="Channels"
         value={checks}
@@ -253,6 +319,11 @@ function NavigationPreview() {
           { value: "popular", label: "Popular" },
         ]}
       />
+      <Steps
+        composeAccessibleName={({ position, total, label }) => `Step ${position} of ${total}, ${label}`}
+        descriptor={{ steps: [{ id: "account", label: "Account" }, { id: "profile", label: "Profile" }, { id: "confirm", label: "Confirm" }], currentStepId: "profile" }}
+        statusLabels={{ pending: "Pending", current: "Current", complete: "Complete", error: "Error" }}
+      />
       <BottomNavigation
         descriptor={{
           accessibilityLabel: "Primary destinations",
@@ -296,6 +367,7 @@ function DataDisplayPreview() {
     <StoryFrame>
       <StoryHeading>Data display</StoryHeading>
       <Stack axis="inline" gap="sm" align="center" wrap>
+        <Avatar accessibilityLabel="HJM profile" name="HJM Profile" />
         <Badge label="Live" tone="success" />
         <CounterBadge count={128} accessibilityLabel="128 unread items" />
         <Tag tone="info">Featured</Tag>
@@ -317,6 +389,11 @@ function DataDisplayPreview() {
         items={[{ value: "details", title: "Details", content: <Text>Expandable content</Text> }]}
       />
       <Statistic descriptor={{ id: "views", label: "Views", value: "12.4K" }} />
+      <UploadItem
+        descriptor={{ id: "photo", name: "profile-photo.png", sizeLabel: "1.2 MB", state: { status: "uploading", progress: 0.64, progressLabel: "64% uploaded" } }}
+        labels={{ pending: "Pending", uploading: "Uploading", success: "Complete", cancel: "Cancel", retry: "Retry" }}
+        onCancel={noop}
+      />
       <Timeline
         composeAccessibleName={({ position, total, label }) => `${position} of ${total}, ${label}`}
         items={[
@@ -367,6 +444,7 @@ function FeedbackPreview() {
       <Notice title="Ready to publish" description="All checks passed." tone="success" />
       <Progress label="Upload progress" value={0.64} />
       <Skeleton accessibilityLabel="Loading preview" width="100%" height={52} />
+      <Spinner label="Loading content" />
       <Result status="success" title="Published" description="Your creation is live." />
       <ToastRegion><ToastTrigger /></ToastRegion>
     </StoryFrame>

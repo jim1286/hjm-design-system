@@ -115,5 +115,20 @@ export declare const Grid: import("react").ForwardRefExoticComponent<Omit<HTMLAt
     /** Container measurement override; ResizeObserver is used when omitted. */
     availableWidth?: number;
 }> & import("react").RefAttributes<HTMLDivElement>>;
+export type SectionProps = Omit<HTMLAttributes<HTMLElement>, "children" | "title"> & Readonly<{
+    title?: ReactNode;
+    description?: ReactNode;
+    action?: ReactNode;
+    children: ReactNode;
+    headingLevel?: 2 | 3 | 4 | 5 | 6;
+}>;
+/** Large-text-safe semantic content section with an optional header action. */
+export declare const Section: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLElement>, "children" | "title"> & Readonly<{
+    title?: ReactNode;
+    description?: ReactNode;
+    action?: ReactNode;
+    children: ReactNode;
+    headingLevel?: 2 | 3 | 4 | 5 | 6;
+}> & import("react").RefAttributes<HTMLElement>>;
 export type { GridGap };
 //# sourceMappingURL=layout.d.ts.map

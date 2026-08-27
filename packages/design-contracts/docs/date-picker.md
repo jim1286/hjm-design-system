@@ -78,6 +78,7 @@ Select의 축과 동일하되 `content`(idle/loading/loadingMore/error)는 없�
 
 ## 검증 화면
 
-아직 없다. `docs/calendar.md`가 밝힌 대로 Yajalal에 현재 이 문제의 살아있는 vertical
-slice가 없다 — 값 하나를 고르는 새 폼 필드(생년월일, 계약일 같은)가 나오면 그때 리드가
-`planned → beta` 승격을 진행한다.
+first-party Web dialog·Native Sheet renderer, 환경 matrix, 기본 실행 증거는 연결되어 surface는
+`beta`다. 다만 `docs/calendar.md`가 밝힌 대로 Yajalal에는 이 문제의 살아있는 vertical
+slice가 아직 없다. 값 하나를 고르는 새 폼 필드가 실제 제품에 생기고 보조기기 증거까지
+쌓이기 전에는 `stable`로 승격하지 않는다.

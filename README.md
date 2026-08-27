@@ -45,7 +45,7 @@ React Native 앱은 renderer의 package 이름과 path를 모두 Native package�
 }
 ```
 
-`<version>`은 세 패키지가 함께 릴리스된 정확한 SemVer(예: `0.6.0`)로 바꿉니다.
+`<version>`은 세 패키지가 함께 릴리스된 정확한 SemVer(예: `0.7.1`)로 바꿉니다.
 
 ## Development
 
@@ -55,7 +55,7 @@ pnpm check
 pnpm showcase:web:build
 ```
 
-- 패키지는 `0.6.x` fixed version train으로 함께 versioning합니다.
+- 세 public package는 하나의 fixed version train으로 함께 versioning합니다.
 - generated version commit이 `main`의 HEAD에 도달하면 전체 검증 후 canonical `v<version>` Git
   tag를 idempotent하게 생성하므로 위 Git package path가 실제 release를 가리킵니다. tag 전에는
   Yajalal/BurnTok의 release-SHA Storybook inventory gate도 fail closed로 통과해야 합니다.

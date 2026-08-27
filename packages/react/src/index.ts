@@ -7,6 +7,7 @@ export {
 export {
   Grid,
   Layout,
+  Section,
   Stack,
   Surface,
   Text,
@@ -14,6 +15,7 @@ export {
   type GridProps,
   type LayoutProps,
   type LayoutSidebar,
+  type SectionProps,
   type StackAlign,
   type StackAxis,
   type StackGap,
@@ -94,8 +96,20 @@ export {
 } from "./slider.js";
 
 export {
+  DatePicker,
+  type DatePickerMonthAction,
+  type DatePickerProps,
+} from "./date-picker.js";
+
+export {
+  FilePicker,
+  type FilePickerProps,
+} from "./file-picker.js";
+
+export {
   Checkbox,
   CheckboxGroup,
+  Chip,
   Radio,
   RadioGroup,
   SegmentedControl,
@@ -103,6 +117,7 @@ export {
   type CheckboxProps,
   type CheckboxGroupItem,
   type CheckboxGroupProps,
+  type ChipProps,
   type ChoiceLeadingRenderProps,
   type RadioProps,
   type RadioGroupItem,
@@ -135,6 +150,11 @@ export {
   LoadMore,
   type LoadMoreProps,
 } from "./supplemental-navigation.js";
+
+export {
+  Steps,
+  type StepsProps,
+} from "./steps.js";
 
 export {
   BottomNavigation,
@@ -175,6 +195,9 @@ export {
   Avatar,
   DescriptionList,
   Divider,
+  List,
+  Statistic,
+  StatisticGroup,
   Table,
   Timeline,
   type AccordionItem,
@@ -184,11 +207,22 @@ export {
   type DividerInset,
   type DividerOrientation,
   type DividerProps,
+  type ListAppearance,
+  type ListProps,
+  type StatisticProps,
+  type StatisticGroupProps,
+  type StatisticTrendMarkRenderProps,
+  type ComposeStatisticAccessibilityLabel,
   type TableColumn,
   type TableProps,
   type TableSortDirection,
   type TimelineProps,
 } from "./advanced-display.js";
+
+export {
+  UploadItem,
+  type UploadItemProps,
+} from "./upload-item.js";
 
 export {
   EmptyState,

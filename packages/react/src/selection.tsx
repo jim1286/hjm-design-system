@@ -1,4 +1,5 @@
 import {
+  chipRecipe,
   iconRecipe,
   segmentedControlRecipe,
   selectionControlRecipe,
@@ -29,6 +30,7 @@ import {
   type ChangeEvent,
   type FieldsetHTMLAttributes,
   type InputHTMLAttributes,
+  type MouseEvent,
   type ReactElement,
   type ReactNode,
   type RefAttributes,
@@ -40,6 +42,90 @@ export type ChoiceLeadingRenderProps = Readonly<{
   color: "currentColor";
   size: number;
 }>;
+
+type ChipBaseProps = Omit<
+  ButtonHTMLAttributes<HTMLButtonElement>,
+  "children" | "onChange" | "onClick" | "size"
+> &
+  Readonly<{
+    label: ReactNode;
+    size?: keyof typeof chipRecipe.sizes;
+    leading?: ReactNode;
+    trailing?: ReactNode;
+    renderSelectionIndicator?: (props: Readonly<{
+      selected: boolean;
+      color: "currentColor";
+      size: number;
+    }>) => ReactNode;
+  }>;
+
+type ActionChipProps = Readonly<{
+  selectionMode?: "action";
+  selected?: never;
+  onPress?: (event: MouseEvent<HTMLButtonElement>) => void;
+  onSelectedChange?: never;
+}>;
+
+type SelectionChipProps = Readonly<{
+  selectionMode: "single" | "multiple";
+  selected: boolean;
+  onSelectedChange: (selected: boolean) => void;
+  onPress?: (event: MouseEvent<HTMLButtonElement>) => void;
+}>;
+
+export type ChipProps = ChipBaseProps & (ActionChipProps | SelectionChipProps);
+
+/** Action/filter chip with explicit selection semantics and no hidden state. */
+export const Chip = forwardRef<HTMLButtonElement, ChipProps>(function Chip(
+  {
+    label,
+    size = chipRecipe.defaults.size,
+    leading,
+    trailing,
+    renderSelectionIndicator,
+    selectionMode = "action",
+    selected,
+    onSelectedChange,
+    onPress,
+    disabled,
+    className,
+    ...props
+  },
+  ref,
+) {
+  const selectable = selectionMode !== "action";
+  const active = selectable && selected === true;
+  return (
+    <button
+      {...props}
+      ref={ref}
+      aria-checked={selectable ? active : undefined}
+      className={classNames("hjm-chip", className)}
+      data-selected={active || undefined}
+      data-size={size}
+      disabled={disabled}
+      onClick={(event) => {
+        onPress?.(event);
+        if (!event.defaultPrevented && selectable) onSelectedChange?.(!active);
+      }}
+      role={selectionMode === "single" ? "radio" : selectionMode === "multiple" ? "checkbox" : undefined}
+      type="button"
+    >
+      {active ? (
+        <span aria-hidden="true" className="hjm-chip__indicator">
+          {renderSelectionIndicator?.({
+            selected: true,
+            color: "currentColor",
+            size: iconRecipe.sizes[chipRecipe.selectionIndicator.glyph],
+          }) ?? "✓"}
+        </span>
+      ) : null}
+      {leading === undefined ? null : <span aria-hidden="true" className="hjm-chip__leading">{leading}</span>}
+      <span className="hjm-chip__label">{label}</span>
+      {trailing === undefined ? null : <span aria-hidden="true" className="hjm-chip__trailing">{trailing}</span>}
+    </button>
+  );
+});
 
 export type CheckboxProps = Omit<
   InputHTMLAttributes<HTMLInputElement>,

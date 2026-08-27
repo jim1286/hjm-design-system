@@ -53,7 +53,7 @@ message와 notification을 가르는 축(정보 층, 지속 시간, 동시 개�
 | 종류 | 뜻 | 예 | 재검토 신호 |
 |---|---|---|---|
 | **흡수됨** | 그 문제를 이미 다른 컴포넌트가 완결한다 | `Notification`→Toast, `Dropdown`→Menu, `ContextPanel`→SidePanel/Sheet, `Flex`→Stack, `TimePicker`→Select 조합, `Rating`→Slider/Statistic | 흡수한 쪽이 못 푸는 요구가 나올 때 |
-| **검증할 화면이 없음** | 계약 자체는 유효하나 이를 확인할 제품 화면이 없다 | `Anchor`, `Calendar`·`DatePicker`(계약은 있으나 승격 근거 없음) | 그 화면이 실제로 생길 때 |
+| **검증할 화면이 없음** | 계약 자체는 유효하나 이를 확인할 제품 화면이 없다 | `Anchor`, `Calendar` | 그 화면이 실제로 생길 때 |
 | **거절됨** | 계약도 유효하고 화면이 생겨도 만들지 않는다 | `BorderBeam`(장식), `AppProvider`(런타임뿐), `Utility`(실체 없음) | 정체성이나 아키텍처 경계가 바뀔 때만 |
 | **흡수 대기** | 흡수 판정은 끝났으나 **선결 축이 아직 없다** | `Cascader`(TreeSelect에 `valueMode`/`commitAt`가 추가돼야 성립) | 그 축이 실제로 추가될 때 |
 
@@ -88,8 +88,8 @@ evidence registry로 판단합니다.
 - partial maturity: decomposed target 중 일부만 stable 또는 beta
 - planned only: 모든 target이 planned
 
-2026-08-23 snapshot의 status 기반 분포는 **fully mature 40 / partial maturity 1 /
-planned only 32**입니다. 따라서 73/73 tracking은 73개 구현 완료를 의미하지 않습니다.
+2026-08-27 snapshot의 status 기반 분포는 **fully mature 45 / partial maturity 1 /
+planned only 27**입니다. 따라서 73/73 tracking은 73개 구현 완료를 의미하지 않습니다.
 홈과 Component Explorer는 이 수치를 분리해 표시합니다. 이 숫자는 source inventory 수가
 아니라 HJM target의 maturity에서 계산하므로 catalog status가 바뀌면 함께 갱신합니다.
 

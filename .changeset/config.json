@@ -14,7 +14,8 @@
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
   "ignore": [
-    "@hjm/showcase-web"
+    "@hjm/showcase-web",
+    "@hjm/showcase-native"
   ],
   "privatePackages": {
     "version": true,

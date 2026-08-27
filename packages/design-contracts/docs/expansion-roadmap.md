@@ -229,18 +229,17 @@ surface별 `planned → beta` gate는 public renderer export와 package CI가 �
 남아 있지만 렌더되지 않고 월 범위 쿼리의 내부 계산일 뿐이며, 화면은 월 헤더 + 7일
 날짜 레일이다. 앱 전체에 값 하나를 고르는 압축 트리거 UI도 없다.
 
-그래서 두 컴포넌트는 **계약은 있으나 승격할 근거가 없는 상태**다. `Notification`·`Dropdown`
-처럼 "안 만든다"로 판정하지는 않았다 — 그 둘의 근거는 "문제가 이미 다른 컴포넌트로
-완결됐다"였는데, 날짜 격자를 보여 주거나 고르는 문제는 어느 기존 컴포넌트에도 흡수되지
-않는다.
+이후 DatePicker에는 first-party Web·Native renderer와 canonical 환경 증거가 추가되어
+`beta`로 승격됐다. 다만 위 실측은 여전히 유효하다. **제품 adoption evidence는 없고**,
+Yajalal의 날짜 레일을 DatePicker 채택으로 세지 않는다. 따라서 `stable` 승격 근거는 없다.
 
 **교훈**: 위임할 때 준 실사용처 전제를 저작자가 **확인하게** 해야 한다. 리드의 기억은
 커밋 하나로 낡는다.
 
 ### Batch 3 — 복합 데이터와 파일
 
-- shared: Timeline, UploadItem
-- adaptive: DatePicker, TimePicker, FilePicker
+- beta: Timeline, UploadItem, DatePicker, FilePicker
+- planned: TimePicker
 - web: DataTable, Tree, ColorPicker, CommandPalette, SidePanel, Popover
 
 FilePicker는 파일 선택 의도만 소유합니다. 업로드 요청·재시도·서버 상태는 제품이 소유하고,

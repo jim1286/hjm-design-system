@@ -3,37 +3,55 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 
 import {
+  Accordion,
   AlertDialog,
+  Avatar,
   Badge,
   BottomNavigation,
   Button,
   Card,
   Checkbox,
   CheckboxGroup,
+  Chip,
+  Combobox,
   CounterBadge,
   DescriptionList,
+  DatePicker,
   Dialog,
+  Divider,
   EmptyState,
   Field,
+  FilePicker,
+  Form,
   Grid,
   HjmProvider,
   Icon,
   IconButton,
   Image,
   Layout,
+  Link,
+  List,
   ListRow,
   LoadMore,
   Menu,
+  Notice,
+  NumberField,
   OtpField,
   PasswordField,
+  Progress,
   Radio,
   RadioGroup,
   Result,
   SearchField,
   SegmentedControl,
+  Section,
   Select,
   Sheet,
+  Skeleton,
+  Slider,
+  Spinner,
   Stack,
+  Steps,
   Surface,
   Switch,
   Tabs,
@@ -44,8 +62,11 @@ import {
   Timeline,
   Toast,
   Tooltip,
+  Statistic,
+  UploadItem,
 } from "../src/index.js";
 import { reactRendererEvidence } from "../src/evidence.js";
+import executedScenarioRegistry from "./executed-scenarios.json" with { type: "json" };
 
 type DefaultRenderFixture = Readonly<{
   componentId: string;
@@ -62,6 +83,26 @@ const readyLoadMoreDescriptor = {
     complete: "모두 불러옴",
   },
 } as const;
+
+const defaultCalendarGrid = {
+  cells: [
+    ...Array.from({ length: 3 }, () => ({})),
+    ...Array.from({ length: 28 }, (_, index) => ({ date: `2027-02-${String(index + 1).padStart(2, "0")}` })),
+    ...Array.from({ length: 4 }, () => ({})),
+  ],
+  weekdayLabels: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+  todayDate: "2027-02-19",
+} as const;
+
+const rendererEnvironments = executedScenarioRegistry.executions[0]!.scenarios as readonly Readonly<{
+  id: "default" | "dark" | "long-copy" | "large-text" | "rtl" | "reduced-motion" | "accessibility";
+  theme: "light" | "dark";
+  direction: "ltr" | "rtl";
+  textScale: number;
+  reducedMotion: boolean;
+}>[];
+
+const longCopy = "아주 긴 제품 설명과 unexpectedly long English content must wrap without hiding the component meaning or required action.";
 
 /**
  * Canonical default-render proofs. The component ids are stable case ids used
@@ -120,6 +161,11 @@ const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
     render: () => <IconButton label="메뉴">☰</IconButton>,
   },
   {
+    componentId: "link",
+    marker: "hjm-link",
+    render: () => <Link href="/docs">Docs</Link>,
+  },
+  {
     componentId: "field",
     marker: "hjm-field",
     render: () => (
@@ -159,6 +205,64 @@ const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
     render: () => <OtpField label="Verification code" length={6} />,
   },
   {
+    componentId: "number-field",
+    marker: "hjm-number-field",
+    render: () => (
+      <NumberField
+        decrementLabel="Decrease"
+        incrementLabel="Increase"
+        label="Quantity"
+        min={0}
+        max={10}
+      />
+    ),
+  },
+  {
+    componentId: "slider",
+    marker: "hjm-slider",
+    render: () => <Slider label="Score" min={0} max={10} />,
+  },
+  {
+    componentId: "form",
+    marker: "hjm-form",
+    render: () => <Form onSubmit={() => undefined}><TextField label="Name" /></Form>,
+  },
+  {
+    componentId: "date-picker",
+    marker: "hjm-date-picker",
+    render: () => (
+      <DatePicker
+        clearLabel="Clear date"
+        closeLabel="Close calendar"
+        composeAccessibleName={({ date }) => date}
+        descriptor={{
+          grid: defaultCalendarGrid,
+          displayValue: null,
+          placeholder: "Choose a date",
+          label: "Date",
+          selectedDate: null,
+          onSelectionChange: () => undefined,
+          open: false,
+          onOpenChange: () => undefined,
+        }}
+        monthLabel="February 2027"
+      />
+    ),
+  },
+  {
+    componentId: "file-picker",
+    marker: "hjm-file-picker",
+    render: () => (
+      <FilePicker
+        buttonLabel="Choose files"
+        descriptor={{ mode: "multiple", accept: ["image/*"] }}
+        dropzoneLabel="Drop files here"
+        label="Attachments"
+        onSelect={() => undefined}
+      />
+    ),
+  },
+  {
     componentId: "checkbox",
     marker: "type=\"checkbox\"",
     render: () => <Checkbox label="Checkbox" />,
@@ -193,6 +297,11 @@ const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
     render: () => (
       <SegmentedControl label="Segmented" items={[{ value: "one", label: "One" }]} />
     ),
+  },
+  {
+    componentId: "chip",
+    marker: "hjm-chip",
+    render: () => <Chip label="Filter" />,
   },
   {
     componentId: "tabs",
@@ -230,9 +339,25 @@ const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
     ),
   },
   {
+    componentId: "steps",
+    marker: "hjm-steps",
+    render: () => (
+      <Steps
+        composeAccessibleName={({ position, total, label }) => `${position} of ${total}: ${label}`}
+        descriptor={{ steps: [{ id: "account", label: "Account" }, { id: "profile", label: "Profile" }], currentStepId: "profile" }}
+        statusLabels={{ pending: "Pending", current: "Current", complete: "Complete", error: "Error" }}
+      />
+    ),
+  },
+  {
     componentId: "badge",
     marker: "hjm-badge",
     render: () => <Badge>Badge</Badge>,
+  },
+  {
+    componentId: "avatar",
+    marker: "hjm-avatar",
+    render: () => <Avatar name="Ada Lovelace" />,
   },
   {
     componentId: "counter-badge",
@@ -245,6 +370,11 @@ const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
     render: () => <Card title="Card">Content</Card>,
   },
   {
+    componentId: "list",
+    marker: "hjm-list",
+    render: () => <List label="Items"><ListRow title="List row" /></List>,
+  },
+  {
     componentId: "list-row",
     marker: "hjm-list-row",
     render: () => <ListRow title="List row" />,
@@ -253,6 +383,42 @@ const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
     componentId: "tag",
     marker: "hjm-tag",
     render: () => <Tag>Tag</Tag>,
+  },
+  {
+    componentId: "accordion",
+    marker: "hjm-accordion",
+    render: () => (
+      <Accordion
+        aria-label="Help"
+        items={[{ id: "shipping", title: "Shipping", panel: "Arrives tomorrow" }]}
+      />
+    ),
+  },
+  {
+    componentId: "divider",
+    marker: "hjm-divider",
+    render: () => <Divider />,
+  },
+  {
+    componentId: "statistic",
+    marker: "hjm-statistic",
+    render: () => <Statistic descriptor={{ id: "orders", label: "Orders", value: "12" }} />,
+  },
+  {
+    componentId: "section",
+    marker: "hjm-section",
+    render: () => <Section title="Section">Content</Section>,
+  },
+  {
+    componentId: "upload-item",
+    marker: "hjm-upload-item",
+    render: () => (
+      <UploadItem
+        descriptor={{ id: "photo", name: "photo.png", sizeLabel: "1.2 MB", state: { status: "uploading", progress: 0.4 } }}
+        labels={{ pending: "Pending", uploading: "Uploading", success: "Complete", cancel: "Cancel", retry: "Retry" }}
+        onCancel={() => undefined}
+      />
+    ),
   },
   {
     componentId: "timeline",
@@ -284,6 +450,26 @@ const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
     render: () => <EmptyState title="Empty state" />,
   },
   {
+    componentId: "notice",
+    marker: "hjm-notice",
+    render: () => <Notice title="Notice" />,
+  },
+  {
+    componentId: "progress",
+    marker: "hjm-progress",
+    render: () => <Progress label="Upload" value={45} valueText="45%" />,
+  },
+  {
+    componentId: "spinner",
+    marker: "hjm-spinner",
+    render: () => <Spinner label="Loading" />,
+  },
+  {
+    componentId: "skeleton",
+    marker: "hjm-skeleton",
+    render: () => <Skeleton />,
+  },
+  {
     componentId: "result",
     marker: "hjm-result",
     render: () => <Result status="success" title="Saved" />,
@@ -311,6 +497,19 @@ const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
         label="Select"
         placeholder="Choose an option"
         items={[{ id: "one", label: "One", textValue: "One" }]}
+      />
+    ),
+  },
+  {
+    componentId: "combobox",
+    marker: "hjm-combobox",
+    render: () => (
+      <Combobox
+        emptyMessage="No results"
+        items={[{ value: "seoul", label: "Seoul" }]}
+        label="City"
+        loadingMessage="Loading"
+        selectionRequiredMessage="Choose a city"
       />
     ),
   },
@@ -368,13 +567,36 @@ describe("@hjm/react default renderer proofs", () => {
 
     expect(fixtureIds).toEqual(evidenceIds);
     expect(new Set(fixtureIds).size).toBe(fixtureIds.length);
+    expect(executedScenarioRegistry.executions[0]?.coverageMode).toBe("all-cases");
+    expect(executedScenarioRegistry.executions[0]?.proofFile).toBe("test/default-render.ssr.test.tsx");
+    expect(rendererEnvironments.map(({ id }) => id)).toEqual(reactRendererEvidence.components[0]?.scenarios);
   });
 
   it.each(defaultRenderFixtures)("$componentId", ({ componentId, marker, render }) => {
-    const component = render();
-    const tree = componentId === "design-system-provider"
-      ? component
-      : <HjmProvider systemTheme="light">{component}</HjmProvider>;
-    expect(renderToStaticMarkup(tree), componentId).toContain(marker);
+    for (const environment of rendererEnvironments) {
+      const html = renderToStaticMarkup(
+        <HjmProvider
+          direction={environment.direction}
+          reducedMotion={environment.reducedMotion}
+          systemTheme={environment.theme}
+          textScale={environment.textScale}
+          theme={environment.theme}
+        >
+          <div aria-label={environment.id === "long-copy" ? longCopy : undefined} style={{ maxWidth: 320 }}>
+            {render()}
+          </div>
+        </HjmProvider>,
+      );
+      expect(html, `${componentId}:${environment.id}`).toContain(marker);
+      expect(html).toContain(`data-theme="${environment.theme}"`);
+      expect(html).toContain(`data-text-scale="${environment.textScale}"`);
+      expect(html).toContain(`dir="${environment.direction}"`);
+      expect(html).toContain(`data-motion="${environment.reducedMotion ? "reduced" : "full"}"`);
+      if (environment.id === "accessibility") {
+        expect(html).not.toContain('aria-label=""');
+        expect(html).not.toContain('aria-describedby=""');
+      }
+      if (environment.id === "long-copy") expect(html).toContain(longCopy);
+    }
   });
 });

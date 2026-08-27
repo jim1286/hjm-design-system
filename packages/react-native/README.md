@@ -50,10 +50,11 @@ The package exports include:
 - foundations: `Text`, `Surface`, `Stack`, `Icon`, `Section`, responsive `Grid`, adaptive `Layout`
 - actions and fields: `Button`, `IconButton`, `BottomCTA`, `Link`, `Field`, `Form`, `TextField`,
   `TextArea`, `SearchField`, `Select`, `Combobox`, `NumberField`, `Slider`
-- selection and navigation: `Checkbox`, `CheckboxGroup`, `RadioGroup`, `Switch`, `SegmentedControl`, `Chip`,
-  `Tabs`, `BottomNavigation`, `TopBar`, `TopBarAction`, `Menu`
+- adaptive inputs: `DatePicker`, Expo-independent adapter-based `FilePicker`
+- selection and navigation: `Checkbox`, `Radio`, `CheckboxGroup`, `RadioGroup`, `Switch`, `SegmentedControl`, `Chip`,
+  `Tabs`, `Steps`, `BottomNavigation`, `TopBar`, `TopBarAction`, `Menu`
 - display: `Badge`, `CounterBadge`, `Tag`, `Card`, `List`, `ListRow`, `Statistic`,
-  `StatisticGroup`, `Avatar`, `Divider`, `Accordion`, `DescriptionList`, `Image`, `Timeline`
+  `StatisticGroup`, `UploadItem`, `Avatar`, `Divider`, `Accordion`, `DescriptionList`, `Image`, `Timeline`
 - feedback and collections: `Notice`, `EmptyState`, `Progress`, `Spinner`, `Skeleton`, `LoadMore`,
   `Result`, `Toast`, `ToastRegion`
 - overlays: `Dialog`, `AlertDialog`, `Sheet`
@@ -278,20 +279,24 @@ nested-container measurement rule.
 
 For bundle-sensitive entry points, import only the renderer family you use, for example
 `@hjm/react-native/actions`, `@hjm/react-native/forms`,
-`@hjm/react-native/number-field`, `@hjm/react-native/slider`, or
+`@hjm/react-native/number-field`, `@hjm/react-native/slider`,
+`@hjm/react-native/date-picker`, `@hjm/react-native/file-picker`,
+`@hjm/react-native/steps`, `@hjm/react-native/upload-item`, or
 `@hjm/react-native/feedback`. Available
 executable families are `provider`, `primitives`, `actions`, `inputs`, `number-field`, `slider`,
-`forms`, `navigation`, `data-display`, `feedback`, `overlays`, and `evidence`. These supported
+`date-picker`, `file-picker`, `steps`, `upload-item`, `forms`, `navigation`, `data-display`,
+`feedback`, `overlays`, and `evidence`. These supported
 family-level subpaths are verified not to traverse the renderer root barrel. They do not promise a
 separate file or component-level tree-shaking result for every named export.
 
 ## Renderer evidence
 
-`@hjm/react-native/evidence` publishes schema v2 claims. Each claim links its `default` scenario to
-a literal case in `test/default-render.test.tsx`; package tests fail if the case inventory and
-manifest diverge. These are component-level `react-test-renderer` smoke proofs. They are not device,
-TalkBack, VoiceOver, RTL screenshot, large-text screenshot, or performance certification, so those
-scenario axes are deliberately not claimed.
+`@hjm/react-native/evidence` publishes schema v2 claims. Each claim links the baseline environment
+matrix—default, dark, long copy, large text, RTL, reduced motion, and accessibility structure—to a
+literal case in `test/default-render.test.tsx`; package tests fail if the case inventory and
+manifest diverge. These are component-level `react-test-renderer` smoke proofs, not screenshot,
+device, TalkBack, VoiceOver, or performance certification. Keyboard/accessibility-action and paired
+platform parity remain fail-closed until a dedicated proof is mapped.
 
 ## Metro production smoke
 

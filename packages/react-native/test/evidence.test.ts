@@ -4,32 +4,44 @@ import { describe, expect, it } from "vitest";
 
 import * as actions from "../src/actions.js";
 import * as dataDisplay from "../src/data-display.js";
+import * as datePicker from "../src/date-picker.js";
 import {
   reactNativeRendererEvidence,
   reactNativeRendererEvidenceSchemaVersion,
 } from "../src/evidence.js";
 import * as feedback from "../src/feedback.js";
+import * as filePicker from "../src/file-picker.js";
 import * as forms from "../src/forms.js";
 import * as inputs from "../src/inputs.js";
 import * as navigation from "../src/navigation.js";
+import * as numberField from "../src/number-field.js";
 import * as overlays from "../src/overlays.js";
 import * as otpField from "../src/otp-field.js";
 import * as passwordField from "../src/password-field.js";
 import * as primitives from "../src/primitives.js";
 import * as provider from "../src/provider.js";
+import * as slider from "../src/slider.js";
+import * as steps from "../src/steps.js";
+import * as uploadItem from "../src/upload-item.js";
 
 const publicModules: Readonly<Record<string, Readonly<Record<string, unknown>>>> = {
   "./actions": actions,
   "./data-display": dataDisplay,
+  "./date-picker": datePicker,
   "./feedback": feedback,
+  "./file-picker": filePicker,
   "./forms": forms,
   "./inputs": inputs,
   "./navigation": navigation,
+  "./number-field": numberField,
   "./overlays": overlays,
   "./otp-field": otpField,
   "./password-field": passwordField,
   "./primitives": primitives,
   "./provider": provider,
+  "./slider": slider,
+  "./steps": steps,
+  "./upload-item": uploadItem,
 };
 
 describe("@hjm/react-native renderer evidence", () => {
@@ -47,7 +59,7 @@ describe("@hjm/react-native renderer evidence", () => {
     const componentIds = reactNativeRendererEvidence.components.map(
       ({ componentId }) => componentId,
     );
-    expect(componentIds).toHaveLength(50);
+    expect(componentIds).toHaveLength(61);
     expect(componentIds).toContain("combobox");
     expect(componentIds).toContain("load-more");
     expect(new Set(componentIds).size).toBe(componentIds.length);

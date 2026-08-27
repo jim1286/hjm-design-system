@@ -63,14 +63,16 @@ describe("showcase contract", () => {
     );
   });
 
-  it("does not demand renderer evidence from a planned surface", () => {
+  it("requires renderer evidence after a surface is promoted", () => {
     const select = componentCatalog.find(({ name }) => name === "Select")!;
     const form = componentCatalog.find(({ name }) => name === "Form")!;
 
     expect(getRequiredShowcaseSurfaces(select)).toEqual(["contract", "web", "native"]);
     expect(getRequiredShowcaseScenarios(select)).toContain("platform-parity");
-    expect(getRequiredShowcaseSurfaces(form)).toEqual(["contract"]);
-    expect(getRequiredShowcaseScenarios(form)).toEqual(["contract"]);
+    expect(getRequiredShowcaseSurfaces(form)).toEqual(["contract", "web", "native"]);
+    expect(getRequiredShowcaseScenarios(form)).toEqual(
+      expect.arrayContaining(["default", "dark", "large-text", "accessibility"]),
+    );
   });
 
   it("summarizes every catalog entry exactly once", () => {

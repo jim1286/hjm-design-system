@@ -11,6 +11,10 @@ BurnTok(`/Users/jimin/Desktop/BurnTok`) 양쪽에서 **같은 문제를 이미 �
 **승격은 여기서 하지 않는다.** 아래는 리드가 `catalog.ts`를 고칠 때 참고할 실측
 자료다.
 
+> 2026-08-27 후속: 이 문서는 제품 adoption 실측 기록으로 보존한다. 이후 first-party
+> renderer와 canonical evidence만으로 beta가 된 항목이 있어 현재 catalog status와 표의
+> “실제품 승격 판단”은 의도적으로 다를 수 있다. 실제 제품 증거 없음은 stable gate의 debt다.
+
 ## 요약
 
 | 판단 | 개수 | 컴포넌트 |

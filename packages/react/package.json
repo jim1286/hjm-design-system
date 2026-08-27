@@ -60,6 +60,26 @@
       "import": "./dist/slider.js",
       "default": "./dist/slider.js"
     },
+    "./date-picker": {
+      "types": "./dist/date-picker.d.ts",
+      "import": "./dist/date-picker.js",
+      "default": "./dist/date-picker.js"
+    },
+    "./file-picker": {
+      "types": "./dist/file-picker.d.ts",
+      "import": "./dist/file-picker.js",
+      "default": "./dist/file-picker.js"
+    },
+    "./steps": {
+      "types": "./dist/steps.d.ts",
+      "import": "./dist/steps.js",
+      "default": "./dist/steps.js"
+    },
+    "./upload-item": {
+      "types": "./dist/upload-item.d.ts",
+      "import": "./dist/upload-item.js",
+      "default": "./dist/upload-item.js"
+    },
     "./selection": {
       "types": "./dist/selection.d.ts",
       "import": "./dist/selection.js",
@@ -110,7 +130,7 @@
     "check": "pnpm typecheck && pnpm test && pnpm build"
   },
   "peerDependencies": {
-    "@hjm/design-contracts": ">=0.7.0 <0.8.0",
+    "@hjm/design-contracts": ">=0.8.0 <0.9.0",
     "react": ">=19.0.0",
     "react-dom": ">=19.0.0"
   },
