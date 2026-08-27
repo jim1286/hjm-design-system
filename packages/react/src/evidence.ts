@@ -65,7 +65,7 @@ function defaultClaim(
 export const reactRendererEvidence = {
   schemaVersion: reactRendererEvidenceSchemaVersion,
   packageName: "@hjm/react",
-  packageVersion: "0.7.1",
+  packageVersion: "0.8.0",
   surface: "web",
   components: [
     defaultClaim("design-system-provider", ["HjmProvider", "useHjmTheme"], "./provider"),
