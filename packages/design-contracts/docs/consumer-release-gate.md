@@ -14,7 +14,7 @@ fine-grained token으로 두 consumer에 `repository_dispatch`를 보내고 결�
 | --- | --- | --- | --- | --- |
 | `burntok-web` | `jim1286/BurnTok` / `main` | `web` | `hjm-consumer-evidence-burntok-` | `hjm-evidence.json`의 `canonicalRelease` |
 | `burntok-native` | `jim1286/BurnTok` / `main` | `native` | `hjm-consumer-evidence-burntok-native-` | `native-storybook.json` + `dispatch.json`의 `releaseCandidate` |
-| `yajalal-native` | `jim1286/yajalal` / `develop` | `native` | `hjm-consumer-evidence-yajalal-` | `native-storybook.json` + `dispatch.json`의 `releaseCandidate` |
+| `yajalal-native` | `jim1286/yajalal` / `main` | `native` | `hjm-consumer-evidence-yajalal-` | `native-storybook.json` + `dispatch.json`의 `releaseCandidate` |
 
 두 consumer workflow의 `run-name`은 기존
 `HJM <version> · <correlation_id>`를 유지합니다. canonical이 correlation ID 끝에 target ID를
@@ -86,5 +86,5 @@ Native registration과 Storybook CSF index 해석 결과에 결합됐음을 surf
 known planned ID는 문서 registration으로만 남고 active evidence에는 포함되지 않습니다.
 
 inventory 일치만으로 dark/RTL/large-text/accessibility scenario가 실행됐다고 주장하지 않습니다.
-새 tag가 생성된 뒤 consumer dependency를 그 tag의 package path로 올리고 각 앱의 CI/device gate를
+tag 생성과 publish가 끝난 뒤 consumer dependency를 그 version range로 올리고 각 앱의 CI/device gate를
 통과시키는 작업도 별도 adoption 단계입니다.

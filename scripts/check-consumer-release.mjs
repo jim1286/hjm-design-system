@@ -37,7 +37,7 @@ export const consumerReleaseTargets = [
   {
     id: "yajalal-native",
     repository: "jim1286/yajalal",
-    defaultBranch: "develop",
+    defaultBranch: "main",
     surface: "native",
     artifactPrefix: "hjm-consumer-evidence-yajalal-",
     evidenceSuffix: "native-storybook.json",
@@ -523,9 +523,9 @@ async function selfTest() {
           };
         }
         if (path === `/repos/${yajalalRepositoryPath}`) {
-          return { default_branch: "develop" };
+          return { default_branch: "main" };
         }
-        if (path === `/repos/${yajalalRepositoryPath}/commits/develop`) {
+        if (path === `/repos/${yajalalRepositoryPath}/commits/main`) {
           revisionRequests.set("yajalal", (revisionRequests.get("yajalal") ?? 0) + 1);
           return { sha: yajalalRef };
         }
