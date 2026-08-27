@@ -1,20 +1,18 @@
-name: Version Packages
+name: Release Packages
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 permissions:
   contents: write
-  pull-requests: write
 
 concurrency:
-  group: version-packages-${{ github.ref }}
+  group: release-packages-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
-  version:
+  release:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 75
     steps:
@@ -38,65 +36,32 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Create or update the fixed-version release PR
-        id: changesets
-        uses: changesets/action@v1
-        with:
-          version: pnpm release:version
-          commit: "chore: version HJM packages"
-          title: "chore: version HJM packages"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Detect a fixed-version release commit
-        id: release-candidate
-        if: steps.changesets.outputs.hasChangesets == 'false'
+      - name: Verify an untagged fixed-version release commit
         shell: bash
         run: |
-          BEFORE="${{ github.event.before }}"
-          AFTER="${{ github.sha }}"
-          if [[ -z "${BEFORE}" || "${BEFORE}" =~ ^0+$ ]]; then
-            BEFORE="$(git rev-list --max-parents=0 "${AFTER}")"
-          fi
-          PACKAGE_MANIFESTS=(
-            packages/design-contracts/package.json
-            packages/react/package.json
-            packages/react-native/package.json
-          )
-          RELEASE_COMMITS="$(git rev-list --first-parent "${BEFORE}..${AFTER}" -- "${PACKAGE_MANIFESTS[@]}")"
-          if [ -z "${RELEASE_COMMITS}" ]; then
-            VERSION="$(node -p "require('./packages/design-contracts/package.json').version")"
-            TAG="v${VERSION}"
-            if git show-ref --tags --verify --quiet "refs/tags/${TAG}"; then
-              echo "should-tag=false" >> "$GITHUB_OUTPUT"
-              exit 0
-            fi
-            LATEST_RELEASE_COMMIT="$(git log -1 --format=%H -- "${PACKAGE_MANIFESTS[@]}")"
-            UNSAFE_RECOVERY_CHANGES="$({
-              git diff --name-only "${LATEST_RELEASE_COMMIT}..${AFTER}" |
-                grep -Ev '^\.github/workflows/(showcase|version-packages)\.yml$'
-            } || true)"
-            if [ -n "${UNSAFE_RECOVERY_CHANGES}" ]; then
-              echo "::error::Refusing to recover untagged ${TAG}; non-workflow files changed after ${LATEST_RELEASE_COMMIT}: ${UNSAFE_RECOVERY_CHANGES//$'\n'/, }"
-              exit 1
-            fi
-            echo "::notice::Recovering untagged ${TAG} after release-workflow-only fixes."
-            echo "should-tag=true" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          LATEST_RELEASE_COMMIT="$(printf '%s\n' "${RELEASE_COMMITS}" | head -n 1)"
-          if [ "${LATEST_RELEASE_COMMIT}" != "${AFTER}" ]; then
-            echo "::error::A fixed-package version changed earlier in this multi-commit push (${LATEST_RELEASE_COMMIT}), not at HEAD (${AFTER}). Merge or push the generated version PR separately so the canonical tag has an unambiguous commit."
+          VERSION="$(node -p "require('./packages/design-contracts/package.json').version")"
+          TAG="v${VERSION}"
+          if git show-ref --tags --verify --quiet "refs/tags/${TAG}"; then
+            echo "::error::${TAG} already exists."
             exit 1
           fi
-          echo "should-tag=true" >> "$GITHUB_OUTPUT"
+          if find .changeset -maxdepth 1 -name '*.md' ! -name README.md | grep -q .; then
+            echo "::error::Authored Changesets remain. Run pnpm release:version, commit the generated artifacts, and push that commit before dispatching this workflow."
+            exit 1
+          fi
+          LATEST_TAG="$(git describe --tags --match 'v[0-9]*' --abbrev=0 2>/dev/null || true)"
+          if [ -n "${LATEST_TAG}" ]; then
+            PREVIOUS_VERSION="$(git show "${LATEST_TAG}:packages/design-contracts/package.json" | node -e 'let value=""; process.stdin.on("data", chunk => value += chunk); process.stdin.on("end", () => console.log(JSON.parse(value).version));')"
+            if [ "${PREVIOUS_VERSION}" = "${VERSION}" ]; then
+              echo "::error::Package version ${VERSION} has not advanced beyond ${LATEST_TAG}."
+              exit 1
+            fi
+          fi
 
       - name: Install Chromium before release verification
-        if: steps.release-candidate.outputs.should-tag == 'true'
         run: pnpm --filter @hjm/react exec playwright install --with-deps chromium
 
       - name: Verify the canonical release candidate
-        if: steps.release-candidate.outputs.should-tag == 'true'
         shell: bash
         run: |
           pnpm release:check
@@ -104,7 +69,6 @@ jobs:
           test -z "$(git ls-files --others --exclude-standard -- packages/design-contracts/dist packages/react/dist packages/react-native/dist packages/design-contracts/docs/generated)"
 
       - name: Require successful private consumer surface evidence
-        if: steps.release-candidate.outputs.should-tag == 'true'
         env:
           HJM_CONSUMER_SYNC_TOKEN: ${{ secrets.HJM_CONSUMER_SYNC_TOKEN }}
         run: |
@@ -115,7 +79,6 @@ jobs:
             --version "${VERSION}"
 
       - name: Create the canonical Git install tag
-        if: steps.release-candidate.outputs.should-tag == 'true'
         shell: bash
         run: |
           HEAD_COMMIT="$(git rev-parse HEAD)"
@@ -131,8 +94,8 @@ jobs:
               echo "::error::${TAG} already points to ${TAG_COMMIT}, not this release commit ${HEAD_COMMIT}."
               exit 1
             fi
-            echo "${TAG} already points to this release commit; nothing to tag."
-            exit 0
+            echo "::error::${TAG} was created while this workflow was running."
+            exit 1
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

@@ -24,10 +24,11 @@ fine-grained token으로 두 consumer에 `repository_dispatch`를 보내고 결�
 
 ## 실행 순서
 
-1. authored Changeset을 포함한 source commit 뒤에 generated version commit을 HEAD로 둡니다.
-   두 commit을 한 번에 push하거나 Changesets version PR을 별도로 병합할 수 있습니다. 어느
-   방식이든 package version을 바꾼 commit이 push의 최종 commit이어야 합니다.
-2. `version` job은 fixed package version commit을 식별하고 package, renderer, Storybook,
+1. authored Changeset을 포함한 source commit을 검증한 뒤 로컬에서 `pnpm release:version`을
+   실행합니다. 생성된 fixed-package version, changelog, dist, generated docs를 하나의 release
+   commit으로 `main`에 push합니다.
+2. GitHub Actions의 `Release Packages` workflow를 수동 실행합니다. `release` job은 남은
+   Changeset이 없고 현재 버전 tag가 아직 없음을 확인한 뒤 package, renderer, Storybook,
    committed artifact를 검증합니다.
 3. `scripts/check-consumer-release.mjs`는 설정된 default branch 이름을 확인하고, 두 repository의
    현재 HEAD를 full SHA로 각각 한 번 캡처한 뒤 그 SHA의 workflow invariant를 검사합니다.

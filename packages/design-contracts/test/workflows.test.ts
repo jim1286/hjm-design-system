@@ -17,7 +17,7 @@ describe("GitHub Actions runtime contracts", () => {
     expect(workflow).not.toContain("ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION");
   });
 
-  it("tags only after immutable private-consumer dispatch evidence succeeds", async () => {
+  it("runs the minimal manual tag gate only after immutable private-consumer evidence succeeds", async () => {
     const [workflow, checker] = await Promise.all([
       readFile(
         new URL("../../../.github/workflows/version-packages.yml", import.meta.url),
@@ -36,9 +36,12 @@ describe("GitHub Actions runtime contracts", () => {
     expect(workflow).toContain("pnpm release:check");
     expect(workflow).toContain("scripts/check-consumer-release.mjs");
     expect(workflow).toContain("HJM_CONSUMER_SYNC_TOKEN");
-    expect(workflow).not.toContain("workflow_dispatch");
+    expect(workflow).toContain("workflow_dispatch");
+    expect(workflow).toContain("github.ref == 'refs/heads/main'");
+    expect(workflow).not.toContain("changesets/action");
+    expect(workflow).not.toContain("pull-requests: write");
     expect(workflow).not.toContain("HJM_RELEASE_TOKEN");
-    expect(workflow).toContain("GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}");
+    expect(workflow).not.toContain("GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}");
     expect(workflow).not.toContain("HJM_CANONICAL_READ_TOKEN");
     expect(workflow).not.toContain("uses: jim1286/BurnTok/");
     expect(workflow).not.toContain("uses: jim1286/yajalal/");
@@ -72,9 +75,10 @@ describe("GitHub Actions runtime contracts", () => {
       workflow.indexOf("git tag -a \"${TAG}\""),
     );
     expect(workflow).toContain("git diff --exit-code -- packages/design-contracts/dist");
-    expect(workflow).toContain("github.event.before");
-    expect(workflow).toContain("git rev-list --first-parent");
-    expect(workflow).toContain("LATEST_RELEASE_COMMIT");
+    expect(workflow).toContain("Authored Changesets remain");
+    expect(workflow).toContain("git describe --tags");
+    expect(workflow).not.toContain("github.event.before");
+    expect(workflow).not.toContain("git rev-list --first-parent");
     expect(workflow).toContain("TAG_COMMIT=\"$(git rev-list -n 1 \"${TAG}\")\"");
     expect(workflow).toContain("git tag -a \"${TAG}\"");
   });

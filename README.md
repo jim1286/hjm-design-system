@@ -56,8 +56,9 @@ pnpm showcase:web:build
 ```
 
 - 세 public package는 하나의 fixed version train으로 함께 versioning합니다.
-- generated version commit이 `main`의 HEAD에 도달하면 전체 검증 후 canonical `v<version>` Git
-  tag를 idempotent하게 생성하므로 위 Git package path가 실제 release를 가리킵니다. tag 전에는
+- 릴리스할 때만 로컬에서 `pnpm release:version`을 실행하고 생성 결과를 `main`에 커밋·push한 뒤,
+  `Release Packages` workflow를 수동 실행합니다. 전체 검증 후 canonical `v<version>` Git tag가
+  생성되므로 위 Git package path가 실제 release를 가리킵니다. tag 전에는
   Yajalal/BurnTok의 release-SHA Storybook inventory gate도 fail closed로 통과해야 합니다.
   두 consumer가 private이므로 canonical에만 최소 권한 `HJM_CONSUMER_SYNC_TOKEN`을 두고 릴리스
   시작 시 각 default branch HEAD를 full SHA로 캡처해 `repository_dispatch`합니다. consumer의
