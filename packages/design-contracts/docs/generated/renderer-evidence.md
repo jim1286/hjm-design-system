@@ -1,6 +1,6 @@
 # Renderer evidence coverage
 
-> Generated for HJM 0.7.1. Do not edit directly; run `pnpm evidence:sync`.
+> Generated for HJM 0.8.0. Do not edit directly; run `pnpm evidence:sync`.
 
 This projection joins the canonical surface maturity manifest with first-party renderer claims. Missing scenarios are explicit beta promotion debt; stable surfaces are blocked by CI until none remain.
 

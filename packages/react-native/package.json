@@ -1,6 +1,6 @@
 {
   "name": "@hjm/react-native",
-  "version": "0.7.1",
+  "version": "0.8.0",
   "description": "Expo-independent React Native renderers for HJM design contracts.",
   "private": true,
   "repository": {
