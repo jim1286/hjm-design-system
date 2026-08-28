@@ -47,8 +47,27 @@ jobs:
           VERSION="$(node -p "require('./packages/design-contracts/package.json').version")"
           TAG="v${VERSION}"
           if git show-ref --tags --verify --quiet "refs/tags/${TAG}"; then
-            echo "::notice::${TAG} already exists; this push did not change the fixed package version."
-            echo "should-release=false" >> "$GITHUB_OUTPUT"
+            TAG_COMMIT="$(git rev-list -n 1 "${TAG}")"
+            if [ "${TAG_COMMIT}" != "${GITHUB_SHA}" ]; then
+              echo "::notice::${TAG} already points to ${TAG_COMMIT}; this push did not change the fixed package version."
+              echo "should-release=false" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            MISSING=false
+            for directory in design-contracts react react-native; do
+              NAME="$(node -p "require('./packages/${directory}/package.json').name")"
+              if ! npm view "${NAME}@${VERSION}" version >/dev/null 2>&1; then
+                MISSING=true
+              fi
+            done
+            if [ "${MISSING}" = "false" ]; then
+              echo "::notice::${TAG} is tagged and every package is published."
+              echo "should-release=false" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            echo "::warning::${TAG} names this commit but npm is missing at least one package; resuming the publish."
+            echo "should-release=true" >> "$GITHUB_OUTPUT"
+            echo "tag-exists=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
           if find .changeset -maxdepth 1 -name '*.md' ! -name README.md | grep -q .; then
@@ -70,6 +89,7 @@ jobs:
           fi
           echo "::notice::Releasing ${TAG}."
           echo "should-release=true" >> "$GITHUB_OUTPUT"
+          echo "tag-exists=false" >> "$GITHUB_OUTPUT"
 
       - name: Install dependencies
         if: steps.release-candidate.outputs.should-release == 'true'
@@ -102,40 +122,15 @@ jobs:
             --release-sha "${GITHUB_SHA}" \
             --version "${VERSION}"
 
-      - name: Verify publish credentials before tagging
+      - name: Verify publish credentials before publishing
         if: steps.release-candidate.outputs.should-release == 'true'
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           if [ -z "${NODE_AUTH_TOKEN}" ]; then
-            echo "::error::NPM_TOKEN is missing. Refusing to tag a release that cannot be published."
+            echo "::error::NPM_TOKEN is missing. Refusing to start a release that cannot be published."
             exit 1
           fi
-
-      - name: Create the canonical Git install tag
-        if: steps.release-candidate.outputs.should-release == 'true'
-        shell: bash
-        run: |
-          HEAD_COMMIT="$(git rev-parse HEAD)"
-          if [ "${HEAD_COMMIT}" != "${GITHUB_SHA}" ]; then
-            echo "::error::Tag checkout ${HEAD_COMMIT} does not match verified release ${GITHUB_SHA}."
-            exit 1
-          fi
-          VERSION="$(node -p "require('./packages/design-contracts/package.json').version")"
-          TAG="v${VERSION}"
-          if git show-ref --tags --verify --quiet "refs/tags/${TAG}"; then
-            TAG_COMMIT="$(git rev-list -n 1 "${TAG}")"
-            if [ "${TAG_COMMIT}" != "${HEAD_COMMIT}" ]; then
-              echo "::error::${TAG} already points to ${TAG_COMMIT}, not this release commit ${HEAD_COMMIT}."
-              exit 1
-            fi
-            echo "::error::${TAG} was created while this workflow was running."
-            exit 1
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git tag -a "${TAG}" -m "HJM design system ${VERSION}"
-          git push origin "${TAG}"
 
       - name: Publish packages to npm
         if: steps.release-candidate.outputs.should-release == 'true'
@@ -152,3 +147,28 @@ jobs:
             fi
             pnpm --filter "${NAME}" publish --access public --no-git-checks
           done
+
+      - name: Create the canonical Git install tag
+        if: steps.release-candidate.outputs.should-release == 'true' && steps.release-candidate.outputs.tag-exists != 'true'
+        shell: bash
+        run: |
+          HEAD_COMMIT="$(git rev-parse HEAD)"
+          if [ "${HEAD_COMMIT}" != "${GITHUB_SHA}" ]; then
+            echo "::error::Tag checkout ${HEAD_COMMIT} does not match verified release ${GITHUB_SHA}."
+            exit 1
+          fi
+          VERSION="$(node -p "require('./packages/design-contracts/package.json').version")"
+          TAG="v${VERSION}"
+          if git show-ref --tags --verify --quiet "refs/tags/${TAG}"; then
+            TAG_COMMIT="$(git rev-list -n 1 "${TAG}")"
+            if [ "${TAG_COMMIT}" != "${HEAD_COMMIT}" ]; then
+              echo "::error::${TAG} already points to ${TAG_COMMIT}, not this release commit ${HEAD_COMMIT}."
+              exit 1
+            fi
+            echo "::notice::${TAG} already names this published release commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "${TAG}" -m "HJM design system ${VERSION}"
+          git push origin "${TAG}"
