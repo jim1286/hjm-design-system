@@ -64,7 +64,7 @@ function defaultClaim(
 export const reactNativeRendererEvidence = {
   schemaVersion: reactNativeRendererEvidenceSchemaVersion,
   packageName: "@hjmds/react-native",
-  packageVersion: "0.8.1",
+  packageVersion: "0.8.2",
   surface: "native",
   components: [
     defaultClaim("design-system-provider", ["HjmNativeProvider", "useHjmNativeTheme"], "./provider"),

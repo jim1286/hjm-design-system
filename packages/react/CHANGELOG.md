@@ -1,5 +1,15 @@
 # @hjmds/react
 
+## 0.8.2
+
+### Patch Changes
+
+- 794a2ce: Publish the renderers under the `@hjmds` npm scope. The previous `@hjm` scope is
+  owned by another account, so the registry rejected every publish attempt. The
+  release now targets `@hjmds`, which this project owns. The first registry version
+  uses a one-time CI credential; subsequent releases authenticate through npm
+  Trusted Publishing (OIDC) without a long-lived publish token.
+
 ## 0.8.1
 
 ### Patch Changes
