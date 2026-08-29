@@ -26,7 +26,7 @@ importers:
 
   packages/react:
     devDependencies:
-      '@hjm/design-contracts':
+      '@hjmds/design-contracts':
         specifier: workspace:*
         version: link:../design-contracts
       '@types/node':
@@ -62,7 +62,7 @@ importers:
       '@babel/runtime':
         specifier: 7.29.7
         version: 7.29.7
-      '@hjm/design-contracts':
+      '@hjmds/design-contracts':
         specifier: workspace:*
         version: link:../design-contracts
       '@react-native/metro-config':
@@ -98,10 +98,10 @@ importers:
 
   showcase/native:
     dependencies:
-      '@hjm/design-contracts':
+      '@hjmds/design-contracts':
         specifier: workspace:*
         version: link:../../packages/design-contracts
-      '@hjm/react-native':
+      '@hjmds/react-native':
         specifier: workspace:*
         version: link:../../packages/react-native
       '@react-native-async-storage/async-storage':
@@ -153,10 +153,10 @@ importers:
 
   showcase/web:
     dependencies:
-      '@hjm/design-contracts':
+      '@hjmds/design-contracts':
         specifier: workspace:*
         version: link:../../packages/design-contracts
-      '@hjm/react':
+      '@hjmds/react':
         specifier: workspace:*
         version: link:../../packages/react
       react:

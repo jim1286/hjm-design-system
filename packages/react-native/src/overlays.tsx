@@ -6,7 +6,7 @@ import {
   type AlertDialogRequest,
   type AlertDialogResult,
   type AlertDialogSession,
-} from "@hjm/design-contracts/components/alert-dialog";
+} from "@hjmds/design-contracts/components/alert-dialog";
 import {
   canDismissSheet,
   createSheetLifecycle,
@@ -14,15 +14,15 @@ import {
   type SheetDismissPolicy,
   type SheetDismissReason,
   type SheetOpenChangeDetails,
-} from "@hjm/design-contracts/components/sheet";
-import { resolveColorReference } from "@hjm/design-contracts/color-references";
-import { easing, overlay, radius, spacing } from "@hjm/design-contracts/foundations";
+} from "@hjmds/design-contracts/components/sheet";
+import { resolveColorReference } from "@hjmds/design-contracts/color-references";
+import { easing, overlay, radius, spacing } from "@hjmds/design-contracts/foundations";
 import {
   alertDialogRecipe,
   dialogRecipe,
   sheetRecipe,
   type DialogSize,
-} from "@hjm/design-contracts/recipes";
+} from "@hjmds/design-contracts/recipes";
 import {
   useCallback,
   useEffect,

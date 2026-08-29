@@ -2,24 +2,24 @@ import {
   fieldRecipe,
   type FieldShape,
   type FieldVariant,
-} from "@hjm/design-contracts/recipes/base";
+} from "@hjmds/design-contracts/recipes/base";
 import {
   iconRecipe,
   searchFieldRecipe,
   type SearchFieldSize,
-} from "@hjm/design-contracts/recipes";
+} from "@hjmds/design-contracts/recipes";
 import {
   passwordFieldRecipe,
   resolvePasswordFieldDescriptor,
   type PasswordFieldAutofillHint,
   type PasswordFieldSize,
-} from "@hjm/design-contracts/components/password-field";
+} from "@hjmds/design-contracts/components/password-field";
 import {
   getOtpFieldSlotValues,
   otpFieldRecipe,
   resolveOtpFieldValue,
   type OtpFieldSize,
-} from "@hjm/design-contracts/components/otp-field";
+} from "@hjmds/design-contracts/components/otp-field";
 import {
   forwardRef,
   useEffect,

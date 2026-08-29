@@ -6,7 +6,7 @@ import {
   stepNumberFieldInput,
   type NumberFieldSize,
   type NumberFieldValue,
-} from "@hjm/design-contracts/components/number-field";
+} from "@hjmds/design-contracts/components/number-field";
 import {
   forwardRef,
   useEffect,

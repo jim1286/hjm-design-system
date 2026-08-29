@@ -15,7 +15,7 @@ async function writePackage(directory: string, packageDirectory: string, version
   await mkdir(join(directory, "packages", packageDirectory), { recursive: true });
   await writeFile(
     join(directory, "packages", packageDirectory, "package.json"),
-    `${JSON.stringify({ name: `@hjm/${packageDirectory}`, version }, null, 2)}\n`,
+    `${JSON.stringify({ name: `@hjmds/${packageDirectory}`, version }, null, 2)}\n`,
   );
 }
 
@@ -62,9 +62,9 @@ describe("generated Changesets release commit gate", () => {
       join(directory, ".changeset/release.md"),
       [
         "---",
-        '"@hjm/design-contracts": minor',
-        '"@hjm/react": minor',
-        '"@hjm/react-native": minor',
+        '"@hjmds/design-contracts": minor',
+        '"@hjmds/react": minor',
+        '"@hjmds/react-native": minor',
         "---",
         "",
         "Release the fixed train.",
@@ -198,14 +198,14 @@ describe("repository install guidance", () => {
       ),
     ]);
 
-    expect(readme).toMatch(/"@hjm\/react-native":\s*"\^[^"\n]+"/);
-    expect(readme).toMatch(/"@hjm\/react":\s*"\^[^"\n]+"/);
+    expect(readme).toMatch(/"@hjmds\/react-native":\s*"\^[^"\n]+"/);
+    expect(readme).toMatch(/"@hjmds\/react":\s*"\^[^"\n]+"/);
     expect(readme).not.toMatch(/git\+[^"\n]*path:\/packages\//);
     expect(migration).toMatch(
-      /'@hjm\/react-native@git\+[^'\n]+path:\/packages\/react-native'/,
+      /'@hjmds\/react-native@git\+[^'\n]+path:\/packages\/react-native'/,
     );
     expect(`${readme}\n${migration}`).not.toMatch(
-      /@hjm\/react(?:@|"\s*:)\s*[^\n]*path:\/packages\/react-native/,
+      /@hjmds\/react(?:@|"\s*:)\s*[^\n]*path:\/packages\/react-native/,
     );
   });
 });

@@ -1,6 +1,6 @@
-import { emptyStateRecipe, type NoticeTone as ContractNoticeTone, type ProgressSize, type ProgressTone, type ToastPlacement, type ToastTone, type ToastToneMark } from "@hjm/design-contracts/recipes";
-import { type ResultDescriptor, type ResultStatus } from "@hjm/design-contracts/components/result";
-import { type ToastDescriptor, type ToastDismissReason, type ToastDuplicatePolicy, type ToastOverflowPolicy, type ToastPauseReason, type ToastPublishResult, type ToastTimerUpdatePolicy } from "@hjm/design-contracts/components/toast";
+import { emptyStateRecipe, type NoticeTone as ContractNoticeTone, type ProgressSize, type ProgressTone, type ToastPlacement, type ToastTone, type ToastToneMark } from "@hjmds/design-contracts/recipes";
+import { type ResultDescriptor, type ResultStatus } from "@hjmds/design-contracts/components/result";
+import { type ToastDescriptor, type ToastDismissReason, type ToastDuplicatePolicy, type ToastOverflowPolicy, type ToastPauseReason, type ToastPublishResult, type ToastTimerUpdatePolicy } from "@hjmds/design-contracts/components/toast";
 import { type ReactNode } from "react";
 import { type ViewProps, type StyleProp, type TextStyle, type ViewStyle } from "react-native";
 export type AnnouncementMode = "none" | "polite" | "assertive";

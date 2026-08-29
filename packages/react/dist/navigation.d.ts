@@ -1,5 +1,5 @@
-import { type TabsActivationMode, type TabsDirection, type TabsMountPolicy, type TabsOrientation, type TabsPanelMode } from "@hjm/design-contracts/behaviors";
-import { type TabSize, type TabsLayout, type TabsOverflow } from "@hjm/design-contracts/recipes";
+import { type TabsActivationMode, type TabsDirection, type TabsMountPolicy, type TabsOrientation, type TabsPanelMode } from "@hjmds/design-contracts/behaviors";
+import { type TabSize, type TabsLayout, type TabsOverflow } from "@hjmds/design-contracts/recipes";
 import { type HTMLAttributes, type ReactNode } from "react";
 export type TabLeadingRenderProps = Readonly<{
     selected: boolean;

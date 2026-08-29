@@ -3,7 +3,7 @@ import {
   resolveUploadItemAnnouncement,
   type UploadItemDescriptor,
   type UploadItemLabels,
-} from "@hjm/design-contracts/components/upload-item";
+} from "@hjmds/design-contracts/components/upload-item";
 import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
 
 import { Progress } from "./feedback.js";

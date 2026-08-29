@@ -91,6 +91,17 @@ jobs:
           echo "should-release=true" >> "$GITHUB_OUTPUT"
           echo "tag-exists=false" >> "$GITHUB_OUTPUT"
 
+      - name: Verify the initial npm registry credential
+        if: steps.release-candidate.outputs.should-release == 'true'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        shell: bash
+        run: |
+          if [ -z "${NODE_AUTH_TOKEN}" ]; then
+            echo "::error::NPM_TOKEN is required for the initial @hjmds package publish."
+            exit 1
+          fi
+
       - name: Install dependencies
         if: steps.release-candidate.outputs.should-release == 'true'
         run: pnpm install --frozen-lockfile
@@ -101,7 +112,7 @@ jobs:
 
       - name: Install Chromium before release verification
         if: steps.release-candidate.outputs.should-release == 'true'
-        run: pnpm --filter @hjm/react exec playwright install --with-deps chromium
+        run: pnpm --filter @hjmds/react exec playwright install --with-deps chromium
 
       - name: Verify the canonical release candidate
         if: steps.release-candidate.outputs.should-release == 'true'
@@ -122,21 +133,14 @@ jobs:
             --release-sha "${GITHUB_SHA}" \
             --version "${VERSION}"
 
-      - name: Verify publish credentials before publishing
-        if: steps.release-candidate.outputs.should-release == 'true'
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          if [ -z "${NODE_AUTH_TOKEN}" ]; then
-            echo "::error::NPM_TOKEN is missing. Refusing to start a release that cannot be published."
-            exit 1
-          fi
-
       - name: Publish packages to npm
         if: steps.release-candidate.outputs.should-release == 'true'
+        shell: bash
+        # New package names cannot use npm Trusted Publishing until their first
+        # registry version exists. This secret is removed after the bootstrap
+        # release and the workflow then relies exclusively on OIDC.
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        shell: bash
         run: |
           VERSION="$(node -p "require('./packages/design-contracts/package.json').version")"
           for directory in design-contracts react react-native; do
@@ -145,7 +149,7 @@ jobs:
               echo "::notice::${NAME}@${VERSION} is already published; skipping."
               continue
             fi
-            pnpm --filter "${NAME}" publish --access public --no-git-checks
+            pnpm --filter "${NAME}" publish --access public --no-git-checks --provenance
           done
 
       - name: Create the canonical Git install tag

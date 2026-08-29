@@ -1,5 +1,5 @@
-import { type ToastDescriptor, type ToastDismissReason, type ToastDuplicatePolicy, type ToastId, type ToastOverflowPolicy, type ToastPublishOptions, type ToastPublishResult, type ToastStore, type ToastTimerUpdatePolicy } from "@hjm/design-contracts/components/toast";
-import { type ToastPlacement } from "@hjm/design-contracts/recipes";
+import { type ToastDescriptor, type ToastDismissReason, type ToastDuplicatePolicy, type ToastId, type ToastOverflowPolicy, type ToastPublishOptions, type ToastPublishResult, type ToastStore, type ToastTimerUpdatePolicy } from "@hjmds/design-contracts/components/toast";
+import { type ToastPlacement } from "@hjmds/design-contracts/recipes";
 import { type HTMLAttributes, type ReactNode } from "react";
 export type ToastProps = Omit<HTMLAttributes<HTMLDivElement>, "children" | "title"> & Readonly<{
     descriptor: ToastDescriptor;

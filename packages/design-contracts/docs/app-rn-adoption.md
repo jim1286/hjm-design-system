@@ -14,10 +14,10 @@
 
 리드의 짐작대로였다. **토큰(색·간격·타이포·radius·motion)만 건너가고, 컴포넌트 계약은 하나도
 건너가지 않는다.** `modules/app-rn/src/design-boundary.test.ts:512-551`의
-`hjmImportsOutsideTheme` 감사는 `@hjm/design-contracts` import를 `lib/theme/` 밖에서 쓰면
+`hjmImportsOutsideTheme` 감사는 `@hjmds/design-contracts` import를 `lib/theme/` 밖에서 쓰면
 빌드를 깨뜨린다 — 그래서 이 확인은 근사치가 아니라 게이트로 강제된 사실이다.
 
-`lib/theme/` 안에서 실제로 `@hjm/design-contracts`을 import하는 이름을 전부 세면:
+`lib/theme/` 안에서 실제로 `@hjmds/design-contracts`을 import하는 이름을 전부 세면:
 
 - 순수 토큰: `spacing`, `radius`, `motion`, `typography`, `withAlpha`, `control`, `glyph`,
   `overlay`, `scrim`, `shadow`, `brandGradient`, `onBrandGradient`, `onAccentFill`,
@@ -138,7 +138,7 @@ terminus)는 두 제품 어디에도 없고, 두 제품이 실제로 가르는 �
   글리프를 이 42개 semantic name에 매핑해 모든 화면에 공급한다(`design-boundary.test.ts`의
   `LUCIDE_VALUE_IMPORT_BASELINE`이 이 매핑의 유일한 창구임을 강제).
 - **채택 비용**: 사실상 0에 가깝다 — 배열이 이미 완전히 같으므로 `export` 문 하나를
-  `@hjm/design-contracts`으로 바꾸는 문제다. `expansion-roadmap.md`의 Icon 절
+  `@hjmds/design-contracts`으로 바꾸는 문제다. `expansion-roadmap.md`의 Icon 절
   ("Yajalal Statistic trend mark에서 같은 semantic registry·tone·size·stroke·RTL 계약을
   실제 renderer로 검증했다")이 이미 이 정확한 이름 목록을 기준으로 hjm 쪽 beta 승격
   근거를 삼았다 — 즉 hjm 저자가 검증에 쓴 "실제 renderer"가 바로 이 앱의 모양이다.

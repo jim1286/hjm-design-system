@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { control, spacing } from "@hjm/design-contracts/foundations";
-import { buttonRecipe } from "@hjm/design-contracts/recipes/base";
+import { control, spacing } from "@hjmds/design-contracts/foundations";
+import { buttonRecipe } from "@hjmds/design-contracts/recipes/base";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import {

@@ -1,8 +1,8 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { resolveDescriptionListColumnCount, resolveDescriptionListDescriptor, } from "@hjm/design-contracts/components/description-list";
-import { resolveTimelineDescriptor, } from "@hjm/design-contracts/components/timeline";
-import { resolveStatisticDescriptor, validateStatisticGroup, } from "@hjm/design-contracts/components/statistic";
-import { accordionRecipe, avatarRecipe, dividerRecipe, listRecipe, statisticRecipe, } from "@hjm/design-contracts/recipes";
+import { resolveDescriptionListColumnCount, resolveDescriptionListDescriptor, } from "@hjmds/design-contracts/components/description-list";
+import { resolveTimelineDescriptor, } from "@hjmds/design-contracts/components/timeline";
+import { resolveStatisticDescriptor, validateStatisticGroup, } from "@hjmds/design-contracts/components/statistic";
+import { accordionRecipe, avatarRecipe, dividerRecipe, listRecipe, statisticRecipe, } from "@hjmds/design-contracts/recipes";
 import { Children, createElement, forwardRef, isValidElement, useEffect, useId, useRef, useState, } from "react";
 import { classNames, useControllableState, useElementWidth } from "./internal.js";
 import { useOptionalHjmTheme } from "./provider.js";

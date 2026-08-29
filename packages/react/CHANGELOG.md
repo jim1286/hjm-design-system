@@ -1,4 +1,4 @@
-# @hjm/react
+# @hjmds/react
 
 ## 0.8.1
 

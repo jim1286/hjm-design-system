@@ -1,6 +1,6 @@
-import { type IconDescriptor } from "@hjm/design-contracts/components/icon";
-import { type ImageDescriptor, type ImageLoadStatus } from "@hjm/design-contracts/components/image";
-import { type CounterBadgeSize, type CounterBadgeTone, type CounterBadgeVariant } from "@hjm/design-contracts/recipes";
+import { type IconDescriptor } from "@hjmds/design-contracts/components/icon";
+import { type ImageDescriptor, type ImageLoadStatus } from "@hjmds/design-contracts/components/image";
+import { type CounterBadgeSize, type CounterBadgeTone, type CounterBadgeVariant } from "@hjmds/design-contracts/recipes";
 import { type CSSProperties, type HTMLAttributes, type ImgHTMLAttributes, type ReactElement, type ReactEventHandler, type ReactNode, type Ref, type SVGAttributes } from "react";
 export type IconProps = Omit<SVGAttributes<SVGSVGElement>, "children" | "color"> & IconDescriptor;
 export declare const Icon: import("react").ForwardRefExoticComponent<IconProps & import("react").RefAttributes<SVGSVGElement>>;

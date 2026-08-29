@@ -6,21 +6,21 @@ import {
   type AlertDialogOpenChangeReason,
   type AlertDialogRequest,
   type AlertDialogSession,
-} from "@hjm/design-contracts/components/alert-dialog";
+} from "@hjmds/design-contracts/components/alert-dialog";
 import {
   createSheetLifecycle,
   sheetBehaviorDefaults,
   type SheetDismissPolicy,
   type SheetDismissReason,
   type SheetOpenChangeDetails,
-} from "@hjm/design-contracts/components/sheet";
+} from "@hjmds/design-contracts/components/sheet";
 import {
   resolveTooltipDescriptor,
   tooltipBehaviorDefaults,
   type TooltipAlign,
   type TooltipOpenChangeDetails,
   type TooltipPlacement,
-} from "@hjm/design-contracts/components/tooltip";
+} from "@hjmds/design-contracts/components/tooltip";
 import {
   dialogRecipe,
   menuRecipe,
@@ -29,8 +29,8 @@ import {
   type DialogSize,
   type MenuDensity,
   type MenuItemTone,
-} from "@hjm/design-contracts/recipes";
-import type { MenuSectionDescriptor } from "@hjm/design-contracts/behaviors";
+} from "@hjmds/design-contracts/recipes";
+import type { MenuSectionDescriptor } from "@hjmds/design-contracts/behaviors";
 import {
   cloneElement,
   forwardRef,

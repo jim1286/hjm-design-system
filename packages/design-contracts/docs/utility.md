@@ -20,7 +20,7 @@
 즉 `Utility`라는 이름 아래 모일 실체가 없다:
 
 - 새 값 타입 없음 — 토큰은 이미 `foundations.ts`/`semantic-colors.ts`/`colors.ts`에 있다.
-- 새 접근 패턴 없음 — `import { spacing } from "@hjm/design-contracts"`가 이미 `useToken()`이
+- 새 접근 패턴 없음 — `import { spacing } from "@hjmds/design-contracts"`가 이미 `useToken()`이
   하는 일과 같은 결과를 낸다(테마별 실제 색 resolve는 `resolveColorReference`가 이미
   한다).
 - 새 접근성·상태 축 없음 — 컴포넌트가 아니므로 애초에 대상이 아니다.

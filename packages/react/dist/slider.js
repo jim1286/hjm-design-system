@@ -1,5 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { getSliderStepTarget, resolveSliderDescriptor, resolveSliderFillFraction, resolveSliderValue, } from "@hjm/design-contracts/components/slider";
+import { getSliderStepTarget, resolveSliderDescriptor, resolveSliderFillFraction, resolveSliderValue, } from "@hjmds/design-contracts/components/slider";
 import { forwardRef, useEffect, useId, useRef, useState, } from "react";
 import { classNames, useControllableState } from "./internal.js";
 const sliderKeys = new Set([

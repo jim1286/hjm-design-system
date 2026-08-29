@@ -1,6 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { comboboxRecipe, selectRecipe, } from "@hjm/design-contracts/recipes";
-import { formRecipe, } from "@hjm/design-contracts/components/form";
+import { comboboxRecipe, selectRecipe, } from "@hjmds/design-contracts/recipes";
+import { formRecipe, } from "@hjmds/design-contracts/components/form";
 import { forwardRef, useCallback, useEffect, useId, useMemo, useRef, useState, } from "react";
 import { Field } from "./forms.js";
 import { classNames, composeRefs, useControllableState } from "./internal.js";

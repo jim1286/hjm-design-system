@@ -1,7 +1,7 @@
-import { formRecipe, type FormSubmitStatus } from "@hjm/design-contracts/components/form";
-import { type ComboboxCommitReason, type ComboboxFiltering, type AsyncCollectionState, type SelectItemDescriptor } from "@hjm/design-contracts/behaviors";
-import { type SelectCollectionSectionDescriptor, type SelectCollectionSource, type SelectOpenChangeReason } from "@hjm/design-contracts/components/collection";
-import { type SelectDensity, type SelectSize } from "@hjm/design-contracts/recipes";
+import { formRecipe, type FormSubmitStatus } from "@hjmds/design-contracts/components/form";
+import { type ComboboxCommitReason, type ComboboxFiltering, type AsyncCollectionState, type SelectItemDescriptor } from "@hjmds/design-contracts/behaviors";
+import { type SelectCollectionSectionDescriptor, type SelectCollectionSource, type SelectOpenChangeReason } from "@hjmds/design-contracts/components/collection";
+import { type SelectDensity, type SelectSize } from "@hjmds/design-contracts/recipes";
 import { type ReactNode } from "react";
 import { type ModalProps, type StyleProp, type ViewStyle } from "react-native";
 type NativeCollectionLeadingRenderProps = Readonly<{

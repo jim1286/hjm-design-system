@@ -41,7 +41,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Install Chromium for renderer interaction tests
-        run: pnpm --filter @hjm/react exec playwright install --with-deps chromium
+        run: pnpm --filter @hjmds/react exec playwright install --with-deps chromium
 
       - name: Require a Changeset for public package changes
         if: github.event_name == 'push'

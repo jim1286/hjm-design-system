@@ -1,5 +1,5 @@
-import { chipRecipe, type SegmentedControlSize, type SelectionControlPresentation, type SelectionControlSize, type SelectionGroupOrientation, type SelectionGroupPresentation } from "@hjm/design-contracts/recipes";
-import { type CheckboxGroupSelection, type SelectionItemDescriptor } from "@hjm/design-contracts/behaviors";
+import { chipRecipe, type SegmentedControlSize, type SelectionControlPresentation, type SelectionControlSize, type SelectionGroupOrientation, type SelectionGroupPresentation } from "@hjmds/design-contracts/recipes";
+import { type CheckboxGroupSelection, type SelectionItemDescriptor } from "@hjmds/design-contracts/behaviors";
 import { type ButtonHTMLAttributes, type ChangeEvent, type FieldsetHTMLAttributes, type InputHTMLAttributes, type MouseEvent, type ReactElement, type ReactNode, type RefAttributes } from "react";
 export type ChoiceLeadingRenderProps = Readonly<{
     selected: boolean;

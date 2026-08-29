@@ -1,8 +1,8 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { control, glyph, radius, spacing } from "@hjm/design-contracts/foundations";
-import { buttonRecipe, } from "@hjm/design-contracts/recipes/base";
-import { bottomCtaRecipe, iconButtonRecipe, resolveIconButtonPresentation, } from "@hjm/design-contracts/recipes";
-import { resolveLinkDescriptor, } from "@hjm/design-contracts/components/link";
+import { control, glyph, radius, spacing } from "@hjmds/design-contracts/foundations";
+import { buttonRecipe, } from "@hjmds/design-contracts/recipes/base";
+import { bottomCtaRecipe, iconButtonRecipe, resolveIconButtonPresentation, } from "@hjmds/design-contracts/recipes";
+import { resolveLinkDescriptor, } from "@hjmds/design-contracts/components/link";
 import { forwardRef } from "react";
 import { ActivityIndicator, Pressable, View, } from "react-native";
 import { Text } from "./primitives.js";

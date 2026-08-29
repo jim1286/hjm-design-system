@@ -12,8 +12,8 @@
     "check": "pnpm storybook:generate && pnpm typecheck && pnpm test"
   },
   "dependencies": {
-    "@hjm/design-contracts": "workspace:*",
-    "@hjm/react-native": "workspace:*",
+    "@hjmds/design-contracts": "workspace:*",
+    "@hjmds/react-native": "workspace:*",
     "@storybook/addon-ondevice-actions": "10.4.4",
     "@storybook/addon-ondevice-controls": "10.4.4",
     "@storybook/react-native": "10.4.4",

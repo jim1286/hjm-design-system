@@ -1,7 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { getCollectionNavigationIntent, getCollectionNavigationTarget, getCollectionTypeaheadMatch, reconcileSelectSelection, resolveCollectionItem, resolveSelectSelectedItem, validateCollection, } from "@hjm/design-contracts/components/collection";
-import { resolveControlAccessibleName, selectBehaviorDefaults, } from "@hjm/design-contracts/behaviors";
-import { iconRecipe, selectRecipe, } from "@hjm/design-contracts/recipes";
+import { getCollectionNavigationIntent, getCollectionNavigationTarget, getCollectionTypeaheadMatch, reconcileSelectSelection, resolveCollectionItem, resolveSelectSelectedItem, validateCollection, } from "@hjmds/design-contracts/components/collection";
+import { resolveControlAccessibleName, selectBehaviorDefaults, } from "@hjmds/design-contracts/behaviors";
+import { iconRecipe, selectRecipe, } from "@hjmds/design-contracts/recipes";
 import { forwardRef, useCallback, useEffect, useId, useRef, useState, } from "react";
 import { classNames, useControllableState } from "./internal.js";
 import { AnchoredPortal, useAnchoredPopup, } from "./portal.js";

@@ -1,4 +1,4 @@
-import type { ShowcaseScenarioId } from "@hjm/design-contracts/showcase";
+import type { ShowcaseScenarioId } from "@hjmds/design-contracts/showcase";
 export declare const reactNativeRendererEvidenceSchemaVersion: 2;
 export type ReactNativeRendererEvidenceScenario = Exclude<ShowcaseScenarioId, "contract">;
 export type ReactNativeRendererEvidenceComponent = Readonly<{
@@ -6,7 +6,7 @@ export type ReactNativeRendererEvidenceComponent = Readonly<{
     componentId: string;
     /** Public symbols that implement this contract on the declared subpath. */
     exportNames: readonly string[];
-    /** Granular @hjm/react-native export used by consumers. */
+    /** Granular @hjmds/react-native export used by consumers. */
     subpath: `./${string}`;
     /** Scenarios supported by automated first-party renderer evidence. */
     scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -19,7 +19,7 @@ export type ReactNativeRendererEvidenceComponent = Readonly<{
 }>;
 export type ReactNativeRendererEvidenceManifest = Readonly<{
     schemaVersion: typeof reactNativeRendererEvidenceSchemaVersion;
-    packageName: "@hjm/react-native";
+    packageName: "@hjmds/react-native";
     packageVersion: string;
     surface: "native";
     components: readonly ReactNativeRendererEvidenceComponent[];
@@ -31,7 +31,7 @@ export type ReactNativeRendererEvidenceManifest = Readonly<{
  */
 export declare const reactNativeRendererEvidence: {
     readonly schemaVersion: 2;
-    readonly packageName: "@hjm/react-native";
+    readonly packageName: "@hjmds/react-native";
     readonly packageVersion: "0.8.1";
     readonly surface: "native";
     readonly components: readonly [Readonly<{
@@ -39,7 +39,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -54,7 +54,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -69,7 +69,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -84,7 +84,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -99,7 +99,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -114,7 +114,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -129,7 +129,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -144,7 +144,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -159,7 +159,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -174,7 +174,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -189,7 +189,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -204,7 +204,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -219,7 +219,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -234,7 +234,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -249,7 +249,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -264,7 +264,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -279,7 +279,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -294,7 +294,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -309,7 +309,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -324,7 +324,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -339,7 +339,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -354,7 +354,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -369,7 +369,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -384,7 +384,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -399,7 +399,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -414,7 +414,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -429,7 +429,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -444,7 +444,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -459,7 +459,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -474,7 +474,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -489,7 +489,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -504,7 +504,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -519,7 +519,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -534,7 +534,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -549,7 +549,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -564,7 +564,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -579,7 +579,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -594,7 +594,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -609,7 +609,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -624,7 +624,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -639,7 +639,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -654,7 +654,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -669,7 +669,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -684,7 +684,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -699,7 +699,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -714,7 +714,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -729,7 +729,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -744,7 +744,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -759,7 +759,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -774,7 +774,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -789,7 +789,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -804,7 +804,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -819,7 +819,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -834,7 +834,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -849,7 +849,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -864,7 +864,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -879,7 +879,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -894,7 +894,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -909,7 +909,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -924,7 +924,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -939,7 +939,7 @@ export declare const reactNativeRendererEvidence: {
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */
         exportNames: readonly string[];
-        /** Granular @hjm/react-native export used by consumers. */
+        /** Granular @hjmds/react-native export used by consumers. */
         subpath: `./${string}`;
         /** Scenarios supported by automated first-party renderer evidence. */
         scenarios: readonly ReactNativeRendererEvidenceScenario[];

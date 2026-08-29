@@ -1,8 +1,8 @@
-import { typography } from "@hjm/design-contracts/foundations";
-import { comboboxRecipe } from "@hjm/design-contracts/recipes";
-import { fieldRecipe } from "@hjm/design-contracts/recipes/base";
-import { numberFieldRecipe } from "@hjm/design-contracts/components/number-field";
-import { sliderRecipe } from "@hjm/design-contracts/components/slider";
+import { typography } from "@hjmds/design-contracts/foundations";
+import { comboboxRecipe } from "@hjmds/design-contracts/recipes";
+import { fieldRecipe } from "@hjmds/design-contracts/recipes/base";
+import { numberFieldRecipe } from "@hjmds/design-contracts/components/number-field";
+import { sliderRecipe } from "@hjmds/design-contracts/components/slider";
 import { type ReactElement } from "react";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { Text as NativeText, TextInput } from "react-native";

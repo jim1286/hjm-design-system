@@ -1,11 +1,11 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
-import { glyph, radius, spacing } from "@hjm/design-contracts/foundations";
-import { resolveColorReference } from "@hjm/design-contracts/color-references";
-import { bottomNavigationRecipe, counterBadgeRecipe, loadMoreRecipe, menuRecipe, spinnerRecipe, tabsRecipe, topBarRecipe, } from "@hjm/design-contracts/recipes";
-import { createLoadMoreController, validateLoadMoreDescriptor, } from "@hjm/design-contracts/components/load-more";
-import { resolveBottomNavigationActivation, resolveBottomNavigationConfiguration, resolveBottomNavigationDescriptor, } from "@hjm/design-contracts/components/bottom-navigation";
-import { getTabNavigationTarget, resolveInitialTabValue, tabsBehaviorDefaults, } from "@hjm/design-contracts/behaviors";
-import { flattenCollectionItems, validateCollection, } from "@hjm/design-contracts/components/collection";
+import { glyph, radius, spacing } from "@hjmds/design-contracts/foundations";
+import { resolveColorReference } from "@hjmds/design-contracts/color-references";
+import { bottomNavigationRecipe, counterBadgeRecipe, loadMoreRecipe, menuRecipe, spinnerRecipe, tabsRecipe, topBarRecipe, } from "@hjmds/design-contracts/recipes";
+import { createLoadMoreController, validateLoadMoreDescriptor, } from "@hjmds/design-contracts/components/load-more";
+import { resolveBottomNavigationActivation, resolveBottomNavigationConfiguration, resolveBottomNavigationDescriptor, } from "@hjmds/design-contracts/components/bottom-navigation";
+import { getTabNavigationTarget, resolveInitialTabValue, tabsBehaviorDefaults, } from "@hjmds/design-contracts/behaviors";
+import { flattenCollectionItems, validateCollection, } from "@hjmds/design-contracts/components/collection";
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useLayoutEffect, useRef, useState, } from "react";
 import { ActivityIndicator, AccessibilityInfo, Keyboard, Modal, Platform, Pressable, ScrollView, View, findNodeHandle, } from "react-native";
 import { Button } from "./actions.js";

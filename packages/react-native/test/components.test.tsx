@@ -42,7 +42,7 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe("@hjm/react-native vertical slice", () => {
+describe("@hjmds/react-native vertical slice", () => {
   it("resolves native environment signals through the contracts Provider", () => {
     let captured: HjmNativeTheme | undefined;
     function Consumer() {

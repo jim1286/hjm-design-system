@@ -1,5 +1,5 @@
-import { emptyStateRecipe, skeletonRecipe, type NoticeTone, type ProgressSize, type ProgressTone, type SpinnerSize, type SpinnerTone } from "@hjm/design-contracts/recipes";
-import { type ResultDescriptor } from "@hjm/design-contracts/components/result";
+import { emptyStateRecipe, skeletonRecipe, type NoticeTone, type ProgressSize, type ProgressTone, type SpinnerSize, type SpinnerTone } from "@hjmds/design-contracts/recipes";
+import { type ResultDescriptor } from "@hjmds/design-contracts/components/result";
 import { type HTMLAttributes, type ProgressHTMLAttributes, type ReactNode } from "react";
 export type NoticeProps = HTMLAttributes<HTMLElement> & Readonly<{
     title: ReactNode;
@@ -37,10 +37,10 @@ export type ResultProps = Omit<HTMLAttributes<HTMLDivElement>, "children" | "tit
 }>;
 /** A terminal flow outcome. EmptyState remains reserved for fillable content. */
 export declare const Result: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLDivElement>, "children" | "title"> & Readonly<{
-    status: import("@hjm/design-contracts/components/result").ResultStatus;
+    status: import("@hjmds/design-contracts/components/result").ResultStatus;
     title: string;
     description?: string;
-    actions?: readonly import("@hjm/design-contracts/components/result").ResultActionDescriptor[];
+    actions?: readonly import("@hjmds/design-contracts/components/result").ResultActionDescriptor[];
 }> & Readonly<{
     headingLevel?: 1 | 2;
     /** Optional product glyph; its meaning is already carried by title/status. */

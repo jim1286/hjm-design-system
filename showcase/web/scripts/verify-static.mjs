@@ -1,5 +1,5 @@
 import { readdir, readFile } from "node:fs/promises";
-import { componentCatalog, getComponentSurfaceStatus } from "@hjm/design-contracts";
+import { componentCatalog, getComponentSurfaceStatus } from "@hjmds/design-contracts";
 
 const index = JSON.parse(await readFile(new URL("../storybook-static/index.json", import.meta.url), "utf8"));
 const entries = Object.values(index.entries ?? {});

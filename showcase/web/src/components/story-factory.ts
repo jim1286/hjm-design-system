@@ -5,7 +5,7 @@ import {
   type ComponentCatalogEntry,
   type ComponentCategory,
   type ComponentName,
-} from "@hjm/design-contracts";
+} from "@hjmds/design-contracts";
 
 type ComponentStoryTarget = Readonly<{
   category: ComponentCategory;

@@ -1,5 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { getSliderStepTarget, resolveSliderDescriptor, resolveSliderFillFraction, resolveSliderValueFromOffset, sliderRecipe, } from "@hjm/design-contracts/components/slider";
+import { getSliderStepTarget, resolveSliderDescriptor, resolveSliderFillFraction, resolveSliderValueFromOffset, sliderRecipe, } from "@hjmds/design-contracts/components/slider";
 import { forwardRef, useEffect, useMemo, useRef, useState, } from "react";
 import { PanResponder, Text as NativeText, View, } from "react-native";
 import { useControllableState } from "./internal/state.js";

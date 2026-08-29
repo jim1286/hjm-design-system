@@ -1,7 +1,7 @@
 import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { BottomNavigationDescriptor } from "@hjm/design-contracts/components/bottom-navigation";
+import type { BottomNavigationDescriptor } from "@hjmds/design-contracts/components/bottom-navigation";
 import { BottomNavigation, HjmProvider } from "../src/index.js";
 
 const descriptor: BottomNavigationDescriptor<"home" | "search", "home" | "search"> = {

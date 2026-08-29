@@ -1,8 +1,8 @@
-import { type FieldShape, type FieldVariant } from "@hjm/design-contracts/recipes/base";
-import { type ChipSize, type SearchFieldSize, type SegmentedControlSize, type SelectionControlPresentation, type SelectionControlSize, type SwitchSize } from "@hjm/design-contracts/recipes";
-import { type PasswordFieldAutofillHint, type PasswordFieldSize } from "@hjm/design-contracts/components/password-field";
-import { type OtpFieldSize } from "@hjm/design-contracts/components/otp-field";
-import { type CheckboxGroupSelection, type CheckboxState, type SelectionItemDescriptor, type SelectionOrientation } from "@hjm/design-contracts/behaviors";
+import { type FieldShape, type FieldVariant } from "@hjmds/design-contracts/recipes/base";
+import { type ChipSize, type SearchFieldSize, type SegmentedControlSize, type SelectionControlPresentation, type SelectionControlSize, type SwitchSize } from "@hjmds/design-contracts/recipes";
+import { type PasswordFieldAutofillHint, type PasswordFieldSize } from "@hjmds/design-contracts/components/password-field";
+import { type OtpFieldSize } from "@hjmds/design-contracts/components/otp-field";
+import { type CheckboxGroupSelection, type CheckboxState, type SelectionItemDescriptor, type SelectionOrientation } from "@hjmds/design-contracts/behaviors";
 import { type ReactNode } from "react";
 import { TextInput, type StyleProp, type GestureResponderEvent, type SwitchProps as NativeSwitchProps, type TextInputProps, type TextStyle, type ViewStyle } from "react-native";
 type FieldAccessibleName = Readonly<{

@@ -1,8 +1,8 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
-import { createAlertDialogSession, getAlertDialogInitialFocus, validateAlertDialogRequest, } from "@hjm/design-contracts/components/alert-dialog";
-import { createSheetLifecycle, sheetBehaviorDefaults, } from "@hjm/design-contracts/components/sheet";
-import { resolveTooltipDescriptor, tooltipBehaviorDefaults, } from "@hjm/design-contracts/components/tooltip";
-import { dialogRecipe, menuRecipe, sheetRecipe, } from "@hjm/design-contracts/recipes";
+import { createAlertDialogSession, getAlertDialogInitialFocus, validateAlertDialogRequest, } from "@hjmds/design-contracts/components/alert-dialog";
+import { createSheetLifecycle, sheetBehaviorDefaults, } from "@hjmds/design-contracts/components/sheet";
+import { resolveTooltipDescriptor, tooltipBehaviorDefaults, } from "@hjmds/design-contracts/components/tooltip";
+import { dialogRecipe, menuRecipe, sheetRecipe, } from "@hjmds/design-contracts/recipes";
 import { cloneElement, forwardRef, useCallback, useEffect, useId, useRef, useState, useSyncExternalStore, } from "react";
 import { createPortal } from "react-dom";
 import { Button } from "./actions.js";

@@ -461,7 +461,7 @@ export const defaultRenderCases = [
   },
 ] as const satisfies readonly DefaultRenderCase[];
 
-describe("@hjm/react-native default renderer evidence", () => {
+describe("@hjmds/react-native default renderer evidence", () => {
   it("has one literal executable case for every default evidence claim", () => {
     const evidenceIds = reactNativeRendererEvidence.components.map(({ componentId }) => componentId);
     const caseIds = defaultRenderCases.map(({ componentId }) => componentId);

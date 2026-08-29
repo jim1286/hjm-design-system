@@ -1,7 +1,7 @@
-import { type FieldShape, type FieldVariant } from "@hjm/design-contracts/recipes/base";
-import { type SearchFieldSize } from "@hjm/design-contracts/recipes";
-import { type PasswordFieldAutofillHint, type PasswordFieldSize } from "@hjm/design-contracts/components/password-field";
-import { type OtpFieldSize } from "@hjm/design-contracts/components/otp-field";
+import { type FieldShape, type FieldVariant } from "@hjmds/design-contracts/recipes/base";
+import { type SearchFieldSize } from "@hjmds/design-contracts/recipes";
+import { type PasswordFieldAutofillHint, type PasswordFieldSize } from "@hjmds/design-contracts/components/password-field";
+import { type OtpFieldSize } from "@hjmds/design-contracts/components/otp-field";
 import { type HTMLAttributes, type InputHTMLAttributes, type ReactNode, type TextareaHTMLAttributes } from "react";
 type FieldCopyProps = Readonly<{
     label?: ReactNode;

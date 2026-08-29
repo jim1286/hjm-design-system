@@ -4,7 +4,7 @@ import {
   uploadItemRecipe,
   type UploadItemDescriptor,
   type UploadItemLabels,
-} from "@hjm/design-contracts/components/upload-item";
+} from "@hjmds/design-contracts/components/upload-item";
 import type { ReactNode } from "react";
 import { Pressable, View, type StyleProp, type ViewStyle } from "react-native";
 

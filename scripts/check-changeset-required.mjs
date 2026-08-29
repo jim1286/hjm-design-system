@@ -37,9 +37,9 @@ const changes = diff.length === 0
     });
 
 const packageByDirectory = new Map([
-  ["design-contracts", "@hjm/design-contracts"],
-  ["react", "@hjm/react"],
-  ["react-native", "@hjm/react-native"],
+  ["design-contracts", "@hjmds/design-contracts"],
+  ["react", "@hjmds/react"],
+  ["react-native", "@hjmds/react-native"],
 ]);
 const changedPackages = new Set();
 for (const { path } of changes) {
@@ -66,7 +66,7 @@ for (const { path } of addedChangesets) {
   const frontmatter = source.match(/^---\s*\n([\s\S]*?)\n---(?:\s*\n|$)/)?.[1] ?? "";
   for (const line of frontmatter.split("\n")) {
     const release = line.match(
-      /^\s*["']?(@hjm\/(?:design-contracts|react|react-native))["']?\s*:\s*(patch|minor|major)\s*$/,
+      /^\s*["']?(@hjmds\/(?:design-contracts|react|react-native))["']?\s*:\s*(patch|minor|major)\s*$/,
     );
     if (release?.[1]) scheduledPackages.add(release[1]);
   }

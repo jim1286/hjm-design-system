@@ -1,8 +1,8 @@
-import { type AlertDialogOpenChangeReason, type AlertDialogRequest } from "@hjm/design-contracts/components/alert-dialog";
-import { type SheetDismissPolicy, type SheetDismissReason, type SheetOpenChangeDetails } from "@hjm/design-contracts/components/sheet";
-import { type TooltipAlign, type TooltipOpenChangeDetails, type TooltipPlacement } from "@hjm/design-contracts/components/tooltip";
-import { type DialogSize, type MenuDensity, type MenuItemTone } from "@hjm/design-contracts/recipes";
-import type { MenuSectionDescriptor } from "@hjm/design-contracts/behaviors";
+import { type AlertDialogOpenChangeReason, type AlertDialogRequest } from "@hjmds/design-contracts/components/alert-dialog";
+import { type SheetDismissPolicy, type SheetDismissReason, type SheetOpenChangeDetails } from "@hjmds/design-contracts/components/sheet";
+import { type TooltipAlign, type TooltipOpenChangeDetails, type TooltipPlacement } from "@hjmds/design-contracts/components/tooltip";
+import { type DialogSize, type MenuDensity, type MenuItemTone } from "@hjmds/design-contracts/recipes";
+import type { MenuSectionDescriptor } from "@hjmds/design-contracts/behaviors";
 import { type AriaAttributes, type MouseEventHandler, type ReactElement, type ReactNode, type Ref } from "react";
 type TriggerElementProps = Readonly<{
     ref?: Ref<HTMLElement>;

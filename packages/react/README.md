@@ -1,12 +1,12 @@
-# @hjm/react
+# @hjmds/react
 
-React 19 renderer for `@hjm/design-contracts`. Components render native HTML,
+React 19 renderer for `@hjmds/design-contracts`. Components render native HTML,
 keep controlled and uncontrolled state explicit, and expose stable `data-state`
 and `data-*` recipe axes for styling and tests.
 
 ```tsx
-import { Button, Dialog, Grid, HjmProvider, TextField } from "@hjm/react";
-import "@hjm/react/styles.css";
+import { Button, Dialog, Grid, HjmProvider, TextField } from "@hjmds/react";
+import "@hjmds/react/styles.css";
 
 export function Example() {
   return (
@@ -57,17 +57,17 @@ granularity boundary: they keep feature imports explicit and are verified not to
 renderer root barrel:
 
 ```tsx
-import { Combobox, Form, Select } from "@hjm/react/forms";
-import { NumberField } from "@hjm/react/number-field";
-import { Slider } from "@hjm/react/slider";
-import { DatePicker } from "@hjm/react/date-picker";
-import { FilePicker } from "@hjm/react/file-picker";
-import { Steps } from "@hjm/react/steps";
-import { UploadItem } from "@hjm/react/upload-item";
-import { Accordion, Image, Table, Timeline } from "@hjm/react/display";
-import { BottomNavigation, Breadcrumb, Pagination, Tabs } from "@hjm/react/navigation";
-import { Dialog, Menu, Sheet } from "@hjm/react/overlays";
-import { ToastProvider, useToast } from "@hjm/react/toast";
+import { Combobox, Form, Select } from "@hjmds/react/forms";
+import { NumberField } from "@hjmds/react/number-field";
+import { Slider } from "@hjmds/react/slider";
+import { DatePicker } from "@hjmds/react/date-picker";
+import { FilePicker } from "@hjmds/react/file-picker";
+import { Steps } from "@hjmds/react/steps";
+import { UploadItem } from "@hjmds/react/upload-item";
+import { Accordion, Image, Table, Timeline } from "@hjmds/react/display";
+import { BottomNavigation, Breadcrumb, Pagination, Tabs } from "@hjmds/react/navigation";
+import { Dialog, Menu, Sheet } from "@hjmds/react/overlays";
+import { ToastProvider, useToast } from "@hjmds/react/toast";
 ```
 
 `pnpm bundle:renderer:check` measures every executable domain graph and the stylesheet against an

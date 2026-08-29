@@ -5,21 +5,21 @@ import {
   type BadgeTone,
   type BadgeVariant as ContractBadgeVariant,
   type ListRowDensity,
-} from "@hjm/design-contracts/recipes";
+} from "@hjmds/design-contracts/recipes";
 import {
   resolveTagDescriptor,
   type TagTone,
-} from "@hjm/design-contracts/components/tag";
+} from "@hjmds/design-contracts/components/tag";
 import {
   cardRecipe,
   type CardHeadingLevel,
-} from "@hjm/design-contracts/components/card";
+} from "@hjmds/design-contracts/components/card";
 import {
   surfaceGeometry,
   type SurfacePadding,
   type SurfaceRadius,
   type SurfaceTone,
-} from "@hjm/design-contracts/recipes/base";
+} from "@hjmds/design-contracts/recipes/base";
 import {
   createElement,
   forwardRef,
@@ -30,8 +30,8 @@ import {
 import { classNames } from "./internal.js";
 import { Surface, Text } from "./layout.js";
 
-export type { CardHeadingLevel } from "@hjm/design-contracts/components/card";
-export type { TagTone } from "@hjm/design-contracts/components/tag";
+export type { CardHeadingLevel } from "@hjmds/design-contracts/components/card";
+export type { TagTone } from "@hjmds/design-contracts/components/tag";
 export type BadgeVariant = ContractBadgeVariant;
 
 export type BadgeProps = HTMLAttributes<HTMLSpanElement> &

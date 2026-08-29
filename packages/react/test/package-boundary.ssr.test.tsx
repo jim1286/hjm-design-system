@@ -2,7 +2,7 @@ import { readFile } from "node:fs/promises";
 import { URL, fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
-describe("@hjm/react package boundary", () => {
+describe("@hjmds/react package boundary", () => {
   it("exposes distinct family-level entry points and an explicit stylesheet", async () => {
     const packageJson = JSON.parse(
       await readFile(fileURLToPath(new URL("../package.json", import.meta.url)), "utf8"),

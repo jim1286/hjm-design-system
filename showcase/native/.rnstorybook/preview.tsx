@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import type { Preview } from "@storybook/react-native";
 import { StyleSheet, View } from "react-native";
-import { HjmNativeProvider, useHjmNativeTheme } from "@hjm/react-native/provider";
+import { HjmNativeProvider, useHjmNativeTheme } from "@hjmds/react-native/provider";
 
 function Canvas({ children }: { children: ReactNode }) {
   const { colors } = useHjmNativeTheme();

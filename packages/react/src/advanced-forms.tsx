@@ -3,11 +3,11 @@ import {
   selectRecipe,
   type SelectDensity,
   type SelectSize,
-} from "@hjm/design-contracts/recipes";
+} from "@hjmds/design-contracts/recipes";
 import {
   formRecipe,
   type FormDensity,
-} from "@hjm/design-contracts/components/form";
+} from "@hjmds/design-contracts/components/form";
 import {
   forwardRef,
   useCallback,

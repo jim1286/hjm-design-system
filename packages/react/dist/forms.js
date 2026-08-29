@@ -1,8 +1,8 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { fieldRecipe, } from "@hjm/design-contracts/recipes/base";
-import { iconRecipe, searchFieldRecipe, } from "@hjm/design-contracts/recipes";
-import { passwordFieldRecipe, resolvePasswordFieldDescriptor, } from "@hjm/design-contracts/components/password-field";
-import { getOtpFieldSlotValues, otpFieldRecipe, resolveOtpFieldValue, } from "@hjm/design-contracts/components/otp-field";
+import { fieldRecipe, } from "@hjmds/design-contracts/recipes/base";
+import { iconRecipe, searchFieldRecipe, } from "@hjmds/design-contracts/recipes";
+import { passwordFieldRecipe, resolvePasswordFieldDescriptor, } from "@hjmds/design-contracts/components/password-field";
+import { getOtpFieldSlotValues, otpFieldRecipe, resolveOtpFieldValue, } from "@hjmds/design-contracts/components/otp-field";
 import { forwardRef, useEffect, useId, useLayoutEffect, useRef, useState, } from "react";
 import { composeRefs, classNames, useControllableState } from "./internal.js";
 function FieldFrame({ controlId, label, description, error, descriptionId, errorId, required = false, disabled = false, focused = false, variant = fieldRecipe.defaults.variant, shape = fieldRecipe.defaults.shape, className, children, ...props }) {

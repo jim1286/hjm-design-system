@@ -4,7 +4,7 @@
   "source": "packages/design-contracts/docs/generated/showcase-manifest.json",
   "surfaces": {
     "web": {
-      "packageName": "@hjm/react",
+      "packageName": "@hjmds/react",
       "packageVersion": "0.8.1",
       "activeComponents": 60,
       "claimedComponents": 60,
@@ -2779,7 +2779,7 @@
       ]
     },
     "native": {
-      "packageName": "@hjm/react-native",
+      "packageName": "@hjmds/react-native",
       "packageVersion": "0.8.1",
       "activeComponents": 61,
       "claimedComponents": 61,

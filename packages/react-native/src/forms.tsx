@@ -1,7 +1,7 @@
 import {
   formRecipe,
   type FormSubmitStatus,
-} from "@hjm/design-contracts/components/form";
+} from "@hjmds/design-contracts/components/form";
 import {
   comboboxBehaviorDefaults,
   resolveControlAccessibleName,
@@ -9,7 +9,7 @@ import {
   type ComboboxFiltering,
   type AsyncCollectionState,
   type SelectItemDescriptor,
-} from "@hjm/design-contracts/behaviors";
+} from "@hjmds/design-contracts/behaviors";
 import {
   flattenCollectionItems,
   isComboboxResultCurrent,
@@ -20,15 +20,15 @@ import {
   type SelectCollectionSectionDescriptor,
   type SelectCollectionSource,
   type SelectOpenChangeReason,
-} from "@hjm/design-contracts/components/collection";
-import { resolveColorReference } from "@hjm/design-contracts/color-references";
-import { glyph, radius, spacing } from "@hjm/design-contracts/foundations";
+} from "@hjmds/design-contracts/components/collection";
+import { resolveColorReference } from "@hjmds/design-contracts/color-references";
+import { glyph, radius, spacing } from "@hjmds/design-contracts/foundations";
 import {
   comboboxRecipe,
   selectRecipe,
   type SelectDensity,
   type SelectSize,
-} from "@hjm/design-contracts/recipes";
+} from "@hjmds/design-contracts/recipes";
 import {
   useCallback,
   useEffect,

@@ -1,4 +1,4 @@
-import type { ShowcaseScenarioId } from "@hjm/design-contracts/showcase";
+import type { ShowcaseScenarioId } from "@hjmds/design-contracts/showcase";
 
 export const reactNativeRendererEvidenceSchemaVersion = 2 as const;
 
@@ -9,7 +9,7 @@ export type ReactNativeRendererEvidenceComponent = Readonly<{
   componentId: string;
   /** Public symbols that implement this contract on the declared subpath. */
   exportNames: readonly string[];
-  /** Granular @hjm/react-native export used by consumers. */
+  /** Granular @hjmds/react-native export used by consumers. */
   subpath: `./${string}`;
   /** Scenarios supported by automated first-party renderer evidence. */
   scenarios: readonly ReactNativeRendererEvidenceScenario[];
@@ -23,7 +23,7 @@ export type ReactNativeRendererEvidenceComponent = Readonly<{
 
 export type ReactNativeRendererEvidenceManifest = Readonly<{
   schemaVersion: typeof reactNativeRendererEvidenceSchemaVersion;
-  packageName: "@hjm/react-native";
+  packageName: "@hjmds/react-native";
   packageVersion: string;
   surface: "native";
   components: readonly ReactNativeRendererEvidenceComponent[];
@@ -63,7 +63,7 @@ function defaultClaim(
  */
 export const reactNativeRendererEvidence = {
   schemaVersion: reactNativeRendererEvidenceSchemaVersion,
-  packageName: "@hjm/react-native",
+  packageName: "@hjmds/react-native",
   packageVersion: "0.8.1",
   surface: "native",
   components: [

@@ -1,4 +1,4 @@
-import { type NumberFieldSize, type NumberFieldValue } from "@hjm/design-contracts/components/number-field";
+import { type NumberFieldSize, type NumberFieldValue } from "@hjmds/design-contracts/components/number-field";
 import { TextInput, type StyleProp, type TextInputProps, type TextStyle, type ViewStyle } from "react-native";
 type NativeNumberInputProps = Omit<TextInputProps, "accessibilityActions" | "accessibilityHint" | "accessibilityLabel" | "accessibilityRole" | "accessibilityState" | "accessibilityValue" | "defaultValue" | "editable" | "inputMode" | "keyboardType" | "multiline" | "onAccessibilityAction" | "onChangeText" | "readOnly" | "style" | "value">;
 export type NumberFieldProps = NativeNumberInputProps & Readonly<{

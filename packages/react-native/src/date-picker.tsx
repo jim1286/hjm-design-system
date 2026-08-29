@@ -2,7 +2,7 @@ import {
   calendarRecipe,
   type ComposeCalendarAccessibleName,
   type ResolvedCalendarDateCell,
-} from "@hjm/design-contracts/components/calendar";
+} from "@hjmds/design-contracts/components/calendar";
 import {
   resolveDatePickerGrid,
   resolveDatePickerTriggerText,
@@ -10,7 +10,7 @@ import {
   type DatePickerDescriptor,
   type DatePickerOpenChangeReason,
   type DatePickerSize,
-} from "@hjm/design-contracts/components/date-picker";
+} from "@hjmds/design-contracts/components/date-picker";
 import { useRef, useState, type ReactNode } from "react";
 import { Pressable, View, type StyleProp, type ViewStyle } from "react-native";
 

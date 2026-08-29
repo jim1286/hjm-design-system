@@ -1,5 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { getUploadItemAvailableAction, resolveUploadItemAnnouncement, } from "@hjm/design-contracts/components/upload-item";
+import { getUploadItemAvailableAction, resolveUploadItemAnnouncement, } from "@hjmds/design-contracts/components/upload-item";
 import { forwardRef } from "react";
 import { Progress } from "./feedback.js";
 import { classNames } from "./internal.js";

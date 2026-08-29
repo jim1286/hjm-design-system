@@ -26,7 +26,7 @@ import {
   typography,
   withAlpha,
   type DesignSystemProviderValue,
-} from "@hjm/design-contracts";
+} from "@hjmds/design-contracts";
 
 export type HjmWebThemeStyle = CSSProperties &
   Record<`--hjm-${string}`, string | number>;

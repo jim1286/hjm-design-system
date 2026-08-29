@@ -10,7 +10,7 @@ const workspaceRoot = fileURLToPath(new URL("../", import.meta.url));
 // explicit review instead of being hidden inside gzip variance.
 const rendererBudgets = [
   {
-    packageName: "@hjm/react",
+    packageName: "@hjmds/react",
     directory: "packages/react",
     surface: "web",
     budgets: {
@@ -40,7 +40,7 @@ const rendererBudgets = [
     },
   },
   {
-    packageName: "@hjm/react-native",
+    packageName: "@hjmds/react-native",
     directory: "packages/react-native",
     surface: "native",
     budgets: {
@@ -100,7 +100,7 @@ function getModuleSpecifiers(source) {
 }
 
 function forbiddenReason(specifier, surface) {
-  if (specifier === "@hjm/design-contracts") {
+  if (specifier === "@hjmds/design-contracts") {
     return "imports the contracts root barrel; use a granular contracts subpath";
   }
   if (specifier.includes("/src/") || specifier.includes("/dist/")) {
@@ -112,8 +112,8 @@ function forbiddenReason(specifier, surface) {
       specifier.startsWith("react-native/") ||
       specifier.startsWith("react-native-") ||
       specifier.startsWith("@react-native/") ||
-      specifier === "@hjm/react-native" ||
-      specifier.startsWith("@hjm/react-native/")
+      specifier === "@hjmds/react-native" ||
+      specifier.startsWith("@hjmds/react-native/")
     ) {
       return "pulls React Native code into the Web renderer";
     }
@@ -122,8 +122,8 @@ function forbiddenReason(specifier, surface) {
     specifier.startsWith("react-dom/") ||
     specifier === "react-native-web" ||
     specifier.startsWith("react-native-web/") ||
-    specifier === "@hjm/react" ||
-    specifier.startsWith("@hjm/react/")
+    specifier === "@hjmds/react" ||
+    specifier.startsWith("@hjmds/react/")
   ) {
     return "pulls Web renderer code into the Native renderer";
   }

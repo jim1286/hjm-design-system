@@ -1,12 +1,12 @@
-import { type GridDescriptor, type ResolvedGridLayout } from "@hjm/design-contracts/grid";
-import { type IconDescriptor } from "@hjm/design-contracts/components/icon";
-import { type LayoutSidebarRole } from "@hjm/design-contracts/components/layout";
-import { type TextVariant } from "@hjm/design-contracts/foundations";
-import { type SurfacePadding as ContractSurfacePadding, type SurfaceRadius as ContractSurfaceRadius, type SurfaceTone as ContractSurfaceTone } from "@hjm/design-contracts/recipes/base";
-import { type StackAlign, type StackAxis, type StackGap, type StackJustify, type TextEmphasis, type TextTone as ContractTextTone } from "@hjm/design-contracts/recipes";
+import { type GridDescriptor, type ResolvedGridLayout } from "@hjmds/design-contracts/grid";
+import { type IconDescriptor } from "@hjmds/design-contracts/components/icon";
+import { type LayoutSidebarRole } from "@hjmds/design-contracts/components/layout";
+import { type TextVariant } from "@hjmds/design-contracts/foundations";
+import { type SurfacePadding as ContractSurfacePadding, type SurfaceRadius as ContractSurfaceRadius, type SurfaceTone as ContractSurfaceTone } from "@hjmds/design-contracts/recipes/base";
+import { type StackAlign, type StackAxis, type StackGap, type StackJustify, type TextEmphasis, type TextTone as ContractTextTone } from "@hjmds/design-contracts/recipes";
 import { type Ref, type ReactNode } from "react";
 import { Text as NativeText, View, type StyleProp, type TextProps as NativeTextProps, type TextStyle, type ViewProps, type ViewStyle } from "react-native";
-export type { StackAlign, StackAxis, StackGap, StackJustify, TextEmphasis, } from "@hjm/design-contracts/recipes";
+export type { StackAlign, StackAxis, StackGap, StackJustify, TextEmphasis, } from "@hjmds/design-contracts/recipes";
 export type TextTone = ContractTextTone;
 type LayoutRegionProps = Omit<ViewProps, "children">;
 type LayoutSidebarBase = Readonly<{

@@ -17,7 +17,7 @@ module.exports = mergeConfig(getDefaultConfig(packageRoot), {
     // the fixture's consumer-style imports back to this package while still
     // resolving every granular subpath through package.json exports.
     extraNodeModules: {
-      "@hjm/react-native": packageRoot,
+      "@hjmds/react-native": packageRoot,
     },
     nodeModulesPaths: [
       path.join(packageRoot, "node_modules"),

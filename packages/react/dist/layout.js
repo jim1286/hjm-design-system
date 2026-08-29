@@ -1,8 +1,8 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { resolveGridLayout, } from "@hjm/design-contracts/grid";
-import { layoutRecipe, validateLayoutWebDescriptor, } from "@hjm/design-contracts/components/layout";
-import { surfaceDefaults, surfaceGeometry, surfaceRecipe, } from "@hjm/design-contracts/recipes/base";
-import { stackRecipe, textRecipe, } from "@hjm/design-contracts/recipes";
+import { resolveGridLayout, } from "@hjmds/design-contracts/grid";
+import { layoutRecipe, validateLayoutWebDescriptor, } from "@hjmds/design-contracts/components/layout";
+import { surfaceDefaults, surfaceGeometry, surfaceRecipe, } from "@hjmds/design-contracts/recipes/base";
+import { stackRecipe, textRecipe, } from "@hjmds/design-contracts/recipes";
 import { createElement, forwardRef, useId, useRef, } from "react";
 import { classNames, composeRefs, useElementWidth, useWindowWidth, } from "./internal.js";
 function hasRegionContent(content) {

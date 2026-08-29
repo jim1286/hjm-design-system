@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { showcaseEnvironmentMatrix, showcaseScenarios } from "@hjm/design-contracts/showcase";
+import { showcaseEnvironmentMatrix, showcaseScenarios } from "@hjmds/design-contracts/showcase";
 
 function EnvironmentMatrix() {
   return (

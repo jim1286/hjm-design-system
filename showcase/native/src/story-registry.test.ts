@@ -1,4 +1,4 @@
-import { reactNativeRendererEvidence } from "@hjm/react-native/evidence";
+import { reactNativeRendererEvidence } from "@hjmds/react-native/evidence";
 import { describe, expect, it } from "vitest";
 
 import { nativeRendererStoryIds } from "./story-registry";

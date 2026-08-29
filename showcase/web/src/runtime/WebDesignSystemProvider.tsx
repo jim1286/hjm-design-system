@@ -1,12 +1,12 @@
 import { createContext, useContext, type ReactNode } from "react";
-import { HjmProvider } from "@hjm/react/provider";
+import { HjmProvider } from "@hjmds/react/provider";
 
 import {
   resolveDesignSystemProviderValue,
   type DesignSystemEnvironmentInput,
   type ResolvedDesignSystemEnvironment,
   type ResolvedTheme,
-} from "@hjm/design-contracts";
+} from "@hjmds/design-contracts";
 
 import { createWebThemeStyle } from "./web-theme";
 

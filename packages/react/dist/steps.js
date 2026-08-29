@@ -1,5 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { resolveStepsDescriptor, } from "@hjm/design-contracts/components/steps";
+import { resolveStepsDescriptor, } from "@hjmds/design-contracts/components/steps";
 import { forwardRef } from "react";
 import { classNames } from "./internal.js";
 /** Linear, read-only progress steps with one canonical cursor. */

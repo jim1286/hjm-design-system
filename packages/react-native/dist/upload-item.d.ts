@@ -1,4 +1,4 @@
-import { type UploadItemDescriptor, type UploadItemLabels } from "@hjm/design-contracts/components/upload-item";
+import { type UploadItemDescriptor, type UploadItemLabels } from "@hjmds/design-contracts/components/upload-item";
 import type { ReactNode } from "react";
 import { type StyleProp, type ViewStyle } from "react-native";
 export type UploadItemProps = Readonly<{

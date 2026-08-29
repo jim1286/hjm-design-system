@@ -1,6 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { emptyStateRecipe, noticeRecipe, progressRecipe, skeletonRecipe, spinnerRecipe, } from "@hjm/design-contracts/recipes";
-import { resolveResultDescriptor, } from "@hjm/design-contracts/components/result";
+import { emptyStateRecipe, noticeRecipe, progressRecipe, skeletonRecipe, spinnerRecipe, } from "@hjmds/design-contracts/recipes";
+import { resolveResultDescriptor, } from "@hjmds/design-contracts/components/result";
 import { forwardRef, } from "react";
 import { classNames } from "./internal.js";
 import { Button } from "./actions.js";

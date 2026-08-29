@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { getAntDesignReferencesFor } from "@hjm/design-contracts";
-import { showcaseManifest, showcaseScenarios } from "@hjm/design-contracts/showcase";
+import { getAntDesignReferencesFor } from "@hjmds/design-contracts";
+import { showcaseManifest, showcaseScenarios } from "@hjmds/design-contracts/showcase";
 
 const scenarioLabels = new Map(showcaseScenarios.map(({ id, label }) => [id, label]));
 

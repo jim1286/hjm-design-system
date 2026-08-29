@@ -1,5 +1,5 @@
-import { type LoadMoreDescriptor, type LoadMoreMode, type LoadMoreRequestHandler, type LoadMoreRequestOutcome, type LoadMoreRequestReason } from "@hjm/design-contracts/components/load-more";
-import { type LoadMoreDensity } from "@hjm/design-contracts/recipes";
+import { type LoadMoreDescriptor, type LoadMoreMode, type LoadMoreRequestHandler, type LoadMoreRequestOutcome, type LoadMoreRequestReason } from "@hjmds/design-contracts/components/load-more";
+import { type LoadMoreDensity } from "@hjmds/design-contracts/recipes";
 import { type HTMLAttributes } from "react";
 export type LoadMoreProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> & Readonly<{
     descriptor: LoadMoreDescriptor;

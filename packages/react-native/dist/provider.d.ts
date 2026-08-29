@@ -1,6 +1,6 @@
-import { type DesignSystemDirection, type DesignSystemProviderValue, type DesignSystemTextScale } from "@hjm/design-contracts/components/design-system-provider";
-import type { ThemePreference } from "@hjm/design-contracts/colors";
-import { spacing, radius, typography } from "@hjm/design-contracts/foundations";
+import { type DesignSystemDirection, type DesignSystemProviderValue, type DesignSystemTextScale } from "@hjmds/design-contracts/components/design-system-provider";
+import type { ThemePreference } from "@hjmds/design-contracts/colors";
+import { spacing, radius, typography } from "@hjmds/design-contracts/foundations";
 import { type ReactNode } from "react";
 import type { NativeTextScaling } from "./internal/styles.js";
 export type HjmNativeTheme = DesignSystemProviderValue & Readonly<{

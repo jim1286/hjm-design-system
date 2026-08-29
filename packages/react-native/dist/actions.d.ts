@@ -1,11 +1,11 @@
-import { type ButtonSize as ContractButtonSize, type ButtonTone as ContractButtonTone } from "@hjm/design-contracts/recipes/base";
-import { type IconButtonShape, type IconButtonSize, type IconButtonTone as ContractIconButtonTone } from "@hjm/design-contracts/recipes";
-import { type LinkDescriptor, type LinkDestination } from "@hjm/design-contracts/components/link";
+import { type ButtonSize as ContractButtonSize, type ButtonTone as ContractButtonTone } from "@hjmds/design-contracts/recipes/base";
+import { type IconButtonShape, type IconButtonSize, type IconButtonTone as ContractIconButtonTone } from "@hjmds/design-contracts/recipes";
+import { type LinkDescriptor, type LinkDestination } from "@hjmds/design-contracts/components/link";
 import { type ReactNode } from "react";
 import { View, type PressableProps, type StyleProp, type TextStyle, type ViewStyle } from "react-native";
 export type ButtonTone = ContractButtonTone;
 export type ButtonSize = ContractButtonSize;
-export type { IconButtonShape, IconButtonSize, } from "@hjm/design-contracts/recipes";
+export type { IconButtonShape, IconButtonSize, } from "@hjmds/design-contracts/recipes";
 export type ButtonProps = Omit<PressableProps, "accessibilityRole" | "accessibilityState" | "children" | "disabled" | "hitSlop" | "style"> & Readonly<{
     /** @deprecated Prefer renderer-neutral `children`. */
     label?: string;

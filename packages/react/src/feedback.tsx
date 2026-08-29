@@ -9,11 +9,11 @@ import {
   type ProgressTone,
   type SpinnerSize,
   type SpinnerTone,
-} from "@hjm/design-contracts/recipes";
+} from "@hjmds/design-contracts/recipes";
 import {
   resolveResultDescriptor,
   type ResultDescriptor,
-} from "@hjm/design-contracts/components/result";
+} from "@hjmds/design-contracts/components/result";
 import {
   forwardRef,
   type HTMLAttributes,

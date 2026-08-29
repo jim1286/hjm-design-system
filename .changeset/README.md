@@ -2,10 +2,10 @@
 
 사용자에게 영향을 주는 package 변경에는 `pnpm changeset`으로 changeset을 추가합니다.
 세 public API package는 fixed group이므로 한 package가 release되면 모두 같은 버전으로
-올라갑니다. 이 저장소는 현재 Git tag/package-path 배포를 사용하며 npm publish는 별도
-결정 전까지 수행하지 않습니다.
+올라갑니다. 생성 릴리스 commit은 consumer evidence gate를 통과한 뒤 세 package를 npm에
+publish하고, 성공한 같은 commit에 canonical `v<version>` tag를 생성합니다.
 
-Generated version commit이 `main`의 HEAD에 도달하면 `Version Packages` workflow가 전체 release
+Generated version commit이 `main`의 HEAD에 도달하면 `Release Packages` workflow가 전체 release
 gate를 통과한 동일 commit에 canonical `v<version>` tag를 생성합니다. version PR을 병합하거나
 authored source commit과 generated version commit을 한 번에 push할 수 있습니다. 이미 존재하는
 tag는 건너뛰므로 일반 main push가 release를 중복 생성하지 않습니다.

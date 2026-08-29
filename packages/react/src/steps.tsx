@@ -4,7 +4,7 @@ import {
   type StepStatus,
   type StepsDescriptor,
   type StepsStatusLabels,
-} from "@hjm/design-contracts/components/steps";
+} from "@hjmds/design-contracts/components/steps";
 import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
 
 import { classNames } from "./internal.js";

@@ -1,6 +1,6 @@
-import { type AlertDialogOpenChangeReason, type AlertDialogRequest, type AlertDialogResult } from "@hjm/design-contracts/components/alert-dialog";
-import { type SheetDismissPolicy, type SheetDismissReason, type SheetOpenChangeDetails } from "@hjm/design-contracts/components/sheet";
-import { type DialogSize } from "@hjm/design-contracts/recipes";
+import { type AlertDialogOpenChangeReason, type AlertDialogRequest, type AlertDialogResult } from "@hjmds/design-contracts/components/alert-dialog";
+import { type SheetDismissPolicy, type SheetDismissReason, type SheetOpenChangeDetails } from "@hjmds/design-contracts/components/sheet";
+import { type DialogSize } from "@hjmds/design-contracts/recipes";
 import { type ReactNode, type RefObject } from "react";
 import { View, type Insets, type ModalProps, type StyleProp, type ViewStyle } from "react-native";
 import { type ButtonTone } from "./actions.js";

@@ -1,4 +1,4 @@
-import { type FilePickerDescriptor, type FilePickerSelectionResult } from "@hjm/design-contracts/components/file-picker";
+import { type FilePickerDescriptor, type FilePickerSelectionResult } from "@hjmds/design-contracts/components/file-picker";
 import { type HTMLAttributes, type ReactNode } from "react";
 export type FilePickerProps = Omit<HTMLAttributes<HTMLDivElement>, "children" | "onSelect"> & Readonly<{
     descriptor: FilePickerDescriptor;

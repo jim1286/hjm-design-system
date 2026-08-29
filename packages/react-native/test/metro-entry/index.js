@@ -1,27 +1,27 @@
 import React from "react";
 import { AppRegistry, View } from "react-native";
 
-import { Button, Link } from "@hjm/react-native/actions";
-import { List, Statistic } from "@hjm/react-native/data-display";
-import { DatePicker } from "@hjm/react-native/date-picker";
-import { reactNativeRendererEvidence } from "@hjm/react-native/evidence";
-import { Notice, ToastRegion } from "@hjm/react-native/feedback";
-import { FilePicker } from "@hjm/react-native/file-picker";
-import { Combobox, Field, Select } from "@hjm/react-native/forms";
-import { Chip, SearchField } from "@hjm/react-native/inputs";
-import { NumberField } from "@hjm/react-native/number-field";
-import { OtpField } from "@hjm/react-native/otp-field";
-import { PasswordField } from "@hjm/react-native/password-field";
-import { Slider } from "@hjm/react-native/slider";
-import { Steps } from "@hjm/react-native/steps";
-import { UploadItem } from "@hjm/react-native/upload-item";
+import { Button, Link } from "@hjmds/react-native/actions";
+import { List, Statistic } from "@hjmds/react-native/data-display";
+import { DatePicker } from "@hjmds/react-native/date-picker";
+import { reactNativeRendererEvidence } from "@hjmds/react-native/evidence";
+import { Notice, ToastRegion } from "@hjmds/react-native/feedback";
+import { FilePicker } from "@hjmds/react-native/file-picker";
+import { Combobox, Field, Select } from "@hjmds/react-native/forms";
+import { Chip, SearchField } from "@hjmds/react-native/inputs";
+import { NumberField } from "@hjmds/react-native/number-field";
+import { OtpField } from "@hjmds/react-native/otp-field";
+import { PasswordField } from "@hjmds/react-native/password-field";
+import { Slider } from "@hjmds/react-native/slider";
+import { Steps } from "@hjmds/react-native/steps";
+import { UploadItem } from "@hjmds/react-native/upload-item";
 import {
   BottomNavigation,
   Menu,
-} from "@hjm/react-native/navigation";
-import { Dialog } from "@hjm/react-native/overlays";
-import { Icon, Text } from "@hjm/react-native/primitives";
-import { HjmNativeProvider } from "@hjm/react-native/provider";
+} from "@hjmds/react-native/navigation";
+import { Dialog } from "@hjmds/react-native/overlays";
+import { Icon, Text } from "@hjmds/react-native/primitives";
+import { HjmNativeProvider } from "@hjmds/react-native/provider";
 
 const noop = () => undefined;
 const calendarGrid = {

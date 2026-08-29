@@ -560,7 +560,7 @@ const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
   },
 ];
 
-describe("@hjm/react default renderer proofs", () => {
+describe("@hjmds/react default renderer proofs", () => {
   it("keeps one executable default fixture for every evidence component", () => {
     const evidenceIds = reactRendererEvidence.components.map(({ componentId }) => componentId);
     const fixtureIds = defaultRenderFixtures.map(({ componentId }) => componentId);

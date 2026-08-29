@@ -5,7 +5,7 @@ import {
   type StepStatus,
   type StepsDescriptor,
   type StepsStatusLabels,
-} from "@hjm/design-contracts/components/steps";
+} from "@hjmds/design-contracts/components/steps";
 import type { ReactNode } from "react";
 import { View, type StyleProp, type ViewStyle } from "react-native";
 

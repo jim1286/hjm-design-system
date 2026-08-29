@@ -1,10 +1,10 @@
-import type { ThemeColors } from "@hjm/design-contracts/colors";
-import { control, glyph, radius, spacing } from "@hjm/design-contracts/foundations";
+import type { ThemeColors } from "@hjmds/design-contracts/colors";
+import { control, glyph, radius, spacing } from "@hjmds/design-contracts/foundations";
 import {
   buttonRecipe,
   type ButtonSize as ContractButtonSize,
   type ButtonTone as ContractButtonTone,
-} from "@hjm/design-contracts/recipes/base";
+} from "@hjmds/design-contracts/recipes/base";
 import {
   bottomCtaRecipe,
   iconButtonRecipe,
@@ -12,12 +12,12 @@ import {
   type IconButtonShape,
   type IconButtonSize,
   type IconButtonTone as ContractIconButtonTone,
-} from "@hjm/design-contracts/recipes";
+} from "@hjmds/design-contracts/recipes";
 import {
   resolveLinkDescriptor,
   type LinkDescriptor,
   type LinkDestination,
-} from "@hjm/design-contracts/components/link";
+} from "@hjmds/design-contracts/components/link";
 import { forwardRef, type ReactNode } from "react";
 import {
   ActivityIndicator,
@@ -39,7 +39,7 @@ export type ButtonSize = ContractButtonSize;
 export type {
   IconButtonShape,
   IconButtonSize,
-} from "@hjm/design-contracts/recipes";
+} from "@hjmds/design-contracts/recipes";
 
 export type ButtonProps = Omit<
   PressableProps,

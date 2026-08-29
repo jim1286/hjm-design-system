@@ -1,6 +1,6 @@
 import { jsx as _jsx } from "react/jsx-runtime";
-import { resolveDesignSystemProviderValue, validateDesignSystemProviderValue, } from "@hjm/design-contracts/components/design-system-provider";
-import { spacing, radius, typography } from "@hjm/design-contracts/foundations";
+import { resolveDesignSystemProviderValue, validateDesignSystemProviderValue, } from "@hjmds/design-contracts/components/design-system-provider";
+import { spacing, radius, typography } from "@hjmds/design-contracts/foundations";
 import { createContext, useContext, useEffect, useMemo, useState, } from "react";
 import { AccessibilityInfo, I18nManager, useColorScheme, useWindowDimensions, } from "react-native";
 const HjmNativeThemeContext = createContext(null);

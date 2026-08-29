@@ -1,4 +1,4 @@
-import { spacing } from "@hjm/design-contracts/foundations";
+import { spacing } from "@hjmds/design-contracts/foundations";
 import { type StyleProp, type TextStyle } from "react-native";
 export type SpacingToken = keyof typeof spacing;
 export declare const minimumTargetStyle: {

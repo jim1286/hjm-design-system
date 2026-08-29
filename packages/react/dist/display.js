@@ -1,8 +1,8 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { badgeRecipe, listRowRecipe, } from "@hjm/design-contracts/recipes";
-import { resolveTagDescriptor, } from "@hjm/design-contracts/components/tag";
-import { cardRecipe, } from "@hjm/design-contracts/components/card";
-import { surfaceGeometry, } from "@hjm/design-contracts/recipes/base";
+import { badgeRecipe, listRowRecipe, } from "@hjmds/design-contracts/recipes";
+import { resolveTagDescriptor, } from "@hjmds/design-contracts/components/tag";
+import { cardRecipe, } from "@hjmds/design-contracts/components/card";
+import { surfaceGeometry, } from "@hjmds/design-contracts/recipes/base";
 import { createElement, forwardRef, } from "react";
 import { classNames } from "./internal.js";
 import { Surface, Text } from "./layout.js";

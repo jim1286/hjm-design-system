@@ -1,6 +1,6 @@
-# @hjm/react-native
+# @hjmds/react-native
 
-Expo-independent React Native renderers for `@hjm/design-contracts`. The package uses only
+Expo-independent React Native renderers for `@hjmds/design-contracts`. The package uses only
 React and React Native runtime APIs, so it can be consumed by bare React Native and Expo apps.
 
 ```tsx
@@ -9,7 +9,7 @@ import {
   HjmNativeProvider,
   Stack,
   Text,
-} from "@hjm/react-native";
+} from "@hjmds/react-native";
 
 export function Screen() {
   return (
@@ -66,7 +66,7 @@ reserve the frame before loading, omitted `decorative` defaults to `true`, and
 shows a built-in fallback; changing `src` starts a fresh load.
 
 ```tsx
-import { Image } from "@hjm/react-native/data-display";
+import { Image } from "@hjmds/react-native/data-display";
 import { Image as ExpoImage } from "expo-image";
 
 <Image
@@ -270,7 +270,7 @@ keep those axes in their own device matrix.
 
 ## Grid
 
-`Grid` delegates window classes and column geometry to `@hjm/design-contracts/grid`. Native
+`Grid` delegates window classes and column geometry to `@hjmds/design-contracts/grid`. Native
 `useWindowDimensions()` supplies density-independent window width, so the same
 compact/medium/expanded/wide thresholds are used on Web and Native. Column geometry uses an
 explicit `availableWidth` when provided; otherwise `Grid` measures its rendered container with
@@ -278,11 +278,11 @@ explicit `availableWidth` when provided; otherwise `Grid` measures its rendered 
 nested-container measurement rule.
 
 For bundle-sensitive entry points, import only the renderer family you use, for example
-`@hjm/react-native/actions`, `@hjm/react-native/forms`,
-`@hjm/react-native/number-field`, `@hjm/react-native/slider`,
-`@hjm/react-native/date-picker`, `@hjm/react-native/file-picker`,
-`@hjm/react-native/steps`, `@hjm/react-native/upload-item`, or
-`@hjm/react-native/feedback`. Available
+`@hjmds/react-native/actions`, `@hjmds/react-native/forms`,
+`@hjmds/react-native/number-field`, `@hjmds/react-native/slider`,
+`@hjmds/react-native/date-picker`, `@hjmds/react-native/file-picker`,
+`@hjmds/react-native/steps`, `@hjmds/react-native/upload-item`, or
+`@hjmds/react-native/feedback`. Available
 executable families are `provider`, `primitives`, `actions`, `inputs`, `number-field`, `slider`,
 `date-picker`, `file-picker`, `steps`, `upload-item`, `forms`, `navigation`, `data-display`,
 `feedback`, `overlays`, and `evidence`. These supported
@@ -291,7 +291,7 @@ separate file or component-level tree-shaking result for every named export.
 
 ## Renderer evidence
 
-`@hjm/react-native/evidence` publishes schema v2 claims. Each claim links the baseline environment
+`@hjmds/react-native/evidence` publishes schema v2 claims. Each claim links the baseline environment
 matrix—default, dark, long copy, large text, RTL, reduced motion, and accessibility structure—to a
 literal case in `test/default-render.test.tsx`; package tests fail if the case inventory and
 manifest diverge. These are component-level `react-test-renderer` smoke proofs, not screenshot,
@@ -300,11 +300,11 @@ platform parity remain fail-closed until a dedicated proof is mapped.
 
 ## Metro production smoke
 
-Run `pnpm --filter @hjm/react-native bundle:check` from the workspace root. The check builds the
+Run `pnpm --filter @hjmds/react-native bundle:check` from the workspace root. The check builds the
 renderer, derives the executable-family inventory from package exports, and creates one minified
 Android production bundle from a fixture that must directly import every family. It verifies the
 source-map module graph in a temporary directory and fails if a family is absent, the root barrel is
-pulled in, or Expo, `react-dom`, or `@hjm/react` contaminates the graph. The aggregate raw and gzip
+pulled in, or Expo, `react-dom`, or `@hjmds/react` contaminates the graph. The aggregate raw and gzip
 budgets measure Metro JavaScript before Hermes bytecode compilation. Per-family source-graph budgets
 are enforced separately by `pnpm bundle:renderer:check`; neither check predicts the final app bundle,
 component-level tree shaking, or Android device-runtime behavior.

@@ -1,9 +1,9 @@
-import { type DescriptionListDescriptor } from "@hjm/design-contracts/components/description-list";
-import { type ResolvedStatisticDescriptor, type StatisticDescriptor, type StatisticGroupDescriptor } from "@hjm/design-contracts/components/statistic";
-import { type TagTone as ContractTagTone } from "@hjm/design-contracts/components/tag";
-import { type ImageDescriptor, type ImageFit, type ImageLoadStatus, type ResolvedImageDescriptor } from "@hjm/design-contracts/components/image";
-import { type ComposeTimelineAccessibleName, type TimelineItemDescriptor } from "@hjm/design-contracts/components/timeline";
-import { statisticRecipe, type AccordionDensity, type BadgeSize, type BadgeTone, type BadgeVariant as ContractBadgeVariant, type CounterBadgeSize, type CounterBadgeTone, type CounterBadgeVariant, type ListRowDensity, type StatisticDensity, type StatisticPresentation } from "@hjm/design-contracts/recipes";
+import { type DescriptionListDescriptor } from "@hjmds/design-contracts/components/description-list";
+import { type ResolvedStatisticDescriptor, type StatisticDescriptor, type StatisticGroupDescriptor } from "@hjmds/design-contracts/components/statistic";
+import { type TagTone as ContractTagTone } from "@hjmds/design-contracts/components/tag";
+import { type ImageDescriptor, type ImageFit, type ImageLoadStatus, type ResolvedImageDescriptor } from "@hjmds/design-contracts/components/image";
+import { type ComposeTimelineAccessibleName, type TimelineItemDescriptor } from "@hjmds/design-contracts/components/timeline";
+import { statisticRecipe, type AccordionDensity, type BadgeSize, type BadgeTone, type BadgeVariant as ContractBadgeVariant, type CounterBadgeSize, type CounterBadgeTone, type CounterBadgeVariant, type ListRowDensity, type StatisticDensity, type StatisticPresentation } from "@hjmds/design-contracts/recipes";
 import { type ReactNode } from "react";
 import { type ImageProps as NativeImageProps, type ImageSourcePropType, type ImageStyle, type PressableProps, type StyleProp, type TextStyle, type ViewProps, type ViewStyle } from "react-native";
 import { type SurfacePadding, type SurfaceProps } from "./primitives.js";

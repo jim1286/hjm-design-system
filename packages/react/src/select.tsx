@@ -9,20 +9,20 @@ import {
   type SelectCollectionSectionDescriptor,
   type SelectCollectionSource,
   type SelectOpenChangeReason,
-} from "@hjm/design-contracts/components/collection";
+} from "@hjmds/design-contracts/components/collection";
 import {
   resolveControlAccessibleName,
   selectBehaviorDefaults,
   type AsyncCollectionState,
   type SelectItemDescriptor,
   type WebKeyboardKey,
-} from "@hjm/design-contracts/behaviors";
+} from "@hjmds/design-contracts/behaviors";
 import {
   iconRecipe,
   selectRecipe,
   type SelectDensity,
   type SelectSize,
-} from "@hjm/design-contracts/recipes";
+} from "@hjmds/design-contracts/recipes";
 import {
   forwardRef,
   useCallback,

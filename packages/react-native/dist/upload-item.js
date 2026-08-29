@@ -1,5 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { getUploadItemAvailableAction, resolveUploadItemAnnouncement, uploadItemRecipe, } from "@hjm/design-contracts/components/upload-item";
+import { getUploadItemAvailableAction, resolveUploadItemAnnouncement, uploadItemRecipe, } from "@hjmds/design-contracts/components/upload-item";
 import { Pressable, View } from "react-native";
 import { Progress } from "./feedback.js";
 import { minimumTargetStyle } from "./internal/styles.js";

@@ -1,5 +1,5 @@
 import { createRef } from "react";
-import { resolveDesignSystemProviderValue } from "@hjm/design-contracts/components/design-system-provider";
+import { resolveDesignSystemProviderValue } from "@hjmds/design-contracts/components/design-system-provider";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { ActivityIndicator, Pressable, Text as NativeText, View } from "react-native";
 import { describe, expect, it, vi } from "vitest";

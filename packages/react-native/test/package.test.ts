@@ -2,7 +2,7 @@ import { readFile } from "node:fs/promises";
 import { URL, fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
-describe("@hjm/react-native package boundary", () => {
+describe("@hjmds/react-native package boundary", () => {
   it("keeps Expo out and exposes distinct family-level entry points", async () => {
     const packageJson = JSON.parse(
       await readFile(fileURLToPath(new URL("../package.json", import.meta.url)), "utf8"),
@@ -15,9 +15,9 @@ describe("@hjm/react-native package boundary", () => {
       sideEffects: boolean;
     };
     expect(packageJson.dependencies).toBeUndefined();
-    expect(packageJson.devDependencies["@hjm/design-contracts"]).toBe("workspace:*");
+    expect(packageJson.devDependencies["@hjmds/design-contracts"]).toBe("workspace:*");
     expect(packageJson.peerDependencies).toEqual({
-      "@hjm/design-contracts": ">=0.8.0 <0.9.0",
+      "@hjmds/design-contracts": ">=0.8.0 <0.9.0",
       react: ">=19",
       "react-native": ">=0.81",
     });
@@ -114,6 +114,6 @@ describe("@hjm/react-native package boundary", () => {
         readFile(fileURLToPath(new URL(`../src/${file}`, import.meta.url)), "utf8"),
       ),
     );
-    expect(sources.join("\n")).not.toMatch(/from ["']@hjm\/design-contracts["']/);
+    expect(sources.join("\n")).not.toMatch(/from ["']@hjmds\/design-contracts["']/);
   });
 });

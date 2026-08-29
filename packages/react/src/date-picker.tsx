@@ -3,7 +3,7 @@ import {
   getCalendarNavigationTarget,
   type ComposeCalendarAccessibleName,
   type ResolvedCalendarDateCell,
-} from "@hjm/design-contracts/components/calendar";
+} from "@hjmds/design-contracts/components/calendar";
 import {
   resolveDatePickerGrid,
   resolveDatePickerTriggerText,
@@ -11,7 +11,7 @@ import {
   type DatePickerDescriptor,
   type DatePickerOpenChangeReason,
   type DatePickerSize,
-} from "@hjm/design-contracts/components/date-picker";
+} from "@hjmds/design-contracts/components/date-picker";
 import {
   useEffect,
   useId,

@@ -6,8 +6,8 @@ import {
   radius,
   spacing,
   typography,
-} from "@hjm/design-contracts/foundations";
-import type { DesignSystemProviderValue } from "@hjm/design-contracts/components/design-system-provider";
+} from "@hjmds/design-contracts/foundations";
+import type { DesignSystemProviderValue } from "@hjmds/design-contracts/components/design-system-provider";
 import type { CSSProperties } from "react";
 
 export type HjmThemeStyle = CSSProperties &

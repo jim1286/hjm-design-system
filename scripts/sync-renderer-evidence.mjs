@@ -17,13 +17,13 @@ const contractManifest = JSON.parse(
 const rendererSources = [
   {
     surface: "web",
-    packageName: "@hjm/react",
+    packageName: "@hjmds/react",
     modulePath: "packages/react/dist/evidence.js",
     exportName: "reactRendererEvidence",
   },
   {
     surface: "native",
-    packageName: "@hjm/react-native",
+    packageName: "@hjmds/react-native",
     modulePath: "packages/react-native/dist/evidence.js",
     exportName: "reactNativeRendererEvidence",
   },

@@ -1,6 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { createLoadMoreController, validateLoadMoreDescriptor, } from "@hjm/design-contracts/components/load-more";
-import { loadMoreRecipe, } from "@hjm/design-contracts/recipes";
+import { createLoadMoreController, validateLoadMoreDescriptor, } from "@hjmds/design-contracts/components/load-more";
+import { loadMoreRecipe, } from "@hjmds/design-contracts/recipes";
 import { forwardRef, useCallback, useEffect, useLayoutEffect, useRef, useState, } from "react";
 import { classNames } from "./internal.js";
 function createLoadMoreControllerFacade() {

@@ -1,6 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
-import { resolveBottomNavigationActivation, resolveBottomNavigationConfiguration, resolveBottomNavigationDescriptor, } from "@hjm/design-contracts/components/bottom-navigation";
-import { bottomNavigationRecipe, iconRecipe, } from "@hjm/design-contracts/recipes";
+import { resolveBottomNavigationActivation, resolveBottomNavigationConfiguration, resolveBottomNavigationDescriptor, } from "@hjmds/design-contracts/components/bottom-navigation";
+import { bottomNavigationRecipe, iconRecipe, } from "@hjmds/design-contracts/recipes";
 import { forwardRef, useEffect, useState, } from "react";
 import { classNames } from "./internal.js";
 import { useOptionalHjmTheme } from "./provider.js";

@@ -5,9 +5,9 @@ renderer를 한 이력과 한 release train에서 관리하는 pnpm monorepo입�
 
 | Package | Role |
 | --- | --- |
-| [`@hjm/design-contracts`](packages/design-contracts) | renderer-neutral tokens, recipes, behavior, catalog, evidence |
-| [`@hjm/react`](packages/react) | accessible React 19 Web components |
-| [`@hjm/react-native`](packages/react-native) | Expo-independent React Native components |
+| [`@hjmds/design-contracts`](packages/design-contracts) | renderer-neutral tokens, recipes, behavior, catalog, evidence |
+| [`@hjmds/react`](packages/react) | accessible React 19 Web components |
+| [`@hjmds/react-native`](packages/react-native) | Expo-independent React Native components |
 | [`@hjm/showcase-web`](showcase/web) | Storybook documentation and Web evidence |
 
 ## Why one repository
@@ -28,8 +28,8 @@ Git tag의 버전 source of truth는 fixed train의 `packages/design-contracts/p
 ```json
 {
   "dependencies": {
-    "@hjm/design-contracts": "^<version>",
-    "@hjm/react": "^<version>"
+    "@hjmds/design-contracts": "^<version>",
+    "@hjmds/react": "^<version>"
   }
 }
 ```
@@ -39,15 +39,16 @@ React Native 앱은 renderer만 Native package로 바꿉니다.
 ```json
 {
   "dependencies": {
-    "@hjm/design-contracts": "^<version>",
-    "@hjm/react-native": "^<version>"
+    "@hjmds/design-contracts": "^<version>",
+    "@hjmds/react-native": "^<version>"
   }
 }
 ```
 
 `<version>`은 세 패키지가 함께 릴리스된 정확한 SemVer(예: `0.8.0`)로 바꿉니다.
 
-publish는 consumer evidence gate와 `v<version>` tag 생성을 모두 통과한 뒤에만 실행됩니다.
+publish는 consumer evidence gate를 통과한 뒤에만 실행되고, 성공한 같은 commit에
+`v<version>` tag가 생성됩니다.
 tarball을 vendoring하거나 Git ref와 package path로 고정하지 않습니다. 두 방식 모두 참조
 문자열에 버전을 박아 `pnpm update`와 `npm outdated`를 무력화합니다.
 

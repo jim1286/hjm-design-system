@@ -6,7 +6,7 @@ import {
   type FilePickerCandidate,
   type FilePickerDescriptor,
   type FilePickerSelectionResult,
-} from "@hjm/design-contracts/components/file-picker";
+} from "@hjmds/design-contracts/components/file-picker";
 import { useEffect, useRef, useState } from "react";
 import { Pressable, View, type StyleProp, type ViewStyle } from "react-native";
 

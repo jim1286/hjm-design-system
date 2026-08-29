@@ -1,4 +1,4 @@
-import { type FilePickerCandidate, type FilePickerDescriptor, type FilePickerSelectionResult } from "@hjm/design-contracts/components/file-picker";
+import { type FilePickerCandidate, type FilePickerDescriptor, type FilePickerSelectionResult } from "@hjmds/design-contracts/components/file-picker";
 import { type StyleProp, type ViewStyle } from "react-native";
 export type FilePickerProps = Readonly<{
     descriptor: FilePickerDescriptor;

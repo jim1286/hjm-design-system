@@ -1,5 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { filePickerTriggerDefaults, resolveFilePickerDescriptor, resolveFilePickerSelection, validateFilePickerTriggers, } from "@hjm/design-contracts/components/file-picker";
+import { filePickerTriggerDefaults, resolveFilePickerDescriptor, resolveFilePickerSelection, validateFilePickerTriggers, } from "@hjmds/design-contracts/components/file-picker";
 import { forwardRef, useId, useRef, useState, } from "react";
 import { classNames, composeRefs } from "./internal.js";
 function defaultCandidateId(file, index) {

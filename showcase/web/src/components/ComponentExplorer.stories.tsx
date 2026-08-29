@@ -10,7 +10,7 @@ import {
   type ComponentCategory,
   type ComponentPlatform,
   type ComponentStatus,
-} from "@hjm/design-contracts";
+} from "@hjmds/design-contracts";
 import {
   summarizeWebShowcaseCoverage,
 } from "./preview-registry";

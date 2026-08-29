@@ -1,7 +1,7 @@
 import { jsx as _jsx } from "react/jsx-runtime";
-import { getIconTransform, resolveIconDescriptor, } from "@hjm/design-contracts/components/icon";
-import { imageRecipe, resolveImageAspectRatio, resolveImageDescriptor, resolveImageFallbackAccessibilityLabel, } from "@hjm/design-contracts/components/image";
-import { counterBadgeRecipe, formatCounterBadgeCount, iconRecipe, } from "@hjm/design-contracts/recipes";
+import { getIconTransform, resolveIconDescriptor, } from "@hjmds/design-contracts/components/icon";
+import { imageRecipe, resolveImageAspectRatio, resolveImageDescriptor, resolveImageFallbackAccessibilityLabel, } from "@hjmds/design-contracts/components/image";
+import { counterBadgeRecipe, formatCounterBadgeCount, iconRecipe, } from "@hjmds/design-contracts/recipes";
 import { forwardRef, useState, } from "react";
 import { classNames } from "./internal.js";
 import { useOptionalHjmTheme } from "./provider.js";

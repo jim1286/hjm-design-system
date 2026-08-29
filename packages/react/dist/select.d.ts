@@ -1,6 +1,6 @@
-import { type SelectCollectionSectionDescriptor, type SelectCollectionSource, type SelectOpenChangeReason } from "@hjm/design-contracts/components/collection";
-import { type AsyncCollectionState, type SelectItemDescriptor } from "@hjm/design-contracts/behaviors";
-import { type SelectDensity, type SelectSize } from "@hjm/design-contracts/recipes";
+import { type SelectCollectionSectionDescriptor, type SelectCollectionSource, type SelectOpenChangeReason } from "@hjmds/design-contracts/components/collection";
+import { type AsyncCollectionState, type SelectItemDescriptor } from "@hjmds/design-contracts/behaviors";
+import { type SelectDensity, type SelectSize } from "@hjmds/design-contracts/recipes";
 import { type ButtonHTMLAttributes, type ReactElement, type ReactNode, type RefAttributes } from "react";
 import { type AnchoredPopupAlign } from "./portal.js";
 export type SelectItem<Key extends string = string> = SelectItemDescriptor<Key>;

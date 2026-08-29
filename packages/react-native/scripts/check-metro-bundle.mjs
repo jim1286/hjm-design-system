@@ -54,8 +54,8 @@ const forbiddenSourcePatterns = [
   { label: "Expo", pattern: /(?:^|\/)node_modules\/expo(?:\/|$)/u },
   { label: "react-dom", pattern: /(?:^|\/)node_modules\/react-dom(?:\/|$)/u },
   {
-    label: "@hjm/react",
-    pattern: /(?:^|\/)(?:packages\/react|node_modules\/@hjm\/react)(?:\/|$)/u,
+    label: "@hjmds/react",
+    pattern: /(?:^|\/)(?:packages\/react|node_modules\/@hjmds\/react)(?:\/|$)/u,
   },
 ];
 
@@ -83,7 +83,7 @@ const startedAt = performance.now();
 try {
   const entrySource = await readFile(entryFile, "utf8");
   const directPackageImports = new Set(
-    [...entrySource.matchAll(/\bfrom\s+["'](@hjm\/react-native(?:\/[^"']+)?)['"]/gu)].map(
+    [...entrySource.matchAll(/\bfrom\s+["'](@hjmds\/react-native(?:\/[^"']+)?)['"]/gu)].map(
       (match) => match[1],
     ),
   );

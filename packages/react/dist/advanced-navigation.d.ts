@@ -1,5 +1,5 @@
-import { type BreadcrumbItemDescriptor } from "@hjm/design-contracts/components/breadcrumb";
-import { type ComposePaginationAccessibleName, type PaginationChangeHandler, type PaginationDescriptor, type PaginationLabels } from "@hjm/design-contracts/components/pagination";
+import { type BreadcrumbItemDescriptor } from "@hjmds/design-contracts/components/breadcrumb";
+import { type ComposePaginationAccessibleName, type PaginationChangeHandler, type PaginationDescriptor, type PaginationLabels } from "@hjmds/design-contracts/components/pagination";
 import { type HTMLAttributes, type ReactElement, type ReactNode, type RefAttributes } from "react";
 export type BreadcrumbProps<Id extends string = string> = Omit<HTMLAttributes<HTMLElement>, "children"> & Readonly<{
     label: string;

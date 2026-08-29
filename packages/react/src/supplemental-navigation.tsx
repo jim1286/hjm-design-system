@@ -8,11 +8,11 @@ import {
   type LoadMoreRequestHandler,
   type LoadMoreRequestOutcome,
   type LoadMoreRequestReason,
-} from "@hjm/design-contracts/components/load-more";
+} from "@hjmds/design-contracts/components/load-more";
 import {
   loadMoreRecipe,
   type LoadMoreDensity,
-} from "@hjm/design-contracts/recipes";
+} from "@hjmds/design-contracts/recipes";
 import {
   forwardRef,
   useCallback,

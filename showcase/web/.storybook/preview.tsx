@@ -1,7 +1,7 @@
 import type { Preview } from "@storybook/react-vite";
 
 import { WebDesignSystemProvider } from "../src/runtime/WebDesignSystemProvider";
-import "@hjm/react/styles.css";
+import "@hjmds/react/styles.css";
 import "../src/showcase.css";
 
 const preview: Preview = {

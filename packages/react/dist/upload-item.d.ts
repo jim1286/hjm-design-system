@@ -1,4 +1,4 @@
-import { type UploadItemDescriptor, type UploadItemLabels } from "@hjm/design-contracts/components/upload-item";
+import { type UploadItemDescriptor, type UploadItemLabels } from "@hjmds/design-contracts/components/upload-item";
 import { type HTMLAttributes, type ReactNode } from "react";
 export type UploadItemProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> & Readonly<{
     descriptor: UploadItemDescriptor;

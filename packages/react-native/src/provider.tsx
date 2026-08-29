@@ -5,9 +5,9 @@ import {
   type DesignSystemEnvironmentInput,
   type DesignSystemProviderValue,
   type DesignSystemTextScale,
-} from "@hjm/design-contracts/components/design-system-provider";
-import type { ThemePreference } from "@hjm/design-contracts/colors";
-import { spacing, radius, typography } from "@hjm/design-contracts/foundations";
+} from "@hjmds/design-contracts/components/design-system-provider";
+import type { ThemePreference } from "@hjmds/design-contracts/colors";
+import { spacing, radius, typography } from "@hjmds/design-contracts/foundations";
 import {
   createContext,
   useContext,

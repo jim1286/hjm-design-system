@@ -1,11 +1,11 @@
-import { resolveColorReference } from "@hjm/design-contracts/color-references";
-import { resolveDesignSystemProviderValue } from "@hjm/design-contracts/components/design-system-provider";
-import { glyph, radius } from "@hjm/design-contracts/foundations";
+import { resolveColorReference } from "@hjmds/design-contracts/color-references";
+import { resolveDesignSystemProviderValue } from "@hjmds/design-contracts/components/design-system-provider";
+import { glyph, radius } from "@hjmds/design-contracts/foundations";
 import {
   bottomNavigationRecipe,
   loadMoreRecipe,
   spinnerRecipe,
-} from "@hjm/design-contracts/recipes";
+} from "@hjmds/design-contracts/recipes";
 import {
   StrictMode,
   useLayoutEffect,

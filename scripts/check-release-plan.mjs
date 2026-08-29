@@ -4,9 +4,9 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 
 const expectedPackages = [
-  "@hjm/design-contracts",
-  "@hjm/react",
-  "@hjm/react-native",
+  "@hjmds/design-contracts",
+  "@hjmds/react",
+  "@hjmds/react-native",
 ];
 const expectedVersion = process.argv.find((value) => value.startsWith("--expected-version="))?.split("=")[1];
 const expectedType = process.argv.find((value) => value.startsWith("--expected-type="))?.split("=")[1];
@@ -24,7 +24,7 @@ async function getHighestAuthoredType() {
     const frontmatter = source.match(/^---\s*\n([\s\S]*?)\n---(?:\s*\n|$)/)?.[1] ?? "";
     for (const line of frontmatter.split("\n")) {
       const release = line.match(
-        /^\s*["']?@hjm\/(?:design-contracts|react|react-native)["']?\s*:\s*(patch|minor|major)\s*$/,
+        /^\s*["']?@hjmds\/(?:design-contracts|react|react-native)["']?\s*:\s*(patch|minor|major)\s*$/,
       );
       const type = release?.[1];
       if (type !== undefined && (highest === undefined || rank[type] > rank[highest])) {

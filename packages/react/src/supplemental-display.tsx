@@ -3,7 +3,7 @@ import {
   resolveIconDescriptor,
   type IconDescriptor,
   type SemanticIconName,
-} from "@hjm/design-contracts/components/icon";
+} from "@hjmds/design-contracts/components/icon";
 import {
   imageRecipe,
   resolveImageAspectRatio,
@@ -11,7 +11,7 @@ import {
   resolveImageFallbackAccessibilityLabel,
   type ImageDescriptor,
   type ImageLoadStatus,
-} from "@hjm/design-contracts/components/image";
+} from "@hjmds/design-contracts/components/image";
 import {
   counterBadgeRecipe,
   formatCounterBadgeCount,
@@ -19,7 +19,7 @@ import {
   type CounterBadgeSize,
   type CounterBadgeTone,
   type CounterBadgeVariant,
-} from "@hjm/design-contracts/recipes";
+} from "@hjmds/design-contracts/recipes";
 import {
   forwardRef,
   useState,

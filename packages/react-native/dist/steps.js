@@ -1,5 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { resolveStepsDescriptor, stepsRecipe, } from "@hjm/design-contracts/components/steps";
+import { resolveStepsDescriptor, stepsRecipe, } from "@hjmds/design-contracts/components/steps";
 import { View } from "react-native";
 import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";

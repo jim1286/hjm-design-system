@@ -12,11 +12,11 @@ import {
   type ToastSessionSnapshot,
   type ToastStore,
   type ToastTimerUpdatePolicy,
-} from "@hjm/design-contracts/components/toast";
+} from "@hjmds/design-contracts/components/toast";
 import {
   toastRecipe,
   type ToastPlacement,
-} from "@hjm/design-contracts/recipes";
+} from "@hjmds/design-contracts/recipes";
 import {
   createContext,
   forwardRef,

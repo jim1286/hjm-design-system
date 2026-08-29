@@ -373,7 +373,7 @@ export function validateEvidenceDocuments(target, documents, release) {
   requireEqual(evidence.designSystemVersion, release.version, `${target.id} evidence designSystemVersion`);
   requireEqual(evidence.source?.revision, target.consumerRef, `${target.id} evidence consumer revision`);
   requireEqual(manifest.schemaVersion, 2, `${target.id} manifest schemaVersion`);
-  requireEqual(manifest.packageName, "@hjm/design-contracts", `${target.id} manifest packageName`);
+  requireEqual(manifest.packageName, "@hjmds/design-contracts", `${target.id} manifest packageName`);
   requireEqual(manifest.designSystemVersion, release.version, `${target.id} manifest version`);
 
   requireEqual(evidence.source?.id, target.id, `${target.id} evidence source id`);
@@ -471,7 +471,7 @@ async function selfTest() {
   };
   const manifest = {
     schemaVersion: 2,
-    packageName: "@hjm/design-contracts",
+    packageName: "@hjmds/design-contracts",
     designSystemVersion: release.version,
     components: [
       {

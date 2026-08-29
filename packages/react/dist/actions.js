@@ -1,6 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
-import { buttonRecipe, } from "@hjm/design-contracts/recipes/base";
-import { iconButtonRecipe, linkRecipe, } from "@hjm/design-contracts/recipes";
+import { buttonRecipe, } from "@hjmds/design-contracts/recipes/base";
+import { iconButtonRecipe, linkRecipe, } from "@hjmds/design-contracts/recipes";
 import { forwardRef, } from "react";
 import { classNames } from "./internal.js";
 export const Button = forwardRef(function Button({ tone = buttonRecipe.defaults.tone, size = buttonRecipe.defaults.size, loading = false, leading, trailing, disabled, onClick, type = "button", className, children, ...props }, ref) {

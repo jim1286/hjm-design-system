@@ -2,11 +2,11 @@
 
 v0.6은 renderer가 없는 계약 패키지의 역할을 이름에서 분명히 하고, Web/RN 앱이 필요한
 graph만 가져가도록 package boundary를 나누는 breaking release입니다. package name은
-`@hjm/design-system`에서 `@hjm/design-contracts`로 변경됩니다. 이전 이름 alias나 호환
+`@hjm/design-system`에서 `@hjmds/design-contracts`로 변경됩니다. 이전 이름 alias나 호환
 wrapper는 제공하지 않습니다.
 
-같은 release에서 공식 renderer도 monorepo package로 제공됩니다. Web은 `@hjm/react`,
-React Native는 `@hjm/react-native`를 선택하고 contracts와 같은 tag를 고정합니다.
+같은 release에서 공식 renderer도 monorepo package로 제공됩니다. Web은 `@hjmds/react`,
+React Native는 `@hjmds/react-native`를 선택하고 contracts와 같은 tag를 고정합니다.
 
 ## 1. dependency와 import를 원자적으로 변경
 
@@ -14,40 +14,40 @@ dependency와 source/test/Storybook/build script의 import를 같은 변경에�
 
 ```diff
 - "@hjm/design-system": "git+https://github.com/jim1286/hjm-design-system.git#v0.5.2"
-+ "@hjm/design-contracts": "git+https://github.com/jim1286/hjm-design-system.git#v0.6.0&path:/packages/design-contracts"
++ "@hjmds/design-contracts": "git+https://github.com/jim1286/hjm-design-system.git#v0.6.0&path:/packages/design-contracts"
 ```
 
 기존 root symbol은 유지되지만 package specifier가 바뀌므로 모든 import를 갱신해야 합니다.
 
 ```diff
 - import { spacing, typography } from "@hjm/design-system";
-+ import { spacing, typography } from "@hjm/design-contracts/foundations";
++ import { spacing, typography } from "@hjmds/design-contracts/foundations";
 ```
 
 ## 2. 앱 runtime은 granular subpath 사용
 
-- 토큰 전체: `@hjm/design-contracts/tokens`
-- foundation만: `@hjm/design-contracts/foundations`
-- palette만: `@hjm/design-contracts/colors`
-- window class와 responsive value: `@hjm/design-contracts/responsive`
-- Grid descriptor와 geometry: `@hjm/design-contracts/grid`
-- 공통 recipe: `@hjm/design-contracts/recipes`
-- Button·Surface·Field 최소 recipe: `@hjm/design-contracts/recipes/base`
-- 공통 anatomy/style contract: `@hjm/design-contracts/contracts`
-- 현재 contract 버전만: `@hjm/design-contracts/version`
-- 단일 상태·validator: `@hjm/design-contracts/components/<name>`
+- 토큰 전체: `@hjmds/design-contracts/tokens`
+- foundation만: `@hjmds/design-contracts/foundations`
+- palette만: `@hjmds/design-contracts/colors`
+- window class와 responsive value: `@hjmds/design-contracts/responsive`
+- Grid descriptor와 geometry: `@hjmds/design-contracts/grid`
+- 공통 recipe: `@hjmds/design-contracts/recipes`
+- Button·Surface·Field 최소 recipe: `@hjmds/design-contracts/recipes/base`
+- 공통 anatomy/style contract: `@hjmds/design-contracts/contracts`
+- 현재 contract 버전만: `@hjmds/design-contracts/version`
+- 단일 상태·validator: `@hjmds/design-contracts/components/<name>`
 
 예를 들어 Toast adapter는 전체 root 대신 다음처럼 가져옵니다.
 
 ```ts
-import { createToastStore } from "@hjm/design-contracts/components/toast";
-import { resolveContentStateAnnouncement } from "@hjm/design-contracts/components/content-state";
+import { createToastStore } from "@hjmds/design-contracts/components/toast";
+import { resolveContentStateAnnouncement } from "@hjmds/design-contracts/components/content-state";
 ```
 
 `/recipes/all`, `/behaviors`, `/catalog`, `/evidence`, `/showcase`는 전체 registry 또는 CI
 metadata가 필요한 도구용입니다. JS를 실행하지 않는 CI는
-`@hjm/design-contracts/manifest.json`과
-`@hjm/design-contracts/renderer-evidence.json`을 읽을 수 있습니다. RN 화면 runtime에서
+`@hjmds/design-contracts/manifest.json`과
+`@hjmds/design-contracts/renderer-evidence.json`을 읽을 수 있습니다. RN 화면 runtime에서
 root나 tooling entry를 사용하면 Metro가 불필요한 계약 graph를 따라갈 수 있습니다.
 
 ## 3. renderer 설치
@@ -56,8 +56,8 @@ Web 앱:
 
 ```bash
 pnpm add \
-  '@hjm/design-contracts@git+https://github.com/jim1286/hjm-design-system.git#v0.6.0&path:/packages/design-contracts' \
-  '@hjm/react@git+https://github.com/jim1286/hjm-design-system.git#v0.6.0&path:/packages/react'
+  '@hjmds/design-contracts@git+https://github.com/jim1286/hjm-design-system.git#v0.6.0&path:/packages/design-contracts' \
+  '@hjmds/react@git+https://github.com/jim1286/hjm-design-system.git#v0.6.0&path:/packages/react'
 ```
 
 React Native 앱은 Web package 이름을 유지한 채 path만 바꾸지 말고, Native renderer 이름과
@@ -65,8 +65,8 @@ path를 함께 지정합니다.
 
 ```bash
 pnpm add \
-  '@hjm/design-contracts@git+https://github.com/jim1286/hjm-design-system.git#v0.6.0&path:/packages/design-contracts' \
-  '@hjm/react-native@git+https://github.com/jim1286/hjm-design-system.git#v0.6.0&path:/packages/react-native'
+  '@hjmds/design-contracts@git+https://github.com/jim1286/hjm-design-system.git#v0.6.0&path:/packages/design-contracts' \
+  '@hjmds/react-native@git+https://github.com/jim1286/hjm-design-system.git#v0.6.0&path:/packages/react-native'
 ```
 
 renderer는 contracts를 peer dependency로 요구하므로 두 항목을 모두 명시해야 합니다.
@@ -132,7 +132,7 @@ Button의 `loading`은 이제 `disabled`와 다른 상태입니다. 중복 activ
 
 Card는 더 이상 Native의 단순 Surface alias가 아닙니다. 양쪽에서 `media`, `title`,
 `description`, `children`, `actions`, `selected` anatomy를 공유하며 계약은
-`@hjm/design-contracts/components/card`와 `cardRecipe`에서 가져옵니다. 전체 정규화 표와
+`@hjmds/design-contracts/components/card`와 `cardRecipe`에서 가져옵니다. 전체 정규화 표와
 호환 범위는 [`cross-platform-core-normalization.md`](./cross-platform-core-normalization.md)를
 참고합니다.
 

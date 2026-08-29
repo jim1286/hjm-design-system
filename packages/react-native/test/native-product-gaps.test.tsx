@@ -8,13 +8,13 @@ import {
 } from "react-native";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { radius, spacing, typography } from "@hjm/design-contracts/foundations";
+import { radius, spacing, typography } from "@hjmds/design-contracts/foundations";
 import {
   badgeRecipe,
   bottomCtaRecipe,
   listRecipe,
   toastRecipe,
-} from "@hjm/design-contracts/recipes";
+} from "@hjmds/design-contracts/recipes";
 import {
   Badge,
   BottomCTA,

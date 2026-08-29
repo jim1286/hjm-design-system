@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import type { CSSProperties } from "react";
 
-import { motionPreset, radius, spacing } from "@hjm/design-contracts";
+import { motionPreset, radius, spacing } from "@hjmds/design-contracts";
 
 type TokenSampleStyle = CSSProperties & Record<`--hjm-sample-${string}`, string>;
 

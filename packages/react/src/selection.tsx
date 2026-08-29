@@ -9,7 +9,7 @@ import {
   type SelectionControlSize,
   type SelectionGroupOrientation,
   type SelectionGroupPresentation,
-} from "@hjm/design-contracts/recipes";
+} from "@hjmds/design-contracts/recipes";
 import {
   resolveControlAccessibleName,
   reconcileCheckboxSelection,
@@ -20,7 +20,7 @@ import {
   validateRadioSelection,
   type CheckboxGroupSelection,
   type SelectionItemDescriptor,
-} from "@hjm/design-contracts/behaviors";
+} from "@hjmds/design-contracts/behaviors";
 import {
   forwardRef,
   useEffect,

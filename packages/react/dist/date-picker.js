@@ -1,6 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { getCalendarNavigationIntent, getCalendarNavigationTarget, } from "@hjm/design-contracts/components/calendar";
-import { resolveDatePickerGrid, resolveDatePickerTriggerText, validateDatePickerDescriptor, } from "@hjm/design-contracts/components/date-picker";
+import { getCalendarNavigationIntent, getCalendarNavigationTarget, } from "@hjmds/design-contracts/components/calendar";
+import { resolveDatePickerGrid, resolveDatePickerTriggerText, validateDatePickerDescriptor, } from "@hjmds/design-contracts/components/date-picker";
 import { useEffect, useId, useRef, useState, } from "react";
 import { classNames } from "./internal.js";
 import { useOptionalHjmTheme } from "./provider.js";

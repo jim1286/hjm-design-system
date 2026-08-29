@@ -1,4 +1,4 @@
-import { control, spacing } from "@hjm/design-contracts/foundations";
+import { control, spacing } from "@hjmds/design-contracts/foundations";
 import {
   StyleSheet,
   type Insets,

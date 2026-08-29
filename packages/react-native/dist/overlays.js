@@ -1,9 +1,9 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { createAlertDialogSession, getAlertDialogInitialFocus, validateAlertDialogRequest, } from "@hjm/design-contracts/components/alert-dialog";
-import { canDismissSheet, createSheetLifecycle, sheetBehaviorDefaults, } from "@hjm/design-contracts/components/sheet";
-import { resolveColorReference } from "@hjm/design-contracts/color-references";
-import { easing, overlay, radius, spacing } from "@hjm/design-contracts/foundations";
-import { alertDialogRecipe, dialogRecipe, sheetRecipe, } from "@hjm/design-contracts/recipes";
+import { createAlertDialogSession, getAlertDialogInitialFocus, validateAlertDialogRequest, } from "@hjmds/design-contracts/components/alert-dialog";
+import { canDismissSheet, createSheetLifecycle, sheetBehaviorDefaults, } from "@hjmds/design-contracts/components/sheet";
+import { resolveColorReference } from "@hjmds/design-contracts/color-references";
+import { easing, overlay, radius, spacing } from "@hjmds/design-contracts/foundations";
+import { alertDialogRecipe, dialogRecipe, sheetRecipe, } from "@hjmds/design-contracts/recipes";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore, } from "react";
 import { AccessibilityInfo, Animated, Easing, Modal, Pressable, View, findNodeHandle, useWindowDimensions, } from "react-native";
 import { Button, IconButton } from "./actions.js";

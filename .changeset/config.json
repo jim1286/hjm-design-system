@@ -4,9 +4,9 @@
   "commit": false,
   "fixed": [
     [
-      "@hjm/design-contracts",
-      "@hjm/react",
-      "@hjm/react-native"
+      "@hjmds/design-contracts",
+      "@hjmds/react",
+      "@hjmds/react-native"
     ]
   ],
   "linked": [],

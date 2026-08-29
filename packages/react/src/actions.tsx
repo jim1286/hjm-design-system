@@ -2,7 +2,7 @@ import {
   buttonRecipe,
   type ButtonSize,
   type ButtonTone,
-} from "@hjm/design-contracts/recipes/base";
+} from "@hjmds/design-contracts/recipes/base";
 import {
   iconButtonRecipe,
   linkRecipe,
@@ -11,7 +11,7 @@ import {
   type IconButtonTone,
   type LinkTone,
   type LinkVariant,
-} from "@hjm/design-contracts/recipes";
+} from "@hjmds/design-contracts/recipes";
 import {
   forwardRef,
   type AnchorHTMLAttributes,
@@ -23,12 +23,12 @@ import {
 } from "react";
 import { classNames } from "./internal.js";
 
-export type { ButtonSize, ButtonTone } from "@hjm/design-contracts/recipes/base";
+export type { ButtonSize, ButtonTone } from "@hjmds/design-contracts/recipes/base";
 export type {
   IconButtonShape,
   IconButtonSize,
   IconButtonTone,
-} from "@hjm/design-contracts/recipes";
+} from "@hjmds/design-contracts/recipes";
 
 export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> &
   Readonly<{

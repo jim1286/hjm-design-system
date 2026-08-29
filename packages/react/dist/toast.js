@@ -1,6 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { createToastStore, resolveToastDescriptor, } from "@hjm/design-contracts/components/toast";
-import { toastRecipe, } from "@hjm/design-contracts/recipes";
+import { createToastStore, resolveToastDescriptor, } from "@hjmds/design-contracts/components/toast";
+import { toastRecipe, } from "@hjmds/design-contracts/recipes";
 import { createContext, forwardRef, useContext, useEffect, useId, useMemo, useRef, useState, useSyncExternalStore, } from "react";
 import { createPortal } from "react-dom";
 import { classNames } from "./internal.js";

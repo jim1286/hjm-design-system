@@ -1,8 +1,8 @@
-import { resolveColorReference } from "@hjm/design-contracts/color-references";
-import { easing, glyph, radius, spacing } from "@hjm/design-contracts/foundations";
+import { resolveColorReference } from "@hjmds/design-contracts/color-references";
+import { easing, glyph, radius, spacing } from "@hjmds/design-contracts/foundations";
 import {
   resolveControlAccessibleName,
-} from "@hjm/design-contracts/behaviors";
+} from "@hjmds/design-contracts/behaviors";
 import {
   emptyStateRecipe,
   noticeRecipe,
@@ -14,13 +14,13 @@ import {
   type ToastPlacement,
   type ToastTone,
   type ToastToneMark,
-} from "@hjm/design-contracts/recipes";
+} from "@hjmds/design-contracts/recipes";
 import {
   resolveResultDescriptor,
   resultRecipe,
   type ResultDescriptor,
   type ResultStatus,
-} from "@hjm/design-contracts/components/result";
+} from "@hjmds/design-contracts/components/result";
 import {
   createToastSession,
   createToastStore,
@@ -36,7 +36,7 @@ import {
   type ToastStore,
   type ToastStoreSnapshot,
   type ToastTimerUpdatePolicy,
-} from "@hjm/design-contracts/components/toast";
+} from "@hjmds/design-contracts/components/toast";
 import {
   createContext,
   useCallback,

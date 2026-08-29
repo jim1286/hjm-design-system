@@ -3,19 +3,19 @@ import {
   resolveDescriptionListDescriptor,
   type DescriptionItemDescriptor,
   type DescriptionListColumns,
-} from "@hjm/design-contracts/components/description-list";
+} from "@hjmds/design-contracts/components/description-list";
 import {
   resolveTimelineDescriptor,
   type ComposeTimelineAccessibleName,
   type TimelineItemDescriptor,
-} from "@hjm/design-contracts/components/timeline";
+} from "@hjmds/design-contracts/components/timeline";
 import {
   resolveStatisticDescriptor,
   validateStatisticGroup,
   type ResolvedStatisticDescriptor,
   type StatisticDescriptor,
   type StatisticGroupDescriptor,
-} from "@hjm/design-contracts/components/statistic";
+} from "@hjmds/design-contracts/components/statistic";
 import {
   accordionRecipe,
   avatarRecipe,
@@ -27,7 +27,7 @@ import {
   type AvatarSize,
   type StatisticDensity,
   type StatisticPresentation,
-} from "@hjm/design-contracts/recipes";
+} from "@hjmds/design-contracts/recipes";
 import {
   Children,
   createElement,

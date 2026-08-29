@@ -1,4 +1,4 @@
-import type { ShowcaseScenarioId } from "@hjm/design-contracts/showcase";
+import type { ShowcaseScenarioId } from "@hjmds/design-contracts/showcase";
 
 export const reactRendererEvidenceSchemaVersion = 2 as const;
 
@@ -9,7 +9,7 @@ export type ReactRendererEvidenceComponent = Readonly<{
   componentId: string;
   /** Public symbols that implement this contract on the declared subpath. */
   exportNames: readonly string[];
-  /** Granular @hjm/react export used by consumers. */
+  /** Granular @hjmds/react export used by consumers. */
   subpath: `./${string}`;
   /** Scenarios supported by automated first-party renderer evidence. */
   scenarios: readonly ReactRendererEvidenceScenario[];
@@ -23,7 +23,7 @@ export type ReactRendererEvidenceComponent = Readonly<{
 
 export type ReactRendererEvidenceManifest = Readonly<{
   schemaVersion: typeof reactRendererEvidenceSchemaVersion;
-  packageName: "@hjm/react";
+  packageName: "@hjmds/react";
   packageVersion: string;
   surface: "web";
   components: readonly ReactRendererEvidenceComponent[];
@@ -64,7 +64,7 @@ function defaultClaim(
  */
 export const reactRendererEvidence = {
   schemaVersion: reactRendererEvidenceSchemaVersion,
-  packageName: "@hjm/react",
+  packageName: "@hjmds/react",
   packageVersion: "0.8.1",
   surface: "web",
   components: [

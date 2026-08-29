@@ -1,4 +1,4 @@
-# @hjm/react-native
+# @hjmds/react-native
 
 ## 0.8.1
 

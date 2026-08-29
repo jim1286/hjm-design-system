@@ -1,5 +1,5 @@
-import { resolveDesignSystemProviderValue } from "@hjm/design-contracts/components/design-system-provider";
-import { topBarRecipe } from "@hjm/design-contracts/recipes";
+import { resolveDesignSystemProviderValue } from "@hjmds/design-contracts/components/design-system-provider";
+import { topBarRecipe } from "@hjmds/design-contracts/recipes";
 import { type ReactNode } from "react";
 import {
   act,

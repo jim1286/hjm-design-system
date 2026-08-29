@@ -42,8 +42,8 @@ generated evidence debt로 공개합니다. `stable`은 이 required scenario를
 합니다. behavior가 있는 컴포넌트는 keyboard interaction, adaptive 컴포넌트는 두 surface가
 모두 beta 이상일 때 Web/Native parity가 승격 debt에 추가됩니다.
 
-`beta`의 구현 source of truth는 `@hjm/react/evidence`와
-`@hjm/react-native/evidence`입니다. 제품 story는 채택 evidence이지 first-party 구현을
+`beta`의 구현 source of truth는 `@hjmds/react/evidence`와
+`@hjmds/react-native/evidence`입니다. 제품 story는 채택 evidence이지 first-party 구현을
 대신하지 않습니다. renderer claim이 없으면 `planned`, 플랫폼이 지원되지 않으면
 `unsupported`입니다. `stable` 승격은 story 파일의 존재만으로 하지 않으며 위 required
 scenario의 자동 evidence가 모두 통과해야 합니다.
@@ -79,7 +79,7 @@ CI에서 별도로 빌드·번들 검증하며, HJM 카탈로그의 story identi
   exact join하는 registry를 먼저 추가한 뒤에만 열 수 있으며, 파일 안의 주석·문자열이나
   export 존재만으로 scenario를 claim할 수 없다.
 - HJM Storybook: `surfaceStatus.web`으로 renderer/contract-only/unsupported 분류
-- 제품 Storybook verifier: 일반 앱 CI에서는 설치된 `@hjm/design-contracts/showcase`, release
+- 제품 Storybook verifier: 일반 앱 CI에서는 설치된 `@hjmds/design-contracts/showcase`, release
   candidate gate에서는 payload full SHA의 generated manifest를 읽어 해당 surface의 active ID와
   exported CSF registration을 비교하고 missing/unknown/duplicate를 실패 처리
 - 제품 evidence artifact: 검증된 story ID와 실제 실행된 scenario만 schema v1 JSON으로 출력

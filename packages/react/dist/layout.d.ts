@@ -1,11 +1,11 @@
-import { type GridDescriptor, type GridGap } from "@hjm/design-contracts/grid";
-import { type LayoutSidebarRole } from "@hjm/design-contracts/components/layout";
-import { type SurfacePadding, type SurfaceRadius, type SurfaceTone } from "@hjm/design-contracts/recipes/base";
-import { type StackAlign, type StackAxis, type StackGap, type StackJustify, type TextEmphasis, type TextTone } from "@hjm/design-contracts/recipes";
-import type { TextVariant } from "@hjm/design-contracts/foundations";
+import { type GridDescriptor, type GridGap } from "@hjmds/design-contracts/grid";
+import { type LayoutSidebarRole } from "@hjmds/design-contracts/components/layout";
+import { type SurfacePadding, type SurfaceRadius, type SurfaceTone } from "@hjmds/design-contracts/recipes/base";
+import { type StackAlign, type StackAxis, type StackGap, type StackJustify, type TextEmphasis, type TextTone } from "@hjmds/design-contracts/recipes";
+import type { TextVariant } from "@hjmds/design-contracts/foundations";
 import { type AnchorHTMLAttributes, type HTMLAttributes, type ReactElement, type ReactNode, type Ref } from "react";
-export type { SurfacePadding, SurfaceRadius, SurfaceTone, } from "@hjm/design-contracts/recipes/base";
-export type { StackAlign, StackAxis, StackGap, StackJustify, TextEmphasis, TextTone, } from "@hjm/design-contracts/recipes";
+export type { SurfacePadding, SurfaceRadius, SurfaceTone, } from "@hjmds/design-contracts/recipes/base";
+export type { StackAlign, StackAxis, StackGap, StackJustify, TextEmphasis, TextTone, } from "@hjmds/design-contracts/recipes";
 type LayoutRegionProps = Omit<HTMLAttributes<HTMLElement>, "children" | "role">;
 type LayoutSidebarBase = Readonly<{
     children: ReactNode;
@@ -105,9 +105,9 @@ export type GridProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> & Pick<
     availableWidth?: number;
 }>;
 export declare const Grid: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLDivElement>, "children"> & Pick<Readonly<{
-    columns: import("@hjm/design-contracts/responsive").ResponsiveValue<number>;
-    gap?: import("@hjm/design-contracts/responsive").ResponsiveValue<GridGap>;
-    minColumnWidth?: import("@hjm/design-contracts/responsive").ResponsiveValue<number>;
+    columns: import("@hjmds/design-contracts/responsive").ResponsiveValue<number>;
+    gap?: import("@hjmds/design-contracts/responsive").ResponsiveValue<GridGap>;
+    minColumnWidth?: import("@hjmds/design-contracts/responsive").ResponsiveValue<number>;
 }>, "gap" | "columns" | "minColumnWidth"> & Readonly<{
     children?: ReactNode;
     /** Test/SSR override. Browser renderers otherwise observe window.innerWidth. */

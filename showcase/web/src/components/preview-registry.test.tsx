@@ -24,7 +24,7 @@ function renderPreview(name: WebRendererComponentName): string {
 }
 
 describe("official Web renderer previews", () => {
-  it("renders supplemental active surfaces through @hjm/react instead of DOM mocks", () => {
+  it("renders supplemental active surfaces through @hjmds/react instead of DOM mocks", () => {
     const icon = renderPreview("Icon");
     expect(icon).toContain('class="hjm-icon"');
     expect(icon).toContain('role="img" aria-label="홈"');

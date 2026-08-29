@@ -1,6 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { calendarRecipe, } from "@hjm/design-contracts/components/calendar";
-import { resolveDatePickerGrid, resolveDatePickerTriggerText, validateDatePickerDescriptor, } from "@hjm/design-contracts/components/date-picker";
+import { calendarRecipe, } from "@hjmds/design-contracts/components/calendar";
+import { resolveDatePickerGrid, resolveDatePickerTriggerText, validateDatePickerDescriptor, } from "@hjmds/design-contracts/components/date-picker";
 import { useRef, useState } from "react";
 import { Pressable, View } from "react-native";
 import { minimumTargetStyle } from "./internal/styles.js";

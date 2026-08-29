@@ -1,6 +1,6 @@
 import { jsx as _jsx } from "react/jsx-runtime";
-import { resolveDesignSystemProviderValue, validateDesignSystemProviderValue, } from "@hjm/design-contracts/components/design-system-provider";
-import { tooltipBehaviorDefaults } from "@hjm/design-contracts/components/tooltip";
+import { resolveDesignSystemProviderValue, validateDesignSystemProviderValue, } from "@hjmds/design-contracts/components/design-system-provider";
+import { tooltipBehaviorDefaults } from "@hjmds/design-contracts/components/tooltip";
 import { createContext, forwardRef, useCallback, useContext, useRef, useState, useSyncExternalStore, } from "react";
 import { classNames } from "./internal.js";
 import { createHjmThemeStyle } from "./theme.js";

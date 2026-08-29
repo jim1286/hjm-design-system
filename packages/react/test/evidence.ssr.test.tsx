@@ -46,7 +46,7 @@ const publicModules: Readonly<Record<string, Readonly<Record<string, unknown>>>>
   "./upload-item": uploadItem,
 };
 
-describe("@hjm/react renderer evidence", () => {
+describe("@hjmds/react renderer evidence", () => {
   it("is versioned, unique, and tied to the package release", async () => {
     const packageJson = JSON.parse(
       await readFile(fileURLToPath(new URL("../package.json", import.meta.url)), "utf8"),

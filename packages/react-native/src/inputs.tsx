@@ -1,10 +1,10 @@
-import { resolveColorReference } from "@hjm/design-contracts/color-references";
-import { glyph, radius, spacing, typography } from "@hjm/design-contracts/foundations";
+import { resolveColorReference } from "@hjmds/design-contracts/color-references";
+import { glyph, radius, spacing, typography } from "@hjmds/design-contracts/foundations";
 import {
   fieldRecipe,
   type FieldShape,
   type FieldVariant,
-} from "@hjm/design-contracts/recipes/base";
+} from "@hjmds/design-contracts/recipes/base";
 import {
   chipRecipe,
   searchFieldRecipe,
@@ -18,19 +18,19 @@ import {
   type SelectionControlPresentation,
   type SelectionControlSize,
   type SwitchSize,
-} from "@hjm/design-contracts/recipes";
+} from "@hjmds/design-contracts/recipes";
 import {
   passwordFieldRecipe,
   resolvePasswordFieldDescriptor,
   type PasswordFieldAutofillHint,
   type PasswordFieldSize,
-} from "@hjm/design-contracts/components/password-field";
+} from "@hjmds/design-contracts/components/password-field";
 import {
   getOtpFieldSlotValues,
   otpFieldRecipe,
   resolveOtpFieldValue,
   type OtpFieldSize,
-} from "@hjm/design-contracts/components/otp-field";
+} from "@hjmds/design-contracts/components/otp-field";
 import {
   getCheckboxNextState,
   reconcileCheckboxSelection,
@@ -47,7 +47,7 @@ import {
   type CheckboxState,
   type SelectionItemDescriptor,
   type SelectionOrientation,
-} from "@hjm/design-contracts/behaviors";
+} from "@hjmds/design-contracts/behaviors";
 import {
   forwardRef,
   useEffect,

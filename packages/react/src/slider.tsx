@@ -4,7 +4,7 @@ import {
   resolveSliderFillFraction,
   resolveSliderValue,
   type SliderStepIntent,
-} from "@hjm/design-contracts/components/slider";
+} from "@hjmds/design-contracts/components/slider";
 import {
   forwardRef,
   useEffect,

@@ -2,24 +2,24 @@ import {
   resolveGridLayout,
   type GridDescriptor,
   type ResolvedGridLayout,
-} from "@hjm/design-contracts/grid";
+} from "@hjmds/design-contracts/grid";
 import {
   getIconTransform,
   resolveIconDescriptor,
   type IconDescriptor,
-} from "@hjm/design-contracts/components/icon";
+} from "@hjmds/design-contracts/components/icon";
 import {
   validateLayoutRegions,
   type LayoutSidebarDescriptor,
   type LayoutSidebarRole,
-} from "@hjm/design-contracts/components/layout";
-import { resolveColorReference } from "@hjm/design-contracts/color-references";
-import { withAlpha, type ThemeColors } from "@hjm/design-contracts/colors";
+} from "@hjmds/design-contracts/components/layout";
+import { resolveColorReference } from "@hjmds/design-contracts/color-references";
+import { withAlpha, type ThemeColors } from "@hjmds/design-contracts/colors";
 import {
   glyph,
   typography,
   type TextVariant,
-} from "@hjm/design-contracts/foundations";
+} from "@hjmds/design-contracts/foundations";
 import {
   surfaceDefaults,
   surfaceGeometry,
@@ -27,7 +27,7 @@ import {
   type SurfacePadding as ContractSurfacePadding,
   type SurfaceRadius as ContractSurfaceRadius,
   type SurfaceTone as ContractSurfaceTone,
-} from "@hjm/design-contracts/recipes/base";
+} from "@hjmds/design-contracts/recipes/base";
 import {
   sectionRecipe,
   stackRecipe,
@@ -38,7 +38,7 @@ import {
   type StackJustify,
   type TextEmphasis,
   type TextTone as ContractTextTone,
-} from "@hjm/design-contracts/recipes";
+} from "@hjmds/design-contracts/recipes";
 import {
   Children,
   forwardRef,
@@ -73,7 +73,7 @@ export type {
   StackGap,
   StackJustify,
   TextEmphasis,
-} from "@hjm/design-contracts/recipes";
+} from "@hjmds/design-contracts/recipes";
 
 export type TextTone = ContractTextTone;
 

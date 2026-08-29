@@ -1,5 +1,5 @@
 {
-  "name": "@hjm/design-contracts",
+  "name": "@hjmds/design-contracts",
   "version": "0.8.1",
   "description": "Renderer-neutral design contracts, tokens, recipes, and behaviors shared by HJM products.",
   "repository": {

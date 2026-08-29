@@ -1,6 +1,6 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
-import type { BottomNavigationDescriptor } from "@hjm/design-contracts/components/bottom-navigation";
+import type { BottomNavigationDescriptor } from "@hjmds/design-contracts/components/bottom-navigation";
 import {
   BottomNavigation,
   HjmProvider,

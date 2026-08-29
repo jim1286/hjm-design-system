@@ -1,5 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { commitNumberFieldInput, parseNumberFieldInput, resolveNumberFieldDescriptor, resolveNumberFieldInputStepperState, stepNumberFieldInput, } from "@hjm/design-contracts/components/number-field";
+import { commitNumberFieldInput, parseNumberFieldInput, resolveNumberFieldDescriptor, resolveNumberFieldInputStepperState, stepNumberFieldInput, } from "@hjmds/design-contracts/components/number-field";
 import { forwardRef, useEffect, useId, useRef, useState, } from "react";
 import { classNames, composeRefs, useControllableState } from "./internal.js";
 function valueToInput(value) {

@@ -1,10 +1,10 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { formRecipe, } from "@hjm/design-contracts/components/form";
-import { comboboxBehaviorDefaults, resolveControlAccessibleName, } from "@hjm/design-contracts/behaviors";
-import { flattenCollectionItems, isComboboxResultCurrent, reconcileSelectSelection, resolveComboboxSelectedItem, resolveSelectSelectedItem, validateCollection, } from "@hjm/design-contracts/components/collection";
-import { resolveColorReference } from "@hjm/design-contracts/color-references";
-import { glyph, radius, spacing } from "@hjm/design-contracts/foundations";
-import { comboboxRecipe, selectRecipe, } from "@hjm/design-contracts/recipes";
+import { formRecipe, } from "@hjmds/design-contracts/components/form";
+import { comboboxBehaviorDefaults, resolveControlAccessibleName, } from "@hjmds/design-contracts/behaviors";
+import { flattenCollectionItems, isComboboxResultCurrent, reconcileSelectSelection, resolveComboboxSelectedItem, resolveSelectSelectedItem, validateCollection, } from "@hjmds/design-contracts/components/collection";
+import { resolveColorReference } from "@hjmds/design-contracts/color-references";
+import { glyph, radius, spacing } from "@hjmds/design-contracts/foundations";
+import { comboboxRecipe, selectRecipe, } from "@hjmds/design-contracts/recipes";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, } from "react";
 import { AccessibilityInfo, ActivityIndicator, Modal, Pressable, ScrollView, TextInput, View, findNodeHandle, } from "react-native";
 import { Button } from "./actions.js";

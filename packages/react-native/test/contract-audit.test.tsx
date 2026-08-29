@@ -1,13 +1,13 @@
-import { resolveColorReference } from "@hjm/design-contracts/color-references";
-import { resolveDesignSystemProviderValue } from "@hjm/design-contracts/components/design-system-provider";
-import { glyph, radius, typography } from "@hjm/design-contracts/foundations";
-import { fieldRecipe } from "@hjm/design-contracts/recipes/base";
+import { resolveColorReference } from "@hjmds/design-contracts/color-references";
+import { resolveDesignSystemProviderValue } from "@hjmds/design-contracts/components/design-system-provider";
+import { glyph, radius, typography } from "@hjmds/design-contracts/foundations";
+import { fieldRecipe } from "@hjmds/design-contracts/recipes/base";
 import {
   searchFieldRecipe,
   segmentedControlRecipe,
   sheetRecipe,
   tabsRecipe,
-} from "@hjm/design-contracts/recipes";
+} from "@hjmds/design-contracts/recipes";
 import { useEffect, type ReactNode } from "react";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import {

@@ -35,7 +35,7 @@ function parseChangesetReleases(source) {
     .split("\n")
     .map((line) => {
       const release = line.match(
-        /^\s*["']?(@hjm\/(?:design-contracts|react|react-native))["']?\s*:\s*(patch|minor|major)\s*$/,
+        /^\s*["']?(@hjmds\/(?:design-contracts|react|react-native))["']?\s*:\s*(patch|minor|major)\s*$/,
       );
       return release ? { packageName: release[1], type: release[2] } : undefined;
     })

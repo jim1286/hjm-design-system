@@ -1,10 +1,10 @@
-import { resolveColorReference } from "@hjm/design-contracts/color-references";
-import { resolveDesignSystemProviderValue } from "@hjm/design-contracts/components/design-system-provider";
+import { resolveColorReference } from "@hjmds/design-contracts/color-references";
+import { resolveDesignSystemProviderValue } from "@hjmds/design-contracts/components/design-system-provider";
 import {
   imageRecipe,
   nativeResizeModes,
-} from "@hjm/design-contracts/components/image";
-import { glyph, radius } from "@hjm/design-contracts/foundations";
+} from "@hjmds/design-contracts/components/image";
+import { glyph, radius } from "@hjmds/design-contracts/foundations";
 import {
   accordionRecipe,
   badgeRecipe,
@@ -15,7 +15,7 @@ import {
   sectionRecipe,
   statisticRecipe,
   topBarRecipe,
-} from "@hjm/design-contracts/recipes";
+} from "@hjmds/design-contracts/recipes";
 import { isValidElement, type ComponentProps, type ReactNode } from "react";
 import { act, create, type ReactTestInstance, type ReactTestRenderer } from "react-test-renderer";
 import {

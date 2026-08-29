@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 
 import { Layout } from "../src/layout.js";
 import { BottomNavigation } from "../src/bottom-navigation.js";
-import type { BottomNavigationDescriptor } from "@hjm/design-contracts/components/bottom-navigation";
+import type { BottomNavigationDescriptor } from "@hjmds/design-contracts/components/bottom-navigation";
 import {
   Image,
   type ImageAdapterProps,

@@ -1,12 +1,12 @@
-# `@hjm/design-contracts`
+# `@hjmds/design-contracts`
 
 HJM 제품들이 함께 사용하는 플랫폼 중립 디자인 계약입니다. 밝고 간결한 정보 위계와
 결정적인 순간의 선명한 피드백을 공유하되, 특정 제품이나 도메인의 의미는 포함하지 않습니다.
 
 이 패키지는 **UI 컴포넌트 라이브러리가 아닙니다.** React element, React Native view,
 DOM event, focus trap 또는 navigation adapter를 렌더링하지 않고, 두 플랫폼 renderer가
-구현해야 할 토큰·recipe·상태·접근성 계약만 배포합니다. `@hjm/react`와
-`@hjm/react-native`는 같은 monorepo의 별도 패키지이며 contracts의 framework-neutral
+구현해야 할 토큰·recipe·상태·접근성 계약만 배포합니다. `@hjmds/react`와
+`@hjmds/react-native`는 같은 monorepo의 별도 패키지이며 contracts의 framework-neutral
 경계를 침범하지 않고 DOM/RN primitive로 번역합니다.
 
 > **조용한 화면 위에 중요한 순간만 선명하게.**
@@ -69,7 +69,7 @@ artifact로 제출합니다.
 
 renderer 및 소비 앱 계층이 소유하는 것:
 
-- React DOM 또는 React Native 컴포넌트와 이벤트 타입 (`@hjm/react`, `@hjm/react-native`)
+- React DOM 또는 React Native 컴포넌트와 이벤트 타입 (`@hjmds/react`, `@hjmds/react-native`)
 - 제품별 저장 키와 사용자 설정 영속화
 - 아이콘 라이브러리, 폰트 로딩, 애니메이션 구현
 - 제품 전용 컴포넌트와 의미 매핑
@@ -100,39 +100,39 @@ recipe graph까지 노출하므로 앱 runtime에서는 필요한 subpath를 우
 
 | 진입점 | 용도 |
 | --- | --- |
-| `@hjm/design-contracts/tokens` | 색·foundation·semantic reference 전체 |
-| `@hjm/design-contracts/foundations` | spacing·type·motion·layout foundation만 |
-| `@hjm/design-contracts/colors` | light/dark palette와 accent resolver만 |
-| `@hjm/design-contracts/color-references` | semantic color reference 생성·해석기만 |
-| `@hjm/design-contracts/responsive` | 공통 window class와 responsive value resolver |
-| `@hjm/design-contracts/grid` | Web/RN 공통 Grid descriptor와 geometry resolver |
-| `@hjm/design-contracts/recipes` | 공통 core component recipe |
-| `@hjm/design-contracts/recipes/base` | Button·Surface·Field 최소 recipe graph |
-| `@hjm/design-contracts/contracts` | renderer가 구현할 공통 anatomy/style 계약 |
-| `@hjm/design-contracts/components/<name>` | `toast`, `form` 등 한 컴포넌트의 상태·validator |
-| `@hjm/design-contracts/recipes/all` | planned를 포함한 전체 recipe; tooling용 |
-| `@hjm/design-contracts/behaviors` | 전체 behavior registry; tooling용 |
-| `@hjm/design-contracts/catalog` | maturity/catalog metadata; tooling용 |
-| `@hjm/design-contracts/evidence` | versioned product evidence schema·validator; CI용 |
-| `@hjm/design-contracts/version` | package graph 없이 현재 contract 버전만 읽는 runtime entry |
-| `@hjm/design-contracts/showcase` | Storybook manifest와 evidence rule; CI용 |
-| `@hjm/design-contracts/manifest.json` | JS runtime 없이 읽는 생성 manifest; CI용 |
-| `@hjm/design-contracts/renderer-evidence.json` | first-party renderer claim과 scenario debt snapshot; CI용 |
+| `@hjmds/design-contracts/tokens` | 색·foundation·semantic reference 전체 |
+| `@hjmds/design-contracts/foundations` | spacing·type·motion·layout foundation만 |
+| `@hjmds/design-contracts/colors` | light/dark palette와 accent resolver만 |
+| `@hjmds/design-contracts/color-references` | semantic color reference 생성·해석기만 |
+| `@hjmds/design-contracts/responsive` | 공통 window class와 responsive value resolver |
+| `@hjmds/design-contracts/grid` | Web/RN 공통 Grid descriptor와 geometry resolver |
+| `@hjmds/design-contracts/recipes` | 공통 core component recipe |
+| `@hjmds/design-contracts/recipes/base` | Button·Surface·Field 최소 recipe graph |
+| `@hjmds/design-contracts/contracts` | renderer가 구현할 공통 anatomy/style 계약 |
+| `@hjmds/design-contracts/components/<name>` | `toast`, `form` 등 한 컴포넌트의 상태·validator |
+| `@hjmds/design-contracts/recipes/all` | planned를 포함한 전체 recipe; tooling용 |
+| `@hjmds/design-contracts/behaviors` | 전체 behavior registry; tooling용 |
+| `@hjmds/design-contracts/catalog` | maturity/catalog metadata; tooling용 |
+| `@hjmds/design-contracts/evidence` | versioned product evidence schema·validator; CI용 |
+| `@hjmds/design-contracts/version` | package graph 없이 현재 contract 버전만 읽는 runtime entry |
+| `@hjmds/design-contracts/showcase` | Storybook manifest와 evidence rule; CI용 |
+| `@hjmds/design-contracts/manifest.json` | JS runtime 없이 읽는 생성 manifest; CI용 |
+| `@hjmds/design-contracts/renderer-evidence.json` | first-party renderer claim과 scenario debt snapshot; CI용 |
 
 ```ts
-import { spacing, typography } from "@hjm/design-contracts/foundations";
-import { designSystemVersion } from "@hjm/design-contracts/version";
-import { resolveContentStateAnnouncement } from "@hjm/design-contracts/components/content-state";
-import { createToastStore } from "@hjm/design-contracts/components/toast";
+import { spacing, typography } from "@hjmds/design-contracts/foundations";
+import { designSystemVersion } from "@hjmds/design-contracts/version";
+import { resolveContentStateAnnouncement } from "@hjmds/design-contracts/components/content-state";
+import { createToastStore } from "@hjmds/design-contracts/components/toast";
 ```
 
 `pnpm bundle:check`는 각 진입점이 연결하는 ESM module 수와 raw/gzip 크기를 검사합니다.
 특히 token·단일 component 진입점에서 catalog/showcase/root module이 다시 유입되면 실패합니다.
 
 ```ts
-import { THEMES } from "@hjm/design-contracts/colors";
-import { radius, typography } from "@hjm/design-contracts/foundations";
-import { buttonRecipe, type ButtonTone } from "@hjm/design-contracts/recipes";
+import { THEMES } from "@hjmds/design-contracts/colors";
+import { radius, typography } from "@hjmds/design-contracts/foundations";
+import { buttonRecipe, type ButtonTone } from "@hjmds/design-contracts/recipes";
 
 const tone: ButtonTone = "primary";
 const contract = buttonRecipe.tones[tone];
@@ -158,8 +158,8 @@ import {
   THEMES,
   accentFill,
   resolveColorReference,
-} from "@hjm/design-contracts/tokens";
-import { badgeRecipe } from "@hjm/design-contracts/recipes";
+} from "@hjmds/design-contracts/tokens";
+import { badgeRecipe } from "@hjmds/design-contracts/recipes";
 
 const palette = {
   theme: THEMES.dark,
@@ -188,7 +188,7 @@ const successText = resolveColorReference(
 소비 저장소는 이전 이름과 새 이름을 동시에 두지 않고 한 변경에서 전환합니다.
 
 ```bash
-pnpm add '@hjm/design-contracts@git+https://github.com/jim1286/hjm-design-system.git#v<version>&path:/packages/design-contracts'
+pnpm add '@hjmds/design-contracts@git+https://github.com/jim1286/hjm-design-system.git#v<version>&path:/packages/design-contracts'
 ```
 
 `<version>`은 설치할 fixed release의 정확한 SemVer로 바꿉니다.

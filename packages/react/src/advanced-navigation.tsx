@@ -1,14 +1,14 @@
 import {
   resolveBreadcrumbDescriptor,
   type BreadcrumbItemDescriptor,
-} from "@hjm/design-contracts/components/breadcrumb";
+} from "@hjmds/design-contracts/components/breadcrumb";
 import {
   resolvePaginationDescriptor,
   type ComposePaginationAccessibleName,
   type PaginationChangeHandler,
   type PaginationDescriptor,
   type PaginationLabels,
-} from "@hjm/design-contracts/components/pagination";
+} from "@hjmds/design-contracts/components/pagination";
 import {
   forwardRef,
   type ForwardedRef,

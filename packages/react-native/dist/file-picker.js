@@ -1,5 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { filePickerRecipe, resolveFilePickerDescriptor, resolveFilePickerSelection, validateFilePickerTriggers, } from "@hjm/design-contracts/components/file-picker";
+import { filePickerRecipe, resolveFilePickerDescriptor, resolveFilePickerSelection, validateFilePickerTriggers, } from "@hjmds/design-contracts/components/file-picker";
 import { useEffect, useRef, useState } from "react";
 import { Pressable, View } from "react-native";
 import { Text } from "./primitives.js";

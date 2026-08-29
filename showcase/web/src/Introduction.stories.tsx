@@ -8,8 +8,8 @@ import {
   summarizeComponentRoadmap,
   type ComponentCatalogEntry,
   type ComponentCategory,
-} from "@hjm/design-contracts";
-import { showcaseEnvironmentMatrix } from "@hjm/design-contracts/showcase";
+} from "@hjmds/design-contracts";
+import { showcaseEnvironmentMatrix } from "@hjmds/design-contracts/showcase";
 import {
   isWebRendererComponent,
   summarizeWebShowcaseCoverage,

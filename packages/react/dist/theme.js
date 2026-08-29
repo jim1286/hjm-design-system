@@ -1,4 +1,4 @@
-import { control, fontFamily, fontWeight, motion, radius, spacing, typography, } from "@hjm/design-contracts/foundations";
+import { control, fontFamily, fontWeight, motion, radius, spacing, typography, } from "@hjmds/design-contracts/foundations";
 function kebab(value) {
     return value.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
 }

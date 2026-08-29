@@ -59,7 +59,7 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe("@hjm/react-native extended mobile renderer", () => {
+describe("@hjmds/react-native extended mobile renderer", () => {
   it("routes Link descriptors without weakening native link semantics", () => {
     const onNavigate = vi.fn();
     const renderer = renderWithProvider(

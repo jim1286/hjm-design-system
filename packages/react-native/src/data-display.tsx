@@ -1,24 +1,24 @@
-import { resolveColorReference } from "@hjm/design-contracts/color-references";
-import { glyph, radius, spacing } from "@hjm/design-contracts/foundations";
+import { resolveColorReference } from "@hjmds/design-contracts/color-references";
+import { glyph, radius, spacing } from "@hjmds/design-contracts/foundations";
 import {
   resolveDescriptionListColumnCount,
   resolveDescriptionListDescriptor,
   type DescriptionListDescriptor,
-} from "@hjm/design-contracts/components/description-list";
+} from "@hjmds/design-contracts/components/description-list";
 import {
   resolveStatisticDescriptor,
   validateStatisticGroup,
   type ResolvedStatisticDescriptor,
   type StatisticDescriptor,
   type StatisticGroupDescriptor,
-} from "@hjm/design-contracts/components/statistic";
+} from "@hjmds/design-contracts/components/statistic";
 import {
   resolveTagDescriptor,
   resolveTagPresentation,
   tagRecipe,
   type TagTone as ContractTagTone,
-} from "@hjm/design-contracts/components/tag";
-import { cardRecipe } from "@hjm/design-contracts/components/card";
+} from "@hjmds/design-contracts/components/tag";
+import { cardRecipe } from "@hjmds/design-contracts/components/card";
 import {
   imageRecipe,
   nativeResizeModes,
@@ -29,14 +29,14 @@ import {
   type ImageFit,
   type ImageLoadStatus,
   type ResolvedImageDescriptor,
-} from "@hjm/design-contracts/components/image";
+} from "@hjmds/design-contracts/components/image";
 import {
   resolveTimelineDescriptor,
   timelineRecipe,
   type ComposeTimelineAccessibleName,
   type TimelineItemDescriptor,
-} from "@hjm/design-contracts/components/timeline";
-import { surfaceGeometry } from "@hjm/design-contracts/recipes/base";
+} from "@hjmds/design-contracts/components/timeline";
+import { surfaceGeometry } from "@hjmds/design-contracts/recipes/base";
 import {
   accordionRecipe,
   counterBadgeRecipe,
@@ -55,7 +55,7 @@ import {
   type ListRowDensity,
   type StatisticDensity,
   type StatisticPresentation,
-} from "@hjm/design-contracts/recipes";
+} from "@hjmds/design-contracts/recipes";
 import {
   Children,
   isValidElement,

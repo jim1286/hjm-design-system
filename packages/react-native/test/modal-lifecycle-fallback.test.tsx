@@ -1,9 +1,9 @@
-import { type AlertDialogRequest } from "@hjm/design-contracts/components/alert-dialog";
+import { type AlertDialogRequest } from "@hjmds/design-contracts/components/alert-dialog";
 import {
   alertDialogRecipe,
   dialogRecipe,
   sheetRecipe,
-} from "@hjm/design-contracts/recipes";
+} from "@hjmds/design-contracts/recipes";
 import { type ReactNode } from "react";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { AccessibilityInfo, Animated, Modal, Platform, View } from "react-native";

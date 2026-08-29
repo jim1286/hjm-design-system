@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
-import { resolveDesignSystemProviderValue } from "@hjm/design-contracts/components/design-system-provider";
+import { resolveDesignSystemProviderValue } from "@hjmds/design-contracts/components/design-system-provider";
 import {
   Badge,
   Button,

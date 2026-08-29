@@ -6,11 +6,11 @@ import {
   type BottomNavigationConfiguration,
   type BottomNavigationDescriptor,
   type ResolvedBottomNavigationItemDescriptor,
-} from "@hjm/design-contracts/components/bottom-navigation";
+} from "@hjmds/design-contracts/components/bottom-navigation";
 import {
   bottomNavigationRecipe,
   iconRecipe,
-} from "@hjm/design-contracts/recipes";
+} from "@hjmds/design-contracts/recipes";
 import {
   forwardRef,
   useEffect,

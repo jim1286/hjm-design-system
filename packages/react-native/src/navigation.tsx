@@ -1,5 +1,5 @@
-import { glyph, radius, spacing } from "@hjm/design-contracts/foundations";
-import { resolveColorReference } from "@hjm/design-contracts/color-references";
+import { glyph, radius, spacing } from "@hjmds/design-contracts/foundations";
+import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import {
   bottomNavigationRecipe,
   counterBadgeRecipe,
@@ -13,7 +13,7 @@ import {
   type TabSize,
   type TabsLayout,
   type TabsOverflow,
-} from "@hjm/design-contracts/recipes";
+} from "@hjmds/design-contracts/recipes";
 import {
   createLoadMoreController,
   validateLoadMoreDescriptor,
@@ -22,8 +22,8 @@ import {
   type LoadMoreRequestHandler,
   type LoadMoreRequestOutcome,
   type LoadMoreRequestReason,
-} from "@hjm/design-contracts/components/load-more";
-import type { LinkDestination } from "@hjm/design-contracts/components/link";
+} from "@hjmds/design-contracts/components/load-more";
+import type { LinkDestination } from "@hjmds/design-contracts/components/link";
 import {
   resolveBottomNavigationActivation,
   resolveBottomNavigationConfiguration,
@@ -33,7 +33,7 @@ import {
   type BottomNavigationDescriptor,
   type ResolvedBottomNavigationCounterBadge,
   type ResolvedBottomNavigationItemDescriptor,
-} from "@hjm/design-contracts/components/bottom-navigation";
+} from "@hjmds/design-contracts/components/bottom-navigation";
 import {
   getTabNavigationTarget,
   resolveInitialTabValue,
@@ -47,12 +47,12 @@ import {
   type CollectionItemDescriptor,
   type CollectionSectionDescriptor,
   type CollectionSelectionModel,
-} from "@hjm/design-contracts/behaviors";
+} from "@hjmds/design-contracts/behaviors";
 import {
   flattenCollectionItems,
   validateCollection,
   type CollectionSource,
-} from "@hjm/design-contracts/components/collection";
+} from "@hjmds/design-contracts/components/collection";
 import {
   forwardRef,
   useCallback,

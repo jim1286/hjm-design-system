@@ -1,9 +1,9 @@
-import { type MenuDensity, type LoadMoreDensity, type TabSize, type TabsLayout, type TabsOverflow } from "@hjm/design-contracts/recipes";
-import { type LoadMoreDescriptor, type LoadMoreMode, type LoadMoreRequestHandler, type LoadMoreRequestOutcome, type LoadMoreRequestReason } from "@hjm/design-contracts/components/load-more";
-import type { LinkDestination } from "@hjm/design-contracts/components/link";
-import { type BottomNavigationActivation, type BottomNavigationConfiguration, type BottomNavigationDescriptor, type ResolvedBottomNavigationCounterBadge, type ResolvedBottomNavigationItemDescriptor } from "@hjm/design-contracts/components/bottom-navigation";
-import { type TabsActivationMode, type TabsDirection, type TabsMountPolicy, type TabsOrientation, type TabsPanelMode, type AsyncCollectionState, type CollectionItemDescriptor, type CollectionSectionDescriptor, type CollectionSelectionModel } from "@hjm/design-contracts/behaviors";
-import { type CollectionSource } from "@hjm/design-contracts/components/collection";
+import { type MenuDensity, type LoadMoreDensity, type TabSize, type TabsLayout, type TabsOverflow } from "@hjmds/design-contracts/recipes";
+import { type LoadMoreDescriptor, type LoadMoreMode, type LoadMoreRequestHandler, type LoadMoreRequestOutcome, type LoadMoreRequestReason } from "@hjmds/design-contracts/components/load-more";
+import type { LinkDestination } from "@hjmds/design-contracts/components/link";
+import { type BottomNavigationActivation, type BottomNavigationConfiguration, type BottomNavigationDescriptor, type ResolvedBottomNavigationCounterBadge, type ResolvedBottomNavigationItemDescriptor } from "@hjmds/design-contracts/components/bottom-navigation";
+import { type TabsActivationMode, type TabsDirection, type TabsMountPolicy, type TabsOrientation, type TabsPanelMode, type AsyncCollectionState, type CollectionItemDescriptor, type CollectionSectionDescriptor, type CollectionSelectionModel } from "@hjmds/design-contracts/behaviors";
+import { type CollectionSource } from "@hjmds/design-contracts/components/collection";
 import { type ReactNode, type ReactElement } from "react";
 import { type ModalProps, type PressableProps, type StyleProp, type TextStyle, type ViewStyle } from "react-native";
 export type TabOption<Value extends string = string> = Readonly<{

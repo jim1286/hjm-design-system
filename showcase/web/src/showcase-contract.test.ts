@@ -15,8 +15,8 @@ import {
   type ColorReference,
   type ComponentName,
   type ComponentStatus,
-} from "@hjm/design-contracts";
-import { showcaseManifest, showcaseScenarios } from "@hjm/design-contracts/showcase";
+} from "@hjmds/design-contracts";
+import { showcaseManifest, showcaseScenarios } from "@hjmds/design-contracts/showcase";
 import {
   ContractStory,
   isWebRendererComponent,
@@ -152,7 +152,7 @@ describe("web showcase coverage", () => {
   it("binds recipe evidence or the explicit nonvisual provider adapter", () => {
     for (const definition of Object.values(webRendererRegistry)) {
       const component = definition.component;
-      expect(definition.evidenceSource.owner).toBe("@hjm/design-contracts");
+      expect(definition.evidenceSource.owner).toBe("@hjmds/design-contracts");
       if (definition.adapterKind === "provider-value-presentation") {
         expect(component).toMatchObject({
           name: "DesignSystemProvider",

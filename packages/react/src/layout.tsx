@@ -2,13 +2,13 @@ import {
   resolveGridLayout,
   type GridDescriptor,
   type GridGap,
-} from "@hjm/design-contracts/grid";
+} from "@hjmds/design-contracts/grid";
 import {
   layoutRecipe,
   validateLayoutWebDescriptor,
   type LayoutSidebarDescriptor,
   type LayoutSidebarRole,
-} from "@hjm/design-contracts/components/layout";
+} from "@hjmds/design-contracts/components/layout";
 import {
   surfaceDefaults,
   surfaceGeometry,
@@ -16,7 +16,7 @@ import {
   type SurfacePadding,
   type SurfaceRadius,
   type SurfaceTone,
-} from "@hjm/design-contracts/recipes/base";
+} from "@hjmds/design-contracts/recipes/base";
 import {
   stackRecipe,
   textRecipe,
@@ -26,8 +26,8 @@ import {
   type StackJustify,
   type TextEmphasis,
   type TextTone,
-} from "@hjm/design-contracts/recipes";
-import type { TextVariant } from "@hjm/design-contracts/foundations";
+} from "@hjmds/design-contracts/recipes";
+import type { TextVariant } from "@hjmds/design-contracts/foundations";
 import {
   createElement,
   forwardRef,
@@ -51,7 +51,7 @@ export type {
   SurfacePadding,
   SurfaceRadius,
   SurfaceTone,
-} from "@hjm/design-contracts/recipes/base";
+} from "@hjmds/design-contracts/recipes/base";
 export type {
   StackAlign,
   StackAxis,
@@ -59,7 +59,7 @@ export type {
   StackJustify,
   TextEmphasis,
   TextTone,
-} from "@hjm/design-contracts/recipes";
+} from "@hjmds/design-contracts/recipes";
 
 type LayoutRegionProps = Omit<
   HTMLAttributes<HTMLElement>,

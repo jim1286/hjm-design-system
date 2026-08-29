@@ -1,4 +1,4 @@
-# @hjm/design-contracts
+# @hjmds/design-contracts
 
 ## 0.8.1
 

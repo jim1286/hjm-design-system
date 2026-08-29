@@ -4,9 +4,9 @@ import {
   type DesignSystemDirection,
   type DesignSystemProviderValue,
   type DesignSystemTextScale,
-} from "@hjm/design-contracts/components/design-system-provider";
-import type { ResolvedTheme, ThemePreference } from "@hjm/design-contracts/colors";
-import { tooltipBehaviorDefaults } from "@hjm/design-contracts/components/tooltip";
+} from "@hjmds/design-contracts/components/design-system-provider";
+import type { ResolvedTheme, ThemePreference } from "@hjmds/design-contracts/colors";
+import { tooltipBehaviorDefaults } from "@hjmds/design-contracts/components/tooltip";
 import {
   createContext,
   forwardRef,

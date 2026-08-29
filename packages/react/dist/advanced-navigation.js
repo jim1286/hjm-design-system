@@ -1,6 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { resolveBreadcrumbDescriptor, } from "@hjm/design-contracts/components/breadcrumb";
-import { resolvePaginationDescriptor, } from "@hjm/design-contracts/components/pagination";
+import { resolveBreadcrumbDescriptor, } from "@hjmds/design-contracts/components/breadcrumb";
+import { resolvePaginationDescriptor, } from "@hjmds/design-contracts/components/pagination";
 import { forwardRef, } from "react";
 import { classNames } from "./internal.js";
 function BreadcrumbInner({ label, items, separator = "›", className, ...props }, ref) {

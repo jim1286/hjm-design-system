@@ -1,5 +1,5 @@
-import { type SelectDensity, type SelectSize } from "@hjm/design-contracts/recipes";
-import { type FormDensity } from "@hjm/design-contracts/components/form";
+import { type SelectDensity, type SelectSize } from "@hjmds/design-contracts/recipes";
+import { type FormDensity } from "@hjmds/design-contracts/components/form";
 import { type FormEvent, type FormHTMLAttributes, type InputHTMLAttributes, type ReactNode, type SelectHTMLAttributes } from "react";
 export type SelectOption = Readonly<{
     value: string;

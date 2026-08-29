@@ -6,7 +6,7 @@ import {
   type FilePickerCandidate,
   type FilePickerDescriptor,
   type FilePickerSelectionResult,
-} from "@hjm/design-contracts/components/file-picker";
+} from "@hjmds/design-contracts/components/file-picker";
 import {
   forwardRef,
   useId,

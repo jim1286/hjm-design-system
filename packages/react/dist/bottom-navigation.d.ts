@@ -1,4 +1,4 @@
-import { type BottomNavigationActivation, type BottomNavigationConfiguration, type BottomNavigationDescriptor, type ResolvedBottomNavigationItemDescriptor } from "@hjm/design-contracts/components/bottom-navigation";
+import { type BottomNavigationActivation, type BottomNavigationConfiguration, type BottomNavigationDescriptor, type ResolvedBottomNavigationItemDescriptor } from "@hjmds/design-contracts/components/bottom-navigation";
 import { type AnchorHTMLAttributes, type HTMLAttributes, type MouseEvent, type ReactElement, type ReactNode, type RefAttributes } from "react";
 export type BottomNavigationIconRenderProps<Key extends string = string, IconName extends string = string> = Readonly<{
     item: ResolvedBottomNavigationItemDescriptor<Key, IconName>;

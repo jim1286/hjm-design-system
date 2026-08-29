@@ -1,5 +1,5 @@
-import { type DesignSystemDirection, type DesignSystemProviderValue, type DesignSystemTextScale } from "@hjm/design-contracts/components/design-system-provider";
-import type { ResolvedTheme, ThemePreference } from "@hjm/design-contracts/colors";
+import { type DesignSystemDirection, type DesignSystemProviderValue, type DesignSystemTextScale } from "@hjmds/design-contracts/components/design-system-provider";
+import type { ResolvedTheme, ThemePreference } from "@hjmds/design-contracts/colors";
 import { type HTMLAttributes, type ReactNode } from "react";
 export type TooltipCoordinator = Readonly<{
     activeId: string | null;

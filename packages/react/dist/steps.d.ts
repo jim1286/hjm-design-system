@@ -1,4 +1,4 @@
-import { type ComposeStepsAccessibleName, type StepStatus, type StepsDescriptor, type StepsStatusLabels } from "@hjm/design-contracts/components/steps";
+import { type ComposeStepsAccessibleName, type StepStatus, type StepsDescriptor, type StepsStatusLabels } from "@hjmds/design-contracts/components/steps";
 import { type HTMLAttributes, type ReactNode } from "react";
 export type StepsProps<Id extends string = string> = Omit<HTMLAttributes<HTMLOListElement>, "children"> & Readonly<{
     descriptor: StepsDescriptor<Id>;
@@ -15,7 +15,7 @@ export declare const Steps: import("react").ForwardRefExoticComponent<Omit<HTMLA
             description?: string;
         }>[];
         currentStepId: string;
-        currentStepStatus?: import("@hjm/design-contracts/components/steps").StepCursorStatus;
+        currentStepStatus?: import("@hjmds/design-contracts/components/steps").StepCursorStatus;
     }>;
     statusLabels: Readonly<{
         pending: string;

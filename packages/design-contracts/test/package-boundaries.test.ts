@@ -76,7 +76,7 @@ describe("package boundaries", () => {
   it("names the renderer-neutral contract instead of implying a bundled UI kit", async () => {
     const packageJson = await readPackageJson();
 
-    expect(packageJson.name).toBe("@hjm/design-contracts");
+    expect(packageJson.name).toBe("@hjmds/design-contracts");
     expect(packageJson.description).toMatch(/Renderer-neutral design contracts/);
     expect(packageJson.repository).toEqual({
       type: "git",
@@ -143,7 +143,7 @@ describe("package boundaries", () => {
   });
 
   it("does not let the component namespace expose internal barrels", () => {
-    expect(import.meta.resolve("@hjm/design-contracts/components/form")).toMatch(/dist\/form\.js$/);
+    expect(import.meta.resolve("@hjmds/design-contracts/components/form")).toMatch(/dist\/form\.js$/);
     for (const internalName of [
       "catalog",
       "component-definitions",
@@ -153,7 +153,7 @@ describe("package boundaries", () => {
       "version",
     ]) {
       expect(
-        () => import.meta.resolve(`@hjm/design-contracts/components/${internalName}`),
+        () => import.meta.resolve(`@hjmds/design-contracts/components/${internalName}`),
       ).toThrow();
     }
   });

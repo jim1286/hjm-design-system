@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from "react";
 import type { Meta, StoryObj } from "@storybook/react-native";
 import { ScrollView, StyleSheet, TextInput, View } from "react-native";
-import { Button, BottomCTA, IconButton, Link } from "@hjm/react-native/actions";
+import { Button, BottomCTA, IconButton, Link } from "@hjmds/react-native/actions";
 import {
   Accordion,
   Avatar,
@@ -16,7 +16,7 @@ import {
   Statistic,
   Tag,
   Timeline,
-} from "@hjm/react-native/data-display";
+} from "@hjmds/react-native/data-display";
 import {
   EmptyState,
   Notice,
@@ -26,13 +26,13 @@ import {
   Spinner,
   ToastRegion,
   useToastRegion,
-} from "@hjm/react-native/feedback";
-import { Combobox, Field, Form, Select } from "@hjm/react-native/forms";
-import { NumberField } from "@hjm/react-native/number-field";
-import { DatePicker } from "@hjm/react-native/date-picker";
-import { FilePicker } from "@hjm/react-native/file-picker";
-import { OtpField } from "@hjm/react-native/otp-field";
-import { PasswordField } from "@hjm/react-native/password-field";
+} from "@hjmds/react-native/feedback";
+import { Combobox, Field, Form, Select } from "@hjmds/react-native/forms";
+import { NumberField } from "@hjmds/react-native/number-field";
+import { DatePicker } from "@hjmds/react-native/date-picker";
+import { FilePicker } from "@hjmds/react-native/file-picker";
+import { OtpField } from "@hjmds/react-native/otp-field";
+import { PasswordField } from "@hjmds/react-native/password-field";
 import {
   Checkbox,
   CheckboxGroup,
@@ -43,10 +43,10 @@ import {
   SegmentedControl,
   Switch,
   TextArea,
-} from "@hjm/react-native/inputs";
-import { Slider } from "@hjm/react-native/slider";
-import { Steps } from "@hjm/react-native/steps";
-import { UploadItem } from "@hjm/react-native/upload-item";
+} from "@hjmds/react-native/inputs";
+import { Slider } from "@hjmds/react-native/slider";
+import { Steps } from "@hjmds/react-native/steps";
+import { UploadItem } from "@hjmds/react-native/upload-item";
 import {
   BottomNavigation,
   LoadMore,
@@ -54,8 +54,8 @@ import {
   Tabs,
   TopBar,
   TopBarAction,
-} from "@hjm/react-native/navigation";
-import { AlertDialog, Dialog, Sheet } from "@hjm/react-native/overlays";
+} from "@hjmds/react-native/navigation";
+import { AlertDialog, Dialog, Sheet } from "@hjmds/react-native/overlays";
 import {
   Grid,
   Icon,
@@ -64,7 +64,7 @@ import {
   Stack,
   Surface,
   Text,
-} from "@hjm/react-native/primitives";
+} from "@hjmds/react-native/primitives";
 
 import { nativeRendererStoryGroups } from "./story-registry";
 

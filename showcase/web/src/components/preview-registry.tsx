@@ -3,7 +3,7 @@ import {
   Button as HjmButton,
   IconButton as HjmIconButton,
   Link as HjmLink,
-} from "@hjm/react/actions";
+} from "@hjmds/react/actions";
 import {
   Accordion as HjmAccordion,
   Avatar as HjmAvatar,
@@ -19,7 +19,7 @@ import {
   Statistic as HjmStatistic,
   Tag as HjmTag,
   Timeline as HjmTimeline,
-} from "@hjm/react/display";
+} from "@hjmds/react/display";
 import {
   EmptyState as HjmEmptyState,
   Notice as HjmNotice,
@@ -27,7 +27,7 @@ import {
   Result as HjmResult,
   Skeleton as HjmSkeleton,
   Spinner as HjmSpinner,
-} from "@hjm/react/feedback";
+} from "@hjmds/react/feedback";
 import {
   Combobox as HjmCombobox,
   Field as HjmField,
@@ -35,12 +35,12 @@ import {
   SearchField as HjmSearchField,
   Select as HjmSelect,
   TextArea as HjmTextArea,
-} from "@hjm/react/forms";
-import { NumberField as HjmNumberField } from "@hjm/react/number-field";
-import { DatePicker as HjmDatePicker } from "@hjm/react/date-picker";
-import { FilePicker as HjmFilePicker } from "@hjm/react/file-picker";
-import { OtpField as HjmOtpField } from "@hjm/react/otp-field";
-import { PasswordField as HjmPasswordField } from "@hjm/react/password-field";
+} from "@hjmds/react/forms";
+import { NumberField as HjmNumberField } from "@hjmds/react/number-field";
+import { DatePicker as HjmDatePicker } from "@hjmds/react/date-picker";
+import { FilePicker as HjmFilePicker } from "@hjmds/react/file-picker";
+import { OtpField as HjmOtpField } from "@hjmds/react/otp-field";
+import { PasswordField as HjmPasswordField } from "@hjmds/react/password-field";
 import {
   Grid as HjmGrid,
   Layout as HjmLayout,
@@ -48,15 +48,15 @@ import {
   Stack as HjmStack,
   Surface as HjmSurface,
   Text as HjmText,
-} from "@hjm/react/layout";
-import { Slider as HjmSlider } from "@hjm/react/slider";
-import { Steps as HjmSteps } from "@hjm/react/steps";
-import { UploadItem as HjmUploadItem } from "@hjm/react/upload-item";
+} from "@hjmds/react/layout";
+import { Slider as HjmSlider } from "@hjmds/react/slider";
+import { Steps as HjmSteps } from "@hjmds/react/steps";
+import { UploadItem as HjmUploadItem } from "@hjmds/react/upload-item";
 import {
   BottomNavigation as HjmBottomNavigation,
   LoadMore as HjmLoadMore,
   Tabs as HjmTabs,
-} from "@hjm/react/navigation";
+} from "@hjmds/react/navigation";
 import {
   Checkbox as HjmCheckbox,
   CheckboxGroup as HjmCheckboxGroup,
@@ -65,15 +65,15 @@ import {
   RadioGroup as HjmRadioGroup,
   SegmentedControl as HjmSegmentedControl,
   Switch as HjmSwitch,
-} from "@hjm/react/selection";
-import { Toast as HjmToast } from "@hjm/react/toast";
+} from "@hjmds/react/selection";
+import { Toast as HjmToast } from "@hjmds/react/toast";
 import {
   AlertDialog as HjmAlertDialog,
   Dialog as HjmDialog,
   Menu as HjmMenu,
   Sheet as HjmSheet,
   Tooltip as HjmTooltip,
-} from "@hjm/react/overlays";
+} from "@hjmds/react/overlays";
 import {
   behaviorRegistry,
   componentCatalog,
@@ -87,12 +87,12 @@ import {
   type ComponentPlatform,
   type DesignSystemProviderValue,
   type RecipeName,
-} from "@hjm/design-contracts";
+} from "@hjmds/design-contracts";
 import {
   showcaseManifest,
   showcaseScenarios,
   type ShowcaseComponentEntry,
-} from "@hjm/design-contracts/showcase";
+} from "@hjmds/design-contracts/showcase";
 
 import { useWebDesignSystemEnvironment } from "../runtime/WebDesignSystemProvider";
 
@@ -185,7 +185,7 @@ type RecipeWebRendererDefinition = Readonly<{
   behavior: BehaviorBinding | null;
   adapterKind: "recipe-presentation" | "recipe-behavior-presentation";
   evidenceSource: Readonly<{
-    owner: "@hjm/design-contracts";
+    owner: "@hjmds/design-contracts";
     recipe: RecipeBinding;
     behavior: BehaviorBinding | null;
   }>;
@@ -202,7 +202,7 @@ type ProviderWebRendererDefinition = Readonly<{
   behavior: null;
   adapterKind: "provider-value-presentation";
   evidenceSource: Readonly<{
-    owner: "@hjm/design-contracts";
+    owner: "@hjmds/design-contracts";
     contract: "resolveDesignSystemProviderValue";
     recipe: null;
     behavior: null;
@@ -607,7 +607,7 @@ function createWebRendererDefinition(
     behavior,
     adapterKind,
     evidenceSource: {
-      owner: "@hjm/design-contracts",
+      owner: "@hjmds/design-contracts",
       recipe,
       behavior,
     },
@@ -641,7 +641,7 @@ function createProviderWebRendererDefinition(): ProviderWebRendererDefinition {
     behavior: null,
     adapterKind: "provider-value-presentation",
     evidenceSource: {
-      owner: "@hjm/design-contracts",
+      owner: "@hjmds/design-contracts",
       contract: "resolveDesignSystemProviderValue",
       recipe: null,
       behavior: null,

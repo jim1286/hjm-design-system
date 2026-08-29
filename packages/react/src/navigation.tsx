@@ -8,14 +8,14 @@ import {
   type TabsMountPolicy,
   type TabsOrientation,
   type TabsPanelMode,
-} from "@hjm/design-contracts/behaviors";
+} from "@hjmds/design-contracts/behaviors";
 import {
   iconRecipe,
   tabsRecipe,
   type TabSize,
   type TabsLayout,
   type TabsOverflow,
-} from "@hjm/design-contracts/recipes";
+} from "@hjmds/design-contracts/recipes";
 import {
   forwardRef,
   useEffect,

@@ -1,5 +1,5 @@
-import { type ComposeCalendarAccessibleName, type ResolvedCalendarDateCell } from "@hjm/design-contracts/components/calendar";
-import { type DatePickerDescriptor, type DatePickerSize } from "@hjm/design-contracts/components/date-picker";
+import { type ComposeCalendarAccessibleName, type ResolvedCalendarDateCell } from "@hjmds/design-contracts/components/calendar";
+import { type DatePickerDescriptor, type DatePickerSize } from "@hjmds/design-contracts/components/date-picker";
 import { type ReactNode } from "react";
 import { type StyleProp, type ViewStyle } from "react-native";
 export type DatePickerMonthAction = Readonly<{

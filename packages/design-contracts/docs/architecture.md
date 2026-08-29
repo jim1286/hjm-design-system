@@ -25,10 +25,10 @@ Product adapters
 BurnTok vocabulary / Yajalal KBO vocabulary
 ```
 
-`@hjm/design-contracts`은 TypeScript 외 런타임 의존성이 없는 계약 패키지로 유지합니다.
+`@hjmds/design-contracts`은 TypeScript 외 런타임 의존성이 없는 계약 패키지로 유지합니다.
 React, React Native, DOM, Expo import는 코어에 들어오지 않습니다.
-패키지 이름도 이 경계를 드러냅니다. `@hjm/design-contracts`는 renderer-neutral core이고,
-실제 UI는 같은 저장소의 `@hjm/react`와 `@hjm/react-native`가 제공하므로 contracts를
+패키지 이름도 이 경계를 드러냅니다. `@hjmds/design-contracts`는 renderer-neutral core이고,
+실제 UI는 같은 저장소의 `@hjmds/react`와 `@hjmds/react-native`가 제공하므로 contracts를
 component library로 오해하게 만드는 이전 `@hjm/design-system` package 이름은 사용하지 않습니다.
 
 시각 recipe와 behavior contract를 분리합니다. 전자는 어떤 모습인지, 후자는 어떤 상태와
@@ -260,9 +260,9 @@ tone과 announcement priority는 독립입니다. tone은 HJM recipe의 색과 �
 ## Monorepo 패키지
 
 ```text
-@hjm/design-contracts  토큰·recipe·catalog
-@hjm/react             DOM·ARIA·focus·keyboard renderer
-@hjm/react-native      Pressable·Modal·safe-area renderer
+@hjmds/design-contracts  토큰·recipe·catalog
+@hjmds/react             DOM·ARIA·focus·keyboard renderer
+@hjmds/react-native      Pressable·Modal·safe-area renderer
 @hjm/icons             같은 의미의 Web/RN icon adapter (planned)
 @hjm/testing           contract·접근성·fixture parity 도구 (planned)
 ```

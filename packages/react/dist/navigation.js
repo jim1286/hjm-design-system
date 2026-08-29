@@ -1,6 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { getTabNavigationIntent, getTabNavigationTarget, resolveInitialTabValue, tabsBehaviorDefaults, } from "@hjm/design-contracts/behaviors";
-import { iconRecipe, tabsRecipe, } from "@hjm/design-contracts/recipes";
+import { getTabNavigationIntent, getTabNavigationTarget, resolveInitialTabValue, tabsBehaviorDefaults, } from "@hjmds/design-contracts/behaviors";
+import { iconRecipe, tabsRecipe, } from "@hjmds/design-contracts/recipes";
 import { forwardRef, useEffect, useId, useRef, useState, } from "react";
 import { classNames, useControllableState } from "./internal.js";
 import { useOptionalHjmTheme } from "./provider.js";

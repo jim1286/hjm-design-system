@@ -1,4 +1,4 @@
-import { type NumberFieldSize, type NumberFieldValue } from "@hjm/design-contracts/components/number-field";
+import { type NumberFieldSize, type NumberFieldValue } from "@hjmds/design-contracts/components/number-field";
 import { type InputHTMLAttributes, type ReactNode } from "react";
 type NativeNumberInputProps = Omit<InputHTMLAttributes<HTMLInputElement>, "aria-errormessage" | "aria-valuemax" | "aria-valuemin" | "aria-valuenow" | "aria-valuetext" | "children" | "className" | "defaultValue" | "disabled" | "max" | "min" | "onChange" | "readOnly" | "required" | "role" | "size" | "step" | "type" | "value">;
 export type NumberFieldProps = NativeNumberInputProps & Readonly<{

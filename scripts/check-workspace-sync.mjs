@@ -6,9 +6,9 @@ const workspaceRoot = fileURLToPath(new URL("../", import.meta.url));
 const activeRendererStatuses = new Set(["stable", "beta"]);
 
 const packageRecords = [
-  { key: "contracts", path: "packages/design-contracts", name: "@hjm/design-contracts" },
-  { key: "web", path: "packages/react", name: "@hjm/react" },
-  { key: "native", path: "packages/react-native", name: "@hjm/react-native" },
+  { key: "contracts", path: "packages/design-contracts", name: "@hjmds/design-contracts" },
+  { key: "web", path: "packages/react", name: "@hjmds/react" },
+  { key: "native", path: "packages/react-native", name: "@hjmds/react-native" },
 ];
 
 const rendererRecords = [
@@ -163,9 +163,9 @@ const fixedVersion = packages[0].packageJson.version;
 
 for (const key of ["web", "native"]) {
   const renderer = packageByKey.get(key);
-  const peerRange = renderer.packageJson.peerDependencies?.["@hjm/design-contracts"];
+  const peerRange = renderer.packageJson.peerDependencies?.["@hjmds/design-contracts"];
   assertContractsPeerTrain(renderer.name, peerRange, fixedVersion);
-  const developmentRange = renderer.packageJson.devDependencies?.["@hjm/design-contracts"];
+  const developmentRange = renderer.packageJson.devDependencies?.["@hjmds/design-contracts"];
   if (typeof developmentRange !== "string" || !developmentRange.startsWith("workspace:")) {
     throw new Error(`${renderer.name} must develop against a workspace: contracts dependency`);
   }
@@ -188,7 +188,7 @@ if (generatedManifest.schemaVersion !== 2) {
     `generated showcase manifest schema is ${generatedManifest.schemaVersion}, expected 2`,
   );
 }
-if (generatedManifest.packageName !== "@hjm/design-contracts") {
+if (generatedManifest.packageName !== "@hjmds/design-contracts") {
   throw new Error(`generated manifest package is ${generatedManifest.packageName}`);
 }
 if (generatedManifest.designSystemVersion !== fixedVersion) {
