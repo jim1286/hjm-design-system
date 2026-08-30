@@ -6,6 +6,7 @@ import { describe, expect, it } from "vitest";
 import {
   Accordion,
   AlertDialog,
+  AspectRatio,
   Avatar,
   Badge,
   BottomCTA,
@@ -16,6 +17,7 @@ import {
   CheckboxGroup,
   Chip,
   Combobox,
+  Container,
   CounterBadge,
   DatePicker,
   DescriptionList,
@@ -108,6 +110,8 @@ export const defaultRenderCases = [
   { componentId: "text", render: () => <Text>본문</Text> },
   { componentId: "surface", render: () => <Surface><Text>표면</Text></Surface> },
   { componentId: "stack", render: () => <Stack><Text>스택</Text></Stack> },
+  { componentId: "container", render: () => <Container size="reading"><Text>본문</Text></Container> },
+  { componentId: "aspect-ratio", render: () => <AspectRatio ratio="wide"><View /></AspectRatio> },
   {
     componentId: "grid",
     render: () => (

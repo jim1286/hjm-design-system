@@ -16,7 +16,7 @@ const rendererBudgets = [
     budgets: {
       ".": { modules: 27, raw: 340_000, gzip: 68_000 },
       "./provider": { modules: 3, raw: 11_500, gzip: 3_200 },
-      "./layout": { modules: 2, raw: 13_500, gzip: 3_900 },
+      "./layout": { modules: 2, raw: 17_000, gzip: 4_500 },
       "./actions": { modules: 2, raw: 7_000, gzip: 1_900 },
       "./forms": { modules: 12, raw: 116_000, gzip: 24_000 },
       "./password-field": { modules: 9, raw: 100_000, gzip: 20_000 },

@@ -2,6 +2,7 @@
   "name": "@hjm/design-system-workspace",
   "version": "0.0.0",
   "description": "HJM design contracts and first-party React and React Native renderers.",
+  "license": "MIT",
   "private": true,
   "type": "module",
   "repository": {
@@ -28,11 +29,9 @@
     "showcase:native:check": "pnpm --filter @hjmds/design-contracts build && pnpm --filter @hjmds/react-native build && pnpm --filter @hjm/showcase-native check",
     "reference:antd:verify": "pnpm --filter @hjmds/design-contracts reference:antd:verify",
     "changeset": "changeset",
-    "changeset:check": "node scripts/check-changeset-required.mjs",
     "release:commit:check": "node scripts/check-release-commit.mjs",
     "release:version": "changeset version && pnpm install --lockfile-only && node scripts/sync-release-version.mjs && pnpm contracts:sync && pnpm build && pnpm evidence:sync",
     "release:status": "changeset status",
-    "release:plan:check": "node scripts/check-release-plan.mjs",
     "release:check": "pnpm check && pnpm showcase:web:build && node scripts/check-release-artifacts.mjs"
   },
   "engines": {

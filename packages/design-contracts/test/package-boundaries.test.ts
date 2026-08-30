@@ -24,6 +24,7 @@ type ContractPackage = Readonly<{
 const packageJsonUrl = new URL("../package.json", import.meta.url);
 const publicComponentContractNames = [
   "alert-dialog",
+  "aspect-ratio",
   "bottom-navigation",
   "breadcrumb",
   "calendar",
@@ -32,6 +33,7 @@ const publicComponentContractNames = [
   "collection",
   "command-palette",
   "content-state",
+  "container",
   "data-table",
   "date-picker",
   "description-list",
@@ -66,6 +68,7 @@ const publicComponentContractNames = [
   "tree",
   "tree-select",
   "upload-item",
+  "visually-hidden",
 ] as const;
 
 async function readPackageJson(): Promise<ContractPackage> {
@@ -84,7 +87,7 @@ describe("package boundaries", () => {
       directory: "packages/design-contracts",
     });
     expect(packageJson.sideEffects).toBe(false);
-    expect(packageJson.files).toEqual(["dist", "docs", "README.md"]);
+    expect(packageJson.files).toEqual(["dist", "docs", "README.md", "LICENSE"]);
     expect(packageJson.dependencies).toBeUndefined();
   });
 

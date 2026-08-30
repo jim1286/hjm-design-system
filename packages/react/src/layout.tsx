@@ -4,6 +4,15 @@ import {
   type GridGap,
 } from "@hjmds/design-contracts/grid";
 import {
+  resolveAspectRatioDescriptor,
+  type AspectRatioValue,
+} from "@hjmds/design-contracts/components/aspect-ratio";
+import {
+  resolveContainerDescriptor,
+  type ContainerGutter,
+  type ContainerSize,
+} from "@hjmds/design-contracts/components/container";
+import {
   layoutRecipe,
   validateLayoutWebDescriptor,
   type LayoutSidebarDescriptor,
@@ -410,6 +419,79 @@ export const Stack = forwardRef<HTMLDivElement, StackProps>(function Stack(
   );
 });
 
+export type ContainerProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> &
+  Readonly<{
+    children?: ReactNode;
+    size?: ContainerSize;
+    gutter?: ContainerGutter;
+  }>;
+
+/** A centered, token-guttered content boundary shared with Native large screens. */
+export const Container = forwardRef<HTMLDivElement, ContainerProps>(function Container(
+  { size, gutter, className, style, ...props },
+  ref,
+) {
+  const resolved = resolveContainerDescriptor({
+    ...(size === undefined ? {} : { size }),
+    ...(gutter === undefined ? {} : { gutter }),
+  });
+  return (
+    <div
+      {...props}
+      ref={ref}
+      className={classNames("hjm-container", className)}
+      data-size={resolved.size}
+      data-gutter={resolved.gutter}
+      style={{
+        maxInlineSize: resolved.maxWidth ?? undefined,
+        paddingInline: resolved.paddingInline,
+        ...style,
+      }}
+    />
+  );
+});
+
+export type AspectRatioProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> &
+  Readonly<{
+    children?: ReactNode;
+    ratio?: AspectRatioValue;
+  }>;
+
+/** Responsive media frame. Products retain object-fit, crop, and content semantics. */
+export const AspectRatio = forwardRef<HTMLDivElement, AspectRatioProps>(function AspectRatio(
+  { ratio, className, style, ...props },
+  ref,
+) {
+  const resolved = resolveAspectRatioDescriptor(
+    ratio === undefined ? {} : { ratio },
+  );
+  return (
+    <div
+      {...props}
+      ref={ref}
+      className={classNames("hjm-aspect-ratio", className)}
+      data-ratio={resolved.source}
+      style={{ aspectRatio: resolved.ratio, ...style }}
+    />
+  );
+});
+
+export type VisuallyHiddenProps = HTMLAttributes<HTMLSpanElement> &
+  Readonly<{ children: ReactNode }>;
+
+/** Keeps meaningful copy available to assistive technology without visible layout. */
+export const VisuallyHidden = forwardRef<HTMLSpanElement, VisuallyHiddenProps>(
+  function VisuallyHidden({ className, ...props }, ref) {
+    return (
+      <span
+        {...props}
+        ref={ref}
+        className={classNames("hjm-visually-hidden", className)}
+      />
+    );
+  },
+);
+
 export type GridProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> &
   Pick<GridDescriptor, "columns" | "gap" | "minColumnWidth"> &
   Readonly<{
@@ -520,3 +602,4 @@ export const Section = forwardRef<HTMLElement, SectionProps>(function Section(
 });
 
 export type { GridGap };
+export type { AspectRatioValue, ContainerGutter, ContainerSize };

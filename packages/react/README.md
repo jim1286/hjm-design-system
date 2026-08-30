@@ -37,7 +37,7 @@ plate with the recipe border treatment.
 ## Public surface
 
 - `provider`: `HjmProvider`, `useHjmTheme`
-- `layout`: `Text`, `Surface`, `Stack`, `Section`, responsive `Grid`, adaptive app-shell `Layout`
+- `layout`: `Text`, `Surface`, `Stack`, `Container`, `AspectRatio`, `Section`, responsive `Grid`, adaptive app-shell `Layout`, `VisuallyHidden`
 - `actions`: `Button`, `IconButton`, `Link`
 - `forms`: `Field`, `TextField`, `TextArea`, `SearchField`, custom accessible
   `Select`, opt-in `NativeSelect`, editable `Combobox`, exact `NumberField`,

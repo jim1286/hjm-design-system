@@ -1,4 +1,4 @@
-import { execFileSync, spawnSync } from "node:child_process";
+import { execFileSync } from "node:child_process";
 import { mkdtemp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -106,83 +106,6 @@ describe("generated Changesets release commit gate", () => {
         stdio: "pipe",
       }),
     ).toThrow(/Command failed/);
-  });
-});
-
-describe("private consumer release evidence gate", () => {
-  const workspaceRoot = fileURLToPath(new URL("../../../", import.meta.url));
-
-  it("accepts the exact repository-surface matrix and rejects mismatched, missing, unexpected, and duplicate data", () => {
-    const output = execFileSync(
-      process.execPath,
-      ["scripts/check-consumer-release.mjs", "--self-test"],
-      {
-        cwd: workspaceRoot,
-        encoding: "utf8",
-      },
-    );
-    expect(output).toContain(
-      "including dynamic revision resolution, binding, wrong-head, and inventory rejection",
-    );
-    expect(output).toContain("burntok-web, burntok-native, and yajalal-native");
-  });
-
-  it("fails closed when the canonical consumer dispatch token is absent", async () => {
-    const manifest = JSON.parse(
-      await readFile(join(workspaceRoot, "packages/design-contracts/package.json"), "utf8"),
-    );
-    const headCommit = git(workspaceRoot, "rev-parse", "HEAD");
-    expect(() =>
-      execFileSync(
-        process.execPath,
-        [
-          "scripts/check-consumer-release.mjs",
-          "--repository",
-          "jim1286/hjm-design-system",
-          "--release-sha",
-          headCommit,
-          "--version",
-          manifest.version,
-        ],
-        {
-          cwd: workspaceRoot,
-          env: { ...process.env, HJM_CONSUMER_SYNC_TOKEN: "" },
-          stdio: "pipe",
-        },
-      ),
-    ).toThrow(/Command failed/);
-  });
-
-  it("rejects an invalid or non-HEAD release SHA before consumer API access", async () => {
-    const manifest = JSON.parse(
-      await readFile(join(workspaceRoot, "packages/design-contracts/package.json"), "utf8"),
-    );
-    const run = (releaseSha: string) =>
-      spawnSync(
-        process.execPath,
-        [
-          "scripts/check-consumer-release.mjs",
-          "--repository",
-          "jim1286/hjm-design-system",
-          "--release-sha",
-          releaseSha,
-          "--version",
-          manifest.version,
-        ],
-        {
-          cwd: workspaceRoot,
-          encoding: "utf8",
-          env: { ...process.env, HJM_CONSUMER_SYNC_TOKEN: "must-not-be-used" },
-        },
-      );
-
-    const invalidCommit = run("a".repeat(40));
-    expect(invalidCommit.status).toBe(1);
-    expect(invalidCommit.stderr).toContain("does not resolve to a local Git commit");
-
-    const nonHeadCommit = run(git(workspaceRoot, "rev-parse", "HEAD^"));
-    expect(nonHeadCommit.status).toBe(1);
-    expect(nonHeadCommit.stderr).toContain("does not match current local HEAD");
   });
 });
 

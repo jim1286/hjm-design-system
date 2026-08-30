@@ -112,22 +112,24 @@ export function getComponentSurfaceStatus(
 export const componentCatalog = [
   { name: "Text", category: "foundation", platform: "shared", status: "beta", ...surfaceMaturity("beta", "beta"), recipe: "textRecipe" },
   { name: "Icon", category: "foundation", platform: "shared", status: "beta", ...surfaceMaturity("beta", "beta"), recipe: "iconRecipe" },
-  { name: "Surface", category: "layout", platform: "shared", status: "stable", ...surfaceMaturity("beta", "beta"), recipe: "surfaceRecipe" },
+  { name: "Surface", category: "layout", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "surfaceRecipe" },
   { name: "Divider", category: "layout", platform: "shared", status: "beta", ...surfaceMaturity("beta", "beta"), recipe: "dividerRecipe" },
   { name: "Section", category: "layout", platform: "shared", status: "beta", ...surfaceMaturity("beta", "beta"), recipe: "sectionRecipe" },
   { name: "Stack", category: "layout", platform: "shared", status: "beta", ...surfaceMaturity("beta", "beta"), recipe: "stackRecipe", aliases: ["Flex", "Space", "Inline"] },
+  { name: "Container", category: "layout", platform: "shared", status: "beta", ...surfaceMaturity("beta", "beta"), recipe: "containerRecipe", ...evidenceNeeded("Radix·Chakra·MUI·Mantine의 layout inventory를 비교해 공통 content-width primitive로 채택했습니다. Web/RN renderer와 환경 행렬 증거를 연결했고 실제 제품의 넓은 화면 채택 뒤 stable을 검토합니다.") },
+  { name: "AspectRatio", category: "layout", platform: "shared", status: "beta", ...surfaceMaturity("beta", "beta"), recipe: "aspectRatioRecipe", ...evidenceNeeded("Radix·Chakra·Mantine·Carbon에서 반복되는 media geometry 문제를 shared primitive로 채택했습니다. 제품이 object-fit을 소유하고 renderer는 비율만 보장합니다.") },
   { name: "Grid", category: "layout", platform: "adaptive", status: "beta", ...surfaceMaturity("beta", "beta"), recipe: "gridRecipe", ...evidenceNeeded("공통 window class·responsive value·row-major geometry 계약과 공식 Web/RN default renderer 증거가 연결됐습니다. 안정화에는 환경별·제품 사용 증거가 더 필요합니다.") },
   { name: "Layout", category: "layout", platform: "adaptive", status: "beta", ...surfaceMaturity("beta", "beta"), aliases: ["AppShell"], recipe: "layoutRecipe", behavior: "layout", ...evidenceNeeded("공통 descriptor를 소비하는 Web landmark·skip-link renderer와 Native ordered-region renderer가 기본 실행 증거를 제공합니다. 실제 product shell·보조기기 증거가 쌓이면 stable을 검토합니다.") },
   { name: "Masonry", category: "layout", platform: "adaptive", status: "planned", ...surfaceMaturity("planned", "planned"), ...evidenceNeeded("실제 waterfall 피드가 생기면 측정·패킹의 renderer 경계를 검증합니다.") },
   { name: "Splitter", category: "layout", platform: "web", status: "planned", ...surfaceMaturity("planned", "unsupported"), aliases: ["SplitPane"], recipe: "splitterRecipe", behavior: "splitter", ...contractReady("분할 크기·키보드 조절 계약은 준비됐고 Web vertical slice를 기다립니다.") },
-  { name: "Button", category: "action", platform: "shared", status: "stable", ...surfaceMaturity("beta", "beta"), recipe: "buttonRecipe" },
+  { name: "Button", category: "action", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "buttonRecipe" },
   { name: "IconButton", category: "action", platform: "shared", status: "beta", ...surfaceMaturity("beta", "beta"), recipe: "iconButtonRecipe" },
   { name: "Link", category: "action", platform: "adaptive", status: "beta", ...surfaceMaturity("beta", "beta"), recipe: "linkRecipe", behavior: "link" },
   { name: "BottomCTA", category: "action", platform: "native", status: "beta", ...surfaceMaturity("unsupported", "beta"), recipe: "bottomCtaRecipe" },
   { name: "FloatingActionButton", category: "action", platform: "adaptive", status: "planned", ...surfaceMaturity("planned", "planned"), recipe: "floatingActionButtonRecipe", behavior: "floatingActionButton", aliases: ["FloatButton", "FAB"], ...contractReady("배치·확장 action·안전 영역 계약은 준비됐고 제품 적용을 기다립니다.") },
-  { name: "Field", category: "input", platform: "shared", status: "stable", ...surfaceMaturity("beta", "beta"), recipe: "fieldRecipe", behavior: "field" },
+  { name: "Field", category: "input", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "fieldRecipe", behavior: "field" },
   { name: "SearchField", category: "input", platform: "shared", status: "beta", ...surfaceMaturity("beta", "beta"), recipe: "searchFieldRecipe", behavior: "searchField" },
-  { name: "TextArea", category: "input", platform: "shared", status: "stable", ...surfaceMaturity("beta", "beta"), recipe: "fieldRecipe" },
+  { name: "TextArea", category: "input", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "fieldRecipe" },
   { name: "PasswordField", category: "input", platform: "adaptive", status: "beta", ...surfaceMaturity("beta", "beta"), aliases: ["Input.Password"], recipe: "passwordFieldRecipe", behavior: "passwordField", ...evidenceNeeded("Web·Native renderer와 기본 실행·Storybook 증거가 연결됐습니다. 실제 로그인·가입 흐름과 암호 관리자 증거가 쌓이면 stable을 검토합니다.") },
   { name: "OtpField", category: "input", platform: "adaptive", status: "beta", ...surfaceMaturity("beta", "beta"), aliases: ["Input.OTP"], recipe: "otpFieldRecipe", behavior: "otpField", ...evidenceNeeded("하나의 접근 가능한 입력을 유지하는 Web·Native renderer와 기본 실행·Storybook 증거가 연결됐습니다. 실제 인증 흐름과 보조기기 증거가 더 필요합니다.") },
   { name: "Checkbox", category: "input", platform: "shared", status: "beta", ...surfaceMaturity("beta", "beta"), recipe: "selectionControlRecipe", behavior: "checkbox" },
@@ -201,6 +203,7 @@ export const componentCatalog = [
   { name: "BorderBeam", category: "utility", platform: "web", status: "planned", ...surfaceMaturity("planned", "unsupported"), ...declined("장식으로 브랜드를 증명하지 않는다는 정체성과 충돌하고, reduced motion에서 남는 것이 없으며, 없어도 화면의 뜻이 같다") },
   { name: "DesignSystemProvider", category: "provider", platform: "shared", status: "beta", ...surfaceMaturity("beta", "beta"), aliases: ["ConfigProvider"], nonVisualEvidence: "provider-adapter", ...evidenceNeeded("두 실제 제품의 Web/RN Context adapter가 environment+palette와 parent axis 상속을 소비합니다. 추가 제품 릴리스 증거가 쌓이면 stable을 검토합니다.") },
   { name: "Utility", category: "utility", platform: "web", status: "planned", ...surfaceMaturity("planned", "unsupported"), aliases: ["Util"], ...declined("antd Util은 theme.useToken()으로 토큰을 읽는 법을 설명하는 문서 페이지다. 이 패키지는 토큰을 정적 export로 주므로 그 문제가 발생하지 않는다") },
+  { name: "VisuallyHidden", category: "utility", platform: "web", status: "beta", ...surfaceMaturity("beta", "unsupported"), recipe: "visuallyHiddenRecipe", aliases: ["ScreenReaderOnly", "SrOnly"], ...evidenceNeeded("Chakra와 React Aria가 별도 접근성 primitive로 제공하는 문제를 Web에서 채택했습니다. Native는 중복 invisible node 대신 host accessibilityLabel/accessibilityHint를 사용하므로 의도적으로 지원하지 않습니다.") },
 ] as const satisfies readonly ComponentCatalogEntry[];
 
 export type ComponentName = (typeof componentCatalog)[number]["name"];
@@ -230,6 +233,8 @@ import {
   bottomNavigationRecipe,
   bottomCtaRecipe,
   breadcrumbRecipe,
+  aspectRatioRecipe,
+  containerRecipe,
   calendarRecipe,
   cardRecipe,
   buttonRecipe,
@@ -292,6 +297,7 @@ import {
   topBarRecipe,
   treeRecipe,
   uploadItemRecipe,
+  visuallyHiddenRecipe,
 } from "./recipes.js";
 import { floatingActionButtonRecipe } from "./floating-action-button.js";
 import { gridRecipe } from "./grid.js";
@@ -305,6 +311,8 @@ export const recipeRegistry = {
   bottomNavigationRecipe,
   bottomCtaRecipe,
   breadcrumbRecipe,
+  aspectRatioRecipe,
+  containerRecipe,
   calendarRecipe,
   cardRecipe,
   buttonRecipe,
@@ -369,6 +377,7 @@ export const recipeRegistry = {
   topBarRecipe,
   treeRecipe,
   uploadItemRecipe,
+  visuallyHiddenRecipe,
 } as const;
 
 export type RecipeName = keyof typeof recipeRegistry;

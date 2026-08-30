@@ -57,6 +57,8 @@ import {
 } from "@hjmds/react-native/navigation";
 import { AlertDialog, Dialog, Sheet } from "@hjmds/react-native/overlays";
 import {
+  AspectRatio,
+  Container,
   Grid,
   Icon,
   Layout,
@@ -111,6 +113,12 @@ function FoundationsPreview() {
       <Surface bordered padding="md" tone="subtle">
         <Text>Surface keeps shared padding and radius.</Text>
       </Surface>
+      <Container gutter="compact" size="reading">
+        <Text tone="muted">Container centers readable content with shared logical gutters.</Text>
+      </Container>
+      <AspectRatio ratio="wide" style={styles.mediaFrame}>
+        <View style={styles.mediaFrameContent}><Text tone="muted">16:9 media frame</Text></View>
+      </AspectRatio>
       <Section title="Section" description="Header and body retain reading order.">
         <Text>Section body</Text>
       </Section>
@@ -512,4 +520,6 @@ const styles = StyleSheet.create({
   customInput: { borderColor: "#667085", borderRadius: 12, borderWidth: 1, minHeight: 44, paddingHorizontal: 16 },
   frame: { gap: 16, paddingBottom: 48 },
   layout: { minHeight: 144 },
+  mediaFrame: { backgroundColor: "#eef2f6" },
+  mediaFrameContent: { alignItems: "center", flex: 1, justifyContent: "center" },
 });

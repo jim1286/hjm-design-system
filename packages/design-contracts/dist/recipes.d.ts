@@ -1,6 +1,8 @@
 export { buttonRecipe, fieldRecipe, surfaceDefaults, surfaceGeometry, surfaceRecipe, type ButtonSize, type ButtonTone, type FieldShape, type FieldVariant, type SurfacePadding, type SurfaceRadius, type SurfaceTone, } from "./base-recipes.js";
 export { accordionRecipe, alertDialogRecipe, avatarRecipe, badgeRecipe, bottomNavigationRecipe, bottomCtaRecipe, chipRecipe, comboboxRecipe, counterBadgeRecipe, dialogRecipe, dividerRecipe, emptyStateRecipe, formatCounterBadgeCount, iconButtonRecipe, iconRecipe, linkRecipe, listRecipe, listRowRecipe, loadMoreRecipe, menuRecipe, noticeRecipe, progressRecipe, searchFieldRecipe, selectRecipe, selectionGroupRecipe, sectionRecipe, segmentedControlRecipe, selectionControlRecipe, sheetRecipe, skeletonRecipe, spinnerRecipe, stackRecipe, statisticRecipe, switchRecipe, tabsRecipe, textRecipe, toastRecipe, tooltipRecipe, topBarRecipe, type AccordionDensity, type AlertDialogTone, type AvatarShape, type AvatarSize, type BadgeSize, type BadgeTone, type BadgeVariant, type BottomNavigationDensity, type BottomNavigationDistribution, type BottomNavigationPresentation, type ChipSize, type SelectDensity, type SelectSize, type CounterBadgeSize, type CounterBadgeTone, type CounterBadgeVariant, type DialogSize, type IconButtonShape, type IconButtonSize, type IconTone, type IconWeight, type LinkTone, type LinkVariant, type LoadMoreDensity, type ListRowDensity, type MenuDensity, type MenuItemTone, type NoticeTone, type ProgressSize, type ProgressTone, type SearchFieldSize, type SegmentedControlSize, type SelectionControlKind, type SelectionControlPresentation, type SelectionControlSize, type SelectionGroupOrientation, type SelectionGroupPresentation, type SpinnerSize, type SpinnerTone, type StackAlign, type StackAxis, type StackGap, type StackJustify, type StatisticDensity, type StatisticPresentation, type SwitchSize, type TabSize, type TabsLayout, type TabsOverflow, type TextEmphasis, type TextTone, type ToastPlacement, type ToastTone, type ToastToneMark, } from "./component-recipes.js";
 export { breadcrumbRecipe } from "./breadcrumb.js";
+export { aspectRatioRecipe } from "./aspect-ratio.js";
+export { containerRecipe } from "./container.js";
 export { cardRecipe, type CardHeadingLevel } from "./card.js";
 export { calendarRecipe } from "./calendar.js";
 export { carouselRecipe } from "./carousel.js";
@@ -28,4 +30,5 @@ export { sidePanelRecipe } from "./side-panel.js";
 export { timelineRecipe } from "./timeline.js";
 export { treeRecipe } from "./tree.js";
 export { uploadItemRecipe } from "./upload-item.js";
+export { visuallyHiddenRecipe } from "./visually-hidden.js";
 //# sourceMappingURL=recipes.d.ts.map

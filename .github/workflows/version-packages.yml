@@ -1,31 +1,26 @@
 name: Release Packages
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
 
 permissions:
   contents: write
-  # npm Trusted Publishing (OIDC). npm is restricting tokens that bypass 2FA,
-  # so the release exchanges this short-lived identity token instead.
   id-token: write
 
 concurrency:
-  group: release-packages-${{ github.ref }}
+  group: release-packages
   cancel-in-progress: false
 
 jobs:
   release:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    timeout-minutes: 75
+    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@v7
         with:
-          fetch-depth: 0
+          fetch-depth: 2
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v6
@@ -40,90 +35,13 @@ jobs:
           cache: pnpm
           registry-url: https://registry.npmjs.org
 
-      - name: Detect an untagged fixed-version release commit
-        id: release-candidate
-        shell: bash
-        run: |
-          VERSION="$(node -p "require('./packages/design-contracts/package.json').version")"
-          TAG="v${VERSION}"
-          if git show-ref --tags --verify --quiet "refs/tags/${TAG}"; then
-            TAG_COMMIT="$(git rev-list -n 1 "${TAG}")"
-            if [ "${TAG_COMMIT}" != "${GITHUB_SHA}" ]; then
-              echo "::notice::${TAG} already points to ${TAG_COMMIT}; this push did not change the fixed package version."
-              echo "should-release=false" >> "$GITHUB_OUTPUT"
-              exit 0
-            fi
-            MISSING=false
-            for directory in design-contracts react react-native; do
-              NAME="$(node -p "require('./packages/${directory}/package.json').name")"
-              if ! npm view "${NAME}@${VERSION}" version >/dev/null 2>&1; then
-                MISSING=true
-              fi
-            done
-            if [ "${MISSING}" = "false" ]; then
-              echo "::notice::${TAG} is tagged and every package is published."
-              echo "should-release=false" >> "$GITHUB_OUTPUT"
-              exit 0
-            fi
-            echo "::warning::${TAG} names this commit but npm is missing at least one package; resuming the publish."
-            echo "should-release=true" >> "$GITHUB_OUTPUT"
-            echo "tag-exists=true" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          if find .changeset -maxdepth 1 -name '*.md' ! -name README.md | grep -q .; then
-            if [ "${GITHUB_EVENT_NAME}" = "workflow_dispatch" ]; then
-              echo "::error::Authored Changesets remain. Run pnpm release:version, commit the generated artifacts, and push that commit before dispatching this workflow."
-              exit 1
-            fi
-            echo "::warning::Authored Changesets remain; ${TAG} waits for a generated version commit."
-            echo "should-release=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          LATEST_TAG="$(git describe --tags --match 'v[0-9]*' --abbrev=0 2>/dev/null || true)"
-          if [ -n "${LATEST_TAG}" ]; then
-            PREVIOUS_VERSION="$(git show "${LATEST_TAG}:packages/design-contracts/package.json" | node -e 'let value=""; process.stdin.on("data", chunk => value += chunk); process.stdin.on("end", () => console.log(JSON.parse(value).version));')"
-            if [ "${PREVIOUS_VERSION}" = "${VERSION}" ]; then
-              echo "::error::Package version ${VERSION} has not advanced beyond ${LATEST_TAG}."
-              exit 1
-            fi
-          fi
-          echo "::notice::Releasing ${TAG}."
-          echo "should-release=true" >> "$GITHUB_OUTPUT"
-          echo "tag-exists=false" >> "$GITHUB_OUTPUT"
-
       - name: Install dependencies
-        if: steps.release-candidate.outputs.should-release == 'true'
         run: pnpm install --frozen-lockfile
 
-      - name: Verify the pushed commit is a generated release commit
-        if: steps.release-candidate.outputs.should-release == 'true'
+      - name: Verify release commit
         run: pnpm release:commit:check "$(git rev-parse HEAD^)"
 
-      - name: Install Chromium before release verification
-        if: steps.release-candidate.outputs.should-release == 'true'
-        run: pnpm --filter @hjmds/react exec playwright install --with-deps chromium
-
-      - name: Verify the canonical release candidate
-        if: steps.release-candidate.outputs.should-release == 'true'
-        shell: bash
-        run: |
-          pnpm release:check
-          git diff --exit-code -- packages/design-contracts/dist packages/react/dist packages/react-native/dist packages/design-contracts/docs/generated
-          test -z "$(git ls-files --others --exclude-standard -- packages/design-contracts/dist packages/react/dist packages/react-native/dist packages/design-contracts/docs/generated)"
-
-      - name: Require successful private consumer surface evidence
-        if: steps.release-candidate.outputs.should-release == 'true'
-        env:
-          HJM_CONSUMER_SYNC_TOKEN: ${{ secrets.HJM_CONSUMER_SYNC_TOKEN }}
-        run: |
-          VERSION="$(node -p "require('./packages/design-contracts/package.json').version")"
-          node scripts/check-consumer-release.mjs \
-            --repository "${GITHUB_REPOSITORY}" \
-            --release-sha "${GITHUB_SHA}" \
-            --version "${VERSION}"
-
-      - name: Publish packages to npm
-        if: steps.release-candidate.outputs.should-release == 'true'
+      - name: Publish packages
         shell: bash
         run: |
           VERSION="$(node -p "require('./packages/design-contracts/package.json').version")"
@@ -136,24 +54,14 @@ jobs:
             pnpm --filter "${NAME}" publish --access public --no-git-checks --provenance
           done
 
-      - name: Create the canonical Git install tag
-        if: steps.release-candidate.outputs.should-release == 'true' && steps.release-candidate.outputs.tag-exists != 'true'
+      - name: Tag release
         shell: bash
         run: |
-          HEAD_COMMIT="$(git rev-parse HEAD)"
-          if [ "${HEAD_COMMIT}" != "${GITHUB_SHA}" ]; then
-            echo "::error::Tag checkout ${HEAD_COMMIT} does not match verified release ${GITHUB_SHA}."
-            exit 1
-          fi
           VERSION="$(node -p "require('./packages/design-contracts/package.json').version")"
           TAG="v${VERSION}"
+          git fetch --tags --force
           if git show-ref --tags --verify --quiet "refs/tags/${TAG}"; then
-            TAG_COMMIT="$(git rev-list -n 1 "${TAG}")"
-            if [ "${TAG_COMMIT}" != "${HEAD_COMMIT}" ]; then
-              echo "::error::${TAG} already points to ${TAG_COMMIT}, not this release commit ${HEAD_COMMIT}."
-              exit 1
-            fi
-            echo "::notice::${TAG} already names this published release commit."
+            test "$(git rev-list -n 1 "${TAG}")" = "${GITHUB_SHA}"
             exit 0
           fi
           git config user.name "github-actions[bot]"

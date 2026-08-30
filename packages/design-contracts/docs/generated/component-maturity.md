@@ -4,30 +4,32 @@
 
 This document is the human-readable projection of the same catalog and Showcase manifest consumed by product CI.
 
-- Contract: stable 4 · beta 58 · planned 29
-- Web renderer: beta 60 · planned 29 · unsupported 2
-- Native renderer: beta 61 · planned 12 · unsupported 18
+- Contract: stable 4 · beta 61 · planned 29
+- Web renderer: stable 4 · beta 59 · planned 29 · unsupported 2
+- Native renderer: stable 4 · beta 59 · planned 12 · unsupported 19
 
 | Component | Canonical story ID | Contract | Web | Native | Documentation | Required evidence |
 | --- | --- | --- | --- | --- | --- | --- |
 | Text | `foundation/text` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
 | Icon | `foundation/icon` | beta | beta | beta | [authored](../icon.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
-| Surface | `layout/surface` | stable | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
+| Surface | `layout/surface` | stable | stable | stable | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
 | Divider | `layout/divider` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
 | Section | `layout/section` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
 | Stack | `layout/stack` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
+| Container | `layout/container` | beta | beta | beta | [authored](../container.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
+| AspectRatio | `layout/aspect-ratio` | beta | beta | beta | [authored](../aspect-ratio.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
 | Grid | `layout/grid` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, platform-parity; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, platform-parity |
 | Layout | `layout/layout` | beta | beta | beta | [authored](../layout.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard, platform-parity; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard, platform-parity |
 | Masonry | `layout/masonry` | planned | planned | planned | generated only | contract: contract |
 | Splitter | `layout/splitter` | planned | planned | unsupported | [authored](../splitter.md) | contract: contract |
-| Button | `action/button` | stable | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
+| Button | `action/button` | stable | stable | stable | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
 | IconButton | `action/icon-button` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
 | Link | `action/link` | beta | beta | beta | [authored](../link.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard, platform-parity; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard, platform-parity |
 | BottomCTA | `action/bottom-cta` | beta | unsupported | beta | generated only | contract: contract; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
 | FloatingActionButton | `action/floating-action-button` | planned | planned | planned | [authored](../floating-action-button.md) | contract: contract |
-| Field | `input/field` | stable | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard |
+| Field | `input/field` | stable | stable | stable | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard |
 | SearchField | `input/search-field` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard |
-| TextArea | `input/text-area` | stable | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
+| TextArea | `input/text-area` | stable | stable | stable | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
 | PasswordField | `input/password-field` | beta | beta | beta | [authored](../password-field.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard, platform-parity; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard, platform-parity |
 | OtpField | `input/otp-field` | beta | beta | beta | [authored](../otp-field.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard, platform-parity; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard, platform-parity |
 | Checkbox | `input/checkbox` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard |
@@ -101,3 +103,4 @@ This document is the human-readable projection of the same catalog and Showcase 
 | BorderBeam | `utility/border-beam` | planned | planned | unsupported | [authored](../border-beam.md) | contract: contract |
 | DesignSystemProvider | `provider/design-system-provider` | beta | beta | beta | [authored](../design-system-provider.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
 | Utility | `utility/utility` | planned | planned | unsupported | [authored](../utility.md) | contract: contract |
+| VisuallyHidden | `utility/visually-hidden` | beta | beta | unsupported | [authored](../visually-hidden.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |

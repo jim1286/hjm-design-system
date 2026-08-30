@@ -47,7 +47,7 @@ token overrides remain unsupported.
 
 The package exports include:
 
-- foundations: `Text`, `Surface`, `Stack`, `Icon`, `Section`, responsive `Grid`, adaptive `Layout`
+- foundations: `Text`, `Surface`, `Stack`, `Container`, `AspectRatio`, `Icon`, `Section`, responsive `Grid`, adaptive `Layout`
 - actions and fields: `Button`, `IconButton`, `BottomCTA`, `Link`, `Field`, `Form`, `TextField`,
   `TextArea`, `SearchField`, `Select`, `Combobox`, `NumberField`, `Slider`
 - adaptive inputs: `DatePicker`, Expo-independent adapter-based `FilePicker`

@@ -121,6 +121,8 @@ export {
   둘이 어긋날 자리가 생긴다. 한 컴포넌트는 한 모듈에 둔다.
 */
 export { breadcrumbRecipe } from "./breadcrumb.js";
+export { aspectRatioRecipe } from "./aspect-ratio.js";
+export { containerRecipe } from "./container.js";
 export { cardRecipe, type CardHeadingLevel } from "./card.js";
 export { calendarRecipe } from "./calendar.js";
 export { carouselRecipe } from "./carousel.js";
@@ -152,3 +154,4 @@ export { sidePanelRecipe } from "./side-panel.js";
 export { timelineRecipe } from "./timeline.js";
 export { treeRecipe } from "./tree.js";
 export { uploadItemRecipe } from "./upload-item.js";
+export { visuallyHiddenRecipe } from "./visually-hidden.js";

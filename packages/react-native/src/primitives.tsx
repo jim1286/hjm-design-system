@@ -4,6 +4,15 @@ import {
   type ResolvedGridLayout,
 } from "@hjmds/design-contracts/grid";
 import {
+  resolveAspectRatioDescriptor,
+  type AspectRatioValue,
+} from "@hjmds/design-contracts/components/aspect-ratio";
+import {
+  resolveContainerDescriptor,
+  type ContainerGutter,
+  type ContainerSize,
+} from "@hjmds/design-contracts/components/container";
+import {
   getIconTransform,
   resolveIconDescriptor,
   type IconDescriptor,
@@ -345,6 +354,52 @@ export function Stack({
   );
 }
 
+export type ContainerProps = Omit<ViewProps, "children"> & Readonly<{
+  children?: ReactNode;
+  size?: ContainerSize;
+  gutter?: ContainerGutter;
+}>;
+
+/** Shared centered content boundary for phones, tablets, and desktop-sized Native windows. */
+export function Container({ size, gutter, style, ...props }: ContainerProps) {
+  const resolved = resolveContainerDescriptor({
+    ...(size === undefined ? {} : { size }),
+    ...(gutter === undefined ? {} : { gutter }),
+  });
+  return (
+    <View
+      {...props}
+      style={[
+        {
+          alignSelf: "center",
+          maxWidth: resolved.maxWidth ?? undefined,
+          paddingHorizontal: resolved.paddingInline,
+          width: "100%",
+        },
+        style,
+      ]}
+    />
+  );
+}
+
+export type AspectRatioProps = Omit<ViewProps, "children"> & Readonly<{
+  children?: ReactNode;
+  ratio?: AspectRatioValue;
+}>;
+
+/** Native translation of the same width/height contract used by Web media frames. */
+export function AspectRatio({ ratio, style, ...props }: AspectRatioProps) {
+  const resolved = resolveAspectRatioDescriptor(
+    ratio === undefined ? {} : { ratio },
+  );
+  return (
+    <View
+      {...props}
+      style={[{ aspectRatio: resolved.ratio, width: "100%" }, style]}
+    />
+  );
+}
+
 type GridCanonicalDescriptorProps = Pick<
   GridDescriptor,
   "columns" | "gap" | "minColumnWidth"
@@ -599,3 +654,5 @@ export function Section({
     </View>
   );
 }
+
+export type { AspectRatioValue, ContainerGutter, ContainerSize };

@@ -13,6 +13,13 @@
         { "id": "reduced-motion", "theme": "light", "direction": "ltr", "textScale": 1, "reducedMotion": true },
         { "id": "accessibility", "theme": "light", "direction": "ltr", "textScale": 1, "reducedMotion": false }
       ]
+    },
+    {
+      "proofFile": "test/stable-core.browser.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        { "id": "keyboard", "theme": "light", "direction": "ltr", "textScale": 1, "reducedMotion": false }
+      ]
     }
   ]
 }

@@ -56,6 +56,25 @@ function defaultClaim(
   };
 }
 
+function stableFieldClaim(
+  exportNames: readonly string[],
+  subpath: `./${string}`,
+): ReactRendererEvidenceComponent {
+  const base = defaultClaim("field", exportNames, subpath);
+  return {
+    ...base,
+    scenarios: [...base.scenarios, "keyboard"],
+    proofs: [
+      ...base.proofs,
+      {
+        scenarios: ["keyboard"],
+        file: "test/stable-core.browser.test.tsx",
+        caseId: "field",
+      },
+    ],
+  };
+}
+
 /**
  * First-party Web renderer claims. Scenario axes remain fail-closed: this
  * manifest claims a table-driven environment/accessibility smoke matrix.
@@ -73,12 +92,14 @@ export const reactRendererEvidence = {
     defaultClaim("surface", ["Surface"], "./layout"),
     defaultClaim("icon", ["Icon"], "./display"),
     defaultClaim("stack", ["Stack"], "./layout"),
+    defaultClaim("container", ["Container"], "./layout"),
+    defaultClaim("aspect-ratio", ["AspectRatio"], "./layout"),
     defaultClaim("grid", ["Grid"], "./layout"),
     defaultClaim("layout", ["Layout"], "./layout"),
     defaultClaim("button", ["Button"], "./actions"),
     defaultClaim("icon-button", ["IconButton"], "./actions"),
     defaultClaim("link", ["Link"], "./actions"),
-    defaultClaim("field", ["Field", "TextField"], "./forms"),
+    stableFieldClaim(["Field", "TextField"], "./forms"),
     defaultClaim("search-field", ["SearchField"], "./forms"),
     defaultClaim("text-area", ["TextArea"], "./forms"),
     defaultClaim("password-field", ["PasswordField"], "./password-field"),
@@ -127,6 +148,7 @@ export const reactRendererEvidence = {
     defaultClaim("alert-dialog", ["AlertDialog"], "./overlays"),
     defaultClaim("sheet", ["Sheet"], "./overlays"),
     defaultClaim("tooltip", ["Tooltip"], "./overlays"),
+    defaultClaim("visually-hidden", ["VisuallyHidden"], "./layout"),
     defaultClaim("menu", ["Menu"], "./overlays"),
   ],
 } as const satisfies ReactRendererEvidenceManifest;

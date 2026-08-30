@@ -7,6 +7,8 @@ export const componentIds = {
     Divider: "divider",
     Section: "section",
     Stack: "stack",
+    Container: "container",
+    AspectRatio: "aspect-ratio",
     Grid: "grid",
     Layout: "layout",
     Masonry: "masonry",
@@ -92,6 +94,7 @@ export const componentIds = {
     BorderBeam: "border-beam",
     DesignSystemProvider: "design-system-provider",
     Utility: "utility",
+    VisuallyHidden: "visually-hidden",
 };
 const kindByCategory = {
     foundation: "primitive",

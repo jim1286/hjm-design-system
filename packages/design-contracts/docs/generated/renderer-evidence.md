@@ -4,25 +4,27 @@
 
 This projection joins the canonical surface maturity manifest with first-party renderer claims. Missing scenarios are explicit beta promotion debt; stable surfaces are blocked by CI until none remain.
 
-- web: 60/60 active implementations; 29/60 full scenario sets
-- native: 61/61 active implementations; 31/61 full scenario sets
+- web: 63/63 active implementations; 33/63 full scenario sets
+- native: 63/63 active implementations; 34/63 full scenario sets
 
 | Component | Surface | Maturity | Renderer package | Export | Claimed scenarios | Missing required scenarios | Executable proofs |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | Text | web | beta | @hjmds/react | ./layout | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.ssr.test.tsx#text |
 | Icon | web | beta | @hjmds/react | ./display | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.ssr.test.tsx#icon |
-| Surface | web | beta | @hjmds/react | ./layout | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.ssr.test.tsx#surface |
+| Surface | web | stable | @hjmds/react | ./layout | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.ssr.test.tsx#surface |
 | Divider | web | beta | @hjmds/react | ./display | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.ssr.test.tsx#divider |
 | Section | web | beta | @hjmds/react | ./layout | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.ssr.test.tsx#section |
 | Stack | web | beta | @hjmds/react | ./layout | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.ssr.test.tsx#stack |
+| Container | web | beta | @hjmds/react | ./layout | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.ssr.test.tsx#container |
+| AspectRatio | web | beta | @hjmds/react | ./layout | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.ssr.test.tsx#aspect-ratio |
 | Grid | web | beta | @hjmds/react | ./layout | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | platform-parity | test/default-render.ssr.test.tsx#grid |
 | Layout | web | beta | @hjmds/react | ./layout | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | keyboard, platform-parity | test/default-render.ssr.test.tsx#layout |
-| Button | web | beta | @hjmds/react | ./actions | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.ssr.test.tsx#button |
+| Button | web | stable | @hjmds/react | ./actions | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.ssr.test.tsx#button |
 | IconButton | web | beta | @hjmds/react | ./actions | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.ssr.test.tsx#icon-button |
 | Link | web | beta | @hjmds/react | ./actions | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | keyboard, platform-parity | test/default-render.ssr.test.tsx#link |
-| Field | web | beta | @hjmds/react | ./forms | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | keyboard | test/default-render.ssr.test.tsx#field |
+| Field | web | stable | @hjmds/react | ./forms | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard | none | test/default-render.ssr.test.tsx#field, test/stable-core.browser.test.tsx#field |
 | SearchField | web | beta | @hjmds/react | ./forms | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | keyboard | test/default-render.ssr.test.tsx#search-field |
-| TextArea | web | beta | @hjmds/react | ./forms | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.ssr.test.tsx#text-area |
+| TextArea | web | stable | @hjmds/react | ./forms | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.ssr.test.tsx#text-area |
 | PasswordField | web | beta | @hjmds/react | ./password-field | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | keyboard, platform-parity | test/default-render.ssr.test.tsx#password-field |
 | OtpField | web | beta | @hjmds/react | ./otp-field | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | keyboard, platform-parity | test/default-render.ssr.test.tsx#otp-field |
 | Checkbox | web | beta | @hjmds/react | ./selection | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | keyboard | test/default-render.ssr.test.tsx#checkbox |
@@ -69,21 +71,24 @@ This projection joins the canonical surface maturity manifest with first-party r
 | Sheet | web | beta | @hjmds/react | ./overlays | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | keyboard, platform-parity | test/default-render.ssr.test.tsx#sheet |
 | Tooltip | web | beta | @hjmds/react | ./overlays | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | keyboard | test/default-render.ssr.test.tsx#tooltip |
 | DesignSystemProvider | web | beta | @hjmds/react | ./provider | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.ssr.test.tsx#design-system-provider |
+| VisuallyHidden | web | beta | @hjmds/react | ./layout | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.ssr.test.tsx#visually-hidden |
 | Text | native | beta | @hjmds/react-native | ./primitives | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.test.tsx#text |
 | Icon | native | beta | @hjmds/react-native | ./primitives | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.test.tsx#icon |
-| Surface | native | beta | @hjmds/react-native | ./primitives | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.test.tsx#surface |
+| Surface | native | stable | @hjmds/react-native | ./primitives | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.test.tsx#surface |
 | Divider | native | beta | @hjmds/react-native | ./data-display | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.test.tsx#divider |
 | Section | native | beta | @hjmds/react-native | ./primitives | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.test.tsx#section |
 | Stack | native | beta | @hjmds/react-native | ./primitives | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.test.tsx#stack |
+| Container | native | beta | @hjmds/react-native | ./primitives | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.test.tsx#container |
+| AspectRatio | native | beta | @hjmds/react-native | ./primitives | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.test.tsx#aspect-ratio |
 | Grid | native | beta | @hjmds/react-native | ./primitives | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | platform-parity | test/default-render.test.tsx#grid |
 | Layout | native | beta | @hjmds/react-native | ./primitives | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | keyboard, platform-parity | test/default-render.test.tsx#layout |
-| Button | native | beta | @hjmds/react-native | ./actions | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.test.tsx#button |
+| Button | native | stable | @hjmds/react-native | ./actions | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.test.tsx#button |
 | IconButton | native | beta | @hjmds/react-native | ./actions | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.test.tsx#icon-button |
 | Link | native | beta | @hjmds/react-native | ./actions | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | keyboard, platform-parity | test/default-render.test.tsx#link |
 | BottomCTA | native | beta | @hjmds/react-native | ./actions | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.test.tsx#bottom-cta |
-| Field | native | beta | @hjmds/react-native | ./forms | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | keyboard | test/default-render.test.tsx#field |
+| Field | native | stable | @hjmds/react-native | ./forms | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard | none | test/default-render.test.tsx#field, test/stable-core.test.tsx#field |
 | SearchField | native | beta | @hjmds/react-native | ./inputs | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | keyboard | test/default-render.test.tsx#search-field |
-| TextArea | native | beta | @hjmds/react-native | ./inputs | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.test.tsx#text-area |
+| TextArea | native | stable | @hjmds/react-native | ./inputs | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | none | test/default-render.test.tsx#text-area |
 | PasswordField | native | beta | @hjmds/react-native | ./password-field | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | keyboard, platform-parity | test/default-render.test.tsx#password-field |
 | OtpField | native | beta | @hjmds/react-native | ./otp-field | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | keyboard, platform-parity | test/default-render.test.tsx#otp-field |
 | Checkbox | native | beta | @hjmds/react-native | ./inputs | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | keyboard | test/default-render.test.tsx#checkbox |

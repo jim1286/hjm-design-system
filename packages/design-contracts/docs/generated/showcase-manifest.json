@@ -107,8 +107,8 @@
       "platform": "shared",
       "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -292,6 +292,102 @@
       }
     },
     {
+      "id": "container",
+      "storyId": "layout/container",
+      "name": "Container",
+      "category": "layout",
+      "platform": "shared",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/container.md"
+      }
+    },
+    {
+      "id": "aspect-ratio",
+      "storyId": "layout/aspect-ratio",
+      "name": "AspectRatio",
+      "category": "layout",
+      "platform": "shared",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/aspect-ratio.md"
+      }
+    },
+    {
       "id": "grid",
       "storyId": "layout/grid",
       "name": "Grid",
@@ -449,8 +545,8 @@
       "platform": "shared",
       "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -657,8 +753,8 @@
       "platform": "shared",
       "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -757,8 +853,8 @@
       "platform": "shared",
       "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -3726,6 +3822,42 @@
       "documentation": {
         "generated": "docs/generated/component-maturity.md",
         "authored": "docs/utility.md"
+      }
+    },
+    {
+      "id": "visually-hidden",
+      "storyId": "utility/visually-hidden",
+      "name": "VisuallyHidden",
+      "category": "utility",
+      "platform": "web",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "unsupported"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/visually-hidden.md"
       }
     }
   ]

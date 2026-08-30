@@ -12,6 +12,8 @@ export declare const componentIds: {
     readonly Divider: "divider";
     readonly Section: "section";
     readonly Stack: "stack";
+    readonly Container: "container";
+    readonly AspectRatio: "aspect-ratio";
     readonly Grid: "grid";
     readonly Layout: "layout";
     readonly Masonry: "masonry";
@@ -97,6 +99,7 @@ export declare const componentIds: {
     readonly BorderBeam: "border-beam";
     readonly DesignSystemProvider: "design-system-provider";
     readonly Utility: "utility";
+    readonly VisuallyHidden: "visually-hidden";
 };
 export type ComponentId = (typeof componentIds)[ComponentName];
 export type ComponentDefinition = Readonly<{

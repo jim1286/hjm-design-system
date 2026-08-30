@@ -1,5 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { resolveGridLayout, } from "@hjmds/design-contracts/grid";
+import { resolveAspectRatioDescriptor, } from "@hjmds/design-contracts/components/aspect-ratio";
+import { resolveContainerDescriptor, } from "@hjmds/design-contracts/components/container";
 import { getIconTransform, resolveIconDescriptor, } from "@hjmds/design-contracts/components/icon";
 import { validateLayoutRegions, } from "@hjmds/design-contracts/components/layout";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
@@ -129,6 +131,27 @@ export function Stack({ axis, direction, gap = stackRecipe.defaults.gap, align =
             },
             style,
         ] }));
+}
+/** Shared centered content boundary for phones, tablets, and desktop-sized Native windows. */
+export function Container({ size, gutter, style, ...props }) {
+    const resolved = resolveContainerDescriptor({
+        ...(size === undefined ? {} : { size }),
+        ...(gutter === undefined ? {} : { gutter }),
+    });
+    return (_jsx(View, { ...props, style: [
+            {
+                alignSelf: "center",
+                maxWidth: resolved.maxWidth ?? undefined,
+                paddingHorizontal: resolved.paddingInline,
+                width: "100%",
+            },
+            style,
+        ] }));
+}
+/** Native translation of the same width/height contract used by Web media frames. */
+export function AspectRatio({ ratio, style, ...props }) {
+    const resolved = resolveAspectRatioDescriptor(ratio === undefined ? {} : { ratio });
+    return (_jsx(View, { ...props, style: [{ aspectRatio: resolved.ratio, width: "100%" }, style] }));
 }
 export function Grid({ children, descriptor, columns, gap, minColumnWidth, availableWidth, onLayoutResolved, itemStyle, style, onLayout, ...props }) {
     const { width: windowWidth } = useWindowDimensions();

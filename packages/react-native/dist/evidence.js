@@ -21,6 +21,21 @@ function defaultClaim(componentId, exportNames, subpath) {
             }],
     };
 }
+function stableFieldClaim(exportNames, subpath) {
+    const base = defaultClaim("field", exportNames, subpath);
+    return {
+        ...base,
+        scenarios: [...base.scenarios, "keyboard"],
+        proofs: [
+            ...base.proofs,
+            {
+                scenarios: ["keyboard"],
+                file: "test/stable-core.test.tsx",
+                caseId: "field",
+            },
+        ],
+    };
+}
 /**
  * First-party Native renderer claims. These are automated component-level
  * smoke claims, not device, TalkBack, or VoiceOver certification. Scenario
@@ -36,6 +51,8 @@ export const reactNativeRendererEvidence = {
         defaultClaim("text", ["Text"], "./primitives"),
         defaultClaim("surface", ["Surface"], "./primitives"),
         defaultClaim("stack", ["Stack"], "./primitives"),
+        defaultClaim("container", ["Container"], "./primitives"),
+        defaultClaim("aspect-ratio", ["AspectRatio"], "./primitives"),
         defaultClaim("grid", ["Grid"], "./primitives"),
         defaultClaim("layout", ["Layout"], "./primitives"),
         defaultClaim("icon", ["Icon"], "./primitives"),
@@ -44,7 +61,7 @@ export const reactNativeRendererEvidence = {
         defaultClaim("icon-button", ["IconButton"], "./actions"),
         defaultClaim("link", ["Link"], "./actions"),
         defaultClaim("bottom-cta", ["BottomCTA"], "./actions"),
-        defaultClaim("field", ["Field"], "./forms"),
+        stableFieldClaim(["Field"], "./forms"),
         defaultClaim("search-field", ["SearchField"], "./inputs"),
         defaultClaim("text-area", ["TextArea"], "./inputs"),
         defaultClaim("password-field", ["PasswordField"], "./password-field"),

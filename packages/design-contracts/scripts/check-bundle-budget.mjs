@@ -102,7 +102,7 @@ const budgets = [
   },
   {
     exportPath: "./recipes/all",
-    maxModules: 46,
+    maxModules: 49,
     maxRawBytes: 365_000,
     maxGzipBytes: 85_000,
   },
@@ -114,19 +114,19 @@ const budgets = [
   },
   {
     exportPath: "./catalog",
-    maxModules: 50,
+    maxModules: 53,
     maxRawBytes: 390_000,
     maxGzipBytes: 92_000,
   },
   {
     exportPath: "./showcase",
-    maxModules: 51,
+    maxModules: 54,
     maxRawBytes: 390_000,
     maxGzipBytes: 92_000,
   },
   {
     exportPath: "./evidence",
-    maxModules: 53,
+    maxModules: 56,
     maxRawBytes: 400_000,
     maxGzipBytes: 95_000,
   },
@@ -136,7 +136,7 @@ const budgets = [
     // consumers are guarded separately below, so module splitting may raise
     // this count without increasing the root byte graph.
     maxModules: 70,
-    maxRawBytes: 460_000,
+    maxRawBytes: 470_000,
     maxGzipBytes: 110_000,
   },
 ];

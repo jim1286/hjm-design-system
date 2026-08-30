@@ -6,6 +6,8 @@ export {
 } from "./provider.js";
 
 export {
+  AspectRatio,
+  Container,
   Grid,
   Icon,
   Layout,
@@ -13,6 +15,11 @@ export {
   Stack,
   Surface,
   Text,
+  type AspectRatioProps,
+  type AspectRatioValue,
+  type ContainerGutter,
+  type ContainerProps,
+  type ContainerSize,
   type GridProps,
   type IconProps,
   type LayoutProps,

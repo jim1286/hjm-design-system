@@ -1,4 +1,6 @@
 import { type GridDescriptor, type GridGap } from "@hjmds/design-contracts/grid";
+import { type AspectRatioValue } from "@hjmds/design-contracts/components/aspect-ratio";
+import { type ContainerGutter, type ContainerSize } from "@hjmds/design-contracts/components/container";
 import { type LayoutSidebarRole } from "@hjmds/design-contracts/components/layout";
 import { type SurfacePadding, type SurfaceRadius, type SurfaceTone } from "@hjmds/design-contracts/recipes/base";
 import { type StackAlign, type StackAxis, type StackGap, type StackJustify, type TextEmphasis, type TextTone } from "@hjmds/design-contracts/recipes";
@@ -97,6 +99,33 @@ export declare const Stack: import("react").ForwardRefExoticComponent<HTMLAttrib
     justify?: StackJustify;
     wrap?: boolean;
 }> & import("react").RefAttributes<HTMLDivElement>>;
+export type ContainerProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> & Readonly<{
+    children?: ReactNode;
+    size?: ContainerSize;
+    gutter?: ContainerGutter;
+}>;
+/** A centered, token-guttered content boundary shared with Native large screens. */
+export declare const Container: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLDivElement>, "children"> & Readonly<{
+    children?: ReactNode;
+    size?: ContainerSize;
+    gutter?: ContainerGutter;
+}> & import("react").RefAttributes<HTMLDivElement>>;
+export type AspectRatioProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> & Readonly<{
+    children?: ReactNode;
+    ratio?: AspectRatioValue;
+}>;
+/** Responsive media frame. Products retain object-fit, crop, and content semantics. */
+export declare const AspectRatio: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLDivElement>, "children"> & Readonly<{
+    children?: ReactNode;
+    ratio?: AspectRatioValue;
+}> & import("react").RefAttributes<HTMLDivElement>>;
+export type VisuallyHiddenProps = HTMLAttributes<HTMLSpanElement> & Readonly<{
+    children: ReactNode;
+}>;
+/** Keeps meaningful copy available to assistive technology without visible layout. */
+export declare const VisuallyHidden: import("react").ForwardRefExoticComponent<HTMLAttributes<HTMLSpanElement> & Readonly<{
+    children: ReactNode;
+}> & import("react").RefAttributes<HTMLSpanElement>>;
 export type GridProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> & Pick<GridDescriptor, "columns" | "gap" | "minColumnWidth"> & Readonly<{
     children?: ReactNode;
     /** Test/SSR override. Browser renderers otherwise observe window.innerWidth. */
@@ -131,4 +160,5 @@ export declare const Section: import("react").ForwardRefExoticComponent<Omit<HTM
     headingLevel?: 2 | 3 | 4 | 5 | 6;
 }> & import("react").RefAttributes<HTMLElement>>;
 export type { GridGap };
+export type { AspectRatioValue, ContainerGutter, ContainerSize };
 //# sourceMappingURL=layout.d.ts.map

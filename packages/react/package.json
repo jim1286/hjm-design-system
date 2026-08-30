@@ -2,6 +2,7 @@
   "name": "@hjmds/react",
   "version": "0.8.2",
   "description": "Accessible React 19 renderers for HJM design contracts.",
+  "license": "MIT",
   "publishConfig": {
     "access": "public"
   },
@@ -121,7 +122,8 @@
   },
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json && cp src/styles.css dist/styles.css",
@@ -132,7 +134,7 @@
     "check": "pnpm typecheck && pnpm test && pnpm build"
   },
   "peerDependencies": {
-    "@hjmds/design-contracts": ">=0.8.0 <0.9.0",
+    "@hjmds/design-contracts": ">=0.9.0 <0.10.0",
     "react": ">=19.0.0",
     "react-dom": ">=19.0.0"
   },

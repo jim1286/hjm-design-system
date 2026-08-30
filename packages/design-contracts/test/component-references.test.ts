@@ -90,8 +90,8 @@ describe("component reference coverage", () => {
       contract: { status: "stable", recipes: ["buttonRecipe"] },
       surfaces: {
         parity: "shared",
-        web: { status: "beta" },
-        native: { status: "beta" },
+        web: { status: "stable" },
+        native: { status: "stable" },
       },
     });
     expect(getComponentDefinition("tooltip")).toMatchObject({
@@ -121,10 +121,10 @@ describe("component reference coverage", () => {
       }
     }
 
-    expect(componentCatalog.filter(({ surfaceStatus }) => surfaceStatus.web === "beta")).toHaveLength(60);
-    expect(componentCatalog.filter(({ surfaceStatus }) => surfaceStatus.native === "beta")).toHaveLength(61);
-    expect(componentCatalog.some((entry) => getComponentSurfaceStatus(entry, "web") === "stable")).toBe(false);
-    expect(componentCatalog.some((entry) => getComponentSurfaceStatus(entry, "native") === "stable")).toBe(false);
+    expect(componentCatalog.filter(({ surfaceStatus }) => surfaceStatus.web === "beta")).toHaveLength(59);
+    expect(componentCatalog.filter(({ surfaceStatus }) => surfaceStatus.native === "beta")).toHaveLength(59);
+    expect(componentCatalog.filter(({ surfaceStatus }) => surfaceStatus.web === "stable")).toHaveLength(4);
+    expect(componentCatalog.filter(({ surfaceStatus }) => surfaceStatus.native === "stable")).toHaveLength(4);
   });
 
   it("keeps legacy custom catalog entries working during the surface-status migration", () => {

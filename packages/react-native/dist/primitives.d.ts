@@ -1,4 +1,6 @@
 import { type GridDescriptor, type ResolvedGridLayout } from "@hjmds/design-contracts/grid";
+import { type AspectRatioValue } from "@hjmds/design-contracts/components/aspect-ratio";
+import { type ContainerGutter, type ContainerSize } from "@hjmds/design-contracts/components/container";
 import { type IconDescriptor } from "@hjmds/design-contracts/components/icon";
 import { type LayoutSidebarRole } from "@hjmds/design-contracts/components/layout";
 import { type TextVariant } from "@hjmds/design-contracts/foundations";
@@ -83,6 +85,19 @@ export type StackProps = ViewProps & Readonly<{
     direction?: "row" | "column";
 }>;
 export declare function Stack({ axis, direction, gap, align, justify, wrap, style, ...props }: StackProps): import("react").JSX.Element;
+export type ContainerProps = Omit<ViewProps, "children"> & Readonly<{
+    children?: ReactNode;
+    size?: ContainerSize;
+    gutter?: ContainerGutter;
+}>;
+/** Shared centered content boundary for phones, tablets, and desktop-sized Native windows. */
+export declare function Container({ size, gutter, style, ...props }: ContainerProps): import("react").JSX.Element;
+export type AspectRatioProps = Omit<ViewProps, "children"> & Readonly<{
+    children?: ReactNode;
+    ratio?: AspectRatioValue;
+}>;
+/** Native translation of the same width/height contract used by Web media frames. */
+export declare function AspectRatio({ ratio, style, ...props }: AspectRatioProps): import("react").JSX.Element;
 type GridCanonicalDescriptorProps = Pick<GridDescriptor, "columns" | "gap" | "minColumnWidth"> & Readonly<{
     descriptor?: never;
 }>;
@@ -129,4 +144,5 @@ export type SectionProps = Omit<ViewProps, "children"> & Readonly<{
 }>;
 /** A large-text-safe content section with a logical header action slot. */
 export declare function Section({ title, description, action, children, headerStyle, copyStyle, titleStyle, descriptionStyle, actionStyle, contentStyle, style, ...props }: SectionProps): import("react").JSX.Element;
+export type { AspectRatioValue, ContainerGutter, ContainerSize };
 //# sourceMappingURL=primitives.d.ts.map

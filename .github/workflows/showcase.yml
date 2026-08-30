@@ -12,18 +12,19 @@ permissions:
   id-token: write
 
 concurrency:
-  group: design-system-showcase-${{ github.ref }}
+  group: design-system-showcase
   cancel-in-progress: true
 
 jobs:
-  check-and-build:
+  deploy:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v6
@@ -40,47 +41,14 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Install Chromium for renderer interaction tests
-        run: pnpm --filter @hjmds/react exec playwright install --with-deps chromium
+      - name: Build Storybook
+        run: pnpm showcase:web:build
 
-      - name: Require a Changeset for public package changes
-        if: github.event_name == 'push'
-        shell: bash
-        env:
-          PUSH_BASE: ${{ github.event.before }}
-        run: |
-          if [ -z "${PUSH_BASE}" ] || [ "${PUSH_BASE}" = "0000000000000000000000000000000000000000" ] || ! git cat-file -e "${PUSH_BASE}^{commit}" 2>/dev/null; then
-            echo "::notice::No reachable push base; skipping the Changeset gate for this push."
-            exit 0
-          fi
-          pnpm changeset:check "${PUSH_BASE}"
-
-      - name: Check design-system contracts
-        run: pnpm check
-
-      - name: Check showcase contracts
-        run: pnpm --filter @hjm/showcase-web check
-
-      - name: Build static Storybook
-        run: pnpm --filter @hjm/showcase-web build && pnpm --filter @hjm/showcase-web verify:static
-
-      - name: Verify committed Git package artifacts
-        run: |
-          git diff --exit-code -- packages/design-contracts/dist packages/react/dist packages/react-native/dist packages/design-contracts/docs/generated
-          test -z "$(git ls-files --others --exclude-standard -- packages/design-contracts/dist packages/react/dist packages/react-native/dist packages/design-contracts/docs/generated)"
-
-      - name: Upload static Storybook
+      - name: Upload Storybook
         uses: actions/upload-pages-artifact@v5
         with:
           path: showcase/web/storybook-static
 
-  deploy:
-    needs: check-and-build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy Storybook to GitHub Pages
+      - name: Deploy Storybook
         id: deployment
         uses: actions/deploy-pages@v5

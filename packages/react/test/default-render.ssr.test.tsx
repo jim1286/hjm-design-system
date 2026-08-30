@@ -5,6 +5,7 @@ import { describe, expect, it } from "vitest";
 import {
   Accordion,
   AlertDialog,
+  AspectRatio,
   Avatar,
   Badge,
   BottomNavigation,
@@ -14,6 +15,7 @@ import {
   CheckboxGroup,
   Chip,
   Combobox,
+  Container,
   CounterBadge,
   DescriptionList,
   DatePicker,
@@ -64,6 +66,7 @@ import {
   Tooltip,
   Statistic,
   UploadItem,
+  VisuallyHidden,
 } from "../src/index.js";
 import { reactRendererEvidence } from "../src/evidence.js";
 import executedScenarioRegistry from "./executed-scenarios.json" with { type: "json" };
@@ -134,6 +137,16 @@ const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
     componentId: "stack",
     marker: "hjm-stack",
     render: () => <Stack>Stack</Stack>,
+  },
+  {
+    componentId: "container",
+    marker: "hjm-container",
+    render: () => <Container size="reading">Readable content</Container>,
+  },
+  {
+    componentId: "aspect-ratio",
+    marker: "hjm-aspect-ratio",
+    render: () => <AspectRatio ratio="wide"><div>Media</div></AspectRatio>,
   },
   {
     componentId: "grid",
@@ -546,6 +559,11 @@ const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
     componentId: "tooltip",
     marker: "hjm-tooltip",
     render: () => <Tooltip trigger={<button type="button">Help</button>} content="Help text" />,
+  },
+  {
+    componentId: "visually-hidden",
+    marker: "hjm-visually-hidden",
+    render: () => <VisuallyHidden>Accessible detail</VisuallyHidden>,
   },
   {
     componentId: "menu",

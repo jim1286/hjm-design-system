@@ -78,8 +78,8 @@ export declare const componentCatalog: readonly [{
 }, {
     readonly recipe: "surfaceRecipe";
     readonly surfaceStatus: {
-        readonly web: "beta";
-        readonly native: "beta";
+        readonly web: "stable";
+        readonly native: "stable";
     };
     readonly name: "Surface";
     readonly category: "layout";
@@ -113,6 +113,34 @@ export declare const componentCatalog: readonly [{
         readonly native: "beta";
     };
     readonly name: "Stack";
+    readonly category: "layout";
+    readonly platform: "shared";
+    readonly status: "beta";
+}, {
+    readonly roadmap: {
+        readonly state: "evidence-needed";
+        readonly summary: string;
+    };
+    readonly recipe: "containerRecipe";
+    readonly surfaceStatus: {
+        readonly web: "beta";
+        readonly native: "beta";
+    };
+    readonly name: "Container";
+    readonly category: "layout";
+    readonly platform: "shared";
+    readonly status: "beta";
+}, {
+    readonly roadmap: {
+        readonly state: "evidence-needed";
+        readonly summary: string;
+    };
+    readonly recipe: "aspectRatioRecipe";
+    readonly surfaceStatus: {
+        readonly web: "beta";
+        readonly native: "beta";
+    };
+    readonly name: "AspectRatio";
     readonly category: "layout";
     readonly platform: "shared";
     readonly status: "beta";
@@ -178,8 +206,8 @@ export declare const componentCatalog: readonly [{
 }, {
     readonly recipe: "buttonRecipe";
     readonly surfaceStatus: {
-        readonly web: "beta";
-        readonly native: "beta";
+        readonly web: "stable";
+        readonly native: "stable";
     };
     readonly name: "Button";
     readonly category: "action";
@@ -236,8 +264,8 @@ export declare const componentCatalog: readonly [{
     readonly recipe: "fieldRecipe";
     readonly behavior: "field";
     readonly surfaceStatus: {
-        readonly web: "beta";
-        readonly native: "beta";
+        readonly web: "stable";
+        readonly native: "stable";
     };
     readonly name: "Field";
     readonly category: "input";
@@ -257,8 +285,8 @@ export declare const componentCatalog: readonly [{
 }, {
     readonly recipe: "fieldRecipe";
     readonly surfaceStatus: {
-        readonly web: "beta";
-        readonly native: "beta";
+        readonly web: "stable";
+        readonly native: "stable";
     };
     readonly name: "TextArea";
     readonly category: "input";
@@ -1207,6 +1235,21 @@ export declare const componentCatalog: readonly [{
     readonly category: "utility";
     readonly platform: "web";
     readonly status: "planned";
+}, {
+    readonly roadmap: {
+        readonly state: "evidence-needed";
+        readonly summary: string;
+    };
+    readonly recipe: "visuallyHiddenRecipe";
+    readonly aliases: readonly ["ScreenReaderOnly", "SrOnly"];
+    readonly surfaceStatus: {
+        readonly web: "beta";
+        readonly native: "unsupported";
+    };
+    readonly name: "VisuallyHidden";
+    readonly category: "utility";
+    readonly platform: "web";
+    readonly status: "beta";
 }];
 export type ComponentName = (typeof componentCatalog)[number]["name"];
 export declare function summarizeComponentRoadmap(entries?: readonly ComponentCatalogEntry[]): Readonly<Record<ComponentRoadmapState, number>>;
@@ -1921,6 +1964,41 @@ export declare const recipeRegistry: {
             readonly icon: "chevronEnd";
             readonly decorative: true;
         };
+    };
+    readonly aspectRatioRecipe: {
+        readonly slots: readonly ["root", "content"];
+        readonly defaults: {
+            readonly ratio: "wide";
+        };
+        readonly ratios: {
+            readonly square: 1;
+            readonly portrait: number;
+            readonly landscape: number;
+            readonly wide: number;
+        };
+        readonly sizing: {
+            readonly inline: "fill";
+            readonly block: "derive-from-ratio";
+        };
+    };
+    readonly containerRecipe: {
+        readonly slots: readonly ["root"];
+        readonly defaults: {
+            readonly size: "content";
+            readonly gutter: "regular";
+        };
+        readonly maxWidths: {
+            readonly reading: 720;
+            readonly content: 1200;
+            readonly full: null;
+        };
+        readonly gutters: {
+            readonly none: 0;
+            readonly compact: 16;
+            readonly regular: 20;
+            readonly spacious: 24;
+        };
+        readonly alignment: "inline-center";
     };
     readonly calendarRecipe: {
         readonly slots: readonly ["root", "header", "monthLabel", "previousMonth", "nextMonth", "weekdayRow", "weekdayLabel", "grid", "week", "day", "dayLabel", "content"];
@@ -7152,6 +7230,20 @@ export declare const recipeRegistry: {
             };
             readonly disabledOpacity: 0.5;
         };
+    };
+    readonly visuallyHiddenRecipe: {
+        readonly slots: readonly ["root"];
+        readonly geometry: {
+            readonly width: 1;
+            readonly height: 1;
+            readonly margin: -1;
+            readonly border: 0;
+            readonly padding: 0;
+        };
+        readonly clipping: "inset(50%)";
+        readonly overflow: "hidden";
+        readonly position: "absolute";
+        readonly whiteSpace: "nowrap";
     };
 };
 export type RecipeName = keyof typeof recipeRegistry;

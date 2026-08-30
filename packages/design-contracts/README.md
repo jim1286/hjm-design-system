@@ -15,6 +15,8 @@ DOM event, focus trap 또는 navigation adapter를 렌더링하지 않고, 두 �
 [`docs/architecture.md`](./docs/architecture.md)에 정리되어 있습니다.
 외부 라이브러리에서 어떤 문제 분해 원칙만 가져오고 무엇을 복제하지 않는지는
 [`docs/library-reference-decisions.md`](./docs/library-reference-decisions.md)에 기록합니다.
+이번 공백 분석에서 추가한 `Container`, `AspectRatio`, `VisuallyHidden`의 선정 근거는
+[`docs/library-gap-analysis.md`](./docs/library-gap-analysis.md)에 기록합니다.
 Toast의 queue·announcement·timer 수명주기는 [`docs/toast.md`](./docs/toast.md)에 별도로
 고정되어 있습니다.
 

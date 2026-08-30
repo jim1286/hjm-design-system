@@ -1,4 +1,31 @@
 export {
+  aspectRatioDefaults,
+  aspectRatioRecipe,
+  resolveAspectRatioDescriptor,
+  validateAspectRatioValue,
+  type AspectRatioDescriptor,
+  type AspectRatioPreset,
+  type AspectRatioValue,
+  type ResolvedAspectRatioDescriptor,
+} from "./aspect-ratio.js";
+
+export {
+  containerDefaults,
+  containerRecipe,
+  resolveContainerDescriptor,
+  validateContainerDescriptor,
+  type ContainerDescriptor,
+  type ContainerGutter,
+  type ContainerSize,
+  type ResolvedContainerDescriptor,
+} from "./container.js";
+
+export {
+  visuallyHiddenRecipe,
+  type VisuallyHiddenContract,
+} from "./visually-hidden.js";
+
+export {
   getIconDirectionality,
   getIconTransform,
   resolveIconDescriptor,

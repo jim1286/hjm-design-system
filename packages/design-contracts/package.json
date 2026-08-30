@@ -2,6 +2,7 @@
   "name": "@hjmds/design-contracts",
   "version": "0.8.2",
   "description": "Renderer-neutral design contracts, tokens, recipes, and behaviors shared by HJM products.",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jim1286/hjm-design-system.git",
@@ -117,6 +118,12 @@
       "import": "./dist/alert-dialog.js",
       "default": "./dist/alert-dialog.js"
     },
+    "./components/aspect-ratio": {
+      "types": "./dist/aspect-ratio.d.ts",
+      "react-native": "./dist/aspect-ratio.js",
+      "import": "./dist/aspect-ratio.js",
+      "default": "./dist/aspect-ratio.js"
+    },
     "./components/bottom-navigation": {
       "types": "./dist/bottom-navigation.d.ts",
       "react-native": "./dist/bottom-navigation.js",
@@ -164,6 +171,12 @@
       "react-native": "./dist/content-state.js",
       "import": "./dist/content-state.js",
       "default": "./dist/content-state.js"
+    },
+    "./components/container": {
+      "types": "./dist/container.d.ts",
+      "react-native": "./dist/container.js",
+      "import": "./dist/container.js",
+      "default": "./dist/container.js"
     },
     "./components/data-table": {
       "types": "./dist/data-table.d.ts",
@@ -369,6 +382,12 @@
       "import": "./dist/upload-item.js",
       "default": "./dist/upload-item.js"
     },
+    "./components/visually-hidden": {
+      "types": "./dist/visually-hidden.d.ts",
+      "react-native": "./dist/visually-hidden.js",
+      "import": "./dist/visually-hidden.js",
+      "default": "./dist/visually-hidden.js"
+    },
     "./showcase": {
       "types": "./dist/showcase.d.ts",
       "react-native": "./dist/showcase.js",
@@ -379,7 +398,8 @@
   "files": [
     "dist",
     "docs",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json",

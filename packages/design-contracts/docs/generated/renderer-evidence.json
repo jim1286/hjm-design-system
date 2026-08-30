@@ -6,9 +6,9 @@
     "web": {
       "packageName": "@hjmds/react",
       "packageVersion": "0.8.2",
-      "activeComponents": 60,
-      "claimedComponents": 60,
-      "completeScenarioComponents": 29,
+      "activeComponents": 63,
+      "claimedComponents": 63,
+      "completeScenarioComponents": 33,
       "components": [
         {
           "componentId": "text",
@@ -101,7 +101,7 @@
         {
           "componentId": "surface",
           "name": "Surface",
-          "status": "beta",
+          "status": "stable",
           "claimed": true,
           "subpath": "./layout",
           "exportNames": [
@@ -275,6 +275,94 @@
           "missingScenarios": []
         },
         {
+          "componentId": "container",
+          "name": "Container",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./layout",
+          "exportNames": [
+            "Container"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "container"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "aspect-ratio",
+          "name": "AspectRatio",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./layout",
+          "exportNames": [
+            "AspectRatio"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "aspect-ratio"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": []
+        },
+        {
           "componentId": "grid",
           "name": "Grid",
           "status": "beta",
@@ -373,7 +461,7 @@
         {
           "componentId": "button",
           "name": "Button",
-          "status": "beta",
+          "status": "stable",
           "claimed": true,
           "subpath": "./actions",
           "exportNames": [
@@ -510,7 +598,7 @@
         {
           "componentId": "field",
           "name": "Field",
-          "status": "beta",
+          "status": "stable",
           "claimed": true,
           "subpath": "./forms",
           "exportNames": [
@@ -529,6 +617,13 @@
                 "accessibility"
               ],
               "file": "test/default-render.ssr.test.tsx",
+              "caseId": "field"
+            },
+            {
+              "scenarios": [
+                "keyboard"
+              ],
+              "file": "test/stable-core.browser.test.tsx",
               "caseId": "field"
             }
           ],
@@ -549,11 +644,10 @@
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility"
-          ],
-          "missingScenarios": [
+            "accessibility",
             "keyboard"
-          ]
+          ],
+          "missingScenarios": []
         },
         {
           "componentId": "search-field",
@@ -605,7 +699,7 @@
         {
           "componentId": "text-area",
           "name": "TextArea",
-          "status": "beta",
+          "status": "stable",
           "claimed": true,
           "subpath": "./forms",
           "exportNames": [
@@ -2775,15 +2869,59 @@
             "accessibility"
           ],
           "missingScenarios": []
+        },
+        {
+          "componentId": "visually-hidden",
+          "name": "VisuallyHidden",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./layout",
+          "exportNames": [
+            "VisuallyHidden"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "visually-hidden"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": []
         }
       ]
     },
     "native": {
       "packageName": "@hjmds/react-native",
       "packageVersion": "0.8.2",
-      "activeComponents": 61,
-      "claimedComponents": 61,
-      "completeScenarioComponents": 31,
+      "activeComponents": 63,
+      "claimedComponents": 63,
+      "completeScenarioComponents": 34,
       "components": [
         {
           "componentId": "text",
@@ -2876,7 +3014,7 @@
         {
           "componentId": "surface",
           "name": "Surface",
-          "status": "beta",
+          "status": "stable",
           "claimed": true,
           "subpath": "./primitives",
           "exportNames": [
@@ -3050,6 +3188,94 @@
           "missingScenarios": []
         },
         {
+          "componentId": "container",
+          "name": "Container",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./primitives",
+          "exportNames": [
+            "Container"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "container"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "aspect-ratio",
+          "name": "AspectRatio",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./primitives",
+          "exportNames": [
+            "AspectRatio"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "aspect-ratio"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": []
+        },
+        {
           "componentId": "grid",
           "name": "Grid",
           "status": "beta",
@@ -3148,7 +3374,7 @@
         {
           "componentId": "button",
           "name": "Button",
-          "status": "beta",
+          "status": "stable",
           "claimed": true,
           "subpath": "./actions",
           "exportNames": [
@@ -3329,7 +3555,7 @@
         {
           "componentId": "field",
           "name": "Field",
-          "status": "beta",
+          "status": "stable",
           "claimed": true,
           "subpath": "./forms",
           "exportNames": [
@@ -3347,6 +3573,13 @@
                 "accessibility"
               ],
               "file": "test/default-render.test.tsx",
+              "caseId": "field"
+            },
+            {
+              "scenarios": [
+                "keyboard"
+              ],
+              "file": "test/stable-core.test.tsx",
               "caseId": "field"
             }
           ],
@@ -3367,11 +3600,10 @@
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility"
-          ],
-          "missingScenarios": [
+            "accessibility",
             "keyboard"
-          ]
+          ],
+          "missingScenarios": []
         },
         {
           "componentId": "search-field",
@@ -3423,7 +3655,7 @@
         {
           "componentId": "text-area",
           "name": "TextArea",
-          "status": "beta",
+          "status": "stable",
           "claimed": true,
           "subpath": "./inputs",
           "exportNames": [

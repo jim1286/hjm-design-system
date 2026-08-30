@@ -5,12 +5,20 @@ export {
 } from "./provider.js";
 
 export {
+  AspectRatio,
+  Container,
   Grid,
   Layout,
   Section,
   Stack,
   Surface,
   Text,
+  VisuallyHidden,
+  type AspectRatioProps,
+  type AspectRatioValue,
+  type ContainerGutter,
+  type ContainerProps,
+  type ContainerSize,
   type GridGap,
   type GridProps,
   type LayoutProps,
@@ -28,6 +36,7 @@ export {
   type TextEmphasis,
   type TextProps,
   type TextTone,
+  type VisuallyHiddenProps,
 } from "./layout.js";
 
 export {

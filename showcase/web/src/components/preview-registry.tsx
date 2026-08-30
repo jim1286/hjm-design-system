@@ -42,12 +42,15 @@ import { FilePicker as HjmFilePicker } from "@hjmds/react/file-picker";
 import { OtpField as HjmOtpField } from "@hjmds/react/otp-field";
 import { PasswordField as HjmPasswordField } from "@hjmds/react/password-field";
 import {
+  AspectRatio as HjmAspectRatio,
+  Container as HjmContainer,
   Grid as HjmGrid,
   Layout as HjmLayout,
   Section as HjmSection,
   Stack as HjmStack,
   Surface as HjmSurface,
   Text as HjmText,
+  VisuallyHidden as HjmVisuallyHidden,
 } from "@hjmds/react/layout";
 import { Slider as HjmSlider } from "@hjmds/react/slider";
 import { Steps as HjmSteps } from "@hjmds/react/steps";
@@ -104,6 +107,8 @@ export const webRendererComponentNames = [
   "Icon",
   "Surface",
   "Stack",
+  "Container",
+  "AspectRatio",
   "Grid",
   "Layout",
   "Button",
@@ -159,6 +164,7 @@ export const webRendererComponentNames = [
   "AlertDialog",
   "Sheet",
   "Tooltip",
+  "VisuallyHidden",
   "DesignSystemProvider",
 ] as const satisfies readonly ComponentName[];
 export type WebRendererComponentName = (typeof webRendererComponentNames)[number];
@@ -301,6 +307,8 @@ function WebPreviewRenderer({ name }: { name: RecipeWebRendererComponentName }) 
     case "Surface": return <HjmSurface as="article" bordered className="hjm-demo-surface"><HjmText as="strong">Surface 제목</HjmText><HjmText as="p" tone="muted">제품이 색·간격·모서리를 임의로 덮지 않는 의미 기반 컨테이너입니다.</HjmText></HjmSurface>;
     case "Card": return <HjmCard leading={<span aria-hidden="true">✨</span>} title="Card 제목" description="계약이 보장하는 여백과 정렬로 긴 설명도 안정적으로 표시합니다." actions={<HjmButton size="small">자세히</HjmButton>} />;
     case "Stack": return <HjmStack gap="sm"><HjmButton tone="secondary">첫 번째</HjmButton><HjmButton tone="secondary">두 번째</HjmButton><HjmButton tone="secondary">세 번째</HjmButton></HjmStack>;
+    case "Container": return <HjmContainer size="reading"><HjmSurface bordered padding="md"><HjmText>읽기 폭과 논리 gutter를 Web·Native에서 같은 계약으로 유지합니다.</HjmText></HjmSurface></HjmContainer>;
+    case "AspectRatio": return <HjmAspectRatio ratio="wide"><div style={{ alignItems: "center", background: "var(--hjm-color-surface-subtle)", display: "flex", justifyContent: "center" }}><HjmText tone="muted">16:9 media frame</HjmText></div></HjmAspectRatio>;
     case "Grid": return <HjmGrid columns={{ compact: 1, medium: 2, expanded: 3 }} gap={{ compact: "md" }}><HjmCard title="첫 번째">공통 window class</HjmCard><HjmCard title="두 번째">responsive columns</HjmCard><HjmCard title="세 번째">row-major order</HjmCard></HjmGrid>;
     case "Layout": return <HjmLayout header={<HjmText as="strong">제품 헤더</HjmText>} skipLinkLabel="본문으로 건너뛰기"><HjmSurface as="section" bordered>하나의 main landmark 안에 놓이는 제품 본문입니다.</HjmSurface></HjmLayout>;
     case "Button": return <HjmStack axis="inline" gap="sm" wrap><HjmButton>Primary</HjmButton><HjmButton tone="secondary">Secondary</HjmButton><HjmButton disabled>Disabled</HjmButton></HjmStack>;
@@ -355,6 +363,7 @@ function WebPreviewRenderer({ name }: { name: RecipeWebRendererComponentName }) 
     case "AlertDialog": return <HjmAlertDialog trigger={<button className="hjm-demo-button" type="button">AlertDialog 열기</button>} request={{ mode: "confirm", tone: "danger", title: "기록 삭제", description: "이 작업은 되돌릴 수 없습니다.", confirmLabel: "삭제", cancelLabel: "취소", onConfirm: async () => undefined, fallbackErrorMessage: "삭제하지 못했습니다." }} />;
     case "Sheet": return <HjmSheet trigger={<button className="hjm-demo-button" type="button">Sheet 열기</button>} title="필터" closeLabel="필터 닫기" description="화면 크기와 방향에 맞춰 배치되는 보조 작업 영역입니다." footer={<HjmButton>적용</HjmButton>}><p>조건을 선택한 뒤 적용하세요.</p></HjmSheet>;
     case "Tooltip": return <HjmTooltip trigger={<button className="hjm-demo-button" type="button">도움말에 포커스하거나 가리키기</button>} content="자세한 도움말" />;
+    case "VisuallyHidden": return <HjmStack axis="inline" align="center"><button type="button" className="hjm-demo-button"><span aria-hidden>🔔</span><HjmVisuallyHidden>읽지 않은 알림 3개</HjmVisuallyHidden></button><HjmText tone="muted">추가 맥락은 화면에는 보이지 않고 접근성 트리에 남습니다.</HjmText></HjmStack>;
     default: return assertNever(name);
   }
 }
@@ -657,6 +666,8 @@ export const webRendererRegistry = {
   Icon: createWebRendererDefinition("Icon", "iconRecipe"),
   Surface: createWebRendererDefinition("Surface", "surfaceRecipe"),
   Stack: createWebRendererDefinition("Stack", "stackRecipe"),
+  Container: createWebRendererDefinition("Container", "containerRecipe"),
+  AspectRatio: createWebRendererDefinition("AspectRatio", "aspectRatioRecipe"),
   Grid: createWebRendererDefinition("Grid", "gridRecipe"),
   Layout: createWebRendererDefinition("Layout", "layoutRecipe", "layout"),
   Button: createWebRendererDefinition("Button", "buttonRecipe"),
@@ -712,6 +723,7 @@ export const webRendererRegistry = {
   AlertDialog: createWebRendererDefinition("AlertDialog", "alertDialogRecipe", "alertDialog"),
   Sheet: createWebRendererDefinition("Sheet", "sheetRecipe", "sheet"),
   Tooltip: createWebRendererDefinition("Tooltip", "tooltipRecipe", "tooltip"),
+  VisuallyHidden: createWebRendererDefinition("VisuallyHidden", "visuallyHiddenRecipe"),
   DesignSystemProvider: createProviderWebRendererDefinition(),
 } satisfies Readonly<Record<WebRendererComponentName, WebRendererDefinition>>;
 

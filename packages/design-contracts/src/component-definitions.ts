@@ -25,6 +25,8 @@ export const componentIds = {
   Divider: "divider",
   Section: "section",
   Stack: "stack",
+  Container: "container",
+  AspectRatio: "aspect-ratio",
   Grid: "grid",
   Layout: "layout",
   Masonry: "masonry",
@@ -110,6 +112,7 @@ export const componentIds = {
   BorderBeam: "border-beam",
   DesignSystemProvider: "design-system-provider",
   Utility: "utility",
+  VisuallyHidden: "visually-hidden",
 } as const satisfies Readonly<Record<ComponentName, string>>;
 
 export type ComponentId = (typeof componentIds)[ComponentName];

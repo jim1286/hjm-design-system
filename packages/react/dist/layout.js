@@ -1,5 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { resolveGridLayout, } from "@hjmds/design-contracts/grid";
+import { resolveAspectRatioDescriptor, } from "@hjmds/design-contracts/components/aspect-ratio";
+import { resolveContainerDescriptor, } from "@hjmds/design-contracts/components/container";
 import { layoutRecipe, validateLayoutWebDescriptor, } from "@hjmds/design-contracts/components/layout";
 import { surfaceDefaults, surfaceGeometry, surfaceRecipe, } from "@hjmds/design-contracts/recipes/base";
 import { stackRecipe, textRecipe, } from "@hjmds/design-contracts/recipes";
@@ -131,6 +133,27 @@ export const Stack = forwardRef(function Stack({ axis = stackRecipe.defaults.axi
             flexWrap: wrap ? "wrap" : "nowrap",
             ...style,
         } }));
+});
+/** A centered, token-guttered content boundary shared with Native large screens. */
+export const Container = forwardRef(function Container({ size, gutter, className, style, ...props }, ref) {
+    const resolved = resolveContainerDescriptor({
+        ...(size === undefined ? {} : { size }),
+        ...(gutter === undefined ? {} : { gutter }),
+    });
+    return (_jsx("div", { ...props, ref: ref, className: classNames("hjm-container", className), "data-size": resolved.size, "data-gutter": resolved.gutter, style: {
+            maxInlineSize: resolved.maxWidth ?? undefined,
+            paddingInline: resolved.paddingInline,
+            ...style,
+        } }));
+});
+/** Responsive media frame. Products retain object-fit, crop, and content semantics. */
+export const AspectRatio = forwardRef(function AspectRatio({ ratio, className, style, ...props }, ref) {
+    const resolved = resolveAspectRatioDescriptor(ratio === undefined ? {} : { ratio });
+    return (_jsx("div", { ...props, ref: ref, className: classNames("hjm-aspect-ratio", className), "data-ratio": resolved.source, style: { aspectRatio: resolved.ratio, ...style } }));
+});
+/** Keeps meaningful copy available to assistive technology without visible layout. */
+export const VisuallyHidden = forwardRef(function VisuallyHidden({ className, ...props }, ref) {
+    return (_jsx("span", { ...props, ref: ref, className: classNames("hjm-visually-hidden", className) }));
 });
 export const Grid = forwardRef(function Grid({ columns, gap, minColumnWidth, windowWidth, availableWidth, className, style, ...props }, forwardedRef) {
     const browserWindowWidth = useWindowWidth();

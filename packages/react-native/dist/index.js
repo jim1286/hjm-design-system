@@ -1,5 +1,5 @@
 export { HjmNativeProvider, useHjmNativeTheme, } from "./provider.js";
-export { Grid, Icon, Layout, Section, Stack, Surface, Text, } from "./primitives.js";
+export { AspectRatio, Container, Grid, Icon, Layout, Section, Stack, Surface, Text, } from "./primitives.js";
 export { BottomCTA, Button, IconButton, Link, } from "./actions.js";
 export { Checkbox, CheckboxGroup, Chip, OtpField, PasswordField, Radio, RadioGroup, SearchField, SegmentedControl, Switch, TextArea, TextField, } from "./inputs.js";
 export { NumberField, } from "./number-field.js";

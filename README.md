@@ -10,6 +10,11 @@ renderer를 한 이력과 한 release train에서 관리하는 pnpm monorepo입�
 | [`@hjmds/react-native`](packages/react-native) | Expo-independent React Native components |
 | [`@hjm/showcase-web`](showcase/web) | Storybook documentation and Web evidence |
 
+Stable Core는 `Surface`, `Button`, `Field`, `TextArea`를 Web과 Native에서 안정 API로
+보장합니다. 공통 레이아웃에는 `Container`, `AspectRatio`, Web 접근성 유틸리티에는
+`VisuallyHidden`을 제공합니다. 승격 근거와 호환성 정책은
+[`docs/stable-core.md`](docs/stable-core.md)에 기록합니다.
+
 ## Why one repository
 
 Contracts와 두 renderer는 같은 API 변화에 함께 반응해야 합니다. 한 PR에서 계약, Web,
@@ -47,7 +52,7 @@ React Native 앱은 renderer만 Native package로 바꿉니다.
 
 `<version>`은 세 패키지가 함께 릴리스된 정확한 SemVer(예: `0.8.0`)로 바꿉니다.
 
-publish는 consumer evidence gate를 통과한 뒤에만 실행되고, 성공한 같은 commit에
+publish는 `Release Packages` workflow를 수동으로 실행할 때만 시작되고, 성공한 같은 commit에
 `v<version>` tag가 생성됩니다.
 tarball을 vendoring하거나 Git ref와 package path로 고정하지 않습니다. 두 방식 모두 참조
 문자열에 버전을 박아 `pnpm update`와 `npm outdated`를 무력화합니다.
@@ -60,23 +65,14 @@ pnpm check
 pnpm showcase:web:build
 ```
 
-- `main` 단일 branch로 운영합니다. 모든 commit은 `main`에 직접 push하고, CI는 `main` push에서만
-  돕니다.
+- `main` 단일 branch로 운영합니다. `main` push는 Storybook을 GitHub Pages에 배포합니다.
 - 세 public package는 하나의 fixed version train으로 함께 versioning합니다.
 - 일반 commit: public package source를 바꿨다면 `pnpm changeset`으로 Changeset을 함께 commit해야
-  `Design System Showcase` workflow의 gate를 통과합니다. 이 push는 Storybook을 GitHub Pages에
-  배포만 하고 릴리스는 하지 않습니다.
+  합니다. 자동 배포는 Storybook만 갱신하고 package를 릴리스하지 않습니다.
 - 릴리스 commit: 로컬에서 `pnpm release:version`을 실행하고 생성 결과를 하나의 commit으로
-  `main`에 push합니다. `Release Packages` workflow는 `main` push마다 돌지만 package version이
-  바뀐 push(= 아직 `v<version>` tag가 없고 남은 Changeset도 없는 push)에서만 릴리스를 진행하고,
-  같은 push가 Storybook도 함께 갱신합니다. 전체 검증 후 canonical `v<version>` Git tag가
-  생성되므로 위 Git package path가 실제 release를 가리킵니다. tag 전에는
-  Yajalal/BurnTok의 release-SHA Storybook inventory gate도 fail closed로 통과해야 합니다.
-  두 consumer가 private이므로 canonical에만 최소 권한 `HJM_CONSUMER_SYNC_TOKEN`을 두고 릴리스
-  시작 시 각 default branch HEAD를 full SHA로 캡처해 `repository_dispatch`합니다. consumer의
-  canonical read token은 필요 없으며,
-  권한과 evidence 경계는
-  [`consumer-release-gate.md`](packages/design-contracts/docs/consumer-release-gate.md)를 따릅니다.
+  `main`에 push합니다. package publish가 필요할 때 GitHub Actions에서 `Release Packages`를 직접
+  실행합니다. workflow는 release commit shape를 확인하고 세 package를 npm에 publish한 뒤
+  canonical `v<version>` Git tag를 생성합니다.
 - source of truth는 `packages/design-contracts/src/catalog.ts`입니다.
 - catalog projection은 `pnpm contracts:sync`로 갱신합니다.
 - renderer claim과 scenario debt projection은 전체 package build 뒤
@@ -86,3 +82,7 @@ pnpm showcase:web:build
 자세한 역할과 migration은
 [`packages/design-contracts/docs/migration-0.6.md`](packages/design-contracts/docs/migration-0.6.md)를
 참고하세요.
+
+기여, 보안 제보, 라이선스와 외부 디자인 시스템 비교 근거는 각각
+[`CONTRIBUTING.md`](CONTRIBUTING.md), [`SECURITY.md`](SECURITY.md), [`LICENSE`](LICENSE),
+[`library-gap-analysis.md`](packages/design-contracts/docs/library-gap-analysis.md)에서 확인할 수 있습니다.
