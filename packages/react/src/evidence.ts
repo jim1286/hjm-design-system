@@ -84,7 +84,7 @@ function stableFieldClaim(
 export const reactRendererEvidence = {
   schemaVersion: reactRendererEvidenceSchemaVersion,
   packageName: "@hjmds/react",
-  packageVersion: "0.8.2",
+  packageVersion: "0.9.0",
   surface: "web",
   components: [
     defaultClaim("design-system-provider", ["HjmProvider", "useHjmTheme"], "./provider"),
