@@ -10,6 +10,11 @@ import { classNames, composeRefs, useControllableState } from "./internal.js";
 import { AnchoredPortal, useAnchoredPopup, } from "./portal.js";
 import { useOptionalHjmTheme, useTooltipCoordinator } from "./provider.js";
 import { createHjmThemeStyle } from "./theme.js";
+function containsEventTarget(container, target) {
+    return target !== null &&
+        "nodeType" in target &&
+        container?.contains(target) === true;
+}
 function HjmPortal({ children, container }) {
     const [mounted, setMounted] = useState(false);
     const theme = useOptionalHjmTheme();
@@ -525,6 +530,12 @@ export const Tooltip = forwardRef(function Tooltip({ trigger, content, placement
         clearTimer();
         if (nextOpen && suppressedRef.current)
             return;
+        if (delay <= 0) {
+            if (nextOpen)
+                activateTooltip?.(id);
+            changeOpen(nextOpen, detail);
+            return;
+        }
         timerRef.current = setTimeout(() => {
             if (nextOpen)
                 activateTooltip?.(id);
@@ -564,7 +575,11 @@ export const Tooltip = forwardRef(function Tooltip({ trigger, content, placement
             if (event.pointerType === "touch")
                 return;
             suppressedRef.current = false;
-            schedule(false, 80, { reason: "pointer-leave" });
+            if (containsEventTarget(tooltipNode, event.relatedTarget)) {
+                clearTimer();
+                return;
+            }
+            schedule(false, 0, { reason: "pointer-leave" });
         },
         onFocus: (event) => {
             triggerProps.onFocus?.(event);
@@ -606,6 +621,10 @@ export const Tooltip = forwardRef(function Tooltip({ trigger, content, placement
             if (event.pointerType === "touch")
                 return;
             suppressedRef.current = false;
+            if (containsEventTarget(tooltipNode, event.relatedTarget)) {
+                clearTimer();
+                return;
+            }
             schedule(false, 0, { reason: "pointer-leave" });
         }, children: [renderedTrigger, visible ? (_jsx(AnchoredPortal, { anchorRef: triggerRef, ssrFallback: "inline", ...(portalContainer === undefined ? {} : { container: portalContainer }), children: _jsx("span", { ref: setTooltipRef, id: id, role: "tooltip", className: "hjm-tooltip__content", "data-placement": popupPosition.placement, "data-align": popupPosition.align, style: popupPosition.style, onPointerEnter: (event) => {
                         if (event.pointerType !== "touch")
@@ -614,6 +633,10 @@ export const Tooltip = forwardRef(function Tooltip({ trigger, content, placement
                         if (event.pointerType === "touch")
                             return;
                         suppressedRef.current = false;
+                        if (containsEventTarget(triggerRef.current, event.relatedTarget)) {
+                            clearTimer();
+                            return;
+                        }
                         schedule(false, 0, { reason: "pointer-leave" });
                     }, children: descriptor.content }) })) : null] }));
 });

@@ -77,6 +77,15 @@ type TriggerElementProps = Readonly<{
 
 export type OverlayTrigger = ReactElement<TriggerElementProps>;
 
+function containsEventTarget(
+  container: Node | null,
+  target: EventTarget | null,
+): boolean {
+  return target !== null &&
+    "nodeType" in target &&
+    container?.contains(target as Node) === true;
+}
+
 type ModalPortalProps = Readonly<{
   children: ReactNode;
   container?: HTMLElement;
@@ -1025,6 +1034,11 @@ export const Tooltip = forwardRef<HTMLSpanElement, TooltipProps>(function Toolti
   ) => {
     clearTimer();
     if (nextOpen && suppressedRef.current) return;
+    if (delay <= 0) {
+      if (nextOpen) activateTooltip?.(id);
+      changeOpen(nextOpen, detail);
+      return;
+    }
     timerRef.current = setTimeout(() => {
       if (nextOpen) activateTooltip?.(id);
       changeOpen(nextOpen, detail);
@@ -1068,7 +1082,11 @@ export const Tooltip = forwardRef<HTMLSpanElement, TooltipProps>(function Toolti
       triggerProps.onPointerLeave?.(event);
       if (event.pointerType === "touch") return;
       suppressedRef.current = false;
-      schedule(false, 80, { reason: "pointer-leave" });
+      if (containsEventTarget(tooltipNode, event.relatedTarget)) {
+        clearTimer();
+        return;
+      }
+      schedule(false, 0, { reason: "pointer-leave" });
     },
     onFocus: (event) => {
       triggerProps.onFocus?.(event);
@@ -1117,6 +1135,10 @@ export const Tooltip = forwardRef<HTMLSpanElement, TooltipProps>(function Toolti
       onPointerLeave={(event) => {
         if (event.pointerType === "touch") return;
         suppressedRef.current = false;
+        if (containsEventTarget(tooltipNode, event.relatedTarget)) {
+          clearTimer();
+          return;
+        }
         schedule(false, 0, { reason: "pointer-leave" });
       }}
     >
@@ -1141,6 +1163,10 @@ export const Tooltip = forwardRef<HTMLSpanElement, TooltipProps>(function Toolti
             onPointerLeave={(event) => {
               if (event.pointerType === "touch") return;
               suppressedRef.current = false;
+              if (containsEventTarget(triggerRef.current, event.relatedTarget)) {
+                clearTimer();
+                return;
+              }
               schedule(false, 0, { reason: "pointer-leave" });
             }}
           >

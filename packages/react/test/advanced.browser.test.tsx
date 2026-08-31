@@ -29,20 +29,6 @@ async function flush() {
   });
 }
 
-/**
- * Reads a value that only appears after a timer-driven state change, retrying
- * inside `act` so a throttled or delayed timer cannot turn a real assertion
- * into a null dereference. Still fails when the value never arrives.
- */
-async function flushUntil<T>(read: () => T | null, attempts = 25): Promise<T> {
-  for (let attempt = 0; attempt < attempts; attempt += 1) {
-    const value = read();
-    if (value !== null) return value;
-    await flush();
-  }
-  throw new Error("Timed out waiting for the value to appear");
-}
-
 beforeEach(() => {
   (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean })
     .IS_REACT_ACT_ENVIRONMENT = true;
@@ -326,10 +312,9 @@ describe("non-modal popup behavior", () => {
     );
     const trigger = container.querySelector<HTMLButtonElement>("button")!;
     await act(async () => trigger.focus());
-    await flush();
-    const tooltip = await flushUntil(() =>
-      document.body.querySelector<HTMLElement>('[role="tooltip"]'),
-    );
+    const tooltip = document.body.querySelector<HTMLElement>('[role="tooltip"]');
+    expect(tooltip).not.toBeNull();
+    if (tooltip === null) throw new Error("Tooltip did not open on focus");
     expect(tooltip.textContent).toBe("상세 설명");
     expect(trigger.getAttribute("aria-describedby")).toBe(tooltip.id);
 

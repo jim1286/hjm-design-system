@@ -422,14 +422,24 @@ describe("anchored portal popups", () => {
       trigger.dispatchEvent(new PointerEvent("pointerout", {
         bubbles: true,
         pointerType: "mouse",
+        relatedTarget: tooltip,
       }));
       tooltip.dispatchEvent(new PointerEvent("pointerover", {
         bubbles: true,
         pointerType: "mouse",
+        relatedTarget: trigger,
       }));
     });
-    await flush(100);
     expect(document.body.querySelector('[role="tooltip"]')).not.toBeNull();
+
+    await act(async () => {
+      tooltip.dispatchEvent(new PointerEvent("pointerout", {
+        bubbles: true,
+        pointerType: "mouse",
+        relatedTarget: document.body,
+      }));
+    });
+    expect(document.body.querySelector('[role="tooltip"]')).toBeNull();
   });
 });
 
