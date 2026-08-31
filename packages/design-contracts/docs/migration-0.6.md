@@ -1,5 +1,9 @@
 # v0.6 migration
 
+> **역사 문서:** 아래 Git-path 명령은 v0.6 당시의 일회성 전환 기록이며 신규 설치 예제가
+> 아닙니다. 현재 소비 앱은 [`../README.md`](../README.md)의 npm registry 설치 규칙에 따라
+> contracts와 renderer를 같은 정확한 SemVer로 설치합니다.
+
 v0.6은 renderer가 없는 계약 패키지의 역할을 이름에서 분명히 하고, Web/RN 앱이 필요한
 graph만 가져가도록 package boundary를 나누는 breaking release입니다. package name은
 `@hjm/design-system`에서 `@hjmds/design-contracts`로 변경됩니다. 이전 이름 alias나 호환

@@ -59,6 +59,43 @@ The package exports include:
   `Result`, `Toast`, `ToastRegion`
 - overlays: `Dialog`, `AlertDialog`, `Sheet`
 
+## Composition style boundary
+
+The normative [consumer policy](../design-contracts/docs/consumer-policy.md#31-react-native-legacy-style-compatibility-boundary)
+is also shipped as `@hjmds/design-contracts/consumer-policy.md`. New apps must not add uses of the
+legacy unrestricted `style`, `labelStyle`, `inputStyle`, `containerStyle`, or slot `*Style` props.
+Those props remain callable in the 0.9 compatibility train only so existing consumers do not break;
+they are not an authorization to override recipe-owned visuals.
+
+Stable Core components are moving first to `layoutStyle`, typed as `HjmCompositionStyle`. It accepts
+screen-placement properties such as logical margins, width, flex, and `alignSelf`, while excluding
+color, typography, padding, gap, border, radius, height, opacity, transform, and interaction-state
+keys. Margin values must still come from HJM spacing tokens or a reviewed product adapter.
+
+```tsx
+import { spacing } from "@hjmds/design-contracts/foundations";
+import {
+  Button,
+  Surface,
+  type HjmCompositionStyle,
+} from "@hjmds/react-native";
+
+const actionPlacement = {
+  marginTop: spacing.md,
+  width: "100%",
+} satisfies HjmCompositionStyle;
+
+<Surface layoutStyle={{ flexGrow: 1 }}>
+  <Button layoutStyle={actionPlacement} onPress={save}>저장</Button>
+</Surface>;
+```
+
+If a product needs a new color, type treatment, radius, density, or control size, add a semantic
+theme/recipe axis with renderer evidence instead of using a raw style prop. Existing raw-style use
+must carry a migration ADR and removal train. The compatibility props will be removed in an
+announced breaking train after one fixed-train deprecation window, and no later than the first
+`1.0.0` release gate. Runtime filtering is intentionally deferred until that migration completes.
+
 `Image` consumes the same intrinsic descriptor as Web. `width` and `height`
 reserve the frame before loading, omitted `decorative` defaults to `true`, and
 `fit` is translated to the matching Native `resizeMode` (`fill` becomes
@@ -190,10 +227,22 @@ Tabs exposes the shared `activationMode`, `mountPolicy`, `panelMode`, `orientati
 and `loop` policies. Uncontrolled Tabs and SegmentedControl reconcile a removed selection to the
 first enabled item; controlled invalid or disabled selections fail before rendering.
 
+For cross-renderer code, use the canonical collection/state vocabulary:
+
+- `Tabs`, `RadioGroup`, and `SegmentedControl` take `items`; Native's former `options` prop remains
+  as a deprecated compatibility alias.
+- Native `TabItem` uses `id`, matching Web. The former `TabOption.value` shape remains available only
+  through the deprecated `options` path.
+- `Switch` takes `checked`, `defaultChecked`, and `onCheckedChange`, matching Web. Native's former
+  `value`, `defaultValue`, and `onValueChange` names remain deprecated aliases.
+
+Canonical and deprecated channels cannot be mixed in one component instance. The public types reject
+ambiguous combinations, and runtime validation protects untyped JavaScript consumers.
+
 `TextArea` follows the same accessible-name rule as `TextField`: provide either a visible `label`
 or `accessibilityLabel`. `SearchField` can render product icons through `renderLeading`,
 `renderClearIcon`, and `renderBusyIndicator`; its trailing precedence is busy, then clear, then the
-passive `trailing` slot. `SegmentedControl` options can render their own leading visual.
+passive `trailing` slot. `SegmentedControl` items can render their own leading visual.
 
 `Checkbox` supports boolean and `"mixed"` state, read-only semantics, plain/card presentation,
 compact/default sizing, and replaceable leading/indicator visuals. `CheckboxGroup` validates unique

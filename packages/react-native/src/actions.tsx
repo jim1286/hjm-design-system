@@ -33,6 +33,7 @@ import {
 import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
 import { minimumTargetStyle } from "./internal/styles.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type ButtonTone = ContractButtonTone;
 export type ButtonSize = ContractButtonSize;
@@ -63,7 +64,19 @@ export type ButtonProps = Omit<
     fullWidth?: boolean;
     hitSlop?: PressableProps["hitSlop"];
     accessibilityState?: PressableProps["accessibilityState"];
+    /** Canonical layout-only placement. Controlled visual and state keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
+    /**
+     * @deprecated Legacy compatibility only. New apps must use `layoutStyle` and must not
+     * override color, typography, radius, control height, or interaction state.
+     * @see https://github.com/jim1286/hjm-design-system/blob/main/packages/design-contracts/docs/consumer-policy.md#31-react-native-legacy-style-compatibility-boundary
+     */
     style?: StyleProp<ViewStyle>;
+    /**
+     * @deprecated Label typography and color belong to the Button recipe. Request a semantic
+     * recipe axis instead of styling the label in product code.
+     * @see https://github.com/jim1286/hjm-design-system/blob/main/packages/design-contracts/docs/consumer-policy.md#31-react-native-legacy-style-compatibility-boundary
+     */
     labelStyle?: StyleProp<TextStyle>;
     renderLoadingIndicator?: (props: Readonly<{ color: string; size: "small" }>) => ReactNode;
   }>;
@@ -82,6 +95,7 @@ export const Button = forwardRef<NativeView, ButtonProps>(function Button({
   trailing,
   fullWidth = false,
   hitSlop,
+  layoutStyle,
   style,
   labelStyle,
   renderLoadingIndicator,
@@ -141,6 +155,7 @@ export const Button = forwardRef<NativeView, ButtonProps>(function Button({
           ...(fullWidth ? { alignSelf: "stretch" } : {}),
         },
         style,
+        layoutStyle,
       ]}
     >
       {loading

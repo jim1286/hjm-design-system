@@ -44,8 +44,8 @@ function Colors() {
           ))}
           <Swatch
             color={`linear-gradient(135deg, ${brandGradient.from}, ${brandGradient.to})`}
-            label="brandGradient"
-            value={`${brandGradient.from} → ${brandGradient.to}`}
+            label="HJM organization gradient"
+            value={`${brandGradient.from} → ${brandGradient.to} · not a product default`}
           />
         </div>
       </section>

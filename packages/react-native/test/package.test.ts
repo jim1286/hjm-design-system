@@ -25,6 +25,7 @@ describe("@hjmds/react-native package boundary", () => {
     const expectedExportPaths = [
       ".",
       "./provider",
+      "./composition-style",
       "./primitives",
       "./actions",
       "./inputs",

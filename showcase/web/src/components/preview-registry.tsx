@@ -314,7 +314,7 @@ function WebPreviewRenderer({ name }: { name: RecipeWebRendererComponentName }) 
     case "Button": return <HjmStack axis="inline" gap="sm" wrap><HjmButton>Primary</HjmButton><HjmButton tone="secondary">Secondary</HjmButton><HjmButton disabled>Disabled</HjmButton></HjmStack>;
     case "IconButton": return <HjmStack axis="inline" gap="sm"><HjmIconButton label="좋아요">♡</HjmIconButton><HjmIconButton label="닫기" tone="ghost">×</HjmIconButton></HjmStack>;
     case "Link": return <HjmLink href="#components">컴포넌트 문서로 이동</HjmLink>;
-    case "Field": return <HjmField controlId="showcase-player-name" label="이름" description="필수 정보는 입력 아래에서 설명합니다.">{(controlProps) => <input {...controlProps} className="hjm-field__control" defaultValue="홍길동" />}</HjmField>;
+    case "Field": return <HjmField className="hjm-demo-field" controlId="showcase-player-name" label="이름" description="필수 정보는 입력 아래에서 설명합니다.">{(controlProps) => <input {...controlProps} defaultValue="홍길동" />}</HjmField>;
     case "SearchField": return <HjmSearchField label="선수 검색" clearLabel="검색어 지우기" defaultValue="야구" description="검색어 지우기 버튼도 키보드로 사용할 수 있습니다." />;
     case "TextArea": return <HjmTextArea label="설명" defaultValue="여러 줄 입력 예시" description="긴 설명도 레이아웃 안에서 줄바꿈됩니다." />;
     case "PasswordField": return <HjmPasswordField label="비밀번호" autofillHint="current" revealLabel="비밀번호 보기" concealLabel="비밀번호 숨기기" defaultValue="hjm-password" description="표시 전환은 값과 독립적으로 동작합니다." />;

@@ -13,7 +13,7 @@
     "build": "pnpm -r --filter './packages/**' run build",
     "typecheck": "pnpm -r --filter './packages/**' run typecheck",
     "test": "pnpm -r --filter './packages/**' run test",
-    "check": "pnpm -r --filter './packages/**' run check && pnpm bundle:renderer:check && pnpm workspace:check && pnpm evidence:check",
+    "check": "pnpm -r --filter './packages/**' run check && pnpm bundle:renderer:check && pnpm workspace:check && pnpm evidence:check && pnpm docs:check",
     "contracts:sync": "pnpm --filter @hjmds/design-contracts contracts:sync",
     "contracts:check": "pnpm --filter @hjmds/design-contracts contracts:check",
     "bundle:check": "pnpm build && pnpm --filter @hjmds/design-contracts bundle:check && pnpm bundle:renderer:check",
@@ -21,18 +21,20 @@
     "workspace:check": "node scripts/check-workspace-sync.mjs",
     "evidence:sync": "node scripts/sync-renderer-evidence.mjs --write",
     "evidence:check": "node scripts/sync-renderer-evidence.mjs",
+    "docs:check": "node scripts/check-doc-links.mjs",
     "showcase:web": "pnpm --filter @hjmds/design-contracts build && pnpm --filter @hjmds/react build && pnpm --filter @hjm/showcase-web storybook",
     "showcase:web:check": "pnpm --filter @hjmds/design-contracts build && pnpm --filter @hjmds/react build && pnpm --filter @hjm/showcase-web check",
     "showcase:web:build": "pnpm --filter @hjmds/design-contracts build && pnpm --filter @hjmds/react build && pnpm --filter @hjm/showcase-web build && pnpm --filter @hjm/showcase-web verify:static",
     "showcase:native": "pnpm --filter @hjmds/design-contracts build && pnpm --filter @hjmds/react-native build && pnpm --filter @hjm/showcase-native storybook",
     "showcase:native:ios": "pnpm --filter @hjmds/design-contracts build && pnpm --filter @hjmds/react-native build && pnpm --filter @hjm/showcase-native storybook:ios",
     "showcase:native:check": "pnpm --filter @hjmds/design-contracts build && pnpm --filter @hjmds/react-native build && pnpm --filter @hjm/showcase-native check",
+    "ci:check": "pnpm check && pnpm showcase:native:check && pnpm showcase:web:build",
     "reference:antd:verify": "pnpm --filter @hjmds/design-contracts reference:antd:verify",
     "changeset": "changeset",
     "release:commit:check": "node scripts/check-release-commit.mjs",
     "release:version": "changeset version && pnpm install --lockfile-only && node scripts/sync-release-version.mjs && pnpm contracts:sync && pnpm build && pnpm evidence:sync",
     "release:status": "changeset status",
-    "release:check": "pnpm check && pnpm showcase:web:build && node scripts/check-release-artifacts.mjs"
+    "release:check": "pnpm ci:check && node scripts/check-release-artifacts.mjs"
   },
   "engines": {
     "node": ">=20"

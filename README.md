@@ -13,7 +13,13 @@ renderer를 한 이력과 한 release train에서 관리하는 pnpm monorepo입�
 Stable Core는 `Surface`, `Button`, `Field`, `TextArea`를 Web과 Native에서 안정 API로
 보장합니다. 공통 레이아웃에는 `Container`, `AspectRatio`, Web 접근성 유틸리티에는
 `VisuallyHidden`을 제공합니다. 승격 근거와 호환성 정책은
-[`docs/stable-core.md`](docs/stable-core.md)에 기록합니다.
+[`stable-core.md`](packages/design-contracts/docs/stable-core.md)에 기록합니다. 신규 제품이
+어디까지 공통 계약을 채택하고 어디부터 제품이 소유하는지는
+[`consumer-policy.md`](packages/design-contracts/docs/consumer-policy.md)를 따릅니다.
+현재 `Text`, `Icon`, `Stack`, `Container`, `DesignSystemProvider`는 첫 화면에 필요한
+foundation이지만 catalog maturity는 아직 `beta`입니다. 신규 앱 표준은 이 사실을 숨기지
+않고 중앙 `requiredFoundations`와 앱별 lifecycle evidence로 관리하며, 그 밖의 beta는
+제품 ADR이 있는 선택 채택으로 구분합니다.
 
 ## Why one repository
 
@@ -28,13 +34,14 @@ Git tag의 버전 source of truth는 fixed train의 `packages/design-contracts/p
 ## Install
 
 세 패키지는 npm registry에 함께 publish합니다. renderer를 사용하는 앱은 contracts도
-명시적으로 설치하고, 세 패키지는 하나의 fixed version train이므로 같은 range를 씁니다.
+명시적으로 설치하고, 세 패키지는 하나의 fixed version train이므로 **정확히 같은
+SemVer**를 씁니다. Git ref, package path, vendored tarball은 지원하는 소비 경로가 아닙니다.
 
 ```json
 {
   "dependencies": {
-    "@hjmds/design-contracts": "^<version>",
-    "@hjmds/react": "^<version>"
+    "@hjmds/design-contracts": "<version>",
+    "@hjmds/react": "<version>"
   }
 }
 ```
@@ -44,13 +51,13 @@ React Native 앱은 renderer만 Native package로 바꿉니다.
 ```json
 {
   "dependencies": {
-    "@hjmds/design-contracts": "^<version>",
-    "@hjmds/react-native": "^<version>"
+    "@hjmds/design-contracts": "<version>",
+    "@hjmds/react-native": "<version>"
   }
 }
 ```
 
-`<version>`은 세 패키지가 함께 릴리스된 정확한 SemVer(예: `0.8.0`)로 바꿉니다.
+`<version>`은 세 패키지가 함께 릴리스된 정확한 SemVer(예: `0.9.0`)로 바꿉니다.
 
 publish는 `Release Packages` workflow를 수동으로 실행할 때만 시작되고, 성공한 같은 commit에
 `v<version>` tag가 생성됩니다.
@@ -61,9 +68,11 @@ tarball을 vendoring하거나 Git ref와 package path로 고정하지 않습니�
 
 ```bash
 pnpm install
-pnpm check
-pnpm showcase:web:build
+pnpm ci:check
 ```
+
+`ci:check`는 package 계약·테스트·bundle/evidence, Native showcase 계약과 배포 가능한 Web
+Storybook을 한 번에 검증하는 CI의 canonical command입니다.
 
 - `main` 단일 branch로 운영합니다. `main` push는 Storybook을 GitHub Pages에 배포합니다.
 - 세 public package는 하나의 fixed version train으로 함께 versioning합니다.
@@ -73,7 +82,10 @@ pnpm showcase:web:build
   `main`에 push합니다. package publish가 필요할 때 GitHub Actions에서 `Release Packages`를 직접
   실행합니다. workflow는 release commit shape를 확인하고 세 package를 npm에 publish한 뒤
   canonical `v<version>` Git tag를 생성합니다.
-- source of truth는 `packages/design-contracts/src/catalog.ts`입니다.
+- 컴포넌트 범위·성숙도의 source of truth는
+  `packages/design-contracts/src/catalog.ts`입니다. 토큰·recipe·behavior는 각각의
+  `src/*.ts` 모듈이 source of truth이고, `docs/generated/*.json`은 CI와 도구를 위한
+  생성 projection입니다.
 - catalog projection은 `pnpm contracts:sync`로 갱신합니다.
 - renderer claim과 scenario debt projection은 전체 package build 뒤
   `pnpm evidence:sync`로 갱신합니다.

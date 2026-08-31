@@ -30,7 +30,12 @@ export const UploadItem = forwardRef<HTMLDivElement, UploadItemProps>(function U
   if (action === "retry" && onRetry === undefined) {
     throw new TypeError("UploadItem requires onRetry while status is error");
   }
-  const progress = descriptor.state.status === "uploading" ? descriptor.state.progress : undefined;
+  const isUploading = descriptor.state.status === "uploading";
+  const progress = isUploading ? descriptor.state.progress : undefined;
+  const progressValueText =
+    isUploading && announcement.description !== labels.uploading
+      ? announcement.description
+      : undefined;
   return (
     <div
       {...props}
@@ -44,14 +49,25 @@ export const UploadItem = forwardRef<HTMLDivElement, UploadItemProps>(function U
       <div className="hjm-upload-item__body">
         <span className="hjm-upload-item__name">{descriptor.name}</span>
         {descriptor.sizeLabel === undefined ? null : <span className="hjm-upload-item__meta">{descriptor.sizeLabel}</span>}
-        <span className="hjm-upload-item__status" aria-live="polite">{announcement.description}</span>
-        {descriptor.state.status === "uploading" ? (
-          <Progress
-            label={announcement.description}
-            {...(progress === null || progress === undefined ? {} : { value: progress * 100 })}
-            valueText={announcement.description}
-          />
-        ) : null}
+        {isUploading ? (
+          <>
+            <span
+              aria-atomic="true"
+              aria-live="polite"
+              className="hjm-upload-item__status hjm-visually-hidden"
+            >
+              {labels.uploading}
+            </span>
+            <Progress
+              aria-label={labels.uploading}
+              label={labels.uploading}
+              {...(progress === null || progress === undefined ? {} : { value: progress * 100 })}
+              {...(progressValueText === undefined ? {} : { valueText: progressValueText })}
+            />
+          </>
+        ) : (
+          <span className="hjm-upload-item__status" aria-live="polite">{announcement.description}</span>
+        )}
       </div>
       {action === "cancel" ? (
         <button className="hjm-upload-item__action" data-action="cancel" onClick={() => onCancel?.(descriptor.id)} type="button">{labels.cancel}</button>

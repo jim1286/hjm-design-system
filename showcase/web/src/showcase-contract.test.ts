@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+import { readFileSync } from "node:fs";
 
 import {
   antDesignReferenceComponents,
@@ -75,6 +76,18 @@ function renderWithProvider(element: ReturnType<typeof createElement>): string {
 }
 
 describe("web showcase coverage", () => {
+  it("keeps demo fields in their own namespace and within the available inline size", () => {
+    const homeHtml = renderToStaticMarkup(createElement(Introduction));
+    const fieldHtml = renderWithProvider(createElement(ContractStory, { name: "Field" }));
+    const showcaseCss = readFileSync(new URL("./showcase.css", import.meta.url), "utf8");
+    const demoFieldRule = showcaseCss.match(/\.hjm-demo-field\s*\{([^}]*)\}/)?.[1] ?? "";
+
+    expect(homeHtml).toContain('class="hjm-demo-field"');
+    expect(fieldHtml).toContain('class="hjm-field hjm-demo-field"');
+    expect(demoFieldRule).toMatch(/\binline-size:\s*100%\s*;/);
+    expect(demoFieldRule).toMatch(/\bmax-width:\s*420px\s*;/);
+  });
+
   it("has a documented definition for every required scenario", () => {
     const known = new Set(showcaseScenarios.map(({ id }) => id));
     for (const entry of showcaseManifest) {

@@ -6,6 +6,18 @@ import { type TabsActivationMode, type TabsDirection, type TabsMountPolicy, type
 import { type CollectionSource } from "@hjmds/design-contracts/components/collection";
 import { type ReactNode, type ReactElement } from "react";
 import { type ModalProps, type PressableProps, type StyleProp, type TextStyle, type ViewStyle } from "react-native";
+export type TabItem<Value extends string = string> = Readonly<{
+    id: Value;
+    label: string;
+    disabled?: boolean;
+    badge?: string;
+    badgeAccessibilityLabel?: string;
+    renderLeading?: (appearance: TabLeadingRenderProps) => ReactNode;
+    /** Optional localized name for this item's tab panel. */
+    panelAccessibilityLabel?: string;
+    panel?: ReactNode;
+}>;
+/** @deprecated Use the renderer-neutral `TabItem` with its canonical `id` key. */
 export type TabOption<Value extends string = string> = Readonly<{
     value: Value;
     label: string;
@@ -39,7 +51,6 @@ type TabsBaseProps<Value extends string> = Readonly<{
     /** Stable id used to associate external panels and automation targets. */
     id?: string;
     label: string;
-    options: readonly TabOption<Value>[];
     activationMode?: TabsActivationMode;
     mountPolicy?: TabsMountPolicy;
     panelMode?: TabsPanelMode;
@@ -55,7 +66,15 @@ type TabsBaseProps<Value extends string> = Readonly<{
     style?: StyleProp<ViewStyle>;
     tabListStyle?: StyleProp<ViewStyle>;
 }>;
-export type TabsProps<Value extends string = string> = TabsBaseProps<Value> & TabsSelection<Value>;
+type TabsCollectionProps<Value extends string> = Readonly<{
+    items: readonly TabItem<Value>[];
+    options?: never;
+}> | Readonly<{
+    items?: never;
+    /** @deprecated Use the renderer-neutral `items` prop. */
+    options: readonly TabOption<Value>[];
+}>;
+export type TabsProps<Value extends string = string> = TabsBaseProps<Value> & TabsCollectionProps<Value> & TabsSelection<Value>;
 export declare function getTabId(tabsId: string, value: string): string;
 export declare function getTabPanelId(tabsId: string, value: string, mode?: TabsPanelMode): string;
 export declare function getDynamicTabPanelId(tabsId: string): string;

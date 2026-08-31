@@ -64,7 +64,7 @@ describe("official Web renderer previews", () => {
 
   it("uses the exact Field and Select public contracts", () => {
     const field = renderPreview("Field");
-    expect(field).toContain('class="hjm-field"');
+    expect(field).toContain('class="hjm-field hjm-demo-field"');
     expect(field).toContain('for="showcase-player-name"');
     expect(field).toContain('id="showcase-player-name"');
 

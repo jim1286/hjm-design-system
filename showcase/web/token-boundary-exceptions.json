@@ -36,7 +36,7 @@
     {
       "file": "src/showcase.css",
       "rule": "raw-length",
-      "selector": ".hjm-field",
+      "selector": ".hjm-demo-field",
       "property": "max-width",
       "value": "420px",
       "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
@@ -44,7 +44,7 @@
     {
       "file": "src/showcase.css",
       "rule": "raw-length",
-      "selector": ".hjm-field textarea",
+      "selector": ".hjm-demo-field textarea",
       "property": "min-height",
       "value": "112px",
       "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."

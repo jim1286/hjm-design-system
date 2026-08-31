@@ -82,6 +82,22 @@ edge를 항상 그린다.
 
 호환 alias는 새 문서와 예제에서 사용하지 않는다. 제거는 major release에서만 한다.
 
+## Collection and state vocabulary
+
+공통 제품 코드에서 같은 역할은 같은 이름을 사용한다. Web을 기준으로 Native의 비파괴 호환
+bridge를 추가했으며, 새 코드는 canonical 열만 사용한다.
+
+| Component | Canonical Web/Native API | Deprecated Native alias |
+| --- | --- | --- |
+| Switch | `checked`, `defaultChecked`, `onCheckedChange` | `value`, `defaultValue`, `onValueChange` |
+| RadioGroup | `items: RadioGroupItem[]` | `options: RadioOption[]` |
+| SegmentedControl | `items: SegmentedControlItem[]` | `options: SegmentedControlOption[]` |
+| Tabs | `items: TabItem[]`, item key `id` | `options: TabOption[]`, item key `value` |
+| Select | `source`/`items`/`sections`, `selectedKey`, `defaultSelectedKey`, `onSelectionChange` | `options`, `value`, `defaultValue`, `onValueChange` |
+
+한 인스턴스에서 canonical과 deprecated channel을 함께 전달하면 타입과 runtime 모두 실패한다.
+이 규칙은 TypeScript를 우회하는 JavaScript 소비자에게도 결정적인 상태 모델을 보장한다.
+
 ## Reference application notes
 
 상위 판단 원칙은 [library-reference-decisions.md](./library-reference-decisions.md)에만 둔다.
@@ -97,14 +113,15 @@ edge를 항상 그린다.
 
 ## Audited next migrations
 
-Tabs와 Select는 단순 alias만 추가하면 두 상태 모델이 동시에 노출되므로 이번 변경에서 억지로
-합치지 않았다.
+Accordion은 이름만 맞추면 의미가 오히려 불명확해져 이번 release에서 억지로 합치지 않았다.
 
-- Tabs: Web `items[{id,label,panel}]`와 Native `options[{value,label,panel?,badge?}]`를 공통
-  item key/content contract로 옮기고, `size`/`layout`/activation semantics를 동시에 맞춰야 한다.
-- Select: Web collection의 nullable `selectedKey`, sections, open-change reason과 Native의
-  string `value`/`options` modal 모델 사이에 공통 collection/selection resolver가 먼저 필요하다.
-  canonical key callback을 도입한 뒤 `value`/`onValueChange`를 호환 alias로 유지한다.
+- Web은 single/multiple mode에 따라 `value: string | string[]`, `allowsMultipleExpanded`,
+  `items[{id,title,panel}]`을 사용한다.
+- Native는 항상 집합 형태인 `expandedValues: string[]`, `multiple`,
+  `items[{value,title,content}]`를 사용한다.
+- 공통 descriptor의 key/content 이름과 single/multiple selection type을 먼저 결정한 뒤,
+  기존 두 모델을 deprecated alias로 격리해야 한다. host event/style 차이와 달리 이 상태 모델
+  차이는 다음 minor의 명시적 migration 대상이다.
 
 ## Intentional remaining differences
 

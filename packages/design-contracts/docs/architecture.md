@@ -292,8 +292,9 @@ scenario 전체와 consumer adoption evidence까지 통과한 surface에만 허�
 - public token/recipe 변경에는 타입 검사, 계약 테스트, light/dark 대비 검증을 포함합니다.
 - beta → stable 승격에는 Web/RN fixture, 키보드 또는 screen reader 검증, Reduce Motion 확인이
   필요합니다.
-- 소비 앱은 정확한 SemVer Git tag를 고정하며 `main`이나 로컬 경로를 커밋하지 않습니다.
-- 한 태그 안의 package path를 함께 고정하고 세 package version을 항상 동일하게 유지합니다.
+- 소비 앱은 npm registry의 정확한 SemVer를 고정하며 Git ref, package path, tarball 또는
+  로컬 경로를 커밋하지 않습니다.
+- contracts와 선택한 renderer의 package version을 항상 동일하게 유지합니다.
 - 제거는 deprecation 기간과 migration note를 거칩니다.
 - 원시 팔레트나 제3자 라이브러리 이름을 public component prop으로 노출하지 않습니다.
 

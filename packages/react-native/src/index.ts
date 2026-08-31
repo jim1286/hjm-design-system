@@ -6,6 +6,13 @@ export {
 } from "./provider.js";
 
 export {
+  hjmCompositionStyleKeys,
+  type HjmCompositionStyle,
+  type HjmCompositionStyleKey,
+  type HjmCompositionStyleProp,
+} from "./composition-style.js";
+
+export {
   AspectRatio,
   Container,
   Grid,
@@ -80,11 +87,13 @@ export {
   type PasswordFieldProps,
   type PasswordFieldToggleRenderProps,
   type RadioProps,
+  type RadioGroupItem,
   type RadioGroupProps,
   type RadioOption,
   type SearchFieldProps,
   type SearchFieldAffordanceRenderProps,
   type SegmentedControlLeadingRenderProps,
+  type SegmentedControlItem,
   type SegmentedControlOption,
   type SegmentedControlProps,
   type SwitchProps,
@@ -151,6 +160,7 @@ export {
   type MenuProps,
   type MenuSection,
   type MenuTriggerRenderProps,
+  type TabItem,
   type TabLeadingRenderProps,
   type TabOption,
   type TabPanelProps,

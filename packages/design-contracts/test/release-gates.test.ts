@@ -112,7 +112,7 @@ describe("generated Changesets release commit gate", () => {
 describe("repository install guidance", () => {
   const workspaceRoot = fileURLToPath(new URL("../../../", import.meta.url));
 
-  it("documents registry ranges and keeps the React Native package distinct", async () => {
+  it("documents exact registry versions and keeps the React Native package distinct", async () => {
     const [readme, migration] = await Promise.all([
       readFile(join(workspaceRoot, "README.md"), "utf8"),
       readFile(
@@ -121,9 +121,11 @@ describe("repository install guidance", () => {
       ),
     ]);
 
-    expect(readme).toMatch(/"@hjmds\/react-native":\s*"\^[^"\n]+"/);
-    expect(readme).toMatch(/"@hjmds\/react":\s*"\^[^"\n]+"/);
+    expect(readme).toMatch(/"@hjmds\/react-native":\s*"<version>"/);
+    expect(readme).toMatch(/"@hjmds\/react":\s*"<version>"/);
+    expect(readme).not.toMatch(/"@hjmds\/(?:design-contracts|react|react-native)":\s*"[\^~]/);
     expect(readme).not.toMatch(/git\+[^"\n]*path:\/packages\//);
+    expect(migration).toContain("역사 문서");
     expect(migration).toMatch(
       /'@hjmds\/react-native@git\+[^'\n]+path:\/packages\/react-native'/,
     );

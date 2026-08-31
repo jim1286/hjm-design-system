@@ -311,14 +311,14 @@ textarea {
   outline-offset: calc(var(--hjm-stroke-default) + var(--hjm-stroke-strong));
 }
 
-.hjm-field { display: grid; gap: calc(var(--hjm-space-xs) - var(--hjm-stroke-default)); max-width: 420px; color: var(--hjm-text-body); }
-.hjm-field > span { font-weight: var(--hjm-font-weight-bold); }
-.hjm-field input, .hjm-field textarea, .hjm-field select {
+.hjm-demo-field { display: grid; inline-size: 100%; gap: calc(var(--hjm-space-xs) - var(--hjm-stroke-default)); max-width: 420px; color: var(--hjm-text-body); }
+.hjm-demo-field > span { font-weight: var(--hjm-font-weight-bold); }
+.hjm-demo-field input, .hjm-demo-field textarea, .hjm-demo-field select {
   min-height: var(--hjm-control-min-touch-target); padding: calc(var(--hjm-space-xs) + var(--hjm-stroke-strong)) var(--hjm-space-sm); border: var(--hjm-stroke-default) solid var(--hjm-border);
   border-radius: calc(var(--hjm-space-xs) + var(--hjm-stroke-strong)); background: var(--hjm-bg); color: var(--hjm-text);
 }
-.hjm-field textarea { min-height: 112px; resize: vertical; }
-.hjm-field small, .hjm-list-row small, .hjm-toast small { color: var(--hjm-text-muted); }
+.hjm-demo-field textarea { min-height: 112px; resize: vertical; }
+.hjm-demo-field small, .hjm-list-row small, .hjm-toast small { color: var(--hjm-text-muted); }
 
 .hjm-choice-group { display: grid; gap: var(--hjm-space-sm); max-width: 440px; border: var(--hjm-stroke-default) solid var(--hjm-border); border-radius: var(--hjm-radius-md); padding: var(--hjm-space-md); }
 .hjm-choice-group legend { padding-inline: calc(var(--hjm-space-xxs) + var(--hjm-stroke-strong)); font-weight: var(--hjm-font-weight-bold); }

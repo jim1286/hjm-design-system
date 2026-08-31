@@ -6,7 +6,7 @@ import { createLoadMoreController, validateLoadMoreDescriptor, } from "@hjmds/de
 import { resolveBottomNavigationActivation, resolveBottomNavigationConfiguration, resolveBottomNavigationDescriptor, } from "@hjmds/design-contracts/components/bottom-navigation";
 import { getTabNavigationTarget, resolveInitialTabValue, tabsBehaviorDefaults, } from "@hjmds/design-contracts/behaviors";
 import { flattenCollectionItems, validateCollection, } from "@hjmds/design-contracts/components/collection";
-import { forwardRef, useCallback, useEffect, useImperativeHandle, useLayoutEffect, useRef, useState, } from "react";
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useLayoutEffect, useMemo, useRef, useState, } from "react";
 import { ActivityIndicator, AccessibilityInfo, Keyboard, Modal, Platform, Pressable, ScrollView, View, findNodeHandle, } from "react-native";
 import { Button } from "./actions.js";
 import { useControllableState } from "./internal/state.js";
@@ -15,6 +15,14 @@ import { minimumTargetStyle } from "./internal/styles.js";
 import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
 import { Spinner } from "./feedback.js";
+function resolveTabItems(items, options) {
+    if ((items === undefined) === (options === undefined)) {
+        throw new TypeError("Tabs requires exactly one of items or options");
+    }
+    if (items !== undefined)
+        return items;
+    return options.map(({ value, ...option }) => ({ ...option, id: value }));
+}
 function encodedTabId(value) {
     return encodeURIComponent(value);
 }
@@ -50,24 +58,25 @@ export function TabPanel(props) {
     return (_jsx(View, { nativeID: getTabPanelId(tabsId, value, dynamic ? "dynamic" : "keyed"), accessibilityLabel: label, accessibilityLabelledBy: getTabId(tabsId, dynamic ? activeValue : value), accessibilityElementsHidden: !selected, importantForAccessibility: selected ? "auto" : "no-hide-descendants", pointerEvents: selected ? "auto" : "none", role: "tabpanel", style: [style, selected ? null : { display: "none" }], children: children }));
 }
 export function Tabs(props) {
-    const { id, label, options, value: valueProp, defaultValue, onValueChange, activationMode = tabsBehaviorDefaults.activationMode, mountPolicy = tabsBehaviorDefaults.mountPolicy, panelMode = tabsBehaviorDefaults.panelMode, orientation = tabsBehaviorDefaults.orientation, direction: directionProp, loop = tabsBehaviorDefaults.loop, size = tabsRecipe.defaults.size, layout = tabsRecipe.defaults.layout, overflow = tabsRecipe.defaults.overflow, renderPanels = true, children, style, tabListStyle, } = props;
+    const { id, label, items, options, value: valueProp, defaultValue, onValueChange, activationMode = tabsBehaviorDefaults.activationMode, mountPolicy = tabsBehaviorDefaults.mountPolicy, panelMode = tabsBehaviorDefaults.panelMode, orientation = tabsBehaviorDefaults.orientation, direction: directionProp, loop = tabsBehaviorDefaults.loop, size = tabsRecipe.defaults.size, layout = tabsRecipe.defaults.layout, overflow = tabsRecipe.defaults.overflow, renderPanels = true, children, style, tabListStyle, } = props;
     if (!label.trim())
         throw new TypeError("Tabs label must not be empty");
-    if (options.length === 0)
-        throw new TypeError("Tabs requires at least one option");
     if (panelMode === "dynamic" && mountPolicy !== "active") {
         throw new TypeError("Tabs dynamic panelMode requires active mountPolicy");
     }
+    const tabItems = useMemo(() => resolveTabItems(items, options), [items, options]);
+    if (tabItems.length === 0)
+        throw new TypeError("Tabs requires at least one option");
     const theme = useHjmNativeTheme();
     const { colors, environment } = theme;
     const direction = directionProp ?? environment.direction;
     const sizeContract = tabsRecipe.sizes[size];
     const fitted = tabsRecipe.layouts[layout].fitted;
     const scrollable = tabsRecipe.overflow[overflow].scrollable;
-    const descriptors = options.map((option) => ({
-        id: option.value,
-        label: option.label,
-        ...(option.disabled === undefined ? {} : { disabled: option.disabled }),
+    const descriptors = tabItems.map((item) => ({
+        id: item.id,
+        label: item.label,
+        ...(item.disabled === undefined ? {} : { disabled: item.disabled }),
     }));
     const collectionFallback = resolveInitialTabValue(descriptors);
     if (collectionFallback === undefined)
@@ -103,14 +112,14 @@ export function Tabs(props) {
     }, [descriptors, focusValue, selected]);
     useEffect(() => {
         setVisited((current) => {
-            const known = new Set(options.map((option) => option.value));
+            const known = new Set(tabItems.map((item) => item.id));
             const next = new Set([...current].filter((id) => known.has(id)));
             next.add(selected);
             if (next.size === current.size && [...next].every((id) => current.has(id)))
                 return current;
             return next;
         });
-    }, [options, selected]);
+    }, [tabItems, selected]);
     const focusTab = (target) => {
         setFocusValue(target);
         if (activationMode === "automatic")
@@ -130,7 +139,7 @@ export function Tabs(props) {
             focusTab(target);
     };
     const hasPanels = renderPanels &&
-        (children !== undefined || options.some((option) => option.panel !== undefined));
+        (children !== undefined || tabItems.some((item) => item.panel !== undefined));
     return (_jsxs(View, { accessibilityLabel: label, style: [
             {
                 direction,
@@ -156,34 +165,34 @@ export function Tabs(props) {
                         flexGrow: fitted ? 1 : 0,
                         flexDirection: orientation === "vertical" ? "column" : "row",
                     },
-                ], children: options.map((option) => {
-                    const active = selected === option.value;
-                    return (_jsxs(Pressable, { nativeID: id ? getTabId(id, option.value) : undefined, role: Platform.OS === "ios" ? "button" : "tab", ref: (node) => {
+                ], children: tabItems.map((item) => {
+                    const active = selected === item.id;
+                    return (_jsxs(Pressable, { nativeID: id ? getTabId(id, item.id) : undefined, role: Platform.OS === "ios" ? "button" : "tab", ref: (node) => {
                             if (node)
-                                tabRefs.current.set(option.value, node);
+                                tabRefs.current.set(item.id, node);
                             else
-                                tabRefs.current.delete(option.value);
+                                tabRefs.current.delete(item.id);
                         }, accessibilityActions: [
                             { name: "activate" },
                             { name: "increment" },
                             { name: "decrement" },
-                        ], accessibilityLabel: option.badge
-                            ? `${option.label}, ${option.badgeAccessibilityLabel ?? option.badge}`
-                            : option.label, accessibilityRole: "tab", accessibilityState: { disabled: option.disabled === true, selected: active }, disabled: option.disabled, onAccessibilityAction: (event) => {
+                        ], accessibilityLabel: item.badge
+                            ? `${item.label}, ${item.badgeAccessibilityLabel ?? item.badge}`
+                            : item.label, accessibilityRole: "tab", accessibilityState: { disabled: item.disabled === true, selected: active }, disabled: item.disabled, onAccessibilityAction: (event) => {
                             const action = event.nativeEvent.actionName;
                             if (action === "activate")
-                                setSelected(option.value);
+                                setSelected(item.id);
                             else if (action === "increment")
-                                moveFocus(option.value, "next");
+                                moveFocus(item.id, "next");
                             else if (action === "decrement")
-                                moveFocus(option.value, "previous");
+                                moveFocus(item.id, "previous");
                         }, onFocus: () => {
-                            setFocusValue(option.value);
+                            setFocusValue(item.id);
                             if (activationMode === "automatic")
-                                setSelected(option.value);
+                                setSelected(item.id);
                         }, onPress: () => {
-                            setFocusValue(option.value);
-                            setSelected(option.value);
+                            setFocusValue(item.id);
+                            setSelected(item.id);
                         }, style: ({ pressed }) => [
                             minimumTargetStyle,
                             {
@@ -197,13 +206,13 @@ export function Tabs(props) {
                                 gap: tabsRecipe.gap,
                                 justifyContent: "center",
                                 minHeight: sizeContract.minHeight,
-                                opacity: option.disabled ? tabsRecipe.states.disabledOpacity : 1,
+                                opacity: item.disabled ? tabsRecipe.states.disabledOpacity : 1,
                                 paddingHorizontal: sizeContract.paddingHorizontal,
                                 position: "relative",
                             },
-                        ], children: [option.renderLeading ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", children: option.renderLeading({
+                        ], children: [item.renderLeading ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", children: item.renderLeading({
                                     selected: active,
-                                    disabled: option.disabled === true,
+                                    disabled: item.disabled === true,
                                     color: resolveColorReference(active ? tabsRecipe.colors.selected : tabsRecipe.colors.idle, theme.palette),
                                     size: glyph[tabsRecipe.icon.glyph],
                                     glyphSize: glyph[tabsRecipe.icon.glyph],
@@ -212,11 +221,11 @@ export function Tabs(props) {
                                     fontWeight: active
                                         ? tabsRecipe.label.selectedFontWeight
                                         : tabsRecipe.label.fontWeight,
-                                }, variant: sizeContract.textVariant, children: option.label }), option.badge ? (_jsx(View, { accessible: false, style: {
+                                }, variant: sizeContract.textVariant, children: item.label }), item.badge ? (_jsx(View, { accessible: false, style: {
                                     backgroundColor: colors.surfaceAccent,
                                     borderRadius: radius.full,
                                     paddingHorizontal: spacing.xs,
-                                }, children: _jsx(Text, { align: "center", tone: "brand", variant: "caption", children: option.badge }) })) : null, active ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", style: {
+                                }, children: _jsx(Text, { align: "center", tone: "brand", variant: "caption", children: item.badge }) })) : null, active ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", style: {
                                     backgroundColor: resolveColorReference(tabsRecipe.colors.indicator, theme.palette),
                                     ...(orientation === "horizontal"
                                         ? {
@@ -232,15 +241,15 @@ export function Tabs(props) {
                                             width: tabsRecipe.indicatorHeight,
                                         }),
                                     position: "absolute",
-                                } })) : null] }, option.value));
-                }) }), hasPanels ? panelMode === "dynamic" ? (_jsx(View, { accessibilityLabel: options.find((option) => option.value === selected)?.panelAccessibilityLabel, accessibilityLabelledBy: id ? getTabId(id, selected) : undefined, nativeID: id ? getDynamicTabPanelId(id) : undefined, importantForAccessibility: "yes", role: "tabpanel", style: { flex: 1 }, children: options.find((option) => option.value === selected)?.panel ?? children?.(selected) })) : options.map((option) => {
-                const active = option.value === selected;
+                                } })) : null] }, item.id));
+                }) }), hasPanels ? panelMode === "dynamic" ? (_jsx(View, { accessibilityLabel: tabItems.find((item) => item.id === selected)?.panelAccessibilityLabel, accessibilityLabelledBy: id ? getTabId(id, selected) : undefined, nativeID: id ? getDynamicTabPanelId(id) : undefined, importantForAccessibility: "yes", role: "tabpanel", style: { flex: 1 }, children: tabItems.find((item) => item.id === selected)?.panel ?? children?.(selected) })) : tabItems.map((item) => {
+                const active = item.id === selected;
                 const mounted = mountPolicy === "always" ||
-                    (mountPolicy === "visited" && (visited.has(option.value) || active)) ||
+                    (mountPolicy === "visited" && (visited.has(item.id) || active)) ||
                     (mountPolicy === "active" && active);
                 if (!mounted)
                     return null;
-                return (_jsx(View, { accessibilityLabel: option.panelAccessibilityLabel, accessibilityLabelledBy: id ? getTabId(id, option.value) : undefined, nativeID: id ? getTabPanelId(id, option.value) : undefined, importantForAccessibility: active ? "yes" : "no-hide-descendants", role: "tabpanel", style: { display: active ? "flex" : "none", flex: 1 }, children: option.panel ?? children?.(option.value) }, option.value));
+                return (_jsx(View, { accessibilityLabel: item.panelAccessibilityLabel, accessibilityLabelledBy: id ? getTabId(id, item.id) : undefined, nativeID: id ? getTabPanelId(id, item.id) : undefined, importantForAccessibility: active ? "yes" : "no-hide-descendants", role: "tabpanel", style: { display: active ? "flex" : "none", flex: 1 }, children: item.panel ?? children?.(item.id) }, item.id));
             }) : null] }));
 }
 function useBottomNavigationKeyboardVisible() {

@@ -59,6 +59,7 @@ import {
   useEffect,
   useImperativeHandle,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState,
   type ReactNode,
@@ -93,6 +94,19 @@ import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
 import { Spinner } from "./feedback.js";
 
+export type TabItem<Value extends string = string> = Readonly<{
+  id: Value;
+  label: string;
+  disabled?: boolean;
+  badge?: string;
+  badgeAccessibilityLabel?: string;
+  renderLeading?: (appearance: TabLeadingRenderProps) => ReactNode;
+  /** Optional localized name for this item's tab panel. */
+  panelAccessibilityLabel?: string;
+  panel?: ReactNode;
+}>;
+
+/** @deprecated Use the renderer-neutral `TabItem` with its canonical `id` key. */
 export type TabOption<Value extends string = string> = Readonly<{
   value: Value;
   label: string;
@@ -131,7 +145,6 @@ type TabsBaseProps<Value extends string> = Readonly<{
   /** Stable id used to associate external panels and automation targets. */
   id?: string;
   label: string;
-  options: readonly TabOption<Value>[];
   activationMode?: TabsActivationMode;
   mountPolicy?: TabsMountPolicy;
   panelMode?: TabsPanelMode;
@@ -148,7 +161,30 @@ type TabsBaseProps<Value extends string> = Readonly<{
   tabListStyle?: StyleProp<ViewStyle>;
 }>;
 
-export type TabsProps<Value extends string = string> = TabsBaseProps<Value> & TabsSelection<Value>;
+type TabsCollectionProps<Value extends string> =
+  | Readonly<{
+      items: readonly TabItem<Value>[];
+      options?: never;
+    }>
+  | Readonly<{
+      items?: never;
+      /** @deprecated Use the renderer-neutral `items` prop. */
+      options: readonly TabOption<Value>[];
+    }>;
+
+export type TabsProps<Value extends string = string> = TabsBaseProps<Value> &
+  TabsCollectionProps<Value> & TabsSelection<Value>;
+
+function resolveTabItems<Value extends string>(
+  items: readonly TabItem<Value>[] | undefined,
+  options: readonly TabOption<Value>[] | undefined,
+): readonly TabItem<Value>[] {
+  if ((items === undefined) === (options === undefined)) {
+    throw new TypeError("Tabs requires exactly one of items or options");
+  }
+  if (items !== undefined) return items;
+  return options!.map(({ value, ...option }) => ({ ...option, id: value }));
+}
 
 function encodedTabId(value: string): string {
   return encodeURIComponent(value);
@@ -230,6 +266,7 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
   const {
     id,
     label,
+    items,
     options,
     value: valueProp,
     defaultValue,
@@ -249,20 +286,21 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
     tabListStyle,
   } = props;
   if (!label.trim()) throw new TypeError("Tabs label must not be empty");
-  if (options.length === 0) throw new TypeError("Tabs requires at least one option");
   if (panelMode === "dynamic" && mountPolicy !== "active") {
     throw new TypeError("Tabs dynamic panelMode requires active mountPolicy");
   }
+  const tabItems = useMemo(() => resolveTabItems(items, options), [items, options]);
+  if (tabItems.length === 0) throw new TypeError("Tabs requires at least one option");
   const theme = useHjmNativeTheme();
   const { colors, environment } = theme;
   const direction = directionProp ?? environment.direction;
   const sizeContract = tabsRecipe.sizes[size];
   const fitted = tabsRecipe.layouts[layout].fitted;
   const scrollable = tabsRecipe.overflow[overflow].scrollable;
-  const descriptors = options.map((option) => ({
-      id: option.value,
-      label: option.label,
-      ...(option.disabled === undefined ? {} : { disabled: option.disabled }),
+  const descriptors = tabItems.map((item) => ({
+      id: item.id,
+      label: item.label,
+      ...(item.disabled === undefined ? {} : { disabled: item.disabled }),
     }));
   const collectionFallback = resolveInitialTabValue(descriptors);
   if (collectionFallback === undefined) throw new TypeError("Tabs requires an enabled option");
@@ -297,13 +335,13 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
   }, [descriptors, focusValue, selected]);
   useEffect(() => {
     setVisited((current) => {
-      const known = new Set(options.map((option) => option.value));
+      const known = new Set(tabItems.map((item) => item.id));
       const next = new Set([...current].filter((id) => known.has(id)));
       next.add(selected);
       if (next.size === current.size && [...next].every((id) => current.has(id))) return current;
       return next;
     });
-  }, [options, selected]);
+  }, [tabItems, selected]);
 
   const focusTab = (target: Value) => {
     setFocusValue(target);
@@ -320,7 +358,7 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
     if (target !== undefined) focusTab(target);
   };
   const hasPanels = renderPanels &&
-    (children !== undefined || options.some((option) => option.panel !== undefined));
+    (children !== undefined || tabItems.some((item) => item.panel !== undefined));
 
   return (
     <View
@@ -363,16 +401,16 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
           },
         ]}
       >
-        {options.map((option) => {
-          const active = selected === option.value;
+        {tabItems.map((item) => {
+          const active = selected === item.id;
           return (
             <Pressable
-              key={option.value}
-              nativeID={id ? getTabId(id, option.value) : undefined}
+              key={item.id}
+              nativeID={id ? getTabId(id, item.id) : undefined}
               role={Platform.OS === "ios" ? "button" : "tab"}
               ref={(node) => {
-                if (node) tabRefs.current.set(option.value, node);
-                else tabRefs.current.delete(option.value);
+                if (node) tabRefs.current.set(item.id, node);
+                else tabRefs.current.delete(item.id);
               }}
               accessibilityActions={[
                 { name: "activate" },
@@ -380,26 +418,26 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
                 { name: "decrement" },
               ]}
               accessibilityLabel={
-                option.badge
-                  ? `${option.label}, ${option.badgeAccessibilityLabel ?? option.badge}`
-                  : option.label
+                item.badge
+                  ? `${item.label}, ${item.badgeAccessibilityLabel ?? item.badge}`
+                  : item.label
               }
               accessibilityRole="tab"
-              accessibilityState={{ disabled: option.disabled === true, selected: active }}
-              disabled={option.disabled}
+              accessibilityState={{ disabled: item.disabled === true, selected: active }}
+              disabled={item.disabled}
               onAccessibilityAction={(event) => {
                 const action = event.nativeEvent.actionName;
-                if (action === "activate") setSelected(option.value);
-                else if (action === "increment") moveFocus(option.value, "next");
-                else if (action === "decrement") moveFocus(option.value, "previous");
+                if (action === "activate") setSelected(item.id);
+                else if (action === "increment") moveFocus(item.id, "next");
+                else if (action === "decrement") moveFocus(item.id, "previous");
               }}
               onFocus={() => {
-                setFocusValue(option.value);
-                if (activationMode === "automatic") setSelected(option.value);
+                setFocusValue(item.id);
+                if (activationMode === "automatic") setSelected(item.id);
               }}
               onPress={() => {
-                setFocusValue(option.value);
-                setSelected(option.value);
+                setFocusValue(item.id);
+                setSelected(item.id);
               }}
               style={({ pressed }) => [
                 minimumTargetStyle,
@@ -414,21 +452,21 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
                   gap: tabsRecipe.gap,
                   justifyContent: "center",
                   minHeight: sizeContract.minHeight,
-                  opacity: option.disabled ? tabsRecipe.states.disabledOpacity : 1,
+                  opacity: item.disabled ? tabsRecipe.states.disabledOpacity : 1,
                   paddingHorizontal: sizeContract.paddingHorizontal,
                   position: "relative",
                 },
               ]}
             >
-              {option.renderLeading ? (
+              {item.renderLeading ? (
                 <View
                   accessibilityElementsHidden
                   accessible={false}
                   importantForAccessibility="no-hide-descendants"
                 >
-                  {option.renderLeading({
+                  {item.renderLeading({
                     selected: active,
-                    disabled: option.disabled === true,
+                    disabled: item.disabled === true,
                     color: resolveColorReference(
                       active ? tabsRecipe.colors.selected : tabsRecipe.colors.idle,
                       theme.palette,
@@ -451,9 +489,9 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
                 }}
                 variant={sizeContract.textVariant}
               >
-                {option.label}
+                {item.label}
               </Text>
-              {option.badge ? (
+              {item.badge ? (
                 <View
                   accessible={false}
                   style={{
@@ -462,7 +500,7 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
                     paddingHorizontal: spacing.xs,
                   }}
                 >
-                  <Text align="center" tone="brand" variant="caption">{option.badge}</Text>
+                  <Text align="center" tone="brand" variant="caption">{item.badge}</Text>
                 </View>
               ) : null}
               {active ? (
@@ -498,32 +536,32 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
       </ScrollView>
       {hasPanels ? panelMode === "dynamic" ? (
         <View
-          accessibilityLabel={options.find((option) => option.value === selected)?.panelAccessibilityLabel}
+          accessibilityLabel={tabItems.find((item) => item.id === selected)?.panelAccessibilityLabel}
           accessibilityLabelledBy={id ? getTabId(id, selected) : undefined}
           nativeID={id ? getDynamicTabPanelId(id) : undefined}
           importantForAccessibility="yes"
           role="tabpanel"
           style={{ flex: 1 }}
         >
-          {options.find((option) => option.value === selected)?.panel ?? children?.(selected)}
+          {tabItems.find((item) => item.id === selected)?.panel ?? children?.(selected)}
         </View>
-      ) : options.map((option) => {
-        const active = option.value === selected;
+      ) : tabItems.map((item) => {
+        const active = item.id === selected;
         const mounted = mountPolicy === "always" ||
-          (mountPolicy === "visited" && (visited.has(option.value) || active)) ||
+          (mountPolicy === "visited" && (visited.has(item.id) || active)) ||
           (mountPolicy === "active" && active);
         if (!mounted) return null;
         return (
           <View
-            key={option.value}
-            accessibilityLabel={option.panelAccessibilityLabel}
-            accessibilityLabelledBy={id ? getTabId(id, option.value) : undefined}
-            nativeID={id ? getTabPanelId(id, option.value) : undefined}
+            key={item.id}
+            accessibilityLabel={item.panelAccessibilityLabel}
+            accessibilityLabelledBy={id ? getTabId(id, item.id) : undefined}
+            nativeID={id ? getTabPanelId(id, item.id) : undefined}
             importantForAccessibility={active ? "yes" : "no-hide-descendants"}
             role="tabpanel"
             style={{ display: active ? "flex" : "none", flex: 1 }}
           >
-            {option.panel ?? children?.(option.value)}
+            {item.panel ?? children?.(item.id)}
           </View>
         );
       }) : null}

@@ -75,6 +75,7 @@ import {
   logicalTextAlign,
   resolveNativeTextScaleProps,
 } from "./internal/styles.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type {
   StackAlign,
@@ -228,14 +229,26 @@ export const Text = forwardRef<NativeText, TextProps>(function Text(
 /** @deprecated Compatibility aliases; use `subtle` and `accent`. */
 export type LegacyNativeSurfaceTone = "sunken" | "brand";
 export type SurfaceTone = ContractSurfaceTone | LegacyNativeSurfaceTone;
+/** Token names are canonical; the numeric branch is legacy compatibility until the breaking train. */
 export type SurfacePadding = ContractSurfacePadding | number;
+/** Token names are canonical; the numeric branch is legacy compatibility until the breaking train. */
 export type SurfaceRadius = ContractSurfaceRadius | number;
-export type SurfaceProps = ViewProps &
+export type SurfaceProps = Omit<ViewProps, "style"> &
   Readonly<{
     tone?: SurfaceTone;
+    /** Numeric values are deprecated; use a recipe-owned padding token. */
     padding?: SurfacePadding;
+    /** Numeric values are deprecated; use a recipe-owned radius token. */
     radius?: SurfaceRadius;
     bordered?: boolean;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
+    /**
+     * @deprecated Legacy compatibility only. New apps must use `layoutStyle` and must not
+     * override color, padding, radius, border, elevation, height, opacity, or state styling.
+     * @see https://github.com/jim1286/hjm-design-system/blob/main/packages/design-contracts/docs/consumer-policy.md#31-react-native-legacy-style-compatibility-boundary
+     */
+    style?: StyleProp<ViewStyle>;
   }>;
 
 function normalizeSurfaceTone(tone: SurfaceTone): ContractSurfaceTone {
@@ -253,6 +266,7 @@ export function Surface({
   padding = surfaceDefaults.padding,
   radius: radiusValue = surfaceDefaults.radius,
   bordered = surfaceDefaults.bordered,
+  layoutStyle,
   style,
   ...props
 }: SurfaceProps) {
@@ -293,6 +307,7 @@ export function Surface({
         },
         elevatedStyle,
         style,
+        layoutStyle,
       ]}
     />
   );

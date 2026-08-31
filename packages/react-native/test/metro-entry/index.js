@@ -2,6 +2,7 @@ import React from "react";
 import { AppRegistry, View } from "react-native";
 
 import { Button, Link } from "@hjmds/react-native/actions";
+import { hjmCompositionStyleKeys } from "@hjmds/react-native/composition-style";
 import { List, Statistic } from "@hjmds/react-native/data-display";
 import { DatePicker } from "@hjmds/react-native/date-picker";
 import { reactNativeRendererEvidence } from "@hjmds/react-native/evidence";
@@ -43,6 +44,7 @@ function MetroSmokeApp() {
       null,
       React.createElement(Text, { variant: "title" }, "HJM Metro smoke"),
       React.createElement(Text, null, `${reactNativeRendererEvidence.components.length} claims`),
+      React.createElement(Text, null, `${hjmCompositionStyleKeys.length} composition keys`),
       React.createElement(Icon, {
         descriptor: { name: "check", decorative: true },
         renderGlyph: ({ name }) => React.createElement(Text, null, name),

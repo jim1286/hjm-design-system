@@ -303,9 +303,18 @@ const files = [
   ...(await collectFiles(path.join(packageRoot, ".storybook"))),
 ];
 const findings = [];
+const namespaceErrors = [];
 for (const absolute of files) {
   const relative = path.relative(packageRoot, absolute).replaceAll(path.sep, "/");
   const source = await readFile(absolute, "utf8");
+  if (
+    relative === "src/showcase.css" &&
+    source.includes(".hjm-field")
+  ) {
+    namespaceErrors.push(
+      "src/showcase.css must not style the package .hjm-field namespace; use an explicit demo class",
+    );
+  }
   findings.push(
     ...(relative.endsWith(".css")
       ? cssFindings(relative, source)
@@ -313,7 +322,7 @@ for (const absolute of files) {
   );
 }
 
-const errors = [];
+const errors = [...namespaceErrors];
 if (exceptionDocument.version !== 2 || !Array.isArray(exceptionDocument.exceptions)) {
   errors.push("token-boundary-exceptions.json must use version 2 with an exceptions array");
 }

@@ -111,6 +111,7 @@ describe("package boundaries", () => {
       "./version",
       "./manifest.json",
       "./renderer-evidence.json",
+      "./consumer-policy.md",
       ...publicComponentContractNames.map((name) => `./components/${name}`),
       "./showcase",
     ] as const;
@@ -122,12 +123,17 @@ describe("package boundaries", () => {
       expect(definition).toBeDefined();
       if (definition === undefined) continue;
 
-      if (exportPath === "./manifest.json" || exportPath === "./renderer-evidence.json") {
-        expect(definition.default).toBe(
-          exportPath === "./manifest.json"
-            ? "./docs/generated/showcase-manifest.json"
-            : "./docs/generated/renderer-evidence.json",
-        );
+      if (
+        exportPath === "./manifest.json" ||
+        exportPath === "./renderer-evidence.json" ||
+        exportPath === "./consumer-policy.md"
+      ) {
+        const expectedStaticExports = {
+          "./manifest.json": "./docs/generated/showcase-manifest.json",
+          "./renderer-evidence.json": "./docs/generated/renderer-evidence.json",
+          "./consumer-policy.md": "./docs/consumer-policy.md",
+        } as const;
+        expect(definition.default).toBe(expectedStaticExports[exportPath]);
         continue;
       }
 

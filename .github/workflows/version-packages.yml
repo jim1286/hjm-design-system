@@ -41,6 +41,9 @@ jobs:
       - name: Verify release commit
         run: pnpm release:commit:check "$(git rev-parse HEAD^)"
 
+      - name: Verify packages, evidence, and release artifacts
+        run: pnpm release:check
+
       - name: Publish packages
         shell: bash
         run: |

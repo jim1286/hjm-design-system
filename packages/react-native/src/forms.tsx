@@ -66,6 +66,7 @@ import {
 } from "./internal/styles.js";
 import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 type NativeCollectionLeadingRenderProps = Readonly<{
   placement: "trigger" | "option";
@@ -122,6 +123,13 @@ export type FieldProps = Readonly<{
   error?: string;
   required?: boolean;
   disabled?: boolean;
+  /** Canonical layout-only placement. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
+  /**
+   * @deprecated Legacy compatibility only. New apps must use `layoutStyle`; Field rhythm,
+   * color, typography, radius, height, and state presentation remain recipe-owned.
+   * @see https://github.com/jim1286/hjm-design-system/blob/main/packages/design-contracts/docs/consumer-policy.md#31-react-native-legacy-style-compatibility-boundary
+   */
   style?: StyleProp<ViewStyle>;
 }>;
 
@@ -133,6 +141,7 @@ export function Field({
   error,
   required = false,
   disabled = false,
+  layoutStyle,
   style,
 }: FieldProps) {
   const visibleLabel = `${label}${required ? " *" : ""}`;
@@ -143,7 +152,7 @@ export function Field({
     accessibilityState: { disabled },
   };
   return (
-    <View style={[{ gap: spacing.xs }, style]}>
+    <View style={[{ gap: spacing.xs }, style, layoutStyle]}>
       <Text tone="primary" variant="label">{visibleLabel}</Text>
       {typeof children === "function" ? children(controlProps) : children}
       {error ? (

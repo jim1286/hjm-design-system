@@ -2,22 +2,33 @@ import { readFile } from "node:fs/promises";
 import { describe, expect, it } from "vitest";
 
 describe("GitHub Actions runtime contracts", () => {
-  it("deploys the Storybook from main without duplicating the workspace test suite", async () => {
+  it("keeps one canonical CI command for packages and both showcases", async () => {
+    const workspacePackage = JSON.parse(
+      await readFile(new URL("../../../package.json", import.meta.url), "utf8"),
+    ) as { scripts: Record<string, string> };
+
+    expect(workspacePackage.scripts["ci:check"]).toBe(
+      "pnpm check && pnpm showcase:native:check && pnpm showcase:web:build",
+    );
+    expect(workspacePackage.scripts["release:check"]).toContain("pnpm ci:check");
+  });
+
+  it("gates pull requests and deploys the verified Storybook from main", async () => {
     const workflow = await readFile(
       new URL("../../../.github/workflows/showcase.yml", import.meta.url),
       "utf8",
     );
 
     expect(workflow).toMatch(/on:\n\s+push:\n\s+branches:\n\s+- main\n/);
+    expect(workflow).toMatch(/\n\s+pull_request:\n\s+branches:\n\s+- main\n/);
     expect(workflow).toContain("actions/checkout@v7");
     expect(workflow).toContain("pnpm/action-setup@v6");
     expect(workflow).toContain("actions/setup-node@v7");
     expect(workflow).toMatch(/node-version:\s*24\b/);
-    expect(workflow).toContain("pnpm showcase:web:build");
+    expect(workflow).toContain("pnpm ci:check");
     expect(workflow).toContain("actions/upload-pages-artifact@v5");
     expect(workflow).toContain("actions/deploy-pages@v5");
     expect(workflow).not.toContain("playwright install");
-    expect(workflow).not.toContain("pnpm check");
     expect(workflow).not.toContain("changeset:check");
   });
 
@@ -31,11 +42,11 @@ describe("GitHub Actions runtime contracts", () => {
     expect(workflow).not.toMatch(/\n\s+push:/);
     expect(workflow).toContain("github.ref == 'refs/heads/main'");
     expect(workflow).toContain('pnpm release:commit:check "$(git rev-parse HEAD^)"');
+    expect(workflow).toContain("pnpm release:check");
     expect(workflow).toContain("publish --access public --no-git-checks --provenance");
     expect(workflow).toContain('git tag -a "${TAG}"');
     expect(workflow).not.toContain("check-consumer-release");
     expect(workflow).not.toContain("playwright install");
-    expect(workflow).not.toContain("pnpm release:check");
   });
 
   it("verifies a generated release commit against the authored Changeset plan", async () => {

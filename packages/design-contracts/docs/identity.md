@@ -50,7 +50,9 @@ HJM은 장식으로 브랜드를 증명하지 않습니다. 정보와 행동의 
 
 - 깨끗한 white canvas와 깊은 navy dark canvas가 기본입니다.
 - HJM blue는 행동과 현재 상태를 드러내는 서명입니다.
-- 그라디언트는 브랜드 마크, hero, 특별한 CTA에만 제한합니다.
+- 공통 `brandGradient`는 HJM 조직 surface와 fallback에만 사용합니다. 제품 hero와 특별한
+  CTA의 브랜드 표현은 제품 어댑터가 소유하며, 모든 앱이 같은 그라디언트를 자동으로
+  복제하지 않습니다.
 - `text`, `textBody`, `textMuted`는 필수 정보에 사용할 수 있습니다.
 - `textSub`, `textWeak`는 장식적·중복적인 정보에만 사용하며 필수 문장에는 쓰지 않습니다.
 - 제품 상태는 먼저 `info / success / warning / attention`에 매핑하고, 제품 이름은 공용
@@ -103,7 +105,8 @@ HJM은 장식으로 브랜드를 증명하지 않습니다. 정보와 행동의 
 | product palette | KBO 구단 색상, 코드 미리보기 색상 |
 
 제품 매핑은 앱 또는 제품 어댑터에 남깁니다. HJM 코어에 제품명, 저장 키, 도메인 상태를
-추가하지 않습니다.
+추가하지 않습니다. 공통 HJM 결을 유지하면서 제품을 구별하는 구체적인 경계와 검증 항목은
+[`consumer-policy.md`](./consumer-policy.md)의 "제품 정체성 경계"를 따릅니다.
 
 ## 참고 원칙
 

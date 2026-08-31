@@ -112,6 +112,9 @@
     "./renderer-evidence.json": {
       "default": "./docs/generated/renderer-evidence.json"
     },
+    "./consumer-policy.md": {
+      "default": "./docs/consumer-policy.md"
+    },
     "./components/alert-dialog": {
       "types": "./dist/alert-dialog.d.ts",
       "react-native": "./dist/alert-dialog.js",

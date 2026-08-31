@@ -8,7 +8,7 @@ import { ActivityIndicator, Pressable, View, } from "react-native";
 import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
 import { minimumTargetStyle } from "./internal/styles.js";
-export const Button = forwardRef(function Button({ label, children, tone = buttonRecipe.defaults.tone, size = buttonRecipe.defaults.size, disabled = false, loading = false, disableWhileLoading = false, growWithContent = false, loadingLabel, leading, trailing, fullWidth = false, hitSlop, style, labelStyle, renderLoadingIndicator, accessibilityLabel, accessibilityState, onPress, onLongPress, ...props }, ref) {
+export const Button = forwardRef(function Button({ label, children, tone = buttonRecipe.defaults.tone, size = buttonRecipe.defaults.size, disabled = false, loading = false, disableWhileLoading = false, growWithContent = false, loadingLabel, leading, trailing, fullWidth = false, hitSlop, layoutStyle, style, labelStyle, renderLoadingIndicator, accessibilityLabel, accessibilityState, onPress, onLongPress, ...props }, ref) {
     const { colors, environment } = useHjmNativeTheme();
     const inactive = disabled || loading;
     const unavailable = disabled || (loading && disableWhileLoading);
@@ -45,6 +45,7 @@ export const Button = forwardRef(function Button({ label, children, tone = butto
                 ...(fullWidth ? { alignSelf: "stretch" } : {}),
             },
             style,
+            layoutStyle,
         ], children: [loading
                 ? renderLoadingIndicator?.({ color: contentColor, size: "small" }) ?? (_jsx(ActivityIndicator, { color: contentColor, size: "small" }))
                 : leading, typeof content === "string" || typeof content === "number" ? (_jsx(Text, { align: "center", emphasis: "medium", style: [{ color: contentColor }, labelStyle], variant: sizeContract.textVariant, children: content })) : content, trailing] }));

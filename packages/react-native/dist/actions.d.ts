@@ -3,6 +3,7 @@ import { type IconButtonShape, type IconButtonSize, type IconButtonTone as Contr
 import { type LinkDescriptor, type LinkDestination } from "@hjmds/design-contracts/components/link";
 import { type ReactNode } from "react";
 import { View, type PressableProps, type StyleProp, type TextStyle, type ViewStyle } from "react-native";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type ButtonTone = ContractButtonTone;
 export type ButtonSize = ContractButtonSize;
 export type { IconButtonShape, IconButtonSize, } from "@hjmds/design-contracts/recipes";
@@ -24,7 +25,19 @@ export type ButtonProps = Omit<PressableProps, "accessibilityRole" | "accessibil
     fullWidth?: boolean;
     hitSlop?: PressableProps["hitSlop"];
     accessibilityState?: PressableProps["accessibilityState"];
+    /** Canonical layout-only placement. Controlled visual and state keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
+    /**
+     * @deprecated Legacy compatibility only. New apps must use `layoutStyle` and must not
+     * override color, typography, radius, control height, or interaction state.
+     * @see https://github.com/jim1286/hjm-design-system/blob/main/packages/design-contracts/docs/consumer-policy.md#31-react-native-legacy-style-compatibility-boundary
+     */
     style?: StyleProp<ViewStyle>;
+    /**
+     * @deprecated Label typography and color belong to the Button recipe. Request a semantic
+     * recipe axis instead of styling the label in product code.
+     * @see https://github.com/jim1286/hjm-design-system/blob/main/packages/design-contracts/docs/consumer-policy.md#31-react-native-legacy-style-compatibility-boundary
+     */
     labelStyle?: StyleProp<TextStyle>;
     renderLoadingIndicator?: (props: Readonly<{
         color: string;
@@ -49,7 +62,19 @@ export declare const Button: import("react").ForwardRefExoticComponent<Omit<Pres
     fullWidth?: boolean;
     hitSlop?: PressableProps["hitSlop"];
     accessibilityState?: PressableProps["accessibilityState"];
+    /** Canonical layout-only placement. Controlled visual and state keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
+    /**
+     * @deprecated Legacy compatibility only. New apps must use `layoutStyle` and must not
+     * override color, typography, radius, control height, or interaction state.
+     * @see https://github.com/jim1286/hjm-design-system/blob/main/packages/design-contracts/docs/consumer-policy.md#31-react-native-legacy-style-compatibility-boundary
+     */
     style?: StyleProp<ViewStyle>;
+    /**
+     * @deprecated Label typography and color belong to the Button recipe. Request a semantic
+     * recipe axis instead of styling the label in product code.
+     * @see https://github.com/jim1286/hjm-design-system/blob/main/packages/design-contracts/docs/consumer-policy.md#31-react-native-legacy-style-compatibility-boundary
+     */
     labelStyle?: StyleProp<TextStyle>;
     renderLoadingIndicator?: (props: Readonly<{
         color: string;

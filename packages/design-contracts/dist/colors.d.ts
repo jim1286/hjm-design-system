@@ -37,7 +37,11 @@ export declare const accentTint: {
     readonly strong: 0.2;
     readonly border: 0.3;
 };
-/** Shared visual signature. Renderers translate the normalized coordinates. */
+/**
+ * HJM organization surfaces' default signature. Renderers translate the
+ * normalized coordinates. Product identity is owned by each product adapter;
+ * consumers must not treat this value as every product's automatic brand.
+ */
 export declare const brandGradient: {
     readonly from: "#0369a1";
     readonly to: "#155dfc";

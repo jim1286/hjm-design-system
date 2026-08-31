@@ -4,6 +4,7 @@ import { type SelectCollectionSectionDescriptor, type SelectCollectionSource, ty
 import { type SelectDensity, type SelectSize } from "@hjmds/design-contracts/recipes";
 import { type ReactNode } from "react";
 import { type ModalProps, type StyleProp, type ViewStyle } from "react-native";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 type NativeCollectionLeadingRenderProps = Readonly<{
     placement: "trigger" | "option";
     selected: boolean;
@@ -25,10 +26,17 @@ export type FieldProps = Readonly<{
     error?: string;
     required?: boolean;
     disabled?: boolean;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
+    /**
+     * @deprecated Legacy compatibility only. New apps must use `layoutStyle`; Field rhythm,
+     * color, typography, radius, height, and state presentation remain recipe-owned.
+     * @see https://github.com/jim1286/hjm-design-system/blob/main/packages/design-contracts/docs/consumer-policy.md#31-react-native-legacy-style-compatibility-boundary
+     */
     style?: StyleProp<ViewStyle>;
 }>;
 /** A renderer-neutral field frame for custom Native controls. */
-export declare function Field({ label, children, description, error, required, disabled, style, }: FieldProps): import("react").JSX.Element;
+export declare function Field({ label, children, description, error, required, disabled, layoutStyle, style, }: FieldProps): import("react").JSX.Element;
 export type FormProps<Values> = Readonly<{
     label: string;
     values: Values;

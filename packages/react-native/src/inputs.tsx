@@ -79,6 +79,7 @@ import {
 } from "./internal/styles.js";
 import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 type FieldAccessibleName =
   | Readonly<{
@@ -110,8 +111,19 @@ type BaseFieldProps = Omit<
     busy?: boolean;
     variant?: FieldVariant;
     shape?: FieldShape;
+    /**
+     * @deprecated Input color, typography, padding, and control height are recipe-owned. Request
+     * a semantic field axis instead of overriding them in product code.
+     * @see https://github.com/jim1286/hjm-design-system/blob/main/packages/design-contracts/docs/consumer-policy.md#31-react-native-legacy-style-compatibility-boundary
+     */
     inputStyle?: StyleProp<TextStyle>;
+    /**
+     * @deprecated Legacy compatibility only. New apps must use `layoutStyle` for placement.
+     * @see https://github.com/jim1286/hjm-design-system/blob/main/packages/design-contracts/docs/consumer-policy.md#31-react-native-legacy-style-compatibility-boundary
+     */
     containerStyle?: StyleProp<ViewStyle>;
+    /** Canonical layout-only placement for the complete field. Controlled keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
   }>;
 
 type AccessibleFieldProps = BaseFieldProps & FieldAccessibleName;
@@ -170,6 +182,7 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(function FieldRe
     accessibilityLabel,
     inputStyle,
     containerStyle,
+    layoutStyle,
     allowFontScaling,
     multiline,
     search,
@@ -265,6 +278,7 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(function FieldRe
             : 1,
         },
         containerStyle,
+        layoutStyle,
       ]}
     >
       {visibleLabel ? (
@@ -1222,7 +1236,7 @@ export function Radio({
   );
 }
 
-export type RadioOption<Value extends string = string> = Readonly<{
+export type RadioGroupItem<Value extends string = string> = Readonly<{
   value: Value;
   label: string;
   description?: string;
@@ -1230,6 +1244,9 @@ export type RadioOption<Value extends string = string> = Readonly<{
   accessibilityHint?: string;
   leading?: ReactNode;
 }>;
+
+/** @deprecated Use the renderer-neutral `RadioGroupItem` name. */
+export type RadioOption<Value extends string = string> = RadioGroupItem<Value>;
 
 type ChoiceGroupVisualProps = ChoiceVisualProps & Readonly<{
   orientation?: SelectionOrientation;
@@ -1244,16 +1261,38 @@ type ChoiceGroupVisualProps = ChoiceVisualProps & Readonly<{
   invalidLabel?: string;
 }>;
 
-export type RadioGroupProps<Value extends string = string> = ChoiceGroupVisualProps & Readonly<{
-  label?: string | undefined;
-  accessibilityLabel?: string | undefined;
-  options: readonly RadioOption<Value>[];
-  value?: Value | null;
-  defaultValue?: Value | null;
-  onValueChange?: (value: Value | null) => void;
-  renderLeading?: (option: RadioOption<Value>, props: ChoiceVisualRenderProps) => ReactNode;
-  renderIndicator?: (option: RadioOption<Value>, props: ChoiceVisualRenderProps) => ReactNode;
-}>;
+type RadioGroupCollectionProps<Value extends string> =
+  | Readonly<{
+      items: readonly RadioGroupItem<Value>[];
+      options?: never;
+    }>
+  | Readonly<{
+      items?: never;
+      /** @deprecated Use the renderer-neutral `items` prop. */
+      options: readonly RadioOption<Value>[];
+    }>;
+
+export type RadioGroupProps<Value extends string = string> = ChoiceGroupVisualProps &
+  RadioGroupCollectionProps<Value> & Readonly<{
+    label?: string | undefined;
+    accessibilityLabel?: string | undefined;
+    value?: Value | null;
+    defaultValue?: Value | null;
+    onValueChange?: (value: Value | null) => void;
+    renderLeading?: (item: RadioGroupItem<Value>, props: ChoiceVisualRenderProps) => ReactNode;
+    renderIndicator?: (item: RadioGroupItem<Value>, props: ChoiceVisualRenderProps) => ReactNode;
+  }>;
+
+function resolveAliasedItems<Item>(
+  component: "RadioGroup" | "SegmentedControl",
+  items: readonly Item[] | undefined,
+  options: readonly Item[] | undefined,
+): readonly Item[] {
+  if ((items === undefined) === (options === undefined)) {
+    throw new TypeError(`${component} requires exactly one of items or options`);
+  }
+  return items ?? options!;
+}
 
 function ChoiceGroupFrame({
   label,
@@ -1337,6 +1376,7 @@ function ChoiceGroupFrame({
 export function RadioGroup<Value extends string = string>({
   label,
   accessibilityLabel,
+  items,
   options,
   value,
   defaultValue,
@@ -1359,11 +1399,12 @@ export function RadioGroup<Value extends string = string>({
   style,
   ...slotStyles
 }: RadioGroupProps<Value>) {
-  const selectionItems = options.map((option) => ({
-    id: option.value,
-    label: option.label,
-    ...(option.description === undefined ? {} : { description: option.description }),
-    ...(option.disabled === undefined ? {} : { disabled: option.disabled }),
+  const resolvedItems = resolveAliasedItems("RadioGroup", items, options);
+  const selectionItems = resolvedItems.map((item) => ({
+    id: item.value,
+    label: item.label,
+    ...(item.description === undefined ? {} : { description: item.description }),
+    ...(item.disabled === undefined ? {} : { disabled: item.disabled }),
   }));
   validateSelectionItems(selectionItems);
   if (value !== undefined) validateRadioSelection(selectionItems, value);
@@ -1397,29 +1438,29 @@ export function RadioGroup<Value extends string = string>({
       role="radiogroup"
       style={style}
     >
-      {options.map((option) => {
-        const optionDisabled = disabled || option.disabled === true;
-        const optionSelected = selected === option.value;
+      {resolvedItems.map((item) => {
+        const optionDisabled = disabled || item.disabled === true;
+        const optionSelected = selected === item.value;
         return (
           <ChoiceRow
             {...slotStyles}
-            key={option.value}
-            accessibilityHint={option.accessibilityHint}
+            key={item.value}
+            accessibilityHint={item.accessibilityHint}
             checked={optionSelected}
-            description={option.description}
+            description={item.description}
             disabled={optionDisabled}
             indicator={indicator}
             invalid={hasError}
             invalidLabel={invalidLabel ?? error}
             kind="radio"
-            label={option.label}
-            leading={option.leading}
-            onActivate={() => setSelected(option.value)}
+            label={item.label}
+            leading={item.leading}
+            onActivate={() => setSelected(item.value)}
             presentation={presentation}
             readOnly={readOnly}
             readOnlyLabel={readOnlyLabel}
-            renderIndicator={renderIndicator ? (props) => renderIndicator(option, props) : undefined}
-            renderLeading={renderLeading ? (props) => renderLeading(option, props) : undefined}
+            renderIndicator={renderIndicator ? (props) => renderIndicator(item, props) : undefined}
+            renderLeading={renderLeading ? (props) => renderLeading(item, props) : undefined}
             required={required}
             requiredLabel={requiredLabel}
             size={size}
@@ -1523,28 +1564,57 @@ export function CheckboxGroup<Value extends string = string>({
   );
 }
 
-export type SwitchProps = Omit<
+type SwitchBaseProps = Omit<
   NativeSwitchProps,
-  "accessibilityHint" | "accessibilityLabel" | "onValueChange" | "style" | "value"
+  | "accessibilityHint"
+  | "accessibilityLabel"
+  | "defaultValue"
+  | "onValueChange"
+  | "style"
+  | "value"
 > &
   Readonly<{
     label: string;
     description?: string;
     size?: SwitchSize;
-    value?: boolean;
-    defaultValue?: boolean;
-    onValueChange?: (value: boolean) => void;
     accessibilityLabel?: string;
     accessibilityHint?: string;
     style?: StyleProp<ViewStyle>;
   }>;
 
+type SwitchCanonicalStateProps = Readonly<{
+  checked?: boolean;
+  defaultChecked?: boolean;
+  onCheckedChange?: (checked: boolean) => void;
+  value?: never;
+  defaultValue?: never;
+  onValueChange?: never;
+}>;
+
+type SwitchLegacyStateProps = Readonly<{
+  checked?: never;
+  defaultChecked?: never;
+  onCheckedChange?: never;
+  /** @deprecated Use the renderer-neutral `checked` prop. */
+  value?: boolean;
+  /** @deprecated Use the renderer-neutral `defaultChecked` prop. */
+  defaultValue?: boolean;
+  /** @deprecated Use the renderer-neutral `onCheckedChange` prop. */
+  onValueChange?: (value: boolean) => void;
+}>;
+
+export type SwitchProps = SwitchBaseProps &
+  (SwitchCanonicalStateProps | SwitchLegacyStateProps);
+
 export function Switch({
   label,
   description,
   size = switchRecipe.defaults.size,
+  checked,
+  defaultChecked,
+  onCheckedChange,
   value,
-  defaultValue = false,
+  defaultValue,
   onValueChange,
   disabled = false,
   accessibilityLabel,
@@ -1552,12 +1622,28 @@ export function Switch({
   style,
   ...props
 }: SwitchProps) {
+  const hasCanonicalState = checked !== undefined
+    || defaultChecked !== undefined
+    || onCheckedChange !== undefined;
+  const hasLegacyState = value !== undefined
+    || defaultValue !== undefined
+    || onValueChange !== undefined;
+  if (hasCanonicalState && hasLegacyState) {
+    throw new TypeError(
+      "Switch cannot mix checked/defaultChecked/onCheckedChange with value/defaultValue/onValueChange",
+    );
+  }
+  const resolvedChecked = checked ?? value;
+  const resolvedDefaultChecked = defaultChecked ?? defaultValue ?? false;
+  const resolvedOnCheckedChange = onCheckedChange ?? onValueChange;
   const { colors, environment } = useHjmNativeTheme();
   const dimensions = switchRecipe.sizes[size];
   const [enabled, setEnabled] = useControllableState({
-    ...(value === undefined ? {} : { value }),
-    defaultValue,
-    ...(onValueChange === undefined ? {} : { onChange: onValueChange }),
+    ...(resolvedChecked === undefined ? {} : { value: resolvedChecked }),
+    defaultValue: resolvedDefaultChecked,
+    ...(resolvedOnCheckedChange === undefined
+      ? {}
+      : { onChange: resolvedOnCheckedChange }),
   });
   return (
     <Pressable
@@ -1603,13 +1689,17 @@ export function Switch({
   );
 }
 
-export type SegmentedControlOption<Value extends string = string> = Readonly<{
+export type SegmentedControlItem<Value extends string = string> = Readonly<{
   value: Value;
   label: string;
   disabled?: boolean;
   leading?: ReactNode;
   renderLeading?: (props: SegmentedControlLeadingRenderProps) => ReactNode;
 }>;
+
+/** @deprecated Use the renderer-neutral `SegmentedControlItem` name. */
+export type SegmentedControlOption<Value extends string = string> =
+  SegmentedControlItem<Value>;
 
 export type SegmentedControlLeadingRenderProps = Readonly<{
   selected: boolean;
@@ -1618,19 +1708,31 @@ export type SegmentedControlLeadingRenderProps = Readonly<{
   size: number;
 }>;
 
-export type SegmentedControlProps<Value extends string = string> = Readonly<{
-  label: string;
-  options: readonly SegmentedControlOption<Value>[];
-  value?: Value;
-  defaultValue?: Value;
-  onValueChange?: (value: Value) => void;
-  size?: SegmentedControlSize;
-  disabled?: boolean;
-  style?: StyleProp<ViewStyle>;
-}>;
+type SegmentedControlCollectionProps<Value extends string> =
+  | Readonly<{
+      items: readonly SegmentedControlItem<Value>[];
+      options?: never;
+    }>
+  | Readonly<{
+      items?: never;
+      /** @deprecated Use the renderer-neutral `items` prop. */
+      options: readonly SegmentedControlOption<Value>[];
+    }>;
+
+export type SegmentedControlProps<Value extends string = string> =
+  SegmentedControlCollectionProps<Value> & Readonly<{
+    label: string;
+    value?: Value;
+    defaultValue?: Value;
+    onValueChange?: (value: Value) => void;
+    size?: SegmentedControlSize;
+    disabled?: boolean;
+    style?: StyleProp<ViewStyle>;
+  }>;
 
 export function SegmentedControl<Value extends string = string>({
   label,
+  items,
   options,
   value,
   defaultValue,
@@ -1639,15 +1741,16 @@ export function SegmentedControl<Value extends string = string>({
   disabled = false,
   style,
 }: SegmentedControlProps<Value>) {
+  const resolvedItems = resolveAliasedItems("SegmentedControl", items, options);
   const theme = useHjmNativeTheme();
   const { environment } = theme;
   const sizeContract = segmentedControlRecipe.sizes[size];
   const stacked = segmentedControlRecipe.adaptive.largeTextLayout === "stacked"
     && environment.textScale >= segmentedControlRecipe.adaptive.stackAtFontScale;
-  const descriptors = options.map((option) => ({
-      id: option.value,
-      label: option.label,
-      ...(option.disabled === undefined ? {} : { disabled: option.disabled }),
+  const descriptors = resolvedItems.map((item) => ({
+      id: item.value,
+      label: item.label,
+      ...(item.disabled === undefined ? {} : { disabled: item.disabled }),
     }));
   const collectionFallback = resolveInitialTabValue(descriptors);
   if (collectionFallback === undefined) throw new Error("SegmentedControl requires an enabled option");
@@ -1695,16 +1798,16 @@ export function SegmentedControl<Value extends string = string>({
         style,
       ]}
     >
-      {options.map((option) => {
-        const isSelected = option.value === selected;
-        const optionDisabled = disabled || option.disabled === true;
+      {resolvedItems.map((item) => {
+        const isSelected = item.value === selected;
+        const optionDisabled = disabled || item.disabled === true;
         const contentColor = resolveColorReference(
           isSelected
             ? segmentedControlRecipe.item.selectedContent
             : segmentedControlRecipe.item.idleContent,
           theme.palette,
         );
-        const leading = option.leading ?? option.renderLeading?.({
+        const leading = item.leading ?? item.renderLeading?.({
           selected: isSelected,
           disabled: optionDisabled,
           color: contentColor,
@@ -1712,13 +1815,13 @@ export function SegmentedControl<Value extends string = string>({
         });
         return (
           <Pressable
-            key={option.value}
-            accessibilityLabel={option.label}
+            key={item.value}
+            accessibilityLabel={item.label}
             accessibilityRole="radio"
             accessibilityState={{ checked: isSelected, disabled: optionDisabled }}
             disabled={optionDisabled}
             hitSlop={sizeContract.hitSlop}
-            onPress={() => setSelected(option.value)}
+            onPress={() => setSelected(item.value)}
             style={({ pressed }) => [
               {
                 alignItems: "center",
@@ -1772,7 +1875,7 @@ export function SegmentedControl<Value extends string = string>({
               tone={isSelected ? "brand" : "muted"}
               variant={sizeContract.textVariant}
             >
-              {option.label}
+              {item.label}
             </Text>
           </Pressable>
         );

@@ -44,8 +44,9 @@ const rendererBudgets = [
     directory: "packages/react-native",
     surface: "native",
     budgets: {
-      ".": { modules: 19, raw: 425_000, gzip: 75_000 },
+      ".": { modules: 20, raw: 425_000, gzip: 75_000 },
       "./provider": { modules: 1, raw: 4_700, gzip: 1_550 },
+      "./composition-style": { modules: 1, raw: 2_000, gzip: 1_000 },
       "./primitives": { modules: 3, raw: 21_500, gzip: 5_650 },
       "./actions": { modules: 4, raw: 34_700, gzip: 7_900 },
       "./inputs": { modules: 13, raw: 178_000, gzip: 31_000 },

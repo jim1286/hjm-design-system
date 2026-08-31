@@ -47,7 +47,7 @@ function useAfterModalDismiss(visible) {
     };
 }
 /** A renderer-neutral field frame for custom Native controls. */
-export function Field({ label, children, description, error, required = false, disabled = false, style, }) {
+export function Field({ label, children, description, error, required = false, disabled = false, layoutStyle, style, }) {
     const visibleLabel = `${label}${required ? " *" : ""}`;
     const hint = error ?? description;
     const controlProps = {
@@ -55,7 +55,7 @@ export function Field({ label, children, description, error, required = false, d
         ...(hint === undefined ? {} : { accessibilityHint: hint }),
         accessibilityState: { disabled },
     };
-    return (_jsxs(View, { style: [{ gap: spacing.xs }, style], children: [_jsx(Text, { tone: "primary", variant: "label", children: visibleLabel }), typeof children === "function" ? children(controlProps) : children, error ? (_jsx(Text, { accessibilityLiveRegion: "assertive", tone: "danger", variant: "caption", children: error })) : description ? (_jsx(Text, { tone: "muted", variant: "caption", children: description })) : null] }));
+    return (_jsxs(View, { style: [{ gap: spacing.xs }, style, layoutStyle], children: [_jsx(Text, { tone: "primary", variant: "label", children: visibleLabel }), typeof children === "function" ? children(controlProps) : children, error ? (_jsx(Text, { accessibilityLiveRegion: "assertive", tone: "danger", variant: "caption", children: error })) : description ? (_jsx(Text, { tone: "muted", variant: "caption", children: description })) : null] }));
 }
 /**
  * A Native submit boundary. Products retain ownership of values and validation;

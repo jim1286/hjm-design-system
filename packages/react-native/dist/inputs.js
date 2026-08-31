@@ -30,7 +30,7 @@ function FieldMessage({ error, supportText }) {
         return null;
     return (_jsx(Text, { accessibilityLiveRegion: error ? "assertive" : "none", tone: error ? "danger" : "muted", variant: fieldRecipe.support.textVariant, children: error ?? supportText }));
 }
-const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultValue = "", onValueChange, supportText, error, required = false, disabled = false, busy = false, variant = fieldRecipe.defaults.variant, shape, accessibilityLabel, inputStyle, containerStyle, allowFontScaling, multiline, search, searchSize = searchFieldRecipe.defaults.size, leading, trailing, onBlur, onFocus, ...props }, ref) {
+const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultValue = "", onValueChange, supportText, error, required = false, disabled = false, busy = false, variant = fieldRecipe.defaults.variant, shape, accessibilityLabel, inputStyle, containerStyle, layoutStyle, allowFontScaling, multiline, search, searchSize = searchFieldRecipe.defaults.size, leading, trailing, onBlur, onFocus, ...props }, ref) {
     const theme = useHjmNativeTheme();
     const { colors, environment, textScaling } = theme;
     const [focused, setFocused] = useState(false);
@@ -95,6 +95,7 @@ const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultV
                     : 1,
             },
             containerStyle,
+            layoutStyle,
         ], children: [visibleLabel ? (_jsxs(Text, { style: {
                     color: colors[fieldRecipe.label.color],
                     fontWeight: fieldRecipe.label.fontWeight,
@@ -439,6 +440,12 @@ export function Radio({ label, checked, defaultChecked = false, onCheckedChange,
     });
     return (_jsx(ChoiceRow, { ...visual, accessibilityHint: accessibilityHint, checked: selected, description: description, disabled: disabled, indicator: visual.indicator ?? "default", invalid: invalid, invalidLabel: invalidLabel, kind: "radio", label: label, leading: leading, onActivate: () => setSelected(true), readOnly: readOnly, readOnlyLabel: readOnlyLabel, renderIndicator: renderIndicator, renderLeading: renderLeading, required: required, requiredLabel: requiredLabel }));
 }
+function resolveAliasedItems(component, items, options) {
+    if ((items === undefined) === (options === undefined)) {
+        throw new TypeError(`${component} requires exactly one of items or options`);
+    }
+    return items ?? options;
+}
 function ChoiceGroupFrame({ label, accessibilityLabel, required, requiredLabel, readOnly, readOnlyLabel, disabled, description, error, role, orientation, presentation, style, children, }) {
     const theme = useHjmNativeTheme();
     const id = useId().replaceAll(":", "");
@@ -459,12 +466,13 @@ function ChoiceGroupFrame({ label, accessibilityLabel, required, requiredLabel, 
                     gap,
                 }, children: children }), error ? (_jsx(Text, { accessibilityLiveRegion: "assertive", accessibilityRole: "alert", tone: "danger", variant: selectionGroupRecipe.error.textVariant, children: error })) : description ? (_jsx(Text, { tone: "muted", variant: selectionGroupRecipe.description.textVariant, children: description })) : null] }));
 }
-export function RadioGroup({ label, accessibilityLabel, options, value, defaultValue, onValueChange, required = false, disabled = false, readOnly = false, invalid = false, description, error, requiredLabel, readOnlyLabel, invalidLabel, orientation = selectionGroupBehaviorDefaults.orientation, presentation = selectionGroupRecipe.defaults.presentation, size = selectionControlRecipe.defaults.size, indicator = "default", renderLeading, renderIndicator, style, ...slotStyles }) {
-    const selectionItems = options.map((option) => ({
-        id: option.value,
-        label: option.label,
-        ...(option.description === undefined ? {} : { description: option.description }),
-        ...(option.disabled === undefined ? {} : { disabled: option.disabled }),
+export function RadioGroup({ label, accessibilityLabel, items, options, value, defaultValue, onValueChange, required = false, disabled = false, readOnly = false, invalid = false, description, error, requiredLabel, readOnlyLabel, invalidLabel, orientation = selectionGroupBehaviorDefaults.orientation, presentation = selectionGroupRecipe.defaults.presentation, size = selectionControlRecipe.defaults.size, indicator = "default", renderLeading, renderIndicator, style, ...slotStyles }) {
+    const resolvedItems = resolveAliasedItems("RadioGroup", items, options);
+    const selectionItems = resolvedItems.map((item) => ({
+        id: item.value,
+        label: item.label,
+        ...(item.description === undefined ? {} : { description: item.description }),
+        ...(item.disabled === undefined ? {} : { disabled: item.disabled }),
     }));
     validateSelectionItems(selectionItems);
     if (value !== undefined)
@@ -484,10 +492,10 @@ export function RadioGroup({ label, accessibilityLabel, options, value, defaultV
             setSelected(selected);
     }, [selected, setSelected, storedValue, value]);
     const hasError = invalid || error !== undefined;
-    return (_jsx(ChoiceGroupFrame, { accessibilityLabel: accessibilityLabel, description: description, disabled: disabled, error: error, label: label, orientation: orientation, presentation: presentation, readOnly: readOnly, readOnlyLabel: readOnlyLabel, required: required, requiredLabel: requiredLabel, role: "radiogroup", style: style, children: options.map((option) => {
-            const optionDisabled = disabled || option.disabled === true;
-            const optionSelected = selected === option.value;
-            return (_createElement(ChoiceRow, { ...slotStyles, key: option.value, accessibilityHint: option.accessibilityHint, checked: optionSelected, description: option.description, disabled: optionDisabled, indicator: indicator, invalid: hasError, invalidLabel: invalidLabel ?? error, kind: "radio", label: option.label, leading: option.leading, onActivate: () => setSelected(option.value), presentation: presentation, readOnly: readOnly, readOnlyLabel: readOnlyLabel, renderIndicator: renderIndicator ? (props) => renderIndicator(option, props) : undefined, renderLeading: renderLeading ? (props) => renderLeading(option, props) : undefined, required: required, requiredLabel: requiredLabel, size: size }));
+    return (_jsx(ChoiceGroupFrame, { accessibilityLabel: accessibilityLabel, description: description, disabled: disabled, error: error, label: label, orientation: orientation, presentation: presentation, readOnly: readOnly, readOnlyLabel: readOnlyLabel, required: required, requiredLabel: requiredLabel, role: "radiogroup", style: style, children: resolvedItems.map((item) => {
+            const optionDisabled = disabled || item.disabled === true;
+            const optionSelected = selected === item.value;
+            return (_createElement(ChoiceRow, { ...slotStyles, key: item.value, accessibilityHint: item.accessibilityHint, checked: optionSelected, description: item.description, disabled: optionDisabled, indicator: indicator, invalid: hasError, invalidLabel: invalidLabel ?? error, kind: "radio", label: item.label, leading: item.leading, onActivate: () => setSelected(item.value), presentation: presentation, readOnly: readOnly, readOnlyLabel: readOnlyLabel, renderIndicator: renderIndicator ? (props) => renderIndicator(item, props) : undefined, renderLeading: renderLeading ? (props) => renderLeading(item, props) : undefined, required: required, requiredLabel: requiredLabel, size: size }));
         }) }));
 }
 /** Validated controlled/uncontrolled checkbox collection using immutable Sets. */
@@ -512,13 +520,27 @@ export function CheckboxGroup({ label, accessibilityLabel, items, value, default
             return (_createElement(ChoiceRow, { ...slotStyles, key: item.id, checked: optionSelected, description: item.description, disabled: optionDisabled, indicator: indicator, invalid: hasError, invalidLabel: invalidLabel ?? error, kind: "checkbox", label: item.label, onActivate: () => setSelected(toggleCheckboxSelection(items, selected, item.id)), presentation: presentation, readOnly: readOnly, readOnlyLabel: readOnlyLabel, renderIndicator: renderIndicator ? (props) => renderIndicator(item, props) : undefined, renderLeading: renderLeading ? (props) => renderLeading(item, props) : undefined, required: required, requiredLabel: requiredLabel, size: size }));
         }) }));
 }
-export function Switch({ label, description, size = switchRecipe.defaults.size, value, defaultValue = false, onValueChange, disabled = false, accessibilityLabel, accessibilityHint, style, ...props }) {
+export function Switch({ label, description, size = switchRecipe.defaults.size, checked, defaultChecked, onCheckedChange, value, defaultValue, onValueChange, disabled = false, accessibilityLabel, accessibilityHint, style, ...props }) {
+    const hasCanonicalState = checked !== undefined
+        || defaultChecked !== undefined
+        || onCheckedChange !== undefined;
+    const hasLegacyState = value !== undefined
+        || defaultValue !== undefined
+        || onValueChange !== undefined;
+    if (hasCanonicalState && hasLegacyState) {
+        throw new TypeError("Switch cannot mix checked/defaultChecked/onCheckedChange with value/defaultValue/onValueChange");
+    }
+    const resolvedChecked = checked ?? value;
+    const resolvedDefaultChecked = defaultChecked ?? defaultValue ?? false;
+    const resolvedOnCheckedChange = onCheckedChange ?? onValueChange;
     const { colors, environment } = useHjmNativeTheme();
     const dimensions = switchRecipe.sizes[size];
     const [enabled, setEnabled] = useControllableState({
-        ...(value === undefined ? {} : { value }),
-        defaultValue,
-        ...(onValueChange === undefined ? {} : { onChange: onValueChange }),
+        ...(resolvedChecked === undefined ? {} : { value: resolvedChecked }),
+        defaultValue: resolvedDefaultChecked,
+        ...(resolvedOnCheckedChange === undefined
+            ? {}
+            : { onChange: resolvedOnCheckedChange }),
     });
     return (_jsxs(Pressable, { accessibilityHint: accessibilityHint ?? description, accessibilityLabel: accessibilityLabel ?? label, accessibilityRole: "switch", accessibilityState: { checked: enabled, disabled }, disabled: disabled, onPress: () => setEnabled(!enabled), style: ({ pressed }) => [
             minimumTargetStyle,
@@ -535,16 +557,17 @@ export function Switch({ label, description, size = switchRecipe.defaults.size, 
             style,
         ], children: [_jsxs(View, { style: { flex: 1, gap: spacing.xxs }, children: [_jsx(Text, { tone: "body", variant: "bodyLarge", children: label }), description ? (_jsx(Text, { tone: "muted", variant: "caption", children: description })) : null] }), _jsx(NativeSwitch, { ...props, accessible: false, disabled: disabled, ios_backgroundColor: colors.surfaceAlt, pointerEvents: "none", style: { height: dimensions.height, width: dimensions.width }, thumbColor: colors.bg, trackColor: { false: colors.surfaceAlt, true: colors.primary }, value: enabled })] }));
 }
-export function SegmentedControl({ label, options, value, defaultValue, onValueChange, size = segmentedControlRecipe.defaults.size, disabled = false, style, }) {
+export function SegmentedControl({ label, items, options, value, defaultValue, onValueChange, size = segmentedControlRecipe.defaults.size, disabled = false, style, }) {
+    const resolvedItems = resolveAliasedItems("SegmentedControl", items, options);
     const theme = useHjmNativeTheme();
     const { environment } = theme;
     const sizeContract = segmentedControlRecipe.sizes[size];
     const stacked = segmentedControlRecipe.adaptive.largeTextLayout === "stacked"
         && environment.textScale >= segmentedControlRecipe.adaptive.stackAtFontScale;
-    const descriptors = options.map((option) => ({
-        id: option.value,
-        label: option.label,
-        ...(option.disabled === undefined ? {} : { disabled: option.disabled }),
+    const descriptors = resolvedItems.map((item) => ({
+        id: item.value,
+        label: item.label,
+        ...(item.disabled === undefined ? {} : { disabled: item.disabled }),
     }));
     const collectionFallback = resolveInitialTabValue(descriptors);
     if (collectionFallback === undefined)
@@ -582,19 +605,19 @@ export function SegmentedControl({ label, options, value, defaultValue, onValueC
                 padding: segmentedControlRecipe.container.padding,
             },
             style,
-        ], children: options.map((option) => {
-            const isSelected = option.value === selected;
-            const optionDisabled = disabled || option.disabled === true;
+        ], children: resolvedItems.map((item) => {
+            const isSelected = item.value === selected;
+            const optionDisabled = disabled || item.disabled === true;
             const contentColor = resolveColorReference(isSelected
                 ? segmentedControlRecipe.item.selectedContent
                 : segmentedControlRecipe.item.idleContent, theme.palette);
-            const leading = option.leading ?? option.renderLeading?.({
+            const leading = item.leading ?? item.renderLeading?.({
                 selected: isSelected,
                 disabled: optionDisabled,
                 color: contentColor,
                 size: glyph.sm,
             });
-            return (_jsxs(Pressable, { accessibilityLabel: option.label, accessibilityRole: "radio", accessibilityState: { checked: isSelected, disabled: optionDisabled }, disabled: optionDisabled, hitSlop: sizeContract.hitSlop, onPress: () => setSelected(option.value), style: ({ pressed }) => [
+            return (_jsxs(Pressable, { accessibilityLabel: item.label, accessibilityRole: "radio", accessibilityState: { checked: isSelected, disabled: optionDisabled }, disabled: optionDisabled, hitSlop: sizeContract.hitSlop, onPress: () => setSelected(item.value), style: ({ pressed }) => [
                     {
                         alignItems: "center",
                         backgroundColor: isSelected
@@ -624,7 +647,7 @@ export function SegmentedControl({ label, options, value, defaultValue, onValueC
                             fontWeight: isSelected
                                 ? segmentedControlRecipe.item.selectedFontWeight
                                 : segmentedControlRecipe.item.fontWeight,
-                        }, tone: isSelected ? "brand" : "muted", variant: sizeContract.textVariant, children: option.label })] }, option.value));
+                        }, tone: isSelected ? "brand" : "muted", variant: sizeContract.textVariant, children: item.label })] }, item.value));
         }) }));
 }
 /** Action/filter chip with role-specific, controlled selection semantics. */

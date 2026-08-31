@@ -13,6 +13,10 @@ DOM event, focus trap 또는 navigation adapter를 렌더링하지 않고, 두 �
 
 상세 원칙은 [`docs/identity.md`](./docs/identity.md), 계층·지원 단계·확장 계획은
 [`docs/architecture.md`](./docs/architecture.md)에 정리되어 있습니다.
+소비 앱의 의무, 성숙도별 채택 조건, 제품 어댑터와 예외 절차는
+[`docs/consumer-policy.md`](./docs/consumer-policy.md)가 규정합니다.
+정책 원문은 package export `@hjmds/design-contracts/consumer-policy.md`에도 포함되어 다음
+patch release부터 독립 소비자 tooling이 설치된 package bytes에서 직접 검증할 수 있습니다.
 외부 라이브러리에서 어떤 문제 분해 원칙만 가져오고 무엇을 복제하지 않는지는
 [`docs/library-reference-decisions.md`](./docs/library-reference-decisions.md)에 기록합니다.
 이번 공백 분석에서 추가한 `Container`, `AspectRatio`, `VisuallyHidden`의 선정 근거는
@@ -67,14 +71,14 @@ artifact로 제출합니다.
 - semantic color reference와 플랫폼 독립 resolver
 - button, surface, field 및 확장 컴포넌트의 typed recipe
 - shared/adaptive/web/native 범위와 stable/beta/planned/deprecated 상태를 담은 component catalog
-- 브랜드 그라디언트와 접근성 계약 테스트
+- HJM 조직 surface용 기본 그라디언트와 접근성 계약 테스트
 
 renderer 및 소비 앱 계층이 소유하는 것:
 
 - React DOM 또는 React Native 컴포넌트와 이벤트 타입 (`@hjmds/react`, `@hjmds/react-native`)
 - 제품별 저장 키와 사용자 설정 영속화
 - 아이콘 라이브러리, 폰트 로딩, 애니메이션 구현
-- 제품 전용 컴포넌트와 의미 매핑
+- 제품 전용 컴포넌트, 브랜드 표현과 의미 매핑
 
 예를 들어 야구 팀 색상, 경기 상태, 스코어보드, 라인업, 야구장과 같은 야구 도메인
 UI는 Yajalal이 소유합니다. 다른 제품의 기능 상태 역시 각 제품이 범용 `AccentTone`에
@@ -183,20 +187,21 @@ const successText = resolveColorReference(
   나타내는 일반 의미 역할입니다.
 - 저장 키, CSS 변수 이름, KBO 구단/경기 상태 같은 제품 의미는 각 앱에 남습니다.
 
-## Git tag로 설치
+## npm registry에서 설치
 
-릴리즈 태그가 생성된 뒤 소비 저장소에서는 정확한 태그를 고정합니다.
-`v0.5.2`까지의 태그는 이전 package name을 담고 있습니다. 첫 rename release는 `v0.6.0`이며
-소비 저장소는 이전 이름과 새 이름을 동시에 두지 않고 한 변경에서 전환합니다.
+소비 저장소는 세 public package 중 필요한 contracts와 renderer를 npm registry에서
+설치합니다. contracts와 renderer는 fixed release train이므로 같은 정확한 SemVer를
+사용합니다.
 
 ```bash
-pnpm add '@hjmds/design-contracts@git+https://github.com/jim1286/hjm-design-system.git#v<version>&path:/packages/design-contracts'
+pnpm add --save-exact @hjmds/design-contracts@<version> @hjmds/react@<version>
+# React Native는 두 번째 package를 @hjmds/react-native로 바꿉니다.
 ```
 
 `<version>`은 설치할 fixed release의 정확한 SemVer로 바꿉니다.
-
-태그에는 `dist/` 빌드 결과를 함께 포함해야 합니다. 브랜치나 커밋되지 않은 로컬 경로에
-의존하지 않으며, 계약 변경은 SemVer로 배포합니다.
+Git tag와 release commit은 출처 추적용이며 package-manager dependency로 사용하지 않습니다.
+과거 Git-path 소비자를 옮기는 절차는 역사 문서인
+[`docs/migration-0.6.md`](./docs/migration-0.6.md)에만 남깁니다.
 
 ## 개발
 

@@ -67,7 +67,7 @@ function LiveComposition() {
         <div className="hjm-home-mini-chart" role="img" aria-label="Component maturity distribution">
           <span /><span /><span /><span /><span /><span /><span />
         </div>
-        <label className="hjm-field">
+        <label className="hjm-demo-field">
           <span>Quick find</span>
           <input readOnly value="Button, Dialog, Listy…" />
         </label>

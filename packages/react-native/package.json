@@ -28,6 +28,12 @@
       "import": "./dist/provider.js",
       "default": "./dist/provider.js"
     },
+    "./composition-style": {
+      "types": "./dist/composition-style.d.ts",
+      "react-native": "./dist/composition-style.js",
+      "import": "./dist/composition-style.js",
+      "default": "./dist/composition-style.js"
+    },
     "./primitives": {
       "types": "./dist/primitives.d.ts",
       "react-native": "./dist/primitives.js",
