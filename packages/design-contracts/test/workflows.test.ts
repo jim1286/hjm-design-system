@@ -26,9 +26,11 @@ describe("GitHub Actions runtime contracts", () => {
     expect(workflow).toContain("actions/setup-node@v7");
     expect(workflow).toMatch(/node-version:\s*24\b/);
     expect(workflow).toContain("pnpm ci:check");
+    expect(workflow).toContain(
+      "pnpm --filter @hjmds/react exec playwright install --with-deps chromium",
+    );
     expect(workflow).toContain("actions/upload-pages-artifact@v5");
     expect(workflow).toContain("actions/deploy-pages@v5");
-    expect(workflow).not.toContain("playwright install");
     expect(workflow).not.toContain("changeset:check");
   });
 
@@ -43,10 +45,12 @@ describe("GitHub Actions runtime contracts", () => {
     expect(workflow).toContain("github.ref == 'refs/heads/main'");
     expect(workflow).toContain('pnpm release:commit:check "$(git rev-parse HEAD^)"');
     expect(workflow).toContain("pnpm release:check");
+    expect(workflow).toContain(
+      "pnpm --filter @hjmds/react exec playwright install --with-deps chromium",
+    );
     expect(workflow).toContain("publish --access public --no-git-checks --provenance");
     expect(workflow).toContain('git tag -a "${TAG}"');
     expect(workflow).not.toContain("check-consumer-release");
-    expect(workflow).not.toContain("playwright install");
   });
 
   it("verifies a generated release commit against the authored Changeset plan", async () => {

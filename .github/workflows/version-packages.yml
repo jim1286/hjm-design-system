@@ -38,6 +38,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Install Playwright Chromium
+        run: pnpm --filter @hjmds/react exec playwright install --with-deps chromium
+
       - name: Verify release commit
         run: pnpm release:commit:check "$(git rev-parse HEAD^)"
 
