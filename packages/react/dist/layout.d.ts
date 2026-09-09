@@ -6,6 +6,7 @@ import { type SurfacePadding, type SurfaceRadius, type SurfaceTone } from "@hjmd
 import { type StackAlign, type StackAxis, type StackGap, type StackJustify, type TextEmphasis, type TextTone } from "@hjmds/design-contracts/recipes";
 import type { TextVariant } from "@hjmds/design-contracts/foundations";
 import { type AnchorHTMLAttributes, type HTMLAttributes, type ReactElement, type ReactNode, type Ref } from "react";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type { SurfacePadding, SurfaceRadius, SurfaceTone, } from "@hjmds/design-contracts/recipes/base";
 export type { StackAlign, StackAxis, StackGap, StackJustify, TextEmphasis, TextTone, } from "@hjmds/design-contracts/recipes";
 type LayoutRegionProps = Omit<HTMLAttributes<HTMLElement>, "children" | "role">;
@@ -63,6 +64,8 @@ export type TextProps = Omit<HTMLAttributes<HTMLElement>, "children"> & Readonly
     variant?: TextVariant;
     tone?: TextTone;
     emphasis?: TextEmphasis;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 export declare const Text: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLElement>, "children"> & Readonly<{
     children: ReactNode;
@@ -70,6 +73,8 @@ export declare const Text: import("react").ForwardRefExoticComponent<Omit<HTMLAt
     variant?: TextVariant;
     tone?: TextTone;
     emphasis?: TextEmphasis;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }> & import("react").RefAttributes<HTMLElement>>;
 export type SurfaceProps = HTMLAttributes<HTMLElement> & Readonly<{
     as?: "div" | "section" | "article";
@@ -77,6 +82,8 @@ export type SurfaceProps = HTMLAttributes<HTMLElement> & Readonly<{
     bordered?: boolean;
     padding?: SurfacePadding;
     radius?: SurfaceRadius;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 export declare const Surface: import("react").ForwardRefExoticComponent<HTMLAttributes<HTMLElement> & Readonly<{
     as?: "div" | "section" | "article";
@@ -84,6 +91,8 @@ export declare const Surface: import("react").ForwardRefExoticComponent<HTMLAttr
     bordered?: boolean;
     padding?: SurfacePadding;
     radius?: SurfaceRadius;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }> & import("react").RefAttributes<HTMLElement>>;
 export type StackProps = HTMLAttributes<HTMLDivElement> & Readonly<{
     axis?: StackAxis;
@@ -91,6 +100,8 @@ export type StackProps = HTMLAttributes<HTMLDivElement> & Readonly<{
     align?: StackAlign;
     justify?: StackJustify;
     wrap?: boolean;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 export declare const Stack: import("react").ForwardRefExoticComponent<HTMLAttributes<HTMLDivElement> & Readonly<{
     axis?: StackAxis;
@@ -98,17 +109,23 @@ export declare const Stack: import("react").ForwardRefExoticComponent<HTMLAttrib
     align?: StackAlign;
     justify?: StackJustify;
     wrap?: boolean;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }> & import("react").RefAttributes<HTMLDivElement>>;
 export type ContainerProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> & Readonly<{
     children?: ReactNode;
     size?: ContainerSize;
     gutter?: ContainerGutter;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** A centered, token-guttered content boundary shared with Native large screens. */
 export declare const Container: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLDivElement>, "children"> & Readonly<{
     children?: ReactNode;
     size?: ContainerSize;
     gutter?: ContainerGutter;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }> & import("react").RefAttributes<HTMLDivElement>>;
 export type AspectRatioProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> & Readonly<{
     children?: ReactNode;
@@ -132,17 +149,21 @@ export type GridProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> & Pick<
     windowWidth?: number;
     /** Container measurement override; ResizeObserver is used when omitted. */
     availableWidth?: number;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 export declare const Grid: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLDivElement>, "children"> & Pick<Readonly<{
     columns: import("@hjmds/design-contracts/responsive").ResponsiveValue<number>;
     gap?: import("@hjmds/design-contracts/responsive").ResponsiveValue<GridGap>;
     minColumnWidth?: import("@hjmds/design-contracts/responsive").ResponsiveValue<number>;
-}>, "gap" | "columns" | "minColumnWidth"> & Readonly<{
+}>, "columns" | "gap" | "minColumnWidth"> & Readonly<{
     children?: ReactNode;
     /** Test/SSR override. Browser renderers otherwise observe window.innerWidth. */
     windowWidth?: number;
     /** Container measurement override; ResizeObserver is used when omitted. */
     availableWidth?: number;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }> & import("react").RefAttributes<HTMLDivElement>>;
 export type SectionProps = Omit<HTMLAttributes<HTMLElement>, "children" | "title"> & Readonly<{
     title?: ReactNode;

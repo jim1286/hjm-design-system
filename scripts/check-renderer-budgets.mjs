@@ -14,7 +14,10 @@ const rendererBudgets = [
     directory: "packages/react",
     surface: "web",
     budgets: {
-      ".": { modules: 27, raw: 340_000, gzip: 68_000 },
+      // 28: the canonical composition-style contract module. `hjmCompositionStyleKeys`
+      // is a runtime value, so exporting it from the root adds one graph edge.
+      // Byte budgets are unchanged and still pass with ~28% headroom.
+      ".": { modules: 28, raw: 340_000, gzip: 68_000 },
       "./provider": { modules: 3, raw: 11_500, gzip: 3_200 },
       "./layout": { modules: 2, raw: 17_000, gzip: 4_500 },
       "./actions": { modules: 2, raw: 7_000, gzip: 1_900 },

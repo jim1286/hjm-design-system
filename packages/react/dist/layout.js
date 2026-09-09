@@ -89,7 +89,7 @@ export const Layout = forwardRef(function Layout({ children, header, footer, sid
                     ...mainStyle,
                 }, children: children }), hasFooter ? (_jsx("footer", { ...restFooterProps, className: classNames("hjm-layout__footer", footerClassName), children: footer })) : null] }));
 });
-export const Text = forwardRef(function Text({ as = "span", variant = textRecipe.defaults.variant, tone = textRecipe.defaults.tone, emphasis = textRecipe.defaults.emphasis, className, ...props }, ref) {
+export const Text = forwardRef(function Text({ as = "span", variant = textRecipe.defaults.variant, tone = textRecipe.defaults.tone, emphasis = textRecipe.defaults.emphasis, className, layoutStyle, style, ...props }, ref) {
     return createElement(as, {
         ...props,
         ref,
@@ -97,9 +97,11 @@ export const Text = forwardRef(function Text({ as = "span", variant = textRecipe
         "data-variant": variant,
         "data-tone": tone,
         "data-emphasis": emphasis,
+        // Placement wins over the legacy `style`, matching Surface's ordering.
+        style: { ...style, ...layoutStyle },
     });
 });
-export const Surface = forwardRef(function Surface({ as = "div", tone = surfaceDefaults.tone, bordered = surfaceDefaults.bordered, padding = surfaceDefaults.padding, radius = surfaceDefaults.radius, className, style, ...props }, ref) {
+export const Surface = forwardRef(function Surface({ as = "div", tone = surfaceDefaults.tone, bordered = surfaceDefaults.bordered, padding = surfaceDefaults.padding, radius = surfaceDefaults.radius, className, layoutStyle, style, ...props }, ref) {
     const contract = surfaceRecipe[tone];
     return createElement(as, {
         ...props,
@@ -114,6 +116,7 @@ export const Surface = forwardRef(function Surface({ as = "div", tone = surfaceD
             padding: surfaceGeometry.paddings[padding],
             borderRadius: surfaceGeometry.radii[radius],
             ...style,
+            ...layoutStyle,
         },
     });
 });
@@ -123,7 +126,7 @@ const justifyValues = {
     end: "flex-end",
     between: "space-between",
 };
-export const Stack = forwardRef(function Stack({ axis = stackRecipe.defaults.axis, gap = stackRecipe.defaults.gap, align = stackRecipe.defaults.align, justify = stackRecipe.defaults.justify, wrap = stackRecipe.defaults.wrap, className, style, ...props }, ref) {
+export const Stack = forwardRef(function Stack({ axis = stackRecipe.defaults.axis, gap = stackRecipe.defaults.gap, align = stackRecipe.defaults.align, justify = stackRecipe.defaults.justify, wrap = stackRecipe.defaults.wrap, className, layoutStyle, style, ...props }, ref) {
     return (_jsx("div", { ...props, ref: ref, className: classNames("hjm-stack", className), "data-axis": axis, "data-gap": gap, style: {
             display: "flex",
             flexDirection: stackRecipe.axes[axis],
@@ -132,10 +135,11 @@ export const Stack = forwardRef(function Stack({ axis = stackRecipe.defaults.axi
             justifyContent: justifyValues[justify],
             flexWrap: wrap ? "wrap" : "nowrap",
             ...style,
+            ...layoutStyle,
         } }));
 });
 /** A centered, token-guttered content boundary shared with Native large screens. */
-export const Container = forwardRef(function Container({ size, gutter, className, style, ...props }, ref) {
+export const Container = forwardRef(function Container({ size, gutter, className, layoutStyle, style, ...props }, ref) {
     const resolved = resolveContainerDescriptor({
         ...(size === undefined ? {} : { size }),
         ...(gutter === undefined ? {} : { gutter }),
@@ -144,6 +148,7 @@ export const Container = forwardRef(function Container({ size, gutter, className
             maxInlineSize: resolved.maxWidth ?? undefined,
             paddingInline: resolved.paddingInline,
             ...style,
+            ...layoutStyle,
         } }));
 });
 /** Responsive media frame. Products retain object-fit, crop, and content semantics. */
@@ -155,7 +160,7 @@ export const AspectRatio = forwardRef(function AspectRatio({ ratio, className, s
 export const VisuallyHidden = forwardRef(function VisuallyHidden({ className, ...props }, ref) {
     return (_jsx("span", { ...props, ref: ref, className: classNames("hjm-visually-hidden", className) }));
 });
-export const Grid = forwardRef(function Grid({ columns, gap, minColumnWidth, windowWidth, availableWidth, className, style, ...props }, forwardedRef) {
+export const Grid = forwardRef(function Grid({ columns, gap, minColumnWidth, windowWidth, availableWidth, className, layoutStyle, style, ...props }, forwardedRef) {
     const browserWindowWidth = useWindowWidth();
     const [measuredWidth, gridRef] = useElementWidth(forwardedRef);
     const compactSsrWidth = 320;
@@ -180,6 +185,7 @@ export const Grid = forwardRef(function Grid({ columns, gap, minColumnWidth, win
             rowGap: layout.rowGap,
             columnGap: layout.columnGap,
             ...style,
+            ...layoutStyle,
         } }));
 });
 /** Large-text-safe semantic content section with an optional header action. */

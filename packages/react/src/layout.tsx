@@ -55,6 +55,7 @@ import {
   useElementWidth,
   useWindowWidth,
 } from "./internal.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type {
   SurfacePadding,
@@ -307,7 +308,9 @@ export type TextProps = Omit<HTMLAttributes<HTMLElement>, "children"> &
     variant?: TextVariant;
     tone?: TextTone;
     emphasis?: TextEmphasis;
-  }>;
+      /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
+}>;
 
 export const Text = forwardRef<HTMLElement, TextProps>(function Text(
   {
@@ -316,6 +319,8 @@ export const Text = forwardRef<HTMLElement, TextProps>(function Text(
     tone = textRecipe.defaults.tone,
     emphasis = textRecipe.defaults.emphasis,
     className,
+    layoutStyle,
+    style,
     ...props
   },
   ref,
@@ -327,6 +332,8 @@ export const Text = forwardRef<HTMLElement, TextProps>(function Text(
     "data-variant": variant,
     "data-tone": tone,
     "data-emphasis": emphasis,
+    // Placement wins over the legacy `style`, matching Surface's ordering.
+    style: { ...style, ...layoutStyle },
   });
 });
 
@@ -337,7 +344,9 @@ export type SurfaceProps = HTMLAttributes<HTMLElement> &
     bordered?: boolean;
     padding?: SurfacePadding;
     radius?: SurfaceRadius;
-  }>;
+      /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
+}>;
 
 export const Surface = forwardRef<HTMLElement, SurfaceProps>(function Surface(
   {
@@ -347,6 +356,7 @@ export const Surface = forwardRef<HTMLElement, SurfaceProps>(function Surface(
     padding = surfaceDefaults.padding,
     radius = surfaceDefaults.radius,
     className,
+    layoutStyle,
     style,
     ...props
   },
@@ -366,6 +376,7 @@ export const Surface = forwardRef<HTMLElement, SurfaceProps>(function Surface(
       padding: surfaceGeometry.paddings[padding],
       borderRadius: surfaceGeometry.radii[radius],
       ...style,
+      ...layoutStyle,
     },
   });
 });
@@ -377,7 +388,9 @@ export type StackProps = HTMLAttributes<HTMLDivElement> &
     align?: StackAlign;
     justify?: StackJustify;
     wrap?: boolean;
-  }>;
+      /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
+}>;
 
 const justifyValues = {
   start: "flex-start",
@@ -394,6 +407,7 @@ export const Stack = forwardRef<HTMLDivElement, StackProps>(function Stack(
     justify = stackRecipe.defaults.justify,
     wrap = stackRecipe.defaults.wrap,
     className,
+    layoutStyle,
     style,
     ...props
   },
@@ -414,6 +428,7 @@ export const Stack = forwardRef<HTMLDivElement, StackProps>(function Stack(
         justifyContent: justifyValues[justify],
         flexWrap: wrap ? "wrap" : "nowrap",
         ...style,
+        ...layoutStyle,
       }}
     />
   );
@@ -424,11 +439,13 @@ export type ContainerProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> &
     children?: ReactNode;
     size?: ContainerSize;
     gutter?: ContainerGutter;
-  }>;
+      /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
+}>;
 
 /** A centered, token-guttered content boundary shared with Native large screens. */
 export const Container = forwardRef<HTMLDivElement, ContainerProps>(function Container(
-  { size, gutter, className, style, ...props },
+  { size, gutter, className, layoutStyle, style, ...props },
   ref,
 ) {
   const resolved = resolveContainerDescriptor({
@@ -446,6 +463,7 @@ export const Container = forwardRef<HTMLDivElement, ContainerProps>(function Con
         maxInlineSize: resolved.maxWidth ?? undefined,
         paddingInline: resolved.paddingInline,
         ...style,
+        ...layoutStyle,
       }}
     />
   );
@@ -500,7 +518,9 @@ export type GridProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> &
     windowWidth?: number;
     /** Container measurement override; ResizeObserver is used when omitted. */
     availableWidth?: number;
-  }>;
+      /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
+}>;
 
 export const Grid = forwardRef<HTMLDivElement, GridProps>(function Grid(
   {
@@ -510,6 +530,7 @@ export const Grid = forwardRef<HTMLDivElement, GridProps>(function Grid(
     windowWidth,
     availableWidth,
     className,
+    layoutStyle,
     style,
     ...props
   },
@@ -551,6 +572,7 @@ export const Grid = forwardRef<HTMLDivElement, GridProps>(function Grid(
         rowGap: layout.rowGap,
         columnGap: layout.columnGap,
         ...style,
+        ...layoutStyle,
       }}
     />
   );

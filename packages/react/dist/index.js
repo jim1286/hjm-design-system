@@ -1,4 +1,5 @@
 export { HjmProvider, useHjmTheme, } from "./provider.js";
+export { hjmCompositionStyleKeys, } from "./composition-style.js";
 export { AspectRatio, Container, Grid, Layout, Section, Stack, Surface, Text, VisuallyHidden, } from "./layout.js";
 export { Button, IconButton, Link, } from "./actions.js";
 export { Field, OtpField, PasswordField, SearchField, TextArea, TextField, } from "./forms.js";

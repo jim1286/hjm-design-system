@@ -62,10 +62,11 @@ export type ResolveDesignSystemEnvironmentOptions = Readonly<{
   systemTextScale?: DesignSystemTextScale;
   systemReducedMotion?: boolean;
   /**
-   * 제품 브랜드 색을 HJM 시맨틱 키 위에 덮어쓴다. 키 집합은 그대로이므로 recipe와
-   * contrast 규칙이 계속 적용된다. 이 입구가 없으면 앱은 자체 토큰 레이어를 만들어
-   * CSS 변수를 덮어쓰는 수밖에 없고, 그건 canonical 팔레트 복제가 된다.
-   * 주는 키만 교체하고 나머지는 HJM 기본값을 유지한다.
+   * Product brand colors layered over the HJM semantic keys. The key set is
+   * unchanged, so recipes and contrast rules keep applying. Without this entry
+   * point a consumer has to build its own token layer and override the CSS
+   * variables, which is a copy of the canonical palette. Only the supplied
+   * keys are replaced; the rest keep the HJM defaults.
    */
   brandPalette?: Readonly<Partial<Record<ResolvedTheme, Readonly<Partial<ThemeColors>>>>>;
   /** A nested renderer inherits the already-resolved parent before consulting OS defaults. */

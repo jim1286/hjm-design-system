@@ -5,6 +5,13 @@ export {
 } from "./provider.js";
 
 export {
+  hjmCompositionStyleKeys,
+  type HjmCompositionStyle,
+  type HjmCompositionStyleKey,
+  type HjmCompositionStyleProp,
+} from "./composition-style.js";
+
+export {
   AspectRatio,
   Container,
   Grid,
