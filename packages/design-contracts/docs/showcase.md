@@ -72,21 +72,22 @@ CI에서 별도로 빌드·번들 검증하며, HJM 카탈로그의 story identi
 - `pnpm evidence:sync`: first-party renderer claim과 required scenario를 결합한
   `renderer-evidence.json`/`.md` 및 명시적 beta debt 갱신
 - `pnpm evidence:check`: renderer projection이 source와 다르면 CI 실패
-- first-party renderer의 `default` claim은 `proofs[]`에서 canonical render table의 stable
-  case id와 연결되고, 그 table은 evidence ID와 exact equality를 검증한 뒤 모든 case를
-  실행한다. 현재 gate는 구조화된 test-result registry가 없는 non-default scenario claim을
-  전부 거부한다. keyboard·accessibility·device 같은 축은 test case ID와 실행 결과 artifact를
-  exact join하는 registry를 먼저 추가한 뒤에만 열 수 있으며, 파일 안의 주석·문자열이나
-  export 존재만으로 scenario를 claim할 수 없다.
+- renderer의 `test/executed-scenarios.json`은 proof file, `all-cases`와 실행할 scenario/environment를
+  선언한다. 실제 test가 이 registry를 import해 case를 실행하며 package test 실패가 CI로 전파된다.
+- `workspace:check`는 claim의 component/case/proof와 registry의 scenario를 결합한다.
+  non-default scenario도 이 registry와 실행되는 proof에 연결되어야 한다. registry 자체는
+  독립적인 실행 성공 영수증이 아니며 해당 source의 테스트 결과와 함께 읽는다.
 - HJM Storybook: `surfaceStatus.web`으로 renderer/contract-only/unsupported 분류
-- 제품 Storybook verifier: 일반 앱 CI에서는 설치된 `@hjmds/design-contracts/showcase`, release
-  candidate gate에서는 payload full SHA의 generated manifest를 읽어 해당 surface의 active ID와
-  exported CSF registration을 비교하고 missing/unknown/duplicate를 실패 처리
-- 제품 evidence artifact: 검증된 story ID와 실제 실행된 scenario만 schema v1 JSON으로 출력
-- canonical tag gate: 최소 권한 token으로 릴리스 시작 시 두 private 제품의 default-branch
-  HEAD를 full SHA로 캡처해 `repository_dispatch`하고, 같은 canonical release SHA·consumer
-  SHA·correlation ID가 run과 artifact JSON 내부까지 exact-join된 두 검증이 모두 성공하기
-  전에는 tag를 생성하지 않음
+- 제품 Storybook verifier: 설치한 `@hjmds/design-contracts/showcase`를 기준으로 실제 채택한
+  story와 scenario를 검증한다. 전체 inventory gate는 full-coverage 구현에만 적용한다.
+- 제품 evidence artifact: 검증한 story ID·실제로 실행한 scenario·소비 버전/source를 기록한다.
+- `pnpm governance:check`: canonical `ci:check`/`release:check` 연결, renderer test/생성 drift 검사,
+  registry 연결과 release verification step의 실패 전파·publish/tag 이전 순서를 검증한다.
+
+현재 canonical tag는 **내부 package·Showcase 검사**를 기준으로 생성한다. 외부 소비 제품을
+`repository_dispatch`하고 release SHA·consumer SHA·run/artifact를 결합해 기다리는 gate는
+구현되어 있지 않다. 제품 CI/기기 QA는 별도 범위다. 현재 실행 계약과 향후 외부 gate 설계는
+[릴리스 검증 계약](../../../docs/RELEASE_GOVERNANCE.md)을 따른다.
 
 `compareShowcaseStoryIds`와 `assertShowcaseStoryIds`는 모든 Stable/Beta 컴포넌트를 제공하는
 first-party/full-coverage Storybook의 inventory gate입니다. 부분 채택 소비 앱이나 개별 화면은

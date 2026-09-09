@@ -13,7 +13,7 @@
     "build": "pnpm -r --filter './packages/**' run build",
     "typecheck": "pnpm -r --filter './packages/**' run typecheck",
     "test": "pnpm -r --filter './packages/**' run test",
-    "check": "pnpm -r --filter './packages/**' run check && pnpm bundle:renderer:check && pnpm workspace:check && pnpm evidence:check && pnpm docs:check",
+    "check": "pnpm -r --filter './packages/**' run check && pnpm bundle:renderer:check && pnpm workspace:check && pnpm evidence:check && pnpm docs:check && pnpm governance:check",
     "contracts:sync": "pnpm --filter @hjmds/design-contracts contracts:sync",
     "contracts:check": "pnpm --filter @hjmds/design-contracts contracts:check",
     "bundle:check": "pnpm build && pnpm --filter @hjmds/design-contracts bundle:check && pnpm bundle:renderer:check",
@@ -34,7 +34,8 @@
     "release:commit:check": "node scripts/check-release-commit.mjs",
     "release:version": "changeset version && pnpm install --lockfile-only && node scripts/sync-release-version.mjs && pnpm contracts:sync && pnpm build && pnpm evidence:sync",
     "release:status": "changeset status",
-    "release:check": "pnpm ci:check && node scripts/check-release-artifacts.mjs"
+    "release:check": "pnpm ci:check && node scripts/check-release-artifacts.mjs",
+    "governance:check": "node --test scripts/check-release-governance.test.mjs && node scripts/check-release-governance.mjs"
   },
   "engines": {
     "node": ">=20"

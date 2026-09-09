@@ -1,0 +1,53 @@
+{
+  "contractVersion": 1,
+  "id": "hjm-design-system",
+  "kind": "package",
+  "profile": "package-v1",
+  "owner": "repository-maintainers",
+  "documentation": [
+    "README.md",
+    "CONTRIBUTING.md"
+  ],
+  "interfaces": [
+    {
+      "name": "design-contracts",
+      "path": "packages/design-contracts/src/index.ts",
+      "versionSource": "packages/design-contracts/package.json"
+    },
+    {
+      "name": "react",
+      "path": "packages/react/src/index.ts",
+      "versionSource": "packages/react/package.json"
+    },
+    {
+      "name": "react-native",
+      "path": "packages/react-native/src/index.ts",
+      "versionSource": "packages/react-native/package.json"
+    }
+  ],
+  "compatibility": {
+    "document": "packages/design-contracts/docs/consumer-policy.md",
+    "consumers": [
+      "burntok",
+      "taground",
+      "unairplane",
+      "yajalal",
+      "spint",
+      "diairy",
+      "portfolio-site"
+    ]
+  },
+  "checks": [
+    {
+      "id": "canonical",
+      "argv": [
+        "pnpm",
+        "run",
+        "ci:check"
+      ],
+      "cwd": ".",
+      "workflow": ".github/workflows/showcase.yml",
+      "timeoutSeconds": 1800
+    }
+  ]
+}

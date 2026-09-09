@@ -62,23 +62,28 @@ The package exports include:
 ## Composition style boundary
 
 The normative [consumer policy](../design-contracts/docs/consumer-policy.md#31-react-native-legacy-style-compatibility-boundary)
-is also shipped as `@hjmds/design-contracts/consumer-policy.md`. New apps must not add uses of the
+has an export in this source checkout for the next package release. Check the installed package's
+exports before importing `@hjmds/design-contracts/consumer-policy.md`; older `0.9.0` consumers use
+the versioned app-standard policy snapshot as that policy explains. Source checkout updates do
+not update an already installed npm package. New apps must not add uses of the
 legacy unrestricted `style`, `labelStyle`, `inputStyle`, `containerStyle`, or slot `*Style` props.
 Those props remain callable in the 0.9 compatibility train only so existing consumers do not break;
 they are not an authorization to override recipe-owned visuals.
 
-Stable Core components are moving first to `layoutStyle`, typed as `HjmCompositionStyle`. It accepts
+Stable Core components are moving first to `layoutStyle`, typed as `HjmCompositionStyle`.
+The following example requires an installed version that exports these APIs; use a composition
+wrapper when the installed version does not provide them. Deprecation preserves old callers,
+and the runtime does not filter their raw style overrides. New-screen enforcement belongs to
+the product's checks under the consumer policy. It accepts
 screen-placement properties such as logical margins, width, flex, and `alignSelf`, while excluding
 color, typography, padding, gap, border, radius, height, opacity, transform, and interaction-state
 keys. Margin values must still come from HJM spacing tokens or a reviewed product adapter.
 
 ```tsx
 import { spacing } from "@hjmds/design-contracts/foundations";
-import {
-  Button,
-  Surface,
-  type HjmCompositionStyle,
-} from "@hjmds/react-native";
+import { Button } from "@hjmds/react-native/actions";
+import { Surface } from "@hjmds/react-native/primitives";
+import { type HjmCompositionStyle } from "@hjmds/react-native/composition-style";
 
 const actionPlacement = {
   marginTop: spacing.md,
