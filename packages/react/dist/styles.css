@@ -790,12 +790,20 @@
 .hjm-card__title { margin: 0; color: var(--hjm-color-text); font-size: var(--hjm-type-title-size); line-height: var(--hjm-type-title-line-height); overflow-wrap: anywhere; }
 .hjm-card__description { margin: 0; overflow-wrap: anywhere; }
 .hjm-card__actions { display: flex; flex-wrap: wrap; gap: var(--hjm-space-sm); padding: 0 var(--hjm-space-md) var(--hjm-space-md); }
-.hjm-list-row { inline-size: 100%; display: flex; align-items: center; gap: var(--hjm-space-sm); min-block-size: 56px; padding: var(--hjm-space-xs); border: 0; color: inherit; background: transparent; text-align: start; text-decoration: none; font: inherit; }
+/* Row rhythm reads the recipe density variables so the stylesheet does not
+   carry a second copy of the same numbers. */
+.hjm-list-row { inline-size: 100%; display: flex; align-items: center; gap: var(--hjm-list-row-gap); min-block-size: var(--hjm-list-row-comfortable-one-line); padding-inline: var(--hjm-list-row-comfortable-padding-inline); padding-block: var(--hjm-list-row-comfortable-padding-block); border: 0; color: inherit; background: transparent; text-align: start; text-decoration: none; font: inherit; }
 button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
-.hjm-list-row[data-density="compact"] { min-block-size: var(--hjm-control-min-touch-target); padding-block: var(--hjm-space-xxs); }
+.hjm-list-row[data-lines="two"] { min-block-size: var(--hjm-list-row-comfortable-two-line); }
+.hjm-list-row[data-density="compact"] { min-block-size: var(--hjm-list-row-compact-one-line); padding-inline: var(--hjm-list-row-compact-padding-inline); padding-block: var(--hjm-list-row-compact-padding-block); }
+.hjm-list-row[data-density="compact"][data-lines="two"] { min-block-size: var(--hjm-list-row-compact-two-line); }
 .hjm-list-row[data-state="selected"] { background: var(--hjm-color-surface-accent); }
 .hjm-list-row[data-state="disabled"] { opacity: 0.5; cursor: not-allowed; }
 .hjm-list-row__leading, .hjm-list-row__trailing { flex: 0 0 auto; }
+/* `leadingSize` was declared by the recipe but unbound, so consumers rebuilt
+   the avatar box in product styles. */
+.hjm-list-row__leading { display: flex; align-items: center; justify-content: center; inline-size: var(--hjm-list-row-leading-size); block-size: var(--hjm-list-row-leading-size); overflow: hidden; }
+.hjm-list-row__leading[data-shape="circle"] { border-radius: var(--hjm-radius-full); }
 .hjm-list-row__content { flex: 1 1 auto; min-inline-size: 0; display: grid; gap: var(--hjm-space-xxs); }
 .hjm-list-row__title { color: var(--hjm-color-text-body); font-weight: var(--hjm-font-weight-bold); overflow-wrap: anywhere; }
 .hjm-list-row__description, .hjm-list-row__trailing { color: var(--hjm-color-text-muted); overflow-wrap: anywhere; }

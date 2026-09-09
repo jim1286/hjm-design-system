@@ -11,6 +11,7 @@ import {
   visibleControlHeight,
   type DesignSystemProviderValue,
 } from "@hjmds/design-contracts/components/design-system-provider";
+import { listRowRecipe } from "@hjmds/design-contracts/recipes";
 import type { CSSProperties } from "react";
 
 export type HjmThemeStyle = CSSProperties &
@@ -68,6 +69,16 @@ export function createHjmThemeStyle(
   }
 
   style["--hjm-font-family-ui"] = fontFamily.ui.join(", ");
+  // Row rhythm and the leading frame come from the recipe so the stylesheet
+  // does not carry a second copy of the same numbers.
+  style["--hjm-list-row-gap"] = rem(listRowRecipe.gap);
+  style["--hjm-list-row-leading-size"] = rem(listRowRecipe.leadingSize);
+  for (const [name, value] of Object.entries(listRowRecipe.density)) {
+    style[`--hjm-list-row-${kebab(name)}-one-line`] = rem(value.oneLineMinHeight);
+    style[`--hjm-list-row-${kebab(name)}-two-line`] = rem(value.twoLineMinHeight);
+    style[`--hjm-list-row-${kebab(name)}-padding-inline`] = rem(value.paddingHorizontal);
+    style[`--hjm-list-row-${kebab(name)}-padding-block`] = rem(value.paddingVertical);
+  }
   style["--hjm-control-min-touch-target"] = `${control.minTouchTarget}px`;
   style["--hjm-control-field-height"] = `${control.fieldHeight}px`;
   for (const [name, value] of Object.entries(control.buttonHeight)) {

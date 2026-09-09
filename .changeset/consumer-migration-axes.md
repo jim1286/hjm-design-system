@@ -29,3 +29,8 @@ recurring overrides of recipe-owned values and five components that offered no
   control boundary than its surface hairline can now inject one semantic key
   through `brandPalette` instead of overriding `borderColor` per wrapper. The
   default value matches what the outline already resolved to in both themes.
+- Web `ListRow` binds the same density recipe the native renderer does. It used
+  a single hardcoded `min-block-size: 56px` and never distinguished a one-line
+  from a two-line row, so `oneLineMinHeight` / `twoLineMinHeight` /
+  `paddingHorizontal` / `paddingVertical` / `gap` and the `leadingShape` frame
+  are now emitted as `--hjm-list-row-*` variables and read by the stylesheet.

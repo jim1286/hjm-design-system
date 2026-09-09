@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { control, spacing } from "@hjmds/design-contracts/foundations";
 import { buttonRecipe } from "@hjmds/design-contracts/recipes/base";
+import { listRowRecipe } from "@hjmds/design-contracts/recipes";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import {
@@ -9,6 +10,7 @@ import {
   Card,
   HjmProvider,
   IconButton,
+  ListRow,
   Stack,
   Surface,
   Tag,
@@ -201,6 +203,34 @@ describe("Web core normalization", () => {
     );
     expect(css).toMatch(
       /\.hjm-button\[data-selected="true"\] \{[^}]*background: var\(--hjm-color-surface-accent\);/s,
+    );
+  });
+
+  it("binds the ListRow density and leading frame from the recipe on web", () => {
+    const markup = renderToStaticMarkup(
+      <HjmProvider systemTheme="light">
+        <ListRow description="Two line" leadingShape="circle" leading={<span />} title="Row" />
+      </HjmProvider>,
+    );
+    expect(markup).toContain('data-lines="two"');
+    expect(markup).toContain('data-shape="circle"');
+    expect(markup).toContain(
+      `--hjm-list-row-comfortable-two-line:${listRowRecipe.density.comfortable.twoLineMinHeight / 16}rem`,
+    );
+    expect(markup).toContain(
+      `--hjm-list-row-leading-size:${listRowRecipe.leadingSize / 16}rem`,
+    );
+
+    const css = readFileSync(
+      fileURLToPath(new URL("../src/styles.css", import.meta.url)),
+      "utf8",
+    );
+    // The stylesheet must read the recipe variables, never a second copy of the numbers.
+    expect(css).toMatch(
+      /\.hjm-list-row \{[^}]*min-block-size: var\(--hjm-list-row-comfortable-one-line\);/s,
+    );
+    expect(css).toMatch(
+      /\.hjm-list-row__leading \{[^}]*inline-size: var\(--hjm-list-row-leading-size\);/s,
     );
   });
 

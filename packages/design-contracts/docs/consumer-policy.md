@@ -108,6 +108,7 @@ semantic axis로 옮겼습니다. 아래는 그 축과 대체 대상입니다.
 | secondary 컨트롤 테두리를 제품 boundary 색으로 덮기 | `borderControl` semantic key + `semanticColors.border.control` |
 | 토글 Button의 selected 배경·테두리를 제품 style로 칠하기 | `selected` (`buttonRecipe.states.selected`) |
 | `link` tone Button에서 `paddingHorizontal: 0`으로 인라인 정렬 복원 | tone별 `paddingHorizontal` (link=0) |
+| Web ListRow의 1행/2행 최소 높이·padding·gap을 제품이 다시 계산 | `--hjm-list-row-*` 변수로 density recipe를 stylesheet에 바인딩 |
 | Chip·ListRow·Image·LoadMore·DescriptionList의 배치용 `style` | 각 컴포넌트의 `layoutStyle` |
 
 legacy raw style surface는 다음 조건이 모두 충족된 뒤 공지된 breaking train에서 제거합니다.

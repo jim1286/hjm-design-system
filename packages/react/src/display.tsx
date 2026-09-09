@@ -5,6 +5,7 @@ import {
   type BadgeTone,
   type BadgeVariant as ContractBadgeVariant,
   type ListRowDensity,
+  type ListRowLeadingShape,
 } from "@hjmds/design-contracts/recipes";
 import {
   resolveTagDescriptor,
@@ -206,6 +207,8 @@ export type ListRowProps = Omit<HTMLAttributes<HTMLElement>, "title" | "onClick"
     leading?: ReactNode;
     trailing?: ReactNode;
     density?: ListRowDensity;
+    /** Frame the ListRow paints around `leading`; the recipe owns its size. */
+    leadingShape?: ListRowLeadingShape;
     selected?: boolean;
     disabled?: boolean;
     href?: string;
@@ -221,6 +224,7 @@ export const ListRow = forwardRef<HTMLElement, ListRowProps>(function ListRow(
     leading,
     trailing,
     density = listRowRecipe.defaults.density,
+    leadingShape = "square",
     selected = listRowRecipe.defaults.selected,
     disabled = false,
     href,
@@ -257,11 +261,16 @@ export const ListRow = forwardRef<HTMLElement, ListRowProps>(function ListRow(
       ref,
       className: classNames("hjm-list-row", className),
       "data-density": density,
+      // One- and two-line rows have different minimum heights in the recipe;
+      // the web renderer used a single hardcoded value until now.
+      "data-lines": description ? "two" : "one",
       "data-state": disabled ? "disabled" : selected ? "selected" : "idle",
       // Placement wins over the legacy `style`, matching Surface's ordering.
       style: { ...style, ...layoutStyle },
     },
-    leading ? <span className="hjm-list-row__leading">{leading}</span> : null,
+    leading
+      ? <span className="hjm-list-row__leading" data-shape={leadingShape}>{leading}</span>
+      : null,
     <span className="hjm-list-row__content">
       <span className="hjm-list-row__title">{title}</span>
       {description ? (
