@@ -59,11 +59,20 @@ export const TextField = forwardRef(function TextField({ id, label, description,
     };
     return (_jsx(FieldFrame, { controlId: ids.controlId, label: label, description: description, error: error, required: required ?? false, disabled: disabled ?? false, focused: focused, variant: variant ?? fieldRecipe.defaults.variant, shape: shape ?? fieldRecipe.defaults.shape, className: fieldClassName, ...(description ? { descriptionId: ids.descriptionId } : {}), ...(error ? { errorId: ids.errorId } : {}), children: _jsxs("div", { className: "hjm-field__control", children: [leading ? _jsx("span", { className: "hjm-field__affix", children: leading }) : null, _jsx("input", { ...props, ref: ref, id: ids.controlId, className: classNames("hjm-field__input", className), required: required, disabled: disabled, "aria-invalid": error ? true : ariaInvalid, "aria-label": ariaLabel, "aria-describedby": describedBy(ariaDescribedBy, description, error, ids.descriptionId, ids.errorId), onFocus: handleFocus, onBlur: handleBlur }), trailing ? _jsx("span", { className: "hjm-field__affix", children: trailing }) : null] }) }));
 });
-export const TextArea = forwardRef(function TextArea({ id, label, description, error, required, disabled, variant, shape, fieldClassName, className, onFocus, onBlur, "aria-describedby": ariaDescribedBy, "aria-invalid": ariaInvalid, "aria-label": ariaLabel, ...props }, ref) {
+export const TextArea = forwardRef(function TextArea({ id, label, description, error, required, disabled, variant, shape, fieldClassName, className, onFocus, onBlur, "aria-describedby": ariaDescribedBy, "aria-invalid": ariaInvalid, "aria-label": ariaLabel, minVisibleLines, maxVisibleLines, style, ...props }, ref) {
     const ids = useFieldIds(id);
     const [focused, setFocused] = useState(false);
     requireFieldAccessibleName(label, ariaLabel);
-    return (_jsx(FieldFrame, { controlId: ids.controlId, label: label, description: description, error: error, required: required ?? false, disabled: disabled ?? false, focused: focused, variant: variant ?? fieldRecipe.defaults.variant, shape: shape ?? fieldRecipe.defaults.shape, className: fieldClassName, ...(description ? { descriptionId: ids.descriptionId } : {}), ...(error ? { errorId: ids.errorId } : {}), children: _jsx("div", { className: "hjm-field__control hjm-field__control--multiline", children: _jsx("textarea", { ...props, ref: ref, id: ids.controlId, className: classNames("hjm-field__input", className), required: required, disabled: disabled, "aria-invalid": error ? true : ariaInvalid, "aria-label": ariaLabel, "aria-describedby": describedBy(ariaDescribedBy, description, error, ids.descriptionId, ids.errorId), onFocus: (event) => {
+    // Bounds are expressed in lines so the recipe keeps line height and padding.
+    const lineBounds = {
+        ...(minVisibleLines === undefined
+            ? {}
+            : { "--hjm-field-min-visible-lines": minVisibleLines }),
+        ...(maxVisibleLines === undefined
+            ? {}
+            : { "--hjm-field-max-visible-lines": maxVisibleLines }),
+    };
+    return (_jsx(FieldFrame, { controlId: ids.controlId, label: label, description: description, error: error, required: required ?? false, disabled: disabled ?? false, focused: focused, variant: variant ?? fieldRecipe.defaults.variant, shape: shape ?? fieldRecipe.defaults.shape, className: fieldClassName, ...(description ? { descriptionId: ids.descriptionId } : {}), ...(error ? { errorId: ids.errorId } : {}), children: _jsx("div", { className: "hjm-field__control hjm-field__control--multiline", children: _jsx("textarea", { ...props, ref: ref, id: ids.controlId, className: classNames("hjm-field__input", className), style: { ...style, ...lineBounds }, required: required, disabled: disabled, "aria-invalid": error ? true : ariaInvalid, "aria-label": ariaLabel, "aria-describedby": describedBy(ariaDescribedBy, description, error, ids.descriptionId, ids.errorId), onFocus: (event) => {
                     setFocused(true);
                     onFocus?.(event);
                 }, onBlur: (event) => {

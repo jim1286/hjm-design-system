@@ -21,6 +21,11 @@ type BaseFieldProps = Omit<TextInputProps, "accessibilityLabel" | "defaultValue"
      * recipe-owned, so this semantic axis replaces `inputStyle={{ maxHeight }}`.
      */
     maxVisibleLines?: number;
+    /**
+     * Lower bound for a growing multiline field, in visible lines. Height is
+     * recipe-owned, so this semantic axis replaces `inputStyle={{ minHeight }}`.
+     */
+    minVisibleLines?: number;
     onValueChange?: (value: string) => void;
     supportText?: string;
     error?: string;

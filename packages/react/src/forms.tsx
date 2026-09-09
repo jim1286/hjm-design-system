@@ -277,7 +277,16 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
 );
 
 export type TextAreaProps = TextareaHTMLAttributes<HTMLTextAreaElement> &
-  Omit<SharedInputProps, "leading" | "trailing">;
+  Omit<SharedInputProps, "leading" | "trailing"> &
+  Readonly<{
+    /**
+     * Lower bound for a growing multiline field, in visible lines. Height is
+     * recipe-owned, so this semantic axis replaces a `min-height` override.
+     */
+    minVisibleLines?: number;
+    /** Upper bound for a growing multiline field, in visible lines. */
+    maxVisibleLines?: number;
+  }>;
 
 export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
   function TextArea(
@@ -297,6 +306,9 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
       "aria-describedby": ariaDescribedBy,
       "aria-invalid": ariaInvalid,
       "aria-label": ariaLabel,
+      minVisibleLines,
+      maxVisibleLines,
+      style,
       ...props
     },
     ref,
@@ -304,6 +316,15 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
     const ids = useFieldIds(id);
     const [focused, setFocused] = useState(false);
     requireFieldAccessibleName(label, ariaLabel);
+    // Bounds are expressed in lines so the recipe keeps line height and padding.
+    const lineBounds = {
+      ...(minVisibleLines === undefined
+        ? {}
+        : { "--hjm-field-min-visible-lines": minVisibleLines }),
+      ...(maxVisibleLines === undefined
+        ? {}
+        : { "--hjm-field-max-visible-lines": maxVisibleLines }),
+    } as CSSProperties;
     return (
       <FieldFrame
         controlId={ids.controlId}
@@ -325,6 +346,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
             ref={ref}
             id={ids.controlId}
             className={classNames("hjm-field__input", className)}
+            style={{ ...style, ...lineBounds }}
             required={required}
             disabled={disabled}
             aria-invalid={error ? true : ariaInvalid}

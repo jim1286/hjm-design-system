@@ -307,8 +307,19 @@
   font: inherit;
 }
 .hjm-field__input::placeholder { color: var(--hjm-color-text-muted); opacity: 1; }
-.hjm-field__control--multiline { min-block-size: 80px; align-items: stretch; }
-.hjm-field__control--multiline textarea { min-block-size: 78px; resize: vertical; }
+/* The multiline minimum came from the recipe, not from a hardcoded 80px, and a
+   consumer can widen or cap it in visible lines rather than pixels. */
+.hjm-field__control--multiline { min-block-size: var(--hjm-field-multiline-min-height); align-items: stretch; }
+.hjm-field__control--multiline textarea {
+  min-block-size: max(
+    calc(var(--hjm-field-multiline-min-height) - 2px),
+    calc(var(--hjm-field-min-visible-lines, 0) * var(--hjm-type-body-line-height) + var(--hjm-field-padding-block) * 2)
+  );
+  max-block-size: calc(
+    var(--hjm-field-max-visible-lines, 1000) * var(--hjm-type-body-line-height) + var(--hjm-field-padding-block) * 2
+  );
+  resize: vertical;
+}
 .hjm-field__affix { display: inline-flex; align-items: center; color: var(--hjm-color-text-muted); }
 .hjm-field__description, .hjm-choice__description { color: var(--hjm-color-text-muted); font-size: var(--hjm-type-label-size); line-height: var(--hjm-type-label-line-height); }
 .hjm-field__error { color: var(--hjm-color-danger); font-size: var(--hjm-type-label-size); line-height: var(--hjm-type-label-line-height); }

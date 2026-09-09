@@ -52,8 +52,24 @@ export declare const TextField: import("react").ForwardRefExoticComponent<Omit<I
     trailing?: ReactNode;
     fieldClassName?: string;
 }> & import("react").RefAttributes<HTMLInputElement>>;
-export type TextAreaProps = TextareaHTMLAttributes<HTMLTextAreaElement> & Omit<SharedInputProps, "leading" | "trailing">;
-export declare const TextArea: import("react").ForwardRefExoticComponent<TextareaHTMLAttributes<HTMLTextAreaElement> & Omit<SharedInputProps, "leading" | "trailing"> & import("react").RefAttributes<HTMLTextAreaElement>>;
+export type TextAreaProps = TextareaHTMLAttributes<HTMLTextAreaElement> & Omit<SharedInputProps, "leading" | "trailing"> & Readonly<{
+    /**
+     * Lower bound for a growing multiline field, in visible lines. Height is
+     * recipe-owned, so this semantic axis replaces a `min-height` override.
+     */
+    minVisibleLines?: number;
+    /** Upper bound for a growing multiline field, in visible lines. */
+    maxVisibleLines?: number;
+}>;
+export declare const TextArea: import("react").ForwardRefExoticComponent<TextareaHTMLAttributes<HTMLTextAreaElement> & Omit<SharedInputProps, "leading" | "trailing"> & Readonly<{
+    /**
+     * Lower bound for a growing multiline field, in visible lines. Height is
+     * recipe-owned, so this semantic axis replaces a `min-height` override.
+     */
+    minVisibleLines?: number;
+    /** Upper bound for a growing multiline field, in visible lines. */
+    maxVisibleLines?: number;
+}> & import("react").RefAttributes<HTMLTextAreaElement>>;
 export type SearchFieldProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type" | "size" | "value" | "defaultValue"> & SharedInputProps & Readonly<{
     value?: string;
     defaultValue?: string;

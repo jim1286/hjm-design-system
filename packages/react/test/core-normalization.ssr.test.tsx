@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { control, spacing } from "@hjmds/design-contracts/foundations";
-import { buttonRecipe } from "@hjmds/design-contracts/recipes/base";
+import { buttonRecipe, fieldRecipe } from "@hjmds/design-contracts/recipes/base";
 import { listRowRecipe, switchRecipe } from "@hjmds/design-contracts/recipes";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
@@ -14,6 +14,7 @@ import {
   Stack,
   Surface,
   Switch,
+  TextArea,
   Tag,
   Text,
 } from "../src/index.js";
@@ -249,6 +250,29 @@ describe("Web core normalization", () => {
       "utf8",
     );
     expect(css).toContain('.hjm-surface[data-clips="true"] { overflow: hidden; }');
+  });
+
+  it("bounds a multiline field in visible lines from the recipe", () => {
+    const markup = renderToStaticMarkup(
+      <HjmProvider systemTheme="light">
+        <TextArea label="Note" maxVisibleLines={7} minVisibleLines={4} />
+      </HjmProvider>,
+    );
+    expect(markup).toContain("--hjm-field-min-visible-lines:4");
+    expect(markup).toContain("--hjm-field-max-visible-lines:7");
+    expect(markup).toContain(
+      `--hjm-field-multiline-min-height:${fieldRecipe.multilineMinHeight / 16}rem`,
+    );
+
+    const css = readFileSync(
+      fileURLToPath(new URL("../src/styles.css", import.meta.url)),
+      "utf8",
+    );
+    // The old stylesheet carried 80px/78px instead of the recipe minimum.
+    expect(css).not.toMatch(/--multiline \{ min-block-size: 80px/);
+    expect(css).toMatch(
+      /\.hjm-field__control--multiline \{[^}]*min-block-size: var\(--hjm-field-multiline-min-height\);/s,
+    );
   });
 
   it("binds the Switch size recipe on web", () => {

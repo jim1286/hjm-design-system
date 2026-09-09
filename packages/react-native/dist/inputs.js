@@ -32,7 +32,7 @@ function FieldMessage({ error, supportText }) {
         return null;
     return (_jsx(Text, { accessibilityLiveRegion: error ? "assertive" : "none", tone: error ? "danger" : "muted", variant: fieldRecipe.support.textVariant, children: error ?? supportText }));
 }
-const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultValue = "", onValueChange, supportText, error, required = false, disabled = false, busy = false, variant = fieldRecipe.defaults.variant, shape, accessibilityLabel, inputStyle, containerStyle, layoutStyle, allowFontScaling, multiline, maxVisibleLines, search, searchSize = searchFieldRecipe.defaults.size, leading, trailing, onBlur, onFocus, ...props }, ref) {
+const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultValue = "", onValueChange, supportText, error, required = false, disabled = false, busy = false, variant = fieldRecipe.defaults.variant, shape, accessibilityLabel, inputStyle, containerStyle, layoutStyle, allowFontScaling, multiline, maxVisibleLines, minVisibleLines, search, searchSize = searchFieldRecipe.defaults.size, leading, trailing, onBlur, onFocus, ...props }, ref) {
     const theme = useHjmNativeTheme();
     const { colors, environment, textScaling } = theme;
     const [focused, setFocused] = useState(false);
@@ -46,11 +46,6 @@ const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultV
     const resolvedShape = shape ?? (search ? searchFieldRecipe.defaults.shape : fieldRecipe.defaults.shape);
     const searchSizing = searchFieldRecipe.sizes[searchSize];
     const resolvedMaxVisibleLines = maxVisibleLines ?? fieldRecipe.multilineMaxVisibleLines;
-    const minHeight = multiline
-        ? fieldRecipe.multilineMinHeight
-        : search
-            ? searchSizing.minHeight
-            : fieldRecipe.minHeight;
     const borderWidth = search ? searchFieldRecipe.borderWidth : fieldRecipe.borderWidth;
     const borderColor = search
         ? resolveColorReference(error
@@ -70,6 +65,15 @@ const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultV
         ? resolveColorReference(searchFieldRecipe.colors.placeholder, theme.palette)
         : colors[fieldRecipe.placeholder.color];
     const textStyle = typography[search ? searchSizing.textVariant : fieldRecipe.textVariant];
+    // A composer that should open several lines tall asks in lines, not pixels,
+    // so the recipe keeps ownership of line height and vertical padding.
+    const minHeight = multiline
+        ? minVisibleLines === undefined
+            ? fieldRecipe.multilineMinHeight
+            : Math.max(fieldRecipe.multilineMinHeight, textStyle.lineHeight * minVisibleLines + fieldRecipe.paddingVertical * 2)
+        : search
+            ? searchSizing.minHeight
+            : fieldRecipe.minHeight;
     const controlRadius = radius[search ? searchFieldRecipe.shapes[resolvedShape] : fieldRecipe.shapes[resolvedShape]];
     const inputTextScaleProps = resolveNativeTextScaleProps(textScaling, [
         {

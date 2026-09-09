@@ -110,6 +110,11 @@ type BaseFieldProps = Omit<
      * recipe-owned, so this semantic axis replaces `inputStyle={{ maxHeight }}`.
      */
     maxVisibleLines?: number;
+    /**
+     * Lower bound for a growing multiline field, in visible lines. Height is
+     * recipe-owned, so this semantic axis replaces `inputStyle={{ minHeight }}`.
+     */
+    minVisibleLines?: number;
     onValueChange?: (value: string) => void;
     supportText?: string;
     error?: string;
@@ -193,6 +198,7 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(function FieldRe
     allowFontScaling,
     multiline,
     maxVisibleLines,
+  minVisibleLines,
     search,
     searchSize = searchFieldRecipe.defaults.size,
     leading,
@@ -221,11 +227,6 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(function FieldRe
   );
   const searchSizing = searchFieldRecipe.sizes[searchSize];
   const resolvedMaxVisibleLines = maxVisibleLines ?? fieldRecipe.multilineMaxVisibleLines;
-  const minHeight = multiline
-    ? fieldRecipe.multilineMinHeight
-    : search
-      ? searchSizing.minHeight
-      : fieldRecipe.minHeight;
   const borderWidth = search ? searchFieldRecipe.borderWidth : fieldRecipe.borderWidth;
   const borderColor = search
     ? resolveColorReference(
@@ -250,6 +251,18 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(function FieldRe
     ? resolveColorReference(searchFieldRecipe.colors.placeholder, theme.palette)
     : colors[fieldRecipe.placeholder.color];
   const textStyle = typography[search ? searchSizing.textVariant : fieldRecipe.textVariant];
+  // A composer that should open several lines tall asks in lines, not pixels,
+  // so the recipe keeps ownership of line height and vertical padding.
+  const minHeight = multiline
+    ? minVisibleLines === undefined
+      ? fieldRecipe.multilineMinHeight
+      : Math.max(
+          fieldRecipe.multilineMinHeight,
+          textStyle.lineHeight * minVisibleLines + fieldRecipe.paddingVertical * 2,
+        )
+    : search
+      ? searchSizing.minHeight
+      : fieldRecipe.minHeight;
   const controlRadius = radius[
     search ? searchFieldRecipe.shapes[resolvedShape] : fieldRecipe.shapes[resolvedShape]
   ];
