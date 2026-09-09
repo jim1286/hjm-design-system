@@ -2140,7 +2140,7 @@ export declare const recipeRegistry: {
             readonly secondary: {
                 readonly background: "surfaceAlt";
                 readonly content: "text";
-                readonly border: "border";
+                readonly border: "textSub";
             };
             readonly ghost: {
                 readonly background: null;
@@ -3343,7 +3343,7 @@ export declare const recipeRegistry: {
                 }>;
                 readonly border: Readonly<{
                     source: "theme";
-                    key: "border";
+                    key: "textSub";
                     alpha?: number;
                 }>;
             };

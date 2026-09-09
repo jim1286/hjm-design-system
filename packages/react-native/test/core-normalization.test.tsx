@@ -1,4 +1,5 @@
 import { createRef } from "react";
+import { THEMES } from "@hjmds/design-contracts/colors";
 import { resolveDesignSystemProviderValue } from "@hjmds/design-contracts/components/design-system-provider";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { ActivityIndicator, Pressable, Text as NativeText, View } from "react-native";
@@ -39,6 +40,32 @@ function flattenStyle(style: unknown): Record<string, unknown> {
 }
 
 describe("Native core normalization", () => {
+  it.each(["light", "dark"] as const)("renders secondary action outlines from the %s palette", (theme) => {
+    let renderer: ReactTestRenderer | undefined;
+    act(() => {
+      renderer = create(
+        <HjmNativeProvider reducedMotion theme={theme}>
+          <Button tone="secondary">저장</Button>
+          <IconButton label="알림" tone="secondary"><View /></IconButton>
+          <IconButton label="더 보기"><View /></IconButton>
+        </HjmNativeProvider>,
+      );
+    });
+    const actions = renderer!.root.findAllByType(Pressable);
+    for (const action of [actions[0]!, actions[1]!]) {
+      const style = flattenStyle(action.props.style({ pressed: false }));
+      expect(style).toMatchObject({
+        backgroundColor: THEMES[theme].surfaceAlt,
+        borderColor: THEMES[theme].textSub,
+        borderWidth: 1,
+      });
+    }
+    const ghost = flattenStyle(actions[2]!.props.style({ pressed: false }));
+    expect(ghost.borderColor).toBe("transparent");
+    expect(ghost.backgroundColor).toBe("transparent");
+    act(() => renderer!.unmount());
+  });
+
   it("accepts a pre-resolved product palette without re-resolving environment axes", () => {
     const canonical = resolveDesignSystemProviderValue(
       { direction: "rtl", reducedMotion: true, textScale: 1.25, theme: "light" },

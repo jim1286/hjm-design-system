@@ -13,7 +13,7 @@ export const iconButtonRecipe = {
         secondary: {
             background: semanticColors.action.neutral.background,
             content: semanticColors.action.neutral.content,
-            border: semanticColors.border.default,
+            border: semanticColors.action.neutral.border,
         },
         ghost: {
             background: null,

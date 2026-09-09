@@ -36,7 +36,7 @@ export declare const iconButtonRecipe: {
             }>;
             readonly border: Readonly<{
                 source: "theme";
-                key: "border";
+                key: "textSub";
                 alpha?: number;
             }>;
         };

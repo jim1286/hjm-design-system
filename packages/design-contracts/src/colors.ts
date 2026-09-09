@@ -53,12 +53,14 @@ const dark = {
   surface: "#131a36",
   surfaceAlt: "#1e293b",
   surfaceAccent: "#1e3a5f",
-  border: "#1e293b",
+  // Visible against every neutral surface, including surfaceAlt (3.07:1).
+  border: "#64748b",
   text: "#f1f5f9",
   textBody: "#e2e8f0",
   textMuted: "#cbd5e1",
   textSub: "#94a3b8",
-  textWeak: "#64748b",
+  // Keep the quietest text step readable on surfaceAlt (4.62:1).
+  textWeak: "#8292a9",
   primary: "#075985",
   contentBrand: "#38bdf8",
   danger: "#f87171",

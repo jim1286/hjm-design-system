@@ -112,7 +112,7 @@ describe("cross-platform core normalization", () => {
     expect(resolveIconButtonPresentation("secondary", palette)).toEqual({
       background: THEMES.light.surfaceAlt,
       content: THEMES.light.text,
-      border: THEMES.light.border,
+      border: THEMES.light.textSub,
     });
   });
 });

@@ -245,6 +245,32 @@ describe("color and accessibility contracts", () => {
     }
   });
 
+  it("keeps quiet dark text and neutral surface boundaries distinguishable", () => {
+    const theme = THEMES.dark;
+    for (const background of ["bg", "surface", "surfaceAlt"] as const) {
+      expect(contrast(theme.textWeak, theme[background])).toBeGreaterThanOrEqual(4.5);
+      expect(contrast(theme.border, theme[background])).toBeGreaterThanOrEqual(3);
+    }
+  });
+
+  it("separates secondary action outlines from their fill in both themes", () => {
+    const button = buttonRecipe.tones.secondary;
+    const iconButton = iconButtonRecipe.tones.secondary;
+    for (const themeName of ["light", "dark"] as const) {
+      const theme = THEMES[themeName];
+      const palette = {
+        theme,
+        statusAccents: ACCENTS[themeName],
+        statusAccentFills: accentFill,
+      };
+      expect(contrast(theme[button.border], theme[button.background])).toBeGreaterThanOrEqual(3);
+      expect(contrast(
+        resolveColorReference(iconButton.border, palette),
+        resolveColorReference(iconButton.background, palette),
+      )).toBeGreaterThanOrEqual(3);
+    }
+  });
+
   it("keeps generic accent labels readable on tinted badges", () => {
     for (const themeName of ["light", "dark"] as const) {
       for (const tone of Object.values(ACCENTS[themeName])) {

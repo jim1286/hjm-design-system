@@ -36,6 +36,7 @@ export const semanticColors = {
         neutral: {
             background: themeColor("surfaceAlt"),
             content: themeColor("text"),
+            border: themeColor("textSub"),
         },
         danger: {
             background: themeColor("dangerFill"),

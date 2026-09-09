@@ -123,6 +123,11 @@ export declare const semanticColors: {
                 key: "text";
                 alpha?: number;
             }>;
+            readonly border: Readonly<{
+                source: "theme";
+                key: "textSub";
+                alpha?: number;
+            }>;
         };
         readonly danger: {
             readonly background: Readonly<{

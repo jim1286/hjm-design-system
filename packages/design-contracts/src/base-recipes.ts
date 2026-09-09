@@ -16,7 +16,7 @@ export const buttonRecipe = {
   defaults: { tone: "primary", size: "medium" } as const,
   tones: {
     primary: { background: "primary", content: "onPrimary", border: null },
-    secondary: { background: "surfaceAlt", content: "text", border: "border" },
+    secondary: { background: "surfaceAlt", content: "text", border: "textSub" },
     ghost: { background: null, content: "textMuted", border: null },
     danger: { background: "dangerFill", content: "onDanger", border: null },
     link: { background: null, content: "contentBrand", border: null },
