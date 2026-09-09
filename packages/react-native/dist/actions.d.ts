@@ -118,6 +118,8 @@ export type IconButtonProps = Omit<PressableProps, "accessibilityLabel" | "acces
     tone?: IconButtonTone | LegacyNativeIconButtonTone;
     size?: IconButtonSize;
     shape?: IconButtonShape;
+    /** Toggle state. Paints the selected treatment and reports it to assistive tech. */
+    selected?: boolean;
     disabled?: boolean;
     loading?: boolean;
     /** Keep the busy control discoverable by default; opt in only for legacy disabled semantics. */

@@ -3416,6 +3416,23 @@ export declare const recipeRegistry: {
             readonly circle: "full";
         };
         readonly states: {
+            readonly selected: {
+                readonly background: Readonly<{
+                    source: "theme";
+                    key: "surfaceAccent";
+                    alpha?: number;
+                }>;
+                readonly content: Readonly<{
+                    source: "theme";
+                    key: "contentBrand";
+                    alpha?: number;
+                }>;
+                readonly border: Readonly<{
+                    source: "theme";
+                    key: "contentBrand";
+                    alpha?: number;
+                }>;
+            };
             readonly pressedOpacity: 0.86;
             readonly disabledOpacity: 0.5;
         };

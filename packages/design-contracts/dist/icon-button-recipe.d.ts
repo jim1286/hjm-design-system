@@ -85,6 +85,23 @@ export declare const iconButtonRecipe: {
         readonly circle: "full";
     };
     readonly states: {
+        readonly selected: {
+            readonly background: Readonly<{
+                source: "theme";
+                key: "surfaceAccent";
+                alpha?: number;
+            }>;
+            readonly content: Readonly<{
+                source: "theme";
+                key: "contentBrand";
+                alpha?: number;
+            }>;
+            readonly border: Readonly<{
+                source: "theme";
+                key: "contentBrand";
+                alpha?: number;
+            }>;
+        };
         readonly pressedOpacity: 0.86;
         readonly disabledOpacity: 0.5;
     };
@@ -95,5 +112,5 @@ export type ResolvedIconButtonPresentation = Readonly<{
     border: string | null;
 }>;
 /** Resolve one recipe tone for non-CSS renderers without a second tone table. */
-export declare function resolveIconButtonPresentation(tone: IconButtonTone, palette: ColorReferencePalette): ResolvedIconButtonPresentation;
+export declare function resolveIconButtonPresentation(tone: IconButtonTone, palette: ColorReferencePalette, selected?: boolean): ResolvedIconButtonPresentation;
 //# sourceMappingURL=icon-button-recipe.d.ts.map

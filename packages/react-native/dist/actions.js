@@ -58,7 +58,7 @@ export const Button = forwardRef(function Button({ label, children, tone = butto
                 ? renderLoadingIndicator?.({ color: contentColor, size: "small" }) ?? (_jsx(ActivityIndicator, { color: contentColor, size: "small" }))
                 : leading, typeof content === "string" || typeof content === "number" ? (_jsx(Text, { align: align === "leading" ? "auto" : "center", emphasis: "medium", style: [{ color: contentColor }, labelStyle], variant: sizeContract.textVariant, children: content })) : content, trailing] }));
 });
-export const IconButton = forwardRef(function IconButton({ label, accessibilityLabel, children, icon, tone = iconButtonRecipe.defaults.tone, size = iconButtonRecipe.defaults.size, shape = iconButtonRecipe.defaults.shape, disabled = false, loading = false, disableWhileLoading = false, hitSlop, layoutStyle, style, renderLoadingIndicator, onPress, onLongPress, accessibilityState, ...props }, ref) {
+export const IconButton = forwardRef(function IconButton({ label, accessibilityLabel, children, icon, tone = iconButtonRecipe.defaults.tone, size = iconButtonRecipe.defaults.size, shape = iconButtonRecipe.defaults.shape, selected, disabled = false, loading = false, disableWhileLoading = false, hitSlop, layoutStyle, style, renderLoadingIndicator, onPress, onLongPress, accessibilityState, ...props }, ref) {
     const theme = useHjmNativeTheme();
     const resolvedLabel = label ?? accessibilityLabel;
     const resolvedIcon = children ?? icon;
@@ -69,11 +69,16 @@ export const IconButton = forwardRef(function IconButton({ label, accessibilityL
         throw new TypeError("IconButton requires children (or the deprecated icon prop)");
     }
     const resolvedTone = tone === "link" ? "ghost" : tone;
-    const presentation = resolveIconButtonPresentation(resolvedTone, theme.palette);
+    const presentation = resolveIconButtonPresentation(resolvedTone, theme.palette, selected === true);
     const sizeContract = iconButtonRecipe.sizes[size];
     const glyphSize = glyph[sizeContract.glyph];
     const unavailable = disabled || (loading && disableWhileLoading);
-    return (_jsx(Pressable, { ...props, ref: ref, accessibilityLabel: resolvedLabel, accessibilityRole: "button", accessibilityState: { ...accessibilityState, disabled: unavailable, busy: loading }, disabled: unavailable, hitSlop: hitSlop ?? (sizeContract.hitSlop > 0 ? sizeContract.hitSlop : undefined), onPress: loading ? () => undefined : onPress, onLongPress: loading ? () => undefined : onLongPress, style: ({ pressed }) => [
+    return (_jsx(Pressable, { ...props, ref: ref, accessibilityLabel: resolvedLabel, accessibilityRole: "button", accessibilityState: {
+            ...accessibilityState,
+            ...(selected === undefined ? {} : { selected }),
+            disabled: unavailable,
+            busy: loading,
+        }, disabled: unavailable, hitSlop: hitSlop ?? (sizeContract.hitSlop > 0 ? sizeContract.hitSlop : undefined), onPress: loading ? () => undefined : onPress, onLongPress: loading ? () => undefined : onLongPress, style: ({ pressed }) => [
             {
                 alignItems: "center",
                 backgroundColor: presentation.background ?? "transparent",

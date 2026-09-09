@@ -40,6 +40,8 @@ export type IconButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "ari
     tone?: IconButtonTone;
     size?: IconButtonSize;
     shape?: IconButtonShape;
+    /** Toggle state. Paints the selected treatment and sets `aria-pressed`. */
+    selected?: boolean;
     loading?: boolean;
     children: ReactNode;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
@@ -50,6 +52,8 @@ export declare const IconButton: import("react").ForwardRefExoticComponent<Omit<
     tone?: IconButtonTone;
     size?: IconButtonSize;
     shape?: IconButtonShape;
+    /** Toggle state. Paints the selected treatment and sets `aria-pressed`. */
+    selected?: boolean;
     loading?: boolean;
     children: ReactNode;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */

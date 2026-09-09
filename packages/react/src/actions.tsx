@@ -116,6 +116,8 @@ export type IconButtonProps = Omit<
     tone?: IconButtonTone;
     size?: IconButtonSize;
     shape?: IconButtonShape;
+    /** Toggle state. Paints the selected treatment and sets `aria-pressed`. */
+    selected?: boolean;
     loading?: boolean;
     children: ReactNode;
       /** Canonical layout-only placement. Controlled visual keys are excluded. */
@@ -129,6 +131,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
       tone = iconButtonRecipe.defaults.tone,
       size = iconButtonRecipe.defaults.size,
       shape = iconButtonRecipe.defaults.shape,
+      selected,
       loading = false,
       disabled,
       onClick,
@@ -160,6 +163,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
         data-tone={tone}
         data-size={size}
         data-shape={shape}
+        {...(selected === undefined ? {} : { "data-selected": selected, "aria-pressed": selected })}
         data-state={loading ? "loading" : unavailable ? "disabled" : "idle"}
         aria-label={label}
         aria-busy={loading || undefined}

@@ -46,6 +46,14 @@ export const iconButtonRecipe = {
   },
   shapes: { rounded: "md", circle: "full" },
   states: {
+    // `aria-pressed` / `accessibilityState.selected` already carried the toggle
+    // state; without a paired visual every consumer painted the pressed icon
+    // button in product styles. Mirrors `buttonRecipe.states.selected`.
+    selected: {
+      background: semanticColors.surface.brand,
+      content: semanticColors.content.brand,
+      border: semanticColors.border.focus,
+    },
     pressedOpacity: opacity.pressed,
     disabledOpacity: opacity.disabled,
   },
@@ -62,7 +70,11 @@ export const iconButtonRecipe = {
   >;
   sizes: Record<IconButtonSize, { diameter: number; hitSlop: number; glyph: GlyphSize }>;
   shapes: Record<IconButtonShape, keyof typeof radius>;
-  states: { pressedOpacity: number; disabledOpacity: number };
+  states: {
+    selected: { background: ColorReference; content: ColorReference; border: ColorReference };
+    pressedOpacity: number;
+    disabledOpacity: number;
+  };
 };
 
 export type ResolvedIconButtonPresentation = Readonly<{
@@ -75,8 +87,13 @@ export type ResolvedIconButtonPresentation = Readonly<{
 export function resolveIconButtonPresentation(
   tone: IconButtonTone,
   palette: ColorReferencePalette,
+  selected = false,
 ): ResolvedIconButtonPresentation {
-  const contract = iconButtonRecipe.tones[tone];
+  const contract: {
+    background: ColorReference | null;
+    content: ColorReference;
+    border: ColorReference | null;
+  } = selected ? iconButtonRecipe.states.selected : iconButtonRecipe.tones[tone];
   return {
     background:
       contract.background === null

@@ -15,7 +15,7 @@ export const Button = forwardRef(function Button({ tone = buttonRecipe.defaults.
     };
     return (_jsxs("button", { ...props, style: { ...style, ...layoutStyle }, ref: ref, type: type, className: classNames("hjm-button", className), "data-tone": tone, "data-size": size, "data-shape": shape, "data-align": align, ...(selected === undefined ? {} : { "data-selected": selected, "aria-pressed": selected }), "data-state": loading ? "loading" : unavailable ? "disabled" : "idle", "aria-busy": loading || undefined, "aria-disabled": loading || undefined, disabled: disabled, onClick: handleClick, children: [loading ? _jsx("span", { className: "hjm-button__spinner", "aria-hidden": "true" }) : leading, _jsx("span", { className: "hjm-button__label", children: children }), trailing] }));
 });
-export const IconButton = forwardRef(function IconButton({ label, tone = iconButtonRecipe.defaults.tone, size = iconButtonRecipe.defaults.size, shape = iconButtonRecipe.defaults.shape, loading = false, disabled, onClick, type = "button", className, children, layoutStyle, style, ...props }, ref) {
+export const IconButton = forwardRef(function IconButton({ label, tone = iconButtonRecipe.defaults.tone, size = iconButtonRecipe.defaults.size, shape = iconButtonRecipe.defaults.shape, selected, loading = false, disabled, onClick, type = "button", className, children, layoutStyle, style, ...props }, ref) {
     const unavailable = disabled === true || loading;
     const handleClick = (event) => {
         if (loading) {
@@ -25,7 +25,7 @@ export const IconButton = forwardRef(function IconButton({ label, tone = iconBut
         }
         onClick?.(event);
     };
-    return (_jsx("button", { ...props, style: { ...style, ...layoutStyle }, ref: ref, type: type, className: classNames("hjm-icon-button", className), "data-tone": tone, "data-size": size, "data-shape": shape, "data-state": loading ? "loading" : unavailable ? "disabled" : "idle", "aria-label": label, "aria-busy": loading || undefined, "aria-disabled": loading || undefined, disabled: disabled, onClick: handleClick, children: loading ? _jsx("span", { className: "hjm-button__spinner", "aria-hidden": "true" }) : children }));
+    return (_jsx("button", { ...props, style: { ...style, ...layoutStyle }, ref: ref, type: type, className: classNames("hjm-icon-button", className), "data-tone": tone, "data-size": size, "data-shape": shape, ...(selected === undefined ? {} : { "data-selected": selected, "aria-pressed": selected }), "data-state": loading ? "loading" : unavailable ? "disabled" : "idle", "aria-label": label, "aria-busy": loading || undefined, "aria-disabled": loading || undefined, disabled: disabled, onClick: handleClick, children: loading ? _jsx("span", { className: "hjm-button__spinner", "aria-hidden": "true" }) : children }));
 });
 export const Link = forwardRef(function Link({ tone = linkRecipe.defaults.tone, variant = linkRecipe.defaults.variant, disabled = false, leading, trailing, renderAnchor, target, rel, tabIndex, onClick, className, children, ...props }, ref) {
     const handleClick = (event) => {

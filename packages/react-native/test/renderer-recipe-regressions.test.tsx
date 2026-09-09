@@ -35,6 +35,7 @@ import {
   CounterBadge,
   EmptyState,
   HjmNativeProvider,
+  IconButton,
   Image,
   Layout,
   ListRow,
@@ -545,6 +546,18 @@ describe("Recipe axes that replace product style overrides", () => {
     expect(
       flattenStyle(raised.root.findByProps({ testID: "raised-child" }).parent!.parent!.props.style).overflow,
     ).toBe("visible");
+  });
+
+  it("gives an icon-button toggle the same selected treatment", () => {
+    const renderer = render(
+      <IconButton label="Sound" selected tone="secondary"><View /></IconButton>,
+    );
+    const node = byLabel(renderer, "Sound");
+    expect(pressableStyleOf(node)).toMatchObject({
+      backgroundColor: lightValue.palette.theme.surfaceAccent,
+      borderColor: lightValue.palette.theme.contentBrand,
+    });
+    expect(node.props.accessibilityState.selected).toBe(true);
   });
 
   it("accepts layoutStyle on the components that previously required style", () => {
