@@ -97,6 +97,9 @@ export function Surface({ tone = surfaceDefaults.tone, padding = surfaceDefaults
                     ? radiusValue
                     : surfaceGeometry.radii[radiusValue],
                 borderWidth: 1,
+                // A child image would otherwise spill past the rounded corner. An
+                // elevated tone opts out because clipping cuts off its own shadow.
+                overflow: contract.clipsContent ? "hidden" : "visible",
                 padding: typeof padding === "number"
                     ? padding
                     : surfaceGeometry.paddings[padding],

@@ -110,6 +110,7 @@ semantic axis로 옮겼습니다. 아래는 그 축과 대체 대상입니다.
 | `link` tone Button에서 `paddingHorizontal: 0`으로 인라인 정렬 복원 | tone별 `paddingHorizontal` (link=0) |
 | Web ListRow의 1행/2행 최소 높이·padding·gap을 제품이 다시 계산 | `--hjm-list-row-*` 변수로 density recipe를 stylesheet에 바인딩 |
 | Web Switch에 size 축이 없어 track/thumb 크기를 제품 변수로 구현 | `size` prop + `--hjm-switch-*` (`switchRecipe.sizes` 바인딩) |
+| Surface에 `overflow: hidden`을 얹어 자식 이미지의 라운드 코너 침범 막기 | `surfaceRecipe[tone].clipsContent` (elevated tone은 그림자가 잘리므로 예외) |
 | Chip·ListRow·Image·LoadMore·DescriptionList의 배치용 `style` | 각 컴포넌트의 `layoutStyle` |
 
 legacy raw style surface는 다음 조건이 모두 충족된 뒤 공지된 breaking train에서 제거합니다.

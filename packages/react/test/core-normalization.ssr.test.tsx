@@ -235,6 +235,22 @@ describe("Web core normalization", () => {
     );
   });
 
+  it("clips a Surface to its own radius except when a shadow would be cut", () => {
+    const markup = renderToStaticMarkup(
+      <HjmProvider systemTheme="light">
+        <Surface>flat</Surface>
+        <Surface tone="raised">raised</Surface>
+      </HjmProvider>,
+    );
+    expect(markup).toContain('data-clips="true"');
+    expect(markup).toContain('data-clips="false"');
+    const css = readFileSync(
+      fileURLToPath(new URL("../src/styles.css", import.meta.url)),
+      "utf8",
+    );
+    expect(css).toContain('.hjm-surface[data-clips="true"] { overflow: hidden; }');
+  });
+
   it("binds the Switch size recipe on web", () => {
     const markup = renderToStaticMarkup(
       <HjmProvider systemTheme="light">

@@ -41,6 +41,7 @@ import {
   Progress,
   Section,
   Statistic,
+  Surface,
   Text,
   TopBar,
   useHjmNativeTheme,
@@ -534,6 +535,16 @@ describe("Recipe axes that replace product style overrides", () => {
     // Other tones keep the size axis' padding.
     expect(pressableStyleOf(byLabel(render(<Button>Framed</Button>), "Framed")).paddingHorizontal)
       .toBe(buttonRecipe.sizes.medium.paddingHorizontal);
+  });
+
+  it("clips a Surface to its own radius except when a shadow would be cut", () => {
+    const flat = render(<Surface><View testID="child" /></Surface>);
+    expect(flattenStyle(flat.root.findByProps({ testID: "child" }).parent!.parent!.props.style).overflow)
+      .toBe("hidden");
+    const raised = render(<Surface tone="raised"><View testID="raised-child" /></Surface>);
+    expect(
+      flattenStyle(raised.root.findByProps({ testID: "raised-child" }).parent!.parent!.props.style).overflow,
+    ).toBe("visible");
   });
 
   it("accepts layoutStyle on the components that previously required style", () => {

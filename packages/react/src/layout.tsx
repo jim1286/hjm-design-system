@@ -370,6 +370,7 @@ export const Surface = forwardRef<HTMLElement, SurfaceProps>(function Surface(
     "data-tone": tone,
     "data-bordered": bordered || contract.borderAlways,
     "data-elevated": contract.elevated,
+    "data-clips": contract.clipsContent,
     "data-padding": padding,
     "data-radius": radius,
     style: {

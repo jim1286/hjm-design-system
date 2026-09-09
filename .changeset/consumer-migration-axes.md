@@ -38,3 +38,7 @@ recurring overrides of recipe-owned values and five components that offered no
   stylesheet carried 48/28/22/3px, which matched neither recipe size, so the
   axis was unbound on web and consumers re-implemented it with their own
   variables. Track and thumb geometry now read `--hjm-switch-*`.
+- `surfaceRecipe` gains `clipsContent`. A child image spilled past the rounded
+  corner in every consumer, which each fixed with `overflow: hidden` in product
+  styles — including the discovery that an elevated tone must opt out because
+  clipping cuts off its own shadow. Both renderers bind it.

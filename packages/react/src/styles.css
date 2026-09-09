@@ -68,6 +68,9 @@
   border-radius: var(--hjm-radius-lg);
   background: var(--hjm-color-surface);
 }
+/* A child image would otherwise spill past the rounded corner. An elevated tone
+   opts out because clipping cuts off its own shadow. */
+.hjm-surface[data-clips="true"] { overflow: hidden; }
 .hjm-surface[data-tone="raised"] { background: var(--hjm-color-bg); box-shadow: 0 4px 12px rgb(0 0 0 / 12%); }
 .hjm-surface[data-tone="accent"] { background: var(--hjm-color-surface-accent); }
 .hjm-surface[data-tone="subtle"] { background: var(--hjm-color-bg); }

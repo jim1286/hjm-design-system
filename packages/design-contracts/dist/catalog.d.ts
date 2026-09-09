@@ -6336,6 +6336,7 @@ export declare const recipeRegistry: {
             readonly borderAlpha: 1;
             readonly elevated: false;
             readonly borderAlways: false;
+            readonly clipsContent: true;
         };
         readonly raised: {
             readonly background: "bg";
@@ -6343,6 +6344,7 @@ export declare const recipeRegistry: {
             readonly borderAlpha: 1;
             readonly elevated: true;
             readonly borderAlways: false;
+            readonly clipsContent: false;
         };
         readonly accent: {
             readonly background: "surfaceAccent";
@@ -6350,6 +6352,7 @@ export declare const recipeRegistry: {
             readonly borderAlpha: 0.3;
             readonly elevated: false;
             readonly borderAlways: false;
+            readonly clipsContent: true;
         };
         readonly subtle: {
             readonly background: "bg";
@@ -6357,6 +6360,7 @@ export declare const recipeRegistry: {
             readonly borderAlpha: 1;
             readonly elevated: false;
             readonly borderAlways: true;
+            readonly clipsContent: true;
         };
     };
     readonly switchRecipe: {

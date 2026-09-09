@@ -53,6 +53,7 @@ export const surfaceRecipe = {
         borderAlpha: 1,
         elevated: false,
         borderAlways: false,
+        clipsContent: true,
     },
     raised: {
         background: "bg",
@@ -60,6 +61,10 @@ export const surfaceRecipe = {
         borderAlpha: 1,
         elevated: true,
         borderAlways: false,
+        // An elevated surface must not clip: `overflow: hidden` cuts off its own
+        // shadow. Every other tone clips so a child image cannot spill past the
+        // rounded corner, which consumers were fixing in product styles.
+        clipsContent: false,
     },
     accent: {
         background: "surfaceAccent",
@@ -67,6 +72,7 @@ export const surfaceRecipe = {
         borderAlpha: 0.3,
         elevated: false,
         borderAlways: false,
+        clipsContent: true,
     },
     subtle: {
         background: "bg",
@@ -74,6 +80,7 @@ export const surfaceRecipe = {
         borderAlpha: 1,
         elevated: false,
         borderAlways: true,
+        clipsContent: true,
     },
 };
 export const fieldRecipe = {
