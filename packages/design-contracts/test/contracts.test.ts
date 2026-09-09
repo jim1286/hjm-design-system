@@ -1186,7 +1186,9 @@ describe("expanded cross-platform component contracts", () => {
     };
     controlled.onOpenChange(false, { reason: "outside" });
 
-    expect(sheetRecipe.defaults).toEqual({ placement: "bottom" });
+    // size는 시각 축이라 recipe 기본값에 남는다. 이 테스트가 막는 것은 dismissal
+    // 정책이 시각 recipe로 새어드는 것이다.
+    expect(sheetRecipe.defaults).toEqual({ placement: "bottom", size: "auto" });
     expect(sheetRecipe.defaults).not.toHaveProperty("dismissible");
     expect(sheetRecipe.content.borderWidth).toBe(stroke.default);
     expect(sheetRecipe.content.shadow).toBe(floatingSurfaceContract.shadow);

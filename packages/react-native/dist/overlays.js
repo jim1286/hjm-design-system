@@ -503,9 +503,10 @@ export function AlertDialog({ open, defaultOpen, onOpenChange, request, returnFo
                                     ], children: _jsx(Text, { style: { color: confirmContent }, variant: "label", children: request.confirmLabel }) })] })] })] }) }));
 }
 /** Native Sheet applies policy before emitting a concrete dismissal reason. */
-export function Sheet({ open, defaultOpen, onOpenChange, title, description, children, footer, placement = "bottom", busy = false, dismissPolicy, closeLabel, returnFocusRef, safeAreaInsets = {}, onDismissComplete, contentStyle, onShow, ...modalProps }) {
+export function Sheet({ open, defaultOpen, onOpenChange, title, description, children, footer, placement = "bottom", size = sheetRecipe.defaults.size, busy = false, dismissPolicy, closeLabel, returnFocusRef, safeAreaInsets = {}, onDismissComplete, contentStyle, onShow, ...modalProps }) {
     const { environment, palette } = useHjmNativeTheme();
     const { width: windowWidth, height: windowHeight } = useWindowDimensions();
+    const sizeRatio = sheetRecipe.sizes[size];
     const policy = { ...sheetBehaviorDefaults, ...dismissPolicy };
     const [visible, changeOpen] = useReasonedOpenState({
         ...(open === undefined ? {} : { open }),
@@ -720,7 +721,13 @@ export function Sheet({ open, defaultOpen, onOpenChange, title, description, chi
                             borderWidth: sheetRecipe.content.borderWidth,
                             elevation: 8,
                             gap: sheetRecipe.body.gap,
-                            height: side ? "100%" : undefined,
+                            // A fixed size ratio drives the height; `auto` lets the content decide
+                            // and the recipe's maxHeightRatio caps it.
+                            height: side
+                                ? "100%"
+                                : sizeRatio === null
+                                    ? undefined
+                                    : windowHeight * sizeRatio,
                             maxWidth: side ? 420 : undefined,
                             maxHeight: side
                                 ? undefined

@@ -6,9 +6,13 @@ import type { StyleProp, ViewStyle } from "react-native";
  * and interaction-state properties are intentionally absent because the HJM
  * recipe or semantic product-theme adapter owns them.
  *
+ * Width bounds and wrapping are placement, not appearance: a consumer decides how
+ * much room a component may take in its own layout. Height stays out because the
+ * recipe owns vertical rhythm.
+ *
  * @see https://github.com/jim1286/hjm-design-system/blob/main/packages/design-contracts/docs/consumer-policy.md#31-react-native-legacy-style-compatibility-boundary
  */
-export declare const hjmCompositionStyleKeys: readonly ["alignSelf", "flex", "flexBasis", "flexGrow", "flexShrink", "margin", "marginBottom", "marginEnd", "marginHorizontal", "marginStart", "marginTop", "marginVertical", "width"];
+export declare const hjmCompositionStyleKeys: readonly ["alignSelf", "flex", "flexBasis", "flexGrow", "flexShrink", "flexWrap", "margin", "marginBottom", "marginEnd", "marginHorizontal", "marginStart", "marginTop", "marginVertical", "maxWidth", "minWidth", "width"];
 export type HjmCompositionStyleKey = (typeof hjmCompositionStyleKeys)[number];
 type HjmControlledStyleKey = Exclude<keyof ViewStyle, HjmCompositionStyleKey>;
 type HjmControlledStyleExclusions = Readonly<{

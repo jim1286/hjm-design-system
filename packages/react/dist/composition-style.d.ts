@@ -12,7 +12,7 @@ import type { CSSProperties } from "react";
  *
  * @see ../../react-native/src/composition-style.ts
  */
-export declare const hjmCompositionStyleKeys: readonly ["alignSelf", "flex", "flexBasis", "flexGrow", "flexShrink", "margin", "marginBlock", "marginBottom", "marginInline", "marginInlineEnd", "marginInlineStart", "marginTop", "width"];
+export declare const hjmCompositionStyleKeys: readonly ["alignSelf", "flex", "flexBasis", "flexGrow", "flexShrink", "flexWrap", "margin", "marginBlock", "marginBottom", "marginInline", "marginInlineEnd", "marginInlineStart", "marginTop", "maxInlineSize", "maxWidth", "minInlineSize", "minWidth", "width"];
 export type HjmCompositionStyleKey = (typeof hjmCompositionStyleKeys)[number];
 type HjmControlledStyleKey = Exclude<keyof CSSProperties, HjmCompositionStyleKey>;
 type HjmControlledStyleExclusions = Readonly<{

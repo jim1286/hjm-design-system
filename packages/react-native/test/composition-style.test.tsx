@@ -23,7 +23,10 @@ import {
   type SwitchProps,
   type TagProps,
   type TextProps,
+  type SheetProps,
+  type SheetSize,
 } from "../src/index.js";
+import { sheetRecipe } from "@hjmds/design-contracts/recipes";
 
 (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean })
   .IS_REACT_ACT_ENVIRONMENT = true;
@@ -177,5 +180,26 @@ describe("React Native composition style boundary", () => {
       backgroundColor: "#456789",
       marginTop: 11,
     });
+  });
+});
+
+describe("sheet height axis", () => {
+  it("keeps sheet height in the recipe instead of a caller style", () => {
+    // 소비 제품이 `contentStyle={{ height: "60%" }}`로 시트 높이를 정하고 있었다.
+    // 높이는 recipe 소유이므로 semantic 단계로 노출하고, contentStyle은 배치 전용으로
+    // 좁혔다. auto는 내용이 높이를 정하고 maxHeightRatio가 상한을 잡는다.
+    expect(sheetRecipe.sizes).toMatchObject({
+      auto: null,
+      medium: 0.6,
+      large: 0.85,
+      full: 1,
+    });
+    expect(sheetRecipe.defaults.size).toBe("auto");
+    expectTypeOf<SheetProps["size"]>().toEqualTypeOf<SheetSize | undefined>();
+    // contentStyle이 배치 전용으로 좁혀졌는지 확인한다. 시각 키는 타입에서 막힌다.
+    type SheetContent = NonNullable<SheetProps["contentStyle"]>;
+    expectTypeOf<{ marginTop: 4 }>().toMatchTypeOf<SheetContent>();
+    // 시각 키는 never로 좁혀져 값을 넣을 수 없다.
+    expectTypeOf<HjmCompositionStyle["height"]>().toEqualTypeOf<undefined>();
   });
 });

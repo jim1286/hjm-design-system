@@ -753,7 +753,7 @@ describe("Native canonical recipe bindings", () => {
       <Section
         action={<View testID="section-action" />}
         actionStyle={{ minWidth: 77 }}
-        contentStyle={{ paddingTop: 5 }}
+        contentStyle={{ marginTop: 5 }}
         description="설명"
         descriptionStyle={{ letterSpacing: 1 }}
         headerStyle={{ marginTop: 3 }}
@@ -791,7 +791,7 @@ describe("Native canonical recipe bindings", () => {
     expect(flattenStyle(renderer.root.findByProps({ testID: "section-action" }).parent?.props.style))
       .toMatchObject({ minWidth: 77 });
     expect(flattenStyle(renderer.root.findByProps({ testID: "section-content" }).parent?.props.style))
-      .toMatchObject({ paddingTop: 5 });
+      .toMatchObject({ marginTop: 5 });
   });
 
   it("binds TopBar chrome/title recipes, safe area metrics, and logical slots", () => {

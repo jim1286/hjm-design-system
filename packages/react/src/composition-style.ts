@@ -19,6 +19,7 @@ export const hjmCompositionStyleKeys = [
   "flexBasis",
   "flexGrow",
   "flexShrink",
+  "flexWrap",
   "margin",
   "marginBlock",
   "marginBottom",
@@ -26,6 +27,10 @@ export const hjmCompositionStyleKeys = [
   "marginInlineEnd",
   "marginInlineStart",
   "marginTop",
+  "maxInlineSize",
+  "maxWidth",
+  "minInlineSize",
+  "minWidth",
   "width",
 ] as const satisfies readonly (keyof CSSProperties)[];
 

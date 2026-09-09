@@ -2880,6 +2880,19 @@ export declare const sheetRecipe: {
     readonly slots: readonly ["backdrop", "positioner", "content", "handle", "header", "title", "body", "footer", "close"];
     readonly defaults: {
         readonly placement: "bottom";
+        readonly size: "auto";
+    };
+    /**
+     * How tall the sheet opens. `auto` keeps the content-driven height that the
+     * recipe already caps with `maxHeightRatio`. The fixed steps exist because
+     * consumers otherwise reach for `contentStyle={{ height }}`, which moves a
+     * recipe-owned dimension into product code.
+     */
+    readonly sizes: {
+        readonly auto: null;
+        readonly medium: 0.6;
+        readonly large: 0.85;
+        readonly full: 1;
     };
     readonly backdrop: {
         readonly color: "#000000";

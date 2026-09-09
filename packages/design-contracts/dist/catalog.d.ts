@@ -5116,6 +5116,13 @@ export declare const recipeRegistry: {
         readonly slots: readonly ["backdrop", "positioner", "content", "handle", "header", "title", "body", "footer", "close"];
         readonly defaults: {
             readonly placement: "bottom";
+            readonly size: "auto";
+        };
+        readonly sizes: {
+            readonly auto: null;
+            readonly medium: 0.6;
+            readonly large: 0.85;
+            readonly full: 1;
         };
         readonly backdrop: {
             readonly color: "#000000";

@@ -605,12 +605,25 @@ export type SectionProps = Omit<ViewProps, "children"> &
     description?: string;
     action?: ReactNode;
     children: ReactNode;
-    headerStyle?: StyleProp<ViewStyle>;
-    copyStyle?: StyleProp<ViewStyle>;
+    /**
+     * Layout-only placement for the header row. Narrowed from a free style prop so a
+     * consumer cannot move recipe-owned appearance into a slot.
+     */
+    headerStyle?: HjmCompositionStyleProp;
+    /** Layout-only placement for the title/description column. */
+    copyStyle?: HjmCompositionStyleProp;
+    /**
+     * @deprecated Typography is recipe-owned. Use `variant`/`tone` on the title instead.
+     */
     titleStyle?: StyleProp<TextStyle>;
+    /**
+     * @deprecated Typography is recipe-owned. Use `variant`/`tone` on the description instead.
+     */
     descriptionStyle?: StyleProp<TextStyle>;
-    actionStyle?: StyleProp<ViewStyle>;
-    contentStyle?: StyleProp<ViewStyle>;
+    /** Layout-only placement for the action slot. */
+    actionStyle?: HjmCompositionStyleProp;
+    /** Layout-only placement for the content slot. */
+    contentStyle?: HjmCompositionStyleProp;
       /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;

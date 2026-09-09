@@ -7,6 +7,7 @@ import {
   type AlertDialogResult,
   type AlertDialogSession,
 } from "@hjmds/design-contracts/components/alert-dialog";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 import {
   canDismissSheet,
   createSheetLifecycle,
@@ -195,7 +196,8 @@ export type DialogProps = NativeModalProps &
     /** Localized accessible name for the close action. */
     closeLabel: string;
     returnFocusRef?: RefObject<View | null>;
-    contentStyle?: StyleProp<ViewStyle>;
+    /** Layout-only placement for the sheet content. Use `size` for height. */
+    contentStyle?: HjmCompositionStyleProp;
   }>;
 
 /** Native modal boundary with one reasoned close intent for each user attempt. */
@@ -858,6 +860,7 @@ export function AlertDialog({
 }
 
 export type SheetPlacement = "bottom" | "start" | "end";
+export type SheetSize = keyof typeof sheetRecipe.sizes;
 
 export type SheetProps = NativeModalProps &
   ReasonedOpenProps<SheetOpenChangeDetails["reason"]> &
@@ -867,6 +870,12 @@ export type SheetProps = NativeModalProps &
     children?: ReactNode;
     footer?: ReactNode;
     placement?: SheetPlacement;
+    /**
+     * How tall the sheet opens. `auto` keeps the content-driven height. Without this
+     * axis a consumer has to set `contentStyle={{ height }}`, which moves a
+     * recipe-owned dimension into product code.
+     */
+    size?: SheetSize;
     busy?: boolean;
     dismissPolicy?: Partial<SheetDismissPolicy>;
     /** Localized accessible name for the close action. */
@@ -887,6 +896,7 @@ export function Sheet({
   children,
   footer,
   placement = "bottom",
+  size = sheetRecipe.defaults.size,
   busy = false,
   dismissPolicy,
   closeLabel,
@@ -899,6 +909,7 @@ export function Sheet({
 }: SheetProps) {
   const { environment, palette } = useHjmNativeTheme();
   const { width: windowWidth, height: windowHeight } = useWindowDimensions();
+  const sizeRatio = sheetRecipe.sizes[size];
   const policy: SheetDismissPolicy = { ...sheetBehaviorDefaults, ...dismissPolicy };
   const [visible, changeOpen] = useReasonedOpenState({
     ...(open === undefined ? {} : { open }),
@@ -1183,7 +1194,13 @@ export function Sheet({
               borderWidth: sheetRecipe.content.borderWidth,
               elevation: 8,
               gap: sheetRecipe.body.gap,
-              height: side ? "100%" : undefined,
+              // A fixed size ratio drives the height; `auto` lets the content decide
+              // and the recipe's maxHeightRatio caps it.
+              height: side
+                ? "100%"
+                : sizeRatio === null
+                  ? undefined
+                  : windowHeight * sizeRatio,
               maxWidth: side ? 420 : undefined,
               maxHeight: side
                 ? undefined

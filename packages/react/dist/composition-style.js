@@ -17,6 +17,7 @@ export const hjmCompositionStyleKeys = [
     "flexBasis",
     "flexGrow",
     "flexShrink",
+    "flexWrap",
     "margin",
     "marginBlock",
     "marginBottom",
@@ -24,6 +25,10 @@ export const hjmCompositionStyleKeys = [
     "marginInlineEnd",
     "marginInlineStart",
     "marginTop",
+    "maxInlineSize",
+    "maxWidth",
+    "minInlineSize",
+    "minWidth",
     "width",
 ];
 //# sourceMappingURL=composition-style.js.map

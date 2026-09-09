@@ -1176,7 +1176,19 @@ export const statisticRecipe = {
 };
 export const sheetRecipe = {
     slots: ["backdrop", "positioner", "content", "handle", "header", "title", "body", "footer", "close"],
-    defaults: { placement: "bottom" },
+    defaults: { placement: "bottom", size: "auto" },
+    /**
+     * How tall the sheet opens. `auto` keeps the content-driven height that the
+     * recipe already caps with `maxHeightRatio`. The fixed steps exist because
+     * consumers otherwise reach for `contentStyle={{ height }}`, which moves a
+     * recipe-owned dimension into product code.
+     */
+    sizes: {
+        auto: null,
+        medium: 0.6,
+        large: 0.85,
+        full: 1,
+    },
     backdrop: backdrop.modal,
     content: {
         background: semanticColors.canvas,

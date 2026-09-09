@@ -261,5 +261,6 @@ export {
   type DialogProps,
   type OverlayAction,
   type SheetPlacement,
+  type SheetSize,
   type SheetProps,
 } from "./overlays.js";
