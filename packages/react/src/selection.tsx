@@ -4,12 +4,16 @@ import {
   segmentedControlRecipe,
   selectionControlRecipe,
   selectionGroupRecipe,
+  switchRecipe,
   type SegmentedControlSize,
   type SelectionControlPresentation,
   type SelectionControlSize,
   type SelectionGroupOrientation,
   type SelectionGroupPresentation,
+  type SwitchSize,
 } from "@hjmds/design-contracts/recipes";
+
+export type { SwitchSize };
 import {
   resolveControlAccessibleName,
   reconcileCheckboxSelection,
@@ -676,6 +680,8 @@ export type SwitchProps = Omit<
     label: ReactNode;
     checked?: boolean;
     defaultChecked?: boolean;
+    /** Track and thumb geometry from `switchRecipe.sizes`. */
+    size?: SwitchSize;
     onCheckedChange?: (checked: boolean) => void;
       /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
@@ -686,6 +692,7 @@ export const Switch = forwardRef<HTMLButtonElement, SwitchProps>(function Switch
     label,
     checked: checkedProp,
     defaultChecked = false,
+    size = switchRecipe.defaults.size,
     onCheckedChange,
     disabled,
     type = "button",
@@ -710,6 +717,7 @@ export const Switch = forwardRef<HTMLButtonElement, SwitchProps>(function Switch
       type={type}
       role="switch"
       className={classNames("hjm-switch", className)}
+      data-size={size}
       data-state={checked ? "checked" : "unchecked"}
       aria-checked={checked}
       disabled={disabled}

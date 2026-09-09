@@ -144,6 +144,7 @@ export {
   type SegmentedControlItem,
   type SegmentedControlProps,
   type SwitchProps,
+  type SwitchSize,
 } from "./selection.js";
 
 export {

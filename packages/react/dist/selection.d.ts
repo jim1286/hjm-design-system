@@ -1,4 +1,5 @@
-import { chipRecipe, type SegmentedControlSize, type SelectionControlPresentation, type SelectionControlSize, type SelectionGroupOrientation, type SelectionGroupPresentation } from "@hjmds/design-contracts/recipes";
+import { chipRecipe, type SegmentedControlSize, type SelectionControlPresentation, type SelectionControlSize, type SelectionGroupOrientation, type SelectionGroupPresentation, type SwitchSize } from "@hjmds/design-contracts/recipes";
+export type { SwitchSize };
 import { type CheckboxGroupSelection, type SelectionItemDescriptor } from "@hjmds/design-contracts/behaviors";
 import { type ButtonHTMLAttributes, type ChangeEvent, type FieldsetHTMLAttributes, type InputHTMLAttributes, type MouseEvent, type ReactElement, type ReactNode, type RefAttributes } from "react";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
@@ -126,6 +127,8 @@ export type SwitchProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "role" |
     label: ReactNode;
     checked?: boolean;
     defaultChecked?: boolean;
+    /** Track and thumb geometry from `switchRecipe.sizes`. */
+    size?: SwitchSize;
     onCheckedChange?: (checked: boolean) => void;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
@@ -134,6 +137,8 @@ export declare const Switch: import("react").ForwardRefExoticComponent<Omit<Butt
     label: ReactNode;
     checked?: boolean;
     defaultChecked?: boolean;
+    /** Track and thumb geometry from `switchRecipe.sizes`. */
+    size?: SwitchSize;
     onCheckedChange?: (checked: boolean) => void;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
@@ -161,5 +166,4 @@ export declare const SegmentedControl: import("react").ForwardRefExoticComponent
     size?: SegmentedControlSize;
     name?: string;
 }> & RefAttributes<HTMLFieldSetElement>>;
-export {};
 //# sourceMappingURL=selection.d.ts.map

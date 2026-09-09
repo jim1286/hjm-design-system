@@ -11,7 +11,7 @@ import {
   visibleControlHeight,
   type DesignSystemProviderValue,
 } from "@hjmds/design-contracts/components/design-system-provider";
-import { listRowRecipe } from "@hjmds/design-contracts/recipes";
+import { listRowRecipe, switchRecipe } from "@hjmds/design-contracts/recipes";
 import type { CSSProperties } from "react";
 
 export type HjmThemeStyle = CSSProperties &
@@ -73,6 +73,15 @@ export function createHjmThemeStyle(
   // does not carry a second copy of the same numbers.
   style["--hjm-list-row-gap"] = rem(listRowRecipe.gap);
   style["--hjm-list-row-leading-size"] = rem(listRowRecipe.leadingSize);
+  for (const [name, value] of Object.entries(switchRecipe.sizes)) {
+    style[`--hjm-switch-${kebab(name)}-width`] = rem(value.width);
+    style[`--hjm-switch-${kebab(name)}-height`] = rem(value.height);
+    style[`--hjm-switch-${kebab(name)}-thumb`] = rem(value.thumb);
+    style[`--hjm-switch-${kebab(name)}-inset`] = rem(value.inset);
+    style[`--hjm-switch-${kebab(name)}-offset`] = rem(
+      value.width - value.thumb - value.inset * 2,
+    );
+  }
   for (const [name, value] of Object.entries(listRowRecipe.density)) {
     style[`--hjm-list-row-${kebab(name)}-one-line`] = rem(value.oneLineMinHeight);
     style[`--hjm-list-row-${kebab(name)}-two-line`] = rem(value.twoLineMinHeight);

@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { control, spacing } from "@hjmds/design-contracts/foundations";
 import { buttonRecipe } from "@hjmds/design-contracts/recipes/base";
-import { listRowRecipe } from "@hjmds/design-contracts/recipes";
+import { listRowRecipe, switchRecipe } from "@hjmds/design-contracts/recipes";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import {
@@ -13,6 +13,7 @@ import {
   ListRow,
   Stack,
   Surface,
+  Switch,
   Tag,
   Text,
 } from "../src/index.js";
@@ -231,6 +232,35 @@ describe("Web core normalization", () => {
     );
     expect(css).toMatch(
       /\.hjm-list-row__leading \{[^}]*inline-size: var\(--hjm-list-row-leading-size\);/s,
+    );
+  });
+
+  it("binds the Switch size recipe on web", () => {
+    const markup = renderToStaticMarkup(
+      <HjmProvider systemTheme="light">
+        <Switch checked label="On" size="small" />
+      </HjmProvider>,
+    );
+    expect(markup).toContain('data-size="small"');
+    expect(markup).toContain(
+      `--hjm-switch-small-width:${switchRecipe.sizes.small.width / 16}rem`,
+    );
+    expect(markup).toContain(
+      `--hjm-switch-small-offset:${
+        (switchRecipe.sizes.small.width -
+          switchRecipe.sizes.small.thumb -
+          switchRecipe.sizes.small.inset * 2) / 16
+      }rem`,
+    );
+
+    const css = readFileSync(
+      fileURLToPath(new URL("../src/styles.css", import.meta.url)),
+      "utf8",
+    );
+    // The old stylesheet carried 48/28/22/3px, matching neither recipe size.
+    expect(css).not.toMatch(/\.hjm-switch__track \{[^}]*inline-size: 48px/s);
+    expect(css).toMatch(
+      /\.hjm-switch__track \{[^}]*inline-size: var\(--hjm-switch-track-width\);/s,
     );
   });
 

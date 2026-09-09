@@ -9,7 +9,7 @@ export { NumberField, type NumberFieldProps, } from "./number-field.js";
 export { Slider, type SliderProps, } from "./slider.js";
 export { DatePicker, type DatePickerMonthAction, type DatePickerProps, } from "./date-picker.js";
 export { FilePicker, type FilePickerProps, } from "./file-picker.js";
-export { Checkbox, CheckboxGroup, Chip, Radio, RadioGroup, SegmentedControl, Switch, type CheckboxProps, type CheckboxGroupItem, type CheckboxGroupProps, type ChipProps, type ChoiceLeadingRenderProps, type RadioProps, type RadioGroupItem, type RadioGroupProps, type SegmentedControlItem, type SegmentedControlProps, type SwitchProps, } from "./selection.js";
+export { Checkbox, CheckboxGroup, Chip, Radio, RadioGroup, SegmentedControl, Switch, type CheckboxProps, type CheckboxGroupItem, type CheckboxGroupProps, type ChipProps, type ChoiceLeadingRenderProps, type RadioProps, type RadioGroupItem, type RadioGroupProps, type SegmentedControlItem, type SegmentedControlProps, type SwitchProps, type SwitchSize, } from "./selection.js";
 export { TabPanel, Tabs, getDynamicTabPanelId, getTabId, getTabPanelId, type TabLeadingRenderProps, type TabItem, type TabPanelProps, type TabsProps, } from "./navigation.js";
 export { Breadcrumb, Pagination, type BreadcrumbProps, type PaginationProps, } from "./advanced-navigation.js";
 export { LoadMore, type LoadMoreProps, } from "./supplemental-navigation.js";

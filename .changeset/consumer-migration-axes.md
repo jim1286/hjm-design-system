@@ -34,3 +34,7 @@ recurring overrides of recipe-owned values and five components that offered no
   from a two-line row, so `oneLineMinHeight` / `twoLineMinHeight` /
   `paddingHorizontal` / `paddingVertical` / `gap` and the `leadingShape` frame
   are now emitted as `--hjm-list-row-*` variables and read by the stylesheet.
+- Web `Switch` binds `switchRecipe.sizes`. It had no `size` prop and the
+  stylesheet carried 48/28/22/3px, which matched neither recipe size, so the
+  axis was unbound on web and consumers re-implemented it with their own
+  variables. Track and thumb geometry now read `--hjm-switch-*`.

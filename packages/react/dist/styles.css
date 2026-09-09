@@ -712,11 +712,16 @@
 
 .hjm-switch { display: inline-flex; align-items: center; gap: var(--hjm-space-sm); min-block-size: var(--hjm-control-min-touch-target); padding: 0; border: 0; color: inherit; background: transparent; font: inherit; cursor: pointer; }
 .hjm-switch:disabled { opacity: 0.5; cursor: not-allowed; }
-.hjm-switch__track { display: flex; align-items: center; inline-size: 48px; block-size: 28px; padding: 3px; border-radius: var(--hjm-radius-full); background: var(--hjm-color-surface-alt); transition: background var(--hjm-motion-fast); }
-.hjm-switch__thumb { inline-size: 22px; block-size: 22px; border-radius: 50%; background: var(--hjm-color-bg); box-shadow: 0 1px 3px rgb(0 0 0 / 20%); transition: transform var(--hjm-motion-fast); }
+/* Track and thumb geometry reads `switchRecipe.sizes`. The stylesheet used to
+   carry 48/28/22/3px, which matched neither recipe size, so the size axis was
+   unbound on web and consumers re-implemented it with their own variables. */
+.hjm-switch { --hjm-switch-track-width: var(--hjm-switch-medium-width); --hjm-switch-track-height: var(--hjm-switch-medium-height); --hjm-switch-track-thumb: var(--hjm-switch-medium-thumb); --hjm-switch-track-inset: var(--hjm-switch-medium-inset); --hjm-switch-track-offset: var(--hjm-switch-medium-offset); }
+.hjm-switch[data-size="small"] { --hjm-switch-track-width: var(--hjm-switch-small-width); --hjm-switch-track-height: var(--hjm-switch-small-height); --hjm-switch-track-thumb: var(--hjm-switch-small-thumb); --hjm-switch-track-inset: var(--hjm-switch-small-inset); --hjm-switch-track-offset: var(--hjm-switch-small-offset); }
+.hjm-switch__track { display: flex; align-items: center; flex: 0 0 auto; inline-size: var(--hjm-switch-track-width); block-size: var(--hjm-switch-track-height); padding: var(--hjm-switch-track-inset); border-radius: var(--hjm-radius-full); background: var(--hjm-color-surface-alt); transition: background var(--hjm-motion-fast); }
+.hjm-switch__thumb { inline-size: var(--hjm-switch-track-thumb); block-size: var(--hjm-switch-track-thumb); border-radius: 50%; background: var(--hjm-color-bg); box-shadow: 0 1px 3px rgb(0 0 0 / 20%); transition: transform var(--hjm-motion-fast); }
 .hjm-switch[data-state="checked"] .hjm-switch__track { background: var(--hjm-color-primary); }
-.hjm-switch[data-state="checked"] .hjm-switch__thumb { transform: translateX(20px); }
-[dir="rtl"] .hjm-switch[data-state="checked"] .hjm-switch__thumb { transform: translateX(-20px); }
+.hjm-switch[data-state="checked"] .hjm-switch__thumb { transform: translateX(var(--hjm-switch-track-offset)); }
+[dir="rtl"] .hjm-switch[data-state="checked"] .hjm-switch__thumb { transform: translateX(calc(-1 * var(--hjm-switch-track-offset))); }
 
 .hjm-segmented { min-inline-size: 0; padding: 0; border: 0; }
 .hjm-segmented__items { display: flex; min-inline-size: 0; gap: 2px; padding: 2px; border-radius: var(--hjm-radius-md); background: var(--hjm-color-surface-alt); overflow-x: auto; }
