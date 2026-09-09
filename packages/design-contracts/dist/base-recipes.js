@@ -90,6 +90,12 @@ export const fieldRecipe = {
     },
     minHeight: control.minTouchTarget,
     multilineMinHeight: 80,
+    /**
+     * Upper bound for a growing multiline field, expressed in visible lines. A
+     * consumer otherwise reaches for `inputStyle={{ maxHeight }}`, which moves a
+     * recipe-owned dimension into product code. `null` keeps unbounded growth.
+     */
+    multilineMaxVisibleLines: null,
     borderWidth: 1,
     focusRingWidth: 2,
     focusRingOffset: 2,

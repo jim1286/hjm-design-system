@@ -26,6 +26,7 @@ import {
   type SheetProps,
   type SheetSize,
 } from "../src/index.js";
+import { fieldRecipe } from "@hjmds/design-contracts/recipes/base";
 import { sheetRecipe } from "@hjmds/design-contracts/recipes";
 
 (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean })
@@ -201,5 +202,24 @@ describe("sheet height axis", () => {
     expectTypeOf<{ marginTop: 4 }>().toMatchTypeOf<SheetContent>();
     // 시각 키는 never로 좁혀져 값을 넣을 수 없다.
     expectTypeOf<HjmCompositionStyle["height"]>().toEqualTypeOf<undefined>();
+  });
+});
+
+describe("multiline field height axis", () => {
+  it("caps a growing field through the recipe instead of a caller style", () => {
+    // 소비 제품이 `inputStyle={{ maxHeight: 160 }}`으로 작성창 성장을 막고 있었다.
+    // 높이는 recipe 소유이므로 보이는 줄 수라는 semantic 축으로 노출한다.
+    expect(fieldRecipe.multilineMaxVisibleLines).toBe(null);
+    expectTypeOf<TextAreaProps["maxVisibleLines"]>().toEqualTypeOf<number | undefined>();
+    const renderer = render(
+      <HjmNativeProvider theme="light">
+        <TextArea label="본문" maxVisibleLines={6} value="" onValueChange={() => {}} />
+      </HjmNativeProvider>,
+    );
+    const input = renderer.root.findByType(TextInput);
+    const flattened = Object.assign({}, ...[input.props.style].flat(4).filter(Boolean));
+    expect(flattened.maxHeight).toBe(
+      flattened.lineHeight * 6 + fieldRecipe.paddingVertical * 2,
+    );
   });
 });

@@ -103,6 +103,11 @@ type BaseFieldProps = Omit<
   Readonly<{
     value?: string;
     defaultValue?: string;
+    /**
+     * Upper bound for a growing multiline field, in visible lines. Height is
+     * recipe-owned, so this semantic axis replaces `inputStyle={{ maxHeight }}`.
+     */
+    maxVisibleLines?: number;
     onValueChange?: (value: string) => void;
     supportText?: string;
     error?: string;
@@ -185,6 +190,7 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(function FieldRe
     layoutStyle,
     allowFontScaling,
     multiline,
+    maxVisibleLines,
     search,
     searchSize = searchFieldRecipe.defaults.size,
     leading,
@@ -212,6 +218,7 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(function FieldRe
     search ? searchFieldRecipe.defaults.shape : fieldRecipe.defaults.shape
   );
   const searchSizing = searchFieldRecipe.sizes[searchSize];
+  const resolvedMaxVisibleLines = maxVisibleLines ?? fieldRecipe.multilineMaxVisibleLines;
   const minHeight = multiline
     ? fieldRecipe.multilineMinHeight
     : search
@@ -256,6 +263,12 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(function FieldRe
         fontWeight: textStyle.fontWeight,
         lineHeight: textStyle.lineHeight,
         minHeight: minHeight - (borderWidth * 2),
+        ...(multiline && resolvedMaxVisibleLines !== null && resolvedMaxVisibleLines !== undefined
+          ? {
+            maxHeight: textStyle.lineHeight * resolvedMaxVisibleLines
+              + (fieldRecipe.paddingVertical * 2),
+          }
+          : {}),
         paddingHorizontal: 0,
         paddingVertical: fieldRecipe.paddingVertical,
         textAlign: logicalTextAlign(environment.direction),

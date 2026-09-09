@@ -16,6 +16,11 @@ type FieldAccessibleName = Readonly<{
 type BaseFieldProps = Omit<TextInputProps, "accessibilityLabel" | "defaultValue" | "multiline" | "onChangeText" | "style" | "value"> & Readonly<{
     value?: string;
     defaultValue?: string;
+    /**
+     * Upper bound for a growing multiline field, in visible lines. Height is
+     * recipe-owned, so this semantic axis replaces `inputStyle={{ maxHeight }}`.
+     */
+    maxVisibleLines?: number;
     onValueChange?: (value: string) => void;
     supportText?: string;
     error?: string;

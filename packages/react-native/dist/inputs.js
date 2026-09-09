@@ -30,7 +30,7 @@ function FieldMessage({ error, supportText }) {
         return null;
     return (_jsx(Text, { accessibilityLiveRegion: error ? "assertive" : "none", tone: error ? "danger" : "muted", variant: fieldRecipe.support.textVariant, children: error ?? supportText }));
 }
-const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultValue = "", onValueChange, supportText, error, required = false, disabled = false, busy = false, variant = fieldRecipe.defaults.variant, shape, accessibilityLabel, inputStyle, containerStyle, layoutStyle, allowFontScaling, multiline, search, searchSize = searchFieldRecipe.defaults.size, leading, trailing, onBlur, onFocus, ...props }, ref) {
+const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultValue = "", onValueChange, supportText, error, required = false, disabled = false, busy = false, variant = fieldRecipe.defaults.variant, shape, accessibilityLabel, inputStyle, containerStyle, layoutStyle, allowFontScaling, multiline, maxVisibleLines, search, searchSize = searchFieldRecipe.defaults.size, leading, trailing, onBlur, onFocus, ...props }, ref) {
     const theme = useHjmNativeTheme();
     const { colors, environment, textScaling } = theme;
     const [focused, setFocused] = useState(false);
@@ -43,6 +43,7 @@ const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultV
     const { accessibleName, visibleLabel } = resolveFieldAccessibleName(label, accessibilityLabel);
     const resolvedShape = shape ?? (search ? searchFieldRecipe.defaults.shape : fieldRecipe.defaults.shape);
     const searchSizing = searchFieldRecipe.sizes[searchSize];
+    const resolvedMaxVisibleLines = maxVisibleLines ?? fieldRecipe.multilineMaxVisibleLines;
     const minHeight = multiline
         ? fieldRecipe.multilineMinHeight
         : search
@@ -78,6 +79,12 @@ const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultV
             fontWeight: textStyle.fontWeight,
             lineHeight: textStyle.lineHeight,
             minHeight: minHeight - (borderWidth * 2),
+            ...(multiline && resolvedMaxVisibleLines !== null && resolvedMaxVisibleLines !== undefined
+                ? {
+                    maxHeight: textStyle.lineHeight * resolvedMaxVisibleLines
+                        + (fieldRecipe.paddingVertical * 2),
+                }
+                : {}),
             paddingHorizontal: 0,
             paddingVertical: fieldRecipe.paddingVertical,
             textAlign: logicalTextAlign(environment.direction),

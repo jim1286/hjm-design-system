@@ -3219,6 +3219,7 @@ export declare const recipeRegistry: {
         };
         readonly minHeight: 44;
         readonly multilineMinHeight: 80;
+        readonly multilineMaxVisibleLines: number | null;
         readonly borderWidth: 1;
         readonly focusRingWidth: 2;
         readonly focusRingOffset: 2;
