@@ -71,6 +71,10 @@ pnpm install
 pnpm ci:check
 ```
 
+[릴리스 검증 계약](docs/RELEASE_GOVERNANCE.md)은 내부 검사와 별도 제품 검증의 범위를 정합니다.
+`governance:check`가 canonical 명령·workflow·scenario registry 연결을 검사하며 외부 소비 제품
+dispatch gate는 현재 미구현입니다.
+
 `ci:check`는 package 계약·테스트·bundle/evidence, Native showcase 계약과 배포 가능한 Web
 Storybook을 한 번에 검증하는 CI의 canonical command입니다.
 
