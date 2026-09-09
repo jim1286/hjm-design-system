@@ -1579,6 +1579,8 @@ type SwitchBaseProps = Omit<
     size?: SwitchSize;
     accessibilityLabel?: string;
     accessibilityHint?: string;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
     style?: StyleProp<ViewStyle>;
   }>;
 
@@ -1619,6 +1621,7 @@ export function Switch({
   disabled = false,
   accessibilityLabel,
   accessibilityHint,
+  layoutStyle,
   style,
   ...props
 }: SwitchProps) {
@@ -1666,6 +1669,7 @@ export function Switch({
           opacity: disabled ? 0.5 : pressed ? 0.86 : 1,
         },
         style,
+        layoutStyle,
       ]}
     >
       <View style={{ flex: 1, gap: spacing.xxs }}>

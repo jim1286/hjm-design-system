@@ -56,6 +56,8 @@ export type TextProps = Omit<NativeTextProps, "children"> & Readonly<{
     tone?: TextTone;
     emphasis?: TextEmphasis;
     align?: TextStyle["textAlign"];
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 export declare const Text: import("react").ForwardRefExoticComponent<Omit<NativeTextProps, "children"> & Readonly<{
     children: ReactNode;
@@ -63,6 +65,8 @@ export declare const Text: import("react").ForwardRefExoticComponent<Omit<Native
     tone?: TextTone;
     emphasis?: TextEmphasis;
     align?: TextStyle["textAlign"];
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }> & import("react").RefAttributes<NativeText>>;
 /** @deprecated Compatibility aliases; use `subtle` and `accent`. */
 export type LegacyNativeSurfaceTone = "sunken" | "brand";
@@ -96,15 +100,19 @@ export type StackProps = ViewProps & Readonly<{
     wrap?: boolean;
     /** @deprecated Use the renderer-neutral `axis` prop. */
     direction?: "row" | "column";
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function Stack({ axis, direction, gap, align, justify, wrap, style, ...props }: StackProps): import("react").JSX.Element;
+export declare function Stack({ axis, direction, gap, align, justify, wrap, layoutStyle, style, ...props }: StackProps): import("react").JSX.Element;
 export type ContainerProps = Omit<ViewProps, "children"> & Readonly<{
     children?: ReactNode;
     size?: ContainerSize;
     gutter?: ContainerGutter;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** Shared centered content boundary for phones, tablets, and desktop-sized Native windows. */
-export declare function Container({ size, gutter, style, ...props }: ContainerProps): import("react").JSX.Element;
+export declare function Container({ size, gutter, layoutStyle, style, ...props }: ContainerProps): import("react").JSX.Element;
 export type AspectRatioProps = Omit<ViewProps, "children"> & Readonly<{
     children?: ReactNode;
     ratio?: AspectRatioValue;
@@ -154,8 +162,10 @@ export type SectionProps = Omit<ViewProps, "children"> & Readonly<{
     descriptionStyle?: StyleProp<TextStyle>;
     actionStyle?: StyleProp<ViewStyle>;
     contentStyle?: StyleProp<ViewStyle>;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** A large-text-safe content section with a logical header action slot. */
-export declare function Section({ title, description, action, children, headerStyle, copyStyle, titleStyle, descriptionStyle, actionStyle, contentStyle, style, ...props }: SectionProps): import("react").JSX.Element;
+export declare function Section({ title, description, action, children, headerStyle, copyStyle, titleStyle, descriptionStyle, actionStyle, contentStyle, layoutStyle, style, ...props }: SectionProps): import("react").JSX.Element;
 export type { AspectRatioValue, ContainerGutter, ContainerSize };
 //# sourceMappingURL=primitives.d.ts.map

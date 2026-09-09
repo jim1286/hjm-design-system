@@ -1,6 +1,7 @@
 import { type DescriptionListDescriptor } from "@hjmds/design-contracts/components/description-list";
 import { type ResolvedStatisticDescriptor, type StatisticDescriptor, type StatisticGroupDescriptor } from "@hjmds/design-contracts/components/statistic";
 import { type TagTone as ContractTagTone } from "@hjmds/design-contracts/components/tag";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { type ImageDescriptor, type ImageFit, type ImageLoadStatus, type ResolvedImageDescriptor } from "@hjmds/design-contracts/components/image";
 import { type ComposeTimelineAccessibleName, type TimelineItemDescriptor } from "@hjmds/design-contracts/components/timeline";
 import { statisticRecipe, type AccordionDensity, type BadgeSize, type BadgeTone, type BadgeVariant as ContractBadgeVariant, type CounterBadgeSize, type CounterBadgeTone, type CounterBadgeVariant, type ListRowDensity, type StatisticDensity, type StatisticPresentation } from "@hjmds/design-contracts/recipes";
@@ -29,8 +30,10 @@ export type TagProps = Omit<ViewProps, "accessibilityLabel" | "accessible" | "ch
     accessibilityLabel?: string;
     style?: StyleProp<ViewStyle>;
     labelStyle?: StyleProp<TextStyle>;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function Tag({ children, label, tone, accessibilityLabel, style, labelStyle, ...props }: TagProps): import("react").JSX.Element;
+export declare function Tag({ children, label, tone, accessibilityLabel, layoutStyle, style, labelStyle, ...props }: TagProps): import("react").JSX.Element;
 export type CardProps = Omit<SurfaceProps, "children" | "padding"> & Readonly<{
     children?: ReactNode;
     title?: ReactNode;
@@ -40,8 +43,10 @@ export type CardProps = Omit<SurfaceProps, "children" | "padding"> & Readonly<{
     actions?: ReactNode;
     selected?: boolean;
     padding?: SurfacePadding;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function Card({ children, title, description, leading, media, actions, selected, tone, bordered, padding, style, ...props }: CardProps): import("react").JSX.Element;
+export declare function Card({ children, title, description, leading, media, actions, selected, tone, bordered, padding, layoutStyle, style, ...props }: CardProps): import("react").JSX.Element;
 export type ListRowProps = Omit<PressableProps, "accessibilityLabel" | "accessibilityRole" | "children" | "disabled" | "style"> & Readonly<{
     title: string;
     description?: string;

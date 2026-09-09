@@ -175,7 +175,9 @@ export type TextProps = Omit<NativeTextProps, "children"> &
     tone?: TextTone;
     emphasis?: TextEmphasis;
     align?: TextStyle["textAlign"];
-  }>;
+      /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
+}>;
 
 export const Text = forwardRef<NativeText, TextProps>(function Text(
   {
@@ -185,6 +187,7 @@ export const Text = forwardRef<NativeText, TextProps>(function Text(
     emphasis = textRecipe.defaults.emphasis,
     align,
     allowFontScaling,
+    layoutStyle,
     style,
     ...props
   },
@@ -211,6 +214,7 @@ export const Text = forwardRef<NativeText, TextProps>(function Text(
         textAlign: align ?? logicalTextAlign(environment.direction),
       },
       style,
+      layoutStyle,
     ],
     allowFontScaling,
   );
@@ -322,7 +326,9 @@ export type StackProps = ViewProps &
     wrap?: boolean;
     /** @deprecated Use the renderer-neutral `axis` prop. */
     direction?: "row" | "column";
-  }>;
+      /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
+}>;
 
 const alignValues: Readonly<Record<StackAlign, ViewStyle["alignItems"]>> = {
   start: "flex-start",
@@ -345,6 +351,7 @@ export function Stack({
   align = stackRecipe.defaults.align,
   justify = stackRecipe.defaults.justify,
   wrap = stackRecipe.defaults.wrap,
+  layoutStyle,
   style,
   ...props
 }: StackProps) {
@@ -364,6 +371,7 @@ export function Stack({
           justifyContent: justifyValues[justify],
         },
         style,
+        layoutStyle,
       ]}
     />
   );
@@ -373,10 +381,13 @@ export type ContainerProps = Omit<ViewProps, "children"> & Readonly<{
   children?: ReactNode;
   size?: ContainerSize;
   gutter?: ContainerGutter;
+  /** Canonical layout-only placement. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
 }>;
 
 /** Shared centered content boundary for phones, tablets, and desktop-sized Native windows. */
-export function Container({ size, gutter, style, ...props }: ContainerProps) {
+export function Container({ size, gutter, layoutStyle,
+  style, ...props }: ContainerProps) {
   const resolved = resolveContainerDescriptor({
     ...(size === undefined ? {} : { size }),
     ...(gutter === undefined ? {} : { gutter }),
@@ -392,6 +403,7 @@ export function Container({ size, gutter, style, ...props }: ContainerProps) {
           width: "100%",
         },
         style,
+        layoutStyle,
       ]}
     />
   );
@@ -599,7 +611,9 @@ export type SectionProps = Omit<ViewProps, "children"> &
     descriptionStyle?: StyleProp<TextStyle>;
     actionStyle?: StyleProp<ViewStyle>;
     contentStyle?: StyleProp<ViewStyle>;
-  }>;
+      /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
+}>;
 
 /** A large-text-safe content section with a logical header action slot. */
 export function Section({
@@ -613,6 +627,7 @@ export function Section({
   descriptionStyle,
   actionStyle,
   contentStyle,
+  layoutStyle,
   style,
   ...props
 }: SectionProps) {
@@ -620,7 +635,7 @@ export function Section({
   const stackHeader = theme.environment.textScale >= 1.6;
   const hasHeader = title !== undefined || description !== undefined || action !== undefined;
   return (
-    <View {...props} style={[{ gap: sectionRecipe.gap }, style]}>
+    <View {...props} style={[{ gap: sectionRecipe.gap }, style, layoutStyle]}>
       {hasHeader ? <View
         style={[
           {

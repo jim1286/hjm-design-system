@@ -15,6 +15,14 @@ import {
   type HjmCompositionStyleProp,
   type SurfaceProps,
   type TextAreaProps,
+  type CardProps,
+  type ContainerProps,
+  type IconButtonProps,
+  type SectionProps,
+  type StackProps,
+  type SwitchProps,
+  type TagProps,
+  type TextProps,
 } from "../src/index.js";
 
 (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean })
@@ -61,6 +69,24 @@ describe("React Native composition style boundary", () => {
     expectTypeOf<FieldProps["layoutStyle"]>()
       .toEqualTypeOf<HjmCompositionStyleProp | undefined>();
     expectTypeOf<TextAreaProps["layoutStyle"]>()
+      .toEqualTypeOf<HjmCompositionStyleProp | undefined>();
+    // 배치 전용 style은 컴포넌트마다 따로 열지 않는다. 하나라도 빠지면 소비 앱이
+    // 그 컴포넌트에서만 legacy `style`을 쓸 수밖에 없어 계약이 무너진다.
+    expectTypeOf<TextProps["layoutStyle"]>()
+      .toEqualTypeOf<HjmCompositionStyleProp | undefined>();
+    expectTypeOf<StackProps["layoutStyle"]>()
+      .toEqualTypeOf<HjmCompositionStyleProp | undefined>();
+    expectTypeOf<ContainerProps["layoutStyle"]>()
+      .toEqualTypeOf<HjmCompositionStyleProp | undefined>();
+    expectTypeOf<SectionProps["layoutStyle"]>()
+      .toEqualTypeOf<HjmCompositionStyleProp | undefined>();
+    expectTypeOf<CardProps["layoutStyle"]>()
+      .toEqualTypeOf<HjmCompositionStyleProp | undefined>();
+    expectTypeOf<TagProps["layoutStyle"]>()
+      .toEqualTypeOf<HjmCompositionStyleProp | undefined>();
+    expectTypeOf<SwitchProps["layoutStyle"]>()
+      .toEqualTypeOf<HjmCompositionStyleProp | undefined>();
+    expectTypeOf<IconButtonProps["layoutStyle"]>()
       .toEqualTypeOf<HjmCompositionStyleProp | undefined>();
 
     type ControlledVisualValue = HjmCompositionStyle[

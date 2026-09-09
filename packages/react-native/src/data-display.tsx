@@ -18,6 +18,7 @@ import {
   tagRecipe,
   type TagTone as ContractTagTone,
 } from "@hjmds/design-contracts/components/tag";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { cardRecipe } from "@hjmds/design-contracts/components/card";
 import {
   imageRecipe,
@@ -199,6 +200,8 @@ export type TagProps = Omit<
   accessibilityLabel?: string;
   style?: StyleProp<ViewStyle>;
   labelStyle?: StyleProp<TextStyle>;
+  /** Canonical layout-only placement. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
 }>;
 
 export function Tag({
@@ -206,6 +209,7 @@ export function Tag({
   label,
   tone,
   accessibilityLabel,
+  layoutStyle,
   style,
   labelStyle,
   ...props
@@ -240,6 +244,7 @@ export function Tag({
           paddingHorizontal: tagRecipe.size.paddingHorizontal,
         },
         style,
+        layoutStyle,
       ]}
     >
       <Text
@@ -264,7 +269,9 @@ export type CardProps = Omit<SurfaceProps, "children" | "padding"> &
     actions?: ReactNode;
     selected?: boolean;
     padding?: SurfacePadding;
-  }>;
+      /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
+}>;
 
 export function Card({
   children,
@@ -277,6 +284,7 @@ export function Card({
   tone = cardRecipe.defaults.tone,
   bordered = cardRecipe.defaults.bordered,
   padding = cardRecipe.defaults.padding,
+  layoutStyle,
   style,
   ...props
 }: CardProps) {
@@ -290,7 +298,7 @@ export function Card({
       {...props}
       bordered={bordered}
       padding="none"
-      style={[{ overflow: "hidden" }, style]}
+      style={[{ overflow: "hidden" }, style, layoutStyle]}
       tone={selected ? cardRecipe.selectedTone : tone}
     >
       {media === undefined ? null : <View>{media}</View>}

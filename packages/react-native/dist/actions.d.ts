@@ -115,6 +115,8 @@ export type IconButtonProps = Omit<PressableProps, "accessibilityLabel" | "acces
         color: string;
         size: "small";
     }>) => ReactNode;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 export declare const IconButton: import("react").ForwardRefExoticComponent<IconButtonProps & import("react").RefAttributes<View>>;
 export type LinkProps = Omit<PressableProps, "accessibilityLabel" | "accessibilityRole" | "children" | "disabled" | "style"> & Readonly<{

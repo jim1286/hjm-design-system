@@ -222,7 +222,9 @@ export type IconButtonProps = Omit<
     accessibilityState?: PressableProps["accessibilityState"];
     style?: StyleProp<ViewStyle>;
     renderLoadingIndicator?: (props: Readonly<{ color: string; size: "small" }>) => ReactNode;
-  }>;
+      /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
+}>;
 
 export const IconButton = forwardRef<NativeView, IconButtonProps>(function IconButton({
   label,
@@ -236,6 +238,7 @@ export const IconButton = forwardRef<NativeView, IconButtonProps>(function IconB
   loading = false,
   disableWhileLoading = false,
   hitSlop,
+  layoutStyle,
   style,
   renderLoadingIndicator,
   onPress,
@@ -289,6 +292,7 @@ export const IconButton = forwardRef<NativeView, IconButtonProps>(function IconB
           width: sizeContract.diameter,
         },
         style,
+        layoutStyle,
       ]}
     >
       {loading ? (

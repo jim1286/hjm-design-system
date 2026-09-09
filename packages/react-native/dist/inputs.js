@@ -520,7 +520,7 @@ export function CheckboxGroup({ label, accessibilityLabel, items, value, default
             return (_createElement(ChoiceRow, { ...slotStyles, key: item.id, checked: optionSelected, description: item.description, disabled: optionDisabled, indicator: indicator, invalid: hasError, invalidLabel: invalidLabel ?? error, kind: "checkbox", label: item.label, onActivate: () => setSelected(toggleCheckboxSelection(items, selected, item.id)), presentation: presentation, readOnly: readOnly, readOnlyLabel: readOnlyLabel, renderIndicator: renderIndicator ? (props) => renderIndicator(item, props) : undefined, renderLeading: renderLeading ? (props) => renderLeading(item, props) : undefined, required: required, requiredLabel: requiredLabel, size: size }));
         }) }));
 }
-export function Switch({ label, description, size = switchRecipe.defaults.size, checked, defaultChecked, onCheckedChange, value, defaultValue, onValueChange, disabled = false, accessibilityLabel, accessibilityHint, style, ...props }) {
+export function Switch({ label, description, size = switchRecipe.defaults.size, checked, defaultChecked, onCheckedChange, value, defaultValue, onValueChange, disabled = false, accessibilityLabel, accessibilityHint, layoutStyle, style, ...props }) {
     const hasCanonicalState = checked !== undefined
         || defaultChecked !== undefined
         || onCheckedChange !== undefined;
@@ -555,6 +555,7 @@ export function Switch({ label, description, size = switchRecipe.defaults.size, 
                 opacity: disabled ? 0.5 : pressed ? 0.86 : 1,
             },
             style,
+            layoutStyle,
         ], children: [_jsxs(View, { style: { flex: 1, gap: spacing.xxs }, children: [_jsx(Text, { tone: "body", variant: "bodyLarge", children: label }), description ? (_jsx(Text, { tone: "muted", variant: "caption", children: description })) : null] }), _jsx(NativeSwitch, { ...props, accessible: false, disabled: disabled, ios_backgroundColor: colors.surfaceAlt, pointerEvents: "none", style: { height: dimensions.height, width: dimensions.width }, thumbColor: colors.bg, trackColor: { false: colors.surfaceAlt, true: colors.primary }, value: enabled })] }));
 }
 export function SegmentedControl({ label, items, options, value, defaultValue, onValueChange, size = segmentedControlRecipe.defaults.size, disabled = false, style, }) {

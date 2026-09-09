@@ -50,7 +50,7 @@ export const Button = forwardRef(function Button({ label, children, tone = butto
                 ? renderLoadingIndicator?.({ color: contentColor, size: "small" }) ?? (_jsx(ActivityIndicator, { color: contentColor, size: "small" }))
                 : leading, typeof content === "string" || typeof content === "number" ? (_jsx(Text, { align: "center", emphasis: "medium", style: [{ color: contentColor }, labelStyle], variant: sizeContract.textVariant, children: content })) : content, trailing] }));
 });
-export const IconButton = forwardRef(function IconButton({ label, accessibilityLabel, children, icon, tone = iconButtonRecipe.defaults.tone, size = iconButtonRecipe.defaults.size, shape = iconButtonRecipe.defaults.shape, disabled = false, loading = false, disableWhileLoading = false, hitSlop, style, renderLoadingIndicator, onPress, onLongPress, accessibilityState, ...props }, ref) {
+export const IconButton = forwardRef(function IconButton({ label, accessibilityLabel, children, icon, tone = iconButtonRecipe.defaults.tone, size = iconButtonRecipe.defaults.size, shape = iconButtonRecipe.defaults.shape, disabled = false, loading = false, disableWhileLoading = false, hitSlop, layoutStyle, style, renderLoadingIndicator, onPress, onLongPress, accessibilityState, ...props }, ref) {
     const theme = useHjmNativeTheme();
     const resolvedLabel = label ?? accessibilityLabel;
     const resolvedIcon = children ?? icon;
@@ -86,6 +86,7 @@ export const IconButton = forwardRef(function IconButton({ label, accessibilityL
                 width: sizeContract.diameter,
             },
             style,
+            layoutStyle,
         ], children: loading ? (renderLoadingIndicator?.({ color: presentation.content, size: "small" }) ?? (_jsx(ActivityIndicator, { color: presentation.content, size: "small" }))) : (_jsx(View, { accessible: false, style: {
                 alignItems: "center",
                 height: glyphSize,

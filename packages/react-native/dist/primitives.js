@@ -36,7 +36,7 @@ export const Layout = forwardRef(function Layout({ children, header, footer, sid
         : (_jsx(View, { ...sidebar.containerProps, accessibilityLabel: sidebar.label, children: sidebar.children }));
     return (_jsxs(View, { ...props, ref: ref, style: [{ flex: 1 }, style], children: [hasHeader ? _jsx(View, { ...headerProps, children: header }) : null, sidebar?.mode === "overlay" ? sidebar.renderOverlay(sidebarNode) : sidebarNode, _jsx(View, { ...mainProps, ref: mainRef, style: [{ flex: 1 }, mainProps?.style], children: children }), hasFooter ? _jsx(View, { ...footerProps, children: footer }) : null] }));
 });
-export const Text = forwardRef(function Text({ children, variant = textRecipe.defaults.variant, tone = textRecipe.defaults.tone, emphasis = textRecipe.defaults.emphasis, align, allowFontScaling, style, ...props }, ref) {
+export const Text = forwardRef(function Text({ children, variant = textRecipe.defaults.variant, tone = textRecipe.defaults.tone, emphasis = textRecipe.defaults.emphasis, align, allowFontScaling, layoutStyle, style, ...props }, ref) {
     const { colors, environment, textScaling } = useHjmNativeTheme();
     const toneColors = {
         primary: colors.text,
@@ -56,6 +56,7 @@ export const Text = forwardRef(function Text({ children, variant = textRecipe.de
             textAlign: align ?? logicalTextAlign(environment.direction),
         },
         style,
+        layoutStyle,
     ], allowFontScaling);
     return (_jsx(NativeText, { ...props, allowFontScaling: resolvedText.allowFontScaling, ref: ref, style: resolvedText.style, children: children }));
 });
@@ -117,7 +118,7 @@ const justifyValues = {
     end: "flex-end",
     between: "space-between",
 };
-export function Stack({ axis, direction, gap = stackRecipe.defaults.gap, align = stackRecipe.defaults.align, justify = stackRecipe.defaults.justify, wrap = stackRecipe.defaults.wrap, style, ...props }) {
+export function Stack({ axis, direction, gap = stackRecipe.defaults.gap, align = stackRecipe.defaults.align, justify = stackRecipe.defaults.justify, wrap = stackRecipe.defaults.wrap, layoutStyle, style, ...props }) {
     const { environment } = useHjmNativeTheme();
     const resolvedAxis = axis ?? (direction === "row" ? "inline" : "block");
     const flexDirection = stackRecipe.axes[resolvedAxis];
@@ -131,10 +132,11 @@ export function Stack({ axis, direction, gap = stackRecipe.defaults.gap, align =
                 justifyContent: justifyValues[justify],
             },
             style,
+            layoutStyle,
         ] }));
 }
 /** Shared centered content boundary for phones, tablets, and desktop-sized Native windows. */
-export function Container({ size, gutter, style, ...props }) {
+export function Container({ size, gutter, layoutStyle, style, ...props }) {
     const resolved = resolveContainerDescriptor({
         ...(size === undefined ? {} : { size }),
         ...(gutter === undefined ? {} : { gutter }),
@@ -147,6 +149,7 @@ export function Container({ size, gutter, style, ...props }) {
                 width: "100%",
             },
             style,
+            layoutStyle,
         ] }));
 }
 /** Native translation of the same width/height contract used by Web media frames. */
@@ -234,11 +237,11 @@ export function Icon({ descriptor, renderGlyph, style, }) {
             }) }) }));
 }
 /** A large-text-safe content section with a logical header action slot. */
-export function Section({ title, description, action, children, headerStyle, copyStyle, titleStyle, descriptionStyle, actionStyle, contentStyle, style, ...props }) {
+export function Section({ title, description, action, children, headerStyle, copyStyle, titleStyle, descriptionStyle, actionStyle, contentStyle, layoutStyle, style, ...props }) {
     const theme = useHjmNativeTheme();
     const stackHeader = theme.environment.textScale >= 1.6;
     const hasHeader = title !== undefined || description !== undefined || action !== undefined;
-    return (_jsxs(View, { ...props, style: [{ gap: sectionRecipe.gap }, style], children: [hasHeader ? _jsxs(View, { style: [
+    return (_jsxs(View, { ...props, style: [{ gap: sectionRecipe.gap }, style, layoutStyle], children: [hasHeader ? _jsxs(View, { style: [
                     {
                         alignItems: stackHeader ? "stretch" : "center",
                         direction: theme.environment.direction,

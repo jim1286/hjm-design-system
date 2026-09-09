@@ -212,6 +212,8 @@ type SwitchBaseProps = Omit<NativeSwitchProps, "accessibilityHint" | "accessibil
     size?: SwitchSize;
     accessibilityLabel?: string;
     accessibilityHint?: string;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
     style?: StyleProp<ViewStyle>;
 }>;
 type SwitchCanonicalStateProps = Readonly<{
@@ -234,7 +236,7 @@ type SwitchLegacyStateProps = Readonly<{
     onValueChange?: (value: boolean) => void;
 }>;
 export type SwitchProps = SwitchBaseProps & (SwitchCanonicalStateProps | SwitchLegacyStateProps);
-export declare function Switch({ label, description, size, checked, defaultChecked, onCheckedChange, value, defaultValue, onValueChange, disabled, accessibilityLabel, accessibilityHint, style, ...props }: SwitchProps): import("react").JSX.Element;
+export declare function Switch({ label, description, size, checked, defaultChecked, onCheckedChange, value, defaultValue, onValueChange, disabled, accessibilityLabel, accessibilityHint, layoutStyle, style, ...props }: SwitchProps): import("react").JSX.Element;
 export type SegmentedControlItem<Value extends string = string> = Readonly<{
     value: Value;
     label: string;

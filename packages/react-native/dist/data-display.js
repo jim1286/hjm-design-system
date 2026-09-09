@@ -53,7 +53,7 @@ export function Badge({ label, tone = badgeRecipe.defaults.tone, size = badgeRec
                     labelStyle,
                 ], variant: metrics.textVariant, children: label })] }));
 }
-export function Tag({ children, label, tone, accessibilityLabel, style, labelStyle, ...props }) {
+export function Tag({ children, label, tone, accessibilityLabel, layoutStyle, style, labelStyle, ...props }) {
     const theme = useHjmNativeTheme();
     const resolvedLabel = children ?? label;
     if (resolvedLabel === undefined) {
@@ -79,13 +79,14 @@ export function Tag({ children, label, tone, accessibilityLabel, style, labelSty
                 paddingHorizontal: tagRecipe.size.paddingHorizontal,
             },
             style,
+            layoutStyle,
         ], children: _jsx(Text, { align: "center", emphasis: "medium", style: [{ color: presentation.content }, labelStyle], variant: tagRecipe.size.textVariant, children: descriptor.label }) }));
 }
-export function Card({ children, title, description, leading, media, actions, selected = cardRecipe.defaults.selected, tone = cardRecipe.defaults.tone, bordered = cardRecipe.defaults.bordered, padding = cardRecipe.defaults.padding, style, ...props }) {
+export function Card({ children, title, description, leading, media, actions, selected = cardRecipe.defaults.selected, tone = cardRecipe.defaults.tone, bordered = cardRecipe.defaults.bordered, padding = cardRecipe.defaults.padding, layoutStyle, style, ...props }) {
     const { environment } = useHjmNativeTheme();
     const bodyPadding = typeof padding === "number" ? padding : surfaceGeometry.paddings[padding];
     const hasHeader = leading !== undefined || title !== undefined || description !== undefined;
-    return (_jsxs(Surface, { ...props, bordered: bordered, padding: "none", style: [{ overflow: "hidden" }, style], tone: selected ? cardRecipe.selectedTone : tone, children: [media === undefined ? null : _jsx(View, { children: media }), _jsxs(View, { style: { gap: cardRecipe.body.gap, padding: bodyPadding }, children: [hasHeader ? (_jsxs(View, { style: {
+    return (_jsxs(Surface, { ...props, bordered: bordered, padding: "none", style: [{ overflow: "hidden" }, style, layoutStyle], tone: selected ? cardRecipe.selectedTone : tone, children: [media === undefined ? null : _jsx(View, { children: media }), _jsxs(View, { style: { gap: cardRecipe.body.gap, padding: bodyPadding }, children: [hasHeader ? (_jsxs(View, { style: {
                             alignItems: "flex-start",
                             direction: environment.direction,
                             flexDirection: "row",
