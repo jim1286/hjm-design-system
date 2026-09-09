@@ -6,6 +6,7 @@ import {
 } from "@hjmds/design-contracts/components/image";
 import { control, glyph, radius, spacing } from "@hjmds/design-contracts/foundations";
 import { buttonRecipe } from "@hjmds/design-contracts/recipes/base";
+import { iconButtonRecipe } from "@hjmds/design-contracts/recipes";
 import {
   accordionRecipe,
   badgeRecipe,
@@ -469,6 +470,22 @@ describe("minimumVisualTarget control geometry", () => {
     expect(style.paddingHorizontal).toBe(buttonRecipe.sizes.small.paddingHorizontal);
     expect(pressableStyle(byLabel(render(<Chip label="Tag" onPress={() => undefined} selected={false} selectionMode="single" size="small" />, strictValue), "Tag")).height)
       .toBe(control.minTouchTarget);
+  });
+
+  it("raises a compact icon button to the same visible target as the web renderer", () => {
+    // Web reads the same size through `--hjm-control-button-*`, which the axis
+    // already raises. Native read `diameter` straight from the recipe, so the
+    // two renderers disagreed for a product that turned the axis on.
+    const compact = pressableStyle(
+      byLabel(render(<IconButton label="Close" size="small"><View /></IconButton>, strictValue), "Close"),
+    );
+    expect(compact.height).toBe(control.minTouchTarget);
+    expect(compact.width).toBe(control.minTouchTarget);
+
+    const off = pressableStyle(
+      byLabel(render(<IconButton label="Close" size="small"><View /></IconButton>), "Close"),
+    );
+    expect(off.height).toBe(iconButtonRecipe.sizes.small.diameter);
   });
 
   it("leaves heights at or above the target untouched", () => {

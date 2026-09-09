@@ -282,6 +282,14 @@ export const IconButton = forwardRef<NativeView, IconButtonProps>(function IconB
   const resolvedTone: IconButtonTone = tone === "link" ? "ghost" : tone;
   const presentation = resolveIconButtonPresentation(resolvedTone, theme.palette, selected === true);
   const sizeContract = iconButtonRecipe.sizes[size];
+  // Web reads the same size through `--hjm-control-button-*`, which the axis
+  // already raises. Native read `diameter` straight from the recipe, so a
+  // product that turned `minimumVisualTarget` on got 44pt buttons but 36pt
+  // icon buttons — the two renderers disagreed.
+  const visibleDiameter = visibleControlHeight(
+    sizeContract.diameter,
+    theme.environment.minimumVisualTarget,
+  );
   const glyphSize = glyph[sizeContract.glyph];
   const unavailable = disabled || (loading && disableWhileLoading);
   return (
@@ -307,10 +315,10 @@ export const IconButton = forwardRef<NativeView, IconButtonProps>(function IconB
           borderColor: presentation.border ?? "transparent",
           borderRadius: radius[iconButtonRecipe.shapes[shape]],
           borderWidth: 1,
-          height: sizeContract.diameter,
+          height: visibleDiameter,
           justifyContent: "center",
-          minHeight: sizeContract.diameter,
-          minWidth: sizeContract.diameter,
+          minHeight: visibleDiameter,
+          minWidth: visibleDiameter,
           opacity: disabled
             ? iconButtonRecipe.states.disabledOpacity
             : loading
@@ -318,7 +326,7 @@ export const IconButton = forwardRef<NativeView, IconButtonProps>(function IconB
             : pressed
               ? iconButtonRecipe.states.pressedOpacity
               : 1,
-          width: sizeContract.diameter,
+          width: visibleDiameter,
         },
         style,
         layoutStyle,
