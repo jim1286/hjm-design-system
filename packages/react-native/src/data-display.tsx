@@ -86,6 +86,7 @@ import {
 
 import { useControllableState } from "./internal/state.js";
 import { minimumTargetStyle } from "./internal/styles.js";
+import { webDisclosureProps, webOnly } from "./internal/web-a11y.js";
 import {
   Surface,
   Text,
@@ -807,6 +808,7 @@ export function Accordion<Value extends string = string>({
               accessibilityLabel={item.accessibilityLabel ?? item.title}
               accessibilityRole="button"
               accessibilityState={{ disabled: item.disabled === true, expanded: isExpanded }}
+              {...webOnly(webDisclosureProps(isExpanded, item.disabled === true))}
               disabled={item.disabled}
               onPress={() => {
                 if (!theme.environment.reducedMotion) {

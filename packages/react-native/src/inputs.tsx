@@ -73,6 +73,7 @@ import {
 } from "react-native";
 
 import { useControllableState } from "./internal/state.js";
+import { webChoiceProps, webOnly } from "./internal/web-a11y.js";
 import {
   logicalTextAlign,
   minimumTargetStyle,
@@ -917,6 +918,8 @@ type ChoiceRowProps = ChoiceVisualProps & Readonly<{
   renderLeading?: ((props: ChoiceVisualRenderProps) => ReactNode) | undefined;
   renderIndicator?: ((props: ChoiceVisualRenderProps) => ReactNode) | undefined;
   onActivate: () => void;
+  /** Roving tabindex position inside a radio group. Web renderer only. */
+  webTabIndex?: number | undefined;
 }>;
 
 function ChoiceRow({
@@ -939,6 +942,7 @@ function ChoiceRow({
   renderLeading,
   renderIndicator,
   onActivate,
+  webTabIndex,
   style,
   controlStyle,
   indicatorStyle,
@@ -1006,6 +1010,14 @@ function ChoiceRow({
       accessibilityLabel={label}
       accessibilityRole={kind}
       accessibilityState={{ checked, disabled: disabled || readOnly }}
+      {...webOnly(webChoiceProps({
+        kind,
+        checked,
+        disabled,
+        readOnly,
+        onActivate,
+        ...(webTabIndex === undefined ? {} : { tabIndex: webTabIndex }),
+      }))}
       disabled={disabled || readOnly}
       hitSlop={plate.useSizePadding ? 0 : metrics.hitSlop}
       onPress={() => {
@@ -1432,6 +1444,9 @@ export function RadioGroup<Value extends string = string>({
     ...(onValueChange === undefined ? {} : { onChange: onValueChange }),
   });
   const selected = reconcileRadioSelection(selectionItems, storedValue, required);
+  // A radio group is one tab stop: the selected option holds it, or the first
+  // enabled option when nothing is selected yet.
+  const webTabStop = selected ?? selectionItems.find((item) => !item.disabled)?.id;
   useEffect(() => {
     if (value === undefined && selected !== storedValue) setSelected(selected);
   }, [selected, setSelected, storedValue, value]);
@@ -1470,6 +1485,7 @@ export function RadioGroup<Value extends string = string>({
             label={item.label}
             leading={item.leading}
             onActivate={() => setSelected(item.value)}
+            webTabIndex={!optionDisabled && !readOnly && item.value === webTabStop ? 0 : -1}
             presentation={presentation}
             readOnly={readOnly}
             readOnlyLabel={readOnlyLabel}
@@ -1981,6 +1997,21 @@ export function Chip({
       accessibilityLabel={accessibilityLabel ?? label}
       accessibilityRole={role}
       accessibilityState={selectable ? { checked: active, disabled } : { disabled }}
+      {...webOnly(
+        selectable
+          ? webChoiceProps({
+              kind: role === "radio" ? "radio" : "checkbox",
+              checked: active,
+              disabled,
+              readOnly: false,
+              // Chip's controlled handler needs the press event, so Space
+              // re-enters the element's own DOM click path instead of calling
+              // the handler with a synthesised one.
+              onActivate: (element) => element.click(),
+              ...(role === "radio" ? { tabIndex: active && !disabled ? 0 : -1 } : {}),
+            })
+          : { "aria-disabled": disabled },
+      )}
       disabled={disabled}
       hitSlop={metrics.hitSlop}
       onPress={(event) => {

@@ -13,6 +13,7 @@ import { Children, isValidElement, useEffect, useMemo, useState, } from "react";
 import { Image as NativeImage, LayoutAnimation, Pressable, StyleSheet, View, useWindowDimensions, } from "react-native";
 import { useControllableState } from "./internal/state.js";
 import { minimumTargetStyle } from "./internal/styles.js";
+import { webDisclosureProps, webOnly } from "./internal/web-a11y.js";
 import { Surface, Text, } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
 export function Badge({ label, tone = badgeRecipe.defaults.tone, size = badgeRecipe.defaults.size, variant = badgeRecipe.defaults.variant, leading, accessibilityLabel, style, labelStyle, ...props }) {
@@ -270,7 +271,7 @@ export function Accordion({ label, items, expandedValues, defaultExpandedValues 
                         borderBottomWidth: 1,
                     },
                     itemStyle,
-                ], children: [_jsxs(Pressable, { accessibilityHint: item.accessibilityHint, accessibilityLabel: item.accessibilityLabel ?? item.title, accessibilityRole: "button", accessibilityState: { disabled: item.disabled === true, expanded: isExpanded }, disabled: item.disabled, onPress: () => {
+                ], children: [_jsxs(Pressable, { accessibilityHint: item.accessibilityHint, accessibilityLabel: item.accessibilityLabel ?? item.title, accessibilityRole: "button", accessibilityState: { disabled: item.disabled === true, expanded: isExpanded }, ...webOnly(webDisclosureProps(isExpanded, item.disabled === true)), disabled: item.disabled, onPress: () => {
                             if (!theme.environment.reducedMotion) {
                                 LayoutAnimation.configureNext({
                                     duration: accordionRecipe.transition.duration,
