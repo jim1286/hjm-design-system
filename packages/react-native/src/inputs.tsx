@@ -2,6 +2,7 @@ import { resolveColorReference } from "@hjmds/design-contracts/color-references"
 import { glyph, radius, spacing, typography } from "@hjmds/design-contracts/foundations";
 import {
   fieldRecipe,
+  type FieldAlign,
   type FieldShape,
   type FieldVariant,
 } from "@hjmds/design-contracts/recipes/base";
@@ -115,6 +116,12 @@ type BaseFieldProps = Omit<
      * recipe-owned, so this semantic axis replaces `inputStyle={{ minHeight }}`.
      */
     minVisibleLines?: number;
+    /**
+     * Text placement inside the control. `start` follows the resolved
+     * direction; `center` suits a short, ceremonial single value such as a
+     * nickname or a code. Replaces `inputStyle={{ textAlign }}`.
+     */
+    align?: FieldAlign;
     onValueChange?: (value: string) => void;
     supportText?: string;
     error?: string;
@@ -199,6 +206,7 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(function FieldRe
     multiline,
     maxVisibleLines,
   minVisibleLines,
+  align = fieldRecipe.defaults.align,
     search,
     searchSize = searchFieldRecipe.defaults.size,
     leading,
@@ -286,7 +294,9 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(function FieldRe
           : {}),
         paddingHorizontal: 0,
         paddingVertical: fieldRecipe.paddingVertical,
-        textAlign: logicalTextAlign(environment.direction),
+        textAlign: align === "center"
+          ? "center"
+          : logicalTextAlign(environment.direction),
         textAlignVertical: multiline ? "top" : "center",
       },
       inputStyle,

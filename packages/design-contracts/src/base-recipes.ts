@@ -155,6 +155,9 @@ export const surfaceRecipe = {
   }
 >;
 
+/** Text placement inside a field control. */
+export type FieldAlign = "start" | "center";
+
 export const fieldRecipe = {
   slots: [
     "root",
@@ -166,7 +169,7 @@ export const fieldRecipe = {
     "hint",
     "error",
   ] as const,
-  defaults: { variant: "surface", shape: "medium" } as const,
+  defaults: { variant: "surface", shape: "medium", align: "start" } as const,
   variants: {
     surface: { background: "surface" },
     inset: { background: "bg" },
@@ -211,7 +214,7 @@ export const fieldRecipe = {
   disabledOpacity: 0.6,
 } as const satisfies {
   slots: readonly string[];
-  defaults: { variant: FieldVariant; shape: FieldShape };
+  defaults: { variant: FieldVariant; shape: FieldShape; align: FieldAlign };
   variants: Record<FieldVariant, { background: keyof ThemeColors }>;
   shapes: Record<FieldShape, keyof typeof radius>;
   states: Record<

@@ -104,7 +104,7 @@ export const fieldRecipe = {
         "hint",
         "error",
     ],
-    defaults: { variant: "surface", shape: "medium" },
+    defaults: { variant: "surface", shape: "medium", align: "start" },
     variants: {
         surface: { background: "surface" },
         inset: { background: "bg" },

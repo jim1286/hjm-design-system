@@ -15,6 +15,7 @@ import {
   Surface,
   Switch,
   TextArea,
+  TextField,
   Tag,
   Text,
 } from "../src/index.js";
@@ -272,6 +273,24 @@ describe("Web core normalization", () => {
     expect(css).not.toMatch(/--multiline \{ min-block-size: 80px/);
     expect(css).toMatch(
       /\.hjm-field__control--multiline \{[^}]*min-block-size: var\(--hjm-field-multiline-min-height\);/s,
+    );
+  });
+
+  it("centres a ceremonial field value through the align axis", () => {
+    const markup = renderToStaticMarkup(
+      <HjmProvider systemTheme="light">
+        <TextField align="center" label="Nickname" />
+        <TextField label="Email" />
+      </HjmProvider>,
+    );
+    expect(markup).toContain('data-align="center"');
+    expect(markup).toContain('data-align="start"');
+    const css = readFileSync(
+      fileURLToPath(new URL("../src/styles.css", import.meta.url)),
+      "utf8",
+    );
+    expect(css).toContain(
+      '.hjm-field[data-align="center"] .hjm-field__input { text-align: center; }',
     );
   });
 

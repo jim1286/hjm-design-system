@@ -307,6 +307,9 @@
   font: inherit;
 }
 .hjm-field__input::placeholder { color: var(--hjm-color-text-muted); opacity: 1; }
+/* A short, ceremonial value (nickname, code) centres; the default follows the
+   resolved direction. Product code must not reach for `text-align`. */
+.hjm-field[data-align="center"] .hjm-field__input { text-align: center; }
 /* The multiline minimum came from the recipe, not from a hardcoded 80px, and a
    consumer can widen or cap it in visible lines rather than pixels. */
 .hjm-field__control--multiline { min-block-size: var(--hjm-field-multiline-min-height); align-items: stretch; }

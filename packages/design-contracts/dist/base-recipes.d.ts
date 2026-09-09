@@ -141,11 +141,14 @@ export declare const surfaceRecipe: {
         readonly clipsContent: true;
     };
 };
+/** Text placement inside a field control. */
+export type FieldAlign = "start" | "center";
 export declare const fieldRecipe: {
     readonly slots: readonly ["root", "label", "control", "leading", "input", "trailing", "hint", "error"];
     readonly defaults: {
         readonly variant: "surface";
         readonly shape: "medium";
+        readonly align: "start";
     };
     readonly variants: {
         readonly surface: {

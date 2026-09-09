@@ -8,6 +8,7 @@ import {
   HjmNativeProvider,
   Surface,
   TextArea,
+  TextField,
   hjmCompositionStyleKeys,
   type ButtonProps,
   type FieldProps,
@@ -239,6 +240,33 @@ describe("multiline field height axis", () => {
     expect(flattened.minHeight).toBe(
       flattened.lineHeight * 4 + fieldRecipe.paddingVertical * 2 - fieldRecipe.borderWidth * 2,
     );
+  });
+
+  it("centres a ceremonial value through the align axis", () => {
+    // `inputStyle={{ textAlign: "center" }}`을 쓰던 닉네임 필드의 대체 축.
+    expect(fieldRecipe.defaults.align).toBe("start");
+    const centred = render(
+      <HjmNativeProvider theme="light">
+        <TextField align="center" label="별명" value="" onValueChange={() => {}} />
+      </HjmNativeProvider>,
+    );
+    const flattened = Object.assign(
+      {},
+      ...[centred.root.findByType(TextInput).props.style].flat(4).filter(Boolean),
+    );
+    expect(flattened.textAlign).toBe("center");
+
+    const defaulted = render(
+      <HjmNativeProvider theme="light">
+        <TextField label="별명" value="" onValueChange={() => {}} />
+      </HjmNativeProvider>,
+    );
+    expect(
+      Object.assign(
+        {},
+        ...[defaulted.root.findByType(TextInput).props.style].flat(4).filter(Boolean),
+      ).textAlign,
+    ).toBe("left");
   });
 
   it("never shrinks below the recipe minimum", () => {
