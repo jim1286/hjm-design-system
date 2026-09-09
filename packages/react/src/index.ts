@@ -1,6 +1,7 @@
 export {
   HjmProvider,
   useHjmTheme,
+  type HjmProviderHost,
   type HjmProviderProps,
 } from "./provider.js";
 
@@ -50,7 +51,9 @@ export {
   Button,
   IconButton,
   Link,
+  type ButtonAlign,
   type ButtonProps,
+  type ButtonShape,
   type ButtonSize,
   type ButtonTone,
   type IconButtonProps,

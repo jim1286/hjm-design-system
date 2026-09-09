@@ -1,4 +1,5 @@
-import { type ButtonSize, type ButtonTone } from "@hjmds/design-contracts/recipes/base";
+import { type ButtonAlign, type ButtonShape, type ButtonSize, type ButtonTone } from "@hjmds/design-contracts/recipes/base";
+export type { ButtonAlign, ButtonShape };
 import { type IconButtonShape, type IconButtonSize, type IconButtonTone, type LinkTone, type LinkVariant } from "@hjmds/design-contracts/recipes";
 import { type AnchorHTMLAttributes, type ButtonHTMLAttributes, type ForwardedRef, type ReactElement, type ReactNode } from "react";
 export type { ButtonSize, ButtonTone } from "@hjmds/design-contracts/recipes/base";
@@ -7,6 +8,10 @@ import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & Readonly<{
     tone?: ButtonTone;
     size?: ButtonSize;
+    /** Frame geometry. `pill` replaces product code that overrode `border-radius`. */
+    shape?: ButtonShape;
+    /** Label placement inside the frame; `leading` suits a full-width row action. */
+    align?: ButtonAlign;
     loading?: boolean;
     leading?: ReactNode;
     trailing?: ReactNode;
@@ -16,6 +21,10 @@ export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & Readonly<{
 export declare const Button: import("react").ForwardRefExoticComponent<ButtonHTMLAttributes<HTMLButtonElement> & Readonly<{
     tone?: ButtonTone;
     size?: ButtonSize;
+    /** Frame geometry. `pill` replaces product code that overrode `border-radius`. */
+    shape?: ButtonShape;
+    /** Label placement inside the frame; `leading` suits a full-width row action. */
+    align?: ButtonAlign;
     loading?: boolean;
     leading?: ReactNode;
     trailing?: ReactNode;

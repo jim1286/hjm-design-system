@@ -1910,11 +1910,18 @@ type ChipBaseProps = Readonly<{
   trailing?: ReactNode;
   accessibilityLabel?: string;
   accessibilityHint?: string;
+  /** Canonical layout-only placement. Controlled visual and state keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
+  /**
+   * @deprecated Legacy compatibility only. New apps must use `layoutStyle` and must not
+   * override color, typography, radius, control height, or interaction state.
+   * @see https://github.com/jim1286/hjm-design-system/blob/main/packages/design-contracts/docs/consumer-policy.md#31-react-native-legacy-style-compatibility-boundary
+   */
   style?: StyleProp<ViewStyle>;
-  leadingStyle?: StyleProp<ViewStyle>;
-  indicatorStyle?: StyleProp<ViewStyle>;
+  leadingStyle?: HjmCompositionStyleProp;
+  indicatorStyle?: HjmCompositionStyleProp;
   labelStyle?: StyleProp<TextStyle>;
-  trailingStyle?: StyleProp<ViewStyle>;
+  trailingStyle?: HjmCompositionStyleProp;
   renderSelectionIndicator?: (props: Readonly<{
     selected: boolean;
     color: string;
@@ -1946,6 +1953,7 @@ export function Chip({
   trailing,
   accessibilityLabel,
   accessibilityHint,
+  layoutStyle,
   style,
   leadingStyle,
   indicatorStyle,
@@ -2005,6 +2013,7 @@ export function Chip({
           paddingHorizontal: metrics.paddingHorizontal,
         },
         style,
+        layoutStyle,
       ]}
     >
       {leading ? <View accessible={false} style={leadingStyle}>{leading}</View> : null}

@@ -4,7 +4,7 @@ import {
   imageRecipe,
   nativeResizeModes,
 } from "@hjmds/design-contracts/components/image";
-import { control, glyph, radius } from "@hjmds/design-contracts/foundations";
+import { control, glyph, radius, spacing } from "@hjmds/design-contracts/foundations";
 import { buttonRecipe } from "@hjmds/design-contracts/recipes/base";
 import {
   accordionRecipe,
@@ -472,6 +472,69 @@ describe("minimumVisualTarget control geometry", () => {
   it("leaves heights at or above the target untouched", () => {
     expect(pressableStyle(byLabel(render(<Button size="large">Roomy</Button>, strictValue), "Roomy")).minHeight)
       .toBe(control.buttonHeight.large);
+  });
+});
+
+describe("Recipe axes that replace product style overrides", () => {
+  const pressableStyleOf = (node: ReactTestInstance): Record<string, unknown> =>
+    flattenStyle((node.props.style as (state: { pressed: boolean }) => unknown)({ pressed: false }));
+
+  it("owns pill geometry and leading label alignment on Button", () => {
+    const pill = pressableStyleOf(byLabel(render(<Button shape="pill">Pill</Button>), "Pill"));
+    expect(pill.borderRadius).toBe(radius.full);
+    const leading = render(<Button align="leading">Row</Button>);
+    expect(pressableStyleOf(byLabel(leading, "Row")).justifyContent).toBe("flex-start");
+    expect(copy(leading, "Row").props.align).toBe("auto");
+    // Defaults stay the action geometry.
+    const base = render(<Button>Base</Button>);
+    expect(pressableStyleOf(byLabel(base, "Base")).borderRadius).toBe(radius.md);
+    expect(pressableStyleOf(byLabel(base, "Base")).justifyContent).toBe("center");
+  });
+
+  it("frames the ListRow leading slot from the recipe instead of product styles", () => {
+    const circle = render(
+      <ListRow
+        leading={<View testID="leading-visual" />}
+        leadingShape="circle"
+        onPress={() => undefined}
+        title="Row"
+      />,
+    );
+    const frame = circle.root.findByProps({ testID: "leading-visual" }).parent!;
+    const framed = flattenStyle(frame.props.style);
+    expect(framed).toMatchObject({
+      borderRadius: radius.full,
+      height: listRowRecipe.leadingSize,
+      overflow: "hidden",
+      width: listRowRecipe.leadingSize,
+    });
+
+    const square = render(
+      <ListRow leading={<View testID="square-visual" />} onPress={() => undefined} title="Row" />,
+    );
+    const squareFrame = flattenStyle(
+      square.root.findByProps({ testID: "square-visual" }).parent!.props.style,
+    );
+    expect(squareFrame.width).toBe(listRowRecipe.leadingSize);
+    expect(squareFrame.borderRadius).toBeUndefined();
+  });
+
+  it("accepts layoutStyle on the components that previously required style", () => {
+    const chip = render(
+      <Chip
+        label="Tag"
+        layoutStyle={{ flex: 1 }}
+        onPress={() => undefined}
+        selected={false}
+        selectionMode="single"
+      />,
+    );
+    expect(pressableStyleOf(byLabel(chip, "Tag")).flex).toBe(1);
+
+    const row = render(
+      <ListRow layoutStyle={{ marginTop: spacing.sm }} onPress={() => undefined} title="Placed" />,
+    );
+    expect(pressableStyleOf(byLabel(row, "Placed")).marginTop).toBe(spacing.sm);
   });
 });
 

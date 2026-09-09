@@ -1,5 +1,12 @@
 import { control, radius, spacing } from "./foundations.js";
 export type ButtonTone = "primary" | "secondary" | "ghost" | "danger" | "link";
+/** Corner geometry of the control frame. Mirrors `IconButtonShape`. */
+export type ButtonShape = "rounded" | "pill";
+/**
+ * Where the label sits inside the frame. `center` is the action default;
+ * `leading` is for a full-width row action whose label reads as list copy.
+ */
+export type ButtonAlign = "center" | "leading";
 export type ButtonSize = keyof typeof control.buttonHeight;
 export type SurfaceTone = "default" | "raised" | "accent" | "subtle";
 export type SurfacePadding = "none" | keyof typeof spacing;
@@ -12,6 +19,8 @@ export declare const buttonRecipe: {
     readonly defaults: {
         readonly tone: "primary";
         readonly size: "medium";
+        readonly shape: "rounded";
+        readonly align: "center";
     };
     readonly tones: {
         readonly primary: {
@@ -59,6 +68,14 @@ export declare const buttonRecipe: {
             readonly paddingHorizontal: 20;
             readonly textVariant: "bodyLarge";
         };
+    };
+    readonly shapes: {
+        readonly rounded: "md";
+        readonly pill: "full";
+    };
+    readonly aligns: {
+        readonly center: "center";
+        readonly leading: "flex-start";
     };
     readonly opacity: {
         readonly disabled: 0.5;

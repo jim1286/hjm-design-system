@@ -522,6 +522,8 @@ export const listRecipe = {
 } as const;
 
 export type ListRowDensity = "comfortable" | "compact";
+/** Frame geometry the ListRow paints around its leading slot. */
+export type ListRowLeadingShape = "square" | "circle";
 
 export const listRowRecipe = {
   slots: ["root", "leading", "content", "title", "description", "trailing"] as const,
@@ -542,6 +544,12 @@ export const listRowRecipe = {
   },
   gap: spacing.sm,
   leadingSize: 40,
+  /**
+   * Frame geometry for the leading slot. The size was already declared here but
+   * no renderer bound it, so every consumer re-derived the avatar box (radius,
+   * clipping, centering) in product styles.
+   */
+  leadingShapes: { square: null, circle: "full" },
   title: { color: semanticColors.content.body, textVariant: "bodyLarge", fontWeight: fontWeight.bold },
   description: { color: semanticColors.content.secondary, textVariant: "body" },
   trailing: {
@@ -555,7 +563,23 @@ export const listRowRecipe = {
     selectedBackground: semanticColors.surface.brand,
     disabledOpacity: opacity.disabled,
   },
-} as const;
+} as const satisfies {
+  slots: readonly string[];
+  defaults: { density: ListRowDensity; selected: boolean };
+  density: Record<ListRowDensity, {
+    oneLineMinHeight: number;
+    twoLineMinHeight: number;
+    paddingHorizontal: number;
+    paddingVertical: number;
+  }>;
+  gap: number;
+  leadingSize: number;
+  leadingShapes: Record<ListRowLeadingShape, keyof typeof radius | null>;
+  title: unknown;
+  description: unknown;
+  trailing: unknown;
+  states: unknown;
+};
 
 export type AccordionDensity = "compact" | "comfortable";
 

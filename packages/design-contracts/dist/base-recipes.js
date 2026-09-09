@@ -2,7 +2,7 @@ import { control, fontWeight, radius, spacing, typography } from "./foundations.
 /** Small renderer entry point for the three foundational visual recipes. */
 export const buttonRecipe = {
     slots: ["root", "leading", "label", "trailing", "spinner"],
-    defaults: { tone: "primary", size: "medium" },
+    defaults: { tone: "primary", size: "medium", shape: "rounded", align: "center" },
     tones: {
         primary: { background: "primary", content: "onPrimary", border: null },
         secondary: { background: "surfaceAlt", content: "text", border: "textSub" },
@@ -30,6 +30,8 @@ export const buttonRecipe = {
             textVariant: "bodyLarge",
         },
     },
+    shapes: { rounded: "md", pill: "full" },
+    aligns: { center: "center", leading: "flex-start" },
     opacity: { disabled: 0.5, pressed: 0.86 },
 };
 export const surfaceRecipe = {

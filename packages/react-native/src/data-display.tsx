@@ -54,6 +54,7 @@ import {
   type CounterBadgeTone,
   type CounterBadgeVariant,
   type ListRowDensity,
+  type ListRowLeadingShape,
   type StatisticDensity,
   type StatisticPresentation,
 } from "@hjmds/design-contracts/recipes";
@@ -374,14 +375,23 @@ export type ListRowProps = Omit<
     disabled?: boolean;
     density?: ListRowDensity;
     selected?: boolean;
+    /** Frame the ListRow paints around `leading`; the recipe owns its size. */
+    leadingShape?: ListRowLeadingShape;
+    /** Canonical layout-only placement. Controlled visual and state keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
+    /**
+     * @deprecated Legacy compatibility only. New apps must use `layoutStyle` and must not
+     * override color, typography, radius, row height, or interaction state.
+     * @see https://github.com/jim1286/hjm-design-system/blob/main/packages/design-contracts/docs/consumer-policy.md#31-react-native-legacy-style-compatibility-boundary
+     */
     style?: StyleProp<ViewStyle>;
-    leadingStyle?: StyleProp<ViewStyle>;
-    contentStyle?: StyleProp<ViewStyle>;
+    leadingStyle?: HjmCompositionStyleProp;
+    contentStyle?: HjmCompositionStyleProp;
     titleStyle?: StyleProp<TextStyle>;
-    titleRowStyle?: StyleProp<ViewStyle>;
+    titleRowStyle?: HjmCompositionStyleProp;
     descriptionStyle?: StyleProp<TextStyle>;
-    trailingStyle?: StyleProp<ViewStyle>;
-    trailingActionStyle?: StyleProp<ViewStyle>;
+    trailingStyle?: HjmCompositionStyleProp;
+    trailingActionStyle?: HjmCompositionStyleProp;
     containerProps?: Omit<ViewProps, "children" | "style">;
   }>;
 
@@ -402,6 +412,8 @@ export function ListRow({
   disabled = false,
   density = listRowRecipe.defaults.density,
   selected: selectedProp,
+  leadingShape = "square",
+  layoutStyle,
   style,
   leadingStyle,
   contentStyle,
@@ -434,13 +446,25 @@ export function ListRow({
     minHeight: description ? metrics.twoLineMinHeight : metrics.oneLineMinHeight,
     opacity: disabled ? listRowRecipe.states.disabledOpacity : 1,
   } as const;
+  // `leadingSize` was declared by the recipe but unbound, so consumers rebuilt
+  // the avatar box themselves. The frame belongs here; `leadingStyle` keeps
+  // only composition keys.
+  const leadingRadius = listRowRecipe.leadingShapes[leadingShape];
+  const leadingFrameStyle = {
+    alignItems: "center",
+    height: listRowRecipe.leadingSize,
+    justifyContent: "center",
+    overflow: "hidden",
+    width: listRowRecipe.leadingSize,
+    ...(leadingRadius === null ? {} : { borderRadius: radius[leadingRadius] }),
+  } as const satisfies ViewStyle;
   const rowContent = (
     <>
       {leading ? (
         <View
           accessible={interactive ? false : undefined}
           importantForAccessibility={interactive ? "no-hide-descendants" : "auto"}
-          style={leadingStyle}
+          style={[leadingFrameStyle, leadingStyle]}
         >
           {leading}
         </View>
@@ -531,6 +555,7 @@ export function ListRow({
       paddingVertical: metrics.paddingVertical,
     },
     trailingAction ? undefined : style,
+    trailingAction ? undefined : layoutStyle,
   ];
   const main = interactive ? (
     <Pressable
@@ -575,6 +600,7 @@ export function ListRow({
           opacity: visualState.opacity,
         },
         style,
+        layoutStyle,
       ]}
     >
       {main}
@@ -1028,8 +1054,15 @@ type ImageSharedProps = ImageNativeProps &
       status: Extract<ImageLoadStatus, "loaded" | "error">,
     ) => void;
     resizeMode?: NativeImageProps["resizeMode"];
-    /** Image-host style. `containerStyle` owns the reserved root frame. */
+    /** Image-host style. `layoutStyle` places the reserved root frame. */
     style?: StyleProp<ImageStyle>;
+    /** Canonical layout-only placement of the reserved frame. */
+    layoutStyle?: HjmCompositionStyleProp;
+    /**
+     * @deprecated Legacy compatibility only. New apps must use `layoutStyle`; the
+     * reserved frame's aspect ratio, clipping and background belong to the recipe.
+     * @see https://github.com/jim1286/hjm-design-system/blob/main/packages/design-contracts/docs/consumer-policy.md#31-react-native-legacy-style-compatibility-boundary
+     */
     containerStyle?: StyleProp<ViewStyle>;
   }>;
 
@@ -1109,6 +1142,7 @@ export function Image(imageProps: ImageProps) {
     renderImage,
     resizeMode,
     style,
+    layoutStyle,
     containerStyle,
     ...nativeProps
   } = imageProps;
@@ -1318,6 +1352,7 @@ export function Image(imageProps: ImageProps) {
               }),
         },
         containerStyle,
+        layoutStyle,
       ]}
     >
       {visual}

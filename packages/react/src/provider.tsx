@@ -68,12 +68,25 @@ type HjmProviderValueProps = Readonly<{
   systemTheme?: never;
 }>;
 
+/**
+ * How the provider's own host element participates in layout and painting.
+ *
+ * `surface` (default) paints the HJM background, text color and UI typography,
+ * which is what a page whose root *is* the provider needs. A product whose
+ * document root already paints its surface previously had to neutralise the
+ * host with an inline `display: contents` style, re-entering product code into
+ * the renderer boundary; `contents` is that intent as a supported axis — the
+ * element still carries the CSS variables, `dir` and data attributes.
+ */
+export type HjmProviderHost = "surface" | "contents";
+
 export type HjmProviderProps = Omit<
   HTMLAttributes<HTMLDivElement>,
   "children" | "dir"
 > &
   Readonly<{
     children: ReactNode;
+    host?: HjmProviderHost;
   }> & (HjmProviderEnvironmentProps | HjmProviderValueProps);
 
 export const HjmProvider = forwardRef<HTMLDivElement, HjmProviderProps>(
@@ -86,6 +99,7 @@ export const HjmProvider = forwardRef<HTMLDivElement, HjmProviderProps>(
       reducedMotion,
       minimumVisualTarget,
       systemTheme,
+      host = "surface",
       value: suppliedValue,
       className,
       style,
@@ -159,6 +173,7 @@ export const HjmProvider = forwardRef<HTMLDivElement, HjmProviderProps>(
             ref={ref}
             className={classNames("hjm-root", className)}
             data-hjm-provider=""
+            data-host={host}
             data-motion={environment.reducedMotion ? "reduced" : "full"}
             data-theme={environment.theme}
             data-text-scale={environment.textScale}

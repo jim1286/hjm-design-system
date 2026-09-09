@@ -3,6 +3,13 @@ import { control, fontWeight, radius, spacing, typography } from "./foundations.
 import type { FontWeightValue, TextVariant } from "./foundations.js";
 
 export type ButtonTone = "primary" | "secondary" | "ghost" | "danger" | "link";
+/** Corner geometry of the control frame. Mirrors `IconButtonShape`. */
+export type ButtonShape = "rounded" | "pill";
+/**
+ * Where the label sits inside the frame. `center` is the action default;
+ * `leading` is for a full-width row action whose label reads as list copy.
+ */
+export type ButtonAlign = "center" | "leading";
 export type ButtonSize = keyof typeof control.buttonHeight;
 export type SurfaceTone = "default" | "raised" | "accent" | "subtle";
 export type SurfacePadding = "none" | keyof typeof spacing;
@@ -13,7 +20,7 @@ export type FieldShape = "medium" | "large" | "full";
 /** Small renderer entry point for the three foundational visual recipes. */
 export const buttonRecipe = {
   slots: ["root", "leading", "label", "trailing", "spinner"] as const,
-  defaults: { tone: "primary", size: "medium" } as const,
+  defaults: { tone: "primary", size: "medium", shape: "rounded", align: "center" } as const,
   tones: {
     primary: { background: "primary", content: "onPrimary", border: null },
     secondary: { background: "surfaceAlt", content: "text", border: "textSub" },
@@ -41,10 +48,12 @@ export const buttonRecipe = {
       textVariant: "bodyLarge",
     },
   },
+  shapes: { rounded: "md", pill: "full" },
+  aligns: { center: "center", leading: "flex-start" },
   opacity: { disabled: 0.5, pressed: 0.86 },
 } as const satisfies {
   slots: readonly string[];
-  defaults: { tone: ButtonTone; size: ButtonSize };
+  defaults: { tone: ButtonTone; size: ButtonSize; shape: ButtonShape; align: ButtonAlign };
   tones: Record<
     ButtonTone,
     {
@@ -62,6 +71,8 @@ export const buttonRecipe = {
       textVariant: TextVariant;
     }
   >;
+  shapes: Record<ButtonShape, keyof typeof radius>;
+  aligns: Record<ButtonAlign, "center" | "flex-start">;
   opacity: { disabled: number; pressed: number };
 };
 

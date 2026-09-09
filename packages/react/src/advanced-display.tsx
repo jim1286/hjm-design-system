@@ -47,6 +47,7 @@ import {
   type RefAttributes,
   type TableHTMLAttributes,
 } from "react";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { classNames, useControllableState, useElementWidth } from "./internal.js";
 import { useOptionalHjmTheme } from "./provider.js";
 
@@ -493,10 +494,12 @@ export type DescriptionListProps<Id extends string = string> = Omit<
   Readonly<{
     items: readonly DescriptionItemDescriptor<Id>[];
     columns?: DescriptionListColumns;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
   }>;
 
 function DescriptionListInner<Id extends string>(
-  { items, columns, className, style, ...props }: DescriptionListProps<Id>,
+  { items, columns, className, layoutStyle, style, ...props }: DescriptionListProps<Id>,
   forwardedRef: ForwardedRef<HTMLDListElement>,
 ) {
   const descriptor = resolveDescriptionListDescriptor({
@@ -512,6 +515,7 @@ function DescriptionListInner<Id extends string>(
   );
   const responsiveStyle = {
     ...style,
+    ...layoutStyle,
     "--hjm-description-columns": resolvedColumns,
   } as CSSProperties;
   return (

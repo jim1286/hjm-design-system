@@ -14,6 +14,18 @@
   color: var(--hjm-color-text);
 }
 
+/* host="contents": the element only carries the theme variables, dir and data
+   attributes. Custom properties still inherit through display: contents, so
+   recipes keep resolving; the product's own root paints the surface. */
+.hjm-root[data-host="contents"] {
+  display: contents;
+  background: transparent;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
 .hjm-visually-hidden {
   position: absolute !important;
   inline-size: 1px !important;
@@ -198,6 +210,11 @@
   position: absolute;
   inset: calc(-1 * var(--hjm-space-xxs));
 }
+/* Shape and label alignment are recipe axes; a product must not override
+   border-radius or justify-content on the control itself. */
+.hjm-button[data-shape="pill"] { border-radius: var(--hjm-radius-full); }
+.hjm-button[data-align="leading"] { justify-content: flex-start; text-align: start; }
+
 .hjm-button[data-size="large"] {
   min-block-size: var(--hjm-control-button-large);
   padding-inline: var(--hjm-space-lg);

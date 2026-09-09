@@ -95,6 +95,18 @@ maturity manifest에는 해당 surface가 계속 `beta`로 보여야 합니다.
 - 0.9 호환 train에서는 등록 style ID와 배열을 런타임에서 필터링하거나 조용히 삭제하지
   않습니다. 그러한 즉시 변경은 기존 앱의 레이아웃을 예측 불가능하게 깨뜨리기 때문입니다.
 
+소비 앱의 legacy prop이 실제로 무엇을 덮어쓰고 있었는지 확인한 뒤, 배치가 아닌 값은
+semantic axis로 옮겼습니다. 아래는 그 축과 대체 대상입니다.
+
+| 제품이 덮어썼던 것 | semantic axis |
+| --- | --- |
+| 컨트롤에 `minHeight: 44`를 다시 얹어 compact recipe의 36pt를 가리기 | provider 환경의 `minimumVisualTarget` |
+| Button `borderRadius: 999`로 pill 만들기 | `shape="pill"` |
+| Button `justifyContent: "flex-start"`로 라벨 좌측 정렬 | `align="leading"` |
+| ListRow leading slot에 40pt 원형 avatar 프레임을 제품이 다시 계산 | `leadingShape` (`listRowRecipe.leadingSize`를 renderer가 바인딩) |
+| 중첩 web Provider의 `display: contents` 인라인 중화 | `host="contents"` |
+| Chip·ListRow·Image·LoadMore·DescriptionList의 배치용 `style` | 각 컴포넌트의 `layoutStyle` |
+
 legacy raw style surface는 다음 조건이 모두 충족된 뒤 공지된 breaking train에서 제거합니다.
 
 1. Stable Core가 canonical `layoutStyle` 또는 동등한 좁은 composition API를 제공한다.

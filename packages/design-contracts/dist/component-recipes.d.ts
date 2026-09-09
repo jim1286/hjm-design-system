@@ -717,6 +717,8 @@ export declare const listRecipe: {
     readonly background: null;
 };
 export type ListRowDensity = "comfortable" | "compact";
+/** Frame geometry the ListRow paints around its leading slot. */
+export type ListRowLeadingShape = "square" | "circle";
 export declare const listRowRecipe: {
     readonly slots: readonly ["root", "leading", "content", "title", "description", "trailing"];
     readonly defaults: {
@@ -739,6 +741,15 @@ export declare const listRowRecipe: {
     };
     readonly gap: 12;
     readonly leadingSize: 40;
+    /**
+     * Frame geometry for the leading slot. The size was already declared here but
+     * no renderer bound it, so every consumer re-derived the avatar box (radius,
+     * clipping, centering) in product styles.
+     */
+    readonly leadingShapes: {
+        readonly square: null;
+        readonly circle: "full";
+    };
     readonly title: {
         readonly color: Readonly<{
             source: "theme";

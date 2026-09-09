@@ -660,7 +660,7 @@ export function SegmentedControl({ label, items, options, value, defaultValue, o
         }) }));
 }
 /** Action/filter chip with role-specific, controlled selection semantics. */
-export function Chip({ label, size = chipRecipe.defaults.size, disabled = false, leading, trailing, accessibilityLabel, accessibilityHint, style, leadingStyle, indicatorStyle, labelStyle, trailingStyle, renderSelectionIndicator, selectionMode = "action", selected, onPress, }) {
+export function Chip({ label, size = chipRecipe.defaults.size, disabled = false, leading, trailing, accessibilityLabel, accessibilityHint, layoutStyle, style, leadingStyle, indicatorStyle, labelStyle, trailingStyle, renderSelectionIndicator, selectionMode = "action", selected, onPress, }) {
     const theme = useHjmNativeTheme();
     const selectable = selectionMode !== "action";
     const active = selectable && selected === true;
@@ -696,6 +696,7 @@ export function Chip({ label, size = chipRecipe.defaults.size, disabled = false,
                 paddingHorizontal: metrics.paddingHorizontal,
             },
             style,
+            layoutStyle,
         ], children: [leading ? _jsx(View, { accessible: false, style: leadingStyle, children: leading }) : null, active ? (_jsx(View, { accessible: false, style: indicatorStyle, children: renderSelectionIndicator ? (renderSelectionIndicator({
                     selected: active,
                     color: indicatorColor,

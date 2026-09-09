@@ -2,6 +2,8 @@ import type { ThemeColors } from "@hjmds/design-contracts/colors";
 import { control, glyph, radius, spacing } from "@hjmds/design-contracts/foundations";
 import {
   buttonRecipe,
+  type ButtonAlign as ContractButtonAlign,
+  type ButtonShape as ContractButtonShape,
   type ButtonSize as ContractButtonSize,
   type ButtonTone as ContractButtonTone,
 } from "@hjmds/design-contracts/recipes/base";
@@ -38,6 +40,8 @@ import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type ButtonTone = ContractButtonTone;
 export type ButtonSize = ContractButtonSize;
+export type ButtonShape = ContractButtonShape;
+export type ButtonAlign = ContractButtonAlign;
 export type {
   IconButtonShape,
   IconButtonSize,
@@ -53,6 +57,10 @@ export type ButtonProps = Omit<
     children?: ReactNode;
     tone?: ButtonTone;
     size?: ButtonSize;
+    /** Frame geometry. `pill` replaces product code that overrode `borderRadius`. */
+    shape?: ButtonShape;
+    /** Label placement inside the frame; `leading` suits a full-width row action. */
+    align?: ButtonAlign;
     disabled?: boolean;
     loading?: boolean;
     /** Keep the busy control discoverable by default; opt in only for legacy disabled semantics. */
@@ -87,6 +95,8 @@ export const Button = forwardRef<NativeView, ButtonProps>(function Button({
   children,
   tone = buttonRecipe.defaults.tone,
   size = buttonRecipe.defaults.size,
+  shape = buttonRecipe.defaults.shape,
+  align = buttonRecipe.defaults.align,
   disabled = false,
   loading = false,
   disableWhileLoading = false,
@@ -139,13 +149,13 @@ export const Button = forwardRef<NativeView, ButtonProps>(function Button({
           alignItems: "center",
           backgroundColor: resolveColor(toneContract.background),
           borderColor: resolveColor(toneContract.border),
-          borderRadius: radius.md,
+          borderRadius: radius[buttonRecipe.shapes[shape]],
           borderWidth: toneContract.border ? 1 : 0,
           direction: environment.direction,
           flexDirection: "row",
           gap: spacing.xs,
           ...(growWithContent ? {} : { height: visibleHeight }),
-          justifyContent: "center",
+          justifyContent: buttonRecipe.aligns[align],
           minHeight: visibleHeight,
           minWidth: control.minTouchTarget,
           opacity: inactive
@@ -167,7 +177,7 @@ export const Button = forwardRef<NativeView, ButtonProps>(function Button({
         : leading}
       {typeof content === "string" || typeof content === "number" ? (
         <Text
-          align="center"
+          align={align === "leading" ? "auto" : "center"}
           emphasis="medium"
           style={[{ color: contentColor }, labelStyle]}
           variant={sizeContract.textVariant}

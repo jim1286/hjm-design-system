@@ -2130,6 +2130,8 @@ export declare const recipeRegistry: {
         readonly defaults: {
             readonly tone: "primary";
             readonly size: "medium";
+            readonly shape: "rounded";
+            readonly align: "center";
         };
         readonly tones: {
             readonly primary: {
@@ -2177,6 +2179,14 @@ export declare const recipeRegistry: {
                 readonly paddingHorizontal: 20;
                 readonly textVariant: "bodyLarge";
             };
+        };
+        readonly shapes: {
+            readonly rounded: "md";
+            readonly pill: "full";
+        };
+        readonly aligns: {
+            readonly center: "center";
+            readonly leading: "flex-start";
         };
         readonly opacity: {
             readonly disabled: 0.5;
@@ -3587,6 +3597,10 @@ export declare const recipeRegistry: {
         };
         readonly gap: 12;
         readonly leadingSize: 40;
+        readonly leadingShapes: {
+            readonly square: null;
+            readonly circle: "full";
+        };
         readonly title: {
             readonly color: Readonly<{
                 source: "theme";

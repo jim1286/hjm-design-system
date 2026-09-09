@@ -341,6 +341,12 @@ export const listRowRecipe = {
     },
     gap: spacing.sm,
     leadingSize: 40,
+    /**
+     * Frame geometry for the leading slot. The size was already declared here but
+     * no renderer bound it, so every consumer re-derived the avatar box (radius,
+     * clipping, centering) in product styles.
+     */
+    leadingShapes: { square: null, circle: "full" },
     title: { color: semanticColors.content.body, textVariant: "bodyLarge", fontWeight: fontWeight.bold },
     description: { color: semanticColors.content.secondary, textVariant: "body" },
     trailing: {

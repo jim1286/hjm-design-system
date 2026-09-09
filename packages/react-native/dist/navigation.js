@@ -896,7 +896,7 @@ function createNativeLoadMoreControllerFacade() {
     };
 }
 /** Collection footer that de-duplicates automatic and manual page requests. */
-export const LoadMore = forwardRef(function LoadMore({ descriptor, onLoadMore, mode = loadMoreRecipe.defaults.mode, density = loadMoreRecipe.defaults.density, onRequestOutcome, onRequestError, style, }, ref) {
+export const LoadMore = forwardRef(function LoadMore({ descriptor, onLoadMore, mode = loadMoreRecipe.defaults.mode, density = loadMoreRecipe.defaults.density, onRequestOutcome, onRequestError, layoutStyle, style, }, ref) {
     validateLoadMoreDescriptor(descriptor);
     const stateRef = useRef(descriptor.state);
     const handlerRef = useRef(onLoadMore);
@@ -957,6 +957,7 @@ export const LoadMore = forwardRef(function LoadMore({ descriptor, onLoadMore, m
                 paddingVertical: densityContract.paddingVertical,
             },
             style,
+            layoutStyle,
         ], children: state.status === "ready" ? (_jsx(Button, { onPress: () => {
                 void request("manual").catch(() => undefined);
             }, labelStyle: {

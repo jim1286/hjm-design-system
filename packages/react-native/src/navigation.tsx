@@ -81,6 +81,7 @@ import {
   type TextStyle,
   type ViewStyle,
 } from "react-native";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 import { Button } from "./actions.js";
 import { useControllableState } from "./internal/state.js";
@@ -1834,6 +1835,13 @@ export type LoadMoreProps = Readonly<{
     reason: LoadMoreRequestReason,
   ) => void;
   onRequestError?: (error: unknown, reason: LoadMoreRequestReason) => void;
+  /** Canonical layout-only placement. Controlled visual and state keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
+  /**
+   * @deprecated Legacy compatibility only. New apps must use `layoutStyle`; the
+   * footer's gap and vertical rhythm belong to the recipe density axis.
+   * @see https://github.com/jim1286/hjm-design-system/blob/main/packages/design-contracts/docs/consumer-policy.md#31-react-native-legacy-style-compatibility-boundary
+   */
   style?: StyleProp<ViewStyle>;
 }>;
 
@@ -1871,6 +1879,7 @@ export const LoadMore = forwardRef<LoadMoreHandle, LoadMoreProps>(function LoadM
     density = loadMoreRecipe.defaults.density,
     onRequestOutcome,
     onRequestError,
+    layoutStyle,
     style,
   },
   ref,
@@ -1948,6 +1957,7 @@ export const LoadMore = forwardRef<LoadMoreHandle, LoadMoreProps>(function LoadM
           paddingVertical: densityContract.paddingVertical,
         },
         style,
+        layoutStyle,
       ]}
     >
       {state.status === "ready" ? (

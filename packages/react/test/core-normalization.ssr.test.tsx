@@ -158,6 +158,30 @@ describe("Web core normalization", () => {
     );
   });
 
+  it("owns pill geometry, leading alignment and a contents host as CSS axes", () => {
+    const markup = renderToStaticMarkup(
+      <HjmProvider host="contents" systemTheme="light">
+        <Button align="leading" shape="pill">Row</Button>
+      </HjmProvider>,
+    );
+    expect(markup).toContain('data-shape="pill"');
+    expect(markup).toContain('data-align="leading"');
+    expect(markup).toContain('data-host="contents"');
+
+    const css = readFileSync(
+      fileURLToPath(new URL("../src/styles.css", import.meta.url)),
+      "utf8",
+    );
+    expect(css).toContain('.hjm-button[data-shape="pill"] { border-radius: var(--hjm-radius-full); }');
+    expect(css).toMatch(
+      /\.hjm-button\[data-align="leading"\] \{[^}]*justify-content: flex-start;/s,
+    );
+    // A contents host keeps the variables but stops painting the surface.
+    expect(css).toMatch(
+      /\.hjm-root\[data-host="contents"\] \{[^}]*display: contents;[^}]*background: transparent;/s,
+    );
+  });
+
   it("raises the compact control height variables under minimumVisualTarget", () => {
     const markup = renderToStaticMarkup(
       <HjmProvider minimumVisualTarget systemTheme="light">

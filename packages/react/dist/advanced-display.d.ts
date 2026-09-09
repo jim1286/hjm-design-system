@@ -3,6 +3,7 @@ import { type ComposeTimelineAccessibleName, type TimelineItemDescriptor } from 
 import { type ResolvedStatisticDescriptor, type StatisticDescriptor, type StatisticGroupDescriptor } from "@hjmds/design-contracts/components/statistic";
 import { dividerRecipe, listRecipe, type AccordionDensity, type AvatarShape, type AvatarSize, type StatisticDensity, type StatisticPresentation } from "@hjmds/design-contracts/recipes";
 import { type HTMLAttributes, type ImgHTMLAttributes, type ReactElement, type ReactNode, type RefAttributes, type TableHTMLAttributes } from "react";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type AccordionItem = Readonly<{
     id: string;
     title: ReactNode;
@@ -103,6 +104,8 @@ export declare function StatisticGroup<Id extends string = string>({ label, desc
 export type DescriptionListProps<Id extends string = string> = Omit<HTMLAttributes<HTMLDListElement>, "children"> & Readonly<{
     items: readonly DescriptionItemDescriptor<Id>[];
     columns?: DescriptionListColumns;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 export declare const DescriptionList: <Id extends string = string>(props: DescriptionListProps<Id> & RefAttributes<HTMLDListElement>) => ReactElement;
 export type TableSortDirection = "ascending" | "descending";
