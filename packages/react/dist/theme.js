@@ -1,4 +1,6 @@
 import { control, fontFamily, fontWeight, motion, radius, spacing, typography, } from "@hjmds/design-contracts/foundations";
+import { visibleControlHeight, } from "@hjmds/design-contracts/components/design-system-provider";
+import { listRowRecipe, switchRecipe } from "@hjmds/design-contracts/recipes";
 function kebab(value) {
     return value.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
 }
@@ -45,10 +47,30 @@ export function createHjmThemeStyle(value) {
             : `${value}ms`;
     }
     style["--hjm-font-family-ui"] = fontFamily.ui.join(", ");
+    // Row rhythm and the leading frame come from the recipe so the stylesheet
+    // does not carry a second copy of the same numbers.
+    style["--hjm-list-row-gap"] = rem(listRowRecipe.gap);
+    style["--hjm-list-row-leading-size"] = rem(listRowRecipe.leadingSize);
+    for (const [name, value] of Object.entries(switchRecipe.sizes)) {
+        style[`--hjm-switch-${kebab(name)}-width`] = rem(value.width);
+        style[`--hjm-switch-${kebab(name)}-height`] = rem(value.height);
+        style[`--hjm-switch-${kebab(name)}-thumb`] = rem(value.thumb);
+        style[`--hjm-switch-${kebab(name)}-inset`] = rem(value.inset);
+        style[`--hjm-switch-${kebab(name)}-offset`] = rem(value.width - value.thumb - value.inset * 2);
+    }
+    for (const [name, value] of Object.entries(listRowRecipe.density)) {
+        style[`--hjm-list-row-${kebab(name)}-one-line`] = rem(value.oneLineMinHeight);
+        style[`--hjm-list-row-${kebab(name)}-two-line`] = rem(value.twoLineMinHeight);
+        style[`--hjm-list-row-${kebab(name)}-padding-inline`] = rem(value.paddingHorizontal);
+        style[`--hjm-list-row-${kebab(name)}-padding-block`] = rem(value.paddingVertical);
+    }
     style["--hjm-control-min-touch-target"] = `${control.minTouchTarget}px`;
     style["--hjm-control-field-height"] = `${control.fieldHeight}px`;
     for (const [name, value] of Object.entries(control.buttonHeight)) {
-        style[`--hjm-control-button-${kebab(name)}`] = `${value}px`;
+        // The axis is applied to the emitted variables rather than to each rule so
+        // that every stylesheet consumer of a control height honours it at once.
+        style[`--hjm-control-button-${kebab(name)}`] =
+            `${visibleControlHeight(value, environment.minimumVisualTarget)}px`;
     }
     return style;
 }

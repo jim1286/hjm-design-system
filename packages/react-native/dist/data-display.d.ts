@@ -4,7 +4,7 @@ import { type TagTone as ContractTagTone } from "@hjmds/design-contracts/compone
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { type ImageDescriptor, type ImageFit, type ImageLoadStatus, type ResolvedImageDescriptor } from "@hjmds/design-contracts/components/image";
 import { type ComposeTimelineAccessibleName, type TimelineItemDescriptor } from "@hjmds/design-contracts/components/timeline";
-import { statisticRecipe, type AccordionDensity, type BadgeSize, type BadgeTone, type BadgeVariant as ContractBadgeVariant, type CounterBadgeSize, type CounterBadgeTone, type CounterBadgeVariant, type ListRowDensity, type StatisticDensity, type StatisticPresentation } from "@hjmds/design-contracts/recipes";
+import { statisticRecipe, type AccordionDensity, type BadgeSize, type BadgeTone, type BadgeVariant as ContractBadgeVariant, type CounterBadgeSize, type CounterBadgeTone, type CounterBadgeVariant, type ListRowDensity, type ListRowLeadingShape, type StatisticDensity, type StatisticPresentation } from "@hjmds/design-contracts/recipes";
 import { type ReactNode } from "react";
 import { type ImageProps as NativeImageProps, type ImageSourcePropType, type ImageStyle, type PressableProps, type StyleProp, type TextStyle, type ViewProps, type ViewStyle } from "react-native";
 import { type SurfacePadding, type SurfaceProps } from "./primitives.js";
@@ -68,17 +68,26 @@ export type ListRowProps = Omit<PressableProps, "accessibilityLabel" | "accessib
     disabled?: boolean;
     density?: ListRowDensity;
     selected?: boolean;
+    /** Frame the ListRow paints around `leading`; the recipe owns its size. */
+    leadingShape?: ListRowLeadingShape;
+    /** Canonical layout-only placement. Controlled visual and state keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
+    /**
+     * @deprecated Legacy compatibility only. New apps must use `layoutStyle` and must not
+     * override color, typography, radius, row height, or interaction state.
+     * @see https://github.com/jim1286/hjm-design-system/blob/main/packages/design-contracts/docs/consumer-policy.md#31-react-native-legacy-style-compatibility-boundary
+     */
     style?: StyleProp<ViewStyle>;
-    leadingStyle?: StyleProp<ViewStyle>;
-    contentStyle?: StyleProp<ViewStyle>;
+    leadingStyle?: HjmCompositionStyleProp;
+    contentStyle?: HjmCompositionStyleProp;
     titleStyle?: StyleProp<TextStyle>;
-    titleRowStyle?: StyleProp<ViewStyle>;
+    titleRowStyle?: HjmCompositionStyleProp;
     descriptionStyle?: StyleProp<TextStyle>;
-    trailingStyle?: StyleProp<ViewStyle>;
-    trailingActionStyle?: StyleProp<ViewStyle>;
+    trailingStyle?: HjmCompositionStyleProp;
+    trailingActionStyle?: HjmCompositionStyleProp;
     containerProps?: Omit<ViewProps, "children" | "style">;
 }>;
-export declare function ListRow({ title, description, leading, trailing, titleMetadata, badge, trailingAction, trailingText, metadataLabel, trailingLabel, onPress, accessibilityLabel, accessibilityHint, disabled, density, selected: selectedProp, style, leadingStyle, contentStyle, titleStyle, titleRowStyle, descriptionStyle, trailingStyle, trailingActionStyle, containerProps, accessibilityState, ...props }: ListRowProps): import("react").JSX.Element;
+export declare function ListRow({ title, description, leading, trailing, titleMetadata, badge, trailingAction, trailingText, metadataLabel, trailingLabel, onPress, accessibilityLabel, accessibilityHint, disabled, density, selected: selectedProp, leadingShape, layoutStyle, style, leadingStyle, contentStyle, titleStyle, titleRowStyle, descriptionStyle, trailingStyle, trailingActionStyle, containerProps, accessibilityState, ...props }: ListRowProps): import("react").JSX.Element;
 type AccessibleMedia = Readonly<{
     decorative: true;
     accessibilityLabel?: never;
@@ -194,8 +203,15 @@ type ImageSharedProps = ImageNativeProps & Readonly<{
     onLoad?: NativeImageProps["onLoad"];
     onLoadStatusChange?: (status: Extract<ImageLoadStatus, "loaded" | "error">) => void;
     resizeMode?: NativeImageProps["resizeMode"];
-    /** Image-host style. `containerStyle` owns the reserved root frame. */
+    /** Image-host style. `layoutStyle` places the reserved root frame. */
     style?: StyleProp<ImageStyle>;
+    /** Canonical layout-only placement of the reserved frame. */
+    layoutStyle?: HjmCompositionStyleProp;
+    /**
+     * @deprecated Legacy compatibility only. New apps must use `layoutStyle`; the
+     * reserved frame's aspect ratio, clipping and background belong to the recipe.
+     * @see https://github.com/jim1286/hjm-design-system/blob/main/packages/design-contracts/docs/consumer-policy.md#31-react-native-legacy-style-compatibility-boundary
+     */
     containerStyle?: StyleProp<ViewStyle>;
 }>;
 type CanonicalImageProps = ImageSharedProps & ImageDescriptor & Readonly<{

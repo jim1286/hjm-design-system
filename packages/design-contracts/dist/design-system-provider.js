@@ -1,9 +1,24 @@
+import { control } from "./foundations.js";
 import { ACCENTS, THEMES, accentFill, isThemePreference, } from "./colors.js";
+/**
+ * Visible height a compact control paints under a product's target-size policy.
+ *
+ * The compact recipes stay at 36 and reach the 44pt target through hit slop,
+ * which satisfies WCAG 2.5.8 but not the stricter iOS/Android guidance some
+ * products commit to. `minimumVisualTarget` turns that commitment into one
+ * resolved axis, so both renderers compute the same geometry instead of each
+ * consumer re-adding `minHeight` in product styles. It lives beside the axis
+ * rather than in `foundations` because it is a policy over a token, not a token.
+ */
+export function visibleControlHeight(recipeHeight, minimumVisualTarget) {
+    return minimumVisualTarget ? Math.max(recipeHeight, control.minTouchTarget) : recipeHeight;
+}
 export const designSystemEnvironmentDefaults = {
     theme: "system",
     direction: "ltr",
     textScale: 1,
     reducedMotion: false,
+    minimumVisualTarget: false,
 };
 const themeColorKeys = Object.keys(THEMES.light);
 const accentColorKeys = Object.keys(ACCENTS.light);
@@ -71,6 +86,9 @@ export function validateDesignSystemEnvironmentInput(input) {
     if (input.reducedMotion !== undefined) {
         assertBoolean(input.reducedMotion, "reducedMotion");
     }
+    if (input.minimumVisualTarget !== undefined) {
+        assertBoolean(input.minimumVisualTarget, "minimumVisualTarget");
+    }
 }
 /**
  * A parent has already crossed the system-preference boundary. Unlike the
@@ -84,6 +102,7 @@ export function validateResolvedDesignSystemEnvironment(environment) {
     assertDirection(environment.direction, "parent direction");
     assertTextScale(environment.textScale, "parent textScale");
     assertBoolean(environment.reducedMotion, "parent reducedMotion");
+    assertBoolean(environment.minimumVisualTarget, "parent minimumVisualTarget");
 }
 /**
  * Merges partial signals with safe defaults and resolves `"system"` against
@@ -124,6 +143,9 @@ export function resolveDesignSystemEnvironment(input, options) {
             options.parent?.reducedMotion ??
             options.systemReducedMotion ??
             designSystemEnvironmentDefaults.reducedMotion,
+        minimumVisualTarget: input.minimumVisualTarget ??
+            options.parent?.minimumVisualTarget ??
+            designSystemEnvironmentDefaults.minimumVisualTarget,
     };
 }
 /**

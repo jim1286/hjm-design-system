@@ -32,7 +32,10 @@ const budgets = [
     exportPath: "./colors",
     maxModules: 1,
     maxRawBytes: 3_000,
-    maxGzipBytes: 1_200,
+    // 1_200 -> 1_250: the `borderControl` semantic key (a control outline is a
+    // border role, not `textSub`) adds one key per theme plus its rationale
+    // comment. The module count and import edges are unchanged.
+    maxGzipBytes: 1_250,
     forbiddenModules: metadataModules,
   },
   {

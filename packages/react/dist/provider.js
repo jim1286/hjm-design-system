@@ -14,7 +14,7 @@ function subscribeMedia(query, callback) {
 function useMediaQuery(query, observe = true) {
     return useSyncExternalStore((callback) => observe ? subscribeMedia(query, callback) : () => undefined, () => observe && window.matchMedia(query).matches, () => false);
 }
-export const HjmProvider = forwardRef(function HjmProvider({ children, theme, direction, textScale, reducedMotion, systemTheme, value: suppliedValue, className, style, ...rest }, ref) {
+export const HjmProvider = forwardRef(function HjmProvider({ children, theme, direction, textScale, reducedMotion, minimumVisualTarget, systemTheme, host = "surface", value: suppliedValue, className, style, ...rest }, ref) {
     const parent = useContext(HjmThemeContext);
     const observesSystem = suppliedValue === undefined;
     const prefersDark = useMediaQuery("(prefers-color-scheme: dark)", observesSystem);
@@ -25,6 +25,7 @@ export const HjmProvider = forwardRef(function HjmProvider({ children, theme, di
         ...(direction === undefined ? {} : { direction }),
         ...(textScale === undefined ? {} : { textScale }),
         ...(reducedMotion === undefined ? {} : { reducedMotion }),
+        ...(minimumVisualTarget === undefined ? {} : { minimumVisualTarget }),
     };
     const value = suppliedValue ?? resolveDesignSystemProviderValue(input, {
         systemTheme: resolvedSystemTheme,
@@ -67,7 +68,7 @@ export const HjmProvider = forwardRef(function HjmProvider({ children, theme, di
         deactivate: deactivateTooltip,
         shouldSkipDelay: shouldSkipTooltipDelay,
     };
-    return (_jsx(HjmThemeContext.Provider, { value: value, children: _jsx(TooltipCoordinatorContext.Provider, { value: tooltipCoordinator, children: _jsx("div", { ...rest, ref: ref, className: classNames("hjm-root", className), "data-hjm-provider": "", "data-motion": environment.reducedMotion ? "reduced" : "full", "data-theme": environment.theme, "data-text-scale": environment.textScale, dir: environment.direction, style: { ...createHjmThemeStyle(value), ...style }, children: children }) }) }));
+    return (_jsx(HjmThemeContext.Provider, { value: value, children: _jsx(TooltipCoordinatorContext.Provider, { value: tooltipCoordinator, children: _jsx("div", { ...rest, ref: ref, className: classNames("hjm-root", className), "data-hjm-provider": "", "data-host": host, "data-motion": environment.reducedMotion ? "reduced" : "full", "data-theme": environment.theme, "data-text-scale": environment.textScale, dir: environment.direction, style: { ...createHjmThemeStyle(value), ...style }, children: children }) }) }));
 });
 export function useHjmTheme() {
     const value = useContext(HjmThemeContext);

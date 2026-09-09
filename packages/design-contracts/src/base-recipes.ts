@@ -3,6 +3,13 @@ import { control, fontWeight, radius, spacing, typography } from "./foundations.
 import type { FontWeightValue, TextVariant } from "./foundations.js";
 
 export type ButtonTone = "primary" | "secondary" | "ghost" | "danger" | "link";
+/** Corner geometry of the control frame. Mirrors `IconButtonShape`. */
+export type ButtonShape = "rounded" | "pill";
+/**
+ * Where the label sits inside the frame. `center` is the action default;
+ * `leading` is for a full-width row action whose label reads as list copy.
+ */
+export type ButtonAlign = "center" | "leading";
 export type ButtonSize = keyof typeof control.buttonHeight;
 export type SurfaceTone = "default" | "raised" | "accent" | "subtle";
 export type SurfacePadding = "none" | keyof typeof spacing;
@@ -13,13 +20,25 @@ export type FieldShape = "medium" | "large" | "full";
 /** Small renderer entry point for the three foundational visual recipes. */
 export const buttonRecipe = {
   slots: ["root", "leading", "label", "trailing", "spinner"] as const,
-  defaults: { tone: "primary", size: "medium" } as const,
+  defaults: { tone: "primary", size: "medium", shape: "rounded", align: "center" } as const,
   tones: {
-    primary: { background: "primary", content: "onPrimary", border: null },
-    secondary: { background: "surfaceAlt", content: "text", border: "textSub" },
-    ghost: { background: null, content: "textMuted", border: null },
-    danger: { background: "dangerFill", content: "onDanger", border: null },
-    link: { background: null, content: "contentBrand", border: null },
+    primary: { background: "primary", content: "onPrimary", border: null, paddingHorizontal: null },
+    // The outline is a border role, not a text color. Drawing it in `textSub`
+    // made a resting control read heavier than the selected one beside it.
+    secondary: { background: "surfaceAlt", content: "text", border: "borderControl", paddingHorizontal: null },
+    ghost: { background: null, content: "textMuted", border: null, paddingHorizontal: null },
+    danger: { background: "dangerFill", content: "onDanger", border: null, paddingHorizontal: null },
+    // A link-tone control is inline copy, so the size axis' horizontal padding
+    // would push it out of alignment with the text around it.
+    link: { background: null, content: "contentBrand", border: null, paddingHorizontal: 0 },
+  },
+  /**
+   * Visual treatment for a control that is also a toggle. `accessibilityState`
+   * / `aria-pressed` already expressed the state; without a paired visual every
+   * consumer painted the selected background in product styles.
+   */
+  states: {
+    selected: { background: "surfaceAccent", content: "contentBrand", border: "contentBrand" },
   },
   sizes: {
     small: {
@@ -41,18 +60,29 @@ export const buttonRecipe = {
       textVariant: "bodyLarge",
     },
   },
+  shapes: { rounded: "md", pill: "full" },
+  aligns: { center: "center", leading: "flex-start" },
   opacity: { disabled: 0.5, pressed: 0.86 },
 } as const satisfies {
   slots: readonly string[];
-  defaults: { tone: ButtonTone; size: ButtonSize };
+  defaults: { tone: ButtonTone; size: ButtonSize; shape: ButtonShape; align: ButtonAlign };
   tones: Record<
     ButtonTone,
     {
       background: keyof ThemeColors | null;
       content: keyof ThemeColors;
       border: keyof ThemeColors | null;
+      /** `null` keeps the size axis' padding. */
+      paddingHorizontal: number | null;
     }
   >;
+  states: {
+    selected: {
+      background: keyof ThemeColors;
+      content: keyof ThemeColors;
+      border: keyof ThemeColors;
+    };
+  };
   sizes: Record<
     ButtonSize,
     {
@@ -62,6 +92,8 @@ export const buttonRecipe = {
       textVariant: TextVariant;
     }
   >;
+  shapes: Record<ButtonShape, keyof typeof radius>;
+  aligns: Record<ButtonAlign, "center" | "flex-start">;
   opacity: { disabled: number; pressed: number };
 };
 
@@ -72,6 +104,7 @@ export const surfaceRecipe = {
     borderAlpha: 1,
     elevated: false,
     borderAlways: false,
+    clipsContent: true,
   },
   raised: {
     background: "bg",
@@ -79,6 +112,10 @@ export const surfaceRecipe = {
     borderAlpha: 1,
     elevated: true,
     borderAlways: false,
+    // An elevated surface must not clip: `overflow: hidden` cuts off its own
+    // shadow. Every other tone clips so a child image cannot spill past the
+    // rounded corner, which consumers were fixing in product styles.
+    clipsContent: false,
   },
   accent: {
     background: "surfaceAccent",
@@ -86,6 +123,7 @@ export const surfaceRecipe = {
     borderAlpha: 0.3,
     elevated: false,
     borderAlways: false,
+    clipsContent: true,
   },
   subtle: {
     background: "bg",
@@ -93,6 +131,7 @@ export const surfaceRecipe = {
     borderAlpha: 1,
     elevated: false,
     borderAlways: true,
+    clipsContent: true,
   },
 } as const satisfies Record<
   SurfaceTone,
@@ -101,6 +140,7 @@ export const surfaceRecipe = {
     border: keyof ThemeColors;
     borderAlpha: number;
     elevated: boolean;
+    clipsContent: boolean;
     borderAlways: boolean;
   }
 >;

@@ -1,4 +1,5 @@
 import type { ColorReferencePalette } from "./color-references.js";
+import { control } from "./foundations.js";
 import {
   ACCENTS,
   THEMES,
@@ -23,11 +24,34 @@ export type DesignSystemDirection = "ltr" | "rtl";
  */
 export type DesignSystemTextScale = number;
 
+/**
+ * Visible height a compact control paints under a product's target-size policy.
+ *
+ * The compact recipes stay at 36 and reach the 44pt target through hit slop,
+ * which satisfies WCAG 2.5.8 but not the stricter iOS/Android guidance some
+ * products commit to. `minimumVisualTarget` turns that commitment into one
+ * resolved axis, so both renderers compute the same geometry instead of each
+ * consumer re-adding `minHeight` in product styles. It lives beside the axis
+ * rather than in `foundations` because it is a policy over a token, not a token.
+ */
+export function visibleControlHeight(
+  recipeHeight: number,
+  minimumVisualTarget: boolean,
+): number {
+  return minimumVisualTarget ? Math.max(recipeHeight, control.minTouchTarget) : recipeHeight;
+}
+
 export type DesignSystemEnvironmentInput = Readonly<{
   theme?: ThemePreference;
   direction?: DesignSystemDirection;
   textScale?: DesignSystemTextScale;
   reducedMotion?: boolean;
+  /**
+   * Paint the minimum touch target as visible control geometry instead of
+   * reaching it with hit slop. This is a product accessibility stance, not an
+   * OS signal, so it has no `system*` counterpart.
+   */
+  minimumVisualTarget?: boolean;
 }>;
 
 export const designSystemEnvironmentDefaults = {
@@ -35,11 +59,13 @@ export const designSystemEnvironmentDefaults = {
   direction: "ltr",
   textScale: 1,
   reducedMotion: false,
+  minimumVisualTarget: false,
 } as const satisfies Readonly<{
   theme: ThemePreference;
   direction: DesignSystemDirection;
   textScale: DesignSystemTextScale;
   reducedMotion: boolean;
+  minimumVisualTarget: boolean;
 }>;
 
 export type ResolvedDesignSystemEnvironment = Readonly<{
@@ -47,6 +73,7 @@ export type ResolvedDesignSystemEnvironment = Readonly<{
   direction: DesignSystemDirection;
   textScale: DesignSystemTextScale;
   reducedMotion: boolean;
+  minimumVisualTarget: boolean;
 }>;
 
 export type ResolveDesignSystemEnvironmentOptions = Readonly<{
@@ -175,6 +202,9 @@ export function validateDesignSystemEnvironmentInput(
   if (input.reducedMotion !== undefined) {
     assertBoolean(input.reducedMotion, "reducedMotion");
   }
+  if (input.minimumVisualTarget !== undefined) {
+    assertBoolean(input.minimumVisualTarget, "minimumVisualTarget");
+  }
 }
 
 /**
@@ -193,6 +223,7 @@ export function validateResolvedDesignSystemEnvironment(
   assertDirection(environment.direction, "parent direction");
   assertTextScale(environment.textScale, "parent textScale");
   assertBoolean(environment.reducedMotion, "parent reducedMotion");
+  assertBoolean(environment.minimumVisualTarget, "parent minimumVisualTarget");
 }
 
 /**
@@ -242,6 +273,10 @@ export function resolveDesignSystemEnvironment(
       options.parent?.reducedMotion ??
       options.systemReducedMotion ??
       designSystemEnvironmentDefaults.reducedMotion,
+    minimumVisualTarget:
+      input.minimumVisualTarget ??
+      options.parent?.minimumVisualTarget ??
+      designSystemEnvironmentDefaults.minimumVisualTarget,
   };
 }
 

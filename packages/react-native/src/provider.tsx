@@ -47,6 +47,7 @@ type HjmNativeProviderEnvironmentProps = Readonly<{
   direction?: DesignSystemDirection;
   textScale?: DesignSystemTextScale;
   reducedMotion?: boolean;
+  minimumVisualTarget?: boolean;
 }>;
 
 type HjmNativeProviderValueProps = Readonly<{
@@ -56,6 +57,7 @@ type HjmNativeProviderValueProps = Readonly<{
   direction?: never;
   textScale?: never;
   reducedMotion?: never;
+  minimumVisualTarget?: never;
 }>;
 
 export type HjmNativeProviderProps = Readonly<{
@@ -97,6 +99,9 @@ function toEnvironmentInput(
     ...(props.direction === undefined ? {} : { direction: props.direction }),
     ...(props.textScale === undefined ? {} : { textScale: props.textScale }),
     ...(props.reducedMotion === undefined ? {} : { reducedMotion: props.reducedMotion }),
+    ...(props.minimumVisualTarget === undefined
+      ? {}
+      : { minimumVisualTarget: props.minimumVisualTarget }),
   };
 }
 
@@ -106,6 +111,7 @@ export function HjmNativeProvider({
   direction,
   textScale,
   reducedMotion,
+  minimumVisualTarget,
   value: suppliedValue,
 }: HjmNativeProviderProps) {
   const parent = useContext(HjmNativeThemeContext);
@@ -121,8 +127,9 @@ export function HjmNativeProvider({
         ...(direction === undefined ? {} : { direction }),
         ...(textScale === undefined ? {} : { textScale }),
         ...(reducedMotion === undefined ? {} : { reducedMotion }),
+        ...(minimumVisualTarget === undefined ? {} : { minimumVisualTarget }),
       }),
-    [direction, reducedMotion, textScale, theme],
+    [direction, minimumVisualTarget, reducedMotion, textScale, theme],
   );
 
   const contextValue = useMemo<HjmNativeTheme>(() => {

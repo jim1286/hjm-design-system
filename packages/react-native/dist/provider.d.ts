@@ -23,6 +23,7 @@ type HjmNativeProviderEnvironmentProps = Readonly<{
     direction?: DesignSystemDirection;
     textScale?: DesignSystemTextScale;
     reducedMotion?: boolean;
+    minimumVisualTarget?: boolean;
 }>;
 type HjmNativeProviderValueProps = Readonly<{
     /** Pre-resolved environment and product palette for first-party renderer adaptation. */
@@ -31,11 +32,12 @@ type HjmNativeProviderValueProps = Readonly<{
     direction?: never;
     textScale?: never;
     reducedMotion?: never;
+    minimumVisualTarget?: never;
 }>;
 export type HjmNativeProviderProps = Readonly<{
     children: ReactNode;
 }> & (HjmNativeProviderEnvironmentProps | HjmNativeProviderValueProps);
-export declare function HjmNativeProvider({ children, theme, direction, textScale, reducedMotion, value: suppliedValue, }: HjmNativeProviderProps): import("react").JSX.Element;
+export declare function HjmNativeProvider({ children, theme, direction, textScale, reducedMotion, minimumVisualTarget, value: suppliedValue, }: HjmNativeProviderProps): import("react").JSX.Element;
 export declare function useHjmNativeTheme(): HjmNativeTheme;
 export {};
 //# sourceMappingURL=provider.d.ts.map

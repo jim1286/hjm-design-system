@@ -12,6 +12,14 @@ export type ThemeColors = {
     surfaceAlt: string;
     surfaceAccent: string;
     border: string;
+    /**
+     * Outline of an interactive control that must read stronger than the shared
+     * hairline. Separate from `border` because a resting control needs to be
+     * findable while a surface edge should stay quiet, and separate from
+     * `textSub` because a text-strength outline makes an unselected control read
+     * heavier than the selected one beside it.
+     */
+    borderControl: string;
     text: string;
     textBody: string;
     textMuted: string;

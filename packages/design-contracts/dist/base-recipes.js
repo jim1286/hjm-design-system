@@ -2,13 +2,25 @@ import { control, fontWeight, radius, spacing, typography } from "./foundations.
 /** Small renderer entry point for the three foundational visual recipes. */
 export const buttonRecipe = {
     slots: ["root", "leading", "label", "trailing", "spinner"],
-    defaults: { tone: "primary", size: "medium" },
+    defaults: { tone: "primary", size: "medium", shape: "rounded", align: "center" },
     tones: {
-        primary: { background: "primary", content: "onPrimary", border: null },
-        secondary: { background: "surfaceAlt", content: "text", border: "textSub" },
-        ghost: { background: null, content: "textMuted", border: null },
-        danger: { background: "dangerFill", content: "onDanger", border: null },
-        link: { background: null, content: "contentBrand", border: null },
+        primary: { background: "primary", content: "onPrimary", border: null, paddingHorizontal: null },
+        // The outline is a border role, not a text color. Drawing it in `textSub`
+        // made a resting control read heavier than the selected one beside it.
+        secondary: { background: "surfaceAlt", content: "text", border: "borderControl", paddingHorizontal: null },
+        ghost: { background: null, content: "textMuted", border: null, paddingHorizontal: null },
+        danger: { background: "dangerFill", content: "onDanger", border: null, paddingHorizontal: null },
+        // A link-tone control is inline copy, so the size axis' horizontal padding
+        // would push it out of alignment with the text around it.
+        link: { background: null, content: "contentBrand", border: null, paddingHorizontal: 0 },
+    },
+    /**
+     * Visual treatment for a control that is also a toggle. `accessibilityState`
+     * / `aria-pressed` already expressed the state; without a paired visual every
+     * consumer painted the selected background in product styles.
+     */
+    states: {
+        selected: { background: "surfaceAccent", content: "contentBrand", border: "contentBrand" },
     },
     sizes: {
         small: {
@@ -30,6 +42,8 @@ export const buttonRecipe = {
             textVariant: "bodyLarge",
         },
     },
+    shapes: { rounded: "md", pill: "full" },
+    aligns: { center: "center", leading: "flex-start" },
     opacity: { disabled: 0.5, pressed: 0.86 },
 };
 export const surfaceRecipe = {
@@ -39,6 +53,7 @@ export const surfaceRecipe = {
         borderAlpha: 1,
         elevated: false,
         borderAlways: false,
+        clipsContent: true,
     },
     raised: {
         background: "bg",
@@ -46,6 +61,10 @@ export const surfaceRecipe = {
         borderAlpha: 1,
         elevated: true,
         borderAlways: false,
+        // An elevated surface must not clip: `overflow: hidden` cuts off its own
+        // shadow. Every other tone clips so a child image cannot spill past the
+        // rounded corner, which consumers were fixing in product styles.
+        clipsContent: false,
     },
     accent: {
         background: "surfaceAccent",
@@ -53,6 +72,7 @@ export const surfaceRecipe = {
         borderAlpha: 0.3,
         elevated: false,
         borderAlways: false,
+        clipsContent: true,
     },
     subtle: {
         background: "bg",
@@ -60,6 +80,7 @@ export const surfaceRecipe = {
         borderAlpha: 1,
         elevated: false,
         borderAlways: true,
+        clipsContent: true,
     },
 };
 export const fieldRecipe = {

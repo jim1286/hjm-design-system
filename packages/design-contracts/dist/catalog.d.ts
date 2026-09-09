@@ -2130,32 +2130,46 @@ export declare const recipeRegistry: {
         readonly defaults: {
             readonly tone: "primary";
             readonly size: "medium";
+            readonly shape: "rounded";
+            readonly align: "center";
         };
         readonly tones: {
             readonly primary: {
                 readonly background: "primary";
                 readonly content: "onPrimary";
                 readonly border: null;
+                readonly paddingHorizontal: null;
             };
             readonly secondary: {
                 readonly background: "surfaceAlt";
                 readonly content: "text";
-                readonly border: "textSub";
+                readonly border: "borderControl";
+                readonly paddingHorizontal: null;
             };
             readonly ghost: {
                 readonly background: null;
                 readonly content: "textMuted";
                 readonly border: null;
+                readonly paddingHorizontal: null;
             };
             readonly danger: {
                 readonly background: "dangerFill";
                 readonly content: "onDanger";
                 readonly border: null;
+                readonly paddingHorizontal: null;
             };
             readonly link: {
                 readonly background: null;
                 readonly content: "contentBrand";
                 readonly border: null;
+                readonly paddingHorizontal: 0;
+            };
+        };
+        readonly states: {
+            readonly selected: {
+                readonly background: "surfaceAccent";
+                readonly content: "contentBrand";
+                readonly border: "contentBrand";
             };
         };
         readonly sizes: {
@@ -2177,6 +2191,14 @@ export declare const recipeRegistry: {
                 readonly paddingHorizontal: 20;
                 readonly textVariant: "bodyLarge";
             };
+        };
+        readonly shapes: {
+            readonly rounded: "md";
+            readonly pill: "full";
+        };
+        readonly aligns: {
+            readonly center: "center";
+            readonly leading: "flex-start";
         };
         readonly opacity: {
             readonly disabled: 0.5;
@@ -3344,7 +3366,7 @@ export declare const recipeRegistry: {
                 }>;
                 readonly border: Readonly<{
                     source: "theme";
-                    key: "textSub";
+                    key: "borderControl";
                     alpha?: number;
                 }>;
             };
@@ -3587,6 +3609,10 @@ export declare const recipeRegistry: {
         };
         readonly gap: 12;
         readonly leadingSize: 40;
+        readonly leadingShapes: {
+            readonly square: null;
+            readonly circle: "full";
+        };
         readonly title: {
             readonly color: Readonly<{
                 source: "theme";
@@ -6310,6 +6336,7 @@ export declare const recipeRegistry: {
             readonly borderAlpha: 1;
             readonly elevated: false;
             readonly borderAlways: false;
+            readonly clipsContent: true;
         };
         readonly raised: {
             readonly background: "bg";
@@ -6317,6 +6344,7 @@ export declare const recipeRegistry: {
             readonly borderAlpha: 1;
             readonly elevated: true;
             readonly borderAlways: false;
+            readonly clipsContent: false;
         };
         readonly accent: {
             readonly background: "surfaceAccent";
@@ -6324,6 +6352,7 @@ export declare const recipeRegistry: {
             readonly borderAlpha: 0.3;
             readonly elevated: false;
             readonly borderAlways: false;
+            readonly clipsContent: true;
         };
         readonly subtle: {
             readonly background: "bg";
@@ -6331,6 +6360,7 @@ export declare const recipeRegistry: {
             readonly borderAlpha: 1;
             readonly elevated: false;
             readonly borderAlways: true;
+            readonly clipsContent: true;
         };
     };
     readonly switchRecipe: {

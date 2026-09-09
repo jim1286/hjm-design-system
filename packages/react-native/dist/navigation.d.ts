@@ -6,6 +6,7 @@ import { type TabsActivationMode, type TabsDirection, type TabsMountPolicy, type
 import { type CollectionSource } from "@hjmds/design-contracts/components/collection";
 import { type ReactNode, type ReactElement } from "react";
 import { type ModalProps, type PressableProps, type StyleProp, type TextStyle, type ViewStyle } from "react-native";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type TabItem<Value extends string = string> = Readonly<{
     id: Value;
     label: string;
@@ -267,6 +268,13 @@ export type LoadMoreProps = Readonly<{
     density?: LoadMoreDensity;
     onRequestOutcome?: (outcome: LoadMoreRequestOutcome, reason: LoadMoreRequestReason) => void;
     onRequestError?: (error: unknown, reason: LoadMoreRequestReason) => void;
+    /** Canonical layout-only placement. Controlled visual and state keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
+    /**
+     * @deprecated Legacy compatibility only. New apps must use `layoutStyle`; the
+     * footer's gap and vertical rhythm belong to the recipe density axis.
+     * @see https://github.com/jim1286/hjm-design-system/blob/main/packages/design-contracts/docs/consumer-policy.md#31-react-native-legacy-style-compatibility-boundary
+     */
     style?: StyleProp<ViewStyle>;
 }>;
 export type LoadMoreHandle = Readonly<{
@@ -281,6 +289,13 @@ export declare const LoadMore: import("react").ForwardRefExoticComponent<Readonl
     density?: LoadMoreDensity;
     onRequestOutcome?: (outcome: LoadMoreRequestOutcome, reason: LoadMoreRequestReason) => void;
     onRequestError?: (error: unknown, reason: LoadMoreRequestReason) => void;
+    /** Canonical layout-only placement. Controlled visual and state keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
+    /**
+     * @deprecated Legacy compatibility only. New apps must use `layoutStyle`; the
+     * footer's gap and vertical rhythm belong to the recipe density axis.
+     * @see https://github.com/jim1286/hjm-design-system/blob/main/packages/design-contracts/docs/consumer-policy.md#31-react-native-legacy-style-compatibility-boundary
+     */
     style?: StyleProp<ViewStyle>;
 }> & import("react").RefAttributes<Readonly<{
     /** Pass this method to FlatList.onEndReached through a small callback. */

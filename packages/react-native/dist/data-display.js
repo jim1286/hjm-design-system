@@ -100,7 +100,7 @@ export function Card({ children, title, description, leading, media, actions, se
                     paddingHorizontal: cardRecipe.actions.paddingHorizontal,
                 }, children: actions }))] }));
 }
-export function ListRow({ title, description, leading, trailing, titleMetadata, badge, trailingAction, trailingText, metadataLabel, trailingLabel, onPress, accessibilityLabel, accessibilityHint, disabled = false, density = listRowRecipe.defaults.density, selected: selectedProp, style, leadingStyle, contentStyle, titleStyle, titleRowStyle, descriptionStyle, trailingStyle, trailingActionStyle, containerProps, accessibilityState, ...props }) {
+export function ListRow({ title, description, leading, trailing, titleMetadata, badge, trailingAction, trailingText, metadataLabel, trailingLabel, onPress, accessibilityLabel, accessibilityHint, disabled = false, density = listRowRecipe.defaults.density, selected: selectedProp, leadingShape = "square", layoutStyle, style, leadingStyle, contentStyle, titleStyle, titleRowStyle, descriptionStyle, trailingStyle, trailingActionStyle, containerProps, accessibilityState, ...props }) {
     const theme = useHjmNativeTheme();
     const metrics = listRowRecipe.density[density];
     const interactive = onPress !== undefined;
@@ -121,7 +121,19 @@ export function ListRow({ title, description, leading, trailing, titleMetadata, 
         minHeight: description ? metrics.twoLineMinHeight : metrics.oneLineMinHeight,
         opacity: disabled ? listRowRecipe.states.disabledOpacity : 1,
     };
-    const rowContent = (_jsxs(_Fragment, { children: [leading ? (_jsx(View, { accessible: interactive ? false : undefined, importantForAccessibility: interactive ? "no-hide-descendants" : "auto", style: leadingStyle, children: leading })) : null, _jsxs(View, { style: [{ flex: 1, gap: spacing.xxs, minWidth: 0 }, contentStyle], children: [_jsxs(View, { style: [
+    // `leadingSize` was declared by the recipe but unbound, so consumers rebuilt
+    // the avatar box themselves. The frame belongs here; `leadingStyle` keeps
+    // only composition keys.
+    const leadingRadius = listRowRecipe.leadingShapes[leadingShape];
+    const leadingFrameStyle = {
+        alignItems: "center",
+        height: listRowRecipe.leadingSize,
+        justifyContent: "center",
+        overflow: "hidden",
+        width: listRowRecipe.leadingSize,
+        ...(leadingRadius === null ? {} : { borderRadius: radius[leadingRadius] }),
+    };
+    const rowContent = (_jsxs(_Fragment, { children: [leading ? (_jsx(View, { accessible: interactive ? false : undefined, importantForAccessibility: interactive ? "no-hide-descendants" : "auto", style: [leadingFrameStyle, leadingStyle], children: leading })) : null, _jsxs(View, { style: [{ flex: 1, gap: spacing.xxs, minWidth: 0 }, contentStyle], children: [_jsxs(View, { style: [
                             {
                                 alignItems: "center",
                                 direction: theme.environment.direction,
@@ -162,6 +174,7 @@ export function ListRow({ title, description, leading, trailing, titleMetadata, 
             paddingVertical: metrics.paddingVertical,
         },
         trailingAction ? undefined : style,
+        trailingAction ? undefined : layoutStyle,
     ];
     const main = interactive ? (_jsx(Pressable, { ...props, accessibilityHint: accessibilityHint, accessibilityLabel: composedLabel, accessibilityRole: "button", accessibilityState: {
             ...accessibilityState,
@@ -180,6 +193,7 @@ export function ListRow({ title, description, leading, trailing, titleMetadata, 
                 opacity: visualState.opacity,
             },
             style,
+            layoutStyle,
         ], children: [main, _jsx(View, { style: [
                     { flexShrink: 0, paddingEnd: metrics.paddingHorizontal },
                     trailingActionStyle,
@@ -363,7 +377,7 @@ function resolveLegacyMedia(decorative, accessibilityLabel) {
 }
 /** Intrinsic-size Native image with canonical fit, accessibility, and fallback semantics. */
 export function Image(imageProps) {
-    const { source: legacySource, src, width, height, fit, decorative, accessibilityLabel, sourceAdapter, fallback, onError, onLoad, onLoadStatusChange, renderImage, resizeMode, style, containerStyle, ...nativeProps } = imageProps;
+    const { source: legacySource, src, width, height, fit, decorative, accessibilityLabel, sourceAdapter, fallback, onError, onLoad, onLoadStatusChange, renderImage, resizeMode, style, layoutStyle, containerStyle, ...nativeProps } = imageProps;
     const theme = useHjmNativeTheme();
     if (src !== undefined && legacySource !== undefined) {
         throw new TypeError("Image accepts either canonical src or legacy source, not both");
@@ -521,6 +535,7 @@ export function Image(imageProps) {
                     }),
             },
             containerStyle,
+            layoutStyle,
         ], children: visual }));
 }
 const styles = StyleSheet.create({

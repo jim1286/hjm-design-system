@@ -69,6 +69,7 @@ describe("DesignSystemEnvironment validation", () => {
       direction: "rtl",
       textScale: 1.5,
       reducedMotion: true,
+      minimumVisualTarget: false,
     } as const;
     expect(() => validateResolvedDesignSystemEnvironment(resolved)).not.toThrow();
 
@@ -95,6 +96,12 @@ describe("DesignSystemEnvironment validation", () => {
     ).toThrow(/parent reducedMotion/);
     expect(() =>
       validateResolvedDesignSystemEnvironment({
+        ...resolved,
+        minimumVisualTarget: "true",
+      } as never),
+    ).toThrow(/parent minimumVisualTarget/);
+    expect(() =>
+      validateResolvedDesignSystemEnvironment({
         theme: "light",
         direction: "ltr",
         textScale: 1,
@@ -110,6 +117,7 @@ describe("DesignSystemEnvironment resolution", () => {
       direction: "ltr",
       textScale: 1,
       reducedMotion: false,
+      minimumVisualTarget: false,
     });
     expect(designSystemEnvironmentDefaults.theme).toBe("system");
   });
@@ -149,7 +157,7 @@ describe("DesignSystemEnvironment resolution", () => {
 
   it("uses input, parent, system signals, and defaults in that order", () => {
     const parent = resolveDesignSystemEnvironment(
-      { theme: "dark", direction: "rtl", textScale: 1.5, reducedMotion: true },
+      { theme: "dark", direction: "rtl", minimumVisualTarget: true, textScale: 1.5, reducedMotion: true },
       { systemTheme: "light" },
     );
     expect(
@@ -168,6 +176,7 @@ describe("DesignSystemEnvironment resolution", () => {
       direction: "ltr",
       textScale: 1.5,
       reducedMotion: true,
+      minimumVisualTarget: true,
     });
 
     expect(
@@ -180,6 +189,7 @@ describe("DesignSystemEnvironment resolution", () => {
       direction: "rtl",
       textScale: 2,
       reducedMotion: false,
+      minimumVisualTarget: true,
     });
 
     expect(
@@ -197,6 +207,8 @@ describe("DesignSystemEnvironment resolution", () => {
       direction: "rtl",
       textScale: 1.25,
       reducedMotion: true,
+      // No OS signal exists for this axis, so it falls straight to the default.
+      minimumVisualTarget: false,
     });
   });
 

@@ -1,8 +1,12 @@
 import {
   buttonRecipe,
+  type ButtonAlign,
+  type ButtonShape,
   type ButtonSize,
   type ButtonTone,
 } from "@hjmds/design-contracts/recipes/base";
+
+export type { ButtonAlign, ButtonShape };
 import {
   iconButtonRecipe,
   linkRecipe,
@@ -35,6 +39,12 @@ export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> &
   Readonly<{
     tone?: ButtonTone;
     size?: ButtonSize;
+    /** Frame geometry. `pill` replaces product code that overrode `border-radius`. */
+    shape?: ButtonShape;
+    /** Label placement inside the frame; `leading` suits a full-width row action. */
+    align?: ButtonAlign;
+    /** Toggle state. Paints the selected treatment and sets `aria-pressed`. */
+    selected?: boolean;
     loading?: boolean;
     leading?: ReactNode;
     trailing?: ReactNode;
@@ -46,6 +56,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   {
     tone = buttonRecipe.defaults.tone,
     size = buttonRecipe.defaults.size,
+    shape = buttonRecipe.defaults.shape,
+    align = buttonRecipe.defaults.align,
+    selected,
     loading = false,
     leading,
     trailing,
@@ -78,6 +91,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       className={classNames("hjm-button", className)}
       data-tone={tone}
       data-size={size}
+      data-shape={shape}
+      data-align={align}
+      {...(selected === undefined ? {} : { "data-selected": selected, "aria-pressed": selected })}
       data-state={loading ? "loading" : unavailable ? "disabled" : "idle"}
       aria-busy={loading || undefined}
       aria-disabled={loading || undefined}

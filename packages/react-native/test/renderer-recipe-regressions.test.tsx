@@ -4,7 +4,8 @@ import {
   imageRecipe,
   nativeResizeModes,
 } from "@hjmds/design-contracts/components/image";
-import { glyph, radius } from "@hjmds/design-contracts/foundations";
+import { control, glyph, radius, spacing } from "@hjmds/design-contracts/foundations";
+import { buttonRecipe } from "@hjmds/design-contracts/recipes/base";
 import {
   accordionRecipe,
   badgeRecipe,
@@ -29,6 +30,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   Accordion,
   Badge,
+  Button,
   Chip,
   CounterBadge,
   EmptyState,
@@ -39,6 +41,7 @@ import {
   Progress,
   Section,
   Statistic,
+  Surface,
   Text,
   TopBar,
   useHjmNativeTheme,
@@ -438,6 +441,128 @@ describe("Native provider and structural renderer regressions", () => {
     expect(badge.findByType(Text).props.accessible).toBe(false);
     expect(() => render(<CounterBadge accessibilityLabel="   " count={1} />))
       .toThrow(/must not be empty/u);
+  });
+});
+
+describe("minimumVisualTarget control geometry", () => {
+  const strictValue = resolveDesignSystemProviderValue(
+    { direction: "ltr", minimumVisualTarget: true, reducedMotion: true, textScale: 1, theme: "light" },
+    { systemTheme: "light" },
+  );
+
+  const pressableStyle = (node: ReactTestInstance): Record<string, unknown> =>
+    flattenStyle((node.props.style as (state: { pressed: boolean }) => unknown)({ pressed: false }));
+
+  it("keeps compact recipe heights when the axis is off", () => {
+    expect(pressableStyle(byLabel(render(<Button size="small">Compact</Button>), "Compact")).minHeight)
+      .toBe(control.buttonHeight.small);
+    expect(pressableStyle(byLabel(render(<Chip label="Tag" onPress={() => undefined} selected={false} selectionMode="single" size="small" />), "Tag")).height)
+      .toBe(chipRecipe.sizes.small.height);
+  });
+
+  it("raises compact Button and Chip to the visible touch target when the axis is on", () => {
+    const style = pressableStyle(byLabel(render(<Button size="small">Compact</Button>, strictValue), "Compact"));
+    expect(style.minHeight).toBe(control.minTouchTarget);
+    expect(style.height).toBe(control.minTouchTarget);
+    // Padding, color and radius still belong to the compact recipe.
+    expect(style.paddingHorizontal).toBe(buttonRecipe.sizes.small.paddingHorizontal);
+    expect(pressableStyle(byLabel(render(<Chip label="Tag" onPress={() => undefined} selected={false} selectionMode="single" size="small" />, strictValue), "Tag")).height)
+      .toBe(control.minTouchTarget);
+  });
+
+  it("leaves heights at or above the target untouched", () => {
+    expect(pressableStyle(byLabel(render(<Button size="large">Roomy</Button>, strictValue), "Roomy")).minHeight)
+      .toBe(control.buttonHeight.large);
+  });
+});
+
+describe("Recipe axes that replace product style overrides", () => {
+  const pressableStyleOf = (node: ReactTestInstance): Record<string, unknown> =>
+    flattenStyle((node.props.style as (state: { pressed: boolean }) => unknown)({ pressed: false }));
+
+  it("owns pill geometry and leading label alignment on Button", () => {
+    const pill = pressableStyleOf(byLabel(render(<Button shape="pill">Pill</Button>), "Pill"));
+    expect(pill.borderRadius).toBe(radius.full);
+    const leading = render(<Button align="leading">Row</Button>);
+    expect(pressableStyleOf(byLabel(leading, "Row")).justifyContent).toBe("flex-start");
+    expect(copy(leading, "Row").props.align).toBe("auto");
+    // Defaults stay the action geometry.
+    const base = render(<Button>Base</Button>);
+    expect(pressableStyleOf(byLabel(base, "Base")).borderRadius).toBe(radius.md);
+    expect(pressableStyleOf(byLabel(base, "Base")).justifyContent).toBe("center");
+  });
+
+  it("frames the ListRow leading slot from the recipe instead of product styles", () => {
+    const circle = render(
+      <ListRow
+        leading={<View testID="leading-visual" />}
+        leadingShape="circle"
+        onPress={() => undefined}
+        title="Row"
+      />,
+    );
+    const frame = circle.root.findByProps({ testID: "leading-visual" }).parent!;
+    const framed = flattenStyle(frame.props.style);
+    expect(framed).toMatchObject({
+      borderRadius: radius.full,
+      height: listRowRecipe.leadingSize,
+      overflow: "hidden",
+      width: listRowRecipe.leadingSize,
+    });
+
+    const square = render(
+      <ListRow leading={<View testID="square-visual" />} onPress={() => undefined} title="Row" />,
+    );
+    const squareFrame = flattenStyle(
+      square.root.findByProps({ testID: "square-visual" }).parent!.props.style,
+    );
+    expect(squareFrame.width).toBe(listRowRecipe.leadingSize);
+    expect(squareFrame.borderRadius).toBeUndefined();
+  });
+
+  it("paints the toggle treatment and drops link padding from the recipe", () => {
+    const selected = render(<Button selected tone="secondary">Toggle</Button>);
+    const node = byLabel(selected, "Toggle");
+    expect(flattenStyle((node.props.style as (s: { pressed: boolean }) => unknown)({ pressed: false })))
+      .toMatchObject({
+        backgroundColor: lightValue.palette.theme.surfaceAccent,
+        borderColor: lightValue.palette.theme.contentBrand,
+      });
+    expect(node.props.accessibilityState.selected).toBe(true);
+
+    const link = render(<Button tone="link">Inline</Button>);
+    expect(pressableStyleOf(byLabel(link, "Inline")).paddingHorizontal).toBe(0);
+    // Other tones keep the size axis' padding.
+    expect(pressableStyleOf(byLabel(render(<Button>Framed</Button>), "Framed")).paddingHorizontal)
+      .toBe(buttonRecipe.sizes.medium.paddingHorizontal);
+  });
+
+  it("clips a Surface to its own radius except when a shadow would be cut", () => {
+    const flat = render(<Surface><View testID="child" /></Surface>);
+    expect(flattenStyle(flat.root.findByProps({ testID: "child" }).parent!.parent!.props.style).overflow)
+      .toBe("hidden");
+    const raised = render(<Surface tone="raised"><View testID="raised-child" /></Surface>);
+    expect(
+      flattenStyle(raised.root.findByProps({ testID: "raised-child" }).parent!.parent!.props.style).overflow,
+    ).toBe("visible");
+  });
+
+  it("accepts layoutStyle on the components that previously required style", () => {
+    const chip = render(
+      <Chip
+        label="Tag"
+        layoutStyle={{ flex: 1 }}
+        onPress={() => undefined}
+        selected={false}
+        selectionMode="single"
+      />,
+    );
+    expect(pressableStyleOf(byLabel(chip, "Tag")).flex).toBe(1);
+
+    const row = render(
+      <ListRow layoutStyle={{ marginTop: spacing.sm }} onPress={() => undefined} title="Placed" />,
+    );
+    expect(pressableStyleOf(byLabel(row, "Placed")).marginTop).toBe(spacing.sm);
   });
 });
 

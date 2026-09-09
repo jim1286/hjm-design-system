@@ -148,7 +148,7 @@ export function StatisticGroup({ label, descriptor, density, presentation, compo
         throw new TypeError("StatisticGroup label must not be empty");
     return (_jsx("div", { ...props, "aria-label": label, className: classNames("hjm-statistic-group", className), role: "list", style: { ...style, "--hjm-statistic-columns": descriptor.columns ?? statisticRecipe.defaults.columns }, children: descriptor.items.map((item) => (_jsx("div", { role: "listitem", children: _jsx(Statistic, { contextLabel: label, descriptor: item, ...(composeAccessibilityLabel === undefined ? {} : { composeAccessibilityLabel }), ...(density === undefined ? {} : { density }), ...(presentation === undefined ? {} : { presentation }), ...(renderTrendMark === undefined ? {} : { renderTrendMark }) }) }, item.id))) }));
 }
-function DescriptionListInner({ items, columns, className, style, ...props }, forwardedRef) {
+function DescriptionListInner({ items, columns, className, layoutStyle, style, ...props }, forwardedRef) {
     const descriptor = resolveDescriptionListDescriptor({
         items,
         ...(columns === undefined ? {} : { columns }),
@@ -158,6 +158,7 @@ function DescriptionListInner({ items, columns, className, style, ...props }, fo
     const resolvedColumns = resolveDescriptionListColumnCount(width ?? 0, descriptor.columns, theme?.environment.textScale ?? 1);
     const responsiveStyle = {
         ...style,
+        ...layoutStyle,
         "--hjm-description-columns": resolvedColumns,
     };
     return (_jsx("dl", { ...props, ref: ref, className: classNames("hjm-description-list", className), "data-columns": resolvedColumns, "data-state": resolvedColumns < descriptor.columns ? "collapsed" : "ready", style: responsiveStyle, children: descriptor.items.map((item) => (_jsxs("div", { className: "hjm-description-list__item", children: [_jsx("dt", { className: "hjm-description-list__label", children: item.label }), _jsx("dd", { className: "hjm-description-list__value", children: item.value })] }, item.id))) }));

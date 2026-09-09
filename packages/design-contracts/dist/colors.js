@@ -7,6 +7,8 @@ const light = {
     surfaceAlt: "#e5e8eb",
     surfaceAccent: "#c9e2ff",
     border: "#e5e8eb",
+    // Keeps the value the secondary control outline already resolved to.
+    borderControl: "#6b7684",
     text: "#191f28",
     textBody: "#333d4b",
     textMuted: "#4e5968",
@@ -25,6 +27,7 @@ const dark = {
     surfaceAlt: "#1e293b",
     surfaceAccent: "#1e3a5f",
     border: "#64748b",
+    borderControl: "#94a3b8",
     text: "#f1f5f9",
     textBody: "#e2e8f0",
     textMuted: "#cbd5e1",

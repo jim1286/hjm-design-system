@@ -1,4 +1,4 @@
-import { type ButtonSize as ContractButtonSize, type ButtonTone as ContractButtonTone } from "@hjmds/design-contracts/recipes/base";
+import { type ButtonAlign as ContractButtonAlign, type ButtonShape as ContractButtonShape, type ButtonSize as ContractButtonSize, type ButtonTone as ContractButtonTone } from "@hjmds/design-contracts/recipes/base";
 import { type IconButtonShape, type IconButtonSize, type IconButtonTone as ContractIconButtonTone } from "@hjmds/design-contracts/recipes";
 import { type LinkDescriptor, type LinkDestination } from "@hjmds/design-contracts/components/link";
 import { type ReactNode } from "react";
@@ -6,6 +6,8 @@ import { View, type PressableProps, type StyleProp, type TextStyle, type ViewSty
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type ButtonTone = ContractButtonTone;
 export type ButtonSize = ContractButtonSize;
+export type ButtonShape = ContractButtonShape;
+export type ButtonAlign = ContractButtonAlign;
 export type { IconButtonShape, IconButtonSize, } from "@hjmds/design-contracts/recipes";
 export type ButtonProps = Omit<PressableProps, "accessibilityRole" | "accessibilityState" | "children" | "disabled" | "hitSlop" | "style"> & Readonly<{
     /** @deprecated Prefer renderer-neutral `children`. */
@@ -13,6 +15,12 @@ export type ButtonProps = Omit<PressableProps, "accessibilityRole" | "accessibil
     children?: ReactNode;
     tone?: ButtonTone;
     size?: ButtonSize;
+    /** Frame geometry. `pill` replaces product code that overrode `borderRadius`. */
+    shape?: ButtonShape;
+    /** Label placement inside the frame; `leading` suits a full-width row action. */
+    align?: ButtonAlign;
+    /** Toggle state. Paints the selected treatment and reports it to assistive tech. */
+    selected?: boolean;
     disabled?: boolean;
     loading?: boolean;
     /** Keep the busy control discoverable by default; opt in only for legacy disabled semantics. */
@@ -50,6 +58,12 @@ export declare const Button: import("react").ForwardRefExoticComponent<Omit<Pres
     children?: ReactNode;
     tone?: ButtonTone;
     size?: ButtonSize;
+    /** Frame geometry. `pill` replaces product code that overrode `borderRadius`. */
+    shape?: ButtonShape;
+    /** Label placement inside the frame; `leading` suits a full-width row action. */
+    align?: ButtonAlign;
+    /** Toggle state. Paints the selected treatment and reports it to assistive tech. */
+    selected?: boolean;
     disabled?: boolean;
     loading?: boolean;
     /** Keep the busy control discoverable by default; opt in only for legacy disabled semantics. */

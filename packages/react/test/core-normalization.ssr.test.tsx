@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { control, spacing } from "@hjmds/design-contracts/foundations";
 import { buttonRecipe } from "@hjmds/design-contracts/recipes/base";
+import { listRowRecipe, switchRecipe } from "@hjmds/design-contracts/recipes";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import {
@@ -9,8 +10,10 @@ import {
   Card,
   HjmProvider,
   IconButton,
+  ListRow,
   Stack,
   Surface,
+  Switch,
   Tag,
   Text,
 } from "../src/index.js";
@@ -156,5 +159,136 @@ describe("Web core normalization", () => {
     expect(css).toMatch(
       /\.hjm-button\[data-size="small"\]::after \{[^}]*position: absolute;[^}]*inset: calc\(-1 \* var\(--hjm-space-xxs\)\);/s,
     );
+  });
+
+  it("owns pill geometry, leading alignment and a contents host as CSS axes", () => {
+    const markup = renderToStaticMarkup(
+      <HjmProvider host="contents" systemTheme="light">
+        <Button align="leading" shape="pill">Row</Button>
+      </HjmProvider>,
+    );
+    expect(markup).toContain('data-shape="pill"');
+    expect(markup).toContain('data-align="leading"');
+    expect(markup).toContain('data-host="contents"');
+
+    const css = readFileSync(
+      fileURLToPath(new URL("../src/styles.css", import.meta.url)),
+      "utf8",
+    );
+    expect(css).toContain('.hjm-button[data-shape="pill"] { border-radius: var(--hjm-radius-full); }');
+    expect(css).toMatch(
+      /\.hjm-button\[data-align="leading"\] \{[^}]*justify-content: flex-start;/s,
+    );
+    // A contents host keeps the variables but stops painting the surface.
+    expect(css).toMatch(
+      /\.hjm-root\[data-host="contents"\] \{[^}]*display: contents;[^}]*background: transparent;/s,
+    );
+  });
+
+  it("carries the toggle state and the link tone's padding reset in CSS", () => {
+    const markup = renderToStaticMarkup(
+      <HjmProvider systemTheme="light">
+        <Button selected tone="secondary">Toggle</Button>
+        <Button tone="link">Inline</Button>
+      </HjmProvider>,
+    );
+    expect(markup).toContain('data-selected="true"');
+    expect(markup).toContain('aria-pressed="true"');
+
+    const css = readFileSync(
+      fileURLToPath(new URL("../src/styles.css", import.meta.url)),
+      "utf8",
+    );
+    expect(css).toMatch(
+      /\.hjm-button\[data-tone="link"\] \{[^}]*padding-inline: 0;/s,
+    );
+    expect(css).toMatch(
+      /\.hjm-button\[data-selected="true"\] \{[^}]*background: var\(--hjm-color-surface-accent\);/s,
+    );
+  });
+
+  it("binds the ListRow density and leading frame from the recipe on web", () => {
+    const markup = renderToStaticMarkup(
+      <HjmProvider systemTheme="light">
+        <ListRow description="Two line" leadingShape="circle" leading={<span />} title="Row" />
+      </HjmProvider>,
+    );
+    expect(markup).toContain('data-lines="two"');
+    expect(markup).toContain('data-shape="circle"');
+    expect(markup).toContain(
+      `--hjm-list-row-comfortable-two-line:${listRowRecipe.density.comfortable.twoLineMinHeight / 16}rem`,
+    );
+    expect(markup).toContain(
+      `--hjm-list-row-leading-size:${listRowRecipe.leadingSize / 16}rem`,
+    );
+
+    const css = readFileSync(
+      fileURLToPath(new URL("../src/styles.css", import.meta.url)),
+      "utf8",
+    );
+    // The stylesheet must read the recipe variables, never a second copy of the numbers.
+    expect(css).toMatch(
+      /\.hjm-list-row \{[^}]*min-block-size: var\(--hjm-list-row-comfortable-one-line\);/s,
+    );
+    expect(css).toMatch(
+      /\.hjm-list-row__leading \{[^}]*inline-size: var\(--hjm-list-row-leading-size\);/s,
+    );
+  });
+
+  it("clips a Surface to its own radius except when a shadow would be cut", () => {
+    const markup = renderToStaticMarkup(
+      <HjmProvider systemTheme="light">
+        <Surface>flat</Surface>
+        <Surface tone="raised">raised</Surface>
+      </HjmProvider>,
+    );
+    expect(markup).toContain('data-clips="true"');
+    expect(markup).toContain('data-clips="false"');
+    const css = readFileSync(
+      fileURLToPath(new URL("../src/styles.css", import.meta.url)),
+      "utf8",
+    );
+    expect(css).toContain('.hjm-surface[data-clips="true"] { overflow: hidden; }');
+  });
+
+  it("binds the Switch size recipe on web", () => {
+    const markup = renderToStaticMarkup(
+      <HjmProvider systemTheme="light">
+        <Switch checked label="On" size="small" />
+      </HjmProvider>,
+    );
+    expect(markup).toContain('data-size="small"');
+    expect(markup).toContain(
+      `--hjm-switch-small-width:${switchRecipe.sizes.small.width / 16}rem`,
+    );
+    expect(markup).toContain(
+      `--hjm-switch-small-offset:${
+        (switchRecipe.sizes.small.width -
+          switchRecipe.sizes.small.thumb -
+          switchRecipe.sizes.small.inset * 2) / 16
+      }rem`,
+    );
+
+    const css = readFileSync(
+      fileURLToPath(new URL("../src/styles.css", import.meta.url)),
+      "utf8",
+    );
+    // The old stylesheet carried 48/28/22/3px, matching neither recipe size.
+    expect(css).not.toMatch(/\.hjm-switch__track \{[^}]*inline-size: 48px/s);
+    expect(css).toMatch(
+      /\.hjm-switch__track \{[^}]*inline-size: var\(--hjm-switch-track-width\);/s,
+    );
+  });
+
+  it("raises the compact control height variables under minimumVisualTarget", () => {
+    const markup = renderToStaticMarkup(
+      <HjmProvider minimumVisualTarget systemTheme="light">
+        <Button size="small">작게</Button>
+      </HjmProvider>,
+    );
+    // The axis moves the emitted variable, so every rule reading a control
+    // height — Button, IconButton, PasswordField — follows without its own case.
+    expect(markup).toContain(`--hjm-control-button-small:${control.minTouchTarget}px`);
+    expect(markup).toContain(`--hjm-control-button-large:${buttonRecipe.sizes.large.height}px`);
   });
 });

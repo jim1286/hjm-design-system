@@ -1,7 +1,7 @@
-export { HjmProvider, useHjmTheme, type HjmProviderProps, } from "./provider.js";
+export { HjmProvider, useHjmTheme, type HjmProviderHost, type HjmProviderProps, } from "./provider.js";
 export { hjmCompositionStyleKeys, type HjmCompositionStyle, type HjmCompositionStyleKey, type HjmCompositionStyleProp, } from "./composition-style.js";
 export { AspectRatio, Container, Grid, Layout, Section, Stack, Surface, Text, VisuallyHidden, type AspectRatioProps, type AspectRatioValue, type ContainerGutter, type ContainerProps, type ContainerSize, type GridGap, type GridProps, type LayoutProps, type LayoutSidebar, type SectionProps, type StackAlign, type StackAxis, type StackGap, type StackJustify, type StackProps, type SurfacePadding, type SurfaceProps, type SurfaceRadius, type SurfaceTone, type TextEmphasis, type TextProps, type TextTone, type VisuallyHiddenProps, } from "./layout.js";
-export { Button, IconButton, Link, type ButtonProps, type ButtonSize, type ButtonTone, type IconButtonProps, type IconButtonShape, type IconButtonSize, type IconButtonTone, type LinkRenderProps, type LinkProps, } from "./actions.js";
+export { Button, IconButton, Link, type ButtonAlign, type ButtonProps, type ButtonShape, type ButtonSize, type ButtonTone, type IconButtonProps, type IconButtonShape, type IconButtonSize, type IconButtonTone, type LinkRenderProps, type LinkProps, } from "./actions.js";
 export { Field, OtpField, PasswordField, SearchField, TextArea, TextField, type FieldControlProps, type FieldProps, type OtpFieldProps, type PasswordFieldProps, type PasswordFieldToggleRenderProps, type SearchFieldProps, type SearchFieldIconRenderProps, type TextAreaProps, type TextFieldProps, } from "./forms.js";
 export { Combobox, Form, type ComboboxItem, type ComboboxOpenChangeReason, type ComboboxProps, type FormProps, type FormSubmitHandler, NativeSelect, type NativeSelectProps, type SelectOption, } from "./advanced-forms.js";
 export { Select, type SelectItem, type SelectLeadingRenderProps, type SelectOptionLeadingRenderProps, type SelectProps, type SelectSection, } from "./select.js";
@@ -9,7 +9,7 @@ export { NumberField, type NumberFieldProps, } from "./number-field.js";
 export { Slider, type SliderProps, } from "./slider.js";
 export { DatePicker, type DatePickerMonthAction, type DatePickerProps, } from "./date-picker.js";
 export { FilePicker, type FilePickerProps, } from "./file-picker.js";
-export { Checkbox, CheckboxGroup, Chip, Radio, RadioGroup, SegmentedControl, Switch, type CheckboxProps, type CheckboxGroupItem, type CheckboxGroupProps, type ChipProps, type ChoiceLeadingRenderProps, type RadioProps, type RadioGroupItem, type RadioGroupProps, type SegmentedControlItem, type SegmentedControlProps, type SwitchProps, } from "./selection.js";
+export { Checkbox, CheckboxGroup, Chip, Radio, RadioGroup, SegmentedControl, Switch, type CheckboxProps, type CheckboxGroupItem, type CheckboxGroupProps, type ChipProps, type ChoiceLeadingRenderProps, type RadioProps, type RadioGroupItem, type RadioGroupProps, type SegmentedControlItem, type SegmentedControlProps, type SwitchProps, type SwitchSize, } from "./selection.js";
 export { TabPanel, Tabs, getDynamicTabPanelId, getTabId, getTabPanelId, type TabLeadingRenderProps, type TabItem, type TabPanelProps, type TabsProps, } from "./navigation.js";
 export { Breadcrumb, Pagination, type BreadcrumbProps, type PaginationProps, } from "./advanced-navigation.js";
 export { LoadMore, type LoadMoreProps, } from "./supplemental-navigation.js";

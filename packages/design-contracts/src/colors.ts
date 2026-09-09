@@ -16,6 +16,14 @@ export type ThemeColors = {
   surfaceAlt: string;
   surfaceAccent: string;
   border: string;
+  /**
+   * Outline of an interactive control that must read stronger than the shared
+   * hairline. Separate from `border` because a resting control needs to be
+   * findable while a surface edge should stay quiet, and separate from
+   * `textSub` because a text-strength outline makes an unselected control read
+   * heavier than the selected one beside it.
+   */
+  borderControl: string;
   text: string;
   textBody: string;
   textMuted: string;
@@ -35,6 +43,8 @@ const light = {
   surfaceAlt: "#e5e8eb",
   surfaceAccent: "#c9e2ff",
   border: "#e5e8eb",
+  // Keeps the value the secondary control outline already resolved to.
+  borderControl: "#6b7684",
   text: "#191f28",
   textBody: "#333d4b",
   textMuted: "#4e5968",
@@ -54,6 +64,7 @@ const dark = {
   surfaceAlt: "#1e293b",
   surfaceAccent: "#1e3a5f",
   border: "#64748b",
+  borderControl: "#94a3b8",
   text: "#f1f5f9",
   textBody: "#e2e8f0",
   textMuted: "#cbd5e1",

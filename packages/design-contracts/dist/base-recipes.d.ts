@@ -1,5 +1,12 @@
 import { control, radius, spacing } from "./foundations.js";
 export type ButtonTone = "primary" | "secondary" | "ghost" | "danger" | "link";
+/** Corner geometry of the control frame. Mirrors `IconButtonShape`. */
+export type ButtonShape = "rounded" | "pill";
+/**
+ * Where the label sits inside the frame. `center` is the action default;
+ * `leading` is for a full-width row action whose label reads as list copy.
+ */
+export type ButtonAlign = "center" | "leading";
 export type ButtonSize = keyof typeof control.buttonHeight;
 export type SurfaceTone = "default" | "raised" | "accent" | "subtle";
 export type SurfacePadding = "none" | keyof typeof spacing;
@@ -12,32 +19,51 @@ export declare const buttonRecipe: {
     readonly defaults: {
         readonly tone: "primary";
         readonly size: "medium";
+        readonly shape: "rounded";
+        readonly align: "center";
     };
     readonly tones: {
         readonly primary: {
             readonly background: "primary";
             readonly content: "onPrimary";
             readonly border: null;
+            readonly paddingHorizontal: null;
         };
         readonly secondary: {
             readonly background: "surfaceAlt";
             readonly content: "text";
-            readonly border: "textSub";
+            readonly border: "borderControl";
+            readonly paddingHorizontal: null;
         };
         readonly ghost: {
             readonly background: null;
             readonly content: "textMuted";
             readonly border: null;
+            readonly paddingHorizontal: null;
         };
         readonly danger: {
             readonly background: "dangerFill";
             readonly content: "onDanger";
             readonly border: null;
+            readonly paddingHorizontal: null;
         };
         readonly link: {
             readonly background: null;
             readonly content: "contentBrand";
             readonly border: null;
+            readonly paddingHorizontal: 0;
+        };
+    };
+    /**
+     * Visual treatment for a control that is also a toggle. `accessibilityState`
+     * / `aria-pressed` already expressed the state; without a paired visual every
+     * consumer painted the selected background in product styles.
+     */
+    readonly states: {
+        readonly selected: {
+            readonly background: "surfaceAccent";
+            readonly content: "contentBrand";
+            readonly border: "contentBrand";
         };
     };
     readonly sizes: {
@@ -60,6 +86,14 @@ export declare const buttonRecipe: {
             readonly textVariant: "bodyLarge";
         };
     };
+    readonly shapes: {
+        readonly rounded: "md";
+        readonly pill: "full";
+    };
+    readonly aligns: {
+        readonly center: "center";
+        readonly leading: "flex-start";
+    };
     readonly opacity: {
         readonly disabled: 0.5;
         readonly pressed: 0.86;
@@ -72,6 +106,7 @@ export declare const surfaceRecipe: {
         readonly borderAlpha: 1;
         readonly elevated: false;
         readonly borderAlways: false;
+        readonly clipsContent: true;
     };
     readonly raised: {
         readonly background: "bg";
@@ -79,6 +114,7 @@ export declare const surfaceRecipe: {
         readonly borderAlpha: 1;
         readonly elevated: true;
         readonly borderAlways: false;
+        readonly clipsContent: false;
     };
     readonly accent: {
         readonly background: "surfaceAccent";
@@ -86,6 +122,7 @@ export declare const surfaceRecipe: {
         readonly borderAlpha: 0.3;
         readonly elevated: false;
         readonly borderAlways: false;
+        readonly clipsContent: true;
     };
     readonly subtle: {
         readonly background: "bg";
@@ -93,6 +130,7 @@ export declare const surfaceRecipe: {
         readonly borderAlpha: 1;
         readonly elevated: false;
         readonly borderAlways: true;
+        readonly clipsContent: true;
     };
 };
 export declare const fieldRecipe: {
