@@ -105,6 +105,7 @@ semantic axis로 옮겼습니다. 아래는 그 축과 대체 대상입니다.
 | Button `justifyContent: "flex-start"`로 라벨 좌측 정렬 | `align="leading"` |
 | ListRow leading slot에 40pt 원형 avatar 프레임을 제품이 다시 계산 | `leadingShape` (`listRowRecipe.leadingSize`를 renderer가 바인딩) |
 | 중첩 web Provider의 `display: contents` 인라인 중화 | `host="contents"` |
+| secondary 컨트롤 테두리를 제품 boundary 색으로 덮기 | `borderControl` semantic key + `semanticColors.border.control` |
 | 토글 Button의 selected 배경·테두리를 제품 style로 칠하기 | `selected` (`buttonRecipe.states.selected`) |
 | `link` tone Button에서 `paddingHorizontal: 0`으로 인라인 정렬 복원 | tone별 `paddingHorizontal` (link=0) |
 | Chip·ListRow·Image·LoadMore·DescriptionList의 배치용 `style` | 각 컴포넌트의 `layoutStyle` |

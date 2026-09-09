@@ -83,6 +83,12 @@ export declare const semanticColors: {
             key: "border";
             alpha?: number;
         }>;
+        /** Resting outline of an interactive control. */
+        readonly control: Readonly<{
+            source: "theme";
+            key: "borderControl";
+            alpha?: number;
+        }>;
         readonly strong: Readonly<{
             source: "theme";
             key: "textWeak";
@@ -125,7 +131,7 @@ export declare const semanticColors: {
             }>;
             readonly border: Readonly<{
                 source: "theme";
-                key: "textSub";
+                key: "borderControl";
                 alpha?: number;
             }>;
         };

@@ -22,3 +22,10 @@ recurring overrides of recipe-owned values and five components that offered no
 - `Button`: `selected` paints the toggle treatment that `accessibilityState` /
   `aria-pressed` already claimed, and the `link` tone drops the size axis'
   horizontal padding so it aligns with the copy around it
+- `borderControl` joins `ThemeColors` as the resting outline of an interactive
+  control, exposed as `semanticColors.border.control`. The secondary Button and
+  IconButton tones drew that outline in `textSub`, a text color, which is the
+  same mistake `chipRecipe` already documents; a product that needs a stronger
+  control boundary than its surface hairline can now inject one semantic key
+  through `brandPalette` instead of overriding `borderColor` per wrapper. The
+  default value matches what the outline already resolved to in both themes.

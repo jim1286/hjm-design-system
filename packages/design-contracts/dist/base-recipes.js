@@ -5,7 +5,9 @@ export const buttonRecipe = {
     defaults: { tone: "primary", size: "medium", shape: "rounded", align: "center" },
     tones: {
         primary: { background: "primary", content: "onPrimary", border: null, paddingHorizontal: null },
-        secondary: { background: "surfaceAlt", content: "text", border: "textSub", paddingHorizontal: null },
+        // The outline is a border role, not a text color. Drawing it in `textSub`
+        // made a resting control read heavier than the selected one beside it.
+        secondary: { background: "surfaceAlt", content: "text", border: "borderControl", paddingHorizontal: null },
         ghost: { background: null, content: "textMuted", border: null, paddingHorizontal: null },
         danger: { background: "dangerFill", content: "onDanger", border: null, paddingHorizontal: null },
         // A link-tone control is inline copy, so the size axis' horizontal padding

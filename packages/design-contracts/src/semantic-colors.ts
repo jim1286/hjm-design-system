@@ -25,6 +25,8 @@ export const semanticColors = {
   border: {
     subtle: themeColor("border", 0.7),
     default: themeColor("border"),
+    /** Resting outline of an interactive control. */
+    control: themeColor("borderControl"),
     strong: themeColor("textWeak"),
     focus: themeColor("contentBrand"),
     danger: themeColor("danger"),
@@ -37,7 +39,9 @@ export const semanticColors = {
     neutral: {
       background: themeColor("surfaceAlt"),
       content: themeColor("text"),
-      border: themeColor("textSub"),
+      // A control outline is a border role. `textSub` made a resting neutral
+      // action read heavier than the selected control beside it.
+      border: themeColor("borderControl"),
     },
     danger: {
       background: themeColor("dangerFill"),

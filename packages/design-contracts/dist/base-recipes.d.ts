@@ -32,7 +32,7 @@ export declare const buttonRecipe: {
         readonly secondary: {
             readonly background: "surfaceAlt";
             readonly content: "text";
-            readonly border: "textSub";
+            readonly border: "borderControl";
             readonly paddingHorizontal: null;
         };
         readonly ghost: {
