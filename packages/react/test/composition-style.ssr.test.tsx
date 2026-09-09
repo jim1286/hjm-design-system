@@ -2,11 +2,18 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, expectTypeOf, it } from "vitest";
 
 import {
+  Badge,
+  Button,
   Container,
+  CounterBadge,
   Grid,
   HjmProvider,
+  IconButton,
+  ListRow,
   Stack,
   Surface,
+  Switch,
+  Tag,
   Text,
   hjmCompositionStyleKeys,
   type ContainerProps,
@@ -88,5 +95,26 @@ describe("web composition style", () => {
     expect(markup).toContain("margin-inline-start:6px");
     expect(markup).toContain("margin-bottom:5px");
     expect(markup).toContain("align-self:center");
+  });
+
+  it("places the remaining roots that pass style through to the element", () => {
+    // 이 컴포넌트들은 `style`을 직접 다루지 않고 `...props`로 흘려보내므로,
+    // 타입만 열고 병합을 빼먹기 쉽다. 마크업으로 실제 적용을 확인한다.
+    const markup = renderToStaticMarkup(
+      <HjmProvider theme="light" systemTheme="light">
+        <Badge layoutStyle={{ marginTop: 11 }}>badge</Badge>
+        <Tag layoutStyle={{ marginTop: 12 }}>tag</Tag>
+        <Button layoutStyle={{ marginTop: 13 }}>button</Button>
+        <IconButton label="icon" layoutStyle={{ marginTop: 14 }}>
+          <span>i</span>
+        </IconButton>
+        <CounterBadge count={3} layoutStyle={{ marginTop: 15 }} />
+        <Switch checked={false} label="switch" layoutStyle={{ marginTop: 16 }} />
+        <ListRow title="row" layoutStyle={{ marginTop: 17 }} />
+      </HjmProvider>,
+    );
+    for (const px of [11, 12, 13, 14, 15, 16, 17]) {
+      expect(markup).toContain(`margin-top:${px}px`);
+    }
   });
 });

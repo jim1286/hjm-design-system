@@ -1,6 +1,7 @@
 import { chipRecipe, type SegmentedControlSize, type SelectionControlPresentation, type SelectionControlSize, type SelectionGroupOrientation, type SelectionGroupPresentation } from "@hjmds/design-contracts/recipes";
 import { type CheckboxGroupSelection, type SelectionItemDescriptor } from "@hjmds/design-contracts/behaviors";
 import { type ButtonHTMLAttributes, type ChangeEvent, type FieldsetHTMLAttributes, type InputHTMLAttributes, type MouseEvent, type ReactElement, type ReactNode, type RefAttributes } from "react";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type ChoiceLeadingRenderProps = Readonly<{
     selected: boolean;
     color: "currentColor";
@@ -126,12 +127,16 @@ export type SwitchProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "role" |
     checked?: boolean;
     defaultChecked?: boolean;
     onCheckedChange?: (checked: boolean) => void;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 export declare const Switch: import("react").ForwardRefExoticComponent<Omit<ButtonHTMLAttributes<HTMLButtonElement>, "value" | "onChange" | "role"> & Readonly<{
     label: ReactNode;
     checked?: boolean;
     defaultChecked?: boolean;
     onCheckedChange?: (checked: boolean) => void;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }> & RefAttributes<HTMLButtonElement>>;
 export type SegmentedControlItem = Readonly<{
     value: string;

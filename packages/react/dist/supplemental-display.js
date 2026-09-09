@@ -124,13 +124,13 @@ export const Image = forwardRef(function Image({ src, width, height, fit, decora
             aspectRatio: resolveImageAspectRatio(descriptor.width, descriptor.height),
         }, children: visual }));
 });
-export const CounterBadge = forwardRef(function CounterBadge({ count, max = counterBadgeRecipe.defaults.max, tone = counterBadgeRecipe.defaults.tone, size = counterBadgeRecipe.defaults.size, variant = counterBadgeRecipe.defaults.variant, accessibilityLabel, className, ...props }, ref) {
+export const CounterBadge = forwardRef(function CounterBadge({ count, max = counterBadgeRecipe.defaults.max, tone = counterBadgeRecipe.defaults.tone, size = counterBadgeRecipe.defaults.size, variant = counterBadgeRecipe.defaults.variant, accessibilityLabel, className, layoutStyle, style, ...props }, ref) {
     const label = formatCounterBadgeCount(count, max);
     if (accessibilityLabel !== undefined && accessibilityLabel.trim().length === 0) {
         throw new TypeError("CounterBadge accessibilityLabel must not be empty");
     }
     if (label === null)
         return null;
-    return (_jsx("span", { ...props, ref: ref, className: classNames("hjm-counter-badge", className), "data-tone": tone, "data-size": size, "data-variant": variant, "aria-hidden": accessibilityLabel === undefined || undefined, "aria-label": accessibilityLabel, children: label }));
+    return (_jsx("span", { ...props, style: { ...style, ...layoutStyle }, ref: ref, className: classNames("hjm-counter-badge", className), "data-tone": tone, "data-size": size, "data-variant": variant, "aria-hidden": accessibilityLabel === undefined || undefined, "aria-label": accessibilityLabel, children: label }));
 });
 //# sourceMappingURL=supplemental-display.js.map

@@ -2,6 +2,7 @@ import { type IconDescriptor } from "@hjmds/design-contracts/components/icon";
 import { type ImageDescriptor, type ImageLoadStatus } from "@hjmds/design-contracts/components/image";
 import { type CounterBadgeSize, type CounterBadgeTone, type CounterBadgeVariant } from "@hjmds/design-contracts/recipes";
 import { type CSSProperties, type HTMLAttributes, type ImgHTMLAttributes, type ReactElement, type ReactEventHandler, type ReactNode, type Ref, type SVGAttributes } from "react";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type IconProps = Omit<SVGAttributes<SVGSVGElement>, "children" | "color"> & IconDescriptor;
 export declare const Icon: import("react").ForwardRefExoticComponent<IconProps & import("react").RefAttributes<SVGSVGElement>>;
 type ImageElementProps = Omit<ImgHTMLAttributes<HTMLImageElement>, "alt" | "aria-hidden" | "aria-label" | "children" | "className" | "height" | "onError" | "onLoad" | "role" | "src" | "style" | "width">;
@@ -46,6 +47,8 @@ export type CounterBadgeProps = Omit<HTMLAttributes<HTMLSpanElement>, "children"
     size?: CounterBadgeSize;
     variant?: CounterBadgeVariant;
     accessibilityLabel?: string;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 export declare const CounterBadge: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLSpanElement>, "children"> & Readonly<{
     count: number;
@@ -54,6 +57,8 @@ export declare const CounterBadge: import("react").ForwardRefExoticComponent<Omi
     size?: CounterBadgeSize;
     variant?: CounterBadgeVariant;
     accessibilityLabel?: string;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }> & import("react").RefAttributes<HTMLSpanElement>>;
 export {};
 //# sourceMappingURL=supplemental-display.d.ts.map

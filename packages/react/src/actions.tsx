@@ -29,6 +29,7 @@ export type {
   IconButtonSize,
   IconButtonTone,
 } from "@hjmds/design-contracts/recipes";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> &
   Readonly<{
@@ -37,7 +38,9 @@ export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> &
     loading?: boolean;
     leading?: ReactNode;
     trailing?: ReactNode;
-  }>;
+      /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
+}>;
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
   {
@@ -51,6 +54,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     type = "button",
     className,
     children,
+    layoutStyle,
+    style,
     ...props
   },
   ref,
@@ -67,6 +72,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   return (
     <button
       {...props}
+      style={{ ...style, ...layoutStyle }}
       ref={ref}
       type={type}
       className={classNames("hjm-button", className)}
@@ -96,7 +102,9 @@ export type IconButtonProps = Omit<
     shape?: IconButtonShape;
     loading?: boolean;
     children: ReactNode;
-  }>;
+      /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
+}>;
 
 export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
   function IconButton(
@@ -111,6 +119,8 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
       type = "button",
       className,
       children,
+      layoutStyle,
+      style,
       ...props
     },
     ref,
@@ -127,6 +137,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
     return (
       <button
         {...props}
+        style={{ ...style, ...layoutStyle }}
         ref={ref}
         type={type}
         className={classNames("hjm-icon-button", className)}

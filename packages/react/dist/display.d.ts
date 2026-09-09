@@ -3,6 +3,7 @@ import { type TagTone } from "@hjmds/design-contracts/components/tag";
 import { type CardHeadingLevel } from "@hjmds/design-contracts/components/card";
 import { type SurfacePadding, type SurfaceRadius, type SurfaceTone } from "@hjmds/design-contracts/recipes/base";
 import { type HTMLAttributes, type MouseEventHandler, type ReactNode } from "react";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type { CardHeadingLevel } from "@hjmds/design-contracts/components/card";
 export type { TagTone } from "@hjmds/design-contracts/components/tag";
 export type BadgeVariant = ContractBadgeVariant;
@@ -11,20 +12,28 @@ export type BadgeProps = HTMLAttributes<HTMLSpanElement> & Readonly<{
     size?: BadgeSize;
     variant?: BadgeVariant;
     leading?: ReactNode;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 export declare const Badge: import("react").ForwardRefExoticComponent<HTMLAttributes<HTMLSpanElement> & Readonly<{
     tone?: BadgeTone;
     size?: BadgeSize;
     variant?: BadgeVariant;
     leading?: ReactNode;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }> & import("react").RefAttributes<HTMLSpanElement>>;
 export type TagProps = Omit<HTMLAttributes<HTMLSpanElement>, "children"> & Readonly<{
     children: string;
     tone?: TagTone;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 export declare const Tag: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLSpanElement>, "children"> & Readonly<{
     children: string;
     tone?: TagTone;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }> & import("react").RefAttributes<HTMLSpanElement>>;
 export type CardProps = Omit<HTMLAttributes<HTMLElement>, "title"> & Readonly<{
     title?: ReactNode;
@@ -62,6 +71,8 @@ export type ListRowProps = Omit<HTMLAttributes<HTMLElement>, "title" | "onClick"
     disabled?: boolean;
     href?: string;
     onClick?: MouseEventHandler<HTMLElement>;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 export declare const ListRow: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLElement>, "title" | "onClick"> & Readonly<{
     title: ReactNode;
@@ -73,5 +84,7 @@ export declare const ListRow: import("react").ForwardRefExoticComponent<Omit<HTM
     disabled?: boolean;
     href?: string;
     onClick?: MouseEventHandler<HTMLElement>;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }> & import("react").RefAttributes<HTMLElement>>;
 //# sourceMappingURL=display.d.ts.map

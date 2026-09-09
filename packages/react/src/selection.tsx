@@ -36,6 +36,7 @@ import {
   type RefAttributes,
 } from "react";
 import { classNames, composeRefs, useControllableState } from "./internal.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type ChoiceLeadingRenderProps = Readonly<{
   selected: boolean;
@@ -676,7 +677,9 @@ export type SwitchProps = Omit<
     checked?: boolean;
     defaultChecked?: boolean;
     onCheckedChange?: (checked: boolean) => void;
-  }>;
+      /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
+}>;
 
 export const Switch = forwardRef<HTMLButtonElement, SwitchProps>(function Switch(
   {
@@ -688,6 +691,8 @@ export const Switch = forwardRef<HTMLButtonElement, SwitchProps>(function Switch
     type = "button",
     className,
     onClick,
+    layoutStyle,
+    style,
     ...props
   },
   ref,
@@ -700,6 +705,7 @@ export const Switch = forwardRef<HTMLButtonElement, SwitchProps>(function Switch
   return (
     <button
       {...props}
+      style={{ ...style, ...layoutStyle }}
       ref={ref}
       type={type}
       role="switch"

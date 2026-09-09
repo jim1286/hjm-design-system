@@ -34,6 +34,7 @@ import {
 } from "react";
 import { classNames } from "./internal.js";
 import { useOptionalHjmTheme } from "./provider.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 /** Internal, dependency-free semantic glyph registry. All marks share one 24px stroke grid. */
 const iconPaths = {
@@ -336,7 +337,9 @@ export type CounterBadgeProps = Omit<HTMLAttributes<HTMLSpanElement>, "children"
     size?: CounterBadgeSize;
     variant?: CounterBadgeVariant;
     accessibilityLabel?: string;
-  }>;
+      /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
+}>;
 
 export const CounterBadge = forwardRef<HTMLSpanElement, CounterBadgeProps>(
   function CounterBadge(
@@ -348,6 +351,8 @@ export const CounterBadge = forwardRef<HTMLSpanElement, CounterBadgeProps>(
       variant = counterBadgeRecipe.defaults.variant,
       accessibilityLabel,
       className,
+      layoutStyle,
+      style,
       ...props
     },
     ref,
@@ -360,6 +365,7 @@ export const CounterBadge = forwardRef<HTMLSpanElement, CounterBadgeProps>(
     return (
       <span
         {...props}
+        style={{ ...style, ...layoutStyle }}
         ref={ref}
         className={classNames("hjm-counter-badge", className)}
         data-tone={tone}

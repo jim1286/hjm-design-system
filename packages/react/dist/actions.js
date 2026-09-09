@@ -3,7 +3,7 @@ import { buttonRecipe, } from "@hjmds/design-contracts/recipes/base";
 import { iconButtonRecipe, linkRecipe, } from "@hjmds/design-contracts/recipes";
 import { forwardRef, } from "react";
 import { classNames } from "./internal.js";
-export const Button = forwardRef(function Button({ tone = buttonRecipe.defaults.tone, size = buttonRecipe.defaults.size, loading = false, leading, trailing, disabled, onClick, type = "button", className, children, ...props }, ref) {
+export const Button = forwardRef(function Button({ tone = buttonRecipe.defaults.tone, size = buttonRecipe.defaults.size, loading = false, leading, trailing, disabled, onClick, type = "button", className, children, layoutStyle, style, ...props }, ref) {
     const unavailable = disabled === true || loading;
     const handleClick = (event) => {
         if (loading) {
@@ -13,9 +13,9 @@ export const Button = forwardRef(function Button({ tone = buttonRecipe.defaults.
         }
         onClick?.(event);
     };
-    return (_jsxs("button", { ...props, ref: ref, type: type, className: classNames("hjm-button", className), "data-tone": tone, "data-size": size, "data-state": loading ? "loading" : unavailable ? "disabled" : "idle", "aria-busy": loading || undefined, "aria-disabled": loading || undefined, disabled: disabled, onClick: handleClick, children: [loading ? _jsx("span", { className: "hjm-button__spinner", "aria-hidden": "true" }) : leading, _jsx("span", { className: "hjm-button__label", children: children }), trailing] }));
+    return (_jsxs("button", { ...props, style: { ...style, ...layoutStyle }, ref: ref, type: type, className: classNames("hjm-button", className), "data-tone": tone, "data-size": size, "data-state": loading ? "loading" : unavailable ? "disabled" : "idle", "aria-busy": loading || undefined, "aria-disabled": loading || undefined, disabled: disabled, onClick: handleClick, children: [loading ? _jsx("span", { className: "hjm-button__spinner", "aria-hidden": "true" }) : leading, _jsx("span", { className: "hjm-button__label", children: children }), trailing] }));
 });
-export const IconButton = forwardRef(function IconButton({ label, tone = iconButtonRecipe.defaults.tone, size = iconButtonRecipe.defaults.size, shape = iconButtonRecipe.defaults.shape, loading = false, disabled, onClick, type = "button", className, children, ...props }, ref) {
+export const IconButton = forwardRef(function IconButton({ label, tone = iconButtonRecipe.defaults.tone, size = iconButtonRecipe.defaults.size, shape = iconButtonRecipe.defaults.shape, loading = false, disabled, onClick, type = "button", className, children, layoutStyle, style, ...props }, ref) {
     const unavailable = disabled === true || loading;
     const handleClick = (event) => {
         if (loading) {
@@ -25,7 +25,7 @@ export const IconButton = forwardRef(function IconButton({ label, tone = iconBut
         }
         onClick?.(event);
     };
-    return (_jsx("button", { ...props, ref: ref, type: type, className: classNames("hjm-icon-button", className), "data-tone": tone, "data-size": size, "data-shape": shape, "data-state": loading ? "loading" : unavailable ? "disabled" : "idle", "aria-label": label, "aria-busy": loading || undefined, "aria-disabled": loading || undefined, disabled: disabled, onClick: handleClick, children: loading ? _jsx("span", { className: "hjm-button__spinner", "aria-hidden": "true" }) : children }));
+    return (_jsx("button", { ...props, style: { ...style, ...layoutStyle }, ref: ref, type: type, className: classNames("hjm-icon-button", className), "data-tone": tone, "data-size": size, "data-shape": shape, "data-state": loading ? "loading" : unavailable ? "disabled" : "idle", "aria-label": label, "aria-busy": loading || undefined, "aria-disabled": loading || undefined, disabled: disabled, onClick: handleClick, children: loading ? _jsx("span", { className: "hjm-button__spinner", "aria-hidden": "true" }) : children }));
 });
 export const Link = forwardRef(function Link({ tone = linkRecipe.defaults.tone, variant = linkRecipe.defaults.variant, disabled = false, leading, trailing, renderAnchor, target, rel, tabIndex, onClick, className, children, ...props }, ref) {
     const handleClick = (event) => {

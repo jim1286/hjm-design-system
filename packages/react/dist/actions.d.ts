@@ -3,12 +3,15 @@ import { type IconButtonShape, type IconButtonSize, type IconButtonTone, type Li
 import { type AnchorHTMLAttributes, type ButtonHTMLAttributes, type ForwardedRef, type ReactElement, type ReactNode } from "react";
 export type { ButtonSize, ButtonTone } from "@hjmds/design-contracts/recipes/base";
 export type { IconButtonShape, IconButtonSize, IconButtonTone, } from "@hjmds/design-contracts/recipes";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & Readonly<{
     tone?: ButtonTone;
     size?: ButtonSize;
     loading?: boolean;
     leading?: ReactNode;
     trailing?: ReactNode;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 export declare const Button: import("react").ForwardRefExoticComponent<ButtonHTMLAttributes<HTMLButtonElement> & Readonly<{
     tone?: ButtonTone;
@@ -16,6 +19,8 @@ export declare const Button: import("react").ForwardRefExoticComponent<ButtonHTM
     loading?: boolean;
     leading?: ReactNode;
     trailing?: ReactNode;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }> & import("react").RefAttributes<HTMLButtonElement>>;
 export type IconButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "aria-label"> & Readonly<{
     label: string;
@@ -24,6 +29,8 @@ export type IconButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "ari
     shape?: IconButtonShape;
     loading?: boolean;
     children: ReactNode;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 export declare const IconButton: import("react").ForwardRefExoticComponent<Omit<ButtonHTMLAttributes<HTMLButtonElement>, "aria-label"> & Readonly<{
     label: string;
@@ -32,6 +39,8 @@ export declare const IconButton: import("react").ForwardRefExoticComponent<Omit<
     shape?: IconButtonShape;
     loading?: boolean;
     children: ReactNode;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }> & import("react").RefAttributes<HTMLButtonElement>>;
 export type LinkRenderProps = AnchorHTMLAttributes<HTMLAnchorElement> & Readonly<{
     children: ReactNode;

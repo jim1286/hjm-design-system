@@ -29,6 +29,7 @@ import {
 } from "react";
 import { classNames } from "./internal.js";
 import { Surface, Text } from "./layout.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type { CardHeadingLevel } from "@hjmds/design-contracts/components/card";
 export type { TagTone } from "@hjmds/design-contracts/components/tag";
@@ -40,7 +41,9 @@ export type BadgeProps = HTMLAttributes<HTMLSpanElement> &
     size?: BadgeSize;
     variant?: BadgeVariant;
     leading?: ReactNode;
-  }>;
+      /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
+}>;
 
 export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(function Badge(
   {
@@ -50,6 +53,8 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(function Badge(
     leading,
     className,
     children,
+    layoutStyle,
+    style,
     ...props
   },
   ref,
@@ -57,6 +62,7 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(function Badge(
   return (
     <span
       {...props}
+      style={{ ...style, ...layoutStyle }}
       ref={ref}
       className={classNames("hjm-badge", className)}
       data-tone={tone}
@@ -77,10 +83,12 @@ export type TagProps = Omit<HTMLAttributes<HTMLSpanElement>, "children"> &
   Readonly<{
     children: string;
     tone?: TagTone;
-  }>;
+      /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
+}>;
 
 export const Tag = forwardRef<HTMLSpanElement, TagProps>(function Tag(
-  { children, tone, className, ...props },
+  { children, tone, className, layoutStyle, style, ...props },
   ref,
 ) {
   const descriptor = resolveTagDescriptor({
@@ -90,6 +98,7 @@ export const Tag = forwardRef<HTMLSpanElement, TagProps>(function Tag(
   return (
     <span
       {...props}
+      style={{ ...style, ...layoutStyle }}
       ref={ref}
       className={classNames("hjm-tag", className)}
       data-tone={descriptor.tone}
@@ -201,7 +210,9 @@ export type ListRowProps = Omit<HTMLAttributes<HTMLElement>, "title" | "onClick"
     disabled?: boolean;
     href?: string;
     onClick?: MouseEventHandler<HTMLElement>;
-  }>;
+      /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
+}>;
 
 export const ListRow = forwardRef<HTMLElement, ListRowProps>(function ListRow(
   {
@@ -215,6 +226,8 @@ export const ListRow = forwardRef<HTMLElement, ListRowProps>(function ListRow(
     href,
     onClick,
     className,
+    layoutStyle,
+    style,
     ...props
   },
   ref,
@@ -245,6 +258,8 @@ export const ListRow = forwardRef<HTMLElement, ListRowProps>(function ListRow(
       className: classNames("hjm-list-row", className),
       "data-density": density,
       "data-state": disabled ? "disabled" : selected ? "selected" : "idle",
+      // Placement wins over the legacy `style`, matching Surface's ordering.
+      style: { ...style, ...layoutStyle },
     },
     leading ? <span className="hjm-list-row__leading">{leading}</span> : null,
     <span className="hjm-list-row__content">
