@@ -1,6 +1,7 @@
 import { act, useRef, useState } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { userEvent } from "vitest/browser";
 import {
   Accordion,
   AlertDialog,
@@ -305,23 +306,37 @@ describe("modal overlay behavior", () => {
 
 describe("non-modal popup behavior", () => {
   it("adds Tooltip description only while focus keeps it open", async () => {
+    const onOpenChange = vi.fn();
     await render(
       <HjmProvider systemTheme="light">
-        <Tooltip trigger={<button type="button">도움말</button>} content="상세 설명" />
+        <Tooltip
+          trigger={<button type="button">도움말</button>}
+          content="상세 설명"
+          onOpenChange={onOpenChange}
+        />
+        <button type="button" style={{ display: "block", marginBlockStart: 80 }}>
+          다음 항목
+        </button>
       </HjmProvider>,
     );
-    const trigger = container.querySelector<HTMLButtonElement>("button")!;
-    await act(async () => trigger.focus());
+    const [trigger, next] = [...container.querySelectorAll<HTMLButtonElement>("button")];
+    // A real pointer left over the trigger can reopen a hoverable tooltip after
+    // blur. Park it outside before testing the keyboard-only focus lifecycle.
+    await act(async () => userEvent.hover(next!));
+    await act(async () => trigger!.focus());
+    expect(document.activeElement).toBe(trigger);
+    expect(onOpenChange).toHaveBeenLastCalledWith(true, { reason: "focus" });
     const tooltip = document.body.querySelector<HTMLElement>('[role="tooltip"]');
     expect(tooltip).not.toBeNull();
     if (tooltip === null) throw new Error("Tooltip did not open on focus");
     expect(tooltip.textContent).toBe("상세 설명");
-    expect(trigger.getAttribute("aria-describedby")).toBe(tooltip.id);
+    expect(trigger!.getAttribute("aria-describedby")).toBe(tooltip.id);
 
-    await act(async () => trigger.blur());
-    await flush();
+    await act(async () => userEvent.tab());
+    expect(document.activeElement).toBe(next);
+    expect(onOpenChange).toHaveBeenLastCalledWith(false, { reason: "blur" });
     expect(document.body.querySelector('[role="tooltip"]')).toBeNull();
-    expect(trigger.hasAttribute("aria-describedby")).toBe(false);
+    expect(trigger!.hasAttribute("aria-describedby")).toBe(false);
   });
 
   it("supports Menu roving keys, disabled skipping, selection, and focus return", async () => {
