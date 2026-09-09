@@ -1,6 +1,6 @@
 {
   "name": "@hjmds/react",
-  "version": "0.9.5",
+  "version": "0.9.6",
   "description": "Accessible React 19 renderers for HJM design contracts.",
   "license": "MIT",
   "publishConfig": {
