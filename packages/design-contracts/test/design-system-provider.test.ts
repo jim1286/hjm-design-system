@@ -263,6 +263,48 @@ describe("DesignSystemEnvironment resolution", () => {
     expect(() => validateDesignSystemProviderValue(value)).not.toThrow();
   });
 
+  it("applies a product brand palette over the semantic keys without dropping the rest", () => {
+    // 이 입구가 없으면 앱은 자체 토큰 레이어로 CSS 변수를 덮어쓰는 수밖에 없고,
+    // 그건 canonical 팔레트 복제가 된다. 주는 키만 교체하고 나머지는 기본값을 유지한다.
+    const value = resolveDesignSystemProviderValue(
+      { theme: "light" },
+      {
+        systemTheme: "light",
+        brandPalette: { light: { primary: "#173e2e", bg: "#f4f2ea" } },
+      },
+    );
+    expect(value.palette.theme.primary).toBe("#173e2e");
+    expect(value.palette.theme.bg).toBe("#f4f2ea");
+    expect(value.palette.theme.text).toBe(THEMES.light.text);
+    expect(Object.keys(value.palette.theme).sort()).toEqual(
+      Object.keys(THEMES.light).sort(),
+    );
+    expect(() => validateDesignSystemProviderValue(value)).not.toThrow();
+  });
+
+  it("keeps the canonical palette when the brand override targets the other theme", () => {
+    const value = resolveDesignSystemProviderValue(
+      { theme: "dark" },
+      {
+        systemTheme: "dark",
+        brandPalette: { light: { primary: "#173e2e" } },
+      },
+    );
+    expect(value.palette.theme).toBe(THEMES.dark);
+  });
+
+  it("still rejects a brand override that is not a canonical color value", () => {
+    expect(() =>
+      resolveDesignSystemProviderValue(
+        { theme: "light" },
+        {
+          systemTheme: "light",
+          brandPalette: { light: { primary: "lime" } },
+        },
+      ),
+    ).toThrow(/palette\.theme\.primary/);
+  });
+
   it("rejects partial or non-composable supplied product palettes", () => {
     const value = resolveDesignSystemProviderValue(
       { theme: "light" },

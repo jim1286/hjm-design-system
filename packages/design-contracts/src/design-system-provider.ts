@@ -5,6 +5,7 @@ import {
   accentFill,
   isThemePreference,
   type ResolvedTheme,
+  type ThemeColors,
   type ThemePreference,
 } from "./colors.js";
 
@@ -60,6 +61,13 @@ export type ResolveDesignSystemEnvironmentOptions = Readonly<{
   systemDirection?: DesignSystemDirection;
   systemTextScale?: DesignSystemTextScale;
   systemReducedMotion?: boolean;
+  /**
+   * 제품 브랜드 색을 HJM 시맨틱 키 위에 덮어쓴다. 키 집합은 그대로이므로 recipe와
+   * contrast 규칙이 계속 적용된다. 이 입구가 없으면 앱은 자체 토큰 레이어를 만들어
+   * CSS 변수를 덮어쓰는 수밖에 없고, 그건 canonical 팔레트 복제가 된다.
+   * 주는 키만 교체하고 나머지는 HJM 기본값을 유지한다.
+   */
+  brandPalette?: Readonly<Partial<Record<ResolvedTheme, Readonly<Partial<ThemeColors>>>>>;
   /** A nested renderer inherits the already-resolved parent before consulting OS defaults. */
   parent?: ResolvedDesignSystemEnvironment;
 }>;
@@ -246,10 +254,13 @@ export function resolveDesignSystemProviderValue(
   options: ResolveDesignSystemEnvironmentOptions,
 ): DesignSystemProviderValue {
   const environment = resolveDesignSystemEnvironment(input, options);
+  const brandOverride = options.brandPalette?.[environment.theme];
   const value = {
     environment,
     palette: {
-      theme: THEMES[environment.theme],
+      theme: brandOverride === undefined
+        ? THEMES[environment.theme]
+        : { ...THEMES[environment.theme], ...brandOverride },
       statusAccents: ACCENTS[environment.theme],
       statusAccentFills: accentFill,
     },

@@ -133,10 +133,13 @@ export function resolveDesignSystemEnvironment(input, options) {
  */
 export function resolveDesignSystemProviderValue(input, options) {
     const environment = resolveDesignSystemEnvironment(input, options);
+    const brandOverride = options.brandPalette?.[environment.theme];
     const value = {
         environment,
         palette: {
-            theme: THEMES[environment.theme],
+            theme: brandOverride === undefined
+                ? THEMES[environment.theme]
+                : { ...THEMES[environment.theme], ...brandOverride },
             statusAccents: ACCENTS[environment.theme],
             statusAccentFills: accentFill,
         },

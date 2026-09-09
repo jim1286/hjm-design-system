@@ -1,5 +1,5 @@
 import type { ColorReferencePalette } from "./color-references.js";
-import { type ResolvedTheme, type ThemePreference } from "./colors.js";
+import { type ResolvedTheme, type ThemeColors, type ThemePreference } from "./colors.js";
 /**
  * Canonical logical direction. Existing public component-specific names stay
  * source-compatible as aliases of this type instead of redeclaring the union.
@@ -42,6 +42,13 @@ export type ResolveDesignSystemEnvironmentOptions = Readonly<{
     systemDirection?: DesignSystemDirection;
     systemTextScale?: DesignSystemTextScale;
     systemReducedMotion?: boolean;
+    /**
+     * 제품 브랜드 색을 HJM 시맨틱 키 위에 덮어쓴다. 키 집합은 그대로이므로 recipe와
+     * contrast 규칙이 계속 적용된다. 이 입구가 없으면 앱은 자체 토큰 레이어를 만들어
+     * CSS 변수를 덮어쓰는 수밖에 없고, 그건 canonical 팔레트 복제가 된다.
+     * 주는 키만 교체하고 나머지는 HJM 기본값을 유지한다.
+     */
+    brandPalette?: Readonly<Partial<Record<ResolvedTheme, Readonly<Partial<ThemeColors>>>>>;
     /** A nested renderer inherits the already-resolved parent before consulting OS defaults. */
     parent?: ResolvedDesignSystemEnvironment;
 }>;
