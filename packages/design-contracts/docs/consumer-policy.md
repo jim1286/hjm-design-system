@@ -107,6 +107,24 @@ semantic axis로 옮겼습니다. 아래는 그 축과 대체 대상입니다.
 | 중첩 web Provider의 `display: contents` 인라인 중화 | `host="contents"` |
 | secondary 컨트롤 테두리를 제품 boundary 색으로 덮기 | `borderControl` semantic key + `semanticColors.border.control` |
 
+### Web renderer의 캐스케이드
+
+`@hjmds/react/styles.css`는 **CSS 레이어 밖**에 있다. Tailwind 4를 쓰는 소비 앱의
+유틸리티는 `@layer utilities` 안에 들어가고, 레이어 밖 규칙은 레이어 안 규칙을
+이긴다. 따라서 HJM 컴포넌트에 `px-0`·`rounded-none`·`justify-start` 같은
+유틸리티를 붙여 recipe 값을 덮으려는 시도는 **조용히 아무 일도 하지 않는다.**
+
+이건 결함이 아니라 이 정책이 의도한 결과다 — recipe 소유 값은 지나가는
+유틸리티로 흔들리면 안 된다. 다만 **조용하다**는 점이 문제라, 소비 앱은 다음을
+알고 있어야 한다.
+
+- 유틸리티로 recipe 값을 덮는 코드는 리뷰에서 걸러야 한다. 필요한 값은 semantic
+  axis로 요청한다.
+- HJM이 표현할 수 없는 값(제3자 브랜드 색 등)은 앱의 stylesheet에서 `.hjm-*`를
+  함께 적어 특이도를 맞춘 규칙으로만 쓰고, 그 목록을 한 곳에 모아 둔다.
+- 인라인 `style`은 모든 규칙을 이기므로 이관 전에는 보이던 값이 이관 후 조용히
+  사라질 수 있다. 이관은 브라우저에서 실제 렌더를 확인하며 진행한다.
+
 > `ThemeColors`에 semantic key를 더하는 것은 `brandPalette` 부분 주입 소비자에게는
 > 무해하지만, **완전한 팔레트를 직접 선언하는 소비자에게는 타입 파괴적**이다.
 > 0.x train에서는 patch로 내보내되 릴리스 노트에 그 사실을 적고, 소비자는 새 key를
