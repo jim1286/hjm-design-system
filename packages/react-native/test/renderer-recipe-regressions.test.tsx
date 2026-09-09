@@ -519,6 +519,23 @@ describe("Recipe axes that replace product style overrides", () => {
     expect(squareFrame.borderRadius).toBeUndefined();
   });
 
+  it("paints the toggle treatment and drops link padding from the recipe", () => {
+    const selected = render(<Button selected tone="secondary">Toggle</Button>);
+    const node = byLabel(selected, "Toggle");
+    expect(flattenStyle((node.props.style as (s: { pressed: boolean }) => unknown)({ pressed: false })))
+      .toMatchObject({
+        backgroundColor: lightValue.palette.theme.surfaceAccent,
+        borderColor: lightValue.palette.theme.contentBrand,
+      });
+    expect(node.props.accessibilityState.selected).toBe(true);
+
+    const link = render(<Button tone="link">Inline</Button>);
+    expect(pressableStyleOf(byLabel(link, "Inline")).paddingHorizontal).toBe(0);
+    // Other tones keep the size axis' padding.
+    expect(pressableStyleOf(byLabel(render(<Button>Framed</Button>), "Framed")).paddingHorizontal)
+      .toBe(buttonRecipe.sizes.medium.paddingHorizontal);
+  });
+
   it("accepts layoutStyle on the components that previously required style", () => {
     const chip = render(
       <Chip

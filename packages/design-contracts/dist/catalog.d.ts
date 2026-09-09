@@ -2138,26 +2138,38 @@ export declare const recipeRegistry: {
                 readonly background: "primary";
                 readonly content: "onPrimary";
                 readonly border: null;
+                readonly paddingHorizontal: null;
             };
             readonly secondary: {
                 readonly background: "surfaceAlt";
                 readonly content: "text";
                 readonly border: "textSub";
+                readonly paddingHorizontal: null;
             };
             readonly ghost: {
                 readonly background: null;
                 readonly content: "textMuted";
                 readonly border: null;
+                readonly paddingHorizontal: null;
             };
             readonly danger: {
                 readonly background: "dangerFill";
                 readonly content: "onDanger";
                 readonly border: null;
+                readonly paddingHorizontal: null;
             };
             readonly link: {
                 readonly background: null;
                 readonly content: "contentBrand";
                 readonly border: null;
+                readonly paddingHorizontal: 0;
+            };
+        };
+        readonly states: {
+            readonly selected: {
+                readonly background: "surfaceAccent";
+                readonly content: "contentBrand";
+                readonly border: "contentBrand";
             };
         };
         readonly sizes: {

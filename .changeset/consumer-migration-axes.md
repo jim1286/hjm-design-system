@@ -18,3 +18,7 @@ recurring overrides of recipe-owned values and five components that offered no
 - `layoutStyle` on `Chip`, `ListRow`, `Image`, `LoadMore` (native) and
   `DescriptionList` (web); their root `style` is now marked deprecated, and the
   layout-only slot styles narrow to `HjmCompositionStyleProp`
+
+- `Button`: `selected` paints the toggle treatment that `accessibilityState` /
+  `aria-pressed` already claimed, and the `link` tone drops the size axis'
+  horizontal padding so it aligns with the copy around it

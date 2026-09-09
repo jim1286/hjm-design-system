@@ -182,6 +182,28 @@ describe("Web core normalization", () => {
     );
   });
 
+  it("carries the toggle state and the link tone's padding reset in CSS", () => {
+    const markup = renderToStaticMarkup(
+      <HjmProvider systemTheme="light">
+        <Button selected tone="secondary">Toggle</Button>
+        <Button tone="link">Inline</Button>
+      </HjmProvider>,
+    );
+    expect(markup).toContain('data-selected="true"');
+    expect(markup).toContain('aria-pressed="true"');
+
+    const css = readFileSync(
+      fileURLToPath(new URL("../src/styles.css", import.meta.url)),
+      "utf8",
+    );
+    expect(css).toMatch(
+      /\.hjm-button\[data-tone="link"\] \{[^}]*padding-inline: 0;/s,
+    );
+    expect(css).toMatch(
+      /\.hjm-button\[data-selected="true"\] \{[^}]*background: var\(--hjm-color-surface-accent\);/s,
+    );
+  });
+
   it("raises the compact control height variables under minimumVisualTarget", () => {
     const markup = renderToStaticMarkup(
       <HjmProvider minimumVisualTarget systemTheme="light">

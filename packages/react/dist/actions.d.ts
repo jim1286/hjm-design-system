@@ -12,6 +12,8 @@ export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & Readonly<{
     shape?: ButtonShape;
     /** Label placement inside the frame; `leading` suits a full-width row action. */
     align?: ButtonAlign;
+    /** Toggle state. Paints the selected treatment and sets `aria-pressed`. */
+    selected?: boolean;
     loading?: boolean;
     leading?: ReactNode;
     trailing?: ReactNode;
@@ -25,6 +27,8 @@ export declare const Button: import("react").ForwardRefExoticComponent<ButtonHTM
     shape?: ButtonShape;
     /** Label placement inside the frame; `leading` suits a full-width row action. */
     align?: ButtonAlign;
+    /** Toggle state. Paints the selected treatment and sets `aria-pressed`. */
+    selected?: boolean;
     loading?: boolean;
     leading?: ReactNode;
     trailing?: ReactNode;

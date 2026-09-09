@@ -22,11 +22,21 @@ export const buttonRecipe = {
   slots: ["root", "leading", "label", "trailing", "spinner"] as const,
   defaults: { tone: "primary", size: "medium", shape: "rounded", align: "center" } as const,
   tones: {
-    primary: { background: "primary", content: "onPrimary", border: null },
-    secondary: { background: "surfaceAlt", content: "text", border: "textSub" },
-    ghost: { background: null, content: "textMuted", border: null },
-    danger: { background: "dangerFill", content: "onDanger", border: null },
-    link: { background: null, content: "contentBrand", border: null },
+    primary: { background: "primary", content: "onPrimary", border: null, paddingHorizontal: null },
+    secondary: { background: "surfaceAlt", content: "text", border: "textSub", paddingHorizontal: null },
+    ghost: { background: null, content: "textMuted", border: null, paddingHorizontal: null },
+    danger: { background: "dangerFill", content: "onDanger", border: null, paddingHorizontal: null },
+    // A link-tone control is inline copy, so the size axis' horizontal padding
+    // would push it out of alignment with the text around it.
+    link: { background: null, content: "contentBrand", border: null, paddingHorizontal: 0 },
+  },
+  /**
+   * Visual treatment for a control that is also a toggle. `accessibilityState`
+   * / `aria-pressed` already expressed the state; without a paired visual every
+   * consumer painted the selected background in product styles.
+   */
+  states: {
+    selected: { background: "surfaceAccent", content: "contentBrand", border: "contentBrand" },
   },
   sizes: {
     small: {
@@ -60,8 +70,17 @@ export const buttonRecipe = {
       background: keyof ThemeColors | null;
       content: keyof ThemeColors;
       border: keyof ThemeColors | null;
+      /** `null` keeps the size axis' padding. */
+      paddingHorizontal: number | null;
     }
   >;
+  states: {
+    selected: {
+      background: keyof ThemeColors;
+      content: keyof ThemeColors;
+      border: keyof ThemeColors;
+    };
+  };
   sizes: Record<
     ButtonSize,
     {

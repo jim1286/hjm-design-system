@@ -225,7 +225,12 @@
 .hjm-button[data-tone="secondary"], .hjm-icon-button[data-tone="secondary"] { color: var(--hjm-color-text); background: var(--hjm-color-surface-alt); border-color: var(--hjm-color-text-sub); }
 .hjm-button[data-tone="ghost"], .hjm-icon-button[data-tone="ghost"] { color: var(--hjm-color-text-muted); background: transparent; }
 .hjm-button[data-tone="danger"], .hjm-icon-button[data-tone="danger"] { color: var(--hjm-color-on-danger); background: var(--hjm-color-danger-fill); }
-.hjm-button[data-tone="link"] { color: var(--hjm-color-content-brand); background: transparent; }
+/* A link-tone control is inline copy; the size axis' padding would push it out
+   of alignment with the text around it. */
+.hjm-button[data-tone="link"] { color: var(--hjm-color-content-brand); background: transparent; padding-inline: 0; }
+/* Toggle treatment: aria-pressed already carried the state, so without a paired
+   visual every consumer painted the selected background in product styles. */
+.hjm-button[data-selected="true"] { color: var(--hjm-color-content-brand); background: var(--hjm-color-surface-accent); border-color: var(--hjm-color-content-brand); }
 .hjm-button:active:not(:disabled):not([aria-disabled="true"]), .hjm-icon-button:active:not(:disabled):not([aria-disabled="true"]) { transform: scale(0.98); }
 .hjm-button:disabled, .hjm-icon-button:disabled { cursor: not-allowed; opacity: 0.5; }
 .hjm-button__label { min-inline-size: 0; overflow-wrap: anywhere; }

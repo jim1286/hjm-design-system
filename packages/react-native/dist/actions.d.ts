@@ -19,6 +19,8 @@ export type ButtonProps = Omit<PressableProps, "accessibilityRole" | "accessibil
     shape?: ButtonShape;
     /** Label placement inside the frame; `leading` suits a full-width row action. */
     align?: ButtonAlign;
+    /** Toggle state. Paints the selected treatment and reports it to assistive tech. */
+    selected?: boolean;
     disabled?: boolean;
     loading?: boolean;
     /** Keep the busy control discoverable by default; opt in only for legacy disabled semantics. */
@@ -60,6 +62,8 @@ export declare const Button: import("react").ForwardRefExoticComponent<Omit<Pres
     shape?: ButtonShape;
     /** Label placement inside the frame; `leading` suits a full-width row action. */
     align?: ButtonAlign;
+    /** Toggle state. Paints the selected treatment and reports it to assistive tech. */
+    selected?: boolean;
     disabled?: boolean;
     loading?: boolean;
     /** Keep the busy control discoverable by default; opt in only for legacy disabled semantics. */

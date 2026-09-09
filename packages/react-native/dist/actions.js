@@ -9,7 +9,7 @@ import { ActivityIndicator, Pressable, View, } from "react-native";
 import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
 import { minimumTargetStyle } from "./internal/styles.js";
-export const Button = forwardRef(function Button({ label, children, tone = buttonRecipe.defaults.tone, size = buttonRecipe.defaults.size, shape = buttonRecipe.defaults.shape, align = buttonRecipe.defaults.align, disabled = false, loading = false, disableWhileLoading = false, growWithContent = false, loadingLabel, leading, trailing, fullWidth = false, hitSlop, layoutStyle, style, labelStyle, renderLoadingIndicator, accessibilityLabel, accessibilityState, onPress, onLongPress, ...props }, ref) {
+export const Button = forwardRef(function Button({ label, children, tone = buttonRecipe.defaults.tone, size = buttonRecipe.defaults.size, shape = buttonRecipe.defaults.shape, align = buttonRecipe.defaults.align, selected, disabled = false, loading = false, disableWhileLoading = false, growWithContent = false, loadingLabel, leading, trailing, fullWidth = false, hitSlop, layoutStyle, style, labelStyle, renderLoadingIndicator, accessibilityLabel, accessibilityState, onPress, onLongPress, ...props }, ref) {
     const { colors, environment } = useHjmNativeTheme();
     const inactive = disabled || loading;
     const unavailable = disabled || (loading && disableWhileLoading);
@@ -21,16 +21,22 @@ export const Button = forwardRef(function Button({ label, children, tone = butto
     }
     const toneContract = buttonRecipe.tones[tone];
     const sizeContract = buttonRecipe.sizes[size];
+    const selectedContract = selected === true ? buttonRecipe.states.selected : null;
     const resolveColor = (key) => key === null ? "transparent" : colors[key];
-    const contentColor = resolveColor(toneContract.content);
+    const contentColor = resolveColor(selectedContract?.content ?? toneContract.content);
     const visibleHeight = visibleControlHeight(sizeContract.height, environment.minimumVisualTarget);
-    return (_jsxs(Pressable, { ...props, ref: ref, accessibilityLabel: accessibilityLabel ?? (typeof content === "string" ? content : undefined), accessibilityRole: "button", accessibilityState: { ...accessibilityState, disabled: unavailable, busy: loading }, disabled: unavailable, hitSlop: hitSlop ?? (sizeContract.hitSlop > 0 ? sizeContract.hitSlop : undefined), onPress: loading ? () => undefined : onPress, onLongPress: loading ? () => undefined : onLongPress, style: ({ pressed }) => [
+    return (_jsxs(Pressable, { ...props, ref: ref, accessibilityLabel: accessibilityLabel ?? (typeof content === "string" ? content : undefined), accessibilityRole: "button", accessibilityState: {
+            ...accessibilityState,
+            ...(selected === undefined ? {} : { selected }),
+            disabled: unavailable,
+            busy: loading,
+        }, disabled: unavailable, hitSlop: hitSlop ?? (sizeContract.hitSlop > 0 ? sizeContract.hitSlop : undefined), onPress: loading ? () => undefined : onPress, onLongPress: loading ? () => undefined : onLongPress, style: ({ pressed }) => [
             {
                 alignItems: "center",
-                backgroundColor: resolveColor(toneContract.background),
-                borderColor: resolveColor(toneContract.border),
+                backgroundColor: resolveColor(selectedContract?.background ?? toneContract.background),
+                borderColor: resolveColor(selectedContract?.border ?? toneContract.border),
                 borderRadius: radius[buttonRecipe.shapes[shape]],
-                borderWidth: toneContract.border ? 1 : 0,
+                borderWidth: (selectedContract ?? toneContract).border ? 1 : 0,
                 direction: environment.direction,
                 flexDirection: "row",
                 gap: spacing.xs,
@@ -43,7 +49,7 @@ export const Button = forwardRef(function Button({ label, children, tone = butto
                     : pressed
                         ? buttonRecipe.opacity.pressed
                         : 1,
-                paddingHorizontal: sizeContract.paddingHorizontal,
+                paddingHorizontal: toneContract.paddingHorizontal ?? sizeContract.paddingHorizontal,
                 ...(fullWidth ? { alignSelf: "stretch" } : {}),
             },
             style,

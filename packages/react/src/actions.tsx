@@ -43,6 +43,8 @@ export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> &
     shape?: ButtonShape;
     /** Label placement inside the frame; `leading` suits a full-width row action. */
     align?: ButtonAlign;
+    /** Toggle state. Paints the selected treatment and sets `aria-pressed`. */
+    selected?: boolean;
     loading?: boolean;
     leading?: ReactNode;
     trailing?: ReactNode;
@@ -56,6 +58,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     size = buttonRecipe.defaults.size,
     shape = buttonRecipe.defaults.shape,
     align = buttonRecipe.defaults.align,
+    selected,
     loading = false,
     leading,
     trailing,
@@ -90,6 +93,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       data-size={size}
       data-shape={shape}
       data-align={align}
+      {...(selected === undefined ? {} : { "data-selected": selected, "aria-pressed": selected })}
       data-state={loading ? "loading" : unavailable ? "disabled" : "idle"}
       aria-busy={loading || undefined}
       aria-disabled={loading || undefined}
