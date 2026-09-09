@@ -106,6 +106,11 @@ semantic axis로 옮겼습니다. 아래는 그 축과 대체 대상입니다.
 | ListRow leading slot에 40pt 원형 avatar 프레임을 제품이 다시 계산 | `leadingShape` (`listRowRecipe.leadingSize`를 renderer가 바인딩) |
 | 중첩 web Provider의 `display: contents` 인라인 중화 | `host="contents"` |
 | secondary 컨트롤 테두리를 제품 boundary 색으로 덮기 | `borderControl` semantic key + `semanticColors.border.control` |
+
+> `ThemeColors`에 semantic key를 더하는 것은 `brandPalette` 부분 주입 소비자에게는
+> 무해하지만, **완전한 팔레트를 직접 선언하는 소비자에게는 타입 파괴적**이다.
+> 0.x train에서는 patch로 내보내되 릴리스 노트에 그 사실을 적고, 소비자는 새 key를
+> 채워야 한다. 1.0 이후에는 이 형태의 추가를 minor 이상으로 올린다.
 | 토글 Button·IconButton의 selected 배경·테두리를 제품 style로 칠하기 | `selected` (`buttonRecipe.states.selected`, `iconButtonRecipe.states.selected`) |
 | `link` tone Button에서 `paddingHorizontal: 0`으로 인라인 정렬 복원 | tone별 `paddingHorizontal` (link=0) |
 | Web ListRow의 1행/2행 최소 높이·padding·gap을 제품이 다시 계산 | `--hjm-list-row-*` 변수로 density recipe를 stylesheet에 바인딩 |
