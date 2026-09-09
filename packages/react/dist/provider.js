@@ -14,7 +14,7 @@ function subscribeMedia(query, callback) {
 function useMediaQuery(query, observe = true) {
     return useSyncExternalStore((callback) => observe ? subscribeMedia(query, callback) : () => undefined, () => observe && window.matchMedia(query).matches, () => false);
 }
-export const HjmProvider = forwardRef(function HjmProvider({ children, theme, direction, textScale, reducedMotion, systemTheme, value: suppliedValue, className, style, ...rest }, ref) {
+export const HjmProvider = forwardRef(function HjmProvider({ children, theme, direction, textScale, reducedMotion, minimumVisualTarget, systemTheme, value: suppliedValue, className, style, ...rest }, ref) {
     const parent = useContext(HjmThemeContext);
     const observesSystem = suppliedValue === undefined;
     const prefersDark = useMediaQuery("(prefers-color-scheme: dark)", observesSystem);
@@ -25,6 +25,7 @@ export const HjmProvider = forwardRef(function HjmProvider({ children, theme, di
         ...(direction === undefined ? {} : { direction }),
         ...(textScale === undefined ? {} : { textScale }),
         ...(reducedMotion === undefined ? {} : { reducedMotion }),
+        ...(minimumVisualTarget === undefined ? {} : { minimumVisualTarget }),
     };
     const value = suppliedValue ?? resolveDesignSystemProviderValue(input, {
         systemTheme: resolvedSystemTheme,

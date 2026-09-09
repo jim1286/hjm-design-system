@@ -2,6 +2,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { control, glyph, radius, spacing } from "@hjmds/design-contracts/foundations";
 import { buttonRecipe, } from "@hjmds/design-contracts/recipes/base";
 import { bottomCtaRecipe, iconButtonRecipe, resolveIconButtonPresentation, } from "@hjmds/design-contracts/recipes";
+import { visibleControlHeight } from "@hjmds/design-contracts/components/design-system-provider";
 import { resolveLinkDescriptor, } from "@hjmds/design-contracts/components/link";
 import { forwardRef } from "react";
 import { ActivityIndicator, Pressable, View, } from "react-native";
@@ -22,6 +23,7 @@ export const Button = forwardRef(function Button({ label, children, tone = butto
     const sizeContract = buttonRecipe.sizes[size];
     const resolveColor = (key) => key === null ? "transparent" : colors[key];
     const contentColor = resolveColor(toneContract.content);
+    const visibleHeight = visibleControlHeight(sizeContract.height, environment.minimumVisualTarget);
     return (_jsxs(Pressable, { ...props, ref: ref, accessibilityLabel: accessibilityLabel ?? (typeof content === "string" ? content : undefined), accessibilityRole: "button", accessibilityState: { ...accessibilityState, disabled: unavailable, busy: loading }, disabled: unavailable, hitSlop: hitSlop ?? (sizeContract.hitSlop > 0 ? sizeContract.hitSlop : undefined), onPress: loading ? () => undefined : onPress, onLongPress: loading ? () => undefined : onLongPress, style: ({ pressed }) => [
             {
                 alignItems: "center",
@@ -32,9 +34,9 @@ export const Button = forwardRef(function Button({ label, children, tone = butto
                 direction: environment.direction,
                 flexDirection: "row",
                 gap: spacing.xs,
-                ...(growWithContent ? {} : { height: sizeContract.height }),
+                ...(growWithContent ? {} : { height: visibleHeight }),
                 justifyContent: "center",
-                minHeight: sizeContract.height,
+                minHeight: visibleHeight,
                 minWidth: control.minTouchTarget,
                 opacity: inactive
                     ? buttonRecipe.opacity.disabled

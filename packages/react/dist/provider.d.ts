@@ -13,6 +13,7 @@ type HjmProviderEnvironmentProps = Readonly<{
     direction?: DesignSystemDirection;
     textScale?: DesignSystemTextScale;
     reducedMotion?: boolean;
+    minimumVisualTarget?: boolean;
     /** Deterministic SSR/test override; otherwise prefers-color-scheme is observed. */
     systemTheme?: ResolvedTheme;
 }>;
@@ -23,6 +24,7 @@ type HjmProviderValueProps = Readonly<{
     direction?: never;
     textScale?: never;
     reducedMotion?: never;
+    minimumVisualTarget?: never;
     systemTheme?: never;
 }>;
 export type HjmProviderProps = Omit<HTMLAttributes<HTMLDivElement>, "children" | "dir"> & Readonly<{

@@ -12,23 +12,42 @@ export type DesignSystemDirection = "ltr" | "rtl";
  * local layout clamp. This is the single upstream signal both now consume.
  */
 export type DesignSystemTextScale = number;
+/**
+ * Visible height a compact control paints under a product's target-size policy.
+ *
+ * The compact recipes stay at 36 and reach the 44pt target through hit slop,
+ * which satisfies WCAG 2.5.8 but not the stricter iOS/Android guidance some
+ * products commit to. `minimumVisualTarget` turns that commitment into one
+ * resolved axis, so both renderers compute the same geometry instead of each
+ * consumer re-adding `minHeight` in product styles. It lives beside the axis
+ * rather than in `foundations` because it is a policy over a token, not a token.
+ */
+export declare function visibleControlHeight(recipeHeight: number, minimumVisualTarget: boolean): number;
 export type DesignSystemEnvironmentInput = Readonly<{
     theme?: ThemePreference;
     direction?: DesignSystemDirection;
     textScale?: DesignSystemTextScale;
     reducedMotion?: boolean;
+    /**
+     * Paint the minimum touch target as visible control geometry instead of
+     * reaching it with hit slop. This is a product accessibility stance, not an
+     * OS signal, so it has no `system*` counterpart.
+     */
+    minimumVisualTarget?: boolean;
 }>;
 export declare const designSystemEnvironmentDefaults: {
     readonly theme: "system";
     readonly direction: "ltr";
     readonly textScale: 1;
     readonly reducedMotion: false;
+    readonly minimumVisualTarget: false;
 };
 export type ResolvedDesignSystemEnvironment = Readonly<{
     theme: ResolvedTheme;
     direction: DesignSystemDirection;
     textScale: DesignSystemTextScale;
     reducedMotion: boolean;
+    minimumVisualTarget: boolean;
 }>;
 export type ResolveDesignSystemEnvironmentOptions = Readonly<{
     /**

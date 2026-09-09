@@ -13,6 +13,7 @@ import {
   type IconButtonSize,
   type IconButtonTone as ContractIconButtonTone,
 } from "@hjmds/design-contracts/recipes";
+import { visibleControlHeight } from "@hjmds/design-contracts/components/design-system-provider";
 import {
   resolveLinkDescriptor,
   type LinkDescriptor,
@@ -119,6 +120,7 @@ export const Button = forwardRef<NativeView, ButtonProps>(function Button({
   const resolveColor = (key: keyof ThemeColors | null): string =>
     key === null ? "transparent" : colors[key];
   const contentColor = resolveColor(toneContract.content);
+  const visibleHeight = visibleControlHeight(sizeContract.height, environment.minimumVisualTarget);
   return (
     <Pressable
       {...props}
@@ -142,9 +144,9 @@ export const Button = forwardRef<NativeView, ButtonProps>(function Button({
           direction: environment.direction,
           flexDirection: "row",
           gap: spacing.xs,
-          ...(growWithContent ? {} : { height: sizeContract.height }),
+          ...(growWithContent ? {} : { height: visibleHeight }),
           justifyContent: "center",
-          minHeight: sizeContract.height,
+          minHeight: visibleHeight,
           minWidth: control.minTouchTarget,
           opacity: inactive
             ? buttonRecipe.opacity.disabled

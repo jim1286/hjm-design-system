@@ -4,6 +4,7 @@ import { resolveColorReference } from "@hjmds/design-contracts/color-references"
 import { glyph, radius, spacing, typography } from "@hjmds/design-contracts/foundations";
 import { fieldRecipe, } from "@hjmds/design-contracts/recipes/base";
 import { chipRecipe, searchFieldRecipe, segmentedControlRecipe, selectionControlRecipe, selectionGroupRecipe, switchRecipe, } from "@hjmds/design-contracts/recipes";
+import { visibleControlHeight } from "@hjmds/design-contracts/components/design-system-provider";
 import { passwordFieldRecipe, resolvePasswordFieldDescriptor, } from "@hjmds/design-contracts/components/password-field";
 import { getOtpFieldSlotValues, otpFieldRecipe, resolveOtpFieldValue, } from "@hjmds/design-contracts/components/otp-field";
 import { getCheckboxNextState, reconcileCheckboxSelection, resolveControlAccessibleName, resolveInitialRadioValue, resolveInitialTabValue, reconcileRadioSelection, selectionGroupBehaviorDefaults, toggleCheckboxSelection, validateCheckboxSelection, validateRadioSelection, validateSelectionItems, } from "@hjmds/design-contracts/behaviors";
@@ -686,7 +687,7 @@ export function Chip({ label, size = chipRecipe.defaults.size, disabled = false,
                 direction: theme.environment.direction,
                 flexDirection: "row",
                 gap: metrics.gap,
-                height: metrics.height,
+                height: visibleControlHeight(metrics.height, theme.environment.minimumVisualTarget),
                 opacity: disabled
                     ? chipRecipe.states.disabledOpacity
                     : pressed

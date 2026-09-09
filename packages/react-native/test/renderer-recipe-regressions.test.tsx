@@ -4,7 +4,8 @@ import {
   imageRecipe,
   nativeResizeModes,
 } from "@hjmds/design-contracts/components/image";
-import { glyph, radius } from "@hjmds/design-contracts/foundations";
+import { control, glyph, radius } from "@hjmds/design-contracts/foundations";
+import { buttonRecipe } from "@hjmds/design-contracts/recipes/base";
 import {
   accordionRecipe,
   badgeRecipe,
@@ -29,6 +30,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   Accordion,
   Badge,
+  Button,
   Chip,
   CounterBadge,
   EmptyState,
@@ -438,6 +440,38 @@ describe("Native provider and structural renderer regressions", () => {
     expect(badge.findByType(Text).props.accessible).toBe(false);
     expect(() => render(<CounterBadge accessibilityLabel="   " count={1} />))
       .toThrow(/must not be empty/u);
+  });
+});
+
+describe("minimumVisualTarget control geometry", () => {
+  const strictValue = resolveDesignSystemProviderValue(
+    { direction: "ltr", minimumVisualTarget: true, reducedMotion: true, textScale: 1, theme: "light" },
+    { systemTheme: "light" },
+  );
+
+  const pressableStyle = (node: ReactTestInstance): Record<string, unknown> =>
+    flattenStyle((node.props.style as (state: { pressed: boolean }) => unknown)({ pressed: false }));
+
+  it("keeps compact recipe heights when the axis is off", () => {
+    expect(pressableStyle(byLabel(render(<Button size="small">Compact</Button>), "Compact")).minHeight)
+      .toBe(control.buttonHeight.small);
+    expect(pressableStyle(byLabel(render(<Chip label="Tag" onPress={() => undefined} selected={false} selectionMode="single" size="small" />), "Tag")).height)
+      .toBe(chipRecipe.sizes.small.height);
+  });
+
+  it("raises compact Button and Chip to the visible touch target when the axis is on", () => {
+    const style = pressableStyle(byLabel(render(<Button size="small">Compact</Button>, strictValue), "Compact"));
+    expect(style.minHeight).toBe(control.minTouchTarget);
+    expect(style.height).toBe(control.minTouchTarget);
+    // Padding, color and radius still belong to the compact recipe.
+    expect(style.paddingHorizontal).toBe(buttonRecipe.sizes.small.paddingHorizontal);
+    expect(pressableStyle(byLabel(render(<Chip label="Tag" onPress={() => undefined} selected={false} selectionMode="single" size="small" />, strictValue), "Tag")).height)
+      .toBe(control.minTouchTarget);
+  });
+
+  it("leaves heights at or above the target untouched", () => {
+    expect(pressableStyle(byLabel(render(<Button size="large">Roomy</Button>, strictValue), "Roomy")).minHeight)
+      .toBe(control.buttonHeight.large);
   });
 });
 

@@ -7,7 +7,10 @@ import {
   spacing,
   typography,
 } from "@hjmds/design-contracts/foundations";
-import type { DesignSystemProviderValue } from "@hjmds/design-contracts/components/design-system-provider";
+import {
+  visibleControlHeight,
+  type DesignSystemProviderValue,
+} from "@hjmds/design-contracts/components/design-system-provider";
 import type { CSSProperties } from "react";
 
 export type HjmThemeStyle = CSSProperties &
@@ -68,7 +71,10 @@ export function createHjmThemeStyle(
   style["--hjm-control-min-touch-target"] = `${control.minTouchTarget}px`;
   style["--hjm-control-field-height"] = `${control.fieldHeight}px`;
   for (const [name, value] of Object.entries(control.buttonHeight)) {
-    style[`--hjm-control-button-${kebab(name)}`] = `${value}px`;
+    // The axis is applied to the emitted variables rather than to each rule so
+    // that every stylesheet consumer of a control height honours it at once.
+    style[`--hjm-control-button-${kebab(name)}`] =
+      `${visibleControlHeight(value, environment.minimumVisualTarget)}px`;
   }
 
   return style;

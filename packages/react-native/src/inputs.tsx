@@ -19,6 +19,7 @@ import {
   type SelectionControlSize,
   type SwitchSize,
 } from "@hjmds/design-contracts/recipes";
+import { visibleControlHeight } from "@hjmds/design-contracts/components/design-system-provider";
 import {
   passwordFieldRecipe,
   resolvePasswordFieldDescriptor,
@@ -1995,7 +1996,7 @@ export function Chip({
           direction: theme.environment.direction,
           flexDirection: "row",
           gap: metrics.gap,
-          height: metrics.height,
+          height: visibleControlHeight(metrics.height, theme.environment.minimumVisualTarget),
           opacity: disabled
             ? chipRecipe.states.disabledOpacity
             : pressed

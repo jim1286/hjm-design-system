@@ -52,6 +52,7 @@ type HjmProviderEnvironmentProps = Readonly<{
   direction?: DesignSystemDirection;
   textScale?: DesignSystemTextScale;
   reducedMotion?: boolean;
+  minimumVisualTarget?: boolean;
   /** Deterministic SSR/test override; otherwise prefers-color-scheme is observed. */
   systemTheme?: ResolvedTheme;
 }>;
@@ -63,6 +64,7 @@ type HjmProviderValueProps = Readonly<{
   direction?: never;
   textScale?: never;
   reducedMotion?: never;
+  minimumVisualTarget?: never;
   systemTheme?: never;
 }>;
 
@@ -82,6 +84,7 @@ export const HjmProvider = forwardRef<HTMLDivElement, HjmProviderProps>(
       direction,
       textScale,
       reducedMotion,
+      minimumVisualTarget,
       systemTheme,
       value: suppliedValue,
       className,
@@ -103,6 +106,7 @@ export const HjmProvider = forwardRef<HTMLDivElement, HjmProviderProps>(
       ...(direction === undefined ? {} : { direction }),
       ...(textScale === undefined ? {} : { textScale }),
       ...(reducedMotion === undefined ? {} : { reducedMotion }),
+      ...(minimumVisualTarget === undefined ? {} : { minimumVisualTarget }),
     };
     const value = suppliedValue ?? resolveDesignSystemProviderValue(input, {
       systemTheme: resolvedSystemTheme,

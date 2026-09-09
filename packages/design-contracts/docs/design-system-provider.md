@@ -41,7 +41,7 @@ antd `ConfigProvider`는 테마·방향(RTL)·글자 배율·locale 같은 전�
 
 ## 일반화한 계약
 
-- `DesignSystemEnvironmentInput`은 네 필드 모두 **선택**이다 — 렌더러가 아직 일부
+- `DesignSystemEnvironmentInput`은 다섯 필드 모두 **선택**이다 — 렌더러가 아직 일부
   신호만 알고 있을 수 있기 때문이다(RN의 `AccessibilityInfo.isReduceMotionEnabled()`는
   비동기라 첫 렌더에는 값이 없을 수 있다).
 - `resolveDesignSystemEnvironment(input, options)`의 우선순위는 축마다
@@ -66,7 +66,8 @@ antd `ConfigProvider`는 테마·방향(RTL)·글자 배율·locale 같은 전�
 ## HJM 기본값
 
 `designSystemEnvironmentDefaults`: `theme: "system"`, `direction: "ltr"`,
-`textScale: 1`, `reducedMotion: false` — 기존 호출의 fallback과 호환되는 값이다. 실제
+`textScale: 1`, `reducedMotion: false`, `minimumVisualTarget: false` — 기존 호출의
+fallback과 호환되는 값이다. 실제
 renderer는 이 fallback을 OS 감지 결과로 오해하면 안 되고, root에서 반드시
 `systemReducedMotion`을 공급해야 한다. RN의 비동기 신호를 아직 모르는 첫 프레임에는 adapter가
 애니메이션을 시작하지 않는 정책을 별도로 적용한다.
@@ -101,6 +102,11 @@ adapter가 자체 병합 로직을 다시 만들 필요가 없다. `parent`에�
 | `direction`(ltr/rtl) | 공개 — 새로 정식화 |
 | `textScale`(연속값) | 공개 |
 | `reducedMotion`(boolean 선호) | 공개 |
+| `minimumVisualTarget`(boolean 제품 정책) | 공개 — compact recipe의 36pt를 hit slop이 아니라
+  보이는 높이로 44pt까지 올린다. OS 신호가 아니라 제품의 target-size 기준이므로 `system*`
+  대응 옵션이 없고, 축을 켠 제품에서 `visibleControlHeight()`가 Button·Chip 높이와 web의
+  `--hjm-control-button-*` 변수를 함께 결정한다. 이 축이 없으면 각 제품이 wrapper에
+  `minHeight`를 다시 얹어 recipe가 소유한 기하를 제품 코드로 되돌린다. |
 | `locale`(언어 코드) | **배제** — RTL 여부는 `direction`으로 이미 표현되고, 숫자·날짜·복수형
   포맷은 "제품이 포맷한 문자열을 받는다" 원칙상 이 패키지가 몰라도 된다. locale 자체가
   필요한 제품은 그 값을 직접 들고 있다가 필요한 곳(예: `Intl.DateTimeFormat`)에 쓴다. |

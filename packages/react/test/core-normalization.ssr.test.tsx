@@ -157,4 +157,16 @@ describe("Web core normalization", () => {
       /\.hjm-button\[data-size="small"\]::after \{[^}]*position: absolute;[^}]*inset: calc\(-1 \* var\(--hjm-space-xxs\)\);/s,
     );
   });
+
+  it("raises the compact control height variables under minimumVisualTarget", () => {
+    const markup = renderToStaticMarkup(
+      <HjmProvider minimumVisualTarget systemTheme="light">
+        <Button size="small">작게</Button>
+      </HjmProvider>,
+    );
+    // The axis moves the emitted variable, so every rule reading a control
+    // height — Button, IconButton, PasswordField — follows without its own case.
+    expect(markup).toContain(`--hjm-control-button-small:${control.minTouchTarget}px`);
+    expect(markup).toContain(`--hjm-control-button-large:${buttonRecipe.sizes.large.height}px`);
+  });
 });

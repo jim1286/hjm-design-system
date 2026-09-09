@@ -31,9 +31,12 @@ function toEnvironmentInput(props) {
         ...(props.direction === undefined ? {} : { direction: props.direction }),
         ...(props.textScale === undefined ? {} : { textScale: props.textScale }),
         ...(props.reducedMotion === undefined ? {} : { reducedMotion: props.reducedMotion }),
+        ...(props.minimumVisualTarget === undefined
+            ? {}
+            : { minimumVisualTarget: props.minimumVisualTarget }),
     };
 }
-export function HjmNativeProvider({ children, theme, direction, textScale, reducedMotion, value: suppliedValue, }) {
+export function HjmNativeProvider({ children, theme, direction, textScale, reducedMotion, minimumVisualTarget, value: suppliedValue, }) {
     const parent = useContext(HjmNativeThemeContext);
     const colorScheme = useColorScheme();
     const systemReducedMotion = useSystemReducedMotion(suppliedValue === undefined && reducedMotion === undefined && parent === null);
@@ -43,7 +46,8 @@ export function HjmNativeProvider({ children, theme, direction, textScale, reduc
         ...(direction === undefined ? {} : { direction }),
         ...(textScale === undefined ? {} : { textScale }),
         ...(reducedMotion === undefined ? {} : { reducedMotion }),
-    }), [direction, reducedMotion, textScale, theme]);
+        ...(minimumVisualTarget === undefined ? {} : { minimumVisualTarget }),
+    }), [direction, minimumVisualTarget, reducedMotion, textScale, theme]);
     const contextValue = useMemo(() => {
         const resolved = suppliedValue ?? resolveDesignSystemProviderValue(environment, {
             systemTheme: colorScheme === "dark" ? "dark" : "light",
