@@ -235,6 +235,8 @@ export type IconButtonProps = Omit<
     tone?: IconButtonTone | LegacyNativeIconButtonTone;
     size?: IconButtonSize;
     shape?: IconButtonShape;
+    /** Toggle state. Paints the selected treatment and reports it to assistive tech. */
+    selected?: boolean;
     disabled?: boolean;
     loading?: boolean;
     /** Keep the busy control discoverable by default; opt in only for legacy disabled semantics. */
@@ -255,6 +257,7 @@ export const IconButton = forwardRef<NativeView, IconButtonProps>(function IconB
   tone = iconButtonRecipe.defaults.tone,
   size = iconButtonRecipe.defaults.size,
   shape = iconButtonRecipe.defaults.shape,
+  selected,
   disabled = false,
   loading = false,
   disableWhileLoading = false,
@@ -277,7 +280,7 @@ export const IconButton = forwardRef<NativeView, IconButtonProps>(function IconB
     throw new TypeError("IconButton requires children (or the deprecated icon prop)");
   }
   const resolvedTone: IconButtonTone = tone === "link" ? "ghost" : tone;
-  const presentation = resolveIconButtonPresentation(resolvedTone, theme.palette);
+  const presentation = resolveIconButtonPresentation(resolvedTone, theme.palette, selected === true);
   const sizeContract = iconButtonRecipe.sizes[size];
   const glyphSize = glyph[sizeContract.glyph];
   const unavailable = disabled || (loading && disableWhileLoading);
@@ -287,7 +290,12 @@ export const IconButton = forwardRef<NativeView, IconButtonProps>(function IconB
       ref={ref}
       accessibilityLabel={resolvedLabel}
       accessibilityRole="button"
-      accessibilityState={{ ...accessibilityState, disabled: unavailable, busy: loading }}
+      accessibilityState={{
+        ...accessibilityState,
+        ...(selected === undefined ? {} : { selected }),
+        disabled: unavailable,
+        busy: loading,
+      }}
       disabled={unavailable}
       hitSlop={hitSlop ?? (sizeContract.hitSlop > 0 ? sizeContract.hitSlop : undefined)}
       onPress={loading ? () => undefined : onPress}

@@ -33,13 +33,21 @@ export const iconButtonRecipe = {
     },
     shapes: { rounded: "md", circle: "full" },
     states: {
+        // `aria-pressed` / `accessibilityState.selected` already carried the toggle
+        // state; without a paired visual every consumer painted the pressed icon
+        // button in product styles. Mirrors `buttonRecipe.states.selected`.
+        selected: {
+            background: semanticColors.surface.brand,
+            content: semanticColors.content.brand,
+            border: semanticColors.border.focus,
+        },
         pressedOpacity: opacity.pressed,
         disabledOpacity: opacity.disabled,
     },
 };
 /** Resolve one recipe tone for non-CSS renderers without a second tone table. */
-export function resolveIconButtonPresentation(tone, palette) {
-    const contract = iconButtonRecipe.tones[tone];
+export function resolveIconButtonPresentation(tone, palette, selected = false) {
+    const contract = selected ? iconButtonRecipe.states.selected : iconButtonRecipe.tones[tone];
     return {
         background: contract.background === null
             ? null

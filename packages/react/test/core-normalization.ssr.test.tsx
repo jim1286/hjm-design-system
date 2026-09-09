@@ -205,8 +205,18 @@ describe("Web core normalization", () => {
       /\.hjm-button\[data-tone="link"\] \{[^}]*padding-inline: 0;/s,
     );
     expect(css).toMatch(
-      /\.hjm-button\[data-selected="true"\] \{[^}]*background: var\(--hjm-color-surface-accent\);/s,
+      /\.hjm-button\[data-selected="true"\], \.hjm-icon-button\[data-selected="true"\] \{[^}]*background: var\(--hjm-color-surface-accent\);/s,
     );
+  });
+
+  it("gives an icon-button toggle the same selected treatment", () => {
+    const markup = renderToStaticMarkup(
+      <HjmProvider systemTheme="light">
+        <IconButton label="Sound" selected tone="secondary"><span /></IconButton>
+      </HjmProvider>,
+    );
+    expect(markup).toContain('data-selected="true"');
+    expect(markup).toContain('aria-pressed="true"');
   });
 
   it("binds the ListRow density and leading frame from the recipe on web", () => {
