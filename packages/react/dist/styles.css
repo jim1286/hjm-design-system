@@ -73,6 +73,7 @@
 .hjm-surface[data-clips="true"] { overflow: hidden; }
 .hjm-surface[data-tone="raised"] { background: var(--hjm-color-bg); box-shadow: 0 4px 12px rgb(0 0 0 / 12%); }
 .hjm-surface[data-tone="accent"] { background: var(--hjm-color-surface-accent); }
+.hjm-surface[data-tone="sunken"] { background: var(--hjm-color-surface-alt); }
 .hjm-surface[data-tone="subtle"] { background: var(--hjm-color-bg); }
 .hjm-surface[data-bordered="true"] { border-color: var(--hjm-color-border); }
 .hjm-surface[data-tone="accent"][data-bordered="true"] { border-color: color-mix(in srgb, var(--hjm-color-primary) 30%, transparent); }

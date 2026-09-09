@@ -69,7 +69,8 @@ export declare const Text: import("react").ForwardRefExoticComponent<Omit<Native
     layoutStyle?: HjmCompositionStyleProp;
 }> & import("react").RefAttributes<NativeText>>;
 /** @deprecated Compatibility aliases; use `subtle` and `accent`. */
-export type LegacyNativeSurfaceTone = "sunken" | "brand";
+/** @deprecated `brand` is the legacy native name for the canonical `accent` tone. */
+export type LegacyNativeSurfaceTone = "brand";
 export type SurfaceTone = ContractSurfaceTone | LegacyNativeSurfaceTone;
 /** Token names are canonical; the numeric branch is legacy compatibility until the breaking train. */
 export type SurfacePadding = ContractSurfacePadding | number;

@@ -11,7 +11,7 @@ export type ButtonShape = "rounded" | "pill";
  */
 export type ButtonAlign = "center" | "leading";
 export type ButtonSize = keyof typeof control.buttonHeight;
-export type SurfaceTone = "default" | "raised" | "accent" | "subtle";
+export type SurfaceTone = "default" | "raised" | "accent" | "sunken" | "subtle";
 export type SurfacePadding = "none" | keyof typeof spacing;
 export type SurfaceRadius = keyof typeof radius;
 export type FieldVariant = "surface" | "inset";
@@ -116,6 +116,16 @@ export const surfaceRecipe = {
     // shadow. Every other tone clips so a child image cannot spill past the
     // rounded corner, which consumers were fixing in product styles.
     clipsContent: false,
+  },
+  // `semanticColors.surface.sunken` already named this role; without a paired
+  // tone a consumer had to paint `surfaceAlt` in its own product styles.
+  sunken: {
+    background: "surfaceAlt",
+    border: "border",
+    borderAlpha: 1,
+    elevated: false,
+    borderAlways: false,
+    clipsContent: true,
   },
   accent: {
     background: "surfaceAccent",

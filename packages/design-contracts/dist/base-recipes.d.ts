@@ -8,7 +8,7 @@ export type ButtonShape = "rounded" | "pill";
  */
 export type ButtonAlign = "center" | "leading";
 export type ButtonSize = keyof typeof control.buttonHeight;
-export type SurfaceTone = "default" | "raised" | "accent" | "subtle";
+export type SurfaceTone = "default" | "raised" | "accent" | "sunken" | "subtle";
 export type SurfacePadding = "none" | keyof typeof spacing;
 export type SurfaceRadius = keyof typeof radius;
 export type FieldVariant = "surface" | "inset";
@@ -115,6 +115,14 @@ export declare const surfaceRecipe: {
         readonly elevated: true;
         readonly borderAlways: false;
         readonly clipsContent: false;
+    };
+    readonly sunken: {
+        readonly background: "surfaceAlt";
+        readonly border: "border";
+        readonly borderAlpha: 1;
+        readonly elevated: false;
+        readonly borderAlways: false;
+        readonly clipsContent: true;
     };
     readonly accent: {
         readonly background: "surfaceAccent";

@@ -231,7 +231,8 @@ export const Text = forwardRef<NativeText, TextProps>(function Text(
 });
 
 /** @deprecated Compatibility aliases; use `subtle` and `accent`. */
-export type LegacyNativeSurfaceTone = "sunken" | "brand";
+/** @deprecated `brand` is the legacy native name for the canonical `accent` tone. */
+export type LegacyNativeSurfaceTone = "brand";
 export type SurfaceTone = ContractSurfaceTone | LegacyNativeSurfaceTone;
 /** Token names are canonical; the numeric branch is legacy compatibility until the breaking train. */
 export type SurfacePadding = ContractSurfacePadding | number;
@@ -256,7 +257,6 @@ export type SurfaceProps = Omit<ViewProps, "style"> &
   }>;
 
 function normalizeSurfaceTone(tone: SurfaceTone): ContractSurfaceTone {
-  if (tone === "sunken") return "subtle";
   if (tone === "brand") return "accent";
   return tone;
 }

@@ -6346,6 +6346,14 @@ export declare const recipeRegistry: {
             readonly borderAlways: false;
             readonly clipsContent: false;
         };
+        readonly sunken: {
+            readonly background: "surfaceAlt";
+            readonly border: "border";
+            readonly borderAlpha: 1;
+            readonly elevated: false;
+            readonly borderAlways: false;
+            readonly clipsContent: true;
+        };
         readonly accent: {
             readonly background: "surfaceAccent";
             readonly border: "primary";

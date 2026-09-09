@@ -61,8 +61,6 @@ export const Text = forwardRef(function Text({ children, variant = textRecipe.de
     return (_jsx(NativeText, { ...props, allowFontScaling: resolvedText.allowFontScaling, ref: ref, style: resolvedText.style, children: children }));
 });
 function normalizeSurfaceTone(tone) {
-    if (tone === "sunken")
-        return "subtle";
     if (tone === "brand")
         return "accent";
     return tone;
