@@ -8,6 +8,7 @@ import {
   HjmNativeProvider,
   Surface,
   TextArea,
+  TextField,
   hjmCompositionStyleKeys,
   type ButtonProps,
   type FieldProps,
@@ -220,6 +221,66 @@ describe("multiline field height axis", () => {
     const flattened = Object.assign({}, ...[input.props.style].flat(4).filter(Boolean));
     expect(flattened.maxHeight).toBe(
       flattened.lineHeight * 6 + fieldRecipe.paddingVertical * 2,
+    );
+  });
+
+  it("opens a composer several lines tall through the same axis", () => {
+    // `inputStyle={{ minHeight: 112 }}`의 반대 방향도 같은 단위로 요청한다.
+    expectTypeOf<TextAreaProps["minVisibleLines"]>().toEqualTypeOf<number | undefined>();
+    const renderer = render(
+      <HjmNativeProvider theme="light">
+        <TextArea label="본문" minVisibleLines={4} value="" onValueChange={() => {}} />
+      </HjmNativeProvider>,
+    );
+    const flattened = Object.assign(
+      {},
+      ...[renderer.root.findByType(TextInput).props.style].flat(4).filter(Boolean),
+    );
+    // The frame owns the border, so the inner input carries the inset height.
+    expect(flattened.minHeight).toBe(
+      flattened.lineHeight * 4 + fieldRecipe.paddingVertical * 2 - fieldRecipe.borderWidth * 2,
+    );
+  });
+
+  it("centres a ceremonial value through the align axis", () => {
+    // `inputStyle={{ textAlign: "center" }}`을 쓰던 닉네임 필드의 대체 축.
+    expect(fieldRecipe.defaults.align).toBe("start");
+    const centred = render(
+      <HjmNativeProvider theme="light">
+        <TextField align="center" label="별명" value="" onValueChange={() => {}} />
+      </HjmNativeProvider>,
+    );
+    const flattened = Object.assign(
+      {},
+      ...[centred.root.findByType(TextInput).props.style].flat(4).filter(Boolean),
+    );
+    expect(flattened.textAlign).toBe("center");
+
+    const defaulted = render(
+      <HjmNativeProvider theme="light">
+        <TextField label="별명" value="" onValueChange={() => {}} />
+      </HjmNativeProvider>,
+    );
+    expect(
+      Object.assign(
+        {},
+        ...[defaulted.root.findByType(TextInput).props.style].flat(4).filter(Boolean),
+      ).textAlign,
+    ).toBe("left");
+  });
+
+  it("never shrinks below the recipe minimum", () => {
+    const renderer = render(
+      <HjmNativeProvider theme="light">
+        <TextArea label="본문" minVisibleLines={1} value="" onValueChange={() => {}} />
+      </HjmNativeProvider>,
+    );
+    const flattened = Object.assign(
+      {},
+      ...[renderer.root.findByType(TextInput).props.style].flat(4).filter(Boolean),
+    );
+    expect(flattened.minHeight).toBe(
+      fieldRecipe.multilineMinHeight - fieldRecipe.borderWidth * 2,
     );
   });
 });

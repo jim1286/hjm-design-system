@@ -1,4 +1,4 @@
-import { type FieldShape, type FieldVariant } from "@hjmds/design-contracts/recipes/base";
+import { type FieldAlign, type FieldShape, type FieldVariant } from "@hjmds/design-contracts/recipes/base";
 import { type ChipSize, type SearchFieldSize, type SegmentedControlSize, type SelectionControlPresentation, type SelectionControlSize, type SwitchSize } from "@hjmds/design-contracts/recipes";
 import { type PasswordFieldAutofillHint, type PasswordFieldSize } from "@hjmds/design-contracts/components/password-field";
 import { type OtpFieldSize } from "@hjmds/design-contracts/components/otp-field";
@@ -21,6 +21,17 @@ type BaseFieldProps = Omit<TextInputProps, "accessibilityLabel" | "defaultValue"
      * recipe-owned, so this semantic axis replaces `inputStyle={{ maxHeight }}`.
      */
     maxVisibleLines?: number;
+    /**
+     * Lower bound for a growing multiline field, in visible lines. Height is
+     * recipe-owned, so this semantic axis replaces `inputStyle={{ minHeight }}`.
+     */
+    minVisibleLines?: number;
+    /**
+     * Text placement inside the control. `start` follows the resolved
+     * direction; `center` suits a short, ceremonial single value such as a
+     * nickname or a code. Replaces `inputStyle={{ textAlign }}`.
+     */
+    align?: FieldAlign;
     onValueChange?: (value: string) => void;
     supportText?: string;
     error?: string;

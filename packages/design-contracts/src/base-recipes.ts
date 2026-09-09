@@ -11,7 +11,7 @@ export type ButtonShape = "rounded" | "pill";
  */
 export type ButtonAlign = "center" | "leading";
 export type ButtonSize = keyof typeof control.buttonHeight;
-export type SurfaceTone = "default" | "raised" | "accent" | "subtle";
+export type SurfaceTone = "default" | "raised" | "accent" | "sunken" | "subtle";
 export type SurfacePadding = "none" | keyof typeof spacing;
 export type SurfaceRadius = keyof typeof radius;
 export type FieldVariant = "surface" | "inset";
@@ -117,6 +117,16 @@ export const surfaceRecipe = {
     // rounded corner, which consumers were fixing in product styles.
     clipsContent: false,
   },
+  // `semanticColors.surface.sunken` already named this role; without a paired
+  // tone a consumer had to paint `surfaceAlt` in its own product styles.
+  sunken: {
+    background: "surfaceAlt",
+    border: "border",
+    borderAlpha: 1,
+    elevated: false,
+    borderAlways: false,
+    clipsContent: true,
+  },
   accent: {
     background: "surfaceAccent",
     border: "primary",
@@ -145,6 +155,9 @@ export const surfaceRecipe = {
   }
 >;
 
+/** Text placement inside a field control. */
+export type FieldAlign = "start" | "center";
+
 export const fieldRecipe = {
   slots: [
     "root",
@@ -156,7 +169,7 @@ export const fieldRecipe = {
     "hint",
     "error",
   ] as const,
-  defaults: { variant: "surface", shape: "medium" } as const,
+  defaults: { variant: "surface", shape: "medium", align: "start" } as const,
   variants: {
     surface: { background: "surface" },
     inset: { background: "bg" },
@@ -201,7 +214,7 @@ export const fieldRecipe = {
   disabledOpacity: 0.6,
 } as const satisfies {
   slots: readonly string[];
-  defaults: { variant: FieldVariant; shape: FieldShape };
+  defaults: { variant: FieldVariant; shape: FieldShape; align: FieldAlign };
   variants: Record<FieldVariant, { background: keyof ThemeColors }>;
   shapes: Record<FieldShape, keyof typeof radius>;
   states: Record<

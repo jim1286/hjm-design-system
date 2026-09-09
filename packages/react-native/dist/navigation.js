@@ -8,6 +8,7 @@ import { getTabNavigationTarget, resolveInitialTabValue, tabsBehaviorDefaults, }
 import { flattenCollectionItems, validateCollection, } from "@hjmds/design-contracts/components/collection";
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useLayoutEffect, useMemo, useRef, useState, } from "react";
 import { ActivityIndicator, AccessibilityInfo, Keyboard, Modal, Platform, Pressable, ScrollView, View, findNodeHandle, } from "react-native";
+import { isWebRenderer, webOnly, webTabProps } from "./internal/web-a11y.js";
 import { Button } from "./actions.js";
 import { useControllableState } from "./internal/state.js";
 import { scheduleAfterNativeModalTeardown, shouldAwaitNativeModalDismiss, } from "./internal/modal-lifecycle.js";
@@ -128,6 +129,12 @@ export function Tabs(props) {
             const node = tabRefs.current.get(target);
             if (!node)
                 return;
+            // On web the tab is a real focusable element, so DOM focus is what moves
+            // the caret; `setAccessibilityFocus` is an iOS/Android-only bridge call.
+            if (isWebRenderer) {
+                node.focus?.();
+                return;
+            }
             const handle = findNodeHandle(node);
             if (handle !== null)
                 AccessibilityInfo.setAccessibilityFocus(handle);
@@ -178,7 +185,21 @@ export function Tabs(props) {
                             { name: "decrement" },
                         ], accessibilityLabel: item.badge
                             ? `${item.label}, ${item.badgeAccessibilityLabel ?? item.badge}`
-                            : item.label, accessibilityRole: "tab", accessibilityState: { disabled: item.disabled === true, selected: active }, disabled: item.disabled, onAccessibilityAction: (event) => {
+                            : item.label, accessibilityRole: "tab", accessibilityState: { disabled: item.disabled === true, selected: active }, ...webOnly(webTabProps({
+                            selected: active,
+                            disabled: item.disabled === true,
+                            // aria-controls must name a rendered panel; a Tabs without
+                            // panels has nothing for it to point at.
+                            controls: id && hasPanels ? getTabPanelId(id, item.id, panelMode) : undefined,
+                            focused: focusValue === item.id,
+                            orientation,
+                            direction,
+                            onActivate: () => {
+                                setFocusValue(item.id);
+                                setSelected(item.id);
+                            },
+                            onMoveFocus: (intent) => moveFocus(item.id, intent),
+                        })), disabled: item.disabled, onAccessibilityAction: (event) => {
                             const action = event.nativeEvent.actionName;
                             if (action === "activate")
                                 setSelected(item.id);

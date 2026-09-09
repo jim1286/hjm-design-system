@@ -47,12 +47,17 @@ const rendererBudgets = [
     directory: "packages/react-native",
     surface: "native",
     budgets: {
-      ".": { modules: 20, raw: 425_000, gzip: 75_000 },
+      // +1 module on ".", "./inputs", "./navigation" and "./data-display":
+      // `internal/web-a11y.js` holds the DOM ARIA and keyboard contracts that
+      // react-native-web needs, shared by Accordion, ChoiceRow/RadioGroup, Chip
+      // and Tabs. Duplicating it per entry point would keep the counts but
+      // fork four copies of a keyboard contract.
+      ".": { modules: 21, raw: 425_000, gzip: 75_000 },
       "./provider": { modules: 1, raw: 4_700, gzip: 1_550 },
       "./composition-style": { modules: 1, raw: 2_000, gzip: 1_000 },
       "./primitives": { modules: 3, raw: 21_500, gzip: 5_650 },
       "./actions": { modules: 4, raw: 34_700, gzip: 7_900 },
-      "./inputs": { modules: 13, raw: 178_000, gzip: 31_000 },
+      "./inputs": { modules: 14, raw: 178_000, gzip: 31_000 },
       "./password-field": { modules: 9, raw: 105_000, gzip: 20_000 },
       "./otp-field": { modules: 9, raw: 105_000, gzip: 20_000 },
       "./number-field": { modules: 4, raw: 20_200, gzip: 4_900 },
@@ -62,8 +67,8 @@ const rendererBudgets = [
       "./steps": { modules: 4, raw: 25_000, gzip: 6_500 },
       "./upload-item": { modules: 6, raw: 82_000, gzip: 17_000 },
       "./forms": { modules: 7, raw: 83_000, gzip: 16_600 },
-      "./navigation": { modules: 8, raw: 135_500, gzip: 26_700 },
-      "./data-display": { modules: 5, raw: 77_000, gzip: 15_000 },
+      "./navigation": { modules: 9, raw: 135_500, gzip: 26_700 },
+      "./data-display": { modules: 6, raw: 77_000, gzip: 15_000 },
       "./feedback": { modules: 5, raw: 73_500, gzip: 15_100 },
       "./overlays": { modules: 6, raw: 84_500, gzip: 15_100 },
       "./evidence": { modules: 1, raw: 6_000, gzip: 1_700 },

@@ -11,6 +11,7 @@ import {
   visibleControlHeight,
   type DesignSystemProviderValue,
 } from "@hjmds/design-contracts/components/design-system-provider";
+import { fieldRecipe } from "@hjmds/design-contracts/recipes/base";
 import { listRowRecipe, switchRecipe } from "@hjmds/design-contracts/recipes";
 import type { CSSProperties } from "react";
 
@@ -90,6 +91,8 @@ export function createHjmThemeStyle(
   }
   style["--hjm-control-min-touch-target"] = `${control.minTouchTarget}px`;
   style["--hjm-control-field-height"] = `${control.fieldHeight}px`;
+  style["--hjm-field-multiline-min-height"] = rem(fieldRecipe.multilineMinHeight);
+  style["--hjm-field-padding-block"] = rem(fieldRecipe.paddingVertical);
   for (const [name, value] of Object.entries(control.buttonHeight)) {
     // The axis is applied to the emitted variables rather than to each rule so
     // that every stylesheet consumer of a control height honours it at once.

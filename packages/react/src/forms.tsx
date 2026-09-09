@@ -1,5 +1,6 @@
 import {
   fieldRecipe,
+  type FieldAlign,
   type FieldShape,
   type FieldVariant,
 } from "@hjmds/design-contracts/recipes/base";
@@ -53,6 +54,7 @@ type FieldFrameProps = HTMLAttributes<HTMLDivElement> &
     focused?: boolean;
     variant?: FieldVariant;
     shape?: FieldShape;
+    align?: FieldAlign;
     children: ReactNode;
   }>;
 
@@ -68,6 +70,7 @@ function FieldFrame({
   focused = false,
   variant = fieldRecipe.defaults.variant,
   shape = fieldRecipe.defaults.shape,
+  align = fieldRecipe.defaults.align,
   className,
   children,
   ...props
@@ -80,6 +83,7 @@ function FieldFrame({
       data-state={state}
       data-variant={variant}
       data-shape={shape}
+      data-align={align}
     >
       {label !== undefined && label !== null ? (
         <label className="hjm-field__label" htmlFor={controlId}>
@@ -190,6 +194,12 @@ type SharedInputProps = FieldCopyProps &
   Readonly<{
     variant?: FieldVariant;
     shape?: FieldShape;
+    /**
+     * Text placement inside the control. `start` follows the resolved
+     * direction; `center` suits a short, ceremonial single value such as a
+     * nickname or a code. Replaces a `text-align` override.
+     */
+    align?: FieldAlign;
     leading?: ReactNode;
     trailing?: ReactNode;
     fieldClassName?: string;
@@ -209,6 +219,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
       disabled,
       variant,
       shape,
+      align,
       leading,
       trailing,
       fieldClassName,
@@ -244,6 +255,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
         focused={focused}
         variant={variant ?? fieldRecipe.defaults.variant}
         shape={shape ?? fieldRecipe.defaults.shape}
+        align={align ?? fieldRecipe.defaults.align}
         className={fieldClassName}
         {...(description ? { descriptionId: ids.descriptionId } : {})}
         {...(error ? { errorId: ids.errorId } : {})}
@@ -277,7 +289,16 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
 );
 
 export type TextAreaProps = TextareaHTMLAttributes<HTMLTextAreaElement> &
-  Omit<SharedInputProps, "leading" | "trailing">;
+  Omit<SharedInputProps, "leading" | "trailing"> &
+  Readonly<{
+    /**
+     * Lower bound for a growing multiline field, in visible lines. Height is
+     * recipe-owned, so this semantic axis replaces a `min-height` override.
+     */
+    minVisibleLines?: number;
+    /** Upper bound for a growing multiline field, in visible lines. */
+    maxVisibleLines?: number;
+  }>;
 
 export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
   function TextArea(
@@ -290,6 +311,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
       disabled,
       variant,
       shape,
+      align,
       fieldClassName,
       className,
       onFocus,
@@ -297,6 +319,9 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
       "aria-describedby": ariaDescribedBy,
       "aria-invalid": ariaInvalid,
       "aria-label": ariaLabel,
+      minVisibleLines,
+      maxVisibleLines,
+      style,
       ...props
     },
     ref,
@@ -304,6 +329,15 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
     const ids = useFieldIds(id);
     const [focused, setFocused] = useState(false);
     requireFieldAccessibleName(label, ariaLabel);
+    // Bounds are expressed in lines so the recipe keeps line height and padding.
+    const lineBounds = {
+      ...(minVisibleLines === undefined
+        ? {}
+        : { "--hjm-field-min-visible-lines": minVisibleLines }),
+      ...(maxVisibleLines === undefined
+        ? {}
+        : { "--hjm-field-max-visible-lines": maxVisibleLines }),
+    } as CSSProperties;
     return (
       <FieldFrame
         controlId={ids.controlId}
@@ -315,6 +349,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
         focused={focused}
         variant={variant ?? fieldRecipe.defaults.variant}
         shape={shape ?? fieldRecipe.defaults.shape}
+        align={align ?? fieldRecipe.defaults.align}
         className={fieldClassName}
         {...(description ? { descriptionId: ids.descriptionId } : {})}
         {...(error ? { errorId: ids.errorId } : {})}
@@ -325,6 +360,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
             ref={ref}
             id={ids.controlId}
             className={classNames("hjm-field__input", className)}
+            style={{ ...style, ...lineBounds }}
             required={required}
             disabled={disabled}
             aria-invalid={error ? true : ariaInvalid}

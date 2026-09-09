@@ -8,7 +8,7 @@ export type ButtonShape = "rounded" | "pill";
  */
 export type ButtonAlign = "center" | "leading";
 export type ButtonSize = keyof typeof control.buttonHeight;
-export type SurfaceTone = "default" | "raised" | "accent" | "subtle";
+export type SurfaceTone = "default" | "raised" | "accent" | "sunken" | "subtle";
 export type SurfacePadding = "none" | keyof typeof spacing;
 export type SurfaceRadius = keyof typeof radius;
 export type FieldVariant = "surface" | "inset";
@@ -116,6 +116,14 @@ export declare const surfaceRecipe: {
         readonly borderAlways: false;
         readonly clipsContent: false;
     };
+    readonly sunken: {
+        readonly background: "surfaceAlt";
+        readonly border: "border";
+        readonly borderAlpha: 1;
+        readonly elevated: false;
+        readonly borderAlways: false;
+        readonly clipsContent: true;
+    };
     readonly accent: {
         readonly background: "surfaceAccent";
         readonly border: "primary";
@@ -133,11 +141,14 @@ export declare const surfaceRecipe: {
         readonly clipsContent: true;
     };
 };
+/** Text placement inside a field control. */
+export type FieldAlign = "start" | "center";
 export declare const fieldRecipe: {
     readonly slots: readonly ["root", "label", "control", "leading", "input", "trailing", "hint", "error"];
     readonly defaults: {
         readonly variant: "surface";
         readonly shape: "medium";
+        readonly align: "start";
     };
     readonly variants: {
         readonly surface: {

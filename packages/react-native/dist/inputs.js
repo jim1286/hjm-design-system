@@ -11,6 +11,7 @@ import { getCheckboxNextState, reconcileCheckboxSelection, resolveControlAccessi
 import { forwardRef, useEffect, useId, useImperativeHandle, useRef, useState, } from "react";
 import { ActivityIndicator, Pressable, Switch as NativeSwitch, TextInput, View, } from "react-native";
 import { useControllableState } from "./internal/state.js";
+import { webChoiceProps, webOnly } from "./internal/web-a11y.js";
 import { logicalTextAlign, minimumTargetStyle, resolveNativeTextScaleProps, } from "./internal/styles.js";
 import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
@@ -31,7 +32,7 @@ function FieldMessage({ error, supportText }) {
         return null;
     return (_jsx(Text, { accessibilityLiveRegion: error ? "assertive" : "none", tone: error ? "danger" : "muted", variant: fieldRecipe.support.textVariant, children: error ?? supportText }));
 }
-const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultValue = "", onValueChange, supportText, error, required = false, disabled = false, busy = false, variant = fieldRecipe.defaults.variant, shape, accessibilityLabel, inputStyle, containerStyle, layoutStyle, allowFontScaling, multiline, maxVisibleLines, search, searchSize = searchFieldRecipe.defaults.size, leading, trailing, onBlur, onFocus, ...props }, ref) {
+const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultValue = "", onValueChange, supportText, error, required = false, disabled = false, busy = false, variant = fieldRecipe.defaults.variant, shape, accessibilityLabel, inputStyle, containerStyle, layoutStyle, allowFontScaling, multiline, maxVisibleLines, minVisibleLines, align = fieldRecipe.defaults.align, search, searchSize = searchFieldRecipe.defaults.size, leading, trailing, onBlur, onFocus, ...props }, ref) {
     const theme = useHjmNativeTheme();
     const { colors, environment, textScaling } = theme;
     const [focused, setFocused] = useState(false);
@@ -45,11 +46,6 @@ const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultV
     const resolvedShape = shape ?? (search ? searchFieldRecipe.defaults.shape : fieldRecipe.defaults.shape);
     const searchSizing = searchFieldRecipe.sizes[searchSize];
     const resolvedMaxVisibleLines = maxVisibleLines ?? fieldRecipe.multilineMaxVisibleLines;
-    const minHeight = multiline
-        ? fieldRecipe.multilineMinHeight
-        : search
-            ? searchSizing.minHeight
-            : fieldRecipe.minHeight;
     const borderWidth = search ? searchFieldRecipe.borderWidth : fieldRecipe.borderWidth;
     const borderColor = search
         ? resolveColorReference(error
@@ -69,6 +65,15 @@ const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultV
         ? resolveColorReference(searchFieldRecipe.colors.placeholder, theme.palette)
         : colors[fieldRecipe.placeholder.color];
     const textStyle = typography[search ? searchSizing.textVariant : fieldRecipe.textVariant];
+    // A composer that should open several lines tall asks in lines, not pixels,
+    // so the recipe keeps ownership of line height and vertical padding.
+    const minHeight = multiline
+        ? minVisibleLines === undefined
+            ? fieldRecipe.multilineMinHeight
+            : Math.max(fieldRecipe.multilineMinHeight, textStyle.lineHeight * minVisibleLines + fieldRecipe.paddingVertical * 2)
+        : search
+            ? searchSizing.minHeight
+            : fieldRecipe.minHeight;
     const controlRadius = radius[search ? searchFieldRecipe.shapes[resolvedShape] : fieldRecipe.shapes[resolvedShape]];
     const inputTextScaleProps = resolveNativeTextScaleProps(textScaling, [
         {
@@ -88,7 +93,9 @@ const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultV
                 : {}),
             paddingHorizontal: 0,
             paddingVertical: fieldRecipe.paddingVertical,
-            textAlign: logicalTextAlign(environment.direction),
+            textAlign: align === "center"
+                ? "center"
+                : logicalTextAlign(environment.direction),
             textAlignVertical: multiline ? "top" : "center",
         },
         inputStyle,
@@ -332,7 +339,7 @@ export const OtpField = forwardRef(function OtpField({ label, accessibilityLabel
                                     ], children: _jsx(Text, { accessible: false, align: "center", allowFontScaling: allowFontScaling, style: [{ color: contentColor }, slotTextStyle], variant: metrics.textVariant, children: digit }) }, index));
                             })] }), _jsx(FieldMessage, { ...(error === undefined ? {} : { error }), ...(supportText === undefined ? {} : { supportText }) })] })] }));
 });
-function ChoiceRow({ kind, label, description, checked, disabled, readOnly, required, invalid, readOnlyLabel, requiredLabel, invalidLabel, accessibilityHint, presentation = selectionControlRecipe.defaults.presentation, size = selectionControlRecipe.defaults.size, indicator = "default", leading, renderLeading, renderIndicator, onActivate, style, controlStyle, indicatorStyle, leadingStyle, contentStyle, labelStyle, descriptionStyle, }) {
+function ChoiceRow({ kind, label, description, checked, disabled, readOnly, required, invalid, readOnlyLabel, requiredLabel, invalidLabel, accessibilityHint, presentation = selectionControlRecipe.defaults.presentation, size = selectionControlRecipe.defaults.size, indicator = "default", leading, renderLeading, renderIndicator, onActivate, webTabIndex, style, controlStyle, indicatorStyle, leadingStyle, contentStyle, labelStyle, descriptionStyle, }) {
     const theme = useHjmNativeTheme();
     const metrics = selectionControlRecipe.sizes[size];
     const plate = selectionControlRecipe.presentations[presentation];
@@ -372,7 +379,14 @@ function ChoiceRow({ kind, label, description, checked, disabled, readOnly, requ
             height: metrics.control * selectionControlRecipe.radioDotRatio,
             width: metrics.control * selectionControlRecipe.radioDotRatio,
         } })) : null) : checked === "mixed" ? (_jsx(Text, { accessible: false, align: "center", style: { color: indicatorColor }, variant: "label", children: "\u2212" })) : checked ? (_jsx(Text, { accessible: false, align: "center", style: { color: indicatorColor }, variant: "label", children: "\u2713" })) : null;
-    return (_jsxs(Pressable, { accessibilityHint: resolvedHint, accessibilityLabel: label, accessibilityRole: kind, accessibilityState: { checked, disabled: disabled || readOnly }, disabled: disabled || readOnly, hitSlop: plate.useSizePadding ? 0 : metrics.hitSlop, onPress: () => {
+    return (_jsxs(Pressable, { accessibilityHint: resolvedHint, accessibilityLabel: label, accessibilityRole: kind, accessibilityState: { checked, disabled: disabled || readOnly }, ...webOnly(webChoiceProps({
+            kind,
+            checked,
+            disabled,
+            readOnly,
+            onActivate,
+            ...(webTabIndex === undefined ? {} : { tabIndex: webTabIndex }),
+        })), disabled: disabled || readOnly, hitSlop: plate.useSizePadding ? 0 : metrics.hitSlop, onPress: () => {
             if (!readOnly)
                 onActivate();
         }, style: ({ pressed }) => [
@@ -495,6 +509,9 @@ export function RadioGroup({ label, accessibilityLabel, items, options, value, d
         ...(onValueChange === undefined ? {} : { onChange: onValueChange }),
     });
     const selected = reconcileRadioSelection(selectionItems, storedValue, required);
+    // A radio group is one tab stop: the selected option holds it, or the first
+    // enabled option when nothing is selected yet.
+    const webTabStop = selected ?? selectionItems.find((item) => !item.disabled)?.id;
     useEffect(() => {
         if (value === undefined && selected !== storedValue)
             setSelected(selected);
@@ -503,7 +520,7 @@ export function RadioGroup({ label, accessibilityLabel, items, options, value, d
     return (_jsx(ChoiceGroupFrame, { accessibilityLabel: accessibilityLabel, description: description, disabled: disabled, error: error, label: label, orientation: orientation, presentation: presentation, readOnly: readOnly, readOnlyLabel: readOnlyLabel, required: required, requiredLabel: requiredLabel, role: "radiogroup", style: style, children: resolvedItems.map((item) => {
             const optionDisabled = disabled || item.disabled === true;
             const optionSelected = selected === item.value;
-            return (_createElement(ChoiceRow, { ...slotStyles, key: item.value, accessibilityHint: item.accessibilityHint, checked: optionSelected, description: item.description, disabled: optionDisabled, indicator: indicator, invalid: hasError, invalidLabel: invalidLabel ?? error, kind: "radio", label: item.label, leading: item.leading, onActivate: () => setSelected(item.value), presentation: presentation, readOnly: readOnly, readOnlyLabel: readOnlyLabel, renderIndicator: renderIndicator ? (props) => renderIndicator(item, props) : undefined, renderLeading: renderLeading ? (props) => renderLeading(item, props) : undefined, required: required, requiredLabel: requiredLabel, size: size }));
+            return (_createElement(ChoiceRow, { ...slotStyles, key: item.value, accessibilityHint: item.accessibilityHint, checked: optionSelected, description: item.description, disabled: optionDisabled, indicator: indicator, invalid: hasError, invalidLabel: invalidLabel ?? error, kind: "radio", label: item.label, leading: item.leading, onActivate: () => setSelected(item.value), webTabIndex: !optionDisabled && !readOnly && item.value === webTabStop ? 0 : -1, presentation: presentation, readOnly: readOnly, readOnlyLabel: readOnlyLabel, renderIndicator: renderIndicator ? (props) => renderIndicator(item, props) : undefined, renderLeading: renderLeading ? (props) => renderLeading(item, props) : undefined, required: required, requiredLabel: requiredLabel, size: size }));
         }) }));
 }
 /** Validated controlled/uncontrolled checkbox collection using immutable Sets. */
@@ -669,7 +686,19 @@ export function Chip({ label, size = chipRecipe.defaults.size, disabled = false,
     const contentColor = resolveColorReference(presentation.content, theme.palette);
     const indicatorColor = resolveColorReference(chipRecipe.selectionIndicator.color, theme.palette);
     const role = selectionMode === "single" ? "radio" : selectionMode === "multiple" ? "checkbox" : "button";
-    return (_jsxs(Pressable, { accessibilityHint: accessibilityHint, accessibilityLabel: accessibilityLabel ?? label, accessibilityRole: role, accessibilityState: selectable ? { checked: active, disabled } : { disabled }, disabled: disabled, hitSlop: metrics.hitSlop, onPress: (event) => {
+    return (_jsxs(Pressable, { accessibilityHint: accessibilityHint, accessibilityLabel: accessibilityLabel ?? label, accessibilityRole: role, accessibilityState: selectable ? { checked: active, disabled } : { disabled }, ...webOnly(selectable
+            ? webChoiceProps({
+                kind: role === "radio" ? "radio" : "checkbox",
+                checked: active,
+                disabled,
+                readOnly: false,
+                // Chip's controlled handler needs the press event, so Space
+                // re-enters the element's own DOM click path instead of calling
+                // the handler with a synthesised one.
+                onActivate: (element) => element.click(),
+                ...(role === "radio" ? { tabIndex: active && !disabled ? 0 : -1 } : {}),
+            })
+            : { "aria-disabled": disabled }), disabled: disabled, hitSlop: metrics.hitSlop, onPress: (event) => {
             if (selectionMode === "action") {
                 onPress(event);
             }

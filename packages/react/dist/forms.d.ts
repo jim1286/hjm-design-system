@@ -1,4 +1,4 @@
-import { type FieldShape, type FieldVariant } from "@hjmds/design-contracts/recipes/base";
+import { type FieldAlign, type FieldShape, type FieldVariant } from "@hjmds/design-contracts/recipes/base";
 import { type SearchFieldSize } from "@hjmds/design-contracts/recipes";
 import { type PasswordFieldAutofillHint, type PasswordFieldSize } from "@hjmds/design-contracts/components/password-field";
 import { type OtpFieldSize } from "@hjmds/design-contracts/components/otp-field";
@@ -17,6 +17,7 @@ type FieldFrameProps = HTMLAttributes<HTMLDivElement> & FieldCopyProps & Readonl
     focused?: boolean;
     variant?: FieldVariant;
     shape?: FieldShape;
+    align?: FieldAlign;
     children: ReactNode;
 }>;
 export type FieldControlProps = Readonly<{
@@ -35,6 +36,12 @@ export declare function Field({ controlId, description, error, required, disable
 type SharedInputProps = FieldCopyProps & Readonly<{
     variant?: FieldVariant;
     shape?: FieldShape;
+    /**
+     * Text placement inside the control. `start` follows the resolved
+     * direction; `center` suits a short, ceremonial single value such as a
+     * nickname or a code. Replaces a `text-align` override.
+     */
+    align?: FieldAlign;
     leading?: ReactNode;
     trailing?: ReactNode;
     fieldClassName?: string;
@@ -48,12 +55,34 @@ export declare const TextField: import("react").ForwardRefExoticComponent<Omit<I
 }> & Readonly<{
     variant?: FieldVariant;
     shape?: FieldShape;
+    /**
+     * Text placement inside the control. `start` follows the resolved
+     * direction; `center` suits a short, ceremonial single value such as a
+     * nickname or a code. Replaces a `text-align` override.
+     */
+    align?: FieldAlign;
     leading?: ReactNode;
     trailing?: ReactNode;
     fieldClassName?: string;
 }> & import("react").RefAttributes<HTMLInputElement>>;
-export type TextAreaProps = TextareaHTMLAttributes<HTMLTextAreaElement> & Omit<SharedInputProps, "leading" | "trailing">;
-export declare const TextArea: import("react").ForwardRefExoticComponent<TextareaHTMLAttributes<HTMLTextAreaElement> & Omit<SharedInputProps, "leading" | "trailing"> & import("react").RefAttributes<HTMLTextAreaElement>>;
+export type TextAreaProps = TextareaHTMLAttributes<HTMLTextAreaElement> & Omit<SharedInputProps, "leading" | "trailing"> & Readonly<{
+    /**
+     * Lower bound for a growing multiline field, in visible lines. Height is
+     * recipe-owned, so this semantic axis replaces a `min-height` override.
+     */
+    minVisibleLines?: number;
+    /** Upper bound for a growing multiline field, in visible lines. */
+    maxVisibleLines?: number;
+}>;
+export declare const TextArea: import("react").ForwardRefExoticComponent<TextareaHTMLAttributes<HTMLTextAreaElement> & Omit<SharedInputProps, "leading" | "trailing"> & Readonly<{
+    /**
+     * Lower bound for a growing multiline field, in visible lines. Height is
+     * recipe-owned, so this semantic axis replaces a `min-height` override.
+     */
+    minVisibleLines?: number;
+    /** Upper bound for a growing multiline field, in visible lines. */
+    maxVisibleLines?: number;
+}> & import("react").RefAttributes<HTMLTextAreaElement>>;
 export type SearchFieldProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type" | "size" | "value" | "defaultValue"> & SharedInputProps & Readonly<{
     value?: string;
     defaultValue?: string;
@@ -83,6 +112,12 @@ export declare const SearchField: import("react").ForwardRefExoticComponent<Omit
 }> & Readonly<{
     variant?: FieldVariant;
     shape?: FieldShape;
+    /**
+     * Text placement inside the control. `start` follows the resolved
+     * direction; `center` suits a short, ceremonial single value such as a
+     * nickname or a code. Replaces a `text-align` override.
+     */
+    align?: FieldAlign;
     leading?: ReactNode;
     trailing?: ReactNode;
     fieldClassName?: string;

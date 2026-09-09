@@ -82,6 +82,7 @@ import {
   type ViewStyle,
 } from "react-native";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
+import { isWebRenderer, webOnly, webTabProps } from "./internal/web-a11y.js";
 
 import { Button } from "./actions.js";
 import { useControllableState } from "./internal/state.js";
@@ -350,6 +351,12 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
     queueMicrotask(() => {
       const node = tabRefs.current.get(target);
       if (!node) return;
+      // On web the tab is a real focusable element, so DOM focus is what moves
+      // the caret; `setAccessibilityFocus` is an iOS/Android-only bridge call.
+      if (isWebRenderer) {
+        (node as unknown as { focus?: () => void }).focus?.();
+        return;
+      }
       const handle = findNodeHandle(node);
       if (handle !== null) AccessibilityInfo.setAccessibilityFocus(handle);
     });
@@ -425,6 +432,21 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
               }
               accessibilityRole="tab"
               accessibilityState={{ disabled: item.disabled === true, selected: active }}
+              {...webOnly(webTabProps({
+                selected: active,
+                disabled: item.disabled === true,
+                // aria-controls must name a rendered panel; a Tabs without
+                // panels has nothing for it to point at.
+                controls: id && hasPanels ? getTabPanelId(id, item.id, panelMode) : undefined,
+                focused: focusValue === item.id,
+                orientation,
+                direction,
+                onActivate: () => {
+                  setFocusValue(item.id);
+                  setSelected(item.id);
+                },
+                onMoveFocus: (intent) => moveFocus(item.id, intent),
+              }))}
               disabled={item.disabled}
               onAccessibilityAction={(event) => {
                 const action = event.nativeEvent.actionName;

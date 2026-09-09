@@ -3214,6 +3214,7 @@ export declare const recipeRegistry: {
         readonly defaults: {
             readonly variant: "surface";
             readonly shape: "medium";
+            readonly align: "start";
         };
         readonly variants: {
             readonly surface: {
@@ -6345,6 +6346,14 @@ export declare const recipeRegistry: {
             readonly elevated: true;
             readonly borderAlways: false;
             readonly clipsContent: false;
+        };
+        readonly sunken: {
+            readonly background: "surfaceAlt";
+            readonly border: "border";
+            readonly borderAlpha: 1;
+            readonly elevated: false;
+            readonly borderAlways: false;
+            readonly clipsContent: true;
         };
         readonly accent: {
             readonly background: "surfaceAccent";

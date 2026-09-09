@@ -66,6 +66,16 @@ export const surfaceRecipe = {
         // rounded corner, which consumers were fixing in product styles.
         clipsContent: false,
     },
+    // `semanticColors.surface.sunken` already named this role; without a paired
+    // tone a consumer had to paint `surfaceAlt` in its own product styles.
+    sunken: {
+        background: "surfaceAlt",
+        border: "border",
+        borderAlpha: 1,
+        elevated: false,
+        borderAlways: false,
+        clipsContent: true,
+    },
     accent: {
         background: "surfaceAccent",
         border: "primary",
@@ -94,7 +104,7 @@ export const fieldRecipe = {
         "hint",
         "error",
     ],
-    defaults: { variant: "surface", shape: "medium" },
+    defaults: { variant: "surface", shape: "medium", align: "start" },
     variants: {
         surface: { background: "surface" },
         inset: { background: "bg" },

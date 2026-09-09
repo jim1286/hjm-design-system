@@ -5,9 +5,9 @@ import { passwordFieldRecipe, resolvePasswordFieldDescriptor, } from "@hjmds/des
 import { getOtpFieldSlotValues, otpFieldRecipe, resolveOtpFieldValue, } from "@hjmds/design-contracts/components/otp-field";
 import { forwardRef, useEffect, useId, useLayoutEffect, useRef, useState, } from "react";
 import { composeRefs, classNames, useControllableState } from "./internal.js";
-function FieldFrame({ controlId, label, description, error, descriptionId, errorId, required = false, disabled = false, focused = false, variant = fieldRecipe.defaults.variant, shape = fieldRecipe.defaults.shape, className, children, ...props }) {
+function FieldFrame({ controlId, label, description, error, descriptionId, errorId, required = false, disabled = false, focused = false, variant = fieldRecipe.defaults.variant, shape = fieldRecipe.defaults.shape, align = fieldRecipe.defaults.align, className, children, ...props }) {
     const state = disabled ? "disabled" : error ? "invalid" : focused ? "focused" : "idle";
-    return (_jsxs("div", { ...props, className: classNames("hjm-field", className), "data-state": state, "data-variant": variant, "data-shape": shape, children: [label !== undefined && label !== null ? (_jsxs("label", { className: "hjm-field__label", htmlFor: controlId, children: [label, required ? _jsx("span", { "aria-hidden": "true", children: " *" }) : null] })) : null, children, description && !error ? (_jsx("div", { id: descriptionId, className: "hjm-field__description", children: description })) : null, error ? (_jsx("div", { id: errorId, className: "hjm-field__error", children: error })) : null] }));
+    return (_jsxs("div", { ...props, className: classNames("hjm-field", className), "data-state": state, "data-variant": variant, "data-shape": shape, "data-align": align, children: [label !== undefined && label !== null ? (_jsxs("label", { className: "hjm-field__label", htmlFor: controlId, children: [label, required ? _jsx("span", { "aria-hidden": "true", children: " *" }) : null] })) : null, children, description && !error ? (_jsx("div", { id: descriptionId, className: "hjm-field__description", children: description })) : null, error ? (_jsx("div", { id: errorId, className: "hjm-field__error", children: error })) : null] }));
 }
 /** Generic frame for custom native controls; `controlId` keeps the label explicit. */
 export function Field({ controlId, description, error, required = false, disabled = false, children, ...props }) {
@@ -45,7 +45,7 @@ function requireFieldAccessibleName(label, ariaLabel) {
         throw new TypeError("Field controls require either label or aria-label");
     }
 }
-export const TextField = forwardRef(function TextField({ id, label, description, error, required, disabled, variant, shape, leading, trailing, fieldClassName, className, onFocus, onBlur, "aria-describedby": ariaDescribedBy, "aria-invalid": ariaInvalid, "aria-label": ariaLabel, ...props }, ref) {
+export const TextField = forwardRef(function TextField({ id, label, description, error, required, disabled, variant, shape, align, leading, trailing, fieldClassName, className, onFocus, onBlur, "aria-describedby": ariaDescribedBy, "aria-invalid": ariaInvalid, "aria-label": ariaLabel, ...props }, ref) {
     const ids = useFieldIds(id);
     const [focused, setFocused] = useState(false);
     requireFieldAccessibleName(label, ariaLabel);
@@ -57,13 +57,22 @@ export const TextField = forwardRef(function TextField({ id, label, description,
         setFocused(false);
         onBlur?.(event);
     };
-    return (_jsx(FieldFrame, { controlId: ids.controlId, label: label, description: description, error: error, required: required ?? false, disabled: disabled ?? false, focused: focused, variant: variant ?? fieldRecipe.defaults.variant, shape: shape ?? fieldRecipe.defaults.shape, className: fieldClassName, ...(description ? { descriptionId: ids.descriptionId } : {}), ...(error ? { errorId: ids.errorId } : {}), children: _jsxs("div", { className: "hjm-field__control", children: [leading ? _jsx("span", { className: "hjm-field__affix", children: leading }) : null, _jsx("input", { ...props, ref: ref, id: ids.controlId, className: classNames("hjm-field__input", className), required: required, disabled: disabled, "aria-invalid": error ? true : ariaInvalid, "aria-label": ariaLabel, "aria-describedby": describedBy(ariaDescribedBy, description, error, ids.descriptionId, ids.errorId), onFocus: handleFocus, onBlur: handleBlur }), trailing ? _jsx("span", { className: "hjm-field__affix", children: trailing }) : null] }) }));
+    return (_jsx(FieldFrame, { controlId: ids.controlId, label: label, description: description, error: error, required: required ?? false, disabled: disabled ?? false, focused: focused, variant: variant ?? fieldRecipe.defaults.variant, shape: shape ?? fieldRecipe.defaults.shape, align: align ?? fieldRecipe.defaults.align, className: fieldClassName, ...(description ? { descriptionId: ids.descriptionId } : {}), ...(error ? { errorId: ids.errorId } : {}), children: _jsxs("div", { className: "hjm-field__control", children: [leading ? _jsx("span", { className: "hjm-field__affix", children: leading }) : null, _jsx("input", { ...props, ref: ref, id: ids.controlId, className: classNames("hjm-field__input", className), required: required, disabled: disabled, "aria-invalid": error ? true : ariaInvalid, "aria-label": ariaLabel, "aria-describedby": describedBy(ariaDescribedBy, description, error, ids.descriptionId, ids.errorId), onFocus: handleFocus, onBlur: handleBlur }), trailing ? _jsx("span", { className: "hjm-field__affix", children: trailing }) : null] }) }));
 });
-export const TextArea = forwardRef(function TextArea({ id, label, description, error, required, disabled, variant, shape, fieldClassName, className, onFocus, onBlur, "aria-describedby": ariaDescribedBy, "aria-invalid": ariaInvalid, "aria-label": ariaLabel, ...props }, ref) {
+export const TextArea = forwardRef(function TextArea({ id, label, description, error, required, disabled, variant, shape, align, fieldClassName, className, onFocus, onBlur, "aria-describedby": ariaDescribedBy, "aria-invalid": ariaInvalid, "aria-label": ariaLabel, minVisibleLines, maxVisibleLines, style, ...props }, ref) {
     const ids = useFieldIds(id);
     const [focused, setFocused] = useState(false);
     requireFieldAccessibleName(label, ariaLabel);
-    return (_jsx(FieldFrame, { controlId: ids.controlId, label: label, description: description, error: error, required: required ?? false, disabled: disabled ?? false, focused: focused, variant: variant ?? fieldRecipe.defaults.variant, shape: shape ?? fieldRecipe.defaults.shape, className: fieldClassName, ...(description ? { descriptionId: ids.descriptionId } : {}), ...(error ? { errorId: ids.errorId } : {}), children: _jsx("div", { className: "hjm-field__control hjm-field__control--multiline", children: _jsx("textarea", { ...props, ref: ref, id: ids.controlId, className: classNames("hjm-field__input", className), required: required, disabled: disabled, "aria-invalid": error ? true : ariaInvalid, "aria-label": ariaLabel, "aria-describedby": describedBy(ariaDescribedBy, description, error, ids.descriptionId, ids.errorId), onFocus: (event) => {
+    // Bounds are expressed in lines so the recipe keeps line height and padding.
+    const lineBounds = {
+        ...(minVisibleLines === undefined
+            ? {}
+            : { "--hjm-field-min-visible-lines": minVisibleLines }),
+        ...(maxVisibleLines === undefined
+            ? {}
+            : { "--hjm-field-max-visible-lines": maxVisibleLines }),
+    };
+    return (_jsx(FieldFrame, { controlId: ids.controlId, label: label, description: description, error: error, required: required ?? false, disabled: disabled ?? false, focused: focused, variant: variant ?? fieldRecipe.defaults.variant, shape: shape ?? fieldRecipe.defaults.shape, align: align ?? fieldRecipe.defaults.align, className: fieldClassName, ...(description ? { descriptionId: ids.descriptionId } : {}), ...(error ? { errorId: ids.errorId } : {}), children: _jsx("div", { className: "hjm-field__control hjm-field__control--multiline", children: _jsx("textarea", { ...props, ref: ref, id: ids.controlId, className: classNames("hjm-field__input", className), style: { ...style, ...lineBounds }, required: required, disabled: disabled, "aria-invalid": error ? true : ariaInvalid, "aria-label": ariaLabel, "aria-describedby": describedBy(ariaDescribedBy, description, error, ids.descriptionId, ids.errorId), onFocus: (event) => {
                     setFocused(true);
                     onFocus?.(event);
                 }, onBlur: (event) => {

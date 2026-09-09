@@ -2,6 +2,7 @@ import { resolveColorReference } from "@hjmds/design-contracts/color-references"
 import { glyph, radius, spacing, typography } from "@hjmds/design-contracts/foundations";
 import {
   fieldRecipe,
+  type FieldAlign,
   type FieldShape,
   type FieldVariant,
 } from "@hjmds/design-contracts/recipes/base";
@@ -73,6 +74,7 @@ import {
 } from "react-native";
 
 import { useControllableState } from "./internal/state.js";
+import { webChoiceProps, webOnly } from "./internal/web-a11y.js";
 import {
   logicalTextAlign,
   minimumTargetStyle,
@@ -109,6 +111,17 @@ type BaseFieldProps = Omit<
      * recipe-owned, so this semantic axis replaces `inputStyle={{ maxHeight }}`.
      */
     maxVisibleLines?: number;
+    /**
+     * Lower bound for a growing multiline field, in visible lines. Height is
+     * recipe-owned, so this semantic axis replaces `inputStyle={{ minHeight }}`.
+     */
+    minVisibleLines?: number;
+    /**
+     * Text placement inside the control. `start` follows the resolved
+     * direction; `center` suits a short, ceremonial single value such as a
+     * nickname or a code. Replaces `inputStyle={{ textAlign }}`.
+     */
+    align?: FieldAlign;
     onValueChange?: (value: string) => void;
     supportText?: string;
     error?: string;
@@ -192,6 +205,8 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(function FieldRe
     allowFontScaling,
     multiline,
     maxVisibleLines,
+  minVisibleLines,
+  align = fieldRecipe.defaults.align,
     search,
     searchSize = searchFieldRecipe.defaults.size,
     leading,
@@ -220,11 +235,6 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(function FieldRe
   );
   const searchSizing = searchFieldRecipe.sizes[searchSize];
   const resolvedMaxVisibleLines = maxVisibleLines ?? fieldRecipe.multilineMaxVisibleLines;
-  const minHeight = multiline
-    ? fieldRecipe.multilineMinHeight
-    : search
-      ? searchSizing.minHeight
-      : fieldRecipe.minHeight;
   const borderWidth = search ? searchFieldRecipe.borderWidth : fieldRecipe.borderWidth;
   const borderColor = search
     ? resolveColorReference(
@@ -249,6 +259,18 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(function FieldRe
     ? resolveColorReference(searchFieldRecipe.colors.placeholder, theme.palette)
     : colors[fieldRecipe.placeholder.color];
   const textStyle = typography[search ? searchSizing.textVariant : fieldRecipe.textVariant];
+  // A composer that should open several lines tall asks in lines, not pixels,
+  // so the recipe keeps ownership of line height and vertical padding.
+  const minHeight = multiline
+    ? minVisibleLines === undefined
+      ? fieldRecipe.multilineMinHeight
+      : Math.max(
+          fieldRecipe.multilineMinHeight,
+          textStyle.lineHeight * minVisibleLines + fieldRecipe.paddingVertical * 2,
+        )
+    : search
+      ? searchSizing.minHeight
+      : fieldRecipe.minHeight;
   const controlRadius = radius[
     search ? searchFieldRecipe.shapes[resolvedShape] : fieldRecipe.shapes[resolvedShape]
   ];
@@ -272,7 +294,9 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(function FieldRe
           : {}),
         paddingHorizontal: 0,
         paddingVertical: fieldRecipe.paddingVertical,
-        textAlign: logicalTextAlign(environment.direction),
+        textAlign: align === "center"
+          ? "center"
+          : logicalTextAlign(environment.direction),
         textAlignVertical: multiline ? "top" : "center",
       },
       inputStyle,
@@ -917,6 +941,8 @@ type ChoiceRowProps = ChoiceVisualProps & Readonly<{
   renderLeading?: ((props: ChoiceVisualRenderProps) => ReactNode) | undefined;
   renderIndicator?: ((props: ChoiceVisualRenderProps) => ReactNode) | undefined;
   onActivate: () => void;
+  /** Roving tabindex position inside a radio group. Web renderer only. */
+  webTabIndex?: number | undefined;
 }>;
 
 function ChoiceRow({
@@ -939,6 +965,7 @@ function ChoiceRow({
   renderLeading,
   renderIndicator,
   onActivate,
+  webTabIndex,
   style,
   controlStyle,
   indicatorStyle,
@@ -1006,6 +1033,14 @@ function ChoiceRow({
       accessibilityLabel={label}
       accessibilityRole={kind}
       accessibilityState={{ checked, disabled: disabled || readOnly }}
+      {...webOnly(webChoiceProps({
+        kind,
+        checked,
+        disabled,
+        readOnly,
+        onActivate,
+        ...(webTabIndex === undefined ? {} : { tabIndex: webTabIndex }),
+      }))}
       disabled={disabled || readOnly}
       hitSlop={plate.useSizePadding ? 0 : metrics.hitSlop}
       onPress={() => {
@@ -1432,6 +1467,9 @@ export function RadioGroup<Value extends string = string>({
     ...(onValueChange === undefined ? {} : { onChange: onValueChange }),
   });
   const selected = reconcileRadioSelection(selectionItems, storedValue, required);
+  // A radio group is one tab stop: the selected option holds it, or the first
+  // enabled option when nothing is selected yet.
+  const webTabStop = selected ?? selectionItems.find((item) => !item.disabled)?.id;
   useEffect(() => {
     if (value === undefined && selected !== storedValue) setSelected(selected);
   }, [selected, setSelected, storedValue, value]);
@@ -1470,6 +1508,7 @@ export function RadioGroup<Value extends string = string>({
             label={item.label}
             leading={item.leading}
             onActivate={() => setSelected(item.value)}
+            webTabIndex={!optionDisabled && !readOnly && item.value === webTabStop ? 0 : -1}
             presentation={presentation}
             readOnly={readOnly}
             readOnlyLabel={readOnlyLabel}
@@ -1981,6 +2020,21 @@ export function Chip({
       accessibilityLabel={accessibilityLabel ?? label}
       accessibilityRole={role}
       accessibilityState={selectable ? { checked: active, disabled } : { disabled }}
+      {...webOnly(
+        selectable
+          ? webChoiceProps({
+              kind: role === "radio" ? "radio" : "checkbox",
+              checked: active,
+              disabled,
+              readOnly: false,
+              // Chip's controlled handler needs the press event, so Space
+              // re-enters the element's own DOM click path instead of calling
+              // the handler with a synthesised one.
+              onActivate: (element) => element.click(),
+              ...(role === "radio" ? { tabIndex: active && !disabled ? 0 : -1 } : {}),
+            })
+          : { "aria-disabled": disabled },
+      )}
       disabled={disabled}
       hitSlop={metrics.hitSlop}
       onPress={(event) => {
