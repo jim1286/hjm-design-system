@@ -3561,12 +3561,14 @@ export declare const recipeRegistry: {
                 readonly fontWeight: "600";
                 readonly underline: "always";
                 readonly minHeight: null;
+                readonly minWidth: null;
             };
             readonly standalone: {
                 readonly textVariant: "body";
                 readonly fontWeight: "700";
                 readonly underline: "hover";
                 readonly minHeight: 44;
+                readonly minWidth: 44;
             };
         };
         readonly gap: 4;
