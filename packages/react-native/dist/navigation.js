@@ -357,7 +357,12 @@ export function BottomNavigation({ descriptor, onActivate, onLongActivate, rende
                         const selected = item.id === resolved.selectedKey;
                         const focused = focusedKey === item.id;
                         const sourceBadge = descriptor.items[index]?.badge;
-                        return (_jsxs(Pressable, { accessibilityLabel: item.resolvedAccessibilityLabel, accessibilityRole: "tab", accessibilityState: { disabled: item.disabled, selected }, disabled: item.disabled, onBlur: () => {
+                        return (_jsxs(Pressable, { 
+                            // React Native maps `tab` to UIAccessibilityTraitNone on iOS
+                            // (RCTViewManager.m), so `accessibilityRole` alone leaves the
+                            // item with no trait: VoiceOver reads the name and never says
+                            // it can be activated. Same branch `Tabs` above already uses.
+                            role: Platform.OS === "ios" ? "button" : "tab", accessibilityLabel: item.resolvedAccessibilityLabel, accessibilityRole: "tab", accessibilityState: { disabled: item.disabled, selected }, disabled: item.disabled, onBlur: () => {
                                 setFocusedKey((current) => current === item.id ? null : current);
                             }, onFocus: () => setFocusedKey(item.id), onLongPress: onLongActivate
                                 ? () => {

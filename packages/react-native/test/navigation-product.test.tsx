@@ -13,7 +13,7 @@ import {
   type ReactNode,
 } from "react";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
-import { ActivityIndicator, Keyboard, View } from "react-native";
+import { ActivityIndicator, Keyboard, Platform, View } from "react-native";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
@@ -58,6 +58,40 @@ afterEach(() => {
 });
 
 describe("Native navigation product adapters", () => {
+  it("gives BottomNavigation destinations a real iOS trait", () => {
+    // React Native maps `tab` to UIAccessibilityTraitNone on iOS
+    // (RCTViewManager.m). An item carrying only `accessibilityRole="tab"`
+    // reaches VoiceOver with no trait at all, so the name is read but the
+    // item never announces that it can be activated. Measured on an iOS
+    // simulator: all four destinations came back as plain elements.
+    const original = Platform.OS;
+    Object.defineProperty(Platform, "OS", { configurable: true, value: "ios" });
+    try {
+      const renderer = render(
+        <BottomNavigation
+          descriptor={{
+            accessibilityLabel: "primary",
+            items: [
+              { id: "home", label: "Home", icon: { name: "home" } },
+              { id: "profile", label: "Profile", icon: { name: "user" } },
+            ],
+            selectedKey: "home",
+          }}
+          getItemTestID={(item) => `ios-${item.id}`}
+          onActivate={() => {}}
+          renderIcon={() => <View />}
+        />,
+      );
+      const home = renderer.root.findByProps({ testID: "ios-home" });
+      expect(home.props.role).toBe("button");
+      // Web keeps the correct ARIA role; only the iOS trait mapping differs.
+      expect(home.props.accessibilityRole).toBe("tab");
+      expect(home.props.accessibilityState).toMatchObject({ selected: true });
+    } finally {
+      Object.defineProperty(Platform, "OS", { configurable: true, value: original });
+    }
+  });
+
   it("binds BottomNavigation slots, appearance, intents, safe area, and keyboard behavior", () => {
     const onActivate = vi.fn();
     const onLongActivate = vi.fn();
@@ -136,6 +170,12 @@ describe("Native navigation product adapters", () => {
       .toMatchObject({ accessible: false, importantForAccessibility: "no-hide-descendants" });
 
     const search = renderer.root.findByProps({ testID: "destination-search" });
+    // React Native maps `tab` to UIAccessibilityTraitNone on iOS, so an item
+    // carrying only `accessibilityRole` reaches VoiceOver with no trait at all
+    // and never announces that it can be activated. Measured on an iOS
+    // simulator: the four destinations came back as plain elements.
+    expect(search.props.role).toBe("tab");
+    expect(search.props.accessibilityRole).toBe("tab");
     expect(flattenStyle(search.props.style({ pressed: false }))).toMatchObject({
       marginEnd: bottomNavigationRecipe.distributions["center-gap"].centerGap,
       minHeight: bottomNavigationRecipe.density.compact.itemMinHeight,
