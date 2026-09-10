@@ -55,10 +55,41 @@ Dependabot alerts 6건(high 2·medium 3·low 1)을 확인하고 아래와 같이
 | 패키지 | 현재 → 요구 | 상위 | 남긴 이유 |
 | --- | --- | --- | --- |
 | esbuild | 0.27.7 → 0.28.1 (low) | storybook 10.4.4 | 0.x minor는 semver 관례상 breaking이다. low 1건을 위해 storybook 빌드 경로를 흔들지 않는다 |
-| uuid | 7.0.3 → 11.1.1 (medium) | xcode 3.0.1 ← @expo/config-plugins | major 4단계 차이다. 권고(CVE-2026-41907)는 v3/v5/v6에 `buf`를 넘길 때의 경계 검사 누락이고, 이 경로는 Xcode 프로젝트 파일 파싱이라 해당 호출이 없다 |
 
 두 항목은 상위 도구가 올라올 때 함께 해소한다. 상위 major를 강제하는 override는 넣지 않는다.
 이 판단은 정적 검토이며, 빌드 도구의 런타임 노출 범위를 실측한 것은 아니다.
 
 또한 이 저장소의 `packageManager`는 `pnpm@11.18.0`으로, 포트폴리오 baseline인 11.24.0과
 다르다. 이번 변경 범위가 아니라 그대로 뒀고 HJM 릴리스 절차에서 함께 정한다.
+
+### uuid는 닫았다 — 판단을 정정한다 (2026-09-10, 같은 날 추가)
+
+위에서 `uuid` 7.0.3(`xcode@3.0.1` 경유)을 major 4단계 차이라는 이유로 남기기로 했다.
+**두 가지 근거로 판단을 바꿨다.**
+
+1. **포트폴리오 안에 선례가 넷 있다.** taground·unairplane·spint·diairy가 모두
+   `'xcode>uuid': 11.1.1` 중첩 override를 쓰고 각 저장소 검사를 통과한다. Xcode 프로젝트
+   파서 경로에서 이 major override가 동작한다는 근거가 추측이 아니라 실측으로 있었다.
+2. **남겨 두면 Actions가 계속 빨간색으로 남는다.** Dependabot updater가 매 실행마다
+   실패한다 — 닫을 수 없는 보안 권고를 자동 수정하려다 실패하는 것이다.
+
+```
+security_update_not_possible {
+  "dependency-name": "uuid",
+  "latest-resolvable-version": "7.0.3",
+  "lowest-non-vulnerable-version": "14.0.0"
+}
+Error: The updater encountered one or more errors.
+```
+
+`xcode@3.0.1`이 `~7.0.0`을 선언하므로 Dependabot이 도달할 수 있는 최대가 7.0.3이고,
+그것이 여전히 취약하므로 수정안을 만들지 못한다. 이 실패는 **매 Dependabot 실행마다
+반복**되며 다른 실제 문제를 가린다. override로 하한을 적는 것이 그 반복을 끝내는 유일한 길이다.
+
+검증: `pnpm ci:check` exit 0 — packages 검사, renderer 번들 예산, workspace·evidence·docs·
+governance 검사, **양쪽 showcase**(native check + web storybook build, canonical story 94개와
+navigation page 13개 검증)까지 전부.
+
+남은 것은 `esbuild`(low) 하나다. 그것은 storybook 10.4.4가 0.27.7을 끌어오고 0.x minor를
+건너야 해서 남긴다. 다만 이 항목은 Dependabot updater를 실패시키지 않는다 —
+security update 대상이 아니기 때문이다.
