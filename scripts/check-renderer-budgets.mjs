@@ -67,7 +67,11 @@ const rendererBudgets = [
       "./steps": { modules: 4, raw: 25_000, gzip: 6_500 },
       "./upload-item": { modules: 6, raw: 82_000, gzip: 17_000 },
       "./forms": { modules: 7, raw: 83_000, gzip: 16_600 },
-      "./navigation": { modules: 9, raw: 135_500, gzip: 26_700 },
+      // gzip 26_700 -> 26_750: BottomNavigation needs the same `Platform.OS`
+      // branch Tabs already has, because RN maps `tab` to
+      // UIAccessibilityTraitNone on iOS. Under 50 bytes for a trait that
+      // decides whether VoiceOver calls the destination activatable.
+      "./navigation": { modules: 9, raw: 135_500, gzip: 26_750 },
       "./data-display": { modules: 6, raw: 77_000, gzip: 15_000 },
       "./feedback": { modules: 5, raw: 73_500, gzip: 15_100 },
       "./overlays": { modules: 6, raw: 84_500, gzip: 15_100 },

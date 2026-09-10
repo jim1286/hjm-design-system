@@ -784,6 +784,11 @@ export function BottomNavigation<
             return (
               <Pressable
                 key={item.id}
+                // React Native maps `tab` to UIAccessibilityTraitNone on iOS
+                // (RCTViewManager.m), so `accessibilityRole` alone leaves the
+                // item with no trait: VoiceOver reads the name and never says
+                // it can be activated. Same branch `Tabs` above already uses.
+                role={Platform.OS === "ios" ? "button" : "tab"}
                 accessibilityLabel={item.resolvedAccessibilityLabel}
                 accessibilityRole="tab"
                 accessibilityState={{ disabled: item.disabled, selected }}
