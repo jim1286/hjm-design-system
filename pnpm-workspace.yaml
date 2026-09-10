@@ -3,3 +3,11 @@ packages:
   - "showcase/*"
 allowBuilds:
   esbuild: true
+
+# 전이 의존성의 보안 하한. 상위 패키지가 선언한 range 안에 패치가 있는데도 lockfile이
+# 옛 버전에 고정돼 있을 때만 쓴다. 상위가 따라오면 항목을 지우고 같은 버전이 나오는지 확인한다.
+overrides:
+  # valibot 1 계열만. @storybook/mcp·@tmcp/adapter-valibot·@valibot/to-json-schema가
+  # 1.2.0에 머물러 있었고 같은 트리에 1.4.2가 이미 있었다. 같은 major 안의 minor라
+  # 안전하고, 중복 사본도 함께 없어진다.
+  valibot@^1: ^1.4.2

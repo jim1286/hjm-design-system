@@ -30,3 +30,35 @@ node scripts/check-library-policies.mjs --module hjm-design-system
 중앙 검사는 direct manifest 경로·등록·버전 계열·근거 파일 존재와 등록된 Query key factory/생성 위치를 검사한다. 문서 내용의 정확성이나 모든 간접 호출까지 증명하지 않는다.
 API 요청의 모든 입력, 계정 격리, persistence race, 실기기 동작은 해당 행동 테스트와 QA로 확인한다.
 이 문서와 정적 검사 통과만으로 전체 library API의 런타임 검증이나 원격 required gate 설치를 주장하지 않는다.
+
+## 전이 의존성 보안 권고 처리 — 2026-09-10
+
+Dependabot alerts 6건(high 2·medium 3·low 1)을 확인하고 아래와 같이 정리했다.
+전부 lockfile의 전이 의존성이며 게시되는 `dependencies`/`peerDependencies`는 바뀌지 않았다.
+
+락파일 갱신(`pnpm update --recursive`)으로 닫힌 것:
+
+| 패키지 | 변화 | 권고 |
+| --- | --- | --- |
+| js-yaml | 3.15.1 → 3.15.2, 4.3.1 → 4.3.2 | high 2건 |
+| @vitest/mocker | vitest 4.1.11 상향에 포함 | medium |
+
+`pnpm-workspace.yaml`의 `overrides`로 닫은 것:
+
+| 패키지 | 변화 | 이유 |
+| --- | --- | --- |
+| valibot | 1.2.0 → 1.4.2 | 같은 major 안의 minor이고 트리에 1.4.2가 이미 있어 중복 사본까지 없어진다 |
+
+**닫지 않고 남긴 것과 근거.** 둘 다 dev 전용 toolchain의 전이 의존성이고, 하한을 올리려면
+상위 도구에 major를 강제해야 한다. 게시 산출물에는 들어가지 않으므로 소비 앱에 전달되지 않는다.
+
+| 패키지 | 현재 → 요구 | 상위 | 남긴 이유 |
+| --- | --- | --- | --- |
+| esbuild | 0.27.7 → 0.28.1 (low) | storybook 10.4.4 | 0.x minor는 semver 관례상 breaking이다. low 1건을 위해 storybook 빌드 경로를 흔들지 않는다 |
+| uuid | 7.0.3 → 11.1.1 (medium) | xcode 3.0.1 ← @expo/config-plugins | major 4단계 차이다. 권고(CVE-2026-41907)는 v3/v5/v6에 `buf`를 넘길 때의 경계 검사 누락이고, 이 경로는 Xcode 프로젝트 파일 파싱이라 해당 호출이 없다 |
+
+두 항목은 상위 도구가 올라올 때 함께 해소한다. 상위 major를 강제하는 override는 넣지 않는다.
+이 판단은 정적 검토이며, 빌드 도구의 런타임 노출 범위를 실측한 것은 아니다.
+
+또한 이 저장소의 `packageManager`는 `pnpm@11.18.0`으로, 포트폴리오 baseline인 11.24.0과
+다르다. 이번 변경 범위가 아니라 그대로 뒀고 HJM 릴리스 절차에서 함께 정한다.
