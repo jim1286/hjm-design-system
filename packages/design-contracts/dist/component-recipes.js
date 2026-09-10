@@ -73,12 +73,15 @@ export const linkRecipe = {
             fontWeight: fontWeight.semibold,
             underline: "always",
             minHeight: null,
+            minWidth: null,
         },
+        /** 그 자체가 동작이므로 두 축 모두 최소 터치 타깃. 높이만 잡으면 짧은 라벨이 좁아진다. */
         standalone: {
             textVariant: "body",
             fontWeight: fontWeight.bold,
             underline: "hover",
             minHeight: control.minTouchTarget,
+            minWidth: control.minTouchTarget,
         },
     },
     gap: spacing.xxs,

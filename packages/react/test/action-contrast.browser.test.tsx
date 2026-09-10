@@ -1,7 +1,7 @@
 import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { Button, IconButton } from "../src/actions.js";
+import { Button, IconButton, Link } from "../src/actions.js";
 import { HjmProvider } from "../src/provider.js";
 import "../src/styles.css";
 
@@ -54,5 +54,29 @@ describe("visible secondary action boundaries", () => {
     const ghost = getComputedStyle(actions[2]!);
     expect(ghost.backgroundColor).toBe("rgba(0, 0, 0, 0)");
     expect(ghost.borderTopColor).toBe("rgba(0, 0, 0, 0)");
+  });
+});
+
+describe("standalone link touch target", () => {
+  it("keeps the minimum touch target on both axes for a short label", async () => {
+    await act(async () => root.render(
+      <HjmProvider theme="light">
+        <Link variant="standalone" href="/write">
+          Write
+        </Link>
+        <Link variant="inline" href="/write">
+          문장 안의 링크
+        </Link>
+      </HjmProvider>,
+    ));
+
+    const links = container.querySelectorAll<HTMLAnchorElement>("a");
+    const standalone = links[0]!.getBoundingClientRect();
+    // 단독 링크는 그 자체가 동작이므로 짧은 라벨에서도 44pt 사각형을 유지한다.
+    expect(standalone.height).toBeGreaterThanOrEqual(44);
+    expect(standalone.width).toBeGreaterThanOrEqual(44);
+    // 문장 안 링크는 글줄을 따라가야 하므로 최소 크기를 강제하지 않는다.
+    const inline = links[1]!.getBoundingClientRect();
+    expect(inline.height).toBeLessThan(44);
   });
 });

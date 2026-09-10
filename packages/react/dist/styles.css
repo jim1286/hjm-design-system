@@ -263,7 +263,7 @@
 .hjm-icon-button[data-size="large"] { inline-size: var(--hjm-control-button-large); block-size: var(--hjm-control-button-large); }
 .hjm-link { display: inline-flex; align-items: center; gap: var(--hjm-space-xxs); color: var(--hjm-color-content-brand); text-underline-offset: 0.18em; }
 .hjm-link[data-tone="neutral"] { color: var(--hjm-color-text-body); }
-.hjm-link[data-variant="standalone"] { min-block-size: var(--hjm-control-min-touch-target); text-decoration: none; }
+.hjm-link[data-variant="standalone"] { min-block-size: var(--hjm-control-min-touch-target); min-inline-size: var(--hjm-control-min-touch-target); justify-content: center; text-decoration: none; }
 .hjm-link[aria-disabled="true"] { opacity: 0.5; text-decoration: none; }
 
 .hjm-button:focus-visible,
