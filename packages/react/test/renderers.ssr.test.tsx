@@ -270,6 +270,29 @@ describe("SegmentedControl large-text layout", () => {
     expect(css).toContain(".hjm-segmented__item { flex: 0 0 auto; min-inline-size: 0; }");
   });
 
+  /* 0.9.11 shipped this stylesheet with one closing brace too many. Every gate
+     passed — the SSR assertions read the file as text, and the showcase bundler
+     only warned — while the consumer's Next build failed outright on
+     `Invalid empty selector`. The structure is now read as structure. */
+  it("ships a structurally balanced stylesheet", () => {
+    const css = readFileSync(
+      fileURLToPath(new URL("../src/styles.css", import.meta.url)),
+      "utf8",
+    );
+    const withoutComments = css.replace(/\/\*[\s\S]*?\*\//g, "");
+    let depth = 0;
+    let unbalanced = false;
+    for (const character of withoutComments) {
+      if (character === "{") depth += 1;
+      if (character === "}") {
+        depth -= 1;
+        if (depth < 0) unbalanced = true;
+      }
+    }
+    expect(unbalanced).toBe(false);
+    expect(depth).toBe(0);
+  });
+
   it("keeps the row as the default layout", () => {
     const markup = renderToStaticMarkup(
       <HjmProvider systemTheme="light">
