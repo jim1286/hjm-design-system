@@ -771,7 +771,6 @@
   .hjm-segmented__items { flex-direction: column; overflow-x: visible; }
   .hjm-segmented__item { flex: 0 0 auto; min-inline-size: 0; }
 }
-}
 
 .hjm-tabs { min-inline-size: 0; }
 .hjm-tabs__list { display: flex; gap: var(--hjm-space-xs); min-inline-size: 0; overflow-x: auto; border-block-end: 1px solid var(--hjm-color-border); }
