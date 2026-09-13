@@ -3,6 +3,7 @@ import { fileURLToPath } from "node:url";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import { resolveDesignSystemProviderValue } from "@hjmds/design-contracts/components/design-system-provider";
+import { segmentedControlRecipe } from "@hjmds/design-contracts/recipes";
 import {
   Badge,
   Button,
@@ -249,5 +250,39 @@ describe("layout and display vertical slice", () => {
     expect(css).toContain('.hjm-badge[data-variant="outline"]');
     expect(css).toContain("font-size: var(--hjm-type-caption-size)");
     expect(css).toContain("font-weight: var(--hjm-font-weight-bold)");
+  });
+});
+
+describe("SegmentedControl large-text layout", () => {
+  /* The recipe declares that large text stacks the options; React Native reads
+     it directly, and this renderer translates it into a stylesheet rule keyed on
+     the browser's own font size. Binding the two here means a recipe that stops
+     asking for stacking cannot leave the CSS behind. */
+  it("translates the recipe's stacked layout into the stylesheet", () => {
+    const css = readFileSync(
+      fileURLToPath(new URL("../src/styles.css", import.meta.url)),
+      "utf8",
+    );
+    const stacks = segmentedControlRecipe.adaptive.largeTextLayout === "stacked";
+    const rule = /@media \(max-width: 11em\) \{\s*\.hjm-segmented__items \{[^}]*flex-direction: column;/;
+    expect(rule.test(css)).toBe(stacks);
+    if (!stacks) return;
+    expect(css).toContain(".hjm-segmented__item { flex: 0 0 auto; min-inline-size: 0; }");
+  });
+
+  it("keeps the row as the default layout", () => {
+    const markup = renderToStaticMarkup(
+      <HjmProvider systemTheme="light">
+        <SegmentedControl
+          label="보기"
+          items={[
+            { value: "list", label: "목록으로 보기" },
+            { value: "map", label: "지도로 보기" },
+          ]}
+        />
+      </HjmProvider>,
+    );
+    expect(markup).toContain('class="hjm-segmented__items"');
+    expect(markup).not.toContain("flex-direction");
   });
 });

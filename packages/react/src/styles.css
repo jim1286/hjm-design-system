@@ -748,6 +748,31 @@
 .hjm-segmented__item[data-state="checked"] { color: var(--hjm-color-text); background: var(--hjm-color-surface-accent); font-weight: var(--hjm-font-weight-semibold); }
 .hjm-segmented__item[data-disabled="true"] { opacity: 0.5; cursor: not-allowed; }
 
+/* segmentedControlRecipe.adaptive.largeTextLayout = "stacked": equal-width
+   segments stop being comparable once large text wraps a syllable per line, and
+   on a narrow viewport the row overflows into a horizontal scroller instead.
+   React Native reads the recipe and stacks; this renderer had no translation of
+   it, so one contract rendered two layouts.
+
+   The trigger is a media query rather than the recipe's `stackAtFontScale`
+   because no web product declares `textScale` to the provider — the scale a
+   browser user actually changes is the default font size, and `em` in a media
+   query is exactly that size. 11em is 176px at 100% (no real viewport, so the
+   row is untouched) and 352px at 200%. Measured on the sea view: the row is
+   195px at 100%, 263px at 150% and 333px at 200%, so 320px/200% overflowed
+   (10em) while 360px/200% did not (11.25em) — the threshold sits between them.
+   Stacking releases two row-only declarations: `flex: 1 1 0` would collapse an
+   auto-height column to its padding, and `max-content` would stop a long label
+   from wrapping inside its own full-width row.
+
+   `renderers.ssr.test.tsx` fails if the recipe stops declaring "stacked" while
+   these rules remain, so the two do not drift apart silently. */
+@media (max-width: 11em) {
+  .hjm-segmented__items { flex-direction: column; overflow-x: visible; }
+  .hjm-segmented__item { flex: 0 0 auto; min-inline-size: 0; }
+}
+}
+
 .hjm-tabs { min-inline-size: 0; }
 .hjm-tabs__list { display: flex; gap: var(--hjm-space-xs); min-inline-size: 0; overflow-x: auto; border-block-end: 1px solid var(--hjm-color-border); }
 .hjm-tabs[data-overflow="clip"] .hjm-tabs__list { overflow: hidden; }
