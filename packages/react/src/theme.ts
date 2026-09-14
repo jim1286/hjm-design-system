@@ -1,5 +1,6 @@
 import {
   control,
+  easing,
   fontFamily,
   fontWeight,
   motion,
@@ -12,7 +13,11 @@ import {
   type DesignSystemProviderValue,
 } from "@hjmds/design-contracts/components/design-system-provider";
 import { fieldRecipe } from "@hjmds/design-contracts/recipes/base";
-import { listRowRecipe, switchRecipe } from "@hjmds/design-contracts/recipes";
+import {
+  listRowRecipe,
+  skeletonRecipe,
+  switchRecipe,
+} from "@hjmds/design-contracts/recipes";
 import type { CSSProperties } from "react";
 
 export type HjmThemeStyle = CSSProperties &
@@ -89,6 +94,16 @@ export function createHjmThemeStyle(
     style[`--hjm-list-row-${kebab(name)}-padding-inline`] = rem(value.paddingHorizontal);
     style[`--hjm-list-row-${kebab(name)}-padding-block`] = rem(value.paddingVertical);
   }
+  // The recipe owns these; a second copy in the stylesheet drifts silently
+  // because the gates read that file as text only. Block and text heights
+  // already resolve through --hjm-space-*, so they are not re-emitted.
+  const skeletonCurve = easing[skeletonRecipe.animation.easing];
+  style["--hjm-skeleton-circle-size"] =
+    `${skeletonRecipe.shapes.circle.defaultHeight}px`;
+  style["--hjm-skeleton-duration"] = `${skeletonRecipe.animation.duration}ms`;
+  style["--hjm-skeleton-easing"] = `cubic-bezier(${skeletonCurve.join(", ")})`;
+  style["--hjm-skeleton-from-opacity"] = skeletonRecipe.animation.fromOpacity;
+  style["--hjm-skeleton-to-opacity"] = skeletonRecipe.animation.toOpacity;
   style["--hjm-control-min-touch-target"] = `${control.minTouchTarget}px`;
   style["--hjm-control-field-height"] = `${control.fieldHeight}px`;
   style["--hjm-field-multiline-min-height"] = rem(fieldRecipe.multilineMinHeight);

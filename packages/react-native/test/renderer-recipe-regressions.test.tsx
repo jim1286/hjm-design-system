@@ -15,6 +15,7 @@ import {
   listRowRecipe,
   progressRecipe,
   sectionRecipe,
+  skeletonRecipe,
   statisticRecipe,
   topBarRecipe,
 } from "@hjmds/design-contracts/recipes";
@@ -41,6 +42,7 @@ import {
   Layout,
   ListRow,
   Progress,
+  Skeleton,
   Section,
   Statistic,
   Surface,
@@ -1092,5 +1094,81 @@ describe("Native canonical recipe bindings", () => {
       (node) => node.props.accessibilityLabel === "최신 기록을 불러오는 중",
     )?.props).toMatchObject({ accessibilityRole: "progressbar" });
     expect(accessibilityOnly.root.findAllByType(Text)).toHaveLength(0);
+  });
+});
+
+describe("Skeleton pulse", () => {
+  /* 0.9.12까지 native Skeleton은 recipe의 shape도 animation도 읽지 않고 높이 16의
+     정지 View만 그렸다. web renderer는 같은 recipe로 펄스를 돌리고 있었으므로 같은
+     계약을 쓰는 두 표면의 표현이 갈려 있었다. */
+  const motionValue = resolveDesignSystemProviderValue(
+    { direction: "ltr", reducedMotion: false, textScale: 1, theme: "light" },
+    { systemTheme: "light" },
+  );
+
+  // byLabel은 Skeleton composite와 그 아래 Animated 호스트를 모두 집는다. 스타일을
+  // 실제로 들고 있는 호스트만 본다.
+  function surfaceStyle(renderer: ReactTestRenderer): Record<string, unknown> {
+    const host = renderer.root.findAll(
+      (node) =>
+        node.props.accessibilityLabel === "불러오는 중" &&
+        node.props.style !== undefined,
+      { deep: true },
+    );
+    return flattenStyle(host[host.length - 1]!.props.style);
+  }
+
+  it("takes its geometry and surface from the recipe shape", () => {
+    const renderer = render(
+      <Skeleton accessibilityLabel="불러오는 중" shape="circle" />,
+      motionValue,
+    );
+    expect(surfaceStyle(renderer)).toMatchObject({
+      backgroundColor: resolveColorReference(
+        skeletonRecipe.background,
+        motionValue.palette,
+      ),
+      borderRadius: radius[skeletonRecipe.shapes.circle.radius],
+      height: skeletonRecipe.shapes.circle.defaultHeight,
+      width: skeletonRecipe.shapes.circle.defaultHeight,
+    });
+  });
+
+  it("interpolates the pulse across the recipe's opacity range", () => {
+    const renderer = render(
+      <Skeleton accessibilityLabel="불러오는 중" />,
+      motionValue,
+    );
+    expect(surfaceStyle(renderer).opacity)
+      .toMatchObject({
+        configuration: {
+          inputRange: [0, 1],
+          outputRange: [
+            skeletonRecipe.animation.fromOpacity,
+            skeletonRecipe.animation.toOpacity,
+          ],
+        },
+      });
+  });
+
+  it("pins the pulse to a static value when motion is reduced", () => {
+    // lightValue는 reducedMotion: true다. recipe가 "static"을 선언하므로 0ms 애니메이션이
+    // 아니라 고정 불투명 값이어야 한다.
+    const renderer = render(<Skeleton accessibilityLabel="불러오는 중" />);
+    expect(surfaceStyle(renderer).opacity)
+      .toBe(skeletonRecipe.animation.toOpacity);
+  });
+
+  it("keeps explicit dimensions winning over the shape default", () => {
+    // 0.9 train의 기존 호출부가 쓰는 형태. shape 도입이 이 조합을 깨면 안 된다.
+    const renderer = render(
+      <Skeleton accessibilityLabel="불러오는 중" height={88} radius={18} width="68%" />,
+      motionValue,
+    );
+    expect(surfaceStyle(renderer)).toMatchObject({
+      borderRadius: 18,
+      height: 88,
+      width: "68%",
+    });
   });
 });

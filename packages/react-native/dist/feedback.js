@@ -2,7 +2,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { easing, glyph, radius, spacing } from "@hjmds/design-contracts/foundations";
 import { resolveControlAccessibleName, } from "@hjmds/design-contracts/behaviors";
-import { emptyStateRecipe, noticeRecipe, progressRecipe, toastRecipe, } from "@hjmds/design-contracts/recipes";
+import { emptyStateRecipe, noticeRecipe, progressRecipe, skeletonRecipe, toastRecipe, } from "@hjmds/design-contracts/recipes";
 import { resolveResultDescriptor, resultRecipe, } from "@hjmds/design-contracts/components/result";
 import { createToastSession, createToastStore, resolveToastDescriptor, toastBehaviorDefaults, } from "@hjmds/design-contracts/components/toast";
 import { createContext, useCallback, useContext, useEffect, useRef, useState, useSyncExternalStore, } from "react";
@@ -196,14 +196,59 @@ export function Spinner({ label, size = "small", style }) {
     const { colors } = useHjmNativeTheme();
     return (_jsxs(View, { accessibilityLabel: label, accessibilityRole: "progressbar", accessibilityState: { busy: true }, accessible: true, style: [{ alignItems: "center", gap: spacing.xs, justifyContent: "center" }, style], children: [_jsx(ActivityIndicator, { color: colors.contentBrand, size: size }), _jsx(Text, { accessible: false, align: "center", tone: "muted", variant: "caption", children: label })] }));
 }
-export function Skeleton({ width = "100%", height = 16, radius: radiusValue = radius.sm, accessibilityLabel, style, }) {
-    const { colors } = useHjmNativeTheme();
-    return (_jsx(View, { accessibilityLabel: accessibilityLabel, accessibilityState: accessibilityLabel ? { busy: true } : undefined, accessible: accessibilityLabel !== undefined, style: [
+/**
+ * Consumes the same skeletonRecipe as the web renderer. Until 0.9.13 this drew a
+ * static View at a fixed height of 16, reading neither the recipe shapes nor its
+ * animation, so the two surfaces sharing one contract looked different.
+ *
+ * width/height/radius stay for callers already on the 0.9 train and win over
+ * `shape`. Migration: .changeset/skeleton-pulse-by-default.md
+ */
+export function Skeleton({ shape = skeletonRecipe.defaults.shape, animated = skeletonRecipe.defaults.animated, width, height, radius: radiusValue, accessibilityLabel, style, }) {
+    const { environment, palette } = useHjmNativeTheme();
+    const shapeSpec = skeletonRecipe.shapes[shape];
+    const { duration, easing: easingName, fromOpacity, toOpacity } = skeletonRecipe.animation;
+    // The recipe declares reducedMotion: "static". Rather than running the pulse
+    // at a 0ms duration, pin the progress value to the opaque end of the range.
+    const shouldAnimate = animated && !environment.reducedMotion;
+    const [pulse] = useState(() => new Animated.Value(shouldAnimate ? 0 : 1));
+    useEffect(() => {
+        if (!shouldAnimate) {
+            pulse.stopAnimation();
+            pulse.setValue(1);
+            return undefined;
+        }
+        const curve = easing[easingName];
+        const loop = Animated.loop(Animated.sequence([
+            Animated.timing(pulse, {
+                duration,
+                easing: Easing.bezier(curve[0], curve[1], curve[2], curve[3]),
+                toValue: 1,
+                useNativeDriver: true,
+            }),
+            Animated.timing(pulse, {
+                duration,
+                easing: Easing.bezier(curve[0], curve[1], curve[2], curve[3]),
+                toValue: 0,
+                useNativeDriver: true,
+            }),
+        ]));
+        loop.start();
+        return () => loop.stop();
+    }, [duration, easingName, pulse, shouldAnimate]);
+    const resolvedWidth = width ?? (shape === "circle" ? shapeSpec.defaultHeight : "100%");
+    return (_jsx(Animated.View, { accessibilityLabel: accessibilityLabel, accessibilityState: accessibilityLabel ? { busy: true } : undefined, accessible: accessibilityLabel !== undefined, style: [
             {
-                backgroundColor: colors.surfaceAlt,
-                borderRadius: radiusValue,
-                height,
-                width,
+                backgroundColor: resolveColorReference(skeletonRecipe.background, palette),
+                borderRadius: radiusValue ?? radius[shapeSpec.radius],
+                height: height ?? shapeSpec.defaultHeight,
+                opacity: shouldAnimate
+                    ? pulse.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [fromOpacity, toOpacity],
+                    })
+                    : toOpacity,
+                width: resolvedWidth,
             },
             style,
         ] }));

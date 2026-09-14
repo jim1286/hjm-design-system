@@ -18,7 +18,10 @@ const rendererBudgets = [
       // is a runtime value, so exporting it from the root adds one graph edge.
       // Byte budgets are unchanged and still pass with ~28% headroom.
       ".": { modules: 28, raw: 340_000, gzip: 68_000 },
-      "./provider": { modules: 3, raw: 11_500, gzip: 3_200 },
+      // 0.9.13: skeleton의 원 지름·펄스 길이·곡선·opacity를 recipe에서 읽어 CSS 변수로
+      // 내보내면서 커졌다. modules가 3으로 그대로라 새 import 경로는 없다. 다음에 이
+      // 한도를 올릴 때는 modules가 함께 늘었는지 먼저 확인한다.
+      "./provider": { modules: 3, raw: 12_500, gzip: 3_400 },
       "./layout": { modules: 2, raw: 17_000, gzip: 4_500 },
       "./actions": { modules: 2, raw: 7_000, gzip: 1_900 },
       "./forms": { modules: 12, raw: 116_000, gzip: 24_000 },
@@ -71,7 +74,9 @@ const rendererBudgets = [
       // branch Tabs already has, because RN maps `tab` to
       // UIAccessibilityTraitNone on iOS. Under 50 bytes for a trait that
       // decides whether VoiceOver calls the destination activatable.
-      "./navigation": { modules: 9, raw: 135_500, gzip: 26_750 },
+      // 0.9.13: navigation은 feedback을 경유해 Skeleton을 포함한다. Skeleton이
+      // recipe의 shape·펄스를 실제로 구현하면서 커졌고 modules는 9로 그대로다.
+      "./navigation": { modules: 9, raw: 137_000, gzip: 27_600 },
       "./data-display": { modules: 6, raw: 77_000, gzip: 15_000 },
       "./feedback": { modules: 5, raw: 73_500, gzip: 15_100 },
       "./overlays": { modules: 6, raw: 84_500, gzip: 15_100 },

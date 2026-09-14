@@ -1,4 +1,4 @@
-import { emptyStateRecipe, type NoticeTone as ContractNoticeTone, type ProgressSize, type ProgressTone, type ToastPlacement, type ToastTone, type ToastToneMark } from "@hjmds/design-contracts/recipes";
+import { emptyStateRecipe, skeletonRecipe, type NoticeTone as ContractNoticeTone, type ProgressSize, type ProgressTone, type ToastPlacement, type ToastTone, type ToastToneMark } from "@hjmds/design-contracts/recipes";
 import { type ResultDescriptor, type ResultStatus } from "@hjmds/design-contracts/components/result";
 import { type ToastDescriptor, type ToastDismissReason, type ToastDuplicatePolicy, type ToastOverflowPolicy, type ToastPauseReason, type ToastPublishResult, type ToastTimerUpdatePolicy } from "@hjmds/design-contracts/components/toast";
 import { type ReactNode } from "react";
@@ -79,14 +79,25 @@ export type SpinnerProps = Readonly<{
     style?: StyleProp<ViewStyle>;
 }>;
 export declare function Spinner({ label, size, style }: SpinnerProps): import("react").JSX.Element;
+export type SkeletonShape = keyof typeof skeletonRecipe.shapes;
 export type SkeletonProps = Readonly<{
+    shape?: SkeletonShape;
+    animated?: boolean;
     width?: ViewStyle["width"];
     height?: number;
     radius?: number;
     accessibilityLabel?: string;
     style?: StyleProp<ViewStyle>;
 }>;
-export declare function Skeleton({ width, height, radius: radiusValue, accessibilityLabel, style, }: SkeletonProps): import("react").JSX.Element;
+/**
+ * Consumes the same skeletonRecipe as the web renderer. Until 0.9.13 this drew a
+ * static View at a fixed height of 16, reading neither the recipe shapes nor its
+ * animation, so the two surfaces sharing one contract looked different.
+ *
+ * width/height/radius stay for callers already on the 0.9 train and win over
+ * `shape`. Migration: .changeset/skeleton-pulse-by-default.md
+ */
+export declare function Skeleton({ shape, animated, width, height, radius: radiusValue, accessibilityLabel, style, }: SkeletonProps): import("react").JSX.Element;
 export type ToastProps = Readonly<{
     descriptor: ToastDescriptor;
     onDismiss?: (reason: ToastDismissReason) => void;

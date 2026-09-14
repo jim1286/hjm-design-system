@@ -1786,4 +1786,11 @@ describe("expanded foundation scales", () => {
     expect(recipeRegistry.skeletonRecipe.animation.reducedMotion).toBe("static");
     expect(recipeRegistry.spinnerRecipe.animation.reducedMotion).toBe("static");
   });
+
+  it("keeps the skeleton pulse on by default", () => {
+    // 정지한 skeleton은 로딩이 아니라 깨진 화면으로 읽힌다. 기본값을 다시 false로
+    // 되돌리면 renderer 두 벌이 동시에 조용히 멈추므로 계약에서 고정한다.
+    expect(recipeRegistry.skeletonRecipe.defaults.animated).toBe(true);
+    expect(recipeRegistry.skeletonRecipe.defaults.shape).toBe("block");
+  });
 });

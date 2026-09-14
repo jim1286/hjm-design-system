@@ -46,6 +46,11 @@ class AnimatedValue {
     return { __animatedValue: this, configuration };
   }
 }
+type MockAnimation = Readonly<{
+  start: (callback?: (result: Readonly<{ finished: boolean }>) => void) => void;
+  stop: () => void;
+}>;
+
 export const Animated = {
   Value: AnimatedValue,
   View: host("AnimatedView"),
@@ -55,6 +60,25 @@ export const Animated = {
       callback?.({ finished: true });
     },
     stop: () => undefined,
+  }),
+  sequence: (animations: readonly MockAnimation[]): MockAnimation => ({
+    start: (callback) => {
+      for (const animation of animations) animation.start();
+      callback?.({ finished: true });
+    },
+    stop: () => {
+      for (const animation of animations) animation.stop();
+    },
+  }),
+  loop: (animation: MockAnimation): MockAnimation => ({
+    // Every timing in this mock settles synchronously, so replaying the inner
+    // animation until it reports "unfinished" would never terminate. One
+    // iteration is enough to prove the renderer started the loop.
+    start: (callback) => {
+      animation.start();
+      callback?.({ finished: true });
+    },
+    stop: () => animation.stop(),
   }),
 };
 export const Easing = {
