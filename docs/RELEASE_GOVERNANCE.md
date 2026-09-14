@@ -57,6 +57,21 @@ package publish와 canonical tag는 내부 검사를 기준으로 한다. 기존
 
 위 항목은 계획이며 token, SHA 또는 통과 evidence를 임의로 채우지 않는다.
 
+## Contracts peer 범위
+
+두 renderer는 `@hjmds/design-contracts`를 peer로 선언하며 범위는 **정확히 한 minor
+train**이어야 한다(`>=0.9.0 <0.10.0` 형태). renderer와 contracts를 서로 다른 train으로
+섞어 설치하는 것을 막는 장치이며 `check-workspace-sync.mjs`가 형태를 검사한다.
+
+train을 올리는 release에서는 **버전 PR보다 먼저** 이 범위를 다음 train으로 옮긴다.
+검사기는 이 상태(authored next train)를 허용한다. 순서를 뒤집으면 안 된다:
+`release:version`이 도는 시점에 범위가 아직 이전 train을 가리키고 있으면 contracts의
+minor bump가 범위를 벗어나고, changesets는 범위를 벗어나는 peer 변경을 dependents의
+**major**로 승격시킨다. `fixed` 그룹이 세 패키지를 같은 버전으로 맞추므로 결과는 train
+전체가 major로 올라가는 것이다. 실제로 0.9.12에서 skeleton 기본값 하나를 바꾸는 minor
+변경이 1.0.0을 만들어 냈다. 버전 번호는 변경의 크기를 나타내야 하고 도구의 부수효과여서는
+안 된다.
+
 ## Native 호환 API
 
 [소비 정책](../packages/design-contracts/docs/consumer-policy.md#31-react-native-legacy-style-compatibility-boundary)의

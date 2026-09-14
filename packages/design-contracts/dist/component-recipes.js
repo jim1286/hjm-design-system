@@ -1010,7 +1010,7 @@ export const noticeRecipe = {
 };
 export const skeletonRecipe = {
     slots: ["root"],
-    // animated는 0.9.13까지 false였다. 정지한 블록은 로딩이 아니라 깨진 화면으로
+    // animated는 0.9.12까지 false였다. 정지한 블록은 로딩이 아니라 깨진 화면으로
     // 읽힌다. 전환 근거와 소비 측 migration은
     // .changeset/skeleton-pulse-by-default.md에 있다.
     defaults: { shape: "block", animated: true },

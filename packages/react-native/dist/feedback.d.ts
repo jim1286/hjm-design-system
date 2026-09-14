@@ -90,7 +90,7 @@ export type SkeletonProps = Readonly<{
     style?: StyleProp<ViewStyle>;
 }>;
 /**
- * Consumes the same skeletonRecipe as the web renderer. Until 0.9.13 this drew a
+ * Consumes the same skeletonRecipe as the web renderer. Until 0.10.0 this drew a
  * static View at a fixed height of 16, reading neither the recipe shapes nor its
  * animation, so the two surfaces sharing one contract looked different.
  *
