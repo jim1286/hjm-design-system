@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "designSystemVersion": "0.10.0",
+  "designSystemVersion": "1.0.0",
   "packageName": "@hjmds/design-contracts",
   "components": [
     {
