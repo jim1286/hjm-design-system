@@ -670,7 +670,10 @@ export const switchRecipe = {
         // stylesheet now paints them and `action-contrast.browser.test.tsx` holds the line.
         trackOff: semanticColors.surface.sunken,
         trackOffBorder: semanticColors.content.secondary,
-        trackOn: semanticColors.content.brand,
+        // A lit track is a filled brand plate, same role as a checked checkbox
+        // (`selectionControlRecipe.states.checkedBackground`). Was `content.brand`, a
+        // content role; both renderers painted `primary` anyway, so this is a no-op.
+        trackOn: semanticColors.action.brand.background,
         trackOnBorder: semanticColors.border.focus,
         thumbOff: semanticColors.canvas,
         thumbOffBorder: semanticColors.content.secondary,
@@ -684,8 +687,8 @@ export const switchRecipe = {
         // keeps a hairline border so the shape stays legible at reduced contrast.
         trackOffDisabled: semanticColors.border.default,
         trackOffBorderDisabled: semanticColors.border.default,
-        trackOnDisabled: { ...semanticColors.content.brand, alpha: 0.38 },
-        trackOnBorderDisabled: { ...semanticColors.content.brand, alpha: 0.38 },
+        trackOnDisabled: { ...semanticColors.action.brand.background, alpha: 0.38 },
+        trackOnBorderDisabled: { ...semanticColors.action.brand.background, alpha: 0.38 },
         thumbDisabled: semanticColors.canvas,
         thumbDisabledBorder: semanticColors.content.decorative,
     },

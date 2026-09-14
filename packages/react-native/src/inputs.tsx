@@ -1692,8 +1692,26 @@ export function Switch({
   const resolvedChecked = checked ?? value;
   const resolvedDefaultChecked = defaultChecked ?? defaultValue ?? false;
   const resolvedOnCheckedChange = onCheckedChange ?? onValueChange;
-  const { colors, environment } = useHjmNativeTheme();
+  const { colors, environment, ...nativeTheme } = useHjmNativeTheme();
   const dimensions = switchRecipe.sizes[size];
+  // The platform Switch takes fills only — it has no border hook — so the recipe's
+  // `*Border` slots stay web-only. The fills themselves are read from the recipe
+  // rather than re-picked here; hardcoding them is how `trackOn` drifted from the
+  // contract in the first place.
+  const switchColors = switchRecipe.colors;
+  const palette = nativeTheme.palette;
+  const trackOff = resolveColorReference(
+    disabled ? switchColors.trackOffDisabled : switchColors.trackOff,
+    palette,
+  );
+  const trackOn = resolveColorReference(
+    disabled ? switchColors.trackOnDisabled : switchColors.trackOn,
+    palette,
+  );
+  const thumb = resolveColorReference(
+    disabled ? switchColors.thumbDisabled : switchColors.thumbOff,
+    palette,
+  );
   const [enabled, setEnabled] = useControllableState({
     ...(resolvedChecked === undefined ? {} : { value: resolvedChecked }),
     defaultValue: resolvedDefaultChecked,
@@ -1719,13 +1737,21 @@ export function Switch({
           minHeight: description
             ? switchRecipe.rowTwoLineMinHeight
             : switchRecipe.rowMinHeight,
-          opacity: disabled ? 0.5 : pressed ? 0.86 : 1,
+          opacity: pressed ? switchRecipe.states.pressedOpacity : 1,
         },
         style,
         layoutStyle,
       ]}
     >
-      <View style={{ flex: 1, gap: spacing.xxs }}>
+      {/* Only the label fades. Fading the whole row made on and off nearly
+          identical, which is why the recipe's disabled colours swap hue instead. */}
+      <View
+        style={{
+          flex: 1,
+          gap: spacing.xxs,
+          opacity: disabled ? switchRecipe.states.disabledOpacity : 1,
+        }}
+      >
         <Text tone="body" variant="bodyLarge">{label}</Text>
         {description ? (
           <Text tone="muted" variant="caption">{description}</Text>
@@ -1735,11 +1761,11 @@ export function Switch({
         {...props}
         accessible={false}
         disabled={disabled}
-        ios_backgroundColor={colors.surfaceAlt}
+        ios_backgroundColor={trackOff}
         pointerEvents="none"
         style={{ height: dimensions.height, width: dimensions.width }}
-        thumbColor={colors.bg}
-        trackColor={{ false: colors.surfaceAlt, true: colors.primary }}
+        thumbColor={thumb}
+        trackColor={{ false: trackOff, true: trackOn }}
         value={enabled}
       />
     </Pressable>

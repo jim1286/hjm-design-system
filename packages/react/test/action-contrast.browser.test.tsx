@@ -116,3 +116,32 @@ describe("visible switch off state", () => {
     }
   });
 });
+
+describe("disabled switch still reports its setting", () => {
+  // 레시피가 disabled에서 opacity 대신 hue를 바꾸는 이유: 행 전체를 흐리게 하면
+  // 켜짐과 꺼짐이 거의 같아져 저장된 설정을 읽을 수 없고, 38%로 고른 on 트랙이
+  // 한 번 더 흐려진다. 그래서 fade는 라벨에만 남는다.
+  it("swaps hue instead of fading the control", async () => {
+    await act(async () => root.render(
+      <HjmProvider theme="dark">
+        <div style={{ background: "var(--hjm-color-surface)" }}>
+          <Switch checked={false} disabled onCheckedChange={() => {}} label="꺼짐" />
+          <Switch checked disabled onCheckedChange={() => {}} label="켜짐" />
+        </div>
+      </HjmProvider>,
+    ));
+
+    const [off, on] = [...container.querySelectorAll<HTMLButtonElement>(".hjm-switch")];
+    const trackOf = (row: HTMLButtonElement) =>
+      getComputedStyle(row.querySelector(".hjm-switch__track")!).backgroundColor;
+
+    // 컨트롤은 fade되지 않는다 — 색이 대비를 책임진다.
+    expect(getComputedStyle(off!).opacity).toBe("1");
+    // 라벨만 흐려져 행이 disabled로 읽힌다.
+    expect(getComputedStyle(off!.querySelector(".hjm-switch__label")!).opacity).toBe("0.5");
+    // 꺼짐은 중립 경계색, 켜짐은 반투명 brand wash — 둘은 서로 다른 색이어야 한다.
+    expect(trackOf(on!)).not.toBe(trackOf(off!));
+    // 38% brand wash — color-mix라 브라우저가 `color(srgb … / 0.38)`로 계산한다.
+    expect(trackOf(on!)).toMatch(/0\.38/);
+  });
+});
