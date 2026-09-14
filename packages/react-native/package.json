@@ -1,6 +1,6 @@
 {
   "name": "@hjmds/react-native",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Expo-independent React Native renderers for HJM design contracts.",
   "license": "MIT",
   "publishConfig": {
