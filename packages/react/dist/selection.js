@@ -184,7 +184,7 @@ export const Switch = forwardRef(function Switch({ label, checked: checkedProp, 
     return (_jsxs("button", { ...props, style: { ...style, ...layoutStyle }, ref: ref, type: type, role: "switch", className: classNames("hjm-switch", className), "data-size": size, "data-state": checked ? "checked" : "unchecked", "aria-checked": checked, disabled: disabled, onClick: (event) => {
             setChecked((current) => !current);
             onClick?.(event);
-        }, children: [_jsx("span", { className: "hjm-switch__track", "aria-hidden": "true", children: _jsx("span", { className: "hjm-switch__thumb" }) }), _jsx("span", { children: label })] }));
+        }, children: [_jsx("span", { className: "hjm-switch__track", "aria-hidden": "true", children: _jsx("span", { className: "hjm-switch__thumb" }) }), _jsx("span", { className: "hjm-switch__label", children: label })] }));
 });
 export const SegmentedControl = forwardRef(function SegmentedControl({ label, items, value: valueProp, defaultValue, onValueChange, size = segmentedControlRecipe.defaults.size, name, className, ...props }, ref) {
     validateItems("SegmentedControl", items);

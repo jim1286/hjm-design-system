@@ -558,8 +558,17 @@ export function Switch({ label, description, size = switchRecipe.defaults.size, 
     const resolvedChecked = checked ?? value;
     const resolvedDefaultChecked = defaultChecked ?? defaultValue ?? false;
     const resolvedOnCheckedChange = onCheckedChange ?? onValueChange;
-    const { colors, environment } = useHjmNativeTheme();
+    const { colors, environment, ...nativeTheme } = useHjmNativeTheme();
     const dimensions = switchRecipe.sizes[size];
+    // The platform Switch takes fills only — it has no border hook — so the recipe's
+    // `*Border` slots stay web-only. The fills themselves are read from the recipe
+    // rather than re-picked here; hardcoding them is how `trackOn` drifted from the
+    // contract in the first place.
+    const switchColors = switchRecipe.colors;
+    const palette = nativeTheme.palette;
+    const trackOff = resolveColorReference(disabled ? switchColors.trackOffDisabled : switchColors.trackOff, palette);
+    const trackOn = resolveColorReference(disabled ? switchColors.trackOnDisabled : switchColors.trackOn, palette);
+    const thumb = resolveColorReference(disabled ? switchColors.thumbDisabled : switchColors.thumbOff, palette);
     const [enabled, setEnabled] = useControllableState({
         ...(resolvedChecked === undefined ? {} : { value: resolvedChecked }),
         defaultValue: resolvedDefaultChecked,
@@ -577,11 +586,15 @@ export function Switch({ label, description, size = switchRecipe.defaults.size, 
                 minHeight: description
                     ? switchRecipe.rowTwoLineMinHeight
                     : switchRecipe.rowMinHeight,
-                opacity: disabled ? 0.5 : pressed ? 0.86 : 1,
+                opacity: pressed ? switchRecipe.states.pressedOpacity : 1,
             },
             style,
             layoutStyle,
-        ], children: [_jsxs(View, { style: { flex: 1, gap: spacing.xxs }, children: [_jsx(Text, { tone: "body", variant: "bodyLarge", children: label }), description ? (_jsx(Text, { tone: "muted", variant: "caption", children: description })) : null] }), _jsx(NativeSwitch, { ...props, accessible: false, disabled: disabled, ios_backgroundColor: colors.surfaceAlt, pointerEvents: "none", style: { height: dimensions.height, width: dimensions.width }, thumbColor: colors.bg, trackColor: { false: colors.surfaceAlt, true: colors.primary }, value: enabled })] }));
+        ], children: [_jsxs(View, { style: {
+                    flex: 1,
+                    gap: spacing.xxs,
+                    opacity: disabled ? switchRecipe.states.disabledOpacity : 1,
+                }, children: [_jsx(Text, { tone: "body", variant: "bodyLarge", children: label }), description ? (_jsx(Text, { tone: "muted", variant: "caption", children: description })) : null] }), _jsx(NativeSwitch, { ...props, accessible: false, disabled: disabled, ios_backgroundColor: trackOff, pointerEvents: "none", style: { height: dimensions.height, width: dimensions.width }, thumbColor: thumb, trackColor: { false: trackOff, true: trackOn }, value: enabled })] }));
 }
 export function SegmentedControl({ label, items, options, value, defaultValue, onValueChange, size = segmentedControlRecipe.defaults.size, disabled = false, style, }) {
     const resolvedItems = resolveAliasedItems("SegmentedControl", items, options);

@@ -729,7 +729,7 @@ export const Switch = forwardRef<HTMLButtonElement, SwitchProps>(function Switch
       <span className="hjm-switch__track" aria-hidden="true">
         <span className="hjm-switch__thumb" />
       </span>
-      <span>{label}</span>
+      <span className="hjm-switch__label">{label}</span>
     </button>
   );
 });

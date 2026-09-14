@@ -1897,7 +1897,7 @@ export declare const switchRecipe: {
         }>;
         readonly trackOn: Readonly<{
             source: "theme";
-            key: "contentBrand";
+            key: "primary";
             alpha?: number;
         }>;
         readonly trackOnBorder: Readonly<{
@@ -1933,12 +1933,12 @@ export declare const switchRecipe: {
         readonly trackOnDisabled: {
             readonly alpha: 0.38;
             readonly source: "theme";
-            readonly key: "contentBrand";
+            readonly key: "primary";
         };
         readonly trackOnBorderDisabled: {
             readonly alpha: 0.38;
             readonly source: "theme";
-            readonly key: "contentBrand";
+            readonly key: "primary";
         };
         readonly thumbDisabled: Readonly<{
             source: "theme";

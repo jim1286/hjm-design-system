@@ -729,7 +729,16 @@
 .hjm-checkbox-group[data-orientation="horizontal"][data-presentation="grouped"] .hjm-checkbox-group__items { gap: 0; }
 
 .hjm-switch { display: inline-flex; align-items: center; gap: var(--hjm-space-sm); min-block-size: var(--hjm-control-min-touch-target); padding: 0; border: 0; color: inherit; background: transparent; font: inherit; cursor: pointer; }
-.hjm-switch:disabled { opacity: 0.5; cursor: not-allowed; }
+/* A disabled switch still has to report what it is set to, so `switchRecipe.colors`
+   swaps hue instead of fading the row — a flat `opacity` made on and off nearly
+   identical, and it would also double-fade the calibrated 38% on-track. The fade is
+   kept on the label alone, so the row still reads disabled at a glance while the
+   control keeps the contrast its colours were chosen for. */
+.hjm-switch:disabled { cursor: not-allowed; }
+.hjm-switch:disabled .hjm-switch__label { opacity: 0.5; }
+.hjm-switch:disabled .hjm-switch__track { background: var(--hjm-color-border); box-shadow: inset 0 0 0 1px var(--hjm-color-border); }
+.hjm-switch:disabled[data-state="checked"] .hjm-switch__track { background: color-mix(in srgb, var(--hjm-color-primary) 38%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--hjm-color-primary) 38%, transparent); }
+.hjm-switch:disabled .hjm-switch__thumb { box-shadow: 0 1px 3px rgb(0 0 0 / 20%), inset 0 0 0 1px var(--hjm-color-text-weak); }
 /* Track and thumb geometry reads `switchRecipe.sizes`. The stylesheet used to
    carry 48/28/22/3px, which matched neither recipe size, so the size axis was
    unbound on web and consumers re-implemented it with their own variables. */
