@@ -1004,6 +1004,14 @@ export const switchRecipe = {
     medium: { width: 52, height: 32, thumb: 28, inset: 2 },
   },
   colors: {
+    // The off state is two unsaturated planes — a `surfaceAlt` track holding a `bg`
+    // thumb — so on a dark palette both collapse into the card behind them: measured
+    // 1.10:1 track-to-surface and 1.20:1 thumb-to-track on the canonical dark theme,
+    // where the thumb is actually *darker* than its own track. The `*OffBorder`
+    // hairlines are what keep the shape readable, so they are part of the contract
+    // rather than a renderer flourish. A consumer settings screen shipped with the web
+    // renderer ignoring them and the control was invisible (2026-09-14); the web
+    // stylesheet now paints them and `action-contrast.browser.test.tsx` holds the line.
     trackOff: semanticColors.surface.sunken,
     trackOffBorder: semanticColors.content.secondary,
     trackOn: semanticColors.content.brand,

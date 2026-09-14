@@ -735,10 +735,13 @@
    unbound on web and consumers re-implemented it with their own variables. */
 .hjm-switch { --hjm-switch-track-width: var(--hjm-switch-medium-width); --hjm-switch-track-height: var(--hjm-switch-medium-height); --hjm-switch-track-thumb: var(--hjm-switch-medium-thumb); --hjm-switch-track-inset: var(--hjm-switch-medium-inset); --hjm-switch-track-offset: var(--hjm-switch-medium-offset); }
 .hjm-switch[data-size="small"] { --hjm-switch-track-width: var(--hjm-switch-small-width); --hjm-switch-track-height: var(--hjm-switch-small-height); --hjm-switch-track-thumb: var(--hjm-switch-small-thumb); --hjm-switch-track-inset: var(--hjm-switch-small-inset); --hjm-switch-track-offset: var(--hjm-switch-small-offset); }
-.hjm-switch__track { display: flex; align-items: center; flex: 0 0 auto; inline-size: var(--hjm-switch-track-width); block-size: var(--hjm-switch-track-height); padding: var(--hjm-switch-track-inset); border-radius: var(--hjm-radius-full); background: var(--hjm-color-surface-alt); transition: background var(--hjm-motion-fast); }
-.hjm-switch__thumb { inline-size: var(--hjm-switch-track-thumb); block-size: var(--hjm-switch-track-thumb); border-radius: 50%; background: var(--hjm-color-bg); box-shadow: 0 1px 3px rgb(0 0 0 / 20%); transition: transform var(--hjm-motion-fast); }
-.hjm-switch[data-state="checked"] .hjm-switch__track { background: var(--hjm-color-primary); }
-.hjm-switch[data-state="checked"] .hjm-switch__thumb { transform: translateX(var(--hjm-switch-track-offset)); }
+/* Off-state hairlines paint `switchRecipe.colors.*OffBorder` (see the recipe for why).
+   Inset shadow, not `border`: under `box-sizing: border-box` a border shrinks the
+   padding box while `--hjm-switch-track-offset` keeps the unborrowed travel. */
+.hjm-switch__track { display: flex; align-items: center; flex: 0 0 auto; inline-size: var(--hjm-switch-track-width); block-size: var(--hjm-switch-track-height); padding: var(--hjm-switch-track-inset); border-radius: var(--hjm-radius-full); background: var(--hjm-color-surface-alt); box-shadow: inset 0 0 0 1px var(--hjm-color-text-muted); transition: background var(--hjm-motion-fast), box-shadow var(--hjm-motion-fast); }
+.hjm-switch__thumb { inline-size: var(--hjm-switch-track-thumb); block-size: var(--hjm-switch-track-thumb); border-radius: 50%; background: var(--hjm-color-bg); box-shadow: 0 1px 3px rgb(0 0 0 / 20%), inset 0 0 0 1px var(--hjm-color-text-muted); transition: transform var(--hjm-motion-fast), box-shadow var(--hjm-motion-fast); }
+.hjm-switch[data-state="checked"] .hjm-switch__track { background: var(--hjm-color-primary); box-shadow: inset 0 0 0 1px var(--hjm-color-content-brand); }
+.hjm-switch[data-state="checked"] .hjm-switch__thumb { transform: translateX(var(--hjm-switch-track-offset)); box-shadow: 0 1px 3px rgb(0 0 0 / 20%); }
 [dir="rtl"] .hjm-switch[data-state="checked"] .hjm-switch__thumb { transform: translateX(calc(-1 * var(--hjm-switch-track-offset))); }
 
 .hjm-segmented { min-inline-size: 0; padding: 0; border: 0; }
