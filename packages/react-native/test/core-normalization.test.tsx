@@ -56,7 +56,11 @@ describe("Native core normalization", () => {
       const style = flattenStyle(action.props.style({ pressed: false }));
       expect(style).toMatchObject({
         backgroundColor: THEMES[theme].surfaceAlt,
-        borderColor: THEMES[theme].textSub,
+        // `borderControl`, not `textSub` — that is what the neutral action
+        // recipe resolves. The two used to hold the same hex in both themes, so
+        // this assertion passed on a coincidence until dark's neutrals moved
+        // (2026-09-14, docs/theme-palette.md).
+        borderColor: THEMES[theme].borderControl,
         borderWidth: 1,
       });
     }

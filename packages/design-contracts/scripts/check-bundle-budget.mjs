@@ -35,7 +35,11 @@ const budgets = [
     // 1_200 -> 1_250: the `borderControl` semantic key (a control outline is a
     // border role, not `textSub`) adds one key per theme plus its rationale
     // comment. The module count and import edges are unchanged.
-    maxGzipBytes: 1_250,
+    // 1_250 -> 1_290: the dark theme moved onto light's neutral hue family, so
+    // its hex values no longer repeat light's slate strings and compress worse
+    // (docs/theme-palette.md). Values only — module count and import edges are
+    // unchanged, and the long-form rationale stays out of dist on purpose.
+    maxGzipBytes: 1_290,
     forbiddenModules: metadataModules,
   },
   {

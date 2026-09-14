@@ -1,6 +1,7 @@
 import { access, readFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { assertContractsPeerTrain } from "./contracts-peer-train.mjs";
 
 const workspaceRoot = fileURLToPath(new URL("../", import.meta.url));
 const activeRendererStatuses = new Set(["stable", "beta"]);
@@ -35,39 +36,6 @@ function requireString(value, label) {
     throw new Error(`${label} must be a non-empty string`);
   }
   return value;
-}
-
-function parseStableVersion(version, label) {
-  const match = /^(\d+)\.(\d+)\.(\d+)$/.exec(version);
-  if (!match) throw new Error(`${label} is not a stable semver: ${version}`);
-  return { major: Number(match[1]), minor: Number(match[2]), patch: Number(match[3]) };
-}
-
-function assertContractsPeerTrain(rendererName, peerRange, fixedVersion) {
-  const match = /^>=(\d+)\.(\d+)\.0 <(\d+)\.(\d+)\.0$/.exec(peerRange ?? "");
-  if (!match) {
-    throw new Error(
-      `${rendererName} contracts peer must be one explicit minor train, for example >=0.6.0 <0.7.0; received ${String(peerRange)}`,
-    );
-  }
-  const minimum = { major: Number(match[1]), minor: Number(match[2]) };
-  const upper = { major: Number(match[3]), minor: Number(match[4]) };
-  if (minimum.major !== upper.major || upper.minor !== minimum.minor + 1) {
-    throw new Error(`${rendererName} contracts peer ${peerRange} spans more than one minor train`);
-  }
-
-  const current = parseStableVersion(fixedVersion, "fixed package version");
-  const isCurrentTrain = minimum.major === current.major && minimum.minor === current.minor;
-  // Before the first monorepo version PR, renderer code targets the authored
-  // next-minor release while package.json still carries the previous Git tag.
-  const isAuthoredNextTrain = current.major === 0
-    && minimum.major === 0
-    && minimum.minor === current.minor + 1;
-  if (!isCurrentTrain && !isAuthoredNextTrain) {
-    throw new Error(
-      `${rendererName} contracts peer ${peerRange} is not aligned with ${fixedVersion} or its authored next minor`,
-    );
-  }
 }
 
 function runtimeTarget(exportsMap, subpath, surface) {

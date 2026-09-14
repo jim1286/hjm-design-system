@@ -64,7 +64,12 @@ train**이어야 한다(`>=0.9.0 <0.10.0` 형태). renderer와 contracts를 서�
 섞어 설치하는 것을 막는 장치이며 `check-workspace-sync.mjs`가 형태를 검사한다.
 
 train을 올리는 release에서는 **버전 PR보다 먼저** 이 범위를 다음 train으로 옮긴다.
-검사기는 이 상태(authored next train)를 허용한다. 순서를 뒤집으면 안 된다:
+검사기는 이 상태(authored next train)를 허용하며, 다음 train은 같은 major의 다음 minor
+(`0.10.0` → `>=0.11.0 <0.12.0`)이거나 major를 올리는 release에서는 다음 major의 `.0` train
+(`0.10.0` → `>=1.0.0 <1.1.0`)이다. 후자는 1.0.0 release에서 처음 필요해졌다 —
+검사기가 0.x만 표현하고 있어 규칙대로 작성한 범위가 거부됐다. 어느 자리를 올릴지는
+release의 결정이고 검사기의 결정이 아니다. 규칙은 `scripts/contracts-peer-train.mjs`에 있고 회귀 사례는
+`packages/design-contracts/test/workflows.test.ts`의 "contracts peer train"에 있다. 순서를 뒤집으면 안 된다:
 `release:version`이 도는 시점에 범위가 아직 이전 train을 가리키고 있으면 contracts의
 minor bump가 범위를 벗어나고, changesets는 범위를 벗어나는 peer 변경을 dependents의
 **major**로 승격시킨다. `fixed` 그룹이 세 패키지를 같은 버전으로 맞추므로 결과는 train

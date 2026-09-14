@@ -134,7 +134,7 @@
     "check": "pnpm typecheck && pnpm test && pnpm build"
   },
   "peerDependencies": {
-    "@hjmds/design-contracts": ">=0.10.0 <0.11.0",
+    "@hjmds/design-contracts": ">=1.0.0 <1.1.0",
     "react": ">=19.0.0",
     "react-dom": ">=19.0.0"
   },
