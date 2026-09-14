@@ -7,6 +7,7 @@ import {
   emptyStateRecipe,
   noticeRecipe,
   progressRecipe,
+  skeletonRecipe,
   toastRecipe,
   type NoticeTone as ContractNoticeTone,
   type ProgressSize,
@@ -585,7 +586,11 @@ export function Spinner({ label, size = "small", style }: SpinnerProps) {
   );
 }
 
+export type SkeletonShape = keyof typeof skeletonRecipe.shapes;
+
 export type SkeletonProps = Readonly<{
+  shape?: SkeletonShape;
+  animated?: boolean;
   width?: ViewStyle["width"];
   height?: number;
   radius?: number;
@@ -593,25 +598,82 @@ export type SkeletonProps = Readonly<{
   style?: StyleProp<ViewStyle>;
 }>;
 
+/**
+ * Consumes the same skeletonRecipe as the web renderer. Until 0.9.13 this drew a
+ * static View at a fixed height of 16, reading neither the recipe shapes nor its
+ * animation, so the two surfaces sharing one contract looked different.
+ *
+ * width/height/radius stay for callers already on the 0.9 train and win over
+ * `shape`. Migration: .changeset/skeleton-pulse-by-default.md
+ */
 export function Skeleton({
-  width = "100%",
-  height = 16,
-  radius: radiusValue = radius.sm,
+  shape = skeletonRecipe.defaults.shape,
+  animated = skeletonRecipe.defaults.animated,
+  width,
+  height,
+  radius: radiusValue,
   accessibilityLabel,
   style,
 }: SkeletonProps) {
-  const { colors } = useHjmNativeTheme();
+  const { environment, palette } = useHjmNativeTheme();
+  const shapeSpec = skeletonRecipe.shapes[shape];
+  const { duration, easing: easingName, fromOpacity, toOpacity } =
+    skeletonRecipe.animation;
+  // The recipe declares reducedMotion: "static". Rather than running the pulse
+  // at a 0ms duration, pin the progress value to the opaque end of the range.
+  const shouldAnimate = animated && !environment.reducedMotion;
+  const [pulse] = useState(() => new Animated.Value(shouldAnimate ? 0 : 1));
+
+  useEffect(() => {
+    if (!shouldAnimate) {
+      pulse.stopAnimation();
+      pulse.setValue(1);
+      return undefined;
+    }
+    const curve = easing[easingName];
+    const loop = Animated.loop(
+      Animated.sequence([
+        Animated.timing(pulse, {
+          duration,
+          easing: Easing.bezier(curve[0], curve[1], curve[2], curve[3]),
+          toValue: 1,
+          useNativeDriver: true,
+        }),
+        Animated.timing(pulse, {
+          duration,
+          easing: Easing.bezier(curve[0], curve[1], curve[2], curve[3]),
+          toValue: 0,
+          useNativeDriver: true,
+        }),
+      ]),
+    );
+    loop.start();
+    return () => loop.stop();
+  }, [duration, easingName, pulse, shouldAnimate]);
+
+  const resolvedWidth =
+    width ?? (shape === "circle" ? shapeSpec.defaultHeight : "100%");
+
   return (
-    <View
+    <Animated.View
       accessibilityLabel={accessibilityLabel}
       accessibilityState={accessibilityLabel ? { busy: true } : undefined}
       accessible={accessibilityLabel !== undefined}
       style={[
         {
-          backgroundColor: colors.surfaceAlt,
-          borderRadius: radiusValue,
-          height,
-          width,
+          backgroundColor: resolveColorReference(
+            skeletonRecipe.background,
+            palette,
+          ),
+          borderRadius: radiusValue ?? radius[shapeSpec.radius],
+          height: height ?? shapeSpec.defaultHeight,
+          opacity: shouldAnimate
+            ? pulse.interpolate({
+                inputRange: [0, 1],
+                outputRange: [fromOpacity, toOpacity],
+              })
+            : toOpacity,
+          width: resolvedWidth,
         },
         style,
       ]}

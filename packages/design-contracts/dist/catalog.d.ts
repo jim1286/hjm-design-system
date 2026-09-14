@@ -5955,7 +5955,7 @@ export declare const recipeRegistry: {
         readonly slots: readonly ["root"];
         readonly defaults: {
             readonly shape: "block";
-            readonly animated: false;
+            readonly animated: true;
         };
         readonly background: Readonly<{
             source: "theme";

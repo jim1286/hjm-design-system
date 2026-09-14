@@ -3,7 +3,10 @@ import { fileURLToPath } from "node:url";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import { resolveDesignSystemProviderValue } from "@hjmds/design-contracts/components/design-system-provider";
-import { segmentedControlRecipe } from "@hjmds/design-contracts/recipes";
+import {
+  segmentedControlRecipe,
+  skeletonRecipe,
+} from "@hjmds/design-contracts/recipes";
 import {
   Badge,
   Button,
@@ -250,6 +253,66 @@ describe("layout and display vertical slice", () => {
     expect(css).toContain('.hjm-badge[data-variant="outline"]');
     expect(css).toContain("font-size: var(--hjm-type-caption-size)");
     expect(css).toContain("font-weight: var(--hjm-font-weight-bold)");
+  });
+});
+
+describe("Skeleton pulse", () => {
+  /* The recipe owns the pulse. Before 0.9.13 the stylesheet repeated its
+     duration, curve and opacity range as literals and defaulted the animation
+     off, so a skeleton rendered as a frozen block and a recipe change could not
+     reach the CSS. Gates read this stylesheet as text only — a whole release
+     once shipped with an unbalanced brace — so the binding is asserted here. */
+  it("renders the pulse without opting in", () => {
+    const markup = renderToStaticMarkup(
+      <HjmProvider systemTheme="light">
+        <Skeleton />
+      </HjmProvider>,
+    );
+    expect(markup).toContain('data-shape="block"');
+    expect(markup).toContain('data-animated="true"');
+  });
+
+  it("lets a caller opt out of the pulse", () => {
+    const markup = renderToStaticMarkup(
+      <HjmProvider systemTheme="light">
+        <Skeleton animated={false} />
+      </HjmProvider>,
+    );
+    expect(markup).toContain('data-animated="false"');
+  });
+
+  it("emits the pulse geometry from the recipe instead of the stylesheet", () => {
+    const markup = renderToStaticMarkup(
+      <HjmProvider systemTheme="light">
+        <Skeleton />
+      </HjmProvider>,
+    );
+    const { animation, shapes } = skeletonRecipe;
+    expect(markup).toContain(
+      `--hjm-skeleton-duration:${animation.duration}ms`,
+    );
+    expect(markup).toContain(
+      `--hjm-skeleton-circle-size:${shapes.circle.defaultHeight}px`,
+    );
+    expect(markup).toContain(
+      `--hjm-skeleton-from-opacity:${animation.fromOpacity}`,
+    );
+  });
+
+  it("keeps the stylesheet free of a second copy of those numbers", () => {
+    const css = readFileSync(
+      fileURLToPath(new URL("../src/styles.css", import.meta.url)),
+      "utf8",
+    );
+    const rule = css
+      .split("\n")
+      .find((line) => line.includes('.hjm-skeleton[data-animated="true"]'));
+    expect(rule).toContain("var(--hjm-skeleton-duration)");
+    expect(rule).toContain("var(--hjm-skeleton-easing)");
+    expect(rule).not.toContain(`${skeletonRecipe.animation.duration}ms`);
+    expect(css).toContain(
+      "@keyframes hjm-pulse { from { opacity: var(--hjm-skeleton-from-opacity); } to { opacity: var(--hjm-skeleton-to-opacity); } }",
+    );
   });
 });
 

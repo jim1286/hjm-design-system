@@ -139,8 +139,12 @@ const budgets = [
     // consumers are guarded separately below, so module splitting may raise
     // this count without increasing the root byte graph.
     maxModules: 70,
-    maxRawBytes: 470_000,
-    maxGzipBytes: 110_000,
+    // 0.9.13에서 470_000/110_000을 올렸다. 증가분은 recipe의 근거 주석이며 tsc는
+    // 주석을 dist에 그대로 싣는다. maxModules가 70으로 그대로라는 점이 import
+    // 그래프가 늘지 않았다는 근거다. 이 한도를 다시 올릴 때는 module 수가 함께
+    // 늘었는지 먼저 본다 — 그때는 주석이 아니라 새 의존 경로가 원인이다.
+    maxRawBytes: 472_000,
+    maxGzipBytes: 111_000,
   },
 ];
 
