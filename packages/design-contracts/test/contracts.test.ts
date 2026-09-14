@@ -134,6 +134,20 @@ function contrast(foreground: string, background: string): number {
   return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
 }
 
+/** HSL saturation, so a "how colorful is this" assertion reads as one number. */
+function saturation(hex: string): number {
+  const [r, g, b] = [1, 3, 5].map(
+    (offset) => Number.parseInt(hex.slice(offset, offset + 2), 16) / 255,
+  ) as [number, number, number];
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const lightness = (max + min) / 2;
+  if (max === min) return 0;
+  return lightness > 0.5
+    ? (max - min) / (2 - max - min)
+    : (max - min) / (max + min);
+}
+
 function composite(foreground: string, background: string, alpha: number): string {
   const channels = (hex: string) =>
     [1, 3, 5].map((offset) => Number.parseInt(hex.slice(offset, offset + 2), 16));
@@ -250,6 +264,39 @@ describe("color and accessibility contracts", () => {
     for (const background of ["bg", "surface", "surfaceAlt"] as const) {
       expect(contrast(theme.textWeak, theme[background])).toBeGreaterThanOrEqual(4.5);
       expect(contrast(theme.border, theme[background])).toBeGreaterThanOrEqual(3);
+    }
+  });
+
+  /**
+   * A filled control has to be discernible as a shape, which the AA text rules
+   * above never check — they only look at the label on top of it. Dark's
+   * `primary` was 2.49:1 against `bg`, so the main action was a label floating
+   * on the background (2026-09-14 product report). 3:1 is the non-text minimum.
+   */
+  it("keeps the primary fill discernible against the surfaces it sits on", () => {
+    for (const theme of Object.values(THEMES)) {
+      for (const background of ["bg", "surface", "surfaceAlt"] as const) {
+        expect(contrast(theme.primary, theme[background])).toBeGreaterThanOrEqual(3);
+      }
+    }
+  });
+
+  /**
+   * Dark must stay the counterpart of light rather than a second color system.
+   * When dark's surfaces were saturated indigo and its neutral ramp was slate,
+   * the two families mixed and read muddy while light stayed clean. Pinning the
+   * neutral saturation ceiling keeps a future edit from reintroducing that.
+   * The accent roles are deliberately excluded — they are the saturated ones.
+   */
+  it("keeps neutral surfaces and text in one low-saturation family per theme", () => {
+    const neutrals = [
+      "bg", "surface", "surfaceAlt", "border", "borderControl",
+      "text", "textBody", "textMuted", "textSub", "textWeak",
+    ] as const;
+    for (const theme of Object.values(THEMES)) {
+      for (const key of neutrals) {
+        expect(saturation(theme[key])).toBeLessThanOrEqual(0.3);
+      }
     }
   });
 
