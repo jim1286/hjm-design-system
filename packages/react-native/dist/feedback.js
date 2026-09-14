@@ -197,7 +197,7 @@ export function Spinner({ label, size = "small", style }) {
     return (_jsxs(View, { accessibilityLabel: label, accessibilityRole: "progressbar", accessibilityState: { busy: true }, accessible: true, style: [{ alignItems: "center", gap: spacing.xs, justifyContent: "center" }, style], children: [_jsx(ActivityIndicator, { color: colors.contentBrand, size: size }), _jsx(Text, { accessible: false, align: "center", tone: "muted", variant: "caption", children: label })] }));
 }
 /**
- * Consumes the same skeletonRecipe as the web renderer. Until 0.9.13 this drew a
+ * Consumes the same skeletonRecipe as the web renderer. Until 0.10.0 this drew a
  * static View at a fixed height of 16, reading neither the recipe shapes nor its
  * animation, so the two surfaces sharing one contract looked different.
  *
