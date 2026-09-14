@@ -44,7 +44,7 @@ function stableFieldClaim(exportNames, subpath) {
 export const reactNativeRendererEvidence = {
     schemaVersion: reactNativeRendererEvidenceSchemaVersion,
     packageName: "@hjmds/react-native",
-    packageVersion: "0.10.0",
+    packageVersion: "1.0.0",
     surface: "native",
     components: [
         defaultClaim("design-system-provider", ["HjmNativeProvider", "useHjmNativeTheme"], "./provider"),
