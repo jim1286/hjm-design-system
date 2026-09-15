@@ -289,8 +289,14 @@ describe("Select core behavior alignment", () => {
       </HjmProvider>,
     );
     const trigger = container.querySelector<HTMLButtonElement>('.hjm-select [role="combobox"]')!;
+    // 빈 선택은 목록의 첫 entry이므로 Home이 그 항목을, End가 마지막 실제 항목을 집는다.
     await act(async () => {
       trigger.dispatchEvent(new KeyboardEvent("keydown", { key: "End", bubbles: true }));
+    });
+    const lastId = trigger.getAttribute("aria-activedescendant")!;
+    expect(document.getElementById(lastId)?.textContent).toContain("Gamma");
+    await act(async () => {
+      trigger.dispatchEvent(new KeyboardEvent("keydown", { key: "Home", bubbles: true }));
     });
     const activeId = trigger.getAttribute("aria-activedescendant")!;
     expect(document.getElementById(activeId)?.textContent).toContain("선택 안 함");
@@ -299,6 +305,44 @@ describe("Select core behavior alignment", () => {
     });
     expect(onSelectionChange).toHaveBeenLastCalledWith(null);
     expect(document.body.querySelector('[role="listbox"]')).toBeNull();
+  });
+
+  // 기본값(disallowEmptySelection: false · loop: false)에서 선택이 없으면 활성 항목이
+  // 빈 선택으로 시작한다. 그 지점에서 화살표가 움직이지 못하던 회귀를 막는다 (#18).
+  it("moves off the empty selection with the arrow keys under default behavior", async () => {
+    await render(
+      <HjmProvider systemTheme="light">
+        <Select
+          emptySelectionLabel="선택 안 함"
+          label="선수"
+          placeholder="선수 선택"
+          items={items}
+          defaultOpen
+          onSelectionChange={vi.fn()}
+        />
+      </HjmProvider>,
+    );
+    const trigger = container.querySelector<HTMLButtonElement>('.hjm-select [role="combobox"]')!;
+    const options = [...document.body.querySelectorAll<HTMLElement>('.hjm-select__listbox [role="option"]')];
+    expect(options[0]?.textContent).toContain("선택 안 함");
+    expect(document.getElementById(trigger.getAttribute("aria-activedescendant")!)?.textContent)
+      .toContain("선택 안 함");
+    await act(async () => {
+      trigger.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true }));
+    });
+    expect(document.getElementById(trigger.getAttribute("aria-activedescendant")!)?.textContent)
+      .toContain("Alpha");
+    await act(async () => {
+      trigger.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowUp", bubbles: true }));
+    });
+    expect(document.getElementById(trigger.getAttribute("aria-activedescendant")!)?.textContent)
+      .toContain("선택 안 함");
+    // loop가 꺼져 있으므로 빈 선택에서 위로는 목록 끝으로 감기지 않는다.
+    await act(async () => {
+      trigger.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowUp", bubbles: true }));
+    });
+    expect(document.getElementById(trigger.getAttribute("aria-activedescendant")!)?.textContent)
+      .toContain("선택 안 함");
   });
 
   it("exposes Select icon appearances and keeps a busy trigger focusable but inert", async () => {

@@ -371,7 +371,10 @@ describe("anchored portal popups", () => {
       expect(popup.style.visibility).toBe("visible");
     }
 
-    await act(async () => selectListbox.querySelector<HTMLElement>('[role="option"]')!.click());
+    // 첫 option은 빈 선택 항목이므로 실제 항목을 id로 집는다.
+    const lgOption = [...selectListbox.querySelectorAll<HTMLElement>('[role="option"]')]
+      .find((option) => !option.classList.contains("hjm-select__option--empty"))!;
+    await act(async () => lgOption.click());
     await flush();
     expect(onSelect).toHaveBeenCalledWith("lg");
     const selectTrigger = dialog.querySelector<HTMLButtonElement>(".hjm-select__trigger")!;
