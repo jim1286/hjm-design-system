@@ -8,8 +8,11 @@ describe("GitHub Actions runtime contracts", () => {
       await readFile(new URL("../../../package.json", import.meta.url), "utf8"),
     ) as { scripts: Record<string, string> };
 
+    // showcase-web의 vitest(`showcase:web:check`)는 2026-09-15에 이 명령에 들어왔다.
+    // 그전에는 CI가 그 스위트를 한 번도 돌리지 않아 main에서 실패하는 테스트를 안은 채
+    // 릴리스가 통과했다 (#21).
     expect(workspacePackage.scripts["ci:check"]).toBe(
-      "pnpm check && pnpm showcase:native:check && pnpm showcase:web:build",
+      "pnpm check && pnpm showcase:native:check && pnpm showcase:web:check && pnpm showcase:web:build",
     );
     expect(workspacePackage.scripts["release:check"]).toContain("pnpm ci:check");
   });

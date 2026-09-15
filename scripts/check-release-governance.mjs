@@ -27,7 +27,11 @@ export function validateReleaseGovernance({ packages, releaseWorkflow, showcaseW
   const releaseCode = releaseWorkflow.split("\n").filter((line) => !/^\s*#/.test(line)).join("\n");
   if (/repository_dispatch/.test(releaseCode)) throw new Error("Consumer dispatch needs an explicit validated release contract before it can be claimed");
   const scripts = packages.root.scripts;
-  requireEqual(scripts["ci:check"], "pnpm check && pnpm showcase:native:check && pnpm showcase:web:build", "ci:check");
+  // `showcase:web:check`는 2026-09-15에 들어왔다. 그전까지 ci:check는 showcase-web의
+  // vitest를 한 번도 돌리지 않아(빌드는 typecheck·build·verify:static만 본다) CONTRIBUTING의
+  // 커밋 전 게이트와 CI가 서로 다른 명령을 말했고, main에서 실패하는 테스트를 안은 채
+  // 1.0.0~1.0.2가 통과했다 (#21). package.json은 주석을 담지 못하므로 근거는 여기 둔다.
+  requireEqual(scripts["ci:check"], "pnpm check && pnpm showcase:native:check && pnpm showcase:web:check && pnpm showcase:web:build", "ci:check");
   requireEqual(scripts["check"], "pnpm -r --filter './packages/**' run check && pnpm bundle:renderer:check && pnpm workspace:check && pnpm evidence:check && pnpm docs:check && pnpm governance:check", "check");
   requireEqual(scripts["release:check"], "pnpm ci:check && node scripts/check-release-artifacts.mjs", "release:check");
   requireEqual(scripts["governance:check"], "node --test scripts/check-release-governance.test.mjs && node scripts/check-release-governance.mjs", "governance:check");
