@@ -1,5 +1,74 @@
 # @hjmds/react
 
+## 1.1.0
+
+### Minor Changes
+
+- a7d87b0: 웹 렌더러가 `environment.textScale`의 large-text 전환을 받게 한다.
+
+  `segmentedControlRecipe.adaptive.stackAtFontScale`은 계약이 선언한 축인데, 웹에서 그 전환을
+  일으키는 것은 스타일시트의 `@media (max-width: 11em)`(브라우저 기본 글꼴 크기)뿐이었다.
+  제품이 provider에 `textScale`을 선언하는 경로는 전환을 받지 못했다 — 같은 계약을 React
+  Native만 구현한 상태였다 (#20).
+
+  - `largeTextThreshold`(1.6)를 `foundations`에 이름 붙였다. `segmentedControlRecipe.adaptive
+.stackAtFontScale`과 `topBarRecipe.largeTextThreshold`가 각자 적어 두었던 같은 값이다.
+    `design-system-provider`는 `isLargeTextScale(textScale)`로 그 판정을 공개한다.
+  - `HjmProvider`와 portal host(`overlays`·`toast`·`AnchoredPortal`)가 임계값을 넘을 때
+    `data-large-text="true"`를 내보낸다. `data-text-scale`은 숫자라 속성 선택자로 `>= 1.6`을
+    표현할 수 없다.
+  - SegmentedControl의 스택 규칙이 그 플래그도 트리거로 받는다. 기존 미디어 쿼리는 그대로
+    둔다 — 브라우저 기본 글꼴은 provider가 모르는 별개의 신호다.
+
+  렌더러 번들 비용은 0이다. 같은 판정을 렌더러가 직접 하면 `./selection` 같은 granular
+  entry가 provider 모듈을 통째로 끌어와 gzip 기준 24% 커진다(측정치는 이슈에 있다).
+  `./provider` 예산만 raw 12_500 -> 12_700 · gzip 3_400 -> 3_600으로 올렸고 module 수는 3으로
+  그대로다.
+
+  topBar·description-list의 large-text 분기는 React Native 표면이며 이번 변경에 포함되지 않는다.
+
+### Patch Changes
+
+- 96ad9aa: Field·TextArea의 포커스 표시가 색조에만 기대던 문제를 고친다.
+
+  포커스 링을 1px에서 계약된 2px(`focusIndicatorContract.width`)로 넓힌다. 표시 자체의 대비는
+  원래 기준을 넘었지만(칸 배경 대비 낮 6.86:1 · 밤 7.98:1), **상태가 바뀐 것을 알아채는 단서**가
+  색조뿐이었다 — 비포커스↔포커스 테두리 명도 대비는 낮 1.06:1, 밤 1.44:1이라 회색조에서는 두
+  상태가 사실상 같은 그림이다. 밤에는 `rgb(203,213,225)` → `rgb(56,189,248)`로 바뀌며 칸 배경
+  대비가 11.51에서 7.98로 오히려 떨어진다(에어리 웹 편지 편집기, 2026-09-13 접근성 검수).
+
+  같은 화면의 다른 컨트롤은 없던 2px outline이 생기는 방식이라 단서가 형태였다. 가장 오래
+  머무는 입력 칸만 예외였다. WCAG 1.4.1(색에만 의존하지 않기) 관점의 문제다.
+
+  `.hjm-field__control`을 쓰는 모든 표면(TextField·TextArea·SearchField·PasswordField·
+  NumberField·Select trigger·Combobox)이 같은 규칙을 공유하므로 링은 함께 넓어진다. 링은
+  box-shadow라 레이아웃을 밀지 않는다.
+
+  react-native renderer는 필드 포커스 테두리를 그리지 않아(OS가 처리) 이번 변경 대상이 아니다.
+
+- 65cb6cf: Select의 빈 선택 항목에서 화살표 키가 움직이지 못하던 문제를 고친다.
+
+  `disallowEmptySelection: false` · `loop: false`(둘 다 `selectBehaviorDefaults`)에서 선택이
+  없으면 roving `aria-activedescendant`가 빈 선택 항목에서 시작하는데, 그 항목이 목록 끝에
+  그려져 있고 `moveHighlight`가 `next`를 `loop`가 켜진 경우에만 허용했다. 결과적으로 기본값을
+  쓰는 모든 Select에서 목록을 연 키보드 사용자는 `Home`을 먼저 눌러야 선택을 시작할 수 있었다
+  (에어리 웹 "받을 도시 선택", 2026-09-12 접근성 검수).
+
+  - 빈 선택 항목을 listbox의 **첫** entry로 그린다. 선택이 없을 때 활성 항목이 시작하는
+    자리이므로, 목록 맨 아래는 화살표 이동의 출발점이 될 수 없다.
+  - `moveHighlight`가 그 DOM 순서를 따른다: `Home`은 빈 선택, `End`는 마지막 실제 항목,
+    빈 선택에서 `ArrowDown`은 `loop`와 무관하게 첫 항목, 첫 항목에서 `ArrowUp`은 빈 선택이다.
+    `loop`는 목록의 양 끝을 잇는 역할만 한다(빈 선택에서 위 → 마지막 항목, 마지막 항목에서
+    아래 → 빈 선택).
+  - 닫힌 상태에서 키로 열 때도 같다. `End`/`ArrowUp`은 마지막 실제 항목을 집는다.
+
+  **Migration.** 마우스 사용자에게는 "선택 안 함" 항목의 위치가 목록 끝에서 시작으로 바뀐다.
+  option을 위치(`querySelector('[role="option"]')`)로 집는 테스트는 빈 선택 항목을
+  (`.hjm-select__option--empty`) 먼저 만난다.
+
+  react-native renderer는 빈 선택 항목을 그리지 않고 roving 키보드 탐색도 없어 이번 변경에
+  포함되지 않는다.
+
 ## 1.0.2
 
 ### Patch Changes
