@@ -28,7 +28,7 @@
     "showcase:native": "pnpm --filter @hjmds/design-contracts build && pnpm --filter @hjmds/react-native build && pnpm --filter @hjm/showcase-native storybook",
     "showcase:native:ios": "pnpm --filter @hjmds/design-contracts build && pnpm --filter @hjmds/react-native build && pnpm --filter @hjm/showcase-native storybook:ios",
     "showcase:native:check": "pnpm --filter @hjmds/design-contracts build && pnpm --filter @hjmds/react-native build && pnpm --filter @hjm/showcase-native check",
-    "ci:check": "pnpm check && pnpm showcase:native:check && pnpm showcase:web:build",
+    "ci:check": "pnpm check && pnpm showcase:native:check && pnpm showcase:web:check && pnpm showcase:web:build",
     "reference:antd:verify": "pnpm --filter @hjmds/design-contracts reference:antd:verify",
     "changeset": "changeset",
     "release:commit:check": "node scripts/check-release-commit.mjs",

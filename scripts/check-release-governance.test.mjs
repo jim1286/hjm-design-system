@@ -17,6 +17,7 @@ for (const [name, mutate, expected] of [
   ["release verification is conditional", (s) => { s.releaseWorkflow = s.releaseWorkflow.replace("        run: pnpm release:check", "        if: false\n        run: pnpm release:check"); }, /must not skip/],
   ["release verification ignores failure", (s) => { s.releaseWorkflow = s.releaseWorkflow.replace("        run: pnpm release:check", "        continue-on-error: true\n        run: pnpm release:check"); }, /must not skip/],
   ["release workflow calls a weaker command", (s) => { s.releaseWorkflow = s.releaseWorkflow.replace("run: pnpm release:check", "run: pnpm typecheck"); }, /release:check/],
+  ["ci:check drops the web showcase tests", (s) => { s.packages.root.scripts["ci:check"] = s.packages.root.scripts["ci:check"].replace(" && pnpm showcase:web:check", ""); }, /ci:check/],
   ["showcase workflow skips canonical check", (s) => { s.showcaseWorkflow = s.showcaseWorkflow.replace("run: pnpm ci:check", "run: pnpm showcase:web:build"); }, /ci:check/],
   ["scenario registry is missing", (s) => { delete s.registries.native; }, /registry is required/],
   ["scenario proof is detached", (s) => { const file = s.registries.native.executions[0].proofFile; delete s.proofs[`native/${file}`]; }, /consume its scenario registry/],
