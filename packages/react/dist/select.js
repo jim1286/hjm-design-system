@@ -164,7 +164,11 @@ function SelectInner(props, forwardedRef) {
             ? selectedInSource.id
             : reconciledSelectedKey === null && emptySelectionAvailable
                 ? emptySelectionKey
-                : intent === "last" && emptySelectionAvailable
+                // The empty-selection entry renders first in the listbox, so only the
+                // "first" intent (Home/ArrowDown on a closed trigger) lands on it; "last"
+                // (End/ArrowUp) must reach the last real option. The previous mapping sent
+                // "last" to the empty entry, which contradicted DOM order. See issue #18.
+                : intent === "first" && emptySelectionAvailable
                     ? emptySelectionKey
                     : getCollectionNavigationTarget(source, null, intent, loop) ?? null;
         setHighlightedKey(target);
@@ -176,27 +180,39 @@ function SelectInner(props, forwardedRef) {
             .map((item) => item.id);
         const firstKey = enabledKeys[0];
         const lastKey = enabledKeys.at(-1);
+        // Treat the empty-selection entry as the first row, matching DOM order. `loop`
+        // only joins the two ends of the list: moving between the empty entry and the
+        // first option is adjacency, not a wrap, so it stays loop-independent. The
+        // previous code gated that "next" on `loop`, which trapped the arrow keys on the
+        // empty entry for every Select using the defaults (disallowEmptySelection: false,
+        // loop: false). See issue #18.
         if (emptySelectionAvailable) {
-            if (intent === "last") {
+            if (intent === "first") {
                 setHighlightedKey(emptySelectionKey);
                 return;
             }
             if (activeKey === emptySelectionKey) {
-                if (intent === "previous" && lastKey !== undefined)
-                    setHighlightedKey(lastKey);
-                else if (((intent === "next" && loop) || intent === "first") &&
-                    firstKey !== undefined) {
-                    setHighlightedKey(firstKey);
+                if (intent === "next") {
+                    if (firstKey !== undefined)
+                        setHighlightedKey(firstKey);
+                    return;
                 }
-                return;
+                if (intent === "previous") {
+                    if (loop && lastKey !== undefined)
+                        setHighlightedKey(lastKey);
+                    return;
+                }
+                // intent === "last" falls through: the shared path picks the last option.
             }
-            if (intent === "next" && activeKey === lastKey) {
-                setHighlightedKey(emptySelectionKey);
-                return;
-            }
-            if (intent === "previous" && activeKey === firstKey && loop) {
-                setHighlightedKey(emptySelectionKey);
-                return;
+            else {
+                if (intent === "previous" && activeKey === firstKey) {
+                    setHighlightedKey(emptySelectionKey);
+                    return;
+                }
+                if (intent === "next" && activeKey === lastKey && loop) {
+                    setHighlightedKey(emptySelectionKey);
+                    return;
+                }
             }
         }
         const target = getCollectionNavigationTarget(source, activeKey === emptySelectionKey ? null : activeKey, intent, loop);
@@ -339,15 +355,15 @@ function SelectInner(props, forwardedRef) {
                                 changeOpen(false, "trigger");
                             else
                                 openWithIntent();
-                        }, children: [triggerLeading ? (_jsx("span", { className: "hjm-select__leading", "aria-hidden": "true", children: triggerLeading })) : null, _jsx("span", { className: "hjm-select__value", "data-state": resolvedSelectedItem ? "selected" : "placeholder", children: resolvedSelectedItem?.label ?? placeholder }), busy ? (_jsx("span", { className: "hjm-select__busy-indicator", "aria-hidden": "true" })) : (_jsx("span", { className: "hjm-select__indicator", "aria-hidden": "true", children: "\u2304" }))] }), open ? (_jsx(AnchoredPortal, { anchorRef: triggerRef, ssrFallback: "inline", ...(portalContainer === undefined ? {} : { container: portalContainer }), children: _jsxs("div", { ref: setListboxRef, id: listboxId, role: "listbox", "aria-label": accessibleName, className: "hjm-select__listbox", "data-density": density, "data-placement": popupPosition.placement, "data-align": popupPosition.align, style: popupPosition.style, children: [asyncState.status !== "idle" ? (_jsx("div", { className: "hjm-select__message", role: asyncState.status === "error" ? "alert" : "status", children: asyncState.message })) : null, showOptions ? (source.sections ? source.sections.map((section) => {
-                                    const sectionLabelId = `${controlId}-section-${section.id}`;
-                                    return (_jsxs("div", { role: "group", "aria-labelledby": section.label ? sectionLabelId : undefined, "aria-label": section.label ? undefined : section.accessibilityLabel, className: "hjm-select__section", children: [section.label ? (_jsx("div", { id: sectionLabelId, className: "hjm-select__section-label", children: section.label })) : null, section.items.map(renderOption)] }, section.id));
-                                }) : source.items.map(renderOption)) : null, !disallowEmptySelection && showOptions ? (_jsx("div", { ref: (node) => {
+                        }, children: [triggerLeading ? (_jsx("span", { className: "hjm-select__leading", "aria-hidden": "true", children: triggerLeading })) : null, _jsx("span", { className: "hjm-select__value", "data-state": resolvedSelectedItem ? "selected" : "placeholder", children: resolvedSelectedItem?.label ?? placeholder }), busy ? (_jsx("span", { className: "hjm-select__busy-indicator", "aria-hidden": "true" })) : (_jsx("span", { className: "hjm-select__indicator", "aria-hidden": "true", children: "\u2304" }))] }), open ? (_jsx(AnchoredPortal, { anchorRef: triggerRef, ssrFallback: "inline", ...(portalContainer === undefined ? {} : { container: portalContainer }), children: _jsxs("div", { ref: setListboxRef, id: listboxId, role: "listbox", "aria-label": accessibleName, className: "hjm-select__listbox", "data-density": density, "data-placement": popupPosition.placement, "data-align": popupPosition.align, style: popupPosition.style, children: [asyncState.status !== "idle" ? (_jsx("div", { className: "hjm-select__message", role: asyncState.status === "error" ? "alert" : "status", children: asyncState.message })) : null, !disallowEmptySelection && showOptions ? (_jsx("div", { ref: (node) => {
                                         if (node)
                                             optionRefs.current.set(emptySelectionKey, node);
                                         else
                                             optionRefs.current.delete(emptySelectionKey);
-                                    }, id: `${controlId}-option-empty`, role: "option", className: "hjm-select__option hjm-select__option--empty", "aria-selected": reconciledSelectedKey === null, "data-state": reconciledSelectedKey === null ? "selected" : "idle", "data-active": activeKey === emptySelectionKey || undefined, onMouseDown: (event) => event.preventDefault(), onMouseMove: () => setHighlightedKey(emptySelectionKey), onClick: () => commit(emptySelectionKey), children: emptySelectionLabel })) : null] }) })) : null] }), description && !error ? (_jsx("div", { id: descriptionId, className: "hjm-field__description", children: description })) : null, error ? _jsx("div", { id: errorId, className: "hjm-field__error", children: error }) : null, name ? _jsx("input", { type: "hidden", name: name, value: reconciledSelectedKey ?? "" }) : null] }));
+                                    }, id: `${controlId}-option-empty`, role: "option", className: "hjm-select__option hjm-select__option--empty", "aria-selected": reconciledSelectedKey === null, "data-state": reconciledSelectedKey === null ? "selected" : "idle", "data-active": activeKey === emptySelectionKey || undefined, onMouseDown: (event) => event.preventDefault(), onMouseMove: () => setHighlightedKey(emptySelectionKey), onClick: () => commit(emptySelectionKey), children: emptySelectionLabel })) : null, showOptions ? (source.sections ? source.sections.map((section) => {
+                                    const sectionLabelId = `${controlId}-section-${section.id}`;
+                                    return (_jsxs("div", { role: "group", "aria-labelledby": section.label ? sectionLabelId : undefined, "aria-label": section.label ? undefined : section.accessibilityLabel, className: "hjm-select__section", children: [section.label ? (_jsx("div", { id: sectionLabelId, className: "hjm-select__section-label", children: section.label })) : null, section.items.map(renderOption)] }, section.id));
+                                }) : source.items.map(renderOption)) : null] }) })) : null] }), description && !error ? (_jsx("div", { id: descriptionId, className: "hjm-field__description", children: description })) : null, error ? _jsx("div", { id: errorId, className: "hjm-field__error", children: error }) : null, name ? _jsx("input", { type: "hidden", name: name, value: reconciledSelectedKey ?? "" }) : null] }));
 }
 export const Select = forwardRef(SelectInner);
 //# sourceMappingURL=select.js.map

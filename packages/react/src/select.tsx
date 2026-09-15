@@ -364,7 +364,11 @@ function SelectInner<Key extends string, SectionKey extends string>(
       ? selectedInSource.id
       : reconciledSelectedKey === null && emptySelectionAvailable
         ? emptySelectionKey
-        : intent === "last" && emptySelectionAvailable
+        // The empty-selection entry renders first in the listbox, so only the
+        // "first" intent (Home/ArrowDown on a closed trigger) lands on it; "last"
+        // (End/ArrowUp) must reach the last real option. The previous mapping sent
+        // "last" to the empty entry, which contradicted DOM order. See issue #18.
+        : intent === "first" && emptySelectionAvailable
           ? emptySelectionKey
           : getCollectionNavigationTarget(source, null, intent, loop) ?? null;
     setHighlightedKey(target);
@@ -376,28 +380,36 @@ function SelectInner<Key extends string, SectionKey extends string>(
       .map((item) => item.id);
     const firstKey = enabledKeys[0];
     const lastKey = enabledKeys.at(-1);
+    // Treat the empty-selection entry as the first row, matching DOM order. `loop`
+    // only joins the two ends of the list: moving between the empty entry and the
+    // first option is adjacency, not a wrap, so it stays loop-independent. The
+    // previous code gated that "next" on `loop`, which trapped the arrow keys on the
+    // empty entry for every Select using the defaults (disallowEmptySelection: false,
+    // loop: false). See issue #18.
     if (emptySelectionAvailable) {
-      if (intent === "last") {
+      if (intent === "first") {
         setHighlightedKey(emptySelectionKey);
         return;
       }
       if (activeKey === emptySelectionKey) {
-        if (intent === "previous" && lastKey !== undefined) setHighlightedKey(lastKey);
-        else if (
-          ((intent === "next" && loop) || intent === "first") &&
-          firstKey !== undefined
-        ) {
-          setHighlightedKey(firstKey);
+        if (intent === "next") {
+          if (firstKey !== undefined) setHighlightedKey(firstKey);
+          return;
         }
-        return;
-      }
-      if (intent === "next" && activeKey === lastKey) {
-        setHighlightedKey(emptySelectionKey);
-        return;
-      }
-      if (intent === "previous" && activeKey === firstKey && loop) {
-        setHighlightedKey(emptySelectionKey);
-        return;
+        if (intent === "previous") {
+          if (loop && lastKey !== undefined) setHighlightedKey(lastKey);
+          return;
+        }
+        // intent === "last" falls through: the shared path picks the last option.
+      } else {
+        if (intent === "previous" && activeKey === firstKey) {
+          setHighlightedKey(emptySelectionKey);
+          return;
+        }
+        if (intent === "next" && activeKey === lastKey && loop) {
+          setHighlightedKey(emptySelectionKey);
+          return;
+        }
       }
     }
     const target = getCollectionNavigationTarget(
@@ -647,6 +659,29 @@ function SelectInner<Key extends string, SectionKey extends string>(
                 {asyncState.message}
               </div>
             ) : null}
+            {/* Rendered before the options: with no selection the active descendant
+                starts on this entry, and a trailing position made that starting point
+                the bottom of the list, where ArrowDown has nowhere to go (issue #18).
+                moveHighlight follows this DOM order. */}
+            {!disallowEmptySelection && showOptions ? (
+              <div
+                ref={(node) => {
+                  if (node) optionRefs.current.set(emptySelectionKey, node);
+                  else optionRefs.current.delete(emptySelectionKey);
+                }}
+                id={`${controlId}-option-empty`}
+                role="option"
+                className="hjm-select__option hjm-select__option--empty"
+                aria-selected={reconciledSelectedKey === null}
+                data-state={reconciledSelectedKey === null ? "selected" : "idle"}
+                data-active={activeKey === emptySelectionKey || undefined}
+                onMouseDown={(event) => event.preventDefault()}
+                onMouseMove={() => setHighlightedKey(emptySelectionKey)}
+                onClick={() => commit(emptySelectionKey)}
+              >
+                {emptySelectionLabel}
+              </div>
+            ) : null}
             {showOptions ? (
               source.sections ? source.sections.map((section) => {
                 const sectionLabelId = `${controlId}-section-${section.id}`;
@@ -667,25 +702,6 @@ function SelectInner<Key extends string, SectionKey extends string>(
                   </div>
                 );
               }) : source.items.map(renderOption)
-            ) : null}
-            {!disallowEmptySelection && showOptions ? (
-              <div
-                ref={(node) => {
-                  if (node) optionRefs.current.set(emptySelectionKey, node);
-                  else optionRefs.current.delete(emptySelectionKey);
-                }}
-                id={`${controlId}-option-empty`}
-                role="option"
-                className="hjm-select__option hjm-select__option--empty"
-                aria-selected={reconciledSelectedKey === null}
-                data-state={reconciledSelectedKey === null ? "selected" : "idle"}
-                data-active={activeKey === emptySelectionKey || undefined}
-                onMouseDown={(event) => event.preventDefault()}
-                onMouseMove={() => setHighlightedKey(emptySelectionKey)}
-                onClick={() => commit(emptySelectionKey)}
-              >
-                {emptySelectionLabel}
-              </div>
             ) : null}
             </div>
           </AnchoredPortal>
