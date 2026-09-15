@@ -239,6 +239,7 @@ describe("web showcase coverage", () => {
       expect(presentation.consumption.resolvedColor !== null ||
         presentation.consumption.resolvedMetric !== null, name).toBe(true);
       expect(
+        presentation.style.aspectRatio !== undefined ||
         presentation.style.minHeight !== undefined ||
           presentation.style.minWidth !== undefined ||
           presentation.style.color !== undefined ||
@@ -258,8 +259,11 @@ describe("web showcase coverage", () => {
         expect(consumedRecipeValues, name).toContain(
           presentation.consumption.resolvedMetric,
         );
+        // 비율 계약값은 px가 아니다 (AspectRatio의 `ratios.*` -> CSS aspect-ratio).
         expect(presentation.style["--hjm-evidence-metric"], name).toBe(
-          `${presentation.consumption.resolvedMetric}px`,
+          presentation.consumption.resolvedMetricProperty === "aspectRatio"
+            ? String(presentation.consumption.resolvedMetric)
+            : `${presentation.consumption.resolvedMetric}px`,
         );
       }
       if (presentation.consumption.resolvedColor !== null) {
