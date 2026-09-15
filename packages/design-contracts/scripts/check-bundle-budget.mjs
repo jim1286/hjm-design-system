@@ -68,8 +68,12 @@ const budgets = [
     // The public recipe facade fans out to deliberately small recipe modules;
     // byte budgets keep that split from becoming a size regression.
     maxModules: 14,
-    maxRawBytes: 80_000,
-    maxGzipBytes: 18_000,
+    // 1.0.3: raw 80_000 -> 81_000, gzip 18_000 -> 18_200. `largeTextThreshold`를
+    // foundations에 선언하고 두 레시피가 그 이름을 읽게 하면서(#20) raw 79.8 -> 80.3 kB,
+    // gzip 17.9 -> 18.0 kB가 됐다. module 수는 12로 그대로 — 새 import 경로가 아니라
+    // 선언과 근거 주석의 바이트다. 다시 올릴 때는 module 수부터 확인한다.
+    maxRawBytes: 81_000,
+    maxGzipBytes: 18_200,
     forbiddenModules: metadataModules,
   },
   {
@@ -147,7 +151,8 @@ const budgets = [
     // 주석을 dist에 그대로 싣는다. maxModules가 70으로 그대로라는 점이 import
     // 그래프가 늘지 않았다는 근거다. 이 한도를 다시 올릴 때는 module 수가 함께
     // 늘었는지 먼저 본다 — 그때는 주석이 아니라 새 의존 경로가 원인이다.
-    maxRawBytes: 472_000,
+    // 1.0.3에서 472_000 -> 473_000. 위와 같은 선언·주석이고 maxModules는 70 그대로다.
+    maxRawBytes: 473_000,
     maxGzipBytes: 111_000,
   },
 ];

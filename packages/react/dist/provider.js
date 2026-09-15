@@ -1,5 +1,5 @@
 import { jsx as _jsx } from "react/jsx-runtime";
-import { resolveDesignSystemProviderValue, validateDesignSystemProviderValue, } from "@hjmds/design-contracts/components/design-system-provider";
+import { isLargeTextScale, resolveDesignSystemProviderValue, validateDesignSystemProviderValue, } from "@hjmds/design-contracts/components/design-system-provider";
 import { tooltipBehaviorDefaults } from "@hjmds/design-contracts/components/tooltip";
 import { createContext, forwardRef, useCallback, useContext, useRef, useState, useSyncExternalStore, } from "react";
 import { classNames } from "./internal.js";
@@ -68,7 +68,13 @@ export const HjmProvider = forwardRef(function HjmProvider({ children, theme, di
         deactivate: deactivateTooltip,
         shouldSkipDelay: shouldSkipTooltipDelay,
     };
-    return (_jsx(HjmThemeContext.Provider, { value: value, children: _jsx(TooltipCoordinatorContext.Provider, { value: tooltipCoordinator, children: _jsx("div", { ...rest, ref: ref, className: classNames("hjm-root", className), "data-hjm-provider": "", "data-host": host, "data-motion": environment.reducedMotion ? "reduced" : "full", "data-theme": environment.theme, "data-text-scale": environment.textScale, dir: environment.direction, style: { ...createHjmThemeStyle(value), ...style }, children: children }) }) }));
+    // `data-text-scale` is a number, so a stylesheet cannot ask whether it crossed
+    // `largeTextThreshold`. The provider resolves that comparison once and publishes
+    // the answer; letting each renderer read the environment instead would pull this
+    // module into granular entries like ./selection and blow their gzip budgets.
+    // See issue #20.
+    const largeText = isLargeTextScale(environment.textScale) ? "true" : undefined;
+    return (_jsx(HjmThemeContext.Provider, { value: value, children: _jsx(TooltipCoordinatorContext.Provider, { value: tooltipCoordinator, children: _jsx("div", { ...rest, ref: ref, className: classNames("hjm-root", className), "data-hjm-provider": "", "data-host": host, "data-motion": environment.reducedMotion ? "reduced" : "full", "data-theme": environment.theme, "data-text-scale": environment.textScale, "data-large-text": largeText, dir: environment.direction, style: { ...createHjmThemeStyle(value), ...style }, children: children }) }) }));
 });
 export function useHjmTheme() {
     const value = useContext(HjmThemeContext);

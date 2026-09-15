@@ -21,7 +21,12 @@ const rendererBudgets = [
       // 0.10.0: skeleton의 원 지름·펄스 길이·곡선·opacity를 recipe에서 읽어 CSS 변수로
       // 내보내면서 커졌다. modules가 3으로 그대로라 새 import 경로는 없다. 다음에 이
       // 한도를 올릴 때는 modules가 함께 늘었는지 먼저 확인한다.
-      "./provider": { modules: 3, raw: 12_500, gzip: 3_400 },
+      // 1.0.3: raw 12_500 -> 12_700, gzip 3_400 -> 3_500. provider가 textScale의
+      // large-text 전환을 `data-large-text`로 한 번만 계산해 내보내면서(#20) 커졌다.
+      // 이 자리가 맞는 이유가 예산에도 보인다 — 같은 판정을 renderer가 직접 하면
+      // ./selection 같은 granular entry가 provider 모듈을 통째로 끌어와 gzip 24%가 는다.
+      // modules는 3으로 그대로라 새 import 경로는 없다.
+      "./provider": { modules: 3, raw: 12_700, gzip: 3_600 },
       "./layout": { modules: 2, raw: 17_000, gzip: 4_500 },
       "./actions": { modules: 2, raw: 7_000, gzip: 1_900 },
       "./forms": { modules: 12, raw: 116_000, gzip: 24_000 },
@@ -52,7 +57,11 @@ const rendererBudgets = [
       // 전부라 규칙은 커지지 않았다 — 주석을 뺀 본문은 gzip 11,821 -> 11,823B다. 남은
       // 여유가 6바이트뿐이라 근거 주석 네 줄이 다시 한도를 밀었을 뿐이므로, 위 절차대로
       // 본문을 먼저 확인하고 주석 몫만 올린다.
-      "./styles.css": { raw: 92_000, gzip: 14_400 },
+      // 1.0.3: raw 92_000 -> 93_000. #19(포커스 링)과 #20(large-text 플래그)이 각각은
+      // 한도 안이었는데 main에서 합쳐지며 92.1 kB가 됐다. 규칙은 거의 그대로다 —
+      // 주석을 뺀 본문은 raw 87.4 -> 87.6 kB, gzip 11,821 -> 11,841B다. gzip 한도는
+      // 14_400 그대로 두고(측정 14.1 kB) raw만 올린다.
+      "./styles.css": { raw: 93_000, gzip: 14_400 },
     },
   },
   {

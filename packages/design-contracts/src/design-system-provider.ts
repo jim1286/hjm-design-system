@@ -1,5 +1,5 @@
 import type { ColorReferencePalette } from "./color-references.js";
-import { control } from "./foundations.js";
+import { control, largeTextThreshold } from "./foundations.js";
 import {
   ACCENTS,
   THEMES,
@@ -23,6 +23,15 @@ export type DesignSystemDirection = "ltr" | "rtl";
  * local layout clamp. This is the single upstream signal both now consume.
  */
 export type DesignSystemTextScale = number;
+
+/**
+ * Whether a resolved `textScale` has crossed into large-text layout. A
+ * stylesheet cannot compare numbers, so the provider resolves the axis once and
+ * publishes the result for surfaces that can only match a flag (#20).
+ */
+export function isLargeTextScale(textScale: DesignSystemTextScale): boolean {
+  return Number.isFinite(textScale) && textScale >= largeTextThreshold;
+}
 
 /**
  * Visible height a compact control paints under a product's target-size policy.

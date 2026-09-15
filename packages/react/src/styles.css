@@ -770,10 +770,12 @@
    React Native reads the recipe and stacks; this renderer had no translation of
    it, so one contract rendered two layouts.
 
-   The trigger is a media query rather than the recipe's `stackAtFontScale`
-   because no web product declares `textScale` to the provider — the scale a
-   browser user actually changes is the default font size, and `em` in a media
-   query is exactly that size. 11em is 176px at 100% (no real viewport, so the
+   There are two triggers because web has two large-text signals. A browser
+   user changes the default font size, which `em` in a media query reads
+   directly; a product that declares `textScale` to the provider publishes
+   `data-large-text`, which is the recipe's `stackAtFontScale` resolved once
+   (a stylesheet cannot compare the raw number). Before #20 only the first
+   existed, so the declared axis reached RN and not this renderer. 11em is 176px at 100% (no real viewport, so the
    row is untouched) and 352px at 200%. Measured on the sea view: the row is
    195px at 100%, 263px at 150% and 333px at 200%, so 320px/200% overflowed
    (10em) while 360px/200% did not (11.25em) — the threshold sits between them.
@@ -787,6 +789,8 @@
   .hjm-segmented__items { flex-direction: column; overflow-x: visible; }
   .hjm-segmented__item { flex: 0 0 auto; min-inline-size: 0; }
 }
+[data-large-text="true"] .hjm-segmented__items { flex-direction: column; overflow-x: visible; }
+[data-large-text="true"] .hjm-segmented__item { flex: 0 0 auto; min-inline-size: 0; }
 
 .hjm-tabs { min-inline-size: 0; }
 .hjm-tabs__list { display: flex; gap: var(--hjm-space-xs); min-inline-size: 0; overflow-x: auto; border-block-end: 1px solid var(--hjm-color-border); }

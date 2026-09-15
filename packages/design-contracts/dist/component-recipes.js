@@ -1,5 +1,5 @@
 import { collectionItemContract, fieldFrameContract, floatingSurfaceContract, focusIndicatorContract, formSupportContract, } from "./component-contracts.js";
-import { backdrop, breakpoint, control, glyph, layer, layout, fontWeight, motion, motionPreset, opacity, radius, spacing, stroke, } from "./foundations.js";
+import { backdrop, breakpoint, control, glyph, layer, largeTextThreshold, layout, fontWeight, motion, motionPreset, opacity, radius, spacing, stroke, } from "./foundations.js";
 import { semanticColors } from "./semantic-colors.js";
 import { tooltipDescriptorDefaults } from "./tooltip.js";
 import { bottomNavigationRecipeDefaults } from "./bottom-navigation-defaults.js";
@@ -592,7 +592,7 @@ export const segmentedControlRecipe = {
         // Hangul syllable per line. Native renderers stack the options before that
         // point so each choice remains a readable phrase and a 44pt target.
         largeTextLayout: "stacked",
-        stackAtFontScale: 1.6,
+        stackAtFontScale: largeTextThreshold,
     },
     /**
      * A recessed track with a raised white thumb. The fills used to be
@@ -1473,7 +1473,7 @@ export const topBarRecipe = {
     sideMinWidth: control.minTouchTarget,
     paddingHorizontal: spacing.md,
     gap: spacing.xs,
-    largeTextThreshold: 1.6,
+    largeTextThreshold,
     title: { textVariant: "bodyLarge", color: semanticColors.content.primary, fontWeight: fontWeight.bold },
     titleAction: {
         minHeight: control.minTouchTarget,

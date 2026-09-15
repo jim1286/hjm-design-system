@@ -1,4 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
+import { isLargeTextScale } from "@hjmds/design-contracts/components/design-system-provider";
 import { createAlertDialogSession, getAlertDialogInitialFocus, validateAlertDialogRequest, } from "@hjmds/design-contracts/components/alert-dialog";
 import { createSheetLifecycle, sheetBehaviorDefaults, } from "@hjmds/design-contracts/components/sheet";
 import { resolveTooltipDescriptor, tooltipBehaviorDefaults, } from "@hjmds/design-contracts/components/tooltip";
@@ -21,7 +22,7 @@ function HjmPortal({ children, container }) {
     useEffect(() => setMounted(true), []);
     if (!mounted)
         return null;
-    return createPortal(theme ? (_jsx("div", { className: "hjm-root hjm-portal", "data-hjm-portal": "", "data-motion": theme.environment.reducedMotion ? "reduced" : "full", "data-theme": theme.environment.theme, "data-text-scale": theme.environment.textScale, dir: theme.environment.direction, style: createHjmThemeStyle(theme), children: children })) : children, container ?? document.body);
+    return createPortal(theme ? (_jsx("div", { className: "hjm-root hjm-portal", "data-hjm-portal": "", "data-motion": theme.environment.reducedMotion ? "reduced" : "full", "data-theme": theme.environment.theme, "data-text-scale": theme.environment.textScale, "data-large-text": isLargeTextScale(theme.environment.textScale) ? "true" : undefined, dir: theme.environment.direction, style: createHjmThemeStyle(theme), children: children })) : children, container ?? document.body);
 }
 function useOpenState({ open, defaultOpen = false, onOpenChange, }) {
     const [internalOpen, setInternalOpen] = useState(defaultOpen);

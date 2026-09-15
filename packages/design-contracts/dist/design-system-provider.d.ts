@@ -13,6 +13,12 @@ export type DesignSystemDirection = "ltr" | "rtl";
  */
 export type DesignSystemTextScale = number;
 /**
+ * Whether a resolved `textScale` has crossed into large-text layout. A
+ * stylesheet cannot compare numbers, so the provider resolves the axis once and
+ * publishes the result for surfaces that can only match a flag (#20).
+ */
+export declare function isLargeTextScale(textScale: DesignSystemTextScale): boolean;
+/**
  * Visible height a compact control paints under a product's target-size policy.
  *
  * The compact recipes stay at 36 and reach the 44pt target through hit slop,

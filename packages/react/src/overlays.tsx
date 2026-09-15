@@ -1,3 +1,4 @@
+import { isLargeTextScale } from "@hjmds/design-contracts/components/design-system-provider";
 import {
   createAlertDialogSession,
   getAlertDialogInitialFocus,
@@ -104,6 +105,7 @@ function HjmPortal({ children, container }: ModalPortalProps) {
         data-motion={theme.environment.reducedMotion ? "reduced" : "full"}
         data-theme={theme.environment.theme}
         data-text-scale={theme.environment.textScale}
+        data-large-text={isLargeTextScale(theme.environment.textScale) ? "true" : undefined}
         dir={theme.environment.direction}
         style={createHjmThemeStyle(theme)}
       >
