@@ -1308,6 +1308,20 @@ export const alertDialogRecipe = {
             confirm: semanticColors.action.danger.background,
             confirmContent: semanticColors.action.danger.content,
         },
+        // Explanation and completion keep the brand confirm button: the action they
+        // introduce is the ordinary one, only the mark and its wash change.
+        info: {
+            icon: semanticColors.feedback.info.foreground,
+            iconBackground: semanticColors.feedback.info.background,
+            confirm: semanticColors.action.brand.background,
+            confirmContent: semanticColors.action.brand.content,
+        },
+        success: {
+            icon: semanticColors.feedback.success.foreground,
+            iconBackground: semanticColors.feedback.success.background,
+            confirm: semanticColors.action.brand.background,
+            confirmContent: semanticColors.action.brand.content,
+        },
     },
     icon: { containerSize: control.minTouchTarget, glyph: "md", radius: "full" },
     title: {

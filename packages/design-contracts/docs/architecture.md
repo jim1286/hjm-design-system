@@ -160,6 +160,16 @@ idle ─ confirm ─→ busy ─ success ─→ closing ─ exit complete ─→
 - 결과 Promise는 action 시점이 아니라 실제 exit 완료 시 한 번만 끝납니다.
 - provider unmount나 route 교체는 `interrupted` 결과로 정산해 pending Promise를 남기지 않습니다.
 - confirm 모드는 cancel, 확인만 있는 alert 모드는 confirm에 초기 포커스를 둡니다.
+- `tone`은 장식이 아니라 **끼어든 이유**입니다. `attention`(정말 할까요) · `danger`(되돌릴 수
+  없음) 외에 `info`(실행 전 설명) · `success`(끝났음 보고)를 둡니다. 소비 제품이 설명용 대화에
+  attention 표식을 쓰면 평범한 안내가 경고로 읽힙니다(2026-09-15 제품 보고). 표식 색과 배경만
+  해당 feedback accent를 따르고 확인 버튼은 brand 그대로이며, 확인 버튼까지 바꾸는 톤은
+  `danger` 하나입니다. `danger`만 confirm 모드를 강제합니다 — 취소 없는 파괴적 확인은 한 번의
+  키 입력으로 통과합니다.
+- 두 renderer의 번역이 다릅니다. Web은 제품이 넘긴 표식을 tone 색으로 칠하지만 **Native에는
+  표식 슬롯이 없어** tone이 확인 버튼 색으로만 도달합니다. 따라서 native에서 `attention` ·
+  `info` · `success`는 같아 보이고 `danger`만 달라집니다. native에 표식을 두는 것은 별도
+  컴포넌트 변경이며, 그 전까지 제품은 tone을 "웹에서만 보이는 구분"으로 기대해야 합니다.
 - Web은 modal isolation·Tab trap·trigger focus restore를, Native는 custom Modal·back 처리·초기
   accessibility focus·live error를 renderer에서 보장합니다.
 

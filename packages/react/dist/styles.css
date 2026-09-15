@@ -1048,6 +1048,11 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   padding: var(--hjm-space-lg);
 }
 .hjm-alert-dialog__icon { color: var(--hjm-accent-attention); font-size: 1.5rem; }
+/* The mark carries the tone. `info` explains before an ordinary action and
+   `success` reports one that finished — painting either in the attention accent
+   made a neutral dialog read as a warning. */
+.hjm-alert-dialog[data-tone="info"] .hjm-alert-dialog__icon { color: var(--hjm-accent-info); }
+.hjm-alert-dialog[data-tone="success"] .hjm-alert-dialog__icon { color: var(--hjm-accent-success); }
 .hjm-alert-dialog[data-tone="danger"] .hjm-alert-dialog__icon,
 .hjm-alert-dialog__error { color: var(--hjm-color-danger); }
 .hjm-alert-dialog__description,

@@ -32,7 +32,7 @@ type AlertDialogCopy = Readonly<{
  */
 export type AlertDialogRequest = (AlertDialogCopy & Readonly<{
     mode: "alert";
-    tone?: Extract<AlertDialogTone, "attention">;
+    tone?: Exclude<AlertDialogTone, "danger">;
     cancelLabel?: never;
     onConfirm?: never;
     fallbackErrorMessage?: never;

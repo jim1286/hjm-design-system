@@ -272,6 +272,33 @@ describe("modal overlay behavior", () => {
     expect(onOpenChange).toHaveBeenLastCalledWith(false, { reason: "cancel-action" });
   });
 
+  it("marks an explaining AlertDialog with its own tone and keeps the ordinary confirm", async () => {
+    // 설명용 대화가 attention 표식을 쓰면 평범한 안내가 경고로 읽힌다(제품 보고
+    // 2026-09-15). 톤은 data-tone으로 나가고 확인 버튼은 brand 그대로여야 한다.
+    await render(
+      <HjmProvider systemTheme="light">
+        <AlertDialog
+          trigger={<button type="button">번짐</button>}
+          request={{
+            mode: "confirm",
+            tone: "info",
+            title: "내 버전으로 만들까요?",
+            description: "이 뚝을 한 벌 복사해 내 뚝으로 가져옵니다.",
+            confirmLabel: "내 버전 만들기",
+            cancelLabel: "취소",
+          }}
+        />
+      </HjmProvider>,
+    );
+    const trigger = container.querySelector<HTMLButtonElement>("button")!;
+    await act(async () => trigger.click());
+    await flush();
+    const alert = document.body.querySelector<HTMLElement>('[role="alertdialog"]')!;
+    expect(alert.dataset.tone).toBe("info");
+    const [, confirm] = [...alert.querySelectorAll<HTMLButtonElement>("button")];
+    expect(confirm!.dataset.tone).toBe("primary");
+  });
+
   it("applies Sheet outside-dismiss policy and still handles Escape", async () => {
     const onOpenChange = vi.fn();
     await render(

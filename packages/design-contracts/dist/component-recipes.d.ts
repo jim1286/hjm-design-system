@@ -3060,7 +3060,18 @@ export declare const dialogRecipe: {
         };
     };
 };
-export type AlertDialogTone = "attention" | "danger";
+/**
+ * Tone is the dialog's reason for interrupting, not its decoration.
+ *
+ * `attention` and `danger` covered "are you sure?" and "this destroys
+ * something", but consumers also stop the user to *explain* an action before
+ * running it — an intro before a button that copies content into the account,
+ * or a confirmation that something finished. Those were shipping with the
+ * attention mark, so a neutral explanation read as a warning (reported by a
+ * product team on 2026-09-15). `info` and `success` carry the existing feedback
+ * accents so the axis stays one token lookup per renderer.
+ */
+export type AlertDialogTone = "attention" | "danger" | "info" | "success";
 export declare const alertDialogRecipe: {
     readonly slots: readonly ["backdrop", "positioner", "content", "icon", "title", "description", "status", "error", "actions", "cancel", "confirm"];
     readonly defaults: {
@@ -3148,6 +3159,50 @@ export declare const alertDialogRecipe: {
             readonly confirmContent: Readonly<{
                 source: "theme";
                 key: "onDanger";
+                alpha?: number;
+            }>;
+        };
+        readonly info: {
+            readonly icon: Readonly<{
+                source: "accent";
+                key: "info";
+                alpha?: number;
+            }>;
+            readonly iconBackground: Readonly<{
+                source: "accent";
+                key: "info";
+                alpha?: number;
+            }>;
+            readonly confirm: Readonly<{
+                source: "theme";
+                key: "primary";
+                alpha?: number;
+            }>;
+            readonly confirmContent: Readonly<{
+                source: "theme";
+                key: "onPrimary";
+                alpha?: number;
+            }>;
+        };
+        readonly success: {
+            readonly icon: Readonly<{
+                source: "accent";
+                key: "success";
+                alpha?: number;
+            }>;
+            readonly iconBackground: Readonly<{
+                source: "accent";
+                key: "success";
+                alpha?: number;
+            }>;
+            readonly confirm: Readonly<{
+                source: "theme";
+                key: "primary";
+                alpha?: number;
+            }>;
+            readonly confirmContent: Readonly<{
+                source: "theme";
+                key: "onPrimary";
                 alpha?: number;
             }>;
         };

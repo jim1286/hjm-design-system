@@ -1193,6 +1193,46 @@ describe("expanded cross-platform component contracts", () => {
         tone: "danger",
       } as never),
     ).toThrow(TypeError);
+    // 설명·완료도 대화를 멈춰 세우는 이유다. danger만 confirm 모드를 강제하고,
+    // 나머지 톤은 선택지 없는 알림으로도 쓸 수 있어야 한다.
+    expect(() =>
+      validateAlertDialogRequest({
+        mode: "alert",
+        title: "Make your own version?",
+        description: "This copies the drop into your drops.",
+        confirmLabel: "OK",
+        tone: "info",
+      }),
+    ).not.toThrow();
+    expect(() =>
+      validateAlertDialogRequest({
+        mode: "alert",
+        title: "Saved",
+        description: "Your changes were saved.",
+        confirmLabel: "OK",
+        tone: "success",
+      }),
+    ).not.toThrow();
+    // 톤은 끼어든 이유를 말한다 — 설명·완료는 브랜드 확인 버튼을 그대로 쓰고
+    // 표식 색만 해당 feedback accent를 따른다. danger만 확인 버튼까지 바꾼다.
+    expect(Object.keys(alertDialogRecipe.tones)).toEqual([
+      "attention",
+      "danger",
+      "info",
+      "success",
+    ]);
+    expect(alertDialogRecipe.tones.info.confirm).toBe(
+      alertDialogRecipe.tones.attention.confirm,
+    );
+    expect(alertDialogRecipe.tones.success.confirm).toBe(
+      alertDialogRecipe.tones.attention.confirm,
+    );
+    expect(alertDialogRecipe.tones.info.icon).not.toBe(
+      alertDialogRecipe.tones.attention.icon,
+    );
+    expect(alertDialogRecipe.tones.success.icon).not.toBe(
+      alertDialogRecipe.tones.attention.icon,
+    );
     expect(alertDialogRecipe).not.toHaveProperty("dismiss");
   });
 

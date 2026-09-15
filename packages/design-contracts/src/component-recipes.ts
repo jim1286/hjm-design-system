@@ -1711,7 +1711,18 @@ export const dialogRecipe = {
   transition: { enter: motionPreset.enter, exit: motionPreset.exit },
 } as const;
 
-export type AlertDialogTone = "attention" | "danger";
+/**
+ * Tone is the dialog's reason for interrupting, not its decoration.
+ *
+ * `attention` and `danger` covered "are you sure?" and "this destroys
+ * something", but consumers also stop the user to *explain* an action before
+ * running it — an intro before a button that copies content into the account,
+ * or a confirmation that something finished. Those were shipping with the
+ * attention mark, so a neutral explanation read as a warning (reported by a
+ * product team on 2026-09-15). `info` and `success` carry the existing feedback
+ * accents so the axis stays one token lookup per renderer.
+ */
+export type AlertDialogTone = "attention" | "danger" | "info" | "success";
 
 export const alertDialogRecipe = {
   slots: [
@@ -1743,6 +1754,20 @@ export const alertDialogRecipe = {
       iconBackground: semanticColors.feedback.danger.background,
       confirm: semanticColors.action.danger.background,
       confirmContent: semanticColors.action.danger.content,
+    },
+    // Explanation and completion keep the brand confirm button: the action they
+    // introduce is the ordinary one, only the mark and its wash change.
+    info: {
+      icon: semanticColors.feedback.info.foreground,
+      iconBackground: semanticColors.feedback.info.background,
+      confirm: semanticColors.action.brand.background,
+      confirmContent: semanticColors.action.brand.content,
+    },
+    success: {
+      icon: semanticColors.feedback.success.foreground,
+      iconBackground: semanticColors.feedback.success.background,
+      confirm: semanticColors.action.brand.background,
+      confirmContent: semanticColors.action.brand.content,
     },
   },
   icon: { containerSize: control.minTouchTarget, glyph: "md", radius: "full" },

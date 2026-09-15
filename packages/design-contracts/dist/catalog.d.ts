@@ -1418,6 +1418,50 @@ export declare const recipeRegistry: {
                     alpha?: number;
                 }>;
             };
+            readonly info: {
+                readonly icon: Readonly<{
+                    source: "accent";
+                    key: "info";
+                    alpha?: number;
+                }>;
+                readonly iconBackground: Readonly<{
+                    source: "accent";
+                    key: "info";
+                    alpha?: number;
+                }>;
+                readonly confirm: Readonly<{
+                    source: "theme";
+                    key: "primary";
+                    alpha?: number;
+                }>;
+                readonly confirmContent: Readonly<{
+                    source: "theme";
+                    key: "onPrimary";
+                    alpha?: number;
+                }>;
+            };
+            readonly success: {
+                readonly icon: Readonly<{
+                    source: "accent";
+                    key: "success";
+                    alpha?: number;
+                }>;
+                readonly iconBackground: Readonly<{
+                    source: "accent";
+                    key: "success";
+                    alpha?: number;
+                }>;
+                readonly confirm: Readonly<{
+                    source: "theme";
+                    key: "primary";
+                    alpha?: number;
+                }>;
+                readonly confirmContent: Readonly<{
+                    source: "theme";
+                    key: "onPrimary";
+                    alpha?: number;
+                }>;
+            };
         };
         readonly icon: {
             readonly containerSize: 44;

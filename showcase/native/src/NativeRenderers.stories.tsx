@@ -462,12 +462,16 @@ function FeedbackPreview() {
 function OverlaysPreview() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
+  // 톤은 끼어든 이유다. 파괴적 확인 옆에 설명용 대화를 같이 두어야 두 표식이 한 화면에서
+  // 비교된다 — 설명이 경고처럼 보이는지 여기서 먼저 걸린다.
+  const [introOpen, setIntroOpen] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(false);
   return (
     <StoryFrame>
       <StoryHeading>Overlays</StoryHeading>
       <Button onPress={() => setDialogOpen(true)}>Open dialog</Button>
       <Button tone="secondary" onPress={() => setAlertOpen(true)}>Open alert dialog</Button>
+      <Button tone="secondary" onPress={() => setIntroOpen(true)}>Open info alert dialog</Button>
       <Button tone="secondary" onPress={() => setSheetOpen(true)}>Open sheet</Button>
       <Dialog
         open={dialogOpen}
@@ -486,6 +490,18 @@ function OverlaysPreview() {
           title: "Delete item?",
           description: "This action cannot be undone.",
           confirmLabel: "Delete",
+          cancelLabel: "Cancel",
+        }}
+      />
+      <AlertDialog
+        open={introOpen}
+        onOpenChange={setIntroOpen}
+        request={{
+          mode: "confirm",
+          tone: "info",
+          title: "Make your own version?",
+          description: "This copies the item into your library before you edit it.",
+          confirmLabel: "Make my version",
           cancelLabel: "Cancel",
         }}
       />

@@ -45,7 +45,9 @@ export type AlertDialogRequest =
   | (AlertDialogCopy &
       Readonly<{
         mode: "alert";
-        tone?: Extract<AlertDialogTone, "attention">;
+        // Every tone except `danger` can announce without a choice. A danger
+        // dialog with no cancel would let a destructive act through on one key.
+        tone?: Exclude<AlertDialogTone, "danger">;
         cancelLabel?: never;
         onConfirm?: never;
         fallbackErrorMessage?: never;
