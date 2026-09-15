@@ -225,6 +225,10 @@ type RendererStyle = CSSProperties &
   Record<`--hjm-evidence-${string}`, string | number>;
 
 type RendererMetricProperty =
+  // `aspectRatio`는 px가 아니라 비율이다. AspectRatio의 계약값(`ratios.*`)은 색도 길이도
+  // 아니어서 이 어휘에 들어오지 못했고, 그래서 presentation이 계약값을 하나도 소비하지
+  // 못한 채 남아 있었다 (#21). 실제 웹 renderer도 같은 값을 CSS `aspect-ratio`로 쓴다.
+  | "aspectRatio"
   | "borderWidth"
   | "borderRadius"
   | "gap"
@@ -433,6 +437,12 @@ function resolveMetricProperty(path: string): RendererMetricProperty {
   if (/(?:gap|gaps\.[^.]+)$/i.test(path)) return "gap";
   if (/(?:radius|radii\.[^.]+)$/i.test(path)) return "borderRadius";
   if (/thickness$/i.test(path)) return "borderWidth";
+  // Container는 축 이름으로 값을 묶는다(`maxWidths.content`, `gutters.regular`). 잎 경로가
+  // 속성 이름으로 끝나지 않아 아래 접미사 규칙이 하나도 걸리지 않았고, Container만
+  // resolvedMetric이 null로 남았다 (#21).
+  if (/ratios\.[^.]+$/i.test(path)) return "aspectRatio";
+  if (/maxWidths\.[^.]+$/i.test(path)) return "maxWidth";
+  if (/gutters\.[^.]+$/i.test(path)) return "paddingInline";
   if (/maxWidth$/i.test(path)) return "maxWidth";
   if (/minWidth$/i.test(path)) return "minWidth";
   if (/width$/i.test(path)) return "minWidth";
@@ -471,9 +481,10 @@ function resolveRecipePresentation(
   const metricCandidates = leaves.filter(
     (leaf) =>
       typeof leaf.value === "number" &&
-      leaf.value >= 1 &&
+      // 비율은 1 미만일 수 있다(portrait = 0.75). 길이 하한만 그대로 둔다.
+      (/ratios\.[^.]+$/i.test(leaf.path) ? leaf.value > 0 : leaf.value >= 1) &&
       leaf.value <= (/(?:min|max)?width/i.test(leaf.path) ? 1280 : 160) &&
-      /(?:minHeight|height|diameter|paddingHorizontal|paddingVertical|gap|size|thickness|width|insetStart|insetEnd|(?:gaps|sizes|radii)\.[^.]+)$/i.test(leaf.path),
+      /(?:minHeight|height|diameter|paddingHorizontal|paddingVertical|gap|size|thickness|width|insetStart|insetEnd|(?:gaps|sizes|radii|maxWidths|gutters|ratios)\.[^.]+)$/i.test(leaf.path),
   );
   const metric = metricCandidates.find(({ path }) =>
     path.split(".").some((segment) => defaultSelections.has(segment)),
@@ -500,11 +511,14 @@ function resolveRecipePresentation(
     else if (!metric) style.backgroundColor = resolvedColor.value;
   }
   if (metric && typeof metric.value === "number") {
-    style["--hjm-evidence-metric"] = `${metric.value}px`;
+    style["--hjm-evidence-metric"] = metricProperty === "aspectRatio"
+      ? String(metric.value)
+      : `${metric.value}px`;
     const appliedMetric = metricProperty === "minHeight"
       ? Math.min(metric.value, 96)
       : metric.value;
-    if (metricProperty === "paddingInlineStart") style.paddingInlineStart = appliedMetric;
+    if (metricProperty === "aspectRatio") style.aspectRatio = appliedMetric;
+    else if (metricProperty === "paddingInlineStart") style.paddingInlineStart = appliedMetric;
     else if (metricProperty === "paddingInlineEnd") style.paddingInlineEnd = appliedMetric;
     else if (metricProperty === "paddingInline") style.paddingInline = appliedMetric;
     else if (metricProperty === "paddingBlock") style.paddingBlock = appliedMetric;
