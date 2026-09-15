@@ -51,7 +51,7 @@ function synchronizePortalEnvironment(host: HTMLDivElement, anchor: HTMLElement 
         );
       }
     }
-    for (const attribute of ["data-motion", "data-theme", "data-text-scale"] as const) {
+    for (const attribute of ["data-motion", "data-theme", "data-text-scale", "data-large-text"] as const) {
       const value = source.getAttribute(attribute);
       if (value === null) host.removeAttribute(attribute);
       else host.setAttribute(attribute, value);
@@ -63,6 +63,7 @@ function synchronizePortalEnvironment(host: HTMLDivElement, anchor: HTMLElement 
   host.removeAttribute("data-motion");
   host.removeAttribute("data-theme");
   host.removeAttribute("data-text-scale");
+  host.removeAttribute("data-large-text");
   host.dir = anchor?.closest<HTMLElement>("[dir]")?.dir ?? "";
 }
 
@@ -90,7 +91,7 @@ export function AnchoredPortal({
     });
     observer.observe(source, {
       attributes: true,
-      attributeFilter: ["data-motion", "data-theme", "data-text-scale", "dir", "style"],
+      attributeFilter: ["data-motion", "data-theme", "data-text-scale", "data-large-text", "dir", "style"],
     });
     return () => observer.disconnect();
   }, [anchorRef, mounted]);

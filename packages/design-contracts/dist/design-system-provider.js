@@ -1,5 +1,13 @@
-import { control } from "./foundations.js";
+import { control, largeTextThreshold } from "./foundations.js";
 import { ACCENTS, THEMES, accentFill, isThemePreference, } from "./colors.js";
+/**
+ * Whether a resolved `textScale` has crossed into large-text layout. A
+ * stylesheet cannot compare numbers, so the provider resolves the axis once and
+ * publishes the result for surfaces that can only match a flag (#20).
+ */
+export function isLargeTextScale(textScale) {
+    return Number.isFinite(textScale) && textScale >= largeTextThreshold;
+}
 /**
  * Visible height a compact control paints under a product's target-size policy.
  *

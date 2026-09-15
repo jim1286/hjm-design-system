@@ -12,6 +12,7 @@ import {
   control,
   glyph,
   layer,
+  largeTextThreshold,
   layout,
   fontWeight,
   motion,
@@ -935,7 +936,7 @@ export const segmentedControlRecipe = {
     // Hangul syllable per line. Native renderers stack the options before that
     // point so each choice remains a readable phrase and a 44pt target.
     largeTextLayout: "stacked" as const,
-    stackAtFontScale: 1.6,
+    stackAtFontScale: largeTextThreshold,
   },
   /**
    * A recessed track with a raised white thumb. The fills used to be
@@ -2004,7 +2005,7 @@ export const topBarRecipe = {
   sideMinWidth: control.minTouchTarget,
   paddingHorizontal: spacing.md,
   gap: spacing.xs,
-  largeTextThreshold: 1.6,
+  largeTextThreshold,
   title: { textVariant: "bodyLarge", color: semanticColors.content.primary, fontWeight: fontWeight.bold },
   titleAction: {
     minHeight: control.minTouchTarget,

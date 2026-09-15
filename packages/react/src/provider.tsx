@@ -1,4 +1,5 @@
 import {
+  isLargeTextScale,
   resolveDesignSystemProviderValue,
   validateDesignSystemProviderValue,
   type DesignSystemDirection,
@@ -165,6 +166,13 @@ export const HjmProvider = forwardRef<HTMLDivElement, HjmProviderProps>(
       shouldSkipDelay: shouldSkipTooltipDelay,
     };
 
+    // `data-text-scale` is a number, so a stylesheet cannot ask whether it crossed
+    // `largeTextThreshold`. The provider resolves that comparison once and publishes
+    // the answer; letting each renderer read the environment instead would pull this
+    // module into granular entries like ./selection and blow their gzip budgets.
+    // See issue #20.
+    const largeText = isLargeTextScale(environment.textScale) ? "true" : undefined;
+
     return (
       <HjmThemeContext.Provider value={value}>
         <TooltipCoordinatorContext.Provider value={tooltipCoordinator}>
@@ -177,6 +185,7 @@ export const HjmProvider = forwardRef<HTMLDivElement, HjmProviderProps>(
             data-motion={environment.reducedMotion ? "reduced" : "full"}
             data-theme={environment.theme}
             data-text-scale={environment.textScale}
+            data-large-text={largeText}
             dir={environment.direction}
             style={{ ...createHjmThemeStyle(value), ...style }}
           >

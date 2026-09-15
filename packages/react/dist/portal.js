@@ -31,7 +31,7 @@ function synchronizePortalEnvironment(host, anchor) {
                 host.style.setProperty(property, source.style.getPropertyValue(property), source.style.getPropertyPriority(property));
             }
         }
-        for (const attribute of ["data-motion", "data-theme", "data-text-scale"]) {
+        for (const attribute of ["data-motion", "data-theme", "data-text-scale", "data-large-text"]) {
             const value = source.getAttribute(attribute);
             if (value === null)
                 host.removeAttribute(attribute);
@@ -45,6 +45,7 @@ function synchronizePortalEnvironment(host, anchor) {
     host.removeAttribute("data-motion");
     host.removeAttribute("data-theme");
     host.removeAttribute("data-text-scale");
+    host.removeAttribute("data-large-text");
     host.dir = anchor?.closest("[dir]")?.dir ?? "";
 }
 export function AnchoredPortal({ anchorRef, children, container, ssrFallback = "none", }) {
@@ -66,7 +67,7 @@ export function AnchoredPortal({ anchorRef, children, container, ssrFallback = "
         });
         observer.observe(source, {
             attributes: true,
-            attributeFilter: ["data-motion", "data-theme", "data-text-scale", "dir", "style"],
+            attributeFilter: ["data-motion", "data-theme", "data-text-scale", "data-large-text", "dir", "style"],
         });
         return () => observer.disconnect();
     }, [anchorRef, mounted]);

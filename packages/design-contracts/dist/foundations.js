@@ -171,6 +171,12 @@ export const control = {
     },
     selectionIndicator: 24,
 };
+/**
+ * Font scale at which components switch to a large-text layout. One decision,
+ * previously two literals in `segmentedControlRecipe` and `topBarRecipe`; see
+ * issue #20 for why it sits with the tokens instead of beside the scale axis.
+ */
+export const largeTextThreshold = 1.6;
 /** Product renderers may narrow these widths, but should not invent new rhythm. */
 export const layout = {
     pagePadding: {

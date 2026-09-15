@@ -2,7 +2,11 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
-import { resolveDesignSystemProviderValue } from "@hjmds/design-contracts/components/design-system-provider";
+import {
+  isLargeTextScale,
+  resolveDesignSystemProviderValue,
+} from "@hjmds/design-contracts/components/design-system-provider";
+import { largeTextThreshold } from "@hjmds/design-contracts/foundations";
 import {
   segmentedControlRecipe,
   skeletonRecipe,
@@ -331,6 +335,38 @@ describe("SegmentedControl large-text layout", () => {
     expect(rule.test(css)).toBe(stacks);
     if (!stacks) return;
     expect(css).toContain(".hjm-segmented__item { flex: 0 0 auto; min-inline-size: 0; }");
+    // 브라우저 기본 글꼴만이 web의 large-text 신호가 아니다. provider에 textScale을
+    // 선언한 제품은 `data-large-text`로 같은 전환을 받아야 한다 (#20).
+    expect(css).toContain('[data-large-text="true"] .hjm-segmented__items { flex-direction: column;');
+  });
+
+  /* 계약은 임계값 하나를 말하는데(`stackAtFontScale`), 렌더러가 그것을 각자 숫자로
+     다시 적으면 다시 갈라진다. provider가 내보내는 플래그가 그 임계값을 읽고 있는지
+     여기서 묶는다 (#20). */
+  it("publishes the recipe threshold as a provider flag", () => {
+    expect(segmentedControlRecipe.adaptive.stackAtFontScale).toBe(largeTextThreshold);
+    expect(isLargeTextScale(largeTextThreshold)).toBe(true);
+    expect(isLargeTextScale(largeTextThreshold - 0.01)).toBe(false);
+
+    const markup = renderToStaticMarkup(
+      <HjmProvider systemTheme="light" textScale={largeTextThreshold}>
+        <SegmentedControl
+          label="보기"
+          items={[{ value: "list", label: "목록" }, { value: "grid", label: "격자" }]}
+        />
+      </HjmProvider>,
+    );
+    expect(markup).toContain('data-large-text="true"');
+
+    const small = renderToStaticMarkup(
+      <HjmProvider systemTheme="light" textScale={1}>
+        <SegmentedControl
+          label="보기"
+          items={[{ value: "list", label: "목록" }, { value: "grid", label: "격자" }]}
+        />
+      </HjmProvider>,
+    );
+    expect(small).not.toContain("data-large-text");
   });
 
   /* 0.9.11 shipped this stylesheet with one closing brace too many. Every gate

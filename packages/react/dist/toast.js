@@ -1,4 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { isLargeTextScale } from "@hjmds/design-contracts/components/design-system-provider";
 import { createToastStore, resolveToastDescriptor, } from "@hjmds/design-contracts/components/toast";
 import { toastRecipe, } from "@hjmds/design-contracts/recipes";
 import { createContext, forwardRef, useContext, useEffect, useId, useMemo, useRef, useState, useSyncExternalStore, } from "react";
@@ -58,7 +59,7 @@ function ToastPortal({ children, container }) {
     useEffect(() => setMounted(true), []);
     if (!mounted)
         return null;
-    return createPortal(theme ? (_jsx("div", { className: "hjm-root hjm-portal", "data-hjm-portal": "toast", "data-motion": theme.environment.reducedMotion ? "reduced" : "full", "data-theme": theme.environment.theme, "data-text-scale": theme.environment.textScale, dir: theme.environment.direction, style: createHjmThemeStyle(theme), children: children })) : children, container ?? document.body);
+    return createPortal(theme ? (_jsx("div", { className: "hjm-root hjm-portal", "data-hjm-portal": "toast", "data-motion": theme.environment.reducedMotion ? "reduced" : "full", "data-theme": theme.environment.theme, "data-text-scale": theme.environment.textScale, "data-large-text": isLargeTextScale(theme.environment.textScale) ? "true" : undefined, dir: theme.environment.direction, style: createHjmThemeStyle(theme), children: children })) : children, container ?? document.body);
 }
 function renderStoreToast(snapshot, store, locale) {
     if (snapshot.phase !== "visible" && snapshot.phase !== "closing")

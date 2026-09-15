@@ -21,7 +21,12 @@ const rendererBudgets = [
       // 0.10.0: skeleton의 원 지름·펄스 길이·곡선·opacity를 recipe에서 읽어 CSS 변수로
       // 내보내면서 커졌다. modules가 3으로 그대로라 새 import 경로는 없다. 다음에 이
       // 한도를 올릴 때는 modules가 함께 늘었는지 먼저 확인한다.
-      "./provider": { modules: 3, raw: 12_500, gzip: 3_400 },
+      // 1.0.3: raw 12_500 -> 12_700, gzip 3_400 -> 3_500. provider가 textScale의
+      // large-text 전환을 `data-large-text`로 한 번만 계산해 내보내면서(#20) 커졌다.
+      // 이 자리가 맞는 이유가 예산에도 보인다 — 같은 판정을 renderer가 직접 하면
+      // ./selection 같은 granular entry가 provider 모듈을 통째로 끌어와 gzip 24%가 는다.
+      // modules는 3으로 그대로라 새 import 경로는 없다.
+      "./provider": { modules: 3, raw: 12_700, gzip: 3_600 },
       "./layout": { modules: 2, raw: 17_000, gzip: 4_500 },
       "./actions": { modules: 2, raw: 7_000, gzip: 1_900 },
       "./forms": { modules: 12, raw: 116_000, gzip: 24_000 },
