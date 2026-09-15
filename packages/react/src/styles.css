@@ -292,7 +292,11 @@
 .hjm-field[data-variant="inset"] .hjm-field__control { background: var(--hjm-color-bg); }
 .hjm-field[data-shape="large"] .hjm-field__control { border-radius: var(--hjm-radius-lg); }
 .hjm-field[data-shape="full"] .hjm-field__control { border-radius: var(--hjm-radius-full); }
-.hjm-field[data-state="focused"] .hjm-field__control { border-color: var(--hjm-color-content-brand); box-shadow: 0 0 0 1px var(--hjm-color-content-brand); }
+/* The ring is 2px (focusIndicatorContract.width), not 1px: at 1px the focused and
+   unfocused frames differ by 1.06:1 in light and 1.44:1 in dark, so the state change
+   reads as hue only. The wider ring makes it a shape change like every other control.
+   See issue #19. */
+.hjm-field[data-state="focused"] .hjm-field__control { border-color: var(--hjm-color-content-brand); box-shadow: 0 0 0 2px var(--hjm-color-content-brand); }
 .hjm-field[data-state="invalid"] .hjm-field__control { border-color: var(--hjm-color-danger); }
 .hjm-field[data-state="disabled"] { opacity: 0.6; }
 .hjm-field__input {
@@ -425,7 +429,7 @@
 }
 .hjm-otp-field__control[data-size="large"] .hjm-otp-field__slot { font-size: var(--hjm-type-title-large-size); line-height: var(--hjm-type-title-large-line-height); }
 .hjm-otp-field__slot[data-state="filled"] { border-color: var(--hjm-color-content-brand); }
-.hjm-otp-field__slot[data-state="focused"] { border-color: var(--hjm-color-content-brand); box-shadow: 0 0 0 1px var(--hjm-color-content-brand); }
+.hjm-otp-field__slot[data-state="focused"] { border-color: var(--hjm-color-content-brand); box-shadow: 0 0 0 2px var(--hjm-color-content-brand); }
 .hjm-otp-field__slot[data-state="invalid"] { border-color: var(--hjm-color-danger); }
 
 .hjm-bottom-navigation {

@@ -2,6 +2,7 @@ import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { Button, IconButton, Link } from "../src/actions.js";
+import { TextArea, TextField } from "../src/forms.js";
 import { Switch } from "../src/selection.js";
 import { HjmProvider } from "../src/provider.js";
 import "../src/styles.css";
@@ -143,5 +144,40 @@ describe("disabled switch still reports its setting", () => {
     expect(trackOf(on!)).not.toBe(trackOf(off!));
     // 38% brand wash — color-mix라 브라우저가 `color(srgb … / 0.38)`로 계산한다.
     expect(trackOf(on!)).toMatch(/0\.38/);
+  });
+});
+
+// 포커스 표시가 색조에만 기대면 회색조에서 상태 전환을 알아챌 수 없다. 비포커스↔포커스
+// 테두리 명도 대비는 낮 1.06:1 · 밤 1.44:1이라 색은 단서가 되지 못한다 (#19).
+describe("field focus reads as a shape change", () => {
+  const ringWidth = (boxShadow: string) =>
+    Number.parseFloat(boxShadow.match(/(\d+(?:\.\d+)?)px\s*$/)?.[1] ?? "0");
+
+  it.each(["light", "dark"] as const)("grows the frame when a field takes focus in %s mode", async (theme) => {
+    await act(async () => root.render(
+      <HjmProvider theme={theme}>
+        <TextField label="제목" name="title" />
+        <TextArea label="본문" name="body" />
+      </HjmProvider>,
+    ));
+
+    for (const control of ["input", "textarea"] as const) {
+      const element = container.querySelector<HTMLElement>(control)!;
+      const frame = element.closest<HTMLElement>(".hjm-field__control")!;
+      const idle = getComputedStyle(frame);
+      expect(idle.boxShadow).toBe("none");
+      const idleBorder = Number.parseFloat(idle.borderTopWidth);
+
+      await act(async () => element.focus());
+      const focused = getComputedStyle(frame);
+      // 계약이 정한 포커스 표시 두께는 focusIndicatorContract.width = 2다.
+      expect(ringWidth(focused.boxShadow)).toBeGreaterThanOrEqual(2);
+      expect(ringWidth(focused.boxShadow) + Number.parseFloat(focused.borderTopWidth))
+        .toBeGreaterThan(idleBorder);
+      expect(contrast(focused.borderTopColor, focused.backgroundColor)).toBeGreaterThanOrEqual(3);
+
+      await act(async () => element.blur());
+      expect(getComputedStyle(frame).boxShadow).toBe("none");
+    }
   });
 });
