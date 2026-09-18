@@ -17,7 +17,7 @@ describe("@hjmds/react-native package boundary", () => {
     expect(packageJson.dependencies).toBeUndefined();
     expect(packageJson.devDependencies["@hjmds/design-contracts"]).toBe("workspace:*");
     expect(packageJson.peerDependencies).toEqual({
-      "@hjmds/design-contracts": ">=1.1.0 <1.2.0",
+      "@hjmds/design-contracts": ">=1.2.0 <1.3.0",
       react: ">=19",
       "react-native": ">=0.81",
     });
