@@ -7,8 +7,8 @@ import { assertFiniteNumber } from "./number-field.js";
 import { semanticColors } from "./semantic-colors.js";
 
 /**
- * Ant Design Carousel's infinite loop and default autoplay are intentionally
- * not reproduced — both remove the one thing this contract treats as
+ * Ant Design Carousel's default infinite loop is intentionally not reproduced;
+ * autoplay remains opt-in in both libraries — automatic movement can obscure what this contract treats as
  * non-negotiable: a reliable answer to "where am I, and where does it end".
  * See docs/carousel.md for the accessibility rationale on every point below.
  */
@@ -230,7 +230,7 @@ export const carouselBehavior = {
   web: {
     roles: ["region", "group"],
     keyboard: ["Tab", "Enter", "Space", "ArrowLeft", "ArrowRight"],
-    focus: "roving",
+    focus: "native",
   },
   native: {
     roles: ["adjustable"],

@@ -1,4 +1,4 @@
-import { emptyStateRecipe, skeletonRecipe, type NoticeTone as ContractNoticeTone, type ProgressSize, type ProgressTone, type ToastPlacement, type ToastTone, type ToastToneMark } from "@hjmds/design-contracts/recipes";
+import { emptyStateRecipe, skeletonRecipe, type NoticeTone as ContractNoticeTone, type ProgressShape, type ProgressSize, type ProgressTone, type ToastPlacement, type ToastTone, type ToastToneMark } from "@hjmds/design-contracts/recipes";
 import { type ResultDescriptor, type ResultStatus } from "@hjmds/design-contracts/components/result";
 import { type ToastDescriptor, type ToastDismissReason, type ToastDuplicatePolicy, type ToastOverflowPolicy, type ToastPauseReason, type ToastPublishResult, type ToastTimerUpdatePolicy } from "@hjmds/design-contracts/components/toast";
 import { type ReactNode } from "react";
@@ -64,6 +64,14 @@ export type ProgressProps = ProgressName & Readonly<{
     valueLabel?: string;
     accessibilityHint?: string;
     size?: ProgressSize;
+    /**
+     * `circular` draws the same value as a ring. Native has no conic gradient, so
+     * the ring is four quarter-arcs clipped by rotation — still one accessibility
+     * contract, because the announcing element is unchanged.
+     */
+    shape?: ProgressShape;
+    /** Content inside the ring. Ignored when linear. */
+    children?: ReactNode;
     tone?: ProgressTone;
     style?: StyleProp<ViewStyle>;
     labelStyle?: StyleProp<TextStyle>;
@@ -72,7 +80,7 @@ export type ProgressProps = ProgressName & Readonly<{
     indicatorStyle?: StyleProp<ViewStyle>;
     testID?: string;
 }>;
-export declare function Progress({ value, max, label, accessibilityLabel, valueText, valueLabel, accessibilityHint, size, tone, style, labelStyle, valueStyle, trackStyle, indicatorStyle, testID, }: ProgressProps): import("react").JSX.Element;
+export declare function Progress({ value, max, label, accessibilityLabel, valueText, valueLabel, accessibilityHint, size, tone, shape, children, style, labelStyle, valueStyle, trackStyle, indicatorStyle, testID, }: ProgressProps): import("react").JSX.Element;
 export type SpinnerProps = Readonly<{
     label: string;
     size?: "small" | "large";

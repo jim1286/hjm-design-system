@@ -7,4 +7,6 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Text: Story = componentStory("Text");
+export const Heading: Story = componentStory("Heading");
+export const TextFormat: Story = componentStory("TextFormat");
 export const Icon: Story = componentStory("Icon");

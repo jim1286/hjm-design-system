@@ -52,11 +52,23 @@
       "import": "./dist/responsive.js",
       "default": "./dist/responsive.js"
     },
+    "./formatters": {
+      "types": "./dist/formatters.d.ts",
+      "react-native": "./dist/formatters.js",
+      "import": "./dist/formatters.js",
+      "default": "./dist/formatters.js"
+    },
     "./grid": {
       "types": "./dist/grid.d.ts",
       "react-native": "./dist/grid.js",
       "import": "./dist/grid.js",
       "default": "./dist/grid.js"
+    },
+    "./dataviz": {
+      "types": "./dist/dataviz.d.ts",
+      "react-native": "./dist/dataviz.js",
+      "import": "./dist/dataviz.js",
+      "default": "./dist/dataviz.js"
     },
     "./recipes": {
       "types": "./dist/component-recipes.d.ts",
@@ -115,17 +127,41 @@
     "./consumer-policy.md": {
       "default": "./docs/consumer-policy.md"
     },
+    "./components/agreement": {
+      "types": "./dist/agreement.d.ts",
+      "react-native": "./dist/agreement.js",
+      "import": "./dist/agreement.js",
+      "default": "./dist/agreement.js"
+    },
     "./components/alert-dialog": {
       "types": "./dist/alert-dialog.d.ts",
       "react-native": "./dist/alert-dialog.js",
       "import": "./dist/alert-dialog.js",
       "default": "./dist/alert-dialog.js"
     },
+    "./components/anchor": {
+      "types": "./dist/anchor.d.ts",
+      "react-native": "./dist/anchor.js",
+      "import": "./dist/anchor.js",
+      "default": "./dist/anchor.js"
+    },
     "./components/aspect-ratio": {
       "types": "./dist/aspect-ratio.d.ts",
       "react-native": "./dist/aspect-ratio.js",
       "import": "./dist/aspect-ratio.js",
       "default": "./dist/aspect-ratio.js"
+    },
+    "./components/asset": {
+      "types": "./dist/asset.d.ts",
+      "react-native": "./dist/asset.js",
+      "import": "./dist/asset.js",
+      "default": "./dist/asset.js"
+    },
+    "./components/bottom-info": {
+      "types": "./dist/bottom-info.d.ts",
+      "react-native": "./dist/bottom-info.js",
+      "import": "./dist/bottom-info.js",
+      "default": "./dist/bottom-info.js"
     },
     "./components/bottom-navigation": {
       "types": "./dist/bottom-navigation.d.ts",
@@ -157,6 +193,12 @@
       "import": "./dist/carousel.js",
       "default": "./dist/carousel.js"
     },
+    "./components/collapsible": {
+      "types": "./dist/collapsible.d.ts",
+      "react-native": "./dist/collapsible.js",
+      "import": "./dist/collapsible.js",
+      "default": "./dist/collapsible.js"
+    },
     "./components/collection": {
       "types": "./dist/collection.d.ts",
       "react-native": "./dist/collection.js",
@@ -169,17 +211,23 @@
       "import": "./dist/command-palette.js",
       "default": "./dist/command-palette.js"
     },
+    "./components/container": {
+      "types": "./dist/container.d.ts",
+      "react-native": "./dist/container.js",
+      "import": "./dist/container.js",
+      "default": "./dist/container.js"
+    },
     "./components/content-state": {
       "types": "./dist/content-state.d.ts",
       "react-native": "./dist/content-state.js",
       "import": "./dist/content-state.js",
       "default": "./dist/content-state.js"
     },
-    "./components/container": {
-      "types": "./dist/container.d.ts",
-      "react-native": "./dist/container.js",
-      "import": "./dist/container.js",
-      "default": "./dist/container.js"
+    "./components/context-menu": {
+      "types": "./dist/context-menu.d.ts",
+      "react-native": "./dist/context-menu.js",
+      "import": "./dist/context-menu.js",
+      "default": "./dist/context-menu.js"
     },
     "./components/data-table": {
       "types": "./dist/data-table.d.ts",
@@ -192,6 +240,12 @@
       "react-native": "./dist/date-picker.js",
       "import": "./dist/date-picker.js",
       "default": "./dist/date-picker.js"
+    },
+    "./components/date-range": {
+      "types": "./dist/date-range.d.ts",
+      "react-native": "./dist/date-range.js",
+      "import": "./dist/date-range.js",
+      "default": "./dist/date-range.js"
     },
     "./components/description-list": {
       "types": "./dist/description-list.d.ts",
@@ -222,6 +276,12 @@
       "react-native": "./dist/form.js",
       "import": "./dist/form.js",
       "default": "./dist/form.js"
+    },
+    "./components/heading": {
+      "types": "./dist/heading.d.ts",
+      "react-native": "./dist/heading.js",
+      "import": "./dist/heading.js",
+      "default": "./dist/heading.js"
     },
     "./components/icon": {
       "types": "./dist/icon.d.ts",
@@ -259,6 +319,18 @@
       "import": "./dist/mentions.js",
       "default": "./dist/mentions.js"
     },
+    "./components/menubar": {
+      "types": "./dist/menubar.d.ts",
+      "react-native": "./dist/menubar.js",
+      "import": "./dist/menubar.js",
+      "default": "./dist/menubar.js"
+    },
+    "./components/native-platform": {
+      "types": "./dist/native-platform.d.ts",
+      "react-native": "./dist/native-platform.js",
+      "import": "./dist/native-platform.js",
+      "default": "./dist/native-platform.js"
+    },
     "./components/number-field": {
       "types": "./dist/number-field.d.ts",
       "react-native": "./dist/number-field.js",
@@ -289,6 +361,12 @@
       "import": "./dist/popover.js",
       "default": "./dist/popover.js"
     },
+    "./components/provider-button": {
+      "types": "./dist/provider-button.d.ts",
+      "react-native": "./dist/provider-button.js",
+      "import": "./dist/provider-button.js",
+      "default": "./dist/provider-button.js"
+    },
     "./components/result": {
       "types": "./dist/result.d.ts",
       "react-native": "./dist/result.js",
@@ -306,6 +384,18 @@
       "react-native": "./dist/side-panel.js",
       "import": "./dist/side-panel.js",
       "default": "./dist/side-panel.js"
+    },
+    "./components/sidebar": {
+      "types": "./dist/sidebar.d.ts",
+      "react-native": "./dist/sidebar.js",
+      "import": "./dist/sidebar.js",
+      "default": "./dist/sidebar.js"
+    },
+    "./components/skip-nav": {
+      "types": "./dist/skip-nav.d.ts",
+      "react-native": "./dist/skip-nav.js",
+      "import": "./dist/skip-nav.js",
+      "default": "./dist/skip-nav.js"
     },
     "./components/slider": {
       "types": "./dist/slider.d.ts",
@@ -337,6 +427,18 @@
       "import": "./dist/tag.js",
       "default": "./dist/tag.js"
     },
+    "./components/tags-input": {
+      "types": "./dist/tags-input.d.ts",
+      "react-native": "./dist/tags-input.js",
+      "import": "./dist/tags-input.js",
+      "default": "./dist/tags-input.js"
+    },
+    "./components/text-formats": {
+      "types": "./dist/text-formats.d.ts",
+      "react-native": "./dist/text-formats.js",
+      "import": "./dist/text-formats.js",
+      "default": "./dist/text-formats.js"
+    },
     "./components/timeline": {
       "types": "./dist/timeline.d.ts",
       "react-native": "./dist/timeline.js",
@@ -349,11 +451,23 @@
       "import": "./dist/toast.js",
       "default": "./dist/toast.js"
     },
+    "./components/toggle-group": {
+      "types": "./dist/toggle-group.d.ts",
+      "react-native": "./dist/toggle-group.js",
+      "import": "./dist/toggle-group.js",
+      "default": "./dist/toggle-group.js"
+    },
     "./components/tooltip": {
       "types": "./dist/tooltip.d.ts",
       "react-native": "./dist/tooltip.js",
       "import": "./dist/tooltip.js",
       "default": "./dist/tooltip.js"
+    },
+    "./components/top": {
+      "types": "./dist/top.d.ts",
+      "react-native": "./dist/top.js",
+      "import": "./dist/top.js",
+      "default": "./dist/top.js"
     },
     "./components/tour": {
       "types": "./dist/tour.d.ts",

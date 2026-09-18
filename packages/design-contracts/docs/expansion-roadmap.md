@@ -1,5 +1,18 @@
 # HJM Design System Expansion Roadmap
 
+## 2026-09-16 React·React Native 완성
+
+사용자가 Flutter를 제외하고 토스 UI를 중심 모티브로 컴포넌트를 채우도록 요청했습니다.
+[전체 누락 목록·참조·완성 기준](react-native-completion.md)을 따라 renderer와 실제 조합
+화면을 함께 만듭니다. 기존 소수 수정으로 전체 목표를 완료 처리하지 않습니다.
+
+## 2026-09-15 실제 제품 조사에서 추가한 작업
+
+[8개 앱 업데이트 목록](product-audit-2026-09-15.md)에 공통 결함·기존 컴포넌트 채택·제품 소유
+기능을 구분했다. Toast/Notice compact 레이아웃과 Showcase 스타일 충돌부터 수정하고,
+입력 설명/focus·Dialog 완료 신호·상태 조합을 다음 순서로 등록한다. 넓은 간격·어색한 버튼에
+대한 사용자 피드백과 실제 소스/브라우저 결과가 근거이며 catalog maturity는 바꾸지 않는다.
+
 ## 무엇을 흡수하는가
 
 HJM은 외부 라이브러리의 외형이나 public prop 이름을 복사하지 않습니다. 각 시스템에서
@@ -229,7 +242,7 @@ surface별 `planned → beta` gate는 public renderer export와 package CI가 �
 남아 있지만 렌더되지 않고 월 범위 쿼리의 내부 계산일 뿐이며, 화면은 월 헤더 + 7일
 날짜 레일이다. 앱 전체에 값 하나를 고르는 압축 트리거 UI도 없다.
 
-이후 DatePicker에는 first-party Web·Native renderer와 canonical 환경 증거가 추가되어
+이후 DatePicker와 Calendar에는 first-party Web·Native renderer와 canonical 환경 증거가 추가되어
 `beta`로 승격됐다. 다만 위 실측은 여전히 유효하다. **제품 adoption evidence는 없고**,
 Yajalal의 날짜 레일을 DatePicker 채택으로 세지 않는다. 따라서 `stable` 승격 근거는 없다.
 
@@ -238,8 +251,8 @@ Yajalal의 날짜 레일을 DatePicker 채택으로 세지 않는다. 따라서 
 
 ### Batch 3 — 복합 데이터와 파일
 
-- beta: Timeline, UploadItem, DatePicker, FilePicker
-- planned: TimePicker
+- beta: Timeline, UploadItem, DatePicker, Calendar, FilePicker
+- composed: TimePicker (Web/RN 시·분 선택·확정 예제 제공, 독립 renderer는 없음)
 - web: DataTable, Tree, ColorPicker, CommandPalette, SidePanel, Popover
 
 FilePicker는 파일 선택 의도만 소유합니다. 업로드 요청·재시도·서버 상태는 제품이 소유하고,

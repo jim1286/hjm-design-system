@@ -139,7 +139,7 @@ export function ComponentExplorer({ initialCategory = "all" }: ExplorerProps) {
           <p>검색어나 필터를 바꿔 보세요.</p>
         </section>
       ) : visibleCategories.map(({ category: currentCategory, entries }) => (
-        <section className="hjm-section" key={currentCategory} aria-labelledby={`explorer-${currentCategory}`}>
+        <section className="hjm-showcase-section" key={currentCategory} aria-labelledby={`explorer-${currentCategory}`}>
           <div className="hjm-section-heading">
             <h2 className="hjm-section-title" id={`explorer-${currentCategory}`}>{categoryLabels[currentCategory]}</h2>
             <span className="hjm-muted">{entries.length} components</span>

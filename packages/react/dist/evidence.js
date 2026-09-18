@@ -36,6 +36,19 @@ function stableFieldClaim(exportNames, subpath) {
         ],
     };
 }
+function toastClaim() {
+    const base = defaultClaim("toast", ["Toast", "ToastProvider", "useToast"], "./toast");
+    return {
+        ...base,
+        // SSR proves semantics but cannot catch the close-only row seen in BurnTok.
+        // Keep real geometry evidence attached without promoting catalog maturity.
+        proofs: [...base.proofs, {
+                scenarios: ["dark", "long-copy", "large-text", "rtl"],
+                file: "test/toast-layout.browser.test.tsx",
+                caseId: "toast",
+            }],
+    };
+}
 /**
  * First-party Web renderer claims. Scenario axes remain fail-closed: this
  * manifest claims a table-driven environment/accessibility smoke matrix.
@@ -48,6 +61,8 @@ export const reactRendererEvidence = {
     packageVersion: "1.1.1",
     surface: "web",
     components: [
+        defaultClaim("top-bar", ["TopBar"], "./top-bar"),
+        defaultClaim("bottom-cta", ["BottomCTA"], "./bottom-cta"),
         defaultClaim("design-system-provider", ["HjmProvider", "useHjmTheme"], "./provider"),
         defaultClaim("text", ["Text"], "./layout"),
         defaultClaim("surface", ["Surface"], "./layout"),
@@ -69,6 +84,7 @@ export const reactRendererEvidence = {
         defaultClaim("slider", ["Slider"], "./slider"),
         defaultClaim("form", ["Form"], "./forms"),
         defaultClaim("date-picker", ["DatePicker"], "./date-picker"),
+        defaultClaim("calendar", ["Calendar"], "./calendar"),
         defaultClaim("file-picker", ["FilePicker"], "./file-picker"),
         defaultClaim("checkbox", ["Checkbox"], "./selection"),
         defaultClaim("radio", ["Radio"], "./selection"),
@@ -78,8 +94,37 @@ export const reactRendererEvidence = {
         defaultClaim("segmented-control", ["SegmentedControl"], "./selection"),
         defaultClaim("chip", ["Chip"], "./selection"),
         defaultClaim("tabs", ["Tabs"], "./navigation"),
+        defaultClaim("breadcrumb", ["Breadcrumb"], "./breadcrumb"),
+        defaultClaim("pagination", ["Pagination"], "./pagination"),
+        defaultClaim("popover", ["Popover"], "./popover"),
+        defaultClaim("side-panel", ["SidePanel"], "./side-panel"),
+        defaultClaim("splitter", ["Splitter"], "./splitter"),
+        defaultClaim("tour", ["Tour"], "./tour"),
+        defaultClaim("tree", ["Tree"], "./tree"),
+        defaultClaim("transfer-list", ["TransferList"], "./transfer-list"),
+        defaultClaim("mentions", ["Mentions"], "./mentions"),
+        defaultClaim("command-palette", ["CommandPalette"], "./command-palette"),
+        defaultClaim("agreement", ["Agreement"], "./agreement"),
+        defaultClaim("top", ["Top"], "./top"),
+        defaultClaim("heading", ["Heading"], "./heading"),
+        defaultClaim("text-format", ["TextFormat"], "./text-formats"),
+        defaultClaim("toggle-group", ["ToggleGroup"], "./toggle-group"),
+        defaultClaim("tags-input", ["TagsInput"], "./tags-input"),
+        defaultClaim("skip-nav", ["SkipNav"], "./skip-nav"),
+        defaultClaim("bottom-info", ["BottomInfo"], "./bottom-info"),
+        defaultClaim("sidebar", ["Sidebar"], "./sidebar"),
+        defaultClaim("date-range-picker", ["DateRangePicker"], "./date-range"),
+        defaultClaim("auth-provider-button", ["AuthProviderButton"], "./provider-button"),
+        defaultClaim("data-table", ["DataTable"], "./data-table"),
+        defaultClaim("collapsible", ["Collapsible"], "./collapsible"),
+        defaultClaim("context-menu", ["ContextMenu"], "./context-menu"),
+        defaultClaim("menubar", ["Menubar"], "./menubar"),
+        defaultClaim("asset", ["Asset", "AssetGroup"], "./asset"),
+        defaultClaim("anchor", ["Anchor"], "./anchor"),
         defaultClaim("bottom-navigation", ["BottomNavigation"], "./navigation"),
         defaultClaim("load-more", ["LoadMore"], "./navigation"),
+        defaultClaim("carousel", ["Carousel"], "./carousel"),
+        defaultClaim("floating-action-button", ["FloatingActionButton"], "./floating-action-button"),
         defaultClaim("steps", ["Steps"], "./steps"),
         defaultClaim("badge", ["Badge"], "./display"),
         defaultClaim("avatar", ["Avatar"], "./display"),
@@ -102,7 +147,7 @@ export const reactRendererEvidence = {
         defaultClaim("spinner", ["Spinner"], "./feedback"),
         defaultClaim("skeleton", ["Skeleton"], "./feedback"),
         defaultClaim("result", ["Result"], "./feedback"),
-        defaultClaim("toast", ["Toast", "ToastProvider", "useToast"], "./toast"),
+        toastClaim(),
         defaultClaim("select", ["Select"], "./forms"),
         defaultClaim("combobox", ["Combobox"], "./forms"),
         defaultClaim("dialog", ["Dialog"], "./overlays"),

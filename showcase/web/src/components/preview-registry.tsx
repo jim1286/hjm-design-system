@@ -1,4 +1,24 @@
-import { type CSSProperties, type ReactNode } from "react";
+import { PopoverPreview } from "../patterns/Popover.stories.js";
+import { SidePanelPreview } from "../patterns/SidePanel.stories.js";
+import { SplitterPreview } from "../patterns/Splitter.stories.js";
+import { TourPreview } from "../patterns/Tour.stories.js";
+import { TreePreview } from "../patterns/Tree.stories.js";
+import { TransferListPreview, MentionsPreview } from "../patterns/TransferList.stories.js";
+import { CommandPalettePreview, DataTablePreview } from "../patterns/CommandPalette.stories.js";
+import { AgreementPreview, TopPreview, AuthProviderButtonPreview } from "../patterns/Agreement.stories.js";
+import { HeadingPreview } from "../patterns/Heading.stories.js";
+import { ToggleGroupPreview, TagsInputPreview } from "../patterns/ToggleGroup.stories.js";
+import { SidebarPreview, BottomInfoPreview } from "../patterns/Sidebar.stories.js";
+import { DateRangePreview } from "../patterns/DateRange.stories.js";
+import { TextFormatPreview } from "../patterns/TextFormat.stories.js";
+import { CollapsiblePreview, ContextMenuPreview, MenubarPreview } from "../patterns/Disclosure.stories.js";
+import { AssetPreview } from "../patterns/Asset.stories.js";
+import { WebNavigationPreview } from "../patterns/WebNavigation.stories.js";
+import { AnchorPreview } from "../patterns/Anchor.stories.js";
+import { CalendarPreview } from "../patterns/Calendar.stories.js";
+import { FloatingActionButton as HjmFloatingActionButton } from "@hjmds/react/floating-action-button";
+import { Carousel as HjmCarousel } from "@hjmds/react/carousel";
+import { useState, type CSSProperties, type ReactNode } from "react";
 import {
   Button as HjmButton,
   IconButton as HjmIconButton,
@@ -55,6 +75,8 @@ import {
 import { Slider as HjmSlider } from "@hjmds/react/slider";
 import { Steps as HjmSteps } from "@hjmds/react/steps";
 import { UploadItem as HjmUploadItem } from "@hjmds/react/upload-item";
+import { TopBar as HjmTopBar } from "@hjmds/react/top-bar";
+import { BottomCTA as HjmBottomCTA } from "@hjmds/react/bottom-cta";
 import {
   BottomNavigation as HjmBottomNavigation,
   LoadMore as HjmLoadMore,
@@ -103,6 +125,8 @@ export type ContractStoryProps = { name: ComponentName };
 
 type CatalogEntry = (typeof componentCatalog)[number];
 export const webRendererComponentNames = [
+  "TopBar",
+  "BottomCTA",
   "Text",
   "Icon",
   "Surface",
@@ -137,6 +161,36 @@ export const webRendererComponentNames = [
   "BottomNavigation",
   "LoadMore",
   "Steps",
+  "Carousel",
+  "FloatingActionButton",
+  "Calendar",
+  "Breadcrumb",
+  "Pagination",
+  "Anchor",
+  "Popover",
+  "SidePanel",
+  "Splitter",
+  "Tour",
+  "Tree",
+  "TransferList",
+  "Mentions",
+  "CommandPalette",
+  "DataTable",
+  "Collapsible",
+  "Asset",
+  "ContextMenu",
+  "Menubar",
+  "Agreement",
+  "AuthProviderButton",
+  "Top",
+  "Heading",
+  "ToggleGroup",
+  "TagsInput",
+  "Sidebar",
+  "BottomInfo",
+  "SkipNav",
+  "DateRangePicker",
+  "TextFormat",
   "Menu",
   "Badge",
   "Avatar",
@@ -340,13 +394,45 @@ function WebPreviewRenderer({ name }: { name: RecipeWebRendererComponentName }) 
     case "Tabs": return <HjmTabs label="선수 정보" items={[{ id: "first", label: "첫 번째", panel: "첫 번째 패널 내용" }, { id: "second", label: "두 번째", panel: "두 번째 패널 내용" }]} />;
     case "BottomNavigation": return <HjmBottomNavigation descriptor={{ accessibilityLabel: "주요 탐색", selectedKey: "home", items: [{ id: "home", label: "홈", icon: { name: "home" } }, { id: "profile", label: "프로필", icon: { name: "user" } }] }} getHref={({ id }) => `#${id}`} renderIcon={({ name }) => <HjmIcon name={name} />} />;
     case "LoadMore": return <HjmLoadMore descriptor={{ state: { status: "ready", requestKey: "showcase-next" }, labels: { loadMore: "더 보기", loading: "불러오는 중", retry: "다시 시도", complete: "모두 불러왔습니다" } }} onLoadMore={async () => undefined} />;
+    case "Breadcrumb":
+    case "Pagination": return <WebNavigationPreview />;
+    case "Popover": return <PopoverPreview />;
+    case "SidePanel": return <SidePanelPreview />;
+    case "Splitter": return <SplitterPreview />;
+    case "Tour": return <TourPreview />;
+    case "Tree": return <TreePreview />;
+    case "TransferList": return <TransferListPreview />;
+    case "Mentions": return <MentionsPreview />;
+    case "CommandPalette": return <CommandPalettePreview />;
+    case "DataTable": return <DataTablePreview />;
+    case "Collapsible": return <CollapsiblePreview />;
+    case "Asset": return <AssetPreview />;
+    case "ContextMenu": return <ContextMenuPreview />;
+    case "Menubar": return <MenubarPreview />;
+    case "Agreement": return <AgreementPreview />;
+    case "AuthProviderButton": return <AuthProviderButtonPreview />;
+    case "Top": return <TopPreview />;
+    case "Heading": return <HeadingPreview />;
+    case "ToggleGroup": return <ToggleGroupPreview />;
+    case "TagsInput": return <TagsInputPreview />;
+    case "Sidebar": return <SidebarPreview />;
+    case "BottomInfo": return <BottomInfoPreview />;
+    case "SkipNav": return <SidebarPreview />;
+    case "DateRangePicker": return <DateRangePreview />;
+    case "TextFormat": return <TextFormatPreview />;
+    case "Anchor": return <AnchorPreview />;
+    case "Calendar": return <CalendarPreview />;
+    case "FloatingActionButton": return <FloatingActionPreview />;
+    case "Carousel": return <HjmCarousel label="이번 주 소식" slides={[{ id: "one", label: "좋아하는 소식만 골라요" }, { id: "two", label: "언제든 설정을 바꿀 수 있어요" }]} labels={{ previous: "이전", next: "다음", pause: "멈추기", resume: "재생하기", navigation: "소식 이동" }} composeAccessibleName={({ position, total, label }) => `${position}/${total} ${label}`} renderSlide={({ label }) => <HjmText>{label}</HjmText>} />;
     case "Steps": return <HjmSteps composeAccessibleName={({ position, total, label }) => `${total}단계 중 ${position}단계, ${label}`} descriptor={{ steps: [{ id: "account", label: "계정" }, { id: "profile", label: "프로필" }, { id: "confirm", label: "확인" }], currentStepId: "profile" }} statusLabels={{ pending: "예정", current: "현재", complete: "완료", error: "오류" }} />;
     case "Menu": return <HjmMenu trigger={<button className="hjm-demo-button" type="button">작업 열기</button>} label="선수 작업" items={[{ id: "rename", label: "이름 바꾸기", onSelect: () => undefined }, { id: "share", label: "공유하기", onSelect: () => undefined }, { id: "delete", label: "삭제", tone: "danger", onSelect: () => undefined }]} />;
     case "Badge": return <HjmStack axis="inline" gap="sm"><HjmBadge>진행 중</HjmBadge><HjmBadge tone="success">완료</HjmBadge></HjmStack>;
     case "Avatar": return <HjmAvatar name="홍길동" />;
     case "CounterBadge": return <HjmIconButton label="알림 12개"><HjmIcon name="notifications" /><HjmCounterBadge count={12} /></HjmIconButton>;
+    case "TopBar": return <HjmTopBar title="알림 설정" leading={<HjmIconButton label="뒤로" tone="ghost"><HjmIcon name="chevronStart" /></HjmIconButton>} actions={<HjmButton tone="ghost">완료</HjmButton>} />;
+    case "BottomCTA": return <HjmBottomCTA description="설정은 나중에 바꿀 수 있어요." primaryAction={{ label: "계속하기", onClick: () => {} }} secondaryAction={{ label: "나중에", onClick: () => {} }} />;
     case "List": return <HjmList label="선수 목록"><HjmListRow title="홍길동" description="내야수" /><HjmListRow title="김하늘" description="외야수" /></HjmList>;
-    case "ListRow": return <HjmListRow title="홍길동" description="선수 상세 보기" leading={<span className="hjm-avatar">홍</span>} trailing={<span aria-hidden>›</span>} onClick={() => undefined} />;
+    case "ListRow": return <HjmListRow title="홍길동" description="선수 상세 보기" leading={<span className="hjm-showcase-avatar">홍</span>} trailing={<span aria-hidden>›</span>} onClick={() => undefined} />;
     case "Tag": return <HjmStack axis="inline" gap="sm" wrap><HjmTag>내야수</HjmTag><HjmTag tone="success">등록 선수</HjmTag><HjmTag>2026 시즌</HjmTag></HjmStack>;
     case "Accordion": return <HjmAccordion aria-label="자주 묻는 질문" items={[{ id: "shipping", title: "언제 도착하나요?", panel: "내일 도착할 예정입니다." }]} />;
     case "Divider": return <HjmStack gap="sm"><HjmText>위쪽 내용</HjmText><HjmDivider /><HjmText>아래쪽 내용</HjmText></HjmStack>;
@@ -609,7 +695,7 @@ function createWebRendererDefinition(
   behaviorName: BehaviorName | null = null,
 ): RecipeWebRendererDefinition {
   const component = componentCatalog.find((entry) => entry.name === name);
-  if (!component || component.status === "planned" || component.platform === "native") {
+  if (!component || component.status === "planned") {
     throw new Error(`Invalid Web renderer registration: ${name}`);
   }
   const webComponent = component as WebRendererCatalogEntry;
@@ -711,16 +797,49 @@ export const webRendererRegistry = {
   Tabs: createWebRendererDefinition("Tabs", "tabsRecipe", "tabs"),
   BottomNavigation: createWebRendererDefinition("BottomNavigation", "bottomNavigationRecipe", "bottomNavigation"),
   LoadMore: createWebRendererDefinition("LoadMore", "loadMoreRecipe", "loadMore"),
+  Breadcrumb: createWebRendererDefinition("Breadcrumb", "breadcrumbRecipe", "breadcrumb"),
+  Pagination: createWebRendererDefinition("Pagination", "paginationRecipe", "pagination"),
+  Popover: createWebRendererDefinition("Popover", "popoverRecipe", "popover"),
+  SidePanel: createWebRendererDefinition("SidePanel", "sidePanelRecipe", "sidePanel"),
+  Splitter: createWebRendererDefinition("Splitter", "splitterRecipe", "splitter"),
+  Tour: createWebRendererDefinition("Tour", "tourRecipe", "tour"),
+  Tree: createWebRendererDefinition("Tree", "treeRecipe", "tree"),
+  TransferList: createWebRendererDefinition("TransferList", "transferListRecipe", "transferList"),
+  Mentions: createWebRendererDefinition("Mentions", "comboboxRecipe", "combobox"),
+  CommandPalette: createWebRendererDefinition("CommandPalette", "commandPaletteRecipe", "commandPalette"),
+  DataTable: createWebRendererDefinition("DataTable", "dataTableRecipe", "dataTable"),
+  Agreement: createWebRendererDefinition("Agreement", "agreementRecipe", "agreement"),
+  AuthProviderButton: createWebRendererDefinition("AuthProviderButton", "authProviderButtonRecipe", "authProviderButton"),
+  Top: createWebRendererDefinition("Top", "topRecipe", "top"),
+  Heading: createWebRendererDefinition("Heading", "headingRecipe", "heading"),
+  ToggleGroup: createWebRendererDefinition("ToggleGroup", "toggleGroupRecipe", "toggleGroup"),
+  TagsInput: createWebRendererDefinition("TagsInput", "tagsInputRecipe", "tagsInput"),
+  Sidebar: createWebRendererDefinition("Sidebar", "sidebarRecipe", "sidebar"),
+  BottomInfo: createWebRendererDefinition("BottomInfo", "bottomInfoRecipe", "bottomInfo"),
+  SkipNav: createWebRendererDefinition("SkipNav", "skipNavRecipe", "skipNav"),
+  DateRangePicker: createWebRendererDefinition("DateRangePicker", "calendarRecipe", "dateRange"),
+  TextFormat: createWebRendererDefinition("TextFormat", "textFormatRecipe", "textFormat"),
+  Anchor: createWebRendererDefinition("Anchor", "anchorRecipe", "anchor"),
+  Calendar: createWebRendererDefinition("Calendar", "calendarRecipe", "calendar"),
+  FloatingActionButton: createWebRendererDefinition("FloatingActionButton", "floatingActionButtonRecipe", "floatingActionButton"),
+  Carousel: createWebRendererDefinition("Carousel", "carouselRecipe", "carousel"),
   Steps: createWebRendererDefinition("Steps", "stepsRecipe"),
   Menu: createWebRendererDefinition("Menu", "menuRecipe", "menu"),
+  // ContextMenu는 항목 어휘가 Menu와 같아 recipe도 menuRecipe를 그대로 쓴다.
+  ContextMenu: createWebRendererDefinition("ContextMenu", "menuRecipe", "contextMenu"),
+  Menubar: createWebRendererDefinition("Menubar", "menubarRecipe", "menubar"),
   Badge: createWebRendererDefinition("Badge", "badgeRecipe"),
   Avatar: createWebRendererDefinition("Avatar", "avatarRecipe"),
   CounterBadge: createWebRendererDefinition("CounterBadge", "counterBadgeRecipe"),
   Card: createWebRendererDefinition("Card", "cardRecipe"),
   List: createWebRendererDefinition("List", "listRecipe"),
   ListRow: createWebRendererDefinition("ListRow", "listRowRecipe"),
+  TopBar: createWebRendererDefinition("TopBar", "topBarRecipe"),
+  BottomCTA: createWebRendererDefinition("BottomCTA", "bottomCtaRecipe"),
   Tag: createWebRendererDefinition("Tag", "tagRecipe"),
   Accordion: createWebRendererDefinition("Accordion", "accordionRecipe", "disclosureGroup"),
+  Collapsible: createWebRendererDefinition("Collapsible", "collapsibleRecipe", "collapsible"),
+  Asset: createWebRendererDefinition("Asset", "assetRecipe", "asset"),
   Divider: createWebRendererDefinition("Divider", "dividerRecipe"),
   Statistic: createWebRendererDefinition("Statistic", "statisticRecipe"),
   Section: createWebRendererDefinition("Section", "sectionRecipe"),
@@ -804,9 +923,9 @@ function StoryHeader({ entry }: { entry: ShowcaseComponentEntry }) {
 
 function EvidenceSection({ entry, contract }: { entry: ShowcaseComponentEntry; contract: string }) {
   return (
-    <section className="hjm-section" aria-labelledby={`${entry.component.name}-evidence`}>
+    <section className="hjm-showcase-section" aria-labelledby={`${entry.component.name}-evidence`}>
       <h2 className="hjm-section-title" id={`${entry.component.name}-evidence`}>Required evidence</h2>
-      <div className="hjm-grid"><article className="hjm-card"><h3>Surfaces</h3><p>{entry.requiredSurfaces.join(" · ")}</p></article><article className="hjm-card"><h3>Required scenarios</h3><ul className="hjm-requirement-list">{entry.requiredScenarios.map((id) => <li key={id}>{scenarioLabels.get(id)}</li>)}</ul></article><article className="hjm-card"><h3>Contract</h3><p>{contract}</p></article></div>
+      <div className="hjm-showcase-grid"><article className="hjm-showcase-card"><h3>Surfaces</h3><p>{entry.requiredSurfaces.join(" · ")}</p></article><article className="hjm-showcase-card"><h3>Required scenarios</h3><ul className="hjm-requirement-list">{entry.requiredScenarios.map((id) => <li key={id}>{scenarioLabels.get(id)}</li>)}</ul></article><article className="hjm-showcase-card"><h3>Contract</h3><p>{contract}</p></article></div>
     </section>
   );
 }
@@ -817,7 +936,7 @@ export function ContractOnlyStory({ entry }: { entry: ShowcaseComponentEntry }) 
   return (
     <main className="hjm-page" data-showcase-mode="contract-only">
       <StoryHeader entry={entry} />
-      <section className="hjm-section" aria-labelledby={`${entry.component.name}-contract`}><h2 className="hjm-section-title" id={`${entry.component.name}-contract`}>Contract only</h2><div className="hjm-stage"><div className="hjm-roadmap-preview"><span className="hjm-pill">No renderer evidence</span><strong>{entry.component.name}</strong><p>이 페이지는 범위와 승격 조건만 기록합니다. 구현된 Web UI를 의미하지 않습니다.</p></div></div></section>
+      <section className="hjm-showcase-section" aria-labelledby={`${entry.component.name}-contract`}><h2 className="hjm-section-title" id={`${entry.component.name}-contract`}>Contract only</h2><div className="hjm-stage"><div className="hjm-roadmap-preview"><span className="hjm-pill">No renderer evidence</span><strong>{entry.component.name}</strong><p>이 페이지는 범위와 승격 조건만 기록합니다. 구현된 Web UI를 의미하지 않습니다.</p></div></div></section>
       <EvidenceSection entry={entry} contract={contract} />
     </main>
   );
@@ -827,7 +946,7 @@ export function UnsupportedWebStory({ entry }: { entry: ShowcaseComponentEntry }
   return (
     <main className="hjm-page" data-showcase-mode="web-unsupported">
       <StoryHeader entry={entry} />
-      <section className="hjm-section" aria-labelledby={`${entry.component.name}-unsupported`}><h2 className="hjm-section-title" id={`${entry.component.name}-unsupported`}>Web renderer unsupported</h2><div className="hjm-stage"><div className="hjm-roadmap-preview"><span className="hjm-pill">Native surface</span><strong>{entry.component.name}</strong><p>이 계약은 Native renderer에서 검증합니다. Showcase가 유사한 Web UI를 만들어 지원 범위를 과장하지 않습니다.</p></div></div></section>
+      <section className="hjm-showcase-section" aria-labelledby={`${entry.component.name}-unsupported`}><h2 className="hjm-section-title" id={`${entry.component.name}-unsupported`}>Web renderer unsupported</h2><div className="hjm-stage"><div className="hjm-roadmap-preview"><span className="hjm-pill">Native surface</span><strong>{entry.component.name}</strong><p>이 계약은 Native renderer에서 검증합니다. Showcase가 유사한 Web UI를 만들어 지원 범위를 과장하지 않습니다.</p></div></div></section>
       <EvidenceSection entry={entry} contract="Native renderer contract; no Web implementation is registered" />
     </main>
   );
@@ -841,7 +960,7 @@ function InteractiveWebStory({ entry, name }: { entry: ShowcaseComponentEntry; n
   return (
     <main className="hjm-page" data-showcase-mode="web-renderer">
       <StoryHeader entry={entry} />
-      <section className="hjm-section" aria-labelledby={`${name}-preview`}><h2 className="hjm-section-title" id={`${name}-preview`}>Interactive Web reference</h2><div className="hjm-stage"><ComponentPreview name={name} /></div></section>
+      <section className="hjm-showcase-section" aria-labelledby={`${name}-preview`}><h2 className="hjm-section-title" id={`${name}-preview`}>Interactive Web reference</h2><div className="hjm-stage"><ComponentPreview name={name} /></div></section>
       <EvidenceSection entry={entry} contract={contract} />
     </main>
   );
@@ -861,4 +980,16 @@ export function ContractStory({ name }: ContractStoryProps) {
     throw new Error(`Mature Web component is missing a renderer registration: ${name}`);
   }
   return <InteractiveWebStory entry={entry} name={name} />;
+}
+
+
+function FloatingActionPreview() {
+  const [clearance, setClearance] = useState(0);
+  // A transformed preview owns the fixed-position containing block, so the
+  // sample cannot cover unrelated Catalog entries or the Showcase navigation.
+  return <div style={{ position: "relative", transform: "translateZ(0)", paddingBottom: clearance }}>
+    <HjmText>기록 목록에서 새로운 순간을 남겨요.</HjmText>
+    <HjmFloatingActionButton descriptor={{ label: "새 기록", icon: { name: "add" } }} renderIcon={() => <span>＋</span>}
+      onContentClearanceChange={setClearance} />
+  </div>;
 }

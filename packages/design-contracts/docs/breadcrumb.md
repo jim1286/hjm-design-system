@@ -28,8 +28,7 @@ Breadcrumb는 새 href 개념을 만들지 않습니다. 조상 항목의 `desti
 `LinkDestination`(`internal | external`) 타입 그대로이고, `validateBreadcrumbDescriptor`는
 각 조상 항목마다 `validateLinkDestination`을 그대로 호출합니다. 그래서 internal href가
 `/`, `?`, `#`로 시작해야 한다거나 external href가 허용된 protocol만 써야 한다는 규칙은
-Link 문서(`docs/link.md`)가 유일한 출처입니다. Breadcrumb 조상 항목은 Web에서는 실제
-anchor, Native가 이 컴포넌트를 쓴다면 Expo Router Link로 렌더링될 항목이라는 뜻이며,
+Link 문서(`docs/link.md`)가 유일한 출처입니다. Breadcrumb 조상 항목은 Web의 실제 anchor로 렌더링하며,
 `Link`의 `disabled`/`onClick`/`onPress` 금지 규칙도 그대로 상속합니다.
 
 ## HJM 기본값
@@ -38,14 +37,13 @@ anchor, Native가 이 컴포넌트를 쓴다면 Expo Router Link로 렌더링될
 - 구분자(`/`, `›`)는 정보가 아니라 장식입니다. `breadcrumbRecipe.separator.decorative`는
   항상 `true`이고 renderer는 이를 접근성 트리에서 숨깁니다(Web `aria-hidden`, 스크린
   리더는 순서만 듣습니다).
-- 구분자 아이콘은 `chevronEnd`처럼 Icon registry의 논리 방향 이름을 씁니다. RTL 미러링은
-  Icon 계약이 이미 소유하므로 Breadcrumb가 따로 방향을 계산하지 않습니다.
+- 기본 구분자 `›`만 RTL에서 미러링합니다. `separator`로 전달한 Icon이나 문자는 소비자가
+  방향을 소유하므로 다시 뒤집지 않습니다. `separator={null}`은 구분자를 숨깁니다.
 - **축약(`...`)을 넣지 않습니다.** 항목이 많을 때 가운데를 접는 것은 실제 화면에서
   측정된 수요가 아직 없습니다. 필요해지면 별도 `collapsed` 축으로 명시적으로 추가하고,
   지금은 renderer가 전체 trail을 그대로 그립니다.
 - 크기는 Link의 inline 취급을 따릅니다 — 44-unit 최소 target을 강제하지 않고 밑줄과
-  focus indicator만 유지합니다. Breadcrumb 항목은 문장이 아니라 한 줄 경로이므로 독립된
-  standalone Link처럼 하나씩 별도 target으로 쓰기보다, 촘촘한 한 줄 trail로 배치됩니다.
+  focus indicator만 유지합니다. 긴 경로는 줄바꿈하고 전체 항목을 유지합니다. 링크의 밑줄과 focus indicator는 유지합니다.
 
 ## 플랫폼 번역 — 왜 Web 전용인가
 
@@ -70,13 +68,15 @@ Web에서는:
   가져오므로 Breadcrumb 자체가 새 키보드 상호작용을 정의하지 않습니다.
 - 현재 항목은 tab stop이 아니고 `aria-current="page"`만 갖습니다.
 
-## 검증 화면
+## 공개 경로와 검증
 
-아직 없음. 이전 판정이 후보로 든 "야잘알의 구단 상세 → 선수단 → 선수 상세" 계층은
-검증 결과 근거가 될 수 없다 — Breadcrumb는 `platform: "web"`인데 야잘알(`modules/app`,
-`modules/app-rn`)은 Flutter/React Native 모바일 앱뿐이고 Web 화면 자체가 없다(Native
-계층 이동은 이미 위에서 TopBar가 담당하기로 판정했다). BurnTok의 Web 앱
-(`apps/web/src/app`)도 함께 확인했지만 지금 라우트는 대부분 2단 이하(`/c/[id]`,
-`/ideas/[id]`, `/messages/[peerId]`, `/u/[id]`)라 3단 이상 계층 화면을 아직 찾지
-못했다. `planned → beta` 승격은 실제 3단 이상 Web 화면이 나오고 키보드/스크린리더
-검증을 거친 뒤 리드가 결정한다.
+`import { Breadcrumb } from "@hjmds/react/breadcrumb"`로 가져옵니다. root와 기존 navigation
+경로도 유지합니다. 필수 props는 `label`, `items`이고 `ref`는 nav 요소를 가리킵니다.
+
+2026-09-16 사용자의 React/RN 라이브러리 확장 요청으로, 제품 채택 대기와 라이브러리 beta
+제공을 분리했습니다. `Patterns/WebNavigation`은 조상 링크로 보관함을 열고 다시 기록 목록으로
+돌아오는 작동 예제입니다. 제품 채택이나 stable 증거로 계산하지 않습니다.
+
+[WAI Breadcrumb](https://www.w3.org/WAI/ARIA/apg/patterns/breadcrumb/)의 landmark·조상 링크·
+현재 위치 의미를 확인했습니다. 브라우저 테스트는 실제 anchor, 현재 plain text, 장식 구분자,
+320px/2배 글자·RTL 줄바꿈을 다룹니다. 실제 제품 라우팅·보조기기 검증은 남아 있습니다.

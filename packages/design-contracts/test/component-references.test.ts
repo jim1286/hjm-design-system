@@ -98,7 +98,7 @@ describe("component reference coverage", () => {
       surfaces: { web: { status: "beta" }, native: { status: "unsupported" } },
     });
     expect(getComponentDefinition("top-bar")).toMatchObject({
-      surfaces: { web: { status: "unsupported" }, native: { status: "beta" } },
+      surfaces: { web: { status: "beta" }, native: { status: "beta" } },
     });
     expect(getComponentDefinition("select")).toMatchObject({
       contract: { status: "beta" },
@@ -111,18 +111,18 @@ describe("component reference coverage", () => {
   });
 
   it("tracks built-in renderer maturity independently from contract maturity", () => {
-    for (const entry of componentCatalog) {
+    for (const entry of componentCatalog as readonly ComponentCatalogEntry[]) {
       expect(entry.surfaceStatus, entry.name).toBeDefined();
       if (entry.platform === "web") {
-        expect(entry.surfaceStatus.native, entry.name).toBe("unsupported");
+        expect(entry.surfaceStatus?.native, entry.name).toBe("unsupported");
       }
       if (entry.platform === "native") {
-        expect(entry.surfaceStatus.web, entry.name).toBe("unsupported");
+        expect(entry.surfaceStatus?.web, entry.name).toBe("unsupported");
       }
     }
 
-    expect(componentCatalog.filter(({ surfaceStatus }) => surfaceStatus.web === "beta")).toHaveLength(59);
-    expect(componentCatalog.filter(({ surfaceStatus }) => surfaceStatus.native === "beta")).toHaveLength(59);
+    expect(componentCatalog.filter(({ surfaceStatus }) => surfaceStatus.web === "beta")).toHaveLength(91);
+    expect(componentCatalog.filter(({ surfaceStatus }) => surfaceStatus.native === "beta")).toHaveLength(74);
     expect(componentCatalog.filter(({ surfaceStatus }) => surfaceStatus.web === "stable")).toHaveLength(4);
     expect(componentCatalog.filter(({ surfaceStatus }) => surfaceStatus.native === "stable")).toHaveLength(4);
   });
@@ -160,10 +160,13 @@ describe("component reference coverage", () => {
     expect(Object.values(summarizeComponentRoadmap()).reduce((sum, count) => sum + count, 0)).toBe(
       roadmapEntries.length,
     );
+    // 2026-09-18: Cascader was the only `prerequisite` row. The Tree renderer
+    // derives the path from its own resolved nodes and commits an intermediate
+    // node by selecting it, so it became a composition like TreeSelect.
     expect(summarizeComponentRoadmap()).toMatchObject({
-      composed: 3,
-      prerequisite: 1,
-      declined: 3,
+      composed: 5,
+      prerequisite: 0,
+      declined: 4,
     });
   });
 
@@ -211,17 +214,20 @@ describe("component reference coverage", () => {
     expect(summary).toMatchObject({
       total: 73,
       tracked: 73,
-      fullyMature: 45,
-      partiallyMature: 1,
-      plannedOnly: 27,
-      fullyPreviewable: 45,
-      partiallyPreviewable: 1,
-      contractOnly: 27,
+      fullyMature: 59,
+      partiallyMature: 0,
+      plannedOnly: 14,
+      fullyPreviewable: 59,
+      partiallyPreviewable: 0,
+      contractOnly: 14,
     });
     expect(
       summary.fullyMature + summary.partiallyMature + summary.plannedOnly,
     ).toBe(summary.total);
-    expect(summary.partiallyPreviewable).toBeGreaterThan(0);
+    // SidePanel was the last partially mature target; decomposed Drawer now has
+    // both halves shipped. Keep the axis reported rather than asserting it is
+    // non-empty, so a future partial entry still has to state its own number.
+    expect(summary.partiallyPreviewable).toBe(summary.partiallyMature);
     expect(summary.contractOnly).toBeGreaterThan(0);
 
     const coverageDocument = await readFile(

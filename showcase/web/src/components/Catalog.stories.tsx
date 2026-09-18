@@ -14,9 +14,9 @@ function Catalog() {
         Catalog 상태는 구현 완료를 과장하지 않습니다. 각 행의 evidence 목록이 Web과 Native
         story가 증명해야 할 범위입니다.
       </p>
-      <section className="hjm-section" aria-label="Component catalog">
+      <section className="hjm-showcase-section" aria-label="Component catalog">
         <div className="hjm-table-wrap">
-          <table className="hjm-table">
+          <table className="hjm-showcase-table">
             <thead>
               <tr>
                 <th>Component</th>

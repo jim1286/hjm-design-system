@@ -5,6 +5,9 @@ export {
   type HjmProviderProps,
 } from "./provider.js";
 
+export { TopBar, type TopBarProps } from "./top-bar.js";
+export { BottomCTA, type BottomCTAAction, type BottomCTAProps } from "./bottom-cta.js";
+
 export {
   hjmCompositionStyleKeys,
   type HjmCompositionStyle,
@@ -159,12 +162,8 @@ export {
   type TabsProps,
 } from "./navigation.js";
 
-export {
-  Breadcrumb,
-  Pagination,
-  type BreadcrumbProps,
-  type PaginationProps,
-} from "./advanced-navigation.js";
+export { Breadcrumb, type BreadcrumbProps } from "./breadcrumb.js";
+export { Pagination, type PaginationProps } from "./pagination.js";
 
 export {
   LoadMore,
@@ -213,6 +212,8 @@ export {
 export {
   Accordion,
   Avatar,
+  AvatarGroup,
+  type AvatarGroupProps,
   DescriptionList,
   Divider,
   List,
@@ -287,3 +288,46 @@ export {
   type SheetProps,
   type TooltipProps,
 } from "./overlays.js";
+
+export { Carousel, type CarouselProps, type CarouselLabels } from "./carousel.js";
+
+export { FloatingActionButton, useFloatingActionButtonScroll, resolveFloatingActionButtonContentClearance, type FloatingActionButtonProps } from "./floating-action-button.js";
+
+export { Calendar, type CalendarProps, type CalendarMonthAction, type CalendarHandle, type CalendarOverflow } from "./calendar.js";
+
+export { Anchor, type AnchorProps } from "./anchor.js";
+
+export { Popover, type PopoverProps, type PopoverContentActions } from "./popover.js";
+export { SidePanel, type SidePanelProps } from "./side-panel.js";
+export { Splitter, type SplitterProps } from "./splitter.js";
+export { Tour, type TourProps } from "./tour.js";
+export { Tree, type TreeProps } from "./tree.js";
+export { TransferList, type TransferListProps, type TransferListLabels } from "./transfer-list.js";
+export { Mentions, type MentionsProps, type MentionCandidate } from "./mentions.js";
+export { CommandPalette, type CommandPaletteProps } from "./command-palette.js";
+export { Agreement, type AgreementProps } from "./agreement.js";
+export { Top, type TopProps } from "./top.js";
+export { Heading, type HeadingProps } from "./heading.js";
+export { TextFormat, type TextFormatProps } from "./text-formats.js";
+export { ClipboardButton, type ClipboardButtonProps } from "./clipboard.js";
+export { ToggleGroup, type ToggleGroupProps } from "./toggle-group.js";
+export { TagsInput, type TagsInputProps } from "./tags-input.js";
+export { SkipNav, type SkipNavProps } from "./skip-nav.js";
+export { BottomInfo, type BottomInfoProps } from "./bottom-info.js";
+export { Sidebar, type SidebarProps } from "./sidebar.js";
+export { DateRangePicker, type DateRangePickerProps } from "./date-range.js";
+export {
+  OverlayStackProvider,
+  useOverlayStack,
+  useDialog,
+  useSheet,
+  type OverlayStackApi,
+  type OverlayStackProviderProps,
+  type OverlayHandle,
+} from "./overlay-stack.js";
+export { AuthProviderButton, type AuthProviderButtonProps } from "./provider-button.js";
+export { DataTable, type DataTableProps, type DataTableLabels } from "./data-table.js";
+export { Collapsible, type CollapsibleProps } from "./collapsible.js";
+export { ContextMenu, type ContextMenuProps } from "./context-menu.js";
+export { Menubar, type MenubarProps } from "./menubar.js";
+export { Asset, AssetGroup, type AssetProps, type AssetGroupProps } from "./asset.js";

@@ -46,6 +46,12 @@ export type CounterBadgeProps = Omit<HTMLAttributes<HTMLSpanElement>, "children"
     tone?: CounterBadgeTone;
     size?: CounterBadgeSize;
     variant?: CounterBadgeVariant;
+    /**
+     * Says "there is something new" without a number. Use it where the count is
+     * unknown or not worth reading; inventing a number would be worse than
+     * saying none. The accessible name then carries the whole meaning.
+     */
+    dot?: boolean;
     accessibilityLabel?: string;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
@@ -56,6 +62,12 @@ export declare const CounterBadge: import("react").ForwardRefExoticComponent<Omi
     tone?: CounterBadgeTone;
     size?: CounterBadgeSize;
     variant?: CounterBadgeVariant;
+    /**
+     * Says "there is something new" without a number. Use it where the count is
+     * unknown or not worth reading; inventing a number would be worse than
+     * saying none. The accessible name then carries the whole meaning.
+     */
+    dot?: boolean;
     accessibilityLabel?: string;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;

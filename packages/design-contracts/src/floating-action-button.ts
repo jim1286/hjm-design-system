@@ -239,5 +239,7 @@ export const floatingActionButtonBehaviorScenarios = [
   "accessible-name-is-the-full-label-in-both-layout-modes",
   "content-clearance-accounts-for-the-safe-area-inset-additively",
   "root-sits-after-scrollable-content-in-reading-and-tab-order",
-  "reduced-motion-crossfades-icon-and-label-without-a-shape-tween",
+  // The micro recipe already specifies instant reduced motion; the old
+  // crossfade scenario contradicted that choice. See docs/floating-action-button.md.
+  "reduced-motion-switches-instantly-without-a-shape-tween",
 ] as const;

@@ -46,7 +46,7 @@ export type CheckboxProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type" |
     size?: SelectionControlSize;
     renderLeading?: (appearance: ChoiceLeadingRenderProps) => ReactNode;
 }>;
-export declare const Checkbox: import("react").ForwardRefExoticComponent<Omit<InputHTMLAttributes<HTMLInputElement>, "onChange" | "children" | "defaultChecked" | "type" | "size" | "checked"> & Readonly<{
+export declare const Checkbox: import("react").ForwardRefExoticComponent<Omit<InputHTMLAttributes<HTMLInputElement>, "onChange" | "children" | "defaultChecked" | "size" | "type" | "checked"> & Readonly<{
     label: ReactNode;
     description?: ReactNode;
     checked?: boolean;
@@ -125,6 +125,8 @@ export type RadioGroupProps = Omit<FieldsetHTMLAttributes<HTMLFieldSetElement>, 
 export declare const RadioGroup: import("react").ForwardRefExoticComponent<RadioGroupProps & RefAttributes<HTMLFieldSetElement>>;
 export type SwitchProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "role" | "onChange" | "value"> & Readonly<{
     label: ReactNode;
+    /** Hide repeated row copy visually while preserving the switch's accessible name. */
+    labelVisibility?: "visible" | "hidden";
     checked?: boolean;
     defaultChecked?: boolean;
     /** Track and thumb geometry from `switchRecipe.sizes`. */
@@ -135,6 +137,8 @@ export type SwitchProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "role" |
 }>;
 export declare const Switch: import("react").ForwardRefExoticComponent<Omit<ButtonHTMLAttributes<HTMLButtonElement>, "value" | "onChange" | "role"> & Readonly<{
     label: ReactNode;
+    /** Hide repeated row copy visually while preserving the switch's accessible name. */
+    labelVisibility?: "visible" | "hidden";
     checked?: boolean;
     defaultChecked?: boolean;
     /** Track and thumb geometry from `switchRecipe.sizes`. */

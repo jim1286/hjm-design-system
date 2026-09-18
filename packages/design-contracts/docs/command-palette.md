@@ -114,3 +114,22 @@ heading을 가지므로) — CommandPalette는 다르다: `role="dialog"` 표면
 ## 검증 화면
 
 아직 없음. `planned → beta` 승격은 실제 제품 vertical slice 이후 리드가 진행한다.
+
+## Web renderer (2026-09-18)
+
+`@hjmds/react/command-palette`의 `CommandPalette`가 이 계약을 실행한다. catalog는
+Web `beta`, Native `unsupported`다.
+
+- **모달 takeover다.** Dialog·Sheet·SidePanel과 같은 모달 스택·스크롤 락·배경 격리를
+  공유한다(`packages/react/src/modal.tsx`). 별도 `modal` 축은 없다.
+- **실행은 언제나 닫는다.** `activation`은 정책이 거부할 수 없는 dismiss 사유이고,
+  `onActivateAfterDismiss`는 팔레트가 사라진 뒤에 실행된다 — 다음 표면을 여는 명령이
+  겹쳐 뜨지 않도록.
+- **결과 목록은 Combobox 어휘 그대로다.** 검색 input이 `role="combobox"`,
+  결과가 `listbox`/`option`, 활성 행은 `aria-activedescendant`로 가리킨다.
+  방향키는 계약의 `getCollectionNavigationTarget`(disabled 건너뜀)을 쓴다.
+- **query가 바뀌면 활성 행이 첫 결과로 되돌아간다.** Enter의 대상이 언제나 분명해야 한다.
+- **전역 단축키는 제품 소유다.** 이 renderer는 여는 키를 정하지 않는다.
+- 로컬 검증: `test/command-palette.browser.test.tsx` 5개(이름·초점·배경 inert, 활성 행과
+  disabled 건너뜀·재필터, 실행 시 강제 종료와 사유, 종료 후 후속 명령 순서, Escape·바깥
+  pointer 종료)와 `Patterns/CommandPalette`.

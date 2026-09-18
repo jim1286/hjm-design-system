@@ -4,28 +4,34 @@ import { iconButtonRecipe, linkRecipe, } from "@hjmds/design-contracts/recipes";
 import { forwardRef, } from "react";
 import { classNames } from "./internal.js";
 export const Button = forwardRef(function Button({ tone = buttonRecipe.defaults.tone, size = buttonRecipe.defaults.size, shape = buttonRecipe.defaults.shape, align = buttonRecipe.defaults.align, selected, loading = false, leading, trailing, disabled, onClick, type = "button", className, children, layoutStyle, style, ...props }, ref) {
-    const unavailable = disabled === true || loading;
+    // Preserve a focusable disabled action (e.g. a Carousel boundary).
+    const ariaDisabled = props["aria-disabled"] === true || props["aria-disabled"] === "true";
+    const unavailable = disabled === true || loading || ariaDisabled;
     const handleClick = (event) => {
-        if (loading) {
+        if (unavailable) {
             event.preventDefault();
             event.stopPropagation();
             return;
         }
         onClick?.(event);
     };
-    return (_jsxs("button", { ...props, style: { ...style, ...layoutStyle }, ref: ref, type: type, className: classNames("hjm-button", className), "data-tone": tone, "data-size": size, "data-shape": shape, "data-align": align, ...(selected === undefined ? {} : { "data-selected": selected, "aria-pressed": selected }), "data-state": loading ? "loading" : unavailable ? "disabled" : "idle", "aria-busy": loading || undefined, "aria-disabled": loading || undefined, disabled: disabled, onClick: handleClick, children: [loading ? _jsx("span", { className: "hjm-button__spinner", "aria-hidden": "true" }) : leading, _jsx("span", { className: "hjm-button__label", children: children }), trailing] }));
+    return (_jsxs("button", { ...props, 
+        // The cap lives in the recipe, not in the stylesheet: one number, one place.
+        style: { "--hjm-button-label-lines": buttonRecipe.label.maxLines, ...style, ...layoutStyle }, ref: ref, type: type, className: classNames("hjm-button", className), "data-tone": tone, "data-size": size, "data-shape": shape, "data-align": align, ...(selected === undefined ? {} : { "data-selected": selected, "aria-pressed": selected }), "data-state": loading ? "loading" : unavailable ? "disabled" : "idle", "aria-busy": loading || undefined, "aria-disabled": unavailable || undefined, disabled: disabled, onClick: handleClick, children: [loading ? _jsx("span", { className: "hjm-button__spinner", "aria-hidden": "true" }) : leading, _jsx("span", { className: "hjm-button__label", children: children }), trailing] }));
 });
 export const IconButton = forwardRef(function IconButton({ label, tone = iconButtonRecipe.defaults.tone, size = iconButtonRecipe.defaults.size, shape = iconButtonRecipe.defaults.shape, selected, loading = false, disabled, onClick, type = "button", className, children, layoutStyle, style, ...props }, ref) {
-    const unavailable = disabled === true || loading;
+    // Preserve a focusable disabled action (e.g. a Carousel boundary).
+    const ariaDisabled = props["aria-disabled"] === true || props["aria-disabled"] === "true";
+    const unavailable = disabled === true || loading || ariaDisabled;
     const handleClick = (event) => {
-        if (loading) {
+        if (unavailable) {
             event.preventDefault();
             event.stopPropagation();
             return;
         }
         onClick?.(event);
     };
-    return (_jsx("button", { ...props, style: { ...style, ...layoutStyle }, ref: ref, type: type, className: classNames("hjm-icon-button", className), "data-tone": tone, "data-size": size, "data-shape": shape, ...(selected === undefined ? {} : { "data-selected": selected, "aria-pressed": selected }), "data-state": loading ? "loading" : unavailable ? "disabled" : "idle", "aria-label": label, "aria-busy": loading || undefined, "aria-disabled": loading || undefined, disabled: disabled, onClick: handleClick, children: loading ? _jsx("span", { className: "hjm-button__spinner", "aria-hidden": "true" }) : children }));
+    return (_jsx("button", { ...props, style: { ...style, ...layoutStyle }, ref: ref, type: type, className: classNames("hjm-icon-button", className), "data-tone": tone, "data-size": size, "data-shape": shape, ...(selected === undefined ? {} : { "data-selected": selected, "aria-pressed": selected }), "data-state": loading ? "loading" : unavailable ? "disabled" : "idle", "aria-label": label, "aria-busy": loading || undefined, "aria-disabled": unavailable || undefined, disabled: disabled, onClick: handleClick, children: loading ? _jsx("span", { className: "hjm-button__spinner", "aria-hidden": "true" }) : children }));
 });
 export const Link = forwardRef(function Link({ tone = linkRecipe.defaults.tone, variant = linkRecipe.defaults.variant, disabled = false, leading, trailing, renderAnchor, target, rel, tabIndex, onClick, className, children, ...props }, ref) {
     const handleClick = (event) => {

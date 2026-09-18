@@ -1,7 +1,9 @@
 import type { ThemeColors } from "@hjmds/design-contracts/colors";
 import { control, glyph, radius, spacing } from "@hjmds/design-contracts/foundations";
+import { isLargeTextScale } from "@hjmds/design-contracts/components/design-system-provider";
 import {
   buttonRecipe,
+  resolveButtonLabelLines,
   type ButtonAlign as ContractButtonAlign,
   type ButtonShape as ContractButtonShape,
   type ButtonSize as ContractButtonSize,
@@ -120,6 +122,7 @@ export const Button = forwardRef<NativeView, ButtonProps>(function Button({
   ...props
 }: ButtonProps, ref) {
   const { colors, environment } = useHjmNativeTheme();
+  const labelLines = resolveButtonLabelLines(isLargeTextScale(environment.textScale));
   const inactive = disabled || loading;
   const unavailable = disabled || (loading && disableWhileLoading);
   const content = loading && loadingLabel !== undefined
@@ -188,6 +191,9 @@ export const Button = forwardRef<NativeView, ButtonProps>(function Button({
         <Text
           align={align === "leading" ? "auto" : "center"}
           emphasis="medium"
+          // Wrap up to the recipe's cap instead of the single line RN gives by
+          // default; the cap lifts under large text (buttonRecipe.label).
+          {...(labelLines === null ? {} : { numberOfLines: labelLines })}
           style={[{ color: contentColor }, labelStyle]}
           variant={sizeContract.textVariant}
         >

@@ -1,11 +1,27 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import { useCallback, useEffect, useRef, useState, } from "react";
 import { createPortal } from "react-dom";
+/** Nearest interactive popover, including descendants rendered through another portal. */
+export function getPopoverOwner(node) {
+    const element = node instanceof Element ? node : node?.parentElement;
+    const direct = element?.closest("[data-hjm-popover-content]");
+    if (direct)
+        return direct;
+    const ownerId = element?.closest("[data-hjm-popover-owner]")?.getAttribute("data-hjm-popover-owner");
+    return ownerId ? document.getElementById(ownerId) : null;
+}
 /**
  * Copies the closest provider DOM boundary instead of importing provider
  * runtime code, keeping granular form/overlay entry points lightweight.
  */
 function synchronizePortalEnvironment(host, anchor) {
+    // Modal ownership and non-modal ownership are separate: nested selects/menus
+    // must belong to both, so outside focus does not close their parent popover.
+    const popoverOwner = getPopoverOwner(anchor);
+    if (popoverOwner?.id)
+        host.setAttribute("data-hjm-popover-owner", popoverOwner.id);
+    else
+        host.removeAttribute("data-hjm-popover-owner");
     const source = anchor?.closest("[data-hjm-provider], [data-hjm-portal]") ?? null;
     const directModalOwner = anchor?.closest("[data-hjm-modal-content]") ?? null;
     const inheritedOwnerId = anchor
@@ -102,7 +118,7 @@ function samePosition(previous, next) {
  * The popup flips vertically and shifts horizontally to stay inside the visual
  * viewport, then follows every scroll/resize source that can move either node.
  */
-export function useAnchoredPopup(anchorRef, popup, { align = "start", gap = 8, matchAnchorWidth = false, placement: preferredPlacement = "bottom", viewportPadding = 16, zIndex = 800, } = {}) {
+export function useAnchoredPopup(anchorRef, popup, { align = "start", fallbackAxis = false, gap = 8, matchAnchorWidth = false, placement: preferredPlacement = "bottom", viewportPadding = 16, zIndex = 800, } = {}) {
     const [position, setPosition] = useState(() => ({
         ...hiddenPopupPosition,
         align,
@@ -163,6 +179,12 @@ export function useAnchoredPopup(anchorRef, popup, { align = "start", gap = 8, m
             desiredPopupWidth > availableRight &&
             availableLeft > availableRight)
             physicalPlacement = "left";
+        // A wide form cannot fit beside a centered mobile trigger. Preserve readable
+        // content by trying the block axis; existing compact popup defaults stay unchanged.
+        if (fallbackAxis && (physicalPlacement === "left" || physicalPlacement === "right") &&
+            Math.max(availableLeft, availableRight) < desiredPopupWidth) {
+            physicalPlacement = availableBottom >= availableTop ? "bottom" : "top";
+        }
         const placement = physicalPlacement === "left"
             ? (logicalStartAtLeft ? "start" : "end")
             : physicalPlacement === "right"
@@ -226,6 +248,7 @@ export function useAnchoredPopup(anchorRef, popup, { align = "start", gap = 8, m
     }, [
         align,
         anchorRef,
+        fallbackAxis,
         gap,
         matchAnchorWidth,
         popup,

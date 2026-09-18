@@ -25,6 +25,10 @@ describe("@hjmds/react-native package boundary", () => {
     const expectedExportPaths = [
       ".",
       "./provider",
+      "./carousel",
+      "./floating-action-button",
+      "./top-bar",
+      "./bottom-cta",
       "./composition-style",
       "./primitives",
       "./actions",
@@ -34,6 +38,20 @@ describe("@hjmds/react-native package boundary", () => {
       "./number-field",
       "./slider",
       "./date-picker",
+      "./calendar",
+      "./agreement",
+      "./top",
+      "./heading",
+      "./toggle-group",
+      "./bottom-info",
+      "./collapsible",
+      "./asset",
+      "./tags-input",
+      "./date-range",
+      "./mentions",
+      "./transfer-list",
+      "./keyboard",
+      "./provider-button",
       "./file-picker",
       "./steps",
       "./upload-item",
@@ -45,13 +63,15 @@ describe("@hjmds/react-native package boundary", () => {
       "./evidence",
     ];
     expect(Object.keys(packageJson.exports)).toEqual(expectedExportPaths);
-    const familyTargets = expectedExportPaths.slice(1).map((exportPath) => {
+    const familyTargets = expectedExportPaths.slice(1).filter((path) => path !== "./top-bar" && path !== "./bottom-cta").map((exportPath) => {
       const definition = packageJson.exports[exportPath] as Record<string, string>;
       expect(definition["react-native"]).toMatch(/^\.\/dist\/.+\.js$/);
       expect(definition["react-native"]).not.toBe("./dist/index.js");
       return definition["react-native"];
     });
     expect(new Set(familyTargets).size).toBe(familyTargets.length);
+    expect(packageJson.exports["./top-bar"]).toEqual(packageJson.exports["./navigation"]);
+    expect(packageJson.exports["./bottom-cta"]).toEqual(packageJson.exports["./actions"]);
     expect(packageJson.exports["./number-field"]).toMatchObject({
       types: "./dist/number-field.d.ts",
       "react-native": "./dist/number-field.js",
@@ -77,6 +97,7 @@ describe("@hjmds/react-native package boundary", () => {
         "number-field.tsx",
         "slider.tsx",
         "date-picker.tsx",
+        "calendar.tsx",
         "file-picker.tsx",
         "steps.tsx",
         "upload-item.tsx",
@@ -103,6 +124,7 @@ describe("@hjmds/react-native package boundary", () => {
         "number-field.tsx",
         "slider.tsx",
         "date-picker.tsx",
+        "calendar.tsx",
         "file-picker.tsx",
         "steps.tsx",
         "upload-item.tsx",

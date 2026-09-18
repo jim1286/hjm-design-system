@@ -2,6 +2,11 @@ export { counterBadgeDefaults, formatCounterBadgeCount, type CounterBadgeSize, t
 /** Numeric counters use a compact solid plate, distinct from status badges. */
 export declare const counterBadgeRecipe: {
     readonly slots: readonly ["root", "label"];
+    /**
+     * 숫자 없이 "새것이 있다"만 말하는 점. 0이 아닌 개수를 모르거나 셀 필요가 없는
+     * 자리(탭 배지, 사이드바 항목)에서 숫자를 지어내지 않기 위해 별도 크기로 둔다.
+     */
+    readonly dotSize: 8;
     readonly defaults: {
         readonly tone: "danger";
         readonly size: "medium";

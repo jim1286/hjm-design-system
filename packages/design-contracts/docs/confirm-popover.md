@@ -1,4 +1,4 @@
-# ConfirmPopover — 별도 컴포넌트를 만들지 않는다
+# ConfirmPopover — Popover 위의 확인 조합
 
 ## 문제로 제기된 것
 
@@ -91,3 +91,13 @@ Component Explorer에서 이 문서로 연결한다.
    반복되어, 그 조합 자체(콜백 규약, 포커스 초기값)를 매번 다시 구현하는 비용이
    측정 가능하게 커진다 — 그때는 새 상태 축이 아니라 **Popover 위의 얇은
    합성 헬퍼**(recipe 없이 콜백 배선만 감싸는 유틸리티) 형태를 먼저 검토한다.
+
+## 2026-09-16 작동 예제
+
+React/RN 확장 요청에 따라 `Patterns/Popover/ReversibleConfirmation`을 제공한다.
+`@hjmds/react/popover`의 children 함수에서 `close()`와 HJM Button을 조합한다.
+취소 버튼을 초기 초점으로 지정하고, 보관 후 사라지는 트리거 대신 보관 취소 버튼에
+초점을 보낸다. 보관 취소는 실제 로컬 상태를 복원한다. 외부 서버 요청이나 배포 증거는 아니다.
+
+별도 `ConfirmPopover` renderer/export는 추가하지 않는다. catalog의 composed 항목과
+Popover/AlertDialog 선택 경계는 유지하며, 이 예제를 완성된 조합으로 추적한다.

@@ -1,7 +1,10 @@
 import {
+  designSystemEnvironmentDefaults,
   isLargeTextScale,
+  resolveDensityDefault,
   resolveDesignSystemProviderValue,
   validateDesignSystemProviderValue,
+  type DesignSystemDensity,
   type DesignSystemDirection,
   type DesignSystemProviderValue,
   type DesignSystemTextScale,
@@ -54,6 +57,8 @@ type HjmProviderEnvironmentProps = Readonly<{
   textScale?: DesignSystemTextScale;
   reducedMotion?: boolean;
   minimumVisualTarget?: boolean;
+  /** Default row/menu/table density below this provider; each component's prop wins. */
+  density?: DesignSystemDensity;
   /** Deterministic SSR/test override; otherwise prefers-color-scheme is observed. */
   systemTheme?: ResolvedTheme;
 }>;
@@ -66,6 +71,7 @@ type HjmProviderValueProps = Readonly<{
   textScale?: never;
   reducedMotion?: never;
   minimumVisualTarget?: never;
+  density?: never;
   systemTheme?: never;
 }>;
 
@@ -99,6 +105,7 @@ export const HjmProvider = forwardRef<HTMLDivElement, HjmProviderProps>(
       textScale,
       reducedMotion,
       minimumVisualTarget,
+      density,
       systemTheme,
       host = "surface",
       value: suppliedValue,
@@ -122,6 +129,7 @@ export const HjmProvider = forwardRef<HTMLDivElement, HjmProviderProps>(
       ...(textScale === undefined ? {} : { textScale }),
       ...(reducedMotion === undefined ? {} : { reducedMotion }),
       ...(minimumVisualTarget === undefined ? {} : { minimumVisualTarget }),
+      ...(density === undefined ? {} : { density }),
     };
     const value = suppliedValue ?? resolveDesignSystemProviderValue(input, {
       systemTheme: resolvedSystemTheme,
@@ -208,6 +216,21 @@ export function useHjmTheme(): DesignSystemProviderValue {
 /** Renderer components use the browser default direction when no provider is present. */
 export function useOptionalHjmTheme(): DesignSystemProviderValue | null {
   return useContext(HjmThemeContext);
+}
+
+/**
+ * Resolves the provider's density onto one component's own density vocabulary.
+ * Outside a provider the component's recipe default stands — a global axis must
+ * not make an unwrapped renderer behave differently from a wrapped one at rest.
+ */
+export function useHjmDensityDefault<Comfortable extends string, Compact extends string>(
+  vocabulary: Readonly<{ comfortable: Comfortable; compact: Compact }>,
+): Comfortable | Compact {
+  const theme = useContext(HjmThemeContext);
+  return resolveDensityDefault(
+    theme?.environment.density ?? designSystemEnvironmentDefaults.density,
+    vocabulary,
+  );
 }
 
 /** Internal provider-scoped coordination used by Tooltip renderers. */

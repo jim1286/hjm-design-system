@@ -7,6 +7,8 @@ export type ComponentSurfaceStatus = CatalogComponentSurfaceStatus;
 /** Stable IDs survive display-name and category changes. */
 export declare const componentIds: {
     readonly Text: "text";
+    readonly TextFormat: "text-format";
+    readonly Heading: "heading";
     readonly Icon: "icon";
     readonly Surface: "surface";
     readonly Divider: "divider";
@@ -16,6 +18,7 @@ export declare const componentIds: {
     readonly AspectRatio: "aspect-ratio";
     readonly Grid: "grid";
     readonly Layout: "layout";
+    readonly Top: "top";
     readonly Masonry: "masonry";
     readonly Splitter: "splitter";
     readonly Button: "button";
@@ -23,6 +26,7 @@ export declare const componentIds: {
     readonly Link: "link";
     readonly BottomCTA: "bottom-cta";
     readonly FloatingActionButton: "floating-action-button";
+    readonly AuthProviderButton: "auth-provider-button";
     readonly Field: "field";
     readonly SearchField: "search-field";
     readonly TextArea: "text-area";
@@ -35,16 +39,20 @@ export declare const componentIds: {
     readonly Switch: "switch";
     readonly Chip: "chip";
     readonly SegmentedControl: "segmented-control";
+    readonly ToggleGroup: "toggle-group";
+    readonly TagsInput: "tags-input";
     readonly Slider: "slider";
     readonly NumberField: "number-field";
     readonly Select: "select";
     readonly Combobox: "combobox";
     readonly DatePicker: "date-picker";
+    readonly DateRangePicker: "date-range-picker";
     readonly TimePicker: "time-picker";
     readonly ColorPicker: "color-picker";
     readonly FilePicker: "file-picker";
     readonly Cascader: "cascader";
     readonly Form: "form";
+    readonly Agreement: "agreement";
     readonly Mentions: "mentions";
     readonly Rating: "rating";
     readonly TransferList: "transfer-list";
@@ -52,11 +60,14 @@ export declare const componentIds: {
     readonly UploadItem: "upload-item";
     readonly Tabs: "tabs";
     readonly TopBar: "top-bar";
+    readonly Sidebar: "sidebar";
     readonly BottomNavigation: "bottom-navigation";
     readonly Breadcrumb: "breadcrumb";
     readonly Pagination: "pagination";
     readonly LoadMore: "load-more";
     readonly Steps: "steps";
+    readonly Menubar: "menubar";
+    readonly ContextMenu: "context-menu";
     readonly Menu: "menu";
     readonly Anchor: "anchor";
     readonly Avatar: "avatar";
@@ -66,6 +77,9 @@ export declare const componentIds: {
     readonly List: "list";
     readonly ListRow: "list-row";
     readonly VirtualList: "virtual-list";
+    readonly Collapsible: "collapsible";
+    readonly Asset: "asset";
+    readonly Chart: "chart";
     readonly Accordion: "accordion";
     readonly Statistic: "statistic";
     readonly Timeline: "timeline";
@@ -84,6 +98,7 @@ export declare const componentIds: {
     readonly Spinner: "spinner";
     readonly Skeleton: "skeleton";
     readonly Result: "result";
+    readonly BottomInfo: "bottom-info";
     readonly Toast: "toast";
     readonly Watermark: "watermark";
     readonly Dialog: "dialog";
@@ -99,6 +114,7 @@ export declare const componentIds: {
     readonly BorderBeam: "border-beam";
     readonly DesignSystemProvider: "design-system-provider";
     readonly Utility: "utility";
+    readonly SkipNav: "skip-nav";
     readonly VisuallyHidden: "visually-hidden";
 };
 export type ComponentId = (typeof componentIds)[ComponentName];

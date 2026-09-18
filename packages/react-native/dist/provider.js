@@ -1,9 +1,12 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import { resolveDesignSystemProviderValue, validateDesignSystemProviderValue, } from "@hjmds/design-contracts/components/design-system-provider";
 import { spacing, radius, typography } from "@hjmds/design-contracts/foundations";
-import { createContext, useContext, useEffect, useMemo, useState, } from "react";
-import { AccessibilityInfo, I18nManager, useColorScheme, useWindowDimensions, } from "react-native";
+import { createContext, useContext, useEffect, useMemo, useState, useSyncExternalStore, } from "react";
+import { AccessibilityInfo, I18nManager, Platform, useColorScheme, useWindowDimensions, } from "react-native";
 const HjmNativeThemeContext = createContext(null);
+const subscribeHydration = () => () => undefined;
+const clientSnapshot = () => true;
+const serverSnapshot = () => false;
 function useSystemReducedMotion(observe) {
     // AccessibilityInfo resolves asynchronously. Treat the unknown first frame
     // as reduced motion so a surface never starts an animation before the OS
@@ -39,6 +42,12 @@ function toEnvironmentInput(props) {
 export function HjmNativeProvider({ children, theme, direction, textScale, reducedMotion, minimumVisualTarget, value: suppliedValue, }) {
     const parent = useContext(HjmNativeThemeContext);
     const colorScheme = useColorScheme();
+    // Match Expo web's light server snapshot to avoid stale styles after hydration;
+    // native stays immediate. See README: static-web theme precedence.
+    const isClient = useSyncExternalStore(subscribeHydration, clientSnapshot, serverSnapshot);
+    const systemTheme = colorScheme === "dark" && (Platform.OS !== "web" || isClient)
+        ? "dark"
+        : "light";
     const systemReducedMotion = useSystemReducedMotion(suppliedValue === undefined && reducedMotion === undefined && parent === null);
     const { fontScale: systemTextScale } = useWindowDimensions();
     const environment = useMemo(() => toEnvironmentInput({
@@ -50,7 +59,7 @@ export function HjmNativeProvider({ children, theme, direction, textScale, reduc
     }), [direction, minimumVisualTarget, reducedMotion, textScale, theme]);
     const contextValue = useMemo(() => {
         const resolved = suppliedValue ?? resolveDesignSystemProviderValue(environment, {
-            systemTheme: colorScheme === "dark" ? "dark" : "light",
+            systemTheme,
             systemDirection: I18nManager.isRTL ? "rtl" : "ltr",
             systemTextScale,
             systemReducedMotion,
@@ -69,7 +78,7 @@ export function HjmNativeProvider({ children, theme, direction, textScale, reduc
             },
             tokens: { spacing, radius, typography },
         };
-    }, [colorScheme, environment, parent, suppliedValue, systemReducedMotion, systemTextScale]);
+    }, [environment, parent, suppliedValue, systemReducedMotion, systemTextScale, systemTheme]);
     return _jsx(HjmNativeThemeContext.Provider, { value: contextValue, children: children });
 }
 export function useHjmNativeTheme() {

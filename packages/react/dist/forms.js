@@ -7,7 +7,7 @@ import { forwardRef, useEffect, useId, useLayoutEffect, useRef, useState, } from
 import { composeRefs, classNames, useControllableState } from "./internal.js";
 function FieldFrame({ controlId, label, description, error, descriptionId, errorId, required = false, disabled = false, focused = false, variant = fieldRecipe.defaults.variant, shape = fieldRecipe.defaults.shape, align = fieldRecipe.defaults.align, className, children, ...props }) {
     const state = disabled ? "disabled" : error ? "invalid" : focused ? "focused" : "idle";
-    return (_jsxs("div", { ...props, className: classNames("hjm-field", className), "data-state": state, "data-variant": variant, "data-shape": shape, "data-align": align, children: [label !== undefined && label !== null ? (_jsxs("label", { className: "hjm-field__label", htmlFor: controlId, children: [label, required ? _jsx("span", { "aria-hidden": "true", children: " *" }) : null] })) : null, children, description && !error ? (_jsx("div", { id: descriptionId, className: "hjm-field__description", children: description })) : null, error ? (_jsx("div", { id: errorId, className: "hjm-field__error", children: error })) : null] }));
+    return (_jsxs("div", { ...props, className: classNames("hjm-field", className), "data-state": state, "data-variant": variant, "data-shape": shape, "data-align": align, children: [label !== undefined && label !== null ? (_jsxs("label", { className: "hjm-field__label", htmlFor: controlId, children: [label, required ? _jsx("span", { "aria-hidden": "true", children: " *" }) : null] })) : null, children, description ? (_jsx("div", { id: descriptionId, className: "hjm-field__description", children: description })) : null, error ? (_jsx("div", { id: errorId, className: "hjm-field__error", children: error })) : null] }));
 }
 /** Generic frame for custom native controls; `controlId` keeps the label explicit. */
 export function Field({ controlId, description, error, required = false, disabled = false, children, ...props }) {
@@ -18,11 +18,15 @@ export function Field({ controlId, description, error, required = false, disable
         required,
         disabled,
         ...(error ? { "aria-invalid": true } : {}),
-        ...(error
-            ? { "aria-describedby": errorId }
-            : description
-                ? { "aria-describedby": descriptionId }
-                : {}),
+        // Same merge as the built-in fields: support text stays referenced once an
+        // error appears, so a custom control does not have to re-derive the ids.
+        ...(description || error
+            ? {
+                "aria-describedby": [description ? descriptionId : undefined, error ? errorId : undefined]
+                    .filter(Boolean)
+                    .join(" "),
+            }
+            : {}),
     };
     return (_jsx(FieldFrame, { ...props, controlId: controlId, description: description, error: error, required: required, disabled: disabled, ...(description ? { descriptionId } : {}), ...(error ? { errorId } : {}), children: typeof children === "function" ? children(controlProps) : children }));
 }
@@ -35,8 +39,15 @@ function useFieldIds(id) {
         errorId: `${controlId}-error`,
     };
 }
+/*
+  Support text and the error are both referenced when both exist, in DOM reading
+  order, and the consumer's own `aria-describedby` is kept in front of them.
+  Announcing only the error (the earlier behaviour) dropped the guidance that
+  explains how to fix it — exactly the text a product then duplicated into the
+  error string by hand.
+*/
 function describedBy(own, description, error, descriptionId, errorId) {
-    return [own, error ? errorId : description ? descriptionId : undefined]
+    return [own, description ? descriptionId : undefined, error ? errorId : undefined]
         .filter(Boolean)
         .join(" ") || undefined;
 }

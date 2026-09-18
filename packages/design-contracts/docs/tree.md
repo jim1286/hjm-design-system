@@ -121,3 +121,24 @@ depth/sibling 발화, 화살표 판정, `expandedKeys` 재조정을 그대로 �
 popup/sheet 표면에 얹으면 된다. 새 recipe나 새 상태 축이 필요해 보이지 않으므로, 측정된
 제품 요구가 나오기 전까지는 `src/tree-select.ts`를 만들지 않는다(`docs/dropdown.md`·
 `docs/notification.md`와 같은 판단).
+
+## Web renderer (2026-09-18)
+
+`@hjmds/react/tree`의 `Tree`가 이 계약을 실행한다. catalog는 Web `beta`,
+Native `unsupported`다. 제품 채택·보조기기 실측은 아직 없다.
+
+- **판정은 전부 계약이 한다.** 화살표(`getTreeArrowResult`), 상하·Home/End
+  (`getVisibleTreeNavigationTarget`), 타이핑 검색(`getVisibleTreeTypeaheadMatch`),
+  확장 재조정(`reconcileTreeExpansion`)을 그대로 호출한다. renderer에는 트리 산술이 없다.
+- **중첩 group 대신 aria-level을 쓴 평평한 목록이다.** roving tab stop과 보이는 노드
+  탐색이 모두 resolve 결과 배열 하나 위에서 돌고, WAI-ARIA는 두 형태를 모두 허용한다.
+  들여쓰기는 장식이고 깊이는 항상 발표된다.
+- **tab stop은 트리 전체에 하나다.** 펼침 glyph는 장식이라 행 안에 중첩 컨트롤이 없다.
+  접기로 초점 노드가 사라지면 roving tab stop이 보이는 첫 노드로 되돌아간다.
+- **tri-state 체크는 노드 자체에 실린다.** `checkedStates`(=`resolveTreeCheckedStates`
+  결과)를 주면 행이 `aria-checked`로 true/false/mixed를 말한다. 체크박스를 행 안에 넣으면
+  tab stop 규칙이 깨지므로 넣지 않았다.
+- 로컬 검증: `test/tree.browser.test.tsx` 6개(깊이·형제 위치 발표, 단일 tab stop과 roving,
+  펼침·접힘과 접힌 subtree 건너뛰기, RTL 화살표 반전, disabled의 선택만 차단·타이핑 검색,
+  tri-state 파생과 enabled leaf만의 cascade)와 `Patterns/Tree`.
+

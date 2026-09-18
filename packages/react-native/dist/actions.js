@@ -1,6 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { control, glyph, radius, spacing } from "@hjmds/design-contracts/foundations";
-import { buttonRecipe, } from "@hjmds/design-contracts/recipes/base";
+import { isLargeTextScale } from "@hjmds/design-contracts/components/design-system-provider";
+import { buttonRecipe, resolveButtonLabelLines, } from "@hjmds/design-contracts/recipes/base";
 import { bottomCtaRecipe, iconButtonRecipe, resolveIconButtonPresentation, } from "@hjmds/design-contracts/recipes";
 import { visibleControlHeight } from "@hjmds/design-contracts/components/design-system-provider";
 import { resolveLinkDescriptor, } from "@hjmds/design-contracts/components/link";
@@ -11,6 +12,7 @@ import { useHjmNativeTheme } from "./provider.js";
 import { minimumTargetStyle } from "./internal/styles.js";
 export const Button = forwardRef(function Button({ label, children, tone = buttonRecipe.defaults.tone, size = buttonRecipe.defaults.size, shape = buttonRecipe.defaults.shape, align = buttonRecipe.defaults.align, selected, disabled = false, loading = false, disableWhileLoading = false, growWithContent = false, loadingLabel, leading, trailing, fullWidth = false, hitSlop, layoutStyle, style, labelStyle, renderLoadingIndicator, accessibilityLabel, accessibilityState, onPress, onLongPress, ...props }, ref) {
     const { colors, environment } = useHjmNativeTheme();
+    const labelLines = resolveButtonLabelLines(isLargeTextScale(environment.textScale));
     const inactive = disabled || loading;
     const unavailable = disabled || (loading && disableWhileLoading);
     const content = loading && loadingLabel !== undefined
@@ -56,7 +58,7 @@ export const Button = forwardRef(function Button({ label, children, tone = butto
             layoutStyle,
         ], children: [loading
                 ? renderLoadingIndicator?.({ color: contentColor, size: "small" }) ?? (_jsx(ActivityIndicator, { color: contentColor, size: "small" }))
-                : leading, typeof content === "string" || typeof content === "number" ? (_jsx(Text, { align: align === "leading" ? "auto" : "center", emphasis: "medium", style: [{ color: contentColor }, labelStyle], variant: sizeContract.textVariant, children: content })) : content, trailing] }));
+                : leading, typeof content === "string" || typeof content === "number" ? (_jsx(Text, { align: align === "leading" ? "auto" : "center", emphasis: "medium", ...(labelLines === null ? {} : { numberOfLines: labelLines }), style: [{ color: contentColor }, labelStyle], variant: sizeContract.textVariant, children: content })) : content, trailing] }));
 });
 export const IconButton = forwardRef(function IconButton({ label, accessibilityLabel, children, icon, tone = iconButtonRecipe.defaults.tone, size = iconButtonRecipe.defaults.size, shape = iconButtonRecipe.defaults.shape, selected, disabled = false, loading = false, disableWhileLoading = false, hitSlop, layoutStyle, style, renderLoadingIndicator, onPress, onLongPress, accessibilityState, ...props }, ref) {
     const theme = useHjmNativeTheme();

@@ -1,6 +1,6 @@
 /**
- * Ant Design Carousel's infinite loop and default autoplay are intentionally
- * not reproduced — both remove the one thing this contract treats as
+ * Ant Design Carousel's default infinite loop is intentionally not reproduced;
+ * autoplay remains opt-in in both libraries — automatic movement can obscure what this contract treats as
  * non-negotiable: a reliable answer to "where am I, and where does it end".
  * See docs/carousel.md for the accessibility rationale on every point below.
  */
@@ -109,7 +109,7 @@ export declare const carouselBehavior: {
     readonly web: {
         readonly roles: readonly ["region", "group"];
         readonly keyboard: readonly ["Tab", "Enter", "Space", "ArrowLeft", "ArrowRight"];
-        readonly focus: "roving";
+        readonly focus: "native";
     };
     readonly native: {
         readonly roles: readonly ["adjustable"];

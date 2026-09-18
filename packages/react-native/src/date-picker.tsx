@@ -1,10 +1,8 @@
 import {
-  calendarRecipe,
   type ComposeCalendarAccessibleName,
   type ResolvedCalendarDateCell,
 } from "@hjmds/design-contracts/components/calendar";
 import {
-  resolveDatePickerGrid,
   resolveDatePickerTriggerText,
   validateDatePickerDescriptor,
   type DatePickerDescriptor,
@@ -14,6 +12,7 @@ import {
 import { useRef, useState, type ReactNode } from "react";
 import { Pressable, View, type StyleProp, type ViewStyle } from "react-native";
 
+import { Calendar } from "./calendar.js";
 import { minimumTargetStyle } from "./internal/styles.js";
 import { Sheet } from "./overlays.js";
 import { Text } from "./primitives.js";
@@ -59,23 +58,25 @@ export function DatePicker<Content>({
   const controlledSelection = descriptor.selectedDate !== undefined;
   const [internalSelection, setInternalSelection] = useState(descriptor.defaultSelectedDate ?? null);
   const selectedDate = controlledSelection ? descriptor.selectedDate ?? null : internalSelection;
-  const cells = resolveDatePickerGrid(
-    { ...descriptor, selectedDate } as DatePickerDescriptor<Content>,
-    { composeAccessibleName },
-  );
   const returnFocusRef = useRef<View>(null);
   const requestOpen = (next: boolean, reason: DatePickerOpenChangeReason) => {
     if (!controlledOpen) setInternalOpen(next);
     descriptor.onOpenChange?.(next, reason);
   };
   const commit = (date: string | null, reason: "activate" | "clear") => {
+    // A controlled open field can become read-only while its grid remains mounted.
+    if (descriptor.disabled || descriptor.readOnly) return;
     if (!controlledSelection) setInternalSelection(date);
     descriptor.onSelectionChange?.(date, reason);
     requestOpen(false, reason === "activate" ? "selection" : "clear");
   };
+  // The outer field owns selection; the shared grid receives only its resolved controlled value.
+  const { defaultSelectedDate: _defaultSelectedDate, ...calendarDescriptor } = descriptor;
+  const calendarGrid = descriptor.disabled || descriptor.readOnly
+    ? { ...descriptor.grid, cells: descriptor.grid.cells.map((cell) => cell.date ? { ...cell, disabled: true } : cell) }
+    : descriptor.grid;
   const label = descriptor.label ?? descriptor.accessibilityLabel;
   const triggerText = resolveDatePickerTriggerText(descriptor);
-  const sizeMetrics = calendarRecipe.sizes[size];
   return (
     <View style={[{ gap: 6 }, style]}>
       {descriptor.label === undefined ? null : <Text emphasis="strong" variant="label">{descriptor.label}</Text>}
@@ -105,38 +106,12 @@ export function DatePicker<Content>({
         onOpenChange={(next) => { if (!next) requestOpen(false, "outside"); }}
         open={open}
         returnFocusRef={returnFocusRef}
-        title={monthLabel}
+        title={label}
       >
-        <View style={{ gap: 8 }}>
-          <View style={{ alignItems: "center", flexDirection: "row", gap: 4 }}>
-            {previousMonth === undefined ? <View accessible={false} style={minimumTargetStyle} /> : <Pressable accessibilityLabel={previousMonth.label} accessibilityRole="button" onPress={() => descriptor.onFocusedMonthChange?.(previousMonth.month, "previous")} style={({ pressed }) => [minimumTargetStyle, { alignItems: "center", justifyContent: "center", opacity: pressed ? 0.72 : 1 }]}><Text>‹</Text></Pressable>}
-            <Text align="center" emphasis="strong" style={{ flex: 1 }} variant="title">{monthLabel}</Text>
-            {nextMonth === undefined ? <View accessible={false} style={minimumTargetStyle} /> : <Pressable accessibilityLabel={nextMonth.label} accessibilityRole="button" onPress={() => descriptor.onFocusedMonthChange?.(nextMonth.month, "next")} style={({ pressed }) => [minimumTargetStyle, { alignItems: "center", justifyContent: "center", opacity: pressed ? 0.72 : 1 }]}><Text>›</Text></Pressable>}
-          </View>
-          <View accessible={false} style={{ flexDirection: "row" }}>
-            {descriptor.grid.weekdayLabels.map((weekday, index) => <Text align="center" key={`${weekday}-${index}`} style={{ flex: 1 }} tone="muted" variant="label">{weekday}</Text>)}
-          </View>
-          {Array.from({ length: cells.length / 7 }, (_, row) => (
-            <View key={row} style={{ flexDirection: "row" }}>
-              {cells.slice(row * 7, row * 7 + 7).map((cell, column) => "filler" in cell ? (
-                <View accessible={false} key={`filler-${row}-${column}`} style={{ flex: 1, height: sizeMetrics.cellDiameter }} />
-              ) : (
-                <View key={cell.date} style={{ alignItems: "center", flex: 1 }}>
-                  <Pressable
-                    accessibilityLabel={cell.accessibleName}
-                    accessibilityRole="button"
-                    accessibilityState={{ disabled: !cell.selectable, selected: cell.isSelected }}
-                    onPress={() => cell.selectable && commit(cell.date, "activate")}
-                    style={({ pressed }) => ({ alignItems: "center", backgroundColor: cell.isSelected ? colors.primary : "transparent", borderColor: cell.isToday ? colors.contentBrand : "transparent", borderRadius: sizeMetrics.cellDiameter / 2, borderWidth: cell.isToday ? 1 : 0, height: sizeMetrics.cellDiameter, justifyContent: "center", opacity: !cell.selectable ? 0.4 : cell.outsideFocusedMonth ? 0.56 : pressed ? 0.72 : 1, width: sizeMetrics.cellDiameter })}
-                  >
-                    <Text align="center" style={{ color: cell.isSelected ? colors.onPrimary : colors.textBody }}>{Number(cell.date.slice(-2))}</Text>
-                    {renderCellContent?.(cell)}
-                  </Pressable>
-                </View>
-              ))}
-            </View>
-          ))}
-        </View>
+        <Calendar descriptor={{ ...calendarDescriptor, grid: calendarGrid, monthLabel, selectedDate, onSelectionChange: (date) => commit(date, "activate") }}
+          composeAccessibleName={composeAccessibleName} size={size}
+          {...(previousMonth ? { previousMonth } : {})} {...(nextMonth ? { nextMonth } : {})}
+          {...(renderCellContent ? { renderCellContent } : {})} />
       </Sheet>
     </View>
   );

@@ -11,4 +11,5 @@ export const AppProvider: Story = componentStory("AppProvider");
 export const BorderBeam: Story = componentStory("BorderBeam");
 export const DesignSystemProvider: Story = componentStory("DesignSystemProvider");
 export const Utility: Story = componentStory("Utility");
+export const SkipNav: Story = componentStory("SkipNav");
 export const VisuallyHidden: Story = componentStory("VisuallyHidden");

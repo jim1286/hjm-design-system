@@ -77,3 +77,25 @@
 
 **검증 화면.** 아직 실제 제품 vertical slice가 없다 — catalog는 `planned`으로
 남고, `beta` 승격은 로드맵 gate(실제 화면 검증)를 통과한 뒤 리드가 진행한다.
+
+## Web renderer (2026-09-18)
+
+`@hjmds/react/data-table`의 `DataTable`이 이 계약을 실행한다. catalog는 Web `beta`,
+Native `unsupported`다.
+
+- **기존 `Table`과 겹치지 않는다.** `@hjmds/react`의 `Table`(advanced-display)은 열·행을
+  그려 주는 표시용이고 선택·tri-state·async 상태·정렬 상태 순환이 없다. DataTable은 그
+  상호작용 계약을 실행하는 쪽이다. 단순 표는 계속 `Table`을 쓴다 — 같은 화면에 둘을 겹쳐
+  쓰지 않는다.
+- **정렬 버튼은 header 안에 있다.** `th` 자체를 버튼으로 만들지 않고, 방향은
+  `aria-sort`에 그대로 흘린다. 다음 상태는 `getNextDataTableSortState`가 정하고 실제 정렬은
+  제품이 한다.
+- **선택은 공용 collection 모델 그대로다.** multiple은 checkbox, single은 radio 의미를
+  쓰고, 머리글의 tri-state는 `resolveDataTableSelectAllState`가 파생한다. disabled 행은
+  분모·분자 양쪽에서 빠진다.
+- **셀 하나에 focusable 컨트롤은 최대 하나다.** roving tabindex grid 탐색을 도입하지 않고
+  기본 tab 순서를 쓴다.
+- **페이지네이션은 표 아래에 조합한다.** `footer` slot은 제품이 채우고 표가 소유하지 않는다.
+- 로컬 검증: `test/data-table.browser.test.tsx` 5개(header 안 정렬 버튼과 aria-sort 3단계,
+  tri-state 선택과 disabled 제외, 단일 선택 radio 의미, 셀당 컨트롤 하나와 기본 tab 순서,
+  async 상태 발표와 footer 조합)와 `Patterns/CommandPalette`의 표 화면.

@@ -64,16 +64,26 @@ const budgets = [
     forbiddenModules: metadataModules,
   },
   {
+    exportPath: "./formatters",
+    // Intl wrappers only: no recipe, no catalog, no other contract module.
+    maxModules: 1,
+    maxRawBytes: 9_000,
+    maxGzipBytes: 3_000,
+    forbiddenModules: metadataModules,
+  },
+  {
     exportPath: "./recipes",
     // The public recipe facade fans out to deliberately small recipe modules;
     // byte budgets keep that split from becoming a size regression.
-    maxModules: 14,
+    // P1에서 Heading·ToggleGroup·TagsInput recipe가 이 facade에 붙었다.
+    // 측정 81.6 kB raw / 18.6 kB gzip, module 12 -> 15. 새 의존성은 없다.
+    maxModules: 15,
     // 1.0.3: raw 80_000 -> 81_000, gzip 18_000 -> 18_200. `largeTextThreshold`를
     // foundations에 선언하고 두 레시피가 그 이름을 읽게 하면서(#20) raw 79.8 -> 80.3 kB,
     // gzip 17.9 -> 18.0 kB가 됐다. module 수는 12로 그대로 — 새 import 경로가 아니라
     // 선언과 근거 주석의 바이트다. 다시 올릴 때는 module 수부터 확인한다.
-    maxRawBytes: 81_000,
-    maxGzipBytes: 18_200,
+    maxRawBytes: 86_000,
+    maxGzipBytes: 19_500,
     forbiddenModules: metadataModules,
   },
   {
@@ -112,48 +122,140 @@ const budgets = [
     forbiddenModules: metadataModules,
   },
   {
+    // 토큰 계약만 있는 진입점이다 — 렌더러가 없으므로 그래프가 색 상수와 foundations뿐이다.
+    exportPath: "./dataviz",
+    maxModules: 4,
+    maxRawBytes: 16_000,
+    maxGzipBytes: 6_200,
+    forbiddenModules: metadataModules,
+  },
+  {
     exportPath: "./recipes/all",
-    maxModules: 49,
-    maxRawBytes: 365_000,
-    maxGzipBytes: 85_000,
+    // Anchor adds one isolated contract module; no added library dependency.
+    // 2026-09-18 P0: Agreement·Top·AuthProviderButton 세 계약 모듈이 그래프에 들어왔다.
+    // 셋 다 기존 helper(selection-helpers·foundations·base-recipes)만 재사용하고 외부
+    // 의존성은 없다. 모듈 증가분이 곧 새 계약 파일 수이고, 바이트 증가분은 그 파일들과
+    // catalog 문구다.
+    // 2026-09-18 P1: Heading·ToggleGroup·TagsInput 세 계약 모듈이 더해졌다. 셋 다
+    // 기존 helper만 재사용하고 외부 의존성은 없다 — 증가분이 곧 새 파일 수다.
+    // P1-c(SkipNav·BottomInfo·Sidebar) 세 모듈 추가. 외부 의존성 없음.
+    // P2(text-formats) 한 모듈 추가.
+    // P2-b(collapsible·context-menu·menubar) 세 모듈 추가. 셋 다 기존 helper만
+    // 재사용하고 외부 의존성은 없다 — 증가분이 곧 새 계약 파일 수와 catalog 문구다.
+    // P2-c(asset) 한 모듈, dataviz 한 모듈 추가. 외부 의존성 없이 기존 foundations·
+    // semantic-colors만 재사용한다 — 증가분이 곧 두 계약 파일과 catalog 문구다.
+    maxModules: 63,
+    maxRawBytes: 336_000,
+    maxGzipBytes: 83_000,
   },
   {
     exportPath: "./behaviors",
-    maxModules: 40,
-    maxRawBytes: 330_000,
-    maxGzipBytes: 76_000,
+    // Anchor adds one isolated contract module; no added library dependency.
+    // 2026-09-18 P0: Agreement·Top·AuthProviderButton 세 계약 모듈이 그래프에 들어왔다.
+    // 셋 다 기존 helper(selection-helpers·foundations·base-recipes)만 재사용하고 외부
+    // 의존성은 없다. 모듈 증가분이 곧 새 계약 파일 수이고, 바이트 증가분은 그 파일들과
+    // catalog 문구다.
+    // 2026-09-18 P1: Heading·ToggleGroup·TagsInput 세 계약 모듈이 더해졌다. 셋 다
+    // 기존 helper만 재사용하고 외부 의존성은 없다 — 증가분이 곧 새 파일 수다.
+    // P1-c(SkipNav·BottomInfo·Sidebar) 세 모듈 추가. 외부 의존성 없음.
+    // P1-d(native-platform·date-range) 두 모듈 추가. 측정 319.0/79.3 kB.
+    // P2(text-formats) 한 모듈 추가.
+    // P2-b(collapsible·context-menu·menubar) 세 모듈 추가. 셋 다 기존 helper만
+    // 재사용하고 외부 의존성은 없다 — 증가분이 곧 새 계약 파일 수와 catalog 문구다.
+    // P2-c(asset) 한 모듈, dataviz 한 모듈 추가. 외부 의존성 없이 기존 foundations·
+    // semantic-colors만 재사용한다 — 증가분이 곧 두 계약 파일과 catalog 문구다.
+    maxModules: 58,
+    maxRawBytes: 336_000,
+    maxGzipBytes: 85_000,
   },
   {
     exportPath: "./catalog",
-    maxModules: 53,
-    maxRawBytes: 390_000,
-    maxGzipBytes: 92_000,
+    // Anchor adds one isolated contract module; no added library dependency.
+    // 2026-09-18 P0: Agreement·Top·AuthProviderButton 세 계약 모듈이 그래프에 들어왔다.
+    // 셋 다 기존 helper(selection-helpers·foundations·base-recipes)만 재사용하고 외부
+    // 의존성은 없다. 모듈 증가분이 곧 새 계약 파일 수이고, 바이트 증가분은 그 파일들과
+    // catalog 문구다.
+    // 2026-09-18 P1: Heading·ToggleGroup·TagsInput 세 계약 모듈이 더해졌다. 셋 다
+    // 기존 helper만 재사용하고 외부 의존성은 없다 — 증가분이 곧 새 파일 수다.
+    // P1-c(SkipNav·BottomInfo·Sidebar) 세 모듈 추가. 외부 의존성 없음.
+    // P2(text-formats) 한 모듈 추가.
+    // P2-b(collapsible·context-menu·menubar) 세 모듈 추가. 셋 다 기존 helper만
+    // 재사용하고 외부 의존성은 없다 — 증가분이 곧 새 계약 파일 수와 catalog 문구다.
+    // P2-c(asset) 한 모듈, dataviz 한 모듈 추가. 외부 의존성 없이 기존 foundations·
+    // semantic-colors만 재사용한다 — 증가분이 곧 두 계약 파일과 catalog 문구다.
+    maxModules: 67,
+    maxRawBytes: 389_000,
+    maxGzipBytes: 96_000,
   },
   {
     exportPath: "./showcase",
-    maxModules: 54,
-    maxRawBytes: 390_000,
-    maxGzipBytes: 92_000,
+    // Anchor adds one isolated contract module; no added library dependency.
+    // 2026-09-18 P0: Agreement·Top·AuthProviderButton 세 계약 모듈이 그래프에 들어왔다.
+    // 셋 다 기존 helper(selection-helpers·foundations·base-recipes)만 재사용하고 외부
+    // 의존성은 없다. 모듈 증가분이 곧 새 계약 파일 수이고, 바이트 증가분은 그 파일들과
+    // catalog 문구다.
+    // 2026-09-18 P1: Heading·ToggleGroup·TagsInput 세 계약 모듈이 더해졌다. 셋 다
+    // 기존 helper만 재사용하고 외부 의존성은 없다 — 증가분이 곧 새 파일 수다.
+    // P1-c(SkipNav·BottomInfo·Sidebar) 세 모듈 추가. 외부 의존성 없음.
+    // P2(text-formats) 한 모듈 추가.
+    // P2-b(collapsible·context-menu·menubar) 세 모듈 추가. 셋 다 기존 helper만
+    // 재사용하고 외부 의존성은 없다 — 증가분이 곧 새 계약 파일 수와 catalog 문구다.
+    // P2-c(asset) 한 모듈, dataviz 한 모듈 추가. 외부 의존성 없이 기존 foundations·
+    // semantic-colors만 재사용한다 — 증가분이 곧 두 계약 파일과 catalog 문구다.
+    maxModules: 68,
+    maxRawBytes: 397_000,
+    maxGzipBytes: 98_000,
   },
   {
     exportPath: "./evidence",
-    maxModules: 56,
-    maxRawBytes: 400_000,
-    maxGzipBytes: 95_000,
+    // Anchor adds one isolated contract module; no added library dependency.
+    // 2026-09-18 P0: Agreement·Top·AuthProviderButton 세 계약 모듈이 그래프에 들어왔다.
+    // 셋 다 기존 helper(selection-helpers·foundations·base-recipes)만 재사용하고 외부
+    // 의존성은 없다. 모듈 증가분이 곧 새 계약 파일 수이고, 바이트 증가분은 그 파일들과
+    // catalog 문구다.
+    // 2026-09-18 P1: Heading·ToggleGroup·TagsInput 세 계약 모듈이 더해졌다. 셋 다
+    // 기존 helper만 재사용하고 외부 의존성은 없다 — 증가분이 곧 새 파일 수다.
+    // P1-c(SkipNav·BottomInfo·Sidebar) 세 모듈 추가. 외부 의존성 없음.
+    // P2(text-formats) 한 모듈 추가.
+    // P2-b(collapsible·context-menu·menubar) 세 모듈 추가. 셋 다 기존 helper만
+    // 재사용하고 외부 의존성은 없다 — 증가분이 곧 새 계약 파일 수와 catalog 문구다.
+    // P2-c(asset) 한 모듈, dataviz 한 모듈 추가. 외부 의존성 없이 기존 foundations·
+    // semantic-colors만 재사용한다 — 증가분이 곧 두 계약 파일과 catalog 문구다.
+    maxModules: 70,
+    maxRawBytes: 403_000,
+    maxGzipBytes: 100_000,
   },
   {
     exportPath: ".",
     // The compatibility root intentionally reaches every contract. Granular
     // consumers are guarded separately below, so module splitting may raise
     // this count without increasing the root byte graph.
-    maxModules: 70,
+    // Anchor adds one isolated contract module; no added library dependency.
+    // P0 세 계약 모듈로 71 -> 74, P1 세 모듈로 77. 측정 506.4 kB raw / 121.2 kB gzip.
+    // P1-c로 80, formatters로 81, P1-d로 83. 측정 530.2 kB raw / 128.4 kB gzip.
+    // P2로 84. 측정 533.0 kB raw / 129.3 kB gzip.
+    // P2-b(collapsible·context-menu·menubar)로 87. 측정 544.4 kB raw / 132.8 kB gzip —
+    // gzip은 기존 한도(133 kB) 안이라 그대로 둔다.
+    // P2-c(asset·dataviz)로 89. 측정 553.4 kB raw / 136.3 kB gzip.
+    maxModules: 89,
     // 0.9.13에서 470_000/110_000을 올렸다. 증가분은 recipe의 근거 주석이며 tsc는
     // 주석을 dist에 그대로 싣는다. maxModules가 70으로 그대로라는 점이 import
     // 그래프가 늘지 않았다는 근거다. 이 한도를 다시 올릴 때는 module 수가 함께
     // 늘었는지 먼저 본다 — 그때는 주석이 아니라 새 의존 경로가 원인이다.
     // 1.0.3에서 472_000 -> 473_000. 위와 같은 선언·주석이고 maxModules는 70 그대로다.
-    maxRawBytes: 473_000,
-    maxGzipBytes: 111_000,
+    // 1.2 completion: Web screen-chrome maturity/rationale adds catalog text;
+    // measured 473.1 kB with the same 70 modules. No new runtime dependency.
+    // Anchor contract and navigation catalog updates: measured 476.4 kB raw / 111.8 kB gzip.
+    maxRawBytes: 556_000,
+    // Calendar/composition evidence adds catalog copy; the root remains 70 modules
+    // (473.6 kB raw / 111.0 kB gzip). Keep granular runtime budgets unchanged.
+    // Popover 묶음에서 111.8 -> 112.3 kB gzip. 모듈별로 재면 catalog.js +522 B(Popover·
+    // ConfirmPopover maturity 문구), 나머지 190 B이고 maxModules는 Anchor 때의 71 그대로다.
+    // 새 import 경로가 아니라 계약 데이터 문구 증가이므로 한도를 올린다(476.5 kB raw 측정).
+    // 이후 SidePanel·Splitter·Tour·Tree·TransferList·Mentions·CommandPalette·DataTable의
+    // maturity 문구가 더해져 113.1 kB gzip / 478.4 kB raw. 여전히 maxModules는 71이다 —
+    // 계약 모듈은 전부 이미 그래프 안에 있었고 이번에 늘어난 것은 catalog 문구뿐이다.
+    maxGzipBytes: 137_000,
   },
 ];
 

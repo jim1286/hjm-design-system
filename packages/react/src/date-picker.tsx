@@ -1,11 +1,8 @@
 import {
-  getCalendarNavigationIntent,
-  getCalendarNavigationTarget,
   type ComposeCalendarAccessibleName,
   type ResolvedCalendarDateCell,
 } from "@hjmds/design-contracts/components/calendar";
 import {
-  resolveDatePickerGrid,
   resolveDatePickerTriggerText,
   validateDatePickerDescriptor,
   type DatePickerDescriptor,
@@ -17,12 +14,11 @@ import {
   useId,
   useRef,
   useState,
-  type KeyboardEvent,
   type ReactNode,
 } from "react";
 
+import { Calendar, type CalendarOverflow, type CalendarHandle } from "./calendar.js";
 import { classNames } from "./internal.js";
-import { useOptionalHjmTheme } from "./provider.js";
 
 export type DatePickerMonthAction = Readonly<{ month: string; label: string }>;
 
@@ -37,6 +33,7 @@ export type DatePickerProps<Content = unknown> = Readonly<{
   size?: DatePickerSize;
   description?: ReactNode;
   error?: ReactNode;
+  onNavigateBeyondGrid?: (detail: CalendarOverflow, focusDate: CalendarHandle["focusDate"]) => void;
   renderCellContent?: (cell: ResolvedCalendarDateCell<Content>) => ReactNode;
   className?: string;
 }>;
@@ -54,10 +51,10 @@ export function DatePicker<Content>({
   description,
   error,
   renderCellContent,
+  onNavigateBeyondGrid,
   className,
 }: DatePickerProps<Content>) {
   validateDatePickerDescriptor(descriptor);
-  const theme = useOptionalHjmTheme();
   const generatedId = useId().replaceAll(":", "");
   const dialogId = `hjm-date-picker-${generatedId}`;
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -70,16 +67,14 @@ export function DatePicker<Content>({
     descriptor.defaultSelectedDate ?? null,
   );
   const selectedDate = controlledSelection ? descriptor.selectedDate ?? null : internalSelection;
-  const gridDescriptor = { ...descriptor, selectedDate } as DatePickerDescriptor<Content>;
-  const cells = resolveDatePickerGrid(gridDescriptor, { composeAccessibleName });
-  const firstDate = cells.find((cell): cell is ResolvedCalendarDateCell<Content> => !("filler" in cell));
-  const [focusedDate, setFocusedDate] = useState(selectedDate ?? firstDate?.date ?? "");
 
   const requestOpen = (next: boolean, reason: DatePickerOpenChangeReason) => {
     if (!controlledOpen) setInternalOpen(next);
     descriptor.onOpenChange?.(next, reason);
   };
   const commit = (date: string | null, reason: "activate" | "clear") => {
+    // A controlled open field can become read-only while its grid remains mounted.
+    if (descriptor.disabled || descriptor.readOnly) return;
     if (!controlledSelection) setInternalSelection(date);
     descriptor.onSelectionChange?.(date, reason);
     requestOpen(false, reason === "activate" ? "selection" : "clear");
@@ -93,10 +88,6 @@ export function DatePicker<Content>({
       if (wasOpen) triggerRef.current?.focus();
       return;
     }
-    setFocusedDate(selectedDate ?? firstDate?.date ?? "");
-    const frame = requestAnimationFrame(() => {
-      dialogRef.current?.querySelector<HTMLElement>("[data-focus-date='true']")?.focus();
-    });
     const outside = (event: PointerEvent) => {
       const target = event.target as Node;
       if (!dialogRef.current?.contains(target) && !triggerRef.current?.contains(target)) {
@@ -105,30 +96,15 @@ export function DatePicker<Content>({
     };
     document.addEventListener("pointerdown", outside);
     return () => {
-      cancelAnimationFrame(frame);
       document.removeEventListener("pointerdown", outside);
     };
   }, [open]);
 
-  const handleGridKey = (event: KeyboardEvent<HTMLButtonElement>, date: string) => {
-    if (event.key === "Escape") {
-      event.preventDefault();
-      requestOpen(false, "escape");
-      return;
-    }
-    const intent = getCalendarNavigationIntent(
-      event.key as Parameters<typeof getCalendarNavigationIntent>[0],
-      theme?.environment.direction ?? "ltr",
-    );
-    if (!intent) return;
-    event.preventDefault();
-    const target = getCalendarNavigationTarget(descriptor.grid, date, intent);
-    if ("date" in target && target.date) {
-      setFocusedDate(target.date);
-      queueMicrotask(() => dialogRef.current?.querySelector<HTMLElement>(`[data-date='${target.date}']`)?.focus());
-    }
-  };
-
+  // The outer field owns selection; the shared grid receives only its resolved controlled value.
+  const { defaultSelectedDate: _defaultSelectedDate, ...calendarDescriptor } = descriptor;
+  const calendarGrid = descriptor.disabled || descriptor.readOnly
+    ? { ...descriptor.grid, cells: descriptor.grid.cells.map((cell) => cell.date ? { ...cell, disabled: true } : cell) }
+    : descriptor.grid;
   const label = descriptor.label ?? descriptor.accessibilityLabel;
   const triggerText = resolveDatePickerTriggerText(descriptor);
   return (
@@ -153,46 +129,12 @@ export function DatePicker<Content>({
           <button aria-label={clearLabel} className="hjm-date-picker__clear" disabled={descriptor.disabled || descriptor.readOnly} onClick={() => commit(null, "clear")} type="button">×</button>
         )}
         {open ? (
-          <div aria-label={label} className="hjm-date-picker__popover" id={dialogId} ref={dialogRef} role="dialog">
-            <header className="hjm-date-picker__calendar-header">
-              {previousMonth ? <button aria-label={previousMonth.label} onClick={() => descriptor.onFocusedMonthChange?.(previousMonth.month, "previous")} type="button">‹</button> : <span aria-hidden="true" />}
-              <strong>{monthLabel}</strong>
-              {nextMonth ? <button aria-label={nextMonth.label} onClick={() => descriptor.onFocusedMonthChange?.(nextMonth.month, "next")} type="button">›</button> : <span aria-hidden="true" />}
-              <button aria-label={closeLabel} onClick={() => requestOpen(false, "trigger")} type="button">×</button>
-            </header>
-            <div className="hjm-date-picker__weekdays" aria-hidden="true">
-              {descriptor.grid.weekdayLabels.map((weekday, index) => <span key={`${weekday}-${index}`}>{weekday}</span>)}
-            </div>
-            <div aria-label={monthLabel} className="hjm-date-picker__grid" role="grid">
-              {Array.from({ length: cells.length / 7 }, (_, row) => (
-                <div className="hjm-date-picker__week" key={row} role="row">
-                  {cells.slice(row * 7, row * 7 + 7).map((cell, column) => "filler" in cell ? (
-                    <span aria-hidden="true" className="hjm-date-picker__day" key={`filler-${row}-${column}`} role="gridcell" />
-                  ) : (
-                    <button
-                      aria-label={cell.accessibleName}
-                      aria-selected={cell.isSelected}
-                      className="hjm-date-picker__day"
-                      data-date={cell.date}
-                      data-disabled={!cell.selectable || undefined}
-                      data-focus-date={cell.date === focusedDate || undefined}
-                      data-outside={cell.outsideFocusedMonth || undefined}
-                      data-selected={cell.isSelected || undefined}
-                      data-today={cell.isToday || undefined}
-                      key={cell.date}
-                      onClick={() => cell.selectable && commit(cell.date, "activate")}
-                      onKeyDown={(event) => handleGridKey(event, cell.date)}
-                      role="gridcell"
-                      tabIndex={cell.date === focusedDate ? 0 : -1}
-                      type="button"
-                    >
-                      <span>{Number(cell.date.slice(-2))}</span>
-                      {renderCellContent?.(cell)}
-                    </button>
-                  ))}
-                </div>
-              ))}
-            </div>
+          <div aria-label={label} className="hjm-date-picker__popover" id={dialogId} ref={dialogRef} role="dialog" onKeyDown={(event) => { if (event.key === "Escape") { event.preventDefault(); requestOpen(false, "escape"); } }}>
+            <button aria-label={closeLabel} className="hjm-date-picker__calendar-close" onClick={() => requestOpen(false, "trigger")} type="button">×</button>
+            <Calendar descriptor={{ ...calendarDescriptor, grid: calendarGrid, monthLabel, selectedDate, onSelectionChange: (date) => commit(date, "activate") }}
+              composeAccessibleName={composeAccessibleName} size={size} autoFocus
+              {...(previousMonth ? { previousMonth } : {})} {...(nextMonth ? { nextMonth } : {})}
+              {...(renderCellContent ? { renderCellContent } : {})} {...(onNavigateBeyondGrid ? { onNavigateBeyondGrid } : {})} />
           </div>
         ) : null}
       </div>

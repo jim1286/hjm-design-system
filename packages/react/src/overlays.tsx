@@ -1,4 +1,3 @@
-import { isLargeTextScale } from "@hjmds/design-contracts/components/design-system-provider";
 import {
   createAlertDialogSession,
   getAlertDialogInitialFocus,
@@ -10,7 +9,9 @@ import {
 } from "@hjmds/design-contracts/components/alert-dialog";
 import {
   createSheetLifecycle,
+  resolveNextSheetDetent,
   sheetBehaviorDefaults,
+  type SheetDetent,
   type SheetDismissPolicy,
   type SheetDismissReason,
   type SheetOpenChangeDetails,
@@ -41,438 +42,26 @@ import {
   useRef,
   useState,
   useSyncExternalStore,
-  type AriaAttributes,
   type KeyboardEvent as ReactKeyboardEvent,
-  type MouseEventHandler,
-  type ReactElement,
   type ReactNode,
-  type Ref,
 } from "react";
-import { createPortal } from "react-dom";
 import { Button } from "./actions.js";
 import { classNames, composeRefs, useControllableState } from "./internal.js";
+import { AnchoredPortal, useAnchoredPopup } from "./portal.js";
+import { useHjmDensityDefault, useTooltipCoordinator } from "./provider.js";
 import {
-  AnchoredPortal,
-  useAnchoredPopup,
-} from "./portal.js";
-import { useOptionalHjmTheme, useTooltipCoordinator } from "./provider.js";
-import { createHjmThemeStyle } from "./theme.js";
+  containsEventTarget,
+  getModalLayer,
+  HjmPortal,
+  renderTrigger,
+  useModalFocus,
+  useOpenState,
+  type ModalOpenState,
+  type OpenState,
+  type OverlayTrigger,
+} from "./modal.js";
 
-type TriggerElementProps = Readonly<{
-  ref?: Ref<HTMLElement>;
-  disabled?: boolean;
-  onClick?: MouseEventHandler<HTMLElement>;
-  onMouseEnter?: MouseEventHandler<HTMLElement>;
-  onMouseLeave?: MouseEventHandler<HTMLElement>;
-  onPointerEnter?: React.PointerEventHandler<HTMLElement>;
-  onPointerLeave?: React.PointerEventHandler<HTMLElement>;
-  onFocus?: React.FocusEventHandler<HTMLElement>;
-  onBlur?: React.FocusEventHandler<HTMLElement>;
-  onKeyDown?: React.KeyboardEventHandler<HTMLElement>;
-  "aria-controls"?: string;
-  "aria-describedby"?: string;
-  "aria-disabled"?: AriaAttributes["aria-disabled"];
-  "aria-expanded"?: AriaAttributes["aria-expanded"];
-  "aria-haspopup"?: AriaAttributes["aria-haspopup"];
-}>;
-
-export type OverlayTrigger = ReactElement<TriggerElementProps>;
-
-function containsEventTarget(
-  container: Node | null,
-  target: EventTarget | null,
-): boolean {
-  return target !== null &&
-    "nodeType" in target &&
-    container?.contains(target as Node) === true;
-}
-
-type ModalPortalProps = Readonly<{
-  children: ReactNode;
-  container?: HTMLElement;
-}>;
-
-function HjmPortal({ children, container }: ModalPortalProps) {
-  const [mounted, setMounted] = useState(false);
-  const theme = useOptionalHjmTheme();
-  useEffect(() => setMounted(true), []);
-  if (!mounted) return null;
-  return createPortal(
-    theme ? (
-      <div
-        className="hjm-root hjm-portal"
-        data-hjm-portal=""
-        data-motion={theme.environment.reducedMotion ? "reduced" : "full"}
-        data-theme={theme.environment.theme}
-        data-text-scale={theme.environment.textScale}
-        data-large-text={isLargeTextScale(theme.environment.textScale) ? "true" : undefined}
-        dir={theme.environment.direction}
-        style={createHjmThemeStyle(theme)}
-      >
-        {children}
-      </div>
-    ) : children,
-    container ?? document.body,
-  );
-}
-
-type OpenState<Detail> =
-  | Readonly<{
-      open: boolean;
-      defaultOpen?: never;
-      onOpenChange: (open: boolean, detail: Detail) => void;
-    }>
-  | Readonly<{
-      open?: never;
-      defaultOpen?: boolean;
-      onOpenChange?: (open: boolean, detail: Detail) => void;
-    }>;
-
-type ModalOpenState<Detail> =
-  | Readonly<{
-      open: boolean;
-      defaultOpen?: never;
-      onOpenChange: (open: boolean, detail: Detail) => void;
-      /** Optional for product-owned, programmatically controlled overlays. */
-      trigger?: OverlayTrigger;
-    }>
-  | Readonly<{
-      open?: never;
-      defaultOpen?: boolean;
-      onOpenChange?: (open: boolean, detail: Detail) => void;
-      /** Uncontrolled overlays need a first-party activation target. */
-      trigger: OverlayTrigger;
-    }>;
-
-function useOpenState<Detail>({
-  open,
-  defaultOpen = false,
-  onOpenChange,
-}: Readonly<{
-  open?: boolean;
-  defaultOpen?: boolean;
-  onOpenChange?: (open: boolean, detail: Detail) => void;
-}>) {
-  const [internalOpen, setInternalOpen] = useState(defaultOpen);
-  const controlled = open !== undefined;
-  const currentOpen = controlled ? open : internalOpen;
-  const pendingRequestRef = useRef<boolean | undefined>(undefined);
-  useEffect(() => {
-    if (pendingRequestRef.current === currentOpen) {
-      pendingRequestRef.current = undefined;
-    }
-  }, [currentOpen]);
-  const changeOpen = useCallback(
-    (nextOpen: boolean, detail: Detail) => {
-      if (
-        nextOpen === currentOpen ||
-        pendingRequestRef.current === nextOpen
-      ) return;
-      pendingRequestRef.current = nextOpen;
-      if (!controlled) setInternalOpen(nextOpen);
-      onOpenChange?.(nextOpen, detail);
-      if (controlled && nextOpen) {
-        queueMicrotask(() => {
-          if (pendingRequestRef.current === true) {
-            pendingRequestRef.current = undefined;
-          }
-        });
-      }
-    },
-    [controlled, currentOpen, onOpenChange],
-  );
-  return [currentOpen, changeOpen] as const;
-}
-
-const focusableSelector = [
-  "a[href]",
-  "button:not([disabled])",
-  "input:not([disabled])",
-  "select:not([disabled])",
-  "textarea:not([disabled])",
-  "[tabindex]:not([tabindex='-1'])",
-].join(",");
-
-function getFocusable(container: HTMLElement): HTMLElement[] {
-  return [...container.querySelectorAll<HTMLElement>(focusableSelector)].filter(
-    (element) => !element.hidden && element.getAttribute("aria-hidden") !== "true",
-  );
-}
-
-let bodyLockCount = 0;
-let previousBodyOverflow = "";
-type ActiveModal = Readonly<{
-  element: HTMLElement;
-  order: number;
-  priority: number;
-}>;
-const activeModalStack: ActiveModal[] = [];
-let activeModalOrder = 0;
-const isolatedModalBackground = new Map<
-  HTMLElement,
-  Readonly<{ ariaHidden: string | null; inert: boolean }>
->();
-let modalIsolationObserver: MutationObserver | null = null;
-
-function getOwnedPopupHosts(modal: ActiveModal): HTMLElement[] {
-  const ownerId = modal.element.id;
-  if (ownerId.length === 0) return [];
-  return [...document.querySelectorAll<HTMLElement>("[data-hjm-popup-owner]")]
-    .filter((host) => host.getAttribute("data-hjm-popup-owner") === ownerId);
-}
-
-function modalContainsNode(modal: ActiveModal, node: Node): boolean {
-  return modal.element.contains(node) ||
-    getOwnedPopupHosts(modal).some((host) => host.contains(node));
-}
-
-function getModalFocusable(modal: ActiveModal): HTMLElement[] {
-  return [
-    ...getFocusable(modal.element),
-    ...getOwnedPopupHosts(modal).flatMap((host) => getFocusable(host)),
-  ];
-}
-
-function getModalLayer(priority: number): number {
-  if (!Number.isSafeInteger(priority)) {
-    throw new TypeError("modalPriority must be a safe integer");
-  }
-  return 1000 + priority;
-}
-
-function getTopModal(): ActiveModal | undefined {
-  let top: ActiveModal | undefined;
-  for (const modal of activeModalStack) {
-    if (!modal.element.isConnected) continue;
-    if (
-      top === undefined ||
-      modal.priority > top.priority ||
-      (modal.priority === top.priority && modal.order > top.order)
-    ) top = modal;
-  }
-  return top;
-}
-
-function modalRanksAbove(candidate: ActiveModal, reference: ActiveModal): boolean {
-  return candidate.priority > reference.priority ||
-    (candidate.priority === reference.priority && candidate.order > reference.order);
-}
-
-function restoreModalBackground(): void {
-  for (const [element, previous] of isolatedModalBackground) {
-    element.inert = previous.inert;
-    if (previous.ariaHidden === null) element.removeAttribute("aria-hidden");
-    else element.setAttribute("aria-hidden", previous.ariaHidden);
-  }
-  isolatedModalBackground.clear();
-}
-
-function isolateModalBackgroundElement(element: HTMLElement): void {
-  if (isolatedModalBackground.has(element)) return;
-  isolatedModalBackground.set(element, {
-    ariaHidden: element.getAttribute("aria-hidden"),
-    inert: element.inert,
-  });
-  element.inert = true;
-  element.setAttribute("aria-hidden", "true");
-}
-
-/** Keeps only the top modal's ancestor path interactive, including late portals. */
-function synchronizeModalBackgroundIsolation(): void {
-  restoreModalBackground();
-  for (let index = activeModalStack.length - 1; index >= 0; index -= 1) {
-    if (!activeModalStack[index]?.element.isConnected) activeModalStack.splice(index, 1);
-  }
-  const top = getTopModal();
-  if (!top) {
-    modalIsolationObserver?.disconnect();
-    modalIsolationObserver = null;
-    return;
-  }
-
-  const interactivePath = new Set<HTMLElement>();
-  for (const root of [top.element, ...getOwnedPopupHosts(top)]) {
-    let pathNode: HTMLElement | null = root;
-    while (pathNode) {
-      if (pathNode === document.body) break;
-      interactivePath.add(pathNode);
-      pathNode = pathNode.parentElement;
-    }
-  }
-  const inspectedParents = new Set<HTMLElement>();
-  for (const pathNode of interactivePath) {
-    const parent = pathNode.parentElement;
-    if (!parent || inspectedParents.has(parent)) continue;
-    inspectedParents.add(parent);
-    for (const sibling of parent.children) {
-      if (sibling instanceof HTMLElement && !interactivePath.has(sibling)) {
-        isolateModalBackgroundElement(sibling);
-      }
-    }
-  }
-
-  if (modalIsolationObserver === null) {
-    modalIsolationObserver = new MutationObserver(() => {
-      synchronizeModalBackgroundIsolation();
-    });
-    modalIsolationObserver.observe(document.body, {
-      attributes: true,
-      attributeFilter: ["data-hjm-popup-owner"],
-      childList: true,
-      subtree: true,
-    });
-  }
-}
-
-function lockBodyScroll(): () => void {
-  if (bodyLockCount === 0) {
-    previousBodyOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-  }
-  bodyLockCount += 1;
-  return () => {
-    bodyLockCount = Math.max(0, bodyLockCount - 1);
-    if (bodyLockCount === 0) document.body.style.overflow = previousBodyOverflow;
-  };
-}
-
-type ModalFocusOptions = Readonly<{
-  active: boolean;
-  priority?: number;
-  contentRef: React.RefObject<HTMLElement | null>;
-  initialFocusRef?: React.RefObject<HTMLElement | null>;
-  returnFocusRef?: React.RefObject<HTMLElement | null>;
-  fallbackReturnRef?: React.RefObject<HTMLElement | null>;
-  onEscape(): void;
-}>;
-
-function useModalFocus({
-  active,
-  priority = 0,
-  contentRef,
-  initialFocusRef,
-  returnFocusRef,
-  fallbackReturnRef,
-  onEscape,
-}: ModalFocusOptions): void {
-  const escapeRef = useRef(onEscape);
-  escapeRef.current = onEscape;
-
-  useEffect(() => {
-    if (!active) return;
-    let retryTimer: ReturnType<typeof setTimeout> | undefined;
-    let release: (() => void) | undefined;
-    let cancelled = false;
-
-    const activate = () => {
-      const content = contentRef.current;
-      if (!content) {
-        retryTimer = setTimeout(activate, 0);
-        return;
-      }
-      const previouslyFocused = document.activeElement instanceof HTMLElement
-        ? document.activeElement
-        : null;
-      const releaseScroll = lockBodyScroll();
-      const modal: ActiveModal = {
-        element: content,
-        order: activeModalOrder += 1,
-        priority,
-      };
-      activeModalStack.push(modal);
-      synchronizeModalBackgroundIsolation();
-      const initial = initialFocusRef?.current ?? getFocusable(content)[0] ?? content;
-      if (getTopModal() === modal) initial.focus();
-
-      const handleKeyDown = (event: KeyboardEvent) => {
-        if (getTopModal() !== modal) return;
-        if (event.key === "Escape") {
-          event.preventDefault();
-          escapeRef.current();
-          return;
-        }
-        if (event.key !== "Tab") return;
-        const focusable = getModalFocusable(modal);
-        if (focusable.length === 0) {
-          event.preventDefault();
-          content.focus();
-          return;
-        }
-        const first = focusable[0]!;
-        const last = focusable.at(-1)!;
-        const current = document.activeElement;
-        if (event.shiftKey && (current === first || !(current instanceof Node) || !modalContainsNode(modal, current))) {
-          event.preventDefault();
-          last.focus();
-        } else if (!event.shiftKey && (current === last || !(current instanceof Node) || !modalContainsNode(modal, current))) {
-          event.preventDefault();
-          first.focus();
-        }
-      };
-      const handleFocusIn = (event: FocusEvent) => {
-        if (getTopModal() !== modal) return;
-        if (event.target instanceof Node && !modalContainsNode(modal, event.target)) {
-          (initialFocusRef?.current ?? getFocusable(content)[0] ?? content).focus();
-        }
-      };
-      document.addEventListener("keydown", handleKeyDown, true);
-      document.addEventListener("focusin", handleFocusIn, true);
-      release = () => {
-        const wasTop = !activeModalStack.some(
-          (candidate) =>
-            candidate !== modal && candidate.element.isConnected && modalRanksAbove(candidate, modal),
-        );
-        document.removeEventListener("keydown", handleKeyDown, true);
-        document.removeEventListener("focusin", handleFocusIn, true);
-        const stackIndex = activeModalStack.lastIndexOf(modal);
-        if (stackIndex >= 0) activeModalStack.splice(stackIndex, 1);
-        synchronizeModalBackgroundIsolation();
-        releaseScroll();
-        const returnTarget =
-          returnFocusRef?.current ?? fallbackReturnRef?.current ?? previouslyFocused;
-        if (wasTop) {
-          queueMicrotask(() => {
-            const nextTop = getTopModal();
-            if (!nextTop) {
-              returnTarget?.focus();
-              return;
-            }
-            if (returnTarget && modalContainsNode(nextTop, returnTarget)) returnTarget.focus();
-            else (getModalFocusable(nextTop)[0] ?? nextTop.element).focus();
-          });
-        }
-      };
-      if (cancelled) release();
-    };
-    activate();
-    return () => {
-      cancelled = true;
-      if (retryTimer !== undefined) clearTimeout(retryTimer);
-      release?.();
-    };
-  }, [active, contentRef, fallbackReturnRef, initialFocusRef, priority, returnFocusRef]);
-}
-
-function renderTrigger(
-  trigger: OverlayTrigger,
-  triggerRef: React.RefObject<HTMLElement | null>,
-  open: boolean,
-  contentId: string,
-  popup: "dialog" | "menu",
-  onOpen: () => void,
-): ReactElement {
-  const props = trigger.props;
-  return cloneElement(trigger, {
-    ref: composeRefs(props.ref, triggerRef),
-    "aria-controls": contentId,
-    "aria-expanded": open,
-    "aria-haspopup": popup,
-    onClick: (event) => {
-      props.onClick?.(event);
-      if (!event.defaultPrevented && !props.disabled) onOpen();
-    },
-  });
-}
+export type { OverlayTrigger } from "./modal.js";
 
 export type DialogOpenChangeReason =
   | "trigger"
@@ -493,6 +82,13 @@ export type DialogProps = ModalOpenState<Readonly<{ reason: DialogOpenChangeReas
     closeLabel: string;
     initialFocusRef?: React.RefObject<HTMLElement | null>;
     returnFocusRef?: React.RefObject<HTMLElement | null>;
+    /**
+     * Fires once per visible cycle, after the portal is gone and focus has been
+     * restored — the signal a product needs before opening the next overlay.
+     * Sheet already owns this split; Dialog kept only the request side, which is
+     * why products reached for a 0ms timer to guess when cleanup had finished.
+     */
+    onDismissComplete?: (detail: Readonly<{ reason: Exclude<DialogOpenChangeReason, "trigger"> | "programmatic" }>) => void;
     /** Higher-priority modals remain interactive above later lower-priority modals. */
     modalPriority?: number;
     portalContainer?: HTMLElement;
@@ -512,6 +108,7 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(function Dialog(
     closeLabel,
     initialFocusRef,
     returnFocusRef,
+    onDismissComplete,
     modalPriority = 0,
     portalContainer,
     open: openProp,
@@ -534,10 +131,46 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(function Dialog(
   const contentId = `${id}-dialog`;
   const titleId = `${id}-title`;
   const descriptionId = `${id}-description`;
+  type DialogSettleReason = Exclude<DialogOpenChangeReason, "trigger"> | "programmatic";
+  const dismissReasonRef = useRef<DialogSettleReason | undefined>(undefined);
+  const wasOpenRef = useRef(open);
+  const completeRef = useRef(onDismissComplete);
+  completeRef.current = onDismissComplete;
+  const openRef = useRef(open);
+  openRef.current = open;
   const requestClose = (reason: Exclude<DialogOpenChangeReason, "trigger">) => {
     if (!dismissible || busy) return;
+    dismissReasonRef.current = reason;
     changeOpen(false, { reason });
   };
+  const settle = () => {
+    const reason = dismissReasonRef.current ?? "programmatic";
+    dismissReasonRef.current = undefined;
+    // After the portal is unmounted and `useModalFocus` has restored focus in
+    // its own microtask, so the next overlay can open without a 0ms guess.
+    queueMicrotask(() => queueMicrotask(() => completeRef.current?.({ reason })));
+  };
+  useEffect(() => {
+    if (open) { wasOpenRef.current = true; dismissReasonRef.current = undefined; return; }
+    if (!wasOpenRef.current) return;
+    wasOpenRef.current = false;
+    settle();
+  }, [open]);
+  const epochRef = useRef(0);
+  useEffect(() => {
+    const epoch = epochRef.current + 1;
+    epochRef.current = epoch;
+    return () => {
+      queueMicrotask(() => {
+        // StrictMode re-runs setup right after its probe cleanup; only a real
+        // unmount has no later epoch. An open Dialog torn down that way still
+        // settles exactly once.
+        if (epochRef.current !== epoch || !openRef.current || !wasOpenRef.current) return;
+        wasOpenRef.current = false;
+        settle();
+      });
+    };
+  }, []);
   useModalFocus({
     active: open,
     priority: modalPriority,
@@ -801,6 +434,16 @@ export type SheetProps = ModalOpenState<SheetOpenChangeDetails> &
     children?: ReactNode;
     footer?: ReactNode;
     placement?: SheetPlacement;
+    /**
+     * Heights the user may step between while the sheet is open, smallest
+     * first. `sheetRecipe.sizes` is what the *product* opens at; this is what
+     * the *user* can change afterwards.
+     */
+    detents?: readonly SheetDetent[];
+    activeDetent?: SheetDetent;
+    onDetentChange?: (detent: SheetDetent) => void;
+    /** Localized names for the handle in each direction; required with detents. */
+    detentLabels?: Readonly<{ expand: string; collapse: string }>;
     busy?: boolean;
     dismissPolicy?: Partial<SheetDismissPolicy>;
     /** Localized accessible name for the close action. */
@@ -823,6 +466,10 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(function Sheet(
     children,
     footer,
     placement = sheetRecipe.defaults.placement,
+    detents,
+    activeDetent,
+    onDetentChange,
+    detentLabels,
     busy = false,
     dismissPolicy,
     closeLabel,
@@ -942,9 +589,35 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(function Sheet(
               className={classNames("hjm-sheet", className)}
               data-hjm-modal-content=""
               data-placement={placement}
+              data-detent={activeDetent}
               data-has-footer={footer ? true : undefined}
               data-state={busy ? "busy" : "idle"}
             >
+              {/*
+                The handle is a real control, not a drag-only affordance: a
+                keyboard or switch user must be able to change the height too.
+                Gesture physics stay with the product and report the same way.
+              */}
+              {detents && detentLabels && activeDetent ? (
+                <div className="hjm-sheet__handle-row">
+                  <button
+                    type="button"
+                    className="hjm-sheet__handle"
+                    aria-label={
+                      resolveNextSheetDetent(detents, activeDetent, "expand") === null
+                        ? detentLabels.collapse
+                        : detentLabels.expand
+                    }
+                    onClick={() => {
+                      const expand = resolveNextSheetDetent(detents, activeDetent, "expand");
+                      const next = expand ?? resolveNextSheetDetent(detents, activeDetent, "collapse");
+                      if (next !== null) onDetentChange?.(next);
+                    }}
+                  >
+                    <span aria-hidden="true" className="hjm-sheet__handle-bar" />
+                  </button>
+                </div>
+              ) : null}
               <header className="hjm-sheet__header">
                 <div>
                   <h2 id={titleId} className="hjm-sheet__title">{title}</h2>
@@ -1320,10 +993,15 @@ function validateMenuItems(
 }
 
 export const Menu = forwardRef<HTMLDivElement, MenuProps>(function Menu(props, ref) {
+  // Unconditional: `??` on the hook call would break the rules of hooks.
+  const densityDefault = useHjmDensityDefault({
+    comfortable: menuRecipe.defaults.density,
+    compact: "compact",
+  });
   const {
     trigger,
     label,
-    density = menuRecipe.defaults.density,
+    density: densityProp,
     align = "start",
     disabled = false,
     asyncState = { status: "idle" },
@@ -1335,6 +1013,7 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(function Menu(props, r
     onOpenChange,
     className,
   } = props;
+  const density = densityProp ?? densityDefault;
   const sections = props.sections;
   const items = sections === undefined ? props.items : sections.flatMap((section) => section.items);
   if (label.trim().length === 0) throw new TypeError("Menu label must not be empty");

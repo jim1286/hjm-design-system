@@ -6,7 +6,7 @@ export type ToastProps = Omit<HTMLAttributes<HTMLDivElement>, "children" | "titl
     onDismissRequest: (reason: ToastDismissReason) => void;
 }>;
 /** Controlled single-toast renderer; ToastProvider supplies the full FIFO lifecycle. */
-export declare const Toast: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLDivElement>, "children" | "title"> & Readonly<{
+export declare const Toast: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLDivElement>, "title" | "children"> & Readonly<{
     descriptor: ToastDescriptor;
     onDismissRequest: (reason: ToastDismissReason) => void;
 }> & import("react").RefAttributes<HTMLDivElement>>;

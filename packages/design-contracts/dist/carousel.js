@@ -107,7 +107,7 @@ export const carouselBehavior = {
     web: {
         roles: ["region", "group"],
         keyboard: ["Tab", "Enter", "Space", "ArrowLeft", "ArrowRight"],
-        focus: "roving",
+        focus: "native",
     },
     native: {
         roles: ["adjustable"],

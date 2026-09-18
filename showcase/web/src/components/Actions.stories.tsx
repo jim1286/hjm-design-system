@@ -11,3 +11,4 @@ export const IconButton: Story = componentStory("IconButton");
 export const Link: Story = componentStory("Link");
 export const BottomCTA: Story = componentStory("BottomCTA");
 export const FloatingActionButton: Story = componentStory("FloatingActionButton");
+export const AuthProviderButton: Story = componentStory("AuthProviderButton");

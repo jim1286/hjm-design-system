@@ -6,7 +6,7 @@
 `relationship: "direct"`).
 
 **먼저 뺀 것 — 이미 다른 컴포넌트가 소유한다.** 헤더 크롬은 이미
-`TopBar`(native, beta), 푸터 내비게이션은 이미 `BottomNavigation`(adaptive,
+`TopBar`(adaptive, beta), 푸터 내비게이션은 이미 `BottomNavigation`(adaptive,
 beta)이다. `Layout`이 그 콘텐츠나 상태를 다시 계약하면 두 곳이 같은 것을
 소유하게 된다 — DataTable이 Pagination/LoadMore를 소유하지 않고 합성하기로 한
 것과 같은 실수를 피한다. `Layout`은 **header/footer가 있다는 사실**만 알고

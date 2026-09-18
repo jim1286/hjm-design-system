@@ -52,6 +52,93 @@
       }
     },
     {
+      "id": "text-format",
+      "storyId": "foundation/text-format",
+      "name": "TextFormat",
+      "category": "foundation",
+      "platform": "web",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "unsupported"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
+      "id": "heading",
+      "storyId": "foundation/heading",
+      "name": "Heading",
+      "category": "foundation",
+      "platform": "shared",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/heading.md"
+      }
+    },
+    {
       "id": "icon",
       "storyId": "foundation/icon",
       "name": "Icon",
@@ -490,6 +577,58 @@
       }
     },
     {
+      "id": "top",
+      "storyId": "layout/top",
+      "name": "Top",
+      "category": "layout",
+      "platform": "adaptive",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/top.md"
+      }
+    },
+    {
       "id": "masonry",
       "storyId": "layout/masonry",
       "name": "Masonry",
@@ -519,9 +658,9 @@
       "name": "Splitter",
       "category": "layout",
       "platform": "web",
-      "contractStatus": "planned",
+      "contractStatus": "beta",
       "surfaces": {
-        "web": "planned",
+        "web": "beta",
         "native": "unsupported"
       },
       "requirements": [
@@ -529,6 +668,19 @@
           "surface": "contract",
           "scenarios": [
             "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
           ]
         }
       ],
@@ -690,10 +842,10 @@
       "storyId": "action/bottom-cta",
       "name": "BottomCTA",
       "category": "action",
-      "platform": "native",
+      "platform": "adaptive",
       "contractStatus": "beta",
       "surfaces": {
-        "web": "unsupported",
+        "web": "beta",
         "native": "beta"
       },
       "requirements": [
@@ -701,6 +853,19 @@
           "surface": "contract",
           "scenarios": [
             "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "platform-parity"
           ]
         },
         {
@@ -712,7 +877,8 @@
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility"
+            "accessibility",
+            "platform-parity"
           ]
         }
       ],
@@ -727,10 +893,10 @@
       "name": "FloatingActionButton",
       "category": "action",
       "platform": "adaptive",
-      "contractStatus": "planned",
+      "contractStatus": "beta",
       "surfaces": {
-        "web": "planned",
-        "native": "planned"
+        "web": "beta",
+        "native": "beta"
       },
       "requirements": [
         {
@@ -738,11 +904,91 @@
           "scenarios": [
             "contract"
           ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ]
         }
       ],
       "documentation": {
         "generated": "docs/generated/component-maturity.md",
         "authored": "docs/floating-action-button.md"
+      }
+    },
+    {
+      "id": "auth-provider-button",
+      "storyId": "action/auth-provider-button",
+      "name": "AuthProviderButton",
+      "category": "action",
+      "platform": "adaptive",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
       }
     },
     {
@@ -1346,6 +1592,110 @@
       }
     },
     {
+      "id": "toggle-group",
+      "storyId": "input/toggle-group",
+      "name": "ToggleGroup",
+      "category": "input",
+      "platform": "adaptive",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/toggle-group.md"
+      }
+    },
+    {
+      "id": "tags-input",
+      "storyId": "input/tags-input",
+      "name": "TagsInput",
+      "category": "input",
+      "platform": "adaptive",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/tags-input.md"
+      }
+    },
+    {
       "id": "slider",
       "storyId": "input/slider",
       "name": "Slider",
@@ -1602,6 +1952,58 @@
       }
     },
     {
+      "id": "date-range-picker",
+      "storyId": "input/date-range-picker",
+      "name": "DateRangePicker",
+      "category": "input",
+      "platform": "adaptive",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
       "id": "time-picker",
       "storyId": "input/time-picker",
       "name": "TimePicker",
@@ -1776,21 +2178,101 @@
       }
     },
     {
-      "id": "mentions",
-      "storyId": "input/mentions",
-      "name": "Mentions",
+      "id": "agreement",
+      "storyId": "input/agreement",
+      "name": "Agreement",
       "category": "input",
       "platform": "adaptive",
-      "contractStatus": "planned",
+      "contractStatus": "beta",
       "surfaces": {
-        "web": "planned",
-        "native": "planned"
+        "web": "beta",
+        "native": "beta"
       },
       "requirements": [
         {
           "surface": "contract",
           "scenarios": [
             "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/agreement.md"
+      }
+    },
+    {
+      "id": "mentions",
+      "storyId": "input/mentions",
+      "name": "Mentions",
+      "category": "input",
+      "platform": "adaptive",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
           ]
         }
       ],
@@ -1829,16 +2311,44 @@
       "name": "TransferList",
       "category": "input",
       "platform": "adaptive",
-      "contractStatus": "planned",
+      "contractStatus": "beta",
       "surfaces": {
-        "web": "planned",
-        "native": "planned"
+        "web": "beta",
+        "native": "beta"
       },
       "requirements": [
         {
           "surface": "contract",
           "scenarios": [
             "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
           ]
         }
       ],
@@ -1976,10 +2486,10 @@
       "storyId": "navigation/top-bar",
       "name": "TopBar",
       "category": "navigation",
-      "platform": "native",
+      "platform": "adaptive",
       "contractStatus": "beta",
       "surfaces": {
-        "web": "unsupported",
+        "web": "beta",
         "native": "beta"
       },
       "requirements": [
@@ -1987,6 +2497,19 @@
           "surface": "contract",
           "scenarios": [
             "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "platform-parity"
           ]
         },
         {
@@ -1998,13 +2521,51 @@
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility"
+            "accessibility",
+            "platform-parity"
           ]
         }
       ],
       "documentation": {
         "generated": "docs/generated/component-maturity.md",
         "authored": null
+      }
+    },
+    {
+      "id": "sidebar",
+      "storyId": "navigation/sidebar",
+      "name": "Sidebar",
+      "category": "navigation",
+      "platform": "web",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "unsupported"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/sidebar.md"
       }
     },
     {
@@ -2065,9 +2626,9 @@
       "name": "Breadcrumb",
       "category": "navigation",
       "platform": "web",
-      "contractStatus": "planned",
+      "contractStatus": "beta",
       "surfaces": {
-        "web": "planned",
+        "web": "beta",
         "native": "unsupported"
       },
       "requirements": [
@@ -2075,6 +2636,19 @@
           "surface": "contract",
           "scenarios": [
             "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
           ]
         }
       ],
@@ -2089,9 +2663,9 @@
       "name": "Pagination",
       "category": "navigation",
       "platform": "web",
-      "contractStatus": "planned",
+      "contractStatus": "beta",
       "surfaces": {
-        "web": "planned",
+        "web": "beta",
         "native": "unsupported"
       },
       "requirements": [
@@ -2099,6 +2673,19 @@
           "surface": "contract",
           "scenarios": [
             "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
           ]
         }
       ],
@@ -2206,6 +2793,80 @@
       }
     },
     {
+      "id": "menubar",
+      "storyId": "navigation/menubar",
+      "name": "Menubar",
+      "category": "navigation",
+      "platform": "web",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "unsupported"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/menubar.md"
+      }
+    },
+    {
+      "id": "context-menu",
+      "storyId": "navigation/context-menu",
+      "name": "ContextMenu",
+      "category": "navigation",
+      "platform": "web",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "unsupported"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/context-menu.md"
+      }
+    },
+    {
       "id": "menu",
       "storyId": "navigation/menu",
       "name": "Menu",
@@ -2263,9 +2924,9 @@
       "name": "Anchor",
       "category": "navigation",
       "platform": "web",
-      "contractStatus": "planned",
+      "contractStatus": "beta",
       "surfaces": {
-        "web": "planned",
+        "web": "beta",
         "native": "unsupported"
       },
       "requirements": [
@@ -2273,6 +2934,19 @@
           "surface": "contract",
           "scenarios": [
             "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
           ]
         }
       ],
@@ -2327,6 +3001,82 @@
       "documentation": {
         "generated": "docs/generated/component-maturity.md",
         "authored": null
+      }
+    },
+    {
+      "id": "asset",
+      "storyId": "data-display/asset",
+      "name": "Asset",
+      "category": "data-display",
+      "platform": "adaptive",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/asset.md"
+      }
+    },
+    {
+      "id": "chart",
+      "storyId": "data-display/chart",
+      "name": "Chart",
+      "category": "data-display",
+      "platform": "shared",
+      "contractStatus": "planned",
+      "surfaces": {
+        "web": "planned",
+        "native": "planned"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/chart.md"
       }
     },
     {
@@ -2566,7 +3316,7 @@
       ],
       "documentation": {
         "generated": "docs/generated/component-maturity.md",
-        "authored": null
+        "authored": "docs/list-row.md"
       }
     },
     {
@@ -2591,6 +3341,58 @@
       "documentation": {
         "generated": "docs/generated/component-maturity.md",
         "authored": "docs/virtual-list.md"
+      }
+    },
+    {
+      "id": "collapsible",
+      "storyId": "data-display/collapsible",
+      "name": "Collapsible",
+      "category": "data-display",
+      "platform": "adaptive",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/collapsible.md"
       }
     },
     {
@@ -2745,9 +3547,9 @@
       "name": "DataTable",
       "category": "data-display",
       "platform": "web",
-      "contractStatus": "planned",
+      "contractStatus": "beta",
       "surfaces": {
-        "web": "planned",
+        "web": "beta",
         "native": "unsupported"
       },
       "requirements": [
@@ -2755,6 +3557,19 @@
           "surface": "contract",
           "scenarios": [
             "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
           ]
         }
       ],
@@ -2769,9 +3584,9 @@
       "name": "Tree",
       "category": "data-display",
       "platform": "web",
-      "contractStatus": "planned",
+      "contractStatus": "beta",
       "surfaces": {
-        "web": "planned",
+        "web": "beta",
         "native": "unsupported"
       },
       "requirements": [
@@ -2779,6 +3594,19 @@
           "surface": "contract",
           "scenarios": [
             "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
           ]
         }
       ],
@@ -2793,16 +3621,42 @@
       "name": "Calendar",
       "category": "data-display",
       "platform": "shared",
-      "contractStatus": "planned",
+      "contractStatus": "beta",
       "surfaces": {
-        "web": "planned",
-        "native": "planned"
+        "web": "beta",
+        "native": "beta"
       },
       "requirements": [
         {
           "surface": "contract",
           "scenarios": [
             "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
           ]
         }
       ],
@@ -2817,16 +3671,44 @@
       "name": "Carousel",
       "category": "data-display",
       "platform": "adaptive",
-      "contractStatus": "planned",
+      "contractStatus": "beta",
       "surfaces": {
-        "web": "planned",
-        "native": "planned"
+        "web": "beta",
+        "native": "beta"
       },
       "requirements": [
         {
           "surface": "contract",
           "scenarios": [
             "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
           ]
         }
       ],
@@ -3009,9 +3891,9 @@
       "name": "Tour",
       "category": "overlay",
       "platform": "web",
-      "contractStatus": "planned",
+      "contractStatus": "beta",
       "surfaces": {
-        "web": "planned",
+        "web": "beta",
         "native": "unsupported"
       },
       "requirements": [
@@ -3019,6 +3901,19 @@
           "surface": "contract",
           "scenarios": [
             "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
           ]
         }
       ],
@@ -3168,7 +4063,7 @@
       ],
       "documentation": {
         "generated": "docs/generated/component-maturity.md",
-        "authored": null
+        "authored": "docs/progress.md"
       }
     },
     {
@@ -3313,6 +4208,58 @@
       "documentation": {
         "generated": "docs/generated/component-maturity.md",
         "authored": "docs/result.md"
+      }
+    },
+    {
+      "id": "bottom-info",
+      "storyId": "feedback/bottom-info",
+      "name": "BottomInfo",
+      "category": "feedback",
+      "platform": "adaptive",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/bottom-info.md"
       }
     },
     {
@@ -3553,9 +4500,9 @@
       "name": "SidePanel",
       "category": "overlay",
       "platform": "web",
-      "contractStatus": "planned",
+      "contractStatus": "beta",
       "surfaces": {
-        "web": "planned",
+        "web": "beta",
         "native": "unsupported"
       },
       "requirements": [
@@ -3563,6 +4510,19 @@
           "surface": "contract",
           "scenarios": [
             "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
           ]
         }
       ],
@@ -3577,9 +4537,9 @@
       "name": "Popover",
       "category": "overlay",
       "platform": "web",
-      "contractStatus": "planned",
+      "contractStatus": "beta",
       "surfaces": {
-        "web": "planned",
+        "web": "beta",
         "native": "unsupported"
       },
       "requirements": [
@@ -3587,6 +4547,19 @@
           "surface": "contract",
           "scenarios": [
             "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
           ]
         }
       ],
@@ -3662,9 +4635,9 @@
       "name": "CommandPalette",
       "category": "overlay",
       "platform": "web",
-      "contractStatus": "planned",
+      "contractStatus": "beta",
       "surfaces": {
-        "web": "planned",
+        "web": "beta",
         "native": "unsupported"
       },
       "requirements": [
@@ -3672,6 +4645,19 @@
           "surface": "contract",
           "scenarios": [
             "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
           ]
         }
       ],
@@ -3822,6 +4808,43 @@
       "documentation": {
         "generated": "docs/generated/component-maturity.md",
         "authored": "docs/utility.md"
+      }
+    },
+    {
+      "id": "skip-nav",
+      "storyId": "utility/skip-nav",
+      "name": "SkipNav",
+      "category": "utility",
+      "platform": "web",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "unsupported"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/skip-nav.md"
       }
     },
     {

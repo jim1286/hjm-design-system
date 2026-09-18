@@ -45,6 +45,18 @@ resolved parent values. Products with a reviewed semantic palette can pass the c
 `value`; runtime validation rejects missing roles and non-composable color values, while partial
 token overrides remain unsupported.
 
+On statically rendered Expo web, an automatic system theme uses `light` for the
+server HTML and first hydration snapshot, then updates to the browser preference.
+React Native Web can initialize its color-scheme hook differently on server and
+client; using the browser value during hydration left existing surfaces light
+while newly mounted dialogs were dark. The shared snapshot ensures React updates
+both together using React's [hydration snapshot contract](https://react.dev/reference/react/useSyncExternalStore#adding-support-for-server-rendering).
+Native and client-only web roots use the OS theme immediately;
+explicit `theme`, resolved `value`, and inherited parent settings keep precedence.
+The [browser regression](../react/test/native-provider-hydration.browser.test.tsx)
+uses real React server rendering and DOM hydration with an RN Web appearance
+boundary mock, alongside the [native precedence tests](test/provider-theme.test.tsx).
+
 The package exports include:
 
 - foundations: `Text`, `Surface`, `Stack`, `Container`, `AspectRatio`, `Icon`, `Section`, responsive `Grid`, adaptive `Layout`

@@ -92,7 +92,13 @@ function FieldFrame({
         </label>
       ) : null}
       {children}
-      {description && !error ? (
+      {/*
+        Support text stays visible under an error instead of being replaced by
+        it: the guidance (a length or format hint) is what tells the user how to clear the
+        error, and hiding it is why a product copied that sentence into its own
+        error string. Both are also referenced by aria-describedby.
+      */}
+      {description ? (
         <div id={descriptionId} className="hjm-field__description">
           {description}
         </div>
@@ -140,11 +146,15 @@ export function Field({
     required,
     disabled,
     ...(error ? { "aria-invalid": true as const } : {}),
-    ...(error
-      ? { "aria-describedby": errorId }
-      : description
-        ? { "aria-describedby": descriptionId }
-        : {}),
+    // Same merge as the built-in fields: support text stays referenced once an
+    // error appears, so a custom control does not have to re-derive the ids.
+    ...(description || error
+      ? {
+        "aria-describedby": [description ? descriptionId : undefined, error ? errorId : undefined]
+          .filter(Boolean)
+          .join(" "),
+      }
+      : {}),
   };
   return (
     <FieldFrame
@@ -172,6 +182,13 @@ function useFieldIds(id: string | undefined) {
   } as const;
 }
 
+/*
+  Support text and the error are both referenced when both exist, in DOM reading
+  order, and the consumer's own `aria-describedby` is kept in front of them.
+  Announcing only the error (the earlier behaviour) dropped the guidance that
+  explains how to fix it — exactly the text a product then duplicated into the
+  error string by hand.
+*/
 function describedBy(
   own: string | undefined,
   description: ReactNode | undefined,
@@ -179,7 +196,7 @@ function describedBy(
   descriptionId: string,
   errorId: string,
 ): string | undefined {
-  return [own, error ? errorId : description ? descriptionId : undefined]
+  return [own, description ? descriptionId : undefined, error ? errorId : undefined]
     .filter(Boolean)
     .join(" ") || undefined;
 }

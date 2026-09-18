@@ -81,6 +81,7 @@ export {
   type MenuDensity,
   type MenuItemTone,
   type NoticeTone,
+  type ProgressShape,
   type ProgressSize,
   type ProgressTone,
   type SearchFieldSize,
@@ -155,3 +156,18 @@ export { timelineRecipe } from "./timeline.js";
 export { treeRecipe } from "./tree.js";
 export { uploadItemRecipe } from "./upload-item.js";
 export { visuallyHiddenRecipe } from "./visually-hidden.js";
+
+export { anchorRecipe } from "./anchor.js";
+export { agreementRecipe } from "./agreement.js";
+export { topRecipe } from "./top.js";
+export { authProviderButtonRecipe } from "./provider-button.js";
+export { headingRecipe } from "./heading.js";
+export { toggleGroupRecipe } from "./toggle-group.js";
+export { tagsInputRecipe } from "./tags-input.js";
+export { skipNavRecipe } from "./skip-nav.js";
+export { bottomInfoRecipe } from "./bottom-info.js";
+export { sidebarRecipe } from "./sidebar.js";
+export { textFormatRecipe } from "./text-formats.js";
+export { collapsibleRecipe } from "./collapsible.js";
+export { assetRecipe } from "./asset.js";
+export { menubarRecipe } from "./menubar.js";

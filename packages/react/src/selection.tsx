@@ -678,6 +678,8 @@ export type SwitchProps = Omit<
 > &
   Readonly<{
     label: ReactNode;
+    /** Hide repeated row copy visually while preserving the switch's accessible name. */
+    labelVisibility?: "visible" | "hidden";
     checked?: boolean;
     defaultChecked?: boolean;
     /** Track and thumb geometry from `switchRecipe.sizes`. */
@@ -690,6 +692,7 @@ export type SwitchProps = Omit<
 export const Switch = forwardRef<HTMLButtonElement, SwitchProps>(function Switch(
   {
     label,
+    labelVisibility = "visible",
     checked: checkedProp,
     defaultChecked = false,
     size = switchRecipe.defaults.size,
@@ -729,7 +732,7 @@ export const Switch = forwardRef<HTMLButtonElement, SwitchProps>(function Switch
       <span className="hjm-switch__track" aria-hidden="true">
         <span className="hjm-switch__thumb" />
       </span>
-      <span className="hjm-switch__label">{label}</span>
+      <span className={classNames("hjm-switch__label", labelVisibility === "hidden" && "hjm-visually-hidden")}>{label}</span>
     </button>
   );
 });

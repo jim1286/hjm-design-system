@@ -19,7 +19,7 @@ Collection 기본 계약을 적용하지 않기로 했지만, 시·분은 처음
 - `none|single` 선택 모드, 정적 목록(비동기 상태 불필요)
 
 인 **정확히 `CollectionItemDescriptor` 하나**다. 그리고 "트리거 + 적응형 오버레이(Web
-popover / Native Sheet) + 단일 committed key + disabled 항목 skip 없는 예측 가능한
+popover / Native Sheet) + 단일 committed key + disabled 항목을 건너뛰는 예측 가능한
 방향키 이동"은 이미 `Select`가 `beta`로 검증한 계약 그대로다. 즉:
 
 **시 Select 하나 + 분 Select 하나 = TimePicker.** 제품이 두 값을 `"HH:mm"` 문자열로
@@ -86,3 +86,24 @@ Yajalal 전체(`날짜/시간 선택`, `TimePicker`, 알림 설정 화면 `Notif
 catalog의 `{ name: "TimePicker", category: "input", platform: "adaptive", status:
 "planned" }`(`src/catalog.ts:69`) 행은 바꿀 것이 없다 — recipe/behavior가 원래 없었고,
 지금도 없다. `src/time-picker.ts`, `test/time-picker.test.ts`는 만들지 않았다.
+
+
+## 2026-09-16: React/RN 작동 조합
+
+명시 요청에 따라 위 합성 경로를 양쪽 Showcase의 `Patterns/Time selection`에 구현했다.
+시 00–23와 분 00–59의 독립 Select, 두 값이 있어야 가능한 확정, 초기화, 변경 시 확정 결과 해제를
+포함한다. 새 TimePicker renderer를 선언하지 않고 기존 공개 `Select`를 그대로 조합한다.
+
+- Web API: `@hjmds/react/forms`의 `Select`, `@hjmds/react/actions`의 `Button`.
+- Native API: `@hjmds/react-native/forms`의 `Select`, `@hjmds/react-native/actions`의 `Button`.
+- [Web 예제](../../../showcase/web/src/patterns/TimeSelection.stories.tsx)와
+  [Native 예제](../../../showcase/native/src/TimeSelection.stories.tsx)는 제품이 가져갈 상태 연결을 보여준다.
+- 두 값은 `selectedKey` / `onSelectionChange`로 통제하고 둘 다 non-null일 때 `HH:mm`으로 조합한다.
+  `00`도 유효한 선택이다. 시각을 실제 알림·서버 시각으로 바꾸는 작업은 제품 소유다.
+- [Ant TimePicker](https://ant.design/components/time-picker/)의 명시 확정 흐름을 비교했다.
+  HJM 예제에서는 각 Select의 선택과 최종 시각 확정을 분리한다. 두 popup을 하나로 합치지 않는다.
+- 320px 브라우저에서 시만 선택했을 때 확정 비활성, 23:59 확정, 초기화 후 비활성을 확인했다.
+  Native는 타입·Showcase 검사 범위이며 실제 기기 조작 확인은 별도다.
+
+Catalog의 `planned + roadmap.composed`는 독립 renderer가 없다는 의미로 유지한다.
+합성 예제 완료를 새 renderer 수나 stable 승격으로 더하지 않는다.

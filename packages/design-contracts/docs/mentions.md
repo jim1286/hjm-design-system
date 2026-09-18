@@ -80,3 +80,21 @@ popover가 이미 겪는 것과 같은 종류의 렌더러 문제다.
 ## 검증 화면
 
 아직 없음. `planned → beta` 승격은 실제 제품 vertical slice 이후 리드가 진행한다.
+
+## Web renderer (2026-09-18)
+
+`@hjmds/react/mentions`의 `Mentions`가 이 모듈을 실행한다. catalog는 Web `beta`,
+Native `planned`다.
+
+- **새 목록 계약을 만들지 않았다.** 팝업은 Combobox의 listbox 어휘(`role="listbox"`/
+  `option`, `aria-activedescendant`, 방향키·Enter·Escape)를 그대로 쓰고, 이 모듈은
+  trigger 탐색과 치환 범위만 담당한다.
+- **caret은 입력뿐 아니라 이동에서도 다시 읽는다.** 화살표·클릭으로 캐럿만 움직여도 활성
+  trigger가 달라지므로 `keyup`/`click`에서도 `findActiveMentionTrigger`를 다시 부른다.
+- **포인터 확정은 `mousedown`에서 막고 처리한다.** blur가 먼저 일어나면 삽입이 의존하는
+  캐럿 위치가 이미 사라진다.
+- **필터·로딩은 제품 소유다.** 후보 목록과 빈 문구를 제품이 넘기고, renderer는 활성 match를
+  `onMentionQueryChange`로 알린다.
+- 로컬 검증: `test/mentions.browser.test.tsx` 5개(토큰 시작 trigger만 열림·공백이 닫음·
+  단어에 붙은 trigger 무시, Enter 확정의 치환 범위와 캐럿, 방향키 순환과 Escape가 본문을
+  건드리지 않음, 포인터 확정, 빈 문구)와 `Patterns/TransferList`의 Mentions 화면.

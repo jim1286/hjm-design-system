@@ -28,6 +28,30 @@
       "import": "./dist/provider.js",
       "default": "./dist/provider.js"
     },
+    "./carousel": {
+      "types": "./dist/carousel.d.ts",
+      "react-native": "./dist/carousel.js",
+      "import": "./dist/carousel.js",
+      "default": "./dist/carousel.js"
+    },
+    "./floating-action-button": {
+      "types": "./dist/floating-action-button.d.ts",
+      "react-native": "./dist/floating-action-button.js",
+      "import": "./dist/floating-action-button.js",
+      "default": "./dist/floating-action-button.js"
+    },
+    "./top-bar": {
+      "types": "./dist/navigation.d.ts",
+      "react-native": "./dist/navigation.js",
+      "import": "./dist/navigation.js",
+      "default": "./dist/navigation.js"
+    },
+    "./bottom-cta": {
+      "types": "./dist/actions.d.ts",
+      "react-native": "./dist/actions.js",
+      "import": "./dist/actions.js",
+      "default": "./dist/actions.js"
+    },
     "./composition-style": {
       "types": "./dist/composition-style.d.ts",
       "react-native": "./dist/composition-style.js",
@@ -81,6 +105,90 @@
       "react-native": "./dist/date-picker.js",
       "import": "./dist/date-picker.js",
       "default": "./dist/date-picker.js"
+    },
+    "./calendar": {
+      "types": "./dist/calendar.d.ts",
+      "react-native": "./dist/calendar.js",
+      "import": "./dist/calendar.js",
+      "default": "./dist/calendar.js"
+    },
+    "./agreement": {
+      "types": "./dist/agreement.d.ts",
+      "react-native": "./dist/agreement.js",
+      "import": "./dist/agreement.js",
+      "default": "./dist/agreement.js"
+    },
+    "./top": {
+      "types": "./dist/top.d.ts",
+      "react-native": "./dist/top.js",
+      "import": "./dist/top.js",
+      "default": "./dist/top.js"
+    },
+    "./heading": {
+      "types": "./dist/heading.d.ts",
+      "react-native": "./dist/heading.js",
+      "import": "./dist/heading.js",
+      "default": "./dist/heading.js"
+    },
+    "./toggle-group": {
+      "types": "./dist/toggle-group.d.ts",
+      "react-native": "./dist/toggle-group.js",
+      "import": "./dist/toggle-group.js",
+      "default": "./dist/toggle-group.js"
+    },
+    "./bottom-info": {
+      "types": "./dist/bottom-info.d.ts",
+      "react-native": "./dist/bottom-info.js",
+      "import": "./dist/bottom-info.js",
+      "default": "./dist/bottom-info.js"
+    },
+    "./collapsible": {
+      "types": "./dist/collapsible.d.ts",
+      "react-native": "./dist/collapsible.js",
+      "import": "./dist/collapsible.js",
+      "default": "./dist/collapsible.js"
+    },
+    "./asset": {
+      "types": "./dist/asset.d.ts",
+      "react-native": "./dist/asset.js",
+      "import": "./dist/asset.js",
+      "default": "./dist/asset.js"
+    },
+    "./tags-input": {
+      "types": "./dist/tags-input.d.ts",
+      "react-native": "./dist/tags-input.js",
+      "import": "./dist/tags-input.js",
+      "default": "./dist/tags-input.js"
+    },
+    "./date-range": {
+      "types": "./dist/date-range.d.ts",
+      "react-native": "./dist/date-range.js",
+      "import": "./dist/date-range.js",
+      "default": "./dist/date-range.js"
+    },
+    "./mentions": {
+      "types": "./dist/mentions.d.ts",
+      "react-native": "./dist/mentions.js",
+      "import": "./dist/mentions.js",
+      "default": "./dist/mentions.js"
+    },
+    "./transfer-list": {
+      "types": "./dist/transfer-list.d.ts",
+      "react-native": "./dist/transfer-list.js",
+      "import": "./dist/transfer-list.js",
+      "default": "./dist/transfer-list.js"
+    },
+    "./keyboard": {
+      "types": "./dist/keyboard.d.ts",
+      "react-native": "./dist/keyboard.js",
+      "import": "./dist/keyboard.js",
+      "default": "./dist/keyboard.js"
+    },
+    "./provider-button": {
+      "types": "./dist/provider-button.d.ts",
+      "react-native": "./dist/provider-button.js",
+      "import": "./dist/provider-button.js",
+      "default": "./dist/provider-button.js"
     },
     "./file-picker": {
       "types": "./dist/file-picker.d.ts",

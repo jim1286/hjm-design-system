@@ -22,7 +22,7 @@ export const Result = forwardRef(function Result({ status, title, description, a
     const Heading = headingLevel === 1 ? "h1" : "h2";
     return (_jsxs("div", { ...props, ref: ref, className: classNames("hjm-result", className), "data-status": result.status, role: role ?? (result.status === "failure" ? "alert" : "status"), children: [_jsx("span", { className: "hjm-result__icon", "aria-hidden": "true", children: icon }), _jsx(Heading, { className: "hjm-result__title", children: result.title }), result.description ? (_jsx("p", { className: "hjm-result__description", children: result.description })) : null, result.primaryAction || result.secondaryAction ? (_jsxs("div", { className: "hjm-result__actions", children: [result.primaryAction ? (_jsx(Button, { "aria-label": result.primaryAction.accessibilityLabel, onClick: result.primaryAction.onAction, children: result.primaryAction.label })) : null, result.secondaryAction ? (_jsx(Button, { "aria-label": result.secondaryAction.accessibilityLabel, onClick: result.secondaryAction.onAction, tone: "secondary", children: result.secondaryAction.label })) : null] })) : null] }));
 });
-export const Progress = forwardRef(function Progress({ label, value, valueText, max = 100, size = progressRecipe.defaults.size, tone = progressRecipe.defaults.tone, className, ...props }, ref) {
+export const Progress = forwardRef(function Progress({ label, value, valueText, max = 100, size = progressRecipe.defaults.size, tone = progressRecipe.defaults.tone, shape = progressRecipe.defaults.shape, children, className, ...props }, ref) {
     if (typeof max !== "number" || !Number.isFinite(max) || max <= 0) {
         throw new RangeError("Progress max must be a positive finite number");
     }
@@ -30,7 +30,15 @@ export const Progress = forwardRef(function Progress({ label, value, valueText, 
         (!Number.isFinite(value) || value < 0 || value > max)) {
         throw new RangeError("Progress value must be between zero and max");
     }
-    return (_jsxs("div", { className: classNames("hjm-progress", className), "data-size": size, "data-tone": tone, "data-state": value === undefined ? "indeterminate" : "determinate", children: [_jsxs("span", { className: "hjm-progress__copy", children: [_jsx("span", { children: label }), valueText ? _jsx("span", { children: valueText }) : null] }), _jsx("progress", { ...props, ref: ref, className: "hjm-progress__native", max: max, ...(value === undefined ? {} : { value }), "aria-valuetext": typeof valueText === "string" ? valueText : undefined })] }));
+    const diameter = progressRecipe.circular.sizes[size];
+    const strokeWidth = progressRecipe.circular.strokeWidth[size];
+    return (_jsxs("div", { className: classNames("hjm-progress", className), "data-size": size, "data-tone": tone, "data-shape": shape, "data-state": value === undefined ? "indeterminate" : "determinate", style: shape === "circular" ? {
+            "--hjm-progress-diameter": `${diameter}px`,
+            "--hjm-progress-stroke": `${strokeWidth}px`,
+            // Conic sweep instead of an SVG arc: the same token drives both
+            // shapes and no second color pipeline appears.
+            "--hjm-progress-sweep": value === undefined ? "25%" : `${(value / max) * 100}%`,
+        } : undefined, children: [_jsxs("span", { className: "hjm-progress__copy", children: [_jsx("span", { children: label }), valueText ? _jsx("span", { children: valueText }) : null] }), shape === "circular" ? (_jsx("span", { className: "hjm-progress__ring", "aria-hidden": "true", children: children ? _jsx("span", { className: "hjm-progress__ring-content", children: children }) : null })) : null, _jsx("progress", { ...props, ref: ref, className: "hjm-progress__native", max: max, ...(value === undefined ? {} : { value }), "aria-valuetext": typeof valueText === "string" ? valueText : undefined })] }));
 });
 export const Spinner = forwardRef(function Spinner({ label, size = spinnerRecipe.defaults.size, tone = spinnerRecipe.defaults.tone, className, ...props }, ref) {
     return (_jsxs("span", { ...props, ref: ref, className: classNames("hjm-spinner", className), "data-size": size, "data-tone": tone, role: "status", "aria-live": "polite", children: [_jsx("span", { className: "hjm-spinner__glyph", "aria-hidden": "true" }), _jsx("span", { className: "hjm-visually-hidden", children: label })] }));

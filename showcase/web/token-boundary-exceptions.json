@@ -12,7 +12,7 @@
     {
       "file": "src/showcase.css",
       "rule": "raw-length",
-      "selector": ".hjm-grid",
+      "selector": ".hjm-showcase-grid",
       "property": "grid-template-columns",
       "value": "repeat(auto-fit, minmax(min(100%, 240px), 1fr))",
       "reason": "Showcase editorial composition geometry, not a product spacing or sizing contract."
@@ -20,18 +20,10 @@
     {
       "file": "src/showcase.css",
       "rule": "raw-length",
-      "selector": ".hjm-table",
+      "selector": ".hjm-showcase-table",
       "property": "min-width",
       "value": "760px",
       "reason": "Showcase editorial composition geometry, not a product spacing or sizing contract."
-    },
-    {
-      "file": "src/showcase.css",
-      "rule": "raw-length",
-      "selector": ".hjm-stage",
-      "property": "min-height",
-      "value": "220px",
-      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
     },
     {
       "file": "src/showcase.css",
@@ -60,7 +52,7 @@
     {
       "file": "src/showcase.css",
       "rule": "raw-length",
-      "selector": ".hjm-menu",
+      "selector": ".hjm-showcase-menu",
       "property": "width",
       "value": "min(100%, 260px)",
       "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
@@ -76,7 +68,7 @@
     {
       "file": "src/showcase.css",
       "rule": "raw-length",
-      "selector": ".hjm-notice",
+      "selector": ".hjm-showcase-notice",
       "property": "max-width",
       "value": "520px",
       "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
@@ -84,15 +76,7 @@
     {
       "file": "src/showcase.css",
       "rule": "raw-length",
-      "selector": ".hjm-stage progress",
-      "property": "width",
-      "value": "min(100%, 520px)",
-      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
-    },
-    {
-      "file": "src/showcase.css",
-      "rule": "raw-length",
-      "selector": ".hjm-toast",
+      "selector": ".hjm-showcase-toast",
       "property": "max-width",
       "value": "420px",
       "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
@@ -220,15 +204,7 @@
     {
       "file": "src/showcase.css",
       "rule": "raw-length",
-      "selector": ".hjm-tree",
-      "property": "min-width",
-      "value": "min(100%, 360px)",
-      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
-    },
-    {
-      "file": "src/showcase.css",
-      "rule": "raw-length",
-      "selector": ".hjm-upload-item",
+      "selector": ".hjm-showcase-upload-item",
       "property": "width",
       "value": "min(100%, 520px)",
       "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
@@ -236,7 +212,7 @@
     {
       "file": "src/showcase.css",
       "rule": "raw-length",
-      "selector": ".hjm-steps",
+      "selector": ".hjm-showcase-steps",
       "property": "width",
       "value": "min(100%, 620px)",
       "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
@@ -260,7 +236,7 @@
     {
       "file": "src/showcase.css",
       "rule": "raw-length",
-      "selector": ".hjm-timeline li",
+      "selector": ".hjm-showcase-timeline li",
       "property": "grid-template-columns",
       "value": "55px 1fr",
       "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
@@ -268,7 +244,7 @@
     {
       "file": "src/showcase.css",
       "rule": "raw-length",
-      "selector": ".hjm-timeline li",
+      "selector": ".hjm-showcase-timeline li",
       "property": "min-height",
       "value": "62px",
       "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
@@ -276,31 +252,7 @@
     {
       "file": "src/showcase.css",
       "rule": "raw-length",
-      "selector": ".hjm-calendar",
-      "property": "width",
-      "value": "min(100%, 520px)",
-      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
-    },
-    {
-      "file": "src/showcase.css",
-      "rule": "raw-length",
-      "selector": ".hjm-carousel",
-      "property": "width",
-      "value": "min(100%, 570px)",
-      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
-    },
-    {
-      "file": "src/showcase.css",
-      "rule": "raw-length",
-      "selector": ".hjm-carousel article",
-      "property": "min-height",
-      "value": "170px",
-      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
-    },
-    {
-      "file": "src/showcase.css",
-      "rule": "raw-length",
-      "selector": ".hjm-description-list",
+      "selector": ".hjm-showcase-description-list",
       "property": "width",
       "value": "min(100%, 560px)",
       "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
@@ -308,7 +260,7 @@
     {
       "file": "src/showcase.css",
       "rule": "raw-length",
-      "selector": ".hjm-description-list div",
+      "selector": ".hjm-showcase-description-list div",
       "property": "grid-template-columns",
       "value": "minmax(70px, .6fr) 1fr",
       "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
@@ -316,7 +268,7 @@
     {
       "file": "src/showcase.css",
       "rule": "raw-length",
-      "selector": ".hjm-image",
+      "selector": ".hjm-showcase-image",
       "property": "width",
       "value": "min(100%, 420px)",
       "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
@@ -348,7 +300,7 @@
     {
       "file": "src/showcase.css",
       "rule": "raw-length",
-      "selector": ".hjm-tour, .hjm-command, .hjm-popover-demo section",
+      "selector": ".hjm-command, .hjm-popover-demo section",
       "property": "width",
       "value": "min(100%, 430px)",
       "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
@@ -532,14 +484,6 @@
     {
       "file": "src/showcase.css",
       "rule": "raw-length",
-      "selector": ".hjm-stage",
-      "property": "min-height",
-      "value": "180px",
-      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
-    },
-    {
-      "file": "src/showcase.css",
-      "rule": "raw-length",
       "selector": ".hjm-home-composition",
       "property": "max-width",
       "value": "540px",
@@ -560,6 +504,46 @@
       "property": "condition",
       "value": "(min-width: 641px) and (max-width: 980px)",
       "reason": "Responsive fixture breakpoint; CSS custom properties are not valid in media-query conditions."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-showcase-splitter-stage",
+      "property": "block-size",
+      "value": "20rem",
+      "reason": "Splitter 데모 stage의 높이·테두리다. renderer는 높이를 계약하지 않고 제품 레이아웃이 정하므로 데모가 보여줄 영역만 scaffolding으로 준다."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-showcase-splitter-stage",
+      "property": "border",
+      "value": "1px solid var(--hjm-color-border)",
+      "reason": "Splitter 데모 stage의 높이·테두리다. renderer는 높이를 계약하지 않고 제품 레이아웃이 정하므로 데모가 보여줄 영역만 scaffolding으로 준다."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-showcase-splitter-stage[data-axis=\"vertical\"]",
+      "property": "block-size",
+      "value": "22.5rem",
+      "reason": "Splitter 데모 stage의 높이·테두리다. renderer는 높이를 계약하지 않고 제품 레이아웃이 정하므로 데모가 보여줄 영역만 scaffolding으로 준다."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-showcase-shell",
+      "property": "min-block-size",
+      "value": "24rem",
+      "reason": "Sidebar 데모 셸의 높이·테두리다. 실제 제품은 Layout이 이 자리를 정하므로 renderer 계약에 없다."
+    },
+    {
+      "file": "src/showcase.css",
+      "rule": "raw-length",
+      "selector": ".hjm-showcase-shell",
+      "property": "border",
+      "value": "1px solid var(--hjm-color-border)",
+      "reason": "Sidebar 데모 셸의 높이·테두리다. 실제 제품은 Layout이 이 자리를 정하므로 renderer 계약에 없다."
     }
   ]
 }

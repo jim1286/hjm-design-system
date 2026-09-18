@@ -173,7 +173,7 @@ export type SectionProps = Omit<HTMLAttributes<HTMLElement>, "children" | "title
     headingLevel?: 2 | 3 | 4 | 5 | 6;
 }>;
 /** Large-text-safe semantic content section with an optional header action. */
-export declare const Section: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLElement>, "children" | "title"> & Readonly<{
+export declare const Section: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLElement>, "title" | "children"> & Readonly<{
     title?: ReactNode;
     description?: ReactNode;
     action?: ReactNode;

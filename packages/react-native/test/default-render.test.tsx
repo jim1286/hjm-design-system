@@ -1,3 +1,17 @@
+import { Agreement } from "../src/agreement.js";
+import { Top } from "../src/top.js";
+import { Heading } from "../src/heading.js";
+import { ToggleGroup } from "../src/toggle-group.js";
+import { BottomInfo } from "../src/bottom-info.js";
+import { Collapsible } from "../src/collapsible.js";
+import { Asset } from "../src/asset.js";
+import { TagsInput } from "../src/tags-input.js";
+import { DateRangePicker } from "../src/date-range.js";
+import { Mentions } from "../src/mentions.js";
+import { TransferList } from "../src/transfer-list.js";
+import { AuthProviderButton } from "../src/provider-button.js";
+import { FloatingActionButton } from "../src/floating-action-button.js";
+import { Carousel } from "../src/carousel.js";
 import type { ReactNode } from "react";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { View } from "react-native";
@@ -20,6 +34,7 @@ import {
   Container,
   CounterBadge,
   DatePicker,
+  Calendar,
   DescriptionList,
   Dialog,
   Divider,
@@ -234,6 +249,97 @@ export const defaultRenderCases = [
     ),
   },
   {
+    componentId: "calendar",
+    render: () => <Calendar descriptor={{ grid: defaultCalendarGrid, monthLabel: "February 2027" }} composeAccessibleName={({ date }) => date} />,
+  },
+  {
+    componentId: "agreement",
+    render: () => (
+      <Agreement
+        descriptor={{
+          accessibilityLabel: "약관 동의",
+          allLabel: "전체 동의하기",
+          items: [{ id: "terms", label: "이용약관", required: true, detail: { label: "전문 보기" } }],
+        }}
+        optionalLabel="(선택)"
+        requiredLabel="(필수)"
+      />
+    ),
+  },
+  {
+    componentId: "top",
+    render: () => <Top descriptor={{ title: "오늘 기록을 남겨요", description: "짧아도 괜찮아요" }} />,
+  },
+  {
+    componentId: "heading",
+    render: () => <Heading level="level2">기록 모아보기</Heading>,
+  },
+  {
+    componentId: "toggle-group",
+    render: () => (
+      <ToggleGroup descriptor={{ accessibilityLabel: "글자 꾸미기", items: [{ id: "bold", label: "굵게" }] }} />
+    ),
+  },
+  {
+    componentId: "bottom-info",
+    render: () => <BottomInfo items={["가입하면 약관에 동의하는 것으로 봅니다"]} />,
+  },
+  {
+    componentId: "collapsible",
+    render: () => <Collapsible trigger="배송 정보 더 보기" defaultOpen><Text>내일 도착합니다</Text></Collapsible>,
+  },
+  {
+    componentId: "asset",
+    render: () => <Asset descriptor={{ kind: "lottie", accessibilityLabel: "편지를 나르는 동물" }}><View /></Asset>,
+  },
+  {
+    componentId: "tags-input",
+    render: () => <TagsInput label="관심사" composeRemoveLabel={(tag) => `${tag} 지우기`} defaultTags={["산책"]} />,
+  },
+  {
+    componentId: "date-range-picker",
+    render: () => (
+      <DateRangePicker
+        descriptor={{ grid: defaultCalendarGrid, monthLabel: "2027년 2월" }}
+        composeAccessibleName={({ date }) => date}
+        rangeLabels={{ start: "시작일", end: "종료일", between: "기간 안" }}
+      />
+    ),
+  },
+  {
+    componentId: "mentions",
+    render: () => (
+      <Mentions
+        accessibilityLabel="메모"
+        value=""
+        onValueChange={noop}
+        triggers={[{ id: "user", trigger: "@" }]}
+        candidates={[]}
+        emptyMessage="결과가 없어요"
+        listLabel="추천 대상"
+      />
+    ),
+  },
+  {
+    componentId: "transfer-list",
+    render: () => (
+      <TransferList
+        items={[{ id: "walk", label: "산책", textValue: "산책" }, { id: "meal", label: "식사", textValue: "식사" }]}
+        labels={{ source: "가능", target: "선택", toTarget: "추가", toSource: "빼기", selectAll: "모두 선택", empty: "없음" }}
+      />
+    ),
+  },
+  {
+    componentId: "auth-provider-button",
+    render: () => (
+      <AuthProviderButton
+        descriptor={{ label: "Google로 계속하기", provider: "google" }}
+        logo={<View />}
+        onPress={noop}
+      />
+    ),
+  },
+  {
     componentId: "file-picker",
     render: () => (
       <FilePicker
@@ -289,6 +395,18 @@ export const defaultRenderCases = [
   {
     componentId: "tabs",
     render: () => <Tabs label="계정" options={[{ value: "profile", label: "프로필" }]} />,
+  },
+  {
+    componentId: "carousel",
+    render: () => <Carousel label="새 소식" slides={[{ id: "one", label: "첫 소식" }, { id: "two", label: "다음 소식" }]}
+      labels={{ previous: "이전", next: "다음", pause: "멈추기", resume: "재생하기", navigation: "소식 이동" }}
+      composeAccessibleName={({ position, total, label }) => `${position}/${total} ${label}`}
+      renderSlide={({ label }) => <Text>{label}</Text>} />,
+  },
+  {
+    componentId: "floating-action-button",
+    render: () => <FloatingActionButton descriptor={{ label: "새 기록", icon: { name: "add" } }}
+      renderIcon={() => <Text>＋</Text>} onContentClearanceChange={() => {}} />,
   },
   {
     componentId: "steps",

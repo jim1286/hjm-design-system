@@ -21,12 +21,21 @@ export function isLargeTextScale(textScale) {
 export function visibleControlHeight(recipeHeight, minimumVisualTarget) {
     return minimumVisualTarget ? Math.max(recipeHeight, control.minTouchTarget) : recipeHeight;
 }
+/**
+ * 전역 밀도를 컴포넌트마다 다른 밀도 어휘로 옮긴다. 컴포넌트의 명시적 prop이 언제나
+ * 이긴다 — 전역값은 기본이지 강제가 아니다. 어휘를 하나로 통일하지 않은 이유: 목록의
+ * `relaxed`와 표의 `regular`는 같은 말이 아니고, 억지로 합치면 둘 중 하나가 거짓말을 한다.
+ */
+export function resolveDensityDefault(density, vocabulary) {
+    return density === "compact" ? vocabulary.compact : vocabulary.comfortable;
+}
 export const designSystemEnvironmentDefaults = {
     theme: "system",
     direction: "ltr",
     textScale: 1,
     reducedMotion: false,
     minimumVisualTarget: false,
+    density: "comfortable",
 };
 const themeColorKeys = Object.keys(THEMES.light);
 const accentColorKeys = Object.keys(ACCENTS.light);
@@ -79,6 +88,11 @@ function assertTextScale(value, field) {
         throw new RangeError(`DesignSystemEnvironment ${field} must be a finite number greater than 0`);
     }
 }
+function assertDensity(value, field) {
+    if (value !== "comfortable" && value !== "compact") {
+        throw new TypeError(`Unsupported DesignSystemEnvironment ${field}: ${String(value)}`);
+    }
+}
 export function validateDesignSystemEnvironmentInput(input) {
     if (input.theme !== undefined && !isThemePreference(input.theme)) {
         throw new TypeError(`Unsupported DesignSystemEnvironment theme: ${String(input.theme)}`);
@@ -97,6 +111,9 @@ export function validateDesignSystemEnvironmentInput(input) {
     if (input.minimumVisualTarget !== undefined) {
         assertBoolean(input.minimumVisualTarget, "minimumVisualTarget");
     }
+    if (input.density !== undefined) {
+        assertDensity(input.density, "density");
+    }
 }
 /**
  * A parent has already crossed the system-preference boundary. Unlike the
@@ -111,6 +128,7 @@ export function validateResolvedDesignSystemEnvironment(environment) {
     assertTextScale(environment.textScale, "parent textScale");
     assertBoolean(environment.reducedMotion, "parent reducedMotion");
     assertBoolean(environment.minimumVisualTarget, "parent minimumVisualTarget");
+    assertDensity(environment.density, "parent density");
 }
 /**
  * Merges partial signals with safe defaults and resolves `"system"` against
@@ -154,6 +172,9 @@ export function resolveDesignSystemEnvironment(input, options) {
         minimumVisualTarget: input.minimumVisualTarget ??
             options.parent?.minimumVisualTarget ??
             designSystemEnvironmentDefaults.minimumVisualTarget,
+        density: input.density ??
+            options.parent?.density ??
+            designSystemEnvironmentDefaults.density,
     };
 }
 /**

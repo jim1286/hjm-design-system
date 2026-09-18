@@ -110,6 +110,11 @@ HJM은 장식으로 브랜드를 증명하지 않습니다. 정보와 행동의 
 
 ## 참고 원칙
 
+2026-09-16 사용자 요청으로 **토스 UI를 최우선 시각 모티브**로 삼습니다. ListRow 중심
+정보 위계, 절제된 surface, 짧고 분명한 주 행동, 본문과 이어지는 BottomCTA를 HJM의
+토큰으로 구현합니다. React/RN 완성 범위와 실제 비교·검증은
+[컴포넌트 완성 작업](react-native-completion.md)에 기록합니다. Flutter는 이 작업에서 제외합니다.
+
 다른 시스템에서는 외형이나 코드를 복사하지 않고 다음을 학습합니다.
 
 - [Ant Design](https://ant.design/docs/spec/values/): 설계 가치, 토큰 계층, 컴포넌트 범위

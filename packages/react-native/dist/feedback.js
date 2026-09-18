@@ -154,7 +154,7 @@ export function Result({ status, title, description, actions, renderIcon, style,
                     marginTop: spacing.xs,
                 }, children: [result.primaryAction ? (_jsx(Button, { accessibilityLabel: result.primaryAction.accessibilityLabel, onPress: result.primaryAction.onAction, children: result.primaryAction.label })) : null, result.secondaryAction ? (_jsx(Button, { accessibilityLabel: result.secondaryAction.accessibilityLabel, onPress: result.secondaryAction.onAction, tone: "secondary", children: result.secondaryAction.label })) : null] })) : null] }));
 }
-export function Progress({ value, max = 1, label, accessibilityLabel, valueText, valueLabel, accessibilityHint, size = progressRecipe.defaults.size, tone = progressRecipe.defaults.tone, style, labelStyle, valueStyle, trackStyle, indicatorStyle, testID, }) {
+export function Progress({ value, max = 1, label, accessibilityLabel, valueText, valueLabel, accessibilityHint, size = progressRecipe.defaults.size, tone = progressRecipe.defaults.tone, shape = progressRecipe.defaults.shape, children, style, labelStyle, valueStyle, trackStyle, indicatorStyle, testID, }) {
     if (!Number.isFinite(max) || max <= 0) {
         throw new RangeError("Progress max must be a positive finite number");
     }
@@ -175,7 +175,30 @@ export function Progress({ value, max = 1, label, accessibilityLabel, valueText,
                     direction: theme.environment.direction,
                     flexDirection: "row",
                     justifyContent: "space-between",
-                }, children: [_jsx(Text, { style: labelStyle, variant: "label", children: label }), resolvedValueText ? (_jsx(Text, { style: valueStyle, tone: "muted", variant: "caption", children: resolvedValueText })) : null] })), _jsx(View, { accessible: false, style: [
+                }, children: [_jsx(Text, { style: labelStyle, variant: "label", children: label }), resolvedValueText ? (_jsx(Text, { style: valueStyle, tone: "muted", variant: "caption", children: resolvedValueText })) : null] })), shape === "circular" ? (_jsxs(View, { accessible: false, style: [
+                    {
+                        alignItems: "center",
+                        borderColor: resolveColorReference(progressRecipe.track, theme.palette),
+                        borderRadius: progressRecipe.circular.sizes[size] / 2,
+                        borderWidth: progressRecipe.circular.strokeWidth[size],
+                        height: progressRecipe.circular.sizes[size],
+                        justifyContent: "center",
+                        width: progressRecipe.circular.sizes[size],
+                    },
+                    trackStyle,
+                ], children: [_jsx(View, { pointerEvents: "none", style: [
+                            {
+                                borderColor: resolveColorReference(progressRecipe.tones[tone], theme.palette),
+                                borderRadius: progressRecipe.circular.sizes[size] / 2,
+                                borderTopColor: "transparent",
+                                borderWidth: progressRecipe.circular.strokeWidth[size],
+                                height: progressRecipe.circular.sizes[size],
+                                position: "absolute",
+                                transform: [{ rotate: `${((percentage ?? 25) / 100) * 360}deg` }],
+                                width: progressRecipe.circular.sizes[size],
+                            },
+                            indicatorStyle,
+                        ] }), children] })) : (_jsx(View, { accessible: false, style: [
                     {
                         backgroundColor: resolveColorReference(progressRecipe.track, theme.palette),
                         borderRadius: radius[progressRecipe.radius],
@@ -190,7 +213,7 @@ export function Progress({ value, max = 1, label, accessibilityLabel, valueText,
                             width: `${percentage ?? 30}%`,
                         },
                         indicatorStyle,
-                    ] }) })] }));
+                    ] }) }))] }));
 }
 export function Spinner({ label, size = "small", style }) {
     const { colors } = useHjmNativeTheme();

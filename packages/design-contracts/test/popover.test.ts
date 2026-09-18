@@ -139,13 +139,13 @@ describe("Popover visual recipe", () => {
   });
 });
 
-describe("Popover catalog and crosswalk stay untouched", () => {
-  it("still reserves Popover as planned/web/overlay, matching dropdown.md's premise", () => {
+describe("Popover catalog and crosswalk", () => {
+  it("exposes the verified Web beta while preserving its overlay identity", () => {
     const entry = componentCatalog.find((item) => item.name === "Popover");
     expect(entry).toMatchObject({
       category: "overlay",
       platform: "web",
-      status: "planned",
+      status: "beta",
     });
   });
 

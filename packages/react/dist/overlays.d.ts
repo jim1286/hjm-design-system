@@ -1,49 +1,11 @@
 import { type AlertDialogOpenChangeReason, type AlertDialogRequest } from "@hjmds/design-contracts/components/alert-dialog";
-import { type SheetDismissPolicy, type SheetDismissReason, type SheetOpenChangeDetails } from "@hjmds/design-contracts/components/sheet";
+import { type SheetDetent, type SheetDismissPolicy, type SheetDismissReason, type SheetOpenChangeDetails } from "@hjmds/design-contracts/components/sheet";
 import { type TooltipAlign, type TooltipOpenChangeDetails, type TooltipPlacement } from "@hjmds/design-contracts/components/tooltip";
 import { type DialogSize, type MenuDensity, type MenuItemTone } from "@hjmds/design-contracts/recipes";
 import type { MenuSectionDescriptor } from "@hjmds/design-contracts/behaviors";
-import { type AriaAttributes, type MouseEventHandler, type ReactElement, type ReactNode, type Ref } from "react";
-type TriggerElementProps = Readonly<{
-    ref?: Ref<HTMLElement>;
-    disabled?: boolean;
-    onClick?: MouseEventHandler<HTMLElement>;
-    onMouseEnter?: MouseEventHandler<HTMLElement>;
-    onMouseLeave?: MouseEventHandler<HTMLElement>;
-    onPointerEnter?: React.PointerEventHandler<HTMLElement>;
-    onPointerLeave?: React.PointerEventHandler<HTMLElement>;
-    onFocus?: React.FocusEventHandler<HTMLElement>;
-    onBlur?: React.FocusEventHandler<HTMLElement>;
-    onKeyDown?: React.KeyboardEventHandler<HTMLElement>;
-    "aria-controls"?: string;
-    "aria-describedby"?: string;
-    "aria-disabled"?: AriaAttributes["aria-disabled"];
-    "aria-expanded"?: AriaAttributes["aria-expanded"];
-    "aria-haspopup"?: AriaAttributes["aria-haspopup"];
-}>;
-export type OverlayTrigger = ReactElement<TriggerElementProps>;
-type OpenState<Detail> = Readonly<{
-    open: boolean;
-    defaultOpen?: never;
-    onOpenChange: (open: boolean, detail: Detail) => void;
-}> | Readonly<{
-    open?: never;
-    defaultOpen?: boolean;
-    onOpenChange?: (open: boolean, detail: Detail) => void;
-}>;
-type ModalOpenState<Detail> = Readonly<{
-    open: boolean;
-    defaultOpen?: never;
-    onOpenChange: (open: boolean, detail: Detail) => void;
-    /** Optional for product-owned, programmatically controlled overlays. */
-    trigger?: OverlayTrigger;
-}> | Readonly<{
-    open?: never;
-    defaultOpen?: boolean;
-    onOpenChange?: (open: boolean, detail: Detail) => void;
-    /** Uncontrolled overlays need a first-party activation target. */
-    trigger: OverlayTrigger;
-}>;
+import { type ReactNode } from "react";
+import { type ModalOpenState, type OpenState, type OverlayTrigger } from "./modal.js";
+export type { OverlayTrigger } from "./modal.js";
 export type DialogOpenChangeReason = "trigger" | "close-action" | "escape" | "outside";
 export type DialogProps = ModalOpenState<Readonly<{
     reason: DialogOpenChangeReason;
@@ -59,6 +21,15 @@ export type DialogProps = ModalOpenState<Readonly<{
     closeLabel: string;
     initialFocusRef?: React.RefObject<HTMLElement | null>;
     returnFocusRef?: React.RefObject<HTMLElement | null>;
+    /**
+     * Fires once per visible cycle, after the portal is gone and focus has been
+     * restored — the signal a product needs before opening the next overlay.
+     * Sheet already owns this split; Dialog kept only the request side, which is
+     * why products reached for a 0ms timer to guess when cleanup had finished.
+     */
+    onDismissComplete?: (detail: Readonly<{
+        reason: Exclude<DialogOpenChangeReason, "trigger"> | "programmatic";
+    }>) => void;
     /** Higher-priority modals remain interactive above later lower-priority modals. */
     modalPriority?: number;
     portalContainer?: HTMLElement;
@@ -85,6 +56,19 @@ export type SheetProps = ModalOpenState<SheetOpenChangeDetails> & Readonly<{
     children?: ReactNode;
     footer?: ReactNode;
     placement?: SheetPlacement;
+    /**
+     * Heights the user may step between while the sheet is open, smallest
+     * first. `sheetRecipe.sizes` is what the *product* opens at; this is what
+     * the *user* can change afterwards.
+     */
+    detents?: readonly SheetDetent[];
+    activeDetent?: SheetDetent;
+    onDetentChange?: (detent: SheetDetent) => void;
+    /** Localized names for the handle in each direction; required with detents. */
+    detentLabels?: Readonly<{
+        expand: string;
+        collapse: string;
+    }>;
     busy?: boolean;
     dismissPolicy?: Partial<SheetDismissPolicy>;
     /** Localized accessible name for the close action. */
@@ -188,5 +172,4 @@ export type MenuProps = OpenState<Readonly<{
     reason: MenuOpenChangeReason;
 }>> & MenuBaseProps & (MenuActionSelection | MenuSingleSelection | MenuMultipleSelection);
 export declare const Menu: import("react").ForwardRefExoticComponent<MenuProps & import("react").RefAttributes<HTMLDivElement>>;
-export {};
 //# sourceMappingURL=overlays.d.ts.map

@@ -1,7 +1,25 @@
+import { Agreement } from "@hjmds/react-native/agreement";
+import { AuthProviderButton } from "@hjmds/react-native/provider-button";
+import { Heading } from "@hjmds/react-native/heading";
+import { ToggleGroup } from "@hjmds/react-native/toggle-group";
+import { BottomInfo } from "@hjmds/react-native/bottom-info";
+import { Collapsible } from "@hjmds/react-native/collapsible";
+import { Asset } from "@hjmds/react-native/asset";
+import { TagsInput } from "@hjmds/react-native/tags-input";
+import { DateRangePicker } from "@hjmds/react-native/date-range";
+import { Mentions } from "@hjmds/react-native/mentions";
+import { TransferList } from "@hjmds/react-native/transfer-list";
+import { KeyboardAvoiding } from "@hjmds/react-native/keyboard";
+import { Top } from "@hjmds/react-native/top";
+import { Calendar } from "@hjmds/react-native/calendar";
+import { FloatingActionButton } from "@hjmds/react-native/floating-action-button";
 import React from "react";
 import { AppRegistry, View } from "react-native";
 
 import { Button, Link } from "@hjmds/react-native/actions";
+import { Carousel } from "@hjmds/react-native/carousel";
+import { TopBar } from "@hjmds/react-native/top-bar";
+import { BottomCTA } from "@hjmds/react-native/bottom-cta";
 import { hjmCompositionStyleKeys } from "@hjmds/react-native/composition-style";
 import { List, Statistic } from "@hjmds/react-native/data-display";
 import { DatePicker } from "@hjmds/react-native/date-picker";
@@ -43,6 +61,19 @@ function MetroSmokeApp() {
       View,
       null,
       React.createElement(Text, { variant: "title" }, "HJM Metro smoke"),
+      React.createElement(FloatingActionButton, {
+        descriptor: { label: "새 기록", icon: { name: "add" } },
+        renderIcon: () => React.createElement(Text, null, "＋"), onContentClearanceChange: noop,
+      }),
+      React.createElement(TopBar, { title: "새 소식" }),
+      React.createElement(Carousel, {
+        label: "새 소식",
+        slides: [{ id: "one", label: "첫 소식" }, { id: "two", label: "다음 소식" }],
+        labels: { previous: "이전", next: "다음", pause: "멈춤", resume: "재생", navigation: "소식 이동" },
+        composeAccessibleName: ({ position, total, label }) => `${position}/${total} ${label}`,
+        renderSlide: ({ label }) => React.createElement(Text, null, label),
+      }),
+      React.createElement(BottomCTA, { primaryAction: { label: "계속", onPress: noop } }),
       React.createElement(Text, null, `${reactNativeRendererEvidence.components.length} claims`),
       React.createElement(Text, null, `${hjmCompositionStyleKeys.length} composition keys`),
       React.createElement(Icon, {
@@ -107,6 +138,43 @@ function MetroSmokeApp() {
         label: "점수",
         max: 100,
         min: 0,
+      }),
+      React.createElement(Calendar, { descriptor: { grid: { cells: Array.from({ length: 7 }, (_, index) => ({ date: `2026-09-0${index + 1}` })), weekdayLabels: ["S", "M", "T", "W", "T", "F", "S"], todayDate: "2026-09-01" }, monthLabel: "September" }, composeAccessibleName: ({ date }) => date }),
+      React.createElement(Heading, { level: "level2" }, "기록 모아보기"),
+      React.createElement(KeyboardAvoiding, { safeAreaBottom: 34 }, React.createElement(View, null)),
+      React.createElement(BottomInfo, { items: ["가입하면 약관에 동의하는 것으로 봅니다"] }),
+      React.createElement(Collapsible, { trigger: "배송 정보 더 보기", defaultOpen: true }, null),
+      React.createElement(Asset, { descriptor: { kind: "lottie", accessibilityLabel: "편지를 나르는 동물" } }, null),
+      React.createElement(TagsInput, { label: "관심사", composeRemoveLabel: (tag) => `${tag} 지우기` }),
+      React.createElement(DateRangePicker, {
+        descriptor: { grid: calendarGrid, monthLabel: "2027년 2월" },
+        composeAccessibleName: ({ date }) => date,
+        rangeLabels: { start: "시작일", end: "종료일", between: "기간 안" },
+      }),
+      React.createElement(Mentions, {
+        accessibilityLabel: "메모", value: "", onValueChange: () => {},
+        triggers: [{ id: "user", trigger: "@" }], candidates: [],
+        emptyMessage: "결과가 없어요", listLabel: "추천 대상",
+      }),
+      React.createElement(TransferList, {
+        items: [{ id: "walk", label: "산책", textValue: "산책" }],
+        labels: { source: "가능", target: "선택", toTarget: "추가", toSource: "빼기", selectAll: "모두 선택", empty: "없음" },
+      }),
+      React.createElement(ToggleGroup, { descriptor: { accessibilityLabel: "글자 꾸미기", items: [{ id: "bold", label: "굵게" }] } }),
+      React.createElement(Top, { descriptor: { title: "오늘 기록", description: "짧아도 괜찮아요" } }),
+      React.createElement(Agreement, {
+        descriptor: {
+          accessibilityLabel: "약관 동의",
+          allLabel: "전체 동의하기",
+          items: [{ id: "terms", label: "이용약관", required: true, detail: { label: "전문 보기" } }],
+        },
+        optionalLabel: "(선택)",
+        requiredLabel: "(필수)",
+      }),
+      React.createElement(AuthProviderButton, {
+        descriptor: { label: "Google로 계속하기", provider: "google" },
+        logo: React.createElement(View, null),
+        onPress: noop,
       }),
       React.createElement(DatePicker, {
         clearLabel: "날짜 지우기",

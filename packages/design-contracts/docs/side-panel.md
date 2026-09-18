@@ -67,5 +67,26 @@ target은 `control.minTouchTarget`(44) 이상을 유지한다.
 버튼 클릭(`close-action`)은 renderer가 직접 `requestClose`를 호출하는 일반
 동작이라 "플랫폼이 감지하는 중단 벡터" 목록에 넣지 않는다.
 
-**검증 화면.** 아직 실제 제품 vertical slice가 없다 — catalog는 `planned`으로
-남고, `beta` 승격은 로드맵 gate(실제 화면 검증)를 통과한 뒤 리드가 진행한다.
+## Web renderer (2026-09-18)
+
+`@hjmds/react/side-panel`의 `SidePanel`이 위 계약을 실행한다. catalog는 Web `beta`,
+Native `unsupported`다. 제품 채택·보조기기 실측은 아직 없으므로 `stable`이 아니다.
+
+- **modal만 모달이다.** `modal: true`는 Dialog·Sheet와 **같은** 모달 스택에 들어가
+  초점을 가두고 body 스크롤을 잠근다. 이를 위해 그 기계장치를 `packages/react/src/modal.tsx`로
+  꺼냈다. 복사했다면 `activeModalStack`이 둘로 갈려 Dialog와 SidePanel이 서로를
+  최상위로 오인한다. `modal: false`는 스택에 들어가지 않고 backdrop 요소 자체를
+  렌더링하지 않는다 — 뒤 페이지가 계속 클릭·탭 가능하다.
+- **비모달의 Escape는 패널 안에서만 듣는다.** 살아 있는 페이지가 자기 Escape를
+  그대로 쓰기 때문이다. 문서 전역 handler는 `contentRef`를 **이벤트마다** 읽는다 —
+  portal은 effect보다 한 commit 늦게 mount되므로 effect 시점에 잡아둔 값은 첫 키 입력에서
+  아직 null이다.
+- **`dismissPolicy`는 `Partial<>`이 아니라 전체 union이다.** `Partial<SidePanelDismissPolicy>`는
+  두 갈래를 선택 필드로 합쳐 `{ modal: false, outsideDismiss: true }`를 다시 컴파일
+  가능하게 만든다. 계약이 타입으로 막은 조합을 renderer가 열어 주지 않는다.
+- **`onDismissComplete`는 한 번만 부른다.** Sheet의 lifecycle counter는 두지 않았다(위 4번).
+  Web에서는 닫은 render와 함께 unmount되므로 reduced motion에서도 기다릴 exit transition이
+  없다. 사용자 동작 없이 owner가 닫으면 `programmatic`으로 보고한다.
+- 로컬 검증: `test/side-panel.browser.test.tsx` 6개(도킹·초점 가둠·스크롤 락, RTL `start`
+  미러링과 폭, 비모달의 살아 있는 페이지와 내부 Escape, 사유별 단일 보고와 busy 차단,
+  controlled owner의 busy 종료와 1회 완료, 320px·2배 글자 배치)와 `Patterns/SidePanel`.

@@ -19,6 +19,7 @@ import {
 import {
   forwardRef,
   type AnchorHTMLAttributes,
+  type CSSProperties,
   type ButtonHTMLAttributes,
   type ForwardedRef,
   type MouseEvent,
@@ -73,9 +74,11 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   },
   ref,
 ) {
-  const unavailable = disabled === true || loading;
+  // Preserve a focusable disabled action (e.g. a Carousel boundary).
+  const ariaDisabled = props["aria-disabled"] === true || props["aria-disabled"] === "true";
+  const unavailable = disabled === true || loading || ariaDisabled;
   const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
-    if (loading) {
+    if (unavailable) {
       event.preventDefault();
       event.stopPropagation();
       return;
@@ -85,7 +88,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   return (
     <button
       {...props}
-      style={{ ...style, ...layoutStyle }}
+      // The cap lives in the recipe, not in the stylesheet: one number, one place.
+      style={{ "--hjm-button-label-lines": buttonRecipe.label.maxLines, ...style, ...layoutStyle } as CSSProperties}
       ref={ref}
       type={type}
       className={classNames("hjm-button", className)}
@@ -96,7 +100,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       {...(selected === undefined ? {} : { "data-selected": selected, "aria-pressed": selected })}
       data-state={loading ? "loading" : unavailable ? "disabled" : "idle"}
       aria-busy={loading || undefined}
-      aria-disabled={loading || undefined}
+      aria-disabled={unavailable || undefined}
       disabled={disabled}
       onClick={handleClick}
     >
@@ -144,9 +148,11 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
     },
     ref,
   ) {
-    const unavailable = disabled === true || loading;
+    // Preserve a focusable disabled action (e.g. a Carousel boundary).
+    const ariaDisabled = props["aria-disabled"] === true || props["aria-disabled"] === "true";
+    const unavailable = disabled === true || loading || ariaDisabled;
     const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
-      if (loading) {
+      if (unavailable) {
         event.preventDefault();
         event.stopPropagation();
         return;
@@ -167,7 +173,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
         data-state={loading ? "loading" : unavailable ? "disabled" : "idle"}
         aria-label={label}
         aria-busy={loading || undefined}
-        aria-disabled={loading || undefined}
+        aria-disabled={unavailable || undefined}
         disabled={disabled}
         onClick={handleClick}
       >

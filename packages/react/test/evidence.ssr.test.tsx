@@ -1,3 +1,12 @@
+import * as popover from "../src/popover.js";
+import * as anchor from "../src/anchor.js";
+import * as pagination from "../src/pagination.js";
+import * as breadcrumb from "../src/breadcrumb.js";
+import * as calendar from "../src/calendar.js";
+import * as floatingActionButton from "../src/floating-action-button.js";
+import * as topBar from "../src/top-bar.js";
+import * as bottomCta from "../src/bottom-cta.js";
+import * as carousel from "../src/carousel.js";
 import { readFile } from "node:fs/promises";
 import { URL, fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
@@ -22,12 +31,67 @@ import * as provider from "../src/provider.js";
 import * as selection from "../src/selection.js";
 import * as slider from "../src/slider.js";
 import * as steps from "../src/steps.js";
+import * as sidePanel from "../src/side-panel.js";
+import * as splitter from "../src/splitter.js";
+import * as tour from "../src/tour.js";
+import * as tree from "../src/tree.js";
+import * as transferList from "../src/transfer-list.js";
+import * as mentions from "../src/mentions.js";
+import * as commandPalette from "../src/command-palette.js";
+import * as agreement from "../src/agreement.js";
+import * as top from "../src/top.js";
+import * as headingModule from "../src/heading.js";
+import * as textFormats from "../src/text-formats.js";
+import * as toggleGroup from "../src/toggle-group.js";
+import * as tagsInput from "../src/tags-input.js";
+import * as skipNav from "../src/skip-nav.js";
+import * as bottomInfo from "../src/bottom-info.js";
+import * as sidebar from "../src/sidebar.js";
+import * as dateRange from "../src/date-range.js";
+import * as providerButton from "../src/provider-button.js";
+import * as dataTable from "../src/data-table.js";
+import * as collapsible from "../src/collapsible.js";
+import * as contextMenu from "../src/context-menu.js";
+import * as menubar from "../src/menubar.js";
+import * as asset from "../src/asset.js";
 import * as toast from "../src/toast.js";
 import * as uploadItem from "../src/upload-item.js";
 
 const publicModules: Readonly<Record<string, Readonly<Record<string, unknown>>>> = {
+  "./top-bar": topBar,
+  "./bottom-cta": bottomCta,
+  "./carousel": carousel,
+  "./floating-action-button": floatingActionButton,
   "./actions": actions,
   "./date-picker": datePicker,
+  "./calendar": calendar,
+  "./anchor": anchor,
+  "./side-panel": sidePanel,
+  "./splitter": splitter,
+  "./tour": tour,
+  "./tree": tree,
+  "./transfer-list": transferList,
+  "./mentions": mentions,
+  "./command-palette": commandPalette,
+  "./agreement": agreement,
+  "./top": top,
+  "./heading": headingModule,
+  "./text-formats": textFormats,
+  "./toggle-group": toggleGroup,
+  "./tags-input": tagsInput,
+  "./skip-nav": skipNav,
+  "./bottom-info": bottomInfo,
+  "./sidebar": sidebar,
+  "./date-range": dateRange,
+  "./provider-button": providerButton,
+  "./data-table": dataTable,
+  "./collapsible": collapsible,
+  "./context-menu": contextMenu,
+  "./menubar": menubar,
+  "./asset": asset,
+  "./popover": popover,
+  "./pagination": pagination,
+  "./breadcrumb": breadcrumb,
   "./display": display,
   "./feedback": feedback,
   "./file-picker": filePicker,
@@ -59,7 +123,7 @@ describe("@hjmds/react renderer evidence", () => {
     });
 
     const componentIds = reactRendererEvidence.components.map(({ componentId }) => componentId);
-    expect(componentIds).toHaveLength(63);
+    expect(componentIds).toHaveLength(95);
     expect(new Set(componentIds).size).toBe(componentIds.length);
   });
 

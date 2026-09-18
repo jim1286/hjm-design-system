@@ -117,7 +117,9 @@ export declare function resolveInitialTabValue<Key extends string>(items: readon
 /** Shared roving-focus math; renderers still own DOM/native focus APIs. */
 export declare function getTabNavigationTarget<Key extends string>(items: readonly TabDescriptor<Key>[], currentId: Key, intent: TabNavigationIntent, loop?: boolean): Key | undefined;
 export type BehaviorStateAxis = "interaction" | "availability" | "value" | "validation" | "content";
-export type WebKeyboardKey = "Tab" | "Enter" | "Space" | "Escape" | "ArrowUp" | "ArrowDown" | "ArrowLeft" | "ArrowRight" | "Home" | "End" | "PageUp" | "PageDown" | "F8" | "Typeahead";
+export type WebKeyboardKey = "Tab" | "Enter" | "Space" | "Escape" | "ArrowUp" | "ArrowDown" | "ArrowLeft" | "ArrowRight" | "Home" | "End"
+/** TagsInput removes the previous tag with it; no other contract needed it before. */
+ | "Backspace" | "PageUp" | "PageDown" | "F8" | "Typeahead";
 export type NativeAccessibilityState = "disabled" | "selected" | "checked" | "busy" | "expanded";
 export type BehaviorContract = Readonly<{
     /** Controlled/uncontrolled state triplets only. */
@@ -682,6 +684,346 @@ export declare const behaviorRegistry: {
         };
         readonly scenarios: readonly ["plain-localized-copy-never-contains-interaction", "keyboard-focus-opens-immediately-and-pointer-respects-delay", "recent-sibling-tooltip-uses-skip-delay", "one-tooltip-is-visible-per-provider", "trigger-content-hover-and-pointer-corridor-keep-open", "escape-dismisses-and-suppresses-reopen-until-input-reset", "blur-or-pointer-leave-closes-only-after-all-active-inputs-end", "trigger-activation-closes-without-cancelling-trigger-action", "trigger-keeps-focus-and-tooltip-has-no-tab-stop", "existing-aria-describedby-is-preserved", "touch-pointer-hover-is-ignored", "controlled-close-rejection-never-exposes-two-tooltips", "timer-and-global-listener-cleanup-on-unmount", "reduced-motion-exit-completes-exactly-once"];
     };
+    readonly anchor: {
+        readonly controlled: readonly [];
+        readonly inputs: readonly ["items", "offset", "container", "historyMode"];
+        readonly stateAxes: {};
+        readonly web: {
+            readonly roles: readonly ["navigation", "list", "listitem", "link"];
+            readonly keyboard: readonly ["Tab", "Enter"];
+            readonly focus: "native";
+        };
+        readonly native: {
+            readonly roles: readonly [];
+            readonly states: readonly [];
+            readonly actions: readonly [];
+        };
+        readonly scenarios: readonly ["scroll-position-selects-one-current-location", "activation-focuses-target-and-preserves-offset", "reduced-motion-jumps-instantly", "browser-history-restores-a-section", "missing-targets-are-not-current"];
+    };
+    readonly agreement: {
+        readonly controlled: readonly ["checkedIds", "defaultCheckedIds", "onCheckedIdsChange"];
+        readonly inputs: readonly ["items", "allLabel", "accessibilityLabel"];
+        readonly events: readonly ["onDetail"];
+        readonly stateAxes: {
+            readonly availability: readonly ["enabled", "disabled"];
+            readonly value: readonly ["unchecked", "checked", "mixed"];
+        };
+        readonly web: {
+            readonly roles: readonly ["group", "checkbox", "link", "button"];
+            readonly keyboard: readonly ["Tab", "Space", "Enter"];
+            readonly focus: "native";
+        };
+        readonly native: {
+            readonly roles: readonly ["checkbox", "link", "button"];
+            readonly states: readonly ["checked", "disabled"];
+            readonly actions: readonly ["toggle", "toggleAll", "openDetail"];
+        };
+        readonly scenarios: readonly ["all-agree-is-derived-from-the-items-never-stored-as-its-own-value", "checking-all-checks-every-enabled-item-and-leaves-disabled-ones-untouched", "required-items-alone-decide-whether-the-product-may-submit", "a-required-item-can-never-be-disabled-the-descriptor-is-rejected", "every-item-may-open-its-full-text-and-that-control-is-a-separate-tab-stop", "the-detail-control-never-toggles-the-agreement-it-only-opens-the-text", "optional-items-never-block-submission-and-are-announced-as-optional", "removing-an-item-drops-its-consent-instead-of-keeping-an-orphan-id"];
+    };
+    readonly top: {
+        readonly controlled: readonly [];
+        readonly inputs: readonly ["title", "eyebrow", "description", "size", "headingLevel"];
+        readonly stateAxes: {};
+        readonly web: {
+            readonly roles: readonly ["heading"];
+            readonly keyboard: readonly [];
+            readonly focus: "none";
+        };
+        readonly native: {
+            readonly roles: readonly ["header"];
+            readonly states: readonly [];
+            readonly actions: readonly [];
+        };
+        readonly scenarios: readonly ["the-title-is-a-real-heading-element-at-the-declared-level-not-styled-text", "top-is-body-content-that-scrolls-away-while-topbar-is-fixed-chrome", "description-wraps-instead-of-truncating-so-large-text-never-hides-the-question", "a-trailing-action-shares-the-title-row-and-drops-below-it-when-space-runs-out", "eyebrow-never-carries-information-the-title-does-not-repeat-in-some-form"];
+    };
+    readonly authProviderButton: {
+        readonly controlled: readonly [];
+        readonly inputs: readonly ["provider", "label", "busy", "disabled"];
+        readonly events: readonly ["onPress"];
+        readonly stateAxes: {
+            readonly availability: readonly ["enabled", "disabled", "busy"];
+            readonly interaction: readonly ["idle", "hover", "focusVisible", "pressed"];
+        };
+        readonly web: {
+            readonly roles: readonly ["button"];
+            readonly keyboard: readonly ["Enter", "Space"];
+            readonly focus: "native";
+        };
+        readonly native: {
+            readonly roles: readonly ["button"];
+            readonly states: readonly ["disabled", "busy"];
+            readonly actions: readonly ["press"];
+        };
+        readonly scenarios: readonly ["provider-colors-come-from-the-provider-guideline-and-the-theme-never-recolors-them", "the-theme-only-picks-between-the-providers-own-light-and-dark-variants", "the-logo-asset-is-a-product-supplied-slot-never-bundled-by-the-design-system", "the-label-is-product-copy-because-the-required-wording-differs-per-provider-and-language", "height-radius-and-touch-target-stay-hjm-so-a-stack-of-providers-lines-up", "busy-keeps-the-label-and-the-button-width-instead-of-collapsing-to-a-spinner", "the-focus-ring-is-drawn-outside-the-brand-fill-so-it-survives-every-provider-color"];
+    };
+    readonly heading: {
+        readonly controlled: readonly [];
+        readonly inputs: readonly ["level", "semanticLevel"];
+        readonly stateAxes: {};
+        readonly web: {
+            readonly roles: readonly ["heading"];
+            readonly keyboard: readonly [];
+            readonly focus: "none";
+        };
+        readonly native: {
+            readonly roles: readonly ["header"];
+            readonly states: readonly [];
+            readonly actions: readonly [];
+        };
+        readonly scenarios: readonly ["visual-size-and-document-level-are-separate-axes-that-may-disagree-on-purpose", "the-element-is-a-real-heading-so-the-rotor-and-skip-links-find-it", "no-new-type-sizes-are-introduced-the-existing-heading-scale-is-what-is-exposed", "heading-owns-no-surrounding-layout-the-block-that-contains-it-does"];
+    };
+    readonly toggleGroup: {
+        readonly controlled: readonly ["pressedIds", "defaultPressedIds", "onPressedIdsChange"];
+        readonly inputs: readonly ["items", "accessibilityLabel", "size"];
+        readonly stateAxes: {
+            readonly availability: readonly ["enabled", "disabled"];
+            readonly value: readonly ["pressed", "unpressed"];
+        };
+        readonly web: {
+            readonly roles: readonly ["group", "button"];
+            readonly keyboard: readonly ["Tab", "Enter", "Space"];
+            readonly focus: "native";
+        };
+        readonly native: {
+            readonly roles: readonly ["button"];
+            readonly states: readonly ["selected", "disabled"];
+            readonly actions: readonly ["toggle"];
+        };
+        readonly scenarios: readonly ["several-items-can-be-pressed-at-once-and-none-is-a-valid-state", "pressed-state-rides-on-aria-pressed-not-on-color-alone", "a-disabled-item-never-toggles-and-never-enters-the-pressed-set", "removing-an-item-drops-its-pressed-state-instead-of-keeping-an-orphan-id", "single-choice-belongs-to-segmented-control-this-contract-never-adds-a-single-mode", "the-group-carries-its-own-accessible-name-separate-from-each-buttons-name"];
+    };
+    readonly tagsInput: {
+        readonly controlled: readonly ["tags", "defaultTags", "onTagsChange"];
+        readonly inputs: readonly ["policy", "commitKeys", "label", "removeLabel"];
+        readonly events: readonly ["onReject", "onDraftChange"];
+        readonly defaults: {
+            readonly backspaceRemovesLastTag: false;
+        };
+        readonly stateAxes: {
+            readonly availability: readonly ["enabled", "disabled"];
+            readonly value: readonly ["empty", "filled"];
+            readonly validation: readonly ["valid", "invalid"];
+        };
+        readonly web: {
+            readonly roles: readonly ["combobox", "listbox", "option", "button", "list", "listitem"];
+            readonly keyboard: readonly ["Enter", "Backspace", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Escape", "Tab"];
+            readonly focus: "native";
+        };
+        readonly native: {
+            readonly roles: readonly ["button"];
+            readonly states: readonly ["disabled"];
+            readonly actions: readonly ["commit", "remove"];
+        };
+        readonly scenarios: readonly ["enter-commits-the-trimmed-value-and-clears-the-input", "an-empty-or-whitespace-only-value-is-never-committed", "duplicates-are-rejected-by-default-and-the-reason-is-reported-not-swallowed", "backspace-in-an-empty-input-selects-the-last-tag-before-a-second-press-removes-it", "every-tag-carries-its-own-remove-control-with-a-localized-name", "the-policy-judges-and-the-product-writes-the-sentence-the-user-reads", "a-candidate-list-lives-in-this-field-because-the-value-shape-is-this-fields-not-comboboxs", "enter-commits-the-active-candidate-when-one-is-highlighted-and-the-typed-text-otherwise", "candidate-filtering-belongs-to-the-product-the-contract-only-commits-the-choice"];
+    };
+    readonly skipNav: {
+        readonly controlled: readonly [];
+        readonly inputs: readonly ["targetId", "label"];
+        readonly stateAxes: {
+            readonly interaction: readonly ["idle", "focusVisible"];
+        };
+        readonly web: {
+            readonly roles: readonly ["link"];
+            readonly keyboard: readonly ["Tab", "Enter"];
+            readonly focus: "native";
+        };
+        readonly native: {
+            readonly roles: readonly [];
+            readonly states: readonly [];
+            readonly actions: readonly [];
+        };
+        readonly scenarios: readonly ["hidden-until-focused-and-always-visible-once-focused", "it-is-the-first-tab-stop-on-the-page-or-it-solves-nothing", "activating-it-moves-focus-into-the-target-not-only-the-scroll-position", "a-target-id-written-with-a-leading-hash-is-rejected-instead-of-silently-doubled"];
+    };
+    readonly bottomInfo: {
+        readonly controlled: readonly [];
+        readonly inputs: readonly ["items", "tone"];
+        readonly stateAxes: {};
+        readonly web: {
+            readonly roles: readonly ["list", "listitem"];
+            readonly keyboard: readonly [];
+            readonly focus: "none";
+        };
+        readonly native: {
+            readonly roles: readonly [];
+            readonly states: readonly [];
+            readonly actions: readonly [];
+        };
+        readonly scenarios: readonly ["it-states-a-standing-condition-not-a-state-change-so-it-has-no-tone-of-alarm", "a-single-line-renders-without-a-list-marker-and-several-lines-render-as-a-list", "the-text-wraps-and-is-never-truncated-because-it-is-usually-a-legal-notice", "links-inside-the-copy-belong-to-the-product-not-to-this-contract"];
+    };
+    readonly sidebar: {
+        readonly controlled: readonly ["collapsed", "defaultCollapsed", "onCollapsedChange"];
+        readonly inputs: readonly ["groups", "currentId", "accessibilityLabel"];
+        readonly events: readonly ["onNavigate"];
+        readonly defaults: {
+            readonly collapsed: false;
+        };
+        readonly stateAxes: {
+            readonly availability: readonly ["enabled", "disabled"];
+            readonly value: readonly ["selected"];
+            readonly interaction: readonly ["idle", "hover", "focusVisible", "pressed"];
+        };
+        readonly web: {
+            readonly roles: readonly ["navigation", "list", "listitem", "link", "button"];
+            readonly keyboard: readonly ["Tab", "Enter"];
+            readonly focus: "native";
+        };
+        readonly native: {
+            readonly roles: readonly [];
+            readonly states: readonly [];
+            readonly actions: readonly [];
+        };
+        readonly scenarios: readonly ["the-current-item-is-announced-with-aria-current-not-only-painted", "collapsing-hides-labels-but-keeps-every-item-and-its-accessible-name", "groups-are-real-list-groupings-with-their-own-label-not-visual-dividers-only", "an-item-badge-stays-visible-while-collapsed-because-it-is-the-reason-to-look", "bottom-navigation-owns-the-three-to-five-destination-mobile-case-this-contract-never-adds-it", "layout-owns-where-the-sidebar-sits-this-contract-owns-what-is-inside-it"];
+    };
+    readonly nativePlatform: {
+        readonly controlled: readonly [];
+        readonly inputs: readonly ["keyboardHeight", "safeAreaBottom", "hapticsEnabled"];
+        readonly events: readonly ["onKeyboardInsetChange"];
+        readonly defaults: {
+            readonly offset: 12;
+        };
+        readonly configuration: {
+            readonly behavior: readonly ["padding", "height", "position"];
+            readonly intent: readonly ["selection", "success", "warning", "error"];
+        };
+        readonly stateAxes: {
+            readonly content: readonly ["idle", "loading"];
+        };
+        readonly web: {
+            readonly roles: readonly [];
+            readonly keyboard: readonly [];
+            readonly focus: "none";
+        };
+        readonly native: {
+            readonly roles: readonly [];
+            readonly states: readonly [];
+            readonly actions: readonly [];
+        };
+        readonly scenarios: readonly ["ios-uses-padding-and-android-uses-height-because-the-platforms-resize-differently", "the-safe-area-inset-is-counted-once-never-added-on-top-of-the-keyboard", "a-closed-keyboard-leaves-exactly-the-safe-area-inset-behind", "haptics-are-named-by-meaning-not-by-strength-so-one-app-stays-consistent", "a-change-the-user-did-not-start-never-vibrates", "reduce-motion-does-not-silence-haptics-they-are-different-settings", "the-design-system-never-bundles-a-native-haptics-module-the-product-plays-it"];
+    };
+    readonly dateRange: {
+        readonly controlled: readonly ["value", "defaultValue", "onValueChange"];
+        readonly inputs: readonly ["grid", "monthLabel", "hoveredDate"];
+        readonly stateAxes: {
+            readonly value: readonly ["empty", "selecting", "complete"];
+            readonly availability: readonly ["enabled", "disabled"];
+        };
+        readonly web: {
+            readonly roles: readonly ["grid", "gridcell"];
+            readonly keyboard: readonly ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Home", "End", "Enter", "Space"];
+            readonly focus: "roving";
+        };
+        readonly native: {
+            readonly roles: readonly [];
+            readonly states: readonly ["selected", "disabled"];
+            readonly actions: readonly ["select"];
+        };
+        readonly scenarios: readonly ["a-click-on-a-complete-range-starts-a-new-one-instead-of-guessing-which-end-to-move", "picking-an-earlier-date-while-selecting-swaps-the-two-instead-of-rejecting-it", "the-selecting-state-is-start-without-end-not-a-separate-flag", "a-hovered-date-previews-the-end-through-the-same-cell-state-function", "an-end-without-a-start-is-rejected-by-validation-not-rendered-as-something", "calendar-keeps-single-selection-this-module-never-adds-a-mode-axis-to-it"];
+    };
+    readonly textFormat: {
+        readonly controlled: readonly [];
+        readonly inputs: readonly ["kind"];
+        readonly configuration: {
+            readonly kind: readonly ["kbd", "code", "quote"];
+        };
+        readonly stateAxes: {};
+        readonly web: {
+            readonly roles: readonly [];
+            readonly keyboard: readonly [];
+            readonly focus: "none";
+        };
+        readonly native: {
+            readonly roles: readonly [];
+            readonly states: readonly [];
+            readonly actions: readonly [];
+        };
+        readonly scenarios: readonly ["each-kind-emits-its-own-html-element-so-assistive-technology-reads-it-as-what-it-is", "these-are-elements-not-text-sizes-which-is-why-they-are-not-a-text-variant", "a-key-name-is-product-copy-because-the-same-key-is-called-different-things-per-platform"];
+    };
+    readonly collapsible: {
+        readonly controlled: readonly ["open", "defaultOpen", "onOpenChange"];
+        readonly stateAxes: {
+            readonly availability: readonly ["enabled", "disabled"];
+            readonly value: readonly ["open", "closed"];
+        };
+        readonly web: {
+            readonly roles: readonly ["button", "region"];
+            readonly keyboard: readonly ["Enter", "Space"];
+            readonly focus: "native";
+        };
+        readonly native: {
+            readonly roles: readonly ["button"];
+            readonly states: readonly ["expanded", "disabled"];
+            readonly actions: readonly ["toggle"];
+        };
+        readonly scenarios: readonly ["the-trigger-reports-aria-expanded-and-points-at-the-region-it-controls", "closed-content-is-removed-from-the-accessibility-tree-not-only-hidden-visually", "one-disclosure-has-no-neighbours-so-there-is-no-group-keyboard-model-here", "accordion-keeps-the-multi-item-case-including-the-one-open-at-a-time-policy"];
+    };
+    readonly asset: {
+        readonly controlled: readonly [];
+        readonly inputs: readonly ["kind", "size", "shape", "decorative", "accessibilityLabel"];
+        readonly configuration: {
+            readonly kind: readonly ["icon", "image", "lottie", "video"];
+            readonly shape: readonly ["square", "rounded", "circle"];
+            readonly size: readonly ["small", "medium", "large", "xlarge"];
+        };
+        readonly stateAxes: {
+            readonly availability: readonly ["enabled"];
+        };
+        readonly web: {
+            readonly roles: readonly ["img", "presentation"];
+            readonly keyboard: readonly [];
+            readonly focus: "none";
+        };
+        readonly native: {
+            readonly roles: readonly ["image"];
+            readonly states: readonly [];
+            readonly actions: readonly [];
+        };
+        readonly scenarios: readonly ["one-frame-rule-covers-icon-image-lottie-and-video-so-a-mixed-row-lines-up", "the-package-never-depends-on-a-player-the-media-arrives-as-a-slot", "a-meaningful-asset-without-a-name-is-rejected-instead-of-silently-decorative", "reduced-motion-freezes-the-frame-rather-than-removing-the-asset", "an-accessory-sits-on-the-frames-outer-corner-and-never-covers-the-media"];
+    };
+    readonly menubar: {
+        readonly controlled: readonly ["openMenuId", "defaultOpenMenuId", "onOpenMenuIdChange"];
+        readonly inputs: readonly ["menus", "accessibilityLabel"];
+        readonly events: readonly ["onAction"];
+        readonly stateAxes: {
+            readonly availability: readonly ["enabled", "disabled"];
+            readonly value: readonly ["open", "closed"];
+            readonly interaction: readonly ["idle", "hover", "focusVisible"];
+        };
+        readonly web: {
+            readonly roles: readonly ["menubar", "menuitem", "menu"];
+            readonly keyboard: readonly ["ArrowLeft", "ArrowRight", "ArrowDown", "ArrowUp", "Home", "End", "Enter", "Space", "Escape"];
+            readonly focus: "roving";
+            readonly dismiss: readonly ["escape", "outside"];
+        };
+        readonly native: {
+            readonly roles: readonly [];
+            readonly states: readonly [];
+            readonly actions: readonly [];
+        };
+        readonly scenarios: readonly ["left-and-right-move-between-menus-while-one-is-open-instead-of-closing-and-reopening", "exactly-one-menu-is-open-at-a-time-which-three-independent-menus-cannot-guarantee", "disabled-menus-are-skipped-by-navigation-and-cycling-is-shorter-than-stopping-at-the-end", "the-bar-is-a-single-tab-stop-with-roving-focus-not-one-stop-per-menu", "activating-an-item-runs-an-action-and-leaves-nothing-selected-unlike-tabs"];
+    };
+    readonly contextMenu: {
+        readonly controlled: readonly ["open", "defaultOpen", "onOpenChange"];
+        readonly inputs: readonly ["items", "sections", "accessibilityLabel"];
+        readonly events: readonly ["onAction"];
+        readonly configuration: {
+            readonly openReason: readonly ["pointer", "keyboard", "longPress"];
+        };
+        readonly stateAxes: {
+            readonly availability: readonly ["enabled", "disabled"];
+            readonly interaction: readonly ["idle", "hover", "focusVisible"];
+        };
+        readonly web: {
+            readonly roles: readonly ["menu", "menuitem"];
+            readonly keyboard: readonly ["ArrowUp", "ArrowDown", "Home", "End", "Enter", "Space", "Escape", "Typeahead"];
+            readonly focus: "activeDescendant";
+            readonly dismiss: readonly ["escape", "outside"];
+        };
+        readonly native: {
+            readonly roles: readonly [];
+            readonly states: readonly [];
+            readonly actions: readonly [];
+        };
+        readonly scenarios: readonly ["a-keyboard-user-can-open-it-or-the-feature-does-not-exist-without-a-mouse", "keyboard-opening-anchors-to-the-focused-elements-box-not-to-the-viewport-origin", "the-item-vocabulary-is-menus-own-there-is-no-second-item-type", "the-browser-context-menu-is-replaced-only-where-the-product-owns-the-surface", "closing-returns-focus-to-the-element-the-menu-was-opened-from"];
+    };
     readonly breadcrumb: {
         readonly controlled: readonly [];
         readonly inputs: readonly ["items"];
@@ -730,7 +1072,7 @@ export declare const behaviorRegistry: {
         readonly web: {
             readonly roles: readonly ["region", "group"];
             readonly keyboard: readonly ["Tab", "Enter", "Space", "ArrowLeft", "ArrowRight"];
-            readonly focus: "roving";
+            readonly focus: "native";
         };
         readonly native: {
             readonly roles: readonly ["adjustable"];
@@ -777,7 +1119,7 @@ export declare const behaviorRegistry: {
             readonly states: readonly [];
             readonly actions: readonly ["activate"];
         };
-        readonly scenarios: readonly ["collapses-on-scroll-away-from-start-without-losing-the-44-unit-target", "expands-on-scroll-toward-start", "idle-scroll-signal-does-not-change-the-current-mode", "accessible-name-is-the-full-label-in-both-layout-modes", "content-clearance-accounts-for-the-safe-area-inset-additively", "root-sits-after-scrollable-content-in-reading-and-tab-order", "reduced-motion-crossfades-icon-and-label-without-a-shape-tween"];
+        readonly scenarios: readonly ["collapses-on-scroll-away-from-start-without-losing-the-44-unit-target", "expands-on-scroll-toward-start", "idle-scroll-signal-does-not-change-the-current-mode", "accessible-name-is-the-full-label-in-both-layout-modes", "content-clearance-accounts-for-the-safe-area-inset-additively", "root-sits-after-scrollable-content-in-reading-and-tab-order", "reduced-motion-switches-instantly-without-a-shape-tween"];
     };
     readonly transferList: {
         readonly controlled: readonly ["targetKeys", "defaultTargetKeys", "onTargetKeysChange"];
@@ -1023,6 +1365,7 @@ export declare const behaviorRegistry: {
     readonly popover: {
         readonly controlled: readonly ["open", "defaultOpen", "onOpenChange"];
         readonly defaults: {
+            readonly openOn: import("./popover.js").PopoverOpenOn;
             readonly dismissible: true;
             readonly outsideDismiss: true;
             readonly escapeDismiss: true;

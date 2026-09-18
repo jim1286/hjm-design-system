@@ -1,7 +1,7 @@
 import { control, spacing } from "./foundations.js";
 export { iconButtonRecipe, resolveIconButtonPresentation, type IconButtonShape, type IconButtonSize, type IconButtonTone, type ResolvedIconButtonPresentation, } from "./icon-button-recipe.js";
 export { counterBadgeDefaults, counterBadgeRecipe, formatCounterBadgeCount, type CounterBadgeSize, type CounterBadgeTone, type CounterBadgeVariant, } from "./counter-badge-recipe.js";
-export { progressRecipe, type ProgressSize, type ProgressTone, } from "./progress-recipe.js";
+export { progressRecipe, type ProgressShape, type ProgressSize, type ProgressTone, } from "./progress-recipe.js";
 export type { BottomNavigationDensity, BottomNavigationDistribution, BottomNavigationPresentation, } from "./bottom-navigation-defaults.js";
 export type TextTone = "primary" | "body" | "muted" | "subtle" | "weak" | "brand" | "danger" | "inverse";
 export type TextEmphasis = "regular" | "medium" | "strong";
@@ -719,7 +719,7 @@ export declare const listRecipe: {
     };
     readonly background: null;
 };
-export type ListRowDensity = "comfortable" | "compact";
+export type ListRowDensity = "compact" | "comfortable" | "relaxed" | "spacious";
 /** Frame geometry the ListRow paints around its leading slot. */
 export type ListRowLeadingShape = "square" | "circle";
 export declare const listRowRecipe: {
@@ -740,6 +740,18 @@ export declare const listRowRecipe: {
             readonly twoLineMinHeight: 68;
             readonly paddingHorizontal: 8;
             readonly paddingVertical: 8;
+        };
+        readonly relaxed: {
+            readonly oneLineMinHeight: number;
+            readonly twoLineMinHeight: number;
+            readonly paddingHorizontal: 8;
+            readonly paddingVertical: 12;
+        };
+        readonly spacious: {
+            readonly oneLineMinHeight: number;
+            readonly twoLineMinHeight: number;
+            readonly paddingHorizontal: 8;
+            readonly paddingVertical: 16;
         };
     };
     readonly gap: 12;
@@ -2741,7 +2753,12 @@ export declare const loadMoreRecipe: {
     };
 };
 export declare const avatarRecipe: {
-    readonly slots: readonly ["root", "image", "fallback", "badge"];
+    readonly slots: readonly ["root", "image", "fallback", "badge", "group"];
+    /**
+     * 겹쳐 쌓은 아바타 묶음이 얼마나 겹치는가. 비율로 두는 이유는 크기 축이 이미 네 단계라
+     * 픽셀로 적으면 네 벌이 되기 때문이다. 남은 인원은 제품이 문구로 만든다("+3").
+     */
+    readonly overlapRatio: 0.3;
     readonly defaults: {
         readonly size: "medium";
         readonly shape: "circle";

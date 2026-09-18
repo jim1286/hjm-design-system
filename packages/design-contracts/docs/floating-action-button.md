@@ -91,7 +91,9 @@ FAB는 collection 항목이 아니다. 스크롤 콘텐츠 **뒤**에 오는 고
   항상 전체 `label`(모드 무관). 아이콘은 decorative(`aria-hidden`).
 - Native: 절대 위치 + safe-area 하단 inset을 additive로 적용.
   `accessibilityLabel` 역시 항상 전체 `label`.
-- Reduce Motion: 모양 tween(원 ↔ 알약) 없이 아이콘/라벨 opacity 교차로 대체.
+- Reduce Motion: micro recipe의 `instant`에 맞춰 즉시 전환한다. 기존 문서의 crossfade
+  문구는 recipe와 달랐다. 일반 모드에서는 확장 라벨만 micro 길이로 나타나고,
+  원/알약의 레이아웃 변경을 큐에 쌓지 않는다.
 
 ## 공개한 축 / 배제한 축
 
@@ -107,5 +109,35 @@ FAB는 collection 항목이 아니다. 스크롤 콘텐츠 **뒤**에 오는 고
 
 ## 검증 화면
 
-아직 없음. `planned → beta` 승격은 실제 제품 vertical slice 이후 리드가
-진행한다. 유력 후보: Yajalal 마이 플레이어 목록의 "선수 추가".
+2026-09-16: React/RN `Patterns/Floating action button`에 스크롤 목록 → 기록 작성
+Dialog → 새 기록 추가 흐름을 구현했다. Flutter 앱은 이번 이관 범위에서 제외한다.
+
+## React / React Native 공개 API
+
+각 패키지의 `./floating-action-button`에서 `FloatingActionButton`,
+`useFloatingActionButtonScroll`, `resolveFloatingActionButtonContentClearance`를 제공한다.
+descriptor, renderIcon, onContentClearanceChange는 필수이고, 이벤트는 Web onClick,
+Native onPress다. renderIcon은 name/size/color/decorative를 받으며 그림 자체는
+제품의 아이콘 시스템이 그린다. onContentClearanceChange가 준 값을 목록의 하단
+padding에 적용한다. 최초 값은 clearance resolver로 구하고, 큰 글자의 다중 행은
+실제 측정 높이로 갱신한다. 기본 지름만 예약하면 큰 글자에서 마지막 항목을 가린다.
+
+Web hook은 생략하면 window, HTMLElement를 넘기면 해당 스크롤을 관찰한다.
+null은 대상 ref가 마운트될 때까지 기다린다. Native hook은 layoutMode와 onScroll을
+돌려주므로 ScrollView/FlatList의 onScroll에 연결한다. 작은 이동은 누적하고
+margin 토큰 절반을 넘어야 방향을 바꿔 트랙패드 떨림으로 접고 펴지 않게 한다.
+
+FAB는 같은 Button 인스턴스를 유지하고 라벨만 접는다. 모드별 Button/IconButton 교체는
+focus와 ref를 잃으므로 쓰지 않는다. Web은 논리적 끝의 fixed, Native는 전체 화면의
+positioned 부모 안에서 absolute sibling이다. Native에는 OS가 제공한 bottom inset을
+넘긴다. 내부 화면 도구막대의 높이는 제품이 추가로 반영한다.
+
+[MUI FAB](https://mui.com/material-ui/react-floating-action-button/)의 원형/확장 형태와
+단일 생성 행동을 비교했다. 시각 위계는 [TDS Button](https://tossmini-docs.toss.im/tds-mobile/components/button/)
+및 HJM [화면 구성](./screen-chrome.md)을 따른다. MUI의 다중 크기/색 variant는 가져오지
+않고 기존 HJM large/primary/pill 토큰을 쓴다. 외부 구현이나 아이콘을 포함하지 않는다.
+
+Web browser 테스트는 스크롤 방향, focus/ref 보존, 양방향 배치, 실제 다중 행 높이,
+safe area와 마지막 내용의 도달 가능성을 검사한다. Native 테스트는 onScroll,
+같은 Button 유지, logical end, onLayout clearance와 행동을 검사한다.
+기기 스크린 리더/키보드 및 제품 배포 증거는 별도로 쌓으며 beta로 유지한다.

@@ -55,7 +55,7 @@ function LiveComposition() {
       <div className="hjm-home-composition-bar">
         <span className="hjm-home-brand-mark" aria-hidden="true">H</span>
         <strong>Today</strong>
-        <button className="hjm-icon-button" aria-label="알림 보기">♡</button>
+        <button className="hjm-showcase-icon-button" aria-label="알림 보기">♡</button>
       </div>
       <div className="hjm-home-composition-body">
         <span className="hjm-pill" data-status="stable">Live contract</span>
@@ -118,7 +118,7 @@ export function Introduction() {
         <article><strong>{referenceCoverage.tracked}/{referenceCoverage.total}</strong><span>Ant Design scope tracked</span></article>
       </section>
 
-      <section className="hjm-section" aria-labelledby="roadmap-title">
+      <section className="hjm-showcase-section" aria-labelledby="roadmap-title">
         <div className="hjm-section-heading">
           <div>
             <p className="hjm-eyebrow">Roadmap clarity</p>
@@ -135,7 +135,7 @@ export function Introduction() {
         </div>
       </section>
 
-      <section className="hjm-section" aria-labelledby="featured-title">
+      <section className="hjm-showcase-section" aria-labelledby="featured-title">
         <div className="hjm-section-heading">
           <div>
             <p className="hjm-eyebrow">Start exploring</p>
@@ -165,7 +165,7 @@ export function Introduction() {
         </div>
       </section>
 
-      <section className="hjm-section" aria-labelledby="categories-title">
+      <section className="hjm-showcase-section" aria-labelledby="categories-title">
         <div className="hjm-section-heading">
           <div>
             <p className="hjm-eyebrow">System map</p>
@@ -193,7 +193,7 @@ export function Introduction() {
         </div>
       </section>
 
-      <section className="hjm-section hjm-reference-section" aria-labelledby="coverage-title">
+      <section className="hjm-showcase-section hjm-reference-section" aria-labelledby="coverage-title">
         <div>
           <p className="hjm-eyebrow">Reference coverage</p>
           <h2 className="hjm-section-title" id="coverage-title">넓게 참고하고, HJM답게 번역합니다.</h2>
@@ -217,7 +217,7 @@ export function Introduction() {
         </div>
       </section>
 
-      <section className="hjm-section" aria-labelledby="environment-title">
+      <section className="hjm-showcase-section" aria-labelledby="environment-title">
         <p className="hjm-eyebrow">Built for real environments</p>
         <h2 className="hjm-section-title" id="environment-title">한 Story, 다섯 가지 필수 증거</h2>
         <div className="hjm-environment-strip">

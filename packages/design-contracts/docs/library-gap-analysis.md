@@ -49,15 +49,35 @@ control의 `accessibilityLabel`/`accessibilityHint`가 canonical 번역이다.
 
 ## 이번에 채택하지 않음
 
-- `Kbd`, `Code`, `Blockquote`: 제품·문서 콘텐츠 표현이며 HJM의 상호작용 계약이 없다.
-- `ScrollArea`: Web custom scrollbar와 Native `ScrollView`는 같은 public 의미가 아니고,
-  기본 host scrolling을 감싸는 것만으로는 결함이 줄지 않는다.
-- `Toolbar`, `Menubar`, `ContextMenu`: desktop keyboard model과 실제 제품 vertical slice가
-  먼저 필요하다.
-- `Heading`: `Section`과 semantic heading level, `Text` typography가 이미 책임을 나눠 가진다.
-- `ProgressCircle`: 새 컴포넌트보다 기존 `Progress`의 presentation axis인지 먼저 검증해야 한다.
-- `Popover`, `DataTable`, `SidePanel`, `CommandPalette`: 계약은 이미 준비되어 있다. 제품
-  vertical slice가 확인되면 planned → beta로 올리며 별도 새 catalog 항목은 만들지 않는다.
+> 2026-09-18 갱신: 아래 목록의 전제가 커버리지 감사로 바뀐 항목이 여럿이다. 바뀐 줄은
+> 그대로 두고 **무엇이 뒤집혔는지**와 그 근거를 함께 적는다 — 판정만 지우면 다음 사람이
+> 같은 질문을 다시 한다.
+
+- `Kbd`, `Code`, `Blockquote`: ~~제품·문서 콘텐츠 표현이며 HJM의 상호작용 계약이 없다.~~
+  **뒤집혔다.** 세 표현이 제품마다 다른 요소로 그려지던 것이 문제였다. 상호작용이 아니라
+  **의미 있는 요소를 고르는 판정**을 계약으로 두고 `TextFormat`으로 구현했다.
+- `ScrollArea`: **유효하다.** Web custom scrollbar와 Native `ScrollView`는 같은 public
+  의미가 아니고, 기본 host scrolling을 감싸는 것만으로는 결함이 줄지 않는다. 2026-09-18
+  감사에서도 제품 두 곳 이상이 같은 문제를 겪은 사례가 없어 판정을 유지한다.
+- `Toolbar`: **유효하다.** desktop keyboard model과 실제 제품 vertical slice가 먼저 필요하다.
+- `Menubar`, `ContextMenu`: ~~desktop keyboard model과 vertical slice가 먼저 필요하다.~~
+  **뒤집혔다.** 두 컴포넌트의 값은 "Menu 여러 개로 대체되지 않는 키보드 단위"와 "트리거가
+  없어도 키보드로 열 수 있어야 한다"는 판정이고, 그것은 제품 slice를 기다릴 필요가 없었다.
+  각각 [menubar.md](./menubar.md) · [context-menu.md](./context-menu.md).
+- `Heading`: ~~`Section`·`Text`가 이미 책임을 나눠 가진다.~~ **뒤집혔다.** `foundations`의
+  heading 스케일 다섯 단계를 **어떤 renderer도 노출하지 않고** 있었다. 새 스케일을 만든
+  것이 아니라 있던 것을 꺼냈다.
+- `ProgressCircle`: ~~`Progress`의 presentation axis인지 먼저 검증해야 한다.~~ **검증했고,
+  맞았다.** 새 컴포넌트가 아니라 `Progress`의 `shape` 축으로 들어갔다.
+- `Popover`, `DataTable`, `SidePanel`, `CommandPalette`: **닫혔다.** 넷 다 renderer가 들어와
+  planned → beta로 올라갔고, 예고한 대로 새 catalog 항목은 만들지 않았다.
+- `ListHeader`(TDS): **채택하지 않는다.** 제목·설명·우측 행동으로 이루어진 목록 머리는
+  `Section`이 이미 갖는 구조다. 다른 점은 "목록 바로 위"라는 **위치**뿐인데, 위치는 계약이
+  아니라 배치다. 목록 전용 변형을 따로 두면 같은 제목이 화면 위치에 따라 다른 컴포넌트가
+  된다. `Section` + `List` 조합으로 충분하고, 그 조합이 부족하다는 실측이 나오면 그때
+  `Section`의 축으로 검토한다.
+- `Chart`: **토큰만 채택한다.** 렌더러는 만들지 않고 계열 팔레트·축·격자·범례 토큰만
+  고정한다. 근거는 [chart.md](./chart.md).
 
 ## 후속 검토
 

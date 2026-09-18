@@ -139,5 +139,5 @@ export declare const floatingActionButtonRecipe: {
  * wires into src/behaviors.ts). Kept here, not there, so this module stays
  * self-contained per the authoring brief.
  */
-export declare const floatingActionButtonBehaviorScenarios: readonly ["collapses-on-scroll-away-from-start-without-losing-the-44-unit-target", "expands-on-scroll-toward-start", "idle-scroll-signal-does-not-change-the-current-mode", "accessible-name-is-the-full-label-in-both-layout-modes", "content-clearance-accounts-for-the-safe-area-inset-additively", "root-sits-after-scrollable-content-in-reading-and-tab-order", "reduced-motion-crossfades-icon-and-label-without-a-shape-tween"];
+export declare const floatingActionButtonBehaviorScenarios: readonly ["collapses-on-scroll-away-from-start-without-losing-the-44-unit-target", "expands-on-scroll-toward-start", "idle-scroll-signal-does-not-change-the-current-mode", "accessible-name-is-the-full-label-in-both-layout-modes", "content-clearance-accounts-for-the-safe-area-inset-additively", "root-sits-after-scrollable-content-in-reading-and-tab-order", "reduced-motion-switches-instantly-without-a-shape-tween"];
 //# sourceMappingURL=floating-action-button.d.ts.map

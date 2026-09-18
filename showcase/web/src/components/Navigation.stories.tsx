@@ -8,10 +8,13 @@ type Story = StoryObj<typeof meta>;
 
 export const Tabs: Story = componentStory("Tabs");
 export const TopBar: Story = componentStory("TopBar");
+export const Sidebar: Story = componentStory("Sidebar");
 export const BottomNavigation: Story = componentStory("BottomNavigation");
 export const Breadcrumb: Story = componentStory("Breadcrumb");
 export const Pagination: Story = componentStory("Pagination");
 export const LoadMore: Story = componentStory("LoadMore");
 export const Steps: Story = componentStory("Steps");
 export const Menu: Story = componentStory("Menu");
+export const ContextMenu: Story = componentStory("ContextMenu");
+export const Menubar: Story = componentStory("Menubar");
 export const Anchor: Story = componentStory("Anchor");

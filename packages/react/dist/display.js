@@ -5,6 +5,7 @@ import { cardRecipe, } from "@hjmds/design-contracts/components/card";
 import { surfaceGeometry, } from "@hjmds/design-contracts/recipes/base";
 import { createElement, forwardRef, } from "react";
 import { classNames } from "./internal.js";
+import { useHjmDensityDefault } from "./provider.js";
 import { Surface, Text } from "./layout.js";
 export const Badge = forwardRef(function Badge({ tone = badgeRecipe.defaults.tone, size = badgeRecipe.defaults.size, variant = badgeRecipe.defaults.variant, leading, className, children, layoutStyle, style, ...props }, ref) {
     return (_jsxs("span", { ...props, style: { ...style, ...layoutStyle }, ref: ref, className: classNames("hjm-badge", className), "data-tone": tone, "data-size": size, "data-variant": variant, children: [leading === undefined ? null : (_jsx("span", { "aria-hidden": "true", className: "hjm-badge__icon", children: leading })), _jsx("span", { className: "hjm-badge__label", children: children })] }));
@@ -22,7 +23,18 @@ export const Card = forwardRef(function Card({ title, description, leading, medi
                                         ? null
                                         : createElement(`h${headingLevel}`, { className: "hjm-card__title", "data-slot": "title" }, title), description === undefined ? null : (_jsx(Text, { as: "p", tone: "muted", className: "hjm-card__description", "data-slot": "description", children: description }))] })] })) : null, children === undefined ? null : (_jsx("div", { className: "hjm-card__content", "data-slot": "content", children: children }))] }), actions ? _jsx("div", { className: "hjm-card__actions", "data-slot": "actions", children: actions }) : null] }));
 });
-export const ListRow = forwardRef(function ListRow({ title, description, leading, trailing, density = listRowRecipe.defaults.density, leadingShape = "square", selected = listRowRecipe.defaults.selected, disabled = false, href, onClick, className, layoutStyle, style, ...props }, ref) {
+export const ListRow = forwardRef(function ListRow({ title, description, leading, trailing, density: densityProp, leadingShape = "square", selected = listRowRecipe.defaults.selected, disabled = false, loading = false, loadingLabel, href, onClick, className, layoutStyle, style, ...props }, ref) {
+    // The hook runs unconditionally — `??` would short-circuit it and break the
+    // rules of hooks on the very first row that passes `density`.
+    const densityDefault = useHjmDensityDefault({
+        comfortable: listRowRecipe.defaults.density,
+        compact: "compact",
+    });
+    const density = densityProp ?? densityDefault;
+    if (loading) {
+        // A loading row is never interactive: there is nothing to activate yet.
+        return (_jsxs("div", { ...props, ref: ref, role: "status", "aria-busy": "true", "aria-label": loadingLabel, className: classNames("hjm-list-row", "hjm-list-row--loading", className), "data-density": density, "data-lines": description ? "two" : "one", "data-state": "loading", style: { ...style, ...layoutStyle }, children: [leading ? _jsx("span", { className: "hjm-list-row__leading", "data-shape": leadingShape, "data-placeholder": "" }) : null, _jsxs("span", { className: "hjm-list-row__content", children: [_jsx("span", { className: "hjm-list-row__title", "data-placeholder": "" }), description ? _jsx("span", { className: "hjm-list-row__description", "data-placeholder": "" }) : null] }), trailing ? _jsx("span", { className: "hjm-list-row__trailing", "data-placeholder": "" }) : null] }));
+    }
     const element = href ? "a" : onClick ? "button" : "div";
     const interactiveProps = href
         ? {

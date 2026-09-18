@@ -14,5 +14,6 @@ export const Container: Story = componentStory("Container");
 export const AspectRatio: Story = componentStory("AspectRatio");
 export const Grid: Story = componentStory("Grid");
 export const Layout: Story = componentStory("Layout");
+export const Top: Story = componentStory("Top");
 export const Masonry: Story = componentStory("Masonry");
 export const Splitter: Story = componentStory("Splitter");

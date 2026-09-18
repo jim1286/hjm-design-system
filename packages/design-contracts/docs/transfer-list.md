@@ -92,3 +92,23 @@ Native의 "터치 전용"에도 같게 적용되므로, 버튼이 항상 스와�
 ## 검증 화면
 
 아직 없음. `planned → beta` 승격은 실제 제품 vertical slice 이후 리드가 진행한다.
+
+## Web renderer (2026-09-18)
+
+`@hjmds/react/transfer-list`의 `TransferList`가 이 계약을 실행한다. catalog는 Web `beta`,
+Native `planned`다 — Native renderer는 아직 없다.
+
+- **이동은 키보드만으로 끝난다.** Space로 고르고 이동 버튼을 누르거나, 초점이 있는 행에서
+  Enter로 그 행 하나만 바로 옮긴다. 후자는 계약의 "단일 이동에 다중 선택을 먼저 만들게
+  하지 않는다"는 항목이다.
+- **이동 후 초점은 계약이 정한다.** `resolveTransferListFocusAfterMove`가 미끄러져 들어온
+  행을 돌려주고, 패널이 비면 빈 상태 문구(`tabIndex=-1`)로 보낸다. 문서 body로 초점이
+  풀리는 경우가 없다.
+- **옮긴 항목은 도착 패널에서 선택되지 않는다.** 이동은 값을 확정하는 것이지 사용자가 하지
+  않은 새 선택을 만드는 것이 아니다.
+- **모두 선택은 disabled를 분모에서 뺀다.** 분자·분모 모두에서 빠지므로 잠긴 행이 있어도
+  "모두 선택"이 mixed로 굳지 않는다.
+- **문장은 제품이 만든다.** `onMove`는 옮긴 id를 원래 패널 순서로만 넘긴다.
+- 로컬 검증: `test/transfer-list.browser.test.tsx` 5개(키보드 다중 이동과 id 보고, 단일
+  행 즉시 이동, 이동 후 초점과 빈 상태 초점, disabled 제외와 이동 금지, 되돌리기와 패널당
+  tab stop 하나)와 `Patterns/TransferList`.

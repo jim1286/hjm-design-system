@@ -5,6 +5,7 @@ import {
   skeletonRecipe,
   spinnerRecipe,
   type NoticeTone,
+  type ProgressShape,
   type ProgressSize,
   type ProgressTone,
   type SpinnerSize,
@@ -19,6 +20,7 @@ import {
   type HTMLAttributes,
   type ProgressHTMLAttributes,
   type ReactNode,
+  type CSSProperties,
 } from "react";
 import { classNames } from "./internal.js";
 import { Button } from "./actions.js";
@@ -190,6 +192,14 @@ export type ProgressProps = Omit<
     valueText?: string;
     size?: ProgressSize;
     tone?: ProgressTone;
+    /**
+     * `circular` draws the same value as a ring. It is a shape, not a second
+     * component: min/max/now, the indeterminate case and the announcement are
+     * identical, so the accessibility contract stays in one place.
+     */
+    shape?: ProgressShape;
+    /** Content inside the ring — a percentage, a count, an icon. Ignored when linear. */
+    children?: ReactNode;
   }>;
 
 export const Progress = forwardRef<HTMLProgressElement, ProgressProps>(
@@ -201,6 +211,8 @@ export const Progress = forwardRef<HTMLProgressElement, ProgressProps>(
       max = 100,
       size = progressRecipe.defaults.size,
       tone = progressRecipe.defaults.tone,
+      shape = progressRecipe.defaults.shape,
+      children,
       className,
       ...props
     },
@@ -215,17 +227,32 @@ export const Progress = forwardRef<HTMLProgressElement, ProgressProps>(
     ) {
       throw new RangeError("Progress value must be between zero and max");
     }
+    const diameter = progressRecipe.circular.sizes[size];
+    const strokeWidth = progressRecipe.circular.strokeWidth[size];
     return (
       <div
         className={classNames("hjm-progress", className)}
         data-size={size}
         data-tone={tone}
+        data-shape={shape}
         data-state={value === undefined ? "indeterminate" : "determinate"}
+        style={shape === "circular" ? ({
+          "--hjm-progress-diameter": `${diameter}px`,
+          "--hjm-progress-stroke": `${strokeWidth}px`,
+          // Conic sweep instead of an SVG arc: the same token drives both
+          // shapes and no second color pipeline appears.
+          "--hjm-progress-sweep": value === undefined ? "25%" : `${(value / max) * 100}%`,
+        } as CSSProperties) : undefined}
       >
         <span className="hjm-progress__copy">
           <span>{label}</span>
           {valueText ? <span>{valueText}</span> : null}
         </span>
+        {shape === "circular" ? (
+          <span className="hjm-progress__ring" aria-hidden="true">
+            {children ? <span className="hjm-progress__ring-content">{children}</span> : null}
+          </span>
+        ) : null}
         <progress
           {...props}
           ref={ref}

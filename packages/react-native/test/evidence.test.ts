@@ -1,3 +1,18 @@
+import * as agreement from "../src/agreement.js";
+import * as calendar from "../src/calendar.js";
+import * as providerButton from "../src/provider-button.js";
+import * as headingModule from "../src/heading.js";
+import * as bottomInfo from "../src/bottom-info.js";
+import * as collapsible from "../src/collapsible.js";
+import * as asset from "../src/asset.js";
+import * as tagsInput from "../src/tags-input.js";
+import * as dateRange from "../src/date-range.js";
+import * as mentions from "../src/mentions.js";
+import * as transferList from "../src/transfer-list.js";
+import * as toggleGroup from "../src/toggle-group.js";
+import * as top from "../src/top.js";
+import * as floatingActionButton from "../src/floating-action-button.js";
+import * as carousel from "../src/carousel.js";
 import { readFile } from "node:fs/promises";
 import { URL, fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
@@ -25,9 +40,24 @@ import * as steps from "../src/steps.js";
 import * as uploadItem from "../src/upload-item.js";
 
 const publicModules: Readonly<Record<string, Readonly<Record<string, unknown>>>> = {
+  "./carousel": carousel,
+  "./floating-action-button": floatingActionButton,
   "./actions": actions,
   "./data-display": dataDisplay,
   "./date-picker": datePicker,
+  "./calendar": calendar,
+  "./agreement": agreement,
+  "./top": top,
+  "./heading": headingModule,
+  "./toggle-group": toggleGroup,
+  "./bottom-info": bottomInfo,
+  "./collapsible": collapsible,
+  "./asset": asset,
+  "./tags-input": tagsInput,
+  "./date-range": dateRange,
+  "./mentions": mentions,
+  "./transfer-list": transferList,
+  "./provider-button": providerButton,
   "./feedback": feedback,
   "./file-picker": filePicker,
   "./forms": forms,
@@ -59,7 +89,7 @@ describe("@hjmds/react-native renderer evidence", () => {
     const componentIds = reactNativeRendererEvidence.components.map(
       ({ componentId }) => componentId,
     );
-    expect(componentIds).toHaveLength(63);
+    expect(componentIds).toHaveLength(78);
     expect(componentIds).toContain("combobox");
     expect(componentIds).toContain("load-more");
     expect(new Set(componentIds).size).toBe(componentIds.length);

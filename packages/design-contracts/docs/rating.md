@@ -56,3 +56,22 @@
 3. 두 형태 중 하나가 기존 값 수학이나 접근성 계약으로 표현할 수 없는 요구(예: 정수도
    반정수도 아닌 자유 분수 표시, 별 모양이 아닌 클릭 불가 장식과 클릭 가능 입력이
    레이아웃까지 완전히 달라야 하는 경우)를 드러내면 이 판정을 다시 연다.
+
+
+## 2026-09-16: React/RN 작동 조합
+
+명시 요청에 따라 `Patterns/Rating`에 정수/0.5점 입력과 읽기 전용 평균 표시를 추가했다.
+입력은 기존 Slider, 현재값과 평균 표시는 Statistic이며 별 모양 variant를 새로 만든 것은 아니다.
+
+- [Web 예제](../../../showcase/web/src/patterns/Rating.stories.tsx): `@hjmds/react/slider`,
+  `@hjmds/react/display`, `@hjmds/react/actions`의 공개 API를 조합한다.
+- [Native 예제](../../../showcase/native/src/Rating.stories.tsx): 대응하는 Native 공개 API와
+  올리기/내리기 접근성 라벨을 사용한다.
+- 값은 1–5, `step`은 1 또는 0.5다. `getValueText`는 만점과 현재 점수를 함께 읽는다.
+  값 변경은 입력 상태이고, 저장은 별도 행동이다. 수정하면 이전 저장 완료 표시를 해제한다.
+- 읽기 전용 4.3/5 예제는 Statistic만 제공하며 조작 가능한 Slider를 만들지 않는다.
+- 브라우저에서 키보드로 3 → 3.5 변경, 값 표시·접근성 값·저장 결과를 확인했다.
+  Native는 타입·Showcase 검사 범위이며 실제 기기 검증은 별도다.
+
+독립 Rating API를 추가하지 않았으므로 catalog의 composed 행과 renderer 수는 유지한다.
+이 요청의 합성 예제 범위는 완료됐지만 별점 icon variant 채택을 증명하는 것은 아니다.

@@ -14,9 +14,9 @@ function SpacingAndMotion() {
       <p className="hjm-lead">
         Web은 px, Native는 dp로 번역하지만 같은 리듬과 전환 의도를 유지합니다.
       </p>
-      <section className="hjm-section" aria-labelledby="spacing-title">
+      <section className="hjm-showcase-section" aria-labelledby="spacing-title">
         <h2 className="hjm-section-title" id="spacing-title">Spacing</h2>
-        <div className="hjm-card">
+        <div className="hjm-showcase-card">
           {Object.entries(spacing).map(([name, value]) => (
             <div className="hjm-token-row" key={name}>
               <strong>{name}</strong>
@@ -30,11 +30,11 @@ function SpacingAndMotion() {
           ))}
         </div>
       </section>
-      <section className="hjm-section" aria-labelledby="shape-title">
+      <section className="hjm-showcase-section" aria-labelledby="shape-title">
         <h2 className="hjm-section-title" id="shape-title">Radius</h2>
-        <div className="hjm-grid">
+        <div className="hjm-showcase-grid">
           {Object.entries(radius).map(([name, value]) => (
-            <article className="hjm-card" key={name}>
+            <article className="hjm-showcase-card" key={name}>
               <div
                 aria-hidden="true"
                 className="hjm-radius-sample"
@@ -45,11 +45,11 @@ function SpacingAndMotion() {
           ))}
         </div>
       </section>
-      <section className="hjm-section" aria-labelledby="motion-title">
+      <section className="hjm-showcase-section" aria-labelledby="motion-title">
         <h2 className="hjm-section-title" id="motion-title">Motion presets</h2>
-        <div className="hjm-grid">
+        <div className="hjm-showcase-grid">
           {Object.entries(motionPreset).map(([name, value]) => (
-            <article className="hjm-card" key={name}>
+            <article className="hjm-showcase-card" key={name}>
               <span className="hjm-pill">{name}</span>
               <h3>{value.duration}ms</h3>
               <p className="hjm-muted">{value.easing} · reduced: {value.reducedMotion}</p>
@@ -66,7 +66,7 @@ function SpacingAndMotion() {
               </div>
             </article>
           ))}
-          <article className="hjm-card">
+          <article className="hjm-showcase-card">
             <span className="hjm-pill">continuous</span>
             <h3>Static fallback</h3>
             <p className="hjm-muted">Continuous indicators pause at Reduce Motion.</p>

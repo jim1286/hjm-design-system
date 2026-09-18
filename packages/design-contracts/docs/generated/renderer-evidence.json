@@ -6,8 +6,8 @@
     "web": {
       "packageName": "@hjmds/react",
       "packageVersion": "1.1.1",
-      "activeComponents": 63,
-      "claimedComponents": 63,
+      "activeComponents": 95,
+      "claimedComponents": 95,
       "completeScenarioComponents": 33,
       "components": [
         {
@@ -53,6 +53,100 @@
             "accessibility"
           ],
           "missingScenarios": []
+        },
+        {
+          "componentId": "text-format",
+          "name": "TextFormat",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./text-formats",
+          "exportNames": [
+            "TextFormat"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "text-format"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard"
+          ]
+        },
+        {
+          "componentId": "heading",
+          "name": "Heading",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./heading",
+          "exportNames": [
+            "Heading"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "heading"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard"
+          ]
         },
         {
           "componentId": "icon",
@@ -459,6 +553,102 @@
           ]
         },
         {
+          "componentId": "top",
+          "name": "Top",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./top",
+          "exportNames": [
+            "Top"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "top"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "componentId": "splitter",
+          "name": "Splitter",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./splitter",
+          "exportNames": [
+            "Splitter"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "splitter"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard"
+          ]
+        },
+        {
           "componentId": "button",
           "name": "Button",
           "status": "stable",
@@ -568,6 +758,151 @@
               ],
               "file": "test/default-render.ssr.test.tsx",
               "caseId": "link"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "componentId": "bottom-cta",
+          "name": "BottomCTA",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./bottom-cta",
+          "exportNames": [
+            "BottomCTA"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "bottom-cta"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "platform-parity"
+          ]
+        },
+        {
+          "componentId": "floating-action-button",
+          "name": "FloatingActionButton",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./floating-action-button",
+          "exportNames": [
+            "FloatingActionButton"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "floating-action-button"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "componentId": "auth-provider-button",
+          "name": "AuthProviderButton",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./provider-button",
+          "exportNames": [
+            "AuthProviderButton"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "auth-provider-button"
             }
           ],
           "requiredScenarios": [
@@ -1165,6 +1500,104 @@
           ]
         },
         {
+          "componentId": "toggle-group",
+          "name": "ToggleGroup",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./toggle-group",
+          "exportNames": [
+            "ToggleGroup"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "toggle-group"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "componentId": "tags-input",
+          "name": "TagsInput",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./tags-input",
+          "exportNames": [
+            "TagsInput"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "tags-input"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
           "componentId": "slider",
           "name": "Slider",
           "status": "beta",
@@ -1406,6 +1839,55 @@
           ]
         },
         {
+          "componentId": "date-range-picker",
+          "name": "DateRangePicker",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./date-range",
+          "exportNames": [
+            "DateRangePicker"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "date-range-picker"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
           "componentId": "file-picker",
           "name": "FilePicker",
           "status": "beta",
@@ -1499,6 +1981,153 @@
           ],
           "missingScenarios": [
             "keyboard"
+          ]
+        },
+        {
+          "componentId": "agreement",
+          "name": "Agreement",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./agreement",
+          "exportNames": [
+            "Agreement"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "agreement"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "componentId": "mentions",
+          "name": "Mentions",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./mentions",
+          "exportNames": [
+            "Mentions"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "mentions"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "componentId": "transfer-list",
+          "name": "TransferList",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./transfer-list",
+          "exportNames": [
+            "TransferList"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "transfer-list"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard",
+            "platform-parity"
           ]
         },
         {
@@ -1596,6 +2225,100 @@
           ]
         },
         {
+          "componentId": "top-bar",
+          "name": "TopBar",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./top-bar",
+          "exportNames": [
+            "TopBar"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "top-bar"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "platform-parity"
+          ]
+        },
+        {
+          "componentId": "sidebar",
+          "name": "Sidebar",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./sidebar",
+          "exportNames": [
+            "Sidebar"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "sidebar"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard"
+          ]
+        },
+        {
           "componentId": "bottom-navigation",
           "name": "BottomNavigation",
           "status": "beta",
@@ -1642,6 +2365,100 @@
           "missingScenarios": [
             "keyboard",
             "platform-parity"
+          ]
+        },
+        {
+          "componentId": "breadcrumb",
+          "name": "Breadcrumb",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./breadcrumb",
+          "exportNames": [
+            "Breadcrumb"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "breadcrumb"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard"
+          ]
+        },
+        {
+          "componentId": "pagination",
+          "name": "Pagination",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./pagination",
+          "exportNames": [
+            "Pagination"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "pagination"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard"
           ]
         },
         {
@@ -1736,6 +2553,100 @@
           "missingScenarios": []
         },
         {
+          "componentId": "menubar",
+          "name": "Menubar",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./menubar",
+          "exportNames": [
+            "Menubar"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "menubar"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard"
+          ]
+        },
+        {
+          "componentId": "context-menu",
+          "name": "ContextMenu",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./context-menu",
+          "exportNames": [
+            "ContextMenu"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "context-menu"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard"
+          ]
+        },
+        {
           "componentId": "menu",
           "name": "Menu",
           "status": "beta",
@@ -1785,6 +2696,53 @@
           ]
         },
         {
+          "componentId": "anchor",
+          "name": "Anchor",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./anchor",
+          "exportNames": [
+            "Anchor"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "anchor"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard"
+          ]
+        },
+        {
           "componentId": "avatar",
           "name": "Avatar",
           "status": "beta",
@@ -1827,6 +2785,56 @@
             "accessibility"
           ],
           "missingScenarios": []
+        },
+        {
+          "componentId": "asset",
+          "name": "Asset",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./asset",
+          "exportNames": [
+            "Asset",
+            "AssetGroup"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "asset"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard",
+            "platform-parity"
+          ]
         },
         {
           "componentId": "badge",
@@ -2049,6 +3057,55 @@
           "missingScenarios": []
         },
         {
+          "componentId": "collapsible",
+          "name": "Collapsible",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./collapsible",
+          "exportNames": [
+            "Collapsible"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "collapsible"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
           "componentId": "accordion",
           "name": "Accordion",
           "status": "beta",
@@ -2185,6 +3242,196 @@
           "missingScenarios": []
         },
         {
+          "componentId": "data-table",
+          "name": "DataTable",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./data-table",
+          "exportNames": [
+            "DataTable"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "data-table"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard"
+          ]
+        },
+        {
+          "componentId": "tree",
+          "name": "Tree",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./tree",
+          "exportNames": [
+            "Tree"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "tree"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard"
+          ]
+        },
+        {
+          "componentId": "calendar",
+          "name": "Calendar",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./calendar",
+          "exportNames": [
+            "Calendar"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "calendar"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard"
+          ]
+        },
+        {
+          "componentId": "carousel",
+          "name": "Carousel",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./carousel",
+          "exportNames": [
+            "Carousel"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "carousel"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
           "componentId": "description-list",
           "name": "DescriptionList",
           "status": "beta",
@@ -2315,6 +3562,53 @@
             "accessibility"
           ],
           "missingScenarios": []
+        },
+        {
+          "componentId": "tour",
+          "name": "Tour",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./tour",
+          "exportNames": [
+            "Tour"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "tour"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard"
+          ]
         },
         {
           "componentId": "empty-state",
@@ -2581,6 +3875,55 @@
           "missingScenarios": []
         },
         {
+          "componentId": "bottom-info",
+          "name": "BottomInfo",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./bottom-info",
+          "exportNames": [
+            "BottomInfo"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "bottom-info"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
           "componentId": "toast",
           "name": "Toast",
           "status": "beta",
@@ -2603,6 +3946,16 @@
                 "accessibility"
               ],
               "file": "test/default-render.ssr.test.tsx",
+              "caseId": "toast"
+            },
+            {
+              "scenarios": [
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl"
+              ],
+              "file": "test/toast-layout.browser.test.tsx",
               "caseId": "toast"
             }
           ],
@@ -2779,6 +4132,100 @@
           ]
         },
         {
+          "componentId": "side-panel",
+          "name": "SidePanel",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./side-panel",
+          "exportNames": [
+            "SidePanel"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "side-panel"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard"
+          ]
+        },
+        {
+          "componentId": "popover",
+          "name": "Popover",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./popover",
+          "exportNames": [
+            "Popover"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "popover"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard"
+          ]
+        },
+        {
           "componentId": "tooltip",
           "name": "Tooltip",
           "status": "beta",
@@ -2800,6 +4247,53 @@
               ],
               "file": "test/default-render.ssr.test.tsx",
               "caseId": "tooltip"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard"
+          ]
+        },
+        {
+          "componentId": "command-palette",
+          "name": "CommandPalette",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./command-palette",
+          "exportNames": [
+            "CommandPalette"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "command-palette"
             }
           ],
           "requiredScenarios": [
@@ -2871,6 +4365,53 @@
           "missingScenarios": []
         },
         {
+          "componentId": "skip-nav",
+          "name": "SkipNav",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./skip-nav",
+          "exportNames": [
+            "SkipNav"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "skip-nav"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard"
+          ]
+        },
+        {
           "componentId": "visually-hidden",
           "name": "VisuallyHidden",
           "status": "beta",
@@ -2919,9 +4460,9 @@
     "native": {
       "packageName": "@hjmds/react-native",
       "packageVersion": "1.1.1",
-      "activeComponents": 63,
-      "claimedComponents": 63,
-      "completeScenarioComponents": 34,
+      "activeComponents": 78,
+      "claimedComponents": 78,
+      "completeScenarioComponents": 32,
       "components": [
         {
           "componentId": "text",
@@ -2966,6 +4507,53 @@
             "accessibility"
           ],
           "missingScenarios": []
+        },
+        {
+          "componentId": "heading",
+          "name": "Heading",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./heading",
+          "exportNames": [
+            "Heading"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "heading"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard"
+          ]
         },
         {
           "componentId": "icon",
@@ -3372,6 +4960,55 @@
           ]
         },
         {
+          "componentId": "top",
+          "name": "Top",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./top",
+          "exportNames": [
+            "Top"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "top"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
           "componentId": "button",
           "name": "Button",
           "status": "stable",
@@ -3539,7 +5176,8 @@
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility"
+            "accessibility",
+            "platform-parity"
           ],
           "claimedScenarios": [
             "default",
@@ -3550,7 +5188,107 @@
             "reduced-motion",
             "accessibility"
           ],
-          "missingScenarios": []
+          "missingScenarios": [
+            "platform-parity"
+          ]
+        },
+        {
+          "componentId": "floating-action-button",
+          "name": "FloatingActionButton",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./floating-action-button",
+          "exportNames": [
+            "FloatingActionButton"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "floating-action-button"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "componentId": "auth-provider-button",
+          "name": "AuthProviderButton",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./provider-button",
+          "exportNames": [
+            "AuthProviderButton"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "auth-provider-button"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard",
+            "platform-parity"
+          ]
         },
         {
           "componentId": "field",
@@ -4121,6 +5859,104 @@
           ]
         },
         {
+          "componentId": "toggle-group",
+          "name": "ToggleGroup",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./toggle-group",
+          "exportNames": [
+            "ToggleGroup"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "toggle-group"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "componentId": "tags-input",
+          "name": "TagsInput",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./tags-input",
+          "exportNames": [
+            "TagsInput"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "tags-input"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
           "componentId": "slider",
           "name": "Slider",
           "status": "beta",
@@ -4362,6 +6198,55 @@
           ]
         },
         {
+          "componentId": "date-range-picker",
+          "name": "DateRangePicker",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./date-range",
+          "exportNames": [
+            "DateRangePicker"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "date-range-picker"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
           "componentId": "file-picker",
           "name": "FilePicker",
           "status": "beta",
@@ -4455,6 +6340,153 @@
           ],
           "missingScenarios": [
             "keyboard"
+          ]
+        },
+        {
+          "componentId": "agreement",
+          "name": "Agreement",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./agreement",
+          "exportNames": [
+            "Agreement"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "agreement"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "componentId": "mentions",
+          "name": "Mentions",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./mentions",
+          "exportNames": [
+            "Mentions"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "mentions"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "componentId": "transfer-list",
+          "name": "TransferList",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./transfer-list",
+          "exportNames": [
+            "TransferList"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "transfer-list"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard",
+            "platform-parity"
           ]
         },
         {
@@ -4583,7 +6615,8 @@
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility"
+            "accessibility",
+            "platform-parity"
           ],
           "claimedScenarios": [
             "default",
@@ -4594,7 +6627,9 @@
             "reduced-motion",
             "accessibility"
           ],
-          "missingScenarios": []
+          "missingScenarios": [
+            "platform-parity"
+          ]
         },
         {
           "componentId": "bottom-navigation",
@@ -4830,6 +6865,56 @@
           "missingScenarios": []
         },
         {
+          "componentId": "asset",
+          "name": "Asset",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./asset",
+          "exportNames": [
+            "Asset",
+            "AssetGroup"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "asset"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
           "componentId": "badge",
           "name": "Badge",
           "status": "beta",
@@ -5050,6 +7135,55 @@
           "missingScenarios": []
         },
         {
+          "componentId": "collapsible",
+          "name": "Collapsible",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./collapsible",
+          "exportNames": [
+            "Collapsible"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "collapsible"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
           "componentId": "accordion",
           "name": "Accordion",
           "status": "beta",
@@ -5184,6 +7318,102 @@
             "accessibility"
           ],
           "missingScenarios": []
+        },
+        {
+          "componentId": "calendar",
+          "name": "Calendar",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./calendar",
+          "exportNames": [
+            "Calendar"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "calendar"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard"
+          ]
+        },
+        {
+          "componentId": "carousel",
+          "name": "Carousel",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./carousel",
+          "exportNames": [
+            "Carousel"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "carousel"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard",
+            "platform-parity"
+          ]
         },
         {
           "componentId": "description-list",
@@ -5580,6 +7810,55 @@
             "accessibility"
           ],
           "missingScenarios": []
+        },
+        {
+          "componentId": "bottom-info",
+          "name": "BottomInfo",
+          "status": "beta",
+          "claimed": true,
+          "subpath": "./bottom-info",
+          "exportNames": [
+            "BottomInfo"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default",
+                "dark",
+                "long-copy",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "accessibility"
+              ],
+              "file": "test/default-render.test.tsx",
+              "caseId": "bottom-info"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "missingScenarios": [
+            "keyboard",
+            "platform-parity"
+          ]
         },
         {
           "componentId": "toast",

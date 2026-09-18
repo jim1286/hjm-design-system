@@ -1,4 +1,4 @@
-import { type DesignSystemDirection, type DesignSystemProviderValue, type DesignSystemTextScale } from "@hjmds/design-contracts/components/design-system-provider";
+import { type DesignSystemDensity, type DesignSystemDirection, type DesignSystemProviderValue, type DesignSystemTextScale } from "@hjmds/design-contracts/components/design-system-provider";
 import type { ResolvedTheme, ThemePreference } from "@hjmds/design-contracts/colors";
 import { type HTMLAttributes, type ReactNode } from "react";
 export type TooltipCoordinator = Readonly<{
@@ -14,6 +14,8 @@ type HjmProviderEnvironmentProps = Readonly<{
     textScale?: DesignSystemTextScale;
     reducedMotion?: boolean;
     minimumVisualTarget?: boolean;
+    /** Default row/menu/table density below this provider; each component's prop wins. */
+    density?: DesignSystemDensity;
     /** Deterministic SSR/test override; otherwise prefers-color-scheme is observed. */
     systemTheme?: ResolvedTheme;
 }>;
@@ -25,6 +27,7 @@ type HjmProviderValueProps = Readonly<{
     textScale?: never;
     reducedMotion?: never;
     minimumVisualTarget?: never;
+    density?: never;
     systemTheme?: never;
 }>;
 /**
@@ -46,6 +49,15 @@ export declare const HjmProvider: import("react").ForwardRefExoticComponent<HjmP
 export declare function useHjmTheme(): DesignSystemProviderValue;
 /** Renderer components use the browser default direction when no provider is present. */
 export declare function useOptionalHjmTheme(): DesignSystemProviderValue | null;
+/**
+ * Resolves the provider's density onto one component's own density vocabulary.
+ * Outside a provider the component's recipe default stands — a global axis must
+ * not make an unwrapped renderer behave differently from a wrapped one at rest.
+ */
+export declare function useHjmDensityDefault<Comfortable extends string, Compact extends string>(vocabulary: Readonly<{
+    comfortable: Comfortable;
+    compact: Compact;
+}>): Comfortable | Compact;
 /** Internal provider-scoped coordination used by Tooltip renderers. */
 export declare function useTooltipCoordinator(): TooltipCoordinator | null;
 export {};

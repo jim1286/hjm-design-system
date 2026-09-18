@@ -12,5 +12,6 @@ export const Progress: Story = componentStory("Progress");
 export const Spinner: Story = componentStory("Spinner");
 export const Skeleton: Story = componentStory("Skeleton");
 export const Result: Story = componentStory("Result");
+export const BottomInfo: Story = componentStory("BottomInfo");
 export const Toast: Story = componentStory("Toast");
 export const Watermark: Story = componentStory("Watermark");

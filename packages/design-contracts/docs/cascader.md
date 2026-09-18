@@ -91,3 +91,20 @@ alias 판정과 같은 자리가 된다.
    폭이 넓은 실제 계층 데이터가 나와, "렌더러 선택"이라던 전제가 깨진다.
 3. `changeOnSelect`형 중간 노드 커밋이 `commitAt` 하나로 표현하기엔 부족한 추가 규칙
    (예: 중간 노드 커밋 시 하위 요약값 표시)이 실제 화면에서 요구된다.
+
+## 2026-09-18 후속: 축을 추가하지 않고 조합으로 닫았다
+
+이 판정은 `valueMode`/`commitAt` 두 축을 **TreeSelect 컴포넌트**에 추가하는 것을 전제로
+썼다. 그 사이 TreeSelect 자체가 별도 컴포넌트가 아니라 조합(Popover 표면 + Tree
+collection + tri-state 판정 모듈)으로 확정됐고, Tree renderer가 들어오면서 두 축이
+가리키던 동작이 이미 존재한다.
+
+- `valueMode: "path"` — Tree의 resolve 결과가 `parentId` 사슬을 들고 있으므로 경로는
+  파생이다. 저장 규칙은 여전히 제품 소유이고 계약이 값 모양을 새로 규정하지 않는다.
+- `commitAt: "any"` — 중간 노드를 그냥 고르면 된다. Tree의 단일 선택이 리프를 강제하지
+  않으므로 막아 둔 자리를 여는 새 축이 필요 없다.
+
+그래서 catalog의 Cascader 행은 `prerequisite`에서 `composed`(Popover·Tree)로 옮겼고,
+작동 예제는 Showcase `Patterns/Tree`의 Cascader 화면이다. "만들지 않는다"는 판정 자체는
+그대로다 — 바뀐 것은 흡수하는 쪽이 컴포넌트가 아니라 조합이라는 점뿐이다.
+

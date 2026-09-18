@@ -28,6 +28,26 @@
       "import": "./dist/provider.js",
       "default": "./dist/provider.js"
     },
+    "./carousel": {
+      "types": "./dist/carousel.d.ts",
+      "import": "./dist/carousel.js",
+      "default": "./dist/carousel.js"
+    },
+    "./floating-action-button": {
+      "types": "./dist/floating-action-button.d.ts",
+      "import": "./dist/floating-action-button.js",
+      "default": "./dist/floating-action-button.js"
+    },
+    "./top-bar": {
+      "types": "./dist/top-bar.d.ts",
+      "import": "./dist/top-bar.js",
+      "default": "./dist/top-bar.js"
+    },
+    "./bottom-cta": {
+      "types": "./dist/bottom-cta.d.ts",
+      "import": "./dist/bottom-cta.js",
+      "default": "./dist/bottom-cta.js"
+    },
     "./layout": {
       "types": "./dist/layout.d.ts",
       "import": "./dist/layout.js",
@@ -68,6 +88,11 @@
       "import": "./dist/date-picker.js",
       "default": "./dist/date-picker.js"
     },
+    "./calendar": {
+      "types": "./dist/calendar.d.ts",
+      "import": "./dist/calendar.js",
+      "default": "./dist/calendar.js"
+    },
     "./file-picker": {
       "types": "./dist/file-picker.d.ts",
       "import": "./dist/file-picker.js",
@@ -93,6 +118,21 @@
       "import": "./dist/navigation-public.js",
       "default": "./dist/navigation-public.js"
     },
+    "./breadcrumb": {
+      "types": "./dist/breadcrumb.d.ts",
+      "import": "./dist/breadcrumb.js",
+      "default": "./dist/breadcrumb.js"
+    },
+    "./pagination": {
+      "types": "./dist/pagination.d.ts",
+      "import": "./dist/pagination.js",
+      "default": "./dist/pagination.js"
+    },
+    "./anchor": {
+      "types": "./dist/anchor.d.ts",
+      "import": "./dist/anchor.js",
+      "default": "./dist/anchor.js"
+    },
     "./display": {
       "types": "./dist/display-public.d.ts",
       "import": "./dist/display-public.js",
@@ -102,6 +142,136 @@
       "types": "./dist/overlays.d.ts",
       "import": "./dist/overlays.js",
       "default": "./dist/overlays.js"
+    },
+    "./popover": {
+      "types": "./dist/popover.d.ts",
+      "import": "./dist/popover.js",
+      "default": "./dist/popover.js"
+    },
+    "./side-panel": {
+      "types": "./dist/side-panel.d.ts",
+      "import": "./dist/side-panel.js",
+      "default": "./dist/side-panel.js"
+    },
+    "./splitter": {
+      "types": "./dist/splitter.d.ts",
+      "import": "./dist/splitter.js",
+      "default": "./dist/splitter.js"
+    },
+    "./tour": {
+      "types": "./dist/tour.d.ts",
+      "import": "./dist/tour.js",
+      "default": "./dist/tour.js"
+    },
+    "./tree": {
+      "types": "./dist/tree.d.ts",
+      "import": "./dist/tree.js",
+      "default": "./dist/tree.js"
+    },
+    "./transfer-list": {
+      "types": "./dist/transfer-list.d.ts",
+      "import": "./dist/transfer-list.js",
+      "default": "./dist/transfer-list.js"
+    },
+    "./mentions": {
+      "types": "./dist/mentions.d.ts",
+      "import": "./dist/mentions.js",
+      "default": "./dist/mentions.js"
+    },
+    "./command-palette": {
+      "types": "./dist/command-palette.d.ts",
+      "import": "./dist/command-palette.js",
+      "default": "./dist/command-palette.js"
+    },
+    "./agreement": {
+      "types": "./dist/agreement.d.ts",
+      "import": "./dist/agreement.js",
+      "default": "./dist/agreement.js"
+    },
+    "./top": {
+      "types": "./dist/top.d.ts",
+      "import": "./dist/top.js",
+      "default": "./dist/top.js"
+    },
+    "./heading": {
+      "types": "./dist/heading.d.ts",
+      "import": "./dist/heading.js",
+      "default": "./dist/heading.js"
+    },
+    "./text-formats": {
+      "types": "./dist/text-formats.d.ts",
+      "import": "./dist/text-formats.js",
+      "default": "./dist/text-formats.js"
+    },
+    "./clipboard": {
+      "types": "./dist/clipboard.d.ts",
+      "import": "./dist/clipboard.js",
+      "default": "./dist/clipboard.js"
+    },
+    "./toggle-group": {
+      "types": "./dist/toggle-group.d.ts",
+      "import": "./dist/toggle-group.js",
+      "default": "./dist/toggle-group.js"
+    },
+    "./tags-input": {
+      "types": "./dist/tags-input.d.ts",
+      "import": "./dist/tags-input.js",
+      "default": "./dist/tags-input.js"
+    },
+    "./skip-nav": {
+      "types": "./dist/skip-nav.d.ts",
+      "import": "./dist/skip-nav.js",
+      "default": "./dist/skip-nav.js"
+    },
+    "./bottom-info": {
+      "types": "./dist/bottom-info.d.ts",
+      "import": "./dist/bottom-info.js",
+      "default": "./dist/bottom-info.js"
+    },
+    "./sidebar": {
+      "types": "./dist/sidebar.d.ts",
+      "import": "./dist/sidebar.js",
+      "default": "./dist/sidebar.js"
+    },
+    "./overlay-stack": {
+      "types": "./dist/overlay-stack.d.ts",
+      "import": "./dist/overlay-stack.js",
+      "default": "./dist/overlay-stack.js"
+    },
+    "./date-range": {
+      "types": "./dist/date-range.d.ts",
+      "import": "./dist/date-range.js",
+      "default": "./dist/date-range.js"
+    },
+    "./provider-button": {
+      "types": "./dist/provider-button.d.ts",
+      "import": "./dist/provider-button.js",
+      "default": "./dist/provider-button.js"
+    },
+    "./data-table": {
+      "types": "./dist/data-table.d.ts",
+      "import": "./dist/data-table.js",
+      "default": "./dist/data-table.js"
+    },
+    "./collapsible": {
+      "types": "./dist/collapsible.d.ts",
+      "import": "./dist/collapsible.js",
+      "default": "./dist/collapsible.js"
+    },
+    "./context-menu": {
+      "types": "./dist/context-menu.d.ts",
+      "import": "./dist/context-menu.js",
+      "default": "./dist/context-menu.js"
+    },
+    "./menubar": {
+      "types": "./dist/menubar.d.ts",
+      "import": "./dist/menubar.js",
+      "default": "./dist/menubar.js"
+    },
+    "./asset": {
+      "types": "./dist/asset.d.ts",
+      "import": "./dist/asset.js",
+      "default": "./dist/asset.js"
     },
     "./feedback": {
       "types": "./dist/feedback.d.ts",

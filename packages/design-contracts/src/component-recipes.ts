@@ -47,6 +47,7 @@ export {
 } from "./counter-badge-recipe.js";
 export {
   progressRecipe,
+  type ProgressShape,
   type ProgressSize,
   type ProgressTone,
 } from "./progress-recipe.js";
@@ -526,7 +527,7 @@ export const listRecipe = {
   background: null,
 } as const;
 
-export type ListRowDensity = "comfortable" | "compact";
+export type ListRowDensity = "compact" | "comfortable" | "relaxed" | "spacious";
 /** Frame geometry the ListRow paints around its leading slot. */
 export type ListRowLeadingShape = "square" | "circle";
 
@@ -545,6 +546,24 @@ export const listRowRecipe = {
       twoLineMinHeight: layout.rowHeight.twoLine,
       paddingHorizontal: spacing.xs,
       paddingVertical: spacing.xs,
+    },
+    /*
+      토스 TDS의 ListRow는 세로 여백을 네 단계로 둔다. HJM이 두 단계만 갖고 있던 동안
+      제품은 그 사이 값을 제품 CSS로 만들었다(설정 목록은 넓게, 검색 결과는 좁게).
+      숫자는 이미 있는 spacing 스케일(sm/md)을 그대로 쓰고 새 값을 만들지 않는다.
+      최소 높이는 여백에 맞춰 함께 올라간다 — 여백만 키우면 한 줄 행이 위아래로 치우친다.
+    */
+    relaxed: {
+      oneLineMinHeight: layout.rowHeight.singleLine + spacing.xs,
+      twoLineMinHeight: layout.rowHeight.twoLine + spacing.xs,
+      paddingHorizontal: spacing.xs,
+      paddingVertical: spacing.sm,
+    },
+    spacious: {
+      oneLineMinHeight: layout.rowHeight.singleLine + spacing.md,
+      twoLineMinHeight: layout.rowHeight.twoLine + spacing.md,
+      paddingHorizontal: spacing.xs,
+      paddingVertical: spacing.md,
     },
   },
   gap: spacing.sm,
@@ -1492,7 +1511,12 @@ export const loadMoreRecipe = {
 };
 
 export const avatarRecipe = {
-  slots: ["root", "image", "fallback", "badge"] as const,
+  slots: ["root", "image", "fallback", "badge", "group"] as const,
+  /**
+   * 겹쳐 쌓은 아바타 묶음이 얼마나 겹치는가. 비율로 두는 이유는 크기 축이 이미 네 단계라
+   * 픽셀로 적으면 네 벌이 되기 때문이다. 남은 인원은 제품이 문구로 만든다("+3").
+   */
+  overlapRatio: 0.3,
   defaults: { size: "medium", shape: "circle" },
   sizes: { small: 32, medium: 40, large: 48, xlarge: 64 },
   shapes: { rounded: "md", circle: "full" },

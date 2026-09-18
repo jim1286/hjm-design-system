@@ -106,6 +106,17 @@ export const Avatar = forwardRef(function Avatar({ name, src, alt = name, fallba
                 onError?.(event);
             } })) : (_jsx("span", { className: "hjm-avatar__fallback", role: alt.length > 0 ? "img" : undefined, "aria-label": alt.length > 0 ? alt : undefined, "aria-hidden": alt.length === 0 || undefined, children: fallback ?? initials(name) })) }));
 });
+/**
+ * Overlapping avatars. The overlap comes from the recipe ratio rather than a
+ * pixel value so it holds across all four sizes, and the group carries one
+ * accessible name instead of letting a reader walk five unlabelled images.
+ */
+export const AvatarGroup = forwardRef(function AvatarGroup({ label, children, size = avatarRecipe.defaults.size, overflow, className, ...props }, ref) {
+    if (label.trim().length === 0)
+        throw new TypeError("AvatarGroup label must not be empty");
+    const offset = Math.round(avatarRecipe.sizes[size] * avatarRecipe.overlapRatio);
+    return (_jsxs("span", { ...props, ref: ref, role: "group", "aria-label": label, className: classNames("hjm-avatar-group", className), "data-size": size, style: { "--hjm-avatar-overlap": `${offset}px` }, children: [children, overflow ? _jsx("span", { className: "hjm-avatar-group__overflow", "aria-hidden": "true", children: overflow }) : null] }));
+});
 export const Divider = forwardRef(function Divider({ orientation = dividerRecipe.defaults.orientation, inset = dividerRecipe.defaults.inset, decorative = false, className, ...props }, ref) {
     return createElement(orientation === "horizontal" ? "hr" : "div", {
         ...props,

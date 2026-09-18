@@ -5,11 +5,14 @@ export const popoverDescriptorDefaults = {
     align: "start",
 };
 export const popoverBehaviorDefaults = {
+    openOn: "press",
     dismissible: true,
     outsideDismiss: true,
     escapeDismiss: true,
     focusOutDismiss: true,
 };
+/** hover로 열 때의 지연. 지나가는 포인터마다 열리면 화면이 깜빡인다. */
+export const popoverHoverDelay = { open: 300, close: 150 };
 const placements = new Set(["top", "bottom", "start", "end"]);
 const alignments = new Set(["start", "center", "end"]);
 const descriptorKeys = new Set(["placement", "align", "accessibilityLabel"]);

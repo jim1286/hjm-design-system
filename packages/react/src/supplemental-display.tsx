@@ -336,6 +336,12 @@ export type CounterBadgeProps = Omit<HTMLAttributes<HTMLSpanElement>, "children"
     tone?: CounterBadgeTone;
     size?: CounterBadgeSize;
     variant?: CounterBadgeVariant;
+    /**
+     * Says "there is something new" without a number. Use it where the count is
+     * unknown or not worth reading; inventing a number would be worse than
+     * saying none. The accessible name then carries the whole meaning.
+     */
+    dot?: boolean;
     accessibilityLabel?: string;
       /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
@@ -349,6 +355,7 @@ export const CounterBadge = forwardRef<HTMLSpanElement, CounterBadgeProps>(
       tone = counterBadgeRecipe.defaults.tone,
       size = counterBadgeRecipe.defaults.size,
       variant = counterBadgeRecipe.defaults.variant,
+      dot = false,
       accessibilityLabel,
       className,
       layoutStyle,
@@ -361,20 +368,25 @@ export const CounterBadge = forwardRef<HTMLSpanElement, CounterBadgeProps>(
     if (accessibilityLabel !== undefined && accessibilityLabel.trim().length === 0) {
       throw new TypeError("CounterBadge accessibilityLabel must not be empty");
     }
+    if (dot && accessibilityLabel === undefined) {
+      // A dot with no name is a decoration that nobody can read.
+      throw new TypeError("CounterBadge dot requires an accessibilityLabel");
+    }
     if (label === null) return null;
     return (
       <span
         {...props}
-        style={{ ...style, ...layoutStyle }}
         ref={ref}
         className={classNames("hjm-counter-badge", className)}
         data-tone={tone}
         data-size={size}
         data-variant={variant}
+        data-dot={dot || undefined}
+        style={dot ? { ...style, ...layoutStyle, "--hjm-counter-dot-size": `${counterBadgeRecipe.dotSize}px` } as typeof style : { ...style, ...layoutStyle }}
         aria-hidden={accessibilityLabel === undefined || undefined}
         aria-label={accessibilityLabel}
       >
-        {label}
+        {dot ? null : label}
       </span>
     );
   },

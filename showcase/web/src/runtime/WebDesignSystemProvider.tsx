@@ -17,6 +17,7 @@ type WebDesignSystemProviderProps = Readonly<{
   children: ReactNode;
   input: DesignSystemEnvironmentInput;
   systemTheme?: ResolvedTheme;
+  edgeToEdge?: boolean;
 }>;
 
 /** Showcase's thin React adapter over the renderer-neutral provider contract. */
@@ -24,6 +25,7 @@ export function WebDesignSystemProvider({
   children,
   input,
   systemTheme = "light",
+  edgeToEdge = false,
 }: WebDesignSystemProviderProps) {
   const parent = useContext(WebDesignSystemEnvironmentContext);
   const providerValue = resolveDesignSystemProviderValue(
@@ -36,7 +38,7 @@ export function WebDesignSystemProvider({
   return (
     <WebDesignSystemEnvironmentContext.Provider value={environment}>
       <HjmProvider
-        className="hjm-story-root"
+        className={edgeToEdge ? "hjm-story-root hjm-showcase-edge-to-edge" : "hjm-story-root"}
         direction={environment.direction}
         reducedMotion={environment.reducedMotion}
         systemTheme={environment.theme}

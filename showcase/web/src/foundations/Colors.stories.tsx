@@ -4,7 +4,7 @@ import { ACCENTS, THEMES, accentFill, brandGradient } from "@hjmds/design-contra
 
 function Swatch({ color, label, value }: { color: string; label: string; value: string }) {
   return (
-    <article className="hjm-card">
+    <article className="hjm-showcase-card">
       <div
         aria-hidden="true"
         className="hjm-color-swatch"
@@ -27,18 +27,18 @@ function Colors() {
         제품은 palette 이름 대신 의미를 선택합니다. 두 테마는 정확히 같은 키를 제공합니다.
       </p>
       {Object.entries(THEMES).map(([theme, colors]) => (
-        <section className="hjm-section" key={theme} aria-labelledby={`${theme}-title`}>
+        <section className="hjm-showcase-section" key={theme} aria-labelledby={`${theme}-title`}>
           <h2 className="hjm-section-title" id={`${theme}-title`}>{theme}</h2>
-          <div className="hjm-grid">
+          <div className="hjm-showcase-grid">
             {Object.entries(colors).map(([name, value]) => (
               <Swatch color={value} key={name} label={name} value={value} />
             ))}
           </div>
         </section>
       ))}
-      <section className="hjm-section" aria-labelledby="accent-title">
+      <section className="hjm-showcase-section" aria-labelledby="accent-title">
         <h2 className="hjm-section-title" id="accent-title">Status accents</h2>
-        <div className="hjm-grid">
+        <div className="hjm-showcase-grid">
           {Object.entries(ACCENTS.light).map(([name, value]) => (
             <Swatch color={value} key={name} label={name} value={`${value} · fill ${accentFill[name as keyof typeof accentFill]}`} />
           ))}

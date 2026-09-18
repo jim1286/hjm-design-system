@@ -51,5 +51,25 @@
 PageUp/PageDown(10배 이동)은 넣지 않았다 — 분할 패널 크기 조정은 그 정도로 큰
 점프가 필요하다는 요구가 측정되지 않았다.
 
-**검증 화면.** 아직 실제 제품 vertical slice가 없다 — catalog는 `planned`으로
-남고, `beta` 승격은 로드맵 gate(실제 화면 검증)를 통과한 뒤 리드가 진행한다.
+## Web renderer (2026-09-18)
+
+`@hjmds/react/splitter`의 `Splitter`가 이 계약을 실행한다. catalog는 Web `beta`,
+Native `unsupported`다. 제품 채택·보조기기 실측은 아직 없다.
+
+- **드래그와 키보드가 같은 값을 만든다.** 둘 다 계약의 `resolveSplitterDragValue`/
+  `getNextSplitterValue`를 호출하므로 renderer에 별도 숫자 산술이 없다.
+- **방향은 논리 기준이다.** RTL에서는 primary pane이 오른쪽에서 자라므로 포인터 거리를
+  그 가장자리에서 재고, 같은 반전을 방향키에도 적용한다(RTL에서 ArrowLeft가 increment).
+  둘 중 하나만 뒤집으면 드래그와 키보드가 서로 반대로 움직인다.
+- **pane 축이 아닌 방향키는 건드리지 않는다.** 가로 splitter의 위/아래 키는 pane 안
+  콘텐츠의 것이다.
+- **경계에서의 step은 settle이 아니다.** 값이 그대로면 `onValueChangeEnd`를 부르지 않는다 —
+  크기를 저장하는 owner가 의미 없는 쓰기를 하지 않도록.
+- 구현 중 실제 결함을 하나 잡았다: `onValueChangeEnd?.(commit(next))`는 handler가 없으면
+  인자 평가까지 통째로 건너뛰어 키보드 조절이 조용히 죽는다. commit을 먼저 하고 알린다.
+- 로컬 검증: `test/splitter.browser.test.tsx` 5개(separator 의미·수직 방향과 44px hit
+  target, 방향키 step과 Home/End 경계, 드래그 스냅과 드래그당 1회 end, RTL 드래그·키보드,
+  disabled)와 `Patterns/Splitter`.
+
+**검증 화면.** 제품 vertical slice는 아직 없다. `beta`는 renderer 수준 증거를 뜻하며
+실제 화면 채택은 별도로 기록한다.

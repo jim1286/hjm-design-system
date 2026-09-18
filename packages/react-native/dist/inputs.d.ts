@@ -224,6 +224,8 @@ export type CheckboxGroupProps<Value extends string = string> = ChoiceGroupVisua
 export declare function CheckboxGroup<Value extends string = string>({ label, accessibilityLabel, items, value, defaultValue, onValueChange, required, disabled, readOnly, invalid, description, error, requiredLabel, readOnlyLabel, invalidLabel, orientation, presentation, size, indicator, renderLeading, renderIndicator, style, ...slotStyles }: CheckboxGroupProps<Value>): import("react").JSX.Element;
 type SwitchBaseProps = Omit<NativeSwitchProps, "accessibilityHint" | "accessibilityLabel" | "defaultValue" | "onValueChange" | "style" | "value"> & Readonly<{
     label: string;
+    /** Use inside a labelled ListRow; the accessible name and hint remain present. */
+    labelVisibility?: "visible" | "hidden";
     description?: string;
     size?: SwitchSize;
     accessibilityLabel?: string;
@@ -252,7 +254,7 @@ type SwitchLegacyStateProps = Readonly<{
     onValueChange?: (value: boolean) => void;
 }>;
 export type SwitchProps = SwitchBaseProps & (SwitchCanonicalStateProps | SwitchLegacyStateProps);
-export declare function Switch({ label, description, size, checked, defaultChecked, onCheckedChange, value, defaultValue, onValueChange, disabled, accessibilityLabel, accessibilityHint, layoutStyle, style, ...props }: SwitchProps): import("react").JSX.Element;
+export declare function Switch({ label, labelVisibility, description, size, checked, defaultChecked, onCheckedChange, value, defaultValue, onValueChange, disabled, accessibilityLabel, accessibilityHint, layoutStyle, style, ...props }: SwitchProps): import("react").JSX.Element;
 export type SegmentedControlItem<Value extends string = string> = Readonly<{
     value: Value;
     label: string;

@@ -29,6 +29,7 @@ import {
   type ReactNode,
 } from "react";
 import { classNames } from "./internal.js";
+import { useHjmDensityDefault } from "./provider.js";
 import { Surface, Text } from "./layout.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 
@@ -211,6 +212,14 @@ export type ListRowProps = Omit<HTMLAttributes<HTMLElement>, "title" | "onClick"
     leadingShape?: ListRowLeadingShape;
     selected?: boolean;
     disabled?: boolean;
+    /**
+     * Placeholder row while the real one loads. It keeps the row's own height
+     * and slot geometry, so a list does not jump when the content arrives —
+     * which is exactly what a product-owned skeleton next to the list cannot do.
+     */
+    loading?: boolean;
+    /** Localized status text announced while `loading`. */
+    loadingLabel?: string;
     href?: string;
     onClick?: MouseEventHandler<HTMLElement>;
       /** Canonical layout-only placement. Controlled visual keys are excluded. */
@@ -223,10 +232,12 @@ export const ListRow = forwardRef<HTMLElement, ListRowProps>(function ListRow(
     description,
     leading,
     trailing,
-    density = listRowRecipe.defaults.density,
+    density: densityProp,
     leadingShape = "square",
     selected = listRowRecipe.defaults.selected,
     disabled = false,
+    loading = false,
+    loadingLabel,
     href,
     onClick,
     className,
@@ -236,6 +247,37 @@ export const ListRow = forwardRef<HTMLElement, ListRowProps>(function ListRow(
   },
   ref,
 ) {
+  // The hook runs unconditionally — `??` would short-circuit it and break the
+  // rules of hooks on the very first row that passes `density`.
+  const densityDefault = useHjmDensityDefault({
+    comfortable: listRowRecipe.defaults.density,
+    compact: "compact",
+  });
+  const density = densityProp ?? densityDefault;
+  if (loading) {
+    // A loading row is never interactive: there is nothing to activate yet.
+    return (
+      <div
+        {...props}
+        ref={ref as React.Ref<HTMLDivElement>}
+        role="status"
+        aria-busy="true"
+        aria-label={loadingLabel}
+        className={classNames("hjm-list-row", "hjm-list-row--loading", className)}
+        data-density={density}
+        data-lines={description ? "two" : "one"}
+        data-state="loading"
+        style={{ ...style, ...layoutStyle }}
+      >
+        {leading ? <span className="hjm-list-row__leading" data-shape={leadingShape} data-placeholder="" /> : null}
+        <span className="hjm-list-row__content">
+          <span className="hjm-list-row__title" data-placeholder="" />
+          {description ? <span className="hjm-list-row__description" data-placeholder="" /> : null}
+        </span>
+        {trailing ? <span className="hjm-list-row__trailing" data-placeholder="" /> : null}
+      </div>
+    );
+  }
   const element = href ? "a" : onClick ? "button" : "div";
   const interactiveProps = href
     ? {

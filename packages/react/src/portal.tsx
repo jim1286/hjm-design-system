@@ -17,11 +17,25 @@ export type PortalProps = Readonly<{
   ssrFallback?: "none" | "inline";
 }>;
 
+/** Nearest interactive popover, including descendants rendered through another portal. */
+export function getPopoverOwner(node: Node | null): HTMLElement | null {
+  const element = node instanceof Element ? node : node?.parentElement;
+  const direct = element?.closest<HTMLElement>("[data-hjm-popover-content]");
+  if (direct) return direct;
+  const ownerId = element?.closest<HTMLElement>("[data-hjm-popover-owner]")?.getAttribute("data-hjm-popover-owner");
+  return ownerId ? document.getElementById(ownerId) : null;
+}
+
 /**
  * Copies the closest provider DOM boundary instead of importing provider
  * runtime code, keeping granular form/overlay entry points lightweight.
  */
 function synchronizePortalEnvironment(host: HTMLDivElement, anchor: HTMLElement | null): void {
+  // Modal ownership and non-modal ownership are separate: nested selects/menus
+  // must belong to both, so outside focus does not close their parent popover.
+  const popoverOwner = getPopoverOwner(anchor);
+  if (popoverOwner?.id) host.setAttribute("data-hjm-popover-owner", popoverOwner.id);
+  else host.removeAttribute("data-hjm-popover-owner");
   const source = anchor?.closest<HTMLElement>("[data-hjm-provider], [data-hjm-portal]") ?? null;
   const directModalOwner = anchor?.closest<HTMLElement>("[data-hjm-modal-content]") ?? null;
   const inheritedOwnerId = anchor
@@ -120,6 +134,8 @@ type AnchoredPopupOptions = Readonly<{
   placement?: AnchoredPopupPlacement;
   viewportPadding?: number;
   zIndex?: number;
+  /** Wide contextual content may switch to the block axis in a narrow viewport. */
+  fallbackAxis?: boolean;
 }>;
 
 const hiddenPopupPosition: AnchoredPopupPosition = {
@@ -159,6 +175,7 @@ export function useAnchoredPopup(
   popup: HTMLElement | null,
   {
     align = "start",
+    fallbackAxis = false,
     gap = 8,
     matchAnchorWidth = false,
     placement: preferredPlacement = "bottom",
@@ -238,6 +255,12 @@ export function useAnchoredPopup(
       desiredPopupWidth > availableRight &&
       availableLeft > availableRight
     ) physicalPlacement = "left";
+    // A wide form cannot fit beside a centered mobile trigger. Preserve readable
+    // content by trying the block axis; existing compact popup defaults stay unchanged.
+    if (fallbackAxis && (physicalPlacement === "left" || physicalPlacement === "right") &&
+      Math.max(availableLeft, availableRight) < desiredPopupWidth) {
+      physicalPlacement = availableBottom >= availableTop ? "bottom" : "top";
+    }
     const placement: AnchoredPopupPlacement = physicalPlacement === "left"
       ? (logicalStartAtLeft ? "start" : "end")
       : physicalPlacement === "right"
@@ -313,6 +336,7 @@ export function useAnchoredPopup(
   }, [
     align,
     anchorRef,
+    fallbackAxis,
     gap,
     matchAnchorWidth,
     popup,

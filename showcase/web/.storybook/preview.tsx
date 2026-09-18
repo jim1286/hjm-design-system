@@ -67,6 +67,7 @@ const preview: Preview = {
 
       return (
         <WebDesignSystemProvider
+          edgeToEdge={context.parameters.hjm?.edgeToEdge === true}
           input={{ direction, reducedMotion, textScale, theme }}
           systemTheme="light"
         >

@@ -93,6 +93,24 @@ close, exit complete와 두 번째 provider dispose는 아무 상태도 바꾸�
 
 ## Renderer acceptance
 
+### Compact Web layout — 2026-09-15
+
+BurnTok `apps/web/src/app/globals.css:301` records a product workaround for a
+close-only second row. The first-party browser regression reproduced it at
+320, 390, and 480px: the old fixed subtraction in `flex-basis` did not account
+for the actual control and gap layout. The Web renderer now gives icon, copy,
+and close explicit columns and places an optional action below the copy.
+This keeps a 44px close target and allows long text to wrap without a guessed
+remaining width. Native layout and the shared Toast lifecycle are unchanged.
+The same card grid applies on desktop: ToastProvider caps cards at 420px,
+so a window-width breakpoint left doubled text and action labels compressed
+even in a wide window. A 1280px window/420px card regression covers that case.
+
+Proof: `packages/react/test/toast-layout.browser.test.tsx`; review fixture:
+Storybook `Patterns/Toast layout`. The fixture covers long Korean/English copy,
+doubled text, dark theme and RTL. Automated browser checks are separate from
+real assistive-technology and consumer-release evidence; Toast remains beta.
+
 Web renderer:
 
 - viewport를 문서 root 근처에 하나만 두고 recipe placement와 logical start/end를 사용합니다.

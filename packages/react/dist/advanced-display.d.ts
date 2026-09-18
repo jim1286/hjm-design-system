@@ -46,6 +46,27 @@ export declare const Avatar: import("react").ForwardRefExoticComponent<Omit<HTML
     shape?: AvatarShape;
     imageProps?: Omit<ImgHTMLAttributes<HTMLImageElement>, "alt" | "src">;
 }> & RefAttributes<HTMLSpanElement>>;
+export type AvatarGroupProps = Omit<HTMLAttributes<HTMLSpanElement>, "children"> & Readonly<{
+    /** Required: a pile of faces is meaningless to a screen reader otherwise. */
+    label: string;
+    children: ReactNode;
+    size?: AvatarSize;
+    /** Product-composed overflow copy such as "+3"; the count is the product's. */
+    overflow?: ReactNode;
+}>;
+/**
+ * Overlapping avatars. The overlap comes from the recipe ratio rather than a
+ * pixel value so it holds across all four sizes, and the group carries one
+ * accessible name instead of letting a reader walk five unlabelled images.
+ */
+export declare const AvatarGroup: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLSpanElement>, "children"> & Readonly<{
+    /** Required: a pile of faces is meaningless to a screen reader otherwise. */
+    label: string;
+    children: ReactNode;
+    size?: AvatarSize;
+    /** Product-composed overflow copy such as "+3"; the count is the product's. */
+    overflow?: ReactNode;
+}> & RefAttributes<HTMLSpanElement>>;
 export type DividerOrientation = "horizontal" | "vertical";
 export type DividerInset = keyof typeof dividerRecipe.insets;
 export type DividerProps = HTMLAttributes<HTMLElement> & Readonly<{

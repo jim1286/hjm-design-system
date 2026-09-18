@@ -47,10 +47,8 @@ export type PopoverDescriptor = Readonly<{
   placement?: PopoverPlacement;
   align?: PopoverAlign;
   /**
-   * Only needed when the content has no visible heading the platform
-   * accessibility tree can already read as the surface's name. Most Popover
-   * content should carry its own heading; this is an escape hatch, not the
-   * default path.
+   * Optional explicit accessible name. A renderer must connect its visible
+   * heading with aria-labelledby; a heading alone does not name a dialog.
    */
   accessibilityLabel?: string;
 }>;
@@ -80,12 +78,28 @@ export type PopoverDismissPolicy = Readonly<{
   focusOutDismiss: boolean;
 }>;
 
+/**
+ * 무엇이 popover를 여는가. `press`가 기본이고 `hover`는 **읽기 전용 미리보기**
+ * (다른 시스템의 HoverCard)를 위한 축이다.
+ *
+ * 별도 컴포넌트를 만들지 않은 이유: 표면·초점·dismiss·충돌 회피가 전부 같고 다른 것은
+ * 여는 방법 하나뿐이다. 두 컴포넌트로 나누면 그 네 가지가 두 벌이 된다.
+ *
+ * 대신 `hover`에는 제약이 붙는다 — hover로만 열리는 내용에 **행동을 두면 안 된다**.
+ * 포인터가 없는 사용자는 그 행동에 닿을 수 없기 때문이다. 미리보기는 읽기 전용이다.
+ */
+export type PopoverOpenOn = "press" | "hover";
+
 export const popoverBehaviorDefaults = {
+  openOn: "press" as PopoverOpenOn,
   dismissible: true,
   outsideDismiss: true,
   escapeDismiss: true,
   focusOutDismiss: true,
-} as const satisfies PopoverDismissPolicy;
+} as const satisfies PopoverDismissPolicy & Readonly<{ openOn: PopoverOpenOn }>;
+
+/** hover로 열 때의 지연. 지나가는 포인터마다 열리면 화면이 깜빡인다. */
+export const popoverHoverDelay = { open: 300, close: 150 } as const;
 
 export type ControlledPopoverOpenState = Readonly<{
   open: boolean;

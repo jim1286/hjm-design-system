@@ -139,25 +139,25 @@ describe("web showcase coverage", () => {
     expect(Object.keys(webRendererRegistry).sort()).toEqual(expected);
     expect(summarizeWebShowcaseCoverage()).toEqual({
       canonical: componentCatalog.length,
-      webReferences: 63,
-      contractOnly: 29,
-      nativeOnly: 2,
+      webReferences: 95,
+      contractOnly: 15,
+      nativeOnly: 0,
     });
   });
 
-  it("renders the canonical 63/29/2 surface-evidence split in Home and Explorer", () => {
+  it("renders the canonical 95/15/0 surface-evidence split in Home and Explorer", () => {
     const homeHtml = renderToStaticMarkup(createElement(Introduction));
-    expect(homeHtml).toContain("<strong>63</strong><span>Web references</span>");
-    expect(homeHtml).toContain("<strong>29</strong><span>contract-only stories</span>");
-    expect(homeHtml).toContain("<strong>2</strong><span>Native-only stories</span>");
+    expect(homeHtml).toContain("<strong>95</strong><span>Web references</span>");
+    expect(homeHtml).toContain("<strong>15</strong><span>contract-only stories</span>");
+    expect(homeHtml).toContain("<strong>0</strong><span>Native-only stories</span>");
     expect(homeHtml).toContain(componentCategoryExplorerHref("input"));
     expect(homeHtml).not.toContain("args=initialCategory");
 
     const explorerHtml = renderToStaticMarkup(createElement(ComponentExplorer));
-    expect(explorerHtml).toContain("<strong>63</strong> Web references");
-    expect(explorerHtml).toContain("<strong>29</strong> contract-only stories");
-    expect(explorerHtml).toContain("<strong>2</strong> Native-only stories");
-    expect(explorerHtml.match(/Open Native-only contract/g)).toHaveLength(2);
+    expect(explorerHtml).toContain("<strong>95</strong> Web references");
+    expect(explorerHtml).toContain("<strong>15</strong> contract-only stories");
+    expect(explorerHtml).toContain("<strong>0</strong> Native-only stories");
+    expect(explorerHtml).not.toContain("Open Native-only contract");
     expect(explorerHtml).toContain("Open Web reference");
     expect(explorerHtml).toContain("Open contract &amp; decision");
   });
@@ -360,7 +360,8 @@ describe("web showcase coverage", () => {
     const nativeOnly = componentCatalog.filter(
       (entry) => getComponentSurfaceStatus(entry, "web") === "unsupported",
     );
-    expect(nativeOnly.length).toBeGreaterThan(0);
+    // TopBar and BottomCTA now have Web renderers; no active Native-only rows remain.
+    expect(nativeOnly).toHaveLength(0);
     for (const entry of nativeOnly) {
       expect(webRendererRegistry).not.toHaveProperty(entry.name);
       expect(getComponentStoryClassification(entry.name)).toBe("web-unsupported");
@@ -376,7 +377,7 @@ describe("web showcase coverage", () => {
     const activeNames = componentCatalog
       .filter((entry) => isMatureStatus(getComponentSurfaceStatus(entry, "web")))
       .map(({ name }) => name);
-    expect(activeNames).toHaveLength(63);
+    expect(activeNames).toHaveLength(95);
     for (const name of activeNames) {
       expect(webRendererComponentNames).toContain(name);
       if (!isWebRendererComponent(name)) throw new Error(`Missing Web renderer registry entry: ${name}`);

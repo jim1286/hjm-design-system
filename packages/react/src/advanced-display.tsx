@@ -279,6 +279,43 @@ export const Avatar = forwardRef<HTMLSpanElement, AvatarProps>(function Avatar(
   );
 });
 
+export type AvatarGroupProps = Omit<HTMLAttributes<HTMLSpanElement>, "children"> &
+  Readonly<{
+    /** Required: a pile of faces is meaningless to a screen reader otherwise. */
+    label: string;
+    children: ReactNode;
+    size?: AvatarSize;
+    /** Product-composed overflow copy such as "+3"; the count is the product's. */
+    overflow?: ReactNode;
+  }>;
+
+/**
+ * Overlapping avatars. The overlap comes from the recipe ratio rather than a
+ * pixel value so it holds across all four sizes, and the group carries one
+ * accessible name instead of letting a reader walk five unlabelled images.
+ */
+export const AvatarGroup = forwardRef<HTMLSpanElement, AvatarGroupProps>(function AvatarGroup(
+  { label, children, size = avatarRecipe.defaults.size, overflow, className, ...props },
+  ref,
+) {
+  if (label.trim().length === 0) throw new TypeError("AvatarGroup label must not be empty");
+  const offset = Math.round(avatarRecipe.sizes[size] * avatarRecipe.overlapRatio);
+  return (
+    <span
+      {...props}
+      ref={ref}
+      role="group"
+      aria-label={label}
+      className={classNames("hjm-avatar-group", className)}
+      data-size={size}
+      style={{ "--hjm-avatar-overlap": `${offset}px` } as CSSProperties}
+    >
+      {children}
+      {overflow ? <span className="hjm-avatar-group__overflow" aria-hidden="true">{overflow}</span> : null}
+    </span>
+  );
+});
+
 export type DividerOrientation = "horizontal" | "vertical";
 export type DividerInset = keyof typeof dividerRecipe.insets;
 

@@ -314,13 +314,13 @@ describe("Pagination visual recipe", () => {
   });
 });
 
-describe("Pagination catalog and crosswalk stay untouched", () => {
-  it("still reserves Pagination as planned/web/navigation", () => {
+describe("Pagination catalog and crosswalk", () => {
+  it("exposes the verified Web beta while retaining the navigation category", () => {
     const entry = componentCatalog.find((item) => item.name === "Pagination");
     expect(entry).toMatchObject({
       category: "navigation",
       platform: "web",
-      status: "planned",
+      status: "beta",
     });
   });
 

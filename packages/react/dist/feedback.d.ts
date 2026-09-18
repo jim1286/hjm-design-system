@@ -1,4 +1,4 @@
-import { emptyStateRecipe, skeletonRecipe, type NoticeTone, type ProgressSize, type ProgressTone, type SpinnerSize, type SpinnerTone } from "@hjmds/design-contracts/recipes";
+import { emptyStateRecipe, skeletonRecipe, type NoticeTone, type ProgressShape, type ProgressSize, type ProgressTone, type SpinnerSize, type SpinnerTone } from "@hjmds/design-contracts/recipes";
 import { type ResultDescriptor } from "@hjmds/design-contracts/components/result";
 import { type HTMLAttributes, type ProgressHTMLAttributes, type ReactNode } from "react";
 export type NoticeProps = HTMLAttributes<HTMLElement> & Readonly<{
@@ -36,7 +36,7 @@ export type ResultProps = Omit<HTMLAttributes<HTMLDivElement>, "children" | "tit
     icon?: ReactNode;
 }>;
 /** A terminal flow outcome. EmptyState remains reserved for fillable content. */
-export declare const Result: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLDivElement>, "children" | "title"> & Readonly<{
+export declare const Result: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLDivElement>, "title" | "children"> & Readonly<{
     status: import("@hjmds/design-contracts/components/result").ResultStatus;
     title: string;
     description?: string;
@@ -53,6 +53,14 @@ export type ProgressProps = Omit<ProgressHTMLAttributes<HTMLProgressElement>, "c
     valueText?: string;
     size?: ProgressSize;
     tone?: ProgressTone;
+    /**
+     * `circular` draws the same value as a ring. It is a shape, not a second
+     * component: min/max/now, the indeterminate case and the announcement are
+     * identical, so the accessibility contract stays in one place.
+     */
+    shape?: ProgressShape;
+    /** Content inside the ring — a percentage, a count, an icon. Ignored when linear. */
+    children?: ReactNode;
 }>;
 export declare const Progress: import("react").ForwardRefExoticComponent<Omit<ProgressHTMLAttributes<HTMLProgressElement>, "value" | "children" | "size" | "max"> & Readonly<{
     label: ReactNode;
@@ -61,6 +69,14 @@ export declare const Progress: import("react").ForwardRefExoticComponent<Omit<Pr
     valueText?: string;
     size?: ProgressSize;
     tone?: ProgressTone;
+    /**
+     * `circular` draws the same value as a ring. It is a shape, not a second
+     * component: min/max/now, the indeterminate case and the announcement are
+     * identical, so the accessibility contract stays in one place.
+     */
+    shape?: ProgressShape;
+    /** Content inside the ring — a percentage, a count, an icon. Ignored when linear. */
+    children?: ReactNode;
 }> & import("react").RefAttributes<HTMLProgressElement>>;
 export type SpinnerProps = HTMLAttributes<HTMLSpanElement> & Readonly<{
     label: string;

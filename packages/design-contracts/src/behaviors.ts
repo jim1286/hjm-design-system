@@ -1,3 +1,20 @@
+import { anchorBehavior } from "./anchor.js";
+import { agreementBehavior } from "./agreement.js";
+import { topBehavior } from "./top.js";
+import { authProviderButtonBehavior } from "./provider-button.js";
+import { headingBehavior } from "./heading.js";
+import { toggleGroupBehavior } from "./toggle-group.js";
+import { tagsInputBehavior } from "./tags-input.js";
+import { skipNavBehavior } from "./skip-nav.js";
+import { bottomInfoBehavior } from "./bottom-info.js";
+import { sidebarBehavior } from "./sidebar.js";
+import { nativePlatformBehavior } from "./native-platform.js";
+import { dateRangeBehavior } from "./date-range.js";
+import { textFormatBehavior } from "./text-formats.js";
+import { collapsibleBehavior } from "./collapsible.js";
+import { assetBehavior } from "./asset.js";
+import { menubarBehavior } from "./menubar.js";
+import { contextMenuBehavior } from "./context-menu.js";
 import { sheetBehaviorDefaults } from "./sheet.js";
 import { loadMoreBehaviorDefaults } from "./load-more.js";
 import { toastBehaviorDefaults } from "./toast.js";
@@ -408,6 +425,8 @@ export type WebKeyboardKey =
   | "ArrowRight"
   | "Home"
   | "End"
+  /** TagsInput removes the previous tag with it; no other contract needed it before. */
+  | "Backspace"
   | "PageUp"
   | "PageDown"
   | "F8"
@@ -1106,6 +1125,23 @@ export const behaviorRegistry = {
       "reduced-motion-exit-completes-exactly-once",
     ],
   },
+  anchor: anchorBehavior,
+  agreement: agreementBehavior,
+  top: topBehavior,
+  authProviderButton: authProviderButtonBehavior,
+  heading: headingBehavior,
+  toggleGroup: toggleGroupBehavior,
+  tagsInput: tagsInputBehavior,
+  skipNav: skipNavBehavior,
+  bottomInfo: bottomInfoBehavior,
+  sidebar: sidebarBehavior,
+  nativePlatform: nativePlatformBehavior,
+  dateRange: dateRangeBehavior,
+  textFormat: textFormatBehavior,
+  collapsible: collapsibleBehavior,
+  asset: assetBehavior,
+  menubar: menubarBehavior,
+  contextMenu: contextMenuBehavior,
   breadcrumb: breadcrumbBehaviorSpec,
   calendar: calendarBehavior,
   carousel: carouselBehavior,
@@ -1216,7 +1252,7 @@ export const behaviorRegistry = {
     /*
       `trap`이 아니라 `restore`다 — Dialog·Sheet·AlertDialog는 모달이라 포커스를 가두지만
       Popover는 비모달이라 Tab이 **정당하게 밖으로 나갈 수 있다.** 그래서 가두지 않고,
-      닫힐 때 트리거로 돌려보낸다. 같은 자리에 있는 것은 Menu다(역시 `restore`).
+      Escape/명시적 닫기는 트리거로 복귀하고, 바깥 클릭·Tab 이동은 새 초점을 보존한다.
       나가는 것 자체가 dismiss 신호이므로 `outside-focus`를 별도 reason으로 둔다.
     */
     web: {

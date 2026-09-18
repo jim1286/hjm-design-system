@@ -32,13 +32,13 @@ label/textValue, selection mode)을 따르는 항목 **목록**이고 그 role/k
 않는, 목록이 아닌 콘텐츠를 위한 자리다. 제품이 실제로 액션 목록을 띄우려는
 것이라면 그것은 Popover가 아니라 Menu다.
 
-## ConfirmPopover는 별개로 만들지 않는다 (판정, 한 줄)
+## ConfirmPopover는 작동하는 조합으로 제공한다
 
 catalog에 별도 `planned` 항목으로 있는 `ConfirmPopover`(antd `Popconfirm`,
 `relationship: "adapted"`)는 이 Popover 위의 **조합**이다 — Popover의 anchored
-비-모달 surface에 AlertDialog의 `idle → busy → error/closing → closed` confirm
-session(`docs/architecture.md`의 "위험 확인의 생명주기")을 얹은 것이지, 셋째
-독립 primitive가 아니다. 지금은 만들지 않는다: 이 판정만 남긴다.
+비모달 surface에 되돌릴 수 있는 행동의 확인·취소를 얹은 조합이다. 파괴적 동작은
+AlertDialog를 사용한다. `Patterns/Popover/ReversibleConfirmation`은 기록 보관·취소가
+작동하는 예제이며 새 독립 renderer 수에 더하지 않는다.
 
 ## 일반화한 계약
 
@@ -84,7 +84,8 @@ flip/shift, RTL 논리 방향 변환은 제품 Web renderer의 비공개 `Anchor
   과 의도적으로 다르다. Popover 콘텐츠는 Menu처럼 아래로 펼쳐지는 목록형
   레이아웃을 담는 경우가 많아 Menu의 시각적 관성(아래로 열림)에 더 가깝다.
 - `accessibilityLabel`은 선택 사항이다. 대부분의 Popover 콘텐츠는 자체 heading을
-  가지므로 그것이 surface의 접근 가능한 이름이 된다. heading이 없는 콘텐츠만
+  가지므로 renderer가 `aria-labelledby`로 제목을 연결한다. heading 존재만으로 dialog가
+  자동으로 이름을 얻지는 않는다. heading이 없는 콘텐츠만
   명시적으로 공급한다 — 기본값을 발명하지 않는다(Tooltip이 `content`를 필수로
   요구하는 것과 반대로, Popover는 콘텐츠 자체를 타입으로 갖지 않으므로 대신
   이 escape hatch만 둔다).
@@ -96,13 +97,14 @@ flip/shift, RTL 논리 방향 변환은 제품 Web renderer의 비공개 `Anchor
 - Web: surface는 `role="dialog"`(비모달, `aria-modal` 없음), trigger는
   `aria-haspopup="dialog"`와 `aria-expanded`를 합성한다. 열릴 때 초기 focus는
   콘텐츠의 첫 focusable 요소로 이동하고(없으면 콘텐츠 root, `tabIndex={-1}`),
-  모든 dismiss 경로 이후 focus는 trigger로 복귀한다. Escape·outside pointer·
-  focus가 surface 밖으로 나감 세 경로 모두 이 복귀 규칙을 따른다.
+  Escape·명시적 닫기 후 초점은 trigger로 복귀한다. outside pointer·Tab 이동은 새로 옮긴
+  초점을 유지한다. 기존 문서는 모든 종료 후 복귀를 요구했지만, 실제 Web 구현에서
+  다음 입력으로 가려는 행동을 끊는 문제가 있어 2026-09-16 수정했다.
 - Native: 이 컴포넌트는 `platform: web`이다 — `docs/expansion-roadmap.md`
   Batch 3에 `web`으로만 분류되어 있고, Native adaptive 대응(예: bottom sheet로
   펼치는 대안)이 필요해지면 그때 별도 적응 계약을 연다.
 - Reduce Motion: Tooltip과 같은 enter/exit preset(`motionPreset.enter/exit`)을
-  재사용하며 이동 없는 opacity로 대체한다.
+  사용한다. 진입/종료는 이동 없는 opacity이며 reduced motion의 종료는 즉시 제거한다.
 
 ## 공개한 축 / 배제한 축
 
@@ -116,9 +118,36 @@ flip/shift, RTL 논리 방향 변환은 제품 Web renderer의 비공개 `Anchor
 | portal/flip/shift 공개 API | **배제** — Tooltip의 `AnchoredOverlay` 경계를 그대로 상속 |
 | content 데이터 모델 | **배제** — 런타임 의존성 금지 원칙상 React 콘텐츠 타입을 이 패키지가 가질 수 없다. 콘텐츠 자체는 항상 제품/렌더러 소유다 |
 
-## 검증 화면
+## 공개 API와 예제
 
-아직 없음. `planned → beta` 승격은 실제 제품 vertical slice 이후 리드가
-진행한다. 유력 후보는 필터·정렬 옵션처럼 여러 control이 섞인 작은 패널이며,
-단순 action 목록이면 그것은 Popover가 아니라 이미 beta인 Menu를 먼저
-검토해야 한다.
+`import { Popover } from "@hjmds/react/popover"`로 가져온다. 필수 props는 `trigger`,
+`title`, `closeLabel`이다. trigger는 ref와 button props를 DOM까지 전달하는 단일 버튼이다.
+children은 React 콘텐츠 또는 `({ close }) => ...` 함수이며 close는 `close-action`을 요청한다.
+`open/defaultOpen/onOpenChange`, `descriptor`, `dismissPolicy`, `initialFocusRef`,
+`portalContainer`, `description`을 제공한다. ref는 content div를 가리킨다.
+
+공개 위치 설정은 기존 descriptor의 placement/align이다. 내부 `useAnchoredPopup`이 portal·
+flip·shift를 담당하고, 옆 공간이 부족한 넓은 콘텐츠는 block 축으로 옮긴다. 크기는 recipe의
+240–360px을 기준으로 viewport에 제한하고 긴 콘텐츠는 내부 스크롤한다. 내부 API는 공개하지 않는다.
+
+초기 focus는 지정된 ref, 본문의 첫 tabbable control, content root 순서다. 닫기 버튼을
+무조건 첫 초점으로 고르지 않는다. Tab 경계는 portal의 body 끝 위치 대신 트리거 다음
+입력으로 이어진다. 현재 초점이 다른 제어 요소로 이동했다면 종료 효과가 다시 뺏지 않는다.
+닫히는 표면은 즉시 inert/aria-hidden이 되고 exit 후 제거된다. nested Popover의 portal도 함께
+닫히며, 내부 Menu/Select portal은 바깥 클릭·초점으로 오인하지 않는다.
+
+Dialog 안의 Popover는 첫 Escape를 소유한다. 내부 Menu가 Escape를 처리했다면 부모는
+그 이벤트를 다시 처리하지 않는다. 모달의 초점 목록은 hidden/inert/disabled 자손을 제외한다.
+
+2026-09-16 사용자의 확장 요청으로 라이브러리 beta를 제공한다. 제품 채택은 별도다.
+`Patterns/Popover/Filters`는 제목·즐겨찾기 조건 적용/취소/초기화와 실제 목록 교체를 제공한다.
+`ReversibleConfirmation`은 보관 후 취소 버튼으로 초점을 옮기며 실제로 복원한다.
+
+[Radix Popover](https://www.radix-ui.com/primitives/docs/components/popover)의 비모달 focus·
+종료 구분과 [React Aria Popover](https://react-aria.adobe.com/Popover)의 viewport/portal 경계를
+비교했다. [Ant Design Popconfirm](https://ant.design/components/popconfirm/)의 확인/취소 흐름은
+되돌릴 수 있는 제품 행동의 조합에 적용한다. API 호환을 약속하지 않는다.
+
+브라우저 검증은 초기 focus, Escape 복귀, 바깥 클릭 유지, Tab 양방향 이탈, controlled 거절 후
+재시도, dismiss 정책, 중첩 modal/menu, 320px·2배 글자·RTL·충돌 배치, exit 격리를 다룬다.
+제품 채택·실제 보조기기 검증은 남아 있다.

@@ -18,8 +18,8 @@ function Typography() {
       <p className="hjm-lead">
         역할 기반 타입 스케일입니다. toolbar에서 200%를 선택해 줄바꿈과 정보 보존을 확인하세요.
       </p>
-      <section className="hjm-section" aria-label="Typography scale">
-        <div className="hjm-grid">
+      <section className="hjm-showcase-section" aria-label="Typography scale">
+        <div className="hjm-showcase-grid">
           {Object.entries(typography).map(([name, value]) => {
             const tokenName = kebabCase(name);
             const style = {
@@ -28,7 +28,7 @@ function Typography() {
               "--hjm-sample-line-height": `var(--hjm-type-${tokenName}-line-height)`,
             } as TypographySampleStyle;
             return (
-              <article className="hjm-card" key={name}>
+              <article className="hjm-showcase-card" key={name}>
                 <span className="hjm-pill">{name}</span>
                 <p className="hjm-type-role-sample" style={style}>중요한 순간을 분명하게 보여줘요.</p>
                 <p className="hjm-muted">

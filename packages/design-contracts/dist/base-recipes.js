@@ -45,7 +45,24 @@ export const buttonRecipe = {
     shapes: { rounded: "md", pill: "full" },
     aligns: { center: "center", leading: "flex-start" },
     opacity: { disabled: 0.5, pressed: 0.86 },
+    /**
+     * 긴 라벨의 처리 규칙. 지금까지 이 판단이 없어서 Web은 무한히 줄바꿈하고 RN은 한 줄로
+     * 잘렸다 — 같은 번역문이 두 표면에서 다르게 보였다.
+     *
+     * 자르지 않고 **두 줄까지 접는다**. 잘린 행동 라벨("삭제하..."))은 무엇을 하는 버튼인지
+     * 잃는다. 대신 무제한 줄바꿈도 막는다 — 하단 CTA 행처럼 버튼이 남의 레이아웃을 밀어내는
+     * 자리가 있고, 두 줄을 넘는 라벨은 레이아웃이 아니라 카피의 문제다.
+     *
+     * 큰 글자 설정에서는 상한을 **푼다**. 사용자가 키운 글자에서 두 줄로 자르면 내용이
+     * 사라지고, 그건 WCAG 1.4.4를 어긴다. 제품 카피가 아니라 사용자 설정이 원인이기 때문에
+     * 같은 규칙을 적용할 수 없다.
+     */
+    label: { overflow: "wrap", maxLines: 2, liftCapOnLargeText: true },
 };
+/** Resolves the label's line cap for one resolved environment. `null` means uncapped. */
+export function resolveButtonLabelLines(largeText) {
+    return largeText && buttonRecipe.label.liftCapOnLargeText ? null : buttonRecipe.label.maxLines;
+}
 export const surfaceRecipe = {
     default: {
         background: "surface",

@@ -1,5 +1,5 @@
 import { jsx as _jsx } from "react/jsx-runtime";
-import { isLargeTextScale, resolveDesignSystemProviderValue, validateDesignSystemProviderValue, } from "@hjmds/design-contracts/components/design-system-provider";
+import { designSystemEnvironmentDefaults, isLargeTextScale, resolveDensityDefault, resolveDesignSystemProviderValue, validateDesignSystemProviderValue, } from "@hjmds/design-contracts/components/design-system-provider";
 import { tooltipBehaviorDefaults } from "@hjmds/design-contracts/components/tooltip";
 import { createContext, forwardRef, useCallback, useContext, useRef, useState, useSyncExternalStore, } from "react";
 import { classNames } from "./internal.js";
@@ -14,7 +14,7 @@ function subscribeMedia(query, callback) {
 function useMediaQuery(query, observe = true) {
     return useSyncExternalStore((callback) => observe ? subscribeMedia(query, callback) : () => undefined, () => observe && window.matchMedia(query).matches, () => false);
 }
-export const HjmProvider = forwardRef(function HjmProvider({ children, theme, direction, textScale, reducedMotion, minimumVisualTarget, systemTheme, host = "surface", value: suppliedValue, className, style, ...rest }, ref) {
+export const HjmProvider = forwardRef(function HjmProvider({ children, theme, direction, textScale, reducedMotion, minimumVisualTarget, density, systemTheme, host = "surface", value: suppliedValue, className, style, ...rest }, ref) {
     const parent = useContext(HjmThemeContext);
     const observesSystem = suppliedValue === undefined;
     const prefersDark = useMediaQuery("(prefers-color-scheme: dark)", observesSystem);
@@ -26,6 +26,7 @@ export const HjmProvider = forwardRef(function HjmProvider({ children, theme, di
         ...(textScale === undefined ? {} : { textScale }),
         ...(reducedMotion === undefined ? {} : { reducedMotion }),
         ...(minimumVisualTarget === undefined ? {} : { minimumVisualTarget }),
+        ...(density === undefined ? {} : { density }),
     };
     const value = suppliedValue ?? resolveDesignSystemProviderValue(input, {
         systemTheme: resolvedSystemTheme,
@@ -86,6 +87,15 @@ export function useHjmTheme() {
 /** Renderer components use the browser default direction when no provider is present. */
 export function useOptionalHjmTheme() {
     return useContext(HjmThemeContext);
+}
+/**
+ * Resolves the provider's density onto one component's own density vocabulary.
+ * Outside a provider the component's recipe default stands — a global axis must
+ * not make an unwrapped renderer behave differently from a wrapped one at rest.
+ */
+export function useHjmDensityDefault(vocabulary) {
+    const theme = useContext(HjmThemeContext);
+    return resolveDensityDefault(theme?.environment.density ?? designSystemEnvironmentDefaults.density, vocabulary);
 }
 /** Internal provider-scoped coordination used by Tooltip renderers. */
 export function useTooltipCoordinator() {

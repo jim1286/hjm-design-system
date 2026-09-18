@@ -1,3 +1,32 @@
+import { Popover } from "../src/popover.js";
+import { SidePanel } from "../src/side-panel.js";
+import { Splitter } from "../src/splitter.js";
+import { Tour } from "../src/tour.js";
+import { Tree } from "../src/tree.js";
+import { TransferList } from "../src/transfer-list.js";
+import { Mentions } from "../src/mentions.js";
+import { CommandPalette } from "../src/command-palette.js";
+import { Agreement } from "../src/agreement.js";
+import { Top } from "../src/top.js";
+import { Heading } from "../src/heading.js";
+import { TextFormat } from "../src/text-formats.js";
+import { ToggleGroup } from "../src/toggle-group.js";
+import { TagsInput } from "../src/tags-input.js";
+import { SkipNav } from "../src/skip-nav.js";
+import { BottomInfo } from "../src/bottom-info.js";
+import { Sidebar } from "../src/sidebar.js";
+import { DateRangePicker } from "../src/date-range.js";
+import { AuthProviderButton } from "../src/provider-button.js";
+import { DataTable } from "../src/data-table.js";
+import { Collapsible } from "../src/collapsible.js";
+import { ContextMenu } from "../src/context-menu.js";
+import { Menubar } from "../src/menubar.js";
+import { Asset } from "../src/asset.js";
+import { Breadcrumb } from "../src/breadcrumb.js";
+import { Pagination } from "../src/pagination.js";
+import { Anchor } from "../src/anchor.js";
+import { FloatingActionButton } from "../src/floating-action-button.js";
+import { Carousel } from "../src/carousel.js";
 import type { ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
@@ -9,6 +38,8 @@ import {
   Avatar,
   Badge,
   BottomNavigation,
+  BottomCTA,
+  TopBar,
   Button,
   Card,
   Checkbox,
@@ -19,6 +50,7 @@ import {
   CounterBadge,
   DescriptionList,
   DatePicker,
+  Calendar,
   Dialog,
   Divider,
   EmptyState,
@@ -113,6 +145,8 @@ const longCopy = "아주 긴 제품 설명과 unexpectedly long English content 
  * from satisfying a renderer claim.
  */
 const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
+  { componentId: "top-bar", marker: "hjm-top-bar", render: () => <TopBar title="오늘의 할 일" /> },
+  { componentId: "bottom-cta", marker: "hjm-bottom-cta", render: () => <BottomCTA primaryAction={{ label: "계속", onClick: () => {} }} /> },
   {
     componentId: "design-system-provider",
     marker: "data-hjm-provider",
@@ -263,6 +297,11 @@ const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
     ),
   },
   {
+    componentId: "calendar",
+    marker: "hjm-calendar",
+    render: () => <Calendar descriptor={{ grid: defaultCalendarGrid, monthLabel: "February 2027" }} composeAccessibleName={({ date }) => date} />,
+  },
+  {
     componentId: "file-picker",
     marker: "hjm-file-picker",
     render: () => (
@@ -323,6 +362,249 @@ const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
       <Tabs label="Tabs" items={[{ id: "one", label: "One", panel: "Panel" }]} />
     ),
   },
+  { componentId: "breadcrumb", marker: "hjm-breadcrumb", render: () => <Breadcrumb label="현재 위치" items={[{ id: "all", label: "전체", destination: { kind: "internal", href: "#all" } }, { id: "current", label: "일상" }]} /> },
+  { componentId: "pagination", marker: "hjm-pagination", render: () => <Pagination label="페이지" descriptor={{ currentPage: 2, totalPages: 8 }} labels={{ previous: "이전", next: "다음" }} composeAccessibleName={({ page, totalPages }) => `${totalPages}페이지 중 ${page}페이지`} onPageChange={() => {}} /> },
+  { componentId: "popover", marker: "hjm-popover", render: () => <Popover defaultOpen title="필터" closeLabel="닫기" trigger={<button>필터</button>}><input aria-label="제목" /></Popover> },
+  {
+    componentId: "side-panel",
+    // Like Dialog and Sheet, the panel itself lives in a client portal; the
+    // server-rendered surface is the trigger that owns it.
+    marker: "aria-haspopup=\"dialog\"",
+    render: () => (
+      <SidePanel closeLabel="Close" trigger={<button type="button">Open panel</button>} title="Details" />
+    ),
+  },
+  {
+    componentId: "splitter",
+    marker: "hjm-splitter",
+    render: () => (
+      <Splitter label="패널 크기 조절" min={20} max={80} step={5} defaultValue={40}
+        getValueText={(value) => `${value}%`}
+        primaryPane={<p>목록</p>} secondaryPane={<p>상세</p>} />
+    ),
+  },
+  {
+    componentId: "tour",
+    // The card lives in a client portal like the modal overlays; the trigger is
+    // what the server renders.
+    marker: "aria-haspopup=\"dialog\"",
+    render: () => (
+      <Tour
+        trigger={<button type="button">Start tour</button>}
+        descriptor={{
+          accessibilityLabel: "Product tour",
+          currentStepId: "one",
+          labels: { next: "Next", previous: "Previous", skip: "Skip", done: "Done" },
+          steps: [{ id: "one", anchorId: "records", title: "Records", description: "Your notes live here." }],
+        }}
+        resolveAnchor={() => null}
+        composeAnnouncement={({ position, total, title }) => `${position}/${total} ${title}`}
+        onStepChange={() => {}}
+      />
+    ),
+  },
+  {
+    componentId: "tree",
+    marker: "hjm-tree",
+    render: () => (
+      <Tree
+        label="폴더"
+        nodes={[{ id: "root", label: "기록", textValue: "기록", children: [{ id: "leaf", label: "오늘", textValue: "오늘" }] }]}
+        defaultExpandedKeys={new Set(["root"])}
+        composeAccessibleName={({ depth, position, siblingCount, label: name }) => `${depth}단계 ${siblingCount}개 중 ${position}번째, ${name}`}
+      />
+    ),
+  },
+  {
+    componentId: "transfer-list",
+    marker: "hjm-transfer-list",
+    render: () => (
+      <TransferList
+        items={[{ id: "a", label: "기록 A", textValue: "기록 A" }, { id: "b", label: "기록 B", textValue: "기록 B" }]}
+        defaultTargetKeys={new Set(["b"])}
+        labels={{ source: "전체", target: "선택", toTarget: "담기", toSource: "빼기", selectAll: "모두 선택", empty: "비어 있어요" }}
+      />
+    ),
+  },
+  {
+    componentId: "mentions",
+    marker: "hjm-mentions",
+    render: () => (
+      <Mentions
+        label="함께한 사람"
+        value=""
+        onValueChange={() => {}}
+        triggers={[{ id: "person", trigger: "@" }]}
+        candidates={[]}
+        emptyMessage="찾는 사람이 없어요"
+        listLabel="사람 후보"
+      />
+    ),
+  },
+  {
+    componentId: "command-palette",
+    // Modal surface in a client portal; the trigger is the server-rendered part.
+    marker: "aria-haspopup=\"dialog\"",
+    render: () => (
+      <CommandPalette
+        trigger={<button type="button">명령 열기</button>}
+        descriptor={{ accessibilityLabel: "명령 팔레트", searchPlaceholder: "무엇을 할까요" }}
+        source={{ items: [{ id: "write", label: "새 기록", textValue: "새 기록" }] }}
+        query=""
+        onQueryChange={() => {}}
+        onActivate={() => {}}
+      />
+    ),
+  },
+  {
+    componentId: "agreement",
+    marker: "hjm-agreement",
+    render: () => (
+      <Agreement
+        requiredLabel="(필수)"
+        optionalLabel="(선택)"
+        descriptor={{
+          accessibilityLabel: "약관 동의",
+          allLabel: "전체 동의하기",
+          items: [{ id: "terms", label: "이용약관", required: true, detail: { label: "전문 보기", href: "#terms" } }],
+        }}
+      />
+    ),
+  },
+  {
+    componentId: "top",
+    marker: "hjm-top",
+    render: () => <Top descriptor={{ title: "오늘 기록을 남겨요", description: "짧아도 괜찮아요" }} />,
+  },
+  {
+    componentId: "heading",
+    marker: "hjm-heading",
+    render: () => <Heading level="level2">기록 모아보기</Heading>,
+  },
+  {
+    componentId: "text-format",
+    marker: "hjm-text-format",
+    render: () => <TextFormat kind="kbd">Enter</TextFormat>,
+  },
+  {
+    componentId: "toggle-group",
+    marker: "hjm-toggle-group",
+    render: () => (
+      <ToggleGroup descriptor={{ accessibilityLabel: "글자 꾸미기", items: [{ id: "bold", label: "굵게" }] }} />
+    ),
+  },
+  {
+    componentId: "tags-input",
+    marker: "hjm-tags-input",
+    render: () => (
+      <TagsInput label="태그" defaultTags={["산책"]} composeRemoveLabel={(tag) => `${tag} 지우기`} />
+    ),
+  },
+  {
+    componentId: "skip-nav",
+    marker: "hjm-skip-nav",
+    render: () => <SkipNav targetId="main" label="본문 바로가기" />,
+  },
+  {
+    componentId: "bottom-info",
+    marker: "hjm-bottom-info",
+    render: () => <BottomInfo items={["가입하면 약관에 동의하는 것으로 봅니다"]} />,
+  },
+  {
+    componentId: "sidebar",
+    marker: "hjm-sidebar",
+    render: () => (
+      <Sidebar
+        descriptor={{
+          accessibilityLabel: "주요 메뉴",
+          currentId: "records",
+          groups: [{ id: "main", label: "기록", items: [{ id: "records", label: "내 기록" }] }],
+        }}
+      />
+    ),
+  },
+  {
+    componentId: "date-range-picker",
+    marker: "hjm-date-range",
+    render: () => (
+      <DateRangePicker
+        descriptor={{ grid: defaultCalendarGrid, monthLabel: "2027년 2월" }}
+        composeAccessibleName={({ date }) => date}
+        rangeLabels={{ start: "시작일", end: "종료일", between: "기간 안" }}
+      />
+    ),
+  },
+  {
+    componentId: "auth-provider-button",
+    marker: "hjm-auth-provider-button",
+    render: () => (
+      <AuthProviderButton descriptor={{ provider: "google", label: "Google로 계속하기" }} logo={<span>G</span>} />
+    ),
+  },
+  {
+    componentId: "data-table",
+    marker: "hjm-data-table",
+    render: () => (
+      <DataTable
+        columns={[{ id: "title", header: "제목" }, { id: "day", header: "날짜", sortable: true }]}
+        rows={[{ id: "walk" }, { id: "meal" }]}
+        labels={{
+          table: "기록 표", selectAll: "모두 선택",
+          selectRow: (id) => `${id} 선택`,
+          sortColumn: (header) => `${header} 정렬`,
+        }}
+        renderCell={(rowId, columnId) => `${rowId}-${columnId}`}
+      />
+    ),
+  },
+  {
+    componentId: "collapsible",
+    marker: "hjm-collapsible",
+    render: () => (
+      <Collapsible trigger="자세히 보기" defaultOpen>
+        <p>접었다 펼 수 있는 본문입니다.</p>
+      </Collapsible>
+    ),
+  },
+  {
+    componentId: "context-menu",
+    marker: "hjm-context-menu-host",
+    render: () => (
+      <ContextMenu
+        accessibilityLabel="기록 메뉴"
+        items={[{ id: "edit", label: "수정", textValue: "수정" }, { id: "delete", label: "삭제", textValue: "삭제", tone: "danger" }]}
+        onAction={() => undefined}
+      >
+        <p>여기서 우클릭하세요.</p>
+      </ContextMenu>
+    ),
+  },
+  {
+    componentId: "menubar",
+    marker: "hjm-menubar",
+    render: () => (
+      <Menubar
+        descriptor={{
+          accessibilityLabel: "주 메뉴",
+          menus: [
+            { id: "file", label: "파일", items: [{ id: "new", label: "새로 만들기", textValue: "새로 만들기" }] },
+            { id: "edit", label: "편집", items: [{ id: "undo", label: "실행 취소", textValue: "실행 취소" }] },
+          ],
+        }}
+        onAction={() => undefined}
+      />
+    ),
+  },
+  {
+    componentId: "asset",
+    marker: "hjm-asset",
+    render: () => (
+      <Asset descriptor={{ kind: "lottie", accessibilityLabel: "편지를 나르는 동물" }}>
+        <span>🦊</span>
+      </Asset>
+    ),
+  },
+  { componentId: "anchor", marker: "hjm-anchor", render: () => <Anchor label="목차" items={[{ id: "intro", label: "소개" }]} /> },
   {
     componentId: "bottom-navigation",
     marker: "hjm-bottom-navigation",
@@ -350,6 +632,20 @@ const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
         onLoadMore={async () => undefined}
       />
     ),
+  },
+  {
+    componentId: "carousel",
+    marker: "hjm-carousel",
+    render: () => <Carousel label="새 소식" slides={[{ id: "one", label: "첫 소식" }, { id: "two", label: "다음 소식" }]}
+      labels={{ previous: "이전", next: "다음", pause: "멈추기", resume: "재생하기", navigation: "소식 이동" }}
+      composeAccessibleName={({ position, total, label }) => `${position}/${total} ${label}`}
+      renderSlide={({ label }) => <p>{label}</p>} />,
+  },
+  {
+    componentId: "floating-action-button",
+    marker: "hjm-fab",
+    render: () => <FloatingActionButton descriptor={{ label: "새 기록", icon: { name: "add" } }}
+      renderIcon={() => <span>＋</span>} onContentClearanceChange={() => {}} />,
   },
   {
     componentId: "steps",

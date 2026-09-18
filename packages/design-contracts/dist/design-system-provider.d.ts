@@ -29,6 +29,26 @@ export declare function isLargeTextScale(textScale: DesignSystemTextScale): bool
  * rather than in `foundations` because it is a policy over a token, not a token.
  */
 export declare function visibleControlHeight(recipeHeight: number, minimumVisualTarget: boolean): number;
+/**
+ * 한 화면 안에서 목록·메뉴·표가 각각 다른 밀도로 그려지던 문제를 하나의 축으로 모은다.
+ * 지금까지는 `ListRow density`, `Menu density`, DataTable의 행 높이가 서로 모르는 값이라
+ * 제품이 세 군데를 따로 맞췄다. 컴포넌트의 명시적 prop이 언제나 이 축을 이긴다 —
+ * 전역값은 기본이지 강제가 아니다.
+ *
+ * OS 신호가 없다. 밀도는 제품의 입장(같은 화면에 얼마나 담을 것인가)이지 사용자 설정이
+ * 아니라서 `system*` 짝을 두지 않았다. 반대로 큰 글자 설정은 사용자 설정이므로
+ * `textScale`이 큰 상태에서 `compact`를 쓰는 것은 제품이 스스로 막아야 한다.
+ */
+export type DesignSystemDensity = "comfortable" | "compact";
+/**
+ * 전역 밀도를 컴포넌트마다 다른 밀도 어휘로 옮긴다. 컴포넌트의 명시적 prop이 언제나
+ * 이긴다 — 전역값은 기본이지 강제가 아니다. 어휘를 하나로 통일하지 않은 이유: 목록의
+ * `relaxed`와 표의 `regular`는 같은 말이 아니고, 억지로 합치면 둘 중 하나가 거짓말을 한다.
+ */
+export declare function resolveDensityDefault<Comfortable extends string, Compact extends string>(density: DesignSystemDensity, vocabulary: Readonly<{
+    comfortable: Comfortable;
+    compact: Compact;
+}>): Comfortable | Compact;
 export type DesignSystemEnvironmentInput = Readonly<{
     theme?: ThemePreference;
     direction?: DesignSystemDirection;
@@ -40,6 +60,8 @@ export type DesignSystemEnvironmentInput = Readonly<{
      * OS signal, so it has no `system*` counterpart.
      */
     minimumVisualTarget?: boolean;
+    /** Default row/menu/table density for everything below this provider. */
+    density?: DesignSystemDensity;
 }>;
 export declare const designSystemEnvironmentDefaults: {
     readonly theme: "system";
@@ -47,6 +69,7 @@ export declare const designSystemEnvironmentDefaults: {
     readonly textScale: 1;
     readonly reducedMotion: false;
     readonly minimumVisualTarget: false;
+    readonly density: "comfortable";
 };
 export type ResolvedDesignSystemEnvironment = Readonly<{
     theme: ResolvedTheme;
@@ -54,6 +77,7 @@ export type ResolvedDesignSystemEnvironment = Readonly<{
     textScale: DesignSystemTextScale;
     reducedMotion: boolean;
     minimumVisualTarget: boolean;
+    density: DesignSystemDensity;
 }>;
 export type ResolveDesignSystemEnvironmentOptions = Readonly<{
     /**

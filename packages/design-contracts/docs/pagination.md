@@ -104,9 +104,7 @@ Steps와 같은 이유다: 순서를 나타내는 문장의 어순과 조사는 
   `paginationRecipe.item`은 현재 페이지에 `action.brand` 채움을 쓰지 않고
   `border.focus`/`content.brand` 외곽선만 쓴다 — 페이지 번호는 위치 표시이지
   버튼 커맨드가 아니다.
-- 이전/다음 아이콘은 새 glyph를 만들지 않고 기존 논리 방향 아이콘
-  `chevronStart`/`chevronEnd`(RTL에서 자동 mirror)를 재사용한다. 생략 표시의
-  장식 마크도 기존 `more` 아이콘을 재사용한다.
+- 이전/다음은 장식 문자 `‹`/`›`를 쓰고 RTL에서 미러링한다. 생략 표시는 장식 `…`다.
 
 ## 플랫폼 번역
 
@@ -114,7 +112,8 @@ Steps와 같은 이유다: 순서를 나타내는 문장의 어순과 조사는 
   현재 페이지에만 달고, 시각 숫자와 함께 제품이 조립한 `accessibleName`을
   accessible name으로 쓴다. 생략 표시는 `aria-hidden`이며 tabbable하지 않다.
   이전/다음 버튼은 `PaginationLabels`의 고정 현지화 문구를 쓰고, 경계에서는
-  `disabled`(색만이 아니라 `aria-disabled`와 `opacity.disabled`)로 표시한다.
+  `aria-disabled`와 opacity로 표시하고 activation을 차단한다. hard `disabled`로 바꾸면
+  마지막 페이지에 도착한 순간 누르던 버튼의 초점을 잃을 수 있어 tab stop은 유지한다.
 - Native: `platform: web`이므로 이 계약은 Native 렌더러를 갖지 않는다 —
   긴 목록의 Native 대응은 `LoadMore`다(위 경계 참고).
 - Reduce Motion: 페이지 전환은 이동 애니메이션 없이 콘텐츠만 교체한다 —
@@ -132,8 +131,17 @@ Steps와 같은 이유다: 순서를 나타내는 문장의 어순과 조사는 
 | `disabled`(컨트롤 전체) | **배제** — 브리프가 요구한 필수 계약을 넘는 축이라 지금은 열지 않는다. 필요해지면 availability 축에서 `enabled`/`disabled`만 추가한다 |
 | Native 대응 | **배제** — `LoadMore`가 이미 같은 문제의 Native 해法이다 |
 
-## 검증 화면
+## 공개 경로와 검증
 
-아직 없음. `planned → beta` 승격은 실제 제품 vertical slice 이후 리드가
-진행한다(로드맵 maturity gate). 유력 후보는 검색 결과나 관리자 테이블처럼
-안정된 총 개수가 있는 Web 목록이다.
+`import { Pagination } from "@hjmds/react/pagination"`로 가져옵니다. root와 기존 navigation
+경로도 유지합니다. `label`, `descriptor`, `labels`, `composeAccessibleName`, `onPageChange`가
+필수입니다. 상태·데이터 요청·결과 교체와 URL 동기화는 제품이 소유합니다.
+
+2026-09-16 사용자의 명시적 확장 요청으로 라이브러리 beta를 제공하고 제품 채택은 별도로
+추적합니다. `Patterns/WebNavigation`에서 125개 로컬 기록의 실제 페이지별 목록과 표시 범위가
+바뀝니다. 서버 요청이나 제품 적용을 검증한 것은 아닙니다.
+
+[MUI Pagination](https://mui.com/material-ui/react-pagination/)의 명시적 페이지 탐색과
+outlined 위치 표시를 비교했습니다. HJM은 기존 content-brand outline과 평평한 목록을 유지합니다.
+브라우저 테스트는 현재 페이지 의미, 마지막 페이지 focus 유지·중복 요청 차단, 빈 결과,
+320px·2배 글자·4자리 페이지·RTL을 다룹니다. 실제 제품과 보조기기 검증은 남아 있습니다.

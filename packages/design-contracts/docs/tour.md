@@ -130,7 +130,28 @@ Popover처럼 순수 판정 함수(`resolveTourAdvance`, `validateTourOpenState`
 | "다시 보지 않기" 영속화 | **배제** — 제품이 `TourCloseReason`을 받아 직접 저장할 몫 |
 | 비동기 busy/error 상태 | **배제** — Tour에는 되돌릴 수 없는 side effect가 없다. AlertDialog의 세션 패턴을 가져올 이유가 없다 |
 
+## Web renderer (2026-09-18)
+
+`@hjmds/react/tour`의 `Tour`가 이 계약을 실행한다. catalog는 Web `beta`,
+Native `unsupported`다. 제품 vertical slice와 보조기기 실측은 아직 없다.
+
+- **anchor는 끝까지 제품 소유다.** props는 노드가 아니라
+  `resolveAnchor(anchorId)`를 받는다. renderer는 단계가 바뀔 때마다, 그리고 스크롤·
+  리사이즈마다 다시 측정한다 — rect를 보관하면 제품이 페이지를 다시 그리는 순간 어긋난다.
+- **초점은 카드로 간다.** 카드 자체(`tabIndex=-1`)가 초기 초점이며 단계마다 다시 간다.
+  카드의 첫 버튼이 아니다 — 카드가 단계 안내 문구를 들고 있고, 그 문구가 시각적 포인터를
+  대신하는 전부이기 때문이다. anchor는 열려 있는 동안 inert 배경이라 초점 대상이 아니다.
+- **화면에 보이는 제목·본문은 보조기기에서 숨긴다.** 합성된 안내 문구가 이미 위치·제목·
+  설명을 담고 있어 그대로 두면 두 번 읽힌다.
+- **veil에는 dismiss handler가 없다.** 계약에 `outside` 사유 자체가 없으므로 실수로 찍은
+  포인터가 둘러보기를 끝내지 못한다. Escape와 건너뛰기는 어느 단계에서나 나간다.
+- **unmount는 `interrupted`로 한 번만 정산한다.** StrictMode의 probe cleanup과 실제
+  unmount를 epoch로 구분한다(Sheet와 같은 방식).
+- 로컬 검증: `test/tour.browser.test.tsx` 6개(이름·안내·단계마다 초점 이동, 배경 inert와
+  바깥 pointer 무시, 첫 단계 이전은 no-op·마지막 다음은 complete, Escape·건너뛰기 탈출,
+  unmount의 1회 interrupted, controlled owner 종료와 320px 배치)와 `Patterns/Tour`.
+
 ## 검증 화면
 
-아직 없음. `planned → beta` 승격은 실제 제품 vertical slice 이후 리드가
-진행한다. 유력 후보: Yajalal 홈 화면 첫 진입 안내(검색 → 즐겨찾기 → 알림).
+제품 vertical slice는 아직 없다. 유력 후보는 Yajalal 홈 화면 첫 진입
+안내(검색 → 즐겨찾기 → 알림)이며, 채택 전까지 `beta`는 renderer 수준 증거만 뜻한다.

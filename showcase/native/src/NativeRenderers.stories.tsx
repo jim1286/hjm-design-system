@@ -1,3 +1,12 @@
+import { Agreement } from "@hjmds/react-native/agreement";
+import { Heading } from "@hjmds/react-native/heading";
+import { ToggleGroup } from "@hjmds/react-native/toggle-group";
+import { BottomInfo } from "@hjmds/react-native/bottom-info";
+import { Collapsible } from "@hjmds/react-native/collapsible";
+import { Asset } from "@hjmds/react-native/asset";
+import { AuthProviderButton } from "@hjmds/react-native/provider-button";
+import { Carousel } from "@hjmds/react-native/carousel";
+import { Top } from "@hjmds/react-native/top";
 import { useState, type ReactNode } from "react";
 import type { Meta, StoryObj } from "@storybook/react-native";
 import { ScrollView, StyleSheet, TextInput, View } from "react-native";
@@ -30,6 +39,10 @@ import {
 import { Combobox, Field, Form, Select } from "@hjmds/react-native/forms";
 import { NumberField } from "@hjmds/react-native/number-field";
 import { DatePicker } from "@hjmds/react-native/date-picker";
+import { TagsInput } from "@hjmds/react-native/tags-input";
+import { DateRangePicker } from "@hjmds/react-native/date-range";
+import { Mentions } from "@hjmds/react-native/mentions";
+import { TransferList } from "@hjmds/react-native/transfer-list";
 import { FilePicker } from "@hjmds/react-native/file-picker";
 import { OtpField } from "@hjmds/react-native/otp-field";
 import { PasswordField } from "@hjmds/react-native/password-field";
@@ -106,6 +119,14 @@ function FoundationsPreview() {
     <StoryFrame>
       <StoryHeading>Foundations and layout</StoryHeading>
       <Text tone="muted">Provider, type, semantic icon, surfaces and responsive layout.</Text>
+      <Heading level="level2">Heading exposes the display scale</Heading>
+      <Top
+        descriptor={{
+          eyebrow: "Getting started",
+          title: "Top opens the body, TopBar stays fixed",
+          description: "The screen's own first heading scrolls away with the content.",
+        }}
+      />
       <Stack axis="inline" align="center" gap="sm" wrap>
         <Icon descriptor={{ name: "success", decorative: true }} renderGlyph={({ name }) => <Glyph name={name} />} />
         <Text emphasis="strong">Semantic content</Text>
@@ -156,6 +177,11 @@ function ActionsPreview() {
         descriptor={{ label: "Open component docs", destination: { kind: "internal", href: "/components" } }}
         onNavigate={noop}
       />
+      <AuthProviderButton
+        descriptor={{ label: "Continue with Google", provider: "google" }}
+        logo={<Text>G</Text>}
+        onPress={noop}
+      />
       <BottomCTA
         primaryAction={{ label: "Continue", onPress: noop }}
         secondaryAction={{ label: "Later", onPress: noop }}
@@ -179,6 +205,12 @@ function InputsPreview() {
   return (
     <StoryFrame>
       <StoryHeading>Inputs and forms</StoryHeading>
+      <ToggleGroup
+        descriptor={{
+          accessibilityLabel: "Text styling",
+          items: [{ id: "bold", label: "Bold" }, { id: "italic", label: "Italic" }],
+        }}
+      />
       <Field label="Custom field" description="The frame also supports custom controls.">
         {(controlProps) => <TextInput {...controlProps} defaultValue="Custom value" style={styles.customInput} />}
       </Field>
@@ -237,6 +269,27 @@ function InputsPreview() {
         composeAccessibleName={({ date, isToday, isSelected }) => `${date}${isToday ? ", today" : ""}${isSelected ? ", selected" : ""}`}
         descriptor={{ grid: previewCalendarGrid, displayValue: null, placeholder: "Choose a date", label: "Visit date", defaultSelectedDate: null, defaultOpen: false }}
         monthLabel="February 2027"
+      />
+      <TagsInput label="Interests" composeRemoveLabel={(tag) => `Remove ${tag}`} defaultTags={["walking"]} />
+      {/* No hover on a phone, so the range shows through names and dots only. */}
+      <DateRangePicker
+        descriptor={{ grid: previewCalendarGrid, monthLabel: "February 2027" }}
+        composeAccessibleName={({ date }) => date}
+        rangeLabels={{ start: "range start", end: "range end", between: "inside range" }}
+      />
+      <Mentions
+        accessibilityLabel="Note"
+        value=""
+        onValueChange={noop}
+        triggers={[{ id: "user", trigger: "@" }]}
+        candidates={[{ id: "sky", label: "skyline" }]}
+        emptyMessage="No matches"
+        listLabel="Mention candidates"
+      />
+      {/* Stacked, not side by side: a phone has no room for two columns. */}
+      <TransferList
+        items={[{ id: "walk", label: "Walk", textValue: "Walk" }, { id: "meal", label: "Meal", textValue: "Meal" }]}
+        labels={{ source: "Available", target: "Chosen", toTarget: "Add", toSource: "Remove", selectAll: "Select all", empty: "Nothing here" }}
       />
       <FilePicker
         buttonLabel="Choose images"
@@ -374,6 +427,10 @@ function DataDisplayPreview() {
   return (
     <StoryFrame>
       <StoryHeading>Data display</StoryHeading>
+      <Carousel label="이번 주 소식" slides={[{ id: "one", label: "좋아하는 소식만 골라요" }, { id: "two", label: "언제든 설정을 바꿀 수 있어요" }]}
+        labels={{ previous: "이전", next: "다음", pause: "멈추기", resume: "재생하기", navigation: "소식 이동" }}
+        composeAccessibleName={({ position, total, label }) => `${position}/${total} ${label}`}
+        renderSlide={({ label }) => <Text>{label}</Text>} />
       <Stack axis="inline" gap="sm" align="center" wrap>
         <Avatar accessibilityLabel="HJM profile" name="HJM Profile" />
         <Badge label="Live" tone="success" />
@@ -396,6 +453,14 @@ function DataDisplayPreview() {
         label="Details"
         items={[{ value: "details", title: "Details", content: <Text>Expandable content</Text> }]}
       />
+      {/* Beside Accordion on purpose: a lone disclosure carries no group chrome. */}
+      <Collapsible trigger="Shipping details" defaultOpen>
+        <Text>Arrives tomorrow</Text>
+      </Collapsible>
+      {/* One frame for every media kind; the media itself stays the product's. */}
+      <Asset descriptor={{ kind: "lottie", accessibilityLabel: "Running fox" }}>
+        <Text>Fox</Text>
+      </Asset>
       <Statistic descriptor={{ id: "views", label: "Views", value: "12.4K" }} />
       <UploadItem
         descriptor={{ id: "photo", name: "profile-photo.png", sizeLabel: "1.2 MB", state: { status: "uploading", progress: 0.64, progressLabel: "64% uploaded" } }}
@@ -524,8 +589,34 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+function AgreementPreview() {
+  const [checked, setChecked] = useState<ReadonlySet<string>>(new Set());
+  return (
+    <StoryFrame>
+      <StoryHeading>Agreement</StoryHeading>
+      <Agreement
+        checkedIds={checked}
+        onCheckedIdsChange={setChecked}
+        onDetail={noop}
+        optionalLabel="(optional)"
+        requiredLabel="(required)"
+        descriptor={{
+          accessibilityLabel: "Sign-up agreements",
+          allLabel: "Agree to everything",
+          items: [
+            { id: "terms", label: "Terms of service", required: true, detail: { label: "Read" } },
+            { id: "privacy", label: "Privacy policy", required: true, detail: { label: "Read" } },
+            { id: "marketing", label: "Marketing updates", description: "You can turn this off any time." },
+          ],
+        }}
+      />
+    </StoryFrame>
+  );
+}
+
 export const Foundations: Story = { parameters: { hjm: { componentIds: nativeRendererStoryGroups.foundations } }, render: () => <FoundationsPreview /> };
 export const Actions: Story = { parameters: { hjm: { componentIds: nativeRendererStoryGroups.actions } }, render: () => <ActionsPreview /> };
+export const AgreementStory: Story = { name: "Agreement", parameters: { hjm: { componentIds: nativeRendererStoryGroups.agreement } }, render: () => <AgreementPreview /> };
 export const Inputs: Story = { parameters: { hjm: { componentIds: nativeRendererStoryGroups.inputs } }, render: () => <InputsPreview /> };
 export const Navigation: Story = { parameters: { hjm: { componentIds: nativeRendererStoryGroups.navigation } }, render: () => <NavigationPreview /> };
 export const DataDisplay: Story = { parameters: { hjm: { componentIds: nativeRendererStoryGroups.dataDisplay } }, render: () => <DataDisplayPreview /> };

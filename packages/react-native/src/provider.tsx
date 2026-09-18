@@ -14,11 +14,13 @@ import {
   useEffect,
   useMemo,
   useState,
+  useSyncExternalStore,
   type ReactNode,
 } from "react";
 import {
   AccessibilityInfo,
   I18nManager,
+  Platform,
   useColorScheme,
   useWindowDimensions,
 } from "react-native";
@@ -65,6 +67,10 @@ export type HjmNativeProviderProps = Readonly<{
 }> & (HjmNativeProviderEnvironmentProps | HjmNativeProviderValueProps);
 
 const HjmNativeThemeContext = createContext<HjmNativeTheme | null>(null);
+
+const subscribeHydration = () => () => undefined;
+const clientSnapshot = () => true;
+const serverSnapshot = () => false;
 
 function useSystemReducedMotion(observe: boolean): boolean {
   // AccessibilityInfo resolves asynchronously. Treat the unknown first frame
@@ -116,6 +122,12 @@ export function HjmNativeProvider({
 }: HjmNativeProviderProps) {
   const parent = useContext(HjmNativeThemeContext);
   const colorScheme = useColorScheme();
+  // Match Expo web's light server snapshot to avoid stale styles after hydration;
+  // native stays immediate. See README: static-web theme precedence.
+  const isClient = useSyncExternalStore(subscribeHydration, clientSnapshot, serverSnapshot);
+  const systemTheme = colorScheme === "dark" && (Platform.OS !== "web" || isClient)
+    ? "dark"
+    : "light";
   const systemReducedMotion = useSystemReducedMotion(
     suppliedValue === undefined && reducedMotion === undefined && parent === null,
   );
@@ -136,7 +148,7 @@ export function HjmNativeProvider({
     const resolved = suppliedValue ?? resolveDesignSystemProviderValue(
       environment,
       {
-        systemTheme: colorScheme === "dark" ? "dark" : "light",
+        systemTheme,
         systemDirection: I18nManager.isRTL ? "rtl" : "ltr",
         systemTextScale,
         systemReducedMotion,
@@ -156,7 +168,7 @@ export function HjmNativeProvider({
       },
       tokens: { spacing, radius, typography },
     };
-  }, [colorScheme, environment, parent, suppliedValue, systemReducedMotion, systemTextScale]);
+  }, [environment, parent, suppliedValue, systemReducedMotion, systemTextScale, systemTheme]);
 
   return <HjmNativeThemeContext.Provider value={contextValue}>{children}</HjmNativeThemeContext.Provider>;
 }

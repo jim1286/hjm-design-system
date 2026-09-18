@@ -8,8 +8,9 @@
 
 사용자가 한 번에 하나만 보이는 카드 묶음을 순서대로 넘겨 본다 — 야잘알 홈의 "내 구단
 경기 스트립"(가로 스크롤 페이저)이 실사용처다. Ant Design `Carousel`과 같은 사용자
-문제를 풀지만, HJM은 `direct` crosswalk를 따르면서도 antd의 기본 동작 두 가지(무한
-순환, 자동 재생 기본값)를 의도적으로 걷어낸다.
+문제를 풀지만, HJM은 `direct` crosswalk를 따르면서도 antd의 기본 무한
+순환을 제공하지 않는다. 자동재생은 두 라이브러리 모두 기본 false다. 2026-09-16
+[공식 API](https://ant.design/components/carousel/) 대조로 기존 문서의 기본값 오류를 수정했다.
 
 ## 일반화한 계약
 
@@ -128,3 +129,27 @@ mount policy 참고) — 새로 만든 개념이 아니라 이미 검증된 패�
 
 아직 없음. `planned → beta` 승격은 실제 제품 vertical slice 이후 리드가 진행한다(로드맵
 maturity gate). 유력 후보: 야잘알 홈의 내 구단 경기 스트립.
+
+
+## React / React Native renderer (2026-09-16)
+
+두 패키지의 `./carousel` 경로에서 `Carousel`을 제공한다. 공통 props는 label, slides,
+renderSlide, composeAccessibleName, labels(previous/next/pause/resume/navigation),
+currentKey 또는 defaultCurrentKey, onCurrentKeyChange와 선택적 autoplay다.
+Web은 ref/HTML attributes, Native는 View style을 받는다. 빈 목록이나 존재하지 않는
+currentKey는 계약 오류다. 동적으로 현재 항목을 제거하는 제품은 새 key도 함께 정한다.
+
+[WAI APG](https://www.w3.org/WAI/ARIA/apg/patterns/carousel/)에 따라 Web 재생 제어를
+카드보다 먼저 배치하고 focus 진입 후 자동 재개하지 않는다. hover/숨겨진 페이지에서는
+일시 정지하고 마지막 카드에서 종료한다. 명시적 재시작은 첫 카드부터 시작한다.
+이전/다음/각 위치 버튼은 Tab 순서에 남고, 카드 내부 입력의 화살표 키는 가로채지 않는다.
+
+Native는 현재 위치의 별도 adjustable 제어를 둬 카드 안의 버튼을 접근성 그룹에
+흡수하지 않는다. 수평 의도가 분명한 swipe만 한 장 이동으로 처리하며 수직 scroll은
+제품에 남긴다. VoiceOver/TalkBack이 켜지거나 OS 확인 전에는 자동재생하지 않는다.
+앱이 background인 동안 멈추고, 터치·수동 이동은 명시적 재생 전까지 멈춘다.
+Native 위치 제어는 숫자 버튼으로 표현해 현재 위치를 눈으로도 읽게 한다.
+
+자동재생은 선택 기능이며 기본 화면 예제는 수동이다. Web browser 및 Native renderer
+테스트는 숨김·key 유지·경계·controlled 요청·RTL·자동재생 중지와 swipe/접근성 action을
+검증한다. Native 기기 제스처·스크린 리더 실측은 별도이며 이 증거로 stable 승격하지 않는다.

@@ -1628,6 +1628,8 @@ type SwitchBaseProps = Omit<
 > &
   Readonly<{
     label: string;
+    /** Use inside a labelled ListRow; the accessible name and hint remain present. */
+    labelVisibility?: "visible" | "hidden";
     description?: string;
     size?: SwitchSize;
     accessibilityLabel?: string;
@@ -1663,6 +1665,7 @@ export type SwitchProps = SwitchBaseProps &
 
 export function Switch({
   label,
+  labelVisibility = "visible",
   description,
   size = switchRecipe.defaults.size,
   checked,
@@ -1745,7 +1748,7 @@ export function Switch({
     >
       {/* Only the label fades. Fading the whole row made on and off nearly
           identical, which is why the recipe's disabled colours swap hue instead. */}
-      <View
+      {labelVisibility === "visible" ? <View
         style={{
           flex: 1,
           gap: spacing.xxs,
@@ -1756,7 +1759,7 @@ export function Switch({
         {description ? (
           <Text tone="muted" variant="caption">{description}</Text>
         ) : null}
-      </View>
+      </View> : null}
       <NativeSwitch
         {...props}
         accessible={false}

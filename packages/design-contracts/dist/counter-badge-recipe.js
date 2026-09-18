@@ -5,6 +5,11 @@ export { counterBadgeDefaults, formatCounterBadgeCount, } from "./counter-badge.
 /** Numeric counters use a compact solid plate, distinct from status badges. */
 export const counterBadgeRecipe = {
     slots: ["root", "label"],
+    /**
+     * 숫자 없이 "새것이 있다"만 말하는 점. 0이 아닌 개수를 모르거나 셀 필요가 없는
+     * 자리(탭 배지, 사이드바 항목)에서 숫자를 지어내지 않기 위해 별도 크기로 둔다.
+     */
+    dotSize: 8,
     defaults: counterBadgeDefaults,
     tones: {
         danger: {

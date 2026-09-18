@@ -162,13 +162,16 @@ describe("Mentions self-contained contract", () => {
 });
 
 describe("Mentions catalog and crosswalk stay untouched", () => {
-  it("still reserves Mentions as planned/adaptive/input", () => {
+  it("keeps Mentions an adaptive input and tracks renderer maturity per surface", () => {
     const entry = componentCatalog.find((item) => item.name === "Mentions");
+    // 2026-09-18: the Web renderer landed; Native is still planned, which is
+    // why the surface matrix — not `status` alone — is what this guards.
     expect(entry).toMatchObject({
       category: "input",
       platform: "adaptive",
-      status: "planned",
+      status: "beta",
     });
+    expect(entry?.surfaceStatus).toMatchObject({ web: "beta", native: "beta" });
   });
 
   it("keeps the antd Mentions crosswalk pointed at the same target", () => {

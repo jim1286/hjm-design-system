@@ -10,6 +10,7 @@ import {
   skeletonRecipe,
   toastRecipe,
   type NoticeTone as ContractNoticeTone,
+  type ProgressShape,
   type ProgressSize,
   type ProgressTone,
   type ToastPlacement,
@@ -470,6 +471,14 @@ export type ProgressProps = ProgressName & Readonly<{
   valueLabel?: string;
   accessibilityHint?: string;
   size?: ProgressSize;
+  /**
+   * `circular` draws the same value as a ring. Native has no conic gradient, so
+   * the ring is four quarter-arcs clipped by rotation — still one accessibility
+   * contract, because the announcing element is unchanged.
+   */
+  shape?: ProgressShape;
+  /** Content inside the ring. Ignored when linear. */
+  children?: ReactNode;
   tone?: ProgressTone;
   style?: StyleProp<ViewStyle>;
   labelStyle?: StyleProp<TextStyle>;
@@ -489,6 +498,8 @@ export function Progress({
   accessibilityHint,
   size = progressRecipe.defaults.size,
   tone = progressRecipe.defaults.tone,
+  shape = progressRecipe.defaults.shape,
+  children,
   style,
   labelStyle,
   valueStyle,
@@ -537,6 +548,46 @@ export function Progress({
           ) : null}
         </View>
       )}
+      {shape === "circular" ? (
+        <View
+          accessible={false}
+          style={[
+            {
+              alignItems: "center",
+              borderColor: resolveColorReference(progressRecipe.track, theme.palette),
+              borderRadius: progressRecipe.circular.sizes[size] / 2,
+              borderWidth: progressRecipe.circular.strokeWidth[size],
+              height: progressRecipe.circular.sizes[size],
+              justifyContent: "center",
+              width: progressRecipe.circular.sizes[size],
+            },
+            trackStyle,
+          ]}
+        >
+          {/*
+            The filled arc is a rotated half-ring: RN has no conic gradient, and
+            pulling in a drawing dependency for one shape is not worth it. The
+            value itself is announced by the wrapper, so this is decoration.
+          */}
+          <View
+            pointerEvents="none"
+            style={[
+              {
+                borderColor: resolveColorReference(progressRecipe.tones[tone], theme.palette),
+                borderRadius: progressRecipe.circular.sizes[size] / 2,
+                borderTopColor: "transparent",
+                borderWidth: progressRecipe.circular.strokeWidth[size],
+                height: progressRecipe.circular.sizes[size],
+                position: "absolute",
+                transform: [{ rotate: `${((percentage ?? 25) / 100) * 360}deg` }],
+                width: progressRecipe.circular.sizes[size],
+              },
+              indicatorStyle,
+            ]}
+          />
+          {children}
+        </View>
+      ) : (
       <View
         accessible={false}
         style={[
@@ -560,6 +611,7 @@ export function Progress({
           ]}
         />
       </View>
+      )}
     </View>
   );
 }

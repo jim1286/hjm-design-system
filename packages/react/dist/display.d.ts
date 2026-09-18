@@ -71,6 +71,14 @@ export type ListRowProps = Omit<HTMLAttributes<HTMLElement>, "title" | "onClick"
     leadingShape?: ListRowLeadingShape;
     selected?: boolean;
     disabled?: boolean;
+    /**
+     * Placeholder row while the real one loads. It keeps the row's own height
+     * and slot geometry, so a list does not jump when the content arrives —
+     * which is exactly what a product-owned skeleton next to the list cannot do.
+     */
+    loading?: boolean;
+    /** Localized status text announced while `loading`. */
+    loadingLabel?: string;
     href?: string;
     onClick?: MouseEventHandler<HTMLElement>;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
@@ -86,6 +94,14 @@ export declare const ListRow: import("react").ForwardRefExoticComponent<Omit<HTM
     leadingShape?: ListRowLeadingShape;
     selected?: boolean;
     disabled?: boolean;
+    /**
+     * Placeholder row while the real one loads. It keeps the row's own height
+     * and slot geometry, so a list does not jump when the content arrives —
+     * which is exactly what a product-owned skeleton next to the list cannot do.
+     */
+    loading?: boolean;
+    /** Localized status text announced while `loading`. */
+    loadingLabel?: string;
     href?: string;
     onClick?: MouseEventHandler<HTMLElement>;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */

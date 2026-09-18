@@ -70,6 +70,7 @@ describe("DesignSystemEnvironment validation", () => {
       textScale: 1.5,
       reducedMotion: true,
       minimumVisualTarget: false,
+      density: "comfortable",
     } as const;
     expect(() => validateResolvedDesignSystemEnvironment(resolved)).not.toThrow();
 
@@ -118,6 +119,7 @@ describe("DesignSystemEnvironment resolution", () => {
       textScale: 1,
       reducedMotion: false,
       minimumVisualTarget: false,
+      density: "comfortable",
     });
     expect(designSystemEnvironmentDefaults.theme).toBe("system");
   });
@@ -177,6 +179,7 @@ describe("DesignSystemEnvironment resolution", () => {
       textScale: 1.5,
       reducedMotion: true,
       minimumVisualTarget: true,
+      density: "comfortable",
     });
 
     expect(
@@ -190,6 +193,7 @@ describe("DesignSystemEnvironment resolution", () => {
       textScale: 2,
       reducedMotion: false,
       minimumVisualTarget: true,
+      density: "comfortable",
     });
 
     expect(
@@ -207,8 +211,9 @@ describe("DesignSystemEnvironment resolution", () => {
       direction: "rtl",
       textScale: 1.25,
       reducedMotion: true,
-      // No OS signal exists for this axis, so it falls straight to the default.
+      // No OS signal exists for these axes, so they fall straight to the default.
       minimumVisualTarget: false,
+      density: "comfortable",
     });
   });
 

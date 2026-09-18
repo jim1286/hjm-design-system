@@ -187,13 +187,17 @@ describe("Tour visual recipe and defaults", () => {
 });
 
 describe("Tour catalog and crosswalk stay untouched", () => {
-  it("still reserves Tour as planned/web/overlay", () => {
+  it("keeps Tour a Web-only overlay and tracks its renderer maturity", () => {
     const entry = componentCatalog.find((item) => item.name === "Tour");
+    // 2026-09-18: the Web renderer landed, so `planned` became `beta`. Category
+    // and platform are the parts this file guards — Tour stays Web-only with no
+    // Native surface, which is what the contract decided.
     expect(entry).toMatchObject({
       category: "overlay",
       platform: "web",
-      status: "planned",
+      status: "beta",
     });
+    expect(entry?.surfaceStatus).toMatchObject({ web: "beta", native: "unsupported" });
   });
 
   it("keeps the antd Tour crosswalk pointed at the same target", () => {

@@ -596,6 +596,17 @@ describe("Native input and navigation intent", () => {
     });
   });
 
+  it("hides repeated Switch copy without dropping its accessible name, hint or action", () => {
+    const onCheckedChange = vi.fn();
+    const renderer = render(<Switch label="내 활동 알림" description="댓글 도착" labelVisibility="hidden" onCheckedChange={onCheckedChange} />);
+    const row = renderer.root.findByType(Pressable);
+    expect(row.props.accessibilityLabel).toBe("내 활동 알림");
+    expect(row.props.accessibilityHint).toBe("댓글 도착");
+    expect(renderer.root.findAllByType(Text)).toHaveLength(0);
+    act(() => row.props.onPress());
+    expect(onCheckedChange).toHaveBeenCalledWith(true);
+  });
+
   it("keeps BottomNavigation router-owned and supports the shared six-destination ceiling", () => {
     const onActivate = vi.fn();
     const descriptor = {
