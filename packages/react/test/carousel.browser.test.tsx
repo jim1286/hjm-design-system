@@ -13,7 +13,21 @@ const base = { label: "새 소식", slides, labels: { previous: "이전", next: 
   renderSlide: ({ id, label }: { id: string; label: string }) => <div><a href={`#${id}`}>{label}</a><input aria-label={`${id} 메모`} /></div>,
 };
 let host: HTMLDivElement; let root: Root;
-beforeEach(() => { (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true; host = document.createElement("div"); document.body.append(host); root = createRoot(host); });
+beforeEach(() => {
+  (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+  host = document.createElement("div");
+  /*
+    The runner's pointer sits at the viewport origin and never moves. Chrome
+    re-hit-tests on layout, so a carousel rendered at (0,0) receives mouseenter
+    without anyone hovering it — and hovering pauses autoplay, which is exactly
+    what the autoplay assertions below measure. Push the host below the pointer
+    instead of guessing the box: text metrics differ between machines and CI,
+    so "it happens to miss the cursor here" is not a property to rely on.
+  */
+  host.style.marginBlockStart = "240px";
+  document.body.append(host);
+  root = createRoot(host);
+});
 afterEach(async () => { await act(async () => root.unmount()); host.remove(); vi.useRealTimers(); await page.viewport(1280, 720); });
 const button = (text: string) => [...host.querySelectorAll("button")].find((node) => node.textContent === text)!;
 const current = () => host.querySelector('.hjm-carousel__slide:not([hidden])')?.getAttribute("aria-label");
@@ -49,6 +63,9 @@ describe("Carousel interaction", () => {
     await render({ currentKey: "b", onCurrentKeyChange: change }); expect(current()).toBe("2/3 둘째 소식");
   });
   it("stops autoplay after focus leaves until explicitly restarted and stops at the end", async () => {
+    // Autoplay also pauses on a hidden document; state that as a precondition so
+    // a backgrounded runner reports itself instead of looking like a carousel bug.
+    expect(document.visibilityState).toBe("visible");
     vi.useFakeTimers(); await render({ autoplay: { intervalMs: 1000 } });
     await act(async () => { button("다음").focus(); });
     await act(async () => { button("다음").blur(); await vi.advanceTimersByTimeAsync(3000); });
