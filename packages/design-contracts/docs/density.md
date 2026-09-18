@@ -21,3 +21,32 @@ comfortable, compact })`가 전역 축을 각 컴포넌트의 어휘로 옮긴�
 
 **Provider 밖에서는 각 recipe의 기본값이 그대로 선다.** 전역 축이 "감싸지 않은 렌더러"를
 다르게 만들면 축 자체가 숨은 의존이 된다.
+
+## 1.2.0 이관: `ResolvedDesignSystemEnvironment`에 축이 하나 늘었다
+
+`density`는 **resolved 환경의 필수 필드**다. resolved 타입은 "모든 축이 이미 채워져
+있다"는 것이 존재 이유이고(그래서 `validateResolvedDesignSystemEnvironment`가 빠진 축을
+거절한다), 여기서만 optional로 두면 렌더러가 매번 기본값을 다시 채워야 한다 — 축을 한 곳에
+모으려고 만든 것이 다시 흩어진다.
+
+**런타임은 호환된다.** `resolveDesignSystemEnvironment`가 언제나 이 축을 채워 돌려주고
+기본값은 `comfortable`이라 동작이 달라지는 코드는 없다.
+
+**깨지는 것은 `ResolvedDesignSystemEnvironment`를 손으로 만드는 코드뿐이다.** 받아서
+넘기기만 하는 코드(`parentEnvironment` prop 전달 등)는 영향이 없다. 리터럴에서
+`TS2741: Property 'density' is missing`을 만나면 축을 하나 적으면 된다:
+
+```ts
+const parentEnvironment = {
+  theme: "dark",
+  direction: "rtl",
+  textScale: 1.5,
+  reducedMotion: true,
+  minimumVisualTarget: false,
+  density: "comfortable",
+} as const satisfies ResolvedDesignSystemEnvironment;
+```
+
+2026-09-18 1.2.0 게시 시점에 포트폴리오 8개 앱에서 실제로 걸린 곳은 번뚝 웹의 테스트
+리터럴 두 곳뿐이었다. 그래서 major가 아니라 이 안내로 닫는다 — 버전 번호는 변경의 크기를
+나타내야 하고, 이 변경의 크기는 "리터럴 한 줄"이다.
