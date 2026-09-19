@@ -17,3 +17,4 @@ export const Layout: Story = componentStory("Layout");
 export const Top: Story = componentStory("Top");
 export const Masonry: Story = componentStory("Masonry");
 export const Splitter: Story = componentStory("Splitter");
+export const AuthScreenLayout: Story = componentStory("AuthScreenLayout");
