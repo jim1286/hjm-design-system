@@ -161,6 +161,7 @@ export { anchorRecipe } from "./anchor.js";
 export { agreementRecipe } from "./agreement.js";
 export { topRecipe } from "./top.js";
 export { authProviderButtonRecipe } from "./provider-button.js";
+export { authScreenRecipe } from "./auth-screen.js";
 export { headingRecipe } from "./heading.js";
 export { toggleGroupRecipe } from "./toggle-group.js";
 export { tagsInputRecipe } from "./tags-input.js";

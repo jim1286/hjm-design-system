@@ -2,6 +2,7 @@ import { anchorBehavior } from "./anchor.js";
 import { agreementBehavior } from "./agreement.js";
 import { topBehavior } from "./top.js";
 import { authProviderButtonBehavior } from "./provider-button.js";
+import { authScreenBehavior } from "./auth-screen.js";
 import { headingBehavior } from "./heading.js";
 import { toggleGroupBehavior } from "./toggle-group.js";
 import { tagsInputBehavior } from "./tags-input.js";
@@ -862,6 +863,7 @@ export const behaviorRegistry = {
     agreement: agreementBehavior,
     top: topBehavior,
     authProviderButton: authProviderButtonBehavior,
+    authScreen: authScreenBehavior,
     heading: headingBehavior,
     toggleGroup: toggleGroupBehavior,
     tagsInput: tagsInputBehavior,

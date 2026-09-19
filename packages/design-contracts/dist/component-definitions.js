@@ -22,6 +22,7 @@ export const componentIds = {
     BottomCTA: "bottom-cta",
     FloatingActionButton: "floating-action-button",
     AuthProviderButton: "auth-provider-button",
+    AuthScreenLayout: "auth-screen",
     Field: "field",
     SearchField: "search-field",
     TextArea: "text-area",

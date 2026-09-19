@@ -4,8 +4,8 @@
 
 This projection joins the canonical surface maturity manifest with first-party renderer claims. Missing scenarios are explicit beta promotion debt; stable surfaces are blocked by CI until none remain.
 
-- web: 95/95 active implementations; 33/95 full scenario sets
-- native: 78/78 active implementations; 32/78 full scenario sets
+- web: 95/96 active implementations; 33/96 full scenario sets
+- native: 78/79 active implementations; 32/79 full scenario sets
 
 | Component | Surface | Maturity | Renderer package | Export | Claimed scenarios | Missing required scenarios | Executable proofs |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -28,6 +28,7 @@ This projection joins the canonical surface maturity manifest with first-party r
 | Link | web | beta | @hjmds/react | ./actions | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | keyboard, platform-parity | test/default-render.ssr.test.tsx#link |
 | BottomCTA | web | beta | @hjmds/react | ./bottom-cta | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | platform-parity | test/default-render.ssr.test.tsx#bottom-cta |
 | FloatingActionButton | web | beta | @hjmds/react | ./floating-action-button | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | keyboard, platform-parity | test/default-render.ssr.test.tsx#floating-action-button |
+| AuthScreenLayout | web | beta | @hjmds/react | unclaimed | none | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard, platform-parity | none |
 | AuthProviderButton | web | beta | @hjmds/react | ./provider-button | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | keyboard, platform-parity | test/default-render.ssr.test.tsx#auth-provider-button |
 | Field | web | stable | @hjmds/react | ./forms | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard | none | test/default-render.ssr.test.tsx#field, test/stable-core.browser.test.tsx#field |
 | SearchField | web | beta | @hjmds/react | ./forms | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | keyboard | test/default-render.ssr.test.tsx#search-field |
@@ -121,6 +122,7 @@ This projection joins the canonical surface maturity manifest with first-party r
 | Link | native | beta | @hjmds/react-native | ./actions | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | keyboard, platform-parity | test/default-render.test.tsx#link |
 | BottomCTA | native | beta | @hjmds/react-native | ./actions | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | platform-parity | test/default-render.test.tsx#bottom-cta |
 | FloatingActionButton | native | beta | @hjmds/react-native | ./floating-action-button | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | keyboard, platform-parity | test/default-render.test.tsx#floating-action-button |
+| AuthScreenLayout | native | beta | @hjmds/react-native | unclaimed | none | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard, platform-parity | none |
 | AuthProviderButton | native | beta | @hjmds/react-native | ./provider-button | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | keyboard, platform-parity | test/default-render.test.tsx#auth-provider-button |
 | Field | native | stable | @hjmds/react-native | ./forms | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard | none | test/default-render.test.tsx#field, test/stable-core.test.tsx#field |
 | SearchField | native | beta | @hjmds/react-native | ./inputs | default, dark, long-copy, large-text, rtl, reduced-motion, accessibility | keyboard | test/default-render.test.tsx#search-field |

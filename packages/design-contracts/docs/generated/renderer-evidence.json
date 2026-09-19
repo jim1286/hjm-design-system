@@ -6,7 +6,7 @@
     "web": {
       "packageName": "@hjmds/react",
       "packageVersion": "1.2.0",
-      "activeComponents": 95,
+      "activeComponents": 96,
       "claimedComponents": 95,
       "completeScenarioComponents": 33,
       "components": [
@@ -877,6 +877,38 @@
             "accessibility"
           ],
           "missingScenarios": [
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "componentId": "auth-screen",
+          "name": "AuthScreenLayout",
+          "status": "beta",
+          "claimed": false,
+          "subpath": null,
+          "exportNames": [],
+          "proofs": [],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [],
+          "missingScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
             "keyboard",
             "platform-parity"
           ]
@@ -4460,7 +4492,7 @@
     "native": {
       "packageName": "@hjmds/react-native",
       "packageVersion": "1.2.0",
-      "activeComponents": 78,
+      "activeComponents": 79,
       "claimedComponents": 78,
       "completeScenarioComponents": 32,
       "components": [
@@ -5237,6 +5269,38 @@
             "accessibility"
           ],
           "missingScenarios": [
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "componentId": "auth-screen",
+          "name": "AuthScreenLayout",
+          "status": "beta",
+          "claimed": false,
+          "subpath": null,
+          "exportNames": [],
+          "proofs": [],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ],
+          "claimedScenarios": [],
+          "missingScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
             "keyboard",
             "platform-parity"
           ]

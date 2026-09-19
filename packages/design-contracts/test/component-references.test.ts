@@ -121,8 +121,8 @@ describe("component reference coverage", () => {
       }
     }
 
-    expect(componentCatalog.filter(({ surfaceStatus }) => surfaceStatus.web === "beta")).toHaveLength(91);
-    expect(componentCatalog.filter(({ surfaceStatus }) => surfaceStatus.native === "beta")).toHaveLength(74);
+    expect(componentCatalog.filter(({ surfaceStatus }) => surfaceStatus.web === "beta")).toHaveLength(92);
+    expect(componentCatalog.filter(({ surfaceStatus }) => surfaceStatus.native === "beta")).toHaveLength(75);
     expect(componentCatalog.filter(({ surfaceStatus }) => surfaceStatus.web === "stable")).toHaveLength(4);
     expect(componentCatalog.filter(({ surfaceStatus }) => surfaceStatus.native === "stable")).toHaveLength(4);
   });

@@ -940,6 +940,58 @@
       }
     },
     {
+      "id": "auth-screen",
+      "storyId": "layout/auth-screen-layout",
+      "name": "AuthScreenLayout",
+      "category": "layout",
+      "platform": "adaptive",
+      "contractStatus": "beta",
+      "surfaces": {
+        "web": "beta",
+        "native": "beta"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard",
+            "platform-parity"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": null
+      }
+    },
+    {
       "id": "auth-provider-button",
       "storyId": "action/auth-provider-button",
       "name": "AuthProviderButton",

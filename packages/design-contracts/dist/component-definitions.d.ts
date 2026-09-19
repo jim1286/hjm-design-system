@@ -27,6 +27,7 @@ export declare const componentIds: {
     readonly BottomCTA: "bottom-cta";
     readonly FloatingActionButton: "floating-action-button";
     readonly AuthProviderButton: "auth-provider-button";
+    readonly AuthScreenLayout: "auth-screen";
     readonly Field: "field";
     readonly SearchField: "search-field";
     readonly TextArea: "text-area";

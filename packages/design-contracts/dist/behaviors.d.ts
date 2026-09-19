@@ -756,6 +756,23 @@ export declare const behaviorRegistry: {
         };
         readonly scenarios: readonly ["provider-colors-come-from-the-provider-guideline-and-the-theme-never-recolors-them", "the-theme-only-picks-between-the-providers-own-light-and-dark-variants", "the-logo-asset-is-a-product-supplied-slot-never-bundled-by-the-design-system", "the-label-is-product-copy-because-the-required-wording-differs-per-provider-and-language", "height-radius-and-touch-target-stay-hjm-so-a-stack-of-providers-lines-up", "busy-keeps-the-label-and-the-button-width-instead-of-collapsing-to-a-spinner", "the-focus-ring-is-drawn-outside-the-brand-fill-so-it-survives-every-provider-color"];
     };
+    readonly authScreen: {
+        readonly controlled: readonly [];
+        readonly inputs: readonly ["density", "hasFooter"];
+        readonly events: readonly [];
+        readonly stateAxes: {};
+        readonly web: {
+            readonly roles: readonly ["main"];
+            readonly keyboard: readonly [];
+            readonly focus: "none";
+        };
+        readonly native: {
+            readonly roles: readonly [];
+            readonly states: readonly [];
+            readonly actions: readonly [];
+        };
+        readonly scenarios: readonly ["the-hero-and-the-main-action-stay-one-vertically-centred-block", "the-footer-sits-at-the-bottom-and-never-overlaps-the-main-action", "content-taller-than-the-viewport-scrolls-instead-of-pushing-the-footer-off-screen", "the-product-owns-every-string-and-the-mark-asset-while-the-layout-stays-here", "provider-button-height-comes-from-the-provider-contract-not-from-this-one", "compact-density-shrinks-gaps-without-changing-the-two-region-structure", "policy-links-in-the-footer-keep-the-minimum-touch-target"];
+    };
     readonly heading: {
         readonly controlled: readonly [];
         readonly inputs: readonly ["level", "semanticLevel"];

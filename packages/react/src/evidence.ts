@@ -155,6 +155,7 @@ export const reactRendererEvidence = {
     defaultClaim("sidebar", ["Sidebar"], "./sidebar"),
     defaultClaim("date-range-picker", ["DateRangePicker"], "./date-range"),
     defaultClaim("auth-provider-button", ["AuthProviderButton"], "./provider-button"),
+    defaultClaim("auth-screen", ["AuthScreenLayout"], "./auth-screen"),
     defaultClaim("data-table", ["DataTable"], "./data-table"),
     defaultClaim("collapsible", ["Collapsible"], "./collapsible"),
     defaultClaim("context-menu", ["ContextMenu"], "./context-menu"),

@@ -4,9 +4,9 @@
 
 This document is the human-readable projection of the same catalog and Showcase manifest consumed by product CI.
 
-- Contract: stable 4 · beta 91 · planned 15
-- Web renderer: stable 4 · beta 91 · planned 15
-- Native renderer: stable 4 · beta 74 · planned 8 · unsupported 24
+- Contract: stable 4 · beta 92 · planned 15
+- Web renderer: stable 4 · beta 92 · planned 15
+- Native renderer: stable 4 · beta 75 · planned 8 · unsupported 24
 
 | Component | Canonical story ID | Contract | Web | Native | Documentation | Required evidence |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -30,6 +30,7 @@ This document is the human-readable projection of the same catalog and Showcase 
 | Link | `action/link` | beta | beta | beta | [authored](../link.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard, platform-parity; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard, platform-parity |
 | BottomCTA | `action/bottom-cta` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, platform-parity; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, platform-parity |
 | FloatingActionButton | `action/floating-action-button` | beta | beta | beta | [authored](../floating-action-button.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard, platform-parity; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard, platform-parity |
+| AuthScreenLayout | `layout/auth-screen-layout` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard, platform-parity; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard, platform-parity |
 | AuthProviderButton | `action/auth-provider-button` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard, platform-parity; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard, platform-parity |
 | Field | `input/field` | stable | stable | stable | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard |
 | SearchField | `input/search-field` | beta | beta | beta | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard |

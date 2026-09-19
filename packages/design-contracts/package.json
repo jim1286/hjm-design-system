@@ -157,6 +157,12 @@
       "import": "./dist/asset.js",
       "default": "./dist/asset.js"
     },
+    "./components/auth-screen": {
+      "types": "./dist/auth-screen.d.ts",
+      "react-native": "./dist/auth-screen.js",
+      "import": "./dist/auth-screen.js",
+      "default": "./dist/auth-screen.js"
+    },
     "./components/bottom-info": {
       "types": "./dist/bottom-info.d.ts",
       "react-native": "./dist/bottom-info.js",

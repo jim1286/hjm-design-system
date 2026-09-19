@@ -328,6 +328,22 @@ export declare const componentCatalog: readonly [{
         readonly state: "evidence-needed";
         readonly summary: string;
     };
+    readonly aliases: readonly ["SignInLayout"];
+    readonly recipe: "authScreenRecipe";
+    readonly behavior: "authScreen";
+    readonly surfaceStatus: {
+        readonly web: "beta";
+        readonly native: "beta";
+    };
+    readonly name: "AuthScreenLayout";
+    readonly category: "layout";
+    readonly platform: "adaptive";
+    readonly status: "beta";
+}, {
+    readonly roadmap: {
+        readonly state: "evidence-needed";
+        readonly summary: string;
+    };
     readonly aliases: readonly ["SocialLoginButton"];
     readonly recipe: "authProviderButtonRecipe";
     readonly behavior: "authProviderButton";
@@ -2447,6 +2463,49 @@ export declare const recipeRegistry: {
         };
         readonly borderWidth: 1;
         readonly focusOutlineOffset: 2;
+    };
+    readonly authScreenRecipe: {
+        readonly slots: readonly ["root", "hero", "mark", "title", "description", "main", "footer"];
+        readonly defaults: {
+            readonly density: "regular";
+            readonly hasFooter: true;
+        };
+        readonly maxWidth: 416;
+        readonly markSize: 72;
+        readonly markRadius: 16;
+        readonly title: {
+            readonly fontSize: 20;
+            readonly lineHeight: 28;
+            readonly fontWeight: "800";
+        };
+        readonly description: {
+            readonly fontSize: 14;
+            readonly lineHeight: 20;
+            readonly fontWeight: "400";
+        };
+        readonly footerMinTouchTarget: 44;
+        readonly footerText: {
+            readonly fontSize: 11;
+            readonly lineHeight: 16;
+            readonly fontWeight: "400";
+        };
+        readonly providerMinHeight: 44;
+        readonly densities: {
+            readonly regular: {
+                readonly heroGap: 16;
+                readonly mainGap: 24;
+                readonly footerGap: 24;
+                readonly paddingInline: 20;
+                readonly paddingBlock: 40;
+            };
+            readonly compact: {
+                readonly heroGap: 8;
+                readonly mainGap: 16;
+                readonly footerGap: 16;
+                readonly paddingInline: 16;
+                readonly paddingBlock: 20;
+            };
+        };
     };
     readonly headingRecipe: {
         readonly slots: readonly ["root"];

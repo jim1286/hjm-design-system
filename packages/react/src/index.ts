@@ -326,6 +326,7 @@ export {
   type OverlayHandle,
 } from "./overlay-stack.js";
 export { AuthProviderButton, type AuthProviderButtonProps } from "./provider-button.js";
+export { AuthScreenLayout, type AuthScreenLayoutProps } from "./auth-screen.js";
 export { DataTable, type DataTableProps, type DataTableLabels } from "./data-table.js";
 export { Collapsible, type CollapsibleProps } from "./collapsible.js";
 export { ContextMenu, type ContextMenuProps } from "./context-menu.js";

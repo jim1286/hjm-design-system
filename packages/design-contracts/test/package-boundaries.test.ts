@@ -28,6 +28,7 @@ const publicComponentContractNames = [
   "anchor",
   "aspect-ratio",
   "asset",
+  "auth-screen",
   "bottom-info",
   "bottom-navigation",
   "breadcrumb",

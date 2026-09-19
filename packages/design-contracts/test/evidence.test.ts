@@ -63,7 +63,7 @@ describe("design-system evidence", () => {
     expect(toShowcaseEvidenceEntries([evidence])).toEqual([
       { storyId, surface: "web", scenarios: ["default"] },
     ]);
-    expect(createDesignSystemEvidenceCoverage([evidence])).toHaveLength(110);
+    expect(createDesignSystemEvidenceCoverage([evidence])).toHaveLength(111);
   });
 
   it("rejects stale, duplicate, empty, and surface-incompatible evidence", () => {

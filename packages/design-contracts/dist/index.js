@@ -70,6 +70,7 @@ export * from "./anchor.js";
 export * from "./agreement.js";
 export * from "./top.js";
 export * from "./provider-button.js";
+export * from "./auth-screen.js";
 export * from "./heading.js";
 export * from "./toggle-group.js";
 export * from "./tags-input.js";
