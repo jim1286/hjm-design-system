@@ -49,15 +49,21 @@ export const authProviderPalettes = {
     light: { background: "#FFFFFF", content: "#1F1F1F", border: "#747775" },
     dark: { background: "#131314", content: "#E3E3E3", border: "#8E918F" },
   },
-  // Kakao 로그인: 배경 #FEE500 고정, 글자는 검정 85% 불투명도.
+  // Kakao 로그인: 배경 #FEE500 고정, 글자 #191919.
+  // 예전 값은 `rgba(0, 0, 0, 0.85)`였다. 흔히 인용되는 "검정 85%"인데, 노란 배경 위에서
+  // 실제로 합성하면 (38, 34, 0)이라 카카오가 배포하는 버튼 이미지의 글자색과 다르다.
+  // 공식 자산(kakao_login.zip의 ko/kakao_login_large_wide.png)에서 픽셀을 뽑아 대조했다.
   kakao: {
-    light: { background: "#FEE500", content: "rgba(0, 0, 0, 0.85)", border: null },
-    dark: { background: "#FEE500", content: "rgba(0, 0, 0, 0.85)", border: null },
+    light: { background: "#FEE500", content: "#191919", border: null },
+    dark: { background: "#FEE500", content: "#191919", border: null },
   },
-  // 네이버 로그인: 배경 #03C75A 고정, 글자 흰색.
+  // 네이버 로그인: 배경 #03A94D 고정, 글자 흰색.
+  // 예전 값 #03C75A는 구 BI다. 네이버 로그인 BI 가이드가 "배경 컬러가 더 뚜렷하게
+  // 바뀌었어요. 반드시 지정된 녹색을 사용해 주세요. 컬러 #03A94D, RGB 3/169/77"로 못박고,
+  // 배포 중인 버튼 자산(NAVER_login_KR.zip)의 픽셀도 (3, 169, 77)이다(2026-09-19 확인).
   naver: {
-    light: { background: "#03C75A", content: "#FFFFFF", border: null },
-    dark: { background: "#03C75A", content: "#FFFFFF", border: null },
+    light: { background: "#03A94D", content: "#FFFFFF", border: null },
+    dark: { background: "#03A94D", content: "#FFFFFF", border: null },
   },
   // Sign in with Apple: 검정 버튼이 기본, 밝은 배경 위에서는 흰 버튼 + 검은 테두리.
   apple: {

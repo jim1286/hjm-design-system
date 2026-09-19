@@ -149,7 +149,7 @@ it("paints provider buttons from the guideline table and never from the theme", 
   ));
   const buttonFor = (provider: string) => document.querySelector<HTMLElement>(`[data-provider="${provider}"]`)!;
   expect(getComputedStyle(buttonFor("kakao")).backgroundColor).toBe("rgb(254, 229, 0)");
-  expect(getComputedStyle(buttonFor("naver")).backgroundColor).toBe("rgb(3, 199, 90)");
+  expect(getComputedStyle(buttonFor("naver")).backgroundColor).toBe("rgb(3, 169, 77)");
   expect(getComputedStyle(buttonFor("apple")).backgroundColor).toBe("rgb(0, 0, 0)");
   // Google's light variant is the only one that needs the guideline's border.
   expect(getComputedStyle(buttonFor("google")).borderTopWidth).toBe("1px");
@@ -170,7 +170,7 @@ it("switches to the provider's own dark variant, not to an HJM color", async () 
   const buttonFor = (provider: string) => document.querySelector<HTMLElement>(`[data-provider="${provider}"]`)!;
   expect(getComputedStyle(buttonFor("google")).backgroundColor).toBe("rgb(19, 19, 20)");
   // Naver's brand color is the identity, so dark keeps it unchanged.
-  expect(getComputedStyle(buttonFor("naver")).backgroundColor).toBe("rgb(3, 199, 90)");
+  expect(getComputedStyle(buttonFor("naver")).backgroundColor).toBe("rgb(3, 169, 77)");
 });
 
 it("keeps the label and the width while busy, and blocks the press", async () => {

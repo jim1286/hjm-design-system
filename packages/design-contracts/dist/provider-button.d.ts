@@ -51,23 +51,23 @@ export declare const authProviderPalettes: {
     readonly kakao: {
         readonly light: {
             readonly background: "#FEE500";
-            readonly content: "rgba(0, 0, 0, 0.85)";
+            readonly content: "#191919";
             readonly border: null;
         };
         readonly dark: {
             readonly background: "#FEE500";
-            readonly content: "rgba(0, 0, 0, 0.85)";
+            readonly content: "#191919";
             readonly border: null;
         };
     };
     readonly naver: {
         readonly light: {
-            readonly background: "#03C75A";
+            readonly background: "#03A94D";
             readonly content: "#FFFFFF";
             readonly border: null;
         };
         readonly dark: {
-            readonly background: "#03C75A";
+            readonly background: "#03A94D";
             readonly content: "#FFFFFF";
             readonly border: null;
         };
