@@ -58,7 +58,7 @@ function toastClaim() {
 export const reactRendererEvidence = {
     schemaVersion: reactRendererEvidenceSchemaVersion,
     packageName: "@hjmds/react",
-    packageVersion: "1.2.0",
+    packageVersion: "1.3.0",
     surface: "web",
     components: [
         defaultClaim("top-bar", ["TopBar"], "./top-bar"),
@@ -115,6 +115,7 @@ export const reactRendererEvidence = {
         defaultClaim("sidebar", ["Sidebar"], "./sidebar"),
         defaultClaim("date-range-picker", ["DateRangePicker"], "./date-range"),
         defaultClaim("auth-provider-button", ["AuthProviderButton"], "./provider-button"),
+        defaultClaim("auth-screen", ["AuthScreenLayout"], "./auth-screen"),
         defaultClaim("data-table", ["DataTable"], "./data-table"),
         defaultClaim("collapsible", ["Collapsible"], "./collapsible"),
         defaultClaim("context-menu", ["ContextMenu"], "./context-menu"),

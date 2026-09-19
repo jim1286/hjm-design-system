@@ -30,4 +30,5 @@ export { Mentions, type MentionsProps, type MentionCandidate } from "./mentions.
 export { TransferList, type TransferListProps, type TransferListLabels } from "./transfer-list.js";
 export { KeyboardAvoiding, resolveKeyboardAvoidanceBehavior, type KeyboardAvoidingProps } from "./keyboard.js";
 export { AuthProviderButton, type AuthProviderButtonProps } from "./provider-button.js";
+export { AuthScreenLayout, type AuthScreenLayoutProps } from "./auth-screen.js";
 //# sourceMappingURL=index.d.ts.map

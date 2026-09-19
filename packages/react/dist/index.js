@@ -50,6 +50,7 @@ export { Sidebar } from "./sidebar.js";
 export { DateRangePicker } from "./date-range.js";
 export { OverlayStackProvider, useOverlayStack, useDialog, useSheet, } from "./overlay-stack.js";
 export { AuthProviderButton } from "./provider-button.js";
+export { AuthScreenLayout } from "./auth-screen.js";
 export { DataTable } from "./data-table.js";
 export { Collapsible } from "./collapsible.js";
 export { ContextMenu } from "./context-menu.js";

@@ -44,7 +44,7 @@ function stableFieldClaim(exportNames, subpath) {
 export const reactNativeRendererEvidence = {
     schemaVersion: reactNativeRendererEvidenceSchemaVersion,
     packageName: "@hjmds/react-native",
-    packageVersion: "1.2.0",
+    packageVersion: "1.3.0",
     surface: "native",
     components: [
         defaultClaim("design-system-provider", ["HjmNativeProvider", "useHjmNativeTheme"], "./provider"),
@@ -83,6 +83,7 @@ export const reactNativeRendererEvidence = {
         defaultClaim("mentions", ["Mentions"], "./mentions"),
         defaultClaim("transfer-list", ["TransferList"], "./transfer-list"),
         defaultClaim("auth-provider-button", ["AuthProviderButton"], "./provider-button"),
+        defaultClaim("auth-screen", ["AuthScreenLayout"], "./auth-screen"),
         defaultClaim("file-picker", ["FilePicker"], "./file-picker"),
         defaultClaim("checkbox", ["Checkbox"], "./inputs"),
         defaultClaim("radio", ["Radio"], "./inputs"),

@@ -33,9 +33,24 @@ export type ReactRendererEvidenceManifest = Readonly<{
 export declare const reactRendererEvidence: {
     readonly schemaVersion: 2;
     readonly packageName: "@hjmds/react";
-    readonly packageVersion: "1.2.0";
+    readonly packageVersion: "1.3.0";
     readonly surface: "web";
     readonly components: readonly [Readonly<{
+        /** Canonical component id from the design-contracts catalog. */
+        componentId: string;
+        /** Public symbols that implement this contract on the declared subpath. */
+        exportNames: readonly string[];
+        /** Granular @hjmds/react export used by consumers. */
+        subpath: `./${string}`;
+        /** Scenarios supported by automated first-party renderer evidence. */
+        scenarios: readonly ReactRendererEvidenceScenario[];
+        /** Repository-local executable proof for every claimed scenario. */
+        proofs: readonly Readonly<{
+            scenarios: readonly ReactRendererEvidenceScenario[];
+            file: `test/${string}.test.tsx`;
+            caseId: string;
+        }>[];
+    }>, Readonly<{
         /** Canonical component id from the design-contracts catalog. */
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */

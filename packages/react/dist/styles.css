@@ -1364,6 +1364,48 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-bottom-info:not([data-list]) .hjm-bottom-info__item { margin: 0; }
 .hjm-bottom-info__item { overflow-wrap: anywhere; }
 
+/* AuthScreenLayout -------------------------------------------------------- */
+/* 두 영역만 둔다. 위(히어로+주 행동)가 남는 세로 공간을 전부 먹고 그 안에서 가운데
+   정렬하며, 아래(동의 고지·정책 링크)는 바닥에 붙는다. 수치는 계약이 해석한 값을
+   인라인 custom property로 받으므로 이 파일과 계약이 어긋날 수 없다. */
+.hjm-auth-screen {
+  display: flex;
+  flex-direction: column;
+  min-block-size: 100dvh;
+  padding-inline: var(--hjm-auth-screen-padding-inline);
+  padding-block: var(--hjm-auth-screen-padding-block);
+}
+.hjm-auth-screen__block {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: var(--hjm-auth-screen-main-gap);
+  inline-size: 100%;
+  max-inline-size: var(--hjm-auth-screen-max-width);
+  margin-inline: auto;
+}
+.hjm-auth-screen__hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--hjm-auth-screen-hero-gap);
+  inline-size: 100%;
+  text-align: center;
+}
+.hjm-auth-screen__main { inline-size: 100%; }
+.hjm-auth-screen__footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  inline-size: 100%;
+  max-inline-size: var(--hjm-auth-screen-max-width);
+  margin-inline: auto;
+  margin-block-start: var(--hjm-auth-screen-footer-gap);
+  text-align: center;
+}
+
 /* Sidebar ----------------------------------------------------------------- */
 .hjm-sidebar {
   display: flex;
