@@ -5,7 +5,7 @@ import { TourPreview } from "../patterns/Tour.stories.js";
 import { TreePreview } from "../patterns/Tree.stories.js";
 import { TransferListPreview, MentionsPreview } from "../patterns/TransferList.stories.js";
 import { CommandPalettePreview, DataTablePreview } from "../patterns/CommandPalette.stories.js";
-import { AgreementPreview, TopPreview, AuthProviderButtonPreview } from "../patterns/Agreement.stories.js";
+import { AgreementPreview, TopPreview, AuthProviderButtonPreview, AuthScreenLayoutPreview } from "../patterns/Agreement.stories.js";
 import { HeadingPreview } from "../patterns/Heading.stories.js";
 import { ToggleGroupPreview, TagsInputPreview } from "../patterns/ToggleGroup.stories.js";
 import { SidebarPreview, BottomInfoPreview } from "../patterns/Sidebar.stories.js";
@@ -182,6 +182,7 @@ export const webRendererComponentNames = [
   "Menubar",
   "Agreement",
   "AuthProviderButton",
+  "AuthScreenLayout",
   "Top",
   "Heading",
   "ToggleGroup",
@@ -411,6 +412,7 @@ function WebPreviewRenderer({ name }: { name: RecipeWebRendererComponentName }) 
     case "Menubar": return <MenubarPreview />;
     case "Agreement": return <AgreementPreview />;
     case "AuthProviderButton": return <AuthProviderButtonPreview />;
+    case "AuthScreenLayout": return <AuthScreenLayoutPreview />;
     case "Top": return <TopPreview />;
     case "Heading": return <HeadingPreview />;
     case "ToggleGroup": return <ToggleGroupPreview />;
@@ -810,6 +812,7 @@ export const webRendererRegistry = {
   DataTable: createWebRendererDefinition("DataTable", "dataTableRecipe", "dataTable"),
   Agreement: createWebRendererDefinition("Agreement", "agreementRecipe", "agreement"),
   AuthProviderButton: createWebRendererDefinition("AuthProviderButton", "authProviderButtonRecipe", "authProviderButton"),
+  AuthScreenLayout: createWebRendererDefinition("AuthScreenLayout", "authScreenRecipe", "authScreen"),
   Top: createWebRendererDefinition("Top", "topRecipe", "top"),
   Heading: createWebRendererDefinition("Heading", "headingRecipe", "heading"),
   ToggleGroup: createWebRendererDefinition("ToggleGroup", "toggleGroupRecipe", "toggleGroup"),

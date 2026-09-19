@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Agreement } from "@hjmds/react/agreement";
 import { AuthProviderButton } from "@hjmds/react/provider-button";
+import { AuthScreenLayout } from "@hjmds/react/auth-screen";
 import { Top } from "@hjmds/react/top";
 import { Button } from "@hjmds/react/actions";
 import { TextField } from "@hjmds/react/forms";
@@ -96,10 +97,29 @@ export function AuthProviderButtonPreview() {
   );
 }
 
+/**
+ * 로그인 화면 골격 — 슬롯만 받고 배치를 소유한다. 히어로와 주 행동이 세로 중앙에 한 덩어리로
+ * 남고 동의 고지·정책 링크는 바닥에 붙는다. 문구·마크·제공자 목록은 제품이 넘긴다.
+ */
+export function AuthScreenLayoutPreview() {
+  return (
+    <AuthScreenLayout
+      hero={
+        <Top
+          descriptor={{ title: "어떤 계정으로 시작할까요", description: "쓰던 계정으로 바로 시작할 수 있어요.", size: "medium" }}
+        />
+      }
+      main={<AuthProviderButtonPreview />}
+      footer={<span>로그인하면 약관과 개인정보처리방침에 동의하게 돼요.</span>}
+    />
+  );
+}
+
 const meta = { title: "Patterns/Agreement", component: AgreementPreview } satisfies Meta<typeof AgreementPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const SignUpConsent: Story = {};
 export const ScreenTitle: Story = { render: () => <TopPreview /> };
 export const SocialLogin: Story = { render: () => <AuthProviderButtonPreview /> };
+export const SignInScreen: Story = { render: () => <AuthScreenLayoutPreview /> };
 export const LargeText: Story = { globals: { textScale: "2" } };

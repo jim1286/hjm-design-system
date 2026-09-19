@@ -1,6 +1,6 @@
 export const nativeRendererStoryGroups = {
   foundations: [
-    "design-system-provider", "text", "surface", "stack", "container", "aspect-ratio", "grid", "layout", "icon", "section", "divider", "top", "heading",
+    "design-system-provider", "text", "surface", "stack", "container", "aspect-ratio", "grid", "layout", "icon", "section", "divider", "top", "heading", "auth-screen",
   ],
   actions: ["button", "icon-button", "link", "bottom-cta", "auth-provider-button"],
   agreement: ["agreement"],

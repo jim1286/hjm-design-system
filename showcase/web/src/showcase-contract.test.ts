@@ -139,22 +139,22 @@ describe("web showcase coverage", () => {
     expect(Object.keys(webRendererRegistry).sort()).toEqual(expected);
     expect(summarizeWebShowcaseCoverage()).toEqual({
       canonical: componentCatalog.length,
-      webReferences: 95,
+      webReferences: 96,
       contractOnly: 15,
       nativeOnly: 0,
     });
   });
 
-  it("renders the canonical 95/15/0 surface-evidence split in Home and Explorer", () => {
+  it("renders the canonical 96/15/0 surface-evidence split in Home and Explorer", () => {
     const homeHtml = renderToStaticMarkup(createElement(Introduction));
-    expect(homeHtml).toContain("<strong>95</strong><span>Web references</span>");
+    expect(homeHtml).toContain("<strong>96</strong><span>Web references</span>");
     expect(homeHtml).toContain("<strong>15</strong><span>contract-only stories</span>");
     expect(homeHtml).toContain("<strong>0</strong><span>Native-only stories</span>");
     expect(homeHtml).toContain(componentCategoryExplorerHref("input"));
     expect(homeHtml).not.toContain("args=initialCategory");
 
     const explorerHtml = renderToStaticMarkup(createElement(ComponentExplorer));
-    expect(explorerHtml).toContain("<strong>95</strong> Web references");
+    expect(explorerHtml).toContain("<strong>96</strong> Web references");
     expect(explorerHtml).toContain("<strong>15</strong> contract-only stories");
     expect(explorerHtml).toContain("<strong>0</strong> Native-only stories");
     expect(explorerHtml).not.toContain("Open Native-only contract");
@@ -377,7 +377,7 @@ describe("web showcase coverage", () => {
     const activeNames = componentCatalog
       .filter((entry) => isMatureStatus(getComponentSurfaceStatus(entry, "web")))
       .map(({ name }) => name);
-    expect(activeNames).toHaveLength(95);
+    expect(activeNames).toHaveLength(96);
     for (const name of activeNames) {
       expect(webRendererComponentNames).toContain(name);
       if (!isWebRendererComponent(name)) throw new Error(`Missing Web renderer registry entry: ${name}`);

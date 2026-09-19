@@ -5,6 +5,7 @@ import { BottomInfo } from "@hjmds/react-native/bottom-info";
 import { Collapsible } from "@hjmds/react-native/collapsible";
 import { Asset } from "@hjmds/react-native/asset";
 import { AuthProviderButton } from "@hjmds/react-native/provider-button";
+import { AuthScreenLayout } from "@hjmds/react-native/auth-screen";
 import { Carousel } from "@hjmds/react-native/carousel";
 import { Top } from "@hjmds/react-native/top";
 import { useState, type ReactNode } from "react";
@@ -181,6 +182,19 @@ function ActionsPreview() {
         descriptor={{ label: "Continue with Google", provider: "google" }}
         logo={<Text>G</Text>}
         onPress={noop}
+      />
+      {/* 로그인 화면 골격 — 슬롯만 받고 배치를 소유한다. 높이가 화면 전체라 미리보기에서는
+          섹션 안에 그대로 둔다(스크롤은 부모가 갖는다). */}
+      <AuthScreenLayout
+        hero={<Text>Product mark, title and description</Text>}
+        main={
+          <AuthProviderButton
+            descriptor={{ label: "Continue with Google", provider: "google" }}
+            logo={<Text>G</Text>}
+            onPress={noop}
+          />
+        }
+        footer={<Text tone="muted">Terms · Privacy</Text>}
       />
       <BottomCTA
         primaryAction={{ label: "Continue", onPress: noop }}
