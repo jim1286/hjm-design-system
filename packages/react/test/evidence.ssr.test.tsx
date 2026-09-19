@@ -49,6 +49,7 @@ import * as bottomInfo from "../src/bottom-info.js";
 import * as sidebar from "../src/sidebar.js";
 import * as dateRange from "../src/date-range.js";
 import * as providerButton from "../src/provider-button.js";
+import * as authScreen from "../src/auth-screen.js";
 import * as dataTable from "../src/data-table.js";
 import * as collapsible from "../src/collapsible.js";
 import * as contextMenu from "../src/context-menu.js";
@@ -84,6 +85,7 @@ const publicModules: Readonly<Record<string, Readonly<Record<string, unknown>>>>
   "./sidebar": sidebar,
   "./date-range": dateRange,
   "./provider-button": providerButton,
+  "./auth-screen": authScreen,
   "./data-table": dataTable,
   "./collapsible": collapsible,
   "./context-menu": contextMenu,
@@ -123,7 +125,7 @@ describe("@hjmds/react renderer evidence", () => {
     });
 
     const componentIds = reactRendererEvidence.components.map(({ componentId }) => componentId);
-    expect(componentIds).toHaveLength(95);
+    expect(componentIds).toHaveLength(96);
     expect(new Set(componentIds).size).toBe(componentIds.length);
   });
 

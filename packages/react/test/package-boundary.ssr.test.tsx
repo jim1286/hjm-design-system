@@ -57,6 +57,7 @@ describe("@hjmds/react package boundary", () => {
       "./overlay-stack",
       "./date-range",
       "./provider-button",
+      "./auth-screen",
       "./data-table",
       "./collapsible",
       "./context-menu",

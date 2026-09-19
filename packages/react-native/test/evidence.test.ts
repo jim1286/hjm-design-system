@@ -1,6 +1,7 @@
 import * as agreement from "../src/agreement.js";
 import * as calendar from "../src/calendar.js";
 import * as providerButton from "../src/provider-button.js";
+import * as authScreen from "../src/auth-screen.js";
 import * as headingModule from "../src/heading.js";
 import * as bottomInfo from "../src/bottom-info.js";
 import * as collapsible from "../src/collapsible.js";
@@ -58,6 +59,7 @@ const publicModules: Readonly<Record<string, Readonly<Record<string, unknown>>>>
   "./mentions": mentions,
   "./transfer-list": transferList,
   "./provider-button": providerButton,
+  "./auth-screen": authScreen,
   "./feedback": feedback,
   "./file-picker": filePicker,
   "./forms": forms,
@@ -89,7 +91,7 @@ describe("@hjmds/react-native renderer evidence", () => {
     const componentIds = reactNativeRendererEvidence.components.map(
       ({ componentId }) => componentId,
     );
-    expect(componentIds).toHaveLength(78);
+    expect(componentIds).toHaveLength(79);
     expect(componentIds).toContain("combobox");
     expect(componentIds).toContain("load-more");
     expect(new Set(componentIds).size).toBe(componentIds.length);

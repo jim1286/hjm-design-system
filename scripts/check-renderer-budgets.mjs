@@ -28,7 +28,9 @@ const rendererBudgets = [
       // +1 for Heading.
       // P2-b(Collapsible·ContextMenu·Menubar)로 58 -> 61 모듈.
       // 측정 425.5 kB raw / 88.7 kB gzip — 기존 한도 안이라 바이트는 그대로 둔다.
-      ".": { modules: 62, raw: 445_000, gzip: 93_000 },
+      // 2026-09-19 AuthScreenLayout로 62 -> 63 모듈. 계약 resolver와 `classNames`만
+      // 더해지므로 바이트 증가는 미미하고 기존 한도 안이다.
+      ".": { modules: 63, raw: 445_000, gzip: 93_000 },
       // FAB reuses actions/provider; measured 21.0 kB raw / 5.5 kB gzip.
       "./floating-action-button": { modules: 5, raw: 23_000, gzip: 6_100 },
       // Carousel adds one module, reuses actions/provider; measured 22.5/5.8 kB.
@@ -104,6 +106,9 @@ const rendererBudgets = [
       // Provider fills come from the contract table, not the theme: measured
       // 15.0 kB raw / 4.1 kB gzip over 4 modules (provider + internal).
       "./provider-button": { modules: 4, raw: 17_000, gzip: 4_700 },
+      // AuthScreenLayout은 계약 resolver와 `classNames`만 쓰고 다른 컴포넌트를
+      // 부르지 않는다 — 슬롯으로 받기 때문이다. 그래서 그래프가 가장 얕다.
+      "./auth-screen": { modules: 3, raw: 12_000, gzip: 3_600 },
       // Exposes the existing scale; no new dependency: 3.5 kB raw / 1.2 kB gzip.
       "./heading": { modules: 2, raw: 4_200, gzip: 1_400 },
       // Elements over existing tokens, and the clipboard button over Button:
@@ -186,7 +191,8 @@ const rendererBudgets = [
       // measured 136.3 kB raw / 21.5 kB gzip.
       // Collapsible·ContextMenu·Menubar의 규칙이 9.1 kB 더한다: 측정 145.4 kB raw /
       // 22.8 kB gzip. ListRow의 relaxed·spacious 밀도와 TagsInput 후보 목록도 여기 있다.
-      "./styles.css": { raw: 150_000, gzip: 23_500 },
+      // AuthScreenLayout의 두 영역 규칙(약 40줄)만큼 gzip 0.4 kB 늘었다.
+      "./styles.css": { raw: 150_000, gzip: 24_200 },
     },
   },
   {
@@ -204,7 +210,8 @@ const rendererBudgets = [
       // the same primitive graph.
       // Collapsible(native)로 31 -> 32 모듈. 측정 387.9 kB raw / 70.0 kB gzip —
       // 기존 바이트 한도 안이라 모듈 수만 올린다.
-      ".": { modules: 37, raw: 458_000, gzip: 82_000 },
+      // 2026-09-19 AuthScreenLayout로 37 -> 38 모듈. 바이트는 기존 한도 안이다.
+      ".": { modules: 38, raw: 458_000, gzip: 82_000 },
       // Native FAB + existing actions/primitives: measured 36.4/8.5 kB.
       "./floating-action-button": { modules: 5, raw: 40_000, gzip: 9_400 },
       "./carousel": { modules: 6, raw: 43_000, gzip: 10_300 },
@@ -231,6 +238,9 @@ const rendererBudgets = [
       "./top": { modules: 4, raw: 24_500, gzip: 6_200 },
       // Same table on Native over the shared primitive graph: 22.2/5.6 kB.
       "./provider-button": { modules: 4, raw: 24_500, gzip: 6_200 },
+      // AuthScreenLayout은 계약 resolver와 RN `ScrollView`/`View`만 쓴다 —
+      // 슬롯으로 받으므로 HJM primitive를 하나도 부르지 않는다.
+      "./auth-screen": { modules: 3, raw: 14_000, gzip: 4_200 },
       // Same primitive graph as Top: 21.0 kB raw / 5.4 kB gzip over 4 modules.
       "./heading": { modules: 4, raw: 23_000, gzip: 6_000 },
       // Same primitive graph as the other Native additions: 22.6/5.8 kB.
@@ -266,7 +276,8 @@ const rendererBudgets = [
       "./data-display": { modules: 6, raw: 77_000, gzip: 15_000 },
       "./feedback": { modules: 5, raw: 73_500, gzip: 15_100 },
       "./overlays": { modules: 6, raw: 84_500, gzip: 15_100 },
-      "./evidence": { modules: 1, raw: 6_600, gzip: 1_700 },
+      // evidence 목록에 auth-screen 한 줄이 늘었다.
+      "./evidence": { modules: 1, raw: 6_800, gzip: 1_800 },
     },
     cssBudgets: {},
   },

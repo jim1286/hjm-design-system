@@ -190,6 +190,12 @@
       "import": "./dist/provider-button.js",
       "default": "./dist/provider-button.js"
     },
+    "./auth-screen": {
+      "types": "./dist/auth-screen.d.ts",
+      "react-native": "./dist/auth-screen.js",
+      "import": "./dist/auth-screen.js",
+      "default": "./dist/auth-screen.js"
+    },
     "./file-picker": {
       "types": "./dist/file-picker.d.ts",
       "react-native": "./dist/file-picker.js",

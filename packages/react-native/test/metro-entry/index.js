@@ -1,5 +1,6 @@
 import { Agreement } from "@hjmds/react-native/agreement";
 import { AuthProviderButton } from "@hjmds/react-native/provider-button";
+import { AuthScreenLayout } from "@hjmds/react-native/auth-screen";
 import { Heading } from "@hjmds/react-native/heading";
 import { ToggleGroup } from "@hjmds/react-native/toggle-group";
 import { BottomInfo } from "@hjmds/react-native/bottom-info";
@@ -175,6 +176,11 @@ function MetroSmokeApp() {
         descriptor: { label: "Google로 계속하기", provider: "google" },
         logo: React.createElement(View, null),
         onPress: noop,
+      }),
+      React.createElement(AuthScreenLayout, {
+        hero: React.createElement(View, null),
+        main: React.createElement(View, null),
+        footer: React.createElement(View, null),
       }),
       React.createElement(DatePicker, {
         clearLabel: "날짜 지우기",

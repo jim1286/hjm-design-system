@@ -10,6 +10,7 @@ import { DateRangePicker } from "../src/date-range.js";
 import { Mentions } from "../src/mentions.js";
 import { TransferList } from "../src/transfer-list.js";
 import { AuthProviderButton } from "../src/provider-button.js";
+import { AuthScreenLayout } from "../src/auth-screen.js";
 import { FloatingActionButton } from "../src/floating-action-button.js";
 import { Carousel } from "../src/carousel.js";
 import type { ReactNode } from "react";
@@ -336,6 +337,16 @@ export const defaultRenderCases = [
         descriptor={{ label: "Google로 계속하기", provider: "google" }}
         logo={<View />}
         onPress={noop}
+      />
+    ),
+  },
+  {
+    componentId: "auth-screen",
+    render: () => (
+      <AuthScreenLayout
+        hero={<View />}
+        main={<View />}
+        footer={<View />}
       />
     ),
   },

@@ -17,6 +17,7 @@ import { BottomInfo } from "../src/bottom-info.js";
 import { Sidebar } from "../src/sidebar.js";
 import { DateRangePicker } from "../src/date-range.js";
 import { AuthProviderButton } from "../src/provider-button.js";
+import { AuthScreenLayout } from "../src/auth-screen.js";
 import { DataTable } from "../src/data-table.js";
 import { Collapsible } from "../src/collapsible.js";
 import { ContextMenu } from "../src/context-menu.js";
@@ -539,6 +540,13 @@ const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
     marker: "hjm-auth-provider-button",
     render: () => (
       <AuthProviderButton descriptor={{ provider: "google", label: "Google로 계속하기" }} logo={<span>G</span>} />
+    ),
+  },
+  {
+    componentId: "auth-screen",
+    marker: "hjm-auth-screen",
+    render: () => (
+      <AuthScreenLayout hero={<span>hero</span>} main={<span>main</span>} footer={<span>footer</span>} />
     ),
   },
   {

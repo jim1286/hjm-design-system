@@ -248,6 +248,11 @@
       "import": "./dist/provider-button.js",
       "default": "./dist/provider-button.js"
     },
+    "./auth-screen": {
+      "types": "./dist/auth-screen.d.ts",
+      "import": "./dist/auth-screen.js",
+      "default": "./dist/auth-screen.js"
+    },
     "./data-table": {
       "types": "./dist/data-table.d.ts",
       "import": "./dist/data-table.js",
