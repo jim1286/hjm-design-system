@@ -17,7 +17,9 @@ describe("@hjmds/react-native package boundary", () => {
     expect(packageJson.dependencies).toBeUndefined();
     expect(packageJson.devDependencies["@hjmds/design-contracts"]).toBe("workspace:*");
     expect(packageJson.peerDependencies).toEqual({
-      "@hjmds/design-contracts": ">=1.3.0 <1.4.0",
+      // The authored next train precedes the generated release commit. Exact train
+      // alignment is enforced by workspace:check; a stale literal blocked 1.4.0.
+      "@hjmds/design-contracts": expect.stringMatching(/^>=\d+\.\d+\.0 <\d+\.\d+\.0$/),
       react: ">=19",
       "react-native": ">=0.81",
     });
