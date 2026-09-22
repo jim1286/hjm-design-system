@@ -7,13 +7,13 @@ import { classNames } from "./internal.js";
  * the bottom. The measurements come from the resolved descriptor as custom
  * properties so the stylesheet keeps one source of truth with the contract.
  */
-export const AuthScreenLayout = forwardRef(function AuthScreenLayout({ hero, main, footer, density, hasFooter, className, ...props }, forwardedRef) {
+export const AuthScreenLayout = forwardRef(function AuthScreenLayout({ hero, main, footer, density, hasFooter, className, as: Element = "main", ...props }, forwardedRef) {
     const resolved = resolveAuthScreenDescriptor({
         ...(density === undefined ? {} : { density }),
         ...(hasFooter === undefined ? {} : { hasFooter }),
     });
     const showFooter = resolved.hasFooter && footer !== undefined && footer !== null;
-    return (_jsxs("main", { ...props, ref: forwardedRef, className: classNames("hjm-auth-screen", className), "data-density": resolved.density, style: {
+    return (_jsxs(Element, { ...props, ref: forwardedRef, className: classNames("hjm-auth-screen", className), "data-density": resolved.density, style: {
             ["--hjm-auth-screen-max-width"]: `${resolved.maxWidth}px`,
             ["--hjm-auth-screen-hero-gap"]: `${resolved.heroGap}px`,
             ["--hjm-auth-screen-main-gap"]: `${resolved.mainGap}px`,

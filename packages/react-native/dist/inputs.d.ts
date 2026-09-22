@@ -1,5 +1,5 @@
 import { type FieldAlign, type FieldShape, type FieldVariant } from "@hjmds/design-contracts/recipes/base";
-import { type ChipSize, type SearchFieldSize, type SegmentedControlSize, type SelectionControlPresentation, type SelectionControlSize, type SwitchSize } from "@hjmds/design-contracts/recipes";
+import { type ChipSize, type SearchFieldSize, type SegmentedControlSize, type SelectionControlPresentation, type SelectionControlSize, type SwitchSize, type SwitchPresentation } from "@hjmds/design-contracts/recipes";
 import { type PasswordFieldAutofillHint, type PasswordFieldSize } from "@hjmds/design-contracts/components/password-field";
 import { type OtpFieldSize } from "@hjmds/design-contracts/components/otp-field";
 import { type CheckboxGroupSelection, type CheckboxState, type SelectionItemDescriptor, type SelectionOrientation } from "@hjmds/design-contracts/behaviors";
@@ -227,6 +227,7 @@ type SwitchBaseProps = Omit<NativeSwitchProps, "accessibilityHint" | "accessibil
     /** Use inside a labelled ListRow; the accessible name and hint remain present. */
     labelVisibility?: "visible" | "hidden";
     description?: string;
+    presentation?: SwitchPresentation;
     size?: SwitchSize;
     accessibilityLabel?: string;
     accessibilityHint?: string;
@@ -254,7 +255,7 @@ type SwitchLegacyStateProps = Readonly<{
     onValueChange?: (value: boolean) => void;
 }>;
 export type SwitchProps = SwitchBaseProps & (SwitchCanonicalStateProps | SwitchLegacyStateProps);
-export declare function Switch({ label, labelVisibility, description, size, checked, defaultChecked, onCheckedChange, value, defaultValue, onValueChange, disabled, accessibilityLabel, accessibilityHint, layoutStyle, style, ...props }: SwitchProps): import("react").JSX.Element;
+export declare function Switch({ label, labelVisibility, presentation, testID, description, size, checked, defaultChecked, onCheckedChange, value, defaultValue, onValueChange, disabled, accessibilityLabel, accessibilityHint, layoutStyle, style, ...props }: SwitchProps): import("react").JSX.Element;
 export type SegmentedControlItem<Value extends string = string> = Readonly<{
     value: Value;
     label: string;

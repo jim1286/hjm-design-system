@@ -37,12 +37,16 @@ import {
   AccessibilityInfo,
   Animated,
   Easing,
+  Keyboard,
   Modal,
+  Platform,
+  ScrollView,
   Pressable,
   View,
   findNodeHandle,
   useWindowDimensions,
   type Insets,
+  type KeyboardMetrics,
   type ModalProps,
   type StyleProp,
   type ViewStyle,
@@ -884,6 +888,10 @@ export type SheetProps = NativeModalProps &
     safeAreaInsets?: Partial<Insets>;
     onDismissComplete?: (detail: Readonly<{ reason: SheetDismissReason }>) => void;
     contentStyle?: StyleProp<ViewStyle>;
+    /** Opt in when the body contains inputs; the modal owns keyboard clearance. */
+    keyboardAvoidance?: boolean;
+    /** Keep the header/footer fixed while long content scrolls. Do not nest a virtualized list. */
+    scrollable?: boolean;
   }>;
 
 /** Native Sheet applies policy before emitting a concrete dismissal reason. */
@@ -904,11 +912,15 @@ export function Sheet({
   safeAreaInsets = {},
   onDismissComplete,
   contentStyle,
+  keyboardAvoidance = false,
+  scrollable = false,
   onShow,
   ...modalProps
 }: SheetProps) {
   const { environment, palette } = useHjmNativeTheme();
   const { width: windowWidth, height: windowHeight } = useWindowDimensions();
+  const [modalHeight, setModalHeight] = useState<number | null>(null);
+  const [keyboardFrame, setKeyboardFrame] = useState<KeyboardMetrics | null>(null);
   const sizeRatio = sheetRecipe.sizes[size];
   const policy: SheetDismissPolicy = { ...sheetBehaviorDefaults, ...dismissPolicy };
   const [visible, changeOpen] = useReasonedOpenState({
@@ -951,6 +963,39 @@ export function Sheet({
       throw new RangeError(`Sheet safeAreaInsets.${edge} must be non-negative`);
     }
   }
+
+  useEffect(() => {
+    if (!nativeVisible || !keyboardAvoidance) {
+      setKeyboardFrame(null);
+      return;
+    }
+    // A sheet may open while an input elsewhere already owns the keyboard. Event-only
+    // tracking misses that case; metrics also restores the correct state on reopen.
+    setKeyboardFrame(Keyboard.metrics() ?? null);
+    const change = (event: { endCoordinates: KeyboardMetrics }) => setKeyboardFrame(event.endCoordinates);
+    const hide = () => setKeyboardFrame(null);
+    const subscriptions = [
+      Keyboard.addListener("keyboardDidShow", change),
+      Keyboard.addListener("keyboardDidHide", hide),
+      ...(Platform.OS === "ios" ? [
+        Keyboard.addListener("keyboardWillChangeFrame", change),
+        Keyboard.addListener("keyboardWillHide", hide),
+      ] : []),
+    ];
+    return () => subscriptions.forEach((subscription) => subscription.remove());
+  }, [keyboardAvoidance, nativeVisible]);
+
+  // Modal owns a full-screen coordinate space (statusBarTranslucent). Measure its
+  // actual height so Android adjustResize does not subtract the keyboard twice.
+  const viewportHeight = modalHeight ?? windowHeight;
+  const dockedKeyboard = keyboardAvoidance && keyboardFrame !== null
+    && keyboardFrame.height > 0 && keyboardFrame.screenX <= 0
+    && keyboardFrame.width >= windowWidth;
+  const keyboardInset = dockedKeyboard
+    ? Math.max(0, viewportHeight - keyboardFrame.screenY)
+    : 0;
+  const availableHeight = Math.max(0, viewportHeight - keyboardInset - insets.top);
+  const bottomInset = dockedKeyboard ? 0 : insets.bottom;
 
   const cancelDismissFallback = useCallback(() => {
     dismissFallbackTask.current?.cancel();
@@ -1160,11 +1205,14 @@ export function Sheet({
         accessibilityElementsHidden={!visible}
         importantForAccessibility={visible ? "auto" : "no-hide-descendants"}
         pointerEvents={visible ? "auto" : "none"}
+        onLayout={(event) => setModalHeight(event.nativeEvent.layout.height)}
         style={{
           alignItems: physicalPlacement === "right" ? "flex-end" : "flex-start",
           flex: 1,
           justifyContent: physicalPlacement === "bottom" ? "flex-end" : "flex-start",
           opacity: motionProgress,
+          paddingTop: insets.top,
+          paddingBottom: keyboardInset,
         }}
       >
         <Scrim />
@@ -1197,18 +1245,20 @@ export function Sheet({
               // A fixed size ratio drives the height; `auto` lets the content decide
               // and the recipe's maxHeightRatio caps it.
               height: side
-                ? "100%"
+                ? availableHeight
                 : sizeRatio === null
                   ? undefined
-                  : windowHeight * sizeRatio,
+                  : Math.min(viewportHeight * sizeRatio, availableHeight),
               maxWidth: side ? 420 : undefined,
               maxHeight: side
-                ? undefined
-                : windowHeight * sheetRecipe.content.maxHeightRatio,
-              paddingBottom: sheetRecipe.content.paddingBottom + insets.bottom,
+                ? availableHeight
+                : Math.min(availableHeight, viewportHeight * sheetRecipe.content.maxHeightRatio),
+              paddingBottom: sheetRecipe.content.paddingBottom + bottomInset,
               paddingLeft: sheetRecipe.content.paddingHorizontal + insets.left,
               paddingRight: sheetRecipe.content.paddingHorizontal + insets.right,
-              paddingTop: sheetRecipe.content.paddingTop + insets.top,
+              // The top safe area limits the viewport, rather than adding a second
+              // notch-sized gap inside a sheet anchored to the bottom.
+              paddingTop: sheetRecipe.content.paddingTop,
               shadowColor: sheetRecipe.content.shadow.color,
               shadowOffset: {
                 width: 0,
@@ -1228,7 +1278,9 @@ export function Sheet({
         >
           <View
             style={{
-              alignItems: "flex-start",
+              alignItems: "center",
+              minHeight: sheetRecipe.header.minHeight,
+              flexShrink: 0,
               direction: environment.direction,
               flexDirection: "row",
               gap: spacing.sm,
@@ -1248,11 +1300,23 @@ export function Sheet({
               </IconButton>
             ) : null}
           </View>
-          <View style={{ gap: sheetRecipe.body.gap }}>{children}</View>
+          {/* Keyboard clearance belongs to the enclosing modal; UIKit must not add it again. */}
+          {scrollable ? (
+            <ScrollView
+              style={{ flexShrink: 1, minHeight: 0 }}
+              contentContainerStyle={{ gap: sheetRecipe.body.gap }}
+              keyboardShouldPersistTaps="handled"
+              keyboardDismissMode={Platform.OS === "ios" ? "interactive" : "on-drag"}
+              automaticallyAdjustKeyboardInsets={false}
+            >
+              {children}
+            </ScrollView>
+          ) : <View style={{ gap: sheetRecipe.body.gap, flexShrink: 1 }}>{children}</View>}
           {footer ? (
             <View
               style={{
                 gap: sheetRecipe.footer.gap,
+                flexShrink: 0,
                 paddingTop: sheetRecipe.footer.paddingTop,
               }}
             >

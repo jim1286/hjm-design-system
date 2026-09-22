@@ -1882,6 +1882,11 @@ export declare const switchRecipe: {
     readonly defaults: {
         readonly size: "medium";
     };
+    readonly presentationDefaults: {
+        readonly web: "inline";
+        readonly native: "row";
+    };
+    readonly stackedTextScale: 1.6;
     readonly sizes: {
         readonly small: {
             readonly width: 44;
@@ -3668,6 +3673,7 @@ export declare const sectionRecipe: {
     };
 };
 export type SegmentedControlSize = keyof typeof segmentedControlRecipe.sizes;
+export type SwitchPresentation = "inline" | "row";
 export type SwitchSize = keyof typeof switchRecipe.sizes;
 export type SelectionControlSize = keyof typeof selectionControlRecipe.sizes;
 export type SelectionControlPresentation = keyof typeof selectionControlRecipe.presentations;

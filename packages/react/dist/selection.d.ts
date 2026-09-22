@@ -1,5 +1,5 @@
-import { chipRecipe, type SegmentedControlSize, type SelectionControlPresentation, type SelectionControlSize, type SelectionGroupOrientation, type SelectionGroupPresentation, type SwitchSize } from "@hjmds/design-contracts/recipes";
-export type { SwitchSize };
+import { chipRecipe, type SegmentedControlSize, type SelectionControlPresentation, type SelectionControlSize, type SelectionGroupOrientation, type SelectionGroupPresentation, type SwitchSize, type SwitchPresentation } from "@hjmds/design-contracts/recipes";
+export type { SwitchSize, SwitchPresentation };
 import { type CheckboxGroupSelection, type SelectionItemDescriptor } from "@hjmds/design-contracts/behaviors";
 import { type ButtonHTMLAttributes, type ChangeEvent, type FieldsetHTMLAttributes, type InputHTMLAttributes, type MouseEvent, type ReactElement, type ReactNode, type RefAttributes } from "react";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
@@ -125,6 +125,9 @@ export type RadioGroupProps = Omit<FieldsetHTMLAttributes<HTMLFieldSetElement>, 
 export declare const RadioGroup: import("react").ForwardRefExoticComponent<RadioGroupProps & RefAttributes<HTMLFieldSetElement>>;
 export type SwitchProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "role" | "onChange" | "value"> & Readonly<{
     label: ReactNode;
+    /** Supporting copy is described separately from the stable accessible name. */
+    description?: ReactNode;
+    presentation?: SwitchPresentation;
     /** Hide repeated row copy visually while preserving the switch's accessible name. */
     labelVisibility?: "visible" | "hidden";
     checked?: boolean;
@@ -137,6 +140,9 @@ export type SwitchProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "role" |
 }>;
 export declare const Switch: import("react").ForwardRefExoticComponent<Omit<ButtonHTMLAttributes<HTMLButtonElement>, "value" | "onChange" | "role"> & Readonly<{
     label: ReactNode;
+    /** Supporting copy is described separately from the stable accessible name. */
+    description?: ReactNode;
+    presentation?: SwitchPresentation;
     /** Hide repeated row copy visually while preserving the switch's accessible name. */
     labelVisibility?: "visible" | "hidden";
     checked?: boolean;

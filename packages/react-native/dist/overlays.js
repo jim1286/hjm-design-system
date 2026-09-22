@@ -5,7 +5,7 @@ import { resolveColorReference } from "@hjmds/design-contracts/color-references"
 import { easing, overlay, radius, spacing } from "@hjmds/design-contracts/foundations";
 import { alertDialogRecipe, dialogRecipe, sheetRecipe, } from "@hjmds/design-contracts/recipes";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore, } from "react";
-import { AccessibilityInfo, Animated, Easing, Modal, Pressable, View, findNodeHandle, useWindowDimensions, } from "react-native";
+import { AccessibilityInfo, Animated, Easing, Keyboard, Modal, Platform, ScrollView, Pressable, View, findNodeHandle, useWindowDimensions, } from "react-native";
 import { Button, IconButton } from "./actions.js";
 import { scheduleAfterNativeModalTeardown, shouldAwaitNativeModalDismiss, } from "./internal/modal-lifecycle.js";
 import { minimumTargetStyle } from "./internal/styles.js";
@@ -503,9 +503,11 @@ export function AlertDialog({ open, defaultOpen, onOpenChange, request, returnFo
                                     ], children: _jsx(Text, { style: { color: confirmContent }, variant: "label", children: request.confirmLabel }) })] })] })] }) }));
 }
 /** Native Sheet applies policy before emitting a concrete dismissal reason. */
-export function Sheet({ open, defaultOpen, onOpenChange, title, description, children, footer, placement = "bottom", size = sheetRecipe.defaults.size, busy = false, dismissPolicy, closeLabel, returnFocusRef, safeAreaInsets = {}, onDismissComplete, contentStyle, onShow, ...modalProps }) {
+export function Sheet({ open, defaultOpen, onOpenChange, title, description, children, footer, placement = "bottom", size = sheetRecipe.defaults.size, busy = false, dismissPolicy, closeLabel, returnFocusRef, safeAreaInsets = {}, onDismissComplete, contentStyle, keyboardAvoidance = false, scrollable = false, onShow, ...modalProps }) {
     const { environment, palette } = useHjmNativeTheme();
     const { width: windowWidth, height: windowHeight } = useWindowDimensions();
+    const [modalHeight, setModalHeight] = useState(null);
+    const [keyboardFrame, setKeyboardFrame] = useState(null);
     const sizeRatio = sheetRecipe.sizes[size];
     const policy = { ...sheetBehaviorDefaults, ...dismissPolicy };
     const [visible, changeOpen] = useReasonedOpenState({
@@ -541,6 +543,37 @@ export function Sheet({ open, defaultOpen, onOpenChange, title, description, chi
             throw new RangeError(`Sheet safeAreaInsets.${edge} must be non-negative`);
         }
     }
+    useEffect(() => {
+        if (!nativeVisible || !keyboardAvoidance) {
+            setKeyboardFrame(null);
+            return;
+        }
+        // A sheet may open while an input elsewhere already owns the keyboard. Event-only
+        // tracking misses that case; metrics also restores the correct state on reopen.
+        setKeyboardFrame(Keyboard.metrics() ?? null);
+        const change = (event) => setKeyboardFrame(event.endCoordinates);
+        const hide = () => setKeyboardFrame(null);
+        const subscriptions = [
+            Keyboard.addListener("keyboardDidShow", change),
+            Keyboard.addListener("keyboardDidHide", hide),
+            ...(Platform.OS === "ios" ? [
+                Keyboard.addListener("keyboardWillChangeFrame", change),
+                Keyboard.addListener("keyboardWillHide", hide),
+            ] : []),
+        ];
+        return () => subscriptions.forEach((subscription) => subscription.remove());
+    }, [keyboardAvoidance, nativeVisible]);
+    // Modal owns a full-screen coordinate space (statusBarTranslucent). Measure its
+    // actual height so Android adjustResize does not subtract the keyboard twice.
+    const viewportHeight = modalHeight ?? windowHeight;
+    const dockedKeyboard = keyboardAvoidance && keyboardFrame !== null
+        && keyboardFrame.height > 0 && keyboardFrame.screenX <= 0
+        && keyboardFrame.width >= windowWidth;
+    const keyboardInset = dockedKeyboard
+        ? Math.max(0, viewportHeight - keyboardFrame.screenY)
+        : 0;
+    const availableHeight = Math.max(0, viewportHeight - keyboardInset - insets.top);
+    const bottomInset = dockedKeyboard ? 0 : insets.bottom;
     const cancelDismissFallback = useCallback(() => {
         dismissFallbackTask.current?.cancel();
         dismissFallbackTask.current = null;
@@ -706,11 +739,13 @@ export function Sheet({ open, defaultOpen, onOpenChange, title, description, chi
             nativeShownRef.current = true;
             startEnter();
             onShow?.(event);
-        }, statusBarTranslucent: true, transparent: true, visible: nativeVisible, children: _jsxs(Animated.View, { accessibilityElementsHidden: !visible, importantForAccessibility: visible ? "auto" : "no-hide-descendants", pointerEvents: visible ? "auto" : "none", style: {
+        }, statusBarTranslucent: true, transparent: true, visible: nativeVisible, children: _jsxs(Animated.View, { accessibilityElementsHidden: !visible, importantForAccessibility: visible ? "auto" : "no-hide-descendants", pointerEvents: visible ? "auto" : "none", onLayout: (event) => setModalHeight(event.nativeEvent.layout.height), style: {
                 alignItems: physicalPlacement === "right" ? "flex-end" : "flex-start",
                 flex: 1,
                 justifyContent: physicalPlacement === "bottom" ? "flex-end" : "flex-start",
                 opacity: motionProgress,
+                paddingTop: insets.top,
+                paddingBottom: keyboardInset,
             }, children: [_jsx(Scrim, {}), policy.dismissible && policy.outsideDismiss ? (_jsx(Pressable, { accessible: false, importantForAccessibility: "no-hide-descendants", onPress: () => requestClose("outside"), style: { bottom: 0, left: 0, position: "absolute", right: 0, top: 0 } })) : null, _jsxs(Animated.View, { accessibilityLabel: [title, description].filter(Boolean).join(", "), accessibilityState: { busy }, accessibilityViewIsModal: true, importantForAccessibility: "yes", role: "dialog", style: [
                         {
                             backgroundColor: contentBackground,
@@ -724,18 +759,20 @@ export function Sheet({ open, defaultOpen, onOpenChange, title, description, chi
                             // A fixed size ratio drives the height; `auto` lets the content decide
                             // and the recipe's maxHeightRatio caps it.
                             height: side
-                                ? "100%"
+                                ? availableHeight
                                 : sizeRatio === null
                                     ? undefined
-                                    : windowHeight * sizeRatio,
+                                    : Math.min(viewportHeight * sizeRatio, availableHeight),
                             maxWidth: side ? 420 : undefined,
                             maxHeight: side
-                                ? undefined
-                                : windowHeight * sheetRecipe.content.maxHeightRatio,
-                            paddingBottom: sheetRecipe.content.paddingBottom + insets.bottom,
+                                ? availableHeight
+                                : Math.min(availableHeight, viewportHeight * sheetRecipe.content.maxHeightRatio),
+                            paddingBottom: sheetRecipe.content.paddingBottom + bottomInset,
                             paddingLeft: sheetRecipe.content.paddingHorizontal + insets.left,
                             paddingRight: sheetRecipe.content.paddingHorizontal + insets.right,
-                            paddingTop: sheetRecipe.content.paddingTop + insets.top,
+                            // The top safe area limits the viewport, rather than adding a second
+                            // notch-sized gap inside a sheet anchored to the bottom.
+                            paddingTop: sheetRecipe.content.paddingTop,
                             shadowColor: sheetRecipe.content.shadow.color,
                             shadowOffset: {
                                 width: 0,
@@ -752,12 +789,15 @@ export function Sheet({ open, defaultOpen, onOpenChange, title, description, chi
                         },
                         contentStyle,
                     ], children: [_jsxs(View, { style: {
-                                alignItems: "flex-start",
+                                alignItems: "center",
+                                minHeight: sheetRecipe.header.minHeight,
+                                flexShrink: 0,
                                 direction: environment.direction,
                                 flexDirection: "row",
                                 gap: spacing.sm,
-                            }, children: [_jsxs(View, { style: { flex: 1, gap: spacing.xs }, children: [_jsx(Text, { accessibilityRole: "header", tone: "primary", variant: "title", children: title }), description ? _jsx(Text, { tone: "muted", children: description }) : null] }), policy.dismissible ? (_jsx(IconButton, { disabled: busy && !policy.dismissWhileBusy, label: closeLabel, onPress: () => requestClose("close-action"), children: _jsx(Text, { accessible: false, variant: "title", children: "\u00D7" }) })) : null] }), _jsx(View, { style: { gap: sheetRecipe.body.gap }, children: children }), footer ? (_jsx(View, { style: {
+                            }, children: [_jsxs(View, { style: { flex: 1, gap: spacing.xs }, children: [_jsx(Text, { accessibilityRole: "header", tone: "primary", variant: "title", children: title }), description ? _jsx(Text, { tone: "muted", children: description }) : null] }), policy.dismissible ? (_jsx(IconButton, { disabled: busy && !policy.dismissWhileBusy, label: closeLabel, onPress: () => requestClose("close-action"), children: _jsx(Text, { accessible: false, variant: "title", children: "\u00D7" }) })) : null] }), scrollable ? (_jsx(ScrollView, { style: { flexShrink: 1, minHeight: 0 }, contentContainerStyle: { gap: sheetRecipe.body.gap }, keyboardShouldPersistTaps: "handled", keyboardDismissMode: Platform.OS === "ios" ? "interactive" : "on-drag", automaticallyAdjustKeyboardInsets: false, children: children })) : _jsx(View, { style: { gap: sheetRecipe.body.gap, flexShrink: 1 }, children: children }), footer ? (_jsx(View, { style: {
                                 gap: sheetRecipe.footer.gap,
+                                flexShrink: 0,
                                 paddingTop: sheetRecipe.footer.paddingTop,
                             }, children: footer })) : null] })] }) }));
 }

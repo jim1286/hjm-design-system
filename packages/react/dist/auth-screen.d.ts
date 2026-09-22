@@ -1,6 +1,8 @@
 import { type AuthScreenDescriptor } from "@hjmds/design-contracts/components/auth-screen";
 import { type HTMLAttributes, type ReactNode } from "react";
 export type AuthScreenLayoutProps = Omit<HTMLAttributes<HTMLElement>, "children"> & AuthScreenDescriptor & Readonly<{
+    /** Use section inside a product shell that already owns the main landmark. */
+    as?: "main" | "section";
     /** Product mark, title and description. The product owns every string here. */
     hero: ReactNode;
     /** The primary action block — provider buttons, or a product's own sign-in bundle. */
@@ -18,6 +20,8 @@ export declare const AuthScreenLayout: import("react").ForwardRefExoticComponent
     density?: import("@hjmds/design-contracts/components/auth-screen").AuthScreenDensity;
     hasFooter?: boolean;
 }> & Readonly<{
+    /** Use section inside a product shell that already owns the main landmark. */
+    as?: "main" | "section";
     /** Product mark, title and description. The product owns every string here. */
     hero: ReactNode;
     /** The primary action block — provider buttons, or a product's own sign-in bundle. */

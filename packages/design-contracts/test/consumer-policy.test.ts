@@ -23,7 +23,8 @@ describe("consumer adoption policy", () => {
     expect(policy).toContain("정책 버전: **1.2.0**");
     expect(policy).toContain("React Native legacy style compatibility boundary");
     expect(policy).toContain("`HjmCompositionStyle` / `layoutStyle`");
-    expect(policy).toContain("첫 `1.0.0` train");
+    expect(policy).toContain("위 네 조건과 소비 앱별 이관 목록을 충족한 다음 major에서");
+    expect(policy).toContain("1.4는 semantic API와 이관 경로를 추가하는 train");
   });
 
   it("is reachable from both public package entry documents", async () => {
@@ -84,7 +85,8 @@ describe("consumer adoption policy", () => {
       "../design-contracts/docs/consumer-policy.md#31-react-native-legacy-style-compatibility-boundary",
     );
     expect(nativeReadme).toContain("type HjmCompositionStyle");
-    expect(nativeReadme).toContain("no later than the first\n`1.0.0` release gate");
+    expect(nativeReadme).toContain("Published 1.x compatibility props remain available");
+    expect(nativeReadme).toContain("removal requires a future major");
     expect(nativePackage.exports?.["./composition-style"]?.types)
       .toBe("./dist/composition-style.d.ts");
     expect(compositionSource).toContain("export type HjmCompositionStyle");

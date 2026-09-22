@@ -19,6 +19,7 @@ import {
   type SelectionControlPresentation,
   type SelectionControlSize,
   type SwitchSize,
+  type SwitchPresentation,
 } from "@hjmds/design-contracts/recipes";
 import { visibleControlHeight } from "@hjmds/design-contracts/components/design-system-provider";
 import {
@@ -1631,6 +1632,7 @@ type SwitchBaseProps = Omit<
     /** Use inside a labelled ListRow; the accessible name and hint remain present. */
     labelVisibility?: "visible" | "hidden";
     description?: string;
+    presentation?: SwitchPresentation;
     size?: SwitchSize;
     accessibilityLabel?: string;
     accessibilityHint?: string;
@@ -1666,6 +1668,8 @@ export type SwitchProps = SwitchBaseProps &
 export function Switch({
   label,
   labelVisibility = "visible",
+  presentation = switchRecipe.presentationDefaults.native,
+  testID,
   description,
   size = switchRecipe.defaults.size,
   checked,
@@ -1697,6 +1701,8 @@ export function Switch({
   const resolvedOnCheckedChange = onCheckedChange ?? onValueChange;
   const { colors, environment, ...nativeTheme } = useHjmNativeTheme();
   const dimensions = switchRecipe.sizes[size];
+  const stacked = presentation === "row" && labelVisibility === "visible"
+    && environment.textScale >= switchRecipe.stackedTextScale;
   // The platform Switch takes fills only — it has no border hook — so the recipe's
   // `*Border` slots stay web-only. The fills themselves are read from the recipe
   // rather than re-picked here; hardcoding them is how `trackOn` drifted from the
@@ -1724,6 +1730,7 @@ export function Switch({
   });
   return (
     <Pressable
+      testID={testID}
       accessibilityHint={accessibilityHint ?? description}
       accessibilityLabel={accessibilityLabel ?? label}
       accessibilityRole="switch"
@@ -1733,9 +1740,10 @@ export function Switch({
       style={({ pressed }) => [
         minimumTargetStyle,
         {
-          alignItems: "center",
+          alignItems: stacked ? "flex-start" : "center",
+          alignSelf: presentation === "row" ? "stretch" : "flex-start",
           direction: environment.direction,
-          flexDirection: "row",
+          flexDirection: stacked ? "column" : "row",
           gap: spacing.sm,
           minHeight: description
             ? switchRecipe.rowTwoLineMinHeight
@@ -1750,7 +1758,7 @@ export function Switch({
           identical, which is why the recipe's disabled colours swap hue instead. */}
       {labelVisibility === "visible" ? <View
         style={{
-          flex: 1,
+          flex: stacked || presentation === "inline" ? undefined : 1,
           gap: spacing.xxs,
           opacity: disabled ? switchRecipe.states.disabledOpacity : 1,
         }}

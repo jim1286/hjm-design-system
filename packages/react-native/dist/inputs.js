@@ -545,7 +545,7 @@ export function CheckboxGroup({ label, accessibilityLabel, items, value, default
             return (_createElement(ChoiceRow, { ...slotStyles, key: item.id, checked: optionSelected, description: item.description, disabled: optionDisabled, indicator: indicator, invalid: hasError, invalidLabel: invalidLabel ?? error, kind: "checkbox", label: item.label, onActivate: () => setSelected(toggleCheckboxSelection(items, selected, item.id)), presentation: presentation, readOnly: readOnly, readOnlyLabel: readOnlyLabel, renderIndicator: renderIndicator ? (props) => renderIndicator(item, props) : undefined, renderLeading: renderLeading ? (props) => renderLeading(item, props) : undefined, required: required, requiredLabel: requiredLabel, size: size }));
         }) }));
 }
-export function Switch({ label, labelVisibility = "visible", description, size = switchRecipe.defaults.size, checked, defaultChecked, onCheckedChange, value, defaultValue, onValueChange, disabled = false, accessibilityLabel, accessibilityHint, layoutStyle, style, ...props }) {
+export function Switch({ label, labelVisibility = "visible", presentation = switchRecipe.presentationDefaults.native, testID, description, size = switchRecipe.defaults.size, checked, defaultChecked, onCheckedChange, value, defaultValue, onValueChange, disabled = false, accessibilityLabel, accessibilityHint, layoutStyle, style, ...props }) {
     const hasCanonicalState = checked !== undefined
         || defaultChecked !== undefined
         || onCheckedChange !== undefined;
@@ -560,6 +560,8 @@ export function Switch({ label, labelVisibility = "visible", description, size =
     const resolvedOnCheckedChange = onCheckedChange ?? onValueChange;
     const { colors, environment, ...nativeTheme } = useHjmNativeTheme();
     const dimensions = switchRecipe.sizes[size];
+    const stacked = presentation === "row" && labelVisibility === "visible"
+        && environment.textScale >= switchRecipe.stackedTextScale;
     // The platform Switch takes fills only — it has no border hook — so the recipe's
     // `*Border` slots stay web-only. The fills themselves are read from the recipe
     // rather than re-picked here; hardcoding them is how `trackOn` drifted from the
@@ -576,12 +578,13 @@ export function Switch({ label, labelVisibility = "visible", description, size =
             ? {}
             : { onChange: resolvedOnCheckedChange }),
     });
-    return (_jsxs(Pressable, { accessibilityHint: accessibilityHint ?? description, accessibilityLabel: accessibilityLabel ?? label, accessibilityRole: "switch", accessibilityState: { checked: enabled, disabled }, disabled: disabled, onPress: () => setEnabled(!enabled), style: ({ pressed }) => [
+    return (_jsxs(Pressable, { testID: testID, accessibilityHint: accessibilityHint ?? description, accessibilityLabel: accessibilityLabel ?? label, accessibilityRole: "switch", accessibilityState: { checked: enabled, disabled }, disabled: disabled, onPress: () => setEnabled(!enabled), style: ({ pressed }) => [
             minimumTargetStyle,
             {
-                alignItems: "center",
+                alignItems: stacked ? "flex-start" : "center",
+                alignSelf: presentation === "row" ? "stretch" : "flex-start",
                 direction: environment.direction,
-                flexDirection: "row",
+                flexDirection: stacked ? "column" : "row",
                 gap: spacing.sm,
                 minHeight: description
                     ? switchRecipe.rowTwoLineMinHeight
@@ -591,7 +594,7 @@ export function Switch({ label, labelVisibility = "visible", description, size =
             style,
             layoutStyle,
         ], children: [labelVisibility === "visible" ? _jsxs(View, { style: {
-                    flex: 1,
+                    flex: stacked || presentation === "inline" ? undefined : 1,
                     gap: spacing.xxs,
                     opacity: disabled ? switchRecipe.states.disabledOpacity : 1,
                 }, children: [_jsx(Text, { tone: "body", variant: "bodyLarge", children: label }), description ? (_jsx(Text, { tone: "muted", variant: "caption", children: description })) : null] }) : null, _jsx(NativeSwitch, { ...props, accessible: false, disabled: disabled, ios_backgroundColor: trackOff, pointerEvents: "none", style: { height: dimensions.height, width: dimensions.width }, thumbColor: thumb, trackColor: { false: trackOff, true: trackOn }, value: enabled })] }));

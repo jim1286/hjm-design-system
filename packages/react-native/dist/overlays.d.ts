@@ -70,8 +70,12 @@ export type SheetProps = NativeModalProps & ReasonedOpenProps<SheetOpenChangeDet
         reason: SheetDismissReason;
     }>) => void;
     contentStyle?: StyleProp<ViewStyle>;
+    /** Opt in when the body contains inputs; the modal owns keyboard clearance. */
+    keyboardAvoidance?: boolean;
+    /** Keep the header/footer fixed while long content scrolls. Do not nest a virtualized list. */
+    scrollable?: boolean;
 }>;
 /** Native Sheet applies policy before emitting a concrete dismissal reason. */
-export declare function Sheet({ open, defaultOpen, onOpenChange, title, description, children, footer, placement, size, busy, dismissPolicy, closeLabel, returnFocusRef, safeAreaInsets, onDismissComplete, contentStyle, onShow, ...modalProps }: SheetProps): import("react").JSX.Element;
+export declare function Sheet({ open, defaultOpen, onOpenChange, title, description, children, footer, placement, size, busy, dismissPolicy, closeLabel, returnFocusRef, safeAreaInsets, onDismissComplete, contentStyle, keyboardAvoidance, scrollable, onShow, ...modalProps }: SheetProps): import("react").JSX.Element;
 export {};
 //# sourceMappingURL=overlays.d.ts.map

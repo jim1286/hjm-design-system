@@ -7510,6 +7510,11 @@ export declare const recipeRegistry: {
         readonly defaults: {
             readonly size: "medium";
         };
+        readonly presentationDefaults: {
+            readonly web: "inline";
+            readonly native: "row";
+        };
+        readonly stackedTextScale: 1.6;
         readonly sizes: {
             readonly small: {
                 readonly width: 44;

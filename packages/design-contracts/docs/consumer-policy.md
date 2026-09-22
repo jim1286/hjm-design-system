@@ -144,8 +144,11 @@ legacy raw style surface는 다음 조건이 모두 충족된 뒤 공지된 brea
 3. 최소 한 fixed release train 동안 deprecation과 migration 문서를 제공한다.
 4. 제거 Changeset이 영향을 받는 prop과 semantic 대안을 열거한다.
 
-이 제거는 늦어도 첫 `1.0.0` train의 release gate 전에 완료해야 합니다(MUST). 그 전까지
-legacy prop의 런타임 호환성은 유지하지만 신규 앱 적합성 검사에서는 실패로 취급합니다.
+2026-09-23 소비 감사에서 1.3.5에도 deprecated prop이 남아 있음을 확인했습니다. 이전의
+“1.0.0 이전 제거” 기한은 실제 release/API와 어긋나므로 폐기합니다. 이미 게시한 1.x의 타입과
+런타임을 minor에서 삭제하는 대신, 위 네 조건과 소비 앱별 이관 목록을 충족한 다음 major에서
+제거합니다. 1.4는 semantic API와 이관 경로를 추가하는 train이며, 기존 prop을 새 화면에 쓰는
+것은 계속 금지합니다. 제거 예정 major는 소비 이관 완료 후 Changeset에서 확정합니다.
 
 권장 구조는 다음과 같습니다. 실제 폴더명은 stack 관습에 맞춰도 역할은 유지합니다.
 

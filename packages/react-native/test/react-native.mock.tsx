@@ -158,25 +158,31 @@ export const InteractionManager = {
     };
   },
 };
-type KeyboardEventName = "keyboardDidShow" | "keyboardDidHide";
-type MockKeyboardEvent = Readonly<{ endCoordinates: Readonly<{ height: number }> }>;
+type KeyboardEventName = "keyboardDidShow" | "keyboardDidHide" | "keyboardWillChangeFrame" | "keyboardWillHide";
+type MockKeyboardMetrics = { height: number; screenY: number; screenX: number; width: number };
+type MockKeyboardEvent = Readonly<{ endCoordinates: MockKeyboardMetrics }>;
 const keyboardListeners = new Map<
   KeyboardEventName,
   Set<(event: MockKeyboardEvent) => void>
 >();
 let keyboardVisible = false;
+let keyboardMetrics: MockKeyboardMetrics | undefined;
 export const Keyboard = {
   isVisible: () => keyboardVisible,
+  metrics: () => keyboardMetrics,
   addListener: (event: KeyboardEventName, listener: (event: MockKeyboardEvent) => void) => {
     const listeners = keyboardListeners.get(event) ?? new Set<(event: MockKeyboardEvent) => void>();
     listeners.add(listener);
     keyboardListeners.set(event, listeners);
     return { remove: () => listeners.delete(listener) };
   },
-  __emit(event: KeyboardEventName, height = 0) {
-    keyboardVisible = event === "keyboardDidShow";
+  __emit(event: KeyboardEventName, height = 0, coordinates: Partial<MockKeyboardMetrics> = {}) {
+    keyboardVisible = event === "keyboardDidShow" || event === "keyboardWillChangeFrame";
+    const frame = { height, screenY: windowDimensions.height - height, screenX: 0,
+      width: windowDimensions.width, ...coordinates };
+    keyboardMetrics = keyboardVisible ? frame : undefined;
     for (const listener of keyboardListeners.get(event) ?? []) {
-      listener({ endCoordinates: { height } });
+      listener({ endCoordinates: frame });
     }
   },
 };

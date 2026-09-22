@@ -8,6 +8,8 @@ import { classNames } from "./internal.js";
 export type AuthScreenLayoutProps = Omit<HTMLAttributes<HTMLElement>, "children"> &
   AuthScreenDescriptor &
   Readonly<{
+    /** Use section inside a product shell that already owns the main landmark. */
+    as?: "main" | "section";
     /** Product mark, title and description. The product owns every string here. */
     hero: ReactNode;
     /** The primary action block — provider buttons, or a product's own sign-in bundle. */
@@ -24,7 +26,7 @@ export type AuthScreenLayoutProps = Omit<HTMLAttributes<HTMLElement>, "children"
  */
 export const AuthScreenLayout = forwardRef<HTMLElement, AuthScreenLayoutProps>(
   function AuthScreenLayout(
-    { hero, main, footer, density, hasFooter, className, ...props },
+    { hero, main, footer, density, hasFooter, className, as: Element = "main", ...props },
     forwardedRef,
   ) {
     const resolved = resolveAuthScreenDescriptor({
@@ -33,7 +35,7 @@ export const AuthScreenLayout = forwardRef<HTMLElement, AuthScreenLayoutProps>(
     });
     const showFooter = resolved.hasFooter && footer !== undefined && footer !== null;
     return (
-      <main
+      <Element
         {...props}
         ref={forwardedRef}
         className={classNames("hjm-auth-screen", className)}
@@ -53,7 +55,7 @@ export const AuthScreenLayout = forwardRef<HTMLElement, AuthScreenLayoutProps>(
           <div className="hjm-auth-screen__main">{main}</div>
         </div>
         {showFooter ? <div className="hjm-auth-screen__footer">{footer}</div> : null}
-      </main>
+      </Element>
     );
   },
 );

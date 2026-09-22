@@ -175,16 +175,19 @@ export const RadioGroup = forwardRef(function RadioGroup({ label, accessibilityL
                                 }) })) : null, _jsxs("span", { className: "hjm-choice__copy", children: [_jsx("span", { children: item.label }), item.description ? (_jsx("span", { className: "hjm-choice__description", children: item.description })) : null] })] }, item.value));
                 }) }), error ? _jsx("div", { id: errorId, className: "hjm-field__error", children: error }) : null] }));
 });
-export const Switch = forwardRef(function Switch({ label, labelVisibility = "visible", checked: checkedProp, defaultChecked = false, size = switchRecipe.defaults.size, onCheckedChange, disabled, type = "button", className, onClick, layoutStyle, style, ...props }, ref) {
+export const Switch = forwardRef(function Switch({ label, labelVisibility = "visible", description, presentation = switchRecipe.presentationDefaults.web, checked: checkedProp, defaultChecked = false, size = switchRecipe.defaults.size, onCheckedChange, disabled, type = "button", className, onClick, layoutStyle, style, ...props }, ref) {
+    const labelId = useId();
+    const descriptionId = useId();
+    const hasDescription = description !== undefined && description !== null;
     const [checked, setChecked] = useControllableState({
         ...(checkedProp === undefined ? {} : { value: checkedProp }),
         defaultValue: defaultChecked,
         ...(onCheckedChange === undefined ? {} : { onChange: onCheckedChange }),
     });
-    return (_jsxs("button", { ...props, style: { ...style, ...layoutStyle }, ref: ref, type: type, role: "switch", className: classNames("hjm-switch", className), "data-size": size, "data-state": checked ? "checked" : "unchecked", "aria-checked": checked, disabled: disabled, onClick: (event) => {
+    return (_jsxs("button", { ...props, style: { ...style, ...layoutStyle }, ref: ref, type: type, role: "switch", className: classNames("hjm-switch", className), "data-size": size, "data-presentation": presentation, "data-label-visibility": labelVisibility, "aria-labelledby": props["aria-labelledby"] ?? (props["aria-label"] ? undefined : labelId), "aria-describedby": [props["aria-describedby"], hasDescription ? descriptionId : undefined].filter(Boolean).join(" ") || undefined, "data-state": checked ? "checked" : "unchecked", "aria-checked": checked, disabled: disabled, onClick: (event) => {
             setChecked((current) => !current);
             onClick?.(event);
-        }, children: [_jsx("span", { className: "hjm-switch__track", "aria-hidden": "true", children: _jsx("span", { className: "hjm-switch__thumb" }) }), _jsx("span", { className: classNames("hjm-switch__label", labelVisibility === "hidden" && "hjm-visually-hidden"), children: label })] }));
+        }, children: [_jsx("span", { className: "hjm-switch__track", "aria-hidden": "true", children: _jsx("span", { className: "hjm-switch__thumb" }) }), _jsxs("span", { className: classNames("hjm-switch__copy", labelVisibility === "hidden" && "hjm-visually-hidden"), children: [_jsx("span", { id: labelId, className: "hjm-switch__label", children: label }), hasDescription ? _jsx("span", { id: descriptionId, className: "hjm-switch__description", children: description }) : null] })] }));
 });
 export const SegmentedControl = forwardRef(function SegmentedControl({ label, items, value: valueProp, defaultValue, onValueChange, size = segmentedControlRecipe.defaults.size, name, className, ...props }, ref) {
     validateItems("SegmentedControl", items);

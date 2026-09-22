@@ -109,9 +109,11 @@ const actionPlacement = {
 
 If a product needs a new color, type treatment, radius, density, or control size, add a semantic
 theme/recipe axis with renderer evidence instead of using a raw style prop. Existing raw-style use
-must carry a migration ADR and removal train. The compatibility props will be removed in an
-announced breaking train after one fixed-train deprecation window, and no later than the first
-`1.0.0` release gate. Runtime filtering is intentionally deferred until that migration completes.
+must carry a migration ADR and removal train. Published 1.x compatibility props remain available;
+removal requires a future major, at least one fixed-train deprecation window, and verified consumer
+migration under the policy's four exit conditions. The old pre-1.0 deadline was contradicted by the
+1.3.5 API observed in the September 2026 consumer audit. Runtime filtering is intentionally deferred
+until that migration completes.
 
 `Image` consumes the same intrinsic descriptor as Web. `width` and `height`
 reserve the frame before loading, omitted `decorative` defaults to `true`, and

@@ -3,7 +3,6 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { TopBar } from "@hjmds/react/top-bar";
 import { BottomCTA } from "@hjmds/react/bottom-cta";
 import { Container, Stack, Section } from "@hjmds/react/layout";
-import { List, ListRow } from "@hjmds/react/display";
 import { Switch } from "@hjmds/react/selection";
 import { Notice } from "@hjmds/react/feedback";
 
@@ -15,12 +14,12 @@ function NotificationSettings() {
     <TopBar title="알림 설정" />
     <Container size="reading">
       <Section title="필요한 소식만 받아요" description="원하는 알림을 골라주세요. 언제든 바꿀 수 있어요.">
-        <List label="받을 알림" appearance="plain">
-          <ListRow title="내 활동" description="댓글과 답글이 도착하면 알려드려요."
-            trailing={<Switch labelVisibility="hidden" label="내 활동 알림" checked={activity} onCheckedChange={(value) => { setActivity(value); setSaved(false); }} />} />
-          <ListRow title="주간 모아보기" description="일주일의 소식을 한 번에 받아요."
-            trailing={<Switch labelVisibility="hidden" label="주간 모아보기 알림" checked={digest} onCheckedChange={(value) => { setDigest(value); setSaved(false); }} />} />
-        </List>
+        <Stack gap="md">
+          <Switch presentation="row" label="내 활동 알림" description="댓글과 답글이 도착하면 알려드려요."
+            checked={activity} onCheckedChange={(value) => { setActivity(value); setSaved(false); }} />
+          <Switch presentation="row" label="주간 모아보기" description="일주일의 소식을 한 번에 받아요."
+            checked={digest} onCheckedChange={(value) => { setDigest(value); setSaved(false); }} />
+        </Stack>
         {saved ? <Notice tone="success" title="알림 설정을 저장했어요" description={`내 활동 ${activity ? "켜짐" : "꺼짐"} · 주간 모아보기 ${digest ? "켜짐" : "꺼짐"}`} /> : null}
       </Section>
     </Container>

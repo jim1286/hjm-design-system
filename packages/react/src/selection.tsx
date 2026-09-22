@@ -11,9 +11,10 @@ import {
   type SelectionGroupOrientation,
   type SelectionGroupPresentation,
   type SwitchSize,
+  type SwitchPresentation,
 } from "@hjmds/design-contracts/recipes";
 
-export type { SwitchSize };
+export type { SwitchSize, SwitchPresentation };
 import {
   resolveControlAccessibleName,
   reconcileCheckboxSelection,
@@ -678,6 +679,9 @@ export type SwitchProps = Omit<
 > &
   Readonly<{
     label: ReactNode;
+    /** Supporting copy is described separately from the stable accessible name. */
+    description?: ReactNode;
+    presentation?: SwitchPresentation;
     /** Hide repeated row copy visually while preserving the switch's accessible name. */
     labelVisibility?: "visible" | "hidden";
     checked?: boolean;
@@ -693,6 +697,8 @@ export const Switch = forwardRef<HTMLButtonElement, SwitchProps>(function Switch
   {
     label,
     labelVisibility = "visible",
+    description,
+    presentation = switchRecipe.presentationDefaults.web,
     checked: checkedProp,
     defaultChecked = false,
     size = switchRecipe.defaults.size,
@@ -707,6 +713,9 @@ export const Switch = forwardRef<HTMLButtonElement, SwitchProps>(function Switch
   },
   ref,
 ) {
+  const labelId = useId();
+  const descriptionId = useId();
+  const hasDescription = description !== undefined && description !== null;
   const [checked, setChecked] = useControllableState({
     ...(checkedProp === undefined ? {} : { value: checkedProp }),
     defaultValue: defaultChecked,
@@ -721,6 +730,10 @@ export const Switch = forwardRef<HTMLButtonElement, SwitchProps>(function Switch
       role="switch"
       className={classNames("hjm-switch", className)}
       data-size={size}
+      data-presentation={presentation}
+      data-label-visibility={labelVisibility}
+      aria-labelledby={props["aria-labelledby"] ?? (props["aria-label"] ? undefined : labelId)}
+      aria-describedby={[props["aria-describedby"], hasDescription ? descriptionId : undefined].filter(Boolean).join(" ") || undefined}
       data-state={checked ? "checked" : "unchecked"}
       aria-checked={checked}
       disabled={disabled}
@@ -732,7 +745,10 @@ export const Switch = forwardRef<HTMLButtonElement, SwitchProps>(function Switch
       <span className="hjm-switch__track" aria-hidden="true">
         <span className="hjm-switch__thumb" />
       </span>
-      <span className={classNames("hjm-switch__label", labelVisibility === "hidden" && "hjm-visually-hidden")}>{label}</span>
+      <span className={classNames("hjm-switch__copy", labelVisibility === "hidden" && "hjm-visually-hidden")}>
+        <span id={labelId} className="hjm-switch__label">{label}</span>
+        {hasDescription ? <span id={descriptionId} className="hjm-switch__description">{description}</span> : null}
+      </span>
     </button>
   );
 });

@@ -4,7 +4,8 @@ import {
   type AuthScreenDescriptor,
 } from "@hjmds/design-contracts/components/auth-screen";
 import type { ReactNode } from "react";
-import { ScrollView, View, type StyleProp, type ViewStyle } from "react-native";
+import { Platform, ScrollView, View, type StyleProp, type ViewStyle } from "react-native";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type AuthScreenLayoutProps = AuthScreenDescriptor &
   Readonly<{
@@ -14,6 +15,9 @@ export type AuthScreenLayoutProps = AuthScreenDescriptor &
     main: ReactNode;
     /** Consent notice and policy links. Omit with `hasFooter: false`. */
     footer?: ReactNode;
+    testID?: string;
+    layoutStyle?: HjmCompositionStyleProp;
+    /** @deprecated Use layoutStyle for outer placement. */
     style?: StyleProp<ViewStyle>;
   }>;
 
@@ -22,6 +26,8 @@ export type AuthScreenLayoutProps = AuthScreenDescriptor &
  * the bottom. Content taller than the viewport scrolls instead of pushing the
  * footer off screen — that is why the outer element is a ScrollView whose content
  * container grows.
+ * Review forms must accept submit taps while focused; iOS owns the scroll inset
+ * so a product does not have to wrap this in another keyboard-avoiding view.
  */
 export function AuthScreenLayout({
   hero,
@@ -30,6 +36,8 @@ export function AuthScreenLayout({
   density,
   hasFooter,
   style,
+  layoutStyle,
+  testID,
 }: AuthScreenLayoutProps) {
   const resolved = resolveAuthScreenDescriptor({
     ...(density === undefined ? {} : { density }),
@@ -38,7 +46,11 @@ export function AuthScreenLayout({
   const showFooter = resolved.hasFooter && footer !== undefined && footer !== null;
   return (
     <ScrollView
-      style={style}
+      style={[{ flex: 1 }, style, layoutStyle]}
+      testID={testID}
+      keyboardShouldPersistTaps="handled"
+      keyboardDismissMode={Platform.OS === "ios" ? "interactive" : "on-drag"}
+      automaticallyAdjustKeyboardInsets
       contentContainerStyle={{
         flexGrow: 1,
         paddingHorizontal: resolved.paddingInline,
@@ -48,7 +60,8 @@ export function AuthScreenLayout({
     >
       <View
         style={{
-          flex: 1,
+          flexGrow: 1,
+          flexShrink: 0,
           width: "100%",
           maxWidth: resolved.maxWidth,
           alignSelf: "center",

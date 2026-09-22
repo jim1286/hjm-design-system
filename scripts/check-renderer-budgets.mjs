@@ -192,7 +192,9 @@ const rendererBudgets = [
       // Collapsible·ContextMenu·Menubar의 규칙이 9.1 kB 더한다: 측정 145.4 kB raw /
       // 22.8 kB gzip. ListRow의 relaxed·spacious 밀도와 TagsInput 후보 목록도 여기 있다.
       // AuthScreenLayout의 두 영역 규칙(약 40줄)만큼 gzip 0.4 kB 늘었다.
-      "./styles.css": { raw: 150_000, gzip: 24_200 },
+      // 1.4 Switch row/description/reflow and Sheet alignment measure 149.8/24.2 kB.
+      // Keep selection's module budget unchanged; only these shared CSS rules grow.
+      "./styles.css": { raw: 153_000, gzip: 24_800 },
     },
   },
   {
@@ -224,7 +226,8 @@ const rendererBudgets = [
       "./top-bar": { modules: 9, raw: 143_000, gzip: 28_200 },
       "./bottom-cta": { modules: 4, raw: 34_700, gzip: 7_900 },
       // Inputs reexports DatePicker; the shared grid adds one transitive implementation.
-      "./inputs": { modules: 15, raw: 178_000, gzip: 31_000 },
+      // 1.4 Switch row/inline and large-text reflow measure 170.7/31.4 kB, still 15 modules.
+      "./inputs": { modules: 15, raw: 178_000, gzip: 32_000 },
       "./password-field": { modules: 9, raw: 105_000, gzip: 20_000 },
       "./otp-field": { modules: 9, raw: 105_000, gzip: 20_000 },
       "./number-field": { modules: 4, raw: 20_200, gzip: 4_900 },

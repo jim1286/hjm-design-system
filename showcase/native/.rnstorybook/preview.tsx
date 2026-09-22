@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import type { Preview } from "@storybook/react-native";
 import { StyleSheet, View } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import { HjmNativeProvider, useHjmNativeTheme } from "@hjmds/react-native/provider";
 
 function Canvas({ children }: { children: ReactNode }) {
@@ -58,6 +59,8 @@ const preview: Preview = {
   },
   decorators: [
     (Story, context) => (
+      // Insets belong to the host. Patterns can pass them to Sheet without coupling HJM to Expo.
+      <SafeAreaProvider>
       <HjmNativeProvider
         theme={context.globals.theme === "dark" ? "dark" : "light"}
         direction={context.globals.direction === "rtl" ? "rtl" : "ltr"}
@@ -66,6 +69,7 @@ const preview: Preview = {
       >
         <Canvas><Story /></Canvas>
       </HjmNativeProvider>
+      </SafeAreaProvider>
     ),
   ],
 };

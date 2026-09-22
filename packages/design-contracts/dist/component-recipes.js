@@ -673,6 +673,12 @@ export const segmentedControlRecipe = {
 export const switchRecipe = {
     slots: ["root", "track", "thumb", "label", "description"],
     defaults: { size: "medium" },
+    // Preserve existing inline Web and full-row Native layouts. Settings can opt in
+    // to one shared row without wrapping a switch in a second interactive target.
+    presentationDefaults: { web: "inline", native: "row" },
+    // Descriptions beside a fixed track become a narrow column at larger text sizes.
+    // Reuse the provider's large-text boundary so Web CSS and Native reflow together.
+    stackedTextScale: largeTextThreshold,
     sizes: {
         small: { width: 44, height: 26, thumb: 22, inset: 2 },
         medium: { width: 52, height: 32, thumb: 28, inset: 2 },
