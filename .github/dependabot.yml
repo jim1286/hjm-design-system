@@ -1,0 +1,17 @@
+version: 2
+
+# 워크플로 action을 SHA로 고정하고(2026-09-26 CI 검토) 이 파일이 월 1회 갱신 PR로 낡지 않게 한다.
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: monthly
+    # 버전 범프 PR은 열지 않는다(보안 업데이트만, 2026-09-26 CI 검토). 패키지 버전은 포트폴리오
+    # 라이브러리 정책(docs/library-policy.json)과 lockfile이 정하고, 이 항목은 보안 업데이트 PR이
+    # 이 디렉터리를 보게 하는 설정이다. taground·unairplane 등 기존 저장소와 같은 형태다.
+    open-pull-requests-limit: 0
