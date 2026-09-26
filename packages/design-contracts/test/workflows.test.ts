@@ -2,7 +2,27 @@ import { readFile } from "node:fs/promises";
 import { describe, expect, it } from "vitest";
 import { assertContractsPeerTrain } from "../../../scripts/contracts-peer-train.mjs";
 
+/**
+ * Actions are pinned to a full commit SHA with the version as a comment
+ * (portfolio baseline ci.actionPinning, 2026-09-26). This package publishes to
+ * npm with provenance, so a re-pointed tag would run in the publishing job.
+ */
+const pinned = (action: string, major: number) =>
+  new RegExp(`${action.replace("/", "\\/")}@[0-9a-f]{40} # v${major}\\b`);
+
 describe("GitHub Actions runtime contracts", () => {
+  it("pins every third-party action to a full commit SHA", async () => {
+    for (const file of ["showcase.yml", "version-packages.yml", "visual.yml"]) {
+      const workflow = await readFile(
+        new URL(`../../../.github/workflows/${file}`, import.meta.url),
+        "utf8",
+      );
+      for (const [, ref] of workflow.matchAll(/uses:\s*[^\s@]+@(\S+)/g)) {
+        expect(ref, file).toMatch(/^[0-9a-f]{40}$/);
+      }
+    }
+  });
+
   it("keeps one canonical CI command for packages and both showcases", async () => {
     const workspacePackage = JSON.parse(
       await readFile(new URL("../../../package.json", import.meta.url), "utf8"),
@@ -25,16 +45,19 @@ describe("GitHub Actions runtime contracts", () => {
 
     expect(workflow).toMatch(/on:\n\s+push:\n\s+branches:\n\s+- main\n/);
     expect(workflow).toMatch(/\n\s+pull_request:\n\s+branches:\n\s+- main\n/);
-    expect(workflow).toContain("actions/checkout@v7");
-    expect(workflow).toContain("pnpm/action-setup@v6");
-    expect(workflow).toContain("actions/setup-node@v7");
+    expect(workflow).toMatch(pinned("actions/checkout", 7));
+    expect(workflow).toMatch(pinned("pnpm/action-setup", 6));
+    expect(workflow).toMatch(pinned("actions/setup-node", 7));
     expect(workflow).toMatch(/node-version:\s*24\b/);
     expect(workflow).toContain("pnpm ci:check");
     expect(workflow).toContain(
       "pnpm --filter @hjmds/react exec playwright install --with-deps chromium",
     );
-    expect(workflow).toContain("actions/upload-pages-artifact@v5");
-    expect(workflow).toContain("actions/deploy-pages@v5");
+    expect(workflow).toMatch(pinned("actions/upload-pages-artifact", 5));
+    expect(workflow).toMatch(pinned("actions/deploy-pages", 5));
+    // A PR push used to cancel main's verify and Pages deploy (one group, cancel-in-progress).
+    expect(workflow).toContain("group: design-system-showcase-${{ github.ref }}");
+    expect(workflow).toContain("cancel-in-progress: ${{ github.event_name == 'pull_request' }}");
     expect(workflow).not.toContain("changeset:check");
   });
 
