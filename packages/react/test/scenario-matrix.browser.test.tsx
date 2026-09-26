@@ -104,7 +104,24 @@ async function mount(environment: Environment, node: ReactNode): Promise<void> {
       {node}
     </HjmProvider>,
   ));
-  await act(async () => { await new Promise((resolve) => setTimeout(resolve, 0)); });
+  await settle();
+}
+
+/**
+ * Waits until images have finished loading or failing and the element count
+ * stops changing. Image swaps to its error fallback when the (missing) fixture
+ * source responds, and that timing differed between runs on the CI image,
+ * so two renders compared mid-swap had different structures.
+ */
+async function settle(): Promise<void> {
+  let previous = -1;
+  for (let attempt = 0; attempt < 40; attempt += 1) {
+    await act(async () => { await new Promise((resolve) => setTimeout(resolve, 25)); });
+    const images = Array.from(document.body.querySelectorAll("img"));
+    const count = document.body.querySelectorAll("*").length;
+    if (count === previous && images.every((image) => image.complete)) return;
+    previous = count;
+  }
 }
 
 function isProvider(element: Element): boolean {
@@ -274,7 +291,16 @@ const checks: Readonly<Record<Exclude<ReactRendererEvidenceScenario, "default" |
     });
     const rootElement = large[0]!;
     if (!isVisuallyHidden(rootElement)) {
-      expect(rootElement.scrollWidth, "content overflows inline at 2x text").toBeLessThanOrEqual(rootElement.clientWidth + 1);
+      // Transforms from running animations (a spinning glyph's rotated box) count
+      // toward scrollWidth; pause them so only layout overflow is measured.
+      const freeze = document.createElement("style");
+      freeze.textContent = "*, *::before, *::after { animation: none !important; transition: none !important; }";
+      document.head.append(freeze);
+      try {
+        expect(rootElement.scrollWidth, "content overflows inline at 2x text").toBeLessThanOrEqual(rootElement.clientWidth + 1);
+      } finally {
+        freeze.remove();
+      }
     }
   },
   async rtl(fixture, environment) {
