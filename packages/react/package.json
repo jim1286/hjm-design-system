@@ -311,7 +311,7 @@
     "test:visual": "vitest run --config vitest.visual.config.ts"
   },
   "peerDependencies": {
-    "@hjmds/design-contracts": ">=1.5.0 <1.6.0",
+    "@hjmds/design-contracts": ">=1.6.0 <1.7.0",
     "react": ">=19.0.0",
     "react-dom": ">=19.0.0"
   },
