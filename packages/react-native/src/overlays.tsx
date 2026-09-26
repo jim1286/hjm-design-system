@@ -725,6 +725,37 @@ export function AlertDialog({
   const confirmContent = resolveColorReference(toneRecipe.confirmContent, palette);
   const errorColor = resolveColorReference(alertDialogRecipe.error.color, palette);
 
+  const confirmAction = (
+    <Pressable
+      ref={confirmRef}
+      accessibilityLabel={request.confirmLabel}
+      accessibilityRole="button"
+      accessibilityState={{ busy, disabled: busy }}
+      disabled={busy}
+      onPress={confirm}
+      style={({ pressed }) => [
+        minimumTargetStyle,
+        {
+          alignItems: "center",
+          backgroundColor: confirmBackground,
+          borderRadius: radius.md,
+          flex: stackActions ? undefined : 1,
+          justifyContent: "center",
+          minWidth: alertDialogRecipe.actions.minButtonWidth,
+          opacity: busy ? 0.5 : pressed ? 0.86 : 1,
+          paddingHorizontal: spacing.md,
+        },
+      ]}
+    >
+      <Text
+        style={{ color: confirmContent }}
+        variant="label"
+      >
+        {request.confirmLabel}
+      </Text>
+    </Pressable>
+  );
+
   return (
     <Modal
       {...modalProps}
@@ -798,9 +829,15 @@ export function AlertDialog({
             style={{
               direction: environment.direction,
               flexDirection: stackActions ? "column" : "row",
-              gap: alertDialogRecipe.actions.gap,
+              gap: stackActions
+                ? alertDialogRecipe.actions.stackedGap
+                : alertDialogRecipe.actions.gap,
             }}
           >
+            {/* Stacked, the confirm action renders first so visual, VoiceOver/TalkBack and
+                focus-traversal order agree (recipe actions.stackedOrder). Reversing with
+                column-reverse was rejected: it would leave the reading order upside down. */}
+            {stackActions ? confirmAction : null}
             {request.mode === "confirm" ? (
               <Pressable
                 ref={cancelRef}
@@ -813,7 +850,10 @@ export function AlertDialog({
                   minimumTargetStyle,
                   {
                     alignItems: "center",
-                    backgroundColor: colors.surfaceAlt,
+                    // The cancel action is a quiet outline on the dialog surface. surfaceAlt
+                    // turned it into a tinted slab wherever a product brands that token
+                    // (BurnTok's pale blue, 2026-09-27), competing with the confirm fill.
+                    backgroundColor: colors.bg,
                     borderColor: colors.border,
                     borderRadius: radius.md,
                     borderWidth: 1,
@@ -828,34 +868,7 @@ export function AlertDialog({
                 <Text variant="label">{request.cancelLabel}</Text>
               </Pressable>
             ) : null}
-            <Pressable
-              ref={confirmRef}
-              accessibilityLabel={request.confirmLabel}
-              accessibilityRole="button"
-              accessibilityState={{ busy, disabled: busy }}
-              disabled={busy}
-              onPress={confirm}
-              style={({ pressed }) => [
-                minimumTargetStyle,
-                {
-                  alignItems: "center",
-                  backgroundColor: confirmBackground,
-                  borderRadius: radius.md,
-                  flex: stackActions ? undefined : 1,
-                  justifyContent: "center",
-                  minWidth: alertDialogRecipe.actions.minButtonWidth,
-                  opacity: busy ? 0.5 : pressed ? 0.86 : 1,
-                  paddingHorizontal: spacing.md,
-                },
-              ]}
-            >
-              <Text
-                style={{ color: confirmContent }}
-                variant="label"
-              >
-                {request.confirmLabel}
-              </Text>
-            </Pressable>
+            {stackActions ? null : confirmAction}
           </View>
         </View>
       </Animated.View>

@@ -1363,8 +1363,11 @@ export const alertDialogRecipe = {
         textVariant: "body",
     },
     error: formSupportContract.error,
+    // Stacked: confirm on top, cancel below, tighter gap (reported 2026-09-27). Row stays [cancel][confirm].
     actions: {
         gap: spacing.sm,
+        stackedGap: spacing.xs,
+        stackedOrder: "confirm-first",
         stackBelow: breakpoint.medium,
         minButtonWidth: 96,
     },

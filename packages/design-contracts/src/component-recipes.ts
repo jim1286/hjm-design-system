@@ -1811,8 +1811,11 @@ export const alertDialogRecipe = {
     textVariant: "body",
   },
   error: formSupportContract.error,
+  // Stacked: confirm on top, cancel below, tighter gap (reported 2026-09-27). Row stays [cancel][confirm].
   actions: {
     gap: spacing.sm,
+    stackedGap: spacing.xs,
+    stackedOrder: "confirm-first",
     stackBelow: breakpoint.medium,
     minButtonWidth: 96,
   },
@@ -1836,7 +1839,13 @@ export const alertDialogRecipe = {
   title: { color: ColorReference; textVariant: TextVariant; fontWeight: FontWeightValue };
   description: { color: ColorReference; textVariant: TextVariant };
   error: { color: ColorReference; textVariant: TextVariant };
-  actions: { gap: number; stackBelow: number; minButtonWidth: number };
+  actions: {
+    gap: number;
+    stackedGap: number;
+    stackedOrder: "confirm-first";
+    stackBelow: number;
+    minButtonWidth: number;
+  };
   transition: typeof dialogRecipe.transition;
 };
 

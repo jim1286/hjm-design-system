@@ -90,8 +90,10 @@ const budgets = [
     // foundations에 선언하고 두 레시피가 그 이름을 읽게 하면서(#20) raw 79.8 -> 80.3 kB,
     // gzip 17.9 -> 18.0 kB가 됐다. module 수는 12로 그대로 — 새 import 경로가 아니라
     // 선언과 근거 주석의 바이트다. 다시 올릴 때는 module 수부터 확인한다.
+    // 1.6.0: gzip 19_500 -> 19_700. AlertDialog `actions.stackedGap`·`stackedOrder` 두 값과
+    // 한 줄 근거 주석으로 19.5 -> 19.6 kB. module 수는 12로 그대로 — 새 import 경로가 아니다.
     maxRawBytes: 86_000,
-    maxGzipBytes: 19_500,
+    maxGzipBytes: 19_700,
     forbiddenModules: metadataModules,
   },
   {
@@ -155,8 +157,9 @@ const budgets = [
     // 재사용하고 외부 의존성은 없다 — 증가분이 곧 새 계약 파일 수와 catalog 문구다.
     // P2-c(asset) 한 모듈, dataviz 한 모듈 추가. 외부 의존성 없이 기존 foundations·
     // semantic-colors만 재사용한다 — 증가분이 곧 두 계약 파일과 catalog 문구다.
+    // 1.6.0: raw 339_000 -> 340_000. AlertDialog stacked 순서·간격 두 값(339.1 kB). module 수 그대로.
     maxModules: 64,
-    maxRawBytes: 339_000,
+    maxRawBytes: 340_000,
     maxGzipBytes: 84_000,
   },
   {

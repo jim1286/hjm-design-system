@@ -3261,6 +3261,8 @@ export declare const alertDialogRecipe: {
     };
     readonly actions: {
         readonly gap: 12;
+        readonly stackedGap: 8;
+        readonly stackedOrder: "confirm-first";
         readonly stackBelow: 600;
         readonly minButtonWidth: 96;
     };

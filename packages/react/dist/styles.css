@@ -1902,6 +1902,15 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-alert-dialog__description,
 .hjm-alert-dialog__error { margin: 0; }
 .hjm-alert-dialog__actions { padding: var(--hjm-space-sm) 0 0; }
+/* Stacked (< breakpoint.medium): confirm on top, cancel below; DOM stays [cancel][confirm]. See the 1.6.0 changeset. */
+@media (max-width: 599.98px) {
+  .hjm-alert-dialog__actions {
+    flex-direction: column-reverse;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: var(--hjm-space-xs);
+  }
+}
 .hjm-sheet-positioner {
   padding-block-start: max(var(--hjm-space-md), env(safe-area-inset-top, 0px));
   padding-block-end: max(var(--hjm-space-md), env(safe-area-inset-bottom, 0px));

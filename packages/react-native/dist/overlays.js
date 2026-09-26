@@ -439,6 +439,19 @@ export function AlertDialog({ open, defaultOpen, onOpenChange, request, returnFo
     const confirmBackground = resolveColorReference(toneRecipe.confirm, palette);
     const confirmContent = resolveColorReference(toneRecipe.confirmContent, palette);
     const errorColor = resolveColorReference(alertDialogRecipe.error.color, palette);
+    const confirmAction = (_jsx(Pressable, { ref: confirmRef, accessibilityLabel: request.confirmLabel, accessibilityRole: "button", accessibilityState: { busy, disabled: busy }, disabled: busy, onPress: confirm, style: ({ pressed }) => [
+            minimumTargetStyle,
+            {
+                alignItems: "center",
+                backgroundColor: confirmBackground,
+                borderRadius: radius.md,
+                flex: stackActions ? undefined : 1,
+                justifyContent: "center",
+                minWidth: alertDialogRecipe.actions.minButtonWidth,
+                opacity: busy ? 0.5 : pressed ? 0.86 : 1,
+                paddingHorizontal: spacing.md,
+            },
+        ], children: _jsx(Text, { style: { color: confirmContent }, variant: "label", children: request.confirmLabel }) }));
     return (_jsx(Modal, { ...modalProps, animationType: "none", onDismiss: () => {
             nativeShownRef.current = false;
             const pending = pendingExitSessions.current[0];
@@ -473,12 +486,17 @@ export function AlertDialog({ open, defaultOpen, onOpenChange, request, returnFo
                     ], children: [_jsxs(View, { style: { gap: spacing.xs }, children: [_jsx(Text, { accessibilityRole: "header", tone: "primary", variant: "title", children: request.title }), _jsx(Text, { tone: "muted", children: request.description }), error ? (_jsx(Text, { accessibilityLiveRegion: "assertive", accessibilityRole: "alert", style: { color: errorColor }, children: error })) : null] }), _jsxs(View, { style: {
                                 direction: environment.direction,
                                 flexDirection: stackActions ? "column" : "row",
-                                gap: alertDialogRecipe.actions.gap,
-                            }, children: [request.mode === "confirm" ? (_jsx(Pressable, { ref: cancelRef, accessibilityLabel: request.cancelLabel, accessibilityRole: "button", accessibilityState: { disabled: busy }, disabled: busy, onPress: () => cancel("cancel-action"), style: ({ pressed }) => [
+                                gap: stackActions
+                                    ? alertDialogRecipe.actions.stackedGap
+                                    : alertDialogRecipe.actions.gap,
+                            }, children: [stackActions ? confirmAction : null, request.mode === "confirm" ? (_jsx(Pressable, { ref: cancelRef, accessibilityLabel: request.cancelLabel, accessibilityRole: "button", accessibilityState: { disabled: busy }, disabled: busy, onPress: () => cancel("cancel-action"), style: ({ pressed }) => [
                                         minimumTargetStyle,
                                         {
                                             alignItems: "center",
-                                            backgroundColor: colors.surfaceAlt,
+                                            // The cancel action is a quiet outline on the dialog surface. surfaceAlt
+                                            // turned it into a tinted slab wherever a product brands that token
+                                            // (BurnTok's pale blue, 2026-09-27), competing with the confirm fill.
+                                            backgroundColor: colors.bg,
                                             borderColor: colors.border,
                                             borderRadius: radius.md,
                                             borderWidth: 1,
@@ -488,19 +506,7 @@ export function AlertDialog({ open, defaultOpen, onOpenChange, request, returnFo
                                             opacity: busy ? 0.5 : pressed ? 0.86 : 1,
                                             paddingHorizontal: spacing.md,
                                         },
-                                    ], children: _jsx(Text, { variant: "label", children: request.cancelLabel }) })) : null, _jsx(Pressable, { ref: confirmRef, accessibilityLabel: request.confirmLabel, accessibilityRole: "button", accessibilityState: { busy, disabled: busy }, disabled: busy, onPress: confirm, style: ({ pressed }) => [
-                                        minimumTargetStyle,
-                                        {
-                                            alignItems: "center",
-                                            backgroundColor: confirmBackground,
-                                            borderRadius: radius.md,
-                                            flex: stackActions ? undefined : 1,
-                                            justifyContent: "center",
-                                            minWidth: alertDialogRecipe.actions.minButtonWidth,
-                                            opacity: busy ? 0.5 : pressed ? 0.86 : 1,
-                                            paddingHorizontal: spacing.md,
-                                        },
-                                    ], children: _jsx(Text, { style: { color: confirmContent }, variant: "label", children: request.confirmLabel }) })] })] })] }) }));
+                                    ], children: _jsx(Text, { variant: "label", children: request.cancelLabel }) })) : null, stackActions ? null : confirmAction] })] })] }) }));
 }
 /** Native Sheet applies policy before emitting a concrete dismissal reason. */
 export function Sheet({ open, defaultOpen, onOpenChange, title, description, children, footer, placement = "bottom", size = sheetRecipe.defaults.size, busy = false, dismissPolicy, closeLabel, returnFocusRef, safeAreaInsets = {}, onDismissComplete, contentStyle, keyboardAvoidance = false, scrollable = false, onShow, ...modalProps }) {
