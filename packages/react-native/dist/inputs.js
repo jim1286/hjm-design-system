@@ -9,7 +9,7 @@ import { passwordFieldRecipe, resolvePasswordFieldDescriptor, } from "@hjmds/des
 import { getOtpFieldSlotValues, otpFieldRecipe, resolveOtpFieldValue, } from "@hjmds/design-contracts/components/otp-field";
 import { getCheckboxNextState, reconcileCheckboxSelection, resolveControlAccessibleName, resolveInitialRadioValue, resolveInitialTabValue, reconcileRadioSelection, selectionGroupBehaviorDefaults, toggleCheckboxSelection, validateCheckboxSelection, validateRadioSelection, validateSelectionItems, } from "@hjmds/design-contracts/behaviors";
 import { forwardRef, useEffect, useId, useImperativeHandle, useRef, useState, } from "react";
-import { ActivityIndicator, Pressable, Switch as NativeSwitch, TextInput, View, } from "react-native";
+import { ActivityIndicator, Platform, Pressable, Switch as NativeSwitch, TextInput, View, } from "react-native";
 import { useControllableState } from "./internal/state.js";
 import { webChoiceProps, webOnly } from "./internal/web-a11y.js";
 import { logicalTextAlign, minimumTargetStyle, resolveNativeTextScaleProps, } from "./internal/styles.js";
@@ -599,7 +599,15 @@ export function Switch({ label, labelVisibility = "visible", presentation = swit
                     flex: stacked || presentation === "inline" ? undefined : 1,
                     gap: spacing.xxs,
                     opacity: disabled ? switchRecipe.states.disabledOpacity : 1,
-                }, children: [_jsx(Text, { tone: "body", variant: "bodyLarge", children: label }), description ? (_jsx(Text, { tone: "muted", variant: "caption", children: description })) : null] }) : null, _jsx(NativeSwitch, { ...props, accessible: false, disabled: disabled, ios_backgroundColor: trackOff, pointerEvents: "none", style: { height: dimensions.height, width: dimensions.width }, thumbColor: thumb, trackColor: { false: trackOff, true: trackOn }, value: enabled })] }));
+                }, children: [_jsx(Text, { tone: "body", variant: "bodyLarge", children: label }), description ? (_jsx(Text, { tone: "muted", variant: "caption", children: description })) : null] }) : null, _jsx(NativeSwitch, { ...props, accessible: false, disabled: disabled, ios_backgroundColor: trackOff, pointerEvents: "none", 
+                // iOS UISwitch has a fixed intrinsic size (about 66pt wide on iOS 26) that
+                // ignores a smaller box: forcing the recipe box drew the control from the box's
+                // top-start corner, so it overflowed up and to the end and sat above the row's
+                // centre in two-line rows (reported 2026-09-27, iPhone 17 Pro). On iOS we let the
+                // native size drive layout so `alignItems: center` centres the real track.
+                // Rejected: an oversized centring wrapper — it has to guess the per-OS UISwitch
+                // size, which is exactly the number that changed. Android honours the box.
+                style: Platform.OS === "ios" ? undefined : { height: dimensions.height, width: dimensions.width }, thumbColor: thumb, trackColor: { false: trackOff, true: trackOn }, value: enabled })] }));
 }
 export function SegmentedControl({ label, items, options, value, defaultValue, onValueChange, size = segmentedControlRecipe.defaults.size, disabled = false, style, }) {
     const resolvedItems = resolveAliasedItems("SegmentedControl", items, options);

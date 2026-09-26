@@ -13,6 +13,7 @@ import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import {
   AccessibilityInfo,
   Modal,
+  Platform,
   Pressable,
   Switch as NativeSwitch,
   TextInput,
@@ -594,6 +595,18 @@ describe("Native input and navigation intent", () => {
       height: 32,
       width: 52,
     });
+  });
+
+  it("lets the iOS Switch keep its intrinsic size so the row centres the real track", () => {
+    Object.defineProperty(Platform, "OS", { configurable: true, value: "ios" });
+    try {
+      const renderer = render(<Switch label="내 활동 알림" description="댓글 도착" />);
+      expect(renderer.root.findByType(NativeSwitch).props.style).toBeUndefined();
+      expect(flattenStyle(renderer.root.findByType(Pressable).props.style({ pressed: false })))
+        .toMatchObject({ alignItems: "center" });
+    } finally {
+      Object.defineProperty(Platform, "OS", { configurable: true, value: "android" });
+    }
   });
 
   it("hides repeated Switch copy without dropping its accessible name, hint or action", () => {

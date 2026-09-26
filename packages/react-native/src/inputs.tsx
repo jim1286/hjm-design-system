@@ -62,6 +62,7 @@ import {
 } from "react";
 import {
   ActivityIndicator,
+  Platform,
   Pressable,
   Switch as NativeSwitch,
   TextInput,
@@ -1784,7 +1785,14 @@ export function Switch({
         disabled={disabled}
         ios_backgroundColor={trackOff}
         pointerEvents="none"
-        style={{ height: dimensions.height, width: dimensions.width }}
+        // iOS UISwitch has a fixed intrinsic size (about 66pt wide on iOS 26) that
+        // ignores a smaller box: forcing the recipe box drew the control from the box's
+        // top-start corner, so it overflowed up and to the end and sat above the row's
+        // centre in two-line rows (reported 2026-09-27, iPhone 17 Pro). On iOS we let the
+        // native size drive layout so `alignItems: center` centres the real track.
+        // Rejected: an oversized centring wrapper — it has to guess the per-OS UISwitch
+        // size, which is exactly the number that changed. Android honours the box.
+        style={Platform.OS === "ios" ? undefined : { height: dimensions.height, width: dimensions.width }}
         thumbColor={thumb}
         trackColor={{ false: trackOff, true: trackOn }}
         value={enabled}
