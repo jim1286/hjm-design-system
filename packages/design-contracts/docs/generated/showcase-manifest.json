@@ -9,10 +9,10 @@
       "name": "Text",
       "category": "foundation",
       "platform": "shared",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -144,10 +144,10 @@
       "name": "Icon",
       "category": "foundation",
       "platform": "shared",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -161,7 +161,6 @@
           "scenarios": [
             "default",
             "dark",
-            "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
@@ -173,7 +172,6 @@
           "scenarios": [
             "default",
             "dark",
-            "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
@@ -257,7 +255,6 @@
           "scenarios": [
             "default",
             "dark",
-            "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
@@ -269,7 +266,6 @@
           "scenarios": [
             "default",
             "dark",
-            "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
@@ -336,10 +332,10 @@
       "name": "Stack",
       "category": "layout",
       "platform": "shared",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -384,10 +380,10 @@
       "name": "Container",
       "category": "layout",
       "platform": "shared",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -743,10 +739,10 @@
       "name": "IconButton",
       "category": "action",
       "platform": "shared",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -760,7 +756,6 @@
           "scenarios": [
             "default",
             "dark",
-            "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
@@ -772,7 +767,6 @@
           "scenarios": [
             "default",
             "dark",
-            "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
@@ -3137,10 +3131,10 @@
       "name": "Badge",
       "category": "data-display",
       "platform": "shared",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -3233,10 +3227,10 @@
       "name": "Card",
       "category": "data-display",
       "platform": "shared",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -3895,10 +3889,10 @@
       "name": "Tag",
       "category": "data-display",
       "platform": "shared",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -4028,10 +4022,10 @@
       "name": "Notice",
       "category": "feedback",
       "platform": "shared",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -4076,10 +4070,10 @@
       "name": "Progress",
       "category": "feedback",
       "platform": "shared",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -4124,10 +4118,10 @@
       "name": "Spinner",
       "category": "feedback",
       "platform": "shared",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -4141,7 +4135,6 @@
           "scenarios": [
             "default",
             "dark",
-            "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
@@ -4153,7 +4146,6 @@
           "scenarios": [
             "default",
             "dark",
-            "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
@@ -4172,10 +4164,10 @@
       "name": "Skeleton",
       "category": "feedback",
       "platform": "shared",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -4189,7 +4181,6 @@
           "scenarios": [
             "default",
             "dark",
-            "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
@@ -4201,7 +4192,6 @@
           "scenarios": [
             "default",
             "dark",
-            "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
@@ -4796,10 +4786,10 @@
       "name": "DesignSystemProvider",
       "category": "provider",
       "platform": "shared",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {

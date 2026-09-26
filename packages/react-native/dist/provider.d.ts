@@ -1,4 +1,4 @@
-import { type DesignSystemDirection, type DesignSystemProviderValue, type DesignSystemTextScale } from "@hjmds/design-contracts/components/design-system-provider";
+import { type DesignSystemDirection, type DesignSystemProviderValue, type DesignSystemTextScale, type ResolveDesignSystemEnvironmentOptions } from "@hjmds/design-contracts/components/design-system-provider";
 import type { ThemePreference } from "@hjmds/design-contracts/colors";
 import { spacing, radius, typography } from "@hjmds/design-contracts/foundations";
 import { type ReactNode } from "react";
@@ -17,6 +17,8 @@ export type HjmNativeTheme = DesignSystemProviderValue & Readonly<{
         typography: typeof typography;
     }>;
 }>;
+/** Per-theme partial palette merged over the HJM defaults; see docs/brand-boundary.md. */
+export type HjmNativeBrandPalette = NonNullable<ResolveDesignSystemEnvironmentOptions["brandPalette"]>;
 type HjmNativeProviderEnvironmentProps = Readonly<{
     value?: never;
     theme?: ThemePreference;
@@ -24,6 +26,12 @@ type HjmNativeProviderEnvironmentProps = Readonly<{
     textScale?: DesignSystemTextScale;
     reducedMotion?: boolean;
     minimumVisualTarget?: boolean;
+    /**
+     * The supported brand route. Before 1.5.0 branding required a hand-built
+     * `value`, which also stopped following the OS theme, text scale and
+     * reduced-motion settings.
+     */
+    brandPalette?: HjmNativeBrandPalette;
 }>;
 type HjmNativeProviderValueProps = Readonly<{
     /** Pre-resolved environment and product palette for first-party renderer adaptation. */
@@ -33,11 +41,12 @@ type HjmNativeProviderValueProps = Readonly<{
     textScale?: never;
     reducedMotion?: never;
     minimumVisualTarget?: never;
+    brandPalette?: never;
 }>;
 export type HjmNativeProviderProps = Readonly<{
     children: ReactNode;
 }> & (HjmNativeProviderEnvironmentProps | HjmNativeProviderValueProps);
-export declare function HjmNativeProvider({ children, theme, direction, textScale, reducedMotion, minimumVisualTarget, value: suppliedValue, }: HjmNativeProviderProps): import("react").JSX.Element;
+export declare function HjmNativeProvider({ children, theme, direction, textScale, reducedMotion, minimumVisualTarget, brandPalette: suppliedBrandPalette, value: suppliedValue, }: HjmNativeProviderProps): import("react").JSX.Element;
 export declare function useHjmNativeTheme(): HjmNativeTheme;
 export {};
 //# sourceMappingURL=provider.d.ts.map

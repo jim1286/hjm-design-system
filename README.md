@@ -10,16 +10,16 @@ renderer를 한 이력과 한 release train에서 관리하는 pnpm monorepo입�
 | [`@hjmds/react-native`](packages/react-native) | Expo-independent React Native components |
 | [`@hjm/showcase-web`](showcase/web) | Storybook documentation and Web evidence |
 
-Stable Core는 `Surface`, `Button`, `Field`, `TextArea`를 Web과 Native에서 안정 API로
-보장합니다. 공통 레이아웃에는 `Container`, `AspectRatio`, Web 접근성 유틸리티에는
-`VisuallyHidden`을 제공합니다. 승격 근거와 호환성 정책은
-[`stable-core.md`](packages/design-contracts/docs/stable-core.md)에 기록합니다. 신규 제품이
-어디까지 공통 계약을 채택하고 어디부터 제품이 소유하는지는
-[`consumer-policy.md`](packages/design-contracts/docs/consumer-policy.md)를 따릅니다.
-현재 `Text`, `Icon`, `Stack`, `Container`, `DesignSystemProvider`는 첫 화면에 필요한
-foundation이지만 catalog maturity는 아직 `beta`입니다. 신규 앱 표준은 이 사실을 숨기지
-않고 중앙 `requiredFoundations`와 앱별 lifecycle evidence로 관리하며, 그 밖의 beta는
-제품 ADR이 있는 선택 채택으로 구분합니다.
+1.5.0부터 Stable Core는 17개 surface를 Web과 Native에서 안정 API로 보장합니다:
+`Surface`, `Button`, `Field`, `TextArea`, `Text`, `Icon`, `Stack`, `Container`,
+`DesignSystemProvider`, `IconButton`, `Badge`, `Card`, `Tag`, `Notice`, `Progress`, `Spinner`,
+`Skeleton`. 승격 기준은 두 renderer의 실제 시나리오 검사(scenario matrix) 통과와 세 제품 이상의
+사용입니다. 근거와 호환성 정책은 [`stable-core.md`](packages/design-contracts/docs/stable-core.md)에
+기록합니다. 신규 제품이 어디까지 공통 계약을 채택하고 어디부터 제품이 소유하는지는
+[`consumer-policy.md`](packages/design-contracts/docs/consumer-policy.md), 브랜드가 바꿀 수 있는
+범위는 [`brand-boundary.md`](packages/design-contracts/docs/brand-boundary.md)를 따릅니다.
+그 밖의 컴포넌트는 beta이며 제품 ADR이 있는 선택 채택입니다. 카탈로그 확장은 핵심 beta가
+승격될 때까지 동결되어 있습니다([`catalog-freeze.json`](packages/design-contracts/docs/catalog-freeze.json)).
 
 ## Why one repository
 

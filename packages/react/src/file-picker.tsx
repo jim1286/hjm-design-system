@@ -86,12 +86,21 @@ export const FilePicker = forwardRef<HTMLDivElement, FilePickerProps>(function F
 
   return (
     <div {...props} ref={composeRefs(ref)} className={classNames("hjm-file-picker", className)} data-dragging={dragging || undefined} data-invalid={error !== undefined || undefined}>
-      <span className="hjm-file-picker__label">{label}</span>
+      <span className="hjm-file-picker__label" id={`${id}-label`}>{label}</span>
+      {/*
+        The visible button below is the keyboard entry point. Before 1.5.0 this
+        hidden input was a second, unnamed tab stop (the label span was not
+        associated with it), so a screen reader announced a nameless "file"
+        control. It stays in the accessibility tree for virtual cursors, named
+        by the label, and leaves the tab order.
+      */}
       <input
         accept={resolved.accept?.join(",")}
+        aria-labelledby={`${id}-label`}
         className="hjm-visually-hidden"
         disabled={disabled}
         id={id}
+        tabIndex={-1}
         multiple={resolved.mode === "multiple"}
         onChange={handleChange}
         ref={inputRef}

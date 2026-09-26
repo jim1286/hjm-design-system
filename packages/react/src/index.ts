@@ -1,6 +1,7 @@
 export {
   HjmProvider,
   useHjmTheme,
+  type HjmBrandPalette,
   type HjmProviderHost,
   type HjmProviderProps,
 } from "./provider.js";
@@ -286,6 +287,7 @@ export {
   type OverlayTrigger,
   type SheetPlacement,
   type SheetProps,
+  type SheetSize,
   type TooltipProps,
 } from "./overlays.js";
 

@@ -29,30 +29,74 @@ export type ReactNativeRendererEvidenceManifest = Readonly<{
   components: readonly ReactNativeRendererEvidenceComponent[];
 }>;
 
+const defaultProofFile = "test/default-render.test.tsx" as const;
+const matrixProofFile = "test/scenario-matrix.test.tsx" as const;
+
+/**
+ * Environment scenarios proven by scenario-matrix.test against the resolved
+ * styles in the rendered host tree. Until 1.5.0 every component claimed all
+ * seven scenarios from a test that only checked that rendering did not throw.
+ * The test renderer cannot lay out text, so long-copy here proves the copy sits
+ * in a wrapping Text (no single-line truncation), not measured overflow.
+ */
+const matrixScenarios = ["accessibility", "dark", "large-text", "rtl", "reduced-motion"] as const;
+
+/** Scenarios a component does not pass yet; reported as promotion debt. */
+const nativeScenarioGaps: Readonly<Record<string, readonly ReactNativeRendererEvidenceScenario[]>> = {};
+
+/** Cases that render long copy inside the component (renderLongCopy). */
+const nativeLongCopyCases: ReadonlySet<string> = new Set<string>([
+  "design-system-provider",
+  "stack",
+  "container",
+  "text",
+  "surface",
+  "button",
+  "text-area",
+  "card",
+  "notice",
+  "list-row",
+  "tag",
+  "badge",
+  "chip",
+  "link",
+  "heading",
+  "empty-state",
+  "top",
+  "section",
+  "segmented-control",
+  "bottom-cta",
+  "result",
+  "progress",
+  "description-list",
+  "toast",
+  "statistic",
+  "radio-group",
+  "checkbox-group",
+  "auth-provider-button",
+  "password-field",
+  "field",
+]);
+
 function defaultClaim(
   componentId: string,
   exportNames: readonly string[],
   subpath: `./${string}`,
 ): ReactNativeRendererEvidenceComponent {
-  const scenarios = [
-    "default",
-    "dark",
-    "long-copy",
-    "large-text",
-    "rtl",
-    "reduced-motion",
-    "accessibility",
-  ] as const;
+  const gaps = nativeScenarioGaps[componentId] ?? [];
+  const matrix: ReactNativeRendererEvidenceScenario[] = [
+    ...matrixScenarios.filter((scenario) => !gaps.includes(scenario)),
+    ...(nativeLongCopyCases.has(componentId) && !gaps.includes("long-copy") ? ["long-copy" as const] : []),
+  ];
   return {
     componentId,
     exportNames,
     subpath,
-    scenarios,
-    proofs: [{
-      scenarios,
-      file: "test/default-render.test.tsx",
-      caseId: componentId,
-    }],
+    scenarios: ["default", ...matrix],
+    proofs: [
+      { scenarios: ["default"], file: defaultProofFile, caseId: componentId },
+      ...(matrix.length === 0 ? [] : [{ scenarios: matrix, file: matrixProofFile, caseId: componentId }]),
+    ],
   };
 }
 

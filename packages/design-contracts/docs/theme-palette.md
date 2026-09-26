@@ -50,3 +50,15 @@ contracts·tree-select까지 연쇄로 초과).
   형태로 보이는지(3:1). 기존 AA 검사가 못 잡던 축이다.
 - `keeps neutral surfaces and text in one low-saturation family per theme` — 중성 역할의
   채도 상한 30%. 강조 역할(`primary`·`contentBrand`·`danger`·`surfaceAccent`)은 제외한다.
+
+## 라이트 `textSub`를 AA로 올렸다 (2026-09-26)
+
+브랜드 팔레트 대비 검사([brand-boundary.md](./brand-boundary.md))를 만들면서 기본 팔레트에 같은 기준을 돌렸더니
+라이트 `textSub` `#6b7684`가 `surface`(`#f2f4f6`) 위에서 **4.19:1**로 본문 AA(4.5)에 못 미쳤다. `textSub`는
+`Text tone="subtle"`의 실제 글자색이라 장식 등급으로 볼 수 없다. 같은 색상·채도에서 명도만 내린 `#65707d`
+(`surface` 4.57:1, `bg` 5.04:1)로 바꿨다. 텍스트 램프 순서(`textMuted` > `textSub` > `textWeak`)는 유지된다.
+모펀은 같은 이유로 이미 `textSub`를 `#626E7D`로 보정해 쓰고 있었다.
+
+`borderControl`은 `#6b7684`를 그대로 둔다. 비텍스트 기준(3:1)이고 `surface` 위 4.19:1로 충분하다.
+
+**버린 대안:** 검사에서 `textSub`를 본문 기준에서 빼기. 실제 글자에 쓰이는 색을 기준에서 빼면 검사가 존재 이유를 잃는다.

@@ -121,10 +121,10 @@ describe("component reference coverage", () => {
       }
     }
 
-    expect(componentCatalog.filter(({ surfaceStatus }) => surfaceStatus.web === "beta")).toHaveLength(92);
-    expect(componentCatalog.filter(({ surfaceStatus }) => surfaceStatus.native === "beta")).toHaveLength(75);
-    expect(componentCatalog.filter(({ surfaceStatus }) => surfaceStatus.web === "stable")).toHaveLength(4);
-    expect(componentCatalog.filter(({ surfaceStatus }) => surfaceStatus.native === "stable")).toHaveLength(4);
+    expect(componentCatalog.filter(({ surfaceStatus }) => surfaceStatus.web === "beta")).toHaveLength(79);
+    expect(componentCatalog.filter(({ surfaceStatus }) => surfaceStatus.native === "beta")).toHaveLength(62);
+    expect(componentCatalog.filter(({ surfaceStatus }) => surfaceStatus.web === "stable")).toHaveLength(17);
+    expect(componentCatalog.filter(({ surfaceStatus }) => surfaceStatus.native === "stable")).toHaveLength(17);
   });
 
   it("keeps legacy custom catalog entries working during the surface-status migration", () => {

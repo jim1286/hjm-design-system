@@ -1,0 +1,85 @@
+name: Visual Baselines
+
+# Screenshot baselines for the cross-product core (packages/react/test/core.visual.test.tsx).
+# They are platform-suffixed and only this ubuntu-latest image produces and compares
+# them; a macOS run has different fonts and rasterization, so the check is kept out
+# of `pnpm ci:check`. Regenerate with workflow_dispatch update=true, review the
+# uploaded images, and commit them under packages/react/test/visual-baselines/.
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      update:
+        description: Regenerate the linux baselines and upload them as an artifact
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: design-system-visual-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  visual:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: 11.18.0
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright Chromium
+        run: pnpm --filter @hjmds/react exec playwright install --with-deps chromium
+
+      - name: Build contracts
+        run: pnpm --filter @hjmds/design-contracts run build
+
+      - name: Compare with committed baselines
+        if: ${{ !inputs.update }}
+        run: |
+          if ! ls packages/react/test/visual-baselines/*/*-linux.png >/dev/null 2>&1; then
+            echo "::warning::No linux visual baselines are committed yet; run this workflow with update=true."
+            exit 0
+          fi
+          pnpm --filter @hjmds/react run test:visual
+
+      - name: Regenerate baselines
+        if: ${{ inputs.update }}
+        run: pnpm --filter @hjmds/react exec vitest run --config vitest.visual.config.ts --update
+
+      - name: Upload baselines
+        if: ${{ inputs.update }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: visual-baselines
+          path: packages/react/test/visual-baselines/
+
+      - name: Upload diffs
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: visual-diffs
+          path: packages/react/.vitest-attachments/
+          if-no-files-found: ignore

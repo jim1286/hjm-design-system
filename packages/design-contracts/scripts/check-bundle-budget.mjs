@@ -50,6 +50,14 @@ const budgets = [
     forbiddenModules: metadataModules,
   },
   {
+    // Contrast math plus the default palettes it merges a brandPalette over.
+    exportPath: "./palette-contrast",
+    maxModules: 2,
+    maxRawBytes: 6_000,
+    maxGzipBytes: 2_500,
+    forbiddenModules: metadataModules,
+  },
+  {
     exportPath: "./responsive",
     maxModules: 2,
     maxRawBytes: 15_000,
@@ -236,9 +244,11 @@ const budgets = [
     // 재사용하고 외부 의존성은 없다 — 증가분이 곧 새 계약 파일 수와 catalog 문구다.
     // P2-c(asset) 한 모듈, dataviz 한 모듈 추가. 외부 의존성 없이 기존 foundations·
     // semantic-colors만 재사용한다 — 증가분이 곧 두 계약 파일과 catalog 문구다.
+    // 2026-09-26 1.5.0: 모듈 수는 그대로(71). 13개 승격의 maturity 문자열, textless long-copy
+    // 규칙, Provider 검증 주석 정정으로 101.0 kB gzip 경계를 넘어 0.3 kB 올렸다.
     maxModules: 71,
     maxRawBytes: 407_000,
-    maxGzipBytes: 101_000,
+    maxGzipBytes: 101_300,
   },
   {
     // 2026-09-19 AuthScreenLayout: 계약 모듈 한 개가 그래프에 들어왔다. 기존

@@ -29,6 +29,9 @@ export const Switch = host("Switch");
 export const ActivityIndicator = host("ActivityIndicator");
 export const ScrollView = host("ScrollView");
 export const Image = host("Image");
+/** Every Animated.timing that started, for the reduced-motion scenario proof. */
+export const startedAnimatedTimings: { duration: number }[] = [];
+
 class AnimatedValue {
   current: number;
 
@@ -54,8 +57,10 @@ type MockAnimation = Readonly<{
 export const Animated = {
   Value: AnimatedValue,
   View: host("AnimatedView"),
-  timing: (value: AnimatedValue, configuration: Readonly<{ toValue: number }>) => ({
+  timing: (value: AnimatedValue, configuration: Readonly<{ toValue: number; duration?: number }>) => ({
     start: (callback?: (result: Readonly<{ finished: boolean }>) => void) => {
+      // The reduced-motion scenario proof reads what actually started.
+      startedAnimatedTimings.push({ duration: configuration.duration ?? 500 }); // RN defaults to 500ms
       value.setValue(configuration.toValue);
       callback?.({ finished: true });
     },

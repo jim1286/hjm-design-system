@@ -71,13 +71,13 @@ export declare function getComponentSurfaceStatus(entry: ComponentCatalogEntry, 
 export declare const componentCatalog: readonly [{
     readonly recipe: "textRecipe";
     readonly surfaceStatus: {
-        readonly web: "beta";
-        readonly native: "beta";
+        readonly web: "stable";
+        readonly native: "stable";
     };
     readonly name: "Text";
     readonly category: "foundation";
     readonly platform: "shared";
-    readonly status: "beta";
+    readonly status: "stable";
 }, {
     readonly roadmap: {
         readonly state: "evidence-needed";
@@ -112,13 +112,13 @@ export declare const componentCatalog: readonly [{
 }, {
     readonly recipe: "iconRecipe";
     readonly surfaceStatus: {
-        readonly web: "beta";
-        readonly native: "beta";
+        readonly web: "stable";
+        readonly native: "stable";
     };
     readonly name: "Icon";
     readonly category: "foundation";
     readonly platform: "shared";
-    readonly status: "beta";
+    readonly status: "stable";
 }, {
     readonly recipe: "surfaceRecipe";
     readonly surfaceStatus: {
@@ -153,27 +153,23 @@ export declare const componentCatalog: readonly [{
     readonly recipe: "stackRecipe";
     readonly aliases: readonly ["Flex", "Space", "Inline"];
     readonly surfaceStatus: {
-        readonly web: "beta";
-        readonly native: "beta";
+        readonly web: "stable";
+        readonly native: "stable";
     };
     readonly name: "Stack";
     readonly category: "layout";
     readonly platform: "shared";
-    readonly status: "beta";
+    readonly status: "stable";
 }, {
-    readonly roadmap: {
-        readonly state: "evidence-needed";
-        readonly summary: string;
-    };
     readonly recipe: "containerRecipe";
     readonly surfaceStatus: {
-        readonly web: "beta";
-        readonly native: "beta";
+        readonly web: "stable";
+        readonly native: "stable";
     };
     readonly name: "Container";
     readonly category: "layout";
     readonly platform: "shared";
-    readonly status: "beta";
+    readonly status: "stable";
 }, {
     readonly roadmap: {
         readonly state: "evidence-needed";
@@ -275,13 +271,13 @@ export declare const componentCatalog: readonly [{
 }, {
     readonly recipe: "iconButtonRecipe";
     readonly surfaceStatus: {
-        readonly web: "beta";
-        readonly native: "beta";
+        readonly web: "stable";
+        readonly native: "stable";
     };
     readonly name: "IconButton";
     readonly category: "action";
     readonly platform: "shared";
-    readonly status: "beta";
+    readonly status: "stable";
 }, {
     readonly recipe: "linkRecipe";
     readonly behavior: "link";
@@ -987,13 +983,13 @@ export declare const componentCatalog: readonly [{
 }, {
     readonly recipe: "badgeRecipe";
     readonly surfaceStatus: {
-        readonly web: "beta";
-        readonly native: "beta";
+        readonly web: "stable";
+        readonly native: "stable";
     };
     readonly name: "Badge";
     readonly category: "data-display";
     readonly platform: "shared";
-    readonly status: "beta";
+    readonly status: "stable";
 }, {
     readonly recipe: "counterBadgeRecipe";
     readonly surfaceStatus: {
@@ -1007,13 +1003,13 @@ export declare const componentCatalog: readonly [{
 }, {
     readonly recipe: "cardRecipe";
     readonly surfaceStatus: {
-        readonly web: "beta";
-        readonly native: "beta";
+        readonly web: "stable";
+        readonly native: "stable";
     };
     readonly name: "Card";
     readonly category: "data-display";
     readonly platform: "shared";
-    readonly status: "beta";
+    readonly status: "stable";
 }, {
     readonly recipe: "listRecipe";
     readonly surfaceStatus: {
@@ -1204,13 +1200,13 @@ export declare const componentCatalog: readonly [{
 }, {
     readonly recipe: "tagRecipe";
     readonly surfaceStatus: {
-        readonly web: "beta";
-        readonly native: "beta";
+        readonly web: "stable";
+        readonly native: "stable";
     };
     readonly name: "Tag";
     readonly category: "data-display";
     readonly platform: "shared";
-    readonly status: "beta";
+    readonly status: "stable";
 }, {
     readonly roadmap: {
         readonly state: "evidence-needed";
@@ -1240,43 +1236,43 @@ export declare const componentCatalog: readonly [{
 }, {
     readonly recipe: "noticeRecipe";
     readonly surfaceStatus: {
-        readonly web: "beta";
-        readonly native: "beta";
+        readonly web: "stable";
+        readonly native: "stable";
     };
     readonly name: "Notice";
     readonly category: "feedback";
     readonly platform: "shared";
-    readonly status: "beta";
+    readonly status: "stable";
 }, {
     readonly recipe: "progressRecipe";
     readonly surfaceStatus: {
-        readonly web: "beta";
-        readonly native: "beta";
+        readonly web: "stable";
+        readonly native: "stable";
     };
     readonly name: "Progress";
     readonly category: "feedback";
     readonly platform: "shared";
-    readonly status: "beta";
+    readonly status: "stable";
 }, {
     readonly recipe: "spinnerRecipe";
     readonly surfaceStatus: {
-        readonly web: "beta";
-        readonly native: "beta";
+        readonly web: "stable";
+        readonly native: "stable";
     };
     readonly name: "Spinner";
     readonly category: "feedback";
     readonly platform: "shared";
-    readonly status: "beta";
+    readonly status: "stable";
 }, {
     readonly recipe: "skeletonRecipe";
     readonly surfaceStatus: {
-        readonly web: "beta";
-        readonly native: "beta";
+        readonly web: "stable";
+        readonly native: "stable";
     };
     readonly name: "Skeleton";
     readonly category: "feedback";
     readonly platform: "shared";
-    readonly status: "beta";
+    readonly status: "stable";
 }, {
     readonly roadmap: {
         readonly state: "evidence-needed";
@@ -1478,20 +1474,16 @@ export declare const componentCatalog: readonly [{
     readonly platform: "web";
     readonly status: "planned";
 }, {
-    readonly roadmap: {
-        readonly state: "evidence-needed";
-        readonly summary: string;
-    };
     readonly aliases: readonly ["ConfigProvider"];
     readonly nonVisualEvidence: "provider-adapter";
     readonly surfaceStatus: {
-        readonly web: "beta";
-        readonly native: "beta";
+        readonly web: "stable";
+        readonly native: "stable";
     };
     readonly name: "DesignSystemProvider";
     readonly category: "provider";
     readonly platform: "shared";
-    readonly status: "beta";
+    readonly status: "stable";
 }, {
     readonly declinedReason: string;
     readonly roadmap: {

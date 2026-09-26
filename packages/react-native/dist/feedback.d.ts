@@ -122,6 +122,9 @@ export type ToastToneIconRenderProps = Readonly<{
 /** One Native toast driven by the same exactly-once session as a queued region. */
 export declare function Toast({ descriptor, onDismiss, placement, renderToneIcon, style, }: ToastProps): import("react").JSX.Element;
 export type ToastRegionController = Readonly<{
+    /** Queues a toast; the same name as the Web `useToast().publish` and the contract store. */
+    publish: (descriptor: ToastDescriptor) => ToastPublishResult;
+    /** @deprecated Since 1.5.0; use `publish`, the name Web and the contract store use. Kept for the 1.x train. */
     show: (descriptor: ToastDescriptor) => ToastPublishResult;
     dismiss: (id: string, reason?: ToastDismissReason) => boolean;
     pause: (id: string, reason?: ToastPauseReason) => boolean;

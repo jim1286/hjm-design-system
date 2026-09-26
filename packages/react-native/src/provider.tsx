@@ -5,6 +5,7 @@ import {
   type DesignSystemEnvironmentInput,
   type DesignSystemProviderValue,
   type DesignSystemTextScale,
+  type ResolveDesignSystemEnvironmentOptions,
 } from "@hjmds/design-contracts/components/design-system-provider";
 import type { ThemePreference } from "@hjmds/design-contracts/colors";
 import { spacing, radius, typography } from "@hjmds/design-contracts/foundations";
@@ -43,6 +44,9 @@ export type HjmNativeTheme = DesignSystemProviderValue &
     }>;
   }>;
 
+/** Per-theme partial palette merged over the HJM defaults; see docs/brand-boundary.md. */
+export type HjmNativeBrandPalette = NonNullable<ResolveDesignSystemEnvironmentOptions["brandPalette"]>;
+
 type HjmNativeProviderEnvironmentProps = Readonly<{
   value?: never;
   theme?: ThemePreference;
@@ -50,6 +54,12 @@ type HjmNativeProviderEnvironmentProps = Readonly<{
   textScale?: DesignSystemTextScale;
   reducedMotion?: boolean;
   minimumVisualTarget?: boolean;
+  /**
+   * The supported brand route. Before 1.5.0 branding required a hand-built
+   * `value`, which also stopped following the OS theme, text scale and
+   * reduced-motion settings.
+   */
+  brandPalette?: HjmNativeBrandPalette;
 }>;
 
 type HjmNativeProviderValueProps = Readonly<{
@@ -60,6 +70,7 @@ type HjmNativeProviderValueProps = Readonly<{
   textScale?: never;
   reducedMotion?: never;
   minimumVisualTarget?: never;
+  brandPalette?: never;
 }>;
 
 export type HjmNativeProviderProps = Readonly<{
@@ -67,6 +78,12 @@ export type HjmNativeProviderProps = Readonly<{
 }> & (HjmNativeProviderEnvironmentProps | HjmNativeProviderValueProps);
 
 const HjmNativeThemeContext = createContext<HjmNativeTheme | null>(null);
+
+/**
+ * The nearest ancestor's brand palette, so a nested provider keeps the product
+ * brand; the resolved palette cannot be split back into defaults and overrides.
+ */
+const HjmNativeBrandPaletteContext = createContext<HjmNativeBrandPalette | undefined>(undefined);
 
 const subscribeHydration = () => () => undefined;
 const clientSnapshot = () => true;
@@ -118,9 +135,12 @@ export function HjmNativeProvider({
   textScale,
   reducedMotion,
   minimumVisualTarget,
+  brandPalette: suppliedBrandPalette,
   value: suppliedValue,
 }: HjmNativeProviderProps) {
   const parent = useContext(HjmNativeThemeContext);
+  const inheritedBrandPalette = useContext(HjmNativeBrandPaletteContext);
+  const brandPalette = suppliedValue === undefined ? suppliedBrandPalette ?? inheritedBrandPalette : undefined;
   const colorScheme = useColorScheme();
   // Match Expo web's light server snapshot to avoid stale styles after hydration;
   // native stays immediate. See README: static-web theme precedence.
@@ -152,6 +172,7 @@ export function HjmNativeProvider({
         systemDirection: I18nManager.isRTL ? "rtl" : "ltr",
         systemTextScale,
         systemReducedMotion,
+        ...(brandPalette === undefined ? {} : { brandPalette }),
         ...(parent === null ? {} : { parent: parent.environment }),
       },
     );
@@ -168,9 +189,13 @@ export function HjmNativeProvider({
       },
       tokens: { spacing, radius, typography },
     };
-  }, [environment, parent, suppliedValue, systemReducedMotion, systemTextScale, systemTheme]);
+  }, [brandPalette, environment, parent, suppliedValue, systemReducedMotion, systemTextScale, systemTheme]);
 
-  return <HjmNativeThemeContext.Provider value={contextValue}>{children}</HjmNativeThemeContext.Provider>;
+  return (
+    <HjmNativeThemeContext.Provider value={contextValue}>
+      <HjmNativeBrandPaletteContext.Provider value={brandPalette}>{children}</HjmNativeBrandPaletteContext.Provider>
+    </HjmNativeThemeContext.Provider>
+  );
 }
 
 export function useHjmNativeTheme(): HjmNativeTheme {

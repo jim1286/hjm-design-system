@@ -5,6 +5,13 @@ import { createContext, forwardRef, useCallback, useContext, useRef, useState, u
 import { classNames } from "./internal.js";
 import { createHjmThemeStyle } from "./theme.js";
 const HjmThemeContext = createContext(null);
+/**
+ * The nearest ancestor's brand palette. A nested provider (for example one that
+ * only changes density) keeps the product brand instead of falling back to the
+ * HJM defaults, because the resolved palette alone cannot be split back into
+ * defaults and overrides.
+ */
+const HjmBrandPaletteContext = createContext(undefined);
 const TooltipCoordinatorContext = createContext(null);
 function subscribeMedia(query, callback) {
     const media = window.matchMedia(query);
@@ -14,8 +21,10 @@ function subscribeMedia(query, callback) {
 function useMediaQuery(query, observe = true) {
     return useSyncExternalStore((callback) => observe ? subscribeMedia(query, callback) : () => undefined, () => observe && window.matchMedia(query).matches, () => false);
 }
-export const HjmProvider = forwardRef(function HjmProvider({ children, theme, direction, textScale, reducedMotion, minimumVisualTarget, density, systemTheme, host = "surface", value: suppliedValue, className, style, ...rest }, ref) {
+export const HjmProvider = forwardRef(function HjmProvider({ children, theme, direction, textScale, reducedMotion, minimumVisualTarget, density, systemTheme, brandPalette: suppliedBrandPalette, host = "surface", value: suppliedValue, className, style, ...rest }, ref) {
     const parent = useContext(HjmThemeContext);
+    const inheritedBrandPalette = useContext(HjmBrandPaletteContext);
+    const brandPalette = suppliedBrandPalette ?? inheritedBrandPalette;
     const observesSystem = suppliedValue === undefined;
     const prefersDark = useMediaQuery("(prefers-color-scheme: dark)", observesSystem);
     const prefersReducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)", observesSystem);
@@ -30,6 +39,7 @@ export const HjmProvider = forwardRef(function HjmProvider({ children, theme, di
     };
     const value = suppliedValue ?? resolveDesignSystemProviderValue(input, {
         systemTheme: resolvedSystemTheme,
+        ...(brandPalette === undefined ? {} : { brandPalette }),
         ...(parent === null ? {} : { parent: parent.environment }),
         ...(reducedMotion === undefined && parent === null
             ? { systemReducedMotion: prefersReducedMotion }
@@ -75,7 +85,7 @@ export const HjmProvider = forwardRef(function HjmProvider({ children, theme, di
     // module into granular entries like ./selection and blow their gzip budgets.
     // See issue #20.
     const largeText = isLargeTextScale(environment.textScale) ? "true" : undefined;
-    return (_jsx(HjmThemeContext.Provider, { value: value, children: _jsx(TooltipCoordinatorContext.Provider, { value: tooltipCoordinator, children: _jsx("div", { ...rest, ref: ref, className: classNames("hjm-root", className), "data-hjm-provider": "", "data-host": host, "data-motion": environment.reducedMotion ? "reduced" : "full", "data-theme": environment.theme, "data-text-scale": environment.textScale, "data-large-text": largeText, dir: environment.direction, style: { ...createHjmThemeStyle(value), ...style }, children: children }) }) }));
+    return (_jsx(HjmThemeContext.Provider, { value: value, children: _jsx(HjmBrandPaletteContext.Provider, { value: suppliedValue === undefined ? brandPalette : undefined, children: _jsx(TooltipCoordinatorContext.Provider, { value: tooltipCoordinator, children: _jsx("div", { ...rest, ref: ref, className: classNames("hjm-root", className), "data-hjm-provider": "", "data-host": host, "data-motion": environment.reducedMotion ? "reduced" : "full", "data-theme": environment.theme, "data-text-scale": environment.textScale, "data-large-text": largeText, dir: environment.direction, style: { ...createHjmThemeStyle(value), ...style }, children: children }) }) }) }));
 });
 export function useHjmTheme() {
     const value = useContext(HjmThemeContext);

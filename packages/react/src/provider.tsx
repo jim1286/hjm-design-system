@@ -8,6 +8,7 @@ import {
   type DesignSystemDirection,
   type DesignSystemProviderValue,
   type DesignSystemTextScale,
+  type ResolveDesignSystemEnvironmentOptions,
 } from "@hjmds/design-contracts/components/design-system-provider";
 import type { ResolvedTheme, ThemePreference } from "@hjmds/design-contracts/colors";
 import { tooltipBehaviorDefaults } from "@hjmds/design-contracts/components/tooltip";
@@ -26,6 +27,17 @@ import { classNames } from "./internal.js";
 import { createHjmThemeStyle } from "./theme.js";
 
 const HjmThemeContext = createContext<DesignSystemProviderValue | null>(null);
+
+/** Per-theme partial palette merged over the HJM defaults; see docs/brand-boundary.md. */
+export type HjmBrandPalette = NonNullable<ResolveDesignSystemEnvironmentOptions["brandPalette"]>;
+
+/**
+ * The nearest ancestor's brand palette. A nested provider (for example one that
+ * only changes density) keeps the product brand instead of falling back to the
+ * HJM defaults, because the resolved palette alone cannot be split back into
+ * defaults and overrides.
+ */
+const HjmBrandPaletteContext = createContext<HjmBrandPalette | undefined>(undefined);
 
 export type TooltipCoordinator = Readonly<{
   activeId: string | null;
@@ -61,6 +73,12 @@ type HjmProviderEnvironmentProps = Readonly<{
   density?: DesignSystemDensity;
   /** Deterministic SSR/test override; otherwise prefers-color-scheme is observed. */
   systemTheme?: ResolvedTheme;
+  /**
+   * The supported brand route (docs/brand-boundary.md). Before 1.5.0 the only way
+   * to brand was a hand-built `value`, which also stopped the provider from
+   * following the OS theme and reduced-motion settings.
+   */
+  brandPalette?: HjmBrandPalette;
 }>;
 
 type HjmProviderValueProps = Readonly<{
@@ -73,6 +91,7 @@ type HjmProviderValueProps = Readonly<{
   minimumVisualTarget?: never;
   density?: never;
   systemTheme?: never;
+  brandPalette?: never;
 }>;
 
 /**
@@ -107,6 +126,7 @@ export const HjmProvider = forwardRef<HTMLDivElement, HjmProviderProps>(
       minimumVisualTarget,
       density,
       systemTheme,
+      brandPalette: suppliedBrandPalette,
       host = "surface",
       value: suppliedValue,
       className,
@@ -116,6 +136,8 @@ export const HjmProvider = forwardRef<HTMLDivElement, HjmProviderProps>(
     ref,
   ) {
     const parent = useContext(HjmThemeContext);
+    const inheritedBrandPalette = useContext(HjmBrandPaletteContext);
+    const brandPalette = suppliedBrandPalette ?? inheritedBrandPalette;
     const observesSystem = suppliedValue === undefined;
     const prefersDark = useMediaQuery("(prefers-color-scheme: dark)", observesSystem);
     const prefersReducedMotion = useMediaQuery(
@@ -133,6 +155,7 @@ export const HjmProvider = forwardRef<HTMLDivElement, HjmProviderProps>(
     };
     const value = suppliedValue ?? resolveDesignSystemProviderValue(input, {
       systemTheme: resolvedSystemTheme,
+      ...(brandPalette === undefined ? {} : { brandPalette }),
       ...(parent === null ? {} : { parent: parent.environment }),
       ...(reducedMotion === undefined && parent === null
         ? { systemReducedMotion: prefersReducedMotion }
@@ -183,23 +206,25 @@ export const HjmProvider = forwardRef<HTMLDivElement, HjmProviderProps>(
 
     return (
       <HjmThemeContext.Provider value={value}>
-        <TooltipCoordinatorContext.Provider value={tooltipCoordinator}>
-          <div
-            {...rest}
-            ref={ref}
-            className={classNames("hjm-root", className)}
-            data-hjm-provider=""
-            data-host={host}
-            data-motion={environment.reducedMotion ? "reduced" : "full"}
-            data-theme={environment.theme}
-            data-text-scale={environment.textScale}
-            data-large-text={largeText}
-            dir={environment.direction}
-            style={{ ...createHjmThemeStyle(value), ...style }}
-          >
-            {children}
-          </div>
-        </TooltipCoordinatorContext.Provider>
+        <HjmBrandPaletteContext.Provider value={suppliedValue === undefined ? brandPalette : undefined}>
+          <TooltipCoordinatorContext.Provider value={tooltipCoordinator}>
+            <div
+              {...rest}
+              ref={ref}
+              className={classNames("hjm-root", className)}
+              data-hjm-provider=""
+              data-host={host}
+              data-motion={environment.reducedMotion ? "reduced" : "full"}
+              data-theme={environment.theme}
+              data-text-scale={environment.textScale}
+              data-large-text={largeText}
+              dir={environment.direction}
+              style={{ ...createHjmThemeStyle(value), ...style }}
+            >
+              {children}
+            </div>
+          </TooltipCoordinatorContext.Provider>
+        </HjmBrandPaletteContext.Provider>
       </HjmThemeContext.Provider>
     );
   },

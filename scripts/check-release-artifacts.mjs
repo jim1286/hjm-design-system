@@ -58,6 +58,7 @@ await Promise.all([
   "packages/react/dist/index.js",
   "packages/react/dist/index.d.ts",
   "packages/react/dist/styles.css",
+  "packages/react/dist/styles.layered.css",
   "packages/react-native/dist/index.js",
   "packages/react-native/dist/index.d.ts",
   "packages/design-contracts/docs/generated/renderer-evidence.md",

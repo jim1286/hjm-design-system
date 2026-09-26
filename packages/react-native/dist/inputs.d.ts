@@ -33,6 +33,12 @@ type BaseFieldProps = Omit<TextInputProps, "accessibilityLabel" | "defaultValue"
      */
     align?: FieldAlign;
     onValueChange?: (value: string) => void;
+    /** Helper copy below the control; the same name as the Web renderer. */
+    description?: string;
+    /**
+     * @deprecated Since 1.5.0; use `description`, the name the Web renderer uses.
+     * Kept for the 1.x train.
+     */
     supportText?: string;
     error?: string;
     required?: boolean;

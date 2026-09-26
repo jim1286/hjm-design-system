@@ -48,7 +48,7 @@ const light = {
   text: "#191f28",
   textBody: "#333d4b",
   textMuted: "#4e5968",
-  textSub: "#6b7684",
+  textSub: "#65707d",
   textWeak: "#8b95a1",
   primary: "#0369a1",
   contentBrand: "#075985",

@@ -121,7 +121,13 @@ describe("@hjmds/react-native renderer evidence", () => {
           fileURLToPath(new URL(`../${proof.file}`, import.meta.url)),
           "utf8",
         );
-        expect(proofText, proof.file).toContain(`componentId: "${proof.caseId}"`);
+        // Cases may live in the shared fixture module the proof imports (1.5.0).
+        const importedFixtures = await Promise.all(
+          [...proofText.matchAll(/from "\.\/([\w.-]+)\.js"/g)].map(([, name]) =>
+            readFile(fileURLToPath(new URL(`./${name}.tsx`, import.meta.url)), "utf8").catch(() => ""),
+          ),
+        );
+        expect([proofText, ...importedFixtures].join("\n"), proof.file).toContain(`componentId: "${proof.caseId}"`);
       }
       for (const exportName of component.exportNames) {
         expect(publicModule, component.subpath).toHaveProperty(exportName);

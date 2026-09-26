@@ -83,20 +83,20 @@ describe("Tag visual identity vs. Chip", () => {
     expect(tagRecipe.size).not.toHaveProperty("height");
   });
 
-  it("links the product-validated beta contract to the catalog entry", () => {
+  it("links the product-validated stable contract to the catalog entry", () => {
     expect(componentCatalog.find((entry) => entry.name === "Tag")).toMatchObject({
       category: "data-display",
       platform: "shared",
-      status: "beta",
+      status: "stable",
     });
   });
 
-  it("keeps the authored maturity copy aligned with the beta catalog", async () => {
+  it("keeps the authored maturity copy aligned with the stable catalog", async () => {
     const documentation = await readFile(
       new URL("../docs/tag.md", import.meta.url),
       "utf8",
     );
-    expect(documentation).toMatch(/Web\/Native surface는 모두 \*\*beta\*\*/);
+    expect(documentation).toMatch(/Web\/Native surface는 모두 \*\*stable\*\*/);
     expect(documentation).not.toContain("planned → beta");
   });
 

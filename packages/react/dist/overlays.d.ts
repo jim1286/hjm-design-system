@@ -1,7 +1,7 @@
 import { type AlertDialogOpenChangeReason, type AlertDialogRequest } from "@hjmds/design-contracts/components/alert-dialog";
 import { type SheetDetent, type SheetDismissPolicy, type SheetDismissReason, type SheetOpenChangeDetails } from "@hjmds/design-contracts/components/sheet";
 import { type TooltipAlign, type TooltipOpenChangeDetails, type TooltipPlacement } from "@hjmds/design-contracts/components/tooltip";
-import { type DialogSize, type MenuDensity, type MenuItemTone } from "@hjmds/design-contracts/recipes";
+import { sheetRecipe, type DialogSize, type MenuDensity, type MenuItemTone } from "@hjmds/design-contracts/recipes";
 import type { MenuSectionDescriptor } from "@hjmds/design-contracts/behaviors";
 import { type ReactNode } from "react";
 import { type ModalOpenState, type OpenState, type OverlayTrigger } from "./modal.js";
@@ -50,12 +50,20 @@ export type AlertDialogProps = ModalOpenState<Readonly<{
 }>;
 export declare const AlertDialog: import("react").ForwardRefExoticComponent<AlertDialogProps & import("react").RefAttributes<HTMLDivElement>>;
 export type SheetPlacement = "bottom" | "start" | "end";
+export type SheetSize = keyof typeof sheetRecipe.sizes;
 export type SheetProps = ModalOpenState<SheetOpenChangeDetails> & Readonly<{
     title: ReactNode;
     description?: ReactNode;
     children?: ReactNode;
     footer?: ReactNode;
     placement?: SheetPlacement;
+    /**
+     * Height the product opens the sheet at (`sheetRecipe.sizes`); `auto` keeps
+     * the content height capped by the recipe. Native has had this since 1.3;
+     * Web only had user-adjustable `detents` until 1.5.0. `activeDetent` wins
+     * when both are given.
+     */
+    size?: SheetSize;
     /**
      * Heights the user may step between while the sheet is open, smallest
      * first. `sheetRecipe.sizes` is what the *product* opens at; this is what

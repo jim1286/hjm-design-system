@@ -1,24 +1,68 @@
 export const reactRendererEvidenceSchemaVersion = 2;
+const defaultProofFile = "test/default-render.ssr.test.tsx";
+const matrixProofFile = "test/scenario-matrix.browser.test.tsx";
+/**
+ * Environment scenarios proven in a real browser by scenario-matrix.browser.
+ * Until 1.5.0 every component claimed all seven scenarios from one SSR test
+ * that only checked the provider wrapper's attributes. A component now claims
+ * a matrix scenario only if the matrix assertion for it passes.
+ */
+const matrixScenarios = ["accessibility", "dark", "large-text", "rtl", "reduced-motion"];
+/**
+ * Scenarios a component does not pass yet. Each entry is promotion debt that
+ * the generated evidence projection reports; remove it when the component is
+ * fixed and the matrix case passes.
+ */
+const webScenarioGaps = {};
+/** Fixtures that render long copy inside the component (renderLongCopy). */
+const webLongCopyFixtures = new Set([
+    "design-system-provider",
+    "stack",
+    "container",
+    "text",
+    "surface",
+    "button",
+    "field",
+    "text-area",
+    "card",
+    "notice",
+    "list-row",
+    "tag",
+    "badge",
+    "chip",
+    "link",
+    "heading",
+    "empty-state",
+    "top",
+    "section",
+    "segmented-control",
+    "top-bar",
+    "bottom-cta",
+    "result",
+    "progress",
+    "description-list",
+    "toast",
+    "statistic",
+    "radio-group",
+    "checkbox-group",
+    "auth-provider-button",
+    "password-field",
+]);
 function defaultClaim(componentId, exportNames, subpath) {
-    const scenarios = [
-        "default",
-        "dark",
-        "long-copy",
-        "large-text",
-        "rtl",
-        "reduced-motion",
-        "accessibility",
+    const gaps = webScenarioGaps[componentId] ?? [];
+    const matrix = [
+        ...matrixScenarios.filter((scenario) => !gaps.includes(scenario)),
+        ...(webLongCopyFixtures.has(componentId) && !gaps.includes("long-copy") ? ["long-copy"] : []),
     ];
     return {
         componentId,
         exportNames,
         subpath,
-        scenarios,
-        proofs: [{
-                scenarios,
-                file: "test/default-render.ssr.test.tsx",
-                caseId: componentId,
-            }],
+        scenarios: ["default", ...matrix],
+        proofs: [
+            { scenarios: ["default"], file: defaultProofFile, caseId: componentId },
+            ...(matrix.length === 0 ? [] : [{ scenarios: matrix, file: matrixProofFile, caseId: componentId }]),
+        ],
     };
 }
 function stableFieldClaim(exportNames, subpath) {
@@ -50,8 +94,9 @@ function toastClaim() {
     };
 }
 /**
- * First-party Web renderer claims. Scenario axes remain fail-closed: this
- * manifest claims a table-driven environment/accessibility smoke matrix.
+ * First-party Web renderer claims. Scenario axes remain fail-closed: the
+ * default scenario is an SSR render, the environment and accessibility
+ * scenarios are computed-style assertions in scenario-matrix.browser.
  * Keyboard and cross-platform parity remain fail-closed until dedicated
  * interaction or paired-renderer proofs are mapped one-to-one.
  */

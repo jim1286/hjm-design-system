@@ -20,7 +20,7 @@ describe("consumer adoption policy", () => {
     expect(policy).toContain("`draft` /\n  `incubating`");
     expect(policy).toContain("timestamp가 있는 `verified` evidence");
     expect(policy).toContain("optional adoption");
-    expect(policy).toContain("정책 버전: **1.2.0**");
+    expect(policy).toContain("정책 버전: **1.3.0**");
     expect(policy).toContain("React Native legacy style compatibility boundary");
     expect(policy).toContain("`HjmCompositionStyle` / `layoutStyle`");
     expect(policy).toContain("위 네 조건과 소비 앱별 이관 목록을 충족한 다음 major에서");
@@ -47,7 +47,7 @@ describe("consumer adoption policy", () => {
     );
   });
 
-  it("names every beta foundation that the current app-standard bridge must expose", async () => {
+  it("names every foundation that left the app-standard bridge in 1.5.0", async () => {
     const policy = await readFile(policyUrl, "utf8");
     const requiredFoundationNames = [
       "Text",
@@ -60,7 +60,7 @@ describe("consumer adoption policy", () => {
     for (const name of requiredFoundationNames) {
       const entry = componentCatalog.find((candidate) => candidate.name === name);
       expect(entry, `${name} must remain a catalog entry`).toBeDefined();
-      expect(entry?.status, `${name} policy text must be revised when it leaves beta`).toBe("beta");
+      expect(entry?.status, `${name} policy text must be revised when its maturity changes`).toBe("stable");
       expect(policy).toContain(`\`${name}\``);
     }
   });

@@ -1,7 +1,7 @@
 # HJM 소비 앱 정책
 
 상태: **Normative**
-정책 버전: **1.2.0**
+정책 버전: **1.3.0**
 적용 대상: 신규 HJM Web·React Native 앱과 기존 앱의 새 화면
 
 이 정책 원문은 다음 package patch release부터
@@ -39,11 +39,13 @@
 
 ### 2.1 Stable Core와 필수 foundation bridge
 
-현재 Stable Core는 `Surface`, `Button`, `Field`, `TextArea` 네 surface입니다. `Text`,
-`Icon`, `Stack`, `Container`, `DesignSystemProvider`처럼 첫 제품 화면에 필요한 foundation
-일부는 catalog에서 여전히 `beta`입니다. 따라서 “첫 화면부터 HJM”을 요구하면서 이
-foundation을 몰래 `stable`로 간주하거나 `betaAdoptions: []`로 기록하는 것은 허용하지
-않습니다(MUST NOT).
+1.5.0부터 Stable Core는 17개 surface입니다. 1.4까지의 `Surface`, `Button`, `Field`, `TextArea`에
+더해, 첫 제품 화면에 필요한 foundation인 `Text`, `Icon`, `Stack`, `Container`,
+`DesignSystemProvider`와 세 제품 이상이 쓰는 `IconButton`, `Badge`, `Card`, `Tag`, `Notice`,
+`Progress`, `Spinner`, `Skeleton`이 stable로 승격됐습니다. 승격 근거는 이름뿐이던 시나리오 증거를
+실제 계산 스타일 검사로 바꾼 뒤 두 renderer에서 요구 시나리오가 모두 통과한 것입니다
+([Stable Core](stable-core.md)). 그 밖의 컴포넌트는 여전히 `beta`이며, beta를 `stable`로
+간주하거나 `betaAdoptions: []`로 기록하는 것은 허용하지 않습니다(MUST NOT).
 
 HJM-APP-STANDARD가 versioned `requiredFoundations` 목록을 선언한 경우 다음 bridge를
 적용합니다.
@@ -58,8 +60,9 @@ HJM-APP-STANDARD가 versioned `requiredFoundations` 목록을 선언한 경우 �
 - foundation이 catalog에서 `stable`로 승격되면 기존 표준의 의미를 조용히 바꾸지 않고
   다음 versioned app profile에서 bridge 목록을 줄입니다(MUST).
 
-이 bridge는 성숙도 예외가 아니라 공개된 임시 채택 계약입니다. catalog와 generated
-maturity manifest에는 해당 surface가 계속 `beta`로 보여야 합니다.
+이 bridge는 성숙도 예외가 아니라 공개된 임시 채택 계약입니다. 1.5.0에서 bridge의 다섯
+foundation이 모두 stable이 됐으므로, 중앙 app profile의 다음 개정에서 `requiredFoundations`
+목록을 비웁니다. 개정 전까지 기존 profile을 쓰는 앱의 evidence 요구는 조용히 바뀌지 않습니다.
 
 ## 3. 코드 경계
 
@@ -109,7 +112,8 @@ semantic axis로 옮겼습니다. 아래는 그 축과 대체 대상입니다.
 
 ### Web renderer의 캐스케이드
 
-`@hjmds/react/styles.css`는 **CSS 레이어 밖**에 있다. Tailwind 4를 쓰는 소비 앱의
+`@hjmds/react/styles.css`는 **CSS 레이어 밖**에 있다(레이어된 opt-in 파일과 전환 조건은
+[brand-boundary.md §3](./brand-boundary.md#3-css-재정의는-지원하는-테마-경로가-아니다)). Tailwind 4를 쓰는 소비 앱의
 유틸리티는 `@layer utilities` 안에 들어가고, 레이어 밖 규칙은 레이어 안 규칙을
 이긴다. 따라서 HJM 컴포넌트에 `px-0`·`rounded-none`·`justify-start` 같은
 유틸리티를 붙여 recipe 값을 덮으려는 시도는 **조용히 아무 일도 하지 않는다.**
@@ -120,8 +124,8 @@ semantic axis로 옮겼습니다. 아래는 그 축과 대체 대상입니다.
 
 - 유틸리티로 recipe 값을 덮는 코드는 리뷰에서 걸러야 한다. 필요한 값은 semantic
   axis로 요청한다.
-- HJM이 표현할 수 없는 값(제3자 브랜드 색 등)은 앱의 stylesheet에서 `.hjm-*`를
-  함께 적어 특이도를 맞춘 규칙으로만 쓰고, 그 목록을 한 곳에 모아 둔다.
+- HJM이 표현할 수 없는 값은 `.hjm-*` 재정의로 우회하지 않는다. 계약 공백으로 올린다. 기존 재정의는
+  추적되는 부채이며 이관 경로(opt-in `styles.layered.css`)와 규칙은 [brand-boundary.md](./brand-boundary.md)가 정한다.
 - 인라인 `style`은 모든 규칙을 이기므로 이관 전에는 보이던 값이 이관 후 조용히
   사라질 수 있다. 이관은 브라우저에서 실제 렌더를 확인하며 진행한다.
 
@@ -213,8 +217,8 @@ package로 승격하지 않습니다.
 다음 질문에 모두 "예"라고 답할 수 있어야 HJM 채택이 완료된 것입니다.
 
 - exact fixed-train dependency와 Provider가 CI에서 검증되는가?
-- Stable은 기본 사용하고 필수 beta foundation은 중앙 목록+앱 evidence로, optional Beta는
-  제품 ADR+evidence로 구분되어 있는가?
+- Stable은 기본 사용하고(1.5.0 이전 profile이면 필수 foundation은 중앙 목록+앱 evidence로),
+  optional Beta는 제품 ADR+evidence로 구분되어 있는가?
 - screen 코드가 semantic token·component를 우회하지 않는가?
 - 같은 상태가 Web/RN에서 같은 의미와 자연스러운 플랫폼 행동을 갖는가?
 - 로고를 제거해도 제품의 핵심 콘텐츠와 정보 구조가 다른 제품과 구분되는가?

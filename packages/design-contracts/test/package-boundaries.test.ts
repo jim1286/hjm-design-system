@@ -117,6 +117,7 @@ describe("package boundaries", () => {
       "./foundations",
       "./colors",
       "./color-references",
+      "./palette-contrast",
       "./responsive",
       "./formatters",
       "./grid",

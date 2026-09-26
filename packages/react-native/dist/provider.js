@@ -4,6 +4,11 @@ import { spacing, radius, typography } from "@hjmds/design-contracts/foundations
 import { createContext, useContext, useEffect, useMemo, useState, useSyncExternalStore, } from "react";
 import { AccessibilityInfo, I18nManager, Platform, useColorScheme, useWindowDimensions, } from "react-native";
 const HjmNativeThemeContext = createContext(null);
+/**
+ * The nearest ancestor's brand palette, so a nested provider keeps the product
+ * brand; the resolved palette cannot be split back into defaults and overrides.
+ */
+const HjmNativeBrandPaletteContext = createContext(undefined);
 const subscribeHydration = () => () => undefined;
 const clientSnapshot = () => true;
 const serverSnapshot = () => false;
@@ -39,8 +44,10 @@ function toEnvironmentInput(props) {
             : { minimumVisualTarget: props.minimumVisualTarget }),
     };
 }
-export function HjmNativeProvider({ children, theme, direction, textScale, reducedMotion, minimumVisualTarget, value: suppliedValue, }) {
+export function HjmNativeProvider({ children, theme, direction, textScale, reducedMotion, minimumVisualTarget, brandPalette: suppliedBrandPalette, value: suppliedValue, }) {
     const parent = useContext(HjmNativeThemeContext);
+    const inheritedBrandPalette = useContext(HjmNativeBrandPaletteContext);
+    const brandPalette = suppliedValue === undefined ? suppliedBrandPalette ?? inheritedBrandPalette : undefined;
     const colorScheme = useColorScheme();
     // Match Expo web's light server snapshot to avoid stale styles after hydration;
     // native stays immediate. See README: static-web theme precedence.
@@ -63,6 +70,7 @@ export function HjmNativeProvider({ children, theme, direction, textScale, reduc
             systemDirection: I18nManager.isRTL ? "rtl" : "ltr",
             systemTextScale,
             systemReducedMotion,
+            ...(brandPalette === undefined ? {} : { brandPalette }),
             ...(parent === null ? {} : { parent: parent.environment }),
         });
         validateDesignSystemProviderValue(resolved);
@@ -78,8 +86,8 @@ export function HjmNativeProvider({ children, theme, direction, textScale, reduc
             },
             tokens: { spacing, radius, typography },
         };
-    }, [environment, parent, suppliedValue, systemReducedMotion, systemTextScale, systemTheme]);
-    return _jsx(HjmNativeThemeContext.Provider, { value: contextValue, children: children });
+    }, [brandPalette, environment, parent, suppliedValue, systemReducedMotion, systemTextScale, systemTheme]);
+    return (_jsx(HjmNativeThemeContext.Provider, { value: contextValue, children: _jsx(HjmNativeBrandPaletteContext.Provider, { value: brandPalette, children: children }) }));
 }
 export function useHjmNativeTheme() {
     const value = useContext(HjmNativeThemeContext);

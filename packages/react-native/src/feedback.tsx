@@ -1016,6 +1016,9 @@ export function Toast({
 }
 
 export type ToastRegionController = Readonly<{
+  /** Queues a toast; the same name as the Web `useToast().publish` and the contract store. */
+  publish: (descriptor: ToastDescriptor) => ToastPublishResult;
+  /** @deprecated Since 1.5.0; use `publish`, the name Web and the contract store use. Kept for the 1.x train. */
   show: (descriptor: ToastDescriptor) => ToastPublishResult;
   dismiss: (id: string, reason?: ToastDismissReason) => boolean;
   pause: (id: string, reason?: ToastPauseReason) => boolean;
@@ -1263,6 +1266,7 @@ export function ToastRegion({
     return store.invokeAction(id);
   }, [store]);
   const controller = {
+    publish: show,
     show,
     dismiss,
     pause: (id: string, reason: ToastPauseReason = "programmatic") => store.pause(id, reason),

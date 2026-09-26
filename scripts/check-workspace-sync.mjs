@@ -27,6 +27,23 @@ const rendererRecords = [
   },
 ];
 
+
+/** Text of the ./*.js(x) test modules a proof file imports, resolved to their .ts(x) sources. */
+async function readLocalTestImports(directory, proofFile, source) {
+  const texts = [];
+  for (const match of source.matchAll(/from\s+"\.\/([\w.-]+)\.js"/g)) {
+    for (const extension of [".tsx", ".ts"]) {
+      try {
+        texts.push(await readFile(resolve(directory, "test", `${match[1]}${extension}`), "utf8"));
+        break;
+      } catch {
+        // try the next extension
+      }
+    }
+  }
+  return texts.join("\n");
+}
+
 async function readJson(path) {
   return JSON.parse(await readFile(resolve(workspaceRoot, path), "utf8"));
 }
@@ -354,7 +371,10 @@ for (const record of rendererRecords) {
         }
         proofSourcesByPath.set(proofFile, proofSource);
       }
-      if (!proofSource.includes(caseId)) {
+      // Since 1.5.0 the SSR and browser proofs share one fixture module, so a
+      // case may be declared in a sibling test module the proof imports.
+      const caseSource = `${proofSource}\n${await readLocalTestImports(renderer.directory, proofFile, proofSource)}`;
+      if (!caseSource.includes(caseId)) {
         throw new Error(
           `${renderer.name} ${componentId} proof case ${caseId} is absent from ${proofFile}`,
         );

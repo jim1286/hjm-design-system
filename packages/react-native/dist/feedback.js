@@ -592,6 +592,7 @@ export function ToastRegion({ children, accessibilityLabel, toasts, defaultToast
         return store.invokeAction(id);
     }, [store]);
     const controller = {
+        publish: show,
         show,
         dismiss,
         pause: (id, reason = "programmatic") => store.pause(id, reason),

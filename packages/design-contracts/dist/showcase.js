@@ -134,8 +134,10 @@ export function getRequiredShowcaseScenarios(entry) {
 function isRendererMaturity(status) {
     return status === "stable" || status === "beta";
 }
+// 글자 슬롯이 없어 long-copy를 증명할 수 없는 컴포넌트. 근거: docs/stable-core.md 1.5.0.
+const textlessComponentNames = new Set(["Icon", "IconButton", "Skeleton", "Spinner", "Divider"]);
 function getRendererShowcaseScenarios(entry, activeSurfaces) {
-    const requirements = [...rendererRequirements];
+    const requirements = rendererRequirements.filter((scenario) => scenario !== "long-copy" || !textlessComponentNames.has(entry.name));
     if (entry.behavior) {
         requirements.push("keyboard");
     }

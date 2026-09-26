@@ -47,11 +47,10 @@ recipe가 안정화되면 그쪽에 위임하고, 이 계약에는 넣지 않습
 
 ## 현재 maturity와 남은 증거
 
-Tag contract와 Web/Native surface는 모두 **beta**입니다. 두 first-party renderer의 canonical
-default render proof가 `tagRecipe`의 정적 text/background anatomy를 실행하고, generated
-manifest와 evidence registry가 이 상태를 함께 검증합니다.
+Tag contract와 Web/Native surface는 모두 **stable**입니다(1.5.0). 두 first-party renderer의
+scenario matrix가 dark(라이트 전용 색 누수 없음), 2배 글자, RTL, 모션 줄이기, 접근 이름,
+긴 문구 줄바꿈을 실제 계산 스타일로 검사하고 모두 통과했습니다. Web은 실제 브라우저에서
+배치까지, Native는 test renderer의 style 값까지 봅니다.
 
-beta는 전체 환경 인증을 뜻하지 않습니다. dark, RTL, 200% text/Dynamic Type, screen reader와
-실제 device screenshot은 아직 scenario별 실행 proof가 없으며 generated evidence의 debt로
-남습니다. 야잘알의 기존 `AppBadge` 사용처를 canonical Tag renderer로 마이그레이션하고 이
-환경 증거까지 연결한 뒤 stable 승격을 검토합니다.
+stable은 전체 환경 인증을 뜻하지 않습니다. screen reader 실사용과 실제 device screenshot은
+제품 기기 QA의 범위입니다.

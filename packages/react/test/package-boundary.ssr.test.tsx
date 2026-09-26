@@ -71,6 +71,7 @@ describe("@hjmds/react package boundary", () => {
     expect(Object.keys(packageJson.exports)).toEqual([
       ...executableExportPaths,
       "./styles.css",
+      "./styles.layered.css",
     ]);
     const familyTargets = executableExportPaths.slice(1).map((exportPath) => {
       const definition = packageJson.exports[exportPath] as Record<string, string>;
@@ -80,6 +81,7 @@ describe("@hjmds/react package boundary", () => {
     });
     expect(new Set(familyTargets).size).toBe(familyTargets.length);
     expect(packageJson.exports["./styles.css"]).toBe("./dist/styles.css");
+    expect(packageJson.exports["./styles.layered.css"]).toBe("./dist/styles.layered.css");
     expect(packageJson.sideEffects).toEqual(["**/*.css"]);
   });
 });

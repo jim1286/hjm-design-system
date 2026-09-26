@@ -124,6 +124,12 @@ type BaseFieldProps = Omit<
      */
     align?: FieldAlign;
     onValueChange?: (value: string) => void;
+    /** Helper copy below the control; the same name as the Web renderer. */
+    description?: string;
+    /**
+     * @deprecated Since 1.5.0; use `description`, the name the Web renderer uses.
+     * Kept for the 1.x train.
+     */
     supportText?: string;
     error?: string;
     required?: boolean;
@@ -192,7 +198,8 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(function FieldRe
     value,
     defaultValue = "",
     onValueChange,
-    supportText,
+    description,
+    supportText: legacySupportText,
     error,
     required = false,
     disabled = false,
@@ -226,6 +233,7 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(function FieldRe
     defaultValue,
     ...(onValueChange === undefined ? {} : { onChange: onValueChange }),
   });
+  const supportText = description ?? legacySupportText;
   const hint = error ?? supportText;
   const { accessibleName, visibleLabel } = resolveFieldAccessibleName(
     label,
@@ -733,7 +741,8 @@ export const OtpField = forwardRef<TextInput, OtpFieldProps>(function OtpField(
   {
     label,
     accessibilityLabel,
-    supportText,
+    description,
+    supportText: legacySupportText,
     error,
     required = false,
     disabled = false,
@@ -755,6 +764,7 @@ export const OtpField = forwardRef<TextInput, OtpFieldProps>(function OtpField(
   },
   ref,
 ) {
+  const supportText = description ?? legacySupportText;
   const theme = useHjmNativeTheme();
   const { accessibleName, visibleLabel } = resolveFieldAccessibleName(label, accessibilityLabel);
   const [focused, setFocused] = useState(false);

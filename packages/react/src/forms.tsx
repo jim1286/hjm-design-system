@@ -223,7 +223,16 @@ type SharedInputProps = FieldCopyProps &
   }>;
 
 export type TextFieldProps = Omit<InputHTMLAttributes<HTMLInputElement>, "size"> &
-  SharedInputProps;
+  SharedInputProps &
+  Readonly<{
+    /**
+     * Receives the next string value, the same callback name and shape as the
+     * Native TextField and the Web TextArea. Before 1.5.0 Web TextField only had
+     * the DOM `onChange`, so shared form code needed a platform branch. Both
+     * fire; `onChange` stays for event access.
+     */
+    onValueChange?: (value: string) => void;
+  }>;
 
 export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
   function TextField(
@@ -243,6 +252,8 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
       className,
       onFocus,
       onBlur,
+      onChange,
+      onValueChange,
       "aria-describedby": ariaDescribedBy,
       "aria-invalid": ariaInvalid,
       "aria-label": ariaLabel,
@@ -297,6 +308,10 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
             )}
             onFocus={handleFocus}
             onBlur={handleBlur}
+            onChange={(event) => {
+              onChange?.(event);
+              onValueChange?.(event.currentTarget.value);
+            }}
           />
           {trailing ? <span className="hjm-field__affix">{trailing}</span> : null}
         </div>

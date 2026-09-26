@@ -1,5 +1,6 @@
 export {
   HjmNativeProvider,
+  type HjmNativeBrandPalette,
   useHjmNativeTheme,
   type HjmNativeProviderProps,
   type HjmNativeTheme,

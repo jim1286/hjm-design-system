@@ -1,9 +1,17 @@
-import { control, easing, fontFamily, fontWeight, motion, radius, spacing, typography, } from "@hjmds/design-contracts/foundations";
+import { control, easing, fontFamily, fontWeight, motion, radius, shadow, spacing, stroke, typography, } from "@hjmds/design-contracts/foundations";
+import { resolveColorReference } from "@hjmds/design-contracts/color-references";
+import { focusIndicatorContract } from "@hjmds/design-contracts/contracts";
 import { visibleControlHeight, } from "@hjmds/design-contracts/components/design-system-provider";
-import { fieldRecipe } from "@hjmds/design-contracts/recipes/base";
-import { listRowRecipe, skeletonRecipe, switchRecipe, } from "@hjmds/design-contracts/recipes";
+import { buttonRecipe, fieldRecipe } from "@hjmds/design-contracts/recipes/base";
+import { bottomNavigationRecipe, dialogRecipe, listRowRecipe, sheetRecipe, skeletonRecipe, switchRecipe, toastRecipe, } from "@hjmds/design-contracts/recipes";
 function kebab(value) {
     return value.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
+}
+// RN shadow token -> CSS; blur = radius, as react-native-web maps it.
+function shadowCss(token) {
+    const hex = token.color.replace("#", "");
+    const [r, g, b] = [0, 2, 4].map((start) => Number.parseInt(hex.slice(start, start + 2), 16));
+    return `0 ${token.offsetY}px ${token.radius}px rgb(${r} ${g} ${b} / ${Math.round(token.opacity * 100)}%)`;
 }
 function rem(value) {
     return `${Number((value / 16).toFixed(5))}rem`;
@@ -48,6 +56,14 @@ export function createHjmThemeStyle(value) {
             : `${value}ms`;
     }
     style["--hjm-font-family-ui"] = fontFamily.ui.join(", ");
+    for (const [name, value] of Object.entries(stroke)) {
+        style[`--hjm-stroke-${kebab(name)}`] = `${value}px`;
+    }
+    // Unset before 1.4.1, so focus rules were invalid and drew no ring.
+    style["--hjm-color-focus"] = resolveColorReference(focusIndicatorContract.color, palette);
+    style["--hjm-focus-width"] = `${focusIndicatorContract.width}px`;
+    style["--hjm-focus-offset"] = `${focusIndicatorContract.offset}px`;
+    style["--hjm-bottom-navigation-pressed-background"] = resolveColorReference(bottomNavigationRecipe.states.pressedBackground, palette);
     // Row rhythm and the leading frame come from the recipe so the stylesheet
     // does not carry a second copy of the same numbers.
     style["--hjm-list-row-gap"] = rem(listRowRecipe.gap);
@@ -75,6 +91,34 @@ export function createHjmThemeStyle(value) {
     style["--hjm-skeleton-easing"] = `cubic-bezier(${skeletonCurve.join(", ")})`;
     style["--hjm-skeleton-from-opacity"] = skeletonRecipe.animation.fromOpacity;
     style["--hjm-skeleton-to-opacity"] = skeletonRecipe.animation.toOpacity;
+    for (const [name, token] of Object.entries(shadow)) {
+        style[`--hjm-shadow-${kebab(name)}`] = shadowCss(token);
+    }
+    // Overlay chrome and sizes come from the recipes Native reads (1.5.0).
+    for (const [name, chrome] of [["dialog", dialogRecipe.content], ["sheet", sheetRecipe.content], ["toast", toastRecipe.surface]]) {
+        style[`--hjm-${name}-background`] = resolveColorReference(chrome.background, palette);
+        style[`--hjm-${name}-border`] = resolveColorReference(chrome.border, palette);
+        style[`--hjm-${name}-border-width`] = `${chrome.borderWidth}px`;
+        style[`--hjm-${name}-radius`] = `var(--hjm-radius-${chrome.radius})`;
+        style[`--hjm-${name}-shadow`] = shadowCss(chrome.shadow);
+    }
+    style["--hjm-sheet-max-height"] = `${sheetRecipe.content.maxHeightRatio * 100}dvh`;
+    style["--hjm-sheet-max-width"] = `${sheetRecipe.web.maxWidth}px`;
+    style["--hjm-sheet-handle-width"] = `${sheetRecipe.handle.width}px`;
+    style["--hjm-sheet-handle-height"] = `${sheetRecipe.handle.height}px`;
+    style["--hjm-sheet-handle-color"] = resolveColorReference(sheetRecipe.handle.color, palette);
+    for (const [name, ratio] of Object.entries(sheetRecipe.sizes)) {
+        if (ratio !== null)
+            style[`--hjm-sheet-size-${name}`] = `${ratio * 100}dvh`;
+    }
+    const toastExit = toastRecipe.transition.web.exit;
+    style["--hjm-toast-exit-duration"] = environment.reducedMotion ? "0ms" : `${toastExit.duration}ms`;
+    style["--hjm-toast-exit-easing"] = `cubic-bezier(${easing[toastExit.easing].join(", ")})`;
+    style["--hjm-button-pressed-opacity"] = buttonRecipe.opacity.pressed;
+    style["--hjm-button-disabled-opacity"] = buttonRecipe.opacity.disabled;
+    style["--hjm-field-border-width"] = `${fieldRecipe.borderWidth}px`;
+    style["--hjm-field-focus-ring-width"] = `${fieldRecipe.focusRingWidth}px`;
+    style["--hjm-field-disabled-opacity"] = fieldRecipe.disabledOpacity;
     style["--hjm-control-min-touch-target"] = `${control.minTouchTarget}px`;
     style["--hjm-control-field-height"] = `${control.fieldHeight}px`;
     style["--hjm-field-multiline-min-height"] = rem(fieldRecipe.multilineMinHeight);

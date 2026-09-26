@@ -108,9 +108,10 @@ export type DesignSystemProviderValue = Readonly<{
     palette: ColorReferencePalette;
 }>;
 /**
- * Runtime boundary for reviewed full product palettes supplied to a renderer.
- * Partial token overrides remain unsupported: every semantic role required by
- * a recipe must be present, and alpha composition requires six-digit hex.
+ * Runtime boundary for the resolved palette a renderer receives, including one
+ * merged from a partial `brandPalette`: after merging, every semantic role a
+ * recipe reads must be present, and alpha composition requires six-digit hex.
+ * Brand rules: docs/brand-boundary.md.
  */
 export declare function validateDesignSystemProviderValue(value: DesignSystemProviderValue): void;
 export declare function validateDesignSystemEnvironmentInput(input: DesignSystemEnvironmentInput): void;

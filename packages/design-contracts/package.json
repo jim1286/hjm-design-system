@@ -46,6 +46,12 @@
       "import": "./dist/color-references.js",
       "default": "./dist/color-references.js"
     },
+    "./palette-contrast": {
+      "types": "./dist/palette-contrast.d.ts",
+      "react-native": "./dist/palette-contrast.js",
+      "import": "./dist/palette-contrast.js",
+      "default": "./dist/palette-contrast.js"
+    },
     "./responsive": {
       "types": "./dist/responsive.d.ts",
       "react-native": "./dist/responsive.js",

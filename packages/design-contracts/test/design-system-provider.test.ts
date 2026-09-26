@@ -359,17 +359,15 @@ describe("canonical direction aliases", () => {
 });
 
 describe("DesignSystemProvider maturity", () => {
-  it("is beta after real Web and Native adapters consume the provider value", () => {
-    expect(
-      componentCatalog.find(({ name }) => name === "DesignSystemProvider"),
-    ).toMatchObject({
+  it("is stable after every released product consumes the provider value on Web and Native", () => {
+    // 1.5.0: the roadmap condition (additional product release evidence) was met by
+    // seven released products, and the environment scenarios are real proofs now.
+    const entry = componentCatalog.find(({ name }) => name === "DesignSystemProvider");
+    expect(entry).toMatchObject({
       platform: "shared",
-      status: "beta",
+      status: "stable",
       nonVisualEvidence: "provider-adapter",
-      roadmap: {
-        state: "evidence-needed",
-        summary: expect.stringMatching(/두 실제 제품.*Web\/RN.*environment\+palette/),
-      },
     });
+    expect(entry && "roadmap" in entry ? entry.roadmap : undefined).toBeUndefined();
   });
 });

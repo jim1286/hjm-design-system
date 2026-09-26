@@ -427,6 +427,8 @@ export const AlertDialog = forwardRef<HTMLDivElement, AlertDialogProps>(
 
 export type SheetPlacement = "bottom" | "start" | "end";
 
+export type SheetSize = keyof typeof sheetRecipe.sizes;
+
 export type SheetProps = ModalOpenState<SheetOpenChangeDetails> &
   Readonly<{
     title: ReactNode;
@@ -434,6 +436,13 @@ export type SheetProps = ModalOpenState<SheetOpenChangeDetails> &
     children?: ReactNode;
     footer?: ReactNode;
     placement?: SheetPlacement;
+    /**
+     * Height the product opens the sheet at (`sheetRecipe.sizes`); `auto` keeps
+     * the content height capped by the recipe. Native has had this since 1.3;
+     * Web only had user-adjustable `detents` until 1.5.0. `activeDetent` wins
+     * when both are given.
+     */
+    size?: SheetSize;
     /**
      * Heights the user may step between while the sheet is open, smallest
      * first. `sheetRecipe.sizes` is what the *product* opens at; this is what
@@ -466,6 +475,7 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(function Sheet(
     children,
     footer,
     placement = sheetRecipe.defaults.placement,
+    size = sheetRecipe.defaults.size,
     detents,
     activeDetent,
     onDetentChange,
@@ -589,7 +599,7 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(function Sheet(
               className={classNames("hjm-sheet", className)}
               data-hjm-modal-content=""
               data-placement={placement}
-              data-detent={activeDetent}
+              data-detent={activeDetent ?? (size === "auto" ? undefined : size)}
               data-has-footer={footer ? true : undefined}
               data-state={busy ? "busy" : "idle"}
             >

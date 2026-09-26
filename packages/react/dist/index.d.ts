@@ -1,4 +1,4 @@
-export { HjmProvider, useHjmTheme, type HjmProviderHost, type HjmProviderProps, } from "./provider.js";
+export { HjmProvider, useHjmTheme, type HjmBrandPalette, type HjmProviderHost, type HjmProviderProps, } from "./provider.js";
 export { TopBar, type TopBarProps } from "./top-bar.js";
 export { BottomCTA, type BottomCTAAction, type BottomCTAProps } from "./bottom-cta.js";
 export { hjmCompositionStyleKeys, type HjmCompositionStyle, type HjmCompositionStyleKey, type HjmCompositionStyleProp, } from "./composition-style.js";
@@ -24,7 +24,7 @@ export { Accordion, Avatar, AvatarGroup, type AvatarGroupProps, DescriptionList,
 export { UploadItem, type UploadItemProps, } from "./upload-item.js";
 export { EmptyState, Notice, Progress, Result, Skeleton, Spinner, type EmptyStateProps, type NoticeProps, type ProgressProps, type ResultProps, type SkeletonProps, type SpinnerProps, } from "./feedback.js";
 export { Toast, ToastProvider, useToast, type ToastApi, type ToastProps, type ToastProviderProps, } from "./toast.js";
-export { AlertDialog, Dialog, Menu, Sheet, Tooltip, type AlertDialogProps, type DialogOpenChangeReason, type DialogProps, type MenuItem, type MenuAsyncState, type MenuOpenChangeReason, type MenuProps, type MenuSection, type OverlayTrigger, type SheetPlacement, type SheetProps, type TooltipProps, } from "./overlays.js";
+export { AlertDialog, Dialog, Menu, Sheet, Tooltip, type AlertDialogProps, type DialogOpenChangeReason, type DialogProps, type MenuItem, type MenuAsyncState, type MenuOpenChangeReason, type MenuProps, type MenuSection, type OverlayTrigger, type SheetPlacement, type SheetProps, type SheetSize, type TooltipProps, } from "./overlays.js";
 export { Carousel, type CarouselProps, type CarouselLabels } from "./carousel.js";
 export { FloatingActionButton, useFloatingActionButtonScroll, resolveFloatingActionButtonContentClearance, type FloatingActionButtonProps } from "./floating-action-button.js";
 export { Calendar, type CalendarProps, type CalendarMonthAction, type CalendarHandle, type CalendarOverflow } from "./calendar.js";

@@ -62,7 +62,7 @@ describe("Icon semantic contract", () => {
     expect(getIconTransform("fixed", "rtl")).toBe("none");
   });
 
-  it("links the beta renderer contract proven across product slices", () => {
+  it("links the stable renderer contract proven across product slices", () => {
     expect(new Set(semanticIconNames).size).toBe(semanticIconNames.length);
     expect(iconRecipe.stroke).toEqual({
       lineCap: "round",
@@ -72,7 +72,7 @@ describe("Icon semantic contract", () => {
     expect(iconRecipe.weights).toEqual({ regular: 2, strong: 2.5 });
     expect(componentCatalog.find((entry) => entry.name === "Icon")).toMatchObject({
       platform: "shared",
-      status: "beta",
+      status: "stable",
       recipe: "iconRecipe",
     });
   });

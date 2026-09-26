@@ -112,7 +112,8 @@ describe("cross-platform core normalization", () => {
     expect(resolveIconButtonPresentation("secondary", palette)).toEqual({
       background: THEMES.light.surfaceAlt,
       content: THEMES.light.text,
-      border: THEMES.light.textSub,
+      // The recipe reads border.control; this equalled textSub only while both shared #6b7684.
+      border: THEMES.light.borderControl,
     });
   });
 });

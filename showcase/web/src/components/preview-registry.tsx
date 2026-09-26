@@ -739,7 +739,8 @@ function createProviderWebRendererDefinition(): ProviderWebRendererDefinition {
   }
   const contract: ComponentCatalogEntry = component;
   if (
-    contract.status !== "beta" ||
+    // Stable since 1.5.0 (docs/stable-core.md); the adapter evidence stays required.
+    contract.status !== "stable" ||
     contract.platform === "native" ||
     contract.nonVisualEvidence !== "provider-adapter" ||
     contract.recipe !== undefined ||

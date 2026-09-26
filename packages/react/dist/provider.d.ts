@@ -1,6 +1,8 @@
-import { type DesignSystemDensity, type DesignSystemDirection, type DesignSystemProviderValue, type DesignSystemTextScale } from "@hjmds/design-contracts/components/design-system-provider";
+import { type DesignSystemDensity, type DesignSystemDirection, type DesignSystemProviderValue, type DesignSystemTextScale, type ResolveDesignSystemEnvironmentOptions } from "@hjmds/design-contracts/components/design-system-provider";
 import type { ResolvedTheme, ThemePreference } from "@hjmds/design-contracts/colors";
 import { type HTMLAttributes, type ReactNode } from "react";
+/** Per-theme partial palette merged over the HJM defaults; see docs/brand-boundary.md. */
+export type HjmBrandPalette = NonNullable<ResolveDesignSystemEnvironmentOptions["brandPalette"]>;
 export type TooltipCoordinator = Readonly<{
     activeId: string | null;
     activate(id: string): void;
@@ -18,6 +20,12 @@ type HjmProviderEnvironmentProps = Readonly<{
     density?: DesignSystemDensity;
     /** Deterministic SSR/test override; otherwise prefers-color-scheme is observed. */
     systemTheme?: ResolvedTheme;
+    /**
+     * The supported brand route (docs/brand-boundary.md). Before 1.5.0 the only way
+     * to brand was a hand-built `value`, which also stopped the provider from
+     * following the OS theme and reduced-motion settings.
+     */
+    brandPalette?: HjmBrandPalette;
 }>;
 type HjmProviderValueProps = Readonly<{
     /** Complete, validated environment and semantic product palette. */
@@ -29,6 +37,7 @@ type HjmProviderValueProps = Readonly<{
     minimumVisualTarget?: never;
     density?: never;
     systemTheme?: never;
+    brandPalette?: never;
 }>;
 /**
  * How the provider's own host element participates in layout and painting.

@@ -293,7 +293,8 @@
       "import": "./dist/evidence.js",
       "default": "./dist/evidence.js"
     },
-    "./styles.css": "./dist/styles.css"
+    "./styles.css": "./dist/styles.css",
+    "./styles.layered.css": "./dist/styles.layered.css"
   },
   "files": [
     "dist",
@@ -301,15 +302,16 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.build.json && cp src/styles.css dist/styles.css",
+    "build": "tsc -p tsconfig.build.json && node scripts/copy-styles.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test:ssr": "vitest run --config vitest.ssr.config.ts",
     "test:browser": "vitest run --config vitest.browser.config.ts",
     "test": "pnpm test:ssr && pnpm test:browser",
-    "check": "pnpm typecheck && pnpm test && pnpm build"
+    "check": "pnpm typecheck && pnpm test && pnpm build",
+    "test:visual": "vitest run --config vitest.visual.config.ts"
   },
   "peerDependencies": {
-    "@hjmds/design-contracts": ">=1.4.0 <1.5.0",
+    "@hjmds/design-contracts": ">=1.5.0 <1.6.0",
     "react": ">=19.0.0",
     "react-dom": ">=19.0.0"
   },

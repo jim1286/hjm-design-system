@@ -13,6 +13,16 @@ const rendererBudgets = [
     packageName: "@hjmds/react",
     directory: "packages/react",
     surface: "web",
+    // 1.5.0: shared modules most entries reach grew on purpose, so the allowance
+    // is added to every entry whose graph contains them instead of re-deriving
+    // ~40 per-entry limits. theme.js now emits the focus, overlay, button and
+    // field variables from the recipes (they were hand-copied into styles.css
+    // and drifted): measured +3.1 kB raw / +0.84 kB gzip. provider.js gained the
+    // brandPalette prop and its inheritance context: +0.7 kB / +0.24 kB.
+    sharedModuleAllowances: [
+      { file: "theme.js", raw: 3_300, gzip: 900 },
+      { file: "provider.js", raw: 800, gzip: 280 },
+    ],
     budgets: {
       // 28: the canonical composition-style contract module. `hjmCompositionStyleKeys`
       // is a runtime value, so exporting it from the root adds one graph edge.
@@ -154,7 +164,9 @@ const rendererBudgets = [
       // Two new claims add metadata only: measured 6,045 B raw / 1,594 B gzip.
       // Three Web navigation claims add metadata (6.5 kB raw); no import edges.
       // Six more claims, metadata only: measured 6.9 kB raw / 1.7 kB gzip.
-      "./evidence": { modules: 1, raw: 8_200, gzip: 2_100 },
+      // 1.5.0: claims now derive per-scenario proofs from the gap and long-copy
+      // tables of the real scenario matrix: measured 9.8 kB raw / 2.65 kB gzip.
+      "./evidence": { modules: 1, raw: 10_200, gzip: 2_800 },
     },
     cssBudgets: {
       // 1.0.0+: gzip 13_500 -> 14_000. Switch의 꺼짐 hairline을 추가할 때 규칙 자체는
@@ -195,12 +207,20 @@ const rendererBudgets = [
       // 1.4 Switch row/description/reflow and Sheet alignment measure 149.8/24.2 kB.
       // Keep selection's module budget unchanged; only these shared CSS rules grow.
       "./styles.css": { raw: 153_000, gzip: 24_800 },
+      // Same rules wrapped in `@layer hjm { }` by packages/react/scripts/copy-styles.mjs;
+      // the wrapper adds ~15 bytes, so this budget tracks styles.css plus that margin.
+      "./styles.layered.css": { raw: 153_064, gzip: 24_832 },
     },
   },
   {
     packageName: "@hjmds/react-native",
     directory: "packages/react-native",
     surface: "native",
+    // 1.5.0: provider.js gained the brandPalette prop and its inheritance
+    // context, measured +0.6 kB raw / +0.19 kB gzip; see the Web note above.
+    sharedModuleAllowances: [
+      { file: "provider.js", raw: 700, gzip: 220 },
+    ],
     budgets: {
       // +1 module on ".", "./inputs", "./navigation" and "./data-display":
       // `internal/web-a11y.js` holds the DOM ARIA and keyboard contracts that
@@ -280,7 +300,9 @@ const rendererBudgets = [
       "./feedback": { modules: 5, raw: 73_500, gzip: 15_100 },
       "./overlays": { modules: 6, raw: 84_500, gzip: 15_100 },
       // evidence 목록에 auth-screen 한 줄이 늘었다.
-      "./evidence": { modules: 1, raw: 6_800, gzip: 1_800 },
+      // 1.5.0: per-scenario proofs from the Native scenario matrix tables:
+      // measured 8.1 kB raw / 2.23 kB gzip.
+      "./evidence": { modules: 1, raw: 8_600, gzip: 2_400 },
     },
     cssBudgets: {},
   },
@@ -454,11 +476,15 @@ async function checkRenderer(renderer) {
 
   console.log(`\n${renderer.packageName} import-graph budgets`);
   for (const [exportPath, target] of executableExports) {
-    const budget = renderer.budgets[exportPath];
-    if (!budget || typeof target !== "string") continue;
+    const baseBudget = renderer.budgets[exportPath];
+    if (!baseBudget || typeof target !== "string") continue;
     const entryFile = resolve(packageDirectory, target);
     await access(entryFile);
     const measured = await measureGraph(entryFile, distDirectory, availableFiles);
+    const allowance = (renderer.sharedModuleAllowances ?? [])
+      .filter(({ file }) => measured.files.has(resolve(distDirectory, file)))
+      .reduce((sum, { raw, gzip }) => ({ raw: sum.raw + raw, gzip: sum.gzip + gzip }), { raw: 0, gzip: 0 });
+    const budget = { ...baseBudget, raw: baseBudget.raw + allowance.raw, gzip: baseBudget.gzip + allowance.gzip };
     const regressions = [];
     if (
       exportPath !== "." &&

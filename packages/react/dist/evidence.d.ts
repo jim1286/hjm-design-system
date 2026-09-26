@@ -25,8 +25,9 @@ export type ReactRendererEvidenceManifest = Readonly<{
     components: readonly ReactRendererEvidenceComponent[];
 }>;
 /**
- * First-party Web renderer claims. Scenario axes remain fail-closed: this
- * manifest claims a table-driven environment/accessibility smoke matrix.
+ * First-party Web renderer claims. Scenario axes remain fail-closed: the
+ * default scenario is an SSR render, the environment and accessibility
+ * scenarios are computed-style assertions in scenario-matrix.browser.
  * Keyboard and cross-platform parity remain fail-closed until dedicated
  * interaction or paired-renderer proofs are mapped one-to-one.
  */

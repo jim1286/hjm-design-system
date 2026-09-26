@@ -116,10 +116,10 @@ adapter가 자체 병합 로직을 다시 만들 필요가 없다. `parent`에�
 | `size`(antd ConfigProvider의 컴포넌트 전역 사이즈 프리셋) | **배제** — 측정된 요구가
   없고, 있다 해도 그건 각 recipe의 `sizes`(예: `selectRecipe.sizes`)가 이미 컴포넌트별로
   갖고 있는 축이라 전역 오버라이드를 얹으면 두 곳이 같은 축을 다시 소유하게 된다. |
-| 임의 theme/component token override | **partial override는 배제** — HJM light/dark는 대비
-  테스트를 함께 통과하는 고정 계약이다. 별도 브랜드 제품은 모든 semantic role을 가진
-  완전한 `DesignSystemProviderValue`만 renderer의 `value` 경계로 주입하며, 런타임 shape 검사와
-  제품별 전체 대비 fixture를 함께 둔다. |
+| 임의 theme/component token override | **component token override는 배제**, theme 색은 `brandPalette`
+  부분 병합으로만 — 병합 결과는 `checkBrandPaletteContrast`를 통과해야 한다. 규칙 원본은
+  [brand-boundary.md](./brand-boundary.md)이며, 이 행의 이전 문구("partial override 배제, 완전한 value만")는
+  0.9.x에 `brandPalette`가 생기면서 사실과 달라졌다. |
 
 ## 제품 adapter 증거
 

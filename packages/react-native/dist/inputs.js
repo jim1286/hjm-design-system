@@ -32,7 +32,7 @@ function FieldMessage({ error, supportText }) {
         return null;
     return (_jsx(Text, { accessibilityLiveRegion: error ? "assertive" : "none", tone: error ? "danger" : "muted", variant: fieldRecipe.support.textVariant, children: error ?? supportText }));
 }
-const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultValue = "", onValueChange, supportText, error, required = false, disabled = false, busy = false, variant = fieldRecipe.defaults.variant, shape, accessibilityLabel, inputStyle, containerStyle, layoutStyle, allowFontScaling, multiline, maxVisibleLines, minVisibleLines, align = fieldRecipe.defaults.align, search, searchSize = searchFieldRecipe.defaults.size, leading, trailing, onBlur, onFocus, ...props }, ref) {
+const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultValue = "", onValueChange, description, supportText: legacySupportText, error, required = false, disabled = false, busy = false, variant = fieldRecipe.defaults.variant, shape, accessibilityLabel, inputStyle, containerStyle, layoutStyle, allowFontScaling, multiline, maxVisibleLines, minVisibleLines, align = fieldRecipe.defaults.align, search, searchSize = searchFieldRecipe.defaults.size, leading, trailing, onBlur, onFocus, ...props }, ref) {
     const theme = useHjmNativeTheme();
     const { colors, environment, textScaling } = theme;
     const [focused, setFocused] = useState(false);
@@ -41,6 +41,7 @@ const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultV
         defaultValue,
         ...(onValueChange === undefined ? {} : { onChange: onValueChange }),
     });
+    const supportText = description ?? legacySupportText;
     const hint = error ?? supportText;
     const { accessibleName, visibleLabel } = resolveFieldAccessibleName(label, accessibilityLabel);
     const resolvedShape = shape ?? (search ? searchFieldRecipe.defaults.shape : fieldRecipe.defaults.shape);
@@ -257,7 +258,8 @@ export const PasswordField = forwardRef(function PasswordField({ revealed: revea
             }), children: renderToggleIcon?.(appearance) ?? _jsx(DefaultPasswordToggleIcon, { ...appearance }) })) }));
 });
 /** One accessible numeric TextInput rendered through decorative OTP slots. */
-export const OtpField = forwardRef(function OtpField({ label, accessibilityLabel, supportText, error, required = false, disabled = false, busy = false, readOnly = false, length, value: valueProp, defaultValue = "", onValueChange, onComplete, size = otpFieldRecipe.defaults.size, slotStyle, slotTextStyle, containerStyle, allowFontScaling, onBlur, onFocus, ...props }, ref) {
+export const OtpField = forwardRef(function OtpField({ label, accessibilityLabel, description, supportText: legacySupportText, error, required = false, disabled = false, busy = false, readOnly = false, length, value: valueProp, defaultValue = "", onValueChange, onComplete, size = otpFieldRecipe.defaults.size, slotStyle, slotTextStyle, containerStyle, allowFontScaling, onBlur, onFocus, ...props }, ref) {
+    const supportText = description ?? legacySupportText;
     const theme = useHjmNativeTheme();
     const { accessibleName, visibleLabel } = resolveFieldAccessibleName(label, accessibilityLabel);
     const [focused, setFocused] = useState(false);

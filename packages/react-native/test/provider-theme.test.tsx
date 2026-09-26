@@ -70,3 +70,32 @@ describe("native provider theme precedence", () => {
     expect(renders[0]!.textScaling).toEqual({ mode: "controlled", scale: 1.5 });
   });
 });
+
+describe("brandPalette prop", () => {
+  it("merges the brand over the defaults, follows the theme and reaches nested providers", async () => {
+    const { resolveDesignSystemProviderValue } = await import("@hjmds/design-contracts/components/design-system-provider");
+    const { HjmNativeProvider: Provider, useHjmNativeTheme: useTheme } = await import("../src/index.js");
+    const { act: actRender, create: createRenderer } = await import("react-test-renderer");
+    const seen: string[] = [];
+    function Probe() {
+      seen.push(useTheme().palette.theme.primary);
+      return null;
+    }
+    const brand = { light: { primary: "#123456" }, dark: { primary: "#abcdef" } } as const;
+    for (const theme of ["light", "dark"] as const) {
+      let renderer: ReturnType<typeof createRenderer> | undefined;
+      actRender(() => {
+        renderer = createRenderer(
+          <Provider theme={theme} brandPalette={brand}>
+            <Probe />
+            <Provider textScale={1.3}><Probe /></Provider>
+          </Provider>,
+        );
+      });
+      actRender(() => { renderer?.unmount(); });
+    }
+    expect(seen).toEqual(["#123456", "#123456", "#abcdef", "#abcdef"]);
+    const defaults = resolveDesignSystemProviderValue({ theme: "light" }, { systemTheme: "light" });
+    expect(defaults.palette.theme.primary).not.toBe("#123456");
+  });
+});
