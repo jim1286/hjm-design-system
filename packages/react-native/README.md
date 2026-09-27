@@ -156,6 +156,11 @@ Without `onPress`, its root is a non-interactive `View`. `List` requires a local
 and supports `plain | grouped` appearance; `Statistic` accepts `contextLabel`, an exact
 `accessibilityLabel`, or a custom accessible-name composer.
 
+`Dialog.title` and `Sheet.title` accept a string or a `ReactElement`. A string is the modal's accessible
+name on its own; an element requires `accessibilityTitle` (enforced by the `OverlayTitleProps` union) because
+the renderer does not flatten element children into an accessibility label. `accessibilityTitle` also
+overrides a string title when the spoken name should differ from the displayed one.
+
 ## Controlled and uncontrolled state
 
 Checkbox, CheckboxGroup, RadioGroup, Switch, SegmentedControl, Tabs, Accordion, Select, Combobox, Menu, Dialog,

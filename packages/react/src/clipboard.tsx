@@ -1,7 +1,10 @@
 import { forwardRef, useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { Button, type ButtonProps } from "./actions.js";
 
-export type ClipboardButtonProps = Omit<ButtonProps, "children" | "onClick"> &
+// `onCopy` also names the DOM clipboard event handler on ButtonProps; intersected, the
+// value callback had to accept a ClipboardEvent too and no product could pass it. The
+// renderer consumes the prop and never forwards the DOM event, so omitting is lossless.
+export type ClipboardButtonProps = Omit<ButtonProps, "children" | "onClick" | "onCopy"> &
   Readonly<{
     value: string;
     /** Localized copy for both states; the renderer invents neither. */

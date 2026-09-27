@@ -70,9 +70,18 @@ function OverlayActions({ primaryAction, secondaryAction, busy, stacked = false,
             gap: spacing.sm,
         }, children: [secondaryAction ? renderAction(secondaryAction, "secondary") : null, primaryAction ? renderAction(primaryAction, "primary") : null] }));
 }
+function resolveOverlayAccessibleTitle(title, accessibilityTitle) {
+    if (accessibilityTitle !== undefined)
+        return accessibilityTitle;
+    if (typeof title === "string")
+        return title;
+    // Reached only from untyped callers; failing loudly beats an unnamed modal.
+    throw new TypeError("An element `title` requires `accessibilityTitle` for the modal accessible name");
+}
 /** Native modal boundary with one reasoned close intent for each user attempt. */
-export function Dialog({ open, defaultOpen, onOpenChange, title, description, children, primaryAction, secondaryAction, dismissible = true, busy = false, size = dialogRecipe.defaults.size, closeLabel, returnFocusRef, contentStyle, onShow, ...modalProps }) {
+export function Dialog({ open, defaultOpen, onOpenChange, title, accessibilityTitle, description, children, primaryAction, secondaryAction, dismissible = true, busy = false, size = dialogRecipe.defaults.size, closeLabel, returnFocusRef, contentStyle, onShow, ...modalProps }) {
     const { environment, palette } = useHjmNativeTheme();
+    const accessibleTitle = resolveOverlayAccessibleTitle(title, accessibilityTitle);
     const { width: windowWidth } = useWindowDimensions();
     const [visible, changeOpen] = useReasonedOpenState({
         ...(open === undefined ? {} : { open }),
@@ -205,7 +214,7 @@ export function Dialog({ open, defaultOpen, onOpenChange, title, description, ch
                 justifyContent: "center",
                 opacity: motionProgress,
                 padding: spacing.md,
-            }, children: [_jsx(Scrim, {}), dismissible ? (_jsx(Pressable, { accessible: false, importantForAccessibility: "no-hide-descendants", onPress: () => requestClose("outside"), style: { bottom: 0, left: 0, position: "absolute", right: 0, top: 0 } })) : null, _jsxs(View, { accessibilityLabel: [title, description].filter(Boolean).join(", "), accessibilityState: { busy }, accessibilityViewIsModal: true, importantForAccessibility: "yes", role: "dialog", style: [
+            }, children: [_jsx(Scrim, {}), dismissible ? (_jsx(Pressable, { accessible: false, importantForAccessibility: "no-hide-descendants", onPress: () => requestClose("outside"), style: { bottom: 0, left: 0, position: "absolute", right: 0, top: 0 } })) : null, _jsxs(View, { accessibilityLabel: [accessibleTitle, description].filter(Boolean).join(", "), accessibilityState: { busy }, accessibilityViewIsModal: true, importantForAccessibility: "yes", role: "dialog", style: [
                         {
                             alignSelf: "center",
                             backgroundColor: contentBackground,
@@ -509,8 +518,9 @@ export function AlertDialog({ open, defaultOpen, onOpenChange, request, returnFo
                                     ], children: _jsx(Text, { variant: "label", children: request.cancelLabel }) })) : null, stackActions ? null : confirmAction] })] })] }) }));
 }
 /** Native Sheet applies policy before emitting a concrete dismissal reason. */
-export function Sheet({ open, defaultOpen, onOpenChange, title, description, children, footer, placement = "bottom", size = sheetRecipe.defaults.size, busy = false, dismissPolicy, closeLabel, returnFocusRef, safeAreaInsets = {}, onDismissComplete, contentStyle, keyboardAvoidance = false, scrollable = false, onShow, ...modalProps }) {
+export function Sheet({ open, defaultOpen, onOpenChange, title, accessibilityTitle, description, children, footer, placement = "bottom", size = sheetRecipe.defaults.size, busy = false, dismissPolicy, closeLabel, returnFocusRef, safeAreaInsets = {}, onDismissComplete, contentStyle, keyboardAvoidance = false, scrollable = false, onShow, ...modalProps }) {
     const { environment, palette } = useHjmNativeTheme();
+    const accessibleTitle = resolveOverlayAccessibleTitle(title, accessibilityTitle);
     const { width: windowWidth, height: windowHeight } = useWindowDimensions();
     const [modalHeight, setModalHeight] = useState(null);
     const [keyboardFrame, setKeyboardFrame] = useState(null);
@@ -752,7 +762,7 @@ export function Sheet({ open, defaultOpen, onOpenChange, title, description, chi
                 opacity: motionProgress,
                 paddingTop: insets.top,
                 paddingBottom: keyboardInset,
-            }, children: [_jsx(Scrim, {}), policy.dismissible && policy.outsideDismiss ? (_jsx(Pressable, { accessible: false, importantForAccessibility: "no-hide-descendants", onPress: () => requestClose("outside"), style: { bottom: 0, left: 0, position: "absolute", right: 0, top: 0 } })) : null, _jsxs(Animated.View, { accessibilityLabel: [title, description].filter(Boolean).join(", "), accessibilityState: { busy }, accessibilityViewIsModal: true, importantForAccessibility: "yes", role: "dialog", style: [
+            }, children: [_jsx(Scrim, {}), policy.dismissible && policy.outsideDismiss ? (_jsx(Pressable, { accessible: false, importantForAccessibility: "no-hide-descendants", onPress: () => requestClose("outside"), style: { bottom: 0, left: 0, position: "absolute", right: 0, top: 0 } })) : null, _jsxs(Animated.View, { accessibilityLabel: [accessibleTitle, description].filter(Boolean).join(", "), accessibilityState: { busy }, accessibilityViewIsModal: true, importantForAccessibility: "yes", role: "dialog", style: [
                         {
                             backgroundColor: contentBackground,
                             borderColor: contentBorder,

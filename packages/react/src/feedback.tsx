@@ -25,7 +25,11 @@ import {
 import { classNames } from "./internal.js";
 import { Button } from "./actions.js";
 
-export type NoticeProps = HTMLAttributes<HTMLElement> &
+// The HTML `title` attribute (tooltip string) shares its name with the heading slot.
+// Left in the intersection, `string & ReactNode` collapses the slot to `string`, so
+// consumers had to cast heading elements (BurnTok, 2026-09-27 audit). Omit it like
+// Result/Card/Section already do.
+export type NoticeProps = Omit<HTMLAttributes<HTMLElement>, "title"> &
   Readonly<{
     title: ReactNode;
     description?: ReactNode;
@@ -68,7 +72,7 @@ export const Notice = forwardRef<HTMLElement, NoticeProps>(function Notice(
 
 type EmptyStateDensity = keyof typeof emptyStateRecipe.density;
 
-export type EmptyStateProps = HTMLAttributes<HTMLDivElement> &
+export type EmptyStateProps = Omit<HTMLAttributes<HTMLDivElement>, "title"> &
   Readonly<{
     title: ReactNode;
     description?: ReactNode;

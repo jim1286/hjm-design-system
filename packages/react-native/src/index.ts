@@ -263,6 +263,7 @@ export {
   type DialogOpenChangeReason,
   type DialogProps,
   type OverlayAction,
+  type OverlayTitleProps,
   type SheetPlacement,
   type SheetSize,
   type SheetProps,

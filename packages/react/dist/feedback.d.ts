@@ -1,14 +1,14 @@
 import { emptyStateRecipe, skeletonRecipe, type NoticeTone, type ProgressShape, type ProgressSize, type ProgressTone, type SpinnerSize, type SpinnerTone } from "@hjmds/design-contracts/recipes";
 import { type ResultDescriptor } from "@hjmds/design-contracts/components/result";
 import { type HTMLAttributes, type ProgressHTMLAttributes, type ReactNode } from "react";
-export type NoticeProps = HTMLAttributes<HTMLElement> & Readonly<{
+export type NoticeProps = Omit<HTMLAttributes<HTMLElement>, "title"> & Readonly<{
     title: ReactNode;
     description?: ReactNode;
     action?: ReactNode;
     icon?: ReactNode;
     tone?: NoticeTone;
 }>;
-export declare const Notice: import("react").ForwardRefExoticComponent<HTMLAttributes<HTMLElement> & Readonly<{
+export declare const Notice: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLElement>, "title"> & Readonly<{
     title: ReactNode;
     description?: ReactNode;
     action?: ReactNode;
@@ -16,14 +16,14 @@ export declare const Notice: import("react").ForwardRefExoticComponent<HTMLAttri
     tone?: NoticeTone;
 }> & import("react").RefAttributes<HTMLElement>>;
 type EmptyStateDensity = keyof typeof emptyStateRecipe.density;
-export type EmptyStateProps = HTMLAttributes<HTMLDivElement> & Readonly<{
+export type EmptyStateProps = Omit<HTMLAttributes<HTMLDivElement>, "title"> & Readonly<{
     title: ReactNode;
     description?: ReactNode;
     action?: ReactNode;
     icon?: ReactNode;
     density?: EmptyStateDensity;
 }>;
-export declare const EmptyState: import("react").ForwardRefExoticComponent<HTMLAttributes<HTMLDivElement> & Readonly<{
+export declare const EmptyState: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLDivElement>, "title"> & Readonly<{
     title: ReactNode;
     description?: ReactNode;
     action?: ReactNode;
