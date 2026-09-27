@@ -2,7 +2,7 @@ import { type AlertDialogOpenChangeReason, type AlertDialogRequest, type AlertDi
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { type SheetDismissPolicy, type SheetDismissReason, type SheetOpenChangeDetails } from "@hjmds/design-contracts/components/sheet";
 import { sheetRecipe, type DialogSize } from "@hjmds/design-contracts/recipes";
-import { type ReactNode, type RefObject } from "react";
+import { type ReactElement, type ReactNode, type RefObject } from "react";
 import { View, type Insets, type ModalProps, type StyleProp, type ViewStyle } from "react-native";
 import { type ButtonTone } from "./actions.js";
 export type OverlayAction = Readonly<{
@@ -21,8 +21,22 @@ type ReasonedOpenProps<Reason> = Readonly<{
     }>) => void;
 }>;
 export type DialogOpenChangeReason = "close-action" | "back" | "outside";
-export type DialogProps = NativeModalProps & ReasonedOpenProps<DialogOpenChangeReason> & Readonly<{
+/**
+ * Heading slot shared by Dialog and Sheet. A string is its own accessible name. An
+ * element (a product heading with an icon or emphasis) cannot be flattened by the
+ * renderer, so the consumer supplies `accessibilityTitle` for the modal's
+ * accessibility label; the union makes that pairing mandatory instead of letting the
+ * name silently go empty. Web takes a plain ReactNode because `aria-labelledby`
+ * reads the rendered DOM. Products cast `as unknown as string` before this existed.
+ */
+export type OverlayTitleProps = Readonly<{
     title: string;
+    accessibilityTitle?: string;
+}> | Readonly<{
+    title: ReactElement;
+    accessibilityTitle: string;
+}>;
+export type DialogProps = NativeModalProps & ReasonedOpenProps<DialogOpenChangeReason> & OverlayTitleProps & Readonly<{
     description?: string;
     children?: ReactNode;
     primaryAction?: OverlayAction;
@@ -37,7 +51,7 @@ export type DialogProps = NativeModalProps & ReasonedOpenProps<DialogOpenChangeR
     contentStyle?: HjmCompositionStyleProp;
 }>;
 /** Native modal boundary with one reasoned close intent for each user attempt. */
-export declare function Dialog({ open, defaultOpen, onOpenChange, title, description, children, primaryAction, secondaryAction, dismissible, busy, size, closeLabel, returnFocusRef, contentStyle, onShow, ...modalProps }: DialogProps): import("react").JSX.Element;
+export declare function Dialog({ open, defaultOpen, onOpenChange, title, accessibilityTitle, description, children, primaryAction, secondaryAction, dismissible, busy, size, closeLabel, returnFocusRef, contentStyle, onShow, ...modalProps }: DialogProps): import("react").JSX.Element;
 export type AlertDialogProps = NativeModalProps & ReasonedOpenProps<AlertDialogOpenChangeReason> & Readonly<{
     request: AlertDialogRequest;
     returnFocusRef?: RefObject<View | null>;
@@ -48,8 +62,7 @@ export type AlertDialogProps = NativeModalProps & ReasonedOpenProps<AlertDialogO
 export declare function AlertDialog({ open, defaultOpen, onOpenChange, request, returnFocusRef, onResult, contentStyle, onShow, ...modalProps }: AlertDialogProps): import("react").JSX.Element;
 export type SheetPlacement = "bottom" | "start" | "end";
 export type SheetSize = keyof typeof sheetRecipe.sizes;
-export type SheetProps = NativeModalProps & ReasonedOpenProps<SheetOpenChangeDetails["reason"]> & Readonly<{
-    title: string;
+export type SheetProps = NativeModalProps & ReasonedOpenProps<SheetOpenChangeDetails["reason"]> & OverlayTitleProps & Readonly<{
     description?: string;
     children?: ReactNode;
     footer?: ReactNode;
@@ -76,6 +89,6 @@ export type SheetProps = NativeModalProps & ReasonedOpenProps<SheetOpenChangeDet
     scrollable?: boolean;
 }>;
 /** Native Sheet applies policy before emitting a concrete dismissal reason. */
-export declare function Sheet({ open, defaultOpen, onOpenChange, title, description, children, footer, placement, size, busy, dismissPolicy, closeLabel, returnFocusRef, safeAreaInsets, onDismissComplete, contentStyle, keyboardAvoidance, scrollable, onShow, ...modalProps }: SheetProps): import("react").JSX.Element;
+export declare function Sheet({ open, defaultOpen, onOpenChange, title, accessibilityTitle, description, children, footer, placement, size, busy, dismissPolicy, closeLabel, returnFocusRef, safeAreaInsets, onDismissComplete, contentStyle, keyboardAvoidance, scrollable, onShow, ...modalProps }: SheetProps): import("react").JSX.Element;
 export {};
 //# sourceMappingURL=overlays.d.ts.map

@@ -3,7 +3,7 @@ import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { Animated, Keyboard, Platform, ScrollView, View } from "react-native";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { sheetRecipe } from "@hjmds/design-contracts/recipes";
-import { Sheet, type SheetProps } from "../src/overlays.js";
+import { Dialog, Sheet, type DialogProps, type SheetProps } from "../src/overlays.js";
 import { HjmNativeProvider } from "../src/provider.js";
 import { Text } from "../src/primitives.js";
 
@@ -12,7 +12,9 @@ const keyboard = Keyboard as typeof Keyboard & {
   __emit(event: string, height?: number, coordinates?: Record<string, number>): void;
 };
 let renderer: ReactTestRenderer | undefined;
-function tree(props: Partial<SheetProps> = {}) {
+// `title`/`accessibilityTitle` form a union pair; a Partial over the union would let the
+// string-title fixture below merge into the element branch and fail to type-check.
+function tree(props: Partial<Omit<SheetProps, "title">> = {}) {
   return <HjmNativeProvider reducedMotion textScale={2}>
     <Sheet open title="설정" closeLabel="닫기" safeAreaInsets={{ top: 40, bottom: 24 }}
       footer={<Text>저장</Text>} {...props}>
@@ -109,5 +111,42 @@ describe("Sheet input viewport", () => {
     expect(positioner().props.style.paddingBottom).toBe(0);
     act(() => renderer!.update(tree({ keyboardAvoidance: true, placement: "end" })));
     expect(style()).toMatchObject({ height: 360, maxHeight: 360 });
+  });
+});
+
+describe("Overlay element titles", () => {
+  it("renders an element title in the Sheet header and names the modal from accessibilityTitle", () => {
+    render(
+      <HjmNativeProvider reducedMotion>
+        <Sheet open closeLabel="닫기" title={<Text variant="title">필터 <Text tone="muted">3</Text></Text>}
+          accessibilityTitle="필터 3개 적용" description="현재 조건">
+          <Text>본문</Text>
+        </Sheet>
+      </HjmNativeProvider>,
+    );
+    expect(dialog().props.accessibilityLabel).toBe("필터 3개 적용, 현재 조건");
+    const header = renderer!.root.findAll((node) => node.props.accessibilityRole === "header")[0]!;
+    expect(header.findAllByType(Text).some((text) => text.props.tone === "muted")).toBe(true);
+  });
+
+  it("lets accessibilityTitle override a string title and keeps the string title as the default name", () => {
+    render(tree({ accessibilityTitle: "설정 화면" }));
+    expect(dialog().props.accessibilityLabel).toBe("설정 화면");
+    act(() => { renderer?.unmount(); });
+    render(
+      <HjmNativeProvider reducedMotion>
+        <Dialog open closeLabel="닫기" title={<Text variant="title">삭제할까요?</Text>} accessibilityTitle="삭제 확인" />
+      </HjmNativeProvider>,
+    );
+    const boundary = renderer!.root.findAll((node) => node.props.role === "dialog")[0]!;
+    expect(boundary.props.accessibilityLabel).toBe("삭제 확인");
+  });
+
+  it("requires accessibilityTitle at the type level only when the title is an element", () => {
+    const stringTitle: SheetProps = { title: "설정", closeLabel: "닫기" };
+    const elementTitle: DialogProps = { title: <Text>설정</Text>, accessibilityTitle: "설정", closeLabel: "닫기" };
+    // @ts-expect-error -- an element title without an accessible name would leave the modal unnamed
+    const unnamed: SheetProps = { title: <Text>설정</Text>, closeLabel: "닫기" };
+    expect([stringTitle, elementTitle, unnamed].length).toBe(3);
   });
 });

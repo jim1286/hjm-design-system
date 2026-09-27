@@ -6,8 +6,14 @@
 ReactNode를 `as unknown as string`으로 전달했다. Web도 `.hjm-sheet__header`를 덮어썼다.
 같은 어댑터가 키보드 높이, top inset, 본문 maxHeight를 별도로 보정하고 있었다.
 
-1.4는 제목·닫기 컨트롤을 헤더 중앙에 정렬한다. 제목은 여전히 문자열이다. 임의의 제목 slot을
+1.4는 제목·닫기 컨트롤을 헤더 중앙에 정렬한다. 1.4에서는 제목을 문자열로 유지했다. 임의의 제목 slot을
 추가하면 접근성 이름과 표시가 서로 어긋날 수 있어 기본 renderer 정렬을 고치는 쪽을 택했다.
+
+1.7은 Native `Sheet`·`Dialog`의 `title`을 `string | ReactElement`로 넓힌다(`OverlayTitleProps`).
+정렬을 고친 뒤에도 강조·아이콘이 든 제목을 위해 캐스트가 남았기 때문이다(2026-09-27 감사).
+어긋남은 타입으로 막는다: element 제목이면 `accessibilityTitle: string`이 필수이고 modal의
+`accessibilityLabel`은 그 문자열(+description)로만 만든다. 문자열 제목은 그대로 이름이 되고
+`accessibilityTitle`은 선택이다. Web은 `aria-labelledby`가 렌더된 DOM을 읽으므로 ReactNode 그대로다.
 
 Native Sheet는 `keyboardAvoidance`와 `scrollable`을 제공한다. 둘 다 기본 false다.
 이미 키보드를 처리하거나 FlatList를 넣는 소비자를 minor에서 이중 처리하지 않기 위한 선택이다.
@@ -40,7 +46,8 @@ Native Sheet는 `keyboardAvoidance`와 `scrollable`을 제공한다. 둘 다 기
 ## 증거와 남은 확인
 
 - `packages/react-native/test/sheet-viewport.test.tsx`: 키보드 사전 표시, frame 변경, resize,
-  floating keyboard, listener 해제, footer/body 경계, safe area와 title 이름.
+  floating keyboard, listener 해제, footer/body 경계, safe area와 title 이름, element 제목의
+  `accessibilityTitle` 쌍(타입·accessibilityLabel).
 - `packages/react-native/test/modal-lifecycle-fallback.test.tsx`: 종료/후속 surface/focus 회귀.
 - `packages/react/test/sheet-layout.browser.test.tsx`: 320px의 제목/닫기 기하와 100/200% 글자.
 - 위 Native proof는 host mock이다. 소비 앱 Device Hub 및 Android의 실제 키보드 동작은

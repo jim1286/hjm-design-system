@@ -1,6 +1,6 @@
 import { type ReactNode } from "react";
 import { type ButtonProps } from "./actions.js";
-export type ClipboardButtonProps = Omit<ButtonProps, "children" | "onClick"> & Readonly<{
+export type ClipboardButtonProps = Omit<ButtonProps, "children" | "onClick" | "onCopy"> & Readonly<{
     value: string;
     /** Localized copy for both states; the renderer invents neither. */
     labels: Readonly<{
@@ -18,7 +18,7 @@ export type ClipboardButtonProps = Omit<ButtonProps, "children" | "onClick"> & R
  * The last one is the part that was always missing — a label that only changes
  * visually tells a non-sighted user nothing happened.
  */
-export declare const ClipboardButton: import("react").ForwardRefExoticComponent<Omit<ButtonProps, "children" | "onClick"> & Readonly<{
+export declare const ClipboardButton: import("react").ForwardRefExoticComponent<Omit<ButtonProps, "children" | "onCopy" | "onClick"> & Readonly<{
     value: string;
     /** Localized copy for both states; the renderer invents neither. */
     labels: Readonly<{

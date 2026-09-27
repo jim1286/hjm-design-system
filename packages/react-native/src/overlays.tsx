@@ -30,6 +30,7 @@ import {
   useRef,
   useState,
   useSyncExternalStore,
+  type ReactElement,
   type ReactNode,
   type RefObject,
 } from "react";
@@ -186,10 +187,32 @@ function OverlayActions({
 
 export type DialogOpenChangeReason = "close-action" | "back" | "outside";
 
+/**
+ * Heading slot shared by Dialog and Sheet. A string is its own accessible name. An
+ * element (a product heading with an icon or emphasis) cannot be flattened by the
+ * renderer, so the consumer supplies `accessibilityTitle` for the modal's
+ * accessibility label; the union makes that pairing mandatory instead of letting the
+ * name silently go empty. Web takes a plain ReactNode because `aria-labelledby`
+ * reads the rendered DOM. Products cast `as unknown as string` before this existed.
+ */
+export type OverlayTitleProps =
+  | Readonly<{ title: string; accessibilityTitle?: string }>
+  | Readonly<{ title: ReactElement; accessibilityTitle: string }>;
+
+function resolveOverlayAccessibleTitle(
+  title: string | ReactElement,
+  accessibilityTitle: string | undefined,
+): string {
+  if (accessibilityTitle !== undefined) return accessibilityTitle;
+  if (typeof title === "string") return title;
+  // Reached only from untyped callers; failing loudly beats an unnamed modal.
+  throw new TypeError("An element `title` requires `accessibilityTitle` for the modal accessible name");
+}
+
 export type DialogProps = NativeModalProps &
   ReasonedOpenProps<DialogOpenChangeReason> &
+  OverlayTitleProps &
   Readonly<{
-    title: string;
     description?: string;
     children?: ReactNode;
     primaryAction?: OverlayAction;
@@ -210,6 +233,7 @@ export function Dialog({
   defaultOpen,
   onOpenChange,
   title,
+  accessibilityTitle,
   description,
   children,
   primaryAction,
@@ -224,6 +248,7 @@ export function Dialog({
   ...modalProps
 }: DialogProps) {
   const { environment, palette } = useHjmNativeTheme();
+  const accessibleTitle = resolveOverlayAccessibleTitle(title, accessibilityTitle);
   const { width: windowWidth } = useWindowDimensions();
   const [visible, changeOpen] = useReasonedOpenState({
     ...(open === undefined ? {} : { open }),
@@ -390,7 +415,7 @@ export function Dialog({
           />
         ) : null}
         <View
-          accessibilityLabel={[title, description].filter(Boolean).join(", ")}
+          accessibilityLabel={[accessibleTitle, description].filter(Boolean).join(", ")}
           accessibilityState={{ busy }}
           accessibilityViewIsModal
           importantForAccessibility="yes"
@@ -881,8 +906,8 @@ export type SheetSize = keyof typeof sheetRecipe.sizes;
 
 export type SheetProps = NativeModalProps &
   ReasonedOpenProps<SheetOpenChangeDetails["reason"]> &
+  OverlayTitleProps &
   Readonly<{
-    title: string;
     description?: string;
     children?: ReactNode;
     footer?: ReactNode;
@@ -913,6 +938,7 @@ export function Sheet({
   defaultOpen,
   onOpenChange,
   title,
+  accessibilityTitle,
   description,
   children,
   footer,
@@ -931,6 +957,7 @@ export function Sheet({
   ...modalProps
 }: SheetProps) {
   const { environment, palette } = useHjmNativeTheme();
+  const accessibleTitle = resolveOverlayAccessibleTitle(title, accessibilityTitle);
   const { width: windowWidth, height: windowHeight } = useWindowDimensions();
   const [modalHeight, setModalHeight] = useState<number | null>(null);
   const [keyboardFrame, setKeyboardFrame] = useState<KeyboardMetrics | null>(null);
@@ -1238,7 +1265,7 @@ export function Sheet({
           />
         ) : null}
         <Animated.View
-          accessibilityLabel={[title, description].filter(Boolean).join(", ")}
+          accessibilityLabel={[accessibleTitle, description].filter(Boolean).join(", ")}
           accessibilityState={{ busy }}
           accessibilityViewIsModal
           importantForAccessibility="yes"
