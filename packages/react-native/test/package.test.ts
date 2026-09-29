@@ -35,6 +35,13 @@ describe("@hjmds/react-native package boundary", () => {
       "react-native-gesture-handler": "2.32.0",
       "react-native-svg": "15.15.5",
       "qrcode-generator": "2.0.4",
+      "react-native-sortables": "1.10.1",
+      "react-native-reanimated-carousel": "5.1.1",
+      "react-native-fast-confetti": "2.0.2",
+      "react-native-screen-transitions": "4.0.0",
+      "@react-navigation/native": "7.4.1",
+      "react-native-safe-area-context": "5.7.0",
+
 
     });
     expect(packageJson.sideEffects).toBe(false);
@@ -87,6 +94,12 @@ describe("@hjmds/react-native package boundary", () => {
       "./masonry",
       "./virtual-list",
       "./qr-code",
+      "./sortable",
+      "./swipe-actions",
+      "./content-transition",
+      "./carousel-motion",
+      "./celebration",
+      "./screen-transition",
     ];
     expect(Object.keys(packageJson.exports)).toEqual(expectedExportPaths);
     const familyTargets = expectedExportPaths.slice(1).filter((path) => path !== "./top-bar" && path !== "./bottom-cta").map((exportPath) => {

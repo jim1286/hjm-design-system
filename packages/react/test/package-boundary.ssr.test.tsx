@@ -69,9 +69,17 @@ describe("@hjmds/react package boundary", () => {
       "./thinking-orb",
       "./statistic-motion",
       "./menu-morph",
+      "./affix",
+      "./color-picker",
+      "./watermark",
       "./masonry",
       "./virtual-list",
       "./qr-code",
+      "./sortable",
+      "./swipe-actions",
+      "./content-transition",
+      "./carousel-motion",
+      "./celebration",
     ];
 
     expect(Object.keys(packageJson.exports)).toEqual([

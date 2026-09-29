@@ -12,6 +12,7 @@ import { resolveColorReference } from "@hjmds/design-contracts/color-references"
 import { radius, spacing } from "@hjmds/design-contracts/foundations";
 import { useMemo, useState } from "react";
 import { Pressable, View, type StyleProp, type ViewStyle } from "react-native";
+import { mixedCheckboxState } from "./internal/state.js";
 import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
 
@@ -58,6 +59,11 @@ export function Agreement<Id extends string = string>({
 
   const markColor = resolveColorReference(agreementRecipe.item.selectedIndicator, theme.palette);
   const borderColor = resolveColorReference(agreementRecipe.item.focus.color, theme.palette);
+  // The glyph sits on the brand fill, so it takes onPrimary, the same token as the
+  // Checkbox indicator (selectionControlRecipe.states.indicator). agreementRecipe.all.color
+  // is the row text color and measured 2.19:1 on the fill (2026-09-30 audit). Read from
+  // the theme rather than the recipes entry, which would add a module to this subpath.
+  const glyphColor = theme.colors.onPrimary;
   const mark = (value: boolean | "mixed") => (
     <View
       style={{
@@ -72,7 +78,7 @@ export function Agreement<Id extends string = string>({
       }}
     >
       {value === false ? null : (
-        <Text style={{ color: resolveColorReference(agreementRecipe.all.color, theme.palette) }} variant="caption">
+        <Text accessible={false} style={{ color: glyphColor }} variant="caption">
           {value === "mixed" ? "–" : "✓"}
         </Text>
       )}
@@ -81,9 +87,16 @@ export function Agreement<Id extends string = string>({
 
   return (
     <View accessibilityLabel={descriptor.accessibilityLabel} accessibilityRole="none" style={[{ gap: agreementRecipe.gap }, style]}>
+      {/*
+        An explicit label keeps the name stable: without it Android derived the
+        content description from the mixed state and read "mixed" as the name
+        even after the row became all or none (2026-09-30 audit). Mixed stays in
+        accessibilityState, where TalkBack and VoiceOver announce it as state.
+      */}
       <Pressable
+        accessibilityLabel={descriptor.allLabel}
         accessibilityRole="checkbox"
-        accessibilityState={{ checked: state.all === "mixed" ? "mixed" : state.all }}
+        accessibilityState={mixedCheckboxState(state.all)}
         onPress={() => commit(toggleAgreementAll(descriptor, checked))}
         style={{
           alignItems: "center",
@@ -103,6 +116,8 @@ export function Agreement<Id extends string = string>({
         <View key={item.id} style={{ gap: spacing.xxs }}>
           <View style={{ alignItems: "center", flexDirection: "row", gap: spacing.xs }}>
             <Pressable
+              // Named explicitly so the check glyph never leaks into the name ("✓, Terms").
+              accessibilityLabel={`${item.label} ${item.required === true ? requiredLabel : optionalLabel}`}
               accessibilityRole="checkbox"
               accessibilityState={{ checked: checked.has(item.id), disabled: item.disabled === true }}
               disabled={item.disabled === true}

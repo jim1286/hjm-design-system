@@ -1,0 +1,1608 @@
+{
+  "platform": "ios",
+  "date": "2026-09-30",
+  "device": "iPhone 17 simulator, iOS 27.0 (existing booted device; none created or booted)",
+  "udid": "9ED1529C-5CAA-45CF-B234-E5301C92C89C",
+  "app": "dev.hjm.designsystem.showcase development client on Metro 8084 (shared with a concurrent Android audit; Metro not restarted)",
+  "sourceBase": "HJM checkout f1d28a3 (release 1.8.0) plus uncommitted working-tree changes from other sessions (interaction adapters, liquid toast). Canonical renderer sources had no modification after 01:30; only interaction-adapter files changed during the audit window.",
+  "method": "Screens via xcrun simctl io screenshot/recordVideo into /tmp, copied after all device interaction finished. Control and state reads via idb ui tap/swipe/text and idb ui describe-all (labels, values, traits). Long-press drag via idb gRPC HID events (touch down, 0.9 s hold, 25 stepped moves). Xcode Device Hub is running but this session had no Device Hub automation channel (the 9/29 and 9/30 adapter passes recorded timeoutReached); idb fallback approved by the user for HJM validation. No native build, no source edits, no commit.",
+  "bundleNote": "The client first ran a JS bundle older than another session's 03:20 design-contracts dist rebuild, so Celebration showed only blue particles. After terminating and reopening the client on Metro 8084 (~03:38) colors matched source; all interaction-adapter checks were repeated on the fresh bundle, and the canonical findings (agreement contrast, upload-item AX, number-field AX) were re-confirmed on it.",
+  "limits": [
+    "Accessibility evidence is idb accessibility-tree inspection, not a spoken VoiceOver journey.",
+    "No physical device, Release binary, other device sizes, or system text-size settings.",
+    "Stills do not establish timing; motion claims cite video frames, burst screenshots or pixel diffs.",
+    "idb text on the Korean IME can mis-compose multi-jamo input ('run' produced 'ㄱ'); tag entry claims rely on '42' and '가'.",
+    "External links (QR fallback, component docs) and Photos/provider integration were not exercised beyond in-app callbacks."
+  ],
+  "reviewSummary": {
+    "componentCount": 83,
+    "rendered": 83,
+    "visuallyReviewed": 83,
+    "interactionVerifiedOnScreen": 48,
+    "interactionNotApplicable": 35,
+    "componentsWithFindings": [
+      "agreement",
+      "number-field",
+      "switch",
+      "combobox",
+      "tags-input",
+      "upload-item",
+      "sheet"
+    ],
+    "regressionsVs20260929": []
+  },
+  "components": [
+    {
+      "componentId": "design-system-provider",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "interactionVerifiedOnScreen": false,
+      "interaction20260929": "not-applicable",
+      "evidence": [
+        "foundations-1.png",
+        "foundations-2.png"
+      ],
+      "notes": [
+        "Visually reviewed; identical to 9/29 white-foundations. Grid uses fixture availableWidth=320 so two cells end before right gutter (story fixture, same as 9/29). Icon renders story glyph 'S'."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "text",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "interactionVerifiedOnScreen": false,
+      "interaction20260929": "not-applicable",
+      "evidence": [
+        "foundations-1.png",
+        "foundations-2.png"
+      ],
+      "notes": [
+        "Visually reviewed; identical to 9/29 white-foundations. Grid uses fixture availableWidth=320 so two cells end before right gutter (story fixture, same as 9/29). Icon renders story glyph 'S'."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "surface",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "interactionVerifiedOnScreen": false,
+      "interaction20260929": "not-applicable",
+      "evidence": [
+        "foundations-1.png",
+        "foundations-2.png"
+      ],
+      "notes": [
+        "Visually reviewed; identical to 9/29 white-foundations. Grid uses fixture availableWidth=320 so two cells end before right gutter (story fixture, same as 9/29). Icon renders story glyph 'S'."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "stack",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "interactionVerifiedOnScreen": false,
+      "interaction20260929": "not-applicable",
+      "evidence": [
+        "foundations-1.png",
+        "foundations-2.png"
+      ],
+      "notes": [
+        "Visually reviewed; identical to 9/29 white-foundations. Grid uses fixture availableWidth=320 so two cells end before right gutter (story fixture, same as 9/29). Icon renders story glyph 'S'."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "container",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "interactionVerifiedOnScreen": false,
+      "interaction20260929": "not-applicable",
+      "evidence": [
+        "foundations-1.png",
+        "foundations-2.png"
+      ],
+      "notes": [
+        "Visually reviewed; identical to 9/29 white-foundations. Grid uses fixture availableWidth=320 so two cells end before right gutter (story fixture, same as 9/29). Icon renders story glyph 'S'."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "aspect-ratio",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "interactionVerifiedOnScreen": false,
+      "interaction20260929": "not-applicable",
+      "evidence": [
+        "foundations-1.png",
+        "foundations-2.png"
+      ],
+      "notes": [
+        "Visually reviewed; identical to 9/29 white-foundations. Grid uses fixture availableWidth=320 so two cells end before right gutter (story fixture, same as 9/29). Icon renders story glyph 'S'."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "grid",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "interactionVerifiedOnScreen": false,
+      "interaction20260929": "not-applicable",
+      "evidence": [
+        "foundations-1.png",
+        "foundations-2.png"
+      ],
+      "notes": [
+        "Visually reviewed; identical to 9/29 white-foundations. Grid uses fixture availableWidth=320 so two cells end before right gutter (story fixture, same as 9/29). Icon renders story glyph 'S'."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "layout",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "interactionVerifiedOnScreen": false,
+      "interaction20260929": "not-applicable",
+      "evidence": [
+        "foundations-1.png",
+        "foundations-2.png"
+      ],
+      "notes": [
+        "Visually reviewed; identical to 9/29 white-foundations. Grid uses fixture availableWidth=320 so two cells end before right gutter (story fixture, same as 9/29). Icon renders story glyph 'S'."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "icon",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "interactionVerifiedOnScreen": false,
+      "interaction20260929": "not-applicable",
+      "evidence": [
+        "foundations-1.png",
+        "foundations-2.png"
+      ],
+      "notes": [
+        "Visually reviewed; identical to 9/29 white-foundations. Grid uses fixture availableWidth=320 so two cells end before right gutter (story fixture, same as 9/29). Icon renders story glyph 'S'."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "section",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "interactionVerifiedOnScreen": false,
+      "interaction20260929": "not-applicable",
+      "evidence": [
+        "foundations-1.png",
+        "foundations-2.png"
+      ],
+      "notes": [
+        "Visually reviewed; identical to 9/29 white-foundations. Grid uses fixture availableWidth=320 so two cells end before right gutter (story fixture, same as 9/29). Icon renders story glyph 'S'."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "divider",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "interactionVerifiedOnScreen": false,
+      "interaction20260929": "not-applicable",
+      "evidence": [
+        "foundations-1.png",
+        "foundations-2.png"
+      ],
+      "notes": [
+        "Visually reviewed; identical to 9/29 white-foundations. Grid uses fixture availableWidth=320 so two cells end before right gutter (story fixture, same as 9/29). Icon renders story glyph 'S'."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "top",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "interactionVerifiedOnScreen": false,
+      "interaction20260929": "not-applicable",
+      "evidence": [
+        "foundations-1.png",
+        "foundations-2.png"
+      ],
+      "notes": [
+        "Visually reviewed; identical to 9/29 white-foundations. Grid uses fixture availableWidth=320 so two cells end before right gutter (story fixture, same as 9/29). Icon renders story glyph 'S'."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "heading",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "interactionVerifiedOnScreen": false,
+      "interaction20260929": "not-applicable",
+      "evidence": [
+        "foundations-1.png",
+        "foundations-2.png"
+      ],
+      "notes": [
+        "Visually reviewed; identical to 9/29 white-foundations. Grid uses fixture availableWidth=320 so two cells end before right gutter (story fixture, same as 9/29). Icon renders story glyph 'S'."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "auth-screen",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "interactionVerifiedOnScreen": false,
+      "interaction20260929": "not-applicable",
+      "evidence": [
+        "actions-1.png",
+        "actions-after.png"
+      ],
+      "notes": [
+        "Hero/title, provider button, Terms · Privacy footer visible; embedded provider button emits same callback."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "button",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "pass",
+      "interactionVerifiedOnScreen": true,
+      "interaction20260929": "pass",
+      "evidence": [
+        "actions-1.png",
+        "actions-after.png"
+      ],
+      "notes": [
+        "Primary + Add one(icon) -> 'Pressed 2 times'; Disabled tap did not increment; Secondary -> Last action: Secondary."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "icon-button",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "pass",
+      "interactionVerifiedOnScreen": true,
+      "interaction20260929": "pass",
+      "evidence": [
+        "actions-1.png",
+        "actions-after.png"
+      ],
+      "notes": [
+        "Primary + Add one(icon) -> 'Pressed 2 times'; Disabled tap did not increment; Secondary -> Last action: Secondary."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "link",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "pass",
+      "interactionVerifiedOnScreen": true,
+      "interaction20260929": "pass",
+      "evidence": [
+        "actions-after.png"
+      ],
+      "notes": [
+        "Tap -> Last action: Open component docs."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "bottom-cta",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "pass",
+      "interactionVerifiedOnScreen": true,
+      "interaction20260929": "pass",
+      "evidence": [
+        "actions-after.png"
+      ],
+      "notes": [
+        "Later -> Last action: Later; Continue -> Last action: Continue."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "auth-provider-button",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "pass",
+      "interactionVerifiedOnScreen": true,
+      "interaction20260929": "pass",
+      "evidence": [
+        "actions-after.png"
+      ],
+      "notes": [
+        "Tap -> Last action: Provider login requested (callback only, no provider login)."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "agreement",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass-with-findings",
+      "interaction": "pass",
+      "interactionVerifiedOnScreen": true,
+      "interaction20260929": "pass",
+      "evidence": [
+        "agreement-before.png",
+        "agreement-all.png"
+      ],
+      "notes": [
+        "Read(terms) -> 'Opened detail: terms' without checking; Terms -> master mixed; Agree to everything -> all checked; unchecking Marketing -> master mixed; master again -> all checked."
+      ],
+      "findings": [
+        "Checked mark glyph #191F28 on #075985 fill = 2.19:1 (<3:1 non-text). Same in 9/29 white-agreement-selected.png (pre-existing). AX labels include the glyph ('✓, Terms of service')."
+      ]
+    },
+    {
+      "componentId": "calendar",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "pass",
+      "interactionVerifiedOnScreen": true,
+      "interaction20260929": "pass",
+      "evidence": [
+        "range-before.png",
+        "range-end.png",
+        "calendar-before.png",
+        "calendar-selected.png"
+      ],
+      "notes": [
+        "Tap Feb 1 -> '2027-02-01, range start'; tap Feb 4 -> 2/3 'inside range', 4 'range end'; dots under 1-4 and filled 4. Same rendering as 9/29 range-end.png (start endpoint only dotted, not filled).",
+        "Standalone Patterns/Calendar: 다음 달 2026년 9월 -> 10월; tap 14 -> filled selection, trait Selected, text 2026-10-14; 20 disabled (NotEnabled); record dots visible."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "floating-action-button",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "pass",
+      "interactionVerifiedOnScreen": true,
+      "interaction20260929": "pass",
+      "evidence": [
+        "fab-1.png",
+        "fab-open.png",
+        "fab-typed.png",
+        "fab-saved.png"
+      ],
+      "notes": [
+        "새 기록 FAB opens entry dialog; typed 123; 기록 추가 closes and 123 row appears at top of list."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "field",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "pass",
+      "interactionVerifiedOnScreen": true,
+      "interaction20260929": "pass",
+      "evidence": [
+        "after-pw.png"
+      ],
+      "notes": [
+        "Typed ' 42' -> AXValue 'Custom value 42' and visible."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "search-field",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "pass",
+      "interactionVerifiedOnScreen": true,
+      "interaction20260929": "pass",
+      "evidence": [
+        "inputs-1.png",
+        "after-pw.png"
+      ],
+      "notes": [
+        "Clear search removes '김도영' -> '' and clear button disappears."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "text-area",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "pass",
+      "interactionVerifiedOnScreen": true,
+      "interaction20260929": "pass",
+      "evidence": [
+        "otp-now.png"
+      ],
+      "notes": [
+        "Typed ' 123' appended to multiline value."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "password-field",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "pass",
+      "interactionVerifiedOnScreen": true,
+      "interaction20260929": "pass",
+      "evidence": [
+        "password-revealed.png"
+      ],
+      "notes": [
+        "Show password -> value 'hjm-password' visible, button relabels 'Hide password'; hide restores bullets."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "otp-field",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "pass",
+      "interactionVerifiedOnScreen": true,
+      "interaction20260929": "pass",
+      "evidence": [
+        "otp-now.png"
+      ],
+      "notes": [
+        "128 -> typed 645 via number pad -> 128645 in six slots; keyboard dismissed, value retained, no duplicate backing text."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "number-field",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass-with-findings",
+      "interaction": "pass",
+      "interactionVerifiedOnScreen": true,
+      "interaction20260929": "pass",
+      "evidence": [
+        "number-slider-form.png"
+      ],
+      "notes": [
+        "Increase 2->3, Decrease 3->2, Increase 2->3 visible."
+      ],
+      "findings": [
+        "iOS accessibility value announced as percent: AXValue '20%'/'30%' while display is 2/3 (min/max/now without text -> UIKit percent). Pre-existing code (number-field.tsx accessibilityValue has no default text); not a visual regression."
+      ]
+    },
+    {
+      "componentId": "slider",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "pass",
+      "interactionVerifiedOnScreen": true,
+      "interaction20260929": "pass",
+      "evidence": [
+        "number-slider-form.png"
+      ],
+      "notes": [
+        "Drag 72% -> 95% (AXValue and label)."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "form",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "pass",
+      "interactionVerifiedOnScreen": true,
+      "interaction20260929": "pass",
+      "evidence": [
+        "number-slider-form.png"
+      ],
+      "notes": [
+        "Save profile -> 'Saved 1 times'."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "date-picker",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "pass",
+      "interactionVerifiedOnScreen": true,
+      "interaction20260929": "pass",
+      "evidence": [
+        "date-open.png",
+        "date-selected.png"
+      ],
+      "notes": [
+        "Visit date opens February 2027 sheet (Sunday-first, Feb 1 under Mon, today 19 ring); tap 2027-02-16 closes sheet and field shows 2027-02-16 with Clear date button."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "file-picker",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "pass",
+      "interactionVerifiedOnScreen": true,
+      "interaction20260929": "pass",
+      "evidence": [
+        "file-after.png"
+      ],
+      "notes": [
+        "Choose images -> 'Selected attachment: preview.png' (reference adapter callback; no Photos permission/provider proof)."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "checkbox",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "pass",
+      "interactionVerifiedOnScreen": true,
+      "interaction20260929": "pass",
+      "evidence": [
+        "choices-after.png"
+      ],
+      "notes": [
+        "Accept terms unchecked -> checked (AX)."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "radio",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "pass",
+      "interactionVerifiedOnScreen": true,
+      "interaction20260929": "pass",
+      "evidence": [
+        "choices-after.png"
+      ],
+      "notes": [
+        "Checked standalone radio stays checked when tapped."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "checkbox-group",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "pass",
+      "interactionVerifiedOnScreen": true,
+      "interaction20260929": "pass",
+      "evidence": [
+        "choices-before.png",
+        "choices-after.png",
+        "city-committed.png"
+      ],
+      "notes": [
+        "Push unchecked->checked; Standard->Express (and later Express->Standard); Notifications 1->0 (off); Featured off->on (✓); List->Grid."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "radio-group",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "pass",
+      "interactionVerifiedOnScreen": true,
+      "interaction20260929": "pass",
+      "evidence": [
+        "choices-before.png",
+        "choices-after.png",
+        "city-committed.png"
+      ],
+      "notes": [
+        "Push unchecked->checked; Standard->Express (and later Express->Standard); Notifications 1->0 (off); Featured off->on (✓); List->Grid."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "switch",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass-with-findings",
+      "interaction": "pass",
+      "interactionVerifiedOnScreen": true,
+      "interaction20260929": "pass",
+      "evidence": [
+        "choices-before.png",
+        "choices-after.png",
+        "city-committed.png",
+        "notif-saved.png"
+      ],
+      "notes": [
+        "Push unchecked->checked; Standard->Express (and later Express->Standard); Notifications 1->0 (off); Featured off->on (✓); List->Grid.",
+        "Visual alignment finding for Switch (see defect)."
+      ],
+      "findings": [
+        "Minor visual: the switch track sits ~8-10pt above its label's vertical center (Inputs 'Notifications' row and Notification settings rows). Same in 9/29 inputs-choices.png (pre-existing)."
+      ]
+    },
+    {
+      "componentId": "segmented-control",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "pass",
+      "interactionVerifiedOnScreen": true,
+      "interaction20260929": "pass",
+      "evidence": [
+        "choices-before.png",
+        "choices-after.png",
+        "city-committed.png"
+      ],
+      "notes": [
+        "Push unchecked->checked; Standard->Express (and later Express->Standard); Notifications 1->0 (off); Featured off->on (✓); List->Grid."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "select",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "pass",
+      "interactionVerifiedOnScreen": true,
+      "interaction20260929": "pass",
+      "evidence": [
+        "select-open.png",
+        "city-committed.png"
+      ],
+      "notes": [
+        "Language sheet Korean ✓ / English; choose English -> field shows English."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "combobox",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass-with-findings",
+      "interaction": "pass",
+      "interactionVerifiedOnScreen": true,
+      "interaction20260929": "pass",
+      "evidence": [
+        "combobox-open.png",
+        "city-value.png",
+        "city-committed.png"
+      ],
+      "notes": [
+        "City sheet Seoul/Busan; Busan -> field value 'Busan' with clear."
+      ],
+      "findings": [
+        "Minor UX: after choosing an option the City input regains focus and the keyboard opens, covering the committed value (city-value.png). 9/29 recorded the same 'keyboard' after-state (pre-existing)."
+      ]
+    },
+    {
+      "componentId": "chip",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "pass",
+      "interactionVerifiedOnScreen": true,
+      "interaction20260929": "pass",
+      "evidence": [
+        "choices-before.png",
+        "choices-after.png",
+        "city-committed.png"
+      ],
+      "notes": [
+        "Push unchecked->checked; Standard->Express (and later Express->Standard); Notifications 1->0 (off); Featured off->on (✓); List->Grid."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "toggle-group",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "pass",
+      "interactionVerifiedOnScreen": true,
+      "interaction20260929": "pass",
+      "evidence": [
+        "inputs-1.png",
+        "after-pw.png"
+      ],
+      "notes": [
+        "Bold tap -> Bold outlined blue/selected, Italic unchanged."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "tags-input",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass-with-findings",
+      "interaction": "pass",
+      "interactionVerifiedOnScreen": true,
+      "interaction20260929": "pass",
+      "evidence": [
+        "tags-after.png",
+        "tags-korean.png"
+      ],
+      "notes": [
+        "Remove walking removes chip; typed 42 + Return adds '42' chip; Korean '가' + Return adds '가' chip."
+      ],
+      "findings": [
+        "Minor UX: TextInput uses default blurOnSubmit, so each Return commits and dismisses the keyboard; entering several tags needs re-tapping the field (tags-input.tsx onSubmitEditing without submitBehavior). Not verified whether pre-existing on screen in 9/29 (9/29 only tested removal); code unchanged since then."
+      ]
+    },
+    {
+      "componentId": "date-range-picker",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "pass",
+      "interactionVerifiedOnScreen": true,
+      "interaction20260929": "pass",
+      "evidence": [
+        "range-before.png",
+        "range-end.png"
+      ],
+      "notes": [
+        "Tap Feb 1 -> '2027-02-01, range start'; tap Feb 4 -> 2/3 'inside range', 4 'range end'; dots under 1-4 and filled 4. Same rendering as 9/29 range-end.png (start endpoint only dotted, not filled)."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "mentions",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "pass",
+      "interactionVerifiedOnScreen": true,
+      "interaction20260929": "pass",
+      "evidence": [
+        "mentions-typed.png",
+        "mentions-selected.png"
+      ],
+      "notes": [
+        "Typing @ shows 'skyline' option; selecting commits '@skyline ' into Note. Showcase ScrollView did not auto-scroll the focused field above the keyboard (story container behavior)."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "transfer-list",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "pass",
+      "interactionVerifiedOnScreen": true,
+      "interaction20260929": "pass",
+      "evidence": [
+        "transfer-add.png",
+        "transfer-meal-checked.png"
+      ],
+      "notes": [
+        "Walk checked -> Add -> Walk under Chosen, Meal stays Available; checked item shows ✓ prefix."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "tabs",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "pass",
+      "interactionVerifiedOnScreen": true,
+      "interaction20260929": "pass",
+      "evidence": [
+        "navigation-1.png",
+        "navigation-actions.png"
+      ],
+      "notes": [
+        "Recent->Popular underline moves; Home->Profile selected (blue); TopBar Refresh -> 'Last action: Refreshed'; Load more -> loaded pages 0->1."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "steps",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "interactionVerifiedOnScreen": false,
+      "interaction20260929": "not-applicable",
+      "evidence": [
+        "navigation-actions.png"
+      ],
+      "notes": [
+        "Account complete (✓), Profile current (2 ring), Confirm pending visible."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "top-bar",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "pass",
+      "interactionVerifiedOnScreen": true,
+      "interaction20260929": "pass",
+      "evidence": [
+        "navigation-1.png",
+        "navigation-actions.png"
+      ],
+      "notes": [
+        "Recent->Popular underline moves; Home->Profile selected (blue); TopBar Refresh -> 'Last action: Refreshed'; Load more -> loaded pages 0->1."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "menu",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "pass",
+      "interactionVerifiedOnScreen": true,
+      "interaction20260929": "pass",
+      "evidence": [
+        "menu-open.png",
+        "menu-edit.png"
+      ],
+      "notes": [
+        "More actions opens menu (Edit, destructive Delete in red, Close); Edit -> 'Last action: edit'."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "bottom-navigation",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "pass",
+      "interactionVerifiedOnScreen": true,
+      "interaction20260929": "pass",
+      "evidence": [
+        "navigation-1.png",
+        "navigation-actions.png"
+      ],
+      "notes": [
+        "Recent->Popular underline moves; Home->Profile selected (blue); TopBar Refresh -> 'Last action: Refreshed'; Load more -> loaded pages 0->1."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "load-more",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "pass",
+      "interactionVerifiedOnScreen": true,
+      "interaction20260929": "pass",
+      "evidence": [
+        "navigation-1.png",
+        "navigation-actions.png"
+      ],
+      "notes": [
+        "Recent->Popular underline moves; Home->Profile selected (blue); TopBar Refresh -> 'Last action: Refreshed'; Load more -> loaded pages 0->1."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "badge",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "interactionVerifiedOnScreen": false,
+      "interaction20260929": "not-applicable",
+      "evidence": [
+        "data-1.png"
+      ],
+      "notes": [
+        "HP avatar, Live badge, 99+ counter (AX '128 unread items'), Featured tag, Generated app card with icon, title, description, body. Identical to 9/29 white-data-1.png."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "avatar",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "interactionVerifiedOnScreen": false,
+      "interaction20260929": "not-applicable",
+      "evidence": [
+        "data-1.png"
+      ],
+      "notes": [
+        "HP avatar, Live badge, 99+ counter (AX '128 unread items'), Featured tag, Generated app card with icon, title, description, body. Identical to 9/29 white-data-1.png."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "card",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "interactionVerifiedOnScreen": false,
+      "interaction20260929": "not-applicable",
+      "evidence": [
+        "data-1.png"
+      ],
+      "notes": [
+        "HP avatar, Live badge, 99+ counter (AX '128 unread items'), Featured tag, Generated app card with icon, title, description, body. Identical to 9/29 white-data-1.png."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "list-row",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "pass",
+      "interactionVerifiedOnScreen": true,
+      "interaction20260929": "pass",
+      "evidence": [
+        "data-actions.png"
+      ],
+      "notes": [
+        "Tap Morning loop -> 'Selected row: Morning loop'. Row itself shows no persistent selected styling (story shows selection via text only)."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "tag",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "interactionVerifiedOnScreen": false,
+      "interaction20260929": "not-applicable",
+      "evidence": [
+        "data-1.png"
+      ],
+      "notes": [
+        "HP avatar, Live badge, 99+ counter (AX '128 unread items'), Featured tag, Generated app card with icon, title, description, body. Identical to 9/29 white-data-1.png."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "timeline",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "interactionVerifiedOnScreen": false,
+      "interaction20260929": "not-applicable",
+      "evidence": [
+        "data-middle.png"
+      ],
+      "notes": [
+        "Views 12.4K; Created 09:30 / Shared 10:15 timeline with colored markers; Status Ready / Owner HJM; blue sample image placeholder."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "description-list",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "interactionVerifiedOnScreen": false,
+      "interaction20260929": "not-applicable",
+      "evidence": [
+        "data-middle.png"
+      ],
+      "notes": [
+        "Views 12.4K; Created 09:30 / Shared 10:15 timeline with colored markers; Status Ready / Owner HJM; blue sample image placeholder."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "image",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "interactionVerifiedOnScreen": false,
+      "interaction20260929": "not-applicable",
+      "evidence": [
+        "data-middle.png"
+      ],
+      "notes": [
+        "Views 12.4K; Created 09:30 / Shared 10:15 timeline with colored markers; Status Ready / Owner HJM; blue sample image placeholder."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "counter-badge",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "interactionVerifiedOnScreen": false,
+      "interaction20260929": "not-applicable",
+      "evidence": [
+        "data-1.png"
+      ],
+      "notes": [
+        "HP avatar, Live badge, 99+ counter (AX '128 unread items'), Featured tag, Generated app card with icon, title, description, body. Identical to 9/29 white-data-1.png."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "list",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "interactionVerifiedOnScreen": false,
+      "interaction20260929": "not-applicable",
+      "evidence": [
+        "data-1.png"
+      ],
+      "notes": [
+        "HP avatar, Live badge, 99+ counter (AX '128 unread items'), Featured tag, Generated app card with icon, title, description, body. Identical to 9/29 white-data-1.png."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "carousel",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "pass",
+      "interactionVerifiedOnScreen": true,
+      "interaction20260929": "pass",
+      "evidence": [
+        "data-1.png",
+        "carousel-next.png",
+        "carousel-story-1.png",
+        "carousel-story-3.png",
+        "carousel-autoplay.png"
+      ],
+      "notes": [
+        "다음 -> 1/2 -> 2/2, content changes to '언제든 설정을 바꿀 수 있어요', 다음 disabled at end, 이전 enabled.",
+        "Patterns/Carousel Manual: horizontal swipe 1/3->2/3; dot 3 -> 3/3 (다음 disabled); 이전 -> 2/3. OptionalAutoplay (5s): advanced 1->2->3 and stopped with resume control; 시작하기 resumes (1->2 in ~5.5s), 멈추기 holds 2/3 for 6s."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "statistic",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "interactionVerifiedOnScreen": false,
+      "interaction20260929": "not-applicable",
+      "evidence": [
+        "data-middle.png"
+      ],
+      "notes": [
+        "Views 12.4K; Created 09:30 / Shared 10:15 timeline with colored markers; Status Ready / Owner HJM; blue sample image placeholder."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "upload-item",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass-with-findings",
+      "interaction": "pass",
+      "interactionVerifiedOnScreen": true,
+      "interaction20260929": "pass",
+      "evidence": [
+        "data-middle.png",
+        "upload-cancel.png"
+      ],
+      "notes": [
+        "Touch Cancel -> 'Upload cancelled: No -> Yes'; 64% progress bar visible."
+      ],
+      "findings": [
+        "Accessibility: the row root View is accessible with a label, so iOS collapses the Cancel/Retry Pressable into the single row element; idb AX tree shows only one element 'profile-photo.png' (value busy, no custom actions) and no Cancel button, so VoiceOver cannot cancel/retry. upload-item.tsx root accessible + no accessibilityActions. Pre-existing (code unchanged since 9/29 6c9b155); 9/29 audit did not inspect AX."
+      ]
+    },
+    {
+      "componentId": "accordion",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "pass",
+      "interactionVerifiedOnScreen": true,
+      "interaction20260929": "pass",
+      "evidence": [
+        "data-actions.png"
+      ],
+      "notes": [
+        "Details -> expanded, 'Expandable content' visible, + becomes −."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "collapsible",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "pass",
+      "interactionVerifiedOnScreen": true,
+      "interaction20260929": "pass",
+      "evidence": [
+        "data-1.png",
+        "data-actions.png",
+        "data-asset.png"
+      ],
+      "notes": [
+        "Shipping details expanded -> tap collapses (Arrives tomorrow hidden, AX value cleared) -> tap re-expands."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "asset",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "interactionVerifiedOnScreen": false,
+      "interaction20260929": "not-applicable",
+      "evidence": [
+        "data-asset.png"
+      ],
+      "notes": [
+        "Asset frame with static 'Fox' slot content, AX 'Running fox'. No third-party player claimed."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "empty-state",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "interactionVerifiedOnScreen": false,
+      "interaction20260929": "not-applicable",
+      "evidence": [
+        "feedback-1.png",
+        "feedback-2.png"
+      ],
+      "notes": [
+        "No drafts empty state with Create draft; success Notice; 64% Progress; white bordered Skeleton (AX busy); Spinner 'Loading content'; Published Result (empty tinted icon circle, story passes no glyph); bullet BottomInfo. Identical to 9/29 white-feedback-1.png."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "result",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "interactionVerifiedOnScreen": false,
+      "interaction20260929": "not-applicable",
+      "evidence": [
+        "feedback-1.png",
+        "feedback-2.png"
+      ],
+      "notes": [
+        "No drafts empty state with Create draft; success Notice; 64% Progress; white bordered Skeleton (AX busy); Spinner 'Loading content'; Published Result (empty tinted icon circle, story passes no glyph); bullet BottomInfo. Identical to 9/29 white-feedback-1.png."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "notice",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "interactionVerifiedOnScreen": false,
+      "interaction20260929": "not-applicable",
+      "evidence": [
+        "feedback-1.png",
+        "feedback-2.png"
+      ],
+      "notes": [
+        "No drafts empty state with Create draft; success Notice; 64% Progress; white bordered Skeleton (AX busy); Spinner 'Loading content'; Published Result (empty tinted icon circle, story passes no glyph); bullet BottomInfo. Identical to 9/29 white-feedback-1.png."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "progress",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "interactionVerifiedOnScreen": false,
+      "interaction20260929": "not-applicable",
+      "evidence": [
+        "feedback-1.png",
+        "feedback-2.png"
+      ],
+      "notes": [
+        "No drafts empty state with Create draft; success Notice; 64% Progress; white bordered Skeleton (AX busy); Spinner 'Loading content'; Published Result (empty tinted icon circle, story passes no glyph); bullet BottomInfo. Identical to 9/29 white-feedback-1.png."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "skeleton",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "interactionVerifiedOnScreen": false,
+      "interaction20260929": "not-applicable",
+      "evidence": [
+        "feedback-1.png",
+        "feedback-2.png"
+      ],
+      "notes": [
+        "No drafts empty state with Create draft; success Notice; 64% Progress; white bordered Skeleton (AX busy); Spinner 'Loading content'; Published Result (empty tinted icon circle, story passes no glyph); bullet BottomInfo. Identical to 9/29 white-feedback-1.png."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "spinner",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "interactionVerifiedOnScreen": false,
+      "interaction20260929": "not-applicable",
+      "evidence": [
+        "feedback-1.png",
+        "feedback-2.png"
+      ],
+      "notes": [
+        "No drafts empty state with Create draft; success Notice; 64% Progress; white bordered Skeleton (AX busy); Spinner 'Loading content'; Published Result (empty tinted icon circle, story passes no glyph); bullet BottomInfo. Identical to 9/29 white-feedback-1.png."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "toast",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "pass",
+      "interactionVerifiedOnScreen": true,
+      "interaction20260929": "pass",
+      "evidence": [
+        "toast-visible.png",
+        "toast-dismissed.png"
+      ],
+      "notes": [
+        "Publish toast -> 'Saved with the canonical Toast renderer.' + Dismiss notification; Dismiss removes it (AX and screen)."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "bottom-info",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "interactionVerifiedOnScreen": false,
+      "interaction20260929": "not-applicable",
+      "evidence": [
+        "feedback-1.png",
+        "feedback-2.png"
+      ],
+      "notes": [
+        "No drafts empty state with Create draft; success Notice; 64% Progress; white bordered Skeleton (AX busy); Spinner 'Loading content'; Published Result (empty tinted icon circle, story passes no glyph); bullet BottomInfo. Identical to 9/29 white-feedback-1.png."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "masonry",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "interactionVerifiedOnScreen": false,
+      "interaction20260929": "not-applicable",
+      "evidence": [
+        "masonry.png"
+      ],
+      "notes": [
+        "Nine varied-height outlined cards in two columns without overlap; identical to 9/29 masonry-final.png."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "virtual-list",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "pass",
+      "interactionVerifiedOnScreen": true,
+      "interaction20260929": "pass",
+      "evidence": [
+        "virtual.png",
+        "virtual-scrolled.png"
+      ],
+      "notes": [
+        "1000-row list in 400pt viewport shows 항목 1-7; swipe inside list -> 항목 10-15 visible. AX tree holds ~69 mounted rows (windowed, not 1000)."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "qr-code",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "interactionVerifiedOnScreen": false,
+      "interaction20260929": "not-applicable",
+      "evidence": [
+        "qr.png",
+        "ios-qr-decode.json"
+      ],
+      "notes": [
+        "Screenshot raster decoded with jsqr@1.4.0 -> https://example.com/한글. Fallback '공유 페이지 열기' button not pressed (would leave app to Safari)."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "thinking-orb",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "pass",
+      "interactionVerifiedOnScreen": true,
+      "interaction20260929": "not-applicable",
+      "evidence": [
+        "orb-all-states.png",
+        "orb-all-states-dark.png",
+        "orb-paused.png",
+        "orb-playground.png"
+      ],
+      "notes": [
+        "All nine states (working..shaping) in light and dark. Temporal: Playground orb region changes 4772 px across 0.7s; Paused story 0 px across 1s (pixel diff of consecutive screenshots)."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "dialog",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "pass",
+      "interactionVerifiedOnScreen": true,
+      "interaction20260929": "pass",
+      "evidence": [
+        "dialog-open.png",
+        "dialog-saved.png"
+      ],
+      "notes": [
+        "Open dialog -> 'Edit item' modal with Close and Save; Save closes; reopened and Close (×) closes."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "alert-dialog",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass",
+      "interaction": "pass",
+      "interactionVerifiedOnScreen": true,
+      "interaction20260929": "pass",
+      "evidence": [
+        "alert-open.png",
+        "info-alert-open.png"
+      ],
+      "notes": [
+        "Destructive 'Delete item?' (red Delete, Cancel) -> Cancel closes; info 'Make your own version?' (blue primary) -> Make my version closes."
+      ],
+      "findings": []
+    },
+    {
+      "componentId": "sheet",
+      "rendered": true,
+      "visuallyReviewed": true,
+      "visual": "pass-with-findings",
+      "interaction": "pass",
+      "interactionVerifiedOnScreen": true,
+      "interaction20260929": "pass",
+      "evidence": [
+        "sheet-open.png",
+        "sheet-closed.png",
+        "inputsheet-keyboard.png",
+        "inputsheet-done.png"
+      ],
+      "notes": [
+        "Open sheet -> 'Share item' bottom sheet; Close dismisses; reopened and backdrop tap dismisses.",
+        "Patterns/Input sheet: typed 456 with IME up; sheet lifts, 456 and 완료 stay above keyboard; 완료 closes sheet."
+      ],
+      "findings": [
+        "Minor layout: Sheet safeAreaInsets defaults to {} (overlays.tsx), and the gallery story passes none, so 'Sheet content' ends at y≈861pt inside the home-indicator zone (>840pt). Same in 9/29 sheet-open-final.png (pre-existing)."
+      ]
+    }
+  ],
+  "optionalEntries": [
+    {
+      "optional": "liquid-toast",
+      "interaction": "pass",
+      "evidence": [
+        "liquid-frames.png",
+        "liquid.mp4",
+        "liquid-published.png",
+        "liquid-action.png",
+        "liquid-three.png",
+        "liquid-fourth.png",
+        "liquid-swiped.png",
+        "liquid-long.png",
+        "liquid-reduced.png",
+        "liquid-reduced-frames.png"
+      ],
+      "note": "Capsule: video frames show dark capsule growing below the island, detaching and morphing into the white card with green tone edge. 결과 열기 -> 'generation:1 결과를 열었어요'. 3 consecutive publishes queue: only 결과 2 visible, close -> 결과 3 after ~2-4s, close -> 결과 4 after ~2s; upward swipe dismisses 결과 4. LongCopy wraps three lines inside card. ReducedMotion: burst screenshots show the card appearing directly with no capsule stage."
+    },
+    {
+      "optional": "interaction-adapters/playground",
+      "interaction": "pass",
+      "evidence": [
+        "ia-1.png",
+        "sortable-drag.png",
+        "sortable-final.png",
+        "swipe-revealed.png",
+        "swipe-menu.png",
+        "content-transition.png",
+        "carousel-motion.png",
+        "ia-final.png",
+        "celebration-frames.png",
+        "celebration2-frames.png",
+        "celebration2.mp4"
+      ],
+      "note": "Retested after reloading the JS bundle (see bundle note). Sortable: long-press+drag (idb gRPC HID: 0.9s hold then 25 moves) moved first item to last (바닷가 → 작은 카페 → 숲길), '작은 카페 앞으로' button then moves it to first; AX values '작은 카페, 3개 중 1번째'. SwipeActions: left swipe reveals 보관 + disabled 삭제 without running; 보관 runs ('보관했어요') and closes row; '기록 작업 보기' toggles an inline action copy and hides it again from AX when closed. ContentTransition/TextTransition: 다음 상태 -> '기록이 준비됐어요' and '저장 완료 👨‍👩‍👧‍👦' (family ZWJ kept as one glyph). CarouselMotion: 다음 장소 숲길->바닷가, horizontal swipe -> 작은 카페, 다음 장소 disabled at end. Celebration: on the fresh bundle particles are multi-color (blue, purple, orange, green) and removed; '1번째 기록을 남겼어요' stays.",
+      "bundleNote": "First celebration capture (celebration-frames.png, 03:37) showed only blue/pale-blue particles: the dev client was still running a bundle from before interaction-adapters dist was rebuilt at 03:20 by another session. After terminating and reopening the dev client on Metro 8084, colors matched source. Not a product defect; canonical component sources had no changes after 01:30 (only interaction-adapter files changed)."
+    },
+    {
+      "optional": "interaction-adapters/shared-screen-transition",
+      "interaction": "pass",
+      "evidence": [
+        "shared-source.png",
+        "shared-frames.png",
+        "shared.mp4",
+        "shared-detail.png",
+        "shared-back.png",
+        "shared-gesture-back.png"
+      ],
+      "note": "숲길 상세 보기 -> screen zooms from the card photo into detail (frames), detail shows full-width photo; 목록으로 돌아가기 returns; short 60pt downward drag cancels (detail stays); long 500pt drag returns to list."
+    },
+    {
+      "optional": "interaction-adapters/reduced-motion (dark + RTL + textScale 2)",
+      "interaction": "pass",
+      "evidence": [
+        "reduced-top.png",
+        "reduced-result.png"
+      ],
+      "note": "Dark theme, RTL, 200% text. Drag is disabled by design (drag attempt left order unchanged) while '바닷가 앞으로' reorders; swipe disabled and actions shown inline, 보관 -> 보관했어요; ContentTransition/TextTransition and CarouselMotion (숲길->바닷가) work; Celebration: 6 burst screenshots identical, no particles, text '1번째 기록을 남겼어요' shown.",
+      "defect": "RTL: SortableCollection reorder button row (sortable.tsx flexDirection row without direction) and SwipeActions action row (swipe-actions.tsx) stay left-to-right in RTL: '숲길 앞으로' at x=24 left of '숲길 뒤로' x=191, '보관' left of '삭제', while headings/labels are right-aligned; handle glyph ⠿ also stays before the label. Same in the earlier 02:26 capture docs/evidence/interaction-adapters-2026-09-30/native-reduced-top.png. New experimental adapters, no 9/29 baseline."
+    },
+    {
+      "optional": "interaction-adapters/shared-reduced-motion",
+      "interaction": "pass",
+      "evidence": [
+        "shared-reduced-frames.png",
+        "shared-reduced.png"
+      ],
+      "note": "Dark + reduced motion: detail appears without zoom frames; long downward drag does not dismiss (gesture disabled); 목록으로 돌아가기 returns."
+    },
+    {
+      "optional": "image-viewer",
+      "interaction": "pass",
+      "evidence": [
+        "imageviewer.png"
+      ],
+      "note": "Actual deer/mountain image loads; 닫기 dismisses; single-image 이전/다음 NotEnabled.",
+      "defect": "Minor layout: caption '숲속 사슴' sits at x=0 with no gutter and 닫기/이전/다음 buttons are full-bleed (x 0-402) with rounded corners touching screen edges while the image is inset. Identical to 9/29 imageviewer-final.png (pre-existing)."
+    },
+    {
+      "optional": "gesture-sheet",
+      "interaction": "pass",
+      "evidence": [
+        "gesture-open.png",
+        "gesture-typed.png",
+        "gesture-expanded.png",
+        "gesture-closed.png",
+        "gesture-reopened.png"
+      ],
+      "note": "Opens half-height (top 437pt); typed 789 with sheet lifted above IME; after keyboard dismissal the sheet sits at full height; downward drag closes (시트 상태: 닫힘); reopen returns to half height; 닫기 closes.",
+      "defect": "(1) Accessibility: idb AX tree shows the whole sheet as one element 'Bottom Sheet' (plus 'Bottom sheet handle', 'Bottom sheet backdrop') with English library-default labels; title, 메모 input and 닫기 are not individually exposed (sheet-gesture.tsx does not override @gorhom BottomSheetModal accessible/accessibilityLabel). (2) Full-height snap ignores top safe area: title '상세 보기' renders under the status-bar clock (gesture-expanded.png); same overlap in 9/29 gesture-typed-final.png. (3) GestureSheetInput has no field frame (bare text), same as 9/29. All pre-existing; 9/29 audit did not inspect the AX tree."
+    },
+    {
+      "optional": "keyboard-dock",
+      "interaction": "pass",
+      "evidence": [
+        "keyboard-dock.png",
+        "keyboard-dismissed.png"
+      ],
+      "note": "메모 321; 완료 docks directly above the IME (y 468pt); 완료 dismisses keyboard, 321 kept, dock returns to 796pt."
+    },
+    {
+      "optional": "native-context-menu",
+      "interaction": "pass",
+      "evidence": [
+        "context-menu.png",
+        "context-saved.png",
+        "context-deleted.png"
+      ],
+      "note": "Long press (1.2s) opens the system menu 저장 / red 삭제; 저장 -> 'save'; 삭제 -> 'delete'."
+    }
+  ],
+  "compositions": [
+    {
+      "composition": "cascader",
+      "interaction": "pass",
+      "evidence": [
+        "cascader-1.png",
+        "cascader-selected.png",
+        "cascader-reset.png"
+      ],
+      "note": "도시 서울 -> 지역 appears -> 종로구 -> 서울 / 종로구; 선택 초기화 clears both."
+    },
+    {
+      "composition": "notification-settings",
+      "interaction": "pass",
+      "evidence": [
+        "notif-1.png",
+        "notif-saved.png"
+      ],
+      "note": "주간 모아보기 0->1; 저장 -> success notice 내 활동 켜짐 · 주간 모아보기 켜짐, button becomes disabled 저장했어요. Switch track again sits ~10pt above its label center (same Switch alignment defect)."
+    },
+    {
+      "composition": "rating",
+      "interaction": "pass",
+      "evidence": [
+        "rating-1.png",
+        "rating-saved.png",
+        "rating-half.png",
+        "rating-readonly.png"
+      ],
+      "note": "WholePoint drag 3->4, 점수 저장 -> 4점으로 저장했어요; HalfPoint drag 3->3.5; ReadOnlyAverage statistic 4.3 / 5, 예시 응답 120개."
+    },
+    {
+      "composition": "time-selection",
+      "interaction": "pass",
+      "evidence": [
+        "time-1.png",
+        "time-saved.png"
+      ],
+      "note": "9시, 5분 -> 선택한 시각 09:05; 선택 완료 -> 시간을 정했어요."
+    }
+  ]
+}

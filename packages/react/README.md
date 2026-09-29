@@ -161,3 +161,7 @@ Masonry and VirtualList use the granular `masonry` and `virtual-list` entries.
 Supply measured item heights for Masonry and a fixed row height for VirtualList.
 The optional `qr-code` entry requires `qrcode-generator@2.0.4` and a visible alternative
 action alongside the accessible code.
+
+## Optional interaction adapters
+
+Stable `sortable`, `swipe-actions`, `content-transition`, `carousel-motion` and `celebration` entries are available through explicit subpath imports. See [installation, localized labels and behavior contracts](../../docs/interaction-adapters.md), including pinned peers and native verification limits. These adapters are not root exports.

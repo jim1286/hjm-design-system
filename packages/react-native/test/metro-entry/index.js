@@ -21,6 +21,7 @@ import { AppRegistry, View } from "react-native";
 
 import { Button, Link } from "@hjmds/react-native/actions";
 import { Carousel } from "@hjmds/react-native/carousel";
+import { TextTransition } from "@hjmds/react-native/content-transition";
 import { TopBar } from "@hjmds/react-native/top-bar";
 import { BottomCTA } from "@hjmds/react-native/bottom-cta";
 import { hjmCompositionStyleKeys } from "@hjmds/react-native/composition-style";
@@ -246,6 +247,7 @@ function MetroSmokeApp() {
       React.createElement(Masonry, { items: ["a"], keyExtractor: item => item, width: 320, label: "Cards", getItemHeight: () => 100, renderItem: item => React.createElement(Text, null, item) }),
       React.createElement(VirtualList, { items: ["a"], keyExtractor: item => item, height: 200, rowHeight: 100, label: "Items", renderItem: item => React.createElement(Text, null, item) }),
       React.createElement(ToastRegion, null),
+      React.createElement(TextTransition, { text: "현재 상태" }),
       React.createElement(Dialog, { closeLabel: "닫기", defaultOpen: false, title: "확인" }),
     ),
   );

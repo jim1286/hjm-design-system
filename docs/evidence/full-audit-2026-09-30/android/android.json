@@ -1,0 +1,1838 @@
+{
+ "platform": "Android",
+ "device": "emulator-5554 / spint-store AVD / Android 16 API 36 / 1080x2400 @420dpi",
+ "app": "dev.hjm.designsystem.showcase development client on Metro 8084 (shared with a concurrent iOS audit); no rebuild, reinstall or new emulator",
+ "scope": "83 canonical Native components plus optional adapters, experimental interaction adapters, Liquid Toast and reduced-motion/dark/RTL/200% scenario stories. Emulator + injected adb input; not physical device, not spoken TalkBack, not release build.",
+ "checkedAt": "2026-09-30T04:20:50+09:00",
+ "baseline": "docs/evidence/full-audit-2026-09-29/android.json",
+ "counts": {
+  "supportedComponents": 83,
+  "rendered": 83,
+  "visuallyReviewed": 83,
+  "interactionVerified": 47,
+  "staticVisualOnly": 35,
+  "selectedStateOnly": 1,
+  "componentsWithDefect": [
+   "agreement",
+   "date-picker",
+   "sheet",
+   "slider",
+   "transfer-list"
+  ],
+  "extensionsAndScenarios": 18,
+  "defects": 7,
+  "confirmedRegressionsVs20260929": 0,
+  "note": "No behaviour that passed on 9/29 failed now; D1, D3, D5, D6 cover paths 9/29 did not exercise, so they cannot be classified as regressions."
+ },
+ "defects": [
+  {
+   "id": "D1",
+   "component": "agreement",
+   "severity": "a11y-medium",
+   "regression": "not-in-9/29-scope (mixed state not exercised 9/29)",
+   "repro": "Agreement story: tap Terms of service (all-row becomes mixed), then tap it again (all checked) or clear all.",
+   "expected": "All-row content-desc stays \"Agree to everything\" with checked state.",
+   "actual": "content-desc becomes literally \"mixed\" and stays \"mixed\" in all-checked and unchecked states; label lost.",
+   "evidence": [
+    "android/agr-mixed.png",
+    "android/agr-mixed.xml",
+    "android/agr-all.xml"
+   ]
+  },
+  {
+   "id": "D2",
+   "component": "transfer-list",
+   "severity": "a11y-low",
+   "regression": "pre-existing (same stale suffix in 9/29 transfer-moved.xml)",
+   "repro": "Inputs: check Walk, Add, then check/uncheck Meal.",
+   "expected": "Available select-all description drops \", mixed\" when not partially selected.",
+   "actual": "\"Available, Select all, mixed\" persists when all or none are checked.",
+   "evidence": [
+    "android/in-transfer2.png",
+    "android/in-transfer2.xml"
+   ]
+  },
+  {
+   "id": "D3",
+   "component": "slider",
+   "severity": "interaction-medium",
+   "regression": "pre-existing code (slider.tsx unchanged since publish); not tested 9/29",
+   "repro": "Inputs: start a vertical page scroll with the finger on the Completion track (x=900).",
+   "expected": "Page scrolls; value unchanged.",
+   "actual": "Page scrolls 361 px and value jumps 50% -> 88% (PanResponder grant writes the touch-down position before ScrollView takes over).",
+   "evidence": [
+    "android/in-2.png",
+    "android/in-mid.png"
+   ]
+  },
+  {
+   "id": "D4",
+   "component": "date-picker (also Sheet fixture, Select/Combobox)",
+   "severity": "visual-low",
+   "regression": "pre-existing (identical bounds in 9/29 date-open.xml, sheet-open.xml)",
+   "repro": "Inputs: open Visit date; Overlays: Open sheet.",
+   "expected": "Sheet content clears the 63 px navigation bar inset [2337-2400].",
+   "actual": "Calendar row 28 [2251-2367] and Sheet content text [2313-2366] sit inside the navigation bar band beside the gesture handle. DatePicker has no safeAreaInsets pass-through; the gallery Sheet omits its insets prop.",
+   "evidence": [
+    "android/in-dp-open.png",
+    "android/ov-sheet.png"
+   ]
+  },
+  {
+   "id": "D5",
+   "component": "gesture-sheet (optional adapter); same root in shared screen transition fixture",
+   "severity": "interaction-medium",
+   "regression": "not tested 9/29",
+   "repro": "Optional Adapters: 전체 화면 어댑터 열기 -> 시트 열기 -> Android back.",
+   "expected": "Back closes the sheet only.",
+   "actual": "Back closes the whole enclosing RN Modal host; GestureSheet BackHandler never fires inside a Modal. Shared transition Detail + back likewise closes the host instead of popping.",
+   "evidence": [
+    "android/opt-gs-before-back.png",
+    "android/opt-gs-after-back.png",
+    "android/st-back.png"
+   ]
+  },
+  {
+   "id": "D6",
+   "component": "carousel-motion (experimental)",
+   "severity": "interaction-medium",
+   "regression": "new adapter; earlier 9/30 adapter note reported swipe pass",
+   "repro": "Interaction Adapters: horizontal 800 px swipe on the slide in 200-600 ms.",
+   "expected": "Pages to next slide.",
+   "actual": "0/4 at 200-600 ms, 3/8 at 300 ms, 2/2 at 1000 ms; failed swipes move ~40% then snap back. Emulator-injected input; physical fling untested.",
+   "evidence": [
+    "android/ia-cm-frames.png",
+    "android/ia-carousel-motion.mp4"
+   ]
+  },
+  {
+   "id": "D7",
+   "component": "sortable, swipe-actions (experimental) under provider RTL",
+   "severity": "layout-low",
+   "regression": "Android RTL not covered earlier; iOS capture native-reduced-top.png shows the same",
+   "repro": "Interaction Adapters/Reduced Motion (dark, rtl, 200%).",
+   "expected": "Move-button and explicit action rows start at the right edge.",
+   "actual": "Rows start at the left (x=63 / 42) while text is right-aligned; row Views lack direction: environment.direction.",
+   "evidence": [
+    "android/rm-0.png",
+    "android/rm-1.png"
+   ]
+  }
+ ],
+ "observations": [
+  "SwipeActions: revealed row content is translated fully out of view (blank row with only actions); same in the earlier 9/30 adapter capture.",
+  "Storybook canvas does not scroll focused inputs above the IME (OTP, Combobox); a tap aimed at Clear city landed on the IME backspace. Host limitation, not a component result.",
+  "TagsInput: Enter commits and dismisses the IME; IME auto-capitalised music to Music.",
+  "Carousel pattern OptionalAutoplay: resuming at the last slide shows 멈추기 but cannot advance (no wrap).",
+  "Toast and Liquid Toast are non-modal: Android back with a toast visible leaves the app.",
+  "ImageViewer controls are full-bleed and the caption touches the screen edge (unchanged from 9/29).",
+  "Dev-client lost its Metro websocket once (03:13) and reconnected; LogBox showed the reconnect warning only. No FATAL, Yoga assertion or JS error during the run."
+ ],
+ "components": [
+  {
+   "component": "design-system-provider",
+   "group": "foundations",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "static-visual",
+   "interaction": "not-applicable-static",
+   "defect": false,
+   "baseline20260929": "not-applicable-static",
+   "notes": null,
+   "evidence": [
+    "android/found-1.png",
+    "android/found-3.png"
+   ]
+  },
+  {
+   "component": "text",
+   "group": "foundations",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "static-visual",
+   "interaction": "not-applicable-static",
+   "defect": false,
+   "baseline20260929": "not-applicable-static",
+   "notes": null,
+   "evidence": [
+    "android/found-1.png",
+    "android/found-3.png"
+   ]
+  },
+  {
+   "component": "surface",
+   "group": "foundations",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "static-visual",
+   "interaction": "not-applicable-static",
+   "defect": false,
+   "baseline20260929": "not-applicable-static",
+   "notes": null,
+   "evidence": [
+    "android/found-1.png",
+    "android/found-3.png"
+   ]
+  },
+  {
+   "component": "stack",
+   "group": "foundations",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "static-visual",
+   "interaction": "not-applicable-static",
+   "defect": false,
+   "baseline20260929": "not-applicable-static",
+   "notes": null,
+   "evidence": [
+    "android/found-1.png",
+    "android/found-3.png"
+   ]
+  },
+  {
+   "component": "container",
+   "group": "foundations",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "static-visual",
+   "interaction": "not-applicable-static",
+   "defect": false,
+   "baseline20260929": "not-applicable-static",
+   "notes": null,
+   "evidence": [
+    "android/found-1.png",
+    "android/found-3.png"
+   ]
+  },
+  {
+   "component": "aspect-ratio",
+   "group": "foundations",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "static-visual",
+   "interaction": "not-applicable-static",
+   "defect": false,
+   "baseline20260929": "not-applicable-static",
+   "notes": null,
+   "evidence": [
+    "android/found-1.png",
+    "android/found-3.png"
+   ]
+  },
+  {
+   "component": "grid",
+   "group": "foundations",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "static-visual",
+   "interaction": "not-applicable-static",
+   "defect": false,
+   "baseline20260929": "not-applicable-static",
+   "notes": null,
+   "evidence": [
+    "android/found-1.png",
+    "android/found-3.png"
+   ]
+  },
+  {
+   "component": "layout",
+   "group": "foundations",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "static-visual",
+   "interaction": "not-applicable-static",
+   "defect": false,
+   "baseline20260929": "not-applicable-static",
+   "notes": null,
+   "evidence": [
+    "android/found-1.png",
+    "android/found-3.png"
+   ]
+  },
+  {
+   "component": "icon",
+   "group": "foundations",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "static-visual",
+   "interaction": "not-applicable-static",
+   "defect": false,
+   "baseline20260929": "not-applicable-static",
+   "notes": null,
+   "evidence": [
+    "android/found-1.png",
+    "android/found-3.png"
+   ]
+  },
+  {
+   "component": "section",
+   "group": "foundations",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "static-visual",
+   "interaction": "not-applicable-static",
+   "defect": false,
+   "baseline20260929": "not-applicable-static",
+   "notes": null,
+   "evidence": [
+    "android/found-1.png",
+    "android/found-3.png"
+   ]
+  },
+  {
+   "component": "divider",
+   "group": "foundations",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "static-visual",
+   "interaction": "not-applicable-static",
+   "defect": false,
+   "baseline20260929": "not-applicable-static",
+   "notes": null,
+   "evidence": [
+    "android/found-1.png",
+    "android/found-3.png"
+   ]
+  },
+  {
+   "component": "top",
+   "group": "foundations",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "static-visual",
+   "interaction": "not-applicable-static",
+   "defect": false,
+   "baseline20260929": "not-applicable-static",
+   "notes": null,
+   "evidence": [
+    "android/found-1.png",
+    "android/found-3.png"
+   ]
+  },
+  {
+   "component": "heading",
+   "group": "foundations",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "static-visual",
+   "interaction": "not-applicable-static",
+   "defect": false,
+   "baseline20260929": "not-applicable-static",
+   "notes": null,
+   "evidence": [
+    "android/found-1.png",
+    "android/found-3.png"
+   ]
+  },
+  {
+   "component": "auth-screen",
+   "group": "foundations",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "static-visual",
+   "interaction": "not-applicable-layout",
+   "defect": false,
+   "baseline20260929": "not-applicable-layout",
+   "notes": "Hero/main/footer slots centered; inner provider button callback verified.",
+   "evidence": [
+    "android/act-1.png"
+   ]
+  },
+  {
+   "component": "button",
+   "group": "actions",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "interaction-verified",
+   "interaction": "pass: Primary 0->1, Disabled tap no-op (en=false)",
+   "defect": false,
+   "baseline20260929": "pass-counter-0-to-1-to-2",
+   "notes": null,
+   "evidence": [
+    "android/act-0.png",
+    "android/act-1.png"
+   ]
+  },
+  {
+   "component": "icon-button",
+   "group": "actions",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "interaction-verified",
+   "interaction": "pass: Add one 1->2",
+   "defect": false,
+   "baseline20260929": "pass-counter-0-to-1-to-2",
+   "notes": null,
+   "evidence": [
+    "android/act-0.png",
+    "android/act-1.png"
+   ]
+  },
+  {
+   "component": "link",
+   "group": "actions",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "interaction-verified",
+   "interaction": "pass: Last action: Open component docs",
+   "defect": false,
+   "baseline20260929": "pass-major-interaction",
+   "notes": null,
+   "evidence": [
+    "android/act-0.png",
+    "android/act-1.png"
+   ]
+  },
+  {
+   "component": "bottom-cta",
+   "group": "actions",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "interaction-verified",
+   "interaction": "pass: Later and Continue callbacks",
+   "defect": false,
+   "baseline20260929": "pass-major-interaction",
+   "notes": null,
+   "evidence": [
+    "android/act-0.png",
+    "android/act-1.png"
+   ]
+  },
+  {
+   "component": "auth-provider-button",
+   "group": "actions",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "interaction-verified",
+   "interaction": "pass: both instances -> Provider login requested",
+   "defect": false,
+   "baseline20260929": "pass-major-interaction",
+   "notes": null,
+   "evidence": [
+    "android/act-0.png",
+    "android/act-1.png"
+   ]
+  },
+  {
+   "component": "agreement",
+   "group": "agreement",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "interaction-verified",
+   "interaction": "pass-with-defect",
+   "defect": true,
+   "baseline20260929": "pass-major-interaction",
+   "notes": "Item toggles, all toggle (all on/all off), detail Read -> terms callback pass. DEFECT A11Y: once the all-row enters mixed, its Android content-desc becomes literally \"mixed\" and stays \"mixed\" after returning to all-checked or unchecked; label \"Agree to everything\" is lost.",
+   "evidence": [
+    "android/agr-0.png",
+    "android/agr-all.png",
+    "android/agr-mixed.png",
+    "android/agr-mixed.xml"
+   ]
+  },
+  {
+   "component": "calendar",
+   "group": "calendar",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "interaction-verified",
+   "interaction": "pass: select 2026-09-09 (selected state + caption), disabled 09-20 tap no-op, next month -> 2026년 10월, previous -> 9월 with selection kept",
+   "defect": false,
+   "baseline20260929": "pass-major-interaction",
+   "notes": null,
+   "evidence": [
+    "android/cal-0.png",
+    "android/cal-sel.png",
+    "android/cal-next.png"
+   ]
+  },
+  {
+   "component": "floating-action-button",
+   "group": "floatingActionButton",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "interaction-verified",
+   "interaction": "pass: scroll down collapses to icon (bounds 860-996), scroll up re-expands with label; tap opens Dialog; 기록 추가 disabled while empty, enabled after typing; add prepends Forest walk; Android back closes Dialog",
+   "defect": false,
+   "baseline20260929": "pass-major-interaction",
+   "notes": "With IME up the dialog is lifted so the primary action stays visible; card bottom padding sits under the IME top.",
+   "evidence": [
+    "android/fab-0.png",
+    "android/fab-collapsed.png",
+    "android/fab-expanded.png",
+    "android/fab-dialog.png",
+    "android/fab-typed.png",
+    "android/fab-added.png"
+   ]
+  },
+  {
+   "component": "field",
+   "group": "inputs",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "interaction-verified",
+   "interaction": "pass: custom TextInput slot renders with label/description",
+   "defect": false,
+   "baseline20260929": "pass-major-interaction",
+   "notes": null,
+   "evidence": [
+    "android/in-0.png",
+    "android/in-mid.png",
+    "android/in-2.png",
+    "android/in-3.png",
+    "android/in-sel1.png",
+    "android/in-sel2.png"
+   ]
+  },
+  {
+   "component": "search-field",
+   "group": "inputs",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "interaction-verified",
+   "interaction": "pass: Clear search empties value and hides clear; typed Seoul",
+   "defect": false,
+   "baseline20260929": "pass-major-interaction",
+   "notes": null,
+   "evidence": [
+    "android/in-0.png",
+    "android/in-mid.png",
+    "android/in-2.png",
+    "android/in-3.png",
+    "android/in-sel1.png",
+    "android/in-sel2.png"
+   ]
+  },
+  {
+   "component": "text-area",
+   "group": "inputs",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "interaction-verified",
+   "interaction": "pass: appended text \" ok\" to multiline value",
+   "defect": false,
+   "baseline20260929": "pass-major-interaction",
+   "notes": null,
+   "evidence": [
+    "android/in-0.png",
+    "android/in-mid.png",
+    "android/in-2.png",
+    "android/in-3.png",
+    "android/in-sel1.png",
+    "android/in-sel2.png"
+   ]
+  },
+  {
+   "component": "password-field",
+   "group": "inputs",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "interaction-verified",
+   "interaction": "pass: Show password reveals hjm-password, Hide re-masks; toggle label swaps",
+   "defect": false,
+   "baseline20260929": "pass-major-interaction",
+   "notes": null,
+   "evidence": [
+    "android/in-0.png",
+    "android/in-mid.png",
+    "android/in-2.png",
+    "android/in-3.png",
+    "android/in-sel1.png",
+    "android/in-sel2.png",
+    "android/in-reveal.png"
+   ]
+  },
+  {
+   "component": "otp-field",
+   "group": "inputs",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "interaction-verified",
+   "interaction": "pass: 128 -> typed 645 -> 128645 in six slots, no backing text leak",
+   "defect": false,
+   "baseline20260929": "pass-major-interaction",
+   "notes": "The Storybook canvas does not scroll the focused field above the IME (host, also affects Combobox); captured after dismissing.",
+   "evidence": [
+    "android/in-0.png",
+    "android/in-mid.png",
+    "android/in-2.png",
+    "android/in-3.png",
+    "android/in-sel1.png",
+    "android/in-sel2.png",
+    "android/in-otp-done.png"
+   ]
+  },
+  {
+   "component": "number-field",
+   "group": "inputs",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "interaction-verified",
+   "interaction": "pass: +/- 2->4->3, increments to max 10 then Increase disabled",
+   "defect": false,
+   "baseline20260929": "pass-major-interaction",
+   "notes": null,
+   "evidence": [
+    "android/in-0.png",
+    "android/in-mid.png",
+    "android/in-2.png",
+    "android/in-3.png",
+    "android/in-sel1.png",
+    "android/in-sel2.png"
+   ]
+  },
+  {
+   "component": "slider",
+   "group": "inputs",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "interaction-verified",
+   "interaction": "pass-with-defect",
+   "defect": true,
+   "baseline20260929": "pass-major-interaction",
+   "notes": "Horizontal drag 72->29%, tap-to-seek 92%. DEFECT: a vertical page scroll that starts on the track sets the value to the touch-down x (50%->88% while page scrolled 361px); PanResponder grant writes the value before ScrollView termination.",
+   "evidence": [
+    "android/in-0.png",
+    "android/in-mid.png",
+    "android/in-2.png"
+   ]
+  },
+  {
+   "component": "form",
+   "group": "inputs",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "interaction-verified",
+   "interaction": "pass: Save profile Saved 0->1->2",
+   "defect": false,
+   "baseline20260929": "pass-major-interaction",
+   "notes": null,
+   "evidence": [
+    "android/in-0.png",
+    "android/in-mid.png",
+    "android/in-2.png",
+    "android/in-3.png",
+    "android/in-sel1.png",
+    "android/in-sel2.png"
+   ]
+  },
+  {
+   "component": "date-picker",
+   "group": "inputs",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "interaction-verified",
+   "interaction": "pass: trigger opens sheet, select 2027-02-10 closes sheet and sets value, reopen shows selected, Android back closes, Clear date resets to placeholder",
+   "defect": true,
+   "baseline20260929": "pass-major-interaction",
+   "notes": "DEFECT (pre-existing, same bounds in 9/29 date-open.xml): the internal calendar Sheet gets no safeAreaInsets and DatePicker exposes no pass-through; row 28 [2251-2367] overlaps the 63px navigation bar inset. Select/Combobox option sheets end at 2358 (option text above the bar).",
+   "evidence": [
+    "android/in-0.png",
+    "android/in-mid.png",
+    "android/in-2.png",
+    "android/in-3.png",
+    "android/in-sel1.png",
+    "android/in-sel2.png",
+    "android/in-dp-open.png",
+    "android/in-dp-value.png"
+   ]
+  },
+  {
+   "component": "file-picker",
+   "group": "inputs",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "interaction-verified",
+   "interaction": "pass: Choose images -> Selected attachment: preview.png (fixture adapter)",
+   "defect": false,
+   "baseline20260929": "pass-major-interaction",
+   "notes": null,
+   "evidence": [
+    "android/in-0.png",
+    "android/in-mid.png",
+    "android/in-2.png",
+    "android/in-3.png",
+    "android/in-sel1.png",
+    "android/in-sel2.png",
+    "android/in-file.png"
+   ]
+  },
+  {
+   "component": "checkbox",
+   "group": "inputs",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "interaction-verified",
+   "interaction": "pass: Accept terms on/off",
+   "defect": false,
+   "baseline20260929": "pass-major-interaction",
+   "notes": null,
+   "evidence": [
+    "android/in-0.png",
+    "android/in-mid.png",
+    "android/in-2.png",
+    "android/in-3.png",
+    "android/in-sel1.png",
+    "android/in-sel2.png"
+   ]
+  },
+  {
+   "component": "radio",
+   "group": "inputs",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "selected-state-observed",
+   "interaction": "selected-state-observed: standalone stays selected on tap",
+   "defect": false,
+   "baseline20260929": "selected-state-observed",
+   "notes": null,
+   "evidence": [
+    "android/in-0.png",
+    "android/in-mid.png",
+    "android/in-2.png",
+    "android/in-3.png",
+    "android/in-sel1.png",
+    "android/in-sel2.png"
+   ]
+  },
+  {
+   "component": "checkbox-group",
+   "group": "inputs",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "interaction-verified",
+   "interaction": "pass: Push on, Email off",
+   "defect": false,
+   "baseline20260929": "pass-major-interaction",
+   "notes": null,
+   "evidence": [
+    "android/in-0.png",
+    "android/in-mid.png",
+    "android/in-2.png",
+    "android/in-3.png",
+    "android/in-sel1.png",
+    "android/in-sel2.png"
+   ]
+  },
+  {
+   "component": "radio-group",
+   "group": "inputs",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "interaction-verified",
+   "interaction": "pass: Standard -> Express",
+   "defect": false,
+   "baseline20260929": "pass-major-interaction",
+   "notes": null,
+   "evidence": [
+    "android/in-0.png",
+    "android/in-mid.png",
+    "android/in-2.png",
+    "android/in-3.png",
+    "android/in-sel1.png",
+    "android/in-sel2.png"
+   ]
+  },
+  {
+   "component": "switch",
+   "group": "inputs",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "interaction-verified",
+   "interaction": "pass: Notifications on -> off",
+   "defect": false,
+   "baseline20260929": "pass-major-interaction",
+   "notes": null,
+   "evidence": [
+    "android/in-0.png",
+    "android/in-mid.png",
+    "android/in-2.png",
+    "android/in-3.png",
+    "android/in-sel1.png",
+    "android/in-sel2.png"
+   ]
+  },
+  {
+   "component": "segmented-control",
+   "group": "inputs",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "interaction-verified",
+   "interaction": "pass: List -> Grid",
+   "defect": false,
+   "baseline20260929": "pass-major-interaction",
+   "notes": null,
+   "evidence": [
+    "android/in-0.png",
+    "android/in-mid.png",
+    "android/in-2.png",
+    "android/in-3.png",
+    "android/in-sel1.png",
+    "android/in-sel2.png"
+   ]
+  },
+  {
+   "component": "select",
+   "group": "inputs",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "interaction-verified",
+   "interaction": "pass: opens sheet, English selected closes, Android back closes, scrim tap closes",
+   "defect": false,
+   "baseline20260929": "pass-major-interaction",
+   "notes": null,
+   "evidence": [
+    "android/in-0.png",
+    "android/in-mid.png",
+    "android/in-2.png",
+    "android/in-3.png",
+    "android/in-sel1.png",
+    "android/in-sel2.png",
+    "android/in-select-open.png"
+   ]
+  },
+  {
+   "component": "combobox",
+   "group": "inputs",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "interaction-verified",
+   "interaction": "pass: open, pick Seoul, Clear city resets placeholder, typing Bu filters to Busan, pick Busan",
+   "defect": false,
+   "baseline20260929": "pass-major-interaction",
+   "notes": null,
+   "evidence": [
+    "android/in-0.png",
+    "android/in-mid.png",
+    "android/in-2.png",
+    "android/in-3.png",
+    "android/in-sel1.png",
+    "android/in-sel2.png",
+    "android/in-combo-open.png",
+    "android/in-combo-cleared.png",
+    "android/in-combo-filter.png"
+   ]
+  },
+  {
+   "component": "chip",
+   "group": "inputs",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "interaction-verified",
+   "interaction": "pass: Featured selected with check mark",
+   "defect": false,
+   "baseline20260929": "pass-major-interaction",
+   "notes": null,
+   "evidence": [
+    "android/in-0.png",
+    "android/in-mid.png",
+    "android/in-2.png",
+    "android/in-3.png",
+    "android/in-sel1.png",
+    "android/in-sel2.png"
+   ]
+  },
+  {
+   "component": "toggle-group",
+   "group": "inputs",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "interaction-verified",
+   "interaction": "pass: Bold on, Italic on (multi), Bold off",
+   "defect": false,
+   "baseline20260929": "pass-major-interaction",
+   "notes": null,
+   "evidence": [
+    "android/in-0.png",
+    "android/in-mid.png",
+    "android/in-2.png",
+    "android/in-3.png",
+    "android/in-sel1.png",
+    "android/in-sel2.png"
+   ]
+  },
+  {
+   "component": "tags-input",
+   "group": "inputs",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "interaction-verified",
+   "interaction": "pass: typed music + Enter adds tag, Remove walking removes",
+   "defect": false,
+   "baseline20260929": "pass-major-interaction",
+   "notes": "Enter commits and also dismisses the IME (one tag per focus); IME auto-capitalised to \"Music\".",
+   "evidence": [
+    "android/in-0.png",
+    "android/in-mid.png",
+    "android/in-2.png",
+    "android/in-3.png",
+    "android/in-sel1.png",
+    "android/in-sel2.png",
+    "android/in-tags.png"
+   ]
+  },
+  {
+   "component": "date-range-picker",
+   "group": "inputs",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "interaction-verified",
+   "interaction": "pass: 10 then 14 -> range start / inside x3 / range end",
+   "defect": false,
+   "baseline20260929": "pass-major-interaction",
+   "notes": null,
+   "evidence": [
+    "android/in-0.png",
+    "android/in-mid.png",
+    "android/in-2.png",
+    "android/in-3.png",
+    "android/in-sel1.png",
+    "android/in-sel2.png",
+    "android/in-range.png"
+   ]
+  },
+  {
+   "component": "mentions",
+   "group": "inputs",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "interaction-verified",
+   "interaction": "pass: typing @sk shows skyline candidate; selecting inserts @skyline",
+   "defect": false,
+   "baseline20260929": "pass-major-interaction",
+   "notes": null,
+   "evidence": [
+    "android/in-0.png",
+    "android/in-mid.png",
+    "android/in-2.png",
+    "android/in-3.png",
+    "android/in-sel1.png",
+    "android/in-sel2.png",
+    "android/in-mention-open.png",
+    "android/in-mention.png"
+   ]
+  },
+  {
+   "component": "transfer-list",
+   "group": "inputs",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "interaction-verified",
+   "interaction": "pass-with-defect",
+   "defect": true,
+   "baseline20260929": "pass-major-interaction",
+   "notes": "Check Walk -> Add enabled -> Walk moves to Chosen; Remove returns it. DEFECT A11Y (pre-existing, visible in 9/29 transfer-moved.xml): Available select-all content-desc keeps \", mixed\" after the list becomes all-checked or none-checked.",
+   "evidence": [
+    "android/in-transfer0.png",
+    "android/in-transfer1.png",
+    "android/in-transfer2.png",
+    "android/in-transfer2.xml"
+   ]
+  },
+  {
+   "component": "tabs",
+   "group": "navigation",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "interaction-verified",
+   "interaction": "pass: Recent -> Popular selected",
+   "defect": false,
+   "baseline20260929": "pass-major-interaction",
+   "notes": null,
+   "evidence": [
+    "android/nav-0.png",
+    "android/nav-menu.png",
+    "android/nav-sel.png"
+   ]
+  },
+  {
+   "component": "steps",
+   "group": "navigation",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "static-visual",
+   "interaction": "not-applicable-static: complete/current/pending visuals; status is exposed as accessibilityHint",
+   "defect": false,
+   "baseline20260929": "not-applicable-static",
+   "notes": null,
+   "evidence": [
+    "android/nav-0.png",
+    "android/nav-menu.png",
+    "android/nav-sel.png"
+   ]
+  },
+  {
+   "component": "top-bar",
+   "group": "navigation",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "interaction-verified",
+   "interaction": "pass: Refresh action -> Last action: Refreshed",
+   "defect": false,
+   "baseline20260929": "pass-major-interaction",
+   "notes": null,
+   "evidence": [
+    "android/nav-0.png",
+    "android/nav-menu.png",
+    "android/nav-sel.png"
+   ]
+  },
+  {
+   "component": "menu",
+   "group": "navigation",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "interaction-verified",
+   "interaction": "pass: Edit -> edit, Delete -> delete; Android back closes menu",
+   "defect": false,
+   "baseline20260929": "pass-major-interaction",
+   "notes": null,
+   "evidence": [
+    "android/nav-0.png",
+    "android/nav-menu.png",
+    "android/nav-sel.png"
+   ]
+  },
+  {
+   "component": "bottom-navigation",
+   "group": "navigation",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "interaction-verified",
+   "interaction": "pass: Home -> Profile selected",
+   "defect": false,
+   "baseline20260929": "pass-major-interaction",
+   "notes": null,
+   "evidence": [
+    "android/nav-0.png",
+    "android/nav-menu.png",
+    "android/nav-sel.png"
+   ]
+  },
+  {
+   "component": "load-more",
+   "group": "navigation",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "interaction-verified",
+   "interaction": "pass: Load more 0 -> 1 -> 2",
+   "defect": false,
+   "baseline20260929": "pass-major-interaction",
+   "notes": null,
+   "evidence": [
+    "android/nav-0.png",
+    "android/nav-menu.png",
+    "android/nav-sel.png"
+   ]
+  },
+  {
+   "component": "badge",
+   "group": "dataDisplay",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "static-visual",
+   "interaction": "not-applicable-static",
+   "defect": false,
+   "baseline20260929": "not-applicable-static",
+   "notes": null,
+   "evidence": [
+    "android/data-0.png",
+    "android/data-next.png",
+    "android/data-mid.png",
+    "android/data-bot.png"
+   ]
+  },
+  {
+   "component": "avatar",
+   "group": "dataDisplay",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "static-visual",
+   "interaction": "not-applicable-static",
+   "defect": false,
+   "baseline20260929": "not-applicable-static",
+   "notes": null,
+   "evidence": [
+    "android/data-0.png",
+    "android/data-next.png",
+    "android/data-mid.png",
+    "android/data-bot.png"
+   ]
+  },
+  {
+   "component": "card",
+   "group": "dataDisplay",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "static-visual",
+   "interaction": "not-applicable-static",
+   "defect": false,
+   "baseline20260929": "not-applicable-static",
+   "notes": null,
+   "evidence": [
+    "android/data-0.png",
+    "android/data-next.png",
+    "android/data-mid.png",
+    "android/data-bot.png"
+   ]
+  },
+  {
+   "component": "list-row",
+   "group": "dataDisplay",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "interaction-verified",
+   "interaction": "pass: Night signal / Morning loop row callbacks update Selected row",
+   "defect": false,
+   "baseline20260929": "pass-selected-row",
+   "notes": null,
+   "evidence": [
+    "android/data-0.png",
+    "android/data-next.png",
+    "android/data-mid.png",
+    "android/data-bot.png",
+    "android/data-acc.png"
+   ]
+  },
+  {
+   "component": "tag",
+   "group": "dataDisplay",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "static-visual",
+   "interaction": "not-applicable-static",
+   "defect": false,
+   "baseline20260929": "not-applicable-static",
+   "notes": null,
+   "evidence": [
+    "android/data-0.png",
+    "android/data-next.png",
+    "android/data-mid.png",
+    "android/data-bot.png"
+   ]
+  },
+  {
+   "component": "timeline",
+   "group": "dataDisplay",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "static-visual",
+   "interaction": "not-applicable-static",
+   "defect": false,
+   "baseline20260929": "not-applicable-static",
+   "notes": null,
+   "evidence": [
+    "android/data-0.png",
+    "android/data-next.png",
+    "android/data-mid.png",
+    "android/data-bot.png"
+   ]
+  },
+  {
+   "component": "description-list",
+   "group": "dataDisplay",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "static-visual",
+   "interaction": "not-applicable-static",
+   "defect": false,
+   "baseline20260929": "not-applicable-static",
+   "notes": null,
+   "evidence": [
+    "android/data-0.png",
+    "android/data-next.png",
+    "android/data-mid.png",
+    "android/data-bot.png"
+   ]
+  },
+  {
+   "component": "image",
+   "group": "dataDisplay",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "static-visual",
+   "interaction": "not-applicable-static",
+   "defect": false,
+   "baseline20260929": "not-applicable-static",
+   "notes": null,
+   "evidence": [
+    "android/data-0.png",
+    "android/data-next.png",
+    "android/data-mid.png",
+    "android/data-bot.png"
+   ]
+  },
+  {
+   "component": "counter-badge",
+   "group": "dataDisplay",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "static-visual",
+   "interaction": "not-applicable-static",
+   "defect": false,
+   "baseline20260929": "not-applicable-static",
+   "notes": null,
+   "evidence": [
+    "android/data-0.png",
+    "android/data-next.png",
+    "android/data-mid.png",
+    "android/data-bot.png"
+   ]
+  },
+  {
+   "component": "list",
+   "group": "dataDisplay",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "interaction-verified",
+   "interaction": "pass: row container; rows activate",
+   "defect": false,
+   "baseline20260929": "pass-selected-row",
+   "notes": null,
+   "evidence": [
+    "android/data-0.png",
+    "android/data-next.png",
+    "android/data-mid.png",
+    "android/data-bot.png",
+    "android/data-acc.png"
+   ]
+  },
+  {
+   "component": "carousel",
+   "group": "dataDisplay",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "interaction-verified",
+   "interaction": "pass: 다음 -> slide 2 (다음 disabled at end), 이전 -> slide 1 (이전 disabled at start), dot 2 jumps; caption updates",
+   "defect": false,
+   "baseline20260929": "pass-major-interaction",
+   "notes": "Pattern stories: Manual 1->2->3 with 다음 disabled at end; horizontal swipe does not page (buttons/dots only; swipe is the CarouselMotion adapter). OptionalAutoplay advances every ~5s and stops at the last slide, switching control to 자동 넘김 시작하기; manual dot selection pauses; resume then pause holds 1/3 for 7s. Resume at the last slide shows 멈추기 but does not advance (no wrap).",
+   "evidence": [
+    "android/data-0.png",
+    "android/data-next.png",
+    "android/pat-car0.png",
+    "android/pat-car-end.png",
+    "android/pat-car-auto.png"
+   ]
+  },
+  {
+   "component": "statistic",
+   "group": "dataDisplay",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "static-visual",
+   "interaction": "not-applicable-static",
+   "defect": false,
+   "baseline20260929": "not-applicable-static",
+   "notes": null,
+   "evidence": [
+    "android/data-0.png",
+    "android/data-next.png",
+    "android/data-mid.png",
+    "android/data-bot.png"
+   ]
+  },
+  {
+   "component": "upload-item",
+   "group": "dataDisplay",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "interaction-verified",
+   "interaction": "pass: Cancel -> Upload cancelled: Yes",
+   "defect": false,
+   "baseline20260929": "pass-cancel-callback",
+   "notes": null,
+   "evidence": [
+    "android/data-0.png",
+    "android/data-next.png",
+    "android/data-mid.png",
+    "android/data-bot.png",
+    "android/data-acc.png"
+   ]
+  },
+  {
+   "component": "accordion",
+   "group": "dataDisplay",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "interaction-verified",
+   "interaction": "pass: Details expands Expandable content",
+   "defect": false,
+   "baseline20260929": "pass-expanded-content",
+   "notes": null,
+   "evidence": [
+    "android/data-0.png",
+    "android/data-next.png",
+    "android/data-mid.png",
+    "android/data-bot.png",
+    "android/data-acc.png"
+   ]
+  },
+  {
+   "component": "collapsible",
+   "group": "dataDisplay",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "interaction-verified",
+   "interaction": "pass: Shipping details collapses (defaultOpen) and reopens",
+   "defect": false,
+   "baseline20260929": "pass-collapse-content",
+   "notes": null,
+   "evidence": [
+    "android/data-0.png",
+    "android/data-next.png",
+    "android/data-mid.png",
+    "android/data-bot.png",
+    "android/data-acc.png"
+   ]
+  },
+  {
+   "component": "asset",
+   "group": "dataDisplay",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "static-visual",
+   "interaction": "not-applicable-static",
+   "defect": false,
+   "baseline20260929": "not-applicable-static",
+   "notes": "Frame slot renders Fox; fixture has no Lottie player.",
+   "evidence": [
+    "android/data-0.png",
+    "android/data-next.png",
+    "android/data-mid.png",
+    "android/data-bot.png"
+   ]
+  },
+  {
+   "component": "empty-state",
+   "group": "feedback",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "static-visual",
+   "interaction": "not-applicable-static",
+   "defect": false,
+   "baseline20260929": "not-applicable-static",
+   "notes": "Create draft slot is a noop fixture; visual only.",
+   "evidence": [
+    "android/fb-0.png",
+    "android/fb-toast.png",
+    "android/fb-toast-closed.png",
+    "android/sp3.png"
+   ]
+  },
+  {
+   "component": "result",
+   "group": "feedback",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "static-visual",
+   "interaction": "not-applicable-static",
+   "defect": false,
+   "baseline20260929": "not-applicable-static",
+   "notes": null,
+   "evidence": [
+    "android/fb-0.png",
+    "android/fb-toast.png",
+    "android/fb-toast-closed.png",
+    "android/sp3.png"
+   ]
+  },
+  {
+   "component": "notice",
+   "group": "feedback",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "static-visual",
+   "interaction": "not-applicable-static",
+   "defect": false,
+   "baseline20260929": "not-applicable-static",
+   "notes": null,
+   "evidence": [
+    "android/fb-0.png",
+    "android/fb-toast.png",
+    "android/fb-toast-closed.png",
+    "android/sp3.png"
+   ]
+  },
+  {
+   "component": "progress",
+   "group": "feedback",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "static-visual",
+   "interaction": "not-applicable-static",
+   "defect": false,
+   "baseline20260929": "not-applicable-static",
+   "notes": null,
+   "evidence": [
+    "android/fb-0.png",
+    "android/fb-toast.png",
+    "android/fb-toast-closed.png",
+    "android/sp3.png"
+   ]
+  },
+  {
+   "component": "skeleton",
+   "group": "feedback",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "static-visual",
+   "interaction": "not-applicable-static",
+   "defect": false,
+   "baseline20260929": "not-applicable-static",
+   "notes": null,
+   "evidence": [
+    "android/fb-0.png",
+    "android/fb-toast.png",
+    "android/fb-toast-closed.png",
+    "android/sp3.png"
+   ]
+  },
+  {
+   "component": "spinner",
+   "group": "feedback",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "static-visual",
+   "interaction": "not-applicable-static",
+   "defect": false,
+   "baseline20260929": "not-applicable-static",
+   "notes": "Five rapid captures show the arc rotating/growing (sp1..sp5).",
+   "evidence": [
+    "android/fb-0.png",
+    "android/fb-toast.png",
+    "android/fb-toast-closed.png",
+    "android/sp3.png"
+   ]
+  },
+  {
+   "component": "toast",
+   "group": "feedback",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "interaction-verified",
+   "interaction": "pass: Publish toast shows persistent toast, Dismiss notification removes it. Android back with a toast visible leaves the app (toast is non-modal, expected).",
+   "defect": false,
+   "baseline20260929": "pass-publish-dismiss",
+   "notes": null,
+   "evidence": [
+    "android/fb-0.png",
+    "android/fb-toast.png",
+    "android/fb-toast-closed.png",
+    "android/sp3.png"
+   ]
+  },
+  {
+   "component": "bottom-info",
+   "group": "feedback",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "static-visual",
+   "interaction": "not-applicable-static",
+   "defect": false,
+   "baseline20260929": "not-applicable-static",
+   "notes": null,
+   "evidence": [
+    "android/fb-0.png",
+    "android/fb-toast.png",
+    "android/fb-toast-closed.png",
+    "android/sp3.png"
+   ]
+  },
+  {
+   "component": "masonry",
+   "group": "dataLayouts",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "static-visual",
+   "interaction": "not-applicable-static",
+   "defect": false,
+   "baseline20260929": "not-applicable-static",
+   "notes": "9 cards packed into two columns by height.",
+   "evidence": [
+    "android/dl-masonry.png"
+   ]
+  },
+  {
+   "component": "virtual-list",
+   "group": "dataLayouts",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "interaction-verified",
+   "interaction": "pass: 1000 rows; drag scroll reached 항목 37-42 then 항목 809-814 with only ~6 rows mounted",
+   "defect": false,
+   "baseline20260929": "pass-major-interaction",
+   "notes": null,
+   "evidence": [
+    "android/dl-virtual0.png",
+    "android/dl-virtual1.png",
+    "android/dl-virtual2.png"
+   ]
+  },
+  {
+   "component": "qr-code",
+   "group": "dataLayouts",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "static-visual",
+   "interaction": "not-applicable-static",
+   "defect": false,
+   "baseline20260929": "not-applicable-static",
+   "notes": "Screenshot decoded with CoreImage CIDetector: https://example.com/한글. Fallback link button renders below.",
+   "evidence": [
+    "android/dl-qr.png"
+   ]
+  },
+  {
+   "component": "thinking-orb",
+   "group": "thinkingOrb",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "static-visual",
+   "interaction": "not-applicable-static",
+   "defect": false,
+   "baseline20260929": "not-applicable-static",
+   "notes": "All 9 states light and dark; consecutive frames differ when animating (md5 differ), Paused story frames identical.",
+   "evidence": [
+    "android/orb-all.png",
+    "android/orb-dark.png",
+    "android/orb-paused1.png"
+   ]
+  },
+  {
+   "component": "dialog",
+   "group": "overlays",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "interaction-verified",
+   "interaction": "pass: Save, Close, Android back and scrim tap each close",
+   "defect": false,
+   "baseline20260929": "pass-open-and-dismiss",
+   "notes": null,
+   "evidence": [
+    "android/ov-dialog.png"
+   ]
+  },
+  {
+   "component": "alert-dialog",
+   "group": "overlays",
+   "rendered": true,
+   "visual": "reviewed-pass",
+   "visualReviewed": true,
+   "kind": "interaction-verified",
+   "interaction": "pass: danger Cancel/Delete close; scrim tap does not dismiss (expected for alert); Android back closes; info tone Make my version closes",
+   "defect": false,
+   "baseline20260929": "pass-open-and-dismiss",
+   "notes": null,
+   "evidence": [
+    "android/ov-alert.png",
+    "android/ov-info.png"
+   ]
+  },
+  {
+   "component": "sheet",
+   "group": "overlays",
+   "rendered": true,
+   "visual": "reviewed-defect",
+   "visualReviewed": true,
+   "kind": "interaction-verified",
+   "interaction": "pass: Close, Android back and scrim tap close. Downward drag does not dismiss (not claimed by core Sheet; GestureSheet is the drag adapter).",
+   "defect": true,
+   "baseline20260929": "pass-open-and-dismiss",
+   "notes": "Body text Sheet content [2313-2366] lies inside the navigation bar inset [2337-2400] next to the gesture handle; identical bounds in 9/29 sheet-open.xml. Sheet accepts safeAreaInsets but the gallery fixture does not pass them.",
+   "evidence": [
+    "android/ov-sheet.png",
+    "android/ov-sheet.xml"
+   ]
+  }
+ ],
+ "extensions": [
+  {
+   "id": "cascader",
+   "status": "pass",
+   "interaction": "서울 -> 지역 appears -> 종로구 -> summary 서울 / 종로구; 선택 초기화 resets",
+   "notes": null,
+   "evidence": [
+    "android/pat-casc0.png",
+    "android/pat-casc1.png",
+    "android/pat-casc2.png"
+   ]
+  },
+  {
+   "id": "rating",
+   "status": "pass",
+   "interaction": "Half-point slider drag 3 -> 4.5, 점수 저장 -> 4.5점으로 저장했어요",
+   "notes": null,
+   "evidence": [
+    "android/pat-rating0.png",
+    "android/pat-rating1.png"
+   ]
+  },
+  {
+   "id": "time-picker",
+   "status": "pass",
+   "interaction": "9시 + 5분 -> 선택한 시각 09:05, 선택 완료 -> Notice 09:05",
+   "notes": null,
+   "evidence": [
+    "android/pat-time-hours.png",
+    "android/pat-time.png"
+   ]
+  },
+  {
+   "id": "input-sheet",
+   "status": "pass",
+   "interaction": "Typed Verified with IME up; field and 완료 footer lifted above IME (footer 1368-1484); back #1 dismisses IME only, back #2 closes sheet; 완료 closes",
+   "notes": null,
+   "evidence": [
+    "android/pat-is-open.png",
+    "android/pat-is-ime.png",
+    "android/pat-is-done.png"
+   ]
+  },
+  {
+   "id": "notification-settings",
+   "status": "pass",
+   "interaction": "주간 모아보기 on, save -> 알림 설정을 저장했어요 / 내 활동 켜짐 · 주간 모아보기 켜짐, button becomes 저장했어요 (disabled)",
+   "notes": null,
+   "evidence": [
+    "android/pat-ns0.png",
+    "android/pat-ns1.png"
+   ]
+  },
+  {
+   "id": "image-viewer",
+   "status": "pass",
+   "interaction": "Remote image loads; double-tap zooms (frame changes); Android back and 닫기 each close only the viewer; 이전/다음 disabled for one item. Same layout as 9/29 (full-bleed controls, caption flush to edge).",
+   "notes": null,
+   "evidence": [
+    "android/opt-viewer.png",
+    "android/opt-viewer-dbl.png"
+   ]
+  },
+  {
+   "id": "gesture-sheet",
+   "status": "pass-with-defect",
+   "interaction": "Open, drag up expands to top snap, text entry memo with IME, 닫기 closes, pan-down closes, backdrop tap closes, reopen works. DEFECT: Android back while the sheet is open closes the whole enclosing RN Modal host (fullscreen adapter screen) instead of the sheet; the GestureSheet BackHandler never fires inside an RN Modal.",
+   "notes": null,
+   "evidence": [
+    "android/opt-gs-open.png",
+    "android/opt-gs-expanded.png",
+    "android/opt-gs-input.png",
+    "android/opt-gs-back2.png"
+   ]
+  },
+  {
+   "id": "native-context-menu",
+   "status": "pass",
+   "interaction": "Long press opens OS menu 저장/삭제; 삭제 -> delete, 저장 -> save; Android back closes menu only",
+   "notes": null,
+   "evidence": [
+    "android/opt-menu.png",
+    "android/opt-menu-saved.png"
+   ]
+  },
+  {
+   "id": "keyboard-controller",
+   "status": "pass",
+   "interaction": "Typed dock into 메모; 완료 dock bottom 1517 aligns with IME top (same as 9/29); 완료 dismisses IME and dock returns to 2222-2337 above nav bar",
+   "notes": null,
+   "evidence": [
+    "android/opt-dock-ime.png",
+    "android/opt-dock-done.png"
+   ]
+  },
+  {
+   "id": "sortable",
+   "status": "pass",
+   "interaction": "Buttons: 숲길 뒤로 -> 바닷가 → 숲길 → 작은 카페 (edge buttons disabled). Long-press drag of 작은 카페 handle to top -> 작은 카페 → 바닷가 → 숲길",
+   "notes": null,
+   "evidence": [
+    "android/ia-0.png",
+    "android/ia-drag.png"
+   ]
+  },
+  {
+   "id": "swipe-actions",
+   "status": "pass-with-note",
+   "interaction": "Left swipe reveals 보관 and disabled 삭제 without running; 보관 runs once (보관했어요) and closes row; 기록 작업 보기 toggles explicit 보관/삭제 buttons",
+   "notes": "When revealed, the row content 오늘 걸었던 숲길 is translated fully out of view (blank row with only actions); same in the earlier 2026-09-30 adapter capture android-swipe-revealed.png.",
+   "evidence": [
+    "android/ia-swipe-open.png",
+    "android/ia-archived.png",
+    "android/ia-menu.png"
+   ]
+  },
+  {
+   "id": "content-transition",
+   "status": "pass",
+   "interaction": "다음 상태 toggles 새로운 기록을 시작해요 <-> 기록이 준비됐어요; recording shows cross-fade frames; TextTransition keeps the ZWJ family emoji as one glyph",
+   "notes": null,
+   "evidence": [
+    "android/ia-ct1.png",
+    "android/ia-ct-frames.png",
+    "android/ia-content-transition.mp4"
+   ]
+  },
+  {
+   "id": "carousel-motion",
+   "status": "pass-with-defect",
+   "interaction": "다음/이전 장소 buttons page and disable at ends. Horizontal drag: 1000 ms 800 px drags paged 2/2; 600 ms and 200 ms swipes paged 0/4; 300 ms swipes paged 3/8; frames show a failed swipe moving ~40% then snapping back. Vertical gesture on the slide does not page.",
+   "notes": null,
+   "evidence": [
+    "android/ia-cm-end.png",
+    "android/ia-cm-frames.png",
+    "android/ia-carousel-motion.mp4"
+   ]
+  },
+  {
+   "id": "celebration",
+   "status": "pass",
+   "interaction": "기록 달성 축하 -> N번째 기록을 남겼어요 and a viewport overlay of teal/orange/purple/blue particles falls over ~1.5 s then clears",
+   "notes": null,
+   "evidence": [
+    "android/ia-cel-frames.png",
+    "android/ia-celebration.mp4"
+   ]
+  },
+  {
+   "id": "shared-screen-transition",
+   "status": "pass-with-note",
+   "interaction": "숲길 상세 보기 -> detail expands from the card region (frames), 목록으로 돌아가기 returns to list with thumbnail at original bounds, reopen works. Android back on Detail closes the whole showcase Modal host instead of popping to the list (RN Modal onRequestClose consumes back before React Navigation).",
+   "notes": null,
+   "evidence": [
+    "android/st-0.png",
+    "android/st-detail.png",
+    "android/st-frames.png",
+    "android/st-returned.png",
+    "android/st-back.png"
+   ]
+  },
+  {
+   "id": "scenario-reduced-motion-dark-rtl-200",
+   "status": "pass-with-defect",
+   "interaction": "Dark theme, 200% text and right-aligned RTL text render; reduced motion disables swipe and shows explicit 보관/삭제; CarouselMotion 다음 장소 pages; ContentTransition switches; 기록 달성 축하 increments (1번째) with no particles in the recording (suppressed). DEFECT: under provider direction=rtl the SortableCollection move-button rows and SwipeActions explicit action row stay left-to-right (start at x=63/42); same layout visible in the earlier iOS capture native-reduced-top.png.",
+   "notes": null,
+   "evidence": [
+    "android/rm-0.png",
+    "android/rm-1.png",
+    "android/rm-2.png",
+    "android/rm-3.png",
+    "android/rm-cel-frames.png"
+   ]
+  },
+  {
+   "id": "scenario-shared-reduced-motion",
+   "status": "pass",
+   "interaction": "Dark + reduced motion: 숲길 상세 보기 opens detail, 목록으로 돌아가기 returns",
+   "notes": null,
+   "evidence": [
+    "android/srm-detail.png"
+   ]
+  },
+  {
+   "id": "liquid-toast",
+   "status": "pass",
+   "interaction": "Capsule: publish shows capsule-to-card liquid morph (frames), 결과 열기 -> generation:1 결과를 열었어요 and toast closes; 3-burst queues one at a time (2 -> close -> 3 -> swipe-up -> 4 -> swipe-up -> none); Android back with toast visible leaves the app (non-modal). LongCopy wraps 3 lines with close and action intact. ReducedMotion: card appears in one frame (no morph).",
+   "notes": null,
+   "evidence": [
+    "android/lt-0.png",
+    "android/lt-frames.png",
+    "android/lt-publish.mp4",
+    "android/lt-action.png",
+    "android/lt-burst.png",
+    "android/lt-burst2.png",
+    "android/lt-swipe.png",
+    "android/lt-long.png",
+    "android/lt-reduced.png",
+    "android/lt-reduced.mp4"
+   ]
+  }
+ ],
+ "limitations": [
+  "uiautomator content-desc is the Android accessibility node text, not a spoken TalkBack pass.",
+  "Gorhom GestureSheet content is not exposed in the uiautomator tree; its steps were verified from screenshots.",
+  "Motion was verified from screenrecord frames; screenrecord only emits changed frames, so frame counts are not frame-rate measurements.",
+  "Host load average reached 54 during the run; swipe results in D6 were repeated to separate flakiness."
+ ]
+}

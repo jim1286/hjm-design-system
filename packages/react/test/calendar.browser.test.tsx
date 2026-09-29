@@ -88,3 +88,39 @@ it.each(["ltr", "rtl"] as const)("aligns partial weeks with weekday column cente
     Array.from(row.children).forEach((cell, column) => expect(Math.abs(center(cell) - center(headers[column]!))).toBeLessThan(1));
   }
 });
+
+// 2026-09-30 responsive audit WR-0930-3: the popover was viewport - 32 wide but
+// started at the trigger's left edge, so it crossed the right edge by 1px+.
+it.each([390, 360, 320])("keeps the DatePicker popover inside both viewport edges at %ipx", async (width) => {
+  await page.viewport(width, 720);
+  await act(async () => root.render(
+    <HjmProvider reducedMotion>
+      <div style={{ padding: "0 33px" }}>
+        <DatePicker descriptor={{ grid, label: "날짜", displayValue: null, placeholder: "선택", defaultOpen: true }} monthLabel="September" clearLabel="지우기" closeLabel="닫기" composeAccessibleName={({ date }) => date} />
+      </div>
+    </HjmProvider>,
+  ));
+  const rect = host.querySelector(".hjm-date-picker__popover")!.getBoundingClientRect();
+  expect(rect.left).toBeGreaterThanOrEqual(16);
+  expect(rect.right).toBeLessThanOrEqual(width - 16);
+  expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(width);
+});
+
+// 2026-09-30 responsive audit: on a short landscape viewport the popover ran 20px below the fold.
+// It opens upward when the space above the trigger fits it, and stays below when it does not.
+it("opens the DatePicker popover upward when it would pass the bottom edge and the space above fits", async () => {
+  await page.viewport(844, 640);
+  await act(async () => root.render(
+    <HjmProvider reducedMotion>
+      <div style={{ paddingTop: 560 }}>
+        <DatePicker descriptor={{ grid, label: "날짜", displayValue: null, placeholder: "선택", defaultOpen: true }} monthLabel="September" clearLabel="지우기" closeLabel="닫기" composeAccessibleName={({ date }) => date} />
+      </div>
+    </HjmProvider>,
+  ));
+  const popover = host.querySelector<HTMLElement>(".hjm-date-picker__popover")!;
+  const trigger = host.querySelector(".hjm-date-picker__trigger")!.getBoundingClientRect();
+  const rect = popover.getBoundingClientRect();
+  expect(trigger.top - rect.height).toBeGreaterThan(16);
+  expect(rect.bottom).toBeLessThanOrEqual(trigger.top);
+  expect(rect.top).toBeGreaterThanOrEqual(0);
+});

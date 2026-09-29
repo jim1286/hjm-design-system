@@ -43,10 +43,28 @@ type HjmNativeProviderValueProps = Readonly<{
     minimumVisualTarget?: never;
     brandPalette?: never;
 }>;
+/** Window insets in points, usually `useSafeAreaInsets()` from react-native-safe-area-context. */
+export type HjmNativeSafeAreaInsets = Readonly<{
+    top?: number;
+    right?: number;
+    bottom?: number;
+    left?: number;
+}>;
 export type HjmNativeProviderProps = Readonly<{
     children: ReactNode;
+    /**
+     * Window safe-area insets that full-screen overlays (Sheet, DatePicker, Select,
+     * Combobox) apply when the call site passes none. Added after the 2026-09-30
+     * audit found sheet content under the iOS home indicator and the Android
+     * navigation bar because every call site had to remember the prop. The core
+     * entry cannot import the optional safe-area peer, so the host measures once
+     * here; nested providers inherit the nearest supplied value.
+     */
+    safeAreaInsets?: HjmNativeSafeAreaInsets;
 }> & (HjmNativeProviderEnvironmentProps | HjmNativeProviderValueProps);
-export declare function HjmNativeProvider({ children, theme, direction, textScale, reducedMotion, minimumVisualTarget, brandPalette: suppliedBrandPalette, value: suppliedValue, }: HjmNativeProviderProps): import("react").JSX.Element;
+export declare function HjmNativeProvider({ children, theme, direction, textScale, reducedMotion, minimumVisualTarget, brandPalette: suppliedBrandPalette, value: suppliedValue, safeAreaInsets: suppliedInsets, }: HjmNativeProviderProps): import("react").JSX.Element;
 export declare function useHjmNativeTheme(): HjmNativeTheme;
+/** Insets supplied to the nearest HjmNativeProvider; `{}` when the host supplied none. */
+export declare function useHjmNativeSafeAreaInsets(): HjmNativeSafeAreaInsets;
 export {};
 //# sourceMappingURL=provider.d.ts.map

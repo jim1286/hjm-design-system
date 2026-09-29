@@ -12,6 +12,5 @@ export const AlertDialog: Story = componentStory("AlertDialog");
 export const Sheet: Story = componentStory("Sheet");
 export const SidePanel: Story = componentStory("SidePanel");
 export const Popover: Story = componentStory("Popover");
-export const ConfirmPopover: Story = componentStory("ConfirmPopover");
 export const Tooltip: Story = componentStory("Tooltip");
 export const CommandPalette: Story = componentStory("CommandPalette");

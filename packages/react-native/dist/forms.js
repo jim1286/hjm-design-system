@@ -12,7 +12,7 @@ import { useControllableState } from "./internal/state.js";
 import { scheduleAfterNativeModalTeardown, shouldAwaitNativeModalDismiss, } from "./internal/modal-lifecycle.js";
 import { logicalTextAlign, minimumTargetStyle, resolveNativeTextScaleProps, } from "./internal/styles.js";
 import { Text } from "./primitives.js";
-import { useHjmNativeTheme } from "./provider.js";
+import { useHjmNativeSafeAreaInsets, useHjmNativeTheme } from "./provider.js";
 function useAfterModalDismiss(visible) {
     const shownRef = useRef(false);
     const previousVisibleRef = useRef(visible);
@@ -156,6 +156,7 @@ export function Select({ label, accessibilityLabel, options, source: sourceProp,
     const accessibleName = resolveControlAccessibleName(label, accessibilityLabel, "Select");
     const theme = useHjmNativeTheme();
     const { colors, environment } = theme;
+    const safeArea = useHjmNativeSafeAreaInsets();
     const requestedControlled = selectedKey !== undefined ? selectedKey : value;
     const requestedDefault = defaultSelectedKey ?? defaultValue ?? null;
     const requestedValue = requestedControlled ?? requestedDefault;
@@ -322,8 +323,15 @@ export function Select({ label, accessibilityLabel, options, source: sourceProp,
                                 gap: spacing.sm,
                                 maxHeight: "75%",
                                 padding: spacing.md,
+                                // Clear the home indicator / navigation bar (2026-09-30 audit).
+                                paddingBottom: spacing.md + (safeArea.bottom ?? 0),
                             }, children: [_jsx(CollectionSheetHeader, { title: label ?? accessibleName, dismissLabel: dismissLabel, onDismiss: () => close("programmatic") }), _jsxs(ScrollView, { children: [blockingState ? (_jsxs(View, { style: { gap: spacing.sm, minHeight: selectRecipe.stateMessage.minHeight }, children: [asyncState.status === "loading" ? _jsx(ActivityIndicator, {}) : null, _jsx(Text, { accessibilityLiveRegion: "polite", accessibilityRole: asyncState.status === "error" ? "alert" : undefined, tone: asyncState.status === "error" ? "danger" : "muted", children: asyncState.message }), asyncState.status === "error" && onRetry ? (_jsx(Button, { onPress: onRetry, tone: "secondary", children: retryLabel ?? dismissLabel })) : null] })) : collection, asyncState.status === "loadingMore" ? (_jsxs(View, { accessibilityLiveRegion: "polite", accessibilityState: { busy: true }, style: { alignItems: "center", flexDirection: "row", gap: spacing.xs }, children: [_jsx(ActivityIndicator, {}), _jsx(Text, { tone: "muted", children: asyncState.message })] })) : null] })] })] }) })] }));
 }
+/**
+ * How long focus events are ignored after a result is chosen. It covers the
+ * modal teardown in which iOS restores first responder; a real tap comes later.
+ */
+const comboboxRefocusGuardMs = 600;
 /** Editable Native combobox with sectioned async results and teardown-safe commits. */
 export function Combobox({ label, accessibilityLabel, items, sections, source: sourceProp, selectedKey, defaultSelectedKey = null, selectedItem, onSelectionChange, inputValue, defaultInputValue, onInputValueChange, open, defaultOpen = false, onOpenChange, onCommit, onCommitAfterDismiss, onDismiss, filtering = comboboxBehaviorDefaults.filtering, queryValue, resultQuery, asyncState, loading = false, emptyMessage, loadingMessage, loadingMoreMessage, errorMessage, promptMessage, minimumQueryLength = 0, onRetry, retryLabel, description, error, placeholder, openHint, sheetTitle, required = false, disabled = false, readOnly = false, busy = false, openOnFocus = true, size = comboboxRecipe.defaults.size, density = comboboxRecipe.defaults.density, readOnlyLabel, renderLeading, clearLabel, dismissLabel, resultsAccessibilityLabel, style, ...modalProps }) {
     const providedSources = [sourceProp, items, sections].filter((candidate) => candidate !== undefined).length;
@@ -359,6 +367,7 @@ export function Combobox({ label, accessibilityLabel, items, sections, source: s
     const accessibleName = resolveControlAccessibleName(label, accessibilityLabel, "Combobox");
     const theme = useHjmNativeTheme();
     const { colors, environment } = theme;
+    const safeArea = useHjmNativeSafeAreaInsets();
     const [committedKey, setCommittedKey] = useControllableState({
         ...(selectedKey === undefined ? {} : { value: selectedKey }),
         defaultValue: defaultSelectedKey,
@@ -381,6 +390,12 @@ export function Combobox({ label, accessibilityLabel, items, sections, source: s
     }, [onOpenChange, open, visible]);
     const [activeIndex, setActiveIndex] = useState(-1);
     const inputRef = useRef(null);
+    const refocusGuardRef = useRef(false);
+    const refocusGuardTimer = useRef(null);
+    useEffect(() => () => {
+        if (refocusGuardTimer.current !== null)
+            clearTimeout(refocusGuardTimer.current);
+    }, []);
     const optionRefs = useRef(new Map());
     const modalDismiss = useAfterModalDismiss(visible);
     const normalizedQuery = query.trim().toLocaleLowerCase();
@@ -449,9 +464,24 @@ export function Combobox({ label, accessibilityLabel, items, sections, source: s
         setCommittedKey(item.id);
         setQuery(item.label);
         onCommit?.(item.id, "selection");
-        close("selection", onCommitAfterDismiss
-            ? () => onCommitAfterDismiss(item.id, "selection")
-            : null);
+        // A choice ends the edit. iOS hands first responder back to the input when the
+        // modal dismisses, so the keyboard reopened over the committed value
+        // (2026-09-30 audit). Blur now and again once the modal is gone; the input
+        // keeps accessibility focus, only the IME goes away. Typing resumes on tap.
+        // iOS also fires onFocus for that restore, which reopened the results sheet, so
+        // the guard below swallows focus events until the dismissal has settled.
+        refocusGuardRef.current = true;
+        inputRef.current?.blur?.();
+        close("selection", async () => {
+            inputRef.current?.blur?.();
+            if (refocusGuardTimer.current !== null)
+                clearTimeout(refocusGuardTimer.current);
+            refocusGuardTimer.current = setTimeout(() => {
+                refocusGuardRef.current = false;
+                refocusGuardTimer.current = null;
+            }, comboboxRefocusGuardMs);
+            await onCommitAfterDismiss?.(item.id, "selection");
+        });
     };
     const clear = () => {
         setCommittedKey(null);
@@ -569,6 +599,10 @@ export function Combobox({ label, accessibilityLabel, items, sections, source: s
                             if (!visible && !readOnly)
                                 requestOpen(true, "keyboard");
                         }, onFocus: () => {
+                            if (refocusGuardRef.current) {
+                                inputRef.current?.blur?.();
+                                return;
+                            }
                             if (openOnFocus && !disabled && !readOnly && !busy)
                                 requestOpen(true, "trigger");
                         }, onKeyPress: (event) => {
@@ -607,6 +641,8 @@ export function Combobox({ label, accessibilityLabel, items, sections, source: s
                                 gap: spacing.sm,
                                 maxHeight: "75%",
                                 padding: spacing.md,
+                                // Clear the home indicator / navigation bar (2026-09-30 audit).
+                                paddingBottom: spacing.md + (safeArea.bottom ?? 0),
                             }, children: [_jsx(CollectionSheetHeader, { title: sheetTitle ?? label ?? accessibleName, dismissLabel: dismissLabel, onDismiss: () => dismiss("programmatic") }), viewStatus === "loading" || viewStatus === "prompt" || viewStatus === "error" || viewStatus === "empty" ? (_jsxs(View, { style: { gap: spacing.sm, minHeight: comboboxRecipe.stateMessage.minHeight }, children: [viewStatus === "loading" ? _jsx(ActivityIndicator, {}) : null, _jsx(Text, { accessibilityLiveRegion: viewStatus === "error" ? "assertive" : "polite", accessibilityRole: viewStatus === "error" ? "alert" : undefined, tone: viewStatus === "error" ? "danger" : "muted", children: stateMessage }), viewStatus === "error" && onRetry ? (_jsx(Button, { onPress: onRetry, tone: "secondary", children: retryLabel ?? dismissLabel })) : null] })) : (_jsxs(ScrollView, { keyboardShouldPersistTaps: "handled", children: [collection, viewStatus === "loadingMore" ? (_jsxs(View, { accessibilityLiveRegion: "polite", accessibilityState: { busy: true }, style: { alignItems: "center", flexDirection: "row", gap: spacing.xs }, children: [_jsx(ActivityIndicator, {}), _jsx(Text, { tone: "muted", children: stateMessage || loadingMoreMessage || loadingMessage })] })) : null] }))] })] }) })] }));
 }
 //# sourceMappingURL=forms.js.map

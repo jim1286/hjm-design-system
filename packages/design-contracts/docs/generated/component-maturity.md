@@ -4,9 +4,9 @@
 
 This document is the human-readable projection of the same catalog and Showcase manifest consumed by product CI.
 
-- Contract: stable 100 · planned 8
-- Web renderer: stable 100 · planned 8
-- Native renderer: stable 83 · planned 3 · unsupported 22
+- Contract: stable 103
+- Web renderer: stable 103
+- Native renderer: stable 83 · unsupported 20
 
 | Component | Canonical story ID | Contract | Web | Native | Documentation | Required evidence |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -52,16 +52,12 @@ This document is the human-readable projection of the same catalog and Showcase 
 | Combobox | `input/combobox` | stable | stable | stable | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, native-actions |
 | DatePicker | `input/date-picker` | stable | stable | stable | [authored](../date-picker.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, native-actions |
 | DateRangePicker | `input/date-range-picker` | stable | stable | stable | generated only | contract: contract; web: default, dark, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, large-text, rtl, reduced-motion, accessibility, native-actions |
-| TimePicker | `input/time-picker` | planned | planned | planned | [authored](../time-picker.md) | contract: contract |
-| ColorPicker | `input/color-picker` | planned | planned | unsupported | [authored](../color-picker.md) | contract: contract |
+| ColorPicker | `input/color-picker` | stable | stable | unsupported | [authored](../color-picker.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard |
 | FilePicker | `input/file-picker` | stable | stable | stable | [authored](../file-picker.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, native-actions |
-| Cascader | `input/cascader` | planned | planned | planned | [authored](../cascader.md) | contract: contract |
 | Form | `input/form` | stable | stable | stable | [authored](../form.md) | contract: contract; web: default, dark, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, large-text, rtl, reduced-motion, accessibility, native-actions |
 | Agreement | `input/agreement` | stable | stable | stable | [authored](../agreement.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, native-actions |
 | Mentions | `input/mentions` | stable | stable | stable | [authored](../mentions.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, native-actions |
-| Rating | `input/rating` | planned | planned | planned | [authored](../rating.md) | contract: contract |
 | TransferList | `input/transfer-list` | stable | stable | stable | [authored](../transfer-list.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, native-actions |
-| TreeSelect | `input/tree-select` | planned | planned | unsupported | [authored](../tree-select.md) | contract: contract |
 | UploadItem | `data-display/upload-item` | stable | stable | stable | [authored](../upload-item.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, native-actions |
 | Tabs | `navigation/tabs` | stable | stable | stable | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, native-actions |
 | TopBar | `navigation/top-bar` | stable | stable | stable | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
@@ -105,16 +101,15 @@ This document is the human-readable projection of the same catalog and Showcase 
 | Result | `feedback/result` | stable | stable | stable | [authored](../result.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
 | BottomInfo | `feedback/bottom-info` | stable | stable | stable | [authored](../bottom-info.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
 | Toast | `feedback/toast` | stable | stable | stable | [authored](../toast.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, native-actions |
-| Watermark | `feedback/watermark` | planned | planned | unsupported | [authored](../watermark.md) | contract: contract |
+| Watermark | `feedback/watermark` | stable | stable | unsupported | [authored](../watermark.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
 | Dialog | `overlay/dialog` | stable | stable | stable | [authored](../dialog.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, native-actions |
 | AlertDialog | `overlay/alert-dialog` | stable | stable | stable | generated only | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, native-actions |
 | Sheet | `overlay/sheet` | stable | stable | stable | [authored](../sheet.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, native-actions |
 | SidePanel | `overlay/side-panel` | stable | stable | unsupported | [authored](../side-panel.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard |
 | Popover | `overlay/popover` | stable | stable | unsupported | [authored](../popover.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard |
-| ConfirmPopover | `overlay/confirm-popover` | planned | planned | unsupported | [authored](../confirm-popover.md) | contract: contract |
 | Tooltip | `overlay/tooltip` | stable | stable | unsupported | [authored](../tooltip.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard |
 | CommandPalette | `overlay/command-palette` | stable | stable | unsupported | [authored](../command-palette.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard |
-| Affix | `utility/affix` | planned | planned | unsupported | [authored](../affix.md) | contract: contract |
+| Affix | `utility/affix` | stable | stable | unsupported | [authored](../affix.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
 | DesignSystemProvider | `provider/design-system-provider` | stable | stable | stable | [authored](../design-system-provider.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility; native: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility |
 | SkipNav | `utility/skip-nav` | stable | stable | unsupported | [authored](../skip-nav.md) | contract: contract; web: default, dark, long-copy, large-text, rtl, reduced-motion, accessibility, keyboard |
 | VisuallyHidden | `utility/visually-hidden` | stable | stable | unsupported | [authored](../visually-hidden.md) | contract: contract; web: default, dark, large-text, rtl, reduced-motion, accessibility |

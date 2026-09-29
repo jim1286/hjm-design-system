@@ -48,16 +48,12 @@ export declare const componentIds: {
     readonly Combobox: "combobox";
     readonly DatePicker: "date-picker";
     readonly DateRangePicker: "date-range-picker";
-    readonly TimePicker: "time-picker";
     readonly ColorPicker: "color-picker";
     readonly FilePicker: "file-picker";
-    readonly Cascader: "cascader";
     readonly Form: "form";
     readonly Agreement: "agreement";
     readonly Mentions: "mentions";
-    readonly Rating: "rating";
     readonly TransferList: "transfer-list";
-    readonly TreeSelect: "tree-select";
     readonly UploadItem: "upload-item";
     readonly Tabs: "tabs";
     readonly TopBar: "top-bar";
@@ -107,7 +103,6 @@ export declare const componentIds: {
     readonly Sheet: "sheet";
     readonly SidePanel: "side-panel";
     readonly Popover: "popover";
-    readonly ConfirmPopover: "confirm-popover";
     readonly Tooltip: "tooltip";
     readonly CommandPalette: "command-palette";
     readonly Affix: "affix";

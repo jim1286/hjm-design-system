@@ -12,6 +12,7 @@ import {
 import {
   useEffect,
   useId,
+  useLayoutEffect,
   useRef,
   useState,
   type ReactNode,
@@ -19,6 +20,8 @@ import {
 
 import { Calendar, type CalendarOverflow, type CalendarHandle } from "./calendar.js";
 import { classNames } from "./internal.js";
+
+const popoverViewportInset = 16;
 
 export type DatePickerMonthAction = Readonly<{ month: string; label: string }>;
 
@@ -97,6 +100,42 @@ export function DatePicker<Content>({
     document.addEventListener("pointerdown", outside);
     return () => {
       document.removeEventListener("pointerdown", outside);
+    };
+  }, [open]);
+
+  // Keep the popover inside the viewport (2026-09-30 audit WR-0930-3): shift inline, flip up
+  // when short. Not portaled: Calendar autoFocus runs before a portal popup is measured.
+  useLayoutEffect(() => {
+    const popover = dialogRef.current;
+    if (!open || !popover) return;
+    const place = () => {
+      const viewport = window.visualViewport;
+      const left = (viewport?.offsetLeft ?? 0) + popoverViewportInset;
+      const right = (viewport?.offsetLeft ?? 0) + (viewport?.width ?? document.documentElement.clientWidth) - popoverViewportInset;
+      // Layout offset, not translate: mobile Chromium widened the page for a translated box.
+      popover.style.insetInlineStart = "";
+      popover.style.maxInlineSize = `${Math.max(0, right - left)}px`;
+      const rect = popover.getBoundingClientRect();
+      let shift = rect.right > right ? Math.floor(right - rect.right) : 0;
+      if (rect.left + shift < left) shift = Math.ceil(left - rect.left);
+      const logical = getComputedStyle(popover).direction === "rtl" ? -shift : shift;
+      popover.style.insetInlineStart = shift === 0 ? "" : `${logical}px`;
+      popover.style.insetBlockStart = "";
+      popover.style.insetBlockEnd = "";
+      const box = popover.getBoundingClientRect();
+      const bottom = (viewport?.offsetTop ?? 0) + (viewport?.height ?? window.innerHeight) - popoverViewportInset;
+      const anchor = popover.parentElement?.getBoundingClientRect();
+      if (anchor && box.bottom > bottom && anchor.top - box.height - popoverViewportInset >= (viewport?.offsetTop ?? 0)) {
+        popover.style.insetBlockStart = "auto";
+        popover.style.insetBlockEnd = "calc(100% + var(--hjm-space-xs))";
+      }
+    };
+    place();
+    window.addEventListener("resize", place);
+    window.visualViewport?.addEventListener("resize", place);
+    return () => {
+      window.removeEventListener("resize", place);
+      window.visualViewport?.removeEventListener("resize", place);
     };
   }, [open]);
 

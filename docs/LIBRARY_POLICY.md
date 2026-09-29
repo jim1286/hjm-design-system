@@ -1,5 +1,17 @@
 # HJM Design System 라이브러리 적용 정책
 
+## Optional interaction adoption — 2026-09-30
+
+The user requested all six candidates in the [research](plans/oss-absorption-research-2026-09-30.md).
+[Interaction adapters](interaction-adapters.md) records exact peers, licenses, ownership, removal and
+the conditional-export and native-availability patch for Screen Transitions 4.0.0. These are optional entries; root
+imports retain their existing native-module requirements. Motion Primitives' selected pattern uses
+the existing framer-motion runtime with a packaged MIT notice instead of introducing a second engine.
+Manifest/lock and central library-policy changes are justified by this adoption, not a blanket
+approval for every component from these upstream repositories. Native peer warnings on the base
+RN 0.81 fixture are not evidence of optional-host compatibility. Device testing and publication are
+separate from typechecking, browser tests and JavaScript exports.
+
 기준: 2026-09-08. [포트폴리오 공통 정책](https://github.com/jim1286/app-portfolio/blob/main/docs/LIBRARY_POLICY.md)과
 [Query 정책](https://github.com/jim1286/app-portfolio/blob/main/docs/libraries/TANSTACK_QUERY_POLICY.md)을 이 저장소에도 적용한다.
 라이브러리 선택은 제품의 framework·runtime 경계 안에서 하며, 모듈마다 별도 원칙을 복제하지 않는다.

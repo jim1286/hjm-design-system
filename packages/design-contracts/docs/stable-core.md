@@ -1,11 +1,31 @@
 # Stable Core
 
+## 2026-09-30 선택형 상호작용 어댑터·Liquid Toast 승격
+
+`sortable`·`swipe-actions`·`content-transition`·`carousel-motion`·`celebration`(Web·Native)과 Native Liquid Toast를
+stable로 올린다. 선택형 확장이라 canonical 개수는 바뀌지 않는다. 근거는 Web Chromium, 설치된 iOS 27 시뮬레이터, 이번에
+추가한 Android 16 에뮬레이터 확인이다([어댑터 기록](../../../docs/evidence/interaction-adapters-2026-09-30.md),
+[Liquid Toast 기록](../../../docs/evidence/liquid-toast-2026-09-30/README.md)). 검토에서 고친 것: Celebration 입자 색(옅은
+surfaceAccent → primary + 상태 강조색), Liquid Toast 그림자·캡슐·색 전환. Native `screen-transition`은 experimental로 남긴다 —
+React Navigation 7.4.1 전용이고, 포트폴리오 Expo 앱은 모두 expo-router 57이라 쓸 수 있는 소비자가 없다. Sortable은
+한 줄 목록 범위만 지원한다(그리드 미지원). 실기기·음성 보조기기 QA는 소비 앱 릴리스 몫이다.
+
+## 2026-09-30 Web 기능 추가
+
+ColorPicker·Watermark·Affix를 Web에서 구현했다. 세 항목은 React Native unsupported이며,
+현재 계약/Web은 Stable 103개·Beta 0개·Planned 0개, Native는 Stable 83개다.
+공개 API·기본값은 각 컴포넌트 문서가 소유하며, HEX/alpha·키보드 입력 복구,
+워터마크의 비간섭·텍스트 이스케이프, Affix의 중첩 스크롤·부모 경계·초점 보존·크기 초과
+해제를 Chromium으로 검증한다. dark/RTL/200%/reduced-motion/접근성/긴 문구 증거도 연결했다.
+[검증 기록](../../../docs/evidence/web-additions-2026-09-30/README.md)에 실행 결과와 범위를 남긴다.
+사용자의 배포 제외 지시에 따라 버전 게시나 소비 앱 변경은 하지 않는다.
+
 ## 2026-09-29 컴포넌트 승격 (다음 minor)
 
 `Divider`, `Section`, `ListRow`, `Statistic`, `DescriptionList`, `EmptyState`, `Result`, `Layout`, `Splitter`, `Accordion`, `Agreement`, `FilePicker`, `Tabs`, `BottomNavigation`, `LoadMore`, `Mentions`,
 `Heading`, `Top`, `BottomCTA`, `AspectRatio`, `Grid`, `Steps`, `TopBar`, `AuthScreenLayout`, `Radio`,
 `Avatar`, `Asset`, `CounterBadge`, `Image`, `VisuallyHidden`, `List`, `Timeline`, `BottomInfo`, `Link`, `AuthProviderButton`, `PasswordField`, `CheckboxGroup`, `RadioGroup`, `Chip`, `SegmentedControl`, `SearchField`, `NumberField`, `Toast`, `FloatingActionButton`, `Checkbox`, `Switch`, `ToggleGroup`, `Slider`, `OtpField`, `TagsInput`, `DatePicker`, `DateRangePicker`, `Breadcrumb`, `Pagination`, `Menubar`, `Form`, `Sidebar(Web)`, `TransferList`, `UploadItem`, `ContextMenu(Web)`, `Menu`, `Anchor(Web)`, `Collapsible`, `DataTable(Web)`, `Tree(Web)`, `Calendar`, `Carousel`, `Tour(Web)`, `ThinkingOrb`, `Dialog`, `AlertDialog`, `Sheet`, `SidePanel(Web)`, `Popover(Web)`, `Tooltip(Web)`, `CommandPalette(Web)`, `SkipNav(Web)`을 각 지원 surface에서 stable로 승격합니다.
-TextFormat, Splitter, Breadcrumb, Pagination, Menubar, Sidebar와 Web 전용 overlay/navigation 컴포넌트는 Web-only stable입니다. DateRangePicker, Accordion, Agreement, FilePicker, Tabs, BottomNavigation, LoadMore, Mentions, Form, TransferList, UploadItem, Menu, Collapsible, Calendar, Carousel, Dialog, AlertDialog, Sheet는 Web·Native stable입니다. ThinkingOrb도 Web·Native stable입니다. 현재 계약 stable은 100개, Web stable은 100개, Native stable은 83개입니다.
+TextFormat, Splitter, Breadcrumb, Pagination, Menubar, Sidebar와 Web 전용 overlay/navigation 컴포넌트는 Web-only stable입니다. DateRangePicker, Accordion, Agreement, FilePicker, Tabs, BottomNavigation, LoadMore, Mentions, Form, TransferList, UploadItem, Menu, Collapsible, Calendar, Carousel, Dialog, AlertDialog, Sheet는 Web·Native stable입니다. ThinkingOrb도 Web·Native stable입니다. 당시 계약 stable은 100개, Web stable은 100개, Native stable은 83개입니다.
 
 ## 2026-09-29 Beta → Stable 확인
 

@@ -31,6 +31,7 @@ export type TriggerElementProps = Readonly<{
   onClick?: MouseEventHandler<HTMLElement>;
   onMouseEnter?: MouseEventHandler<HTMLElement>;
   onMouseLeave?: MouseEventHandler<HTMLElement>;
+  onPointerDown?: React.PointerEventHandler<HTMLElement>;
   onPointerEnter?: React.PointerEventHandler<HTMLElement>;
   onPointerLeave?: React.PointerEventHandler<HTMLElement>;
   onFocus?: React.FocusEventHandler<HTMLElement>;

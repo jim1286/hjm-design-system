@@ -1,4 +1,9 @@
-# Liquid Toast (beta, optional Native presentation)
+# Liquid Toast (stable, optional Native presentation)
+
+Promoted 2026-09-30 after fixing three device-visible defects and checking the installed iPhone 17 / iOS 27 simulator
+(island anchor) and Android 16 emulator (capsule anchor): the Skia shadow ignored the token opacity and was clipped by a
+region-wide canvas, the capsule anchor stayed on screen as a second "island", and the droplet turned card-colored before
+leaving the anchor. [Record](../../../docs/evidence/liquid-toast-2026-09-30/README.md).
 
 Liquid Toast uses the existing Toast store with a capsule, connecting neck, droplet, card expansion
 and reverse exit inspired by expo-dynamic-notifications. It is an in-app effect, not ActivityKit,
@@ -6,8 +11,7 @@ Live Activity or a background notification service. The upstream MIT notice ship
 
 ## Installation and compatibility
 
-Use the exact published HJM version train for contracts and renderer. This implementation is currently
-an unpublished source change. The effect is imported from `@hjmds/react-native/toast-liquid`; the root
+Use the exact published HJM version train for contracts and renderer. The effect is imported from `@hjmds/react-native/toast-liquid`; the root
 barrel intentionally does not re-export its factory.
 
 Install the host-compatible versions of these optional peers before importing that subpath:
@@ -91,6 +95,7 @@ GPU performance or verify native accessibility behavior. The source geometry is 
 contracts package. `Patterns/Liquid Toast` provides capsule, long-copy, reduced-motion and burst
 interaction cases; the Web `LiquidHintFallback` story preserves the same descriptor semantics.
 
-Device Hub connection timed out on 2026-09-28. No new simulator was created or booted, and no native
-binary was built. Real island positioning, OS versions, device frame times and VoiceOver/TalkBack
-remain unverified. Release/adoption must not claim this evidence from typechecking or JS export.
+Installed checks on 2026-09-30 (no new simulator/emulator, no native rebuild): iPhone 17 / iOS 27.0 simulator with a
+host-supplied island frame, and Android 16 emulator with the capsule anchor ([record](../../../docs/evidence/liquid-toast-2026-09-30/README.md)).
+Other island models' frames are host-measured and unverified here; physical devices, frame times and spoken
+VoiceOver/TalkBack journeys remain consumer-release QA.

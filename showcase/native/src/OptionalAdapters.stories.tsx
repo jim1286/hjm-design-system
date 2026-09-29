@@ -7,7 +7,7 @@ import { Button } from "@hjmds/react-native/actions";
 import { Text } from "@hjmds/react-native/primitives";
 import { ImageViewer } from "@hjmds/react-native/image-viewer";
 import { KeyboardMotionProvider, KeyboardDock, KeyboardFormScrollView } from "@hjmds/react-native/keyboard-controller";
-import { GestureSheet, GestureSheetProvider, GestureSheetInput } from "@hjmds/react-native/sheet-gesture";
+import { GestureSheet, GestureSheetProvider, GestureSheetInput, dismissTopGestureSheet } from "@hjmds/react-native/sheet-gesture";
 import { NativeContextMenu } from "@hjmds/react-native/context-menu-native";
 import { spacing } from "@hjmds/design-contracts/tokens";
 function Adapters({ onClose }: { onClose: () => void }) {
@@ -45,7 +45,9 @@ function Adapters({ onClose }: { onClose: () => void }) {
 function Demo() {
   const [open, setOpen] = useState(false);
   return <><Button onPress={() => setOpen(true)}>전체 화면 어댑터 열기</Button>
-    <Modal visible={open} animationType="none" statusBarTranslucent navigationBarTranslucent onRequestClose={() => setOpen(false)}>
+    <Modal visible={open} animationType="none" statusBarTranslucent navigationBarTranslucent
+      // Android back inside a Modal never reaches BackHandler; let an open sheet close first.
+      onRequestClose={() => { if (!dismissTopGestureSheet()) setOpen(false); }}>
       <Adapters onClose={() => setOpen(false)} />
     </Modal></>;
 }

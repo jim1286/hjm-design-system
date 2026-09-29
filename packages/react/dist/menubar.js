@@ -1,7 +1,8 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { menubarRecipe, resolveMenubarNavigation, validateMenubarDescriptor, } from "@hjmds/design-contracts/components/menubar";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { classNames, useControllableState } from "./internal.js";
+import { AnchoredPortal, useAnchoredPopup } from "./portal.js";
 export function Menubar({ descriptor, openMenuId: controlledOpen, defaultOpenMenuId, onOpenMenuIdChange, onAction, className, }) {
     validateMenubarDescriptor(descriptor);
     const [openId, setOpenId] = useControllableState({
@@ -18,17 +19,25 @@ export function Menubar({ descriptor, openMenuId: controlledOpen, defaultOpenMen
     const labelRefs = useRef(new Map());
     const openMenu = descriptor.menus.find((menu) => menu.id === openId) ?? null;
     const openItems = openMenu?.items.filter((item) => item.disabled !== true) ?? [];
+    // The panel was absolute inside the bar, so any overflow ancestor clipped it
+    // (2026-09-30 audit WR-0930-4: at 1100px an item could not be hit). It now uses
+    // the same portal + fixed positioning as Menu; focus stays on the bar label.
+    const panelId = `${useId().replaceAll(":", "")}-menubar-panel`;
+    const [panelNode, setPanelNode] = useState(null);
+    const setPanelRef = useCallback((node) => setPanelNode(node), []);
+    const openLabelRef = useMemo(() => ({ get current() { return openId === null ? null : labelRefs.current.get(openId) ?? null; } }), [openId]);
+    const panelPosition = useAnchoredPopup(openLabelRef, panelNode, { gap: 0, zIndex: 900 });
     useEffect(() => {
         if (openId === null)
             return;
         const onPointerDown = (event) => {
-            if (event.target instanceof Node && rootRef.current?.contains(event.target))
+            if (event.target instanceof Node && (rootRef.current?.contains(event.target) || panelNode?.contains(event.target)))
                 return;
             setOpenId(null);
         };
         document.addEventListener("pointerdown", onPointerDown);
         return () => document.removeEventListener("pointerdown", onPointerDown);
-    }, [openId, setOpenId]);
+    }, [openId, panelNode, setOpenId]);
     const focusLabel = (id) => {
         setFocusedId(id);
         labelRefs.current.get(id)?.focus();
@@ -109,7 +118,7 @@ export function Menubar({ descriptor, openMenuId: controlledOpen, defaultOpenMen
             return (_jsxs("div", { className: "hjm-menubar__menu", children: [_jsx("button", { type: "button", ref: (node) => { if (node)
                             labelRefs.current.set(menu.id, node);
                         else
-                            labelRefs.current.delete(menu.id); }, role: "menuitem", "aria-haspopup": "menu", "aria-expanded": open, disabled: menu.disabled, tabIndex: menu.id === focusedId ? 0 : -1, "data-open": open || undefined, className: "hjm-menubar__label", onClick: () => {
+                            labelRefs.current.delete(menu.id); }, role: "menuitem", "aria-haspopup": "menu", "aria-expanded": open, "aria-controls": open ? panelId : undefined, disabled: menu.disabled, tabIndex: menu.id === focusedId ? 0 : -1, "data-open": open || undefined, className: "hjm-menubar__label", onClick: () => {
                             setFocusedId(menu.id);
                             setOpenId(open ? null : menu.id);
                             setActiveItemIndex(0);
@@ -121,17 +130,17 @@ export function Menubar({ descriptor, openMenuId: controlledOpen, defaultOpenMen
                                 setFocusedId(menu.id);
                                 setActiveItemIndex(0);
                             }
-                        }, children: menu.label }), open ? (_jsx("div", { role: "menu", "aria-label": menu.label, className: "hjm-menubar__panel", children: menu.items.map((item) => {
-                            const index = openItems.findIndex((candidate) => candidate.id === item.id);
-                            return (_jsxs("div", { role: "menuitem", "aria-disabled": item.disabled || undefined, "data-active": index === activeItemIndex && item.disabled !== true ? "" : undefined, "data-tone": item.tone, className: "hjm-menubar__item", onMouseEnter: () => { if (index >= 0)
-                                    setActiveItemIndex(index); }, onClick: () => {
-                                    if (item.disabled)
-                                        return;
-                                    onAction(item.id, menu.id);
-                                    setOpenId(null);
-                                    focusLabel(menu.id);
-                                }, children: [_jsx("span", { children: item.label }), item.shortcut ? _jsx("kbd", { className: "hjm-menubar__shortcut", children: item.shortcut }) : null] }, item.id));
-                        }) })) : null] }, menu.id));
+                        }, children: menu.label }), open ? (_jsx(AnchoredPortal, { anchorRef: openLabelRef, ssrFallback: "inline", children: _jsx("div", { ref: setPanelRef, id: panelId, role: "menu", "aria-label": menu.label, className: "hjm-menubar__panel", "data-placement": panelPosition.placement, style: panelPosition.style, children: menu.items.map((item) => {
+                                const index = openItems.findIndex((candidate) => candidate.id === item.id);
+                                return (_jsxs("div", { role: "menuitem", "aria-disabled": item.disabled || undefined, "data-active": index === activeItemIndex && item.disabled !== true ? "" : undefined, "data-tone": item.tone, className: "hjm-menubar__item", onMouseEnter: () => { if (index >= 0)
+                                        setActiveItemIndex(index); }, onClick: () => {
+                                        if (item.disabled)
+                                            return;
+                                        onAction(item.id, menu.id);
+                                        setOpenId(null);
+                                        focusLabel(menu.id);
+                                    }, children: [_jsx("span", { children: item.label }), item.shortcut ? _jsx("kbd", { className: "hjm-menubar__shortcut", children: item.shortcut }) : null] }, item.id));
+                            }) }) })) : null] }, menu.id));
         }) }));
 }
 //# sourceMappingURL=menubar.js.map

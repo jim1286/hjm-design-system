@@ -122,6 +122,10 @@ export function TagsInput({
           // There is no keyboard commit vocabulary here: the return key is the
           // only reliable one on a phone, so Comma/Space/Blur stay Web-only.
           onSubmitEditing={() => commit(draft)}
+          // Return adds a tag and the next one follows, so keep the keyboard up.
+          // The single-line default ("blurAndSubmit") closed it after every tag
+          // (2026-09-30 audit). blurOnSubmit is deprecated in RN 0.81.
+          submitBehavior="submit"
           style={{ flexGrow: 1, minWidth: 80, color: content }}
         />
       </View>

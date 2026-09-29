@@ -1,4 +1,4 @@
-export { HjmNativeProvider, useHjmNativeTheme, } from "./provider.js";
+export { HjmNativeProvider, useHjmNativeSafeAreaInsets, useHjmNativeTheme, } from "./provider.js";
 export { hjmCompositionStyleKeys, } from "./composition-style.js";
 export { AspectRatio, Container, Grid, Icon, Layout, Section, Stack, Surface, Text, } from "./primitives.js";
 export { BottomCTA, Button, IconButton, Link, } from "./actions.js";

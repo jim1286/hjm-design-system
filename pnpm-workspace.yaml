@@ -35,3 +35,7 @@ patchedDependencies:
   'react-native-ios-context-menu@3.2.1': patches/react-native-ios-context-menu.patch
   # Legacy root view is absent from RN 0.86 Fabric; remove when upstream guards the legacy helper.
   'react-native-ios-utilities@5.2.0': patches/react-native-ios-utilities.patch
+  # Types must precede the react-native source condition; otherwise Expo typechecks upstream internals.
+  # Guard optional teleport native views too: installed JS alone caused a red native placeholder.
+  # Remove each fix when upstream ships it. See docs/interaction-adapters.md.
+  react-native-screen-transitions@4.0.0: patches/react-native-screen-transitions@4.0.0.patch

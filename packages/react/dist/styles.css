@@ -343,7 +343,7 @@
 .hjm-field__affix { display: inline-flex; align-items: center; color: var(--hjm-color-text-muted); }
 .hjm-field__description, .hjm-choice__description { color: var(--hjm-color-text-muted); font-size: var(--hjm-type-label-size); line-height: var(--hjm-type-label-line-height); }
 .hjm-field__error { color: var(--hjm-color-danger); font-size: var(--hjm-type-label-size); line-height: var(--hjm-type-label-line-height); }
-.hjm-search-field__clear { inline-size: 32px; block-size: 32px; display: inline-grid; place-items: center; border: 0; border-radius: 50%; color: inherit; background: transparent; font: inherit; cursor: pointer; }
+.hjm-search-field__clear { inline-size: var(--hjm-control-min-touch-target); block-size: var(--hjm-control-min-touch-target); display: inline-grid; place-items: center; border: 0; border-radius: 50%; color: inherit; background: transparent; font: inherit; cursor: pointer; }
 .hjm-search-field__spinner { inline-size: 32px; block-size: 32px; display: inline-grid; place-items: center; color: var(--hjm-color-content-brand); }
 .hjm-search-field__spinner:empty::before { content: ""; inline-size: 1em; block-size: 1em; border: 2px solid currentColor; border-inline-end-color: transparent; border-radius: 50%; animation: hjm-spin 800ms linear infinite; }
 .hjm-password-field--large .hjm-field__control { min-block-size: var(--hjm-control-button-large); padding-inline: var(--hjm-space-lg); }
@@ -1113,6 +1113,9 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   color: var(--hjm-color-on-primary);
   font-size: var(--hjm-type-label-size);
 }
+/* 44px hit slop without growing the mark (2026-09-30 audit WR-0930-5/7) */
+.hjm-data-table__check, .hjm-data-table__sort, .hjm-transfer-list__select-all { position: relative; }
+.hjm-data-table__check::after, .hjm-data-table__sort::after, .hjm-transfer-list__select-all::after { content: ""; position: absolute; inset: calc(50% - var(--hjm-control-min-touch-target) / 2); }
 .hjm-data-table__check[aria-checked="true"],
 .hjm-data-table__check[aria-checked="mixed"] { border-color: var(--hjm-color-primary); background: var(--hjm-color-primary); }
 .hjm-data-table__sort:focus-visible,
@@ -2595,3 +2598,29 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-menu-morph__item:hover, .hjm-menu-morph__item:focus { background: var(--hjm-color-bg); }
 .hjm-menu-morph__item[data-tone="danger"] { color: var(--hjm-color-danger); }
 .hjm-menu-morph__item:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Selected colors are user data; control surfaces keep the same canvas tokens as other inputs. */
+.hjm-color-picker { border: 1px solid var(--hjm-color-border); border-radius: var(--hjm-radius-md); background: var(--hjm-color-bg); color: var(--hjm-color-text); padding: 1rem; margin: 0; min-inline-size: 0; overflow-wrap: anywhere; }
+.hjm-color-picker legend { max-inline-size: 100%; overflow-wrap: anywhere; }
+.hjm-color-picker__row { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+.hjm-color-picker label { display: flex; flex-direction: column; gap: 0.5rem; min-inline-size: 0; }
+.hjm-color-picker__hex { flex: 1 1 10rem; }
+.hjm-color-picker input { box-sizing: border-box; min-block-size: var(--hjm-color-picker-target); min-inline-size: 0; max-inline-size: 100%; border: 1px solid var(--hjm-color-border); border-radius: var(--hjm-radius-md); background: var(--hjm-color-bg); color: var(--hjm-color-text); font: inherit; }
+.hjm-color-picker input[type="text"] { inline-size: 100%; padding-inline: 0.5rem; }
+.hjm-color-picker input[type="color"] { inline-size: 3rem; padding: 0.25rem; }
+.hjm-color-picker__opacity { margin-block-start: 0.75rem; }
+.hjm-color-picker__opacity input[type="range"] { accent-color: var(--hjm-color-primary); }
+.hjm-color-picker__preview { block-size: 1.5rem; margin-block-start: 0.75rem; border: 1px solid var(--hjm-color-border); border-radius: var(--hjm-radius-md); }
+.hjm-color-picker__presets { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-block-start: 0.75rem; }
+.hjm-color-picker__presets button { display: inline-flex; align-items: center; gap: 0.5rem; min-block-size: var(--hjm-color-picker-target); max-inline-size: 100%; overflow-wrap: anywhere; border: 1px solid var(--hjm-color-border); border-radius: var(--hjm-radius-md); padding: 0.5rem; background: var(--hjm-color-bg); color: var(--hjm-color-text); font: inherit; cursor: pointer; }
+.hjm-color-picker__presets button[aria-pressed="true"] { border-color: var(--hjm-color-primary); }
+.hjm-color-picker__swatch { inline-size: 1rem; block-size: 1rem; flex-shrink: 0; border: 1px solid var(--hjm-color-border); }
+.hjm-color-picker :is(input, button):focus-visible { outline: 2px solid var(--hjm-color-primary); outline-offset: 2px; }
+.hjm-color-picker__error { color: var(--hjm-color-danger); margin-block: 0.5rem; }
+.hjm-color-picker:disabled { opacity: 0.5; }
+/* SVG labels are decorative and print with the content; neither selection nor pointer input is intercepted. */
+.hjm-watermark { position: relative; isolation: isolate; }
+.hjm-watermark__content { position: relative; z-index: 0; overflow-wrap: anywhere; }
+.hjm-watermark__overlay { position: absolute; inset: 0; z-index: 1; pointer-events: none; user-select: none; overflow: hidden; color: var(--hjm-color-text-sub); font: inherit; }
+.hjm-affix { color: var(--hjm-color-text); background: var(--hjm-color-bg); overflow-wrap: anywhere; }
+.hjm-affix__marker { display: block; block-size: 0; pointer-events: none; }

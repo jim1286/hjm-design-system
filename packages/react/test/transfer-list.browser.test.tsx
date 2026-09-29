@@ -6,6 +6,7 @@ import { page } from "vitest/browser";
 import { TransferList } from "../src/transfer-list.js";
 import { HjmProvider } from "../src/provider.js";
 import "../src/styles.css";
+import { hasHitArea } from "./touch-tap.js";
 // The evidence registry points to this focused keyboard proof; the shared scenario fixture omits TransferList moves.
 // componentId: "transfer-list"
 
@@ -128,4 +129,15 @@ it("keeps long localized row copy visible and wrapped at a narrow viewport", asy
   expect(getComputedStyle(longRow).overflowWrap).toBe("anywhere");
   expect(longRow.scrollWidth).toBeLessThanOrEqual(longRow.clientWidth + 1);
   expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(document.documentElement.clientWidth + 1);
+});
+
+// 2026-09-30 responsive audit WR-0930-7: the select-all marks hit 16x16.
+it("gives each select-all checkbox a 44px hit area", async () => {
+  // Keep the marks away from the iframe edge so every sampled point is on screen.
+  await page.viewport(900, 720);
+  host.style.padding = "32px";
+  await act(async () => root.render(<Fixture />));
+  const marks = [...document.querySelectorAll<HTMLElement>(".hjm-transfer-list__select-all")];
+  expect(marks).toHaveLength(2);
+  for (const mark of marks) expect(hasHitArea(mark)).toBe(true);
 });

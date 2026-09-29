@@ -53,7 +53,7 @@ export declare const liquidToastRecipe: {
         };
     };
     readonly delay: {
-        readonly tint: 110;
+        readonly tint: 420;
         readonly expand: 340;
         readonly reveal: 560;
         readonly collapse: 100;

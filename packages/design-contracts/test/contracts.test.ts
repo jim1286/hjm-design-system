@@ -609,7 +609,7 @@ describe("expanded cross-platform component contracts", () => {
       const contract: ComponentCatalogEntry = component;
       const hasRecipe = contract.recipe !== undefined;
       const hasNonVisualEvidence = contract.nonVisualEvidence !== undefined;
-      if (component.status !== "planned") {
+      if (contract.status !== "planned") {
         expect(hasRecipe || hasNonVisualEvidence, component.name).toBe(true);
       }
       if (hasNonVisualEvidence) {

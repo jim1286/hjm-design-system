@@ -81,7 +81,7 @@ it("supports browser keyboard focus, menu navigation, disabled state, and action
   // ArrowDown opens the focused menu; aria-expanded and the named menu expose its state.
   await act(async () => userEvent.keyboard("{ArrowDown}"));
   expect(file.getAttribute("aria-expanded")).toBe("true");
-  const panel = host.querySelector<HTMLElement>('[role="menu"]')!;
+  const panel = document.querySelector<HTMLElement>('[role="menu"]')!;
   expect(panel.getAttribute("aria-label")).toBe("파일");
   expect(panel.querySelector('[role="menuitem"][aria-disabled="true"]')?.textContent).toContain("저장");
 
@@ -92,6 +92,6 @@ it("supports browser keyboard focus, menu navigation, disabled state, and action
   expect(onAction).toHaveBeenCalledOnce();
   expect(onAction).toHaveBeenCalledWith("quit", "file");
   expect(file.getAttribute("aria-expanded")).toBe("false");
-  expect(host.querySelector('[role="menu"]')).toBeNull();
+  expect(document.querySelector('[role="menu"]')).toBeNull();
   expect(document.activeElement).toBe(file);
 });

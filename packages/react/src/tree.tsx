@@ -182,10 +182,17 @@ export const Tree = forwardRef(function Tree<Id extends string = string>(
           tabIndex={node.id === activeId ? 0 : -1}
           className="hjm-tree__node"
           style={{ "--hjm-tree-depth": node.depth - 1 } as CSSProperties}
-          onClick={() => {
+          onClick={(event) => {
             setFocusedId(node.id);
-            if (checkedStates && onCheckedToggle) { if (!node.disabled) onCheckedToggle(node.id); }
-            else toggleSelection(node);
+            // Pointer users had no way to expand: only arrow keys toggled (2026-09-30
+            // audit WR-0930-2). The contract lets a row click change expansion; the
+            // glyph toggles only, and in check mode the row click stays the check.
+            const onGlyph = node.hasChildren &&
+              (event.target as Element).closest?.(".hjm-tree__toggle") !== null;
+            if (onGlyph) { setExpanded(node.id, !node.expanded); return; }
+            if (checkedStates && onCheckedToggle) { if (!node.disabled) onCheckedToggle(node.id); return; }
+            if (node.hasChildren) setExpanded(node.id, !node.expanded);
+            toggleSelection(node);
           }}
           onFocus={() => setFocusedId(node.id)}
           onKeyDown={(event) => onKeyDown(event, node)}

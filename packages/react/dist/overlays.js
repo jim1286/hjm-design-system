@@ -263,6 +263,7 @@ export const Tooltip = forwardRef(function Tooltip({ trigger, content, placement
     });
     const timerRef = useRef(undefined);
     const suppressedRef = useRef(false);
+    const touchTapRef = useRef(null);
     const triggerRef = useRef(null);
     const [tooltipNode, setTooltipNode] = useState(null);
     const id = `${useId().replaceAll(":", "")}-tooltip`;
@@ -319,6 +320,10 @@ export const Tooltip = forwardRef(function Tooltip({ trigger, content, placement
     const renderedTrigger = cloneElement(trigger, {
         ref: composeRefs(triggerProps.ref, triggerRef),
         ...(describedBy ? { "aria-describedby": describedBy } : {}),
+        onPointerDown: (event) => {
+            triggerProps.onPointerDown?.(event);
+            touchTapRef.current = event.pointerType === "touch" ? { wasVisible: visible } : null;
+        },
         onPointerEnter: (event) => {
             triggerProps.onPointerEnter?.(event);
             if (event.pointerType === "touch")
@@ -356,11 +361,37 @@ export const Tooltip = forwardRef(function Tooltip({ trigger, content, placement
         },
         onClick: (event) => {
             triggerProps.onClick?.(event);
-            if (visible && !event.defaultPrevented) {
-                changeOpen(false, { reason: "trigger-activation" });
+            const touchTap = touchTapRef.current;
+            touchTapRef.current = null;
+            if (event.defaultPrevented)
+                return;
+            // Touch has no hover, so a tap is the only way to show the hint. The tap's
+            // own focus already opened it; closing here (the mouse/keyboard path) made it
+            // flash for 1ms (2026-09-30 audit WR-0930-1). A second tap closes instead.
+            if (touchTap !== null && !touchTap.wasVisible) {
+                if (!visible)
+                    schedule(true, 0, { reason: "pointer" });
+                return;
             }
+            if (visible)
+                changeOpen(false, { reason: "trigger-activation" });
         },
     });
+    useEffect(() => {
+        if (!visible)
+            return;
+        // Tap-opened tooltips have no pointer-leave; an outside press dismisses them.
+        // Mobile Safari does not focus buttons on tap, so blur alone is not enough.
+        const onOutsidePress = (event) => {
+            if (containsEventTarget(triggerRef.current, event.target) ||
+                containsEventTarget(tooltipNode, event.target))
+                return;
+            clearTimer();
+            changeOpen(false, { reason: "blur" });
+        };
+        document.addEventListener("pointerdown", onOutsidePress, true);
+        return () => document.removeEventListener("pointerdown", onOutsidePress, true);
+    }, [changeOpen, tooltipNode, visible]);
     const popupPosition = useAnchoredPopup(triggerRef, tooltipNode, {
         align: descriptor.align,
         placement: descriptor.placement,

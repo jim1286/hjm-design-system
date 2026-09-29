@@ -24,8 +24,19 @@ const rendererBudgets = [
       { file: "provider.js", raw: 800, gzip: 280 },
     ],
     budgets: {
+      // 2026-09-30: optional interaction graphs measured independently; ~20% byte headroom, exact module counts.
+      "./sortable": { modules: 5, raw: 29800, gzip: 8000 },
+      "./swipe-actions": { modules: 3, raw: 9700, gzip: 2700 },
+      "./content-transition": { modules: 4, raw: 22500, gzip: 6400 },
+      "./carousel-motion": { modules: 5, raw: 28700, gzip: 7600 },
+      "./celebration": { modules: 4, raw: 23700, gzip: 6700 },
+
       // Opt-in data layouts reuse provider primitives; external QR peers remain separately installed.
       // Measured Web: 1.2/0.5, 3.8/1.4, 1.3/0.7 kB raw/gzip; one module each.
+      // Three isolated Web entries import only React and granular contracts; do not inflate the root graph.
+      "./color-picker": { modules: 1, raw: 6_000, gzip: 2_200 },
+      "./watermark": { modules: 1, raw: 2_500, gzip: 1_100 },
+      "./affix": { modules: 1, raw: 4_000, gzip: 1_600 },
       "./masonry": { modules: 1, raw: 1_500, gzip: 700 },
       "./virtual-list": { modules: 1, raw: 4_800, gzip: 1_800 },
       "./qr-code": { modules: 1, raw: 1_700, gzip: 900 },
@@ -84,7 +95,8 @@ const rendererBudgets = [
       // Calendar extraction adds one edge to DatePicker; both share the same grid.
       // Measured DatePicker 24.8 kB raw / 6.5 kB gzip including focus and read-only guards.
       "./calendar": { modules: 4, raw: 24_000, gzip: 6_000 },
-      "./date-picker": { modules: 5, raw: 28_000, gzip: 7_200 },
+      // 2026-09-30: viewport clamp + flip-up for phones/landscape (responsive audit). gzip raised from 7_200.
+      "./date-picker": { modules: 5, raw: 28_000, gzip: 7_600 },
       "./file-picker": { modules: 2, raw: 13_000, gzip: 3_600 },
       "./steps": { modules: 2, raw: 8_000, gzip: 2_500 },
       "./upload-item": { modules: 4, raw: 17_000, gzip: 4_000 },
@@ -117,7 +129,9 @@ const rendererBudgets = [
       // the other overlays use, not a new dependency: measured 45.5/10.5 kB.
       "./collapsible": { modules: 2, raw: 5_000, gzip: 1_700 },
       "./context-menu": { modules: 6, raw: 50_000, gzip: 11_500 },
-      "./menubar": { modules: 2, raw: 11_500, gzip: 3_000 },
+      // 2026-09-30: the panel now uses the shared portal (like Menu/ContextMenu) so clipping ancestors can't
+      // hide items; portal.js is the added module. Raised from 2 / 11.5 kB / 3.0 kB.
+      "./menubar": { modules: 3, raw: 27_000, gzip: 6_500 },
       // 액자 규칙만 있는 얇은 렌더러이고 재생기 의존이 없다(계약이 슬롯으로 받는다).
       "./asset": { modules: 4, raw: 17_000, gzip: 4_700 },
       // Both reuse existing judgment and existing chrome: measured 6.0/1.9 kB
@@ -224,10 +238,11 @@ const rendererBudgets = [
       // Keep selection's module budget unchanged; only these shared CSS rules grow.
       // 2026-09-29 optional Menu Morph adds HJM-owned focus, target, and hover rules; measured CSS is 24.9 kB gzip.
       // 2026-09-29 long-copy wrapping in modal and transfer-list copy adds functional rules; measured 153,703/25,304 B.
-      "./styles.css": { raw: 154_000, gzip: 25_500 },
+      // ColorPicker input/palette and decorative/sticky layout rules add 3.1 kB; measured total 155.9/25.3 kB.
+      "./styles.css": { raw: 158_000, gzip: 26_000 },
       // Same rules wrapped in `@layer hjm { }` by packages/react/scripts/copy-styles.mjs;
       // the wrapper adds ~15 bytes, so this budget tracks styles.css plus that margin.
-      "./styles.layered.css": { raw: 154_064, gzip: 25_532 },
+      "./styles.layered.css": { raw: 158_064, gzip: 26_032 },
     },
   },
   {
@@ -243,6 +258,14 @@ const rendererBudgets = [
       { file: "feedback.js", raw: 7_500, gzip: 1_800 },
     ],
     budgets: {
+      // 2026-09-30: optional interaction graphs measured independently; ~20% byte headroom, exact module counts.
+      "./sortable": { modules: 5, raw: 44900, gzip: 10600 },
+      "./swipe-actions": { modules: 5, raw: 43300, gzip: 10100 },
+      "./content-transition": { modules: 4, raw: 26800, gzip: 7000 },
+      "./carousel-motion": { modules: 5, raw: 42500, gzip: 10100 },
+      "./celebration": { modules: 2, raw: 9500, gzip: 3000 },
+      "./screen-transition": { modules: 2, raw: 8400, gzip: 2700 },
+
       // Opt-in data layouts reuse provider primitives; external QR peers remain separately installed.
       // Measured Native: 6.5/2.1 (2 modules), 1.0/0.5 and 1.4/0.7 kB (1 each).
       "./masonry": { modules: 2, raw: 8_000, gzip: 2_700 },
@@ -274,7 +297,8 @@ const rendererBudgets = [
       // Native FAB + existing actions/primitives: measured 36.4/8.5 kB.
       "./floating-action-button": { modules: 5, raw: 40_000, gzip: 9_400 },
       "./carousel": { modules: 6, raw: 43_000, gzip: 10_300 },
-      "./provider": { modules: 1, raw: 4_700, gzip: 1_550 },
+      // 2026-09-30 native audit: provider carries window safe-area insets for overlays (was 4_700/1_550).
+      "./provider": { modules: 1, raw: 5_300, gzip: 1_650 },
       "./composition-style": { modules: 1, raw: 2_000, gzip: 1_000 },
       "./primitives": { modules: 3, raw: 21_500, gzip: 5_650 },
       "./actions": { modules: 4, raw: 34_700, gzip: 7_900 },
@@ -285,17 +309,22 @@ const rendererBudgets = [
       // Inputs reexports DatePicker; the shared grid adds one transitive implementation.
       // 1.4 Switch row/inline and large-text reflow measure 170.7/31.4 kB, still 15 modules.
       // Calendar equal-column fix and the expanded validation preserve the 15-module graph; measured gzip 32.3 kB.
-      "./inputs": { modules: 15, raw: 178_000, gzip: 32_600 },
+      // 2026-09-30 native audit fixes (Switch, Combobox, Tags, Slider, NumberField, sheet insets) measure 179.1/34.2 kB (was 178_000/32_600).
+      "./inputs": { modules: 15, raw: 184_000, gzip: 34_600 },
       "./password-field": { modules: 9, raw: 105_000, gzip: 20_000 },
       "./otp-field": { modules: 9, raw: 105_000, gzip: 20_000 },
-      "./number-field": { modules: 4, raw: 20_200, gzip: 4_900 },
-      "./slider": { modules: 4, raw: 19_800, gzip: 4_800 },
+      // 2026-09-30: announced value text + provider insets measure 19.8/5.2 kB (gzip was 4_900).
+      "./number-field": { modules: 4, raw: 20_200, gzip: 5_200 },
+      // 2026-09-30: gesture-intent responder (no write on grant) measures 21.5/5.6 kB (was 19_800/4_800).
+      "./slider": { modules: 4, raw: 21_800, gzip: 5_600 },
       // Native Calendar reuses primitives/provider instead of an overlay dependency.
       // The calendar resolves the semantic focus border through color-references.
-      "./calendar": { modules: 6, raw: 38_000, gzip: 9_000 },
+      // 2026-09-30: shared provider/state growth from the native audit measures 35.0/9.4 kB (gzip was 9_000).
+      "./calendar": { modules: 6, raw: 38_000, gzip: 9_400 },
       // Native reaches the shared primitive/provider graph: measured 24.8/6.1 kB
       // and 22.1/5.6 kB over 4 modules each, no new dependency.
-      "./agreement": { modules: 4, raw: 27_000, gzip: 6_800 },
+      // 2026-09-30: +internal/state.js for the Android-safe mixed state helper; measured 28.5/7.3 kB (was 4 / 27_000 / 6_800).
+      "./agreement": { modules: 5, raw: 28_500, gzip: 7_300 },
       "./top": { modules: 4, raw: 24_500, gzip: 6_200 },
       // Same table on Native over the shared primitive graph: 22.2/5.6 kB.
       "./provider-button": { modules: 4, raw: 24_500, gzip: 6_200 },
@@ -334,7 +363,8 @@ const rendererBudgets = [
       // 0.10.0: navigation은 feedback을 경유해 Skeleton을 포함한다. Skeleton이
       // recipe의 shape·펄스를 실제로 구현하면서 커졌고 modules는 9로 그대로다.
       "./navigation": { modules: 9, raw: 143_000, gzip: 28_200 },
-      "./data-display": { modules: 6, raw: 77_000, gzip: 15_000 },
+      // 2026-09-30: UploadItem action split + mixed-state helper measure 75.9/15.6 kB (gzip was 15_000).
+      "./data-display": { modules: 6, raw: 77_000, gzip: 15_600 },
       "./feedback": { modules: 5, raw: 73_500, gzip: 15_100 },
       "./overlays": { modules: 6, raw: 84_500, gzip: 15_100 },
       // evidence 목록에 auth-screen 한 줄이 늘었다.
@@ -533,7 +563,7 @@ async function checkRenderer(renderer) {
     const regressions = [];
     // Opt-in peers must never become a hidden installation requirement of base entries.
     // Derive the peer list from the manifest so new optional runtimes cannot escape this gate.
-    const optionalEntries = new Set(["./qr-code", "./thinking-orb", "./toast-liquid", "./statistic-motion", "./menu-morph", "./image-viewer", "./keyboard-controller", "./sheet-gesture", "./context-menu-native"]);
+    const optionalEntries = new Set(["./sortable", "./swipe-actions", "./content-transition", "./carousel-motion", "./celebration", "./screen-transition", "./qr-code", "./thinking-orb", "./toast-liquid", "./statistic-motion", "./menu-morph", "./image-viewer", "./keyboard-controller", "./sheet-gesture", "./context-menu-native"]);
     if (!optionalEntries.has(exportPath)) {
       for (const [peer, metadata] of Object.entries(packageJson.peerDependenciesMeta ?? {})) {
         if (metadata.optional && measured.externals.some(specifier => specifier === peer || specifier.startsWith(`${peer}/`))) {

@@ -1,0 +1,57 @@
+{
+  "date": "2026-09-30",
+  "device": {
+    "name": "iPhone 17",
+    "os": "iOS 27.0",
+    "udid": "9ED1529C-5CAA-45CF-B234-E5301C92C89C",
+    "bundleId": "dev.hjm.designsystem.showcase",
+    "mode": "existing debug development client; Expo start 8084; user-authorized idb fallback"
+  },
+  "ciCheck": {
+    "exitCode": 0,
+    "tests": {
+      "contracts": 894,
+      "native": 866,
+      "reactSSR": 180,
+      "reactChromium": 942,
+      "nativeShowcase": 1,
+      "webShowcase": 20,
+      "releaseGovernance": 15
+    }
+  },
+  "nativeExport": {
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "type": "Hermes JS assets, not native binaries"
+  },
+  "libraryPolicy": {
+    "hjm": "passed; 6 manifests, 58 libraries",
+    "wholePortfolio": "unrelated burntok admissions for playwright-core, pngjs, @types/pngjs"
+  },
+  "audit": {
+    "productionDependencyGraph": {
+      "info": 0,
+      "low": 1,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0
+    },
+    "finding": "Existing Storybook transitive esbuild 0.27.7; GHSA-g7r4-m6w7-qqqr; Windows development-server file read; not a new adapter engine"
+  },
+  "artifactsSha256": {
+    "hjmds-react-1.8.0.tgz": "83698accc777995760b129d60d65431140da77ae07c7056bb16e817fb6baf994",
+    "hjmds-design-contracts-1.8.0.tgz": "17df00e6e6cea945040fec2c0d5c8ec8d392c9c8f3f8a7de74b3078f86b73431",
+    "hjmds-react-native-1.8.0.tgz": "4018de168f7df90b03c677637f8372afaa89378ae8f6b297abdd7efbc0632524"
+  },
+  "unverified": [
+    "Android device UI",
+    "physical iOS device",
+    "VoiceOver/TalkBack spoken flow",
+    "release binary",
+    "retained product tab integration",
+    "frame-time or memory performance",
+    "publication or app rollout"
+  ]
+}

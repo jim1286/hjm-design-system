@@ -63,7 +63,12 @@ export const NumberField = forwardRef(function NumberField({ label, min, max, st
     const announcedValue = typeof parsedDraft === "number" && parsedDraft >= min && parsedDraft <= max
         ? parsedDraft
         : currentValue;
-    const valueText = announcedValue === null ? undefined : getValueText?.(announcedValue);
+    // Without `text`, UIKit turns min/max/now into a percentage of the range and
+    // announced "20%" for a quantity of 2 (2026-09-30 audit). A number field's
+    // value is the number itself, so fall back to the same string the field shows.
+    const valueText = announcedValue === null
+        ? undefined
+        : getValueText?.(announcedValue) ?? (parsedDraft === announcedValue ? draft.trim() : valueToInput(announcedValue));
     const accessibilityValue = {
         min,
         max,

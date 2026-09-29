@@ -7,6 +7,7 @@ import { ContextMenu } from "../src/context-menu.js";
 import { Menubar } from "../src/menubar.js";
 import { HjmProvider } from "../src/provider.js";
 import "../src/styles.css";
+import { tap } from "./touch-tap.js";
 
 let host: HTMLDivElement; let root: Root;
 beforeEach(() => { (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true; host = document.createElement("div"); document.body.append(host); root = createRoot(host); });
@@ -93,4 +94,39 @@ it("moves between open menubar menus with the arrow keys and keeps exactly one o
   // Activating runs an action and leaves nothing selected, unlike Tabs.
   expect(document.querySelectorAll(".hjm-menubar__panel")).toHaveLength(0);
   expect(labels.filter((label) => label.getAttribute("aria-expanded") === "true")).toHaveLength(0);
+});
+
+// 2026-09-30 responsive audit WR-0930-4: the panel was absolute inside the bar,
+// so an overflow ancestor clipped it and its items could not be hit.
+it("lifts the menubar panel out of a clipping ancestor so every item stays tappable", async () => {
+  const actions: string[] = [];
+  await act(async () => root.render(
+    <HjmProvider reducedMotion>
+      <div style={{ overflow: "hidden", height: 56 }}>
+        <Menubar
+          descriptor={{ accessibilityLabel: "주 메뉴", menus: [{ id: "file", label: "파일", items: [
+            { id: "new", label: "새로 만들기", textValue: "새로 만들기" },
+            { id: "open", label: "열기", textValue: "열기" },
+          ] }] }}
+          onAction={(id, menuId) => actions.push(`${menuId}:${id}`)}
+        />
+      </div>
+    </HjmProvider>,
+  ));
+  const label = document.querySelector<HTMLButtonElement>(".hjm-menubar__label")!;
+  await act(async () => tap(label));
+  const panel = document.querySelector<HTMLElement>(".hjm-menubar__panel")!;
+  expect(host.querySelector('[role="menubar"]')!.contains(panel)).toBe(false);
+  expect(label.getAttribute("aria-controls")).toBe(panel.id);
+  const open = [...panel.querySelectorAll<HTMLElement>('[role="menuitem"]')].find((item) => item.textContent === "열기")!;
+  const rect = open.getBoundingClientRect();
+  expect(document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2)?.closest('[role="menuitem"]')).toBe(open);
+  await act(async () => tap(open));
+  expect(actions).toEqual(["file:open"]);
+  expect(document.querySelector(".hjm-menubar__panel")).toBeNull();
+  expect(document.activeElement).toBe(label);
+  // Keyboard navigation still runs from the focused label into the lifted panel.
+  await act(async () => { label.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true })); });
+  await act(async () => { label.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true })); });
+  expect(document.querySelector(".hjm-menubar__panel [data-active]")?.textContent).toBe("열기");
 });

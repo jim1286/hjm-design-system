@@ -1,0 +1,8 @@
+const { chromium } = require('/Users/jimin/Developer/app-portfolio/packages/hjm-design-system/showcase/web/node_modules/playwright');
+(async()=>{const b=await chromium.launch();const ctx=await b.newContext({viewport:{width:390,height:844},hasTouch:true,isMobile:true,deviceScaleFactor:3});const p=await ctx.newPage();
+await p.goto('http://127.0.0.1:6026/iframe.html?id=components-overlays--tooltip&viewMode=story');await p.locator('[data-hjm-renderer]').waitFor({state:'attached'});await p.waitForTimeout(300);
+const t=p.getByRole('button',{name:'도움말에 포커스하거나 가리키기'});
+await p.evaluate(()=>{window.__ev=[];for(const ev of ['pointerdown','pointerup','focusin','focusout','click','touchstart','touchend'])document.addEventListener(ev,e=>__ev.push(ev+':'+(e.pointerType||'')+':'+(e.target.tagName)),true)});
+await p.evaluate(()=>{window.__st=[];new MutationObserver(m=>m.forEach(x=>__st.push(performance.now().toFixed(0)+" "+x.target.dataset.state))).observe(document.querySelector(".hjm-tooltip"),{attributes:true,attributeFilter:["data-state"]})});await t.tap();for(const ms of [100,400,900,1500]){await p.waitForTimeout(ms);console.log(ms,await p.evaluate(()=>({active:document.activeElement?.textContent?.slice(0,20),tips:[...document.querySelectorAll('[role=tooltip],.hjm-tooltip__content')].map(e=>e.getBoundingClientRect().width+'x'+e.getBoundingClientRect().height+' '+getComputedStyle(e).visibility+' '+getComputedStyle(e).opacity),state:document.querySelector('.hjm-tooltip')?.dataset.state})))}
+console.log(await p.evaluate(()=>__ev),await p.evaluate(()=>__st));await t.focus();await p.waitForTimeout(300);console.log("keyboard-ish focus()",await p.evaluate(()=>document.querySelector(".hjm-tooltip").dataset.state));
+await b.close()})();

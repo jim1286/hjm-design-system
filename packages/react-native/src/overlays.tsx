@@ -61,7 +61,7 @@ import {
 } from "./internal/modal-lifecycle.js";
 import { minimumTargetStyle } from "./internal/styles.js";
 import { Text } from "./primitives.js";
-import { useHjmNativeTheme } from "./provider.js";
+import { useHjmNativeSafeAreaInsets, useHjmNativeTheme } from "./provider.js";
 
 export type OverlayAction = Readonly<{
   label: string;
@@ -948,7 +948,7 @@ export function Sheet({
   dismissPolicy,
   closeLabel,
   returnFocusRef,
-  safeAreaInsets = {},
+  safeAreaInsets: suppliedSafeAreaInsets,
   onDismissComplete,
   contentStyle,
   keyboardAvoidance = false,
@@ -957,6 +957,15 @@ export function Sheet({
   ...modalProps
 }: SheetProps) {
   const { environment, palette } = useHjmNativeTheme();
+  // Default to the provider's window insets so a bare <Sheet> clears the home
+  // indicator and navigation bar (2026-09-30 audit). Edges the call site passes win.
+  const providerInsets = useHjmNativeSafeAreaInsets();
+  const safeAreaInsets = {
+    top: suppliedSafeAreaInsets?.top ?? providerInsets.top,
+    right: suppliedSafeAreaInsets?.right ?? providerInsets.right,
+    bottom: suppliedSafeAreaInsets?.bottom ?? providerInsets.bottom,
+    left: suppliedSafeAreaInsets?.left ?? providerInsets.left,
+  };
   const accessibleTitle = resolveOverlayAccessibleTitle(title, accessibilityTitle);
   const { width: windowWidth, height: windowHeight } = useWindowDimensions();
   const [modalHeight, setModalHeight] = useState<number | null>(null);

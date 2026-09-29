@@ -9,6 +9,8 @@ const HjmNativeThemeContext = createContext(null);
  * brand; the resolved palette cannot be split back into defaults and overrides.
  */
 const HjmNativeBrandPaletteContext = createContext(undefined);
+const noInsets = {};
+const HjmNativeSafeAreaContext = createContext(noInsets);
 const subscribeHydration = () => () => undefined;
 const clientSnapshot = () => true;
 const serverSnapshot = () => false;
@@ -44,8 +46,10 @@ function toEnvironmentInput(props) {
             : { minimumVisualTarget: props.minimumVisualTarget }),
     };
 }
-export function HjmNativeProvider({ children, theme, direction, textScale, reducedMotion, minimumVisualTarget, brandPalette: suppliedBrandPalette, value: suppliedValue, }) {
+export function HjmNativeProvider({ children, theme, direction, textScale, reducedMotion, minimumVisualTarget, brandPalette: suppliedBrandPalette, value: suppliedValue, safeAreaInsets: suppliedInsets, }) {
     const parent = useContext(HjmNativeThemeContext);
+    const inheritedInsets = useContext(HjmNativeSafeAreaContext);
+    const safeAreaInsets = suppliedInsets ?? inheritedInsets;
     const inheritedBrandPalette = useContext(HjmNativeBrandPaletteContext);
     const brandPalette = suppliedValue === undefined ? suppliedBrandPalette ?? inheritedBrandPalette : undefined;
     const colorScheme = useColorScheme();
@@ -87,7 +91,7 @@ export function HjmNativeProvider({ children, theme, direction, textScale, reduc
             tokens: { spacing, radius, typography },
         };
     }, [brandPalette, environment, parent, suppliedValue, systemReducedMotion, systemTextScale, systemTheme]);
-    return (_jsx(HjmNativeThemeContext.Provider, { value: contextValue, children: _jsx(HjmNativeBrandPaletteContext.Provider, { value: brandPalette, children: children }) }));
+    return (_jsx(HjmNativeThemeContext.Provider, { value: contextValue, children: _jsx(HjmNativeBrandPaletteContext.Provider, { value: brandPalette, children: _jsx(HjmNativeSafeAreaContext.Provider, { value: safeAreaInsets, children: children }) }) }));
 }
 export function useHjmNativeTheme() {
     const value = useContext(HjmNativeThemeContext);
@@ -95,5 +99,9 @@ export function useHjmNativeTheme() {
         throw new Error("useHjmNativeTheme must be used inside HjmNativeProvider");
     }
     return value;
+}
+/** Insets supplied to the nearest HjmNativeProvider; `{}` when the host supplied none. */
+export function useHjmNativeSafeAreaInsets() {
+    return useContext(HjmNativeSafeAreaContext);
 }
 //# sourceMappingURL=provider.js.map

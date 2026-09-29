@@ -38,11 +38,15 @@ export function UploadItem({ descriptor, labels, onCancel, onRetry, leading, sty
       ? colors.contentBrand
       : colors.textMuted;
   return (
-    // Native exposes only a busy state for this lifecycle; success and error remain
-    // distinguishable through the live status sentence, as documented by the contract.
-    <View accessibilityLabel={announcement.label} accessibilityState={{ busy: descriptor.state.status === "uploading" }} accessible style={[{ alignItems: "center", borderColor: colors.border, borderRadius: 12, borderWidth: 1, direction: environment.direction, flexDirection: "row", gap: uploadItemRecipe.row.gap, minHeight: uploadItemRecipe.row.minHeight, paddingHorizontal: uploadItemRecipe.row.paddingHorizontal, paddingVertical: 8 }, style]}>
-      {leading === undefined ? null : <View accessible={false}>{leading}</View>}
-      <View style={{ flex: 1, gap: 2, minWidth: 0 }}>
+    // The row itself is a plain container. When the root was one accessible
+    // element, VoiceOver and TalkBack swallowed Cancel/Retry into it and the
+    // action was unreachable (2026-09-30 audit). The file text is one grouped
+    // element and the action is a separate button, as the contract's slots list.
+    <View style={[{ alignItems: "center", borderColor: colors.border, borderRadius: 12, borderWidth: 1, direction: environment.direction, flexDirection: "row", gap: uploadItemRecipe.row.gap, minHeight: uploadItemRecipe.row.minHeight, paddingHorizontal: uploadItemRecipe.row.paddingHorizontal, paddingVertical: 8 }, style]}>
+      {leading === undefined ? null : <View accessible={false} importantForAccessibility="no-hide-descendants">{leading}</View>}
+      {/* Native exposes only a busy state for this lifecycle; success and error remain
+          distinguishable through the live status sentence, as documented by the contract. */}
+      <View accessibilityLabel={announcement.label} accessibilityState={{ busy: descriptor.state.status === "uploading" }} accessibilityValue={{ text: announcement.description }} accessible style={{ flex: 1, gap: 2, minWidth: 0 }}>
         <Text>{descriptor.name}</Text>
         {descriptor.sizeLabel === undefined ? null : <Text tone="muted" variant="label">{descriptor.sizeLabel}</Text>}
         <Text accessibilityLiveRegion="polite" style={{ color: statusColor }} variant="label">{announcement.description}</Text>

@@ -1,5 +1,6 @@
 import { Menu as Bloom } from "bloom-menu";
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
+import { Button } from "./actions.js";
 import { Menu, type MenuItem } from "./overlays.js";
 import { useHjmTheme } from "./provider.js";
 
@@ -36,7 +37,7 @@ export function MorphingMenu({ label, items, onAction, disabled = false, open: c
   }, [open, label]);
   // The canonical Menu owns static/RTL behavior; Bloom's left/right geometry is physical.
   if (theme.environment.reducedMotion || theme.environment.direction === "rtl") {
-    return <Menu label={label} trigger={<button type="button">{label}</button>} items={items} disabled={disabled} open={open}
+    return <Menu label={label} trigger={<Button tone="secondary">{label}</Button>} items={items} disabled={disabled} open={open}
       onOpenChange={change} {...(onAction ? { onAction } : {})} />;
   }
   const keyDown = (event: KeyboardEvent<HTMLDivElement>) => {

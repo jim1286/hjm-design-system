@@ -16,7 +16,6 @@ import {
   PanResponder,
   Text as NativeText,
   View,
-  type GestureResponderEvent,
   type LayoutChangeEvent,
   type StyleProp,
   type ViewProps,
@@ -40,6 +39,9 @@ type NativeSliderViewProps = Omit<
   | "onLayout"
   | "style"
 >;
+
+/** Points of travel before a drag counts as horizontal or vertical intent. */
+const sliderIntentSlop = 6;
 
 export type SliderProps = NativeSliderViewProps &
   Readonly<{
@@ -130,11 +132,11 @@ export const Slider = forwardRef<View, SliderProps>(function Slider(
     setDragging(false);
     onValueChangeEnd?.(lastInteractionValueRef.current);
   };
-  const updateFromLocation = (event: GestureResponderEvent) => {
+  const updateFromLocation = (locationX: number) => {
     if (disabled) return;
     const extent = layoutWidth - recipe.thumbDiameter;
     if (extent <= 0) return;
-    const offset = event.nativeEvent.locationX - recipe.thumbDiameter / 2;
+    const offset = locationX - recipe.thumbDiameter / 2;
     publish(resolveSliderValueFromOffset(
       descriptor,
       offset,
@@ -150,26 +152,71 @@ export const Slider = forwardRef<View, SliderProps>(function Slider(
     onValueChangeEnd?.(next);
   };
 
+  const begin = () => {
+    activeGestureRef.current = true;
+    lastInteractionValueRef.current = currentValueRef.current;
+    setDragging(true);
+  };
+  const beginRef = useRef(begin);
+  beginRef.current = begin;
   const updateFromLocationRef = useRef(updateFromLocation);
   const finishRef = useRef(finish);
   updateFromLocationRef.current = updateFromLocation;
   finishRef.current = finish;
 
+  // The responder is taken on touch start so a tap can still seek, but nothing is
+  // written until the gesture shows horizontal intent (dx dominates past the slop)
+  // or ends as a tap. Writing on grant moved the value 50% -> 88% when a vertical
+  // page scroll merely started on the track (2026-09-30 audit, Android). A vertical
+  // start leaves the gesture pending, so the ScrollView's termination request ends
+  // it with no value change and no onValueChangeEnd. Rejected: claiming only on
+  // move, which loses tap-to-seek on the track.
+  const gestureIntentRef = useRef<"pending" | "horizontal" | "vertical">("pending");
+  const grantLocationRef = useRef(0);
   const panResponder = useMemo(
     () => PanResponder.create({
       onStartShouldSetPanResponder: () => !disabledRef.current,
-      onMoveShouldSetPanResponder: () => !disabledRef.current,
+      onMoveShouldSetPanResponder: (_event, gesture) => !disabledRef.current
+        && Math.abs(gesture.dx) > sliderIntentSlop
+        && Math.abs(gesture.dx) > Math.abs(gesture.dy),
       onPanResponderGrant: (event) => {
-        if (disabledRef.current) return;
-        activeGestureRef.current = true;
-        lastInteractionValueRef.current = currentValueRef.current;
-        setDragging(true);
-        updateFromLocationRef.current(event);
+        gestureIntentRef.current = "pending";
+        grantLocationRef.current = event.nativeEvent.locationX;
       },
-      onPanResponderMove: (event) => updateFromLocationRef.current(event),
-      onPanResponderRelease: () => finishRef.current(),
-      onPanResponderTerminate: () => finishRef.current(),
-      onPanResponderTerminationRequest: () => true,
+      onPanResponderMove: (event, gesture) => {
+        if (disabledRef.current) return;
+        if (gestureIntentRef.current === "pending") {
+          const dx = Math.abs(gesture?.dx ?? 0);
+          const dy = Math.abs(gesture?.dy ?? 0);
+          if (dy > sliderIntentSlop && dy >= dx) {
+            gestureIntentRef.current = "vertical";
+          } else if (dx > sliderIntentSlop && dx > dy) {
+            gestureIntentRef.current = "horizontal";
+            beginRef.current();
+          }
+        }
+        if (gestureIntentRef.current === "horizontal") updateFromLocationRef.current(event.nativeEvent.locationX);
+      },
+      onPanResponderRelease: (_event, gesture) => {
+        if (
+          gestureIntentRef.current === "pending"
+          && Math.abs(gesture?.dx ?? 0) <= sliderIntentSlop
+          && Math.abs(gesture?.dy ?? 0) <= sliderIntentSlop
+          && !disabledRef.current
+        ) {
+          // A tap: seek once to where the finger went down.
+          beginRef.current();
+          updateFromLocationRef.current(grantLocationRef.current);
+        }
+        gestureIntentRef.current = "pending";
+        finishRef.current();
+      },
+      onPanResponderTerminate: () => {
+        gestureIntentRef.current = "pending";
+        finishRef.current();
+      },
+      // Yield to a parent scroll until the drag is known to be horizontal.
+      onPanResponderTerminationRequest: () => gestureIntentRef.current !== "horizontal",
       onShouldBlockNativeResponder: () => true,
     }),
     [],

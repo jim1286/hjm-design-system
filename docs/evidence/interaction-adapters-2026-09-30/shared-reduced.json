@@ -1,0 +1,181 @@
+[
+  {
+    "type": "Application",
+    "enabled": true,
+    "role_description": "application",
+    "title": null,
+    "AXLabel": "HJM Native Showcase",
+    "traits": [
+      "None"
+    ],
+    "frame": {
+      "x": 0,
+      "y": 0,
+      "height": 874,
+      "width": 402
+    },
+    "AXUniqueId": null,
+    "help": null,
+    "AXFrame": "{{0, 0}, {402, 874}}",
+    "content_required": false,
+    "custom_actions": [],
+    "subrole": null,
+    "AXValue": null,
+    "role": "AXApplication",
+    "pid": 40244
+  },
+  {
+    "title": null,
+    "AXFrame": "{{0, 62}, {402, 44}}",
+    "AXValue": null,
+    "type": "Button",
+    "AXLabel": "쇼케이스로 돌아가기",
+    "help": null,
+    "subrole": null,
+    "content_required": false,
+    "pid": 40244,
+    "frame": {
+      "height": 44,
+      "y": 62,
+      "width": 402,
+      "x": 0
+    },
+    "custom_actions": [],
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "enabled": true,
+    "role": "AXButton",
+    "role_description": "button",
+    "AXUniqueId": null
+  },
+  {
+    "AXLabel": "조용한 숲길",
+    "role_description": "text",
+    "subrole": null,
+    "pid": 40244,
+    "frame": {
+      "y": 418,
+      "x": 16,
+      "width": 370,
+      "height": 26
+    },
+    "AXValue": null,
+    "AXUniqueId": null,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "content_required": false,
+    "help": null,
+    "title": null,
+    "enabled": true,
+    "AXFrame": "{{16, 418}, {370, 26}}",
+    "type": "StaticText",
+    "custom_actions": [],
+    "role": "AXStaticText"
+  },
+  {
+    "help": null,
+    "subrole": null,
+    "role_description": "text",
+    "frame": {
+      "width": 370,
+      "height": 20,
+      "y": 460,
+      "x": 16
+    },
+    "content_required": false,
+    "AXLabel": "사진이 원래 카드에서 상세 화면으로 이어집니다.",
+    "AXFrame": "{{16, 460}, {370, 20}}",
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "type": "StaticText",
+    "role": "AXStaticText",
+    "enabled": true,
+    "AXValue": null,
+    "title": null,
+    "pid": 40244,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ]
+  },
+  {
+    "type": "Button",
+    "role": "AXButton",
+    "AXLabel": "목록으로 돌아가기",
+    "enabled": true,
+    "title": null,
+    "frame": {
+      "x": 16,
+      "y": 496,
+      "height": 44,
+      "width": 370
+    },
+    "content_required": false,
+    "help": null,
+    "pid": 40244,
+    "AXUniqueId": null,
+    "subrole": null,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "AXFrame": "{{16, 496}, {370, 44}}",
+    "custom_actions": [],
+    "role_description": "button",
+    "AXValue": null
+  },
+  {
+    "help": null,
+    "enabled": true,
+    "custom_actions": [],
+    "subrole": null,
+    "AXUniqueId": "",
+    "role": "AXSlider",
+    "title": null,
+    "frame": {
+      "height": 734,
+      "y": 106,
+      "x": 0,
+      "width": 402
+    },
+    "AXLabel": null,
+    "type": "Slider",
+    "pid": 40244,
+    "AXFrame": "{{0, 106}, {402, 734}}",
+    "role_description": "slider",
+    "AXValue": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "content_required": false
+  },
+  {
+    "custom_actions": [],
+    "type": "Slider",
+    "title": null,
+    "pid": 40244,
+    "AXLabel": null,
+    "AXFrame": "{{0, 106}, {402, 734}}",
+    "AXValue": null,
+    "content_required": false,
+    "subrole": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "AXUniqueId": null,
+    "frame": {
+      "x": 0,
+      "height": 734,
+      "width": 402,
+      "y": 106
+    },
+    "role_description": "slider",
+    "help": null,
+    "role": "AXSlider",
+    "enabled": true
+  }
+]

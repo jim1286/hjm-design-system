@@ -26,7 +26,10 @@ export const liquidToastRecipe = {
         fade: { duration: 360, dampingRatio: 1 },
         drag: { duration: 560, dampingRatio: 0.7 },
     },
-    delay: { tint: 110, expand: 340, reveal: 560, collapse: 100, return: 280 },
+    // tint waits for the card to start widening. At 110ms the droplet turned white while still inside the Dynamic Island,
+    // so it read as a gray blob appearing below the island instead of the island itself dripping (2026-09-30 iPhone 17
+    // iOS 27 video against the expo-dynamic-notifications reference). It now stays anchor-colored for the descent.
+    delay: { tint: 420, expand: 340, reveal: 560, collapse: 100, return: 280 },
     swipe: { distance: -18, velocity: -420 },
 };
 export function validateLiquidToastAnchor(anchor) {

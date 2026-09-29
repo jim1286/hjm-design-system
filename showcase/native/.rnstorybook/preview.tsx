@@ -1,11 +1,22 @@
 import type { ReactNode } from "react";
 import type { Preview } from "@storybook/react-native";
 import { StyleSheet, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { HjmNativeProvider, useHjmNativeTheme } from "@hjmds/react-native/provider";
 
 function Canvas({ children }: { children: ReactNode }) {
   const { colors } = useHjmNativeTheme();
   return <View style={[styles.canvas, { backgroundColor: colors.bg }]}>{children}</View>;
+}
+
+// Window insets reach every renderer through the provider, so overlays such as
+// Sheet and DatePicker clear the home indicator without a per-story prop
+// (2026-09-30 native audit).
+function Insets({ children, theme, direction, textScale, reducedMotion }: {
+  children: ReactNode; theme: "light" | "dark"; direction: "ltr" | "rtl"; textScale: 1 | 1.5 | 2; reducedMotion: boolean;
+}) {
+  const insets = useSafeAreaInsets();
+  return <HjmNativeProvider theme={theme} direction={direction} textScale={textScale} reducedMotion={reducedMotion} safeAreaInsets={insets}>{children}</HjmNativeProvider>;
 }
 
 const preview: Preview = {
@@ -58,14 +69,14 @@ const preview: Preview = {
   },
   decorators: [
     (Story, context) => (
-      <HjmNativeProvider
+      <Insets
         theme={context.globals.theme === "dark" ? "dark" : "light"}
         direction={context.globals.direction === "rtl" ? "rtl" : "ltr"}
         textScale={context.globals.textScale === "2" ? 2 : context.globals.textScale === "1.5" ? 1.5 : 1}
         reducedMotion={context.globals.reducedMotion === "reduced"}
       >
         <Canvas><Story /></Canvas>
-      </HjmNativeProvider>
+      </Insets>
     ),
   ],
 };

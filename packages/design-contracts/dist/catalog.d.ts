@@ -571,32 +571,15 @@ export declare const componentCatalog: readonly [{
     readonly platform: "adaptive";
     readonly status: "stable";
 }, {
-    readonly roadmap: {
-        readonly state: "composed";
-        readonly summary: string;
-        readonly targets: readonly string[];
-    };
+    readonly recipe: "colorPickerRecipe";
     readonly surfaceStatus: {
-        readonly web: "planned";
-        readonly native: "planned";
-    };
-    readonly name: "TimePicker";
-    readonly category: "input";
-    readonly platform: "adaptive";
-    readonly status: "planned";
-}, {
-    readonly roadmap: {
-        readonly state: "evidence-needed";
-        readonly summary: string;
-    };
-    readonly surfaceStatus: {
-        readonly web: "planned";
+        readonly web: "stable";
         readonly native: "unsupported";
     };
     readonly name: "ColorPicker";
     readonly category: "input";
     readonly platform: "web";
-    readonly status: "planned";
+    readonly status: "stable";
 }, {
     readonly roadmap: {
         readonly state: "evidence-needed";
@@ -613,20 +596,6 @@ export declare const componentCatalog: readonly [{
     readonly category: "input";
     readonly platform: "adaptive";
     readonly status: "stable";
-}, {
-    readonly roadmap: {
-        readonly state: "composed";
-        readonly summary: string;
-        readonly targets: readonly string[];
-    };
-    readonly surfaceStatus: {
-        readonly web: "planned";
-        readonly native: "planned";
-    };
-    readonly name: "Cascader";
-    readonly category: "input";
-    readonly platform: "adaptive";
-    readonly status: "planned";
 }, {
     readonly recipe: "formRecipe";
     readonly behavior: "form";
@@ -665,21 +634,6 @@ export declare const componentCatalog: readonly [{
     readonly platform: "adaptive";
     readonly status: "stable";
 }, {
-    readonly roadmap: {
-        readonly state: "composed";
-        readonly summary: string;
-        readonly targets: readonly string[];
-    };
-    readonly aliases: readonly ["Rate"];
-    readonly surfaceStatus: {
-        readonly web: "planned";
-        readonly native: "planned";
-    };
-    readonly name: "Rating";
-    readonly category: "input";
-    readonly platform: "shared";
-    readonly status: "planned";
-}, {
     readonly aliases: readonly ["Transfer"];
     readonly recipe: "transferListRecipe";
     readonly behavior: "transferList";
@@ -691,20 +645,6 @@ export declare const componentCatalog: readonly [{
     readonly category: "input";
     readonly platform: "adaptive";
     readonly status: "stable";
-}, {
-    readonly roadmap: {
-        readonly state: "composed";
-        readonly summary: string;
-        readonly targets: readonly string[];
-    };
-    readonly surfaceStatus: {
-        readonly web: "planned";
-        readonly native: "unsupported";
-    };
-    readonly name: "TreeSelect";
-    readonly category: "input";
-    readonly platform: "web";
-    readonly status: "planned";
 }, {
     readonly recipe: "uploadItemRecipe";
     readonly behavior: "uploadItem";
@@ -1201,18 +1141,15 @@ export declare const componentCatalog: readonly [{
     readonly platform: "adaptive";
     readonly status: "stable";
 }, {
-    readonly roadmap: {
-        readonly state: "evidence-needed";
-        readonly summary: string;
-    };
+    readonly recipe: "watermarkRecipe";
     readonly surfaceStatus: {
-        readonly web: "planned";
+        readonly web: "stable";
         readonly native: "unsupported";
     };
     readonly name: "Watermark";
     readonly category: "feedback";
     readonly platform: "web";
-    readonly status: "planned";
+    readonly status: "stable";
 }, {
     readonly recipe: "dialogRecipe";
     readonly behavior: "dialog";
@@ -1269,21 +1206,6 @@ export declare const componentCatalog: readonly [{
     readonly platform: "web";
     readonly status: "stable";
 }, {
-    readonly roadmap: {
-        readonly state: "composed";
-        readonly summary: string;
-        readonly targets: readonly string[];
-    };
-    readonly aliases: readonly ["Popconfirm"];
-    readonly surfaceStatus: {
-        readonly web: "planned";
-        readonly native: "unsupported";
-    };
-    readonly name: "ConfirmPopover";
-    readonly category: "overlay";
-    readonly platform: "web";
-    readonly status: "planned";
-}, {
     readonly recipe: "tooltipRecipe";
     readonly behavior: "tooltip";
     readonly surfaceStatus: {
@@ -1306,18 +1228,15 @@ export declare const componentCatalog: readonly [{
     readonly platform: "web";
     readonly status: "stable";
 }, {
-    readonly roadmap: {
-        readonly state: "evidence-needed";
-        readonly summary: string;
-    };
+    readonly recipe: "affixRecipe";
     readonly surfaceStatus: {
-        readonly web: "planned";
+        readonly web: "stable";
         readonly native: "unsupported";
     };
     readonly name: "Affix";
     readonly category: "utility";
     readonly platform: "web";
-    readonly status: "planned";
+    readonly status: "stable";
 }, {
     readonly aliases: readonly ["ConfigProvider"];
     readonly nonVisualEvidence: "provider-adapter";
@@ -1361,6 +1280,25 @@ export type ComponentName = (typeof componentCatalog)[number]["name"];
 export declare function summarizeComponentRoadmap(entries?: readonly ComponentCatalogEntry[]): Readonly<Record<ComponentRoadmapState, number>>;
 /** One typed registry prevents catalog recipe names from drifting into strings. */
 export declare const recipeRegistry: {
+    readonly affixRecipe: {
+        readonly edge: "top";
+        readonly offset: 0;
+        readonly position: "sticky";
+        readonly oversize: "flow";
+    };
+    readonly watermarkRecipe: {
+        readonly tileWidth: 240;
+        readonly tileHeight: 160;
+        readonly rotate: -22;
+        readonly opacity: 0.12;
+        readonly foreground: "textSub";
+    };
+    readonly colorPickerRecipe: {
+        readonly colorSpace: "srgb";
+        readonly background: "bg";
+        readonly border: "border";
+        readonly minTargetSize: 44;
+    };
     readonly thinkingOrbRecipe: {
         readonly defaults: {
             readonly state: "working";

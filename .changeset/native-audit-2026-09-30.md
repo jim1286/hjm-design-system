@@ -1,0 +1,5 @@
+---
+"@hjmds/react-native": minor
+---
+
+Fix the 2026-09-30 installed iOS/Android audit findings. `HjmNativeProvider` accepts `safeAreaInsets`, and Sheet, DatePicker (new `safeAreaInsets` pass-through), Select, Combobox and GestureSheet default to them. Agreement's check glyph uses `onPrimary` and keeps its label as the name; mixed checkboxes (Agreement, TransferList, Checkbox) no longer keep a stale "mixed" on Android. UploadItem exposes Cancel/Retry as separate elements, NumberField announces the number, the iOS Switch track centres on its label, Combobox no longer reopens the keyboard after a choice, TagsInput keeps the keyboard after Return, and Slider ignores vertical scrolls that start on the track. Optional adapters: Sortable/SwipeActions rows mirror in RTL, CarouselMotion pages a slow release past half a slide, GestureSheet gains localized accessibility, a framed input, top/bottom insets and `dismissTopGestureSheet()` for hosts inside an RN Modal, and ImageViewer controls use the page gutter.

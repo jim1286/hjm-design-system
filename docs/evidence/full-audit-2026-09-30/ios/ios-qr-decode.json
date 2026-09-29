@@ -1,0 +1,6 @@
+{
+  "source": "qr.png",
+  "decoder": "jsqr@1.4.0",
+  "data": "https://example.com/한글",
+  "bytes": "https://example.com/한글"
+}

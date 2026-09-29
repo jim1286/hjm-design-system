@@ -1,0 +1,689 @@
+[
+  {
+    "role": "AXApplication",
+    "role_description": "application",
+    "traits": [
+      "None"
+    ],
+    "AXLabel": "HJM Native Showcase",
+    "content_required": false,
+    "AXValue": null,
+    "AXFrame": "{{0, 0}, {402, 874}}",
+    "subrole": null,
+    "pid": 40244,
+    "type": "Application",
+    "help": null,
+    "custom_actions": [],
+    "frame": {
+      "y": 0,
+      "height": 874,
+      "width": 402,
+      "x": 0
+    },
+    "title": null,
+    "AXUniqueId": null,
+    "enabled": true
+  },
+  {
+    "title": null,
+    "content_required": false,
+    "AXUniqueId": null,
+    "type": "Button",
+    "role": "AXButton",
+    "help": null,
+    "AXLabel": "쇼케이스로 돌아가기",
+    "AXValue": null,
+    "role_description": "button",
+    "subrole": null,
+    "enabled": true,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "custom_actions": [],
+    "pid": 40244,
+    "AXFrame": "{{0, 62}, {402, 44}}",
+    "frame": {
+      "height": 44,
+      "y": 62,
+      "width": 402,
+      "x": 0
+    }
+  },
+  {
+    "frame": {
+      "x": 16,
+      "width": 370,
+      "height": 26,
+      "y": 122
+    },
+    "enabled": true,
+    "role": "AXStaticText",
+    "type": "StaticText",
+    "AXUniqueId": null,
+    "custom_actions": [],
+    "subrole": null,
+    "content_required": false,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "AXLabel": "즐겨찾기 순서",
+    "title": null,
+    "pid": 40244,
+    "help": null,
+    "AXFrame": "{{16, 122}, {370, 26}}",
+    "AXValue": null,
+    "role_description": "text"
+  },
+  {
+    "type": "Slider",
+    "pid": 40244,
+    "traits": [
+      "Adjustable",
+      "Scrollable"
+    ],
+    "help": null,
+    "AXFrame": "{{24, 176}, {354, 44}}",
+    "content_required": false,
+    "role": "AXSlider",
+    "title": null,
+    "AXValue": "바닷가, 3개 중 1번째",
+    "role_description": "slider",
+    "frame": {
+      "y": 176,
+      "x": 24,
+      "width": 354,
+      "height": 44
+    },
+    "subrole": null,
+    "AXLabel": "바닷가 순서 이동",
+    "custom_actions": [
+      "바닷가 앞으로",
+      "바닷가 뒤로"
+    ],
+    "AXUniqueId": null,
+    "enabled": true
+  },
+  {
+    "AXUniqueId": null,
+    "content_required": false,
+    "frame": {
+      "x": 24,
+      "width": 108.33332824707031,
+      "height": 44,
+      "y": 228
+    },
+    "traits": [
+      "NotEnabled",
+      "Scrollable",
+      "Button"
+    ],
+    "AXValue": null,
+    "enabled": false,
+    "title": null,
+    "type": "Button",
+    "AXFrame": "{{24, 228}, {108.33332824707031, 44}}",
+    "role": "AXButton",
+    "subrole": null,
+    "pid": 40244,
+    "help": null,
+    "AXLabel": "바닷가 앞으로",
+    "custom_actions": [],
+    "role_description": "button"
+  },
+  {
+    "AXUniqueId": null,
+    "role": "AXButton",
+    "AXFrame": "{{140.33333587646484, 228}, {96.333343505859375, 44}}",
+    "role_description": "button",
+    "custom_actions": [],
+    "subrole": null,
+    "AXValue": null,
+    "help": null,
+    "frame": {
+      "y": 228,
+      "width": 96.33334350585938,
+      "x": 140.33333587646484,
+      "height": 44
+    },
+    "type": "Button",
+    "title": null,
+    "content_required": false,
+    "pid": 40244,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "enabled": true,
+    "AXLabel": "바닷가 뒤로"
+  },
+  {
+    "custom_actions": [
+      "작은 카페 앞으로",
+      "작은 카페 뒤로"
+    ],
+    "role_description": "slider",
+    "title": null,
+    "AXValue": "작은 카페, 3개 중 2번째",
+    "role": "AXSlider",
+    "AXLabel": "작은 카페 순서 이동",
+    "traits": [
+      "Adjustable",
+      "Scrollable"
+    ],
+    "AXFrame": "{{24, 288}, {354, 44}}",
+    "help": null,
+    "content_required": false,
+    "subrole": null,
+    "type": "Slider",
+    "enabled": true,
+    "frame": {
+      "x": 24,
+      "width": 354,
+      "height": 44,
+      "y": 288
+    },
+    "AXUniqueId": null,
+    "pid": 40244
+  },
+  {
+    "help": null,
+    "AXFrame": "{{24, 340}, {124, 44}}",
+    "custom_actions": [],
+    "enabled": true,
+    "AXLabel": "작은 카페 앞으로",
+    "content_required": false,
+    "pid": 40244,
+    "type": "GenericElement",
+    "role": "AXGenericElement",
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "AXUniqueId": null,
+    "frame": {
+      "x": 24,
+      "y": 340,
+      "width": 124,
+      "height": 44
+    },
+    "title": null,
+    "AXValue": null,
+    "role_description": "",
+    "subrole": null
+  },
+  {
+    "type": "Button",
+    "enabled": true,
+    "role_description": "button",
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "title": null,
+    "content_required": false,
+    "AXFrame": "{{156, 340}, {112, 44}}",
+    "pid": 40244,
+    "subrole": null,
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "frame": {
+      "x": 156,
+      "height": 44,
+      "y": 340,
+      "width": 112
+    },
+    "AXLabel": "작은 카페 뒤로",
+    "help": null,
+    "role": "AXButton",
+    "AXValue": null
+  },
+  {
+    "pid": 40244,
+    "content_required": false,
+    "title": null,
+    "frame": {
+      "x": 24,
+      "width": 354,
+      "height": 44,
+      "y": 400
+    },
+    "custom_actions": [
+      "숲길 앞으로",
+      "숲길 뒤로"
+    ],
+    "type": "Button",
+    "AXUniqueId": null,
+    "AXLabel": "숲길 순서 이동",
+    "help": null,
+    "role_description": "button",
+    "AXFrame": "{{24, 400}, {354, 44}}",
+    "traits": [
+      "Adjustable",
+      "Scrollable"
+    ],
+    "enabled": true,
+    "role": "AXButton",
+    "subrole": null,
+    "AXValue": "숲길, 3개 중 3번째"
+  },
+  {
+    "AXLabel": "숲길 앞으로",
+    "pid": 40244,
+    "role_description": "slider",
+    "AXValue": null,
+    "role": "AXSlider",
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "enabled": true,
+    "help": null,
+    "title": null,
+    "frame": {
+      "width": 96.33333587646484,
+      "y": 452,
+      "x": 24,
+      "height": 44
+    },
+    "custom_actions": [],
+    "type": "Slider",
+    "AXFrame": "{{24, 452}, {96.333335876464844, 44}}",
+    "content_required": false,
+    "AXUniqueId": null,
+    "subrole": null
+  },
+  {
+    "AXLabel": "숲길 뒤로",
+    "help": null,
+    "type": "Button",
+    "content_required": false,
+    "pid": 40244,
+    "custom_actions": [],
+    "AXValue": null,
+    "subrole": null,
+    "traits": [
+      "NotEnabled",
+      "Scrollable",
+      "Button"
+    ],
+    "AXUniqueId": null,
+    "role": "AXButton",
+    "enabled": false,
+    "AXFrame": "{{128.33333587646484, 452}, {84.333343505859375, 44}}",
+    "role_description": "button",
+    "frame": {
+      "x": 128.33333587646484,
+      "height": 44,
+      "width": 84.33334350585938,
+      "y": 452
+    },
+    "title": null
+  },
+  {
+    "pid": 40244,
+    "title": null,
+    "AXUniqueId": null,
+    "AXValue": null,
+    "role": "AXStaticText",
+    "frame": {
+      "x": 16,
+      "y": 524,
+      "height": 20,
+      "width": 370
+    },
+    "AXLabel": "현재 순서: 바닷가 → 작은 카페 → 숲길",
+    "custom_actions": [],
+    "subrole": null,
+    "enabled": true,
+    "type": "StaticText",
+    "AXFrame": "{{16, 524}, {370, 20}}",
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "content_required": false,
+    "role_description": "text",
+    "help": null
+  },
+  {
+    "AXFrame": "{{16, 564}, {370, 26}}",
+    "pid": 40244,
+    "title": null,
+    "custom_actions": [],
+    "AXLabel": "목록 작업",
+    "content_required": false,
+    "role_description": "text",
+    "AXUniqueId": null,
+    "enabled": true,
+    "AXValue": null,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "role": "AXStaticText",
+    "type": "StaticText",
+    "subrole": null,
+    "help": null,
+    "frame": {
+      "y": 564,
+      "x": 16,
+      "width": 370,
+      "height": 26
+    }
+  },
+  {
+    "subrole": null,
+    "enabled": true,
+    "AXValue": null,
+    "custom_actions": [],
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "AXLabel": "오늘 걸었던 숲길",
+    "AXUniqueId": null,
+    "help": null,
+    "role_description": "text",
+    "title": null,
+    "pid": 40244,
+    "role": "AXStaticText",
+    "content_required": false,
+    "frame": {
+      "height": 20,
+      "y": 630,
+      "width": 330,
+      "x": 36
+    },
+    "type": "StaticText",
+    "AXFrame": "{{36, 630}, {330, 20}}"
+  },
+  {
+    "AXUniqueId": null,
+    "help": null,
+    "pid": 40244,
+    "frame": {
+      "y": 670,
+      "x": 16,
+      "height": 44,
+      "width": 370
+    },
+    "AXFrame": "{{16, 670}, {370, 44}}",
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "role": "AXButton",
+    "content_required": false,
+    "title": null,
+    "custom_actions": [],
+    "role_description": "button",
+    "AXLabel": "기록 작업 보기",
+    "subrole": null,
+    "enabled": true,
+    "type": "Button",
+    "AXValue": null
+  },
+  {
+    "AXLabel": "선택 없음",
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "role_description": "text",
+    "pid": 40244,
+    "AXFrame": "{{16, 734}, {370, 20}}",
+    "frame": {
+      "x": 16,
+      "y": 734,
+      "height": 20,
+      "width": 370
+    },
+    "role": "AXStaticText",
+    "content_required": false,
+    "type": "StaticText",
+    "AXValue": null,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "help": null,
+    "subrole": null,
+    "title": null,
+    "enabled": true
+  },
+  {
+    "role_description": "text",
+    "frame": {
+      "x": 16,
+      "y": 774,
+      "width": 370,
+      "height": 26
+    },
+    "type": "StaticText",
+    "AXLabel": "내용 전환",
+    "subrole": null,
+    "AXUniqueId": null,
+    "role": "AXStaticText",
+    "content_required": false,
+    "help": null,
+    "AXValue": null,
+    "pid": 40244,
+    "AXFrame": "{{16, 774}, {370, 26}}",
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "custom_actions": [],
+    "title": null,
+    "enabled": true
+  },
+  {
+    "content_required": false,
+    "role_description": "slider",
+    "AXUniqueId": null,
+    "title": null,
+    "help": null,
+    "pid": 40244,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "AXValue": null,
+    "role": "AXSlider",
+    "frame": {
+      "height": 44,
+      "y": 820,
+      "x": 16,
+      "width": 370
+    },
+    "subrole": null,
+    "enabled": true,
+    "AXLabel": "다음 상태",
+    "type": "Slider",
+    "AXFrame": "{{16, 820}, {370, 44}}",
+    "custom_actions": []
+  },
+  {
+    "content_required": false,
+    "type": "StaticText",
+    "frame": {
+      "y": 884,
+      "width": 370,
+      "height": 20,
+      "x": 16
+    },
+    "role_description": "text",
+    "subrole": null,
+    "AXFrame": "{{16, 884}, {370, 20}}",
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "AXLabel": "새로운 기록을 시작해요",
+    "enabled": true,
+    "AXValue": null,
+    "role": "AXStaticText",
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "help": null,
+    "pid": 40244,
+    "title": null
+  },
+  {
+    "title": null,
+    "content_required": false,
+    "custom_actions": [],
+    "help": null,
+    "AXValue": null,
+    "AXFrame": "{{16, 924}, {370, 20}}",
+    "role": "AXStaticText",
+    "AXLabel": "나만의 하루 🌿",
+    "frame": {
+      "y": 924,
+      "height": 20,
+      "width": 370,
+      "x": 16
+    },
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "type": "StaticText",
+    "pid": 40244,
+    "AXUniqueId": null,
+    "enabled": true,
+    "subrole": null,
+    "role_description": "text"
+  },
+  {
+    "custom_actions": [],
+    "type": "StaticText",
+    "AXValue": null,
+    "frame": {
+      "width": 31.333343505859375,
+      "height": 26,
+      "y": 1031,
+      "x": 185.3333282470703
+    },
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "role_description": "text",
+    "subrole": null,
+    "title": null,
+    "role": "AXStaticText",
+    "AXLabel": "숲길",
+    "enabled": true,
+    "help": null,
+    "pid": 40244,
+    "AXUniqueId": null,
+    "AXFrame": "{{185.33332824707031, 1031}, {31.333343505859375, 26}}",
+    "content_required": false
+  },
+  {
+    "role_description": "button",
+    "subrole": null,
+    "AXFrame": "{{16, 1124}, {370, 44}}",
+    "role": "AXButton",
+    "AXValue": null,
+    "AXUniqueId": null,
+    "enabled": false,
+    "type": "Button",
+    "custom_actions": [],
+    "traits": [
+      "NotEnabled",
+      "Scrollable",
+      "Button"
+    ],
+    "frame": {
+      "x": 16,
+      "height": 44,
+      "y": 1124,
+      "width": 370
+    },
+    "pid": 40244,
+    "title": null,
+    "help": null,
+    "AXLabel": "이전 장소",
+    "content_required": false
+  },
+  {
+    "title": null,
+    "frame": {
+      "width": 370,
+      "y": 1168,
+      "height": 44,
+      "x": 16
+    },
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "AXValue": null,
+    "pid": 40244,
+    "custom_actions": [],
+    "help": null,
+    "enabled": true,
+    "AXFrame": "{{16, 1168}, {370, 44}}",
+    "AXLabel": "다음 장소",
+    "type": "Slider",
+    "role_description": "slider",
+    "content_required": false,
+    "AXUniqueId": null,
+    "role": "AXSlider",
+    "subrole": null
+  },
+  {
+    "frame": {
+      "y": 1232,
+      "x": 16,
+      "height": 44,
+      "width": 370
+    },
+    "help": null,
+    "title": null,
+    "role": "AXButton",
+    "AXFrame": "{{16, 1232}, {370, 44}}",
+    "custom_actions": [],
+    "AXValue": null,
+    "type": "Button",
+    "role_description": "button",
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "AXUniqueId": null,
+    "pid": 40244,
+    "subrole": null,
+    "content_required": false,
+    "AXLabel": "기록 달성 축하",
+    "enabled": true
+  },
+  {
+    "title": null,
+    "help": null,
+    "pid": 40244,
+    "frame": {
+      "x": 16,
+      "width": 370,
+      "height": 20,
+      "y": 1296
+    },
+    "role": "AXStaticText",
+    "type": "StaticText",
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "AXUniqueId": null,
+    "custom_actions": [],
+    "enabled": true,
+    "AXValue": null,
+    "AXFrame": "{{16, 1296}, {370, 20}}",
+    "role_description": "text",
+    "content_required": false,
+    "AXLabel": "2번째 기록을 남겼어요",
+    "subrole": null
+  }
+]

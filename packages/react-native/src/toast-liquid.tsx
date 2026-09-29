@@ -3,6 +3,7 @@ import { AccessibilityInfo, PanResponder, View } from "react-native";
 import { Canvas, Group, Paint, Blur, ColorMatrix, RoundedRect, Shadow } from "@shopify/react-native-skia";
 import Animated, { cancelAnimation, interpolateColor, useAnimatedStyle, useDerivedValue, useSharedValue, withDelay, withSpring } from "react-native-reanimated";
 import { scheduleOnRN } from "react-native-worklets";
+import { withAlpha } from "@hjmds/design-contracts/colors";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { toastRecipe } from "@hjmds/design-contracts/recipes";
 import { buildLiquidToastGeometry, liquidToastRecipe as recipe, resolveLiquidToastLayout, validateLiquidToastAnchor, type LiquidToastAnchor } from "@hjmds/design-contracts/components/toast";
@@ -10,6 +11,16 @@ import { useHjmNativeTheme } from "./provider.js";
 import type { NativeToastPresentationProps, ToastPresentationAdapter } from "./internal/toast-presentation.js";
 
 export type LiquidToastOptions = Readonly<{ anchor?: LiquidToastAnchor }>;
+
+const cardShadow = toastRecipe.surface.shadow;
+// Skia Shadow takes one color, so the token opacity must be folded into it. Passing `color` alone drew an opaque black
+// halo (2026-09-30 iPhone 17 · iOS 27 capture: a dark rectangular band behind the card). Skia `blur` is a sigma while
+// RN shadowRadius is roughly two sigmas, so halve it to match the standard Toast.
+const shadowColor = withAlpha(cardShadow.color, cardShadow.opacity);
+const shadowBlur = cardShadow.radius / 2;
+// The halo reaches about three sigmas past the card. The canvas grows by that much on each side; a canvas exactly as wide
+// as the region clipped it into straight left/right/bottom edges on phones where the card fills the width.
+const canvasBleed = Math.ceil(shadowBlur * 3 + Math.abs(cardShadow.offsetY));
 
 /** Optional entry: requires Skia 2.6, Reanimated 4.5 and Worklets 0.10 in the host. */
 export function createLiquidToastPresentation(options: LiquidToastOptions = {}): ToastPresentationAdapter {
@@ -52,7 +63,12 @@ function LiquidSurface({ anchor, ...props }: NativeToastPresentationProps) {
   const nh = useDerivedValue(() => geometry.value.neckHeight);
   const nr = useDerivedValue(() => geometry.value.neckWidth / 2);
   const opacity = useDerivedValue(() => Math.max(0, Math.min(1, expand.value)));
-  const anchorOpacity = useDerivedValue(() => anchor.kind === "island" ? 1 : Math.max(0, Math.min(1, drop.value * 4)));
+  // An in-app capsule is only the starting point. Left on screen after the card settled it read as a second, floating
+  // Dynamic Island under the real one (2026-09-30 capture), so it fades out as the card expands and returns on exit.
+  // A verified island frame stays: it covers the hardware cutout.
+  const anchorOpacity = useDerivedValue(() => anchor.kind === "island"
+    ? 1
+    : Math.max(0, Math.min(1, drop.value * 4)) * (1 - Math.max(0, Math.min(1, expand.value))));
   const contentStyle = useAnimatedStyle(() => ({
     opacity: reveal.value,
     transform: [{ translateY: geometry.value.offsetY + drag.value }, { scale: 0.88 + Math.max(0, Math.min(1, reveal.value)) * 0.12 }],
@@ -123,9 +139,10 @@ function LiquidSurface({ anchor, ...props }: NativeToastPresentationProps) {
   // Only decoration is rasterized. RN text and its independent action/close stay accessible.
   return <View pointerEvents="box-none" style={{ width: "100%", paddingTop: layout.cardTop, alignItems: "center" }}>
     {height > 0 ? <Canvas pointerEvents="none" accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants"
-      style={{ position: "absolute", top: layout.canvasTop, left: 0, width: props.width, height: layout.canvasHeight }}>
+      style={{ position: "absolute", top: layout.canvasTop, left: -canvasBleed, width: props.width + canvasBleed * 2, height: layout.canvasHeight + canvasBleed }}>
+      <Group transform={[{ translateX: canvasBleed }]}>
       <Group opacity={opacity}><RoundedRect x={x} y={y} width={w} height={h} r={r} color={cardColor}>
-        <Shadow dx={0} dy={toastRecipe.surface.shadow.offsetY} blur={toastRecipe.surface.shadow.radius} color={toastRecipe.surface.shadow.color} shadowOnly />
+        <Shadow dx={0} dy={cardShadow.offsetY} blur={shadowBlur} color={shadowColor} shadowOnly />
       </RoundedRect></Group>
       <Group layer={<Paint><Blur blur={recipe.blur} /><ColorMatrix matrix={[1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,recipe.gain,-recipe.gain*recipe.threshold]} /></Paint>}>
         <Group opacity={anchorOpacity}><RoundedRect x={layout.anchorX + 4} y={layout.anchorY - layout.canvasTop + 4} width={Math.max(0, layout.anchorWidth - 8)} height={Math.max(0, layout.anchorHeight - 8)} r={layout.anchorHeight / 2} color={anchorColor} /></Group>
@@ -133,6 +150,7 @@ function LiquidSurface({ anchor, ...props }: NativeToastPresentationProps) {
         <RoundedRect x={x} y={y} width={w} height={h} r={r} color={dropletColor} />
       </Group>
       <Group opacity={anchorOpacity}><RoundedRect x={layout.anchorX} y={layout.anchorY - layout.canvasTop} width={layout.anchorWidth} height={layout.anchorHeight} r={layout.anchorHeight / 2} color={anchorColor} /></Group>
+      </Group>
     </Canvas> : null}
     <Animated.View {...gesture.panHandlers} onLayout={event => setHeight(event.nativeEvent.layout.height)}
       style={[{ width: "100%", maxWidth: recipe.maxWidth }, contentStyle]}>

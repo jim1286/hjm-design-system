@@ -1,5 +1,10 @@
 # Catalog이 "만들지 않기로 확정함"을 표현하지 못하는 문제 — 설계 제안
 
+> 2026-09-30 후속 결정: 구현된 조합 5개는 독립 Planned 행에서 제거하고 참조표를
+> 실제 primitive로 연결했다. 아래의 다중 대상 조합 행 유지 판단은 과거 기록이다.
+> 현재 원칙과 집계는 [참조 범위](ant-design-coverage.md)를 따른다.
+
+
 ## 문제
 
 `ComponentStatus`는 `"stable" | "beta" | "planned" | "deprecated"` 넷뿐이다(`src/catalog.ts`).

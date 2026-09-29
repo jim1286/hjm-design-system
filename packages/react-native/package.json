@@ -303,6 +303,42 @@
       "react-native": "./dist/qr-code.js",
       "import": "./dist/qr-code.js",
       "default": "./dist/qr-code.js"
+    },
+    "./sortable": {
+      "types": "./dist/sortable.d.ts",
+      "react-native": "./dist/sortable.js",
+      "import": "./dist/sortable.js",
+      "default": "./dist/sortable.js"
+    },
+    "./swipe-actions": {
+      "types": "./dist/swipe-actions.d.ts",
+      "react-native": "./dist/swipe-actions.js",
+      "import": "./dist/swipe-actions.js",
+      "default": "./dist/swipe-actions.js"
+    },
+    "./content-transition": {
+      "types": "./dist/content-transition.d.ts",
+      "react-native": "./dist/content-transition.js",
+      "import": "./dist/content-transition.js",
+      "default": "./dist/content-transition.js"
+    },
+    "./carousel-motion": {
+      "types": "./dist/carousel-motion.d.ts",
+      "react-native": "./dist/carousel-motion.js",
+      "import": "./dist/carousel-motion.js",
+      "default": "./dist/carousel-motion.js"
+    },
+    "./celebration": {
+      "types": "./dist/celebration.d.ts",
+      "react-native": "./dist/celebration.js",
+      "import": "./dist/celebration.js",
+      "default": "./dist/celebration.js"
+    },
+    "./screen-transition": {
+      "types": "./dist/screen-transition.d.ts",
+      "react-native": "./dist/screen-transition.js",
+      "import": "./dist/screen-transition.js",
+      "default": "./dist/screen-transition.js"
     }
   },
   "files": [
@@ -321,7 +357,7 @@
   },
   "peerDependencies": {
     "@gorhom/bottom-sheet": "5.2.14",
-    "@hjmds/design-contracts": ">=1.8.0 <1.9.0",
+    "@hjmds/design-contracts": ">=1.9.0 <1.10.0",
     "@react-native-menu/menu": "1.2.2",
     "@shopify/react-native-skia": "^2.6.2",
     "react": ">=19",
@@ -335,7 +371,13 @@
     "react-native-zoom-toolkit": "5.1.1",
     "zeego": "3.0.6",
     "react-native-svg": "15.15.5",
-    "qrcode-generator": "2.0.4"
+    "qrcode-generator": "2.0.4",
+    "react-native-sortables": "1.10.1",
+    "react-native-reanimated-carousel": "5.1.1",
+    "react-native-fast-confetti": "2.0.2",
+    "react-native-screen-transitions": "4.0.0",
+    "@react-navigation/native": "7.4.1",
+    "react-native-safe-area-context": "5.7.0"
   },
   "devDependencies": {
     "@babel/runtime": "7.29.7",
@@ -362,7 +404,13 @@
     "typescript": "^5.9.3",
     "vitest": "^4.1.11",
     "zeego": "3.0.6",
-    "qrcode-generator": "2.0.4"
+    "qrcode-generator": "2.0.4",
+    "react-native-sortables": "1.10.1",
+    "react-native-reanimated-carousel": "5.1.1",
+    "react-native-fast-confetti": "2.0.2",
+    "react-native-screen-transitions": "4.0.0",
+    "@react-navigation/native": "7.4.1",
+    "react-native-safe-area-context": "5.7.0"
   },
   "engines": {
     "node": ">=20"
@@ -405,6 +453,24 @@
       "optional": true
     },
     "qrcode-generator": {
+      "optional": true
+    },
+    "react-native-sortables": {
+      "optional": true
+    },
+    "react-native-reanimated-carousel": {
+      "optional": true
+    },
+    "react-native-fast-confetti": {
+      "optional": true
+    },
+    "react-native-screen-transitions": {
+      "optional": true
+    },
+    "@react-navigation/native": {
+      "optional": true
+    },
+    "react-native-safe-area-context": {
       "optional": true
     }
   }

@@ -7,6 +7,7 @@ import { resolveTreeCheckedStates, toggleTreeCheckedSelection } from "@hjmds/des
 import { Tree } from "../src/tree.js";
 import { HjmProvider } from "../src/provider.js";
 import "../src/styles.css";
+import { tap } from "./touch-tap.js";
 // The evidence registry points to this focused keyboard proof; the shared scenario fixture omits Tree selection behavior.
 // componentId: "tree"
 
@@ -202,4 +203,27 @@ it("wraps long node labels within a narrow tree instead of widening the page", a
   expect(label.textContent).toBe(copy);
   expect(label.scrollWidth).toBeLessThanOrEqual(label.clientWidth + 2);
   expect(tree.getBoundingClientRect().width).toBeLessThanOrEqual(320);
+});
+
+// 2026-09-30 responsive audit WR-0930-2: tapping a parent row or its disclosure
+// glyph only selected; expansion was reachable by arrow keys alone.
+it("expands and collapses a parent by row tap and by its disclosure glyph, keeping arrow keys", async () => {
+  const onSelect = vi.fn();
+  await act(async () => root.render(<Fixture onSelect={onSelect} />));
+  await act(async () => tap(item("9월")));
+  expect(item("9월").getAttribute("aria-expanded")).toBe("true");
+  expect(item("9월").getAttribute("aria-selected")).toBe("true");
+  expect(items()).toContain("walk");
+  const glyph = item("9월").querySelector(".hjm-tree__toggle")!;
+  await act(async () => tap(glyph));
+  expect(item("9월").getAttribute("aria-expanded")).toBe("false");
+  // The glyph toggles only; it does not also change the selection.
+  expect(onSelect.mock.calls).toEqual([["september"]]);
+  await act(async () => (item("9월").querySelector(".hjm-tree__toggle") as HTMLElement).click());
+  expect(item("9월").getAttribute("aria-expanded")).toBe("true");
+  await act(async () => item("9월").focus());
+  await key("ArrowLeft");
+  expect(item("9월").getAttribute("aria-expanded")).toBe("false");
+  await key("ArrowRight");
+  expect(item("9월").getAttribute("aria-expanded")).toBe("true");
 });

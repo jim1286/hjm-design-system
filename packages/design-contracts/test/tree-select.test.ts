@@ -171,23 +171,12 @@ describe("TreeSelect self-contained contract", () => {
   });
 });
 
-describe("TreeSelect catalog and crosswalk stay untouched", () => {
-  it("still reserves TreeSelect as planned/web/input", () => {
-    const entry = componentCatalog.find((item) => item.name === "TreeSelect");
-    expect(entry).toMatchObject({
-      category: "input",
-      platform: "web",
-      status: "planned",
-    });
-  });
-
-  it("keeps the antd TreeSelect crosswalk pointed at the same target", () => {
-    const entry = antDesignReferenceComponents.find(
-      (item) => item.name === "TreeSelect",
-    );
-    expect(entry).toMatchObject({
-      targets: ["tree-select"],
-      relationship: "direct",
+describe("TreeSelect composition coverage", () => {
+  it("maps the composition to implemented primitives without reserving a planned component", () => {
+    expect(componentCatalog.map(item => item.name) as readonly string[]).not.toContain("TreeSelect");
+    expect(antDesignReferenceComponents.find(item => item.name === "TreeSelect")).toMatchObject({
+      targets: ["popover", "tree"],
+      relationship: "decomposed",
     });
   });
 });

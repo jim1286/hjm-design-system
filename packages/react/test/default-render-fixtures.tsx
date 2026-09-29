@@ -1,3 +1,6 @@
+import { ColorPicker } from "../src/color-picker.js";
+import { Watermark } from "../src/watermark.js";
+import { Affix } from "../src/affix.js";
 import { Masonry } from "../src/masonry.js";
 import { VirtualList } from "../src/virtual-list.js";
 import { QRCode } from "../src/qr-code.js";
@@ -946,6 +949,9 @@ export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
   {
     componentId: "thinking-orb", marker: "data-hjm-thinking-orb", render: () => <ThinkingOrb label="Searching" paused />,
   },
+  { componentId: "color-picker", marker: "data-hjm-color-picker", render: () => <ColorPicker label="Color" labels={{color:"Choose color",hex:"Hex",opacity:"Opacity",invalid:"Invalid color"}} value="#b94627" onValueChange={() => {}} alpha presets={["#b94627ff", "#338844ff"]} />, renderLongCopy: copy => <ColorPicker label={copy} labels={{color:copy,hex:copy,opacity:copy,invalid:copy}} value="#b94627" onValueChange={() => {}} alpha /> },
+  { componentId: "watermark", marker: "data-hjm-watermark", render: () => <Watermark text="DRAFT"><p>Document content</p><button>Save</button></Watermark>, renderLongCopy: copy => <Watermark text="DRAFT"><p>{copy}</p></Watermark> },
+  { componentId: "affix", marker: "data-hjm-affix", render: () => <Affix><button>Save</button></Affix>, renderLongCopy: copy => <Affix><p>{copy}</p></Affix> },
   { componentId: "masonry", renderLongCopy: (copy) => <Masonry items={[copy]} keyExtractor={item => item} label="Cards" width={240} columns={1} getItemHeight={() => 300} renderItem={item => <span style={{ overflowWrap: "anywhere" }}>{item}</span>} />, marker: "data-hjm-masonry", render: () => <Masonry items={["First", "Second"]} keyExtractor={item => item} label="Cards" width={240} getItemHeight={() => 120} renderItem={item => <span>{item}</span>} /> },
   { componentId: "virtual-list", renderLongCopy: (copy) => <VirtualList items={[copy]} keyExtractor={item => item} label="Items" height={300} rowHeight={300} renderItem={item => <span style={{ overflowWrap: "anywhere" }}>{item}</span>} />, marker: "data-hjm-virtual-list", render: () => <VirtualList items={["First", "Second"]} keyExtractor={item => item} label="Items" height={200} rowHeight={100} renderItem={item => <span>{item}</span>} /> },
   { componentId: "qr-code", renderLongCopy: (copy) => <QRCode value="https://example.com" label="Share code" fallback={<span style={{ overflowWrap: "anywhere" }}>{copy}</span>} />, marker: "data-hjm-qr-code", render: () => <QRCode value="https://example.com" label="Share code" fallback={<a href="https://example.com">Open destination</a>} /> },

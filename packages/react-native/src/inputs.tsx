@@ -75,7 +75,7 @@ import {
   type ViewStyle,
 } from "react-native";
 
-import { useControllableState } from "./internal/state.js";
+import { mixedCheckboxState, useControllableState } from "./internal/state.js";
 import { webChoiceProps, webOnly } from "./internal/web-a11y.js";
 import {
   logicalTextAlign,
@@ -1051,7 +1051,8 @@ function ChoiceRow({
       accessibilityHint={resolvedHint}
       accessibilityLabel={label}
       accessibilityRole={kind}
-      accessibilityState={{ checked, disabled: disabled || readOnly }}
+      // See mixedCheckboxState: a checkbox leaving "mixed" kept the suffix on Android.
+      accessibilityState={kind === "checkbox" ? mixedCheckboxState(checked, { disabled: disabled || readOnly }) : { checked, disabled: disabled || readOnly }}
       {...webOnly(webChoiceProps({
         kind,
         checked,
@@ -1799,7 +1800,13 @@ export function Switch({
         // native size drive layout so `alignItems: center` centres the real track.
         // Rejected: an oversized centring wrapper — it has to guess the per-OS UISwitch
         // size, which is exactly the number that changed. Android honours the box.
-        style={Platform.OS === "ios" ? undefined : { height: dimensions.height, width: dimensions.width }}
+        // RN's iOS Switch composes `alignSelf: "flex-start"` under the caller's style,
+        // which overrode this row's `alignItems: center` and pinned the track to the
+        // row top, 8-10pt above the label centre (2026-09-30 audit, iOS 27). Restate
+        // the row's cross-axis alignment explicitly.
+        style={Platform.OS === "ios"
+          ? { alignSelf: stacked ? "flex-start" : "center" }
+          : { height: dimensions.height, width: dimensions.width }}
         thumbColor={thumb}
         trackColor={{ false: trackOff, true: trackOn }}
         value={enabled}

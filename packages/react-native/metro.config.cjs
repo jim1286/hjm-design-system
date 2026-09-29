@@ -17,7 +17,7 @@ module.exports = mergeConfig(getDefaultConfig(packageRoot), {
     disableHierarchicalLookup: false,
     resolveRequest(context, moduleName, platform) {
       // Simulate absent optional peers even on a developer checkout that has them installed.
-      if (["@shopify/react-native-skia", "react-native-reanimated", "react-native-worklets", "react-native-gesture-handler", "react-native-zoom-toolkit", "react-native-keyboard-controller", "@gorhom/bottom-sheet", "zeego", "@react-native-menu/menu", "react-native-ios-utilities", "react-native-ios-context-menu"].some(name => moduleName === name || moduleName.startsWith(`${name}/`))) {
+      if (["react-native-sortables", "react-native-reanimated-carousel", "react-native-fast-confetti", "react-native-screen-transitions", "@react-navigation/native", "react-native-teleport", "@shopify/react-native-skia", "react-native-reanimated", "react-native-worklets", "react-native-gesture-handler", "react-native-zoom-toolkit", "react-native-keyboard-controller", "@gorhom/bottom-sheet", "zeego", "@react-native-menu/menu", "react-native-ios-utilities", "react-native-ios-context-menu"].some(name => moduleName === name || moduleName.startsWith(`${name}/`))) {
         throw new Error(`Default HJM entry reached optional effect dependency: ${moduleName}`);
       }
       return context.resolveRequest(context, moduleName, platform);

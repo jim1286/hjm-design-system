@@ -601,7 +601,9 @@ describe("Native input and navigation intent", () => {
     Object.defineProperty(Platform, "OS", { configurable: true, value: "ios" });
     try {
       const renderer = render(<Switch label="내 활동 알림" description="댓글 도착" />);
-      expect(renderer.root.findByType(NativeSwitch).props.style).toBeUndefined();
+      // No forced box (intrinsic size), only the cross-axis alignment: RN's iOS Switch
+      // composes alignSelf "flex-start" that pinned the track to the row top (2026-09-30 audit).
+      expect(renderer.root.findByType(NativeSwitch).props.style).toEqual({ alignSelf: "center" });
       expect(flattenStyle(renderer.root.findByType(Pressable).props.style({ pressed: false })))
         .toMatchObject({ alignItems: "center" });
     } finally {

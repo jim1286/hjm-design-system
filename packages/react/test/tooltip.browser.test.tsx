@@ -5,6 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
 import { HjmProvider, Tooltip } from "../src/index.js";
 import "../src/styles.css";
+import { tap } from "./touch-tap.js";
 // The evidence registry points to this focused keyboard proof; the shared scenario fixture omits tooltip trigger interactions.
 // componentId: "tooltip"
 
@@ -98,5 +99,43 @@ describe("Tooltip renderer readiness", () => {
     expect(tooltip.scrollWidth).toBeLessThanOrEqual(tooltip.clientWidth + 1);
     // The 80vw content cap is 256px; content-box padding adds 32px.
     expect(tooltip.getBoundingClientRect().width).toBeLessThanOrEqual(289);
+  });
+
+  // 2026-09-30 responsive audit WR-0930-1: the tap's focus opened the tooltip and
+  // the same tap's click closed it within 1ms, so touch users never saw it.
+  it("opens on a touch tap and stays until a second tap, an outside tap, or Escape", async () => {
+    const onClick = vi.fn();
+    await render(
+      <HjmProvider systemTheme="light">
+        <div style={{ padding: 80 }}>
+          <Tooltip
+            trigger={<button type="button" onClick={onClick}>Help</button>}
+            content="Additional explanation"
+          />
+        </div>
+        <p id="outside" style={{ height: 120 }}>Outside</p>
+      </HjmProvider>,
+    );
+    const trigger = container.querySelector<HTMLButtonElement>("button")!;
+    const tooltip = () => document.body.querySelector('[role="tooltip"]');
+
+    await act(async () => tap(trigger));
+    await act(async () => new Promise((resolve) => setTimeout(resolve, 200)));
+    expect(tooltip()?.textContent).toBe("Additional explanation");
+    expect(onClick).toHaveBeenCalledTimes(1);
+
+    await act(async () => tap(trigger));
+    expect(tooltip()).toBeNull();
+    expect(onClick).toHaveBeenCalledTimes(2);
+
+    await act(async () => tap(trigger));
+    expect(tooltip()).not.toBeNull();
+    await act(async () => tap(document.getElementById("outside")!));
+    expect(tooltip()).toBeNull();
+
+    await act(async () => tap(trigger));
+    expect(tooltip()).not.toBeNull();
+    await act(async () => userEvent.keyboard("{Escape}"));
+    expect(tooltip()).toBeNull();
   });
 });

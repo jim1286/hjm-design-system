@@ -14,6 +14,12 @@ const packageJsonUrl = new URL("../package.json", import.meta.url);
  * Raising a budget requires an intentional review of the changed graph.
  */
 const budgets = [
+  // Pure optional intent validation; no renderer, engine or catalog imports.
+  { exportPath: "./components/interaction-adapters", maxModules: 1, maxRawBytes: 3000, maxGzipBytes: 1300, forbiddenModules: metadataModules },
+  // Pure sRGB, decorative-tile and sticky-offset contracts stay independent of renderer metadata.
+  { exportPath: "./components/color-picker", maxModules: 1, maxRawBytes: 2_500, maxGzipBytes: 1_000, forbiddenModules: metadataModules },
+  { exportPath: "./components/watermark", maxModules: 1, maxRawBytes: 1_600, maxGzipBytes: 900, forbiddenModules: metadataModules },
+  { exportPath: "./components/affix", maxModules: 1, maxRawBytes: 700, maxGzipBytes: 500, forbiddenModules: metadataModules },
   {
     // Nine upstream modes share geometry and presets; isolated from the default entry.
     exportPath: "./components/thinking-orb", maxModules: 13, maxRawBytes: 48_000, maxGzipBytes: 13_000, forbiddenModules: metadataModules,
@@ -197,6 +203,7 @@ const budgets = [
     // 2026-09-19 AuthScreenLayout: 계약 모듈 한 개가 그래프에 들어왔다. 기존
     // helper(foundations·base-recipes·provider-button)만 재사용하고 외부 의존성은
     // 없다 — 증가분이 곧 새 계약 파일 하나와 catalog 문구다.
+    // ColorPicker, Watermark and Affix add exactly three isolated recipe modules; byte ceilings stay unchanged.
     exportPath: "./catalog",
     // Anchor adds one isolated contract module; no added library dependency.
     // 2026-09-18 P0: Agreement·Top·AuthProviderButton 세 계약 모듈이 그래프에 들어왔다.
@@ -215,7 +222,7 @@ const budgets = [
     // 2026-09-29 Select's stable claim and renderer proof rationale add catalog copy with no module increase.
     // Tabs/BottomNavigation/LoadMore proof mappings add 363 raw / 180 gzip bytes to the unchanged 69-module catalog graph.
     // Masonry/VirtualList geometry and QR recipe add three neutral modules; QR encoder stays opt-in.
-    maxModules: 72,
+    maxModules: 75,
     maxRawBytes: 394_812,
     maxGzipBytes: 98_307,
   },
@@ -243,7 +250,7 @@ const budgets = [
     // Select's stable surface status is exposed here too; its rationale adds copy but no import edge.
     // Tabs/BottomNavigation/LoadMore proof mappings add 363 raw / 188 gzip bytes to the unchanged 70-module showcase graph.
     // Masonry/VirtualList geometry and QR recipe add three neutral modules; QR encoder stays opt-in.
-    maxModules: 73,
+    maxModules: 76,
     maxRawBytes: 403_365,
     maxGzipBytes: 100_872,
   },
@@ -275,7 +282,7 @@ const budgets = [
     // proof-file/case links instead of dropping evidence; measured size remains below 102 kB.
     // Tabs/BottomNavigation/LoadMore proof links add 363 raw / 182 gzip bytes to the unchanged 72-module evidence graph.
     // Masonry/VirtualList geometry and QR recipe add three neutral modules; QR encoder stays opt-in.
-    maxModules: 75,
+    maxModules: 78,
     maxRawBytes: 409_638,
     maxGzipBytes: 102_369,
   },
@@ -297,7 +304,7 @@ const budgets = [
     // Liquid Toast adds the same pure contract module; measured 565.5/140.6 kB.
     // ThinkingOrb adds one recipe-only module; measured catalog/showcase/evidence 393.7/401.4/407.7 kB.
     // Masonry/VirtualList geometry and QR recipe add three neutral modules; QR encoder stays opt-in.
-    maxModules: 95,
+    maxModules: 98,
     // 0.9.13에서 470_000/110_000을 올렸다. 증가분은 recipe의 근거 주석이며 tsc는
     // 주석을 dist에 그대로 싣는다. maxModules가 70으로 그대로라는 점이 import
     // 그래프가 늘지 않았다는 근거다. 이 한도를 다시 올릴 때는 module 수가 함께

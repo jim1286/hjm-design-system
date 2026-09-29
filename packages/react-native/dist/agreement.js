@@ -4,6 +4,7 @@ import { resolveColorReference } from "@hjmds/design-contracts/color-references"
 import { radius, spacing } from "@hjmds/design-contracts/foundations";
 import { useMemo, useState } from "react";
 import { Pressable, View } from "react-native";
+import { mixedCheckboxState } from "./internal/state.js";
 import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
 export function Agreement({ descriptor, checkedIds: controlledChecked, defaultCheckedIds, onCheckedIdsChange, onStateChange, onDetail, requiredLabel, optionalLabel, style, }) {
@@ -21,6 +22,11 @@ export function Agreement({ descriptor, checkedIds: controlledChecked, defaultCh
     };
     const markColor = resolveColorReference(agreementRecipe.item.selectedIndicator, theme.palette);
     const borderColor = resolveColorReference(agreementRecipe.item.focus.color, theme.palette);
+    // The glyph sits on the brand fill, so it takes onPrimary, the same token as the
+    // Checkbox indicator (selectionControlRecipe.states.indicator). agreementRecipe.all.color
+    // is the row text color and measured 2.19:1 on the fill (2026-09-30 audit). Read from
+    // the theme rather than the recipes entry, which would add a module to this subpath.
+    const glyphColor = theme.colors.onPrimary;
     const mark = (value) => (_jsx(View, { style: {
             alignItems: "center",
             backgroundColor: value === false ? "transparent" : markColor,
@@ -30,8 +36,8 @@ export function Agreement({ descriptor, checkedIds: controlledChecked, defaultCh
             height: spacing.md,
             justifyContent: "center",
             width: spacing.md,
-        }, children: value === false ? null : (_jsx(Text, { style: { color: resolveColorReference(agreementRecipe.all.color, theme.palette) }, variant: "caption", children: value === "mixed" ? "–" : "✓" })) }));
-    return (_jsxs(View, { accessibilityLabel: descriptor.accessibilityLabel, accessibilityRole: "none", style: [{ gap: agreementRecipe.gap }, style], children: [_jsxs(Pressable, { accessibilityRole: "checkbox", accessibilityState: { checked: state.all === "mixed" ? "mixed" : state.all }, onPress: () => commit(toggleAgreementAll(descriptor, checked)), style: {
+        }, children: value === false ? null : (_jsx(Text, { accessible: false, style: { color: glyphColor }, variant: "caption", children: value === "mixed" ? "–" : "✓" })) }));
+    return (_jsxs(View, { accessibilityLabel: descriptor.accessibilityLabel, accessibilityRole: "none", style: [{ gap: agreementRecipe.gap }, style], children: [_jsxs(Pressable, { accessibilityLabel: descriptor.allLabel, accessibilityRole: "checkbox", accessibilityState: mixedCheckboxState(state.all), onPress: () => commit(toggleAgreementAll(descriptor, checked)), style: {
                     alignItems: "center",
                     backgroundColor: resolveColorReference(agreementRecipe.all.background, theme.palette),
                     borderRadius: radius.md,
@@ -40,7 +46,11 @@ export function Agreement({ descriptor, checkedIds: controlledChecked, defaultCh
                     minHeight: agreementRecipe.all.minHeight,
                     paddingHorizontal: agreementRecipe.all.paddingHorizontal,
                     paddingVertical: agreementRecipe.all.paddingVertical,
-                }, children: [mark(state.all), _jsx(Text, { variant: agreementRecipe.all.textVariant, children: descriptor.allLabel })] }), descriptor.items.map((item) => (_jsxs(View, { style: { gap: spacing.xxs }, children: [_jsxs(View, { style: { alignItems: "center", flexDirection: "row", gap: spacing.xs }, children: [_jsxs(Pressable, { accessibilityRole: "checkbox", accessibilityState: { checked: checked.has(item.id), disabled: item.disabled === true }, disabled: item.disabled === true, onPress: () => commit(toggleAgreementItem(descriptor, checked, item.id)), style: {
+                }, children: [mark(state.all), _jsx(Text, { variant: agreementRecipe.all.textVariant, children: descriptor.allLabel })] }), descriptor.items.map((item) => (_jsxs(View, { style: { gap: spacing.xxs }, children: [_jsxs(View, { style: { alignItems: "center", flexDirection: "row", gap: spacing.xs }, children: [_jsxs(Pressable
+                            // Named explicitly so the check glyph never leaks into the name ("✓, Terms").
+                            , { 
+                                // Named explicitly so the check glyph never leaks into the name ("✓, Terms").
+                                accessibilityLabel: `${item.label} ${item.required === true ? requiredLabel : optionalLabel}`, accessibilityRole: "checkbox", accessibilityState: { checked: checked.has(item.id), disabled: item.disabled === true }, disabled: item.disabled === true, onPress: () => commit(toggleAgreementItem(descriptor, checked, item.id)), style: {
                                     alignItems: "center",
                                     flex: 1,
                                     flexDirection: "row",

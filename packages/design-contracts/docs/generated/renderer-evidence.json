@@ -6,9 +6,9 @@
     "web": {
       "packageName": "@hjmds/react",
       "packageVersion": "1.8.0",
-      "activeComponents": 100,
-      "claimedComponents": 100,
-      "completeScenarioComponents": 100,
+      "activeComponents": 103,
+      "claimedComponents": 103,
+      "completeScenarioComponents": 103,
       "components": [
         {
           "componentId": "text",
@@ -2302,6 +2302,65 @@
             "large-text",
             "rtl",
             "reduced-motion",
+            "keyboard"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "color-picker",
+          "name": "ColorPicker",
+          "status": "stable",
+          "claimed": true,
+          "subpath": "./color-picker",
+          "exportNames": [
+            "ColorPicker"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "color-picker"
+            },
+            {
+              "scenarios": [
+                "accessibility",
+                "dark",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "long-copy"
+              ],
+              "file": "test/scenario-matrix.browser.test.tsx",
+              "caseId": "color-picker"
+            },
+            {
+              "scenarios": [
+                "keyboard"
+              ],
+              "file": "test/web-additions.browser.test.tsx",
+              "caseId": "color-picker"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
+          ],
+          "claimedScenarios": [
+            "default",
+            "accessibility",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "long-copy",
             "keyboard"
           ],
           "missingScenarios": []
@@ -4910,6 +4969,56 @@
           "missingScenarios": []
         },
         {
+          "componentId": "watermark",
+          "name": "Watermark",
+          "status": "stable",
+          "claimed": true,
+          "subpath": "./watermark",
+          "exportNames": [
+            "Watermark"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "watermark"
+            },
+            {
+              "scenarios": [
+                "accessibility",
+                "dark",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "long-copy"
+              ],
+              "file": "test/scenario-matrix.browser.test.tsx",
+              "caseId": "watermark"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "accessibility",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "long-copy"
+          ],
+          "missingScenarios": []
+        },
+        {
           "componentId": "dialog",
           "name": "Dialog",
           "status": "stable",
@@ -5318,6 +5427,56 @@
             "rtl",
             "reduced-motion",
             "keyboard",
+            "long-copy"
+          ],
+          "missingScenarios": []
+        },
+        {
+          "componentId": "affix",
+          "name": "Affix",
+          "status": "stable",
+          "claimed": true,
+          "subpath": "./affix",
+          "exportNames": [
+            "Affix"
+          ],
+          "proofs": [
+            {
+              "scenarios": [
+                "default"
+              ],
+              "file": "test/default-render.ssr.test.tsx",
+              "caseId": "affix"
+            },
+            {
+              "scenarios": [
+                "accessibility",
+                "dark",
+                "large-text",
+                "rtl",
+                "reduced-motion",
+                "long-copy"
+              ],
+              "file": "test/scenario-matrix.browser.test.tsx",
+              "caseId": "affix"
+            }
+          ],
+          "requiredScenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ],
+          "claimedScenarios": [
+            "default",
+            "accessibility",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion",
             "long-copy"
           ],
           "missingScenarios": []

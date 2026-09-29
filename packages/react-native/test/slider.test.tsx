@@ -69,7 +69,8 @@ describe("Native Slider", () => {
 
     act(() => slider.props.onResponderGrant({ nativeEvent: { locationX: 30 } }));
     slider = byLabel(renderer, "점수");
-    act(() => slider.props.onResponderMove({ nativeEvent: { locationX: 70 } }));
+    act(() => slider.props.onResponderMove({ nativeEvent: { locationX: 30 } }, { dx: 8, dy: 0 }));
+    act(() => byLabel(renderer, "점수").props.onResponderMove({ nativeEvent: { locationX: 70 } }, { dx: 48, dy: 0 }));
     expect(onValueChange.mock.calls.map(([value]) => value)).toEqual([25, 75]);
     expect(onValueChangeEnd).not.toHaveBeenCalled();
     act(() => byLabel(renderer, "점수").props.onResponderRelease());
@@ -104,8 +105,10 @@ describe("Native Slider", () => {
     act(() => byLabel(renderer, "점수").props.onResponderGrant({
       nativeEvent: { locationX: 30 },
     }));
+    // Grant alone never writes (2026-09-30 audit); a tap commits on release.
+    expect(onValueChange).not.toHaveBeenCalled();
+    act(() => byLabel(renderer, "점수").props.onResponderRelease({ nativeEvent: { locationX: 30 } }, { dx: 0, dy: 0 }));
     expect(onValueChange).toHaveBeenLastCalledWith(75);
-    act(() => byLabel(renderer, "점수").props.onResponderRelease());
     expect(onValueChangeEnd).toHaveBeenLastCalledWith(75);
 
     act(() => byLabel(renderer, "점수").props.onAccessibilityAction({
@@ -252,6 +255,9 @@ describe("Native Slider", () => {
     act(() => byLabel(renderer, "점수").props.onResponderGrant({
       nativeEvent: { locationX: 30 },
     }));
+    act(() => byLabel(renderer, "점수").props.onResponderMove({
+      nativeEvent: { locationX: 30 },
+    }, { dx: 20, dy: 1 }));
     expect(onValueChange).toHaveBeenLastCalledWith(25);
 
     act(() => renderer.update(provider(slider(true))));
@@ -340,5 +346,33 @@ describe("Native Slider", () => {
     expect(renderer.root.findAllByType(View).some(
       (view) => view.props.importantForAccessibility === "no-hide-descendants",
     )).toBe(true);
+  });
+
+  it("leaves the value alone when a vertical page scroll starts on the track (2026-09-30 audit)", () => {
+    const onValueChange = vi.fn();
+    const onValueChangeEnd = vi.fn();
+    const renderer = render(
+      <Slider decrementLabel="감소" incrementLabel="증가" label="점수" max={100} min={0}
+        defaultValue={50} onValueChange={onValueChange} onValueChangeEnd={onValueChangeEnd} />,
+    );
+    layout(renderer);
+    const track = byLabel(renderer, "점수");
+    // Move-phase capture is refused until dx dominates, so a vertical drag goes to the ScrollView.
+    expect(track.props.onMoveShouldSetResponder({}, { dx: 2, dy: 40 })).toBe(false);
+    expect(track.props.onMoveShouldSetResponder({}, { dx: 30, dy: 4 })).toBe(true);
+    act(() => track.props.onResponderGrant({ nativeEvent: { locationX: 90 } }));
+    act(() => byLabel(renderer, "점수").props.onResponderMove({ nativeEvent: { locationX: 92 } }, { dx: 2, dy: 30 }));
+    // A vertical start yields to the parent scroll; the scroll then terminates the slider.
+    expect(byLabel(renderer, "점수").props.onResponderTerminationRequest()).toBe(true);
+    act(() => byLabel(renderer, "점수").props.onResponderTerminate());
+    expect(onValueChange).not.toHaveBeenCalled();
+    expect(onValueChangeEnd).not.toHaveBeenCalled();
+    expect(byLabel(renderer, "점수").props.accessibilityValue.now).toBe(50);
+
+    // A horizontal drag still adjusts and then holds the responder.
+    act(() => byLabel(renderer, "점수").props.onResponderGrant({ nativeEvent: { locationX: 50 } }));
+    act(() => byLabel(renderer, "점수").props.onResponderMove({ nativeEvent: { locationX: 90 } }, { dx: 40, dy: 3 }));
+    expect(onValueChange).toHaveBeenCalled();
+    expect(byLabel(renderer, "점수").props.onResponderTerminationRequest()).toBe(false);
   });
 });
