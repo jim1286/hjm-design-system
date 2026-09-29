@@ -4,8 +4,9 @@ import {
   validateMenubarDescriptor,
   type MenubarDescriptor,
 } from "@hjmds/design-contracts/components/menubar";
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState, type CSSProperties, type RefObject } from "react";
 import { classNames, useControllableState } from "./internal.js";
+import { AnchoredPortal, useAnchoredPopup } from "./portal.js";
 
 export type MenubarProps<Key extends string = string, MenuKey extends string = string> = Readonly<{
   descriptor: MenubarDescriptor<Key, MenuKey>;
@@ -39,16 +40,27 @@ export function Menubar<Key extends string = string, MenuKey extends string = st
   const labelRefs = useRef(new Map<MenuKey, HTMLButtonElement>());
   const openMenu = descriptor.menus.find((menu) => menu.id === openId) ?? null;
   const openItems = openMenu?.items.filter((item) => item.disabled !== true) ?? [];
+  // The panel was absolute inside the bar, so any overflow ancestor clipped it
+  // (2026-09-30 audit WR-0930-4: at 1100px an item could not be hit). It now uses
+  // the same portal + fixed positioning as Menu; focus stays on the bar label.
+  const panelId = `${useId().replaceAll(":", "")}-menubar-panel`;
+  const [panelNode, setPanelNode] = useState<HTMLDivElement | null>(null);
+  const setPanelRef = useCallback((node: HTMLDivElement | null) => setPanelNode(node), []);
+  const openLabelRef = useMemo<RefObject<HTMLElement | null>>(
+    () => ({ get current() { return openId === null ? null : labelRefs.current.get(openId) ?? null; } }),
+    [openId],
+  );
+  const panelPosition = useAnchoredPopup(openLabelRef, panelNode, { gap: 0, zIndex: 900 });
 
   useEffect(() => {
     if (openId === null) return;
     const onPointerDown = (event: PointerEvent) => {
-      if (event.target instanceof Node && rootRef.current?.contains(event.target)) return;
+      if (event.target instanceof Node && (rootRef.current?.contains(event.target) || panelNode?.contains(event.target))) return;
       setOpenId(null);
     };
     document.addEventListener("pointerdown", onPointerDown);
     return () => document.removeEventListener("pointerdown", onPointerDown);
-  }, [openId, setOpenId]);
+  }, [openId, panelNode, setOpenId]);
 
   const focusLabel = (id: MenuKey) => {
     setFocusedId(id);
@@ -128,6 +140,7 @@ export function Menubar<Key extends string = string, MenuKey extends string = st
               role="menuitem"
               aria-haspopup="menu"
               aria-expanded={open}
+              aria-controls={open ? panelId : undefined}
               disabled={menu.disabled}
               tabIndex={menu.id === focusedId ? 0 : -1}
               data-open={open || undefined}
@@ -146,7 +159,8 @@ export function Menubar<Key extends string = string, MenuKey extends string = st
               {menu.label}
             </button>
             {open ? (
-              <div role="menu" aria-label={menu.label} className="hjm-menubar__panel">
+              <AnchoredPortal anchorRef={openLabelRef} ssrFallback="inline">
+              <div ref={setPanelRef} id={panelId} role="menu" aria-label={menu.label} className="hjm-menubar__panel" data-placement={panelPosition.placement} style={panelPosition.style}>
                 {menu.items.map((item) => {
                   const index = openItems.findIndex((candidate) => candidate.id === item.id);
                   return (
@@ -171,6 +185,7 @@ export function Menubar<Key extends string = string, MenuKey extends string = st
                   );
                 })}
               </div>
+              </AnchoredPortal>
             ) : null}
           </div>
         );

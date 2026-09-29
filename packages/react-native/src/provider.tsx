@@ -73,8 +73,25 @@ type HjmNativeProviderValueProps = Readonly<{
   brandPalette?: never;
 }>;
 
+/** Window insets in points, usually `useSafeAreaInsets()` from react-native-safe-area-context. */
+export type HjmNativeSafeAreaInsets = Readonly<{
+  top?: number;
+  right?: number;
+  bottom?: number;
+  left?: number;
+}>;
+
 export type HjmNativeProviderProps = Readonly<{
   children: ReactNode;
+  /**
+   * Window safe-area insets that full-screen overlays (Sheet, DatePicker, Select,
+   * Combobox) apply when the call site passes none. Added after the 2026-09-30
+   * audit found sheet content under the iOS home indicator and the Android
+   * navigation bar because every call site had to remember the prop. The core
+   * entry cannot import the optional safe-area peer, so the host measures once
+   * here; nested providers inherit the nearest supplied value.
+   */
+  safeAreaInsets?: HjmNativeSafeAreaInsets;
 }> & (HjmNativeProviderEnvironmentProps | HjmNativeProviderValueProps);
 
 const HjmNativeThemeContext = createContext<HjmNativeTheme | null>(null);
@@ -84,6 +101,9 @@ const HjmNativeThemeContext = createContext<HjmNativeTheme | null>(null);
  * brand; the resolved palette cannot be split back into defaults and overrides.
  */
 const HjmNativeBrandPaletteContext = createContext<HjmNativeBrandPalette | undefined>(undefined);
+
+const noInsets: HjmNativeSafeAreaInsets = {};
+const HjmNativeSafeAreaContext = createContext<HjmNativeSafeAreaInsets>(noInsets);
 
 const subscribeHydration = () => () => undefined;
 const clientSnapshot = () => true;
@@ -137,8 +157,11 @@ export function HjmNativeProvider({
   minimumVisualTarget,
   brandPalette: suppliedBrandPalette,
   value: suppliedValue,
+  safeAreaInsets: suppliedInsets,
 }: HjmNativeProviderProps) {
   const parent = useContext(HjmNativeThemeContext);
+  const inheritedInsets = useContext(HjmNativeSafeAreaContext);
+  const safeAreaInsets = suppliedInsets ?? inheritedInsets;
   const inheritedBrandPalette = useContext(HjmNativeBrandPaletteContext);
   const brandPalette = suppliedValue === undefined ? suppliedBrandPalette ?? inheritedBrandPalette : undefined;
   const colorScheme = useColorScheme();
@@ -193,7 +216,9 @@ export function HjmNativeProvider({
 
   return (
     <HjmNativeThemeContext.Provider value={contextValue}>
-      <HjmNativeBrandPaletteContext.Provider value={brandPalette}>{children}</HjmNativeBrandPaletteContext.Provider>
+      <HjmNativeBrandPaletteContext.Provider value={brandPalette}>
+        <HjmNativeSafeAreaContext.Provider value={safeAreaInsets}>{children}</HjmNativeSafeAreaContext.Provider>
+      </HjmNativeBrandPaletteContext.Provider>
     </HjmNativeThemeContext.Provider>
   );
 }
@@ -204,4 +229,9 @@ export function useHjmNativeTheme(): HjmNativeTheme {
     throw new Error("useHjmNativeTheme must be used inside HjmNativeProvider");
   }
   return value;
+}
+
+/** Insets supplied to the nearest HjmNativeProvider; `{}` when the host supplied none. */
+export function useHjmNativeSafeAreaInsets(): HjmNativeSafeAreaInsets {
+  return useContext(HjmNativeSafeAreaContext);
 }

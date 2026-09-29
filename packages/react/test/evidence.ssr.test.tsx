@@ -1,3 +1,6 @@
+import * as affix from "../src/affix.js";
+import * as watermark from "../src/watermark.js";
+import * as colorPicker from "../src/color-picker.js";
 import * as masonry from "../src/masonry.js";
 import * as virtualList from "../src/virtual-list.js";
 import * as qrCode from "../src/qr-code.js";
@@ -66,6 +69,9 @@ const publicModules: Readonly<Record<string, Readonly<Record<string, unknown>>>>
   "./thinking-orb": thinkingOrb,
   "./top-bar": topBar,
   "./bottom-cta": bottomCta,
+  "./color-picker": colorPicker,
+  "./watermark": watermark,
+  "./affix": affix,
   "./masonry": masonry,
   "./virtual-list": virtualList,
   "./qr-code": qrCode,
@@ -133,7 +139,7 @@ describe("@hjmds/react renderer evidence", () => {
     });
 
     const componentIds = reactRendererEvidence.components.map(({ componentId }) => componentId);
-    expect(componentIds).toHaveLength(100);
+    expect(componentIds).toHaveLength(103);
     expect(new Set(componentIds).size).toBe(componentIds.length);
   });
 

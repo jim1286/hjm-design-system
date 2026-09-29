@@ -6,6 +6,7 @@ import type { DataTableSortState } from "@hjmds/design-contracts/components/data
 import { DataTable } from "../src/data-table.js";
 import { HjmProvider } from "../src/provider.js";
 import "../src/styles.css";
+import { hasHitArea, tap, tapAt } from "./touch-tap.js";
 
 let host: HTMLDivElement; let root: Root;
 beforeEach(() => { (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true; host = document.createElement("div"); document.body.append(host); root = createRoot(host); });
@@ -126,4 +127,28 @@ it("announces the table's async state without replacing the rows", async () => {
   expect(document.querySelectorAll("tbody tr")).toHaveLength(3);
   // Pagination-like chrome is composed beneath the table, not owned by it.
   expect(document.querySelector(".hjm-data-table__footer")!.textContent).toBe("3개 중 3개");
+});
+
+// 2026-09-30 responsive audit WR-0930-5: the selection marks hit 16x16 and the
+// sort button 36px wide, below the table's own minTouchTarget contract.
+it("gives selection checkboxes and sort buttons a 44px hit area", async () => {
+  // Keep the marks away from the iframe edge so every sampled point is on screen.
+  await page.viewport(900, 720);
+  host.style.padding = "32px";
+  const onSort = vi.fn();
+  await act(async () => root.render(<Fixture onSort={onSort} />));
+  const selectAll = check("모두 선택");
+  const walk = check("느리게 걸었던 오후 선택");
+  const sort = header("날짜").querySelector("button")!;
+  expect(hasHitArea(selectAll)).toBe(true);
+  expect(hasHitArea(walk)).toBe(true);
+  expect(hasHitArea(sort)).toBe(true);
+  // A tap 20px off the mark's centre, inside the selection cell, still toggles it.
+  const rect = walk.getBoundingClientRect();
+  const frame = window.frameElement?.getBoundingClientRect();
+  const scale = frame ? frame.width / window.innerWidth : 1;
+  await act(async () => tapAt((frame?.left ?? 0) + (rect.left + rect.width / 2) * scale, (frame?.top ?? 0) + (rect.top + rect.height / 2 + 14) * scale));
+  expect(walk.getAttribute("aria-checked")).toBe("true");
+  await act(async () => tap(sort));
+  expect(onSort).toHaveBeenCalledOnce();
 });

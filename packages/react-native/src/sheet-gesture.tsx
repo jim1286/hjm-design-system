@@ -1,12 +1,40 @@
-import { useCallback, useEffect, useRef, type ReactNode } from "react";
+import { forwardRef, useCallback, useEffect, useRef, type ComponentProps, type ElementRef, type ReactNode } from "react";
 import { BackHandler, View } from "react-native";
-import { BottomSheetModal, BottomSheetModalProvider, BottomSheetScrollView, BottomSheetBackdrop, BottomSheetTextInput, type BottomSheetBackdropProps } from "@gorhom/bottom-sheet";
+import { BottomSheetModal, BottomSheetModalProvider, BottomSheetScrollView, BottomSheetBackdrop, BottomSheetHandle, BottomSheetTextInput, type BottomSheetBackdropProps, type BottomSheetBackgroundProps, type BottomSheetHandleProps } from "@gorhom/bottom-sheet";
 import { ReduceMotion } from "react-native-reanimated";
 import { Button } from "./actions.js";
 import { Text } from "./primitives.js";
-import { useHjmNativeTheme } from "./provider.js";
+import { useHjmNativeSafeAreaInsets, useHjmNativeTheme, type HjmNativeSafeAreaInsets } from "./provider.js";
 
-export { BottomSheetTextInput as GestureSheetInput };
+type GestureSheetInputProps = ComponentProps<typeof BottomSheetTextInput>;
+/**
+ * The keyboard-aware input with the HJM field frame. The raw library input had no
+ * border or padding, so it read as plain text (2026-09-30 audit).
+ */
+export const GestureSheetInput = forwardRef<ElementRef<typeof BottomSheetTextInput>, GestureSheetInputProps>(
+  function GestureSheetInput({ style, ...props }, ref) {
+    const { colors, tokens } = useHjmNativeTheme();
+    return <BottomSheetTextInput ref={ref} placeholderTextColor={colors.textWeak} {...props}
+      style={[{ borderColor: colors.borderControl, borderRadius: tokens.radius.md, borderWidth: 1, color: colors.text,
+        fontSize: tokens.typography.body.fontSize, minHeight: 48, paddingHorizontal: tokens.spacing.md }, style]} />;
+  },
+);
+
+/**
+ * Open sheets, newest last. Android back inside an RN Modal goes to the Modal's
+ * onRequestClose and never reaches BackHandler, so the host closed instead of the
+ * sheet (2026-09-30 audit). A host that renders GestureSheet inside a Modal calls
+ * `dismissTopGestureSheet()` from onRequestClose first; BackHandler still covers
+ * sheets outside a Modal. Rejected: patching the Modal, which the host owns.
+ */
+const openSheets: Array<() => void> = [];
+/** Closes the newest open GestureSheet. Returns false when none is open (let the host close). */
+export function dismissTopGestureSheet(): boolean {
+  const close = openSheets[openSheets.length - 1];
+  if (!close) return false;
+  close();
+  return true;
+}
 export function GestureSheetProvider({ children }: { children: ReactNode }) {
   // Fixed points keep public index semantics stable; dynamic sizing inserts another point.
   return <BottomSheetModalProvider>{children}</BottomSheetModalProvider>;
@@ -20,12 +48,17 @@ export type GestureSheetProps = {
   snapPoints?: readonly (number | `${number}%`)[];
   initialIndex?: number;
   busy?: boolean;
+  /** Defaults to the HjmNativeProvider insets; keeps the full snap below the status bar. */
+  safeAreaInsets?: HjmNativeSafeAreaInsets;
 };
 
 /** Explicit gesture variant: it does not silently change the canonical Sheet. */
 export function GestureSheet({ open, onOpenChange, title, closeLabel, children,
-  snapPoints = ["50%", "90%"], initialIndex = 0, busy = false }: GestureSheetProps) {
+  snapPoints = ["50%", "90%"], initialIndex = 0, busy = false, safeAreaInsets }: GestureSheetProps) {
   const theme = useHjmNativeTheme();
+  const providerInsets = useHjmNativeSafeAreaInsets();
+  const topInset = safeAreaInsets?.top ?? providerInsets.top ?? 0;
+  const bottomInset = safeAreaInsets?.bottom ?? providerInsets.bottom ?? 0;
   const modal = useRef<BottomSheetModal>(null);
   const presented = useRef(false);
   const openRef = useRef(open); openRef.current = open;
@@ -46,20 +79,44 @@ export function GestureSheet({ open, onOpenChange, title, closeLabel, children,
   }, [open]);
   useEffect(() => {
     if (!open) return;
-    const subscription = BackHandler.addEventListener("hardwareBackPress", () => { if (!busy) onOpenChange(false); return true; });
-    return () => subscription.remove();
+    // Busy keeps the sheet but still consumes back, as before.
+    const close = () => { if (!busy) onOpenChange(false); };
+    openSheets.push(close);
+    const subscription = BackHandler.addEventListener("hardwareBackPress", () => { close(); return true; });
+    return () => {
+      subscription.remove();
+      const at = openSheets.lastIndexOf(close);
+      if (at >= 0) openSheets.splice(at, 1);
+    };
   }, [open, busy, onOpenChange]);
+  // The library's backdrop and handle announce English defaults ("Bottom sheet
+  // backdrop", "Bottom sheet handle"; 2026-09-30 audit). The backdrop becomes a
+  // localized dismiss button like the canonical Sheet's, and only while it can
+  // dismiss; the handle leaves the tree because the close button is the
+  // accessible route between snap points' end states.
   const backdrop = useCallback((props: BottomSheetBackdropProps) => <BottomSheetBackdrop {...props}
-    appearsOnIndex={0} disappearsOnIndex={-1} pressBehavior={busy ? "none" : "close"} />, [busy]);
+    accessible={!busy} accessibilityLabel={closeLabel} accessibilityHint="" accessibilityRole="button"
+    appearsOnIndex={0} disappearsOnIndex={-1} pressBehavior={busy ? "none" : "close"} />, [busy, closeLabel]);
+  const handle = useCallback((props: BottomSheetHandleProps) => <BottomSheetHandle {...props} accessible={false}
+    indicatorStyle={{ backgroundColor: theme.colors.text }} />, [theme.colors.text]);
+  // The library background is itself an accessible "Bottom Sheet" adjustable element
+  // (hardcoded, no prop), so it is replaced with a plain surface.
+  const background = useCallback(({ style, pointerEvents }: BottomSheetBackgroundProps) => <View accessible={false}
+    pointerEvents={pointerEvents} style={[{ borderTopLeftRadius: theme.tokens.radius.lg, borderTopRightRadius: theme.tokens.radius.lg }, style]} />,
+  [theme.tokens.radius.lg]);
   // Fixed points keep public index semantics stable; dynamic sizing inserts another point.
+  // accessible={false}: the container defaulted to one "Bottom Sheet" element that
+  // swallowed the title, input and close button; the localized title replaces the
+  // English default name wherever the container is still listed. topInset keeps the 90% snap below
+  // the status bar, where the title used to sit (2026-09-30 audit).
   return <BottomSheetModal ref={modal} index={initialIndex} snapPoints={[...snapPoints]}
+    accessible={false} accessibilityLabel={title} accessibilityRole="none" topInset={topInset} handleComponent={handle} backgroundComponent={background}
     enableDynamicSizing={false} enablePanDownToClose={!busy} backdropComponent={backdrop}
     overrideReduceMotion={theme.environment.reducedMotion ? ReduceMotion.Always : ReduceMotion.System}
     backgroundStyle={{ backgroundColor: theme.colors.bg }}
-    handleIndicatorStyle={{ backgroundColor: theme.colors.text }}
     onDismiss={() => { presented.current = false; if (openRef.current) onOpenChange(false); }}>
     <BottomSheetScrollView keyboardShouldPersistTaps="handled">
-      <View accessibilityViewIsModal style={{ padding: theme.tokens.spacing.lg }}>
+      <View accessibilityViewIsModal style={{ gap: theme.tokens.spacing.sm, padding: theme.tokens.spacing.lg, paddingBottom: theme.tokens.spacing.lg + bottomInset }}>
         <Text accessibilityRole="header">{title}</Text>
         {children}
         <Button disabled={busy} onPress={() => onOpenChange(false)}>{closeLabel}</Button>

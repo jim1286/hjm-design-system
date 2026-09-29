@@ -308,6 +308,21 @@
       "import": "./dist/menu-morph.js",
       "default": "./dist/menu-morph.js"
     },
+    "./affix": {
+      "types": "./dist/affix.d.ts",
+      "import": "./dist/affix.js",
+      "default": "./dist/affix.js"
+    },
+    "./color-picker": {
+      "types": "./dist/color-picker.d.ts",
+      "import": "./dist/color-picker.js",
+      "default": "./dist/color-picker.js"
+    },
+    "./watermark": {
+      "types": "./dist/watermark.d.ts",
+      "import": "./dist/watermark.js",
+      "default": "./dist/watermark.js"
+    },
     "./masonry": {
       "types": "./dist/masonry.d.ts",
       "react-native": "./dist/masonry.js",
@@ -325,6 +340,31 @@
       "react-native": "./dist/qr-code.js",
       "import": "./dist/qr-code.js",
       "default": "./dist/qr-code.js"
+    },
+    "./sortable": {
+      "types": "./dist/sortable.d.ts",
+      "import": "./dist/sortable.js",
+      "default": "./dist/sortable.js"
+    },
+    "./swipe-actions": {
+      "types": "./dist/swipe-actions.d.ts",
+      "import": "./dist/swipe-actions.js",
+      "default": "./dist/swipe-actions.js"
+    },
+    "./content-transition": {
+      "types": "./dist/content-transition.d.ts",
+      "import": "./dist/content-transition.js",
+      "default": "./dist/content-transition.js"
+    },
+    "./carousel-motion": {
+      "types": "./dist/carousel-motion.d.ts",
+      "import": "./dist/carousel-motion.js",
+      "default": "./dist/carousel-motion.js"
+    },
+    "./celebration": {
+      "types": "./dist/celebration.d.ts",
+      "import": "./dist/celebration.js",
+      "default": "./dist/celebration.js"
     },
     "./styles.css": "./dist/styles.css",
     "./styles.layered.css": "./dist/styles.layered.css"
@@ -345,13 +385,17 @@
     "test:visual": "vitest run --config vitest.visual.config.ts"
   },
   "peerDependencies": {
-    "@hjmds/design-contracts": ">=1.8.0 <1.9.0",
+    "@hjmds/design-contracts": ">=1.9.0 <1.10.0",
     "react": ">=19.0.0",
     "react-dom": ">=19.0.0",
     "@number-flow/react": "0.6.2",
     "bloom-menu": "0.1.0",
     "framer-motion": "13.4.4",
-    "qrcode-generator": "2.0.4"
+    "qrcode-generator": "2.0.4",
+    "@dnd-kit/react": "0.5.0",
+    "embla-carousel-react": "8.6.0",
+    "canvas-confetti": "1.9.4",
+    "@dnd-kit/dom": "0.5.0"
   },
   "devDependencies": {
     "@hjmds/design-contracts": "workspace:*",
@@ -367,7 +411,12 @@
     "@number-flow/react": "0.6.2",
     "bloom-menu": "0.1.0",
     "framer-motion": "13.4.4",
-    "qrcode-generator": "2.0.4"
+    "qrcode-generator": "2.0.4",
+    "@dnd-kit/react": "0.5.0",
+    "embla-carousel-react": "8.6.0",
+    "canvas-confetti": "1.9.4",
+    "@types/canvas-confetti": "1.9.0",
+    "@dnd-kit/dom": "0.5.0"
   },
   "peerDependenciesMeta": {
     "@number-flow/react": {
@@ -380,6 +429,18 @@
       "optional": true
     },
     "qrcode-generator": {
+      "optional": true
+    },
+    "@dnd-kit/react": {
+      "optional": true
+    },
+    "embla-carousel-react": {
+      "optional": true
+    },
+    "canvas-confetti": {
+      "optional": true
+    },
+    "@dnd-kit/dom": {
       "optional": true
     }
   }

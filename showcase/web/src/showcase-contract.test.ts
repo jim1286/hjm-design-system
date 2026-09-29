@@ -108,7 +108,7 @@ describe("web showcase coverage", () => {
   });
 
   it("renders planned stories as contract documents without renderer DOM", () => {
-    for (const entry of componentCatalog.filter(({ status }) => status === "planned")) {
+    for (const entry of componentCatalog.filter(entry => getComponentSurfaceStatus(entry, "web") === "planned")) {
       const html = renderToStaticMarkup(
         createElement(ContractStory, { name: entry.name }),
       );
@@ -139,27 +139,27 @@ describe("web showcase coverage", () => {
     expect(Object.keys(webRendererRegistry).sort()).toEqual(expected);
     expect(summarizeWebShowcaseCoverage()).toEqual({
       canonical: componentCatalog.length,
-      webReferences: 100,
-      contractOnly: 8,
+      webReferences: 103,
+      contractOnly: 0,
       nativeOnly: 0,
     });
   });
 
-  it("renders the canonical 100/8/0 surface-evidence split in Home and Explorer", () => {
+  it("renders the canonical 103/0/0 surface-evidence split in Home and Explorer", () => {
     const homeHtml = renderToStaticMarkup(createElement(Introduction));
-    expect(homeHtml).toContain("<strong>100</strong><span>Web references</span>");
-    expect(homeHtml).toContain("<strong>8</strong><span>contract-only stories</span>");
+    expect(homeHtml).toContain("<strong>103</strong><span>Web references</span>");
+    expect(homeHtml).toContain("<strong>0</strong><span>contract-only stories</span>");
     expect(homeHtml).toContain("<strong>0</strong><span>Native-only stories</span>");
     expect(homeHtml).toContain(componentCategoryExplorerHref("input"));
     expect(homeHtml).not.toContain("args=initialCategory");
 
     const explorerHtml = renderToStaticMarkup(createElement(ComponentExplorer));
-    expect(explorerHtml).toContain("<strong>100</strong> Web references");
-    expect(explorerHtml).toContain("<strong>8</strong> contract-only stories");
+    expect(explorerHtml).toContain("<strong>103</strong> Web references");
+    expect(explorerHtml).toContain("<strong>0</strong> contract-only stories");
     expect(explorerHtml).toContain("<strong>0</strong> Native-only stories");
     expect(explorerHtml).not.toContain("Open Native-only contract");
     expect(explorerHtml).toContain("Open Web reference");
-    expect(explorerHtml).toContain("Open contract &amp; decision");
+    expect(explorerHtml).not.toContain("Open contract &amp; decision");
   });
 
   it("binds recipe evidence or the explicit nonvisual provider adapter", () => {
@@ -240,13 +240,14 @@ describe("web showcase coverage", () => {
       // QR module geometry must not be misrepresented as pixel padding in the wrapper.
       // Their real DOM layout/decoding proofs live in data-layouts.browser.test and data-layouts.test.
       const algorithmRecipes: Record<string, readonly unknown[]> = {
+        Affix: ["top", 0, "sticky", "flow"],
         Masonry: ["shortest-column", "source", 12],
         VirtualList: ["fixed-row-window", 3, "source"],
         QRCode: [2, 4, "#000000", "#ffffff"],
       };
       if (algorithmRecipes[name]) {
         expect(consumedRecipeValues, name).toEqual(algorithmRecipes[name]);
-        const marker = { Masonry: "data-hjm-masonry", VirtualList: "data-hjm-virtual-list", QRCode: "data-hjm-qr-code" }[name as "Masonry" | "VirtualList" | "QRCode"];
+        const marker = { Affix: "data-hjm-affix", Masonry: "data-hjm-masonry", VirtualList: "data-hjm-virtual-list", QRCode: "data-hjm-qr-code" }[name as "Affix" | "Masonry" | "VirtualList" | "QRCode"];
         expect(renderWithProvider(createElement(ContractStory, { name: name as ComponentName }))).toContain(marker);
         continue;
       }
@@ -390,7 +391,7 @@ describe("web showcase coverage", () => {
     const activeNames = componentCatalog
       .filter((entry) => isMatureStatus(getComponentSurfaceStatus(entry, "web")))
       .map(({ name }) => name);
-    expect(activeNames).toHaveLength(100);
+    expect(activeNames).toHaveLength(103);
     for (const name of activeNames) {
       expect(webRendererComponentNames).toContain(name);
       if (!isWebRendererComponent(name)) throw new Error(`Missing Web renderer registry entry: ${name}`);

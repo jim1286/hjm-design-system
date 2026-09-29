@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Image, Modal, View, useWindowDimensions } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Gallery } from "react-native-zoom-toolkit";
+import { containerDefaults, containerRecipe } from "@hjmds/design-contracts/components/container";
 import { Button } from "./actions.js";
 import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
@@ -31,6 +32,7 @@ export function ImageViewer(props) {
 }
 function ImageViewerSession(props) {
     const theme = useHjmNativeTheme();
+    const gutter = containerRecipe.gutters[containerDefaults.gutter];
     const { width, height } = useWindowDimensions();
     // Measure remaining space after controls and safe areas; a screen-height ratio clips large text.
     const [viewport, setViewport] = useState({ width, height: height * 0.6 });
@@ -41,7 +43,7 @@ function ImageViewerSession(props) {
     // Accessible buttons remount at the selected index; paging must not require a swipe.
     // Gallery uses a short paging transition; reduced motion removes it entirely.
     const navigate = (next) => { change(next); setGalleryKey(value => value + 1); };
-    return _jsx(Modal, { visible: true, animationType: theme.environment.reducedMotion ? "none" : "fade", onRequestClose: props.onClose, children: _jsx(GestureHandlerRootView, { style: { flex: 1, backgroundColor: theme.colors.bg }, children: _jsxs(View, { accessibilityViewIsModal: true, style: { flex: 1, paddingTop: props.safeAreaInsets.top, paddingBottom: props.safeAreaInsets.bottom }, children: [_jsx(Button, { onPress: props.onClose, children: props.closeLabel }), _jsx(View, { style: { flex: 1 }, onLayout: event => { const { width: measuredWidth, height: measuredHeight } = event.nativeEvent.layout; if (measuredWidth > 0 && measuredHeight > 0)
-                            setViewport({ width: measuredWidth, height: measuredHeight }); }, children: _jsx(Gallery, { data: [...props.items], initialIndex: currentIndex, keyExtractor: item => item.id, rtl: theme.environment.direction === "rtl", onIndexChange: change, snapTimingConfig: { duration: theme.environment.reducedMotion ? 0 : 250 }, renderItem: item => _jsx(ViewerImage, { item: item, width: viewport.width, height: viewport.height, loadingLabel: props.loadingLabel, errorLabel: props.errorLabel, retryLabel: props.retryLabel }, item.uri) }, galleryKey) }), _jsx(Text, { accessibilityLiveRegion: "polite", children: props.items[currentIndex]?.label }), _jsx(Button, { disabled: currentIndex === 0, onPress: () => navigate(currentIndex - 1), children: props.previousLabel }), _jsx(Button, { disabled: currentIndex >= props.items.length - 1, onPress: () => navigate(currentIndex + 1), children: props.nextLabel })] }) }) });
+    return _jsx(Modal, { visible: true, animationType: theme.environment.reducedMotion ? "none" : "fade", onRequestClose: props.onClose, children: _jsx(GestureHandlerRootView, { style: { flex: 1, backgroundColor: theme.colors.bg }, children: _jsxs(View, { accessibilityViewIsModal: true, style: { flex: 1, paddingTop: props.safeAreaInsets.top, paddingBottom: props.safeAreaInsets.bottom }, children: [_jsx(View, { style: { paddingHorizontal: gutter }, children: _jsx(Button, { onPress: props.onClose, children: props.closeLabel }) }), _jsx(View, { style: { flex: 1 }, onLayout: event => { const { width: measuredWidth, height: measuredHeight } = event.nativeEvent.layout; if (measuredWidth > 0 && measuredHeight > 0)
+                            setViewport({ width: measuredWidth, height: measuredHeight }); }, children: _jsx(Gallery, { data: [...props.items], initialIndex: currentIndex, keyExtractor: item => item.id, rtl: theme.environment.direction === "rtl", onIndexChange: change, snapTimingConfig: { duration: theme.environment.reducedMotion ? 0 : 250 }, renderItem: item => _jsx(ViewerImage, { item: item, width: viewport.width, height: viewport.height, loadingLabel: props.loadingLabel, errorLabel: props.errorLabel, retryLabel: props.retryLabel }, item.uri) }, galleryKey) }), _jsxs(View, { style: { gap: theme.tokens.spacing.xs, paddingHorizontal: gutter, paddingTop: theme.tokens.spacing.sm }, children: [_jsx(Text, { accessibilityLiveRegion: "polite", children: props.items[currentIndex]?.label }), _jsx(Button, { disabled: currentIndex === 0, onPress: () => navigate(currentIndex - 1), children: props.previousLabel }), _jsx(Button, { disabled: currentIndex >= props.items.length - 1, onPress: () => navigate(currentIndex + 1), children: props.nextLabel })] })] }) }) });
 }
 //# sourceMappingURL=image-viewer.js.map

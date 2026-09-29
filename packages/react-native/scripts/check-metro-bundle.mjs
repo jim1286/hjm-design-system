@@ -44,7 +44,7 @@ const executableFamilyExports = Object.entries(packageJson.exports)
   .filter(
     ([exportPath, target]) =>
       // Optional effects and QR use the complete Expo showcase export; this baseline must resolve without their peers.
-      exportPath !== "." && exportPath !== "./toast-liquid" && !(["./qr-code", "./thinking-orb", "./image-viewer", "./keyboard-controller", "./sheet-gesture", "./context-menu-native"].includes(exportPath)) && typeof target === "string" && target.endsWith(".js"),
+      exportPath !== "." && exportPath !== "./toast-liquid" && !(["./sortable", "./swipe-actions", "./carousel-motion", "./celebration", "./screen-transition", "./qr-code", "./thinking-orb", "./image-viewer", "./keyboard-controller", "./sheet-gesture", "./context-menu-native"].includes(exportPath)) && typeof target === "string" && target.endsWith(".js"),
   );
 
 const requiredRendererSources = executableFamilyExports.map(([, target]) =>

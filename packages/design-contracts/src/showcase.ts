@@ -287,6 +287,8 @@ function getRendererShowcaseScenarios(
   const requirements: Exclude<ShowcaseScenarioId, "contract">[] = rendererRequirements.filter(
     (scenario) => scenario !== "long-copy" || !textlessComponentNames.has(entry.name),
   );
+  // ColorPicker composes native form controls; its text commit/escape behavior still needs real keyboard proof.
+  if (entry.name === "ColorPicker" && surface === "web") requirements.push("keyboard");
   if (entry.behavior && !semanticOnlyBehaviors.has(entry.behavior)) {
     // Web owns DOM key bindings; Native declares host accessibility actions instead, so Pressable tests must not claim physical keyboard proof.
     if (surface === "web" && webKeyboardBehaviors.has(entry.behavior)) requirements.push("keyboard");

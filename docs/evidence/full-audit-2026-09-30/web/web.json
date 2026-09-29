@@ -1,0 +1,3668 @@
+{
+  "scope": "103 implemented Web canonical component previews + Experimental/Interaction Adapters playground (sortable, swipe-actions, content-transition, carousel-motion, celebration) + Patterns/Optional Motion. Static Storybook built 2026-09-30 03:04 from the working tree (HEAD f1d28a3 + uncommitted changes).",
+  "browser": "Playwright Chromium (showcase/web/node_modules/playwright), headless, 1100x900 and 390x844",
+  "completedAt": "2026-09-29T18:14:06.037Z",
+  "summary": {
+    "canonical": 103,
+    "rendered": 103,
+    "runtimeErrorFree": 103,
+    "visuallyReviewed": 103,
+    "noOverflow390": 103,
+    "interactionVerified": 73,
+    "interactionByKind": {
+      "not-applicable": 30,
+      "pass": 63,
+      "semantic-pass": 8,
+      "composed-pass": 1,
+      "lifecycle-pass": 1
+    },
+    "actionCases": 63,
+    "actionPass": 63,
+    "semanticPass": "8/8",
+    "extraPass": "9/9",
+    "variantCaptures": 48,
+    "variantsNoOverflow": 48,
+    "adapterCases": "10/10"
+  },
+  "results": [
+    {
+      "component": "Text",
+      "storyId": "components-foundation--text",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/Text.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Text-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Text-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 0
+    },
+    {
+      "component": "Heading",
+      "storyId": "components-foundation--heading",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/Heading.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Heading-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Heading-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 0
+    },
+    {
+      "component": "TextFormat",
+      "storyId": "components-foundation--text-format",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/TextFormat.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/TextFormat-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/TextFormat-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 0
+    },
+    {
+      "component": "Icon",
+      "storyId": "components-foundation--icon",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/Icon.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Icon-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Icon-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 5
+    },
+    {
+      "component": "Surface",
+      "storyId": "components-layout--surface",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/Surface.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Surface-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Surface-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 0
+    },
+    {
+      "component": "Divider",
+      "storyId": "components-layout--divider",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/Divider.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Divider-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Divider-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 1
+    },
+    {
+      "component": "Section",
+      "storyId": "components-layout--section",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/Section.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Section-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Section-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 0
+    },
+    {
+      "component": "Stack",
+      "storyId": "components-layout--stack",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/Stack.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Stack-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Stack-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 3
+    },
+    {
+      "component": "Container",
+      "storyId": "components-layout--container",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/Container.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Container-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Container-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 0
+    },
+    {
+      "component": "AspectRatio",
+      "storyId": "components-layout--aspect-ratio",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/AspectRatio.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/AspectRatio-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/AspectRatio-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 0
+    },
+    {
+      "component": "Grid",
+      "storyId": "components-layout--grid",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/Grid.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Grid-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Grid-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 0
+    },
+    {
+      "component": "Layout",
+      "storyId": "components-layout--layout",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/Layout.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Layout-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Layout-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 0
+    },
+    {
+      "component": "Top",
+      "storyId": "components-layout--top",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Top-action.png",
+        "assertions": "async()=>{await p.getByRole('button',{name:'크기 바꾸기'}).click();assert.equal(await p.locator('.hjm-top').getAttribute('data-size'),'medium')}"
+      },
+      "screenshot": "web-screens/Top.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Top-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Top-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 1
+    },
+    {
+      "component": "Masonry",
+      "storyId": "components-layout--masonry",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "semantic-pass",
+        "evidence": "web-screens/Masonry-semantic.png"
+      },
+      "screenshot": "web-screens/Masonry.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Masonry-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Masonry-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 10
+    },
+    {
+      "component": "Splitter",
+      "storyId": "components-layout--splitter",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Splitter-action.png",
+        "assertions": "async()=>{let q=p.getByRole('separator',{name:'목록 폭 조절'});await q.focus();await q.press('ArrowRight');await text(p.getByRole('status'),'40%');await p.getByRole('button',{name:'보기',exact:true}).nth(1).click();await text(p.locator('.hjm-showcase-splitter-pane'),'국이 좀 짰지만')}"
+      },
+      "screenshot": "web-screens/Splitter.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Splitter-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Splitter-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 9
+    },
+    {
+      "component": "AuthScreenLayout",
+      "storyId": "components-layout--auth-screen-layout",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/AuthScreenLayout.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/AuthScreenLayout-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/AuthScreenLayout-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 4
+    },
+    {
+      "component": "Button",
+      "storyId": "components-actions--button",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Button-action.png",
+        "assertions": "async()=>{await p.getByRole('button',{name:'Primary',exact:true}).click();await text(p.getByRole('status'),'Primary 실행');assert(await p.getByRole('button',{name:'Disabled',exact:true}).isDisabled())}"
+      },
+      "screenshot": "web-screens/Button.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Button-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Button-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 3
+    },
+    {
+      "component": "IconButton",
+      "storyId": "components-actions--icon-button",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/IconButton-action.png",
+        "assertions": "async()=>{await p.getByRole('button',{name:'좋아요',exact:true}).click();await text(p.getByRole('status'),'좋아요 실행')}"
+      },
+      "screenshot": "web-screens/IconButton.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/IconButton-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/IconButton-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 2
+    },
+    {
+      "component": "Link",
+      "storyId": "components-actions--link",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Link-action.png",
+        "assertions": "async()=>{await p.getByRole('link',{name:'컴포넌트 문서로 이동'}).click();assert(p.url().endsWith('#components'))}"
+      },
+      "screenshot": "web-screens/Link.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Link-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Link-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 0
+    },
+    {
+      "component": "BottomCTA",
+      "storyId": "components-actions--bottom-cta",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/BottomCTA-action.png",
+        "assertions": "async()=>{await p.getByRole('button',{name:'계속하기'}).click();await text(p.getByRole('status'),'행동 실행')}"
+      },
+      "screenshot": "web-screens/BottomCTA.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/BottomCTA-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/BottomCTA-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 3
+    },
+    {
+      "component": "FloatingActionButton",
+      "storyId": "components-actions--floating-action-button",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "composed-pass",
+        "evidence": "web-screens/FloatingActionButton-composed.png"
+      },
+      "screenshot": "web-screens/FloatingActionButton.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/FloatingActionButton-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/FloatingActionButton-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 1
+    },
+    {
+      "component": "AuthProviderButton",
+      "storyId": "components-actions--auth-provider-button",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/AuthProviderButton-action.png",
+        "assertions": "async()=>{let q=p.getByRole('button',{name:'Google로 계속하기',exact:true});await q.click();await attr(q,'aria-busy','true')}"
+      },
+      "screenshot": "web-screens/AuthProviderButton.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/AuthProviderButton-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/AuthProviderButton-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 4
+    },
+    {
+      "component": "Field",
+      "storyId": "components-inputs--field",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Field-action.png",
+        "assertions": "async()=>{let q=p.getByLabel('이름',{exact:true});await q.fill('확인한 입력');assert.equal(await q.inputValue(),'확인한 입력')}"
+      },
+      "screenshot": "web-screens/Field.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Field-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Field-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 1
+    },
+    {
+      "component": "SearchField",
+      "storyId": "components-inputs--search-field",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/SearchField-action.png",
+        "assertions": "async()=>{await p.getByLabel('검색어 지우기').click();assert.equal(await p.locator('input').inputValue(),'')}"
+      },
+      "screenshot": "web-screens/SearchField.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/SearchField-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/SearchField-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 2
+    },
+    {
+      "component": "TextArea",
+      "storyId": "components-inputs--text-area",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/TextArea-action.png",
+        "assertions": "async()=>{let q=p.getByLabel('설명',{exact:true});await q.fill('첫 줄\\n둘째 줄');assert.equal(await q.inputValue(),'첫 줄\\n둘째 줄')}"
+      },
+      "screenshot": "web-screens/TextArea.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/TextArea-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/TextArea-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 1
+    },
+    {
+      "component": "PasswordField",
+      "storyId": "components-inputs--password-field",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/PasswordField-action.png",
+        "assertions": "async()=>{await p.getByRole('button',{name:'비밀번호 보기'}).click();await attr(p.locator('input'),'type','text');assert.equal(await p.locator('input').inputValue(),'hjm-password');await p.getByRole('button',{name:'비밀번호 숨기기'}).click();await attr(p.locator('input'),'type','password')}"
+      },
+      "screenshot": "web-screens/PasswordField.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/PasswordField-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/PasswordField-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 2
+    },
+    {
+      "component": "OtpField",
+      "storyId": "components-inputs--otp-field",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/OtpField-action.png",
+        "assertions": "async()=>{await p.locator('input').fill('123456');assert.equal(await p.locator('input').inputValue(),'123456')}"
+      },
+      "screenshot": "web-screens/OtpField.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/OtpField-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/OtpField-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 1
+    },
+    {
+      "component": "Checkbox",
+      "storyId": "components-inputs--checkbox",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Checkbox-action.png",
+        "assertions": "async()=>{let q=p.getByRole('checkbox');await q.click();assert.equal(await q.isChecked(),false)}"
+      },
+      "screenshot": "web-screens/Checkbox.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Checkbox-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Checkbox-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 1
+    },
+    {
+      "component": "Radio",
+      "storyId": "components-inputs--radio",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Radio-action.png",
+        "assertions": "async()=>{let q=p.getByRole('radio');await q.focus();await p.keyboard.press('Space');assert(await q.isChecked())}"
+      },
+      "screenshot": "web-screens/Radio.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Radio-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Radio-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 1
+    },
+    {
+      "component": "CheckboxGroup",
+      "storyId": "components-inputs--checkbox-group",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/CheckboxGroup-action.png",
+        "assertions": "async()=>{await p.getByRole('checkbox').nth(1).check();assert(await p.getByRole('checkbox').nth(1).isChecked());assert(await p.getByRole('checkbox').nth(2).isDisabled())}"
+      },
+      "screenshot": "web-screens/CheckboxGroup.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/CheckboxGroup-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/CheckboxGroup-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 3
+    },
+    {
+      "component": "RadioGroup",
+      "storyId": "components-inputs--radio-group",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/RadioGroup-action.png",
+        "assertions": "async()=>{await p.getByRole('radio').nth(1).check();assert(await p.getByRole('radio').nth(1).isChecked());assert(!(await p.getByRole('radio').nth(0).isChecked()))}"
+      },
+      "screenshot": "web-screens/RadioGroup.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/RadioGroup-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/RadioGroup-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 3
+    },
+    {
+      "component": "Switch",
+      "storyId": "components-inputs--switch",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Switch-action.png",
+        "assertions": "async()=>{await p.getByRole('switch').click();await attr(p.getByRole('switch'),'aria-checked','false')}"
+      },
+      "screenshot": "web-screens/Switch.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Switch-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Switch-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 1
+    },
+    {
+      "component": "Chip",
+      "storyId": "components-inputs--chip",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Chip-action.png",
+        "assertions": "async()=>{await p.getByRole('checkbox',{name:'완료',exact:true}).click();await attr(p.getByRole('checkbox',{name:'완료',exact:true}),'aria-checked','true')}"
+      },
+      "screenshot": "web-screens/Chip.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Chip-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Chip-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 2
+    },
+    {
+      "component": "SegmentedControl",
+      "storyId": "components-inputs--segmented-control",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/SegmentedControl-action.png",
+        "assertions": "async()=>{await p.getByRole('radio').nth(1).check();assert(await p.getByRole('radio').nth(1).isChecked())}"
+      },
+      "screenshot": "web-screens/SegmentedControl.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/SegmentedControl-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/SegmentedControl-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 2
+    },
+    {
+      "component": "Slider",
+      "storyId": "components-inputs--slider",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Slider-action.png",
+        "assertions": "async()=>{await p.getByRole('slider').focus();await p.keyboard.press('ArrowRight');assert.equal(await p.getByRole('slider').inputValue(),'73')}"
+      },
+      "screenshot": "web-screens/Slider.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Slider-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Slider-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 1
+    },
+    {
+      "component": "NumberField",
+      "storyId": "components-inputs--number-field",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/NumberField-action.png",
+        "assertions": "async()=>{await p.getByRole('button',{name:'수량 늘리기'}).click();assert.equal(await p.getByRole('spinbutton').inputValue(),'3');await p.getByRole('button',{name:'수량 줄이기'}).click();assert.equal(await p.getByRole('spinbutton').inputValue(),'2')}"
+      },
+      "screenshot": "web-screens/NumberField.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/NumberField-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/NumberField-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 3
+    },
+    {
+      "component": "Select",
+      "storyId": "components-inputs--select",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Select-action.png",
+        "assertions": "async()=>{await p.getByRole('combobox').click();await p.getByRole('option',{name:'English',exact:true}).click();await text(p.getByRole('combobox'),'English')}"
+      },
+      "screenshot": "web-screens/Select.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Select-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Select-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 2
+    },
+    {
+      "component": "Combobox",
+      "storyId": "components-inputs--combobox",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Combobox-action.png",
+        "assertions": "async()=>{await p.getByRole('combobox').fill('부');await p.getByRole('option',{name:'부산',exact:true}).click();assert.equal(await p.getByRole('combobox').inputValue(),'부산')}"
+      },
+      "screenshot": "web-screens/Combobox.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Combobox-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Combobox-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 1
+    },
+    {
+      "component": "DatePicker",
+      "storyId": "components-inputs--date-picker",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/DatePicker-action.png",
+        "assertions": "async()=>{await p.getByRole('button',{name:/날짜를 선택하세요/}).click();await p.getByRole('gridcell',{name:'2027-02-10',exact:true}).click();await text(p.locator('[data-hjm-renderer]'),'2027-02-10')}"
+      },
+      "screenshot": "web-screens/DatePicker.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/DatePicker-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/DatePicker-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 1
+    },
+    {
+      "component": "ColorPicker",
+      "storyId": "components-inputs--color-picker",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/ColorPicker-action.png",
+        "assertions": "async()=>{const r=p.locator('[data-hjm-renderer]');const hex=p.getByLabel('HEX 값');const out=()=>r.innerText();\nawait hex.fill('#338844');await hex.press('Enter');await text(r,'선택한 색상: #338844cc');\nassert.equal(await p.locator('.hjm-color-picker__preview').evaluate(e=>getComputedStyle(e).backgroundColor),'rgba(51, 136, 68, 0.8)');\nconst range=p.getByRole('slider',{name:'불투명도'});await range.fill('50');await text(r,'선택한 색상: #33884480');await text(r,'불투명도 50%');\nawait hex.fill('#6644aa40');await hex.press('Enter');await text(r,'선택한 색상: #6644aa40');assert.equal(await range.inputValue(),'25');\nawait hex.fill('zzz');await hex.press('Enter');await p.getByRole('alert').waitFor();await attr(hex,'aria-invalid','true');await text(r,'선택한 색상: #6644aa40');\nawait hex.press('Escape');assert.equal(await hex.inputValue(),'#6644aa40');assert.equal(await p.getByRole('alert').count(),0);\nawait p.getByRole('button',{name:/#338844ff/}).click();await text(r,'선택한 색상: #338844ff');await attr(p.getByRole('button',{name:/#338844ff/}),'aria-pressed','true')}"
+      },
+      "screenshot": "web-screens/ColorPicker.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/ColorPicker-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Opened at full size (1100 and 390) plus dark/RTL/200% variant",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/ColorPicker-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 6
+    },
+    {
+      "component": "FilePicker",
+      "storyId": "components-inputs--file-picker",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/FilePicker-action.png",
+        "assertions": "async()=>{await p.locator('input[type=file]').setInputFiles({name:'tiny.png',mimeType:'image/png',buffer:Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/lXcAAAAASUVORK5CYII=','base64')});await text(p.getByRole('status'),'파일을 선택했어요')}"
+      },
+      "screenshot": "web-screens/FilePicker.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/FilePicker-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/FilePicker-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 2
+    },
+    {
+      "component": "Form",
+      "storyId": "components-inputs--form",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Form-action.png",
+        "assertions": "async()=>{await p.getByRole('button',{name:'저장',exact:true}).click();await text(p.getByRole('status'),'저장했어요')}"
+      },
+      "screenshot": "web-screens/Form.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Form-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Form-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 3
+    },
+    {
+      "component": "Agreement",
+      "storyId": "components-inputs--agreement",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Agreement-action.png",
+        "assertions": "async()=>{await p.getByRole('checkbox',{name:'전체 동의하기'}).click();await p.locator('input').fill('qa@example.com');await p.getByRole('button',{name:'가입하고 시작하기'}).click();await text(p.locator('[data-hjm-renderer]'),'가입했어요')}"
+      },
+      "screenshot": "web-screens/Agreement.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Agreement-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Agreement-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 9
+    },
+    {
+      "component": "ToggleGroup",
+      "storyId": "components-inputs--toggle-group",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/ToggleGroup-action.png",
+        "assertions": "async()=>{let q=p.getByRole('button',{name:'기울임',exact:true});await q.click();await attr(q,'aria-pressed','true')}"
+      },
+      "screenshot": "web-screens/ToggleGroup.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/ToggleGroup-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/ToggleGroup-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 10
+    },
+    {
+      "component": "TagsInput",
+      "storyId": "components-inputs--tags-input",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/TagsInput-action.png",
+        "assertions": "async()=>{let q=p.locator('[data-hjm-renderer] input');await q.fill('검증');await q.press('Enter');assert(await p.getByRole('button',{name:'검증 지우기'}).isVisible());await p.getByRole('button',{name:'검증 지우기'}).click();assert.equal(await p.getByRole('button',{name:'검증 지우기'}).count(),0)}"
+      },
+      "screenshot": "web-screens/TagsInput.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/TagsInput-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/TagsInput-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 2
+    },
+    {
+      "component": "DateRangePicker",
+      "storyId": "components-inputs--date-range-picker",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/DateRangePicker-action.png",
+        "assertions": "async()=>{await p.getByRole('gridcell',{name:'2026-09-03',exact:true}).click();await p.getByRole('gridcell',{name:'2026-09-07',exact:true}).click();await text(p.getByRole('status'),'2026-09-03 ~ 2026-09-07')}"
+      },
+      "screenshot": "web-screens/DateRangePicker.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/DateRangePicker-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/DateRangePicker-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 50
+    },
+    {
+      "component": "Mentions",
+      "storyId": "components-inputs--mentions",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Mentions-action.png",
+        "assertions": "async()=>{await p.getByRole('combobox').fill('오늘의 검증 기록');await p.getByRole('button',{name:'기록 저장하기'}).click();await text(p.locator('[data-hjm-renderer]'),'오늘의 검증 기록')}"
+      },
+      "screenshot": "web-screens/Mentions.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Mentions-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Mentions-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 3
+    },
+    {
+      "component": "TransferList",
+      "storyId": "components-inputs--transfer-list",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/TransferList-action.png",
+        "assertions": "async()=>{await p.getByRole('option',{name:'느리게 걸었던 오후'}).click();await p.getByRole('button',{name:'담기 →'}).click();await text(p.getByRole('listbox',{name:'모아둔 기록'}),'느리게 걸었던 오후')}"
+      },
+      "screenshot": "web-screens/TransferList.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/TransferList-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/TransferList-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 14
+    },
+    {
+      "component": "Tabs",
+      "storyId": "components-navigation--tabs",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Tabs-action.png",
+        "assertions": "async()=>{await p.getByRole('tab',{name:'두 번째'}).click();await text(p.getByRole('tabpanel'),'두 번째 패널 내용')}"
+      },
+      "screenshot": "web-screens/Tabs.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Tabs-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Tabs-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 4
+    },
+    {
+      "component": "TopBar",
+      "storyId": "components-navigation--top-bar",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/TopBar.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/TopBar-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/TopBar-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 2
+    },
+    {
+      "component": "Sidebar",
+      "storyId": "components-navigation--sidebar",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Sidebar-action.png",
+        "assertions": "async()=>{let q=p.getByRole('button',{name:'메뉴 접기'});await q.click();assert(await p.getByRole('button',{name:'메뉴 펼치기'}).isVisible())}"
+      },
+      "screenshot": "web-screens/Sidebar.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Sidebar-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Sidebar-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 3
+    },
+    {
+      "component": "BottomNavigation",
+      "storyId": "components-navigation--bottom-navigation",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/BottomNavigation-action.png",
+        "assertions": "async()=>{await p.getByRole('link',{name:'프로필'}).click();assert(p.url().endsWith('#profile'))}"
+      },
+      "screenshot": "web-screens/BottomNavigation.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/BottomNavigation-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/BottomNavigation-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 0
+    },
+    {
+      "component": "Breadcrumb",
+      "storyId": "components-navigation--breadcrumb",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "semantic-pass",
+        "evidence": "web-screens/Breadcrumb-semantic.png"
+      },
+      "screenshot": "web-screens/Breadcrumb.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Breadcrumb-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Breadcrumb-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 12
+    },
+    {
+      "component": "Pagination",
+      "storyId": "components-navigation--pagination",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Pagination-action.png",
+        "assertions": "async()=>{await p.getByRole('button',{name:'다음 페이지'}).click();await text(p.getByRole('status'),'6–10번째 기록')}"
+      },
+      "screenshot": "web-screens/Pagination.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Pagination-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Pagination-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 12
+    },
+    {
+      "component": "LoadMore",
+      "storyId": "components-navigation--load-more",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/LoadMore-action.png",
+        "assertions": "async()=>{await p.getByRole('button',{name:'더 보기'}).click();await text(p.getByRole('status'),'추가 항목을 불러왔어요')}"
+      },
+      "screenshot": "web-screens/LoadMore.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/LoadMore-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/LoadMore-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 2
+    },
+    {
+      "component": "Steps",
+      "storyId": "components-navigation--steps",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/Steps.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Steps-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Steps-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 0
+    },
+    {
+      "component": "Menu",
+      "storyId": "components-navigation--menu",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Menu-action.png",
+        "assertions": "async()=>{await p.getByRole('button',{name:'작업 열기'}).click();await p.getByRole('menu').waitFor();await shot('Menu-open');await p.getByRole('menuitem',{name:'이름 바꾸기'}).click();assert.equal(await p.getByRole('menu').count(),0)}"
+      },
+      "screenshot": "web-screens/Menu.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Menu-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Menu-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 1
+    },
+    {
+      "component": "ContextMenu",
+      "storyId": "components-navigation--context-menu",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/ContextMenu-action.png",
+        "assertions": "async()=>{await p.locator('.hjm-showcase-context-target').click({button:'right'});await shot('ContextMenu-open');await p.getByRole('menuitem',{name:/이름 바꾸기/}).click();await text(p.locator('[data-hjm-renderer]'),'edit 작업을 실행했습니다.')}"
+      },
+      "screenshot": "web-screens/ContextMenu.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/ContextMenu-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/ContextMenu-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 0
+    },
+    {
+      "component": "Menubar",
+      "storyId": "components-navigation--menubar",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Menubar-action.png",
+        "assertions": "async()=>{await p.getByRole('menuitem',{name:'파일',exact:true}).click();await p.getByRole('menuitem',{name:/새 기록/}).click();await text(p.locator('[data-hjm-renderer]'),'file/new')}"
+      },
+      "screenshot": "web-screens/Menubar.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Menubar-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Menubar-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 4
+    },
+    {
+      "component": "Anchor",
+      "storyId": "components-navigation--anchor",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "semantic-pass",
+        "evidence": "web-screens/Anchor-semantic.png"
+      },
+      "screenshot": "web-screens/Anchor.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Anchor-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Anchor-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 1
+    },
+    {
+      "component": "UploadItem",
+      "storyId": "components-data-display--upload-item",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/UploadItem-action.png",
+        "assertions": "async()=>{await p.getByRole('button',{name:'취소',exact:true}).click();await text(p.getByRole('status'),'업로드를 취소했어요')}"
+      },
+      "screenshot": "web-screens/UploadItem.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/UploadItem-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/UploadItem-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 2
+    },
+    {
+      "component": "Avatar",
+      "storyId": "components-data-display--avatar",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/Avatar.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Avatar-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Avatar-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 1
+    },
+    {
+      "component": "Badge",
+      "storyId": "components-data-display--badge",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/Badge.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Badge-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Badge-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 0
+    },
+    {
+      "component": "CounterBadge",
+      "storyId": "components-data-display--counter-badge",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "semantic-pass",
+        "evidence": "web-screens/CounterBadge-semantic.png"
+      },
+      "screenshot": "web-screens/CounterBadge.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/CounterBadge-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/CounterBadge-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 1
+    },
+    {
+      "component": "Card",
+      "storyId": "components-data-display--card",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/Card.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Card-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Card-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 1
+    },
+    {
+      "component": "List",
+      "storyId": "components-data-display--list",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/List.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/List-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/List-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 3
+    },
+    {
+      "component": "ListRow",
+      "storyId": "components-data-display--list-row",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/ListRow-action.png",
+        "assertions": "async()=>{await p.locator('[data-hjm-renderer] button').click();await text(p.getByRole('status'),'선수 상세를 열었어요')}"
+      },
+      "screenshot": "web-screens/ListRow.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/ListRow-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/ListRow-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 1
+    },
+    {
+      "component": "VirtualList",
+      "storyId": "components-data-display--virtual-list",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/VirtualList-action.png",
+        "assertions": "async()=>{let q=p.getByRole('list',{name:'가상화 예제 1000개 항목'});await q.evaluate(e=>e.scrollTop=15000);await p.waitForTimeout(100);assert((await q.innerText()).includes('항목 23'));assert((await q.getByRole('listitem').count())<20)}"
+      },
+      "screenshot": "web-screens/VirtualList.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/VirtualList-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/VirtualList-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 11
+    },
+    {
+      "component": "Accordion",
+      "storyId": "components-data-display--accordion",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Accordion-action.png",
+        "assertions": "async()=>{let q=p.getByRole('button',{name:/언제 도착/});await q.click();await attr(q,'aria-expanded','true');assert(await p.getByText('내일 도착할 예정입니다.',{exact:true}).isVisible());await q.click();await attr(q,'aria-expanded','false')}"
+      },
+      "screenshot": "web-screens/Accordion.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Accordion-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Accordion-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 2
+    },
+    {
+      "component": "Collapsible",
+      "storyId": "components-data-display--collapsible",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Collapsible-action.png",
+        "assertions": "async()=>{let q=p.getByRole('button',{name:/환불/});await q.click();await attr(q,'aria-expanded','true');assert(await p.getByText('받은 날부터 7일 안에는 그대로 돌려드립니다.').isVisible())}"
+      },
+      "screenshot": "web-screens/Collapsible.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Collapsible-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Collapsible-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 3
+    },
+    {
+      "component": "Asset",
+      "storyId": "components-data-display--asset",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/Asset.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Asset-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Asset-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 7
+    },
+    {
+      "component": "Statistic",
+      "storyId": "components-data-display--statistic",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/Statistic.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Statistic-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Statistic-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 0
+    },
+    {
+      "component": "Timeline",
+      "storyId": "components-data-display--timeline",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/Timeline.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Timeline-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Timeline-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 0
+    },
+    {
+      "component": "DataTable",
+      "storyId": "components-data-display--data-table",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/DataTable-action.png",
+        "assertions": "async()=>{await p.getByRole('button',{name:'제목 정렬',exact:true}).click();assert.equal(await p.locator('[aria-sort=ascending]').count(),1);await p.getByRole('checkbox',{name:'모든 기록 선택'}).click();await text(p.getByRole('status'),'3개 골랐어요')}"
+      },
+      "screenshot": "web-screens/DataTable.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/DataTable-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/DataTable-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 7
+    },
+    {
+      "component": "Tree",
+      "storyId": "components-data-display--tree",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Tree-action.png",
+        "assertions": "async()=>{let q=p.getByRole('treeitem',{name:/2단계 2개 중 1번째/});await q.focus();await q.press('ArrowRight');await attr(q,'aria-expanded','true')}"
+      },
+      "screenshot": "web-screens/Tree.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Tree-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Tree-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 6
+    },
+    {
+      "component": "Calendar",
+      "storyId": "components-data-display--calendar",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Calendar-action.png",
+        "assertions": "async()=>{await p.getByRole('button',{name:'다음 달',exact:true}).click();await text(p.locator('[data-hjm-renderer]'),'2026년 10월')}"
+      },
+      "screenshot": "web-screens/Calendar.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Calendar-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Calendar-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 53
+    },
+    {
+      "component": "Carousel",
+      "storyId": "components-data-display--carousel",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Carousel-action.png",
+        "assertions": "async()=>{await p.getByRole('button',{name:'다음',exact:true}).click();assert(await p.getByText('언제든 설정을 바꿀 수 있어요',{exact:true}).isVisible())}"
+      },
+      "screenshot": "web-screens/Carousel.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Carousel-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Carousel-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 8
+    },
+    {
+      "component": "DescriptionList",
+      "storyId": "components-data-display--description-list",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/DescriptionList.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/DescriptionList-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/DescriptionList-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 0
+    },
+    {
+      "component": "Image",
+      "storyId": "components-data-display--image",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "semantic-pass",
+        "evidence": "web-screens/Image-semantic.png"
+      },
+      "screenshot": "web-screens/Image.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Image-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Image-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 0
+    },
+    {
+      "component": "QRCode",
+      "storyId": "components-data-display--qr-code",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "semantic-pass",
+        "evidence": "web-screens/QRCode-semantic.png"
+      },
+      "screenshot": "web-screens/QRCode.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/QRCode-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/QRCode-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 1
+    },
+    {
+      "component": "Tag",
+      "storyId": "components-data-display--tag",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/Tag.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Tag-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Tag-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 0
+    },
+    {
+      "component": "EmptyState",
+      "storyId": "components-feedback--empty-state",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/EmptyState.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/EmptyState-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/EmptyState-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 2
+    },
+    {
+      "component": "Notice",
+      "storyId": "components-feedback--notice",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/Notice.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Notice-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Notice-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 1
+    },
+    {
+      "component": "Progress",
+      "storyId": "components-feedback--progress",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/Progress.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Progress-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Progress-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 0
+    },
+    {
+      "component": "Spinner",
+      "storyId": "components-feedback--spinner",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/Spinner.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Spinner-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet; differs from 9/29 baseline only in animation frame",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Spinner-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 1
+    },
+    {
+      "component": "Skeleton",
+      "storyId": "components-feedback--skeleton",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/Skeleton.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Skeleton-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet; differs from 9/29 baseline only in animation frame",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Skeleton-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 0
+    },
+    {
+      "component": "Result",
+      "storyId": "components-feedback--result",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Result-action.png",
+        "assertions": "async()=>{await p.getByRole('button',{name:'확인',exact:true}).click();await text(p.locator('[data-hjm-renderer]'),'확인했어요')}"
+      },
+      "screenshot": "web-screens/Result.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Result-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Result-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 2
+    },
+    {
+      "component": "BottomInfo",
+      "storyId": "components-feedback--bottom-info",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/BottomInfo.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/BottomInfo-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/BottomInfo-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 1
+    },
+    {
+      "component": "Toast",
+      "storyId": "components-feedback--toast",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Toast-action.png",
+        "assertions": "async()=>{await p.getByRole('button',{name:'닫기',exact:true}).click();await text(p.getByRole('status'),'알림을 닫았어요');assert.equal(await p.locator('.hjm-toast').count(),0)}"
+      },
+      "screenshot": "web-screens/Toast.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Toast-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Toast-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 3
+    },
+    {
+      "component": "Watermark",
+      "storyId": "components-feedback--watermark",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Watermark-action.png",
+        "assertions": "async()=>{const t=await p.locator('.hjm-watermark__overlay pattern text').evaluateAll(es=>es.map(e=>e.textContent));assert.deepEqual(t,['HJM','검토용 문서']);\nconst boxes=await p.locator('.hjm-watermark__overlay').evaluate(svg=>{const rect=svg.querySelector('rect').getBoundingClientRect();return {w:rect.width,h:rect.height}});assert(boxes.w>0&&boxes.h>0);\nconst btn=p.getByRole('button',{name:'문서 저장'});const b=await btn.boundingBox();const hit=await p.evaluate(([x,y])=>document.elementFromPoint(x,y)?.closest('button')?.textContent,[b.x+b.width/2,b.y+b.height/2]);assert.equal(hit,'문서 저장');\nawait btn.click();await text(p.locator('[data-hjm-renderer]'),'저장됨');\nconst sel=await p.evaluate(()=>{const n=document.querySelector('.hjm-watermark__content p');const r=document.createRange();r.selectNodeContents(n);getSelection().removeAllRanges();getSelection().addRange(r);return getSelection().toString()});assert(sel.includes('워터마크 위에서도'))}"
+      },
+      "screenshot": "web-screens/Watermark.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Watermark-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Opened at full size (1100 and 390) plus dark/RTL/200% variant",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Watermark-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 1
+    },
+    {
+      "component": "ThinkingOrb",
+      "storyId": "components-feedback--thinking-orb",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "lifecycle-pass",
+        "evidence": [
+          "web-screens/ThinkingOrb-composed.png",
+          "web-screens/ThinkingOrbPaused-composed.png"
+        ]
+      },
+      "screenshot": "web-screens/ThinkingOrb.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/ThinkingOrb-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/ThinkingOrb-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 1
+    },
+    {
+      "component": "Tour",
+      "storyId": "components-overlays--tour",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Tour-action.png",
+        "assertions": "async()=>{await p.getByRole('button',{name:'둘러보기 시작'}).click();await p.getByRole('dialog').waitFor();await p.getByRole('button',{name:'다음',exact:true}).click();await p.getByRole('button',{name:'다음',exact:true}).click();await p.getByRole('button',{name:'다 봤어요'}).click();await text(p.locator('[data-hjm-renderer]'),'끝까지 보셨어요')}"
+      },
+      "screenshot": "web-screens/Tour.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Tour-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Tour-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 6
+    },
+    {
+      "component": "Dialog",
+      "storyId": "components-overlays--dialog",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Dialog-action.png",
+        "assertions": "async()=>{await p.getByRole('button',{name:'Dialog 열기',exact:true}).click();await p.getByRole('dialog').waitFor();await shot('Dialog-open');await p.keyboard.press('Escape');assert.equal(await p.getByRole('dialog').count(),0)}"
+      },
+      "screenshot": "web-screens/Dialog.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Dialog-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Dialog-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 1
+    },
+    {
+      "component": "AlertDialog",
+      "storyId": "components-overlays--alert-dialog",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/AlertDialog-action.png",
+        "assertions": "async()=>{await p.getByRole('button',{name:'AlertDialog 열기',exact:true}).click();await shot('AlertDialog-open');await p.getByRole('button',{name:'취소',exact:true}).click();assert.equal(await p.getByRole('alertdialog').count(),0)}"
+      },
+      "screenshot": "web-screens/AlertDialog.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/AlertDialog-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/AlertDialog-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 2
+    },
+    {
+      "component": "Sheet",
+      "storyId": "components-overlays--sheet",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Sheet-action.png",
+        "assertions": "async()=>{await p.getByRole('button',{name:'Sheet 열기'}).click();await p.getByRole('dialog').waitFor();await shot('Sheet-open');await p.getByRole('button',{name:'필터 닫기'}).click();assert.equal(await p.getByRole('dialog').count(),0)}"
+      },
+      "screenshot": "web-screens/Sheet.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Sheet-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Sheet-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 1
+    },
+    {
+      "component": "SidePanel",
+      "storyId": "components-overlays--side-panel",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/SidePanel-action.png",
+        "assertions": "async()=>{await p.getByRole('button',{name:'고치기'}).first().click();await p.getByRole('dialog').waitFor();await shot('SidePanel-open');await p.keyboard.press('Escape');assert.equal(await p.getByRole('dialog').count(),0)}"
+      },
+      "screenshot": "web-screens/SidePanel.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/SidePanel-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/SidePanel-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 7
+    },
+    {
+      "component": "Popover",
+      "storyId": "components-overlays--popover",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Popover-action.png",
+        "assertions": "async()=>{await p.getByRole('button',{name:'필터',exact:true}).click();await shot('Popover-open');await p.keyboard.press('Escape');await attr(p.getByRole('button',{name:'필터',exact:true}),'aria-expanded','false')}"
+      },
+      "screenshot": "web-screens/Popover.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Popover-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Popover-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 7
+    },
+    {
+      "component": "Tooltip",
+      "storyId": "components-overlays--tooltip",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Tooltip-action.png",
+        "assertions": "async()=>{await p.getByRole('button',{name:'도움말에 포커스하거나 가리키기'}).focus();await p.getByRole('tooltip').waitFor();await text(p.getByRole('tooltip'),'자세한 도움말');await shot('Tooltip-open')}"
+      },
+      "screenshot": "web-screens/Tooltip.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Tooltip-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Tooltip-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 1
+    },
+    {
+      "component": "CommandPalette",
+      "storyId": "components-overlays--command-palette",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/CommandPalette-action.png",
+        "assertions": "async()=>{await p.getByRole('button',{name:'명령 열기'}).click();await shot('CommandPalette-open');await p.getByRole('option').first().click();await text(p.locator('[data-hjm-renderer]'),'실행했어요')}"
+      },
+      "screenshot": "web-screens/CommandPalette.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/CommandPalette-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/CommandPalette-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 1
+    },
+    {
+      "component": "Affix",
+      "storyId": "components-infrastructure--affix",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Affix-action.png",
+        "assertions": "async()=>{const a=p.locator('[data-hjm-affix]');const sc=a.locator('xpath=..');assert.equal(await a.getAttribute('data-affixed'),'false');await text(p.locator('[data-hjm-renderer]'),'일반 위치');\nawait sc.evaluate(e=>e.scrollTop=220);await p.waitForTimeout(200);await attr(a,'data-affixed','true');await text(p.locator('[data-hjm-renderer]'),'상단 고정 중');\nconst g=await sc.evaluate(e=>{const c=e.getBoundingClientRect(),x=e.querySelector('[data-hjm-affix]').getBoundingClientRect();return x.top-c.top});assert(Math.abs(g-8)<=1.5,'offset '+g);\nawait shot('Affix-stuck');const btn=p.getByRole('button',{name:'변경 저장'});await btn.focus();await btn.press('Enter');await p.getByRole('button',{name:'저장됨'}).waitFor();assert(await p.getByRole('button',{name:'저장됨'}).evaluate(e=>e===document.activeElement));\nawait sc.evaluate(e=>e.scrollTop=0);await p.waitForTimeout(200);await attr(a,'data-affixed','false');await text(p.locator('[data-hjm-renderer]'),'일반 위치')}"
+      },
+      "screenshot": "web-screens/Affix.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/Affix-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Opened at full size (1100 and 390) plus dark/RTL/200% variant",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/Affix-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 1
+    },
+    {
+      "component": "DesignSystemProvider",
+      "storyId": "components-infrastructure--design-system-provider",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "semantic-pass",
+        "evidence": "web-screens/DesignSystemProvider-semantic.png"
+      },
+      "screenshot": "web-screens/DesignSystemProvider.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/DesignSystemProvider-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/DesignSystemProvider-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 0
+    },
+    {
+      "component": "SkipNav",
+      "storyId": "components-infrastructure--skip-nav",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/SkipNav-action.png",
+        "assertions": "async()=>{await p.keyboard.press('Tab');let q=p.getByRole('link',{name:'본문 바로가기'});await q.press('Enter');assert(await p.locator('#showcase-main').evaluate(e=>e===document.activeElement))}"
+      },
+      "screenshot": "web-screens/SkipNav.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/SkipNav-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/SkipNav-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 3
+    },
+    {
+      "component": "VisuallyHidden",
+      "storyId": "components-infrastructure--visually-hidden",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "semantic-pass",
+        "evidence": "web-screens/VisuallyHidden-semantic.png"
+      },
+      "screenshot": "web-screens/VisuallyHidden.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "overflowing": []
+      },
+      "compactScreenshot": "web-screens/VisuallyHidden-390.png",
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Contact sheet reviewed; pixel-identical to the accepted 2026-09-29 screenshot",
+      "responsiveReview": {
+        "documentWidth": 390,
+        "pass": true,
+        "screenshot": "web-screens/VisuallyHidden-390.png",
+        "reviewed": "contact sheet"
+      },
+      "controlsCount": 1
+    }
+  ],
+  "interactionAdapters": [
+    {
+      "case": "render",
+      "screenshot": "web-screens/Adapters-render.png",
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "compactScreenshot": "web-screens/Adapters-390.png",
+      "status": "pass",
+      "runtimeErrors": []
+    },
+    {
+      "case": "sortable-keyboard-buttons",
+      "focus1": {
+        "tag": "BUTTON",
+        "text": "숲길 뒤로",
+        "row": "forest"
+      },
+      "focus2": {
+        "tag": "BUTTON",
+        "text": "숲길 앞으로",
+        "row": "forest"
+      },
+      "announcement": "숲길, 3개 중 3번째",
+      "orderAfterPrev": "바닷가 → 작은 카페 → 숲길",
+      "screenshot": "web-screens/Adapters-sortable-keyboard.png",
+      "status": "pass",
+      "runtimeErrors": []
+    },
+    {
+      "case": "sortable-keyboard-handle",
+      "order": "숲길 → 작은 카페 → 바닷가",
+      "focus": {
+        "tag": "BUTTON",
+        "label": "바닷가 순서 이동",
+        "row": "sea"
+      },
+      "domOrder": [
+        "forest",
+        "cafe",
+        "sea"
+      ],
+      "screenshot": "web-screens/Adapters-sortable-handle.png",
+      "status": "pass",
+      "runtimeErrors": []
+    },
+    {
+      "case": "sortable-handle-escape",
+      "order": "숲길 → 바닷가 → 작은 카페",
+      "status": "pass",
+      "runtimeErrors": []
+    },
+    {
+      "case": "swipe-actions",
+      "screenshot": "web-screens/Adapters-swipe.png",
+      "status": "pass",
+      "runtimeErrors": []
+    },
+    {
+      "case": "content-transition",
+      "opacitySamples": [
+        0.303716,
+        0.647106,
+        0.815288,
+        0.945357,
+        0.985114,
+        0.999597,
+        1,
+        1
+      ],
+      "screenshot": "web-screens/Adapters-content.png",
+      "status": "pass",
+      "runtimeErrors": []
+    },
+    {
+      "case": "carousel-motion",
+      "width": 640,
+      "translateSamples": [
+        0,
+        -17,
+        -46,
+        -82,
+        -121,
+        -162,
+        -203,
+        -243,
+        -280,
+        -316,
+        -349,
+        -379,
+        -407,
+        -432,
+        -455,
+        -475,
+        -494,
+        -510,
+        -525,
+        -538,
+        -550,
+        -560,
+        -570,
+        -578,
+        -585,
+        -591,
+        -597,
+        -602,
+        -607,
+        -611,
+        -614,
+        -617,
+        -620,
+        -622,
+        -624,
+        -626,
+        -628,
+        -629,
+        -631,
+        -632,
+        -633,
+        -634,
+        -635,
+        -636,
+        -637,
+        -638,
+        -639,
+        -640
+      ],
+      "intermediateFrames": 44,
+      "screenshot": "web-screens/Adapters-carousel.png",
+      "status": "pass",
+      "runtimeErrors": []
+    },
+    {
+      "case": "celebration",
+      "canvas": {
+        "w": 1100,
+        "h": 900,
+        "opaquePixels": 701,
+        "colorBuckets": 5
+      },
+      "screenshot": "web-screens/Adapters-celebration.png",
+      "after": 0,
+      "status": "pass",
+      "runtimeErrors": []
+    },
+    {
+      "case": "reduced-motion",
+      "carouselSamples": [
+        0,
+        -640
+      ],
+      "celebrationOpaque": 0,
+      "status": "pass",
+      "runtimeErrors": []
+    },
+    {
+      "case": "dark-rtl-200",
+      "compact": {
+        "documentWidth": 390
+      },
+      "screenshot": "web-screens/Adapters-dark-rtl-200.png",
+      "rtlSlideVisible": true,
+      "screenshotAfter": "web-screens/Adapters-dark-rtl-200-carousel.png",
+      "status": "pass",
+      "runtimeErrors": []
+    }
+  ],
+  "variants": [
+    {
+      "component": "Field",
+      "theme": "light",
+      "direction": "ltr",
+      "textScale": 1,
+      "width": 390,
+      "screenshot": "web-screens/Field-light-compact.png",
+      "pageOverflow": false,
+      "render": "pass"
+    },
+    {
+      "component": "SearchField",
+      "theme": "light",
+      "direction": "ltr",
+      "textScale": 1,
+      "width": 390,
+      "screenshot": "web-screens/SearchField-light-compact.png",
+      "pageOverflow": false,
+      "render": "pass"
+    },
+    {
+      "component": "TextArea",
+      "theme": "light",
+      "direction": "ltr",
+      "textScale": 1,
+      "width": 390,
+      "screenshot": "web-screens/TextArea-light-compact.png",
+      "pageOverflow": false,
+      "render": "pass"
+    },
+    {
+      "component": "PasswordField",
+      "theme": "light",
+      "direction": "ltr",
+      "textScale": 1,
+      "width": 390,
+      "screenshot": "web-screens/PasswordField-light-compact.png",
+      "pageOverflow": false,
+      "render": "pass"
+    },
+    {
+      "component": "OtpField",
+      "theme": "light",
+      "direction": "ltr",
+      "textScale": 1,
+      "width": 390,
+      "screenshot": "web-screens/OtpField-light-compact.png",
+      "pageOverflow": false,
+      "render": "pass"
+    },
+    {
+      "component": "NumberField",
+      "theme": "light",
+      "direction": "ltr",
+      "textScale": 1,
+      "width": 390,
+      "screenshot": "web-screens/NumberField-light-compact.png",
+      "pageOverflow": false,
+      "render": "pass"
+    },
+    {
+      "component": "Select",
+      "theme": "light",
+      "direction": "ltr",
+      "textScale": 1,
+      "width": 390,
+      "screenshot": "web-screens/Select-light-compact.png",
+      "pageOverflow": false,
+      "render": "pass"
+    },
+    {
+      "component": "Combobox",
+      "theme": "light",
+      "direction": "ltr",
+      "textScale": 1,
+      "width": 390,
+      "screenshot": "web-screens/Combobox-light-compact.png",
+      "pageOverflow": false,
+      "render": "pass"
+    },
+    {
+      "component": "DatePicker",
+      "theme": "light",
+      "direction": "ltr",
+      "textScale": 1,
+      "width": 390,
+      "screenshot": "web-screens/DatePicker-light-compact.png",
+      "pageOverflow": false,
+      "render": "pass"
+    },
+    {
+      "component": "Checkbox",
+      "theme": "light",
+      "direction": "ltr",
+      "textScale": 1,
+      "width": 390,
+      "screenshot": "web-screens/Checkbox-light-compact.png",
+      "pageOverflow": false,
+      "render": "pass"
+    },
+    {
+      "component": "Radio",
+      "theme": "light",
+      "direction": "ltr",
+      "textScale": 1,
+      "width": 390,
+      "screenshot": "web-screens/Radio-light-compact.png",
+      "pageOverflow": false,
+      "render": "pass"
+    },
+    {
+      "component": "CheckboxGroup",
+      "theme": "light",
+      "direction": "ltr",
+      "textScale": 1,
+      "width": 390,
+      "screenshot": "web-screens/CheckboxGroup-light-compact.png",
+      "pageOverflow": false,
+      "render": "pass"
+    },
+    {
+      "component": "RadioGroup",
+      "theme": "light",
+      "direction": "ltr",
+      "textScale": 1,
+      "width": 390,
+      "screenshot": "web-screens/RadioGroup-light-compact.png",
+      "pageOverflow": false,
+      "render": "pass"
+    },
+    {
+      "component": "Chip",
+      "theme": "light",
+      "direction": "ltr",
+      "textScale": 1,
+      "width": 390,
+      "screenshot": "web-screens/Chip-light-compact.png",
+      "pageOverflow": false,
+      "render": "pass"
+    },
+    {
+      "component": "SegmentedControl",
+      "theme": "light",
+      "direction": "ltr",
+      "textScale": 1,
+      "width": 390,
+      "screenshot": "web-screens/SegmentedControl-light-compact.png",
+      "pageOverflow": false,
+      "render": "pass"
+    },
+    {
+      "component": "ToggleGroup",
+      "theme": "light",
+      "direction": "ltr",
+      "textScale": 1,
+      "width": 390,
+      "screenshot": "web-screens/ToggleGroup-light-compact.png",
+      "pageOverflow": false,
+      "render": "pass"
+    },
+    {
+      "component": "TagsInput",
+      "theme": "light",
+      "direction": "ltr",
+      "textScale": 1,
+      "width": 390,
+      "screenshot": "web-screens/TagsInput-light-compact.png",
+      "pageOverflow": false,
+      "render": "pass"
+    },
+    {
+      "component": "DateRangePicker",
+      "theme": "light",
+      "direction": "ltr",
+      "textScale": 1,
+      "width": 390,
+      "screenshot": "web-screens/DateRangePicker-light-compact.png",
+      "pageOverflow": false,
+      "render": "pass"
+    },
+    {
+      "component": "Agreement",
+      "theme": "light",
+      "direction": "ltr",
+      "textScale": 1,
+      "width": 390,
+      "screenshot": "web-screens/Agreement-light-compact.png",
+      "pageOverflow": false,
+      "render": "pass"
+    },
+    {
+      "component": "FilePicker",
+      "theme": "light",
+      "direction": "ltr",
+      "textScale": 1,
+      "width": 390,
+      "screenshot": "web-screens/FilePicker-light-compact.png",
+      "pageOverflow": false,
+      "render": "pass"
+    },
+    {
+      "component": "Field",
+      "theme": "dark",
+      "direction": "rtl",
+      "textScale": 2,
+      "width": 390,
+      "screenshot": "web-screens/Field-dark-compact.png",
+      "pageOverflow": false,
+      "render": "pass"
+    },
+    {
+      "component": "SearchField",
+      "theme": "dark",
+      "direction": "rtl",
+      "textScale": 2,
+      "width": 390,
+      "screenshot": "web-screens/SearchField-dark-compact.png",
+      "pageOverflow": false,
+      "render": "pass"
+    },
+    {
+      "component": "TextArea",
+      "theme": "dark",
+      "direction": "rtl",
+      "textScale": 2,
+      "width": 390,
+      "screenshot": "web-screens/TextArea-dark-compact.png",
+      "pageOverflow": false,
+      "render": "pass"
+    },
+    {
+      "component": "PasswordField",
+      "theme": "dark",
+      "direction": "rtl",
+      "textScale": 2,
+      "width": 390,
+      "screenshot": "web-screens/PasswordField-dark-compact.png",
+      "pageOverflow": false,
+      "render": "pass"
+    },
+    {
+      "component": "OtpField",
+      "theme": "dark",
+      "direction": "rtl",
+      "textScale": 2,
+      "width": 390,
+      "screenshot": "web-screens/OtpField-dark-compact.png",
+      "pageOverflow": false,
+      "render": "pass"
+    },
+    {
+      "component": "NumberField",
+      "theme": "dark",
+      "direction": "rtl",
+      "textScale": 2,
+      "width": 390,
+      "screenshot": "web-screens/NumberField-dark-compact.png",
+      "pageOverflow": false,
+      "render": "pass"
+    },
+    {
+      "component": "Select",
+      "theme": "dark",
+      "direction": "rtl",
+      "textScale": 2,
+      "width": 390,
+      "screenshot": "web-screens/Select-dark-compact.png",
+      "pageOverflow": false,
+      "render": "pass"
+    },
+    {
+      "component": "Combobox",
+      "theme": "dark",
+      "direction": "rtl",
+      "textScale": 2,
+      "width": 390,
+      "screenshot": "web-screens/Combobox-dark-compact.png",
+      "pageOverflow": false,
+      "render": "pass"
+    },
+    {
+      "component": "DatePicker",
+      "theme": "dark",
+      "direction": "rtl",
+      "textScale": 2,
+      "width": 390,
+      "screenshot": "web-screens/DatePicker-dark-compact.png",
+      "pageOverflow": false,
+      "render": "pass"
+    },
+    {
+      "component": "Checkbox",
+      "theme": "dark",
+      "direction": "rtl",
+      "textScale": 2,
+      "width": 390,
+      "screenshot": "web-screens/Checkbox-dark-compact.png",
+      "pageOverflow": false,
+      "render": "pass"
+    },
+    {
+      "component": "Radio",
+      "theme": "dark",
+      "direction": "rtl",
+      "textScale": 2,
+      "width": 390,
+      "screenshot": "web-screens/Radio-dark-compact.png",
+      "pageOverflow": false,
+      "render": "pass"
+    },
+    {
+      "component": "CheckboxGroup",
+      "theme": "dark",
+      "direction": "rtl",
+      "textScale": 2,
+      "width": 390,
+      "screenshot": "web-screens/CheckboxGroup-dark-compact.png",
+      "pageOverflow": false,
+      "render": "pass"
+    },
+    {
+      "component": "RadioGroup",
+      "theme": "dark",
+      "direction": "rtl",
+      "textScale": 2,
+      "width": 390,
+      "screenshot": "web-screens/RadioGroup-dark-compact.png",
+      "pageOverflow": false,
+      "render": "pass"
+    },
+    {
+      "component": "Chip",
+      "theme": "dark",
+      "direction": "rtl",
+      "textScale": 2,
+      "width": 390,
+      "screenshot": "web-screens/Chip-dark-compact.png",
+      "pageOverflow": false,
+      "render": "pass"
+    },
+    {
+      "component": "SegmentedControl",
+      "theme": "dark",
+      "direction": "rtl",
+      "textScale": 2,
+      "width": 390,
+      "screenshot": "web-screens/SegmentedControl-dark-compact.png",
+      "pageOverflow": false,
+      "render": "pass"
+    },
+    {
+      "component": "ToggleGroup",
+      "theme": "dark",
+      "direction": "rtl",
+      "textScale": 2,
+      "width": 390,
+      "screenshot": "web-screens/ToggleGroup-dark-compact.png",
+      "pageOverflow": false,
+      "render": "pass"
+    },
+    {
+      "component": "TagsInput",
+      "theme": "dark",
+      "direction": "rtl",
+      "textScale": 2,
+      "width": 390,
+      "screenshot": "web-screens/TagsInput-dark-compact.png",
+      "pageOverflow": false,
+      "render": "pass"
+    },
+    {
+      "component": "DateRangePicker",
+      "theme": "dark",
+      "direction": "rtl",
+      "textScale": 2,
+      "width": 390,
+      "screenshot": "web-screens/DateRangePicker-dark-compact.png",
+      "pageOverflow": false,
+      "render": "pass"
+    },
+    {
+      "component": "Agreement",
+      "theme": "dark",
+      "direction": "rtl",
+      "textScale": 2,
+      "width": 390,
+      "screenshot": "web-screens/Agreement-dark-compact.png",
+      "pageOverflow": false,
+      "render": "pass"
+    },
+    {
+      "component": "FilePicker",
+      "theme": "dark",
+      "direction": "rtl",
+      "textScale": 2,
+      "width": 390,
+      "screenshot": "web-screens/FilePicker-dark-compact.png",
+      "pageOverflow": false,
+      "render": "pass"
+    },
+    {
+      "component": "ColorPicker",
+      "theme": "light",
+      "direction": "ltr",
+      "textScale": 1,
+      "width": 390,
+      "screenshot": "web-screens/ColorPicker-light-compact.png",
+      "pageOverflow": false,
+      "render": "pass",
+      "runtimeErrors": []
+    },
+    {
+      "component": "ColorPicker",
+      "theme": "dark",
+      "direction": "rtl",
+      "textScale": 2,
+      "width": 390,
+      "screenshot": "web-screens/ColorPicker-dark-compact.png",
+      "pageOverflow": false,
+      "render": "pass",
+      "runtimeErrors": []
+    },
+    {
+      "component": "Watermark",
+      "theme": "light",
+      "direction": "ltr",
+      "textScale": 1,
+      "width": 390,
+      "screenshot": "web-screens/Watermark-light-compact.png",
+      "pageOverflow": false,
+      "render": "pass",
+      "runtimeErrors": []
+    },
+    {
+      "component": "Watermark",
+      "theme": "dark",
+      "direction": "rtl",
+      "textScale": 2,
+      "width": 390,
+      "screenshot": "web-screens/Watermark-dark-compact.png",
+      "pageOverflow": false,
+      "render": "pass",
+      "runtimeErrors": []
+    },
+    {
+      "component": "Affix",
+      "theme": "light",
+      "direction": "ltr",
+      "textScale": 1,
+      "width": 390,
+      "screenshot": "web-screens/Affix-light-compact.png",
+      "pageOverflow": false,
+      "render": "pass",
+      "runtimeErrors": []
+    },
+    {
+      "component": "Affix",
+      "theme": "dark",
+      "direction": "rtl",
+      "textScale": 2,
+      "width": 390,
+      "screenshot": "web-screens/Affix-dark-compact.png",
+      "pageOverflow": false,
+      "render": "pass",
+      "runtimeErrors": []
+    },
+    {
+      "component": "OptionalMotion",
+      "theme": "light",
+      "direction": "ltr",
+      "textScale": 1,
+      "width": 390,
+      "screenshot": "web-screens/OptionalMotion-light-compact.png",
+      "pageOverflow": false,
+      "render": "pass",
+      "runtimeErrors": []
+    },
+    {
+      "component": "OptionalMotion",
+      "theme": "dark",
+      "direction": "rtl",
+      "textScale": 2,
+      "width": 390,
+      "screenshot": "web-screens/OptionalMotion-dark-compact.png",
+      "pageOverflow": false,
+      "render": "pass",
+      "runtimeErrors": []
+    }
+  ],
+  "semantic": [
+    {
+      "component": "Anchor",
+      "status": "pass",
+      "screenshot": "web-screens/Anchor-semantic.png"
+    },
+    {
+      "component": "Breadcrumb",
+      "status": "pass",
+      "screenshot": "web-screens/Breadcrumb-semantic.png"
+    },
+    {
+      "component": "QRCode",
+      "status": "pass",
+      "screenshot": "web-screens/QRCode-semantic.png"
+    },
+    {
+      "component": "Masonry",
+      "status": "pass",
+      "screenshot": "web-screens/Masonry-semantic.png"
+    },
+    {
+      "component": "CounterBadge",
+      "status": "pass",
+      "screenshot": "web-screens/CounterBadge-semantic.png"
+    },
+    {
+      "component": "Image",
+      "status": "pass",
+      "screenshot": "web-screens/Image-semantic.png"
+    },
+    {
+      "component": "VisuallyHidden",
+      "status": "pass",
+      "screenshot": "web-screens/VisuallyHidden-semantic.png"
+    },
+    {
+      "component": "DesignSystemProvider",
+      "status": "pass",
+      "screenshot": "web-screens/DesignSystemProvider-semantic.png"
+    }
+  ],
+  "extra": [
+    {
+      "component": "ThinkingOrb",
+      "storyId": "patterns-thinking-orb--all-states",
+      "status": "pass",
+      "screenshot": "web-screens/ThinkingOrb-composed.png"
+    },
+    {
+      "component": "ThinkingOrbPaused",
+      "storyId": "patterns-thinking-orb--paused",
+      "status": "pass",
+      "screenshot": "web-screens/ThinkingOrbPaused-composed.png"
+    },
+    {
+      "component": "FloatingActionButton",
+      "storyId": "patterns-floating-action-button--notes",
+      "status": "pass",
+      "screenshot": "web-screens/FloatingActionButton-composed.png"
+    },
+    {
+      "component": "Rating",
+      "storyId": "patterns-rating--half-point",
+      "status": "pass",
+      "screenshot": "web-screens/Rating-composed.png"
+    },
+    {
+      "component": "TimePicker",
+      "storyId": "patterns-time-selection--choose-time",
+      "status": "pass",
+      "screenshot": "web-screens/TimePicker-composed.png"
+    },
+    {
+      "component": "Cascader",
+      "storyId": "patterns-tree--cascader-composition",
+      "status": "pass",
+      "screenshot": "web-screens/Cascader-composed.png"
+    },
+    {
+      "component": "TreeSelect",
+      "storyId": "patterns-tree--tree-select-composition",
+      "status": "pass",
+      "screenshot": "web-screens/TreeSelect-composed.png"
+    },
+    {
+      "component": "ConfirmPopover",
+      "storyId": "patterns-popover--reversible-confirmation",
+      "status": "pass",
+      "screenshot": "web-screens/ConfirmPopover-composed.png"
+    },
+    {
+      "component": "AnimatedStatistic_MorphingMenu",
+      "storyId": "patterns-optional-motion--playground",
+      "status": "pass",
+      "screenshot": "web-screens/AnimatedStatistic_MorphingMenu-composed.png"
+    }
+  ],
+  "defects": [
+    {
+      "id": "W-0930-1",
+      "component": "ColorPicker",
+      "severity": "minor/visual",
+      "regression": "new component (not in 9/29 scope)",
+      "repro": "components-inputs--color-picker, look at the 불투명도 range",
+      "expected": "HJM primary track/thumb like Slider (#075985 light)",
+      "actual": "Chromium default accent rgb(0,117,255) light, pale blue in dark; .hjm-color-picker CSS sets no accent-color/range styling",
+      "evidence": [
+        "web-screens/ColorPicker.png",
+        "web-screens/ColorPicker-dark-compact.png",
+        "web-screens/Slider.png"
+      ]
+    },
+    {
+      "id": "W-0930-2",
+      "component": "MorphingMenu (Patterns/Optional Motion)",
+      "severity": "moderate/visual+target size",
+      "regression": "pre-existing (same code at 9/29 6c9b155), not caught because 9/29 checked only the motion path in LTR",
+      "repro": "patterns-optional-motion--playground with globals motion:reduced or direction:rtl",
+      "expected": "fallback Menu trigger styled like HJM Button, >=44px target",
+      "actual": "unstyled native <button> (rgb(239,239,239) bg, 2px outset border, 68x26px); menu itself still opens and 저장 selects",
+      "evidence": [
+        "web-screens/OptionalMotion-reduced-trigger.png",
+        "web-screens/OptionalMotion-rtl-trigger.png",
+        "web-screens/OptionalMotion-dark-compact.png"
+      ]
+    }
+  ],
+  "observations": [
+    "Affix story: status span abuts button with no gap (fixture copy, not component)",
+    "RTL variants use Korean copy, so neutral punctuation lands at line start (e.g. ColorPicker \"#b94627cc :선택한 색상\", Watermark \".니다\"); expected Unicode bidi, same as 9/29 variants",
+    "BottomNavigation 390 fullPage capture shows the fixed bar mid-page: capture artifact of fullPage, not layout"
+  ],
+  "limits": "Local headless Chromium only; not Safari/Firefox, screen reader, consumer apps, native, or deployed release. Pointer drag of SortableCollection was not re-run here (keyboard only). Variant matrix is the 9/29 20-input set plus ColorPicker/Watermark/Affix/OptionalMotion/Adapters, not every permutation."
+}

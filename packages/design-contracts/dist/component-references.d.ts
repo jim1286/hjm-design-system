@@ -121,8 +121,8 @@ declare const antDesignReferenceSources: readonly [{
 }, {
     readonly name: "Cascader";
     readonly category: "data-entry";
-    readonly targets: readonly ["Cascader"];
-    readonly relationship: "direct";
+    readonly targets: readonly ["Popover", "Tree"];
+    readonly relationship: "decomposed";
 }, {
     readonly name: "Checkbox";
     readonly category: "data-entry";
@@ -166,8 +166,8 @@ declare const antDesignReferenceSources: readonly [{
 }, {
     readonly name: "Rate";
     readonly category: "data-entry";
-    readonly targets: readonly ["Rating"];
-    readonly relationship: "adapted";
+    readonly targets: readonly ["Slider", "Statistic"];
+    readonly relationship: "decomposed";
 }, {
     readonly name: "Select";
     readonly category: "data-entry";
@@ -186,8 +186,8 @@ declare const antDesignReferenceSources: readonly [{
 }, {
     readonly name: "TimePicker";
     readonly category: "data-entry";
-    readonly targets: readonly ["TimePicker"];
-    readonly relationship: "direct";
+    readonly targets: readonly ["Select"];
+    readonly relationship: "adapted";
 }, {
     readonly name: "Transfer";
     readonly category: "data-entry";
@@ -196,8 +196,8 @@ declare const antDesignReferenceSources: readonly [{
 }, {
     readonly name: "TreeSelect";
     readonly category: "data-entry";
-    readonly targets: readonly ["TreeSelect"];
-    readonly relationship: "direct";
+    readonly targets: readonly ["Popover", "Tree"];
+    readonly relationship: "decomposed";
 }, {
     readonly name: "Upload";
     readonly category: "data-entry";
@@ -338,8 +338,8 @@ declare const antDesignReferenceSources: readonly [{
 }, {
     readonly name: "Popconfirm";
     readonly category: "feedback";
-    readonly targets: readonly ["ConfirmPopover"];
-    readonly relationship: "adapted";
+    readonly targets: readonly ["Popover", "AlertDialog"];
+    readonly relationship: "decomposed";
 }, {
     readonly name: "Progress";
     readonly category: "feedback";

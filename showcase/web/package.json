@@ -19,7 +19,11 @@
     "react-dom": "19.2.3",
     "@number-flow/react": "0.6.2",
     "bloom-menu": "0.1.0",
-    "framer-motion": "13.4.4"
+    "framer-motion": "13.4.4",
+    "@dnd-kit/react": "0.5.0",
+    "embla-carousel-react": "8.6.0",
+    "canvas-confetti": "1.9.4",
+    "@dnd-kit/dom": "0.5.0"
   },
   "devDependencies": {
     "@storybook/addon-a11y": "^10.6.0",

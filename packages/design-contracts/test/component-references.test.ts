@@ -130,7 +130,7 @@ describe("component reference coverage", () => {
     // 2026-09-29 promotion: every beta renderer now has complete required evidence; Form's focus path was implemented, and ThinkingOrb Native passed installed iOS/Android Skia smoke.
     expect(catalogEntries.filter(({ surfaceStatus }) => surfaceStatus?.web === "beta")).toHaveLength(0);
     expect(catalogEntries.filter(({ surfaceStatus }) => surfaceStatus?.native === "beta")).toHaveLength(0);
-    expect(catalogEntries.filter(({ surfaceStatus }) => surfaceStatus?.web === "stable")).toHaveLength(100);
+    expect(catalogEntries.filter(({ surfaceStatus }) => surfaceStatus?.web === "stable")).toHaveLength(103);
     expect(catalogEntries.filter(({ surfaceStatus }) => surfaceStatus?.native === "stable")).toHaveLength(83);
   });
 
@@ -147,11 +147,11 @@ describe("component reference coverage", () => {
 
   it("does not list deliberately excluded candidates as future work", () => {
     const names = componentCatalog.map(entry => entry.name) as readonly string[];
-    for (const name of ["AppProvider", "Utility", "BorderBeam", "Chart"]) expect(names).not.toContain(name);
+    for (const name of ["AppProvider", "Utility", "BorderBeam", "Chart", "TimePicker", "Cascader", "Rating", "TreeSelect", "ConfirmPopover"]) expect(names).not.toContain(name);
   });
 
   it("explains every roadmap transition and every planned row", () => {
-    const planned: readonly ComponentCatalogEntry[] = componentCatalog.filter(
+    const planned = (componentCatalog as readonly ComponentCatalogEntry[]).filter(
       ({ status }) => status === "planned",
     );
     for (const entry of planned) {
@@ -161,11 +161,9 @@ describe("component reference coverage", () => {
     expect(Object.values(summarizeComponentRoadmap()).reduce((sum, count) => sum + count, 0)).toBe(
       roadmapEntries.length,
     );
-    // 2026-09-18: Cascader was the only `prerequisite` row. The Tree renderer
-    // derives the path from its own resolved nodes and commits an intermediate
-    // node by selecting it, so it became a composition like TreeSelect.
+    // Composition patterns are covered by their existing primitive targets.
     expect(summarizeComponentRoadmap()).toMatchObject({
-      composed: 5,
+      composed: 0,
       prerequisite: 0,
       declined: 0,
     });
@@ -215,12 +213,12 @@ describe("component reference coverage", () => {
     expect(summary).toMatchObject({
       total: 70,
       tracked: 70,
-      fullyMature: 62,
+      fullyMature: 70,
       partiallyMature: 0,
-      plannedOnly: 8,
-      fullyPreviewable: 62,
+      plannedOnly: 0,
+      fullyPreviewable: 70,
       partiallyPreviewable: 0,
-      contractOnly: 8,
+      contractOnly: 0,
     });
     expect(
       summary.fullyMature + summary.partiallyMature + summary.plannedOnly,
@@ -229,7 +227,7 @@ describe("component reference coverage", () => {
     // both halves shipped. Keep the axis reported rather than asserting it is
     // non-empty, so a future partial entry still has to state its own number.
     expect(summary.partiallyPreviewable).toBe(summary.partiallyMature);
-    expect(summary.contractOnly).toBeGreaterThan(0);
+    expect(summary.contractOnly).toBe(0);
 
     const coverageDocument = await readFile(
       new URL("../docs/ant-design-coverage.md", import.meta.url),

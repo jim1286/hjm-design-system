@@ -9,6 +9,7 @@ import { Select } from "../src/select.js";
 import { OtpField } from "../src/otp-field.js";
 import { Checkbox, Chip, SegmentedControl } from "../src/selection.js";
 import "../src/styles.css";
+import { hasHitArea } from "./touch-tap.js";
 
 let host: HTMLDivElement; let root: Root;
 beforeEach(() => { (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true; host = document.createElement("div"); document.body.append(host); root = createRoot(host); });
@@ -51,3 +52,18 @@ for (const theme of ["light", "dark"] as const) {
     expect(getComputedStyle(document.querySelector(".hjm-select__listbox")!).backgroundColor).toBe(canvas);
   });
 }
+
+// 2026-09-30 responsive audit WR-0930-6: the clear button was hardcoded 32x32
+// while DatePicker's clear already used the 44px control touch target.
+it("sizes the SearchField clear button to the 44px control touch target", async () => {
+  await page.viewport(390, 720);
+  await act(async () => root.render(<HjmProvider theme="light">
+    <SearchField label="Search" clearLabel="Clear" defaultValue="hjm" />
+  </HjmProvider>));
+  const clear = host.querySelector<HTMLButtonElement>(".hjm-search-field__clear")!;
+  const rect = clear.getBoundingClientRect();
+  expect(rect.width).toBeGreaterThanOrEqual(44);
+  expect(rect.height).toBeGreaterThanOrEqual(44);
+  expect(hasHitArea(clear)).toBe(true);
+  expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(390);
+});

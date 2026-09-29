@@ -2,6 +2,7 @@ import { useState, type ReactNode } from "react";
 import { Image, Modal, View, useWindowDimensions } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Gallery } from "react-native-zoom-toolkit";
+import { containerDefaults, containerRecipe } from "@hjmds/design-contracts/components/container";
 import { Button } from "./actions.js";
 import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
@@ -53,6 +54,7 @@ export function ImageViewer(props: ImageViewerProps) {
 
 function ImageViewerSession(props: ImageViewerProps) {
   const theme = useHjmNativeTheme();
+  const gutter = containerRecipe.gutters[containerDefaults.gutter];
   const { width, height } = useWindowDimensions();
   // Measure remaining space after controls and safe areas; a screen-height ratio clips large text.
   const [viewport, setViewport] = useState({ width, height: height * 0.6 });
@@ -66,7 +68,10 @@ function ImageViewerSession(props: ImageViewerProps) {
   return <Modal visible animationType={theme.environment.reducedMotion ? "none" : "fade"} onRequestClose={props.onClose}>
     <GestureHandlerRootView style={{ flex: 1, backgroundColor: theme.colors.bg }}>
       <View accessibilityViewIsModal style={{ flex: 1, paddingTop: props.safeAreaInsets.top, paddingBottom: props.safeAreaInsets.bottom }}>
-        <Button onPress={props.onClose}>{props.closeLabel}</Button>
+        {/* Controls and caption share the page gutter (Container's default); they
+            ran edge to edge and the caption touched the screen edge (2026-09-30
+            audit). The image area stays full-bleed so zoom keeps the whole width. */}
+        <View style={{ paddingHorizontal: gutter }}><Button onPress={props.onClose}>{props.closeLabel}</Button></View>
         <View style={{ flex: 1 }} onLayout={event => { const { width: measuredWidth, height: measuredHeight } = event.nativeEvent.layout; if (measuredWidth > 0 && measuredHeight > 0) setViewport({ width: measuredWidth, height: measuredHeight }); }}>
           <Gallery key={galleryKey} data={[...props.items]} initialIndex={currentIndex} keyExtractor={item => item.id}
             rtl={theme.environment.direction === "rtl"} onIndexChange={change}
@@ -74,9 +79,11 @@ function ImageViewerSession(props: ImageViewerProps) {
             renderItem={item => <ViewerImage key={item.uri} item={item} width={viewport.width} height={viewport.height}
               loadingLabel={props.loadingLabel} errorLabel={props.errorLabel} retryLabel={props.retryLabel} />} />
         </View>
-        <Text accessibilityLiveRegion="polite">{props.items[currentIndex]?.label}</Text>
-        <Button disabled={currentIndex === 0} onPress={() => navigate(currentIndex - 1)}>{props.previousLabel}</Button>
-        <Button disabled={currentIndex >= props.items.length - 1} onPress={() => navigate(currentIndex + 1)}>{props.nextLabel}</Button>
+        <View style={{ gap: theme.tokens.spacing.xs, paddingHorizontal: gutter, paddingTop: theme.tokens.spacing.sm }}>
+          <Text accessibilityLiveRegion="polite">{props.items[currentIndex]?.label}</Text>
+          <Button disabled={currentIndex === 0} onPress={() => navigate(currentIndex - 1)}>{props.previousLabel}</Button>
+          <Button disabled={currentIndex >= props.items.length - 1} onPress={() => navigate(currentIndex + 1)}>{props.nextLabel}</Button>
+        </View>
       </View>
     </GestureHandlerRootView>
   </Modal>;

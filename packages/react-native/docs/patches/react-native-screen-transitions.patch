@@ -1,0 +1,87 @@
+diff --git a/package.json b/package.json
+index 2a5a78236a92756591adcc6ed55a71c7726e149f..c16a59ea7e8973c8e5da0d52ca4d623381bb0513 100644
+--- a/package.json
++++ b/package.json
+@@ -25,22 +25,22 @@
+ 	"react-native": "src/index",
+ 	"exports": {
+ 		".": {
++			"types": "./lib/typescript/index.d.ts",
+ 			"react-native": "./src/index.ts",
+ 			"import": "./lib/module/index.js",
+-			"require": "./lib/commonjs/index.js",
+-			"types": "./lib/typescript/index.d.ts"
++			"require": "./lib/commonjs/index.js"
+ 		},
+ 		"./react-navigation": {
++			"types": "./lib/typescript/navigators/react-navigation/index.d.ts",
+ 			"react-native": "./src/navigators/react-navigation/index.tsx",
+ 			"import": "./lib/module/navigators/react-navigation/index.js",
+-			"require": "./lib/commonjs/navigators/react-navigation/index.js",
+-			"types": "./lib/typescript/navigators/react-navigation/index.d.ts"
++			"require": "./lib/commonjs/navigators/react-navigation/index.js"
+ 		},
+ 		"./expo-router": {
++			"types": "./lib/typescript/navigators/expo-router/index.d.ts",
+ 			"react-native": "./src/navigators/expo-router/index.tsx",
+ 			"import": "./lib/module/navigators/expo-router/index.js",
+-			"require": "./lib/commonjs/navigators/expo-router/index.js",
+-			"types": "./lib/typescript/navigators/expo-router/index.d.ts"
++			"require": "./lib/commonjs/navigators/expo-router/index.js"
+ 		}
+ 	},
+ 	"scripts": {
+diff --git a/src/components/boundary/portal/teleport.ts b/src/components/boundary/portal/teleport.ts
+--- a/src/components/boundary/portal/teleport.ts
++++ b/src/components/boundary/portal/teleport.ts
+@@ -10,7 +10,13 @@
+  */
+ let mod: any = null;
+ try {
+-	mod = require("react-native-teleport");
++	// A JS package can exist before its native views are linked into a dev client.
++  // Treat that case as absent, rather than mounting RN's red placeholder views.
++  // TODO(remove when upstream probes native availability): observed on iOS 27.
++  const { UIManager } = require("react-native");
++  if (UIManager.hasViewManagerConfig("PortalHostView") && UIManager.hasViewManagerConfig("PortalView")) {
++    mod = require("react-native-teleport");
++  }
+ } catch {}
+ 
+ const SafeNativePortalProvider: ComponentType<{ children: ReactNode }> | null =
+diff --git a/lib/module/components/boundary/portal/teleport.js b/lib/module/components/boundary/portal/teleport.js
+--- a/lib/module/components/boundary/portal/teleport.js
++++ b/lib/module/components/boundary/portal/teleport.js
+@@ -10,7 +10,13 @@
+  */
+ let mod = null;
+ try {
+-  mod = require("react-native-teleport");
++  // A JS package can exist before its native views are linked into a dev client.
++  // Treat that case as absent, rather than mounting RN's red placeholder views.
++  // TODO(remove when upstream probes native availability): observed on iOS 27.
++  const { UIManager } = require("react-native");
++  if (UIManager.hasViewManagerConfig("PortalHostView") && UIManager.hasViewManagerConfig("PortalView")) {
++    mod = require("react-native-teleport");
++  }
+ } catch {}
+ const SafeNativePortalProvider = mod?.PortalProvider ?? null;
+ export const isTeleportAvailable = mod !== null && SafeNativePortalProvider !== null;
+diff --git a/lib/commonjs/components/boundary/portal/teleport.js b/lib/commonjs/components/boundary/portal/teleport.js
+--- a/lib/commonjs/components/boundary/portal/teleport.js
++++ b/lib/commonjs/components/boundary/portal/teleport.js
+@@ -14,7 +14,13 @@
+  */
+ let mod = null;
+ try {
+-  mod = require("react-native-teleport");
++  // A JS package can exist before its native views are linked into a dev client.
++  // Treat that case as absent, rather than mounting RN's red placeholder views.
++  // TODO(remove when upstream probes native availability): observed on iOS 27.
++  const { UIManager } = require("react-native");
++  if (UIManager.hasViewManagerConfig("PortalHostView") && UIManager.hasViewManagerConfig("PortalView")) {
++    mod = require("react-native-teleport");
++  }
+ } catch {}
+ const SafeNativePortalProvider = mod?.PortalProvider ?? null;
+ const isTeleportAvailable = exports.isTeleportAvailable = mod !== null && SafeNativePortalProvider !== null;

@@ -1,0 +1,30 @@
+{
+  "engine": "Chromium",
+  "evidence": [
+    {
+      "story": "choose-color",
+      "width": 390,
+      "overflow": false,
+      "action": "passed"
+    },
+    {
+      "story": "mark-document",
+      "width": 390,
+      "overflow": false,
+      "action": "passed"
+    },
+    {
+      "story": "sticky-action",
+      "width": 390,
+      "overflow": false,
+      "action": "passed"
+    },
+    {
+      "story": "choose-color",
+      "theme": "dark",
+      "direction": "rtl",
+      "textScale": 2,
+      "overflow": false
+    }
+  ]
+}

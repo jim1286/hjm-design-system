@@ -67,11 +67,9 @@ catalog 행 처리도 여기서 갈립니다. **흡수됨**은 행을 지우고 
 남깁니다 — 남겨 두면 "아직 만들 계획"으로 잘못 읽힙니다. **검증할 화면이 없음**은 행을
 그대로 둡니다. 계약은 유효하고 언젠가 채워질 자리이기 때문입니다. **거절됨**은 행을 지울 수 없습니다 — crosswalk의 `targets`가 가리키고 있고 흡수할 다른 이름이 없기 때문입니다. 대신 `ComponentCatalogEntry.declinedReason`에 사유를 적습니다.
 
-**흡수됨은 다시 두 갈래입니다.** 흡수한 대상이 **정확히 하나**면(`Notification`→Toast,
-`Dropdown`→Menu, `Flex`·`Space`→Stack) 행을 지우고 그 하나에 `aliases`로 이름을 남깁니다.
-대상이 **둘 이상의 조합**이면(`TimePicker`→Select 둘, `Rating`→Slider/Statistic,
-`ConfirmPopover`→Popover/AlertDialog) alias를 걸 단일 이름이 없으므로 **행을 그대로 둡니다.**
-이 저장소는 이 답을 세 번 반복해서 냈고, 우연이 아니라 규칙입니다.
+2026-09-30 사용자의 조합·중복 제외 요청에 따라, 구현된 조합도 독립 catalog 행에서 제거합니다.
+단일 대상 alias나 여러 primitive를 가리키는 crosswalk로 범위를 추적하고 작동 예제는 유지합니다.
+조합의 이름을 Planned로 예약하는 대안은 이미 해결된 기능을 미구현 수에 포함하므로 폐기합니다.
 
 **흡수 대기**는 행과 crosswalk를 **둘 다 건드리지 않습니다.** 흡수를 지금 적용하면 아직 만들지
 않은 해결책을 완료로 표시하게 됩니다 — `planned`이 거짓말하던 문제와 방향만 반대인 같은 문제입니다.
@@ -88,18 +86,16 @@ evidence registry로 판단합니다.
 - partial maturity: decomposed target 중 일부만 stable 또는 beta
 - planned only: 모든 target이 planned
 
-2026-09-18 SidePanel·Splitter·Tour·Tree·TransferList·Mentions·CommandPalette·DataTable renderer까지 추가한 뒤 status 기반 분포는
-**fully mature 62 / partial maturity 0 /
-planned only 8**입니다. decomposed Drawer의 두 갈래(Sheet·SidePanel)가 모두 구현되면서
-partial maturity가 비었습니다 — 0은 "부분 구현이 없다"는 뜻이고 planned only 20은 그대로입니다. 따라서 73/73 tracking은 73개 구현 완료를 의미하지 않습니다.
-홈과 Component Explorer는 이 수치를 분리해 표시합니다. 이 숫자는 source inventory 수가
-아니라 HJM target의 maturity에서 계산하므로 catalog status가 바뀌면 함께 갱신합니다.
+2026-09-30 조합 항목을 실제 primitive로 연결한 status 기반 분포는
+**fully mature 70 / partial maturity 0 /
+planned only 0**입니다. 이는 참조표 대상의 성숙도이며 원본 라이브러리 API 전체의 동등성을
+보증하지 않습니다. ColorPicker·Watermark·Affix에도 Web renderer가 추가되어 Planned가 없습니다.
 
 ## lifecycle
 
 Ant Design 6.6.1은 기존 `List`를 deprecated로 표시하고 `Listy`를 successor로 추가했습니다.
 reference inventory는 `List.lifecycle = deprecated`, `Listy.lifecycle = new`로 보존하지만 HJM
-`List`를 자동으로 deprecated 처리하지 않습니다. HJM은 기존 비가상 `List`와 planned
+`List`를 자동으로 deprecated 처리하지 않습니다. HJM은 기존 비가상 `List`와 구현된
 `VirtualList`를 서로 다른 사용 문제로 유지합니다.
 
 ## 업데이트 규칙

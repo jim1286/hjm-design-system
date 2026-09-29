@@ -139,6 +139,10 @@ describe("package boundaries", () => {
       "./components/masonry",
       "./components/virtual-list",
       "./components/qr-code",
+      "./components/color-picker",
+      "./components/watermark",
+      "./components/affix",
+      "./components/interaction-adapters",
     ] as const;
 
     expect(Object.keys(packageJson.exports)).toEqual(expectedExports);

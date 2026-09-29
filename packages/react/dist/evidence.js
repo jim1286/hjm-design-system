@@ -16,7 +16,7 @@ const matrixScenarios = ["accessibility", "dark", "large-text", "rtl", "reduced-
 const webScenarioGaps = {};
 /** Fixtures that render long copy inside the component (renderLongCopy). */
 const webLongCopyFixtures = new Set([
-    "masonry", "virtual-list", "qr-code",
+    "masonry", "virtual-list", "qr-code", "color-picker", "watermark", "affix",
     "design-system-provider",
     "text-format",
     "aspect-ratio",
@@ -256,6 +256,9 @@ export const reactRendererEvidence = {
                 },
             ],
         },
+        keyboardClaim("color-picker", ["ColorPicker"], "./color-picker", "test/web-additions.browser.test.tsx"),
+        defaultClaim("watermark", ["Watermark"], "./watermark"),
+        defaultClaim("affix", ["Affix"], "./affix"),
         defaultClaim("masonry", ["Masonry"], "./masonry"),
         defaultClaim("virtual-list", ["VirtualList"], "./virtual-list"),
         defaultClaim("qr-code", ["QRCode"], "./qr-code"),

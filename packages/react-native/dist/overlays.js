@@ -10,7 +10,7 @@ import { Button, IconButton } from "./actions.js";
 import { scheduleAfterNativeModalTeardown, shouldAwaitNativeModalDismiss, } from "./internal/modal-lifecycle.js";
 import { minimumTargetStyle } from "./internal/styles.js";
 import { Text } from "./primitives.js";
-import { useHjmNativeTheme } from "./provider.js";
+import { useHjmNativeSafeAreaInsets, useHjmNativeTheme } from "./provider.js";
 function useReasonedOpenState({ open, defaultOpen = false, onOpenChange, }) {
     const controlledAtMount = useRef(open !== undefined);
     const controlled = open !== undefined;
@@ -518,8 +518,17 @@ export function AlertDialog({ open, defaultOpen, onOpenChange, request, returnFo
                                     ], children: _jsx(Text, { variant: "label", children: request.cancelLabel }) })) : null, stackActions ? null : confirmAction] })] })] }) }));
 }
 /** Native Sheet applies policy before emitting a concrete dismissal reason. */
-export function Sheet({ open, defaultOpen, onOpenChange, title, accessibilityTitle, description, children, footer, placement = "bottom", size = sheetRecipe.defaults.size, busy = false, dismissPolicy, closeLabel, returnFocusRef, safeAreaInsets = {}, onDismissComplete, contentStyle, keyboardAvoidance = false, scrollable = false, onShow, ...modalProps }) {
+export function Sheet({ open, defaultOpen, onOpenChange, title, accessibilityTitle, description, children, footer, placement = "bottom", size = sheetRecipe.defaults.size, busy = false, dismissPolicy, closeLabel, returnFocusRef, safeAreaInsets: suppliedSafeAreaInsets, onDismissComplete, contentStyle, keyboardAvoidance = false, scrollable = false, onShow, ...modalProps }) {
     const { environment, palette } = useHjmNativeTheme();
+    // Default to the provider's window insets so a bare <Sheet> clears the home
+    // indicator and navigation bar (2026-09-30 audit). Edges the call site passes win.
+    const providerInsets = useHjmNativeSafeAreaInsets();
+    const safeAreaInsets = {
+        top: suppliedSafeAreaInsets?.top ?? providerInsets.top,
+        right: suppliedSafeAreaInsets?.right ?? providerInsets.right,
+        bottom: suppliedSafeAreaInsets?.bottom ?? providerInsets.bottom,
+        left: suppliedSafeAreaInsets?.left ?? providerInsets.left,
+    };
     const accessibleTitle = resolveOverlayAccessibleTitle(title, accessibilityTitle);
     const { width: windowWidth, height: windowHeight } = useWindowDimensions();
     const [modalHeight, setModalHeight] = useState(null);

@@ -1,0 +1,6971 @@
+{
+  "scope": "Responsive pass over the HJM Web static Storybook: 103 canonical component stories + 17 optional-entry/pattern stories at tablet 768x1024 and wide 1440x900; touch (hasTouch,isMobile,DSF 3) tap interactions at 390x844; overlay/full-height subset at landscape 844x390 (render + touch).",
+  "build": "pnpm showcase:web:build at 2026-09-30 03:21 (after menu-morph.tsx/styles.css 03:15 change); verify-static: 103 canonical stories, 103 Web renderers. Served by runners/serve.cjs on 127.0.0.1:6026.",
+  "browser": "Playwright Chromium headless (showcase/web/node_modules/playwright). Touch = CDP-emulated touch, not a real device or Safari.",
+  "completedAt": "2026-09-29T18:54:03.334Z",
+  "separation": {
+    "rendered": "render pass = page loaded, renderer attached, no pageerror/console error, screenshot taken",
+    "visuallyReviewed": "contact sheets of every capture opened and looked at; suspicious ones opened at full size (listed in RESPONSIVE.md)",
+    "interactionVerified": "a tap-driven action produced an asserted DOM/state result"
+  },
+  "summary": {
+    "tablet": {
+      "rendered": 120,
+      "total": 120,
+      "horizontalScroll": 0,
+      "visuallyReviewed": 120
+    },
+    "wide": {
+      "rendered": 120,
+      "total": 120,
+      "horizontalScroll": 0,
+      "visuallyReviewed": 120
+    },
+    "landscapeRender": {
+      "rendered": 20,
+      "total": 20,
+      "horizontalScroll": 0,
+      "visuallyReviewed": 20
+    },
+    "mobileTouch": {
+      "cases": 71,
+      "pass": 69,
+      "fail": [
+        "Tooltip",
+        "Tree"
+      ],
+      "overlayCases": 20,
+      "surfaceOutsideViewport": [
+        "DatePicker"
+      ],
+      "pageHorizontalOverflowWhileOpen": [
+        "DatePicker"
+      ],
+      "finalPageOverflow": [],
+      "tapOutsideDismissed": [
+        "Dialog",
+        "Sheet",
+        "Popover",
+        "ConfirmPopover",
+        "Menu",
+        "ContextMenu",
+        "Menubar",
+        "Select",
+        "Combobox",
+        "DatePicker",
+        "TimePicker",
+        "CommandPalette",
+        "Cascader",
+        "TreeSelect",
+        "MorphingMenu"
+      ],
+      "tapOutsideStayed": [
+        "AlertDialog",
+        "SidePanel (no outside area)",
+        "Tour"
+      ]
+    },
+    "landscapeTouch": {
+      "cases": 20,
+      "pass": 19,
+      "fail": [
+        "Tooltip"
+      ],
+      "overlayCases": 17,
+      "surfaceOutsideViewport": [
+        "DatePicker"
+      ],
+      "pageHorizontalOverflowWhileOpen": [],
+      "finalPageOverflow": [],
+      "tapOutsideDismissed": [
+        "Dialog",
+        "Sheet",
+        "SidePanel",
+        "Popover",
+        "ConfirmPopover",
+        "Menu",
+        "ContextMenu",
+        "Select",
+        "Combobox",
+        "DatePicker",
+        "TimePicker",
+        "CommandPalette",
+        "Cascader",
+        "TreeSelect"
+      ],
+      "tapOutsideStayed": [
+        "AlertDialog",
+        "Tour"
+      ]
+    },
+    "touchTargets": {
+      "storiesScanned": 111,
+      "storiesWithBelow44HitArea": 11
+    }
+  },
+  "defects": [
+    {
+      "id": "WR-0930-1",
+      "component": "Tooltip",
+      "viewport": "390x844 and 844x390 touch",
+      "severity": "moderate/a11y",
+      "repro": "components-overlays--tooltip, tap 도움말에 포커스하거나 가리키기",
+      "expected": "tap (focus) shows 자세한 도움말, like keyboard focus does",
+      "actual": "data-state goes open->closed within 1ms: focusOpenDelayMs=0 opens on focus, then the same tap click hits onClick visible&&changeOpen(false,trigger-activation) in overlays.tsx; pointerenter is ignored for touch. Touch users can never see tooltip content.",
+      "evidence": [
+        "screens/mobile-touch/Tooltip-open.png",
+        "screens/landscape-touch/Tooltip-open.png"
+      ]
+    },
+    {
+      "id": "WR-0930-2",
+      "component": "Tree",
+      "viewport": "all (found with touch 390; mouse click has the same handler)",
+      "severity": "moderate/functional",
+      "repro": "components-data-display--tree, tap 9월 row or its ▸ glyph",
+      "expected": "pointer can expand/collapse a parent node",
+      "actual": "row onClick only selects (aria-selected=true, aria-expanded stays false); the glyph is aria-hidden decoration with no handler; expansion exists only on ArrowRight/ArrowLeft (tree.tsx). Children of 9월 are unreachable by touch/mouse. The 9/30 desktop audit used ArrowRight so it did not catch this.",
+      "evidence": [
+        "screens/mobile-touch/Tree-failed.png"
+      ]
+    },
+    {
+      "id": "WR-0930-3",
+      "component": "DatePicker",
+      "viewport": "390x844 (also 360, 320) touch",
+      "severity": "minor/layout",
+      "repro": "components-inputs--date-picker, tap 날짜를 선택하세요",
+      "expected": "popover inside the 390 viewport, no page widening",
+      "actual": "popover left=33 (trigger left) but width=viewport-32 (358), right=391; document scrollWidth/innerWidth become 391 (layout viewport widens by 1px on every width tested); right rounded corner visibly clipped. Landscape 844x390: popover top 42 height 368 -> bottom 410 (20px below fold, absolute so page-scrollable).",
+      "evidence": [
+        "screens/mobile-touch/DatePicker-open-390.png",
+        "screens/mobile-touch/DatePicker-open-320.png",
+        "screens/landscape-touch/DatePicker-open.png"
+      ]
+    },
+    {
+      "id": "WR-0930-4",
+      "component": "Menubar",
+      "viewport": "all (390 touch; 1100 mouse confirmed)",
+      "severity": "moderate/layout",
+      "repro": "components-navigation--menubar, tap/click 파일",
+      "expected": "panel fully visible, both items hittable",
+      "actual": "panel is position:absolute and not portaled, so the showcase .hjm-stage (overflow:auto) clips it: stage bottom 424 vs panel bottom 445 at 390; at 1100 the 열기 item centre is not hit-testable (elementFromPoint misses). Other menus (Menu, Select, ContextMenu) portal and are not clipped.",
+      "evidence": [
+        "screens/mobile-touch/Menubar-open-clipped-crop.png",
+        "screens/mobile-touch/Menubar-open.png"
+      ]
+    },
+    {
+      "id": "WR-0930-5",
+      "component": "DataTable",
+      "viewport": "390 touch",
+      "severity": "minor/target-size, contract mismatch",
+      "repro": "components-data-display--data-table",
+      "expected": "dataTableRecipe sortButton.minTarget and selectionCell.width = control.minTouchTarget (44)",
+      "actual": "row/all checkboxes hit area 16x16 (cell is 44 wide but not clickable); sort buttons 36x44",
+      "evidence": [
+        "contact-sheets/tablet-06.png"
+      ]
+    },
+    {
+      "id": "WR-0930-6",
+      "component": "SearchField / Field clear button",
+      "viewport": "390 touch",
+      "severity": "minor/target-size",
+      "repro": "components-inputs--search-field, components-inputs--form",
+      "expected": ">=44 like .hjm-date-picker__clear (var(--hjm-control-min-touch-target))",
+      "actual": ".hjm-search-field__clear hardcoded 32x32px, hit 32x32",
+      "evidence": [
+        "contact-sheets/tablet-01.png"
+      ]
+    },
+    {
+      "id": "WR-0930-7",
+      "component": "TransferList",
+      "viewport": "390 touch",
+      "severity": "minor/target-size",
+      "repro": "components-inputs--transfer-list",
+      "expected": ">=44 hit",
+      "actual": "전체 기록 모두 선택 / 모아둔 기록 모두 선택 checkboxes hit 16x16",
+      "evidence": [
+        "contact-sheets/tablet-03.png"
+      ]
+    }
+  ],
+  "observations": [
+    "Masonry (showcase fixture): DataLayouts story passes width={320} to Masonry (width is a required caller-measured prop), so at 768 and 1440 the grid stays 2x~160px columns in the left 320px of a 662/1158px area. Component-by-contract, but the fixture never demonstrates responsive width. screens/wide/Masonry-renderer.png, screens/tablet/Masonry-renderer.png",
+    "BottomNavigation at 1440: bar presentation has maxWidth null, so 2 items sit 720px apart across the full width. Contract says web adaptive = fixed-compact-viewport (host should swap to Sidebar on wide); floating presentation caps at 384. screens/wide/BottomNavigation.png",
+    "Width policy is inconsistent at 1440: Field caps (~420px) while SearchField, Select, Combobox, PasswordField, TextArea, NumberField (value centred ~570px from each stepper), Slider, AuthProviderButton, BottomCTA and DateRangePicker (day cells ~165px apart) fill the 1158px renderer; Calendar caps at ~500px. Not broken, but hosts must constrain widths themselves. screens/wide/*.png",
+    "Landscape 844x390: all overlays inside viewport except DatePicker (WR-0930-3); Popover/Select/Combobox/Menu flip above the trigger; Sheet is 640px centred; SidePanel 400px docked right and tap-outside dismisses. BottomNavigation fixed bar takes ~60px of the 390 height (expected).",
+    "Tap outside: AlertDialog stays (expected for destructive confirm), Tour stays (explicit 그만 보기), SidePanel at 390 covers the full viewport so there is no outside area; close controls closed all of them.",
+    "Chip small size is 36px tall with no hit slop (hit 44x36 / 63x36); Card 자세히 hit 64x42; Anchor tabs 38px tall; standalone text links (Link, Breadcrumb, QRCode 공유 페이지 열기) 17-20px tall. WCAG 2.5.8 (24px) mostly satisfied by spacing; below the 44px guideline.",
+    "TagsInput remove button box 16x20 but ::after hit slop reaches 44x44 (pass)."
+  ],
+  "limits": [
+    "Headless Chromium with CDP touch emulation only: not iOS Safari/Android Chrome on device, no real long-press/haptics, no on-screen keyboard resizing the viewport.",
+    "Hit extents are sampled on the axes through the control centre (capped at 81px).",
+    "Tablet/wide/landscape static captures are visual review only; interactions were not re-run at 768/1440 (the 1100 desktop pass covers mouse).",
+    "Stories reused: the same showcase fixtures; product layouts may constrain widths differently."
+  ],
+  "render": {
+    "tablet": [
+      {
+        "component": "Text",
+        "storyId": "components-foundation--text",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 80
+        }
+      },
+      {
+        "component": "Heading",
+        "storyId": "components-foundation--heading",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 250
+        }
+      },
+      {
+        "component": "TextFormat",
+        "storyId": "components-foundation--text-format",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 201
+        }
+      },
+      {
+        "component": "Icon",
+        "storyId": "components-foundation--icon",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 24
+        }
+      },
+      {
+        "component": "Surface",
+        "storyId": "components-layout--surface",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 42
+        }
+      },
+      {
+        "component": "Divider",
+        "storyId": "components-layout--divider",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 65
+        }
+      },
+      {
+        "component": "Section",
+        "storyId": "components-layout--section",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 72
+        }
+      },
+      {
+        "component": "Stack",
+        "storyId": "components-layout--stack",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 156
+        }
+      },
+      {
+        "component": "Container",
+        "storyId": "components-layout--container",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 54
+        }
+      },
+      {
+        "component": "AspectRatio",
+        "storyId": "components-layout--aspect-ratio",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 372
+        }
+      },
+      {
+        "component": "Grid",
+        "storyId": "components-layout--grid",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 192
+        }
+      },
+      {
+        "component": "Layout",
+        "storyId": "components-layout--layout",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 42
+        }
+      },
+      {
+        "component": "Top",
+        "storyId": "components-layout--top",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 203
+        }
+      },
+      {
+        "component": "Masonry",
+        "storyId": "components-layout--masonry",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 608
+        }
+      },
+      {
+        "component": "Splitter",
+        "storyId": "components-layout--splitter",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 436
+        }
+      },
+      {
+        "component": "AuthScreenLayout",
+        "storyId": "components-layout--auth-screen-layout",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 1024
+        }
+      },
+      {
+        "component": "Button",
+        "storyId": "components-actions--button",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 44
+        }
+      },
+      {
+        "component": "IconButton",
+        "storyId": "components-actions--icon-button",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 44
+        }
+      },
+      {
+        "component": "Link",
+        "storyId": "components-actions--link",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 44
+        }
+      },
+      {
+        "component": "BottomCTA",
+        "storyId": "components-actions--bottom-cta",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 97
+        }
+      },
+      {
+        "component": "FloatingActionButton",
+        "storyId": "components-actions--floating-action-button",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 104
+        }
+      },
+      {
+        "component": "AuthProviderButton",
+        "storyId": "components-actions--auth-provider-button",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 312
+        }
+      },
+      {
+        "component": "Field",
+        "storyId": "components-inputs--field",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 96
+        }
+      },
+      {
+        "component": "SearchField",
+        "storyId": "components-inputs--search-field",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 98
+        }
+      },
+      {
+        "component": "TextArea",
+        "storyId": "components-inputs--text-area",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 134
+        }
+      },
+      {
+        "component": "PasswordField",
+        "storyId": "components-inputs--password-field",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 100
+        }
+      },
+      {
+        "component": "OtpField",
+        "storyId": "components-inputs--otp-field",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 98
+        }
+      },
+      {
+        "component": "Checkbox",
+        "storyId": "components-inputs--checkbox",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 72
+        }
+      },
+      {
+        "component": "Radio",
+        "storyId": "components-inputs--radio",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 72
+        }
+      },
+      {
+        "component": "CheckboxGroup",
+        "storyId": "components-inputs--checkbox-group",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 212
+        }
+      },
+      {
+        "component": "RadioGroup",
+        "storyId": "components-inputs--radio-group",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 212
+        }
+      },
+      {
+        "component": "Switch",
+        "storyId": "components-inputs--switch",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 44
+        }
+      },
+      {
+        "component": "Chip",
+        "storyId": "components-inputs--chip",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 36
+        }
+      },
+      {
+        "component": "SegmentedControl",
+        "storyId": "components-inputs--segmented-control",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 48
+        }
+      },
+      {
+        "component": "Slider",
+        "storyId": "components-inputs--slider",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 72
+        }
+      },
+      {
+        "component": "NumberField",
+        "storyId": "components-inputs--number-field",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 74
+        }
+      },
+      {
+        "component": "Select",
+        "storyId": "components-inputs--select",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 72
+        }
+      },
+      {
+        "component": "Combobox",
+        "storyId": "components-inputs--combobox",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 72
+        }
+      },
+      {
+        "component": "DatePicker",
+        "storyId": "components-inputs--date-picker",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 72
+        }
+      },
+      {
+        "component": "ColorPicker",
+        "storyId": "components-inputs--color-picker",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 353
+        }
+      },
+      {
+        "component": "FilePicker",
+        "storyId": "components-inputs--file-picker",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 184
+        }
+      },
+      {
+        "component": "Form",
+        "storyId": "components-inputs--form",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 128
+        }
+      },
+      {
+        "component": "Agreement",
+        "storyId": "components-inputs--agreement",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 614
+        }
+      },
+      {
+        "component": "ToggleGroup",
+        "storyId": "components-inputs--toggle-group",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 220
+        }
+      },
+      {
+        "component": "TagsInput",
+        "storyId": "components-inputs--tags-input",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 144
+        }
+      },
+      {
+        "component": "DateRangePicker",
+        "storyId": "components-inputs--date-range-picker",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 524
+        }
+      },
+      {
+        "component": "Mentions",
+        "storyId": "components-inputs--mentions",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 340
+        }
+      },
+      {
+        "component": "TransferList",
+        "storyId": "components-inputs--transfer-list",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 326
+        }
+      },
+      {
+        "component": "Tabs",
+        "storyId": "components-navigation--tabs",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 101
+        }
+      },
+      {
+        "component": "TopBar",
+        "storyId": "components-navigation--top-bar",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 52
+        }
+      },
+      {
+        "component": "Sidebar",
+        "storyId": "components-navigation--sidebar",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 398
+        }
+      },
+      {
+        "component": "BottomNavigation",
+        "storyId": "components-navigation--bottom-navigation",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": []
+      },
+      {
+        "component": "Breadcrumb",
+        "storyId": "components-navigation--breadcrumb",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 556
+        }
+      },
+      {
+        "component": "Pagination",
+        "storyId": "components-navigation--pagination",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 556
+        }
+      },
+      {
+        "component": "LoadMore",
+        "storyId": "components-navigation--load-more",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 169
+        }
+      },
+      {
+        "component": "Steps",
+        "storyId": "components-navigation--steps",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 52
+        }
+      },
+      {
+        "component": "Menu",
+        "storyId": "components-navigation--menu",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 56
+        }
+      },
+      {
+        "component": "ContextMenu",
+        "storyId": "components-navigation--context-menu",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 90
+        }
+      },
+      {
+        "component": "Menubar",
+        "storyId": "components-navigation--menubar",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 80
+        }
+      },
+      {
+        "component": "Anchor",
+        "storyId": "components-navigation--anchor",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 567
+        }
+      },
+      {
+        "component": "UploadItem",
+        "storyId": "components-data-display--upload-item",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 110
+        }
+      },
+      {
+        "component": "Avatar",
+        "storyId": "components-data-display--avatar",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 40
+        }
+      },
+      {
+        "component": "Badge",
+        "storyId": "components-data-display--badge",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 24
+        }
+      },
+      {
+        "component": "CounterBadge",
+        "storyId": "components-data-display--counter-badge",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 44
+        }
+      },
+      {
+        "component": "Card",
+        "storyId": "components-data-display--card",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 140
+        }
+      },
+      {
+        "component": "List",
+        "storyId": "components-data-display--list",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 136
+        }
+      },
+      {
+        "component": "ListRow",
+        "storyId": "components-data-display--list-row",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 68
+        }
+      },
+      {
+        "component": "VirtualList",
+        "storyId": "components-data-display--virtual-list",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 400
+        }
+      },
+      {
+        "component": "Accordion",
+        "storyId": "components-data-display--accordion",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 58
+        }
+      },
+      {
+        "component": "Collapsible",
+        "storyId": "components-data-display--collapsible",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 132
+        }
+      },
+      {
+        "component": "Asset",
+        "storyId": "components-data-display--asset",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 208
+        }
+      },
+      {
+        "component": "Statistic",
+        "storyId": "components-data-display--statistic",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 68
+        }
+      },
+      {
+        "component": "Timeline",
+        "storyId": "components-data-display--timeline",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 88
+        }
+      },
+      {
+        "component": "DataTable",
+        "storyId": "components-data-display--data-table",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 340
+        }
+      },
+      {
+        "component": "Tree",
+        "storyId": "components-data-display--tree",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 292
+        }
+      },
+      {
+        "component": "Calendar",
+        "storyId": "components-data-display--calendar",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 642
+        }
+      },
+      {
+        "component": "Carousel",
+        "storyId": "components-data-display--carousel",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 76
+        }
+      },
+      {
+        "component": "DescriptionList",
+        "storyId": "components-data-display--description-list",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 44
+        }
+      },
+      {
+        "component": "Image",
+        "storyId": "components-data-display--image",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 180
+        }
+      },
+      {
+        "component": "QRCode",
+        "storyId": "components-data-display--qr-code",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 170
+        }
+      },
+      {
+        "component": "Tag",
+        "storyId": "components-data-display--tag",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 20
+        }
+      },
+      {
+        "component": "EmptyState",
+        "storyId": "components-feedback--empty-state",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 272
+        }
+      },
+      {
+        "component": "Notice",
+        "storyId": "components-feedback--notice",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 78
+        }
+      },
+      {
+        "component": "Progress",
+        "storyId": "components-feedback--progress",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 36
+        }
+      },
+      {
+        "component": "Spinner",
+        "storyId": "components-feedback--spinner",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 25
+        }
+      },
+      {
+        "component": "Skeleton",
+        "storyId": "components-feedback--skeleton",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 32
+        }
+      },
+      {
+        "component": "Result",
+        "storyId": "components-feedback--result",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 352
+        }
+      },
+      {
+        "component": "BottomInfo",
+        "storyId": "components-feedback--bottom-info",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 204
+        }
+      },
+      {
+        "component": "Toast",
+        "storyId": "components-feedback--toast",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 78
+        }
+      },
+      {
+        "component": "Watermark",
+        "storyId": "components-feedback--watermark",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 131
+        }
+      },
+      {
+        "component": "ThinkingOrb",
+        "storyId": "components-feedback--thinking-orb",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 69
+        }
+      },
+      {
+        "component": "Tour",
+        "storyId": "components-overlays--tour",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 368
+        }
+      },
+      {
+        "component": "Dialog",
+        "storyId": "components-overlays--dialog",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 420,
+          "height": 44
+        }
+      },
+      {
+        "component": "AlertDialog",
+        "storyId": "components-overlays--alert-dialog",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 320,
+          "height": 44
+        }
+      },
+      {
+        "component": "Sheet",
+        "storyId": "components-overlays--sheet",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 44
+        }
+      },
+      {
+        "component": "SidePanel",
+        "storyId": "components-overlays--side-panel",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 256
+        }
+      },
+      {
+        "component": "Popover",
+        "storyId": "components-overlays--popover",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 440
+        }
+      },
+      {
+        "component": "Tooltip",
+        "storyId": "components-overlays--tooltip",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 44
+        }
+      },
+      {
+        "component": "CommandPalette",
+        "storyId": "components-overlays--command-palette",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 96
+        }
+      },
+      {
+        "component": "Affix",
+        "storyId": "components-infrastructure--affix",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 280
+        }
+      },
+      {
+        "component": "DesignSystemProvider",
+        "storyId": "components-infrastructure--design-system-provider",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 276
+        }
+      },
+      {
+        "component": "SkipNav",
+        "storyId": "components-infrastructure--skip-nav",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 398
+        }
+      },
+      {
+        "component": "VisuallyHidden",
+        "storyId": "components-infrastructure--visually-hidden",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 662,
+          "height": 44
+        }
+      },
+      {
+        "component": "OptionalMotion",
+        "storyId": "patterns-optional-motion--playground",
+        "kind": "optional",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": []
+      },
+      {
+        "component": "InteractionAdapters",
+        "storyId": "experimental-interaction-adapters--playground",
+        "kind": "optional",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": []
+      },
+      {
+        "component": "ThinkingOrbStates",
+        "storyId": "patterns-thinking-orb--all-states",
+        "kind": "optional",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": []
+      },
+      {
+        "component": "DataLayouts",
+        "storyId": "patterns-data-layouts--data-layout-preview",
+        "kind": "optional",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": []
+      },
+      {
+        "component": "PackedCards",
+        "storyId": "patterns-data-layouts--packed-cards",
+        "kind": "optional",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": []
+      },
+      {
+        "component": "WindowedList",
+        "storyId": "patterns-data-layouts--windowed-list",
+        "kind": "optional",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": []
+      },
+      {
+        "component": "ShareCode",
+        "storyId": "patterns-data-layouts--share-code",
+        "kind": "optional",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": []
+      },
+      {
+        "component": "WebAdditions",
+        "storyId": "patterns-web-additions--web-additions-preview",
+        "kind": "optional",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": []
+      },
+      {
+        "component": "FabNotes",
+        "storyId": "patterns-floating-action-button--notes",
+        "kind": "optional",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": []
+      },
+      {
+        "component": "Rating",
+        "storyId": "patterns-rating--half-point",
+        "kind": "optional",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": []
+      },
+      {
+        "component": "TimePicker",
+        "storyId": "patterns-time-selection--choose-time",
+        "kind": "optional",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": []
+      },
+      {
+        "component": "Cascader",
+        "storyId": "patterns-tree--cascader-composition",
+        "kind": "optional",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": []
+      },
+      {
+        "component": "TreeSelect",
+        "storyId": "patterns-tree--tree-select-composition",
+        "kind": "optional",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": []
+      },
+      {
+        "component": "ConfirmPopover",
+        "storyId": "patterns-popover--reversible-confirmation",
+        "kind": "optional",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": []
+      },
+      {
+        "component": "SidebarShell",
+        "storyId": "patterns-sidebar--desktop-shell",
+        "kind": "optional",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": []
+      },
+      {
+        "component": "SplitterListDetail",
+        "storyId": "patterns-splitter--list-and-detail",
+        "kind": "optional",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": []
+      },
+      {
+        "component": "WebNavigationRecords",
+        "storyId": "patterns-webnavigation--records",
+        "kind": "optional",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 768,
+        "overflowingElements": []
+      }
+    ],
+    "wide": [
+      {
+        "component": "Text",
+        "storyId": "components-foundation--text",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 80
+        }
+      },
+      {
+        "component": "Heading",
+        "storyId": "components-foundation--heading",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 250
+        }
+      },
+      {
+        "component": "TextFormat",
+        "storyId": "components-foundation--text-format",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 201
+        }
+      },
+      {
+        "component": "Icon",
+        "storyId": "components-foundation--icon",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 24
+        }
+      },
+      {
+        "component": "Surface",
+        "storyId": "components-layout--surface",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 42
+        }
+      },
+      {
+        "component": "Divider",
+        "storyId": "components-layout--divider",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 65
+        }
+      },
+      {
+        "component": "Section",
+        "storyId": "components-layout--section",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 72
+        }
+      },
+      {
+        "component": "Stack",
+        "storyId": "components-layout--stack",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 156
+        }
+      },
+      {
+        "component": "Container",
+        "storyId": "components-layout--container",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 54
+        }
+      },
+      {
+        "component": "AspectRatio",
+        "storyId": "components-layout--aspect-ratio",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 651
+        }
+      },
+      {
+        "component": "Grid",
+        "storyId": "components-layout--grid",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 88
+        }
+      },
+      {
+        "component": "Layout",
+        "storyId": "components-layout--layout",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 42
+        }
+      },
+      {
+        "component": "Top",
+        "storyId": "components-layout--top",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 203
+        }
+      },
+      {
+        "component": "Masonry",
+        "storyId": "components-layout--masonry",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 608
+        }
+      },
+      {
+        "component": "Splitter",
+        "storyId": "components-layout--splitter",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 436
+        }
+      },
+      {
+        "component": "AuthScreenLayout",
+        "storyId": "components-layout--auth-screen-layout",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 900
+        }
+      },
+      {
+        "component": "Button",
+        "storyId": "components-actions--button",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 44
+        }
+      },
+      {
+        "component": "IconButton",
+        "storyId": "components-actions--icon-button",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 44
+        }
+      },
+      {
+        "component": "Link",
+        "storyId": "components-actions--link",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 44
+        }
+      },
+      {
+        "component": "BottomCTA",
+        "storyId": "components-actions--bottom-cta",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 97
+        }
+      },
+      {
+        "component": "FloatingActionButton",
+        "storyId": "components-actions--floating-action-button",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 104
+        }
+      },
+      {
+        "component": "AuthProviderButton",
+        "storyId": "components-actions--auth-provider-button",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 312
+        }
+      },
+      {
+        "component": "Field",
+        "storyId": "components-inputs--field",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 96
+        }
+      },
+      {
+        "component": "SearchField",
+        "storyId": "components-inputs--search-field",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 98
+        }
+      },
+      {
+        "component": "TextArea",
+        "storyId": "components-inputs--text-area",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 134
+        }
+      },
+      {
+        "component": "PasswordField",
+        "storyId": "components-inputs--password-field",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 100
+        }
+      },
+      {
+        "component": "OtpField",
+        "storyId": "components-inputs--otp-field",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 98
+        }
+      },
+      {
+        "component": "Checkbox",
+        "storyId": "components-inputs--checkbox",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 72
+        }
+      },
+      {
+        "component": "Radio",
+        "storyId": "components-inputs--radio",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 72
+        }
+      },
+      {
+        "component": "CheckboxGroup",
+        "storyId": "components-inputs--checkbox-group",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 212
+        }
+      },
+      {
+        "component": "RadioGroup",
+        "storyId": "components-inputs--radio-group",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 212
+        }
+      },
+      {
+        "component": "Switch",
+        "storyId": "components-inputs--switch",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 44
+        }
+      },
+      {
+        "component": "Chip",
+        "storyId": "components-inputs--chip",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 36
+        }
+      },
+      {
+        "component": "SegmentedControl",
+        "storyId": "components-inputs--segmented-control",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 48
+        }
+      },
+      {
+        "component": "Slider",
+        "storyId": "components-inputs--slider",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 72
+        }
+      },
+      {
+        "component": "NumberField",
+        "storyId": "components-inputs--number-field",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 74
+        }
+      },
+      {
+        "component": "Select",
+        "storyId": "components-inputs--select",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 72
+        }
+      },
+      {
+        "component": "Combobox",
+        "storyId": "components-inputs--combobox",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 72
+        }
+      },
+      {
+        "component": "DatePicker",
+        "storyId": "components-inputs--date-picker",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 72
+        }
+      },
+      {
+        "component": "ColorPicker",
+        "storyId": "components-inputs--color-picker",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 353
+        }
+      },
+      {
+        "component": "FilePicker",
+        "storyId": "components-inputs--file-picker",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 184
+        }
+      },
+      {
+        "component": "Form",
+        "storyId": "components-inputs--form",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 128
+        }
+      },
+      {
+        "component": "Agreement",
+        "storyId": "components-inputs--agreement",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 614
+        }
+      },
+      {
+        "component": "ToggleGroup",
+        "storyId": "components-inputs--toggle-group",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 220
+        }
+      },
+      {
+        "component": "TagsInput",
+        "storyId": "components-inputs--tags-input",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 144
+        }
+      },
+      {
+        "component": "DateRangePicker",
+        "storyId": "components-inputs--date-range-picker",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 524
+        }
+      },
+      {
+        "component": "Mentions",
+        "storyId": "components-inputs--mentions",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 340
+        }
+      },
+      {
+        "component": "TransferList",
+        "storyId": "components-inputs--transfer-list",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 326
+        }
+      },
+      {
+        "component": "Tabs",
+        "storyId": "components-navigation--tabs",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 101
+        }
+      },
+      {
+        "component": "TopBar",
+        "storyId": "components-navigation--top-bar",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 52
+        }
+      },
+      {
+        "component": "Sidebar",
+        "storyId": "components-navigation--sidebar",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 398
+        }
+      },
+      {
+        "component": "BottomNavigation",
+        "storyId": "components-navigation--bottom-navigation",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": []
+      },
+      {
+        "component": "Breadcrumb",
+        "storyId": "components-navigation--breadcrumb",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 556
+        }
+      },
+      {
+        "component": "Pagination",
+        "storyId": "components-navigation--pagination",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 556
+        }
+      },
+      {
+        "component": "LoadMore",
+        "storyId": "components-navigation--load-more",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 169
+        }
+      },
+      {
+        "component": "Steps",
+        "storyId": "components-navigation--steps",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 52
+        }
+      },
+      {
+        "component": "Menu",
+        "storyId": "components-navigation--menu",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 56
+        }
+      },
+      {
+        "component": "ContextMenu",
+        "storyId": "components-navigation--context-menu",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 90
+        }
+      },
+      {
+        "component": "Menubar",
+        "storyId": "components-navigation--menubar",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 80
+        }
+      },
+      {
+        "component": "Anchor",
+        "storyId": "components-navigation--anchor",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 511
+        }
+      },
+      {
+        "component": "UploadItem",
+        "storyId": "components-data-display--upload-item",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 110
+        }
+      },
+      {
+        "component": "Avatar",
+        "storyId": "components-data-display--avatar",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 40
+        }
+      },
+      {
+        "component": "Badge",
+        "storyId": "components-data-display--badge",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 24
+        }
+      },
+      {
+        "component": "CounterBadge",
+        "storyId": "components-data-display--counter-badge",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 44
+        }
+      },
+      {
+        "component": "Card",
+        "storyId": "components-data-display--card",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 140
+        }
+      },
+      {
+        "component": "List",
+        "storyId": "components-data-display--list",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 136
+        }
+      },
+      {
+        "component": "ListRow",
+        "storyId": "components-data-display--list-row",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 68
+        }
+      },
+      {
+        "component": "VirtualList",
+        "storyId": "components-data-display--virtual-list",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 400
+        }
+      },
+      {
+        "component": "Accordion",
+        "storyId": "components-data-display--accordion",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 58
+        }
+      },
+      {
+        "component": "Collapsible",
+        "storyId": "components-data-display--collapsible",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 132
+        }
+      },
+      {
+        "component": "Asset",
+        "storyId": "components-data-display--asset",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 208
+        }
+      },
+      {
+        "component": "Statistic",
+        "storyId": "components-data-display--statistic",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 68
+        }
+      },
+      {
+        "component": "Timeline",
+        "storyId": "components-data-display--timeline",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 88
+        }
+      },
+      {
+        "component": "DataTable",
+        "storyId": "components-data-display--data-table",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 340
+        }
+      },
+      {
+        "component": "Tree",
+        "storyId": "components-data-display--tree",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 292
+        }
+      },
+      {
+        "component": "Calendar",
+        "storyId": "components-data-display--calendar",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 642
+        }
+      },
+      {
+        "component": "Carousel",
+        "storyId": "components-data-display--carousel",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 76
+        }
+      },
+      {
+        "component": "DescriptionList",
+        "storyId": "components-data-display--description-list",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 44
+        }
+      },
+      {
+        "component": "Image",
+        "storyId": "components-data-display--image",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 180
+        }
+      },
+      {
+        "component": "QRCode",
+        "storyId": "components-data-display--qr-code",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 170
+        }
+      },
+      {
+        "component": "Tag",
+        "storyId": "components-data-display--tag",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 20
+        }
+      },
+      {
+        "component": "EmptyState",
+        "storyId": "components-feedback--empty-state",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 272
+        }
+      },
+      {
+        "component": "Notice",
+        "storyId": "components-feedback--notice",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 78
+        }
+      },
+      {
+        "component": "Progress",
+        "storyId": "components-feedback--progress",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 36
+        }
+      },
+      {
+        "component": "Spinner",
+        "storyId": "components-feedback--spinner",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 25
+        }
+      },
+      {
+        "component": "Skeleton",
+        "storyId": "components-feedback--skeleton",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 32
+        }
+      },
+      {
+        "component": "Result",
+        "storyId": "components-feedback--result",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 352
+        }
+      },
+      {
+        "component": "BottomInfo",
+        "storyId": "components-feedback--bottom-info",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 204
+        }
+      },
+      {
+        "component": "Toast",
+        "storyId": "components-feedback--toast",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 78
+        }
+      },
+      {
+        "component": "Watermark",
+        "storyId": "components-feedback--watermark",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 131
+        }
+      },
+      {
+        "component": "ThinkingOrb",
+        "storyId": "components-feedback--thinking-orb",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 69
+        }
+      },
+      {
+        "component": "Tour",
+        "storyId": "components-overlays--tour",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 368
+        }
+      },
+      {
+        "component": "Dialog",
+        "storyId": "components-overlays--dialog",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 420,
+          "height": 44
+        }
+      },
+      {
+        "component": "AlertDialog",
+        "storyId": "components-overlays--alert-dialog",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 320,
+          "height": 44
+        }
+      },
+      {
+        "component": "Sheet",
+        "storyId": "components-overlays--sheet",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 44
+        }
+      },
+      {
+        "component": "SidePanel",
+        "storyId": "components-overlays--side-panel",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 256
+        }
+      },
+      {
+        "component": "Popover",
+        "storyId": "components-overlays--popover",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 440
+        }
+      },
+      {
+        "component": "Tooltip",
+        "storyId": "components-overlays--tooltip",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 44
+        }
+      },
+      {
+        "component": "CommandPalette",
+        "storyId": "components-overlays--command-palette",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 96
+        }
+      },
+      {
+        "component": "Affix",
+        "storyId": "components-infrastructure--affix",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 280
+        }
+      },
+      {
+        "component": "DesignSystemProvider",
+        "storyId": "components-infrastructure--design-system-provider",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 276
+        }
+      },
+      {
+        "component": "SkipNav",
+        "storyId": "components-infrastructure--skip-nav",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 398
+        }
+      },
+      {
+        "component": "VisuallyHidden",
+        "storyId": "components-infrastructure--visually-hidden",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 1158,
+          "height": 44
+        }
+      },
+      {
+        "component": "OptionalMotion",
+        "storyId": "patterns-optional-motion--playground",
+        "kind": "optional",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": []
+      },
+      {
+        "component": "InteractionAdapters",
+        "storyId": "experimental-interaction-adapters--playground",
+        "kind": "optional",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": []
+      },
+      {
+        "component": "ThinkingOrbStates",
+        "storyId": "patterns-thinking-orb--all-states",
+        "kind": "optional",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": []
+      },
+      {
+        "component": "DataLayouts",
+        "storyId": "patterns-data-layouts--data-layout-preview",
+        "kind": "optional",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": []
+      },
+      {
+        "component": "PackedCards",
+        "storyId": "patterns-data-layouts--packed-cards",
+        "kind": "optional",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": []
+      },
+      {
+        "component": "WindowedList",
+        "storyId": "patterns-data-layouts--windowed-list",
+        "kind": "optional",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": []
+      },
+      {
+        "component": "ShareCode",
+        "storyId": "patterns-data-layouts--share-code",
+        "kind": "optional",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": []
+      },
+      {
+        "component": "WebAdditions",
+        "storyId": "patterns-web-additions--web-additions-preview",
+        "kind": "optional",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": []
+      },
+      {
+        "component": "FabNotes",
+        "storyId": "patterns-floating-action-button--notes",
+        "kind": "optional",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": []
+      },
+      {
+        "component": "Rating",
+        "storyId": "patterns-rating--half-point",
+        "kind": "optional",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": []
+      },
+      {
+        "component": "TimePicker",
+        "storyId": "patterns-time-selection--choose-time",
+        "kind": "optional",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": []
+      },
+      {
+        "component": "Cascader",
+        "storyId": "patterns-tree--cascader-composition",
+        "kind": "optional",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": []
+      },
+      {
+        "component": "TreeSelect",
+        "storyId": "patterns-tree--tree-select-composition",
+        "kind": "optional",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": []
+      },
+      {
+        "component": "ConfirmPopover",
+        "storyId": "patterns-popover--reversible-confirmation",
+        "kind": "optional",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": []
+      },
+      {
+        "component": "SidebarShell",
+        "storyId": "patterns-sidebar--desktop-shell",
+        "kind": "optional",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": []
+      },
+      {
+        "component": "SplitterListDetail",
+        "storyId": "patterns-splitter--list-and-detail",
+        "kind": "optional",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": []
+      },
+      {
+        "component": "WebNavigationRecords",
+        "storyId": "patterns-webnavigation--records",
+        "kind": "optional",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 1440,
+        "overflowingElements": []
+      }
+    ],
+    "landscape": [
+      {
+        "component": "Layout",
+        "storyId": "components-layout--layout",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 844,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 738,
+          "height": 42
+        }
+      },
+      {
+        "component": "AuthScreenLayout",
+        "storyId": "components-layout--auth-screen-layout",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 844,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 738,
+          "height": 544
+        }
+      },
+      {
+        "component": "BottomCTA",
+        "storyId": "components-actions--bottom-cta",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 844,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 738,
+          "height": 97
+        }
+      },
+      {
+        "component": "Select",
+        "storyId": "components-inputs--select",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 844,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 738,
+          "height": 72
+        }
+      },
+      {
+        "component": "DatePicker",
+        "storyId": "components-inputs--date-picker",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 844,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 738,
+          "height": 72
+        }
+      },
+      {
+        "component": "TopBar",
+        "storyId": "components-navigation--top-bar",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 844,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 738,
+          "height": 52
+        }
+      },
+      {
+        "component": "BottomNavigation",
+        "storyId": "components-navigation--bottom-navigation",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 844,
+        "overflowingElements": []
+      },
+      {
+        "component": "Menu",
+        "storyId": "components-navigation--menu",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 844,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 738,
+          "height": 56
+        }
+      },
+      {
+        "component": "Toast",
+        "storyId": "components-feedback--toast",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 844,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 738,
+          "height": 78
+        }
+      },
+      {
+        "component": "Tour",
+        "storyId": "components-overlays--tour",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 844,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 738,
+          "height": 368
+        }
+      },
+      {
+        "component": "Dialog",
+        "storyId": "components-overlays--dialog",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 844,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 420,
+          "height": 44
+        }
+      },
+      {
+        "component": "AlertDialog",
+        "storyId": "components-overlays--alert-dialog",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 844,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 320,
+          "height": 44
+        }
+      },
+      {
+        "component": "Sheet",
+        "storyId": "components-overlays--sheet",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 844,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 738,
+          "height": 44
+        }
+      },
+      {
+        "component": "SidePanel",
+        "storyId": "components-overlays--side-panel",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 844,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 738,
+          "height": 256
+        }
+      },
+      {
+        "component": "Popover",
+        "storyId": "components-overlays--popover",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 844,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 738,
+          "height": 440
+        }
+      },
+      {
+        "component": "CommandPalette",
+        "storyId": "components-overlays--command-palette",
+        "kind": "canonical",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 844,
+        "overflowingElements": [],
+        "renderer": {
+          "width": 738,
+          "height": 96
+        }
+      },
+      {
+        "component": "FabNotes",
+        "storyId": "patterns-floating-action-button--notes",
+        "kind": "optional",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 844,
+        "overflowingElements": []
+      },
+      {
+        "component": "TimePicker",
+        "storyId": "patterns-time-selection--choose-time",
+        "kind": "optional",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 844,
+        "overflowingElements": []
+      },
+      {
+        "component": "Cascader",
+        "storyId": "patterns-tree--cascader-composition",
+        "kind": "optional",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 844,
+        "overflowingElements": []
+      },
+      {
+        "component": "TreeSelect",
+        "storyId": "patterns-tree--tree-select-composition",
+        "kind": "optional",
+        "render": "pass",
+        "runtimeErrors": [],
+        "horizontalScroll": false,
+        "documentWidth": 844,
+        "overflowingElements": []
+      }
+    ]
+  },
+  "touch": {
+    "mobile": [
+      {
+        "component": "Dialog",
+        "storyId": "components-overlays--dialog",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "surfaces": [
+          {
+            "tag": "div",
+            "role": "dialog",
+            "cls": "hjm-dialog",
+            "label": "",
+            "left": 16,
+            "top": 297,
+            "right": 374,
+            "bottom": 547,
+            "width": 358,
+            "height": 250,
+            "inside": true
+          }
+        ],
+        "openScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "openShot": "shots/mobile-touch/Dialog-open.png",
+        "surfaceInside": true,
+        "pageHScroll": false,
+        "tapOutside": {
+          "tapped": true,
+          "at": [
+            195,
+            6
+          ]
+        },
+        "afterOutside": 0,
+        "outsideResult": "dismissed",
+        "afterClose": 0,
+        "closeResult": "closed",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/Dialog-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "AlertDialog",
+        "storyId": "components-overlays--alert-dialog",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "surfaces": [
+          {
+            "tag": "div",
+            "role": "alertdialog",
+            "cls": "hjm-alert-dialog",
+            "label": "",
+            "left": 16,
+            "top": 312,
+            "right": 374,
+            "bottom": 532,
+            "width": 358,
+            "height": 220,
+            "inside": true
+          }
+        ],
+        "openScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "openShot": "shots/mobile-touch/AlertDialog-open.png",
+        "surfaceInside": true,
+        "pageHScroll": false,
+        "tapOutside": {
+          "tapped": true,
+          "at": [
+            195,
+            6
+          ]
+        },
+        "afterOutside": 1,
+        "outsideResult": "stayed",
+        "afterClose": 0,
+        "closeResult": "closed",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/AlertDialog-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "Sheet",
+        "storyId": "components-overlays--sheet",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "surfaces": [
+          {
+            "tag": "div",
+            "role": "dialog",
+            "cls": "hjm-sheet",
+            "label": "",
+            "left": 16,
+            "top": 596,
+            "right": 374,
+            "bottom": 844,
+            "width": 358,
+            "height": 248,
+            "inside": true
+          }
+        ],
+        "openScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "openShot": "shots/mobile-touch/Sheet-open.png",
+        "surfaceInside": true,
+        "pageHScroll": false,
+        "tapOutside": {
+          "tapped": true,
+          "at": [
+            195,
+            6
+          ]
+        },
+        "afterOutside": 0,
+        "outsideResult": "dismissed",
+        "afterClose": 0,
+        "closeResult": "closed",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/Sheet-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "SidePanel",
+        "storyId": "components-overlays--side-panel",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "surfaces": [
+          {
+            "tag": "div",
+            "role": "dialog",
+            "cls": "hjm-side-panel",
+            "label": "",
+            "left": 0,
+            "top": 0,
+            "right": 390,
+            "bottom": 844,
+            "width": 390,
+            "height": 844,
+            "inside": true
+          }
+        ],
+        "openScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "openShot": "shots/mobile-touch/SidePanel-open.png",
+        "surfaceInside": true,
+        "pageHScroll": false,
+        "tapOutside": {
+          "tapped": false
+        },
+        "afterOutside": 1,
+        "outsideResult": "stayed",
+        "afterClose": 0,
+        "closeResult": "closed",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/SidePanel-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "Popover",
+        "storyId": "components-overlays--popover",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "surfaces": [
+          {
+            "tag": "div",
+            "role": "dialog",
+            "cls": "hjm-popover",
+            "label": "",
+            "left": 22,
+            "top": 407,
+            "right": 382,
+            "bottom": 677,
+            "width": 360,
+            "height": 270,
+            "inside": true
+          }
+        ],
+        "openScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "openShot": "shots/mobile-touch/Popover-open.png",
+        "surfaceInside": true,
+        "pageHScroll": false,
+        "tapOutside": {
+          "tapped": true,
+          "at": [
+            195,
+            6
+          ]
+        },
+        "afterOutside": 0,
+        "outsideResult": "dismissed",
+        "afterClose": 0,
+        "closeResult": "closed",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/Popover-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "ConfirmPopover",
+        "storyId": "patterns-popover--reversible-confirmation",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "surfaces": [
+          {
+            "tag": "div",
+            "role": "dialog",
+            "cls": "hjm-popover",
+            "label": "",
+            "left": 16,
+            "top": 208,
+            "right": 376,
+            "bottom": 430,
+            "width": 360,
+            "height": 222,
+            "inside": true
+          }
+        ],
+        "openScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "openShot": "shots/mobile-touch/ConfirmPopover-open.png",
+        "surfaceInside": true,
+        "pageHScroll": false,
+        "tapOutside": {
+          "tapped": true,
+          "at": [
+            195,
+            6
+          ]
+        },
+        "afterOutside": 0,
+        "outsideResult": "dismissed",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/ConfirmPopover-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "Tooltip",
+        "storyId": "components-overlays--tooltip",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "surfaces": [],
+        "openScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "openShot": "shots/mobile-touch/Tooltip-open.png",
+        "status": "fail",
+        "error": "no surface appeared after tap",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/Tooltip-failed.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "Menu",
+        "storyId": "components-navigation--menu",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "surfaces": [
+          {
+            "tag": "div",
+            "role": "menu",
+            "cls": "hjm-menu__content",
+            "label": "선수 작업",
+            "left": 33,
+            "top": 315,
+            "right": 253,
+            "bottom": 493,
+            "width": 220,
+            "height": 178,
+            "inside": true
+          }
+        ],
+        "openScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "openShot": "shots/mobile-touch/Menu-open.png",
+        "surfaceInside": true,
+        "pageHScroll": false,
+        "tapOutside": {
+          "tapped": true,
+          "at": [
+            195,
+            6
+          ]
+        },
+        "afterOutside": 0,
+        "outsideResult": "dismissed",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/Menu-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "ContextMenu",
+        "storyId": "components-navigation--context-menu",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "surfaces": [
+          {
+            "tag": "div",
+            "role": "menu",
+            "cls": "hjm-context-menu",
+            "label": "기록 작업",
+            "left": 170,
+            "top": 386,
+            "right": 390,
+            "bottom": 528,
+            "width": 220,
+            "height": 142,
+            "inside": true
+          }
+        ],
+        "openScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "openShot": "shots/mobile-touch/ContextMenu-open.png",
+        "surfaceInside": true,
+        "pageHScroll": false,
+        "tapOutside": {
+          "tapped": true,
+          "at": [
+            195,
+            6
+          ]
+        },
+        "afterOutside": 0,
+        "outsideResult": "dismissed",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/ContextMenu-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "Menubar",
+        "storyId": "components-navigation--menubar",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "surfaces": [
+          {
+            "tag": "div",
+            "role": "menu",
+            "cls": "hjm-menubar__panel",
+            "label": "파일",
+            "left": 41,
+            "top": 347,
+            "right": 261,
+            "bottom": 445,
+            "width": 220,
+            "height": 98,
+            "inside": true
+          }
+        ],
+        "openScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "openShot": "shots/mobile-touch/Menubar-open.png",
+        "surfaceInside": true,
+        "pageHScroll": false,
+        "tapOutside": {
+          "tapped": true,
+          "at": [
+            195,
+            6
+          ]
+        },
+        "afterOutside": 0,
+        "outsideResult": "dismissed",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/Menubar-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "Select",
+        "storyId": "components-inputs--select",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "surfaces": [
+          {
+            "tag": "div",
+            "role": "listbox",
+            "cls": "hjm-select__listbox",
+            "label": "언어",
+            "left": 33,
+            "top": 343,
+            "right": 357,
+            "bottom": 521,
+            "width": 324,
+            "height": 178,
+            "inside": true
+          }
+        ],
+        "openScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "openShot": "shots/mobile-touch/Select-open.png",
+        "surfaceInside": true,
+        "pageHScroll": false,
+        "tapOutside": {
+          "tapped": true,
+          "at": [
+            195,
+            6
+          ]
+        },
+        "afterOutside": 0,
+        "outsideResult": "dismissed",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/Select-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "Combobox",
+        "storyId": "components-inputs--combobox",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "surfaces": [
+          {
+            "tag": "div",
+            "role": "listbox",
+            "cls": "hjm-combobox__listbox",
+            "label": "도시",
+            "left": 50,
+            "top": 538,
+            "right": 332,
+            "bottom": 604,
+            "width": 282,
+            "height": 66,
+            "inside": true
+          }
+        ],
+        "openScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "openShot": "shots/mobile-touch/Combobox-open.png",
+        "surfaceInside": true,
+        "pageHScroll": false,
+        "tapOutside": {
+          "tapped": true,
+          "at": [
+            195,
+            6
+          ]
+        },
+        "afterOutside": 0,
+        "outsideResult": "dismissed",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/Combobox-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "DatePicker",
+        "storyId": "components-inputs--date-picker",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "surfaces": [
+          {
+            "tag": "div",
+            "role": "dialog",
+            "cls": "hjm-date-picker__popover",
+            "label": "관람일",
+            "left": 33,
+            "top": 343,
+            "right": 391,
+            "bottom": 711,
+            "width": 358,
+            "height": 368,
+            "inside": false
+          }
+        ],
+        "openScroll": {
+          "documentWidth": 391,
+          "innerWidth": 391,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": true
+        },
+        "openShot": "shots/mobile-touch/DatePicker-open.png",
+        "surfaceInside": false,
+        "pageHScroll": true,
+        "tapOutside": {
+          "tapped": true,
+          "at": [
+            195,
+            6
+          ]
+        },
+        "afterOutside": 0,
+        "outsideResult": "dismissed",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/DatePicker-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "TimePicker",
+        "storyId": "patterns-time-selection--choose-time",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "surfaces": [
+          {
+            "tag": "div",
+            "role": "listbox",
+            "cls": "hjm-select__listbox",
+            "label": "시",
+            "left": 16,
+            "top": 152,
+            "right": 374,
+            "bottom": 828,
+            "width": 358,
+            "height": 676,
+            "inside": true
+          }
+        ],
+        "openScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "openShot": "shots/mobile-touch/TimePicker-open.png",
+        "surfaceInside": true,
+        "pageHScroll": false,
+        "tapOutside": {
+          "tapped": true,
+          "at": [
+            195,
+            6
+          ]
+        },
+        "afterOutside": 0,
+        "outsideResult": "dismissed",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/TimePicker-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "CommandPalette",
+        "storyId": "components-overlays--command-palette",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "surfaces": [
+          {
+            "tag": "div",
+            "role": "dialog",
+            "cls": "hjm-command-palette",
+            "label": "명령 팔레트",
+            "left": 16,
+            "top": 307,
+            "right": 374,
+            "bottom": 537,
+            "width": 358,
+            "height": 230,
+            "inside": true
+          }
+        ],
+        "openScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "openShot": "shots/mobile-touch/CommandPalette-open.png",
+        "surfaceInside": true,
+        "pageHScroll": false,
+        "tapOutside": {
+          "tapped": true,
+          "at": [
+            195,
+            6
+          ]
+        },
+        "afterOutside": 0,
+        "outsideResult": "dismissed",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/CommandPalette-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "Cascader",
+        "storyId": "patterns-tree--cascader-composition",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "surfaces": [
+          {
+            "tag": "div",
+            "role": "dialog",
+            "cls": "hjm-popover",
+            "label": "",
+            "left": 16,
+            "top": 124,
+            "right": 376,
+            "bottom": 494,
+            "width": 360,
+            "height": 370,
+            "inside": true
+          }
+        ],
+        "openScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "openShot": "shots/mobile-touch/Cascader-open.png",
+        "surfaceInside": true,
+        "pageHScroll": false,
+        "tapOutside": {
+          "tapped": true,
+          "at": [
+            195,
+            6
+          ]
+        },
+        "afterOutside": 0,
+        "outsideResult": "dismissed",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/Cascader-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "TreeSelect",
+        "storyId": "patterns-tree--tree-select-composition",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "surfaces": [
+          {
+            "tag": "div",
+            "role": "dialog",
+            "cls": "hjm-popover",
+            "label": "",
+            "left": 16,
+            "top": 124,
+            "right": 376,
+            "bottom": 522,
+            "width": 360,
+            "height": 398,
+            "inside": true
+          }
+        ],
+        "openScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "openShot": "shots/mobile-touch/TreeSelect-open.png",
+        "surfaceInside": true,
+        "pageHScroll": false,
+        "tapOutside": {
+          "tapped": true,
+          "at": [
+            195,
+            6
+          ]
+        },
+        "afterOutside": 0,
+        "outsideResult": "dismissed",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/TreeSelect-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "MorphingMenu",
+        "storyId": "patterns-optional-motion--playground",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "surfaces": [
+          {
+            "tag": "div",
+            "role": "menu",
+            "cls": "",
+            "label": "작업 선택",
+            "left": 16,
+            "top": 187,
+            "right": 256,
+            "bottom": 319,
+            "width": 240,
+            "height": 132,
+            "inside": true
+          }
+        ],
+        "openScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "openShot": "shots/mobile-touch/MorphingMenu-open.png",
+        "surfaceInside": true,
+        "pageHScroll": false,
+        "tapOutside": {
+          "tapped": true,
+          "at": [
+            195,
+            6
+          ]
+        },
+        "afterOutside": 0,
+        "outsideResult": "dismissed",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/MorphingMenu-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "Tour",
+        "storyId": "components-overlays--tour",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "steps": [
+          {
+            "step": 1,
+            "surfaces": [
+              {
+                "tag": "div",
+                "role": "dialog",
+                "cls": "hjm-tour",
+                "label": "기록 앱 둘러보기",
+                "left": 33,
+                "top": 559,
+                "right": 285.5,
+                "bottom": 727,
+                "width": 252,
+                "height": 168,
+                "inside": true
+              }
+            ],
+            "inside": true,
+            "scroll": {
+              "documentWidth": 390,
+              "innerWidth": 390,
+              "visualWidth": 390,
+              "scrolledX": 0,
+              "overflow": false
+            },
+            "shot": "shots/mobile-touch/Tour-step1.png"
+          },
+          {
+            "step": 2,
+            "surfaces": [
+              {
+                "tag": "div",
+                "role": "dialog",
+                "cls": "hjm-tour",
+                "label": "기록 앱 둘러보기",
+                "left": 33,
+                "top": 559,
+                "right": 285.5,
+                "bottom": 727,
+                "width": 252,
+                "height": 168,
+                "inside": true
+              }
+            ],
+            "inside": true,
+            "scroll": {
+              "documentWidth": 390,
+              "innerWidth": 390,
+              "visualWidth": 390,
+              "scrolledX": 0,
+              "overflow": false
+            },
+            "shot": "shots/mobile-touch/Tour-step2.png"
+          },
+          {
+            "step": 3,
+            "surfaces": [
+              {
+                "tag": "div",
+                "role": "dialog",
+                "cls": "hjm-tour",
+                "label": "기록 앱 둘러보기",
+                "left": 33,
+                "top": 619,
+                "right": 313.3,
+                "bottom": 787,
+                "width": 280,
+                "height": 168,
+                "inside": true
+              }
+            ],
+            "inside": true,
+            "scroll": {
+              "documentWidth": 390,
+              "innerWidth": 390,
+              "visualWidth": 390,
+              "scrolledX": 0,
+              "overflow": false
+            },
+            "shot": "shots/mobile-touch/Tour-step3.png"
+          }
+        ],
+        "surfaceInside": true,
+        "pageHScroll": false,
+        "tapOutside": {
+          "tapped": true,
+          "at": [
+            195,
+            6
+          ]
+        },
+        "outsideResult": "stayed",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/Tour-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "Toast",
+        "storyId": "components-feedback--toast",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "surfaces": [
+          {
+            "x": 33,
+            "y": 263,
+            "width": 324,
+            "height": 78,
+            "inside": true
+          }
+        ],
+        "openScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "pageHScroll": false,
+        "surfaceInside": true,
+        "openShot": "shots/mobile-touch/Toast-open.png",
+        "closeResult": "closed",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/Toast-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "ColorPicker",
+        "storyId": "components-inputs--color-picker",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "opacityAfterTap": "23",
+        "surfaceInside": true,
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/ColorPicker-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "Button",
+        "storyId": "components-actions--button",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/Button-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "IconButton",
+        "storyId": "components-actions--icon-button",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/IconButton-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "BottomCTA",
+        "storyId": "components-actions--bottom-cta",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/BottomCTA-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "Form",
+        "storyId": "components-inputs--form",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/Form-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "Chip",
+        "storyId": "components-inputs--chip",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/Chip-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "LoadMore",
+        "storyId": "components-navigation--load-more",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/LoadMore-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "ListRow",
+        "storyId": "components-data-display--list-row",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/ListRow-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "UploadItem",
+        "storyId": "components-data-display--upload-item",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/UploadItem-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "Result",
+        "storyId": "components-feedback--result",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/Result-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "Top",
+        "storyId": "components-layout--top",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/Top-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "Link",
+        "storyId": "components-actions--link",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/Link-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "BottomNavigation",
+        "storyId": "components-navigation--bottom-navigation",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/BottomNavigation-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "AuthProviderButton",
+        "storyId": "components-actions--auth-provider-button",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/AuthProviderButton-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "Field",
+        "storyId": "components-inputs--field",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/Field-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "SearchField",
+        "storyId": "components-inputs--search-field",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/SearchField-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "TextArea",
+        "storyId": "components-inputs--text-area",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/TextArea-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "PasswordField",
+        "storyId": "components-inputs--password-field",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/PasswordField-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "OtpField",
+        "storyId": "components-inputs--otp-field",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/OtpField-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "NumberField",
+        "storyId": "components-inputs--number-field",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/NumberField-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "Slider",
+        "storyId": "components-inputs--slider",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "valueAfterTap": "7",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/Slider-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "Checkbox",
+        "storyId": "components-inputs--checkbox",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/Checkbox-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "Radio",
+        "storyId": "components-inputs--radio",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/Radio-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "CheckboxGroup",
+        "storyId": "components-inputs--checkbox-group",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/CheckboxGroup-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "RadioGroup",
+        "storyId": "components-inputs--radio-group",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/RadioGroup-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "Switch",
+        "storyId": "components-inputs--switch",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/Switch-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "SegmentedControl",
+        "storyId": "components-inputs--segmented-control",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/SegmentedControl-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "Tabs",
+        "storyId": "components-navigation--tabs",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/Tabs-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "Accordion",
+        "storyId": "components-data-display--accordion",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/Accordion-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "Collapsible",
+        "storyId": "components-data-display--collapsible",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/Collapsible-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "ToggleGroup",
+        "storyId": "components-inputs--toggle-group",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/ToggleGroup-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "TagsInput",
+        "storyId": "components-inputs--tags-input",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/TagsInput-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "DateRangePicker",
+        "storyId": "components-inputs--date-range-picker",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/DateRangePicker-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "Calendar",
+        "storyId": "components-data-display--calendar",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/Calendar-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "Carousel",
+        "storyId": "components-data-display--carousel",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/Carousel-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "Splitter",
+        "storyId": "components-layout--splitter",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "statusAfterDrag": "저장된 목록 폭 45%",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/Splitter-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "DataTable",
+        "storyId": "components-data-display--data-table",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/DataTable-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "Pagination",
+        "storyId": "components-navigation--pagination",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/Pagination-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "Tree",
+        "storyId": "components-data-display--tree",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "status": "fail",
+        "error": "'false' == 'true'",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/Tree-failed.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "Agreement",
+        "storyId": "components-inputs--agreement",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/Agreement-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "TransferList",
+        "storyId": "components-inputs--transfer-list",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/TransferList-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "Mentions",
+        "storyId": "components-inputs--mentions",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/Mentions-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "Sidebar",
+        "storyId": "components-navigation--sidebar",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/Sidebar-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "Breadcrumb",
+        "storyId": "components-navigation--breadcrumb",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/Breadcrumb-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "Anchor",
+        "storyId": "components-navigation--anchor",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/Anchor-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "Watermark",
+        "storyId": "components-feedback--watermark",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/Watermark-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "Affix",
+        "storyId": "components-infrastructure--affix",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/Affix-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "Rating",
+        "storyId": "patterns-rating--half-point",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/Rating-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "FabNotes",
+        "storyId": "patterns-floating-action-button--notes",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/FabNotes-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "FloatingActionButton",
+        "storyId": "components-actions--floating-action-button",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/FloatingActionButton-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "TopBar",
+        "storyId": "components-navigation--top-bar",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "mode": "mobile",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 390,
+          "innerWidth": 390,
+          "visualWidth": 390,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/mobile-touch/TopBar-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      }
+    ],
+    "landscape": [
+      {
+        "component": "Dialog",
+        "storyId": "components-overlays--dialog",
+        "viewport": {
+          "width": 844,
+          "height": 390
+        },
+        "mode": "landscape",
+        "surfaces": [
+          {
+            "tag": "div",
+            "role": "dialog",
+            "cls": "hjm-dialog",
+            "label": "",
+            "left": 134,
+            "top": 80,
+            "right": 710,
+            "bottom": 310,
+            "width": 576,
+            "height": 230,
+            "inside": true
+          }
+        ],
+        "openScroll": {
+          "documentWidth": 844,
+          "innerWidth": 844,
+          "visualWidth": 844,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "openShot": "shots/landscape-touch/Dialog-open.png",
+        "surfaceInside": true,
+        "pageHScroll": false,
+        "tapOutside": {
+          "tapped": true,
+          "at": [
+            422,
+            6
+          ]
+        },
+        "afterOutside": 0,
+        "outsideResult": "dismissed",
+        "afterClose": 0,
+        "closeResult": "closed",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 844,
+          "innerWidth": 844,
+          "visualWidth": 844,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/landscape-touch/Dialog-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "AlertDialog",
+        "storyId": "components-overlays--alert-dialog",
+        "viewport": {
+          "width": 844,
+          "height": 390
+        },
+        "mode": "landscape",
+        "surfaces": [
+          {
+            "tag": "div",
+            "role": "alertdialog",
+            "cls": "hjm-alert-dialog",
+            "label": "",
+            "left": 134,
+            "top": 111,
+            "right": 710,
+            "bottom": 279,
+            "width": 576,
+            "height": 168,
+            "inside": true
+          }
+        ],
+        "openScroll": {
+          "documentWidth": 844,
+          "innerWidth": 844,
+          "visualWidth": 844,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "openShot": "shots/landscape-touch/AlertDialog-open.png",
+        "surfaceInside": true,
+        "pageHScroll": false,
+        "tapOutside": {
+          "tapped": true,
+          "at": [
+            422,
+            6
+          ]
+        },
+        "afterOutside": 1,
+        "outsideResult": "stayed",
+        "afterClose": 0,
+        "closeResult": "closed",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 844,
+          "innerWidth": 844,
+          "visualWidth": 844,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/landscape-touch/AlertDialog-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "Sheet",
+        "storyId": "components-overlays--sheet",
+        "viewport": {
+          "width": 844,
+          "height": 390
+        },
+        "mode": "landscape",
+        "surfaces": [
+          {
+            "tag": "div",
+            "role": "dialog",
+            "cls": "hjm-sheet",
+            "label": "",
+            "left": 102,
+            "top": 162,
+            "right": 742,
+            "bottom": 390,
+            "width": 640,
+            "height": 228,
+            "inside": true
+          }
+        ],
+        "openScroll": {
+          "documentWidth": 844,
+          "innerWidth": 844,
+          "visualWidth": 844,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "openShot": "shots/landscape-touch/Sheet-open.png",
+        "surfaceInside": true,
+        "pageHScroll": false,
+        "tapOutside": {
+          "tapped": true,
+          "at": [
+            422,
+            6
+          ]
+        },
+        "afterOutside": 0,
+        "outsideResult": "dismissed",
+        "afterClose": 0,
+        "closeResult": "closed",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 844,
+          "innerWidth": 844,
+          "visualWidth": 844,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/landscape-touch/Sheet-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "SidePanel",
+        "storyId": "components-overlays--side-panel",
+        "viewport": {
+          "width": 844,
+          "height": 390
+        },
+        "mode": "landscape",
+        "surfaces": [
+          {
+            "tag": "div",
+            "role": "dialog",
+            "cls": "hjm-side-panel",
+            "label": "",
+            "left": 444,
+            "top": 0,
+            "right": 844,
+            "bottom": 390,
+            "width": 400,
+            "height": 390,
+            "inside": true
+          }
+        ],
+        "openScroll": {
+          "documentWidth": 844,
+          "innerWidth": 844,
+          "visualWidth": 844,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "openShot": "shots/landscape-touch/SidePanel-open.png",
+        "surfaceInside": true,
+        "pageHScroll": false,
+        "tapOutside": {
+          "tapped": true,
+          "at": [
+            422,
+            6
+          ]
+        },
+        "afterOutside": 0,
+        "outsideResult": "dismissed",
+        "afterClose": 0,
+        "closeResult": "closed",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 844,
+          "innerWidth": 844,
+          "visualWidth": 844,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/landscape-touch/SidePanel-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "Popover",
+        "storyId": "components-overlays--popover",
+        "viewport": {
+          "width": 844,
+          "height": 390
+        },
+        "mode": "landscape",
+        "surfaces": [
+          {
+            "tag": "div",
+            "role": "dialog",
+            "cls": "hjm-popover",
+            "label": "",
+            "left": 53,
+            "top": 17,
+            "right": 413,
+            "bottom": 287,
+            "width": 360,
+            "height": 270,
+            "inside": true
+          }
+        ],
+        "openScroll": {
+          "documentWidth": 844,
+          "innerWidth": 844,
+          "visualWidth": 844,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "openShot": "shots/landscape-touch/Popover-open.png",
+        "surfaceInside": true,
+        "pageHScroll": false,
+        "tapOutside": {
+          "tapped": true,
+          "at": [
+            422,
+            6
+          ]
+        },
+        "afterOutside": 0,
+        "outsideResult": "dismissed",
+        "afterClose": 0,
+        "closeResult": "closed",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 844,
+          "innerWidth": 844,
+          "visualWidth": 844,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/landscape-touch/Popover-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "ConfirmPopover",
+        "storyId": "patterns-popover--reversible-confirmation",
+        "viewport": {
+          "width": 844,
+          "height": 390
+        },
+        "mode": "landscape",
+        "surfaces": [
+          {
+            "tag": "div",
+            "role": "dialog",
+            "cls": "hjm-popover",
+            "label": "",
+            "left": 32,
+            "top": 220,
+            "right": 392,
+            "bottom": 382,
+            "width": 360,
+            "height": 162,
+            "inside": true
+          }
+        ],
+        "openScroll": {
+          "documentWidth": 844,
+          "innerWidth": 844,
+          "visualWidth": 844,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "openShot": "shots/landscape-touch/ConfirmPopover-open.png",
+        "surfaceInside": true,
+        "pageHScroll": false,
+        "tapOutside": {
+          "tapped": true,
+          "at": [
+            422,
+            6
+          ]
+        },
+        "afterOutside": 0,
+        "outsideResult": "dismissed",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 844,
+          "innerWidth": 844,
+          "visualWidth": 844,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/landscape-touch/ConfirmPopover-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "Tooltip",
+        "storyId": "components-overlays--tooltip",
+        "viewport": {
+          "width": 844,
+          "height": 390
+        },
+        "mode": "landscape",
+        "surfaces": [],
+        "openScroll": {
+          "documentWidth": 844,
+          "innerWidth": 844,
+          "visualWidth": 844,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "openShot": "shots/landscape-touch/Tooltip-open.png",
+        "status": "fail",
+        "error": "no surface appeared after tap",
+        "finalScroll": {
+          "documentWidth": 844,
+          "innerWidth": 844,
+          "visualWidth": 844,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/landscape-touch/Tooltip-failed.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "Menu",
+        "storyId": "components-navigation--menu",
+        "viewport": {
+          "width": 844,
+          "height": 390
+        },
+        "mode": "landscape",
+        "surfaces": [
+          {
+            "tag": "div",
+            "role": "menu",
+            "cls": "hjm-menu__content",
+            "label": "선수 작업",
+            "left": 53,
+            "top": 57,
+            "right": 273,
+            "bottom": 235,
+            "width": 220,
+            "height": 178,
+            "inside": true
+          }
+        ],
+        "openScroll": {
+          "documentWidth": 844,
+          "innerWidth": 844,
+          "visualWidth": 844,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "openShot": "shots/landscape-touch/Menu-open.png",
+        "surfaceInside": true,
+        "pageHScroll": false,
+        "tapOutside": {
+          "tapped": true,
+          "at": [
+            422,
+            6
+          ]
+        },
+        "afterOutside": 0,
+        "outsideResult": "dismissed",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 844,
+          "innerWidth": 844,
+          "visualWidth": 844,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/landscape-touch/Menu-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "ContextMenu",
+        "storyId": "components-navigation--context-menu",
+        "viewport": {
+          "width": 844,
+          "height": 390
+        },
+        "mode": "landscape",
+        "surfaces": [
+          {
+            "tag": "div",
+            "role": "menu",
+            "cls": "hjm-context-menu",
+            "label": "기록 작업",
+            "left": 422,
+            "top": 248,
+            "right": 642,
+            "bottom": 390,
+            "width": 220,
+            "height": 142,
+            "inside": true
+          }
+        ],
+        "openScroll": {
+          "documentWidth": 844,
+          "innerWidth": 844,
+          "visualWidth": 844,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "openShot": "shots/landscape-touch/ContextMenu-open.png",
+        "surfaceInside": true,
+        "pageHScroll": false,
+        "tapOutside": {
+          "tapped": true,
+          "at": [
+            422,
+            6
+          ]
+        },
+        "afterOutside": 0,
+        "outsideResult": "dismissed",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 844,
+          "innerWidth": 844,
+          "visualWidth": 844,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/landscape-touch/ContextMenu-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "Select",
+        "storyId": "components-inputs--select",
+        "viewport": {
+          "width": 844,
+          "height": 390
+        },
+        "mode": "landscape",
+        "surfaces": [
+          {
+            "tag": "div",
+            "role": "listbox",
+            "cls": "hjm-select__listbox",
+            "label": "언어",
+            "left": 53,
+            "top": 85,
+            "right": 791,
+            "bottom": 263,
+            "width": 738,
+            "height": 178,
+            "inside": true
+          }
+        ],
+        "openScroll": {
+          "documentWidth": 844,
+          "innerWidth": 844,
+          "visualWidth": 844,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "openShot": "shots/landscape-touch/Select-open.png",
+        "surfaceInside": true,
+        "pageHScroll": false,
+        "tapOutside": {
+          "tapped": true,
+          "at": [
+            422,
+            6
+          ]
+        },
+        "afterOutside": 0,
+        "outsideResult": "dismissed",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 844,
+          "innerWidth": 844,
+          "visualWidth": 844,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/landscape-touch/Select-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "Combobox",
+        "storyId": "components-inputs--combobox",
+        "viewport": {
+          "width": 844,
+          "height": 390
+        },
+        "mode": "landscape",
+        "surfaces": [
+          {
+            "tag": "div",
+            "role": "listbox",
+            "cls": "hjm-combobox__listbox",
+            "label": "도시",
+            "left": 70,
+            "top": 274,
+            "right": 766,
+            "bottom": 340,
+            "width": 696,
+            "height": 66,
+            "inside": true
+          }
+        ],
+        "openScroll": {
+          "documentWidth": 844,
+          "innerWidth": 844,
+          "visualWidth": 844,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "openShot": "shots/landscape-touch/Combobox-open.png",
+        "surfaceInside": true,
+        "pageHScroll": false,
+        "tapOutside": {
+          "tapped": true,
+          "at": [
+            422,
+            6
+          ]
+        },
+        "afterOutside": 0,
+        "outsideResult": "dismissed",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 844,
+          "innerWidth": 844,
+          "visualWidth": 844,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/landscape-touch/Combobox-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "DatePicker",
+        "storyId": "components-inputs--date-picker",
+        "viewport": {
+          "width": 844,
+          "height": 390
+        },
+        "mode": "landscape",
+        "surfaces": [
+          {
+            "tag": "div",
+            "role": "dialog",
+            "cls": "hjm-date-picker__popover",
+            "label": "관람일",
+            "left": 53,
+            "top": 42,
+            "right": 413,
+            "bottom": 410,
+            "width": 360,
+            "height": 368,
+            "inside": false
+          }
+        ],
+        "openScroll": {
+          "documentWidth": 844,
+          "innerWidth": 844,
+          "visualWidth": 844,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "openShot": "shots/landscape-touch/DatePicker-open.png",
+        "surfaceInside": false,
+        "pageHScroll": false,
+        "tapOutside": {
+          "tapped": true,
+          "at": [
+            6,
+            6
+          ]
+        },
+        "afterOutside": 0,
+        "outsideResult": "dismissed",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 844,
+          "innerWidth": 844,
+          "visualWidth": 844,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/landscape-touch/DatePicker-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "TimePicker",
+        "storyId": "patterns-time-selection--choose-time",
+        "viewport": {
+          "width": 844,
+          "height": 390
+        },
+        "mode": "landscape",
+        "surfaces": [
+          {
+            "tag": "div",
+            "role": "listbox",
+            "cls": "hjm-select__listbox",
+            "label": "시",
+            "left": 32,
+            "top": 164,
+            "right": 812,
+            "bottom": 374,
+            "width": 780,
+            "height": 210,
+            "inside": true
+          }
+        ],
+        "openScroll": {
+          "documentWidth": 844,
+          "innerWidth": 844,
+          "visualWidth": 844,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "openShot": "shots/landscape-touch/TimePicker-open.png",
+        "surfaceInside": true,
+        "pageHScroll": false,
+        "tapOutside": {
+          "tapped": true,
+          "at": [
+            422,
+            6
+          ]
+        },
+        "afterOutside": 0,
+        "outsideResult": "dismissed",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 844,
+          "innerWidth": 844,
+          "visualWidth": 844,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/landscape-touch/TimePicker-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "CommandPalette",
+        "storyId": "components-overlays--command-palette",
+        "viewport": {
+          "width": 844,
+          "height": 390
+        },
+        "mode": "landscape",
+        "surfaces": [
+          {
+            "tag": "div",
+            "role": "dialog",
+            "cls": "hjm-command-palette",
+            "label": "명령 팔레트",
+            "left": 142,
+            "top": 80,
+            "right": 702,
+            "bottom": 310,
+            "width": 560,
+            "height": 230,
+            "inside": true
+          }
+        ],
+        "openScroll": {
+          "documentWidth": 844,
+          "innerWidth": 844,
+          "visualWidth": 844,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "openShot": "shots/landscape-touch/CommandPalette-open.png",
+        "surfaceInside": true,
+        "pageHScroll": false,
+        "tapOutside": {
+          "tapped": true,
+          "at": [
+            422,
+            6
+          ]
+        },
+        "afterOutside": 0,
+        "outsideResult": "dismissed",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 844,
+          "innerWidth": 844,
+          "visualWidth": 844,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/landscape-touch/CommandPalette-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "Cascader",
+        "storyId": "patterns-tree--cascader-composition",
+        "viewport": {
+          "width": 844,
+          "height": 390
+        },
+        "mode": "landscape",
+        "surfaces": [
+          {
+            "tag": "div",
+            "role": "dialog",
+            "cls": "hjm-popover",
+            "label": "",
+            "left": 32,
+            "top": 136,
+            "right": 392,
+            "bottom": 382,
+            "width": 360,
+            "height": 246,
+            "inside": true
+          }
+        ],
+        "openScroll": {
+          "documentWidth": 844,
+          "innerWidth": 844,
+          "visualWidth": 844,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "openShot": "shots/landscape-touch/Cascader-open.png",
+        "surfaceInside": true,
+        "pageHScroll": false,
+        "tapOutside": {
+          "tapped": true,
+          "at": [
+            422,
+            6
+          ]
+        },
+        "afterOutside": 0,
+        "outsideResult": "dismissed",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 844,
+          "innerWidth": 844,
+          "visualWidth": 844,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/landscape-touch/Cascader-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "TreeSelect",
+        "storyId": "patterns-tree--tree-select-composition",
+        "viewport": {
+          "width": 844,
+          "height": 390
+        },
+        "mode": "landscape",
+        "surfaces": [
+          {
+            "tag": "div",
+            "role": "dialog",
+            "cls": "hjm-popover",
+            "label": "",
+            "left": 32,
+            "top": 136,
+            "right": 392,
+            "bottom": 382,
+            "width": 360,
+            "height": 246,
+            "inside": true
+          }
+        ],
+        "openScroll": {
+          "documentWidth": 844,
+          "innerWidth": 844,
+          "visualWidth": 844,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "openShot": "shots/landscape-touch/TreeSelect-open.png",
+        "surfaceInside": true,
+        "pageHScroll": false,
+        "tapOutside": {
+          "tapped": true,
+          "at": [
+            422,
+            6
+          ]
+        },
+        "afterOutside": 0,
+        "outsideResult": "dismissed",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 844,
+          "innerWidth": 844,
+          "visualWidth": 844,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/landscape-touch/TreeSelect-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "Tour",
+        "storyId": "components-overlays--tour",
+        "viewport": {
+          "width": 844,
+          "height": 390
+        },
+        "mode": "landscape",
+        "steps": [
+          {
+            "step": 1,
+            "surfaces": [
+              {
+                "tag": "div",
+                "role": "dialog",
+                "cls": "hjm-tour",
+                "label": "기록 앱 둘러보기",
+                "left": 53,
+                "top": 105,
+                "right": 305.5,
+                "bottom": 273,
+                "width": 252,
+                "height": 168,
+                "inside": true
+              }
+            ],
+            "inside": true,
+            "scroll": {
+              "documentWidth": 844,
+              "innerWidth": 844,
+              "visualWidth": 844,
+              "scrolledX": 0,
+              "overflow": false
+            },
+            "shot": "shots/landscape-touch/Tour-step1.png"
+          },
+          {
+            "step": 2,
+            "surfaces": [
+              {
+                "tag": "div",
+                "role": "dialog",
+                "cls": "hjm-tour",
+                "label": "기록 앱 둘러보기",
+                "left": 53,
+                "top": 105,
+                "right": 305.5,
+                "bottom": 273,
+                "width": 252,
+                "height": 168,
+                "inside": true
+              }
+            ],
+            "inside": true,
+            "scroll": {
+              "documentWidth": 844,
+              "innerWidth": 844,
+              "visualWidth": 844,
+              "scrolledX": 0,
+              "overflow": false
+            },
+            "shot": "shots/landscape-touch/Tour-step2.png"
+          },
+          {
+            "step": 3,
+            "surfaces": [
+              {
+                "tag": "div",
+                "role": "dialog",
+                "cls": "hjm-tour",
+                "label": "기록 앱 둘러보기",
+                "left": 53,
+                "top": 165,
+                "right": 333.3,
+                "bottom": 333,
+                "width": 280,
+                "height": 168,
+                "inside": true
+              }
+            ],
+            "inside": true,
+            "scroll": {
+              "documentWidth": 844,
+              "innerWidth": 844,
+              "visualWidth": 844,
+              "scrolledX": 0,
+              "overflow": false
+            },
+            "shot": "shots/landscape-touch/Tour-step3.png"
+          }
+        ],
+        "surfaceInside": true,
+        "pageHScroll": false,
+        "tapOutside": {
+          "tapped": true,
+          "at": [
+            422,
+            6
+          ]
+        },
+        "outsideResult": "stayed",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 844,
+          "innerWidth": 844,
+          "visualWidth": 844,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/landscape-touch/Tour-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "Toast",
+        "storyId": "components-feedback--toast",
+        "viewport": {
+          "width": 844,
+          "height": 390
+        },
+        "mode": "landscape",
+        "surfaces": [
+          {
+            "x": 53,
+            "y": 243,
+            "width": 738,
+            "height": 78,
+            "inside": true
+          }
+        ],
+        "openScroll": {
+          "documentWidth": 844,
+          "innerWidth": 844,
+          "visualWidth": 844,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "pageHScroll": false,
+        "surfaceInside": true,
+        "openShot": "shots/landscape-touch/Toast-open.png",
+        "closeResult": "closed",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 844,
+          "innerWidth": 844,
+          "visualWidth": 844,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/landscape-touch/Toast-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "BottomCTA",
+        "storyId": "components-actions--bottom-cta",
+        "viewport": {
+          "width": 844,
+          "height": 390
+        },
+        "mode": "landscape",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 844,
+          "innerWidth": 844,
+          "visualWidth": 844,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/landscape-touch/BottomCTA-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      },
+      {
+        "component": "BottomNavigation",
+        "storyId": "components-navigation--bottom-navigation",
+        "viewport": {
+          "width": 844,
+          "height": 390
+        },
+        "mode": "landscape",
+        "status": "pass",
+        "finalScroll": {
+          "documentWidth": 844,
+          "innerWidth": 844,
+          "visualWidth": 844,
+          "scrolledX": 0,
+          "overflow": false
+        },
+        "shot": "shots/landscape-touch/BottomNavigation-after.png",
+        "runtimeErrors": [],
+        "finalOverflow": false
+      }
+    ]
+  },
+  "touchTargets": [
+    {
+      "component": "Link",
+      "below44Hit": [
+        "a \"컴포넌트 문서로 이동\" box 116x20 hit 81x20"
+      ],
+      "slopReaches44": []
+    },
+    {
+      "component": "SearchField",
+      "below44Hit": [
+        "button \"검색어 지우기\" box 32x32 hit 32x32"
+      ],
+      "slopReaches44": []
+    },
+    {
+      "component": "Chip",
+      "below44Hit": [
+        "button[radio] \"✓전체\" box 62x36 hit 63x36",
+        "button[checkbox] \"완료\" box 42x36 hit 44x36"
+      ],
+      "slopReaches44": []
+    },
+    {
+      "component": "Form",
+      "below44Hit": [
+        "button \"담당자 지우기\" box 32x32 hit 32x32"
+      ],
+      "slopReaches44": []
+    },
+    {
+      "component": "TagsInput",
+      "below44Hit": [],
+      "slopReaches44": [
+        "button \"산책 지우기\" box 16x20 hit 44x44"
+      ]
+    },
+    {
+      "component": "TransferList",
+      "below44Hit": [
+        "button[checkbox] \"전체 기록 모두 선택\" box 16x16 hit 16x16",
+        "button[checkbox] \"모아둔 기록 모두 선택\" box 16x16 hit 16x16"
+      ],
+      "slopReaches44": []
+    },
+    {
+      "component": "Breadcrumb",
+      "below44Hit": [
+        "a \"전체 보관함\" box 64x20 hit 66x20"
+      ],
+      "slopReaches44": []
+    },
+    {
+      "component": "Pagination",
+      "below44Hit": [
+        "a \"전체 보관함\" box 64x20 hit 66x20"
+      ],
+      "slopReaches44": []
+    },
+    {
+      "component": "Anchor",
+      "below44Hit": [
+        "a \"작게 시작해요\" box 92x38 hit 81x38",
+        "a \"나에게 맞게 모아요\" box 120x38 hit 81x38",
+        "a \"다시 돌아봐요\" box 92x38 hit 81x38"
+      ],
+      "slopReaches44": []
+    },
+    {
+      "component": "Card",
+      "below44Hit": [
+        "button \"자세히\" box 57x36 hit 64x42"
+      ],
+      "slopReaches44": []
+    },
+    {
+      "component": "DataTable",
+      "below44Hit": [
+        "button[checkbox] \"모든 기록 선택\" box 16x16 hit 16x16",
+        "button \"제목 정렬\" box 36x44 hit 36x44",
+        "button \"날짜 정렬\" box 36x44 hit 36x44",
+        "button[checkbox] \"느리게 걸었던 오후 선택\" box 16x16 hit 16x16",
+        "button[checkbox] \"함께 먹은 저녁 선택\" box 16x16 hit 16x16",
+        "button[checkbox] \"창밖으로 본 풍경 선택\" box 16x16 hit 16x16"
+      ],
+      "slopReaches44": []
+    },
+    {
+      "component": "QRCode",
+      "below44Hit": [
+        "a \"공유 페이지 열기\" box 92x17 hit 81x18"
+      ],
+      "slopReaches44": []
+    }
+  ]
+}

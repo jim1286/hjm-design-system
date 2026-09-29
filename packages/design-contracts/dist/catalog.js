@@ -1,3 +1,6 @@
+import { affixRecipe } from "./affix.js";
+import { watermarkRecipe } from "./watermark.js";
+import { colorPickerRecipe } from "./color-picker.js";
 import { masonryRecipe } from "./masonry.js";
 import { virtualListRecipe } from "./virtual-list.js";
 import { qrCodeRecipe } from "./qr-code-recipe.js";
@@ -10,9 +13,8 @@ import { thinkingOrbRecipe } from "./thinking-orb-recipe.js";
 export const contractReady = (summary) => ({
     roadmap: { state: "contract-ready", summary },
 });
-const composed = (summary, targets) => ({
-    roadmap: { state: "composed", summary, targets },
-});
+// Compositions live in Showcase patterns and map to their implemented primitives in the
+// reference crosswalk; reserving Planned rows incorrectly counted them as missing work.
 // Promotion uses renderer requirements; adoption notes are not gates (docs/stable-promotion.md).
 const evidenceNeeded = (summary) => ({
     roadmap: { state: "evidence-needed", summary },
@@ -114,18 +116,14 @@ export const componentCatalog = [
     // Product adoption and device QA follow the consumer release; both renderer contracts now have complete required proofs.
     { name: "DatePicker", category: "input", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "datePickerRecipe", behavior: "datePicker" },
     { name: "DateRangePicker", category: "input", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), aliases: ["DateRange"], recipe: "calendarRecipe", behavior: "dateRange" },
-    { name: "TimePicker", category: "input", platform: "adaptive", status: "planned", ...surfaceMaturity("planned", "planned"), ...composed("시·분 Select와 확정·초기화를 조합한 Web/RN 예제를 제공합니다. docs/time-picker.md.", ["Select"]) },
-    { name: "ColorPicker", category: "input", platform: "web", status: "planned", ...surfaceMaturity("planned", "unsupported"), ...evidenceNeeded("임의 색 선택이 실제 제품 요구로 확인될 때 색공간·키보드 계약을 엽니다.") },
+    { name: "ColorPicker", category: "input", platform: "web", status: "stable", ...surfaceMaturity("stable", "unsupported"), recipe: "colorPickerRecipe" },
     { name: "FilePicker", category: "input", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "filePickerRecipe", behavior: "filePicker", aliases: ["Upload"], ...evidenceNeeded("Web은 native file input과 dropzone 선택을, Native는 제품 소유 picker adapter 연결을 제공하고 양쪽이 같은 accept·size·count resolver를 사용합니다. 실제 OS picker 동작은 소비 앱 QA에서 확인합니다.") },
-    { name: "Cascader", category: "input", platform: "adaptive", status: "planned", ...surfaceMaturity("planned", "planned"), ...composed("Tree renderer가 들어오면서 경로는 resolve 결과에서 파생되고 중간 단계 확정은 그 노드를 고르는 것으로 끝납니다. 열 방식 화면을 베끼는 대신 Patterns/Tree의 Cascader 조합 예제로 제공합니다.", ["Popover", "Tree"]) },
     // Both renderers now focus the product-selected first invalid field; field ordering and validation stay product-owned (docs/form.md).
     { name: "Form", category: "input", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "formRecipe", behavior: "form" },
     { name: "Agreement", category: "input", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "agreementRecipe", behavior: "agreement", ...evidenceNeeded("전체 동의는 항목의 합에서 파생하고 필수 항목만 제출 가능 여부를 정합니다. 전문 열기는 동의와 분리된 별도 tab stop입니다. 제품의 문구·링크·법적 검토와 동의 기록은 제품 소유입니다.") },
     // Both renderer matrices now prove caret insertion, named candidate actions, and long-copy behavior; IME device certification stays consumer QA because this contract does not control composition.
     { name: "Mentions", category: "input", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "comboboxRecipe", behavior: "combobox" },
-    { name: "Rating", category: "input", platform: "shared", status: "planned", ...surfaceMaturity("planned", "planned"), aliases: ["Rate"], ...composed("정수/반점 Slider 입력·저장과 Statistic 평균 표시의 Web/RN 예제를 제공합니다. docs/rating.md.", ["Slider", "Statistic"]) },
     { name: "TransferList", category: "input", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), aliases: ["Transfer"], recipe: "transferListRecipe", behavior: "transferList" },
-    { name: "TreeSelect", category: "input", platform: "web", status: "planned", ...surfaceMaturity("planned", "unsupported"), ...composed("새 primitive가 아니라 Popover 표면·Tree collection·tri-state 판정 모듈의 조합입니다. 작동 예제는 Patterns/Tree의 TreeSelect 화면입니다. docs/tree-select.md.", ["Popover", "Tree"]) },
     // Upload/network lifecycle belongs to consuming products; both renderers verify the caller-owned status/action contract.
     { name: "UploadItem", category: "data-display", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "uploadItemRecipe", behavior: "uploadItem" },
     { name: "Tabs", category: "navigation", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "tabsRecipe", behavior: "tabs", ...evidenceNeeded("Web Arrow-key roving focus skips disabled tabs, keeps manual selection until activation, and scrolls a focused tab into view; reduced motion uses instant scrolling. Native exposes a contract-named activate action and labelled panel.") },
@@ -186,16 +184,15 @@ export const componentCatalog = [
     { name: "BottomInfo", category: "feedback", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "bottomInfoRecipe", behavior: "bottomInfo", ...evidenceNeeded("주 행동 아래의 상시 안내 문장입니다. 상태를 알리는 Notice와 달리 tone·아이콘이 없고 사라지지 않습니다.") },
     // Liquid is an opt-in presentation; Web close/Escape and Native close actions are covered separately.
     { name: "Toast", category: "feedback", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "toastRecipe", behavior: "toast", aliases: ["Notification"] },
-    { name: "Watermark", category: "feedback", platform: "web", status: "planned", ...surfaceMaturity("planned", "unsupported"), ...evidenceNeeded("화면 위 반복 표식이 필요한 제품 요구가 확인되면 의미·인쇄·접근성 경계를 엽니다.") },
+    { name: "Watermark", category: "feedback", platform: "web", status: "stable", ...surfaceMaturity("stable", "unsupported"), recipe: "watermarkRecipe" },
     { name: "Dialog", category: "overlay", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "dialogRecipe", behavior: "dialog" },
     { name: "AlertDialog", category: "overlay", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "alertDialogRecipe", behavior: "alertDialog" },
     { name: "Sheet", category: "overlay", platform: "adaptive", status: "stable", ...surfaceMaturity("stable", "stable"), recipe: "sheetRecipe", behavior: "sheet" },
     { name: "SidePanel", category: "overlay", platform: "web", status: "stable", ...surfaceMaturity("stable", "unsupported"), recipe: "sidePanelRecipe", behavior: "sidePanel" },
     { name: "Popover", category: "overlay", platform: "web", status: "stable", ...surfaceMaturity("stable", "unsupported"), recipe: "popoverRecipe", behavior: "popover" },
-    { name: "ConfirmPopover", category: "overlay", platform: "web", status: "planned", ...surfaceMaturity("planned", "unsupported"), aliases: ["Popconfirm"], ...composed("되돌릴 수 있는 보관은 Popover의 확인/취소 조합으로 제공합니다. 파괴적 동작은 AlertDialog를 사용합니다.", ["Popover", "AlertDialog"]) },
     { name: "Tooltip", category: "overlay", platform: "web", status: "stable", ...surfaceMaturity("stable", "unsupported"), recipe: "tooltipRecipe", behavior: "tooltip" },
     { name: "CommandPalette", category: "overlay", platform: "web", status: "stable", ...surfaceMaturity("stable", "unsupported"), recipe: "commandPaletteRecipe", behavior: "commandPalette" },
-    { name: "Affix", category: "utility", platform: "web", status: "planned", ...surfaceMaturity("planned", "unsupported"), ...evidenceNeeded("임의 콘텐츠의 scroll threshold 고정 요구가 확인되면 Web 전용 계약을 엽니다.") },
+    { name: "Affix", category: "utility", platform: "web", status: "stable", ...surfaceMaturity("stable", "unsupported"), recipe: "affixRecipe" },
     { name: "DesignSystemProvider", category: "provider", platform: "shared", status: "stable", ...surfaceMaturity("stable", "stable"), aliases: ["ConfigProvider"], nonVisualEvidence: "provider-adapter" },
     { name: "SkipNav", category: "utility", platform: "web", status: "stable", ...surfaceMaturity("stable", "unsupported"), aliases: ["SkipLink"], recipe: "skipNavRecipe", behavior: "skipNav" },
     // Hidden copy is validated as an accessible node; visual long-copy overflow is inapplicable by design.
@@ -219,6 +216,9 @@ import { floatingActionButtonRecipe } from "./floating-action-button.js";
 import { gridRecipe } from "./grid.js";
 /** One typed registry prevents catalog recipe names from drifting into strings. */
 export const recipeRegistry = {
+    affixRecipe,
+    watermarkRecipe,
+    colorPickerRecipe,
     thinkingOrbRecipe,
     masonryRecipe,
     virtualListRecipe,

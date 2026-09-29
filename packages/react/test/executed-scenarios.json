@@ -655,6 +655,19 @@
           "reducedMotion": false
         }
       ]
+    },
+    {
+      "proofFile": "test/web-additions.browser.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "keyboard",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
     }
   ]
 }

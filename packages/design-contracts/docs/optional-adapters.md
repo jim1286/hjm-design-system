@@ -1,5 +1,19 @@
 # Optional presentation adapters
 
+## Current evidence — 2026-09-30
+
+The six opt-in entries are implemented. The earlier checkout verification below is a historical
+snapshot, not the current publication or consumer-adoption state. The subsequent
+[Web audit](../../../docs/evidence/full-audit-2026-09-29/WEB.md),
+[iOS audit](../../../docs/evidence/full-audit-2026-09-29/IOS-AUDIT.md) and
+[Android evidence](../../../docs/evidence/full-audit-2026-09-29/android.json)
+record browser and installed simulator/emulator checks, including optional adapter flows.
+These results do not establish physical-device or screen-reader testing and do not promote
+optional adapters by changing canonical component counts. This catalog cleanup does not publish
+packages or migrate consumer applications.
+
+## Original adoption record — 2026-09-29
+
 2026-09-29: the user requested all six shortlisted libraries, explicitly allowing platform-specific
 adoption. These are opt-in extensions, not six new canonical components or a stable promotion.
 The canonical Statistic/Menu/Sheet/KeyboardAvoiding APIs remain available without additional peers.
@@ -67,6 +81,12 @@ Expo Go cannot verify these linked native modules.
   the host can still close programmatically. GestureSheetInput wires sheet keyboard tracking.
   Android back, backdrop and pan dismissal converge on onOpenChange(false). Consumers remain
   responsible for focus restoration to the opener and avoiding simultaneous modal sheets.
+  Inside an RN `Modal`, Android back goes to the Modal's `onRequestClose` and never reaches
+  BackHandler, so the 2026-09-30 audit saw back close the whole host. Such hosts call
+  `dismissTopGestureSheet()` first and close themselves only when it returns false. The same
+  applies to a navigation container inside a Modal (shared screen transition Detail): the host
+  must route `onRequestClose` to `navigation.goBack()` while it can go back. Insets default to the
+  HjmNativeProvider `safeAreaInsets`; the library's English handle/background labels are replaced.
 - NativeContextMenu delegates long-press behavior and menu appearance to the OS. Supply an
   accessible native child; item IDs are unique, labels localized, danger maps to OS destructive
   intent and disabled actions are guarded. Arbitrary custom native menu colors are unsupported.

@@ -1,6 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { Menu as Bloom } from "bloom-menu";
 import { useEffect, useRef, useState } from "react";
+import { Button } from "./actions.js";
 import { Menu } from "./overlays.js";
 import { useHjmTheme } from "./provider.js";
 /** Action-only morph presentation. Selection/async menus retain the full Menu. */
@@ -30,7 +31,7 @@ export function MorphingMenu({ label, items, onAction, disabled = false, open: c
     }, [open, label]);
     // The canonical Menu owns static/RTL behavior; Bloom's left/right geometry is physical.
     if (theme.environment.reducedMotion || theme.environment.direction === "rtl") {
-        return _jsx(Menu, { label: label, trigger: _jsx("button", { type: "button", children: label }), items: items, disabled: disabled, open: open, onOpenChange: change, ...(onAction ? { onAction } : {}) });
+        return _jsx(Menu, { label: label, trigger: _jsx(Button, { tone: "secondary", children: label }), items: items, disabled: disabled, open: open, onOpenChange: change, ...(onAction ? { onAction } : {}) });
     }
     const keyDown = (event) => {
         if (!open) {

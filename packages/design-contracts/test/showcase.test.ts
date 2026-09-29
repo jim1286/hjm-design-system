@@ -55,9 +55,8 @@ describe("showcase contract", () => {
   });
 
   it("keeps planned entries contract-only", () => {
-    const planned = componentCatalog.find(({ status }) => status === "planned");
-    expect(planned).toBeDefined();
-    expect(getRequiredShowcaseScenarios(planned!)).toEqual(["contract"]);
+    const planned = { name: "FutureExample", status: "planned", category: "utility", platform: "web" } as const;
+    expect(getRequiredShowcaseScenarios(planned)).toEqual(["contract"]);
   });
 
   it("requires interaction evidence without a duplicate cross-platform gate", () => {

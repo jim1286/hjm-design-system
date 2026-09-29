@@ -546,6 +546,30 @@
       "react-native": "./dist/qr-code.js",
       "import": "./dist/qr-code.js",
       "default": "./dist/qr-code.js"
+    },
+    "./components/color-picker": {
+      "types": "./dist/color-picker.d.ts",
+      "react-native": "./dist/color-picker.js",
+      "import": "./dist/color-picker.js",
+      "default": "./dist/color-picker.js"
+    },
+    "./components/watermark": {
+      "types": "./dist/watermark.d.ts",
+      "react-native": "./dist/watermark.js",
+      "import": "./dist/watermark.js",
+      "default": "./dist/watermark.js"
+    },
+    "./components/affix": {
+      "types": "./dist/affix.d.ts",
+      "react-native": "./dist/affix.js",
+      "import": "./dist/affix.js",
+      "default": "./dist/affix.js"
+    },
+    "./components/interaction-adapters": {
+      "types": "./dist/interaction-adapters.d.ts",
+      "react-native": "./dist/interaction-adapters.js",
+      "import": "./dist/interaction-adapters.js",
+      "default": "./dist/interaction-adapters.js"
     }
   },
   "files": [

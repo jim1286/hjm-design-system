@@ -1,0 +1,130 @@
+[
+  {
+    "type": "Application",
+    "enabled": true,
+    "title": null,
+    "role_description": "application",
+    "AXLabel": "HJM Native Showcase",
+    "traits": [
+      "None"
+    ],
+    "frame": {
+      "x": 0,
+      "y": 0,
+      "height": 874,
+      "width": 402
+    },
+    "AXUniqueId": null,
+    "help": null,
+    "AXFrame": "{{0, 0}, {402, 874}}",
+    "content_required": false,
+    "custom_actions": [],
+    "subrole": null,
+    "AXValue": null,
+    "role": "AXApplication",
+    "pid": 40244
+  },
+  {
+    "AXUniqueId": null,
+    "AXValue": null,
+    "help": null,
+    "type": "Button",
+    "AXLabel": "쇼케이스로 돌아가기",
+    "AXFrame": "{{0, 62}, {402, 44}}",
+    "subrole": null,
+    "content_required": false,
+    "pid": 40244,
+    "frame": {
+      "width": 402,
+      "height": 44,
+      "y": 62,
+      "x": 0
+    },
+    "custom_actions": [],
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "enabled": true,
+    "role": "AXButton",
+    "role_description": "button",
+    "title": null
+  },
+  {
+    "AXLabel": null,
+    "role_description": "button",
+    "subrole": null,
+    "pid": 40244,
+    "frame": {
+      "y": 106,
+      "x": 0,
+      "width": 402,
+      "height": 734
+    },
+    "AXValue": null,
+    "AXUniqueId": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "content_required": false,
+    "title": null,
+    "help": null,
+    "enabled": true,
+    "AXFrame": "{{0, 106}, {402, 734}}",
+    "type": "Button",
+    "custom_actions": [],
+    "role": "AXButton"
+  },
+  {
+    "help": null,
+    "subrole": null,
+    "role_description": "text",
+    "frame": {
+      "y": 122.02546113729477,
+      "width": 369.9731606245041,
+      "height": 25.998113989830017,
+      "x": 16.013419687747955
+    },
+    "content_required": false,
+    "AXLabel": "기억하고 싶은 장소",
+    "AXFrame": "{{16.013419687747955, 122.02546113729477}, {369.97316062450409, 25.998113989830017}}",
+    "custom_actions": [],
+    "title": null,
+    "type": "StaticText",
+    "AXUniqueId": null,
+    "enabled": true,
+    "AXValue": null,
+    "role": "AXStaticText",
+    "pid": 40244,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ]
+  },
+  {
+    "type": "Button",
+    "role": "AXButton",
+    "AXLabel": "숲길 상세 보기",
+    "enabled": true,
+    "title": null,
+    "frame": {
+      "x": 16.013419687747955,
+      "y": 300.01254922151566,
+      "height": 43.99680829048157,
+      "width": 369.9731606245041
+    },
+    "content_required": false,
+    "help": null,
+    "pid": 40244,
+    "AXUniqueId": null,
+    "subrole": null,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "role_description": "button",
+    "custom_actions": [],
+    "AXFrame": "{{16.013419687747955, 300.01254922151566}, {369.97316062450409, 43.996808290481567}}",
+    "AXValue": null
+  }
+]

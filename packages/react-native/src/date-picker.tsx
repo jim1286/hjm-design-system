@@ -14,7 +14,7 @@ import { Pressable, View, type StyleProp, type ViewStyle } from "react-native";
 
 import { Calendar } from "./calendar.js";
 import { minimumTargetStyle } from "./internal/styles.js";
-import { Sheet } from "./overlays.js";
+import { Sheet, type SheetProps } from "./overlays.js";
 import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
 
@@ -32,6 +32,12 @@ export type DatePickerProps<Content = unknown> = Readonly<{
   description?: string;
   error?: string;
   renderCellContent?: (cell: ResolvedCalendarDateCell<Content>) => ReactNode;
+  /**
+   * Forwarded to the picker's Sheet. Without it the calendar's last row sat under
+   * the Android navigation bar and the call site had no way to fix it
+   * (2026-09-30 audit). Defaults to the HjmNativeProvider insets like Sheet.
+   */
+  safeAreaInsets?: SheetProps["safeAreaInsets"];
   style?: StyleProp<ViewStyle>;
 }>;
 
@@ -48,6 +54,7 @@ export function DatePicker<Content>({
   description,
   error,
   renderCellContent,
+  safeAreaInsets,
   style,
 }: DatePickerProps<Content>) {
   validateDatePickerDescriptor(descriptor);
@@ -106,6 +113,7 @@ export function DatePicker<Content>({
         onOpenChange={(next) => { if (!next) requestOpen(false, "outside"); }}
         open={open}
         returnFocusRef={returnFocusRef}
+        {...(safeAreaInsets === undefined ? {} : { safeAreaInsets })}
         title={label}
       >
         <Calendar descriptor={{ ...calendarDescriptor, grid: calendarGrid, monthLabel, selectedDate, onSelectionChange: (date) => commit(date, "activate") }}

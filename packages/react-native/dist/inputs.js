@@ -10,7 +10,7 @@ import { getOtpFieldSlotValues, otpFieldRecipe, resolveOtpFieldValue, } from "@h
 import { getCheckboxNextState, reconcileCheckboxSelection, resolveControlAccessibleName, resolveInitialRadioValue, resolveInitialTabValue, reconcileRadioSelection, selectionGroupBehaviorDefaults, toggleCheckboxSelection, validateCheckboxSelection, validateRadioSelection, validateSelectionItems, } from "@hjmds/design-contracts/behaviors";
 import { forwardRef, useEffect, useId, useImperativeHandle, useRef, useState, } from "react";
 import { ActivityIndicator, Platform, Pressable, Switch as NativeSwitch, TextInput, View, } from "react-native";
-import { useControllableState } from "./internal/state.js";
+import { mixedCheckboxState, useControllableState } from "./internal/state.js";
 import { webChoiceProps, webOnly } from "./internal/web-a11y.js";
 import { logicalTextAlign, minimumTargetStyle, resolveNativeTextScaleProps, } from "./internal/styles.js";
 import { Text } from "./primitives.js";
@@ -382,7 +382,9 @@ function ChoiceRow({ kind, label, description, checked, disabled, readOnly, requ
             height: metrics.control * selectionControlRecipe.radioDotRatio,
             width: metrics.control * selectionControlRecipe.radioDotRatio,
         } })) : null) : checked === "mixed" ? (_jsx(Text, { accessible: false, align: "center", style: { color: indicatorColor }, variant: "label", children: "\u2212" })) : checked ? (_jsx(Text, { accessible: false, align: "center", style: { color: indicatorColor }, variant: "label", children: "\u2713" })) : null;
-    return (_jsxs(Pressable, { accessibilityHint: resolvedHint, accessibilityLabel: label, accessibilityRole: kind, accessibilityState: { checked, disabled: disabled || readOnly }, ...webOnly(webChoiceProps({
+    return (_jsxs(Pressable, { accessibilityHint: resolvedHint, accessibilityLabel: label, accessibilityRole: kind, 
+        // See mixedCheckboxState: a checkbox leaving "mixed" kept the suffix on Android.
+        accessibilityState: kind === "checkbox" ? mixedCheckboxState(checked, { disabled: disabled || readOnly }) : { checked, disabled: disabled || readOnly }, ...webOnly(webChoiceProps({
             kind,
             checked,
             disabled,
@@ -608,7 +610,13 @@ export function Switch({ label, labelVisibility = "visible", presentation = swit
                 // native size drive layout so `alignItems: center` centres the real track.
                 // Rejected: an oversized centring wrapper — it has to guess the per-OS UISwitch
                 // size, which is exactly the number that changed. Android honours the box.
-                style: Platform.OS === "ios" ? undefined : { height: dimensions.height, width: dimensions.width }, thumbColor: thumb, trackColor: { false: trackOff, true: trackOn }, value: enabled })] }));
+                // RN's iOS Switch composes `alignSelf: "flex-start"` under the caller's style,
+                // which overrode this row's `alignItems: center` and pinned the track to the
+                // row top, 8-10pt above the label centre (2026-09-30 audit, iOS 27). Restate
+                // the row's cross-axis alignment explicitly.
+                style: Platform.OS === "ios"
+                    ? { alignSelf: stacked ? "flex-start" : "center" }
+                    : { height: dimensions.height, width: dimensions.width }, thumbColor: thumb, trackColor: { false: trackOff, true: trackOn }, value: enabled })] }));
 }
 export function SegmentedControl({ label, items, options, value, defaultValue, onValueChange, size = segmentedControlRecipe.defaults.size, disabled = false, style, }) {
     const resolvedItems = resolveAliasedItems("SegmentedControl", items, options);

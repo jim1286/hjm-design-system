@@ -107,14 +107,25 @@ export const Tree = forwardRef(function Tree({ label, nodes, composeAccessibleNa
     return (_jsxs("div", { ref: composeRefs(rootRef, forwardedRef), role: "tree", "aria-label": label, "aria-busy": asyncState.status === "loading" || asyncState.status === "loadingMore" || undefined, "aria-multiselectable": selection?.mode === "multiple" || undefined, className: classNames("hjm-tree", className), style: { "--hjm-tree-indent": `${treeRecipe.indentPerLevel}px` }, children: [asyncState.status === "empty" || asyncState.status === "error" || asyncState.status === "loading" ? (_jsx("p", { className: "hjm-tree__state", role: asyncState.status === "error" ? "alert" : "status", children: asyncState.message })) : null, visible.map((node) => (_jsxs("div", { role: "treeitem", "data-hjm-tree-node": node.id, "aria-level": node.depth, "aria-posinset": node.position, "aria-setsize": node.siblingCount, "aria-expanded": node.hasChildren ? node.expanded : undefined, "aria-selected": selection && selection.mode !== "none" ? selected.has(node.id) : undefined, "aria-checked": checkedStates ? (checkedStates.get(node.id) === "mixed" ? "mixed" : String(checkedStates.get(node.id) === true)) : undefined, "aria-disabled": node.disabled || undefined, "aria-label": node.accessibleName, 
                 // One tab stop for the whole tree; the glyph is decorative, not a
                 // nested control, so a node is the only focusable thing in a row.
-                tabIndex: node.id === activeId ? 0 : -1, className: "hjm-tree__node", style: { "--hjm-tree-depth": node.depth - 1 }, onClick: () => {
+                tabIndex: node.id === activeId ? 0 : -1, className: "hjm-tree__node", style: { "--hjm-tree-depth": node.depth - 1 }, onClick: (event) => {
                     setFocusedId(node.id);
+                    // Pointer users had no way to expand: only arrow keys toggled (2026-09-30
+                    // audit WR-0930-2). The contract lets a row click change expansion; the
+                    // glyph toggles only, and in check mode the row click stays the check.
+                    const onGlyph = node.hasChildren &&
+                        event.target.closest?.(".hjm-tree__toggle") !== null;
+                    if (onGlyph) {
+                        setExpanded(node.id, !node.expanded);
+                        return;
+                    }
                     if (checkedStates && onCheckedToggle) {
                         if (!node.disabled)
                             onCheckedToggle(node.id);
+                        return;
                     }
-                    else
-                        toggleSelection(node);
+                    if (node.hasChildren)
+                        setExpanded(node.id, !node.expanded);
+                    toggleSelection(node);
                 }, onFocus: () => setFocusedId(node.id), onKeyDown: (event) => onKeyDown(event, node), children: [_jsx("span", { "aria-hidden": "true", className: "hjm-tree__indent" }), checkedStates ? (_jsx("span", { "aria-hidden": "true", className: "hjm-tree__check", "data-state": String(checkedStates.get(node.id) ?? false), children: checkedStates.get(node.id) === true ? "✓" : checkedStates.get(node.id) === "mixed" ? "–" : "" })) : null, _jsx("span", { "aria-hidden": "true", className: "hjm-tree__toggle", "data-visible": node.hasChildren || undefined, children: node.hasChildren ? renderToggle?.({ expanded: node.expanded }) ?? (node.expanded ? "▾" : "▸") : null }), _jsxs("span", { "aria-hidden": "true", className: "hjm-tree__label", children: [node.label, node.description ? _jsx("span", { className: "hjm-tree__description", children: node.description }) : null] })] }, node.id))), asyncState.status === "loadingMore" ? _jsx("p", { className: "hjm-tree__state", role: "status", children: asyncState.message }) : null] }));
 });
 //# sourceMappingURL=tree.js.map

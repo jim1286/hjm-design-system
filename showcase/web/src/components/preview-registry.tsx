@@ -1,3 +1,4 @@
+import { WebAdditionsPreview } from "../patterns/WebAdditions.stories.js";
 import { calendarExampleGrid } from "../../../shared/calendar-example.js";
 import { DataLayoutPreview } from "../patterns/DataLayouts.stories.js";
 import { ThinkingOrb } from "@hjmds/react/thinking-orb";
@@ -105,6 +106,7 @@ import {
 import {
   behaviorRegistry,
   componentCatalog,
+  getComponentSurfaceStatus,
   recipeRegistry,
   resolveColorReference,
   resolveDesignSystemProviderValue,
@@ -215,6 +217,7 @@ export const webRendererComponentNames = [
   "Notice",
   "Progress",
   "ThinkingOrb",
+  "ColorPicker", "Watermark", "Affix",
   "Masonry",
   "VirtualList",
   "QRCode",
@@ -447,6 +450,9 @@ function WebPreviewRenderer({ name }: { name: RecipeWebRendererComponentName }) 
     case "EmptyState": return <HjmEmptyState icon="◇" title="아직 항목이 없어요" description="새 항목을 추가하면 여기에 표시됩니다." action={<HjmButton>추가하기</HjmButton>} />;
     case "Notice": return <HjmNotice title="저장 전 확인" description="입력한 내용을 다시 확인해 주세요." />;
     case "Progress": return <HjmProgress label="업로드" value={64} valueText="64%" />;
+    case "ColorPicker": return <WebAdditionsPreview mode="color" />;
+    case "Watermark": return <WebAdditionsPreview mode="watermark" />;
+    case "Affix": return <WebAdditionsPreview mode="affix" />;
     case "Masonry": return <DataLayoutPreview />;
     case "VirtualList": return <DataLayoutPreview mode="virtual" />;
     case "QRCode": return <DataLayoutPreview mode="qr" />;
@@ -702,7 +708,7 @@ function createWebRendererDefinition(
   behaviorName: BehaviorName | null = null,
 ): RecipeWebRendererDefinition {
   const component = componentCatalog.find((entry) => entry.name === name);
-  if (!component || component.status === "planned") {
+  if (!component || getComponentSurfaceStatus(component, "web") === "planned") {
     throw new Error(`Invalid Web renderer registration: ${name}`);
   }
   const webComponent = component as WebRendererCatalogEntry;
@@ -859,6 +865,9 @@ export const webRendererRegistry = {
   EmptyState: createWebRendererDefinition("EmptyState", "emptyStateRecipe"),
   Notice: createWebRendererDefinition("Notice", "noticeRecipe"),
   Progress: createWebRendererDefinition("Progress", "progressRecipe"),
+  ColorPicker: createWebRendererDefinition("ColorPicker", "colorPickerRecipe"),
+  Watermark: createWebRendererDefinition("Watermark", "watermarkRecipe"),
+  Affix: createWebRendererDefinition("Affix", "affixRecipe"),
   Masonry: createWebRendererDefinition("Masonry", "masonryRecipe"),
   VirtualList: createWebRendererDefinition("VirtualList", "virtualListRecipe"),
   QRCode: createWebRendererDefinition("QRCode", "qrCodeRecipe"),

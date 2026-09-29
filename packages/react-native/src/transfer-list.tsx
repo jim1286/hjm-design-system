@@ -15,7 +15,7 @@ import { useMemo, useState } from "react";
 import { Pressable, ScrollView, View, type StyleProp, type ViewStyle } from "react-native";
 import { Button } from "./actions.js";
 import { Text } from "./primitives.js";
-import { useControllableState } from "./internal/state.js";
+import { mixedCheckboxState, useControllableState } from "./internal/state.js";
 import { useHjmNativeTheme } from "./provider.js";
 
 export type TransferListLabels = Readonly<{
@@ -83,7 +83,8 @@ export function TransferList<Id extends string = string>({
           accessibilityRole="checkbox"
           // `mixed` is the contract's answer, not a third visual state invented
           // here: some rows checked is neither on nor off.
-          accessibilityState={{ checked: selectAll }}
+          // mixedCheckboxState keeps Android from holding a stale ", mixed" suffix.
+          accessibilityState={mixedCheckboxState(selectAll)}
           accessibilityLabel={`${panel === "source" ? labels.source : labels.target}, ${labels.selectAll}`}
           disabled={rows.length === 0}
           onPress={() => setSelection(toggleTransferListSelectAll(descriptor, selection, panel))}

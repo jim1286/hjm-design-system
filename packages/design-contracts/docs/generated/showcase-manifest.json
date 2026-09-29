@@ -2032,38 +2032,14 @@
       }
     },
     {
-      "id": "time-picker",
-      "storyId": "input/time-picker",
-      "name": "TimePicker",
-      "category": "input",
-      "platform": "adaptive",
-      "contractStatus": "planned",
-      "surfaces": {
-        "web": "planned",
-        "native": "planned"
-      },
-      "requirements": [
-        {
-          "surface": "contract",
-          "scenarios": [
-            "contract"
-          ]
-        }
-      ],
-      "documentation": {
-        "generated": "docs/generated/component-maturity.md",
-        "authored": "docs/time-picker.md"
-      }
-    },
-    {
       "id": "color-picker",
       "storyId": "input/color-picker",
       "name": "ColorPicker",
       "category": "input",
       "platform": "web",
-      "contractStatus": "planned",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "planned",
+        "web": "stable",
         "native": "unsupported"
       },
       "requirements": [
@@ -2071,6 +2047,19 @@
           "surface": "contract",
           "scenarios": [
             "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility",
+            "keyboard"
           ]
         }
       ],
@@ -2127,30 +2116,6 @@
       "documentation": {
         "generated": "docs/generated/component-maturity.md",
         "authored": "docs/file-picker.md"
-      }
-    },
-    {
-      "id": "cascader",
-      "storyId": "input/cascader",
-      "name": "Cascader",
-      "category": "input",
-      "platform": "adaptive",
-      "contractStatus": "planned",
-      "surfaces": {
-        "web": "planned",
-        "native": "planned"
-      },
-      "requirements": [
-        {
-          "surface": "contract",
-          "scenarios": [
-            "contract"
-          ]
-        }
-      ],
-      "documentation": {
-        "generated": "docs/generated/component-maturity.md",
-        "authored": "docs/cascader.md"
       }
     },
     {
@@ -2302,30 +2267,6 @@
       }
     },
     {
-      "id": "rating",
-      "storyId": "input/rating",
-      "name": "Rating",
-      "category": "input",
-      "platform": "shared",
-      "contractStatus": "planned",
-      "surfaces": {
-        "web": "planned",
-        "native": "planned"
-      },
-      "requirements": [
-        {
-          "surface": "contract",
-          "scenarios": [
-            "contract"
-          ]
-        }
-      ],
-      "documentation": {
-        "generated": "docs/generated/component-maturity.md",
-        "authored": "docs/rating.md"
-      }
-    },
-    {
       "id": "transfer-list",
       "storyId": "input/transfer-list",
       "name": "TransferList",
@@ -2373,30 +2314,6 @@
       "documentation": {
         "generated": "docs/generated/component-maturity.md",
         "authored": "docs/transfer-list.md"
-      }
-    },
-    {
-      "id": "tree-select",
-      "storyId": "input/tree-select",
-      "name": "TreeSelect",
-      "category": "input",
-      "platform": "web",
-      "contractStatus": "planned",
-      "surfaces": {
-        "web": "planned",
-        "native": "unsupported"
-      },
-      "requirements": [
-        {
-          "surface": "contract",
-          "scenarios": [
-            "contract"
-          ]
-        }
-      ],
-      "documentation": {
-        "generated": "docs/generated/component-maturity.md",
-        "authored": "docs/tree-select.md"
       }
     },
     {
@@ -4375,9 +4292,9 @@
       "name": "Watermark",
       "category": "feedback",
       "platform": "web",
-      "contractStatus": "planned",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "planned",
+        "web": "stable",
         "native": "unsupported"
       },
       "requirements": [
@@ -4385,6 +4302,18 @@
           "surface": "contract",
           "scenarios": [
             "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
           ]
         }
       ],
@@ -4618,30 +4547,6 @@
       }
     },
     {
-      "id": "confirm-popover",
-      "storyId": "overlay/confirm-popover",
-      "name": "ConfirmPopover",
-      "category": "overlay",
-      "platform": "web",
-      "contractStatus": "planned",
-      "surfaces": {
-        "web": "planned",
-        "native": "unsupported"
-      },
-      "requirements": [
-        {
-          "surface": "contract",
-          "scenarios": [
-            "contract"
-          ]
-        }
-      ],
-      "documentation": {
-        "generated": "docs/generated/component-maturity.md",
-        "authored": "docs/confirm-popover.md"
-      }
-    },
-    {
       "id": "tooltip",
       "storyId": "overlay/tooltip",
       "name": "Tooltip",
@@ -4721,9 +4626,9 @@
       "name": "Affix",
       "category": "utility",
       "platform": "web",
-      "contractStatus": "planned",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "planned",
+        "web": "stable",
         "native": "unsupported"
       },
       "requirements": [
@@ -4731,6 +4636,18 @@
           "surface": "contract",
           "scenarios": [
             "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
           ]
         }
       ],

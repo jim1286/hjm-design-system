@@ -5,7 +5,7 @@ import { useMemo, useState } from "react";
 import { Pressable, ScrollView, View } from "react-native";
 import { Button } from "./actions.js";
 import { Text } from "./primitives.js";
-import { useControllableState } from "./internal/state.js";
+import { mixedCheckboxState, useControllableState } from "./internal/state.js";
 import { useHjmNativeTheme } from "./provider.js";
 const emptySelection = () => ({
     source: new Set(),
@@ -36,7 +36,8 @@ export function TransferList({ items, labels, targetKeys: controlledTargetKeys, 
         return (_jsxs(View, { style: { flex: 1, gap: spacing.xs }, children: [_jsx(Pressable, { accessibilityRole: "checkbox", 
                     // `mixed` is the contract's answer, not a third visual state invented
                     // here: some rows checked is neither on nor off.
-                    accessibilityState: { checked: selectAll }, accessibilityLabel: `${panel === "source" ? labels.source : labels.target}, ${labels.selectAll}`, disabled: rows.length === 0, onPress: () => setSelection(toggleTransferListSelectAll(descriptor, selection, panel)), style: { minHeight: 44, justifyContent: "center" }, children: _jsx(Text, { variant: "label", children: labels.selectAll }) }), _jsx(ScrollView, { accessibilityRole: "list", accessibilityLabel: panel === "source" ? labels.source : labels.target, style: { borderWidth: 1, borderColor: colors.border, borderRadius: 12 }, children: rows.length === 0 ? (_jsx(Text, { tone: "muted", variant: "caption", style: { padding: spacing.sm }, children: labels.empty })) : (rows.map((item) => {
+                    // mixedCheckboxState keeps Android from holding a stale ", mixed" suffix.
+                    accessibilityState: mixedCheckboxState(selectAll), accessibilityLabel: `${panel === "source" ? labels.source : labels.target}, ${labels.selectAll}`, disabled: rows.length === 0, onPress: () => setSelection(toggleTransferListSelectAll(descriptor, selection, panel)), style: { minHeight: 44, justifyContent: "center" }, children: _jsx(Text, { variant: "label", children: labels.selectAll }) }), _jsx(ScrollView, { accessibilityRole: "list", accessibilityLabel: panel === "source" ? labels.source : labels.target, style: { borderWidth: 1, borderColor: colors.border, borderRadius: 12 }, children: rows.length === 0 ? (_jsx(Text, { tone: "muted", variant: "caption", style: { padding: spacing.sm }, children: labels.empty })) : (rows.map((item) => {
                         const checked = selection[panel].has(item.id);
                         return (_jsx(Pressable, { accessibilityRole: "checkbox", accessibilityLabel: item.label, accessibilityState: { checked, disabled: item.disabled === true }, disabled: item.disabled === true, onPress: () => setSelection(toggleTransferListSelection(descriptor, selection, panel, item.id)), style: { minHeight: 44, justifyContent: "center", paddingHorizontal: spacing.sm }, children: _jsxs(Text, { children: [checked ? "✓ " : "", item.label] }) }, item.id));
                     })) })] }));

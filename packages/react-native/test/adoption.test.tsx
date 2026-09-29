@@ -15,7 +15,7 @@ vi.mock("react-native-keyboard-controller", () => ({ KeyboardProvider: "Keyboard
 vi.mock("zeego/context-menu", () => ({ Root: "ContextRoot", Trigger: "ContextTrigger", Content: "ContextContent", Item: "ContextItem", ItemTitle: "ContextTitle" }));
 vi.mock("@gorhom/bottom-sheet", async () => {
   const { forwardRef, useImperativeHandle, createElement } = await import("react");
-  return { BottomSheetModal: forwardRef((props: { children?: ReactNode }, ref) => { useImperativeHandle(ref, () => methods); return createElement("SheetModal", props, props.children); }), BottomSheetModalProvider: "SheetProvider", BottomSheetScrollView: "SheetScroll", BottomSheetBackdrop: "Backdrop", BottomSheetTextInput: "SheetInput" };
+  return { BottomSheetModal: forwardRef((props: { children?: ReactNode }, ref) => { useImperativeHandle(ref, () => methods); return createElement("SheetModal", props, props.children); }), BottomSheetModalProvider: "SheetProvider", BottomSheetScrollView: "SheetScroll", BottomSheetBackdrop: "Backdrop", BottomSheetHandle: "SheetHandle", BottomSheetTextInput: "SheetInput" };
 });
 (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 let renderer: ReactTestRenderer | undefined;
