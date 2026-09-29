@@ -27,8 +27,9 @@ export default defineConfig({
       expect: {
         toMatchScreenshot: {
           comparatorName: "pixelmatch",
-          // Anti-aliasing differs by a few pixels between otherwise identical
-          // runs; a 0.5% budget still fails on any real color, size or layout change.
+          // Tolerate rasterization noise while catching geometry and larger pixel changes.
+          // Subtle fill changes use computed-style regression tests: pale blue/gray
+          // can remain within pixelmatch's color threshold (2026-09-29 audit).
           comparatorOptions: { threshold: 0.2, allowedMismatchedPixelRatio: 0.005 },
           resolveScreenshotPath: ({ root, testFileName, arg, browserName, platform, ext }) =>
             `${root}/test/visual-baselines/${testFileName}/${arg}-${browserName}-${platform}${ext}`,

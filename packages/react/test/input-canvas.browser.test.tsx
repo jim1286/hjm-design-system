@@ -22,13 +22,20 @@ for (const theme of ["light", "dark"] as const) {
       <SearchField label="Search" clearLabel="Clear" />
       <TextArea label="Notes" />
       <OtpField label="Code" length={6} />
-      <Checkbox label="Agree" defaultChecked />
+      <Checkbox label="Remember me" defaultChecked />
       <Chip label="Chosen" selectionMode="multiple" selected onSelectedChange={() => {}} />
       <SegmentedControl label="View" defaultValue="a" items={[{ value: "a", label: "A" }, { value: "b", label: "B" }]} />
       <Select label="Language" placeholder="Choose language" emptySelectionLabel="Clear language" items={[{ id: "ko", label: "Korean", textValue: "Korean" }]} />
     </HjmProvider>));
     const canvas = getComputedStyle(host.querySelector(".hjm-root")!).backgroundColor;
     if (theme === "light") expect(canvas).toBe("rgb(255, 255, 255)");
+    // Pale selected-row fills can pass screenshot color tolerance; assert this
+    // user-reported row directly rather than treating a matching PNG as proof.
+    const rememberMe = page.getByRole("checkbox", { name: "Remember me" });
+    await expect.element(rememberMe).toBeChecked();
+    const rememberMeRow = rememberMe.element().closest(".hjm-choice");
+    expect(rememberMeRow).not.toBeNull();
+    expect(getComputedStyle(rememberMeRow!).backgroundColor).toBe(canvas);
     for (const element of host.querySelectorAll(".hjm-field__control, .hjm-otp-field__slot, .hjm-choice, .hjm-chip, .hjm-segmented__items, .hjm-segmented__item[data-state=checked]")) {
       expect(getComputedStyle(element).backgroundColor, element.className).toBe(canvas);
     }
