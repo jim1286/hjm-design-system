@@ -234,7 +234,7 @@ export const transferListRecipe = {
     "moveButton",
   ] as const,
   panel: {
-    background: semanticColors.surface.default,
+    background: semanticColors.canvas,
     border: semanticColors.border.default,
     borderWidth: stroke.default,
     radius: "md" as const,

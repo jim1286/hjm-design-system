@@ -93,3 +93,10 @@ it("copies, announces the copied state, and reports a denied clipboard", async (
   // A denied clipboard must not claim success.
   expect(document.querySelector("button")!.textContent).toBe("복사");
 });
+
+it("keeps counter text inside its badge in a constrained flex row", async () => {
+  await act(async () => root.render(<HjmProvider><div style={{ display: "flex", width: 20 }}><CounterBadge count={12} /></div></HjmProvider>));
+  const badge = document.querySelector<HTMLElement>(".hjm-counter-badge")!;
+  const text = document.createRange(); text.selectNodeContents(badge);
+  expect(text.getBoundingClientRect().right).toBeLessThanOrEqual(badge.getBoundingClientRect().right);
+});

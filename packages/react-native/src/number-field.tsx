@@ -207,7 +207,7 @@ export const NumberField = forwardRef<TextInput, NumberFieldProps>(
         <View
           style={{
             alignItems: "center",
-            backgroundColor: colors.surface,
+            backgroundColor: colors.bg,
             borderColor: error
               ? colors.danger
               : focused
@@ -233,7 +233,7 @@ export const NumberField = forwardRef<TextInput, NumberFieldProps>(
               {
                 alignItems: "center",
                 alignSelf: "stretch",
-                backgroundColor: pressed ? colors.surfaceAlt : "transparent",
+                backgroundColor: pressed ? colors.bg : "transparent",
                 borderEndColor: colors.border,
                 borderEndWidth: 1,
                 justifyContent: "center",
@@ -311,7 +311,7 @@ export const NumberField = forwardRef<TextInput, NumberFieldProps>(
               {
                 alignItems: "center",
                 alignSelf: "stretch",
-                backgroundColor: pressed ? colors.surfaceAlt : "transparent",
+                backgroundColor: pressed ? colors.bg : "transparent",
                 borderStartColor: colors.border,
                 borderStartWidth: 1,
                 justifyContent: "center",

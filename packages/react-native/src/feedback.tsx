@@ -722,6 +722,9 @@ export function Skeleton({
             skeletonRecipe.background,
             palette,
           ),
+          // A white loading placeholder needs an outline after removing grey fills.
+          borderColor: palette.theme.border,
+          borderWidth: 1,
           borderRadius: radiusValue ?? radius[shapeSpec.radius],
           height: height ?? shapeSpec.defaultHeight,
           opacity: shouldAnimate

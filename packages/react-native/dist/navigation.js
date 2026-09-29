@@ -1,5 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
-import { glyph, radius, spacing } from "@hjmds/design-contracts/foundations";
+import { backdrop, glyph, radius, spacing } from "@hjmds/design-contracts/foundations";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { bottomNavigationRecipe, counterBadgeRecipe, loadMoreRecipe, menuRecipe, spinnerRecipe, tabsRecipe, topBarRecipe, } from "@hjmds/design-contracts/recipes";
 import { createLoadMoreController, validateLoadMoreDescriptor, } from "@hjmds/design-contracts/components/load-more";
@@ -243,7 +243,7 @@ export function Tabs(props) {
                                         ? tabsRecipe.label.selectedFontWeight
                                         : tabsRecipe.label.fontWeight,
                                 }, variant: sizeContract.textVariant, children: item.label }), item.badge ? (_jsx(View, { accessible: false, style: {
-                                    backgroundColor: colors.surfaceAccent,
+                                    backgroundColor: colors.bg,
                                     borderRadius: radius.full,
                                     paddingHorizontal: spacing.xs,
                                 }, children: _jsx(Text, { align: "center", tone: "brand", variant: "caption", children: item.badge }) })) : null, active ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", style: {
@@ -889,7 +889,7 @@ export function Menu({ triggerLabel, title = triggerLabel, items, sections, sour
                     modalDismiss.onShow();
                     focusFirstItem();
                 }, transparent: true, visible: visible, children: _jsxs(View, { style: { flex: 1, justifyContent: "center", padding: spacing.md }, children: [_jsx(Pressable, { accessibilityLabel: dismissLabel, accessibilityRole: "button", onPress: () => close("outside"), style: {
-                                backgroundColor: "#00000088",
+                                backgroundColor: backdrop.modal.color, opacity: backdrop.modal.opacity,
                                 bottom: 0,
                                 left: 0,
                                 position: "absolute",

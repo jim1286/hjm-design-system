@@ -46,6 +46,9 @@ describe("Native UploadItem status and actions", () => {
     expect(allText(renderer)).toContain(longName);
     expect(allText(renderer)).toContain("압축 전 원본 파일 · 약 1.2 MB (네트워크 상태에 따라 시간이 더 걸릴 수 있음)");
     expect(allText(renderer)).toContain(longStatus);
+    // A label and value on Progress used to render this sentence two extra times.
+    expect(renderer.root.findAll((node) => typeof node.type === "string" && node.props.children === longStatus)).toHaveLength(1);
+    expect(renderer.root.find((node) => node.props.accessibilityRole === "progressbar").props.accessibilityLabel).toBe(longStatus);
 
     const cancel = renderer.root.find((node) => node.props.accessibilityLabel === "취소" && node.props.accessibilityRole === "button");
     expect(cancel.props.accessibilityRole).toBe("button");

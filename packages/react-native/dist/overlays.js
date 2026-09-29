@@ -2,7 +2,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { createAlertDialogSession, getAlertDialogInitialFocus, validateAlertDialogRequest, } from "@hjmds/design-contracts/components/alert-dialog";
 import { canDismissSheet, createSheetLifecycle, sheetBehaviorDefaults, } from "@hjmds/design-contracts/components/sheet";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
-import { easing, overlay, radius, spacing } from "@hjmds/design-contracts/foundations";
+import { backdrop, easing, radius, spacing } from "@hjmds/design-contracts/foundations";
 import { alertDialogRecipe, dialogRecipe, sheetRecipe, } from "@hjmds/design-contracts/recipes";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore, } from "react";
 import { AccessibilityInfo, Animated, Easing, Keyboard, Modal, Platform, ScrollView, Pressable, View, findNodeHandle, useWindowDimensions, } from "react-native";
@@ -45,10 +45,10 @@ function focusNativeTarget(target) {
 }
 function Scrim() {
     return (_jsx(View, { accessible: false, importantForAccessibility: "no-hide-descendants", style: {
-            backgroundColor: "#000000",
+            backgroundColor: backdrop.modal.color,
             bottom: 0,
             left: 0,
-            opacity: overlay.scrim,
+            opacity: backdrop.modal.opacity,
             position: "absolute",
             right: 0,
             top: 0,
@@ -583,8 +583,10 @@ export function Sheet({ open, defaultOpen, onOpenChange, title, accessibilityTit
     // actual height so Android adjustResize does not subtract the keyboard twice.
     const viewportHeight = modalHeight ?? windowHeight;
     const dockedKeyboard = keyboardAvoidance && keyboardFrame !== null
-        && keyboardFrame.height > 0 && keyboardFrame.screenX <= 0
-        && keyboardFrame.width >= windowWidth;
+        // Android converts IME pixels to float dp independently from window dimensions;
+        // exact width comparison rejected a full-width keyboard by 0.000013 dp on API 36.
+        && keyboardFrame.height > 0 && Math.abs(keyboardFrame.screenX) <= 1
+        && keyboardFrame.width >= windowWidth - 1;
     const keyboardInset = dockedKeyboard
         ? Math.max(0, viewportHeight - keyboardFrame.screenY)
         : 0;

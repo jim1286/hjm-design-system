@@ -30,7 +30,7 @@ describe("Web core normalization", () => {
       </HjmProvider>,
     );
     expect(markup).toContain('data-variant="body" data-tone="primary" data-emphasis="regular"');
-    expect(markup).toContain('data-tone="default" data-bordered="false"');
+    expect(markup).toContain('data-tone="default" data-bordered="true"');
     expect(markup).toContain('data-padding="none" data-radius="lg"');
     expect(markup).toContain('data-axis="block" data-gap="md"');
     expect(markup).toContain('align-items:stretch');
@@ -70,10 +70,10 @@ describe("Web core normalization", () => {
     }
   });
 
-  it("draws an accent edge only for an explicitly bordered Surface", () => {
+  it("retains the shared Surface edge when neutral fills use the canvas", () => {
     const markup = renderToStaticMarkup(
       <HjmProvider systemTheme="light">
-        <Surface tone="accent">무테</Surface>
+        <Surface tone="accent" bordered={false}>무테</Surface>
         <Surface tone="accent" bordered>테두리</Surface>
       </HjmProvider>,
     );
@@ -91,7 +91,7 @@ describe("Web core normalization", () => {
       /\.hjm-surface\[data-tone="accent"\] \{[^}]*border-color/,
     );
     expect(css).toContain(
-      '.hjm-tag[data-tone="info"] { background: color-mix(in srgb, var(--hjm-accent-info) 10%, transparent); }',
+      '.hjm-tag[data-tone="info"] { background: var(--hjm-color-bg); }',
     );
     expect(css).toContain("font-size: var(--hjm-type-caption-size)");
   });
@@ -205,7 +205,7 @@ describe("Web core normalization", () => {
       /\.hjm-button\[data-tone="link"\] \{[^}]*padding-inline: 0;/s,
     );
     expect(css).toMatch(
-      /\.hjm-button\[data-selected="true"\], \.hjm-icon-button\[data-selected="true"\] \{[^}]*background: var\(--hjm-color-surface-accent\);/s,
+      /\.hjm-button\[data-selected="true"\], \.hjm-icon-button\[data-selected="true"\] \{[^}]*background: var\(--hjm-color-bg\);/s,
     );
   });
 

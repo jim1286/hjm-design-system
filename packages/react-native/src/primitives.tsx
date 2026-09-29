@@ -269,7 +269,7 @@ export function Surface({
   tone = surfaceDefaults.tone,
   padding = surfaceDefaults.padding,
   radius: radiusValue = surfaceDefaults.radius,
-  bordered = surfaceDefaults.bordered,
+  bordered,
   layoutStyle,
   style,
   ...props
@@ -277,7 +277,7 @@ export function Surface({
   const { colors } = useHjmNativeTheme();
   const normalizedTone = normalizeSurfaceTone(tone);
   const contract = surfaceRecipe[normalizedTone];
-  const shouldDrawBorder = bordered || contract.borderAlways;
+  const shouldDrawBorder = bordered ?? (surfaceDefaults.bordered || contract.borderAlways);
   const borderColor = resolveThemeColor(colors, contract.border);
   const elevatedStyle: ViewStyle | undefined = contract.elevated
     ? {

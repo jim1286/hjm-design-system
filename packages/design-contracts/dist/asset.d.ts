@@ -51,7 +51,7 @@ export declare const assetRecipe: {
     };
     readonly background: Readonly<{
         source: "theme";
-        key: "surfaceAlt";
+        key: "bg";
         alpha?: number;
     }>;
     readonly border: Readonly<{

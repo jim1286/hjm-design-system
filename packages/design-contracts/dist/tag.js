@@ -41,17 +41,17 @@ export const tagRecipe = {
     defaults: tagDefaults,
     tones: {
         neutral: {
-            background: semanticColors.surface.sunken,
+            background: semanticColors.canvas,
             content: semanticColors.content.secondary,
             border: null,
         },
         brand: {
-            background: semanticColors.surface.brand,
+            background: semanticColors.canvas,
             content: semanticColors.content.brand,
             border: null,
         },
         info: {
-            background: semanticColors.feedback.info.badgeBackground,
+            background: semanticColors.canvas,
             content: semanticColors.feedback.info.foreground,
             border: semanticColors.feedback.info.border,
         },

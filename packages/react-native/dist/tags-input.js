@@ -30,6 +30,7 @@ export function TagsInput({ label, tags: controlledTags, defaultTags, onTagsChan
         changeDraft("");
     };
     return (_jsxs(View, { style: [{ gap: tagsInputRecipe.frame.gap }, style], children: [_jsx(Text, { variant: "label", children: label }), _jsxs(View, { style: {
+                    backgroundColor: resolveColorReference(tagsInputRecipe.frame.background, palette),
                     minHeight: tagsInputRecipe.frame.minHeight,
                     flexDirection: "row",
                     flexWrap: "wrap",

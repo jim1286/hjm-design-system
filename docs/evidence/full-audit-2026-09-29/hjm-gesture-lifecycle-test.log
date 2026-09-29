@@ -1,0 +1,8 @@
+
+ RUN  v4.1.11 /Users/jimin/Developer/app-portfolio/packages/hjm-design-system/packages/react-native
+
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  19:38:56
+   Duration  405ms (transform 146ms, setup 0ms, import 200ms, tests 18ms, environment 0ms)

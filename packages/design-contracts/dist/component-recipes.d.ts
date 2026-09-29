@@ -332,7 +332,7 @@ export declare const badgeRecipe: {
             }>;
             readonly background: Readonly<{
                 source: "theme";
-                key: "surfaceAlt";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly border: null;
@@ -368,7 +368,7 @@ export declare const badgeRecipe: {
             }>;
             readonly background: Readonly<{
                 source: "theme";
-                key: "surfaceAlt";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly border: null;
@@ -385,8 +385,8 @@ export declare const badgeRecipe: {
                 alpha?: number;
             }>;
             readonly background: Readonly<{
-                source: "accent";
-                key: "info";
+                source: "theme";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly border: Readonly<{
@@ -533,7 +533,7 @@ export declare const searchFieldRecipe: {
     readonly colors: {
         readonly background: Readonly<{
             source: "theme";
-            key: "surface";
+            key: "bg";
             alpha?: number;
         }>;
         readonly content: Readonly<{
@@ -558,7 +558,7 @@ export declare const searchFieldRecipe: {
         }>;
         readonly border: Readonly<{
             source: "theme";
-            key: "textMuted";
+            key: "borderControl";
             alpha?: number;
         }>;
         readonly focus: Readonly<{
@@ -625,7 +625,7 @@ export declare const chipRecipe: {
         readonly idle: {
             readonly background: Readonly<{
                 source: "theme";
-                key: "surface";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly content: Readonly<{
@@ -642,7 +642,7 @@ export declare const chipRecipe: {
         readonly selected: {
             readonly background: Readonly<{
                 source: "theme";
-                key: "surfaceAccent";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly content: Readonly<{
@@ -799,12 +799,12 @@ export declare const listRowRecipe: {
     readonly states: {
         readonly pressedBackground: Readonly<{
             source: "theme";
-            key: "text";
+            key: "bg";
             alpha?: number;
         }>;
         readonly selectedBackground: Readonly<{
             source: "theme";
-            key: "surfaceAccent";
+            key: "bg";
             alpha?: number;
         }>;
         readonly disabledOpacity: 0.5;
@@ -864,7 +864,7 @@ export declare const accordionRecipe: {
     readonly states: {
         readonly pressedBackground: Readonly<{
             source: "theme";
-            key: "text";
+            key: "bg";
             alpha?: number;
         }>;
         readonly focus: {
@@ -936,7 +936,7 @@ export declare const menuRecipe: {
             };
             readonly highlightedBackground: Readonly<{
                 source: "theme";
-                key: "text";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly focus: {
@@ -950,7 +950,7 @@ export declare const menuRecipe: {
             };
             readonly selectedBackground: Readonly<{
                 source: "theme";
-                key: "primary";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly selectedIndicator: Readonly<{
@@ -987,7 +987,7 @@ export declare const menuRecipe: {
             };
             readonly highlightedBackground: Readonly<{
                 source: "theme";
-                key: "text";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly focus: {
@@ -1001,7 +1001,7 @@ export declare const menuRecipe: {
             };
             readonly selectedBackground: Readonly<{
                 source: "theme";
-                key: "primary";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly selectedIndicator: Readonly<{
@@ -1117,12 +1117,12 @@ export declare const selectRecipe: {
     readonly frame: {
         readonly background: Readonly<{
             source: "theme";
-            key: "surface";
+            key: "bg";
             alpha?: number;
         }>;
         readonly border: Readonly<{
             source: "theme";
-            key: "textMuted";
+            key: "borderControl";
             alpha?: number;
         }>;
         readonly focusBorder: Readonly<{
@@ -1245,6 +1245,16 @@ export declare const selectRecipe: {
     };
     readonly density: {
         readonly compact: {
+            readonly selectedBackground: Readonly<{
+                source: "theme";
+                key: "bg";
+                alpha?: number;
+            }>;
+            readonly highlightedBackground: Readonly<{
+                source: "theme";
+                key: "bg";
+                alpha?: number;
+            }>;
             readonly minHeight: 44;
             readonly paddingHorizontal: 12;
             readonly gap: 12;
@@ -1265,11 +1275,6 @@ export declare const selectRecipe: {
                 }>;
                 readonly textVariant: "label";
             };
-            readonly highlightedBackground: Readonly<{
-                source: "theme";
-                key: "text";
-                alpha?: number;
-            }>;
             readonly focus: {
                 readonly color: Readonly<{
                     source: "theme";
@@ -1279,11 +1284,6 @@ export declare const selectRecipe: {
                 readonly width: 2;
                 readonly offset: 2;
             };
-            readonly selectedBackground: Readonly<{
-                source: "theme";
-                key: "primary";
-                alpha?: number;
-            }>;
             readonly selectedIndicator: Readonly<{
                 source: "theme";
                 key: "contentBrand";
@@ -1296,6 +1296,16 @@ export declare const selectRecipe: {
             }>;
         };
         readonly comfortable: {
+            readonly selectedBackground: Readonly<{
+                source: "theme";
+                key: "bg";
+                alpha?: number;
+            }>;
+            readonly highlightedBackground: Readonly<{
+                source: "theme";
+                key: "bg";
+                alpha?: number;
+            }>;
             readonly minHeight: 56;
             readonly paddingHorizontal: 12;
             readonly gap: 12;
@@ -1316,11 +1326,6 @@ export declare const selectRecipe: {
                 }>;
                 readonly textVariant: "label";
             };
-            readonly highlightedBackground: Readonly<{
-                source: "theme";
-                key: "text";
-                alpha?: number;
-            }>;
             readonly focus: {
                 readonly color: Readonly<{
                     source: "theme";
@@ -1330,11 +1335,6 @@ export declare const selectRecipe: {
                 readonly width: 2;
                 readonly offset: 2;
             };
-            readonly selectedBackground: Readonly<{
-                source: "theme";
-                key: "primary";
-                alpha?: number;
-            }>;
             readonly selectedIndicator: Readonly<{
                 source: "theme";
                 key: "contentBrand";
@@ -1391,12 +1391,12 @@ export declare const selectRecipe: {
     readonly states: {
         readonly hoverBackground: Readonly<{
             source: "theme";
-            key: "text";
+            key: "bg";
             alpha?: number;
         }>;
         readonly pressedBackground: Readonly<{
             source: "theme";
-            key: "text";
+            key: "bg";
             alpha?: number;
         }>;
         readonly focus: {
@@ -1456,12 +1456,12 @@ export declare const comboboxRecipe: {
     readonly frame: {
         readonly background: Readonly<{
             source: "theme";
-            key: "surface";
+            key: "bg";
             alpha?: number;
         }>;
         readonly border: Readonly<{
             source: "theme";
-            key: "textMuted";
+            key: "borderControl";
             alpha?: number;
         }>;
         readonly focusBorder: Readonly<{
@@ -1594,6 +1594,16 @@ export declare const comboboxRecipe: {
     };
     readonly density: {
         readonly compact: {
+            readonly selectedBackground: Readonly<{
+                source: "theme";
+                key: "bg";
+                alpha?: number;
+            }>;
+            readonly highlightedBackground: Readonly<{
+                source: "theme";
+                key: "bg";
+                alpha?: number;
+            }>;
             readonly minHeight: 44;
             readonly paddingHorizontal: 12;
             readonly gap: 12;
@@ -1614,11 +1624,6 @@ export declare const comboboxRecipe: {
                 }>;
                 readonly textVariant: "label";
             };
-            readonly highlightedBackground: Readonly<{
-                source: "theme";
-                key: "text";
-                alpha?: number;
-            }>;
             readonly focus: {
                 readonly color: Readonly<{
                     source: "theme";
@@ -1628,11 +1633,6 @@ export declare const comboboxRecipe: {
                 readonly width: 2;
                 readonly offset: 2;
             };
-            readonly selectedBackground: Readonly<{
-                source: "theme";
-                key: "primary";
-                alpha?: number;
-            }>;
             readonly selectedIndicator: Readonly<{
                 source: "theme";
                 key: "contentBrand";
@@ -1645,6 +1645,16 @@ export declare const comboboxRecipe: {
             }>;
         };
         readonly comfortable: {
+            readonly selectedBackground: Readonly<{
+                source: "theme";
+                key: "bg";
+                alpha?: number;
+            }>;
+            readonly highlightedBackground: Readonly<{
+                source: "theme";
+                key: "bg";
+                alpha?: number;
+            }>;
             readonly minHeight: 56;
             readonly paddingHorizontal: 12;
             readonly gap: 12;
@@ -1665,11 +1675,6 @@ export declare const comboboxRecipe: {
                 }>;
                 readonly textVariant: "label";
             };
-            readonly highlightedBackground: Readonly<{
-                source: "theme";
-                key: "text";
-                alpha?: number;
-            }>;
             readonly focus: {
                 readonly color: Readonly<{
                     source: "theme";
@@ -1679,11 +1684,6 @@ export declare const comboboxRecipe: {
                 readonly width: 2;
                 readonly offset: 2;
             };
-            readonly selectedBackground: Readonly<{
-                source: "theme";
-                key: "primary";
-                alpha?: number;
-            }>;
             readonly selectedIndicator: Readonly<{
                 source: "theme";
                 key: "contentBrand";
@@ -1740,12 +1740,12 @@ export declare const comboboxRecipe: {
     readonly states: {
         readonly hoverBackground: Readonly<{
             source: "theme";
-            key: "text";
+            key: "bg";
             alpha?: number;
         }>;
         readonly pressedBackground: Readonly<{
             source: "theme";
-            key: "text";
+            key: "bg";
             alpha?: number;
         }>;
         readonly focus: {
@@ -1800,13 +1800,6 @@ export declare const segmentedControlRecipe: {
         readonly largeTextLayout: "stacked";
         readonly stackAtFontScale: 1.6;
     };
-    /**
-     * A recessed track with a raised white thumb. The fills used to be
-     * inverted — a white track with a canvas-coloured selected segment — so the
-     * chosen option read as the recessed, disabled-looking one. `surface.sunken`
-     * is too close to white to carry the step, so the track takes the canvas
-     * tone and a border keeps the control legible when it sits on that canvas.
-     */
     readonly container: {
         readonly background: Readonly<{
             source: "theme";
@@ -1848,7 +1841,7 @@ export declare const segmentedControlRecipe: {
         readonly fontWeight: "600";
         readonly selectedBackground: Readonly<{
             source: "theme";
-            key: "surfaceAccent";
+            key: "bg";
             alpha?: number;
         }>;
         readonly selectedContent: Readonly<{
@@ -2023,7 +2016,7 @@ export declare const selectionControlRecipe: {
         readonly card: {
             readonly background: Readonly<{
                 source: "theme";
-                key: "surface";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly border: Readonly<{
@@ -2112,7 +2105,7 @@ export declare const selectionControlRecipe: {
         }>;
         readonly selectedBackground: Readonly<{
             source: "theme";
-            key: "surfaceAccent";
+            key: "bg";
             alpha?: number;
         }>;
         readonly selectedBorder: Readonly<{
@@ -2122,12 +2115,12 @@ export declare const selectionControlRecipe: {
         }>;
         readonly hoverBackground: Readonly<{
             source: "theme";
-            key: "text";
+            key: "bg";
             alpha?: number;
         }>;
         readonly pressedBackground: Readonly<{
             source: "theme";
-            key: "text";
+            key: "bg";
             alpha?: number;
         }>;
         readonly invalidBorder: Readonly<{
@@ -2319,12 +2312,12 @@ export declare const bottomNavigationRecipe: {
     readonly states: {
         readonly hoverBackground: Readonly<{
             source: "theme";
-            key: "text";
+            key: "bg";
             alpha?: number;
         }>;
         readonly pressedBackground: Readonly<{
             source: "theme";
-            key: "text";
+            key: "bg";
             alpha?: number;
         }>;
         readonly focus: {
@@ -2425,7 +2418,7 @@ export declare const tabsRecipe: {
     readonly states: {
         readonly pressedBackground: Readonly<{
             source: "theme";
-            key: "text";
+            key: "bg";
             alpha?: number;
         }>;
         readonly focus: {
@@ -2450,7 +2443,7 @@ export declare const noticeRecipe: {
         readonly info: {
             readonly background: Readonly<{
                 source: "theme";
-                key: "surfaceAlt";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly foreground: Readonly<{
@@ -2585,7 +2578,7 @@ export declare const skeletonRecipe: {
     };
     readonly background: Readonly<{
         source: "theme";
-        key: "surfaceAlt";
+        key: "bg";
         alpha?: number;
     }>;
     readonly shapes: {
@@ -2780,7 +2773,7 @@ export declare const avatarRecipe: {
     };
     readonly background: Readonly<{
         source: "theme";
-        key: "surfaceAlt";
+        key: "bg";
         alpha?: number;
     }>;
     readonly content: Readonly<{
@@ -2827,7 +2820,7 @@ export declare const statisticRecipe: {
         readonly surface: {
             readonly background: Readonly<{
                 source: "theme";
-                key: "surface";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly border: Readonly<{
@@ -3634,7 +3627,7 @@ export declare const bottomCtaRecipe: {
     readonly gap: 12;
     readonly background: Readonly<{
         source: "theme";
-        key: "surface";
+        key: "bg";
         alpha?: number;
     }>;
     readonly border: Readonly<{

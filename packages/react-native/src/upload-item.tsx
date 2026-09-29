@@ -40,13 +40,14 @@ export function UploadItem({ descriptor, labels, onCancel, onRetry, leading, sty
   return (
     // Native exposes only a busy state for this lifecycle; success and error remain
     // distinguishable through the live status sentence, as documented by the contract.
-    <View accessibilityLabel={announcement.label} accessibilityState={{ busy: descriptor.state.status === "uploading" }} accessible style={[{ alignItems: "center", borderColor: colors.border, borderRadius: 12, borderWidth: 1, direction: environment.direction, flexDirection: "row", gap: uploadItemRecipe.row.gap, minHeight: uploadItemRecipe.row.minHeight, paddingHorizontal: uploadItemRecipe.row.paddingHorizontal }, style]}>
+    <View accessibilityLabel={announcement.label} accessibilityState={{ busy: descriptor.state.status === "uploading" }} accessible style={[{ alignItems: "center", borderColor: colors.border, borderRadius: 12, borderWidth: 1, direction: environment.direction, flexDirection: "row", gap: uploadItemRecipe.row.gap, minHeight: uploadItemRecipe.row.minHeight, paddingHorizontal: uploadItemRecipe.row.paddingHorizontal, paddingVertical: 8 }, style]}>
       {leading === undefined ? null : <View accessible={false}>{leading}</View>}
       <View style={{ flex: 1, gap: 2, minWidth: 0 }}>
         <Text>{descriptor.name}</Text>
         {descriptor.sizeLabel === undefined ? null : <Text tone="muted" variant="label">{descriptor.sizeLabel}</Text>}
         <Text accessibilityLiveRegion="polite" style={{ color: statusColor }} variant="label">{announcement.description}</Text>
-        {descriptor.state.status === "uploading" ? <Progress label={announcement.description} {...(descriptor.state.progress === null ? {} : { value: descriptor.state.progress })} valueText={announcement.description} /> : null}
+        {/* The live sentence already displays progress; keep the bar named without repeating that sentence twice visually. */}
+        {descriptor.state.status === "uploading" ? <Progress accessibilityLabel={announcement.description} {...(descriptor.state.progress === null ? {} : { value: descriptor.state.progress })} valueText={announcement.description} /> : null}
       </View>
       {action === null ? null : (
         <Pressable

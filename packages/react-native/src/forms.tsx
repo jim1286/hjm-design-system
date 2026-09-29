@@ -22,7 +22,7 @@ import {
   type SelectOpenChangeReason,
 } from "@hjmds/design-contracts/components/collection";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
-import { glyph, radius, spacing } from "@hjmds/design-contracts/foundations";
+import { backdrop, glyph, radius, spacing } from "@hjmds/design-contracts/foundations";
 import {
   comboboxRecipe,
   selectRecipe,
@@ -368,7 +368,7 @@ function CollectionSheetHeader({ title, dismissLabel, onDismiss }: { title: stri
   return <View style={{ flexDirection: "row", direction: environment.direction, alignItems: "center", gap: spacing.sm }}>
     <Text accessibilityRole="header" tone="primary" variant="title" emphasis="strong" style={{ flex: 1 }}>{title}</Text>
     <Pressable accessibilityRole="button" accessibilityLabel={dismissLabel} onPress={onDismiss}
-      style={({ pressed }) => [minimumTargetStyle, { alignItems: "center", justifyContent: "center", borderRadius: radius.full, backgroundColor: pressed ? colors.surface : "transparent" }]}>
+      style={({ pressed }) => [minimumTargetStyle, { alignItems: "center", justifyContent: "center", borderRadius: radius.full, backgroundColor: pressed ? colors.bg : "transparent" }]}>
       <Text accessible={false} tone="muted" variant="title">×</Text>
     </Pressable>
   </View>;
@@ -696,7 +696,7 @@ export function Select<
             accessibilityRole="button"
             onPress={() => close("outside")}
             style={{
-              backgroundColor: "#00000088",
+              backgroundColor: backdrop.modal.color, opacity: backdrop.modal.opacity,
               bottom: 0,
               left: 0,
               position: "absolute",
@@ -1085,7 +1085,7 @@ export function Combobox<
             backgroundColor: checked || active
               ? resolveColorReference(densityContract.selectedBackground, theme.palette)
               : pressed
-                ? resolveColorReference(comboboxRecipe.states.pressedBackground, theme.palette)
+                ? colors.bg
                 : "transparent",
             borderRadius: radius[densityContract.radius],
             direction: environment.direction,
@@ -1237,7 +1237,7 @@ export function Combobox<
             accessibilityLabel={dismissLabel}
             accessibilityRole="button"
             onPress={() => dismiss("outside")}
-            style={{ backgroundColor: "#00000088", bottom: 0, left: 0, position: "absolute", right: 0, top: 0 }}
+            style={{ backgroundColor: backdrop.modal.color, opacity: backdrop.modal.opacity, bottom: 0, left: 0, position: "absolute", right: 0, top: 0 }}
           />
           <View
             accessibilityLabel={resultsAccessibilityLabel ?? accessibleName}

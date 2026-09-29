@@ -163,6 +163,8 @@ export function ListRow({ title, description, leading, trailing, titleMetadata, 
                 : trailingAction
                     ? "transparent"
                     : visualState.backgroundColor,
+            borderColor: selected && !trailingAction ? theme.colors.contentBrand : "transparent",
+            borderWidth: trailingAction ? 0 : 1,
             direction: visualState.direction,
             flex: trailingAction ? 1 : undefined,
             flexDirection: "row",
@@ -188,6 +190,8 @@ export function ListRow({ title, description, leading, trailing, titleMetadata, 
             {
                 alignItems: "center",
                 backgroundColor: visualState.backgroundColor,
+                borderColor: selected ? theme.colors.contentBrand : "transparent",
+                borderWidth: 1,
                 direction: visualState.direction,
                 flexDirection: "row",
                 minHeight: visualState.minHeight,
@@ -221,7 +225,9 @@ export function Avatar({ source, name, initials, size = 44, decorative = false, 
     return (_jsx(View, { ...mediaAccessibility, style: [
             {
                 alignItems: "center",
-                backgroundColor: colors.surfaceAccent,
+                backgroundColor: colors.bg,
+                borderColor: colors.borderControl,
+                borderWidth: 1,
                 borderRadius: radius.full,
                 height: size,
                 justifyContent: "center",
@@ -596,7 +602,7 @@ export function List({ label, children, separator = listRecipe.defaults.separato
                 direction: environment.direction,
                 ...(appearance === "grouped"
                     ? {
-                        backgroundColor: colors.surface,
+                        backgroundColor: colors.bg,
                         borderRadius: radius.lg,
                         overflow: "hidden",
                     }

@@ -144,10 +144,10 @@ export const imageRecipe = {
   defaults: imageDefaults,
   fits,
   placeholder: {
-    background: semanticColors.surface.sunken,
+    background: semanticColors.canvas,
   },
   fallback: {
-    background: semanticColors.surface.sunken,
+    background: semanticColors.canvas,
     icon: { name: errorIconName, tone: fallbackIconTone },
   },
   radius: "md",

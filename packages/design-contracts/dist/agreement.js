@@ -90,7 +90,7 @@ export const agreementRecipe = {
         gap: spacing.sm,
         paddingHorizontal: spacing.md,
         paddingVertical: spacing.sm,
-        background: semanticColors.surface.sunken,
+        background: semanticColors.canvas,
         radius: "md",
         textVariant: "bodyLarge",
         color: semanticColors.content.primary,

@@ -7,8 +7,9 @@ export const focusIndicatorContract = {
     offset: 2,
 };
 export const fieldFrameContract = {
-    background: semanticColors.surface.default,
-    border: semanticColors.content.secondary,
+    // White in the light theme, theme canvas in dark; selection/focus remains an outline signal.
+    background: semanticColors.canvas,
+    border: semanticColors.border.control,
     focusBorder: semanticColors.border.focus,
     invalidBorder: semanticColors.border.danger,
     radius: "md",
@@ -44,9 +45,9 @@ export const collectionItemContract = {
         color: semanticColors.content.secondary,
         textVariant: "label",
     },
-    highlightedBackground: semanticColors.interaction.hover,
+    highlightedBackground: semanticColors.canvas,
     focus: focusIndicatorContract,
-    selectedBackground: semanticColors.interaction.selected,
+    selectedBackground: semanticColors.canvas,
     selectedIndicator: semanticColors.border.focus,
     danger: semanticColors.content.danger,
 };

@@ -62,7 +62,7 @@ export function MorphingMenu({ label, items, onAction, disabled = false, open: c
     {/* Open toward following content; upstream defaults upward and can cover preceding values. */}
     <Bloom.Root direction="bottom" open={open} onOpenChange={change} modal={false}>
       <Bloom.Container buttonSize={{ width: 160, height: 44 }} menuWidth={240}
-        style={{ background: theme.palette.theme.surface, color: theme.palette.theme.text }}>
+        style={{ background: theme.palette.theme.bg, color: theme.palette.theme.text }}>
         <Bloom.Trigger disabled={disabled}>{label}</Bloom.Trigger>
         <Bloom.Content>
           {items.map(item => <button type="button" role="menuitem" tabIndex={-1} className="hjm-menu-morph__item" key={item.id} disabled={!open || (item.disabled ?? false)}

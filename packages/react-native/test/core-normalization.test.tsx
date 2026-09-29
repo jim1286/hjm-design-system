@@ -55,7 +55,7 @@ describe("Native core normalization", () => {
     for (const action of [actions[0]!, actions[1]!]) {
       const style = flattenStyle(action.props.style({ pressed: false }));
       expect(style).toMatchObject({
-        backgroundColor: THEMES[theme].surfaceAlt,
+        backgroundColor: THEMES[theme].bg,
         // `borderControl`, not `textSub` — that is what the neutral action
         // recipe resolves. The two used to hold the same hex in both themes, so
         // this assertion passed on a coincidence until dark's neutrals moved
@@ -212,12 +212,12 @@ describe("Native core normalization", () => {
   it("matches Surface optional-border and geometry semantics", () => {
     const renderer = renderWithProvider(
       <>
-        <Surface tone="accent"><Text>무테</Text></Surface>
-        <Surface tone="accent" bordered padding="md" radius="sm"><Text>테두리</Text></Surface>
+        <Surface tone="accent" bordered={false} testID="plain-accent"><Text>무테</Text></Surface>
+        <Surface tone="accent" bordered testID="bordered-accent" padding="md" radius="sm"><Text>테두리</Text></Surface>
       </>,
     );
     const surfaces = renderer.root.findAllByType(View).filter(
-      (node) => flattenStyle(node.props.style).backgroundColor === "#c9e2ff",
+      (node) => ["plain-accent", "bordered-accent"].includes(node.props.testID),
     );
     expect(flattenStyle(surfaces[0]!.props.style)).toMatchObject({
       borderColor: "transparent",
@@ -225,7 +225,9 @@ describe("Native core normalization", () => {
       padding: 0,
     });
     expect(flattenStyle(surfaces[1]!.props.style)).toMatchObject({
-      borderColor: "rgba(3, 105, 161, 0.3)",
+      borderColor: THEMES.light.primary,
+      backgroundColor: THEMES.light.bg,
+      borderWidth: 1,
       borderRadius: 8,
       padding: 16,
     });
@@ -420,10 +422,12 @@ describe("Native core normalization", () => {
       paddingHorizontal: 4,
     });
     const selectedCard = renderer.root.findAllByType(View).find(
-      (node) => flattenStyle(node.props.style).backgroundColor === "#c9e2ff",
+      (node) => flattenStyle(node.props.style).borderColor === THEMES.light.primary,
     );
     expect(flattenStyle(selectedCard?.props.style)).toMatchObject({
-      borderColor: "rgba(3, 105, 161, 0.3)",
+      borderColor: THEMES.light.primary,
+      backgroundColor: THEMES.light.bg,
+      borderWidth: 1,
       borderRadius: 16,
       padding: 0,
     });

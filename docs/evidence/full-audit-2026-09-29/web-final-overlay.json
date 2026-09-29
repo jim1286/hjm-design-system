@@ -1,0 +1,38 @@
+[
+  {
+    "component": "Tour",
+    "status": "pass",
+    "evidence": "web-screens/Tour-action.png",
+    "assertions": "async()=>{await p.getByRole('button',{name:'둘러보기 시작'}).click();await p.getByRole('dialog').waitFor();await p.getByRole('button',{name:'다음',exact:true}).click();await p.getByRole('button',{name:'다음',exact:true}).click();await p.getByRole('button',{name:'다 봤어요'}).click();await text(p.locator('[data-hjm-renderer]'),'끝까지 보셨어요')}"
+  },
+  {
+    "component": "DatePicker",
+    "status": "pass",
+    "evidence": "web-screens/DatePicker-action.png",
+    "assertions": "async()=>{await p.getByRole('button',{name:/날짜를 선택하세요/}).click();await p.getByRole('gridcell',{name:'2027-02-10',exact:true}).click();await text(p.locator('[data-hjm-renderer]'),'2027-02-10')}"
+  },
+  {
+    "component": "Dialog",
+    "status": "pass",
+    "evidence": "web-screens/Dialog-action.png",
+    "assertions": "async()=>{await p.getByRole('button',{name:'Dialog 열기',exact:true}).click();await p.getByRole('dialog').waitFor();await shot('Dialog-open');await p.keyboard.press('Escape');assert.equal(await p.getByRole('dialog').count(),0)}"
+  },
+  {
+    "component": "Sheet",
+    "status": "pass",
+    "evidence": "web-screens/Sheet-action.png",
+    "assertions": "async()=>{await p.getByRole('button',{name:'Sheet 열기'}).click();await p.getByRole('dialog').waitFor();await shot('Sheet-open');await p.getByRole('button',{name:'필터 닫기'}).click();assert.equal(await p.getByRole('dialog').count(),0)}"
+  },
+  {
+    "component": "AlertDialog",
+    "status": "pass",
+    "evidence": "web-screens/AlertDialog-action.png",
+    "assertions": "async()=>{await p.getByRole('button',{name:'AlertDialog 열기',exact:true}).click();await shot('AlertDialog-open');await p.getByRole('button',{name:'취소',exact:true}).click();assert.equal(await p.getByRole('alertdialog').count(),0)}"
+  },
+  {
+    "component": "CommandPalette",
+    "status": "pass",
+    "evidence": "web-screens/CommandPalette-action.png",
+    "assertions": "async()=>{await p.getByRole('button',{name:'명령 열기'}).click();await shot('CommandPalette-open');await p.getByRole('option').first().click();await text(p.locator('[data-hjm-renderer]'),'실행했어요')}"
+  }
+]

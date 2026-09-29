@@ -62,3 +62,30 @@ contracts·tree-select까지 연쇄로 초과).
 `borderControl`은 `#6b7684`를 그대로 둔다. 비텍스트 기준(3:1)이고 `surface` 위 4.19:1로 충분하다.
 
 **버린 대안:** 검사에서 `textSub`를 본문 기준에서 빼기. 실제 글자에 쓰이는 색을 기준에서 빼면 검사가 존재 이유를 잃는다.
+
+## 입력과 선택 항목은 흰 내부와 상태 테두리로 구분한다 (2026-09-29)
+
+전수 기기 확인 중 사용자가 회색·푸른색 입력/선택 배경을 제거하고, "푸른 테두리는 쓰는데 input 안은 흰색"으로 요청했다.
+입력 프레임, 검색·OTP·숫자·날짜 입력, 선택 카드·Chip·SegmentedControl·ToggleGroup은 라이트의 `bg`(`#ffffff`)를 사용한다.
+다크에는 같은 역할의 `bg`를 사용해 밝은 사각형이 따로 뜨지 않도록 한다. 포커스/선택 테두리와 체크 표시는 기존 브랜드색을 유지한다.
+휴지 상태 입력 테두리는 글자색 `textMuted` 대신 전용 `borderControl`을 사용한다.
+
+공식 참조는 [Ant Design Input](https://ant.design/components/input/)의 outlined 변형(흰 active/hover 내부, 파란 active 테두리),
+[Radix Text Field](https://www.radix-ui.com/themes/docs/components/text-field)의 surface/soft 변형 분리,
+[Atlassian Border](https://atlassian.design/foundations/border)의 기본·선택·포커스 테두리 역할 분리다.
+Ant의 원시 색상이나 낮은 테두리 대비까지 복제하지 않고, HJM의 의미 토큰과 대비를 유지한다.
+포커스 링은 기존 2px 계약을 유지하며, 작은 체크·스위치 트랙·선택 날짜 표식과 주요 CTA는 넓은 입력 채움 배경과 구분한다.
+
+**버린 대안:** 선택을 넓은 불투명 브랜드색 판으로 표현하거나 소비 앱에서 흰색 CSS만 덮어쓰기.
+전자는 이번 사용자 방향과 맞지 않고 후자는 웹·네이티브 및 다크 테마에 서로 다른 표현을 남긴다.
+
+### 전체 중립 표면으로 확대
+
+같은 화면 검토에서 사용자가 입력뿐 아니라 회색·연한 파란색 배경 전체를 제거하되 Create draft의 진한 파란색은 유지하도록 명확히 했다.
+`Surface`·Card·메뉴·목록·아바타·Skeleton·보조 버튼도 canvas를 사용하며, 경계가 사라지는 곳은 테두리로 구분한다.
+`ButtonTone.primary`와 주요 CTA/FAB, 작은 체크·스위치·진행 표시, 성공·위험 상태색은 그대로 유지한다.
+원시 팔레트의 surface/primary 색 자체를 흰색으로 덮지 않고 컴포넌트 배경 역할만 바꿔, 글자·아이콘·진행선의 의미가 바뀌지 않게 한다.
+
+버튼의 배경색은 소비 화면에서 직접 지정하지 않고 `ButtonTone`의 `primary | secondary | ghost | danger | link`로 선택한다.
+웹과 네이티브는 같은 `buttonRecipe`의 배경·글자·테두리 역할을 해석한다. Create draft는 `primary`를 유지하므로
+일반 표면의 canvas 전환과 독립적으로 기존 브랜드 채움색을 보존한다.

@@ -65,6 +65,14 @@ describe("Sheet input viewport", () => {
     expect(style().paddingBottom).toBe(sheetRecipe.content.paddingBottom + 24);
   });
 
+  it("accepts density-rounded full-width keyboard coordinates", () => {
+    render(tree({ keyboardAvoidance: true }));
+    act(() => keyboard.__emit("keyboardDidShow", 200, { width: 799.99998, screenX: 0.00001 }));
+    expect(positioner().props.style.paddingBottom).toBe(200);
+    act(() => keyboard.__emit("keyboardDidShow", 200, { width: 600, screenX: 100 }));
+    expect(positioner().props.style.paddingBottom).toBe(0);
+  });
+
   it("uses the modal's measured viewport when Android already resized it", () => {
     render(tree({ keyboardAvoidance: true }));
     act(() => {

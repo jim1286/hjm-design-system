@@ -37,7 +37,7 @@ export const iconButtonRecipe = {
         // state; without a paired visual every consumer painted the pressed icon
         // button in product styles. Mirrors `buttonRecipe.states.selected`.
         selected: {
-            background: semanticColors.surface.brand,
+            background: semanticColors.canvas,
             content: semanticColors.content.brand,
             border: semanticColors.border.focus,
         },

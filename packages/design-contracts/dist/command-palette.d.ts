@@ -149,7 +149,7 @@ export declare const commandPaletteRecipe: {
         readonly paddingHorizontal: 16;
         readonly borderColor: Readonly<{
             source: "theme";
-            key: "textMuted";
+            key: "borderControl";
             alpha?: number;
         }>;
     };
@@ -176,7 +176,7 @@ export declare const commandPaletteRecipe: {
         };
         readonly highlightedBackground: Readonly<{
             source: "theme";
-            key: "text";
+            key: "bg";
             alpha?: number;
         }>;
         readonly focus: {
@@ -190,7 +190,7 @@ export declare const commandPaletteRecipe: {
         };
         readonly selectedBackground: Readonly<{
             source: "theme";
-            key: "primary";
+            key: "bg";
             alpha?: number;
         }>;
         readonly selectedIndicator: Readonly<{

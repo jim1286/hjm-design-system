@@ -33,7 +33,7 @@ describe("cross-platform core normalization", () => {
     expect(stackRecipe.axes).toEqual({ block: "column", inline: "row" });
   });
 
-  it("makes Surface geometry and optional borders renderer-neutral", () => {
+  it("makes white Surface boundaries and geometry renderer-neutral", () => {
     expect(surfaceDefaults).toEqual({
       tone: "default",
       padding: "none",
@@ -45,8 +45,9 @@ describe("cross-platform core normalization", () => {
     expect(surfaceGeometry.radii.lg).toBe(16);
     expect(surfaceRecipe.accent).toMatchObject({
       border: "primary",
-      borderAlpha: 0.3,
-      borderAlways: false,
+      background: "bg",
+      borderAlpha: 1,
+      borderAlways: true,
     });
     expect(surfaceRecipe.subtle.borderAlways).toBe(true);
   });
@@ -110,7 +111,7 @@ describe("cross-platform core normalization", () => {
       border: null,
     });
     expect(resolveIconButtonPresentation("secondary", palette)).toEqual({
-      background: THEMES.light.surfaceAlt,
+      background: THEMES.light.bg,
       content: THEMES.light.text,
       // The recipe reads border.control; this equalled textSub only while both shared #6b7684.
       border: THEMES.light.borderControl,

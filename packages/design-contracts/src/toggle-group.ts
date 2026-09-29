@@ -1,6 +1,6 @@
 import type { BehaviorContract } from "./behaviors.js";
 import type { ColorReference } from "./color-references.js";
-import { collectionItemContract, focusIndicatorContract } from "./component-contracts.js";
+import { focusIndicatorContract } from "./component-contracts.js";
 import { control, radius, spacing } from "./foundations.js";
 import { semanticColors } from "./semantic-colors.js";
 import {
@@ -83,12 +83,12 @@ export const toggleGroupRecipe = {
   radius: radius.md,
   gap: spacing.xxs,
   idle: {
-    background: semanticColors.surface.default,
+    background: semanticColors.canvas,
     color: semanticColors.content.body,
     border: semanticColors.border.control,
   },
   pressed: {
-    background: collectionItemContract.selectedBackground,
+    background: semanticColors.canvas,
     color: semanticColors.content.brand,
     border: semanticColors.border.focus,
   },

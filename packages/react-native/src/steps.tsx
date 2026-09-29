@@ -37,7 +37,7 @@ export function Steps<Id extends string>({
       {steps.map((step, index) => (
         <View accessibilityHint={step.statusLabel} accessibilityLabel={step.accessibleName} accessible key={step.id} style={{ flex: 1, gap: stepsRecipe.gap, minWidth: 0 }}>
           <View accessible={false} style={{ alignItems: "center", flexDirection: "row" }}>
-            <View style={{ alignItems: "center", backgroundColor: colors.surface, borderColor: statusColor(step.status), borderRadius: stepsRecipe.indicator.size / 2, borderWidth: step.status === "current" || step.status === "error" ? stepsRecipe.indicator.activeBorderWidth : stepsRecipe.indicator.borderWidth, height: stepsRecipe.indicator.size, justifyContent: "center", width: stepsRecipe.indicator.size }}>
+            <View style={{ alignItems: "center", backgroundColor: colors.bg, borderColor: statusColor(step.status), borderRadius: stepsRecipe.indicator.size / 2, borderWidth: step.status === "current" || step.status === "error" ? stepsRecipe.indicator.activeBorderWidth : stepsRecipe.indicator.borderWidth, height: stepsRecipe.indicator.size, justifyContent: "center", width: stepsRecipe.indicator.size }}>
               {renderMark?.(step.status, step.position) ?? <Text align="center" emphasis="strong" style={{ color: statusColor(step.status) }} variant="label">{step.status === "complete" ? "✓" : step.status === "error" ? "!" : step.position}</Text>}
             </View>
             {index === steps.length - 1 ? null : <View style={{ backgroundColor: step.status === "complete" ? colors.contentBrand : colors.border, flex: 1, height: stepsRecipe.connector.height }} />}

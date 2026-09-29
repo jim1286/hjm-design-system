@@ -40,7 +40,7 @@ export declare const menubarRecipe: {
         }>;
         readonly openBackground: Readonly<{
             source: "theme";
-            key: "primary";
+            key: "bg";
             alpha?: number;
         }>;
     };
@@ -67,7 +67,7 @@ export declare const menubarRecipe: {
         };
         readonly highlightedBackground: Readonly<{
             source: "theme";
-            key: "text";
+            key: "bg";
             alpha?: number;
         }>;
         readonly focus: {
@@ -81,7 +81,7 @@ export declare const menubarRecipe: {
         };
         readonly selectedBackground: Readonly<{
             source: "theme";
-            key: "primary";
+            key: "bg";
             alpha?: number;
         }>;
         readonly selectedIndicator: Readonly<{

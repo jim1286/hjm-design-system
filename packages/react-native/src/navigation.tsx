@@ -1,4 +1,4 @@
-import { glyph, radius, spacing } from "@hjmds/design-contracts/foundations";
+import { backdrop, glyph, radius, spacing } from "@hjmds/design-contracts/foundations";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import {
   bottomNavigationRecipe,
@@ -518,7 +518,7 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
                 <View
                   accessible={false}
                   style={{
-                    backgroundColor: colors.surfaceAccent,
+                    backgroundColor: colors.bg,
                     borderRadius: radius.full,
                     paddingHorizontal: spacing.xs,
                   }}
@@ -1802,7 +1802,7 @@ export function Menu<
             accessibilityRole="button"
             onPress={() => close("outside")}
             style={{
-              backgroundColor: "#00000088",
+              backgroundColor: backdrop.modal.color, opacity: backdrop.modal.opacity,
               bottom: 0,
               left: 0,
               position: "absolute",

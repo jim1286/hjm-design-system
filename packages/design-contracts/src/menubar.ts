@@ -84,7 +84,7 @@ export const menubarRecipe = {
     paddingHorizontal: spacing.sm,
     radius: radius.sm,
     color: semanticColors.content.body,
-    openBackground: semanticColors.interaction.selected,
+    openBackground: semanticColors.canvas,
   },
   item: collectionItemContract,
   states: { focus: focusIndicatorContract },

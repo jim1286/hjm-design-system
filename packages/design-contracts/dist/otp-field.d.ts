@@ -91,7 +91,7 @@ export declare const otpFieldRecipe: {
     readonly slot: {
         readonly border: Readonly<{
             source: "theme";
-            key: "textMuted";
+            key: "borderControl";
             alpha?: number;
         }>;
         readonly focusBorder: Readonly<{

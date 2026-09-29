@@ -76,12 +76,12 @@ export declare const tagsInputRecipe: {
         readonly gap: 8;
         readonly border: Readonly<{
             source: "theme";
-            key: "textMuted";
+            key: "borderControl";
             alpha?: number;
         }>;
         readonly background: Readonly<{
             source: "theme";
-            key: "surface";
+            key: "bg";
             alpha?: number;
         }>;
     };
@@ -91,7 +91,7 @@ export declare const tagsInputRecipe: {
         readonly gap: 4;
         readonly background: Readonly<{
             source: "theme";
-            key: "surfaceAlt";
+            key: "bg";
             alpha?: number;
         }>;
         readonly color: Readonly<{

@@ -1,9 +1,11 @@
+import { resolveDesignSystemProviderValue } from "@hjmds/design-contracts";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 
 import { WebDesignSystemProvider } from "../runtime/WebDesignSystemProvider";
 import {
   ComponentPreview,
+  webRendererRegistry,
   type WebRendererComponentName,
 } from "./preview-registry";
 
@@ -24,6 +26,15 @@ function renderPreview(name: WebRendererComponentName): string {
 }
 
 describe("official Web renderer previews", () => {
+  it("does not apply separator or inverse recipe colors to ordinary preview text", () => {
+    for (const theme of ["light", "dark"] as const) {
+      const provider = resolveDesignSystemProviderValue({ theme }, { systemTheme: theme });
+      const presentation = webRendererRegistry.Splitter.resolvePresentation(provider);
+      expect(presentation.style.color).toBeUndefined();
+      expect(presentation.style.backgroundColor).toBeUndefined();
+      expect(presentation.style["--hjm-evidence-color"]).toBeDefined();
+    }
+  });
   it("renders supplemental active surfaces through @hjmds/react instead of DOM mocks", () => {
     const icon = renderPreview("Icon");
     expect(icon).toContain('class="hjm-icon"');

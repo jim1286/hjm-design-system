@@ -1,4 +1,4 @@
-import { control, easing, fontFamily, fontWeight, motion, radius, shadow, spacing, stroke, typography, } from "@hjmds/design-contracts/foundations";
+import { backdrop, control, easing, fontFamily, fontWeight, motion, radius, shadow, spacing, stroke, typography, } from "@hjmds/design-contracts/foundations";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { focusIndicatorContract } from "@hjmds/design-contracts/contracts";
 import { visibleControlHeight, } from "@hjmds/design-contracts/components/design-system-provider";
@@ -19,6 +19,7 @@ function rem(value) {
 export function createHjmThemeStyle(value) {
     const { environment, palette } = value;
     const style = {
+        "--hjm-backdrop-modal": `color-mix(in srgb, ${backdrop.modal.color} ${backdrop.modal.opacity * 100}%, transparent)`,
         "--hjm-text-scale": environment.textScale,
         "--hjm-motion-scale": environment.reducedMotion ? 0 : 1,
         colorScheme: environment.theme,

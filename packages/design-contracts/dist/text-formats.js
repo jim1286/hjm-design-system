@@ -7,7 +7,7 @@ export const textFormatRecipe = {
         textVariant: "label",
         paddingHorizontal: spacing.xxs,
         radius: radius.sm,
-        background: semanticColors.surface.sunken,
+        background: semanticColors.canvas,
         color: semanticColors.content.body,
         border: semanticColors.border.default,
     },
@@ -16,7 +16,7 @@ export const textFormatRecipe = {
         textVariant: "body",
         paddingHorizontal: spacing.xxs,
         radius: radius.sm,
-        background: semanticColors.surface.sunken,
+        background: semanticColors.canvas,
         color: semanticColors.content.primary,
     },
     quote: {

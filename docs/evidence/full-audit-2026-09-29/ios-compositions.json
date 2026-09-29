@@ -1,0 +1,60 @@
+{
+  "device": "iPhone17 iOS27 9ED1529C-5CAA-45CF-B234-E5301C92C89C",
+  "method": "idb+simctl fallback after root-confirmed DeviceHub timeout",
+  "examples": [
+    {
+      "id": "rating",
+      "story": "patterns-rating--whole-point",
+      "status": "pass",
+      "interaction": "Score3 to4, Save displays4-point confirmation",
+      "evidence": [
+        "ios/ios-composed-rating-saved.png"
+      ]
+    },
+    {
+      "id": "time-selection",
+      "status": "pass",
+      "interaction": "Choose9hours,5minutes, confirm09:05 saved",
+      "evidence": [
+        "ios/ios-composed-time-saved.png"
+      ]
+    },
+    {
+      "id": "cascader",
+      "status": "pass",
+      "interaction": "Seoul then Jongno selected; Reset clears both",
+      "evidence": [
+        "ios/ios-composed-cascader-selected.png",
+        "ios/ios-composed-cascader-reset.png"
+      ]
+    },
+    {
+      "id": "notification-settings",
+      "status": "pass",
+      "interaction": "Weekly toggleon, Save shows activityon/weeklyon confirmation",
+      "evidence": [
+        "ios/ios-composed-notification-saved.png"
+      ]
+    },
+    {
+      "id": "liquid-toast",
+      "status": "pass",
+      "interaction": "Publish visible capsule; result action showsgeneration:1; republish then close removes capsule.",
+      "evidence": [
+        "ios/ios-composed-liquid-published.png",
+        "ios/ios-composed-liquid-action.png",
+        "ios/ios-composed-liquid-second.png",
+        "ios/ios-composed-liquid-close-confirmed.png"
+      ]
+    }
+  ],
+  "otpRegression": {
+    "status": "pass",
+    "interaction": "Tap fourthslot opens numericIME; enter645 changes128to128645. Tapoutside dismissesIME; sixdigits visiblewithoutbackingtextleak.",
+    "evidence": [
+      "ios/ios-final-otp-before.png",
+      "ios/ios-final-otp-input.png",
+      "ios/ios-final-otp-verified.png"
+    ]
+  }
+}

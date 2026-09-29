@@ -1,4 +1,5 @@
 import {
+  backdrop,
   control,
   easing,
   fontFamily,
@@ -53,6 +54,7 @@ export function createHjmThemeStyle(
 ): HjmThemeStyle {
   const { environment, palette } = value;
   const style: HjmThemeStyle = {
+    "--hjm-backdrop-modal": `color-mix(in srgb, ${backdrop.modal.color} ${backdrop.modal.opacity * 100}%, transparent)`,
     "--hjm-text-scale": environment.textScale,
     "--hjm-motion-scale": environment.reducedMotion ? 0 : 1,
     colorScheme: environment.theme,

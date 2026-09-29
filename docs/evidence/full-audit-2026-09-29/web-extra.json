@@ -1,0 +1,56 @@
+[
+  {
+    "component": "ThinkingOrb",
+    "storyId": "patterns-thinking-orb--all-states",
+    "status": "pass",
+    "screenshot": "web-screens/ThinkingOrb-composed.png"
+  },
+  {
+    "component": "ThinkingOrbPaused",
+    "storyId": "patterns-thinking-orb--paused",
+    "status": "pass",
+    "screenshot": "web-screens/ThinkingOrbPaused-composed.png"
+  },
+  {
+    "component": "FloatingActionButton",
+    "storyId": "patterns-floating-action-button--notes",
+    "status": "pass",
+    "screenshot": "web-screens/FloatingActionButton-composed.png"
+  },
+  {
+    "component": "Rating",
+    "storyId": "patterns-rating--half-point",
+    "status": "pass",
+    "screenshot": "web-screens/Rating-composed.png"
+  },
+  {
+    "component": "TimePicker",
+    "storyId": "patterns-time-selection--choose-time",
+    "status": "pass",
+    "screenshot": "web-screens/TimePicker-composed.png"
+  },
+  {
+    "component": "Cascader",
+    "storyId": "patterns-tree--cascader-composition",
+    "status": "pass",
+    "screenshot": "web-screens/Cascader-composed.png"
+  },
+  {
+    "component": "TreeSelect",
+    "storyId": "patterns-tree--tree-select-composition",
+    "status": "pass",
+    "screenshot": "web-screens/TreeSelect-composed.png"
+  },
+  {
+    "component": "ConfirmPopover",
+    "storyId": "patterns-popover--reversible-confirmation",
+    "status": "pass",
+    "screenshot": "web-screens/ConfirmPopover-composed.png"
+  },
+  {
+    "component": "AnimatedStatistic_MorphingMenu",
+    "storyId": "patterns-optional-motion--playground",
+    "status": "pass",
+    "screenshot": "web-screens/AnimatedStatistic_MorphingMenu-composed.png"
+  }
+]

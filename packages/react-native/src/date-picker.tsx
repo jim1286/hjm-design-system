@@ -88,7 +88,7 @@ export function DatePicker<Content>({
           disabled={descriptor.disabled}
           onPress={() => !descriptor.readOnly && requestOpen(!open, "trigger")}
           ref={returnFocusRef}
-          style={({ pressed }) => ({ alignItems: "center", backgroundColor: colors.surface, borderColor: descriptor.invalid || error ? colors.danger : colors.border, borderRadius: 12, borderWidth: 1, flex: 1, flexDirection: "row", gap: 8, minHeight: size === "large" ? 56 : 48, opacity: pressed ? 0.72 : 1, paddingHorizontal: size === "large" ? 20 : 16 })}
+          style={({ pressed }) => ({ alignItems: "center", backgroundColor: colors.bg, borderColor: descriptor.invalid || error ? colors.danger : colors.borderControl, borderRadius: 12, borderWidth: 1, flex: 1, flexDirection: "row", gap: 8, minHeight: size === "large" ? 56 : 48, opacity: pressed ? 0.72 : 1, paddingHorizontal: size === "large" ? 20 : 16 })}
         >
           <Text accessible={false}>▣</Text>
           <Text style={{ color: descriptor.displayValue === null ? colors.textMuted : colors.textBody }}>{triggerText}</Text>

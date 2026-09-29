@@ -25,7 +25,7 @@ export const buttonRecipe = {
     primary: { background: "primary", content: "onPrimary", border: null, paddingHorizontal: null },
     // The outline is a border role, not a text color. Drawing it in `textSub`
     // made a resting control read heavier than the selected one beside it.
-    secondary: { background: "surfaceAlt", content: "text", border: "borderControl", paddingHorizontal: null },
+    secondary: { background: "bg", content: "text", border: "borderControl", paddingHorizontal: null },
     ghost: { background: null, content: "textMuted", border: null, paddingHorizontal: null },
     danger: { background: "dangerFill", content: "onDanger", border: null, paddingHorizontal: null },
     // A link-tone control is inline copy, so the size axis' horizontal padding
@@ -38,7 +38,7 @@ export const buttonRecipe = {
    * consumer painted the selected background in product styles.
    */
   states: {
-    selected: { background: "surfaceAccent", content: "contentBrand", border: "contentBrand" },
+    selected: { background: "bg", content: "contentBrand", border: "contentBrand" },
   },
   sizes: {
     small: {
@@ -118,11 +118,11 @@ export function resolveButtonLabelLines(largeText: boolean): number | null {
 
 export const surfaceRecipe = {
   default: {
-    background: "surface",
+    background: "bg",
     border: "border",
     borderAlpha: 1,
     elevated: false,
-    borderAlways: false,
+    borderAlways: true,
     clipsContent: true,
   },
   raised: {
@@ -130,28 +130,28 @@ export const surfaceRecipe = {
     border: "border",
     borderAlpha: 1,
     elevated: true,
-    borderAlways: false,
+    borderAlways: true,
     // An elevated surface must not clip: `overflow: hidden` cuts off its own
     // shadow. Every other tone clips so a child image cannot spill past the
     // rounded corner, which consumers were fixing in product styles.
     clipsContent: false,
   },
-  // `semanticColors.surface.sunken` already named this role; without a paired
-  // tone a consumer had to paint `surfaceAlt` in its own product styles.
+  // White surfaces retain a boundary; tonal fills were removed at the user
+  // review, so elevation and border now carry hierarchy.
   sunken: {
-    background: "surfaceAlt",
+    background: "bg",
     border: "border",
     borderAlpha: 1,
     elevated: false,
-    borderAlways: false,
+    borderAlways: true,
     clipsContent: true,
   },
   accent: {
-    background: "surfaceAccent",
+    background: "bg",
     border: "primary",
-    borderAlpha: 0.3,
+    borderAlpha: 1,
     elevated: false,
-    borderAlways: false,
+    borderAlways: true,
     clipsContent: true,
   },
   subtle: {
@@ -190,7 +190,8 @@ export const fieldRecipe = {
   ] as const,
   defaults: { variant: "surface", shape: "medium", align: "start" } as const,
   variants: {
-    surface: { background: "surface" },
+    // Input interiors stay on the canvas; focus is conveyed by the blue outline, not a grey or blue fill.
+    surface: { background: "bg" },
     inset: { background: "bg" },
   },
   shapes: {
@@ -199,7 +200,7 @@ export const fieldRecipe = {
     full: "full",
   },
   states: {
-    idle: { border: "textMuted" },
+    idle: { border: "borderControl" },
     focused: { border: "contentBrand" },
     invalid: { border: "danger" },
   },
