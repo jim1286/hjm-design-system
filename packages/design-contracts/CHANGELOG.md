@@ -1,5 +1,26 @@
 # @hjmds/design-contracts
 
+## 1.9.0
+
+### Minor Changes
+
+- 3ce99ac: Liquid Toast is stable. Fix the opaque, canvas-clipped card shadow, fade the in-app capsule once the card settles, and keep the droplet anchor-colored until the card widens (`liquidToastRecipe.delay.tint` 110 → 420 ms). Hosts with a Dynamic Island should pass a measured `island` anchor frame.
+- 3ce99ac: Add opt-in stable sortable collections, row actions, content transitions, motion carousels and bounded celebrations (Web and Native, verified in Chromium, the iOS 27 simulator and the Android 16 emulator), plus an experimental Native shared-screen transition adapter. Celebration particles use the primary plus theme status accents. Keep runtime peers outside base entries and provide accessible action alternatives. Consumers of Screen Transitions 4.0.0 must apply the shipped conditional-export and native-availability patch; see docs/interaction-adapters.md for exact host compatibility and evidence limits.
+- 3ce99ac: Implement Web ColorPicker (controlled sRGB HEX, alpha and presets), decorative text Watermark,
+  and top Affix with nested-scroll observation and oversized-content fallback. Add granular
+  contract/renderer exports, token-based styles, live showcase examples and browser regression
+  coverage. The three implemented Web entries are stable; React Native remains unsupported for these Web-specific entries. No publication or
+  consumer dependency changes are performed as part of this source change.
+
+### Patch Changes
+
+- 3ce99ac: Remove TimePicker, Cascader, Rating, TreeSelect and ConfirmPopover from the planned
+  component inventory because their working patterns already compose existing primitives.
+  Reference mappings now point to those primitives. Keep pattern examples and the public
+  tree-select helper; catalog consumers must use the underlying component IDs instead of
+  the removed planned IDs. Regenerate catalog artifacts and clarify historical adapter
+  verification records without publishing or migrating consumer applications.
+
 ## 1.8.0
 
 ### Minor Changes

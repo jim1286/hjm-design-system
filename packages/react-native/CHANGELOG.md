@@ -1,5 +1,13 @@
 # @hjmds/react-native
 
+## 1.9.0
+
+### Minor Changes
+
+- 3ce99ac: Liquid Toast is stable. Fix the opaque, canvas-clipped card shadow, fade the in-app capsule once the card settles, and keep the droplet anchor-colored until the card widens (`liquidToastRecipe.delay.tint` 110 → 420 ms). Hosts with a Dynamic Island should pass a measured `island` anchor frame.
+- 3ce99ac: Fix the 2026-09-30 installed iOS/Android audit findings. `HjmNativeProvider` accepts `safeAreaInsets`, and Sheet, DatePicker (new `safeAreaInsets` pass-through), Select, Combobox and GestureSheet default to them. Agreement's check glyph uses `onPrimary` and keeps its label as the name; mixed checkboxes (Agreement, TransferList, Checkbox) no longer keep a stale "mixed" on Android. UploadItem exposes Cancel/Retry as separate elements, NumberField announces the number, the iOS Switch track centres on its label, Combobox no longer reopens the keyboard after a choice, TagsInput keeps the keyboard after Return, and Slider ignores vertical scrolls that start on the track. Optional adapters: Sortable/SwipeActions rows mirror in RTL, CarouselMotion pages a slow release past half a slide, GestureSheet gains localized accessibility, a framed input, top/bottom insets and `dismissTopGestureSheet()` for hosts inside an RN Modal, and ImageViewer controls use the page gutter.
+- 3ce99ac: Add opt-in stable sortable collections, row actions, content transitions, motion carousels and bounded celebrations (Web and Native, verified in Chromium, the iOS 27 simulator and the Android 16 emulator), plus an experimental Native shared-screen transition adapter. Celebration particles use the primary plus theme status accents. Keep runtime peers outside base entries and provide accessible action alternatives. Consumers of Screen Transitions 4.0.0 must apply the shipped conditional-export and native-availability patch; see docs/interaction-adapters.md for exact host compatibility and evidence limits.
+
 ## 1.8.0
 
 ### Minor Changes
