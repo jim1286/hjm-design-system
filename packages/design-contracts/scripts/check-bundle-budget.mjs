@@ -318,8 +318,9 @@ const budgets = [
     // 이후 SidePanel·Splitter·Tour·Tree·TransferList·Mentions·CommandPalette·DataTable의
     // maturity 문구가 더해져 113.1 kB gzip / 478.4 kB raw. 여전히 maxModules는 71이다 —
     // 계약 모듈은 전부 이미 그래프 안에 있었고 이번에 늘어난 것은 catalog 문구뿐이다.
-    // Keep the gzip cap at the measured size; these are evidence strings, not runtime dependencies.
-    maxGzipBytes: 141_414,
+    // Same 95-module graph measures 140.8 kB on local Node 26 and 141.4 kB on
+    // CI Node 24/zlib. Keep raw/module caps; allow 1.1% compression headroom.
+    maxGzipBytes: 143_000,
   },
 ];
 
