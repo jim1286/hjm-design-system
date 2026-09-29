@@ -61,14 +61,14 @@ export declare const imageRecipe: {
     readonly placeholder: {
         readonly background: Readonly<{
             source: "theme";
-            key: "surfaceAlt";
+            key: "bg";
             alpha?: number;
         }>;
     };
     readonly fallback: {
         readonly background: Readonly<{
             source: "theme";
-            key: "surfaceAlt";
+            key: "bg";
             alpha?: number;
         }>;
         readonly icon: {

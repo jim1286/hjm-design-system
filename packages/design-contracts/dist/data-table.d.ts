@@ -83,7 +83,7 @@ export declare const dataTableRecipe: {
     readonly header: {
         readonly background: Readonly<{
             source: "theme";
-            key: "surfaceAlt";
+            key: "bg";
             alpha?: number;
         }>;
         readonly color: Readonly<{
@@ -107,12 +107,12 @@ export declare const dataTableRecipe: {
         }>;
         readonly hoverBackground: Readonly<{
             source: "theme";
-            key: "text";
+            key: "bg";
             alpha?: number;
         }>;
         readonly selectedBackground: Readonly<{
             source: "theme";
-            key: "primary";
+            key: "bg";
             alpha?: number;
         }>;
     };

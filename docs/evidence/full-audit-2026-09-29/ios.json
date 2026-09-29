@@ -1,0 +1,1360 @@
+{
+  "platform": "ios",
+  "device": "iPhone17 simulator iOS27.0",
+  "udid": "9ED1529C-5CAA-45CF-B234-E5301C92C89C",
+  "method": "Installed full debug showcase via Metro8084; actual screenshot review + idb tap/swipe/type; DeviceHub connection timeout, fallback documented. No physical device or VoiceOver proof.",
+  "components": [
+    {
+      "componentId": "design-system-provider",
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "evidence": [
+        "ios/foundations-1.png",
+        "ios/foundations-2.png",
+        "ios/white-foundations-1.png",
+        "ios/white-foundations-2.png"
+      ],
+      "notes": [],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Existing parent-audited record preserved"
+    },
+    {
+      "componentId": "text",
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "evidence": [
+        "ios/foundations-1.png",
+        "ios/foundations-2.png",
+        "ios/white-foundations-1.png",
+        "ios/white-foundations-2.png"
+      ],
+      "notes": [],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Existing parent-audited record preserved"
+    },
+    {
+      "componentId": "surface",
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "evidence": [
+        "ios/foundations-1.png",
+        "ios/foundations-2.png",
+        "ios/white-foundations-1.png",
+        "ios/white-foundations-2.png"
+      ],
+      "notes": [],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Existing parent-audited record preserved"
+    },
+    {
+      "componentId": "stack",
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "evidence": [
+        "ios/foundations-1.png",
+        "ios/foundations-2.png",
+        "ios/white-foundations-1.png",
+        "ios/white-foundations-2.png"
+      ],
+      "notes": [],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Existing parent-audited record preserved"
+    },
+    {
+      "componentId": "container",
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "evidence": [
+        "ios/foundations-1.png",
+        "ios/foundations-2.png",
+        "ios/white-foundations-1.png",
+        "ios/white-foundations-2.png"
+      ],
+      "notes": [],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Existing parent-audited record preserved"
+    },
+    {
+      "componentId": "aspect-ratio",
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "evidence": [
+        "ios/foundations-1.png",
+        "ios/foundations-2.png",
+        "ios/white-foundations-1.png",
+        "ios/white-foundations-2.png"
+      ],
+      "notes": [],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Existing parent-audited record preserved"
+    },
+    {
+      "componentId": "grid",
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "evidence": [
+        "ios/foundations-1.png",
+        "ios/foundations-2.png",
+        "ios/white-foundations-1.png",
+        "ios/white-foundations-2.png"
+      ],
+      "notes": [],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Existing parent-audited record preserved"
+    },
+    {
+      "componentId": "layout",
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "evidence": [
+        "ios/foundations-1.png",
+        "ios/foundations-2.png",
+        "ios/white-foundations-1.png",
+        "ios/white-foundations-2.png"
+      ],
+      "notes": [],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Existing parent-audited record preserved"
+    },
+    {
+      "componentId": "icon",
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "evidence": [
+        "ios/foundations-1.png",
+        "ios/foundations-2.png",
+        "ios/white-foundations-1.png",
+        "ios/white-foundations-2.png"
+      ],
+      "notes": [],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Existing parent-audited record preserved"
+    },
+    {
+      "componentId": "section",
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "evidence": [
+        "ios/foundations-1.png",
+        "ios/foundations-2.png",
+        "ios/white-foundations-1.png",
+        "ios/white-foundations-2.png"
+      ],
+      "notes": [],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Existing parent-audited record preserved"
+    },
+    {
+      "componentId": "divider",
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "evidence": [
+        "ios/foundations-1.png",
+        "ios/foundations-2.png",
+        "ios/white-foundations-1.png",
+        "ios/white-foundations-2.png"
+      ],
+      "notes": [],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Existing parent-audited record preserved"
+    },
+    {
+      "componentId": "top",
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "evidence": [
+        "ios/foundations-1.png",
+        "ios/foundations-2.png",
+        "ios/white-foundations-1.png",
+        "ios/white-foundations-2.png"
+      ],
+      "notes": [],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Existing parent-audited record preserved"
+    },
+    {
+      "componentId": "heading",
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "evidence": [
+        "ios/foundations-1.png",
+        "ios/foundations-2.png",
+        "ios/white-foundations-1.png",
+        "ios/white-foundations-2.png"
+      ],
+      "notes": [],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Existing parent-audited record preserved"
+    },
+    {
+      "componentId": "auth-screen",
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "evidence": [
+        "ios/actions-1.png",
+        "ios/white-actions-1.png",
+        "ios/white-actions-2.png"
+      ],
+      "notes": [],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Existing parent-audited record preserved"
+    },
+    {
+      "componentId": "button",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/actions-icon.png",
+        "ios/white-actions-1.png",
+        "ios/white-actions-2.png"
+      ],
+      "notes": [
+        "Primary and icon increment count; disabled did not increment."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Existing parent-audited record preserved"
+    },
+    {
+      "componentId": "icon-button",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/actions-icon.png",
+        "ios/white-actions-1.png",
+        "ios/white-actions-2.png"
+      ],
+      "notes": [
+        "Primary and icon increment count; disabled did not increment."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Existing parent-audited record preserved"
+    },
+    {
+      "componentId": "link",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/actions-link.png",
+        "ios/white-actions-1.png",
+        "ios/white-actions-2.png"
+      ],
+      "notes": [
+        "Activation updates callback status."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Existing parent-audited record preserved"
+    },
+    {
+      "componentId": "bottom-cta",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/actions-cta.png",
+        "ios/white-actions-1.png",
+        "ios/white-actions-2.png"
+      ],
+      "notes": [
+        "Continue callback reflected."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Existing parent-audited record preserved"
+    },
+    {
+      "componentId": "auth-provider-button",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/actions-auth.png",
+        "ios/white-actions-1.png",
+        "ios/white-actions-2.png"
+      ],
+      "notes": [
+        "Login-request callback; no external provider login in component scope."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Existing parent-audited record preserved"
+    },
+    {
+      "componentId": "agreement",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/agreement-after.png",
+        "ios/white-agreement-final.png",
+        "ios/white-agreement-selected.png"
+      ],
+      "notes": [
+        "Select all checks all; Read detail emits terms without selecting it.",
+        "Final canvas screenshot directly reviewed; resolves earlier latest-color retake gap."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Existing parent-audited record preserved"
+    },
+    {
+      "componentId": "calendar",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/range-start.png",
+        "ios/range-end.png",
+        "ios/calendar-next.png",
+        "ios/calendar-selected.png"
+      ],
+      "notes": [
+        "Shared calendar inside DateRange composition: selected Feb1 then Feb4; range marks on1-4. Standalone calendar story not separately captured.",
+        "Standalone Calendar now separately reviewed: October2026 navigation and selection October14 reflected in2026-10-14."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "floating-action-button",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/fab-1.png",
+        "ios/fab-open.png",
+        "ios/fab-typed.png",
+        "ios/fab-saved.png"
+      ],
+      "notes": [
+        "FAB opens dialog;123 entered and new123 row visible at top after save."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "field",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/field-current.png",
+        "ios/white-inputs-loaded.png",
+        "ios/white-input-focused.png"
+      ],
+      "notes": [
+        "Typed input changes custom value.",
+        "White input interiors and blue focus border reviewed in latest input screenshots; earlier interaction pass retained."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Existing parent-audited record preserved"
+    },
+    {
+      "componentId": "search-field",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/inputs-search-clear.png",
+        "ios/white-inputs-loaded.png",
+        "ios/white-input-focused.png"
+      ],
+      "notes": [
+        "Clear removes query.",
+        "White input interiors and blue focus border reviewed in latest input screenshots; earlier interaction pass retained."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Existing parent-audited record preserved"
+    },
+    {
+      "componentId": "text-area",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/textarea-after.png",
+        "ios/white-inputs-loaded.png",
+        "ios/white-input-focused.png"
+      ],
+      "notes": [
+        "Typed123 preserved in multiline value.",
+        "White input interiors and blue focus border reviewed in latest input screenshots; earlier interaction pass retained."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Existing parent-audited record preserved"
+    },
+    {
+      "componentId": "password-field",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/inputs-password.png",
+        "ios/white-inputs-loaded.png",
+        "ios/white-input-focused.png"
+      ],
+      "notes": [
+        "Reveal preserves password.",
+        "White input interiors and blue focus border reviewed in latest input screenshots; earlier interaction pass retained."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Existing parent-audited record preserved"
+    },
+    {
+      "componentId": "otp-field",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/otp-filled-dismiss.png",
+        "ios/white-inputs-loaded.png",
+        "ios/white-input-focused.png",
+        "ios/ios-final-otp-verified.png"
+      ],
+      "notes": [
+        "FIXED UIKit opacity hit-testing; tap opens keypad, input128456 visible.",
+        "White input interiors and blue focus border reviewed in latest input screenshots; earlier interaction pass retained.",
+        "Final opaque slot wrapper: actual iOS keyboard entry 128 to 128645 and dismissal verified without duplicate backing text."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Existing parent-audited record preserved"
+    },
+    {
+      "componentId": "number-field",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/number-increment.png",
+        "ios/white-number-slider.png"
+      ],
+      "notes": [
+        "2 to3.",
+        "Final canvas screenshot directly reviewed; resolves earlier latest-color retake gap."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Existing parent-audited record preserved"
+    },
+    {
+      "componentId": "slider",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/slider-change.png",
+        "ios/white-number-slider.png"
+      ],
+      "notes": [
+        "Drag72 to89.",
+        "Final canvas screenshot directly reviewed; resolves earlier latest-color retake gap."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Existing parent-audited record preserved"
+    },
+    {
+      "componentId": "form",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/form-save.png",
+        "ios/white-input-middle.png"
+      ],
+      "notes": [
+        "Submit updates saved count1."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Existing parent-audited record preserved"
+    },
+    {
+      "componentId": "date-picker",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/date-open-final.png",
+        "ios/date-selected-final.png",
+        "ios/white-input-middle.png"
+      ],
+      "notes": [
+        "Opened corrected Monday-start February2027 calendar; selected value 2027-02-16 appears. Refresh banner remains; latest canvas retake needed."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "file-picker",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/file-select.png",
+        "ios/inputs-file-checkbox-radio.png"
+      ],
+      "notes": [
+        "Choose images visible, but Selected attachment remains None; filename is not selection proof.",
+        "Parent performed taps; actual image shows Accept terms checked and Selected attachment preview.png. This is reference adapter callback proof, not iOS Photos permission/provider proof."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "checkbox",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/inputs-file-checkbox-radio.png"
+      ],
+      "notes": [
+        "Parent performed taps; actual image shows Accept terms checked and Selected attachment preview.png. This is reference adapter callback proof, not iOS Photos permission/provider proof."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "radio",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/inputs-choices.png",
+        "ios/inputs-file-checkbox-radio.png"
+      ],
+      "notes": [
+        "Standalone choice visible checked; no before/after uncheck or callback evidence.",
+        "Parent tapped checked standalone radio; it correctly stays checked. Screenshot confirms radio state, not an unchecked toggle."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "checkbox-group",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/inputs-4.png",
+        "ios/inputs-choices.png",
+        "ios/inputs-city-value.png"
+      ],
+      "notes": [
+        "Before/after pair: Push unchecked→checked, Standard→Express, notifications on→off, Featured off→on, List→Grid."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "radio-group",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/inputs-4.png",
+        "ios/inputs-choices.png",
+        "ios/inputs-city-value.png"
+      ],
+      "notes": [
+        "Before/after pair: Push unchecked→checked, Standard→Express, notifications on→off, Featured off→on, List→Grid."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "switch",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/inputs-4.png",
+        "ios/inputs-choices.png",
+        "ios/inputs-city-value.png"
+      ],
+      "notes": [
+        "Before/after pair: Push unchecked→checked, Standard→Express, notifications on→off, Featured off→on, List→Grid."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "segmented-control",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/inputs-4.png",
+        "ios/inputs-choices.png",
+        "ios/inputs-city-value.png"
+      ],
+      "notes": [
+        "Before/after pair: Push unchecked→checked, Standard→Express, notifications on→off, Featured off→on, List→Grid."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "select",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/inputs-choices.png",
+        "ios/select-english.png",
+        "ios/inputs-city-value.png"
+      ],
+      "notes": [
+        "Korean→English displayed after selection."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "combobox",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/combobox-open.png",
+        "ios/combobox-selected.png",
+        "ios/inputs-city-value.png"
+      ],
+      "notes": [
+        "City sheet shows Seoul/Busan. After image shows keyboard at another scroll position; selected City value not visible.",
+        "Committed city Busan visible in field after selection."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "chip",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/inputs-4.png",
+        "ios/inputs-choices.png",
+        "ios/inputs-city-value.png"
+      ],
+      "notes": [
+        "Before/after pair: Push unchecked→checked, Standard→Express, notifications on→off, Featured off→on, List→Grid."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "toggle-group",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/inputs-toggle.png",
+        "ios/white-inputs-loaded.png",
+        "ios/white-input-focused.png"
+      ],
+      "notes": [
+        "Bold selected.",
+        "White input interiors and blue focus border reviewed in latest input screenshots; earlier interaction pass retained."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Existing parent-audited record preserved"
+    },
+    {
+      "componentId": "tags-input",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/inputs-2-fixed.png",
+        "ios/tags-remove-final.png",
+        "ios/white-input-middle.png"
+      ],
+      "notes": [
+        "Walking tag visible before; empty interests frame after removal."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "date-range-picker",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/range-start.png",
+        "ios/range-end.png",
+        "ios/white-input-middle.png"
+      ],
+      "notes": [
+        "Shared calendar inside DateRange composition: selected Feb1 then Feb4; range marks on1-4. Standalone calendar story not separately captured."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "mentions",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/mentions-typed.png",
+        "ios/mentions-select.png",
+        "ios/white-mentions.png"
+      ],
+      "notes": [
+        "Typed @ displays skyline option; selecting commits @skyline.",
+        "Final canvas screenshot directly reviewed; resolves earlier latest-color retake gap."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "transfer-list",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/inputs-3-final.png",
+        "ios/transfer-add.png",
+        "ios/white-input-lower.png"
+      ],
+      "notes": [
+        "Walk moves from Available to Chosen; Meal remains Available."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "tabs",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/navigation-1.png",
+        "ios/navigation-actions.png",
+        "ios/menu-edit-final.png"
+      ],
+      "notes": [
+        "Recent→Popular, Home→Profile, Last action Refreshed, loaded pages0→1."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "steps",
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "evidence": [
+        "ios/navigation-1.png",
+        "ios/menu-edit-final.png"
+      ],
+      "notes": [
+        "Account complete/Profile current/Confirm pending indicators visible."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "top-bar",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/navigation-1.png",
+        "ios/navigation-actions.png",
+        "ios/menu-edit-final.png"
+      ],
+      "notes": [
+        "Recent→Popular, Home→Profile, Last action Refreshed, loaded pages0→1."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "menu",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/menu-open.png",
+        "ios/menu-selected.png",
+        "ios/menu-edit-final.png"
+      ],
+      "notes": [
+        "More actions menu visible; after screenshot Last action None, so only open/close proved.",
+        "Last action edit visible after Edit selection."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "bottom-navigation",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/navigation-1.png",
+        "ios/navigation-actions.png",
+        "ios/menu-edit-final.png"
+      ],
+      "notes": [
+        "Recent→Popular, Home→Profile, Last action Refreshed, loaded pages0→1."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "load-more",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/navigation-1.png",
+        "ios/navigation-actions.png",
+        "ios/menu-edit-final.png"
+      ],
+      "notes": [
+        "Recent→Popular, Home→Profile, Last action Refreshed, loaded pages0→1."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "badge",
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "evidence": [
+        "ios/data-1.png",
+        "ios/white-data-1.png"
+      ],
+      "notes": [
+        "Visible HP avatar, Live badge,99+ counter, Featured tag, titled card and two rows. Captured before latest pale-fill removal."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "avatar",
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "evidence": [
+        "ios/data-1.png",
+        "ios/white-data-1.png"
+      ],
+      "notes": [
+        "Visible HP avatar, Live badge,99+ counter, Featured tag, titled card and two rows. Captured before latest pale-fill removal."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "card",
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "evidence": [
+        "ios/data-1.png",
+        "ios/white-data-1.png"
+      ],
+      "notes": [
+        "Visible HP avatar, Live badge,99+ counter, Featured tag, titled card and two rows. Captured before latest pale-fill removal."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "list-row",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/data-1.png",
+        "ios/data-actions.png",
+        "ios/white-data-1.png"
+      ],
+      "notes": [
+        "Selected row Morning loop; Details expanded and Expandable content visible."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "tag",
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "evidence": [
+        "ios/data-1.png",
+        "ios/white-data-1.png"
+      ],
+      "notes": [
+        "Visible HP avatar, Live badge,99+ counter, Featured tag, titled card and two rows. Captured before latest pale-fill removal."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "timeline",
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "evidence": [
+        "ios/data-2.png",
+        "ios/white-data-2.png"
+      ],
+      "notes": [
+        "Views12.4K, Created/Shared timeline, StatusReady/OwnerHJM and blue sample image are visible."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "description-list",
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "evidence": [
+        "ios/data-2.png",
+        "ios/white-data-2.png"
+      ],
+      "notes": [
+        "Views12.4K, Created/Shared timeline, StatusReady/OwnerHJM and blue sample image are visible."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "image",
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "evidence": [
+        "ios/data-2.png",
+        "ios/white-data-2.png"
+      ],
+      "notes": [
+        "Views12.4K, Created/Shared timeline, StatusReady/OwnerHJM and blue sample image are visible."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "counter-badge",
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "evidence": [
+        "ios/data-1.png",
+        "ios/white-data-1.png"
+      ],
+      "notes": [
+        "Visible HP avatar, Live badge,99+ counter, Featured tag, titled card and two rows. Captured before latest pale-fill removal."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "list",
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "evidence": [
+        "ios/data-1.png",
+        "ios/white-data-1.png"
+      ],
+      "notes": [
+        "Visible HP avatar, Live badge,99+ counter, Featured tag, titled card and two rows. Captured before latest pale-fill removal."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "carousel",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/data-1.png",
+        "ios/carousel-next.png",
+        "ios/white-data-1.png"
+      ],
+      "notes": [
+        "Page1/2→2/2 with changed Korean content."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "statistic",
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "evidence": [
+        "ios/data-2.png",
+        "ios/white-data-2.png"
+      ],
+      "notes": [
+        "Views12.4K, Created/Shared timeline, StatusReady/OwnerHJM and blue sample image are visible."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "upload-item",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/data-2.png",
+        "ios/upload-cancel.png",
+        "ios/white-data-2.png"
+      ],
+      "notes": [
+        "Upload cancelled No→Yes after cancel. Progress64% visible."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "accordion",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/data-1.png",
+        "ios/data-actions.png",
+        "ios/white-data-1.png"
+      ],
+      "notes": [
+        "Selected row Morning loop; Details expanded and Expandable content visible."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "collapsible",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/data-middle.png",
+        "ios/white-data-1.png"
+      ],
+      "notes": [
+        "Shipping details expanded, Arrives tomorrow visible; parent confirms open action."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "asset",
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "evidence": [
+        "ios/data-middle.png",
+        "ios/white-asset.png"
+      ],
+      "notes": [
+        "Asset frame with Fox placeholder visible; actual Lottie playback/media adapter not demonstrated.",
+        "Parent checked Asset ownership: frame and animation policy, not a Lottie player. Fox child is valid static slot content; third-party media playback is outside this component audit.",
+        "Final canvas screenshot directly reviewed; resolves earlier latest-color retake gap."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "empty-state",
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "evidence": [
+        "ios/feedback-1.png",
+        "ios/feedback-2.png",
+        "ios/white-feedback-1.png",
+        "ios/white-feedback-2.png"
+      ],
+      "notes": [
+        "Empty state,success notice,64%progress,skeleton,spinner,result and footer notes visible. Skeleton still pre-change gray; latest retake needed."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "result",
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "evidence": [
+        "ios/feedback-1.png",
+        "ios/feedback-2.png",
+        "ios/white-feedback-1.png",
+        "ios/white-feedback-2.png"
+      ],
+      "notes": [
+        "Empty state,success notice,64%progress,skeleton,spinner,result and footer notes visible. Skeleton still pre-change gray; latest retake needed."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "notice",
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "evidence": [
+        "ios/feedback-1.png",
+        "ios/feedback-2.png",
+        "ios/white-feedback-1.png",
+        "ios/white-feedback-2.png"
+      ],
+      "notes": [
+        "Empty state,success notice,64%progress,skeleton,spinner,result and footer notes visible. Skeleton still pre-change gray; latest retake needed."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "progress",
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "evidence": [
+        "ios/feedback-1.png",
+        "ios/feedback-2.png",
+        "ios/white-feedback-1.png",
+        "ios/white-feedback-2.png"
+      ],
+      "notes": [
+        "Empty state,success notice,64%progress,skeleton,spinner,result and footer notes visible. Skeleton still pre-change gray; latest retake needed."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "skeleton",
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "evidence": [
+        "ios/feedback-1.png",
+        "ios/feedback-2.png",
+        "ios/white-feedback-1.png",
+        "ios/white-feedback-2.png"
+      ],
+      "notes": [
+        "Empty state,success notice,64%progress,skeleton,spinner,result and footer notes visible. Skeleton still pre-change gray; latest retake needed."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "spinner",
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "evidence": [
+        "ios/feedback-1.png",
+        "ios/feedback-2.png",
+        "ios/white-feedback-1.png",
+        "ios/white-feedback-2.png"
+      ],
+      "notes": [
+        "Empty state,success notice,64%progress,skeleton,spinner,result and footer notes visible. Skeleton still pre-change gray; latest retake needed."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "toast",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/toast-visible.png",
+        "ios/toast-dismissed.png",
+        "ios/white-toast-visible.png"
+      ],
+      "notes": [
+        "Toast message and close visible; absent after dismissal.",
+        "Final canvas screenshot directly reviewed; resolves earlier latest-color retake gap."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "bottom-info",
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "evidence": [
+        "ios/feedback-1.png",
+        "ios/feedback-2.png",
+        "ios/white-feedback-1.png",
+        "ios/white-feedback-2.png"
+      ],
+      "notes": [
+        "Empty state,success notice,64%progress,skeleton,spinner,result and footer notes visible. Skeleton still pre-change gray; latest retake needed."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "masonry",
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "evidence": [
+        "ios/masonry-final.png"
+      ],
+      "notes": [
+        "Nine varied-height white outlined cards visible without overlap."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "virtual-list",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/virtual-final.png",
+        "ios/virtual-scrolled-final.png"
+      ],
+      "notes": [
+        "Visible window changes from items1-7 to9-14 after scroll."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "qr-code",
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "evidence": [
+        "ios/qr-final.png"
+      ],
+      "notes": [
+        "Actual screenshot raster independently decoded with jsQR to https://example.com/한글; decoder output /tmp/ios-qr-decode.json. Open-link consumer action not part of QR rendering."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "thinking-orb",
+      "visual": "pass",
+      "interaction": "not-applicable",
+      "evidence": [
+        "ios/orb-final.png"
+      ],
+      "notes": [
+        "All nine visual states visible. Still screenshot proves presentation only; temporal/reduced-motion behavior not newly inferred from a still."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "dialog",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/dialog-open.png",
+        "ios/dialog-saved.png"
+      ],
+      "notes": [
+        "Edit item dialog opens and closes after Save; not a persistence proof."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "alert-dialog",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/alert-open.png",
+        "ios/alert-cancel.png"
+      ],
+      "notes": [
+        "Destructive alert and cancel shown; cancelled to overlay gallery. Open evidence has Refresh banner."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    },
+    {
+      "componentId": "sheet",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/sheet-open-final.png",
+        "ios/sheet-closed.png",
+        "ios/inputsheet-keyboard-retry.png",
+        "ios/inputsheet-done.png"
+      ],
+      "notes": [
+        "Sheet opens/closes. Latest input-sheet456 remains visible; Done sits above IME and closes sheet."
+      ],
+      "latestWhiteVisual": "pass",
+      "reviewOrigin": "Screenshot review by web audit agent, 2026-09-29"
+    }
+  ],
+  "reviewSummary": {
+    "componentCount": 83,
+    "visualPass": 83,
+    "interactionPass": 47,
+    "interactionNotApplicable": 36,
+    "visualPending": [],
+    "interactionPending": [],
+    "latestWhitePassCount": 83,
+    "latestWhitePending": [],
+    "remainingNotes": [
+      "83 visual rows do not imply every platform, accessibility mode or theme permutation passed.",
+      "ThinkingOrb latest image verifies nine states, not temporal animation/reduced-motion behavior.",
+      "FilePicker preview.png callback proves reference adapter response, not Photos permission/provider integration.",
+      "Earlier action evidence and latest static color retakes are deliberately separated.",
+      "QR raster independently decoded; does not claim camera scanning via physical device.",
+      "white-agreement.png rejected by parent as wrong-story Feedback residue; not used."
+    ]
+  },
+  "optionalAdapters": [
+    {
+      "adapter": "gesture-sheet",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/gesture-open-final.png",
+        "ios/gesture-typed-final.png",
+        "ios/gesture-reopened-final.png"
+      ],
+      "notes": "Opened half-height, entered789 with keyboard, parent performed drag, closed/reopened at half-height. Still images show states; drag trajectory is parent-observed, not inferred."
+    },
+    {
+      "adapter": "image-viewer",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/imageviewer-final.png",
+        "ios/keyboard-dock-final.png"
+      ],
+      "notes": "Actual deer/mountain image loaded and Close visible; subsequent base demo proves dismissal. Single-image fixture has disabled previous/next; multi-image swiping not covered."
+    },
+    {
+      "adapter": "keyboard-dock",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/keyboard-dock-final.png",
+        "ios/keyboard-dock-dismissed.png"
+      ],
+      "notes": "321 input visible; Done dock above keyboard then keyboard dismissed with321 retained."
+    },
+    {
+      "adapter": "native-context-menu",
+      "visual": "pass",
+      "interaction": "pass",
+      "evidence": [
+        "ios/context-menu-final.png",
+        "ios/context-menu-saved.png"
+      ],
+      "notes": "OS menu shows Save/Delete; resulting save status visible. System-owned native menu material is not a HJM gray surface token."
+    }
+  ],
+  "compositions": {
+    "device": "iPhone17 iOS27 9ED1529C-5CAA-45CF-B234-E5301C92C89C",
+    "method": "idb+simctl fallback after root-confirmed DeviceHub timeout",
+    "examples": [
+      {
+        "id": "rating",
+        "story": "patterns-rating--whole-point",
+        "status": "pass",
+        "interaction": "Score3 to4, Save displays4-point confirmation",
+        "evidence": [
+          "ios/ios-composed-rating-saved.png"
+        ]
+      },
+      {
+        "id": "time-selection",
+        "status": "pass",
+        "interaction": "Choose9hours,5minutes, confirm09:05 saved",
+        "evidence": [
+          "ios/ios-composed-time-saved.png"
+        ]
+      },
+      {
+        "id": "cascader",
+        "status": "pass",
+        "interaction": "Seoul then Jongno selected; Reset clears both",
+        "evidence": [
+          "ios/ios-composed-cascader-selected.png",
+          "ios/ios-composed-cascader-reset.png"
+        ]
+      },
+      {
+        "id": "notification-settings",
+        "status": "pass",
+        "interaction": "Weekly toggleon, Save shows activityon/weeklyon confirmation",
+        "evidence": [
+          "ios/ios-composed-notification-saved.png"
+        ]
+      },
+      {
+        "id": "liquid-toast",
+        "status": "pass",
+        "interaction": "Publish visible capsule; result action showsgeneration:1; republish then close removes capsule.",
+        "evidence": [
+          "ios/ios-composed-liquid-published.png",
+          "ios/ios-composed-liquid-action.png",
+          "ios/ios-composed-liquid-second.png",
+          "ios/ios-composed-liquid-close-confirmed.png"
+        ]
+      }
+    ],
+    "otpRegression": {
+      "status": "pass",
+      "interaction": "Tap fourthslot opens numericIME; enter645 changes128to128645. Tapoutside dismissesIME; sixdigits visiblewithoutbackingtextleak.",
+      "evidence": [
+        "ios/ios-final-otp-before.png",
+        "ios/ios-final-otp-input.png",
+        "ios/ios-final-otp-verified.png"
+      ]
+    }
+  }
+}

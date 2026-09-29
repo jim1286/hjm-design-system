@@ -161,7 +161,7 @@ export declare const treeRecipe: {
         };
         readonly highlightedBackground: Readonly<{
             source: "theme";
-            key: "text";
+            key: "bg";
             alpha?: number;
         }>;
         readonly focus: {
@@ -175,7 +175,7 @@ export declare const treeRecipe: {
         };
         readonly selectedBackground: Readonly<{
             source: "theme";
-            key: "primary";
+            key: "bg";
             alpha?: number;
         }>;
         readonly selectedIndicator: Readonly<{

@@ -69,3 +69,14 @@ it("names the range edges for assistive technology, not only in color", async ()
   expect(day("2026-09-11").getAttribute("aria-label")).toContain("기간 안");
   expect(day("2026-09-12").getAttribute("aria-label")).toContain("종료일");
 });
+
+// DOM .click() bypasses browser hit testing and did not catch range layers
+// spanning sibling days. Use real pointer actions for this regression.
+it("selects the intended range through real pointer hit testing", async () => {
+  await act(async () => root.render(<Fixture />));
+  await page.getByRole("gridcell", { name: "2026-09-03", exact: true }).click();
+  await page.getByRole("gridcell", { name: "2026-09-07", exact: true }).click();
+  expect(status()).toBe("2026-09-03 ~ 2026-09-07");
+  const label = day("2026-09-03").querySelector<HTMLElement>(".hjm-calendar__day-label")!;
+  expect(getComputedStyle(label).zIndex).toBe("1");
+});

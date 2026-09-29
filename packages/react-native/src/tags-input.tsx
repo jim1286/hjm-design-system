@@ -74,6 +74,7 @@ export function TagsInput({
       <Text variant="label">{label}</Text>
       <View
         style={{
+          backgroundColor: resolveColorReference(tagsInputRecipe.frame.background, palette),
           minHeight: tagsInputRecipe.frame.minHeight,
           flexDirection: "row",
           flexWrap: "wrap",

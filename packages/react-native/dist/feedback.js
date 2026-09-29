@@ -263,6 +263,9 @@ export function Skeleton({ shape = skeletonRecipe.defaults.shape, animated = ske
     return (_jsx(Animated.View, { accessibilityLabel: accessibilityLabel, accessibilityState: accessibilityLabel ? { busy: true } : undefined, accessible: accessibilityLabel !== undefined, style: [
             {
                 backgroundColor: resolveColorReference(skeletonRecipe.background, palette),
+                // A white loading placeholder needs an outline after removing grey fills.
+                borderColor: palette.theme.border,
+                borderWidth: 1,
                 borderRadius: radiusValue ?? radius[shapeSpec.radius],
                 height: height ?? shapeSpec.defaultHeight,
                 opacity: shouldAnimate

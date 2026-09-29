@@ -26,7 +26,7 @@ export declare const iconButtonRecipe: {
         readonly secondary: {
             readonly background: Readonly<{
                 source: "theme";
-                key: "surfaceAlt";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly content: Readonly<{
@@ -88,7 +88,7 @@ export declare const iconButtonRecipe: {
         readonly selected: {
             readonly background: Readonly<{
                 source: "theme";
-                key: "surfaceAccent";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly content: Readonly<{

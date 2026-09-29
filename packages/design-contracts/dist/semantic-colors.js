@@ -36,7 +36,7 @@ export const semanticColors = {
             content: themeColor("onPrimary"),
         },
         neutral: {
-            background: themeColor("surfaceAlt"),
+            background: themeColor("bg"),
             content: themeColor("text"),
             // A control outline is a border role. `textSub` made a resting neutral
             // action read heavier than the selected control beside it.

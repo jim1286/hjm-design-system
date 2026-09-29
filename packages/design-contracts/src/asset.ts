@@ -62,7 +62,7 @@ export const assetRecipe = {
   // 정사각은 모서리 0이다 — radius 토큰에 0이 없는 이유는 "모서리 없음"이 토큰이 아니라
   // 값의 부재이기 때문이다.
   shapes: { square: 0, rounded: radius.md, circle: radius.full },
-  background: semanticColors.surface.sunken,
+  background: semanticColors.canvas,
   border: semanticColors.border.default,
   /** 묶음으로 겹칠 때의 비율. Avatar와 같은 값을 쓴다 — 한 줄에 섞여 나오기 때문이다. */
   overlapRatio: 0.3,

@@ -51,7 +51,7 @@ export declare const sidebarRecipe: {
     };
     readonly background: Readonly<{
         source: "theme";
-        key: "surfaceAlt";
+        key: "bg";
         alpha?: number;
     }>;
     readonly border: Readonly<{
@@ -97,7 +97,7 @@ export declare const sidebarRecipe: {
         };
         readonly highlightedBackground: Readonly<{
             source: "theme";
-            key: "text";
+            key: "bg";
             alpha?: number;
         }>;
         readonly focus: {
@@ -111,7 +111,7 @@ export declare const sidebarRecipe: {
         };
         readonly selectedBackground: Readonly<{
             source: "theme";
-            key: "primary";
+            key: "bg";
             alpha?: number;
         }>;
         readonly selectedIndicator: Readonly<{

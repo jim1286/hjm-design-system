@@ -47,6 +47,24 @@ it("opens the gesture sheet, respects motion/busy and cleans up BackHandler", as
   expect(back()).toBe(true); expect(change).not.toHaveBeenCalled();
   act(() => renderer!.unmount()); renderer = undefined; expect(remove).toHaveBeenCalled();
 });
+it("opens an initially closed gesture sheet without poisoning the native modal lifecycle", async () => {
+  const change = vi.fn();
+  const tree = (open: boolean) => <HjmNativeProvider reducedMotion><GestureSheet open={open} onOpenChange={change} title="제목" closeLabel="닫기">body</GestureSheet></HjmNativeProvider>;
+  await act(async () => { renderer = create(tree(false)); });
+  expect(methods.dismiss).not.toHaveBeenCalled();
+  await act(async () => renderer!.update(tree(true)));
+  expect(methods.present).toHaveBeenCalledTimes(1);
+  // A native swipe has already dismissed the modal. Reflecting that callback
+  // into controlled state must not dismiss it a second time before reopening.
+  act(() => find("SheetModal").props.onDismiss());
+  expect(change).toHaveBeenCalledWith(false);
+  await act(async () => renderer!.update(tree(false)));
+  expect(methods.dismiss).not.toHaveBeenCalled();
+  await act(async () => renderer!.update(tree(true)));
+  expect(methods.present).toHaveBeenCalledTimes(2);
+  await act(async () => renderer!.update(tree(false)));
+  expect(methods.dismiss).toHaveBeenCalledTimes(1);
+});
 it("shows image load failure and lets the user retry without closing", async () => {
   const close = vi.fn();
   await render(<ImageViewer safeAreaInsets={{ top: 0, bottom: 0 }} open onClose={close} items={[{ id: "one", uri: "https://example.test/photo", label: "사진" }]}

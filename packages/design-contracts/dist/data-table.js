@@ -109,7 +109,7 @@ export const dataTableRecipe = {
         regular: { paddingVertical: spacing.sm, paddingHorizontal: spacing.md },
     },
     header: {
-        background: semanticColors.surface.sunken,
+        background: semanticColors.canvas,
         color: semanticColors.content.secondary,
         textVariant: "label",
         fontWeight: fontWeight.bold,

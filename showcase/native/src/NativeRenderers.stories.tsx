@@ -88,9 +88,9 @@ const noop = () => undefined;
 
 const previewCalendarGrid = {
   cells: [
-    ...Array.from({ length: 3 }, () => ({})),
+    ...Array.from({ length: 1 }, () => ({})),
     ...Array.from({ length: 28 }, (_, index) => ({ date: `2027-02-${String(index + 1).padStart(2, "0")}` })),
-    ...Array.from({ length: 4 }, () => ({})),
+    ...Array.from({ length: 6 }, () => ({})),
   ],
   weekdayLabels: ["일", "월", "화", "수", "목", "금", "토"],
   todayDate: "2027-02-19",
@@ -138,9 +138,11 @@ function FoundationsPreview() {
       <Container gutter="compact" size="reading">
         <Text tone="muted">Container centers readable content with shared logical gutters.</Text>
       </Container>
-      <AspectRatio ratio="wide" style={styles.mediaFrame}>
-        <View style={styles.mediaFrameContent}><Text tone="muted">16:9 media frame</Text></View>
-      </AspectRatio>
+      <Surface bordered>
+        <AspectRatio ratio="wide">
+          <View style={styles.mediaFrameContent}><Text tone="muted">16:9 media frame</Text></View>
+        </AspectRatio>
+      </Surface>
       <Section title="Section" description="Header and body retain reading order.">
         <Text>Section body</Text>
       </Section>
@@ -162,13 +164,14 @@ function FoundationsPreview() {
 
 function ActionsPreview() {
   const [count, setCount] = useState(0);
+  const [action, setAction] = useState("None");
   return (
     <StoryFrame>
       <StoryHeading>Actions</StoryHeading>
       <Stack axis="inline" gap="sm" wrap>
         <Button onPress={() => setCount((value) => value + 1)}>Primary</Button>
-        <Button tone="secondary" onPress={noop}>Secondary</Button>
-        <Button disabled onPress={noop}>Disabled</Button>
+        <Button tone="secondary" onPress={() => setAction("Secondary")}>Secondary</Button>
+        <Button disabled onPress={() => setAction("Provider login requested")}>Disabled</Button>
         <IconButton label="Add one" onPress={() => setCount((value) => value + 1)}>
           <Text>＋</Text>
         </IconButton>
@@ -176,12 +179,12 @@ function ActionsPreview() {
       <Text tone="muted">Pressed {count} times</Text>
       <Link
         descriptor={{ label: "Open component docs", destination: { kind: "internal", href: "/components" } }}
-        onNavigate={noop}
+        onNavigate={() => setAction("Open component docs")}
       />
       <AuthProviderButton
         descriptor={{ label: "Continue with Google", provider: "google" }}
         logo={<Text>G</Text>}
-        onPress={noop}
+        onPress={() => setAction("Provider login requested")}
       />
       {/* 로그인 화면 골격 — 슬롯만 받고 배치를 소유한다. 높이가 화면 전체라 미리보기에서는
           섹션 안에 그대로 둔다(스크롤은 부모가 갖는다). */}
@@ -191,16 +194,17 @@ function ActionsPreview() {
           <AuthProviderButton
             descriptor={{ label: "Continue with Google", provider: "google" }}
             logo={<Text>G</Text>}
-            onPress={noop}
+            onPress={() => setAction("Provider login requested")}
           />
         }
         footer={<Text tone="muted">Terms · Privacy</Text>}
       />
       <BottomCTA
-        primaryAction={{ label: "Continue", onPress: noop }}
-        secondaryAction={{ label: "Later", onPress: noop }}
+        primaryAction={{ label: "Continue", onPress: () => setAction("Continue") }}
+        secondaryAction={{ label: "Later", onPress: () => setAction("Later") }}
         description="Actions wrap instead of clipping at large text sizes."
       />
+    <Text accessibilityLiveRegion="polite">Last action: {action}</Text>
     </StoryFrame>
   );
 }
@@ -216,6 +220,11 @@ function InputsPreview() {
   const [chip, setChip] = useState(false);
   const [select, setSelect] = useState<string | null>("ko");
   const [city, setCity] = useState<string | null>(null);
+  // Observable callbacks make the device gallery verify behavior as well as rendering.
+  const [mention, setMention] = useState("");
+  const [saved, setSaved] = useState(0);
+  const [picked, setPicked] = useState("None");
+  const [visitDate, setVisitDate] = useState<string | null>(null);
   return (
     <StoryFrame>
       <StoryHeading>Inputs and forms</StoryHeading>
@@ -271,17 +280,17 @@ function InputsPreview() {
       <Form
         fallbackErrorMessage="Could not save"
         label="Profile form"
-        onSubmit={noop}
+        onSubmit={() => setSaved((value) => value + 1)}
         submitLabel="Save profile"
         values={{ query }}
       >
-        <Text tone="muted">Form owns submit feedback while products own values.</Text>
+        <Text tone="muted">Saved {saved} times. Form owns submit feedback while products own values.</Text>
       </Form>
       <DatePicker
         clearLabel="Clear date"
         closeLabel="Close calendar"
         composeAccessibleName={({ date, isToday, isSelected }) => `${date}${isToday ? ", today" : ""}${isSelected ? ", selected" : ""}`}
-        descriptor={{ grid: previewCalendarGrid, displayValue: null, placeholder: "Choose a date", label: "Visit date", defaultSelectedDate: null, defaultOpen: false }}
+        descriptor={{ grid: previewCalendarGrid, displayValue: visitDate, placeholder: "Choose a date", label: "Visit date", selectedDate: visitDate, onSelectionChange: setVisitDate, defaultOpen: false }}
         monthLabel="February 2027"
       />
       <TagsInput label="Interests" composeRemoveLabel={(tag) => `Remove ${tag}`} defaultTags={["walking"]} />
@@ -293,8 +302,8 @@ function InputsPreview() {
       />
       <Mentions
         accessibilityLabel="Note"
-        value=""
-        onValueChange={noop}
+        value={mention}
+        onValueChange={setMention}
         triggers={[{ id: "user", trigger: "@" }]}
         candidates={[{ id: "sky", label: "skyline" }]}
         emptyMessage="No matches"
@@ -312,8 +321,9 @@ function InputsPreview() {
         label="Attachments"
         onPick={async () => [{ id: "preview", name: "preview.png", mimeType: "image/png", sizeBytes: 1024 }]}
         onPickError={noop}
-        onSelect={noop}
+        onSelect={(files) => setPicked(files.accepted.map((file) => file.name).join(", "))}
       />
+      <Text>Selected attachment: {picked}</Text>
       <Checkbox label="Accept terms" checked={checked} onCheckedChange={setChecked} />
       <Radio label="Standalone choice" defaultChecked />
       <CheckboxGroup
@@ -378,12 +388,13 @@ function NavigationPreview() {
   const [tab, setTab] = useState("recent");
   const [destination, setDestination] = useState("home");
   const [loads, setLoads] = useState(0);
+  const [navigationAction, setNavigationAction] = useState("None");
   return (
     <StoryFrame>
       <StoryHeading>Navigation</StoryHeading>
       <TopBar
         title="HJM"
-        actions={<TopBarAction label="Refresh" onPress={noop}><Text>↻</Text></TopBarAction>}
+        actions={<TopBarAction label="Refresh" onPress={() => setNavigationAction("Refreshed")}><Text>↻</Text></TopBarAction>}
       />
       <Tabs
         label="Feed view"
@@ -418,8 +429,9 @@ function NavigationPreview() {
           { value: "edit", label: "Edit" },
           { value: "delete", label: "Delete", tone: "danger" },
         ]}
-        onSelect={noop}
+        onSelect={(value) => setNavigationAction(value)}
       />
+      <Text>Last action: {navigationAction}; loaded pages: {loads}</Text>
       <LoadMore
         descriptor={{
           labels: {
@@ -438,6 +450,8 @@ function NavigationPreview() {
 }
 
 function DataDisplayPreview() {
+  const [row, setRow] = useState("None");
+  const [cancelled, setCancelled] = useState(false);
   return (
     <StoryFrame>
       <StoryHeading>Data display</StoryHeading>
@@ -460,9 +474,10 @@ function DataDisplayPreview() {
         <Text>Composable body content</Text>
       </Card>
       <List label="Recent items">
-        <ListRow title="Morning loop" description="Updated just now" onPress={noop} />
-        <ListRow title="Night signal" description="Updated yesterday" onPress={noop} />
+        <ListRow title="Morning loop" description="Updated just now" onPress={() => setRow("Morning loop")} />
+        <ListRow title="Night signal" description="Updated yesterday" onPress={() => setRow("Night signal")} />
       </List>
+      <Text>Selected row: {row}</Text>
       <Accordion
         label="Details"
         items={[{ value: "details", title: "Details", content: <Text>Expandable content</Text> }]}
@@ -479,8 +494,9 @@ function DataDisplayPreview() {
       <UploadItem
         descriptor={{ id: "photo", name: "profile-photo.png", sizeLabel: "1.2 MB", state: { status: "uploading", progress: 0.64, progressLabel: "64% uploaded" } }}
         labels={{ pending: "Pending", uploading: "Uploading", success: "Complete", cancel: "Cancel", retry: "Retry" }}
-        onCancel={noop}
+        onCancel={() => setCancelled(true)}
       />
+      <Text>Upload cancelled: {cancelled ? "Yes" : "No"}</Text>
       <Timeline
         composeAccessibleName={({ position, total, label }) => `${position} of ${total}, ${label}`}
         items={[
@@ -500,7 +516,7 @@ function DataDisplayPreview() {
         accessibilityLabel="Blue preview placeholder"
         decorative={false}
         height={180}
-        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/ScL3WQAAAABJRU5ErkJggg=="
+        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAIAAABLbSncAAAAFElEQVR4nGM0qz/CgA0wYRUdtBIAKh8BiZNSY5sAAAAASUVORK5CYII="
         width={320}
       />
     </StoryFrame>
@@ -534,6 +550,7 @@ function FeedbackPreview() {
       <Spinner label="Loading content" />
       <Result status="success" title="Published" description="Your creation is live." />
       <ToastRegion><ToastTrigger /></ToastRegion>
+      <BottomInfo items={["Your draft stays private until published.", "You can change this later."]} />
     </StoryFrame>
   );
 }
@@ -605,13 +622,15 @@ type Story = StoryObj<typeof meta>;
 
 function AgreementPreview() {
   const [checked, setChecked] = useState<ReadonlySet<string>>(new Set());
+  const [detail, setDetail] = useState("None");
   return (
     <StoryFrame>
       <StoryHeading>Agreement</StoryHeading>
+      <Text>Opened detail: {detail}</Text>
       <Agreement
         checkedIds={checked}
         onCheckedIdsChange={setChecked}
-        onDetail={noop}
+        onDetail={(id) => setDetail(id)}
         optionalLabel="(optional)"
         requiredLabel="(required)"
         descriptor={{
@@ -641,6 +660,5 @@ const styles = StyleSheet.create({
   customInput: { borderColor: "#667085", borderRadius: 12, borderWidth: 1, minHeight: 44, paddingHorizontal: 16 },
   frame: { gap: 16, paddingBottom: 48 },
   layout: { minHeight: 144 },
-  mediaFrame: { backgroundColor: "#eef2f6" },
   mediaFrameContent: { alignItems: "center", flex: 1, justifyContent: "center" },
 });

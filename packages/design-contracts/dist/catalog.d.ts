@@ -1444,7 +1444,7 @@ export declare const recipeRegistry: {
         readonly states: {
             readonly pressedBackground: Readonly<{
                 source: "theme";
-                key: "text";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly focus: {
@@ -1668,7 +1668,7 @@ export declare const recipeRegistry: {
         };
         readonly background: Readonly<{
             source: "theme";
-            key: "surfaceAlt";
+            key: "bg";
             alpha?: number;
         }>;
         readonly content: Readonly<{
@@ -1717,7 +1717,7 @@ export declare const recipeRegistry: {
                 }>;
                 readonly background: Readonly<{
                     source: "theme";
-                    key: "surfaceAlt";
+                    key: "bg";
                     alpha?: number;
                 }>;
                 readonly border: null;
@@ -1753,7 +1753,7 @@ export declare const recipeRegistry: {
                 }>;
                 readonly background: Readonly<{
                     source: "theme";
-                    key: "surfaceAlt";
+                    key: "bg";
                     alpha?: number;
                 }>;
                 readonly border: null;
@@ -1770,8 +1770,8 @@ export declare const recipeRegistry: {
                     alpha?: number;
                 }>;
                 readonly background: Readonly<{
-                    source: "accent";
-                    key: "info";
+                    source: "theme";
+                    key: "bg";
                     alpha?: number;
                 }>;
                 readonly border: Readonly<{
@@ -2047,12 +2047,12 @@ export declare const recipeRegistry: {
         readonly states: {
             readonly hoverBackground: Readonly<{
                 source: "theme";
-                key: "text";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly pressedBackground: Readonly<{
                 source: "theme";
-                key: "text";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly focus: {
@@ -2091,7 +2091,7 @@ export declare const recipeRegistry: {
         readonly gap: 12;
         readonly background: Readonly<{
             source: "theme";
-            key: "surface";
+            key: "bg";
             alpha?: number;
         }>;
         readonly border: Readonly<{
@@ -2151,7 +2151,7 @@ export declare const recipeRegistry: {
             readonly paddingVertical: 12;
             readonly background: Readonly<{
                 source: "theme";
-                key: "surfaceAlt";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly radius: "md";
@@ -2185,7 +2185,7 @@ export declare const recipeRegistry: {
             };
             readonly highlightedBackground: Readonly<{
                 source: "theme";
-                key: "text";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly focus: {
@@ -2199,7 +2199,7 @@ export declare const recipeRegistry: {
             };
             readonly selectedBackground: Readonly<{
                 source: "theme";
-                key: "primary";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly selectedIndicator: Readonly<{
@@ -2418,7 +2418,7 @@ export declare const recipeRegistry: {
         readonly idle: {
             readonly background: Readonly<{
                 source: "theme";
-                key: "surface";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly color: Readonly<{
@@ -2435,7 +2435,7 @@ export declare const recipeRegistry: {
         readonly pressed: {
             readonly background: Readonly<{
                 source: "theme";
-                key: "primary";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly color: Readonly<{
@@ -2473,12 +2473,12 @@ export declare const recipeRegistry: {
             readonly gap: 8;
             readonly border: Readonly<{
                 source: "theme";
-                key: "textMuted";
+                key: "borderControl";
                 alpha?: number;
             }>;
             readonly background: Readonly<{
                 source: "theme";
-                key: "surface";
+                key: "bg";
                 alpha?: number;
             }>;
         };
@@ -2488,7 +2488,7 @@ export declare const recipeRegistry: {
             readonly gap: 4;
             readonly background: Readonly<{
                 source: "theme";
-                key: "surfaceAlt";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly color: Readonly<{
@@ -2583,7 +2583,7 @@ export declare const recipeRegistry: {
         };
         readonly background: Readonly<{
             source: "theme";
-            key: "surfaceAlt";
+            key: "bg";
             alpha?: number;
         }>;
         readonly border: Readonly<{
@@ -2629,7 +2629,7 @@ export declare const recipeRegistry: {
             };
             readonly highlightedBackground: Readonly<{
                 source: "theme";
-                key: "text";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly focus: {
@@ -2643,7 +2643,7 @@ export declare const recipeRegistry: {
             };
             readonly selectedBackground: Readonly<{
                 source: "theme";
-                key: "primary";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly selectedIndicator: Readonly<{
@@ -2680,7 +2680,7 @@ export declare const recipeRegistry: {
             readonly radius: 8;
             readonly background: Readonly<{
                 source: "theme";
-                key: "surfaceAlt";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly color: Readonly<{
@@ -2701,7 +2701,7 @@ export declare const recipeRegistry: {
             readonly radius: 8;
             readonly background: Readonly<{
                 source: "theme";
-                key: "surfaceAlt";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly color: Readonly<{
@@ -2757,7 +2757,7 @@ export declare const recipeRegistry: {
             }>;
             readonly openBackground: Readonly<{
                 source: "theme";
-                key: "primary";
+                key: "bg";
                 alpha?: number;
             }>;
         };
@@ -2784,7 +2784,7 @@ export declare const recipeRegistry: {
             };
             readonly highlightedBackground: Readonly<{
                 source: "theme";
-                key: "text";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly focus: {
@@ -2798,7 +2798,7 @@ export declare const recipeRegistry: {
             };
             readonly selectedBackground: Readonly<{
                 source: "theme";
-                key: "primary";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly selectedIndicator: Readonly<{
@@ -2844,7 +2844,7 @@ export declare const recipeRegistry: {
         };
         readonly background: Readonly<{
             source: "theme";
-            key: "surfaceAlt";
+            key: "bg";
             alpha?: number;
         }>;
         readonly border: Readonly<{
@@ -3074,7 +3074,7 @@ export declare const recipeRegistry: {
                 readonly paddingHorizontal: null;
             };
             readonly secondary: {
-                readonly background: "surfaceAlt";
+                readonly background: "bg";
                 readonly content: "text";
                 readonly border: "borderControl";
                 readonly paddingHorizontal: null;
@@ -3100,7 +3100,7 @@ export declare const recipeRegistry: {
         };
         readonly states: {
             readonly selected: {
-                readonly background: "surfaceAccent";
+                readonly background: "bg";
                 readonly content: "contentBrand";
                 readonly border: "contentBrand";
             };
@@ -3221,7 +3221,7 @@ export declare const recipeRegistry: {
             readonly idle: {
                 readonly background: Readonly<{
                     source: "theme";
-                    key: "surface";
+                    key: "bg";
                     alpha?: number;
                 }>;
                 readonly content: Readonly<{
@@ -3238,7 +3238,7 @@ export declare const recipeRegistry: {
             readonly selected: {
                 readonly background: Readonly<{
                     source: "theme";
-                    key: "surfaceAccent";
+                    key: "bg";
                     alpha?: number;
                 }>;
                 readonly content: Readonly<{
@@ -3292,12 +3292,12 @@ export declare const recipeRegistry: {
         readonly frame: {
             readonly background: Readonly<{
                 source: "theme";
-                key: "surface";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly border: Readonly<{
                 source: "theme";
-                key: "textMuted";
+                key: "borderControl";
                 alpha?: number;
             }>;
             readonly focusBorder: Readonly<{
@@ -3430,6 +3430,16 @@ export declare const recipeRegistry: {
         };
         readonly density: {
             readonly compact: {
+                readonly selectedBackground: Readonly<{
+                    source: "theme";
+                    key: "bg";
+                    alpha?: number;
+                }>;
+                readonly highlightedBackground: Readonly<{
+                    source: "theme";
+                    key: "bg";
+                    alpha?: number;
+                }>;
                 readonly minHeight: 44;
                 readonly paddingHorizontal: 12;
                 readonly gap: 12;
@@ -3450,11 +3460,6 @@ export declare const recipeRegistry: {
                     }>;
                     readonly textVariant: "label";
                 };
-                readonly highlightedBackground: Readonly<{
-                    source: "theme";
-                    key: "text";
-                    alpha?: number;
-                }>;
                 readonly focus: {
                     readonly color: Readonly<{
                         source: "theme";
@@ -3464,11 +3469,6 @@ export declare const recipeRegistry: {
                     readonly width: 2;
                     readonly offset: 2;
                 };
-                readonly selectedBackground: Readonly<{
-                    source: "theme";
-                    key: "primary";
-                    alpha?: number;
-                }>;
                 readonly selectedIndicator: Readonly<{
                     source: "theme";
                     key: "contentBrand";
@@ -3481,6 +3481,16 @@ export declare const recipeRegistry: {
                 }>;
             };
             readonly comfortable: {
+                readonly selectedBackground: Readonly<{
+                    source: "theme";
+                    key: "bg";
+                    alpha?: number;
+                }>;
+                readonly highlightedBackground: Readonly<{
+                    source: "theme";
+                    key: "bg";
+                    alpha?: number;
+                }>;
                 readonly minHeight: 56;
                 readonly paddingHorizontal: 12;
                 readonly gap: 12;
@@ -3501,11 +3511,6 @@ export declare const recipeRegistry: {
                     }>;
                     readonly textVariant: "label";
                 };
-                readonly highlightedBackground: Readonly<{
-                    source: "theme";
-                    key: "text";
-                    alpha?: number;
-                }>;
                 readonly focus: {
                     readonly color: Readonly<{
                         source: "theme";
@@ -3515,11 +3520,6 @@ export declare const recipeRegistry: {
                     readonly width: 2;
                     readonly offset: 2;
                 };
-                readonly selectedBackground: Readonly<{
-                    source: "theme";
-                    key: "primary";
-                    alpha?: number;
-                }>;
                 readonly selectedIndicator: Readonly<{
                     source: "theme";
                     key: "contentBrand";
@@ -3576,12 +3576,12 @@ export declare const recipeRegistry: {
         readonly states: {
             readonly hoverBackground: Readonly<{
                 source: "theme";
-                key: "text";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly pressedBackground: Readonly<{
                 source: "theme";
-                key: "text";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly focus: {
@@ -3812,7 +3812,7 @@ export declare const recipeRegistry: {
         readonly header: {
             readonly background: Readonly<{
                 source: "theme";
-                key: "surfaceAlt";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly color: Readonly<{
@@ -3836,12 +3836,12 @@ export declare const recipeRegistry: {
             }>;
             readonly hoverBackground: Readonly<{
                 source: "theme";
-                key: "text";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly selectedBackground: Readonly<{
                 source: "theme";
-                key: "primary";
+                key: "bg";
                 alpha?: number;
             }>;
         };
@@ -3909,12 +3909,12 @@ export declare const recipeRegistry: {
         readonly frame: {
             readonly background: Readonly<{
                 source: "theme";
-                key: "surface";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly border: Readonly<{
                 source: "theme";
-                key: "textMuted";
+                key: "borderControl";
                 alpha?: number;
             }>;
             readonly focusBorder: Readonly<{
@@ -4157,7 +4157,7 @@ export declare const recipeRegistry: {
         };
         readonly variants: {
             readonly surface: {
-                readonly background: "surface";
+                readonly background: "bg";
             };
             readonly inset: {
                 readonly background: "bg";
@@ -4170,7 +4170,7 @@ export declare const recipeRegistry: {
         };
         readonly states: {
             readonly idle: {
-                readonly border: "textMuted";
+                readonly border: "borderControl";
             };
             readonly focused: {
                 readonly border: "contentBrand";
@@ -4296,7 +4296,7 @@ export declare const recipeRegistry: {
             readonly secondary: {
                 readonly background: Readonly<{
                     source: "theme";
-                    key: "surfaceAlt";
+                    key: "bg";
                     alpha?: number;
                 }>;
                 readonly content: Readonly<{
@@ -4358,7 +4358,7 @@ export declare const recipeRegistry: {
             readonly selected: {
                 readonly background: Readonly<{
                     source: "theme";
-                    key: "surfaceAccent";
+                    key: "bg";
                     alpha?: number;
                 }>;
                 readonly content: Readonly<{
@@ -4459,14 +4459,14 @@ export declare const recipeRegistry: {
         readonly placeholder: {
             readonly background: Readonly<{
                 source: "theme";
-                key: "surfaceAlt";
+                key: "bg";
                 alpha?: number;
             }>;
         };
         readonly fallback: {
             readonly background: Readonly<{
                 source: "theme";
-                key: "surfaceAlt";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly icon: {
@@ -4618,12 +4618,12 @@ export declare const recipeRegistry: {
         readonly states: {
             readonly pressedBackground: Readonly<{
                 source: "theme";
-                key: "text";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly selectedBackground: Readonly<{
                 source: "theme";
-                key: "surfaceAccent";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly disabledOpacity: 0.5;
@@ -4750,7 +4750,7 @@ export declare const recipeRegistry: {
                 };
                 readonly highlightedBackground: Readonly<{
                     source: "theme";
-                    key: "text";
+                    key: "bg";
                     alpha?: number;
                 }>;
                 readonly focus: {
@@ -4764,7 +4764,7 @@ export declare const recipeRegistry: {
                 };
                 readonly selectedBackground: Readonly<{
                     source: "theme";
-                    key: "primary";
+                    key: "bg";
                     alpha?: number;
                 }>;
                 readonly selectedIndicator: Readonly<{
@@ -4801,7 +4801,7 @@ export declare const recipeRegistry: {
                 };
                 readonly highlightedBackground: Readonly<{
                     source: "theme";
-                    key: "text";
+                    key: "bg";
                     alpha?: number;
                 }>;
                 readonly focus: {
@@ -4815,7 +4815,7 @@ export declare const recipeRegistry: {
                 };
                 readonly selectedBackground: Readonly<{
                     source: "theme";
-                    key: "primary";
+                    key: "bg";
                     alpha?: number;
                 }>;
                 readonly selectedIndicator: Readonly<{
@@ -4920,7 +4920,7 @@ export declare const recipeRegistry: {
             readonly info: {
                 readonly background: Readonly<{
                     source: "theme";
-                    key: "surfaceAlt";
+                    key: "bg";
                     alpha?: number;
                 }>;
                 readonly foreground: Readonly<{
@@ -5157,12 +5157,12 @@ export declare const recipeRegistry: {
         readonly frame: {
             readonly background: Readonly<{
                 source: "theme";
-                key: "surface";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly border: Readonly<{
                 source: "theme";
-                key: "textMuted";
+                key: "borderControl";
                 alpha?: number;
             }>;
             readonly focusBorder: Readonly<{
@@ -5404,7 +5404,7 @@ export declare const recipeRegistry: {
         readonly colors: {
             readonly background: Readonly<{
                 source: "theme";
-                key: "surface";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly content: Readonly<{
@@ -5429,7 +5429,7 @@ export declare const recipeRegistry: {
             }>;
             readonly border: Readonly<{
                 source: "theme";
-                key: "textMuted";
+                key: "borderControl";
                 alpha?: number;
             }>;
             readonly focus: Readonly<{
@@ -5469,12 +5469,12 @@ export declare const recipeRegistry: {
         readonly frame: {
             readonly background: Readonly<{
                 source: "theme";
-                key: "surface";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly border: Readonly<{
                 source: "theme";
-                key: "textMuted";
+                key: "borderControl";
                 alpha?: number;
             }>;
             readonly focusBorder: Readonly<{
@@ -5597,6 +5597,16 @@ export declare const recipeRegistry: {
         };
         readonly density: {
             readonly compact: {
+                readonly selectedBackground: Readonly<{
+                    source: "theme";
+                    key: "bg";
+                    alpha?: number;
+                }>;
+                readonly highlightedBackground: Readonly<{
+                    source: "theme";
+                    key: "bg";
+                    alpha?: number;
+                }>;
                 readonly minHeight: 44;
                 readonly paddingHorizontal: 12;
                 readonly gap: 12;
@@ -5617,11 +5627,6 @@ export declare const recipeRegistry: {
                     }>;
                     readonly textVariant: "label";
                 };
-                readonly highlightedBackground: Readonly<{
-                    source: "theme";
-                    key: "text";
-                    alpha?: number;
-                }>;
                 readonly focus: {
                     readonly color: Readonly<{
                         source: "theme";
@@ -5631,11 +5636,6 @@ export declare const recipeRegistry: {
                     readonly width: 2;
                     readonly offset: 2;
                 };
-                readonly selectedBackground: Readonly<{
-                    source: "theme";
-                    key: "primary";
-                    alpha?: number;
-                }>;
                 readonly selectedIndicator: Readonly<{
                     source: "theme";
                     key: "contentBrand";
@@ -5648,6 +5648,16 @@ export declare const recipeRegistry: {
                 }>;
             };
             readonly comfortable: {
+                readonly selectedBackground: Readonly<{
+                    source: "theme";
+                    key: "bg";
+                    alpha?: number;
+                }>;
+                readonly highlightedBackground: Readonly<{
+                    source: "theme";
+                    key: "bg";
+                    alpha?: number;
+                }>;
                 readonly minHeight: 56;
                 readonly paddingHorizontal: 12;
                 readonly gap: 12;
@@ -5668,11 +5678,6 @@ export declare const recipeRegistry: {
                     }>;
                     readonly textVariant: "label";
                 };
-                readonly highlightedBackground: Readonly<{
-                    source: "theme";
-                    key: "text";
-                    alpha?: number;
-                }>;
                 readonly focus: {
                     readonly color: Readonly<{
                         source: "theme";
@@ -5682,11 +5687,6 @@ export declare const recipeRegistry: {
                     readonly width: 2;
                     readonly offset: 2;
                 };
-                readonly selectedBackground: Readonly<{
-                    source: "theme";
-                    key: "primary";
-                    alpha?: number;
-                }>;
                 readonly selectedIndicator: Readonly<{
                     source: "theme";
                     key: "contentBrand";
@@ -5743,12 +5743,12 @@ export declare const recipeRegistry: {
         readonly states: {
             readonly hoverBackground: Readonly<{
                 source: "theme";
-                key: "text";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly pressedBackground: Readonly<{
                 source: "theme";
-                key: "text";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly focus: {
@@ -5928,7 +5928,7 @@ export declare const recipeRegistry: {
             readonly fontWeight: "600";
             readonly selectedBackground: Readonly<{
                 source: "theme";
-                key: "surfaceAccent";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly selectedContent: Readonly<{
@@ -5999,7 +5999,7 @@ export declare const recipeRegistry: {
             readonly card: {
                 readonly background: Readonly<{
                     source: "theme";
-                    key: "surface";
+                    key: "bg";
                     alpha?: number;
                 }>;
                 readonly border: Readonly<{
@@ -6088,7 +6088,7 @@ export declare const recipeRegistry: {
             }>;
             readonly selectedBackground: Readonly<{
                 source: "theme";
-                key: "surfaceAccent";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly selectedBorder: Readonly<{
@@ -6098,12 +6098,12 @@ export declare const recipeRegistry: {
             }>;
             readonly hoverBackground: Readonly<{
                 source: "theme";
-                key: "text";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly pressedBackground: Readonly<{
                 source: "theme";
-                key: "text";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly invalidBorder: Readonly<{
@@ -6356,7 +6356,7 @@ export declare const recipeRegistry: {
             readonly paddingHorizontal: 16;
             readonly borderColor: Readonly<{
                 source: "theme";
-                key: "textMuted";
+                key: "borderControl";
                 alpha?: number;
             }>;
         };
@@ -6383,7 +6383,7 @@ export declare const recipeRegistry: {
             };
             readonly highlightedBackground: Readonly<{
                 source: "theme";
-                key: "text";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly focus: {
@@ -6397,7 +6397,7 @@ export declare const recipeRegistry: {
             };
             readonly selectedBackground: Readonly<{
                 source: "theme";
-                key: "primary";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly selectedIndicator: Readonly<{
@@ -6528,7 +6528,7 @@ export declare const recipeRegistry: {
         readonly slot: {
             readonly border: Readonly<{
                 source: "theme";
-                key: "textMuted";
+                key: "borderControl";
                 alpha?: number;
             }>;
             readonly focusBorder: Readonly<{
@@ -6575,12 +6575,12 @@ export declare const recipeRegistry: {
         readonly frame: {
             readonly background: Readonly<{
                 source: "theme";
-                key: "surface";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly border: Readonly<{
                 source: "theme";
-                key: "textMuted";
+                key: "borderControl";
                 alpha?: number;
             }>;
             readonly focusBorder: Readonly<{
@@ -6801,7 +6801,7 @@ export declare const recipeRegistry: {
         readonly panel: {
             readonly background: Readonly<{
                 source: "theme";
-                key: "surface";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly border: Readonly<{
@@ -6855,7 +6855,7 @@ export declare const recipeRegistry: {
             };
             readonly highlightedBackground: Readonly<{
                 source: "theme";
-                key: "text";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly focus: {
@@ -6869,7 +6869,7 @@ export declare const recipeRegistry: {
             };
             readonly selectedBackground: Readonly<{
                 source: "theme";
-                key: "primary";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly selectedIndicator: Readonly<{
@@ -6923,7 +6923,7 @@ export declare const recipeRegistry: {
         };
         readonly background: Readonly<{
             source: "theme";
-            key: "surfaceAlt";
+            key: "bg";
             alpha?: number;
         }>;
         readonly shapes: {
@@ -7106,7 +7106,7 @@ export declare const recipeRegistry: {
             readonly surface: {
                 readonly background: Readonly<{
                     source: "theme";
-                    key: "surface";
+                    key: "bg";
                     alpha?: number;
                 }>;
                 readonly border: Readonly<{
@@ -7315,11 +7315,11 @@ export declare const recipeRegistry: {
     };
     readonly surfaceRecipe: {
         readonly default: {
-            readonly background: "surface";
+            readonly background: "bg";
             readonly border: "border";
             readonly borderAlpha: 1;
             readonly elevated: false;
-            readonly borderAlways: false;
+            readonly borderAlways: true;
             readonly clipsContent: true;
         };
         readonly raised: {
@@ -7327,23 +7327,23 @@ export declare const recipeRegistry: {
             readonly border: "border";
             readonly borderAlpha: 1;
             readonly elevated: true;
-            readonly borderAlways: false;
+            readonly borderAlways: true;
             readonly clipsContent: false;
         };
         readonly sunken: {
-            readonly background: "surfaceAlt";
+            readonly background: "bg";
             readonly border: "border";
             readonly borderAlpha: 1;
             readonly elevated: false;
-            readonly borderAlways: false;
+            readonly borderAlways: true;
             readonly clipsContent: true;
         };
         readonly accent: {
-            readonly background: "surfaceAccent";
+            readonly background: "bg";
             readonly border: "primary";
-            readonly borderAlpha: 0.3;
+            readonly borderAlpha: 1;
             readonly elevated: false;
-            readonly borderAlways: false;
+            readonly borderAlways: true;
             readonly clipsContent: true;
         };
         readonly subtle: {
@@ -7524,7 +7524,7 @@ export declare const recipeRegistry: {
         readonly states: {
             readonly pressedBackground: Readonly<{
                 source: "theme";
-                key: "text";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly focus: {
@@ -7548,7 +7548,7 @@ export declare const recipeRegistry: {
             readonly neutral: {
                 readonly background: Readonly<{
                     source: "theme";
-                    key: "surfaceAlt";
+                    key: "bg";
                     alpha?: number;
                 }>;
                 readonly content: Readonly<{
@@ -7561,7 +7561,7 @@ export declare const recipeRegistry: {
             readonly brand: {
                 readonly background: Readonly<{
                     source: "theme";
-                    key: "surfaceAccent";
+                    key: "bg";
                     alpha?: number;
                 }>;
                 readonly content: Readonly<{
@@ -7573,8 +7573,8 @@ export declare const recipeRegistry: {
             };
             readonly info: {
                 readonly background: Readonly<{
-                    source: "accent";
-                    key: "info";
+                    source: "theme";
+                    key: "bg";
                     alpha?: number;
                 }>;
                 readonly content: Readonly<{
@@ -8144,7 +8144,7 @@ export declare const recipeRegistry: {
             };
             readonly highlightedBackground: Readonly<{
                 source: "theme";
-                key: "text";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly focus: {
@@ -8158,7 +8158,7 @@ export declare const recipeRegistry: {
             };
             readonly selectedBackground: Readonly<{
                 source: "theme";
-                key: "primary";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly selectedIndicator: Readonly<{

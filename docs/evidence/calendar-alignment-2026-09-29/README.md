@@ -13,5 +13,5 @@ flex and minimum-width geometry, preserving the seven-column alignment.
 - Chromium Calendar focused tests: 10 passed (including actual column-center
   measurements in LTR/RTL). Web already uses seven equal grid tracks; no Web renderer
   change was needed.
-- Android screen verification remains pending; the capture attempt showed launch
-  splash, not the Calendar. Do not count it as passed.
+- Android 16, existing spint-store emulator: after recovering the stalled guest,
+  `android-after.png` confirms September partial weeks align with weekday columns.

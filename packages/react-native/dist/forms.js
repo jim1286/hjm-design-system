@@ -3,7 +3,7 @@ import { formRecipe, } from "@hjmds/design-contracts/components/form";
 import { comboboxBehaviorDefaults, resolveControlAccessibleName, } from "@hjmds/design-contracts/behaviors";
 import { flattenCollectionItems, isComboboxResultCurrent, reconcileSelectSelection, resolveComboboxSelectedItem, resolveSelectSelectedItem, validateCollection, } from "@hjmds/design-contracts/components/collection";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
-import { glyph, radius, spacing } from "@hjmds/design-contracts/foundations";
+import { backdrop, glyph, radius, spacing } from "@hjmds/design-contracts/foundations";
 import { comboboxRecipe, selectRecipe, } from "@hjmds/design-contracts/recipes";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, } from "react";
 import { AccessibilityInfo, ActivityIndicator, Modal, Pressable, ScrollView, TextInput, View, findNodeHandle, } from "react-native";
@@ -117,7 +117,7 @@ export function Form({ label, values, onSubmit, children, submitLabel, status, d
 /** Shared collection sheets keep dismissal in the header so it does not compete with choices. */
 function CollectionSheetHeader({ title, dismissLabel, onDismiss }) {
     const { colors, environment } = useHjmNativeTheme();
-    return _jsxs(View, { style: { flexDirection: "row", direction: environment.direction, alignItems: "center", gap: spacing.sm }, children: [_jsx(Text, { accessibilityRole: "header", tone: "primary", variant: "title", emphasis: "strong", style: { flex: 1 }, children: title }), _jsx(Pressable, { accessibilityRole: "button", accessibilityLabel: dismissLabel, onPress: onDismiss, style: ({ pressed }) => [minimumTargetStyle, { alignItems: "center", justifyContent: "center", borderRadius: radius.full, backgroundColor: pressed ? colors.surface : "transparent" }], children: _jsx(Text, { accessible: false, tone: "muted", variant: "title", children: "\u00D7" }) })] });
+    return _jsxs(View, { style: { flexDirection: "row", direction: environment.direction, alignItems: "center", gap: spacing.sm }, children: [_jsx(Text, { accessibilityRole: "header", tone: "primary", variant: "title", emphasis: "strong", style: { flex: 1 }, children: title }), _jsx(Pressable, { accessibilityRole: "button", accessibilityLabel: dismissLabel, onPress: onDismiss, style: ({ pressed }) => [minimumTargetStyle, { alignItems: "center", justifyContent: "center", borderRadius: radius.full, backgroundColor: pressed ? colors.bg : "transparent" }], children: _jsx(Text, { accessible: false, tone: "muted", variant: "title", children: "\u00D7" }) })] });
 }
 /** Native adaptive Select with shared sections, async states, and teardown-safe commits. */
 export function Select({ label, accessibilityLabel, options, source: sourceProp, items, sections, value, defaultValue, onValueChange, selectedKey, defaultSelectedKey, onSelectionChange, selectedItem, disallowEmptySelection = false, open, defaultOpen = false, onOpenChange, placeholder, description, error, required = false, disabled = false, readOnly = false, busy = false, size = selectRecipe.defaults.size, density = selectRecipe.defaults.density, asyncState = { status: "idle" }, onRetry, retryLabel, readOnlyLabel, openHint, renderLeading, renderOptionLeading, onSelectionAfterDismiss, onDismiss, dismissLabel, optionsAccessibilityLabel, style, ...modalProps }) {
@@ -309,7 +309,7 @@ export function Select({ label, accessibilityLabel, options, source: sourceProp,
                     modalDismiss.onShow();
                     focusInitialOption();
                 }, transparent: true, visible: visible, children: _jsxs(View, { style: { flex: 1, justifyContent: "flex-end" }, children: [_jsx(Pressable, { accessibilityLabel: dismissLabel, accessibilityRole: "button", onPress: () => close("outside"), style: {
-                                backgroundColor: "#00000088",
+                                backgroundColor: backdrop.modal.color, opacity: backdrop.modal.opacity,
                                 bottom: 0,
                                 left: 0,
                                 position: "absolute",
@@ -521,7 +521,7 @@ export function Combobox({ label, accessibilityLabel, items, sections, source: s
                     backgroundColor: checked || active
                         ? resolveColorReference(densityContract.selectedBackground, theme.palette)
                         : pressed
-                            ? resolveColorReference(comboboxRecipe.states.pressedBackground, theme.palette)
+                            ? colors.bg
                             : "transparent",
                     borderRadius: radius[densityContract.radius],
                     direction: environment.direction,
@@ -600,7 +600,7 @@ export function Combobox({ label, accessibilityLabel, items, sections, source: s
                         }, placeholder: placeholder, placeholderTextColor: colors.textWeak, value: query }), query.length > 0 && !readOnly ? (_jsx(Pressable, { accessibilityLabel: clearLabel, accessibilityRole: "button", disabled: disabled || busy || viewStatus === "loading", onPress: clear, style: minimumTargetStyle, children: _jsx(Text, { align: "center", tone: "muted", variant: "title", children: "\u00D7" }) })) : null] }), error ? (_jsx(Text, { accessibilityLiveRegion: "assertive", tone: "danger", variant: "caption", children: error })) : description ? (_jsx(Text, { tone: "muted", variant: "caption", children: description })) : null, _jsx(Modal, { ...modalProps, animationType: "none", onDismiss: modalDismiss.onDismiss, onRequestClose: () => dismiss("escape"), onShow: () => {
                     modalDismiss.onShow();
                     focusInitialOption();
-                }, transparent: true, visible: visible, children: _jsxs(View, { style: { flex: 1, justifyContent: "flex-end" }, children: [_jsx(Pressable, { accessibilityLabel: dismissLabel, accessibilityRole: "button", onPress: () => dismiss("outside"), style: { backgroundColor: "#00000088", bottom: 0, left: 0, position: "absolute", right: 0, top: 0 } }), _jsxs(View, { accessibilityLabel: resultsAccessibilityLabel ?? accessibleName, accessibilityRole: "radiogroup", accessibilityViewIsModal: true, style: {
+                }, transparent: true, visible: visible, children: _jsxs(View, { style: { flex: 1, justifyContent: "flex-end" }, children: [_jsx(Pressable, { accessibilityLabel: dismissLabel, accessibilityRole: "button", onPress: () => dismiss("outside"), style: { backgroundColor: backdrop.modal.color, opacity: backdrop.modal.opacity, bottom: 0, left: 0, position: "absolute", right: 0, top: 0 } }), _jsxs(View, { accessibilityLabel: resultsAccessibilityLabel ?? accessibleName, accessibilityRole: "radiogroup", accessibilityViewIsModal: true, style: {
                                 backgroundColor: colors.bg,
                                 borderTopLeftRadius: radius.lg,
                                 borderTopRightRadius: radius.lg,

@@ -11,12 +11,12 @@ export declare const focusIndicatorContract: {
 export declare const fieldFrameContract: {
     readonly background: Readonly<{
         source: "theme";
-        key: "surface";
+        key: "bg";
         alpha?: number;
     }>;
     readonly border: Readonly<{
         source: "theme";
-        key: "textMuted";
+        key: "borderControl";
         alpha?: number;
     }>;
     readonly focusBorder: Readonly<{
@@ -106,7 +106,7 @@ export declare const collectionItemContract: {
     };
     readonly highlightedBackground: Readonly<{
         source: "theme";
-        key: "text";
+        key: "bg";
         alpha?: number;
     }>;
     readonly focus: {
@@ -120,7 +120,7 @@ export declare const collectionItemContract: {
     };
     readonly selectedBackground: Readonly<{
         source: "theme";
-        key: "primary";
+        key: "bg";
         alpha?: number;
     }>;
     readonly selectedIndicator: Readonly<{

@@ -496,7 +496,7 @@ export function BottomCTA({
       testID={testID}
       style={[
         {
-          backgroundColor: colors.surface,
+          backgroundColor: colors.bg,
           borderColor: colors.border,
           borderTopWidth: bottomCtaRecipe.borderWidth,
           elevation: bottomCtaRecipe.shadow.elevation,

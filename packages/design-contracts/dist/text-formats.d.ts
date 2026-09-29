@@ -17,7 +17,7 @@ export declare const textFormatRecipe: {
         readonly radius: 8;
         readonly background: Readonly<{
             source: "theme";
-            key: "surfaceAlt";
+            key: "bg";
             alpha?: number;
         }>;
         readonly color: Readonly<{
@@ -38,7 +38,7 @@ export declare const textFormatRecipe: {
         readonly radius: 8;
         readonly background: Readonly<{
             source: "theme";
-            key: "surfaceAlt";
+            key: "bg";
             alpha?: number;
         }>;
         readonly color: Readonly<{

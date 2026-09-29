@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
-import { TextInput } from "react-native";
+import { StyleSheet, TextInput } from "react-native";
 import { describe, expect, it, vi } from "vitest";
 
 import { HjmNativeProvider, OtpField, PasswordField } from "../src/index.js";
@@ -66,6 +66,17 @@ describe("Native OtpField", () => {
     );
     expect(renderer.root.findAllByType(TextInput)).toHaveLength(1);
     const input = renderer.root.findByType(TextInput);
+    // UIKit treats alpha <= 0.01 as non-interactive even when the input is accessible.
+    expect(StyleSheet.flatten(input.props.style).opacity ?? 1).toBeGreaterThan(0.01);
+    // Decorative slots cover Android composing text without stealing input taps.
+    const slots = renderer.root.findAll((node) =>
+      node.props.pointerEvents === "none" &&
+      node.props.importantForAccessibility === "no-hide-descendants" &&
+      node.props.accessible === false,
+    );
+    expect(slots.length).toBeGreaterThanOrEqual(6);
+    expect(Object.assign({}, ...slots[0]!.props.style.filter(Boolean)).zIndex)
+      .toBeGreaterThan(StyleSheet.flatten(input.props.style).zIndex);
     expect(input.props.keyboardType).toBe("number-pad");
     expect(input.props.textContentType).toBe("oneTimeCode");
 

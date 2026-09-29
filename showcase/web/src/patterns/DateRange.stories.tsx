@@ -1,3 +1,4 @@
+import { calendarExampleGrid } from "../../../shared/calendar-example.js";
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { DateRangeValue } from "@hjmds/design-contracts/components/date-range";
@@ -9,12 +10,9 @@ import { StatisticGroup } from "@hjmds/react/display";
 import { Notice } from "@hjmds/react/feedback";
 import { Stack, Section } from "@hjmds/react/layout";
 
-const grid = {
-  // 7의 배수여야 한다 — 격자는 한 주 단위로만 성립한다.
-  cells: Array.from({ length: 28 }, (_, index) => ({ date: `2026-09-${String(index + 1).padStart(2, "0")}` })),
-  weekdayLabels: ["일", "월", "화", "수", "목", "금", "토"] as const,
-  todayDate: "2026-09-18",
-};
+// Shared date generation preserves weekday offsets and complete months;
+// a flat 28-day fixture put September 1 under Sunday and hid the final days.
+const grid = calendarExampleGrid("2026-09");
 
 export function DateRangePreview() {
   const [value, setValue] = useState<DateRangeValue>({ start: null, end: null });

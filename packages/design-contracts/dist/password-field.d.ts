@@ -58,12 +58,12 @@ export declare const passwordFieldRecipe: {
     readonly frame: {
         readonly background: Readonly<{
             source: "theme";
-            key: "surface";
+            key: "bg";
             alpha?: number;
         }>;
         readonly border: Readonly<{
             source: "theme";
-            key: "textMuted";
+            key: "borderControl";
             alpha?: number;
         }>;
         readonly focusBorder: Readonly<{

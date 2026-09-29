@@ -50,7 +50,7 @@ export const sidebarRecipe = {
     slots: ["root", "group", "groupLabel", "item", "label", "badge", "toggle"],
     defaults: sidebarDefaults,
     widths: { expanded: 260, collapsed: 72 },
-    background: semanticColors.surface.sunken,
+    background: semanticColors.canvas,
     border: semanticColors.border.default,
     borderWidth: stroke.default,
     paddingVertical: spacing.sm,

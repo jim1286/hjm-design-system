@@ -121,7 +121,7 @@ export declare const semanticColors: {
         readonly neutral: {
             readonly background: Readonly<{
                 source: "theme";
-                key: "surfaceAlt";
+                key: "bg";
                 alpha?: number;
             }>;
             readonly content: Readonly<{

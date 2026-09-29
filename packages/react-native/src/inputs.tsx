@@ -819,8 +819,6 @@ export const OtpField = forwardRef<TextInput, OtpFieldProps>(function OtpField(
         <View
           style={{
             direction: "ltr",
-            flexDirection: "row",
-            gap: metrics.gap,
             maxWidth: metrics.slotSize * length + metrics.gap * (length - 1),
             position: "relative",
             width: "100%",
@@ -852,16 +850,22 @@ export const OtpField = forwardRef<TextInput, OtpFieldProps>(function OtpField(
               bottom: 0,
               color: "transparent",
               left: 0,
-              opacity: 0.01,
+              // UIKit excludes views with opacity <= 0.01 from hit testing.
+              // Keep it behind opaque, pointer-transparent slots: Android may paint
+              // composing text despite a transparent text color.
               padding: 0,
               position: "absolute",
               right: 0,
               top: 0,
-              zIndex: 1,
+              zIndex: 0,
             }}
             textContentType="oneTimeCode"
             value={value}
           />
+          <View
+            pointerEvents="none"
+            style={{ backgroundColor: theme.colors.bg, flexDirection: "row", gap: metrics.gap, width: "100%", zIndex: 1 }}
+          >
           {slots.map((digit, index) => {
             const borderColor = error
               ? invalidBorder
@@ -875,11 +879,12 @@ export const OtpField = forwardRef<TextInput, OtpFieldProps>(function OtpField(
                 accessibilityElementsHidden
                 accessible={false}
                 importantForAccessibility="no-hide-descendants"
+                pointerEvents="none"
                 key={index}
                 style={[
                   {
                     alignItems: "center",
-                    backgroundColor: theme.colors.surface,
+                    backgroundColor: theme.colors.bg,
                     borderColor,
                     borderRadius: radius[otpFieldRecipe.slot.radius],
                     borderWidth: otpFieldRecipe.slot.borderWidth,
@@ -888,6 +893,7 @@ export const OtpField = forwardRef<TextInput, OtpFieldProps>(function OtpField(
                     justifyContent: "center",
                     maxWidth: metrics.slotSize,
                     minWidth: 0,
+                    zIndex: 1,
                   },
                   slotStyle,
                 ]}
@@ -904,6 +910,7 @@ export const OtpField = forwardRef<TextInput, OtpFieldProps>(function OtpField(
               </View>
             );
           })}
+          </View>
         </View>
         <FieldMessage
           {...(error === undefined ? {} : { error })}

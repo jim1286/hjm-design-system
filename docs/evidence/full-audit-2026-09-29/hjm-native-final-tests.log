@@ -1,0 +1,9 @@
+$ vitest run
+
+ RUN  v4.1.11 /Users/jimin/Developer/app-portfolio/packages/hjm-design-system/packages/react-native
+
+
+ Test Files  51 passed (51)
+      Tests  855 passed (855)
+   Start at  19:52:49
+   Duration  3.47s (transform 3.63s, setup 0ms, import 10.57s, tests 2.48s, environment 5ms)

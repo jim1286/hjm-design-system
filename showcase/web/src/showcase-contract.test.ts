@@ -256,8 +256,7 @@ describe("web showcase coverage", () => {
         presentation.style.aspectRatio !== undefined ||
         presentation.style.minHeight !== undefined ||
           presentation.style.minWidth !== undefined ||
-          presentation.style.color !== undefined ||
-          presentation.style.backgroundColor !== undefined ||
+          presentation.style["--hjm-evidence-color"] !== undefined ||
           presentation.style.gap !== undefined ||
           presentation.style.paddingBlock !== undefined ||
           presentation.style.paddingInline !== undefined ||
@@ -266,7 +265,7 @@ describe("web showcase coverage", () => {
           presentation.style.borderWidth !== undefined ||
           presentation.style.maxWidth !== undefined ||
           presentation.style.borderRadius !== undefined,
-        `${name} must apply a recipe value to a standard CSS property`,
+        `${name} must expose recipe evidence without overriding renderer paint`,
       ).toBe(true);
       if (presentation.consumption.resolvedMetric !== null) {
         expect(presentation.consumption.resolvedMetricProperty, name).not.toBeNull();

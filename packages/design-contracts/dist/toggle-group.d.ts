@@ -45,7 +45,7 @@ export declare const toggleGroupRecipe: {
     readonly idle: {
         readonly background: Readonly<{
             source: "theme";
-            key: "surface";
+            key: "bg";
             alpha?: number;
         }>;
         readonly color: Readonly<{
@@ -62,7 +62,7 @@ export declare const toggleGroupRecipe: {
     readonly pressed: {
         readonly background: Readonly<{
             source: "theme";
-            key: "primary";
+            key: "bg";
             alpha?: number;
         }>;
         readonly color: Readonly<{

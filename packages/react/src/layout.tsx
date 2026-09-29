@@ -352,7 +352,7 @@ export const Surface = forwardRef<HTMLElement, SurfaceProps>(function Surface(
   {
     as = "div",
     tone = surfaceDefaults.tone,
-    bordered = surfaceDefaults.bordered,
+    bordered,
     padding = surfaceDefaults.padding,
     radius = surfaceDefaults.radius,
     className,
@@ -368,7 +368,8 @@ export const Surface = forwardRef<HTMLElement, SurfaceProps>(function Surface(
     ref,
     className: classNames("hjm-surface", className),
     "data-tone": tone,
-    "data-bordered": bordered || contract.borderAlways,
+    // Canvas framing is the default; preserve the caller's explicit border opt-out.
+    "data-bordered": bordered ?? (surfaceDefaults.bordered || contract.borderAlways),
     "data-elevated": contract.elevated,
     "data-clips": contract.clipsContent,
     "data-padding": padding,

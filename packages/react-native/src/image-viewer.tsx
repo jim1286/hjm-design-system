@@ -64,7 +64,7 @@ function ImageViewerSession(props: ImageViewerProps) {
   // Gallery uses a short paging transition; reduced motion removes it entirely.
   const navigate = (next: number) => { change(next); setGalleryKey(value => value + 1); };
   return <Modal visible animationType={theme.environment.reducedMotion ? "none" : "fade"} onRequestClose={props.onClose}>
-    <GestureHandlerRootView style={{ flex: 1, backgroundColor: theme.colors.surface }}>
+    <GestureHandlerRootView style={{ flex: 1, backgroundColor: theme.colors.bg }}>
       <View accessibilityViewIsModal style={{ flex: 1, paddingTop: props.safeAreaInsets.top, paddingBottom: props.safeAreaInsets.bottom }}>
         <Button onPress={props.onClose}>{props.closeLabel}</Button>
         <View style={{ flex: 1 }} onLayout={event => { const { width: measuredWidth, height: measuredHeight } = event.nativeEvent.layout; if (measuredWidth > 0 && measuredHeight > 0) setViewport({ width: measuredWidth, height: measuredHeight }); }}>

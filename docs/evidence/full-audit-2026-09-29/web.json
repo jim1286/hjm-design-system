@@ -1,0 +1,5346 @@
+{
+  "scope": "100 implemented Web canonical component previews. Visual review and interactions separately recorded.",
+  "results": [
+    {
+      "component": "Text",
+      "storyId": "components-foundation--text",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/Text.png",
+      "dom": {
+        "text": "명확한 제목\n\n조용한 본문 위계\n\n보조 정보는 한 단계 낮게 표시합니다.",
+        "controls": []
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Heading",
+      "storyId": "components-foundation--heading",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/Heading.png",
+      "dom": {
+        "text": "랜딩 히어로 제목\n섹션을 여는 큰 제목\n본문 안의 제목\n크게 보이지만 문서상 h4인 카드 제목\n가장 작은 단계",
+        "controls": []
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "TextFormat",
+      "storyId": "components-foundation--text-format",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/TextFormat.png",
+      "dom": {
+        "text": "의미 있는 글자 조각\n크기가 아니라 요소입니다 — 보조기기가 다르게 읽어요.\n\n저장은 ⌘ S로 할 수 있어요.\n\n설치는 pnpm add @hjmds/react 한 줄이면 됩니다.\n\n기록은 짧아도 좋아요. 남기는 것 자체가 의미예요.",
+        "controls": []
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Icon",
+      "storyId": "components-foundation--icon",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/Icon.png",
+      "dom": {
+        "text": "",
+        "controls": [
+          {
+            "tag": "DIV",
+            "role": "group",
+            "name": "Semantic icons",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "svg",
+            "role": "img",
+            "name": "홈",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "svg",
+            "role": "img",
+            "name": "성공",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "svg",
+            "role": "img",
+            "name": "경고",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "svg",
+            "role": "img",
+            "name": "다음",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Surface",
+      "storyId": "components-layout--surface",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/Surface.png",
+      "dom": {
+        "text": "Surface 제목\n\n제품이 색·간격·모서리를 임의로 덮지 않는 의미 기반 컨테이너입니다.",
+        "controls": []
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Divider",
+      "storyId": "components-layout--divider",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/Divider.png",
+      "dom": {
+        "text": "위쪽 내용\n아래쪽 내용",
+        "controls": [
+          {
+            "tag": "HR",
+            "role": "separator",
+            "name": "",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Section",
+      "storyId": "components-layout--section",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/Section.png",
+      "dom": {
+        "text": "앱 정보\n현재 앱의 핵심 기능을 간결하게 설명합니다.\n배고픔을 기록하고 흐름을 확인하세요.",
+        "controls": []
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Stack",
+      "storyId": "components-layout--stack",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/Stack.png",
+      "dom": {
+        "text": "첫 번째\n두 번째\n세 번째",
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "첫 번째",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "두 번째",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "세 번째",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Container",
+      "storyId": "components-layout--container",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/Container.png",
+      "dom": {
+        "text": "읽기 폭과 논리 gutter를 Web·Native에서 같은 계약으로 유지합니다.",
+        "controls": []
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "AspectRatio",
+      "storyId": "components-layout--aspect-ratio",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/AspectRatio.png",
+      "dom": {
+        "text": "16:9 media frame",
+        "controls": []
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Grid",
+      "storyId": "components-layout--grid",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/Grid.png",
+      "dom": {
+        "text": "첫 번째\n공통 window class\n두 번째\nresponsive columns\n세 번째\nrow-major order",
+        "controls": []
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Layout",
+      "storyId": "components-layout--layout",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/Layout.png",
+      "dom": {
+        "text": "본문으로 건너뛰기\n제품 헤더\n하나의 main landmark 안에 놓이는 제품 본문입니다.",
+        "controls": []
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Top",
+      "storyId": "components-layout--top",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Top-action.png"
+      },
+      "screenshot": "web-screens/Top.png",
+      "dom": {
+        "text": "2026년 9월\n\n화면의 첫 제목입니다\n크기 바꾸기\n\nTopBar와 달리 본문이라 스크롤과 함께 올라가고, 큰 글자에서도 잘리지 않아요.\n\n본문이 여기서 이어집니다.",
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "크기 바꾸기",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Masonry",
+      "storyId": "components-layout--masonry",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "semantic-pass",
+        "evidence": "web-screens/Masonry-semantic.png"
+      },
+      "screenshot": "web-screens/Masonry.png",
+      "dom": {
+        "text": "항목 1\n항목 2\n항목 3\n항목 4\n항목 5\n항목 6\n항목 7\n항목 8\n항목 9",
+        "controls": [
+          {
+            "tag": "DIV",
+            "role": "list",
+            "name": "높이가 다른 카드",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "listitem",
+            "name": "항목 1",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "listitem",
+            "name": "항목 2",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "listitem",
+            "name": "항목 3",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "listitem",
+            "name": "항목 4",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "listitem",
+            "name": "항목 5",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "listitem",
+            "name": "항목 6",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "listitem",
+            "name": "항목 7",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "listitem",
+            "name": "항목 8",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "listitem",
+            "name": "항목 9",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Splitter",
+      "storyId": "components-layout--splitter",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Splitter-action.png"
+      },
+      "screenshot": "web-screens/Splitter.png",
+      "dom": {
+        "text": "기록 훑어보기\n목록과 본문의 경계를 원하는 대로 옮겨 보세요.\n\n저장된 목록 폭 35%\n\n느리게 걸었던 오후\n보기\n함께 먹은 저녁\n보기\n창밖으로 본 풍경\n보기\n느리게 걸었던 오후\n\n골목을 한 바퀴 돌았어요. 담벼락의 고양이는 오늘도 자고 있었습니다.",
+        "controls": [
+          {
+            "tag": "P",
+            "role": "status",
+            "name": "저장된 목록 폭 35%",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "list",
+            "name": "내 기록",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "listitem",
+            "name": "느리게 걸었던 오후보기",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "보기",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "listitem",
+            "name": "함께 먹은 저녁보기",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "보기",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "listitem",
+            "name": "창밖으로 본 풍경보기",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "보기",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "separator",
+            "name": "목록 폭 조절",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "AuthScreenLayout",
+      "storyId": "components-layout--auth-screen-layout",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/AuthScreenLayout.png",
+      "dom": {
+        "text": "어떤 계정으로 시작할까요\n\n쓰던 계정으로 바로 시작할 수 있어요.\n\n어떤 계정으로 시작할까요\n\n쓰던 계정으로 바로 시작할 수 있어요.\n\nG\nGoogle로 계속하기\nK\n카카오로 계속하기\nN\n네이버로 계속하기\nApple로 계속하기\n로그인하면 약관과 개인정보처리방침에 동의하게 돼요.",
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "GGoogle로 계속하기",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "K카카오로 계속하기",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "N네이버로 계속하기",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "Apple로 계속하기",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Button",
+      "storyId": "components-actions--button",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Button-action.png"
+      },
+      "screenshot": "web-screens/Button.png",
+      "dom": {
+        "text": "Primary\nSecondary\nDisabled",
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "Primary",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "Secondary",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "Disabled",
+            "type": "button",
+            "disabled": true,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "IconButton",
+      "storyId": "components-actions--icon-button",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/IconButton-action.png"
+      },
+      "screenshot": "web-screens/IconButton.png",
+      "dom": {
+        "text": "♡\n×",
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "좋아요",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "닫기",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Link",
+      "storyId": "components-actions--link",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Link-action.png"
+      },
+      "screenshot": "web-screens/Link.png",
+      "dom": {
+        "text": "컴포넌트 문서로 이동",
+        "controls": []
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "BottomCTA",
+      "storyId": "components-actions--bottom-cta",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/BottomCTA-action.png"
+      },
+      "screenshot": "web-screens/BottomCTA.png",
+      "dom": {
+        "text": "설정은 나중에 바꿀 수 있어요.\n\n나중에\n계속하기",
+        "controls": [
+          {
+            "tag": "DIV",
+            "role": "group",
+            "name": "설정은 나중에 바꿀 수 있어요.나중에계속하기",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "나중에",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "계속하기",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "FloatingActionButton",
+      "storyId": "components-actions--floating-action-button",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/FloatingActionButton.png",
+      "dom": {
+        "text": "기록 목록에서 새로운 순간을 남겨요.\n＋\n새 기록",
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "새 기록",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "AuthProviderButton",
+      "storyId": "components-actions--auth-provider-button",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/AuthProviderButton-action.png"
+      },
+      "screenshot": "web-screens/AuthProviderButton.png",
+      "dom": {
+        "text": "어떤 계정으로 시작할까요\n\n쓰던 계정으로 바로 시작할 수 있어요.\n\nG\nGoogle로 계속하기\nK\n카카오로 계속하기\nN\n네이버로 계속하기\nApple로 계속하기",
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "GGoogle로 계속하기",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "K카카오로 계속하기",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "N네이버로 계속하기",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "Apple로 계속하기",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Field",
+      "storyId": "components-inputs--field",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Field-action.png"
+      },
+      "screenshot": "web-screens/Field.png",
+      "dom": {
+        "text": "이름\n필수 정보는 입력 아래에서 설명합니다.",
+        "controls": [
+          {
+            "tag": "INPUT",
+            "role": null,
+            "name": "",
+            "type": null,
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "SearchField",
+      "storyId": "components-inputs--search-field",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/SearchField-action.png"
+      },
+      "screenshot": "web-screens/SearchField.png",
+      "dom": {
+        "text": "선수 검색\n×\n검색어 지우기 버튼도 키보드로 사용할 수 있습니다.",
+        "controls": [
+          {
+            "tag": "INPUT",
+            "role": null,
+            "name": "",
+            "type": "search",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "검색어 지우기",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "TextArea",
+      "storyId": "components-inputs--text-area",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/TextArea-action.png"
+      },
+      "screenshot": "web-screens/TextArea.png",
+      "dom": {
+        "text": "설명\n긴 설명도 레이아웃 안에서 줄바꿈됩니다.",
+        "controls": [
+          {
+            "tag": "TEXTAREA",
+            "role": null,
+            "name": "여러 줄 입력 예시",
+            "type": null,
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "PasswordField",
+      "storyId": "components-inputs--password-field",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/PasswordField-action.png"
+      },
+      "screenshot": "web-screens/PasswordField.png",
+      "dom": {
+        "text": "비밀번호\n표시 전환은 값과 독립적으로 동작합니다.",
+        "controls": [
+          {
+            "tag": "INPUT",
+            "role": null,
+            "name": "",
+            "type": "password",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "비밀번호 보기",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "OtpField",
+      "storyId": "components-inputs--otp-field",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/OtpField-action.png"
+      },
+      "screenshot": "web-screens/OtpField.png",
+      "dom": {
+        "text": "인증번호\n1\n2\n8\n여섯 자리를 한 번에 입력하거나 붙여넣을 수 있습니다.",
+        "controls": [
+          {
+            "tag": "INPUT",
+            "role": null,
+            "name": "",
+            "type": "text",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Checkbox",
+      "storyId": "components-inputs--checkbox",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Checkbox-action.png"
+      },
+      "screenshot": "web-screens/Checkbox.png",
+      "dom": {
+        "text": "동의합니다\n선택 상태와 설명이 함께 노출됩니다.",
+        "controls": [
+          {
+            "tag": "INPUT",
+            "role": null,
+            "name": "",
+            "type": "checkbox",
+            "disabled": false,
+            "checked": "true",
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Radio",
+      "storyId": "components-inputs--radio",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Radio-action.png"
+      },
+      "screenshot": "web-screens/Radio.png",
+      "dom": {
+        "text": "단일 선택\n독립 radio item renderer입니다.",
+        "controls": [
+          {
+            "tag": "INPUT",
+            "role": null,
+            "name": "",
+            "type": "radio",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "CheckboxGroup",
+      "storyId": "components-inputs--checkbox-group",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/CheckboxGroup-action.png"
+      },
+      "screenshot": "web-screens/CheckboxGroup.png",
+      "dom": {
+        "text": "선택 그룹\n첫 번째 선택\n두 번째 선택\n사용할 수 없음",
+        "controls": [
+          {
+            "tag": "INPUT",
+            "role": null,
+            "name": "",
+            "type": "checkbox",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "INPUT",
+            "role": null,
+            "name": "",
+            "type": "checkbox",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "INPUT",
+            "role": null,
+            "name": "",
+            "type": "checkbox",
+            "disabled": true,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "RadioGroup",
+      "storyId": "components-inputs--radio-group",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/RadioGroup-action.png"
+      },
+      "screenshot": "web-screens/RadioGroup.png",
+      "dom": {
+        "text": "선택 그룹\n첫 번째 선택\n두 번째 선택\n사용할 수 없음",
+        "controls": [
+          {
+            "tag": "INPUT",
+            "role": null,
+            "name": "",
+            "type": "radio",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "INPUT",
+            "role": null,
+            "name": "",
+            "type": "radio",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "INPUT",
+            "role": null,
+            "name": "",
+            "type": "radio",
+            "disabled": true,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Switch",
+      "storyId": "components-inputs--switch",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Switch-action.png"
+      },
+      "screenshot": "web-screens/Switch.png",
+      "dom": {
+        "text": "알림 받기",
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "role": "switch",
+            "name": "알림 받기",
+            "type": "button",
+            "disabled": false,
+            "checked": "true",
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Chip",
+      "storyId": "components-inputs--chip",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Chip-action.png"
+      },
+      "screenshot": "web-screens/Chip.png",
+      "dom": {
+        "text": "✓\n전체\n완료",
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "role": "radio",
+            "name": "✓전체",
+            "type": "button",
+            "disabled": false,
+            "checked": "true",
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "checkbox",
+            "name": "완료",
+            "type": "button",
+            "disabled": false,
+            "checked": "false",
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "SegmentedControl",
+      "storyId": "components-inputs--segmented-control",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/SegmentedControl-action.png"
+      },
+      "screenshot": "web-screens/SegmentedControl.png",
+      "dom": {
+        "text": "보기 방식\n목록\n격자",
+        "controls": [
+          {
+            "tag": "INPUT",
+            "role": null,
+            "name": "",
+            "type": "radio",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "INPUT",
+            "role": null,
+            "name": "",
+            "type": "radio",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Slider",
+      "storyId": "components-inputs--slider",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Slider-action.png"
+      },
+      "screenshot": "web-screens/Slider.png",
+      "dom": {
+        "text": "완성도\n72%",
+        "controls": [
+          {
+            "tag": "INPUT",
+            "role": null,
+            "name": "",
+            "type": "range",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "NumberField",
+      "storyId": "components-inputs--number-field",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/NumberField-action.png"
+      },
+      "screenshot": "web-screens/NumberField.png",
+      "dom": {
+        "text": "수량\n−\n+",
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "수량 줄이기",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "INPUT",
+            "role": "spinbutton",
+            "name": "",
+            "type": "text",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "수량 늘리기",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Select",
+      "storyId": "components-inputs--select",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Select-action.png"
+      },
+      "screenshot": "web-screens/Select.png",
+      "dom": {
+        "text": "언어\n한국어\n⌄",
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "role": "combobox",
+            "name": "한국어⌄",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": "false"
+          },
+          {
+            "tag": "INPUT",
+            "role": null,
+            "name": "",
+            "type": "hidden",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Combobox",
+      "storyId": "components-inputs--combobox",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Combobox-action.png"
+      },
+      "screenshot": "web-screens/Combobox.png",
+      "dom": {
+        "text": "도시\n⌄",
+        "controls": [
+          {
+            "tag": "INPUT",
+            "role": "combobox",
+            "name": "",
+            "type": null,
+            "disabled": false,
+            "checked": null,
+            "expanded": "false"
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "DatePicker",
+      "storyId": "components-inputs--date-picker",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/DatePicker-action.png"
+      },
+      "screenshot": "web-screens/DatePicker.png",
+      "dom": {
+        "text": "관람일\n▣\n날짜를 선택하세요",
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "▣날짜를 선택하세요",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": "false"
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "FilePicker",
+      "storyId": "components-inputs--file-picker",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/FilePicker-action.png"
+      },
+      "screenshot": "web-screens/FilePicker.png",
+      "dom": {
+        "text": "첨부 이미지\n이미지를 여기에 놓으세요\n파일 선택\nPNG 또는 JPG, 최대 4개",
+        "controls": [
+          {
+            "tag": "INPUT",
+            "role": null,
+            "name": "",
+            "type": "file",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "파일 선택",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Form",
+      "storyId": "components-inputs--form",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Form-action.png"
+      },
+      "screenshot": "web-screens/Form.png",
+      "dom": {
+        "text": "담당자\n×\n저장",
+        "controls": [
+          {
+            "tag": "INPUT",
+            "role": null,
+            "name": "",
+            "type": "search",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "담당자 지우기",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "저장",
+            "type": "submit",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Agreement",
+      "storyId": "components-inputs--agreement",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Agreement-action.png"
+      },
+      "screenshot": "web-screens/Agreement.png",
+      "dom": {
+        "text": "가입\n\n기록을 시작할까요\n\n이메일과 약관 동의만 있으면 돼요.\n\n이메일\n전체 동의하기\n서비스 이용약관\n(필수)\n전문 보기\n개인정보 처리방침\n(필수)\n전문 보기\n만 14세 이상입니다\n(필수)\n마케팅 정보 수신\n(선택)\n\n새 소식과 이벤트를 알려드려요. 언제든 끌 수 있어요.\n\n전문 보기\n가입하고 시작하기",
+        "controls": [
+          {
+            "tag": "INPUT",
+            "role": null,
+            "name": "",
+            "type": null,
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "group",
+            "name": "가입 약관 동의",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "checkbox",
+            "name": "전체 동의하기",
+            "type": "button",
+            "disabled": false,
+            "checked": "false",
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "checkbox",
+            "name": "서비스 이용약관(필수)",
+            "type": "button",
+            "disabled": false,
+            "checked": "false",
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "checkbox",
+            "name": "개인정보 처리방침(필수)",
+            "type": "button",
+            "disabled": false,
+            "checked": "false",
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "checkbox",
+            "name": "만 14세 이상입니다(필수)",
+            "type": "button",
+            "disabled": false,
+            "checked": "false",
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "checkbox",
+            "name": "마케팅 정보 수신(선택)",
+            "type": "button",
+            "disabled": false,
+            "checked": "false",
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "전문 보기",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "가입하고 시작하기",
+            "type": "button",
+            "disabled": true,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "ToggleGroup",
+      "storyId": "components-inputs--toggle-group",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/ToggleGroup-action.png"
+      },
+      "screenshot": "web-screens/ToggleGroup.png",
+      "dom": {
+        "text": "여러 개를 함께 켜기\n하나만 고르는 자리는 SegmentedControl이 맡습니다.\n굵게\n기울임\n밑줄\n취소선\n\nbold\n\n사진 있음\n긴 글\n즐겨찾기",
+        "controls": [
+          {
+            "tag": "DIV",
+            "role": "group",
+            "name": "글자 꾸미기",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "굵게",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "기울임",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "밑줄",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "취소선",
+            "type": "button",
+            "disabled": true,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "P",
+            "role": "status",
+            "name": "bold",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "group",
+            "name": "기록 필터",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "사진 있음",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "긴 글",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "즐겨찾기",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "TagsInput",
+      "storyId": "components-inputs--tags-input",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/TagsInput-action.png"
+      },
+      "screenshot": "web-screens/TagsInput.png",
+      "dom": {
+        "text": "태그로 모아두기\n목록에 없는 말도 직접 만들 수 있어요.\n태그\n산책\n×\n\nEnter로 추가하고, 빈 칸에서 지우기를 두 번 누르면 마지막 태그가 지워져요.",
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "산책 지우기",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "INPUT",
+            "role": null,
+            "name": "",
+            "type": "text",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "DateRangePicker",
+      "storyId": "components-inputs--date-range-picker",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/DateRangePicker-action.png"
+      },
+      "screenshot": "web-screens/DateRangePicker.png",
+      "dom": {
+        "text": "기간으로 골라보기\n시작일을 누르고 종료일을 누르면 돼요.\n2026년 9월\n일\n월\n화\n수\n목\n금\n토\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n22\n23\n24\n25\n26\n27\n28\n29\n30\n\n기간을 골라 주세요",
+        "controls": [
+          {
+            "tag": "DIV",
+            "role": "grid",
+            "name": "일월화수목금토123456789101112131415161718192021222324252627282930",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "row",
+            "name": "일월화수목금토",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "SPAN",
+            "role": "columnheader",
+            "name": "일",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "SPAN",
+            "role": "columnheader",
+            "name": "월",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "SPAN",
+            "role": "columnheader",
+            "name": "화",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "SPAN",
+            "role": "columnheader",
+            "name": "수",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "SPAN",
+            "role": "columnheader",
+            "name": "목",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "SPAN",
+            "role": "columnheader",
+            "name": "금",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "SPAN",
+            "role": "columnheader",
+            "name": "토",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "row",
+            "name": "12345",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "SPAN",
+            "role": "gridcell",
+            "name": "",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "SPAN",
+            "role": "gridcell",
+            "name": "",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-01",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-02",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-03",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-04",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-05",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "row",
+            "name": "6789101112",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-06",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-07",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-08",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-09",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-10",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-11",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-12",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "row",
+            "name": "13141516171819",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-13",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-14",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-15",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-16",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-17",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-18",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-19",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "row",
+            "name": "20212223242526",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-20",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-21",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-22",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-23",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-24",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-25",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-26",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "row",
+            "name": "27282930",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-27",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-28",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-29",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-30",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "SPAN",
+            "role": "gridcell",
+            "name": "",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "SPAN",
+            "role": "gridcell",
+            "name": "",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "SPAN",
+            "role": "gridcell",
+            "name": "",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "P",
+            "role": "status",
+            "name": "기간을 골라 주세요",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Mentions",
+      "storyId": "components-inputs--mentions",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Mentions-action.png"
+      },
+      "screenshot": "web-screens/Mentions.png",
+      "dom": {
+        "text": "함께한 사람을 적어요\n@를 입력하면 이름을 골라 넣을 수 있어요.\n오늘의 기록\n이름 앞에 @를 붙이면 후보가 나와요.\n기록 저장하기\n아직 저장한 기록이 없어요\n적고 나서 저장하면 여기에 남아요.",
+        "controls": [
+          {
+            "tag": "TEXTAREA",
+            "role": "combobox",
+            "name": "",
+            "type": null,
+            "disabled": false,
+            "checked": null,
+            "expanded": "false"
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "기록 저장하기",
+            "type": "button",
+            "disabled": true,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "SECTION",
+            "role": "status",
+            "name": "아직 저장한 기록이 없어요적고 나서 저장하면 여기에 남아요.",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "TransferList",
+      "storyId": "components-inputs--transfer-list",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/TransferList-action.png"
+      },
+      "screenshot": "web-screens/TransferList.png",
+      "dom": {
+        "text": "모아볼 기록 고르기\n담고 싶은 기록을 오른쪽으로 옮겨요.\n전체 기록\n느리게 걸었던 오후\n함께 먹은 저녁\n비 오던 아침\n잠긴 기록\n담기 →\n← 빼기\n모아둔 기록\n창밖으로 본 풍경",
+        "controls": [
+          {
+            "tag": "DIV",
+            "role": "group",
+            "name": "전체 기록",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "checkbox",
+            "name": "전체 기록 모두 선택",
+            "type": "button",
+            "disabled": false,
+            "checked": "false",
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "listbox",
+            "name": "전체 기록",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "option",
+            "name": "느리게 걸었던 오후",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "option",
+            "name": "함께 먹은 저녁",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "option",
+            "name": "비 오던 아침",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "option",
+            "name": "잠긴 기록",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "담기 →",
+            "type": "button",
+            "disabled": true,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "← 빼기",
+            "type": "button",
+            "disabled": true,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "group",
+            "name": "모아둔 기록",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "checkbox",
+            "name": "모아둔 기록 모두 선택",
+            "type": "button",
+            "disabled": false,
+            "checked": "false",
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "listbox",
+            "name": "모아둔 기록",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "option",
+            "name": "창밖으로 본 풍경",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "P",
+            "role": "status",
+            "name": "",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Tabs",
+      "storyId": "components-navigation--tabs",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Tabs-action.png"
+      },
+      "screenshot": "web-screens/Tabs.png",
+      "dom": {
+        "text": "첫 번째\n두 번째\n첫 번째 패널 내용",
+        "controls": [
+          {
+            "tag": "DIV",
+            "role": "tablist",
+            "name": "선수 정보",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "tab",
+            "name": "첫 번째",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "tab",
+            "name": "두 번째",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "tabpanel",
+            "name": "첫 번째 패널 내용",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "TopBar",
+      "storyId": "components-navigation--top-bar",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/TopBar.png",
+      "dom": {
+        "text": "알림 설정\n완료",
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "뒤로",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "완료",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Sidebar",
+      "storyId": "components-navigation--sidebar",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Sidebar-action.png"
+      },
+      "screenshot": "web-screens/Sidebar.png",
+      "dom": {
+        "text": "본문 바로가기\n«\n\n기록\n\n내\n내 기록\n보\n보관함\n3\n휴\n휴지통\n\n설정\n\n프\n프로필\n결\n결제\n내 기록\n\n왼쪽 메뉴에서 다른 화면으로 갈 수 있어요.\n\n현재 화면: records",
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "메뉴 접기",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": "true"
+          },
+          {
+            "tag": "DIV",
+            "role": "group",
+            "name": "기록",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "group",
+            "name": "설정",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "BottomNavigation",
+      "storyId": "components-navigation--bottom-navigation",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/BottomNavigation-action.png"
+      },
+      "screenshot": "web-screens/BottomNavigation.png",
+      "dom": {
+        "text": "홈\n프로필",
+        "controls": []
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Breadcrumb",
+      "storyId": "components-navigation--breadcrumb",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "semantic-pass",
+        "evidence": "web-screens/Breadcrumb-semantic.png"
+      },
+      "screenshot": "web-screens/Breadcrumb.png",
+      "dom": {
+        "text": "전체 보관함\n›\n산책 기록\n걸었던 날을 모아봤어요\n산책 기록 125개\n\n1–5번째 기록\n\n1번째 산책 기록\n걷다가 만난 풍경을 담았어요.\n2번째 산책 기록\n걷다가 만난 풍경을 담았어요.\n3번째 산책 기록\n걷다가 만난 풍경을 담았어요.\n4번째 산책 기록\n걷다가 만난 풍경을 담았어요.\n5번째 산책 기록\n걷다가 만난 풍경을 담았어요.\n‹\n1\n2\n…\n25\n›",
+        "controls": [
+          {
+            "tag": "P",
+            "role": "status",
+            "name": "1–5번째 기록",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "list",
+            "name": "산책 기록 목록",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "listitem",
+            "name": "1번째 산책 기록걷다가 만난 풍경을 담았어요.",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "listitem",
+            "name": "2번째 산책 기록걷다가 만난 풍경을 담았어요.",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "listitem",
+            "name": "3번째 산책 기록걷다가 만난 풍경을 담았어요.",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "listitem",
+            "name": "4번째 산책 기록걷다가 만난 풍경을 담았어요.",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "listitem",
+            "name": "5번째 산책 기록걷다가 만난 풍경을 담았어요.",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "이전 페이지",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "25페이지 중 1페이지, 현재 페이지",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "25페이지 중 2페이지로 이동",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "25페이지 중 25페이지로 이동",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "다음 페이지",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Pagination",
+      "storyId": "components-navigation--pagination",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Pagination-action.png"
+      },
+      "screenshot": "web-screens/Pagination.png",
+      "dom": {
+        "text": "전체 보관함\n›\n산책 기록\n걸었던 날을 모아봤어요\n산책 기록 125개\n\n1–5번째 기록\n\n1번째 산책 기록\n걷다가 만난 풍경을 담았어요.\n2번째 산책 기록\n걷다가 만난 풍경을 담았어요.\n3번째 산책 기록\n걷다가 만난 풍경을 담았어요.\n4번째 산책 기록\n걷다가 만난 풍경을 담았어요.\n5번째 산책 기록\n걷다가 만난 풍경을 담았어요.\n‹\n1\n2\n…\n25\n›",
+        "controls": [
+          {
+            "tag": "P",
+            "role": "status",
+            "name": "1–5번째 기록",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "list",
+            "name": "산책 기록 목록",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "listitem",
+            "name": "1번째 산책 기록걷다가 만난 풍경을 담았어요.",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "listitem",
+            "name": "2번째 산책 기록걷다가 만난 풍경을 담았어요.",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "listitem",
+            "name": "3번째 산책 기록걷다가 만난 풍경을 담았어요.",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "listitem",
+            "name": "4번째 산책 기록걷다가 만난 풍경을 담았어요.",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "listitem",
+            "name": "5번째 산책 기록걷다가 만난 풍경을 담았어요.",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "이전 페이지",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "25페이지 중 1페이지, 현재 페이지",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "25페이지 중 2페이지로 이동",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "25페이지 중 25페이지로 이동",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "다음 페이지",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "LoadMore",
+      "storyId": "components-navigation--load-more",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/LoadMore-action.png"
+      },
+      "screenshot": "web-screens/LoadMore.png",
+      "dom": {
+        "text": "더 보기\n추가 항목을 불러왔어요",
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "더 보기",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "SPAN",
+            "role": "status",
+            "name": "추가 항목을 불러왔어요",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Steps",
+      "storyId": "components-navigation--steps",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/Steps.png",
+      "dom": {
+        "text": "✓\n계정\n완료\n2\n프로필\n현재\n3\n확인\n예정",
+        "controls": []
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Menu",
+      "storyId": "components-navigation--menu",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Menu-action.png"
+      },
+      "screenshot": "web-screens/Menu.png",
+      "dom": {
+        "text": "작업 열기",
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "작업 열기",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": "false"
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "ContextMenu",
+      "storyId": "components-navigation--context-menu",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/ContextMenu-action.png"
+      },
+      "screenshot": "web-screens/ContextMenu.png",
+      "dom": {
+        "text": "아래 영역에서 우클릭하거나, 초점을 준 뒤 Shift+F10을 누르세요.\n2026년 9월 18일 기록",
+        "controls": []
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Menubar",
+      "storyId": "components-navigation--menubar",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Menubar-action.png"
+      },
+      "screenshot": "web-screens/Menubar.png",
+      "dom": {
+        "text": "파일\n편집\n도움말\n메뉴를 연 뒤 ←/→로 옆 메뉴로 넘어가 보세요. 비활성 메뉴는 건너뜁니다.",
+        "controls": [
+          {
+            "tag": "DIV",
+            "role": "menubar",
+            "name": "주 메뉴",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "menuitem",
+            "name": "파일",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": "false"
+          },
+          {
+            "tag": "BUTTON",
+            "role": "menuitem",
+            "name": "편집",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": "false"
+          },
+          {
+            "tag": "BUTTON",
+            "role": "menuitem",
+            "name": "도움말",
+            "type": "button",
+            "disabled": true,
+            "checked": null,
+            "expanded": "false"
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Anchor",
+      "storyId": "components-navigation--anchor",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "semantic-pass",
+        "evidence": "web-screens/Anchor-semantic.png"
+      },
+      "screenshot": "web-screens/Anchor.png",
+      "dom": {
+        "text": "기록을 오래 이어가는 방법\n궁금한 부분부터 읽어보세요.\n작게 시작해요\n나에게 맞게 모아요\n다시 돌아봐요\n작게 시작해요\n\n오늘 기억하고 싶은 순간 하나를 골라보세요. 긴 글을 쓸 필요는 없어요.\n\n눈에 들어온 풍경이나 들었던 말처럼 작은 장면이면 충분해요.\n\n기록을 남길 시간을 정해두면 하루를 돌아보기가 조금 더 쉬워져요.\n\n나에게 맞게 모아요\n\n함께 보고 싶은 기록에 같은 주제를 붙여보세요. 산책, 여행, 식사처럼 편한 이름을 쓰면 돼요.\n\n제목을 바꿔도 기록의 내용은 그대로 남아요. 나중에 찾기 좋은 이름으로 다듬어보세요.\n\n분류가 떠오르지 않으면 먼저 기록만 남겨도 괜찮아요.\n\n다시 돌아봐요\n\n한 주가 끝나면 가장 마음에 남는 기록을 골라보세요.\n\n처음에는 지나쳤던 기쁨을 다시 발견할 수도 있어요.",
+        "controls": [
+          {
+            "tag": "DIV",
+            "role": "region",
+            "name": "기록 가이드 본문",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "UploadItem",
+      "storyId": "components-data-display--upload-item",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/UploadItem-action.png"
+      },
+      "screenshot": "web-screens/UploadItem.png",
+      "dom": {
+        "text": "profile-photo.png\n1.2 MB\n업로드 중\n업로드 중\n1.2 MB 중 64% 업로드\n취소",
+        "controls": [
+          {
+            "tag": "DIV",
+            "role": "group",
+            "name": "profile-photo.png",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "취소",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Avatar",
+      "storyId": "components-data-display--avatar",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/Avatar.png",
+      "dom": {
+        "text": "홍",
+        "controls": [
+          {
+            "tag": "SPAN",
+            "role": "img",
+            "name": "홍길동",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Badge",
+      "storyId": "components-data-display--badge",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/Badge.png",
+      "dom": {
+        "text": "진행 중\n완료",
+        "controls": []
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "CounterBadge",
+      "storyId": "components-data-display--counter-badge",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "semantic-pass",
+        "evidence": "web-screens/CounterBadge-semantic.png"
+      },
+      "screenshot": "web-screens/CounterBadge.png",
+      "dom": {
+        "text": "12",
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "알림 12개",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Card",
+      "storyId": "components-data-display--card",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/Card.png",
+      "dom": {
+        "text": "✨\nCard 제목\n\n계약이 보장하는 여백과 정렬로 긴 설명도 안정적으로 표시합니다.\n\n자세히",
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "자세히",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "List",
+      "storyId": "components-data-display--list",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/List.png",
+      "dom": {
+        "text": "홍길동\n내야수\n김하늘\n외야수",
+        "controls": [
+          {
+            "tag": "DIV",
+            "role": "list",
+            "name": "선수 목록",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "listitem",
+            "name": "홍길동내야수",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "listitem",
+            "name": "김하늘외야수",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "ListRow",
+      "storyId": "components-data-display--list-row",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/ListRow-action.png"
+      },
+      "screenshot": "web-screens/ListRow.png",
+      "dom": {
+        "text": "홍\n홍길동\n선수 상세 보기\n›",
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "홍홍길동선수 상세 보기›",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "VirtualList",
+      "storyId": "components-data-display--virtual-list",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/VirtualList-action.png"
+      },
+      "screenshot": "web-screens/VirtualList.png",
+      "dom": {
+        "text": "항목 1\n항목 2\n항목 3\n항목 4\n항목 5\n항목 6\n항목 7\n항목 8\n항목 9\n항목 10",
+        "controls": [
+          {
+            "tag": "DIV",
+            "role": "list",
+            "name": "가상화 예제 1000개 항목",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "listitem",
+            "name": "항목 1",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "listitem",
+            "name": "항목 2",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "listitem",
+            "name": "항목 3",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "listitem",
+            "name": "항목 4",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "listitem",
+            "name": "항목 5",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "listitem",
+            "name": "항목 6",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "listitem",
+            "name": "항목 7",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "listitem",
+            "name": "항목 8",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "listitem",
+            "name": "항목 9",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "listitem",
+            "name": "항목 10",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Accordion",
+      "storyId": "components-data-display--accordion",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Accordion-action.png"
+      },
+      "screenshot": "web-screens/Accordion.png",
+      "dom": {
+        "text": "언제 도착하나요?\n+",
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "언제 도착하나요?+",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": "false"
+          },
+          {
+            "tag": "DIV",
+            "role": "region",
+            "name": "내일 도착할 예정입니다.",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Collapsible",
+      "storyId": "components-data-display--collapsible",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Collapsible-action.png"
+      },
+      "screenshot": "web-screens/Collapsible.png",
+      "dom": {
+        "text": "배송 정보 더 보기\n▾\n주문 다음 날 도착합니다. 도착 전날 알림을 보내드려요.\n환불 규정 더 보기\n▸",
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "배송 정보 더 보기▾",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": "true"
+          },
+          {
+            "tag": "DIV",
+            "role": "region",
+            "name": "주문 다음 날 도착합니다. 도착 전날 알림을 보내드려요.",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "환불 규정 더 보기▸",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": "false"
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Asset",
+      "storyId": "components-data-display--asset",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/Asset.png",
+      "dom": {
+        "text": "◇\n🌲\n🦊\n▶\n🌙\n🌞\n🎬\n▶",
+        "controls": [
+          {
+            "tag": "DIV",
+            "role": "group",
+            "name": "오늘 도착한 편지들",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "presentation",
+            "name": "◇",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "img",
+            "name": "숲 사진",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "img",
+            "name": "달리는 여우",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "img",
+            "name": "작은 원형",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "img",
+            "name": "중간 정사각",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "img",
+            "name": "소개 영상",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Statistic",
+      "storyId": "components-data-display--statistic",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/Statistic.png",
+      "dom": {
+        "text": "오늘 주문\n128\n↑\n어제보다 12% 증가",
+        "controls": []
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Timeline",
+      "storyId": "components-data-display--timeline",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/Timeline.png",
+      "dom": {
+        "text": "아이디어 생성\n10:00\n실행 완료\n10:12\n결과를 저장했습니다.",
+        "controls": []
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "DataTable",
+      "storyId": "components-data-display--data-table",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/DataTable-action.png"
+      },
+      "screenshot": "web-screens/DataTable.png",
+      "dom": {
+        "text": "기록 한눈에 보기\n정렬하고 골라서 한 번에 정리해요.\n\t\n제목\n↕\n\t\n날짜\n↕\n\t장소\n\n\t느리게 걸었던 오후\t9월 12일\t골목\n\n\t함께 먹은 저녁\t9월 14일\t집\n\n\t창밖으로 본 풍경\t9월 15일\t사무실\n\n고른 기록이 없어요",
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "role": "checkbox",
+            "name": "모든 기록 선택",
+            "type": "button",
+            "disabled": false,
+            "checked": "false",
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "제목 정렬",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "날짜 정렬",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "checkbox",
+            "name": "느리게 걸었던 오후 선택",
+            "type": "button",
+            "disabled": false,
+            "checked": "false",
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "checkbox",
+            "name": "함께 먹은 저녁 선택",
+            "type": "button",
+            "disabled": false,
+            "checked": "false",
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "checkbox",
+            "name": "창밖으로 본 풍경 선택",
+            "type": "button",
+            "disabled": false,
+            "checked": "false",
+            "expanded": null
+          },
+          {
+            "tag": "P",
+            "role": "status",
+            "name": "고른 기록이 없어요",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Tree",
+      "storyId": "components-data-display--tree",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Tree-action.png"
+      },
+      "screenshot": "web-screens/Tree.png",
+      "dom": {
+        "text": "폴더로 찾아보기\n연도와 달을 펼쳐 기록을 골라보세요.\n▾\n2026년\n▸\n9월\n▸\n10월\n▸\n보관함\n\n아직 고르지 않았어요",
+        "controls": [
+          {
+            "tag": "DIV",
+            "role": "tree",
+            "name": "기록 폴더",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "treeitem",
+            "name": "1단계 2개 중 1번째, 2026년, 펼쳐짐",
+            "type": null,
+            "checked": null,
+            "expanded": "true"
+          },
+          {
+            "tag": "DIV",
+            "role": "treeitem",
+            "name": "2단계 2개 중 1번째, 9월, 접힘",
+            "type": null,
+            "checked": null,
+            "expanded": "false"
+          },
+          {
+            "tag": "DIV",
+            "role": "treeitem",
+            "name": "2단계 2개 중 2번째, 10월, 접힘",
+            "type": null,
+            "checked": null,
+            "expanded": "false"
+          },
+          {
+            "tag": "DIV",
+            "role": "treeitem",
+            "name": "1단계 2개 중 2번째, 보관함, 접힘",
+            "type": null,
+            "checked": null,
+            "expanded": "false"
+          },
+          {
+            "tag": "P",
+            "role": "status",
+            "name": "아직 고르지 않았어요",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Calendar",
+      "storyId": "components-data-display--calendar",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Calendar-action.png"
+      },
+      "screenshot": "web-screens/Calendar.png",
+      "dom": {
+        "text": "날짜로 돌아봐요\n기록을 남긴 날을 골라보세요.\n‹\n2026년 9월\n›\n일\n월\n화\n수\n목\n금\n토\n1\n2\n3\n·\n4\n5\n6\n·\n7\n8\n9\n·\n10\n11\n12\n·\n13\n14\n15\n·\n16\n17\n18\n·\n19\n20\n21\n·\n22\n23\n24\n·\n25\n26\n27\n·\n28\n29\n30\n·\n2026-09-16\n선택한 날짜의 기록을 여기에서 확인해요.",
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "이전 달",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "다음 달",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "grid",
+            "name": "일월화수목금토123·456·789·101112·131415·161718·192021·222324·252627·282930·",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "row",
+            "name": "일월화수목금토",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "SPAN",
+            "role": "columnheader",
+            "name": "일",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "SPAN",
+            "role": "columnheader",
+            "name": "월",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "SPAN",
+            "role": "columnheader",
+            "name": "화",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "SPAN",
+            "role": "columnheader",
+            "name": "수",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "SPAN",
+            "role": "columnheader",
+            "name": "목",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "SPAN",
+            "role": "columnheader",
+            "name": "금",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "SPAN",
+            "role": "columnheader",
+            "name": "토",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "row",
+            "name": "123·45",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "SPAN",
+            "role": "gridcell",
+            "name": "",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "SPAN",
+            "role": "gridcell",
+            "name": "",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-01",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-02",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-03, 기록 있음",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-04",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-05",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "row",
+            "name": "6·789·101112·",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-06, 기록 있음",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-07",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-08",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-09, 기록 있음",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-10",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-11",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-12, 기록 있음",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "row",
+            "name": "131415·161718·19",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-13",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-14",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-15, 기록 있음",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-16, 오늘",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-17",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-18, 기록 있음",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-19",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "row",
+            "name": "2021·222324·2526",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-20, 선택 불가",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-21, 기록 있음",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-22",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-23",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-24, 기록 있음",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-25",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-26",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "row",
+            "name": "27·282930·",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-27, 기록 있음",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-28",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-29",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": "gridcell",
+            "name": "2026-09-30, 기록 있음",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "SPAN",
+            "role": "gridcell",
+            "name": "",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "SPAN",
+            "role": "gridcell",
+            "name": "",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "SPAN",
+            "role": "gridcell",
+            "name": "",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "list",
+            "name": "선택한 날의 기록",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "listitem",
+            "name": "2026-09-16선택한 날짜의 기록을 여기에서 확인해요.",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Carousel",
+      "storyId": "components-data-display--carousel",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Carousel-action.png"
+      },
+      "screenshot": "web-screens/Carousel.png",
+      "dom": {
+        "text": "좋아하는 소식만 골라요\n이전\n다음",
+        "controls": [
+          {
+            "tag": "DIV",
+            "role": "region",
+            "name": "이번 주 소식",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "group",
+            "name": "1/2 좋아하는 소식만 골라요",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "group",
+            "name": "2/2 언제든 설정을 바꿀 수 있어요",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "group",
+            "name": "소식 이동",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "이전",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "1/2 좋아하는 소식만 골라요",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "2/2 언제든 설정을 바꿀 수 있어요",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "다음",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "DescriptionList",
+      "storyId": "components-data-display--description-list",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/DescriptionList.png",
+      "dom": {
+        "text": "상태\n준비됨\n담당\n홍길동",
+        "controls": []
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Image",
+      "storyId": "components-data-display--image",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "semantic-pass",
+        "evidence": "web-screens/Image-semantic.png"
+      },
+      "screenshot": "web-screens/Image.png",
+      "dom": {
+        "text": "",
+        "controls": []
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "QRCode",
+      "storyId": "components-data-display--qr-code",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "semantic-pass",
+        "evidence": "web-screens/QRCode-semantic.png"
+      },
+      "screenshot": "web-screens/QRCode.png",
+      "dom": {
+        "text": "공유 페이지 열기",
+        "controls": [
+          {
+            "tag": "svg",
+            "role": "img",
+            "name": "공유 페이지 QR 코드",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Tag",
+      "storyId": "components-data-display--tag",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/Tag.png",
+      "dom": {
+        "text": "내야수\n등록 선수\n2026 시즌",
+        "controls": []
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "EmptyState",
+      "storyId": "components-feedback--empty-state",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/EmptyState.png",
+      "dom": {
+        "text": "◇\n아직 항목이 없어요\n새 항목을 추가하면 여기에 표시됩니다.\n추가하기",
+        "controls": [
+          {
+            "tag": "DIV",
+            "role": "status",
+            "name": "◇아직 항목이 없어요새 항목을 추가하면 여기에 표시됩니다.추가하기",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "추가하기",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Notice",
+      "storyId": "components-feedback--notice",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/Notice.png",
+      "dom": {
+        "text": "저장 전 확인\n입력한 내용을 다시 확인해 주세요.",
+        "controls": [
+          {
+            "tag": "SECTION",
+            "role": "status",
+            "name": "저장 전 확인입력한 내용을 다시 확인해 주세요.",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Progress",
+      "storyId": "components-feedback--progress",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/Progress.png",
+      "dom": {
+        "text": "업로드\n64%",
+        "controls": []
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Spinner",
+      "storyId": "components-feedback--spinner",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/Spinner.png",
+      "dom": {
+        "text": "불러오는 중",
+        "controls": [
+          {
+            "tag": "SPAN",
+            "role": "status",
+            "name": "불러오는 중",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Skeleton",
+      "storyId": "components-feedback--skeleton",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/Skeleton.png",
+      "dom": {
+        "text": "",
+        "controls": []
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Result",
+      "storyId": "components-feedback--result",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Result-action.png"
+      },
+      "screenshot": "web-screens/Result.png",
+      "dom": {
+        "text": "저장했어요\n\n변경 사항이 모든 기기에 반영되었습니다.\n\n확인",
+        "controls": [
+          {
+            "tag": "DIV",
+            "role": "status",
+            "name": "저장했어요변경 사항이 모든 기기에 반영되었습니다.확인",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "확인",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "BottomInfo",
+      "storyId": "components-feedback--bottom-info",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "not-applicable",
+        "reason": "Presentation/layout component; rendered content, geometry and responsive layout reviewed. Consumer-supplied action slots are not separate product flows."
+      },
+      "screenshot": "web-screens/BottomInfo.png",
+      "dom": {
+        "text": "행동 아래의 조건\n상태를 알리는 Notice와 다른 자리입니다.\n가입하고 시작하기\n\n가입하면 이용약관과 개인정보 처리방침에 동의하는 것으로 봅니다.\n\n결제 수수료는 결제 시점에 확정됩니다.\n환불은 결제일로부터 7일 이내에 가능합니다.",
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "가입하고 시작하기",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Toast",
+      "storyId": "components-feedback--toast",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Toast-action.png"
+      },
+      "screenshot": "web-screens/Toast.png",
+      "dom": {
+        "text": "저장했어요. 변경 사항이 반영되었습니다.\n✓\n저장했어요\n변경 사항이 반영되었습니다.\n×",
+        "controls": [
+          {
+            "tag": "DIV",
+            "role": "group",
+            "name": "저장했어요. 변경 사항이 반영되었습니다.✓저장했어요변경 사항이 반영되었습니다.×",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "SPAN",
+            "role": "status",
+            "name": "저장했어요. 변경 사항이 반영되었습니다.",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "닫기",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "ThinkingOrb",
+      "storyId": "components-feedback--thinking-orb",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "lifecycle-pass",
+        "evidence": "web-screens/ThinkingOrb-composed.png"
+      },
+      "screenshot": "web-screens/ThinkingOrb.png",
+      "dom": {
+        "text": "검색 중",
+        "controls": [
+          {
+            "tag": "SPAN",
+            "role": "status",
+            "name": "검색 중",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Tour",
+      "storyId": "components-overlays--tour",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Tour-action.png"
+      },
+      "screenshot": "web-screens/Tour.png",
+      "dom": {
+        "text": "처음 오신 분께\n어디에 무엇이 있는지 한 바퀴 돌아봐요.\n새 기록 쓰기\n느리게 걸었던 오후\n골목을 한 바퀴 돌았어요\n함께 먹은 저녁\n국이 좀 짰지만 좋았어요\n알림 설정\n둘러보기 시작",
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "새 기록 쓰기",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "list",
+            "name": "내 기록",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "listitem",
+            "name": "느리게 걸었던 오후골목을 한 바퀴 돌았어요",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "listitem",
+            "name": "함께 먹은 저녁국이 좀 짰지만 좋았어요",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "알림 설정",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "둘러보기 시작",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": "false"
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Dialog",
+      "storyId": "components-overlays--dialog",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Dialog-action.png"
+      },
+      "screenshot": "web-screens/Dialog.png",
+      "dom": {
+        "text": "Dialog 열기",
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "Dialog 열기",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": "false"
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "AlertDialog",
+      "storyId": "components-overlays--alert-dialog",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/AlertDialog-action.png"
+      },
+      "screenshot": "web-screens/AlertDialog.png",
+      "dom": {
+        "text": "AlertDialog 열기설명 AlertDialog 열기",
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "AlertDialog 열기",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": "false"
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "설명 AlertDialog 열기",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": "false"
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Sheet",
+      "storyId": "components-overlays--sheet",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Sheet-action.png"
+      },
+      "screenshot": "web-screens/Sheet.png",
+      "dom": {
+        "text": "Sheet 열기",
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "Sheet 열기",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": "false"
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "SidePanel",
+      "storyId": "components-overlays--side-panel",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/SidePanel-action.png"
+      },
+      "screenshot": "web-screens/SidePanel.png",
+      "dom": {
+        "text": "기록 다듬기\n목록에서 기록을 고르면 옆에서 바로 고칠 수 있어요.\n느리게 걸었던 오후\n골목을 한 바퀴 돌았어요\n고치기\n함께 먹은 저녁\n국이 좀 짰지만 좋았어요\n고치기\n창밖으로 본 풍경\n구름이 낮게 지나갔어요\n고치기",
+        "controls": [
+          {
+            "tag": "DIV",
+            "role": "list",
+            "name": "내 기록",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "listitem",
+            "name": "느리게 걸었던 오후골목을 한 바퀴 돌았어요고치기",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "고치기",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "listitem",
+            "name": "함께 먹은 저녁국이 좀 짰지만 좋았어요고치기",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "고치기",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "listitem",
+            "name": "창밖으로 본 풍경구름이 낮게 지나갔어요고치기",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "고치기",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Popover",
+      "storyId": "components-overlays--popover",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Popover-action.png"
+      },
+      "screenshot": "web-screens/Popover.png",
+      "dom": {
+        "text": "다시 보고 싶은 순간\n제목과 즐겨찾기로 기록을 찾아보세요.\n필터\n\n기록 3개\n\n느리게 걸었던 오후\n즐겨찾기한 기록\n함께 먹은 저녁\n일상의 기록\n창밖으로 본 풍경\n즐겨찾기한 기록\n필터 초기화",
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "필터",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": "false"
+          },
+          {
+            "tag": "P",
+            "role": "status",
+            "name": "기록 3개",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "list",
+            "name": "찾은 기록",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "listitem",
+            "name": "느리게 걸었던 오후즐겨찾기한 기록",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "listitem",
+            "name": "함께 먹은 저녁일상의 기록",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "listitem",
+            "name": "창밖으로 본 풍경즐겨찾기한 기록",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "필터 초기화",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "Tooltip",
+      "storyId": "components-overlays--tooltip",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/Tooltip-action.png"
+      },
+      "screenshot": "web-screens/Tooltip.png",
+      "dom": {
+        "text": "도움말에 포커스하거나 가리키기",
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "도움말에 포커스하거나 가리키기",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "CommandPalette",
+      "storyId": "components-overlays--command-palette",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/CommandPalette-action.png"
+      },
+      "screenshot": "web-screens/CommandPalette.png",
+      "dom": {
+        "text": "빠르게 실행하기\n원하는 일을 검색해 바로 실행해요.\n명령 열기",
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "명령 열기",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": "false"
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "DesignSystemProvider",
+      "storyId": "components-infrastructure--design-system-provider",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "semantic-pass",
+        "evidence": "web-screens/DesignSystemProvider-semantic.png"
+      },
+      "screenshot": "web-screens/DesignSystemProvider.png",
+      "dom": {
+        "text": "Resolved environment + palette\nTheme\nlight\nDirection\nltr\nText scale\n1\nReduced motion\nfalse\ninfo: #6d28d9\nsuccess: #065f46\nwarning: #92400e\nattention: #9a3412",
+        "controls": []
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "SkipNav",
+      "storyId": "components-infrastructure--skip-nav",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "pass",
+        "evidence": "web-screens/SkipNav-action.png"
+      },
+      "screenshot": "web-screens/SkipNav.png",
+      "dom": {
+        "text": "본문 바로가기\n«\n\n기록\n\n내\n내 기록\n보\n보관함\n3\n휴\n휴지통\n\n설정\n\n프\n프로필\n결\n결제\n내 기록\n\n왼쪽 메뉴에서 다른 화면으로 갈 수 있어요.\n\n현재 화면: records",
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "메뉴 접기",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": "true"
+          },
+          {
+            "tag": "DIV",
+            "role": "group",
+            "name": "기록",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          },
+          {
+            "tag": "DIV",
+            "role": "group",
+            "name": "설정",
+            "type": null,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    },
+    {
+      "component": "VisuallyHidden",
+      "storyId": "components-infrastructure--visually-hidden",
+      "visualReview": "pass",
+      "interaction": {
+        "status": "semantic-pass",
+        "evidence": "web-screens/VisuallyHidden-semantic.png"
+      },
+      "screenshot": "web-screens/VisuallyHidden.png",
+      "dom": {
+        "text": "🔔\n읽지 않은 알림 3개\n추가 맥락은 화면에는 보이지 않고 접근성 트리에 남습니다.",
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "role": null,
+            "name": "🔔읽지 않은 알림 3개",
+            "type": "button",
+            "disabled": false,
+            "checked": null,
+            "expanded": null
+          }
+        ]
+      },
+      "compact": {
+        "viewport": 390,
+        "documentWidth": 390
+      },
+      "runtimeErrors": [],
+      "render": "pass",
+      "visualReviewMethod": "Inspected rendered screenshot in contact sheet; opened detail for calendar, overlays, text contrast and count badge.",
+      "responsiveReview": "pass"
+    }
+  ],
+  "completedAt": "2026-09-29T19:45:55.920561",
+  "browser": "Playwright Chromium, local Storybook static build, 1100x900 and 390x844",
+  "summary": {
+    "canonicalRendered": 100,
+    "canonicalVisuallyReviewed": 100,
+    "canonicalMajorActions": 60,
+    "semanticChecks": 8,
+    "extraStoryChecks": 9,
+    "inputVariants": 40,
+    "plannedExcluded": 8
+  },
+  "limits": [
+    "Chromium only; Safari/Firefox not covered.",
+    "No physical screen-reader session.",
+    "Dark/RTL/200% variants cover 20 input families, not the full cross-product of 100 components.",
+    "No native, store, production deployment or consumer-app claims."
+  ]
+}

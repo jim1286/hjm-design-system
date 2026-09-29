@@ -132,7 +132,7 @@ export const badgeRecipe = {
         neutral: {
             content: semanticColors.content.secondary,
             outlineContent: semanticColors.content.secondary,
-            background: semanticColors.surface.sunken,
+            background: semanticColors.canvas,
             border: null,
         },
         strong: {
@@ -150,13 +150,13 @@ export const badgeRecipe = {
             // cannot wear it: rows of static badges started reading as a filter
             // with one option switched on. The plate goes neutral and the brand
             // stays in the copy.
-            background: semanticColors.surface.sunken,
+            background: semanticColors.canvas,
             border: null,
         },
         info: {
             content: semanticColors.feedback.info.foreground,
             outlineContent: semanticColors.feedback.info.foreground,
-            background: semanticColors.feedback.info.badgeBackground,
+            background: semanticColors.canvas,
             border: semanticColors.feedback.info.border,
         },
         success: {
@@ -227,12 +227,12 @@ export const searchFieldRecipe = {
         },
     },
     colors: {
-        background: semanticColors.surface.default,
+        background: semanticColors.canvas,
         content: semanticColors.content.primary,
         placeholder: semanticColors.content.secondary,
         leading: semanticColors.content.decorative,
         clear: semanticColors.content.secondary,
-        border: semanticColors.content.secondary,
+        border: semanticColors.border.control,
         focus: focusIndicatorContract.color,
         invalid: semanticColors.border.danger,
     },
@@ -279,7 +279,7 @@ export const chipRecipe = {
     },
     states: {
         idle: {
-            background: semanticColors.surface.default,
+            background: semanticColors.canvas,
             content: semanticColors.content.secondary,
             // A resting chip wears the shared hairline, not a text-strength
             // outline. Drawing it in `content.secondary` made an unselected chip
@@ -288,7 +288,7 @@ export const chipRecipe = {
             border: semanticColors.border.default,
         },
         selected: {
-            background: semanticColors.surface.brand,
+            background: semanticColors.canvas,
             content: semanticColors.content.brand,
             border: semanticColors.border.focus,
         },
@@ -377,8 +377,8 @@ export const listRowRecipe = {
         textVariant: "caption",
     },
     states: {
-        pressedBackground: semanticColors.interaction.pressed,
-        selectedBackground: semanticColors.surface.brand,
+        pressedBackground: semanticColors.canvas,
+        selectedBackground: semanticColors.canvas,
         disabledOpacity: opacity.disabled,
     },
 };
@@ -401,7 +401,7 @@ export const accordionRecipe = {
     },
     divider: semanticColors.border.default,
     states: {
-        pressedBackground: semanticColors.interaction.pressed,
+        pressedBackground: semanticColors.canvas,
         focus: focusIndicatorContract,
         disabledOpacity: opacity.disabled,
     },
@@ -521,8 +521,8 @@ export const selectRecipe = {
         collisionPadding: spacing.xs,
     },
     density: {
-        compact: { ...collectionItemContract, minHeight: control.minTouchTarget },
-        comfortable: { ...collectionItemContract, minHeight: layout.rowHeight.singleLine },
+        compact: { ...collectionItemContract, selectedBackground: semanticColors.canvas, highlightedBackground: semanticColors.canvas, minHeight: control.minTouchTarget },
+        comfortable: { ...collectionItemContract, selectedBackground: semanticColors.canvas, highlightedBackground: semanticColors.canvas, minHeight: layout.rowHeight.singleLine },
     },
     sectionLabel: {
         color: semanticColors.content.secondary,
@@ -541,8 +541,8 @@ export const selectRecipe = {
         paddingVertical: spacing.sm,
     },
     states: {
-        hoverBackground: semanticColors.interaction.hover,
-        pressedBackground: semanticColors.interaction.pressed,
+        hoverBackground: semanticColors.canvas,
+        pressedBackground: semanticColors.canvas,
         focus: focusIndicatorContract,
         invalidBorder: semanticColors.border.danger,
         disabledOpacity: opacity.disabled,
@@ -612,13 +612,7 @@ export const segmentedControlRecipe = {
         largeTextLayout: "stacked",
         stackAtFontScale: largeTextThreshold,
     },
-    /**
-     * A recessed track with a raised white thumb. The fills used to be
-     * inverted — a white track with a canvas-coloured selected segment — so the
-     * chosen option read as the recessed, disabled-looking one. `surface.sunken`
-     * is too close to white to carry the step, so the track takes the canvas
-     * tone and a border keeps the control legible when it sits on that canvas.
-     */
+    // Track and selected segment share the canvas; the blue ring identifies the chosen option.
     container: {
         background: semanticColors.canvas,
         border: semanticColors.border.default,
@@ -646,16 +640,7 @@ export const segmentedControlRecipe = {
         gap: spacing.xxs,
         idleContent: semanticColors.content.secondary,
         fontWeight: fontWeight.semibold,
-        // "Selected" is the brand tint, not a plain raised plate — a raised
-        // white segment beside a selected brand-tinted chip spoke two different
-        // visual languages for the same state. `surface.brand` is also the one
-        // *opaque* brand role: a product author who tried a translucent wash of
-        // `primary` here instead (same idea, see
-        // `selectionControlRecipe.states.selectedBackground` below) found it
-        // changed value with whatever sat behind it — #E8EFFB on a white card,
-        // #DCE5F3 on the canvas — so the same "selected" read as three different
-        // colors. Using the opaque tint keeps it one color everywhere.
-        selectedBackground: semanticColors.surface.brand,
+        selectedBackground: semanticColors.canvas,
         selectedContent: semanticColors.content.brand,
         /**
          * The ring stays the selection signal so the control keeps a non-text
@@ -773,7 +758,7 @@ export const selectionControlRecipe = {
             labelColor: null,
         },
         card: {
-            background: semanticColors.surface.default,
+            background: semanticColors.canvas,
             border: semanticColors.border.default,
             borderWidth: stroke.default,
             radius: "md",
@@ -815,16 +800,11 @@ export const selectionControlRecipe = {
         checkedBackground: semanticColors.action.brand.background,
         checkedBorder: semanticColors.border.focus,
         indicator: semanticColors.action.brand.content,
-        // The brand tint is one opaque role, not a translucent wash. A product
-        // author found that a 10% wash of `primary` (the previous value here)
-        // changed value with whatever sat behind it — #E8EFFB on a white card,
-        // #DCE5F3 on the canvas — so the same "selected" read as three different
-        // colors. `surface.brand` is the one opaque fill (same fix, same reason,
-        // as `segmentedControlRecipe.item.selectedBackground` above).
-        selectedBackground: semanticColors.surface.brand,
+        // Keep the entire choice plate white; border and checked indicator carry selection.
+        selectedBackground: semanticColors.canvas,
         selectedBorder: semanticColors.border.focus,
-        hoverBackground: semanticColors.interaction.hover,
-        pressedBackground: semanticColors.interaction.pressed,
+        hoverBackground: semanticColors.canvas,
+        pressedBackground: semanticColors.canvas,
         invalidBorder: semanticColors.border.danger,
         focus: focusIndicatorContract,
         disabledOpacity: opacity.disabled,
@@ -961,8 +941,8 @@ export const bottomNavigationRecipe = {
         badgeAnchor: "inline-end",
     },
     states: {
-        hoverBackground: semanticColors.interaction.hover,
-        pressedBackground: semanticColors.interaction.pressed,
+        hoverBackground: semanticColors.canvas,
+        pressedBackground: semanticColors.canvas,
         focus: focusIndicatorContract,
         disabledOpacity: opacity.disabled,
         selectedNonColorEvidence: {
@@ -1012,7 +992,7 @@ export const tabsRecipe = {
     },
     indicatorHeight: stroke.strong,
     states: {
-        pressedBackground: semanticColors.interaction.pressed,
+        pressedBackground: semanticColors.canvas,
         focus: focusIndicatorContract,
         disabledOpacity: opacity.disabled,
     },
@@ -1031,7 +1011,7 @@ export const noticeRecipe = {
             // `warning`/`attention`/`danger` keep the tinted surface because a
             // product author confirmed those readings didn't have the same
             // conflict with a selection state.
-            background: semanticColors.surface.sunken,
+            background: semanticColors.canvas,
         },
     },
     radius: "md",
@@ -1049,7 +1029,7 @@ export const skeletonRecipe = {
     // 읽힌다. 전환 근거와 소비 측 migration은
     // .changeset/skeleton-pulse-by-default.md에 있다.
     defaults: { shape: "block", animated: true },
-    background: semanticColors.surface.sunken,
+    background: semanticColors.canvas,
     shapes: {
         block: { radius: "md", defaultHeight: spacing.xxl },
         text: { radius: "sm", defaultHeight: spacing.md },
@@ -1144,7 +1124,7 @@ export const avatarRecipe = {
     defaults: { size: "medium", shape: "circle" },
     sizes: { small: 32, medium: 40, large: 48, xlarge: 64 },
     shapes: { rounded: "md", circle: "full" },
-    background: semanticColors.surface.sunken,
+    background: semanticColors.canvas,
     content: semanticColors.content.secondary,
     border: semanticColors.border.default,
 };
@@ -1179,7 +1159,7 @@ export const statisticRecipe = {
     presentations: {
         plain: { background: null, border: null, borderWidth: 0, radius: "md" },
         surface: {
-            background: semanticColors.surface.default,
+            background: semanticColors.canvas,
             border: semanticColors.border.default,
             borderWidth: stroke.default,
             radius: "md",
@@ -1556,7 +1536,7 @@ export const bottomCtaRecipe = {
     // (one step up from canvas) instead of by shadow alone is how this
     // component builds the separation; `shadow` below is reserved for the one
     // case that still needs it — see its comment.
-    background: semanticColors.surface.default,
+    background: semanticColors.canvas,
     border: semanticColors.border.default,
     borderWidth: stroke.default,
     // The cut described above is the scroll viewport's edge, not a spacing

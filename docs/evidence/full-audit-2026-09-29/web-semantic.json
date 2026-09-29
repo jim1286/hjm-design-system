@@ -1,0 +1,42 @@
+[
+  {
+    "component": "Anchor",
+    "status": "pass",
+    "screenshot": "web-screens/Anchor-semantic.png"
+  },
+  {
+    "component": "Breadcrumb",
+    "status": "pass",
+    "screenshot": "web-screens/Breadcrumb-semantic.png"
+  },
+  {
+    "component": "QRCode",
+    "status": "pass",
+    "screenshot": "web-screens/QRCode-semantic.png"
+  },
+  {
+    "component": "Masonry",
+    "status": "pass",
+    "screenshot": "web-screens/Masonry-semantic.png"
+  },
+  {
+    "component": "CounterBadge",
+    "status": "pass",
+    "screenshot": "web-screens/CounterBadge-semantic.png"
+  },
+  {
+    "component": "Image",
+    "status": "pass",
+    "screenshot": "web-screens/Image-semantic.png"
+  },
+  {
+    "component": "VisuallyHidden",
+    "status": "pass",
+    "screenshot": "web-screens/VisuallyHidden-semantic.png"
+  },
+  {
+    "component": "DesignSystemProvider",
+    "status": "pass",
+    "screenshot": "web-screens/DesignSystemProvider-semantic.png"
+  }
+]

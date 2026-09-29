@@ -295,8 +295,6 @@ export const OtpField = forwardRef(function OtpField({ label, accessibilityLabel
                     fontWeight: fieldRecipe.label.fontWeight,
                 }, tone: "body", variant: fieldRecipe.label.textVariant, children: [visibleLabel, required ? " *" : ""] })) : null, _jsxs(View, { style: { gap: otpFieldRecipe.support.gap }, children: [_jsxs(View, { style: {
                             direction: "ltr",
-                            flexDirection: "row",
-                            gap: metrics.gap,
                             maxWidth: metrics.slotSize * length + metrics.gap * (length - 1),
                             position: "relative",
                             width: "100%",
@@ -310,36 +308,39 @@ export const OtpField = forwardRef(function OtpField({ label, accessibilityLabel
                                     bottom: 0,
                                     color: "transparent",
                                     left: 0,
-                                    opacity: 0.01,
+                                    // UIKit excludes views with opacity <= 0.01 from hit testing.
+                                    // Keep it behind opaque, pointer-transparent slots: Android may paint
+                                    // composing text despite a transparent text color.
                                     padding: 0,
                                     position: "absolute",
                                     right: 0,
                                     top: 0,
-                                    zIndex: 1,
-                                }, textContentType: "oneTimeCode", value: value }), slots.map((digit, index) => {
-                                const borderColor = error
-                                    ? invalidBorder
-                                    : focused && index === activeIndex
-                                        ? focusBorder
-                                        : digit
-                                            ? filledBorder
-                                            : baseBorder;
-                                return (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", style: [
-                                        {
-                                            alignItems: "center",
-                                            backgroundColor: theme.colors.surface,
-                                            borderColor,
-                                            borderRadius: radius[otpFieldRecipe.slot.radius],
-                                            borderWidth: otpFieldRecipe.slot.borderWidth,
-                                            flex: 1,
-                                            height: slotHeight,
-                                            justifyContent: "center",
-                                            maxWidth: metrics.slotSize,
-                                            minWidth: 0,
-                                        },
-                                        slotStyle,
-                                    ], children: _jsx(Text, { accessible: false, align: "center", allowFontScaling: allowFontScaling, style: [{ color: contentColor }, slotTextStyle], variant: metrics.textVariant, children: digit }) }, index));
-                            })] }), _jsx(FieldMessage, { ...(error === undefined ? {} : { error }), ...(supportText === undefined ? {} : { supportText }) })] })] }));
+                                    zIndex: 0,
+                                }, textContentType: "oneTimeCode", value: value }), _jsx(View, { pointerEvents: "none", style: { backgroundColor: theme.colors.bg, flexDirection: "row", gap: metrics.gap, width: "100%", zIndex: 1 }, children: slots.map((digit, index) => {
+                                    const borderColor = error
+                                        ? invalidBorder
+                                        : focused && index === activeIndex
+                                            ? focusBorder
+                                            : digit
+                                                ? filledBorder
+                                                : baseBorder;
+                                    return (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", pointerEvents: "none", style: [
+                                            {
+                                                alignItems: "center",
+                                                backgroundColor: theme.colors.bg,
+                                                borderColor,
+                                                borderRadius: radius[otpFieldRecipe.slot.radius],
+                                                borderWidth: otpFieldRecipe.slot.borderWidth,
+                                                flex: 1,
+                                                height: slotHeight,
+                                                justifyContent: "center",
+                                                maxWidth: metrics.slotSize,
+                                                minWidth: 0,
+                                                zIndex: 1,
+                                            },
+                                            slotStyle,
+                                        ], children: _jsx(Text, { accessible: false, align: "center", allowFontScaling: allowFontScaling, style: [{ color: contentColor }, slotTextStyle], variant: metrics.textVariant, children: digit }) }, index));
+                                }) })] }), _jsx(FieldMessage, { ...(error === undefined ? {} : { error }), ...(supportText === undefined ? {} : { supportText }) })] })] }));
 });
 function ChoiceRow({ kind, label, description, checked, disabled, readOnly, required, invalid, readOnlyLabel, requiredLabel, invalidLabel, accessibilityHint, presentation = selectionControlRecipe.defaults.presentation, size = selectionControlRecipe.defaults.size, indicator = "default", leading, renderLeading, renderIndicator, onActivate, webTabIndex, style, controlStyle, indicatorStyle, leadingStyle, contentStyle, labelStyle, descriptionStyle, }) {
     const theme = useHjmNativeTheme();

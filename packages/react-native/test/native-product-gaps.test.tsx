@@ -193,7 +193,7 @@ describe("Native product renderer gaps", () => {
   it("owns grouped/plain List appearance and requires its localized name", () => {
     let surface = "";
     function Capture() {
-      surface = useHjmNativeTheme().colors.surface;
+      surface = useHjmNativeTheme().colors.bg;
       return (
         <List appearance="grouped" label="선수 목록">
           <ListRow title="홍길동" />

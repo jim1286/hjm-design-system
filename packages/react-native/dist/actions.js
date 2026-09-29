@@ -155,7 +155,7 @@ export function BottomCTA({ primaryAction, secondaryAction, description, accessi
             : secondaryAction;
     return (_jsxs(View, { accessibilityLabel: accessibilityLabel, accessibilityRole: "toolbar", testID: testID, style: [
             {
-                backgroundColor: colors.surface,
+                backgroundColor: colors.bg,
                 borderColor: colors.border,
                 borderTopWidth: bottomCtaRecipe.borderWidth,
                 elevation: bottomCtaRecipe.shadow.elevation,

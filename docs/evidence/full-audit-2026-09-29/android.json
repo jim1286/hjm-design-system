@@ -1,0 +1,1218 @@
+{
+  "platform": "Android",
+  "device": "emulator-5554 / spint-store / Android 16 API36",
+  "scope": "83 Native supported components; actual screenshot inspection and major interaction. Not physical device or TalkBack proof.",
+  "status": "core-complete-extensions-complete",
+  "components": [
+    {
+      "component": "design-system-provider",
+      "group": "foundations",
+      "visual": "pass",
+      "interaction": "not-applicable-static",
+      "evidence": [
+        "android/foundations-clean.png",
+        "android/foundations-2.png",
+        "android/final-foundations.png",
+        "android/final-foundations-bottom.png",
+        "android/final-foundations-latest.png",
+        "android/final-foundations-bottom-latest.png"
+      ]
+    },
+    {
+      "component": "text",
+      "group": "foundations",
+      "visual": "pass",
+      "interaction": "not-applicable-static",
+      "evidence": [
+        "android/foundations-clean.png",
+        "android/foundations-2.png",
+        "android/final-foundations.png",
+        "android/final-foundations-bottom.png",
+        "android/final-foundations-latest.png",
+        "android/final-foundations-bottom-latest.png"
+      ]
+    },
+    {
+      "component": "surface",
+      "group": "foundations",
+      "visual": "pass",
+      "interaction": "not-applicable-static",
+      "evidence": [
+        "android/foundations-clean.png",
+        "android/foundations-2.png",
+        "android/final-foundations.png",
+        "android/final-foundations-bottom.png",
+        "android/final-foundations-latest.png",
+        "android/final-foundations-bottom-latest.png"
+      ]
+    },
+    {
+      "component": "stack",
+      "group": "foundations",
+      "visual": "pass",
+      "interaction": "not-applicable-static",
+      "evidence": [
+        "android/foundations-clean.png",
+        "android/foundations-2.png",
+        "android/final-foundations.png",
+        "android/final-foundations-bottom.png",
+        "android/final-foundations-latest.png",
+        "android/final-foundations-bottom-latest.png"
+      ]
+    },
+    {
+      "component": "container",
+      "group": "foundations",
+      "visual": "pass",
+      "interaction": "not-applicable-static",
+      "evidence": [
+        "android/foundations-clean.png",
+        "android/foundations-2.png",
+        "android/final-foundations.png",
+        "android/final-foundations-bottom.png",
+        "android/final-foundations-latest.png",
+        "android/final-foundations-bottom-latest.png"
+      ]
+    },
+    {
+      "component": "aspect-ratio",
+      "group": "foundations",
+      "visual": "pass",
+      "interaction": "not-applicable-static",
+      "evidence": [
+        "android/foundations-clean.png",
+        "android/foundations-2.png",
+        "android/final-foundations.png",
+        "android/final-foundations-bottom.png",
+        "android/final-foundations-latest.png",
+        "android/final-foundations-bottom-latest.png"
+      ]
+    },
+    {
+      "component": "grid",
+      "group": "foundations",
+      "visual": "pass",
+      "interaction": "not-applicable-static",
+      "evidence": [
+        "android/foundations-clean.png",
+        "android/foundations-2.png",
+        "android/final-foundations.png",
+        "android/final-foundations-bottom.png",
+        "android/final-foundations-latest.png",
+        "android/final-foundations-bottom-latest.png"
+      ]
+    },
+    {
+      "component": "layout",
+      "group": "foundations",
+      "visual": "pass",
+      "interaction": "not-applicable-static",
+      "evidence": [
+        "android/foundations-clean.png",
+        "android/foundations-2.png",
+        "android/final-foundations.png",
+        "android/final-foundations-bottom.png",
+        "android/final-foundations-latest.png",
+        "android/final-foundations-bottom-latest.png"
+      ]
+    },
+    {
+      "component": "icon",
+      "group": "foundations",
+      "visual": "pass",
+      "interaction": "not-applicable-static",
+      "evidence": [
+        "android/foundations-clean.png",
+        "android/foundations-2.png",
+        "android/final-foundations.png",
+        "android/final-foundations-bottom.png",
+        "android/final-foundations-latest.png",
+        "android/final-foundations-bottom-latest.png"
+      ]
+    },
+    {
+      "component": "section",
+      "group": "foundations",
+      "visual": "pass",
+      "interaction": "not-applicable-static",
+      "evidence": [
+        "android/foundations-clean.png",
+        "android/foundations-2.png",
+        "android/final-foundations.png",
+        "android/final-foundations-bottom.png",
+        "android/final-foundations-latest.png",
+        "android/final-foundations-bottom-latest.png"
+      ]
+    },
+    {
+      "component": "divider",
+      "group": "foundations",
+      "visual": "pass",
+      "interaction": "not-applicable-static",
+      "evidence": [
+        "android/foundations-clean.png",
+        "android/foundations-2.png",
+        "android/final-foundations.png",
+        "android/final-foundations-bottom.png",
+        "android/final-foundations-latest.png",
+        "android/final-foundations-bottom-latest.png"
+      ]
+    },
+    {
+      "component": "top",
+      "group": "foundations",
+      "visual": "pass",
+      "interaction": "not-applicable-static",
+      "evidence": [
+        "android/foundations-clean.png",
+        "android/foundations-2.png",
+        "android/final-foundations.png",
+        "android/final-foundations-bottom.png",
+        "android/final-foundations-latest.png",
+        "android/final-foundations-bottom-latest.png"
+      ]
+    },
+    {
+      "component": "heading",
+      "group": "foundations",
+      "visual": "pass",
+      "interaction": "not-applicable-static",
+      "evidence": [
+        "android/foundations-clean.png",
+        "android/foundations-2.png",
+        "android/final-foundations.png",
+        "android/final-foundations-bottom.png",
+        "android/final-foundations-latest.png",
+        "android/final-foundations-bottom-latest.png"
+      ]
+    },
+    {
+      "component": "auth-screen",
+      "group": "foundations",
+      "visual": "pass",
+      "interaction": "not-applicable-layout",
+      "evidence": [
+        "android/actions-1.png",
+        "android/final-foundations.png",
+        "android/final-foundations-bottom.png",
+        "android/final-actions.png",
+        "android/final-foundations-latest.png",
+        "android/final-foundations-bottom-latest.png"
+      ]
+    },
+    {
+      "component": "button",
+      "group": "actions",
+      "visual": "pass",
+      "interaction": "pass-counter-0-to-1-to-2",
+      "evidence": [
+        "android/actions-primary.png",
+        "android/actions-icon.png",
+        "android/final-actions.png"
+      ]
+    },
+    {
+      "component": "icon-button",
+      "group": "actions",
+      "visual": "pass",
+      "interaction": "pass-counter-0-to-1-to-2",
+      "evidence": [
+        "android/actions-primary.png",
+        "android/actions-icon.png",
+        "android/final-actions.png"
+      ]
+    },
+    {
+      "component": "link",
+      "group": "actions",
+      "visual": "pass",
+      "interaction": "pass-major-interaction",
+      "evidence": [
+        "android/link-activated.png",
+        "android/final-actions.png"
+      ]
+    },
+    {
+      "component": "bottom-cta",
+      "group": "actions",
+      "visual": "pass",
+      "interaction": "pass-major-interaction",
+      "evidence": [
+        "android/cta-activated.png",
+        "android/final-actions.png"
+      ]
+    },
+    {
+      "component": "auth-provider-button",
+      "group": "actions",
+      "visual": "pass",
+      "interaction": "pass-major-interaction",
+      "evidence": [
+        "android/auth-activated.png",
+        "android/final-actions.png"
+      ]
+    },
+    {
+      "component": "agreement",
+      "group": "agreement",
+      "visual": "pass",
+      "interaction": "pass-major-interaction",
+      "evidence": [
+        "android/agreement-checked.png",
+        "android/final-agreement.png"
+      ]
+    },
+    {
+      "component": "calendar",
+      "group": "calendar",
+      "visual": "pass",
+      "interaction": "pass-major-interaction",
+      "evidence": [
+        "android/calendar-selected.png",
+        "android/final-calendar.png"
+      ]
+    },
+    {
+      "component": "floating-action-button",
+      "group": "floatingActionButton",
+      "visual": "pass",
+      "interaction": "pass-major-interaction",
+      "evidence": [
+        "android/fab-added.png",
+        "android/final-fab.png"
+      ]
+    },
+    {
+      "component": "field",
+      "group": "inputs",
+      "visual": "pass",
+      "interaction": "pass-major-interaction",
+      "evidence": [
+        "android/field-typed.png",
+        "android/final-inputs-top.png",
+        "android/final-inputs-middle.png",
+        "android/final-inputs-selection.png",
+        "android/final-inputs-bottom.png",
+        "android/final-inputs-end.png"
+      ]
+    },
+    {
+      "component": "search-field",
+      "group": "inputs",
+      "visual": "pass",
+      "interaction": "pass-major-interaction",
+      "evidence": [
+        "android/search-clear.png",
+        "android/final-inputs-top.png",
+        "android/final-inputs-middle.png",
+        "android/final-inputs-selection.png",
+        "android/final-inputs-bottom.png",
+        "android/final-inputs-end.png"
+      ]
+    },
+    {
+      "component": "text-area",
+      "group": "inputs",
+      "visual": "pass",
+      "interaction": "pass-major-interaction",
+      "evidence": [
+        "android/textarea-typed.png",
+        "android/final-inputs-top.png",
+        "android/final-inputs-middle.png",
+        "android/final-inputs-selection.png",
+        "android/final-inputs-bottom.png",
+        "android/final-inputs-end.png"
+      ]
+    },
+    {
+      "component": "password-field",
+      "group": "inputs",
+      "visual": "pass",
+      "interaction": "pass-major-interaction",
+      "evidence": [
+        "android/password-show.png",
+        "android/final-inputs-top.png",
+        "android/final-inputs-middle.png",
+        "android/final-inputs-selection.png",
+        "android/final-inputs-bottom.png",
+        "android/final-inputs-end.png"
+      ]
+    },
+    {
+      "component": "otp-field",
+      "group": "inputs",
+      "visual": "pass",
+      "interaction": "pass-major-interaction",
+      "evidence": [
+        "android/otp-typed.png",
+        "android/final-inputs-top.png",
+        "android/final-inputs-middle.png",
+        "android/final-inputs-selection.png",
+        "android/final-inputs-bottom.png",
+        "android/final-inputs-end.png",
+        "android/final-otp-clean.png"
+      ],
+      "notes": "Android input128→128645; opaque pointerEvents-none presentation hides composing text through gaps."
+    },
+    {
+      "component": "number-field",
+      "group": "inputs",
+      "visual": "pass",
+      "interaction": "pass-major-interaction",
+      "evidence": [
+        "android/number-increase.png",
+        "android/final-inputs-top.png",
+        "android/final-inputs-middle.png",
+        "android/final-inputs-selection.png",
+        "android/final-inputs-bottom.png",
+        "android/final-inputs-end.png"
+      ]
+    },
+    {
+      "component": "slider",
+      "group": "inputs",
+      "visual": "pass",
+      "interaction": "pass-major-interaction",
+      "evidence": [
+        "android/slider-changed.png",
+        "android/final-inputs-top.png",
+        "android/final-inputs-middle.png",
+        "android/final-inputs-selection.png",
+        "android/final-inputs-bottom.png",
+        "android/final-inputs-end.png"
+      ]
+    },
+    {
+      "component": "form",
+      "group": "inputs",
+      "visual": "pass",
+      "interaction": "pass-major-interaction",
+      "evidence": [
+        "android/form-saved.png",
+        "android/final-inputs-top.png",
+        "android/final-inputs-middle.png",
+        "android/final-inputs-selection.png",
+        "android/final-inputs-bottom.png",
+        "android/final-inputs-end.png"
+      ]
+    },
+    {
+      "component": "date-picker",
+      "group": "inputs",
+      "visual": "pass",
+      "interaction": "pass-major-interaction",
+      "evidence": [
+        "android/date-fixed-selected.png",
+        "android/final-inputs-top.png",
+        "android/final-inputs-middle.png",
+        "android/final-inputs-selection.png",
+        "android/final-inputs-bottom.png",
+        "android/final-inputs-end.png"
+      ]
+    },
+    {
+      "component": "file-picker",
+      "group": "inputs",
+      "visual": "pass",
+      "interaction": "pass-major-interaction",
+      "evidence": [
+        "android/file-selected.png",
+        "android/final-inputs-top.png",
+        "android/final-inputs-middle.png",
+        "android/final-inputs-selection.png",
+        "android/final-inputs-bottom.png",
+        "android/final-inputs-end.png"
+      ],
+      "notes": "Fixture adapter accepts preview.png, not an OS document picker/provider integration test."
+    },
+    {
+      "component": "checkbox",
+      "group": "inputs",
+      "visual": "pass",
+      "interaction": "pass-major-interaction",
+      "evidence": [
+        "android/controls-changed.png",
+        "android/final-inputs-top.png",
+        "android/final-inputs-middle.png",
+        "android/final-inputs-selection.png",
+        "android/final-inputs-bottom.png",
+        "android/final-inputs-end.png"
+      ]
+    },
+    {
+      "component": "radio",
+      "group": "inputs",
+      "visual": "pass",
+      "interaction": "selected-state-observed",
+      "evidence": [
+        "android/controls-changed.png",
+        "android/final-inputs-top.png",
+        "android/final-inputs-middle.png",
+        "android/final-inputs-selection.png",
+        "android/final-inputs-bottom.png",
+        "android/final-inputs-end.png"
+      ],
+      "notes": "Standalone radio starts selected and cannot unselect itself. RadioGroup selection transition separately verified."
+    },
+    {
+      "component": "checkbox-group",
+      "group": "inputs",
+      "visual": "pass",
+      "interaction": "pass-major-interaction",
+      "evidence": [
+        "android/controls-changed.png",
+        "android/final-inputs-top.png",
+        "android/final-inputs-middle.png",
+        "android/final-inputs-selection.png",
+        "android/final-inputs-bottom.png",
+        "android/final-inputs-end.png"
+      ]
+    },
+    {
+      "component": "radio-group",
+      "group": "inputs",
+      "visual": "pass",
+      "interaction": "pass-major-interaction",
+      "evidence": [
+        "android/controls-changed.png",
+        "android/final-inputs-top.png",
+        "android/final-inputs-middle.png",
+        "android/final-inputs-selection.png",
+        "android/final-inputs-bottom.png",
+        "android/final-inputs-end.png"
+      ]
+    },
+    {
+      "component": "switch",
+      "group": "inputs",
+      "visual": "pass",
+      "interaction": "pass-major-interaction",
+      "evidence": [
+        "android/inputs-bottom.png",
+        "android/final-inputs-top.png",
+        "android/final-inputs-middle.png",
+        "android/final-inputs-selection.png",
+        "android/final-inputs-bottom.png",
+        "android/final-inputs-end.png"
+      ]
+    },
+    {
+      "component": "segmented-control",
+      "group": "inputs",
+      "visual": "pass",
+      "interaction": "pass-major-interaction",
+      "evidence": [
+        "android/controls-changed.png",
+        "android/final-inputs-top.png",
+        "android/final-inputs-middle.png",
+        "android/final-inputs-selection.png",
+        "android/final-inputs-bottom.png",
+        "android/final-inputs-end.png"
+      ]
+    },
+    {
+      "component": "select",
+      "group": "inputs",
+      "visual": "pass",
+      "interaction": "pass-major-interaction",
+      "evidence": [
+        "android/select-english.png",
+        "android/final-inputs-top.png",
+        "android/final-inputs-middle.png",
+        "android/final-inputs-selection.png",
+        "android/final-inputs-bottom.png",
+        "android/final-inputs-end.png"
+      ]
+    },
+    {
+      "component": "combobox",
+      "group": "inputs",
+      "visual": "pass",
+      "interaction": "pass-major-interaction",
+      "evidence": [
+        "android/combobox-seoul.png",
+        "android/final-inputs-top.png",
+        "android/final-inputs-middle.png",
+        "android/final-inputs-selection.png",
+        "android/final-inputs-bottom.png",
+        "android/final-inputs-end.png"
+      ]
+    },
+    {
+      "component": "chip",
+      "group": "inputs",
+      "visual": "pass",
+      "interaction": "pass-major-interaction",
+      "evidence": [
+        "android/controls-changed.png",
+        "android/final-inputs-top.png",
+        "android/final-inputs-middle.png",
+        "android/final-inputs-selection.png",
+        "android/final-inputs-bottom.png",
+        "android/final-inputs-end.png"
+      ]
+    },
+    {
+      "component": "toggle-group",
+      "group": "inputs",
+      "visual": "pass",
+      "interaction": "pass-major-interaction",
+      "evidence": [
+        "android/toggle-bold.png",
+        "android/final-inputs-top.png",
+        "android/final-inputs-middle.png",
+        "android/final-inputs-selection.png",
+        "android/final-inputs-bottom.png",
+        "android/final-inputs-end.png"
+      ]
+    },
+    {
+      "component": "tags-input",
+      "group": "inputs",
+      "visual": "pass",
+      "interaction": "pass-major-interaction",
+      "evidence": [
+        "android/tags-removed.png",
+        "android/final-inputs-top.png",
+        "android/final-inputs-middle.png",
+        "android/final-inputs-selection.png",
+        "android/final-inputs-bottom.png",
+        "android/final-inputs-end.png"
+      ]
+    },
+    {
+      "component": "date-range-picker",
+      "group": "inputs",
+      "visual": "pass",
+      "interaction": "pass-major-interaction",
+      "evidence": [
+        "android/range-end.png",
+        "android/final-inputs-top.png",
+        "android/final-inputs-middle.png",
+        "android/final-inputs-selection.png",
+        "android/final-inputs-bottom.png",
+        "android/final-inputs-end.png"
+      ]
+    },
+    {
+      "component": "mentions",
+      "group": "inputs",
+      "visual": "pass",
+      "interaction": "pass-major-interaction",
+      "evidence": [
+        "android/mentions-selected.png",
+        "android/final-inputs-top.png",
+        "android/final-inputs-middle.png",
+        "android/final-inputs-selection.png",
+        "android/final-inputs-bottom.png",
+        "android/final-inputs-end.png"
+      ]
+    },
+    {
+      "component": "transfer-list",
+      "group": "inputs",
+      "visual": "pass",
+      "interaction": "pass-major-interaction",
+      "evidence": [
+        "android/transfer-moved.png",
+        "android/final-inputs-top.png",
+        "android/final-inputs-middle.png",
+        "android/final-inputs-selection.png",
+        "android/final-inputs-bottom.png",
+        "android/final-inputs-end.png"
+      ]
+    },
+    {
+      "component": "tabs",
+      "group": "navigation",
+      "visual": "pass",
+      "interaction": "pass-major-interaction",
+      "evidence": [
+        "android/nav-selected.png",
+        "android/menu-edit.png",
+        "android/final-navigation.png"
+      ]
+    },
+    {
+      "component": "steps",
+      "group": "navigation",
+      "visual": "pass",
+      "interaction": "not-applicable-static",
+      "evidence": [
+        "android/nav-selected.png",
+        "android/menu-edit.png",
+        "android/final-navigation.png"
+      ]
+    },
+    {
+      "component": "top-bar",
+      "group": "navigation",
+      "visual": "pass",
+      "interaction": "pass-major-interaction",
+      "evidence": [
+        "android/nav-selected.png",
+        "android/menu-edit.png",
+        "android/final-navigation.png"
+      ]
+    },
+    {
+      "component": "menu",
+      "group": "navigation",
+      "visual": "pass",
+      "interaction": "pass-major-interaction",
+      "evidence": [
+        "android/nav-selected.png",
+        "android/menu-edit.png",
+        "android/final-navigation.png"
+      ]
+    },
+    {
+      "component": "bottom-navigation",
+      "group": "navigation",
+      "visual": "pass",
+      "interaction": "pass-major-interaction",
+      "evidence": [
+        "android/nav-selected.png",
+        "android/menu-edit.png",
+        "android/final-navigation.png"
+      ]
+    },
+    {
+      "component": "load-more",
+      "group": "navigation",
+      "visual": "pass",
+      "interaction": "pass-major-interaction",
+      "evidence": [
+        "android/nav-selected.png",
+        "android/menu-edit.png",
+        "android/final-navigation.png"
+      ]
+    },
+    {
+      "component": "badge",
+      "group": "dataDisplay",
+      "visual": "pass",
+      "interaction": "not-applicable-static",
+      "evidence": [
+        "android/data-1.png",
+        "android/data-2.png",
+        "android/data-3.png",
+        "android/final-data-top.png",
+        "android/final-data-mid.png"
+      ]
+    },
+    {
+      "component": "avatar",
+      "group": "dataDisplay",
+      "visual": "pass",
+      "interaction": "not-applicable-static",
+      "evidence": [
+        "android/data-1.png",
+        "android/data-2.png",
+        "android/data-3.png",
+        "android/final-data-top.png",
+        "android/final-data-mid.png"
+      ]
+    },
+    {
+      "component": "card",
+      "group": "dataDisplay",
+      "visual": "pass",
+      "interaction": "not-applicable-static",
+      "evidence": [
+        "android/data-1.png",
+        "android/data-2.png",
+        "android/data-3.png",
+        "android/final-data-top.png",
+        "android/final-data-mid.png"
+      ]
+    },
+    {
+      "component": "list-row",
+      "group": "dataDisplay",
+      "visual": "pass",
+      "interaction": "pass-selected-row",
+      "evidence": [
+        "android/list-selected-good.png",
+        "android/final-data-top.png",
+        "android/final-data-mid.png"
+      ]
+    },
+    {
+      "component": "tag",
+      "group": "dataDisplay",
+      "visual": "pass",
+      "interaction": "not-applicable-static",
+      "evidence": [
+        "android/data-1.png",
+        "android/data-2.png",
+        "android/data-3.png",
+        "android/final-data-top.png",
+        "android/final-data-mid.png"
+      ]
+    },
+    {
+      "component": "timeline",
+      "group": "dataDisplay",
+      "visual": "pass",
+      "interaction": "not-applicable-static",
+      "evidence": [
+        "android/data-1.png",
+        "android/data-2.png",
+        "android/data-3.png",
+        "android/final-data-top.png",
+        "android/final-data-mid.png"
+      ]
+    },
+    {
+      "component": "description-list",
+      "group": "dataDisplay",
+      "visual": "pass",
+      "interaction": "not-applicable-static",
+      "evidence": [
+        "android/data-1.png",
+        "android/data-2.png",
+        "android/data-3.png",
+        "android/final-data-top.png",
+        "android/final-data-mid.png"
+      ]
+    },
+    {
+      "component": "image",
+      "group": "dataDisplay",
+      "visual": "pass",
+      "interaction": "not-applicable-static",
+      "evidence": [
+        "android/data-1.png",
+        "android/data-2.png",
+        "android/data-3.png",
+        "android/final-data-top.png",
+        "android/final-data-mid.png"
+      ]
+    },
+    {
+      "component": "counter-badge",
+      "group": "dataDisplay",
+      "visual": "pass",
+      "interaction": "not-applicable-static",
+      "evidence": [
+        "android/data-1.png",
+        "android/data-2.png",
+        "android/data-3.png",
+        "android/final-data-top.png",
+        "android/final-data-mid.png"
+      ]
+    },
+    {
+      "component": "list",
+      "group": "dataDisplay",
+      "visual": "pass",
+      "interaction": "pass-selected-row",
+      "evidence": [
+        "android/list-selected-good.png",
+        "android/final-data-top.png",
+        "android/final-data-mid.png"
+      ]
+    },
+    {
+      "component": "carousel",
+      "group": "dataDisplay",
+      "visual": "pass",
+      "interaction": "pass-major-interaction",
+      "evidence": [
+        "android/carousel-repro-next.png",
+        "android/carousel-yoga-crash.log",
+        "android/final-data-top.png",
+        "android/final-data-mid.png",
+        "android/final-carousel-next.png"
+      ],
+      "notes": "Initial Yoga crash occurred during repository screenshot-triggered FastRefresh. Fresh next and full scroll/cancel/accordion/next sequence passed with captures outside Metro tree; no repeat in stable runtime."
+    },
+    {
+      "component": "statistic",
+      "group": "dataDisplay",
+      "visual": "pass",
+      "interaction": "not-applicable-static",
+      "evidence": [
+        "android/data-1.png",
+        "android/data-2.png",
+        "android/data-3.png",
+        "android/final-data-top.png",
+        "android/final-data-mid.png"
+      ]
+    },
+    {
+      "component": "upload-item",
+      "group": "dataDisplay",
+      "visual": "pass",
+      "interaction": "pass-cancel-callback",
+      "evidence": [
+        "android/upload-cancel.png",
+        "android/final-data-top.png",
+        "android/final-data-mid.png",
+        "android/final-upload-cancel.png"
+      ]
+    },
+    {
+      "component": "accordion",
+      "group": "dataDisplay",
+      "visual": "pass",
+      "interaction": "pass-expanded-content",
+      "evidence": [
+        "android/accordion-open.png",
+        "android/final-data-top.png",
+        "android/final-data-mid.png"
+      ]
+    },
+    {
+      "component": "collapsible",
+      "group": "dataDisplay",
+      "visual": "pass",
+      "interaction": "pass-collapse-content",
+      "evidence": [
+        "android/collapsible-closed.png",
+        "android/final-data-top.png",
+        "android/final-data-mid.png"
+      ]
+    },
+    {
+      "component": "asset",
+      "group": "dataDisplay",
+      "visual": "pass",
+      "interaction": "not-applicable-static",
+      "evidence": [
+        "android/data-1.png",
+        "android/data-2.png",
+        "android/data-3.png",
+        "android/final-data-top.png",
+        "android/final-data-mid.png"
+      ],
+      "notes": "Media frame/motion-policy slot renders Fox; fixture contains no Lottie player."
+    },
+    {
+      "component": "empty-state",
+      "group": "feedback",
+      "visual": "pass",
+      "interaction": "not-applicable-static",
+      "evidence": [
+        "android/feedback.png",
+        "android/feedback-2.png",
+        "android/toast-visible.png",
+        "android/toast-closed.png",
+        "android/final-feedback.png",
+        "android/final-feedback-bottom.png"
+      ],
+      "notes": "Action slot renders; Create draft fixture has noop handler. No draft creation claim; Button callback separately audited."
+    },
+    {
+      "component": "result",
+      "group": "feedback",
+      "visual": "pass",
+      "interaction": "not-applicable-static",
+      "evidence": [
+        "android/feedback.png",
+        "android/feedback-2.png",
+        "android/toast-visible.png",
+        "android/toast-closed.png",
+        "android/final-feedback.png",
+        "android/final-feedback-bottom.png"
+      ]
+    },
+    {
+      "component": "notice",
+      "group": "feedback",
+      "visual": "pass",
+      "interaction": "not-applicable-static",
+      "evidence": [
+        "android/feedback.png",
+        "android/feedback-2.png",
+        "android/toast-visible.png",
+        "android/toast-closed.png",
+        "android/final-feedback.png",
+        "android/final-feedback-bottom.png"
+      ]
+    },
+    {
+      "component": "progress",
+      "group": "feedback",
+      "visual": "pass",
+      "interaction": "not-applicable-static",
+      "evidence": [
+        "android/feedback.png",
+        "android/feedback-2.png",
+        "android/toast-visible.png",
+        "android/toast-closed.png",
+        "android/final-feedback.png",
+        "android/final-feedback-bottom.png"
+      ]
+    },
+    {
+      "component": "skeleton",
+      "group": "feedback",
+      "visual": "pass",
+      "interaction": "not-applicable-static",
+      "evidence": [
+        "android/feedback.png",
+        "android/feedback-2.png",
+        "android/toast-visible.png",
+        "android/toast-closed.png",
+        "android/final-feedback.png",
+        "android/final-feedback-bottom.png"
+      ]
+    },
+    {
+      "component": "spinner",
+      "group": "feedback",
+      "visual": "pass",
+      "interaction": "not-applicable-static",
+      "evidence": [
+        "android/feedback.png",
+        "android/feedback-2.png",
+        "android/toast-visible.png",
+        "android/toast-closed.png",
+        "android/final-feedback.png",
+        "android/final-feedback-bottom.png"
+      ]
+    },
+    {
+      "component": "toast",
+      "group": "feedback",
+      "visual": "pass",
+      "interaction": "pass-publish-dismiss",
+      "evidence": [
+        "android/feedback.png",
+        "android/feedback-2.png",
+        "android/toast-visible.png",
+        "android/toast-closed.png",
+        "android/final-feedback.png",
+        "android/final-feedback-bottom.png",
+        "android/final-toast-visible.png",
+        "android/final-toast-dismissed.png"
+      ]
+    },
+    {
+      "component": "bottom-info",
+      "group": "feedback",
+      "visual": "pass",
+      "interaction": "not-applicable-static",
+      "evidence": [
+        "android/feedback.png",
+        "android/feedback-2.png",
+        "android/toast-visible.png",
+        "android/toast-closed.png",
+        "android/final-feedback.png",
+        "android/final-feedback-bottom.png"
+      ]
+    },
+    {
+      "component": "masonry",
+      "group": "dataLayouts",
+      "visual": "pass",
+      "interaction": "not-applicable-static",
+      "evidence": [
+        "android/masonry.png",
+        "android/final-masonry.png"
+      ]
+    },
+    {
+      "component": "virtual-list",
+      "group": "dataLayouts",
+      "visual": "pass",
+      "interaction": "pass-major-interaction",
+      "evidence": [
+        "android/virtual-scrolled.png",
+        "android/final-virtual.png"
+      ]
+    },
+    {
+      "component": "qr-code",
+      "group": "dataLayouts",
+      "visual": "pass",
+      "interaction": "not-applicable-static",
+      "evidence": [
+        "android/qr.png",
+        "android/final-qr.png"
+      ]
+    },
+    {
+      "component": "thinking-orb",
+      "group": "thinkingOrb",
+      "visual": "pass",
+      "interaction": "not-applicable-static",
+      "evidence": [
+        "android/orb.png",
+        "android/final-orb.png"
+      ]
+    },
+    {
+      "component": "dialog",
+      "group": "overlays",
+      "visual": "pass",
+      "interaction": "pass-open-and-dismiss",
+      "evidence": [
+        "android/dialog-open.png"
+      ]
+    },
+    {
+      "component": "alert-dialog",
+      "group": "overlays",
+      "visual": "pass",
+      "interaction": "pass-open-and-dismiss",
+      "evidence": [
+        "android/alert-open.png"
+      ]
+    },
+    {
+      "component": "sheet",
+      "group": "overlays",
+      "visual": "pass",
+      "interaction": "pass-open-and-dismiss",
+      "evidence": [
+        "android/sheet-open.png"
+      ]
+    }
+  ],
+  "extensions": [
+    {
+      "id": "cascader",
+      "status": "pass",
+      "evidence": [
+        "android/cascader-selected.png"
+      ],
+      "interaction": "Seoul then Jongno selected"
+    },
+    {
+      "id": "rating",
+      "status": "pass",
+      "evidence": [
+        "android/rating-selected.png"
+      ],
+      "interaction": "Slider 3 to 4.5"
+    },
+    {
+      "id": "time-picker",
+      "status": "pass",
+      "evidence": [
+        "android/time-selected.png"
+      ],
+      "interaction": "09:05 selected"
+    },
+    {
+      "id": "native-context-menu",
+      "status": "pass",
+      "evidence": [
+        "android/native-menu-retest-save.png",
+        "android/final-native-menu.png",
+        "android/final-native-menu-saved.png"
+      ],
+      "interaction": "Long press OS menu then save callback confirmed"
+    },
+    {
+      "id": "image-viewer",
+      "status": "pass",
+      "evidence": [
+        "android/final-imageviewer-fullscreen.png",
+        "android/final-imageviewer-close.png"
+      ],
+      "interaction": "Remote image loads; close below status bar and previous/next above navigation inset; close returns to host. One item, navigation disabled."
+    },
+    {
+      "id": "gesture-sheet",
+      "status": "pass",
+      "evidence": [
+        "android/gesture-fixed-open.png",
+        "android/gesture-expanded.png",
+        "android/gesture-input.png",
+        "android/gesture-closed-confirm.png",
+        "android/gesture-reopened-confirm.png",
+        "android/final-gesture-fullscreen.png",
+        "android/final-gesture-fullscreen-close.png"
+      ],
+      "interaction": "First open, expand drag, text entry, close then reopen passed after lifecycle fix."
+    },
+    {
+      "id": "keyboard-controller",
+      "status": "pass",
+      "evidence": [
+        "android/dock-fullscreen-ime.png",
+        "android/dock-fullscreen-done.png"
+      ],
+      "interaction": "Fullscreen app host: text entry, dock bottom aligns IME top at1517px, Done dismisses keyboard. Storybook canvas bottomgap removed by fullscreen fixture."
+    },
+    {
+      "id": "input-sheet",
+      "status": "pass",
+      "interaction": "Typed Verified with IME visible. Footer moved aboveIME and Done dismisses modal. Fixed floatdp dockedkeyboard detection.",
+      "evidence": [
+        "android/sheet-fixed-ime.png",
+        "android/sheet-fixed-complete.png"
+      ]
+    },
+    {
+      "id": "notification-settings",
+      "status": "pass",
+      "interaction": "Weekly switch enabled and Save exposes activity-on / weekly-on confirmation.",
+      "evidence": [
+        "android/final-notification-saved.png"
+      ]
+    },
+    {
+      "id": "liquid-toast",
+      "status": "pass",
+      "interaction": "Publish visible capsule, action opens generation:1 result, close removes toast.",
+      "evidence": [
+        "android/final-liquid-published.png",
+        "android/final-liquid-action.png",
+        "android/final-liquid-closed.png",
+        "android/liquid-close-confirmed.png"
+      ]
+    }
+  ],
+  "limitations": [
+    "Android16/API36 emulator dev-client only; not physical-device, release-build, exhaustive OS matrix, TalkBack traversal, or all prop combinations.",
+    "FilePicker fixture adapter only; provider login actions are callbacks, not external OAuth.",
+    "Static slots are visual checks, not product workflows. Minor display markers and primary CTA colors are retained intentionally.",
+    "Initial native Yoga crash during simultaneous FastRefresh/screenshot writes remains an observed development-refresh failure; fresh stable user interaction did not reproduce it."
+  ],
+  "counts": {
+    "supportedComponents": 83,
+    "visualPassed": 83,
+    "majorInteractiveComponents": 47,
+    "staticOrLayout": 35,
+    "extensions": 10,
+    "selectedStateOnly": 1
+  },
+  "checkedAt": "2026-09-29T19:57:32.888482+09:00",
+  "fixes": [
+    {
+      "component": "gesture-sheet",
+      "cause": "Calling Gorhom dismiss before first present poisons portal lifecycle with DISMISSING.",
+      "change": "Skip dismiss until previously presented, clear presentation state on native dismissal.",
+      "verification": "5 adoption tests plus installed firstopen/drag/input/close/reopen."
+    },
+    {
+      "component": "sheet",
+      "cause": "Android density conversion made keyboard width 0.000013 dp narrower than window.",
+      "change": "1dp tolerance at docked keyboard horizontal edges.",
+      "verification": "13 viewport tests and installed IME footer visible/dismiss flow."
+    },
+    {
+      "component": "image-viewer",
+      "cause": "SafeAreaProvider inside Storybook canvas reported0 for full-screen Modal.",
+      "change": "Provider moved to registered app root with initialWindowMetrics.",
+      "verification": "Close below status bar, controls above navigation inset, actual close."
+    },
+    {
+      "component": "keyboard-controller",
+      "cause": "Canvas bottom toolbar gap carried above IME because StickyView operates in window coordinates.",
+      "change": "Optional adapter fixture uses fullscreen app-sized host; safearea padding belongs to Dock content.",
+      "verification": "Dock bottom exactly aligns IME top and Done dismisses keyboard."
+    },
+    {
+      "component": "otp-field",
+      "cause": "Original opacity0.01 prevents iOS taps; transparent composing text leaked on Android after removal.",
+      "change": "Root-owned opaque presentation wrapper over backinginput with pointerEvents none.",
+      "verification": "Android128→128645 without duplicated/gap text."
+    }
+  ]
+}

@@ -101,14 +101,15 @@ export const Text = forwardRef(function Text({ as = "span", variant = textRecipe
         style: { ...style, ...layoutStyle },
     });
 });
-export const Surface = forwardRef(function Surface({ as = "div", tone = surfaceDefaults.tone, bordered = surfaceDefaults.bordered, padding = surfaceDefaults.padding, radius = surfaceDefaults.radius, className, layoutStyle, style, ...props }, ref) {
+export const Surface = forwardRef(function Surface({ as = "div", tone = surfaceDefaults.tone, bordered, padding = surfaceDefaults.padding, radius = surfaceDefaults.radius, className, layoutStyle, style, ...props }, ref) {
     const contract = surfaceRecipe[tone];
     return createElement(as, {
         ...props,
         ref,
         className: classNames("hjm-surface", className),
         "data-tone": tone,
-        "data-bordered": bordered || contract.borderAlways,
+        // Canvas framing is the default; preserve the caller's explicit border opt-out.
+        "data-bordered": bordered ?? (surfaceDefaults.bordered || contract.borderAlways),
         "data-elevated": contract.elevated,
         "data-clips": contract.clipsContent,
         "data-padding": padding,

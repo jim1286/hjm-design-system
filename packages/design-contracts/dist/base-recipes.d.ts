@@ -30,7 +30,7 @@ export declare const buttonRecipe: {
             readonly paddingHorizontal: null;
         };
         readonly secondary: {
-            readonly background: "surfaceAlt";
+            readonly background: "bg";
             readonly content: "text";
             readonly border: "borderControl";
             readonly paddingHorizontal: null;
@@ -61,7 +61,7 @@ export declare const buttonRecipe: {
      */
     readonly states: {
         readonly selected: {
-            readonly background: "surfaceAccent";
+            readonly background: "bg";
             readonly content: "contentBrand";
             readonly border: "contentBrand";
         };
@@ -120,11 +120,11 @@ export declare const buttonRecipe: {
 export declare function resolveButtonLabelLines(largeText: boolean): number | null;
 export declare const surfaceRecipe: {
     readonly default: {
-        readonly background: "surface";
+        readonly background: "bg";
         readonly border: "border";
         readonly borderAlpha: 1;
         readonly elevated: false;
-        readonly borderAlways: false;
+        readonly borderAlways: true;
         readonly clipsContent: true;
     };
     readonly raised: {
@@ -132,23 +132,23 @@ export declare const surfaceRecipe: {
         readonly border: "border";
         readonly borderAlpha: 1;
         readonly elevated: true;
-        readonly borderAlways: false;
+        readonly borderAlways: true;
         readonly clipsContent: false;
     };
     readonly sunken: {
-        readonly background: "surfaceAlt";
+        readonly background: "bg";
         readonly border: "border";
         readonly borderAlpha: 1;
         readonly elevated: false;
-        readonly borderAlways: false;
+        readonly borderAlways: true;
         readonly clipsContent: true;
     };
     readonly accent: {
-        readonly background: "surfaceAccent";
+        readonly background: "bg";
         readonly border: "primary";
-        readonly borderAlpha: 0.3;
+        readonly borderAlpha: 1;
         readonly elevated: false;
-        readonly borderAlways: false;
+        readonly borderAlways: true;
         readonly clipsContent: true;
     };
     readonly subtle: {
@@ -171,7 +171,7 @@ export declare const fieldRecipe: {
     };
     readonly variants: {
         readonly surface: {
-            readonly background: "surface";
+            readonly background: "bg";
         };
         readonly inset: {
             readonly background: "bg";
@@ -184,7 +184,7 @@ export declare const fieldRecipe: {
     };
     readonly states: {
         readonly idle: {
-            readonly border: "textMuted";
+            readonly border: "borderControl";
         };
         readonly focused: {
             readonly border: "contentBrand";

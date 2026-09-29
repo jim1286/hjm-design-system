@@ -70,7 +70,7 @@ export declare const transferListRecipe: {
     readonly panel: {
         readonly background: Readonly<{
             source: "theme";
-            key: "surface";
+            key: "bg";
             alpha?: number;
         }>;
         readonly border: Readonly<{
@@ -124,7 +124,7 @@ export declare const transferListRecipe: {
         };
         readonly highlightedBackground: Readonly<{
             source: "theme";
-            key: "text";
+            key: "bg";
             alpha?: number;
         }>;
         readonly focus: {
@@ -138,7 +138,7 @@ export declare const transferListRecipe: {
         };
         readonly selectedBackground: Readonly<{
             source: "theme";
-            key: "primary";
+            key: "bg";
             alpha?: number;
         }>;
         readonly selectedIndicator: Readonly<{
