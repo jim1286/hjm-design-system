@@ -28,7 +28,7 @@
   `id`와 `disabled?`만 가진 훨씬 좁은 타입이다 — Collection 기본 계약 중 실제로
   행에 맞는 부분만 가져오고, 맞지 않는 부분(label/textValue/typeahead)은 그대로
   두었다.
-- `Pagination`(다른 저작자가 이번 배치에서 계약)과 `LoadMore`(이미 beta)는 DataTable이
+- `Pagination`(다른 저작자가 이번 배치에서 계약)과 `LoadMore`(이미 stable)는 DataTable이
   **소유하지 않고 합성**한다. `asyncState`가 `loadingMore`일 때 그 아래 어느
   컴포넌트를 두는지는 제품 선택이다 — Native 긴 목록에 LoadMore를 쓰듯 Web 표에도
   같은 패턴이 통한다.
@@ -75,13 +75,14 @@
   `native` 필드는 breadcrumb·form 같은 다른 Web 전용 계약과 같은 빈 배열
   자리표시자다.
 
-**검증 화면.** 아직 실제 제품 vertical slice가 없다 — catalog는 `planned`으로
-남고, `beta` 승격은 로드맵 gate(실제 화면 검증)를 통과한 뒤 리드가 진행한다.
+**검증 화면.** 제품 vertical slice는 필요하지 않다. Renderer 계약을 정렬·tri-state selection·
+async 상태와 narrow long-copy 회귀로 확인하고, 소비 제품의 데이터 정렬·페이지네이션은 계속
+제품 소유로 둔다. 채택 여부는 [stable 승격 기준](stable-promotion.md)과 별도다.
 
 ## Web renderer (2026-09-18)
 
-`@hjmds/react/data-table`의 `DataTable`이 이 계약을 실행한다. catalog는 Web `beta`,
-Native `unsupported`다.
+`@hjmds/react/data-table`의 `DataTable`이 이 계약을 실행한다. Web renderer는 전용 keyboard·
+selection·320px long-copy proof를 통과해 2026-09-29 stable로 승격한다. Native는 `unsupported`다.
 
 - **기존 `Table`과 겹치지 않는다.** `@hjmds/react`의 `Table`(advanced-display)은 열·행을
   그려 주는 표시용이고 선택·tri-state·async 상태·정렬 상태 순환이 없다. DataTable은 그
@@ -96,6 +97,10 @@ Native `unsupported`다.
 - **셀 하나에 focusable 컨트롤은 최대 하나다.** roving tabindex grid 탐색을 도입하지 않고
   기본 tab 순서를 쓴다.
 - **페이지네이션은 표 아래에 조합한다.** `footer` slot은 제품이 채우고 표가 소유하지 않는다.
+- 키보드는 표 전체를 하나의 ARIA grid로 만들지 않고 native Tab 순서를 쓴다. 실제 브라우저 입력으로
+  select-all·정렬·행 선택 버튼이 Tab 순서에 있고 Space/Enter로 동작하는지 확인한다. 방향키 셀 탐색은
+  계약에 없다 — 제품 수요가 확인되지 않은 full grid interaction은 별도 계약으로 다룬다.
 - 로컬 검증: `test/data-table.browser.test.tsx` 5개(header 안 정렬 버튼과 aria-sort 3단계,
   tri-state 선택과 disabled 제외, 단일 선택 radio 의미, 셀당 컨트롤 하나와 기본 tab 순서,
-  async 상태 발표와 footer 조합)와 `Patterns/CommandPalette`의 표 화면.
+  async 상태 발표와 footer 조합), `test/data-table.keyboard.browser.test.tsx` 1개(실제 Tab·Enter·Space
+  입력), 그리고 `Patterns/CommandPalette`의 표 화면.

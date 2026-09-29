@@ -1,3 +1,4 @@
+export { liquidToastRecipe, resolveLiquidToastLayout, buildLiquidToastGeometry, validateLiquidToastAnchor } from "./toast-liquid.js";
 export const toastBehaviorDefaults = {
     durationMs: 5000,
     minimumDurationMs: 5000,
@@ -42,6 +43,9 @@ export function validateToastDescriptor(descriptor) {
         descriptor.priority !== "high") {
         throw new TypeError(`Unsupported Toast priority: ${String(descriptor.priority)}`);
     }
+    if (descriptor.presentation !== undefined && !["standard", "liquid"].includes(descriptor.presentation)) {
+        throw new TypeError(`Unsupported Toast presentation: ${String(descriptor.presentation)}`);
+    }
     if (descriptor.durationMs !== undefined && descriptor.durationMs !== null) {
         if (!Number.isFinite(descriptor.durationMs) || descriptor.durationMs <= 0) {
             throw new RangeError("Toast durationMs must be a positive finite number or null");
@@ -82,6 +86,7 @@ export function resolveToastDescriptor(descriptor) {
         title,
         description: descriptor.description,
         tone: descriptor.tone ?? "neutral",
+        presentation: descriptor.presentation ?? "standard",
         priority: descriptor.priority ?? toastBehaviorDefaults.priority,
         announcement,
         durationMs: resolveToastDuration(descriptor),

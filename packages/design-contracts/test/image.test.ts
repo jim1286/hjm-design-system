@@ -115,12 +115,12 @@ describe("Image visual identity", () => {
     expect(imageRecipe).not.toHaveProperty("focus");
   });
 
-  it("tracks the paired fallback and adapter renderers as beta", () => {
+  it("tracks the paired fallback and adapter renderers as stable", () => {
     expect(componentCatalog.find((entry) => entry.name === "Image")).toMatchObject({
       category: "data-display",
       platform: "shared",
-      status: "beta",
-      surfaceStatus: { web: "beta", native: "beta" },
+      status: "stable",
+      surfaceStatus: { web: "stable", native: "stable" },
     });
   });
 });

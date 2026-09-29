@@ -44,6 +44,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
   useSyncExternalStore,
@@ -58,11 +59,15 @@ import {
   Keyboard,
   Platform,
   View,
+  useWindowDimensions,
   type ViewProps,
   type StyleProp,
   type TextStyle,
   type ViewStyle,
 } from "react-native";
+
+import type { ToastPresentationAdapter } from "./internal/toast-presentation.js";
+export type { ToastPresentationAdapter } from "./internal/toast-presentation.js";
 
 import { Button, IconButton } from "./actions.js";
 import { Text } from "./primitives.js";
@@ -750,6 +755,10 @@ export type ToastToneIconRenderProps = Readonly<{
 
 type ToastSurfaceProps = Readonly<{
   snapshot: ToastSessionSnapshot;
+  /** The optional presentation owns motion; this surface still owns accessible controls. */
+  managedMotion?: boolean;
+  announces?: boolean;
+  suspended?: boolean;
   onDismiss: (reason: ToastDismissReason) => void;
   onAction: () => void;
   onExitComplete: () => void;
@@ -762,6 +771,9 @@ type ToastSurfaceProps = Readonly<{
 
 function ToastSurface({
   snapshot,
+  managedMotion = false,
+  announces = true,
+  suspended = false,
   onDismiss,
   onAction,
   onExitComplete,
@@ -788,11 +800,11 @@ function ToastSurface({
   const entryOffset = blockEdge === "top" ? -12 : 12;
 
   useEffect(() => {
-    if (snapshot.phase === "queued" || snapshot.phase === "closed") return;
+    if (managedMotion || snapshot.phase === "queued" || snapshot.phase === "closed") return;
     const phase = snapshot.phase === "closing" ? "exit" : "enter";
     const transition = toastRecipe.transition.native[phase];
     const target = phase === "exit" ? 0 : 1;
-    const duration = theme.environment.reducedMotion ? 0 : transition.duration;
+    const duration = theme.environment.reducedMotion || suspended ? 0 : transition.duration;
     motionProgress.stopAnimation();
     if (duration === 0) {
       motionProgress.setValue(target);
@@ -810,17 +822,17 @@ function ToastSurface({
       if (finished && phase === "exit") exitCompleteRef.current();
     });
     return () => animation.stop();
-  }, [motionProgress, snapshot.phase, theme.environment.reducedMotion]);
+  }, [managedMotion, suspended, motionProgress, snapshot.phase, theme.environment.reducedMotion]);
 
   useEffect(() => {
-    if (Platform.OS !== "ios" || snapshot.phase !== "visible") return;
+    if (!announces || suspended || Platform.OS !== "ios" || snapshot.phase !== "visible") return;
     AccessibilityInfo.announceForAccessibilityWithOptions(resolved.announcement, {
       queue: resolved.priority !== "high",
     });
-  }, [resolved.announcement, resolved.id, resolved.priority, snapshot.phase, snapshot.revision]);
+  }, [resolved.announcement, resolved.id, resolved.priority, snapshot.phase, suspended, announces]);
 
   if (snapshot.phase === "queued" || snapshot.phase === "closed") return null;
-  const translateY = theme.environment.reducedMotion
+  const translateY = managedMotion || theme.environment.reducedMotion
     ? 0
     : motionProgress.interpolate({ inputRange: [0, 1], outputRange: [entryOffset, 0] });
   const renderedToneIcon = renderToneIcon?.({
@@ -833,6 +845,7 @@ function ToastSurface({
   return (
     <Animated.View
       accessible={false}
+      onTouchCancel={() => onResume("pointer")}
       onTouchEnd={() => onResume("pointer")}
       onTouchStart={() => onPause("pointer")}
       style={[
@@ -840,12 +853,12 @@ function ToastSurface({
           alignItems: "stretch",
           backgroundColor: background,
           borderColor: border,
-          borderRadius: radius[toastRecipe.surface.radius],
+          borderRadius: managedMotion ? 32 : radius[toastRecipe.surface.radius],
           borderWidth: toastRecipe.surface.borderWidth,
           gap: toastRecipe.surface.gap,
           maxWidth: toastRecipe.surface.maxWidth,
-          minHeight: toastRecipe.surface.minHeight,
-          opacity: motionProgress,
+          minHeight: managedMotion ? 74 : toastRecipe.surface.minHeight,
+          opacity: managedMotion ? 1 : motionProgress,
           overflow: "hidden",
           padding: toastRecipe.surface.padding,
           shadowColor: toastRecipe.surface.shadow.color,
@@ -871,7 +884,7 @@ function ToastSurface({
           width: toastRecipe.toneMark.width,
         }}
       />
-      {Platform.OS === "ios" ? null : (
+      {!announces || Platform.OS === "ios" ? null : (
         <Text
           accessibilityLabel={resolved.announcement}
           accessibilityLiveRegion={resolved.priority === "high" ? "assertive" : "polite"}
@@ -1039,6 +1052,10 @@ export type ToastSafeAreaInsets = Readonly<{
 }>;
 
 export type ToastRegionProps = Readonly<{
+  /** Optional renderer from the toast-liquid subpath. Requires top placement and one visible slot. */
+  presentationAdapter?: ToastPresentationAdapter;
+  /** Host modal ownership: hide and pause announcements without creating a second queue. */
+  occluded?: boolean;
   children?: ReactNode;
   /** Optional localized name for the region; individual toasts remain self-announcing. */
   accessibilityLabel?: string;
@@ -1094,6 +1111,7 @@ function snapshotDescriptor(snapshot: ToastSessionSnapshot): ToastDescriptor {
     ...(descriptor.title === null ? {} : { title: descriptor.title }),
     description: descriptor.description,
     tone: descriptor.tone,
+    presentation: descriptor.presentation,
     priority: descriptor.priority,
     announcement: descriptor.announcement,
     durationMs: descriptor.durationMs,
@@ -1116,8 +1134,49 @@ function allToastSnapshots(snapshot: ToastStoreSnapshot): readonly ToastSessionS
   return [...snapshot.visible, ...snapshot.queued];
 }
 
+function PresentedToast({ adapter, width, availableHeight, windowOrigin, ...props }: ToastSurfaceProps & {
+  adapter: ToastPresentationAdapter | undefined;
+  width: number;
+  availableHeight: number;
+  windowOrigin: { x: number; y: number } | undefined;
+}) {
+  // Updating a job's copy must not replay its entrance or replace its presentation mid-session.
+  const [enhanced] = useState(() => props.snapshot.descriptor.presentation === "liquid");
+  const selected = enhanced ? adapter : undefined;
+  const enabled = selected !== undefined;
+  const callbacks = useRef(props);
+  callbacks.current = props;
+  useLayoutEffect(() => {
+    if (enabled) callbacks.current.onPause("presentation");
+    else callbacks.current.onResume("presentation");
+  }, [enabled]);
+  const announcement = props.snapshot.descriptor;
+  const lastAnnouncement = useRef<string | undefined>(undefined);
+  useEffect(() => {
+    if (props.suspended || props.snapshot.phase !== "visible" || Platform.OS !== "ios") return;
+    const key = `${announcement.id}:${announcement.priority}:${announcement.announcement}`;
+    if (lastAnnouncement.current === key) return;
+    lastAnnouncement.current = key;
+    AccessibilityInfo.announceForAccessibilityWithOptions(announcement.announcement, { queue: announcement.priority !== "high" });
+  }, [announcement.announcement, announcement.priority, props.snapshot.phase, props.suspended]);
+  const announcer = Platform.OS === "ios" || props.suspended ? null : <Text
+    accessibilityLabel={announcement.announcement} accessibilityLiveRegion={announcement.priority === "high" ? "assertive" : "polite"}
+    accessible style={{ height: 1, opacity: 0, position: "absolute", width: 1 }}>{announcement.announcement}</Text>;
+  const fallback = <ToastSurface {...props} announces={false} />;
+  if (!selected) return <>{announcer}{fallback}</>;
+  const Surface = selected.Surface;
+  return <>{announcer}<Surface anchor={selected.anchor} snapshot={props.snapshot} width={width} availableHeight={availableHeight}
+    {...(windowOrigin === undefined ? {} : { windowOrigin })}
+    suspended={props.suspended ?? false}
+    body={<ToastSurface {...props} announces={false} managedMotion />}
+    fallback={fallback} onPause={props.onPause} onResume={props.onResume}
+    onDismiss={props.onDismiss} onExitComplete={props.onExitComplete} /></>;
+}
+
 /** Bounded FIFO region with one clock, app-state pause and teardown interruption. */
 export function ToastRegion({
+  presentationAdapter,
+  occluded = false,
   children,
   accessibilityLabel,
   toasts,
@@ -1136,6 +1195,9 @@ export function ToastRegion({
   style,
   toastStyle,
 }: ToastRegionProps) {
+  if (presentationAdapter && (presentationAdapter.kind !== "liquid" || placement !== "top" || maxVisible !== 1)) {
+    throw new TypeError("Liquid Toast requires top placement and maxVisible=1");
+  }
   defaultToasts.forEach(resolveToastDescriptor);
   toasts?.forEach(resolveToastDescriptor);
   const [store] = useState<ToastStore>(() =>
@@ -1152,6 +1214,21 @@ export function ToastRegion({
     store.getSnapshot,
     store.getSnapshot,
   );
+  const lastTime = useRef(performance.now());
+  const disposed = useRef(false);
+  const flushTime = useCallback(() => {
+    if (disposed.current) return;
+    const now = performance.now();
+    const elapsed = Math.max(0, now - lastTime.current);
+    lastTime.current = now;
+    // Settle before publish/pause/resume, otherwise frequent updates reset the deadline.
+    if (elapsed > 0) store.advanceTime(elapsed);
+  }, [store]);
+  const [appActive, setAppActive] = useState(AppState.currentState === "active");
+  const dimensions = useWindowDimensions();
+  const viewportRef = useRef<View>(null);
+  const [viewportWidth, setViewportWidth] = useState<number | null>(null);
+  const [windowOrigin, setWindowOrigin] = useState<{ x: number; y: number }>();
   const rawDescriptors = useRef(new Map<string, ToastDescriptor>());
   const initialDescriptors = useRef(toasts ?? defaultToasts);
   const onToastsChangeRef = useRef(onToastsChange);
@@ -1190,26 +1267,31 @@ export function ToastRegion({
     onToastsChangeRef.current?.(next);
   }, [pruneRaw, store]);
   const completeExit = useCallback((id: string) => {
+    if (disposed.current) return false;
+    flushTime();
     const changed = store.completeExit(id);
     if (changed) {
       pruneRaw();
       emitChange();
     }
     return changed;
-  }, [emitChange, pruneRaw, store]);
+  }, [emitChange, pruneRaw, store, flushTime]);
 
   useEffect(() => {
+    flushTime();
     for (const descriptor of initialDescriptors.current) {
       rawDescriptors.current.set(descriptor.id, descriptor);
       store.publish(descriptor);
     }
     return () => {
+      disposed.current = true;
       store.dispose();
     };
   }, [store]);
 
   useEffect(() => {
     if (toasts === undefined) return;
+    flushTime();
     const nextIds = new Set(toasts.map((descriptor) => descriptor.id));
     for (const descriptor of toasts) {
       if (rawDescriptors.current.get(descriptor.id) !== descriptor) {
@@ -1227,13 +1309,21 @@ export function ToastRegion({
 
   useEffect(() => {
     const updateWindowPause = (state: string) => {
+      flushTime();
+      setAppActive(state === "active");
       if (state === "active") store.resumeAll("window");
       else store.pauseAll("window");
     };
     updateWindowPause(AppState.currentState);
     const subscription = AppState.addEventListener("change", updateWindowPause);
     return () => subscription.remove();
-  }, [store]);
+  }, [store, flushTime]);
+
+  useLayoutEffect(() => {
+    flushTime();
+    if (occluded) store.pauseAll("occlusion");
+    else store.resumeAll("occlusion");
+  }, [occluded, store, flushTime]);
 
   useEffect(() => {
     const running = snapshot.visible
@@ -1242,12 +1332,13 @@ export function ToastRegion({
     if (running.length === 0) return;
     const remaining = Math.min(...running.map((timer) => timer.remainingMs ?? Infinity));
     const timeout = setTimeout(() => {
-      store.advanceTime(remaining);
+      flushTime();
     }, remaining);
     return () => clearTimeout(timeout);
-  }, [snapshot.visible, store]);
+  }, [snapshot.visible, store, flushTime]);
 
   const show = useCallback((descriptor: ToastDescriptor) => {
+    flushTime();
     rawDescriptors.current.set(descriptor.id, descriptor);
     const result = store.publish(descriptor);
     pruneRaw();
@@ -1255,6 +1346,7 @@ export function ToastRegion({
     return result;
   }, [emitChange, pruneRaw, store]);
   const dismiss = useCallback((id: string, reason: ToastDismissReason = "programmatic") => {
+    flushTime();
     const changed = store.dismiss(id, reason);
     if (changed) {
       pruneRaw();
@@ -1263,16 +1355,20 @@ export function ToastRegion({
     return changed;
   }, [emitChange, pruneRaw, store]);
   const invokeAction = useCallback((id: string) => {
+    flushTime();
     return store.invokeAction(id);
   }, [store]);
   const controller = {
     publish: show,
     show,
     dismiss,
-    pause: (id: string, reason: ToastPauseReason = "programmatic") => store.pause(id, reason),
-    resume: (id: string, reason: ToastPauseReason = "programmatic") => store.resume(id, reason),
+    pause: (id: string, reason: ToastPauseReason = "programmatic") => { flushTime(); return !disposed.current && store.pause(id, reason); },
+    resume: (id: string, reason: ToastPauseReason = "programmatic") => { flushTime(); return !disposed.current && store.resume(id, reason); },
   } satisfies ToastRegionController;
 
+  const suspended = occluded || !appActive;
+  const width = viewportWidth ?? Math.max(0, dimensions.width - safeLeft - safeRight - toastRecipe.viewport.inset * 2);
+  const availableHeight = Math.max(0, dimensions.height - (windowOrigin?.y ?? safeTop + toastRecipe.viewport.inset) - safeBottom - toastRecipe.viewport.inset);
   const hasChildren = children !== undefined && children !== null;
   const inlineAlignment = placementContract.inlineEdge === "start"
     ? "flex-start"
@@ -1286,9 +1382,17 @@ export function ToastRegion({
       <View style={[{ flex: hasChildren ? 1 : undefined }, style]}>
         {children}
         <View
+          ref={viewportRef}
+          onLayout={event => {
+            setViewportWidth(event.nativeEvent.layout.width);
+            viewportRef.current?.measureInWindow?.((x, y) => setWindowOrigin(previous => previous?.x === x && previous?.y === y ? previous : { x, y }));
+          }}
           accessibilityLabel={accessibilityLabel}
-          pointerEvents="box-none"
+          accessibilityElementsHidden={suspended}
+          importantForAccessibility={suspended ? "no-hide-descendants" : "auto"}
+          pointerEvents={suspended ? "none" : "box-none"}
           style={{
+            opacity: suspended ? 0 : 1,
             alignItems: inlineAlignment,
             direction: theme.environment.direction,
             elevation: toastRecipe.viewport.layer,
@@ -1302,13 +1406,18 @@ export function ToastRegion({
           }}
         >
           {snapshot.visible.map((entry) => (
-            <ToastSurface
+            <PresentedToast
               key={entry.descriptor.id}
+              adapter={presentationAdapter}
+              width={width}
+              availableHeight={availableHeight}
+              windowOrigin={windowOrigin}
+              suspended={suspended}
               onAction={() => invokeAction(entry.descriptor.id)}
               onDismiss={(reason) => dismiss(entry.descriptor.id, reason)}
               onExitComplete={() => completeExit(entry.descriptor.id)}
-              onPause={(reason) => store.pause(entry.descriptor.id, reason)}
-              onResume={(reason) => store.resume(entry.descriptor.id, reason)}
+              onPause={(reason) => { controller.pause(entry.descriptor.id, reason); }}
+              onResume={(reason) => { controller.resume(entry.descriptor.id, reason); }}
               placement={placement}
               {...(renderToneIcon === undefined ? {} : { renderToneIcon })}
               snapshot={entry}

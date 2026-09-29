@@ -1,0 +1,14 @@
+diff --git a/ios/RNIContextMenu/RNIMenuActionItem.swift b/ios/RNIContextMenu/RNIMenuActionItem.swift
+index 63fae48aeb169f0ec81798adc60f53304be9afcb..5e25cedaae4629dc038755677251d597c9d68760 100644
+--- a/ios/RNIContextMenu/RNIMenuActionItem.swift
++++ b/ios/RNIContextMenu/RNIMenuActionItem.swift
+@@ -182,7 +182,8 @@ extension RNIMenuActionItem {
+     );
+     
+     #if swift(>=5.5)
+-    if #available(iOS 15.0, *) {
++    // Xcode 27 annotates UIAction.subtitle as iOS 16+; keep older hosts supported.
++    if #available(iOS 16.0, *) {
+       action.subtitle =
+            self.actionSubtitle
+         ?? self.fallbackActionSubtitle;

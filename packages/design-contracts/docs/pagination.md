@@ -144,4 +144,7 @@ Steps와 같은 이유다: 순서를 나타내는 문장의 어순과 조사는 
 [MUI Pagination](https://mui.com/material-ui/react-pagination/)의 명시적 페이지 탐색과
 outlined 위치 표시를 비교했습니다. HJM은 기존 content-brand outline과 평평한 목록을 유지합니다.
 브라우저 테스트는 현재 페이지 의미, 마지막 페이지 focus 유지·중복 요청 차단, 빈 결과,
-320px·2배 글자·4자리 페이지·RTL을 다룹니다. 실제 제품과 보조기기 검증은 남아 있습니다.
+320px·2배 글자·4자리 페이지·RTL을 다룹니다. Web renderer는 default·접근성·환경 matrix와
+실제 Tab/Space/Enter 페이지 전환·경계 focus proof를 통과해 stable입니다. Pagination에는
+소비자 문장을 그리는 visible text slot이 없어 long-copy proof는 요구하지 않습니다. 제품 URL·목록
+갱신과 실기기/보조기기 QA는 소비 앱 소유입니다.

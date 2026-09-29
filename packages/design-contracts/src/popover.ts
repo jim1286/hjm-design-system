@@ -79,14 +79,13 @@ export type PopoverDismissPolicy = Readonly<{
 }>;
 
 /**
- * 무엇이 popover를 여는가. `press`가 기본이고 `hover`는 **읽기 전용 미리보기**
- * (다른 시스템의 HoverCard)를 위한 축이다.
+ * 무엇이 popover를 여는가. `press`가 기본이고 `hover`는 포인터의 추가 진입
+ * 방식이다. hover를 켜도 press 경로를 유지해야 키보드·터치 사용자가 같은
+ * 콘텐츠에 도달할 수 있다.
  *
- * 별도 컴포넌트를 만들지 않은 이유: 표면·초점·dismiss·충돌 회피가 전부 같고 다른 것은
- * 여는 방법 하나뿐이다. 두 컴포넌트로 나누면 그 네 가지가 두 벌이 된다.
- *
- * 대신 `hover`에는 제약이 붙는다 — hover로만 열리는 내용에 **행동을 두면 안 된다**.
- * 포인터가 없는 사용자는 그 행동에 닿을 수 없기 때문이다. 미리보기는 읽기 전용이다.
+ * 별도 HoverCard는 검토했지만 표면·초점·dismiss·충돌 회피 계약은 같고 여는
+ * 방식만 하나 더하는 것이므로 컴포넌트를 나누지 않는다. hover는 지나가는 포인터에
+ * 바로 반응하지 않도록 지연되며, click/키보드/터치 경로를 대체하지 않는다.
  */
 export type PopoverOpenOn = "press" | "hover";
 
@@ -276,6 +275,8 @@ export const popoverBehaviorScenarios = [
   "escape-closes-and-restores-trigger-focus",
   "outside-pointer-close-does-not-cancel-the-original-interaction",
   "tabbing-past-last-focusable-child-closes-without-trapping",
+  "optional-hover-opens-after-delay-and-survives-pointer-crossing",
+  "hover-mode-retains-press-activation-for-touch-and-keyboard",
   "controlled-owner-programmatic-close-always-wins",
   "close-action-inside-content-closes-exactly-once",
   "trigger-while-open-does-not-reopen",

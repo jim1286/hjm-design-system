@@ -95,22 +95,28 @@ describe("component reference coverage", () => {
       },
     });
     expect(getComponentDefinition("tooltip")).toMatchObject({
-      surfaces: { web: { status: "beta" }, native: { status: "unsupported" } },
+      contract: { status: "stable" },
+      surfaces: { web: { status: "stable" }, native: { status: "unsupported" } },
     });
     expect(getComponentDefinition("top-bar")).toMatchObject({
-      surfaces: { web: { status: "beta" }, native: { status: "beta" } },
+      surfaces: { web: { status: "stable" }, native: { status: "stable" } },
     });
     expect(getComponentDefinition("select")).toMatchObject({
-      contract: { status: "beta" },
-      surfaces: { web: { status: "beta" }, native: { status: "beta" } },
+      contract: { status: "stable" },
+      surfaces: { web: { status: "stable" }, native: { status: "stable" } },
+    });
+    expect(getComponentDefinition("combobox")).toMatchObject({
+      contract: { status: "stable" },
+      surfaces: { web: { status: "stable" }, native: { status: "stable" } },
     });
     expect(getComponentDefinition("form")).toMatchObject({
-      contract: { status: "beta" },
-      surfaces: { web: { status: "beta" }, native: { status: "beta" } },
+      contract: { status: "stable" },
+      surfaces: { web: { status: "stable" }, native: { status: "stable" } },
     });
   });
 
   it("tracks built-in renderer maturity independently from contract maturity", () => {
+    const catalogEntries: readonly ComponentCatalogEntry[] = componentCatalog;
     for (const entry of componentCatalog as readonly ComponentCatalogEntry[]) {
       expect(entry.surfaceStatus, entry.name).toBeDefined();
       if (entry.platform === "web") {
@@ -121,10 +127,11 @@ describe("component reference coverage", () => {
       }
     }
 
-    expect(componentCatalog.filter(({ surfaceStatus }) => surfaceStatus.web === "beta")).toHaveLength(79);
-    expect(componentCatalog.filter(({ surfaceStatus }) => surfaceStatus.native === "beta")).toHaveLength(62);
-    expect(componentCatalog.filter(({ surfaceStatus }) => surfaceStatus.web === "stable")).toHaveLength(17);
-    expect(componentCatalog.filter(({ surfaceStatus }) => surfaceStatus.native === "stable")).toHaveLength(17);
+    // 2026-09-29 promotion: every beta renderer now has complete required evidence; Form's focus path was implemented, and ThinkingOrb Native passed installed iOS/Android Skia smoke.
+    expect(catalogEntries.filter(({ surfaceStatus }) => surfaceStatus?.web === "beta")).toHaveLength(0);
+    expect(catalogEntries.filter(({ surfaceStatus }) => surfaceStatus?.native === "beta")).toHaveLength(0);
+    expect(catalogEntries.filter(({ surfaceStatus }) => surfaceStatus?.web === "stable")).toHaveLength(100);
+    expect(catalogEntries.filter(({ surfaceStatus }) => surfaceStatus?.native === "stable")).toHaveLength(83);
   });
 
   it("keeps legacy custom catalog entries working during the surface-status migration", () => {
@@ -138,15 +145,9 @@ describe("component reference coverage", () => {
     expect(getComponentSurfaceStatus(legacyEntry, "native")).toBe("beta");
   });
 
-  it("allows nonvisual provider and utility definitions without fake recipes", () => {
-    expect(getComponentDefinition("app-provider")).toMatchObject({
-      kind: "provider",
-      contract: { recipes: [], behaviors: [] },
-    });
-    expect(getComponentDefinition("utility")).toMatchObject({
-      kind: "utility",
-      contract: { recipes: [], behaviors: [] },
-    });
+  it("does not list deliberately excluded candidates as future work", () => {
+    const names = componentCatalog.map(entry => entry.name) as readonly string[];
+    for (const name of ["AppProvider", "Utility", "BorderBeam", "Chart"]) expect(names).not.toContain(name);
   });
 
   it("explains every roadmap transition and every planned row", () => {
@@ -166,7 +167,7 @@ describe("component reference coverage", () => {
     expect(summarizeComponentRoadmap()).toMatchObject({
       composed: 5,
       prerequisite: 0,
-      declined: 4,
+      declined: 0,
     });
   });
 
@@ -175,8 +176,8 @@ describe("component reference coverage", () => {
       name: "Ant Design",
       version: "6.6.1",
     });
-    expect(antDesignReferenceComponents).toHaveLength(73);
-    expect(new Set(antDesignReferenceComponents.map(({ name }) => name)).size).toBe(73);
+    expect(antDesignReferenceComponents).toHaveLength(70);
+    expect(new Set(antDesignReferenceComponents.map(({ name }) => name)).size).toBe(70);
 
     const categoryCounts = Object.fromEntries(
       ["general", "layout", "navigation", "data-entry", "data-display", "feedback", "other"].map(
@@ -193,7 +194,7 @@ describe("component reference coverage", () => {
       "data-entry": 18,
       "data-display": 21,
       feedback: 11,
-      other: 5,
+      other: 2,
     });
   });
 
@@ -206,20 +207,20 @@ describe("component reference coverage", () => {
       }
     }
 
-    expect(summarizeAntDesignCoverage().tracked).toBe(73);
+    expect(summarizeAntDesignCoverage().tracked).toBe(70);
   });
 
   it("distinguishes full, partial, and planned target maturity", async () => {
     const summary = summarizeAntDesignCoverage();
     expect(summary).toMatchObject({
-      total: 73,
-      tracked: 73,
-      fullyMature: 59,
+      total: 70,
+      tracked: 70,
+      fullyMature: 62,
       partiallyMature: 0,
-      plannedOnly: 14,
-      fullyPreviewable: 59,
+      plannedOnly: 8,
+      fullyPreviewable: 62,
       partiallyPreviewable: 0,
-      contractOnly: 14,
+      contractOnly: 8,
     });
     expect(
       summary.fullyMature + summary.partiallyMature + summary.plannedOnly,
@@ -256,35 +257,6 @@ describe("component reference coverage", () => {
       lifecycle: "new",
       targets: ["virtual-list"],
     });
-    expect(componentCatalog.find(({ name }) => name === "List")?.status).toBe("beta");
-  });
-});
-
-describe("declined components", () => {
-  // componentCatalog은 `as const`라 항목마다 타입이 좁다 — optional 필드는 그 필드를
-  // 실제로 가진 항목에만 존재한다. 계약 타입으로 넓혀서 전부 같은 모양으로 본다.
-  const entries: readonly ComponentCatalogEntry[] = componentCatalog;
-  const declined = entries.filter((entry) => entry.declinedReason !== undefined);
-
-  it("marks components we decided never to build, not merely ones we have not built", () => {
-    expect(declined.length).toBeGreaterThan(0);
-    for (const entry of declined) {
-      // `declinedReason`은 성숙도가 아니라 "만들 것인가"를 말한다. beta/stable에 붙으면
-      // 이미 만든 것을 안 만들겠다고 말하는 셈이라 성립하지 않는다.
-      expect(entry.status, entry.name).toBe("planned");
-      expect(entry.declinedReason?.trim().length, entry.name).toBeGreaterThan(0);
-    }
-  });
-
-  it("keeps a written rationale on disk for every declined component", async () => {
-    // 사유 한 줄은 요약이고 근거는 문서에 있다. 문서가 없으면 다음 사람이 판정을
-    // 되돌릴 근거도, 뒤집힐 조건도 알 수 없다.
-    for (const entry of declined) {
-      const id = componentIds[entry.name as keyof typeof componentIds];
-      await expect(
-        readFile(new URL(`../docs/${id}.md`, import.meta.url), "utf8"),
-        `${entry.name} -> docs/${id}.md`,
-      ).resolves.toContain(entry.name);
-    }
+    expect(componentCatalog.find(({ name }) => name === "List")?.status).toBe("stable");
   });
 });

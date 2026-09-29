@@ -130,10 +130,13 @@ Popover처럼 순수 판정 함수(`resolveTourAdvance`, `validateTourOpenState`
 | "다시 보지 않기" 영속화 | **배제** — 제품이 `TourCloseReason`을 받아 직접 저장할 몫 |
 | 비동기 busy/error 상태 | **배제** — Tour에는 되돌릴 수 없는 side effect가 없다. AlertDialog의 세션 패턴을 가져올 이유가 없다 |
 
-## Web renderer (2026-09-18)
+## Web renderer (promotion scope reviewed 2026-09-29)
 
-`@hjmds/react/tour`의 `Tour`가 이 계약을 실행한다. catalog는 Web `beta`,
-Native `unsupported`다. 제품 vertical slice와 보조기기 실측은 아직 없다.
+`@hjmds/react/tour`의 `Tour`가 이 계약을 실행한다. 정확한 승격 범위는 Web
+renderer이며 Native는 계속 `unsupported`다. Web renderer 증거는 stable 승격에
+준비됐다. 전용 Chromium proof가 긴 번역 copy와 키보드 단계 진행·anchor 이동을
+확인하며, 테스트를 중앙 evidence 및 실행 시나리오에 등록했다. 생성 evidence와 canonical
+`pnpm ci:check`가 모두 통과한 뒤 catalog에 반영한다.
 
 - **anchor는 끝까지 제품 소유다.** props는 노드가 아니라
   `resolveAnchor(anchorId)`를 받는다. renderer는 단계가 바뀔 때마다, 그리고 스크롤·
@@ -147,11 +150,14 @@ Native `unsupported`다. 제품 vertical slice와 보조기기 실측은 아직 
   포인터가 둘러보기를 끝내지 못한다. Escape와 건너뛰기는 어느 단계에서나 나간다.
 - **unmount는 `interrupted`로 한 번만 정산한다.** StrictMode의 probe cleanup과 실제
   unmount를 epoch로 구분한다(Sheet와 같은 방식).
-- 로컬 검증: `test/tour.browser.test.tsx` 6개(이름·안내·단계마다 초점 이동, 배경 inert와
-  바깥 pointer 무시, 첫 단계 이전은 no-op·마지막 다음은 complete, Escape·건너뛰기 탈출,
-  unmount의 1회 interrupted, controlled owner 종료와 320px 배치)와 `Patterns/Tour`.
+- 로컬 검증: `test/tour.browser.test.tsx` 7개(이름·안내·단계마다 초점 이동과 키보드
+  다음 단계에 맞춘 anchor 하이라이트, 배경 inert와 바깥 pointer 무시, 첫 단계 이전은
+  no-op·마지막 다음은 complete, Escape·건너뛰기 탈출, unmount의 1회 interrupted,
+  controlled owner 종료와 320px 배치, 긴 번역 copy 내부 스크롤·키보드 건너뛰기·호출자
+  focus 복귀)와 `Patterns/Tour`.
 
 ## 검증 화면
 
-제품 vertical slice는 아직 없다. 유력 후보는 Yajalal 홈 화면 첫 진입
-안내(검색 → 즐겨찾기 → 알림)이며, 채택 전까지 `beta`는 renderer 수준 증거만 뜻한다.
+제품 화면 통합과 실제 OS 스크린 리더·보조기기 확인은 소비 앱 릴리스 QA에서 수행한다.
+이는 [Stable 승격 기준](stable-promotion.md)의 consumer QA 범위이며 HJM Web renderer
+승격 조건이 아니다. 제품별 앵커 선택과 안내 문구 품질도 제품 소유 계약으로 남는다.

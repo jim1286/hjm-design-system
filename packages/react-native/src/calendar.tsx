@@ -54,6 +54,9 @@ export function Calendar<Content>({ descriptor, composeAccessibleName, previousM
     if (handle != null) { AccessibilityInfo.setAccessibilityFocus(handle); pending.current = undefined; }
   }, [gridKey, request]);
   const diameter = recipe.sizes[size].cellDiameter;
+  // Yoga distributes remaining space after minimum widths: omitting the minimum on
+  // fillers collapses them and shifts partial weeks away from the weekday columns.
+  const columnStyle = { flex: 1, minWidth: diameter };
   const nav = (action: CalendarMonthAction | undefined, reason: "previous" | "next") => action
     ? <Pressable accessibilityRole="button" accessibilityLabel={action.label} disabled={!descriptor.onFocusedMonthChange}
         accessibilityState={{ disabled: !descriptor.onFocusedMonthChange }}
@@ -73,17 +76,17 @@ export function Calendar<Content>({ descriptor, composeAccessibleName, previousM
       <View style={{ flex: 1, minWidth: diameter * 7 }}>
         <View accessible={false} style={{ flexDirection: "row" }}>
           {descriptor.grid.weekdayLabels.map((label, index) => <Text key={index} accessible={false} align="center" tone="muted"
-            variant={recipe.weekdayLabel.textVariant} style={{ flex: 1 }}>{label}</Text>)}
+            variant={recipe.weekdayLabel.textVariant} style={columnStyle}>{label}</Text>)}
         </View>
         {Array.from({ length: cells.length / 7 }, (_, row) => <View key={row} style={{ flexDirection: "row" }}>
           {cells.slice(row * 7, row * 7 + 7).map((cell, column) => "filler" in cell
-            ? <View accessible={false} key={`filler-${column}`} style={{ flex: 1, minHeight: diameter }} />
+            ? <View accessible={false} key={`filler-${column}`} style={{ ...columnStyle, minHeight: diameter }} />
             : <Pressable key={cell.date} ref={(node) => { if (node) targets.current.set(cell.date, node); else targets.current.delete(cell.date); }}
               accessibilityRole="button" accessibilityLabel={cell.accessibleName}
               {...webOnly({ "aria-pressed": cell.isSelected, "aria-disabled": !cell.selectable })}
               accessibilityState={{ selected: cell.isSelected, disabled: !cell.selectable }}
               onPress={() => { if (cell.selectable) setSelected(cell.date); }}
-              style={{ flex: 1, minWidth: diameter, minHeight: diameter, alignItems: "center", justifyContent: "flex-start",
+              style={{ ...columnStyle, minHeight: diameter, alignItems: "center", justifyContent: "flex-start",
                 borderRadius: diameter / 2,
                 opacity: !cell.selectable ? recipe.day.disabledOpacity : cell.outsideFocusedMonth ? recipe.day.outsideFocusedMonthOpacity : 1 }}>
               <View accessible={false} style={{ width: diameter, minHeight: diameter, alignItems: "center", justifyContent: "center", borderRadius: diameter / 2, borderWidth: recipe.day.today.borderWidth, borderColor: cell.isToday ? resolveColorReference(recipe.day.today.border, palette) : "transparent", backgroundColor: cell.isSelected ? colors.primary : "transparent" }}>

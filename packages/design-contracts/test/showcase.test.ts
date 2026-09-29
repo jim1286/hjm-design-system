@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { behaviorRegistry } from "../src/behaviors.js";
 import { componentCatalog } from "../src/catalog.js";
 import {
   assertShowcaseCoverage,
@@ -44,8 +45,12 @@ describe("showcase contract", () => {
       "navigation/bottom-navigation",
     );
     expect(manifest.find(({ component }) => component.name === "Select")?.surfaceMaturity).toEqual({
-      web: "beta",
-      native: "beta",
+      web: "stable",
+      native: "stable",
+    });
+    expect(manifest.find(({ component }) => component.name === "Combobox")?.surfaceMaturity).toEqual({
+      web: "stable",
+      native: "stable",
     });
   });
 
@@ -55,11 +60,11 @@ describe("showcase contract", () => {
     expect(getRequiredShowcaseScenarios(planned!)).toEqual(["contract"]);
   });
 
-  it("requires behavior and adaptive evidence where applicable", () => {
+  it("requires interaction evidence without a duplicate cross-platform gate", () => {
     const dialog = componentCatalog.find(({ name }) => name === "Dialog");
     expect(dialog).toBeDefined();
     expect(getRequiredShowcaseScenarios(dialog!)).toEqual(
-      expect.arrayContaining(["keyboard", "platform-parity", "accessibility", "large-text"]),
+      expect.arrayContaining(["keyboard", "accessibility", "large-text"]),
     );
   });
 
@@ -68,11 +73,39 @@ describe("showcase contract", () => {
     const form = componentCatalog.find(({ name }) => name === "Form")!;
 
     expect(getRequiredShowcaseSurfaces(select)).toEqual(["contract", "web", "native"]);
-    expect(getRequiredShowcaseScenarios(select)).toContain("platform-parity");
+    expect(getRequiredShowcaseScenarios(select)).not.toContain("platform-parity");
+    expect(getRequiredShowcaseScenarios(select)).toContain("keyboard");
     expect(getRequiredShowcaseSurfaces(form)).toEqual(["contract", "web", "native"]);
     expect(getRequiredShowcaseScenarios(form)).toEqual(
       expect.arrayContaining(["default", "dark", "large-text", "accessibility"]),
     );
+  });
+
+  it("does not require visible long-copy layout from media, count, or hidden-text primitives", () => {
+    for (const name of ["Avatar", "Asset", "CounterBadge", "Image", "VisuallyHidden"]) {
+      const entry = componentCatalog.find((item) => item.name === name)!;
+      for (const evidence of getRequiredShowcaseEvidence(entry)) {
+        if (evidence.surface === "contract") continue;
+        expect(evidence.scenarios, name).not.toContain("long-copy");
+      }
+    }
+  });
+
+  it("assigns keyboard and Native action evidence to their owning surfaces", () => {
+    for (const entry of componentCatalog) {
+      if (!("behavior" in entry)) continue;
+      const behavior = behaviorRegistry[entry.behavior];
+      const evidence = getRequiredShowcaseEvidence(entry);
+      const web = evidence.find(({ surface }) => surface === "web");
+      const native = evidence.find(({ surface }) => surface === "native");
+      if (web) expect(web.scenarios.includes("keyboard"), `${entry.name} Web`).toBe(behavior.web.keyboard.length > 0);
+      if (native) {
+        expect(native.scenarios.includes("native-actions"), `${entry.name} Native`).toBe(behavior.native.actions.length > 0);
+        expect(native.scenarios).not.toContain("keyboard");
+      }
+      if (web && behavior.web.keyboard.length > 0) expect(getRequiredShowcaseScenarios(entry)).toContain("keyboard");
+      if (native && behavior.native.actions.length > 0) expect(getRequiredShowcaseScenarios(entry)).toContain("native-actions");
+    }
   });
 
   it("summarizes every catalog entry exactly once", () => {

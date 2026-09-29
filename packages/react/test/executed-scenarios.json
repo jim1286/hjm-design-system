@@ -5,36 +5,655 @@
       "proofFile": "test/default-render.ssr.test.tsx",
       "coverageMode": "all-cases",
       "scenarios": [
-        { "id": "default", "theme": "light", "direction": "ltr", "textScale": 1, "reducedMotion": false }
+        {
+          "id": "default",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
       ]
     },
     {
       "proofFile": "test/scenario-matrix.browser.test.tsx",
       "coverageMode": "all-cases",
       "scenarios": [
-        { "id": "accessibility", "theme": "light", "direction": "ltr", "textScale": 1, "reducedMotion": false },
-        { "id": "dark", "theme": "dark", "direction": "ltr", "textScale": 1, "reducedMotion": false },
-        { "id": "large-text", "theme": "light", "direction": "ltr", "textScale": 2, "reducedMotion": false },
-        { "id": "rtl", "theme": "light", "direction": "rtl", "textScale": 1, "reducedMotion": false },
-        { "id": "reduced-motion", "theme": "light", "direction": "ltr", "textScale": 1, "reducedMotion": true },
-        { "id": "long-copy", "theme": "light", "direction": "ltr", "textScale": 1, "reducedMotion": false }
+        {
+          "id": "accessibility",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        },
+        {
+          "id": "dark",
+          "theme": "dark",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        },
+        {
+          "id": "large-text",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 2,
+          "reducedMotion": false
+        },
+        {
+          "id": "rtl",
+          "theme": "light",
+          "direction": "rtl",
+          "textScale": 1,
+          "reducedMotion": false
+        },
+        {
+          "id": "reduced-motion",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": true
+        },
+        {
+          "id": "long-copy",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
       ]
     },
     {
       "proofFile": "test/stable-core.browser.test.tsx",
       "coverageMode": "all-cases",
       "scenarios": [
-        { "id": "keyboard", "theme": "light", "direction": "ltr", "textScale": 1, "reducedMotion": false }
+        {
+          "id": "keyboard",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/splitter.browser.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "keyboard",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/page-navigation.browser.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "keyboard",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/pagination.keyboard.browser.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "keyboard",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/date-range.keyboard.browser.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "keyboard",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/form.keyboard.browser.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "keyboard",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/menubar.keyboard.browser.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "keyboard",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/accordion.keyboard.browser.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "keyboard",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/sidebar.browser.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "keyboard",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/file-picker.keyboard.browser.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "keyboard",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/agreement.keyboard.browser.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "keyboard",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/bottom-navigation.keyboard.browser.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "keyboard",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/load-more.interactions.browser.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "keyboard",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        },
+        {
+          "id": "long-copy",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/tabs.keyboard.browser.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "keyboard",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        },
+        {
+          "id": "long-copy",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
       ]
     },
     {
       "proofFile": "test/toast-layout.browser.test.tsx",
       "coverageMode": "all-cases",
       "scenarios": [
-        { "id": "dark", "theme": "dark", "direction": "ltr", "textScale": 1, "reducedMotion": true },
-        { "id": "long-copy", "theme": "light", "direction": "ltr", "textScale": 1, "reducedMotion": true },
-        { "id": "large-text", "theme": "light", "direction": "ltr", "textScale": 2, "reducedMotion": true },
-        { "id": "rtl", "theme": "dark", "direction": "rtl", "textScale": 2, "reducedMotion": true }
+        {
+          "id": "dark",
+          "theme": "dark",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": true
+        },
+        {
+          "id": "long-copy",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": true
+        },
+        {
+          "id": "large-text",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 2,
+          "reducedMotion": true
+        },
+        {
+          "id": "rtl",
+          "theme": "dark",
+          "direction": "rtl",
+          "textScale": 2,
+          "reducedMotion": true
+        }
+      ]
+    },
+    {
+      "proofFile": "test/mentions.browser.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "keyboard",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/transfer-list.browser.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "keyboard",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/upload-item.browser.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "keyboard",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/anchor.browser.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "keyboard",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/collapsible.keyboard.browser.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "keyboard",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/data-table.keyboard.browser.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "keyboard",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/tree.browser.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "keyboard",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/tour.browser.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "keyboard",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        },
+        {
+          "id": "long-copy",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/context-menu.interactions.browser.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "keyboard",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        },
+        {
+          "id": "long-copy",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/carousel.browser.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "keyboard",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/menu.keyboard.browser.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "keyboard",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        },
+        {
+          "id": "long-copy",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/advanced.browser.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "keyboard",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/alert-dialog.keyboard.browser.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "keyboard",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        },
+        {
+          "id": "long-copy",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/popover.browser.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "keyboard",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        },
+        {
+          "id": "long-copy",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/side-panel.browser.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "keyboard",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        },
+        {
+          "id": "long-copy",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/sheet-layout.browser.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "keyboard",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        },
+        {
+          "id": "long-copy",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/calendar.browser.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "keyboard",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/command-palette.browser.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "keyboard",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        },
+        {
+          "id": "long-copy",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/tooltip.browser.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "keyboard",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/skip-nav.browser.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "keyboard",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        },
+        {
+          "id": "long-copy",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/thinking-orb.browser.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "dark",
+          "theme": "dark",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        },
+        {
+          "id": "large-text",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 2,
+          "reducedMotion": false
+        },
+        {
+          "id": "rtl",
+          "theme": "light",
+          "direction": "rtl",
+          "textScale": 1,
+          "reducedMotion": false
+        },
+        {
+          "id": "reduced-motion",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": true
+        },
+        {
+          "id": "accessibility",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
       ]
     }
   ]

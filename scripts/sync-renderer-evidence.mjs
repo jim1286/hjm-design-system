@@ -107,7 +107,7 @@ const json = `${JSON.stringify(artifact, null, 2)}\n`;
 const summaryLines = Object.entries(surfaces).map(
   ([surface, summary]) =>
     `- ${surface}: ${summary.claimedComponents}/${summary.activeComponents} active implementations; ` +
-    `${summary.completeScenarioComponents}/${summary.activeComponents} full scenario sets`,
+    `${summary.completeScenarioComponents}/${summary.activeComponents} required scenario sets`,
 );
 const rows = Object.entries(surfaces).flatMap(([surface, summary]) =>
   summary.components.map((component) =>

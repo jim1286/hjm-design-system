@@ -2,7 +2,7 @@ import type { ShowcaseScenarioId } from "@hjmds/design-contracts/showcase";
 
 export const reactNativeRendererEvidenceSchemaVersion = 2 as const;
 
-export type ReactNativeRendererEvidenceScenario = Exclude<ShowcaseScenarioId, "contract">;
+export type ReactNativeRendererEvidenceScenario = Exclude<ShowcaseScenarioId, "contract" | "keyboard">;
 
 export type ReactNativeRendererEvidenceComponent = Readonly<{
   /** Canonical component id from the design-contracts catalog. */
@@ -46,7 +46,18 @@ const nativeScenarioGaps: Readonly<Record<string, readonly ReactNativeRendererEv
 
 /** Cases that render long copy inside the component (renderLongCopy). */
 const nativeLongCopyCases: ReadonlySet<string> = new Set<string>([
+  "masonry", "virtual-list", "qr-code",
   "design-system-provider",
+  "aspect-ratio",
+  "grid",
+  "layout",
+  "steps",
+  "auth-screen",
+  "radio",
+  "list",
+  "timeline",
+  "bottom-info",
+  "top-bar",
   "stack",
   "container",
   "text",
@@ -57,8 +68,16 @@ const nativeLongCopyCases: ReadonlySet<string> = new Set<string>([
   "notice",
   "list-row",
   "tag",
+  "accordion",
+  "file-picker",
+  "agreement",
+  "bottom-navigation",
+  "load-more",
+  "tabs",
   "badge",
   "chip",
+  "select",
+  "combobox",
   "link",
   "heading",
   "empty-state",
@@ -75,7 +94,25 @@ const nativeLongCopyCases: ReadonlySet<string> = new Set<string>([
   "checkbox-group",
   "auth-provider-button",
   "password-field",
+  "search-field",
+  "number-field",
   "field",
+  "floating-action-button",
+  "checkbox",
+  "switch",
+  "toggle-group",
+  "slider",
+  "otp-field",
+  "date-picker",
+  "tags-input",
+  "mentions",
+  "transfer-list",
+  "upload-item",
+  "collapsible",
+  "calendar",
+  "carousel",
+  "dialog",
+  "alert-dialog",
 ]);
 
 function defaultClaim(
@@ -100,22 +137,38 @@ function defaultClaim(
   };
 }
 
-function stableFieldClaim(
+function nativeActionClaim(
+  componentId: string,
   exportNames: readonly string[],
   subpath: `./${string}`,
+  proofFile: `test/${string}.test.tsx` = "test/stable-core.test.tsx",
 ): ReactNativeRendererEvidenceComponent {
-  const base = defaultClaim("field", exportNames, subpath);
+  const base = defaultClaim(componentId, exportNames, subpath);
   return {
     ...base,
-    scenarios: [...base.scenarios, "keyboard"],
+    scenarios: [...base.scenarios, "native-actions"],
     proofs: [
       ...base.proofs,
       {
-        scenarios: ["keyboard"],
-        file: "test/stable-core.test.tsx",
-        caseId: "field",
+        scenarios: ["native-actions"],
+        file: proofFile,
+        caseId: componentId,
       },
     ],
+  };
+}
+
+function nativeActionAndLongCopyClaim(
+  componentId: string,
+  exportNames: readonly string[],
+  subpath: `./${string}`,
+  proofFile: `test/${string}.test.tsx`,
+): ReactNativeRendererEvidenceComponent {
+  const base = defaultClaim(componentId, exportNames, subpath);
+  return {
+    ...base,
+    scenarios: [...base.scenarios, "native-actions", "long-copy"],
+    proofs: [...base.proofs, { scenarios: ["native-actions", "long-copy"], file: proofFile, caseId: componentId }],
   };
 }
 
@@ -142,47 +195,47 @@ export const reactNativeRendererEvidence = {
     defaultClaim("section", ["Section"], "./primitives"),
     defaultClaim("button", ["Button"], "./actions"),
     defaultClaim("icon-button", ["IconButton"], "./actions"),
-    defaultClaim("link", ["Link"], "./actions"),
+    nativeActionClaim("link", ["Link"], "./actions"),
     defaultClaim("bottom-cta", ["BottomCTA"], "./actions"),
-    stableFieldClaim(["Field"], "./forms"),
-    defaultClaim("search-field", ["SearchField"], "./inputs"),
+    nativeActionClaim("field", ["Field"], "./forms"),
+    nativeActionClaim("search-field", ["SearchField"], "./inputs"),
     defaultClaim("text-area", ["TextArea"], "./inputs"),
-    defaultClaim("password-field", ["PasswordField"], "./password-field"),
-    defaultClaim("otp-field", ["OtpField"], "./otp-field"),
-    defaultClaim("number-field", ["NumberField"], "./number-field"),
-    defaultClaim("slider", ["Slider"], "./slider"),
-    defaultClaim("form", ["Form"], "./forms"),
-    defaultClaim("date-picker", ["DatePicker"], "./date-picker"),
-    defaultClaim("calendar", ["Calendar"], "./calendar"),
-    defaultClaim("agreement", ["Agreement"], "./agreement"),
+    nativeActionClaim("password-field", ["PasswordField"], "./password-field"),
+    nativeActionClaim("otp-field", ["OtpField"], "./otp-field"),
+    nativeActionClaim("number-field", ["NumberField"], "./number-field"),
+    nativeActionClaim("slider", ["Slider"], "./slider"),
+    nativeActionClaim("form", ["Form"], "./forms", "test/form.interaction.test.tsx"),
+    nativeActionClaim("date-picker", ["DatePicker"], "./date-picker"),
+    nativeActionClaim("calendar", ["Calendar"], "./calendar", "test/calendar.test.tsx"),
+    nativeActionClaim("agreement", ["Agreement"], "./agreement", "test/agreement.interaction.test.tsx"),
     defaultClaim("top", ["Top"], "./top"),
     defaultClaim("heading", ["Heading"], "./heading"),
-    defaultClaim("toggle-group", ["ToggleGroup"], "./toggle-group"),
+    nativeActionClaim("toggle-group", ["ToggleGroup"], "./toggle-group"),
     defaultClaim("bottom-info", ["BottomInfo"], "./bottom-info"),
-    defaultClaim("collapsible", ["Collapsible"], "./collapsible"),
+    nativeActionClaim("collapsible", ["Collapsible"], "./collapsible", "test/collapsible-actions.test.tsx"),
     defaultClaim("asset", ["Asset", "AssetGroup"], "./asset"),
-    defaultClaim("tags-input", ["TagsInput"], "./tags-input"),
-    defaultClaim("date-range-picker", ["DateRangePicker"], "./date-range"),
-    defaultClaim("mentions", ["Mentions"], "./mentions"),
-    defaultClaim("transfer-list", ["TransferList"], "./transfer-list"),
-    defaultClaim("auth-provider-button", ["AuthProviderButton"], "./provider-button"),
+    nativeActionClaim("tags-input", ["TagsInput"], "./tags-input"),
+    nativeActionClaim("date-range-picker", ["DateRangePicker"], "./date-range", "test/date-range-actions.test.tsx"),
+    nativeActionClaim("mentions", ["Mentions"], "./mentions", "test/mentions-actions.test.tsx"),
+    nativeActionClaim("transfer-list", ["TransferList"], "./transfer-list", "test/transfer-list-actions.test.tsx"),
+    nativeActionClaim("auth-provider-button", ["AuthProviderButton"], "./provider-button"),
     defaultClaim("auth-screen", ["AuthScreenLayout"], "./auth-screen"),
-    defaultClaim("file-picker", ["FilePicker"], "./file-picker"),
-    defaultClaim("checkbox", ["Checkbox"], "./inputs"),
+    nativeActionClaim("file-picker", ["FilePicker"], "./file-picker", "test/file-picker-host-action.test.tsx"),
+    nativeActionClaim("checkbox", ["Checkbox"], "./inputs"),
     defaultClaim("radio", ["Radio"], "./inputs"),
-    defaultClaim("checkbox-group", ["CheckboxGroup"], "./inputs"),
-    defaultClaim("radio-group", ["RadioGroup"], "./inputs"),
-    defaultClaim("switch", ["Switch"], "./inputs"),
-    defaultClaim("segmented-control", ["SegmentedControl"], "./inputs"),
-    defaultClaim("select", ["Select"], "./forms"),
-    defaultClaim("combobox", ["Combobox"], "./forms"),
-    defaultClaim("chip", ["Chip"], "./inputs"),
-    defaultClaim("tabs", ["Tabs"], "./navigation"),
-    defaultClaim("carousel", ["Carousel"], "./carousel"),
-    defaultClaim("floating-action-button", ["FloatingActionButton"], "./floating-action-button"),
+    nativeActionClaim("checkbox-group", ["CheckboxGroup"], "./inputs"),
+    nativeActionClaim("radio-group", ["RadioGroup"], "./inputs"),
+    nativeActionClaim("switch", ["Switch"], "./inputs"),
+    nativeActionClaim("segmented-control", ["SegmentedControl"], "./inputs"),
+    nativeActionClaim("select", ["Select"], "./forms"),
+    nativeActionClaim("combobox", ["Combobox"], "./forms"),
+    nativeActionClaim("chip", ["Chip"], "./inputs"),
+    nativeActionClaim("tabs", ["Tabs"], "./navigation", "test/tabs-actions.test.tsx"),
+    nativeActionClaim("carousel", ["Carousel"], "./carousel", "test/carousel.test.tsx"),
+    nativeActionClaim("floating-action-button", ["FloatingActionButton"], "./floating-action-button"),
     defaultClaim("steps", ["Steps"], "./steps"),
     defaultClaim("top-bar", ["TopBar", "TopBarAction"], "./navigation"),
-    defaultClaim("menu", ["Menu"], "./navigation"),
+    nativeActionAndLongCopyClaim("menu", ["Menu"], "./navigation", "test/menu-actions.test.tsx"),
     defaultClaim("badge", ["Badge"], "./data-display"),
     defaultClaim("avatar", ["Avatar"], "./data-display"),
     defaultClaim("card", ["Card"], "./data-display"),
@@ -194,20 +247,33 @@ export const reactNativeRendererEvidence = {
     defaultClaim("counter-badge", ["CounterBadge"], "./data-display"),
     defaultClaim("list", ["List"], "./data-display"),
     defaultClaim("statistic", ["Statistic", "StatisticGroup"], "./data-display"),
-    defaultClaim("upload-item", ["UploadItem"], "./upload-item"),
+    nativeActionClaim("upload-item", ["UploadItem"], "./upload-item", "test/upload-item.test.tsx"),
     defaultClaim("empty-state", ["EmptyState"], "./feedback"),
     defaultClaim("result", ["Result"], "./feedback"),
     defaultClaim("notice", ["Notice"], "./feedback"),
     defaultClaim("progress", ["Progress"], "./feedback"),
     defaultClaim("skeleton", ["Skeleton"], "./feedback"),
+    {
+      componentId: "thinking-orb", exportNames: ["ThinkingOrb"], subpath: "./thinking-orb",
+      scenarios: ["default", "dark", "large-text", "rtl", "reduced-motion", "accessibility"],
+      proofs: [
+        { scenarios: ["default"], file: defaultProofFile, caseId: "thinking-orb" },
+        { scenarios: ["dark", "large-text", "rtl", "reduced-motion", "accessibility"], file: "test/thinking-orb.test.tsx", caseId: "thinking-orb" },
+      ],
+    },
+    defaultClaim("masonry", ["Masonry"], "./masonry"),
+    defaultClaim("virtual-list", ["VirtualList"], "./virtual-list"),
+    defaultClaim("qr-code", ["QRCode"], "./qr-code"),
     defaultClaim("spinner", ["Spinner"], "./feedback"),
-    defaultClaim("dialog", ["Dialog"], "./overlays"),
-    defaultClaim("alert-dialog", ["AlertDialog"], "./overlays"),
-    defaultClaim("sheet", ["Sheet"], "./overlays"),
-    defaultClaim("bottom-navigation", ["BottomNavigation"], "./navigation"),
-    defaultClaim("load-more", ["LoadMore"], "./navigation"),
-    defaultClaim("accordion", ["Accordion"], "./data-display"),
+    nativeActionClaim("dialog", ["Dialog"], "./overlays", "test/dialog-actions.test.tsx"),
+    nativeActionClaim("alert-dialog", ["AlertDialog"], "./overlays", "test/alert-dialog-actions.test.tsx"),
+    nativeActionAndLongCopyClaim("sheet", ["Sheet"], "./overlays", "test/sheet-viewport.test.tsx"),
+    nativeActionClaim("bottom-navigation", ["BottomNavigation"], "./navigation", "test/bottom-navigation.interaction.test.tsx"),
+    nativeActionClaim("load-more", ["LoadMore"], "./navigation", "test/load-more.interactions.test.tsx"),
+    nativeActionClaim("accordion", ["Accordion"], "./data-display", "test/accordion-actions.test.tsx"),
     defaultClaim("divider", ["Divider"], "./data-display"),
-    defaultClaim("toast", ["ToastRegion", "useToastRegion"], "./feedback"),
+    // This claim covers standard chrome. Liquid's mock lifecycle tests and showcase do not
+    // certify device motion, VoiceOver/TalkBack, or the optional runtime support matrix.
+    nativeActionClaim("toast", ["ToastRegion", "useToastRegion"], "./feedback"),
   ],
 } as const satisfies ReactNativeRendererEvidenceManifest;

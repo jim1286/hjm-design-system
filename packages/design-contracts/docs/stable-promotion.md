@@ -1,51 +1,55 @@
-# stable 승격 절차
+# Stable 승격 기준
 
-2026-09-18 기준 `stable`은 네 개다: Surface, Button, Field, TextArea. 나머지 90여 개
-Web renderer는 `beta`이고, 그 뜻은 **"renderer는 있고 제품 실측은 없다"**이다. 커버리지
-감사가 "컴포넌트 수가 아니라 이 숫자가 배포 준비를 막는다"고 지적한 자리다.
+검토일: 2026-09-29. 이 문서가 성숙도 승격 조건의 원문입니다.
 
-이 문서는 그 숫자를 움직이는 **조건과 순서**만 정한다. 승격 자체는 증거가 모인 뒤에 한다.
+`stable`은 공개 API와 동작을 SemVer로 지원한다는 약속입니다. 변경을 영구히 금지하거나
+모든 제품·OS에서 검증을 마쳤다는 뜻은 아닙니다. `beta`는 API·동작 또는 renderer 검증에
+구체적인 미완료 항목이 있다는 뜻입니다. 채택 제품 수나 사용 기간으로 구분하지 않습니다.
 
-## 왜 자동으로 올리지 않는가
+## 컴포넌트 승격에 필요한 것
 
-`beta → stable`은 "이 API를 바꾸지 않겠다"는 약속이다. 테스트가 초록이라는 것은 우리가
-작성한 시나리오를 통과했다는 뜻이지, 실제 사용자가 그 화면을 통과했다는 뜻이 아니다.
-정적 검사로 승격하면 그 약속의 근거가 우리 자신의 테스트뿐이게 된다.
+1. 공개 타입·기본값·지원 동작이 문서와 일치하고, 알려진 계약 공백이 없어야 합니다.
+2. 승격할 surface의 실제 renderer에 default·접근성·적용되는 환경/행동 회귀 증거가 있어야
+   합니다. 필수 목록은 `showcaseManifest`이며 canonical `pnpm ci:check`를 통과해야 합니다.
+   문서 등록, story 존재 또는 mock 실행을 실제 기기 검증으로 바꿔 부르지 않습니다.
+3. catalog와 생성물, Changeset에 승격 범위를 함께 반영합니다. 기록은
+   [Stable Core](stable-core.md)에 대상·검사·남은 제한을 간단히 남깁니다.
 
-## 승격 조건 (네 가지 전부)
+별도 승격 전용 JSON, 승인 단계, 소비 앱 배포 영수증을 추가하지 않습니다.
+Web과 Native는 `surfaceStatus`로 각각 판정합니다. Web-only의 승격에 Native 구현은 필요
+없습니다. 공유 contract의 승격과 각 renderer의 상태도 구분하고, 미구현 surface를 함께
+stable로 올리지 않습니다. 선택형 모션·네이티브 확장은 기본 컴포넌트의 상태를 상속하지 않습니다.
 
-1. **제품 채택** — 등록된 제품 최소 한 곳의 실제 화면에서 쓰이고, 그 화면이 배포돼 있다.
-   Showcase 사용은 채택이 아니다.
-2. **우회 없음** — 그 제품이 이 컴포넌트를 `.hjm-*` CSS로 덮거나 recipe 값을 다시 읽어
-   인라인 style로 싣고 있지 않다. 우회가 있으면 그것이 곧 API 공백이고, 공백이 있는 API를
-   고정하면 안 된다.
-3. **보조기기 실측** — 해당 표면에서 한 번 이상 실제 확인. Web은 화면 리더 1종 + 키보드
-   전용 통과, Native는 VoiceOver 또는 TalkBack 통과. 기록은 제품 저장소에 남긴다.
-4. **환경 4종** — dark, RTL, 2배 글자, reduced motion에서 그 **제품 화면**이 깨지지 않는다.
-   (renderer evidence의 시나리오와 별개다. 그쪽은 우리 스토리, 이쪽은 실제 화면이다.)
+## 별도로 확인할 것
 
-## 첫 후보 (다음 minor 게시 이후)
-
-BurnTok·Diairy가 실제로 소비 중이고 우회가 남아 있지 않은 것부터 본다.
-
-| 후보 | 채택처 | 남은 확인 |
+| 항목 | 소유 범위 | 성숙도와의 관계 |
 | --- | --- | --- |
-| ListRow | BurnTok, Diairy, Taground | 우회 제거 후 재확인, 보조기기 |
-| Dialog | BurnTok(AppModal) | `onDismissComplete` 소비 후 0ms 타이머 제거 |
-| Sheet | BurnTok(AppSheet) | 같음 |
-| Toast | BurnTok | DS-01 우회 제거 |
-| Notice | Diairy | DS-11 우회 제거 |
-| Tabs | BurnTok | compact 우회가 제품 선택인지 API 공백인지 판정 |
-| TextField | BurnTok, Diairy | 설명·오류 동시 표시 변경 반영 확인 |
-| Select · Checkbox · Switch | 3개 제품 | 보조기기 |
+| 제품 채택 수·사용 기간·배포 이력 | 채택 관측 | 우선순위와 개선 신호. 승격 최소치 없음 |
+| 제품 화면의 키보드·스크린 리더·기기 QA | 소비 앱 릴리스 | 바뀐 흐름과 플랫폼 위험에 맞춰 실행 |
+| HJM renderer 키 동작 / Native 접근성 action | Web `keyboard` / Native `native-actions` 증거 | 각 surface behavior contract에 실제 선언된 입력 방식만 요구 |
+| 제품 화면의 dark·RTL·200%·reduced motion | 소비 앱 릴리스 | 제품이 지원하는 환경 검증. HJM 테스트와 중복 영수증을 요구하지 않음 |
+| Web/Native 의미 일치 | 공통 계약과 관련 행동 회귀 | `adaptive` 전체에 별도 parity 테스트를 일괄 강제하지 않음 |
+| 제품의 style 우회 | API 공백 또는 제품 이관 | HJM API 공백이면 해결. 단순 제품 이관 지연은 승격 조건 아님 |
 
-**순서**: minor 게시 → 소비 앱 dependency·lock 갱신 → 우회 제거 → 보조기기·환경 확인 →
-증거를 제품 저장소에 기록 → 이 표를 근거로 승격 PR.
+컴포넌트의 접근성·환경 검증은 계속 필요합니다. 제품의 임의 조합과 도메인 흐름까지 HJM
+성숙도 하나로 보증하려는 조건을 분리한 것입니다. 모달 focus/dismiss, 선택값 전이, 입력 복구
+같은 고유 행동의 검증은 생략하지 않습니다. 실제 OS에 의존하는 확장의 미검증 제한도 유지합니다.
 
-## 승격하지 않는 것
+Web keyboard는 DOM focus와 문서화된 key binding을 browser renderer에서 확인합니다. Native
+behavior contract은 물리 키가 아니라 접근성 role·state·action을 선언하므로, `onPress`나
+TalkBack action 테스트를 keyboard 증거로 기록하지 않습니다. Native `native-actions`는 그
+host action과 상태 전이를 renderer test에서 확인하며 실제 키보드·VoiceOver·TalkBack 기기 QA는
+소비 앱 릴리스에서 수행합니다.
 
-- 제품이 아직 쓰지 않는 컴포넌트(이번에 추가한 Sidebar·TagsInput·Agreement 등). renderer가
-  있다는 것과 안심하고 쓸 수 있다는 것은 다른 말이다.
-- Native가 `planned`인 채로 Web만 성숙한 항목의 **contract status**. `status`는 계약
-  성숙도이고 표면별 성숙도는 `surfaceStatus`가 따로 갖는다 — 한쪽 표면만으로 계약을
-  stable로 올리면 다른 표면이 조용히 약속에 포함된다.
+## 변경 이유
+
+2026-09-29 감사에서 architecture는 ‘두 제품 또는 두 플랫폼’, 이 문서는 ‘한 제품 배포 +
+제품 화면 실측’, 과거 Stable Core 기록은 ‘세 제품’을 사용하고 있었습니다. 이미 양쪽 renderer
+필수 시나리오가 갖춰진 표시 컴포넌트 7개도 채택 수 때문에 beta에 머물렀습니다.
+제품 인기도와 릴리스 절차가 API 지원 약속을 가로막는 문제를 없애기 위해 조건을 통일했습니다.
+소비 Beta는 [소비 정책 §2](consumer-policy.md#2-성숙도별-채택)의 간단한 채택 기록으로 관리합니다.
+
+2026-09-29 후속 증거 감사에서는 Native 실행 레지스트리의 `keyboard` 증거가 실제 물리 키보드
+입력이 아니라 React Native host action 테스트에 연결된 것을 확인했습니다. Native 계약에 없는
+입력을 공통 keyboard gate로 강제하거나 터치 action을 키보드 검증이라고 부르지 않도록 surface별
+시나리오를 분리했습니다.

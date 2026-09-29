@@ -17,6 +17,8 @@ export const nativeRendererStoryGroups = {
     "list", "carousel", "statistic", "upload-item", "accordion", "collapsible", "asset",
   ],
   feedback: ["empty-state", "result", "notice", "progress", "skeleton", "spinner", "toast", "bottom-info"],
+  dataLayouts: ["masonry", "virtual-list", "qr-code"],
+  thinkingOrb: ["thinking-orb"],
   overlays: ["dialog", "alert-dialog", "sheet"],
 } as const;
 

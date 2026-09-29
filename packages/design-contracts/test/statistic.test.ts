@@ -103,10 +103,10 @@ describe("Statistic visual identity", () => {
     expect(statisticDefaults.trendTone).toBe("neutral");
   });
 
-  it("links the beta renderer contract proven by a product vertical slice", () => {
+  it("links the stable renderer contract with complete scenario evidence", () => {
     expect(componentCatalog.find((entry) => entry.name === "Statistic")).toMatchObject({
       platform: "shared",
-      status: "beta",
+      status: "stable",
       recipe: "statisticRecipe",
     });
     expect(componentCatalog.find((entry) => entry.name === "Statistic")).not.toHaveProperty(

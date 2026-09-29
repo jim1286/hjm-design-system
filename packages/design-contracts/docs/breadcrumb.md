@@ -78,5 +78,8 @@ Web에서는:
 돌아오는 작동 예제입니다. 제품 채택이나 stable 증거로 계산하지 않습니다.
 
 [WAI Breadcrumb](https://www.w3.org/WAI/ARIA/apg/patterns/breadcrumb/)의 landmark·조상 링크·
-현재 위치 의미를 확인했습니다. 브라우저 테스트는 실제 anchor, 현재 plain text, 장식 구분자,
-320px/2배 글자·RTL 줄바꿈을 다룹니다. 실제 제품 라우팅·보조기기 검증은 남아 있습니다.
+현재 위치 의미를 확인했습니다. Web renderer evidence는 component 자신의 긴 label이 320px
+컨테이너 안에서 넘치지 않는지 확인하고, 실제 Tab/Shift+Tab/Enter로 조상 anchor를 따라가며
+현재 위치가 tab stop이나 link가 아닌 `aria-current="page"` 텍스트로 남는지 확인합니다.
+별도 브라우저 회귀는 실제 anchor URL, 장식 구분자, 320px/2배 글자·RTL 줄바꿈을 다룹니다.
+실제 제품 라우팅·보조기기 검증은 소비 앱의 별도 범위입니다. Web renderer evidence의 필수 시나리오 누락은 0이며 Breadcrumb는 Web-only stable입니다.

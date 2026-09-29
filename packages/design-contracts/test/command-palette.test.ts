@@ -126,14 +126,13 @@ describe("CommandPalette visual recipe", () => {
 describe("CommandPalette catalog and crosswalk", () => {
   it("keeps CommandPalette a Web-only overlay and tracks renderer maturity", () => {
     const entry = componentCatalog.find((item) => item.name === "CommandPalette");
-    // 2026-09-18: the Web renderer landed, so `planned` became `beta`; the
-    // Web-only platform boundary is what this file still guards.
+    // 2026-09-29: registered keyboard/long-copy browser proof completed the Web renderer maturity.
     expect(entry).toMatchObject({
       category: "overlay",
       platform: "web",
-      status: "beta",
+      status: "stable",
     });
-    expect(entry?.surfaceStatus).toMatchObject({ web: "beta", native: "unsupported" });
+    expect(entry?.surfaceStatus).toMatchObject({ web: "stable", native: "unsupported" });
   });
 
   it("has no antd crosswalk entry — there is no direct antd counterpart", () => {

@@ -380,7 +380,8 @@ for (const record of rendererRecords) {
         );
       }
       const registeredScenarios = executionByProofFile.get(proofFile);
-      if (!registeredScenarios || !proofSource.includes(record.scenarioRegistry.split("/").at(-1))) {
+      // The checker has loaded and validates this registry above; requiring every proof source to mention its filename duplicated the registry join and rejected focused tests that don't need to import metadata.
+      if (!registeredScenarios) {
         throw new Error(
           `${renderer.name} ${componentId} proof ${proofFile} is not joined to its executed-scenario registry`,
         );

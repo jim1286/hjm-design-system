@@ -1,0 +1,34 @@
+diff --git a/ios/Sources/Extensions+Helpers/RCTView+Helpers.swift b/ios/Sources/Extensions+Helpers/RCTView+Helpers.swift
+index 09be306d5aa39337c5114c2ad6ba7513218e0751..0a650b65b4f127116f78dd057aef2f696f5177a5 100644
+--- a/ios/Sources/Extensions+Helpers/RCTView+Helpers.swift
++++ b/ios/Sources/Extensions+Helpers/RCTView+Helpers.swift
+@@ -25,6 +25,9 @@ public extension RCTView {
+     return rootView.recursivelyFindSubview(whereType: targetType);
+   };
+   
++  // RN 0.86 prebuilt Fabric omits the legacy RCTRootContentView implementation.
++  // Keep the fallback only for legacy builds; Fabric uses its own surface touch handler.
++  #if !RCT_NEW_ARCH_ENABLED
+   var closestParentReactContentView: RCTRootContentView? {
+     let targetType = RCTRootContentView.self;
+   
+@@ -36,6 +39,8 @@ public extension RCTView {
+     return rootView.recursivelyFindSubview(whereType: targetType);
+   };
+   
++  #endif
++
+   var reactTouchHandlers: [RCTTouchHandler]? {
+     self.gestureRecognizers?.compactMap {
+       $0 as? RCTTouchHandler
+@@ -58,6 +63,10 @@ public extension RCTView {
+       currentView = superview;
+     };
+     
++    #if !RCT_NEW_ARCH_ENABLED
+     return closestParentReactContentView?.reactTouchHandlers?.first;
++    #else
++    return nil;
++    #endif
+   };
+ };

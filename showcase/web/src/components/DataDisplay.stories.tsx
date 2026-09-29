@@ -15,7 +15,6 @@ export const List: Story = componentStory("List");
 export const ListRow: Story = componentStory("ListRow");
 export const VirtualList: Story = componentStory("VirtualList");
 // 렌더러를 만들지 않기로 한 행이다 — 토큰 계약만 있고 그리기는 제품 라이브러리 몫이다.
-export const Chart: Story = componentStory("Chart");
 export const Accordion: Story = componentStory("Accordion");
 export const Collapsible: Story = componentStory("Collapsible");
 export const Asset: Story = componentStory("Asset");

@@ -20,7 +20,7 @@ describe("consumer adoption policy", () => {
     expect(policy).toContain("`draft` /\n  `incubating`");
     expect(policy).toContain("timestamp가 있는 `verified` evidence");
     expect(policy).toContain("optional adoption");
-    expect(policy).toContain("정책 버전: **1.3.0**");
+    expect(policy).toContain("정책 버전: **1.4.0**");
     expect(policy).toContain("React Native legacy style compatibility boundary");
     expect(policy).toContain("`HjmCompositionStyle` / `layoutStyle`");
     expect(policy).toContain("위 네 조건과 소비 앱별 이관 목록을 충족한 다음 major에서");

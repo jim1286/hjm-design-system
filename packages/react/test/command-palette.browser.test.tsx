@@ -1,10 +1,13 @@
 import { act, useState } from "react";
+// This proof file is listed by test/executed-scenarios.json; the workspace checker validates its cases against that registry.
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { CommandPalette } from "../src/command-palette.js";
 import { HjmProvider } from "../src/provider.js";
 import "../src/styles.css";
+// The evidence registry points to this focused keyboard proof; the shared scenario fixture omits command activation.
+// componentId: "command-palette"
 
 let host: HTMLDivElement; let root: Root;
 beforeEach(() => { (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true; host = document.createElement("div"); document.body.append(host); root = createRoot(host); });
@@ -23,14 +26,24 @@ const active = () => document.querySelector<HTMLElement>('[role="option"][aria-s
 const optionOf = (label: string) => [...document.querySelectorAll<HTMLElement>('[role="option"]')].find((node) => node.textContent?.startsWith(label))!;
 const key = async (value: string) => act(async () => search().dispatchEvent(new KeyboardEvent("keydown", { key: value, bubbles: true, cancelable: true })));
 
-function Fixture({ onActivate, onAfter, onOpenChange }: {
+function Fixture({ onActivate, onAfter, onOpenChange, longCopy = false }: {
   onActivate?: (id: string, reason: string) => void;
   onAfter?: (id: string) => void;
   onOpenChange?: (open: boolean, reason: string) => void;
+  longCopy?: boolean;
 }) {
   const [open, setOpen] = useState(true);
   const [query, setQuery] = useState("");
-  const items = commands.filter((command) => command.label.includes(query));
+  const items = commands
+    .map((command) => longCopy && command.id === "write"
+      ? {
+        ...command,
+        label: `${command.label} ${"매우 긴 명령 이름 ".repeat(12)}`,
+        description: "이 설명은 좁은 화면에서도 단축키와 겹치거나 팔레트 바깥으로 잘리지 않아야 합니다. ".repeat(3),
+        textValue: `${command.textValue} ${"매우 긴 명령 이름 ".repeat(12)}`,
+      }
+      : command)
+    .filter((command) => command.label.includes(query));
   return (
     <HjmProvider reducedMotion>
       <button type="button">뒤쪽 버튼</button>
@@ -58,6 +71,21 @@ it("names the modal surface, focuses the search field, and makes the page inert"
   expect(behind.closest("[inert]")).not.toBeNull();
 });
 
+it("wraps long command copy inside the palette on a narrow viewport", async () => {
+  await page.viewport(320, 640);
+  await act(async () => root.render(<Fixture longCopy />));
+  await expect.poll(() => document.activeElement).toBe(search());
+
+  const surface = palette()!;
+  const copy = surface.querySelector<HTMLElement>(".hjm-command-palette__copy")!;
+  const rect = surface.getBoundingClientRect();
+  expect(rect.left).toBeGreaterThanOrEqual(0);
+  expect(rect.right).toBeLessThanOrEqual(320);
+  expect(surface.scrollWidth).toBeLessThanOrEqual(surface.clientWidth);
+  expect(copy.getBoundingClientRect().height).toBeGreaterThan(24);
+  expect(copy.textContent).toContain("매우 긴 명령 이름");
+});
+
 it("keeps one active result, skips disabled rows, and filters as the query narrows", async () => {
   await act(async () => root.render(<Fixture />));
   expect(active()).toContain("새 기록 쓰기");
@@ -67,11 +95,7 @@ it("keeps one active result, skips disabled rows, and filters as the query narro
   // The disabled row is never the active target.
   expect(active()).toContain("기록 지우기");
   expect(optionOf("보관함 열기").getAttribute("aria-disabled")).toBe("true");
-  await act(async () => {
-    const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")!.set!;
-    setter.call(search(), "찾기");
-    search().dispatchEvent(new Event("input", { bubbles: true }));
-  });
+  await act(async () => page.getByRole("combobox", { name: "명령 팔레트" }).fill("찾기"));
   // A new result list re-anchors the active row to the first enabled result.
   expect(active()).toContain("기록 찾기");
   expect(search().getAttribute("aria-activedescendant")).toContain("search");

@@ -214,17 +214,17 @@ describe("TransferList self-contained contract", () => {
   });
 });
 
-describe("TransferList catalog and crosswalk stay untouched", () => {
+describe("TransferList catalog and crosswalk", () => {
   it("keeps TransferList an adaptive input with the Transfer alias and per-surface maturity", () => {
     const entry = componentCatalog.find((item) => item.name === "TransferList");
-    // 2026-09-18: Web renderer landed; Native is still planned.
+    // Both renderers now pass their applicable keyboard/host-action and long-copy proofs.
     expect(entry).toMatchObject({
       category: "input",
       platform: "adaptive",
-      status: "beta",
+      status: "stable",
       aliases: ["Transfer"],
     });
-    expect(entry?.surfaceStatus).toMatchObject({ web: "beta", native: "beta" });
+    expect(entry?.surfaceStatus).toMatchObject({ web: "stable", native: "stable" });
   });
 
   it("keeps the antd Transfer crosswalk pointed at TransferList", () => {

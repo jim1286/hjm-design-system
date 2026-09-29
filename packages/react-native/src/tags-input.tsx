@@ -121,7 +121,6 @@ export function TagsInput({
           // There is no keyboard commit vocabulary here: the return key is the
           // only reliable one on a phone, so Comma/Space/Blur stay Web-only.
           onSubmitEditing={() => commit(draft)}
-          onBlur={() => commit(draft)}
           style={{ flexGrow: 1, minWidth: 80, color: content }}
         />
       </View>

@@ -23,6 +23,7 @@ type ContractPackage = Readonly<{
 
 const packageJsonUrl = new URL("../package.json", import.meta.url);
 const publicComponentContractNames = [
+  "thinking-orb",
   "agreement",
   "alert-dialog",
   "anchor",
@@ -105,7 +106,7 @@ describe("package boundaries", () => {
       directory: "packages/design-contracts",
     });
     expect(packageJson.sideEffects).toBe(false);
-    expect(packageJson.files).toEqual(["dist", "docs", "README.md", "LICENSE"]);
+    expect(packageJson.files).toEqual(["dist", "docs", "README.md", "LICENSE", "THIRD_PARTY_NOTICES.md"]);
     expect(packageJson.dependencies).toBeUndefined();
   });
 
@@ -135,6 +136,9 @@ describe("package boundaries", () => {
       "./consumer-policy.md",
       ...publicComponentContractNames.map((name) => `./components/${name}`),
       "./showcase",
+      "./components/masonry",
+      "./components/virtual-list",
+      "./components/qr-code",
     ] as const;
 
     expect(Object.keys(packageJson.exports)).toEqual(expectedExports);

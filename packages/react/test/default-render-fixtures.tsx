@@ -1,3 +1,7 @@
+import { Masonry } from "../src/masonry.js";
+import { VirtualList } from "../src/virtual-list.js";
+import { QRCode } from "../src/qr-code.js";
+import { ThinkingOrb } from "../src/thinking-orb.js";
 /**
  * Shared default-render fixtures for the renderer evidence proofs. The SSR proof
  * (default-render.ssr.test.tsx) renders each one for the default and
@@ -110,6 +114,8 @@ export type DefaultRenderFixture = Readonly<{
   componentId: string;
   /** A class or attribute the component's own root emits, never the provider's. */
   marker: string;
+  /** Portal-backed components can expose only their trigger during server rendering. */
+  ssrMarker?: string;
   render(): ReactNode;
   /**
    * Renders the component with `copy` in its primary text slot. Only fixtures
@@ -186,11 +192,13 @@ export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
   {
     componentId: "aspect-ratio",
     marker: "hjm-aspect-ratio",
+    renderLongCopy: (copy) => <AspectRatio ratio="wide"><Text>{copy}</Text></AspectRatio>,
     render: () => <AspectRatio ratio="wide"><div>Media</div></AspectRatio>,
   },
   {
     componentId: "grid",
     marker: "hjm-grid",
+    renderLongCopy: (copy) => <Grid columns={{ compact: 1, medium: 2 }}><Text>{copy}</Text></Grid>,
     render: () => (
       <Grid columns={{ compact: 1, medium: 2 }}>
         <span>First</span>
@@ -201,6 +209,7 @@ export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
   {
     componentId: "layout",
     marker: "hjm-layout",
+    renderLongCopy: (copy) => <Layout header="내비게이션" skipLinkLabel="본문으로 건너뛰기"><Text>{copy}</Text></Layout>,
     render: () => <Layout>Primary content</Layout>,
   },
   {
@@ -235,7 +244,8 @@ export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
   },
   {
     componentId: "search-field",
-    marker: "type=\"search\"",
+    marker: "hjm-search-field",
+    renderLongCopy: (copy) => <SearchField clearLabel="Clear search" label={copy} />,
     render: () => <SearchField clearLabel="Clear search" label="Search" />,
   },
   {
@@ -259,12 +269,14 @@ export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
   },
   {
     componentId: "otp-field",
-    marker: "hjm-otp-field__slots",
+    marker: "hjm-otp-field",
+    renderLongCopy: (copy) => <OtpField label={copy} length={6} />,
     render: () => <OtpField label="Verification code" length={6} />,
   },
   {
     componentId: "number-field",
     marker: "hjm-number-field",
+    renderLongCopy: (copy) => <NumberField decrementLabel="Decrease" incrementLabel="Increase" label={copy} min={0} max={10} />,
     render: () => (
       <NumberField
         decrementLabel="Decrease"
@@ -278,6 +290,7 @@ export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
   {
     componentId: "slider",
     marker: "hjm-slider",
+    renderLongCopy: (copy) => <Slider label={copy} min={0} max={10} />,
     render: () => <Slider label="Score" min={0} max={10} />,
   },
   {
@@ -288,6 +301,11 @@ export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
   {
     componentId: "date-picker",
     marker: "hjm-date-picker",
+    renderLongCopy: (copy) => (
+      <DatePicker clearLabel="Clear date" closeLabel="Close calendar" composeAccessibleName={({ date }) => date}
+        descriptor={{ grid: defaultCalendarGrid, displayValue: null, placeholder: "Choose a date", label: copy, selectedDate: null, onSelectionChange: () => undefined, open: false, onOpenChange: () => undefined }}
+        monthLabel="February 2027" />
+    ),
     render: () => (
       <DatePicker
         clearLabel="Clear date"
@@ -310,11 +328,15 @@ export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
   {
     componentId: "calendar",
     marker: "hjm-calendar",
+    renderLongCopy: (copy) => <Calendar descriptor={{ grid: defaultCalendarGrid, monthLabel: copy }} composeAccessibleName={({ date }) => date} />,
     render: () => <Calendar descriptor={{ grid: defaultCalendarGrid, monthLabel: "February 2027" }} composeAccessibleName={({ date }) => date} />,
   },
   {
     componentId: "file-picker",
     marker: "hjm-file-picker",
+    renderLongCopy: (copy) => (
+      <FilePicker buttonLabel={copy} descriptor={{ accept: ["image/*"] }} dropzoneLabel={copy} label={copy} onSelect={() => undefined} />
+    ),
     render: () => (
       <FilePicker
         buttonLabel="Choose files"
@@ -327,12 +349,14 @@ export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
   },
   {
     componentId: "checkbox",
-    marker: "type=\"checkbox\"",
+    marker: "hjm-choice",
+    renderLongCopy: (copy) => <Checkbox label={copy} />,
     render: () => <Checkbox label="Checkbox" />,
   },
   {
     componentId: "radio",
-    marker: "type=\"radio\"",
+    marker: "data-kind=\"radio\"",
+    renderLongCopy: (copy) => <Radio label={copy} name="long-copy-radio" />,
     render: () => <Radio label="Radio" name="default-radio" />,
   },
   {
@@ -354,6 +378,7 @@ export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
   {
     componentId: "switch",
     marker: "role=\"switch\"",
+    renderLongCopy: (copy) => <Switch label={copy} />,
     render: () => <Switch label="Switch" />,
   },
   {
@@ -373,11 +398,22 @@ export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
   {
     componentId: "tabs",
     marker: "role=\"tablist\"",
+    renderLongCopy: (copy) => (
+      <Tabs label="Tabs" items={[{ id: "one", label: copy, panel: "First panel" }, { id: "two", label: "Second", panel: "Second panel" }]} />
+    ),
     render: () => (
       <Tabs label="Tabs" items={[{ id: "one", label: "One", panel: "Panel" }]} />
     ),
   },
-  { componentId: "breadcrumb", marker: "hjm-breadcrumb", render: () => <Breadcrumb label="현재 위치" items={[{ id: "all", label: "전체", destination: { kind: "internal", href: "#all" } }, { id: "current", label: "일상" }]} /> },
+  {
+    componentId: "breadcrumb",
+    marker: "hjm-breadcrumb",
+    renderLongCopy: (copy) => <Breadcrumb label={copy} items={[
+      { id: "all", label: copy, destination: { kind: "internal", href: "#all" } },
+      { id: "current", label: copy },
+    ]} />,
+    render: () => <Breadcrumb label="현재 위치" items={[{ id: "all", label: "전체", destination: { kind: "internal", href: "#all" } }, { id: "current", label: "일상" }]} />,
+  },
   { componentId: "pagination", marker: "hjm-pagination", render: () => <Pagination label="페이지" descriptor={{ currentPage: 2, totalPages: 8 }} labels={{ previous: "이전", next: "다음" }} composeAccessibleName={({ page, totalPages }) => `${totalPages}페이지 중 ${page}페이지`} onPageChange={() => {}} /> },
   { componentId: "popover", marker: "hjm-popover", render: () => <Popover defaultOpen title="필터" closeLabel="닫기" trigger={<button>필터</button>}><input aria-label="제목" /></Popover> },
   {
@@ -392,6 +428,10 @@ export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
   {
     componentId: "splitter",
     marker: "hjm-splitter",
+    renderLongCopy: (copy) => (
+      <Splitter label="패널 크기 조절" min={20} max={80} step={5} defaultValue={40}
+        primaryPane={<Text>{copy}</Text>} secondaryPane={<Text>{copy}</Text>} />
+    ),
     render: () => (
       <Splitter label="패널 크기 조절" min={20} max={80} step={5} defaultValue={40}
         getValueText={(value) => `${value}%`}
@@ -421,6 +461,14 @@ export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
   {
     componentId: "tree",
     marker: "hjm-tree",
+    renderLongCopy: (copy) => (
+      <Tree
+        label="폴더"
+        nodes={[{ id: "root", label: "기록", textValue: "기록", children: [{ id: "leaf", label: copy, textValue: copy }] }]}
+        defaultExpandedKeys={new Set(["root"])}
+        composeAccessibleName={({ depth, position, siblingCount, label: name }) => `${depth}단계 ${siblingCount}개 중 ${position}번째, ${name}`}
+      />
+    ),
     render: () => (
       <Tree
         label="폴더"
@@ -433,6 +481,12 @@ export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
   {
     componentId: "transfer-list",
     marker: "hjm-transfer-list",
+    renderLongCopy: (copy) => (
+      <TransferList
+        items={[{ id: "long", label: copy, textValue: copy }]}
+        labels={{ source: copy, target: "Selected", toTarget: "Move to selected", toSource: "Move back", selectAll: "Select all", empty: copy }}
+      />
+    ),
     render: () => (
       <TransferList
         items={[{ id: "a", label: "기록 A", textValue: "기록 A" }, { id: "b", label: "기록 B", textValue: "기록 B" }]}
@@ -444,6 +498,17 @@ export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
   {
     componentId: "mentions",
     marker: "hjm-mentions",
+    renderLongCopy: (copy) => (
+      <Mentions
+        label={copy}
+        value=""
+        onValueChange={() => {}}
+        triggers={[{ id: "person", trigger: "@" }]}
+        candidates={[]}
+        emptyMessage="No people found"
+        listLabel="Suggested people"
+      />
+    ),
     render: () => (
       <Mentions
         label="함께한 사람"
@@ -474,6 +539,13 @@ export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
   {
     componentId: "agreement",
     marker: "hjm-agreement",
+    renderLongCopy: (copy) => (
+      <Agreement requiredLabel="(필수)" optionalLabel="(선택)" descriptor={{
+        accessibilityLabel: copy,
+        allLabel: copy,
+        items: [{ id: "terms-long", label: copy, required: true }],
+      }} />
+    ),
     render: () => (
       <Agreement
         requiredLabel="(필수)"
@@ -501,11 +573,13 @@ export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
   {
     componentId: "text-format",
     marker: "hjm-text-format",
+    renderLongCopy: (copy) => <TextFormat kind="code">{copy}</TextFormat>,
     render: () => <TextFormat kind="kbd">Enter</TextFormat>,
   },
   {
     componentId: "toggle-group",
     marker: "hjm-toggle-group",
+    renderLongCopy: (copy) => <ToggleGroup descriptor={{ accessibilityLabel: "글자 꾸미기", items: [{ id: "bold", label: copy }] }} />,
     render: () => (
       <ToggleGroup descriptor={{ accessibilityLabel: "글자 꾸미기", items: [{ id: "bold", label: "굵게" }] }} />
     ),
@@ -513,6 +587,7 @@ export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
   {
     componentId: "tags-input",
     marker: "hjm-tags-input",
+    renderLongCopy: (copy) => <TagsInput label={copy} composeRemoveLabel={(tag) => `${tag} 지우기`} defaultTags={["산책"]} />,
     render: () => (
       <TagsInput label="태그" defaultTags={["산책"]} composeRemoveLabel={(tag) => `${tag} 지우기`} />
     ),
@@ -525,11 +600,22 @@ export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
   {
     componentId: "bottom-info",
     marker: "hjm-bottom-info",
+    renderLongCopy: (copy) => <BottomInfo items={[copy]} />,
     render: () => <BottomInfo items={["가입하면 약관에 동의하는 것으로 봅니다"]} />,
   },
   {
     componentId: "sidebar",
     marker: "hjm-sidebar",
+    renderLongCopy: (copy) => (
+      <Sidebar
+        descriptor={{
+          accessibilityLabel: "Primary navigation",
+          currentId: "records",
+          groups: [{ id: "main", label: copy, items: [{ id: "records", label: copy }] }],
+        }}
+        collapseLabels={{ collapse: "Collapse navigation", expand: "Expand navigation" }}
+      />
+    ),
     render: () => (
       <Sidebar
         descriptor={{
@@ -562,6 +648,7 @@ export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
   {
     componentId: "auth-screen",
     marker: "hjm-auth-screen",
+    renderLongCopy: (copy) => <AuthScreenLayout hero={<Text>{copy}</Text>} main={<Text>Sign in</Text>} footer={<Text>Terms</Text>} />,
     render: () => (
       <AuthScreenLayout hero={<span>hero</span>} main={<span>main</span>} footer={<span>footer</span>} />
     ),
@@ -569,6 +656,18 @@ export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
   {
     componentId: "data-table",
     marker: "hjm-data-table",
+    renderLongCopy: (copy) => (
+      <DataTable
+        columns={[{ id: "title", header: "제목" }, { id: "day", header: "날짜" }]}
+        rows={[{ id: "long" }]}
+        labels={{
+          table: "기록 표", selectAll: "모두 선택",
+          selectRow: (id) => `${id} 선택`,
+          sortColumn: (header) => `${header} 정렬`,
+        }}
+        renderCell={(_rowId, columnId) => columnId === "title" ? copy : "오늘"}
+      />
+    ),
     render: () => (
       <DataTable
         columns={[{ id: "title", header: "제목" }, { id: "day", header: "날짜", sortable: true }]}
@@ -585,6 +684,11 @@ export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
   {
     componentId: "collapsible",
     marker: "hjm-collapsible",
+    renderLongCopy: (copy) => (
+      <Collapsible trigger={copy} defaultOpen>
+        <p>상세한 배송 안내를 확인해 주세요.</p>
+      </Collapsible>
+    ),
     render: () => (
       <Collapsible trigger="자세히 보기" defaultOpen>
         <p>접었다 펼 수 있는 본문입니다.</p>
@@ -607,6 +711,13 @@ export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
   {
     componentId: "menubar",
     marker: "hjm-menubar",
+    renderLongCopy: (copy) => (
+      <Menubar descriptor={{ accessibilityLabel: "Main menu", menus: [{
+        id: "long-label",
+        label: copy,
+        items: [{ id: "long-item", label: copy, textValue: copy }],
+      }] }} onAction={() => undefined} />
+    ),
     render: () => (
       <Menubar
         descriptor={{
@@ -629,10 +740,18 @@ export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
       </Asset>
     ),
   },
-  { componentId: "anchor", marker: "hjm-anchor", render: () => <Anchor label="목차" items={[{ id: "intro", label: "소개" }]} /> },
+  { componentId: "anchor", marker: "hjm-anchor", renderLongCopy: (copy) => <Anchor label={copy} items={[{ id: "intro", label: copy }]} />, render: () => <Anchor label="목차" items={[{ id: "intro", label: "소개" }]} /> },
   {
     componentId: "bottom-navigation",
     marker: "hjm-bottom-navigation",
+    renderLongCopy: (copy) => (
+      <BottomNavigation
+        descriptor={{ accessibilityLabel: "Primary navigation", items: [{ id: "home", label: "Home", icon: { name: "home" } }, { id: "search", label: copy, icon: { name: "search" } }], selectedKey: "home" }}
+        getHref={({ id }) => `/${id}`}
+        onActivate={() => undefined}
+        renderIcon={({ name }) => <span>{name}</span>}
+      />
+    ),
     render: () => (
       <BottomNavigation
         descriptor={{
@@ -651,6 +770,9 @@ export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
   {
     componentId: "load-more",
     marker: "hjm-load-more",
+    renderLongCopy: (copy) => (
+      <LoadMore descriptor={{ state: { status: "complete" }, labels: { complete: copy, loadMore: copy, loading: copy, retry: copy } }} onLoadMore={async () => undefined} />
+    ),
     render: () => (
       <LoadMore
         descriptor={readyLoadMoreDescriptor}
@@ -661,6 +783,10 @@ export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
   {
     componentId: "carousel",
     marker: "hjm-carousel",
+    renderLongCopy: (copy) => <Carousel label={copy} slides={[{ id: "one", label: copy }, { id: "two", label: "다음 소식" }]}
+      labels={{ previous: copy, next: copy, pause: copy, resume: copy, navigation: copy }}
+      composeAccessibleName={({ position, total, label }) => `${position}/${total} ${label}`}
+      renderSlide={({ label }) => <p>{label}</p>} />,
     render: () => <Carousel label="새 소식" slides={[{ id: "one", label: "첫 소식" }, { id: "two", label: "다음 소식" }]}
       labels={{ previous: "이전", next: "다음", pause: "멈추기", resume: "재생하기", navigation: "소식 이동" }}
       composeAccessibleName={({ position, total, label }) => `${position}/${total} ${label}`}
@@ -669,12 +795,14 @@ export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
   {
     componentId: "floating-action-button",
     marker: "hjm-fab",
+    renderLongCopy: (copy) => <FloatingActionButton descriptor={{ label: copy, icon: { name: "add" } }} renderIcon={() => <span>＋</span>} onContentClearanceChange={() => {}} />,
     render: () => <FloatingActionButton descriptor={{ label: "새 기록", icon: { name: "add" } }}
       renderIcon={() => <span>＋</span>} onContentClearanceChange={() => {}} />,
   },
   {
     componentId: "steps",
     marker: "hjm-steps",
+    renderLongCopy: (copy) => <Steps composeAccessibleName={({ position, total, label }) => `${position} of ${total}: ${label}`} descriptor={{ steps: [{ id: "one", label: copy }, { id: "two", label: "Review" }], currentStepId: "one" }} statusLabels={{ pending: "Pending", current: "Current", complete: "Complete", error: "Error" }} />,
     render: () => (
       <Steps
         composeAccessibleName={({ position, total, label }) => `${position} of ${total}: ${label}`}
@@ -708,6 +836,7 @@ export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
   {
     componentId: "list",
     marker: "hjm-list",
+    renderLongCopy: (copy) => <List label="Items"><ListRow title={copy} /></List>,
     render: () => <List label="Items"><ListRow title="List row" /></List>,
   },
   {
@@ -725,6 +854,9 @@ export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
   {
     componentId: "accordion",
     marker: "hjm-accordion",
+    renderLongCopy: (copy) => (
+      <Accordion aria-label="Help" items={[{ id: "long-copy", title: copy, panel: <p>{copy}</p> }]} />
+    ),
     render: () => (
       <Accordion
         aria-label="Help"
@@ -752,6 +884,13 @@ export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
   {
     componentId: "upload-item",
     marker: "hjm-upload-item",
+    renderLongCopy: (copy) => (
+      <UploadItem
+        descriptor={{ id: "photo", name: copy, sizeLabel: copy, state: { status: "uploading", progress: 0.4, progressLabel: copy } }}
+        labels={{ pending: "Pending", uploading: copy, success: "Complete", cancel: "Cancel", retry: "Retry" }}
+        onCancel={() => undefined}
+      />
+    ),
     render: () => (
       <UploadItem
         descriptor={{ id: "photo", name: "photo.png", sizeLabel: "1.2 MB", state: { status: "uploading", progress: 0.4 } }}
@@ -763,6 +902,7 @@ export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
   {
     componentId: "timeline",
     marker: "hjm-timeline",
+    renderLongCopy: (copy) => <Timeline composeAccessibleName={({ position, total, label }) => `${position} of ${total}: ${label}`} items={[{ id: "created", label: copy }]} />,
     render: () => (
       <Timeline
         composeAccessibleName={({ position, total, label }) =>
@@ -804,6 +944,12 @@ export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
     render: () => <Progress label="Upload" value={45} valueText="45%" />,
   },
   {
+    componentId: "thinking-orb", marker: "data-hjm-thinking-orb", render: () => <ThinkingOrb label="Searching" paused />,
+  },
+  { componentId: "masonry", renderLongCopy: (copy) => <Masonry items={[copy]} keyExtractor={item => item} label="Cards" width={240} columns={1} getItemHeight={() => 300} renderItem={item => <span style={{ overflowWrap: "anywhere" }}>{item}</span>} />, marker: "data-hjm-masonry", render: () => <Masonry items={["First", "Second"]} keyExtractor={item => item} label="Cards" width={240} getItemHeight={() => 120} renderItem={item => <span>{item}</span>} /> },
+  { componentId: "virtual-list", renderLongCopy: (copy) => <VirtualList items={[copy]} keyExtractor={item => item} label="Items" height={300} rowHeight={300} renderItem={item => <span style={{ overflowWrap: "anywhere" }}>{item}</span>} />, marker: "data-hjm-virtual-list", render: () => <VirtualList items={["First", "Second"]} keyExtractor={item => item} label="Items" height={200} rowHeight={100} renderItem={item => <span>{item}</span>} /> },
+  { componentId: "qr-code", renderLongCopy: (copy) => <QRCode value="https://example.com" label="Share code" fallback={<span style={{ overflowWrap: "anywhere" }}>{copy}</span>} />, marker: "data-hjm-qr-code", render: () => <QRCode value="https://example.com" label="Share code" fallback={<a href="https://example.com">Open destination</a>} /> },
+  {
     componentId: "spinner",
     marker: "hjm-spinner",
     render: () => <Spinner label="Loading" />,
@@ -836,7 +982,10 @@ export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
   },
   {
     componentId: "select",
-    marker: "role=\"combobox\"",
+    marker: "hjm-select",
+    renderLongCopy: (copy) => (
+      <Select defaultSelectedKey="one" emptySelectionLabel="No selection" label={copy} placeholder="Choose an option" items={[{ id: "one", label: "One", textValue: "One" }]} />
+    ),
     render: () => (
       <Select
         emptySelectionLabel="No selection"
@@ -849,6 +998,9 @@ export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
   {
     componentId: "combobox",
     marker: "hjm-combobox",
+    renderLongCopy: (copy) => (
+      <Combobox emptyMessage="No results" items={[{ value: "seoul", label: "Seoul" }]} label={copy} loadingMessage="Loading" selectionRequiredMessage="Choose a city" />
+    ),
     render: () => (
       <Combobox
         emptyMessage="No results"
@@ -861,14 +1013,28 @@ export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
   },
   {
     componentId: "dialog",
-    marker: "aria-haspopup=\"dialog\"",
+    // Portal content intentionally waits for hydration; SSR proves the trigger while browser evidence inspects the modal.
+    marker: "role=\"dialog\"",
+    ssrMarker: "Open dialog",
+    renderLongCopy: (copy) => (
+      <Dialog closeLabel="Close" onOpenChange={() => undefined} open title={copy} description={copy} trigger={<button type="button">Open dialog</button>}>
+        <p>{copy}</p>
+      </Dialog>
+    ),
     render: () => (
-      <Dialog closeLabel="Close" trigger={<button type="button">Open</button>} title="Dialog" />
+      <Dialog closeLabel="Close" onOpenChange={() => undefined} open title="Dialog" description="Dialog description" trigger={<button type="button">Open dialog</button>} />
     ),
   },
   {
     componentId: "alert-dialog",
     marker: "aria-haspopup=\"dialog\"",
+    renderLongCopy: (copy) => (
+      <AlertDialog
+        defaultOpen
+        trigger={<button type="button">Open alert</button>}
+        request={{ mode: "alert", title: copy, description: copy, confirmLabel: "OK" }}
+      />
+    ),
     render: () => (
       <AlertDialog
         trigger={<button type="button">Open alert</button>}
@@ -891,6 +1057,9 @@ export const defaultRenderFixtures: readonly DefaultRenderFixture[] = [
   {
     componentId: "tooltip",
     marker: "hjm-tooltip",
+    renderLongCopy: (copy) => (
+      <Tooltip defaultOpen trigger={<button type="button">Help</button>} content={copy} />
+    ),
     render: () => <Tooltip trigger={<button type="button">Help</button>} content="Help text" />,
   },
   {

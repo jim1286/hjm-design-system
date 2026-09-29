@@ -1,5 +1,7 @@
 import { act, useState } from "react";
+// This proof file is listed by test/executed-scenarios.json; the workspace checker validates its cases against that registry.
 import { createRoot, type Root } from "react-dom/client";
+import { userEvent } from "vitest/browser";
 import { beforeEach, afterEach, expect, it, vi } from "vitest";
 import { Anchor } from "../src/anchor.js";
 import { HjmProvider } from "../src/provider.js";
@@ -53,4 +55,51 @@ it("reconciles missing and newly inserted targets", async () => {
   await act(async () => root.render(<Fixture />)); await settle();
   await act(async () => { container.scrollTop = container.scrollHeight; container.dispatchEvent(new Event("scroll")); }); await settle();
   expect(host.querySelector('[aria-current="location"]')?.getAttribute("href")).toBe("#anchor-three");
+});
+
+export const anchorLongCopyCases = [{ componentId: "anchor" }] as const;
+export const anchorKeyboardCases = [{ componentId: "anchor" }] as const;
+
+it("wraps long link labels inside a narrow host without horizontal overflow", async () => {
+  const label = "A deliberately long section label that must remain readable in a narrow table of contents";
+  await act(async () => root.render(
+    <div style={{ width: 144 }}>
+      <Anchor label="Document contents" items={[{ id: "anchor-long-copy-target", label }]} />
+      <section id="anchor-long-copy-target">Section</section>
+    </div>,
+  ));
+
+  const link = host.querySelector<HTMLAnchorElement>(".hjm-anchor__link")!;
+  expect(link.textContent).toBe(label);
+  expect(link.scrollWidth).toBeLessThanOrEqual(link.clientWidth);
+  expect(link.clientHeight).toBeGreaterThan(24);
+});
+
+it("uses native Tab and Enter activation, moves focus, and updates the document scroll root", async () => {
+  await act(async () => root.render(
+    <HjmProvider reducedMotion>
+      <Anchor label="이 문서의 목차" items={items} offset={24} historyMode="push" />
+      <section id="anchor-one">첫 부분</section>
+      <section id="anchor-two">두 번째</section>
+      <section id="anchor-three">마지막 부분</section>
+    </HjmProvider>,
+  ));
+
+  const links = host.querySelectorAll<HTMLAnchorElement>(".hjm-anchor__link");
+  const target = host.querySelector<HTMLElement>("#anchor-two")!;
+  const scroll = vi.spyOn(window, "scrollTo").mockImplementation(() => undefined);
+  vi.spyOn(target, "getBoundingClientRect").mockReturnValue({
+    x: 0, y: 220, top: 220, left: 0, right: 400, bottom: 240, width: 400, height: 20,
+    toJSON: () => ({}),
+  });
+
+  await act(async () => userEvent.tab());
+  expect(document.activeElement).toBe(links[0]);
+  await act(async () => userEvent.tab());
+  expect(document.activeElement).toBe(links[1]);
+  await act(async () => userEvent.keyboard("{Enter}"));
+
+  expect(scroll).toHaveBeenCalledWith({ top: 196, behavior: "instant" });
+  expect(document.activeElement).toBe(target);
+  expect(location.hash).toBe("#anchor-two");
 });

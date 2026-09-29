@@ -1,6 +1,6 @@
 import type { ShowcaseScenarioId } from "@hjmds/design-contracts/showcase";
 export declare const reactNativeRendererEvidenceSchemaVersion: 2;
-export type ReactNativeRendererEvidenceScenario = Exclude<ShowcaseScenarioId, "contract">;
+export type ReactNativeRendererEvidenceScenario = Exclude<ShowcaseScenarioId, "contract" | "keyboard">;
 export type ReactNativeRendererEvidenceComponent = Readonly<{
     /** Canonical component id from the design-contracts catalog. */
     componentId: string;
@@ -1040,6 +1040,65 @@ export declare const reactNativeRendererEvidence: {
             caseId: string;
         }>[];
     }>, Readonly<{
+        /** Canonical component id from the design-contracts catalog. */
+        componentId: string;
+        /** Public symbols that implement this contract on the declared subpath. */
+        exportNames: readonly string[];
+        /** Granular @hjmds/react-native export used by consumers. */
+        subpath: `./${string}`;
+        /** Scenarios supported by automated first-party renderer evidence. */
+        scenarios: readonly ReactNativeRendererEvidenceScenario[];
+        /** Repository-local executable proof for every claimed scenario. */
+        proofs: readonly Readonly<{
+            scenarios: readonly ReactNativeRendererEvidenceScenario[];
+            file: `test/${string}.test.tsx`;
+            caseId: string;
+        }>[];
+    }>, Readonly<{
+        /** Canonical component id from the design-contracts catalog. */
+        componentId: string;
+        /** Public symbols that implement this contract on the declared subpath. */
+        exportNames: readonly string[];
+        /** Granular @hjmds/react-native export used by consumers. */
+        subpath: `./${string}`;
+        /** Scenarios supported by automated first-party renderer evidence. */
+        scenarios: readonly ReactNativeRendererEvidenceScenario[];
+        /** Repository-local executable proof for every claimed scenario. */
+        proofs: readonly Readonly<{
+            scenarios: readonly ReactNativeRendererEvidenceScenario[];
+            file: `test/${string}.test.tsx`;
+            caseId: string;
+        }>[];
+    }>, Readonly<{
+        /** Canonical component id from the design-contracts catalog. */
+        componentId: string;
+        /** Public symbols that implement this contract on the declared subpath. */
+        exportNames: readonly string[];
+        /** Granular @hjmds/react-native export used by consumers. */
+        subpath: `./${string}`;
+        /** Scenarios supported by automated first-party renderer evidence. */
+        scenarios: readonly ReactNativeRendererEvidenceScenario[];
+        /** Repository-local executable proof for every claimed scenario. */
+        proofs: readonly Readonly<{
+            scenarios: readonly ReactNativeRendererEvidenceScenario[];
+            file: `test/${string}.test.tsx`;
+            caseId: string;
+        }>[];
+    }>, {
+        readonly componentId: "thinking-orb";
+        readonly exportNames: readonly ["ThinkingOrb"];
+        readonly subpath: "./thinking-orb";
+        readonly scenarios: readonly ["default", "dark", "large-text", "rtl", "reduced-motion", "accessibility"];
+        readonly proofs: readonly [{
+            readonly scenarios: readonly ["default"];
+            readonly file: "test/default-render.test.tsx";
+            readonly caseId: "thinking-orb";
+        }, {
+            readonly scenarios: readonly ["dark", "large-text", "rtl", "reduced-motion", "accessibility"];
+            readonly file: "test/thinking-orb.test.tsx";
+            readonly caseId: "thinking-orb";
+        }];
+    }, Readonly<{
         /** Canonical component id from the design-contracts catalog. */
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */

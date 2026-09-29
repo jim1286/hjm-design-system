@@ -8,6 +8,8 @@ import { menuRecipe } from "@hjmds/design-contracts/recipes";
 import {
   useCallback,
   useEffect,
+  useId,
+  useLayoutEffect,
   useRef,
   useState,
   type CSSProperties,
@@ -35,6 +37,10 @@ export function ContextMenu<Key extends string = string>({
   className,
 }: ContextMenuProps<Key>) {
   const hostRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const [menuMounted, setMenuMounted] = useState(false);
+  const returnFocusRef = useRef<HTMLElement | null>(null);
+  const menuId = useId();
   const [anchor, setAnchor] = useState<ContextMenuAnchor | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const longPress = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -43,6 +49,10 @@ export function ContextMenu<Key extends string = string>({
   const enabled = items.filter((item) => !item.disabled);
 
   const open = useCallback((reason: ContextMenuOpenReason, pointer: ContextMenuAnchor | null) => {
+    const activeElement = document.activeElement;
+    returnFocusRef.current = activeElement instanceof HTMLElement && hostRef.current?.contains(activeElement)
+      ? activeElement
+      : hostRef.current;
     const rect = hostRef.current?.getBoundingClientRect() ?? null;
     setAnchor(resolveContextMenuAnchor(
       reason,
@@ -52,6 +62,21 @@ export function ContextMenu<Key extends string = string>({
     setActiveIndex(0);
   }, []);
 
+  const setMenuRef = useCallback((node: HTMLDivElement | null) => {
+    menuRef.current = node;
+    setMenuMounted(node !== null);
+  }, []);
+
+  useLayoutEffect(() => {
+    if (anchor === null || !menuMounted || menuRef.current === null) return;
+    menuRef.current.focus();
+    const rect = menuRef.current.getBoundingClientRect();
+    const x = Math.min(Math.max(anchor.x, 0), Math.max(window.innerWidth - rect.width, 0));
+    const y = Math.min(Math.max(anchor.y, 0), Math.max(window.innerHeight - rect.height, 0));
+    // The contract promises viewport coordinates; post-render measurement keeps long labels onscreen, where guessed dimensions could not account for wrapping.
+    if (x !== anchor.x || y !== anchor.y) setAnchor({ x, y });
+  }, [anchor, menuMounted]);
+
   useEffect(() => {
     if (anchor === null) return;
     const onKeyDown = (event: KeyboardEvent) => {
@@ -59,7 +84,7 @@ export function ContextMenu<Key extends string = string>({
         event.preventDefault();
         setAnchor(null);
         // Focus goes back where the menu was opened from, not to the body.
-        hostRef.current?.focus();
+        returnFocusRef.current?.focus();
         return;
       }
       if (event.key === "ArrowDown" || event.key === "ArrowUp") {
@@ -88,11 +113,15 @@ export function ContextMenu<Key extends string = string>({
       if (event.key === "Enter" || event.key === " ") {
         event.preventDefault();
         const item = enabled[activeIndex];
-        if (item) { onAction(item.id as Key); setAnchor(null); hostRef.current?.focus(); }
+        if (item) { onAction(item.id as Key); setAnchor(null); returnFocusRef.current?.focus(); }
+        return;
+      }
+      if (event.key === "Tab") {
+        setAnchor(null);
       }
     };
     const onPointerDown = (event: PointerEvent) => {
-      if (!(event.target instanceof Node) || !document.querySelector(".hjm-context-menu")?.contains(event.target)) {
+      if (!(event.target instanceof Node) || !menuRef.current?.contains(event.target)) {
         setAnchor(null);
       }
     };
@@ -133,11 +162,15 @@ export function ContextMenu<Key extends string = string>({
         <HjmPortal>
           <div
             role="menu"
+            id={menuId}
+            ref={setMenuRef}
+            tabIndex={-1}
+            aria-activedescendant={enabled[activeIndex] ? `${menuId}-item-${activeIndex}` : undefined}
             aria-label={accessibilityLabel}
             className="hjm-context-menu"
             style={{
-              insetBlockStart: anchor.y,
-              insetInlineStart: anchor.x,
+              top: anchor.y,
+              left: anchor.x,
               zIndex: getModalLayer(0),
               minInlineSize: menuRecipe.minWidth,
             } as CSSProperties}
@@ -147,6 +180,7 @@ export function ContextMenu<Key extends string = string>({
               return (
                 <div
                   key={item.id}
+                  id={index >= 0 ? `${menuId}-item-${index}` : undefined}
                   role="menuitem"
                   aria-disabled={item.disabled || undefined}
                   data-active={index === activeIndex && !item.disabled ? "" : undefined}
@@ -157,7 +191,7 @@ export function ContextMenu<Key extends string = string>({
                     if (item.disabled) return;
                     onAction(item.id as Key);
                     setAnchor(null);
-                    hostRef.current?.focus();
+                    returnFocusRef.current?.focus();
                   }}
                 >
                   <span>{item.label}</span>

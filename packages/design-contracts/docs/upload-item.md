@@ -63,6 +63,10 @@
   `error`만 쓴다. `loadingMore`와 `empty`는 목록 페이지네이션 개념이라 한 파일의
   상태에는 적용되지 않는다.
 
-**검증 화면.** first-party Web·Native renderer와 cancel/retry 상태 테스트는 연결되어
-surface는 `beta`다. 실제 전송 lifecycle을 쓰는 제품 vertical slice는 아직 없으므로
-`stable` 승격 gate는 닫혀 있다.
+**검증 화면.** Web browser test는 긴 파일명·크기·상태 문구가 좁은 화면에서도 유지되고
+취소 버튼이 Tab/Enter로 동작하는지 확인한다. Native renderer test는 긴 문구, uploading의
+`busy` 상태, 취소·재시도 action을 확인하지만 하드웨어 키보드나 VoiceOver/TalkBack 동작을
+증명하지 않는다. HJM은 caller가 전달한 전송 상태를 표시하고 action을 전달한다. 서버 전송,
+실제 취소, 재시도 lifecycle 검증은 소비 제품이 소유하므로 이 vertical slice의 부재는 HJM
+renderer 승격을 막지 않는다. 2026-09-29 승격 기준 정리에서 adoption/deployment 조건을
+분리했고, renderer 계약과 실제 제품 흐름을 중복 요구하지 않기로 했다.

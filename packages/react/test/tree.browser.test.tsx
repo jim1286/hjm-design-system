@@ -1,4 +1,5 @@
 import { act, useState } from "react";
+// This proof file is listed by test/executed-scenarios.json; the workspace checker validates its cases against that registry.
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
@@ -6,6 +7,8 @@ import { resolveTreeCheckedStates, toggleTreeCheckedSelection } from "@hjmds/des
 import { Tree } from "../src/tree.js";
 import { HjmProvider } from "../src/provider.js";
 import "../src/styles.css";
+// The evidence registry points to this focused keyboard proof; the shared scenario fixture omits Tree selection behavior.
+// componentId: "tree"
 
 let host: HTMLDivElement; let root: Root;
 beforeEach(() => { (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true; host = document.createElement("div"); document.body.append(host); root = createRoot(host); });
@@ -92,6 +95,30 @@ it("expands into the first child and collapses back to the parent, skipping coll
   expect(document.activeElement).toBe(item("보관함"));
 });
 
+it("keeps selection on the focused row and returns focus before collapsing its parent", async () => {
+  const onSelect = vi.fn();
+  await act(async () => root.render(<Fixture onSelect={onSelect} />));
+  const september = item("9월");
+
+  await act(async () => september.focus());
+  await key("Enter");
+  expect(onSelect.mock.calls).toEqual([["september"]]);
+  expect(item("9월").getAttribute("aria-selected")).toBe("true");
+  expect(document.activeElement).toBe(item("9월"));
+
+  await key("ArrowRight");
+  expect(item("9월").getAttribute("aria-expanded")).toBe("true");
+  await key("ArrowRight");
+  expect(document.activeElement).toBe(item("느리게 걸었던 오후"));
+  await key("ArrowLeft");
+  expect(document.activeElement).toBe(item("9월"));
+  await key("ArrowLeft");
+  expect(item("9월").getAttribute("aria-expanded")).toBe("false");
+  expect(document.activeElement).toBe(item("9월"));
+  expect(item("9월").getAttribute("aria-selected")).toBe("true");
+  expect(items()).not.toContain("walk");
+});
+
 it("mirrors the expand and collapse arrows in RTL", async () => {
   await act(async () => root.render(<Fixture direction="rtl" />));
   await act(async () => item("9월").focus());
@@ -157,4 +184,22 @@ it("carries tri-state checks on the node itself and cascades to enabled leaves",
   await key(" ");
   expect(item("느리게 걸었던 오후").getAttribute("aria-checked")).toBe("false");
   expect(item("2026년").getAttribute("aria-checked")).toBe("false");
+});
+
+it("wraps long node labels within a narrow tree instead of widening the page", async () => {
+  const copy = "An unusually long product sentence with verylongunbrokenidentifierlikewordsthatmustwrap and a second clause that keeps going past one line.";
+  host.style.width = "320px";
+  await act(async () => root.render(
+    <Tree
+      label="폴더"
+      nodes={[{ id: "root", label: "기록", textValue: "기록", children: [{ id: "long", label: copy, textValue: copy }] }]}
+      defaultExpandedKeys={new Set(["root"])}
+      composeAccessibleName={({ depth, position, siblingCount, label }) => `${depth}단계 ${siblingCount}개 중 ${position}번째, ${label}`}
+    />,
+  ));
+  const tree = host.querySelector<HTMLElement>('[role="tree"]')!;
+  const label = item(copy).querySelector<HTMLElement>(".hjm-tree__label")!;
+  expect(label.textContent).toBe(copy);
+  expect(label.scrollWidth).toBeLessThanOrEqual(label.clientWidth + 2);
+  expect(tree.getBoundingClientRect().width).toBeLessThanOrEqual(320);
 });

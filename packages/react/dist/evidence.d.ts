@@ -1,6 +1,6 @@
 import type { ShowcaseScenarioId } from "@hjmds/design-contracts/showcase";
 export declare const reactRendererEvidenceSchemaVersion: 2;
-export type ReactRendererEvidenceScenario = Exclude<ShowcaseScenarioId, "contract">;
+export type ReactRendererEvidenceScenario = Exclude<ShowcaseScenarioId, "contract" | "native-actions">;
 export type ReactRendererEvidenceComponent = Readonly<{
     /** Canonical component id from the design-contracts catalog. */
     componentId: string;
@@ -1252,6 +1252,65 @@ export declare const reactRendererEvidence: {
             caseId: string;
         }>[];
     }>, Readonly<{
+        /** Canonical component id from the design-contracts catalog. */
+        componentId: string;
+        /** Public symbols that implement this contract on the declared subpath. */
+        exportNames: readonly string[];
+        /** Granular @hjmds/react export used by consumers. */
+        subpath: `./${string}`;
+        /** Scenarios supported by automated first-party renderer evidence. */
+        scenarios: readonly ReactRendererEvidenceScenario[];
+        /** Repository-local executable proof for every claimed scenario. */
+        proofs: readonly Readonly<{
+            scenarios: readonly ReactRendererEvidenceScenario[];
+            file: `test/${string}.test.tsx`;
+            caseId: string;
+        }>[];
+    }>, Readonly<{
+        /** Canonical component id from the design-contracts catalog. */
+        componentId: string;
+        /** Public symbols that implement this contract on the declared subpath. */
+        exportNames: readonly string[];
+        /** Granular @hjmds/react export used by consumers. */
+        subpath: `./${string}`;
+        /** Scenarios supported by automated first-party renderer evidence. */
+        scenarios: readonly ReactRendererEvidenceScenario[];
+        /** Repository-local executable proof for every claimed scenario. */
+        proofs: readonly Readonly<{
+            scenarios: readonly ReactRendererEvidenceScenario[];
+            file: `test/${string}.test.tsx`;
+            caseId: string;
+        }>[];
+    }>, Readonly<{
+        /** Canonical component id from the design-contracts catalog. */
+        componentId: string;
+        /** Public symbols that implement this contract on the declared subpath. */
+        exportNames: readonly string[];
+        /** Granular @hjmds/react export used by consumers. */
+        subpath: `./${string}`;
+        /** Scenarios supported by automated first-party renderer evidence. */
+        scenarios: readonly ReactRendererEvidenceScenario[];
+        /** Repository-local executable proof for every claimed scenario. */
+        proofs: readonly Readonly<{
+            scenarios: readonly ReactRendererEvidenceScenario[];
+            file: `test/${string}.test.tsx`;
+            caseId: string;
+        }>[];
+    }>, {
+        readonly componentId: "thinking-orb";
+        readonly exportNames: readonly ["ThinkingOrb"];
+        readonly subpath: "./thinking-orb";
+        readonly scenarios: readonly ["default", "dark", "large-text", "rtl", "reduced-motion", "accessibility"];
+        readonly proofs: readonly [{
+            readonly scenarios: readonly ["default"];
+            readonly file: "test/default-render.ssr.test.tsx";
+            readonly caseId: "thinking-orb";
+        }, {
+            readonly scenarios: readonly ["dark", "large-text", "rtl", "reduced-motion", "accessibility"];
+            readonly file: "test/thinking-orb.browser.test.tsx";
+            readonly caseId: "thinking-orb";
+        }];
+    }, Readonly<{
         /** Canonical component id from the design-contracts catalog. */
         componentId: string;
         /** Public symbols that implement this contract on the declared subpath. */

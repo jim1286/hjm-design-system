@@ -140,12 +140,12 @@ describe("Popover visual recipe", () => {
 });
 
 describe("Popover catalog and crosswalk", () => {
-  it("exposes the verified Web beta while preserving its overlay identity", () => {
+  it("exposes the verified Web stable renderer while preserving its overlay identity", () => {
     const entry = componentCatalog.find((item) => item.name === "Popover");
     expect(entry).toMatchObject({
       category: "overlay",
       platform: "web",
-      status: "beta",
+      status: "stable",
     });
   });
 

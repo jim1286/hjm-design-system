@@ -15,6 +15,10 @@ const packageJsonUrl = new URL("../package.json", import.meta.url);
  */
 const budgets = [
   {
+    // Nine upstream modes share geometry and presets; isolated from the default entry.
+    exportPath: "./components/thinking-orb", maxModules: 13, maxRawBytes: 48_000, maxGzipBytes: 13_000, forbiddenModules: metadataModules,
+  },
+  {
     exportPath: "./tokens",
     maxModules: 5,
     maxRawBytes: 15_000,
@@ -119,9 +123,11 @@ const budgets = [
   },
   {
     exportPath: "./components/toast",
-    maxModules: 1,
-    maxRawBytes: 22_000,
-    maxGzipBytes: 4_500,
+    // Liquid adds one pure geometry/recipe module to the existing Toast contract,
+    // not Skia or a new store. Reviewed graph: 25.3 kB raw / 5.7 kB gzip.
+    maxModules: 2,
+    maxRawBytes: 26_000,
+    maxGzipBytes: 6_000,
     forbiddenModules: metadataModules,
   },
   {
@@ -181,9 +187,11 @@ const budgets = [
     // 재사용하고 외부 의존성은 없다 — 증가분이 곧 새 계약 파일 수와 catalog 문구다.
     // P2-c(asset) 한 모듈, dataviz 한 모듈 추가. 외부 의존성 없이 기존 foundations·
     // semantic-colors만 재사용한다 — 증가분이 곧 두 계약 파일과 catalog 문구다.
-    maxModules: 59,
-    maxRawBytes: 339_000,
-    maxGzipBytes: 86_000,
+    // Liquid Toast's pure geometry re-export adds one module; measured 343.8/87.2 kB.
+    // Keep this shared with the Toast contract instead of duplicating renderer math.
+    maxModules: 60,
+    maxRawBytes: 345_000,
+    maxGzipBytes: 88_000,
   },
   {
     // 2026-09-19 AuthScreenLayout: 계약 모듈 한 개가 그래프에 들어왔다. 기존
@@ -203,9 +211,13 @@ const budgets = [
     // 재사용하고 외부 의존성은 없다 — 증가분이 곧 새 계약 파일 수와 catalog 문구다.
     // P2-c(asset) 한 모듈, dataviz 한 모듈 추가. 외부 의존성 없이 기존 foundations·
     // semantic-colors만 재사용한다 — 증가분이 곧 두 계약 파일과 catalog 문구다.
-    maxModules: 68,
-    maxRawBytes: 393_000,
-    maxGzipBytes: 98_000,
+    // ThinkingOrb adds one recipe-only module; measured catalog/showcase/evidence 393.7/401.4/407.7 kB.
+    // 2026-09-29 Select's stable claim and renderer proof rationale add catalog copy with no module increase.
+    // Tabs/BottomNavigation/LoadMore proof mappings add 363 raw / 180 gzip bytes to the unchanged 69-module catalog graph.
+    // Masonry/VirtualList geometry and QR recipe add three neutral modules; QR encoder stays opt-in.
+    maxModules: 72,
+    maxRawBytes: 394_812,
+    maxGzipBytes: 98_307,
   },
   {
     // 2026-09-19 AuthScreenLayout: 계약 모듈 한 개가 그래프에 들어왔다. 기존
@@ -225,9 +237,15 @@ const budgets = [
     // 재사용하고 외부 의존성은 없다 — 증가분이 곧 새 계약 파일 수와 catalog 문구다.
     // P2-c(asset) 한 모듈, dataviz 한 모듈 추가. 외부 의존성 없이 기존 foundations·
     // semantic-colors만 재사용한다 — 증가분이 곧 두 계약 파일과 catalog 문구다.
-    maxModules: 69,
-    maxRawBytes: 401_000,
-    maxGzipBytes: 100_000,
+    // ThinkingOrb adds one recipe-only module; measured catalog/showcase/evidence 393.7/401.4/407.7 kB.
+    // 2026-09-29 promotion metadata raises gzip 100.0 -> 100.2 kB with the same 70-module graph.
+    // Rejected removing stable scenario wiring: each proof must stay linked to the component matrix.
+    // Select's stable surface status is exposed here too; its rationale adds copy but no import edge.
+    // Tabs/BottomNavigation/LoadMore proof mappings add 363 raw / 188 gzip bytes to the unchanged 70-module showcase graph.
+    // Masonry/VirtualList geometry and QR recipe add three neutral modules; QR encoder stays opt-in.
+    maxModules: 73,
+    maxRawBytes: 403_365,
+    maxGzipBytes: 100_872,
   },
   {
     // 2026-09-19 AuthScreenLayout: 계약 모듈 한 개가 그래프에 들어왔다. 기존
@@ -249,9 +267,17 @@ const budgets = [
     // semantic-colors만 재사용한다 — 증가분이 곧 두 계약 파일과 catalog 문구다.
     // 2026-09-26 1.5.0: 모듈 수는 그대로(71). 13개 승격의 maturity 문자열, textless long-copy
     // 규칙, Provider 검증 주석 정정으로 101.0 kB gzip 경계를 넘어 0.3 kB 올렸다.
-    maxModules: 71,
-    maxRawBytes: 407_000,
-    maxGzipBytes: 101_300,
+    // ThinkingOrb adds one recipe-only module; measured catalog/showcase/evidence 393.7/401.4/407.7 kB.
+    // 2026-09-29 List/Timeline/BottomInfo long-copy and Link keyboard proofs add only renderer evidence references.
+    // Evidence graph remains 72 modules, measured 407,480 raw / 101,433 gzip; keep the cap local at 101,500.
+    // 2026-09-29 additional verified promotion claims, including TagsInput keyboard/host-action proof links,
+    // take the unchanged 72-module evidence graph just beyond the prior 101.7 kB cap. Keep executable
+    // proof-file/case links instead of dropping evidence; measured size remains below 102 kB.
+    // Tabs/BottomNavigation/LoadMore proof links add 363 raw / 182 gzip bytes to the unchanged 72-module evidence graph.
+    // Masonry/VirtualList geometry and QR recipe add three neutral modules; QR encoder stays opt-in.
+    maxModules: 75,
+    maxRawBytes: 409_638,
+    maxGzipBytes: 102_369,
   },
   {
     // 2026-09-19 AuthScreenLayout: 계약 모듈 한 개가 그래프에 들어왔다. 기존
@@ -268,7 +294,10 @@ const budgets = [
     // P2-b(collapsible·context-menu·menubar)로 87. 측정 544.4 kB raw / 132.8 kB gzip —
     // gzip은 기존 한도(133 kB) 안이라 그대로 둔다.
     // P2-c(asset·dataviz)로 89. 측정 553.4 kB raw / 136.3 kB gzip.
-    maxModules: 90,
+    // Liquid Toast adds the same pure contract module; measured 565.5/140.6 kB.
+    // ThinkingOrb adds one recipe-only module; measured catalog/showcase/evidence 393.7/401.4/407.7 kB.
+    // Masonry/VirtualList geometry and QR recipe add three neutral modules; QR encoder stays opt-in.
+    maxModules: 95,
     // 0.9.13에서 470_000/110_000을 올렸다. 증가분은 recipe의 근거 주석이며 tsc는
     // 주석을 dist에 그대로 싣는다. maxModules가 70으로 그대로라는 점이 import
     // 그래프가 늘지 않았다는 근거다. 이 한도를 다시 올릴 때는 module 수가 함께
@@ -277,7 +306,10 @@ const budgets = [
     // 1.2 completion: Web screen-chrome maturity/rationale adds catalog text;
     // measured 473.1 kB with the same 70 modules. No new runtime dependency.
     // Anchor contract and navigation catalog updates: measured 476.4 kB raw / 111.8 kB gzip.
-    maxRawBytes: 561_000,
+    // 2026-09-29 stable maturity metadata and evidence mappings exceed the prior 567 kB raw cap
+    // with the same 92-module graph; retain the metadata and leave a narrow 1 kB measured allowance.
+    // Tabs/BottomNavigation/LoadMore proof mappings add 363 raw / 182 gzip bytes to the unchanged 92-module root graph.
+    maxRawBytes: 568_450,
     // Calendar/composition evidence adds catalog copy; the root remains 70 modules
     // (473.6 kB raw / 111.0 kB gzip). Keep granular runtime budgets unchanged.
     // Popover 묶음에서 111.8 -> 112.3 kB gzip. 모듈별로 재면 catalog.js +522 B(Popover·
@@ -286,7 +318,8 @@ const budgets = [
     // 이후 SidePanel·Splitter·Tour·Tree·TransferList·Mentions·CommandPalette·DataTable의
     // maturity 문구가 더해져 113.1 kB gzip / 478.4 kB raw. 여전히 maxModules는 71이다 —
     // 계약 모듈은 전부 이미 그래프 안에 있었고 이번에 늘어난 것은 catalog 문구뿐이다.
-    maxGzipBytes: 139_000,
+    // Keep the gzip cap at the measured size; these are evidence strings, not runtime dependencies.
+    maxGzipBytes: 141_414,
   },
 ];
 
@@ -509,7 +542,8 @@ function checkBudget(budget, measurement) {
 async function main() {
   const packageJson = JSON.parse(await readFile(packageJsonUrl, "utf8"));
   await assertExportTargetsExist(packageJson);
-  const distFiles = await readdir(distDirectory);
+  // ThinkingOrb keeps vendored math internal; inspect nested emitted modules too.
+  const distFiles = await readdir(distDirectory, { recursive: true });
   const availableModules = new Set(distFiles.filter((fileName) => fileName.endsWith(".js")));
   const failures = [];
   const checkedBudgets = getCheckedBudgets(packageJson);

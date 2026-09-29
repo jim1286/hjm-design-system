@@ -1,3 +1,5 @@
+import { DataLayoutPreview } from "../patterns/DataLayouts.stories.js";
+import { ThinkingOrb } from "@hjmds/react/thinking-orb";
 import { PopoverPreview } from "../patterns/Popover.stories.js";
 import { SidePanelPreview } from "../patterns/SidePanel.stories.js";
 import { SplitterPreview } from "../patterns/Splitter.stories.js";
@@ -211,6 +213,10 @@ export const webRendererComponentNames = [
   "EmptyState",
   "Notice",
   "Progress",
+  "ThinkingOrb",
+  "Masonry",
+  "VirtualList",
+  "QRCode",
   "Spinner",
   "Skeleton",
   "Result",
@@ -447,6 +453,10 @@ function WebPreviewRenderer({ name }: { name: RecipeWebRendererComponentName }) 
     case "EmptyState": return <HjmEmptyState icon="◇" title="아직 항목이 없어요" description="새 항목을 추가하면 여기에 표시됩니다." action={<HjmButton>추가하기</HjmButton>} />;
     case "Notice": return <HjmNotice title="저장 전 확인" description="입력한 내용을 다시 확인해 주세요." />;
     case "Progress": return <HjmProgress label="업로드" value={64} valueText="64%" />;
+    case "Masonry": return <DataLayoutPreview />;
+    case "VirtualList": return <DataLayoutPreview mode="virtual" />;
+    case "QRCode": return <DataLayoutPreview mode="qr" />;
+    case "ThinkingOrb": return <ThinkingOrb label="검색 중" state="searching" />;
     case "Spinner": return <HjmSpinner label="불러오는 중" />;
     case "Skeleton": return <HjmSkeleton width="100%" height={20} />;
     case "Result": return <HjmResult status="success" title="저장했어요" description="변경 사항이 모든 기기에 반영되었습니다." actions={[{ label: "확인", onAction: () => undefined }]} />;
@@ -854,6 +864,10 @@ export const webRendererRegistry = {
   EmptyState: createWebRendererDefinition("EmptyState", "emptyStateRecipe"),
   Notice: createWebRendererDefinition("Notice", "noticeRecipe"),
   Progress: createWebRendererDefinition("Progress", "progressRecipe"),
+  Masonry: createWebRendererDefinition("Masonry", "masonryRecipe"),
+  VirtualList: createWebRendererDefinition("VirtualList", "virtualListRecipe"),
+  QRCode: createWebRendererDefinition("QRCode", "qrCodeRecipe"),
+  ThinkingOrb: createWebRendererDefinition("ThinkingOrb", "thinkingOrbRecipe"),
   Spinner: createWebRendererDefinition("Spinner", "spinnerRecipe"),
   Skeleton: createWebRendererDefinition("Skeleton", "skeletonRecipe"),
   Result: createWebRendererDefinition("Result", "resultRecipe"),

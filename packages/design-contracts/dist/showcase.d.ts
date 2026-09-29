@@ -56,7 +56,7 @@ export declare const showcaseEnvironmentMatrix: readonly [{
 }];
 /** Bridges documentation fixtures to the same environment contract products consume. */
 export declare function getShowcaseEnvironmentInput(environment: ShowcaseEnvironment): DesignSystemEnvironmentInput;
-export type ShowcaseScenarioId = "contract" | "default" | "dark" | "long-copy" | "large-text" | "rtl" | "reduced-motion" | "accessibility" | "keyboard" | "platform-parity";
+export type ShowcaseScenarioId = "contract" | "default" | "dark" | "long-copy" | "large-text" | "rtl" | "reduced-motion" | "accessibility" | "keyboard" | "native-actions" | "platform-parity";
 export type ShowcaseSurface = "contract" | "web" | "native";
 export type ShowcaseScenario = Readonly<{
     id: ShowcaseScenarioId;
@@ -99,6 +99,10 @@ export declare const showcaseScenarios: readonly [{
     readonly id: "keyboard";
     readonly label: "Keyboard";
     readonly description: "Focus order and documented keyboard behavior run as interaction tests.";
+}, {
+    readonly id: "native-actions";
+    readonly label: "Native actions";
+    readonly description: "Accessible host actions and their state transitions run against the Native renderer.";
 }, {
     readonly id: "platform-parity";
     readonly label: "Web / Native parity";

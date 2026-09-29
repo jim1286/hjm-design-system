@@ -91,7 +91,11 @@ export function TransferList<Id extends string = string>({
         >
           <Text variant="label">{labels.selectAll}</Text>
         </Pressable>
-        <ScrollView style={{ borderWidth: 1, borderColor: colors.border, borderRadius: 12 }}>
+        <ScrollView
+          accessibilityRole="list"
+          accessibilityLabel={panel === "source" ? labels.source : labels.target}
+          style={{ borderWidth: 1, borderColor: colors.border, borderRadius: 12 }}
+        >
           {rows.length === 0 ? (
             <Text tone="muted" variant="caption" style={{ padding: spacing.sm }}>{labels.empty}</Text>
           ) : (
@@ -101,6 +105,7 @@ export function TransferList<Id extends string = string>({
                 <Pressable
                   key={item.id}
                   accessibilityRole="checkbox"
+                  accessibilityLabel={item.label}
                   accessibilityState={{ checked, disabled: item.disabled === true }}
                   disabled={item.disabled === true}
                   onPress={() => setSelection(toggleTransferListSelection(descriptor, selection, panel, item.id as Id))}

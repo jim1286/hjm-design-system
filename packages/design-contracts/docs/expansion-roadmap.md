@@ -194,8 +194,9 @@ semantic tone은 독립이고 arrow/minus와 visible copy를 함께 사용합니
 
 Yajalal의 선수·FA 기록 vertical slice에서 기존 StatGrid 호환 adapter와 새 Statistic renderer를
 함께 검증했습니다. 좁은 폭에서는 1열까지 reflow하고 큰 글자에서도 값을 줄 수로 자르지 않으며,
-각 통계의 label/value/hint/trend를 독립된 접근성 이름으로 유지하므로 Statistic을 beta로
-승격합니다.
+각 통계의 label/value/hint/trend를 독립된 접근성 이름으로 유지해 Statistic을 첫 beta
+renderer로 도입했습니다. 현재 maturity는 [Stable Core](stable-core.md)의 surface 목록을
+따릅니다.
 
 Select/Combobox는 Menu의 collection contract를 공유하지만 role과 dismiss behavior는 별도입니다.
 Web은 listbox popup, Native는 Sheet를 사용합니다. Native 긴 목록에는 페이지 번호보다
@@ -209,15 +210,18 @@ manual fallback을 유지합니다.
 BurnTok 홈 피드 vertical slice에서 Web IntersectionObserver와 항상 보이는 manual fallback,
 Native FlatList onEndReached와 footer fallback을 같은 controller에 연결했습니다. 두 renderer 모두
 탭과 다음 offset으로 requestKey를 만들고 실제 페이지 요청 Promise가 끝날 때까지 중복 호출을
-차단하며 loading/error/complete 접근성 상태를 검증했으므로 LoadMore를 beta로 승격합니다.
+차단하며 loading/error/complete 접근성 상태를 검증해 LoadMore를 beta renderer로 도입했습니다.
+현재 Web·Native stable evidence와 소비 앱 경계는 [stable promotion log](stable-core.md)에
+기록합니다.
 
 BottomNavigation은 route source-of-truth를 복제하지 않고 `selectedKey`를 input으로만 받습니다.
 Web renderer는 실제 link와 `aria-current`, Native renderer는 navigator의 preventable tabPress와
 long press를 보존합니다. 숫자 badge는 visual subtree를 접근성에서 숨기고 item root에 합성된
 이름을 한 번만 전달합니다. BurnTok 중앙 생성 action은 `center-gap`에 놓이는 sibling primary
 action이며 destination collection에는 들어가지 않습니다. BurnTok Web/RN과 Yajalal RN 실제
-navigation에 적용해 route state·disabled/reselect·긴 글자·safe area·RTL 계약을 검증했으므로
-BottomNavigation을 beta로 승격합니다.
+navigation에 적용해 route state·disabled/reselect·긴 글자·safe area·RTL 계약을 검증해
+BottomNavigation을 beta renderer로 도입했습니다. 현재 Web·Native stable evidence는
+[stable promotion log](stable-core.md)에 기록합니다.
 
 선행 타입은 Select의 nullable stable key와 Combobox의 `selectedKey`/`inputValue` 분리를
 고정합니다. local filtering과 server-driven external filtering도 구분해 선택 상태와 비동기
@@ -233,7 +237,7 @@ state도 selection state와 별도 controlled/uncontrolled 축으로 유지합�
 
 surface별 `planned → beta` gate는 public renderer export와 package CI가 실행하는 canonical
 `default` proof를 요구합니다. 실제 제품 vertical slice는 별도의 adoption evidence이며,
-없다면 beta의 환경 debt와 함께 공개되고 stable 승격을 막습니다. 제품 채택을 검토하는
+없다면 채택 관측으로 남기며 stable 승격을 막지 않습니다(2026-09-29 [기준 개정](stable-promotion.md)). 제품 채택을 검토하는
 과정에서 **전제가 이미 바뀌어 있던 사례**도 나왔습니다.
 
 `Calendar`·`DatePicker`를 위임할 때 "야잘알 일정 찾기가 월 달력 격자를 자체 구현 중"이라는
@@ -244,7 +248,7 @@ surface별 `planned → beta` gate는 public renderer export와 package CI가 �
 
 이후 DatePicker와 Calendar에는 first-party Web·Native renderer와 canonical 환경 증거가 추가되어
 `beta`로 승격됐다. 다만 위 실측은 여전히 유효하다. **제품 adoption evidence는 없고**,
-Yajalal의 날짜 레일을 DatePicker 채택으로 세지 않는다. 따라서 `stable` 승격 근거는 없다.
+Yajalal의 날짜 레일을 DatePicker 채택으로 세지 않는다. 성숙도는 제품 채택 여부 대신 현재 renderer 필수 증거로 판정한다.
 
 **교훈**: 위임할 때 준 실사용처 전제를 저작자가 **확인하게** 해야 한다. 리드의 기억은
 커밋 하나로 낡는다.

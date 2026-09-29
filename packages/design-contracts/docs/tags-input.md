@@ -21,5 +21,8 @@
 
 **삭제는 위치 기준이다.** 중복을 허용한 제품에서 값 기준으로 지우면 엉뚱한 것이 사라진다.
 
-**Native.** 아직 renderer가 없다(catalog `planned`). 자유 입력 + 칩 목록은 키보드
-회피·IME와 함께 검증해야 해서 Web 먼저 낸다.
+**Native.** 현재 renderer는 `TextInput`의 Return으로 값을 확정하고 각 태그 옆의 이름
+있는 button action으로 삭제한다. 제안 목록이 있으면 후보도 button으로 고를 수 있다.
+초안은 포커스를 잃는 것만으로 확정하지 않는다. Web의 ArrowUp/Down 후보 탐색과 빈 입력
+Backspace의 2단계 삭제는 Web 키보드 계약이며 Native에서 같은 키 동작을 주장하지 않는다.
+Native 입력·Return·삭제는 renderer 회귀로 확인하고, IME와 OS별 키보드 동작은 기기 검증 범위다.

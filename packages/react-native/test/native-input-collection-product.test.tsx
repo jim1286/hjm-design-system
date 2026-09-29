@@ -413,3 +413,16 @@ describe("Native collection surfaces", () => {
     expect(menu.root.findAll((node) => node.children.includes("메뉴 불러오는 중"))).not.toHaveLength(0);
   });
 });
+
+it("dismisses Select from its named header control without committing a choice", () => {
+  const onOpenChange = vi.fn(); const onSelectionChange = vi.fn();
+  const tree = render(<Select label="지역" dismissLabel="지역 선택 닫기" placeholder="지역 선택" defaultOpen
+    items={[{ id: "mapo", label: "마포구", textValue: "마포구" }]} onOpenChange={onOpenChange} onSelectionChange={onSelectionChange} />);
+  const close = tree.root.findAllByType(Pressable).find(node => node.props.accessibilityLabel === "지역 선택 닫기" && typeof node.props.style === "function")!;
+  expect(close).toBeDefined();
+  expect(close.props.style({ pressed: false })[0]).toMatchObject({ minWidth: 44, minHeight: 44 });
+  act(() => close.props.onPress());
+  expect(onOpenChange).toHaveBeenCalledWith(false, "programmatic");
+  expect(onSelectionChange).not.toHaveBeenCalled();
+  act(() => tree.unmount());
+});

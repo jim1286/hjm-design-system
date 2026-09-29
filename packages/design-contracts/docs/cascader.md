@@ -108,3 +108,9 @@ collection + tri-state 판정 모듈)으로 확정됐고, Tree renderer가 들�
 작동 예제는 Showcase `Patterns/Tree`의 Cascader 화면이다. "만들지 않는다"는 판정 자체는
 그대로다 — 바뀐 것은 흡수하는 쪽이 컴포넌트가 아니라 조합이라는 점뿐이다.
 
+
+## Native 조합 완성 — 2026-09-29
+
+`showcase/native/src/Cascader.stories.tsx`는 단계별 Select로 도시→지역을 선택한다.
+상위 항목 변경 시 하위 선택을 비워 이전 경로가 남지 않게 하고 전체 초기화를 제공한다.
+기존 Web Tree 조합과 함께 제공하며 새 primitive나 별도 상태 계약은 만들지 않는다.

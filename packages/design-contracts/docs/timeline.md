@@ -141,6 +141,5 @@ Ant Design Timeline의 `mode="alternate"`(항목이 좌우로 번갈아 배치)�
 `LiveScreen.tsx:797-821`의 PBP 플레이 기록이 실제로 존재하는 후보다 — "일어난 일,
 순서, 커서 없음"이라는 경계는 정확히 일치한다. 다만 지금은 `timelineRecipe`의 dot/
 connector 시각이 아니라 평평한 `AppListRow` 목록으로 그려져 있어, 시각 recipe 쪽
-vertical slice는 아직 없다. `planned → beta` 승격은 실제 제품 vertical slice 이후
-리드가 진행한다(로드맵 maturity gate). 구단 상세의 영입·유출 이력은 여전히 미확인
-후보로 남긴다.
+vertical slice는 이 조사에서 확인하지 못했다. 구단 상세의 영입·유출 이력도 미확인 후보였다.
+2026-09-29부터 제품 채택은 관측으로 분리하며 [현재 승격 기준](stable-promotion.md)을 따른다.

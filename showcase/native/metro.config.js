@@ -5,6 +5,8 @@ const { withStorybook } = require("@storybook/react-native/withStorybook");
 const projectRoot = __dirname;
 const workspaceRoot = path.resolve(projectRoot, "../..");
 const config = getDefaultConfig(projectRoot);
+// Shared workstation: match the renderer bundle fixture cap instead of spawning one worker per core.
+config.maxWorkers = 2;
 
 config.watchFolders = [workspaceRoot];
 config.resolver.nodeModulesPaths = [

@@ -2,6 +2,7 @@ import { act, type ReactNode } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { resolveDesignSystemProviderValue } from "@hjmds/design-contracts/components/design-system-provider";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { page } from "vitest/browser";
 import { HjmProvider } from "../src/index.js";
 import { reactRendererEvidence, type ReactRendererEvidenceScenario } from "../src/evidence.js";
 import { defaultRenderFixtures, type DefaultRenderFixture } from "./default-render-fixtures.js";
@@ -48,6 +49,7 @@ const themeInvariantPaint: Readonly<Record<string, string>> = {
  * needs a reason; everything else must inherit the provider direction.
  */
 const ltrIsolates: Readonly<Record<string, string>> = {
+  "hjm-otp-field__control": "Numeric verification codes are entered left to right in RTL locales (docs/otp-field.md).",
   "hjm-otp-field__slots": "One-time codes are entered and read left to right in RTL locales too.",
 };
 
@@ -83,6 +85,7 @@ beforeEach(() => {
 afterEach(async () => {
   await act(async () => root.unmount());
   container.remove();
+  await page.viewport(1280, 720);
 });
 
 /**
@@ -351,10 +354,20 @@ const checks: Readonly<Record<Exclude<ReactRendererEvidenceScenario, "default" |
     }
   },
   async "long-copy"(fixture, environment) {
+    // Viewport-fixed chrome must use the same width as the deliberately narrow fixture.
+    if (["floating-action-button", "bottom-navigation", "dialog"].includes(fixture.componentId)) await page.viewport(containerWidth, 720);
     expect(fixture.renderLongCopy, "long-copy needs a fixture that puts the copy in the component").toBeDefined();
     await mount(environment, fixture.renderLongCopy!(longCopy));
     const element = findMarker(fixture.marker);
-    const holder = subtree(element).reverse().find((node) => (node.textContent ?? "").includes(longCopy));
+    // Modal and tooltip content lives in a portal outside its owning trigger root.
+    const contentRoot = fixture.componentId === "dialog"
+      ? document.body.querySelector<HTMLElement>('[role="dialog"]')
+      : fixture.componentId === "tooltip"
+        ? document.body.querySelector<HTMLElement>('[role="tooltip"]')
+        : element;
+    const holder = contentRoot === null
+      ? undefined
+      : subtree(contentRoot).reverse().find((node) => (node.textContent ?? "").includes(longCopy));
     expect(holder, "long copy is not rendered inside the component").toBeDefined();
     // Two pixels absorb sub-pixel rounding in line-clamped labels (buttonRecipe.label.maxLines).
     expect(holder!.scrollWidth, "long copy overflows its box").toBeLessThanOrEqual(holder!.clientWidth + 2);

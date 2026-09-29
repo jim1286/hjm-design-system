@@ -138,11 +138,11 @@ describe("LoadMore state and request gate", () => {
 });
 
 describe("LoadMore identity contract", () => {
-  it("links the beta renderer contract proven by a product vertical slice", () => {
+  it("links the stable renderer contract proven by per-surface interaction evidence", () => {
     expect(componentCatalog.find((entry) => entry.name === "LoadMore")).toMatchObject({
       platform: "shared",
-      status: "beta",
-      surfaceStatus: { web: "beta", native: "beta" },
+      status: "stable",
+      surfaceStatus: { web: "stable", native: "stable" },
       recipe: "loadMoreRecipe",
       behavior: "loadMore",
     });

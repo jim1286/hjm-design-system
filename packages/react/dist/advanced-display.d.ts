@@ -111,8 +111,10 @@ export type StatisticProps<Id extends string = string> = Omit<HTMLAttributes<HTM
     accessibilityLabel?: string;
     composeAccessibilityLabel?: ComposeStatisticAccessibilityLabel<Id>;
     renderTrendMark?: (props: StatisticTrendMarkRenderProps) => ReactNode;
+    /** Optional visual adapter; the descriptor remains the accessible value source. */
+    renderValue?: (value: string) => ReactNode;
 }>;
-export declare function Statistic<Id extends string = string>({ descriptor, density, presentation, contextLabel, accessibilityLabel, composeAccessibilityLabel, renderTrendMark, className, ...props }: StatisticProps<Id>): import("react").JSX.Element;
+export declare function Statistic<Id extends string = string>({ descriptor, density, presentation, contextLabel, accessibilityLabel, composeAccessibilityLabel, renderTrendMark, renderValue, className, ...props }: StatisticProps<Id>): import("react").JSX.Element;
 export type StatisticGroupProps<Id extends string = string> = Omit<HTMLAttributes<HTMLDivElement>, "children"> & Readonly<{
     label: string;
     descriptor: StatisticGroupDescriptor<Id>;

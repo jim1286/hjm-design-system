@@ -28,6 +28,9 @@ export const Pressable = host("Pressable");
 export const Switch = host("Switch");
 export const ActivityIndicator = host("ActivityIndicator");
 export const ScrollView = host("ScrollView");
+export function FlatList({ data = [], renderItem, ListEmptyComponent, ...props }: HostProps & { data?: readonly unknown[]; renderItem?: (info: { item: unknown; index: number }) => ReactNode; ListEmptyComponent?: ReactNode }) {
+  return createElement("FlatList", props, data.length ? data.map((item, index) => createElement("Cell", { key: index }, renderItem?.({ item, index }))) : ListEmptyComponent);
+}
 export const Image = host("Image");
 /** Every Animated.timing that started, for the reduced-motion scenario proof. */
 export const startedAnimatedTimings: { duration: number }[] = [];
@@ -213,3 +216,10 @@ export type GestureResponderEvent = Readonly<{
 export type LayoutChangeEvent = Readonly<{
   nativeEvent: Readonly<{ layout: Readonly<{ width: number }> }>;
 }>;
+
+/** Native back subscriptions are explicit so adapter tests can assert cleanup. */
+export const BackHandler = {
+  addEventListener(_event: string, _handler: () => boolean | null | undefined) {
+    return { remove() {} };
+  },
+};

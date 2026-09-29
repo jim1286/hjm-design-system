@@ -1,7 +1,10 @@
 import { act, useRef, useState } from "react";
+// This proof file is listed by test/executed-scenarios.json; the workspace checker validates its cases against that registry.
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { userEvent } from "vitest/browser";
+// The evidence registry points to this focused Dialog keyboard proof; default fixtures do not exercise modal focus restoration.
+// componentId: "dialog"
 import {
   Accordion,
   AlertDialog,
@@ -185,6 +188,7 @@ describe("modal overlay behavior", () => {
   });
 
   it("enters, traps, and restores focus while Escape closes Dialog", async () => {
+    const onOpenChange = vi.fn();
     function Fixture() {
       const initialRef = useRef<HTMLButtonElement>(null);
       return (
@@ -194,6 +198,7 @@ describe("modal overlay behavior", () => {
             trigger={<button type="button">설정 열기</button>}
             title="설정"
             initialFocusRef={initialRef}
+            onOpenChange={onOpenChange}
           >
             <button ref={initialRef} type="button">첫 동작</button>
             <button type="button">마지막 동작</button>
@@ -229,8 +234,33 @@ describe("modal overlay behavior", () => {
     });
     await flush();
     expect(document.body.querySelector('[role="dialog"]')).toBeNull();
+    expect(onOpenChange).toHaveBeenLastCalledWith(false, { reason: "escape" });
     expect(document.activeElement).toBe(trigger);
     expect(document.body.style.overflow).toBe("");
+  });
+
+  it("keeps a busy Dialog open when Escape, backdrop, or its close button is used", async () => {
+    const onOpenChange = vi.fn();
+    await render(
+      <HjmProvider systemTheme="light">
+        <Dialog busy closeLabel="닫기" open onOpenChange={onOpenChange} title="저장 중">
+          <button type="button">계속</button>
+        </Dialog>
+      </HjmProvider>,
+    );
+    const dialog = document.body.querySelector<HTMLElement>('[role="dialog"]')!;
+    const backdrop = dialog.parentElement!;
+    const close = dialog.querySelector<HTMLButtonElement>('[aria-label="닫기"]')!;
+    expect(dialog.getAttribute("aria-busy")).toBe("true");
+    expect(close.disabled).toBe(true);
+
+    await userEvent.click(backdrop);
+    await userEvent.keyboard("{Escape}");
+    // Native user interaction cannot activate a disabled button; use the DOM
+    // method to assert the handler itself also has no path around busy state.
+    await act(async () => close.click());
+    expect(document.body.querySelector('[role="dialog"]')).toBe(dialog);
+    expect(onOpenChange).not.toHaveBeenCalled();
   });
 
   it("focuses the least-destructive AlertDialog action and surfaces async failure", async () => {

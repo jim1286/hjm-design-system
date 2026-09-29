@@ -2,7 +2,8 @@ import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-native";
 import { Calendar } from "@hjmds/react-native/calendar";
 import { Stack, Text } from "@hjmds/react-native/primitives";
-import { calendarExampleGrid, calendarExampleName, shiftCalendarMonth } from "../../shared/calendar-example.js";
+// Metro resolves the shared TypeScript source by extension; a literal .js path has no file.
+import { calendarExampleGrid, calendarExampleName, shiftCalendarMonth } from "../../shared/calendar-example";
 function CalendarPreview() {
   const [month, setMonth] = useState("2026-09"); const [selected, setSelected] = useState<string | null>("2026-09-16");
   return <Stack gap="md"><Text variant="title" emphasis="strong">날짜로 돌아봐요</Text><Text tone="muted">기록을 남긴 날을 골라보세요.</Text>

@@ -127,8 +127,8 @@ mount policy 참고) — 새로 만든 개념이 아니라 이미 검증된 패�
 
 ## 검증 화면
 
-아직 없음. `planned → beta` 승격은 실제 제품 vertical slice 이후 리드가 진행한다(로드맵
-maturity gate). 유력 후보: 야잘알 홈의 내 구단 경기 스트립.
+이 조사 당시 제품 채택은 미확인이었다. 후보는 야잘알 홈의 내 구단 경기 스트립이다.
+2026-09-29부터 제품 채택은 관측으로 분리하며 [현재 승격 기준](stable-promotion.md)을 따른다.
 
 
 ## React / React Native renderer (2026-09-16)

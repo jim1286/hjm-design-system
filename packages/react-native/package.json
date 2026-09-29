@@ -249,12 +249,68 @@
       "react-native": "./dist/evidence.js",
       "import": "./dist/evidence.js",
       "default": "./dist/evidence.js"
+    },
+    "./toast-liquid": {
+      "types": "./dist/toast-liquid.d.ts",
+      "react-native": "./dist/toast-liquid.js",
+      "import": "./dist/toast-liquid.js",
+      "default": "./dist/toast-liquid.js"
+    },
+    "./thinking-orb": {
+      "types": "./dist/thinking-orb.d.ts",
+      "react-native": "./dist/thinking-orb.js",
+      "import": "./dist/thinking-orb.js",
+      "default": "./dist/thinking-orb.js"
+    },
+    "./image-viewer": {
+      "types": "./dist/image-viewer.d.ts",
+      "react-native": "./dist/image-viewer.js",
+      "import": "./dist/image-viewer.js",
+      "default": "./dist/image-viewer.js"
+    },
+    "./keyboard-controller": {
+      "types": "./dist/keyboard-controller.d.ts",
+      "react-native": "./dist/keyboard-controller.js",
+      "import": "./dist/keyboard-controller.js",
+      "default": "./dist/keyboard-controller.js"
+    },
+    "./sheet-gesture": {
+      "types": "./dist/sheet-gesture.d.ts",
+      "react-native": "./dist/sheet-gesture.js",
+      "import": "./dist/sheet-gesture.js",
+      "default": "./dist/sheet-gesture.js"
+    },
+    "./context-menu-native": {
+      "types": "./dist/context-menu-native.d.ts",
+      "react-native": "./dist/context-menu-native.js",
+      "import": "./dist/context-menu-native.js",
+      "default": "./dist/context-menu-native.js"
+    },
+    "./masonry": {
+      "types": "./dist/masonry.d.ts",
+      "react-native": "./dist/masonry.js",
+      "import": "./dist/masonry.js",
+      "default": "./dist/masonry.js"
+    },
+    "./virtual-list": {
+      "types": "./dist/virtual-list.d.ts",
+      "react-native": "./dist/virtual-list.js",
+      "import": "./dist/virtual-list.js",
+      "default": "./dist/virtual-list.js"
+    },
+    "./qr-code": {
+      "types": "./dist/qr-code.d.ts",
+      "react-native": "./dist/qr-code.js",
+      "import": "./dist/qr-code.js",
+      "default": "./dist/qr-code.js"
     }
   },
   "files": [
     "dist",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "THIRD_PARTY_NOTICES.md",
+    "docs"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
@@ -264,25 +320,92 @@
     "check": "pnpm typecheck && pnpm test && pnpm bundle:check"
   },
   "peerDependencies": {
+    "@gorhom/bottom-sheet": "5.2.14",
     "@hjmds/design-contracts": ">=1.7.0 <1.8.0",
+    "@react-native-menu/menu": "1.2.2",
+    "@shopify/react-native-skia": "^2.6.2",
     "react": ">=19",
-    "react-native": ">=0.81"
+    "react-native": ">=0.81",
+    "react-native-gesture-handler": "2.32.0",
+    "react-native-ios-context-menu": "3.2.1",
+    "react-native-ios-utilities": "5.2.0",
+    "react-native-keyboard-controller": "1.22.5",
+    "react-native-reanimated": "^4.5.1",
+    "react-native-worklets": "^0.10.1",
+    "react-native-zoom-toolkit": "5.1.1",
+    "zeego": "3.0.6",
+    "react-native-svg": "15.15.5",
+    "qrcode-generator": "2.0.4"
   },
   "devDependencies": {
     "@babel/runtime": "7.29.7",
+    "@gorhom/bottom-sheet": "5.2.14",
     "@hjmds/design-contracts": "workspace:*",
+    "@react-native-menu/menu": "1.2.2",
     "@react-native/metro-config": "0.81.6",
+    "@shopify/react-native-skia": "2.6.2",
     "@types/node": "^24.13.3",
     "@types/react": "^19.2.18",
     "@types/react-test-renderer": "^19.1.0",
     "metro": "0.83.8",
     "react": "19.2.3",
     "react-native": "^0.81.6",
+    "react-native-gesture-handler": "2.32.0",
+    "react-native-ios-context-menu": "3.2.1",
+    "react-native-ios-utilities": "5.2.0",
+    "react-native-keyboard-controller": "1.22.5",
+    "react-native-reanimated": "4.5.1",
+    "react-native-svg": "15.15.5",
+    "react-native-worklets": "0.10.1",
+    "react-native-zoom-toolkit": "5.1.1",
     "react-test-renderer": "19.2.3",
     "typescript": "^5.9.3",
-    "vitest": "^4.1.11"
+    "vitest": "^4.1.11",
+    "zeego": "3.0.6",
+    "qrcode-generator": "2.0.4"
   },
   "engines": {
     "node": ">=20"
+  },
+  "peerDependenciesMeta": {
+    "@shopify/react-native-skia": {
+      "optional": true
+    },
+    "react-native-reanimated": {
+      "optional": true
+    },
+    "react-native-worklets": {
+      "optional": true
+    },
+    "react-native-zoom-toolkit": {
+      "optional": true
+    },
+    "react-native-keyboard-controller": {
+      "optional": true
+    },
+    "@gorhom/bottom-sheet": {
+      "optional": true
+    },
+    "zeego": {
+      "optional": true
+    },
+    "@react-native-menu/menu": {
+      "optional": true
+    },
+    "react-native-ios-utilities": {
+      "optional": true
+    },
+    "react-native-ios-context-menu": {
+      "optional": true
+    },
+    "react-native-gesture-handler": {
+      "optional": true
+    },
+    "react-native-svg": {
+      "optional": true
+    },
+    "qrcode-generator": {
+      "optional": true
+    }
   }
 }

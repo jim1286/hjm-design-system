@@ -7,7 +7,7 @@
 
 **먼저 뺀 것 — 이미 다른 컴포넌트가 소유한다.** 헤더 크롬은 이미
 `TopBar`(adaptive, beta), 푸터 내비게이션은 이미 `BottomNavigation`(adaptive,
-beta)이다. `Layout`이 그 콘텐츠나 상태를 다시 계약하면 두 곳이 같은 것을
+stable)이다. `Layout`이 그 콘텐츠나 상태를 다시 계약하면 두 곳이 같은 것을
 소유하게 된다 — DataTable이 Pagination/LoadMore를 소유하지 않고 합성하기로 한
 것과 같은 실수를 피한다. `Layout`은 **header/footer가 있다는 사실**만 알고
 (`hasHeader?`/`hasFooter?`), 그 안의 내용은 모른다.
@@ -73,11 +73,10 @@ Web의 `footer` slot은 `Layout`이 `<footer>` contentinfo를 정확히 한 번 
 렌더링하거나 요구하지 않는다. `skipLinkLabel` Native prop은 이전 호출부 호환을
 위해 deprecated 상태로만 남아 있다.
 
-**현재 검증과 남은 증거.** 공통 descriptor를 직접 소비하는 first-party Web/RN renderer가
-추가되어 catalog와 두 surface를 `beta`로 승격했다. Web renderer는 실제
-`header`/`nav|aside`/`main`/`footer` landmark, BottomNavigation과의 단일-landmark 합성,
-skip-link focus 이동, persistent/overlay sidebar 합성을 SSR·browser test로 검증한다.
-Native renderer는 같은 region 순서와 overlay
-adapter를 유지하되 존재하지 않는 landmark role을 만들지 않는 기본 실행 증거를 제공한다.
-실제 product shell의 브라우저·VoiceOver·TalkBack 검증과 200% 글자 크기 증거는 stable
-승격 전까지 명시적인 debt로 남는다.
+**현재 검증.** 공통 descriptor를 직접 소비하는 first-party Web/RN renderer가 실제
+landmark, source order, overlay adapter를 검증한다. Web Chromium test는 skip-link가 첫
+Tab 대상이고 Enter로 `main`에 초점을 옮기는지 확인하며, 두 renderer의 scenario matrix는
+긴 본문·접근성·dark·200% 글자·RTL·reduced-motion을 검사한다. Native는 skip-link를
+렌더링하지 않고 region 순서·접근성 속성을 검사한다. 따라서 keyboard proof는 Web에만
+요구한다. 실제 제품 shell의 VoiceOver/TalkBack 및 기기 검증은 제품 릴리스 QA에서 다루며
+공용 Layout의 stable 상태를 막지 않는다.

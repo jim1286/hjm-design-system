@@ -1,4 +1,5 @@
 import { act, createRef, useState } from "react";
+// This proof file is listed by test/executed-scenarios.json; the workspace checker validates its cases against that registry.
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
@@ -6,6 +7,8 @@ import { DatePicker } from "../src/date-picker.js";
 import { Calendar, type CalendarHandle } from "../src/calendar.js";
 import { HjmProvider } from "../src/provider.js";
 import "../src/styles.css";
+// The evidence registry points to this focused keyboard and long-copy proof; the shared scenario fixture is intentionally generic.
+// componentId: "calendar"
 const grid = { cells: [{}, ...Array.from({ length: 13 }, (_, index) => ({ date: `2026-09-${String(index + 1).padStart(2, "0")}`, disabled: index === 1 }))], weekdayLabels: ["일", "월", "화", "수", "목", "금", "토"] as const, todayDate: "2026-09-03" };
 let host: HTMLDivElement; let root: Root;
 beforeEach(() => { (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true; host = document.createElement("div"); document.body.append(host); root = createRoot(host); });
@@ -63,4 +66,25 @@ it("uses the large typography tier without shrinking date targets", async () => 
   const mediumFont = parseFloat(getComputedStyle(label()).fontSize); const mediumWidth = label().getBoundingClientRect().width;
   // Both tiers keep a 44px minimum target; large changes the typography tier.
   await render("large"); expect(parseFloat(getComputedStyle(label()).fontSize)).toBeGreaterThan(mediumFont); expect(label().getBoundingClientRect().width).toBeGreaterThanOrEqual(mediumWidth);
+});
+
+it("keeps a long month heading readable inside the calendar header", async () => {
+  const longMonth = "An unusually long month heading with an unbrokenidentifierthatmustwrap inside the calendar header";
+  await page.viewport(320, 720);
+  await act(async () => root.render(<Calendar descriptor={{ grid, monthLabel: longMonth }} composeAccessibleName={({ date }) => date} />));
+  const heading = host.querySelector<HTMLElement>(".hjm-calendar__header strong")!;
+  expect(heading.textContent).toBe(longMonth);
+  expect(heading.scrollWidth).toBeLessThanOrEqual(heading.clientWidth + 2);
+  expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(320);
+});
+
+// Partial weeks must reserve the same columns as complete weeks, including RTL.
+it.each(["ltr", "rtl"] as const)("aligns partial weeks with weekday column centers in %s", async (direction) => {
+  const partial = { ...grid, cells: [{}, {}, ...Array.from({ length: 30 }, (_, i) => ({ date: `2026-09-${String(i + 1).padStart(2, "0")}` })), {}, {}, {}] };
+  await act(async () => root.render(<HjmProvider direction={direction}><div style={{ width: 370 }}><Calendar descriptor={{ grid: partial, monthLabel: "September" }} composeAccessibleName={({ date }) => date} /></div></HjmProvider>));
+  const center = (node: Element) => { const rect = node.getBoundingClientRect(); return rect.left + rect.width / 2; };
+  const headers = Array.from(host.querySelectorAll('[role="columnheader"]'));
+  for (const row of host.querySelectorAll('.hjm-calendar__week:not(:first-child)')) {
+    Array.from(row.children).forEach((cell, column) => expect(Math.abs(center(cell) - center(headers[column]!))).toBeLessThan(1));
+  }
 });

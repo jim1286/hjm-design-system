@@ -282,7 +282,9 @@
 .hjm-switch:focus-visible .hjm-switch__track,
 .hjm-segmented__item:has(input:focus-visible),
 .hjm-tabs__tab:focus-visible,
-.hjm-list-row:focus-visible {
+.hjm-list-row:focus-visible,
+.hjm-virtual-list:focus-visible,
+.hjm-virtual-list__row:focus-visible {
   outline: var(--hjm-focus-width) solid var(--hjm-color-focus);
   outline-offset: var(--hjm-focus-offset);
 }
@@ -395,6 +397,7 @@
     (var(--hjm-otp-slot-size) * var(--hjm-otp-length)) +
     (var(--hjm-otp-gap) * (var(--hjm-otp-length) - 1))
   );
+  /* Numeric codes keep their entry order in RTL (docs/otp-field.md); mirroring digits would reorder the code. */
   direction: ltr;
 }
 .hjm-otp-field__control[data-size="large"] {
@@ -699,7 +702,8 @@
 }
 .hjm-slider__input:disabled { cursor: not-allowed; }
 
-.hjm-choice { display: inline-flex; align-items: center; gap: var(--hjm-space-sm); min-block-size: 56px; padding: var(--hjm-space-sm) var(--hjm-space-md); border: 1px solid var(--hjm-color-border); border-radius: var(--hjm-radius-md); background: var(--hjm-color-surface); cursor: pointer; }
+/* Long choice labels wrap within the parent. */
+.hjm-choice { display: inline-flex; align-items: center; gap: var(--hjm-space-sm); min-block-size: 56px; max-inline-size: 100%; padding: var(--hjm-space-sm) var(--hjm-space-md); border: 1px solid var(--hjm-color-border); border-radius: var(--hjm-radius-md); background: var(--hjm-color-surface); cursor: pointer; }
 .hjm-choice[data-disabled="true"] { opacity: 0.5; cursor: not-allowed; }
 .hjm-choice[data-readonly="true"] { cursor: default; }
 .hjm-choice[data-presentation="plain"] { padding: 0; border-color: transparent; background: transparent; }
@@ -1218,6 +1222,11 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   border-radius: var(--hjm-radius-sm);
   overflow-wrap: anywhere;
 }
+/* The label is a flex item; reset its intrinsic min-width so long localized values wrap inside a narrow panel. */
+.hjm-transfer-list__option > span:last-child { min-inline-size: 0; overflow-wrap: anywhere; }
+/* Panel headings and empty-state copy share the same narrow column as rows. */
+.hjm-transfer-list__title,
+.hjm-transfer-list__empty { min-inline-size: 0; overflow-wrap: anywhere; }
 .hjm-transfer-list__option[aria-selected="true"] { background: var(--hjm-color-surface-accent); }
 .hjm-transfer-list__option[aria-disabled="true"] { color: var(--hjm-color-text-weak); }
 .hjm-transfer-list__option:focus-visible,
@@ -1347,6 +1356,9 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   position: absolute;
   inset-block-start: var(--hjm-skip-nav-offset);
   inset-inline-start: var(--hjm-skip-nav-offset);
+  /* A localized skip label can be longer than a narrow viewport; keep the focused link on-screen. */
+  box-sizing: border-box;
+  max-inline-size: calc(100vw - var(--hjm-skip-nav-offset) * 2);
   z-index: 1300;
   display: inline-flex;
   align-items: center;
@@ -1356,6 +1368,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   background: var(--hjm-color-primary);
   color: var(--hjm-color-on-primary);
   text-decoration: none;
+  overflow-wrap: anywhere;
   transform: translateY(calc(-100% - var(--hjm-skip-nav-offset) * 2));
 }
 .hjm-skip-nav:focus-visible,
@@ -1450,6 +1463,8 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   color: var(--hjm-color-text-muted);
   font-size: var(--hjm-type-label-size);
   font-weight: var(--hjm-type-label-weight);
+  /* The rail has a fixed width; wrap long localized headings so their meaning stays visible instead of clipping or widening the shell. */
+  overflow-wrap: anywhere;
 }
 .hjm-sidebar__list { display: flex; flex-direction: column; gap: var(--hjm-sidebar-gap); margin: 0; padding: 0; list-style: none; }
 .hjm-sidebar__item {
@@ -1859,6 +1874,8 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   overflow-wrap: anywhere;
 }
 .hjm-dialog > .hjm-dialog__description { padding-inline: var(--hjm-space-lg); }
+/* Consumer-authored identifiers can be unbroken; keep modal body text inside the narrow viewport. */
+.hjm-dialog__body { overflow-wrap: anywhere; }
 .hjm-dialog__body,
 .hjm-sheet__body { padding: var(--hjm-space-lg); }
 .hjm-dialog__footer,
@@ -2065,6 +2082,9 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   display: flex;
   flex-direction: column;
   gap: var(--hjm-space-sm);
+  /* The anchored popup is viewport-height bounded; scrolling keeps long translations and actions usable without truncating copy or detaching controls. */
+  overflow-y: auto;
+  overscroll-behavior: contain;
   box-sizing: border-box;
   padding: var(--hjm-space-md);
   border: 1px solid var(--hjm-color-border);
@@ -2566,10 +2586,12 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-context-menu-host:focus-visible { outline: 2px solid var(--hjm-color-focus); outline-offset: 2px; }
 .hjm-context-menu { position: fixed; max-inline-size: min(24rem, 90vw); max-block-size: calc(100dvh - (2 * var(--hjm-space-md))); overflow: auto; padding: var(--hjm-space-xxs); border: 1px solid var(--hjm-color-border); border-radius: var(--hjm-radius-md); background: var(--hjm-color-surface); box-shadow: 0 8px 24px rgb(0 0 0 / 18%); }
 .hjm-context-menu__item { min-block-size: var(--hjm-control-min-touch-target); display: flex; align-items: center; justify-content: space-between; gap: var(--hjm-space-sm); padding: var(--hjm-space-xs) var(--hjm-space-sm); border-radius: var(--hjm-radius-sm); color: var(--hjm-color-text-body); cursor: pointer; }
+/* Wrap long labels so commands stay readable inside the viewport-bounded menu; truncation was rejected because it hides command meaning. */
+.hjm-context-menu__item > span { min-inline-size: 0; overflow-wrap: anywhere; }
 .hjm-context-menu__item[data-active] { background: var(--hjm-color-surface-alt); }
 .hjm-context-menu__item[data-tone="danger"] { color: var(--hjm-color-danger); }
 .hjm-context-menu__item[aria-disabled="true"] { opacity: 0.5; cursor: not-allowed; }
-.hjm-context-menu__shortcut { color: var(--hjm-color-text-muted); font-size: var(--hjm-type-label-size); }
+.hjm-context-menu__shortcut { flex: 0 0 auto; white-space: nowrap; color: var(--hjm-color-text-muted); font-size: var(--hjm-type-label-size); }
 
 .hjm-menubar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--hjm-menubar-gap); min-block-size: var(--hjm-menubar-min-height); padding-inline: var(--hjm-menubar-padding); }
 .hjm-menubar__menu { position: relative; }
@@ -2593,5 +2615,13 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-asset__accessory { position: absolute; inset-block-end: var(--hjm-asset-accessory-offset); inset-inline-end: var(--hjm-asset-accessory-offset); transform: translate(25%, 25%); display: inline-flex; }
 .hjm-asset-group { display: inline-flex; align-items: center; }
 .hjm-asset-group > .hjm-asset + .hjm-asset { margin-inline-start: var(--hjm-asset-overlap); }
+
+/* Bloom owns geometry only; HJM owns target size, theme and keyboard focus. */
+.hjm-menu-morph { position: relative; z-index: 1; }
+.hjm-menu-morph [role="button"]:focus-visible, .hjm-menu-morph__item:focus-visible { outline: 2px solid var(--hjm-color-focus); outline-offset: -2px; }
+.hjm-menu-morph__item { display: flex; width: 100%; align-items: center; gap: var(--hjm-space-sm); min-height: var(--hjm-control-min-touch-target); padding: var(--hjm-space-sm); border: 0; background: transparent; color: inherit; font: inherit; text-align: start; cursor: pointer; }
+.hjm-menu-morph__item:hover, .hjm-menu-morph__item:focus { background: var(--hjm-color-surface-alt); }
+.hjm-menu-morph__item[data-tone="danger"] { color: var(--hjm-color-danger); }
+.hjm-menu-morph__item:disabled { opacity: 0.5; cursor: not-allowed; }
 
 }

@@ -132,6 +132,8 @@ export const popoverBehaviorScenarios = [
     "escape-closes-and-restores-trigger-focus",
     "outside-pointer-close-does-not-cancel-the-original-interaction",
     "tabbing-past-last-focusable-child-closes-without-trapping",
+    "optional-hover-opens-after-delay-and-survives-pointer-crossing",
+    "hover-mode-retains-press-activation-for-touch-and-keyboard",
     "controlled-owner-programmatic-close-always-wins",
     "close-action-inside-content-closes-exactly-once",
     "trigger-while-open-does-not-reopen",

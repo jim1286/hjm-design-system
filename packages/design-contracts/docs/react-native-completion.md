@@ -311,7 +311,7 @@ formatters, RN 키보드 회피·햅틱 계약.
 - **Asset**(Web/RN): 아이콘·이미지·Lottie·비디오를 같은 액자에 넣는다. **재생기는 슬롯으로
   받아** 이 패키지가 의존하지 않는다. [asset.md](./asset.md).
 - **Chart**: 렌더러를 만들지 않는다. 계열 팔레트·축·격자·범례 토큰(`dataviz`)만 고정하고
-  그리기는 제품 라이브러리에 위임한다. 실제로 어긋난 것은 색이었다. [chart.md](./chart.md).
+  그리기는 제품 라이브러리에 위임한다. 실제로 어긋난 것은 색이었다. [catalog-cleanup.md](./catalog-cleanup.md).
 - **전역 density**: Provider의 한 축이 목록·메뉴·표의 기본 밀도가 된다. 컴포넌트 prop이
   언제나 이긴다. 어휘는 통일하지 않고 매핑 함수를 한 곳에 뒀다. [density.md](./density.md).
 - **버튼 라벨 wrap**: 자르지 않고 두 줄까지 접는다. 큰 글자에서는 상한을 푼다(WCAG 1.4.4).

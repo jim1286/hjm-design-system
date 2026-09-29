@@ -1,0 +1,43 @@
+diff --git a/android/src/main/java/com/reactnativemenu/MenuView.kt b/android/src/main/java/com/reactnativemenu/MenuView.kt
+index 17ed7c6491b60e87fe829fb3f8841424617b4cfb..8abbe4b112a278bdce74de04c9d50f48db09e244 100644
+--- a/android/src/main/java/com/reactnativemenu/MenuView.kt
++++ b/android/src/main/java/com/reactnativemenu/MenuView.kt
+@@ -47,11 +47,15 @@ class MenuView(private val mContext: ReactContext) : ReactViewGroup(mContext) {
+     prepareMenu()
+   }
+ 
+-  override fun setHitSlopRect(rect: Rect?) {
+-    super.setHitSlopRect(rect)
+-    mHitSlopRect = rect
+-    updateTouchDelegate()
+-  }
++  // RN 0.81+ exposes a Kotlin property rather than a callable Java setter.
++  // Preserve both RN hit testing and the menu TouchDelegate when the prop changes.
++  override var hitSlopRect: Rect?
++    get() = super.hitSlopRect
++    set(value) {
++      super.hitSlopRect = value
++      mHitSlopRect = value
++      updateTouchDelegate()
++    }
+ 
+   override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
+     return true
+diff --git a/android/src/main/java/com/reactnativemenu/MenuViewManagerBase.kt b/android/src/main/java/com/reactnativemenu/MenuViewManagerBase.kt
+index 0cd90f4741508a95a63198574228c244ad41afd8..77733af70c938b5e50fb89839f32de8fa04f4964 100644
+--- a/android/src/main/java/com/reactnativemenu/MenuViewManagerBase.kt
++++ b/android/src/main/java/com/reactnativemenu/MenuViewManagerBase.kt
+@@ -122,10 +122,10 @@ abstract class MenuViewManagerBase : ReactClippingViewManager<MenuView>() {
+   @ReactProp(name = "hitSlop")
+   fun setHitSlop(view: ReactViewGroup, @Nullable hitSlop: ReadableMap?) {
+     if (hitSlop == null) {
+-      // We should keep using setters as `Val cannot be reassigned`
+-      view.setHitSlopRect(null)
++      // RN 0.81+ uses Kotlin property access; dispatches to MenuView hit testing.
++      view.hitSlopRect = null
+     } else {
+-      view.setHitSlopRect(
++      view.hitSlopRect = (
+               Rect(
+                       if (hitSlop.hasKey("left"))
+                               PixelUtil.toPixelFromDIP(hitSlop.getDouble("left")).toInt()

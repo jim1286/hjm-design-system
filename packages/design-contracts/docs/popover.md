@@ -18,7 +18,7 @@ control이 섞인 레이아웃)를 보여줘야 하는 자리가 있다. `docs/d
 | 콘텐츠 | 현지화된 plain text 한 문장 | stable id를 가진 action/선택 항목 목록 | 임의의 interactive 콘텐츠(폼, 링크, 혼합 레이아웃) |
 | focus가 surface 안으로 들어가는가 | **아니오** — `docs/tooltip.md`: "tabbable descendant가 없다" | 예 — 항목에 roving/activate focus | **예** — 결정적 차이 |
 | dismiss 계기 | hover/focus 해제, Escape, sibling 전환 | 선택, Escape/back, outside | close action, outside pointer, **outside-focus**(Tab이 surface 밖으로 나감), Escape |
-| trigger 상호작용 | hover(지연) + focus(즉시) | click/Enter/Space로 열림, 방향키로 탐색 | **click/Enter/Space만** — content가 interactive라 hover로 열고 hover로 유지하는 Tooltip 모델을 재사용하면 키보드·터치 사용자가 content에 도달하기 전에 닫히는 경쟁이 생긴다 |
+| trigger 상호작용 | hover(지연) + focus(즉시) | click/Enter/Space로 열림, 방향키로 탐색 | **click/Enter/Space 기본**; `openOn="hover"`는 지연된 포인터 진입을 추가하지만 click 경로를 유지해 키보드·터치도 같은 콘텐츠에 도달한다 |
 | positioning | 제품 renderer의 비공개 `AnchoredOverlay` | 같은 anatomy(`menuRecipe`)가 이미 소유 | Tooltip과 동일하게 비공개 `AnchoredOverlay`에 위임 — 새 portal/flip/shift API를 만들지 않는다 |
 
 `docs/tooltip.md`가 그은 경계("interactive Popover로 확장하지 않는다")를
@@ -89,8 +89,9 @@ flip/shift, RTL 논리 방향 변환은 제품 Web renderer의 비공개 `Anchor
   명시적으로 공급한다 — 기본값을 발명하지 않는다(Tooltip이 `content`를 필수로
   요구하는 것과 반대로, Popover는 콘텐츠 자체를 타입으로 갖지 않으므로 대신
   이 escape hatch만 둔다).
-- trigger는 click/Enter/Space로만 연다. hover는 열지 않는다 — 위 삼각 경계
-  표의 이유와 동일하다.
+- trigger는 click/Enter/Space로 연다. `openOn="hover"`를 선택하면 pointer hover도
+  지연 후 열리지만, click 경로는 계속 사용할 수 있다. hover가 없는 키보드·터치
+  환경에서도 동작을 제공해야 하므로 hover만으로 열리는 전용 경로는 만들지 않는다.
 
 ## 플랫폼 번역
 
@@ -114,7 +115,7 @@ flip/shift, RTL 논리 방향 변환은 제품 Web renderer의 비공개 `Anchor
 | dismiss reason(`close-action`/`outside-pointer`/`outside-focus`/`escape`/`programmatic`) | 공개 |
 | `placement`/`align` | 공개(Tooltip과 같은 값 집합) |
 | `busy`(모든 dismiss 차단) | **배제** — 비모달이라 전역 차단 상태가 성립하지 않는다 |
-| hover trigger | **배제** — focus가 콘텐츠 안으로 들어가는 계약과 hover 열기/유지가 경쟁한다 |
+| hover trigger | 선택형 추가 입력으로 공개(`openOn="hover"`) — 기본 press 동작을 대체하지 않으며 open/close 지연으로 포인터 이동 간 표면을 유지한다 |
 | portal/flip/shift 공개 API | **배제** — Tooltip의 `AnchoredOverlay` 경계를 그대로 상속 |
 | content 데이터 모델 | **배제** — 런타임 의존성 금지 원칙상 React 콘텐츠 타입을 이 패키지가 가질 수 없다. 콘텐츠 자체는 항상 제품/렌더러 소유다 |
 
@@ -139,7 +140,8 @@ flip·shift를 담당하고, 옆 공간이 부족한 넓은 콘텐츠는 block �
 Dialog 안의 Popover는 첫 Escape를 소유한다. 내부 Menu가 Escape를 처리했다면 부모는
 그 이벤트를 다시 처리하지 않는다. 모달의 초점 목록은 hidden/inert/disabled 자손을 제외한다.
 
-2026-09-16 사용자의 확장 요청으로 라이브러리 beta를 제공한다. 제품 채택은 별도다.
+2026-09-16 사용자의 확장 요청으로 Web beta를 제공했다. 2026-09-29 focus/keyboard·hover/touch·
+320px long-copy browser proof를 확인해 stable로 승격한다. Native는 `unsupported`; 제품 채택은 별도다.
 `Patterns/Popover/Filters`는 제목·즐겨찾기 조건 적용/취소/초기화와 실제 목록 교체를 제공한다.
 `ReversibleConfirmation`은 보관 후 취소 버튼으로 초점을 옮기며 실제로 복원한다.
 
@@ -149,5 +151,6 @@ Dialog 안의 Popover는 첫 Escape를 소유한다. 내부 Menu가 Escape를 �
 되돌릴 수 있는 제품 행동의 조합에 적용한다. API 호환을 약속하지 않는다.
 
 브라우저 검증은 초기 focus, Escape 복귀, 바깥 클릭 유지, Tab 양방향 이탈, controlled 거절 후
-재시도, dismiss 정책, 중첩 modal/menu, 320px·2배 글자·RTL·충돌 배치, exit 격리를 다룬다.
+재시도, dismiss 정책, 중첩 modal/menu, 선택형 hover 지연과 touch/keyboard press 경로,
+320px·2배 글자·RTL·충돌 배치, exit 격리를 다룬다.
 제품 채택·실제 보조기기 검증은 남아 있다.

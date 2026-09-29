@@ -38,7 +38,9 @@ export function UploadItem({ descriptor, labels, onCancel, onRetry, leading, sty
       ? colors.contentBrand
       : colors.textMuted;
   return (
-    <View accessibilityLabel={announcement.label} accessible style={[{ alignItems: "center", borderColor: colors.border, borderRadius: 12, borderWidth: 1, direction: environment.direction, flexDirection: "row", gap: uploadItemRecipe.row.gap, minHeight: uploadItemRecipe.row.minHeight, paddingHorizontal: uploadItemRecipe.row.paddingHorizontal }, style]}>
+    // Native exposes only a busy state for this lifecycle; success and error remain
+    // distinguishable through the live status sentence, as documented by the contract.
+    <View accessibilityLabel={announcement.label} accessibilityState={{ busy: descriptor.state.status === "uploading" }} accessible style={[{ alignItems: "center", borderColor: colors.border, borderRadius: 12, borderWidth: 1, direction: environment.direction, flexDirection: "row", gap: uploadItemRecipe.row.gap, minHeight: uploadItemRecipe.row.minHeight, paddingHorizontal: uploadItemRecipe.row.paddingHorizontal }, style]}>
       {leading === undefined ? null : <View accessible={false}>{leading}</View>}
       <View style={{ flex: 1, gap: 2, minWidth: 0 }}>
         <Text>{descriptor.name}</Text>

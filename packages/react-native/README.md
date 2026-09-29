@@ -1,7 +1,8 @@
 # @hjmds/react-native
 
-Expo-independent React Native renderers for `@hjmds/design-contracts`. The package uses only
-React and React Native runtime APIs, so it can be consumed by bare React Native and Expo apps.
+Expo-independent React Native renderers for `@hjmds/design-contracts`. The default entries use only
+React and React Native runtime APIs. The optional `toast-liquid` entry has additional native peers;
+its supported host combinations and installation are documented below.
 
 ```tsx
 import {
@@ -381,3 +382,26 @@ pulled in, or Expo, `react-dom`, or `@hjmds/react` contaminates the graph. The a
 budgets measure Metro JavaScript before Hermes bytecode compilation. Per-family source-graph budgets
 are enforced separately by `pnpm bundle:renderer:check`; neither check predicts the final app bundle,
 component-level tree shaking, or Android device-runtime behavior.
+## Optional Liquid Toast
+
+The existing Toast can opt into a capsule/droplet presentation through the separate
+`@hjmds/react-native/toast-liquid` entry. See [Liquid Toast](docs/liquid-toast.md) for optional peers,
+host integration, fallback behavior and the current device-validation limits.
+
+## ThinkingOrb
+
+Experimental Native (device verification pending) AI operation indicator: `@hjmds/react-native/thinking-orb`.
+Requires a localized `label`; `state`, `size` (20/64), `paused`, and `active` control its presentation.
+See [the shared contract and compatibility](../design-contracts/docs/thinking-orb.md).
+
+## Optional presentation adapters
+
+See [installation and behavior contracts](../design-contracts/docs/optional-adapters.md) for opt-in entries, pinned peers and verification limits. Native adapters remain experimental until device verification.
+
+## Data layouts and QRCode
+
+Masonry and VirtualList use the granular `masonry` and `virtual-list` entries.
+Supply measured item heights for Masonry and a fixed row height for VirtualList.
+The optional `qr-code` entry requires `qrcode-generator@2.0.4` and a visible alternative
+action alongside the accessible code. Native also requires `react-native-svg@15.15.5`.
+For the optional native menu, apply the host patches documented in [patch installation](docs/patches/README.md).

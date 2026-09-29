@@ -89,8 +89,8 @@ evidence registry로 판단합니다.
 - planned only: 모든 target이 planned
 
 2026-09-18 SidePanel·Splitter·Tour·Tree·TransferList·Mentions·CommandPalette·DataTable renderer까지 추가한 뒤 status 기반 분포는
-**fully mature 59 / partial maturity 0 /
-planned only 14**입니다. decomposed Drawer의 두 갈래(Sheet·SidePanel)가 모두 구현되면서
+**fully mature 62 / partial maturity 0 /
+planned only 8**입니다. decomposed Drawer의 두 갈래(Sheet·SidePanel)가 모두 구현되면서
 partial maturity가 비었습니다 — 0은 "부분 구현이 없다"는 뜻이고 planned only 20은 그대로입니다. 따라서 73/73 tracking은 73개 구현 완료를 의미하지 않습니다.
 홈과 Component Explorer는 이 수치를 분리해 표시합니다. 이 숫자는 source inventory 수가
 아니라 HJM target의 maturity에서 계산하므로 catalog status가 바뀌면 함께 갱신합니다.

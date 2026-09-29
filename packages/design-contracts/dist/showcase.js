@@ -102,6 +102,11 @@ export const showcaseScenarios = [
         description: "Focus order and documented keyboard behavior run as interaction tests.",
     },
     {
+        id: "native-actions",
+        label: "Native actions",
+        description: "Accessible host actions and their state transitions run against the Native renderer.",
+    },
+    {
         id: "platform-parity",
         label: "Web / Native parity",
         description: "Adaptive renderers preserve intent while using platform-native behavior.",
@@ -129,22 +134,56 @@ export function getRequiredShowcaseScenarios(entry) {
     const activeSurfaces = ["web", "native"].filter((surface) => isRendererMaturity(getComponentSurfaceStatus(entry, surface)));
     if (activeSurfaces.length === 0)
         return plannedRequirements;
-    return ["contract", ...getRendererShowcaseScenarios(entry, activeSurfaces)];
+    const rendererScenarios = [...new Set(activeSurfaces.flatMap((surface) => getRendererShowcaseScenarios(entry, surface)))];
+    return [
+        "contract",
+        ...rendererScenarios,
+    ];
 }
 function isRendererMaturity(status) {
     return status === "stable" || status === "beta";
 }
-// 글자 슬롯이 없어 long-copy를 증명할 수 없는 컴포넌트. 근거: docs/stable-core.md 1.5.0.
-const textlessComponentNames = new Set(["Icon", "IconButton", "Skeleton", "Spinner", "Divider"]);
-function getRendererShowcaseScenarios(entry, activeSurfaces) {
+// These outputs expose no consumer-authored visible prose; default and accessibility proofs remain required.
+const textlessComponentNames = new Set([
+    "Icon", "IconButton", "Skeleton", "Spinner", "ThinkingOrb", "Divider",
+    "Avatar", "Asset", "CounterBadge", "Image", "VisuallyHidden", "Pagination",
+    // These own form/range behavior but no long-form text slot; their child fields
+    // and calendar cells own their copy, so duplicating that proof here misattributes it.
+    "Form", "DateRangePicker",
+]);
+// These behaviors expose no interaction on either rendered surface.
+const semanticOnlyBehaviors = new Set([
+    "top", "authScreen", "heading", "bottomInfo", "nativePlatform", "textFormat", "asset",
+]);
+// Keep surface capability lookup local: importing behaviorRegistry here would pull every
+// behavior contract into the lightweight showcase/evidence entry points. The alternative was
+// importing that registry; showcase.test.ts cross-checks these names against it to prevent drift.
+const webKeyboardBehaviors = new Set([
+    "agreement", "alertDialog", "anchor", "authProviderButton", "bottomNavigation", "breadcrumb",
+    "calendar", "carousel", "checkbox", "checkboxGroup", "chip", "collapsible", "combobox",
+    "commandPalette", "contextMenu", "dataTable", "datePicker", "dateRange", "dialog",
+    "disclosureGroup", "field", "filePicker", "floatingActionButton", "form", "layout", "link",
+    "loadMore", "menu", "menubar", "numberField", "otpField", "pagination", "passwordField",
+    "popover", "radioGroup", "searchField", "segmentedControl", "select", "sheet", "sidePanel",
+    "sidebar", "skipNav", "slider", "splitter", "switch", "tabs", "tagsInput", "toast",
+    "toggleGroup", "tooltip", "tour", "transferList", "tree", "uploadItem",
+]);
+const nativeActionBehaviors = new Set([
+    "agreement", "alertDialog", "authProviderButton", "bottomNavigation", "calendar", "carousel",
+    "checkbox", "checkboxGroup", "chip", "collapsible", "combobox", "datePicker", "dateRange",
+    "dialog", "disclosureGroup", "field", "filePicker", "floatingActionButton", "form", "link",
+    "loadMore", "menu", "numberField", "otpField", "passwordField", "radioGroup", "searchField",
+    "segmentedControl", "select", "sheet", "slider", "switch", "tabs", "tagsInput", "toast",
+    "toggleGroup", "transferList", "uploadItem",
+]);
+function getRendererShowcaseScenarios(entry, surface) {
     const requirements = rendererRequirements.filter((scenario) => scenario !== "long-copy" || !textlessComponentNames.has(entry.name));
-    if (entry.behavior) {
-        requirements.push("keyboard");
-    }
-    if (entry.platform === "adaptive" &&
-        activeSurfaces.includes("web") &&
-        activeSurfaces.includes("native")) {
-        requirements.push("platform-parity");
+    if (entry.behavior && !semanticOnlyBehaviors.has(entry.behavior)) {
+        // Web owns DOM key bindings; Native declares host accessibility actions instead, so Pressable tests must not claim physical keyboard proof.
+        if (surface === "web" && webKeyboardBehaviors.has(entry.behavior))
+            requirements.push("keyboard");
+        if (surface === "native" && nativeActionBehaviors.has(entry.behavior))
+            requirements.push("native-actions");
     }
     return requirements;
 }
@@ -156,9 +195,8 @@ export function getRequiredShowcaseEvidence(entry) {
         { surface: "contract", scenarios: ["contract"] },
     ];
     const activeSurfaces = ["web", "native"].filter((surface) => isRendererMaturity(getComponentSurfaceStatus(entry, surface)));
-    const rendererScenarios = getRendererShowcaseScenarios(entry, activeSurfaces);
     for (const surface of activeSurfaces) {
-        requirements.push({ surface, scenarios: rendererScenarios });
+        requirements.push({ surface, scenarios: getRendererShowcaseScenarios(entry, surface) });
     }
     return requirements;
 }

@@ -57,9 +57,9 @@
       "name": "TextFormat",
       "category": "foundation",
       "platform": "web",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
+        "web": "stable",
         "native": "unsupported"
       },
       "requirements": [
@@ -78,8 +78,7 @@
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility",
-            "keyboard"
+            "accessibility"
           ]
         }
       ],
@@ -94,10 +93,10 @@
       "name": "Heading",
       "category": "foundation",
       "platform": "shared",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -115,8 +114,7 @@
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility",
-            "keyboard"
+            "accessibility"
           ]
         },
         {
@@ -128,8 +126,7 @@
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility",
-            "keyboard"
+            "accessibility"
           ]
         }
       ],
@@ -238,10 +235,10 @@
       "name": "Divider",
       "category": "layout",
       "platform": "shared",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -284,10 +281,10 @@
       "name": "Section",
       "category": "layout",
       "platform": "shared",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -428,10 +425,10 @@
       "name": "AspectRatio",
       "category": "layout",
       "platform": "shared",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -476,10 +473,10 @@
       "name": "Grid",
       "category": "layout",
       "platform": "adaptive",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -497,8 +494,7 @@
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility",
-            "platform-parity"
+            "accessibility"
           ]
         },
         {
@@ -510,8 +506,7 @@
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility",
-            "platform-parity"
+            "accessibility"
           ]
         }
       ],
@@ -526,10 +521,10 @@
       "name": "Layout",
       "category": "layout",
       "platform": "adaptive",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -548,8 +543,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard",
-            "platform-parity"
+            "keyboard"
           ]
         },
         {
@@ -561,9 +555,7 @@
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility",
-            "keyboard",
-            "platform-parity"
+            "accessibility"
           ]
         }
       ],
@@ -578,10 +570,10 @@
       "name": "Top",
       "category": "layout",
       "platform": "adaptive",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -599,9 +591,7 @@
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility",
-            "keyboard",
-            "platform-parity"
+            "accessibility"
           ]
         },
         {
@@ -613,9 +603,7 @@
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility",
-            "keyboard",
-            "platform-parity"
+            "accessibility"
           ]
         }
       ],
@@ -630,10 +618,10 @@
       "name": "Masonry",
       "category": "layout",
       "platform": "adaptive",
-      "contractStatus": "planned",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "planned",
-        "native": "planned"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -641,11 +629,35 @@
           "scenarios": [
             "contract"
           ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
         }
       ],
       "documentation": {
         "generated": "docs/generated/component-maturity.md",
-        "authored": null
+        "authored": "docs/masonry.md"
       }
     },
     {
@@ -654,9 +666,9 @@
       "name": "Splitter",
       "category": "layout",
       "platform": "web",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
+        "web": "stable",
         "native": "unsupported"
       },
       "requirements": [
@@ -785,10 +797,10 @@
       "name": "Link",
       "category": "action",
       "platform": "adaptive",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -807,8 +819,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard",
-            "platform-parity"
+            "keyboard"
           ]
         },
         {
@@ -821,8 +832,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard",
-            "platform-parity"
+            "native-actions"
           ]
         }
       ],
@@ -837,10 +847,10 @@
       "name": "BottomCTA",
       "category": "action",
       "platform": "adaptive",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -858,8 +868,7 @@
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility",
-            "platform-parity"
+            "accessibility"
           ]
         },
         {
@@ -871,8 +880,7 @@
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility",
-            "platform-parity"
+            "accessibility"
           ]
         }
       ],
@@ -887,10 +895,10 @@
       "name": "FloatingActionButton",
       "category": "action",
       "platform": "adaptive",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -909,8 +917,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard",
-            "platform-parity"
+            "keyboard"
           ]
         },
         {
@@ -923,8 +930,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard",
-            "platform-parity"
+            "native-actions"
           ]
         }
       ],
@@ -939,10 +945,10 @@
       "name": "AuthScreenLayout",
       "category": "layout",
       "platform": "adaptive",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -960,9 +966,7 @@
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility",
-            "keyboard",
-            "platform-parity"
+            "accessibility"
           ]
         },
         {
@@ -974,9 +978,7 @@
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility",
-            "keyboard",
-            "platform-parity"
+            "accessibility"
           ]
         }
       ],
@@ -991,10 +993,10 @@
       "name": "AuthProviderButton",
       "category": "action",
       "platform": "adaptive",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -1013,8 +1015,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard",
-            "platform-parity"
+            "keyboard"
           ]
         },
         {
@@ -1027,8 +1028,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard",
-            "platform-parity"
+            "native-actions"
           ]
         }
       ],
@@ -1078,7 +1078,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard"
+            "native-actions"
           ]
         }
       ],
@@ -1093,10 +1093,10 @@
       "name": "SearchField",
       "category": "input",
       "platform": "shared",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -1128,7 +1128,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard"
+            "native-actions"
           ]
         }
       ],
@@ -1191,10 +1191,10 @@
       "name": "PasswordField",
       "category": "input",
       "platform": "adaptive",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -1213,8 +1213,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard",
-            "platform-parity"
+            "keyboard"
           ]
         },
         {
@@ -1227,8 +1226,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard",
-            "platform-parity"
+            "native-actions"
           ]
         }
       ],
@@ -1243,10 +1241,10 @@
       "name": "OtpField",
       "category": "input",
       "platform": "adaptive",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -1265,8 +1263,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard",
-            "platform-parity"
+            "keyboard"
           ]
         },
         {
@@ -1279,8 +1276,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard",
-            "platform-parity"
+            "native-actions"
           ]
         }
       ],
@@ -1295,10 +1291,10 @@
       "name": "Checkbox",
       "category": "input",
       "platform": "shared",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -1330,7 +1326,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard"
+            "native-actions"
           ]
         }
       ],
@@ -1345,10 +1341,10 @@
       "name": "Radio",
       "category": "input",
       "platform": "shared",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -1393,10 +1389,10 @@
       "name": "CheckboxGroup",
       "category": "input",
       "platform": "shared",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -1428,7 +1424,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard"
+            "native-actions"
           ]
         }
       ],
@@ -1443,10 +1439,10 @@
       "name": "RadioGroup",
       "category": "input",
       "platform": "shared",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -1478,7 +1474,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard"
+            "native-actions"
           ]
         }
       ],
@@ -1493,10 +1489,10 @@
       "name": "Switch",
       "category": "input",
       "platform": "shared",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -1528,7 +1524,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard"
+            "native-actions"
           ]
         }
       ],
@@ -1543,10 +1539,10 @@
       "name": "Chip",
       "category": "input",
       "platform": "shared",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -1578,7 +1574,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard"
+            "native-actions"
           ]
         }
       ],
@@ -1593,10 +1589,10 @@
       "name": "SegmentedControl",
       "category": "input",
       "platform": "shared",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -1628,7 +1624,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard"
+            "native-actions"
           ]
         }
       ],
@@ -1643,10 +1639,10 @@
       "name": "ToggleGroup",
       "category": "input",
       "platform": "adaptive",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -1665,8 +1661,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard",
-            "platform-parity"
+            "keyboard"
           ]
         },
         {
@@ -1679,8 +1674,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard",
-            "platform-parity"
+            "native-actions"
           ]
         }
       ],
@@ -1695,10 +1689,10 @@
       "name": "TagsInput",
       "category": "input",
       "platform": "adaptive",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -1717,8 +1711,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard",
-            "platform-parity"
+            "keyboard"
           ]
         },
         {
@@ -1731,8 +1724,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard",
-            "platform-parity"
+            "native-actions"
           ]
         }
       ],
@@ -1747,10 +1739,10 @@
       "name": "Slider",
       "category": "input",
       "platform": "shared",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -1782,7 +1774,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard"
+            "native-actions"
           ]
         }
       ],
@@ -1797,10 +1789,10 @@
       "name": "NumberField",
       "category": "input",
       "platform": "shared",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -1832,7 +1824,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard"
+            "native-actions"
           ]
         }
       ],
@@ -1847,10 +1839,10 @@
       "name": "Select",
       "category": "input",
       "platform": "adaptive",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -1869,8 +1861,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard",
-            "platform-parity"
+            "keyboard"
           ]
         },
         {
@@ -1883,8 +1874,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard",
-            "platform-parity"
+            "native-actions"
           ]
         }
       ],
@@ -1899,10 +1889,10 @@
       "name": "Combobox",
       "category": "input",
       "platform": "adaptive",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -1921,8 +1911,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard",
-            "platform-parity"
+            "keyboard"
           ]
         },
         {
@@ -1935,8 +1924,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard",
-            "platform-parity"
+            "native-actions"
           ]
         }
       ],
@@ -1951,10 +1939,10 @@
       "name": "DatePicker",
       "category": "input",
       "platform": "adaptive",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -1973,8 +1961,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard",
-            "platform-parity"
+            "keyboard"
           ]
         },
         {
@@ -1987,8 +1974,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard",
-            "platform-parity"
+            "native-actions"
           ]
         }
       ],
@@ -2003,10 +1989,10 @@
       "name": "DateRangePicker",
       "category": "input",
       "platform": "adaptive",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -2020,13 +2006,11 @@
           "scenarios": [
             "default",
             "dark",
-            "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard",
-            "platform-parity"
+            "keyboard"
           ]
         },
         {
@@ -2034,13 +2018,11 @@
           "scenarios": [
             "default",
             "dark",
-            "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard",
-            "platform-parity"
+            "native-actions"
           ]
         }
       ],
@@ -2103,10 +2085,10 @@
       "name": "FilePicker",
       "category": "input",
       "platform": "adaptive",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -2125,8 +2107,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard",
-            "platform-parity"
+            "keyboard"
           ]
         },
         {
@@ -2139,8 +2120,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard",
-            "platform-parity"
+            "native-actions"
           ]
         }
       ],
@@ -2179,10 +2159,10 @@
       "name": "Form",
       "category": "input",
       "platform": "shared",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -2196,7 +2176,6 @@
           "scenarios": [
             "default",
             "dark",
-            "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
@@ -2209,12 +2188,11 @@
           "scenarios": [
             "default",
             "dark",
-            "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard"
+            "native-actions"
           ]
         }
       ],
@@ -2229,10 +2207,10 @@
       "name": "Agreement",
       "category": "input",
       "platform": "adaptive",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -2251,8 +2229,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard",
-            "platform-parity"
+            "keyboard"
           ]
         },
         {
@@ -2265,8 +2242,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard",
-            "platform-parity"
+            "native-actions"
           ]
         }
       ],
@@ -2281,10 +2257,10 @@
       "name": "Mentions",
       "category": "input",
       "platform": "adaptive",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -2303,8 +2279,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard",
-            "platform-parity"
+            "keyboard"
           ]
         },
         {
@@ -2317,8 +2292,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard",
-            "platform-parity"
+            "native-actions"
           ]
         }
       ],
@@ -2357,10 +2331,10 @@
       "name": "TransferList",
       "category": "input",
       "platform": "adaptive",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -2379,8 +2353,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard",
-            "platform-parity"
+            "keyboard"
           ]
         },
         {
@@ -2393,8 +2366,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard",
-            "platform-parity"
+            "native-actions"
           ]
         }
       ],
@@ -2433,10 +2405,10 @@
       "name": "UploadItem",
       "category": "data-display",
       "platform": "shared",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -2468,7 +2440,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard"
+            "native-actions"
           ]
         }
       ],
@@ -2483,10 +2455,10 @@
       "name": "Tabs",
       "category": "navigation",
       "platform": "shared",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -2518,7 +2490,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard"
+            "native-actions"
           ]
         }
       ],
@@ -2533,10 +2505,10 @@
       "name": "TopBar",
       "category": "navigation",
       "platform": "adaptive",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -2554,8 +2526,7 @@
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility",
-            "platform-parity"
+            "accessibility"
           ]
         },
         {
@@ -2567,8 +2538,7 @@
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility",
-            "platform-parity"
+            "accessibility"
           ]
         }
       ],
@@ -2583,9 +2553,9 @@
       "name": "Sidebar",
       "category": "navigation",
       "platform": "web",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
+        "web": "stable",
         "native": "unsupported"
       },
       "requirements": [
@@ -2620,10 +2590,10 @@
       "name": "BottomNavigation",
       "category": "navigation",
       "platform": "adaptive",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -2642,8 +2612,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard",
-            "platform-parity"
+            "keyboard"
           ]
         },
         {
@@ -2656,8 +2625,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard",
-            "platform-parity"
+            "native-actions"
           ]
         }
       ],
@@ -2672,9 +2640,9 @@
       "name": "Breadcrumb",
       "category": "navigation",
       "platform": "web",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
+        "web": "stable",
         "native": "unsupported"
       },
       "requirements": [
@@ -2709,9 +2677,9 @@
       "name": "Pagination",
       "category": "navigation",
       "platform": "web",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
+        "web": "stable",
         "native": "unsupported"
       },
       "requirements": [
@@ -2726,7 +2694,6 @@
           "scenarios": [
             "default",
             "dark",
-            "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
@@ -2746,10 +2713,10 @@
       "name": "LoadMore",
       "category": "navigation",
       "platform": "shared",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -2781,7 +2748,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard"
+            "native-actions"
           ]
         }
       ],
@@ -2796,10 +2763,10 @@
       "name": "Steps",
       "category": "navigation",
       "platform": "shared",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -2844,9 +2811,9 @@
       "name": "Menubar",
       "category": "navigation",
       "platform": "web",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
+        "web": "stable",
         "native": "unsupported"
       },
       "requirements": [
@@ -2881,9 +2848,9 @@
       "name": "ContextMenu",
       "category": "navigation",
       "platform": "web",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
+        "web": "stable",
         "native": "unsupported"
       },
       "requirements": [
@@ -2918,10 +2885,10 @@
       "name": "Menu",
       "category": "navigation",
       "platform": "adaptive",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -2940,8 +2907,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard",
-            "platform-parity"
+            "keyboard"
           ]
         },
         {
@@ -2954,8 +2920,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard",
-            "platform-parity"
+            "native-actions"
           ]
         }
       ],
@@ -2970,9 +2935,9 @@
       "name": "Anchor",
       "category": "navigation",
       "platform": "web",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
+        "web": "stable",
         "native": "unsupported"
       },
       "requirements": [
@@ -3007,10 +2972,10 @@
       "name": "Avatar",
       "category": "data-display",
       "platform": "shared",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -3024,7 +2989,6 @@
           "scenarios": [
             "default",
             "dark",
-            "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
@@ -3036,7 +3000,6 @@
           "scenarios": [
             "default",
             "dark",
-            "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
@@ -3055,10 +3018,10 @@
       "name": "Asset",
       "category": "data-display",
       "platform": "adaptive",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -3072,13 +3035,10 @@
           "scenarios": [
             "default",
             "dark",
-            "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility",
-            "keyboard",
-            "platform-parity"
+            "accessibility"
           ]
         },
         {
@@ -3086,43 +3046,16 @@
           "scenarios": [
             "default",
             "dark",
-            "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility",
-            "keyboard",
-            "platform-parity"
+            "accessibility"
           ]
         }
       ],
       "documentation": {
         "generated": "docs/generated/component-maturity.md",
         "authored": "docs/asset.md"
-      }
-    },
-    {
-      "id": "chart",
-      "storyId": "data-display/chart",
-      "name": "Chart",
-      "category": "data-display",
-      "platform": "shared",
-      "contractStatus": "planned",
-      "surfaces": {
-        "web": "planned",
-        "native": "planned"
-      },
-      "requirements": [
-        {
-          "surface": "contract",
-          "scenarios": [
-            "contract"
-          ]
-        }
-      ],
-      "documentation": {
-        "generated": "docs/generated/component-maturity.md",
-        "authored": "docs/chart.md"
       }
     },
     {
@@ -3179,10 +3112,10 @@
       "name": "CounterBadge",
       "category": "data-display",
       "platform": "shared",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -3196,7 +3129,6 @@
           "scenarios": [
             "default",
             "dark",
-            "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
@@ -3208,7 +3140,6 @@
           "scenarios": [
             "default",
             "dark",
-            "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",
@@ -3275,10 +3206,10 @@
       "name": "List",
       "category": "data-display",
       "platform": "shared",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -3323,10 +3254,10 @@
       "name": "ListRow",
       "category": "data-display",
       "platform": "shared",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -3371,16 +3302,40 @@
       "name": "VirtualList",
       "category": "data-display",
       "platform": "adaptive",
-      "contractStatus": "planned",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "planned",
-        "native": "planned"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
           "surface": "contract",
           "scenarios": [
             "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "long-copy",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
           ]
         }
       ],
@@ -3395,10 +3350,10 @@
       "name": "Collapsible",
       "category": "data-display",
       "platform": "adaptive",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -3417,8 +3372,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard",
-            "platform-parity"
+            "keyboard"
           ]
         },
         {
@@ -3431,8 +3385,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard",
-            "platform-parity"
+            "native-actions"
           ]
         }
       ],
@@ -3447,10 +3400,10 @@
       "name": "Accordion",
       "category": "data-display",
       "platform": "shared",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -3482,7 +3435,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard"
+            "native-actions"
           ]
         }
       ],
@@ -3497,10 +3450,10 @@
       "name": "Statistic",
       "category": "data-display",
       "platform": "shared",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -3545,10 +3498,10 @@
       "name": "Timeline",
       "category": "data-display",
       "platform": "shared",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -3593,9 +3546,9 @@
       "name": "DataTable",
       "category": "data-display",
       "platform": "web",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
+        "web": "stable",
         "native": "unsupported"
       },
       "requirements": [
@@ -3630,9 +3583,9 @@
       "name": "Tree",
       "category": "data-display",
       "platform": "web",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
+        "web": "stable",
         "native": "unsupported"
       },
       "requirements": [
@@ -3667,10 +3620,10 @@
       "name": "Calendar",
       "category": "data-display",
       "platform": "shared",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -3702,7 +3655,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard"
+            "native-actions"
           ]
         }
       ],
@@ -3717,10 +3670,10 @@
       "name": "Carousel",
       "category": "data-display",
       "platform": "adaptive",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -3739,8 +3692,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard",
-            "platform-parity"
+            "keyboard"
           ]
         },
         {
@@ -3753,8 +3705,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard",
-            "platform-parity"
+            "native-actions"
           ]
         }
       ],
@@ -3769,10 +3720,10 @@
       "name": "DescriptionList",
       "category": "data-display",
       "platform": "shared",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -3817,10 +3768,56 @@
       "name": "Image",
       "category": "data-display",
       "platform": "shared",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/image.md"
+      }
+    },
+    {
+      "id": "qr-code",
+      "storyId": "data-display/qrcode",
+      "name": "QRCode",
+      "category": "data-display",
+      "platform": "shared",
+      "contractStatus": "stable",
+      "surfaces": {
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -3851,30 +3848,6 @@
             "rtl",
             "reduced-motion",
             "accessibility"
-          ]
-        }
-      ],
-      "documentation": {
-        "generated": "docs/generated/component-maturity.md",
-        "authored": "docs/image.md"
-      }
-    },
-    {
-      "id": "qr-code",
-      "storyId": "data-display/qrcode",
-      "name": "QRCode",
-      "category": "data-display",
-      "platform": "shared",
-      "contractStatus": "planned",
-      "surfaces": {
-        "web": "planned",
-        "native": "planned"
-      },
-      "requirements": [
-        {
-          "surface": "contract",
-          "scenarios": [
-            "contract"
           ]
         }
       ],
@@ -3937,9 +3910,9 @@
       "name": "Tour",
       "category": "overlay",
       "platform": "web",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
+        "web": "stable",
         "native": "unsupported"
       },
       "requirements": [
@@ -3974,10 +3947,10 @@
       "name": "EmptyState",
       "category": "feedback",
       "platform": "shared",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -4113,6 +4086,52 @@
       }
     },
     {
+      "id": "thinking-orb",
+      "storyId": "feedback/thinking-orb",
+      "name": "ThinkingOrb",
+      "category": "feedback",
+      "platform": "shared",
+      "contractStatus": "stable",
+      "surfaces": {
+        "web": "stable",
+        "native": "stable"
+      },
+      "requirements": [
+        {
+          "surface": "contract",
+          "scenarios": [
+            "contract"
+          ]
+        },
+        {
+          "surface": "web",
+          "scenarios": [
+            "default",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        },
+        {
+          "surface": "native",
+          "scenarios": [
+            "default",
+            "dark",
+            "large-text",
+            "rtl",
+            "reduced-motion",
+            "accessibility"
+          ]
+        }
+      ],
+      "documentation": {
+        "generated": "docs/generated/component-maturity.md",
+        "authored": "docs/thinking-orb.md"
+      }
+    },
+    {
       "id": "spinner",
       "storyId": "feedback/spinner",
       "name": "Spinner",
@@ -4210,10 +4229,10 @@
       "name": "Result",
       "category": "feedback",
       "platform": "shared",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -4258,10 +4277,10 @@
       "name": "BottomInfo",
       "category": "feedback",
       "platform": "adaptive",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -4279,9 +4298,7 @@
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility",
-            "keyboard",
-            "platform-parity"
+            "accessibility"
           ]
         },
         {
@@ -4293,9 +4310,7 @@
             "large-text",
             "rtl",
             "reduced-motion",
-            "accessibility",
-            "keyboard",
-            "platform-parity"
+            "accessibility"
           ]
         }
       ],
@@ -4310,10 +4325,10 @@
       "name": "Toast",
       "category": "feedback",
       "platform": "adaptive",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -4332,8 +4347,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard",
-            "platform-parity"
+            "keyboard"
           ]
         },
         {
@@ -4346,8 +4360,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard",
-            "platform-parity"
+            "native-actions"
           ]
         }
       ],
@@ -4386,10 +4399,10 @@
       "name": "Dialog",
       "category": "overlay",
       "platform": "adaptive",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -4408,8 +4421,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard",
-            "platform-parity"
+            "keyboard"
           ]
         },
         {
@@ -4422,14 +4434,13 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard",
-            "platform-parity"
+            "native-actions"
           ]
         }
       ],
       "documentation": {
         "generated": "docs/generated/component-maturity.md",
-        "authored": null
+        "authored": "docs/dialog.md"
       }
     },
     {
@@ -4438,10 +4449,10 @@
       "name": "AlertDialog",
       "category": "overlay",
       "platform": "adaptive",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -4460,8 +4471,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard",
-            "platform-parity"
+            "keyboard"
           ]
         },
         {
@@ -4474,8 +4484,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard",
-            "platform-parity"
+            "native-actions"
           ]
         }
       ],
@@ -4490,10 +4499,10 @@
       "name": "Sheet",
       "category": "overlay",
       "platform": "adaptive",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
-        "native": "beta"
+        "web": "stable",
+        "native": "stable"
       },
       "requirements": [
         {
@@ -4512,8 +4521,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard",
-            "platform-parity"
+            "keyboard"
           ]
         },
         {
@@ -4526,8 +4534,7 @@
             "rtl",
             "reduced-motion",
             "accessibility",
-            "keyboard",
-            "platform-parity"
+            "native-actions"
           ]
         }
       ],
@@ -4542,9 +4549,9 @@
       "name": "SidePanel",
       "category": "overlay",
       "platform": "web",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
+        "web": "stable",
         "native": "unsupported"
       },
       "requirements": [
@@ -4579,9 +4586,9 @@
       "name": "Popover",
       "category": "overlay",
       "platform": "web",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
+        "web": "stable",
         "native": "unsupported"
       },
       "requirements": [
@@ -4640,9 +4647,9 @@
       "name": "Tooltip",
       "category": "overlay",
       "platform": "web",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
+        "web": "stable",
         "native": "unsupported"
       },
       "requirements": [
@@ -4677,9 +4684,9 @@
       "name": "CommandPalette",
       "category": "overlay",
       "platform": "web",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
+        "web": "stable",
         "native": "unsupported"
       },
       "requirements": [
@@ -4733,54 +4740,6 @@
       }
     },
     {
-      "id": "app-provider",
-      "storyId": "provider/app-provider",
-      "name": "AppProvider",
-      "category": "provider",
-      "platform": "adaptive",
-      "contractStatus": "planned",
-      "surfaces": {
-        "web": "planned",
-        "native": "planned"
-      },
-      "requirements": [
-        {
-          "surface": "contract",
-          "scenarios": [
-            "contract"
-          ]
-        }
-      ],
-      "documentation": {
-        "generated": "docs/generated/component-maturity.md",
-        "authored": "docs/app-provider.md"
-      }
-    },
-    {
-      "id": "border-beam",
-      "storyId": "utility/border-beam",
-      "name": "BorderBeam",
-      "category": "utility",
-      "platform": "web",
-      "contractStatus": "planned",
-      "surfaces": {
-        "web": "planned",
-        "native": "unsupported"
-      },
-      "requirements": [
-        {
-          "surface": "contract",
-          "scenarios": [
-            "contract"
-          ]
-        }
-      ],
-      "documentation": {
-        "generated": "docs/generated/component-maturity.md",
-        "authored": "docs/border-beam.md"
-      }
-    },
-    {
       "id": "design-system-provider",
       "storyId": "provider/design-system-provider",
       "name": "DesignSystemProvider",
@@ -4829,38 +4788,14 @@
       }
     },
     {
-      "id": "utility",
-      "storyId": "utility/utility",
-      "name": "Utility",
-      "category": "utility",
-      "platform": "web",
-      "contractStatus": "planned",
-      "surfaces": {
-        "web": "planned",
-        "native": "unsupported"
-      },
-      "requirements": [
-        {
-          "surface": "contract",
-          "scenarios": [
-            "contract"
-          ]
-        }
-      ],
-      "documentation": {
-        "generated": "docs/generated/component-maturity.md",
-        "authored": "docs/utility.md"
-      }
-    },
-    {
       "id": "skip-nav",
       "storyId": "utility/skip-nav",
       "name": "SkipNav",
       "category": "utility",
       "platform": "web",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
+        "web": "stable",
         "native": "unsupported"
       },
       "requirements": [
@@ -4895,9 +4830,9 @@
       "name": "VisuallyHidden",
       "category": "utility",
       "platform": "web",
-      "contractStatus": "beta",
+      "contractStatus": "stable",
       "surfaces": {
-        "web": "beta",
+        "web": "stable",
         "native": "unsupported"
       },
       "requirements": [
@@ -4912,7 +4847,6 @@
           "scenarios": [
             "default",
             "dark",
-            "long-copy",
             "large-text",
             "rtl",
             "reduced-motion",

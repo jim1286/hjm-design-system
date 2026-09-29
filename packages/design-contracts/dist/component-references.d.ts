@@ -371,24 +371,9 @@ declare const antDesignReferenceSources: readonly [{
     readonly targets: readonly ["Affix"];
     readonly relationship: "direct";
 }, {
-    readonly name: "App";
-    readonly category: "other";
-    readonly targets: readonly ["AppProvider"];
-    readonly relationship: "adapted";
-}, {
-    readonly name: "BorderBeam";
-    readonly category: "other";
-    readonly targets: readonly ["BorderBeam"];
-    readonly relationship: "direct";
-}, {
     readonly name: "ConfigProvider";
     readonly category: "other";
     readonly targets: readonly ["DesignSystemProvider"];
-    readonly relationship: "adapted";
-}, {
-    readonly name: "Util";
-    readonly category: "other";
-    readonly targets: readonly ["Utility"];
     readonly relationship: "adapted";
 }];
 export declare const antDesignReferenceComponents: readonly AntDesignReferenceComponent[];

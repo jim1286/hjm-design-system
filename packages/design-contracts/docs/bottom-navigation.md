@@ -2,9 +2,9 @@
 
 `BottomNavigation`은 콘텐츠 panel을 바꾸는 `Tabs`가 아니라 앱의 안정된 최상위 route를
 이동합니다. 같은 destination 의미를 Web의 link와 React Native navigator tab으로 적응시키며,
-route state는 제품 router 한 곳에서만 소유합니다. BurnTok Web/RN과 Yajalal RN의 실제
-navigation renderer에서 route lifecycle·접근성·큰 글자·safe area를 검증해 catalog status는
-`beta`입니다.
+route state는 제품 router 한 곳에서만 소유합니다. 각 renderer의 환경 matrix, Web route-link
+키보드 동작, Native navigate/reselect host action과 긴 목적지 label 회귀가 연결되어 catalog
+status는 `stable`입니다. 구체적인 router·navigator와 결합한 화면 동작은 소비 앱 QA입니다.
 
 ## Descriptor와 configuration
 
@@ -46,9 +46,8 @@ const descriptor = {
 예약하며 action을 collection에 추가하지 않습니다.
 
 Web renderer도 이름이 있는 실제 link landmark, `aria-current`, modifier click 보존,
-keyboard viewport hide와 center-gap 배치를 first-party SSR·browser test로 검증하므로 Web
-surface 역시 `beta`입니다. 제품 router와 결합한 브라우저 릴리스 증거는 stable 승격 전
-debt로 남습니다.
+keyboard viewport hide와 center-gap 배치를 first-party SSR·browser test로 검증합니다. 제품
+router와 결합한 브라우저 릴리스 증거는 컴포넌트 API 성숙도가 아니라 소비 앱 QA에 속합니다.
 
 ## Route source of truth
 
@@ -111,6 +110,8 @@ status/live role이나 별도 accessibility label을 추가하면 같은 정보�
   visual label은 최대 `1.4×`까지만 커지고, 원문 전체는 item의 접근성 이름으로 유지합니다.
 - safe-area bottom inset은 recipe의 최소 padding에 더합니다. `max(base, inset)`으로 대체하지
   않습니다.
+- 긴 label은 320px viewport의 Web geometry matrix와 React Native renderer matrix에서 확인합니다.
+  Web link의 전체 이름/visible label 보존과 Native accessibility name/Text 보존은 전용 interaction proof에 둡니다.
 - 기본 keyboard behavior는 `hide`입니다. software keyboard 위로 bottom navigation을 밀어
   올려 입력 영역을 가리지 않습니다.
 - RTL에서는 item 순서와 badge의 inline-end anchor가 함께 뒤집힙니다. icon 자체의 mirror 여부는

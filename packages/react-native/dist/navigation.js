@@ -661,7 +661,9 @@ export function TopBar({ title, titleLeading, onTitlePress, titleAccessibilityLa
                             minWidth: topBarRecipe.sideMinWidth,
                         },
                         leadingStyle,
-                    ], children: hasLeading ? leading : null })) : null, hasTitle ? (renderTitle({ flex: 2, flexShrink: 1, minWidth: 0 }, 1)) : null, renderCompactTrailingSlot ? (_jsx(View, { style: [
+                    ], children: hasLeading ? leading : null })) : null, hasTitle ? (
+                // Keep long route titles readable; the screen-chrome contract promises wrapping, while a one-line cap silently hid the rest.
+                renderTitle({ flex: 2, flexShrink: 1, minWidth: 0 })) : null, renderCompactTrailingSlot ? (_jsx(View, { style: [
                         {
                             alignItems: "center",
                             direction: theme.environment.direction,

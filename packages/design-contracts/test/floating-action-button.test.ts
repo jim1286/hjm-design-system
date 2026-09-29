@@ -150,12 +150,12 @@ describe("FloatingActionButton visual recipe", () => {
 });
 
 describe("FloatingActionButton catalog", () => {
-  it("records both renderers as beta while retaining adaptive action semantics", () => {
+  it("records both renderers as stable while retaining adaptive action semantics", () => {
     const entry = componentCatalog.find((item) => item.name === "FloatingActionButton");
     expect(entry).toMatchObject({
       category: "action",
       platform: "adaptive",
-      status: "beta",
+      status: "stable",
     });
   });
 });

@@ -1,4 +1,5 @@
 import type { CarouselSelection } from "@hjmds/design-contracts/components/carousel";
+// This proof file is listed by test/executed-scenarios.json; the workspace checker validates its cases against that registry.
 import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -6,6 +7,8 @@ import { page } from "vitest/browser";
 import { Carousel, type CarouselProps } from "../src/carousel.js";
 import { HjmProvider } from "../src/provider.js";
 import "../src/styles.css";
+// The evidence registry points to this focused keyboard and long-copy proof; the shared scenario fixture is intentionally generic.
+// componentId: "carousel"
 
 const slides = [{ id: "a", label: "첫 소식" }, { id: "b", label: "둘째 소식" }, { id: "c", label: "마지막 소식" }];
 const base = { label: "새 소식", slides, labels: { previous: "이전", next: "다음", pause: "멈추기", resume: "재생하기", navigation: "소식 이동" },
@@ -52,10 +55,22 @@ describe("Carousel interaction", () => {
   });
   it.each(["ltr", "rtl"] as const)("moves from controls in %s without stealing an input arrow", async (direction) => {
     await render({}, direction);
-    await act(async () => button("다음").dispatchEvent(new KeyboardEvent("keydown", { key: direction === "ltr" ? "ArrowRight" : "ArrowLeft", bubbles: true })));
+    const next = button("다음");
+    await act(async () => { next.focus(); next.dispatchEvent(new KeyboardEvent("keydown", { key: direction === "ltr" ? "ArrowRight" : "ArrowLeft", bubbles: true })); });
     expect(current()).toBe("2/3 둘째 소식");
     await act(async () => host.querySelector('.hjm-carousel__slide:not([hidden]) input')!.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight", bubbles: true })));
     expect(current()).toBe("2/3 둘째 소식");
+  });
+  it("exposes slide position and named dot actions to the browser accessibility tree", async () => {
+    await render();
+    const region = host.querySelector('[role="region"][aria-roledescription="carousel"]');
+    expect(region?.getAttribute("aria-label")).toBe("새 소식");
+    expect(host.querySelector('[role="group"][aria-roledescription="slide"]')?.getAttribute("aria-label")).toBe("1/3 첫 소식");
+    const second = host.querySelector<HTMLButtonElement>('button[aria-label="2/3 둘째 소식"]')!;
+    expect(second.getAttribute("aria-disabled")).toBe("false");
+    await act(async () => { second.focus(); second.click(); });
+    expect(current()).toBe("2/3 둘째 소식");
+    expect(document.activeElement).toBe(second);
   });
   it("requests a controlled key without changing the card until its owner updates", async () => {
     const change = vi.fn(); await render({ currentKey: "a", onCurrentKeyChange: change });
@@ -100,5 +115,18 @@ describe("Carousel interaction", () => {
     }
     expect(button("이전").getBoundingClientRect().top).toBe(button("다음").getBoundingClientRect().top);
     expect(host.querySelector(".hjm-carousel__dots")!.getBoundingClientRect().bottom).toBeLessThanOrEqual(button("이전").getBoundingClientRect().top);
+  });
+  it("wraps long slide and control copy inside a narrow 200% text layout", async () => {
+    await page.viewport(320, 844);
+    const copy = "An unusually long product sentence with verylongunbrokenidentifierlikewordsthatmustwrap and a second clause that keeps going past one line.";
+    const labels = { previous: copy, next: copy, pause: copy, resume: copy, navigation: copy };
+    await act(async () => root.render(<HjmProvider textScale={2}><Carousel {...base} label={copy} labels={labels}
+      slides={[{ id: "one", label: copy }, { id: "two", label: "다음 소식" }]}
+      renderSlide={({ label }) => <p>{label}</p>} /></HjmProvider>));
+    const carousel = host.querySelector<HTMLElement>(".hjm-carousel")!;
+    const overflow = [...carousel.querySelectorAll<HTMLElement>(".hjm-carousel__track, .hjm-carousel__slide, .hjm-carousel__controls")];
+    expect(carousel.getBoundingClientRect().width).toBeLessThanOrEqual(320);
+    expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(320);
+    for (const node of overflow) expect(node.scrollWidth).toBeLessThanOrEqual(node.clientWidth + 2);
   });
 });

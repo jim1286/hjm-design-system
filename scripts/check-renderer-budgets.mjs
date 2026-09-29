@@ -24,6 +24,17 @@ const rendererBudgets = [
       { file: "provider.js", raw: 800, gzip: 280 },
     ],
     budgets: {
+      // Opt-in data layouts reuse provider primitives; external QR peers remain separately installed.
+      // Measured Web: 1.2/0.5, 3.8/1.4, 1.3/0.7 kB raw/gzip; one module each.
+      "./masonry": { modules: 1, raw: 1_500, gzip: 700 },
+      "./virtual-list": { modules: 1, raw: 4_800, gzip: 1_800 },
+      "./qr-code": { modules: 1, raw: 1_700, gzip: 900 },
+      // Optional adoption graphs reuse HJM semantics; measurements exclude external peers.
+      // 2026-09-29: Statistic 35.6/9.1 kB (5 modules), Menu 93.5/19.8 kB (8).
+      "./statistic-motion": { modules: 5, raw: 40_000, gzip: 10_200 },
+      "./menu-morph": { modules: 8, raw: 104_000, gzip: 22_000 },
+      // Standalone ThinkingOrb reuses the provider; geometry lives in the separately budgeted contracts entry.
+      "./thinking-orb": { modules: 4, raw: 20_000, gzip: 5_700 },
       // 28: the canonical composition-style contract module. `hjmCompositionStyleKeys`
       // is a runtime value, so exporting it from the root adds one graph edge.
       // Byte budgets are unchanged and still pass with ~28% headroom.
@@ -166,7 +177,12 @@ const rendererBudgets = [
       // Six more claims, metadata only: measured 6.9 kB raw / 1.7 kB gzip.
       // 1.5.0: claims now derive per-scenario proofs from the gap and long-copy
       // tables of the real scenario matrix: measured 9.8 kB raw / 2.65 kB gzip.
-      "./evidence": { modules: 1, raw: 10_200, gzip: 2_800 },
+      // 2026-09-29: stable interactive claims add keyboard proof links (no new module).
+      // Mentions keyboard proof and its long-copy matrix reference add 51 raw / 10 gzip bytes; keep the one-module graph exact.
+      // The promotion batch adds explicit keyboard/Native-action and long-copy proof references;
+      // measured 13,074 raw / 3,161 gzip bytes, still one module and no renderer imports.
+      // Three data-layout scenario claims grow metadata only; no new import edges.
+      "./evidence": { modules: 1, raw: 14_000, gzip: 3_400 },
     },
     cssBudgets: {
       // 1.0.0+: gzip 13_500 -> 14_000. Switch의 꺼짐 hairline을 추가할 때 규칙 자체는
@@ -206,10 +222,12 @@ const rendererBudgets = [
       // AuthScreenLayout의 두 영역 규칙(약 40줄)만큼 gzip 0.4 kB 늘었다.
       // 1.4 Switch row/description/reflow and Sheet alignment measure 149.8/24.2 kB.
       // Keep selection's module budget unchanged; only these shared CSS rules grow.
-      "./styles.css": { raw: 153_000, gzip: 24_800 },
+      // 2026-09-29 optional Menu Morph adds HJM-owned focus, target, and hover rules; measured CSS is 24.9 kB gzip.
+      // 2026-09-29 long-copy wrapping in modal and transfer-list copy adds functional rules; measured 153,703/25,304 B.
+      "./styles.css": { raw: 154_000, gzip: 25_500 },
       // Same rules wrapped in `@layer hjm { }` by packages/react/scripts/copy-styles.mjs;
       // the wrapper adds ~15 bytes, so this budget tracks styles.css plus that margin.
-      "./styles.layered.css": { raw: 153_064, gzip: 24_832 },
+      "./styles.layered.css": { raw: 154_064, gzip: 25_532 },
     },
   },
   {
@@ -220,8 +238,27 @@ const rendererBudgets = [
     // context, measured +0.6 kB raw / +0.19 kB gzip; see the Web note above.
     sharedModuleAllowances: [
       { file: "provider.js", raw: 700, gzip: 220 },
+      // Liquid's dependency-free host seam adds measured timing/occlusion/announcement logic
+      // to feedback (also reached by navigation). The optional Skia renderer is budgeted separately.
+      { file: "feedback.js", raw: 7_500, gzip: 1_800 },
     ],
     budgets: {
+      // Opt-in data layouts reuse provider primitives; external QR peers remain separately installed.
+      // Measured Native: 6.5/2.1 (2 modules), 1.0/0.5 and 1.4/0.7 kB (1 each).
+      "./masonry": { modules: 2, raw: 8_000, gzip: 2_700 },
+      "./virtual-list": { modules: 1, raw: 1_400, gzip: 700 },
+      "./qr-code": { modules: 1, raw: 1_800, gzip: 900 },
+      // 2026-09-29 measured local adapter graphs: viewer 37.4/8.9 kB, sheet 36.2/8.6 kB;
+      // keyboard 1.2/0.6 kB and OS menu 1.1/0.5 kB. External native peers are Metro-checked separately.
+      "./image-viewer": { modules: 5, raw: 42_000, gzip: 10_000 },
+      "./sheet-gesture": { modules: 5, raw: 41_000, gzip: 9_800 },
+      "./keyboard-controller": { modules: 1, raw: 1_600, gzip: 850 },
+      "./context-menu-native": { modules: 1, raw: 1_500, gzip: 800 },
+      // Optional Skia renderer shares provider only, leaving the root graph unchanged.
+      "./thinking-orb": { modules: 2, raw: 15_000, gzip: 4_500 },
+      // Separate opt-in graph: measured 15.3 kB raw / 4.2 kB gzip in two modules.
+      // Geometry is in contracts; this entry reaches provider only (no feedback barrel).
+      "./toast-liquid": { modules: 2, raw: 17_500, gzip: 4_800 },
       // +1 module on ".", "./inputs", "./navigation" and "./data-display":
       // `internal/web-a11y.js` holds the DOM ARIA and keyboard contracts that
       // react-native-web needs, shared by Accordion, ChoiceRow/RadioGroup, Chip
@@ -247,7 +284,8 @@ const rendererBudgets = [
       "./bottom-cta": { modules: 4, raw: 34_700, gzip: 7_900 },
       // Inputs reexports DatePicker; the shared grid adds one transitive implementation.
       // 1.4 Switch row/inline and large-text reflow measure 170.7/31.4 kB, still 15 modules.
-      "./inputs": { modules: 15, raw: 178_000, gzip: 32_000 },
+      // Calendar equal-column fix and the expanded validation preserve the 15-module graph; measured gzip 32.3 kB.
+      "./inputs": { modules: 15, raw: 178_000, gzip: 32_600 },
       "./password-field": { modules: 9, raw: 105_000, gzip: 20_000 },
       "./otp-field": { modules: 9, raw: 105_000, gzip: 20_000 },
       "./number-field": { modules: 4, raw: 20_200, gzip: 4_900 },
@@ -302,7 +340,14 @@ const rendererBudgets = [
       // evidence 목록에 auth-screen 한 줄이 늘었다.
       // 1.5.0: per-scenario proofs from the Native scenario matrix tables:
       // measured 8.1 kB raw / 2.23 kB gzip.
-      "./evidence": { modules: 1, raw: 8_600, gzip: 2_400 },
+      // 2026-09-29: five stable controls add host-action proof references; same one-module graph.
+      // Keep executable case ids; measured 8.6 kB raw / 2.4 kB gzip.
+      // Mentions host-action proof and long-copy matrix add 51 raw / 12 gzip bytes; keep the one-module graph exact.
+      // Promotion batch adds explicit native-action and long-copy proof references; measured 10,211/2,630 B.
+      // ThinkingOrb adds default/environment proof metadata (10.7 kB raw / 2.72 kB gzip);
+      // the graph remains one module: Skia is not imported into evidence or the base renderer.
+      // Three data-layout scenario claims grow metadata only; no new import edges.
+      "./evidence": { modules: 1, raw: 12_000, gzip: 3_100 },
     },
     cssBudgets: {},
   },
@@ -486,6 +531,16 @@ async function checkRenderer(renderer) {
       .reduce((sum, { raw, gzip }) => ({ raw: sum.raw + raw, gzip: sum.gzip + gzip }), { raw: 0, gzip: 0 });
     const budget = { ...baseBudget, raw: baseBudget.raw + allowance.raw, gzip: baseBudget.gzip + allowance.gzip };
     const regressions = [];
+    // Opt-in peers must never become a hidden installation requirement of base entries.
+    // Derive the peer list from the manifest so new optional runtimes cannot escape this gate.
+    const optionalEntries = new Set(["./qr-code", "./thinking-orb", "./toast-liquid", "./statistic-motion", "./menu-morph", "./image-viewer", "./keyboard-controller", "./sheet-gesture", "./context-menu-native"]);
+    if (!optionalEntries.has(exportPath)) {
+      for (const [peer, metadata] of Object.entries(packageJson.peerDependenciesMeta ?? {})) {
+        if (metadata.optional && measured.externals.some(specifier => specifier === peer || specifier.startsWith(`${peer}/`))) {
+          regressions.push(`base entry imports optional peer ${peer}`);
+        }
+      }
+    }
     if (
       exportPath !== "." &&
       measured.files.has(resolve(distDirectory, "index.js"))

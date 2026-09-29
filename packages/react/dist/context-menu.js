@@ -1,12 +1,16 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { resolveContextMenuAnchor, } from "@hjmds/design-contracts/components/context-menu";
 import { menuRecipe } from "@hjmds/design-contracts/recipes";
-import { useCallback, useEffect, useRef, useState, } from "react";
+import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState, } from "react";
 import { classNames } from "./internal.js";
 import { HjmPortal, getModalLayer } from "./modal.js";
 const longPressDelay = 500;
 export function ContextMenu({ children, items, accessibilityLabel, onAction, className, }) {
     const hostRef = useRef(null);
+    const menuRef = useRef(null);
+    const [menuMounted, setMenuMounted] = useState(false);
+    const returnFocusRef = useRef(null);
+    const menuId = useId();
     const [anchor, setAnchor] = useState(null);
     const [activeIndex, setActiveIndex] = useState(0);
     const longPress = useRef(undefined);
@@ -14,10 +18,29 @@ export function ContextMenu({ children, items, accessibilityLabel, onAction, cla
     const typeaheadTimer = useRef(undefined);
     const enabled = items.filter((item) => !item.disabled);
     const open = useCallback((reason, pointer) => {
+        const activeElement = document.activeElement;
+        returnFocusRef.current = activeElement instanceof HTMLElement && hostRef.current?.contains(activeElement)
+            ? activeElement
+            : hostRef.current;
         const rect = hostRef.current?.getBoundingClientRect() ?? null;
         setAnchor(resolveContextMenuAnchor(reason, pointer, rect === null ? null : { left: rect.left, bottom: rect.bottom }));
         setActiveIndex(0);
     }, []);
+    const setMenuRef = useCallback((node) => {
+        menuRef.current = node;
+        setMenuMounted(node !== null);
+    }, []);
+    useLayoutEffect(() => {
+        if (anchor === null || !menuMounted || menuRef.current === null)
+            return;
+        menuRef.current.focus();
+        const rect = menuRef.current.getBoundingClientRect();
+        const x = Math.min(Math.max(anchor.x, 0), Math.max(window.innerWidth - rect.width, 0));
+        const y = Math.min(Math.max(anchor.y, 0), Math.max(window.innerHeight - rect.height, 0));
+        // The contract promises viewport coordinates; post-render measurement keeps long labels onscreen, where guessed dimensions could not account for wrapping.
+        if (x !== anchor.x || y !== anchor.y)
+            setAnchor({ x, y });
+    }, [anchor, menuMounted]);
     useEffect(() => {
         if (anchor === null)
             return;
@@ -26,7 +49,7 @@ export function ContextMenu({ children, items, accessibilityLabel, onAction, cla
                 event.preventDefault();
                 setAnchor(null);
                 // Focus goes back where the menu was opened from, not to the body.
-                hostRef.current?.focus();
+                returnFocusRef.current?.focus();
                 return;
             }
             if (event.key === "ArrowDown" || event.key === "ArrowUp") {
@@ -59,12 +82,16 @@ export function ContextMenu({ children, items, accessibilityLabel, onAction, cla
                 if (item) {
                     onAction(item.id);
                     setAnchor(null);
-                    hostRef.current?.focus();
+                    returnFocusRef.current?.focus();
                 }
+                return;
+            }
+            if (event.key === "Tab") {
+                setAnchor(null);
             }
         };
         const onPointerDown = (event) => {
-            if (!(event.target instanceof Node) || !document.querySelector(".hjm-context-menu")?.contains(event.target)) {
+            if (!(event.target instanceof Node) || !menuRef.current?.contains(event.target)) {
                 setAnchor(null);
             }
         };
@@ -91,20 +118,20 @@ export function ContextMenu({ children, items, accessibilityLabel, onAction, cla
             longPress.current = setTimeout(() => open("longPress", { x: event.clientX, y: event.clientY }), longPressDelay);
         }, onPointerUp: () => { if (longPress.current !== undefined)
             clearTimeout(longPress.current); }, onPointerCancel: () => { if (longPress.current !== undefined)
-            clearTimeout(longPress.current); }, children: [children, anchor !== null ? (_jsx(HjmPortal, { children: _jsx("div", { role: "menu", "aria-label": accessibilityLabel, className: "hjm-context-menu", style: {
-                        insetBlockStart: anchor.y,
-                        insetInlineStart: anchor.x,
+            clearTimeout(longPress.current); }, children: [children, anchor !== null ? (_jsx(HjmPortal, { children: _jsx("div", { role: "menu", id: menuId, ref: setMenuRef, tabIndex: -1, "aria-activedescendant": enabled[activeIndex] ? `${menuId}-item-${activeIndex}` : undefined, "aria-label": accessibilityLabel, className: "hjm-context-menu", style: {
+                        top: anchor.y,
+                        left: anchor.x,
                         zIndex: getModalLayer(0),
                         minInlineSize: menuRecipe.minWidth,
                     }, children: items.map((item) => {
                         const index = enabled.findIndex((candidate) => candidate.id === item.id);
-                        return (_jsxs("div", { role: "menuitem", "aria-disabled": item.disabled || undefined, "data-active": index === activeIndex && !item.disabled ? "" : undefined, "data-tone": item.tone, className: "hjm-context-menu__item", onMouseEnter: () => { if (index >= 0)
+                        return (_jsxs("div", { id: index >= 0 ? `${menuId}-item-${index}` : undefined, role: "menuitem", "aria-disabled": item.disabled || undefined, "data-active": index === activeIndex && !item.disabled ? "" : undefined, "data-tone": item.tone, className: "hjm-context-menu__item", onMouseEnter: () => { if (index >= 0)
                                 setActiveIndex(index); }, onClick: () => {
                                 if (item.disabled)
                                     return;
                                 onAction(item.id);
                                 setAnchor(null);
-                                hostRef.current?.focus();
+                                returnFocusRef.current?.focus();
                             }, children: [_jsx("span", { children: item.label }), item.shortcut ? _jsx("kbd", { className: "hjm-context-menu__shortcut", children: item.shortcut }) : null] }, item.id));
                     }) }) })) : null] }));
 }

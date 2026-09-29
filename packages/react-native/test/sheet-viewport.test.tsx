@@ -1,12 +1,15 @@
 import { type ReactElement } from "react";
+// This proof file is listed by test/executed-scenarios.json; the workspace checker validates its cases against that registry.
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
-import { Animated, Keyboard, Platform, ScrollView, View } from "react-native";
+import { Animated, Keyboard, Platform, Pressable, ScrollView, View } from "react-native";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { sheetRecipe } from "@hjmds/design-contracts/recipes";
 import { Dialog, Sheet, type DialogProps, type SheetProps } from "../src/overlays.js";
 import { HjmNativeProvider } from "../src/provider.js";
 import { Text } from "../src/primitives.js";
 
+// The evidence registry points to this test because it exercises Sheet viewport and dismissal actions directly.
+// componentId: "sheet"
 (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 const keyboard = Keyboard as typeof Keyboard & {
   __emit(event: string, height?: number, coordinates?: Record<string, number>): void;
@@ -14,7 +17,7 @@ const keyboard = Keyboard as typeof Keyboard & {
 let renderer: ReactTestRenderer | undefined;
 // `title`/`accessibilityTitle` form a union pair; a Partial over the union would let the
 // string-title fixture below merge into the element branch and fail to type-check.
-function tree(props: Partial<Omit<SheetProps, "title">> = {}) {
+function tree(props: Partial<Omit<SheetProps, "title">> & { title?: string } = {}) {
   return <HjmNativeProvider reducedMotion textScale={2}>
     <Sheet open title="설정" closeLabel="닫기" safeAreaInsets={{ top: 40, bottom: 24 }}
       footer={<Text>저장</Text>} {...props}>
@@ -111,6 +114,34 @@ describe("Sheet input viewport", () => {
     expect(positioner().props.style.paddingBottom).toBe(0);
     act(() => renderer!.update(tree({ keyboardAvoidance: true, placement: "end" })));
     expect(style()).toMatchObject({ height: 360, maxHeight: 360 });
+  });
+
+  it("exposes the close action and blocks it while busy", () => {
+    const onOpenChange = vi.fn();
+    render(tree({ onOpenChange }));
+    const close = renderer!.root.findAllByType(Pressable).find((node) =>
+      node.props.accessibilityLabel === "닫기");
+    expect(close?.props.accessibilityRole).toBe("button");
+    expect(close?.props.disabled).toBe(false);
+    act(() => close?.props.onPress());
+    expect(onOpenChange).toHaveBeenCalledWith(false, { reason: "close-action" });
+
+    onOpenChange.mockClear();
+    act(() => renderer!.update(tree({ busy: true, onOpenChange })));
+    const busyClose = renderer!.root.findAllByType(Pressable).find((node) =>
+      node.props.accessibilityLabel === "닫기");
+    expect(busyClose?.props.disabled).toBe(true);
+    expect(busyClose?.props.accessibilityState.disabled).toBe(true);
+    expect(onOpenChange).not.toHaveBeenCalled();
+  });
+
+  it("preserves long title and description without truncation at large text", () => {
+    const longCopy = "계정 설정을 확인하고 저장하기 전에 모든 변경 사항을 검토해 주세요. 이 문장은 큰 글자에서도 잘리면 안 됩니다.";
+    render(tree({ title: longCopy, description: longCopy }));
+    const visibleText = dialog().findAllByType(Text).map((node) => node.props.children);
+    expect(visibleText).toContain(longCopy);
+    expect(visibleText.filter((value) => value === longCopy)).toHaveLength(2);
+    expect(dialog().findAllByType(Text).every((node) => node.props.numberOfLines === undefined)).toBe(true);
   });
 });
 

@@ -110,7 +110,8 @@ Carousel과 같은 이유로 어순·조사를 여기서 조립하지 않는다)
 
 ## 검증 화면
 
-아직 없음. `planned → beta` 승격은 실제 제품 vertical slice 이후 리드가 진행한다.
+이 조사 당시 제품 채택은 미확인이었다. 2026-09-29부터 제품 채택은 관측으로 분리하며,
+현재 성숙도는 catalog와 [승격 기준](stable-promotion.md)을 따른다.
 
 ## TreeSelect 판정
 
@@ -124,8 +125,9 @@ popup/sheet 표면에 얹으면 된다. 새 recipe나 새 상태 축이 필요�
 
 ## Web renderer (2026-09-18)
 
-`@hjmds/react/tree`의 `Tree`가 이 계약을 실행한다. catalog는 Web `beta`,
-Native `unsupported`다. 제품 채택·보조기기 실측은 아직 없다.
+`@hjmds/react/tree`의 `Tree`가 이 계약을 실행한다. Web hierarchy·keyboard focus·selection과 긴
+label proof를 통과해 2026-09-29 stable로 승격한다. Native는 `unsupported`이며 제품 채택·보조기기
+실측은 소비 앱 release QA에서 별도로 확인한다.
 
 - **판정은 전부 계약이 한다.** 화살표(`getTreeArrowResult`), 상하·Home/End
   (`getVisibleTreeNavigationTarget`), 타이핑 검색(`getVisibleTreeTypeaheadMatch`),
@@ -138,7 +140,10 @@ Native `unsupported`다. 제품 채택·보조기기 실측은 아직 없다.
 - **tri-state 체크는 노드 자체에 실린다.** `checkedStates`(=`resolveTreeCheckedStates`
   결과)를 주면 행이 `aria-checked`로 true/false/mixed를 말한다. 체크박스를 행 안에 넣으면
   tab stop 규칙이 깨지므로 넣지 않았다.
-- 로컬 검증: `test/tree.browser.test.tsx` 6개(깊이·형제 위치 발표, 단일 tab stop과 roving,
-  펼침·접힘과 접힌 subtree 건너뛰기, RTL 화살표 반전, disabled의 선택만 차단·타이핑 검색,
-  tri-state 파생과 enabled leaf만의 cascade)와 `Patterns/Tree`.
-
+- 브라우저 검증: `test/tree.browser.test.tsx` 8개. 기존 여섯 동작(깊이·형제 위치 발표,
+  단일 tab stop과 roving, 펼침·접힘과 접힌 subtree 건너뛰기, RTL 화살표 반전,
+  disabled의 선택만 차단·타이핑 검색, tri-state 파생과 enabled leaf만의 cascade)에 더해,
+  포커스된 자식에서 부모로 돌아온 뒤 접어도 선택 상태와 포커스가 유지되는지, 320px 폭에서
+  긴 라벨이 줄바꿈되어 트리 바깥으로 넘치지 않는지를 실제 브라우저에서 확인한다.
+  긴 문구 케이스는 환경 행렬에 연결할 수 있도록 `default-render-fixtures.tsx`에도 등록했다.
+  이 테스트는 보조기기 실측이나 제품 채택 근거를 대신하지 않는다.

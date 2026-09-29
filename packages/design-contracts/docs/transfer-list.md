@@ -91,24 +91,27 @@ Native의 "터치 전용"에도 같게 적용되므로, 버튼이 항상 스와�
 
 ## 검증 화면
 
-아직 없음. `planned → beta` 승격은 실제 제품 vertical slice 이후 리드가 진행한다.
+이 조사 당시 제품 채택은 미확인이었다. 2026-09-29부터 제품 채택은 관측으로 분리하며,
+현재 성숙도는 catalog와 [승격 기준](stable-promotion.md)을 따른다.
 
-## Web renderer (2026-09-18)
+## Renderer notes (2026-09-29)
 
-`@hjmds/react/transfer-list`의 `TransferList`가 이 계약을 실행한다. catalog는 Web `beta`,
-Native `planned`다 — Native renderer는 아직 없다.
+Web and Native both implement TransferList. These renderer notes describe source-level behavior;
+they do not claim installed-device, VoiceOver, or TalkBack validation.
 
-- **이동은 키보드만으로 끝난다.** Space로 고르고 이동 버튼을 누르거나, 초점이 있는 행에서
-  Enter로 그 행 하나만 바로 옮긴다. 후자는 계약의 "단일 이동에 다중 선택을 먼저 만들게
-  하지 않는다"는 항목이다.
-- **이동 후 초점은 계약이 정한다.** `resolveTransferListFocusAfterMove`가 미끄러져 들어온
-  행을 돌려주고, 패널이 비면 빈 상태 문구(`tabIndex=-1`)로 보낸다. 문서 body로 초점이
-  풀리는 경우가 없다.
-- **옮긴 항목은 도착 패널에서 선택되지 않는다.** 이동은 값을 확정하는 것이지 사용자가 하지
-  않은 새 선택을 만드는 것이 아니다.
-- **모두 선택은 disabled를 분모에서 뺀다.** 분자·분모 모두에서 빠지므로 잠긴 행이 있어도
-  "모두 선택"이 mixed로 굳지 않는다.
-- **문장은 제품이 만든다.** `onMove`는 옮긴 id를 원래 패널 순서로만 넘긴다.
-- 로컬 검증: `test/transfer-list.browser.test.tsx` 5개(키보드 다중 이동과 id 보고, 단일
-  행 즉시 이동, 이동 후 초점과 빈 상태 초점, disabled 제외와 이동 금지, 되돌리기와 패널당
-  tab stop 하나)와 `Patterns/TransferList`.
+- **Web keyboard interaction:** Space toggles the focused row and the shared move button commits
+  a selection; Enter moves one focused row directly. ArrowUp/ArrowDown/Home/End change the roving
+  row focus. After a move, focus goes to the row that slides into the vacated position or to the
+  empty-state message, so it does not fall to the document body. See
+  `packages/react/test/transfer-list.browser.test.tsx`.
+- **Native host interaction:** each panel's `ScrollView` is exposed as a named list and each row is
+  an individually labelled checkbox. Selecting a row and activating the shared move button moves
+  it without relying on a swipe gesture. React Native's host renderer proves the accessibility
+  props and handler wiring, not physical keyboard or screen-reader behavior. See
+  `packages/react-native/test/transfer-list-actions.test.tsx`.
+- **Long copy:** both renderers leave row copy untruncated. Web wraps at narrow viewport widths;
+  Native leaves font scaling enabled and does not set a line limit. The browser and host-renderer
+  tests verify those source-level constraints.
+- **Shared behavior:** moved rows are not preselected at the destination, disabled rows cannot be
+  selected or moved, and select-all excludes disabled rows from its denominator. `onMove` gives
+  the product moved ids in source-panel order so it can compose an announcement.
