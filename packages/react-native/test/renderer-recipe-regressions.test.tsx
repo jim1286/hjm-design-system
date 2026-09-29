@@ -978,9 +978,9 @@ describe("Native canonical recipe bindings", () => {
     const title = copy(renderer, "설정");
     expect(title.props).toMatchObject({
       accessibilityRole: "header",
-      numberOfLines: 1,
       variant: topBarRecipe.title.textVariant,
     });
+    expect(title.props.numberOfLines).toBeUndefined();
     expect(flattenStyle(title.props.style)).toMatchObject({
       color: resolveColorReference(topBarRecipe.title.color, lightValue.palette),
       fontWeight: topBarRecipe.title.fontWeight,

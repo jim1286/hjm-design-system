@@ -133,6 +133,12 @@
     "./consumer-policy.md": {
       "default": "./docs/consumer-policy.md"
     },
+    "./components/thinking-orb": {
+      "types": "./dist/thinking-orb.d.ts",
+      "react-native": "./dist/thinking-orb.js",
+      "import": "./dist/thinking-orb.js",
+      "default": "./dist/thinking-orb.js"
+    },
     "./components/agreement": {
       "types": "./dist/agreement.d.ts",
       "react-native": "./dist/agreement.js",
@@ -522,13 +528,32 @@
       "react-native": "./dist/showcase.js",
       "import": "./dist/showcase.js",
       "default": "./dist/showcase.js"
+    },
+    "./components/masonry": {
+      "types": "./dist/masonry.d.ts",
+      "react-native": "./dist/masonry.js",
+      "import": "./dist/masonry.js",
+      "default": "./dist/masonry.js"
+    },
+    "./components/virtual-list": {
+      "types": "./dist/virtual-list.d.ts",
+      "react-native": "./dist/virtual-list.js",
+      "import": "./dist/virtual-list.js",
+      "default": "./dist/virtual-list.js"
+    },
+    "./components/qr-code": {
+      "types": "./dist/qr-code.d.ts",
+      "react-native": "./dist/qr-code.js",
+      "import": "./dist/qr-code.js",
+      "default": "./dist/qr-code.js"
     }
   },
   "files": [
     "dist",
     "docs",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "THIRD_PARTY_NOTICES.md"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
@@ -547,7 +572,9 @@
   "packageManager": "pnpm@11.18.0",
   "devDependencies": {
     "@types/node": "^24.13.3",
+    "jsqr": "1.4.0",
     "typescript": "^5.9.3",
-    "vitest": "^4.1.11"
+    "vitest": "^4.1.11",
+    "qrcode-generator": "2.0.4"
   }
 }

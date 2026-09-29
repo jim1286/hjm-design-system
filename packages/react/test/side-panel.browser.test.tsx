@@ -1,4 +1,5 @@
 import { act, useState } from "react";
+// This proof file is listed by test/executed-scenarios.json; the workspace checker validates its cases against that registry.
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
@@ -6,6 +7,8 @@ import type { SidePanelDismissPolicy } from "@hjmds/design-contracts/components/
 import { SidePanel, type SidePanelProps } from "../src/side-panel.js";
 import { HjmProvider } from "../src/provider.js";
 import "../src/styles.css";
+// The evidence registry points to this focused keyboard proof; the shared scenario fixture omits SidePanel dismissal behavior.
+// componentId: "side-panel"
 
 let host: HTMLDivElement; let root: Root;
 beforeEach(() => { (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true; host = document.createElement("div"); document.body.append(host); root = createRoot(host); });

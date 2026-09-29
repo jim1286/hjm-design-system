@@ -57,8 +57,9 @@
 ## maturity에 대해
 
 당신의 산출물로 컴포넌트는 **"계약+recipe 준비됨"**이 된다. catalog의 `planned → beta`
-승격은 실제 제품 vertical slice 검증 후 리드가 한다 — 로드맵의 gate가 그렇게 정했고,
-시각 recipe만으로 구현 완료를 주장하지 않는 것이 이 저장소의 원칙이다.
+승격에는 실제 first-party renderer export와 실행되는 default proof가 필요하다.
+2026-09-29 개정에서 제품 vertical slice는 승격 조건에서 분리했다. stable은
+[승격 기준](stable-promotion.md)을 따르며 recipe만으로 구현 완료를 주장하지 않는다.
 
 ## 게이트
 

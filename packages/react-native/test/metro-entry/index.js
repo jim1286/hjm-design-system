@@ -1,3 +1,5 @@
+import { Masonry } from "@hjmds/react-native/masonry";
+import { VirtualList } from "@hjmds/react-native/virtual-list";
 import { Agreement } from "@hjmds/react-native/agreement";
 import { AuthProviderButton } from "@hjmds/react-native/provider-button";
 import { AuthScreenLayout } from "@hjmds/react-native/auth-screen";
@@ -241,6 +243,8 @@ function MetroSmokeApp() {
         labels: { pending: "대기", uploading: "업로드 중", success: "완료", cancel: "취소", retry: "재시도" },
         onCancel: noop,
       }),
+      React.createElement(Masonry, { items: ["a"], keyExtractor: item => item, width: 320, label: "Cards", getItemHeight: () => 100, renderItem: item => React.createElement(Text, null, item) }),
+      React.createElement(VirtualList, { items: ["a"], keyExtractor: item => item, height: 200, rowHeight: 100, label: "Items", renderItem: item => React.createElement(Text, null, item) }),
       React.createElement(ToastRegion, null),
       React.createElement(Dialog, { closeLabel: "닫기", defaultOpen: false, title: "확인" }),
     ),

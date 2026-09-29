@@ -110,14 +110,14 @@ describe("DescriptionList visual identity", () => {
     );
   });
 
-  it("tracks the paired responsive renderers as beta", () => {
+  it("tracks the paired responsive renderers as stable", () => {
     expect(
       componentCatalog.find((entry) => entry.name === "DescriptionList"),
     ).toMatchObject({
       category: "data-display",
       platform: "shared",
-      status: "beta",
-      surfaceStatus: { web: "beta", native: "beta" },
+      status: "stable",
+      surfaceStatus: { web: "stable", native: "stable" },
     });
   });
 

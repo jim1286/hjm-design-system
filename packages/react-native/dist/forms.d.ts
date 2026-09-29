@@ -2,8 +2,8 @@ import { formRecipe, type FormSubmitStatus } from "@hjmds/design-contracts/compo
 import { type ComboboxCommitReason, type ComboboxFiltering, type AsyncCollectionState, type SelectItemDescriptor } from "@hjmds/design-contracts/behaviors";
 import { type SelectCollectionSectionDescriptor, type SelectCollectionSource, type SelectOpenChangeReason } from "@hjmds/design-contracts/components/collection";
 import { type SelectDensity, type SelectSize } from "@hjmds/design-contracts/recipes";
-import { type ReactNode } from "react";
-import { type ModalProps, type StyleProp, type ViewStyle } from "react-native";
+import { type RefObject, type ReactNode } from "react";
+import { TextInput, type ModalProps, type StyleProp, type ViewStyle } from "react-native";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 type NativeCollectionLeadingRenderProps = Readonly<{
     placement: "trigger" | "option";
@@ -51,13 +51,18 @@ export type FormProps<Values> = Readonly<{
     fallbackErrorMessage: string;
     disabled?: boolean;
     density?: keyof typeof formRecipe.density;
+    /**
+     * The product-selected first invalid input, or null when client validation passes.
+     * Form uses it to focus the control and move screen-reader focus before submitting.
+     */
+    firstInvalidFieldRef?: RefObject<TextInput | null>;
     style?: StyleProp<ViewStyle>;
 }>;
 /**
  * A Native submit boundary. Products retain ownership of values and validation;
  * this renderer only owns submit re-entrancy, feedback, and field rhythm.
  */
-export declare function Form<Values>({ label, values, onSubmit, children, submitLabel, status, defaultStatus, onStatusChange, error, fallbackErrorMessage, disabled, density, style, }: FormProps<Values>): import("react").JSX.Element;
+export declare function Form<Values>({ label, values, onSubmit, children, submitLabel, status, defaultStatus, onStatusChange, error, fallbackErrorMessage, disabled, density, firstInvalidFieldRef, style, }: FormProps<Values>): import("react").JSX.Element;
 export type SelectOption<Value extends string = string> = Readonly<{
     value: Value;
     label: string;

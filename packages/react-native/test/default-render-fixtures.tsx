@@ -1,3 +1,22 @@
+import { Masonry } from "../src/masonry.js";
+import { VirtualList } from "../src/virtual-list.js";
+import { QRCode } from "../src/qr-code.js";
+import { vi } from "vitest";
+import { ThinkingOrb } from "../src/thinking-orb.js";
+// Default proof exercises the opt-in entry without loading a native binary in Node.
+// Installed Skia linkage is checked separately by the focused showcase smoke.
+vi.mock("react-native-svg", async () => { const { View } = await import("react-native"); return { default: View, Rect: View, Path: View }; });
+vi.mock("react-native-reanimated", async () => {
+  const { useRef } = await import("react");
+  return { useSharedValue: (value: unknown) => useRef({ value }).current };
+});
+vi.mock("@shopify/react-native-skia", async () => {
+  const { View } = await import("react-native");
+  return { Canvas: View, Picture: View, PaintStyle: { Stroke: 1 },
+    Skia: { Paint: () => ({ setAntiAlias() {}, setStyle() {}, setColor() {}, setAlphaf() {}, setStrokeWidth() {}, dispose() {} }), Color: (v: string) => v, XYWHRect: (_x: number, _y: number, w: number, h: number) => [w, h] },
+    createPicture: (draw: (canvas: unknown) => void) => { draw({ drawLine() {}, drawCircle() {} }); return {}; },
+  };
+});
 /**
  * Shared default-render cases for the React Native evidence proofs: the default
  * proof (default-render.test.tsx) and the environment matrix
@@ -124,9 +143,10 @@ export const defaultRenderCases = [
   { componentId: "surface", renderLongCopy: (copy) => <Surface><Text>{copy}</Text></Surface>, render: () => <Surface><Text>표면</Text></Surface> },
   { componentId: "stack", renderLongCopy: (copy) => <Stack><Text>{copy}</Text></Stack>, render: () => <Stack><Text>스택</Text></Stack> },
   { componentId: "container", renderLongCopy: (copy) => <Container size="reading"><Text>{copy}</Text></Container>, render: () => <Container size="reading"><Text>본문</Text></Container> },
-  { componentId: "aspect-ratio", render: () => <AspectRatio ratio="wide"><View /></AspectRatio> },
+  { componentId: "aspect-ratio", renderLongCopy: (copy) => <AspectRatio ratio="wide"><Text>{copy}</Text></AspectRatio>, render: () => <AspectRatio ratio="wide"><View /></AspectRatio> },
   {
     componentId: "grid",
+    renderLongCopy: (copy) => <Grid availableWidth={320} columns={{ compact: 2 }}><Text>{copy}</Text></Grid>,
     render: () => (
       <Grid availableWidth={320} columns={{ compact: 2 }}>
         <Text key="first">첫 번째</Text>
@@ -134,7 +154,7 @@ export const defaultRenderCases = [
       </Grid>
     ),
   },
-  { componentId: "layout", render: () => <Layout><Text>본문</Text></Layout> },
+  { componentId: "layout", renderLongCopy: (copy) => <Layout header={<Text>내비게이션</Text>}><Text>{copy}</Text></Layout>, render: () => <Layout><Text>본문</Text></Layout> },
   {
     componentId: "icon",
     render: () => (
@@ -172,6 +192,7 @@ export const defaultRenderCases = [
   },
   {
     componentId: "search-field",
+    renderLongCopy: (copy) => <SearchField busyLabel="검색 중" clearLabel="검색어 지우기" label={copy} />,
     render: () => <SearchField busyLabel="검색 중" clearLabel="검색어 지우기" label="검색" />,
   },
   { componentId: "text-area", renderLongCopy: (copy) => <TextArea label={copy} />, render: () => <TextArea label="설명" /> },
@@ -189,10 +210,12 @@ export const defaultRenderCases = [
   },
   {
     componentId: "otp-field",
+    renderLongCopy: (copy) => <OtpField label={copy} length={6} />,
     render: () => <OtpField label="인증번호" length={6} />,
   },
   {
     componentId: "number-field",
+    renderLongCopy: (copy) => <NumberField decrementLabel="감소" incrementLabel="증가" label={copy} min={0} max={10} />,
     render: () => (
       <NumberField
         decrementLabel="감소"
@@ -205,6 +228,7 @@ export const defaultRenderCases = [
   },
   {
     componentId: "slider",
+    renderLongCopy: (copy) => <Slider decrementLabel="감소" incrementLabel="증가" label={copy} min={0} max={10} />,
     render: () => (
       <Slider
         decrementLabel="감소"
@@ -231,6 +255,11 @@ export const defaultRenderCases = [
   },
   {
     componentId: "date-picker",
+    renderLongCopy: (copy) => (
+      <DatePicker clearLabel="날짜 지우기" closeLabel="달력 닫기" composeAccessibleName={({ date }) => date}
+        descriptor={{ grid: defaultCalendarGrid, displayValue: null, placeholder: "날짜 선택", label: copy, selectedDate: null, onSelectionChange: noop, open: false, onOpenChange: noop }}
+        monthLabel="2027년 2월" />
+    ),
     render: () => (
       <DatePicker
         clearLabel="날짜 지우기"
@@ -252,10 +281,14 @@ export const defaultRenderCases = [
   },
   {
     componentId: "calendar",
+    renderLongCopy: (copy) => <Calendar descriptor={{ grid: defaultCalendarGrid, monthLabel: copy }} composeAccessibleName={({ date }) => date} />,
     render: () => <Calendar descriptor={{ grid: defaultCalendarGrid, monthLabel: "February 2027" }} composeAccessibleName={({ date }) => date} />,
   },
   {
     componentId: "agreement",
+    renderLongCopy: (copy) => (
+      <Agreement descriptor={{ accessibilityLabel: copy, allLabel: copy, items: [{ id: "terms-long", label: copy, required: true }] }} optionalLabel="(선택)" requiredLabel="(필수)" />
+    ),
     render: () => (
       <Agreement
         descriptor={{
@@ -280,16 +313,19 @@ export const defaultRenderCases = [
   },
   {
     componentId: "toggle-group",
+    renderLongCopy: (copy) => <ToggleGroup descriptor={{ accessibilityLabel: "글자 꾸미기", items: [{ id: "bold", label: copy }] }} />,
     render: () => (
       <ToggleGroup descriptor={{ accessibilityLabel: "글자 꾸미기", items: [{ id: "bold", label: "굵게" }] }} />
     ),
   },
   {
     componentId: "bottom-info",
+    renderLongCopy: (copy) => <BottomInfo items={[copy]} />,
     render: () => <BottomInfo items={["가입하면 약관에 동의하는 것으로 봅니다"]} />,
   },
   {
     componentId: "collapsible",
+    renderLongCopy: (copy) => <Collapsible trigger={copy} defaultOpen><Text>상세한 배송 안내를 확인해 주세요.</Text></Collapsible>,
     render: () => <Collapsible trigger="배송 정보 더 보기" defaultOpen><Text>내일 도착합니다</Text></Collapsible>,
   },
   {
@@ -298,6 +334,7 @@ export const defaultRenderCases = [
   },
   {
     componentId: "tags-input",
+    renderLongCopy: (copy) => <TagsInput label={copy} composeRemoveLabel={(tag) => `${tag} 지우기`} defaultTags={["산책"]} />,
     render: () => <TagsInput label="관심사" composeRemoveLabel={(tag) => `${tag} 지우기`} defaultTags={["산책"]} />,
   },
   {
@@ -312,6 +349,17 @@ export const defaultRenderCases = [
   },
   {
     componentId: "mentions",
+    renderLongCopy: (copy) => (
+      <Mentions
+        label={copy}
+        value=""
+        onValueChange={noop}
+        triggers={[{ id: "user", trigger: "@" }]}
+        candidates={[]}
+        emptyMessage="결과가 없어요"
+        listLabel="추천 대상"
+      />
+    ),
     render: () => (
       <Mentions
         accessibilityLabel="메모"
@@ -326,6 +374,12 @@ export const defaultRenderCases = [
   },
   {
     componentId: "transfer-list",
+    renderLongCopy: (copy) => (
+      <TransferList
+        items={[{ id: "long", label: copy, textValue: copy }]}
+        labels={{ source: copy, target: "선택됨", toTarget: "선택으로 이동", toSource: "돌아가기", selectAll: "모두 선택", empty: copy }}
+      />
+    ),
     render: () => (
       <TransferList
         items={[{ id: "walk", label: "산책", textValue: "산책" }, { id: "meal", label: "식사", textValue: "식사" }]}
@@ -346,6 +400,7 @@ export const defaultRenderCases = [
   },
   {
     componentId: "auth-screen",
+    renderLongCopy: (copy) => <AuthScreenLayout hero={<Text>{copy}</Text>} main={<Text>로그인</Text>} footer={<Text>약관</Text>} />,
     render: () => (
       <AuthScreenLayout
         hero={<View />}
@@ -356,6 +411,9 @@ export const defaultRenderCases = [
   },
   {
     componentId: "file-picker",
+    renderLongCopy: (copy) => (
+      <FilePicker buttonLabel={copy} descriptor={{ mode: "multiple", accept: ["image/*"] }} label={copy} onPick={async () => null} onPickError={noop} onSelect={noop} />
+    ),
     render: () => (
       <FilePicker
         buttonLabel="파일 선택"
@@ -367,8 +425,8 @@ export const defaultRenderCases = [
       />
     ),
   },
-  { componentId: "checkbox", render: () => <Checkbox label="동의" /> },
-  { componentId: "radio", render: () => <Radio label="일반 배송" /> },
+  { componentId: "checkbox", renderLongCopy: (copy) => <Checkbox label={copy} />, render: () => <Checkbox label="동의" /> },
+  { componentId: "radio", renderLongCopy: (copy) => <Radio label={copy} />, render: () => <Radio label="일반 배송" /> },
   {
     componentId: "checkbox-group",
     renderLongCopy: (copy) => <CheckboxGroup label="관심사" items={[{ id: "sports", label: copy }]} />,
@@ -379,7 +437,7 @@ export const defaultRenderCases = [
     renderLongCopy: (copy) => <RadioGroup label="배송" options={[{ value: "standard", label: copy }]} />,
     render: () => <RadioGroup label="배송" options={[{ value: "standard", label: "일반" }]} />,
   },
-  { componentId: "switch", render: () => <Switch label="알림" /> },
+  { componentId: "switch", renderLongCopy: (copy) => <Switch label={copy} />, render: () => <Switch label="알림" /> },
   {
     componentId: "segmented-control",
     renderLongCopy: (copy) => <SegmentedControl label="보기" options={[{ value: "list", label: copy }]} />,
@@ -387,6 +445,9 @@ export const defaultRenderCases = [
   },
   {
     componentId: "select",
+    renderLongCopy: (copy) => (
+      <Select defaultValue="ko" dismissLabel="닫기" label={copy} options={[{ value: "ko", label: "한국어" }]} placeholder="선택" />
+    ),
     render: () => (
       <Select
         dismissLabel="닫기"
@@ -398,6 +459,9 @@ export const defaultRenderCases = [
   },
   {
     componentId: "combobox",
+    renderLongCopy: (copy) => (
+      <Combobox clearLabel="검색어 지우기" dismissLabel="닫기" emptyMessage="결과 없음" items={[{ id: "seoul", label: "서울", textValue: "서울" }]} label={copy} loadingMessage="검색 중" />
+    ),
     render: () => (
       <Combobox
         clearLabel="검색어 지우기"
@@ -412,10 +476,17 @@ export const defaultRenderCases = [
   { componentId: "chip", renderLongCopy: (copy) => <Chip label={copy} onPress={noop} />, render: () => <Chip label="필터" onPress={noop} /> },
   {
     componentId: "tabs",
+    renderLongCopy: (copy) => (
+      <Tabs label="계정" options={[{ value: "profile", label: copy }, { value: "settings", label: "설정" }]} />
+    ),
     render: () => <Tabs label="계정" options={[{ value: "profile", label: "프로필" }]} />,
   },
   {
     componentId: "carousel",
+    renderLongCopy: (copy) => <Carousel label={copy} slides={[{ id: "one", label: copy }, { id: "two", label: "다음 소식" }]}
+      labels={{ previous: copy, next: copy, pause: copy, resume: copy, navigation: copy }}
+      composeAccessibleName={({ position, total, label }) => `${position}/${total} ${label}`}
+      renderSlide={({ label }) => <Text>{label}</Text>} />,
     render: () => <Carousel label="새 소식" slides={[{ id: "one", label: "첫 소식" }, { id: "two", label: "다음 소식" }]}
       labels={{ previous: "이전", next: "다음", pause: "멈추기", resume: "재생하기", navigation: "소식 이동" }}
       composeAccessibleName={({ position, total, label }) => `${position}/${total} ${label}`}
@@ -423,11 +494,13 @@ export const defaultRenderCases = [
   },
   {
     componentId: "floating-action-button",
+    renderLongCopy: (copy) => <FloatingActionButton descriptor={{ label: copy, icon: { name: "add" } }} renderIcon={() => <Text>＋</Text>} onContentClearanceChange={() => {}} />,
     render: () => <FloatingActionButton descriptor={{ label: "새 기록", icon: { name: "add" } }}
       renderIcon={() => <Text>＋</Text>} onContentClearanceChange={() => {}} />,
   },
   {
     componentId: "steps",
+    renderLongCopy: (copy) => <Steps composeAccessibleName={({ position, total, label }) => `${total}단계 중 ${position}단계, ${label}`} descriptor={{ steps: [{ id: "one", label: copy }, { id: "two", label: "확인" }], currentStepId: "one" }} statusLabels={{ pending: "예정", current: "현재", complete: "완료", error: "오류" }} />,
     render: () => (
       <Steps
         composeAccessibleName={({ position, total, label }) => `${total}단계 중 ${position}단계, ${label}`}
@@ -438,6 +511,7 @@ export const defaultRenderCases = [
   },
   {
     componentId: "top-bar",
+    renderLongCopy: (copy) => <TopBar title={copy} />,
     render: () => (
       <TopBar
         actions={(
@@ -453,6 +527,9 @@ export const defaultRenderCases = [
   },
   {
     componentId: "menu",
+    renderLongCopy: (copy) => (
+      <Menu dismissLabel="닫기" items={[{ value: "edit", label: copy }]} onSelect={noop} triggerLabel="더 보기" />
+    ),
     render: () => (
       <Menu
         dismissLabel="닫기"
@@ -472,6 +549,7 @@ export const defaultRenderCases = [
   { componentId: "tag", renderLongCopy: (copy) => <Tag>{copy}</Tag>, render: () => <Tag>태그</Tag> },
   {
     componentId: "timeline",
+    renderLongCopy: (copy) => <Timeline composeAccessibleName={({ position, total, label }) => `${total}개 중 ${position}번째, ${label}`} items={[{ id: "created", label: copy }]} />,
     render: () => (
       <Timeline
         composeAccessibleName={({ position, total, label }) =>
@@ -506,7 +584,7 @@ export const defaultRenderCases = [
     componentId: "counter-badge",
     render: () => <CounterBadge accessibilityLabel="알림 3개" count={3} />,
   },
-  { componentId: "list", render: () => <List label="목록"><ListRow title="행" /></List> },
+  { componentId: "list", renderLongCopy: (copy) => <List label="목록"><ListRow title={copy} /></List>, render: () => <List label="목록"><ListRow title="행" /></List> },
   {
     componentId: "statistic",
     renderLongCopy: (copy) => <Statistic descriptor={{ id: "orders", label: copy, value: "12" }} />,
@@ -514,6 +592,13 @@ export const defaultRenderCases = [
   },
   {
     componentId: "upload-item",
+    renderLongCopy: (copy) => (
+      <UploadItem
+        descriptor={{ id: "photo", name: copy, sizeLabel: copy, state: { status: "uploading", progress: 0.4, progressLabel: copy } }}
+        labels={{ pending: "대기", uploading: copy, success: "완료", cancel: "취소", retry: "재시도" }}
+        onCancel={noop}
+      />
+    ),
     render: () => (
       <UploadItem
         descriptor={{ id: "photo", name: "photo.png", sizeLabel: "1.2 MB", state: { status: "uploading", progress: 0.4 } }}
@@ -527,10 +612,24 @@ export const defaultRenderCases = [
   { componentId: "notice", renderLongCopy: (copy) => <Notice title={copy} />, render: () => <Notice title="안내" /> },
   { componentId: "progress", renderLongCopy: (copy) => <Progress label={copy} value={0.5} />, render: () => <Progress label="업로드" value={0.5} /> },
   { componentId: "skeleton", render: () => <Skeleton accessibilityLabel="불러오는 중" /> },
+  { componentId: "thinking-orb", render: () => <ThinkingOrb label="검색 중" paused /> },
+  { componentId: "masonry", renderLongCopy: (copy) => <Masonry items={[copy]} keyExtractor={item => item} label="Cards" width={240} columns={1} getItemHeight={() => 300} renderItem={item => <Text>{item}</Text>} />, render: () => <Masonry items={["First", "Second"]} keyExtractor={item => item} label="Cards" width={240} getItemHeight={() => 120} renderItem={item => <Text>{item}</Text>} /> },
+  { componentId: "virtual-list", renderLongCopy: (copy) => <VirtualList items={[copy]} keyExtractor={item => item} label="Items" height={300} rowHeight={300} renderItem={item => <Text>{item}</Text>} />, render: () => <VirtualList items={["First", "Second"]} keyExtractor={item => item} label="Items" height={200} rowHeight={100} renderItem={item => <Text>{item}</Text>} /> },
+  { componentId: "qr-code", renderLongCopy: (copy) => <QRCode value="https://example.com" label="Share code" fallback={<Text>{copy}</Text>} />, render: () => <QRCode value="https://example.com" label="Share code" fallback={<Text>Open destination</Text>} /> },
   { componentId: "spinner", render: () => <Spinner label="불러오는 중" /> },
-  { componentId: "dialog", render: () => <Dialog closeLabel="닫기" title="대화상자" /> },
+  {
+    componentId: "dialog",
+    renderLongCopy: (copy) => <Dialog closeLabel="닫기" defaultOpen description={copy} title={copy} />,
+    render: () => <Dialog closeLabel="닫기" defaultOpen description="설정을 변경합니다." title="대화상자" />,
+  },
   {
     componentId: "alert-dialog",
+    renderLongCopy: (copy) => (
+      <AlertDialog
+        defaultOpen
+        request={{ mode: "alert", title: copy, description: copy, confirmLabel: "확인" }}
+      />
+    ),
     render: () => (
       <AlertDialog
         request={{
@@ -545,6 +644,13 @@ export const defaultRenderCases = [
   { componentId: "sheet", render: () => <Sheet closeLabel="닫기" title="시트" /> },
   {
     componentId: "bottom-navigation",
+    renderLongCopy: (copy) => (
+      <BottomNavigation
+        descriptor={{ accessibilityLabel: "주요 메뉴", items: [{ id: "home", label: "홈", icon: { name: "home" } }, { id: "search", label: copy, icon: { name: "search" } }], selectedKey: "home" }}
+        onActivate={noop}
+        renderIcon={({ name }) => <Text>{name}</Text>}
+      />
+    ),
     render: () => (
       <BottomNavigation
         descriptor={{
@@ -562,6 +668,9 @@ export const defaultRenderCases = [
   },
   {
     componentId: "load-more",
+    renderLongCopy: (copy) => (
+      <LoadMore descriptor={{ state: { status: "complete" }, labels: { complete: copy, loadMore: copy, loading: copy, retry: copy } }} mode="manual" onLoadMore={async () => undefined} />
+    ),
     render: () => (
       <LoadMore
         descriptor={{
@@ -580,6 +689,9 @@ export const defaultRenderCases = [
   },
   {
     componentId: "accordion",
+    renderLongCopy: (copy) => (
+      <Accordion label={copy} items={[{ value: "long-copy", title: copy, accessibilityLabel: copy, content: <Text>{copy}</Text> }]} />
+    ),
     render: () => (
       <Accordion
         label="도움말"

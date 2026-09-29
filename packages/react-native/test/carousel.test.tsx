@@ -1,4 +1,5 @@
 import type { CarouselSelection } from "@hjmds/design-contracts/components/carousel";
+// This proof file is listed by test/executed-scenarios.json; the workspace checker validates its cases against that registry.
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { AccessibilityInfo, View } from "react-native";
 import { beforeEach, afterEach, describe, expect, it, vi } from "vitest";
@@ -7,6 +8,8 @@ import { Button } from "../src/actions.js";
 import { Text } from "../src/primitives.js";
 import { HjmNativeProvider } from "../src/provider.js";
 
+// The registered Native action proof is this focused test; the generic fixture omits adjustable navigation.
+// componentId: "carousel"
 const slides = [{ id: "a", label: "첫 소식" }, { id: "b", label: "다음 소식" }];
 const base = { label: "새 소식", slides, labels: { previous: "이전", next: "다음", pause: "멈추기", resume: "재생하기", navigation: "소식 이동" },
   composeAccessibleName: ({ position, total, label }: { position: number; total: number; label: string }) => `${position}/${total} ${label}`,
@@ -34,6 +37,37 @@ describe("Native Carousel", () => {
     act(() => position().props.onAccessibilityAction({ nativeEvent: { actionName: "increment" } }));
     expect(position().props.accessibilityValue.now).toBe(2);
     expect(announce).toHaveBeenCalledTimes(1);
+  });
+  it("publishes labeled adjustable and button actions for screen-reader navigation", async () => {
+    vi.spyOn(AccessibilityInfo, "isScreenReaderEnabled").mockResolvedValue(true);
+    await render();
+    expect(position().props.accessibilityLabel).toBe("새 소식: 1/2 첫 소식");
+    expect(position().props.accessibilityActions).toEqual([
+      { name: "increment", label: "다음" },
+      { name: "decrement", label: "이전" },
+    ]);
+    const dots = renderer.root.findAllByType(Button).filter((node) => node.props.accessibilityState?.selected !== undefined);
+    expect(dots.map((dot) => [dot.props.accessibilityLabel, dot.props.accessibilityState.selected])).toEqual([
+      ["1/2 첫 소식", true], ["2/2 다음 소식", false],
+    ]);
+    act(() => position().props.onAccessibilityAction({ nativeEvent: { actionName: "decrement" } }));
+    expect(position().props.accessibilityValue.now).toBe(1);
+    act(() => position().props.onAccessibilityAction({ nativeEvent: { actionName: "increment" } }));
+    expect(position().props.accessibilityValue.now).toBe(2);
+  });
+  it("retains long localized copy in the slide, adjustable position, and navigation labels", async () => {
+    const copy = "An unusually long product sentence with verylongunbrokenidentifierlikewordsthatmustwrap and a second clause that keeps going past one line.";
+    await render({
+      label: copy,
+      labels: { previous: copy, next: copy, pause: copy, resume: copy, navigation: copy },
+      slides: [{ id: "one", label: copy }, { id: "two", label: "다음 소식" }],
+      renderSlide: ({ label }) => <Text>{label}</Text>,
+    });
+    expect(position().props.accessibilityLabel).toBe(`${copy}: 1/2 ${copy}`);
+    expect(renderer.root.findAllByType(Text).some((node) => node.props.children === copy)).toBe(true);
+    expect(renderer.root.findAllByType(View).some((node) => node.props.accessibilityLabel === copy)).toBe(true);
+    const navButtons = renderer.root.findAllByType(Button);
+    expect(navButtons.some((node) => node.props.children === copy)).toBe(true);
   });
   it.each(["ltr", "rtl"] as const)("moves one card for a deliberate horizontal swipe in %s", async (direction) => {
     await render({}, direction);

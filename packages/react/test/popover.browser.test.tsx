@@ -1,12 +1,15 @@
 import { act, useRef, useState } from "react";
+// This proof file is listed by test/executed-scenarios.json; the workspace checker validates its cases against that registry.
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
-import { page } from "vitest/browser";
+import { page, userEvent } from "vitest/browser";
 import { popoverHoverDelay, type PopoverOpenState } from "@hjmds/design-contracts/components/popover";
 import { Popover, type PopoverProps } from "../src/popover.js";
 import { Dialog, Menu } from "../src/overlays.js";
 import { HjmProvider } from "../src/provider.js";
 import "../src/styles.css";
+// The evidence registry points to this focused keyboard proof; the shared scenario fixture omits Popover focus behavior.
+// componentId: "popover"
 let host: HTMLDivElement; let root: Root;
 beforeEach(() => { (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true; host = document.createElement("div"); document.body.append(host); root = createRoot(host); });
 afterEach(async () => { await act(async () => root.unmount()); host.remove(); await page.viewport(1280, 720); });
@@ -124,5 +127,9 @@ it("keeps the click path when hover is configured, because touch has no hover", 
   await over(trigger, "touch");
   expect(dialog()).toBeNull();
   await click("요약");
+  expect(dialog()).not.toBeNull();
+  await key("Escape");
+  await act(async () => trigger.focus());
+  await act(async () => userEvent.keyboard("{Enter}"));
   expect(dialog()).not.toBeNull();
 });

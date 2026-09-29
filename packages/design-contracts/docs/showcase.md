@@ -39,8 +39,16 @@ Web과 Native가 같은 DOM/view tree를 만드는 것이 아니라, 같은 의�
 문서만 유지합니다. `beta`는 first-party renderer export와 최소 default evidence가 있어야
 하며, 아직 통과하지 못한 dark·긴 문구·큰 글자·RTL·reduced motion·접근성 scenario를
 generated evidence debt로 공개합니다. `stable`은 이 required scenario를 모두 통과해야
-합니다. behavior가 있는 컴포넌트는 keyboard interaction, adaptive 컴포넌트는 두 surface가
-모두 beta 이상일 때 Web/Native parity가 승격 debt에 추가됩니다.
+합니다. 입력 행동이 있는 컴포넌트는 keyboard/host-action 증거를 추가합니다.
+Heading처럼 keyboard와 Native action이 모두 없는 의미 계약에는 이를 요구하지 않습니다.
+`keyboard` scenario는 Web 키보드 동작과 Native host/accessibility action을 가리키는 기존 ID이며,
+모든 Native 컴포넌트의 외장 키보드 지원을 뜻하지 않습니다.
+
+2026-09-29부터 `adaptive` 분류만으로 별도 `platform-parity` 시나리오를 강제하지 않습니다.
+각 renderer가 같은 계약을 검증하는 것에 더해 일괄 비교 영수증까지 요구하던 중복을 없앴습니다.
+플랫폼별 완료·취소·선택 의미가 달라질 위험은 해당 동작 회귀 검사에서 확인합니다.
+기존 parity 시나리오와 evidence는 유지되며 필요한 기능에서 추가 실행할 수 있습니다.
+제품 배포·기기·보조기기 QA는 [승격 절차](stable-promotion.md)의 별도 제품 검증 범위입니다.
 
 `beta`의 구현 source of truth는 `@hjmds/react/evidence`와
 `@hjmds/react-native/evidence`입니다. 제품 story는 채택 evidence이지 first-party 구현을

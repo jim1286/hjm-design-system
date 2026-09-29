@@ -122,12 +122,12 @@ describe("Result visual identity", () => {
     ]);
   });
 
-  it("promotes the shared recipe after product flow termini adopt both renderers", () => {
+  it("promotes the shared recipe with complete renderer evidence", () => {
     expect(componentCatalog.find((entry) => entry.name === "Result")).toMatchObject({
       category: "feedback",
       platform: "shared",
-      status: "beta",
-      surfaceStatus: { web: "beta", native: "beta" },
+      status: "stable",
+      surfaceStatus: { web: "stable", native: "stable" },
     });
   });
 

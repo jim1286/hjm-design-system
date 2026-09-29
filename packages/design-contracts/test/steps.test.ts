@@ -232,12 +232,12 @@ describe("Steps visual identity", () => {
     **catalog와 recipe가 서로를 가리키는지**이기 때문이다. 지우면 recipe 키가 오타로
     바뀌어도 아무도 모른다.
 
-    Web·Native renderer와 기본 실행 증거가 연결된 뒤 `beta`로 승격한다.
+    Web·Native renderer와 기본 실행 증거에 긴 단계 label matrix가 연결되어 `stable`이다.
   */
   it("is wired into the shared catalog and points at its own recipe", () => {
     expect(componentCatalog.find((entry) => entry.name === "Steps")).toMatchObject({
       platform: "shared",
-      status: "beta",
+      status: "stable",
       recipe: "stepsRecipe",
     });
     expect(recipeRegistry).toHaveProperty("stepsRecipe");

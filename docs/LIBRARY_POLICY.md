@@ -93,3 +93,89 @@ navigation page 13개 검증)까지 전부.
 남은 것은 `esbuild`(low) 하나다. 그것은 storybook 10.4.4가 0.27.7을 끌어오고 0.x minor를
 건너야 해서 남긴다. 다만 이 항목은 Dependabot updater를 실패시키지 않는다 —
 security update 대상이 아니기 때문이다.
+## Liquid Toast optional renderer — 2026-09-28
+
+User-requested absorption of expo-dynamic-notifications adds Skia 2.6.2, Reanimated 4.5.1 and Worklets
+0.10.1 as optional renderer peers, development typecheck dependencies and Native showcase runtime.
+The optional `toast-liquid` and `thinking-orb` entries import these runtimes; later native adapters also use Reanimated through their separately documented entries. The default Metro fixture rejects these modules during
+resolution, including when installed locally, so ordinary consumers do not acquire an implicit native
+module requirement. Geometry, timing and lifecycle stay within the existing Toast contract.
+
+Expo 57/RN 0.86.2 is the effect's bundle fixture. Reanimated/Worklets declare RN 0.83–0.86, whereas the
+base renderer still tests RN 0.81.6. The resulting development-only peer warning does not establish
+effect support on 0.81. A separate entry was chosen over raising the base renderer's RN minimum.
+No Expo-only UI modules or network clients are added. Removing the adapter and presentation hint
+restores standard Toast; removal of native peers requires the host's normal binary update procedure.
+
+See [usage and compatibility](../packages/react-native/docs/liquid-toast.md) and
+[design decisions](plans/liquid-toast.md). Native UI, performance and assistive-technology checks are
+separate from mock tests and JS bundling. Original source license notices ship in both packages that
+contain adapted code. Native package `files` includes its usage document as well as the notice.
+
+## ThinkingOrb source absorption — 2026-09-29
+
+User-requested absorption vendors MIT geometry/presets at Thinking Orbs commit
+`de85557ca220332586d070d8788c0e1d6e877a0d`, rather than adding its React package as a
+runtime dependency. Only the optional Native entry uses the existing Skia/Reanimated peers.
+Root exports do not load the engine or these optional peers. The source/license record,
+catalog freeze exception, compatibility and promotion conditions are in
+[ThinkingOrb](../packages/design-contracts/docs/thinking-orb.md). Removing this entry and
+its host usage restores ordinary Spinner; no app dependencies or release versions change here.
+
+## Optional presentation adoption — 2026-09-29
+
+The user explicitly requested all six shortlisted libraries with platform-specific adoption allowed.
+[Optional adapters](../packages/design-contracts/docs/optional-adapters.md) records exact versions,
+entry points, MIT provenance, host setup, failure behavior, removal cost and runtime evidence limits.
+NumberFlow and Bloom extend web Statistic/Menu; Zoom Toolkit, Keyboard Controller, Gorhom Sheet
+and Zeego supply native-specific capabilities. They are optional peers plus development dependencies,
+with actual runtime imports only in opt-in entries. This avoids imposing native linking requirements
+on the base renderer. Central library-policy.json registers the new direct dependencies and lanes.
+Zeego's older exact peer versions follow its published contract; newer native-module majors were
+rejected as an unverified substitution. Native device and transitive security audits remain separate.
+
+## Native showcase build compatibility — 2026-09-29
+
+Android RN 0.86.2 compilation exposed `@react-native-menu/menu@1.2.2` calling the old
+Java `setHitSlopRect` API after RN 0.81 converted it to a Kotlin property. The pinned
+workspace patch uses property access and preserves both superclass hit testing and
+the menu TouchDelegate update. A blind major override was rejected because Zeego
+pins 1.2.2. Remove this patch when Zeego adopts an upstream compatible release.
+This workspace patch is not inherited by consumers installing the published HJM
+package; Android hosts using the optional context-menu adapter need the same patch
+until that upstream update. It is unrelated to ThinkingOrb's renderer implementation.
+
+Skia postinstall is explicitly enabled in `pnpm-workspace.yaml`: its binary packages
+were installed, but the required copy into `libs/` had been skipped and CMake could
+not find `libskia.a`. The official `install-skia` command restored those files.
+See [upstream API migration issue](https://github.com/react-native-menu/menu/issues/1144).
+
+The complete iOS showcase now uses ios-context-menu 3.2.1 and ios-utilities 5.2.0.
+Their podspecs respect RN 0.86's prebuilt dependency mode instead of forcing an old
+Folly version. Two pinned patches handle Xcode 27's iOS 16 subtitle availability
+and exclude the removed legacy RCTRootContentView reference from Fabric builds.
+Keeping the legacy fallback in Fabric was rejected because it caused a linker
+failure. Remove these patches when the upstream packages include equivalent fixes.
+The full iOS build and a native menu save action passed on the existing iPhone 17
+simulator. The Orb-only autolinking/story filter has therefore been removed.
+
+## iOS 27 showcase launch fix — 2026-09-29
+
+`HJMNativeShowcase-2026-09-29-174721.ips` confirms the UIKit
+`___UIApplicationEvaluateRuntimeIssueForNoSceneLifecycleAdoption_block_invoke`
+SIGTRAP at launch. Expo 57.0.21 lacks the required scene delegate. The showcase
+uses Expo ~57.0.25 and the existing portfolio scene-lifecycle config plugin, which
+creates the scene-owned window and preserves Expo URL forwarding. Hand-editing
+generated ios files was rejected because prebuild would discard the fix. Remove
+the plugin when Expo's template owns scene wiring. This is showcase host repair,
+not a claim about a published consumer app or OS-wide release validation.
+
+## Optional QR encoding and test decoding
+
+`qrcode-generator@2.0.4` is an optional peer of both QRCode renderer entries and a
+dev dependency for typechecking/showcase tests. Base renderer entries and contracts
+remain independent of the encoder. Native QR rendering additionally requires
+`react-native-svg@15.15.5`. `jsqr@1.4.0` is test-only: decoding the actual generated
+matrix catches corrupt UTF-8 or module geometry that SVG snapshots would miss.
+These versions are registered in the central library policy; installing unrelated
+optional presentation peers is not required for QRCode.

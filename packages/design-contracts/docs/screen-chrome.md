@@ -49,4 +49,5 @@ LTR/RTL, light/dark에서 hit target, 글자 범위, overflow, 제목 분리와 
 Web List의 indented 구분선은 행 margin이 아닌 별도 선으로 그린다. 320px 조합에서
 두 번째 제목부터 들여쓰기되던 재현을 고쳤고 Native의 기존 선 전용 inset과 맞췄다.
 Storybook의 조작과 브라우저 검사는 Native 기기의 VoiceOver/TalkBack 검증을 대체하지 않는다.
-catalog beta는 구현 지원 범위이며 stable 또는 앱 배포 완료 선언이 아니다.
+2026-09-29 기준 BottomCTA, TopBar, AuthScreenLayout은 계약·Web·Native stable이다. TopBar Native compact title은
+한 줄 clamp를 제거해 이 문서의 제목 줄바꿈 계약을 따르며, 긴 제목 matrix proof가 연결돼 있다.

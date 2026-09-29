@@ -1,16 +1,50 @@
 import { act, useState } from "react";
 import { createRoot, type Root } from "react-dom/client";
+import { userEvent } from "vitest/browser";
 import { beforeEach, afterEach, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { Breadcrumb } from "../src/breadcrumb.js";
 import { Pagination } from "../src/pagination.js";
 import { HjmProvider } from "../src/provider.js";
+import executedScenarioRegistry from "./executed-scenarios.json" with { type: "json" };
 import "../src/styles.css";
 let host: HTMLDivElement; let root: Root;
 beforeEach(() => { (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true; host = document.createElement("div"); document.body.append(host); root = createRoot(host); });
-afterEach(async () => { await act(async () => root.unmount()); host.remove(); await page.viewport(1280, 720); });
+afterEach(async () => { await act(async () => root.unmount()); host.remove(); window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`); await page.viewport(1280, 720); });
 const labels = { previous: "이전 페이지", next: "다음 페이지" };
 const name = ({ page, totalPages }: { page: number; totalPages: number }) => `${totalPages}페이지 중 ${page}페이지`;
+/** Literal case id joins the real browser keyboard flow to renderer evidence. */
+export const breadcrumbKeyboardCases = [{ componentId: "breadcrumb" }] as const;
+
+it("follows an ancestor with Tab and Enter while the current location stays a noninteractive label", async () => {
+  const registered = executedScenarioRegistry.executions.find((execution) => execution.proofFile === "test/page-navigation.browser.test.tsx");
+  expect(registered?.scenarios.some((scenario) => scenario.id === "keyboard")).toBe(true);
+  await act(async () => root.render(<HjmProvider>
+    <Breadcrumb label="현재 위치" items={[
+      { id: "teams", label: "구단 목록", destination: { kind: "internal", href: "#teams" } },
+      { id: "roster", label: "LG 트윈스 선수단" },
+    ]} />
+    <button type="button">다음 콘텐츠 컨트롤</button>
+    <main id="teams">구단</main>
+  </HjmProvider>));
+
+  const ancestor = host.querySelector<HTMLAnchorElement>('.hjm-breadcrumb a[href="#teams"]')!;
+  const current = host.querySelector<HTMLElement>('.hjm-breadcrumb [aria-current="page"]')!;
+  await userEvent.tab();
+  expect(document.activeElement).toBe(ancestor);
+  await userEvent.tab();
+  expect(document.activeElement).toBe(host.querySelector("button"));
+  expect(current.tagName).toBe("SPAN");
+  expect(current.tabIndex).toBe(-1);
+
+  await userEvent.tab({ shift: true });
+  expect(document.activeElement).toBe(ancestor);
+  await userEvent.keyboard("{Enter}");
+  expect(window.location.hash).toBe("#teams");
+  expect(current.getAttribute("aria-current")).toBe("page");
+  expect(current.textContent).toBe("LG 트윈스 선수단");
+});
+
 it("keeps current breadcrumb text out of the tab order and preserves real ancestor URLs", async () => {
   await act(async () => root.render(<HjmProvider><Breadcrumb label="현재 위치" items={[{ id: "all", label: "기록", destination: { kind: "internal", href: "#records" } }, { id: "current", label: "일상" }]} /></HjmProvider>));
   expect(host.querySelectorAll("nav ol li")).toHaveLength(2);

@@ -331,7 +331,18 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
   const focusItem = (id: string) => {
     setFocusValue(id);
     if (activationMode === "automatic") setValue(id);
-    queueMicrotask(() => tabRefs.current.get(id)?.focus());
+    queueMicrotask(() => {
+      const node = tabRefs.current.get(id);
+      if (!node) return;
+      node.focus();
+      // The tab strip is horizontally scrollable; keyboard focus must bring an offscreen roving tab into view.
+      // `auto` preserves the consumer's scroll behavior, while `instant` prevents CSS smooth scrolling under reduced motion.
+      node.scrollIntoView({
+        block: "nearest",
+        inline: "nearest",
+        behavior: theme?.environment.reducedMotion ? "instant" : "auto",
+      });
+    });
   };
   const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>, id: string) => {
     const intent = getTabNavigationIntent(

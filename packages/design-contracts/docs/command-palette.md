@@ -113,12 +113,14 @@ heading을 가지므로) — CommandPalette는 다르다: `role="dialog"` 표면
 
 ## 검증 화면
 
-아직 없음. `planned → beta` 승격은 실제 제품 vertical slice 이후 리드가 진행한다.
+이 조사 당시 제품 채택은 미확인이었다. 2026-09-29부터 제품 채택은 관측으로 분리하며,
+현재 성숙도는 catalog와 [승격 기준](stable-promotion.md)을 따른다.
 
 ## Web renderer (2026-09-18)
 
-`@hjmds/react/command-palette`의 `CommandPalette`가 이 계약을 실행한다. catalog는
-Web `beta`, Native `unsupported`다.
+`@hjmds/react/command-palette`의 `CommandPalette`가 이 계약을 실행한다. Web은 키보드 검색·
+실행·dismiss와 320px의 긴 한글 명령 설명 proof를 통과해 2026-09-29 stable로 승격한다.
+Native는 `unsupported`다. 전역 단축키는 제품 소유다.
 
 - **모달 takeover다.** Dialog·Sheet·SidePanel과 같은 모달 스택·스크롤 락·배경 격리를
   공유한다(`packages/react/src/modal.tsx`). 별도 `modal` 축은 없다.

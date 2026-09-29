@@ -95,4 +95,5 @@ Field가 이미 가진 `description`/`hint` 슬롯에 자기 문구를 채우면
 
 ## 검증 화면
 
-아직 없음. `planned → beta` 승격은 실제 제품 vertical slice 이후 리드가 진행한다.
+이 조사 당시 제품 채택은 미확인이었다. 2026-09-29부터 제품 채택은 관측으로 분리하며,
+현재 성숙도는 catalog와 [승격 기준](stable-promotion.md)을 따른다.

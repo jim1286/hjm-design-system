@@ -1,6 +1,6 @@
 # Calendar
 
-2026-09-16 · React / React Native beta. 날짜별 기록을 탐색하는 작동 예제를 제공한다.
+2026-09-16 · React / React Native renderer beta로 시작했다. 2026-09-29 두 surface의 키·host action·긴 title proof를 보강해 stable로 승격한다. 제품 채택은 별도 관측이다.
 제품의 실제 채택·기기 검증·npm 게시를 뜻하지 않는다.
 
 ## 설계와 참조
@@ -69,7 +69,8 @@ Web의 `autoFocus`는 기본 false이며 DatePicker가 열린 격자에만 true�
 - 7열의 최소 touch target을 유지한다. 폭이 부족하면 격자만 가로 스크롤하고 본문은 넘치지 않는다.
 - 셀 높이를 고정하지 않아 2배 글자나 짧은 제품 콘텐츠가 잘리지 않는다.
 - Web: grid / row / columnheader / gridcell, 하나의 날짜 tab stop, visible focus.
-- Native: 각 날짜는 독립 접근 가능한 button. 실제 플랫폼과 RN Web의 focus 경로를 구분한다.
+- Native: 각 날짜는 독립 접근 가능한 button. `focusDate`는 Native 접근성 초점 요청으로,
+  RN Web에서는 DOM 초점으로 전달한다. 이는 하드웨어 키보드 방향키 탐색 지원의 증거가 아니다.
 - 단일 날짜·한 페이지 계약이다. range, 연간 view, 비그레고리력 계산 엔진은 이 컴포넌트에 없다.
   제품이 준비한 날짜 배열의 의미를 보존하며 HJM은 날짜 형식·중복·격자 모양을 검증한다.
 
@@ -77,6 +78,8 @@ Web의 `autoFocus`는 기본 false이며 DatePicker가 열린 격자에만 true�
 
 Web 테스트는 비활성 날짜 focus/활성화 분리, 하루/주/Home/End, 경계에서 새 페이지의 지정 날짜로
 focus 이동, controlled 선택 보존, 320px·2배 글자·RTL 최소 target과 본문 overflow를 검사한다.
-Native 테스트는 개별 날짜의 접근성·비활성·선택, 명시적 월 이동, 크기와 스크롤 경계를 검사한다.
+Native 테스트는 개별 날짜의 접근성·비활성·선택, 명시적 월 이동, 크기와 스크롤 경계,
+긴 월 제목의 잘림 방지, `focusDate`의 접근성 초점 요청을 검사한다. 실제 VoiceOver/TalkBack
+기기나 하드웨어 키보드 탐색 검증을 뜻하지 않는다.
 DatePicker의 기존 선택·닫기·방향키 회귀와 controlled-open 읽기 전용/disabled 활성화 방지도 검사한다.
 전체 패키지·Showcase 검증 및 브라우저 확인은 `react-native-completion.md` 실행 기록에 남긴다.

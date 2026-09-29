@@ -4,7 +4,10 @@ import { afterEach, beforeEach, expect, it } from "vitest";
 import { page } from "vitest/browser";
 import { Mentions, type MentionCandidate } from "../src/mentions.js";
 import { HjmProvider } from "../src/provider.js";
+import executedScenarioRegistry from "./executed-scenarios.json" with { type: "json" };
 import "../src/styles.css";
+
+export const mentionsKeyboardCases = [{ componentId: "mentions" }] as const;
 
 let host: HTMLDivElement; let root: Root;
 beforeEach(() => { (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true; host = document.createElement("div"); document.body.append(host); root = createRoot(host); });
@@ -53,6 +56,7 @@ function Fixture() {
 }
 
 it("opens on a trigger that starts a token and stays closed when it follows other text", async () => {
+  expect(executedScenarioRegistry.executions.find(({ proofFile }) => proofFile === "test/mentions.browser.test.tsx")?.scenarios.map(({ id }) => id)).toContain("keyboard");
   await act(async () => root.render(<Fixture />));
   await type("오늘 ");
   expect(list()).toBeNull();

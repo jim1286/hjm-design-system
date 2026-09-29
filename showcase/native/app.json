@@ -6,13 +6,19 @@
     "orientation": "portrait",
     "scheme": "hjm-showcase",
     "userInterfaceStyle": "automatic",
-    "platforms": ["ios", "android"],
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "ios": {
       "bundleIdentifier": "dev.hjm.designsystem.showcase",
       "supportsTablet": true
     },
     "android": {
       "package": "dev.hjm.designsystem.showcase"
-    }
+    },
+    "plugins": [
+      "./plugins/with-ios-scene-lifecycle.cjs"
+    ]
   }
 }

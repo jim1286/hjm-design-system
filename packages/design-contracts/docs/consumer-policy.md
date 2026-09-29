@@ -1,7 +1,7 @@
 # HJM 소비 앱 정책
 
 상태: **Normative**
-정책 버전: **1.3.0**
+정책 버전: **1.4.0**
 적용 대상: 신규 HJM Web·React Native 앱과 기존 앱의 새 화면
 
 이 정책 원문은 다음 package patch release부터
@@ -26,25 +26,38 @@
 
 ## 2. 성숙도별 채택
 
-| Catalog 상태 | 신규 앱 기본 정책 | 추가 조건 |
+| 사용할 surface 상태 | 신규 앱 기본 정책 | 추가 조건 |
 | --- | --- | --- |
 | `stable` | 사용 가능 | 제품 흐름·copy 검증 |
-| `beta` | 기본 비활성 | ADR, 앱 테스트, 실제 기기/브라우저 evidence |
+| `beta` | 필요에 따라 선택 가능 | 사용 표면·미완료 항목 확인, 채택 기록과 관련 회귀 검사 |
 | `planned` | 사용 금지 | HJM package에서 구현·승격한 뒤 채택 |
 | `deprecated` | 신규 사용 금지 | 공지된 migration 기한 안에 제거 |
 
-신규 앱 scaffold는 Stable Core만 기본 surface로 채택해야 합니다(MUST). Beta를 사용하려면
-앱의 `docs/decisions/` 아래 ADR에 채택 이유, 대체안, 소유자, 검증 환경과 재검토 날짜를
-기록해야 합니다(MUST).
+`surfaceStatus`가 사용 플랫폼의 채택 기준입니다. contract `status`가 stable이어도
+다른 renderer까지 안정화됐다는 뜻은 아닙니다. 예를 들어 TopBar는 Web stable / Native beta입니다.
+
+신규 앱 scaffold의 기본 선택은 Stable Core입니다(SHOULD). Beta 사용은 정책 예외가 아닙니다.
+앱의 기존 contract 또는 TASKS 한 곳에 컴포넌트·표면, 사용하는 이유, 담당자와 관련 회귀
+검사를 기록해야 합니다(MUST). 여러 Beta를 한 기록으로 묶을 수 있고, 별도 ADR·대안 비교·
+재검토 날짜는 요구하지 않습니다. 실제 기기·브라우저 QA는 바뀐 사용자 흐름과 플랫폼 위험에
+맞춰 앱 릴리스에서 수행합니다. Beta라는 이유만으로 제품 전체 QA를 반복하지 않습니다.
+
+2026-09-29 점검에서 HJM 자체 검증을 통과한 표시 컴포넌트도 제품 수·배포 이력 때문에
+승격이 막혔습니다. 1.4.0은 컴포넌트 호환성 약속과 제품 릴리스 검증을 분리합니다.
+[승격 기준](stable-promotion.md)을 따르며 기존 versioned app profile의 검사 요건은 그
+profile을 명시적으로 갱신하기 전까지 유지합니다.
 
 ### 2.1 Stable Core와 필수 foundation bridge
 
-1.5.0부터 Stable Core는 17개 surface입니다. 1.4까지의 `Surface`, `Button`, `Field`, `TextArea`에
+1.5.0에서 Stable Core는 17개 컴포넌트였습니다. 1.4까지의 `Surface`, `Button`, `Field`, `TextArea`에
 더해, 첫 제품 화면에 필요한 foundation인 `Text`, `Icon`, `Stack`, `Container`,
 `DesignSystemProvider`와 세 제품 이상이 쓰는 `IconButton`, `Badge`, `Card`, `Tag`, `Notice`,
 `Progress`, `Spinner`, `Skeleton`이 stable로 승격됐습니다. 승격 근거는 이름뿐이던 시나리오 증거를
 실제 계산 스타일 검사로 바꾼 뒤 두 renderer에서 요구 시나리오가 모두 통과한 것입니다
-([Stable Core](stable-core.md)). 그 밖의 컴포넌트는 여전히 `beta`이며, beta를 `stable`로
+([Stable Core](stable-core.md)). 이번 개정에서는 `Divider`, `Section`, `ListRow`, `Statistic`,
+`DescriptionList`, `EmptyState`, `Result`, `Heading`, `Top`, `BottomCTA`를 양쪽에서 승격하고,
+`TopBar`는 계약·Web만 승격했습니다. 계약/Web stable은 28개, Native stable은 27개입니다.
+배포된 패키지의 catalog가 소비 앱의 기준입니다. 남은 beta를 `stable`로
 간주하거나 `betaAdoptions: []`로 기록하는 것은 허용하지 않습니다(MUST NOT).
 
 HJM-APP-STANDARD가 versioned `requiredFoundations` 목록을 선언한 경우 다음 bridge를
@@ -55,8 +68,8 @@ HJM-APP-STANDARD가 versioned `requiredFoundations` 목록을 선언한 경우 �
 - 각 앱은 실제 adapter와 사용 환경에 대한 evidence를 소유합니다(MUST). `draft` /
   `incubating` contract에서는 evidence가 `planned`일 수 있지만, `active` 또는 release gate는
   timestamp가 있는 `verified` evidence 없이는 통과하면 안 됩니다(MUST NOT).
-- 중앙 필수 목록 밖의 `beta`는 계속 제품별 optional adoption입니다. 제품 ADR, 대안,
-  제거·승격 조건과 verified app evidence가 모두 필요합니다(MUST).
+- 중앙 필수 목록 밖의 `beta`는 제품별 optional adoption이며 §2의 간단한 채택 기록을
+  사용합니다. 예전 profile이 ADR·verified evidence를 요구하면 해당 profile 갱신 때 이관합니다.
 - foundation이 catalog에서 `stable`로 승격되면 기존 표준의 의미를 조용히 바꾸지 않고
   다음 versioned app profile에서 bridge 목록을 줄입니다(MUST).
 
@@ -194,7 +207,7 @@ on-color 대비, 색에 의존하지 않는 상태 표지, reduce-motion을 제�
 4. 원시 색·간격·radius의 화면 레이어 유입 방지 검사
 5. typecheck, unit/component test, production build
 6. light/dark, 100–200% 글자 크기, LTR/RTL, reduce motion 중 앱이 지원한다고 선언한 환경
-7. optional Beta component를 쓴다면 ADR과 해당 component·환경의 versioned consumer evidence
+7. optional Beta component를 쓴다면 §2의 채택 기록과 변경한 사용자 흐름의 회귀 검사
 
 앱이 지원하지 않는 플랫폼이나 환경은 가짜 통과 script로 만들지 않고 app contract에서
 `not-applicable`과 이유를 선언해야 합니다(MUST).
@@ -218,8 +231,12 @@ package로 승격하지 않습니다.
 
 - exact fixed-train dependency와 Provider가 CI에서 검증되는가?
 - Stable은 기본 사용하고(1.5.0 이전 profile이면 필수 foundation은 중앙 목록+앱 evidence로),
-  optional Beta는 제품 ADR+evidence로 구분되어 있는가?
+  optional Beta는 채택 기록과 관련 회귀 검사로 추적되는가?
 - screen 코드가 semantic token·component를 우회하지 않는가?
 - 같은 상태가 Web/RN에서 같은 의미와 자연스러운 플랫폼 행동을 갖는가?
 - 로고를 제거해도 제품의 핵심 콘텐츠와 정보 구조가 다른 제품과 구분되는가?
 - 제품 고유 표현을 제거해도 정보 위계·피드백·접근성에서는 HJM의 결이 남는가?
+
+## Optional presentation adapters
+
+The [optional adapter contract](optional-adapters.md) lists platform-specific entries and exact peer requirements. These extensions do not promote the canonical component or establish consumer/device compatibility. Native adapters require separately verified development clients; base imports retain their existing dependency contract.

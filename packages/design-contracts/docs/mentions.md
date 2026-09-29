@@ -79,12 +79,13 @@ popover가 이미 겪는 것과 같은 종류의 렌더러 문제다.
 
 ## 검증 화면
 
-아직 없음. `planned → beta` 승격은 실제 제품 vertical slice 이후 리드가 진행한다.
+이 조사 당시 제품 채택은 미확인이었다. 2026-09-29부터 제품 채택은 관측으로 분리하며,
+현재 성숙도는 catalog와 [승격 기준](stable-promotion.md)을 따른다.
 
-## Web renderer (2026-09-18)
+## Renderer 성숙도 (2026-09-29)
 
-`@hjmds/react/mentions`의 `Mentions`가 이 모듈을 실행한다. catalog는 Web `beta`,
-Native `planned`다.
+`@hjmds/react/mentions`와 `@hjmds/react-native/mentions`의 `Mentions`가 이 모듈을
+실행하며 양 surface 모두 stable이다.
 
 - **새 목록 계약을 만들지 않았다.** 팝업은 Combobox의 listbox 어휘(`role="listbox"`/
   `option`, `aria-activedescendant`, 방향키·Enter·Escape)를 그대로 쓰고, 이 모듈은
@@ -95,6 +96,12 @@ Native `planned`다.
   캐럿 위치가 이미 사라진다.
 - **필터·로딩은 제품 소유다.** 후보 목록과 빈 문구를 제품이 넘기고, renderer는 활성 match를
   `onMentionQueryChange`로 알린다.
-- 로컬 검증: `test/mentions.browser.test.tsx` 5개(토큰 시작 trigger만 열림·공백이 닫음·
-  단어에 붙은 trigger 무시, Enter 확정의 치환 범위와 캐럿, 방향키 순환과 Escape가 본문을
-  건드리지 않음, 포인터 확정, 빈 문구)와 `Patterns/TransferList`의 Mentions 화면.
+- Native `onMentionQueryChange`는 commit effect 이후 호출해, 부모가 후보 상태를 갱신해도
+  render-phase update를 일으키지 않는다. 후보 영역은 `list` 역할과 제품 제공 label을 갖고,
+  각 press action은 후보 이름으로 노출된다.
+- Web과 Native 모두 긴 visible field label을 실제 renderer matrix에서 검증한다. Web은
+  component browser test에서 토큰 탐지, 중간 커서 삽입, Arrow 순환, Enter/Escape, pointer,
+  empty state를 확인한다. Native host-action test는 중간 커서 범위 치환, trailing text 보존,
+  query callback이 commit 이후 전달되는 것과 이름 있는 후보 action을 확인한다.
+- IME 조합과 후보 필터링/loading은 플랫폼·제품 소유 흐름이다. 이 package 검증은 실제
+  iOS/Android IME, VoiceOver/TalkBack 동작 또는 제품 adapter를 실행했다고 주장하지 않는다.

@@ -61,7 +61,7 @@ export function Field({ label, children, description, error, required = false, d
  * A Native submit boundary. Products retain ownership of values and validation;
  * this renderer only owns submit re-entrancy, feedback, and field rhythm.
  */
-export function Form({ label, values, onSubmit, children, submitLabel, status, defaultStatus = "idle", onStatusChange, error, fallbackErrorMessage, disabled = false, density = "comfortable", style, }) {
+export function Form({ label, values, onSubmit, children, submitLabel, status, defaultStatus = "idle", onStatusChange, error, fallbackErrorMessage, disabled = false, density = "comfortable", firstInvalidFieldRef, style, }) {
     const [submitStatus, setSubmitStatus] = useControllableState({
         ...(status === undefined ? {} : { value: status }),
         defaultValue: defaultStatus,
@@ -80,6 +80,18 @@ export function Form({ label, values, onSubmit, children, submitLabel, status, d
     const submit = async () => {
         if (disabled || busy || submittingRef.current)
             return;
+        const invalidField = firstInvalidFieldRef?.current;
+        if (invalidField) {
+            // Field order and validity belong to the product; the renderer only executes the
+            // selected target. Focusing the TextInput also opens the native keyboard, while
+            // setAccessibilityFocus moves VoiceOver/TalkBack to that same field.
+            invalidField.focus();
+            const nativeHandle = findNodeHandle(invalidField);
+            if (nativeHandle !== null) {
+                void AccessibilityInfo.setAccessibilityFocus(nativeHandle);
+            }
+            return;
+        }
         submittingRef.current = true;
         setInternalError(undefined);
         setSubmitStatus("submitting");
@@ -101,6 +113,11 @@ export function Form({ label, values, onSubmit, children, submitLabel, status, d
         }
     };
     return (_jsxs(View, { accessibilityLabel: label, accessibilityState: { busy, disabled }, style: [{ gap: formRecipe.density[density].fieldGap }, style], children: [children, error ?? internalError ? (_jsx(View, { accessibilityLiveRegion: "assertive", accessibilityRole: "alert", children: _jsx(Text, { tone: "danger", children: error ?? internalError }) })) : null, _jsx(Button, { disabled: disabled, loading: busy, onPress: () => void submit(), children: submitLabel })] }));
+}
+/** Shared collection sheets keep dismissal in the header so it does not compete with choices. */
+function CollectionSheetHeader({ title, dismissLabel, onDismiss }) {
+    const { colors, environment } = useHjmNativeTheme();
+    return _jsxs(View, { style: { flexDirection: "row", direction: environment.direction, alignItems: "center", gap: spacing.sm }, children: [_jsx(Text, { accessibilityRole: "header", tone: "primary", variant: "title", emphasis: "strong", style: { flex: 1 }, children: title }), _jsx(Pressable, { accessibilityRole: "button", accessibilityLabel: dismissLabel, onPress: onDismiss, style: ({ pressed }) => [minimumTargetStyle, { alignItems: "center", justifyContent: "center", borderRadius: radius.full, backgroundColor: pressed ? colors.surface : "transparent" }], children: _jsx(Text, { accessible: false, tone: "muted", variant: "title", children: "\u00D7" }) })] });
 }
 /** Native adaptive Select with shared sections, async states, and teardown-safe commits. */
 export function Select({ label, accessibilityLabel, options, source: sourceProp, items, sections, value, defaultValue, onValueChange, selectedKey, defaultSelectedKey, onSelectionChange, selectedItem, disallowEmptySelection = false, open, defaultOpen = false, onOpenChange, placeholder, description, error, required = false, disabled = false, readOnly = false, busy = false, size = selectRecipe.defaults.size, density = selectRecipe.defaults.density, asyncState = { status: "idle" }, onRetry, retryLabel, readOnlyLabel, openHint, renderLeading, renderOptionLeading, onSelectionAfterDismiss, onDismiss, dismissLabel, optionsAccessibilityLabel, style, ...modalProps }) {
@@ -305,7 +322,7 @@ export function Select({ label, accessibilityLabel, options, source: sourceProp,
                                 gap: spacing.sm,
                                 maxHeight: "75%",
                                 padding: spacing.md,
-                            }, children: [_jsx(Text, { tone: "primary", variant: "title", children: label ?? accessibleName }), _jsxs(ScrollView, { children: [blockingState ? (_jsxs(View, { style: { gap: spacing.sm, minHeight: selectRecipe.stateMessage.minHeight }, children: [asyncState.status === "loading" ? _jsx(ActivityIndicator, {}) : null, _jsx(Text, { accessibilityLiveRegion: "polite", accessibilityRole: asyncState.status === "error" ? "alert" : undefined, tone: asyncState.status === "error" ? "danger" : "muted", children: asyncState.message }), asyncState.status === "error" && onRetry ? (_jsx(Button, { onPress: onRetry, tone: "secondary", children: retryLabel ?? dismissLabel })) : null] })) : collection, asyncState.status === "loadingMore" ? (_jsxs(View, { accessibilityLiveRegion: "polite", accessibilityState: { busy: true }, style: { alignItems: "center", flexDirection: "row", gap: spacing.xs }, children: [_jsx(ActivityIndicator, {}), _jsx(Text, { tone: "muted", children: asyncState.message })] })) : null] }), _jsx(Button, { onPress: () => close("programmatic"), tone: "secondary", children: dismissLabel })] })] }) })] }));
+                            }, children: [_jsx(CollectionSheetHeader, { title: label ?? accessibleName, dismissLabel: dismissLabel, onDismiss: () => close("programmatic") }), _jsxs(ScrollView, { children: [blockingState ? (_jsxs(View, { style: { gap: spacing.sm, minHeight: selectRecipe.stateMessage.minHeight }, children: [asyncState.status === "loading" ? _jsx(ActivityIndicator, {}) : null, _jsx(Text, { accessibilityLiveRegion: "polite", accessibilityRole: asyncState.status === "error" ? "alert" : undefined, tone: asyncState.status === "error" ? "danger" : "muted", children: asyncState.message }), asyncState.status === "error" && onRetry ? (_jsx(Button, { onPress: onRetry, tone: "secondary", children: retryLabel ?? dismissLabel })) : null] })) : collection, asyncState.status === "loadingMore" ? (_jsxs(View, { accessibilityLiveRegion: "polite", accessibilityState: { busy: true }, style: { alignItems: "center", flexDirection: "row", gap: spacing.xs }, children: [_jsx(ActivityIndicator, {}), _jsx(Text, { tone: "muted", children: asyncState.message })] })) : null] })] })] }) })] }));
 }
 /** Editable Native combobox with sectioned async results and teardown-safe commits. */
 export function Combobox({ label, accessibilityLabel, items, sections, source: sourceProp, selectedKey, defaultSelectedKey = null, selectedItem, onSelectionChange, inputValue, defaultInputValue, onInputValueChange, open, defaultOpen = false, onOpenChange, onCommit, onCommitAfterDismiss, onDismiss, filtering = comboboxBehaviorDefaults.filtering, queryValue, resultQuery, asyncState, loading = false, emptyMessage, loadingMessage, loadingMoreMessage, errorMessage, promptMessage, minimumQueryLength = 0, onRetry, retryLabel, description, error, placeholder, openHint, sheetTitle, required = false, disabled = false, readOnly = false, busy = false, openOnFocus = true, size = comboboxRecipe.defaults.size, density = comboboxRecipe.defaults.density, readOnlyLabel, renderLeading, clearLabel, dismissLabel, resultsAccessibilityLabel, style, ...modalProps }) {
@@ -590,6 +607,6 @@ export function Combobox({ label, accessibilityLabel, items, sections, source: s
                                 gap: spacing.sm,
                                 maxHeight: "75%",
                                 padding: spacing.md,
-                            }, children: [_jsx(Text, { tone: "primary", variant: "title", children: sheetTitle ?? label ?? accessibleName }), viewStatus === "loading" || viewStatus === "prompt" || viewStatus === "error" || viewStatus === "empty" ? (_jsxs(View, { style: { gap: spacing.sm, minHeight: comboboxRecipe.stateMessage.minHeight }, children: [viewStatus === "loading" ? _jsx(ActivityIndicator, {}) : null, _jsx(Text, { accessibilityLiveRegion: viewStatus === "error" ? "assertive" : "polite", accessibilityRole: viewStatus === "error" ? "alert" : undefined, tone: viewStatus === "error" ? "danger" : "muted", children: stateMessage }), viewStatus === "error" && onRetry ? (_jsx(Button, { onPress: onRetry, tone: "secondary", children: retryLabel ?? dismissLabel })) : null] })) : (_jsxs(ScrollView, { keyboardShouldPersistTaps: "handled", children: [collection, viewStatus === "loadingMore" ? (_jsxs(View, { accessibilityLiveRegion: "polite", accessibilityState: { busy: true }, style: { alignItems: "center", flexDirection: "row", gap: spacing.xs }, children: [_jsx(ActivityIndicator, {}), _jsx(Text, { tone: "muted", children: stateMessage || loadingMoreMessage || loadingMessage })] })) : null] })), _jsx(Button, { onPress: () => dismiss("programmatic"), tone: "secondary", children: dismissLabel })] })] }) })] }));
+                            }, children: [_jsx(CollectionSheetHeader, { title: sheetTitle ?? label ?? accessibleName, dismissLabel: dismissLabel, onDismiss: () => dismiss("programmatic") }), viewStatus === "loading" || viewStatus === "prompt" || viewStatus === "error" || viewStatus === "empty" ? (_jsxs(View, { style: { gap: spacing.sm, minHeight: comboboxRecipe.stateMessage.minHeight }, children: [viewStatus === "loading" ? _jsx(ActivityIndicator, {}) : null, _jsx(Text, { accessibilityLiveRegion: viewStatus === "error" ? "assertive" : "polite", accessibilityRole: viewStatus === "error" ? "alert" : undefined, tone: viewStatus === "error" ? "danger" : "muted", children: stateMessage }), viewStatus === "error" && onRetry ? (_jsx(Button, { onPress: onRetry, tone: "secondary", children: retryLabel ?? dismissLabel })) : null] })) : (_jsxs(ScrollView, { keyboardShouldPersistTaps: "handled", children: [collection, viewStatus === "loadingMore" ? (_jsxs(View, { accessibilityLiveRegion: "polite", accessibilityState: { busy: true }, style: { alignItems: "center", flexDirection: "row", gap: spacing.xs }, children: [_jsx(ActivityIndicator, {}), _jsx(Text, { tone: "muted", children: stateMessage || loadingMoreMessage || loadingMessage })] })) : null] }))] })] }) })] }));
 }
 //# sourceMappingURL=forms.js.map

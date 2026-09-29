@@ -1,23 +1,27 @@
 {
-  "$comment": "카탈로그 확장 동결. 이 목록에 없는 이름을 catalog.ts에 추가하면 test/catalog-freeze.test.ts가 실패한다.",
+  "$comment": "카탈로그 확장 동결. 이 목록에 없는 이름을 catalog.ts에 추가하면 test/catalog-freeze.test.ts가 실패한다. 2026-09-29 사용자 요청으로 도입 제외 후보 네 개 삭제; 기존 dataviz/provider API는 유지.",
   "frozenAt": "2026-09-26",
-  "reason": "2026-09-26 설계 점검: 111개 중 stable 4개였고, 세 제품 이상이 쓰는 약 30개가 beta에 묶여 있었다. 1.5.0에서 13개를 실제 증거로 승격했지만 keyboard·platform-parity 증거가 필요한 핵심(Checkbox, Switch, Dialog, Sheet, SegmentedControl, RadioGroup, Link, PasswordField 등)은 아직 beta다. 폭을 넓히기 전에 이것들을 먼저 올린다.",
+  "reason": "2026-09-26 설계 점검: 111개 중 stable 4개였고, 세 제품 이상이 쓰는 약 30개가 beta에 묶여 있었다. 1.5.0에서 13개를 실제 증거로 승격했지만 입력·접근성 동작 증거가 필요한 핵심(Checkbox, Switch, Dialog, Sheet, SegmentedControl, RadioGroup, Link, PasswordField 등)은 아직 beta다. 폭을 넓히기 전에 이것들을 먼저 올린다.",
   "unfreezeWhen": "위 핵심 beta가 stable이 되면 동결을 푼다. 그 전에 추가가 필요하면 이 파일의 exceptions에 이름·날짜·근거(ADR 또는 이슈)를 적는다.",
-  "exceptions": [],
+  "exceptions": [
+    {
+      "name": "ThinkingOrb",
+      "date": "2026-09-29",
+      "rationale": "사용자가 Thinking Orbs의 HJM 흡수를 명시적으로 요청함. 기존 Spinner를 교체하지 않는 AI 상태 표시이며 선택형 경로로 격리. docs/thinking-orb.md"
+    }
+  ],
   "names": [
     "Accordion",
     "Affix",
     "Agreement",
     "AlertDialog",
     "Anchor",
-    "AppProvider",
     "AspectRatio",
     "Asset",
     "AuthProviderButton",
     "AuthScreenLayout",
     "Avatar",
     "Badge",
-    "BorderBeam",
     "BottomCTA",
     "BottomInfo",
     "BottomNavigation",
@@ -27,7 +31,6 @@
     "Card",
     "Carousel",
     "Cascader",
-    "Chart",
     "Checkbox",
     "CheckboxGroup",
     "Chip",
@@ -112,7 +115,6 @@
     "Tree",
     "TreeSelect",
     "UploadItem",
-    "Utility",
     "VirtualList",
     "VisuallyHidden",
     "Watermark"

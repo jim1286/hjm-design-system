@@ -13,7 +13,8 @@ BurnTok(`/Users/jimin/Desktop/BurnTok`) 양쪽에서 **같은 문제를 이미 �
 
 > 2026-08-27 후속: 이 문서는 제품 adoption 실측 기록으로 보존한다. 이후 first-party
 > renderer와 canonical evidence만으로 beta가 된 항목이 있어 현재 catalog status와 표의
-> “실제품 승격 판단”은 의도적으로 다를 수 있다. 실제 제품 증거 없음은 stable gate의 debt다.
+> “실제품 승격 판단”은 의도적으로 다를 수 있다. 당시에는 실제 제품 증거도 stable gate로 보았다.
+> 2026-09-29: 현재 승격은 [승격 기준](stable-promotion.md)을 따른다. 이 문서는 과거 채택 조사이며 제품 수·배포는 더 이상 승격 관문이 아니다.
 
 ## 요약
 

@@ -315,12 +315,12 @@ describe("Pagination visual recipe", () => {
 });
 
 describe("Pagination catalog and crosswalk", () => {
-  it("exposes the verified Web beta while retaining the navigation category", () => {
+  it("exposes the verified Web stable component while retaining the navigation category", () => {
     const entry = componentCatalog.find((item) => item.name === "Pagination");
     expect(entry).toMatchObject({
       category: "navigation",
       platform: "web",
-      status: "beta",
+      status: "stable",
     });
   });
 

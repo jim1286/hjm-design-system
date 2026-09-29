@@ -27,8 +27,8 @@ describe("@hjmds/react default renderer proofs", () => {
     expect(execution?.scenarios.map(({ id }) => id)).toEqual(["default"]);
   });
 
-  it.each(defaultRenderFixtures)("$componentId", ({ componentId, marker, render }) => {
+  it.each(defaultRenderFixtures)("$componentId", ({ componentId, marker, ssrMarker, render }) => {
     const html = renderToStaticMarkup(<HjmProvider systemTheme="light">{render()}</HjmProvider>);
-    expect(html, componentId).toContain(marker);
+    expect(html, componentId).toContain(ssrMarker ?? marker);
   });
 });

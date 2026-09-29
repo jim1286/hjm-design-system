@@ -144,3 +144,20 @@ uses caller-owned strings.
 `Grid` observes window and element widths in the browser and starts from a
 deterministic compact layout during SSR. Tests may pass `windowWidth` and
 `availableWidth` explicitly; product code normally leaves both unset.
+
+## ThinkingOrb
+
+Beta web AI operation indicator: `@hjmds/react/thinking-orb`.
+Requires a localized `label`; `state`, `size` (20/64), `paused`, and `active` control its presentation.
+See [the shared contract and compatibility](../design-contracts/docs/thinking-orb.md).
+
+## Optional presentation adapters
+
+See [installation and behavior contracts](../design-contracts/docs/optional-adapters.md) for opt-in entries, pinned peers and verification limits. Native adapters remain experimental until device verification.
+
+## Data layouts and QRCode
+
+Masonry and VirtualList use the granular `masonry` and `virtual-list` entries.
+Supply measured item heights for Masonry and a fixed row height for VirtualList.
+The optional `qr-code` entry requires `qrcode-generator@2.0.4` and a visible alternative
+action alongside the accessible code.

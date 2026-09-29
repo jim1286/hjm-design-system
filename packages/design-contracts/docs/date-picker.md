@@ -78,7 +78,9 @@ Select의 축과 동일하되 `content`(idle/loading/loadingMore/error)는 없�
 
 ## 검증 화면
 
-first-party Web dialog·Native Sheet renderer, 환경 matrix, 기본 실행 증거는 연결되어 surface는
-`beta`다. 다만 `docs/calendar.md`가 밝힌 대로 Yajalal에는 이 문제의 살아있는 vertical
-slice가 아직 없다. 값 하나를 고르는 새 폼 필드가 실제 제품에 생기고 보조기기 증거까지
-쌓이기 전에는 `stable`로 승격하지 않는다.
+first-party Web dialog·Native Sheet renderer의 필수 시나리오가 연결되어 양쪽 surface가
+`stable`이다. Web Chromium 검사는 트리거 열기, 실제 날짜 셀 키보드 이동·선택, 닫힘과 focus
+복귀를 확인한다. Native renderer 검사는 날짜 host action에 따른 선택·닫힘을 확인한다.
+두 renderer 모두 접근성 이름, 긴 label, 환경 matrix 검사를 통과한다. 실제 iOS/Android 기기와
+제품 폼의 스크린 리더 검증은 소비 앱 릴리스 QA에 속하며, Yajalal vertical slice나 제품 채택
+수는 이 공개 API 성숙도 판단의 조건으로 두지 않는다([Stable 승격 기준](stable-promotion.md)).

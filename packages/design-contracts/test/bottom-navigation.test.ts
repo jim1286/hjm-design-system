@@ -541,7 +541,7 @@ describe("BottomNavigation visual and behavior contracts", () => {
     });
   });
 
-  it("tracks both first-party adaptive renderers as beta", () => {
+  it("tracks both first-party adaptive renderers as stable", () => {
     expect(componentCatalog).not.toEqual(
       expect.arrayContaining([expect.objectContaining({ name: "BottomTabs" })]),
     );
@@ -551,8 +551,8 @@ describe("BottomNavigation visual and behavior contracts", () => {
           name: "BottomNavigation",
           category: "navigation",
           platform: "adaptive",
-          status: "beta",
-          surfaceStatus: { web: "beta", native: "beta" },
+          status: "stable",
+          surfaceStatus: { web: "stable", native: "stable" },
           recipe: "bottomNavigationRecipe",
           behavior: "bottomNavigation",
         }),

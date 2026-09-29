@@ -36,6 +36,7 @@ import {
   useMemo,
   useRef,
   useState,
+  type RefObject,
   type ReactNode,
 } from "react";
 import {
@@ -180,6 +181,11 @@ export type FormProps<Values> = Readonly<{
   fallbackErrorMessage: string;
   disabled?: boolean;
   density?: keyof typeof formRecipe.density;
+  /**
+   * The product-selected first invalid input, or null when client validation passes.
+   * Form uses it to focus the control and move screen-reader focus before submitting.
+   */
+  firstInvalidFieldRef?: RefObject<TextInput | null>;
   style?: StyleProp<ViewStyle>;
 }>;
 
@@ -200,6 +206,7 @@ export function Form<Values>({
   fallbackErrorMessage,
   disabled = false,
   density = "comfortable",
+  firstInvalidFieldRef,
   style,
 }: FormProps<Values>) {
   const [submitStatus, setSubmitStatus] = useControllableState({
@@ -221,6 +228,18 @@ export function Form<Values>({
 
   const submit = async () => {
     if (disabled || busy || submittingRef.current) return;
+    const invalidField = firstInvalidFieldRef?.current;
+    if (invalidField) {
+      // Field order and validity belong to the product; the renderer only executes the
+      // selected target. Focusing the TextInput also opens the native keyboard, while
+      // setAccessibilityFocus moves VoiceOver/TalkBack to that same field.
+      invalidField.focus();
+      const nativeHandle = findNodeHandle(invalidField);
+      if (nativeHandle !== null) {
+        void AccessibilityInfo.setAccessibilityFocus(nativeHandle);
+      }
+      return;
+    }
     submittingRef.current = true;
     setInternalError(undefined);
     setSubmitStatus("submitting");
@@ -342,6 +361,18 @@ export type SelectProps<
     optionsAccessibilityLabel?: string;
     style?: StyleProp<ViewStyle>;
   }>;
+
+/** Shared collection sheets keep dismissal in the header so it does not compete with choices. */
+function CollectionSheetHeader({ title, dismissLabel, onDismiss }: { title: string; dismissLabel: string; onDismiss: () => void }) {
+  const { colors, environment } = useHjmNativeTheme();
+  return <View style={{ flexDirection: "row", direction: environment.direction, alignItems: "center", gap: spacing.sm }}>
+    <Text accessibilityRole="header" tone="primary" variant="title" emphasis="strong" style={{ flex: 1 }}>{title}</Text>
+    <Pressable accessibilityRole="button" accessibilityLabel={dismissLabel} onPress={onDismiss}
+      style={({ pressed }) => [minimumTargetStyle, { alignItems: "center", justifyContent: "center", borderRadius: radius.full, backgroundColor: pressed ? colors.surface : "transparent" }]}>
+      <Text accessible={false} tone="muted" variant="title">×</Text>
+    </Pressable>
+  </View>;
+}
 
 /** Native adaptive Select with shared sections, async states, and teardown-safe commits. */
 export function Select<
@@ -686,7 +717,7 @@ export function Select<
               padding: spacing.md,
             }}
           >
-            <Text tone="primary" variant="title">{label ?? accessibleName}</Text>
+            <CollectionSheetHeader title={label ?? accessibleName} dismissLabel={dismissLabel} onDismiss={() => close("programmatic")} />
             <ScrollView>
               {blockingState ? (
                 <View style={{ gap: spacing.sm, minHeight: selectRecipe.stateMessage.minHeight }}>
@@ -710,7 +741,6 @@ export function Select<
                 </View>
               ) : null}
             </ScrollView>
-            <Button onPress={() => close("programmatic")} tone="secondary">{dismissLabel}</Button>
           </View>
         </View>
       </Modal>
@@ -1222,7 +1252,7 @@ export function Combobox<
               padding: spacing.md,
             }}
           >
-            <Text tone="primary" variant="title">{sheetTitle ?? label ?? accessibleName}</Text>
+            <CollectionSheetHeader title={sheetTitle ?? label ?? accessibleName} dismissLabel={dismissLabel} onDismiss={() => dismiss("programmatic")} />
             {viewStatus === "loading" || viewStatus === "prompt" || viewStatus === "error" || viewStatus === "empty" ? (
               <View style={{ gap: spacing.sm, minHeight: comboboxRecipe.stateMessage.minHeight }}>
                 {viewStatus === "loading" ? <ActivityIndicator /> : null}
@@ -1248,7 +1278,6 @@ export function Combobox<
                 ) : null}
               </ScrollView>
             )}
-            <Button onPress={() => dismiss("programmatic")} tone="secondary">{dismissLabel}</Button>
           </View>
         </View>
       </Modal>

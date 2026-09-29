@@ -514,7 +514,7 @@ describe("Toast visual and behavior identity", () => {
   it("links the recipe and behavior explicitly in the catalog", () => {
     expect(componentCatalog.find((entry) => entry.name === "Toast")).toMatchObject({
       platform: "adaptive",
-      status: "beta",
+      status: "stable",
       recipe: "toastRecipe",
       behavior: "toast",
     });

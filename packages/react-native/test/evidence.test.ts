@@ -1,3 +1,6 @@
+import * as masonry from "../src/masonry.js";
+import * as virtualList from "../src/virtual-list.js";
+import * as qrCode from "../src/qr-code.js";
 import * as agreement from "../src/agreement.js";
 import * as calendar from "../src/calendar.js";
 import * as providerButton from "../src/provider-button.js";
@@ -16,7 +19,13 @@ import * as floatingActionButton from "../src/floating-action-button.js";
 import * as carousel from "../src/carousel.js";
 import { readFile } from "node:fs/promises";
 import { URL, fileURLToPath } from "node:url";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+import * as thinkingOrb from "../src/thinking-orb.js";
+// This test checks real public exports, not native binary loading; installed linkage
+// is covered by the documented iOS/Android showcase smoke.
+vi.mock("react-native-reanimated", () => ({ useSharedValue: vi.fn() }));
+vi.mock("@shopify/react-native-skia", () => ({}));
+vi.mock("react-native-svg", () => ({}));
 
 import * as actions from "../src/actions.js";
 import * as dataDisplay from "../src/data-display.js";
@@ -41,6 +50,10 @@ import * as steps from "../src/steps.js";
 import * as uploadItem from "../src/upload-item.js";
 
 const publicModules: Readonly<Record<string, Readonly<Record<string, unknown>>>> = {
+  "./thinking-orb": thinkingOrb,
+  "./masonry": masonry,
+  "./virtual-list": virtualList,
+  "./qr-code": qrCode,
   "./carousel": carousel,
   "./floating-action-button": floatingActionButton,
   "./actions": actions,
@@ -91,7 +104,8 @@ describe("@hjmds/react-native renderer evidence", () => {
     const componentIds = reactNativeRendererEvidence.components.map(
       ({ componentId }) => componentId,
     );
-    expect(componentIds).toHaveLength(79);
+    expect(componentIds).toHaveLength(83);
+    expect(componentIds).toContain("thinking-orb");
     expect(componentIds).toContain("combobox");
     expect(componentIds).toContain("load-more");
     expect(new Set(componentIds).size).toBe(componentIds.length);

@@ -120,7 +120,7 @@ const interactiveRoles = new Set(["button", "link", "checkbox", "radio", "switch
 
 type Check = (item: DefaultRenderCase, environment: Environment) => void;
 
-const checks: Readonly<Record<Exclude<ReactNativeRendererEvidenceScenario, "default" | "keyboard" | "platform-parity">, Check>> = {
+const checks: Readonly<Record<Exclude<ReactNativeRendererEvidenceScenario, "default" | "native-actions" | "platform-parity">, Check>> = {
   dark(item, environment) {
     const light = render(baseline, item.render());
     const dark = render(environment, item.render());

@@ -1,7 +1,8 @@
 import { act, useState } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
-import { page } from "vitest/browser";
+import { page, userEvent } from "vitest/browser";
+import executedScenarioRegistry from "./executed-scenarios.json" with { type: "json" };
 import { Splitter } from "../src/splitter.js";
 import { HjmProvider } from "../src/provider.js";
 import "../src/styles.css";
@@ -16,6 +17,9 @@ const key = async (value: string) => act(async () => separator().dispatchEvent(n
 const pointer = async (type: string, clientX: number, clientY = 200) => act(async () => {
   separator().dispatchEvent(new PointerEvent(type, { bubbles: true, cancelable: true, clientX, clientY, pointerId: 1, button: 0, isPrimary: true }));
 });
+
+/** Literal case id links the focused keyboard interaction to renderer evidence. */
+export const splitterKeyboardCases = [{ componentId: "splitter" }] as const;
 
 function Fixture({ direction = "ltr", ...props }: Record<string, unknown> & { direction?: "ltr" | "rtl" }) {
   const [value, setValue] = useState(40);
@@ -66,6 +70,15 @@ it("steps with arrow keys, jumps to the boundary with Home and End, and stops th
   expect(separator().getAttribute("aria-valuenow")).toBe("20");
   // Keyboard resize settles immediately; every committed step reports an end.
   expect(end.mock.calls.map(([value]) => value)).toEqual([45, 40, 35, 80, 20]);
+});
+
+it("is reachable by Tab and resizes from the actual focused separator", async () => {
+  expect(executedScenarioRegistry.executions.find(({ proofFile }) => proofFile === "test/splitter.browser.test.tsx")?.scenarios.map(({ id }) => id)).toContain("keyboard");
+  await act(async () => root.render(<Fixture />));
+  await act(async () => userEvent.tab());
+  expect(document.activeElement).toBe(separator());
+  await act(async () => userEvent.keyboard("{ArrowRight}"));
+  expect(separator().getAttribute("aria-valuenow")).toBe("45");
 });
 
 it("snaps a drag to the same step grid the keyboard uses and reports one end per drag", async () => {

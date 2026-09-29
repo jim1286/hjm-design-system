@@ -50,7 +50,7 @@ it("opens a context menu from the keyboard and anchors it to the focused box", a
   await act(async () => { region.dispatchEvent(new KeyboardEvent("keydown", { key: "F10", shiftKey: true, bubbles: true })); });
   const menu = document.querySelector<HTMLElement>(".hjm-context-menu")!;
   expect(menu.getAttribute("role")).toBe("menu");
-  expect(menu.style.insetInlineStart).toBe(`${rect.left}px`);
+  expect(menu.style.left).toBe(`${rect.left}px`);
 
   // Arrow navigation skips the disabled item; the second stop is 삭제, not 복제.
   await act(async () => { document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true })); });

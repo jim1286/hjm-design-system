@@ -80,7 +80,6 @@ export declare const componentIds: {
     readonly VirtualList: "virtual-list";
     readonly Collapsible: "collapsible";
     readonly Asset: "asset";
-    readonly Chart: "chart";
     readonly Accordion: "accordion";
     readonly Statistic: "statistic";
     readonly Timeline: "timeline";
@@ -96,6 +95,7 @@ export declare const componentIds: {
     readonly EmptyState: "empty-state";
     readonly Notice: "notice";
     readonly Progress: "progress";
+    readonly ThinkingOrb: "thinking-orb";
     readonly Spinner: "spinner";
     readonly Skeleton: "skeleton";
     readonly Result: "result";
@@ -111,10 +111,7 @@ export declare const componentIds: {
     readonly Tooltip: "tooltip";
     readonly CommandPalette: "command-palette";
     readonly Affix: "affix";
-    readonly AppProvider: "app-provider";
-    readonly BorderBeam: "border-beam";
     readonly DesignSystemProvider: "design-system-provider";
-    readonly Utility: "utility";
     readonly SkipNav: "skip-nav";
     readonly VisuallyHidden: "visually-hidden";
 };

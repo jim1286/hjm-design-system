@@ -4,7 +4,8 @@ import { Select } from "@hjmds/react-native/forms";
 import { Button } from "@hjmds/react-native/actions";
 import { Stack, Text } from "@hjmds/react-native/primitives";
 import { Notice } from "@hjmds/react-native/feedback";
-import { hourOptions, minuteOptions, selectedTime } from "../../shared/time-example.js";
+// Metro resolves the shared TypeScript source by extension; a literal .js path has no file.
+import { hourOptions, minuteOptions, selectedTime } from "../../shared/time-example";
 function TimeSelectionPreview() {
   const [hour, setHour] = useState<string | null>(null); const [minute, setMinute] = useState<string | null>(null);
   const [saved, setSaved] = useState<string | null>(null); const value = selectedTime(hour, minute);

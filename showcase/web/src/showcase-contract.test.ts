@@ -119,8 +119,8 @@ describe("web showcase coverage", () => {
 
   it("exposes the full canonical scope and Ant Design crosswalk to the explorer", () => {
     expect(componentDefinitions).toHaveLength(showcaseManifest.length);
-    expect(antDesignReferenceComponents).toHaveLength(73);
-    expect(summarizeAntDesignCoverage()).toMatchObject({ total: 73, tracked: 73 });
+    expect(antDesignReferenceComponents).toHaveLength(70);
+    expect(summarizeAntDesignCoverage()).toMatchObject({ total: 70, tracked: 70 });
   });
 
   it("uses stable documentation IDs for every canonical component", () => {
@@ -139,23 +139,23 @@ describe("web showcase coverage", () => {
     expect(Object.keys(webRendererRegistry).sort()).toEqual(expected);
     expect(summarizeWebShowcaseCoverage()).toEqual({
       canonical: componentCatalog.length,
-      webReferences: 96,
-      contractOnly: 15,
+      webReferences: 100,
+      contractOnly: 8,
       nativeOnly: 0,
     });
   });
 
-  it("renders the canonical 96/15/0 surface-evidence split in Home and Explorer", () => {
+  it("renders the canonical 100/8/0 surface-evidence split in Home and Explorer", () => {
     const homeHtml = renderToStaticMarkup(createElement(Introduction));
-    expect(homeHtml).toContain("<strong>96</strong><span>Web references</span>");
-    expect(homeHtml).toContain("<strong>15</strong><span>contract-only stories</span>");
+    expect(homeHtml).toContain("<strong>100</strong><span>Web references</span>");
+    expect(homeHtml).toContain("<strong>8</strong><span>contract-only stories</span>");
     expect(homeHtml).toContain("<strong>0</strong><span>Native-only stories</span>");
     expect(homeHtml).toContain(componentCategoryExplorerHref("input"));
     expect(homeHtml).not.toContain("args=initialCategory");
 
     const explorerHtml = renderToStaticMarkup(createElement(ComponentExplorer));
-    expect(explorerHtml).toContain("<strong>96</strong> Web references");
-    expect(explorerHtml).toContain("<strong>15</strong> contract-only stories");
+    expect(explorerHtml).toContain("<strong>100</strong> Web references");
+    expect(explorerHtml).toContain("<strong>8</strong> contract-only stories");
     expect(explorerHtml).toContain("<strong>0</strong> Native-only stories");
     expect(explorerHtml).not.toContain("Open Native-only contract");
     expect(explorerHtml).toContain("Open Web reference");
@@ -236,6 +236,20 @@ describe("web showcase coverage", () => {
         presentation.style["--hjm-evidence-signature"],
         name,
       ).toBe(presentation.attributes["data-hjm-presentation-signature"]);
+      // These are algorithm recipes, not decorative CSS: overscan/column counts and
+      // QR module geometry must not be misrepresented as pixel padding in the wrapper.
+      // Their real DOM layout/decoding proofs live in data-layouts.browser.test and data-layouts.test.
+      const algorithmRecipes: Record<string, readonly unknown[]> = {
+        Masonry: ["shortest-column", "source", 12],
+        VirtualList: ["fixed-row-window", 3, "source"],
+        QRCode: [2, 4, "#000000", "#ffffff"],
+      };
+      if (algorithmRecipes[name]) {
+        expect(consumedRecipeValues, name).toEqual(algorithmRecipes[name]);
+        const marker = { Masonry: "data-hjm-masonry", VirtualList: "data-hjm-virtual-list", QRCode: "data-hjm-qr-code" }[name as "Masonry" | "VirtualList" | "QRCode"];
+        expect(renderWithProvider(createElement(ContractStory, { name: name as ComponentName }))).toContain(marker);
+        continue;
+      }
       expect(presentation.consumption.resolvedColor !== null ||
         presentation.consumption.resolvedMetric !== null, name).toBe(true);
       expect(
@@ -377,7 +391,7 @@ describe("web showcase coverage", () => {
     const activeNames = componentCatalog
       .filter((entry) => isMatureStatus(getComponentSurfaceStatus(entry, "web")))
       .map(({ name }) => name);
-    expect(activeNames).toHaveLength(96);
+    expect(activeNames).toHaveLength(100);
     for (const name of activeNames) {
       expect(webRendererComponentNames).toContain(name);
       if (!isWebRendererComponent(name)) throw new Error(`Missing Web renderer registry entry: ${name}`);

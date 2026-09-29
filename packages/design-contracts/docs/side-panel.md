@@ -67,10 +67,11 @@ target은 `control.minTouchTarget`(44) 이상을 유지한다.
 버튼 클릭(`close-action`)은 renderer가 직접 `requestClose`를 호출하는 일반
 동작이라 "플랫폼이 감지하는 중단 벡터" 목록에 넣지 않는다.
 
-## Web renderer (2026-09-18)
+## Web renderer (2026-09-29)
 
-`@hjmds/react/side-panel`의 `SidePanel`이 위 계약을 실행한다. catalog는 Web `beta`,
-Native `unsupported`다. 제품 채택·보조기기 실측은 아직 없으므로 `stable`이 아니다.
+`@hjmds/react/side-panel`의 `SidePanel`이 위 계약을 실행한다. Web은 2026-09-29에 전용 keyboard·
+long-copy proof를 등록하고 stable로 승격한다. Native는 `unsupported`다. 제품 채택과 보조기기
+실측은 별도 소비자 릴리스 QA다.
 
 - **modal만 모달이다.** `modal: true`는 Dialog·Sheet와 **같은** 모달 스택에 들어가
   초점을 가두고 body 스크롤을 잠근다. 이를 위해 그 기계장치를 `packages/react/src/modal.tsx`로
@@ -87,6 +88,11 @@ Native `unsupported`다. 제품 채택·보조기기 실측은 아직 없으므�
 - **`onDismissComplete`는 한 번만 부른다.** Sheet의 lifecycle counter는 두지 않았다(위 4번).
   Web에서는 닫은 render와 함께 unmount되므로 reduced motion에서도 기다릴 exit transition이
   없다. 사용자 동작 없이 owner가 닫으면 `programmatic`으로 보고한다.
-- 로컬 검증: `test/side-panel.browser.test.tsx` 6개(도킹·초점 가둠·스크롤 락, RTL `start`
-  미러링과 폭, 비모달의 살아 있는 페이지와 내부 Escape, 사유별 단일 보고와 busy 차단,
-  controlled owner의 busy 종료와 1회 완료, 320px·2배 글자 배치)와 `Patterns/SidePanel`.
+- 렌더러 테스트는 `test/side-panel.browser.test.tsx`의 다섯 흐름에서 모달 도킹·초점 가둠·스크롤 락,
+  RTL `start` 미러링과 폭, 비모달 페이지 상호작용과 Escape 범위, 사유별 단일 보고와 busy 차단,
+  controlled owner의 busy 종료와 1회 완료, 320px·2배 글자 배치를 확인한다.
+- 승격 검토 기준은 [Stable 승격 기준](stable-promotion.md)이다. `test/side-panel.browser.test.tsx`의
+  `keyboard`와 `long-copy` 검증을 중앙 renderer evidence 및 실행 시나리오에 등록했다. 생성된
+  evidence가 모든 필수 시나리오를 보고하고 canonical `pnpm ci:check`가 통과한 뒤 catalog를 올린다.
+- SidePanel은 contract상 Web 전용이고 Native는 `unsupported`다. 제품 채택 수나 VoiceOver/TalkBack,
+  실제 제품 기기 검증은 소비자 릴리스 QA이며 Web renderer 성숙도의 별도 gate가 아니다.

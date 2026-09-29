@@ -251,6 +251,7 @@ export {
   type ToastProps,
   type ToastRegionController,
   type ToastRegionProps,
+  type ToastPresentationAdapter,
   type ToastSafeAreaInsets,
   type ToastToneIconRenderProps,
 } from "./feedback.js";

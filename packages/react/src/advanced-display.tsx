@@ -420,6 +420,8 @@ export type StatisticProps<Id extends string = string> = Omit<
   accessibilityLabel?: string;
   composeAccessibilityLabel?: ComposeStatisticAccessibilityLabel<Id>;
   renderTrendMark?: (props: StatisticTrendMarkRenderProps) => ReactNode;
+  /** Optional visual adapter; the descriptor remains the accessible value source. */
+  renderValue?: (value: string) => ReactNode;
 }>;
 
 export function Statistic<Id extends string = string>({
@@ -430,6 +432,7 @@ export function Statistic<Id extends string = string>({
   accessibilityLabel,
   composeAccessibilityLabel,
   renderTrendMark,
+  renderValue,
   className,
   ...props
 }: StatisticProps<Id>) {
@@ -457,7 +460,7 @@ export function Statistic<Id extends string = string>({
       <span aria-hidden="true" className="hjm-statistic__label">{resolved.label}</span>
       <span aria-hidden="true" className="hjm-statistic__value-row">
         {resolved.prefix ? <span className="hjm-statistic__affix">{resolved.prefix}</span> : null}
-        <strong className="hjm-statistic__value">{resolved.value}</strong>
+        <strong className="hjm-statistic__value">{renderValue?.(resolved.value) ?? resolved.value}</strong>
         {resolved.suffix ? <span className="hjm-statistic__affix">{resolved.suffix}</span> : null}
       </span>
       {resolved.trend ? (

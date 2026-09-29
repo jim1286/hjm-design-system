@@ -54,6 +54,8 @@ FilePicker는 파일 선택 의도만 소유하고, 진행·성공·실패 표�
 - 거부 발표는 색에 의존하지 않는다 — `reason`과 한계값으로 제품이 만든 문장을
   live 영역/에러 카피로 보여준다.
 
-**검증 화면.** first-party Web input/dropzone과 Native picker-adapter renderer, 선택 판정
-상호작용 테스트는 연결되어 surface는 `beta`다. 실제 제품 vertical slice와 플랫폼 picker
-실기기 증거는 아직 없으므로 `stable` 승격 gate는 닫혀 있다.
+**검증 범위.** Web의 native file input/dropzone과 Native의 이름 있는 제품 adapter action,
+양쪽의 같은 선택 판정 resolver를 renderer 회귀로 검증한다. Native adapter가 실제 OS
+document/image picker를 여는지는 제품 통합 책임이며 이 패키지는 이를 구현하거나 기기에서
+검증했다고 주장하지 않는다. 소비 앱은 해당 adapter를 연결하고 제품별 릴리스 QA에서 OS
+동작을 확인한다.

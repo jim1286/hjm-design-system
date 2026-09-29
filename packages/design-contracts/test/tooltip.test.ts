@@ -163,13 +163,13 @@ describe("Tooltip visual and behavior contracts", () => {
     }
   });
 
-  it("promotes the Web-only catalog after the BurnTok product slice lands", () => {
+  it("promotes the Web-only catalog after required renderer proofs pass", () => {
     expect(componentCatalog.find((entry) => entry.name === "Tooltip")).toEqual({
       name: "Tooltip",
       category: "overlay",
       platform: "web",
-      status: "beta",
-      surfaceStatus: { web: "beta", native: "unsupported" },
+      status: "stable",
+      surfaceStatus: { web: "stable", native: "unsupported" },
       recipe: "tooltipRecipe",
       behavior: "tooltip",
     });

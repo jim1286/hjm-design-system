@@ -9,6 +9,9 @@ const defaultRoot = resolve(scriptDirectory, "..");
 const ignoredDirectories = new Set([
   ".git",
   "node_modules",
+  // CocoaPods downloads are third-party dependencies, like node_modules; their
+  // packaged READMEs may link assets omitted from the pod and are not HJM docs.
+  "Pods",
   "dist",
   "build",
   "coverage",

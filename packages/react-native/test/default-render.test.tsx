@@ -1,11 +1,15 @@
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
-import { describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { HjmNativeProvider } from "../src/index.js";
 import { reactNativeRendererEvidence } from "../src/evidence.js";
 import { defaultRenderCases } from "./default-render-fixtures.js";
 import executedScenarioRegistry from "./executed-scenarios.json" with { type: "json" };
 
 (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+
+// Paused optional animation still cancels its frame handle when unmounted.
+beforeAll(() => { vi.stubGlobal("cancelAnimationFrame", () => {}); });
+afterAll(() => { vi.unstubAllGlobals(); });
 
 /**
  * Canonical default-render proof: every evidence component renders inside the

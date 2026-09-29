@@ -3,6 +3,8 @@ import { type ResultDescriptor, type ResultStatus } from "@hjmds/design-contract
 import { type ToastDescriptor, type ToastDismissReason, type ToastDuplicatePolicy, type ToastOverflowPolicy, type ToastPauseReason, type ToastPublishResult, type ToastTimerUpdatePolicy } from "@hjmds/design-contracts/components/toast";
 import { type ReactNode } from "react";
 import { type ViewProps, type StyleProp, type TextStyle, type ViewStyle } from "react-native";
+import type { ToastPresentationAdapter } from "./internal/toast-presentation.js";
+export type { ToastPresentationAdapter } from "./internal/toast-presentation.js";
 export type AnnouncementMode = "none" | "polite" | "assertive";
 export type NoticeTone = ContractNoticeTone;
 export type NoticeIconRenderProps = Readonly<{
@@ -141,6 +143,10 @@ export type ToastSafeAreaInsets = Readonly<{
     end?: number;
 }>;
 export type ToastRegionProps = Readonly<{
+    /** Optional renderer from the toast-liquid subpath. Requires top placement and one visible slot. */
+    presentationAdapter?: ToastPresentationAdapter;
+    /** Host modal ownership: hide and pause announcements without creating a second queue. */
+    occluded?: boolean;
     children?: ReactNode;
     /** Optional localized name for the region; individual toasts remain self-announcing. */
     accessibilityLabel?: string;
@@ -164,7 +170,6 @@ export type ToastRegionProps = Readonly<{
     toastStyle?: StyleProp<ViewStyle>;
 }>;
 /** Bounded FIFO region with one clock, app-state pause and teardown interruption. */
-export declare function ToastRegion({ children, accessibilityLabel, toasts, defaultToasts, onToastsChange, maxVisible, maxQueued, duplicatePolicy, timerUpdatePolicy, overflowPolicy, placement, safeAreaInsets, avoidKeyboard, keyboardOffset, renderToneIcon, style, toastStyle, }: ToastRegionProps): import("react").JSX.Element;
+export declare function ToastRegion({ presentationAdapter, occluded, children, accessibilityLabel, toasts, defaultToasts, onToastsChange, maxVisible, maxQueued, duplicatePolicy, timerUpdatePolicy, overflowPolicy, placement, safeAreaInsets, avoidKeyboard, keyboardOffset, renderToneIcon, style, toastStyle, }: ToastRegionProps): import("react").JSX.Element;
 export declare function useToastRegion(): ToastRegionController;
-export {};
 //# sourceMappingURL=feedback.d.ts.map

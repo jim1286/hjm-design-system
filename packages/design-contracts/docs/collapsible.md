@@ -17,3 +17,15 @@ chrome이 따라오고 그걸 다시 CSS로 지우게 된다. 그래서 별도�
 가리키지 않으면 사용자는 방금 나타난 것을 찾아야 한다.
 
 **Web·Native 공통.** 네이티브도 `button` role에 expanded 상태를 그대로 쓴다.
+
+## Renderer evidence
+
+- Web keyboard proof tabs to the native button, toggles with Enter, then closes with Space;
+  it checks `aria-expanded`, the controlled region relationship, and that closed content leaves
+  the tree. The narrow long-copy case places a long unbroken label in the trigger to verify that
+  disclosure chrome does not widen its container.
+- Native renderer tests inspect the `button` role and expanded state, invoke the rendered
+  `Pressable` action, and verify that opening and closing adds and removes the content. This is
+  host-renderer evidence; it does not claim physical keyboard, VoiceOver, or TalkBack verification.
+- Native and Web long-copy fixtures put the long label in the trigger itself. The child body stays
+  short so the scenario tests the constrained interactive label rather than arbitrary content.

@@ -98,7 +98,8 @@ antd `TreeSelect`의 `checkStrictly`(부모/자식을 독립적으로 체크할�
 
 ## 검증 화면
 
-아직 없음. `planned → beta` 승격은 실제 제품 vertical slice 이후 리드가 진행한다.
+이 조사 당시 제품 채택은 미확인이었다. 2026-09-29부터 제품 채택은 관측으로 분리하며,
+현재 성숙도는 catalog와 [승격 기준](stable-promotion.md)을 따른다.
 
 ## 조합으로 제공한다 (2026-09-18)
 

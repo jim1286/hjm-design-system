@@ -98,10 +98,22 @@ dispose()가 submitting 중 호출되면 그 attempt는 interrupted로 한 번�
   live-region 동등물(`AccessibilityInfo.announceForAccessibility` 또는 동등 API)로
   발표. `submitting` 중에는 제출 버튼이 `accessibilityState.busy`를 얻습니다.
 
+Native 소비자는 제품 검증 결과로 `resolveFirstInvalidFieldFocusTarget`을 호출해
+선택한 입력의 ref를 `Form.firstInvalidFieldRef`에 전달합니다. ref가 있으면 제출 버튼은
+`TextInput.focus()`와 `AccessibilityInfo.setAccessibilityFocus()`를 실행하고 `onSubmit`을
+호출하지 않습니다. ref가 없으면 기존 제출 경로를 따릅니다. Form은 필드 순서·오류 상태를
+등록하거나 추론하지 않습니다.
+
 ## 검증 화면
 
-Form은 이제 `beta`입니다. BurnTok Web의
-`apps/web/src/app/ideas/page.tsx`가 실제 2필드 생성 흐름에서 아래 계약을 소비합니다.
+Form은 surface별 상태를 갖습니다. Web은 실제 Chromium 입력·Enter 제출, 비동기 중복 제출 방지,
+필드·form 오류 semantics와 긴 자식 콘텐츠·환경 matrix 검증을 통과해 stable입니다. Native는
+현재 값 입력·제출·busy 상태와, 제품이 선택한 첫 무효 필드로 Native 키보드 및 accessibility
+focus를 전달하는 host-action 회귀까지 검증합니다. 테스트는 React Native host 동작을 확인하며,
+실기기 VoiceOver/TalkBack 경험은 별도 검증 근거로 기록해야 합니다.
+
+BurnTok Web의 `apps/web/src/app/ideas/page.tsx`는 2필드 생성 흐름에서 제품 소유 검증과 첫 오류
+필드 focus를 연결한 소비 사례입니다.
 
 - `apps/web/src/lib/form-contract.ts`: `formRecipe` 간격, `createFormSubmitSession`,
   `resolveFirstInvalidFieldFocusTarget`을 제품 validation과 React lifecycle에 연결합니다.
@@ -111,8 +123,8 @@ Form은 이제 `beta`입니다. BurnTok Web의
 - `apps/web/src/components/ui/AppTextField.tsx`: input/textarea ref를 실제 control까지
   전달해 focus 계약이 설명에 그치지 않게 합니다.
 
-Web 한 제품의 vertical slice만으로 `stable`을 주장하지 않습니다. Native renderer의
-accessibility focus와 busy 발표 증거가 추가되기 전까지 `beta`를 유지합니다.
+제품 채택 수는 stable blocker가 아닙니다. 실기기 VoiceOver/TalkBack 확인은 제품 QA 범위이며,
+HJM renderer의 Native action 회귀와 사용 가능한 자동 검증을 기준으로 surface 성숙도를 평가합니다.
 
 ## 공개하지 않기로 한 것
 

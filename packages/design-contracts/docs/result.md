@@ -1,5 +1,8 @@
 # Result contract
 
+현재 계약·Web·Native는 [표시 컴포넌트 승격](stable-core.md)에 따라 stable이다.
+아래 실측은 과거 요구 조사 기록이며 제품 채택 수는 [현재 승격 조건](stable-promotion.md)이 아니다.
+
 **문제.** 흐름이 끝나는 화면 — 결제 성공, 제출 실패, 존재하지 않는 페이지 — 을 하나의
 상태와 최대 두 개의 다음 행동으로 보여줍니다.
 
@@ -26,7 +29,7 @@ const saved = {
 
 ## EmptyState와의 경계
 
-이 시스템에는 이미 `EmptyState`(beta)가 있습니다. 둘 다 "콘텐츠 대신 보여주는 화면"이라는
+이 시스템에는 이미 `EmptyState`가 있습니다. 둘 다 "콘텐츠 대신 보여주는 화면"이라는
 점은 같지만 의미가 정반대입니다.
 
 - `EmptyState`는 **아직 없음**입니다 — 검색 결과가 없거나 목록이 비었을 뿐, 조건이
@@ -89,8 +92,8 @@ Web/Native 모두 아이콘 + 제목 + 설명 + action 슬롯을 세로로 쌓�
 그대로 조합합니다 — Result 자체의 recipe는 아이콘 tone, 타이포그래피 위계, 슬롯 사이
 gap만 제공합니다.
 
-## 검증 화면 (예정)
+## 제품 화면 검증
 
-야잘알 결제/제출 흐름의 성공·실패 화면을 첫 vertical slice 후보로 남깁니다.
-`planned → beta` 승격에는 primary-only, primary+secondary, action-없음 세 조합의 실제
-화면 검증이 포함되어야 합니다.
+제품에서 채택할 때는 primary-only, primary+secondary, action-없음 중 실제 사용하는
+조합의 다음 행동과 navigation을 확인합니다. 과거 야잘알 결제/제출 후보는 채택 완료
+증거가 아니며, 제품 배포 여부는 HJM renderer 승격 관문에 포함하지 않습니다.

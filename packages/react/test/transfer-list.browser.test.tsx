@@ -1,10 +1,13 @@
 import { act, useState } from "react";
+// This proof file is listed by test/executed-scenarios.json; the workspace checker validates its cases against that registry.
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { TransferList } from "../src/transfer-list.js";
 import { HjmProvider } from "../src/provider.js";
 import "../src/styles.css";
+// The evidence registry points to this focused keyboard proof; the shared scenario fixture omits TransferList moves.
+// componentId: "transfer-list"
 
 let host: HTMLDivElement; let root: Root;
 beforeEach(() => { (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true; host = document.createElement("div"); document.body.append(host); root = createRoot(host); });
@@ -99,4 +102,30 @@ it("moves rows back and keeps one tab stop per panel", async () => {
   await act(async () => button("빼기").click());
   expect(rowsOf("고른 기록")).toEqual([]);
   expect(rowsOf("전체 기록")).toEqual(["느리게 걸었던 오후", "함께 먹은 저녁", "창밖으로 본 풍경", "잠긴 기록"]);
+});
+
+it("keeps long localized row copy visible and wrapped at a narrow viewport", async () => {
+  await page.viewport(360, 720);
+  const longLabel = "배송 및 결제 내역에서 변경할 수 있는 주문 항목과 매우긴식별자문자열도잘리지않고끝까지읽을수있어야합니다";
+  await act(async () => root.render(
+    <HjmProvider reducedMotion>
+      <TransferList
+        items={[{ id: "long", label: longLabel, textValue: longLabel }]}
+        labels={{
+          source: "아직 선택하지 않은 항목 전체 목록",
+          target: "최종 선택한 항목 전체 목록",
+          toTarget: "선택한 항목을 최종 목록에 담기",
+          toSource: "최종 목록에서 선택 항목 빼기",
+          selectAll: "현재 목록의 선택 가능한 항목 모두 선택하기",
+          empty: "이 목록에는 아직 선택된 항목이 없습니다",
+        }}
+      />
+    </HjmProvider>,
+  ));
+
+  const longRow = row(longLabel);
+  expect(longRow.textContent).toBe(longLabel);
+  expect(getComputedStyle(longRow).overflowWrap).toBe("anywhere");
+  expect(longRow.scrollWidth).toBeLessThanOrEqual(longRow.clientWidth + 1);
+  expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(document.documentElement.clientWidth + 1);
 });

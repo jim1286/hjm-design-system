@@ -1,7 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { findActiveMentionTrigger, resolveMentionInsertion, } from "@hjmds/design-contracts/components/mentions";
 import { spacing } from "@hjmds/design-contracts/foundations";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Pressable, View } from "react-native";
 import { TextArea } from "./inputs.js";
 import { Text } from "./primitives.js";
@@ -16,12 +16,20 @@ export function Mentions({ value, onValueChange, triggers, candidates, onMention
     */
     const [caret, setCaret] = useState(value.length);
     const match = findActiveMentionTrigger(value, Math.min(caret, value.length), triggers);
-    const [lastMatchKey, setLastMatchKey] = useState(null);
     const matchKey = match === null ? null : `${String(match.triggerId)}:${match.query}:${match.triggerStart}`;
-    if (matchKey !== lastMatchKey) {
-        setLastMatchKey(matchKey);
-        onMentionQueryChange?.(match);
-    }
+    const matchRef = useRef(match);
+    matchRef.current = match;
+    const lastNotifiedMatchKey = useRef(null);
+    const onMentionQueryChangeRef = useRef(onMentionQueryChange);
+    onMentionQueryChangeRef.current = onMentionQueryChange;
+    // A query callback commonly filters candidates in the parent; defer it until commit so that
+    // this renderer does not update another component during its own render.
+    useEffect(() => {
+        if (matchKey === lastNotifiedMatchKey.current)
+            return;
+        lastNotifiedMatchKey.current = matchKey;
+        onMentionQueryChangeRef.current?.(matchRef.current);
+    }, [matchKey]);
     const insert = (candidate) => {
         if (match === null)
             return;
@@ -36,6 +44,6 @@ export function Mentions({ value, onValueChange, triggers, candidates, onMention
                     value,
                     onValueChange,
                     onSelectionChange: (event) => setCaret(event.nativeEvent.selection.end),
-                } }), match !== null ? (_jsx(View, { accessibilityLabel: listLabel, style: [{ gap: spacing.xxs, borderWidth: 1, borderColor: colors.border, borderRadius: 12, padding: spacing.xxs }, listStyle], children: candidates.length === 0 ? (_jsx(Text, { tone: "muted", variant: "caption", children: emptyMessage })) : (candidates.map((candidate) => (_jsx(Pressable, { accessibilityRole: "button", onPress: () => insert(candidate), style: { minHeight: 44, justifyContent: "center", paddingHorizontal: spacing.xs }, children: renderCandidate?.(candidate) ?? _jsx(Text, { children: candidate.label }) }, candidate.id)))) })) : null] }));
+                } }), match !== null ? (_jsx(View, { accessibilityLabel: listLabel, accessibilityRole: "list", style: [{ gap: spacing.xxs, borderWidth: 1, borderColor: colors.border, borderRadius: 12, padding: spacing.xxs }, listStyle], children: candidates.length === 0 ? (_jsx(Text, { tone: "muted", variant: "caption", children: emptyMessage })) : (candidates.map((candidate) => (_jsx(Pressable, { accessibilityRole: "button", accessibilityLabel: candidate.label, onPress: () => insert(candidate), style: { minHeight: 44, justifyContent: "center", paddingHorizontal: spacing.xs }, children: renderCandidate?.(candidate) ?? _jsx(Text, { children: candidate.label }) }, candidate.id)))) })) : null] }));
 }
 //# sourceMappingURL=mentions.js.map

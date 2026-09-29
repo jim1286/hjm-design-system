@@ -6,12 +6,12 @@
 `planned`은 "아직 구현하지 않았지만 구현할 것"을 뜻해 왔다. 그런데 저작 과정에서 이 뜻이
 거짓인 행이 실제로 쌓였다:
 
-- `AppProvider` — 런타임(Context+훅)뿐이라 계약할 값 타입조차 남지 않는다(`docs/app-provider.md`).
+- `AppProvider` — 런타임(Context+훅)뿐이라 계약할 값 타입조차 남지 않는다(`docs/catalog-cleanup.md`).
 - `Utility` — antd `Util`이 가리키는 문제(토큰을 코드에서 읽는 법) 자체가 이 패키지의
-  기존 정적 export로 이미 해소돼 있다(`docs/utility.md`).
+  기존 정적 export로 이미 해소돼 있다(`docs/catalog-cleanup.md`).
 - `BorderBeam` — antd에 실재하는 컴포넌트이지만(crosswalk은 정확하다, 정정: 이전 판은
   "오염됐다"고 잘못 주장했었다), 상시 반복 장식 모션이 `docs/identity.md`와 정면으로
-  충돌해 만들지 않기로 확정했다(`docs/border-beam.md`).
+  충돌해 만들지 않기로 확정했다(`docs/catalog-cleanup.md`).
 
 세 행 모두 **"언젠가 화면이 생기면 만든다"가 아니라 "화면이 생겨도 안 만든다"**다. 그런데
 행을 지울 수도 없다 — `component-references.test.ts`의

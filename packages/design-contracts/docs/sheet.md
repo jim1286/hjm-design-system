@@ -47,11 +47,17 @@ Native Sheet는 `keyboardAvoidance`와 `scrollable`을 제공한다. 둘 다 기
 
 - `packages/react-native/test/sheet-viewport.test.tsx`: 키보드 사전 표시, frame 변경, resize,
   floating keyboard, listener 해제, footer/body 경계, safe area와 title 이름, element 제목의
-  `accessibilityTitle` 쌍(타입·accessibilityLabel).
+  `accessibilityTitle` 쌍(타입·accessibilityLabel), close action/busy 차단, 200% 긴 제목·설명.
 - `packages/react-native/test/modal-lifecycle-fallback.test.tsx`: 종료/후속 surface/focus 회귀.
-- `packages/react/test/sheet-layout.browser.test.tsx`: 320px의 제목/닫기 기하와 100/200% 글자.
+- `packages/react/test/sheet-layout.browser.test.tsx`: 320px의 제목/닫기 기하와 100/200% 글자,
+  긴 제목·설명 줄바꿈, Tab focus containment, Escape 종료와 trigger focus 복원.
 - 위 Native proof는 host mock이다. 소비 앱 Device Hub 및 Android의 실제 키보드 동작은
   별도로 기록하며 mock 통과를 기기 증거로 삼지 않는다.
+
+2026-09-29 renderer 증거 보완: 기존 Sheet renderer proof에는 layout·환경 matrix는 있었지만
+behavior contract의 Web key 동작과 Native host action, 긴 제목·설명 회귀가 별도 interaction test로
+등록되어 있지 않았다. 제품별 기기 영수증을 공통 성숙도 조건으로 만들지 않고, renderer가 소유한
+focus/dismiss와 텍스트 배치 회귀를 직접 확인하도록 위 테스트를 추가했다.
 
 참조: [React Native Keyboard](https://reactnative.dev/docs/keyboard),
 [ScrollView](https://reactnative.dev/docs/scrollview).

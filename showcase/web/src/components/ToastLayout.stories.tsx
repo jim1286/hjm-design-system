@@ -20,6 +20,13 @@ export const Compact: Story = {
   globals: { viewport: { value: "mobile1", isRotated: false } },
 };
 
+// A shared product descriptor keeps its action on Web without loading Native liquid dependencies.
+export const LiquidHintFallback: Story = {
+  args: { descriptor: { id: "generation-ready", presentation: "liquid", title: "아이디어가 완성됐어요",
+    description: "결과를 확인해 보세요.", closeLabel: "완료 알림 닫기", tone: "success",
+    action: { label: "결과 열기", onAction: () => {} } } },
+};
+
 export const LongCopyWithAction: Story = {
   ...Compact,
   globals: { ...Compact.globals, textScale: "2" },

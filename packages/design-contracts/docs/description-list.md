@@ -62,14 +62,13 @@ Web/Native 모두 `resolveDescriptionListColumnCount`가 돌려준 열 수로 CS
 flex wrap 레이아웃을 만듭니다. 실제 측정된 컨테이너 폭과 시스템 폰트 배율은 renderer가
 공급하고, 이 계약은 그 두 입력을 받아 열 수만 결정합니다.
 
-## 현재 검증과 남은 증거
+## 현재 검증과 제품 채택
 
-first-party Web/RN renderer가 공통 descriptor와
-`resolveDescriptionListColumnCount`를 직접 소비하므로 contract와 두 surface를 `beta`로
-승격했다. Web은 `<dl>/<dt>/<dd>` 구조와 측정 폭 기반 열 전환을, Native는 독립된 라벨-값
-접근성 노드와 window/text-scale 기반 flex 열 전환을 기본 실행 test로 검증한다.
+공통 descriptor와 `resolveDescriptionListColumnCount`를 소비하는 Web/RN renderer는
+[2026-09-29 승격](stable-core.md)의 대상이다. Web의 `<dl>/<dt>/<dd>`와 폭 기반 열 전환,
+Native의 라벨-값 접근성 노드와 text-scale 기반 열 전환은 renderer 회귀로 검증한다.
+필수 환경 시나리오가 모두 연결됐으며 계약·양쪽 surface를 stable로 올린다.
 
-이전 판정이 후보로 든 야잘알 화면은 여전히 승격의 제품 근거로 세지 않는다. 해당 화면은
-단일 열 `List`/`ListRow` 조합이며 DescriptionList의 1/2열 문제와 다르기 때문이다. 실제 소비
-앱에서 이 renderer를 쓰는 1/2열 화면과 200% 글자 크기 실기기 증거는 stable 승격 전까지
-명시적인 debt로 남는다.
+과거 후보로 든 야잘알 화면은 단일 열 List/ListRow 조합이므로 DescriptionList 채택으로
+세지 않는다. 제품의 1/2열 화면과 실제 기기 QA는 해당 앱 릴리스에서 확인하며,
+[승격 기준](stable-promotion.md)에 따라 제품 채택 부재를 성숙도 관문으로 쓰지 않는다.

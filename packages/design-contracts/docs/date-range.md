@@ -27,5 +27,7 @@
 확정된 구간과 hover 미리보기를 함께 처리한다 — renderer가 두 벌의 칠하기 규칙을 만들지
 않게 한다.
 
-**Native.** renderer는 아직 없다(catalog `planned`). 구간 선택은 제스처·스크롤과 함께
-검증해야 해서 Web 먼저 낸다.
+**Native.** 같은 Calendar 격자에서 날짜 host action이 범위의 시작·중간·끝으로 반영되고,
+접근성 이름에도 해당 상태가 포함된다. 시각 범위는 Web에서 band와 hover preview로, Native에서
+날짜 아래 점과 이름으로 표현한다. 두 renderer의 환경·접근성 matrix와 날짜 선택 회귀가 통과해
+각 지원 surface의 계약은 stable이다. 기기·VoiceOver·TalkBack 검증은 소비 제품 QA에서 한다.

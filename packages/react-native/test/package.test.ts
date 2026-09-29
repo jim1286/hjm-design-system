@@ -22,6 +22,20 @@ describe("@hjmds/react-native package boundary", () => {
       "@hjmds/design-contracts": expect.stringMatching(/^>=\d+\.\d+\.0 <\d+\.\d+\.0$/),
       react: ">=19",
       "react-native": ">=0.81",
+      "@shopify/react-native-skia": "^2.6.2",
+      "react-native-reanimated": "^4.5.1",
+      "react-native-worklets": "^0.10.1",
+      "react-native-zoom-toolkit": "5.1.1",
+      "react-native-keyboard-controller": "1.22.5",
+      "@gorhom/bottom-sheet": "5.2.14",
+      "zeego": "3.0.6",
+      "@react-native-menu/menu": "1.2.2",
+      "react-native-ios-utilities": "5.2.0",
+      "react-native-ios-context-menu": "3.2.1",
+      "react-native-gesture-handler": "2.32.0",
+      "react-native-svg": "15.15.5",
+      "qrcode-generator": "2.0.4",
+
     });
     expect(packageJson.sideEffects).toBe(false);
     const expectedExportPaths = [
@@ -64,6 +78,15 @@ describe("@hjmds/react-native package boundary", () => {
       "./feedback",
       "./overlays",
       "./evidence",
+      "./toast-liquid",
+      "./thinking-orb",
+      "./image-viewer",
+      "./keyboard-controller",
+      "./sheet-gesture",
+      "./context-menu-native",
+      "./masonry",
+      "./virtual-list",
+      "./qr-code",
     ];
     expect(Object.keys(packageJson.exports)).toEqual(expectedExportPaths);
     const familyTargets = expectedExportPaths.slice(1).filter((path) => path !== "./top-bar" && path !== "./bottom-cta").map((exportPath) => {

@@ -1,5 +1,11 @@
 # Toast contract
 
+Native의 선택형 `liquid` presentation은 같은 descriptor/store를 사용합니다.
+[사용 및 호환성](../../react-native/docs/liquid-toast.md),
+[설계·검증 경계](../../../docs/plans/liquid-toast.md)를 따릅니다.
+Web 또는 adapter 없는 Native는 같은 알림을 standard surface로 표시합니다.
+`presentation`·`occlusion`은 renderer가 소유하는 독립 pause reason입니다.
+
 Toast는 사용자가 응답해야만 진행되는 modal UI가 아니라, 무시해도 안전한 짧은 알림입니다.
 필수 선택·삭제 확인·시간 안에 응답해야 하는 작업은 `AlertDialog`를 사용합니다.
 

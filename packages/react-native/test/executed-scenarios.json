@@ -5,26 +5,419 @@
       "proofFile": "test/default-render.test.tsx",
       "coverageMode": "all-cases",
       "scenarios": [
-        { "id": "default", "theme": "light", "direction": "ltr", "textScale": 1, "reducedMotion": false }
+        {
+          "id": "default",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
       ]
     },
     {
       "proofFile": "test/scenario-matrix.test.tsx",
       "coverageMode": "all-cases",
       "scenarios": [
-        { "id": "accessibility", "theme": "light", "direction": "ltr", "textScale": 1, "reducedMotion": false },
-        { "id": "dark", "theme": "dark", "direction": "ltr", "textScale": 1, "reducedMotion": false },
-        { "id": "large-text", "theme": "light", "direction": "ltr", "textScale": 2, "reducedMotion": false },
-        { "id": "rtl", "theme": "light", "direction": "rtl", "textScale": 1, "reducedMotion": false },
-        { "id": "reduced-motion", "theme": "light", "direction": "ltr", "textScale": 1, "reducedMotion": true },
-        { "id": "long-copy", "theme": "light", "direction": "ltr", "textScale": 1, "reducedMotion": false }
+        {
+          "id": "accessibility",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        },
+        {
+          "id": "dark",
+          "theme": "dark",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        },
+        {
+          "id": "large-text",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 2,
+          "reducedMotion": false
+        },
+        {
+          "id": "rtl",
+          "theme": "light",
+          "direction": "rtl",
+          "textScale": 1,
+          "reducedMotion": false
+        },
+        {
+          "id": "reduced-motion",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": true
+        },
+        {
+          "id": "long-copy",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
       ]
     },
     {
       "proofFile": "test/stable-core.test.tsx",
       "coverageMode": "all-cases",
       "scenarios": [
-        { "id": "keyboard", "theme": "light", "direction": "ltr", "textScale": 1, "reducedMotion": false }
+        {
+          "id": "native-actions",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/date-range-actions.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "native-actions",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/form.interaction.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "native-actions",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/accordion-actions.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "native-actions",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/file-picker-host-action.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "native-actions",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/agreement.interaction.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "native-actions",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/bottom-navigation.interaction.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "native-actions",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/load-more.interactions.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "native-actions",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        },
+        {
+          "id": "long-copy",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/tabs-actions.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "native-actions",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        },
+        {
+          "id": "long-copy",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/mentions-actions.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "native-actions",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        },
+        {
+          "id": "long-copy",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/transfer-list-actions.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "native-actions",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        },
+        {
+          "id": "long-copy",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/upload-item.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "native-actions",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        },
+        {
+          "id": "long-copy",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/calendar.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "native-actions",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/collapsible-actions.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "native-actions",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        },
+        {
+          "id": "long-copy",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/menu-actions.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "native-actions",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        },
+        {
+          "id": "long-copy",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/carousel.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "native-actions",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        },
+        {
+          "id": "long-copy",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/dialog-actions.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "native-actions",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/alert-dialog-actions.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "native-actions",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        },
+        {
+          "id": "long-copy",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/sheet-viewport.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "native-actions",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        },
+        {
+          "id": "long-copy",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        }
+      ]
+    },
+    {
+      "proofFile": "test/thinking-orb.test.tsx",
+      "coverageMode": "all-cases",
+      "scenarios": [
+        {
+          "id": "accessibility",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        },
+        {
+          "id": "dark",
+          "theme": "dark",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": false
+        },
+        {
+          "id": "large-text",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 2,
+          "reducedMotion": false
+        },
+        {
+          "id": "rtl",
+          "theme": "light",
+          "direction": "rtl",
+          "textScale": 1,
+          "reducedMotion": false
+        },
+        {
+          "id": "reduced-motion",
+          "theme": "light",
+          "direction": "ltr",
+          "textScale": 1,
+          "reducedMotion": true
+        }
       ]
     }
   ]

@@ -10,16 +10,19 @@ renderer를 한 이력과 한 release train에서 관리하는 pnpm monorepo입�
 | [`@hjmds/react-native`](packages/react-native) | Expo-independent React Native components |
 | [`@hjm/showcase-web`](showcase/web) | Storybook documentation and Web evidence |
 
-1.5.0부터 Stable Core는 17개 surface를 Web과 Native에서 안정 API로 보장합니다:
-`Surface`, `Button`, `Field`, `TextArea`, `Text`, `Icon`, `Stack`, `Container`,
-`DesignSystemProvider`, `IconButton`, `Badge`, `Card`, `Tag`, `Notice`, `Progress`, `Spinner`,
-`Skeleton`. 승격 기준은 두 renderer의 실제 시나리오 검사(scenario matrix) 통과와 세 제품 이상의
-사용입니다. 근거와 호환성 정책은 [`stable-core.md`](packages/design-contracts/docs/stable-core.md)에
-기록합니다. 신규 제품이 어디까지 공통 계약을 채택하고 어디부터 제품이 소유하는지는
-[`consumer-policy.md`](packages/design-contracts/docs/consumer-policy.md), 브랜드가 바꿀 수 있는
-범위는 [`brand-boundary.md`](packages/design-contracts/docs/brand-boundary.md)를 따릅니다.
-그 밖의 컴포넌트는 beta이며 제품 ADR이 있는 선택 채택입니다. 카탈로그 확장은 핵심 beta가
-승격될 때까지 동결되어 있습니다([`catalog-freeze.json`](packages/design-contracts/docs/catalog-freeze.json)).
+현재 checkout의 stable은 계약/Web 69개, Native 62개입니다.
+1.5.0의 17개에 `Divider`, `Section`, `ListRow`, `Statistic`, `DescriptionList`, `EmptyState`,
+`Result`, `Heading`, `Top`, `BottomCTA`, `AspectRatio`, `Grid`, `Steps`, `TopBar`, `AuthScreenLayout`, `Radio`, `Avatar`, `Asset`, `CounterBadge`, `Image`, `VisuallyHidden`을 승격했고, Web-only TextFormat도 stable입니다. 잘못 적용되던 long-copy gate는 실제 visible text 슬롯이 없는 다섯 컴포넌트에서 제외하고 접근성·fallback 증거를 유지합니다. 다음 minor 배포에 포함됩니다. 소비 앱은 설치한 버전의 catalog를 따릅니다.
+추가로 긴 row title·timeline label·안내 문구를 검증해 List, Timeline, BottomInfo를, Link·AuthProviderButton·PasswordField·CheckboxGroup·RadioGroup·Chip·SegmentedControl·SearchField·NumberField·Toast·FloatingActionButton·Checkbox·Switch·ToggleGroup·Slider·OtpField·TagsInput·Select·Combobox은 각 renderer의 키보드 또는 host action을 확인해 stable로 승격했습니다. Layout은 양 renderer의 긴 콘텐츠·환경·접근성 검사와 Web skip-link Tab/Enter 동작을, Web-only Splitter는 긴 콘텐츠 matrix와 실제 포커스된 separator의 키보드 조절을 확인했습니다. Native에는 Layout skip-link action 계약이 없어 keyboard proof는 요구하지 않습니다.
+승격은 공개 API와 renderer 검증을 기준으로 하며 제품 수·배포 이력은 필수 조건이 아닙니다.
+[승격 기준](packages/design-contracts/docs/stable-promotion.md)과
+[승격 기록](packages/design-contracts/docs/stable-core.md)을 참고하세요.
+
+Beta는 필요한 경우 선택해서 쓸 수 있으며, 기존 contract/TASKS의 채택 기록과 관련 회귀
+검사로 추적합니다. 별도 ADR을 항목마다 요구하지 않습니다. 신규 제품의 공통 계약과 제품 소유
+범위는 [소비 정책](packages/design-contracts/docs/consumer-policy.md), 브랜드 범위는
+[브랜드 경계](packages/design-contracts/docs/brand-boundary.md)를 따릅니다.
+카탈로그 확장은 [동결 목록](packages/design-contracts/docs/catalog-freeze.json)으로 관리합니다.
 
 ## Why one repository
 

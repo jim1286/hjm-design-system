@@ -53,8 +53,8 @@ PageUp/PageDown(10배 이동)은 넣지 않았다 — 분할 패널 크기 조�
 
 ## Web renderer (2026-09-18)
 
-`@hjmds/react/splitter`의 `Splitter`가 이 계약을 실행한다. catalog는 Web `beta`,
-Native `unsupported`다. 제품 채택·보조기기 실측은 아직 없다.
+`@hjmds/react/splitter`의 `Splitter`가 이 계약을 실행한다. catalog는 Web `stable`,
+Native `unsupported`다. 제품 채택과 실제 보조기기 실측은 승격 범위에 포함하지 않는다.
 
 - **드래그와 키보드가 같은 값을 만든다.** 둘 다 계약의 `resolveSplitterDragValue`/
   `getNextSplitterValue`를 호출하므로 renderer에 별도 숫자 산술이 없다.
@@ -67,9 +67,9 @@ Native `unsupported`다. 제품 채택·보조기기 실측은 아직 없다.
   크기를 저장하는 owner가 의미 없는 쓰기를 하지 않도록.
 - 구현 중 실제 결함을 하나 잡았다: `onValueChangeEnd?.(commit(next))`는 handler가 없으면
   인자 평가까지 통째로 건너뛰어 키보드 조절이 조용히 죽는다. commit을 먼저 하고 알린다.
-- 로컬 검증: `test/splitter.browser.test.tsx` 5개(separator 의미·수직 방향과 44px hit
+- 로컬 검증: `test/splitter.browser.test.tsx` 6개(separator 의미·수직 방향과 44px hit
   target, 방향키 step과 Home/End 경계, 드래그 스냅과 드래그당 1회 end, RTL 드래그·키보드,
-  disabled)와 `Patterns/Splitter`.
+  disabled, 실제 Tab focus와 focused keyboard resize)와 `Patterns/Splitter`.
 
-**검증 화면.** 제품 vertical slice는 아직 없다. `beta`는 renderer 수준 증거를 뜻하며
-실제 화면 채택은 별도로 기록한다.
+**검증 범위.** Web Chromium renderer matrix가 긴 pane 콘텐츠·환경·접근성 증거를 제공한다.
+제품 vertical slice, screen reader 실측, 모든 OS 조합은 보증하지 않으며 소비 앱 릴리스 QA에서 확인한다.

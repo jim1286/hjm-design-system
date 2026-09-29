@@ -5,7 +5,7 @@ import {
   type MentionTriggerConfig,
 } from "@hjmds/design-contracts/components/mentions";
 import { spacing } from "@hjmds/design-contracts/foundations";
-import { useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Pressable, View, type NativeSyntheticEvent, type StyleProp, type TextInputSelectionChangeEventData, type ViewStyle } from "react-native";
 import { TextArea, type TextAreaProps } from "./inputs.js";
 import { Text } from "./primitives.js";
@@ -58,12 +58,19 @@ export function Mentions<TriggerId extends string = string>({
   */
   const [caret, setCaret] = useState(value.length);
   const match = findActiveMentionTrigger(value, Math.min(caret, value.length), triggers);
-  const [lastMatchKey, setLastMatchKey] = useState<string | null>(null);
   const matchKey = match === null ? null : `${String(match.triggerId)}:${match.query}:${match.triggerStart}`;
-  if (matchKey !== lastMatchKey) {
-    setLastMatchKey(matchKey);
-    onMentionQueryChange?.(match);
-  }
+  const matchRef = useRef(match);
+  matchRef.current = match;
+  const lastNotifiedMatchKey = useRef<string | null>(null);
+  const onMentionQueryChangeRef = useRef(onMentionQueryChange);
+  onMentionQueryChangeRef.current = onMentionQueryChange;
+  // A query callback commonly filters candidates in the parent; defer it until commit so that
+  // this renderer does not update another component during its own render.
+  useEffect(() => {
+    if (matchKey === lastNotifiedMatchKey.current) return;
+    lastNotifiedMatchKey.current = matchKey;
+    onMentionQueryChangeRef.current?.(matchRef.current);
+  }, [matchKey]);
 
   const insert = (candidate: MentionCandidate) => {
     if (match === null) return;
@@ -93,6 +100,7 @@ export function Mentions<TriggerId extends string = string>({
       {match !== null ? (
         <View
           accessibilityLabel={listLabel}
+          accessibilityRole="list"
           style={[{ gap: spacing.xxs, borderWidth: 1, borderColor: colors.border, borderRadius: 12, padding: spacing.xxs }, listStyle]}
         >
           {candidates.length === 0 ? (
@@ -102,6 +110,7 @@ export function Mentions<TriggerId extends string = string>({
               <Pressable
                 key={candidate.id}
                 accessibilityRole="button"
+                accessibilityLabel={candidate.label}
                 onPress={() => insert(candidate)}
                 style={{ minHeight: 44, justifyContent: "center", paddingHorizontal: spacing.xs }}
               >

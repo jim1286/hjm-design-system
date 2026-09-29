@@ -1,5 +1,7 @@
 import { act } from "react";
+// This proof file is listed by test/executed-scenarios.json; the workspace checker validates its cases against that registry.
 import { createRoot, type Root } from "react-dom/client";
+import { userEvent } from "vitest/browser";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { HjmProvider } from "../src/provider.js";
@@ -13,6 +15,9 @@ const labels = {
   cancel: "취소",
   retry: "다시 시도",
 } as const;
+
+/** Component-scoped proof links the real browser keyboard path to renderer evidence. */
+export const uploadItemKeyboardCases = [{ componentId: "upload-item" }] as const;
 
 let container: HTMLDivElement;
 let root: Root;
@@ -107,5 +112,36 @@ describe("UploadItem responsive progress copy", () => {
     ]);
     expect(progress.hasAttribute("aria-valuetext")).toBe(false);
     expect(progress.hasAttribute("value")).toBe(false);
+  });
+
+  it("keeps long localized file details readable and its cancel action keyboard-operable", async () => {
+    const onCancel = vi.fn();
+    const longName = "여행_사진_원본_최종_수정본_".repeat(8) + "photo.png";
+    const longSize = "압축 전 원본 파일 · 약 1.2 MB (네트워크 상태에 따라 시간이 더 걸릴 수 있음)";
+    await render(
+      <UploadItem
+        descriptor={{
+          id: "photo",
+          name: longName,
+          sizeLabel: longSize,
+          state: { status: "uploading", progress: 0.64, progressLabel: "업로드 중 · 서버에서 파일을 확인하고 있습니다" },
+        }}
+        labels={labels}
+        onCancel={onCancel}
+      />,
+    );
+
+    const item = container.querySelector<HTMLElement>(".hjm-upload-item")!;
+    const action = item.querySelector<HTMLButtonElement>('[data-action="cancel"]')!;
+    expect(item.querySelector(".hjm-upload-item__name")?.textContent).toBe(longName);
+    expect(item.querySelector(".hjm-upload-item__meta")?.textContent).toBe(longSize);
+    expect(item.querySelector(".hjm-progress__copy")?.textContent).toContain("서버에서 파일을 확인하고 있습니다");
+    expect(item.scrollWidth).toBeLessThanOrEqual(item.clientWidth);
+
+    await act(async () => userEvent.tab());
+    expect(document.activeElement).toBe(action);
+    await act(async () => userEvent.keyboard("{Enter}"));
+    expect(onCancel).toHaveBeenCalledOnce();
+    expect(onCancel).toHaveBeenCalledWith("photo");
   });
 });

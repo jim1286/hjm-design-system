@@ -1,0 +1,1 @@
+{"version":3,"file":"virtual-list.d.ts","sourceRoot":"","sources":["../src/virtual-list.ts"],"names":[],"mappings":"AAAA,wBAAgB,oBAAoB,CAAC,KAAK,EAAE,MAAM,EAAE,SAAS,EAAE,MAAM,EAAE,cAAc,EAAE,MAAM,EAAE,SAAS,EAAE,MAAM,EAAE,QAAQ,SAAI;;;;;EAK7H;AACD,wBAAgB,gBAAgB,CAAC,IAAI,EAAE,SAAS,MAAM,EAAE,EAAE,KAAK,EAAE,MAAM,QAEtE;AACD,eAAO,MAAM,iBAAiB;;;;CAA+E,CAAC"}

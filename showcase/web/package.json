@@ -16,7 +16,10 @@
     "@hjmds/design-contracts": "workspace:*",
     "@hjmds/react": "workspace:*",
     "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react-dom": "19.2.3",
+    "@number-flow/react": "0.6.2",
+    "bloom-menu": "0.1.0",
+    "framer-motion": "13.4.4"
   },
   "devDependencies": {
     "@storybook/addon-a11y": "^10.6.0",

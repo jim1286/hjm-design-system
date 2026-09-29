@@ -1,13 +1,19 @@
 import type { ToastTone } from "./component-recipes.js";
 
+export { liquidToastRecipe, resolveLiquidToastLayout, buildLiquidToastGeometry, validateLiquidToastAnchor } from "./toast-liquid.js";
+export type { LiquidToastAnchor, LiquidToastLayout } from "./toast-liquid.js";
+
 export type ToastId = string;
+export type ToastPresentation = "standard" | "liquid";
 export type ToastAnnouncementPriority = "normal" | "high";
 export type ToastPauseReason =
   | "pointer"
   | "focus"
   | "window"
   | "gesture"
-  | "programmatic";
+  | "programmatic"
+  | "presentation"
+  | "occlusion";
 export type ToastDismissReason =
   | "timeout"
   | "action"
@@ -39,6 +45,8 @@ export type ToastDescriptor = Readonly<{
   title?: string;
   description: string;
   tone?: ToastTone;
+  /** Optional Native presentation; unsupported renderers retain the standard surface. */
+  presentation?: ToastPresentation;
   /** High priority interrupts; normal priority waits for a graceful announcement. */
   priority?: ToastAnnouncementPriority;
   /** Optional localized announcement when visible copy needs extra context. */
@@ -63,6 +71,7 @@ export type ResolvedToastDescriptor = Readonly<{
   title: string | null;
   description: string;
   tone: ToastTone;
+  presentation: ToastPresentation;
   priority: ToastAnnouncementPriority;
   announcement: string;
   durationMs: number | null;
@@ -134,6 +143,9 @@ export function validateToastDescriptor(descriptor: ToastDescriptor): void {
   ) {
     throw new TypeError(`Unsupported Toast priority: ${String(descriptor.priority)}`);
   }
+  if (descriptor.presentation !== undefined && !["standard", "liquid"].includes(descriptor.presentation)) {
+    throw new TypeError(`Unsupported Toast presentation: ${String(descriptor.presentation)}`);
+  }
   if (descriptor.durationMs !== undefined && descriptor.durationMs !== null) {
     if (!Number.isFinite(descriptor.durationMs) || descriptor.durationMs <= 0) {
       throw new RangeError("Toast durationMs must be a positive finite number or null");
@@ -181,6 +193,7 @@ export function resolveToastDescriptor(
     title,
     description: descriptor.description,
     tone: descriptor.tone ?? "neutral",
+    presentation: descriptor.presentation ?? "standard",
     priority: descriptor.priority ?? toastBehaviorDefaults.priority,
     announcement,
     durationMs: resolveToastDuration(descriptor),

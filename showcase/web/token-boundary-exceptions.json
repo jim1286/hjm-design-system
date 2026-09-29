@@ -220,22 +220,6 @@
     {
       "file": "src/showcase.css",
       "rule": "raw-length",
-      "selector": ".hjm-virtual-list",
-      "property": "width",
-      "value": "min(100%, 460px)",
-      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
-    },
-    {
-      "file": "src/showcase.css",
-      "rule": "raw-length",
-      "selector": ".hjm-virtual-list",
-      "property": "height",
-      "value": "210px",
-      "reason": "Isolated component demo fixture geometry, not a product spacing or sizing contract."
-    },
-    {
-      "file": "src/showcase.css",
-      "rule": "raw-length",
       "selector": ".hjm-showcase-timeline li",
       "property": "grid-template-columns",
       "value": "55px 1fr",

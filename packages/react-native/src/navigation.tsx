@@ -1382,7 +1382,8 @@ export function TopBar({
             </View>
           ) : null}
           {hasTitle ? (
-            renderTitle({ flex: 2, flexShrink: 1, minWidth: 0 }, 1)
+            // Keep long route titles readable; the screen-chrome contract promises wrapping, while a one-line cap silently hid the rest.
+            renderTitle({ flex: 2, flexShrink: 1, minWidth: 0 })
           ) : null}
           {renderCompactTrailingSlot ? (
             <View

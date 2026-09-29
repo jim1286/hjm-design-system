@@ -3,7 +3,8 @@
 `Tooltip`은 Web에서 이미 의미와 focus를 가진 interactive trigger에 짧은 보충 설명을
 제공합니다. 중요한 정보, 오류, 행동, link를 Tooltip 안에 숨기지 않으며 Native에 억지로
 동일한 hover UI를 만들지 않습니다. BurnTok Web renderer와 실제 알림 trigger에서 아래
-수명주기·RTL·접근성 계약을 검증했으므로 catalog는 `web / beta`입니다.
+수명주기·RTL·접근성 계약과 전용 keyboard·320px long-copy browser proof를 통과해 catalog는
+2026-09-29부터 `Web / stable`입니다. Native는 `unsupported`입니다.
 
 ## Public descriptor
 

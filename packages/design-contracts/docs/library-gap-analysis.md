@@ -77,7 +77,7 @@ control의 `accessibilityLabel`/`accessibilityHint`가 canonical 번역이다.
   된다. `Section` + `List` 조합으로 충분하고, 그 조합이 부족하다는 실측이 나오면 그때
   `Section`의 축으로 검토한다.
 - `Chart`: **토큰만 채택한다.** 렌더러는 만들지 않고 계열 팔레트·축·격자·범례 토큰만
-  고정한다. 근거는 [chart.md](./chart.md).
+  고정한다. 근거는 [catalog-cleanup.md](./catalog-cleanup.md).
 
 ## 후속 검토
 

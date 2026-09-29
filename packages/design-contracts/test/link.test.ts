@@ -237,13 +237,13 @@ describe("Link visual and behavior contracts", () => {
     }
   });
 
-  it("tracks Link as an active paired renderer", () => {
+  it("tracks Link as a stable paired renderer", () => {
     expect(componentCatalog.find((entry) => entry.name === "Link")).toEqual({
       name: "Link",
       category: "action",
       platform: "adaptive",
-      status: "beta",
-      surfaceStatus: { web: "beta", native: "beta" },
+      status: "stable",
+      surfaceStatus: { web: "stable", native: "stable" },
       recipe: "linkRecipe",
       behavior: "link",
     });

@@ -56,10 +56,14 @@ Typography recipe의 `fontWeight`·`selectedFontWeight`·`checkedFontWeight`는 
 
 ## 지원 단계
 
-- `stable`: 두 제품 이상 또는 두 플랫폼에서 사용되고 계약·접근성 검증이 있음
-- `beta`: 실제 앱 패턴을 공용 recipe로 승격했지만 renderer parity 또는 시각 회귀가 진행 중
+- `stable`: 공개 API와 동작을 SemVer로 지원하며 해당 renderer의 필수 검증을 통과함
+- `beta`: 공개 API·동작 또는 renderer 검증에 구체적인 미완료 항목이 있음
 - `planned`: 범위에 포함되지만 API를 아직 안정화하지 않음
 - `deprecated`: 새 사용을 막고 대체 경로와 제거 예정 버전을 문서화한 호환 계약
+
+제품 채택 수·제품 배포·제품 전체 QA는 성숙도 관문이 아닙니다. 승격 기준은
+[stable 승격 절차](stable-promotion.md) 한 곳에서 관리합니다. 2026-09-29에 서로 달랐던
+채택 수 조건을 제거했으며 제품 검증은 소비 앱의 릴리스 책임으로 분리했습니다.
 
 현재 전체 범위와 목표 플랫폼 분류는 `componentCatalog`가 기계 판독 가능한 형태로 제공합니다.
 계획된 컴포넌트를 catalog에 올리는 것은 구현 완료를 의미하지 않습니다.

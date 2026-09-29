@@ -43,7 +43,8 @@ const executableFamilyExports = Object.entries(packageJson.exports)
   .map(([exportPath, definition]) => [exportPath, getNativeRuntimeTarget(definition)])
   .filter(
     ([exportPath, target]) =>
-      exportPath !== "." && typeof target === "string" && target.endsWith(".js"),
+      // Optional effects and QR use the complete Expo showcase export; this baseline must resolve without their peers.
+      exportPath !== "." && exportPath !== "./toast-liquid" && !(["./qr-code", "./thinking-orb", "./image-viewer", "./keyboard-controller", "./sheet-gesture", "./context-menu-native"].includes(exportPath)) && typeof target === "string" && target.endsWith(".js"),
   );
 
 const requiredRendererSources = executableFamilyExports.map(([, target]) =>
@@ -51,6 +52,7 @@ const requiredRendererSources = executableFamilyExports.map(([, target]) =>
 );
 
 const forbiddenSourcePatterns = [
+  { label: "optional effect runtime", pattern: /(?:@shopify[\/]react-native-skia|react-native-reanimated|react-native-worklets|qrcode-generator|react-native-svg)/u },
   { label: "Expo", pattern: /(?:^|\/)node_modules\/expo(?:\/|$)/u },
   { label: "react-dom", pattern: /(?:^|\/)node_modules\/react-dom(?:\/|$)/u },
   {

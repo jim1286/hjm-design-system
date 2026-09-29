@@ -84,10 +84,7 @@ const antDesignReferenceSources = [
     { name: "Spin", category: "feedback", targets: ["Spinner"], relationship: "adapted" },
     { name: "Watermark", category: "feedback", targets: ["Watermark"], relationship: "direct" },
     { name: "Affix", category: "other", targets: ["Affix"], relationship: "direct" },
-    { name: "App", category: "other", targets: ["AppProvider"], relationship: "adapted" },
-    { name: "BorderBeam", category: "other", targets: ["BorderBeam"], relationship: "direct" },
     { name: "ConfigProvider", category: "other", targets: ["DesignSystemProvider"], relationship: "adapted" },
-    { name: "Util", category: "other", targets: ["Utility"], relationship: "adapted" },
 ];
 export const antDesignReferenceComponents = antDesignReferenceSources.map((reference) => ({
     ...reference,

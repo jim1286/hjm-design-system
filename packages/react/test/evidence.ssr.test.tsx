@@ -1,3 +1,7 @@
+import * as masonry from "../src/masonry.js";
+import * as virtualList from "../src/virtual-list.js";
+import * as qrCode from "../src/qr-code.js";
+import * as thinkingOrb from "../src/thinking-orb.js";
 import * as popover from "../src/popover.js";
 import * as anchor from "../src/anchor.js";
 import * as pagination from "../src/pagination.js";
@@ -59,8 +63,12 @@ import * as toast from "../src/toast.js";
 import * as uploadItem from "../src/upload-item.js";
 
 const publicModules: Readonly<Record<string, Readonly<Record<string, unknown>>>> = {
+  "./thinking-orb": thinkingOrb,
   "./top-bar": topBar,
   "./bottom-cta": bottomCta,
+  "./masonry": masonry,
+  "./virtual-list": virtualList,
+  "./qr-code": qrCode,
   "./carousel": carousel,
   "./floating-action-button": floatingActionButton,
   "./actions": actions,
@@ -125,7 +133,7 @@ describe("@hjmds/react renderer evidence", () => {
     });
 
     const componentIds = reactRendererEvidence.components.map(({ componentId }) => componentId);
-    expect(componentIds).toHaveLength(96);
+    expect(componentIds).toHaveLength(100);
     expect(new Set(componentIds).size).toBe(componentIds.length);
   });
 
