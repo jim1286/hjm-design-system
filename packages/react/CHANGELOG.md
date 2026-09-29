@@ -1,5 +1,35 @@
 # @hjmds/react
 
+## 1.8.0
+
+### Minor Changes
+
+- d589299: Promote completed Web and React Native component contracts/renderers to stable, including the first-invalid-field Native Form focus path. ThinkingOrb becomes stable on Web and Native after required renderer evidence and installed iOS/Android Skia smoke.
+- d589299: Add stable Masonry, fixed-row VirtualList, and QRCode entries for Web and Native, with shared geometry and UTF-8 QR contracts. QRCode peers remain optional and its matrices are decode-tested. Add a Native Cascader composition and remove the excluded Chart, AppProvider, BorderBeam, and Utility candidates from the catalog. Ship documented host patches for the optional native menu on RN 0.86.
+- d589299: Add opt-in animated Statistic and morphing action Menu for web, and experimental image viewer,
+  keyboard motion, gesture Sheet and OS context-menu adapters for native. Preserve root dependency
+  isolation and document peer installation, behavior boundaries and pending device verification.
+- d589299: Separate component stability from product adoption counts and product release QA. Promote Divider, Section, ListRow, Statistic, DescriptionList, EmptyState, Result, Heading, Top, BottomCTA, AspectRatio, Grid, Steps, TopBar, AuthScreenLayout, Radio, Avatar, Asset, CounterBadge, Image, VisuallyHidden, List, Timeline, BottomInfo, Link, AuthProviderButton, PasswordField, CheckboxGroup, RadioGroup, Chip, SegmentedControl, SearchField, NumberField, Toast, FloatingActionButton, Checkbox, Switch, ToggleGroup, Slider, OtpField, TagsInput, Select, Combobox, Layout, DatePicker, DateRangePicker, Accordion, Agreement, FilePicker, Tabs, BottomNavigation, LoadMore, Breadcrumb, Pagination, Menubar, Form Web, Web-only Splitter, and Mentions on their supported surfaces. Mentions proves caret-based query/insertion, named candidate actions, long labels, and Web keyboard interaction on both supported renderers; Native query callbacks run after commit. Native Form remains beta until its renderer supports first-invalid-field accessibility focus. TextFormat remains Web-only. Do not require visible long-copy layout for media, initials, numeric-count, page numerals, intentionally hidden text primitives, or behavior containers without a prose slot such as Form and DateRangePicker; keep their default and accessibility proofs. Keep component environment checks and require keyboard or host-action evidence only on surfaces whose behavior contract declares that interaction; Layout therefore requires Web skip-link keyboard proof and has no Native keyboard proof. DatePicker has browser keyboard selection/focus-return and Native selection host-action proof. DateRangePicker has browser range keyboard behavior and Native named-date host-action proof. Accordion, Agreement, and FilePicker now have per-surface interaction proof; FilePicker's Native OS picker remains a product adapter responsibility and is not claimed as device-tested. Tabs verifies roving focus, disabled skips, reduced-motion visibility, and Native activate; BottomNavigation verifies route intent while selection remains navigator-owned; LoadMore verifies viewport/manual requests, retry, deduplication, and long status labels. Menubar has actual Web keyboard navigation and long-label evidence. Breadcrumb has real Web route-link keyboard proof. Pagination has real Web page movement and boundary-focus keyboard proof; its four-digit layout stays covered by the 320px/200%/RTL browser test. Splitter remains Web-only and its drag grid, focusable keyboard actions, and RTL behavior are covered by its browser tests. Remove automatic parity evidence. Consumer policy 1.4.0 permits beta adoption with a shared adoption record instead of a separate ADR per component. Existing versioned app profiles retain their requirements until explicitly updated.
+- d589299: Add an optional ThinkingOrb AI operation indicator with shared MIT-derived geometry,
+  HJM semantic ink, localized labels and pausable motion. Web and optional Skia Native renderers are stable after their required matrices
+  and installed iOS/Android Skia smoke. Native hosts must link the documented optional peers.
+
+### Patch Changes
+
+- d589299: Add the opt-in liquid Toast presentation with capsule and explicit island anchors. Native consumers
+  import `createLiquidToastPresentation` from `@hjmds/react-native/toast-liquid` and provide it to a top,
+  single-slot ToastRegion. The effect requires optional Skia, Reanimated and Worklets peers; ordinary
+  imports remain independent of these modules. Shared descriptors retain standard rendering on Web.
+
+  Preserve FIFO, action and dismissal ownership in the existing store, account for elapsed time before
+  Native updates/pauses, and pause while entering or occluded by a host modal. Screen readers, reduced
+  motion and constrained viewports use the standard surface. This remains beta; device geometry and
+  performance verification are separate from unit and bundle checks.
+
+- 6c9b155: Use theme canvas tokens for neutral component backgrounds and white light-theme input interiors, keeping blue focus/selection outlines and typed primary CTA fills such as Create draft. Secondary buttons use their typed recipe with white fill and a neutral control border. Fix native OTP interaction/rendering, repeated UploadItem progress text, GestureSheet first presentation, Web DateRangePicker pointer hit areas and CounterBadge shrinkage discovered during full showcase device/browser auditing.
+
+  Align renderer contracts peers with the authored 1.8 train before version generation, following docs/RELEASE_GOVERNANCE.md; keeping the previous train would incorrectly turn a minor peer update into a major release.
+
 ## 1.7.0
 
 ### Minor Changes
