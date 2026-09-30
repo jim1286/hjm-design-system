@@ -2371,18 +2371,23 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-toast-viewport[data-placement^="bottom"] { inset-block-end: calc(max(var(--hjm-space-md), env(safe-area-inset-bottom)) + var(--hjm-toast-bottom-offset, 0px)); flex-direction: column-reverse; }
 .hjm-toast-viewport[data-placement$="-start"] { margin-inline-start: 0; }
 .hjm-toast-viewport[data-placement$="-end"] { margin-inline-end: 0; }
-/* Cards stay narrow on desktop too; keep close/action rows explicit (docs/toast.md). */
-.hjm-toast { position: relative; min-inline-size: 0; min-block-size: 3.5rem; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: var(--hjm-space-sm); padding: var(--hjm-space-md); overflow: hidden; border: var(--hjm-toast-border-width) solid var(--hjm-toast-border); border-radius: var(--hjm-toast-radius); color: var(--hjm-color-text); background: var(--hjm-toast-background); box-shadow: var(--hjm-toast-shadow); pointer-events: auto; }
-.hjm-toast__tone-mark { position: absolute; inset-block: 0; inset-inline-start: 0; inline-size: 2px; background: var(--hjm-color-text-muted); }
-.hjm-toast[data-tone="info"] .hjm-toast__tone-mark, .hjm-toast[data-tone="info"] .hjm-toast__icon { color: var(--hjm-accent-info); background-color: var(--hjm-accent-info); }
-.hjm-toast[data-tone="success"] .hjm-toast__tone-mark, .hjm-toast[data-tone="success"] .hjm-toast__icon { color: var(--hjm-accent-success); background-color: var(--hjm-accent-success); }
-.hjm-toast[data-tone="warning"] .hjm-toast__tone-mark, .hjm-toast[data-tone="warning"] .hjm-toast__icon { color: var(--hjm-accent-warning); background-color: var(--hjm-accent-warning); }
-.hjm-toast[data-tone="danger"] .hjm-toast__tone-mark, .hjm-toast[data-tone="danger"] .hjm-toast__icon { color: var(--hjm-color-danger); background-color: var(--hjm-color-danger); }
-.hjm-toast__icon { grid-column: 1; grid-row: 1; display: grid; place-items: center; inline-size: 1.25rem; block-size: 1.25rem; border-radius: 50%; color: var(--hjm-color-text-muted); background: transparent !important; font-weight: var(--hjm-font-weight-bold); }
-.hjm-toast__content { grid-column: 2; grid-row: 1; min-inline-size: 0; display: grid; gap: var(--hjm-space-xxs); overflow-wrap: anywhere; }
-.hjm-toast__action, .hjm-toast__close { min-block-size: var(--hjm-control-min-touch-target); border: 0; color: var(--hjm-color-content-brand); background: transparent; font: inherit; font-weight: var(--hjm-font-weight-bold); cursor: pointer; }
-.hjm-toast__close { grid-column: 3; grid-row: 1; align-self: start; inline-size: var(--hjm-control-min-touch-target); color: var(--hjm-color-text-muted); }
-.hjm-toast__action { grid-column: 2 / -1; grid-row: 2; justify-self: start; max-inline-size: 100%; overflow-wrap: anywhere; text-align: start; }
+/* Cards stay narrow on desktop too; keep close/action rows explicit (docs/toast.md).
+   1.10.0 layout: [tone badge][title + description][close] / action pill on its own row, end-aligned.
+   The 2px tone strip is retired — the tinted badge carries tone (toastRecipe.toneMark width 0). */
+.hjm-toast { position: relative; min-inline-size: 0; min-block-size: 3.5rem; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: start; column-gap: var(--hjm-space-sm); row-gap: var(--hjm-space-xs); padding: var(--hjm-space-sm) var(--hjm-space-xs) var(--hjm-space-sm) var(--hjm-space-md); overflow: hidden; border: var(--hjm-toast-border-width) solid var(--hjm-toast-border); border-radius: var(--hjm-toast-radius); color: var(--hjm-color-text); background: var(--hjm-toast-background); box-shadow: var(--hjm-toast-shadow); pointer-events: auto; }
+.hjm-toast__tone-mark { display: none; }
+.hjm-toast__icon { grid-column: 1; grid-row: 1; align-self: start; display: grid; place-items: center; inline-size: var(--hjm-toast-badge-size); block-size: var(--hjm-toast-badge-size); border-radius: 50%; color: var(--hjm-toast-accent-neutral); background: var(--hjm-toast-badge-neutral); }
+.hjm-toast[data-tone="info"] .hjm-toast__icon { color: var(--hjm-toast-accent-info); background: var(--hjm-toast-badge-info); }
+.hjm-toast[data-tone="success"] .hjm-toast__icon { color: var(--hjm-toast-accent-success); background: var(--hjm-toast-badge-success); }
+.hjm-toast[data-tone="warning"] .hjm-toast__icon { color: var(--hjm-toast-accent-warning); background: var(--hjm-toast-badge-warning); }
+.hjm-toast[data-tone="danger"] .hjm-toast__icon { color: var(--hjm-toast-accent-danger); background: var(--hjm-toast-badge-danger); }
+.hjm-toast__content { grid-column: 2; grid-row: 1; align-self: center; min-inline-size: 0; display: grid; gap: var(--hjm-space-xxs); padding-block: var(--hjm-space-xxs); overflow-wrap: anywhere; word-break: keep-all; }
+.hjm-toast__title { font-weight: var(--hjm-font-weight-bold); line-height: 1.35; }
+.hjm-toast__description { color: var(--hjm-toast-description-color); line-height: 1.45; }
+.hjm-toast__close { grid-column: 3; grid-row: 1; align-self: start; display: grid; place-items: center; inline-size: var(--hjm-control-min-touch-target); min-block-size: var(--hjm-control-min-touch-target); margin-block-start: calc(-1 * var(--hjm-space-xxs)); border: 0; border-radius: 50%; color: var(--hjm-color-text-muted); background: transparent; cursor: pointer; }
+.hjm-toast__close:hover { color: var(--hjm-color-text); }
+.hjm-toast__action { grid-column: 2 / -1; grid-row: 2; justify-self: end; margin-inline-end: var(--hjm-space-xs); min-block-size: var(--hjm-control-min-touch-target); max-inline-size: 100%; padding-inline: var(--hjm-space-md); border: 0; border-radius: 999px; color: var(--hjm-toast-action-color); background: var(--hjm-toast-action-background); font: inherit; font-weight: var(--hjm-font-weight-bold); overflow-wrap: anywhere; text-align: center; cursor: pointer; }
+.hjm-toast__action:hover { filter: brightness(0.97); }
 .hjm-toast[data-state="closing"] { opacity: 0; transform: translateY(var(--hjm-space-xs)); transition: opacity var(--hjm-toast-exit-duration) var(--hjm-toast-exit-easing), transform var(--hjm-toast-exit-duration) var(--hjm-toast-exit-easing); }
 
 .hjm-dialog__close:focus-visible,

@@ -250,9 +250,11 @@ const budgets = [
     // Select's stable surface status is exposed here too; its rationale adds copy but no import edge.
     // Tabs/BottomNavigation/LoadMore proof mappings add 363 raw / 188 gzip bytes to the unchanged 70-module showcase graph.
     // Masonry/VirtualList geometry and QR recipe add three neutral modules; QR encoder stays opt-in.
+    // 1.10.0 Toast refresh adds badge/action recipe fields and their rationale comments (dist keeps comments);
+    // module count unchanged. Measured showcase/evidence/root 403.8/410.1/568.8 kB raw.
     maxModules: 76,
-    maxRawBytes: 403_365,
-    maxGzipBytes: 100_872,
+    maxRawBytes: 404_400,
+    maxGzipBytes: 101_400,
   },
   {
     // 2026-09-19 AuthScreenLayout: 계약 모듈 한 개가 그래프에 들어왔다. 기존
@@ -282,9 +284,11 @@ const budgets = [
     // proof-file/case links instead of dropping evidence; measured size remains below 102 kB.
     // Tabs/BottomNavigation/LoadMore proof links add 363 raw / 182 gzip bytes to the unchanged 72-module evidence graph.
     // Masonry/VirtualList geometry and QR recipe add three neutral modules; QR encoder stays opt-in.
+    // 1.10.0 Toast refresh adds badge/action recipe fields and their rationale comments (dist keeps comments);
+    // module count unchanged. Measured showcase/evidence/root 403.8/410.1/568.8 kB raw.
     maxModules: 78,
-    maxRawBytes: 409_638,
-    maxGzipBytes: 102_369,
+    maxRawBytes: 410_700,
+    maxGzipBytes: 102_900,
   },
   {
     // 2026-09-19 AuthScreenLayout: 계약 모듈 한 개가 그래프에 들어왔다. 기존
@@ -316,7 +320,8 @@ const budgets = [
     // 2026-09-29 stable maturity metadata and evidence mappings exceed the prior 567 kB raw cap
     // with the same 92-module graph; retain the metadata and leave a narrow 1 kB measured allowance.
     // Tabs/BottomNavigation/LoadMore proof mappings add 363 raw / 182 gzip bytes to the unchanged 92-module root graph.
-    maxRawBytes: 568_450,
+    // 1.10.0 Toast refresh recipe fields + rationale comments; measured 568.8 kB raw, module count unchanged.
+    maxRawBytes: 569_500,
     // Calendar/composition evidence adds catalog copy; the root remains 70 modules
     // (473.6 kB raw / 111.0 kB gzip). Keep granular runtime budgets unchanged.
     // Popover 묶음에서 111.8 -> 112.3 kB gzip. 모듈별로 재면 catalog.js +522 B(Popover·

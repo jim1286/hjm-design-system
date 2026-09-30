@@ -40,3 +40,17 @@ export const LongCopyWithAction: Story = {
     },
   },
 };
+
+// 1.10.0 refresh review: every tone badge, with and without an action, in one frame (docs/toast.md).
+export const ToneGallery: Story = {
+  ...Compact,
+  render: () => (
+    <div style={{ display: "grid", gap: "var(--hjm-space-sm)" }}>
+      <Toast descriptor={{ id: "g-neutral", title: "검토하고 있어요", description: "다 되면 알려 드릴게요. 그동안 써 보셔도 돼요.", closeLabel: "닫기" }} onDismissRequest={() => {}} />
+      <Toast descriptor={{ id: "g-success", tone: "success", title: "검토 완료", description: "번뚝 타이머를 다듬었어요. 새 버전으로 저장할까요?", closeLabel: "닫기", action: { label: "새 버전으로 저장", onAction: () => {} } }} onDismissRequest={() => {}} />
+      <Toast descriptor={{ id: "g-info", tone: "info", description: "새 버전으로 저장했어요", closeLabel: "닫기" }} onDismissRequest={() => {}} />
+      <Toast descriptor={{ id: "g-warning", tone: "warning", title: "연결이 불안정해요", description: "잠시 후 다시 시도해 주세요.", closeLabel: "닫기" }} onDismissRequest={() => {}} />
+      <Toast descriptor={{ id: "g-danger", tone: "danger", description: "저장하지 못했어요", closeLabel: "닫기", action: { label: "다시 시도", onAction: () => {} } }} onDismissRequest={() => {}} />
+    </div>
+  ),
+};

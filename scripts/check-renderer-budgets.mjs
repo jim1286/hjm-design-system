@@ -96,7 +96,8 @@ const rendererBudgets = [
       // Measured DatePicker 24.8 kB raw / 6.5 kB gzip including focus and read-only guards.
       "./calendar": { modules: 4, raw: 24_000, gzip: 6_000 },
       // 2026-09-30: viewport clamp + flip-up for phones/landscape (responsive audit). gzip raised from 7_200.
-      "./date-picker": { modules: 5, raw: 28_000, gzip: 7_600 },
+      // 1.10.0: theme.ts now emits the Toast badge/action variables every themed graph carries; measured 32.6 kB raw.
+      "./date-picker": { modules: 5, raw: 29_000, gzip: 7_600 },
       "./file-picker": { modules: 2, raw: 13_000, gzip: 3_600 },
       "./steps": { modules: 2, raw: 8_000, gzip: 2_500 },
       "./upload-item": { modules: 4, raw: 17_000, gzip: 4_000 },
@@ -185,7 +186,9 @@ const rendererBudgets = [
       "./overlays": { modules: 7, raw: 90_000, gzip: 18_000 },
       "./feedback": { modules: 3, raw: 13_500, gzip: 3_300 },
       // density helper가 provider 모듈에 들어가면서 6.8 kB gzip 경계에 닿았다.
-      "./toast": { modules: 4, raw: 28_000, gzip: 7_100 },
+      // 1.10.0 Toast refresh: five inline stroke SVG tone glyphs + close glyph replace text glyphs, and theme
+      // emits badge/action variables; module count unchanged. Measured 33.4 kB raw / 8.5 kB gzip.
+      "./toast": { modules: 4, raw: 30_000, gzip: 7_600 },
       // Two new claims add metadata only: measured 6,045 B raw / 1,594 B gzip.
       // Three Web navigation claims add metadata (6.5 kB raw); no import edges.
       // Six more claims, metadata only: measured 6.9 kB raw / 1.7 kB gzip.

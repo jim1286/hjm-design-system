@@ -58,6 +58,7 @@ import {
   Easing,
   Keyboard,
   Platform,
+  Pressable,
   View,
   useWindowDimensions,
   type ViewProps,
@@ -795,6 +796,7 @@ function ToastSurface({
   exitCompleteRef.current = onExitComplete;
   const tone = toastRecipe.tones[resolved.tone];
   const accent = resolveColorReference(tone.accent, theme.palette);
+  const badge = resolveColorReference(tone.badge, theme.palette);
   const background = resolveColorReference(toastRecipe.surface.background, theme.palette);
   const border = resolveColorReference(toastRecipe.surface.border, theme.palette);
   const pauseFocus = () => onPause("focus");
@@ -874,19 +876,22 @@ function ToastSurface({
         style,
       ]}
     >
-      <View
-        accessibilityElementsHidden
-        importantForAccessibility="no-hide-descendants"
-        style={{
-          backgroundColor: accent,
-          borderRadius: radius[toastRecipe.toneMark.radius],
-          bottom: 0,
-          start: 0,
-          position: "absolute",
-          top: 0,
-          width: toastRecipe.toneMark.width,
-        }}
-      />
+      {/* 1.10.0 retired the edge strip (toneMark width 0); the tinted icon badge carries tone. */}
+      {toastRecipe.toneMark.width > 0 ? (
+        <View
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+          style={{
+            backgroundColor: accent,
+            borderRadius: radius[toastRecipe.toneMark.radius],
+            bottom: 0,
+            start: 0,
+            position: "absolute",
+            top: 0,
+            width: toastRecipe.toneMark.width,
+          }}
+        />
+      ) : null}
       {!announces || Platform.OS === "ios" ? null : (
         <Text
           accessibilityLabel={resolved.announcement}
@@ -900,7 +905,8 @@ function ToastSurface({
       )}
       <View
         style={{
-          alignItems: "center",
+          // Start-aligned so a multi-line or large-text toast keeps its badge beside the title (Web does the same).
+          alignItems: "flex-start",
           direction: theme.environment.direction,
           flexDirection: "row",
           gap: toastRecipe.surface.gap,
@@ -910,12 +916,20 @@ function ToastSurface({
           <View
             accessibilityElementsHidden
             importantForAccessibility="no-hide-descendants"
-            style={{ alignItems: "center", flexShrink: 0, justifyContent: "center" }}
+            style={{
+              alignItems: "center",
+              backgroundColor: badge,
+              borderRadius: radius[toastRecipe.icon.badgeRadius],
+              flexShrink: 0,
+              height: toastRecipe.icon.badgeDiameter,
+              justifyContent: "center",
+              width: toastRecipe.icon.badgeDiameter,
+            }}
           >
             {renderedToneIcon}
           </View>
         )}
-        <View style={{ flex: 1, gap: toastRecipe.content.gap, minWidth: 0 }}>
+        <View style={{ alignSelf: "center", flex: 1, gap: toastRecipe.content.gap, minWidth: 0 }}>
           {resolved.title ? (
             <Text
               style={{
@@ -944,17 +958,34 @@ function ToastSurface({
         </IconButton>
       </View>
       {resolved.action ? (
-        <View style={{ alignSelf: "flex-start" }}>
-          <Button
-            accessibilityLabel={resolved.action.accessibilityLabel}
-            onBlur={resumeFocus}
-            onFocus={pauseFocus}
-            onPress={onAction}
-            tone="ghost"
+        // 1.10.0: tinted pill aligned to the end (toastRecipe.action) instead of a ghost text button.
+        <Pressable
+          accessibilityLabel={resolved.action.accessibilityLabel}
+          accessibilityRole="button"
+          onBlur={resumeFocus}
+          onFocus={pauseFocus}
+          onPress={onAction}
+          style={({ pressed }) => ({
+            alignItems: "center",
+            alignSelf: toastRecipe.action.align === "end" ? "flex-end" : "flex-start",
+            backgroundColor: resolveColorReference(toastRecipe.action.background, theme.palette),
+            borderRadius: radius[toastRecipe.action.radius],
+            justifyContent: "center",
+            minHeight: toastRecipe.action.minHeight,
+            opacity: pressed ? toastRecipe.states.pressedOpacity : 1,
+            paddingHorizontal: toastRecipe.action.paddingHorizontal,
+          })}
+        >
+          <Text
+            style={{
+              color: resolveColorReference(toastRecipe.action.color, theme.palette),
+              fontWeight: toastRecipe.action.fontWeight,
+            }}
+            variant={toastRecipe.action.textVariant}
           >
             {resolved.action.label}
-          </Button>
-        </View>
+          </Text>
+        </Pressable>
       ) : null}
     </Animated.View>
   );
