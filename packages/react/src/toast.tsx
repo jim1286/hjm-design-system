@@ -39,13 +39,33 @@ import { classNames } from "./internal.js";
 import { useOptionalHjmTheme } from "./provider.js";
 import { createHjmThemeStyle } from "./theme.js";
 
-const toneMarks = {
-  neutral: "●",
-  info: "i",
-  success: "✓",
-  warning: "!",
-  danger: "!",
+// 1.10.0: stroked SVG glyphs inside a tinted badge (toastRecipe.icon). Text glyphs ("●", "i", "!") rendered at
+// font metrics, so neutral read as a stray grey dot and info/danger looked like typos. currentColor = tone accent.
+const toneGlyphPaths = {
+  notifications: "M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.94 1.94 0 0 0 3.4 0",
+  info: "M12 16v-4M12 8h.01M22 12a10 10 0 1 1-20 0 10 10 0 0 1 20 0Z",
+  success: "M20 6 9 17l-5-5",
+  warning: "M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0ZM12 9v4M12 17h.01",
+  alert: "M12 8v4M12 16h.01M7.86 2h8.28L22 7.86v8.28L16.14 22H7.86L2 16.14V7.86Z",
 } as const;
+
+function ToneGlyph({ tone }: { tone: keyof typeof toastRecipe.tones }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      width="18"
+      height="18"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      focusable="false"
+    >
+      <path d={toneGlyphPaths[toastRecipe.tones[tone].mark]} />
+    </svg>
+  );
+}
 
 type ToastCardProps = Readonly<{
   descriptor: ResolvedToastDescriptor;
@@ -110,7 +130,7 @@ const ToastCard = forwardRef<HTMLDivElement, ToastCardProps>(function ToastCard(
       </span>
       <span className="hjm-toast__tone-mark" aria-hidden="true" />
       <span className="hjm-toast__icon" aria-hidden="true">
-        {toneMarks[descriptor.tone]}
+        <ToneGlyph tone={descriptor.tone} />
       </span>
       <span className="hjm-toast__content">
         {descriptor.title ? (
@@ -136,7 +156,9 @@ const ToastCard = forwardRef<HTMLDivElement, ToastCardProps>(function ToastCard(
         aria-label={descriptor.closeLabel}
         onClick={() => onDismiss("close-action")}
       >
-        <span aria-hidden="true">×</span>
+        <svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" focusable="false">
+          <path d="M18 6 6 18M6 6l12 12" />
+        </svg>
       </button>
     </div>
   );

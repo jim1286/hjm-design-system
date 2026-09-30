@@ -567,6 +567,9 @@ describe("Toast visual and behavior identity", () => {
           contrast(resolveColorReference(tone.accent, palette), background),
         ).toBeGreaterThanOrEqual(3);
       }
+      // 1.10.0 pill action: its label must stay readable on the tinted fill.
+      const actionFill = resolveColorReference(toastRecipe.action.background, palette);
+      expect(contrast(resolveColorReference(toastRecipe.action.color, palette), actionFill)).toBeGreaterThanOrEqual(4.5);
     }
   });
 

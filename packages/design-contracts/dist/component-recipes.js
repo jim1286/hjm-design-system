@@ -1382,62 +1382,78 @@ export const toastRecipe = {
         "bottom-start": { blockEdge: "bottom", inlineEdge: "start", stackFrom: "bottom" },
         "bottom-end": { blockEdge: "bottom", inlineEdge: "end", stackFrom: "bottom" },
     },
+    // 1.10.0: tone is carried by a tinted icon badge, not a 2px edge strip — the strip plus a bare glyph read
+    // as a grey dot on neutral toasts (BurnTok 2026-09-30 feedback "알림 ui 구려"). `badge` is the badge fill.
     tones: {
         neutral: {
             foreground: semanticColors.content.primary,
             accent: semanticColors.content.secondary,
+            badge: semanticColors.surface.sunken,
             mark: "notifications",
         },
         info: {
             foreground: semanticColors.content.primary,
             accent: semanticColors.feedback.info.foreground,
+            badge: semanticColors.feedback.info.badgeBackground,
             mark: "info",
         },
         success: {
             foreground: semanticColors.content.primary,
             accent: semanticColors.feedback.success.foreground,
+            badge: semanticColors.feedback.success.badgeBackground,
             mark: "success",
         },
         warning: {
             foreground: semanticColors.content.primary,
             accent: semanticColors.feedback.warning.foreground,
+            badge: semanticColors.feedback.warning.badgeBackground,
             mark: "warning",
         },
         danger: {
             foreground: semanticColors.content.primary,
             accent: semanticColors.content.danger,
+            badge: semanticColors.feedback.danger.badgeBackground,
             mark: "alert",
         },
     },
     surface: {
         background: semanticColors.canvas,
+        // Strong border stays: the card boundary must keep 3:1 against the page (toast.test.ts, WCAG 1.4.11).
+        // 1.10.0 only softens the shape (lg radius).
         border: semanticColors.border.strong,
         borderWidth: stroke.default,
-        radius: "md",
+        radius: "lg",
         shadow: floatingSurfaceContract.shadow,
         minHeight: layout.rowHeight.singleLine,
         padding: spacing.md,
         gap: spacing.sm,
         maxWidth: 420,
     },
-    toneMark: { width: stroke.strong, radius: "full" },
-    icon: { glyph: "sm" },
+    // Retired in 1.10.0 (width 0): the icon badge carries tone. Kept so the slot contract stays additive.
+    toneMark: { width: 0, radius: "full" },
+    icon: { glyph: "sm", badgeDiameter: 32, badgeRadius: "full" },
     content: { gap: spacing.xxs },
     title: {
         color: semanticColors.content.primary,
         textVariant: "body",
         fontWeight: fontWeight.bold,
     },
+    // Secondary copy so the title leads; body-on-body read as one grey block.
     description: {
-        color: semanticColors.content.body,
+        color: semanticColors.content.secondary,
         textVariant: "body",
     },
+    // 1.10.0: a tinted pill button aligned to the end instead of a bare text link, so the one thing a toast
+    // asks for is recognisable as a control. Hit area stays the 44pt touch target.
     action: {
         color: semanticColors.content.brand,
+        background: semanticColors.surface.brand,
+        radius: "full",
+        align: "end",
         textVariant: "body",
         fontWeight: fontWeight.bold,
         minHeight: control.minTouchTarget,
-        paddingHorizontal: spacing.xs,
+        paddingHorizontal: spacing.md,
     },
     close: {
         color: semanticColors.content.secondary,

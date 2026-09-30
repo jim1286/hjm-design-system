@@ -7,13 +7,18 @@ import { createPortal } from "react-dom";
 import { classNames } from "./internal.js";
 import { useOptionalHjmTheme } from "./provider.js";
 import { createHjmThemeStyle } from "./theme.js";
-const toneMarks = {
-    neutral: "●",
-    info: "i",
-    success: "✓",
-    warning: "!",
-    danger: "!",
+// 1.10.0: stroked SVG glyphs inside a tinted badge (toastRecipe.icon). Text glyphs ("●", "i", "!") rendered at
+// font metrics, so neutral read as a stray grey dot and info/danger looked like typos. currentColor = tone accent.
+const toneGlyphPaths = {
+    notifications: "M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.94 1.94 0 0 0 3.4 0",
+    info: "M12 16v-4M12 8h.01M22 12a10 10 0 1 1-20 0 10 10 0 0 1 20 0Z",
+    success: "M20 6 9 17l-5-5",
+    warning: "M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0ZM12 9v4M12 17h.01",
+    alert: "M12 8v4M12 16h.01M7.86 2h8.28L22 7.86v8.28L16.14 22H7.86L2 16.14V7.86Z",
 };
+function ToneGlyph({ tone }) {
+    return (_jsx("svg", { viewBox: "0 0 24 24", width: "18", height: "18", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", focusable: "false", children: _jsx("path", { d: toneGlyphPaths[toastRecipe.tones[tone].mark] }) }));
+}
 const ToastCard = forwardRef(function ToastCard({ descriptor, phase, onAction, onDismiss, onPointerPause, onPointerResume, onFocusPause, onFocusResume, locale, className, }, ref) {
     const baseId = useId().replaceAll(":", "");
     const titleId = `${baseId}-toast-title`;
@@ -27,7 +32,7 @@ const ToastCard = forwardRef(function ToastCard({ descriptor, phase, onAction, o
     return (_jsxs("div", { ref: ref, className: classNames("hjm-toast", className), "data-tone": descriptor.tone, "data-state": phase, lang: locale, role: "group", "aria-labelledby": descriptor.title ? titleId : undefined, "aria-describedby": descriptionId, onPointerEnter: onPointerPause, onPointerLeave: onPointerResume, onFocusCapture: onFocusPause, onBlurCapture: (event) => {
             if (!event.currentTarget.contains(event.relatedTarget))
                 onFocusResume?.();
-        }, onKeyDown: handleKeyDown, children: [_jsx("span", { className: "hjm-visually-hidden", role: descriptor.priority === "high" ? "alert" : "status", children: descriptor.announcement }), _jsx("span", { className: "hjm-toast__tone-mark", "aria-hidden": "true" }), _jsx("span", { className: "hjm-toast__icon", "aria-hidden": "true", children: toneMarks[descriptor.tone] }), _jsxs("span", { className: "hjm-toast__content", children: [descriptor.title ? (_jsx("strong", { id: titleId, className: "hjm-toast__title", children: descriptor.title })) : null, _jsx("span", { id: descriptionId, className: "hjm-toast__description", children: descriptor.description })] }), descriptor.action ? (_jsx("button", { type: "button", className: "hjm-toast__action", "aria-label": descriptor.action.accessibilityLabel, onClick: onAction, children: descriptor.action.label })) : null, _jsx("button", { type: "button", className: "hjm-toast__close", "aria-label": descriptor.closeLabel, onClick: () => onDismiss("close-action"), children: _jsx("span", { "aria-hidden": "true", children: "\u00D7" }) })] }));
+        }, onKeyDown: handleKeyDown, children: [_jsx("span", { className: "hjm-visually-hidden", role: descriptor.priority === "high" ? "alert" : "status", children: descriptor.announcement }), _jsx("span", { className: "hjm-toast__tone-mark", "aria-hidden": "true" }), _jsx("span", { className: "hjm-toast__icon", "aria-hidden": "true", children: _jsx(ToneGlyph, { tone: descriptor.tone }) }), _jsxs("span", { className: "hjm-toast__content", children: [descriptor.title ? (_jsx("strong", { id: titleId, className: "hjm-toast__title", children: descriptor.title })) : null, _jsx("span", { id: descriptionId, className: "hjm-toast__description", children: descriptor.description })] }), descriptor.action ? (_jsx("button", { type: "button", className: "hjm-toast__action", "aria-label": descriptor.action.accessibilityLabel, onClick: onAction, children: descriptor.action.label })) : null, _jsx("button", { type: "button", className: "hjm-toast__close", "aria-label": descriptor.closeLabel, onClick: () => onDismiss("close-action"), children: _jsx("svg", { "aria-hidden": "true", viewBox: "0 0 24 24", width: "16", height: "16", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", focusable: "false", children: _jsx("path", { d: "M18 6 6 18M6 6l12 12" }) }) })] }));
 });
 /** Controlled single-toast renderer; ToastProvider supplies the full FIFO lifecycle. */
 export const Toast = forwardRef(function Toast({ descriptor, onDismissRequest, className }, ref) {

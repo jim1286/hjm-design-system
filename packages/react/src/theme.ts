@@ -153,6 +153,15 @@ export function createHjmThemeStyle(
   for (const [name, ratio] of Object.entries(sheetRecipe.sizes)) {
     if (ratio !== null) style[`--hjm-sheet-size-${name}`] = `${ratio * 100}dvh`;
   }
+  // Toast badge/action colours resolve from the recipe so Web and Native share one tone table (1.10.0).
+  for (const [tone, contract] of Object.entries(toastRecipe.tones)) {
+    style[`--hjm-toast-accent-${tone}`] = resolveColorReference(contract.accent, palette);
+    style[`--hjm-toast-badge-${tone}`] = resolveColorReference(contract.badge, palette);
+  }
+  style["--hjm-toast-badge-size"] = `${toastRecipe.icon.badgeDiameter}px`;
+  style["--hjm-toast-action-background"] = resolveColorReference(toastRecipe.action.background, palette);
+  style["--hjm-toast-action-color"] = resolveColorReference(toastRecipe.action.color, palette);
+  style["--hjm-toast-description-color"] = resolveColorReference(toastRecipe.description.color, palette);
   const toastExit = toastRecipe.transition.web.exit;
   style["--hjm-toast-exit-duration"] = environment.reducedMotion ? "0ms" : `${toastExit.duration}ms`;
   style["--hjm-toast-exit-easing"] = `cubic-bezier(${easing[toastExit.easing].join(", ")})`;

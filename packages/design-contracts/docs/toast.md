@@ -117,6 +117,23 @@ Storybook `Patterns/Toast layout`. The fixture covers long Korean/English copy,
 doubled text, dark theme and RTL. Automated browser checks are separate from
 real assistive-technology and consumer-release evidence; Toast remains beta.
 
+### Visual refresh — 2026-09-30 (1.10.0)
+
+BurnTok 사용자 피드백("알림 ui 구려")을 실제 화면으로 확인했더니 세 가지가 원인이었습니다. neutral
+Toast의 `●` 글리프가 뜻 없는 회색 점으로 보였고, 글자 글리프(`i`·`!`)는 폰트 metric에 따라 오타처럼
+보였고, action이 밑줄 없는 텍스트라 컨트롤로 읽히지 않았습니다. 1.10.0은 다음으로 바꿉니다.
+
+- tone은 32-unit 원형 tinted badge 안의 stroke SVG 아이콘이 전달합니다(neutral = 종). 2px 가장자리
+  띠(`toneMark`)는 badge와 역할이 겹쳐 너비 0으로 은퇴했습니다 — slot은 가산 계약을 위해 남깁니다.
+- action은 끝 정렬 tinted pill(`action.background` = `surface.brand`, 44-unit target)입니다. 라벨과
+  fill 대비 4.5:1을 contract test가 지킵니다.
+- 카드 radius md → lg, description은 secondary 색으로 제목과 위계를 나눕니다. 테두리는
+  `border.strong`을 유지합니다 — subtle hairline은 3:1 경계 대비(WCAG 1.4.11) test를 통과하지 못했습니다.
+- 여러 줄·큰 글자에서도 badge는 제목 옆 위쪽에 붙고, 한국어는 `word-break: keep-all`로 단어 중간에서
+  끊지 않습니다(Web).
+
+Review fixture: Storybook `Patterns/Toast layout` → `Tone gallery`(light/dark).
+
 Web renderer:
 
 - viewport를 문서 root 근처에 하나만 두고 recipe placement와 logical start/end를 사용합니다.
@@ -140,8 +157,9 @@ Native renderer:
 - swipe capability가 없는 플랫폼에서는 gesture를 노출하지 않습니다.
 - app background/foreground와 accessibility focus를 `window`/`focus` pause reason에 연결합니다.
 
-두 renderer 모두 tone icon과 `toneMark`를 렌더링해 색 없이 neutral/info/success/warning/danger를
-구분하고, action·close는 44-unit target과 visible focus를 유지합니다. 실제 제품 fixture에서는
+두 renderer 모두 tone icon을 tinted badge(`toastRecipe.icon.badgeDiameter`, `tones.*.badge`) 안에
+렌더링해 색 없이 neutral/info/success/warning/danger를 구분하고(1.10.0부터 `toneMark` 가장자리 띠는
+너비 0으로 은퇴), action·close는 44-unit target과 visible focus를 유지합니다. 실제 제품 fixture에서는
 normal/high announcement, keyboard/screen reader, 200% zoom, Reduce Motion, 앱 background 복귀,
 overflow와 update를 검증합니다.
 

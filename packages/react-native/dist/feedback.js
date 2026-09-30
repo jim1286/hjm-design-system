@@ -6,7 +6,7 @@ import { emptyStateRecipe, noticeRecipe, progressRecipe, skeletonRecipe, toastRe
 import { resolveResultDescriptor, resultRecipe, } from "@hjmds/design-contracts/components/result";
 import { createToastSession, createToastStore, resolveToastDescriptor, toastBehaviorDefaults, } from "@hjmds/design-contracts/components/toast";
 import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, } from "react";
-import { ActivityIndicator, AccessibilityInfo, Animated, AppState, Easing, Keyboard, Platform, View, useWindowDimensions, } from "react-native";
+import { ActivityIndicator, AccessibilityInfo, Animated, AppState, Easing, Keyboard, Platform, Pressable, View, useWindowDimensions, } from "react-native";
 import { Button, IconButton } from "./actions.js";
 import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
@@ -287,6 +287,7 @@ function ToastSurface({ snapshot, managedMotion = false, announces = true, suspe
     exitCompleteRef.current = onExitComplete;
     const tone = toastRecipe.tones[resolved.tone];
     const accent = resolveColorReference(tone.accent, theme.palette);
+    const badge = resolveColorReference(tone.badge, theme.palette);
     const background = resolveColorReference(toastRecipe.surface.background, theme.palette);
     const border = resolveColorReference(toastRecipe.surface.border, theme.palette);
     const pauseFocus = () => onPause("focus");
@@ -359,7 +360,7 @@ function ToastSurface({ snapshot, managedMotion = false, announces = true, suspe
                 width: "100%",
             },
             style,
-        ], children: [_jsx(View, { accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: {
+        ], children: [toastRecipe.toneMark.width > 0 ? (_jsx(View, { accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: {
                     backgroundColor: accent,
                     borderRadius: radius[toastRecipe.toneMark.radius],
                     bottom: 0,
@@ -367,15 +368,38 @@ function ToastSurface({ snapshot, managedMotion = false, announces = true, suspe
                     position: "absolute",
                     top: 0,
                     width: toastRecipe.toneMark.width,
-                } }), !announces || Platform.OS === "ios" ? null : (_jsx(Text, { accessibilityLabel: resolved.announcement, accessibilityLiveRegion: resolved.priority === "high" ? "assertive" : "polite", accessibilityRole: resolved.priority === "high" ? "alert" : undefined, accessible: true, style: { height: 1, opacity: 0, position: "absolute", width: 1 }, children: resolved.announcement })), _jsxs(View, { style: {
-                    alignItems: "center",
+                } })) : null, !announces || Platform.OS === "ios" ? null : (_jsx(Text, { accessibilityLabel: resolved.announcement, accessibilityLiveRegion: resolved.priority === "high" ? "assertive" : "polite", accessibilityRole: resolved.priority === "high" ? "alert" : undefined, accessible: true, style: { height: 1, opacity: 0, position: "absolute", width: 1 }, children: resolved.announcement })), _jsxs(View, { style: {
+                    // Start-aligned so a multi-line or large-text toast keeps its badge beside the title (Web does the same).
+                    alignItems: "flex-start",
                     direction: theme.environment.direction,
                     flexDirection: "row",
                     gap: toastRecipe.surface.gap,
-                }, children: [renderedToneIcon === undefined ? null : (_jsx(View, { accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { alignItems: "center", flexShrink: 0, justifyContent: "center" }, children: renderedToneIcon })), _jsxs(View, { style: { flex: 1, gap: toastRecipe.content.gap, minWidth: 0 }, children: [resolved.title ? (_jsx(Text, { style: {
+                }, children: [renderedToneIcon === undefined ? null : (_jsx(View, { accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: {
+                            alignItems: "center",
+                            backgroundColor: badge,
+                            borderRadius: radius[toastRecipe.icon.badgeRadius],
+                            flexShrink: 0,
+                            height: toastRecipe.icon.badgeDiameter,
+                            justifyContent: "center",
+                            width: toastRecipe.icon.badgeDiameter,
+                        }, children: renderedToneIcon })), _jsxs(View, { style: { alignSelf: "center", flex: 1, gap: toastRecipe.content.gap, minWidth: 0 }, children: [resolved.title ? (_jsx(Text, { style: {
                                     color: resolveColorReference(toastRecipe.title.color, theme.palette),
                                     fontWeight: toastRecipe.title.fontWeight,
-                                }, variant: toastRecipe.title.textVariant, children: resolved.title })) : null, _jsx(Text, { style: { color: resolveColorReference(toastRecipe.description.color, theme.palette) }, variant: toastRecipe.description.textVariant, children: resolved.description })] }), _jsx(IconButton, { label: resolved.closeLabel, onBlur: resumeFocus, onFocus: pauseFocus, onPress: () => onDismiss("close-action"), children: _jsx(Text, { accessible: false, tone: "muted", variant: "title", children: "\u00D7" }) })] }), resolved.action ? (_jsx(View, { style: { alignSelf: "flex-start" }, children: _jsx(Button, { accessibilityLabel: resolved.action.accessibilityLabel, onBlur: resumeFocus, onFocus: pauseFocus, onPress: onAction, tone: "ghost", children: resolved.action.label }) })) : null] }));
+                                }, variant: toastRecipe.title.textVariant, children: resolved.title })) : null, _jsx(Text, { style: { color: resolveColorReference(toastRecipe.description.color, theme.palette) }, variant: toastRecipe.description.textVariant, children: resolved.description })] }), _jsx(IconButton, { label: resolved.closeLabel, onBlur: resumeFocus, onFocus: pauseFocus, onPress: () => onDismiss("close-action"), children: _jsx(Text, { accessible: false, tone: "muted", variant: "title", children: "\u00D7" }) })] }), resolved.action ? (
+            // 1.10.0: tinted pill aligned to the end (toastRecipe.action) instead of a ghost text button.
+            _jsx(Pressable, { accessibilityLabel: resolved.action.accessibilityLabel, accessibilityRole: "button", onBlur: resumeFocus, onFocus: pauseFocus, onPress: onAction, style: ({ pressed }) => ({
+                    alignItems: "center",
+                    alignSelf: toastRecipe.action.align === "end" ? "flex-end" : "flex-start",
+                    backgroundColor: resolveColorReference(toastRecipe.action.background, theme.palette),
+                    borderRadius: radius[toastRecipe.action.radius],
+                    justifyContent: "center",
+                    minHeight: toastRecipe.action.minHeight,
+                    opacity: pressed ? toastRecipe.states.pressedOpacity : 1,
+                    paddingHorizontal: toastRecipe.action.paddingHorizontal,
+                }), children: _jsx(Text, { style: {
+                        color: resolveColorReference(toastRecipe.action.color, theme.palette),
+                        fontWeight: toastRecipe.action.fontWeight,
+                    }, variant: toastRecipe.action.textVariant, children: resolved.action.label }) })) : null] }));
 }
 /** One Native toast driven by the same exactly-once session as a queued region. */
 export function Toast({ descriptor, onDismiss, placement = toastRecipe.defaults.placement, renderToneIcon, style, }) {
