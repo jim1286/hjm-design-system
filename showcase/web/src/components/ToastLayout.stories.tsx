@@ -45,7 +45,7 @@ export const LongCopyWithAction: Story = {
 export const ToneGallery: Story = {
   ...Compact,
   render: () => (
-    <div style={{ display: "grid", gap: 12, maxWidth: 420 }}>
+    <div style={{ display: "grid", gap: "var(--hjm-space-sm)" }}>
       <Toast descriptor={{ id: "g-neutral", title: "검토하고 있어요", description: "다 되면 알려 드릴게요. 그동안 써 보셔도 돼요.", closeLabel: "닫기" }} onDismissRequest={() => {}} />
       <Toast descriptor={{ id: "g-success", tone: "success", title: "검토 완료", description: "번뚝 타이머를 다듬었어요. 새 버전으로 저장할까요?", closeLabel: "닫기", action: { label: "새 버전으로 저장", onAction: () => {} } }} onDismissRequest={() => {}} />
       <Toast descriptor={{ id: "g-info", tone: "info", description: "새 버전으로 저장했어요", closeLabel: "닫기" }} onDismissRequest={() => {}} />
