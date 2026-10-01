@@ -1,0 +1,181 @@
+[
+  {
+    "title": null,
+    "role": "AXApplication",
+    "enabled": true,
+    "AXValue": null,
+    "help": null,
+    "AXLabel": "HJM Native Showcase",
+    "AXFrame": "{{0, 0}, {402, 874}}",
+    "role_description": "application",
+    "content_required": false,
+    "traits": [
+      "None"
+    ],
+    "pid": 83631,
+    "type": "Application",
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "subrole": null,
+    "frame": {
+      "x": 0,
+      "width": 402,
+      "height": 874,
+      "y": 0
+    }
+  },
+  {
+    "title": null,
+    "AXFrame": "{{16, 258}, {370, 20}}",
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "help": null,
+    "role": "AXStaticText",
+    "role_description": "text",
+    "type": "StaticText",
+    "custom_actions": [],
+    "AXLabel": "물방울 알림",
+    "subrole": null,
+    "enabled": true,
+    "content_required": false,
+    "pid": 83631,
+    "AXUniqueId": null,
+    "frame": {
+      "y": 258,
+      "x": 16,
+      "width": 370,
+      "height": 20
+    },
+    "AXValue": null
+  },
+  {
+    "content_required": false,
+    "AXFrame": "{{16, 294}, {370, 20}}",
+    "pid": 83631,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "enabled": true,
+    "AXValue": null,
+    "AXLabel": "물방울 애니메이션과 알림 표면을 확인하는 예제입니다.",
+    "custom_actions": [],
+    "title": null,
+    "help": null,
+    "role": "AXStaticText",
+    "subrole": null,
+    "AXUniqueId": null,
+    "type": "StaticText",
+    "role_description": "text",
+    "frame": {
+      "height": 20,
+      "y": 294,
+      "width": 370,
+      "x": 16
+    }
+  },
+  {
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "role_description": "button",
+    "AXValue": null,
+    "subrole": null,
+    "role": "AXButton",
+    "pid": 83631,
+    "AXUniqueId": null,
+    "help": null,
+    "enabled": true,
+    "custom_actions": [],
+    "type": "Button",
+    "AXLabel": "알림 띄우기",
+    "title": null,
+    "AXFrame": "{{16, 330}, {370, 44}}",
+    "content_required": false,
+    "frame": {
+      "width": 370,
+      "x": 16,
+      "y": 330,
+      "height": 44
+    }
+  },
+  {
+    "AXFrame": "{{362, 759}, {24, 24}}",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "role": "AXGenericElement",
+    "content_required": false,
+    "AXLabel": null,
+    "title": null,
+    "frame": {
+      "y": 759,
+      "width": 24,
+      "height": 24,
+      "x": 362
+    },
+    "custom_actions": [],
+    "pid": 83631,
+    "traits": [
+      "Scrollable"
+    ],
+    "help": null,
+    "type": "GenericElement",
+    "role_description": "",
+    "enabled": true,
+    "subrole": null
+  },
+  {
+    "enabled": true,
+    "AXLabel": "컴포넌트/상태와 알림/리퀴드 토스트/기본",
+    "role": "AXGenericElement",
+    "traits": [
+      "Scrollable"
+    ],
+    "help": null,
+    "subrole": null,
+    "AXFrame": "{{6, 811.66666698455811}, {264, 17}}",
+    "AXUniqueId": "mobile-menu-button",
+    "content_required": false,
+    "role_description": "",
+    "pid": 83631,
+    "type": "GenericElement",
+    "frame": {
+      "y": 811.6666669845581,
+      "height": 17,
+      "width": 264,
+      "x": 6
+    },
+    "AXValue": null,
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "subrole": null,
+    "help": null,
+    "AXValue": null,
+    "AXFrame": "{{368, 806}, {28, 28}}",
+    "content_required": false,
+    "AXUniqueId": "mobile-addons-button",
+    "custom_actions": [],
+    "enabled": true,
+    "role_description": "button",
+    "frame": {
+      "width": 28,
+      "y": 806,
+      "height": 28,
+      "x": 368
+    },
+    "AXLabel": null,
+    "pid": 83631,
+    "title": null,
+    "type": "Button",
+    "role": "AXButton",
+    "traits": [
+      "Scrollable",
+      "Button"
+    ]
+  }
+]

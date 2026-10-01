@@ -1,0 +1,27 @@
+[
+  {
+    "id": "patterns-onboarding",
+    "headings": [
+      "나의 속도로 쌓아 가요"
+    ]
+  },
+  {
+    "id": "patterns-search",
+    "headings": [
+      "다시 만나고 싶은 순간"
+    ]
+  },
+  {
+    "id": "patterns-dashboard",
+    "headings": [
+      "작은 순간이 쌓인 한 달"
+    ]
+  },
+  {
+    "id": "patterns-profile-studio",
+    "emptyNameError": true,
+    "saveBlockedWhileEmpty": true,
+    "recovery": true,
+    "overflow": false
+  }
+]

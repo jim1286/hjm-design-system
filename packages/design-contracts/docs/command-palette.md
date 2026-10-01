@@ -134,4 +134,4 @@ Native는 `unsupported`다. 전역 단축키는 제품 소유다.
 - **전역 단축키는 제품 소유다.** 이 renderer는 여는 키를 정하지 않는다.
 - 로컬 검증: `test/command-palette.browser.test.tsx` 5개(이름·초점·배경 inert, 활성 행과
   disabled 건너뜀·재필터, 실행 시 강제 종료와 사유, 종료 후 후속 명령 순서, Escape·바깥
-  pointer 종료)와 `Patterns/CommandPalette`.
+  pointer 종료)와 `컴포넌트/탐색/Command Palette`.

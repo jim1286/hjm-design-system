@@ -13,6 +13,13 @@ Native의 외부 배치는 `layoutStyle`, UI 식별은 `testID`를 사용한다.
 Web의 상위 앱 셸에 이미 main landmark가 있으면 `as="section"`을 사용한다. 이 옵션은
 다에리 WebShell의 main 안에 로그인 레이아웃을 채택할 때 중첩 main을 피하기 위해 추가했다.
 
+2026-10-01 로그인 조합 변경은 [로그인 화면 계약](auth-screen.md)의 mainCard와 pendingLabel을
+사용한다. 제공자 버튼 label은 지역화 카탈로그에서 이름만 남기고, 인증 시작부터 완료·취소·실패까지
+같은 main 내용을 유지한 채 pendingLabel만 켜고 끈다. 기존 제품 카드 wrapper를 제거하고 mainCard로
+옮기면 배경까지 유지된다. 버튼마다 busy를 켜는 기존 연결은 이 카드 상태로 옮긴다.
+HJM npm 게시만으로 이 변경이 제품에 자동 적용되지는 않는다. exact dependency·lock·계약을
+업데이트하고 제품의 상태 연결과 문구를 바꾼 뒤 웹·앱을 함께 검증한다.
+
 ## 설정 한 행
 
 `Switch presentation="row"`에 label/description/checked/onCheckedChange를 전달하면 행 전체가

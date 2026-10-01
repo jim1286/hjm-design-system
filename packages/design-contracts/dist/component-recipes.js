@@ -831,6 +831,17 @@ export const bottomNavigationRecipe = {
         native: "navigator-tab-bar",
     },
     presentations: {
+        capsule: {
+            background: semanticColors.surface.default,
+            border: semanticColors.border.default,
+            borderWidth: stroke.default,
+            borderEdges: ["all"],
+            radius: "full",
+            shadow: floatingSurfaceContract.shadow,
+            maxWidth: 480,
+            outerPaddingHorizontal: spacing.md,
+            outerPaddingTop: spacing.xs,
+        },
         bar: {
             background: semanticColors.canvas,
             border: semanticColors.border.default,
@@ -1365,7 +1376,7 @@ export const toastRecipe = {
         "action",
         "close",
     ],
-    defaults: { tone: "neutral", placement: "bottom", durationMs: 5000 },
+    defaults: { tone: "neutral", placement: "bottom", durationMs: 3000 },
     adaptive: { web: "fixed-viewport", native: "safe-area-overlay" },
     viewport: {
         layer: layer.toast,

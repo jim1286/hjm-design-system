@@ -20,3 +20,29 @@ name을 제품 adapter가 Web SVG 또는 React Native glyph로 번역해, 아이
 
 WAI의 기준처럼 주변 텍스트와 중복되는 그림은 장식으로 숨기고, 기능을 단독으로 전달하는
 그림은 모양 이름이 아니라 동작/목적을 접근성 이름으로 제공합니다.
+
+## Lucide adapter — 2026-10-01
+
+`createLucideGlyph` from either renderer `/icon-lucide` entry accepts named
+Lucide imports mapped to semantic names. This keeps only the selected glyphs
+reachable; it never loads a dynamic full-library dictionary.
+
+```tsx
+import { Search, ArrowLeft } from 'lucide-react';
+import { createLucideGlyph } from '@hjmds/react/icon-lucide';
+const renderGlyph = createLucideGlyph({ search: Search, back: ArrowLeft });
+// Web: <Icon name="search" renderGlyph={renderGlyph} />
+// Native: use lucide-react-native and <Icon descriptor={{name:'search'}} renderGlyph={renderGlyph}/>
+```
+
+Web now supports an optional `renderGlyph` inside its existing SVG frame. Omit it
+or return null to preserve the built-in glyph. Its callback receives a 24-unit
+viewBox size and currentColor; the outer frame resolves the actual token size.
+Native receives resolved numeric size/color/stroke and retains its existing
+renderGlyph contract. Both adapters hide artwork and leave naming, directionality
+and mirroring on Icon. Missing map entries throw to reveal product mapping errors.
+
+Lucide 1.49.0 is the verified development/showcase version and optional peer.
+The Native factory uses a scalar-only component interface instead of exporting
+one host version's RN StyleProp types, keeping consumers on supported newer RN
+versions structurally compatible. This does not replace provider/brand logos.

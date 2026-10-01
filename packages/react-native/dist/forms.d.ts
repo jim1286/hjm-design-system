@@ -28,15 +28,9 @@ export type FieldProps = Readonly<{
     disabled?: boolean;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
-    /**
-     * @deprecated Legacy compatibility only. New apps must use `layoutStyle`; Field rhythm,
-     * color, typography, radius, height, and state presentation remain recipe-owned.
-     * @see https://github.com/jim1286/hjm-design-system/blob/main/packages/design-contracts/docs/consumer-policy.md#31-react-native-legacy-style-compatibility-boundary
-     */
-    style?: StyleProp<ViewStyle>;
 }>;
 /** A renderer-neutral field frame for custom Native controls. */
-export declare function Field({ label, children, description, error, required, disabled, layoutStyle, style, }: FieldProps): import("react").JSX.Element;
+export declare function Field({ label, children, description, error, required, disabled, layoutStyle, }: FieldProps): import("react").JSX.Element;
 export type FormProps<Values> = Readonly<{
     label: string;
     values: Values;
@@ -63,26 +57,14 @@ export type FormProps<Values> = Readonly<{
  * this renderer only owns submit re-entrancy, feedback, and field rhythm.
  */
 export declare function Form<Values>({ label, values, onSubmit, children, submitLabel, status, defaultStatus, onStatusChange, error, fallbackErrorMessage, disabled, density, firstInvalidFieldRef, style, }: FormProps<Values>): import("react").JSX.Element;
-export type SelectOption<Value extends string = string> = Readonly<{
-    value: Value;
-    label: string;
-    description?: string;
-    disabled?: boolean;
-    accessibilityHint?: string;
-}>;
 export type SelectSection<Value extends string = string, SectionKey extends string = string> = SelectCollectionSectionDescriptor<Value, SectionKey>;
 export type SelectLeadingRenderProps = NativeCollectionLeadingRenderProps;
 export type SelectProps<Value extends string = string, SectionKey extends string = string> = Omit<ModalProps, "animationType" | "children" | "onDismiss" | "onRequestClose" | "onShow" | "transparent" | "visible"> & Readonly<{
     label?: string;
     accessibilityLabel?: string;
-    /** Legacy flat source. Prefer source/sections for shared collection identity. */
-    options?: readonly SelectOption<Value>[];
     source?: SelectCollectionSource<Value, SectionKey>;
     items?: readonly SelectItemDescriptor<Value>[];
     sections?: readonly SelectSection<Value, SectionKey>[];
-    value?: Value | null;
-    defaultValue?: Value | null;
-    onValueChange?: (value: Value) => void;
     selectedKey?: Value | null;
     defaultSelectedKey?: Value | null;
     onSelectionChange?: (value: Value | null) => void;
@@ -117,7 +99,7 @@ export type SelectProps<Value extends string = string, SectionKey extends string
     style?: StyleProp<ViewStyle>;
 }>;
 /** Native adaptive Select with shared sections, async states, and teardown-safe commits. */
-export declare function Select<Value extends string = string, SectionKey extends string = string>({ label, accessibilityLabel, options, source: sourceProp, items, sections, value, defaultValue, onValueChange, selectedKey, defaultSelectedKey, onSelectionChange, selectedItem, disallowEmptySelection, open, defaultOpen, onOpenChange, placeholder, description, error, required, disabled, readOnly, busy, size, density, asyncState, onRetry, retryLabel, readOnlyLabel, openHint, renderLeading, renderOptionLeading, onSelectionAfterDismiss, onDismiss, dismissLabel, optionsAccessibilityLabel, style, ...modalProps }: SelectProps<Value, SectionKey>): import("react").JSX.Element;
+export declare function Select<Value extends string = string, SectionKey extends string = string>({ label, accessibilityLabel, source: sourceProp, items, sections, selectedKey, defaultSelectedKey, onSelectionChange, selectedItem, disallowEmptySelection, open, defaultOpen, onOpenChange, placeholder, description, error, required, disabled, readOnly, busy, size, density, asyncState, onRetry, retryLabel, readOnlyLabel, openHint, renderLeading, renderOptionLeading, onSelectionAfterDismiss, onDismiss, dismissLabel, optionsAccessibilityLabel, style, ...modalProps }: SelectProps<Value, SectionKey>): import("react").JSX.Element;
 export type ComboboxLeadingRenderProps = NativeCollectionLeadingRenderProps;
 export type ComboboxProps<Key extends string = string, SectionKey extends string = string> = Omit<ModalProps, "animationType" | "children" | "onDismiss" | "onRequestClose" | "onShow" | "transparent" | "visible"> & Readonly<{
     label?: string;

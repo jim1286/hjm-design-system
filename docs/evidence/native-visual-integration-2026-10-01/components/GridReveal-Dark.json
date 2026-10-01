@@ -1,0 +1,206 @@
+[
+  {
+    "frame": {
+      "width": 402,
+      "y": 0,
+      "height": 874,
+      "x": 0
+    },
+    "enabled": true,
+    "role": "AXApplication",
+    "AXValue": null,
+    "help": null,
+    "AXFrame": "{{0, 0}, {402, 874}}",
+    "AXLabel": "HJM Native Showcase",
+    "role_description": "application",
+    "content_required": false,
+    "traits": [
+      "None"
+    ],
+    "pid": 57163,
+    "type": "Application",
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "subrole": null,
+    "title": null
+  },
+  {
+    "title": null,
+    "AXFrame": "{{16, 78}, {320, 200}}",
+    "traits": [
+      "Scrollable"
+    ],
+    "help": null,
+    "role": "AXGenericElement",
+    "role_description": "",
+    "type": "GenericElement",
+    "custom_actions": [],
+    "AXLabel": "햇살과 겹친 산 능선",
+    "subrole": null,
+    "enabled": true,
+    "content_required": false,
+    "pid": 57163,
+    "AXValue": null,
+    "AXUniqueId": null,
+    "frame": {
+      "height": 200,
+      "y": 78,
+      "width": 320,
+      "x": 16
+    }
+  },
+  {
+    "subrole": null,
+    "help": null,
+    "AXValue": null,
+    "AXFrame": "{{16, 298}, {370, 44}}",
+    "content_required": false,
+    "AXUniqueId": null,
+    "enabled": true,
+    "custom_actions": [],
+    "role_description": "",
+    "frame": {
+      "height": 44,
+      "x": 16,
+      "width": 370,
+      "y": 298
+    },
+    "AXLabel": "다시 보기",
+    "pid": 57163,
+    "title": null,
+    "type": "GenericElement",
+    "role": "AXGenericElement",
+    "traits": [
+      "Scrollable",
+      "Button"
+    ]
+  },
+  {
+    "enabled": true,
+    "AXLabel": "이미지 오류 보기",
+    "role": "AXGenericElement",
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "help": null,
+    "subrole": null,
+    "AXFrame": "{{16, 362}, {370, 44}}",
+    "AXUniqueId": null,
+    "content_required": false,
+    "role_description": "",
+    "pid": 57163,
+    "type": "GenericElement",
+    "frame": {
+      "y": 362,
+      "width": 370,
+      "height": 44,
+      "x": 16
+    },
+    "AXValue": null,
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "AXFrame": "{{16, 426}, {370, 40}}",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "role": "AXStaticText",
+    "content_required": false,
+    "AXLabel": "이미지가 로드된 뒤에만 격자 효과를 시작해요. 오류 상태에서 다시 보기를 누르면 재시도합니다.",
+    "title": null,
+    "frame": {
+      "width": 370,
+      "height": 40,
+      "y": 426,
+      "x": 16
+    },
+    "custom_actions": [],
+    "pid": 57163,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "help": null,
+    "type": "StaticText",
+    "role_description": "text",
+    "enabled": true,
+    "subrole": null
+  },
+  {
+    "traits": [
+      "Scrollable"
+    ],
+    "role_description": "",
+    "AXValue": null,
+    "subrole": null,
+    "role": "AXGenericElement",
+    "pid": 57163,
+    "AXUniqueId": null,
+    "help": null,
+    "enabled": true,
+    "custom_actions": [],
+    "AXLabel": null,
+    "type": "GenericElement",
+    "title": null,
+    "AXFrame": "{{362, 759}, {24, 24}}",
+    "content_required": false,
+    "frame": {
+      "height": 24,
+      "y": 759,
+      "width": 24,
+      "x": 362
+    }
+  },
+  {
+    "content_required": false,
+    "AXFrame": "{{6, 811.66666698455811}, {283, 17}}",
+    "pid": 57163,
+    "traits": [
+      "Scrollable"
+    ],
+    "enabled": true,
+    "AXValue": null,
+    "AXLabel": "Components/Display/Grid Reveal/Dark",
+    "custom_actions": [],
+    "title": null,
+    "help": null,
+    "role": "AXGenericElement",
+    "subrole": null,
+    "AXUniqueId": "mobile-menu-button",
+    "type": "GenericElement",
+    "role_description": "",
+    "frame": {
+      "width": 283,
+      "x": 6,
+      "y": 811.6666669845581,
+      "height": 17
+    }
+  },
+  {
+    "AXUniqueId": "mobile-addons-button",
+    "frame": {
+      "width": 28,
+      "height": 28,
+      "x": 368,
+      "y": 806
+    },
+    "content_required": false,
+    "type": "Button",
+    "custom_actions": [],
+    "role": "AXButton",
+    "AXValue": null,
+    "role_description": "button",
+    "subrole": null,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "title": null,
+    "AXLabel": "Open addons panel",
+    "enabled": true,
+    "help": null,
+    "pid": 57163,
+    "AXFrame": "{{368, 806}, {28, 28}}"
+  }
+]

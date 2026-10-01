@@ -65,9 +65,9 @@ export function BottomInfoPreview() {
   );
 }
 
-const meta = { title: "Patterns/Sidebar", component: SidebarPreview } satisfies Meta<typeof SidebarPreview>;
+const meta = { includeStories: ["DesktopShell","StandingConditions","LargeText"], id: "patterns-sidebar", title: "배포/컴포넌트/탐색/사이드바", component: SidebarPreview } satisfies Meta<typeof SidebarPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
-export const DesktopShell: Story = {};
-export const StandingConditions: Story = { render: () => <BottomInfoPreview /> };
-export const LargeText: Story = { globals: { textScale: "2" } };
+export const DesktopShell: Story = { name: "데스크톱 화면 골격",};
+export const StandingConditions: Story = { name: "고정 조건", render: () => <BottomInfoPreview /> };
+export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };

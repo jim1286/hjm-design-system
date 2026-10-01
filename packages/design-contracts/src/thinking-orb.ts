@@ -1,12 +1,15 @@
+import { buildOrbPresentation } from "./internal/thinking-orb/presentation.js";
 import { MODE_FRAMES } from "./internal/thinking-orb/registry.js";
 import { resolvePreset } from "./internal/thinking-orb/presets.js";
 import type { OrbState, OrbSize, OrbFrame } from "./internal/thinking-orb/types.js";
 export type { OrbState, OrbSize, OrbFrame };
 
 export const thinkingOrbStates = ["working", "searching", "solving", "listening", "connecting", "weaving", "composing", "breathing", "shaping"] as const;
+export type ThinkingOrbAppearance = "state" | "fluid" | "matrix";
 export type ThinkingOrbOptions = Readonly<{
   /** Actual operation phase, supplied by the host; the orb never simulates progress. */
   state?: OrbState;
+  appearance?: ThinkingOrbAppearance;
   size?: OrbSize;
   /** Localized description of the current operation. */
   label: string;
@@ -18,7 +21,8 @@ export type ThinkingOrbOptions = Readonly<{
 export { thinkingOrbRecipe } from "./thinking-orb-recipe.js";
 import { thinkingOrbRecipe } from "./thinking-orb-recipe.js";
 
-export function validateThinkingOrb({ state = "working", size = 64, speed = 1, label }: ThinkingOrbOptions): void {
+export function validateThinkingOrb({ state = "working", size = 64, speed = 1, label, appearance = "state" }: ThinkingOrbOptions): void {
+  if (!["state", "fluid", "matrix"].includes(appearance)) throw new TypeError("Unknown ThinkingOrb appearance");
   if (!thinkingOrbStates.includes(state)) throw new TypeError("Unknown ThinkingOrb state");
   if (size !== 20 && size !== 64) throw new RangeError("ThinkingOrb size must be 20 or 64");
   if (!Number.isFinite(speed) || speed <= 0 || speed > 4) throw new RangeError("ThinkingOrb speed must be > 0 and <= 4");
@@ -26,9 +30,10 @@ export function validateThinkingOrb({ state = "working", size = 64, speed = 1, l
 }
 
 /** Theme-free, deterministic geometry; no DOM/React/native imports. */
-export function buildThinkingOrbFrame(state: OrbState, size: OrbSize, time: number): OrbFrame {
-  validateThinkingOrb({ state, size, label: state });
+export function buildThinkingOrbFrame(state: OrbState, size: OrbSize, time: number, appearance: ThinkingOrbAppearance = "state"): OrbFrame {
+  validateThinkingOrb({ state, size, label: state, appearance });
   if (!Number.isFinite(time) || time < 0) throw new RangeError("ThinkingOrb time must be finite and non-negative");
+  if (appearance !== "state") return buildOrbPresentation(appearance, size, time);
   const preset = resolvePreset(state, size);
   return MODE_FRAMES[preset.mode](size, time * preset.speed, preset.opts);
 }

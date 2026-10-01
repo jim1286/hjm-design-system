@@ -53,11 +53,12 @@ describe("Native PasswordField", () => {
 });
 
 describe("Native OtpField", () => {
-  it("uses one accessible TextInput and sanitizes the complete value", () => {
+  it.each(["boxes", "underline"] as const)("uses one accessible TextInput and sanitizes the complete value (%s)", (presentation) => {
     const onValueChange = vi.fn();
     const onComplete = vi.fn();
     const renderer = render(
       <OtpField
+        presentation={presentation}
         accessibilityLabel="인증번호"
         length={6}
         onComplete={onComplete}

@@ -598,8 +598,8 @@ export declare const behaviorRegistry: {
             readonly overflowPolicy: readonly ["discard-oldest", "discard-newest"];
         };
         readonly defaults: {
-            readonly durationMs: 5000;
-            readonly minimumDurationMs: 5000;
+            readonly durationMs: 3000;
+            readonly minimumDurationMs: 3000;
             readonly priority: "normal";
             readonly dismissOnAction: true;
             readonly maxVisible: 1;

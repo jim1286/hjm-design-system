@@ -1,3 +1,4 @@
+import { resolveMenuTypeahead } from "./menu-typeahead.js";
 import {
   createAlertDialogSession,
   getAlertDialogInitialFocus,
@@ -901,8 +902,6 @@ export type MenuItem = Readonly<{
   trailing?: ReactNode;
   tone?: MenuItemTone;
   disabled?: boolean;
-  /** Backward-compatible item-local action; Menu onAction receives every activation. */
-  onSelect?: () => void;
 }>;
 
 export type MenuSection = Omit<MenuSectionDescriptor<string, string>, "items"> &
@@ -1179,7 +1178,6 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(function Menu(props, r
 
   const activateItem = (item: MenuItem, index: number) => {
     if (itemIsDisabled(item)) return;
-    item.onSelect?.();
     onAction?.(item.id);
     if (selectionMode === "multiple") {
       const next = new Set(multipleValue);
@@ -1195,25 +1193,12 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(function Menu(props, r
   };
 
   const runTypeahead = (key: string) => {
-    const currentTime = Date.now();
-    const previous = currentTime - typeaheadRef.current.time < 500
-      ? typeaheadRef.current.value
-      : "";
-    const combined = `${previous}${key}`.toLocaleLowerCase();
-    const search = new Set(combined).size === 1 ? key.toLocaleLowerCase() : combined;
-    typeaheadRef.current = { value: combined, time: currentTime };
-    for (let offset = 1; offset <= items.length; offset += 1) {
-      const index = (focusIndex + offset + items.length) % items.length;
-      const item = items[index];
-      if (
-        item &&
-        !itemIsDisabled(item) &&
-        menuTextValue(item).toLocaleLowerCase().startsWith(search)
-      ) {
-        focusAt(index);
-        return;
-      }
-    }
+    const result = resolveMenuTypeahead(
+      items.map((item) => ({ textValue: menuTextValue(item), disabled: itemIsDisabled(item) })),
+      focusIndex, key, typeaheadRef.current, Date.now(),
+    );
+    typeaheadRef.current = result.state;
+    if (result.index !== undefined) focusAt(result.index);
   };
 
   useEffect(() => {

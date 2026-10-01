@@ -8,7 +8,6 @@ export type SelectSection<Key extends string = string, SectionKey extends string
 export type SelectLeadingRenderProps = Readonly<{
     color: "currentColor";
     size: number;
-    glyphSize: number;
 }>;
 export type SelectOptionLeadingRenderProps = SelectLeadingRenderProps & Readonly<{
     selected: boolean;

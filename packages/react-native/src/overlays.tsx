@@ -17,7 +17,7 @@ import {
   type SheetOpenChangeDetails,
 } from "@hjmds/design-contracts/components/sheet";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
-import { backdrop, easing, radius, spacing } from "@hjmds/design-contracts/foundations";
+import { backdrop, easing, glyph, radius, spacing } from "@hjmds/design-contracts/foundations";
 import {
   alertDialogRecipe,
   dialogRecipe,
@@ -42,6 +42,7 @@ import {
   Modal,
   Platform,
   ScrollView,
+  Text as NativeText,
   Pressable,
   View,
   findNodeHandle,
@@ -62,6 +63,14 @@ import {
 import { minimumTargetStyle } from "./internal/styles.js";
 import { Text } from "./primitives.js";
 import { useHjmNativeSafeAreaInsets, useHjmNativeTheme } from "./provider.js";
+
+// A close glyph is icon artwork, not body copy. HJM Text applies controlled textScale
+// even with allowFontScaling=false, which clipped × in the fixed icon frame at 200%.
+function CloseGlyph() {
+  const { colors } = useHjmNativeTheme();
+  return <NativeText accessible={false} allowFontScaling={false}
+    style={{ color: colors.text, fontSize: glyph.sm, lineHeight: glyph.sm }}>×</NativeText>;
+}
 
 export type OverlayAction = Readonly<{
   label: string;
@@ -458,7 +467,7 @@ export function Dialog({
                 label={closeLabel}
                 onPress={() => requestClose("close-action")}
               >
-                <Text accessible={false} variant="title">×</Text>
+                <CloseGlyph />
               </IconButton>
             ) : null}
           </View>
@@ -1347,7 +1356,7 @@ export function Sheet({
                 label={closeLabel}
                 onPress={() => requestClose("close-action")}
               >
-                <Text accessible={false} variant="title">×</Text>
+                <CloseGlyph />
               </IconButton>
             ) : null}
           </View>

@@ -71,9 +71,9 @@ export function TagsInputPreview() {
   );
 }
 
-const meta = { title: "Patterns/ToggleGroup", component: ToggleGroupPreview } satisfies Meta<typeof ToggleGroupPreview>;
+const meta = { includeStories: ["Toggles","Tags","LargeText"], id: "patterns-togglegroup", title: "배포/컴포넌트/입력/토글 그룹", component: ToggleGroupPreview } satisfies Meta<typeof ToggleGroupPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
-export const Toggles: Story = {};
-export const Tags: Story = { render: () => <TagsInputPreview /> };
-export const LargeText: Story = { globals: { textScale: "2" } };
+export const Toggles: Story = { name: "토글",};
+export const Tags: Story = { name: "태그 모음", render: () => <TagsInputPreview /> };
+export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };

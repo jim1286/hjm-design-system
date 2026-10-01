@@ -1,0 +1,1 @@
+{"version":3,"file":"gooey-navigation.d.ts","sourceRoot":"","sources":["../src/gooey-navigation.ts"],"names":[],"mappings":"AAAA,MAAM,MAAM,cAAc,GAAG,UAAU,GAAG,OAAO,CAAC;AAClD,MAAM,MAAM,kBAAkB,GAAG,QAAQ,CAAC;IAAE,CAAC,EAAE,MAAM,CAAC;IAAC,KAAK,EAAE,MAAM,CAAA;CAAE,CAAC,CAAC;AACxE,gFAAgF;AAChF,wBAAgB,qBAAqB,CAAC,IAAI,EAAE,kBAAkB,EAAE,EAAE,EAAE,kBAAkB;;;;;EAMrF"}

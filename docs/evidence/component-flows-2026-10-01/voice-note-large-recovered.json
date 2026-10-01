@@ -1,0 +1,288 @@
+[
+  {
+    "subrole": null,
+    "help": null,
+    "AXValue": null,
+    "AXFrame": "{{0, 0}, {402, 874}}",
+    "content_required": false,
+    "AXUniqueId": null,
+    "enabled": true,
+    "custom_actions": [],
+    "role_description": "application",
+    "frame": {
+      "height": 874,
+      "y": 0,
+      "width": 402,
+      "x": 0
+    },
+    "AXLabel": "HJM Native Showcase",
+    "pid": 89686,
+    "title": null,
+    "type": "Application",
+    "role": "AXApplication",
+    "traits": [
+      "None"
+    ]
+  },
+  {
+    "enabled": true,
+    "AXLabel": "산책하며 남긴 메모",
+    "role": "AXStaticText",
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "help": null,
+    "subrole": null,
+    "AXFrame": "{{101, 99}, {205.66665649414062, 48}}",
+    "AXUniqueId": null,
+    "content_required": false,
+    "role_description": "text",
+    "pid": 89686,
+    "type": "StaticText",
+    "frame": {
+      "width": 205.66665649414062,
+      "y": 99,
+      "height": 48,
+      "x": 101
+    },
+    "AXValue": null,
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "AXFrame": "{{37, 211}, {328, 44}}",
+    "AXUniqueId": null,
+    "AXValue": "0:12",
+    "role": "AXGenericElement",
+    "content_required": false,
+    "AXLabel": "재생 위치",
+    "title": null,
+    "frame": {
+      "y": 211,
+      "x": 37,
+      "height": 44,
+      "width": 328
+    },
+    "custom_actions": [
+      "다음으로",
+      "이전으로"
+    ],
+    "pid": 89686,
+    "traits": [
+      "Scrollable",
+      "Adjustable"
+    ],
+    "help": null,
+    "type": "GenericElement",
+    "role_description": "",
+    "enabled": true,
+    "subrole": null
+  },
+  {
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "role_description": "text",
+    "AXValue": null,
+    "subrole": null,
+    "role": "AXStaticText",
+    "pid": 89686,
+    "AXUniqueId": null,
+    "help": null,
+    "enabled": true,
+    "custom_actions": [],
+    "AXLabel": "0:12 / 1:24",
+    "type": "StaticText",
+    "title": null,
+    "AXFrame": "{{37, 271}, {328, 40}}",
+    "content_required": false,
+    "frame": {
+      "width": 328,
+      "x": 37,
+      "y": 271,
+      "height": 40
+    }
+  },
+  {
+    "content_required": false,
+    "AXFrame": "{{37, 327}, {80.666664123535156, 44}}",
+    "pid": 89686,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "enabled": true,
+    "AXValue": null,
+    "AXLabel": "재생",
+    "custom_actions": [],
+    "title": null,
+    "help": null,
+    "role": "AXButton",
+    "subrole": null,
+    "AXUniqueId": null,
+    "type": "Button",
+    "role_description": "button",
+    "frame": {
+      "y": 327,
+      "width": 80.66666412353516,
+      "height": 44,
+      "x": 37
+    }
+  },
+  {
+    "title": null,
+    "AXFrame": "{{16, 412}, {370, 80}}",
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "help": null,
+    "role": "AXStaticText",
+    "role_description": "text",
+    "type": "StaticText",
+    "custom_actions": [],
+    "AXLabel": "재생 상태를 살펴보는 예제입니다. 실제 음성은 재생하지 않아요.",
+    "subrole": null,
+    "enabled": true,
+    "content_required": false,
+    "pid": 89686,
+    "AXValue": null,
+    "AXUniqueId": null,
+    "frame": {
+      "y": 412,
+      "height": 80,
+      "width": 370,
+      "x": 16
+    }
+  },
+  {
+    "frame": {
+      "width": 370,
+      "y": 512,
+      "height": 44,
+      "x": 16
+    },
+    "enabled": true,
+    "role": "AXButton",
+    "AXValue": null,
+    "help": null,
+    "AXFrame": "{{16, 512}, {370, 44}}",
+    "AXLabel": "로딩 상태",
+    "role_description": "switch",
+    "content_required": false,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "pid": 89686,
+    "type": "Button",
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "subrole": "AXSwitch",
+    "title": null
+  },
+  {
+    "help": null,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "AXUniqueId": null,
+    "frame": {
+      "height": 44,
+      "x": 16,
+      "y": 576,
+      "width": 370
+    },
+    "role_description": "button",
+    "content_required": false,
+    "pid": 89686,
+    "type": "Button",
+    "AXFrame": "{{16, 576}, {370, 44}}",
+    "role": "AXButton",
+    "subrole": null,
+    "enabled": true,
+    "AXValue": null,
+    "AXLabel": "오류 상태",
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "content_required": false,
+    "type": "GenericElement",
+    "AXValue": null,
+    "AXUniqueId": null,
+    "enabled": true,
+    "role_description": "",
+    "help": null,
+    "AXFrame": "{{362, 759}, {24, 24}}",
+    "title": null,
+    "frame": {
+      "x": 362,
+      "y": 759,
+      "width": 24,
+      "height": 24
+    },
+    "custom_actions": [],
+    "role": "AXGenericElement",
+    "AXLabel": null,
+    "subrole": null,
+    "pid": 89686,
+    "traits": [
+      "Scrollable"
+    ]
+  },
+  {
+    "help": null,
+    "content_required": false,
+    "AXFrame": "{{6, 811.66666698455811}, {301, 17}}",
+    "frame": {
+      "x": 6,
+      "y": 811.6666669845581,
+      "width": 301,
+      "height": 17
+    },
+    "subrole": null,
+    "role": "AXGenericElement",
+    "AXUniqueId": "mobile-menu-button",
+    "AXLabel": "컴포넌트/데이터 표시/Voice Note/Large Text",
+    "custom_actions": [],
+    "pid": 89686,
+    "traits": [
+      "Scrollable"
+    ],
+    "title": null,
+    "role_description": "",
+    "enabled": true,
+    "AXValue": null,
+    "type": "GenericElement"
+  },
+  {
+    "help": null,
+    "role_description": "button",
+    "title": null,
+    "type": "Button",
+    "custom_actions": [],
+    "AXValue": null,
+    "enabled": true,
+    "frame": {
+      "x": 368,
+      "width": 28,
+      "y": 806,
+      "height": 28
+    },
+    "AXLabel": null,
+    "subrole": null,
+    "AXUniqueId": "mobile-addons-button",
+    "AXFrame": "{{368, 806}, {28, 28}}",
+    "pid": 89686,
+    "content_required": false,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "role": "AXButton"
+  }
+]

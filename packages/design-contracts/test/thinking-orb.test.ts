@@ -29,3 +29,29 @@ describe("ThinkingOrb upstream geometry parity", () => {
     expect(() => buildThinkingOrbFrame("working", 64, -1)).toThrow();
   });
 });
+
+
+describe("ThinkingOrb independent presentations", () => {
+  it.each(["fluid", "matrix"] as const)("keeps %s geometry deterministic, bounded and animated", appearance => {
+    for (const size of [20, 64] as const) {
+      const first = buildThinkingOrbFrame("working", size, 0, appearance);
+      expect(first).toEqual(buildThinkingOrbFrame("working", size, 0, appearance));
+      expect(first).not.toEqual(buildThinkingOrbFrame("working", size, 1, appearance));
+      expect(first.dots.length).toBe(appearance === "fluid" ? 192 : 49);
+      for (const time of [0, 0.6, 1, 1000]) {
+        for (const dot of buildThinkingOrbFrame("working", size, time, appearance).dots) {
+          expect(Object.values(dot).every(Number.isFinite)).toBe(true);
+          expect(dot.x - dot.r).toBeGreaterThanOrEqual(0);
+          expect(dot.y - dot.r).toBeGreaterThanOrEqual(0);
+          expect(dot.x + dot.r).toBeLessThanOrEqual(size);
+          expect(dot.y + dot.r).toBeLessThanOrEqual(size);
+          expect(dot.white).toBeGreaterThanOrEqual(0);
+          expect(dot.white).toBeLessThanOrEqual(1);
+        }
+      }
+    }
+  });
+  it("preserves the default state geometry", () => {
+    expect(buildThinkingOrbFrame("working", 64, 1)).toEqual(buildThinkingOrbFrame("working", 64, 1, "state"));
+  });
+});

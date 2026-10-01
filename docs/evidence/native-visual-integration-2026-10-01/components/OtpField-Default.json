@@ -1,0 +1,287 @@
+[
+  {
+    "subrole": null,
+    "help": null,
+    "AXValue": null,
+    "AXFrame": "{{0, 0}, {402, 874}}",
+    "content_required": false,
+    "AXUniqueId": null,
+    "enabled": true,
+    "custom_actions": [],
+    "role_description": "application",
+    "frame": {
+      "height": 874,
+      "x": 0,
+      "y": 0,
+      "width": 402
+    },
+    "AXLabel": "HJM Native Showcase",
+    "pid": 67845,
+    "title": null,
+    "type": "Application",
+    "role": "AXApplication",
+    "traits": [
+      "None"
+    ]
+  },
+  {
+    "enabled": true,
+    "AXLabel": "한 번에 붙여넣어도, 한 글자씩 입력해도 같은 인증번호입니다.",
+    "role": "AXStaticText",
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "help": null,
+    "subrole": null,
+    "AXFrame": "{{16, 78}, {370, 20}}",
+    "AXUniqueId": null,
+    "content_required": false,
+    "role_description": "text",
+    "pid": 67845,
+    "type": "StaticText",
+    "frame": {
+      "y": 78,
+      "width": 370,
+      "height": 20,
+      "x": 16
+    },
+    "AXValue": null,
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "AXFrame": "{{16, 122}, {370, 20}}",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "role": "AXStaticText",
+    "content_required": false,
+    "AXLabel": "인증번호 · 카드형",
+    "title": null,
+    "frame": {
+      "width": 370,
+      "y": 122,
+      "height": 20,
+      "x": 16
+    },
+    "custom_actions": [],
+    "pid": 67845,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "help": null,
+    "type": "StaticText",
+    "role_description": "text",
+    "enabled": true,
+    "subrole": null
+  },
+  {
+    "traits": [
+      "TextEntry",
+      "Scrollable",
+      "TextOperationsAvailable"
+    ],
+    "role_description": "text field",
+    "AXValue": "",
+    "subrole": null,
+    "role": "AXTextField",
+    "pid": 67845,
+    "AXUniqueId": null,
+    "help": null,
+    "enabled": true,
+    "custom_actions": [],
+    "AXLabel": "인증번호 · 카드형",
+    "type": "TextField",
+    "title": null,
+    "AXFrame": "{{16, 150}, {304, 44}}",
+    "content_required": false,
+    "frame": {
+      "width": 304,
+      "x": 16,
+      "y": 150,
+      "height": 44
+    }
+  },
+  {
+    "content_required": false,
+    "AXFrame": "{{16, 218}, {370, 20}}",
+    "pid": 67845,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "enabled": true,
+    "AXValue": null,
+    "AXLabel": "인증번호 · 밑줄형",
+    "custom_actions": [],
+    "title": null,
+    "help": null,
+    "role": "AXStaticText",
+    "subrole": null,
+    "AXUniqueId": null,
+    "type": "StaticText",
+    "role_description": "text",
+    "frame": {
+      "x": 16,
+      "y": 218,
+      "height": 20,
+      "width": 370
+    }
+  },
+  {
+    "title": null,
+    "AXFrame": "{{16, 246}, {304, 44}}",
+    "traits": [
+      "TextEntry",
+      "Scrollable",
+      "TextOperationsAvailable"
+    ],
+    "help": null,
+    "role": "AXTextField",
+    "role_description": "text field",
+    "type": "TextField",
+    "custom_actions": [],
+    "AXLabel": "인증번호 · 밑줄형",
+    "subrole": null,
+    "enabled": true,
+    "content_required": false,
+    "pid": 67845,
+    "AXValue": "",
+    "AXUniqueId": null,
+    "frame": {
+      "width": 304,
+      "height": 44,
+      "y": 246,
+      "x": 16
+    }
+  },
+  {
+    "frame": {
+      "height": 20,
+      "y": 314,
+      "width": 370,
+      "x": 16
+    },
+    "enabled": true,
+    "role": "AXStaticText",
+    "AXValue": null,
+    "help": null,
+    "AXFrame": "{{16, 314}, {370, 20}}",
+    "AXLabel": "6자리 숫자를 입력해 주세요.",
+    "role_description": "text",
+    "content_required": false,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "pid": 67845,
+    "type": "StaticText",
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "subrole": null,
+    "title": null
+  },
+  {
+    "AXFrame": "{{16, 358}, {370, 44}}",
+    "AXValue": null,
+    "role": "AXGenericElement",
+    "AXLabel": "오류 상태 보기",
+    "custom_actions": [],
+    "content_required": false,
+    "subrole": null,
+    "AXUniqueId": null,
+    "title": null,
+    "type": "GenericElement",
+    "enabled": true,
+    "pid": 67845,
+    "frame": {
+      "x": 16,
+      "width": 370,
+      "height": 44,
+      "y": 358
+    },
+    "help": null,
+    "role_description": "",
+    "traits": [
+      "Button",
+      "Scrollable"
+    ]
+  },
+  {
+    "subrole": null,
+    "enabled": true,
+    "role_description": "",
+    "pid": 67845,
+    "AXValue": null,
+    "type": "GenericElement",
+    "custom_actions": [],
+    "content_required": false,
+    "AXFrame": "{{362, 759}, {24, 24}}",
+    "role": "AXGenericElement",
+    "AXUniqueId": null,
+    "title": null,
+    "AXLabel": null,
+    "help": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "frame": {
+      "height": 24,
+      "x": 362,
+      "width": 24,
+      "y": 759
+    }
+  },
+  {
+    "frame": {
+      "height": 17,
+      "y": 811.6666669845581,
+      "x": 6,
+      "width": 274.3333435058594
+    },
+    "role": "AXGenericElement",
+    "AXUniqueId": "mobile-menu-button",
+    "traits": [
+      "Scrollable"
+    ],
+    "pid": 67845,
+    "help": null,
+    "role_description": "",
+    "title": null,
+    "enabled": true,
+    "AXFrame": "{{6, 811.66666698455811}, {274.33334350585938, 17}}",
+    "custom_actions": [],
+    "AXValue": null,
+    "AXLabel": "Components/Inputs/OtpField/Default",
+    "type": "GenericElement",
+    "subrole": null,
+    "content_required": false
+  },
+  {
+    "pid": 67845,
+    "content_required": false,
+    "title": null,
+    "AXFrame": "{{368, 806}, {28, 28}}",
+    "frame": {
+      "y": 806,
+      "x": 368,
+      "width": 28,
+      "height": 28
+    },
+    "role": "AXButton",
+    "enabled": true,
+    "type": "Button",
+    "AXUniqueId": "mobile-addons-button",
+    "AXValue": null,
+    "traits": [
+      "Button",
+      "Scrollable"
+    ],
+    "role_description": "button",
+    "help": null,
+    "subrole": null,
+    "custom_actions": [],
+    "AXLabel": "Open addons panel"
+  }
+]

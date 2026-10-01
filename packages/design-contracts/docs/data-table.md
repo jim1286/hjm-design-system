@@ -84,10 +84,13 @@ async 상태와 narrow long-copy 회귀로 확인하고, 소비 제품의 데이
 `@hjmds/react/data-table`의 `DataTable`이 이 계약을 실행한다. Web renderer는 전용 keyboard·
 selection·320px long-copy proof를 통과해 2026-09-29 stable로 승격한다. Native는 `unsupported`다.
 
-- **기존 `Table`과 겹치지 않는다.** `@hjmds/react`의 `Table`(advanced-display)은 열·행을
-  그려 주는 표시용이고 선택·tri-state·async 상태·정렬 상태 순환이 없다. DataTable은 그
-  상호작용 계약을 실행하는 쪽이다. 단순 표는 계속 `Table`을 쓴다 — 같은 화면에 둘을 겹쳐
-  쓰지 않는다.
+- **기존 `Table`과 정렬 기능은 공유한다.** 2026-10-01 중복 조사에서 Table도 정렬 버튼과
+  ascending/descending 순환을 제공하는데 표시 전용으로 설명했던 불일치를 확인했다.
+  Table은 generic row·caption·emptyState와 두 방향 정렬을 제공하고, DataTable은
+  ID 기반 row/column·선택·tri-state·async 상태 및 정렬 해제를 포함하는 세 상태 순환을 제공한다.
+  정렬 전환은 같은 계약 함수, header button은 같은 내부 renderer를 소비한다.
+  caption과 단순 generic row 표는 Table, 행 선택·loading/error와 정렬 해제가 필요한 표는
+  DataTable을 선택한다. API를 합치면 caption·emptyState·row 모델 호환성을 잃으므로 두 API를 유지한다.
 - **정렬 버튼은 header 안에 있다.** `th` 자체를 버튼으로 만들지 않고, 방향은
   `aria-sort`에 그대로 흘린다. 다음 상태는 `getNextDataTableSortState`가 정하고 실제 정렬은
   제품이 한다.
@@ -103,4 +106,4 @@ selection·320px long-copy proof를 통과해 2026-09-29 stable로 승격한다.
 - 로컬 검증: `test/data-table.browser.test.tsx` 5개(header 안 정렬 버튼과 aria-sort 3단계,
   tri-state 선택과 disabled 제외, 단일 선택 radio 의미, 셀당 컨트롤 하나와 기본 tab 순서,
   async 상태 발표와 footer 조합), `test/data-table.keyboard.browser.test.tsx` 1개(실제 Tab·Enter·Space
-  입력), 그리고 `Patterns/CommandPalette`의 표 화면.
+  입력), 그리고 `컴포넌트/탐색/Command Palette`의 표 화면.

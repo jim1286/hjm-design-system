@@ -68,7 +68,7 @@ describe("Native stable core input-action evidence", () => {
     act(() => {
       renderer = create(
         <HjmNativeProvider>
-          <Select defaultOpen dismissLabel="닫기" label="언어" onSelectionChange={onSelectionChange} options={[{ value: "ko", label: "한국어" }, { value: "en", label: "영어" }]} placeholder="선택" />
+          <Select defaultOpen dismissLabel="닫기" label="언어" onSelectionChange={onSelectionChange} items={[{ id: "ko", label: "한국어" , textValue: "한국어"}, { id: "en", label: "영어" , textValue: "영어"}]} placeholder="선택" />
         </HjmNativeProvider>,
       );
     });

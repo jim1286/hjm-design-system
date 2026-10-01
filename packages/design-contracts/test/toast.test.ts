@@ -75,9 +75,11 @@ describe("Toast descriptor and announcement contract", () => {
     }
   });
 
-  it("applies the accessible timeout floor and persistent actionable default", () => {
-    expect(resolveToastDuration(makeToast("default"))).toBe(5000);
-    expect(resolveToastDuration(makeToast("clamped", { durationMs: 250 }))).toBe(5000);
+  it("applies the configured timeout floor and persistent actionable default", () => {
+    for (const presentation of ["standard", "liquid"] as const) {
+      expect(resolveToastDuration(makeToast("default", { presentation }))).toBe(3000);
+    }
+    expect(resolveToastDuration(makeToast("clamped", { durationMs: 250 }))).toBe(3000);
     expect(resolveToastDuration(makeToast("long", { durationMs: 8000 }))).toBe(8000);
     expect(resolveToastDuration(makeToast("persistent", { durationMs: null }))).toBeNull();
     expect(
@@ -93,7 +95,7 @@ describe("Toast descriptor and announcement contract", () => {
         }),
       ),
     ).toBe(6000);
-    expect(toastBehaviorDefaults.minimumDurationMs).toBe(5000);
+    expect(toastBehaviorDefaults.minimumDurationMs).toBe(3000);
     expect(toastBehaviorDefaults.maxVisible).toBe(1);
     expect(toastRecipe.defaults.durationMs).toBe(
       toastBehaviorDefaults.minimumDurationMs,
@@ -154,25 +156,27 @@ describe("Toast session lifecycle", () => {
 
     expect(session.getSnapshot().timer).toMatchObject({
       status: "waiting",
-      durationMs: 5000,
-      remainingMs: 5000,
+      durationMs: 3000,
+      remainingMs: 3000,
     });
     expect(session.advanceTime(10_000)).toBe(false);
-    expect(session.getSnapshot().timer.remainingMs).toBe(5000);
+    expect(session.getSnapshot().timer.remainingMs).toBe(3000);
 
     expect(session.show()).toBe(true);
     expect(session.show()).toBe(false);
     expect(session.advanceTime(2000)).toBe(true);
-    expect(session.getSnapshot().timer.remainingMs).toBe(3000);
+    expect(session.getSnapshot().timer.remainingMs).toBe(1000);
     expect(session.pause("pointer")).toBe(true);
     expect(session.pause("focus")).toBe(true);
-    expect(session.advanceTime(5000)).toBe(false);
+    expect(session.advanceTime(3000)).toBe(false);
     expect(session.resume("pointer")).toBe(true);
     expect(session.getSnapshot().timer.status).toBe("paused");
     expect(session.resume("focus")).toBe(true);
     expect(session.getSnapshot().timer.status).toBe("running");
 
-    expect(session.advanceTime(3000)).toBe(true);
+    expect(session.advanceTime(999)).toBe(true);
+    expect(session.getSnapshot().phase).toBe("visible");
+    expect(session.advanceTime(1)).toBe(true);
     expect(session.getSnapshot()).toMatchObject({
       phase: "closing",
       dismissReason: "timeout",
@@ -340,18 +344,18 @@ describe("bounded FIFO Toast store", () => {
     expect(store.getSnapshot().visible.map((entry) => entry.descriptor.id)).toEqual(["a"]);
     expect(store.getSnapshot().queued.map((entry) => entry.descriptor.id)).toEqual(["b", "c"]);
 
-    store.advanceTime(5000);
+    store.advanceTime(3000);
     expect(store.getSnapshot().visible[0]).toMatchObject({
       phase: "closing",
       dismissReason: "timeout",
     });
     expect(store.getSnapshot().queued[0]?.timer.status).toBe("waiting");
-    expect(store.getSnapshot().queued[0]?.timer.remainingMs).toBe(5000);
+    expect(store.getSnapshot().queued[0]?.timer.remainingMs).toBe(3000);
     expect(store.completeExit("a")).toBe(true);
     expect(store.getSnapshot().visible[0]).toMatchObject({
       phase: "visible",
       descriptor: { id: "b" },
-      timer: { status: "running", remainingMs: 5000 },
+      timer: { status: "running", remainingMs: 3000 },
     });
     expect(store.getSnapshot().queued.map((entry) => entry.descriptor.id)).toEqual(["c"]);
   });
@@ -463,11 +467,11 @@ describe("bounded FIFO Toast store", () => {
     expect(store.completeExit("first")).toBe(true);
     expect(store.getSnapshot().visible[0]).toMatchObject({
       descriptor: { id: "second" },
-      timer: { status: "paused", remainingMs: 5000 },
+      timer: { status: "paused", remainingMs: 3000 },
     });
-    expect(store.advanceTime(5000)).toBe(0);
+    expect(store.advanceTime(3000)).toBe(0);
     expect(store.resumeAll("window")).toBe(1);
-    expect(store.advanceTime(5000)).toBe(1);
+    expect(store.advanceTime(3000)).toBe(1);
     expect(store.getSnapshot().visible[0]?.dismissReason).toBe("timeout");
   });
 
@@ -481,11 +485,11 @@ describe("bounded FIFO Toast store", () => {
         store.completeExit("first");
       }
     });
-    expect(store.advanceTime(5000)).toBe(1);
+    expect(store.advanceTime(3000)).toBe(1);
     unsubscribe();
     expect(store.getSnapshot().visible[0]).toMatchObject({
       descriptor: { id: "second" },
-      timer: { status: "running", remainingMs: 5000 },
+      timer: { status: "running", remainingMs: 3000 },
     });
   });
 

@@ -5,13 +5,13 @@
  */
 export declare const liquidToastRecipe: {
     readonly capsule: {
-        readonly width: 88;
-        readonly height: 24;
+        readonly width: 32;
+        readonly height: 32;
     };
-    readonly gap: 34;
+    readonly gap: 26;
     readonly minHeight: 74;
     readonly maxWidth: 396;
-    readonly radius: 32;
+    readonly radius: 12;
     readonly dropSize: 52;
     readonly neckWidth: 60;
     readonly blur: 14.3;

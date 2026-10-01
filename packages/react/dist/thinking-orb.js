@@ -3,8 +3,8 @@ import { useEffect, useRef } from "react";
 import { buildThinkingOrbFrame, createThinkingOrbClock, thinkingOrbRecipe, validateThinkingOrb } from "@hjmds/design-contracts/components/thinking-orb";
 import { useHjmTheme } from "./provider.js";
 /** Optional AI status presentation; ordinary loading retains Spinner. */
-export function ThinkingOrb({ state = "working", size = 64, label, speed = 1, paused = false, active = true, className, style }) {
-    validateThinkingOrb({ state, size, speed, label });
+export function ThinkingOrb({ state = "working", appearance = "state", size = 64, label, speed = 1, paused = false, active = true, className, style }) {
+    validateThinkingOrb({ state, appearance, size, speed, label });
     const theme = useHjmTheme();
     const ink = theme.palette.theme.text;
     const reduced = theme.environment.reducedMotion;
@@ -20,7 +20,7 @@ export function ThinkingOrb({ state = "working", size = 64, label, speed = 1, pa
         let visible = typeof IntersectionObserver === "undefined";
         let disposed = false;
         const draw = () => {
-            const frame = buildThinkingOrbFrame(state, size, reduced ? thinkingOrbRecipe.motion.staticTime : clock.current.time);
+            const frame = buildThinkingOrbFrame(state, size, reduced ? thinkingOrbRecipe.motion.staticTime : clock.current.time, appearance);
             ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
             ctx.clearRect(0, 0, size, size);
             ctx.fillStyle = ctx.strokeStyle = ink;
@@ -80,7 +80,7 @@ export function ThinkingOrb({ state = "working", size = 64, label, speed = 1, pa
             document.removeEventListener("visibilitychange", sync);
             window.removeEventListener("resize", resize);
         };
-    }, [state, size, speed, active, paused, reduced, ink]);
+    }, [state, appearance, size, speed, active, paused, reduced, ink]);
     return _jsxs("span", { className: className, "data-hjm-thinking-orb": state, role: "status", "aria-live": "polite", "aria-atomic": "true", style: { display: "inline-flex", ...style }, children: [_jsx("canvas", { ref: canvasRef, "aria-hidden": "true", style: { width: size, height: size, display: "block" } }), _jsx("span", { style: { position: "absolute", width: 1, height: 1, padding: 0, margin: -1, overflow: "hidden", clipPath: "inset(50%)", whiteSpace: "nowrap", border: 0 }, children: label })] });
 }
 //# sourceMappingURL=thinking-orb.js.map

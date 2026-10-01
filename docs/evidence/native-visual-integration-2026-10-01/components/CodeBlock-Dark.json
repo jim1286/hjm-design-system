@@ -1,0 +1,181 @@
+[
+  {
+    "frame": {
+      "width": 402,
+      "y": 0,
+      "height": 874,
+      "x": 0
+    },
+    "enabled": true,
+    "role": "AXApplication",
+    "AXValue": null,
+    "help": null,
+    "AXFrame": "{{0, 0}, {402, 874}}",
+    "AXLabel": "HJM Native Showcase",
+    "role_description": "application",
+    "content_required": false,
+    "traits": [
+      "None"
+    ],
+    "pid": 57163,
+    "type": "Application",
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "subrole": null,
+    "title": null
+  },
+  {
+    "title": null,
+    "AXFrame": "{{16, 78}, {370, 20}}",
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "help": null,
+    "role": "AXStaticText",
+    "role_description": "text",
+    "type": "StaticText",
+    "custom_actions": [],
+    "AXLabel": "코드를 길게 눌러 선택하고 시스템 메뉴에서 복사할 수 있어요.",
+    "subrole": null,
+    "enabled": true,
+    "content_required": false,
+    "pid": 57163,
+    "AXValue": null,
+    "AXUniqueId": null,
+    "frame": {
+      "y": 78,
+      "x": 16,
+      "width": 370,
+      "height": 20
+    }
+  },
+  {
+    "subrole": null,
+    "help": null,
+    "AXValue": null,
+    "AXFrame": "{{32, 130}, {70, 17}}",
+    "content_required": false,
+    "AXUniqueId": null,
+    "enabled": true,
+    "custom_actions": [],
+    "role_description": "text",
+    "frame": {
+      "x": 32,
+      "y": 130,
+      "width": 70,
+      "height": 17
+    },
+    "AXLabel": "TypeScript",
+    "pid": 57163,
+    "title": null,
+    "type": "StaticText",
+    "role": "AXStaticText",
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ]
+  },
+  {
+    "enabled": true,
+    "AXLabel": "테마 설정 코드\nconst theme = {\n  appearance: \"light\",\n  spacing: 16,\n};\n",
+    "role": "AXStaticText",
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "help": null,
+    "subrole": null,
+    "AXFrame": "{{16, 163}, {217.66667175292969, 113.66665649414062}}",
+    "AXUniqueId": null,
+    "content_required": false,
+    "role_description": "text",
+    "pid": 57163,
+    "type": "StaticText",
+    "frame": {
+      "height": 113.66665649414062,
+      "y": 163,
+      "x": 16,
+      "width": 217.6666717529297
+    },
+    "AXValue": null,
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "AXFrame": "{{362, 759}, {24, 24}}",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "role": "AXGenericElement",
+    "content_required": false,
+    "AXLabel": null,
+    "title": null,
+    "frame": {
+      "y": 759,
+      "height": 24,
+      "width": 24,
+      "x": 362
+    },
+    "custom_actions": [],
+    "pid": 57163,
+    "traits": [
+      "Scrollable"
+    ],
+    "help": null,
+    "type": "GenericElement",
+    "role_description": "",
+    "enabled": true,
+    "subrole": null
+  },
+  {
+    "traits": [
+      "Scrollable"
+    ],
+    "role_description": "",
+    "AXValue": null,
+    "subrole": null,
+    "role": "AXGenericElement",
+    "pid": 57163,
+    "AXUniqueId": "mobile-menu-button",
+    "help": null,
+    "enabled": true,
+    "custom_actions": [],
+    "AXLabel": "Components/Display/Code Block/Dark",
+    "type": "GenericElement",
+    "title": null,
+    "AXFrame": "{{6, 811.66666698455811}, {283.33334350585938, 17}}",
+    "content_required": false,
+    "frame": {
+      "x": 6,
+      "width": 283.3333435058594,
+      "height": 17,
+      "y": 811.6666669845581
+    }
+  },
+  {
+    "content_required": false,
+    "AXFrame": "{{368, 806}, {28, 28}}",
+    "pid": 57163,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "enabled": true,
+    "AXValue": null,
+    "AXLabel": "Open addons panel",
+    "custom_actions": [],
+    "title": null,
+    "help": null,
+    "role": "AXButton",
+    "subrole": null,
+    "AXUniqueId": "mobile-addons-button",
+    "type": "Button",
+    "role_description": "button",
+    "frame": {
+      "width": 28,
+      "y": 806,
+      "height": 28,
+      "x": 368
+    }
+  }
+]

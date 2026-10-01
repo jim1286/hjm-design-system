@@ -4,8 +4,8 @@ import { useHjmTheme } from "./provider.js";
 
 export type ThinkingOrbProps = ThinkingOrbOptions & Readonly<{ className?: string; style?: CSSProperties }>;
 /** Optional AI status presentation; ordinary loading retains Spinner. */
-export function ThinkingOrb({ state = "working", size = 64, label, speed = 1, paused = false, active = true, className, style }: ThinkingOrbProps) {
-  validateThinkingOrb({ state, size, speed, label });
+export function ThinkingOrb({ state = "working", appearance = "state", size = 64, label, speed = 1, paused = false, active = true, className, style }: ThinkingOrbProps) {
+  validateThinkingOrb({ state, appearance, size, speed, label });
   const theme = useHjmTheme();
   const ink = theme.palette.theme.text;
   const reduced = theme.environment.reducedMotion;
@@ -20,7 +20,7 @@ export function ThinkingOrb({ state = "working", size = 64, label, speed = 1, pa
     let visible = typeof IntersectionObserver === "undefined";
     let disposed = false;
     const draw = () => {
-      const frame = buildThinkingOrbFrame(state, size, reduced ? thinkingOrbRecipe.motion.staticTime : clock.current.time);
+      const frame = buildThinkingOrbFrame(state, size, reduced ? thinkingOrbRecipe.motion.staticTime : clock.current.time, appearance);
       ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
       ctx.clearRect(0, 0, size, size);
       ctx.fillStyle = ctx.strokeStyle = ink;
@@ -62,7 +62,7 @@ export function ThinkingOrb({ state = "working", size = 64, label, speed = 1, pa
       disposed = true; cancelAnimationFrame(raf); observer?.disconnect(); clock.current.resetDelta();
       document.removeEventListener("visibilitychange", sync); window.removeEventListener("resize", resize);
     };
-  }, [state, size, speed, active, paused, reduced, ink]);
+  }, [state, appearance, size, speed, active, paused, reduced, ink]);
   return <span className={className} data-hjm-thinking-orb={state} role="status" aria-live="polite" aria-atomic="true" style={{ display: "inline-flex", ...style }}>
     <canvas ref={canvasRef} aria-hidden="true" style={{ width: size, height: size, display: "block" }} />
     {/* Inline hiding works for granular consumers who do not import the stylesheet. */}

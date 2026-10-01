@@ -1,0 +1,20 @@
+[
+  {
+    "label": "선택한 서체를 불러왔어요. 한글 글리프가 없는 부분은 기본 서체로 표시될 수 있어요.",
+    "frame": {
+      "x": 36,
+      "y": 428,
+      "width": 330,
+      "height": 40
+    }
+  },
+  {
+    "label": "서체 후보 설정\n{\n  \"family\": \"HjmTypographyCandidate1\",\n  \"status\": \"ready\",\n  \"source\": \"\",\n  \"license\": \"\"\n}",
+    "frame": {
+      "y": 1441,
+      "width": 330,
+      "height": 146.3333740234375,
+      "x": 36
+    }
+  }
+]

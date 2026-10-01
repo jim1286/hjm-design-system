@@ -1,0 +1,20 @@
+[
+  {
+    "state": "default",
+    "tables": 2,
+    "focused": true,
+    "overflow": false
+  },
+  {
+    "state": "dark",
+    "tables": 2,
+    "focused": true,
+    "overflow": false
+  },
+  {
+    "state": "large-text",
+    "tables": 2,
+    "focused": true,
+    "overflow": false
+  }
+]

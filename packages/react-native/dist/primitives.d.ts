@@ -30,8 +30,6 @@ export type LayoutProps = Omit<ViewProps, "children"> & Readonly<{
     header?: ReactNode;
     footer?: ReactNode;
     sidebar?: LayoutSidebar;
-    /** @deprecated Native has no bypass-link equivalent; omit this Web-only copy. */
-    skipLinkLabel?: string;
     headerProps?: LayoutRegionProps;
     mainProps?: LayoutRegionProps;
     footerProps?: LayoutRegionProps;
@@ -43,8 +41,6 @@ export declare const Layout: import("react").ForwardRefExoticComponent<Omit<View
     header?: ReactNode;
     footer?: ReactNode;
     sidebar?: LayoutSidebar;
-    /** @deprecated Native has no bypass-link equivalent; omit this Web-only copy. */
-    skipLinkLabel?: string;
     headerProps?: LayoutRegionProps;
     mainProps?: LayoutRegionProps;
     footerProps?: LayoutRegionProps;
@@ -68,43 +64,28 @@ export declare const Text: import("react").ForwardRefExoticComponent<Omit<Native
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }> & import("react").RefAttributes<NativeText>>;
-/** @deprecated Compatibility aliases; use `subtle` and `accent`. */
-/** @deprecated `brand` is the legacy native name for the canonical `accent` tone. */
-export type LegacyNativeSurfaceTone = "brand";
-export type SurfaceTone = ContractSurfaceTone | LegacyNativeSurfaceTone;
-/** Token names are canonical; the numeric branch is legacy compatibility until the breaking train. */
-export type SurfacePadding = ContractSurfacePadding | number;
-/** Token names are canonical; the numeric branch is legacy compatibility until the breaking train. */
-export type SurfaceRadius = ContractSurfaceRadius | number;
+export type SurfaceTone = ContractSurfaceTone;
+export type SurfacePadding = ContractSurfacePadding;
+export type SurfaceRadius = ContractSurfaceRadius;
 export type SurfaceProps = Omit<ViewProps, "style"> & Readonly<{
     tone?: SurfaceTone;
-    /** Numeric values are deprecated; use a recipe-owned padding token. */
     padding?: SurfacePadding;
-    /** Numeric values are deprecated; use a recipe-owned radius token. */
     radius?: SurfaceRadius;
     bordered?: boolean;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
-    /**
-     * @deprecated Legacy compatibility only. New apps must use `layoutStyle` and must not
-     * override color, padding, radius, border, elevation, height, opacity, or state styling.
-     * @see https://github.com/jim1286/hjm-design-system/blob/main/packages/design-contracts/docs/consumer-policy.md#31-react-native-legacy-style-compatibility-boundary
-     */
-    style?: StyleProp<ViewStyle>;
 }>;
-export declare function Surface({ tone, padding, radius: radiusValue, bordered, layoutStyle, style, ...props }: SurfaceProps): import("react").JSX.Element;
+export declare function Surface({ tone, padding, radius: radiusValue, bordered, layoutStyle, ...props }: SurfaceProps): import("react").JSX.Element;
 export type StackProps = ViewProps & Readonly<{
     axis?: StackAxis;
     gap?: StackGap | number;
     align?: StackAlign;
     justify?: StackJustify;
     wrap?: boolean;
-    /** @deprecated Use the renderer-neutral `axis` prop. */
-    direction?: "row" | "column";
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function Stack({ axis, direction, gap, align, justify, wrap, layoutStyle, style, ...props }: StackProps): import("react").JSX.Element;
+export declare function Stack({ axis, gap, align, justify, wrap, layoutStyle, style, ...props }: StackProps): import("react").JSX.Element;
 export type ContainerProps = Omit<ViewProps, "children"> & Readonly<{
     children?: ReactNode;
     size?: ContainerSize;
@@ -120,24 +101,15 @@ export type AspectRatioProps = Omit<ViewProps, "children"> & Readonly<{
 }>;
 /** Native translation of the same width/height contract used by Web media frames. */
 export declare function AspectRatio({ ratio, style, ...props }: AspectRatioProps): import("react").JSX.Element;
-type GridCanonicalDescriptorProps = Pick<GridDescriptor, "columns" | "gap" | "minColumnWidth"> & Readonly<{
-    descriptor?: never;
-}>;
-type GridLegacyDescriptorProps = Readonly<{
-    /** @deprecated Pass `columns`, `gap`, and `minColumnWidth` directly. */
-    descriptor: GridDescriptor;
-    columns?: never;
-    gap?: never;
-    minColumnWidth?: never;
-}>;
-export type GridProps = Omit<ViewProps, "children"> & (GridCanonicalDescriptorProps | GridLegacyDescriptorProps) & Readonly<{
+type GridCanonicalDescriptorProps = Pick<GridDescriptor, "columns" | "gap" | "minColumnWidth">;
+export type GridProps = Omit<ViewProps, "children"> & GridCanonicalDescriptorProps & Readonly<{
     children?: ReactNode;
     /** Inner width after page padding. When omitted, the rendered container is measured. */
     availableWidth?: number;
     onLayoutResolved?: (layout: ResolvedGridLayout) => void;
     itemStyle?: StyleProp<ViewStyle>;
 }>;
-export declare function Grid({ children, descriptor, columns, gap, minColumnWidth, availableWidth, onLayoutResolved, itemStyle, style, onLayout, ...props }: GridProps): import("react").JSX.Element;
+export declare function Grid({ children, columns, gap, minColumnWidth, availableWidth, onLayoutResolved, itemStyle, style, onLayout, ...props }: GridProps): import("react").JSX.Element;
 export type NativeIconRenderProps<Name extends string = string> = Readonly<{
     name: Name;
     size: number;
@@ -164,14 +136,6 @@ export type SectionProps = Omit<ViewProps, "children"> & Readonly<{
     headerStyle?: HjmCompositionStyleProp;
     /** Layout-only placement for the title/description column. */
     copyStyle?: HjmCompositionStyleProp;
-    /**
-     * @deprecated Typography is recipe-owned. Use `variant`/`tone` on the title instead.
-     */
-    titleStyle?: StyleProp<TextStyle>;
-    /**
-     * @deprecated Typography is recipe-owned. Use `variant`/`tone` on the description instead.
-     */
-    descriptionStyle?: StyleProp<TextStyle>;
     /** Layout-only placement for the action slot. */
     actionStyle?: HjmCompositionStyleProp;
     /** Layout-only placement for the content slot. */
@@ -180,6 +144,6 @@ export type SectionProps = Omit<ViewProps, "children"> & Readonly<{
     layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** A large-text-safe content section with a logical header action slot. */
-export declare function Section({ title, description, action, children, headerStyle, copyStyle, titleStyle, descriptionStyle, actionStyle, contentStyle, layoutStyle, style, ...props }: SectionProps): import("react").JSX.Element;
+export declare function Section({ title, description, action, children, headerStyle, copyStyle, actionStyle, contentStyle, layoutStyle, style, ...props }: SectionProps): import("react").JSX.Element;
 export type { AspectRatioValue, ContainerGutter, ContainerSize };
 //# sourceMappingURL=primitives.d.ts.map

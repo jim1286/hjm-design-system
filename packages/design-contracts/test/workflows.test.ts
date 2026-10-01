@@ -88,7 +88,8 @@ describe("GitHub Actions runtime contracts", () => {
 
     expect(checker).toContain("Release commit must consume");
     expect(checker).toContain("Release commit contains");
-    expect(checker).toContain("Release commit must apply");
+    expect(checker).not.toContain("Release commit must apply the highest authored");
+    expect(checker).toContain("parseVersion(currentVersion");
   });
 
   it("joins non-default renderer evidence to structured executed-scenario registries", async () => {

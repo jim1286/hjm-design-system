@@ -53,12 +53,12 @@ function Catalog() {
   );
 }
 
-const meta = {
-  title: "Components/Catalog",
+const meta = { includeStories: ["EvidenceMatrix"],
+  id: "components-catalog", title: "배포/컴포넌트/전체 목록",
   component: Catalog,
   parameters: { controls: { disable: true } },
 } satisfies Meta<typeof Catalog>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
-export const EvidenceMatrix: Story = {};
+export const EvidenceMatrix: Story = { name: "구현·검증 현황",};

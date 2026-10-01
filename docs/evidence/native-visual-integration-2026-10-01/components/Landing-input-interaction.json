@@ -1,0 +1,1216 @@
+[
+  {
+    "frame": {
+      "height": 874,
+      "y": 0,
+      "x": 0,
+      "width": 402
+    },
+    "enabled": true,
+    "role": "AXApplication",
+    "AXValue": null,
+    "help": null,
+    "AXFrame": "{{0, 0}, {402, 874}}",
+    "AXLabel": "HJM Native Showcase",
+    "role_description": "application",
+    "content_required": false,
+    "traits": [
+      "None"
+    ],
+    "pid": 67845,
+    "type": "Application",
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "subrole": null,
+    "title": null
+  },
+  {
+    "title": null,
+    "AXFrame": "{{337, 311}, {44, 44}}",
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "help": null,
+    "role": "AXButton",
+    "role_description": "button",
+    "type": "Button",
+    "custom_actions": [],
+    "AXLabel": "닫기",
+    "subrole": null,
+    "enabled": true,
+    "content_required": false,
+    "pid": 67845,
+    "AXValue": null,
+    "AXUniqueId": null,
+    "frame": {
+      "height": 44,
+      "x": 337,
+      "width": 44,
+      "y": 311
+    }
+  },
+  {
+    "content_required": false,
+    "AXFrame": "{{21, 320}, {304, 26}}",
+    "pid": 67845,
+    "traits": [
+      "Scrollable",
+      "StaticText",
+      "Header"
+    ],
+    "enabled": true,
+    "AXValue": null,
+    "AXLabel": "첫 기록을 남겨요",
+    "custom_actions": [],
+    "title": null,
+    "help": null,
+    "role": "AXHeading",
+    "subrole": null,
+    "AXUniqueId": null,
+    "type": "Heading",
+    "role_description": "heading",
+    "frame": {
+      "x": 21,
+      "width": 304,
+      "height": 26,
+      "y": 320
+    }
+  },
+  {
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "role_description": "text",
+    "AXValue": null,
+    "subrole": null,
+    "role": "AXStaticText",
+    "pid": 67845,
+    "AXUniqueId": null,
+    "help": null,
+    "enabled": true,
+    "custom_actions": [],
+    "AXLabel": "오늘의 한 줄",
+    "type": "StaticText",
+    "title": null,
+    "AXFrame": "{{21, 371}, {360, 20}}",
+    "content_required": false,
+    "frame": {
+      "height": 20,
+      "y": 371,
+      "width": 360,
+      "x": 21
+    }
+  },
+  {
+    "AXFrame": "{{38, 424}, {326, 44}}",
+    "AXUniqueId": null,
+    "AXValue": "123",
+    "role": "AXTextField",
+    "content_required": false,
+    "AXLabel": "오늘의 한 줄",
+    "title": null,
+    "frame": {
+      "width": 326,
+      "height": 44,
+      "y": 424,
+      "x": 38
+    },
+    "custom_actions": [],
+    "pid": 67845,
+    "traits": [
+      "TextEntry",
+      "Scrollable",
+      "TextOperationsAvailable",
+      "IsEditing"
+    ],
+    "help": null,
+    "type": "TextField",
+    "role_description": "text field",
+    "enabled": true,
+    "subrole": null
+  },
+  {
+    "subrole": null,
+    "help": null,
+    "AXValue": null,
+    "AXFrame": "{{0, 0}, {0, 0}}",
+    "content_required": false,
+    "AXUniqueId": null,
+    "enabled": true,
+    "custom_actions": [],
+    "role_description": "text",
+    "frame": {
+      "x": 0,
+      "y": 0,
+      "height": 0,
+      "width": 0
+    },
+    "AXLabel": "내용을 한 글자 이상 적어 주세요.",
+    "pid": 67845,
+    "title": null,
+    "type": "StaticText",
+    "role": "AXStaticText",
+    "traits": [
+      "StaticText"
+    ]
+  },
+  {
+    "enabled": true,
+    "AXLabel": "미리보기에 추가",
+    "role": "AXButton",
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "help": null,
+    "subrole": null,
+    "AXFrame": "{{21, 489}, {360, 44}}",
+    "AXUniqueId": null,
+    "content_required": false,
+    "role_description": "button",
+    "pid": 67845,
+    "type": "Button",
+    "frame": {
+      "width": 360,
+      "x": 21,
+      "y": 489,
+      "height": 44
+    },
+    "AXValue": null,
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "AXFrame": "{{0, 546}, {134, 44}}",
+    "AXValue": null,
+    "role": "AXButton",
+    "AXLabel": "I",
+    "custom_actions": [],
+    "content_required": false,
+    "subrole": null,
+    "AXUniqueId": null,
+    "title": null,
+    "type": "Button",
+    "enabled": true,
+    "pid": 67845,
+    "frame": {
+      "width": 134,
+      "y": 546,
+      "height": 44,
+      "x": 0
+    },
+    "help": null,
+    "role_description": "button",
+    "traits": [
+      "Scrollable",
+      "Button",
+      "AutoCorrectCandidate"
+    ]
+  },
+  {
+    "subrole": null,
+    "enabled": true,
+    "role_description": "button",
+    "pid": 67845,
+    "AXValue": null,
+    "type": "Button",
+    "custom_actions": [],
+    "content_required": false,
+    "AXFrame": "{{134, 546}, {134, 44}}",
+    "role": "AXButton",
+    "AXUniqueId": null,
+    "title": null,
+    "AXLabel": null,
+    "help": null,
+    "traits": [
+      "Scrollable",
+      "Button",
+      "AutoCorrectCandidate"
+    ],
+    "frame": {
+      "y": 546,
+      "width": 134,
+      "height": 44,
+      "x": 134
+    }
+  },
+  {
+    "frame": {
+      "height": 44,
+      "x": 268,
+      "y": 546,
+      "width": 134
+    },
+    "role": "AXButton",
+    "AXUniqueId": null,
+    "traits": [
+      "Scrollable",
+      "Button",
+      "AutoCorrectCandidate"
+    ],
+    "pid": 67845,
+    "help": null,
+    "role_description": "button",
+    "title": null,
+    "enabled": true,
+    "AXFrame": "{{268, 546}, {134, 44}}",
+    "custom_actions": [],
+    "AXValue": null,
+    "AXLabel": null,
+    "type": "Button",
+    "subrole": null,
+    "content_required": false
+  },
+  {
+    "pid": 67845,
+    "content_required": false,
+    "title": null,
+    "AXFrame": "{{4.6666666666666572, 597}, {39.333333333333336, 54}}",
+    "frame": {
+      "width": 39.333333333333336,
+      "height": 54,
+      "x": 4.666666666666657,
+      "y": 597
+    },
+    "role": "AXButton",
+    "enabled": true,
+    "type": "Button",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "traits": [
+      "KeyboardKey",
+      "Scrollable",
+      "PlaysSound"
+    ],
+    "role_description": "button",
+    "help": null,
+    "subrole": null,
+    "custom_actions": [],
+    "AXLabel": "q"
+  },
+  {
+    "AXValue": null,
+    "type": "Button",
+    "custom_actions": [],
+    "content_required": false,
+    "frame": {
+      "x": 44,
+      "y": 597,
+      "width": 39.66666666666666,
+      "height": 54
+    },
+    "title": null,
+    "traits": [
+      "KeyboardKey",
+      "Scrollable",
+      "PlaysSound"
+    ],
+    "enabled": true,
+    "role_description": "button",
+    "subrole": null,
+    "help": null,
+    "pid": 67845,
+    "AXFrame": "{{44, 597}, {39.666666666666657, 54}}",
+    "AXLabel": "w",
+    "role": "AXButton",
+    "AXUniqueId": null
+  },
+  {
+    "AXValue": null,
+    "enabled": true,
+    "help": null,
+    "AXFrame": "{{83.666666666666657, 597}, {39.333333333333343, 54}}",
+    "frame": {
+      "x": 83.66666666666666,
+      "y": 597,
+      "width": 39.33333333333334,
+      "height": 54
+    },
+    "subrole": null,
+    "content_required": false,
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "role_description": "button",
+    "AXLabel": "e",
+    "pid": 67845,
+    "role": "AXButton",
+    "title": null,
+    "traits": [
+      "KeyboardKey",
+      "Scrollable",
+      "PlaysSound"
+    ],
+    "type": "Button"
+  },
+  {
+    "role": "AXButton",
+    "AXValue": null,
+    "subrole": null,
+    "AXFrame": "{{122.99999999999999, 597}, {39.666666666666671, 54}}",
+    "custom_actions": [],
+    "role_description": "button",
+    "pid": 67845,
+    "traits": [
+      "KeyboardKey",
+      "Scrollable",
+      "PlaysSound"
+    ],
+    "content_required": false,
+    "type": "Button",
+    "help": null,
+    "AXUniqueId": null,
+    "title": null,
+    "frame": {
+      "y": 597,
+      "x": 122.99999999999999,
+      "width": 39.66666666666667,
+      "height": 54
+    },
+    "AXLabel": "r",
+    "enabled": true
+  },
+  {
+    "help": null,
+    "AXFrame": "{{162.66666666666666, 597}, {39.333333333333343, 54}}",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "AXLabel": "t",
+    "enabled": true,
+    "role_description": "button",
+    "type": "Button",
+    "traits": [
+      "KeyboardKey",
+      "Scrollable",
+      "PlaysSound"
+    ],
+    "title": null,
+    "frame": {
+      "x": 162.66666666666666,
+      "y": 597,
+      "width": 39.33333333333334,
+      "height": 54
+    },
+    "custom_actions": [],
+    "content_required": false,
+    "role": "AXButton",
+    "subrole": null,
+    "pid": 67845
+  },
+  {
+    "enabled": true,
+    "title": null,
+    "role": "AXButton",
+    "role_description": "button",
+    "AXFrame": "{{202, 597}, {39.666666666666657, 54}}",
+    "subrole": null,
+    "help": null,
+    "traits": [
+      "KeyboardKey",
+      "Scrollable",
+      "PlaysSound"
+    ],
+    "AXLabel": "y",
+    "AXValue": null,
+    "pid": 67845,
+    "AXUniqueId": null,
+    "type": "Button",
+    "custom_actions": [],
+    "frame": {
+      "width": 39.66666666666666,
+      "y": 597,
+      "height": 54,
+      "x": 202
+    },
+    "content_required": false
+  },
+  {
+    "help": null,
+    "frame": {
+      "width": 39.333333333333314,
+      "x": 241.66666666666669,
+      "y": 597,
+      "height": 54
+    },
+    "role_description": "button",
+    "enabled": true,
+    "subrole": null,
+    "content_required": false,
+    "type": "Button",
+    "AXUniqueId": null,
+    "AXLabel": "u",
+    "traits": [
+      "KeyboardKey",
+      "Scrollable",
+      "PlaysSound"
+    ],
+    "AXValue": null,
+    "title": null,
+    "pid": 67845,
+    "AXFrame": "{{241.66666666666669, 597}, {39.333333333333314, 54}}",
+    "role": "AXButton",
+    "custom_actions": []
+  },
+  {
+    "role": "AXButton",
+    "AXLabel": "i",
+    "AXFrame": "{{281, 597}, {39.666666666666686, 54}}",
+    "traits": [
+      "KeyboardKey",
+      "Scrollable",
+      "PlaysSound"
+    ],
+    "pid": 67845,
+    "role_description": "button",
+    "frame": {
+      "width": 39.666666666666686,
+      "height": 54,
+      "x": 281,
+      "y": 597
+    },
+    "type": "Button",
+    "content_required": false,
+    "custom_actions": [],
+    "subrole": null,
+    "help": null,
+    "title": null,
+    "enabled": true,
+    "AXValue": null,
+    "AXUniqueId": null
+  },
+  {
+    "role": "AXButton",
+    "enabled": true,
+    "content_required": false,
+    "frame": {
+      "x": 320.66666666666663,
+      "width": 39.333333333333314,
+      "y": 597,
+      "height": 54
+    },
+    "pid": 67845,
+    "subrole": null,
+    "AXValue": null,
+    "title": null,
+    "AXLabel": "o",
+    "type": "Button",
+    "custom_actions": [],
+    "traits": [
+      "KeyboardKey",
+      "Scrollable",
+      "PlaysSound"
+    ],
+    "AXUniqueId": null,
+    "help": null,
+    "role_description": "button",
+    "AXFrame": "{{320.66666666666663, 597}, {39.333333333333314, 54}}"
+  },
+  {
+    "type": "Button",
+    "frame": {
+      "y": 597,
+      "x": 360,
+      "height": 54,
+      "width": 39.666666666666686
+    },
+    "role_description": "button",
+    "role": "AXButton",
+    "AXFrame": "{{360, 597}, {39.666666666666686, 54}}",
+    "custom_actions": [],
+    "subrole": null,
+    "AXValue": null,
+    "AXLabel": "p",
+    "content_required": false,
+    "help": null,
+    "traits": [
+      "KeyboardKey",
+      "Scrollable",
+      "PlaysSound"
+    ],
+    "title": null,
+    "AXUniqueId": null,
+    "enabled": true,
+    "pid": 67845
+  },
+  {
+    "AXLabel": "a",
+    "subrole": null,
+    "enabled": true,
+    "frame": {
+      "height": 54,
+      "x": 24.333333333333318,
+      "y": 651,
+      "width": 39.33333333333334
+    },
+    "role": "AXButton",
+    "traits": [
+      "KeyboardKey",
+      "Scrollable",
+      "PlaysSound"
+    ],
+    "title": null,
+    "help": null,
+    "AXValue": null,
+    "AXFrame": "{{24.333333333333318, 651}, {39.333333333333343, 54}}",
+    "role_description": "button",
+    "custom_actions": [],
+    "content_required": false,
+    "pid": 67845,
+    "AXUniqueId": null,
+    "type": "Button"
+  },
+  {
+    "AXLabel": "s",
+    "subrole": null,
+    "traits": [
+      "KeyboardKey",
+      "Scrollable",
+      "PlaysSound"
+    ],
+    "AXFrame": "{{63.666666666666657, 651}, {39.666666666666657, 54}}",
+    "role_description": "button",
+    "frame": {
+      "x": 63.66666666666666,
+      "width": 39.66666666666666,
+      "height": 54,
+      "y": 651
+    },
+    "type": "Button",
+    "content_required": false,
+    "help": null,
+    "AXValue": null,
+    "title": null,
+    "enabled": true,
+    "role": "AXButton",
+    "custom_actions": [],
+    "pid": 67845,
+    "AXUniqueId": null
+  },
+  {
+    "role_description": "button",
+    "enabled": true,
+    "subrole": null,
+    "pid": 67845,
+    "AXValue": null,
+    "AXUniqueId": null,
+    "frame": {
+      "x": 103.33333333333331,
+      "y": 651,
+      "width": 39.33333333333334,
+      "height": 54
+    },
+    "title": null,
+    "help": null,
+    "AXLabel": "d",
+    "role": "AXButton",
+    "type": "Button",
+    "content_required": false,
+    "custom_actions": [],
+    "traits": [
+      "KeyboardKey",
+      "Scrollable",
+      "PlaysSound"
+    ],
+    "AXFrame": "{{103.33333333333331, 651}, {39.333333333333343, 54}}"
+  },
+  {
+    "content_required": false,
+    "help": null,
+    "frame": {
+      "height": 54,
+      "y": 651,
+      "x": 142.66666666666666,
+      "width": 39.66666666666666
+    },
+    "role_description": "button",
+    "role": "AXButton",
+    "custom_actions": [],
+    "type": "Button",
+    "AXLabel": "f",
+    "enabled": true,
+    "subrole": null,
+    "traits": [
+      "KeyboardKey",
+      "Scrollable",
+      "PlaysSound"
+    ],
+    "title": null,
+    "pid": 67845,
+    "AXUniqueId": null,
+    "AXValue": null,
+    "AXFrame": "{{142.66666666666666, 651}, {39.666666666666657, 54}}"
+  },
+  {
+    "content_required": false,
+    "AXLabel": "g",
+    "AXValue": null,
+    "traits": [
+      "KeyboardKey",
+      "Scrollable",
+      "PlaysSound"
+    ],
+    "custom_actions": [],
+    "enabled": true,
+    "AXFrame": "{{182.33333333333334, 651}, {39.333333333333343, 54}}",
+    "role": "AXButton",
+    "title": null,
+    "type": "Button",
+    "subrole": null,
+    "pid": 67845,
+    "role_description": "button",
+    "frame": {
+      "y": 651,
+      "height": 54,
+      "width": 39.33333333333334,
+      "x": 182.33333333333334
+    },
+    "AXUniqueId": null,
+    "help": null
+  },
+  {
+    "AXLabel": "h",
+    "role_description": "button",
+    "AXValue": null,
+    "AXUniqueId": null,
+    "title": null,
+    "AXFrame": "{{221.66666666666666, 651}, {39.666666666666657, 54}}",
+    "subrole": null,
+    "frame": {
+      "y": 651,
+      "width": 39.66666666666666,
+      "height": 54,
+      "x": 221.66666666666666
+    },
+    "help": null,
+    "custom_actions": [],
+    "type": "Button",
+    "role": "AXButton",
+    "pid": 67845,
+    "enabled": true,
+    "content_required": false,
+    "traits": [
+      "KeyboardKey",
+      "Scrollable",
+      "PlaysSound"
+    ]
+  },
+  {
+    "AXValue": null,
+    "role_description": "button",
+    "subrole": null,
+    "help": null,
+    "pid": 67845,
+    "AXLabel": "j",
+    "frame": {
+      "x": 261.33333333333326,
+      "width": 39.333333333333314,
+      "y": 651,
+      "height": 54
+    },
+    "content_required": false,
+    "AXUniqueId": null,
+    "traits": [
+      "KeyboardKey",
+      "Scrollable",
+      "PlaysSound"
+    ],
+    "enabled": true,
+    "role": "AXButton",
+    "AXFrame": "{{261.33333333333326, 651}, {39.333333333333314, 54}}",
+    "title": null,
+    "type": "Button",
+    "custom_actions": []
+  },
+  {
+    "custom_actions": [],
+    "traits": [
+      "KeyboardKey",
+      "Scrollable",
+      "PlaysSound"
+    ],
+    "content_required": false,
+    "title": null,
+    "type": "Button",
+    "AXLabel": "k",
+    "AXFrame": "{{300.66666666666663, 651}, {39.666666666666686, 54}}",
+    "enabled": true,
+    "pid": 67845,
+    "AXValue": null,
+    "frame": {
+      "height": 54,
+      "y": 651,
+      "width": 39.666666666666686,
+      "x": 300.66666666666663
+    },
+    "role_description": "button",
+    "subrole": null,
+    "role": "AXButton",
+    "help": null,
+    "AXUniqueId": null
+  },
+  {
+    "pid": 67845,
+    "help": null,
+    "custom_actions": [],
+    "role": "AXButton",
+    "subrole": null,
+    "AXFrame": "{{340.33333333333326, 651}, {39.333333333333314, 54}}",
+    "frame": {
+      "height": 54,
+      "x": 340.33333333333326,
+      "width": 39.333333333333314,
+      "y": 651
+    },
+    "role_description": "button",
+    "content_required": false,
+    "traits": [
+      "KeyboardKey",
+      "Scrollable",
+      "PlaysSound"
+    ],
+    "AXUniqueId": null,
+    "AXLabel": "l",
+    "enabled": true,
+    "title": null,
+    "AXValue": null,
+    "type": "Button"
+  },
+  {
+    "AXValue": null,
+    "type": "Button",
+    "AXFrame": "{{4.6666666666666572, 705}, {51.333333333333336, 54}}",
+    "subrole": null,
+    "traits": [
+      "PlaysSound",
+      "Scrollable",
+      "Button",
+      "KeyboardKey"
+    ],
+    "role_description": "button",
+    "pid": 67845,
+    "custom_actions": [
+      "Caps Lock"
+    ],
+    "content_required": false,
+    "AXUniqueId": "shift",
+    "frame": {
+      "width": 51.333333333333336,
+      "y": 705,
+      "x": 4.666666666666657,
+      "height": 54
+    },
+    "title": null,
+    "enabled": true,
+    "help": "Quadruple-tap to enter caps lock",
+    "AXLabel": "shift",
+    "role": "AXButton"
+  },
+  {
+    "role": "AXButton",
+    "content_required": false,
+    "AXValue": null,
+    "AXUniqueId": null,
+    "title": null,
+    "help": null,
+    "frame": {
+      "height": 54,
+      "y": 705,
+      "x": 63.66666666666666,
+      "width": 39.66666666666666
+    },
+    "subrole": null,
+    "AXLabel": "z",
+    "enabled": true,
+    "pid": 67845,
+    "AXFrame": "{{63.666666666666657, 705}, {39.666666666666657, 54}}",
+    "role_description": "button",
+    "traits": [
+      "KeyboardKey",
+      "Scrollable",
+      "PlaysSound"
+    ],
+    "type": "Button",
+    "custom_actions": []
+  },
+  {
+    "role": "AXButton",
+    "custom_actions": [],
+    "enabled": true,
+    "AXLabel": "x",
+    "frame": {
+      "width": 39.33333333333334,
+      "x": 103.33333333333331,
+      "y": 705,
+      "height": 54
+    },
+    "pid": 67845,
+    "help": null,
+    "AXFrame": "{{103.33333333333331, 705}, {39.333333333333343, 54}}",
+    "traits": [
+      "KeyboardKey",
+      "Scrollable",
+      "PlaysSound"
+    ],
+    "AXValue": null,
+    "type": "Button",
+    "content_required": false,
+    "AXUniqueId": null,
+    "title": null,
+    "role_description": "button",
+    "subrole": null
+  },
+  {
+    "custom_actions": [],
+    "pid": 67845,
+    "role_description": "button",
+    "help": null,
+    "title": null,
+    "frame": {
+      "width": 39.66666666666666,
+      "y": 705,
+      "x": 142.66666666666666,
+      "height": 54
+    },
+    "AXLabel": "c",
+    "AXFrame": "{{142.66666666666666, 705}, {39.666666666666657, 54}}",
+    "subrole": null,
+    "role": "AXButton",
+    "type": "Button",
+    "AXValue": null,
+    "content_required": false,
+    "AXUniqueId": null,
+    "traits": [
+      "KeyboardKey",
+      "Scrollable",
+      "PlaysSound"
+    ],
+    "enabled": true
+  },
+  {
+    "role": "AXButton",
+    "role_description": "button",
+    "frame": {
+      "x": 182.33333333333334,
+      "y": 705,
+      "width": 39.33333333333334,
+      "height": 54
+    },
+    "content_required": false,
+    "type": "Button",
+    "help": null,
+    "pid": 67845,
+    "enabled": true,
+    "AXUniqueId": null,
+    "AXFrame": "{{182.33333333333334, 705}, {39.333333333333343, 54}}",
+    "AXLabel": "v",
+    "custom_actions": [],
+    "AXValue": null,
+    "traits": [
+      "KeyboardKey",
+      "Scrollable",
+      "PlaysSound"
+    ],
+    "title": null,
+    "subrole": null
+  },
+  {
+    "AXUniqueId": null,
+    "frame": {
+      "y": 705,
+      "width": 39.66666666666666,
+      "height": 54,
+      "x": 221.66666666666666
+    },
+    "content_required": false,
+    "type": "Button",
+    "custom_actions": [],
+    "role": "AXButton",
+    "AXValue": null,
+    "role_description": "button",
+    "subrole": null,
+    "traits": [
+      "KeyboardKey",
+      "Scrollable",
+      "PlaysSound"
+    ],
+    "title": null,
+    "AXLabel": "b",
+    "enabled": true,
+    "help": null,
+    "pid": 67845,
+    "AXFrame": "{{221.66666666666666, 705}, {39.666666666666657, 54}}"
+  },
+  {
+    "AXUniqueId": null,
+    "custom_actions": [],
+    "frame": {
+      "width": 39.333333333333314,
+      "x": 261.33333333333326,
+      "y": 705,
+      "height": 54
+    },
+    "subrole": null,
+    "content_required": false,
+    "AXValue": null,
+    "help": null,
+    "AXFrame": "{{261.33333333333326, 705}, {39.333333333333314, 54}}",
+    "enabled": true,
+    "traits": [
+      "KeyboardKey",
+      "Scrollable",
+      "PlaysSound"
+    ],
+    "type": "Button",
+    "role_description": "button",
+    "AXLabel": "n",
+    "role": "AXButton",
+    "title": null,
+    "pid": 67845
+  },
+  {
+    "role": "AXButton",
+    "AXUniqueId": null,
+    "type": "Button",
+    "traits": [
+      "KeyboardKey",
+      "Scrollable",
+      "PlaysSound"
+    ],
+    "AXLabel": "m",
+    "frame": {
+      "height": 54,
+      "x": 300.66666666666663,
+      "width": 39.666666666666686,
+      "y": 705
+    },
+    "enabled": true,
+    "AXValue": null,
+    "AXFrame": "{{300.66666666666663, 705}, {39.666666666666686, 54}}",
+    "title": null,
+    "help": null,
+    "custom_actions": [],
+    "subrole": null,
+    "role_description": "button",
+    "content_required": false,
+    "pid": 67845
+  },
+  {
+    "pid": 67845,
+    "role_description": "button",
+    "role": "AXButton",
+    "subrole": null,
+    "traits": [
+      "PlaysSound",
+      "Scrollable",
+      "DeleteKey",
+      "KeyboardKey"
+    ],
+    "AXUniqueId": "delete",
+    "AXValue": null,
+    "AXFrame": "{{348, 705}, {51.666666666666686, 54}}",
+    "type": "Button",
+    "custom_actions": [],
+    "help": null,
+    "frame": {
+      "width": 51.666666666666686,
+      "height": 54,
+      "x": 348,
+      "y": 705
+    },
+    "title": null,
+    "enabled": true,
+    "AXLabel": "delete",
+    "content_required": false
+  },
+  {
+    "content_required": false,
+    "AXValue": null,
+    "enabled": true,
+    "role": "AXButton",
+    "title": null,
+    "AXFrame": "{{4.6666666666666572, 759}, {49.333333333333336, 54}}",
+    "help": null,
+    "role_description": "button",
+    "custom_actions": [],
+    "frame": {
+      "height": 54,
+      "x": 4.666666666666657,
+      "width": 49.333333333333336,
+      "y": 759
+    },
+    "AXLabel": "numbers",
+    "subrole": null,
+    "type": "Button",
+    "pid": 67845,
+    "traits": [
+      "KeyboardKey",
+      "Scrollable",
+      "PlaysSound"
+    ],
+    "AXUniqueId": "more"
+  },
+  {
+    "type": "Button",
+    "subrole": null,
+    "AXFrame": "{{53.999999999999986, 759}, {49.333333333333329, 54}}",
+    "pid": 67845,
+    "role_description": "button",
+    "AXLabel": "Emoji",
+    "custom_actions": [],
+    "content_required": false,
+    "traits": [
+      "PlaysSound",
+      "Scrollable",
+      "Button",
+      "KeyboardKey"
+    ],
+    "role": "AXButton",
+    "AXValue": null,
+    "title": null,
+    "help": null,
+    "frame": {
+      "y": 759,
+      "height": 54,
+      "x": 53.999999999999986,
+      "width": 49.33333333333333
+    },
+    "enabled": true,
+    "AXUniqueId": "emoji"
+  },
+  {
+    "AXValue": null,
+    "content_required": false,
+    "AXFrame": "{{103.3333333333333, 759}, {197.33333333333331, 54}}",
+    "role_description": "button",
+    "enabled": true,
+    "help": null,
+    "role": "AXButton",
+    "traits": [
+      "KeyboardKey",
+      "Scrollable",
+      "PlaysSound"
+    ],
+    "type": "Button",
+    "AXUniqueId": "space",
+    "subrole": null,
+    "AXLabel": "space",
+    "pid": 67845,
+    "custom_actions": [],
+    "title": null,
+    "frame": {
+      "y": 759,
+      "x": 103.3333333333333,
+      "height": 54,
+      "width": 197.33333333333331
+    }
+  },
+  {
+    "pid": 67845,
+    "AXValue": null,
+    "type": "Button",
+    "custom_actions": [],
+    "AXLabel": "return",
+    "AXUniqueId": "Return",
+    "title": null,
+    "role_description": "button",
+    "traits": [
+      "PlaysSound",
+      "Scrollable",
+      "Button",
+      "KeyboardKey"
+    ],
+    "content_required": false,
+    "role": "AXButton",
+    "frame": {
+      "y": 759,
+      "width": 99,
+      "x": 300.66666666666663,
+      "height": 54
+    },
+    "subrole": null,
+    "enabled": true,
+    "help": null,
+    "AXFrame": "{{300.66666666666663, 759}, {99, 54}}"
+  },
+  {
+    "role": "AXGenericElement",
+    "AXUniqueId": null,
+    "AXFrame": "{{0, 590}, {402, 284}}",
+    "title": null,
+    "frame": {
+      "width": 402,
+      "y": 590,
+      "x": 0,
+      "height": 284
+    },
+    "role_description": "",
+    "traits": [
+      "Scrollable",
+      "Spacer"
+    ],
+    "content_required": false,
+    "help": null,
+    "custom_actions": [],
+    "AXValue": null,
+    "subrole": null,
+    "pid": 67845,
+    "enabled": true,
+    "AXLabel": null,
+    "type": "GenericElement"
+  },
+  {
+    "AXFrame": "{{8.4772656811592597, 805.69895679985711}, {68.085295847508604, 68.735163935050991}}",
+    "content_required": false,
+    "custom_actions": [],
+    "type": "Button",
+    "title": null,
+    "frame": {
+      "height": 68.73516393505099,
+      "width": 68.0852958475086,
+      "x": 8.47726568115926,
+      "y": 805.6989567998571
+    },
+    "help": "Double-tap and hold, then drag up to select another keyboard",
+    "traits": [
+      "Scrollable",
+      "Button",
+      "KeyboardKey"
+    ],
+    "pid": 67845,
+    "subrole": null,
+    "AXUniqueId": null,
+    "AXValue": "한국어",
+    "enabled": true,
+    "role": "AXButton",
+    "AXLabel": "Next keyboard",
+    "role_description": "button"
+  },
+  {
+    "subrole": null,
+    "title": null,
+    "traits": [
+      "Scrollable",
+      "Button",
+      "KeyboardKey"
+    ],
+    "role_description": "button",
+    "custom_actions": [],
+    "role": "AXButton",
+    "pid": 67845,
+    "content_required": false,
+    "AXFrame": "{{325.43743847133214, 805.36562346652386}, {68.085295847508633, 68.735163935050991}}",
+    "type": "Button",
+    "frame": {
+      "x": 325.43743847133214,
+      "height": 68.73516393505099,
+      "width": 68.08529584750863,
+      "y": 805.3656234665239
+    },
+    "AXValue": null,
+    "enabled": true,
+    "AXLabel": "Dictate",
+    "help": "Double-tap to start dictation. Double-tap with two fingers when finished.",
+    "AXUniqueId": "dictation"
+  }
+]

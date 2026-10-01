@@ -83,4 +83,16 @@ export function finalizeFrame(dots, lines, rMin = 0.3) {
 export function radiusScale(size, pow) {
     return (size / 300) ** pow;
 }
+// Braid and Ribbon share the faint backing sphere, not their foreground motion.
+// Extract the identical loop so tuning the backdrop cannot diverge across modes.
+export function ghostSphereDots(project, radius, radiusScale, count) {
+    const dots = [];
+    for (let i = 0; i < count; i++) {
+        const d = fibDir(i, count);
+        const [x, y, z] = project(d[0] * radius, d[1] * radius, d[2] * radius);
+        const depth = (z / radius + 1) / 2;
+        dots.push({ x, y, z, r: 0.8 * radiusScale, white: 0.78, a: 0.1 + 0.22 * depth });
+    }
+    return dots;
+}
 //# sourceMappingURL=core.js.map

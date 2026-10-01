@@ -111,11 +111,11 @@ describe("selection contract alignment", () => {
         mountPolicy="always"
         orientation="vertical"
         panelMode="keyed"
-        options={[
-          { value: "disabled", label: "비활성", disabled: true, panel: <Text>비활성 패널</Text> },
-          { value: "profile", label: "프로필", panel: <Text>프로필 패널</Text> },
+        items={[
+          { id: "disabled", label: "비활성", disabled: true, panel: <Text>비활성 패널</Text> },
+          { id: "profile", label: "프로필", panel: <Text>프로필 패널</Text> },
           {
-            value: "security",
+            id: "security",
             label: "보안",
             panel: <Text>보안 패널</Text>,
             panelAccessibilityLabel: "보안 콘텐츠",
@@ -151,9 +151,9 @@ describe("selection contract alignment", () => {
         <Tabs
           id="feed"
           label="피드"
-          options={[
-            { value: "all", label: "전체", renderLeading: leading },
-            { value: "following", label: "팔로잉" },
+          items={[
+            { id: "all", label: "전체", renderLeading: leading },
+            { id: "following", label: "팔로잉" },
           ]}
           panelMode="dynamic"
           renderPanels={false}
@@ -169,7 +169,6 @@ describe("selection contract alignment", () => {
     expect(leading).toHaveBeenCalledWith(expect.objectContaining({
       color: resolveColorReference(tabsRecipe.colors.selected, lightProviderValue.palette),
       disabled: false,
-      glyphSize: glyph[tabsRecipe.icon.glyph],
       selected: true,
       size: glyph[tabsRecipe.icon.glyph],
     }));
@@ -198,14 +197,14 @@ describe("selection contract alignment", () => {
     expect(() => render(
       <Tabs
         label="중복"
-        options={[{ value: "same", label: "하나" }, { value: "same", label: "둘" }]}
+        items={[{ id: "same", label: "하나" }, { id: "same", label: "둘" }]}
       />,
     )).toThrow(/Duplicate tab id/u);
     expect(() => render(
       <Tabs
         defaultValue="disabled"
         label="비활성"
-        options={[{ value: "disabled", label: "비활성", disabled: true }, { value: "ready", label: "사용" }]}
+        items={[{ id: "disabled", label: "비활성", disabled: true }, { id: "ready", label: "사용" }]}
       />,
     )).toThrow(/enabled/u);
     expect(() => render(
@@ -213,7 +212,7 @@ describe("selection contract alignment", () => {
         label="패널"
         mountPolicy="always"
         panelMode="dynamic"
-        options={[{ value: "one", label: "하나" }]}
+        items={[{ id: "one", label: "하나" }]}
       />,
     )).toThrow(/dynamic panelMode/u);
 
@@ -223,7 +222,7 @@ describe("selection contract alignment", () => {
         defaultValue="a"
         label="동적 탭"
         onValueChange={onValueChange}
-        options={[{ value: "a", label: "A" }, { value: "b", label: "B" }]}
+        items={[{ id: "a", label: "A" }, { id: "b", label: "B" }]}
       />,
     );
     act(() => {
@@ -232,7 +231,7 @@ describe("selection contract alignment", () => {
           defaultValue="a"
           label="동적 탭"
           onValueChange={onValueChange}
-          options={[{ value: "b", label: "B" }, { value: "c", label: "C" }]}
+          items={[{ id: "b", label: "B" }, { id: "c", label: "C" }]}
         />,
       ));
     });
@@ -245,7 +244,7 @@ describe("selection contract alignment", () => {
       <RadioGroup
         error="하나를 선택하세요"
         label="배송"
-        options={[{ value: "none", label: "불가", disabled: true }, { value: "fast", label: "빠른 배송" }]}
+        items={[{ value: "none", label: "불가", disabled: true }, { value: "fast", label: "빠른 배송" }]}
         readOnly
         readOnlyLabel="읽기 전용"
         required
@@ -264,13 +263,13 @@ describe("selection contract alignment", () => {
     expect(() => render(
       <RadioGroup
         label="중복"
-        options={[{ value: "same", label: "하나" }, { value: "same", label: "둘" }]}
+        items={[{ value: "same", label: "하나" }, { value: "same", label: "둘" }]}
       />,
     )).toThrow(/Duplicate selection item id/u);
     expect(() => render(
       <RadioGroup
         label="알 수 없음"
-        options={[{ value: "known", label: "알려짐" }]}
+        items={[{ value: "known", label: "알려짐" }]}
         value="missing"
       />,
     )).toThrow(/must exist/u);
@@ -283,7 +282,7 @@ describe("selection contract alignment", () => {
         defaultValue="a"
         label="보기"
         onValueChange={onValueChange}
-        options={[{ value: "a", label: "A" }, { value: "b", label: "B" }]}
+        items={[{ value: "a", label: "A" }, { value: "b", label: "B" }]}
       />,
     );
     act(() => {
@@ -292,7 +291,7 @@ describe("selection contract alignment", () => {
           defaultValue="a"
           label="보기"
           onValueChange={onValueChange}
-          options={[{ value: "disabled", label: "불가", disabled: true }, { value: "b", label: "B" }]}
+          items={[{ value: "disabled", label: "불가", disabled: true }, { value: "b", label: "B" }]}
         />,
       ));
     });
@@ -301,7 +300,7 @@ describe("selection contract alignment", () => {
     expect(() => render(
       <SegmentedControl
         label="중복"
-        options={[{ value: "same", label: "하나" }, { value: "same", label: "둘" }]}
+        items={[{ value: "same", label: "하나" }, { value: "same", label: "둘" }]}
       />,
     )).toThrow(/Duplicate tab id/u);
   });
@@ -330,7 +329,7 @@ describe("Native input and navigation intent", () => {
 
   it("binds field geometry, type, support spacing, and state colors to fieldRecipe", () => {
     const renderer = render(
-      <TextField label="이름" placeholder="이름 입력" supportText="실명을 입력하세요" />,
+      <TextField label="이름" placeholder="이름 입력" description="실명을 입력하세요" />,
     );
     const control = renderer.root.findAllByType(View).find((node) => {
       const style = flattenStyle(node.props.style);
@@ -456,7 +455,7 @@ describe("Native input and navigation intent", () => {
       <SegmentedControl
         defaultValue="list"
         label="보기"
-        options={[{ value: "list", label: "목록" }, { value: "grid", label: "격자" }]}
+        items={[{ value: "list", label: "목록" }, { value: "grid", label: "격자" }]}
         size="small"
       />,
     );
@@ -506,7 +505,7 @@ describe("Native input and navigation intent", () => {
     const stacked = render(
       <SegmentedControl
         label="큰 글자 보기"
-        options={[{ value: "list", label: "목록" }, { value: "grid", label: "격자" }]}
+        items={[{ value: "list", label: "목록" }, { value: "grid", label: "격자" }]}
       />,
       1.6,
     );
@@ -558,7 +557,7 @@ describe("Native input and navigation intent", () => {
         accessibilityLabel="푸시 알림 설정"
         description="새 소식을 알려드려요"
         label="알림"
-        onValueChange={onValueChange}
+        onCheckedChange={onValueChange}
         size="small"
       />,
       1,
@@ -955,9 +954,9 @@ describe("Toast store adapter", () => {
       "rtl",
     );
     act(() => {
-      controller!.show({ id: "visible", description: "첫째", durationMs: null, closeLabel: "첫째 닫기" });
-      controller!.show({ id: "oldest", description: "둘째", durationMs: null, closeLabel: "둘째 닫기", onDismiss: overflowDismiss });
-      controller!.show({ id: "next", description: "셋째", durationMs: 5_000, closeLabel: "셋째 닫기", onDismiss: timeoutDismiss });
+      controller!.publish({ id: "visible", description: "첫째", durationMs: null, closeLabel: "첫째 닫기" });
+      controller!.publish({ id: "oldest", description: "둘째", durationMs: null, closeLabel: "둘째 닫기", onDismiss: overflowDismiss });
+      controller!.publish({ id: "next", description: "셋째", durationMs: 5_000, closeLabel: "셋째 닫기", onDismiss: timeoutDismiss });
     });
     expect(overflowDismiss).toHaveBeenCalledOnce();
     expect(overflowDismiss).toHaveBeenCalledWith("queue-overflow");
@@ -977,7 +976,7 @@ describe("Toast store adapter", () => {
     expect(timeoutDismiss).toHaveBeenCalledWith("timeout");
   });
 
-  it("invokes Toast action/dismiss exactly once and interrupts every item on teardown", () => {
+  it("invokes Toast action/dismiss exactly once and interrupts every item on teardown", async () => {
     let controller: ToastRegionController | undefined;
     const action = vi.fn();
     const actionDismiss = vi.fn();
@@ -988,14 +987,14 @@ describe("Toast store adapter", () => {
       </ToastRegion>,
     );
     act(() => {
-      controller!.show({
+      controller!.publish({
         id: "action",
         description: "실행 가능",
         closeLabel: "실행 닫기",
         action: { label: "되돌리기", onAction: action },
         onDismiss: actionDismiss,
       });
-      controller!.show({
+      controller!.publish({
         id: "queued",
         description: "대기",
         durationMs: null,
@@ -1011,7 +1010,7 @@ describe("Toast store adapter", () => {
     expect(action).toHaveBeenCalledOnce();
     expect(actionDismiss).toHaveBeenCalledOnce();
     expect(actionDismiss).toHaveBeenCalledWith("action");
-    act(() => renderer.unmount());
+    await act(async () => renderer.unmount());
     expect(queuedDismiss).toHaveBeenCalledOnce();
     expect(queuedDismiss).toHaveBeenCalledWith("interrupted");
   });

@@ -1,0 +1,2550 @@
+{
+  "schemaVersion": 1,
+  "packages": {
+    "@hjmds/react": [
+      {
+        "name": "Accordion",
+        "source": "packages/react/src/advanced-display.tsx",
+        "entries": [
+          ".",
+          "./display"
+        ],
+        "canonicalComponent": "Accordion",
+        "role": "canonical"
+      },
+      {
+        "name": "ActivityHeatmap",
+        "source": "packages/react/src/activity-heatmap.tsx",
+        "entries": [
+          "./activity-heatmap"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
+        "name": "Affix",
+        "source": "packages/react/src/affix.tsx",
+        "entries": [
+          "./affix"
+        ],
+        "canonicalComponent": "Affix",
+        "role": "canonical"
+      },
+      {
+        "name": "Agreement",
+        "source": "packages/react/src/agreement.tsx",
+        "entries": [
+          ".",
+          "./agreement"
+        ],
+        "canonicalComponent": "Agreement",
+        "role": "canonical"
+      },
+      {
+        "name": "AlertDialog",
+        "source": "packages/react/src/overlays.tsx",
+        "entries": [
+          ".",
+          "./overlays"
+        ],
+        "canonicalComponent": "AlertDialog",
+        "role": "canonical"
+      },
+      {
+        "name": "Anchor",
+        "source": "packages/react/src/anchor.tsx",
+        "entries": [
+          ".",
+          "./anchor"
+        ],
+        "canonicalComponent": "Anchor",
+        "role": "canonical"
+      },
+      {
+        "name": "AnimatedStatistic",
+        "source": "packages/react/src/statistic-motion.tsx",
+        "entries": [
+          "./statistic-motion"
+        ],
+        "canonicalComponent": "Statistic",
+        "role": "optional-extension"
+      },
+      {
+        "name": "AspectRatio",
+        "source": "packages/react/src/layout.tsx",
+        "entries": [
+          ".",
+          "./layout"
+        ],
+        "canonicalComponent": "AspectRatio",
+        "role": "canonical"
+      },
+      {
+        "name": "Asset",
+        "source": "packages/react/src/asset.tsx",
+        "entries": [
+          ".",
+          "./asset"
+        ],
+        "canonicalComponent": "Asset",
+        "role": "canonical"
+      },
+      {
+        "name": "AssetGroup",
+        "source": "packages/react/src/asset.tsx",
+        "entries": [
+          ".",
+          "./asset"
+        ],
+        "canonicalComponent": "Asset",
+        "role": "companion-or-alternative"
+      },
+      {
+        "name": "AuthProviderButton",
+        "source": "packages/react/src/provider-button.tsx",
+        "entries": [
+          ".",
+          "./provider-button"
+        ],
+        "canonicalComponent": "AuthProviderButton",
+        "role": "canonical"
+      },
+      {
+        "name": "AuthScreenLayout",
+        "source": "packages/react/src/auth-screen.tsx",
+        "entries": [
+          ".",
+          "./auth-screen"
+        ],
+        "canonicalComponent": "AuthScreenLayout",
+        "role": "canonical"
+      },
+      {
+        "name": "Avatar",
+        "source": "packages/react/src/advanced-display.tsx",
+        "entries": [
+          ".",
+          "./display"
+        ],
+        "canonicalComponent": "Avatar",
+        "role": "canonical"
+      },
+      {
+        "name": "AvatarGroup",
+        "source": "packages/react/src/advanced-display.tsx",
+        "entries": [
+          ".",
+          "./display"
+        ],
+        "canonicalComponent": "Avatar",
+        "role": "companion-or-alternative"
+      },
+      {
+        "name": "Badge",
+        "source": "packages/react/src/display.tsx",
+        "entries": [
+          ".",
+          "./display"
+        ],
+        "canonicalComponent": "Badge",
+        "role": "canonical"
+      },
+      {
+        "name": "BottomCTA",
+        "source": "packages/react/src/bottom-cta.tsx",
+        "entries": [
+          ".",
+          "./bottom-cta"
+        ],
+        "canonicalComponent": "BottomCTA",
+        "role": "canonical"
+      },
+      {
+        "name": "BottomInfo",
+        "source": "packages/react/src/bottom-info.tsx",
+        "entries": [
+          ".",
+          "./bottom-info"
+        ],
+        "canonicalComponent": "BottomInfo",
+        "role": "canonical"
+      },
+      {
+        "name": "BottomNavigation",
+        "source": "packages/react/src/bottom-navigation.tsx",
+        "entries": [
+          ".",
+          "./navigation"
+        ],
+        "canonicalComponent": "BottomNavigation",
+        "role": "canonical"
+      },
+      {
+        "name": "Breadcrumb",
+        "source": "packages/react/src/breadcrumb.tsx",
+        "entries": [
+          ".",
+          "./breadcrumb",
+          "./navigation"
+        ],
+        "canonicalComponent": "Breadcrumb",
+        "role": "canonical"
+      },
+      {
+        "name": "Button",
+        "source": "packages/react/src/actions.tsx",
+        "entries": [
+          ".",
+          "./actions"
+        ],
+        "canonicalComponent": "Button",
+        "role": "canonical"
+      },
+      {
+        "name": "Calendar",
+        "source": "packages/react/src/calendar.tsx",
+        "entries": [
+          ".",
+          "./calendar"
+        ],
+        "canonicalComponent": "Calendar",
+        "role": "canonical"
+      },
+      {
+        "name": "Card",
+        "source": "packages/react/src/display.tsx",
+        "entries": [
+          ".",
+          "./display"
+        ],
+        "canonicalComponent": "Card",
+        "role": "canonical"
+      },
+      {
+        "name": "Carousel",
+        "source": "packages/react/src/carousel.tsx",
+        "entries": [
+          ".",
+          "./carousel"
+        ],
+        "canonicalComponent": "Carousel",
+        "role": "canonical"
+      },
+      {
+        "name": "CarouselMotion",
+        "source": "packages/react/src/carousel-motion.tsx",
+        "entries": [
+          "./carousel-motion"
+        ],
+        "canonicalComponent": "Carousel",
+        "role": "optional-extension"
+      },
+      {
+        "name": "Celebration",
+        "source": "packages/react/src/celebration.tsx",
+        "entries": [
+          "./celebration"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
+        "name": "Checkbox",
+        "source": "packages/react/src/selection.tsx",
+        "entries": [
+          ".",
+          "./selection"
+        ],
+        "canonicalComponent": "Checkbox",
+        "role": "canonical"
+      },
+      {
+        "name": "CheckboxGroup",
+        "source": "packages/react/src/selection.tsx",
+        "entries": [
+          ".",
+          "./selection"
+        ],
+        "canonicalComponent": "CheckboxGroup",
+        "role": "canonical"
+      },
+      {
+        "name": "Chip",
+        "source": "packages/react/src/selection.tsx",
+        "entries": [
+          ".",
+          "./selection"
+        ],
+        "canonicalComponent": "Chip",
+        "role": "canonical"
+      },
+      {
+        "name": "ClipboardButton",
+        "source": "packages/react/src/clipboard.tsx",
+        "entries": [
+          ".",
+          "./clipboard"
+        ],
+        "canonicalComponent": "Button",
+        "role": "companion-or-alternative"
+      },
+      {
+        "name": "CodeBlock",
+        "source": "packages/react/src/code-block.tsx",
+        "entries": [
+          "./code-block"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
+        "name": "Collapsible",
+        "source": "packages/react/src/collapsible.tsx",
+        "entries": [
+          ".",
+          "./collapsible"
+        ],
+        "canonicalComponent": "Collapsible",
+        "role": "canonical"
+      },
+      {
+        "name": "ColorPicker",
+        "source": "packages/react/src/color-picker.tsx",
+        "entries": [
+          "./color-picker"
+        ],
+        "canonicalComponent": "ColorPicker",
+        "role": "canonical"
+      },
+      {
+        "name": "Combobox",
+        "source": "packages/react/src/advanced-forms.tsx",
+        "entries": [
+          ".",
+          "./forms"
+        ],
+        "canonicalComponent": "Combobox",
+        "role": "canonical"
+      },
+      {
+        "name": "CommandPalette",
+        "source": "packages/react/src/command-palette.tsx",
+        "entries": [
+          ".",
+          "./command-palette"
+        ],
+        "canonicalComponent": "CommandPalette",
+        "role": "canonical"
+      },
+      {
+        "name": "Container",
+        "source": "packages/react/src/layout.tsx",
+        "entries": [
+          ".",
+          "./layout"
+        ],
+        "canonicalComponent": "Container",
+        "role": "canonical"
+      },
+      {
+        "name": "ContentTransition",
+        "source": "packages/react/src/content-transition.tsx",
+        "entries": [
+          "./content-transition"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
+        "name": "ContextMenu",
+        "source": "packages/react/src/context-menu.tsx",
+        "entries": [
+          ".",
+          "./context-menu"
+        ],
+        "canonicalComponent": "ContextMenu",
+        "role": "canonical"
+      },
+      {
+        "name": "CounterBadge",
+        "source": "packages/react/src/supplemental-display.tsx",
+        "entries": [
+          ".",
+          "./display"
+        ],
+        "canonicalComponent": "CounterBadge",
+        "role": "canonical"
+      },
+      {
+        "name": "DataTable",
+        "source": "packages/react/src/data-table.tsx",
+        "entries": [
+          ".",
+          "./data-table"
+        ],
+        "canonicalComponent": "DataTable",
+        "role": "canonical"
+      },
+      {
+        "name": "DatePicker",
+        "source": "packages/react/src/date-picker.tsx",
+        "entries": [
+          ".",
+          "./date-picker",
+          "./forms"
+        ],
+        "canonicalComponent": "DatePicker",
+        "role": "canonical"
+      },
+      {
+        "name": "DateRangePicker",
+        "source": "packages/react/src/date-range.tsx",
+        "entries": [
+          ".",
+          "./date-range"
+        ],
+        "canonicalComponent": "DateRangePicker",
+        "role": "canonical"
+      },
+      {
+        "name": "DescriptionList",
+        "source": "packages/react/src/advanced-display.tsx",
+        "entries": [
+          ".",
+          "./display"
+        ],
+        "canonicalComponent": "DescriptionList",
+        "role": "canonical"
+      },
+      {
+        "name": "Dialog",
+        "source": "packages/react/src/overlays.tsx",
+        "entries": [
+          ".",
+          "./overlays"
+        ],
+        "canonicalComponent": "Dialog",
+        "role": "canonical"
+      },
+      {
+        "name": "Divider",
+        "source": "packages/react/src/advanced-display.tsx",
+        "entries": [
+          ".",
+          "./display"
+        ],
+        "canonicalComponent": "Divider",
+        "role": "canonical"
+      },
+      {
+        "name": "DurationField",
+        "source": "packages/react/src/duration-field.tsx",
+        "entries": [
+          "./duration-field"
+        ],
+        "canonicalComponent": "NumberField",
+        "role": "optional-extension"
+      },
+      {
+        "name": "EffectSurface",
+        "source": "packages/react/src/effect-surface.tsx",
+        "entries": [
+          "./effect-surface"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
+        "name": "EmptyState",
+        "source": "packages/react/src/feedback.tsx",
+        "entries": [
+          ".",
+          "./feedback"
+        ],
+        "canonicalComponent": "EmptyState",
+        "role": "canonical"
+      },
+      {
+        "name": "Field",
+        "source": "packages/react/src/forms.tsx",
+        "entries": [
+          ".",
+          "./forms"
+        ],
+        "canonicalComponent": "Field",
+        "role": "canonical"
+      },
+      {
+        "name": "FilePicker",
+        "source": "packages/react/src/file-picker.tsx",
+        "entries": [
+          ".",
+          "./file-picker",
+          "./forms"
+        ],
+        "canonicalComponent": "FilePicker",
+        "role": "canonical"
+      },
+      {
+        "name": "FloatingActionButton",
+        "source": "packages/react/src/floating-action-button.tsx",
+        "entries": [
+          ".",
+          "./floating-action-button"
+        ],
+        "canonicalComponent": "FloatingActionButton",
+        "role": "canonical"
+      },
+      {
+        "name": "FolderPreview",
+        "source": "packages/react/src/folder-preview.tsx",
+        "entries": [
+          "./folder-preview"
+        ],
+        "canonicalComponent": "Collapsible",
+        "role": "optional-extension"
+      },
+      {
+        "name": "Form",
+        "source": "packages/react/src/advanced-forms.tsx",
+        "entries": [
+          ".",
+          "./forms"
+        ],
+        "canonicalComponent": "Form",
+        "role": "canonical"
+      },
+      {
+        "name": "GravityLetters",
+        "source": "packages/react/src/gravity-letters.tsx",
+        "entries": [
+          "./gravity-letters"
+        ],
+        "canonicalComponent": "Text",
+        "role": "optional-extension"
+      },
+      {
+        "name": "Grid",
+        "source": "packages/react/src/layout.tsx",
+        "entries": [
+          ".",
+          "./layout"
+        ],
+        "canonicalComponent": "Grid",
+        "role": "canonical"
+      },
+      {
+        "name": "GridReveal",
+        "source": "packages/react/src/grid-reveal.tsx",
+        "entries": [
+          "./grid-reveal"
+        ],
+        "canonicalComponent": "Image",
+        "role": "optional-extension"
+      },
+      {
+        "name": "Heading",
+        "source": "packages/react/src/heading.tsx",
+        "entries": [
+          ".",
+          "./heading"
+        ],
+        "canonicalComponent": "Heading",
+        "role": "canonical"
+      },
+      {
+        "name": "HjmProvider",
+        "source": "packages/react/src/provider.tsx",
+        "entries": [
+          ".",
+          "./provider"
+        ],
+        "canonicalComponent": "DesignSystemProvider",
+        "role": "canonical"
+      },
+      {
+        "name": "Icon",
+        "source": "packages/react/src/supplemental-display.tsx",
+        "entries": [
+          ".",
+          "./display"
+        ],
+        "canonicalComponent": "Icon",
+        "role": "canonical"
+      },
+      {
+        "name": "IconButton",
+        "source": "packages/react/src/actions.tsx",
+        "entries": [
+          ".",
+          "./actions"
+        ],
+        "canonicalComponent": "IconButton",
+        "role": "canonical"
+      },
+      {
+        "name": "Image",
+        "source": "packages/react/src/supplemental-display.tsx",
+        "entries": [
+          ".",
+          "./display"
+        ],
+        "canonicalComponent": "Image",
+        "role": "canonical"
+      },
+      {
+        "name": "InlineConfirm",
+        "source": "packages/react/src/inline-confirm.tsx",
+        "entries": [
+          "./inline-confirm"
+        ],
+        "canonicalComponent": "Button",
+        "role": "optional-extension"
+      },
+      {
+        "name": "Layout",
+        "source": "packages/react/src/layout.tsx",
+        "entries": [
+          ".",
+          "./layout"
+        ],
+        "canonicalComponent": "Layout",
+        "role": "canonical"
+      },
+      {
+        "name": "Link",
+        "source": "packages/react/src/actions.tsx",
+        "entries": [
+          ".",
+          "./actions"
+        ],
+        "canonicalComponent": "Link",
+        "role": "canonical"
+      },
+      {
+        "name": "List",
+        "source": "packages/react/src/advanced-display.tsx",
+        "entries": [
+          ".",
+          "./display"
+        ],
+        "canonicalComponent": "List",
+        "role": "canonical"
+      },
+      {
+        "name": "ListRow",
+        "source": "packages/react/src/display.tsx",
+        "entries": [
+          ".",
+          "./display"
+        ],
+        "canonicalComponent": "ListRow",
+        "role": "canonical"
+      },
+      {
+        "name": "LoadMore",
+        "source": "packages/react/src/supplemental-navigation.tsx",
+        "entries": [
+          ".",
+          "./navigation"
+        ],
+        "canonicalComponent": "LoadMore",
+        "role": "canonical"
+      },
+      {
+        "name": "Masonry",
+        "source": "packages/react/src/masonry.tsx",
+        "entries": [
+          "./masonry"
+        ],
+        "canonicalComponent": "Masonry",
+        "role": "canonical"
+      },
+      {
+        "name": "Mentions",
+        "source": "packages/react/src/mentions.tsx",
+        "entries": [
+          ".",
+          "./mentions"
+        ],
+        "canonicalComponent": "Mentions",
+        "role": "canonical"
+      },
+      {
+        "name": "Menu",
+        "source": "packages/react/src/overlays.tsx",
+        "entries": [
+          ".",
+          "./overlays"
+        ],
+        "canonicalComponent": "Menu",
+        "role": "canonical"
+      },
+      {
+        "name": "Menubar",
+        "source": "packages/react/src/menubar.tsx",
+        "entries": [
+          ".",
+          "./menubar"
+        ],
+        "canonicalComponent": "Menubar",
+        "role": "canonical"
+      },
+      {
+        "name": "MorphingMenu",
+        "source": "packages/react/src/menu-morph.tsx",
+        "entries": [
+          "./menu-morph"
+        ],
+        "canonicalComponent": "Menu",
+        "role": "optional-extension"
+      },
+      {
+        "name": "NativeSelect",
+        "source": "packages/react/src/advanced-forms.tsx",
+        "entries": [
+          ".",
+          "./forms"
+        ],
+        "canonicalComponent": "Select",
+        "role": "companion-or-alternative"
+      },
+      {
+        "name": "NavigationBar",
+        "source": "packages/react/src/navigation-bar.tsx",
+        "entries": [
+          "./navigation-bar"
+        ],
+        "canonicalComponent": "TopBar",
+        "role": "companion-or-alternative"
+      },
+      {
+        "name": "Notice",
+        "source": "packages/react/src/feedback.tsx",
+        "entries": [
+          ".",
+          "./feedback"
+        ],
+        "canonicalComponent": "Notice",
+        "role": "canonical"
+      },
+      {
+        "name": "NotificationBell",
+        "source": "packages/react/src/notification-bell.tsx",
+        "entries": [
+          "./notification-bell"
+        ],
+        "canonicalComponent": "IconButton",
+        "role": "optional-extension"
+      },
+      {
+        "name": "NumberField",
+        "source": "packages/react/src/number-field.tsx",
+        "entries": [
+          ".",
+          "./forms",
+          "./number-field"
+        ],
+        "canonicalComponent": "NumberField",
+        "role": "canonical"
+      },
+      {
+        "name": "OtpField",
+        "source": "packages/react/src/forms.tsx",
+        "entries": [
+          ".",
+          "./forms",
+          "./otp-field"
+        ],
+        "canonicalComponent": "OtpField",
+        "role": "canonical"
+      },
+      {
+        "name": "OverlayStackProvider",
+        "source": "packages/react/src/overlay-stack.tsx",
+        "entries": [
+          ".",
+          "./overlay-stack"
+        ],
+        "canonicalComponent": "Dialog",
+        "role": "companion-or-alternative"
+      },
+      {
+        "name": "Pagination",
+        "source": "packages/react/src/pagination.tsx",
+        "entries": [
+          ".",
+          "./navigation",
+          "./pagination"
+        ],
+        "canonicalComponent": "Pagination",
+        "role": "canonical"
+      },
+      {
+        "name": "PasswordField",
+        "source": "packages/react/src/forms.tsx",
+        "entries": [
+          ".",
+          "./forms",
+          "./password-field"
+        ],
+        "canonicalComponent": "PasswordField",
+        "role": "canonical"
+      },
+      {
+        "name": "Popover",
+        "source": "packages/react/src/popover.tsx",
+        "entries": [
+          ".",
+          "./popover"
+        ],
+        "canonicalComponent": "Popover",
+        "role": "canonical"
+      },
+      {
+        "name": "Progress",
+        "source": "packages/react/src/feedback.tsx",
+        "entries": [
+          ".",
+          "./feedback"
+        ],
+        "canonicalComponent": "Progress",
+        "role": "canonical"
+      },
+      {
+        "name": "QRCode",
+        "source": "packages/react/src/qr-code.tsx",
+        "entries": [
+          "./qr-code"
+        ],
+        "canonicalComponent": "QRCode",
+        "role": "canonical"
+      },
+      {
+        "name": "Radio",
+        "source": "packages/react/src/selection.tsx",
+        "entries": [
+          ".",
+          "./selection"
+        ],
+        "canonicalComponent": "Radio",
+        "role": "canonical"
+      },
+      {
+        "name": "RadioGroup",
+        "source": "packages/react/src/selection.tsx",
+        "entries": [
+          ".",
+          "./selection"
+        ],
+        "canonicalComponent": "RadioGroup",
+        "role": "canonical"
+      },
+      {
+        "name": "ReactionPicker",
+        "source": "packages/react/src/reaction-picker.tsx",
+        "entries": [
+          "./reaction-picker"
+        ],
+        "canonicalComponent": "Button",
+        "role": "optional-extension"
+      },
+      {
+        "name": "Result",
+        "source": "packages/react/src/feedback.tsx",
+        "entries": [
+          ".",
+          "./feedback"
+        ],
+        "canonicalComponent": "Result",
+        "role": "canonical"
+      },
+      {
+        "name": "ScrollProgress",
+        "source": "packages/react/src/scroll-progress.tsx",
+        "entries": [
+          "./scroll-progress"
+        ],
+        "canonicalComponent": "Progress",
+        "role": "optional-extension"
+      },
+      {
+        "name": "SearchField",
+        "source": "packages/react/src/forms.tsx",
+        "entries": [
+          ".",
+          "./forms"
+        ],
+        "canonicalComponent": "SearchField",
+        "role": "canonical"
+      },
+      {
+        "name": "Section",
+        "source": "packages/react/src/layout.tsx",
+        "entries": [
+          ".",
+          "./layout"
+        ],
+        "canonicalComponent": "Section",
+        "role": "canonical"
+      },
+      {
+        "name": "SegmentedControl",
+        "source": "packages/react/src/selection.tsx",
+        "entries": [
+          ".",
+          "./selection"
+        ],
+        "canonicalComponent": "SegmentedControl",
+        "role": "canonical"
+      },
+      {
+        "name": "Select",
+        "source": "packages/react/src/select.tsx",
+        "entries": [
+          ".",
+          "./forms"
+        ],
+        "canonicalComponent": "Select",
+        "role": "canonical"
+      },
+      {
+        "name": "Sheet",
+        "source": "packages/react/src/overlays.tsx",
+        "entries": [
+          ".",
+          "./overlays"
+        ],
+        "canonicalComponent": "Sheet",
+        "role": "canonical"
+      },
+      {
+        "name": "Sidebar",
+        "source": "packages/react/src/sidebar.tsx",
+        "entries": [
+          ".",
+          "./sidebar"
+        ],
+        "canonicalComponent": "Sidebar",
+        "role": "canonical"
+      },
+      {
+        "name": "SidePanel",
+        "source": "packages/react/src/side-panel.tsx",
+        "entries": [
+          ".",
+          "./side-panel"
+        ],
+        "canonicalComponent": "SidePanel",
+        "role": "canonical"
+      },
+      {
+        "name": "Skeleton",
+        "source": "packages/react/src/feedback.tsx",
+        "entries": [
+          ".",
+          "./feedback"
+        ],
+        "canonicalComponent": "Skeleton",
+        "role": "canonical"
+      },
+      {
+        "name": "SkipNav",
+        "source": "packages/react/src/skip-nav.tsx",
+        "entries": [
+          ".",
+          "./skip-nav"
+        ],
+        "canonicalComponent": "SkipNav",
+        "role": "canonical"
+      },
+      {
+        "name": "Slider",
+        "source": "packages/react/src/slider.tsx",
+        "entries": [
+          ".",
+          "./forms",
+          "./slider"
+        ],
+        "canonicalComponent": "Slider",
+        "role": "canonical"
+      },
+      {
+        "name": "SortableCollection",
+        "source": "packages/react/src/sortable.tsx",
+        "entries": [
+          "./sortable"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
+        "name": "Spinner",
+        "source": "packages/react/src/feedback.tsx",
+        "entries": [
+          ".",
+          "./feedback"
+        ],
+        "canonicalComponent": "Spinner",
+        "role": "canonical"
+      },
+      {
+        "name": "Splitter",
+        "source": "packages/react/src/splitter.tsx",
+        "entries": [
+          ".",
+          "./splitter"
+        ],
+        "canonicalComponent": "Splitter",
+        "role": "canonical"
+      },
+      {
+        "name": "Stack",
+        "source": "packages/react/src/layout.tsx",
+        "entries": [
+          ".",
+          "./layout"
+        ],
+        "canonicalComponent": "Stack",
+        "role": "canonical"
+      },
+      {
+        "name": "Statistic",
+        "source": "packages/react/src/advanced-display.tsx",
+        "entries": [
+          ".",
+          "./display"
+        ],
+        "canonicalComponent": "Statistic",
+        "role": "canonical"
+      },
+      {
+        "name": "StatisticGroup",
+        "source": "packages/react/src/advanced-display.tsx",
+        "entries": [
+          ".",
+          "./display"
+        ],
+        "canonicalComponent": "Statistic",
+        "role": "companion-or-alternative"
+      },
+      {
+        "name": "StepPlayer",
+        "source": "packages/react/src/step-player.tsx",
+        "entries": [
+          "./step-player"
+        ],
+        "canonicalComponent": "Steps",
+        "role": "optional-extension"
+      },
+      {
+        "name": "Steps",
+        "source": "packages/react/src/steps.tsx",
+        "entries": [
+          ".",
+          "./navigation",
+          "./steps"
+        ],
+        "canonicalComponent": "Steps",
+        "role": "canonical"
+      },
+      {
+        "name": "Surface",
+        "source": "packages/react/src/layout.tsx",
+        "entries": [
+          ".",
+          "./layout"
+        ],
+        "canonicalComponent": "Surface",
+        "role": "canonical"
+      },
+      {
+        "name": "SwipeActions",
+        "source": "packages/react/src/swipe-actions.tsx",
+        "entries": [
+          "./swipe-actions"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
+        "name": "Switch",
+        "source": "packages/react/src/selection.tsx",
+        "entries": [
+          ".",
+          "./selection"
+        ],
+        "canonicalComponent": "Switch",
+        "role": "canonical"
+      },
+      {
+        "name": "Table",
+        "source": "packages/react/src/advanced-display.tsx",
+        "entries": [
+          ".",
+          "./display"
+        ],
+        "canonicalComponent": "DataTable",
+        "role": "companion-or-alternative"
+      },
+      {
+        "name": "TabPanel",
+        "source": "packages/react/src/navigation.tsx",
+        "entries": [
+          ".",
+          "./navigation"
+        ],
+        "canonicalComponent": "Tabs",
+        "role": "companion-or-alternative"
+      },
+      {
+        "name": "Tabs",
+        "source": "packages/react/src/navigation.tsx",
+        "entries": [
+          ".",
+          "./navigation"
+        ],
+        "canonicalComponent": "Tabs",
+        "role": "canonical"
+      },
+      {
+        "name": "Tag",
+        "source": "packages/react/src/display.tsx",
+        "entries": [
+          ".",
+          "./display"
+        ],
+        "canonicalComponent": "Tag",
+        "role": "canonical"
+      },
+      {
+        "name": "TagsInput",
+        "source": "packages/react/src/tags-input.tsx",
+        "entries": [
+          ".",
+          "./tags-input"
+        ],
+        "canonicalComponent": "TagsInput",
+        "role": "canonical"
+      },
+      {
+        "name": "TaskList",
+        "source": "packages/react/src/task-list.tsx",
+        "entries": [
+          "./task-list"
+        ],
+        "canonicalComponent": "List",
+        "role": "optional-extension"
+      },
+      {
+        "name": "Text",
+        "source": "packages/react/src/layout.tsx",
+        "entries": [
+          ".",
+          "./layout"
+        ],
+        "canonicalComponent": "Text",
+        "role": "canonical"
+      },
+      {
+        "name": "TextArea",
+        "source": "packages/react/src/forms.tsx",
+        "entries": [
+          ".",
+          "./forms"
+        ],
+        "canonicalComponent": "TextArea",
+        "role": "canonical"
+      },
+      {
+        "name": "TextField",
+        "source": "packages/react/src/forms.tsx",
+        "entries": [
+          ".",
+          "./forms"
+        ],
+        "canonicalComponent": "Field",
+        "role": "companion-or-alternative"
+      },
+      {
+        "name": "TextFormat",
+        "source": "packages/react/src/text-formats.tsx",
+        "entries": [
+          ".",
+          "./text-formats"
+        ],
+        "canonicalComponent": "TextFormat",
+        "role": "canonical"
+      },
+      {
+        "name": "TextTransition",
+        "source": "packages/react/src/content-transition.tsx",
+        "entries": [
+          "./content-transition"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
+        "name": "ThinkingOrb",
+        "source": "packages/react/src/thinking-orb.tsx",
+        "entries": [
+          "./thinking-orb"
+        ],
+        "canonicalComponent": "ThinkingOrb",
+        "role": "canonical"
+      },
+      {
+        "name": "Timeline",
+        "source": "packages/react/src/advanced-display.tsx",
+        "entries": [
+          ".",
+          "./display"
+        ],
+        "canonicalComponent": "Timeline",
+        "role": "canonical"
+      },
+      {
+        "name": "Toast",
+        "source": "packages/react/src/toast.tsx",
+        "entries": [
+          ".",
+          "./toast"
+        ],
+        "canonicalComponent": "Toast",
+        "role": "canonical"
+      },
+      {
+        "name": "ToastProvider",
+        "source": "packages/react/src/toast.tsx",
+        "entries": [
+          ".",
+          "./toast"
+        ],
+        "canonicalComponent": "Toast",
+        "role": "companion-or-alternative"
+      },
+      {
+        "name": "ToggleGroup",
+        "source": "packages/react/src/toggle-group.tsx",
+        "entries": [
+          ".",
+          "./toggle-group"
+        ],
+        "canonicalComponent": "ToggleGroup",
+        "role": "canonical"
+      },
+      {
+        "name": "Tooltip",
+        "source": "packages/react/src/overlays.tsx",
+        "entries": [
+          ".",
+          "./overlays"
+        ],
+        "canonicalComponent": "Tooltip",
+        "role": "canonical"
+      },
+      {
+        "name": "Top",
+        "source": "packages/react/src/top.tsx",
+        "entries": [
+          ".",
+          "./top"
+        ],
+        "canonicalComponent": "Top",
+        "role": "canonical"
+      },
+      {
+        "name": "TopBar",
+        "source": "packages/react/src/top-bar.tsx",
+        "entries": [
+          ".",
+          "./top-bar"
+        ],
+        "canonicalComponent": "TopBar",
+        "role": "canonical"
+      },
+      {
+        "name": "Tour",
+        "source": "packages/react/src/tour.tsx",
+        "entries": [
+          ".",
+          "./tour"
+        ],
+        "canonicalComponent": "Tour",
+        "role": "canonical"
+      },
+      {
+        "name": "TransferList",
+        "source": "packages/react/src/transfer-list.tsx",
+        "entries": [
+          ".",
+          "./transfer-list"
+        ],
+        "canonicalComponent": "TransferList",
+        "role": "canonical"
+      },
+      {
+        "name": "Tree",
+        "source": "packages/react/src/tree.tsx",
+        "entries": [
+          ".",
+          "./tree"
+        ],
+        "canonicalComponent": "Tree",
+        "role": "canonical"
+      },
+      {
+        "name": "UploadItem",
+        "source": "packages/react/src/upload-item.tsx",
+        "entries": [
+          ".",
+          "./display",
+          "./upload-item"
+        ],
+        "canonicalComponent": "UploadItem",
+        "role": "canonical"
+      },
+      {
+        "name": "VirtualList",
+        "source": "packages/react/src/virtual-list.tsx",
+        "entries": [
+          "./virtual-list"
+        ],
+        "canonicalComponent": "VirtualList",
+        "role": "canonical"
+      },
+      {
+        "name": "VisuallyHidden",
+        "source": "packages/react/src/layout.tsx",
+        "entries": [
+          ".",
+          "./layout"
+        ],
+        "canonicalComponent": "VisuallyHidden",
+        "role": "canonical"
+      },
+      {
+        "name": "VoiceNote",
+        "source": "packages/react/src/voice-note.tsx",
+        "entries": [
+          "./voice-note"
+        ],
+        "canonicalComponent": "Asset",
+        "role": "optional-extension"
+      },
+      {
+        "name": "Watermark",
+        "source": "packages/react/src/watermark.tsx",
+        "entries": [
+          "./watermark"
+        ],
+        "canonicalComponent": "Watermark",
+        "role": "canonical"
+      }
+    ],
+    "@hjmds/react-native": [
+      {
+        "name": "Accordion",
+        "source": "packages/react-native/src/data-display.tsx",
+        "entries": [
+          ".",
+          "./data-display"
+        ],
+        "canonicalComponent": "Accordion",
+        "role": "canonical"
+      },
+      {
+        "name": "ActivityHeatmap",
+        "source": "packages/react-native/src/activity-heatmap.tsx",
+        "entries": [
+          "./activity-heatmap"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
+        "name": "Agreement",
+        "source": "packages/react-native/src/agreement.tsx",
+        "entries": [
+          ".",
+          "./agreement"
+        ],
+        "canonicalComponent": "Agreement",
+        "role": "canonical"
+      },
+      {
+        "name": "AlertDialog",
+        "source": "packages/react-native/src/overlays.tsx",
+        "entries": [
+          ".",
+          "./overlays"
+        ],
+        "canonicalComponent": "AlertDialog",
+        "role": "canonical"
+      },
+      {
+        "name": "AnimatedStatistic",
+        "source": "packages/react-native/src/statistic-motion.tsx",
+        "entries": [
+          "./statistic-motion"
+        ],
+        "canonicalComponent": "Statistic",
+        "role": "optional-extension"
+      },
+      {
+        "name": "AspectRatio",
+        "source": "packages/react-native/src/primitives.tsx",
+        "entries": [
+          ".",
+          "./primitives"
+        ],
+        "canonicalComponent": "AspectRatio",
+        "role": "canonical"
+      },
+      {
+        "name": "Asset",
+        "source": "packages/react-native/src/asset.tsx",
+        "entries": [
+          ".",
+          "./asset"
+        ],
+        "canonicalComponent": "Asset",
+        "role": "canonical"
+      },
+      {
+        "name": "AssetGroup",
+        "source": "packages/react-native/src/asset.tsx",
+        "entries": [
+          ".",
+          "./asset"
+        ],
+        "canonicalComponent": "Asset",
+        "role": "companion-or-alternative"
+      },
+      {
+        "name": "AuthProviderButton",
+        "source": "packages/react-native/src/provider-button.tsx",
+        "entries": [
+          ".",
+          "./provider-button"
+        ],
+        "canonicalComponent": "AuthProviderButton",
+        "role": "canonical"
+      },
+      {
+        "name": "AuthScreenLayout",
+        "source": "packages/react-native/src/auth-screen.tsx",
+        "entries": [
+          ".",
+          "./auth-screen"
+        ],
+        "canonicalComponent": "AuthScreenLayout",
+        "role": "canonical"
+      },
+      {
+        "name": "Avatar",
+        "source": "packages/react-native/src/data-display.tsx",
+        "entries": [
+          ".",
+          "./data-display"
+        ],
+        "canonicalComponent": "Avatar",
+        "role": "canonical"
+      },
+      {
+        "name": "Badge",
+        "source": "packages/react-native/src/data-display.tsx",
+        "entries": [
+          ".",
+          "./data-display"
+        ],
+        "canonicalComponent": "Badge",
+        "role": "canonical"
+      },
+      {
+        "name": "BottomCTA",
+        "source": "packages/react-native/src/actions.tsx",
+        "entries": [
+          ".",
+          "./actions",
+          "./bottom-cta"
+        ],
+        "canonicalComponent": "BottomCTA",
+        "role": "canonical"
+      },
+      {
+        "name": "BottomInfo",
+        "source": "packages/react-native/src/bottom-info.tsx",
+        "entries": [
+          ".",
+          "./bottom-info"
+        ],
+        "canonicalComponent": "BottomInfo",
+        "role": "canonical"
+      },
+      {
+        "name": "BottomNavigation",
+        "source": "packages/react-native/src/navigation.tsx",
+        "entries": [
+          ".",
+          "./navigation",
+          "./top-bar"
+        ],
+        "canonicalComponent": "BottomNavigation",
+        "role": "canonical"
+      },
+      {
+        "name": "Button",
+        "source": "packages/react-native/src/actions.tsx",
+        "entries": [
+          ".",
+          "./actions",
+          "./bottom-cta"
+        ],
+        "canonicalComponent": "Button",
+        "role": "canonical"
+      },
+      {
+        "name": "Calendar",
+        "source": "packages/react-native/src/calendar.tsx",
+        "entries": [
+          ".",
+          "./calendar"
+        ],
+        "canonicalComponent": "Calendar",
+        "role": "canonical"
+      },
+      {
+        "name": "Card",
+        "source": "packages/react-native/src/data-display.tsx",
+        "entries": [
+          ".",
+          "./data-display"
+        ],
+        "canonicalComponent": "Card",
+        "role": "canonical"
+      },
+      {
+        "name": "Carousel",
+        "source": "packages/react-native/src/carousel.tsx",
+        "entries": [
+          ".",
+          "./carousel"
+        ],
+        "canonicalComponent": "Carousel",
+        "role": "canonical"
+      },
+      {
+        "name": "CarouselMotion",
+        "source": "packages/react-native/src/carousel-motion.tsx",
+        "entries": [
+          "./carousel-motion"
+        ],
+        "canonicalComponent": "Carousel",
+        "role": "optional-extension"
+      },
+      {
+        "name": "Celebration",
+        "source": "packages/react-native/src/celebration.tsx",
+        "entries": [
+          "./celebration"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
+        "name": "Checkbox",
+        "source": "packages/react-native/src/inputs.tsx",
+        "entries": [
+          ".",
+          "./inputs"
+        ],
+        "canonicalComponent": "Checkbox",
+        "role": "canonical"
+      },
+      {
+        "name": "CheckboxGroup",
+        "source": "packages/react-native/src/inputs.tsx",
+        "entries": [
+          ".",
+          "./inputs"
+        ],
+        "canonicalComponent": "CheckboxGroup",
+        "role": "canonical"
+      },
+      {
+        "name": "Chip",
+        "source": "packages/react-native/src/inputs.tsx",
+        "entries": [
+          ".",
+          "./inputs"
+        ],
+        "canonicalComponent": "Chip",
+        "role": "canonical"
+      },
+      {
+        "name": "CodeBlock",
+        "source": "packages/react-native/src/code-block.tsx",
+        "entries": [
+          "./code-block"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
+        "name": "Collapsible",
+        "source": "packages/react-native/src/collapsible.tsx",
+        "entries": [
+          ".",
+          "./collapsible"
+        ],
+        "canonicalComponent": "Collapsible",
+        "role": "canonical"
+      },
+      {
+        "name": "Combobox",
+        "source": "packages/react-native/src/forms.tsx",
+        "entries": [
+          ".",
+          "./forms"
+        ],
+        "canonicalComponent": "Combobox",
+        "role": "canonical"
+      },
+      {
+        "name": "Container",
+        "source": "packages/react-native/src/primitives.tsx",
+        "entries": [
+          ".",
+          "./primitives"
+        ],
+        "canonicalComponent": "Container",
+        "role": "canonical"
+      },
+      {
+        "name": "ContentTransition",
+        "source": "packages/react-native/src/content-transition.tsx",
+        "entries": [
+          "./content-transition"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
+        "name": "CounterBadge",
+        "source": "packages/react-native/src/data-display.tsx",
+        "entries": [
+          ".",
+          "./data-display"
+        ],
+        "canonicalComponent": "CounterBadge",
+        "role": "canonical"
+      },
+      {
+        "name": "DatePicker",
+        "source": "packages/react-native/src/date-picker.tsx",
+        "entries": [
+          ".",
+          "./date-picker",
+          "./inputs"
+        ],
+        "canonicalComponent": "DatePicker",
+        "role": "canonical"
+      },
+      {
+        "name": "DateRangePicker",
+        "source": "packages/react-native/src/date-range.tsx",
+        "entries": [
+          ".",
+          "./date-range"
+        ],
+        "canonicalComponent": "DateRangePicker",
+        "role": "canonical"
+      },
+      {
+        "name": "DescriptionList",
+        "source": "packages/react-native/src/data-display.tsx",
+        "entries": [
+          ".",
+          "./data-display"
+        ],
+        "canonicalComponent": "DescriptionList",
+        "role": "canonical"
+      },
+      {
+        "name": "Dialog",
+        "source": "packages/react-native/src/overlays.tsx",
+        "entries": [
+          ".",
+          "./overlays"
+        ],
+        "canonicalComponent": "Dialog",
+        "role": "canonical"
+      },
+      {
+        "name": "Divider",
+        "source": "packages/react-native/src/data-display.tsx",
+        "entries": [
+          ".",
+          "./data-display"
+        ],
+        "canonicalComponent": "Divider",
+        "role": "canonical"
+      },
+      {
+        "name": "DurationField",
+        "source": "packages/react-native/src/duration-field.tsx",
+        "entries": [
+          "./duration-field"
+        ],
+        "canonicalComponent": "NumberField",
+        "role": "optional-extension"
+      },
+      {
+        "name": "EffectSurface",
+        "source": "packages/react-native/src/effect-surface.tsx",
+        "entries": [
+          "./effect-surface"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
+        "name": "EmptyState",
+        "source": "packages/react-native/src/feedback.tsx",
+        "entries": [
+          ".",
+          "./feedback"
+        ],
+        "canonicalComponent": "EmptyState",
+        "role": "canonical"
+      },
+      {
+        "name": "Field",
+        "source": "packages/react-native/src/forms.tsx",
+        "entries": [
+          ".",
+          "./forms"
+        ],
+        "canonicalComponent": "Field",
+        "role": "canonical"
+      },
+      {
+        "name": "FilePicker",
+        "source": "packages/react-native/src/file-picker.tsx",
+        "entries": [
+          ".",
+          "./file-picker",
+          "./inputs"
+        ],
+        "canonicalComponent": "FilePicker",
+        "role": "canonical"
+      },
+      {
+        "name": "FloatingActionButton",
+        "source": "packages/react-native/src/floating-action-button.tsx",
+        "entries": [
+          ".",
+          "./floating-action-button"
+        ],
+        "canonicalComponent": "FloatingActionButton",
+        "role": "canonical"
+      },
+      {
+        "name": "FolderPreview",
+        "source": "packages/react-native/src/folder-preview.tsx",
+        "entries": [
+          "./folder-preview"
+        ],
+        "canonicalComponent": "Collapsible",
+        "role": "optional-extension"
+      },
+      {
+        "name": "Form",
+        "source": "packages/react-native/src/forms.tsx",
+        "entries": [
+          ".",
+          "./forms"
+        ],
+        "canonicalComponent": "Form",
+        "role": "canonical"
+      },
+      {
+        "name": "GestureSheet",
+        "source": "packages/react-native/src/sheet-gesture.tsx",
+        "entries": [
+          "./sheet-gesture"
+        ],
+        "canonicalComponent": "Sheet",
+        "role": "optional-extension"
+      },
+      {
+        "name": "GestureSheetInput",
+        "source": "packages/react-native/src/sheet-gesture.tsx",
+        "entries": [
+          "./sheet-gesture"
+        ],
+        "canonicalComponent": "Field",
+        "role": "optional-extension"
+      },
+      {
+        "name": "GestureSheetProvider",
+        "source": "packages/react-native/src/sheet-gesture.tsx",
+        "entries": [
+          "./sheet-gesture"
+        ],
+        "canonicalComponent": "Sheet",
+        "role": "optional-extension"
+      },
+      {
+        "name": "GravityLetters",
+        "source": "packages/react-native/src/gravity-letters.tsx",
+        "entries": [
+          "./gravity-letters"
+        ],
+        "canonicalComponent": "Text",
+        "role": "optional-extension"
+      },
+      {
+        "name": "Grid",
+        "source": "packages/react-native/src/primitives.tsx",
+        "entries": [
+          ".",
+          "./primitives"
+        ],
+        "canonicalComponent": "Grid",
+        "role": "canonical"
+      },
+      {
+        "name": "GridReveal",
+        "source": "packages/react-native/src/grid-reveal.tsx",
+        "entries": [
+          "./grid-reveal"
+        ],
+        "canonicalComponent": "Image",
+        "role": "optional-extension"
+      },
+      {
+        "name": "Heading",
+        "source": "packages/react-native/src/heading.tsx",
+        "entries": [
+          ".",
+          "./heading"
+        ],
+        "canonicalComponent": "Heading",
+        "role": "canonical"
+      },
+      {
+        "name": "HjmNativeProvider",
+        "source": "packages/react-native/src/provider.tsx",
+        "entries": [
+          ".",
+          "./provider"
+        ],
+        "canonicalComponent": "DesignSystemProvider",
+        "role": "canonical"
+      },
+      {
+        "name": "Icon",
+        "source": "packages/react-native/src/primitives.tsx",
+        "entries": [
+          ".",
+          "./primitives"
+        ],
+        "canonicalComponent": "Icon",
+        "role": "canonical"
+      },
+      {
+        "name": "IconButton",
+        "source": "packages/react-native/src/actions.tsx",
+        "entries": [
+          ".",
+          "./actions",
+          "./bottom-cta"
+        ],
+        "canonicalComponent": "IconButton",
+        "role": "canonical"
+      },
+      {
+        "name": "Image",
+        "source": "packages/react-native/src/data-display.tsx",
+        "entries": [
+          ".",
+          "./data-display"
+        ],
+        "canonicalComponent": "Image",
+        "role": "canonical"
+      },
+      {
+        "name": "ImageViewer",
+        "source": "packages/react-native/src/image-viewer.tsx",
+        "entries": [
+          "./image-viewer"
+        ],
+        "canonicalComponent": "Image",
+        "role": "optional-extension"
+      },
+      {
+        "name": "InlineConfirm",
+        "source": "packages/react-native/src/inline-confirm.tsx",
+        "entries": [
+          "./inline-confirm"
+        ],
+        "canonicalComponent": "Button",
+        "role": "optional-extension"
+      },
+      {
+        "name": "KeyboardAvoiding",
+        "source": "packages/react-native/src/keyboard.tsx",
+        "entries": [
+          ".",
+          "./keyboard"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
+        "name": "KeyboardDock",
+        "source": "packages/react-native/src/keyboard-controller.tsx",
+        "entries": [
+          "./keyboard-controller"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
+        "name": "KeyboardFormScrollView",
+        "source": "packages/react-native/src/keyboard-controller.tsx",
+        "entries": [
+          "./keyboard-controller"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
+        "name": "KeyboardMotionProvider",
+        "source": "packages/react-native/src/keyboard-controller.tsx",
+        "entries": [
+          "./keyboard-controller"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
+        "name": "Layout",
+        "source": "packages/react-native/src/primitives.tsx",
+        "entries": [
+          ".",
+          "./primitives"
+        ],
+        "canonicalComponent": "Layout",
+        "role": "canonical"
+      },
+      {
+        "name": "Link",
+        "source": "packages/react-native/src/actions.tsx",
+        "entries": [
+          ".",
+          "./actions",
+          "./bottom-cta"
+        ],
+        "canonicalComponent": "Link",
+        "role": "canonical"
+      },
+      {
+        "name": "List",
+        "source": "packages/react-native/src/data-display.tsx",
+        "entries": [
+          ".",
+          "./data-display"
+        ],
+        "canonicalComponent": "List",
+        "role": "canonical"
+      },
+      {
+        "name": "ListRow",
+        "source": "packages/react-native/src/data-display.tsx",
+        "entries": [
+          ".",
+          "./data-display"
+        ],
+        "canonicalComponent": "ListRow",
+        "role": "canonical"
+      },
+      {
+        "name": "LoadMore",
+        "source": "packages/react-native/src/navigation.tsx",
+        "entries": [
+          ".",
+          "./navigation",
+          "./top-bar"
+        ],
+        "canonicalComponent": "LoadMore",
+        "role": "canonical"
+      },
+      {
+        "name": "Masonry",
+        "source": "packages/react-native/src/masonry.tsx",
+        "entries": [
+          "./masonry"
+        ],
+        "canonicalComponent": "Masonry",
+        "role": "canonical"
+      },
+      {
+        "name": "Mentions",
+        "source": "packages/react-native/src/mentions.tsx",
+        "entries": [
+          ".",
+          "./mentions"
+        ],
+        "canonicalComponent": "Mentions",
+        "role": "canonical"
+      },
+      {
+        "name": "Menu",
+        "source": "packages/react-native/src/navigation.tsx",
+        "entries": [
+          ".",
+          "./navigation",
+          "./top-bar"
+        ],
+        "canonicalComponent": "Menu",
+        "role": "canonical"
+      },
+      {
+        "name": "NativeContextMenu",
+        "source": "packages/react-native/src/context-menu-native.tsx",
+        "entries": [
+          "./context-menu-native"
+        ],
+        "canonicalComponent": "ContextMenu",
+        "role": "optional-extension"
+      },
+      {
+        "name": "NavigationBar",
+        "source": "packages/react-native/src/navigation-bar.tsx",
+        "entries": [
+          "./navigation-bar"
+        ],
+        "canonicalComponent": "TopBar",
+        "role": "companion-or-alternative"
+      },
+      {
+        "name": "Notice",
+        "source": "packages/react-native/src/feedback.tsx",
+        "entries": [
+          ".",
+          "./feedback"
+        ],
+        "canonicalComponent": "Notice",
+        "role": "canonical"
+      },
+      {
+        "name": "NotificationBell",
+        "source": "packages/react-native/src/notification-bell.tsx",
+        "entries": [
+          "./notification-bell"
+        ],
+        "canonicalComponent": "IconButton",
+        "role": "optional-extension"
+      },
+      {
+        "name": "NumberField",
+        "source": "packages/react-native/src/number-field.tsx",
+        "entries": [
+          ".",
+          "./inputs",
+          "./number-field"
+        ],
+        "canonicalComponent": "NumberField",
+        "role": "canonical"
+      },
+      {
+        "name": "OtpField",
+        "source": "packages/react-native/src/inputs.tsx",
+        "entries": [
+          ".",
+          "./inputs",
+          "./otp-field"
+        ],
+        "canonicalComponent": "OtpField",
+        "role": "canonical"
+      },
+      {
+        "name": "PasswordField",
+        "source": "packages/react-native/src/inputs.tsx",
+        "entries": [
+          ".",
+          "./inputs",
+          "./password-field"
+        ],
+        "canonicalComponent": "PasswordField",
+        "role": "canonical"
+      },
+      {
+        "name": "Progress",
+        "source": "packages/react-native/src/feedback.tsx",
+        "entries": [
+          ".",
+          "./feedback"
+        ],
+        "canonicalComponent": "Progress",
+        "role": "canonical"
+      },
+      {
+        "name": "QRCode",
+        "source": "packages/react-native/src/qr-code.tsx",
+        "entries": [
+          "./qr-code"
+        ],
+        "canonicalComponent": "QRCode",
+        "role": "canonical"
+      },
+      {
+        "name": "Radio",
+        "source": "packages/react-native/src/inputs.tsx",
+        "entries": [
+          ".",
+          "./inputs"
+        ],
+        "canonicalComponent": "Radio",
+        "role": "canonical"
+      },
+      {
+        "name": "RadioGroup",
+        "source": "packages/react-native/src/inputs.tsx",
+        "entries": [
+          ".",
+          "./inputs"
+        ],
+        "canonicalComponent": "RadioGroup",
+        "role": "canonical"
+      },
+      {
+        "name": "ReactionPicker",
+        "source": "packages/react-native/src/reaction-picker.tsx",
+        "entries": [
+          "./reaction-picker"
+        ],
+        "canonicalComponent": "Button",
+        "role": "optional-extension"
+      },
+      {
+        "name": "Result",
+        "source": "packages/react-native/src/feedback.tsx",
+        "entries": [
+          ".",
+          "./feedback"
+        ],
+        "canonicalComponent": "Result",
+        "role": "canonical"
+      },
+      {
+        "name": "ScrollProgress",
+        "source": "packages/react-native/src/scroll-progress.tsx",
+        "entries": [
+          "./scroll-progress"
+        ],
+        "canonicalComponent": "Progress",
+        "role": "optional-extension"
+      },
+      {
+        "name": "SearchField",
+        "source": "packages/react-native/src/inputs.tsx",
+        "entries": [
+          ".",
+          "./inputs"
+        ],
+        "canonicalComponent": "SearchField",
+        "role": "canonical"
+      },
+      {
+        "name": "Section",
+        "source": "packages/react-native/src/primitives.tsx",
+        "entries": [
+          ".",
+          "./primitives"
+        ],
+        "canonicalComponent": "Section",
+        "role": "canonical"
+      },
+      {
+        "name": "SegmentedControl",
+        "source": "packages/react-native/src/inputs.tsx",
+        "entries": [
+          ".",
+          "./inputs"
+        ],
+        "canonicalComponent": "SegmentedControl",
+        "role": "canonical"
+      },
+      {
+        "name": "Select",
+        "source": "packages/react-native/src/forms.tsx",
+        "entries": [
+          ".",
+          "./forms"
+        ],
+        "canonicalComponent": "Select",
+        "role": "canonical"
+      },
+      {
+        "name": "SharedTransitionElement",
+        "source": "packages/react-native/src/screen-transition.tsx",
+        "entries": [
+          "./screen-transition"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
+        "name": "SharedTransitionScreen",
+        "source": "packages/react-native/src/screen-transition.tsx",
+        "entries": [
+          "./screen-transition"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
+        "name": "Sheet",
+        "source": "packages/react-native/src/overlays.tsx",
+        "entries": [
+          ".",
+          "./overlays"
+        ],
+        "canonicalComponent": "Sheet",
+        "role": "canonical"
+      },
+      {
+        "name": "Skeleton",
+        "source": "packages/react-native/src/feedback.tsx",
+        "entries": [
+          ".",
+          "./feedback"
+        ],
+        "canonicalComponent": "Skeleton",
+        "role": "canonical"
+      },
+      {
+        "name": "Slider",
+        "source": "packages/react-native/src/slider.tsx",
+        "entries": [
+          ".",
+          "./inputs",
+          "./slider"
+        ],
+        "canonicalComponent": "Slider",
+        "role": "canonical"
+      },
+      {
+        "name": "SortableCollection",
+        "source": "packages/react-native/src/sortable.tsx",
+        "entries": [
+          "./sortable"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
+        "name": "Spinner",
+        "source": "packages/react-native/src/feedback.tsx",
+        "entries": [
+          ".",
+          "./feedback"
+        ],
+        "canonicalComponent": "Spinner",
+        "role": "canonical"
+      },
+      {
+        "name": "Stack",
+        "source": "packages/react-native/src/primitives.tsx",
+        "entries": [
+          ".",
+          "./primitives"
+        ],
+        "canonicalComponent": "Stack",
+        "role": "canonical"
+      },
+      {
+        "name": "Statistic",
+        "source": "packages/react-native/src/data-display.tsx",
+        "entries": [
+          ".",
+          "./data-display"
+        ],
+        "canonicalComponent": "Statistic",
+        "role": "canonical"
+      },
+      {
+        "name": "StatisticGroup",
+        "source": "packages/react-native/src/data-display.tsx",
+        "entries": [
+          ".",
+          "./data-display"
+        ],
+        "canonicalComponent": "Statistic",
+        "role": "companion-or-alternative"
+      },
+      {
+        "name": "StepPlayer",
+        "source": "packages/react-native/src/step-player.tsx",
+        "entries": [
+          "./step-player"
+        ],
+        "canonicalComponent": "Steps",
+        "role": "optional-extension"
+      },
+      {
+        "name": "Steps",
+        "source": "packages/react-native/src/steps.tsx",
+        "entries": [
+          ".",
+          "./steps"
+        ],
+        "canonicalComponent": "Steps",
+        "role": "canonical"
+      },
+      {
+        "name": "Surface",
+        "source": "packages/react-native/src/primitives.tsx",
+        "entries": [
+          ".",
+          "./primitives"
+        ],
+        "canonicalComponent": "Surface",
+        "role": "canonical"
+      },
+      {
+        "name": "SwipeActions",
+        "source": "packages/react-native/src/swipe-actions.tsx",
+        "entries": [
+          "./swipe-actions"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
+        "name": "Switch",
+        "source": "packages/react-native/src/inputs.tsx",
+        "entries": [
+          ".",
+          "./inputs"
+        ],
+        "canonicalComponent": "Switch",
+        "role": "canonical"
+      },
+      {
+        "name": "TabPanel",
+        "source": "packages/react-native/src/navigation.tsx",
+        "entries": [
+          ".",
+          "./navigation",
+          "./top-bar"
+        ],
+        "canonicalComponent": "Tabs",
+        "role": "companion-or-alternative"
+      },
+      {
+        "name": "Tabs",
+        "source": "packages/react-native/src/navigation.tsx",
+        "entries": [
+          ".",
+          "./navigation",
+          "./top-bar"
+        ],
+        "canonicalComponent": "Tabs",
+        "role": "canonical"
+      },
+      {
+        "name": "Tag",
+        "source": "packages/react-native/src/data-display.tsx",
+        "entries": [
+          ".",
+          "./data-display"
+        ],
+        "canonicalComponent": "Tag",
+        "role": "canonical"
+      },
+      {
+        "name": "TagsInput",
+        "source": "packages/react-native/src/tags-input.tsx",
+        "entries": [
+          ".",
+          "./tags-input"
+        ],
+        "canonicalComponent": "TagsInput",
+        "role": "canonical"
+      },
+      {
+        "name": "TaskList",
+        "source": "packages/react-native/src/task-list.tsx",
+        "entries": [
+          "./task-list"
+        ],
+        "canonicalComponent": "List",
+        "role": "optional-extension"
+      },
+      {
+        "name": "Text",
+        "source": "packages/react-native/src/primitives.tsx",
+        "entries": [
+          ".",
+          "./primitives"
+        ],
+        "canonicalComponent": "Text",
+        "role": "canonical"
+      },
+      {
+        "name": "TextArea",
+        "source": "packages/react-native/src/inputs.tsx",
+        "entries": [
+          ".",
+          "./inputs"
+        ],
+        "canonicalComponent": "TextArea",
+        "role": "canonical"
+      },
+      {
+        "name": "TextField",
+        "source": "packages/react-native/src/inputs.tsx",
+        "entries": [
+          ".",
+          "./inputs"
+        ],
+        "canonicalComponent": "Field",
+        "role": "companion-or-alternative"
+      },
+      {
+        "name": "TextTransition",
+        "source": "packages/react-native/src/content-transition.tsx",
+        "entries": [
+          "./content-transition"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
+        "name": "ThinkingOrb",
+        "source": "packages/react-native/src/thinking-orb.tsx",
+        "entries": [
+          "./thinking-orb"
+        ],
+        "canonicalComponent": "ThinkingOrb",
+        "role": "canonical"
+      },
+      {
+        "name": "Timeline",
+        "source": "packages/react-native/src/data-display.tsx",
+        "entries": [
+          ".",
+          "./data-display"
+        ],
+        "canonicalComponent": "Timeline",
+        "role": "canonical"
+      },
+      {
+        "name": "Toast",
+        "source": "packages/react-native/src/feedback.tsx",
+        "entries": [
+          ".",
+          "./feedback"
+        ],
+        "canonicalComponent": "Toast",
+        "role": "canonical"
+      },
+      {
+        "name": "ToastRegion",
+        "source": "packages/react-native/src/feedback.tsx",
+        "entries": [
+          ".",
+          "./feedback"
+        ],
+        "canonicalComponent": "Toast",
+        "role": "companion-or-alternative"
+      },
+      {
+        "name": "ToggleGroup",
+        "source": "packages/react-native/src/toggle-group.tsx",
+        "entries": [
+          ".",
+          "./toggle-group"
+        ],
+        "canonicalComponent": "ToggleGroup",
+        "role": "canonical"
+      },
+      {
+        "name": "Top",
+        "source": "packages/react-native/src/top.tsx",
+        "entries": [
+          ".",
+          "./top"
+        ],
+        "canonicalComponent": "Top",
+        "role": "canonical"
+      },
+      {
+        "name": "TopBar",
+        "source": "packages/react-native/src/navigation.tsx",
+        "entries": [
+          ".",
+          "./navigation",
+          "./top-bar"
+        ],
+        "canonicalComponent": "TopBar",
+        "role": "canonical"
+      },
+      {
+        "name": "TopBarAction",
+        "source": "packages/react-native/src/navigation.tsx",
+        "entries": [
+          ".",
+          "./navigation",
+          "./top-bar"
+        ],
+        "canonicalComponent": "TopBar",
+        "role": "companion-or-alternative"
+      },
+      {
+        "name": "TransferList",
+        "source": "packages/react-native/src/transfer-list.tsx",
+        "entries": [
+          ".",
+          "./transfer-list"
+        ],
+        "canonicalComponent": "TransferList",
+        "role": "canonical"
+      },
+      {
+        "name": "UploadItem",
+        "source": "packages/react-native/src/upload-item.tsx",
+        "entries": [
+          ".",
+          "./upload-item"
+        ],
+        "canonicalComponent": "UploadItem",
+        "role": "canonical"
+      },
+      {
+        "name": "VirtualList",
+        "source": "packages/react-native/src/virtual-list.tsx",
+        "entries": [
+          "./virtual-list"
+        ],
+        "canonicalComponent": "VirtualList",
+        "role": "canonical"
+      },
+      {
+        "name": "VoiceNote",
+        "source": "packages/react-native/src/voice-note.tsx",
+        "entries": [
+          "./voice-note"
+        ],
+        "canonicalComponent": "Asset",
+        "role": "optional-extension"
+      }
+    ]
+  }
+}

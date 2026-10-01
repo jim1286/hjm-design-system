@@ -69,11 +69,11 @@ function Demo({ shared = false }: { shared?: boolean }) {
       <Button tone="secondary" onPress={() => setOpen(false)}>쇼케이스로 돌아가기</Button>{open ? shared ? <SharedDemo /> : <Interactions /> : null}
     </GestureHandlerRootView></Modal></>;
 }
-const meta = { title: "Experimental/Interaction Adapters", component: Demo } satisfies Meta<typeof Demo>;
+const meta = { title: "실험/구성/드래그·스와이프·모션", component: Demo } satisfies Meta<typeof Demo>;
 export default meta;
-export const Playground: StoryObj<typeof meta> = {};
-export const SharedScreenTransition: StoryObj<typeof meta> = { args: { shared: true } };
+export const Playground: StoryObj<typeof meta> = { name: "순서 이동·목록 작업·내용 전환",};
+export const SharedScreenTransition: StoryObj<typeof meta> = { name: "카드 확대와 화면 전환", args: { shared: true } };
 
 // Explicit scenarios make accessibility preferences reproducible without changing the device.
-export const ReducedMotion: StoryObj<typeof meta> = { render: () => <HjmNativeProvider theme="dark" direction="rtl" textScale={2} reducedMotion><Demo /></HjmNativeProvider> };
-export const SharedReducedMotion: StoryObj<typeof meta> = { render: () => <HjmNativeProvider theme="dark" reducedMotion><Demo shared /></HjmNativeProvider> };
+export const ReducedMotion: StoryObj<typeof meta> = { name: "동작 줄이기", render: () => <HjmNativeProvider theme="dark" direction="rtl" textScale={2} reducedMotion><Demo /></HjmNativeProvider> };
+export const SharedReducedMotion: StoryObj<typeof meta> = { name: "공통 동작 줄이기", render: () => <HjmNativeProvider theme="dark" reducedMotion><Demo shared /></HjmNativeProvider> };

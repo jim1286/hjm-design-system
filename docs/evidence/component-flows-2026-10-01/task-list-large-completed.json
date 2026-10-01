@@ -1,0 +1,423 @@
+[
+  {
+    "frame": {
+      "width": 402,
+      "height": 874,
+      "x": 0,
+      "y": 0
+    },
+    "enabled": true,
+    "role": "AXApplication",
+    "AXValue": null,
+    "help": null,
+    "AXFrame": "{{0, 0}, {402, 874}}",
+    "AXLabel": "HJM Native Showcase",
+    "role_description": "application",
+    "content_required": false,
+    "traits": [
+      "None"
+    ],
+    "pid": 89686,
+    "type": "Application",
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "subrole": null,
+    "title": null
+  },
+  {
+    "title": null,
+    "AXFrame": "{{24, 86}, {354, 44}}",
+    "traits": [
+      "Scrollable",
+      "Adjustable"
+    ],
+    "help": null,
+    "role": "AXGenericElement",
+    "role_description": "",
+    "type": "GenericElement",
+    "custom_actions": [
+      "오늘의 아이디어 정리 위로",
+      "오늘의 아이디어 정리 아래로"
+    ],
+    "AXLabel": "오늘의 아이디어 정리 순서 변경",
+    "subrole": null,
+    "enabled": true,
+    "content_required": false,
+    "pid": 89686,
+    "AXValue": "오늘의 아이디어 정리, 3개 중 1번째",
+    "AXUniqueId": null,
+    "frame": {
+      "height": 44,
+      "x": 24,
+      "y": 86,
+      "width": 354
+    }
+  },
+  {
+    "content_required": false,
+    "AXFrame": "{{40, 154}, {322, 142}}",
+    "pid": 89686,
+    "traits": [
+      "Scrollable"
+    ],
+    "enabled": true,
+    "AXValue": "checkbox, checked",
+    "AXLabel": "오늘의 아이디어 정리",
+    "custom_actions": [],
+    "title": null,
+    "help": "떠오른 생각을 짧게 기록해요.",
+    "role": "AXGenericElement",
+    "subrole": null,
+    "AXUniqueId": null,
+    "type": "GenericElement",
+    "role_description": "",
+    "frame": {
+      "x": 40,
+      "y": 154,
+      "height": 142,
+      "width": 322
+    }
+  },
+  {
+    "traits": [
+      "Scrollable",
+      "NotEnabled",
+      "Button"
+    ],
+    "role_description": "",
+    "AXValue": null,
+    "subrole": null,
+    "role": "AXGenericElement",
+    "pid": 89686,
+    "AXUniqueId": null,
+    "help": null,
+    "enabled": false,
+    "custom_actions": [],
+    "AXLabel": "오늘의 아이디어 정리 위로",
+    "type": "GenericElement",
+    "title": null,
+    "AXFrame": "{{24, 320}, {316.66665649414062, 44}}",
+    "content_required": false,
+    "frame": {
+      "width": 316.6666564941406,
+      "x": 24,
+      "y": 320,
+      "height": 44
+    }
+  },
+  {
+    "AXFrame": "{{24, 372}, {340.66665649414062, 44}}",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "role": "AXButton",
+    "content_required": false,
+    "AXLabel": "오늘의 아이디어 정리 아래로",
+    "title": null,
+    "frame": {
+      "width": 340.6666564941406,
+      "height": 44,
+      "y": 372,
+      "x": 24
+    },
+    "custom_actions": [],
+    "pid": 89686,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "help": null,
+    "type": "Button",
+    "role_description": "button",
+    "enabled": true,
+    "subrole": null
+  },
+  {
+    "enabled": true,
+    "AXLabel": "첫 화면 그려보기 순서 변경",
+    "role": "AXButton",
+    "traits": [
+      "Scrollable",
+      "Adjustable"
+    ],
+    "help": null,
+    "subrole": null,
+    "AXFrame": "{{24, 432}, {354, 44}}",
+    "AXUniqueId": null,
+    "content_required": false,
+    "role_description": "button",
+    "pid": 89686,
+    "type": "Button",
+    "frame": {
+      "height": 44,
+      "x": 24,
+      "width": 354,
+      "y": 432
+    },
+    "AXValue": "첫 화면 그려보기, 3개 중 2번째",
+    "title": null,
+    "custom_actions": [
+      "첫 화면 그려보기 위로",
+      "첫 화면 그려보기 아래로"
+    ]
+  },
+  {
+    "subrole": null,
+    "help": null,
+    "AXValue": "checkbox, checked",
+    "AXFrame": "{{40, 500}, {322, 66}}",
+    "content_required": false,
+    "AXUniqueId": null,
+    "enabled": true,
+    "custom_actions": [],
+    "role_description": "button",
+    "frame": {
+      "height": 66,
+      "y": 500,
+      "width": 322,
+      "x": 40
+    },
+    "AXLabel": "첫 화면 그려보기",
+    "pid": 89686,
+    "title": null,
+    "type": "Button",
+    "role": "AXButton",
+    "traits": [
+      "Scrollable"
+    ]
+  },
+  {
+    "content_required": false,
+    "AXLabel": "첫 화면 그려보기 위로",
+    "type": "GenericElement",
+    "help": null,
+    "AXFrame": "{{24, 590}, {268, 44}}",
+    "enabled": true,
+    "role": "AXGenericElement",
+    "subrole": null,
+    "AXValue": null,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "title": null,
+    "role_description": "",
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "pid": 89686,
+    "frame": {
+      "x": 24,
+      "width": 268,
+      "y": 590,
+      "height": 44
+    }
+  },
+  {
+    "role_description": "button",
+    "custom_actions": [],
+    "AXFrame": "{{24, 642}, {292.33334350585938, 44}}",
+    "role": "AXButton",
+    "help": null,
+    "frame": {
+      "width": 292.3333435058594,
+      "height": 44,
+      "x": 24,
+      "y": 642
+    },
+    "enabled": true,
+    "AXValue": null,
+    "AXUniqueId": null,
+    "content_required": false,
+    "pid": 89686,
+    "AXLabel": "첫 화면 그려보기 아래로",
+    "type": "Button",
+    "title": null,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "subrole": null
+  },
+  {
+    "custom_actions": [
+      "함께 볼 사람에게 공유 위로",
+      "함께 볼 사람에게 공유 아래로"
+    ],
+    "pid": 89686,
+    "AXLabel": "함께 볼 사람에게 공유 순서 변경",
+    "AXFrame": "{{24, 702}, {354, 44}}",
+    "role": "AXGenericElement",
+    "traits": [
+      "Scrollable",
+      "Adjustable"
+    ],
+    "AXUniqueId": null,
+    "type": "GenericElement",
+    "help": null,
+    "role_description": "",
+    "enabled": true,
+    "subrole": null,
+    "AXValue": "함께 볼 사람에게 공유, 3개 중 3번째",
+    "content_required": false,
+    "frame": {
+      "height": 44,
+      "y": 702,
+      "x": 24,
+      "width": 354
+    },
+    "title": null
+  },
+  {
+    "pid": 89686,
+    "frame": {
+      "x": 40,
+      "y": 770,
+      "width": 322,
+      "height": 66
+    },
+    "AXFrame": "{{40, 770}, {322, 66}}",
+    "AXLabel": "함께 볼 사람에게 공유",
+    "traits": [
+      "Scrollable"
+    ],
+    "AXUniqueId": null,
+    "enabled": true,
+    "role": "AXGenericElement",
+    "help": null,
+    "type": "GenericElement",
+    "subrole": null,
+    "role_description": "",
+    "content_required": false,
+    "AXValue": "checkbox, unchecked",
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "frame": {
+      "x": 24,
+      "width": 322.6666564941406,
+      "height": 44,
+      "y": 860
+    },
+    "AXLabel": "함께 볼 사람에게 공유 위로",
+    "AXFrame": "{{24, 860}, {322.66665649414062, 44}}",
+    "role": "AXGenericElement",
+    "content_required": false,
+    "pid": 89686,
+    "custom_actions": [],
+    "title": null,
+    "enabled": true,
+    "role_description": "",
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "AXUniqueId": null,
+    "AXValue": null,
+    "help": null,
+    "subrole": null,
+    "type": "GenericElement"
+  },
+  {
+    "AXUniqueId": null,
+    "enabled": false,
+    "AXLabel": "함께 볼 사람에게 공유 아래로",
+    "title": null,
+    "pid": 89686,
+    "role_description": "",
+    "custom_actions": [],
+    "AXFrame": "{{24, 912}, {346.66665649414062, 44}}",
+    "help": null,
+    "frame": {
+      "y": 912,
+      "width": 346.6666564941406,
+      "height": 44,
+      "x": 24
+    },
+    "role": "AXGenericElement",
+    "AXValue": null,
+    "traits": [
+      "Scrollable",
+      "NotEnabled",
+      "Button"
+    ],
+    "subrole": null,
+    "type": "GenericElement",
+    "content_required": false
+  },
+  {
+    "traits": [
+      "Scrollable"
+    ],
+    "help": null,
+    "role": "AXGenericElement",
+    "pid": 89686,
+    "AXLabel": null,
+    "title": null,
+    "frame": {
+      "height": 24,
+      "x": 362,
+      "width": 24,
+      "y": 759
+    },
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "AXFrame": "{{362, 759}, {24, 24}}",
+    "role_description": "",
+    "AXValue": null,
+    "type": "GenericElement",
+    "enabled": true,
+    "subrole": null,
+    "content_required": false
+  },
+  {
+    "AXFrame": "{{6, 811.66666698455811}, {247.33332824707031, 17}}",
+    "enabled": true,
+    "help": null,
+    "role_description": "",
+    "role": "AXGenericElement",
+    "type": "GenericElement",
+    "AXLabel": "컴포넌트/입력/Task List/Large Text",
+    "AXValue": null,
+    "subrole": null,
+    "AXUniqueId": "mobile-menu-button",
+    "custom_actions": [],
+    "frame": {
+      "height": 17,
+      "y": 811.6666669845581,
+      "x": 6,
+      "width": 247.3333282470703
+    },
+    "content_required": false,
+    "pid": 89686,
+    "title": null,
+    "traits": [
+      "Scrollable"
+    ]
+  },
+  {
+    "content_required": false,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "role_description": "button",
+    "enabled": true,
+    "AXLabel": null,
+    "help": null,
+    "AXUniqueId": "mobile-addons-button",
+    "AXValue": null,
+    "subrole": null,
+    "frame": {
+      "x": 368,
+      "width": 28,
+      "y": 806,
+      "height": 28
+    },
+    "type": "Button",
+    "custom_actions": [],
+    "AXFrame": "{{368, 806}, {28, 28}}",
+    "role": "AXButton",
+    "pid": 89686,
+    "title": null
+  }
+]

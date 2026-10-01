@@ -1,3 +1,4 @@
+import { isObject, rejectUnknownKeys } from "./internal/object-validation.js";
 import { floatingSurfaceContract } from "./component-contracts.js";
 import { motionPreset, spacing } from "./foundations.js";
 
@@ -127,27 +128,11 @@ const alignments = new Set<PopoverAlign>(["start", "center", "end"]);
 const descriptorKeys = new Set(["placement", "align", "accessibilityLabel"]);
 const openStateKeys = new Set(["open", "defaultOpen", "onOpenChange"]);
 
-function isObject(value: unknown): value is Readonly<Record<string, unknown>> {
-  return value !== null && typeof value === "object" && !Array.isArray(value);
-}
-
-function rejectUnknownKeys(
-  value: Readonly<Record<string, unknown>>,
-  allowed: ReadonlySet<string>,
-  field: string,
-): void {
-  for (const key of Object.keys(value)) {
-    if (!allowed.has(key)) {
-      throw new TypeError(`Unsupported Popover ${field} field: ${key}`);
-    }
-  }
-}
-
 export function validatePopoverDescriptor(descriptor: PopoverDescriptor): void {
   if (!isObject(descriptor)) {
     throw new TypeError("Popover descriptor must be an object");
   }
-  rejectUnknownKeys(descriptor, descriptorKeys, "descriptor");
+  rejectUnknownKeys(descriptor, descriptorKeys, "descriptor", "Popover");
   if (
     descriptor.placement !== undefined &&
     !placements.has(descriptor.placement)
@@ -191,7 +176,7 @@ export function validatePopoverOpenState(state: PopoverOpenState): void {
   if (!isObject(state)) {
     throw new TypeError("Popover open state must be an object");
   }
-  rejectUnknownKeys(state, openStateKeys, "open state");
+  rejectUnknownKeys(state, openStateKeys, "open state", "Popover");
   const runtime = state as Readonly<Record<string, unknown>>;
   const hasOpen = Object.prototype.hasOwnProperty.call(runtime, "open");
   const hasDefaultOpen = Object.prototype.hasOwnProperty.call(

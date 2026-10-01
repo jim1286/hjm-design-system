@@ -1,3 +1,4 @@
+import { NativeFieldFrame } from "./internal/field-frame.js";
 import {
   formRecipe,
   type FormSubmitStatus,
@@ -22,7 +23,12 @@ import {
   type SelectOpenChangeReason,
 } from "@hjmds/design-contracts/components/collection";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
-import { backdrop, glyph, radius, spacing } from "@hjmds/design-contracts/foundations";
+import {
+  backdrop,
+  glyph,
+  radius,
+  spacing,
+} from "@hjmds/design-contracts/foundations";
 import {
   comboboxRecipe,
   selectRecipe,
@@ -95,7 +101,12 @@ function useAfterModalDismiss(visible: boolean) {
   useLayoutEffect(() => {
     const wasVisible = previousVisibleRef.current;
     previousVisibleRef.current = visible;
-    if (!wasVisible || visible || shouldAwaitNativeModalDismiss(shownRef.current)) return;
+    if (
+      !wasVisible ||
+      visible ||
+      shouldAwaitNativeModalDismiss(shownRef.current)
+    )
+      return;
     teardownTaskRef.current?.cancel();
     teardownTaskRef.current = scheduleAfterNativeModalTeardown(complete);
   }, [complete, visible]);
@@ -126,12 +137,6 @@ export type FieldProps = Readonly<{
   disabled?: boolean;
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
-  /**
-   * @deprecated Legacy compatibility only. New apps must use `layoutStyle`; Field rhythm,
-   * color, typography, radius, height, and state presentation remain recipe-owned.
-   * @see https://github.com/jim1286/hjm-design-system/blob/main/packages/design-contracts/docs/consumer-policy.md#31-react-native-legacy-style-compatibility-boundary
-   */
-  style?: StyleProp<ViewStyle>;
 }>;
 
 /** A renderer-neutral field frame for custom Native controls. */
@@ -143,7 +148,7 @@ export function Field({
   required = false,
   disabled = false,
   layoutStyle,
-  style,
+
 }: FieldProps) {
   const visibleLabel = `${label}${required ? " *" : ""}`;
   const hint = error ?? description;
@@ -153,17 +158,11 @@ export function Field({
     accessibilityState: { disabled },
   };
   return (
-    <View style={[{ gap: spacing.xs }, style, layoutStyle]}>
-      <Text tone="primary" variant="label">{visibleLabel}</Text>
+    <NativeFieldFrame label={label} required={required} groupControl={false} style={layoutStyle}
+      {...(error === undefined ? {} : { error })}
+      {...(description === undefined ? {} : { description })}>
       {typeof children === "function" ? children(controlProps) : children}
-      {error ? (
-        <Text accessibilityLiveRegion="assertive" tone="danger" variant="caption">
-          {error}
-        </Text>
-      ) : description ? (
-        <Text tone="muted" variant="caption">{description}</Text>
-      ) : null}
-    </View>
+    </NativeFieldFrame>
   );
 }
 
@@ -283,14 +282,6 @@ export function Form<Values>({
   );
 }
 
-export type SelectOption<Value extends string = string> = Readonly<{
-  value: Value;
-  label: string;
-  description?: string;
-  disabled?: boolean;
-  accessibilityHint?: string;
-}>;
-
 export type SelectSection<
   Value extends string = string,
   SectionKey extends string = string,
@@ -314,14 +305,9 @@ export type SelectProps<
   Readonly<{
     label?: string;
     accessibilityLabel?: string;
-    /** Legacy flat source. Prefer source/sections for shared collection identity. */
-    options?: readonly SelectOption<Value>[];
     source?: SelectCollectionSource<Value, SectionKey>;
     items?: readonly SelectItemDescriptor<Value>[];
     sections?: readonly SelectSection<Value, SectionKey>[];
-    value?: Value | null;
-    defaultValue?: Value | null;
-    onValueChange?: (value: Value) => void;
     selectedKey?: Value | null;
     defaultSelectedKey?: Value | null;
     onSelectionChange?: (value: Value | null) => void;
@@ -381,13 +367,9 @@ export function Select<
 >({
   label,
   accessibilityLabel,
-  options,
   source: sourceProp,
   items,
   sections,
-  value,
-  defaultValue,
-  onValueChange,
   selectedKey,
   defaultSelectedKey,
   onSelectionChange,
@@ -419,32 +401,18 @@ export function Select<
   style,
   ...modalProps
 }: SelectProps<Value, SectionKey>) {
-  const providedSources = [sourceProp, options, items, sections].filter(
+  const providedSources = [sourceProp, items, sections].filter(
     (candidate) => candidate !== undefined,
   ).length;
   if (providedSources !== 1) {
-    throw new TypeError("Select requires exactly one of source, options, items, or sections");
-  }
-  if (value !== undefined && selectedKey !== undefined) {
-    throw new TypeError("Select cannot combine value and selectedKey");
-  }
-  if (defaultValue !== undefined && defaultSelectedKey !== undefined) {
-    throw new TypeError("Select cannot combine defaultValue and defaultSelectedKey");
+    throw new TypeError("Select requires exactly one of source, items, or sections");
   }
   const source = useMemo<SelectCollectionSource<Value, SectionKey>>(() => {
     if (sourceProp) return sourceProp;
     if (sections) return { sections };
     if (items) return { items };
-    return {
-      items: (options ?? []).map((option) => ({
-        id: option.value,
-        label: option.label,
-        textValue: option.label,
-        ...(option.description === undefined ? {} : { description: option.description }),
-        ...(option.disabled === undefined ? {} : { disabled: option.disabled }),
-      })),
-    };
-  }, [items, options, sections, sourceProp]);
+    return { items: items! };
+  }, [items, sections, sourceProp]);
   validateCollection(source);
   const collectionItems = flattenCollectionItems(source) as readonly SelectItemDescriptor<Value>[];
   if (collectionItems.length === 0 && asyncState.status === "idle") {
@@ -454,8 +422,8 @@ export function Select<
   const theme = useHjmNativeTheme();
   const { colors, environment } = theme;
   const safeArea = useHjmNativeSafeAreaInsets();
-  const requestedControlled = selectedKey !== undefined ? selectedKey : value;
-  const requestedDefault = defaultSelectedKey ?? defaultValue ?? null;
+  const requestedControlled = selectedKey;
+  const requestedDefault = defaultSelectedKey ?? null;
   const requestedValue = requestedControlled ?? requestedDefault;
   if (
     requestedValue !== null &&
@@ -470,7 +438,6 @@ export function Select<
     ...(requestedControlled === undefined ? {} : { value: requestedControlled }),
     defaultValue: requestedDefault,
     onChange: (next) => {
-      if (next !== null) onValueChange?.(next);
       onSelectionChange?.(next);
     },
   });

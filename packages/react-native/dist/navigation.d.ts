@@ -1,12 +1,14 @@
-import { type MenuDensity, type LoadMoreDensity, type TabSize, type TabsLayout, type TabsOverflow } from "@hjmds/design-contracts/recipes";
-import { type LoadMoreDescriptor, type LoadMoreMode, type LoadMoreRequestHandler, type LoadMoreRequestOutcome, type LoadMoreRequestReason } from "@hjmds/design-contracts/components/load-more";
-import type { LinkDestination } from "@hjmds/design-contracts/components/link";
+import { type AsyncCollectionState, type CollectionItemDescriptor, type CollectionSectionDescriptor, type CollectionSelectionModel, type TabsActivationMode, type TabsDirection, type TabsMountPolicy, type TabsOrientation, type TabsPanelMode } from "@hjmds/design-contracts/behaviors";
 import { type BottomNavigationActivation, type BottomNavigationConfiguration, type BottomNavigationDescriptor, type ResolvedBottomNavigationCounterBadge, type ResolvedBottomNavigationItemDescriptor } from "@hjmds/design-contracts/components/bottom-navigation";
-import { type TabsActivationMode, type TabsDirection, type TabsMountPolicy, type TabsOrientation, type TabsPanelMode, type AsyncCollectionState, type CollectionItemDescriptor, type CollectionSectionDescriptor, type CollectionSelectionModel } from "@hjmds/design-contracts/behaviors";
 import { type CollectionSource } from "@hjmds/design-contracts/components/collection";
-import { type ReactNode, type ReactElement } from "react";
+import type { LinkDestination } from "@hjmds/design-contracts/components/link";
+import { type LoadMoreDescriptor, type LoadMoreMode, type LoadMoreRequestHandler, type LoadMoreRequestOutcome, type LoadMoreRequestReason } from "@hjmds/design-contracts/components/load-more";
+import { type TabsAppearance } from "@hjmds/design-contracts/gooey-navigation";
+import { type LoadMoreDensity, type MenuDensity, type TabSize, type TabsLayout, type TabsOverflow } from "@hjmds/design-contracts/recipes";
+import { type ReactElement, type ReactNode } from "react";
 import { type ModalProps, type PressableProps, type StyleProp, type TextStyle, type ViewStyle } from "react-native";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
+export type { TabsAppearance };
 export type TabItem<Value extends string = string> = Readonly<{
     id: Value;
     label: string;
@@ -18,26 +20,12 @@ export type TabItem<Value extends string = string> = Readonly<{
     panelAccessibilityLabel?: string;
     panel?: ReactNode;
 }>;
-/** @deprecated Use the renderer-neutral `TabItem` with its canonical `id` key. */
-export type TabOption<Value extends string = string> = Readonly<{
-    value: Value;
-    label: string;
-    disabled?: boolean;
-    badge?: string;
-    badgeAccessibilityLabel?: string;
-    renderLeading?: (appearance: TabLeadingRenderProps) => ReactNode;
-    /** Optional localized name for this option's tab panel. */
-    panelAccessibilityLabel?: string;
-    panel?: ReactNode;
-}>;
 export type TabLeadingRenderProps = Readonly<{
     selected: boolean;
     disabled: boolean;
     color: string;
     /** Pixel size resolved from `tabsRecipe.icon.glyph`. */
     size: number;
-    /** Compatibility alias for product icon libraries. */
-    glyphSize: number;
 }>;
 type TabsSelection<Value extends string> = Readonly<{
     value: Value;
@@ -55,6 +43,7 @@ type TabsBaseProps<Value extends string> = Readonly<{
     activationMode?: TabsActivationMode;
     mountPolicy?: TabsMountPolicy;
     panelMode?: TabsPanelMode;
+    appearance?: TabsAppearance;
     orientation?: TabsOrientation;
     direction?: TabsDirection;
     loop?: boolean;
@@ -69,11 +58,6 @@ type TabsBaseProps<Value extends string> = Readonly<{
 }>;
 type TabsCollectionProps<Value extends string> = Readonly<{
     items: readonly TabItem<Value>[];
-    options?: never;
-}> | Readonly<{
-    items?: never;
-    /** @deprecated Use the renderer-neutral `items` prop. */
-    options: readonly TabOption<Value>[];
 }>;
 export type TabsProps<Value extends string = string> = TabsBaseProps<Value> & TabsCollectionProps<Value> & TabsSelection<Value>;
 export declare function getTabId(tabsId: string, value: string): string;
@@ -201,16 +185,9 @@ export type TopBarProps = Readonly<{
 }>;
 /** Native screen top bar with logical action slots and large-text reflow. */
 export declare function TopBar({ title, titleLeading, onTitlePress, titleAccessibilityLabel, titleAccessibilityHint, leading, trailing, actions, centered, safeAreaTop, style, leadingStyle, titleStyle, trailingStyle, }: TopBarProps): import("react").JSX.Element;
-export type MenuItem<Value extends string = string> = Readonly<{
-    value: Value;
-    label: string;
+/** Flat and sectioned menus share collection identifiers and rendering slots. */
+export type MenuItem<Value extends string = string> = Omit<CollectionItemDescriptor<Value>, "textValue"> & Readonly<{
     textValue?: string;
-    description?: string;
-    icon?: ReactNode;
-    shortcut?: string;
-    tone?: "default" | "danger";
-    disabled?: boolean;
-    accessibilityHint?: string;
 }>;
 export type MenuSection<Value extends string = string, SectionKey extends string = string> = CollectionSectionDescriptor<Value, SectionKey>;
 export type MenuOpenChangeReason = "trigger" | "selection" | "escape" | "outside" | "programmatic";
@@ -235,7 +212,6 @@ export type MenuProps<Value extends string = string, SectionKey extends string =
     sections?: readonly MenuSection<Value, SectionKey>[];
     source?: CollectionSource<Value, SectionKey>;
     selection?: CollectionSelectionModel<Value>;
-    onSelect?: (value: Value) => void | Promise<void>;
     onAction?: (value: Value) => void | Promise<void>;
     onActionAfterDismiss?: (value: Value) => void | Promise<void>;
     onSelectionAfterDismiss?: (value: Value) => void | Promise<void>;
@@ -260,7 +236,7 @@ export type MenuProps<Value extends string = string, SectionKey extends string =
     style?: StyleProp<ViewStyle>;
 }>;
 /** Sectioned Native action/selection menu with teardown-safe action callbacks. */
-export declare function Menu<Value extends string = string, SectionKey extends string = string>({ triggerLabel, title, items, sections, source: sourceProp, selection, onSelect, onAction, onActionAfterDismiss, onSelectionAfterDismiss, open, defaultOpen, onOpenChange, onDismiss, disabled, readOnly, busy, readOnlyLabel, asyncState, onRetry, retryLabel, density, renderLeading, renderTrailing, dismissLabel, trigger, renderTrigger, style, ...modalProps }: MenuProps<Value, SectionKey>): import("react").JSX.Element;
+export declare function Menu<Value extends string = string, SectionKey extends string = string>({ triggerLabel, title, items, sections, source: sourceProp, selection, onAction, onActionAfterDismiss, onSelectionAfterDismiss, open, defaultOpen, onOpenChange, onDismiss, disabled, readOnly, busy, readOnlyLabel, asyncState, onRetry, retryLabel, density, renderLeading, renderTrailing, dismissLabel, trigger, renderTrigger, style, ...modalProps }: MenuProps<Value, SectionKey>): import("react").JSX.Element;
 export type LoadMoreProps = Readonly<{
     descriptor: LoadMoreDescriptor;
     onLoadMore: LoadMoreRequestHandler;
@@ -270,12 +246,6 @@ export type LoadMoreProps = Readonly<{
     onRequestError?: (error: unknown, reason: LoadMoreRequestReason) => void;
     /** Canonical layout-only placement. Controlled visual and state keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
-    /**
-     * @deprecated Legacy compatibility only. New apps must use `layoutStyle`; the
-     * footer's gap and vertical rhythm belong to the recipe density axis.
-     * @see https://github.com/jim1286/hjm-design-system/blob/main/packages/design-contracts/docs/consumer-policy.md#31-react-native-legacy-style-compatibility-boundary
-     */
-    style?: StyleProp<ViewStyle>;
 }>;
 export type LoadMoreHandle = Readonly<{
     /** Pass this method to FlatList.onEndReached through a small callback. */
@@ -291,15 +261,8 @@ export declare const LoadMore: import("react").ForwardRefExoticComponent<Readonl
     onRequestError?: (error: unknown, reason: LoadMoreRequestReason) => void;
     /** Canonical layout-only placement. Controlled visual and state keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
-    /**
-     * @deprecated Legacy compatibility only. New apps must use `layoutStyle`; the
-     * footer's gap and vertical rhythm belong to the recipe density axis.
-     * @see https://github.com/jim1286/hjm-design-system/blob/main/packages/design-contracts/docs/consumer-policy.md#31-react-native-legacy-style-compatibility-boundary
-     */
-    style?: StyleProp<ViewStyle>;
 }> & import("react").RefAttributes<Readonly<{
     /** Pass this method to FlatList.onEndReached through a small callback. */
     onEndReached(): Promise<LoadMoreRequestOutcome>;
 }>>>;
-export {};
 //# sourceMappingURL=navigation.d.ts.map

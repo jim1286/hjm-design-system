@@ -36,6 +36,6 @@ function Demo() {
     <section><h2>목표 달성</h2><Button onClick={() => setEvent(value => value + 1)}>기록 달성 축하</Button>{event > 0 ? <><p role="status">{event}번째 기록을 남겼어요</p><Celebration eventId={`record-${event}`} /></> : null}</section>
   </div>;
 }
-const meta = { title: "Experimental/Interaction Adapters", component: Demo } satisfies Meta<typeof Demo>;
+const meta = { includeStories: ["Playground"], id: "experimental-interaction-adapters", title: "실험/구성/드래그·스와이프·모션", component: Demo } satisfies Meta<typeof Demo>;
 export default meta;
-export const Playground: StoryObj<typeof meta> = {};
+export const Playground: StoryObj<typeof meta> = { name: "순서 이동·목록 작업·내용 전환",};

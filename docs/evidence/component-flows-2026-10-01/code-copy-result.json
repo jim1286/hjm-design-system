@@ -1,0 +1,7 @@
+{
+  "method": "Long press source; tap native iOS Copy; read simulator pasteboard after propagation",
+  "expected": "const theme = {\n  appearance: \"light\",\n  spacing: 16,\n};\n",
+  "actual": "const theme = {\n  appearance: \"light\",\n  spacing: 16,\n};\n",
+  "exact": true,
+  "utf8Bytes": 57
+}

@@ -6,8 +6,8 @@ import { useSharedValue } from "react-native-reanimated";
 import { buildThinkingOrbFrame, createThinkingOrbClock, thinkingOrbRecipe, validateThinkingOrb } from "@hjmds/design-contracts/components/thinking-orb";
 import { useHjmNativeTheme } from "./provider.js";
 /** Skia is isolated to this entry; hosts must forward navigation/list visibility via active. */
-export function ThinkingOrb({ state = "working", size = 64, label, speed = 1, paused = false, active = true, style, testID }) {
-    validateThinkingOrb({ state, size, speed, label });
+export function ThinkingOrb({ state = "working", appearance = "state", size = 64, label, speed = 1, paused = false, active = true, style, testID }) {
+    validateThinkingOrb({ state, appearance, size, speed, label });
     const theme = useHjmNativeTheme();
     // Default to static until the asynchronous OS preference resolves to avoid an initial motion flash.
     const [osReduced, setOsReduced] = useState(true);
@@ -34,7 +34,7 @@ export function ThinkingOrb({ state = "working", size = 64, label, speed = 1, pa
         fill.setColor(Skia.Color(ink));
         stroke.setColor(Skia.Color(ink));
         const draw = () => {
-            const frame = buildThinkingOrbFrame(state, size, reduced ? thinkingOrbRecipe.motion.staticTime : clock.current.time);
+            const frame = buildThinkingOrbFrame(state, size, reduced ? thinkingOrbRecipe.motion.staticTime : clock.current.time, appearance);
             // A shared picture updates Skia directly; no React setState/commit per animation frame.
             // Pictures are GC-owned: disposing a replaced picture here can race UI-thread consumption.
             picture.value = createPicture(canvas => {
@@ -62,7 +62,7 @@ export function ThinkingOrb({ state = "working", size = 64, label, speed = 1, pa
         if (active && !paused && !reduced && foreground)
             raf = requestAnimationFrame(loop);
         return () => { disposed = true; cancelAnimationFrame(raf); clock.current.resetDelta(); fill.dispose(); stroke.dispose(); };
-    }, [state, size, speed, active, paused, reduced, foreground, ink, picture]);
+    }, [state, appearance, size, speed, active, paused, reduced, foreground, ink, picture]);
     return _jsx(View, { testID: testID, accessible: true, accessibilityRole: "progressbar", accessibilityLabel: label, accessibilityLiveRegion: "polite", accessibilityState: { busy: true }, style: [{ width: size, height: size }, style], children: _jsx(Canvas, { accessible: false, importantForAccessibility: "no-hide-descendants", style: { width: size, height: size }, children: _jsx(Picture, { picture: picture }) }) });
 }
 //# sourceMappingURL=thinking-orb.js.map

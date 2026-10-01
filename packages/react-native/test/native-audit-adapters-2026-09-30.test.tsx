@@ -90,7 +90,10 @@ it("GestureSheet: separate accessible children, localized chrome, safe-area inse
   const body = tree!.root.find((n) => n.props.accessibilityViewIsModal === true);
   expect(flat(body.props.style).paddingBottom).toBeGreaterThanOrEqual(34);
   const input = tree!.root.find((n) => String(n.type) === "SheetInput");
-  expect(flat(input.props.style)).toMatchObject({ borderWidth: 1, minHeight: 48 });
+  expect(flat(input.props.style)).toMatchObject({ borderWidth: 1 });
+  // The common field recipe owns geometry; require an accessible target instead
+  // of pinning the adapter's former 48pt override over the 44pt base input.
+  expect(flat(input.props.style).minHeight).toBeGreaterThanOrEqual(44);
   // A host Modal's onRequestClose routes Android back to the sheet first.
   expect(dismissTopGestureSheet()).toBe(true);
   expect(change).toHaveBeenCalledWith(false);

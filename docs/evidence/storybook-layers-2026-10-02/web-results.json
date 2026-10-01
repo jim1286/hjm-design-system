@@ -1,0 +1,75 @@
+{
+  "viewport": 320,
+  "results": [
+    {
+      "kind": "apply",
+      "state": "default",
+      "pass": true
+    },
+    {
+      "kind": "draft",
+      "state": "default",
+      "pass": true
+    },
+    {
+      "kind": "search",
+      "state": "default",
+      "pass": true
+    },
+    {
+      "kind": "apply",
+      "state": "dark",
+      "pass": true
+    },
+    {
+      "kind": "draft",
+      "state": "dark",
+      "pass": true
+    },
+    {
+      "kind": "search",
+      "state": "dark",
+      "pass": true
+    },
+    {
+      "kind": "apply",
+      "state": "large-text",
+      "pass": true
+    },
+    {
+      "kind": "draft",
+      "state": "large-text",
+      "pass": true
+    },
+    {
+      "kind": "search",
+      "state": "large-text",
+      "pass": true
+    },
+    {
+      "kind": "navigation",
+      "key": "robot",
+      "presets": 4,
+      "pass": true
+    },
+    {
+      "kind": "navigation",
+      "key": "cycle",
+      "presets": 2,
+      "pass": true
+    },
+    {
+      "kind": "navigation",
+      "key": "finance",
+      "presets": 3,
+      "pass": true
+    },
+    {
+      "kind": "navigation",
+      "key": "project",
+      "presets": 1,
+      "pass": true
+    }
+  ],
+  "errors": []
+}

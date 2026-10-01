@@ -404,10 +404,11 @@ describe("non-modal popup behavior", () => {
         <Menu
           trigger={<button type="button">작업</button>}
           label="선수 작업"
+          onAction={(id) => { if (id === "edit") selectFirst(); if (id === "delete") selectLast(); }}
           items={[
-            { id: "edit", label: "수정", onSelect: selectFirst },
-            { id: "archive", label: "보관", disabled: true, onSelect: vi.fn() },
-            { id: "delete", label: "삭제", tone: "danger", onSelect: selectLast },
+            { id: "edit", label: "수정" },
+            { id: "archive", label: "보관", disabled: true },
+            { id: "delete", label: "삭제", tone: "danger" },
           ]}
         />
       </HjmProvider>,

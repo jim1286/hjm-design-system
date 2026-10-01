@@ -560,3 +560,9 @@ describe("BottomNavigation visual and behavior contracts", () => {
     );
   });
 });
+
+it("keeps capsule routing and rejects the incompatible central action gap", () => {
+  expect(resolveBottomNavigationConfiguration({ presentation: "capsule" }, 4).presentation).toBe("capsule");
+  expect(() => resolveBottomNavigationConfiguration({ presentation: "capsule", distribution: "center-gap" }, 4)).toThrow(/capsule/);
+  expect(resolveBottomNavigationActivation(descriptor, "messages")).toEqual({ key: "messages", reason: "navigate" });
+});

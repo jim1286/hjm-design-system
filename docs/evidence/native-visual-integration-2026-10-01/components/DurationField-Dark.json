@@ -1,0 +1,536 @@
+[
+  {
+    "frame": {
+      "y": 0,
+      "width": 402,
+      "height": 874,
+      "x": 0
+    },
+    "enabled": true,
+    "role": "AXApplication",
+    "AXValue": null,
+    "help": null,
+    "AXFrame": "{{0, 0}, {402, 874}}",
+    "AXLabel": "HJM Native Showcase",
+    "role_description": "application",
+    "content_required": false,
+    "traits": [
+      "None"
+    ],
+    "pid": 57163,
+    "type": "Application",
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "subrole": null,
+    "title": null
+  },
+  {
+    "title": null,
+    "AXFrame": "{{40, 102}, {322, 32}}",
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "help": null,
+    "role": "AXStaticText",
+    "role_description": "text",
+    "type": "StaticText",
+    "custom_actions": [],
+    "AXLabel": "나에게 맞는 속도로.",
+    "subrole": null,
+    "enabled": true,
+    "content_required": false,
+    "pid": 57163,
+    "AXValue": null,
+    "AXUniqueId": null,
+    "frame": {
+      "height": 32,
+      "x": 40,
+      "width": 322,
+      "y": 102
+    }
+  },
+  {
+    "subrole": null,
+    "help": null,
+    "AXValue": null,
+    "AXFrame": "{{40, 158}, {322, 20}}",
+    "content_required": false,
+    "AXUniqueId": null,
+    "enabled": true,
+    "custom_actions": [],
+    "role_description": "text",
+    "frame": {
+      "height": 20,
+      "y": 158,
+      "width": 322,
+      "x": 40
+    },
+    "AXLabel": "시간·분·초를 조절해 다음 집중 시간을 정해요.",
+    "pid": 57163,
+    "title": null,
+    "type": "StaticText",
+    "role": "AXStaticText",
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ]
+  },
+  {
+    "enabled": true,
+    "AXLabel": "집중할 시간",
+    "role": "AXStaticText",
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "help": null,
+    "subrole": null,
+    "AXFrame": "{{40, 202}, {322, 18}}",
+    "AXUniqueId": null,
+    "content_required": false,
+    "role_description": "text",
+    "pid": 57163,
+    "type": "StaticText",
+    "frame": {
+      "x": 40,
+      "width": 322,
+      "height": 18,
+      "y": 202
+    },
+    "AXValue": null,
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "AXFrame": "{{40, 232}, {153, 20}}",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "role": "AXStaticText",
+    "content_required": false,
+    "AXLabel": "집중할 시간, 시간",
+    "title": null,
+    "frame": {
+      "height": 20,
+      "y": 232,
+      "x": 40,
+      "width": 153
+    },
+    "custom_actions": [],
+    "pid": 57163,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "help": null,
+    "type": "StaticText",
+    "role_description": "text",
+    "enabled": true,
+    "subrole": null
+  },
+  {
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "role_description": "text",
+    "AXValue": null,
+    "subrole": null,
+    "role": "AXStaticText",
+    "pid": 57163,
+    "AXUniqueId": null,
+    "help": null,
+    "enabled": true,
+    "custom_actions": [],
+    "AXLabel": "집중할 시간, 분",
+    "type": "StaticText",
+    "title": null,
+    "AXFrame": "{{209, 232}, {153, 20}}",
+    "content_required": false,
+    "frame": {
+      "x": 209,
+      "y": 232,
+      "width": 153,
+      "height": 20
+    }
+  },
+  {
+    "content_required": false,
+    "AXFrame": "{{41, 261}, {44, 44}}",
+    "pid": 57163,
+    "traits": [
+      "NotEnabled",
+      "Scrollable",
+      "Button"
+    ],
+    "enabled": false,
+    "AXValue": null,
+    "AXLabel": "시간 줄이기",
+    "custom_actions": [],
+    "title": null,
+    "help": null,
+    "role": "AXGenericElement",
+    "subrole": null,
+    "AXUniqueId": null,
+    "type": "GenericElement",
+    "role_description": "",
+    "frame": {
+      "x": 41,
+      "y": 261,
+      "height": 44,
+      "width": 44
+    }
+  },
+  {
+    "custom_actions": [
+      "시간 늘리기",
+      "시간 줄이기"
+    ],
+    "help": null,
+    "enabled": true,
+    "title": null,
+    "AXFrame": "{{85, 261}, {63, 44}}",
+    "role_description": "text",
+    "frame": {
+      "x": 85,
+      "y": 261,
+      "width": 63,
+      "height": 44
+    },
+    "content_required": false,
+    "subrole": null,
+    "role": "AXStaticText",
+    "AXUniqueId": null,
+    "AXValue": "0",
+    "traits": [
+      "TextOperationsAvailable",
+      "StaticText",
+      "TextEntry",
+      "Scrollable"
+    ],
+    "type": "StaticText",
+    "pid": 57163,
+    "AXLabel": "집중할 시간, 시간"
+  },
+  {
+    "title": null,
+    "AXFrame": "{{148, 261}, {44, 44}}",
+    "type": "GenericElement",
+    "role": "AXGenericElement",
+    "pid": 57163,
+    "AXUniqueId": null,
+    "custom_actions": [],
+    "AXLabel": "시간 늘리기",
+    "content_required": false,
+    "help": null,
+    "frame": {
+      "y": 261,
+      "x": 148,
+      "width": 44,
+      "height": 44
+    },
+    "subrole": null,
+    "AXValue": null,
+    "role_description": "",
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "enabled": true
+  },
+  {
+    "type": "GenericElement",
+    "custom_actions": [],
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "AXUniqueId": null,
+    "AXFrame": "{{210, 261}, {44, 44}}",
+    "frame": {
+      "y": 261,
+      "x": 210,
+      "height": 44,
+      "width": 44
+    },
+    "role_description": "",
+    "content_required": false,
+    "role": "AXGenericElement",
+    "AXValue": null,
+    "help": null,
+    "AXLabel": "분 줄이기",
+    "title": null,
+    "enabled": true,
+    "subrole": null,
+    "pid": 57163
+  },
+  {
+    "type": "StaticText",
+    "traits": [
+      "TextOperationsAvailable",
+      "StaticText",
+      "TextEntry",
+      "Scrollable"
+    ],
+    "frame": {
+      "height": 44,
+      "x": 254,
+      "y": 261,
+      "width": 63
+    },
+    "subrole": null,
+    "AXValue": "25",
+    "help": null,
+    "custom_actions": [
+      "분 늘리기",
+      "분 줄이기"
+    ],
+    "content_required": false,
+    "role": "AXStaticText",
+    "enabled": true,
+    "role_description": "text",
+    "pid": 57163,
+    "title": null,
+    "AXFrame": "{{254, 261}, {63, 44}}",
+    "AXLabel": "집중할 시간, 분",
+    "AXUniqueId": null
+  },
+  {
+    "AXFrame": "{{317, 261}, {44, 44}}",
+    "custom_actions": [],
+    "help": null,
+    "AXUniqueId": null,
+    "type": "GenericElement",
+    "role_description": "",
+    "role": "AXGenericElement",
+    "content_required": false,
+    "pid": 57163,
+    "AXValue": null,
+    "enabled": true,
+    "frame": {
+      "x": 317,
+      "y": 261,
+      "width": 44,
+      "height": 44
+    },
+    "AXLabel": "분 늘리기",
+    "subrole": null,
+    "title": null,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ]
+  },
+  {
+    "help": null,
+    "subrole": null,
+    "AXUniqueId": null,
+    "content_required": false,
+    "frame": {
+      "x": 40,
+      "width": 322,
+      "y": 322,
+      "height": 20
+    },
+    "role_description": "text",
+    "enabled": true,
+    "AXLabel": "집중할 시간, 초",
+    "type": "StaticText",
+    "AXValue": null,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "pid": 57163,
+    "role": "AXStaticText",
+    "AXFrame": "{{40, 322}, {322, 20}}",
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "role_description": "",
+    "title": null,
+    "AXValue": null,
+    "AXLabel": "초 줄이기",
+    "AXUniqueId": null,
+    "pid": 57163,
+    "frame": {
+      "height": 44,
+      "x": 41,
+      "width": 44,
+      "y": 351
+    },
+    "type": "GenericElement",
+    "role": "AXGenericElement",
+    "help": null,
+    "AXFrame": "{{41, 351}, {44, 44}}",
+    "enabled": false,
+    "custom_actions": [],
+    "content_required": false,
+    "subrole": null,
+    "traits": [
+      "NotEnabled",
+      "Scrollable",
+      "Button"
+    ]
+  },
+  {
+    "type": "StaticText",
+    "role_description": "text",
+    "help": null,
+    "AXFrame": "{{85, 351}, {232, 44}}",
+    "AXUniqueId": null,
+    "AXLabel": "집중할 시간, 초",
+    "enabled": true,
+    "title": null,
+    "pid": 57163,
+    "frame": {
+      "height": 44,
+      "x": 85,
+      "y": 351,
+      "width": 232
+    },
+    "role": "AXStaticText",
+    "subrole": null,
+    "traits": [
+      "TextOperationsAvailable",
+      "StaticText",
+      "TextEntry",
+      "Scrollable"
+    ],
+    "content_required": false,
+    "AXValue": "0",
+    "custom_actions": [
+      "초 늘리기",
+      "초 줄이기"
+    ]
+  },
+  {
+    "AXLabel": "초 늘리기",
+    "AXValue": null,
+    "AXFrame": "{{317, 351}, {44, 44}}",
+    "enabled": true,
+    "frame": {
+      "width": 44,
+      "y": 351,
+      "height": 44,
+      "x": 317
+    },
+    "custom_actions": [],
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "type": "Slider",
+    "AXUniqueId": null,
+    "role_description": "slider",
+    "pid": 57163,
+    "content_required": false,
+    "subrole": null,
+    "role": "AXSlider",
+    "title": null,
+    "help": null
+  },
+  {
+    "AXUniqueId": null,
+    "frame": {
+      "x": 40,
+      "width": 322,
+      "height": 20,
+      "y": 420
+    },
+    "content_required": false,
+    "help": null,
+    "type": "StaticText",
+    "enabled": true,
+    "role": "AXStaticText",
+    "custom_actions": [],
+    "AXValue": null,
+    "role_description": "text",
+    "subrole": null,
+    "title": null,
+    "AXFrame": "{{40, 420}, {322, 20}}",
+    "pid": 57163,
+    "AXLabel": "총 1,500초",
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ]
+  },
+  {
+    "AXFrame": "{{362, 759}, {24, 24}}",
+    "AXValue": null,
+    "custom_actions": [],
+    "help": null,
+    "content_required": false,
+    "role_description": "",
+    "title": null,
+    "AXLabel": null,
+    "AXUniqueId": null,
+    "pid": 57163,
+    "role": "AXGenericElement",
+    "enabled": true,
+    "frame": {
+      "y": 759,
+      "height": 24,
+      "width": 24,
+      "x": 362
+    },
+    "traits": [
+      "Scrollable"
+    ],
+    "type": "GenericElement",
+    "subrole": null
+  },
+  {
+    "frame": {
+      "height": 17,
+      "y": 811.6666669845581,
+      "x": 6,
+      "width": 293
+    },
+    "AXFrame": "{{6, 811.66666698455811}, {293, 17}}",
+    "enabled": true,
+    "AXUniqueId": "mobile-menu-button",
+    "content_required": false,
+    "AXValue": null,
+    "role_description": "",
+    "type": "GenericElement",
+    "title": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "role": "AXGenericElement",
+    "custom_actions": [],
+    "pid": 57163,
+    "AXLabel": "Components/Inputs/Duration Field/Dark",
+    "subrole": null,
+    "help": null
+  },
+  {
+    "type": "Button",
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "subrole": null,
+    "AXValue": null,
+    "title": null,
+    "role_description": "button",
+    "AXLabel": "Open addons panel",
+    "AXFrame": "{{368, 806}, {28, 28}}",
+    "pid": 57163,
+    "custom_actions": [],
+    "content_required": false,
+    "enabled": true,
+    "role": "AXButton",
+    "AXUniqueId": "mobile-addons-button",
+    "frame": {
+      "x": 368,
+      "y": 806,
+      "width": 28,
+      "height": 28
+    },
+    "help": null
+  }
+]

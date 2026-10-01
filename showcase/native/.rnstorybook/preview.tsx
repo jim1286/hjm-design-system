@@ -20,31 +20,35 @@ function Insets({ children, theme, direction, textScale, reducedMotion }: {
 }
 
 const preview: Preview = {
+  // Put individual components first; grouped fixtures remain available for comparing composition.
+  // Keep the same approval roots and conceptual layers as Web (STORYBOOK_NAVIGATION.md);
+  // source/gallery-based grouping hid the difference between a control and a whole screen.
+  parameters: { options: { storySort: { order: ["배포", ["토큰", "컴포넌트", ["개요", "전체 목록", "글자와 아이콘", "레이아웃", "동작", "입력", "탐색", "데이터 표시", "상태와 알림", "오버레이", "시각 효과", "기반 기능"], "구성", "화면"], "실험", ["토큰", "컴포넌트", ["개요", "전체 목록", "글자와 아이콘", "레이아웃", "동작", "입력", "탐색", "데이터 표시", "상태와 알림", "오버레이", "시각 효과", "기반 기능"], "구성", "화면"], "*"] } } },
   globalTypes: {
     theme: {
-      name: "Theme",
+      name: "테마",
       defaultValue: "light",
       toolbar: {
         icon: "paintbrush",
         items: [
-          { value: "light", title: "Light" },
-          { value: "dark", title: "Dark" },
+          { value: "light", title: "밝은 테마" },
+          { value: "dark", title: "어두운 테마" },
         ],
       },
     },
     direction: {
-      name: "Direction",
+      name: "글 읽는 방향",
       defaultValue: "ltr",
       toolbar: {
         icon: "transfer",
         items: [
-          { value: "ltr", title: "LTR" },
-          { value: "rtl", title: "RTL" },
+          { value: "ltr", title: "왼쪽에서 오른쪽" },
+          { value: "rtl", title: "오른쪽에서 왼쪽" },
         ],
       },
     },
     textScale: {
-      name: "Text scale",
+      name: "글자 크기",
       defaultValue: "1",
       toolbar: {
         icon: "zoom",
@@ -56,13 +60,13 @@ const preview: Preview = {
       },
     },
     reducedMotion: {
-      name: "Motion",
+      name: "움직임",
       defaultValue: "full",
       toolbar: {
         icon: "lightning",
         items: [
-          { value: "full", title: "Full motion" },
-          { value: "reduced", title: "Reduced motion" },
+          { value: "full", title: "기본 움직임" },
+          { value: "reduced", title: "동작 줄이기" },
         ],
       },
     },

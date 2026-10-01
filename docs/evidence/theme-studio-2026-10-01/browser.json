@@ -1,0 +1,12 @@
+{
+  "exported": {
+    "brandPalette": {
+      "light": {
+        "primary": "#ffffff"
+      }
+    }
+  },
+  "contrastFailureShown": true,
+  "reset": true,
+  "overflow": false
+}

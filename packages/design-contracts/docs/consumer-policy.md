@@ -1,13 +1,13 @@
 # HJM 소비 앱 정책
 
 상태: **Normative**
-정책 버전: **1.4.0**
+정책 버전: **2.0.0**
+검토일: 2026-10-02 · 전체 소비 이관에 따른 deprecated API 제거
 적용 대상: 신규 HJM Web·React Native 앱과 기존 앱의 새 화면
 
-이 정책 원문은 다음 package patch release부터
-`@hjmds/design-contracts/consumer-policy.md` export에 포함됩니다. 아직 그 export를 포함하지
-않는 `0.9.0` 소비자는 HJM-APP-STANDARD의 versioned profile과 catalog snapshot을 정책
-근거로 사용하고, 존재하지 않는 `v0.9.0` 정책 URL을 만들어 내면 안 됩니다.
+이 원문은 `@hjmds/design-contracts/consumer-policy.md`에서 제공한다. 소비 앱은 설치한
+패키지 버전의 정책과 HJM-APP-STANDARD release snapshot을 함께 확인한다. 이 checkout의
+1.11 소스 갱신을 아직 설치하지 않은 앱에 자동 적용된 것으로 판단하지 않는다.
 
 이 문서는 "HJM답게 보인다"를 특정 화면 복제로 정의하지 않습니다. 모든 제품이 공유해야
 하는 것은 정보 위계, semantic role, 상태 피드백, 접근성 품질과 플랫폼별 행동입니다.
@@ -93,23 +93,15 @@ foundation이 모두 stable이 됐으므로, 중앙 app profile의 다음 개정
 
 ### 3.1 React Native legacy style compatibility boundary
 
-`@hjmds/react-native` 0.9.x의 공개 타입에는 `style`, `labelStyle`, `inputStyle`,
-`containerStyle`과 여러 slot `*Style`처럼 전체 React Native style을 받는 호환 API가 남아
-있습니다. 이 타입 범위와 caller-last 렌더 순서는 기존 소비자를 위한 집행 공백이지, 앞 절의
-금지 속성을 제품이 덮어써도 된다는 허가가 아닙니다.
+2026-10-02 전체 소비 버전업 결정에 따라 deprecated 공개 스타일 통로는 1.11에서 제거합니다.
+정확한 제거 속성과 대체 API는 [1.11 이관표](migration-native-legacy-removal.md)를 따릅니다.
+1.x 설치본의 caller-last 호환 동작은 역사적 동작이며 현재 소스에 유지되지 않습니다.
 
-- 신규 앱과 기존 앱의 새 화면은 legacy raw style prop을 새로 사용하면 안 됩니다(MUST NOT).
-  컴포넌트가 `layoutStyle`을 제공하면 배치에는 그것만 사용하고, 제공하지 않으면 바깥
-  composition wrapper를 사용하거나 HJM에 semantic axis를 먼저 추가해야 합니다(MUST).
-- `HjmCompositionStyle` / `layoutStyle`은 margin, width, flex 계열과 `alignSelf`만 노출하며
-  color, typography, padding, gap, border, radius, height, opacity, transform과 interaction
-  state key를 타입에서 제외합니다. 허용된 margin 값도 HJM spacing token 또는 검토된 제품
-  adapter에서 와야 합니다(MUST).
-- 기존 화면의 legacy prop은 migration 기간에만 유지할 수 있습니다(MAY). controlled visual
-  key가 남아 있으면 정책 항목, 소유자, 대체 semantic API와 제거 train을 ADR에 기록해야
-  하며, 신규 사용으로 복사해서는 안 됩니다(MUST NOT).
-- 0.9 호환 train에서는 등록 style ID와 배열을 런타임에서 필터링하거나 조용히 삭제하지
-  않습니다. 그러한 즉시 변경은 기존 앱의 레이아웃을 예측 불가능하게 깨뜨리기 때문입니다.
+- 배치에는 `layoutStyle`을 쓰고, 제공하지 않는 컴포넌트는 외부 composition wrapper를 씁니다.
+- `HjmCompositionStyle` / `layoutStyle`은 margin, width, flex 계열과 `alignSelf`만 제공합니다. color,
+  typography, padding, gap, border, radius, height, opacity, transform은 recipe/semantic API 소유입니다.
+- 내부 조합의 스타일은 비공개 renderer에 두며 앱에서 해당 내부 파일을 import하지 않습니다.
+- 정식 플랫폼 host·제품 소유 슬롯·이미지 renderer 스타일을 deprecated 별칭과 혼동하지 않습니다.
 
 소비 앱의 legacy prop이 실제로 무엇을 덮어쓰고 있었는지 확인한 뒤, 배치가 아닌 값은
 semantic axis로 옮겼습니다. 아래는 그 축과 대체 대상입니다.
@@ -165,7 +157,7 @@ legacy raw style surface는 다음 조건이 모두 충족된 뒤 공지된 brea
 “1.0.0 이전 제거” 기한은 실제 release/API와 어긋나므로 폐기합니다. 이미 게시한 1.x의 타입과
 런타임을 minor에서 삭제하는 대신, 위 네 조건과 소비 앱별 이관 목록을 충족한 다음 major에서
 제거합니다. 1.4는 semantic API와 이관 경로를 추가하는 train이며, 기존 prop을 새 화면에 쓰는
-것은 계속 금지합니다. 제거 예정 major는 소비 이관 완료 후 Changeset에서 확정합니다.
+것은 계속 금지합니다. 2026-10-02 사용자의 전체 이관 결정으로 제거 train을 1.11로 확정했습니다.
 
 권장 구조는 다음과 같습니다. 실제 폴더명은 stack 관습에 맞춰도 역할은 유지합니다.
 
@@ -240,3 +232,18 @@ package로 승격하지 않습니다.
 ## Optional presentation adapters
 
 The [optional adapter contract](optional-adapters.md) lists platform-specific entries and exact peer requirements. These extensions do not promote the canonical component or establish consumer/device compatibility. Native adapters require separately verified development clients; base imports retain their existing dependency contract.
+
+
+## 상호작용 채택과 성능 기록
+
+2026-10-02 사용자가 참고 인터랙션 수준의 제품 품질을 요청한 데 따른 구체 적용 기준이다.
+기존 상태 피드백·접근성 책임을 제품의 입력 → 반응 → 확정 → 복구 흐름까지 연결한다.
+
+- 제품은 설치된 HJM 버전의 API와 Storybook 배포/실험 상태를 확인하고 해당 범위에서 재사용한다.
+  새 동작이 필요한 경우 기존 Button·Sheet·Toast를 합성하며 같은 상태를 두 계층에서 관리하지 않는다.
+- 성공은 서버 또는 제품의 실제 확정 뒤에 표시한다. 연속 입력·실패·역순 응답·중간 이탈에서도
+  초안과 복구 경로를 보존한다. 웹·앱 입력 방식이 달라도 같은 사용자 의도를 유지한다.
+- 성능에 영향을 주는 제스처·전환·대량 렌더링 변경은 제품 조건의 변경 전후를 측정한다.
+  기기·OS·빌드·데이터·측정 방법과 미검증 범위를 기록하고 데모의 성공을 실기기 성능으로 쓰지 않는다.
+- 구체 예제·목표·기록 양식은 [상호작용 적용·품질 기준](../../../docs/INTERACTION_QUALITY.md)을 따른다.
+  이 소스 문서의 변경이 아직 게시되지 않은 API를 소비 앱에 설치하거나 자동 적용하지는 않는다.

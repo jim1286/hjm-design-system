@@ -24,8 +24,8 @@ it("exposes menu items as named host actions and activates an enabled item", asy
           defaultOpen
           dismissLabel="닫기"
           items={[
-            { value: "edit", label: "편집 문서" },
-            { value: "locked", label: "잠긴 문서", disabled: true },
+            { id: "edit", label: "편집 문서" },
+            { id: "locked", label: "잠긴 문서", disabled: true },
           ]}
           onAction={onAction}
           onOpenChange={onOpenChange}
@@ -56,7 +56,7 @@ it("keeps long menu labels and descriptions available to wrapping native Text", 
         <Menu
           defaultOpen
           dismissLabel="닫기"
-          items={[{ value: "details", label: longCopy, description: longCopy }]}
+          items={[{ id: "details", label: longCopy, description: longCopy }]}
           triggerLabel="계정 메뉴"
         />
       </HjmNativeProvider>,
@@ -67,5 +67,17 @@ it("keeps long menu labels and descriptions available to wrapping native Text", 
   const textNodes = item.findAll((node) => node.children.includes(longCopy));
   expect(textNodes.length).toBeGreaterThanOrEqual(1);
   expect(textNodes.every((node) => node.props.numberOfLines === undefined)).toBe(true);
+  act(() => renderer!.unmount());
+});
+
+
+it("omits the heading line box for an empty title and retains the accessible menu name", async () => {
+  let renderer: ReturnType<typeof create>;
+  await act(async () => {
+    renderer = create(<HjmNativeProvider><Menu defaultOpen title="" triggerLabel="문서 메뉴" dismissLabel="닫기" items={[{ id: "edit", label: "편집" }]} /></HjmNativeProvider>);
+  });
+  const menu = renderer!.root.findAll((node) => node.props.accessibilityRole === "menu").find((node) => typeof node.type === "string")!;
+  expect(menu.props.accessibilityLabel).toBe("문서 메뉴");
+  expect(menu.findAll((node) => node.props.variant === "title")).toHaveLength(0);
   act(() => renderer!.unmount());
 });

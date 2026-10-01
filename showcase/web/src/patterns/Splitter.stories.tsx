@@ -83,9 +83,9 @@ export function VerticalSplitterPreview() {
   );
 }
 
-const meta = { title: "Patterns/Splitter", component: SplitterPreview } satisfies Meta<typeof SplitterPreview>;
+const meta = { includeStories: ["ListAndDetail","VerticalAxis","LargeText"], id: "patterns-splitter", title: "배포/컴포넌트/레이아웃/분할 영역 조절", component: SplitterPreview } satisfies Meta<typeof SplitterPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
-export const ListAndDetail: Story = {};
-export const VerticalAxis: Story = { render: () => <VerticalSplitterPreview /> };
-export const LargeText: Story = { globals: { textScale: "2" } };
+export const ListAndDetail: Story = { name: "목록과 상세",};
+export const VerticalAxis: Story = { name: "세로 축", render: () => <VerticalSplitterPreview /> };
+export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };

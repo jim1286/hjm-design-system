@@ -34,13 +34,6 @@ export function validateLayoutWebDescriptor(descriptor) {
     }
 }
 /**
- * @deprecated Use `validateLayoutRegions` for shared/Native structure or
- * `validateLayoutWebDescriptor` for a Web app shell.
- */
-export function validateLayoutDescriptor(descriptor) {
-    validateLayoutWebDescriptor(descriptor);
-}
-/**
  * Web-only translation: real landmark elements exist there. Native has no
  * landmark-role equivalent at all (`accessibilityRole` covers headings and
  * controls, not page regions) — RN renderers instead rely on visual/DOM

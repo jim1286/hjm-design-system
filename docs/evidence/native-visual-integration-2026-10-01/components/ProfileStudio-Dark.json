@@ -1,0 +1,654 @@
+[
+  {
+    "frame": {
+      "height": 874,
+      "x": 0,
+      "y": 0,
+      "width": 402
+    },
+    "enabled": true,
+    "role": "AXApplication",
+    "AXValue": null,
+    "help": null,
+    "AXFrame": "{{0, 0}, {402, 874}}",
+    "AXLabel": "HJM Native Showcase",
+    "role_description": "application",
+    "content_required": false,
+    "traits": [
+      "None"
+    ],
+    "pid": 57163,
+    "type": "Application",
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "subrole": null,
+    "title": null
+  },
+  {
+    "title": null,
+    "AXFrame": "{{40, 102}, {322, 18}}",
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "help": null,
+    "role": "AXStaticText",
+    "role_description": "text",
+    "type": "StaticText",
+    "custom_actions": [],
+    "AXLabel": "나를 담는 작은 공간",
+    "subrole": null,
+    "enabled": true,
+    "content_required": false,
+    "pid": 57163,
+    "AXValue": null,
+    "AXUniqueId": null,
+    "frame": {
+      "y": 102,
+      "x": 40,
+      "height": 18,
+      "width": 322
+    }
+  },
+  {
+    "content_required": false,
+    "AXFrame": "{{40, 132}, {322, 32}}",
+    "pid": 57163,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "enabled": true,
+    "AXValue": null,
+    "AXLabel": "나답게, 조금 더.",
+    "custom_actions": [],
+    "title": null,
+    "help": null,
+    "role": "AXStaticText",
+    "subrole": null,
+    "AXUniqueId": null,
+    "type": "StaticText",
+    "role_description": "text",
+    "frame": {
+      "y": 132,
+      "x": 40,
+      "width": 322,
+      "height": 32
+    }
+  },
+  {
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "role_description": "text",
+    "AXValue": null,
+    "subrole": null,
+    "role": "AXStaticText",
+    "pid": 57163,
+    "AXUniqueId": null,
+    "help": null,
+    "enabled": true,
+    "custom_actions": [],
+    "AXLabel": "이름부터 작은 표정까지. 나를 보여줄 프로필을 만들어 보세요.",
+    "type": "StaticText",
+    "title": null,
+    "AXFrame": "{{40, 176}, {322, 40}}",
+    "content_required": false,
+    "frame": {
+      "x": 40,
+      "y": 176,
+      "width": 322,
+      "height": 40
+    }
+  },
+  {
+    "AXFrame": "{{173.33332824707031, 273}, {55.333343505859375, 18}}",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "role": "AXStaticText",
+    "content_required": false,
+    "AXLabel": "나만의 얼굴",
+    "title": null,
+    "frame": {
+      "x": 173.3333282470703,
+      "y": 273,
+      "height": 18,
+      "width": 55.333343505859375
+    },
+    "custom_actions": [],
+    "pid": 57163,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "help": null,
+    "type": "StaticText",
+    "role_description": "text",
+    "enabled": true,
+    "subrole": null
+  },
+  {
+    "enabled": true,
+    "AXLabel": "지민",
+    "role": "AXGenericElement",
+    "traits": [
+      "Image",
+      "Scrollable"
+    ],
+    "help": null,
+    "subrole": null,
+    "AXFrame": "{{153, 307}, {96, 96}}",
+    "AXUniqueId": null,
+    "content_required": false,
+    "role_description": "",
+    "pid": 57163,
+    "type": "GenericElement",
+    "frame": {
+      "width": 96,
+      "x": 153,
+      "y": 307,
+      "height": 96
+    },
+    "AXValue": null,
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "subrole": null,
+    "help": null,
+    "AXValue": null,
+    "AXFrame": "{{180, 419}, {41.666671752929688, 32}}",
+    "content_required": false,
+    "AXUniqueId": null,
+    "enabled": true,
+    "custom_actions": [],
+    "role_description": "text",
+    "frame": {
+      "height": 32,
+      "y": 419,
+      "width": 41.66667175292969,
+      "x": 180
+    },
+    "AXLabel": "지민",
+    "pid": 57163,
+    "title": null,
+    "type": "StaticText",
+    "role": "AXStaticText",
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ]
+  },
+  {
+    "role_description": "text",
+    "AXValue": null,
+    "AXUniqueId": null,
+    "type": "StaticText",
+    "role": "AXStaticText",
+    "title": null,
+    "subrole": null,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "enabled": true,
+    "custom_actions": [],
+    "AXLabel": "새로운 이야기를 만들어 가는 중",
+    "pid": 57163,
+    "help": null,
+    "AXFrame": "{{114.66666412353516, 467}, {172.66668701171875, 20}}",
+    "content_required": false,
+    "frame": {
+      "x": 114.66666412353516,
+      "y": 467,
+      "width": 172.66668701171875,
+      "height": 20
+    }
+  },
+  {
+    "title": null,
+    "frame": {
+      "width": 322,
+      "height": 26,
+      "x": 40,
+      "y": 544
+    },
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "pid": 57163,
+    "AXValue": null,
+    "help": null,
+    "AXUniqueId": null,
+    "content_required": false,
+    "AXFrame": "{{40, 544}, {322, 26}}",
+    "role_description": "text",
+    "role": "AXStaticText",
+    "AXLabel": "어떤 모습이 좋으세요?",
+    "enabled": true,
+    "custom_actions": [],
+    "type": "StaticText",
+    "subrole": null
+  },
+  {
+    "content_required": false,
+    "title": null,
+    "AXFrame": "{{40, 586}, {322, 20}}",
+    "role": "AXStaticText",
+    "subrole": null,
+    "help": null,
+    "pid": 57163,
+    "custom_actions": [],
+    "enabled": true,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "frame": {
+      "height": 20,
+      "y": 586,
+      "x": 40,
+      "width": 322
+    },
+    "role_description": "text",
+    "AXValue": null,
+    "type": "StaticText",
+    "AXLabel": "사진이 없을 때 보여줄 얼굴이에요.",
+    "AXUniqueId": null
+  },
+  {
+    "type": "GenericElement",
+    "AXUniqueId": null,
+    "enabled": true,
+    "help": null,
+    "custom_actions": [],
+    "AXFrame": "{{40, 622}, {66, 44}}",
+    "frame": {
+      "x": 40,
+      "width": 66,
+      "height": 44,
+      "y": 622
+    },
+    "AXLabel": "클로버",
+    "role": "AXGenericElement",
+    "traits": [
+      "Scrollable",
+      "Button",
+      "Selected"
+    ],
+    "title": null,
+    "AXValue": null,
+    "subrole": null,
+    "pid": 57163,
+    "content_required": false,
+    "role_description": ""
+  },
+  {
+    "type": "GenericElement",
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "title": null,
+    "role_description": "",
+    "help": null,
+    "AXUniqueId": null,
+    "subrole": null,
+    "content_required": false,
+    "AXFrame": "{{118, 622}, {64, 44}}",
+    "AXValue": null,
+    "enabled": true,
+    "frame": {
+      "x": 118,
+      "width": 64,
+      "y": 622,
+      "height": 44
+    },
+    "role": "AXGenericElement",
+    "custom_actions": [],
+    "pid": 57163,
+    "AXLabel": "피치"
+  },
+  {
+    "type": "Button",
+    "AXLabel": "구름",
+    "help": null,
+    "role_description": "button",
+    "role": "AXButton",
+    "custom_actions": [],
+    "frame": {
+      "width": 64,
+      "height": 44,
+      "x": 194,
+      "y": 622
+    },
+    "content_required": false,
+    "pid": 57163,
+    "subrole": null,
+    "AXValue": null,
+    "AXFrame": "{{194, 622}, {64, 44}}",
+    "title": null,
+    "enabled": true,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "AXUniqueId": null
+  },
+  {
+    "help": null,
+    "role_description": "",
+    "AXLabel": "파도",
+    "content_required": false,
+    "role": "AXGenericElement",
+    "enabled": true,
+    "subrole": null,
+    "title": null,
+    "AXValue": null,
+    "type": "GenericElement",
+    "custom_actions": [],
+    "AXFrame": "{{270, 622}, {64, 44}}",
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "AXUniqueId": null,
+    "frame": {
+      "width": 64,
+      "x": 270,
+      "y": 622,
+      "height": 44
+    },
+    "pid": 57163
+  },
+  {
+    "enabled": true,
+    "title": null,
+    "subrole": null,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "content_required": false,
+    "pid": 57163,
+    "AXFrame": "{{40, 682}, {322, 20}}",
+    "frame": {
+      "width": 322,
+      "y": 682,
+      "height": 20,
+      "x": 40
+    },
+    "role": "AXStaticText",
+    "custom_actions": [],
+    "AXValue": null,
+    "type": "StaticText",
+    "help": null,
+    "role_description": "text",
+    "AXUniqueId": null,
+    "AXLabel": "표시 이름"
+  },
+  {
+    "custom_actions": [],
+    "AXFrame": "{{57, 711}, {288, 44}}",
+    "pid": 57163,
+    "help": "다른 사람에게 보이는 이름이에요.",
+    "frame": {
+      "width": 288,
+      "height": 44,
+      "y": 711,
+      "x": 57
+    },
+    "subrole": "AXSearchField",
+    "traits": [
+      "Scrollable",
+      "TextEntry",
+      "TextOperationsAvailable"
+    ],
+    "AXUniqueId": null,
+    "role_description": "text",
+    "role": "AXStaticText",
+    "type": "StaticText",
+    "enabled": true,
+    "title": null,
+    "AXLabel": "표시 이름",
+    "AXValue": "지민",
+    "content_required": false
+  },
+  {
+    "AXUniqueId": null,
+    "frame": {
+      "height": 18,
+      "x": 40,
+      "width": 322,
+      "y": 762
+    },
+    "content_required": false,
+    "type": "StaticText",
+    "custom_actions": [],
+    "role": "AXStaticText",
+    "AXValue": null,
+    "role_description": "text",
+    "subrole": null,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "title": null,
+    "AXLabel": "다른 사람에게 보이는 이름이에요.",
+    "enabled": true,
+    "help": null,
+    "pid": 57163,
+    "AXFrame": "{{40, 762}, {322, 18}}"
+  },
+  {
+    "AXUniqueId": null,
+    "custom_actions": [],
+    "frame": {
+      "height": 26,
+      "x": 40,
+      "y": 804,
+      "width": 322
+    },
+    "subrole": null,
+    "content_required": false,
+    "AXValue": null,
+    "help": null,
+    "AXFrame": "{{40, 804}, {322, 26}}",
+    "enabled": true,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "type": "StaticText",
+    "role_description": "text",
+    "AXLabel": "나에게 맞는 설정",
+    "role": "AXStaticText",
+    "title": null,
+    "pid": 57163
+  },
+  {
+    "role": "AXGenericElement",
+    "AXUniqueId": null,
+    "type": "GenericElement",
+    "traits": [
+      "Scrollable",
+      "Toggle",
+      "Button"
+    ],
+    "AXLabel": "활동 알림",
+    "frame": {
+      "y": 846,
+      "width": 322,
+      "height": 68,
+      "x": 40
+    },
+    "enabled": true,
+    "AXValue": "1",
+    "AXFrame": "{{40, 846}, {322, 68}}",
+    "title": null,
+    "help": "내 활동에 새로운 소식이 생기면 알려드려요.",
+    "custom_actions": [],
+    "subrole": "AXSwitch",
+    "role_description": "",
+    "content_required": false,
+    "pid": 57163
+  },
+  {
+    "pid": 57163,
+    "role_description": "text",
+    "role": "AXStaticText",
+    "subrole": null,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "AXUniqueId": null,
+    "AXValue": null,
+    "AXFrame": "{{40, 938}, {322, 20}}",
+    "type": "StaticText",
+    "custom_actions": [],
+    "help": null,
+    "frame": {
+      "width": 322,
+      "y": 938,
+      "height": 20,
+      "x": 40
+    },
+    "title": null,
+    "enabled": true,
+    "AXLabel": "아래 설정을 바꾸고 미리보기에 적용해 보세요.",
+    "content_required": false
+  },
+  {
+    "content_required": false,
+    "AXValue": null,
+    "enabled": false,
+    "role": "AXGenericElement",
+    "title": null,
+    "AXFrame": "{{40, 982}, {322, 44}}",
+    "help": null,
+    "role_description": "",
+    "custom_actions": [],
+    "frame": {
+      "y": 982,
+      "x": 40,
+      "width": 322,
+      "height": 44
+    },
+    "AXLabel": "변경 내용 적용",
+    "subrole": null,
+    "type": "GenericElement",
+    "pid": 57163,
+    "traits": [
+      "Scrollable",
+      "NotEnabled",
+      "Button"
+    ],
+    "AXUniqueId": null
+  },
+  {
+    "type": "GenericElement",
+    "subrole": null,
+    "AXFrame": "{{40, 1050}, {322, 44}}",
+    "pid": 57163,
+    "role_description": "",
+    "AXLabel": "되돌리기",
+    "custom_actions": [],
+    "content_required": false,
+    "traits": [
+      "Scrollable",
+      "NotEnabled",
+      "Button"
+    ],
+    "role": "AXGenericElement",
+    "AXValue": null,
+    "title": null,
+    "help": null,
+    "frame": {
+      "x": 40,
+      "y": 1050,
+      "width": 322,
+      "height": 44
+    },
+    "enabled": false,
+    "AXUniqueId": null
+  },
+  {
+    "AXValue": null,
+    "content_required": false,
+    "AXFrame": "{{362, 759}, {24, 24}}",
+    "role_description": "",
+    "enabled": true,
+    "help": null,
+    "role": "AXGenericElement",
+    "traits": [
+      "Scrollable"
+    ],
+    "type": "GenericElement",
+    "AXUniqueId": null,
+    "subrole": null,
+    "AXLabel": null,
+    "pid": 57163,
+    "custom_actions": [],
+    "title": null,
+    "frame": {
+      "height": 24,
+      "y": 759,
+      "x": 362,
+      "width": 24
+    }
+  },
+  {
+    "pid": 57163,
+    "AXValue": null,
+    "type": "GenericElement",
+    "custom_actions": [],
+    "AXLabel": "Patterns/Profile studio/Dark",
+    "AXUniqueId": "mobile-menu-button",
+    "title": null,
+    "role_description": "",
+    "traits": [
+      "Scrollable"
+    ],
+    "content_required": false,
+    "role": "AXGenericElement",
+    "frame": {
+      "y": 811.6666669845581,
+      "height": 17,
+      "width": 215.6666717529297,
+      "x": 6
+    },
+    "subrole": null,
+    "enabled": true,
+    "help": null,
+    "AXFrame": "{{6, 811.66666698455811}, {215.66667175292969, 17}}"
+  },
+  {
+    "role": "AXButton",
+    "AXUniqueId": "mobile-addons-button",
+    "AXFrame": "{{368, 806}, {28, 28}}",
+    "title": null,
+    "frame": {
+      "y": 806,
+      "width": 28,
+      "height": 28,
+      "x": 368
+    },
+    "role_description": "button",
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "content_required": false,
+    "help": null,
+    "custom_actions": [],
+    "AXValue": null,
+    "subrole": null,
+    "pid": 57163,
+    "enabled": true,
+    "AXLabel": "Open addons panel",
+    "type": "Button"
+  }
+]

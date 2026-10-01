@@ -323,7 +323,6 @@ function SelectInner(props, forwardedRef) {
             disabled: item.disabled ?? false,
             color: "currentColor",
             size: leadingSize,
-            glyphSize: leadingSize,
         });
         return (_jsxs("div", { ref: (node) => {
                 if (node)
@@ -339,7 +338,6 @@ function SelectInner(props, forwardedRef) {
     const triggerLeading = renderLeading?.(resolvedSelectedItem, {
         color: "currentColor",
         size: triggerLeadingSize,
-        glyphSize: triggerLeadingSize,
     });
     return (_jsxs("div", { ref: rootRef, className: classNames("hjm-field hjm-select", fieldClassName), "data-state": disabled ? "disabled" : error ? "invalid" : open ? "focused" : "idle", "data-size": size, "data-density": density, "data-async-state": asyncState.status, "data-busy": busy || undefined, children: [label !== undefined ? (_jsxs("label", { className: "hjm-field__label", htmlFor: controlId, children: [label, required ? _jsx("span", { "aria-hidden": "true", children: " *" }) : null] })) : null, _jsxs("div", { className: "hjm-select__anchor", children: [_jsxs("button", { ...buttonProps, ref: (node) => {
                             triggerRef.current = node;

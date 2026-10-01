@@ -1,5 +1,7 @@
 # Cross-platform core normalization
 
+검토일: 2026-10-02 · 2.0 source contract
+
 Text, Surface, Stack, Grid, Button, IconButton, Tag, Card의 공통 의미 축은 contracts가 소유하고 Web과
 Native renderer는 각 플랫폼 host로 번역한다. 라이브러리 비교와 채택/기각 근거는
 [library-reference-decisions.md](./library-reference-decisions.md)를 따른다.
@@ -53,7 +55,8 @@ edge를 항상 그린다.
 
 ## 0.5 compatibility aliases
 
-0.6에서 canonical API로 옮길 수 있도록 기존 Native 호출은 당분간 동작한다.
+아래는 0.6 이관 당시의 before/canonical 비교다. 현재 지원 여부는 각 API 타입을 따른다.
+아래 before API는 모두 [2.0 이관](./migration-native-legacy-removal.md)에서 제거했다.
 
 ```tsx
 // before
@@ -73,30 +76,25 @@ edge를 항상 그린다.
 <IconButton label="닫기" tone="ghost"><CloseIcon /></IconButton>
 ```
 
-- Native `Stack.direction`: `row → inline`, `column → block` deprecated alias
-- Native `Button.label`, `Tag.label`: `children` deprecated alias
-- Native `Surface.sunken`, `Surface.brand`: 각각 `subtle`, `accent` deprecated alias
-- Native `Grid.descriptor`: flat `columns`/`gap`/`minColumnWidth`를 위한 deprecated alias
-- Native `IconButton.accessibilityLabel`, `icon`: `label`, `children` deprecated alias
-- Native `IconButton tone="link"`: `ghost`로 번역되는 deprecated alias
-
-호환 alias는 새 문서와 예제에서 사용하지 않는다. 제거는 major release에서만 한다.
+Native `Surface.sunken`은 공통 recipe에 독립적으로 정의된 tone이며 deprecated alias가 아니다.
+`brand`만 제거하고 `accent`로 이관한다. 1.x의 호환 별칭 지원 설명은 현재 2.0 소스에 적용하지 않는다.
 
 ## Collection and state vocabulary
 
-공통 제품 코드에서 같은 역할은 같은 이름을 사용한다. Web을 기준으로 Native의 비파괴 호환
-bridge를 추가했으며, 새 코드는 canonical 열만 사용한다.
+공통 제품 코드에서 같은 역할은 같은 이름을 사용한다. 1.x에서 제공했던 Native bridge를
+2.0에서 제거했으므로 아래 canonical API만 사용한다.
 
-| Component | Canonical Web/Native API | Deprecated Native alias |
-| --- | --- | --- |
-| Switch | `checked`, `defaultChecked`, `onCheckedChange` | `value`, `defaultValue`, `onValueChange` |
-| RadioGroup | `items: RadioGroupItem[]` | `options: RadioOption[]` |
-| SegmentedControl | `items: SegmentedControlItem[]` | `options: SegmentedControlOption[]` |
-| Tabs | `items: TabItem[]`, item key `id` | `options: TabOption[]`, item key `value` |
-| Select | `source`/`items`/`sections`, `selectedKey`, `defaultSelectedKey`, `onSelectionChange` | `options`, `value`, `defaultValue`, `onValueChange` |
+| Component | Canonical Web/Native API |
+| --- | --- |
+| Switch | `checked`, `defaultChecked`, `onCheckedChange` |
+| RadioGroup | `items: RadioGroupItem[]` |
+| SegmentedControl | `items: SegmentedControlItem[]` |
+| Tabs | `items: TabItem[]`, item key `id` |
+| Select | `source`/`items`/`sections`, `selectedKey`, `defaultSelectedKey`, `onSelectionChange` |
+| Menu | 항목 key `id`, 실행 `onAction`, 선택 `selection.onSelectionChange` |
 
-한 인스턴스에서 canonical과 deprecated channel을 함께 전달하면 타입과 runtime 모두 실패한다.
-이 규칙은 TypeScript를 우회하는 JavaScript 소비자에게도 결정적인 상태 모델을 보장한다.
+Web Menu의 선택 prop 배치는 Web Menu 타입을 따른다. 두 플랫폼 모두 실행과 선택 변경을
+구분하며 item-local `onSelect` 또는 Native `onSelect` 호환 콜백은 사용하지 않는다.
 
 ## Reference application notes
 

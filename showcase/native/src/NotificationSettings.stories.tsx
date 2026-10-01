@@ -21,7 +21,7 @@ function NotificationSettings() {
           <Switch presentation="row" label="주간 모아보기" description="일주일의 소식을 한 번에 받아요."
             checked={digest} onCheckedChange={(value) => { setDigest(value); setSaved(false); }} />
         </Stack>
-        {saved ? <Notice tone="success" title="알림 설정을 저장했어요" description={`내 활동 ${activity ? "켜짐" : "꺼짐"} · 주간 모아보기 ${digest ? "켜짐" : "꺼짐"}`} /> : null}
+        {saved ? <Notice announcement="polite" tone="success" title="알림 설정을 저장했어요" description={`내 활동 ${activity ? "켜짐" : "꺼짐"} · 주간 모아보기 ${digest ? "켜짐" : "꺼짐"}`} /> : null}
       </Section>
     </Container>
     <BottomCTA description="선택한 알림만 보내드릴게요."
@@ -29,7 +29,7 @@ function NotificationSettings() {
   </Stack></ScrollView>;
 }
 
-const meta = { title: "Patterns/Notification settings", component: NotificationSettings } satisfies Meta<typeof NotificationSettings>;
+const meta = { title: "배포/화면/알림 설정", component: NotificationSettings } satisfies Meta<typeof NotificationSettings>;
 export default meta;
 type Story = StoryObj<typeof meta>;
-export const Default: Story = {};
+export const Default: Story = { name: "기본",};

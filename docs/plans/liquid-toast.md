@@ -7,6 +7,9 @@
 [Native 사용 문서](../../packages/react-native/docs/liquid-toast.md)에 있다. 게시·기기 검증 완료를 뜻하지 않는다.
 기존 Toast의 선택형 표현이며 새 알림 시스템이나 OS Live Activity가 아니다.
 
+> 이 문서는 2026-09-28 초기 설계 기록이다. 2026-10-02 현재 기본 시작점은 32×32 원형,
+> 카드 반경은 16이며 아래 초기 캡슐 도안보다 [현재 사용 문서](../../packages/react-native/docs/liquid-toast.md)가 우선한다.
+
 ## 1. 문제와 설계 결정
 
 생성·업로드처럼 기다린 작업의 완료를 사용자가 알아채고 결과로 이동하게 한다.
@@ -283,3 +286,13 @@ native binary 설치·렌더링 증거가 아니다. `npm pack --ignore-scripts`
 
 Device Hub 연결은 `timeoutReached`로 실패했다. 실제 기기 시각·접근성·성능 비교는 미검증이며,
 기존 Toast catalog maturity를 Liquid 모션의 검증 수준으로 해석하지 않는다.
+
+## 2026-10-01 single-surface correction
+
+The iPhone 12 product capture showed a doubled card rim. In liquid presentation the
+Skia canvas exclusively owns the background/shadow; its accessible native content
+has no second fill, border or shadow. Standard Web/Native chrome retains its single
+contrast boundary. Hosts should omit the adapter when no verified hardware anchor
+is appropriate; a liquid descriptor then uses the existing standard entrance.
+BurnTok applies this to non-island phones, landscape, tablets and Android following
+the user's iPhone 12 feedback. Actual device visual verification remains pending.

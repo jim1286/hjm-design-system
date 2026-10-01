@@ -20,7 +20,7 @@ function InputSheet() {
     </Sheet>
   </Stack>;
 }
-const meta = { title: "Patterns/Input sheet", component: InputSheet } satisfies Meta<typeof InputSheet>;
+const meta = { title: "배포/구성/입력 시트", component: InputSheet } satisfies Meta<typeof InputSheet>;
 export default meta;
 type Story = StoryObj<typeof meta>;
-export const Default: Story = {};
+export const Default: Story = { name: "기본",};

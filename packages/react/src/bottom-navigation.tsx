@@ -183,6 +183,7 @@ function BottomNavigationInner<
       ref={ref}
       aria-label={resolved.accessibilityLabel}
       className={classNames("hjm-bottom-navigation", className)}
+      data-expanded-labels={(theme?.environment.textScale ?? 1) >= 1.5 || resolved.items.length > 4 ? "true" : "false"}
       data-density={presentation.density}
       data-distribution={presentation.distribution}
       data-keyboard-behavior={presentation.keyboardBehavior}
@@ -246,7 +247,7 @@ function BottomNavigationInner<
             };
             if (item.disabled) {
               return (
-                <li key={item.id} style={itemStyle}>
+                <li key={item.id} style={itemStyle} data-selected="false">
                   <span
                     aria-disabled="true"
                     aria-label={item.resolvedAccessibilityLabel}
@@ -277,7 +278,7 @@ function BottomNavigationInner<
               children: content,
             };
             return (
-              <li key={item.id} style={itemStyle}>
+              <li key={item.id} style={itemStyle} data-selected={selected}>
                 {renderLink ? renderLink(linkProps) : <a {...linkProps} />}
               </li>
             );

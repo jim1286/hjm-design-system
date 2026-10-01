@@ -1,6 +1,6 @@
 # ThinkingOrb — AI 작업 상태
 
-검토일: 2026-09-29. 원본: [Thinking Orbs](https://github.com/Jakubantalik/thinking-orbs/tree/de85557ca220332586d070d8788c0e1d6e877a0d), MIT.
+검토일: 2026-10-01. 원본: [Thinking Orbs](https://github.com/Jakubantalik/thinking-orbs/tree/de85557ca220332586d070d8788c0e1d6e877a0d), MIT.
 
 ## 결정과 범위
 
@@ -22,6 +22,7 @@
 
 - `state`: working, searching, solving, listening, connecting, weaving, composing, breathing, shaping.
   실제 상태를 앱에서 전달한다. listening은 음성 크기에 반응하는 오디오 시각화가 아니다.
+- `appearance`: 기본 `state`는 상태별 원본 기하를 유지한다. `fluid`는 물결치는 점 고리, `matrix`는 원형 점 격자로 독립 구현한 표현이다. 실제 진행률이나 음성 신호를 나타내지 않으며 기존 정지·가시성·모션 줄이기 규칙을 공유한다.
 - `size`: 20 또는 64. 원본의 점 수·반지름 튜닝을 유지하며 임의 CSS 확대는 지원하지 않는다.
 - `label`: 필수. 앱에서 번역한 현재 작업 설명. 완료·오류 때는 별도 결과 UI로 교체한다.
 - `speed`: 기본 1, 유한수 0 초과 4 이하. 무제한 속도는 읽기 어려운 모션을 만들므로 제한한다.
@@ -30,7 +31,7 @@
   AppState만으로는 여전히 mounted인 숨긴 화면을 알아낼 수 없기 때문이다.
 
 HJM provider의 `text` 색을 깊이에 따른 opacity와 조합한다. 원본의 고정 grayscale 팔레트는
-브랜드 테마와 배경에서 어긋날 수 있어 사용하지 않는다. 기하 좌표는 원본과 동일하다.
+브랜드 테마와 배경에서 어긋날 수 있어 사용하지 않는다. `appearance="state"`의 기하 좌표는 원본과 동일하다.
 모션 줄이기에서는 elapsed 0.6초 프레임만 그린다. 긴 JS 정체 후 이동은 최대 64ms로 제한해
 순간적인 모션 점프를 줄인다. 상태 전환은 새 모양으로 즉시 바뀌며 morph 전환은 제공하지 않는다.
 웹은 role=status와 숨긴 텍스트, Native는 접근 가능한 progressbar host를 사용한다.
@@ -122,3 +123,9 @@ Storybook registry 누락을 수정해 해당 검사를 다시 통과했다. Evi
 workspace/evidence/docs/governance, 양쪽 showcase 검사, Web Storybook build 및
 112 canonical story inventory, 중앙 library-policy 정적 검사, `git diff --check` 통과.
 게시·소비 앱 갱신은 실행하지 않았다.
+
+## Storybook 탐색
+
+Web/Native 모두 `컴포넌트/피드백/ThinkingOrb`에서 Default, Dark, LargeText를 제공한다.
+Fluid와 Matrix는 같은 컴포넌트의 표현 예제이며 새 상태 엔진이나 진행률 계약을 추가하지 않는다.
+2026-10-01 추가 표현의 Native 실제 화면 확인은 아직 미완료다.

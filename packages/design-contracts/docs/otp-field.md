@@ -102,3 +102,18 @@ Backspace → 앞 칸으로)도 이 모델에서는 별도 로직이 필요 없�
 
 이 조사 당시 제품 채택은 미확인이었다. 2026-09-29부터 제품 채택은 관측으로 분리하며,
 현재 성숙도는 catalog와 [승격 기준](stable-promotion.md)을 따른다.
+
+## Presentation options (2026-10-01)
+
+Web and Native accept `presentation="boxes" | "underline"`; boxes remains the
+compatible default. Underline removes the side/top slot outlines and keeps a
+strong bottom border with the same focus, filled and error colors. This changes
+only decorative slots: one actual input still owns selection, paste, numeric
+sanitization, SMS autocomplete and the completion callback. Never replace it with
+six separately focused fields to obtain this appearance.
+
+Both showcases place the interactive preview under 컴포넌트/입력/OtpField
+with Default, Dark and LargeText. The two presentations share a controlled sample
+value and an explicit error toggle. “Input complete” means six characters entered,
+not a successful server verification. Existing input behavior tests now exercise
+both presentations on Web and Native; actual device autofill remains separate QA.

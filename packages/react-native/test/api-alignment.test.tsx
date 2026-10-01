@@ -33,7 +33,7 @@ describe("Native API aligned with Web", () => {
     });
     act(() => { controller!.publish({ id: "saved", description: "Saved", closeLabel: "Close", durationMs: null }); });
     expect(JSON.stringify(renderer!.toJSON())).toContain("Saved");
-    expect(controller!.show).toBe(controller!.publish);
+    expect(controller).not.toHaveProperty("show");
     act(() => { renderer!.unmount(); });
   });
 });

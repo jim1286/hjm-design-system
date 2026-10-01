@@ -69,7 +69,7 @@ Native `unsupported`다. 제품 채택과 실제 보조기기 실측은 승격 �
   인자 평가까지 통째로 건너뛰어 키보드 조절이 조용히 죽는다. commit을 먼저 하고 알린다.
 - 로컬 검증: `test/splitter.browser.test.tsx` 6개(separator 의미·수직 방향과 44px hit
   target, 방향키 step과 Home/End 경계, 드래그 스냅과 드래그당 1회 end, RTL 드래그·키보드,
-  disabled, 실제 Tab focus와 focused keyboard resize)와 `Patterns/Splitter`.
+  disabled, 실제 Tab focus와 focused keyboard resize)와 `컴포넌트/레이아웃/Splitter`.
 
 **검증 범위.** Web Chromium renderer matrix가 긴 pane 콘텐츠·환경·접근성 증거를 제공한다.
 제품 vertical slice, screen reader 실측, 모든 OS 조합은 보증하지 않으며 소비 앱 릴리스 QA에서 확인한다.

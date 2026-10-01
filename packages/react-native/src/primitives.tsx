@@ -108,8 +108,6 @@ export type LayoutProps = Omit<ViewProps, "children"> & Readonly<{
   header?: ReactNode;
   footer?: ReactNode;
   sidebar?: LayoutSidebar;
-  /** @deprecated Native has no bypass-link equivalent; omit this Web-only copy. */
-  skipLinkLabel?: string;
   headerProps?: LayoutRegionProps;
   mainProps?: LayoutRegionProps;
   footerProps?: LayoutRegionProps;
@@ -122,7 +120,6 @@ export const Layout = forwardRef<View, LayoutProps>(function Layout({
   header,
   footer,
   sidebar,
-  skipLinkLabel,
   headerProps,
   mainProps,
   footerProps,
@@ -144,7 +141,6 @@ export const Layout = forwardRef<View, LayoutProps>(function Layout({
             label: sidebar.label,
           } satisfies LayoutSidebarDescriptor,
         }),
-    ...(skipLinkLabel === undefined ? {} : { skipLinkLabel }),
   });
   const sidebarNode = sidebar === undefined
     ? null
@@ -230,36 +226,18 @@ export const Text = forwardRef<NativeText, TextProps>(function Text(
   );
 });
 
-/** @deprecated Compatibility aliases; use `subtle` and `accent`. */
-/** @deprecated `brand` is the legacy native name for the canonical `accent` tone. */
-export type LegacyNativeSurfaceTone = "brand";
-export type SurfaceTone = ContractSurfaceTone | LegacyNativeSurfaceTone;
-/** Token names are canonical; the numeric branch is legacy compatibility until the breaking train. */
-export type SurfacePadding = ContractSurfacePadding | number;
-/** Token names are canonical; the numeric branch is legacy compatibility until the breaking train. */
-export type SurfaceRadius = ContractSurfaceRadius | number;
+export type SurfaceTone = ContractSurfaceTone;
+export type SurfacePadding = ContractSurfacePadding;
+export type SurfaceRadius = ContractSurfaceRadius;
 export type SurfaceProps = Omit<ViewProps, "style"> &
   Readonly<{
     tone?: SurfaceTone;
-    /** Numeric values are deprecated; use a recipe-owned padding token. */
     padding?: SurfacePadding;
-    /** Numeric values are deprecated; use a recipe-owned radius token. */
     radius?: SurfaceRadius;
     bordered?: boolean;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
-    /**
-     * @deprecated Legacy compatibility only. New apps must use `layoutStyle` and must not
-     * override color, padding, radius, border, elevation, height, opacity, or state styling.
-     * @see https://github.com/jim1286/hjm-design-system/blob/main/packages/design-contracts/docs/consumer-policy.md#31-react-native-legacy-style-compatibility-boundary
-     */
-    style?: StyleProp<ViewStyle>;
   }>;
-
-function normalizeSurfaceTone(tone: SurfaceTone): ContractSurfaceTone {
-  if (tone === "brand") return "accent";
-  return tone;
-}
 
 function resolveThemeColor(colors: ThemeColors, key: keyof ThemeColors): string {
   return colors[key];
@@ -271,11 +249,11 @@ export function Surface({
   radius: radiusValue = surfaceDefaults.radius,
   bordered,
   layoutStyle,
-  style,
+
   ...props
 }: SurfaceProps) {
   const { colors } = useHjmNativeTheme();
-  const normalizedTone = normalizeSurfaceTone(tone);
+  const normalizedTone = tone;
   const contract = surfaceRecipe[normalizedTone];
   const shouldDrawBorder = bordered ?? (surfaceDefaults.bordered || contract.borderAlways);
   const borderColor = resolveThemeColor(colors, contract.border);
@@ -299,21 +277,14 @@ export function Surface({
               ? borderColor
               : withAlpha(borderColor, contract.borderAlpha)
             : "transparent",
-          borderRadius:
-            typeof radiusValue === "number"
-              ? radiusValue
-              : surfaceGeometry.radii[radiusValue],
+          borderRadius: surfaceGeometry.radii[radiusValue],
           borderWidth: 1,
           // A child image would otherwise spill past the rounded corner. An
           // elevated tone opts out because clipping cuts off its own shadow.
           overflow: contract.clipsContent ? "hidden" : "visible",
-          padding:
-            typeof padding === "number"
-              ? padding
-              : surfaceGeometry.paddings[padding],
+          padding: surfaceGeometry.paddings[padding],
         },
         elevatedStyle,
-        style,
         layoutStyle,
       ]}
     />
@@ -327,8 +298,6 @@ export type StackProps = ViewProps &
     align?: StackAlign;
     justify?: StackJustify;
     wrap?: boolean;
-    /** @deprecated Use the renderer-neutral `axis` prop. */
-    direction?: "row" | "column";
       /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
@@ -349,7 +318,6 @@ const justifyValues: Readonly<Record<StackJustify, ViewStyle["justifyContent"]>>
 
 export function Stack({
   axis,
-  direction,
   gap = stackRecipe.defaults.gap,
   align = stackRecipe.defaults.align,
   justify = stackRecipe.defaults.justify,
@@ -359,7 +327,7 @@ export function Stack({
   ...props
 }: StackProps) {
   const { environment } = useHjmNativeTheme();
-  const resolvedAxis = axis ?? (direction === "row" ? "inline" : "block");
+  const resolvedAxis = axis ?? "block";
   const flexDirection = stackRecipe.axes[resolvedAxis];
   return (
     <View
@@ -433,19 +401,10 @@ export function AspectRatio({ ratio, style, ...props }: AspectRatioProps) {
 type GridCanonicalDescriptorProps = Pick<
   GridDescriptor,
   "columns" | "gap" | "minColumnWidth"
-> &
-  Readonly<{ descriptor?: never }>;
-
-type GridLegacyDescriptorProps = Readonly<{
-  /** @deprecated Pass `columns`, `gap`, and `minColumnWidth` directly. */
-  descriptor: GridDescriptor;
-  columns?: never;
-  gap?: never;
-  minColumnWidth?: never;
-}>;
+>;
 
 export type GridProps = Omit<ViewProps, "children"> &
-  (GridCanonicalDescriptorProps | GridLegacyDescriptorProps) &
+  GridCanonicalDescriptorProps &
   Readonly<{
     children?: ReactNode;
     /** Inner width after page padding. When omitted, the rendered container is measured. */
@@ -456,7 +415,6 @@ export type GridProps = Omit<ViewProps, "children"> &
 
 export function Grid({
   children,
-  descriptor,
   columns,
   gap,
   minColumnWidth,
@@ -473,12 +431,12 @@ export function Grid({
   const innerWidth = availableWidth ?? measuredWidth ?? windowWidth;
   const resolvedDescriptor = useMemo<GridDescriptor>(
     () =>
-      descriptor ?? {
+      ({
         columns: columns!,
         ...(gap === undefined ? {} : { gap }),
         ...(minColumnWidth === undefined ? {} : { minColumnWidth }),
-      },
-    [columns, descriptor, gap, minColumnWidth],
+      }),
+    [columns, gap, minColumnWidth],
   );
   const layout = useMemo(
     () => resolveGridLayout(resolvedDescriptor, { windowWidth, availableWidth: innerWidth }),
@@ -615,14 +573,6 @@ export type SectionProps = Omit<ViewProps, "children"> &
     headerStyle?: HjmCompositionStyleProp;
     /** Layout-only placement for the title/description column. */
     copyStyle?: HjmCompositionStyleProp;
-    /**
-     * @deprecated Typography is recipe-owned. Use `variant`/`tone` on the title instead.
-     */
-    titleStyle?: StyleProp<TextStyle>;
-    /**
-     * @deprecated Typography is recipe-owned. Use `variant`/`tone` on the description instead.
-     */
-    descriptionStyle?: StyleProp<TextStyle>;
     /** Layout-only placement for the action slot. */
     actionStyle?: HjmCompositionStyleProp;
     /** Layout-only placement for the content slot. */
@@ -639,8 +589,7 @@ export function Section({
   children,
   headerStyle,
   copyStyle,
-  titleStyle,
-  descriptionStyle,
+
   actionStyle,
   contentStyle,
   layoutStyle,
@@ -671,8 +620,7 @@ export function Section({
                 color: resolveColorReference(sectionRecipe.title.color, theme.palette),
                 fontWeight: sectionRecipe.title.fontWeight,
               },
-              titleStyle,
-            ]}
+                  ]}
             variant={sectionRecipe.title.textVariant}
           >
             {title}
@@ -686,8 +634,7 @@ export function Section({
                     theme.palette,
                   ),
                 },
-                descriptionStyle,
-              ]}
+                      ]}
               variant={sectionRecipe.description.textVariant}
             >
               {description}

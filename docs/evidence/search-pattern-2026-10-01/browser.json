@@ -1,0 +1,17 @@
+[
+  {
+    "state": "default",
+    "count": "1개의 기록",
+    "overflow": false
+  },
+  {
+    "state": "dark",
+    "count": "1개의 기록",
+    "overflow": false
+  },
+  {
+    "state": "large-text",
+    "count": "1개의 기록",
+    "overflow": false
+  }
+]

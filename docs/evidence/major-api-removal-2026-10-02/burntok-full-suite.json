@@ -1,0 +1,18 @@
+{
+  "passed": 198,
+  "failed": 11,
+  "failedCases": [
+    "✖ the run header renders at most two trailing icons per role (18.467583ms)",
+    "✖ every root route draws its own header instead of the native bar (1.363417ms)",
+    "✖ Run visitor actions stack instead of clipping at large text sizes (1.078583ms)",
+    "✖ login and create modals never offer a close that lands nowhere (1.108625ms)",
+    "✖ native create keeps the primary action above the Android keyboard (0.708625ms)",
+    "✖ remix-copy metadata stays separate from app version labels (1.668792ms)",
+    "✖ only the remix fix entry marks its first save as the remix request (1.187916ms)",
+    "✖ session replacement commits the new me identity without retaining an observer snapshot (5.805458ms)",
+    "✖ restore accepts one request during rapid repeated taps and exposes failure (27.037291ms)",
+    "✖ Strict Effects replay resubscribes to one avatar request and clears busy (1.86025ms)",
+    "✖ a failed initial avatar request also clears busy after replay (0.43425ms)"
+  ],
+  "scope": "full consumer suite with currently installed 1.10.0; not a passing 2.0 release gate"
+}

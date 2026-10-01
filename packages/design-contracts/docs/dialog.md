@@ -37,3 +37,5 @@ a narrow viewport. React Native renderer tests cover modal role/name/state,
 action labels and close requests, back/outside dismissal, busy guards, and long
 title/description copy. These tests exercise renderer contracts; device and
 screen-reader behavior remains a separate consumer validation concern.
+
+Native accessibility follow-up (2026-10-01): at 200% text scale, the close glyph was clipped inside the fixed IconButton frame. Dialog and Sheet now render that decorative glyph at a fixed icon size, matching Toast; title/body text still scales and the named close action and touch target are preserved. `sheet-viewport.test.tsx` checks both renderers and close callbacks.

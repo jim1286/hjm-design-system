@@ -1,0 +1,6 @@
+import{act}from"react";import{createRoot}from"react-dom/client";import{expect,it}from"vitest";import{GridReveal}from"../src/grid-reveal.js";import{HjmProvider}from"../src/provider.js";
+(globalThis as {IS_REACT_ACT_ENVIRONMENT?:boolean}).IS_REACT_ACT_ENVIRONMENT=true;
+it("starts only on ready and cancels masks on reduced motion or inactivity",async()=>{
+ const host=document.createElement("div");document.body.append(host);const root=createRoot(host);const render=(ready:boolean,reduced=false,active=true)=>root.render(<HjmProvider reducedMotion={reduced}><GridReveal ready={ready} active={active}><img alt="Landscape"/></GridReveal></HjmProvider>);
+ try{await act(()=>render(false));expect(host.getAnimations({subtree:true})).toHaveLength(0);await act(()=>render(true));expect(host.getAnimations({subtree:true})).toHaveLength(16);expect(host.querySelector('[aria-hidden="true"]')?.getAttribute('style')).toContain('pointer-events: none');expect(host.querySelector('img')!.alt).toBe("Landscape");await act(()=>render(true,true));expect(host.getAnimations({subtree:true})).toHaveLength(0);await act(()=>render(true,false,false));expect(host.getAnimations({subtree:true})).toHaveLength(0);}finally{await act(()=>root.unmount());host.remove();}
+});

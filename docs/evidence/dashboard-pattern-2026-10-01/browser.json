@@ -1,0 +1,20 @@
+[
+  {
+    "state": "default",
+    "periodChange": true,
+    "emptyRecovery": true,
+    "overflow": false
+  },
+  {
+    "state": "dark",
+    "periodChange": true,
+    "emptyRecovery": true,
+    "overflow": false
+  },
+  {
+    "state": "large-text",
+    "periodChange": true,
+    "emptyRecovery": true,
+    "overflow": false
+  }
+]

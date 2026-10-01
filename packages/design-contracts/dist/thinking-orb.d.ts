@@ -1,9 +1,11 @@
 import type { OrbState, OrbSize, OrbFrame } from "./internal/thinking-orb/types.js";
 export type { OrbState, OrbSize, OrbFrame };
 export declare const thinkingOrbStates: readonly ["working", "searching", "solving", "listening", "connecting", "weaving", "composing", "breathing", "shaping"];
+export type ThinkingOrbAppearance = "state" | "fluid" | "matrix";
 export type ThinkingOrbOptions = Readonly<{
     /** Actual operation phase, supplied by the host; the orb never simulates progress. */
     state?: OrbState;
+    appearance?: ThinkingOrbAppearance;
     size?: OrbSize;
     /** Localized description of the current operation. */
     label: string;
@@ -13,9 +15,9 @@ export type ThinkingOrbOptions = Readonly<{
     active?: boolean;
 }>;
 export { thinkingOrbRecipe } from "./thinking-orb-recipe.js";
-export declare function validateThinkingOrb({ state, size, speed, label }: ThinkingOrbOptions): void;
+export declare function validateThinkingOrb({ state, size, speed, label, appearance }: ThinkingOrbOptions): void;
 /** Theme-free, deterministic geometry; no DOM/React/native imports. */
-export declare function buildThinkingOrbFrame(state: OrbState, size: OrbSize, time: number): OrbFrame;
+export declare function buildThinkingOrbFrame(state: OrbState, size: OrbSize, time: number, appearance?: ThinkingOrbAppearance): OrbFrame;
 /** A local elapsed clock freezes exactly, instead of jumping to wall time after resume. */
 export declare function createThinkingOrbClock(): {
     resetDelta(): void;

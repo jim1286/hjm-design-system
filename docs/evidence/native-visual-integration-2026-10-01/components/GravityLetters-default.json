@@ -1,0 +1,207 @@
+[
+  {
+    "frame": {
+      "x": 0,
+      "width": 402,
+      "y": 0,
+      "height": 874
+    },
+    "enabled": true,
+    "role": "AXApplication",
+    "AXValue": null,
+    "help": null,
+    "AXFrame": "{{0, 0}, {402, 874}}",
+    "AXLabel": "HJM Native Showcase",
+    "role_description": "application",
+    "content_required": false,
+    "traits": [
+      "None"
+    ],
+    "pid": 57163,
+    "type": "Application",
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "subrole": null,
+    "title": null
+  },
+  {
+    "title": null,
+    "AXFrame": "{{16, 78}, {370, 32}}",
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "help": null,
+    "role": "AXStaticText",
+    "role_description": "text",
+    "type": "StaticText",
+    "custom_actions": [],
+    "AXLabel": "새로운 시작",
+    "subrole": null,
+    "enabled": true,
+    "content_required": false,
+    "pid": 57163,
+    "AXValue": null,
+    "AXUniqueId": null,
+    "frame": {
+      "x": 16,
+      "y": 78,
+      "width": 370,
+      "height": 32
+    }
+  },
+  {
+    "content_required": false,
+    "AXFrame": "{{16, 218}, {370, 40}}",
+    "pid": 57163,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "enabled": true,
+    "AXValue": null,
+    "AXLabel": "글자가 떨어지고 가볍게 튀어요. 모션 줄이기 설정에서는 정지된 글자를 보여줍니다.",
+    "custom_actions": [],
+    "title": null,
+    "help": null,
+    "role": "AXStaticText",
+    "subrole": null,
+    "AXUniqueId": null,
+    "type": "StaticText",
+    "role_description": "text",
+    "frame": {
+      "height": 40,
+      "x": 16,
+      "y": 218,
+      "width": 370
+    }
+  },
+  {
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "role_description": "",
+    "AXValue": null,
+    "subrole": null,
+    "role": "AXGenericElement",
+    "pid": 57163,
+    "AXUniqueId": null,
+    "help": null,
+    "enabled": true,
+    "custom_actions": [],
+    "AXLabel": "다시 재생",
+    "type": "GenericElement",
+    "title": null,
+    "AXFrame": "{{16, 278}, {370, 44}}",
+    "content_required": false,
+    "frame": {
+      "x": 16,
+      "y": 278,
+      "width": 370,
+      "height": 44
+    }
+  },
+  {
+    "AXFrame": "{{16, 342}, {370, 44}}",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "role": "AXGenericElement",
+    "content_required": false,
+    "AXLabel": "움직임 멈추기",
+    "title": null,
+    "frame": {
+      "height": 44,
+      "y": 342,
+      "x": 16,
+      "width": 370
+    },
+    "custom_actions": [],
+    "pid": 57163,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "help": null,
+    "type": "GenericElement",
+    "role_description": "",
+    "enabled": true,
+    "subrole": null
+  },
+  {
+    "enabled": true,
+    "AXLabel": null,
+    "role": "AXGenericElement",
+    "traits": [
+      "Scrollable"
+    ],
+    "help": null,
+    "subrole": null,
+    "AXFrame": "{{362, 759}, {24, 24}}",
+    "AXUniqueId": null,
+    "content_required": false,
+    "role_description": "",
+    "pid": 57163,
+    "type": "GenericElement",
+    "frame": {
+      "x": 362,
+      "width": 24,
+      "height": 24,
+      "y": 759
+    },
+    "AXValue": null,
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "subrole": null,
+    "help": null,
+    "AXValue": null,
+    "AXFrame": "{{6, 811.66666698455811}, {320.66665649414062, 17}}",
+    "content_required": false,
+    "AXUniqueId": "mobile-menu-button",
+    "enabled": true,
+    "custom_actions": [],
+    "role_description": "",
+    "frame": {
+      "height": 17,
+      "y": 811.6666669845581,
+      "width": 320.6666564941406,
+      "x": 6
+    },
+    "AXLabel": "Components/Display/Gravity Letters/Default",
+    "pid": 57163,
+    "title": null,
+    "type": "GenericElement",
+    "role": "AXGenericElement",
+    "traits": [
+      "Scrollable"
+    ]
+  },
+  {
+    "custom_actions": [],
+    "help": null,
+    "enabled": true,
+    "title": null,
+    "AXFrame": "{{368, 806}, {28, 28}}",
+    "role_description": "button",
+    "frame": {
+      "height": 28,
+      "x": 368,
+      "width": 28,
+      "y": 806
+    },
+    "content_required": false,
+    "subrole": null,
+    "role": "AXButton",
+    "AXUniqueId": "mobile-addons-button",
+    "AXValue": null,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "type": "Button",
+    "pid": 57163,
+    "AXLabel": "Open addons panel"
+  }
+]

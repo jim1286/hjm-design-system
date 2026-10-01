@@ -51,6 +51,6 @@ function Demo() {
       <Adapters onClose={() => setOpen(false)} />
     </Modal></>;
 }
-const meta = { title: "Experimental/Optional Adapters", component: Demo } satisfies Meta<typeof Demo>;
+const meta = { title: "실험/구성/이미지·시트·키보드 조작", component: Demo } satisfies Meta<typeof Demo>;
 export default meta;
-export const Playground: StoryObj<typeof meta> = {};
+export const Playground: StoryObj<typeof meta> = { name: "직접 조작",};

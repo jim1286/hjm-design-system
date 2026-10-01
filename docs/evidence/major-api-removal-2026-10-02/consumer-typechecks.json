@@ -1,0 +1,79 @@
+[
+  {
+    "target": "control-plane/app-release-hub",
+    "files": 145,
+    "pass": true,
+    "mode": "candidate declarations with consumer React/React Native peer types",
+    "installedVersion": "1.10.0"
+  },
+  {
+    "target": "apps/unairplane",
+    "files": 112,
+    "pass": true,
+    "mode": "candidate declarations with consumer React/React Native peer types",
+    "installedVersion": "1.10.0"
+  },
+  {
+    "target": "apps/portfolio-site",
+    "files": 6,
+    "pass": true,
+    "mode": "candidate declarations with consumer React/React Native peer types",
+    "installedVersion": "1.10.0"
+  },
+  {
+    "target": "apps/mofun/apps/mobile",
+    "files": 63,
+    "pass": true,
+    "mode": "candidate declarations with consumer React/React Native peer types",
+    "installedVersion": "1.10.0"
+  },
+  {
+    "target": "apps/utilverse/apps/mobile",
+    "files": 204,
+    "pass": true,
+    "mode": "candidate declarations with consumer React/React Native peer types",
+    "installedVersion": "1.10.0"
+  },
+  {
+    "target": "apps/burntok/apps/mobile",
+    "files": 131,
+    "pass": true,
+    "mode": "candidate declarations with consumer React/React Native peer types",
+    "installedVersion": "1.10.0"
+  },
+  {
+    "target": "apps/spint/apps/mobile",
+    "files": 164,
+    "pass": true,
+    "mode": "candidate declarations with consumer React/React Native peer types",
+    "installedVersion": "1.10.0"
+  },
+  {
+    "target": "apps/diairy/apps/mobile",
+    "files": 369,
+    "pass": true,
+    "mode": "candidate declarations with consumer React/React Native peer types",
+    "installedVersion": "1.10.0"
+  },
+  {
+    "target": "apps/burntok/apps/web",
+    "files": 282,
+    "pass": true,
+    "mode": "candidate declarations with consumer React/React Native peer types",
+    "installedVersion": "1.10.0"
+  },
+  {
+    "target": "apps/burntok/packages/design-system",
+    "files": 2,
+    "pass": true,
+    "mode": "candidate declarations with consumer React/React Native peer types",
+    "installedVersion": "1.10.0"
+  },
+  {
+    "target": "apps/diairy/apps/web",
+    "files": 256,
+    "pass": true,
+    "mode": "candidate declarations with consumer React/React Native peer types",
+    "installedVersion": "1.10.0"
+  }
+]

@@ -71,12 +71,13 @@ describe("PasswordField", () => {
 });
 
 describe("OtpField", () => {
-  it("keeps one textbox while sanitizing paste and rendering decorative slots", async () => {
+  it.each(["boxes", "underline"] as const)("keeps one textbox while sanitizing paste and rendering decorative slots", async (presentation) => {
     const onValueChange = vi.fn();
     const onComplete = vi.fn();
     await render(
       <HjmProvider systemTheme="light">
         <OtpField
+          presentation={presentation}
           aria-label="Verification code"
           length={6}
           onComplete={onComplete}

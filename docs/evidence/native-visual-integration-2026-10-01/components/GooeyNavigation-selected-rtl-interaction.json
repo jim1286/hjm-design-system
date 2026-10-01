@@ -1,0 +1,329 @@
+[
+  {
+    "subrole": null,
+    "help": null,
+    "AXValue": null,
+    "AXFrame": "{{0, 0}, {402, 874}}",
+    "content_required": false,
+    "AXUniqueId": null,
+    "enabled": true,
+    "custom_actions": [],
+    "role_description": "application",
+    "frame": {
+      "height": 874,
+      "y": 0,
+      "x": 0,
+      "width": 402
+    },
+    "AXLabel": "HJM Native Showcase",
+    "pid": 57163,
+    "title": null,
+    "type": "Application",
+    "role": "AXApplication",
+    "traits": [
+      "None"
+    ]
+  },
+  {
+    "enabled": true,
+    "AXLabel": "유연하게 이어지는 선택",
+    "role": "AXStaticText",
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "help": null,
+    "subrole": null,
+    "AXFrame": "{{16, 78}, {370, 32}}",
+    "AXUniqueId": null,
+    "content_required": false,
+    "role_description": "text",
+    "pid": 57163,
+    "type": "StaticText",
+    "frame": {
+      "y": 78,
+      "height": 32,
+      "width": 370,
+      "x": 16
+    },
+    "AXValue": null,
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "AXFrame": "{{329.66667175292969, 130}, {56.333343505859375, 48}}",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "role": "AXGenericElement",
+    "content_required": false,
+    "AXLabel": "오늘",
+    "title": null,
+    "frame": {
+      "x": 329.6666717529297,
+      "width": 56.333343505859375,
+      "height": 48,
+      "y": 130
+    },
+    "custom_actions": [
+      "activate",
+      "increment",
+      "decrement"
+    ],
+    "pid": 57163,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "help": null,
+    "type": "GenericElement",
+    "role_description": "",
+    "enabled": true,
+    "subrole": null
+  },
+  {
+    "traits": [
+      "Selected",
+      "Scrollable",
+      "Button"
+    ],
+    "role_description": "",
+    "AXValue": null,
+    "subrole": null,
+    "role": "AXGenericElement",
+    "pid": 57163,
+    "AXUniqueId": null,
+    "help": null,
+    "enabled": true,
+    "custom_actions": [
+      "activate",
+      "increment",
+      "decrement"
+    ],
+    "AXLabel": "보관함",
+    "type": "GenericElement",
+    "title": null,
+    "AXFrame": "{{261.33334350585938, 130}, {68.33331298828125, 48}}",
+    "content_required": false,
+    "frame": {
+      "width": 68.33331298828125,
+      "y": 130,
+      "height": 48,
+      "x": 261.3333435058594
+    }
+  },
+  {
+    "content_required": false,
+    "AXFrame": "{{189.33334350585938, 130}, {72.000015258789062, 48}}",
+    "pid": 57163,
+    "traits": [
+      "NotEnabled",
+      "Scrollable",
+      "Button"
+    ],
+    "enabled": false,
+    "AXValue": null,
+    "AXLabel": "준비 중",
+    "custom_actions": [
+      "activate",
+      "increment",
+      "decrement"
+    ],
+    "title": null,
+    "help": null,
+    "role": "AXImage",
+    "subrole": "AXSwitch",
+    "AXUniqueId": null,
+    "type": "Image",
+    "role_description": "image",
+    "frame": {
+      "height": 48,
+      "y": 130,
+      "width": 72.00001525878906,
+      "x": 189.33334350585938
+    }
+  },
+  {
+    "title": null,
+    "AXFrame": "{{117.33334350585938, 130}, {71.999992370605469, 48}}",
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "help": null,
+    "role": "AXSlider",
+    "role_description": "slider",
+    "type": "Slider",
+    "custom_actions": [
+      "activate",
+      "increment",
+      "decrement"
+    ],
+    "AXLabel": "내 정보",
+    "subrole": null,
+    "enabled": true,
+    "content_required": false,
+    "pid": 57163,
+    "AXValue": null,
+    "AXUniqueId": null,
+    "frame": {
+      "x": 117.33334350585938,
+      "y": 130,
+      "width": 71.99999237060547,
+      "height": 48
+    }
+  },
+  {
+    "frame": {
+      "y": 195,
+      "x": 16,
+      "width": 370,
+      "height": 20
+    },
+    "enabled": true,
+    "role": "AXStaticText",
+    "AXValue": null,
+    "help": null,
+    "AXFrame": "{{16, 195}, {370, 20}}",
+    "AXLabel": "저장한 기록을 다시 보세요.",
+    "role_description": "text",
+    "content_required": false,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "pid": 57163,
+    "type": "StaticText",
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "subrole": null,
+    "title": null
+  },
+  {
+    "AXUniqueId": null,
+    "frame": {
+      "width": 370,
+      "height": 44,
+      "y": 235,
+      "x": 16
+    },
+    "content_required": false,
+    "help": null,
+    "type": "GenericElement",
+    "enabled": true,
+    "role": "AXGenericElement",
+    "custom_actions": [],
+    "AXValue": null,
+    "role_description": "",
+    "subrole": null,
+    "title": null,
+    "AXFrame": "{{16, 235}, {370, 44}}",
+    "pid": 57163,
+    "AXLabel": "방향 바꾸기",
+    "traits": [
+      "Scrollable",
+      "Button"
+    ]
+  },
+  {
+    "AXFrame": "{{16, 299}, {370, 20}}",
+    "AXValue": null,
+    "custom_actions": [],
+    "help": null,
+    "content_required": false,
+    "role_description": "text",
+    "title": null,
+    "AXLabel": "선택 표시만 늘어나며 이동해요. 준비 중인 항목은 건너뜁니다.",
+    "AXUniqueId": null,
+    "pid": 57163,
+    "role": "AXStaticText",
+    "enabled": true,
+    "frame": {
+      "y": 299,
+      "width": 370,
+      "height": 20,
+      "x": 16
+    },
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "type": "StaticText",
+    "subrole": null
+  },
+  {
+    "frame": {
+      "y": 759,
+      "x": 362,
+      "height": 24,
+      "width": 24
+    },
+    "AXFrame": "{{362, 759}, {24, 24}}",
+    "enabled": true,
+    "AXUniqueId": null,
+    "content_required": false,
+    "AXValue": null,
+    "role_description": "",
+    "type": "GenericElement",
+    "title": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "role": "AXGenericElement",
+    "custom_actions": [],
+    "pid": 57163,
+    "AXLabel": null,
+    "subrole": null,
+    "help": null
+  },
+  {
+    "type": "GenericElement",
+    "traits": [
+      "Scrollable"
+    ],
+    "subrole": null,
+    "AXValue": null,
+    "title": null,
+    "role_description": "",
+    "AXLabel": "Components/Navigation/Gooey Navigation/Default",
+    "AXFrame": "{{6, 811.66666698455811}, {362, 17}}",
+    "pid": 57163,
+    "custom_actions": [],
+    "content_required": false,
+    "enabled": true,
+    "role": "AXGenericElement",
+    "AXUniqueId": "mobile-menu-button",
+    "frame": {
+      "height": 17,
+      "x": 6,
+      "y": 811.6666669845581,
+      "width": 362
+    },
+    "help": null
+  },
+  {
+    "help": null,
+    "frame": {
+      "height": 28,
+      "x": 368,
+      "width": 28,
+      "y": 806
+    },
+    "enabled": true,
+    "pid": 57163,
+    "role": "AXButton",
+    "role_description": "button",
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "AXFrame": "{{368, 806}, {28, 28}}",
+    "custom_actions": [],
+    "type": "Button",
+    "content_required": false,
+    "title": null,
+    "AXLabel": "Open addons panel",
+    "AXValue": null,
+    "subrole": null,
+    "AXUniqueId": "mobile-addons-button"
+  }
+]

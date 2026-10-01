@@ -1,5 +1,12 @@
 # @hjmds/react-native
 
+Login screens use `AuthScreenLayout` from `@hjmds/react-native/auth-screen`. Set `mainCard` and supply
+provider buttons with name-only labels in `main`. During authentication, pass a localized
+`pendingLabel`: the actions become hidden and excluded from touch/accessibility navigation,
+their layout preserves the card dimensions, and one loader appears at its centre. Remove the prop
+on cancellation or failure to restore them. Keep the same `main` content mounted and avoid setting
+each button's `busy` at the same time. See the [login layout contract](../design-contracts/docs/auth-screen.md).
+
 Expo-independent React Native renderers for `@hjmds/design-contracts`. The default entries use only
 React and React Native runtime APIs. The optional `toast-liquid` entry has additional native peers;
 its supported host combinations and installation are documented below.
@@ -75,22 +82,15 @@ The package exports include:
 ## Composition style boundary
 
 The normative [consumer policy](../design-contracts/docs/consumer-policy.md#31-react-native-legacy-style-compatibility-boundary)
-has an export in this source checkout for the next package release. Check the installed package's
-exports before importing `@hjmds/design-contracts/consumer-policy.md`; older `0.9.0` consumers use
-the versioned app-standard policy snapshot as that policy explains. Source checkout updates do
-not update an already installed npm package. New apps must not add uses of the
-legacy unrestricted `style`, `labelStyle`, `inputStyle`, `containerStyle`, or slot `*Style` props.
-Those props remain callable in the 0.9 compatibility train only so existing consumers do not break;
-they are not an authorization to override recipe-owned visuals.
+defines the supported composition boundary. Version 1.11 removes deprecated public raw-style
+props and compatibility aliases listed in the [migration guide](../design-contracts/docs/migration-native-legacy-removal.md).
+Source changes do not update already installed npm packages. Upgrade each consumer's dependency
+and lockfile together, and verify its supported surfaces.
 
-Stable Core components are moving first to `layoutStyle`, typed as `HjmCompositionStyle`.
-The following example requires an installed version that exports these APIs; use a composition
-wrapper when the installed version does not provide them. Deprecation preserves old callers,
-and the runtime does not filter their raw style overrides. New-screen enforcement belongs to
-the product's checks under the consumer policy. It accepts
-screen-placement properties such as logical margins, width, flex, and `alignSelf`, while excluding
-color, typography, padding, gap, border, radius, height, opacity, transform, and interaction-state
-keys. Margin values must still come from HJM spacing tokens or a reviewed product adapter.
+Use `layoutStyle`, typed as `HjmCompositionStyle`, for screen placement. It accepts logical margins,
+width, flex, and `alignSelf`, while excluding recipe-owned color, typography, padding, gap, border,
+radius, height, opacity, transform, and interaction state. Use a composition wrapper where no
+placement prop exists. Margin values come from spacing tokens or a reviewed product adapter.
 
 ```tsx
 import { spacing } from "@hjmds/design-contracts/foundations";
@@ -109,12 +109,8 @@ const actionPlacement = {
 ```
 
 If a product needs a new color, type treatment, radius, density, or control size, add a semantic
-theme/recipe axis with renderer evidence instead of using a raw style prop. Existing raw-style use
-must carry a migration ADR and removal train. Published 1.x compatibility props remain available;
-removal requires a future major, at least one fixed-train deprecation window, and verified consumer
-migration under the policy's four exit conditions. The old pre-1.0 deadline was contradicted by the
-1.3.5 API observed in the September 2026 consumer audit. Runtime filtering is intentionally deferred
-until that migration completes.
+theme/recipe axis with renderer evidence. Deprecated 1.x compatibility props are removed in 1.11;
+private recipe composition and supported platform host styles are separate APIs.
 
 `Image` consumes the same intrinsic descriptor as Web. `width` and `height`
 reserve the frame before loading, omitted `decorative` defaults to `true`, and
@@ -146,9 +142,9 @@ import { Image as ExpoImage } from "expo-image";
 ```
 
 Use `sourceAdapter` when the built-in React Native host needs headers, cache
-metadata, or another `ImageSourcePropType`. The older `source` API remains as a
-deprecated compatibility path for migration, but it cannot guarantee intrinsic
-space reservation without the canonical dimensions.
+metadata, or another `ImageSourcePropType`. The old `source` prop is removed in the next major;
+provide canonical dimensions and use `sourceAdapter` for transport. See
+[the migration guide](../design-contracts/docs/migration-native-legacy-removal.md).
 
 `Badge.variant` is the shared `filled | outline` recipe axis on Web and Native. `ListRow` keeps
 `titleMetadata` inside the row's accessible name only through caller-supplied `metadataLabel`, and
@@ -254,12 +250,10 @@ first enabled item; controlled invalid or disabled selections fail before render
 
 For cross-renderer code, use the canonical collection/state vocabulary:
 
-- `Tabs`, `RadioGroup`, and `SegmentedControl` take `items`; Native's former `options` prop remains
-  as a deprecated compatibility alias.
-- Native `TabItem` uses `id`, matching Web. The former `TabOption.value` shape remains available only
-  through the deprecated `options` path.
+- `Tabs`, `RadioGroup`, and `SegmentedControl` take `items`; Native's former `options` prop is removed in 1.11.
+- Native `TabItem` uses `id`, matching Web. The former `TabOption.value` and `options` path are removed.
 - `Switch` takes `checked`, `defaultChecked`, and `onCheckedChange`, matching Web. Native's former
-  `value`, `defaultValue`, and `onValueChange` names remain deprecated aliases.
+  `value`, `defaultValue`, and `onValueChange` aliases are removed in the next major.
 
 Canonical and deprecated channels cannot be mixed in one component instance. The public types reject
 ambiguous combinations, and runtime validation protects untyped JavaScript consumers.
@@ -319,14 +313,14 @@ copy for `Form.fallbackErrorMessage`, `SearchField.clearLabel` /
 `Dialog.closeLabel` / `Sheet.closeLabel`. Optional
 region names remain injectable through `Select.optionsAccessibilityLabel`,
 `Combobox.resultsAccessibilityLabel`, `AccordionItem.contentAccessibilityLabel`,
-`TabOption.panelAccessibilityLabel`, and `ToastRegion.accessibilityLabel`.
+`TabItem.panelAccessibilityLabel`, and `ToastRegion.accessibilityLabel`.
 When those optional names are absent, the renderer relies on the Native role,
 state, or the caller's existing control label instead of inventing translated
 suffixes. `RadioGroup.requiredLabel` and `readOnlyLabel` are optional localized
 qualifiers; a language-neutral asterisk and disabled interaction state remain
 when they are omitted.
 
-`ToastRegion` can wrap a screen and exposes `useToastRegion().show()` / `dismiss()`. The shared
+`ToastRegion` can wrap a screen and exposes `useToastRegion().publish()` / `dismiss()`. The shared
 bounded FIFO store owns `maxVisible`, `maxQueued`, duplicate and overflow policies, exactly-once
 action/dismiss behavior, app-background and interaction timer pauses, and interrupted teardown.
 It announces normal priority politely and high priority assertively, and keeps actionable toasts
@@ -409,3 +403,18 @@ For the optional native menu, apply the host patches documented in [patch instal
 ## Optional interaction adapters
 
 Stable `sortable`, `swipe-actions`, `content-transition`, `carousel-motion` and `celebration` entries plus experimental native `screen-transition` are available through explicit subpath imports. See [installation, localized labels and behavior contracts](../../docs/interaction-adapters.md), including pinned peers and native verification limits. These adapters are not root exports.
+
+
+### Menu without a visible heading
+
+Pass `title=""` to omit the visible heading and its line box. The menu retains
+`triggerLabel` as its accessible name. This fixes the blank space left by an empty
+Text heading observed in BurnTok's owner menu; consumers should not compensate
+with negative margins.
+
+### Reference-inspired navigation
+
+`@hjmds/react-native/navigation-bar` exports [NavigationBar](../design-contracts/docs/navigation-bar.md)
+with an opaque semantic surface and adaptive slots, without a required blur dependency.
+Existing [BottomNavigation](../design-contracts/docs/bottom-navigation.md) accepts the
+`capsule` presentation with an adjacent action and large-text label fallback.

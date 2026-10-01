@@ -51,7 +51,7 @@ export type ToastDescriptor = Readonly<{
   priority?: ToastAnnouncementPriority;
   /** Optional localized announcement when visible copy needs extra context. */
   announcement?: string;
-  /** `null` is persistent. Values below the accessible minimum are clamped. */
+  /** `null` persists; short durations clamp to the configured floor. */
   durationMs?: number | null;
   action?: ToastActionDescriptor;
   /** Required localized name for the icon-only close affordance. */
@@ -86,8 +86,9 @@ export type ToastAnnouncement = Readonly<{
 }>;
 
 export const toastBehaviorDefaults = {
-  durationMs: 5000,
-  minimumDurationMs: 5000,
+  // 2026-10-02: product chose 3s over 5s for both presentations; actions may persist.
+  durationMs: 3000,
+  minimumDurationMs: 3000,
   priority: "normal",
   dismissOnAction: true,
   maxVisible: 1,
@@ -159,7 +160,7 @@ export function validateToastDescriptor(descriptor: ToastDescriptor): void {
   }
 }
 
-/** Actionable notifications persist by default; every timer has a five-second floor. */
+/** Actions persist by default; timed notices follow the shared 3-second floor. */
 export function resolveToastDuration(descriptor: ToastDescriptor): number | null {
   validateToastDescriptor(descriptor);
   if (descriptor.durationMs === null) return null;

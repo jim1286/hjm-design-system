@@ -1,0 +1,129 @@
+[
+  {
+    "AXFrame": "{{0, 0}, {402, 874}}",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "role": "AXApplication",
+    "content_required": false,
+    "AXLabel": "HJM Native Showcase",
+    "title": null,
+    "frame": {
+      "x": 0,
+      "width": 402,
+      "height": 874,
+      "y": 0
+    },
+    "custom_actions": [],
+    "pid": 57163,
+    "traits": [
+      "None"
+    ],
+    "help": null,
+    "type": "Application",
+    "role_description": "application",
+    "enabled": true,
+    "subrole": null
+  },
+  {
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "role_description": "button",
+    "AXValue": null,
+    "subrole": null,
+    "role": "AXButton",
+    "pid": 57163,
+    "AXUniqueId": null,
+    "help": null,
+    "enabled": true,
+    "custom_actions": [],
+    "AXLabel": "이번 주 아이디어 · 3개",
+    "type": "Button",
+    "title": null,
+    "AXFrame": "{{16, 78}, {370, 180}}",
+    "content_required": false,
+    "frame": {
+      "y": 78,
+      "height": 180,
+      "width": 370,
+      "x": 16
+    }
+  },
+  {
+    "content_required": false,
+    "AXFrame": "{{362, 759}, {24, 24}}",
+    "pid": 57163,
+    "traits": [
+      "Scrollable"
+    ],
+    "enabled": true,
+    "AXValue": null,
+    "AXLabel": null,
+    "custom_actions": [],
+    "title": null,
+    "help": null,
+    "role": "AXGenericElement",
+    "subrole": null,
+    "AXUniqueId": null,
+    "type": "GenericElement",
+    "role_description": "",
+    "frame": {
+      "height": 24,
+      "y": 759,
+      "x": 362,
+      "width": 24
+    }
+  },
+  {
+    "title": null,
+    "AXFrame": "{{6, 811.66666698455811}, {320.66665649414062, 17}}",
+    "traits": [
+      "Scrollable"
+    ],
+    "help": null,
+    "role": "AXGenericElement",
+    "role_description": "",
+    "type": "GenericElement",
+    "custom_actions": [],
+    "AXLabel": "Components/Display/Folder Preview/Default",
+    "subrole": null,
+    "enabled": true,
+    "content_required": false,
+    "pid": 57163,
+    "AXValue": null,
+    "AXUniqueId": "mobile-menu-button",
+    "frame": {
+      "x": 6,
+      "y": 811.6666669845581,
+      "height": 17,
+      "width": 320.6666564941406
+    }
+  },
+  {
+    "frame": {
+      "x": 368,
+      "y": 806,
+      "width": 28,
+      "height": 28
+    },
+    "enabled": true,
+    "role": "AXButton",
+    "AXValue": null,
+    "help": null,
+    "AXFrame": "{{368, 806}, {28, 28}}",
+    "AXLabel": "Open addons panel",
+    "role_description": "button",
+    "content_required": false,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "pid": 57163,
+    "type": "Button",
+    "custom_actions": [],
+    "AXUniqueId": "mobile-addons-button",
+    "subrole": null,
+    "title": null
+  }
+]

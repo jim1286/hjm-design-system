@@ -114,11 +114,11 @@ describe("@hjmds/react-native vertical slice", () => {
         <Switch label="알림" />
         <SegmentedControl
           label="보기 방식"
-          options={[{ value: "list", label: "목록" }, { value: "grid", label: "격자" }]}
+          items={[{ value: "list", label: "목록" }, { value: "grid", label: "격자" }]}
         />
         <Tabs
           label="프로필 탭"
-          options={[{ value: "info", label: "정보" }, { value: "record", label: "기록" }]}
+          items={[{ id: "info", label: "정보" }, { id: "record", label: "기록" }]}
         />
       </>,
     );

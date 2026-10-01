@@ -1837,6 +1837,30 @@ export declare const recipeRegistry: {
             readonly native: "navigator-tab-bar";
         };
         readonly presentations: {
+            readonly capsule: {
+                readonly background: Readonly<{
+                    source: "theme";
+                    key: "surface";
+                    alpha?: number;
+                }>;
+                readonly border: Readonly<{
+                    source: "theme";
+                    key: "border";
+                    alpha?: number;
+                }>;
+                readonly borderWidth: 1;
+                readonly borderEdges: readonly ["all"];
+                readonly radius: "full";
+                readonly shadow: {
+                    readonly color: "#000000";
+                    readonly opacity: 0.12;
+                    readonly radius: 12;
+                    readonly offsetY: 4;
+                };
+                readonly maxWidth: 480;
+                readonly outerPaddingHorizontal: 16;
+                readonly outerPaddingTop: 8;
+            };
             readonly bar: {
                 readonly background: Readonly<{
                     source: "theme";
@@ -2278,6 +2302,10 @@ export declare const recipeRegistry: {
             readonly fontWeight: "400";
         };
         readonly providerMinHeight: 44;
+        readonly mainCard: {
+            readonly padding: 16;
+            readonly radius: 16;
+        };
         readonly densities: {
             readonly regular: {
                 readonly heroGap: 16;
@@ -7718,7 +7746,7 @@ export declare const recipeRegistry: {
         readonly defaults: {
             readonly tone: "neutral";
             readonly placement: "bottom";
-            readonly durationMs: 5000;
+            readonly durationMs: 3000;
         };
         readonly adaptive: {
             readonly web: "fixed-viewport";

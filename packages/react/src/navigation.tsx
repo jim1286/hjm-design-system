@@ -1,3 +1,5 @@
+import { resolveGooeyIndicator, type TabsAppearance, type GooeyIndicatorRect } from "@hjmds/design-contracts/gooey-navigation";
+export type { TabsAppearance };
 import {
   getTabNavigationIntent,
   getTabNavigationTarget,
@@ -19,6 +21,7 @@ import {
 import {
   forwardRef,
   useEffect,
+  useLayoutEffect,
   useId,
   useRef,
   useState,
@@ -35,8 +38,6 @@ export type TabLeadingRenderProps = Readonly<{
   color: "currentColor";
   /** Pixel size resolved from `tabsRecipe.icon.glyph`. */
   size: number;
-  /** Compatibility alias for product icon libraries that name this value explicitly. */
-  glyphSize: number;
 }>;
 
 export type TabItem = Readonly<{
@@ -67,6 +68,7 @@ export type TabsProps = Omit<HTMLAttributes<HTMLDivElement>, "dir" | "onChange">
     activationMode?: TabsActivationMode;
     mountPolicy?: TabsMountPolicy;
     panelMode?: TabsPanelMode;
+    appearance?: TabsAppearance;
     orientation?: TabsOrientation;
     direction?: TabsDirection;
     loop?: boolean;
@@ -248,6 +250,7 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
     activationMode = tabsBehaviorDefaults.activationMode,
     mountPolicy = tabsBehaviorDefaults.mountPolicy,
     panelMode = tabsBehaviorDefaults.panelMode,
+    appearance = "standard",
     orientation = tabsBehaviorDefaults.orientation,
     direction: directionProp,
     loop = tabsBehaviorDefaults.loop,
@@ -306,6 +309,40 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
   const baseId = id ?? `hjm-${generatedId}`;
   const theme = useOptionalHjmTheme();
   const direction = directionProp ?? theme?.environment.direction ?? tabsBehaviorDefaults.direction;
+  const gooey = appearance === "gooey" && orientation === "horizontal";
+  const indicatorRef = useRef<HTMLSpanElement>(null);
+  const previousIndicator = useRef<{ value: string; rect: GooeyIndicatorRect } | null>(null);
+  useLayoutEffect(() => {
+    const indicator = indicatorRef.current;
+    const tab = tabRefs.current.get(value);
+    if (!gooey || !indicator || !tab) { previousIndicator.current = null; return; }
+    let animation: Animation | undefined;
+    const place = (animate: boolean) => {
+      animation?.cancel();
+      const rect = { x: tab.offsetLeft, width: tab.offsetWidth };
+      if (rect.width <= 0) return;
+      indicator.style.left = `${rect.x}px`;
+      indicator.style.width = `${rect.width}px`;
+      const previous = previousIndicator.current;
+      if (animate && previous && previous.value !== value && !theme?.environment.reducedMotion && !document.hidden) {
+        const recipe = resolveGooeyIndicator(previous.rect, rect);
+        animation = indicator.animate(recipe.input.map((offset, index) => ({ offset, left: `${recipe.x[index]}px`, width: `${recipe.width[index]}px` })), { duration: recipe.duration, easing: "ease-out" });
+      }
+      previousIndicator.current = { value, rect };
+    };
+    place(true);
+    // Font loading, resizing and large text change measurements without changing selection.
+    const observer = new ResizeObserver(() => {
+      const previous = previousIndicator.current?.rect;
+      if (previous?.x !== tab.offsetLeft || previous.width !== tab.offsetWidth) place(false);
+    });
+    const list = tab.parentElement!;
+    for (const child of list.children) if (child !== indicator) observer.observe(child);
+    const visibility = () => { if (document.hidden) animation?.cancel(); };
+    document.addEventListener("visibilitychange", visibility);
+    return () => { animation?.cancel(); observer.disconnect(); document.removeEventListener("visibilitychange", visibility); };
+  }, [gooey, value, items, theme?.environment.reducedMotion]);
+
 
   useEffect(() => {
     if (!controlled && !storedSelectionIsValid) setValue(collectionFallback);
@@ -377,6 +414,7 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
       data-size={size}
       data-layout={layout}
       data-overflow={overflow}
+      data-appearance={gooey ? "gooey" : "standard"}
       data-orientation={orientation}
       data-mount-policy={mountPolicy}
       data-panel-mode={panelMode}
@@ -389,6 +427,7 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
         aria-label={label}
         aria-orientation={orientation}
       >
+        {gooey ? <span ref={indicatorRef} aria-hidden="true" className="hjm-tabs__gooey" /> : null}
         {items.map((item) => {
           const selected = item.id === value;
           const tabId = getTabId(baseId, item.id);
@@ -422,7 +461,6 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
                     disabled: item.disabled ?? false,
                     color: "currentColor",
                     size: leadingSize,
-                    glyphSize: leadingSize,
                   })}
                 </span>
               ) : null}

@@ -1,0 +1,496 @@
+[
+  {
+    "subrole": null,
+    "help": null,
+    "AXValue": null,
+    "AXFrame": "{{0, 0}, {402, 874}}",
+    "content_required": false,
+    "AXUniqueId": null,
+    "enabled": true,
+    "custom_actions": [],
+    "role_description": "application",
+    "frame": {
+      "width": 402,
+      "x": 0,
+      "y": 0,
+      "height": 874
+    },
+    "AXLabel": "HJM Native Showcase",
+    "pid": 57163,
+    "title": null,
+    "type": "Application",
+    "role": "AXApplication",
+    "traits": [
+      "None"
+    ]
+  },
+  {
+    "enabled": true,
+    "AXLabel": "나의 작은 보관함",
+    "role": "AXStaticText",
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "help": null,
+    "subrole": null,
+    "AXFrame": "{{57, 119}, {288, 20}}",
+    "AXUniqueId": null,
+    "content_required": false,
+    "role_description": "text",
+    "pid": 57163,
+    "type": "StaticText",
+    "frame": {
+      "width": 288,
+      "height": 20,
+      "x": 57,
+      "y": 119
+    },
+    "AXValue": null,
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "AXFrame": "{{57, 155}, {288, 32}}",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "role": "AXStaticText",
+    "content_required": false,
+    "AXLabel": "다시 만나고 싶은 순간",
+    "title": null,
+    "frame": {
+      "x": 57,
+      "width": 288,
+      "y": 155,
+      "height": 32
+    },
+    "custom_actions": [],
+    "pid": 57163,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "help": null,
+    "type": "StaticText",
+    "role_description": "text",
+    "enabled": true,
+    "subrole": null
+  },
+  {
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "role_description": "text",
+    "AXValue": null,
+    "subrole": null,
+    "role": "AXStaticText",
+    "pid": 57163,
+    "AXUniqueId": null,
+    "help": null,
+    "enabled": true,
+    "custom_actions": [],
+    "AXLabel": "기억나는 단어로 내 기록을 찾아보세요.",
+    "type": "StaticText",
+    "title": null,
+    "AXFrame": "{{57, 203}, {288, 20}}",
+    "content_required": false,
+    "frame": {
+      "x": 57,
+      "width": 288,
+      "height": 20,
+      "y": 203
+    }
+  },
+  {
+    "content_required": false,
+    "AXFrame": "{{57, 239}, {288, 20}}",
+    "pid": 57163,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "enabled": true,
+    "AXValue": null,
+    "AXLabel": "기록 검색",
+    "custom_actions": [],
+    "title": null,
+    "help": null,
+    "role": "AXStaticText",
+    "subrole": null,
+    "AXUniqueId": null,
+    "type": "StaticText",
+    "role_description": "text",
+    "frame": {
+      "height": 20,
+      "y": 239,
+      "x": 57,
+      "width": 288
+    }
+  },
+  {
+    "title": null,
+    "AXFrame": "{{70, 268}, {262, 44}}",
+    "traits": [
+      "SearchField",
+      "TextOperationsAvailable",
+      "TextEntry",
+      "Scrollable"
+    ],
+    "help": null,
+    "role": "AXStaticText",
+    "role_description": "text",
+    "type": "StaticText",
+    "custom_actions": [],
+    "AXLabel": "기록 검색",
+    "subrole": "AXSearchField",
+    "enabled": true,
+    "content_required": false,
+    "pid": 57163,
+    "AXValue": "산책, 카페, 아이디어",
+    "AXUniqueId": null,
+    "frame": {
+      "width": 262,
+      "height": 44,
+      "x": 70,
+      "y": 268
+    }
+  },
+  {
+    "frame": {
+      "x": 57,
+      "y": 329,
+      "width": 58.333335876464844,
+      "height": 44
+    },
+    "enabled": true,
+    "role": "AXGenericElement",
+    "AXValue": null,
+    "help": null,
+    "AXFrame": "{{57, 329}, {58.333335876464844, 44}}",
+    "AXLabel": "전체",
+    "role_description": "",
+    "content_required": false,
+    "traits": [
+      "Button",
+      "Scrollable",
+      "Selected"
+    ],
+    "pid": 57163,
+    "type": "GenericElement",
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "subrole": null,
+    "title": null
+  },
+  {
+    "role_description": "",
+    "AXValue": null,
+    "AXUniqueId": null,
+    "type": "GenericElement",
+    "role": "AXGenericElement",
+    "title": null,
+    "subrole": null,
+    "traits": [
+      "Button",
+      "Scrollable"
+    ],
+    "enabled": true,
+    "custom_actions": [],
+    "AXLabel": "메모",
+    "pid": 57163,
+    "help": null,
+    "AXFrame": "{{127.33333587646484, 329}, {56.333335876464844, 44}}",
+    "content_required": false,
+    "frame": {
+      "height": 44,
+      "y": 329,
+      "width": 56.333335876464844,
+      "x": 127.33333587646484
+    }
+  },
+  {
+    "title": null,
+    "frame": {
+      "width": 56.33332824707031,
+      "x": 195.6666717529297,
+      "y": 329,
+      "height": 44
+    },
+    "traits": [
+      "Button",
+      "Scrollable"
+    ],
+    "pid": 57163,
+    "AXValue": null,
+    "help": null,
+    "AXUniqueId": null,
+    "content_required": false,
+    "AXFrame": "{{195.66667175292969, 329}, {56.333328247070312, 44}}",
+    "role_description": "slider",
+    "role": "AXSlider",
+    "AXLabel": "장소",
+    "enabled": true,
+    "custom_actions": [],
+    "type": "Slider",
+    "subrole": null
+  },
+  {
+    "content_required": false,
+    "title": null,
+    "AXFrame": "{{264, 329}, {80.666656494140625, 44}}",
+    "role": "AXButton",
+    "subrole": null,
+    "help": null,
+    "pid": 57163,
+    "custom_actions": [],
+    "enabled": true,
+    "traits": [
+      "Button",
+      "Scrollable"
+    ],
+    "frame": {
+      "x": 264,
+      "y": 329,
+      "height": 44,
+      "width": 80.66665649414062
+    },
+    "role_description": "button",
+    "AXValue": null,
+    "type": "Button",
+    "AXLabel": "아이디어",
+    "AXUniqueId": null
+  },
+  {
+    "type": "StaticText",
+    "AXUniqueId": null,
+    "enabled": true,
+    "help": null,
+    "custom_actions": [],
+    "AXFrame": "{{36, 418}, {330, 20}}",
+    "frame": {
+      "x": 36,
+      "y": 418,
+      "width": 330,
+      "height": 20
+    },
+    "AXLabel": "4개의 기록",
+    "role": "AXStaticText",
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "title": null,
+    "AXValue": null,
+    "subrole": null,
+    "pid": 57163,
+    "content_required": false,
+    "role_description": "text"
+  },
+  {
+    "type": "GenericElement",
+    "traits": [
+      "Button",
+      "Scrollable"
+    ],
+    "title": null,
+    "role_description": "",
+    "help": null,
+    "AXUniqueId": null,
+    "subrole": null,
+    "content_required": false,
+    "AXFrame": "{{36, 462}, {330, 68}}",
+    "AXValue": null,
+    "enabled": true,
+    "frame": {
+      "y": 462,
+      "x": 36,
+      "width": 330,
+      "height": 68
+    },
+    "role": "AXGenericElement",
+    "custom_actions": [],
+    "pid": 57163,
+    "AXLabel": "비 오는 날의 산책, 작은 골목에서 발견한 느린 오후"
+  },
+  {
+    "type": "GenericElement",
+    "AXLabel": "햇살이 머무는 카페, 창가 자리와 따뜻한 차",
+    "help": null,
+    "role_description": "",
+    "role": "AXGenericElement",
+    "custom_actions": [],
+    "frame": {
+      "y": 531,
+      "x": 36,
+      "height": 68,
+      "width": 330
+    },
+    "content_required": false,
+    "pid": 57163,
+    "subrole": null,
+    "AXValue": null,
+    "AXFrame": "{{36, 531}, {330, 68}}",
+    "title": null,
+    "enabled": true,
+    "traits": [
+      "Button",
+      "Scrollable"
+    ],
+    "AXUniqueId": null
+  },
+  {
+    "help": null,
+    "role_description": "",
+    "AXLabel": "주말의 작은 정원, 베란다에 초록을 더하는 계획",
+    "content_required": false,
+    "role": "AXGenericElement",
+    "enabled": true,
+    "subrole": null,
+    "title": null,
+    "AXValue": null,
+    "type": "GenericElement",
+    "custom_actions": [],
+    "AXFrame": "{{36, 600}, {330, 68}}",
+    "traits": [
+      "Button",
+      "Scrollable"
+    ],
+    "AXUniqueId": null,
+    "frame": {
+      "height": 68,
+      "x": 36,
+      "y": 600,
+      "width": 330
+    },
+    "pid": 57163
+  },
+  {
+    "enabled": true,
+    "title": null,
+    "subrole": null,
+    "traits": [
+      "Button",
+      "Scrollable"
+    ],
+    "content_required": false,
+    "pid": 57163,
+    "AXFrame": "{{36, 669}, {330, 68}}",
+    "frame": {
+      "x": 36,
+      "y": 669,
+      "width": 330,
+      "height": 68
+    },
+    "role": "AXGenericElement",
+    "custom_actions": [],
+    "AXValue": null,
+    "type": "GenericElement",
+    "help": null,
+    "role_description": "",
+    "AXUniqueId": null,
+    "AXLabel": "책에서 발견한 문장, 다시 읽고 싶은 생각 한 조각"
+  },
+  {
+    "custom_actions": [],
+    "AXFrame": "{{36, 761}, {330, 20}}",
+    "pid": 57163,
+    "help": null,
+    "frame": {
+      "x": 36,
+      "width": 330,
+      "y": 761,
+      "height": 20
+    },
+    "subrole": null,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "AXUniqueId": null,
+    "role_description": "text",
+    "role": "AXStaticText",
+    "type": "StaticText",
+    "enabled": true,
+    "title": null,
+    "AXLabel": "직접 작성한 예제 기록을 기기 안에서 검색합니다.",
+    "AXValue": null,
+    "content_required": false
+  },
+  {
+    "AXUniqueId": null,
+    "frame": {
+      "height": 24,
+      "y": 759,
+      "width": 24,
+      "x": 362
+    },
+    "content_required": false,
+    "type": "GenericElement",
+    "custom_actions": [],
+    "role": "AXGenericElement",
+    "AXValue": null,
+    "role_description": "",
+    "subrole": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "title": null,
+    "AXLabel": null,
+    "enabled": true,
+    "help": null,
+    "pid": 57163,
+    "AXFrame": "{{362, 759}, {24, 24}}"
+  },
+  {
+    "AXUniqueId": "mobile-menu-button",
+    "custom_actions": [],
+    "frame": {
+      "height": 17,
+      "x": 6,
+      "width": 175.6666717529297,
+      "y": 811.6666669845581
+    },
+    "subrole": null,
+    "content_required": false,
+    "AXValue": null,
+    "help": null,
+    "AXFrame": "{{6, 811.66666698455811}, {175.66667175292969, 17}}",
+    "enabled": true,
+    "traits": [
+      "Scrollable"
+    ],
+    "type": "GenericElement",
+    "role_description": "",
+    "AXLabel": "Patterns/Search/Dark",
+    "role": "AXGenericElement",
+    "title": null,
+    "pid": 57163
+  },
+  {
+    "role": "AXButton",
+    "AXUniqueId": "mobile-addons-button",
+    "type": "Button",
+    "traits": [
+      "Button",
+      "Scrollable"
+    ],
+    "AXLabel": "Open addons panel",
+    "frame": {
+      "y": 806,
+      "width": 28,
+      "height": 28,
+      "x": 368
+    },
+    "enabled": true,
+    "AXValue": null,
+    "AXFrame": "{{368, 806}, {28, 28}}",
+    "title": null,
+    "help": null,
+    "custom_actions": [],
+    "subrole": null,
+    "role_description": "button",
+    "content_required": false,
+    "pid": 57163
+  }
+]

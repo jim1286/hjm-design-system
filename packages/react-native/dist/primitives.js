@@ -14,7 +14,7 @@ import { Text as NativeText, View, useWindowDimensions, } from "react-native";
 import { useHjmNativeTheme } from "./provider.js";
 import { logicalTextAlign, resolveNativeTextScaleProps, } from "./internal/styles.js";
 /** Native shell translation: ordered regions without inventing Web landmark roles. */
-export const Layout = forwardRef(function Layout({ children, header, footer, sidebar, skipLinkLabel, headerProps, mainProps, footerProps, mainRef, style, ...props }, ref) {
+export const Layout = forwardRef(function Layout({ children, header, footer, sidebar, headerProps, mainProps, footerProps, mainRef, style, ...props }, ref) {
     const hasHeader = header !== undefined && header !== null && header !== false;
     const hasFooter = footer !== undefined && footer !== null && footer !== false;
     validateLayoutRegions({
@@ -29,7 +29,6 @@ export const Layout = forwardRef(function Layout({ children, header, footer, sid
                     label: sidebar.label,
                 },
             }),
-        ...(skipLinkLabel === undefined ? {} : { skipLinkLabel }),
     });
     const sidebarNode = sidebar === undefined
         ? null
@@ -60,17 +59,12 @@ export const Text = forwardRef(function Text({ children, variant = textRecipe.de
     ], allowFontScaling);
     return (_jsx(NativeText, { ...props, allowFontScaling: resolvedText.allowFontScaling, ref: ref, style: resolvedText.style, children: children }));
 });
-function normalizeSurfaceTone(tone) {
-    if (tone === "brand")
-        return "accent";
-    return tone;
-}
 function resolveThemeColor(colors, key) {
     return colors[key];
 }
-export function Surface({ tone = surfaceDefaults.tone, padding = surfaceDefaults.padding, radius: radiusValue = surfaceDefaults.radius, bordered, layoutStyle, style, ...props }) {
+export function Surface({ tone = surfaceDefaults.tone, padding = surfaceDefaults.padding, radius: radiusValue = surfaceDefaults.radius, bordered, layoutStyle, ...props }) {
     const { colors } = useHjmNativeTheme();
-    const normalizedTone = normalizeSurfaceTone(tone);
+    const normalizedTone = tone;
     const contract = surfaceRecipe[normalizedTone];
     const shouldDrawBorder = bordered ?? (surfaceDefaults.bordered || contract.borderAlways);
     const borderColor = resolveThemeColor(colors, contract.border);
@@ -91,19 +85,14 @@ export function Surface({ tone = surfaceDefaults.tone, padding = surfaceDefaults
                         ? borderColor
                         : withAlpha(borderColor, contract.borderAlpha)
                     : "transparent",
-                borderRadius: typeof radiusValue === "number"
-                    ? radiusValue
-                    : surfaceGeometry.radii[radiusValue],
+                borderRadius: surfaceGeometry.radii[radiusValue],
                 borderWidth: 1,
                 // A child image would otherwise spill past the rounded corner. An
                 // elevated tone opts out because clipping cuts off its own shadow.
                 overflow: contract.clipsContent ? "hidden" : "visible",
-                padding: typeof padding === "number"
-                    ? padding
-                    : surfaceGeometry.paddings[padding],
+                padding: surfaceGeometry.paddings[padding],
             },
             elevatedStyle,
-            style,
             layoutStyle,
         ] }));
 }
@@ -119,9 +108,9 @@ const justifyValues = {
     end: "flex-end",
     between: "space-between",
 };
-export function Stack({ axis, direction, gap = stackRecipe.defaults.gap, align = stackRecipe.defaults.align, justify = stackRecipe.defaults.justify, wrap = stackRecipe.defaults.wrap, layoutStyle, style, ...props }) {
+export function Stack({ axis, gap = stackRecipe.defaults.gap, align = stackRecipe.defaults.align, justify = stackRecipe.defaults.justify, wrap = stackRecipe.defaults.wrap, layoutStyle, style, ...props }) {
     const { environment } = useHjmNativeTheme();
-    const resolvedAxis = axis ?? (direction === "row" ? "inline" : "block");
+    const resolvedAxis = axis ?? "block";
     const flexDirection = stackRecipe.axes[resolvedAxis];
     return (_jsx(View, { ...props, style: [
             {
@@ -158,16 +147,16 @@ export function AspectRatio({ ratio, style, ...props }) {
     const resolved = resolveAspectRatioDescriptor(ratio === undefined ? {} : { ratio });
     return (_jsx(View, { ...props, style: [{ aspectRatio: resolved.ratio, width: "100%" }, style] }));
 }
-export function Grid({ children, descriptor, columns, gap, minColumnWidth, availableWidth, onLayoutResolved, itemStyle, style, onLayout, ...props }) {
+export function Grid({ children, columns, gap, minColumnWidth, availableWidth, onLayoutResolved, itemStyle, style, onLayout, ...props }) {
     const { width: windowWidth } = useWindowDimensions();
     const { environment } = useHjmNativeTheme();
     const [measuredWidth, setMeasuredWidth] = useState(null);
     const innerWidth = availableWidth ?? measuredWidth ?? windowWidth;
-    const resolvedDescriptor = useMemo(() => descriptor ?? {
+    const resolvedDescriptor = useMemo(() => ({
         columns: columns,
         ...(gap === undefined ? {} : { gap }),
         ...(minColumnWidth === undefined ? {} : { minColumnWidth }),
-    }, [columns, descriptor, gap, minColumnWidth]);
+    }), [columns, gap, minColumnWidth]);
     const layout = useMemo(() => resolveGridLayout(resolvedDescriptor, { windowWidth, availableWidth: innerWidth }), [innerWidth, resolvedDescriptor, windowWidth]);
     const handleLayout = (event) => {
         onLayout?.(event);
@@ -238,7 +227,7 @@ export function Icon({ descriptor, renderGlyph, style, }) {
             }) }) }));
 }
 /** A large-text-safe content section with a logical header action slot. */
-export function Section({ title, description, action, children, headerStyle, copyStyle, titleStyle, descriptionStyle, actionStyle, contentStyle, layoutStyle, style, ...props }) {
+export function Section({ title, description, action, children, headerStyle, copyStyle, actionStyle, contentStyle, layoutStyle, style, ...props }) {
     const theme = useHjmNativeTheme();
     const stackHeader = theme.environment.textScale >= 1.6;
     const hasHeader = title !== undefined || description !== undefined || action !== undefined;
@@ -255,12 +244,10 @@ export function Section({ title, description, action, children, headerStyle, cop
                                         color: resolveColorReference(sectionRecipe.title.color, theme.palette),
                                         fontWeight: sectionRecipe.title.fontWeight,
                                     },
-                                    titleStyle,
                                 ], variant: sectionRecipe.title.textVariant, children: title }), description ? (_jsx(Text, { style: [
                                     {
                                         color: resolveColorReference(sectionRecipe.description.color, theme.palette),
                                     },
-                                    descriptionStyle,
                                 ], variant: sectionRecipe.description.textVariant, children: description })) : null] }), action ? _jsx(View, { style: actionStyle, children: action }) : null] }) : null, _jsx(View, { style: contentStyle, children: children })] }));
 }
 //# sourceMappingURL=primitives.js.map

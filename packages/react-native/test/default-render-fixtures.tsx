@@ -434,25 +434,25 @@ export const defaultRenderCases = [
   },
   {
     componentId: "radio-group",
-    renderLongCopy: (copy) => <RadioGroup label="배송" options={[{ value: "standard", label: copy }]} />,
-    render: () => <RadioGroup label="배송" options={[{ value: "standard", label: "일반" }]} />,
+    renderLongCopy: (copy) => <RadioGroup label="배송" items={[{ value: "standard", label: copy }]} />,
+    render: () => <RadioGroup label="배송" items={[{ value: "standard", label: "일반" }]} />,
   },
   { componentId: "switch", renderLongCopy: (copy) => <Switch label={copy} />, render: () => <Switch label="알림" /> },
   {
     componentId: "segmented-control",
-    renderLongCopy: (copy) => <SegmentedControl label="보기" options={[{ value: "list", label: copy }]} />,
-    render: () => <SegmentedControl label="보기" options={[{ value: "list", label: "목록" }]} />,
+    renderLongCopy: (copy) => <SegmentedControl label="보기" items={[{ value: "list", label: copy }]} />,
+    render: () => <SegmentedControl label="보기" items={[{ value: "list", label: "목록" }]} />,
   },
   {
     componentId: "select",
     renderLongCopy: (copy) => (
-      <Select defaultValue="ko" dismissLabel="닫기" label={copy} options={[{ value: "ko", label: "한국어" }]} placeholder="선택" />
+      <Select defaultSelectedKey="ko" dismissLabel="닫기" label={copy} items={[{ id: "ko", label: "한국어" , textValue: "한국어"}]} placeholder="선택" />
     ),
     render: () => (
       <Select
         dismissLabel="닫기"
         label="언어"
-        options={[{ value: "ko", label: "한국어" }]}
+        items={[{ id: "ko", label: "한국어" , textValue: "한국어"}]}
         placeholder="선택"
       />
     ),
@@ -477,9 +477,9 @@ export const defaultRenderCases = [
   {
     componentId: "tabs",
     renderLongCopy: (copy) => (
-      <Tabs label="계정" options={[{ value: "profile", label: copy }, { value: "settings", label: "설정" }]} />
+      <Tabs label="계정" items={[{ id: "profile", label: copy }, { id: "settings", label: "설정" }]} />
     ),
-    render: () => <Tabs label="계정" options={[{ value: "profile", label: "프로필" }]} />,
+    render: () => <Tabs label="계정" items={[{ id: "profile", label: "프로필" }]} />,
   },
   {
     componentId: "carousel",
@@ -528,13 +528,13 @@ export const defaultRenderCases = [
   {
     componentId: "menu",
     renderLongCopy: (copy) => (
-      <Menu dismissLabel="닫기" items={[{ value: "edit", label: copy }]} onSelect={noop} triggerLabel="더 보기" />
+      <Menu dismissLabel="닫기" items={[{ id: "edit", label: copy }]} onAction={noop} triggerLabel="더 보기" />
     ),
     render: () => (
       <Menu
         dismissLabel="닫기"
-        items={[{ value: "edit", label: "수정" }]}
-        onSelect={noop}
+        items={[{ id: "edit", label: "수정" }]}
+        onAction={noop}
         triggerLabel="더 보기"
       />
     ),

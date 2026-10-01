@@ -1,3 +1,4 @@
+import { PatternStatus } from "./pattern-status";
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-native";
 import { Select } from "@hjmds/react-native/forms";
@@ -19,10 +20,10 @@ function CascaderExample() {
       onSelectionChange={value => { setCity(value); setDistrict(null); }} />
     {parent ? <Select key={parent.id} label="지역" placeholder="지역 선택" dismissLabel="지역 선택 닫기"
       items={parent.children} selectedKey={district} onSelectionChange={setDistrict} /> : null}
-    <Text accessibilityLiveRegion="polite">{parent ? [parent.label, parent.children.find(item => item.id === district)?.label].filter(Boolean).join(" / ") : "지역을 선택해 주세요"}</Text>
+    <PatternStatus>{parent ? [parent.label, parent.children.find(item => item.id === district)?.label].filter(Boolean).join(" / ") : "지역을 선택해 주세요"}</PatternStatus>
     <Button onPress={() => { setCity(null); setDistrict(null); }}>선택 초기화</Button>
   </Stack>;
 }
-const meta = { title: "Patterns/Cascader", component: CascaderExample } satisfies Meta<typeof CascaderExample>;
+const meta = { title: "배포/컴포넌트/입력/단계별 선택", component: CascaderExample } satisfies Meta<typeof CascaderExample>;
 export default meta;
-export const ChooseRegion: StoryObj<typeof meta> = {};
+export const ChooseRegion: StoryObj<typeof meta> = { name: "지역 선택",};

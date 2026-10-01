@@ -1,0 +1,17 @@
+{
+  "method": "Same emitted navigation.js reversing only selected-tab viewport correction, gzip level 9",
+  "before": {
+    "raw": 66252,
+    "gzip": 12785,
+    "sha256": "878ff14133f4d16f0e4e9fd4b4edbe4c6c63314562b3d1dd3483cf8c5088408a"
+  },
+  "after": {
+    "raw": 67257,
+    "gzip": 13116,
+    "sha256": "1945d2bb888c275fbcfa30f5af0b0b8f3db4f05fc51475fec4d1ddde2ed14815"
+  },
+  "delta": {
+    "raw": 1005,
+    "gzip": 331
+  }
+}

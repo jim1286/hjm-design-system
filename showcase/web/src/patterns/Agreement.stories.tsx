@@ -72,54 +72,42 @@ export function TopPreview() {
   실제 제품은 각 제공자가 배포하는 마크를 넣는다.
 */
 const providers = [
-  { id: "google", label: "Google로 계속하기", mark: "G" },
-  { id: "kakao", label: "카카오로 계속하기", mark: "K" },
-  { id: "naver", label: "네이버로 계속하기", mark: "N" },
-  { id: "apple", label: "Apple로 계속하기", mark: "" },
+  { id: "google", label: "Google", mark: "G" },
+  { id: "kakao", label: "카카오", mark: "K" },
+  { id: "naver", label: "네이버", mark: "N" },
+  { id: "apple", label: "Apple", mark: "" },
 ] as const;
 
 export function AuthProviderButtonPreview() {
-  const [busy, setBusy] = useState<string | null>(null);
-  return (
-    <Stack gap="md">
-      <Top descriptor={{ title: "어떤 계정으로 시작할까요", description: "쓰던 계정으로 바로 시작할 수 있어요.", size: "medium" }} />
+  return <AuthScreenLayoutPreview />;
+}
+
+export function AuthScreenLayoutPreview({ loading = false }: { loading?: boolean } = {}) {
+  const [busy, setBusy] = useState(false);
+  return <AuthScreenLayout mainCard
+    {...(busy || loading ? { pendingLabel: "로그인 중" } : {})}
+    hero={<Top descriptor={{ title: "어떤 계정으로 시작할까요", description: "쓰던 계정으로 바로 시작할 수 있어요.", size: "medium" }} />}
+    main={
       <Stack gap="sm">
         {providers.map((provider) => (
           <AuthProviderButton
             key={provider.id}
-            descriptor={{ provider: provider.id, label: provider.label, busy: busy === provider.id }}
+            descriptor={{ provider: provider.id, label: provider.label }}
             logo={<span aria-hidden="true">{provider.mark}</span>}
-            onClick={() => { setBusy(provider.id); window.setTimeout(() => setBusy(null), 1200); }}
+            // This is a demo completion delay; products clear pending on real success, cancellation or failure.
+            onClick={() => { setBusy(true); window.setTimeout(() => setBusy(false), 1200); }}
           />
         ))}
-      </Stack>
-    </Stack>
-  );
+      </Stack>}
+    footer={<span>개인정보 처리방침 · 이용약관</span>} />;
 }
 
-/**
- * 로그인 화면 골격 — 슬롯만 받고 배치를 소유한다. 히어로와 주 행동이 세로 중앙에 한 덩어리로
- * 남고 동의 고지·정책 링크는 바닥에 붙는다. 문구·마크·제공자 목록은 제품이 넘긴다.
- */
-export function AuthScreenLayoutPreview() {
-  return (
-    <AuthScreenLayout
-      hero={
-        <Top
-          descriptor={{ title: "어떤 계정으로 시작할까요", description: "쓰던 계정으로 바로 시작할 수 있어요.", size: "medium" }}
-        />
-      }
-      main={<AuthProviderButtonPreview />}
-      footer={<span>로그인하면 약관과 개인정보처리방침에 동의하게 돼요.</span>}
-    />
-  );
-}
-
-const meta = { title: "Patterns/Agreement", component: AgreementPreview } satisfies Meta<typeof AgreementPreview>;
+const meta = { includeStories: ["SignUpConsent","ScreenTitle","SocialLogin","SignInScreen","SignInLoading","LargeText"], id: "patterns-agreement", title: "배포/컴포넌트/입력/약관 동의", component: AgreementPreview } satisfies Meta<typeof AgreementPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
-export const SignUpConsent: Story = {};
-export const ScreenTitle: Story = { render: () => <TopPreview /> };
-export const SocialLogin: Story = { render: () => <AuthProviderButtonPreview /> };
-export const SignInScreen: Story = { render: () => <AuthScreenLayoutPreview /> };
-export const LargeText: Story = { globals: { textScale: "2" } };
+export const SignUpConsent: Story = { name: "가입 동의",};
+export const ScreenTitle: Story = { name: "화면 제목", render: () => <TopPreview /> };
+export const SocialLogin: Story = { name: "소셜 로그인", render: () => <AuthProviderButtonPreview /> };
+export const SignInScreen: Story = { name: "로그인 화면", render: () => <AuthScreenLayoutPreview /> };
+export const SignInLoading: Story = { name: "로그인 중", render: () => <AuthScreenLayoutPreview loading /> };
+export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };
