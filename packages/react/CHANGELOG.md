@@ -1,5 +1,54 @@
 # @hjmds/react
 
+## 1.11.0
+
+### Minor Changes
+
+- 5e394b6: Add optional ActivityHeatmap with a bounded calendar-day contract, explicit missing-data semantics, shared value levels, accessible grid/list views and role-based Web/Native showcase entries.
+- 5e394b6: Add AuthScreenLayout mainCard and pendingLabel. Login actions become hidden and inaccessible during authentication while their mounted layout preserves the card dimensions and one loader appears at its centre. Clear pendingLabel after cancellation or failure to restore actions. Products supply localized labels and use provider names for visible button text.
+- 5e394b6: Add a shared decorative Avatar fallback slot and opt-in static Blobatar factories
+  for Web and Native. Keep existing photo/initials behavior and retry Native photos
+  when their source changes. Blobatar peers are exact, optional, and absent from
+  base entries. Profile studio examples demonstrate local selection/apply/revert.
+- 5e394b6: Add optional animated Blobatar fallback factories, seven supported expressions and explicit active/visible controls. Pause for reduced motion and background hosts; Web also observes intersection. Keep static avatar entries separate and add role-based showcase states.
+- 5e394b6: Add optional CodeBlock source previews with exact-text highlight validation, selectable source, scrolling/wrapping and a copy-action slot. Web can reuse ClipboardButton; Native supports system text selection without requiring an Expo clipboard dependency.
+- 5e394b6: Add optional DurationField, InlineConfirm, ReactionPicker and NotificationBell compositions for Web and React Native. Reuse existing number, button, confirmation and badge behavior with shared duration/reaction validation. Labels and persistence remain product-owned; no consumer migration is required.
+- 5e394b6: Add optional controlled FolderPreview compositions using the existing Collapsible behavior. Decorative preview cards fan out separately from accessible expanded content; include matching role-based showcase states.
+- 5e394b6: Add a gooey appearance to existing horizontal Tabs, with a measured elastic indicator, unchanged navigation semantics, reduced-motion/background cleanup and Web/Native stories.
+- 5e394b6: Add optional GravityLetters decorative drop/rebound presentation with bounded host graphemes, explicit replay, reduced-motion/background cleanup, and role-based Web/Native stories.
+- 5e394b6: Add a bounded decorative GridReveal mask that composes with existing Image loading/error semantics and respects reduced motion and host visibility.
+- 5e394b6: Add opt-in BottomNavigation capsule presentation with an adjacent primary action,
+  accessible collapsed labels and expanded text fallback. Existing routing remains controlled.
+  Add the granular NavigationBar slot composition for Web/Native; Native uses an opaque
+  surface without a new blur dependency. No existing consumer needs migration.
+- 5e394b6: Add an optional underline presentation to the existing OtpField on both platforms. Boxes remains the default; the single real input, paste/autofill behavior and completion contract are preserved. Include matching role-based showcase states.
+- 5e394b6: Remove deprecated compatibility APIs in the 1.11 fixed release train: Native state/content aliases, collection options and legacy Menu items, layout descriptors and numeric Surface geometry, and deprecated raw styling props. Remove Web Menu item onSelect and Tabs glyphSize aliases, plus contract layout-validator and catalog-summary aliases. Migrate renderer internals, both showcases, and managed consumers to canonical composition, items/selection, onAction, and token APIs. See packages/design-contracts/docs/migration-native-legacy-removal.md for the complete replacement table and verification boundaries.
+- 5e394b6: Add optional ScrollProgress using the canonical Progress renderer and shared bounded scroll metrics. Web includes an explicit-host observer; Native composes the application's existing scroll events. No existing API migration is required.
+- 5e394b6: Add optional bounce, hook and proximity Sidebar decoration while preserving link targets, keyboard order and reduced-motion behavior. Register three role-based component stories.
+- 5e394b6: Add controlled StepPlayer composition using existing Steps, Progress and Button, with role-based Web/Native stories and localized play, pause and replay actions.
+- 5e394b6: Add optional controlled TaskList compositions with shared task validation, canonical Checkbox/List semantics, empty content and an optional collection slot for the existing SortableCollection. Register role-based Web/Native showcase states.
+- 5e394b6: Add independently authored fluid and matrix presentations to ThinkingOrb, retaining its existing accessibility and motion lifecycle. Register role-based Web and Native stories with default, dark and large-text fixtures.
+- 5e394b6: Add optional seeded mesh/glow/grain EffectSurface entries with shared validation,
+  static fallback and host/reduced-motion suspension. Add selective Lucide glyph
+  factories and an optional Web Icon glyph seam while retaining existing semantics.
+  Provide individual Web/Native avatar, icon and background-effect stories.
+
+  Extend existing ContentTransition/TextTransition with shared fade/rise/slide/scale
+  presets, retaining reduced-motion behavior and single-subtree focus semantics.
+
+- 5e394b6: Add controlled VoiceNote presentation using Asset, Slider and Button with playback, seek, loading, error and retry seams. Include role-based three-state Web/Native stories.
+
+### Patch Changes
+
+- 5e394b6: Keep EffectSurface content usable when an optional decoration host fails. Web retains
+  static SVG if WAAPI rejects animation creation. Native isolates SVG/Animated render
+  failures from product content and retains static layers after a failed foreground
+  animation start. Invalid descriptors still fail validation; no public API changes.
+- 5e394b6: Share menu typeahead, table sorting/header semantics, Native field presentation and canonical
+  carousel navigation/naming across optional motion hosts. Keep existing public APIs and optional
+  peer boundaries. Reuse anchored-overlay validation and ThinkingOrb backdrop geometry; add a
+  checked public component-to-catalog map and document the Table/DataTable selection boundary.
+
 ## 1.10.0
 
 ### Minor Changes
