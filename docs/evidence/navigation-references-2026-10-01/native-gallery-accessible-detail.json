@@ -1,0 +1,159 @@
+[
+  {
+    "enabled": true,
+    "AXLabel": "HJM Native Showcase",
+    "role": "AXApplication",
+    "traits": [
+      "None"
+    ],
+    "help": null,
+    "subrole": null,
+    "AXFrame": "{{0, 0}, {402, 874}}",
+    "AXUniqueId": null,
+    "content_required": false,
+    "role_description": "application",
+    "pid": 89686,
+    "type": "Application",
+    "frame": {
+      "height": 874,
+      "x": 0,
+      "width": 402,
+      "y": 0
+    },
+    "AXValue": null,
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "AXFrame": "{{337, 398}, {44, 44}}",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "role": "AXButton",
+    "content_required": false,
+    "AXLabel": "닫기",
+    "title": null,
+    "frame": {
+      "height": 44,
+      "y": 398,
+      "x": 337,
+      "width": 44
+    },
+    "custom_actions": [],
+    "pid": 89686,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "help": null,
+    "type": "Button",
+    "role_description": "button",
+    "enabled": true,
+    "subrole": null
+  },
+  {
+    "traits": [
+      "StaticText",
+      "Scrollable",
+      "Header"
+    ],
+    "role_description": "heading",
+    "AXValue": null,
+    "subrole": null,
+    "role": "AXHeading",
+    "pid": 89686,
+    "AXUniqueId": null,
+    "help": null,
+    "enabled": true,
+    "custom_actions": [],
+    "type": "Heading",
+    "AXLabel": "초록을 기록하는 하루",
+    "title": null,
+    "AXFrame": "{{21, 407}, {304, 26}}",
+    "content_required": false,
+    "frame": {
+      "x": 21,
+      "y": 407,
+      "width": 304,
+      "height": 26
+    }
+  },
+  {
+    "content_required": false,
+    "AXFrame": "{{21, 703}, {360, 20}}",
+    "pid": 89686,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "enabled": true,
+    "AXValue": null,
+    "AXLabel": "서연 · 모바일",
+    "custom_actions": [],
+    "title": null,
+    "help": null,
+    "role": "AXStaticText",
+    "subrole": null,
+    "AXUniqueId": null,
+    "type": "StaticText",
+    "role_description": "text",
+    "frame": {
+      "x": 21,
+      "width": 360,
+      "height": 20,
+      "y": 703
+    }
+  },
+  {
+    "title": null,
+    "AXFrame": "{{21, 743}, {360, 20}}",
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "help": null,
+    "role": "AXStaticText",
+    "role_description": "text",
+    "type": "StaticText",
+    "custom_actions": [],
+    "AXLabel": "큰 제목과 명확한 행동, 여유 있는 간격으로 구성한 화면입니다.",
+    "subrole": null,
+    "enabled": true,
+    "content_required": false,
+    "pid": 89686,
+    "AXUniqueId": null,
+    "frame": {
+      "y": 743,
+      "width": 360,
+      "height": 20,
+      "x": 21
+    },
+    "AXValue": null
+  },
+  {
+    "title": null,
+    "role": "AXGenericElement",
+    "enabled": true,
+    "AXValue": null,
+    "help": null,
+    "AXLabel": "초록을 기록하는 하루 저장 취소",
+    "AXFrame": "{{21, 783}, {360, 44}}",
+    "role_description": "",
+    "content_required": false,
+    "traits": [
+      "Scrollable",
+      "Selected",
+      "Button"
+    ],
+    "pid": 89686,
+    "type": "GenericElement",
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "subrole": null,
+    "frame": {
+      "height": 44,
+      "x": 21,
+      "width": 360,
+      "y": 783
+    }
+  }
+]

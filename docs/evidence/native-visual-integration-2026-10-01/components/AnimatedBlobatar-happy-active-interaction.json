@@ -1,0 +1,233 @@
+[
+  {
+    "content_required": false,
+    "AXFrame": "{{0, 0}, {402, 874}}",
+    "pid": 57163,
+    "traits": [
+      "None"
+    ],
+    "enabled": true,
+    "AXValue": null,
+    "AXLabel": "HJM Native Showcase",
+    "custom_actions": [],
+    "title": null,
+    "help": null,
+    "role": "AXApplication",
+    "subrole": null,
+    "AXUniqueId": null,
+    "type": "Application",
+    "role_description": "application",
+    "frame": {
+      "width": 402,
+      "height": 874,
+      "y": 0,
+      "x": 0
+    }
+  },
+  {
+    "traits": [
+      "Scrollable",
+      "Image"
+    ],
+    "role_description": "button",
+    "AXValue": null,
+    "subrole": null,
+    "role": "AXButton",
+    "pid": 57163,
+    "AXUniqueId": null,
+    "help": null,
+    "enabled": true,
+    "custom_actions": [],
+    "AXLabel": "미리보기",
+    "type": "Button",
+    "title": null,
+    "AXFrame": "{{16, 78}, {96, 96}}",
+    "content_required": false,
+    "frame": {
+      "height": 96,
+      "y": 78,
+      "width": 96,
+      "x": 16
+    }
+  },
+  {
+    "AXFrame": "{{16, 198}, {370, 20}}",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "role": "AXStaticText",
+    "content_required": false,
+    "AXLabel": "happy",
+    "title": null,
+    "frame": {
+      "width": 370,
+      "y": 198,
+      "height": 20,
+      "x": 16
+    },
+    "custom_actions": [],
+    "pid": 57163,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "help": null,
+    "type": "StaticText",
+    "role_description": "text",
+    "enabled": true,
+    "subrole": null
+  },
+  {
+    "enabled": true,
+    "AXLabel": "다음 표정",
+    "role": "AXGenericElement",
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "help": null,
+    "subrole": null,
+    "AXFrame": "{{16, 242}, {370, 44}}",
+    "AXUniqueId": null,
+    "content_required": false,
+    "role_description": "",
+    "pid": 57163,
+    "type": "GenericElement",
+    "frame": {
+      "x": 16,
+      "width": 370,
+      "height": 44,
+      "y": 242
+    },
+    "AXValue": null,
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "subrole": null,
+    "help": null,
+    "AXValue": null,
+    "AXFrame": "{{16, 310}, {370, 44}}",
+    "content_required": false,
+    "AXUniqueId": null,
+    "enabled": true,
+    "custom_actions": [],
+    "role_description": "",
+    "frame": {
+      "y": 310,
+      "height": 44,
+      "width": 370,
+      "x": 16
+    },
+    "AXLabel": "움직임 멈추기",
+    "pid": 57163,
+    "title": null,
+    "type": "GenericElement",
+    "role": "AXGenericElement",
+    "traits": [
+      "Selected",
+      "Scrollable",
+      "Button"
+    ]
+  },
+  {
+    "title": null,
+    "AXFrame": "{{362, 759}, {24, 24}}",
+    "traits": [
+      "Scrollable"
+    ],
+    "help": null,
+    "role": "AXGenericElement",
+    "role_description": "",
+    "type": "GenericElement",
+    "custom_actions": [],
+    "AXLabel": null,
+    "subrole": null,
+    "enabled": true,
+    "content_required": false,
+    "pid": 57163,
+    "AXValue": null,
+    "AXUniqueId": null,
+    "frame": {
+      "height": 24,
+      "y": 759,
+      "x": 362,
+      "width": 24
+    }
+  },
+  {
+    "frame": {
+      "x": 6,
+      "y": 811.6666669845581,
+      "height": 17,
+      "width": 344.3333435058594
+    },
+    "enabled": true,
+    "role": "AXGenericElement",
+    "AXValue": null,
+    "help": null,
+    "AXFrame": "{{6, 811.66666698455811}, {344.33334350585938, 17}}",
+    "AXLabel": "Components/Display/Animated Blobatar/Default",
+    "role_description": "",
+    "content_required": false,
+    "traits": [
+      "Scrollable"
+    ],
+    "pid": 57163,
+    "type": "GenericElement",
+    "custom_actions": [],
+    "AXUniqueId": "mobile-menu-button",
+    "subrole": null,
+    "title": null
+  },
+  {
+    "AXUniqueId": "mobile-addons-button",
+    "frame": {
+      "x": 368,
+      "y": 806,
+      "width": 28,
+      "height": 28
+    },
+    "content_required": false,
+    "help": null,
+    "type": "Button",
+    "enabled": true,
+    "role": "AXButton",
+    "custom_actions": [],
+    "AXValue": null,
+    "role_description": "button",
+    "subrole": null,
+    "title": null,
+    "AXFrame": "{{368, 806}, {28, 28}}",
+    "pid": 57163,
+    "AXLabel": "Open addons panel",
+    "traits": [
+      "Scrollable",
+      "Button"
+    ]
+  },
+  {
+    "AXFrame": "{{10, 787.66668704152107}, {382, 48}}",
+    "AXValue": null,
+    "custom_actions": [],
+    "help": null,
+    "content_required": false,
+    "role_description": "",
+    "title": null,
+    "AXLabel": "!, Open debugger to view warnings.",
+    "AXUniqueId": null,
+    "pid": 57163,
+    "role": "AXGenericElement",
+    "enabled": true,
+    "frame": {
+      "y": 787.6666870415211,
+      "x": 10,
+      "width": 382,
+      "height": 48
+    },
+    "traits": [
+      "Scrollable"
+    ],
+    "type": "GenericElement",
+    "subrole": null
+  }
+]

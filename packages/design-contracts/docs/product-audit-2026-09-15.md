@@ -54,7 +54,7 @@ Yajalal과 Choose Window의 현재 제품은 Flutter이므로 JS renderer 소비
   dark/long-copy/large-text/rtl 환경으로 직접 실행한다.
 - Showcase 격리: `packages/react/test/showcase-style-isolation.browser.test.tsx`.
   SSR class 확인만으로 발견되지 않은 Tabs 가로 배치와 버튼 모양을 실제 browser로 검사한다.
-- Review: `Patterns/Toast layout`, 기존 Button/IconButton/Tabs/Notice story.
+- Review: `패턴/토스트 배치`, 기존 Button/IconButton/Tabs/Notice story.
 - Toast는 1280px 창의 420px 카드에서도 액션 행을 유지한다. 창 breakpoint만으로 판단하면
   실제 provider의 좁은 카드에서 큰 글자 버튼이 다시 압축되므로 grid를 카드 기본 구조로 둔다.
 - NativeProvider: `packages/react/test/native-provider-hydration.browser.test.tsx`5개와

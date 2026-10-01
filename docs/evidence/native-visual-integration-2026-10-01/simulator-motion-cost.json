@@ -1,0 +1,234 @@
+{
+  "environment": "iPhone 17 iOS 27 simulator, installed Debug app, existing Metro; macOS process CPU, not GPU or physical-device frame time",
+  "pid": 67845,
+  "samples": {
+    "blobatar-stopped": {
+      "values": [
+        {
+          "cpuPercent": 25.8,
+          "rssKiB": 846336
+        },
+        {
+          "cpuPercent": 30.2,
+          "rssKiB": 846672
+        },
+        {
+          "cpuPercent": 32.6,
+          "rssKiB": 846672
+        },
+        {
+          "cpuPercent": 31.0,
+          "rssKiB": 846720
+        },
+        {
+          "cpuPercent": 31.0,
+          "rssKiB": 847040
+        },
+        {
+          "cpuPercent": 27.9,
+          "rssKiB": 847040
+        },
+        {
+          "cpuPercent": 24.6,
+          "rssKiB": 847088
+        },
+        {
+          "cpuPercent": 20.1,
+          "rssKiB": 847104
+        }
+      ],
+      "medianCpuPercent": 29.049999999999997,
+      "maxCpuPercent": 32.6
+    },
+    "blobatar-active": {
+      "values": [
+        {
+          "cpuPercent": 29.1,
+          "rssKiB": 864992
+        },
+        {
+          "cpuPercent": 29.5,
+          "rssKiB": 865024
+        },
+        {
+          "cpuPercent": 26.1,
+          "rssKiB": 865040
+        },
+        {
+          "cpuPercent": 29.0,
+          "rssKiB": 864976
+        },
+        {
+          "cpuPercent": 33.1,
+          "rssKiB": 865008
+        },
+        {
+          "cpuPercent": 29.8,
+          "rssKiB": 865008
+        },
+        {
+          "cpuPercent": 27.4,
+          "rssKiB": 865024
+        },
+        {
+          "cpuPercent": 24.6,
+          "rssKiB": 865040
+        }
+      ],
+      "medianCpuPercent": 29.05,
+      "maxCpuPercent": 33.1
+    },
+    "blobatar-stopped-again": {
+      "values": [
+        {
+          "cpuPercent": 23.5,
+          "rssKiB": 865200
+        },
+        {
+          "cpuPercent": 29.2,
+          "rssKiB": 865200
+        },
+        {
+          "cpuPercent": 27.4,
+          "rssKiB": 865216
+        },
+        {
+          "cpuPercent": 27.9,
+          "rssKiB": 865216
+        },
+        {
+          "cpuPercent": 26.9,
+          "rssKiB": 865216
+        },
+        {
+          "cpuPercent": 27.0,
+          "rssKiB": 865216
+        },
+        {
+          "cpuPercent": 22.2,
+          "rssKiB": 865216
+        },
+        {
+          "cpuPercent": 22.6,
+          "rssKiB": 865216
+        }
+      ],
+      "medianCpuPercent": 26.95,
+      "maxCpuPercent": 29.2
+    },
+    "effects-static": {
+      "values": [
+        {
+          "cpuPercent": 1.5,
+          "rssKiB": 887952
+        },
+        {
+          "cpuPercent": 2.2,
+          "rssKiB": 887952
+        },
+        {
+          "cpuPercent": 1.7,
+          "rssKiB": 887952
+        },
+        {
+          "cpuPercent": 2.5,
+          "rssKiB": 887904
+        },
+        {
+          "cpuPercent": 2.2,
+          "rssKiB": 887856
+        },
+        {
+          "cpuPercent": 2.0,
+          "rssKiB": 887856
+        },
+        {
+          "cpuPercent": 2.0,
+          "rssKiB": 887856
+        },
+        {
+          "cpuPercent": 2.4,
+          "rssKiB": 887856
+        }
+      ],
+      "medianCpuPercent": 2.1,
+      "maxCpuPercent": 2.5
+    },
+    "effects-active": {
+      "values": [
+        {
+          "cpuPercent": 12.1,
+          "rssKiB": 889216
+        },
+        {
+          "cpuPercent": 11.2,
+          "rssKiB": 889216
+        },
+        {
+          "cpuPercent": 10.7,
+          "rssKiB": 889152
+        },
+        {
+          "cpuPercent": 12.3,
+          "rssKiB": 889152
+        },
+        {
+          "cpuPercent": 5.4,
+          "rssKiB": 889152
+        },
+        {
+          "cpuPercent": 7.6,
+          "rssKiB": 889168
+        },
+        {
+          "cpuPercent": 9.7,
+          "rssKiB": 889184
+        },
+        {
+          "cpuPercent": 5.6,
+          "rssKiB": 889184
+        }
+      ],
+      "medianCpuPercent": 10.2,
+      "maxCpuPercent": 12.3
+    },
+    "effects-background": {
+      "values": [
+        {
+          "cpuPercent": 5.9,
+          "rssKiB": 616624
+        },
+        {
+          "cpuPercent": 0.9,
+          "rssKiB": 616624
+        },
+        {
+          "cpuPercent": 0.0,
+          "rssKiB": 581328
+        },
+        {
+          "cpuPercent": 0.0,
+          "rssKiB": 581264
+        },
+        {
+          "cpuPercent": 0.0,
+          "rssKiB": 581264
+        },
+        {
+          "cpuPercent": 0.0,
+          "rssKiB": 581264
+        },
+        {
+          "cpuPercent": 0.0,
+          "rssKiB": 581264
+        },
+        {
+          "cpuPercent": 0.0,
+          "rssKiB": 566896
+        }
+      ],
+      "medianCpuPercent": 0.0,
+      "maxCpuPercent": 5.9
+    }
+  }
+}

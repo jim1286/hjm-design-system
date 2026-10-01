@@ -1,3 +1,4 @@
+import { storyLabels } from "../../../shared/story-labels.js";
 import {
   componentCatalog,
   componentIds,
@@ -63,7 +64,7 @@ export function componentStory(name: ComponentName) {
   if (!entry) throw new Error(`Unknown canonical component: ${name}`);
   const classification = getComponentStoryClassification(name);
   return {
-    name,
+    name: storyLabels[name] ?? name,
     args: { name },
     tags: [`hjm-${classification}`],
     parameters: {
@@ -83,7 +84,9 @@ export function componentStoryId(
   if (!Object.hasOwn(componentIds, entry.name)) {
     throw new Error(`Unknown canonical component: ${entry.name}`);
   }
-  return `components-${sectionIds[entry.category]}--${componentIds[entry.name as ComponentName]}`;
+  // The CSF export is AuthScreenLayout; the contract id omits Layout and is not a story URL.
+  const storyExportId = entry.name === "AuthScreenLayout" ? "auth-screen-layout" : componentIds[entry.name as ComponentName];
+  return `components-${sectionIds[entry.category]}--${storyExportId}`;
 }
 
 export function componentStoryHref(

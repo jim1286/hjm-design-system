@@ -13,7 +13,11 @@ function CalendarPreview() {
     <Text emphasis="strong">{selected ?? "날짜를 선택해 주세요"}</Text><Text tone="muted">선택한 날짜의 기록을 여기에서 확인해요.</Text>
   </Stack>;
 }
-const meta = { title: "Patterns/Calendar", component: CalendarPreview } satisfies Meta<typeof CalendarPreview>;
+const meta = { title: "배포/컴포넌트/입력/달력", parameters: { hjm: { componentIds: ["calendar"] } }, component: CalendarPreview } satisfies Meta<typeof CalendarPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
-export const Records: Story = {};
+export const Records: Story = { name: "기록",};
+
+export const Default: Story = { name: "기본",};
+export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
+export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };

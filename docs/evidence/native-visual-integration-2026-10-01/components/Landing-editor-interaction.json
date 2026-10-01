@@ -1,0 +1,159 @@
+[
+  {
+    "enabled": true,
+    "AXLabel": "HJM Native Showcase",
+    "role": "AXApplication",
+    "traits": [
+      "None"
+    ],
+    "help": null,
+    "subrole": null,
+    "AXFrame": "{{0, 0}, {402, 874}}",
+    "AXUniqueId": null,
+    "content_required": false,
+    "role_description": "application",
+    "pid": 67845,
+    "type": "Application",
+    "frame": {
+      "x": 0,
+      "y": 0,
+      "height": 874,
+      "width": 402
+    },
+    "AXValue": null,
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "subrole": null,
+    "help": null,
+    "AXValue": null,
+    "AXFrame": "{{337, 692.13512420654297}, {44, 44}}",
+    "content_required": false,
+    "AXUniqueId": null,
+    "enabled": true,
+    "custom_actions": [],
+    "role_description": "button",
+    "frame": {
+      "width": 44,
+      "height": 44,
+      "y": 692.135124206543,
+      "x": 337
+    },
+    "AXLabel": "닫기",
+    "pid": 67845,
+    "title": null,
+    "type": "Button",
+    "role": "AXButton",
+    "traits": [
+      "Scrollable",
+      "Button"
+    ]
+  },
+  {
+    "AXFrame": "{{21, 701.13512420654297}, {304, 26}}",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "role": "AXHeading",
+    "content_required": false,
+    "AXLabel": "첫 기록을 남겨요",
+    "title": null,
+    "frame": {
+      "height": 26,
+      "y": 701.135124206543,
+      "width": 304,
+      "x": 21
+    },
+    "custom_actions": [],
+    "pid": 67845,
+    "traits": [
+      "Header",
+      "Scrollable",
+      "StaticText"
+    ],
+    "help": null,
+    "type": "Heading",
+    "role_description": "heading",
+    "enabled": true,
+    "subrole": null
+  },
+  {
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "role_description": "text",
+    "AXValue": null,
+    "subrole": null,
+    "role": "AXStaticText",
+    "pid": 67845,
+    "AXUniqueId": null,
+    "help": null,
+    "enabled": true,
+    "custom_actions": [],
+    "AXLabel": "오늘의 한 줄",
+    "type": "StaticText",
+    "title": null,
+    "AXFrame": "{{21, 752.13512420654297}, {360, 20}}",
+    "content_required": false,
+    "frame": {
+      "x": 21,
+      "width": 360,
+      "height": 20,
+      "y": 752.135124206543
+    }
+  },
+  {
+    "content_required": false,
+    "AXFrame": "{{38, 781.13512420654297}, {326, 44}}",
+    "pid": 67845,
+    "traits": [
+      "Scrollable",
+      "TextEntry",
+      "TextOperationsAvailable"
+    ],
+    "enabled": true,
+    "AXValue": "",
+    "AXLabel": "오늘의 한 줄",
+    "custom_actions": [],
+    "title": null,
+    "help": null,
+    "role": "AXTextField",
+    "subrole": null,
+    "AXUniqueId": null,
+    "type": "TextField",
+    "role_description": "text field",
+    "frame": {
+      "height": 44,
+      "x": 38,
+      "width": 326,
+      "y": 781.135124206543
+    }
+  },
+  {
+    "title": null,
+    "AXFrame": "{{21, 821.37283706665039}, {360, 44}}",
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "help": null,
+    "role": "AXButton",
+    "role_description": "button",
+    "type": "Button",
+    "custom_actions": [],
+    "AXLabel": "미리보기에 추가",
+    "subrole": null,
+    "enabled": true,
+    "content_required": false,
+    "pid": 67845,
+    "AXValue": null,
+    "AXUniqueId": null,
+    "frame": {
+      "height": 44,
+      "y": 821.3728370666504,
+      "x": 21,
+      "width": 360
+    }
+  }
+]

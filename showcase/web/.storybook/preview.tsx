@@ -7,32 +7,32 @@ import "../src/showcase.css";
 const preview: Preview = {
   globalTypes: {
     theme: {
-      name: "Theme",
-      description: "HJM semantic color theme",
+      name: "테마",
+      description: "디자인 시스템 색상 테마",
       defaultValue: "light",
       toolbar: {
         icon: "paintbrush",
         items: [
-          { value: "light", title: "Light" },
-          { value: "dark", title: "Dark" },
+          { value: "light", title: "밝은 테마" },
+          { value: "dark", title: "어두운 테마" },
         ],
         dynamicTitle: true,
       },
     },
     direction: {
-      name: "Direction",
+      name: "글 읽는 방향",
       defaultValue: "ltr",
       toolbar: {
         icon: "transfer",
         items: [
-          { value: "ltr", title: "LTR" },
-          { value: "rtl", title: "RTL" },
+          { value: "ltr", title: "왼쪽에서 오른쪽" },
+          { value: "rtl", title: "오른쪽에서 왼쪽" },
         ],
         dynamicTitle: true,
       },
     },
     textScale: {
-      name: "Text scale",
+      name: "글자 크기",
       defaultValue: "1",
       toolbar: {
         icon: "paragraph",
@@ -45,13 +45,13 @@ const preview: Preview = {
       },
     },
     motion: {
-      name: "Motion",
+      name: "움직임",
       defaultValue: "full",
       toolbar: {
         icon: "lightning",
         items: [
-          { value: "full", title: "Full motion" },
-          { value: "reduced", title: "Reduced motion" },
+          { value: "full", title: "기본 움직임" },
+          { value: "reduced", title: "동작 줄이기" },
         ],
         dynamicTitle: true,
       },
@@ -82,26 +82,9 @@ const preview: Preview = {
     a11y: { test: "error" },
     options: {
       storySort: {
-        order: [
-          "Home",
-          "Foundations",
-          "Components",
-          [
-            "Overview",
-            "Foundation",
-            "Layout",
-            "Actions",
-            "Inputs",
-            "Navigation",
-            "Data Display",
-            "Feedback",
-            "Overlays",
-            "Infrastructure",
-            "Catalog",
-          ],
-          "Patterns",
-          "Accessibility",
-        ],
+        // Share approval roots and conceptual layers with Native (STORYBOOK_NAVIGATION.md);
+        // source/gallery-based grouping hid the difference between a control and a whole screen.
+        order: ["배포", ["토큰", "컴포넌트", ["개요", "전체 목록", "글자와 아이콘", "레이아웃", "동작", "입력", "탐색", "데이터 표시", "상태와 알림", "오버레이", "시각 효과", "기반 기능"], "구성", "화면"], "실험", ["토큰", "컴포넌트", ["개요", "전체 목록", "글자와 아이콘", "레이아웃", "동작", "입력", "탐색", "데이터 표시", "상태와 알림", "오버레이", "시각 효과", "기반 기능"], "구성", "화면"], "*"],
       },
     },
   },

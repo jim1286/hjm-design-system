@@ -32,7 +32,7 @@ export type ToastDescriptor = Readonly<{
     priority?: ToastAnnouncementPriority;
     /** Optional localized announcement when visible copy needs extra context. */
     announcement?: string;
-    /** `null` is persistent. Values below the accessible minimum are clamped. */
+    /** `null` persists; short durations clamp to the configured floor. */
     durationMs?: number | null;
     action?: ToastActionDescriptor;
     /** Required localized name for the icon-only close affordance. */
@@ -63,8 +63,8 @@ export type ToastAnnouncement = Readonly<{
     priority: ToastAnnouncementPriority;
 }>;
 export declare const toastBehaviorDefaults: {
-    readonly durationMs: 5000;
-    readonly minimumDurationMs: 5000;
+    readonly durationMs: 3000;
+    readonly minimumDurationMs: 3000;
     readonly priority: "normal";
     readonly dismissOnAction: true;
     readonly maxVisible: 1;
@@ -75,7 +75,7 @@ export declare const toastBehaviorDefaults: {
 };
 /** Rejects ambiguous identity and inaccessible copy before anything is queued. */
 export declare function validateToastDescriptor(descriptor: ToastDescriptor): void;
-/** Actionable notifications persist by default; every timer has a five-second floor. */
+/** Actions persist by default; timed notices follow the shared 3-second floor. */
 export declare function resolveToastDuration(descriptor: ToastDescriptor): number | null;
 export declare function resolveToastDescriptor(descriptor: ToastDescriptor): ResolvedToastDescriptor;
 export declare function resolveToastAnnouncement(descriptor: ToastDescriptor): ToastAnnouncement;

@@ -1,0 +1,6 @@
+import{act,create,type ReactTestRenderer}from"react-test-renderer";import{expect,it}from"vitest";import{GridReveal}from"../src/grid-reveal.js";import{HjmNativeProvider}from"../src/provider.js";import{Text}from"../src/primitives.js";import{startedAnimatedTimings}from"./react-native.mock.js";
+(globalThis as {IS_REACT_ACT_ENVIRONMENT?:boolean}).IS_REACT_ACT_ENVIRONMENT=true;
+it("keeps motion bounded and bypasses masks for reduced motion and inactive hosts",()=>{
+ let tree!:ReactTestRenderer;const element=(ready:boolean,reduced=false,active=true)=><HjmNativeProvider reducedMotion={reduced}><GridReveal ready={ready} active={active}><Text>Image host</Text></GridReveal></HjmNativeProvider>;
+ try{startedAnimatedTimings.length=0;act(()=>{tree=create(element(false));});expect(startedAnimatedTimings).toHaveLength(0);act(()=>tree.update(element(true)));expect(startedAnimatedTimings).toHaveLength(16);startedAnimatedTimings.length=0;act(()=>tree.update(element(true,true)));act(()=>tree.update(element(true,false,false)));expect(startedAnimatedTimings).toHaveLength(0);expect(tree.root.findAll(node=>node.props.importantForAccessibility==="no-hide-descendants").length).toBeGreaterThan(0);}finally{act(()=>tree.unmount());}
+});

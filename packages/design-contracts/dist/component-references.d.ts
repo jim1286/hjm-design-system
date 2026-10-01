@@ -387,12 +387,6 @@ export type ReferenceCoverageSummary = Readonly<{
     partiallyMature: number;
     /** No HJM target has moved beyond planned maturity. */
     plannedOnly: number;
-    /** @deprecated Status maturity is not proof that a preview renderer exists. */
-    fullyPreviewable: number;
-    /** @deprecated Status maturity is not proof that a preview renderer exists. */
-    partiallyPreviewable: number;
-    /** @deprecated Use `plannedOnly`. */
-    contractOnly: number;
     relationships: Readonly<Record<ReferenceRelationship, number>>;
 }>;
 export declare function getAntDesignReferencesFor(componentNameOrId: string): readonly AntDesignReferenceComponent[];

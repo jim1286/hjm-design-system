@@ -1,0 +1,261 @@
+[
+  {
+    "subrole": null,
+    "help": null,
+    "AXValue": null,
+    "AXFrame": "{{0, 0}, {402, 874}}",
+    "content_required": false,
+    "AXUniqueId": null,
+    "enabled": true,
+    "custom_actions": [],
+    "role_description": "application",
+    "frame": {
+      "height": 874,
+      "x": 0,
+      "y": 0,
+      "width": 402
+    },
+    "AXLabel": "HJM Native Showcase",
+    "pid": 63103,
+    "title": null,
+    "type": "Application",
+    "role": "AXApplication",
+    "traits": [
+      "None"
+    ]
+  },
+  {
+    "enabled": true,
+    "AXLabel": "닫기",
+    "role": "AXButton",
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "help": null,
+    "subrole": null,
+    "AXFrame": "{{337, 557}, {44, 44}}",
+    "AXUniqueId": null,
+    "content_required": false,
+    "role_description": "button",
+    "pid": 63103,
+    "type": "Button",
+    "frame": {
+      "height": 44,
+      "x": 337,
+      "width": 44,
+      "y": 557
+    },
+    "AXValue": null,
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "AXFrame": "{{21, 566}, {304, 26}}",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "role": "AXHeading",
+    "content_required": false,
+    "AXLabel": "함께하는 공간",
+    "title": null,
+    "frame": {
+      "x": 21,
+      "y": 566,
+      "height": 26,
+      "width": 304
+    },
+    "custom_actions": [],
+    "pid": 63103,
+    "traits": [
+      "Header",
+      "Scrollable",
+      "StaticText"
+    ],
+    "help": null,
+    "type": "Heading",
+    "role_description": "heading",
+    "enabled": true,
+    "subrole": null
+  },
+  {
+    "traits": [
+      "Scrollable"
+    ],
+    "role_description": "button",
+    "AXValue": null,
+    "subrole": null,
+    "role": "AXButton",
+    "pid": 63103,
+    "AXUniqueId": null,
+    "help": "진행 중",
+    "enabled": true,
+    "custom_actions": [],
+    "AXLabel": "3단계 중 1, 초대",
+    "type": "Button",
+    "title": null,
+    "AXFrame": "{{21, 617}, {114.66667175292969, 50}}",
+    "content_required": false,
+    "frame": {
+      "x": 21,
+      "y": 617,
+      "width": 114.66667175292969,
+      "height": 50
+    }
+  },
+  {
+    "content_required": false,
+    "AXFrame": "{{143.66666412353516, 617}, {114.66667175292969, 50}}",
+    "pid": 63103,
+    "traits": [
+      "Scrollable"
+    ],
+    "enabled": true,
+    "AXValue": null,
+    "AXLabel": "3단계 중 2, 설정",
+    "custom_actions": [],
+    "title": null,
+    "help": "대기",
+    "role": "AXGenericElement",
+    "subrole": null,
+    "AXUniqueId": null,
+    "type": "GenericElement",
+    "role_description": "",
+    "frame": {
+      "y": 617,
+      "x": 143.66666412353516,
+      "width": 114.66667175292969,
+      "height": 50
+    }
+  },
+  {
+    "title": null,
+    "AXFrame": "{{266.33332824707031, 617}, {114.66665649414062, 50}}",
+    "traits": [
+      "Scrollable"
+    ],
+    "help": "대기",
+    "role": "AXButton",
+    "role_description": "button",
+    "type": "Button",
+    "custom_actions": [],
+    "AXLabel": "3단계 중 3, 확인",
+    "subrole": null,
+    "enabled": true,
+    "content_required": false,
+    "pid": 63103,
+    "AXValue": null,
+    "AXUniqueId": null,
+    "frame": {
+      "y": 617,
+      "x": 266.3333282470703,
+      "height": 50,
+      "width": 114.66665649414062
+    }
+  },
+  {
+    "frame": {
+      "height": 32,
+      "x": 21,
+      "y": 691,
+      "width": 360
+    },
+    "enabled": true,
+    "role": "AXHeading",
+    "AXValue": null,
+    "help": null,
+    "AXFrame": "{{21, 691}, {360, 32}}",
+    "AXLabel": "누구와 함께할까요?",
+    "role_description": "heading",
+    "content_required": false,
+    "traits": [
+      "Header",
+      "Scrollable",
+      "StaticText"
+    ],
+    "pid": 63103,
+    "type": "Heading",
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "subrole": null,
+    "title": null
+  },
+  {
+    "AXFrame": "{{21, 739}, {360, 20}}",
+    "AXValue": null,
+    "role": "AXStaticText",
+    "AXLabel": "가족이나 가까운 사람과 기록을 나눌 공간을 준비해요.",
+    "custom_actions": [],
+    "content_required": false,
+    "subrole": null,
+    "AXUniqueId": null,
+    "title": null,
+    "type": "StaticText",
+    "enabled": true,
+    "pid": 63103,
+    "frame": {
+      "x": 21,
+      "y": 739,
+      "width": 360,
+      "height": 20
+    },
+    "help": null,
+    "role_description": "text",
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ]
+  },
+  {
+    "subrole": null,
+    "enabled": false,
+    "role_description": "button",
+    "pid": 63103,
+    "AXValue": null,
+    "type": "Button",
+    "custom_actions": [],
+    "content_required": false,
+    "AXFrame": "{{21, 783}, {56.333335876464844, 44}}",
+    "role": "AXButton",
+    "AXUniqueId": null,
+    "title": null,
+    "AXLabel": "이전",
+    "help": null,
+    "traits": [
+      "NotEnabled",
+      "Scrollable",
+      "Button"
+    ],
+    "frame": {
+      "x": 21,
+      "y": 783,
+      "width": 56.333335876464844,
+      "height": 44
+    }
+  },
+  {
+    "frame": {
+      "width": 56.333335876464844,
+      "height": 44,
+      "x": 89.33333587646484,
+      "y": 783
+    },
+    "role": "AXButton",
+    "AXUniqueId": null,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "pid": 63103,
+    "help": null,
+    "role_description": "button",
+    "title": null,
+    "enabled": true,
+    "AXFrame": "{{89.333335876464844, 783}, {56.333335876464844, 44}}",
+    "custom_actions": [],
+    "AXValue": null,
+    "AXLabel": "계속",
+    "type": "Button",
+    "subrole": null,
+    "content_required": false
+  }
+]

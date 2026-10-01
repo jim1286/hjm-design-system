@@ -44,7 +44,7 @@ afterEach(async () => {
 });
 
 describe("generated Changesets release commit gate", () => {
-  it("accepts the authored fixed minor bump and rejects an escalated major", async () => {
+  it("accepts a maintainer-chosen version while checking fixed-package synchronization", async () => {
     const directory = await mkdtemp(join(tmpdir(), "hjm-release-commit-test-"));
     temporaryDirectories.push(directory);
     await mkdir(join(directory, "scripts"), { recursive: true });
@@ -98,14 +98,14 @@ describe("generated Changesets release commit gate", () => {
     }
     await writeSynchronizedVersions(directory, "1.0.0");
     git(directory, "add", "-A");
-    git(directory, "commit", "-m", "unexpected major escalation");
+    git(directory, "commit", "-m", "maintainer-chosen version");
 
     expect(() =>
       execFileSync(process.execPath, ["scripts/check-release-commit.mjs", baseRevision], {
         cwd: directory,
         stdio: "pipe",
       }),
-    ).toThrow(/Command failed/);
+    ).not.toThrow();
   });
 });
 

@@ -57,8 +57,8 @@ export function TourPreview() {
   );
 }
 
-const meta = { title: "Patterns/Tour", component: TourPreview } satisfies Meta<typeof TourPreview>;
+const meta = { includeStories: ["Onboarding","LargeText"], id: "patterns-tour", title: "배포/컴포넌트/오버레이/사용 안내 둘러보기", component: TourPreview } satisfies Meta<typeof TourPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
-export const Onboarding: Story = {};
-export const LargeText: Story = { globals: { textScale: "2" } };
+export const Onboarding: Story = { name: "온보딩",};
+export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };

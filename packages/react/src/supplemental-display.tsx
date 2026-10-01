@@ -86,7 +86,10 @@ const iconPaths = {
 export type IconProps = Omit<
   SVGAttributes<SVGSVGElement>,
   "children" | "color"
-> & IconDescriptor;
+> & IconDescriptor & Readonly<{
+  /** Optional glyph inside the existing 24-unit SVG frame; HJM owns semantics. */
+  renderGlyph?: (props: Readonly<{ name: SemanticIconName; size: number; color: string; strokeWidth: number }>) => ReactNode;
+}>;
 
 export const Icon = forwardRef<SVGSVGElement, IconProps>(function Icon(
   {
@@ -97,6 +100,7 @@ export const Icon = forwardRef<SVGSVGElement, IconProps>(function Icon(
     directionality,
     decorative,
     accessibilityLabel,
+    renderGlyph,
     className,
     style,
     ...props
@@ -143,7 +147,7 @@ export const Icon = forwardRef<SVGSVGElement, IconProps>(function Icon(
       focusable="false"
       style={style}
     >
-      <path d={iconPaths[descriptor.name]} />
+      {renderGlyph?.({ name: descriptor.name, size: 24, color: "currentColor", strokeWidth: iconRecipe.weights[descriptor.weight] }) ?? <path d={iconPaths[descriptor.name]} />}
     </svg>
   );
 });

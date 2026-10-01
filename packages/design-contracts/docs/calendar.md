@@ -15,7 +15,7 @@
 
 과거 Yajalal 조사에서는 월 격자가 날짜 레일로 바뀌어 살아 있는 Calendar 소비 화면이 없었다.
 이번 구현의 근거는 React/RN 컴포넌트를 채우라는 명시 요청이며, 검증 화면은 Showcase의
-`Patterns/Calendar` 기록 탐색이다. 이를 Yajalal 채택으로 기록하지 않는다.
+`컴포넌트/입력/Calendar` 기록 탐색이다. 이를 Yajalal 채택으로 기록하지 않는다.
 
 ## 경계
 

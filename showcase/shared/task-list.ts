@@ -1,0 +1,3 @@
+export const initialTasks=[{id:'read',label:'오늘의 아이디어 정리',description:'떠오른 생각을 짧게 기록해요.',completed:true},{id:'sketch',label:'첫 화면 그려보기',completed:false},{id:'share',label:'함께 볼 사람에게 공유',completed:false}];
+// Shared structural copy keeps both showcase hosts independent of workspace module resolution.
+export const taskLabels={instructions:'손잡이를 끌거나 이동 버튼으로 순서를 바꿔요.',dragStart:(item:{label:string})=>`${item.label} 이동`,dragCancel:'이동 취소',handle:(item:{label:string})=>`${item.label} 순서 변경`,previous:(item:{label:string})=>`${item.label} 위로`,next:(item:{label:string})=>`${item.label} 아래로`,position:(item:{label:string},position:number,total:number)=>`${item.label}, ${total}개 중 ${position}번째`};

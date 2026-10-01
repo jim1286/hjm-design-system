@@ -343,7 +343,7 @@ describe("Native product renderer gaps", () => {
       { reducedMotion: false },
     );
     act(() => {
-      controller?.show({
+      controller?.publish({
         closeLabel: "알림 닫기",
         description: "저장했습니다",
         durationMs: null,
@@ -399,7 +399,7 @@ describe("Native product renderer gaps", () => {
       { direction: "rtl", reducedMotion: true },
     );
     act(() => {
-      controller?.show({
+      controller?.publish({
         closeLabel: "알림 닫기",
         description: "완료",
         durationMs: null,

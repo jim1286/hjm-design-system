@@ -43,7 +43,7 @@ LTR/RTL, light/dark에서 hit target, 글자 범위, overflow, 제목 분리와 
 검증한다. ref/heading/link, busy 중 중복 실행 방지와 폭/focus 보존, sticky footer 위
 마지막 본문 행동의 도달 가능성도 검사한다. 기본 SSR renderer fixture를 추가한다.
 
-`Patterns/Notification settings`는 Web/RN에서 동일 문구·선택·저장 상태를 합성한다.
+`패턴/알림 설정`는 Web/RN에서 동일 문구·선택·저장 상태를 합성한다.
 행 제목과 스위치 문구가 중복되면 `labelVisibility="hidden"`을 사용한다. `label`은
 계속 필수이며 Web의 visually-hidden 텍스트와 Native의 accessibilityLabel로 남는다.
 Web List의 indented 구분선은 행 margin이 아닌 별도 선으로 그린다. 320px 조합에서

@@ -5,5 +5,5 @@ export type ThinkingOrbProps = ThinkingOrbOptions & Readonly<{
     testID?: string;
 }>;
 /** Skia is isolated to this entry; hosts must forward navigation/list visibility via active. */
-export declare function ThinkingOrb({ state, size, label, speed, paused, active, style, testID }: ThinkingOrbProps): import("react").JSX.Element;
+export declare function ThinkingOrb({ state, appearance, size, label, speed, paused, active, style, testID }: ThinkingOrbProps): import("react").JSX.Element;
 //# sourceMappingURL=thinking-orb.d.ts.map

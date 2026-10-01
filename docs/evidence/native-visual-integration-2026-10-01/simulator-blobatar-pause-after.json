@@ -1,0 +1,120 @@
+{
+  "environment": "iPhone 17 iOS 27 simulator, installed Debug app, existing Metro; macOS process CPU, not GPU or physical-device frame time",
+  "pid": 67845,
+  "samples": {
+    "blobatar-stopped": {
+      "values": [
+        {
+          "cpuPercent": 1.3,
+          "rssKiB": 489696
+        },
+        {
+          "cpuPercent": 1.9,
+          "rssKiB": 489696
+        },
+        {
+          "cpuPercent": 2.2,
+          "rssKiB": 489600
+        },
+        {
+          "cpuPercent": 2.6,
+          "rssKiB": 489568
+        },
+        {
+          "cpuPercent": 2.6,
+          "rssKiB": 489600
+        },
+        {
+          "cpuPercent": 2.2,
+          "rssKiB": 489648
+        },
+        {
+          "cpuPercent": 1.8,
+          "rssKiB": 489696
+        },
+        {
+          "cpuPercent": 1.0,
+          "rssKiB": 489744
+        }
+      ],
+      "medianCpuPercent": 2.05,
+      "maxCpuPercent": 2.6
+    },
+    "blobatar-active": {
+      "values": [
+        {
+          "cpuPercent": 24.0,
+          "rssKiB": 501536
+        },
+        {
+          "cpuPercent": 22.5,
+          "rssKiB": 501392
+        },
+        {
+          "cpuPercent": 22.3,
+          "rssKiB": 501376
+        },
+        {
+          "cpuPercent": 32.5,
+          "rssKiB": 501488
+        },
+        {
+          "cpuPercent": 34.0,
+          "rssKiB": 501440
+        },
+        {
+          "cpuPercent": 35.5,
+          "rssKiB": 501456
+        },
+        {
+          "cpuPercent": 24.1,
+          "rssKiB": 501472
+        },
+        {
+          "cpuPercent": 23.2,
+          "rssKiB": 501504
+        }
+      ],
+      "medianCpuPercent": 24.05,
+      "maxCpuPercent": 35.5
+    },
+    "blobatar-stopped-again": {
+      "values": [
+        {
+          "cpuPercent": 1.8,
+          "rssKiB": 503584
+        },
+        {
+          "cpuPercent": 2.7,
+          "rssKiB": 503584
+        },
+        {
+          "cpuPercent": 2.7,
+          "rssKiB": 503584
+        },
+        {
+          "cpuPercent": 2.7,
+          "rssKiB": 503600
+        },
+        {
+          "cpuPercent": 1.5,
+          "rssKiB": 503568
+        },
+        {
+          "cpuPercent": 2.6,
+          "rssKiB": 503600
+        },
+        {
+          "cpuPercent": 1.2,
+          "rssKiB": 503616
+        },
+        {
+          "cpuPercent": 0.7,
+          "rssKiB": 503632
+        }
+      ],
+      "medianCpuPercent": 2.2,
+      "maxCpuPercent": 2.7
+    }
+  }
+}

@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { StyleSheet, View, ScrollView } from "react-native";
 import { Text } from "../src/primitives.js";
 import { FloatingActionButton, useFloatingActionButtonScroll } from "../src/floating-action-button.js";
-import { Button } from "../src/actions.js";
+import { RecipeButton as Button } from "../src/internal/recipe-button.js";
 import { HjmNativeProvider } from "../src/provider.js";
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;

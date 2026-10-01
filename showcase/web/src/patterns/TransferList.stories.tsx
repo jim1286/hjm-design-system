@@ -76,9 +76,9 @@ export function MentionsPreview() {
   );
 }
 
-const meta = { title: "Patterns/TransferList", component: TransferListPreview } satisfies Meta<typeof TransferListPreview>;
+const meta = { includeStories: ["MovingRecords","MentionsInWriting","LargeText"], id: "patterns-transferlist", title: "배포/컴포넌트/입력/목록 간 항목 이동", component: TransferListPreview } satisfies Meta<typeof TransferListPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
-export const MovingRecords: Story = {};
-export const MentionsInWriting: Story = { render: () => <MentionsPreview /> };
-export const LargeText: Story = { globals: { textScale: "2" } };
+export const MovingRecords: Story = { name: "기록 이동",};
+export const MentionsInWriting: Story = { name: "작성 중 사용자 언급", render: () => <MentionsPreview /> };
+export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };

@@ -1,0 +1,704 @@
+[
+  {
+    "frame": {
+      "x": 0,
+      "y": 0,
+      "width": 402,
+      "height": 874
+    },
+    "enabled": true,
+    "role": "AXApplication",
+    "AXValue": null,
+    "help": null,
+    "AXFrame": "{{0, 0}, {402, 874}}",
+    "AXLabel": "HJM Native Showcase",
+    "role_description": "application",
+    "content_required": false,
+    "traits": [
+      "None"
+    ],
+    "pid": 63103,
+    "type": "Application",
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "subrole": null,
+    "title": null
+  },
+  {
+    "title": null,
+    "AXFrame": "{{36, 98}, {330, 64}}",
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "help": null,
+    "role": "AXStaticText",
+    "role_description": "text",
+    "type": "StaticText",
+    "custom_actions": [],
+    "AXLabel": "서체 작업실",
+    "subrole": null,
+    "enabled": true,
+    "content_required": false,
+    "pid": 63103,
+    "AXValue": null,
+    "AXUniqueId": null,
+    "frame": {
+      "width": 330,
+      "height": 64,
+      "x": 36,
+      "y": 98
+    }
+  },
+  {
+    "content_required": false,
+    "AXFrame": "{{36, 186}, {330, 80}}",
+    "pid": 63103,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "enabled": true,
+    "AXValue": null,
+    "AXLabel": "한글·English·숫자와 긴 문장을 같은 크기에서 비교해요.",
+    "custom_actions": [],
+    "title": null,
+    "help": null,
+    "role": "AXStaticText",
+    "subrole": null,
+    "AXUniqueId": null,
+    "type": "StaticText",
+    "role_description": "text",
+    "frame": {
+      "height": 80,
+      "x": 36,
+      "y": 186,
+      "width": 330
+    }
+  },
+  {
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "role_description": "text",
+    "AXValue": null,
+    "subrole": null,
+    "role": "AXStaticText",
+    "pid": 63103,
+    "AXUniqueId": null,
+    "help": null,
+    "enabled": true,
+    "custom_actions": [],
+    "AXLabel": "폰트 파일 주소",
+    "type": "StaticText",
+    "title": null,
+    "AXFrame": "{{36, 290}, {330, 40}}",
+    "content_required": false,
+    "frame": {
+      "y": 290,
+      "width": 330,
+      "height": 40,
+      "x": 36
+    }
+  },
+  {
+    "AXFrame": "{{53, 339}, {296, 64}}",
+    "AXUniqueId": null,
+    "AXValue": "",
+    "role": "AXTextField",
+    "content_required": false,
+    "AXLabel": "폰트 파일 주소",
+    "title": null,
+    "frame": {
+      "width": 296,
+      "y": 339,
+      "height": 64,
+      "x": 53
+    },
+    "custom_actions": [],
+    "pid": 63103,
+    "traits": [
+      "Scrollable",
+      "TextEntry",
+      "TextOperationsAvailable"
+    ],
+    "help": null,
+    "type": "TextField",
+    "role_description": "search text field",
+    "enabled": true,
+    "subrole": "AXSearchField"
+  },
+  {
+    "enabled": true,
+    "AXLabel": "사용 권한이 있는 OTF·TTF 파일의 주소 또는 이 기기의 파일 주소를 입력하세요.",
+    "role": "AXStaticText",
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "help": null,
+    "subrole": null,
+    "AXFrame": "{{36, 428}, {330, 120}}",
+    "AXUniqueId": null,
+    "content_required": false,
+    "role_description": "text",
+    "pid": 63103,
+    "type": "StaticText",
+    "frame": {
+      "y": 428,
+      "x": 36,
+      "width": 330,
+      "height": 120
+    },
+    "AXValue": null,
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "subrole": null,
+    "help": null,
+    "AXValue": null,
+    "AXFrame": "{{36, 572}, {330, 44}}",
+    "content_required": false,
+    "AXUniqueId": null,
+    "enabled": true,
+    "custom_actions": [],
+    "role_description": "image",
+    "frame": {
+      "height": 44,
+      "y": 572,
+      "x": 36,
+      "width": 330
+    },
+    "AXLabel": "서체 불러오기",
+    "pid": 63103,
+    "title": null,
+    "type": "Image",
+    "role": "AXImage",
+    "traits": [
+      "Scrollable",
+      "Button"
+    ]
+  },
+  {
+    "AXLabel": "비교할 서체를 선택해 주세요.",
+    "role_description": "text",
+    "AXValue": null,
+    "AXUniqueId": null,
+    "title": null,
+    "AXFrame": "{{36, 640}, {330, 40}}",
+    "subrole": null,
+    "frame": {
+      "height": 40,
+      "x": 36,
+      "width": 330,
+      "y": 640
+    },
+    "help": null,
+    "custom_actions": [],
+    "type": "StaticText",
+    "role": "AXStaticText",
+    "pid": 63103,
+    "enabled": true,
+    "content_required": false,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ]
+  },
+  {
+    "AXValue": null,
+    "role_description": "text",
+    "subrole": null,
+    "help": null,
+    "pid": 63103,
+    "AXLabel": "서체 출처",
+    "frame": {
+      "x": 36,
+      "width": 330,
+      "height": 40,
+      "y": 704
+    },
+    "content_required": false,
+    "AXUniqueId": null,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "enabled": true,
+    "role": "AXStaticText",
+    "AXFrame": "{{36, 704}, {330, 40}}",
+    "title": null,
+    "type": "StaticText",
+    "custom_actions": []
+  },
+  {
+    "custom_actions": [],
+    "traits": [
+      "Scrollable",
+      "TextEntry",
+      "TextOperationsAvailable"
+    ],
+    "content_required": false,
+    "title": null,
+    "type": "TextField",
+    "AXLabel": "서체 출처",
+    "AXFrame": "{{53, 753}, {296, 64}}",
+    "enabled": true,
+    "pid": 63103,
+    "AXValue": "",
+    "frame": {
+      "height": 64,
+      "y": 753,
+      "width": 296,
+      "x": 53
+    },
+    "role_description": "text field",
+    "subrole": null,
+    "role": "AXTextField",
+    "help": null,
+    "AXUniqueId": null
+  },
+  {
+    "pid": 63103,
+    "help": null,
+    "custom_actions": [],
+    "role": "AXStaticText",
+    "subrole": null,
+    "AXFrame": "{{36, 842}, {330, 40}}",
+    "frame": {
+      "width": 330,
+      "x": 36,
+      "y": 842,
+      "height": 40
+    },
+    "role_description": "text",
+    "content_required": false,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "AXUniqueId": null,
+    "AXLabel": "라이선스 문서 주소",
+    "enabled": true,
+    "title": null,
+    "AXValue": null,
+    "type": "StaticText"
+  },
+  {
+    "AXValue": "",
+    "type": "TextField",
+    "AXFrame": "{{53, 891}, {296, 64}}",
+    "subrole": null,
+    "traits": [
+      "Scrollable",
+      "TextEntry",
+      "TextOperationsAvailable"
+    ],
+    "role_description": "text field",
+    "pid": 63103,
+    "custom_actions": [],
+    "content_required": false,
+    "AXUniqueId": null,
+    "frame": {
+      "x": 53,
+      "y": 891,
+      "height": 64,
+      "width": 296
+    },
+    "title": null,
+    "enabled": true,
+    "help": null,
+    "AXLabel": "라이선스 문서 주소",
+    "role": "AXTextField"
+  },
+  {
+    "role": "AXStaticText",
+    "content_required": false,
+    "AXValue": null,
+    "AXUniqueId": null,
+    "title": null,
+    "help": null,
+    "frame": {
+      "height": 40,
+      "x": 57,
+      "width": 288,
+      "y": 1001
+    },
+    "subrole": null,
+    "AXLabel": "기본 서체",
+    "enabled": true,
+    "pid": 63103,
+    "AXFrame": "{{57, 1001}, {288, 40}}",
+    "role_description": "text",
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "type": "StaticText",
+    "custom_actions": []
+  },
+  {
+    "role": "AXStaticText",
+    "custom_actions": [],
+    "enabled": true,
+    "AXLabel": "작은 기록이 만드는 긴 이야기 — A quiet moment, 2026",
+    "frame": {
+      "height": 320,
+      "y": 1057,
+      "width": 288,
+      "x": 57
+    },
+    "pid": 63103,
+    "help": null,
+    "AXFrame": "{{57, 1057}, {288, 320}}",
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "AXValue": null,
+    "type": "StaticText",
+    "content_required": false,
+    "AXUniqueId": null,
+    "title": null,
+    "role_description": "text",
+    "subrole": null
+  },
+  {
+    "custom_actions": [],
+    "pid": 63103,
+    "role_description": "text",
+    "help": null,
+    "title": null,
+    "frame": {
+      "x": 57,
+      "width": 288,
+      "y": 1393,
+      "height": 200
+    },
+    "AXLabel": "오늘의 한 장면을 내 말로 남겨요. Read slowly, remember clearly. 0123456789 · ₩12,500 · 09:41",
+    "AXFrame": "{{57, 1393}, {288, 200}}",
+    "subrole": null,
+    "role": "AXStaticText",
+    "type": "StaticText",
+    "AXValue": null,
+    "content_required": false,
+    "AXUniqueId": null,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "enabled": true
+  },
+  {
+    "role": "AXStaticText",
+    "role_description": "text",
+    "frame": {
+      "y": 1609,
+      "width": 288,
+      "height": 200,
+      "x": 57
+    },
+    "content_required": false,
+    "type": "StaticText",
+    "help": null,
+    "pid": 63103,
+    "enabled": true,
+    "AXUniqueId": null,
+    "AXFrame": "{{57, 1609}, {288, 200}}",
+    "AXLabel": "오늘의 한 장면을 내 말로 남겨요. Read slowly, remember clearly. 0123456789 · ₩12,500 · 09:41",
+    "custom_actions": [],
+    "AXValue": null,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "title": null,
+    "subrole": null
+  },
+  {
+    "AXUniqueId": null,
+    "frame": {
+      "y": 1875,
+      "height": 40,
+      "width": 288,
+      "x": 57
+    },
+    "content_required": false,
+    "type": "StaticText",
+    "custom_actions": [],
+    "role": "AXStaticText",
+    "AXValue": null,
+    "role_description": "text",
+    "subrole": null,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "title": null,
+    "AXLabel": "비교할 서체",
+    "enabled": true,
+    "help": null,
+    "pid": 63103,
+    "AXFrame": "{{57, 1875}, {288, 40}}"
+  },
+  {
+    "AXUniqueId": null,
+    "custom_actions": [],
+    "frame": {
+      "height": 320,
+      "y": 1931,
+      "x": 57,
+      "width": 288
+    },
+    "subrole": null,
+    "content_required": false,
+    "AXValue": null,
+    "help": null,
+    "AXFrame": "{{57, 1931}, {288, 320}}",
+    "enabled": true,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "type": "StaticText",
+    "role_description": "text",
+    "AXLabel": "작은 기록이 만드는 긴 이야기 — A quiet moment, 2026",
+    "role": "AXStaticText",
+    "title": null,
+    "pid": 63103
+  },
+  {
+    "role": "AXStaticText",
+    "AXUniqueId": null,
+    "type": "StaticText",
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "AXLabel": "오늘의 한 장면을 내 말로 남겨요. Read slowly, remember clearly. 0123456789 · ₩12,500 · 09:41",
+    "frame": {
+      "x": 57,
+      "y": 2267,
+      "width": 288,
+      "height": 200
+    },
+    "enabled": true,
+    "AXValue": null,
+    "AXFrame": "{{57, 2267}, {288, 200}}",
+    "title": null,
+    "help": null,
+    "custom_actions": [],
+    "subrole": null,
+    "role_description": "text",
+    "content_required": false,
+    "pid": 63103
+  },
+  {
+    "pid": 63103,
+    "role_description": "text",
+    "role": "AXStaticText",
+    "subrole": null,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "AXUniqueId": null,
+    "AXValue": null,
+    "AXFrame": "{{57, 2483}, {288, 200}}",
+    "type": "StaticText",
+    "custom_actions": [],
+    "help": null,
+    "frame": {
+      "width": 288,
+      "height": 200,
+      "y": 2483,
+      "x": 57
+    },
+    "title": null,
+    "enabled": true,
+    "AXLabel": "오늘의 한 장면을 내 말로 남겨요. Read slowly, remember clearly. 0123456789 · ₩12,500 · 09:41",
+    "content_required": false
+  },
+  {
+    "content_required": false,
+    "AXValue": null,
+    "enabled": true,
+    "role": "AXButton",
+    "title": null,
+    "AXFrame": "{{36, 2728}, {330, 44}}",
+    "help": null,
+    "role_description": "button",
+    "custom_actions": [],
+    "frame": {
+      "width": 330,
+      "y": 2728,
+      "height": 44,
+      "x": 36
+    },
+    "AXLabel": "기본 서체로 돌아가기",
+    "subrole": null,
+    "type": "Button",
+    "pid": 63103,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "AXUniqueId": null
+  },
+  {
+    "type": "StaticText",
+    "subrole": null,
+    "AXFrame": "{{52, 2812}, {80.333328247070312, 17}}",
+    "pid": 63103,
+    "role_description": "text",
+    "AXLabel": "서체 후보 설정",
+    "custom_actions": [],
+    "content_required": false,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "role": "AXStaticText",
+    "AXValue": null,
+    "title": null,
+    "help": null,
+    "frame": {
+      "width": 80.33332824707031,
+      "x": 52,
+      "y": 2812,
+      "height": 17
+    },
+    "enabled": true,
+    "AXUniqueId": null
+  },
+  {
+    "AXValue": null,
+    "content_required": false,
+    "AXFrame": "{{36, 2845}, {330, 130}}",
+    "role_description": "text",
+    "enabled": true,
+    "help": null,
+    "role": "AXStaticText",
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "type": "StaticText",
+    "AXUniqueId": null,
+    "subrole": null,
+    "AXLabel": "서체 후보 설정\n{\n  \"family\": null,\n  \"status\": \"empty\",\n  \"source\": \"\",\n  \"license\": \"\"\n}",
+    "pid": 63103,
+    "custom_actions": [],
+    "title": null,
+    "frame": {
+      "width": 330,
+      "height": 130,
+      "x": 36,
+      "y": 2845
+    }
+  },
+  {
+    "pid": 63103,
+    "AXValue": null,
+    "type": "StaticText",
+    "custom_actions": [],
+    "AXLabel": "폰트 등록이 끝난 뒤에만 비교 서체를 표시해요. 초기화하면 기본 서체로 돌아가며, 등록된 폰트는 앱을 종료할 때까지 유지됩니다.",
+    "AXUniqueId": null,
+    "title": null,
+    "role_description": "text",
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "content_required": false,
+    "role": "AXStaticText",
+    "frame": {
+      "x": 36,
+      "width": 330,
+      "y": 2999,
+      "height": 200
+    },
+    "subrole": null,
+    "enabled": true,
+    "help": null,
+    "AXFrame": "{{36, 2999}, {330, 200}}"
+  },
+  {
+    "role": "AXGenericElement",
+    "AXUniqueId": null,
+    "AXFrame": "{{362, 759}, {24, 24}}",
+    "title": null,
+    "frame": {
+      "y": 759,
+      "x": 362,
+      "height": 24,
+      "width": 24
+    },
+    "role_description": "",
+    "traits": [
+      "Scrollable"
+    ],
+    "content_required": false,
+    "help": null,
+    "custom_actions": [],
+    "AXValue": null,
+    "subrole": null,
+    "pid": 63103,
+    "enabled": true,
+    "AXLabel": null,
+    "type": "GenericElement"
+  },
+  {
+    "AXFrame": "{{6, 811.66666698455811}, {315.66665649414062, 17}}",
+    "AXValue": null,
+    "role": "AXGenericElement",
+    "AXLabel": "Foundations/Typography Studio/Large Text",
+    "custom_actions": [],
+    "content_required": false,
+    "subrole": null,
+    "AXUniqueId": "mobile-menu-button",
+    "title": null,
+    "type": "GenericElement",
+    "enabled": true,
+    "pid": 63103,
+    "frame": {
+      "height": 17,
+      "x": 6,
+      "y": 811.6666669845581,
+      "width": 315.6666564941406
+    },
+    "help": null,
+    "role_description": "",
+    "traits": [
+      "Scrollable"
+    ]
+  },
+  {
+    "subrole": null,
+    "enabled": true,
+    "role_description": "button",
+    "pid": 63103,
+    "AXValue": null,
+    "type": "Button",
+    "custom_actions": [],
+    "content_required": false,
+    "AXFrame": "{{368, 806}, {28, 28}}",
+    "role": "AXButton",
+    "AXUniqueId": "mobile-addons-button",
+    "title": null,
+    "AXLabel": "Open addons panel",
+    "help": null,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "frame": {
+      "x": 368,
+      "width": 28,
+      "height": 28,
+      "y": 806
+    }
+  }
+]

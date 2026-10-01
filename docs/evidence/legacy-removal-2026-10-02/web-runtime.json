@@ -1,0 +1,34 @@
+{
+  "results": [
+    {
+      "state": "default",
+      "bg": "#ffffff",
+      "oldBg": ""
+    },
+    {
+      "state": "dark",
+      "bg": "#0d1116",
+      "oldBg": ""
+    },
+    {
+      "state": "large-text",
+      "bg": "#ffffff",
+      "oldBg": ""
+    }
+  ],
+  "errors": [],
+  "profileEntries": [
+    {
+      "id": "patterns-profile-studio--default",
+      "name": "기본"
+    },
+    {
+      "id": "patterns-profile-studio--dark",
+      "name": "어두운 테마"
+    },
+    {
+      "id": "patterns-profile-studio--large-text",
+      "name": "큰 글자"
+    }
+  ]
+}

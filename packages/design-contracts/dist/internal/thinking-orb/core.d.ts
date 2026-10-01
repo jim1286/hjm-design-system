@@ -57,4 +57,5 @@ export declare function finalizeFrame(dots: Dot[], lines: Line[], rMin?: number)
  * spinners legible. Lower pow = radii shrink less with size.
  */
 export declare function radiusScale(size: number, pow: number): number;
+export declare function ghostSphereDots(project: Projector, radius: number, radiusScale: number, count: number): Dot[];
 //# sourceMappingURL=core.d.ts.map

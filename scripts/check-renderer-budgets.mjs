@@ -20,10 +20,59 @@ const rendererBudgets = [
     // and drifted): measured +3.1 kB raw / +0.84 kB gzip. provider.js gained the
     // brandPalette prop and its inheritance context: +0.7 kB / +0.24 kB.
     sharedModuleAllowances: [
+      // Gooey Tabs adds 2513 raw / 674 gzip bytes to navigation.js, no local import edge.
+      { file: "navigation.js", raw: 2600, gzip: 700 },
+      // Sidebar presentation adds 1476 raw / 496 gzip bytes to its emitted module.
+      // Root already reaches the provider; apply this only to graphs importing Sidebar.
+      { file: "sidebar.js", raw: 1500, gzip: 500 },
       { file: "theme.js", raw: 3_300, gzip: 900 },
+      // Optional Icon glyph callback grows supplemental-display by measured
+      // 142 raw / 31 gzip bytes; retain exact graph edges and base-peer bans.
+      { file: "supplemental-display.js", raw: 160, gzip: 40 },
       { file: "provider.js", raw: 800, gzip: 280 },
     ],
+    // 2026-10-01 overlap refactor: menu-typeahead.js and table-sort-button.js
+    // replace repeated host behavior. Reviewed local edges only: root +2, affected
+    // families +1. The split source graph measured root 94.5 kB gzip,
+    // display 77.5 kB raw and overlays 19.4 kB gzip; add only 500/600/350 bytes
+    // to those three pre-allowance limits; Node 24 additionally needs 100 gzip bytes
+    // on display (18.4 kB measured). Other byte/optional-peer gates stay fixed.
     budgets: {
+      // Glass header composition: 4 modules, 18730 raw / 5174 gzip; provider allowances apply.
+      "./navigation-bar": { modules: 4, raw: 17500, gzip: 5000 },
+      // GravityLetters provider graph: 19763 raw / 5556 gzip; bounded DOM motion, no peer.
+      "./gravity-letters": { modules: 4, raw: 22800, gzip: 6400 },
+      // GridReveal shares the provider: measured 19586 raw / 5504 gzip, no motion peer.
+      "./grid-reveal": { modules: 4, raw: 22600, gzip: 6400 },
+      // VoiceNote reuses canonical Asset/Slider/Button; measured 45229/11108 raw/gzip.
+      "./voice-note": { modules: 8, raw: 52100, gzip: 12800 },
+      // StepPlayer reuses canonical Steps/Progress/Button; measured 27759/6658 raw/gzip.
+      "./step-player": { modules: 6, raw: 32000, gzip: 7700 },
+      // Optional Blobatar motion graph measured 19720/5520 raw/gzip bytes; static entry stays separate.
+      "./avatar-blobatar-motion": { modules: 4, raw: 22700, gzip: 6400 },
+      // FolderPreview composition measured 21246/5970 raw/gzip bytes; no new motion peer.
+      "./folder-preview": { modules: 5, raw: 24500, gzip: 6900 },
+      // TaskList reuses canonical list/checkbox: measured 57442/12261 raw/gzip bytes.
+      "./task-list": { modules: 7, raw: 66100, gzip: 14200 },
+      // Activity grid/list composes existing primitives; measured local graphs with ~15% headroom.
+      "./activity-heatmap": { modules: 1, raw: 1700, gzip: 830 },
+      // CodeBlock presentation measured independently; no highlighting or clipboard engine import.
+      "./code-block": { modules: 1, raw: 1700, gzip: 820 },
+      // ScrollProgress reuses feedback: measured 4 local modules; ~15% byte headroom.
+      "./scroll-progress": { modules: 4, raw: 17400, gzip: 4400 },
+      // 2026-10-01 compound controls: measured local graphs, ~15% byte headroom;
+      // exact module limits preserve reuse of NumberField/Button/IconButton/CounterBadge.
+      "./duration-field": { modules: 3, raw: 12200, gzip: 3700 },
+      "./inline-confirm": { modules: 3, raw: 11000, gzip: 3050 },
+      "./reaction-picker": { modules: 3, raw: 9000, gzip: 2500 },
+      "./notification-bell": { modules: 6, raw: 39200, gzip: 10700 },
+
+      // Static avatar bridge: measured <0.8 kB source, one local module;
+      // external generation stays an explicit optional peer.
+      "./avatar-blobatar": { modules: 1, raw: 900, gzip: 550 },
+      // New isolated graphs measured at 21,520/6,013 B (effect) and 575/377 B (glyph factory).
+      "./effect-surface": { modules: 4, raw: 24800, gzip: 6950 },
+      "./icon-lucide": { modules: 1, raw: 750, gzip: 500 },
       // 2026-09-30: optional interaction graphs measured independently; ~20% byte headroom, exact module counts.
       "./sortable": { modules: 5, raw: 29800, gzip: 8000 },
       "./swipe-actions": { modules: 3, raw: 9700, gzip: 2700 },
@@ -42,8 +91,8 @@ const rendererBudgets = [
       "./qr-code": { modules: 1, raw: 1_700, gzip: 900 },
       // Optional adoption graphs reuse HJM semantics; measurements exclude external peers.
       // 2026-09-29: Statistic 35.6/9.1 kB (5 modules), Menu 93.5/19.8 kB (8).
-      "./statistic-motion": { modules: 5, raw: 40_000, gzip: 10_200 },
-      "./menu-morph": { modules: 8, raw: 104_000, gzip: 22_000 },
+      "./statistic-motion": { modules: 6, raw: 40_000, gzip: 10_200 },
+      "./menu-morph": { modules: 9, raw: 104_000, gzip: 22_000 },
       // Standalone ThinkingOrb reuses the provider; geometry lives in the separately budgeted contracts entry.
       "./thinking-orb": { modules: 4, raw: 20_000, gzip: 5_700 },
       // 28: the canonical composition-style contract module. `hjmCompositionStyleKeys`
@@ -62,7 +111,9 @@ const rendererBudgets = [
       // 측정 425.5 kB raw / 88.7 kB gzip — 기존 한도 안이라 바이트는 그대로 둔다.
       // 2026-09-19 AuthScreenLayout로 62 -> 63 모듈. 계약 resolver와 `classNames`만
       // 더해지므로 바이트 증가는 미미하고 기존 한도 안이다.
-      ".": { modules: 63, raw: 445_000, gzip: 93_000 },
+      // 2026-10-01 auth card pending state: Node 24 root measured 94.8 kB gzip including shared allowances.
+      // Add 300 bytes only here for the new inert/centred loader branch; auth-screen, CSS and dependency gates already fit.
+      ".": { modules: 65, raw: 445_000, gzip: 93_800 },
       // FAB reuses actions/provider; measured 21.0 kB raw / 5.5 kB gzip.
       "./floating-action-button": { modules: 5, raw: 23_000, gzip: 6_100 },
       // Carousel adds one module, reuses actions/provider; measured 22.5/5.8 kB.
@@ -123,13 +174,13 @@ const rendererBudgets = [
       // 측정 18.9 kB raw / 5.2 kB gzip. provider 예산의 경고("granular entry가 provider를
       // 통째로 끌어온다")를 알고 올린다 — 제품은 어차피 HjmProvider를 항상 싣고,
       // 대신 얻는 것은 목록·메뉴·표가 같은 밀도를 쓰는 것이다. 그게 이 축의 목적이다.
-      "./data-table": { modules: 4, raw: 21_000, gzip: 5_800 },
+      "./data-table": { modules: 5, raw: 21_000, gzip: 5_800 },
       // Collapsible and Menubar add only their own chrome: measured 4.0/1.4 kB
       // and 10.0/2.6 kB over 2 modules each. ContextMenu is bigger because it
       // reaches the shared modal/portal module for its layer — the same stack
       // the other overlays use, not a new dependency: measured 45.5/10.5 kB.
       "./collapsible": { modules: 2, raw: 5_000, gzip: 1_700 },
-      "./context-menu": { modules: 6, raw: 50_000, gzip: 11_500 },
+      "./context-menu": { modules: 7, raw: 50_000, gzip: 11_500 },
       // 2026-09-30: the panel now uses the shared portal (like Menu/ContextMenu) so clipping ancestors can't
       // hide items; portal.js is the added module. Raised from 2 / 11.5 kB / 3.0 kB.
       "./menubar": { modules: 3, raw: 27_000, gzip: 6_500 },
@@ -160,15 +211,17 @@ const rendererBudgets = [
       // 3.6/1.3 and 5.8/1.7 kB over 2 modules each.
       "./skip-nav": { modules: 2, raw: 4_600, gzip: 1_700 },
       "./bottom-info": { modules: 2, raw: 4_300, gzip: 1_600 },
-      "./sidebar": { modules: 2, raw: 6_800, gzip: 2_100 },
+      // Provider theme access is needed for explicit reduced-motion overrides.
+      // Four-module graph measured 22787 raw / 6167 gzip; no optional motion peer.
+      "./sidebar": { modules: 4, raw: 19_000, gzip: 5_200 },
       // The imperative layer reaches the whole overlay barrel on purpose — it
       // mounts Dialog and Sheet: measured 85.0 kB raw / 17.6 kB gzip.
-      "./overlay-stack": { modules: 8, raw: 93_000, gzip: 19_400 },
+      "./overlay-stack": { modules: 9, raw: 93_000, gzip: 19_400 },
       // Range selection reuses the Calendar grid: 21.9 kB raw / 5.9 kB gzip.
       "./date-range": { modules: 5, raw: 24_000, gzip: 6_500 },
       // ListRow가 전역 density를 읽으면서 16.6 -> 16.8 kB gzip. provider는 이미
       // 이 그래프 안에 있었으므로 modules는 11 그대로다.
-      "./display": { modules: 11, raw: 73_000, gzip: 17_200 },
+      "./display": { modules: 12, raw: 73_600, gzip: 17_300 },
       // 최초 43_000은 마지막 focus/dismiss 보강 전 추정값이라 실측 44.0 kB에서 걸렸다.
       // portal·overlay 공유 모듈 6개는 그대로이고 gzip은 9.3% 여유다. 다른 entry와 같은
       // 수준(약 8%)의 raw 여유를 준다.
@@ -183,7 +236,7 @@ const rendererBudgets = [
       // Tour reuses the anchored popup helper and the shared modal machinery:
       // measured 51.0 kB raw / 12.0 kB gzip over 7 modules, no new dependency.
       "./tour": { modules: 7, raw: 56_000, gzip: 13_200 },
-      "./overlays": { modules: 7, raw: 90_000, gzip: 18_000 },
+      "./overlays": { modules: 8, raw: 90_000, gzip: 18_350 },
       "./feedback": { modules: 3, raw: 13_500, gzip: 3_300 },
       // density helper가 provider 모듈에 들어가면서 6.8 kB gzip 경계에 닿았다.
       // 1.10.0 Toast refresh: five inline stroke SVG tone glyphs + close glyph replace text glyphs, and theme
@@ -242,10 +295,12 @@ const rendererBudgets = [
       // 2026-09-29 optional Menu Morph adds HJM-owned focus, target, and hover rules; measured CSS is 24.9 kB gzip.
       // 2026-09-29 long-copy wrapping in modal and transfer-list copy adds functional rules; measured 153,703/25,304 B.
       // ColorPicker input/palette and decorative/sticky layout rules add 3.1 kB; measured total 155.9/25.3 kB.
-      "./styles.css": { raw: 158_000, gzip: 26_000 },
+      // Bounded sidebar decoration adds CSS only; no animation runtime dependency.
+      // Capsule/header styles add measured 3339 raw / 600 gzip; preserve prior headroom.
+      "./styles.css": { raw: 162_839, gzip: 27_000 },
       // Same rules wrapped in `@layer hjm { }` by packages/react/scripts/copy-styles.mjs;
       // the wrapper adds ~15 bytes, so this budget tracks styles.css plus that margin.
-      "./styles.layered.css": { raw: 158_064, gzip: 26_032 },
+      "./styles.layered.css": { raw: 162_903, gzip: 27_032 },
     },
   },
   {
@@ -255,12 +310,73 @@ const rendererBudgets = [
     // 1.5.0: provider.js gained the brandPalette prop and its inheritance
     // context, measured +0.6 kB raw / +0.19 kB gzip; see the Web note above.
     sharedModuleAllowances: [
+      // 2.0: private RecipeButton keeps FAB/LoadMore paint overrides out of the public
+      // Button API. One explicit local edge replaces exposing private props to products.
+      // Reviewed emitted graphs: sheet-gesture 41.8/10.2 kB and navigation 154.3/31.8 kB;
+      // bounded wrapper/import cost only, no peer or Metro budget change. See major-api-removal evidence.
+      { file: "internal/recipe-button.js", modules: 1, raw: 512, gzip: 256 },
+      // Measured Core Animated indicator adds 3325 raw / 717 gzip bytes to navigation.js.
+      // Selected-tab viewport correction adds exactly 1005 raw / 331 gzip bytes.
+      // Same-file measurement: docs/evidence/component-flows-2026-10-01/tab-viewport-cost.json.
+      // Capsule layout adds 1446 raw / 305 gzip, measured with the same TypeScript options.
+      // See docs/evidence/navigation-references-2026-10-01/native-budget-delta.json.
+      { file: "navigation.js", raw: 5851, gzip: 1386 },
+      // OTP underline adds 360 raw / 81 gzip bytes to inputs.js (same emitted file with only the new branches removed).
+      // Apply only to graphs importing that module; no extra module or optional dependency allowance.
+      // Fixed-size Checkbox/Chip artwork adds 267 raw / 163 gzip bytes, including rationale comments.
+      // Same-file inverse measurement: docs/evidence/component-flows-2026-10-01/selection-mark-cost.json.
+      { file: "inputs.js", raw: 667, gzip: 263 },
       { file: "provider.js", raw: 700, gzip: 220 },
       // Liquid's dependency-free host seam adds measured timing/occlusion/announcement logic
       // to feedback (also reached by navigation). The optional Skia renderer is budgeted separately.
-      { file: "feedback.js", raw: 7_500, gzip: 1_800 },
+      // Strict Effects-safe store lifetime adds measured 567 raw / 178 gzip bytes;
+      // preserve teardown while avoiding disposal during development replay.
+      { file: "feedback.js", raw: 8_100, gzip: 2_000 },
     ],
+    // 2026-10-01: internal/field-frame.js replaces repeated Field/TextField
+    // label/support presentation. Only its consuming graphs gain one local edge;
+    // provider, native-linking and optional-peer boundaries remain unchanged.
     budgets: {
+      // Native opaque header fallback: 2 modules, 7123 raw / 2264 gzip; no blur peer.
+      "./navigation-bar": { modules: 2, raw: 7500, gzip: 2500 },
+      // GravityLetters uses canonical Text: 23498 raw / 6194 gzip, Core Animated only.
+      "./gravity-letters": { modules: 4, raw: 27100, gzip: 7200 },
+      // Native mask shares provider only: measured 7806 raw / 2458 gzip.
+      "./grid-reveal": { modules: 2, raw: 9000, gzip: 2900 },
+      // VoiceNote reuses canonical Asset/Slider/Button; measured 52452/12085 raw/gzip.
+      "./voice-note": { modules: 8, raw: 60400, gzip: 13900 },
+      // StepPlayer reuses canonical Steps/Progress/Button; measured 81110/17302 raw/gzip.
+      "./step-player": { modules: 7, raw: 93400, gzip: 20000 },
+      // Optional Blobatar motion graph measured 7252/2270 raw/gzip bytes; static entry stays separate.
+      "./avatar-blobatar-motion": { modules: 2, raw: 8400, gzip: 2700 },
+      // FolderPreview composition measured 26528/6892 raw/gzip bytes; no new motion peer.
+      "./folder-preview": { modules: 6, raw: 30600, gzip: 8000 },
+      // TaskList reuses canonical list/checkbox: measured 133367/26205 raw/gzip bytes.
+      "./task-list": { modules: 9, raw: 153400, gzip: 30200 },
+      // Native Statistic + existing ContentTransition measured 8 modules, 79.8/16.8 kB raw/gzip.
+      "./statistic-motion": { modules: 8, raw: 92000, gzip: 19300 },
+      // Activity grid/list composes existing primitives; measured local graphs with ~15% headroom.
+      "./activity-heatmap": { modules: 4, raw: 26200, gzip: 6900 },
+      // CodeBlock presentation measured independently; no highlighting or clipboard engine import.
+      // Shared Native text-scale helper fixes controlled large-text rendering without
+      // duplicating scaling policy: +1 module/+2131 raw/+627 gzip, measured in
+      // docs/evidence/component-flows-2026-10-01/code-scale-cost.json.
+      "./code-block": { modules: 3, raw: 10631, gzip: 3427 },
+      // ScrollProgress reuses feedback: measured 6 local modules; ~15% byte headroom.
+      "./scroll-progress": { modules: 6, raw: 89500, gzip: 19000 },
+      // 2026-10-01 compound controls: measured local graphs, ~15% byte headroom;
+      // exact module limits preserve reuse of NumberField/Button/IconButton/CounterBadge.
+      "./duration-field": { modules: 6, raw: 40000, gzip: 9800 },
+      "./inline-confirm": { modules: 5, raw: 41300, gzip: 9700 },
+      "./reaction-picker": { modules: 5, raw: 39800, gzip: 9300 },
+      "./notification-bell": { modules: 8, raw: 105100, gzip: 21400 },
+
+      // Static avatar bridge: measured <0.8 kB source, one local module;
+      // external generation stays an explicit optional peer.
+      "./avatar-blobatar": { modules: 1, raw: 900, gzip: 550 },
+      // Native measurements: 9,056/2,891 B and 632/410 B; no extra local edges allowed.
+      "./effect-surface": { modules: 2, raw: 10500, gzip: 3350 },
+      "./icon-lucide": { modules: 1, raw: 800, gzip: 520 },
       // 2026-09-30: optional interaction graphs measured independently; ~20% byte headroom, exact module counts.
       "./sortable": { modules: 5, raw: 44900, gzip: 10600 },
       "./swipe-actions": { modules: 5, raw: 43300, gzip: 10100 },
@@ -277,14 +393,19 @@ const rendererBudgets = [
       // 2026-09-29 measured local adapter graphs: viewer 37.4/8.9 kB, sheet 36.2/8.6 kB;
       // keyboard 1.2/0.6 kB and OS menu 1.1/0.5 kB. External native peers are Metro-checked separately.
       "./image-viewer": { modules: 5, raw: 42_000, gzip: 10_000 },
-      "./sheet-gesture": { modules: 5, raw: 41_000, gzip: 9_800 },
+      // 2026-10-01: recipe-owned typography/geometry and controlled font scaling
+      // replace the independent 48pt style. Measured 10.1 kB gzip incl provider;
+      // +150 bytes covers that shared accessibility behavior, with unchanged edges/raw.
+      "./sheet-gesture": { modules: 5, raw: 41_000, gzip: 9_950 },
       "./keyboard-controller": { modules: 1, raw: 1_600, gzip: 850 },
       "./context-menu-native": { modules: 1, raw: 1_500, gzip: 800 },
       // Optional Skia renderer shares provider only, leaving the root graph unchanged.
       "./thinking-orb": { modules: 2, raw: 15_000, gzip: 4_500 },
       // Separate opt-in graph: measured 15.3 kB raw / 4.2 kB gzip in two modules.
       // Geometry is in contracts; this entry reaches provider only (no feedback barrel).
-      "./toast-liquid": { modules: 2, raw: 17_500, gzip: 4_800 },
+      // Dark borderless surface fix measures +254 raw / +106 gzip bytes (native visual evidence, 2026-10-01).
+      // Keep the same graph/raw ceiling; reserve 120 gzip bytes for the theme branch and its rationale.
+      "./toast-liquid": { modules: 2, raw: 17_500, gzip: 4_920 },
       // +1 module on ".", "./inputs", "./navigation" and "./data-display":
       // `internal/web-a11y.js` holds the DOM ARIA and keyboard contracts that
       // react-native-web needs, shared by Accordion, ChoiceRow/RadioGroup, Chip
@@ -296,7 +417,7 @@ const rendererBudgets = [
       // Collapsible(native)로 31 -> 32 모듈. 측정 387.9 kB raw / 70.0 kB gzip —
       // 기존 바이트 한도 안이라 모듈 수만 올린다.
       // 2026-09-19 AuthScreenLayout로 37 -> 38 모듈. 바이트는 기존 한도 안이다.
-      ".": { modules: 38, raw: 458_000, gzip: 82_000 },
+      ".": { modules: 39, raw: 458_000, gzip: 82_000 },
       // Native FAB + existing actions/primitives: measured 36.4/8.5 kB.
       "./floating-action-button": { modules: 5, raw: 40_000, gzip: 9_400 },
       "./carousel": { modules: 6, raw: 43_000, gzip: 10_300 },
@@ -313,7 +434,7 @@ const rendererBudgets = [
       // 1.4 Switch row/inline and large-text reflow measure 170.7/31.4 kB, still 15 modules.
       // Calendar equal-column fix and the expanded validation preserve the 15-module graph; measured gzip 32.3 kB.
       // 2026-09-30 native audit fixes (Switch, Combobox, Tags, Slider, NumberField, sheet insets) measure 179.1/34.2 kB (was 178_000/32_600).
-      "./inputs": { modules: 15, raw: 184_000, gzip: 34_600 },
+      "./inputs": { modules: 16, raw: 184_000, gzip: 34_600 },
       "./password-field": { modules: 9, raw: 105_000, gzip: 20_000 },
       "./otp-field": { modules: 9, raw: 105_000, gzip: 20_000 },
       // 2026-09-30: announced value text + provider insets measure 19.8/5.2 kB (gzip was 4_900).
@@ -331,8 +452,8 @@ const rendererBudgets = [
       "./top": { modules: 4, raw: 24_500, gzip: 6_200 },
       // Same table on Native over the shared primitive graph: 22.2/5.6 kB.
       "./provider-button": { modules: 4, raw: 24_500, gzip: 6_200 },
-      // AuthScreenLayout은 계약 resolver와 RN `ScrollView`/`View`만 쓴다 —
-      // 슬롯으로 받으므로 HJM primitive를 하나도 부르지 않는다.
+      // AuthScreenLayout keeps RN hosts and uses the existing provider only for the opt-in action card palette.
+      // 2026-10-01: centred pending/card state measured 9.4/3.0 kB; existing limits cover it without loosening the gate.
       "./auth-screen": { modules: 3, raw: 14_000, gzip: 4_200 },
       // Same primitive graph as Top: 21.0 kB raw / 5.4 kB gzip over 4 modules.
       "./heading": { modules: 4, raw: 23_000, gzip: 6_000 },
@@ -351,14 +472,16 @@ const rendererBudgets = [
       // 측정: 24.4/6.2, 35.7/9.3, 80.8/16.5, 37.6/8.7 kB.
       "./tags-input": { modules: 4, raw: 27_000, gzip: 6_800 },
       "./date-range": { modules: 7, raw: 39_000, gzip: 10_200 },
-      "./mentions": { modules: 7, raw: 88_000, gzip: 18_000 },
+      // The extracted field frame changes the shared compressed graph to 18.4 kB
+      // on CI's Node 24; allow 200 additional gzip bytes, with no raw growth budget.
+      "./mentions": { modules: 8, raw: 88_000, gzip: 18_200 },
       "./transfer-list": { modules: 6, raw: 41_000, gzip: 9_500 },
       "./keyboard": { modules: 1, raw: 2_800, gzip: 1_200 },
       "./date-picker": { modules: 10, raw: 105_000, gzip: 21_500 },
       "./file-picker": { modules: 4, raw: 24_000, gzip: 6_500 },
       "./steps": { modules: 4, raw: 25_000, gzip: 6_500 },
       "./upload-item": { modules: 6, raw: 82_000, gzip: 17_000 },
-      "./forms": { modules: 7, raw: 83_000, gzip: 16_600 },
+      "./forms": { modules: 8, raw: 83_000, gzip: 16_600 },
       // gzip 26_700 -> 26_750: BottomNavigation needs the same `Platform.OS`
       // branch Tabs already has, because RN maps `tab` to
       // UIAccessibilityTraitNone on iOS. Under 50 bytes for a trait that
@@ -369,7 +492,13 @@ const rendererBudgets = [
       // 2026-09-30: UploadItem action split + mixed-state helper measure 75.9/15.6 kB (gzip was 15_000).
       "./data-display": { modules: 6, raw: 77_000, gzip: 15_600 },
       "./feedback": { modules: 5, raw: 73_500, gzip: 15_100 },
-      "./overlays": { modules: 6, raw: 84_500, gzip: 15_100 },
+      // 2026-10-01: all six emitted files match HEAD 8543b6f byte-for-byte.
+      // Node 26.9.0 measures 15_332 gzip vs the effective 15_320 limit; +20 only.
+      // Evidence: docs/evidence/overlay-budget-2026-10-01/baseline.json.
+      // CloseGlyph fixes the reproduced 200% clipping: +339 raw / +138 gzip bytes
+      // over that exact six-module baseline; no new graph edge, peer or raw allowance.
+      // Evidence: docs/evidence/pattern-polish-2026-10-01/overlay-close-budget.json.
+      "./overlays": { modules: 6, raw: 84_500, gzip: 15_258 },
       // evidence 목록에 auth-screen 한 줄이 늘었다.
       // 1.5.0: per-scenario proofs from the Native scenario matrix tables:
       // measured 8.1 kB raw / 2.23 kB gzip.
@@ -561,12 +690,12 @@ async function checkRenderer(renderer) {
     const measured = await measureGraph(entryFile, distDirectory, availableFiles);
     const allowance = (renderer.sharedModuleAllowances ?? [])
       .filter(({ file }) => measured.files.has(resolve(distDirectory, file)))
-      .reduce((sum, { raw, gzip }) => ({ raw: sum.raw + raw, gzip: sum.gzip + gzip }), { raw: 0, gzip: 0 });
-    const budget = { ...baseBudget, raw: baseBudget.raw + allowance.raw, gzip: baseBudget.gzip + allowance.gzip };
+      .reduce((sum, { raw, gzip, modules = 0 }) => ({ raw: sum.raw + raw, gzip: sum.gzip + gzip, modules: sum.modules + modules }), { raw: 0, gzip: 0, modules: 0 });
+    const budget = { ...baseBudget, modules: baseBudget.modules + allowance.modules, raw: baseBudget.raw + allowance.raw, gzip: baseBudget.gzip + allowance.gzip };
     const regressions = [];
     // Opt-in peers must never become a hidden installation requirement of base entries.
     // Derive the peer list from the manifest so new optional runtimes cannot escape this gate.
-    const optionalEntries = new Set(["./sortable", "./swipe-actions", "./content-transition", "./carousel-motion", "./celebration", "./screen-transition", "./qr-code", "./thinking-orb", "./toast-liquid", "./statistic-motion", "./menu-morph", "./image-viewer", "./keyboard-controller", "./sheet-gesture", "./context-menu-native"]);
+    const optionalEntries = new Set(["./avatar-blobatar-motion", "./effect-surface", "./icon-lucide", "./avatar-blobatar", "./sortable", "./swipe-actions", "./content-transition", "./carousel-motion", "./celebration", "./screen-transition", "./qr-code", "./thinking-orb", "./toast-liquid", "./statistic-motion", "./menu-morph", "./image-viewer", "./keyboard-controller", "./sheet-gesture", "./context-menu-native"]);
     if (!optionalEntries.has(exportPath)) {
       for (const [peer, metadata] of Object.entries(packageJson.peerDependenciesMeta ?? {})) {
         if (metadata.optional && measured.externals.some(specifier => specifier === peer || specifier.startsWith(`${peer}/`))) {

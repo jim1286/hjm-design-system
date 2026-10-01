@@ -47,10 +47,10 @@ export function ListRowLoadingPreview() {
   );
 }
 
-const meta = { title: "Patterns/Heading", component: HeadingPreview } satisfies Meta<typeof HeadingPreview>;
+const meta = { includeStories: ["DisplayScale","ProgressRing","LoadingRows","LargeText"], id: "patterns-heading", title: "배포/컴포넌트/글자와 아이콘/제목", component: HeadingPreview } satisfies Meta<typeof HeadingPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
-export const DisplayScale: Story = {};
-export const ProgressRing: Story = { render: () => <ProgressRingPreview /> };
-export const LoadingRows: Story = { render: () => <ListRowLoadingPreview /> };
-export const LargeText: Story = { globals: { textScale: "2" } };
+export const DisplayScale: Story = { name: "표시 크기",};
+export const ProgressRing: Story = { name: "원형 진행 표시", render: () => <ProgressRingPreview /> };
+export const LoadingRows: Story = { name: "목록 로딩", render: () => <ListRowLoadingPreview /> };
+export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };

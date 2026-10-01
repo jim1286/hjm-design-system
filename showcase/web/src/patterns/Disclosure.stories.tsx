@@ -69,10 +69,10 @@ export function MenubarPreview() {
   );
 }
 
-const meta = { title: "Patterns/Disclosure", component: CollapsiblePreview } satisfies Meta<typeof CollapsiblePreview>;
+const meta = { includeStories: ["SingleDisclosure","PointerMenu","DesktopMenubar","LargeText"], id: "patterns-disclosure", title: "배포/구성/펼침과 메뉴", component: CollapsiblePreview } satisfies Meta<typeof CollapsiblePreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
-export const SingleDisclosure: Story = {};
-export const PointerMenu: Story = { render: () => <ContextMenuPreview /> };
-export const DesktopMenubar: Story = { render: () => <MenubarPreview /> };
-export const LargeText: Story = { globals: { textScale: "2" } };
+export const SingleDisclosure: Story = { name: "단일 펼침",};
+export const PointerMenu: Story = { name: "포인터 메뉴", render: () => <ContextMenuPreview /> };
+export const DesktopMenubar: Story = { name: "데스크톱 메뉴 막대", render: () => <MenubarPreview /> };
+export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };

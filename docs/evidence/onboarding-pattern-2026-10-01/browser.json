@@ -1,0 +1,23 @@
+[
+  {
+    "state": "default",
+    "focusRetained": true,
+    "retained": "true",
+    "skip": true,
+    "overflow": false
+  },
+  {
+    "state": "dark",
+    "focusRetained": true,
+    "retained": "true",
+    "skip": true,
+    "overflow": false
+  },
+  {
+    "state": "large-text",
+    "focusRetained": true,
+    "retained": "true",
+    "skip": true,
+    "overflow": false
+  }
+]

@@ -20,6 +20,7 @@ import {
   otpFieldRecipe,
   resolveOtpFieldValue,
   type OtpFieldSize,
+  type OtpFieldPresentation,
 } from "@hjmds/design-contracts/components/otp-field";
 import {
   forwardRef,
@@ -678,6 +679,7 @@ export type OtpFieldProps = Omit<
     onValueChange?: (value: string) => void;
     onComplete?: (value: string) => void;
     size?: OtpFieldSize;
+    presentation?: OtpFieldPresentation;
     busy?: boolean;
   }>;
 
@@ -700,6 +702,7 @@ export const OtpField = forwardRef<HTMLInputElement, OtpFieldProps>(
       onComplete,
       onChange,
       size = otpFieldRecipe.defaults.size,
+    presentation = "boxes",
       fieldClassName,
       className,
       onFocus,
@@ -743,6 +746,7 @@ export const OtpField = forwardRef<HTMLInputElement, OtpFieldProps>(
       >
         <div
           className="hjm-otp-field__control"
+          data-presentation={presentation}
           data-complete={complete || undefined}
           data-size={size}
           style={{ "--hjm-otp-length": length } as CSSProperties}

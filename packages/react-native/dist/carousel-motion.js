@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 import { View } from "react-native";
 import { Carousel } from "react-native-reanimated-carousel";
 import { scheduleOnRN } from "react-native-worklets";
-import { validateCarousel } from "@hjmds/design-contracts/components/interaction-adapters";
+import { resolveCarouselDescriptor, getCarouselNavigationTarget } from "@hjmds/design-contracts/components/carousel";
 import { motion as timing } from "@hjmds/design-contracts/foundations";
 import { Button } from "./actions.js";
 import { useHjmNativeTheme } from "./provider.js";
@@ -12,7 +12,16 @@ const carouselReleasePageFraction = 0.5;
 /** Opposite release speed (px/s) treated as a deliberate fling back, not a pause. */
 const carouselReleaseFlingBack = 300;
 export function CarouselMotion(props) {
-    const index = validateCarousel(props.slides, props.currentKey);
+    const descriptor = { slides: props.slides, currentKey: props.currentKey };
+    // Share finite keyed selection and names with Carousel; the optional peer owns
+    // only swipe/motion. No autoplay is implied by this controlled presentation.
+    const resolved = resolveCarouselDescriptor(descriptor, {
+        composeAccessibleName: props.composeAccessibleName ?? ((info) => info.label),
+    });
+    const index = resolved.findIndex(slide => slide.current);
+    if (![props.label, props.previousLabel, props.nextLabel].every(label => label.trim())) {
+        throw new TypeError("CarouselMotion labels must not be empty");
+    }
     if (![props.width, props.height].every(value => Number.isFinite(value) && value > 0))
         throw new TypeError("Carousel needs positive measured dimensions");
     const { environment } = useHjmNativeTheme();
@@ -24,10 +33,10 @@ export function CarouselMotion(props) {
     // JS side of the release fallback below; reads the latest index so a stale
     // gesture closure cannot page from an old slide.
     const pageBy = (delta) => {
-        const { index: current, props: live } = latest.current;
-        const slide = live.slides[current + delta];
-        if (slide && slide.id !== live.currentKey)
-            live.onCurrentKeyChange(slide.id);
+        const { props: live } = latest.current;
+        const target = getCarouselNavigationTarget({ slides: live.slides, currentKey: live.currentKey }, delta === 1 ? "next" : "previous");
+        if (target !== live.currentKey)
+            live.onCurrentKeyChange(target);
     };
     useEffect(() => { if (ref.current?.getCurrentIndex() !== index)
         ref.current?.scrollTo({ index, animated: !environment.reducedMotion }); }, [index, environment.reducedMotion]);
@@ -52,6 +61,6 @@ export function CarouselMotion(props) {
                     const forward = dx < 0 ? 1 : -1;
                     scheduleOnRN(pageBy, (rtl ? -forward : forward));
                 }), onSnapToItem: next => { const slide = props.slides[next]; if (slide && slide.id !== props.currentKey)
-                    props.onCurrentKeyChange(slide.id); }, renderItem: ({ item, index: i }) => _jsx(View, { accessibilityElementsHidden: i !== index, importantForAccessibility: i === index ? "auto" : "no-hide-descendants", pointerEvents: i === index ? "auto" : "none", children: props.renderSlide(item) }) }), _jsx(Button, { tone: "ghost", disabled: index === 0, onPress: () => props.onCurrentKeyChange(props.slides[index - 1].id), children: props.previousLabel }), _jsx(Button, { tone: "ghost", disabled: index === props.slides.length - 1, onPress: () => props.onCurrentKeyChange(props.slides[index + 1].id), children: props.nextLabel })] });
+                    props.onCurrentKeyChange(slide.id); }, renderItem: ({ item, index: i }) => _jsx(View, { accessibilityLabel: resolved[i].accessibleName, accessibilityElementsHidden: resolved[i].inert, importantForAccessibility: i === index ? "auto" : "no-hide-descendants", pointerEvents: i === index ? "auto" : "none", children: props.renderSlide(item) }) }), _jsx(Button, { tone: "ghost", disabled: index === 0, onPress: () => props.onCurrentKeyChange(getCarouselNavigationTarget(descriptor, "previous")), children: props.previousLabel }), _jsx(Button, { tone: "ghost", disabled: index === props.slides.length - 1, onPress: () => props.onCurrentKeyChange(getCarouselNavigationTarget(descriptor, "next")), children: props.nextLabel })] });
 }
 //# sourceMappingURL=carousel-motion.js.map

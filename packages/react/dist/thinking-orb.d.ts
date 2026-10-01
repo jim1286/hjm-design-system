@@ -5,5 +5,5 @@ export type ThinkingOrbProps = ThinkingOrbOptions & Readonly<{
     style?: CSSProperties;
 }>;
 /** Optional AI status presentation; ordinary loading retains Spinner. */
-export declare function ThinkingOrb({ state, size, label, speed, paused, active, className, style }: ThinkingOrbProps): import("react").JSX.Element;
+export declare function ThinkingOrb({ state, appearance, size, label, speed, paused, active, className, style }: ThinkingOrbProps): import("react").JSX.Element;
 //# sourceMappingURL=thinking-orb.d.ts.map

@@ -1,0 +1,336 @@
+[
+  {
+    "subrole": null,
+    "help": null,
+    "AXValue": null,
+    "AXFrame": "{{0, 0}, {402, 874}}",
+    "content_required": false,
+    "AXUniqueId": null,
+    "custom_actions": [],
+    "enabled": true,
+    "role_description": "application",
+    "frame": {
+      "y": 0,
+      "height": 874,
+      "width": 402,
+      "x": 0
+    },
+    "AXLabel": "HJM Native Showcase",
+    "pid": 83631,
+    "title": null,
+    "type": "Application",
+    "role": "AXApplication",
+    "traits": [
+      "None"
+    ]
+  },
+  {
+    "enabled": true,
+    "AXLabel": "Available",
+    "role": "AXStaticText",
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "help": null,
+    "subrole": null,
+    "AXFrame": "{{16, 78}, {370, 18}}",
+    "AXUniqueId": null,
+    "content_required": false,
+    "role_description": "text",
+    "pid": 83631,
+    "type": "StaticText",
+    "frame": {
+      "y": 78,
+      "width": 370,
+      "height": 18,
+      "x": 16
+    },
+    "AXValue": null,
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "AXFrame": "{{16, 108}, {370, 44}}",
+    "AXUniqueId": null,
+    "AXValue": "checkbox, unchecked",
+    "role": "AXGenericElement",
+    "content_required": false,
+    "AXLabel": "Available, Select all",
+    "title": null,
+    "frame": {
+      "width": 370,
+      "x": 16,
+      "y": 108,
+      "height": 44
+    },
+    "custom_actions": [],
+    "pid": 83631,
+    "traits": [
+      "Scrollable"
+    ],
+    "help": null,
+    "type": "GenericElement",
+    "role_description": "",
+    "enabled": true,
+    "subrole": null
+  },
+  {
+    "traits": [
+      "Scrollable"
+    ],
+    "role_description": "",
+    "AXValue": "checkbox, unchecked",
+    "subrole": null,
+    "role": "AXGenericElement",
+    "pid": 83631,
+    "AXUniqueId": null,
+    "help": null,
+    "enabled": true,
+    "custom_actions": [],
+    "type": "GenericElement",
+    "AXLabel": "Walk",
+    "title": null,
+    "AXFrame": "{{17, 161}, {368, 44}}",
+    "content_required": false,
+    "frame": {
+      "height": 44,
+      "y": 161,
+      "width": 368,
+      "x": 17
+    }
+  },
+  {
+    "content_required": false,
+    "AXFrame": "{{17, 205}, {368, 44}}",
+    "pid": 83631,
+    "traits": [
+      "Scrollable"
+    ],
+    "enabled": true,
+    "AXValue": "checkbox, unchecked",
+    "AXLabel": "Meal",
+    "custom_actions": [],
+    "title": null,
+    "help": null,
+    "role": "AXGenericElement",
+    "subrole": null,
+    "AXUniqueId": null,
+    "type": "GenericElement",
+    "role_description": "",
+    "frame": {
+      "y": 205,
+      "x": 17,
+      "width": 368,
+      "height": 44
+    }
+  },
+  {
+    "title": null,
+    "AXFrame": "{{120.66666412353516, 262}, {61.000007629394531, 44}}",
+    "traits": [
+      "Scrollable",
+      "NotEnabled",
+      "Button"
+    ],
+    "help": null,
+    "role": "AXButton",
+    "role_description": "button",
+    "type": "Button",
+    "custom_actions": [],
+    "AXLabel": "Add",
+    "subrole": null,
+    "enabled": false,
+    "content_required": false,
+    "pid": 83631,
+    "AXUniqueId": null,
+    "frame": {
+      "x": 120.66666412353516,
+      "width": 61.00000762939453,
+      "height": 44,
+      "y": 262
+    },
+    "AXValue": null
+  },
+  {
+    "title": null,
+    "role": "AXButton",
+    "enabled": false,
+    "AXValue": null,
+    "help": null,
+    "AXLabel": "Remove",
+    "AXFrame": "{{193.66667175292969, 262}, {87.666671752929688, 44}}",
+    "role_description": "button",
+    "content_required": false,
+    "traits": [
+      "Scrollable",
+      "NotEnabled",
+      "Button"
+    ],
+    "pid": 83631,
+    "type": "Button",
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "subrole": null,
+    "frame": {
+      "x": 193.6666717529297,
+      "y": 262,
+      "width": 87.66667175292969,
+      "height": 44
+    }
+  },
+  {
+    "content_required": false,
+    "role": "AXStaticText",
+    "custom_actions": [],
+    "AXFrame": "{{16, 318}, {370, 18}}",
+    "enabled": true,
+    "role_description": "text",
+    "subrole": null,
+    "pid": 83631,
+    "AXValue": null,
+    "AXLabel": "Chosen",
+    "help": null,
+    "title": null,
+    "AXUniqueId": null,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "frame": {
+      "height": 18,
+      "x": 16,
+      "y": 318,
+      "width": 370
+    },
+    "type": "StaticText"
+  },
+  {
+    "AXFrame": "{{16, 348}, {370, 44}}",
+    "AXValue": "checkbox, unchecked",
+    "pid": 83631,
+    "traits": [
+      "Scrollable",
+      "NotEnabled"
+    ],
+    "type": "GenericElement",
+    "enabled": false,
+    "AXUniqueId": null,
+    "title": null,
+    "help": null,
+    "frame": {
+      "x": 16,
+      "width": 370,
+      "y": 348,
+      "height": 44
+    },
+    "role": "AXGenericElement",
+    "role_description": "",
+    "subrole": null,
+    "AXLabel": "Chosen, Select all",
+    "content_required": false,
+    "custom_actions": []
+  },
+  {
+    "help": null,
+    "AXUniqueId": null,
+    "type": "StaticText",
+    "AXLabel": "Nothing here",
+    "AXFrame": "{{17, 401}, {368, 40}}",
+    "frame": {
+      "height": 40,
+      "y": 401,
+      "width": 368,
+      "x": 17
+    },
+    "role": "AXStaticText",
+    "title": null,
+    "AXValue": null,
+    "subrole": null,
+    "role_description": "text",
+    "content_required": false,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "pid": 83631,
+    "custom_actions": [],
+    "enabled": true
+  },
+  {
+    "type": "GenericElement",
+    "AXFrame": "{{362, 759}, {24, 24}}",
+    "role": "AXGenericElement",
+    "AXLabel": null,
+    "enabled": true,
+    "subrole": null,
+    "AXValue": null,
+    "content_required": false,
+    "traits": [
+      "Scrollable"
+    ],
+    "custom_actions": [],
+    "title": null,
+    "role_description": "",
+    "pid": 83631,
+    "frame": {
+      "width": 24,
+      "height": 24,
+      "x": 362,
+      "y": 759
+    },
+    "AXUniqueId": null,
+    "help": null
+  },
+  {
+    "type": "GenericElement",
+    "AXFrame": "{{6, 811.66666698455811}, {243.66667175292969, 17}}",
+    "title": null,
+    "pid": 83631,
+    "help": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "subrole": null,
+    "frame": {
+      "x": 6,
+      "y": 811.6666669845581,
+      "width": 243.6666717529297,
+      "height": 17
+    },
+    "AXLabel": "컴포넌트/입력/목록 간 항목 이동/기본",
+    "role": "AXGenericElement",
+    "content_required": false,
+    "role_description": "",
+    "enabled": true,
+    "AXValue": null,
+    "custom_actions": [],
+    "AXUniqueId": "mobile-menu-button"
+  },
+  {
+    "AXValue": null,
+    "subrole": null,
+    "AXLabel": null,
+    "content_required": false,
+    "role_description": "button",
+    "custom_actions": [],
+    "pid": 83631,
+    "role": "AXButton",
+    "frame": {
+      "width": 28,
+      "height": 28,
+      "x": 368,
+      "y": 806
+    },
+    "AXUniqueId": "mobile-addons-button",
+    "type": "Button",
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "help": null,
+    "AXFrame": "{{368, 806}, {28, 28}}",
+    "title": null,
+    "enabled": true
+  }
+]

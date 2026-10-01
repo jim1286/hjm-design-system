@@ -1,0 +1,1069 @@
+[
+  {
+    "subrole": null,
+    "help": null,
+    "AXValue": null,
+    "AXFrame": "{{0, 0}, {402, 874}}",
+    "content_required": false,
+    "AXUniqueId": null,
+    "custom_actions": [],
+    "enabled": true,
+    "role_description": "application",
+    "frame": {
+      "width": 402,
+      "x": 0,
+      "y": 0,
+      "height": 874
+    },
+    "AXLabel": "HJM Native Showcase",
+    "pid": 89686,
+    "title": null,
+    "type": "Application",
+    "role": "AXApplication",
+    "traits": [
+      "None"
+    ]
+  },
+  {
+    "enabled": true,
+    "AXLabel": "작은 아이디어가 시작되는 곳",
+    "role": "AXStaticText",
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "help": null,
+    "subrole": null,
+    "AXFrame": "{{36, 98}, {330, 40}}",
+    "AXUniqueId": null,
+    "content_required": false,
+    "role_description": "text",
+    "pid": 89686,
+    "type": "StaticText",
+    "frame": {
+      "width": 330,
+      "y": 98,
+      "height": 40,
+      "x": 36
+    },
+    "AXValue": null,
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "AXFrame": "{{36, 154}, {330, 128}}",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "role": "AXHeading",
+    "content_required": false,
+    "AXLabel": "다음 화면의 영감을 찾아보세요",
+    "title": null,
+    "frame": {
+      "y": 154,
+      "x": 36,
+      "height": 128,
+      "width": 330
+    },
+    "custom_actions": [],
+    "pid": 89686,
+    "traits": [
+      "StaticText",
+      "Scrollable",
+      "Header"
+    ],
+    "help": null,
+    "type": "Heading",
+    "role_description": "heading",
+    "enabled": true,
+    "subrole": null
+  },
+  {
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "role_description": "text",
+    "AXValue": null,
+    "subrole": null,
+    "role": "AXStaticText",
+    "pid": 89686,
+    "AXUniqueId": null,
+    "help": null,
+    "enabled": true,
+    "custom_actions": [],
+    "type": "StaticText",
+    "AXLabel": "마음에 드는 화면을 살펴보고 나만의 컬렉션에 담아보세요.",
+    "title": null,
+    "AXFrame": "{{36, 298}, {330, 80}}",
+    "content_required": false,
+    "frame": {
+      "x": 36,
+      "y": 298,
+      "width": 330,
+      "height": 80
+    }
+  },
+  {
+    "content_required": false,
+    "AXFrame": "{{36, 394}, {330, 40}}",
+    "pid": 89686,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "enabled": true,
+    "AXValue": null,
+    "AXLabel": "작품 검색",
+    "custom_actions": [],
+    "title": null,
+    "help": null,
+    "role": "AXStaticText",
+    "subrole": null,
+    "AXUniqueId": null,
+    "type": "StaticText",
+    "role_description": "text",
+    "frame": {
+      "x": 36,
+      "width": 330,
+      "y": 394,
+      "height": 40
+    }
+  },
+  {
+    "title": null,
+    "AXFrame": "{{49, 443}, {304, 64}}",
+    "traits": [
+      "Scrollable",
+      "TextOperationsAvailable",
+      "TextEntry",
+      "SearchField"
+    ],
+    "help": null,
+    "role": "AXTextField",
+    "role_description": "search text field",
+    "type": "TextField",
+    "custom_actions": [],
+    "AXLabel": "작품 검색",
+    "subrole": "AXSearchField",
+    "enabled": true,
+    "content_required": false,
+    "pid": 89686,
+    "AXUniqueId": null,
+    "frame": {
+      "y": 443,
+      "x": 49,
+      "width": 304,
+      "height": 64
+    },
+    "AXValue": "모바일, 작업 공간, 서연"
+  },
+  {
+    "title": null,
+    "role": "AXGenericElement",
+    "enabled": true,
+    "AXValue": null,
+    "help": null,
+    "AXLabel": "전체",
+    "AXFrame": "{{36, 532}, {82.666664123535156, 44}}",
+    "role_description": "",
+    "content_required": false,
+    "traits": [
+      "Button",
+      "Selected",
+      "Scrollable"
+    ],
+    "pid": 89686,
+    "type": "GenericElement",
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "subrole": null,
+    "frame": {
+      "height": 44,
+      "y": 532,
+      "x": 36,
+      "width": 82.66666412353516
+    }
+  },
+  {
+    "content_required": false,
+    "type": "GenericElement",
+    "AXLabel": "웹사이트",
+    "help": null,
+    "AXFrame": "{{130.66666412353516, 532}, {128.99998474121094, 44}}",
+    "role": "AXGenericElement",
+    "enabled": true,
+    "subrole": null,
+    "AXValue": null,
+    "traits": [
+      "Button",
+      "Scrollable"
+    ],
+    "title": null,
+    "role_description": "",
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "pid": 89686,
+    "frame": {
+      "height": 44,
+      "x": 130.66666412353516,
+      "width": 128.99998474121094,
+      "y": 532
+    }
+  },
+  {
+    "role_description": "",
+    "custom_actions": [],
+    "role": "AXGenericElement",
+    "AXFrame": "{{36, 588}, {104.66667175292969, 44}}",
+    "help": null,
+    "frame": {
+      "y": 588,
+      "width": 104.66667175292969,
+      "height": 44,
+      "x": 36
+    },
+    "enabled": true,
+    "AXUniqueId": null,
+    "AXValue": null,
+    "content_required": false,
+    "pid": 89686,
+    "AXLabel": "모바일",
+    "type": "GenericElement",
+    "title": null,
+    "traits": [
+      "Button",
+      "Scrollable"
+    ],
+    "subrole": null
+  },
+  {
+    "custom_actions": [],
+    "pid": 89686,
+    "AXLabel": "대시보드",
+    "role": "AXGenericElement",
+    "AXFrame": "{{152.66666412353516, 588}, {128.99998474121094, 44}}",
+    "traits": [
+      "Button",
+      "Scrollable"
+    ],
+    "AXUniqueId": null,
+    "type": "GenericElement",
+    "help": null,
+    "role_description": "",
+    "enabled": true,
+    "subrole": null,
+    "AXValue": null,
+    "content_required": false,
+    "frame": {
+      "x": 152.66666412353516,
+      "width": 128.99998474121094,
+      "height": 44,
+      "y": 588
+    },
+    "title": null
+  },
+  {
+    "pid": 89686,
+    "frame": {
+      "x": 36,
+      "y": 656,
+      "width": 168,
+      "height": 44
+    },
+    "AXLabel": "정렬: 인기순",
+    "AXFrame": "{{36, 656}, {168, 44}}",
+    "traits": [
+      "Button",
+      "Scrollable"
+    ],
+    "AXUniqueId": null,
+    "role": "AXButton",
+    "enabled": true,
+    "help": null,
+    "type": "Button",
+    "subrole": null,
+    "role_description": "button",
+    "content_required": false,
+    "AXValue": null,
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "frame": {
+      "height": 44,
+      "y": 712,
+      "x": 36,
+      "width": 183.3333282470703
+    },
+    "AXLabel": "저장한 작품 0",
+    "role": "AXGenericElement",
+    "AXFrame": "{{36, 712}, {183.33332824707031, 44}}",
+    "content_required": false,
+    "pid": 89686,
+    "custom_actions": [],
+    "title": null,
+    "role_description": "",
+    "enabled": true,
+    "traits": [
+      "Button",
+      "Scrollable"
+    ],
+    "AXUniqueId": null,
+    "help": null,
+    "AXValue": null,
+    "subrole": null,
+    "type": "GenericElement"
+  },
+  {
+    "AXUniqueId": null,
+    "AXLabel": "6개의 작품",
+    "enabled": true,
+    "title": null,
+    "pid": 89686,
+    "role_description": "text",
+    "custom_actions": [],
+    "AXFrame": "{{36, 780}, {330, 40}}",
+    "help": null,
+    "frame": {
+      "height": 40,
+      "x": 36,
+      "width": 330,
+      "y": 780
+    },
+    "role": "AXStaticText",
+    "AXValue": null,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "subrole": null,
+    "type": "StaticText",
+    "content_required": false
+  },
+  {
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "help": null,
+    "role": "AXStaticText",
+    "pid": 89686,
+    "AXLabel": "한눈에 보는 이번 주",
+    "frame": {
+      "width": 330,
+      "height": 36,
+      "y": 1062,
+      "x": 36
+    },
+    "title": null,
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "type": "StaticText",
+    "AXFrame": "{{36, 1062}, {330, 36}}",
+    "AXValue": null,
+    "role_description": "text",
+    "enabled": true,
+    "subrole": null,
+    "content_required": false
+  },
+  {
+    "AXFrame": "{{36, 1110}, {330, 40}}",
+    "enabled": true,
+    "help": null,
+    "role_description": "text",
+    "role": "AXStaticText",
+    "type": "StaticText",
+    "AXLabel": "지우 · 대시보드 · 좋아요 204",
+    "AXValue": null,
+    "subrole": null,
+    "AXUniqueId": null,
+    "custom_actions": [],
+    "frame": {
+      "height": 40,
+      "x": 36,
+      "y": 1110,
+      "width": 330
+    },
+    "content_required": false,
+    "pid": 89686,
+    "title": null,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ]
+  },
+  {
+    "content_required": false,
+    "traits": [
+      "Button",
+      "Scrollable"
+    ],
+    "role_description": "",
+    "enabled": true,
+    "AXLabel": "한눈에 보는 이번 주 보기",
+    "help": null,
+    "AXUniqueId": null,
+    "AXValue": null,
+    "subrole": null,
+    "frame": {
+      "width": 159.3333282470703,
+      "height": 44,
+      "x": 36,
+      "y": 1162.3333435058594
+    },
+    "type": "GenericElement",
+    "custom_actions": [],
+    "AXFrame": "{{36, 1162.3333435058594}, {159.33332824707031, 44}}",
+    "role": "AXGenericElement",
+    "pid": 89686,
+    "title": null
+  },
+  {
+    "role": "AXButton",
+    "AXValue": null,
+    "role_description": "button",
+    "AXUniqueId": null,
+    "pid": 89686,
+    "custom_actions": [],
+    "title": null,
+    "enabled": true,
+    "AXFrame": "{{207.33332824707031, 1162.3333435058594}, {82.666671752929688, 44}}",
+    "AXLabel": "저장",
+    "content_required": false,
+    "traits": [
+      "Button",
+      "Scrollable"
+    ],
+    "subrole": null,
+    "type": "Button",
+    "help": null,
+    "frame": {
+      "x": 207.3333282470703,
+      "y": 1162.3333435058594,
+      "width": 82.66667175292969,
+      "height": 44
+    }
+  },
+  {
+    "role": "AXStaticText",
+    "AXValue": null,
+    "AXFrame": "{{36, 1444.3333435058594}, {330, 36}}",
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "type": "StaticText",
+    "content_required": false,
+    "AXUniqueId": null,
+    "custom_actions": [],
+    "help": null,
+    "frame": {
+      "width": 330,
+      "height": 36,
+      "x": 36,
+      "y": 1444.3333435058594
+    },
+    "title": null,
+    "subrole": null,
+    "AXLabel": "순간을 모으는 아카이브",
+    "role_description": "text",
+    "pid": 89686,
+    "enabled": true
+  },
+  {
+    "subrole": null,
+    "frame": {
+      "height": 40,
+      "y": 1492.3333435058594,
+      "width": 330,
+      "x": 36
+    },
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "pid": 89686,
+    "content_required": false,
+    "role_description": "text",
+    "role": "AXStaticText",
+    "help": null,
+    "title": null,
+    "type": "StaticText",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "AXFrame": "{{36, 1492.3333435058594}, {330, 40}}",
+    "enabled": true,
+    "AXLabel": "민준 · 웹사이트 · 좋아요 163",
+    "custom_actions": []
+  },
+  {
+    "enabled": true,
+    "help": null,
+    "role": "AXButton",
+    "AXLabel": "순간을 모으는 아카이브 보기",
+    "role_description": "button",
+    "traits": [
+      "Button",
+      "Scrollable"
+    ],
+    "type": "Button",
+    "AXUniqueId": null,
+    "AXFrame": "{{36, 1544.6666870117188}, {159.33332824707031, 44}}",
+    "content_required": false,
+    "pid": 89686,
+    "title": null,
+    "frame": {
+      "x": 36,
+      "width": 159.3333282470703,
+      "y": 1544.6666870117188,
+      "height": 44
+    },
+    "subrole": null,
+    "AXValue": null,
+    "custom_actions": []
+  },
+  {
+    "AXLabel": "저장",
+    "title": null,
+    "enabled": true,
+    "AXFrame": "{{207.33332824707031, 1544.6666870117188}, {82.666671752929688, 44}}",
+    "custom_actions": [],
+    "subrole": null,
+    "AXValue": null,
+    "frame": {
+      "height": 44,
+      "x": 207.3333282470703,
+      "y": 1544.6666870117188,
+      "width": 82.66667175292969
+    },
+    "pid": 89686,
+    "type": "GenericElement",
+    "role_description": "",
+    "content_required": false,
+    "AXUniqueId": null,
+    "help": null,
+    "role": "AXGenericElement",
+    "traits": [
+      "Button",
+      "Scrollable"
+    ]
+  },
+  {
+    "role_description": "text",
+    "subrole": null,
+    "content_required": false,
+    "pid": 89686,
+    "frame": {
+      "width": 330,
+      "y": 1826.6666870117188,
+      "height": 36,
+      "x": 36
+    },
+    "help": null,
+    "AXLabel": "초록을 기록하는 하루",
+    "custom_actions": [],
+    "enabled": true,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "AXFrame": "{{36, 1826.6666870117188}, {330, 36}}",
+    "role": "AXStaticText",
+    "AXUniqueId": null,
+    "type": "StaticText",
+    "AXValue": null,
+    "title": null
+  },
+  {
+    "help": null,
+    "role_description": "text",
+    "content_required": false,
+    "AXValue": null,
+    "role": "AXStaticText",
+    "enabled": true,
+    "AXLabel": "서연 · 모바일 · 좋아요 128",
+    "custom_actions": [],
+    "pid": 89686,
+    "AXUniqueId": null,
+    "subrole": null,
+    "frame": {
+      "y": 1874.6666870117188,
+      "height": 40,
+      "width": 330,
+      "x": 36
+    },
+    "AXFrame": "{{36, 1874.6666870117188}, {330, 40}}",
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "type": "StaticText",
+    "title": null
+  },
+  {
+    "title": null,
+    "AXFrame": "{{36, 1927.0000305175781}, {159.33332824707031, 44}}",
+    "enabled": true,
+    "pid": 89686,
+    "content_required": false,
+    "help": null,
+    "type": "Button",
+    "AXValue": null,
+    "traits": [
+      "Button",
+      "Scrollable"
+    ],
+    "role": "AXButton",
+    "AXUniqueId": null,
+    "frame": {
+      "y": 1927.0000305175781,
+      "width": 159.3333282470703,
+      "height": 44,
+      "x": 36
+    },
+    "role_description": "button",
+    "subrole": null,
+    "custom_actions": [],
+    "AXLabel": "초록을 기록하는 하루 보기"
+  },
+  {
+    "role": "AXGenericElement",
+    "title": null,
+    "custom_actions": [],
+    "AXLabel": "저장",
+    "pid": 89686,
+    "AXUniqueId": null,
+    "AXValue": null,
+    "type": "GenericElement",
+    "help": null,
+    "AXFrame": "{{207.33332824707031, 1927.0000305175781}, {82.666671752929688, 44}}",
+    "role_description": "",
+    "content_required": false,
+    "frame": {
+      "width": 82.66667175292969,
+      "x": 207.3333282470703,
+      "y": 1927.0000305175781,
+      "height": 44
+    },
+    "enabled": true,
+    "traits": [
+      "Button",
+      "Scrollable"
+    ],
+    "subrole": null
+  },
+  {
+    "AXLabel": "집중을 위한 작업 공간",
+    "role_description": "text",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "title": null,
+    "AXFrame": "{{36, 2208.6666259765625}, {330, 36}}",
+    "subrole": null,
+    "frame": {
+      "height": 36,
+      "y": 2208.6666259765625,
+      "width": 330,
+      "x": 36
+    },
+    "help": null,
+    "custom_actions": [],
+    "type": "StaticText",
+    "role": "AXStaticText",
+    "pid": 89686,
+    "enabled": true,
+    "content_required": false,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ]
+  },
+  {
+    "AXValue": null,
+    "role_description": "text",
+    "subrole": null,
+    "help": null,
+    "pid": 89686,
+    "AXLabel": "서연 · 대시보드 · 좋아요 111",
+    "frame": {
+      "y": 2256.6666259765625,
+      "x": 36,
+      "width": 330,
+      "height": 40
+    },
+    "content_required": false,
+    "AXUniqueId": null,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "enabled": true,
+    "role": "AXStaticText",
+    "type": "StaticText",
+    "title": null,
+    "AXFrame": "{{36, 2256.6666259765625}, {330, 40}}",
+    "custom_actions": []
+  },
+  {
+    "custom_actions": [],
+    "traits": [
+      "Button",
+      "Scrollable"
+    ],
+    "content_required": false,
+    "type": "GenericElement",
+    "title": null,
+    "AXLabel": "집중을 위한 작업 공간 보기",
+    "AXFrame": "{{36, 2308.9999694824219}, {159.33332824707031, 44}}",
+    "enabled": true,
+    "pid": 89686,
+    "AXValue": null,
+    "frame": {
+      "x": 36,
+      "width": 159.3333282470703,
+      "height": 44,
+      "y": 2308.999969482422
+    },
+    "role_description": "",
+    "subrole": null,
+    "role": "AXGenericElement",
+    "help": null,
+    "AXUniqueId": null
+  },
+  {
+    "pid": 89686,
+    "help": null,
+    "custom_actions": [],
+    "role": "AXGenericElement",
+    "subrole": null,
+    "frame": {
+      "x": 207.3333282470703,
+      "y": 2308.999969482422,
+      "width": 82.66667175292969,
+      "height": 44
+    },
+    "AXFrame": "{{207.33332824707031, 2308.9999694824219}, {82.666671752929688, 44}}",
+    "role_description": "",
+    "content_required": false,
+    "traits": [
+      "Button",
+      "Scrollable"
+    ],
+    "AXUniqueId": null,
+    "AXLabel": "저장",
+    "enabled": true,
+    "title": null,
+    "AXValue": null,
+    "type": "GenericElement"
+  },
+  {
+    "type": "StaticText",
+    "AXValue": null,
+    "AXFrame": "{{36, 2591}, {330, 36}}",
+    "subrole": null,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "role_description": "text",
+    "pid": 89686,
+    "custom_actions": [],
+    "content_required": false,
+    "frame": {
+      "width": 330,
+      "y": 2591,
+      "x": 36,
+      "height": 36
+    },
+    "AXUniqueId": null,
+    "title": null,
+    "enabled": true,
+    "help": null,
+    "AXLabel": "작은 스튜디오의 큰 생각",
+    "role": "AXStaticText"
+  },
+  {
+    "role": "AXStaticText",
+    "content_required": false,
+    "AXUniqueId": null,
+    "AXValue": null,
+    "title": null,
+    "help": null,
+    "frame": {
+      "height": 40,
+      "y": 2639,
+      "width": 330,
+      "x": 36
+    },
+    "subrole": null,
+    "AXLabel": "도윤 · 웹사이트 · 좋아요 92",
+    "enabled": true,
+    "pid": 89686,
+    "AXFrame": "{{36, 2639}, {330, 40}}",
+    "role_description": "text",
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "type": "StaticText",
+    "custom_actions": []
+  },
+  {
+    "role": "AXGenericElement",
+    "custom_actions": [],
+    "enabled": true,
+    "AXLabel": "작은 스튜디오의 큰 생각 보기",
+    "frame": {
+      "x": 36,
+      "y": 2691.3333435058594,
+      "width": 159.3333282470703,
+      "height": 44
+    },
+    "pid": 89686,
+    "help": null,
+    "AXFrame": "{{36, 2691.3333435058594}, {159.33332824707031, 44}}",
+    "traits": [
+      "Button",
+      "Scrollable"
+    ],
+    "type": "GenericElement",
+    "AXValue": null,
+    "content_required": false,
+    "AXUniqueId": null,
+    "title": null,
+    "role_description": "",
+    "subrole": null
+  },
+  {
+    "custom_actions": [],
+    "pid": 89686,
+    "role_description": "",
+    "help": null,
+    "title": null,
+    "frame": {
+      "y": 2691.3333435058594,
+      "width": 82.66667175292969,
+      "x": 207.3333282470703,
+      "height": 44
+    },
+    "AXLabel": "저장",
+    "AXFrame": "{{207.33332824707031, 2691.3333435058594}, {82.666671752929688, 44}}",
+    "subrole": null,
+    "role": "AXGenericElement",
+    "type": "GenericElement",
+    "AXValue": null,
+    "content_required": false,
+    "AXUniqueId": null,
+    "traits": [
+      "Button",
+      "Scrollable"
+    ],
+    "enabled": true
+  },
+  {
+    "role": "AXStaticText",
+    "role_description": "text",
+    "frame": {
+      "width": 330,
+      "y": 2973.3333740234375,
+      "x": 36,
+      "height": 36
+    },
+    "content_required": false,
+    "type": "StaticText",
+    "help": null,
+    "pid": 89686,
+    "enabled": true,
+    "AXUniqueId": null,
+    "AXFrame": "{{36, 2973.3333740234375}, {330, 36}}",
+    "AXLabel": "다음 여행의 시작",
+    "custom_actions": [],
+    "AXValue": null,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "title": null,
+    "subrole": null
+  },
+  {
+    "content_required": false,
+    "role": "AXStaticText",
+    "custom_actions": [],
+    "AXFrame": "{{36, 3021.3333740234375}, {330, 40}}",
+    "enabled": true,
+    "role_description": "text",
+    "subrole": null,
+    "pid": 89686,
+    "AXValue": null,
+    "AXLabel": "하린 · 모바일 · 좋아요 76",
+    "help": null,
+    "title": null,
+    "AXUniqueId": null,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "frame": {
+      "height": 40,
+      "x": 36,
+      "y": 3021.3333740234375,
+      "width": 330
+    },
+    "type": "StaticText"
+  },
+  {
+    "AXFrame": "{{36, 3073.6667175292969}, {159.33332824707031, 44}}",
+    "AXValue": null,
+    "pid": 89686,
+    "traits": [
+      "Button",
+      "Scrollable"
+    ],
+    "type": "Button",
+    "enabled": true,
+    "AXUniqueId": null,
+    "title": null,
+    "help": null,
+    "frame": {
+      "y": 3073.666717529297,
+      "width": 159.3333282470703,
+      "x": 36,
+      "height": 44
+    },
+    "role": "AXButton",
+    "role_description": "button",
+    "subrole": null,
+    "AXLabel": "다음 여행의 시작 보기",
+    "content_required": false,
+    "custom_actions": []
+  },
+  {
+    "help": null,
+    "AXUniqueId": null,
+    "type": "Button",
+    "AXLabel": "저장",
+    "AXFrame": "{{207.33332824707031, 3073.6667175292969}, {82.666671752929688, 44}}",
+    "frame": {
+      "width": 82.66667175292969,
+      "x": 207.3333282470703,
+      "y": 3073.666717529297,
+      "height": 44
+    },
+    "role": "AXButton",
+    "title": null,
+    "AXValue": null,
+    "subrole": null,
+    "role_description": "button",
+    "content_required": false,
+    "traits": [
+      "Button",
+      "Scrollable"
+    ],
+    "pid": 89686,
+    "custom_actions": [],
+    "enabled": true
+  },
+  {
+    "type": "StaticText",
+    "AXFrame": "{{36, 3141.333251953125}, {330, 120}}",
+    "role": "AXStaticText",
+    "AXLabel": "직접 만든 예제 작품입니다. 저장은 이 미리보기에서만 유지됩니다.",
+    "enabled": true,
+    "subrole": null,
+    "AXValue": null,
+    "content_required": false,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "custom_actions": [],
+    "title": null,
+    "role_description": "text",
+    "pid": 89686,
+    "frame": {
+      "height": 120,
+      "x": 36,
+      "y": 3141.333251953125,
+      "width": 330
+    },
+    "AXUniqueId": null,
+    "help": null
+  },
+  {
+    "type": "GenericElement",
+    "title": null,
+    "AXFrame": "{{362, 759}, {24, 24}}",
+    "pid": 89686,
+    "help": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "subrole": null,
+    "frame": {
+      "y": 759,
+      "x": 362,
+      "height": 24,
+      "width": 24
+    },
+    "AXLabel": null,
+    "role": "AXGenericElement",
+    "content_required": false,
+    "role_description": "",
+    "enabled": true,
+    "AXValue": null,
+    "custom_actions": [],
+    "AXUniqueId": null
+  },
+  {
+    "AXValue": null,
+    "subrole": null,
+    "AXLabel": "패턴/작품 탐색/Large Text",
+    "content_required": false,
+    "role_description": "",
+    "custom_actions": [],
+    "pid": 89686,
+    "role": "AXGenericElement",
+    "frame": {
+      "height": 17,
+      "y": 811.6666669845581,
+      "x": 6,
+      "width": 190.3333282470703
+    },
+    "AXUniqueId": "mobile-menu-button",
+    "type": "GenericElement",
+    "traits": [
+      "Scrollable"
+    ],
+    "help": null,
+    "AXFrame": "{{6, 811.66666698455811}, {190.33332824707031, 17}}",
+    "title": null,
+    "enabled": true
+  },
+  {
+    "subrole": null,
+    "custom_actions": [],
+    "AXUniqueId": "mobile-addons-button",
+    "help": null,
+    "AXValue": null,
+    "type": "Button",
+    "role": "AXButton",
+    "content_required": false,
+    "pid": 89686,
+    "traits": [
+      "Button",
+      "Scrollable"
+    ],
+    "enabled": true,
+    "role_description": "button",
+    "frame": {
+      "width": 28,
+      "height": 28,
+      "y": 806,
+      "x": 368
+    },
+    "AXLabel": null,
+    "title": null,
+    "AXFrame": "{{368, 806}, {28, 28}}"
+  }
+]

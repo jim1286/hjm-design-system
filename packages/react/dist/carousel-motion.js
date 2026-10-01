@@ -1,11 +1,20 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useEffect, useRef, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
-import { validateCarousel } from "@hjmds/design-contracts/components/interaction-adapters";
+import { resolveCarouselDescriptor, getCarouselNavigationTarget } from "@hjmds/design-contracts/components/carousel";
 import { Button } from "./actions.js";
 import { useHjmTheme } from "./provider.js";
 export function CarouselMotion(props) {
-    const index = validateCarousel(props.slides, props.currentKey);
+    const descriptor = { slides: props.slides, currentKey: props.currentKey };
+    // Share finite keyed selection and names with Carousel; the optional peer owns
+    // only swipe/motion. No autoplay is implied by this controlled presentation.
+    const resolved = resolveCarouselDescriptor(descriptor, {
+        composeAccessibleName: props.composeAccessibleName ?? ((info) => info.label),
+    });
+    const index = resolved.findIndex(slide => slide.current);
+    if (![props.label, props.previousLabel, props.nextLabel].every(label => label.trim())) {
+        throw new TypeError("CarouselMotion labels must not be empty");
+    }
     const { environment } = useHjmTheme();
     // Embla deep-compares options and reInits on change; a live startIndex restarted the engine at the target on
     // every selection, so navigation snapped instead of animating (2026-09-30 review). Only the first index seeds it.
@@ -30,6 +39,6 @@ export function CarouselMotion(props) {
         return () => { api.off("select", select); };
     }, [api]);
     useEffect(() => { syncing.current = true; api?.scrollTo(index, environment.reducedMotion); syncing.current = false; }, [api, index, environment.reducedMotion]);
-    return _jsxs("section", { "aria-label": props.label, "aria-roledescription": "carousel", children: [_jsx("div", { ref: viewport, style: { overflow: "hidden" }, children: _jsx("div", { style: { display: "flex", touchAction: "pan-y pinch-zoom" }, children: props.slides.map((slide, i) => _jsx("div", { role: "group", "aria-roledescription": "slide", "aria-label": slide.label, "aria-hidden": i !== index, inert: i !== index, style: { flex: "0 0 100%", minWidth: 0 }, children: props.renderSlide(slide) }, slide.id)) }) }), _jsx(Button, { tone: "ghost", disabled: index === 0, onClick: () => props.onCurrentKeyChange(props.slides[index - 1].id), children: props.previousLabel }), _jsx(Button, { tone: "ghost", disabled: index === props.slides.length - 1, onClick: () => props.onCurrentKeyChange(props.slides[index + 1].id), children: props.nextLabel })] });
+    return _jsxs("section", { "aria-label": props.label, "aria-roledescription": "carousel", children: [_jsx("div", { ref: viewport, style: { overflow: "hidden" }, children: _jsx("div", { style: { display: "flex", touchAction: "pan-y pinch-zoom" }, children: props.slides.map((slide, i) => _jsx("div", { role: "group", "aria-roledescription": "slide", "aria-label": resolved[i].accessibleName, "aria-hidden": resolved[i].inert, inert: resolved[i].inert, style: { flex: "0 0 100%", minWidth: 0 }, children: props.renderSlide(slide) }, slide.id)) }) }), _jsx(Button, { tone: "ghost", disabled: index === 0, onClick: () => props.onCurrentKeyChange(getCarouselNavigationTarget(descriptor, "previous")), children: props.previousLabel }), _jsx(Button, { tone: "ghost", disabled: index === props.slides.length - 1, onClick: () => props.onCurrentKeyChange(getCarouselNavigationTarget(descriptor, "next")), children: props.nextLabel })] });
 }
 //# sourceMappingURL=carousel-motion.js.map

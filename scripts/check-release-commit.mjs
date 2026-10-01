@@ -22,13 +22,6 @@ function parseVersion(value, label) {
   return match.slice(1).map(Number);
 }
 
-function incrementVersion(version, type) {
-  const [major, minor, patch] = version;
-  if (type === "major") return [major + 1, 0, 0];
-  if (type === "minor") return [major, minor + 1, 0];
-  return [major, minor, patch + 1];
-}
-
 function parseChangesetReleases(source) {
   const frontmatter = source.match(/^---\s*\n([\s\S]*?)\n---(?:\s*\n|$)/)?.[1] ?? "";
   return frontmatter
@@ -66,12 +59,10 @@ if (addedChangesets.length > 0) {
 }
 
 const scheduledPackages = new Set();
-const authoredTypes = [];
 for (const { path } of deletedChangesets) {
   const source = git("show", `${baseRevision}:${path}`);
-  for (const { packageName, type } of parseChangesetReleases(source)) {
+  for (const { packageName } of parseChangesetReleases(source)) {
     scheduledPackages.add(packageName);
-    authoredTypes.push(type);
   }
 }
 if (scheduledPackages.size === 0) {
@@ -115,21 +106,10 @@ if (currentVersions.size !== 1 || previousVersions.size !== 1) {
 }
 const [currentVersion] = currentVersions;
 const [previousVersion] = previousVersions;
-const typeRank = { patch: 0, minor: 1, major: 2 };
-const authoredType = authoredTypes.reduce(
-  (highest, type) => typeRank[type] > typeRank[highest] ? type : highest,
-  "patch",
-);
-const expectedVersion = incrementVersion(
-  parseVersion(previousVersion, "Base version"),
-  authoredType,
-).join(".");
+// 2026-10-02 user decision: release version is chosen by the maintainer.
+// Verify synchronized stable identifiers here; do not infer major/minor from Changeset labels.
+parseVersion(previousVersion, "Base version");
 parseVersion(currentVersion, "Current version");
-if (currentVersion !== expectedVersion) {
-  throw new Error(
-    `Release commit must apply the highest authored ${authoredType} bump ${previousVersion} -> ${expectedVersion}; received ${currentVersion}`,
-  );
-}
 
 const contractsVersion = await readFile("packages/design-contracts/src/version.ts", "utf8");
 const reactEvidence = await readFile("packages/react/src/evidence.ts", "utf8");

@@ -143,6 +143,22 @@ describe("package boundaries", () => {
       "./components/watermark",
       "./components/affix",
       "./components/interaction-adapters",
+      // Optional visual contracts remain granular and must retain explicit Metro conditions.
+      "./avatar-fallback",
+      "./effect-surface",
+      "./content-transition",
+      "./duration-field",
+      "./reactions",
+      "./scroll-progress",
+      "./code-block",
+      "./activity-heatmap",
+      "./task-list",
+      "./voice-note",
+      "./theme-studio",
+      "./grid-reveal",
+      "./gravity-letters",
+      "./gooey-navigation",
+      "./action-session",
     ] as const;
 
     expect(Object.keys(packageJson.exports)).toEqual(expectedExports);

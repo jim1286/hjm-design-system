@@ -2156,6 +2156,30 @@ export declare const bottomNavigationRecipe: {
         readonly native: "navigator-tab-bar";
     };
     readonly presentations: {
+        readonly capsule: {
+            readonly background: Readonly<{
+                source: "theme";
+                key: "surface";
+                alpha?: number;
+            }>;
+            readonly border: Readonly<{
+                source: "theme";
+                key: "border";
+                alpha?: number;
+            }>;
+            readonly borderWidth: 1;
+            readonly borderEdges: readonly ["all"];
+            readonly radius: "full";
+            readonly shadow: {
+                readonly color: "#000000";
+                readonly opacity: 0.12;
+                readonly radius: 12;
+                readonly offsetY: 4;
+            };
+            readonly maxWidth: 480;
+            readonly outerPaddingHorizontal: 16;
+            readonly outerPaddingTop: 8;
+        };
         readonly bar: {
             readonly background: Readonly<{
                 source: "theme";
@@ -3280,7 +3304,7 @@ export declare const toastRecipe: {
     readonly defaults: {
         readonly tone: "neutral";
         readonly placement: "bottom";
-        readonly durationMs: 5000;
+        readonly durationMs: 3000;
     };
     readonly adaptive: {
         readonly web: "fixed-viewport";

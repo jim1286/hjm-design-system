@@ -1,0 +1,2481 @@
+[
+  {
+    "subrole": null,
+    "help": null,
+    "AXValue": null,
+    "AXFrame": "{{0, 0}, {402, 874}}",
+    "content_required": false,
+    "AXUniqueId": null,
+    "custom_actions": [],
+    "enabled": true,
+    "role_description": "application",
+    "frame": {
+      "x": 0,
+      "y": 0,
+      "width": 402,
+      "height": 874
+    },
+    "AXLabel": "HJM Native Showcase",
+    "pid": 57163,
+    "title": null,
+    "type": "Application",
+    "role": "AXApplication",
+    "traits": [
+      "None"
+    ]
+  },
+  {
+    "enabled": true,
+    "AXLabel": "최근 활동",
+    "role": "AXStaticText",
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "help": null,
+    "subrole": null,
+    "AXFrame": "{{16, 78}, {370, 20}}",
+    "AXUniqueId": null,
+    "content_required": false,
+    "role_description": "text",
+    "pid": 57163,
+    "type": "StaticText",
+    "frame": {
+      "x": 16,
+      "width": 370,
+      "y": 78,
+      "height": 20
+    },
+    "AXValue": null,
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "AXFrame": "{{16, 114}, {370, 20}}",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "role": "AXStaticText",
+    "content_required": false,
+    "AXLabel": "진할수록 활동이 많아요. 점선은 아직 기록을 받지 못한 날입니다.",
+    "title": null,
+    "frame": {
+      "height": 20,
+      "x": 16,
+      "width": 370,
+      "y": 114
+    },
+    "custom_actions": [],
+    "pid": 57163,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "help": null,
+    "type": "StaticText",
+    "role_description": "text",
+    "enabled": true,
+    "subrole": null
+  },
+  {
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "role_description": "image",
+    "AXValue": null,
+    "subrole": "AXSwitch",
+    "role": "AXImage",
+    "pid": 57163,
+    "AXUniqueId": null,
+    "help": null,
+    "enabled": true,
+    "custom_actions": [],
+    "type": "Image",
+    "AXLabel": "목록으로 보기",
+    "title": null,
+    "AXFrame": "{{16, 150}, {370, 44}}",
+    "content_required": false,
+    "frame": {
+      "y": 150,
+      "x": 16,
+      "width": 370,
+      "height": 44
+    }
+  },
+  {
+    "content_required": false,
+    "AXFrame": "{{36, 210}, {16, 16}}",
+    "pid": 57163,
+    "traits": [
+      "Scrollable"
+    ],
+    "enabled": true,
+    "AXValue": null,
+    "AXLabel": "2026-07-06: 10회",
+    "custom_actions": [],
+    "title": null,
+    "help": null,
+    "role": "AXGenericElement",
+    "subrole": null,
+    "AXUniqueId": null,
+    "type": "GenericElement",
+    "role_description": "",
+    "frame": {
+      "x": 36,
+      "y": 210,
+      "width": 16,
+      "height": 16
+    }
+  },
+  {
+    "title": null,
+    "AXFrame": "{{56, 210}, {16, 16}}",
+    "traits": [
+      "Scrollable"
+    ],
+    "help": null,
+    "role": "AXGenericElement",
+    "role_description": "",
+    "type": "GenericElement",
+    "custom_actions": [],
+    "AXLabel": "2026-07-13: 6회",
+    "subrole": null,
+    "enabled": true,
+    "content_required": false,
+    "pid": 57163,
+    "AXUniqueId": null,
+    "frame": {
+      "height": 16,
+      "y": 210,
+      "width": 16,
+      "x": 56
+    },
+    "AXValue": null
+  },
+  {
+    "title": null,
+    "role": "AXGenericElement",
+    "enabled": true,
+    "AXValue": null,
+    "help": null,
+    "AXLabel": "2026-07-20: 5회",
+    "AXFrame": "{{76, 210}, {16, 16}}",
+    "role_description": "",
+    "content_required": false,
+    "traits": [
+      "Scrollable"
+    ],
+    "pid": 57163,
+    "type": "GenericElement",
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "subrole": null,
+    "frame": {
+      "width": 16,
+      "y": 210,
+      "height": 16,
+      "x": 76
+    }
+  },
+  {
+    "AXFrame": "{{96, 210}, {16, 16}}",
+    "content_required": false,
+    "custom_actions": [],
+    "type": "GenericElement",
+    "frame": {
+      "x": 96,
+      "y": 210,
+      "width": 16,
+      "height": 16
+    },
+    "title": null,
+    "help": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "pid": 57163,
+    "subrole": null,
+    "AXUniqueId": null,
+    "AXValue": null,
+    "enabled": true,
+    "role": "AXGenericElement",
+    "AXLabel": "2026-07-27: 기록 없음",
+    "role_description": ""
+  },
+  {
+    "subrole": null,
+    "title": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "role_description": "",
+    "custom_actions": [],
+    "role": "AXGenericElement",
+    "pid": 57163,
+    "content_required": false,
+    "AXFrame": "{{116, 210}, {16, 16}}",
+    "type": "GenericElement",
+    "frame": {
+      "height": 16,
+      "y": 210,
+      "x": 116,
+      "width": 16
+    },
+    "AXValue": null,
+    "AXLabel": "2026-08-03: 0회",
+    "enabled": true,
+    "help": null,
+    "AXUniqueId": null
+  },
+  {
+    "enabled": true,
+    "type": "GenericElement",
+    "role_description": "",
+    "frame": {
+      "x": 136,
+      "width": 16,
+      "height": 16,
+      "y": 210
+    },
+    "help": null,
+    "content_required": false,
+    "AXValue": null,
+    "AXLabel": "2026-08-10: 10회",
+    "pid": 57163,
+    "custom_actions": [],
+    "AXFrame": "{{136, 210}, {16, 16}}",
+    "AXUniqueId": null,
+    "title": null,
+    "role": "AXGenericElement",
+    "traits": [
+      "Scrollable"
+    ],
+    "subrole": null
+  },
+  {
+    "content_required": false,
+    "pid": 57163,
+    "AXValue": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "AXUniqueId": null,
+    "title": null,
+    "role_description": "",
+    "enabled": true,
+    "help": null,
+    "AXFrame": "{{156, 210}, {16, 16}}",
+    "type": "GenericElement",
+    "subrole": null,
+    "custom_actions": [],
+    "frame": {
+      "height": 16,
+      "y": 210,
+      "width": 16,
+      "x": 156
+    },
+    "role": "AXGenericElement",
+    "AXLabel": "2026-08-17: 9회"
+  },
+  {
+    "enabled": true,
+    "role_description": "",
+    "title": null,
+    "frame": {
+      "height": 16,
+      "x": 176,
+      "width": 16,
+      "y": 210
+    },
+    "AXFrame": "{{176, 210}, {16, 16}}",
+    "AXValue": null,
+    "custom_actions": [],
+    "role": "AXGenericElement",
+    "type": "GenericElement",
+    "AXUniqueId": null,
+    "subrole": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "AXLabel": "2026-08-24: 5회",
+    "help": null,
+    "content_required": false,
+    "pid": 57163
+  },
+  {
+    "frame": {
+      "height": 16,
+      "x": 196,
+      "y": 210,
+      "width": 16
+    },
+    "role": "AXGenericElement",
+    "type": "GenericElement",
+    "title": null,
+    "AXFrame": "{{196, 210}, {16, 16}}",
+    "enabled": true,
+    "AXLabel": "2026-08-31: 4회",
+    "AXValue": null,
+    "role_description": "",
+    "help": null,
+    "pid": 57163,
+    "AXUniqueId": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "custom_actions": [],
+    "subrole": null,
+    "content_required": false
+  },
+  {
+    "title": null,
+    "role_description": "",
+    "AXFrame": "{{216, 210}, {16, 16}}",
+    "help": null,
+    "role": "AXGenericElement",
+    "enabled": true,
+    "subrole": null,
+    "content_required": false,
+    "pid": 57163,
+    "traits": [
+      "Scrollable"
+    ],
+    "custom_actions": [],
+    "frame": {
+      "y": 210,
+      "x": 216,
+      "height": 16,
+      "width": 16
+    },
+    "AXUniqueId": null,
+    "AXValue": null,
+    "AXLabel": "2026-09-07: 3회",
+    "type": "GenericElement"
+  },
+  {
+    "type": "GenericElement",
+    "pid": 57163,
+    "enabled": true,
+    "help": null,
+    "AXLabel": "2026-09-14: 10회",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "title": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "AXFrame": "{{236, 210}, {16, 16}}",
+    "role": "AXGenericElement",
+    "role_description": "",
+    "content_required": false,
+    "subrole": null,
+    "frame": {
+      "y": 210,
+      "width": 16,
+      "height": 16,
+      "x": 236
+    },
+    "custom_actions": []
+  },
+  {
+    "subrole": null,
+    "AXValue": null,
+    "type": "GenericElement",
+    "AXFrame": "{{256, 210}, {16, 16}}",
+    "frame": {
+      "width": 16,
+      "height": 16,
+      "y": 210,
+      "x": 256
+    },
+    "enabled": true,
+    "content_required": false,
+    "title": null,
+    "pid": 57163,
+    "custom_actions": [],
+    "help": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "AXUniqueId": null,
+    "AXLabel": "2026-09-21: 9회",
+    "role": "AXGenericElement",
+    "role_description": ""
+  },
+  {
+    "help": null,
+    "frame": {
+      "x": 276,
+      "width": 16,
+      "height": 16,
+      "y": 210
+    },
+    "role_description": "",
+    "enabled": true,
+    "subrole": null,
+    "content_required": false,
+    "type": "GenericElement",
+    "AXUniqueId": null,
+    "AXLabel": "2026-09-28: 8회",
+    "traits": [
+      "Scrollable"
+    ],
+    "AXValue": null,
+    "title": null,
+    "pid": 57163,
+    "role": "AXGenericElement",
+    "AXFrame": "{{276, 210}, {16, 16}}",
+    "custom_actions": []
+  },
+  {
+    "enabled": true,
+    "AXLabel": "2026-07-07: 3회",
+    "AXFrame": "{{36, 230}, {16, 16}}",
+    "traits": [
+      "Scrollable"
+    ],
+    "pid": 57163,
+    "role_description": "",
+    "frame": {
+      "y": 230,
+      "height": 16,
+      "width": 16,
+      "x": 36
+    },
+    "type": "GenericElement",
+    "content_required": false,
+    "custom_actions": [],
+    "subrole": null,
+    "help": null,
+    "role": "AXGenericElement",
+    "title": null,
+    "AXUniqueId": null,
+    "AXValue": null
+  },
+  {
+    "role": "AXGenericElement",
+    "enabled": true,
+    "content_required": false,
+    "frame": {
+      "height": 16,
+      "y": 230,
+      "x": 56,
+      "width": 16
+    },
+    "pid": 57163,
+    "subrole": null,
+    "AXValue": null,
+    "AXLabel": "2026-07-14: 기록 없음",
+    "title": null,
+    "type": "GenericElement",
+    "custom_actions": [],
+    "traits": [
+      "Scrollable"
+    ],
+    "AXUniqueId": null,
+    "help": null,
+    "role_description": "",
+    "AXFrame": "{{56, 230}, {16, 16}}"
+  },
+  {
+    "type": "GenericElement",
+    "frame": {
+      "x": 76,
+      "y": 230,
+      "height": 16,
+      "width": 16
+    },
+    "role_description": "",
+    "role": "AXGenericElement",
+    "AXFrame": "{{76, 230}, {16, 16}}",
+    "custom_actions": [],
+    "subrole": null,
+    "AXValue": null,
+    "AXLabel": "2026-07-21: 1회",
+    "content_required": false,
+    "help": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "title": null,
+    "AXUniqueId": null,
+    "enabled": true,
+    "pid": 57163
+  },
+  {
+    "AXLabel": "2026-07-28: 8회",
+    "subrole": null,
+    "frame": {
+      "x": 96,
+      "y": 230,
+      "width": 16,
+      "height": 16
+    },
+    "role": "AXGenericElement",
+    "enabled": true,
+    "traits": [
+      "Scrollable"
+    ],
+    "title": null,
+    "help": null,
+    "AXValue": null,
+    "AXFrame": "{{96, 230}, {16, 16}}",
+    "role_description": "",
+    "custom_actions": [],
+    "content_required": false,
+    "pid": 57163,
+    "AXUniqueId": null,
+    "type": "GenericElement"
+  },
+  {
+    "AXLabel": "2026-08-04: 7회",
+    "subrole": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "AXFrame": "{{116, 230}, {16, 16}}",
+    "role_description": "",
+    "frame": {
+      "width": 16,
+      "x": 116,
+      "y": 230,
+      "height": 16
+    },
+    "type": "GenericElement",
+    "content_required": false,
+    "help": null,
+    "AXValue": null,
+    "title": null,
+    "role": "AXGenericElement",
+    "custom_actions": [],
+    "enabled": true,
+    "pid": 57163,
+    "AXUniqueId": null
+  },
+  {
+    "role_description": "",
+    "enabled": true,
+    "subrole": null,
+    "pid": 57163,
+    "frame": {
+      "width": 16,
+      "height": 16,
+      "x": 136,
+      "y": 230
+    },
+    "AXUniqueId": null,
+    "AXValue": null,
+    "help": null,
+    "AXLabel": "2026-08-11: 6회",
+    "role": "AXGenericElement",
+    "title": null,
+    "type": "GenericElement",
+    "content_required": false,
+    "custom_actions": [],
+    "traits": [
+      "Scrollable"
+    ],
+    "AXFrame": "{{136, 230}, {16, 16}}"
+  },
+  {
+    "content_required": false,
+    "help": null,
+    "frame": {
+      "width": 16,
+      "x": 156,
+      "y": 230,
+      "height": 16
+    },
+    "role": "AXGenericElement",
+    "role_description": "",
+    "custom_actions": [],
+    "type": "GenericElement",
+    "AXLabel": "2026-08-18: 2회",
+    "enabled": true,
+    "subrole": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "title": null,
+    "pid": 57163,
+    "AXUniqueId": null,
+    "AXValue": null,
+    "AXFrame": "{{156, 230}, {16, 16}}"
+  },
+  {
+    "content_required": false,
+    "AXLabel": "2026-08-25: 1회",
+    "AXValue": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "custom_actions": [],
+    "enabled": true,
+    "AXFrame": "{{176, 230}, {16, 16}}",
+    "role": "AXGenericElement",
+    "title": null,
+    "type": "GenericElement",
+    "subrole": null,
+    "pid": 57163,
+    "role_description": "",
+    "frame": {
+      "width": 16,
+      "height": 16,
+      "x": 176,
+      "y": 230
+    },
+    "AXUniqueId": null,
+    "help": null
+  },
+  {
+    "AXLabel": "2026-09-01: 0회",
+    "role_description": "",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "AXFrame": "{{196, 230}, {16, 16}}",
+    "title": null,
+    "subrole": null,
+    "frame": {
+      "x": 196,
+      "width": 16,
+      "y": 230,
+      "height": 16
+    },
+    "help": null,
+    "custom_actions": [],
+    "type": "GenericElement",
+    "role": "AXGenericElement",
+    "pid": 57163,
+    "enabled": true,
+    "content_required": false,
+    "traits": [
+      "Scrollable"
+    ]
+  },
+  {
+    "AXValue": null,
+    "role_description": "",
+    "subrole": null,
+    "help": null,
+    "pid": 57163,
+    "AXLabel": "2026-09-08: 7회",
+    "frame": {
+      "y": 230,
+      "x": 216,
+      "width": 16,
+      "height": 16
+    },
+    "content_required": false,
+    "AXUniqueId": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "enabled": true,
+    "role": "AXGenericElement",
+    "type": "GenericElement",
+    "AXFrame": "{{216, 230}, {16, 16}}",
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "custom_actions": [],
+    "traits": [
+      "Scrollable"
+    ],
+    "content_required": false,
+    "type": "GenericElement",
+    "title": null,
+    "AXLabel": "2026-09-15: 6회",
+    "AXFrame": "{{236, 230}, {16, 16}}",
+    "enabled": true,
+    "pid": 57163,
+    "AXValue": null,
+    "frame": {
+      "width": 16,
+      "y": 230,
+      "height": 16,
+      "x": 236
+    },
+    "role_description": "",
+    "subrole": null,
+    "role": "AXGenericElement",
+    "help": null,
+    "AXUniqueId": null
+  },
+  {
+    "pid": 57163,
+    "help": null,
+    "custom_actions": [],
+    "role": "AXGenericElement",
+    "subrole": null,
+    "frame": {
+      "y": 230,
+      "width": 16,
+      "height": 16,
+      "x": 256
+    },
+    "AXFrame": "{{256, 230}, {16, 16}}",
+    "role_description": "",
+    "content_required": false,
+    "traits": [
+      "Scrollable"
+    ],
+    "AXUniqueId": null,
+    "AXLabel": "2026-09-22: 5회",
+    "enabled": true,
+    "title": null,
+    "AXValue": null,
+    "type": "GenericElement"
+  },
+  {
+    "type": "GenericElement",
+    "AXValue": null,
+    "AXFrame": "{{276, 230}, {16, 16}}",
+    "subrole": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "role_description": "",
+    "pid": 57163,
+    "custom_actions": [],
+    "content_required": false,
+    "frame": {
+      "width": 16,
+      "y": 230,
+      "x": 276,
+      "height": 16
+    },
+    "AXUniqueId": null,
+    "title": null,
+    "enabled": true,
+    "help": null,
+    "AXLabel": "2026-09-29: 1회",
+    "role": "AXGenericElement"
+  },
+  {
+    "role": "AXGenericElement",
+    "content_required": false,
+    "AXUniqueId": null,
+    "AXValue": null,
+    "title": null,
+    "help": null,
+    "frame": {
+      "y": 250,
+      "height": 16,
+      "x": 16,
+      "width": 16
+    },
+    "subrole": null,
+    "AXLabel": "2026-07-01: 기록 없음",
+    "enabled": true,
+    "pid": 57163,
+    "AXFrame": "{{16, 250}, {16, 16}}",
+    "role_description": "",
+    "traits": [
+      "Scrollable"
+    ],
+    "type": "GenericElement",
+    "custom_actions": []
+  },
+  {
+    "role": "AXGenericElement",
+    "custom_actions": [],
+    "enabled": true,
+    "AXLabel": "2026-07-08: 10회",
+    "frame": {
+      "width": 16,
+      "height": 16,
+      "x": 36,
+      "y": 250
+    },
+    "pid": 57163,
+    "help": null,
+    "AXFrame": "{{36, 250}, {16, 16}}",
+    "traits": [
+      "Scrollable"
+    ],
+    "type": "GenericElement",
+    "AXValue": null,
+    "content_required": false,
+    "AXUniqueId": null,
+    "title": null,
+    "role_description": "",
+    "subrole": null
+  },
+  {
+    "custom_actions": [],
+    "pid": 57163,
+    "role_description": "",
+    "help": null,
+    "title": null,
+    "frame": {
+      "y": 250,
+      "width": 16,
+      "height": 16,
+      "x": 56
+    },
+    "AXLabel": "2026-07-15: 9회",
+    "AXFrame": "{{56, 250}, {16, 16}}",
+    "subrole": null,
+    "role": "AXGenericElement",
+    "type": "GenericElement",
+    "AXValue": null,
+    "content_required": false,
+    "AXUniqueId": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "enabled": true
+  },
+  {
+    "role": "AXGenericElement",
+    "role_description": "",
+    "frame": {
+      "width": 16,
+      "y": 250,
+      "x": 76,
+      "height": 16
+    },
+    "content_required": false,
+    "type": "GenericElement",
+    "help": null,
+    "pid": 57163,
+    "enabled": true,
+    "AXUniqueId": null,
+    "AXFrame": "{{76, 250}, {16, 16}}",
+    "AXLabel": "2026-07-22: 5회",
+    "custom_actions": [],
+    "AXValue": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "title": null,
+    "subrole": null
+  },
+  {
+    "enabled": true,
+    "traits": [
+      "Scrollable"
+    ],
+    "frame": {
+      "height": 16,
+      "y": 250,
+      "x": 96,
+      "width": 16
+    },
+    "title": null,
+    "help": null,
+    "role": "AXGenericElement",
+    "AXFrame": "{{96, 250}, {16, 16}}",
+    "custom_actions": [],
+    "AXLabel": "2026-07-29: 4회",
+    "subrole": null,
+    "content_required": false,
+    "AXUniqueId": null,
+    "role_description": "",
+    "AXValue": null,
+    "pid": 57163,
+    "type": "GenericElement"
+  },
+  {
+    "content_required": false,
+    "AXUniqueId": null,
+    "title": null,
+    "role": "AXGenericElement",
+    "frame": {
+      "x": 116,
+      "width": 16,
+      "height": 16,
+      "y": 250
+    },
+    "custom_actions": [],
+    "AXFrame": "{{116, 250}, {16, 16}}",
+    "pid": 57163,
+    "role_description": "",
+    "type": "GenericElement",
+    "AXValue": null,
+    "enabled": true,
+    "subrole": null,
+    "help": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "AXLabel": "2026-08-05: 3회"
+  },
+  {
+    "pid": 57163,
+    "title": null,
+    "role_description": "",
+    "AXUniqueId": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "type": "GenericElement",
+    "AXFrame": "{{136, 250}, {16, 16}}",
+    "subrole": null,
+    "role": "AXGenericElement",
+    "frame": {
+      "width": 16,
+      "height": 16,
+      "x": 136,
+      "y": 250
+    },
+    "enabled": true,
+    "AXLabel": "2026-08-12: 10회",
+    "AXValue": null,
+    "help": null,
+    "custom_actions": [],
+    "content_required": false
+  },
+  {
+    "subrole": null,
+    "content_required": false,
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "AXLabel": "2026-08-19: 9회",
+    "AXFrame": "{{156, 250}, {16, 16}}",
+    "frame": {
+      "width": 16,
+      "x": 156,
+      "y": 250,
+      "height": 16
+    },
+    "help": null,
+    "type": "GenericElement",
+    "AXValue": null,
+    "role": "AXGenericElement",
+    "pid": 57163,
+    "enabled": true,
+    "title": null,
+    "role_description": "",
+    "traits": [
+      "Scrollable"
+    ]
+  },
+  {
+    "AXFrame": "{{176, 250}, {16, 16}}",
+    "enabled": true,
+    "title": null,
+    "role_description": "",
+    "help": null,
+    "subrole": null,
+    "custom_actions": [],
+    "AXLabel": "2026-08-26: 8회",
+    "content_required": false,
+    "traits": [
+      "Scrollable"
+    ],
+    "frame": {
+      "x": 176,
+      "y": 250,
+      "height": 16,
+      "width": 16
+    },
+    "type": "GenericElement",
+    "AXValue": null,
+    "AXUniqueId": null,
+    "pid": 57163,
+    "role": "AXGenericElement"
+  },
+  {
+    "help": null,
+    "AXFrame": "{{196, 250}, {16, 16}}",
+    "traits": [
+      "Scrollable"
+    ],
+    "enabled": true,
+    "AXUniqueId": null,
+    "role": "AXGenericElement",
+    "content_required": false,
+    "custom_actions": [],
+    "frame": {
+      "y": 250,
+      "x": 196,
+      "height": 16,
+      "width": 16
+    },
+    "AXLabel": "2026-09-02: 4회",
+    "pid": 57163,
+    "title": null,
+    "type": "GenericElement",
+    "AXValue": null,
+    "role_description": "",
+    "subrole": null
+  },
+  {
+    "AXValue": null,
+    "AXUniqueId": null,
+    "AXFrame": "{{216, 250}, {16, 16}}",
+    "type": "GenericElement",
+    "traits": [
+      "Scrollable"
+    ],
+    "role": "AXGenericElement",
+    "title": null,
+    "frame": {
+      "width": 16,
+      "x": 216,
+      "height": 16,
+      "y": 250
+    },
+    "content_required": false,
+    "enabled": true,
+    "AXLabel": "2026-09-09: 3회",
+    "role_description": "",
+    "pid": 57163,
+    "custom_actions": [],
+    "subrole": null,
+    "help": null
+  },
+  {
+    "role": "AXGenericElement",
+    "role_description": "",
+    "custom_actions": [],
+    "AXLabel": "2026-09-16: 2회",
+    "title": null,
+    "AXFrame": "{{236, 250}, {16, 16}}",
+    "help": null,
+    "type": "GenericElement",
+    "subrole": null,
+    "frame": {
+      "width": 16,
+      "y": 250,
+      "height": 16,
+      "x": 236
+    },
+    "content_required": false,
+    "AXUniqueId": null,
+    "AXValue": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "enabled": true,
+    "pid": 57163
+  },
+  {
+    "role": "AXGenericElement",
+    "enabled": true,
+    "help": null,
+    "AXValue": null,
+    "custom_actions": [],
+    "type": "GenericElement",
+    "AXLabel": "2026-09-23: 9회",
+    "AXFrame": "{{256, 250}, {16, 16}}",
+    "role_description": "",
+    "subrole": null,
+    "title": null,
+    "frame": {
+      "width": 16,
+      "height": 16,
+      "x": 256,
+      "y": 250
+    },
+    "traits": [
+      "Scrollable"
+    ],
+    "content_required": false,
+    "pid": 57163,
+    "AXUniqueId": null
+  },
+  {
+    "AXUniqueId": null,
+    "frame": {
+      "width": 16,
+      "height": 16,
+      "y": 250,
+      "x": 276
+    },
+    "content_required": false,
+    "type": "GenericElement",
+    "custom_actions": [],
+    "role": "AXGenericElement",
+    "AXValue": null,
+    "role_description": "",
+    "subrole": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "title": null,
+    "AXLabel": "2026-09-30: 기록 없음",
+    "enabled": true,
+    "help": null,
+    "pid": 57163,
+    "AXFrame": "{{276, 250}, {16, 16}}"
+  },
+  {
+    "AXUniqueId": null,
+    "custom_actions": [],
+    "frame": {
+      "width": 16,
+      "x": 16,
+      "height": 16,
+      "y": 270
+    },
+    "subrole": null,
+    "content_required": false,
+    "help": null,
+    "AXValue": null,
+    "AXFrame": "{{16, 270}, {16, 16}}",
+    "enabled": true,
+    "traits": [
+      "Scrollable"
+    ],
+    "type": "GenericElement",
+    "AXLabel": "2026-07-02: 7회",
+    "role": "AXGenericElement",
+    "role_description": "",
+    "title": null,
+    "pid": 57163
+  },
+  {
+    "role": "AXGenericElement",
+    "AXUniqueId": null,
+    "type": "GenericElement",
+    "traits": [
+      "Scrollable"
+    ],
+    "AXLabel": "2026-07-09: 6회",
+    "frame": {
+      "width": 16,
+      "x": 36,
+      "y": 270,
+      "height": 16
+    },
+    "enabled": true,
+    "AXValue": null,
+    "AXFrame": "{{36, 270}, {16, 16}}",
+    "title": null,
+    "help": null,
+    "custom_actions": [],
+    "subrole": null,
+    "role_description": "",
+    "content_required": false,
+    "pid": 57163
+  },
+  {
+    "pid": 57163,
+    "role": "AXGenericElement",
+    "role_description": "",
+    "subrole": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "AXUniqueId": null,
+    "AXValue": null,
+    "AXFrame": "{{56, 270}, {16, 16}}",
+    "type": "GenericElement",
+    "custom_actions": [],
+    "help": null,
+    "frame": {
+      "width": 16,
+      "height": 16,
+      "y": 270,
+      "x": 56
+    },
+    "title": null,
+    "enabled": true,
+    "AXLabel": "2026-07-16: 2회",
+    "content_required": false
+  },
+  {
+    "content_required": false,
+    "AXValue": null,
+    "role": "AXGenericElement",
+    "enabled": true,
+    "title": null,
+    "AXFrame": "{{76, 270}, {16, 16}}",
+    "help": null,
+    "role_description": "",
+    "custom_actions": [],
+    "frame": {
+      "y": 270,
+      "height": 16,
+      "width": 16,
+      "x": 76
+    },
+    "AXLabel": "2026-07-23: 1회",
+    "subrole": null,
+    "type": "GenericElement",
+    "pid": 57163,
+    "traits": [
+      "Scrollable"
+    ],
+    "AXUniqueId": null
+  },
+  {
+    "type": "GenericElement",
+    "subrole": null,
+    "AXFrame": "{{96, 270}, {16, 16}}",
+    "pid": 57163,
+    "AXLabel": "2026-07-30: 0회",
+    "role_description": "",
+    "custom_actions": [],
+    "content_required": false,
+    "traits": [
+      "Scrollable"
+    ],
+    "role": "AXGenericElement",
+    "frame": {
+      "x": 96,
+      "width": 16,
+      "height": 16,
+      "y": 270
+    },
+    "help": null,
+    "AXValue": null,
+    "title": null,
+    "enabled": true,
+    "AXUniqueId": null
+  },
+  {
+    "AXValue": null,
+    "content_required": false,
+    "AXFrame": "{{116, 270}, {16, 16}}",
+    "role": "AXGenericElement",
+    "role_description": "",
+    "help": null,
+    "enabled": true,
+    "traits": [
+      "Scrollable"
+    ],
+    "type": "GenericElement",
+    "AXUniqueId": null,
+    "subrole": null,
+    "AXLabel": "2026-08-06: 7회",
+    "pid": 57163,
+    "custom_actions": [],
+    "title": null,
+    "frame": {
+      "y": 270,
+      "height": 16,
+      "x": 116,
+      "width": 16
+    }
+  },
+  {
+    "pid": 57163,
+    "AXValue": null,
+    "type": "GenericElement",
+    "custom_actions": [],
+    "AXLabel": "2026-08-13: 6회",
+    "AXUniqueId": null,
+    "title": null,
+    "role_description": "",
+    "traits": [
+      "Scrollable"
+    ],
+    "content_required": false,
+    "role": "AXGenericElement",
+    "frame": {
+      "x": 136,
+      "width": 16,
+      "height": 16,
+      "y": 270
+    },
+    "subrole": null,
+    "enabled": true,
+    "help": null,
+    "AXFrame": "{{136, 270}, {16, 16}}"
+  },
+  {
+    "role": "AXGenericElement",
+    "AXUniqueId": null,
+    "AXFrame": "{{156, 270}, {16, 16}}",
+    "title": null,
+    "frame": {
+      "y": 270,
+      "x": 156,
+      "height": 16,
+      "width": 16
+    },
+    "role_description": "",
+    "traits": [
+      "Scrollable"
+    ],
+    "content_required": false,
+    "help": null,
+    "custom_actions": [],
+    "AXValue": null,
+    "subrole": null,
+    "pid": 57163,
+    "enabled": true,
+    "type": "GenericElement",
+    "AXLabel": "2026-08-20: 5회"
+  },
+  {
+    "role_description": "",
+    "AXValue": null,
+    "AXUniqueId": null,
+    "type": "GenericElement",
+    "role": "AXGenericElement",
+    "title": null,
+    "subrole": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "enabled": true,
+    "custom_actions": [],
+    "AXLabel": "2026-08-27: 1회",
+    "pid": 57163,
+    "help": null,
+    "AXFrame": "{{176, 270}, {16, 16}}",
+    "content_required": false,
+    "frame": {
+      "height": 16,
+      "width": 16,
+      "x": 176,
+      "y": 270
+    }
+  },
+  {
+    "title": null,
+    "frame": {
+      "height": 16,
+      "y": 270,
+      "x": 196,
+      "width": 16
+    },
+    "traits": [
+      "Scrollable"
+    ],
+    "pid": 57163,
+    "AXValue": null,
+    "help": null,
+    "AXUniqueId": null,
+    "content_required": false,
+    "AXFrame": "{{196, 270}, {16, 16}}",
+    "role_description": "",
+    "role": "AXGenericElement",
+    "AXLabel": "2026-09-03: 0회",
+    "custom_actions": [],
+    "enabled": true,
+    "type": "GenericElement",
+    "subrole": null
+  },
+  {
+    "content_required": false,
+    "role": "AXGenericElement",
+    "title": null,
+    "AXFrame": "{{216, 270}, {16, 16}}",
+    "subrole": null,
+    "help": null,
+    "pid": 57163,
+    "custom_actions": [],
+    "enabled": true,
+    "traits": [
+      "Scrollable"
+    ],
+    "frame": {
+      "y": 270,
+      "width": 16,
+      "x": 216,
+      "height": 16
+    },
+    "role_description": "",
+    "AXValue": null,
+    "type": "GenericElement",
+    "AXLabel": "2026-09-10: 10회",
+    "AXUniqueId": null
+  },
+  {
+    "type": "GenericElement",
+    "AXUniqueId": null,
+    "enabled": true,
+    "help": null,
+    "custom_actions": [],
+    "AXLabel": "2026-09-17: 기록 없음",
+    "frame": {
+      "x": 236,
+      "height": 16,
+      "y": 270,
+      "width": 16
+    },
+    "role": "AXGenericElement",
+    "AXFrame": "{{236, 270}, {16, 16}}",
+    "traits": [
+      "Scrollable"
+    ],
+    "title": null,
+    "AXValue": null,
+    "subrole": null,
+    "pid": 57163,
+    "content_required": false,
+    "role_description": ""
+  },
+  {
+    "AXLabel": "2026-09-24: 5회",
+    "traits": [
+      "Scrollable"
+    ],
+    "title": null,
+    "role_description": "",
+    "help": null,
+    "AXUniqueId": null,
+    "subrole": null,
+    "content_required": false,
+    "AXFrame": "{{256, 270}, {16, 16}}",
+    "AXValue": null,
+    "frame": {
+      "width": 16,
+      "y": 270,
+      "x": 256,
+      "height": 16
+    },
+    "enabled": true,
+    "role": "AXGenericElement",
+    "custom_actions": [],
+    "pid": 57163,
+    "type": "GenericElement"
+  },
+  {
+    "AXUniqueId": null,
+    "AXLabel": "2026-07-03: 3회",
+    "help": null,
+    "role_description": "",
+    "role": "AXGenericElement",
+    "custom_actions": [],
+    "frame": {
+      "height": 16,
+      "y": 290,
+      "x": 16,
+      "width": 16
+    },
+    "content_required": false,
+    "pid": 57163,
+    "subrole": null,
+    "AXValue": null,
+    "AXFrame": "{{16, 290}, {16, 16}}",
+    "title": null,
+    "enabled": true,
+    "traits": [
+      "Scrollable"
+    ],
+    "type": "GenericElement"
+  },
+  {
+    "help": null,
+    "AXLabel": "2026-07-10: 10회",
+    "role_description": "",
+    "content_required": false,
+    "role": "AXGenericElement",
+    "enabled": true,
+    "subrole": null,
+    "type": "GenericElement",
+    "AXValue": null,
+    "title": null,
+    "custom_actions": [],
+    "AXFrame": "{{36, 290}, {16, 16}}",
+    "traits": [
+      "Scrollable"
+    ],
+    "frame": {
+      "height": 16,
+      "width": 16,
+      "y": 290,
+      "x": 36
+    },
+    "AXUniqueId": null,
+    "pid": 57163
+  },
+  {
+    "enabled": true,
+    "title": null,
+    "subrole": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "content_required": false,
+    "pid": 57163,
+    "AXFrame": "{{56, 290}, {16, 16}}",
+    "frame": {
+      "height": 16,
+      "width": 16,
+      "x": 56,
+      "y": 290
+    },
+    "role": "AXGenericElement",
+    "custom_actions": [],
+    "AXValue": null,
+    "type": "GenericElement",
+    "help": null,
+    "role_description": "",
+    "AXUniqueId": null,
+    "AXLabel": "2026-07-17: 9회"
+  },
+  {
+    "custom_actions": [],
+    "AXFrame": "{{76, 290}, {16, 16}}",
+    "pid": 57163,
+    "help": null,
+    "frame": {
+      "height": 16,
+      "x": 76,
+      "y": 290,
+      "width": 16
+    },
+    "subrole": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "AXUniqueId": null,
+    "role_description": "",
+    "role": "AXGenericElement",
+    "type": "GenericElement",
+    "AXLabel": "2026-07-24: 8회",
+    "title": null,
+    "enabled": true,
+    "AXValue": null,
+    "content_required": false
+  },
+  {
+    "content_required": false,
+    "role": "AXGenericElement",
+    "custom_actions": [],
+    "AXFrame": "{{96, 290}, {16, 16}}",
+    "enabled": true,
+    "role_description": "",
+    "subrole": null,
+    "pid": 57163,
+    "AXValue": null,
+    "AXLabel": "2026-07-31: 4회",
+    "help": null,
+    "title": null,
+    "AXUniqueId": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "frame": {
+      "height": 16,
+      "x": 96,
+      "y": 290,
+      "width": 16
+    },
+    "type": "GenericElement"
+  },
+  {
+    "AXFrame": "{{116, 290}, {16, 16}}",
+    "AXValue": null,
+    "pid": 57163,
+    "traits": [
+      "Scrollable"
+    ],
+    "type": "GenericElement",
+    "enabled": true,
+    "AXUniqueId": null,
+    "title": null,
+    "help": null,
+    "frame": {
+      "y": 290,
+      "x": 116,
+      "width": 16,
+      "height": 16
+    },
+    "role": "AXGenericElement",
+    "role_description": "",
+    "subrole": null,
+    "AXLabel": "2026-08-07: 3회",
+    "content_required": false,
+    "custom_actions": []
+  },
+  {
+    "help": null,
+    "AXUniqueId": null,
+    "type": "GenericElement",
+    "AXLabel": "2026-08-14: 2회",
+    "AXFrame": "{{136, 290}, {16, 16}}",
+    "frame": {
+      "x": 136,
+      "height": 16,
+      "y": 290,
+      "width": 16
+    },
+    "role": "AXGenericElement",
+    "title": null,
+    "AXValue": null,
+    "subrole": null,
+    "role_description": "",
+    "content_required": false,
+    "traits": [
+      "Scrollable"
+    ],
+    "pid": 57163,
+    "custom_actions": [],
+    "enabled": true
+  },
+  {
+    "type": "GenericElement",
+    "AXFrame": "{{156, 290}, {16, 16}}",
+    "role": "AXGenericElement",
+    "AXLabel": "2026-08-21: 9회",
+    "enabled": true,
+    "subrole": null,
+    "AXValue": null,
+    "content_required": false,
+    "traits": [
+      "Scrollable"
+    ],
+    "custom_actions": [],
+    "title": null,
+    "role_description": "",
+    "pid": 57163,
+    "frame": {
+      "height": 16,
+      "x": 156,
+      "width": 16,
+      "y": 290
+    },
+    "AXUniqueId": null,
+    "help": null
+  },
+  {
+    "type": "GenericElement",
+    "title": null,
+    "AXFrame": "{{176, 290}, {16, 16}}",
+    "pid": 57163,
+    "help": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "subrole": null,
+    "frame": {
+      "y": 290,
+      "width": 16,
+      "height": 16,
+      "x": 176
+    },
+    "AXLabel": "2026-08-28: 8회",
+    "role": "AXGenericElement",
+    "content_required": false,
+    "role_description": "",
+    "enabled": true,
+    "AXValue": null,
+    "custom_actions": [],
+    "AXUniqueId": null
+  },
+  {
+    "AXValue": null,
+    "subrole": null,
+    "AXLabel": "2026-09-04: 기록 없음",
+    "content_required": false,
+    "role_description": "",
+    "custom_actions": [],
+    "pid": 57163,
+    "role": "AXGenericElement",
+    "frame": {
+      "height": 16,
+      "width": 16,
+      "x": 196,
+      "y": 290
+    },
+    "AXUniqueId": null,
+    "type": "GenericElement",
+    "traits": [
+      "Scrollable"
+    ],
+    "help": null,
+    "AXFrame": "{{196, 290}, {16, 16}}",
+    "title": null,
+    "enabled": true
+  },
+  {
+    "subrole": null,
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "help": null,
+    "AXValue": null,
+    "type": "GenericElement",
+    "role": "AXGenericElement",
+    "content_required": false,
+    "pid": 57163,
+    "traits": [
+      "Scrollable"
+    ],
+    "enabled": true,
+    "role_description": "",
+    "frame": {
+      "x": 216,
+      "y": 290,
+      "height": 16,
+      "width": 16
+    },
+    "AXLabel": "2026-09-11: 3회",
+    "title": null,
+    "AXFrame": "{{216, 290}, {16, 16}}"
+  },
+  {
+    "custom_actions": [],
+    "content_required": false,
+    "AXFrame": "{{236, 290}, {16, 16}}",
+    "help": null,
+    "AXUniqueId": null,
+    "frame": {
+      "height": 16,
+      "x": 236,
+      "width": 16,
+      "y": 290
+    },
+    "title": null,
+    "type": "GenericElement",
+    "role": "AXGenericElement",
+    "role_description": "",
+    "subrole": null,
+    "AXLabel": "2026-09-18: 2회",
+    "pid": 57163,
+    "AXValue": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "enabled": true
+  },
+  {
+    "enabled": true,
+    "frame": {
+      "x": 256,
+      "width": 16,
+      "height": 16,
+      "y": 290
+    },
+    "role": "AXGenericElement",
+    "title": null,
+    "custom_actions": [],
+    "role_description": "",
+    "subrole": null,
+    "type": "GenericElement",
+    "content_required": false,
+    "help": null,
+    "AXValue": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "AXFrame": "{{256, 290}, {16, 16}}",
+    "pid": 57163,
+    "AXLabel": "2026-09-25: 1회",
+    "AXUniqueId": null
+  },
+  {
+    "role": "AXGenericElement",
+    "role_description": "",
+    "subrole": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "frame": {
+      "x": 16,
+      "width": 16,
+      "height": 16,
+      "y": 310
+    },
+    "AXUniqueId": null,
+    "type": "GenericElement",
+    "AXValue": null,
+    "title": null,
+    "enabled": true,
+    "pid": 57163,
+    "content_required": false,
+    "custom_actions": [],
+    "help": null,
+    "AXFrame": "{{16, 310}, {16, 16}}",
+    "AXLabel": "2026-07-04: 7회"
+  },
+  {
+    "role_description": "",
+    "traits": [
+      "Scrollable"
+    ],
+    "AXLabel": "2026-07-11: 6회",
+    "AXFrame": "{{36, 310}, {16, 16}}",
+    "content_required": false,
+    "AXValue": null,
+    "type": "GenericElement",
+    "frame": {
+      "height": 16,
+      "width": 16,
+      "y": 310,
+      "x": 36
+    },
+    "custom_actions": [],
+    "title": null,
+    "subrole": null,
+    "pid": 57163,
+    "AXUniqueId": null,
+    "help": null,
+    "enabled": true,
+    "role": "AXGenericElement"
+  },
+  {
+    "role_description": "",
+    "pid": 57163,
+    "type": "GenericElement",
+    "AXUniqueId": null,
+    "subrole": null,
+    "AXLabel": "2026-07-18: 5회",
+    "AXValue": null,
+    "content_required": false,
+    "help": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "AXFrame": "{{56, 310}, {16, 16}}",
+    "role": "AXGenericElement",
+    "frame": {
+      "width": 16,
+      "x": 56,
+      "height": 16,
+      "y": 310
+    },
+    "custom_actions": [],
+    "enabled": true,
+    "title": null
+  },
+  {
+    "title": null,
+    "role_description": "",
+    "AXLabel": "2026-07-25: 1회",
+    "pid": 57163,
+    "AXUniqueId": null,
+    "AXValue": null,
+    "role": "AXGenericElement",
+    "content_required": false,
+    "subrole": null,
+    "custom_actions": [],
+    "type": "GenericElement",
+    "help": null,
+    "enabled": true,
+    "traits": [
+      "Scrollable"
+    ],
+    "frame": {
+      "width": 16,
+      "y": 310,
+      "x": 76,
+      "height": 16
+    },
+    "AXFrame": "{{76, 310}, {16, 16}}"
+  },
+  {
+    "title": null,
+    "custom_actions": [],
+    "type": "GenericElement",
+    "AXUniqueId": null,
+    "frame": {
+      "x": 96,
+      "height": 16,
+      "y": 310,
+      "width": 16
+    },
+    "enabled": true,
+    "role_description": "",
+    "pid": 57163,
+    "AXValue": null,
+    "help": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "AXLabel": "2026-08-01: 0회",
+    "role": "AXGenericElement",
+    "AXFrame": "{{96, 310}, {16, 16}}",
+    "content_required": false,
+    "subrole": null
+  },
+  {
+    "AXValue": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "role": "AXGenericElement",
+    "title": null,
+    "pid": 57163,
+    "enabled": true,
+    "help": null,
+    "role_description": "",
+    "subrole": null,
+    "AXUniqueId": null,
+    "AXFrame": "{{116, 310}, {16, 16}}",
+    "custom_actions": [],
+    "content_required": false,
+    "AXLabel": "2026-08-08: 10회",
+    "type": "GenericElement",
+    "frame": {
+      "x": 116,
+      "y": 310,
+      "width": 16,
+      "height": 16
+    }
+  },
+  {
+    "custom_actions": [],
+    "subrole": null,
+    "enabled": true,
+    "role_description": "",
+    "AXFrame": "{{136, 310}, {16, 16}}",
+    "content_required": false,
+    "title": null,
+    "frame": {
+      "y": 310,
+      "width": 16,
+      "height": 16,
+      "x": 136
+    },
+    "role": "AXGenericElement",
+    "AXValue": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "AXLabel": "2026-08-15: 6회",
+    "pid": 57163,
+    "help": null,
+    "AXUniqueId": null,
+    "type": "GenericElement"
+  },
+  {
+    "role_description": "",
+    "custom_actions": [],
+    "pid": 57163,
+    "content_required": false,
+    "AXFrame": "{{156, 310}, {16, 16}}",
+    "AXValue": null,
+    "role": "AXGenericElement",
+    "title": null,
+    "enabled": true,
+    "help": null,
+    "AXUniqueId": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "frame": {
+      "height": 16,
+      "width": 16,
+      "x": 156,
+      "y": 310
+    },
+    "subrole": null,
+    "type": "GenericElement",
+    "AXLabel": "2026-08-22: 기록 없음"
+  },
+  {
+    "custom_actions": [],
+    "subrole": null,
+    "type": "GenericElement",
+    "pid": 57163,
+    "enabled": true,
+    "frame": {
+      "height": 16,
+      "x": 176,
+      "y": 310,
+      "width": 16
+    },
+    "AXLabel": "2026-08-29: 4회",
+    "help": null,
+    "AXValue": null,
+    "AXUniqueId": null,
+    "role": "AXGenericElement",
+    "role_description": "",
+    "traits": [
+      "Scrollable"
+    ],
+    "title": null,
+    "AXFrame": "{{176, 310}, {16, 16}}",
+    "content_required": false
+  },
+  {
+    "content_required": false,
+    "type": "GenericElement",
+    "AXLabel": "2026-09-05: 0회",
+    "help": null,
+    "AXFrame": "{{196, 310}, {16, 16}}",
+    "role": "AXGenericElement",
+    "enabled": true,
+    "subrole": null,
+    "AXValue": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "title": null,
+    "role_description": "",
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "pid": 57163,
+    "frame": {
+      "width": 16,
+      "height": 16,
+      "y": 310,
+      "x": 196
+    }
+  },
+  {
+    "role_description": "",
+    "custom_actions": [],
+    "role": "AXGenericElement",
+    "AXFrame": "{{216, 310}, {16, 16}}",
+    "help": null,
+    "frame": {
+      "width": 16,
+      "x": 216,
+      "y": 310,
+      "height": 16
+    },
+    "enabled": true,
+    "AXUniqueId": null,
+    "AXValue": null,
+    "content_required": false,
+    "pid": 57163,
+    "AXLabel": "2026-09-12: 10회",
+    "type": "GenericElement",
+    "title": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "subrole": null
+  },
+  {
+    "custom_actions": [],
+    "pid": 57163,
+    "AXLabel": "2026-09-19: 9회",
+    "role": "AXGenericElement",
+    "AXFrame": "{{236, 310}, {16, 16}}",
+    "traits": [
+      "Scrollable"
+    ],
+    "AXUniqueId": null,
+    "type": "GenericElement",
+    "help": null,
+    "role_description": "",
+    "enabled": true,
+    "subrole": null,
+    "AXValue": null,
+    "content_required": false,
+    "frame": {
+      "y": 310,
+      "height": 16,
+      "x": 236,
+      "width": 16
+    },
+    "title": null
+  },
+  {
+    "pid": 57163,
+    "frame": {
+      "x": 256,
+      "y": 310,
+      "height": 16,
+      "width": 16
+    },
+    "AXLabel": "2026-09-26: 5회",
+    "AXFrame": "{{256, 310}, {16, 16}}",
+    "traits": [
+      "Scrollable"
+    ],
+    "AXUniqueId": null,
+    "role": "AXGenericElement",
+    "enabled": true,
+    "help": null,
+    "type": "GenericElement",
+    "subrole": null,
+    "role_description": "",
+    "content_required": false,
+    "AXValue": null,
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "frame": {
+      "height": 16,
+      "y": 330,
+      "x": 16,
+      "width": 16
+    },
+    "AXLabel": "2026-07-05: 3회",
+    "role": "AXGenericElement",
+    "AXFrame": "{{16, 330}, {16, 16}}",
+    "content_required": false,
+    "pid": 57163,
+    "custom_actions": [],
+    "title": null,
+    "role_description": "",
+    "enabled": true,
+    "traits": [
+      "Scrollable"
+    ],
+    "AXUniqueId": null,
+    "help": null,
+    "AXValue": null,
+    "subrole": null,
+    "type": "GenericElement"
+  },
+  {
+    "AXUniqueId": null,
+    "AXLabel": "2026-07-12: 2회",
+    "enabled": true,
+    "title": null,
+    "pid": 57163,
+    "role_description": "",
+    "custom_actions": [],
+    "AXFrame": "{{36, 330}, {16, 16}}",
+    "help": null,
+    "frame": {
+      "height": 16,
+      "x": 36,
+      "y": 330,
+      "width": 16
+    },
+    "role": "AXGenericElement",
+    "AXValue": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "subrole": null,
+    "type": "GenericElement",
+    "content_required": false
+  },
+  {
+    "traits": [
+      "Scrollable"
+    ],
+    "help": null,
+    "role": "AXGenericElement",
+    "pid": 57163,
+    "AXLabel": "2026-07-19: 9회",
+    "frame": {
+      "y": 330,
+      "width": 16,
+      "height": 16,
+      "x": 56
+    },
+    "title": null,
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "type": "GenericElement",
+    "AXFrame": "{{56, 330}, {16, 16}}",
+    "AXValue": null,
+    "role_description": "",
+    "enabled": true,
+    "subrole": null,
+    "content_required": false
+  },
+  {
+    "AXFrame": "{{76, 330}, {16, 16}}",
+    "enabled": true,
+    "help": null,
+    "role_description": "",
+    "role": "AXGenericElement",
+    "type": "GenericElement",
+    "AXLabel": "2026-07-26: 8회",
+    "AXValue": null,
+    "subrole": null,
+    "AXUniqueId": null,
+    "custom_actions": [],
+    "frame": {
+      "y": 330,
+      "x": 76,
+      "height": 16,
+      "width": 16
+    },
+    "content_required": false,
+    "pid": 57163,
+    "title": null,
+    "traits": [
+      "Scrollable"
+    ]
+  },
+  {
+    "content_required": false,
+    "traits": [
+      "Scrollable"
+    ],
+    "role_description": "",
+    "enabled": true,
+    "AXLabel": "2026-08-02: 7회",
+    "help": null,
+    "AXUniqueId": null,
+    "AXValue": null,
+    "subrole": null,
+    "frame": {
+      "y": 330,
+      "height": 16,
+      "x": 96,
+      "width": 16
+    },
+    "type": "GenericElement",
+    "custom_actions": [],
+    "AXFrame": "{{96, 330}, {16, 16}}",
+    "role": "AXGenericElement",
+    "pid": 57163,
+    "title": null
+  },
+  {
+    "custom_actions": [],
+    "help": null,
+    "enabled": true,
+    "title": null,
+    "AXFrame": "{{116, 330}, {16, 16}}",
+    "role_description": "",
+    "frame": {
+      "y": 330,
+      "x": 116,
+      "height": 16,
+      "width": 16
+    },
+    "content_required": false,
+    "subrole": null,
+    "role": "AXGenericElement",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "type": "GenericElement",
+    "pid": 57163,
+    "AXLabel": "2026-08-09: 기록 없음"
+  },
+  {
+    "title": null,
+    "AXFrame": "{{136, 330}, {16, 16}}",
+    "type": "GenericElement",
+    "role": "AXGenericElement",
+    "pid": 57163,
+    "AXUniqueId": null,
+    "custom_actions": [],
+    "AXLabel": "2026-08-16: 2회",
+    "content_required": false,
+    "help": null,
+    "frame": {
+      "width": 16,
+      "x": 136,
+      "height": 16,
+      "y": 330
+    },
+    "subrole": null,
+    "AXValue": null,
+    "role_description": "",
+    "traits": [
+      "Scrollable"
+    ],
+    "enabled": true
+  },
+  {
+    "type": "GenericElement",
+    "custom_actions": [],
+    "traits": [
+      "Scrollable"
+    ],
+    "frame": {
+      "x": 156,
+      "y": 330,
+      "width": 16,
+      "height": 16
+    },
+    "AXUniqueId": null,
+    "AXFrame": "{{156, 330}, {16, 16}}",
+    "role_description": "",
+    "content_required": false,
+    "role": "AXGenericElement",
+    "AXValue": null,
+    "help": null,
+    "AXLabel": "2026-08-23: 1회",
+    "title": null,
+    "enabled": true,
+    "subrole": null,
+    "pid": 57163
+  },
+  {
+    "type": "GenericElement",
+    "traits": [
+      "Scrollable"
+    ],
+    "frame": {
+      "y": 330,
+      "width": 16,
+      "height": 16,
+      "x": 176
+    },
+    "subrole": null,
+    "help": null,
+    "AXValue": null,
+    "custom_actions": [],
+    "content_required": false,
+    "role": "AXGenericElement",
+    "role_description": "",
+    "enabled": true,
+    "pid": 57163,
+    "title": null,
+    "AXFrame": "{{176, 330}, {16, 16}}",
+    "AXLabel": "2026-08-30: 8회",
+    "AXUniqueId": null
+  },
+  {
+    "AXFrame": "{{196, 330}, {16, 16}}",
+    "custom_actions": [],
+    "help": null,
+    "AXUniqueId": null,
+    "type": "GenericElement",
+    "role_description": "",
+    "role": "AXGenericElement",
+    "content_required": false,
+    "pid": 57163,
+    "AXValue": null,
+    "AXLabel": "2026-09-06: 7회",
+    "frame": {
+      "x": 196,
+      "y": 330,
+      "width": 16,
+      "height": 16
+    },
+    "enabled": true,
+    "subrole": null,
+    "title": null,
+    "traits": [
+      "Scrollable"
+    ]
+  },
+  {
+    "help": null,
+    "subrole": null,
+    "AXUniqueId": null,
+    "content_required": false,
+    "frame": {
+      "width": 16,
+      "y": 330,
+      "x": 216,
+      "height": 16
+    },
+    "AXLabel": "2026-09-13: 6회",
+    "role_description": "",
+    "enabled": true,
+    "type": "GenericElement",
+    "AXValue": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "pid": 57163,
+    "role": "AXGenericElement",
+    "AXFrame": "{{216, 330}, {16, 16}}",
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "role_description": "",
+    "title": null,
+    "AXValue": null,
+    "AXLabel": "2026-09-20: 2회",
+    "AXUniqueId": null,
+    "pid": 57163,
+    "frame": {
+      "height": 16,
+      "y": 330,
+      "x": 236,
+      "width": 16
+    },
+    "type": "GenericElement",
+    "role": "AXGenericElement",
+    "help": null,
+    "AXFrame": "{{236, 330}, {16, 16}}",
+    "custom_actions": [],
+    "enabled": true,
+    "content_required": false,
+    "subrole": null,
+    "traits": [
+      "Scrollable"
+    ]
+  },
+  {
+    "type": "GenericElement",
+    "role_description": "",
+    "help": null,
+    "AXFrame": "{{256, 330}, {16, 16}}",
+    "AXUniqueId": null,
+    "AXLabel": "2026-09-27: 1회",
+    "enabled": true,
+    "title": null,
+    "pid": 57163,
+    "frame": {
+      "width": 16,
+      "x": 256,
+      "y": 330,
+      "height": 16
+    },
+    "role": "AXGenericElement",
+    "subrole": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "content_required": false,
+    "AXValue": null,
+    "custom_actions": []
+  },
+  {
+    "AXLabel": null,
+    "AXValue": null,
+    "AXFrame": "{{362, 759}, {24, 24}}",
+    "enabled": true,
+    "frame": {
+      "width": 24,
+      "y": 759,
+      "x": 362,
+      "height": 24
+    },
+    "custom_actions": [],
+    "traits": [
+      "Scrollable"
+    ],
+    "type": "GenericElement",
+    "AXUniqueId": null,
+    "role_description": "",
+    "pid": 57163,
+    "content_required": false,
+    "subrole": null,
+    "role": "AXGenericElement",
+    "title": null,
+    "help": null
+  },
+  {
+    "AXUniqueId": "mobile-menu-button",
+    "frame": {
+      "x": 6,
+      "y": 811.6666669845581,
+      "width": 335.6666564941406,
+      "height": 17
+    },
+    "content_required": false,
+    "help": null,
+    "type": "GenericElement",
+    "enabled": true,
+    "role": "AXGenericElement",
+    "custom_actions": [],
+    "AXValue": null,
+    "role_description": "",
+    "subrole": null,
+    "title": null,
+    "AXFrame": "{{6, 811.66666698455811}, {335.66665649414062, 17}}",
+    "pid": 57163,
+    "AXLabel": "Components/Display/Activity Heatmap/Default",
+    "traits": [
+      "Scrollable"
+    ]
+  },
+  {
+    "AXFrame": "{{368, 806}, {28, 28}}",
+    "AXValue": null,
+    "custom_actions": [],
+    "help": null,
+    "content_required": false,
+    "role_description": "button",
+    "title": null,
+    "AXLabel": "Open addons panel",
+    "AXUniqueId": "mobile-addons-button",
+    "pid": 57163,
+    "role": "AXButton",
+    "frame": {
+      "y": 806,
+      "width": 28,
+      "height": 28,
+      "x": 368
+    },
+    "enabled": true,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "type": "Button",
+    "subrole": null
+  }
+]

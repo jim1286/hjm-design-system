@@ -53,12 +53,12 @@ function Colors() {
   );
 }
 
-const meta = {
-  title: "Foundations/Colors",
+const meta = { includeStories: ["SemanticPalette"],
+  id: "foundations-colors", title: "배포/토큰/색상",
   component: Colors,
   parameters: { controls: { disable: true } },
 } satisfies Meta<typeof Colors>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
-export const SemanticPalette: Story = {};
+export const SemanticPalette: Story = { name: "역할별 색상",};

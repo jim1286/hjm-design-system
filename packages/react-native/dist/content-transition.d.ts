@@ -1,11 +1,14 @@
+import { type ContentTransitionPreset } from "@hjmds/design-contracts/content-transition";
 import { type ReactNode } from "react";
 export type ContentTransitionProps = {
+    preset?: ContentTransitionPreset;
     stateKey: string;
     children: ReactNode;
     motion?: "system" | "none";
 };
-export declare function ContentTransition({ stateKey, children, motion: preference }: ContentTransitionProps): import("react").JSX.Element;
-export declare function TextTransition({ text, motion: preference }: {
+export declare function ContentTransition({ stateKey, children, motion: preference, preset }: ContentTransitionProps): import("react").JSX.Element;
+export declare function TextTransition({ text, motion: preference, preset }: {
+    preset?: ContentTransitionPreset;
     text: string;
     motion?: "system" | "none";
 }): import("react").JSX.Element;

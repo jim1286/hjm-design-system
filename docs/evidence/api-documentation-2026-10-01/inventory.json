@@ -1,0 +1,231 @@
+[
+  {
+    "feature": "정적 Blobatar",
+    "subpath": "./avatar-blobatar",
+    "platforms": [
+      "react",
+      "react-native"
+    ],
+    "usage": "packages/design-contracts/docs/avatar-fallback.md",
+    "changeset": ".changeset/avatar-blobatar.md"
+  },
+  {
+    "feature": "모션 Blobatar",
+    "subpath": "./avatar-blobatar-motion",
+    "platforms": [
+      "react",
+      "react-native"
+    ],
+    "usage": "packages/design-contracts/docs/avatar-fallback.md",
+    "changeset": ".changeset/blobatar-motion.md"
+  },
+  {
+    "feature": "내용·텍스트 전환",
+    "subpath": "./content-transition",
+    "platforms": [
+      "react",
+      "react-native"
+    ],
+    "usage": "docs/interaction-adapters.md",
+    "changeset": ".changeset/visual-foundations.md"
+  },
+  {
+    "feature": "폴더 미리보기",
+    "subpath": "./folder-preview",
+    "platforms": [
+      "react",
+      "react-native"
+    ],
+    "usage": "packages/design-contracts/docs/folder-preview.md",
+    "changeset": ".changeset/folder-preview.md"
+  },
+  {
+    "feature": "Sidebar bounce/hook/proximity",
+    "subpath": "./sidebar",
+    "platforms": [
+      "react"
+    ],
+    "usage": "packages/design-contracts/docs/sidebar.md",
+    "changeset": ".changeset/sidebar-presentations.md"
+  },
+  {
+    "feature": "시간 간격 입력",
+    "subpath": "./duration-field",
+    "platforms": [
+      "react",
+      "react-native"
+    ],
+    "usage": "packages/design-contracts/docs/compound-controls.md",
+    "changeset": ".changeset/compound-controls.md"
+  },
+  {
+    "feature": "Fluid/Matrix Orb",
+    "subpath": "./thinking-orb",
+    "platforms": [
+      "react",
+      "react-native"
+    ],
+    "usage": "packages/design-contracts/docs/thinking-orb.md",
+    "changeset": ".changeset/thinking-orb-presentations.md"
+  },
+  {
+    "feature": "스크롤 진행",
+    "subpath": "./scroll-progress",
+    "platforms": [
+      "react",
+      "react-native"
+    ],
+    "usage": "packages/design-contracts/docs/scroll-progress.md",
+    "changeset": ".changeset/scroll-progress.md"
+  },
+  {
+    "feature": "코드 블록",
+    "subpath": "./code-block",
+    "platforms": [
+      "react",
+      "react-native"
+    ],
+    "usage": "packages/design-contracts/docs/code-block.md",
+    "changeset": ".changeset/code-block.md"
+  },
+  {
+    "feature": "OTP 표현",
+    "subpath": "./otp-field",
+    "platforms": [
+      "react",
+      "react-native"
+    ],
+    "usage": "packages/design-contracts/docs/otp-field.md",
+    "changeset": ".changeset/otp-presentation.md"
+  },
+  {
+    "feature": "중력 글자",
+    "subpath": "./gravity-letters",
+    "platforms": [
+      "react",
+      "react-native"
+    ],
+    "usage": "packages/design-contracts/docs/gravity-letters.md",
+    "changeset": ".changeset/gravity-letters.md"
+  },
+  {
+    "feature": "활동 히트맵",
+    "subpath": "./activity-heatmap",
+    "platforms": [
+      "react",
+      "react-native"
+    ],
+    "usage": "packages/design-contracts/docs/activity-heatmap.md",
+    "changeset": ".changeset/activity-heatmap.md"
+  },
+  {
+    "feature": "반응 선택",
+    "subpath": "./reaction-picker",
+    "platforms": [
+      "react",
+      "react-native"
+    ],
+    "usage": "packages/design-contracts/docs/compound-controls.md",
+    "changeset": ".changeset/compound-controls.md"
+  },
+  {
+    "feature": "알림 벨",
+    "subpath": "./notification-bell",
+    "platforms": [
+      "react",
+      "react-native"
+    ],
+    "usage": "packages/design-contracts/docs/compound-controls.md",
+    "changeset": ".changeset/compound-controls.md"
+  },
+  {
+    "feature": "단계 재생",
+    "subpath": "./step-player",
+    "platforms": [
+      "react",
+      "react-native"
+    ],
+    "usage": "packages/design-contracts/docs/step-player.md",
+    "changeset": ".changeset/step-player.md"
+  },
+  {
+    "feature": "이미지 등장",
+    "subpath": "./grid-reveal",
+    "platforms": [
+      "react",
+      "react-native"
+    ],
+    "usage": "packages/design-contracts/docs/grid-reveal.md",
+    "changeset": ".changeset/grid-reveal.md"
+  },
+  {
+    "feature": "유동형 탭 표시",
+    "subpath": "./navigation",
+    "platforms": [
+      "react",
+      "react-native"
+    ],
+    "usage": "packages/design-contracts/docs/gooey-navigation.md",
+    "changeset": ".changeset/gooey-navigation.md"
+  },
+  {
+    "feature": "인라인 확인",
+    "subpath": "./inline-confirm",
+    "platforms": [
+      "react",
+      "react-native"
+    ],
+    "usage": "packages/design-contracts/docs/compound-controls.md",
+    "changeset": ".changeset/compound-controls.md"
+  },
+  {
+    "feature": "숫자 전환",
+    "subpath": "./statistic-motion",
+    "platforms": [
+      "react",
+      "react-native"
+    ],
+    "usage": "docs/interaction-adapters.md",
+    "changeset": ".changeset/native-statistic-motion.md"
+  },
+  {
+    "feature": "할 일 목록",
+    "subpath": "./task-list",
+    "platforms": [
+      "react",
+      "react-native"
+    ],
+    "usage": "packages/design-contracts/docs/task-list.md",
+    "changeset": ".changeset/task-list.md"
+  },
+  {
+    "feature": "음성 메모",
+    "subpath": "./voice-note",
+    "platforms": [
+      "react",
+      "react-native"
+    ],
+    "usage": "packages/design-contracts/docs/voice-note.md",
+    "changeset": ".changeset/voice-note.md"
+  },
+  {
+    "feature": "배경 효과",
+    "subpath": "./effect-surface",
+    "platforms": [
+      "react",
+      "react-native"
+    ],
+    "usage": "packages/design-contracts/docs/effect-surface.md",
+    "changeset": ".changeset/visual-foundations.md"
+  },
+  {
+    "feature": "Lucide 아이콘",
+    "subpath": "./icon-lucide",
+    "platforms": [
+      "react",
+      "react-native"
+    ],
+    "usage": "packages/design-contracts/docs/icon.md",
+    "changeset": ".changeset/visual-foundations.md"
+  }
+]

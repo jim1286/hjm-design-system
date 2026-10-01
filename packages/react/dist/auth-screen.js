@@ -7,12 +7,15 @@ import { classNames } from "./internal.js";
  * the bottom. The measurements come from the resolved descriptor as custom
  * properties so the stylesheet keeps one source of truth with the contract.
  */
-export const AuthScreenLayout = forwardRef(function AuthScreenLayout({ hero, main, footer, density, hasFooter, className, as: Element = "main", ...props }, forwardedRef) {
+export const AuthScreenLayout = forwardRef(function AuthScreenLayout({ hero, main, footer, density, hasFooter, pendingLabel, mainCard = false, className, as: Element = "main", ...props }, forwardedRef) {
     const resolved = resolveAuthScreenDescriptor({
         ...(density === undefined ? {} : { density }),
         ...(hasFooter === undefined ? {} : { hasFooter }),
     });
     const showFooter = resolved.hasFooter && footer !== undefined && footer !== null;
+    const pending = pendingLabel !== undefined;
+    if (pending && !pendingLabel.trim())
+        throw new TypeError("AuthScreen pendingLabel must not be empty");
     return (_jsxs(Element, { ...props, ref: forwardedRef, className: classNames("hjm-auth-screen", className), "data-density": resolved.density, style: {
             ["--hjm-auth-screen-max-width"]: `${resolved.maxWidth}px`,
             ["--hjm-auth-screen-hero-gap"]: `${resolved.heroGap}px`,
@@ -21,6 +24,6 @@ export const AuthScreenLayout = forwardRef(function AuthScreenLayout({ hero, mai
             ["--hjm-auth-screen-padding-inline"]: `${resolved.paddingInline}px`,
             ["--hjm-auth-screen-padding-block"]: `${resolved.paddingBlock}px`,
             ...props.style,
-        }, children: [_jsxs("div", { className: "hjm-auth-screen__block", children: [_jsx("div", { className: "hjm-auth-screen__hero", children: hero }), _jsx("div", { className: "hjm-auth-screen__main", children: main })] }), showFooter ? _jsx("div", { className: "hjm-auth-screen__footer", children: footer }) : null] }));
+        }, children: [_jsxs("div", { className: "hjm-auth-screen__block", children: [_jsx("div", { className: "hjm-auth-screen__hero", children: hero }), _jsxs("div", { className: "hjm-auth-screen__main", "data-card": mainCard || undefined, "aria-busy": pending || undefined, children: [_jsx("div", { className: "hjm-auth-screen__actions", inert: pending, "aria-hidden": pending || undefined, style: pending ? { visibility: "hidden" } : undefined, children: main }), pending ? _jsx("div", { className: "hjm-auth-screen__pending", role: "status", "aria-label": pendingLabel, children: _jsx("span", { className: "hjm-auth-provider-button__spinner", "aria-hidden": "true" }) }) : null] })] }), showFooter ? _jsx("div", { className: "hjm-auth-screen__footer", children: footer }) : null] }));
 });
 //# sourceMappingURL=auth-screen.js.map

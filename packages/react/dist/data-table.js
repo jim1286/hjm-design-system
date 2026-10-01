@@ -1,4 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { TableSortButton } from "./table-sort-button.js";
 import { dataTableColumnDefaults, dataTableDefaults, getNextDataTableSortState, resolveDataTableSelectAllState, validateDataTableColumns, validateDataTableRows, validateDataTableSortState, } from "@hjmds/design-contracts/components/data-table";
 import { forwardRef } from "react";
 import { useHjmDensityDefault } from "./provider.js";
@@ -51,7 +52,7 @@ export const DataTable = forwardRef(function DataTable({ columns, rows, labels, 
                                     const sorted = sortState?.columnId === column.id ? sortState.direction : null;
                                     return (_jsx("th", { scope: "col", "aria-sort": sorted ?? undefined, style: { inlineSize: column.width, textAlign: column.align ?? dataTableColumnDefaults.align }, children: column.sortable ? (
                                         // A button inside the header, never the header itself.
-                                        _jsxs("button", { type: "button", className: "hjm-data-table__sort", "aria-label": labels.sortColumn(column.header, sortState), onClick: () => onSortChange?.(getNextDataTableSortState(sortState, column.id, sortCycle)), children: [_jsx("span", { children: column.header }), _jsx("span", { "aria-hidden": "true", children: sorted === "ascending" ? "▲" : sorted === "descending" ? "▼" : "↕" })] })) : column.header }, column.id));
+                                        _jsx(TableSortButton, { header: column.header, direction: sorted, glyphs: { ascending: "▲", descending: "▼", none: "↕" }, className: "hjm-data-table__sort", accessibleName: labels.sortColumn(column.header, sortState), onSort: () => onSortChange?.(getNextDataTableSortState(sortState, column.id, sortCycle)) })) : column.header }, column.id));
                                 })] }) }), _jsx("tbody", { children: rows.map((row) => (_jsxs("tr", { "aria-selected": selection && selection.mode !== "none" ? selectedKeys.has(row.id) : undefined, "data-disabled": row.disabled || undefined, children: [selection && selection.mode !== "none" ? (_jsx("td", { className: "hjm-data-table__selector", children: _jsx("button", { type: "button", role: multiple ? "checkbox" : "radio", "aria-checked": selectedKeys.has(row.id), "aria-label": labels.selectRow(row.id), "aria-disabled": row.disabled || undefined, className: "hjm-data-table__check", onClick: () => toggleRow(row), children: selectedKeys.has(row.id) ? "✓" : "" }) })) : null, columns.map((column) => (_jsx("td", { style: { textAlign: column.align ?? dataTableColumnDefaults.align }, children: renderCell(row.id, column.id) }, column.id)))] }, row.id))) })] }), footer ? _jsx("div", { className: "hjm-data-table__footer", children: footer }) : null] }));
 });
 //# sourceMappingURL=data-table.js.map

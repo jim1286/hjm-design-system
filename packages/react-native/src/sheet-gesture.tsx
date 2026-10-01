@@ -1,3 +1,6 @@
+import { fieldRecipe } from "@hjmds/design-contracts/recipes/base";
+import { radius, typography } from "@hjmds/design-contracts/foundations";
+import { resolveNativeTextScaleProps } from "./internal/styles.js";
 import { forwardRef, useCallback, useEffect, useRef, type ComponentProps, type ElementRef, type ReactNode } from "react";
 import { BackHandler, View } from "react-native";
 import { BottomSheetModal, BottomSheetModalProvider, BottomSheetScrollView, BottomSheetBackdrop, BottomSheetHandle, BottomSheetTextInput, type BottomSheetBackdropProps, type BottomSheetBackgroundProps, type BottomSheetHandleProps } from "@gorhom/bottom-sheet";
@@ -13,10 +16,21 @@ type GestureSheetInputProps = ComponentProps<typeof BottomSheetTextInput>;
  */
 export const GestureSheetInput = forwardRef<ElementRef<typeof BottomSheetTextInput>, GestureSheetInputProps>(
   function GestureSheetInput({ style, ...props }, ref) {
-    const { colors, tokens } = useHjmNativeTheme();
-    return <BottomSheetTextInput ref={ref} placeholderTextColor={colors.textWeak} {...props}
-      style={[{ borderColor: colors.borderControl, borderRadius: tokens.radius.md, borderWidth: 1, color: colors.text,
-        fontSize: tokens.typography.body.fontSize, minHeight: 48, paddingHorizontal: tokens.spacing.md }, style]} />;
+    const { colors, textScaling } = useHjmNativeTheme();
+    const metrics = typography[fieldRecipe.textVariant];
+    // Preserve the sheet's keyboard-tracking host, but derive its presentation
+    // and font scaling from the same recipe as TextField instead of a third style.
+    const scaled = resolveNativeTextScaleProps(textScaling, [{
+      borderColor: colors[fieldRecipe.states.idle.border],
+      borderRadius: radius[fieldRecipe.shapes[fieldRecipe.defaults.shape]],
+      borderWidth: fieldRecipe.borderWidth,
+      backgroundColor: colors[fieldRecipe.variants[fieldRecipe.defaults.variant].background],
+      color: colors.text, fontSize: metrics.fontSize, fontWeight: metrics.fontWeight,
+      lineHeight: metrics.lineHeight, minHeight: fieldRecipe.minHeight,
+      paddingHorizontal: fieldRecipe.paddingHorizontal, paddingVertical: fieldRecipe.paddingVertical,
+    }, style], props.allowFontScaling);
+    return <BottomSheetTextInput ref={ref} placeholderTextColor={colors[fieldRecipe.placeholder.color]}
+      {...props} {...scaled} />;
   },
 );
 

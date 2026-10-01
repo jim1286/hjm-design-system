@@ -154,12 +154,14 @@ describe("web showcase coverage", () => {
     expect(homeHtml).not.toContain("args=initialCategory");
 
     const explorerHtml = renderToStaticMarkup(createElement(ComponentExplorer));
-    expect(explorerHtml).toContain("<strong>103</strong> Web references");
-    expect(explorerHtml).toContain("<strong>0</strong> contract-only stories");
-    expect(explorerHtml).toContain("<strong>0</strong> Native-only stories");
-    expect(explorerHtml).not.toContain("Open Native-only contract");
-    expect(explorerHtml).toContain("Open Web reference");
-    expect(explorerHtml).not.toContain("Open contract &amp; decision");
+    expect(explorerHtml).toContain("<strong>103</strong> 웹 예제");
+    expect(explorerHtml).toContain("<strong>0</strong> 계약만 등록");
+    expect(explorerHtml).toContain("<strong>0</strong> 앱 전용");
+    expect(explorerHtml).not.toContain("앱 전용 계약 보기");
+    expect(explorerHtml).toContain("웹 예제 열기");
+    expect(explorerHtml).toContain("components-layout--auth-screen-layout");
+    expect(explorerHtml).toContain("로그인 화면");
+    expect(explorerHtml).not.toContain("계약과 구현 계획 보기");
   });
 
   it("binds recipe evidence or the explicit nonvisual provider adapter", () => {

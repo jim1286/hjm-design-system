@@ -1,0 +1,59 @@
+{
+  "results": [
+    {
+      "kind": "save",
+      "variant": "default",
+      "status": "passed",
+      "width": 320
+    },
+    {
+      "kind": "optimistic",
+      "variant": "default",
+      "status": "passed",
+      "width": 320
+    },
+    {
+      "kind": "undo",
+      "variant": "default",
+      "status": "passed",
+      "width": 320
+    },
+    {
+      "kind": "save",
+      "variant": "dark",
+      "status": "passed",
+      "width": 320
+    },
+    {
+      "kind": "optimistic",
+      "variant": "dark",
+      "status": "passed",
+      "width": 320
+    },
+    {
+      "kind": "undo",
+      "variant": "dark",
+      "status": "passed",
+      "width": 320
+    },
+    {
+      "kind": "save",
+      "variant": "large-text",
+      "status": "passed",
+      "width": 320
+    },
+    {
+      "kind": "optimistic",
+      "variant": "large-text",
+      "status": "passed",
+      "width": 320
+    },
+    {
+      "kind": "undo",
+      "variant": "large-text",
+      "status": "passed",
+      "width": 320
+    }
+  ],
+  "errors": []
+}

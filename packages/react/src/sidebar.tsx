@@ -7,13 +7,19 @@ import {
 } from "@hjmds/design-contracts/components/sidebar";
 import {
   forwardRef,
+  useState,
   type CSSProperties,
   type ReactNode,
 } from "react";
+import { useOptionalHjmTheme } from "./provider.js";
 import { classNames, useControllableState } from "./internal.js";
+
+export type SidebarAppearance = "standard" | "bounce" | "hook" | "proximity";
 
 export type SidebarProps<Id extends string = string, GroupId extends string = string> = Readonly<{
   descriptor: SidebarDescriptor<Id, GroupId>;
+  /** Decoration only; link hit areas and document-order keyboard navigation stay fixed. */
+  appearance?: SidebarAppearance;
   collapsed?: boolean;
   defaultCollapsed?: boolean;
   onCollapsedChange?: (collapsed: boolean) => void;
@@ -29,6 +35,7 @@ export type SidebarProps<Id extends string = string, GroupId extends string = st
 export const Sidebar = forwardRef(function Sidebar<Id extends string = string, GroupId extends string = string>(
   {
     descriptor,
+    appearance = "standard",
     collapsed: controlledCollapsed,
     defaultCollapsed,
     onCollapsedChange,
@@ -41,6 +48,9 @@ export const Sidebar = forwardRef(function Sidebar<Id extends string = string, G
   forwardedRef: React.Ref<HTMLElement>,
 ) {
   validateSidebarDescriptor(descriptor);
+  const theme = useOptionalHjmTheme();
+  const animate = theme !== null && !theme.environment.reducedMotion;
+  const [activatedId, setActivatedId] = useState<string | null>(null);
   const [collapsed, setCollapsed] = useControllableState<boolean>({
     ...(controlledCollapsed === undefined ? {} : { value: controlledCollapsed }),
     defaultValue: defaultCollapsed ?? sidebarDefaults.collapsed,
@@ -52,6 +62,21 @@ export const Sidebar = forwardRef(function Sidebar<Id extends string = string, G
       aria-label={descriptor.accessibilityLabel}
       className={classNames("hjm-sidebar", className)}
       data-collapsed={collapsed || undefined}
+      data-appearance={appearance}
+      data-animate={animate || undefined}
+      onPointerMove={event => {
+        if (appearance !== "proximity" || !animate || event.pointerType === "touch") return;
+        // Only icon decoration responds to distance; moving links would shift click/focus targets.
+        for (const item of event.currentTarget.querySelectorAll<HTMLElement>(".hjm-sidebar__item")) {
+          const bounds = item.getBoundingClientRect();
+          const distance = Math.abs(event.clientY - (bounds.top + bounds.height / 2));
+          const proximity = item.getAttribute("aria-disabled") === "true" ? 0 : Math.max(0, 1 - distance / (bounds.height * 2));
+          item.style.setProperty("--hjm-sidebar-proximity", String(proximity));
+        }
+      }}
+      onPointerLeave={event => {
+        for (const item of event.currentTarget.querySelectorAll<HTMLElement>(".hjm-sidebar__item")) item.style.removeProperty("--hjm-sidebar-proximity");
+      }}
       style={{
         "--hjm-sidebar-width": `${collapsed ? sidebarRecipe.widths.collapsed : sidebarRecipe.widths.expanded}px`,
         "--hjm-sidebar-item-height": `${sidebarRecipe.itemMinHeight}px`,
@@ -87,6 +112,7 @@ export const Sidebar = forwardRef(function Sidebar<Id extends string = string, G
                     className="hjm-sidebar__item"
                     href={item.destination?.kind === "internal" ? item.destination.href : item.destination?.href}
                     aria-current={current ? "page" : undefined}
+                    data-bounce={current && activatedId === item.id || undefined}
                     aria-disabled={item.disabled || undefined}
                     // Collapsed labels are hidden visually, so the name comes
                     // from the attribute instead of disappearing with the text.
@@ -94,6 +120,7 @@ export const Sidebar = forwardRef(function Sidebar<Id extends string = string, G
                     tabIndex={item.disabled ? -1 : undefined}
                     onClick={(event) => {
                       if (item.disabled) { event.preventDefault(); return; }
+                      if (appearance === "bounce" && animate) setActivatedId(item.id);
                       onNavigate?.(item.id);
                     }}
                   >

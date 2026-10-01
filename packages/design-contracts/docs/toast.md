@@ -10,8 +10,7 @@ Toast는 사용자가 응답해야만 진행되는 modal UI가 아니라, 무시
 필수 선택·삭제 확인·시간 안에 응답해야 하는 작업은 `AlertDialog`를 사용합니다.
 
 HJM은 Radix Primitives에서 provider/viewport anatomy, visible timer pause, focus·Escape·swipe
-수명주기를 참고하고 React Aria/Spectrum에서 bounded queue, stable id close handle, 5초 최소
-timeout과 actionable persistent 기본값을 참고했습니다. 외부 component나 prop 이름은 공개하지
+수명주기를 참고하고 React Aria/Spectrum에서 bounded queue, stable id close handle과 actionable persistent 기본값을 참고했습니다. 외부 component나 prop 이름은 공개하지
 않고 다음 세 계층으로 번역했습니다.
 
 ```text
@@ -44,7 +43,9 @@ const result = store.publish({
   `announcement`를 제공합니다.
 - action은 무시해도 안전해야 합니다. label 자체로 동작이 명확하지 않으면
   `accessibilityLabel`에 완전한 이름을 제공합니다.
-- action이 있는 Toast는 기본 persistent입니다. 제품이 명시한 `durationMs`도 5000ms보다
+- 기본 알림과 리퀴드 알림은 모두 표시 후 3초에 자동 닫힘을 시작합니다. 리퀴드는 진입 연출 동안 타이머를 멈춥니다.
+  2026-10-02 사용자 요청으로 기존 5초 기본값·최솟값을 3초로 변경했습니다.
+- action이 있는 Toast는 기본 persistent입니다. 제품이 명시한 `durationMs`도 3000ms보다
   짧아질 수 없으며, `null`은 명시적 persistent입니다.
 
 `publish` 결과에는 stable id와 `visible | queued` 위치가 포함됩니다. 호출자는 반환된 함수
@@ -74,9 +75,9 @@ duration을 갖습니다. `closing` id는 exit가 끝날 때까지 새 publish�
 자기 monotonic clock으로 `advanceTime(elapsedMs)`를 호출합니다.
 
 ```text
-queued(waiting, 5000) ─ show ─→ visible(running, 5000)
+queued(waiting, 3000) ─ show ─→ visible(running, 3000)
                                   ├─ pointer/focus/window/gesture → paused
-                                  └─ elapsed=5000 → closing(timeout)
+                                  └─ elapsed=3000 → closing(timeout)
                                                         └─ exit complete → closed
 ```
 
@@ -113,7 +114,7 @@ so a window-width breakpoint left doubled text and action labels compressed
 even in a wide window. A 1280px window/420px card regression covers that case.
 
 Proof: `packages/react/test/toast-layout.browser.test.tsx`; review fixture:
-Storybook `Patterns/Toast layout`. The fixture covers long Korean/English copy,
+Storybook `패턴/토스트 배치`. The fixture covers long Korean/English copy,
 doubled text, dark theme and RTL. Automated browser checks are separate from
 real assistive-technology and consumer-release evidence; Toast remains beta.
 
@@ -132,7 +133,7 @@ Toast의 `●` 글리프가 뜻 없는 회색 점으로 보였고, 글자 글리
 - 여러 줄·큰 글자에서도 badge는 제목 옆 위쪽에 붙고, 한국어는 `word-break: keep-all`로 단어 중간에서
   끊지 않습니다(Web).
 
-Review fixture: Storybook `Patterns/Toast layout` → `Tone gallery`(light/dark).
+Review fixture: Storybook `패턴/토스트 배치` → `Tone gallery`(light/dark).
 
 Web renderer:
 

@@ -31,3 +31,9 @@
 
 **Web 전용.** 폰은 BottomNavigation을 쓰고, 네이티브 태블릿의 split view는 navigator의
 문제다.
+
+## 선택형 Web 표현 — 2026-10-01
+
+`appearance`는 standard(기본), bounce, hook, proximity를 지원한다. bounce는 새로 선택한 항목의 아이콘에 한 번만 적용하고, hook은 선택 항목의 시작 쪽 곡선 경계를 강조한다. proximity는 마우스/펜의 세로 거리에 따라 아이콘만 최대 18% 확대한다. 링크 경계와 키보드 순서는 변하지 않는다. 터치는 근접 효과를 만들지 않는다. HJM provider의 모션 줄이기에서 동적 표현을 끄며, provider 없이도 기본 정적 탐색은 가능하다.
+
+독립적으로 구현한 제한된 표현이다. 원본 사이트의 모션 엔진을 복제하지 않았다. Web 전용이라는 기존 지원 범위를 유지하며 Native에서 새 사이드바를 만들지 않는다. Storybook `컴포넌트/탐색/Sidebar Motion`의 Default/Dark/LargeText에서 네 가지 표현과 접기를 비교한다. 기존 앱 셸 예제는 컴포넌트/탐색/Sidebar에 남는다.

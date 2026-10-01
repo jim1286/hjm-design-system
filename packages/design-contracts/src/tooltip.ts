@@ -1,3 +1,4 @@
+import { isObject, rejectUnknownKeys } from "./internal/object-validation.js";
 export type TooltipPlacement = "top" | "bottom" | "start" | "end";
 export type TooltipAlign = "start" | "center" | "end";
 
@@ -73,29 +74,13 @@ const alignments = new Set<TooltipAlign>(["start", "center", "end"]);
 const descriptorKeys = new Set(["content", "placement", "align"]);
 const openStateKeys = new Set(["open", "defaultOpen", "onOpenChange"]);
 
-function isObject(value: unknown): value is Readonly<Record<string, unknown>> {
-  return value !== null && typeof value === "object" && !Array.isArray(value);
-}
-
-function rejectUnknownKeys(
-  value: Readonly<Record<string, unknown>>,
-  allowed: ReadonlySet<string>,
-  field: string,
-): void {
-  for (const key of Object.keys(value)) {
-    if (!allowed.has(key)) {
-      throw new TypeError(`Unsupported Tooltip ${field} field: ${key}`);
-    }
-  }
-}
-
 export function validateTooltipDescriptor(
   descriptor: TooltipDescriptor,
 ): void {
   if (!isObject(descriptor)) {
     throw new TypeError("Tooltip descriptor must be an object");
   }
-  rejectUnknownKeys(descriptor, descriptorKeys, "descriptor");
+  rejectUnknownKeys(descriptor, descriptorKeys, "descriptor", "Tooltip");
   if (
     typeof descriptor.content !== "string" ||
     descriptor.content.trim().length === 0
@@ -137,7 +122,7 @@ export function validateTooltipOpenState(state: TooltipOpenState): void {
   if (!isObject(state)) {
     throw new TypeError("Tooltip open state must be an object");
   }
-  rejectUnknownKeys(state, openStateKeys, "open state");
+  rejectUnknownKeys(state, openStateKeys, "open state", "Tooltip");
   const runtime = state as Readonly<Record<string, unknown>>;
   const hasOpen = Object.prototype.hasOwnProperty.call(runtime, "open");
   const hasDefaultOpen = Object.prototype.hasOwnProperty.call(

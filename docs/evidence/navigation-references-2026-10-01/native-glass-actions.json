@@ -1,0 +1,365 @@
+[
+  {
+    "title": null,
+    "role": "AXApplication",
+    "enabled": true,
+    "AXValue": null,
+    "help": null,
+    "AXLabel": "HJM Native Showcase",
+    "AXFrame": "{{0, 0}, {402, 874}}",
+    "role_description": "application",
+    "content_required": false,
+    "traits": [
+      "None"
+    ],
+    "pid": 89686,
+    "type": "Application",
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "subrole": null,
+    "frame": {
+      "x": 0,
+      "y": 0,
+      "width": 402,
+      "height": 874
+    }
+  },
+  {
+    "title": null,
+    "AXFrame": "{{16, 78}, {370, 32}}",
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "help": null,
+    "role": "AXStaticText",
+    "role_description": "text",
+    "type": "StaticText",
+    "custom_actions": [],
+    "AXLabel": "나만의 작업 공간",
+    "subrole": null,
+    "enabled": true,
+    "content_required": false,
+    "pid": 89686,
+    "AXUniqueId": null,
+    "frame": {
+      "x": 16,
+      "width": 370,
+      "height": 32,
+      "y": 78
+    },
+    "AXValue": null
+  },
+  {
+    "subrole": null,
+    "help": null,
+    "AXValue": null,
+    "AXFrame": "{{71, 147}, {44.333335876464844, 44}}",
+    "content_required": false,
+    "AXUniqueId": null,
+    "custom_actions": [],
+    "enabled": true,
+    "role_description": "",
+    "frame": {
+      "y": 147,
+      "width": 44.333335876464844,
+      "height": 44,
+      "x": 71
+    },
+    "AXLabel": "홈",
+    "pid": 89686,
+    "title": null,
+    "type": "GenericElement",
+    "role": "AXGenericElement",
+    "traits": [
+      "Scrollable",
+      "Button"
+    ]
+  },
+  {
+    "enabled": true,
+    "AXLabel": "서비스",
+    "role": "AXGenericElement",
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "help": null,
+    "subrole": null,
+    "AXFrame": "{{123.33333206176758, 147}, {43.999992370605469, 44}}",
+    "AXUniqueId": null,
+    "content_required": false,
+    "role_description": "",
+    "pid": 89686,
+    "type": "GenericElement",
+    "frame": {
+      "height": 44,
+      "x": 123.33333206176758,
+      "width": 43.99999237060547,
+      "y": 147
+    },
+    "AXValue": null,
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "AXFrame": "{{175.33333587646484, 147}, {56.333343505859375, 44}}",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "role": "AXGenericElement",
+    "content_required": false,
+    "AXLabel": "소개",
+    "title": null,
+    "frame": {
+      "height": 44,
+      "y": 147,
+      "x": 175.33333587646484,
+      "width": 56.333343505859375
+    },
+    "custom_actions": [],
+    "pid": 89686,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "help": null,
+    "type": "GenericElement",
+    "role_description": "",
+    "enabled": true,
+    "subrole": null
+  },
+  {
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "role_description": "text",
+    "AXValue": null,
+    "subrole": null,
+    "role": "AXStaticText",
+    "pid": 89686,
+    "AXUniqueId": null,
+    "help": null,
+    "enabled": true,
+    "custom_actions": [],
+    "type": "StaticText",
+    "AXLabel": "HJM",
+    "title": null,
+    "AXFrame": "{{29, 160}, {26, 18}}",
+    "content_required": false,
+    "frame": {
+      "y": 160,
+      "x": 29,
+      "width": 26,
+      "height": 18
+    }
+  },
+  {
+    "content_required": false,
+    "AXFrame": "{{29, 207}, {344, 20}}",
+    "pid": 89686,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "enabled": true,
+    "AXValue": null,
+    "AXLabel": "검색",
+    "custom_actions": [],
+    "title": null,
+    "help": null,
+    "role": "AXStaticText",
+    "subrole": null,
+    "AXUniqueId": null,
+    "type": "StaticText",
+    "role_description": "text",
+    "frame": {
+      "x": 29,
+      "width": 344,
+      "y": 207,
+      "height": 20
+    }
+  },
+  {
+    "content_required": false,
+    "role": "AXTextField",
+    "custom_actions": [],
+    "AXFrame": "{{42, 236}, {318, 44}}",
+    "enabled": true,
+    "role_description": "search text field",
+    "subrole": "AXSearchField",
+    "pid": 89686,
+    "AXValue": "",
+    "AXLabel": "검색",
+    "help": null,
+    "title": null,
+    "AXUniqueId": null,
+    "traits": [
+      "Scrollable",
+      "TextOperationsAvailable",
+      "TextEntry",
+      "SearchField"
+    ],
+    "frame": {
+      "x": 42,
+      "y": 236,
+      "width": 318,
+      "height": 44
+    },
+    "type": "TextField"
+  },
+  {
+    "AXFrame": "{{29, 289}, {344, 44}}",
+    "AXValue": null,
+    "pid": 89686,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "type": "GenericElement",
+    "enabled": true,
+    "AXUniqueId": null,
+    "title": null,
+    "help": null,
+    "frame": {
+      "y": 289,
+      "x": 29,
+      "height": 44,
+      "width": 344
+    },
+    "role": "AXGenericElement",
+    "role_description": "",
+    "subrole": null,
+    "AXLabel": "내 계정",
+    "content_required": false,
+    "custom_actions": []
+  },
+  {
+    "help": null,
+    "AXUniqueId": null,
+    "type": "StaticText",
+    "AXLabel": "문서 화면",
+    "AXFrame": "{{16, 370}, {370, 20}}",
+    "frame": {
+      "width": 370,
+      "y": 370,
+      "height": 20,
+      "x": 16
+    },
+    "role": "AXStaticText",
+    "title": null,
+    "AXValue": null,
+    "subrole": null,
+    "role_description": "text",
+    "content_required": false,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "pid": 89686,
+    "custom_actions": [],
+    "enabled": true
+  },
+  {
+    "type": "StaticText",
+    "AXFrame": "{{16, 414}, {370, 20}}",
+    "role": "AXStaticText",
+    "AXLabel": "로그인은 화면 상태를 보여주는 예제입니다.",
+    "enabled": true,
+    "subrole": null,
+    "AXValue": null,
+    "content_required": false,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "custom_actions": [],
+    "title": null,
+    "role_description": "text",
+    "pid": 89686,
+    "frame": {
+      "height": 20,
+      "y": 414,
+      "width": 370,
+      "x": 16
+    },
+    "AXUniqueId": null,
+    "help": null
+  },
+  {
+    "type": "GenericElement",
+    "title": null,
+    "AXFrame": "{{362, 759}, {24, 24}}",
+    "pid": 89686,
+    "help": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "subrole": null,
+    "frame": {
+      "y": 759,
+      "x": 362,
+      "width": 24,
+      "height": 24
+    },
+    "AXLabel": null,
+    "role": "AXGenericElement",
+    "content_required": false,
+    "role_description": "",
+    "enabled": true,
+    "AXValue": null,
+    "custom_actions": [],
+    "AXUniqueId": null
+  },
+  {
+    "AXValue": null,
+    "subrole": null,
+    "AXLabel": "컴포넌트/탐색/글래스 네비게이션 바/Default",
+    "content_required": false,
+    "role_description": "",
+    "custom_actions": [],
+    "pid": 89686,
+    "role": "AXGenericElement",
+    "frame": {
+      "x": 6,
+      "width": 286.3333435058594,
+      "height": 17,
+      "y": 811.6666669845581
+    },
+    "AXUniqueId": "mobile-menu-button",
+    "type": "GenericElement",
+    "traits": [
+      "Scrollable"
+    ],
+    "help": null,
+    "AXFrame": "{{6, 811.66666698455811}, {286.33334350585938, 17}}",
+    "title": null,
+    "enabled": true
+  },
+  {
+    "subrole": null,
+    "custom_actions": [],
+    "AXUniqueId": "mobile-addons-button",
+    "help": null,
+    "AXValue": null,
+    "type": "Button",
+    "role": "AXButton",
+    "content_required": false,
+    "pid": 89686,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "enabled": true,
+    "role_description": "button",
+    "frame": {
+      "x": 368,
+      "y": 806,
+      "width": 28,
+      "height": 28
+    },
+    "AXLabel": null,
+    "title": null,
+    "AXFrame": "{{368, 806}, {28, 28}}"
+  }
+]

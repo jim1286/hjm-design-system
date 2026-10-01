@@ -31,11 +31,6 @@ export type LayoutDescriptor = Readonly<{
 export declare function validateLayoutRegions(descriptor: LayoutDescriptor): void;
 /** Web landmark validation, including the WCAG 2.4.1 bypass-link invariant. */
 export declare function validateLayoutWebDescriptor(descriptor: LayoutDescriptor): void;
-/**
- * @deprecated Use `validateLayoutRegions` for shared/Native structure or
- * `validateLayoutWebDescriptor` for a Web app shell.
- */
-export declare function validateLayoutDescriptor(descriptor: LayoutDescriptor): void;
 export type LayoutLandmarkRole = "banner" | "navigation" | "complementary" | "main" | "contentinfo";
 /**
  * Web-only translation: real landmark elements exist there. Native has no

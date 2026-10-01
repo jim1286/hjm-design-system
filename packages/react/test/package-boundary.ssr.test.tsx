@@ -82,12 +82,35 @@ describe("@hjmds/react package boundary", () => {
       "./celebration",
     ];
 
+    // Optional visual entry points are checked independently of canonical family exports.
+    const optionalExportPaths = [
+      "./avatar-blobatar",
+      "./effect-surface",
+      "./icon-lucide",
+      "./duration-field",
+      "./inline-confirm",
+      "./reaction-picker",
+      "./notification-bell",
+      "./scroll-progress",
+      "./code-block",
+      "./activity-heatmap",
+      "./task-list",
+      "./folder-preview",
+      "./avatar-blobatar-motion",
+      "./step-player",
+      "./voice-note",
+      "./grid-reveal",
+      "./gravity-letters",
+      "./navigation-bar",
+    ];
+
     expect(Object.keys(packageJson.exports)).toEqual([
       ...executableExportPaths,
       "./styles.css",
       "./styles.layered.css",
+      ...optionalExportPaths,
     ]);
-    const familyTargets = executableExportPaths.slice(1).map((exportPath) => {
+    const familyTargets = [...executableExportPaths.slice(1), ...optionalExportPaths].map((exportPath) => {
       const definition = packageJson.exports[exportPath] as Record<string, string>;
       expect(definition.import).toMatch(/^\.\/dist\/.+\.js$/);
       expect(definition.import).not.toBe("./dist/index.js");

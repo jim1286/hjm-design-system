@@ -1,4 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { resolveMenuTypeahead } from "./menu-typeahead.js";
 import { Menu as Bloom } from "bloom-menu";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "./actions.js";
@@ -12,7 +13,7 @@ export function MorphingMenu({ label, items, onAction, disabled = false, open: c
     const root = useRef(null);
     const previousOpen = useRef(false);
     const restoreFocus = useRef(true);
-    const search = useRef({ text: "", time: 0 });
+    const search = useRef({ value: "", time: 0 });
     const change = (value) => { if (value)
         restoreFocus.current = true; setLocalOpen(value); onOpenChange?.(value); };
     if (!label.trim() || !items.length || new Set(items.map(item => item.id)).size !== items.length ||
@@ -22,6 +23,7 @@ export function MorphingMenu({ label, items, onAction, disabled = false, open: c
     useEffect(() => {
         const host = root.current;
         if (open) {
+            search.current = { value: "", time: 0 };
             host?.querySelector('[role="menu"]')?.setAttribute("aria-label", label);
             host?.querySelector('[role="menuitem"]:not([disabled])')?.focus();
         }
@@ -60,10 +62,12 @@ export function MorphingMenu({ label, items, onAction, disabled = false, open: c
             if (event.key === "Escape")
                 event.preventDefault();
         }
-        if (event.key.length === 1 && !event.ctrlKey && !event.metaKey && event.key !== " ") {
-            const now = Date.now();
-            search.current = { text: (now - search.current.time < 600 ? search.current.text : "") + event.key.toLocaleLowerCase(), time: now };
-            next = nodes.findIndex(node => node.textContent?.trim().toLocaleLowerCase().startsWith(search.current.text));
+        if (event.key.length === 1 && !event.altKey && !event.ctrlKey && !event.metaKey && event.key !== " ") {
+            const result = resolveMenuTypeahead(items.filter(item => !item.disabled).map(item => ({
+                textValue: item.textValue ?? (typeof item.label === "string" ? item.label : ""),
+            })), index, event.key, search.current, Date.now());
+            search.current = result.state;
+            next = result.index;
         }
         if (next !== undefined && next >= 0) {
             event.preventDefault();
@@ -73,7 +77,6 @@ export function MorphingMenu({ label, items, onAction, disabled = false, open: c
     };
     return _jsx("div", { ref: root, className: "hjm-menu-morph", onKeyDownCapture: keyDown, children: _jsx(Bloom.Root, { direction: "bottom", open: open, onOpenChange: change, modal: false, children: _jsxs(Bloom.Container, { buttonSize: { width: 160, height: 44 }, menuWidth: 240, style: { background: theme.palette.theme.bg, color: theme.palette.theme.text }, children: [_jsx(Bloom.Trigger, { disabled: disabled, children: label }), _jsx(Bloom.Content, { children: items.map(item => _jsxs("button", { type: "button", role: "menuitem", tabIndex: -1, className: "hjm-menu-morph__item", disabled: !open || (item.disabled ?? false), "data-tone": item.tone, "aria-label": item.textValue, onClick: () => { if (!item.disabled) {
                                 change(false);
-                                item.onSelect?.();
                                 onAction?.(item.id);
                             } }, children: [item.leading, item.label, item.trailing] }, item.id)) })] }) }) });
 }

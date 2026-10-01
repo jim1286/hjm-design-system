@@ -143,12 +143,6 @@ export type ReferenceCoverageSummary = Readonly<{
   partiallyMature: number;
   /** No HJM target has moved beyond planned maturity. */
   plannedOnly: number;
-  /** @deprecated Status maturity is not proof that a preview renderer exists. */
-  fullyPreviewable: number;
-  /** @deprecated Status maturity is not proof that a preview renderer exists. */
-  partiallyPreviewable: number;
-  /** @deprecated Use `plannedOnly`. */
-  contractOnly: number;
   relationships: Readonly<Record<ReferenceRelationship, number>>;
 }>;
 
@@ -200,11 +194,6 @@ export function summarizeAntDesignCoverage(
     fullyMature,
     partiallyMature,
     plannedOnly,
-    // Backward-compatible aliases. These names predate the evidence registry
-    // and must not be used as renderer or preview counts in new UI.
-    fullyPreviewable: fullyMature,
-    partiallyPreviewable: partiallyMature,
-    contractOnly: plannedOnly,
     relationships,
   };
 }

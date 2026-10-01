@@ -126,3 +126,16 @@ export function finalizeFrame(dots: Dot[], lines: Line[], rMin = 0.3): OrbFrame 
 export function radiusScale(size: number, pow: number): number {
   return (size / 300) ** pow;
 }
+
+// Braid and Ribbon share the faint backing sphere, not their foreground motion.
+// Extract the identical loop so tuning the backdrop cannot diverge across modes.
+export function ghostSphereDots(project: Projector, radius: number, radiusScale: number, count: number): Dot[] {
+  const dots: Dot[] = [];
+  for (let i = 0; i < count; i++) {
+    const d = fibDir(i, count);
+    const [x, y, z] = project(d[0] * radius, d[1] * radius, d[2] * radius);
+    const depth = (z / radius + 1) / 2;
+    dots.push({ x, y, z, r: 0.8 * radiusScale, white: 0.78, a: 0.1 + 0.22 * depth });
+  }
+  return dots;
+}

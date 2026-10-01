@@ -44,8 +44,8 @@ export function WebNavigationPreview() {
     </div>
   </Stack>;
 }
-const meta = { title: "Patterns/WebNavigation", component: WebNavigationPreview } satisfies Meta<typeof WebNavigationPreview>;
+const meta = { includeStories: ["Records","LargeText"], id: "patterns-webnavigation", title: "배포/구성/웹 탐색", component: WebNavigationPreview } satisfies Meta<typeof WebNavigationPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
-export const Records: Story = {};
-export const LargeText: Story = { globals: { textScale: "2" } };
+export const Records: Story = { name: "기록",};
+export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };

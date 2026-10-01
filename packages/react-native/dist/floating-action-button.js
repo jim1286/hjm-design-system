@@ -1,11 +1,11 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { forwardRef, useCallback, useEffect, useRef, useState } from "react";
-import { Animated, Easing, View, useWindowDimensions } from "react-native";
-import { floatingActionButtonRecipe as recipe, resolveFloatingActionButtonDescriptor, resolveFloatingActionButtonLayoutMode, resolveFloatingActionButtonContentClearance, } from "@hjmds/design-contracts/components/floating-action-button";
-import { glyph, easing } from "@hjmds/design-contracts/foundations";
-import { Button } from "./actions.js";
-import { useHjmNativeTheme } from "./provider.js";
+import { floatingActionButtonRecipe as recipe, resolveFloatingActionButtonContentClearance, resolveFloatingActionButtonDescriptor, resolveFloatingActionButtonLayoutMode, } from "@hjmds/design-contracts/components/floating-action-button";
+import { easing, glyph } from "@hjmds/design-contracts/foundations";
+import { forwardRef, useCallback, useEffect, useRef, useState, } from "react";
+import { Animated, Easing, View, useWindowDimensions, } from "react-native";
+import { RecipeButton } from "./internal/recipe-button.js";
 import { Text } from "./primitives.js";
+import { useHjmNativeTheme } from "./provider.js";
 export { resolveFloatingActionButtonContentClearance };
 /** Place after the ScrollView in a positioned screen; reserve the reported content clearance. */
 export const FloatingActionButton = forwardRef(function FloatingActionButton({ descriptor, renderIcon, safeAreaBottomInset = 0, onContentClearanceChange, ...props }, ref) {
@@ -26,7 +26,7 @@ export const FloatingActionButton = forwardRef(function FloatingActionButton({ d
         animation.start();
         return () => animation.stop();
     }, [collapsed, environment.reducedMotion, labelOpacity]);
-    return _jsx(Button, { ...props, ref: ref, size: "large", tone: "primary", shape: "pill", growWithContent: true, accessibilityLabel: resolved.resolvedAccessibilityLabel, onLayout: ({ nativeEvent }) => onContentClearanceChange(Math.max(minimumClearance, nativeEvent.layout.height + recipe.margin * 2 + safeAreaBottomInset)), style: { position: "absolute", bottom: recipe.margin + safeAreaBottomInset,
+    return _jsx(RecipeButton, { ...props, ref: ref, size: "large", tone: "primary", shape: "pill", growWithContent: true, accessibilityLabel: resolved.resolvedAccessibilityLabel, onLayout: ({ nativeEvent }) => onContentClearanceChange(Math.max(minimumClearance, nativeEvent.layout.height + recipe.margin * 2 + safeAreaBottomInset)), style: { position: "absolute", bottom: recipe.margin + safeAreaBottomInset,
             ...(environment.direction === "rtl" ? { left: recipe.margin } : { right: recipe.margin }),
             maxWidth: width - recipe.margin * 2, minHeight: recipe.circle.diameter,
             shadowColor: recipe.shadow.color, shadowOpacity: recipe.shadow.opacity,

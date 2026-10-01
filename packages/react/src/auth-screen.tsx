@@ -14,6 +14,10 @@ export type AuthScreenLayoutProps = Omit<HTMLAttributes<HTMLElement>, "children"
     hero: ReactNode;
     /** The primary action block — provider buttons, or a product's own sign-in bundle. */
     main: ReactNode;
+    /** Product-localized progress label; presence replaces actions with one centred loader. */
+    pendingLabel?: string;
+    /** Let the layout own the action card; omit when the product already supplies a surface. */
+    mainCard?: boolean;
     /** Consent notice and policy links. Omit with `hasFooter: false`. */
     footer?: ReactNode;
     className?: string;
@@ -26,7 +30,7 @@ export type AuthScreenLayoutProps = Omit<HTMLAttributes<HTMLElement>, "children"
  */
 export const AuthScreenLayout = forwardRef<HTMLElement, AuthScreenLayoutProps>(
   function AuthScreenLayout(
-    { hero, main, footer, density, hasFooter, className, as: Element = "main", ...props },
+    { hero, main, footer, density, hasFooter, pendingLabel, mainCard = false, className, as: Element = "main", ...props },
     forwardedRef,
   ) {
     const resolved = resolveAuthScreenDescriptor({
@@ -34,6 +38,8 @@ export const AuthScreenLayout = forwardRef<HTMLElement, AuthScreenLayoutProps>(
       ...(hasFooter === undefined ? {} : { hasFooter }),
     });
     const showFooter = resolved.hasFooter && footer !== undefined && footer !== null;
+    const pending = pendingLabel !== undefined;
+    if (pending && !pendingLabel.trim()) throw new TypeError("AuthScreen pendingLabel must not be empty");
     return (
       <Element
         {...props}
@@ -52,7 +58,14 @@ export const AuthScreenLayout = forwardRef<HTMLElement, AuthScreenLayoutProps>(
       >
         <div className="hjm-auth-screen__block">
           <div className="hjm-auth-screen__hero">{hero}</div>
-          <div className="hjm-auth-screen__main">{main}</div>
+          <div className="hjm-auth-screen__main" data-card={mainCard || undefined} aria-busy={pending || undefined}>
+            {/* Keep the action block in flow so the card never collapses; inert also removes keyboard access. */}
+            <div className="hjm-auth-screen__actions" inert={pending} aria-hidden={pending || undefined}
+              style={pending ? { visibility: "hidden" } : undefined}>{main}</div>
+            {pending ? <div className="hjm-auth-screen__pending" role="status" aria-label={pendingLabel}>
+              <span className="hjm-auth-provider-button__spinner" aria-hidden="true" />
+            </div> : null}
+          </div>
         </div>
         {showFooter ? <div className="hjm-auth-screen__footer">{footer}</div> : null}
       </Element>

@@ -31,7 +31,7 @@ export function FloatingNotesPreview() {
   </View>;
 }
 
-const meta = { title: "Patterns/Floating action button", component: FloatingNotesPreview } satisfies Meta<typeof FloatingNotesPreview>;
+const meta = { title: "배포/구성/빠른 메모 작성", component: FloatingNotesPreview } satisfies Meta<typeof FloatingNotesPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
-export const Notes: Story = { parameters: { hjm: { componentIds: nativeRendererStoryGroups.floatingActionButton } } };
+export const Notes: Story = { name: "메모", parameters: { hjm: { componentIds: nativeRendererStoryGroups.floatingActionButton } } };

@@ -1,0 +1,207 @@
+[
+  {
+    "subrole": null,
+    "help": null,
+    "AXValue": null,
+    "AXFrame": "{{0, 0}, {402, 874}}",
+    "content_required": false,
+    "AXUniqueId": null,
+    "enabled": true,
+    "custom_actions": [],
+    "role_description": "application",
+    "frame": {
+      "height": 874,
+      "x": 0,
+      "y": 0,
+      "width": 402
+    },
+    "AXLabel": "HJM Native Showcase",
+    "pid": 89686,
+    "title": null,
+    "type": "Application",
+    "role": "AXApplication",
+    "traits": [
+      "None"
+    ]
+  },
+  {
+    "enabled": true,
+    "AXLabel": "햇살과 겹친 산 능선",
+    "role": "AXImage",
+    "traits": [
+      "Image",
+      "Scrollable"
+    ],
+    "help": null,
+    "subrole": null,
+    "AXFrame": "{{16, 78}, {320, 200}}",
+    "AXUniqueId": null,
+    "content_required": false,
+    "role_description": "image",
+    "pid": 89686,
+    "type": "Image",
+    "frame": {
+      "width": 320,
+      "y": 78,
+      "height": 200,
+      "x": 16
+    },
+    "AXValue": null,
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "AXFrame": "{{16, 298}, {370, 44}}",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "role": "AXGenericElement",
+    "content_required": false,
+    "AXLabel": "다시 보기",
+    "title": null,
+    "frame": {
+      "y": 298,
+      "height": 44,
+      "width": 370,
+      "x": 16
+    },
+    "custom_actions": [],
+    "pid": 89686,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "help": null,
+    "type": "GenericElement",
+    "role_description": "",
+    "enabled": true,
+    "subrole": null
+  },
+  {
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "role_description": "",
+    "AXValue": null,
+    "subrole": "AXSwitch",
+    "role": "AXGenericElement",
+    "pid": 89686,
+    "AXUniqueId": null,
+    "help": null,
+    "enabled": true,
+    "custom_actions": [],
+    "AXLabel": "이미지 오류 보기",
+    "type": "GenericElement",
+    "title": null,
+    "AXFrame": "{{16, 362}, {370, 44}}",
+    "content_required": false,
+    "frame": {
+      "y": 362,
+      "width": 370,
+      "height": 44,
+      "x": 16
+    }
+  },
+  {
+    "content_required": false,
+    "AXFrame": "{{16, 426}, {370, 120}}",
+    "pid": 89686,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "enabled": true,
+    "AXValue": null,
+    "AXLabel": "이미지가 로드된 뒤에만 격자 효과를 시작해요. 오류 상태에서 다시 보기를 누르면 재시도합니다.",
+    "custom_actions": [],
+    "title": null,
+    "help": null,
+    "role": "AXStaticText",
+    "subrole": null,
+    "AXUniqueId": null,
+    "type": "StaticText",
+    "role_description": "text",
+    "frame": {
+      "width": 370,
+      "x": 16,
+      "y": 426,
+      "height": 120
+    }
+  },
+  {
+    "title": null,
+    "AXFrame": "{{362, 759}, {24, 24}}",
+    "traits": [
+      "Scrollable"
+    ],
+    "help": null,
+    "role": "AXGenericElement",
+    "role_description": "",
+    "type": "GenericElement",
+    "custom_actions": [],
+    "AXLabel": null,
+    "subrole": null,
+    "enabled": true,
+    "content_required": false,
+    "pid": 89686,
+    "AXValue": null,
+    "AXUniqueId": null,
+    "frame": {
+      "y": 759,
+      "x": 362,
+      "height": 24,
+      "width": 24
+    }
+  },
+  {
+    "frame": {
+      "width": 292,
+      "y": 811.6666669845581,
+      "height": 17,
+      "x": 6
+    },
+    "enabled": true,
+    "role": "AXGenericElement",
+    "AXValue": null,
+    "help": null,
+    "AXFrame": "{{6, 811.66666698455811}, {292, 17}}",
+    "AXLabel": "컴포넌트/시각 효과/Grid Reveal/Large Text",
+    "role_description": "",
+    "content_required": false,
+    "traits": [
+      "Scrollable"
+    ],
+    "pid": 89686,
+    "type": "GenericElement",
+    "custom_actions": [],
+    "AXUniqueId": "mobile-menu-button",
+    "subrole": null,
+    "title": null
+  },
+  {
+    "help": null,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "AXUniqueId": "mobile-addons-button",
+    "frame": {
+      "height": 28,
+      "y": 806,
+      "width": 28,
+      "x": 368
+    },
+    "role_description": "button",
+    "content_required": false,
+    "pid": 89686,
+    "type": "Button",
+    "AXFrame": "{{368, 806}, {28, 28}}",
+    "role": "AXButton",
+    "subrole": null,
+    "enabled": true,
+    "AXValue": null,
+    "AXLabel": null,
+    "title": null,
+    "custom_actions": []
+  }
+]

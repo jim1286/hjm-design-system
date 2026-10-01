@@ -1,0 +1,10 @@
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { View } from 'react-native';
+import { Collapsible } from './collapsible.js';
+import { Text } from './primitives.js';
+import { ContentTransition } from './content-transition.js';
+import { useHjmNativeTheme } from './provider.js';
+import { radius } from '@hjmds/design-contracts/foundations';
+export function FolderPreview({ label, open, onOpenChange, previews, children, disabled = false }) { const { colors } = useHjmNativeTheme(); if (!label.trim())
+    throw new TypeError('Folder needs a label'); return _jsx(Collapsible, { open: open, onOpenChange: onOpenChange, disabled: disabled, trigger: _jsxs(View, { style: { flex: 1 }, children: [_jsx(View, { pointerEvents: "none", accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", children: _jsx(ContentTransition, { stateKey: String(open), preset: "scale", children: _jsxs(View, { style: { height: 160, width: '100%', maxWidth: 260, alignSelf: 'center' }, children: [previews.slice(0, 3).map((preview, index) => _jsx(View, { style: { position: 'absolute', start: '20%', top: 24 + index * 8, width: '60%', height: 104, overflow: 'hidden', borderRadius: radius.md, backgroundColor: colors.surfaceAlt, borderWidth: 1, borderColor: colors.border, transform: [{ translateX: (index - 1) * (open ? 34 : 10) }, { rotate: `${(index - 1) * (open ? 12 : 4)}deg` }] }, children: preview }, index)), _jsx(View, { style: { position: 'absolute', bottom: 0, start: 0, end: 0, height: 56, borderRadius: radius.lg, backgroundColor: colors.surfaceAccent, borderWidth: 1, borderColor: colors.border } })] }) }) }), _jsx(Text, { children: label })] }), children: children }); }
+//# sourceMappingURL=folder-preview.js.map

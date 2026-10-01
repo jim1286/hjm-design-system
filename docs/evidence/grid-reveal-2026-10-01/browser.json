@@ -1,0 +1,20 @@
+[
+  {
+    "state": "default",
+    "retry": true,
+    "overflow": false,
+    "remainingAnimations": 0
+  },
+  {
+    "state": "dark",
+    "retry": true,
+    "overflow": false,
+    "remainingAnimations": 0
+  },
+  {
+    "state": "large-text",
+    "retry": true,
+    "overflow": false,
+    "remainingAnimations": 0
+  }
+]

@@ -1,0 +1,535 @@
+[
+  {
+    "content_required": false,
+    "AXFrame": "{{0, 0}, {402, 874}}",
+    "pid": 89686,
+    "traits": [
+      "None"
+    ],
+    "enabled": true,
+    "AXValue": null,
+    "AXLabel": "HJM Native Showcase",
+    "custom_actions": [],
+    "title": null,
+    "help": null,
+    "role": "AXApplication",
+    "subrole": null,
+    "AXUniqueId": null,
+    "type": "Application",
+    "role_description": "application",
+    "frame": {
+      "height": 874,
+      "y": 0,
+      "x": 0,
+      "width": 402
+    }
+  },
+  {
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "role_description": "text",
+    "AXValue": null,
+    "subrole": null,
+    "role": "AXStaticText",
+    "pid": 89686,
+    "AXUniqueId": null,
+    "help": null,
+    "enabled": true,
+    "custom_actions": [],
+    "AXLabel": "나에게 맞는 속도로.",
+    "type": "StaticText",
+    "title": null,
+    "AXFrame": "{{40, 53}, {322, 128}}",
+    "content_required": false,
+    "frame": {
+      "x": 40,
+      "y": 53,
+      "width": 322,
+      "height": 128
+    }
+  },
+  {
+    "AXFrame": "{{40, 205}, {322, 80}}",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "role": "AXStaticText",
+    "content_required": false,
+    "AXLabel": "시간·분·초를 조절해 다음 집중 시간을 정해요.",
+    "title": null,
+    "frame": {
+      "x": 40,
+      "width": 322,
+      "height": 80,
+      "y": 205
+    },
+    "custom_actions": [],
+    "pid": 89686,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "help": null,
+    "type": "StaticText",
+    "role_description": "text",
+    "enabled": true,
+    "subrole": null
+  },
+  {
+    "enabled": true,
+    "AXLabel": "집중할 시간",
+    "role": "AXStaticText",
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "help": null,
+    "subrole": null,
+    "AXFrame": "{{40, 309}, {322, 36}}",
+    "AXUniqueId": null,
+    "content_required": false,
+    "role_description": "text",
+    "pid": 89686,
+    "type": "StaticText",
+    "frame": {
+      "y": 309,
+      "width": 322,
+      "height": 36,
+      "x": 40
+    },
+    "AXValue": null,
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "subrole": null,
+    "help": null,
+    "AXValue": null,
+    "AXFrame": "{{40, 357}, {322, 40}}",
+    "content_required": false,
+    "AXUniqueId": null,
+    "enabled": true,
+    "custom_actions": [],
+    "role_description": "text",
+    "frame": {
+      "height": 40,
+      "x": 40,
+      "width": 322,
+      "y": 357
+    },
+    "AXLabel": "집중할 시간, 시간",
+    "pid": 89686,
+    "title": null,
+    "type": "StaticText",
+    "role": "AXStaticText",
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ]
+  },
+  {
+    "title": null,
+    "AXFrame": "{{41, 406}, {44, 52}}",
+    "traits": [
+      "Button",
+      "Scrollable",
+      "NotEnabled"
+    ],
+    "help": null,
+    "role": "AXButton",
+    "role_description": "button",
+    "type": "Button",
+    "custom_actions": [],
+    "AXLabel": "시간 줄이기",
+    "subrole": null,
+    "enabled": false,
+    "content_required": false,
+    "pid": 89686,
+    "AXValue": null,
+    "AXUniqueId": null,
+    "frame": {
+      "height": 52,
+      "y": 406,
+      "x": 41,
+      "width": 44
+    }
+  },
+  {
+    "frame": {
+      "y": 410,
+      "x": 85,
+      "width": 232,
+      "height": 44
+    },
+    "enabled": true,
+    "role": "AXTextField",
+    "AXValue": "0",
+    "help": null,
+    "AXFrame": "{{85, 410}, {232, 44}}",
+    "AXLabel": "집중할 시간, 시간",
+    "role_description": "search text field",
+    "content_required": false,
+    "traits": [
+      "StaticText",
+      "Scrollable",
+      "TextOperationsAvailable",
+      "TextEntry"
+    ],
+    "pid": 89686,
+    "type": "TextField",
+    "custom_actions": [
+      "시간 늘리기",
+      "시간 줄이기"
+    ],
+    "AXUniqueId": null,
+    "subrole": "AXSearchField",
+    "title": null
+  },
+  {
+    "traits": [
+      "Button",
+      "Scrollable"
+    ],
+    "AXValue": null,
+    "AXFrame": "{{317, 406}, {44, 52}}",
+    "frame": {
+      "x": 317,
+      "width": 44,
+      "y": 406,
+      "height": 52
+    },
+    "subrole": null,
+    "title": null,
+    "custom_actions": [],
+    "pid": 89686,
+    "help": null,
+    "type": "GenericElement",
+    "enabled": true,
+    "role": "AXGenericElement",
+    "content_required": false,
+    "role_description": "",
+    "AXLabel": "시간 늘리기",
+    "AXUniqueId": null
+  },
+  {
+    "custom_actions": [],
+    "AXLabel": "집중할 시간, 분",
+    "AXUniqueId": null,
+    "title": null,
+    "AXFrame": "{{40, 475}, {322, 40}}",
+    "role_description": "text",
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "type": "StaticText",
+    "help": null,
+    "pid": 89686,
+    "subrole": null,
+    "AXValue": null,
+    "enabled": true,
+    "content_required": false,
+    "role": "AXStaticText",
+    "frame": {
+      "x": 40,
+      "y": 475,
+      "width": 322,
+      "height": 40
+    }
+  },
+  {
+    "pid": 89686,
+    "AXValue": null,
+    "content_required": false,
+    "subrole": null,
+    "custom_actions": [],
+    "title": null,
+    "type": "Button",
+    "AXUniqueId": null,
+    "help": null,
+    "AXLabel": "분 줄이기",
+    "enabled": true,
+    "AXFrame": "{{41, 524}, {44, 52}}",
+    "role_description": "button",
+    "traits": [
+      "Button",
+      "Scrollable"
+    ],
+    "role": "AXButton",
+    "frame": {
+      "x": 41,
+      "y": 524,
+      "width": 44,
+      "height": 52
+    }
+  },
+  {
+    "traits": [
+      "StaticText",
+      "Scrollable",
+      "TextOperationsAvailable",
+      "TextEntry"
+    ],
+    "frame": {
+      "x": 85,
+      "width": 232,
+      "height": 44,
+      "y": 528
+    },
+    "AXValue": "26",
+    "type": "TextField",
+    "AXUniqueId": null,
+    "help": null,
+    "content_required": false,
+    "custom_actions": [
+      "분 늘리기",
+      "분 줄이기"
+    ],
+    "AXLabel": "집중할 시간, 분",
+    "role": "AXTextField",
+    "title": null,
+    "enabled": true,
+    "role_description": "text field",
+    "subrole": null,
+    "AXFrame": "{{85, 528}, {232, 44}}",
+    "pid": 89686
+  },
+  {
+    "AXLabel": "분 늘리기",
+    "title": null,
+    "AXValue": null,
+    "help": null,
+    "role_description": "button",
+    "subrole": null,
+    "AXUniqueId": null,
+    "frame": {
+      "y": 524,
+      "x": 317,
+      "width": 44,
+      "height": 52
+    },
+    "custom_actions": [],
+    "type": "Button",
+    "role": "AXButton",
+    "enabled": true,
+    "content_required": false,
+    "pid": 89686,
+    "AXFrame": "{{317, 524}, {44, 52}}",
+    "traits": [
+      "Button",
+      "Scrollable"
+    ]
+  },
+  {
+    "title": null,
+    "type": "StaticText",
+    "help": null,
+    "frame": {
+      "height": 40,
+      "y": 593,
+      "width": 322,
+      "x": 40
+    },
+    "AXFrame": "{{40, 593}, {322, 40}}",
+    "role_description": "text",
+    "AXLabel": "집중할 시간, 초",
+    "subrole": null,
+    "content_required": false,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "pid": 89686,
+    "AXValue": null,
+    "role": "AXStaticText",
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "enabled": true
+  },
+  {
+    "AXFrame": "{{41, 642}, {44, 52}}",
+    "AXValue": null,
+    "enabled": true,
+    "content_required": false,
+    "custom_actions": [],
+    "pid": 89686,
+    "role_description": "button",
+    "traits": [
+      "Button",
+      "Scrollable"
+    ],
+    "frame": {
+      "width": 44,
+      "y": 642,
+      "height": 52,
+      "x": 41
+    },
+    "role": "AXButton",
+    "title": null,
+    "AXLabel": "초 줄이기",
+    "AXUniqueId": null,
+    "help": null,
+    "type": "Button",
+    "subrole": null
+  },
+  {
+    "AXFrame": "{{85, 646}, {232, 44}}",
+    "subrole": null,
+    "frame": {
+      "y": 646,
+      "x": 85,
+      "height": 44,
+      "width": 232
+    },
+    "title": null,
+    "traits": [
+      "StaticText",
+      "Scrollable",
+      "TextOperationsAvailable",
+      "TextEntry"
+    ],
+    "AXValue": "1",
+    "role_description": "text field",
+    "help": null,
+    "role": "AXTextField",
+    "enabled": true,
+    "custom_actions": [
+      "초 늘리기",
+      "초 줄이기"
+    ],
+    "content_required": false,
+    "pid": 89686,
+    "AXLabel": "집중할 시간, 초",
+    "type": "TextField",
+    "AXUniqueId": null
+  },
+  {
+    "AXUniqueId": null,
+    "pid": 89686,
+    "frame": {
+      "width": 44,
+      "x": 317,
+      "y": 642,
+      "height": 52
+    },
+    "custom_actions": [],
+    "role": "AXButton",
+    "AXFrame": "{{317, 642}, {44, 52}}",
+    "content_required": false,
+    "title": null,
+    "AXLabel": "초 늘리기",
+    "subrole": null,
+    "role_description": "button",
+    "help": null,
+    "enabled": true,
+    "traits": [
+      "Button",
+      "Scrollable"
+    ],
+    "AXValue": null,
+    "type": "Button"
+  },
+  {
+    "help": null,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "AXUniqueId": null,
+    "frame": {
+      "y": 719,
+      "width": 322,
+      "height": 40,
+      "x": 40
+    },
+    "role_description": "text",
+    "content_required": false,
+    "pid": 89686,
+    "type": "StaticText",
+    "AXFrame": "{{40, 719}, {322, 40}}",
+    "role": "AXStaticText",
+    "subrole": null,
+    "enabled": true,
+    "AXValue": null,
+    "AXLabel": "총 1,561초",
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "content_required": false,
+    "type": "GenericElement",
+    "AXValue": null,
+    "AXUniqueId": null,
+    "enabled": true,
+    "role_description": "",
+    "help": null,
+    "AXFrame": "{{362, 759}, {24, 24}}",
+    "title": null,
+    "frame": {
+      "y": 759,
+      "height": 24,
+      "width": 24,
+      "x": 362
+    },
+    "custom_actions": [],
+    "role": "AXGenericElement",
+    "AXLabel": null,
+    "subrole": null,
+    "pid": 89686,
+    "traits": [
+      "Scrollable"
+    ]
+  },
+  {
+    "help": null,
+    "content_required": false,
+    "AXFrame": "{{6, 811.66666698455811}, {280.33334350585938, 17}}",
+    "frame": {
+      "width": 280.3333435058594,
+      "y": 811.6666669845581,
+      "height": 17,
+      "x": 6
+    },
+    "subrole": null,
+    "role": "AXGenericElement",
+    "AXUniqueId": "mobile-menu-button",
+    "AXLabel": "컴포넌트/입력/Duration Field/Large Text",
+    "custom_actions": [],
+    "pid": 89686,
+    "traits": [
+      "Scrollable"
+    ],
+    "title": null,
+    "role_description": "",
+    "enabled": true,
+    "AXValue": null,
+    "type": "GenericElement"
+  },
+  {
+    "help": null,
+    "role_description": "button",
+    "title": null,
+    "type": "Button",
+    "custom_actions": [],
+    "AXValue": null,
+    "enabled": true,
+    "frame": {
+      "height": 28,
+      "x": 368,
+      "y": 806,
+      "width": 28
+    },
+    "AXLabel": null,
+    "subrole": null,
+    "AXUniqueId": "mobile-addons-button",
+    "AXFrame": "{{368, 806}, {28, 28}}",
+    "pid": 89686,
+    "content_required": false,
+    "traits": [
+      "Button",
+      "Scrollable"
+    ],
+    "role": "AXButton"
+  }
+]

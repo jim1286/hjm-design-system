@@ -113,9 +113,9 @@ Context 배선/정적 토큰 사용은 예제로 설명하며 BorderBeam은 모�
   경로를 유지했다. Anchor는 문서·별도 스크롤 영역, section focus, reduced motion, fragment
   history와 동적 본문 관찰을 구현했다. Web 전용이며 Native wrapper를 추가하지 않았다.
   [Breadcrumb](./breadcrumb.md), [Pagination](./pagination.md), [Anchor](./anchor.md).
-- Patterns/WebNavigation은 125개 기록의 페이지별 목록 교체와 보관함 왕복을 제공한다.
+- 갤러리/웹 탐색은 125개 기록의 페이지별 목록 교체와 보관함 왕복을 제공한다.
   경로 변경 후 사라진 링크 대신 새 본문으로 focus를 옮기며 초기 mount에서는 focus를 뺏지 않는다.
-  Patterns/Anchor는 세 부분의 실제 읽기 가이드에서 목차·스크롤·focus를 연결한다.
+  컴포넌트/탐색/Anchor는 세 부분의 실제 읽기 가이드에서 목차·스크롤·focus를 연결한다.
 - 탐색 묶음 `pnpm ci:check` exit 0: contracts 733, Web SSR 139 + browser 140,
   Native 268 = 패키지 테스트 1,280개. Showcase Web 19 / Native 1과 타입·문서·evidence·
   번들·정적 Storybook(Web 71 / contract-only 23 / unsupported 0)이 통과했다.
@@ -131,7 +131,7 @@ Context 배선/정적 토큰 사용은 예제로 설명하며 BorderBeam은 모�
   바깥 pointer/Tab이 향한 곳을 그대로 두고, 자식 popover가 감싸는 Dialog보다 Escape를 먼저 받는다.
   [API와 근거](./popover.md). ConfirmPopover는 새 renderer가 아니라 Popover의 확인/취소 조합으로
   제공하고 파괴적 동작은 AlertDialog에 남긴다. [조합 근거](./confirm-popover.md).
-- Patterns/Popover는 필터 적용과 되돌릴 수 있는 보관 두 화면을 제공한다. 보관하면 트리거가
+- 컴포넌트/오버레이/Popover는 필터 적용과 되돌릴 수 있는 보관 두 화면을 제공한다. 보관하면 트리거가
   사라지므로 제품이 초점을 보관 취소 버튼으로 옮기고, 초기 mount에서는 초점을 뺏지 않는다.
 - 묶음 종료 시 두 예산이 실측에서 걸려 근거와 함께 올렸다. contracts 루트 barrel은
   111.8 -> 112.3 kB gzip인데 모듈별로 재면 catalog.js +522 B(Popover·ConfirmPopover maturity
@@ -160,7 +160,7 @@ Context 배선/정적 토큰 사용은 예제로 설명하며 BorderBeam은 모�
 - 브라우저(chromium) 검증 6개: 도킹·초점 가둠·스크롤 락과 flush 모서리, RTL `start` 미러링과
   wide 560px, 비모달의 살아 있는 페이지·내부 Escape만 dismiss, 사유별 단일 보고와 busy 중
   outside 차단, controlled owner의 busy 종료와 1회 완료, 320px·2배 글자에서 가로 넘침 없음.
-  `Patterns/SidePanel`은 기록 편집(모달)과 도움말(비모달) 두 화면을 제공한다.
+  `컴포넌트/오버레이/Side Panel`은 기록 편집(모달)과 도움말(비모달) 두 화면을 제공한다.
 - 예산은 실측으로 넷을 조정했다. `./side-panel` 45.9 kB raw / 11.0 kB gzip(6 modules),
   `./overlays`는 modal.js 분리로 6→7 modules(81.2/16.7 kB, 의존성 추가 아님),
   루트는 36→38 modules(322.3/66.3 kB, 바이트 한도 그대로), `./styles.css`는 도킹·크기·footer

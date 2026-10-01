@@ -1,0 +1,337 @@
+[
+  {
+    "subrole": null,
+    "help": null,
+    "AXValue": null,
+    "AXFrame": "{{0, 0}, {402, 874}}",
+    "content_required": false,
+    "AXUniqueId": null,
+    "enabled": true,
+    "custom_actions": [],
+    "role_description": "application",
+    "frame": {
+      "width": 402,
+      "y": 0,
+      "height": 874,
+      "x": 0
+    },
+    "AXLabel": "HJM Native Showcase",
+    "pid": 57163,
+    "title": null,
+    "type": "Application",
+    "role": "AXApplication",
+    "traits": [
+      "None"
+    ]
+  },
+  {
+    "enabled": true,
+    "AXLabel": "다음 장면",
+    "role": "AXButton",
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "help": null,
+    "subrole": null,
+    "AXFrame": "{{40, 102}, {322, 44}}",
+    "AXUniqueId": null,
+    "content_required": false,
+    "role_description": "button",
+    "pid": 57163,
+    "type": "Button",
+    "frame": {
+      "x": 40,
+      "width": 322,
+      "height": 44,
+      "y": 102
+    },
+    "AXValue": null,
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "AXFrame": "{{40, 170}, {322, 18}}",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "role": "AXStaticText",
+    "content_required": false,
+    "AXLabel": "fade",
+    "title": null,
+    "frame": {
+      "y": 170,
+      "height": 18,
+      "width": 322,
+      "x": 40
+    },
+    "custom_actions": [],
+    "pid": 57163,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "help": null,
+    "type": "StaticText",
+    "role_description": "text",
+    "enabled": true,
+    "subrole": null
+  },
+  {
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "role_description": "text",
+    "AXValue": null,
+    "subrole": null,
+    "role": "AXStaticText",
+    "pid": 57163,
+    "AXUniqueId": null,
+    "help": null,
+    "enabled": true,
+    "custom_actions": [],
+    "AXLabel": "반가워요. 나만의 공간을 만들어 볼까요?",
+    "type": "StaticText",
+    "title": null,
+    "AXFrame": "{{40, 204}, {322, 20}}",
+    "content_required": false,
+    "frame": {
+      "height": 20,
+      "y": 204,
+      "x": 40,
+      "width": 322
+    }
+  },
+  {
+    "content_required": false,
+    "AXFrame": "{{40, 248}, {322, 18}}",
+    "pid": 57163,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "enabled": true,
+    "AXValue": null,
+    "AXLabel": "rise",
+    "custom_actions": [],
+    "title": null,
+    "help": null,
+    "role": "AXStaticText",
+    "subrole": null,
+    "AXUniqueId": null,
+    "type": "StaticText",
+    "role_description": "text",
+    "frame": {
+      "x": 40,
+      "y": 248,
+      "width": 322,
+      "height": 18
+    }
+  },
+  {
+    "title": null,
+    "AXFrame": "{{40, 282}, {322, 20}}",
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "help": null,
+    "role": "AXStaticText",
+    "role_description": "text",
+    "type": "StaticText",
+    "custom_actions": [],
+    "AXLabel": "반가워요. 나만의 공간을 만들어 볼까요?",
+    "subrole": null,
+    "enabled": true,
+    "content_required": false,
+    "pid": 57163,
+    "AXValue": null,
+    "AXUniqueId": null,
+    "frame": {
+      "height": 20,
+      "x": 40,
+      "width": 322,
+      "y": 282
+    }
+  },
+  {
+    "frame": {
+      "x": 40,
+      "width": 322,
+      "y": 326,
+      "height": 18
+    },
+    "enabled": true,
+    "role": "AXStaticText",
+    "AXValue": null,
+    "help": null,
+    "AXFrame": "{{40, 326}, {322, 18}}",
+    "AXLabel": "slide",
+    "role_description": "text",
+    "content_required": false,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "pid": 57163,
+    "type": "StaticText",
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "subrole": null,
+    "title": null
+  },
+  {
+    "AXUniqueId": null,
+    "frame": {
+      "x": 40,
+      "y": 360,
+      "width": 322,
+      "height": 20
+    },
+    "content_required": false,
+    "help": null,
+    "type": "StaticText",
+    "enabled": true,
+    "role": "AXStaticText",
+    "custom_actions": [],
+    "AXValue": null,
+    "role_description": "text",
+    "subrole": null,
+    "title": null,
+    "AXFrame": "{{40, 360}, {322, 20}}",
+    "pid": 57163,
+    "AXLabel": "반가워요. 나만의 공간을 만들어 볼까요?",
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ]
+  },
+  {
+    "AXFrame": "{{40, 404}, {322, 18}}",
+    "AXValue": null,
+    "custom_actions": [],
+    "help": null,
+    "content_required": false,
+    "role_description": "text",
+    "title": null,
+    "AXLabel": "scale",
+    "AXUniqueId": null,
+    "pid": 57163,
+    "role": "AXStaticText",
+    "enabled": true,
+    "frame": {
+      "height": 18,
+      "x": 40,
+      "y": 404,
+      "width": 322
+    },
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "type": "StaticText",
+    "subrole": null
+  },
+  {
+    "frame": {
+      "y": 438,
+      "x": 40,
+      "height": 20,
+      "width": 322
+    },
+    "AXFrame": "{{40, 438}, {322, 20}}",
+    "enabled": true,
+    "AXUniqueId": null,
+    "content_required": false,
+    "AXValue": null,
+    "role_description": "text",
+    "type": "StaticText",
+    "title": null,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "role": "AXStaticText",
+    "custom_actions": [],
+    "pid": 57163,
+    "AXLabel": "반가워요. 나만의 공간을 만들어 볼까요?",
+    "subrole": null,
+    "help": null
+  },
+  {
+    "type": "GenericElement",
+    "traits": [
+      "Scrollable"
+    ],
+    "subrole": null,
+    "AXValue": null,
+    "title": null,
+    "role_description": "",
+    "AXLabel": null,
+    "AXFrame": "{{362, 759}, {24, 24}}",
+    "pid": 57163,
+    "custom_actions": [],
+    "content_required": false,
+    "enabled": true,
+    "role": "AXGenericElement",
+    "AXUniqueId": null,
+    "frame": {
+      "y": 759,
+      "x": 362,
+      "width": 24,
+      "height": 24
+    },
+    "help": null
+  },
+  {
+    "help": null,
+    "frame": {
+      "x": 6,
+      "y": 811.6666669845581,
+      "width": 328.3333435058594,
+      "height": 17
+    },
+    "enabled": true,
+    "pid": 57163,
+    "role": "AXGenericElement",
+    "role_description": "",
+    "traits": [
+      "Scrollable"
+    ],
+    "AXFrame": "{{6, 811.66666698455811}, {328.33334350585938, 17}}",
+    "custom_actions": [],
+    "type": "GenericElement",
+    "content_required": false,
+    "title": null,
+    "AXLabel": "Components/Display/Content Transition/Dark",
+    "AXValue": null,
+    "subrole": null,
+    "AXUniqueId": "mobile-menu-button"
+  },
+  {
+    "title": null,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "enabled": true,
+    "subrole": null,
+    "role_description": "button",
+    "AXFrame": "{{368, 806}, {28, 28}}",
+    "frame": {
+      "x": 368,
+      "y": 806,
+      "height": 28,
+      "width": 28
+    },
+    "AXValue": null,
+    "AXLabel": "Open addons panel",
+    "role": "AXButton",
+    "AXUniqueId": "mobile-addons-button",
+    "content_required": false,
+    "custom_actions": [],
+    "help": null,
+    "pid": 57163,
+    "type": "Button"
+  }
+]

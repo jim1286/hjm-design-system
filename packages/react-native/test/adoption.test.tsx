@@ -38,7 +38,7 @@ it("maps native actions, destructive intent and disabled guards", async () => {
 });
 it("opens the gesture sheet, respects motion/busy and cleans up BackHandler", async () => {
   let back = () => false; const remove = vi.fn(); const change = vi.fn();
-  vi.spyOn(BackHandler, "addEventListener").mockImplementation((_event, fn) => { back = () => Boolean(fn()); return { remove }; });
+  vi.spyOn(BackHandler, "addEventListener").mockImplementation((_event, fn) => { back = () => Boolean(fn({ type: "hardwareBackPress", timeStamp: 0 })); return { remove }; });
   await render(<GestureSheet open busy onOpenChange={change} title="제목" closeLabel="닫기" snapPoints={["35%", "80%"]} initialIndex={1}>body</GestureSheet>);
   expect(methods.present).toHaveBeenCalledOnce();
   expect(find("SheetModal").props.snapPoints).toEqual(["35%", "80%"]);

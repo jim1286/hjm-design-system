@@ -1,0 +1,194 @@
+[
+  {
+    "state": "default",
+    "surface": 0,
+    "phase": 0,
+    "minimumContrast": 5.41
+  },
+  {
+    "state": "default",
+    "surface": 0,
+    "phase": 3000,
+    "minimumContrast": 5.45
+  },
+  {
+    "state": "default",
+    "surface": 0,
+    "phase": 6000,
+    "minimumContrast": 5.45
+  },
+  {
+    "state": "default",
+    "surface": 0,
+    "phase": 9000,
+    "minimumContrast": 5.45
+  },
+  {
+    "state": "default",
+    "surface": 1,
+    "phase": 0,
+    "minimumContrast": 4.21
+  },
+  {
+    "state": "default",
+    "surface": 1,
+    "phase": 3000,
+    "minimumContrast": 4.21
+  },
+  {
+    "state": "default",
+    "surface": 1,
+    "phase": 6000,
+    "minimumContrast": 4.21
+  },
+  {
+    "state": "default",
+    "surface": 1,
+    "phase": 9000,
+    "minimumContrast": 4.21
+  },
+  {
+    "state": "default",
+    "surface": 2,
+    "phase": 0,
+    "minimumContrast": 7.31
+  },
+  {
+    "state": "default",
+    "surface": 2,
+    "phase": 3000,
+    "minimumContrast": 7.37
+  },
+  {
+    "state": "default",
+    "surface": 2,
+    "phase": 6000,
+    "minimumContrast": 7.44
+  },
+  {
+    "state": "default",
+    "surface": 2,
+    "phase": 9000,
+    "minimumContrast": 7.37
+  },
+  {
+    "state": "default",
+    "surface": 3,
+    "phase": 0,
+    "minimumContrast": 4.09
+  },
+  {
+    "state": "default",
+    "surface": 3,
+    "phase": 3000,
+    "minimumContrast": 4.08
+  },
+  {
+    "state": "default",
+    "surface": 3,
+    "phase": 6000,
+    "minimumContrast": 4.08
+  },
+  {
+    "state": "default",
+    "surface": 3,
+    "phase": 9000,
+    "minimumContrast": 4.08
+  },
+  {
+    "state": "dark",
+    "surface": 0,
+    "phase": 0,
+    "minimumContrast": 6.8
+  },
+  {
+    "state": "dark",
+    "surface": 0,
+    "phase": 3000,
+    "minimumContrast": 6.81
+  },
+  {
+    "state": "dark",
+    "surface": 0,
+    "phase": 6000,
+    "minimumContrast": 6.81
+  },
+  {
+    "state": "dark",
+    "surface": 0,
+    "phase": 9000,
+    "minimumContrast": 6.81
+  },
+  {
+    "state": "dark",
+    "surface": 1,
+    "phase": 0,
+    "minimumContrast": 6.04
+  },
+  {
+    "state": "dark",
+    "surface": 1,
+    "phase": 3000,
+    "minimumContrast": 6.04
+  },
+  {
+    "state": "dark",
+    "surface": 1,
+    "phase": 6000,
+    "minimumContrast": 6.04
+  },
+  {
+    "state": "dark",
+    "surface": 1,
+    "phase": 9000,
+    "minimumContrast": 6.04
+  },
+  {
+    "state": "dark",
+    "surface": 2,
+    "phase": 0,
+    "minimumContrast": 8.84
+  },
+  {
+    "state": "dark",
+    "surface": 2,
+    "phase": 3000,
+    "minimumContrast": 8.92
+  },
+  {
+    "state": "dark",
+    "surface": 2,
+    "phase": 6000,
+    "minimumContrast": 8.99
+  },
+  {
+    "state": "dark",
+    "surface": 2,
+    "phase": 9000,
+    "minimumContrast": 8.92
+  },
+  {
+    "state": "dark",
+    "surface": 3,
+    "phase": 0,
+    "minimumContrast": 5.87
+  },
+  {
+    "state": "dark",
+    "surface": 3,
+    "phase": 3000,
+    "minimumContrast": 5.87
+  },
+  {
+    "state": "dark",
+    "surface": 3,
+    "phase": 6000,
+    "minimumContrast": 5.94
+  },
+  {
+    "state": "dark",
+    "surface": 3,
+    "phase": 9000,
+    "minimumContrast": 5.87
+  }
+]

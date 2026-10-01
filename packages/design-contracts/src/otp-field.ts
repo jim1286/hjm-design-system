@@ -172,3 +172,6 @@ export const otpFieldBehavior = {
     "alphanumeric-otp-is-out-of-scope-until-a-real-product-need-exists",
   ],
 } as const satisfies BehaviorContract;
+
+/** Visual slots only; all presentations retain one real platform input. */
+export type OtpFieldPresentation = "boxes" | "underline";

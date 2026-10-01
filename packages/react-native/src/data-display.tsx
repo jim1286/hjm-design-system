@@ -1,3 +1,4 @@
+import type { AvatarFallbackContext } from "@hjmds/design-contracts/avatar-fallback";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { glyph, radius, spacing } from "@hjmds/design-contracts/foundations";
 import {
@@ -37,7 +38,7 @@ import {
   type ComposeTimelineAccessibleName,
   type TimelineItemDescriptor,
 } from "@hjmds/design-contracts/components/timeline";
-import { surfaceGeometry } from "@hjmds/design-contracts/recipes/base";
+import { surfaceDefaults, surfaceGeometry } from "@hjmds/design-contracts/recipes/base";
 import {
   accordionRecipe,
   counterBadgeRecipe,
@@ -195,9 +196,7 @@ export type TagProps = Omit<
   ViewProps,
   "accessibilityLabel" | "accessible" | "children" | "style"
 > & Readonly<{
-  children?: string;
-  /** @deprecated Prefer renderer-neutral `children`. */
-  label?: string;
+  children: string;
   tone?: TagTone;
   accessibilityLabel?: string;
   style?: StyleProp<ViewStyle>;
@@ -208,7 +207,6 @@ export type TagProps = Omit<
 
 export function Tag({
   children,
-  label,
   tone,
   accessibilityLabel,
   layoutStyle,
@@ -217,9 +215,9 @@ export function Tag({
   ...props
 }: TagProps) {
   const theme = useHjmNativeTheme();
-  const resolvedLabel = children ?? label;
+  const resolvedLabel = children;
   if (resolvedLabel === undefined) {
-    throw new TypeError("Tag requires children (or the deprecated label prop)");
+    throw new TypeError("Tag requires children");
   }
   const descriptor = resolveTagDescriptor({
     label: resolvedLabel,
@@ -271,9 +269,9 @@ export type CardProps = Omit<SurfaceProps, "children" | "padding"> &
     actions?: ReactNode;
     selected?: boolean;
     padding?: SurfacePadding;
-      /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
-}>;
+  }>;
 
 export function Card({
   children,
@@ -287,12 +285,11 @@ export function Card({
   bordered = cardRecipe.defaults.bordered,
   padding = cardRecipe.defaults.padding,
   layoutStyle,
-  style,
+  radius: cornerRadius = surfaceDefaults.radius,
   ...props
 }: CardProps) {
   const { environment } = useHjmNativeTheme();
-  const bodyPadding =
-    typeof padding === "number" ? padding : surfaceGeometry.paddings[padding];
+  const bodyPadding = surfaceGeometry.paddings[padding];
   const hasHeader =
     leading !== undefined || title !== undefined || description !== undefined;
   return (
@@ -300,53 +297,67 @@ export function Card({
       {...props}
       bordered={bordered}
       padding="none"
-      style={[{ overflow: "hidden" }, style, layoutStyle]}
+      radius={cornerRadius}
+      {...(layoutStyle === undefined ? {} : { layoutStyle })}
       tone={selected ? cardRecipe.selectedTone : tone}
     >
-      {media === undefined ? null : <View>{media}</View>}
-      <View style={{ gap: cardRecipe.body.gap, padding: bodyPadding }}>
-        {hasHeader ? (
+      {/* Clip card content independently so raised Surface shadows can remain outside the frame. */}
+      <View
+        style={{
+          overflow: "hidden",
+          borderRadius: surfaceGeometry.radii[cornerRadius],
+        }}
+      >
+        {media === undefined ? null : <View>{media}</View>}
+        <View style={{ gap: cardRecipe.body.gap, padding: bodyPadding }}>
+          {hasHeader ? (
+            <View
+              style={{
+                alignItems: "flex-start",
+                direction: environment.direction,
+                flexDirection: "row",
+                gap: cardRecipe.header.gap,
+              }}
+            >
+              {leading === undefined ? null : (
+                <View style={{ flexShrink: 0 }}>{leading}</View>
+              )}
+              <View style={{ flex: 1, gap: cardRecipe.body.gap, minWidth: 0 }}>
+                {title === undefined ? null : (
+                  <Text
+                    accessibilityRole="header"
+                    emphasis="strong"
+                    tone="primary"
+                    variant="title"
+                  >
+                    {title}
+                  </Text>
+                )}
+                {description === undefined ? null : (
+                  <Text emphasis="regular" tone="muted" variant="body">
+                    {description}
+                  </Text>
+                )}
+              </View>
+            </View>
+          ) : null}
+          {children === undefined ? null : <View>{children}</View>}
+        </View>
+        {actions === undefined ? null : (
           <View
             style={{
-              alignItems: "flex-start",
               direction: environment.direction,
               flexDirection: "row",
-              gap: cardRecipe.header.gap,
+              flexWrap: "wrap",
+              gap: cardRecipe.actions.gap,
+              paddingBottom: cardRecipe.actions.paddingBottom,
+              paddingHorizontal: cardRecipe.actions.paddingHorizontal,
             }}
           >
-            {leading === undefined ? null : (
-              <View style={{ flexShrink: 0 }}>{leading}</View>
-            )}
-            <View style={{ flex: 1, gap: cardRecipe.body.gap, minWidth: 0 }}>
-              {title === undefined ? null : (
-                <Text accessibilityRole="header" emphasis="strong" tone="primary" variant="title">
-                  {title}
-                </Text>
-              )}
-              {description === undefined ? null : (
-                <Text emphasis="regular" tone="muted" variant="body">
-                  {description}
-                </Text>
-              )}
-            </View>
+            {actions}
           </View>
-        ) : null}
-        {children === undefined ? null : <View>{children}</View>}
+        )}
       </View>
-      {actions === undefined ? null : (
-        <View
-          style={{
-            direction: environment.direction,
-            flexDirection: "row",
-            flexWrap: "wrap",
-            gap: cardRecipe.actions.gap,
-            paddingBottom: cardRecipe.actions.paddingBottom,
-            paddingHorizontal: cardRecipe.actions.paddingHorizontal,
-          }}
-        >
-          {actions}
-        </View>
-      )}
     </Surface>
   );
 }
@@ -362,8 +373,6 @@ export type ListRowProps = Omit<
     trailing?: ReactNode;
     /** Visible metadata placed beside the title, such as a Badge. */
     titleMetadata?: ReactNode;
-    /** @deprecated Prefer the renderer-neutral `titleMetadata` slot. */
-    badge?: ReactNode;
     /** A separate accessible target rendered beside, never inside, the row command. */
     trailingAction?: ReactNode;
     trailingText?: string;
@@ -380,12 +389,6 @@ export type ListRowProps = Omit<
     leadingShape?: ListRowLeadingShape;
     /** Canonical layout-only placement. Controlled visual and state keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
-    /**
-     * @deprecated Legacy compatibility only. New apps must use `layoutStyle` and must not
-     * override color, typography, radius, row height, or interaction state.
-     * @see https://github.com/jim1286/hjm-design-system/blob/main/packages/design-contracts/docs/consumer-policy.md#31-react-native-legacy-style-compatibility-boundary
-     */
-    style?: StyleProp<ViewStyle>;
     leadingStyle?: HjmCompositionStyleProp;
     contentStyle?: HjmCompositionStyleProp;
     titleStyle?: StyleProp<TextStyle>;
@@ -402,7 +405,6 @@ export function ListRow({
   leading,
   trailing,
   titleMetadata,
-  badge,
   trailingAction,
   trailingText,
   metadataLabel,
@@ -415,7 +417,7 @@ export function ListRow({
   selected: selectedProp,
   leadingShape = "square",
   layoutStyle,
-  style,
+
   leadingStyle,
   contentStyle,
   titleStyle,
@@ -431,7 +433,7 @@ export function ListRow({
   const metrics = listRowRecipe.density[density];
   const interactive = onPress !== undefined;
   const selected = selectedProp ?? listRowRecipe.defaults.selected;
-  const resolvedMetadata = titleMetadata ?? badge;
+  const resolvedMetadata = titleMetadata;
   const resolvedTrailingLabel = trailingLabel ?? trailingText;
   const composedLabel = accessibilityLabel ?? [
     title,
@@ -557,7 +559,6 @@ export function ListRow({
         : { paddingHorizontal: metrics.paddingHorizontal }),
       paddingVertical: metrics.paddingVertical,
     },
-    trailingAction ? undefined : style,
     trailingAction ? undefined : layoutStyle,
   ];
   const main = interactive ? (
@@ -604,7 +605,6 @@ export function ListRow({
           minHeight: visualState.minHeight,
           opacity: visualState.opacity,
         },
-        style,
         layoutStyle,
       ]}
     >
@@ -629,6 +629,7 @@ type AvatarBaseProps = Readonly<{
   source?: ImageSourcePropType;
   name: string;
   initials?: string;
+  renderFallback?: (context: AvatarFallbackContext) => ReactNode;
   size?: number;
   style?: StyleProp<ViewStyle>;
   imageStyle?: StyleProp<ImageStyle>;
@@ -648,6 +649,7 @@ export function Avatar({
   source,
   name,
   initials,
+  renderFallback,
   size = 44,
   decorative = false,
   accessibilityLabel,
@@ -656,7 +658,12 @@ export function Avatar({
 }: AvatarProps) {
   if (!Number.isFinite(size) || size < 24) throw new RangeError("Avatar size must be at least 24");
   const { colors } = useHjmNativeTheme();
-  const [failed, setFailed] = useState(false);
+  const sourceKey = source === undefined ? "none" : resolveImageSourceKey(source);
+  const [failedSource, setFailedSource] = useState<string | null>(null);
+  // A replacement photo must retry even when the previous URI failed. Key by
+  // content rather than object identity, since hosts commonly inline { uri }.
+  const failed = failedSource === sourceKey;
+  useEffect(() => setFailedSource(null), [sourceKey]);
   const fallback = resolveInitials(name, initials);
   const mediaAccessibility = decorative
     ? { accessible: false as const }
@@ -682,12 +689,14 @@ export function Avatar({
       {source !== undefined && !failed ? (
         <NativeImage
           accessible={false}
-          onError={() => setFailed(true)}
+          onError={() => setFailedSource(sourceKey)}
           source={source}
           style={[{ height: size, width: size }, imageStyle]}
         />
       ) : (
-        <Text align="center" style={{ color: colors.contentBrand }} variant="label">{fallback}</Text>
+        <View accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+          {renderFallback?.({ size, decorative: true }) ?? <Text align="center" style={{ color: colors.contentBrand }} variant="label">{fallback}</Text>}
+        </View>
       )}
     </View>
   );
@@ -1032,21 +1041,9 @@ export type CanonicalImageRenderProps = ImageAdapterBaseProps &
     width: number;
     height: number;
     fit: ImageFit;
-    legacySource: false;
   }>;
 
-/** @deprecated Migrate the caller to canonical `src`/`width`/`height` props. */
-export type LegacyImageRenderProps = ImageAdapterBaseProps &
-  Readonly<{
-    descriptor?: never;
-    src?: never;
-    width?: number;
-    height?: number;
-    fit?: ImageFit;
-    legacySource: true;
-  }>;
-
-export type ImageRenderProps = CanonicalImageRenderProps | LegacyImageRenderProps;
+export type ImageRenderProps = CanonicalImageRenderProps;
 
 export type ImageSourceAdapter = (
   descriptor: ResolvedImageDescriptor,
@@ -1066,12 +1063,6 @@ type ImageSharedProps = ImageNativeProps &
     style?: StyleProp<ImageStyle>;
     /** Canonical layout-only placement of the reserved frame. */
     layoutStyle?: HjmCompositionStyleProp;
-    /**
-     * @deprecated Legacy compatibility only. New apps must use `layoutStyle`; the
-     * reserved frame's aspect ratio, clipping and background belong to the recipe.
-     * @see https://github.com/jim1286/hjm-design-system/blob/main/packages/design-contracts/docs/consumer-policy.md#31-react-native-legacy-style-compatibility-boundary
-     */
-    containerStyle?: StyleProp<ViewStyle>;
   }>;
 
 type CanonicalImageProps = ImageSharedProps &
@@ -1083,30 +1074,14 @@ type CanonicalImageProps = ImageSharedProps &
     renderImage?: (props: CanonicalImageRenderProps) => ReactNode;
   }>;
 
-type LegacyImageProps = ImageSharedProps &
-  AccessibleMedia &
-  Readonly<{
-    /** @deprecated Use canonical `src`, `width`, `height`, and optional `fit`. */
-    source: ImageSourcePropType;
-    src?: never;
-    /** @deprecated Used only by the legacy Native source path. */
-    width?: number;
-    /** @deprecated Used only by the legacy Native source path. */
-    height?: number;
-    fit?: ImageFit;
-    sourceAdapter?: never;
-    /** @deprecated Migrate the host adapter to canonical Image props. */
-    renderImage?: (props: LegacyImageRenderProps) => ReactNode;
-  }>;
-
-export type ImageProps = CanonicalImageProps | LegacyImageProps;
+export type ImageProps = CanonicalImageProps;
 
 type ImageState = Readonly<{
   sourceKey: string;
   status: Extract<ImageLoadStatus, "loading" | "loaded" | "error">;
 }>;
 
-function resolveLegacyImageSourceKey(source: ImageSourcePropType): string {
+function resolveImageSourceKey(source: ImageSourcePropType): string {
   if (typeof source === "number") return `asset:${source}`;
   try {
     return `source:${JSON.stringify(source)}`;
@@ -1115,27 +1090,9 @@ function resolveLegacyImageSourceKey(source: ImageSourcePropType): string {
   }
 }
 
-function resolveLegacyMedia(
-  decorative: boolean | undefined,
-  accessibilityLabel: string | undefined,
-): Readonly<{ decorative: boolean; accessibilityLabel?: string }> {
-  const resolvedDecorative = decorative ?? accessibilityLabel === undefined;
-  if (resolvedDecorative) {
-    if (accessibilityLabel !== undefined) {
-      throw new TypeError("Decorative Image must not provide accessibilityLabel");
-    }
-    return { decorative: true };
-  }
-  if (accessibilityLabel === undefined || accessibilityLabel.trim().length === 0) {
-    throw new TypeError("Informative Image accessibilityLabel must not be empty");
-  }
-  return { decorative: false, accessibilityLabel };
-}
-
 /** Intrinsic-size Native image with canonical fit, accessibility, and fallback semantics. */
 export function Image(imageProps: ImageProps) {
   const {
-    source: legacySource,
     src,
     width,
     height,
@@ -1151,55 +1108,24 @@ export function Image(imageProps: ImageProps) {
     resizeMode,
     style,
     layoutStyle,
-    containerStyle,
+
     ...nativeProps
   } = imageProps;
   const theme = useHjmNativeTheme();
-  if (src !== undefined && legacySource !== undefined) {
-    throw new TypeError("Image accepts either canonical src or legacy source, not both");
-  }
-  if (src === undefined && legacySource === undefined) {
-    throw new TypeError("Image requires src or legacy source");
-  }
-
-  const descriptor = src === undefined
-    ? undefined
-    : resolveImageDescriptor({
-        src,
-        width: width as number,
-        height: height as number,
-        ...(fit === undefined ? {} : { fit }),
-        ...(decorative === undefined ? {} : { decorative }),
-        ...(accessibilityLabel === undefined ? {} : { accessibilityLabel }),
-      } as ImageDescriptor);
-  const legacyMedia = descriptor === undefined
-    ? resolveLegacyMedia(decorative, accessibilityLabel)
-    : undefined;
-  const resolvedDecorative = descriptor?.decorative ?? legacyMedia!.decorative;
-  const resolvedAccessibilityLabel = descriptor?.decorative === false
-    ? descriptor.accessibilityLabel
-    : legacyMedia?.accessibilityLabel;
-  const resolvedFit = descriptor?.fit ?? fit;
-  const resolvedResizeMode = descriptor === undefined
-    ? resizeMode ?? (resolvedFit === undefined ? undefined : nativeResizeModes[resolvedFit])
-    : nativeResizeModes[descriptor.fit];
-  const sourceKey = descriptor === undefined
-    ? resolveLegacyImageSourceKey(legacySource!)
-    : `src:${descriptor.src}`;
+  const descriptor = resolveImageDescriptor({
+    src, width, height,
+    ...(fit === undefined ? {} : { fit }),
+    ...(decorative === undefined ? {} : { decorative }),
+    ...(accessibilityLabel === undefined ? {} : { accessibilityLabel }),
+  } as ImageDescriptor);
+  const resolvedDecorative = descriptor.decorative;
+  const resolvedAccessibilityLabel = descriptor.decorative ? undefined : descriptor.accessibilityLabel;
+  const resolvedResizeMode = nativeResizeModes[descriptor.fit];
+  const sourceKey = `src:${descriptor.src}`;
   const source = useMemo(
-    () => descriptor === undefined
-      ? legacySource!
-      : sourceAdapter?.(descriptor) ?? { uri: descriptor.src },
-    [
-      descriptor?.accessibilityLabel,
-      descriptor?.decorative,
-      descriptor?.fit,
-      descriptor?.height,
-      descriptor?.src,
-      descriptor?.width,
-      legacySource,
-      sourceAdapter,
-    ],
+    () => sourceAdapter?.(descriptor) ?? { uri: descriptor.src },
+    [descriptor.accessibilityLabel, descriptor.decorative, descriptor.fit,
+      descriptor.height, descriptor.src, descriptor.width, sourceAdapter],
   );
   const [state, setState] = useState<ImageState>({ sourceKey, status: "loading" });
   const status = state.sourceKey === sourceKey ? state.status : "loading";
@@ -1225,9 +1151,7 @@ export function Image(imageProps: ImageProps) {
   };
   const handleLoad = reportLoad as NonNullable<NativeImageProps["onLoad"]>;
   const handleError = reportError as NonNullable<NativeImageProps["onError"]>;
-  const assetStyle: StyleProp<ImageStyle> = descriptor === undefined
-    ? style
-    : [StyleSheet.absoluteFill, style];
+  const assetStyle: StyleProp<ImageStyle> = [StyleSheet.absoluteFill, style];
   const adapterBase = {
     source,
     accessible: !resolvedDecorative,
@@ -1246,8 +1170,6 @@ export function Image(imageProps: ImageProps) {
     ...(assetStyle === undefined ? {} : { style: assetStyle }),
     nativeProps: {
       ...nativeProps,
-      ...(descriptor === undefined && width !== undefined ? { width } : {}),
-      ...(descriptor === undefined && height !== undefined ? { height } : {}),
       ...(resolvedResizeMode === undefined ? {} : { resizeMode: resolvedResizeMode }),
     },
   } satisfies ImageAdapterBaseProps;
@@ -1255,9 +1177,7 @@ export function Image(imageProps: ImageProps) {
     imageRecipe.placeholder.background,
     theme.palette,
   );
-  const fallbackLabel = descriptor === undefined
-    ? resolvedAccessibilityLabel
-    : resolveImageFallbackAccessibilityLabel(descriptor);
+  const fallbackLabel = resolveImageFallbackAccessibilityLabel(descriptor);
   let visual: ReactNode;
   if (status === "error") {
     visual = (
@@ -1320,14 +1240,6 @@ export function Image(imageProps: ImageProps) {
         style={assetStyle}
       />
     );
-  } else if (descriptor === undefined) {
-    visual = (renderImage as (props: LegacyImageRenderProps) => ReactNode)({
-      ...adapterBase,
-      ...(resolvedFit === undefined ? {} : { fit: resolvedFit }),
-      ...(width === undefined ? {} : { width }),
-      ...(height === undefined ? {} : { height }),
-      legacySource: true,
-    });
   } else {
     visual = (renderImage as (props: CanonicalImageRenderProps) => ReactNode)({
       ...adapterBase,
@@ -1336,7 +1248,6 @@ export function Image(imageProps: ImageProps) {
       width: descriptor.width,
       height: descriptor.height,
       fit: descriptor.fit,
-      legacySource: false,
     });
   }
 
@@ -1349,17 +1260,9 @@ export function Image(imageProps: ImageProps) {
           borderRadius: radius[imageRecipe.radius],
           justifyContent: "center",
           overflow: "hidden",
-          ...(descriptor === undefined
-            ? {}
-            : {
-                aspectRatio: resolveImageAspectRatio(
-                  descriptor.width,
-                  descriptor.height,
-                ),
-                width: descriptor.width,
-              }),
+          aspectRatio: resolveImageAspectRatio(descriptor.width, descriptor.height),
+          width: descriptor.width,
         },
-        containerStyle,
         layoutStyle,
       ]}
     >

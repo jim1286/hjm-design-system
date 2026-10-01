@@ -1,0 +1,545 @@
+[
+  {
+    "subrole": null,
+    "help": null,
+    "AXValue": null,
+    "AXFrame": "{{0, 0}, {402, 874}}",
+    "content_required": false,
+    "AXUniqueId": null,
+    "enabled": true,
+    "custom_actions": [],
+    "role_description": "application",
+    "frame": {
+      "height": 874,
+      "x": 0,
+      "width": 402,
+      "y": 0
+    },
+    "AXLabel": "HJM Native Showcase",
+    "pid": 57163,
+    "title": null,
+    "type": "Application",
+    "role": "AXApplication",
+    "traits": [
+      "None"
+    ]
+  },
+  {
+    "enabled": true,
+    "AXLabel": "배경 움직임",
+    "role": "AXButton",
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "help": null,
+    "subrole": null,
+    "AXFrame": "{{40, 102}, {322, 44}}",
+    "AXUniqueId": null,
+    "content_required": false,
+    "role_description": "button",
+    "pid": 57163,
+    "type": "Button",
+    "frame": {
+      "x": 40,
+      "width": 322,
+      "y": 102,
+      "height": 44
+    },
+    "AXValue": null,
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "AXFrame": "{{72, 202}, {258, 18}}",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "role": "AXStaticText",
+    "content_required": false,
+    "AXLabel": "mesh",
+    "title": null,
+    "frame": {
+      "x": 72,
+      "y": 202,
+      "width": 258,
+      "height": 18
+    },
+    "custom_actions": [],
+    "pid": 57163,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "help": null,
+    "type": "StaticText",
+    "role_description": "text",
+    "enabled": true,
+    "subrole": null
+  },
+  {
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "role_description": "text",
+    "AXValue": null,
+    "subrole": null,
+    "role": "AXStaticText",
+    "pid": 57163,
+    "AXUniqueId": null,
+    "help": null,
+    "enabled": true,
+    "custom_actions": [],
+    "AXLabel": "작은 시작, 새로운 장면.",
+    "type": "StaticText",
+    "title": null,
+    "AXFrame": "{{72, 240}, {258, 32}}",
+    "content_required": false,
+    "frame": {
+      "height": 32,
+      "x": 72,
+      "y": 240,
+      "width": 258
+    }
+  },
+  {
+    "content_required": false,
+    "AXFrame": "{{72, 292}, {258, 20}}",
+    "pid": 57163,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "enabled": true,
+    "AXValue": null,
+    "AXLabel": "빛과 질감은 배경에, 중요한 이야기는 선명하게.",
+    "custom_actions": [],
+    "title": null,
+    "help": null,
+    "role": "AXStaticText",
+    "subrole": null,
+    "AXUniqueId": null,
+    "type": "StaticText",
+    "role_description": "text",
+    "frame": {
+      "y": 292,
+      "x": 72,
+      "height": 20,
+      "width": 258
+    }
+  },
+  {
+    "title": null,
+    "AXFrame": "{{72, 332}, {258, 44}}",
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "help": null,
+    "role": "AXGenericElement",
+    "role_description": "",
+    "type": "GenericElement",
+    "custom_actions": [],
+    "AXLabel": "이야기 시작하기",
+    "subrole": null,
+    "enabled": true,
+    "content_required": false,
+    "pid": 57163,
+    "AXValue": null,
+    "AXUniqueId": null,
+    "frame": {
+      "y": 332,
+      "x": 72,
+      "width": 258,
+      "height": 44
+    }
+  },
+  {
+    "frame": {
+      "x": 72,
+      "y": 464,
+      "width": 258,
+      "height": 18
+    },
+    "enabled": true,
+    "role": "AXStaticText",
+    "AXValue": null,
+    "help": null,
+    "AXFrame": "{{72, 464}, {258, 18}}",
+    "AXLabel": "glow",
+    "role_description": "text",
+    "content_required": false,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "pid": 57163,
+    "type": "StaticText",
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "subrole": null,
+    "title": null
+  },
+  {
+    "AXUniqueId": null,
+    "frame": {
+      "x": 72,
+      "y": 502,
+      "height": 32,
+      "width": 258
+    },
+    "content_required": false,
+    "help": null,
+    "type": "StaticText",
+    "enabled": true,
+    "role": "AXStaticText",
+    "custom_actions": [],
+    "AXValue": null,
+    "role_description": "text",
+    "subrole": null,
+    "title": null,
+    "AXFrame": "{{72, 502}, {258, 32}}",
+    "pid": 57163,
+    "AXLabel": "작은 시작, 새로운 장면.",
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ]
+  },
+  {
+    "AXFrame": "{{72, 554}, {258, 20}}",
+    "AXValue": null,
+    "custom_actions": [],
+    "help": null,
+    "content_required": false,
+    "role_description": "text",
+    "title": null,
+    "AXLabel": "빛과 질감은 배경에, 중요한 이야기는 선명하게.",
+    "AXUniqueId": null,
+    "pid": 57163,
+    "role": "AXStaticText",
+    "enabled": true,
+    "frame": {
+      "height": 20,
+      "y": 554,
+      "x": 72,
+      "width": 258
+    },
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "type": "StaticText",
+    "subrole": null
+  },
+  {
+    "frame": {
+      "y": 594,
+      "height": 44,
+      "width": 258,
+      "x": 72
+    },
+    "AXFrame": "{{72, 594}, {258, 44}}",
+    "enabled": true,
+    "AXUniqueId": null,
+    "content_required": false,
+    "AXValue": null,
+    "role_description": "",
+    "type": "GenericElement",
+    "title": null,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "role": "AXGenericElement",
+    "custom_actions": [],
+    "pid": 57163,
+    "AXLabel": "이야기 시작하기",
+    "subrole": null,
+    "help": null
+  },
+  {
+    "type": "StaticText",
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "subrole": null,
+    "AXValue": null,
+    "title": null,
+    "role_description": "text",
+    "AXLabel": "grain",
+    "AXFrame": "{{72, 726}, {258, 18}}",
+    "pid": 57163,
+    "custom_actions": [],
+    "content_required": false,
+    "enabled": true,
+    "role": "AXStaticText",
+    "AXUniqueId": null,
+    "frame": {
+      "x": 72,
+      "width": 258,
+      "height": 18,
+      "y": 726
+    },
+    "help": null
+  },
+  {
+    "help": null,
+    "frame": {
+      "width": 258,
+      "y": 764,
+      "height": 32,
+      "x": 72
+    },
+    "enabled": true,
+    "pid": 57163,
+    "role": "AXStaticText",
+    "role_description": "text",
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "AXFrame": "{{72, 764}, {258, 32}}",
+    "custom_actions": [],
+    "type": "StaticText",
+    "content_required": false,
+    "title": null,
+    "AXLabel": "작은 시작, 새로운 장면.",
+    "AXValue": null,
+    "subrole": null,
+    "AXUniqueId": null
+  },
+  {
+    "title": null,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "enabled": true,
+    "subrole": null,
+    "role_description": "text",
+    "AXFrame": "{{72, 816}, {258, 20}}",
+    "frame": {
+      "height": 20,
+      "x": 72,
+      "y": 816,
+      "width": 258
+    },
+    "AXValue": null,
+    "AXLabel": "빛과 질감은 배경에, 중요한 이야기는 선명하게.",
+    "role": "AXStaticText",
+    "AXUniqueId": null,
+    "content_required": false,
+    "custom_actions": [],
+    "help": null,
+    "pid": 57163,
+    "type": "StaticText"
+  },
+  {
+    "AXLabel": "이야기 시작하기",
+    "frame": {
+      "x": 72,
+      "y": 856,
+      "width": 258,
+      "height": 44
+    },
+    "role_description": "slider",
+    "help": null,
+    "type": "Slider",
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "enabled": true,
+    "AXValue": null,
+    "subrole": null,
+    "content_required": false,
+    "AXUniqueId": null,
+    "AXFrame": "{{72, 856}, {258, 44}}",
+    "role": "AXSlider",
+    "pid": 57163,
+    "custom_actions": [],
+    "title": null
+  },
+  {
+    "AXUniqueId": null,
+    "content_required": false,
+    "enabled": true,
+    "frame": {
+      "height": 18,
+      "y": 988,
+      "x": 72,
+      "width": 258
+    },
+    "AXLabel": "mesh + glow + grain",
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "custom_actions": [],
+    "title": null,
+    "AXFrame": "{{72, 988}, {258, 18}}",
+    "type": "StaticText",
+    "pid": 57163,
+    "AXValue": null,
+    "help": null,
+    "role_description": "text",
+    "subrole": null,
+    "role": "AXStaticText"
+  },
+  {
+    "enabled": true,
+    "AXValue": null,
+    "role": "AXStaticText",
+    "content_required": false,
+    "custom_actions": [],
+    "AXLabel": "작은 시작, 새로운 장면.",
+    "AXFrame": "{{72, 1026}, {258, 32}}",
+    "role_description": "text",
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "frame": {
+      "x": 72,
+      "width": 258,
+      "height": 32,
+      "y": 1026
+    },
+    "pid": 57163,
+    "AXUniqueId": null,
+    "title": null,
+    "type": "StaticText",
+    "help": null,
+    "subrole": null
+  },
+  {
+    "custom_actions": [],
+    "help": null,
+    "enabled": true,
+    "title": null,
+    "AXFrame": "{{72, 1078}, {258, 20}}",
+    "role_description": "text",
+    "frame": {
+      "height": 20,
+      "y": 1078,
+      "width": 258,
+      "x": 72
+    },
+    "content_required": false,
+    "subrole": null,
+    "role": "AXStaticText",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "type": "StaticText",
+    "pid": 57163,
+    "AXLabel": "빛과 질감은 배경에, 중요한 이야기는 선명하게."
+  },
+  {
+    "title": null,
+    "AXFrame": "{{72, 1118}, {258, 44}}",
+    "type": "GenericElement",
+    "role": "AXGenericElement",
+    "pid": 57163,
+    "AXUniqueId": null,
+    "custom_actions": [],
+    "AXLabel": "이야기 시작하기",
+    "content_required": false,
+    "help": null,
+    "frame": {
+      "height": 44,
+      "x": 72,
+      "width": 258,
+      "y": 1118
+    },
+    "subrole": null,
+    "AXValue": null,
+    "role_description": "",
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "enabled": true
+  },
+  {
+    "type": "GenericElement",
+    "custom_actions": [],
+    "traits": [
+      "Scrollable"
+    ],
+    "AXUniqueId": null,
+    "AXFrame": "{{362, 759}, {24, 24}}",
+    "frame": {
+      "y": 759,
+      "width": 24,
+      "height": 24,
+      "x": 362
+    },
+    "role_description": "",
+    "content_required": false,
+    "role": "AXGenericElement",
+    "AXValue": null,
+    "help": null,
+    "AXLabel": null,
+    "title": null,
+    "enabled": true,
+    "subrole": null,
+    "pid": 57163
+  },
+  {
+    "type": "GenericElement",
+    "traits": [
+      "Scrollable"
+    ],
+    "frame": {
+      "width": 301.6666564941406,
+      "height": 17,
+      "y": 811.6666669845581,
+      "x": 6
+    },
+    "subrole": null,
+    "AXValue": null,
+    "help": null,
+    "custom_actions": [],
+    "content_required": false,
+    "role": "AXGenericElement",
+    "enabled": true,
+    "role_description": "",
+    "pid": 57163,
+    "title": null,
+    "AXFrame": "{{6, 811.66666698455811}, {301.66665649414062, 17}}",
+    "AXLabel": "Components/Display/Effect Surface/Dark",
+    "AXUniqueId": "mobile-menu-button"
+  },
+  {
+    "AXFrame": "{{368, 806}, {28, 28}}",
+    "custom_actions": [],
+    "help": null,
+    "AXUniqueId": "mobile-addons-button",
+    "type": "Button",
+    "role_description": "button",
+    "role": "AXButton",
+    "content_required": false,
+    "pid": 57163,
+    "AXValue": null,
+    "enabled": true,
+    "frame": {
+      "height": 28,
+      "y": 806,
+      "width": 28,
+      "x": 368
+    },
+    "AXLabel": "Open addons panel",
+    "subrole": null,
+    "title": null,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ]
+  }
+]

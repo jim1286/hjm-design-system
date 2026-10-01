@@ -41,8 +41,9 @@ describe("@hjmds/react-native package boundary", () => {
       "react-native-screen-transitions": "4.0.0",
       "@react-navigation/native": "7.4.1",
       "react-native-safe-area-context": "5.7.0",
-
-
+      "@blobatar/react-native": "2.7.0",
+      "blobatar": "2.7.0",
+      "lucide-react-native": "1.49.0",
     });
     expect(packageJson.sideEffects).toBe(false);
     const expectedExportPaths = [
@@ -100,6 +101,25 @@ describe("@hjmds/react-native package boundary", () => {
       "./carousel-motion",
       "./celebration",
       "./screen-transition",
+      "./avatar-blobatar",
+      "./effect-surface",
+      "./icon-lucide",
+      "./duration-field",
+      "./inline-confirm",
+      "./reaction-picker",
+      "./notification-bell",
+      "./scroll-progress",
+      "./code-block",
+      "./activity-heatmap",
+      "./statistic-motion",
+      "./task-list",
+      "./folder-preview",
+      "./avatar-blobatar-motion",
+      "./step-player",
+      "./voice-note",
+      "./grid-reveal",
+      "./gravity-letters",
+      "./navigation-bar",
     ];
     expect(Object.keys(packageJson.exports)).toEqual(expectedExportPaths);
     const familyTargets = expectedExportPaths.slice(1).filter((path) => path !== "./top-bar" && path !== "./bottom-cta").map((exportPath) => {

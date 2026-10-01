@@ -51,3 +51,22 @@ it("emits navigate and reselect host actions while leaving route selection to th
   expect(onActivate).toHaveBeenLastCalledWith({ key: "home", reason: "reselect" });
   expect(onActivate).toHaveBeenCalledTimes(2);
 });
+
+it("keeps hidden capsule destinations named and restores visible labels at large text", () => {
+  const items = [{ id: "home", label: "홈", icon: { name: "home" } }, { id: "search", label: "검색", icon: { name: "search" } }];
+  const activate = vi.fn();
+  let tree!: ReturnType<typeof create>;
+  const render = (scale: number) => <HjmNativeProvider theme="light" textScale={scale}>
+    <BottomNavigation descriptor={{ accessibilityLabel: "탐색", selectedKey: "home", items }} configuration={{ presentation: "capsule", direction: "rtl" }} renderIcon={() => null} onActivate={activate} getItemTestID={item => `capsule-${item.id}`}/>
+  </HjmNativeProvider>;
+  act(() => { tree = create(render(1)); });
+  expect(tree.root.findAllByType(Text).some(node => node.props.children === "검색")).toBe(false);
+  const search = tree.root.findByProps({ testID: "capsule-search" });
+  expect(search.props.accessibilityLabel).toBe("검색");
+  act(() => search.props.onPress());
+  expect(activate).toHaveBeenCalledWith({ key: "search", reason: "navigate" });
+  expect(tree.root.findByProps({ testID: "capsule-home" }).props.accessibilityState.selected).toBe(true);
+  act(() => tree.update(render(2)));
+  expect(tree.root.findAllByType(Text).some(node => node.props.children === "검색")).toBe(true);
+  act(() => tree.unmount());
+});

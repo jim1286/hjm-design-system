@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Toast } from "@hjmds/react/toast";
 
-const meta = {
-  title: "Patterns/Toast layout",
+const meta = { includeStories: ["Compact","LiquidHintFallback","LongCopyWithAction","ToneGallery"],
+  id: "patterns-toast-layout", title: "배포/구성/토스트 배치",
   component: Toast,
   args: {
     descriptor: { id: "saved", description: "저장했어요", closeLabel: "닫기" },
@@ -16,18 +16,18 @@ type Story = StoryObj<typeof meta>;
 
 // Use a compact viewport to exercise the same responsive rule as the product.
 // A narrow parent in a desktop viewport alone does not activate that rule.
-export const Compact: Story = {
+export const Compact: Story = { name: "간결한 배치",
   globals: { viewport: { value: "mobile1", isRotated: false } },
 };
 
 // A shared product descriptor keeps its action on Web without loading Native liquid dependencies.
-export const LiquidHintFallback: Story = {
+export const LiquidHintFallback: Story = { name: "리퀴드 효과 대체 표시",
   args: { descriptor: { id: "generation-ready", presentation: "liquid", title: "아이디어가 완성됐어요",
     description: "결과를 확인해 보세요.", closeLabel: "완료 알림 닫기", tone: "success",
     action: { label: "결과 열기", onAction: () => {} } } },
 };
 
-export const LongCopyWithAction: Story = {
+export const LongCopyWithAction: Story = { name: "긴 문구와 실행 버튼",
   ...Compact,
   globals: { ...Compact.globals, textScale: "2" },
   args: {
@@ -42,7 +42,7 @@ export const LongCopyWithAction: Story = {
 };
 
 // 1.10.0 refresh review: every tone badge, with and without an action, in one frame (docs/toast.md).
-export const ToneGallery: Story = {
+export const ToneGallery: Story = { name: "상태별 비교",
   ...Compact,
   render: () => (
     <div style={{ display: "grid", gap: "var(--hjm-space-sm)" }}>

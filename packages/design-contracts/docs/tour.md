@@ -154,7 +154,7 @@ renderer이며 Native는 계속 `unsupported`다. Web renderer 증거는 stable 
   다음 단계에 맞춘 anchor 하이라이트, 배경 inert와 바깥 pointer 무시, 첫 단계 이전은
   no-op·마지막 다음은 complete, Escape·건너뛰기 탈출, unmount의 1회 interrupted,
   controlled owner 종료와 320px 배치, 긴 번역 copy 내부 스크롤·키보드 건너뛰기·호출자
-  focus 복귀)와 `Patterns/Tour`.
+  focus 복귀)와 `컴포넌트/오버레이/Tour`.
 
 ## 검증 화면
 

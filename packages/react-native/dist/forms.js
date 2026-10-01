@@ -1,9 +1,10 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { NativeFieldFrame } from "./internal/field-frame.js";
 import { formRecipe, } from "@hjmds/design-contracts/components/form";
 import { comboboxBehaviorDefaults, resolveControlAccessibleName, } from "@hjmds/design-contracts/behaviors";
 import { flattenCollectionItems, isComboboxResultCurrent, reconcileSelectSelection, resolveComboboxSelectedItem, resolveSelectSelectedItem, validateCollection, } from "@hjmds/design-contracts/components/collection";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
-import { backdrop, glyph, radius, spacing } from "@hjmds/design-contracts/foundations";
+import { backdrop, glyph, radius, spacing, } from "@hjmds/design-contracts/foundations";
 import { comboboxRecipe, selectRecipe, } from "@hjmds/design-contracts/recipes";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, } from "react";
 import { AccessibilityInfo, ActivityIndicator, Modal, Pressable, ScrollView, TextInput, View, findNodeHandle, } from "react-native";
@@ -30,7 +31,9 @@ function useAfterModalDismiss(visible) {
     useLayoutEffect(() => {
         const wasVisible = previousVisibleRef.current;
         previousVisibleRef.current = visible;
-        if (!wasVisible || visible || shouldAwaitNativeModalDismiss(shownRef.current))
+        if (!wasVisible ||
+            visible ||
+            shouldAwaitNativeModalDismiss(shownRef.current))
             return;
         teardownTaskRef.current?.cancel();
         teardownTaskRef.current = scheduleAfterNativeModalTeardown(complete);
@@ -47,7 +50,7 @@ function useAfterModalDismiss(visible) {
     };
 }
 /** A renderer-neutral field frame for custom Native controls. */
-export function Field({ label, children, description, error, required = false, disabled = false, layoutStyle, style, }) {
+export function Field({ label, children, description, error, required = false, disabled = false, layoutStyle, }) {
     const visibleLabel = `${label}${required ? " *" : ""}`;
     const hint = error ?? description;
     const controlProps = {
@@ -55,7 +58,7 @@ export function Field({ label, children, description, error, required = false, d
         ...(hint === undefined ? {} : { accessibilityHint: hint }),
         accessibilityState: { disabled },
     };
-    return (_jsxs(View, { style: [{ gap: spacing.xs }, style, layoutStyle], children: [_jsx(Text, { tone: "primary", variant: "label", children: visibleLabel }), typeof children === "function" ? children(controlProps) : children, error ? (_jsx(Text, { accessibilityLiveRegion: "assertive", tone: "danger", variant: "caption", children: error })) : description ? (_jsx(Text, { tone: "muted", variant: "caption", children: description })) : null] }));
+    return (_jsx(NativeFieldFrame, { label: label, required: required, groupControl: false, style: layoutStyle, ...(error === undefined ? {} : { error }), ...(description === undefined ? {} : { description }), children: typeof children === "function" ? children(controlProps) : children }));
 }
 /**
  * A Native submit boundary. Products retain ownership of values and validation;
@@ -120,16 +123,10 @@ function CollectionSheetHeader({ title, dismissLabel, onDismiss }) {
     return _jsxs(View, { style: { flexDirection: "row", direction: environment.direction, alignItems: "center", gap: spacing.sm }, children: [_jsx(Text, { accessibilityRole: "header", tone: "primary", variant: "title", emphasis: "strong", style: { flex: 1 }, children: title }), _jsx(Pressable, { accessibilityRole: "button", accessibilityLabel: dismissLabel, onPress: onDismiss, style: ({ pressed }) => [minimumTargetStyle, { alignItems: "center", justifyContent: "center", borderRadius: radius.full, backgroundColor: pressed ? colors.bg : "transparent" }], children: _jsx(Text, { accessible: false, tone: "muted", variant: "title", children: "\u00D7" }) })] });
 }
 /** Native adaptive Select with shared sections, async states, and teardown-safe commits. */
-export function Select({ label, accessibilityLabel, options, source: sourceProp, items, sections, value, defaultValue, onValueChange, selectedKey, defaultSelectedKey, onSelectionChange, selectedItem, disallowEmptySelection = false, open, defaultOpen = false, onOpenChange, placeholder, description, error, required = false, disabled = false, readOnly = false, busy = false, size = selectRecipe.defaults.size, density = selectRecipe.defaults.density, asyncState = { status: "idle" }, onRetry, retryLabel, readOnlyLabel, openHint, renderLeading, renderOptionLeading, onSelectionAfterDismiss, onDismiss, dismissLabel, optionsAccessibilityLabel, style, ...modalProps }) {
-    const providedSources = [sourceProp, options, items, sections].filter((candidate) => candidate !== undefined).length;
+export function Select({ label, accessibilityLabel, source: sourceProp, items, sections, selectedKey, defaultSelectedKey, onSelectionChange, selectedItem, disallowEmptySelection = false, open, defaultOpen = false, onOpenChange, placeholder, description, error, required = false, disabled = false, readOnly = false, busy = false, size = selectRecipe.defaults.size, density = selectRecipe.defaults.density, asyncState = { status: "idle" }, onRetry, retryLabel, readOnlyLabel, openHint, renderLeading, renderOptionLeading, onSelectionAfterDismiss, onDismiss, dismissLabel, optionsAccessibilityLabel, style, ...modalProps }) {
+    const providedSources = [sourceProp, items, sections].filter((candidate) => candidate !== undefined).length;
     if (providedSources !== 1) {
-        throw new TypeError("Select requires exactly one of source, options, items, or sections");
-    }
-    if (value !== undefined && selectedKey !== undefined) {
-        throw new TypeError("Select cannot combine value and selectedKey");
-    }
-    if (defaultValue !== undefined && defaultSelectedKey !== undefined) {
-        throw new TypeError("Select cannot combine defaultValue and defaultSelectedKey");
+        throw new TypeError("Select requires exactly one of source, items, or sections");
     }
     const source = useMemo(() => {
         if (sourceProp)
@@ -138,16 +135,8 @@ export function Select({ label, accessibilityLabel, options, source: sourceProp,
             return { sections };
         if (items)
             return { items };
-        return {
-            items: (options ?? []).map((option) => ({
-                id: option.value,
-                label: option.label,
-                textValue: option.label,
-                ...(option.description === undefined ? {} : { description: option.description }),
-                ...(option.disabled === undefined ? {} : { disabled: option.disabled }),
-            })),
-        };
-    }, [items, options, sections, sourceProp]);
+        return { items: items };
+    }, [items, sections, sourceProp]);
     validateCollection(source);
     const collectionItems = flattenCollectionItems(source);
     if (collectionItems.length === 0 && asyncState.status === "idle") {
@@ -157,8 +146,8 @@ export function Select({ label, accessibilityLabel, options, source: sourceProp,
     const theme = useHjmNativeTheme();
     const { colors, environment } = theme;
     const safeArea = useHjmNativeSafeAreaInsets();
-    const requestedControlled = selectedKey !== undefined ? selectedKey : value;
-    const requestedDefault = defaultSelectedKey ?? defaultValue ?? null;
+    const requestedControlled = selectedKey;
+    const requestedDefault = defaultSelectedKey ?? null;
     const requestedValue = requestedControlled ?? requestedDefault;
     if (requestedValue !== null &&
         requestedValue !== undefined &&
@@ -171,8 +160,6 @@ export function Select({ label, accessibilityLabel, options, source: sourceProp,
         ...(requestedControlled === undefined ? {} : { value: requestedControlled }),
         defaultValue: requestedDefault,
         onChange: (next) => {
-            if (next !== null)
-                onValueChange?.(next);
             onSelectionChange?.(next);
         },
     });

@@ -1,3 +1,4 @@
+import { resolveMenuTypeahead } from "./menu-typeahead.js";
 import { Menu as Bloom } from "bloom-menu";
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { Button } from "./actions.js";
@@ -21,7 +22,7 @@ export function MorphingMenu({ label, items, onAction, disabled = false, open: c
   const root = useRef<HTMLDivElement>(null);
   const previousOpen = useRef(false);
   const restoreFocus = useRef(true);
-  const search = useRef({ text: "", time: 0 });
+  const search = useRef({ value: "", time: 0 });
   const change = (value: boolean) => { if (value) restoreFocus.current = true; setLocalOpen(value); onOpenChange?.(value); };
   if (!label.trim() || !items.length || new Set(items.map(item => item.id)).size !== items.length ||
     items.some(item => !item.id.trim() || !(item.textValue ?? (typeof item.label === "string" ? item.label : "")).trim())) {
@@ -30,6 +31,7 @@ export function MorphingMenu({ label, items, onAction, disabled = false, open: c
   useEffect(() => {
     const host = root.current;
     if (open) {
+      search.current = { value: "", time: 0 };
       host?.querySelector('[role="menu"]')?.setAttribute("aria-label", label);
       host?.querySelector<HTMLElement>('[role="menuitem"]:not([disabled])')?.focus();
     } else if (previousOpen.current && restoreFocus.current && (host?.contains(document.activeElement) || document.activeElement === document.body)) host?.querySelector<HTMLElement>('[role="button"]')?.focus();
@@ -53,9 +55,14 @@ export function MorphingMenu({ label, items, onAction, disabled = false, open: c
     if (event.key === "Home") next = 0;
     if (event.key === "End") next = nodes.length - 1;
     if (event.key === "Escape" || event.key === "Tab") { if (event.key === "Tab") restoreFocus.current = false; change(false); if (event.key === "Escape") event.preventDefault(); }
-    if (event.key.length === 1 && !event.ctrlKey && !event.metaKey && event.key !== " ") {
-      const now = Date.now(); search.current = { text: (now - search.current.time < 600 ? search.current.text : "") + event.key.toLocaleLowerCase(), time: now };
-      next = nodes.findIndex(node => node.textContent?.trim().toLocaleLowerCase().startsWith(search.current.text));
+    if (event.key.length === 1 && !event.altKey && !event.ctrlKey && !event.metaKey && event.key !== " ") {
+      const result = resolveMenuTypeahead(
+        items.filter(item => !item.disabled).map(item => ({
+          textValue: item.textValue ?? (typeof item.label === "string" ? item.label : ""),
+        })), index, event.key, search.current, Date.now(),
+      );
+      search.current = result.state;
+      next = result.index;
     }
     if (next !== undefined && next >= 0) { event.preventDefault(); event.stopPropagation(); nodes[next]?.focus(); }
   };
@@ -68,7 +75,7 @@ export function MorphingMenu({ label, items, onAction, disabled = false, open: c
         <Bloom.Content>
           {items.map(item => <button type="button" role="menuitem" tabIndex={-1} className="hjm-menu-morph__item" key={item.id} disabled={!open || (item.disabled ?? false)}
             data-tone={item.tone} aria-label={item.textValue}
-            onClick={() => { if (!item.disabled) { change(false); item.onSelect?.(); onAction?.(item.id); } }}>
+            onClick={() => { if (!item.disabled) { change(false); onAction?.(item.id); } }}>
             {item.leading}{item.label}{item.trailing}
           </button>)}
         </Bloom.Content>

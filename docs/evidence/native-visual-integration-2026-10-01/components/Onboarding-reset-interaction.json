@@ -1,0 +1,361 @@
+[
+  {
+    "subrole": null,
+    "help": null,
+    "AXValue": null,
+    "AXFrame": "{{0, 0}, {402, 874}}",
+    "content_required": false,
+    "AXUniqueId": null,
+    "enabled": true,
+    "custom_actions": [],
+    "role_description": "application",
+    "frame": {
+      "height": 874,
+      "y": 0,
+      "x": 0,
+      "width": 402
+    },
+    "AXLabel": "HJM Native Showcase",
+    "pid": 63103,
+    "title": null,
+    "type": "Application",
+    "role": "AXApplication",
+    "traits": [
+      "None"
+    ]
+  },
+  {
+    "enabled": true,
+    "AXLabel": "작은 기록의 시작",
+    "role": "AXStaticText",
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "help": null,
+    "subrole": null,
+    "AXFrame": "{{36, 98}, {330, 20}}",
+    "AXUniqueId": null,
+    "content_required": false,
+    "role_description": "text",
+    "pid": 63103,
+    "type": "StaticText",
+    "frame": {
+      "y": 98,
+      "x": 36,
+      "width": 330,
+      "height": 20
+    },
+    "AXValue": null,
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "AXFrame": "{{36, 142}, {104.66667175292969, 50}}",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "role": "AXButton",
+    "content_required": false,
+    "AXLabel": "3단계 중 1, 소개",
+    "title": null,
+    "frame": {
+      "width": 104.66667175292969,
+      "y": 142,
+      "height": 50,
+      "x": 36
+    },
+    "custom_actions": [],
+    "pid": 63103,
+    "traits": [
+      "Scrollable"
+    ],
+    "help": "현재 단계",
+    "type": "Button",
+    "role_description": "button",
+    "enabled": true,
+    "subrole": null
+  },
+  {
+    "traits": [
+      "Scrollable"
+    ],
+    "role_description": "",
+    "AXValue": null,
+    "subrole": null,
+    "role": "AXGenericElement",
+    "pid": 63103,
+    "AXUniqueId": null,
+    "help": "대기",
+    "enabled": true,
+    "custom_actions": [],
+    "AXLabel": "3단계 중 2, 관심사",
+    "type": "GenericElement",
+    "title": null,
+    "AXFrame": "{{148.66666412353516, 142}, {104.66665649414062, 50}}",
+    "content_required": false,
+    "frame": {
+      "y": 142,
+      "width": 104.66665649414062,
+      "height": 50,
+      "x": 148.66666412353516
+    }
+  },
+  {
+    "content_required": false,
+    "AXFrame": "{{261.33332824707031, 142}, {104.66665649414062, 50}}",
+    "pid": 63103,
+    "traits": [
+      "Scrollable"
+    ],
+    "enabled": true,
+    "AXValue": null,
+    "AXLabel": "3단계 중 3, 확인",
+    "custom_actions": [],
+    "title": null,
+    "help": "대기",
+    "role": "AXButton",
+    "subrole": null,
+    "AXUniqueId": null,
+    "type": "Button",
+    "role_description": "button",
+    "frame": {
+      "height": 50,
+      "x": 261.3333282470703,
+      "y": 142,
+      "width": 104.66665649414062
+    }
+  },
+  {
+    "title": null,
+    "AXFrame": "{{36, 216}, {330, 20}}",
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "help": null,
+    "role": "AXStaticText",
+    "role_description": "text",
+    "type": "StaticText",
+    "custom_actions": [],
+    "AXLabel": "1 / 3 · 나의 속도로 쌓아 가요",
+    "subrole": null,
+    "enabled": true,
+    "content_required": false,
+    "pid": 63103,
+    "AXValue": null,
+    "AXUniqueId": null,
+    "frame": {
+      "height": 20,
+      "x": 36,
+      "width": 330,
+      "y": 216
+    }
+  },
+  {
+    "frame": {
+      "x": 57,
+      "y": 281,
+      "height": 32,
+      "width": 288
+    },
+    "enabled": true,
+    "role": "AXStaticText",
+    "AXValue": null,
+    "help": null,
+    "AXFrame": "{{57, 281}, {288, 32}}",
+    "AXLabel": "나의 속도로 쌓아 가요",
+    "role_description": "text",
+    "content_required": false,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "pid": 63103,
+    "type": "StaticText",
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "subrole": null,
+    "title": null
+  },
+  {
+    "AXFrame": "{{57, 333}, {288, 40}}",
+    "AXValue": null,
+    "role": "AXStaticText",
+    "AXLabel": "매일 멋진 일을 할 필요는 없어요. 기억하고 싶은 작은 순간부터 남겨 보세요.",
+    "custom_actions": [],
+    "content_required": false,
+    "subrole": null,
+    "AXUniqueId": null,
+    "title": null,
+    "type": "StaticText",
+    "enabled": true,
+    "pid": 63103,
+    "frame": {
+      "x": 57,
+      "y": 333,
+      "width": 288,
+      "height": 40
+    },
+    "help": null,
+    "role_description": "text",
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ]
+  },
+  {
+    "subrole": null,
+    "enabled": false,
+    "role_description": "button",
+    "pid": 63103,
+    "AXValue": null,
+    "type": "Button",
+    "custom_actions": [],
+    "content_required": false,
+    "AXFrame": "{{36, 418}, {56.333335876464844, 44}}",
+    "role": "AXButton",
+    "AXUniqueId": null,
+    "title": null,
+    "AXLabel": "이전",
+    "help": null,
+    "traits": [
+      "NotEnabled",
+      "Scrollable",
+      "Button"
+    ],
+    "frame": {
+      "y": 418,
+      "x": 36,
+      "width": 56.333335876464844,
+      "height": 44
+    }
+  },
+  {
+    "frame": {
+      "y": 418,
+      "x": 104.33333587646484,
+      "height": 44,
+      "width": 56.333335876464844
+    },
+    "role": "AXButton",
+    "AXUniqueId": null,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "pid": 63103,
+    "help": null,
+    "role_description": "button",
+    "title": null,
+    "enabled": true,
+    "AXFrame": "{{104.33333587646484, 418}, {56.333335876464844, 44}}",
+    "custom_actions": [],
+    "AXValue": null,
+    "AXLabel": "계속",
+    "type": "Button",
+    "subrole": null,
+    "content_required": false
+  },
+  {
+    "pid": 63103,
+    "content_required": false,
+    "title": null,
+    "AXFrame": "{{36, 486}, {330, 20}}",
+    "frame": {
+      "height": 20,
+      "x": 36,
+      "y": 486,
+      "width": 330
+    },
+    "role": "AXStaticText",
+    "enabled": true,
+    "type": "StaticText",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "role_description": "text",
+    "help": null,
+    "subrole": null,
+    "custom_actions": [],
+    "AXLabel": "이 예제의 선택은 현재 화면에서만 유지됩니다."
+  },
+  {
+    "AXValue": null,
+    "type": "GenericElement",
+    "custom_actions": [],
+    "content_required": false,
+    "frame": {
+      "x": 362,
+      "y": 759,
+      "width": 24,
+      "height": 24
+    },
+    "title": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "enabled": true,
+    "role_description": "",
+    "subrole": null,
+    "help": null,
+    "pid": 63103,
+    "AXFrame": "{{362, 759}, {24, 24}}",
+    "AXLabel": null,
+    "role": "AXGenericElement",
+    "AXUniqueId": null
+  },
+  {
+    "AXValue": null,
+    "enabled": true,
+    "help": null,
+    "AXFrame": "{{6, 811.66666698455811}, {223, 17}}",
+    "frame": {
+      "x": 6,
+      "y": 811.6666669845581,
+      "width": 223,
+      "height": 17
+    },
+    "subrole": null,
+    "content_required": false,
+    "custom_actions": [],
+    "AXUniqueId": "mobile-menu-button",
+    "role_description": "",
+    "AXLabel": "Patterns/Onboarding/Default",
+    "pid": 63103,
+    "role": "AXGenericElement",
+    "title": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "type": "GenericElement"
+  },
+  {
+    "role": "AXButton",
+    "AXValue": null,
+    "subrole": null,
+    "AXFrame": "{{368, 806}, {28, 28}}",
+    "custom_actions": [],
+    "role_description": "button",
+    "pid": 63103,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "content_required": false,
+    "type": "Button",
+    "help": null,
+    "AXUniqueId": "mobile-addons-button",
+    "title": null,
+    "frame": {
+      "width": 28,
+      "height": 28,
+      "x": 368,
+      "y": 806
+    },
+    "AXLabel": "Open addons panel",
+    "enabled": true
+  }
+]

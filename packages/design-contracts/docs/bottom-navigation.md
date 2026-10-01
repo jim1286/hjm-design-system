@@ -35,7 +35,7 @@ const descriptor = {
 
 시각·플랫폼 선택은 별도 `BottomNavigationConfiguration`으로 전달합니다.
 
-- `presentation`: `bar | floating`
+- `presentation`: `bar | floating | capsule`
 - `distribution`: `equal | center-gap`
 - `density`: `compact | regular`
 - `direction`: `ltr | rtl`
@@ -126,3 +126,18 @@ distribution을 선택하고 outer Dock frame에서 기존 Button/IconButton 기
 합성합니다. 이 action은 tab role, selected state, badge, `selectedKey`, destination count를
 가질 수 없습니다. Web은 button, RN은 button role과 activate action을 사용하며 제품 router나
 modal API를 직접 호출합니다.
+
+## Capsule presentation (2026-10-01)
+
+`configuration={{ presentation: "capsule" }}`는 둥근 route 표면과 선택된 항목의 가로형
+icon/label을 제공합니다. `primaryAction`은 컬렉션 밖의 별도 원형 행동으로 배치됩니다.
+`center-gap`과 함께 지정하면 오류입니다. 생성 행동이 route로 오인되거나 중앙에서 이름을
+가리는 것을 방지하기 위한 선택입니다.
+
+기본 크기에서 비선택 항목의 시각 label은 접히지만 전체 접근성 이름/배지/route intent는
+그대로 유지됩니다. 큰 글씨(1.5 이상) 또는 5–6개 목적지는 모든 이름을 세로 배치해 표시합니다.
+기존 bar/floating 및 router 소유 selectedKey는 바뀌지 않습니다.
+[사용자 레퍼런스 두 번째 이미지](https://www.instagram.com/p/Ddb8lXmjnV9/?img_index=2)의
+선택 캡슐과 분리된 추가 행동을 참고했으며, 원본 소스는 복제하지 않았습니다.
+
+Storybook: **컴포넌트 → 탐색 → 캡슐 네비게이션**, Default/Dark/LargeText.

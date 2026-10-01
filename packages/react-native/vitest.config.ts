@@ -10,6 +10,9 @@ export default defineConfig({
     },
   },
   test: {
+    // Inline these SVG adapters so their imports use our native host mock;
+    // Node otherwise loads React Native Flow before Vitest can substitute it.
+    server: { deps: { inline: ["@blobatar/react-native", "lucide-react-native"] } },
     environment: "node",
     include: ["test/**/*.test.ts", "test/**/*.test.tsx"],
   },

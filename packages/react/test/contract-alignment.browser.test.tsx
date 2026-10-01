@@ -348,7 +348,7 @@ describe("Select core behavior alignment", () => {
   it("exposes Select icon appearances and keeps a busy trigger focusable but inert", async () => {
     const onSelectionChange = vi.fn();
     const renderLeading = vi.fn((_item, appearance) => (
-      <span data-select-leading data-size={appearance.glyphSize} data-color={appearance.color} />
+      <span data-select-leading data-size={appearance.size} data-color={appearance.color} />
     ));
     const renderOptionLeading = vi.fn((item, appearance) => (
       <span

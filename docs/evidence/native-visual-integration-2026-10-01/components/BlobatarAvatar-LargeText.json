@@ -1,0 +1,441 @@
+[
+  {
+    "subrole": null,
+    "help": null,
+    "AXValue": null,
+    "AXFrame": "{{0, 0}, {402, 874}}",
+    "content_required": false,
+    "AXUniqueId": null,
+    "enabled": true,
+    "custom_actions": [],
+    "role_description": "application",
+    "frame": {
+      "x": 0,
+      "y": 0,
+      "width": 402,
+      "height": 874
+    },
+    "AXLabel": "HJM Native Showcase",
+    "pid": 57163,
+    "title": null,
+    "type": "Application",
+    "role": "AXApplication",
+    "traits": [
+      "None"
+    ]
+  },
+  {
+    "enabled": true,
+    "AXLabel": "하나의 얼굴, 여러 가지 표정.",
+    "role": "AXStaticText",
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "help": null,
+    "subrole": null,
+    "AXFrame": "{{40, 102}, {322, 128}}",
+    "AXUniqueId": null,
+    "content_required": false,
+    "role_description": "text",
+    "pid": 57163,
+    "type": "StaticText",
+    "frame": {
+      "height": 128,
+      "y": 102,
+      "x": 40,
+      "width": 322
+    },
+    "AXValue": null,
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "AXFrame": "{{40, 254}, {64, 64}}",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "role": "AXButton",
+    "content_required": false,
+    "AXLabel": "클로버",
+    "title": null,
+    "frame": {
+      "x": 40,
+      "width": 64,
+      "height": 64,
+      "y": 254
+    },
+    "custom_actions": [],
+    "pid": 57163,
+    "traits": [
+      "Scrollable",
+      "Image"
+    ],
+    "help": null,
+    "type": "Button",
+    "role_description": "button",
+    "enabled": true,
+    "subrole": null
+  },
+  {
+    "traits": [
+      "Scrollable",
+      "Image"
+    ],
+    "role_description": "button",
+    "AXValue": null,
+    "subrole": null,
+    "role": "AXButton",
+    "pid": 57163,
+    "AXUniqueId": null,
+    "help": null,
+    "enabled": true,
+    "custom_actions": [],
+    "AXLabel": "클로버 웃는 표정",
+    "type": "Button",
+    "title": null,
+    "AXFrame": "{{120, 254}, {64, 64}}",
+    "content_required": false,
+    "frame": {
+      "height": 64,
+      "y": 254,
+      "width": 64,
+      "x": 120
+    }
+  },
+  {
+    "content_required": false,
+    "AXFrame": "{{200, 254}, {72.666656494140625, 64}}",
+    "pid": 57163,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "enabled": true,
+    "AXValue": null,
+    "AXLabel": "클로버",
+    "custom_actions": [],
+    "title": null,
+    "help": null,
+    "role": "AXStaticText",
+    "subrole": null,
+    "AXUniqueId": null,
+    "type": "StaticText",
+    "role_description": "text",
+    "frame": {
+      "height": 64,
+      "x": 200,
+      "width": 72.66665649414062,
+      "y": 254
+    }
+  },
+  {
+    "title": null,
+    "AXFrame": "{{40, 342}, {64, 64}}",
+    "traits": [
+      "Scrollable",
+      "Image"
+    ],
+    "help": null,
+    "role": "AXGenericElement",
+    "role_description": "",
+    "type": "GenericElement",
+    "custom_actions": [],
+    "AXLabel": "피치",
+    "subrole": null,
+    "enabled": true,
+    "content_required": false,
+    "pid": 57163,
+    "AXValue": null,
+    "AXUniqueId": null,
+    "frame": {
+      "y": 342,
+      "width": 64,
+      "height": 64,
+      "x": 40
+    }
+  },
+  {
+    "frame": {
+      "width": 64,
+      "height": 64,
+      "y": 342,
+      "x": 120
+    },
+    "enabled": true,
+    "role": "AXGenericElement",
+    "AXValue": null,
+    "help": null,
+    "AXFrame": "{{120, 342}, {64, 64}}",
+    "AXLabel": "피치 웃는 표정",
+    "role_description": "",
+    "content_required": false,
+    "traits": [
+      "Scrollable",
+      "Image"
+    ],
+    "pid": 57163,
+    "type": "GenericElement",
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "subrole": null,
+    "title": null
+  },
+  {
+    "custom_actions": [],
+    "help": null,
+    "enabled": true,
+    "title": null,
+    "AXFrame": "{{200, 342}, {48.666671752929688, 64}}",
+    "role_description": "text",
+    "frame": {
+      "height": 64,
+      "y": 342,
+      "width": 48.66667175292969,
+      "x": 200
+    },
+    "content_required": false,
+    "subrole": null,
+    "role": "AXStaticText",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "type": "StaticText",
+    "pid": 57163,
+    "AXLabel": "피치"
+  },
+  {
+    "title": null,
+    "AXFrame": "{{40, 430}, {64, 64}}",
+    "type": "GenericElement",
+    "role": "AXGenericElement",
+    "pid": 57163,
+    "AXUniqueId": null,
+    "custom_actions": [],
+    "AXLabel": "구름",
+    "content_required": false,
+    "help": null,
+    "frame": {
+      "width": 64,
+      "y": 430,
+      "height": 64,
+      "x": 40
+    },
+    "subrole": null,
+    "AXValue": null,
+    "role_description": "",
+    "traits": [
+      "Scrollable",
+      "Image"
+    ],
+    "enabled": true
+  },
+  {
+    "type": "GenericElement",
+    "custom_actions": [],
+    "traits": [
+      "Scrollable",
+      "Image"
+    ],
+    "AXUniqueId": null,
+    "AXFrame": "{{120, 430}, {64, 64}}",
+    "frame": {
+      "x": 120,
+      "width": 64,
+      "height": 64,
+      "y": 430
+    },
+    "role_description": "",
+    "content_required": false,
+    "role": "AXGenericElement",
+    "AXValue": null,
+    "help": null,
+    "AXLabel": "구름 웃는 표정",
+    "title": null,
+    "enabled": true,
+    "subrole": null,
+    "pid": 57163
+  },
+  {
+    "type": "StaticText",
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "frame": {
+      "y": 430,
+      "height": 64,
+      "width": 48.66667175292969,
+      "x": 200
+    },
+    "subrole": null,
+    "AXValue": null,
+    "help": null,
+    "custom_actions": [],
+    "content_required": false,
+    "role": "AXStaticText",
+    "enabled": true,
+    "role_description": "text",
+    "pid": 57163,
+    "title": null,
+    "AXFrame": "{{200, 430}, {48.666671752929688, 64}}",
+    "AXLabel": "구름",
+    "AXUniqueId": null
+  },
+  {
+    "AXFrame": "{{40, 518}, {64, 64}}",
+    "custom_actions": [],
+    "help": null,
+    "AXUniqueId": null,
+    "type": "GenericElement",
+    "role_description": "",
+    "role": "AXGenericElement",
+    "content_required": false,
+    "pid": 57163,
+    "AXValue": null,
+    "enabled": true,
+    "frame": {
+      "height": 64,
+      "y": 518,
+      "x": 40,
+      "width": 64
+    },
+    "AXLabel": "파도",
+    "subrole": null,
+    "title": null,
+    "traits": [
+      "Scrollable",
+      "Image"
+    ]
+  },
+  {
+    "help": null,
+    "subrole": "AXSwitch",
+    "AXUniqueId": null,
+    "content_required": false,
+    "frame": {
+      "x": 120,
+      "y": 518,
+      "height": 64,
+      "width": 64
+    },
+    "role_description": "image",
+    "enabled": true,
+    "AXLabel": "파도 웃는 표정",
+    "type": "Image",
+    "AXValue": null,
+    "traits": [
+      "Scrollable",
+      "Image"
+    ],
+    "pid": 57163,
+    "role": "AXImage",
+    "AXFrame": "{{120, 518}, {64, 64}}",
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "role_description": "text",
+    "title": null,
+    "AXValue": null,
+    "AXLabel": "파도",
+    "AXUniqueId": null,
+    "pid": 57163,
+    "frame": {
+      "x": 200,
+      "y": 518,
+      "width": 48.66667175292969,
+      "height": 64
+    },
+    "type": "StaticText",
+    "role": "AXStaticText",
+    "help": null,
+    "AXFrame": "{{200, 518}, {48.666671752929688, 64}}",
+    "enabled": true,
+    "custom_actions": [],
+    "content_required": false,
+    "subrole": null,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ]
+  },
+  {
+    "type": "GenericElement",
+    "role_description": "",
+    "help": null,
+    "AXFrame": "{{362, 759}, {24, 24}}",
+    "AXUniqueId": null,
+    "AXLabel": null,
+    "enabled": true,
+    "title": null,
+    "pid": 57163,
+    "frame": {
+      "y": 759,
+      "x": 362,
+      "width": 24,
+      "height": 24
+    },
+    "role": "AXGenericElement",
+    "subrole": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "content_required": false,
+    "AXValue": null,
+    "custom_actions": []
+  },
+  {
+    "AXLabel": "Components/Display/Blobatar Avatar/Large Text",
+    "AXValue": null,
+    "AXFrame": "{{6, 811.66666698455811}, {345, 17}}",
+    "enabled": true,
+    "frame": {
+      "y": 811.6666669845581,
+      "x": 6,
+      "height": 17,
+      "width": 345
+    },
+    "custom_actions": [],
+    "traits": [
+      "Scrollable"
+    ],
+    "type": "GenericElement",
+    "AXUniqueId": "mobile-menu-button",
+    "role_description": "",
+    "pid": 57163,
+    "content_required": false,
+    "subrole": null,
+    "role": "AXGenericElement",
+    "title": null,
+    "help": null
+  },
+  {
+    "AXUniqueId": "mobile-addons-button",
+    "frame": {
+      "height": 28,
+      "x": 368,
+      "y": 806,
+      "width": 28
+    },
+    "content_required": false,
+    "help": null,
+    "type": "Button",
+    "enabled": true,
+    "role": "AXButton",
+    "custom_actions": [],
+    "AXValue": null,
+    "role_description": "button",
+    "subrole": null,
+    "title": null,
+    "AXFrame": "{{368, 806}, {28, 28}}",
+    "pid": 57163,
+    "AXLabel": "Open addons panel",
+    "traits": [
+      "Scrollable",
+      "Button"
+    ]
+  }
+]

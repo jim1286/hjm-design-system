@@ -1,0 +1,38 @@
+[
+  {
+    "state": "default",
+    "running": 1,
+    "rtl": {
+      "selected": "내 정보",
+      "tabX": 81.609375,
+      "indicatorX": 82,
+      "width": 390,
+      "scrollWidth": 390,
+      "animations": 0
+    }
+  },
+  {
+    "state": "dark",
+    "running": 1,
+    "rtl": {
+      "selected": "내 정보",
+      "tabX": 81.609375,
+      "indicatorX": 82,
+      "width": 390,
+      "scrollWidth": 390,
+      "animations": 0
+    }
+  },
+  {
+    "state": "large-text",
+    "running": 1,
+    "rtl": {
+      "selected": "내 정보",
+      "tabX": 15.5625,
+      "indicatorX": 16,
+      "width": 390,
+      "scrollWidth": 390,
+      "animations": 0
+    }
+  }
+]

@@ -1,0 +1,20 @@
+{
+  "method": "Sorted concatenated emitted graph; saved pre-change code-block.js and unchanged provider.js; adds existing internal/styles.js",
+  "before": {
+    "modules": 2,
+    "raw": 7288,
+    "gzip": 2373,
+    "sha256": "01b224cbb2c1c4ec1ab0d97924b9dab4edb06286403f843f273bcaf370f49ed0"
+  },
+  "after": {
+    "modules": 3,
+    "raw": 9419,
+    "gzip": 3000,
+    "sha256": "34e831f8a68aa0cff16a06b08aa9655cb659087ad9e3586044cf24330f0aadd4"
+  },
+  "delta": {
+    "modules": 1,
+    "raw": 2131,
+    "gzip": 627
+  }
+}

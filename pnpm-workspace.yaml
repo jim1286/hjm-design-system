@@ -9,6 +9,16 @@ allowBuilds:
 # 전이 의존성의 보안 하한. 상위 패키지가 선언한 range 안에 패치가 있는데도 lockfile이
 # 옛 버전에 고정돼 있을 때만 쓴다. 상위가 따라오면 항목을 지우고 같은 버전이 나오는지 확인한다.
 overrides:
+  # Native host stays on Storybook 10.4.4 / safe-area 5.7.0 (installed binary).
+  # Its caret dependencies drifted to UI 10.6 requiring a different native peer.
+  # Scope React pins to Native parents so Web retains its own 10.6 renderer.
+  # Remove after the Native host and its transitive UI are upgraded together.
+  '@storybook/react-native-ui': 10.4.4
+  '@storybook/react-native-ui-common': 10.4.4
+  '@storybook/react-native-theming': 10.4.4
+  '@storybook/react-native@10.4.4>@storybook/react': 10.4.0
+  '@storybook/react-native-ui@10.4.4>@storybook/react': 10.4.0
+  '@storybook/react-native-ui-common@10.4.4>@storybook/react': 10.4.0
   # Expo 57 prebuilt RN requires these upstream podspec fixes (RCT_USE_RN_DEP).
   # Zeego pins older peers; override only after full native adapter validation.
   react-native-ios-context-menu: 3.2.1

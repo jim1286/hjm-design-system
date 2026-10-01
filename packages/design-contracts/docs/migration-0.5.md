@@ -1,5 +1,8 @@
 # v0.5 migration
 
+이 문서는 0.5 당시의 이관 기록이다. 여기서 유지한다고 설명한 coverage 별칭은
+[2.0 이관](migration-native-legacy-removal.md)에서 제거했으며 현재 API 지원을 뜻하지 않는다.
+
 v0.4 → v0.5는 기존 foundation/recipe 런타임 값을 유지하는 additive release입니다. 다만
 catalog status를 그대로 열거하거나 Showcase route 존재를 renderer 증거로 사용한 소비자는
 아래 두 가지를 확인해야 합니다.
@@ -65,7 +68,7 @@ value.palette;
 
 - 91개 canonical route를 Web reference, contract-only, Web unsupported로 분리합니다.
 - planned route는 구현된 것처럼 보이는 JSX를 렌더링하지 않습니다.
-- Home/Explorer 수치는 실제 evidence registry에서 계산합니다.
+- 시작하기/Explorer 수치는 실제 evidence registry에서 계산합니다.
 - Storybook manager와 preview가 foundation token을 사용합니다.
 - token-boundary 검사와 static classification 검사가 Showcase check에 포함됩니다.
 - Ant Design reference는 6.6.1로 고정됩니다. v0.7부터 외부 registry drift 검사는 자동 CI가

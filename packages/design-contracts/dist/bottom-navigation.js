@@ -93,7 +93,7 @@ function validateItem(item) {
     if (item.badge !== undefined)
         validateBadge(item.badge);
 }
-const presentations = new Set(["bar", "floating"]);
+const presentations = new Set(["bar", "floating", "capsule"]);
 const distributions = new Set(["equal", "center-gap"]);
 const densities = new Set(["compact", "regular"]);
 const directions = new Set(["ltr", "rtl"]);
@@ -129,6 +129,10 @@ export function validateBottomNavigationConfiguration(configuration, itemCount) 
     if (configuration.keyboardBehavior !== undefined &&
         !keyboardBehaviors.has(configuration.keyboardBehavior)) {
         throw new TypeError(`Unsupported BottomNavigation keyboardBehavior: ${String(configuration.keyboardBehavior)}`);
+    }
+    // Capsule actions sit beside the destination surface, so reserving a central gap would duplicate their space.
+    if (configuration.presentation === "capsule" && configuration.distribution === "center-gap") {
+        throw new TypeError("BottomNavigation capsule uses an adjacent action, not center-gap");
     }
     if (configuration.distribution === "center-gap" && itemCount % 2 !== 0) {
         throw new RangeError("BottomNavigation center-gap distribution requires an even destination count");

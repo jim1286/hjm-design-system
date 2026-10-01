@@ -24,16 +24,16 @@ const catalog: readonly ComponentCatalogEntry[] = componentCatalog;
 const categoryMetadata: Readonly<
   Record<ComponentCategory, Readonly<{ label: string; description: string; mark: string }>>
 > = {
-  foundation: { label: "Foundations", description: "Type, icons and semantic primitives", mark: "Aa" },
-  layout: { label: "Layout", description: "Composition, rhythm and responsive structure", mark: "▦" },
-  action: { label: "Actions", description: "Commands, destinations and primary moments", mark: "↗" },
-  input: { label: "Inputs", description: "Data entry, validation and selection", mark: "⌁" },
-  navigation: { label: "Navigation", description: "Routes, views and collection movement", mark: "⌘" },
-  "data-display": { label: "Data display", description: "Structured content and information density", mark: "▤" },
-  feedback: { label: "Feedback", description: "Progress, outcomes and announcements", mark: "◉" },
-  overlay: { label: "Overlays", description: "Layered focus and contextual surfaces", mark: "◇" },
-  provider: { label: "Providers", description: "Cross-platform configuration boundaries", mark: "◎" },
-  utility: { label: "Utilities", description: "Platform helpers and structural effects", mark: "✦" },
+  foundation: { label: "글자와 아이콘", description: "Type, icons and semantic primitives", mark: "Aa" },
+  layout: { label: "레이아웃", description: "Composition, rhythm and responsive structure", mark: "▦" },
+  action: { label: "동작", description: "Commands, destinations and primary moments", mark: "↗" },
+  input: { label: "입력", description: "Data entry, validation and selection", mark: "⌁" },
+  navigation: { label: "탐색", description: "Routes, views and collection movement", mark: "⌘" },
+  "data-display": { label: "데이터 표시", description: "Structured content and information density", mark: "▤" },
+  feedback: { label: "피드백", description: "Progress, outcomes and announcements", mark: "◉" },
+  overlay: { label: "오버레이", description: "Layered focus and contextual surfaces", mark: "◇" },
+  provider: { label: "제공자 설정", description: "Cross-platform configuration boundaries", mark: "◎" },
+  utility: { label: "보조 기능", description: "Platform helpers and structural effects", mark: "✦" },
 };
 
 const categoryOrder: readonly ComponentCategory[] = [
@@ -230,8 +230,8 @@ export function Introduction() {
   );
 }
 
-const meta = {
-  title: "Home/Overview",
+const meta = { includeStories: ["Overview"],
+  id: "home-overview", title: "배포/컴포넌트/개요/사용 안내",
   component: Introduction,
   excludeStories: ["Introduction"],
   parameters: { controls: { disable: true } },
@@ -240,4 +240,4 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Overview: Story = {};
+export const Overview: Story = { name: "개요",};

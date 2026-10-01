@@ -17,8 +17,8 @@ export function TimeSelectionPreview() {
     {saved ? <Notice tone="success" title="시간을 정했어요" description={saved} /> : null}
   </Stack></Section>;
 }
-const meta = { title: "Patterns/Time selection", component: TimeSelectionPreview } satisfies Meta<typeof TimeSelectionPreview>;
+const meta = { includeStories: ["ChooseTime","LargeText"], id: "patterns-time-selection", title: "배포/구성/시간 선택", component: TimeSelectionPreview } satisfies Meta<typeof TimeSelectionPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
-export const ChooseTime: Story = {};
-export const LargeText: Story = { globals: { textScale: "2" } };
+export const ChooseTime: Story = { name: "시간 선택",};
+export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };

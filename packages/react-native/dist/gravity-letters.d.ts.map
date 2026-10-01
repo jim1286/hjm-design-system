@@ -1,0 +1,1 @@
+{"version":3,"file":"gravity-letters.d.ts","sourceRoot":"","sources":["../src/gravity-letters.tsx"],"names":[],"mappings":"AAKA,MAAM,MAAM,mBAAmB,GAAG,QAAQ,CAAC;IAAE,MAAM,EAAE,SAAS,MAAM,EAAE,CAAC;IAAC,MAAM,CAAC,EAAE,OAAO,CAAC;IAAC,SAAS,CAAC,EAAE,MAAM,GAAG,MAAM,CAAA;CAAE,CAAC,CAAC;AACzH,iFAAiF;AACjF,wBAAgB,cAAc,CAAC,EAAE,MAAM,EAAE,MAAc,EAAE,SAAa,EAAE,EAAE,mBAAmB,+BAuB5F"}

@@ -80,6 +80,10 @@ export declare const authScreenRecipe: {
     };
     /** 제공자 버튼 높이는 Provider 계약이 소유한다 — 여기서 다시 정하지 않는다. */
     readonly providerMinHeight: 44;
+    readonly mainCard: {
+        readonly padding: 16;
+        readonly radius: 16;
+    };
     readonly densities: {
         readonly regular: {
             readonly heroGap: 16;

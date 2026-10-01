@@ -65,7 +65,7 @@
 
 ## 2026-09-16: React/RN 작동 조합
 
-명시 요청에 따라 `Patterns/Rating`에 정수/0.5점 입력과 읽기 전용 평균 표시를 추가했다.
+명시 요청에 따라 `컴포넌트/입력/Rating`에 정수/0.5점 입력과 읽기 전용 평균 표시를 추가했다.
 입력은 기존 Slider, 현재값과 평균 표시는 Statistic이며 별 모양 variant를 새로 만든 것은 아니다.
 
 - [Web 예제](../../../showcase/web/src/patterns/Rating.stories.tsx): `@hjmds/react/slider`,

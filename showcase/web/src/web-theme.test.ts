@@ -24,7 +24,7 @@ describe("Showcase Web theme adapter", () => {
         { systemTheme: "light" },
       ),
     );
-    expect(style["--hjm-primary"]).toBe(THEMES.light.primary);
+    expect(style["--hjm-color-primary"]).toBe(THEMES.light.primary);
     expect(style["--hjm-space-md"]).toBe(`${spacing.md}px`);
     expect(style["--hjm-radius-lg"]).toBe(`${radius.lg}px`);
     expect(style["--hjm-type-body-size-base"]).toBe("0.875rem");
@@ -50,7 +50,7 @@ describe("Showcase Web theme adapter", () => {
         { systemTheme: "light" },
       ),
     );
-    expect(style["--hjm-bg"]).toBe(THEMES.dark.bg);
+    expect(style["--hjm-color-bg"]).toBe(THEMES.dark.bg);
     expect(style["--hjm-text-scale"]).toBe(2);
     expect(style["--hjm-motion-scale"]).toBe(0);
     expect(style["--hjm-motion-preset-micro-effective-duration"]).toBe("0ms");

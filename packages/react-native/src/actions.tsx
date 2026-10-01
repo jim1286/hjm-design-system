@@ -1,28 +1,24 @@
-import type { ThemeColors } from "@hjmds/design-contracts/colors";
-import { control, glyph, radius, spacing } from "@hjmds/design-contracts/foundations";
-import { isLargeTextScale } from "@hjmds/design-contracts/components/design-system-provider";
-import {
-  buttonRecipe,
-  resolveButtonLabelLines,
-  type ButtonAlign as ContractButtonAlign,
-  type ButtonShape as ContractButtonShape,
-  type ButtonSize as ContractButtonSize,
-  type ButtonTone as ContractButtonTone,
-} from "@hjmds/design-contracts/recipes/base";
-import {
-  bottomCtaRecipe,
-  iconButtonRecipe,
-  resolveIconButtonPresentation,
-  type IconButtonShape,
-  type IconButtonSize,
-  type IconButtonTone as ContractIconButtonTone,
-} from "@hjmds/design-contracts/recipes";
 import { visibleControlHeight } from "@hjmds/design-contracts/components/design-system-provider";
 import {
   resolveLinkDescriptor,
   type LinkDescriptor,
   type LinkDestination,
 } from "@hjmds/design-contracts/components/link";
+import { glyph, radius, spacing } from "@hjmds/design-contracts/foundations";
+import {
+  bottomCtaRecipe,
+  iconButtonRecipe,
+  resolveIconButtonPresentation,
+  type IconButtonTone as ContractIconButtonTone,
+  type IconButtonShape,
+  type IconButtonSize,
+} from "@hjmds/design-contracts/recipes";
+import {
+  type ButtonAlign as ContractButtonAlign,
+  type ButtonShape as ContractButtonShape,
+  type ButtonSize as ContractButtonSize,
+  type ButtonTone as ContractButtonTone,
+} from "@hjmds/design-contracts/recipes/base";
 import { forwardRef, type ReactNode } from "react";
 import {
   ActivityIndicator,
@@ -31,22 +27,22 @@ import {
   type View as NativeView,
   type PressableProps,
   type StyleProp,
-  type TextStyle,
   type ViewStyle,
 } from "react-native";
+import { RecipeButton } from "./internal/recipe-button.js";
 
+import type { HjmCompositionStyleProp } from "./composition-style.js";
+import { minimumTargetStyle } from "./internal/styles.js";
 import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
-import { minimumTargetStyle } from "./internal/styles.js";
-import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type ButtonTone = ContractButtonTone;
 export type ButtonSize = ContractButtonSize;
 export type ButtonShape = ContractButtonShape;
 export type ButtonAlign = ContractButtonAlign;
 export type {
-  IconButtonShape,
-  IconButtonSize,
+IconButtonShape,
+IconButtonSize
 } from "@hjmds/design-contracts/recipes";
 
 export type ButtonProps = Omit<
@@ -54,8 +50,6 @@ export type ButtonProps = Omit<
   "accessibilityRole" | "accessibilityState" | "children" | "disabled" | "hitSlop" | "style"
 > &
   Readonly<{
-    /** @deprecated Prefer renderer-neutral `children`. */
-    label?: string;
     children?: ReactNode;
     tone?: ButtonTone;
     size?: ButtonSize;
@@ -79,151 +73,21 @@ export type ButtonProps = Omit<
     accessibilityState?: PressableProps["accessibilityState"];
     /** Canonical layout-only placement. Controlled visual and state keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
-    /**
-     * @deprecated Legacy compatibility only. New apps must use `layoutStyle` and must not
-     * override color, typography, radius, control height, or interaction state.
-     * @see https://github.com/jim1286/hjm-design-system/blob/main/packages/design-contracts/docs/consumer-policy.md#31-react-native-legacy-style-compatibility-boundary
-     */
-    style?: StyleProp<ViewStyle>;
-    /**
-     * @deprecated Label typography and color belong to the Button recipe. Request a semantic
-     * recipe axis instead of styling the label in product code.
-     * @see https://github.com/jim1286/hjm-design-system/blob/main/packages/design-contracts/docs/consumer-policy.md#31-react-native-legacy-style-compatibility-boundary
-     */
-    labelStyle?: StyleProp<TextStyle>;
     renderLoadingIndicator?: (props: Readonly<{ color: string; size: "small" }>) => ReactNode;
   }>;
 
-export const Button = forwardRef<NativeView, ButtonProps>(function Button({
-  label,
-  children,
-  tone = buttonRecipe.defaults.tone,
-  size = buttonRecipe.defaults.size,
-  shape = buttonRecipe.defaults.shape,
-  align = buttonRecipe.defaults.align,
-  selected,
-  disabled = false,
-  loading = false,
-  disableWhileLoading = false,
-  growWithContent = false,
-  loadingLabel,
-  leading,
-  trailing,
-  fullWidth = false,
-  hitSlop,
-  layoutStyle,
-  style,
-  labelStyle,
-  renderLoadingIndicator,
-  accessibilityLabel,
-  accessibilityState,
-  onPress,
-  onLongPress,
-  ...props
-}: ButtonProps, ref) {
-  const { colors, environment } = useHjmNativeTheme();
-  const labelLines = resolveButtonLabelLines(isLargeTextScale(environment.textScale));
-  const inactive = disabled || loading;
-  const unavailable = disabled || (loading && disableWhileLoading);
-  const content = loading && loadingLabel !== undefined
-    ? loadingLabel
-    : children ?? label;
-  if (content === undefined || content === null || content === false) {
-    throw new TypeError("Button requires children (or the deprecated label prop)");
+// Public callers compose placement through layoutStyle; visual overrides stay inside HJM recipes.
+export const Button = forwardRef<NativeView, ButtonProps>(function Button(props, ref) {
+  // Untyped JS callers must not reach the private recipe override through a spread.
+  if ("style" in props || "labelStyle" in props) {
+    throw new TypeError("Button style/labelStyle were removed; use layoutStyle and semantic props");
   }
-  const toneContract = buttonRecipe.tones[tone];
-  const sizeContract = buttonRecipe.sizes[size];
-  const selectedContract = selected === true ? buttonRecipe.states.selected : null;
-  const resolveColor = (key: keyof ThemeColors | null): string =>
-    key === null ? "transparent" : colors[key];
-  const contentColor = resolveColor(selectedContract?.content ?? toneContract.content);
-  const visibleHeight = visibleControlHeight(sizeContract.height, environment.minimumVisualTarget);
-  return (
-    <Pressable
-      {...props}
-      ref={ref}
-      accessibilityLabel={
-        accessibilityLabel ?? (typeof content === "string" ? content : undefined)
-      }
-      accessibilityRole="button"
-      accessibilityState={{
-        ...accessibilityState,
-        ...(selected === undefined ? {} : { selected }),
-        disabled: unavailable,
-        busy: loading,
-      }}
-      disabled={unavailable}
-      hitSlop={hitSlop ?? (sizeContract.hitSlop > 0 ? sizeContract.hitSlop : undefined)}
-      onPress={loading ? () => undefined : onPress}
-      onLongPress={loading ? () => undefined : onLongPress}
-      style={({ pressed }) => [
-        {
-          alignItems: "center",
-          backgroundColor: resolveColor(selectedContract?.background ?? toneContract.background),
-          borderColor: resolveColor(selectedContract?.border ?? toneContract.border),
-          borderRadius: radius[buttonRecipe.shapes[shape]],
-          borderWidth: (selectedContract ?? toneContract).border ? 1 : 0,
-          direction: environment.direction,
-          flexDirection: "row",
-          gap: spacing.xs,
-          ...(growWithContent ? {} : { height: visibleHeight }),
-          justifyContent: buttonRecipe.aligns[align],
-          minHeight: visibleHeight,
-          minWidth: control.minTouchTarget,
-          opacity: inactive
-            ? buttonRecipe.opacity.disabled
-            : pressed
-              ? buttonRecipe.opacity.pressed
-              : 1,
-          paddingHorizontal: toneContract.paddingHorizontal ?? sizeContract.paddingHorizontal,
-          ...(fullWidth ? { alignSelf: "stretch" } : {}),
-        },
-        style,
-        layoutStyle,
-      ]}
-    >
-      {loading
-        ? renderLoadingIndicator?.({ color: contentColor, size: "small" }) ?? (
-            <ActivityIndicator color={contentColor} size="small" />
-          )
-        : leading}
-      {typeof content === "string" || typeof content === "number" ? (
-        <Text
-          align={align === "leading" ? "auto" : "center"}
-          emphasis="medium"
-          // Wrap up to the recipe's cap instead of the single line RN gives by
-          // default; the cap lifts under large text (buttonRecipe.label).
-          {...(labelLines === null ? {} : { numberOfLines: labelLines })}
-          style={[{ color: contentColor }, labelStyle]}
-          variant={sizeContract.textVariant}
-        >
-          {content}
-        </Text>
-      ) : content}
-      {trailing}
-    </Pressable>
-  );
+  return <RecipeButton {...props} ref={ref} />;
 });
 
 export type IconButtonTone = ContractIconButtonTone;
-/** @deprecated `link` was never an IconButton recipe tone; use `ghost`. */
-export type LegacyNativeIconButtonTone = "link";
-
-type IconButtonNameProps =
-  | Readonly<{ label: string; accessibilityLabel?: never }>
-  | Readonly<{
-      label?: never;
-      /** @deprecated Prefer the renderer-neutral `label`. */
-      accessibilityLabel: string;
-    }>;
-
-type IconButtonContentProps =
-  | Readonly<{ children: ReactNode; icon?: never }>
-  | Readonly<{
-      children?: never;
-      /** @deprecated Prefer the renderer-neutral `children`. */
-      icon: ReactNode;
-    }>;
+type IconButtonNameProps = Readonly<{ label: string }>;
+type IconButtonContentProps = Readonly<{ children: ReactNode }>;
 
 export type IconButtonProps = Omit<
   PressableProps,
@@ -238,7 +102,7 @@ export type IconButtonProps = Omit<
   IconButtonNameProps &
   IconButtonContentProps &
   Readonly<{
-    tone?: IconButtonTone | LegacyNativeIconButtonTone;
+    tone?: IconButtonTone;
     size?: IconButtonSize;
     shape?: IconButtonShape;
     /** Toggle state. Paints the selected treatment and reports it to assistive tech. */
@@ -257,9 +121,7 @@ export type IconButtonProps = Omit<
 
 export const IconButton = forwardRef<NativeView, IconButtonProps>(function IconButton({
   label,
-  accessibilityLabel,
   children,
-  icon,
   tone = iconButtonRecipe.defaults.tone,
   size = iconButtonRecipe.defaults.size,
   shape = iconButtonRecipe.defaults.shape,
@@ -277,15 +139,15 @@ export const IconButton = forwardRef<NativeView, IconButtonProps>(function IconB
   ...props
 }: IconButtonProps, ref) {
   const theme = useHjmNativeTheme();
-  const resolvedLabel = label ?? accessibilityLabel;
-  const resolvedIcon = children ?? icon;
+  const resolvedLabel = label;
+  const resolvedIcon = children;
   if (resolvedLabel === undefined || resolvedLabel.trim().length === 0) {
     throw new TypeError("IconButton label must not be empty");
   }
   if (resolvedIcon === undefined || resolvedIcon === null || resolvedIcon === false) {
-    throw new TypeError("IconButton requires children (or the deprecated icon prop)");
+    throw new TypeError("IconButton requires children");
   }
-  const resolvedTone: IconButtonTone = tone === "link" ? "ghost" : tone;
+  const resolvedTone: IconButtonTone = tone;
   const presentation = resolveIconButtonPresentation(resolvedTone, theme.palette, selected === true);
   const sizeContract = iconButtonRecipe.sizes[size];
   // Web reads the same size through `--hjm-control-button-*`, which the axis

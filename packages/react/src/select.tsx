@@ -53,7 +53,6 @@ export type SelectSection<
 export type SelectLeadingRenderProps = Readonly<{
   color: "currentColor";
   size: number;
-  glyphSize: number;
 }>;
 
 export type SelectOptionLeadingRenderProps = SelectLeadingRenderProps & Readonly<{
@@ -523,7 +522,6 @@ function SelectInner<Key extends string, SectionKey extends string>(
       disabled: item.disabled ?? false,
       color: "currentColor",
       size: leadingSize,
-      glyphSize: leadingSize,
     });
     return (
       <div
@@ -565,7 +563,6 @@ function SelectInner<Key extends string, SectionKey extends string>(
   const triggerLeading = renderLeading?.(resolvedSelectedItem, {
     color: "currentColor",
     size: triggerLeadingSize,
-    glyphSize: triggerLeadingSize,
   });
 
   return (

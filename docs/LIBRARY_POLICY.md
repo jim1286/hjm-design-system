@@ -191,3 +191,55 @@ remain independent of the encoder. Native QR rendering additionally requires
 matrix catches corrupt UTF-8 or module geometry that SVG snapshots would miss.
 These versions are registered in the central library policy; installing unrelated
 optional presentation peers is not required for QRCode.
+
+## Physical iPhone development preview — 2026-10-01
+
+The user requested the native design-system preview on the same private remote development page as their Expo apps. `expo-dev-client ~57.0.19` (MIT, Expo SDK 57) belongs only to the native showcase host and supplies the launcher/Fast Refresh runtime; the published renderer remains Expo-independent. Removing it requires replacing the physical-device launcher workflow. The dedicated Metro uses private Tailscale HTTPS because iPhone ATS rejected HTTP. Contract and renderer dist builds are watched alongside Metro, so source edits reach the workspace preview without changing published export contracts. Native changes still require rebuilding the showcase.
+
+## Static generated avatars — 2026-10-01
+
+The user's visual integration request adds `blobatar`, `@blobatar/react`, and
+`@blobatar/react-native` at exactly 2.7.0 (MIT). They are optional renderer peers,
+development dependencies for checks, and showcase runtime dependencies. Only
+`/avatar-blobatar` imports them. A second generator was rejected because it would
+drift from upstream artwork and Web/Native identity. Native uses the existing SVG
+peer; the animated entry, Reanimated and Worklets are not imported. No new native
+binary dependency or postinstall was introduced. Removing the adapter restores
+Avatar initials; consumers opt in rather than changing all profiles implicitly.
+Exact versions pin the seed-to-face generation. Root registry entries document
+this same 2.x adoption; this paragraph supplies the rationale for JSON changes.
+
+## Selected Lucide glyphs and decorative surfaces — 2026-10-01
+
+`lucide-react` and `lucide-react-native` 1.49.0 (ISC) are optional adapter peers
+and showcase dependencies. Named glyph imports flow through the existing Icon
+frame; importing the HJM root does not import Lucide. A dynamic icon dictionary
+was rejected to avoid bundling the entire library. Missing semantic mappings are
+explicit errors. Package licenses remain with upstream packages. The Native
+adapter's public seam includes scalar appearance props only so supported RN
+versions do not exchange incompatible StyleProp declarations.
+
+EffectSurface uses no new engine dependency: Web uses SVG/WAAPI, Native uses the
+existing react-native-svg and core Animated. It independently implements simple
+seeded gradients/noise rather than redistributing Shaders.com code or presets.
+
+## Native typography candidate loader — 2026-10-01
+
+`showcase/native` uses Expo SDK-matched `expo-font@57.0.4` directly for the
+Typography Studio's explicit OTF/TTF URI loader. The same version already existed
+in the lockfile and ExpoFont was present in the host Podfile.lock; no second font
+engine or runtime package dependency is introduced. This replaces unverified
+`status=ready` story arguments with `loadAsync` followed by `isLoaded`. Stale
+responses do not replace the current candidate. Expo retains registration for the
+app process; reset changes only preview selection. Loader errors retain system
+font fallback. Removing this studio loader removes the direct dependency; no
+product font or font binary is bundled. Device registration/rendering was subsequently verified with a Satoshi candidate; see
+[Native evidence](evidence/native-visual-integration-2026-10-01/README.md). Pod registration and Metro/type checks alone do not prove it.
+
+## Native test and Storybook peer alignment — 2026-10-01
+
+The renderer test workspace now uses `react-native@0.86.2`, matching the existing Expo 57 showcase and the declared Reanimated 4.5.1 / Worklets 0.10.1 compatibility range (RN 0.83–0.86). Leaving test RN 0.81.6 in that graph made `pnpm peers check` fail even while mocked renderer tests passed. This changes the development dependency only: the public base peer range stays `>=0.81`; optional native modules keep their own narrower host requirements. React Native 0.86.2 CLI requires matching metro-config 0.86.2, which declares Metro ^0.84.3; the smoke tool therefore uses Metro 0.84.3 and must pass the production bundle probe. These toolchain lanes are added to the central registry without removing the older lanes used elsewhere. No installed app binary is upgraded by this change.
+
+Native Storybook remains 10.4.4 with the binary's safe-area-context 5.7.0. Its caret ranges had resolved Native UI/theming/common to 10.6.0, whose UI requires safe-area 5.8.0 and Storybook ^10.5.4. Scoped workspace overrides pin these Native UI modules to 10.4.4 and their React renderer to 10.4.0; the latter declares Storybook ^10.4.0. Web keeps its existing 10.6 renderer. Upgrading safe-area merely to satisfy a development UI dependency was rejected because it would require changing the installed native binary. Remove these pins when the Native host, UI modules and native peers are intentionally upgraded together. Package manifests from the exact registry versions were inspected before changing resolution.
+
+React Native's 0.86 lane is already registered centrally for this workspace; no new library is introduced. Matching Metro toolchain lanes are recorded as described above. Installation uses `--ignore-scripts` because all affected changes are development JS/type dependencies and the existing native host is retained. Verification includes fresh peer resolution, package checks, both showcases and a development-host smoke.

@@ -1,0 +1,494 @@
+[
+  {
+    "id": "components-navigation-capsulenavigation",
+    "state": "default",
+    "violations": [],
+    "incomplete": [],
+    "passes": 13
+  },
+  {
+    "id": "components-navigation-capsulenavigation",
+    "state": "dark",
+    "violations": [],
+    "incomplete": [],
+    "passes": 13
+  },
+  {
+    "id": "components-navigation-capsulenavigation",
+    "state": "large-text",
+    "violations": [],
+    "incomplete": [],
+    "passes": 13
+  },
+  {
+    "id": "components-navigation-navigationbar",
+    "state": "default",
+    "violations": [],
+    "incomplete": [
+      {
+        "id": "aria-valid-attr-value",
+        "nodes": [
+          {
+            "html": "<button aria-controls=\"_r_0_-menu\" aria-expanded=\"false\" aria-haspopup=\"menu\" type=\"button\" class=\"hjm-button\" data-tone=\"ghost\" data-size=\"medium\" data-shape=\"rounded\" data-align=\"center\" data-state=\"idle\" style=\"--hjm-button-label-lines: 2;\"><span class=\"hjm-button__label\">서비스 ▾</span></button>",
+            "summary": "Fix all of the following:\n  Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"_r_0_-menu\"",
+            "any": [],
+            "all": [
+              {
+                "id": "aria-valid-attr-value",
+                "data": {
+                  "messageKey": "controlsWithinPopup",
+                  "needsReview": "aria-controls=\"_r_0_-menu\""
+                },
+                "relatedNodes": [],
+                "impact": "critical",
+                "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"_r_0_-menu\""
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "passes": 15
+  },
+  {
+    "id": "components-navigation-navigationbar",
+    "state": "dark",
+    "violations": [],
+    "incomplete": [
+      {
+        "id": "aria-valid-attr-value",
+        "nodes": [
+          {
+            "html": "<button aria-controls=\"_r_0_-menu\" aria-expanded=\"false\" aria-haspopup=\"menu\" type=\"button\" class=\"hjm-button\" data-tone=\"ghost\" data-size=\"medium\" data-shape=\"rounded\" data-align=\"center\" data-state=\"idle\" style=\"--hjm-button-label-lines: 2;\"><span class=\"hjm-button__label\">서비스 ▾</span></button>",
+            "summary": "Fix all of the following:\n  Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"_r_0_-menu\"",
+            "any": [],
+            "all": [
+              {
+                "id": "aria-valid-attr-value",
+                "data": {
+                  "messageKey": "controlsWithinPopup",
+                  "needsReview": "aria-controls=\"_r_0_-menu\""
+                },
+                "relatedNodes": [],
+                "impact": "critical",
+                "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"_r_0_-menu\""
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "passes": 15
+  },
+  {
+    "id": "components-navigation-navigationbar",
+    "state": "large-text",
+    "violations": [],
+    "incomplete": [
+      {
+        "id": "aria-valid-attr-value",
+        "nodes": [
+          {
+            "html": "<button aria-controls=\"_r_0_-menu\" aria-expanded=\"false\" aria-haspopup=\"menu\" type=\"button\" class=\"hjm-button\" data-tone=\"ghost\" data-size=\"medium\" data-shape=\"rounded\" data-align=\"center\" data-state=\"idle\" style=\"--hjm-button-label-lines: 2;\"><span class=\"hjm-button__label\">서비스 ▾</span></button>",
+            "summary": "Fix all of the following:\n  Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"_r_0_-menu\"",
+            "any": [],
+            "all": [
+              {
+                "id": "aria-valid-attr-value",
+                "data": {
+                  "messageKey": "controlsWithinPopup",
+                  "needsReview": "aria-controls=\"_r_0_-menu\""
+                },
+                "relatedNodes": [],
+                "impact": "critical",
+                "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"_r_0_-menu\""
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "passes": 15
+  },
+  {
+    "id": "patterns-discovery-gallery",
+    "state": "default",
+    "violations": [],
+    "incomplete": [
+      {
+        "id": "color-contrast",
+        "nodes": [
+          {
+            "html": "<span style=\"font-size: var(--hjm-type-heading-size); color: var(--hjm-color-primary);\">✺</span>",
+            "summary": "Fix any of the following:\n  Element content contains only non-text characters",
+            "any": [
+              {
+                "id": "color-contrast",
+                "data": {
+                  "messageKey": "nonBmp"
+                },
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element content contains only non-text characters"
+              }
+            ],
+            "all": []
+          },
+          {
+            "html": "<span style=\"font-size: var(--hjm-type-heading-size); color: var(--hjm-color-primary);\">◒</span>",
+            "summary": "Fix any of the following:\n  Element content contains only non-text characters",
+            "any": [
+              {
+                "id": "color-contrast",
+                "data": {
+                  "messageKey": "nonBmp"
+                },
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element content contains only non-text characters"
+              }
+            ],
+            "all": []
+          },
+          {
+            "html": "<span style=\"font-size: var(--hjm-type-heading-size); color: var(--hjm-color-primary);\">✦</span>",
+            "summary": "Fix any of the following:\n  Element content contains only non-text characters",
+            "any": [
+              {
+                "id": "color-contrast",
+                "data": {
+                  "messageKey": "nonBmp"
+                },
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element content contains only non-text characters"
+              }
+            ],
+            "all": []
+          },
+          {
+            "html": "<span style=\"font-size: var(--hjm-type-heading-size); color: var(--hjm-color-primary);\">✺</span>",
+            "summary": "Fix any of the following:\n  Element content contains only non-text characters",
+            "any": [
+              {
+                "id": "color-contrast",
+                "data": {
+                  "messageKey": "nonBmp"
+                },
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element content contains only non-text characters"
+              }
+            ],
+            "all": []
+          },
+          {
+            "html": "<span style=\"font-size: var(--hjm-type-heading-size); color: var(--hjm-color-primary);\">◒</span>",
+            "summary": "Fix any of the following:\n  Element content contains only non-text characters",
+            "any": [
+              {
+                "id": "color-contrast",
+                "data": {
+                  "messageKey": "nonBmp"
+                },
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element content contains only non-text characters"
+              }
+            ],
+            "all": []
+          },
+          {
+            "html": "<span style=\"font-size: var(--hjm-type-heading-size); color: var(--hjm-color-primary);\">✦</span>",
+            "summary": "Fix any of the following:\n  Element content contains only non-text characters",
+            "any": [
+              {
+                "id": "color-contrast",
+                "data": {
+                  "messageKey": "nonBmp"
+                },
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element content contains only non-text characters"
+              }
+            ],
+            "all": []
+          }
+        ]
+      }
+    ],
+    "passes": 16
+  },
+  {
+    "id": "patterns-discovery-gallery",
+    "state": "dark",
+    "violations": [],
+    "incomplete": [
+      {
+        "id": "color-contrast",
+        "nodes": [
+          {
+            "html": "<span style=\"font-size: var(--hjm-type-heading-size); color: var(--hjm-color-primary);\">✺</span>",
+            "summary": "Fix any of the following:\n  Element content contains only non-text characters",
+            "any": [
+              {
+                "id": "color-contrast",
+                "data": {
+                  "messageKey": "nonBmp"
+                },
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element content contains only non-text characters"
+              }
+            ],
+            "all": []
+          },
+          {
+            "html": "<span style=\"font-size: var(--hjm-type-heading-size); color: var(--hjm-color-primary);\">◒</span>",
+            "summary": "Fix any of the following:\n  Element content contains only non-text characters",
+            "any": [
+              {
+                "id": "color-contrast",
+                "data": {
+                  "messageKey": "nonBmp"
+                },
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element content contains only non-text characters"
+              }
+            ],
+            "all": []
+          },
+          {
+            "html": "<span style=\"font-size: var(--hjm-type-heading-size); color: var(--hjm-color-primary);\">✦</span>",
+            "summary": "Fix any of the following:\n  Element content contains only non-text characters",
+            "any": [
+              {
+                "id": "color-contrast",
+                "data": {
+                  "messageKey": "nonBmp"
+                },
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element content contains only non-text characters"
+              }
+            ],
+            "all": []
+          },
+          {
+            "html": "<span style=\"font-size: var(--hjm-type-heading-size); color: var(--hjm-color-primary);\">✺</span>",
+            "summary": "Fix any of the following:\n  Element content contains only non-text characters",
+            "any": [
+              {
+                "id": "color-contrast",
+                "data": {
+                  "messageKey": "nonBmp"
+                },
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element content contains only non-text characters"
+              }
+            ],
+            "all": []
+          },
+          {
+            "html": "<span style=\"font-size: var(--hjm-type-heading-size); color: var(--hjm-color-primary);\">◒</span>",
+            "summary": "Fix any of the following:\n  Element content contains only non-text characters",
+            "any": [
+              {
+                "id": "color-contrast",
+                "data": {
+                  "messageKey": "nonBmp"
+                },
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element content contains only non-text characters"
+              }
+            ],
+            "all": []
+          },
+          {
+            "html": "<span style=\"font-size: var(--hjm-type-heading-size); color: var(--hjm-color-primary);\">✦</span>",
+            "summary": "Fix any of the following:\n  Element content contains only non-text characters",
+            "any": [
+              {
+                "id": "color-contrast",
+                "data": {
+                  "messageKey": "nonBmp"
+                },
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element content contains only non-text characters"
+              }
+            ],
+            "all": []
+          }
+        ]
+      }
+    ],
+    "passes": 16
+  },
+  {
+    "id": "patterns-discovery-gallery",
+    "state": "large-text",
+    "violations": [],
+    "incomplete": [
+      {
+        "id": "color-contrast",
+        "nodes": [
+          {
+            "html": "<span style=\"font-size: var(--hjm-type-heading-size); color: var(--hjm-color-primary);\">✺</span>",
+            "summary": "Fix any of the following:\n  Element content contains only non-text characters",
+            "any": [
+              {
+                "id": "color-contrast",
+                "data": {
+                  "messageKey": "nonBmp"
+                },
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element content contains only non-text characters"
+              }
+            ],
+            "all": []
+          },
+          {
+            "html": "<span style=\"font-size: var(--hjm-type-caption-size); font-weight: var(--hjm-font-weight-bold);\">Discover</span>",
+            "summary": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element",
+            "any": [
+              {
+                "id": "color-contrast",
+                "data": {
+                  "contrastRatio": 0,
+                  "fontSize": "16.5pt (22px)",
+                  "fontWeight": "bold",
+                  "messageKey": "elmPartiallyObscured",
+                  "expectedContrastRatio": "3:1"
+                },
+                "relatedNodes": [
+                  {
+                    "html": "<div style=\"flex: 1 1 0%; min-width: 0px; background: var(--hjm-color-bg); border-radius: var(--hjm-radius-xl); padding: var(--hjm-space-sm); display: flex; flex-direction: column; gap: var(--hjm-space-xs); transform: translateY(var(--hjm-space-sm));\">",
+                    "target": [
+                      "article:nth-child(3) > .hjm-stack[data-axis=\"block\"][data-gap=\"sm\"] > div[aria-hidden=\"true\"] > div:nth-child(2)"
+                    ]
+                  }
+                ],
+                "impact": "serious",
+                "message": "Element's background color could not be determined because it's partially obscured by another element"
+              }
+            ],
+            "all": []
+          },
+          {
+            "html": "<span style=\"font-size: var(--hjm-type-heading-size); color: var(--hjm-color-primary);\">◒</span>",
+            "summary": "Fix any of the following:\n  Element content contains only non-text characters",
+            "any": [
+              {
+                "id": "color-contrast",
+                "data": {
+                  "messageKey": "nonBmp"
+                },
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element content contains only non-text characters"
+              }
+            ],
+            "all": []
+          },
+          {
+            "html": "<span style=\"font-size: var(--hjm-type-heading-size); color: var(--hjm-color-primary);\">✦</span>",
+            "summary": "Fix any of the following:\n  Element content contains only non-text characters",
+            "any": [
+              {
+                "id": "color-contrast",
+                "data": {
+                  "messageKey": "nonBmp"
+                },
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element content contains only non-text characters"
+              }
+            ],
+            "all": []
+          },
+          {
+            "html": "<span style=\"font-size: var(--hjm-type-heading-size); color: var(--hjm-color-primary);\">✺</span>",
+            "summary": "Fix any of the following:\n  Element content contains only non-text characters",
+            "any": [
+              {
+                "id": "color-contrast",
+                "data": {
+                  "messageKey": "nonBmp"
+                },
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element content contains only non-text characters"
+              }
+            ],
+            "all": []
+          },
+          {
+            "html": "<span style=\"font-size: var(--hjm-type-caption-size); font-weight: var(--hjm-font-weight-bold);\">Discover</span>",
+            "summary": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element",
+            "any": [
+              {
+                "id": "color-contrast",
+                "data": {
+                  "contrastRatio": 0,
+                  "fontSize": "16.5pt (22px)",
+                  "fontWeight": "bold",
+                  "messageKey": "elmPartiallyObscured",
+                  "expectedContrastRatio": "3:1"
+                },
+                "relatedNodes": [
+                  {
+                    "html": "<div style=\"flex: 1 1 0%; min-width: 0px; background: var(--hjm-color-bg); border-radius: var(--hjm-radius-xl); padding: var(--hjm-space-sm); display: flex; flex-direction: column; gap: var(--hjm-space-xs); transform: translateY(var(--hjm-space-sm));\">",
+                    "target": [
+                      "article:nth-child(6) > .hjm-stack[data-axis=\"block\"][data-gap=\"sm\"] > div[aria-hidden=\"true\"] > div:nth-child(2)"
+                    ]
+                  }
+                ],
+                "impact": "serious",
+                "message": "Element's background color could not be determined because it's partially obscured by another element"
+              }
+            ],
+            "all": []
+          },
+          {
+            "html": "<span style=\"font-size: var(--hjm-type-heading-size); color: var(--hjm-color-primary);\">◒</span>",
+            "summary": "Fix any of the following:\n  Element content contains only non-text characters",
+            "any": [
+              {
+                "id": "color-contrast",
+                "data": {
+                  "messageKey": "nonBmp"
+                },
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element content contains only non-text characters"
+              }
+            ],
+            "all": []
+          },
+          {
+            "html": "<span style=\"font-size: var(--hjm-type-heading-size); color: var(--hjm-color-primary);\">✦</span>",
+            "summary": "Fix any of the following:\n  Element content contains only non-text characters",
+            "any": [
+              {
+                "id": "color-contrast",
+                "data": {
+                  "messageKey": "nonBmp"
+                },
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element content contains only non-text characters"
+              }
+            ],
+            "all": []
+          }
+        ]
+      }
+    ],
+    "passes": 16
+  }
+]

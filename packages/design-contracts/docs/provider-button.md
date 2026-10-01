@@ -1,6 +1,6 @@
 # AuthProviderButton contract
 
-**문제.** "Google로 계속하기", "카카오로 계속하기" 같은 소셜 로그인 버튼. BurnTok이
+**문제.** 제공자 브랜드 규정을 따르는 소셜 로그인 버튼. BurnTok이
 `.hjm-button.bt-provider-google` 네 줄로 HJM 버튼을 덮어 쓰던 자리다.
 
 **왜 Button의 tone이 아닌가.** HJM의 tone은 **의미**다 — primary/secondary/danger는
@@ -26,8 +26,11 @@
 **포커스 링은 바깥에 그린다.** `#FEE500`부터 `#000000`까지 어떤 배경 위에서도 보여야
 하므로 `focusOutlineOffset`으로 fill 밖에 둔다.
 
-**busy는 라벨을 지우지 않는다.** 스피너만 옆에 붙고 폭도 유지한다 — 버튼이 줄어들면
-그 아래 제공자 버튼들이 밀린다.
+**로그인 화면의 진행 상태는 카드가 소유한다.** 2026-10-01 사용자 요청으로 로그인 조합은
+`AuthScreenLayout`의 pendingLabel을 사용한다. 모든 제공자 버튼을 숨기고 기존 카드 크기에서
+중앙 로딩 하나만 보여 준다([로그인 화면 계약](auth-screen.md)). 버튼 label은 제품이 제공자
+이름만 전달한다. 이전 버전 소비와 단독 버튼의 호환성을 위해 descriptor.busy는 유지하며,
+카드 진행 상태와 동시에 사용하지 않는다.
 
 **값의 출처.** 각 제공자의 공개 브랜드 가이드라인(2026-09 확인). 가이드라인이 바뀌면
 `authProviderPalettes` 한 곳만 고친다.

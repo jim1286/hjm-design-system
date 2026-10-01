@@ -75,8 +75,8 @@ intrinsic ratio 예약, 장식/정보 이미지의 alt 의미, load/error 상태
 `nativeResizeModes`로 fit을 번역하며, 장식 기본값·정보 이미지의 fallback 이름 유지·built-in
 fallback·`src` 변경 후 재시도를 component test로 검증한다. `sourceAdapter`와 `renderImage`
 경계로 bare RN의 `ImageSourcePropType` 및 `expo-image` 같은 optimized host를 연결할 수 있다.
-이전 RN `source` API는 마이그레이션 호환용 deprecated 경계일 뿐 intrinsic-size 계약의
-증거로 세지 않는다.
+이전 RN `source` 호환 경로는 다음 major 소스에서 제거했다. 이관은
+[Native 호환 별칭 제거](./migration-native-legacy-removal.md)를 따른다.
 
 이전 후보였던 야잘알 팀 엠블럼은 여전히 Avatar 성격이므로 Image의 제품 증거로 세지 않고,
 BurnTok의 data URI 아이콘도 network failure 증거로 세지 않는다. 실제 network asset의

@@ -1,0 +1,183 @@
+{
+  "entries": 323,
+  "koreanLabels": 323,
+  "removedPreviewExports": [
+    {
+      "id": "patterns-heading--heading-preview",
+      "name": "Heading Preview"
+    },
+    {
+      "id": "patterns-heading--progress-ring-preview",
+      "name": "Progress Ring Preview"
+    },
+    {
+      "id": "patterns-heading--list-row-loading-preview",
+      "name": "List Row Loading Preview"
+    },
+    {
+      "id": "patterns-textformat--text-format-preview",
+      "name": "Text Format Preview"
+    },
+    {
+      "id": "patterns-textformat--clipboard-preview",
+      "name": "Clipboard Preview"
+    },
+    {
+      "id": "patterns-textformat--avatar-group-preview",
+      "name": "Avatar Group Preview"
+    },
+    {
+      "id": "patterns-splitter--splitter-preview",
+      "name": "Splitter Preview"
+    },
+    {
+      "id": "patterns-splitter--vertical-splitter-preview",
+      "name": "Vertical Splitter Preview"
+    },
+    {
+      "id": "patterns-agreement--agreement-preview",
+      "name": "Agreement Preview"
+    },
+    {
+      "id": "patterns-agreement--top-preview",
+      "name": "Top Preview"
+    },
+    {
+      "id": "patterns-agreement--auth-provider-button-preview",
+      "name": "Auth Provider Button Preview"
+    },
+    {
+      "id": "patterns-agreement--auth-screen-layout-preview",
+      "name": "Auth Screen Layout Preview"
+    },
+    {
+      "id": "patterns-calendar--calendar-preview",
+      "name": "Calendar Preview"
+    },
+    {
+      "id": "patterns-daterange--date-range-preview",
+      "name": "Date Range Preview"
+    },
+    {
+      "id": "patterns-daterange--imperative-overlay-preview",
+      "name": "Imperative Overlay Preview"
+    },
+    {
+      "id": "patterns-daterange--formatters-preview",
+      "name": "Formatters Preview"
+    },
+    {
+      "id": "patterns-rating--rating-preview",
+      "name": "Rating Preview"
+    },
+    {
+      "id": "patterns-togglegroup--toggle-group-preview",
+      "name": "Toggle Group Preview"
+    },
+    {
+      "id": "patterns-togglegroup--tags-input-preview",
+      "name": "Tags Input Preview"
+    },
+    {
+      "id": "patterns-transferlist--transfer-list-preview",
+      "name": "Transfer List Preview"
+    },
+    {
+      "id": "patterns-transferlist--mentions-preview",
+      "name": "Mentions Preview"
+    },
+    {
+      "id": "patterns-anchor--anchor-preview",
+      "name": "Anchor Preview"
+    },
+    {
+      "id": "patterns-commandpalette--command-palette-preview",
+      "name": "Command Palette Preview"
+    },
+    {
+      "id": "patterns-commandpalette--data-table-preview",
+      "name": "Data Table Preview"
+    },
+    {
+      "id": "patterns-sidebar--sidebar-preview",
+      "name": "Sidebar Preview"
+    },
+    {
+      "id": "patterns-sidebar--bottom-info-preview",
+      "name": "Bottom Info Preview"
+    },
+    {
+      "id": "patterns-asset--asset-preview",
+      "name": "Asset Preview"
+    },
+    {
+      "id": "patterns-tree--tree-preview",
+      "name": "Tree Preview"
+    },
+    {
+      "id": "patterns-tree--tree-select-preview",
+      "name": "Tree Select Preview"
+    },
+    {
+      "id": "patterns-tree--cascader-preview",
+      "name": "Cascader Preview"
+    },
+    {
+      "id": "patterns-popover--popover-preview",
+      "name": "Popover Preview"
+    },
+    {
+      "id": "patterns-popover--confirm-popover-preview",
+      "name": "Confirm Popover Preview"
+    },
+    {
+      "id": "patterns-sidepanel--side-panel-preview",
+      "name": "Side Panel Preview"
+    },
+    {
+      "id": "patterns-sidepanel--non-modal-side-panel-preview",
+      "name": "Non Modal Side Panel Preview"
+    },
+    {
+      "id": "patterns-tour--tour-preview",
+      "name": "Tour Preview"
+    },
+    {
+      "id": "patterns-floating-action-button--floating-notes-preview",
+      "name": "Floating Notes Preview"
+    },
+    {
+      "id": "patterns-profile-studio--profile-studio",
+      "name": "Profile Studio"
+    },
+    {
+      "id": "patterns-time-selection--time-selection-preview",
+      "name": "Time Selection Preview"
+    },
+    {
+      "id": "patterns-data-layouts--data-layout-preview",
+      "name": "Data Layout Preview"
+    },
+    {
+      "id": "patterns-disclosure--collapsible-preview",
+      "name": "Collapsible Preview"
+    },
+    {
+      "id": "patterns-disclosure--context-menu-preview",
+      "name": "Context Menu Preview"
+    },
+    {
+      "id": "patterns-disclosure--menubar-preview",
+      "name": "Menubar Preview"
+    },
+    {
+      "id": "patterns-web-additions--web-additions-preview",
+      "name": "Web Additions Preview"
+    },
+    {
+      "id": "patterns-webnavigation--web-navigation-preview",
+      "name": "Web Navigation Preview"
+    }
+  ],
+  "addedIds": []
+}

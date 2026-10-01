@@ -88,10 +88,10 @@ export function FormattersPreview() {
   );
 }
 
-const meta = { title: "Patterns/DateRange", component: DateRangePreview } satisfies Meta<typeof DateRangePreview>;
+const meta = { includeStories: ["PickARange","ImperativeOverlays","Formatters","LargeText"], id: "patterns-daterange", title: "배포/컴포넌트/입력/기간 선택", component: DateRangePreview } satisfies Meta<typeof DateRangePreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
-export const PickARange: Story = {};
-export const ImperativeOverlays: Story = { render: () => <ImperativeOverlayPreview /> };
-export const Formatters: Story = { render: () => <FormattersPreview /> };
-export const LargeText: Story = { globals: { textScale: "2" } };
+export const PickARange: Story = { name: "기간 고르기",};
+export const ImperativeOverlays: Story = { name: "코드로 여는 팝업", render: () => <ImperativeOverlayPreview /> };
+export const Formatters: Story = { name: "서식 변환", render: () => <FormattersPreview /> };
+export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };

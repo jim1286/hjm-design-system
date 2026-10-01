@@ -1,0 +1,24 @@
+✔ placeholder-only fields retain an accessible name on native platforms (0.641708ms)
+✔ native input layout includes both border edges in the minimum touch frame (0.0975ms)
+✔ native field errors are announced when validation updates (0.072167ms)
+✔ product input names are translated without reimplementing the renderer (0.1365ms)
+✔ empty-state string illustrations are wrapped in native Text (0.15775ms)
+✔ the native idea-room composer gives flex width to the field container (0.728209ms)
+▶ BurnTok native HJM renderer adoption
+  ✔ keeps every generic product facade delegated across granular renderer subpaths (7.241417ms)
+  ✔ removes the former raw fallbacks and supplies the complete provider value (0.553875ms)
+  ✔ uses executable Storybook fixtures instead of catalog-ID proxy copy (0.502ms)
+✔ BurnTok native HJM renderer adoption (8.927166ms)
+✔ native tabs use an actionable iOS accessibility role (2.137584ms)
+✔ every scrollable root tab registers its list for tab reselection (1.249ms)
+✔ the swipe home resets to the first card on tab reselection instead of scrolling (0.366875ms)
+✔ guest tab redirects do not race a focused shared route or auth modal (0.30425ms)
+✔ the native EULA gate follows session replacement and matches the web policy (1.383333ms)
+ℹ tests 14
+ℹ suites 1
+ℹ pass 14
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 146.92625

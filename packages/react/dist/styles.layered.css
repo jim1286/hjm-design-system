@@ -447,6 +447,10 @@
 .hjm-otp-field__slot[data-state="focused"] { border-color: var(--hjm-color-content-brand); box-shadow: 0 0 0 2px var(--hjm-color-content-brand); }
 .hjm-otp-field__slot[data-state="invalid"] { border-color: var(--hjm-color-danger); }
 
+/* Underline slots keep the same single editable input and focus contract. */
+.hjm-otp-field__control[data-presentation="underline"] .hjm-otp-field__slot { border-width: 0 0 2px; border-radius: 0; }
+.hjm-otp-field__control[data-presentation="underline"] .hjm-otp-field__slot[data-state="focused"] { box-shadow: 0 2px 0 var(--hjm-color-content-brand); }
+
 .hjm-bottom-navigation {
   position: fixed;
   z-index: 700;
@@ -1409,7 +1413,20 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   inline-size: 100%;
   text-align: center;
 }
-.hjm-auth-screen__main { inline-size: 100%; }
+.hjm-auth-screen__main { inline-size: 100%; position: relative; }
+.hjm-auth-screen__main[data-card] {
+  background: var(--hjm-color-bg);
+  border-radius: var(--hjm-radius-lg);
+  padding: var(--hjm-space-md);
+  box-sizing: border-box;
+}
+.hjm-auth-screen__pending {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .hjm-auth-screen__footer {
   display: flex;
   flex-direction: column;
@@ -2630,5 +2647,71 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-watermark__overlay { position: absolute; inset: 0; z-index: 1; pointer-events: none; user-select: none; overflow: hidden; color: var(--hjm-color-text-sub); font: inherit; }
 .hjm-affix { color: var(--hjm-color-text); background: var(--hjm-color-bg); overflow-wrap: anywhere; }
 .hjm-affix__marker { display: block; block-size: 0; pointer-events: none; }
+
+/* Sidebar presentation decorates fixed link boxes; no pointer/focus target is transformed. */
+.hjm-sidebar[data-appearance="proximity"][data-animate] .hjm-sidebar__icon {
+  transform: scale(calc(1 + var(--hjm-sidebar-proximity, 0) * .18));
+  transition: transform var(--hjm-motion-fast);
+}
+.hjm-sidebar[data-appearance="hook"] .hjm-sidebar__item[aria-current="page"] {
+  border-inline-start: 3px solid var(--hjm-color-content-brand);
+  border-start-start-radius: var(--hjm-radius-lg);
+  border-end-start-radius: var(--hjm-radius-lg);
+}
+@keyframes hjm-sidebar-bounce {
+  0%, 100% { transform: translateY(0); }
+  45% { transform: translateY(calc(var(--hjm-space-xxs) * -1)); }
+  75% { transform: translateY(calc(var(--hjm-space-xxs) * .5)); }
+}
+.hjm-sidebar[data-appearance="bounce"][data-animate] .hjm-sidebar__item[data-bounce] .hjm-sidebar__icon {
+  animation: hjm-sidebar-bounce var(--hjm-motion-normal) ease-out;
+}
+
+/* Measured elastic indicator stays beneath labels; no filter touches text or hit targets. */
+.hjm-tabs[data-appearance="gooey"] .hjm-tabs__list { position: relative; }
+.hjm-tabs[data-appearance="gooey"] .hjm-tabs__tab[data-state="selected"]::after { display: none; }
+.hjm-tabs__gooey { position: absolute; bottom: 0; height: 6px; border-radius: var(--hjm-radius-full); background: var(--hjm-color-content-brand); pointer-events: none; }
+
+/* Capsule destinations retain route/link semantics. At larger text sizes we show
+   every label vertically instead of shrinking type to mimic the reference. */
+.hjm-bottom-navigation[data-presentation="capsule"] .hjm-bottom-navigation__surface {
+  display: flex; align-items: center; gap: var(--hjm-space-xs); background: transparent;
+}
+.hjm-bottom-navigation[data-presentation="capsule"] .hjm-bottom-navigation__list {
+  display: flex; flex: 1; min-inline-size: 0; padding: var(--hjm-space-xxs);
+  background: var(--hjm-color-surface); border: 1px solid var(--hjm-color-border);
+  border-radius: var(--hjm-radius-full); box-shadow: 0 8px 24px rgb(0 0 0 / 12%);
+}
+.hjm-bottom-navigation[data-presentation="capsule"] li { flex: 1; min-inline-size: 44px; }
+.hjm-bottom-navigation[data-presentation="capsule"][data-expanded-labels="false"] li[data-selected="true"] { flex: 2; }
+.hjm-bottom-navigation[data-presentation="capsule"] .hjm-bottom-navigation__item {
+  min-inline-size: 44px; min-block-size: 52px; justify-content: center; border-radius: var(--hjm-radius-full);
+  transition: background-color 160ms ease, color 160ms ease;
+}
+.hjm-bottom-navigation[data-presentation="capsule"][data-expanded-labels="false"] .hjm-bottom-navigation__item { flex-direction: row; }
+.hjm-bottom-navigation[data-presentation="capsule"][data-expanded-labels="false"] .hjm-bottom-navigation__item:not([data-state="selected"]) .hjm-bottom-navigation__label { display: none; }
+.hjm-bottom-navigation[data-presentation="capsule"] .hjm-bottom-navigation__item[data-state="selected"] { background: var(--hjm-color-surface-accent); }
+.hjm-bottom-navigation[data-presentation="capsule"] .hjm-bottom-navigation__primary-action { position: static; translate: none; flex-shrink: 0; }
+@media (prefers-reduced-motion: reduce) { .hjm-bottom-navigation[data-presentation="capsule"] .hjm-bottom-navigation__item { transition: none; } }
+
+/* An opaque baseline remains readable when backdrop filtering is unsupported.
+   Menus render through their existing portals rather than clipping in this shell. */
+.hjm-navigation-bar {
+  display: flex; flex-wrap: wrap; align-items: center; gap: var(--hjm-space-md);
+  padding: var(--hjm-space-sm); border: 1px solid var(--hjm-color-border);
+  border-radius: var(--hjm-radius-xl); background: var(--hjm-color-surface);
+  color: var(--hjm-color-text); box-shadow: 0 8px 24px rgb(0 0 0 / 12%);
+}
+@supports (backdrop-filter: blur(20px)) {
+  .hjm-navigation-bar { background: color-mix(in srgb, var(--hjm-color-surface) 92%, transparent); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+}
+.hjm-navigation-bar__brand { flex-shrink: 0; padding-inline: var(--hjm-space-xs); }
+.hjm-navigation-bar__destinations, .hjm-navigation-bar__actions { display: flex; align-items: center; flex-wrap: wrap; gap: var(--hjm-space-xs); min-inline-size: 0; }
+.hjm-navigation-bar__destinations { flex: 1; }
+.hjm-navigation-bar__actions > * { max-inline-size: 100%; }
+@media (max-width: 600px) { .hjm-navigation-bar__actions { flex-basis: 100%; } }
+@media (prefers-reduced-transparency: reduce), (forced-colors: active) { .hjm-navigation-bar { background: var(--hjm-color-surface); backdrop-filter: none; } }
+
+[data-motion="reduced"] .hjm-bottom-navigation[data-presentation="capsule"] .hjm-bottom-navigation__item { transition: none; }
 
 }

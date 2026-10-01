@@ -1,14 +1,32 @@
-import { forwardRef, useCallback, useEffect, useRef, useState, type ReactNode } from "react";
-import { Animated, Easing, View, useWindowDimensions, type NativeScrollEvent, type NativeSyntheticEvent } from "react-native";
+import type { ButtonProps } from "./actions.js";
 import {
-  floatingActionButtonRecipe as recipe, resolveFloatingActionButtonDescriptor,
-  resolveFloatingActionButtonLayoutMode, resolveFloatingActionButtonContentClearance,
-  type FloatingActionButtonDescriptor, type FloatingActionButtonLayoutMode,
+  floatingActionButtonRecipe as recipe,
+  resolveFloatingActionButtonContentClearance,
+  resolveFloatingActionButtonDescriptor,
+  resolveFloatingActionButtonLayoutMode,
+  type FloatingActionButtonDescriptor,
+  type FloatingActionButtonLayoutMode,
 } from "@hjmds/design-contracts/components/floating-action-button";
-import { glyph, easing } from "@hjmds/design-contracts/foundations";
-import { Button, type ButtonProps } from "./actions.js";
-import { useHjmNativeTheme } from "./provider.js";
+import { easing, glyph } from "@hjmds/design-contracts/foundations";
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
+import {
+  Animated,
+  Easing,
+  View,
+  useWindowDimensions,
+  type NativeScrollEvent,
+  type NativeSyntheticEvent,
+} from "react-native";
+import { RecipeButton } from "./internal/recipe-button.js";
 import { Text } from "./primitives.js";
+import { useHjmNativeTheme } from "./provider.js";
 
 export { resolveFloatingActionButtonContentClearance };
 export type FloatingActionButtonProps = Pick<ButtonProps, "onPress" | "onFocus" | "onBlur" | "testID"> & Readonly<{
@@ -35,7 +53,7 @@ export const FloatingActionButton = forwardRef<View, FloatingActionButtonProps>(
       easing: Easing.bezier(...easing[recipe.transition.easing]), useNativeDriver: true });
     animation.start(); return () => animation.stop();
   }, [collapsed, environment.reducedMotion, labelOpacity]);
-  return <Button {...props} ref={ref} size="large" tone="primary" shape="pill" growWithContent
+  return <RecipeButton {...props} ref={ref} size="large" tone="primary" shape="pill" growWithContent
     accessibilityLabel={resolved.resolvedAccessibilityLabel}
     onLayout={({ nativeEvent }) => onContentClearanceChange(Math.max(minimumClearance,
       nativeEvent.layout.height + recipe.margin * 2 + safeAreaBottomInset))}
@@ -55,7 +73,7 @@ export const FloatingActionButton = forwardRef<View, FloatingActionButtonProps>(
       </View>
       {collapsed ? null : <Animated.View style={{ opacity: labelOpacity, flexShrink: 1 }}><Text variant="bodyLarge" emphasis="medium" style={{ color: colors.onPrimary }}>{resolved.label}</Text></Animated.View>}
     </View>
-  </Button>;
+  </RecipeButton>;
 });
 
 export function useFloatingActionButtonScroll() {

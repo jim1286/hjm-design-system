@@ -1,0 +1,6022 @@
+{
+  "root": "/Users/jimin/Developer/app-portfolio/packages/hjm-design-system",
+  "head": "8543b6fb886321cff9a5d50837ffcb99db6b859e",
+  "catalog": [
+    {
+      "name": "Text",
+      "category": "foundation",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "textRecipe",
+      "line": 126
+    },
+    {
+      "name": "TextFormat",
+      "category": "foundation",
+      "platform": "web",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "unsupported"
+      ],
+      "aliases": [
+        "Kbd",
+        "Code",
+        "Blockquote"
+      ],
+      "recipe": "textFormatRecipe",
+      "behavior": "textFormat",
+      "line": 128
+    },
+    {
+      "name": "Heading",
+      "category": "foundation",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "headingRecipe",
+      "behavior": "heading",
+      "line": 129
+    },
+    {
+      "name": "Icon",
+      "category": "foundation",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "iconRecipe",
+      "line": 130
+    },
+    {
+      "name": "Surface",
+      "category": "layout",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "surfaceRecipe",
+      "line": 131
+    },
+    {
+      "name": "Divider",
+      "category": "layout",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "dividerRecipe",
+      "line": 133
+    },
+    {
+      "name": "Section",
+      "category": "layout",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "sectionRecipe",
+      "line": 134
+    },
+    {
+      "name": "Stack",
+      "category": "layout",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "stackRecipe",
+      "aliases": [
+        "Flex",
+        "Space",
+        "Inline"
+      ],
+      "line": 135
+    },
+    {
+      "name": "Container",
+      "category": "layout",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "containerRecipe",
+      "line": 136
+    },
+    {
+      "name": "AspectRatio",
+      "category": "layout",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "aspectRatioRecipe",
+      "line": 138
+    },
+    {
+      "name": "Grid",
+      "category": "layout",
+      "platform": "adaptive",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "gridRecipe",
+      "line": 140
+    },
+    {
+      "name": "Layout",
+      "category": "layout",
+      "platform": "adaptive",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "aliases": [
+        "AppShell"
+      ],
+      "recipe": "layoutRecipe",
+      "behavior": "layout",
+      "line": 142
+    },
+    {
+      "name": "Top",
+      "category": "layout",
+      "platform": "adaptive",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "topRecipe",
+      "behavior": "top",
+      "line": 143
+    },
+    {
+      "name": "Masonry",
+      "category": "layout",
+      "platform": "adaptive",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "masonryRecipe",
+      "line": 144
+    },
+    {
+      "name": "Splitter",
+      "category": "layout",
+      "platform": "web",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "unsupported"
+      ],
+      "aliases": [
+        "SplitPane"
+      ],
+      "recipe": "splitterRecipe",
+      "behavior": "splitter",
+      "line": 146
+    },
+    {
+      "name": "Button",
+      "category": "action",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "buttonRecipe",
+      "line": 147
+    },
+    {
+      "name": "IconButton",
+      "category": "action",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "iconButtonRecipe",
+      "line": 148
+    },
+    {
+      "name": "Link",
+      "category": "action",
+      "platform": "adaptive",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "linkRecipe",
+      "behavior": "link",
+      "line": 150
+    },
+    {
+      "name": "BottomCTA",
+      "category": "action",
+      "platform": "adaptive",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "bottomCtaRecipe",
+      "line": 151
+    },
+    {
+      "name": "FloatingActionButton",
+      "category": "action",
+      "platform": "adaptive",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "floatingActionButtonRecipe",
+      "behavior": "floatingActionButton",
+      "aliases": [
+        "FloatButton",
+        "FAB"
+      ],
+      "line": 152
+    },
+    {
+      "name": "AuthScreenLayout",
+      "category": "layout",
+      "platform": "adaptive",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "aliases": [
+        "SignInLayout"
+      ],
+      "recipe": "authScreenRecipe",
+      "behavior": "authScreen",
+      "line": 154
+    },
+    {
+      "name": "AuthProviderButton",
+      "category": "action",
+      "platform": "adaptive",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "aliases": [
+        "SocialLoginButton"
+      ],
+      "recipe": "authProviderButtonRecipe",
+      "behavior": "authProviderButton",
+      "line": 156
+    },
+    {
+      "name": "Field",
+      "category": "input",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "fieldRecipe",
+      "behavior": "field",
+      "line": 157
+    },
+    {
+      "name": "SearchField",
+      "category": "input",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "searchFieldRecipe",
+      "behavior": "searchField",
+      "line": 159
+    },
+    {
+      "name": "TextArea",
+      "category": "input",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "fieldRecipe",
+      "line": 160
+    },
+    {
+      "name": "PasswordField",
+      "category": "input",
+      "platform": "adaptive",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "aliases": [
+        "Input.Password"
+      ],
+      "recipe": "passwordFieldRecipe",
+      "behavior": "passwordField",
+      "line": 162
+    },
+    {
+      "name": "OtpField",
+      "category": "input",
+      "platform": "adaptive",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "aliases": [
+        "Input.OTP"
+      ],
+      "recipe": "otpFieldRecipe",
+      "behavior": "otpField",
+      "line": 164
+    },
+    {
+      "name": "Checkbox",
+      "category": "input",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "selectionControlRecipe",
+      "behavior": "checkbox",
+      "line": 166
+    },
+    {
+      "name": "Radio",
+      "category": "input",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "selectionControlRecipe",
+      "line": 168
+    },
+    {
+      "name": "CheckboxGroup",
+      "category": "input",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "selectionGroupRecipe",
+      "behavior": "checkboxGroup",
+      "line": 170
+    },
+    {
+      "name": "RadioGroup",
+      "category": "input",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "selectionGroupRecipe",
+      "behavior": "radioGroup",
+      "line": 172
+    },
+    {
+      "name": "Switch",
+      "category": "input",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "switchRecipe",
+      "behavior": "switch",
+      "line": 174
+    },
+    {
+      "name": "Chip",
+      "category": "input",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "chipRecipe",
+      "behavior": "chip",
+      "line": 176
+    },
+    {
+      "name": "SegmentedControl",
+      "category": "input",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "segmentedControlRecipe",
+      "behavior": "segmentedControl",
+      "line": 178
+    },
+    {
+      "name": "ToggleGroup",
+      "category": "input",
+      "platform": "adaptive",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "toggleGroupRecipe",
+      "behavior": "toggleGroup",
+      "line": 180
+    },
+    {
+      "name": "TagsInput",
+      "category": "input",
+      "platform": "adaptive",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "aliases": [
+        "TagField",
+        "ChipsInput"
+      ],
+      "recipe": "tagsInputRecipe",
+      "behavior": "tagsInput",
+      "line": 182
+    },
+    {
+      "name": "Slider",
+      "category": "input",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "sliderRecipe",
+      "behavior": "slider",
+      "line": 184
+    },
+    {
+      "name": "NumberField",
+      "category": "input",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "numberFieldRecipe",
+      "behavior": "numberField",
+      "line": 186
+    },
+    {
+      "name": "Select",
+      "category": "input",
+      "platform": "adaptive",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "selectRecipe",
+      "behavior": "select",
+      "line": 188
+    },
+    {
+      "name": "Combobox",
+      "category": "input",
+      "platform": "adaptive",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "comboboxRecipe",
+      "behavior": "combobox",
+      "line": 190
+    },
+    {
+      "name": "DatePicker",
+      "category": "input",
+      "platform": "adaptive",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "datePickerRecipe",
+      "behavior": "datePicker",
+      "line": 192
+    },
+    {
+      "name": "DateRangePicker",
+      "category": "input",
+      "platform": "adaptive",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "aliases": [
+        "DateRange"
+      ],
+      "recipe": "calendarRecipe",
+      "behavior": "dateRange",
+      "line": 193
+    },
+    {
+      "name": "ColorPicker",
+      "category": "input",
+      "platform": "web",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "unsupported"
+      ],
+      "recipe": "colorPickerRecipe",
+      "line": 194
+    },
+    {
+      "name": "FilePicker",
+      "category": "input",
+      "platform": "adaptive",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "filePickerRecipe",
+      "behavior": "filePicker",
+      "aliases": [
+        "Upload"
+      ],
+      "line": 195
+    },
+    {
+      "name": "Form",
+      "category": "input",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "formRecipe",
+      "behavior": "form",
+      "line": 197
+    },
+    {
+      "name": "Agreement",
+      "category": "input",
+      "platform": "adaptive",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "agreementRecipe",
+      "behavior": "agreement",
+      "line": 198
+    },
+    {
+      "name": "Mentions",
+      "category": "input",
+      "platform": "adaptive",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "comboboxRecipe",
+      "behavior": "combobox",
+      "line": 200
+    },
+    {
+      "name": "TransferList",
+      "category": "input",
+      "platform": "adaptive",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "aliases": [
+        "Transfer"
+      ],
+      "recipe": "transferListRecipe",
+      "behavior": "transferList",
+      "line": 201
+    },
+    {
+      "name": "UploadItem",
+      "category": "data-display",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "uploadItemRecipe",
+      "behavior": "uploadItem",
+      "line": 203
+    },
+    {
+      "name": "Tabs",
+      "category": "navigation",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "tabsRecipe",
+      "behavior": "tabs",
+      "line": 204
+    },
+    {
+      "name": "TopBar",
+      "category": "navigation",
+      "platform": "adaptive",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "topBarRecipe",
+      "line": 207
+    },
+    {
+      "name": "Sidebar",
+      "category": "navigation",
+      "platform": "web",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "unsupported"
+      ],
+      "aliases": [
+        "NavigationRail",
+        "SideNav"
+      ],
+      "recipe": "sidebarRecipe",
+      "behavior": "sidebar",
+      "line": 209
+    },
+    {
+      "name": "BottomNavigation",
+      "category": "navigation",
+      "platform": "adaptive",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "bottomNavigationRecipe",
+      "behavior": "bottomNavigation",
+      "line": 210
+    },
+    {
+      "name": "Breadcrumb",
+      "category": "navigation",
+      "platform": "web",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "unsupported"
+      ],
+      "recipe": "breadcrumbRecipe",
+      "behavior": "breadcrumb",
+      "line": 212
+    },
+    {
+      "name": "Pagination",
+      "category": "navigation",
+      "platform": "web",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "unsupported"
+      ],
+      "recipe": "paginationRecipe",
+      "behavior": "pagination",
+      "line": 214
+    },
+    {
+      "name": "LoadMore",
+      "category": "navigation",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "loadMoreRecipe",
+      "behavior": "loadMore",
+      "line": 215
+    },
+    {
+      "name": "Steps",
+      "category": "navigation",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "stepsRecipe",
+      "line": 217
+    },
+    {
+      "name": "Menubar",
+      "category": "navigation",
+      "platform": "web",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "unsupported"
+      ],
+      "recipe": "menubarRecipe",
+      "behavior": "menubar",
+      "line": 219
+    },
+    {
+      "name": "ContextMenu",
+      "category": "navigation",
+      "platform": "web",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "unsupported"
+      ],
+      "recipe": "menuRecipe",
+      "behavior": "contextMenu",
+      "line": 220
+    },
+    {
+      "name": "Menu",
+      "category": "navigation",
+      "platform": "adaptive",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "menuRecipe",
+      "behavior": "menu",
+      "aliases": [
+        "Dropdown"
+      ],
+      "line": 221
+    },
+    {
+      "name": "Anchor",
+      "category": "navigation",
+      "platform": "web",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "unsupported"
+      ],
+      "recipe": "anchorRecipe",
+      "behavior": "anchor",
+      "line": 222
+    },
+    {
+      "name": "Avatar",
+      "category": "data-display",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "avatarRecipe",
+      "line": 224
+    },
+    {
+      "name": "Asset",
+      "category": "data-display",
+      "platform": "adaptive",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "aliases": [
+        "Media",
+        "Artwork"
+      ],
+      "recipe": "assetRecipe",
+      "behavior": "asset",
+      "line": 225
+    },
+    {
+      "name": "Badge",
+      "category": "data-display",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "badgeRecipe",
+      "line": 226
+    },
+    {
+      "name": "CounterBadge",
+      "category": "data-display",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "counterBadgeRecipe",
+      "line": 228
+    },
+    {
+      "name": "Card",
+      "category": "data-display",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "cardRecipe",
+      "line": 229
+    },
+    {
+      "name": "List",
+      "category": "data-display",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "listRecipe",
+      "line": 231
+    },
+    {
+      "name": "ListRow",
+      "category": "data-display",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "listRowRecipe",
+      "line": 232
+    },
+    {
+      "name": "VirtualList",
+      "category": "data-display",
+      "platform": "adaptive",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "aliases": [
+        "Listy"
+      ],
+      "recipe": "virtualListRecipe",
+      "line": 233
+    },
+    {
+      "name": "Collapsible",
+      "category": "data-display",
+      "platform": "adaptive",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "aliases": [
+        "Disclosure"
+      ],
+      "recipe": "collapsibleRecipe",
+      "behavior": "collapsible",
+      "line": 234
+    },
+    {
+      "name": "Accordion",
+      "category": "data-display",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "accordionRecipe",
+      "behavior": "disclosureGroup",
+      "line": 235
+    },
+    {
+      "name": "Statistic",
+      "category": "data-display",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "statisticRecipe",
+      "line": 236
+    },
+    {
+      "name": "Timeline",
+      "category": "data-display",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "timelineRecipe",
+      "line": 238
+    },
+    {
+      "name": "DataTable",
+      "category": "data-display",
+      "platform": "web",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "unsupported"
+      ],
+      "recipe": "dataTableRecipe",
+      "behavior": "dataTable",
+      "line": 239
+    },
+    {
+      "name": "Tree",
+      "category": "data-display",
+      "platform": "web",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "unsupported"
+      ],
+      "recipe": "treeRecipe",
+      "behavior": "tree",
+      "line": 240
+    },
+    {
+      "name": "Calendar",
+      "category": "data-display",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "calendarRecipe",
+      "behavior": "calendar",
+      "line": 241
+    },
+    {
+      "name": "Carousel",
+      "category": "data-display",
+      "platform": "adaptive",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "carouselRecipe",
+      "behavior": "carousel",
+      "line": 242
+    },
+    {
+      "name": "DescriptionList",
+      "category": "data-display",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "descriptionListRecipe",
+      "aliases": [
+        "Descriptions"
+      ],
+      "line": 243
+    },
+    {
+      "name": "Image",
+      "category": "data-display",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "imageRecipe",
+      "line": 245
+    },
+    {
+      "name": "QRCode",
+      "category": "data-display",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "qrCodeRecipe",
+      "line": 246
+    },
+    {
+      "name": "Tag",
+      "category": "data-display",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "tagRecipe",
+      "line": 247
+    },
+    {
+      "name": "Tour",
+      "category": "overlay",
+      "platform": "web",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "unsupported"
+      ],
+      "recipe": "tourRecipe",
+      "behavior": "tour",
+      "aliases": [
+        "CoachMark"
+      ],
+      "line": 248
+    },
+    {
+      "name": "EmptyState",
+      "category": "feedback",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "emptyStateRecipe",
+      "line": 249
+    },
+    {
+      "name": "Notice",
+      "category": "feedback",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "noticeRecipe",
+      "line": 250
+    },
+    {
+      "name": "Progress",
+      "category": "feedback",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "progressRecipe",
+      "line": 251
+    },
+    {
+      "name": "ThinkingOrb",
+      "category": "feedback",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "thinkingOrbRecipe",
+      "line": 253
+    },
+    {
+      "name": "Spinner",
+      "category": "feedback",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "spinnerRecipe",
+      "line": 254
+    },
+    {
+      "name": "Skeleton",
+      "category": "feedback",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "skeletonRecipe",
+      "line": 255
+    },
+    {
+      "name": "Result",
+      "category": "feedback",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "resultRecipe",
+      "line": 257
+    },
+    {
+      "name": "BottomInfo",
+      "category": "feedback",
+      "platform": "adaptive",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "bottomInfoRecipe",
+      "behavior": "bottomInfo",
+      "line": 259
+    },
+    {
+      "name": "Toast",
+      "category": "feedback",
+      "platform": "adaptive",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "toastRecipe",
+      "behavior": "toast",
+      "aliases": [
+        "Notification"
+      ],
+      "line": 261
+    },
+    {
+      "name": "Watermark",
+      "category": "feedback",
+      "platform": "web",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "unsupported"
+      ],
+      "recipe": "watermarkRecipe",
+      "line": 262
+    },
+    {
+      "name": "Dialog",
+      "category": "overlay",
+      "platform": "adaptive",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "dialogRecipe",
+      "behavior": "dialog",
+      "line": 263
+    },
+    {
+      "name": "AlertDialog",
+      "category": "overlay",
+      "platform": "adaptive",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "alertDialogRecipe",
+      "behavior": "alertDialog",
+      "line": 264
+    },
+    {
+      "name": "Sheet",
+      "category": "overlay",
+      "platform": "adaptive",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "recipe": "sheetRecipe",
+      "behavior": "sheet",
+      "line": 265
+    },
+    {
+      "name": "SidePanel",
+      "category": "overlay",
+      "platform": "web",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "unsupported"
+      ],
+      "recipe": "sidePanelRecipe",
+      "behavior": "sidePanel",
+      "line": 266
+    },
+    {
+      "name": "Popover",
+      "category": "overlay",
+      "platform": "web",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "unsupported"
+      ],
+      "recipe": "popoverRecipe",
+      "behavior": "popover",
+      "line": 267
+    },
+    {
+      "name": "Tooltip",
+      "category": "overlay",
+      "platform": "web",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "unsupported"
+      ],
+      "recipe": "tooltipRecipe",
+      "behavior": "tooltip",
+      "line": 268
+    },
+    {
+      "name": "CommandPalette",
+      "category": "overlay",
+      "platform": "web",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "unsupported"
+      ],
+      "recipe": "commandPaletteRecipe",
+      "behavior": "commandPalette",
+      "line": 269
+    },
+    {
+      "name": "Affix",
+      "category": "utility",
+      "platform": "web",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "unsupported"
+      ],
+      "recipe": "affixRecipe",
+      "line": 270
+    },
+    {
+      "name": "DesignSystemProvider",
+      "category": "provider",
+      "platform": "shared",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "stable"
+      ],
+      "aliases": [
+        "ConfigProvider"
+      ],
+      "nonVisualEvidence": "provider-adapter",
+      "line": 271
+    },
+    {
+      "name": "SkipNav",
+      "category": "utility",
+      "platform": "web",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "unsupported"
+      ],
+      "aliases": [
+        "SkipLink"
+      ],
+      "recipe": "skipNavRecipe",
+      "behavior": "skipNav",
+      "line": 272
+    },
+    {
+      "name": "VisuallyHidden",
+      "category": "utility",
+      "platform": "web",
+      "status": "stable",
+      "surfaces": [
+        "stable",
+        "unsupported"
+      ],
+      "recipe": "visuallyHiddenRecipe",
+      "aliases": [
+        "ScreenReaderOnly",
+        "SrOnly"
+      ],
+      "line": 274
+    }
+  ],
+  "packages": {
+    "react": {
+      "version": "1.10.0",
+      "entries": {
+        ".": [
+          {
+            "name": "HjmProvider",
+            "file": "packages/react/src/provider.tsx",
+            "line": 118,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "useHjmTheme",
+            "file": "packages/react/src/provider.tsx",
+            "line": 233,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "TopBar",
+            "file": "packages/react/src/top-bar.tsx",
+            "line": 21,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "BottomCTA",
+            "file": "packages/react/src/bottom-cta.tsx",
+            "line": 43,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "hjmCompositionStyleKeys",
+            "file": "packages/react/src/composition-style.ts",
+            "line": 16,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "AspectRatio",
+            "file": "packages/react/src/layout.tsx",
+            "line": 481,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Container",
+            "file": "packages/react/src/layout.tsx",
+            "line": 449,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Grid",
+            "file": "packages/react/src/layout.tsx",
+            "line": 527,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Layout",
+            "file": "packages/react/src/layout.tsx",
+            "line": 137,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Section",
+            "file": "packages/react/src/layout.tsx",
+            "line": 593,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Stack",
+            "file": "packages/react/src/layout.tsx",
+            "line": 404,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Surface",
+            "file": "packages/react/src/layout.tsx",
+            "line": 351,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Text",
+            "file": "packages/react/src/layout.tsx",
+            "line": 315,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "VisuallyHidden",
+            "file": "packages/react/src/layout.tsx",
+            "line": 503,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Button",
+            "file": "packages/react/src/actions.tsx",
+            "line": 56,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "IconButton",
+            "file": "packages/react/src/actions.tsx",
+            "line": 131,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Link",
+            "file": "packages/react/src/actions.tsx",
+            "line": 206,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Field",
+            "file": "packages/react/src/forms.tsx",
+            "line": 133,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "OtpField",
+            "file": "packages/react/src/forms.tsx",
+            "line": 685,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "PasswordField",
+            "file": "packages/react/src/forms.tsx",
+            "line": 555,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "SearchField",
+            "file": "packages/react/src/forms.tsx",
+            "line": 450,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "TextArea",
+            "file": "packages/react/src/forms.tsx",
+            "line": 335,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "TextField",
+            "file": "packages/react/src/forms.tsx",
+            "line": 237,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Combobox",
+            "file": "packages/react/src/advanced-forms.tsx",
+            "line": 215,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Form",
+            "file": "packages/react/src/advanced-forms.tsx",
+            "line": 515,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "NativeSelect",
+            "file": "packages/react/src/advanced-forms.tsx",
+            "line": 78,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Select",
+            "file": "packages/react/src/select.tsx",
+            "line": 719,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "NumberField",
+            "file": "packages/react/src/number-field.tsx",
+            "line": 85,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Slider",
+            "file": "packages/react/src/slider.tsx",
+            "line": 87,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "DatePicker",
+            "file": "packages/react/src/date-picker.tsx",
+            "line": 45,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "FilePicker",
+            "file": "packages/react/src/file-picker.tsx",
+            "line": 43,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Checkbox",
+            "file": "packages/react/src/selection.tsx",
+            "line": 153,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "CheckboxGroup",
+            "file": "packages/react/src/selection.tsx",
+            "line": 478,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Chip",
+            "file": "packages/react/src/selection.tsx",
+            "line": 85,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Radio",
+            "file": "packages/react/src/selection.tsx",
+            "line": 260,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "RadioGroup",
+            "file": "packages/react/src/selection.tsx",
+            "line": 536,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "SegmentedControl",
+            "file": "packages/react/src/selection.tsx",
+            "line": 776,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Switch",
+            "file": "packages/react/src/selection.tsx",
+            "line": 696,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "TabPanel",
+            "file": "packages/react/src/navigation.tsx",
+            "line": 190,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Tabs",
+            "file": "packages/react/src/navigation.tsx",
+            "line": 241,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "getDynamicTabPanelId",
+            "file": "packages/react/src/navigation.tsx",
+            "line": 164,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "getTabId",
+            "file": "packages/react/src/navigation.tsx",
+            "line": 150,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "getTabPanelId",
+            "file": "packages/react/src/navigation.tsx",
+            "line": 154,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Breadcrumb",
+            "file": "packages/react/src/breadcrumb.tsx",
+            "line": 62,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Pagination",
+            "file": "packages/react/src/pagination.tsx",
+            "line": 14,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "LoadMore",
+            "file": "packages/react/src/supplemental-navigation.tsx",
+            "line": 74,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Steps",
+            "file": "packages/react/src/steps.tsx",
+            "line": 23,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "BottomNavigation",
+            "file": "packages/react/src/bottom-navigation.tsx",
+            "line": 294,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "getBottomNavigationGridColumn",
+            "file": "packages/react/src/bottom-navigation.tsx",
+            "line": 105,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "isUnmodifiedPrimaryBottomNavigationClick",
+            "file": "packages/react/src/bottom-navigation.tsx",
+            "line": 70,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "shouldHideBottomNavigationForKeyboard",
+            "file": "packages/react/src/bottom-navigation.tsx",
+            "line": 86,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Badge",
+            "file": "packages/react/src/display.tsx",
+            "line": 50,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Card",
+            "file": "packages/react/src/display.tsx",
+            "line": 128,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "ListRow",
+            "file": "packages/react/src/display.tsx",
+            "line": 229,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Tag",
+            "file": "packages/react/src/display.tsx",
+            "line": 92,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "CounterBadge",
+            "file": "packages/react/src/supplemental-display.tsx",
+            "line": 350,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Icon",
+            "file": "packages/react/src/supplemental-display.tsx",
+            "line": 91,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Image",
+            "file": "packages/react/src/supplemental-display.tsx",
+            "line": 218,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Accordion",
+            "file": "packages/react/src/advanced-display.tsx",
+            "line": 103,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Avatar",
+            "file": "packages/react/src/advanced-display.tsx",
+            "line": 230,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "AvatarGroup",
+            "file": "packages/react/src/advanced-display.tsx",
+            "line": 297,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "DescriptionList",
+            "file": "packages/react/src/advanced-display.tsx",
+            "line": 580,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Divider",
+            "file": "packages/react/src/advanced-display.tsx",
+            "line": 329,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "List",
+            "file": "packages/react/src/advanced-display.tsx",
+            "line": 362,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Statistic",
+            "file": "packages/react/src/advanced-display.tsx",
+            "line": 427,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "StatisticGroup",
+            "file": "packages/react/src/advanced-display.tsx",
+            "line": 493,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Table",
+            "file": "packages/react/src/advanced-display.tsx",
+            "line": 703,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Timeline",
+            "file": "packages/react/src/advanced-display.tsx",
+            "line": 765,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "UploadItem",
+            "file": "packages/react/src/upload-item.tsx",
+            "line": 21,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "EmptyState",
+            "file": "packages/react/src/feedback.tsx",
+            "line": 84,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Notice",
+            "file": "packages/react/src/feedback.tsx",
+            "line": 41,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Progress",
+            "file": "packages/react/src/feedback.tsx",
+            "line": 209,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Result",
+            "file": "packages/react/src/feedback.tsx",
+            "line": 126,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Skeleton",
+            "file": "packages/react/src/feedback.tsx",
+            "line": 316,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Spinner",
+            "file": "packages/react/src/feedback.tsx",
+            "line": 280,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Toast",
+            "file": "packages/react/src/toast.tsx",
+            "line": 174,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "ToastProvider",
+            "file": "packages/react/src/toast.tsx",
+            "line": 289,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "useToast",
+            "file": "packages/react/src/toast.tsx",
+            "line": 209,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "AlertDialog",
+            "file": "packages/react/src/overlays.tsx",
+            "line": 259,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Dialog",
+            "file": "packages/react/src/overlays.tsx",
+            "line": 98,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Menu",
+            "file": "packages/react/src/overlays.tsx",
+            "line": 1033,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Sheet",
+            "file": "packages/react/src/overlays.tsx",
+            "line": 470,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Tooltip",
+            "file": "packages/react/src/overlays.tsx",
+            "line": 670,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Carousel",
+            "file": "packages/react/src/carousel.tsx",
+            "line": 23,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "FloatingActionButton",
+            "file": "packages/react/src/floating-action-button.tsx",
+            "line": 22,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "useFloatingActionButtonScroll",
+            "file": "packages/react/src/floating-action-button.tsx",
+            "line": 54,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "resolveFloatingActionButtonContentClearance",
+            "file": "packages/design-contracts/dist/floating-action-button.d.ts",
+            "line": 74,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Calendar",
+            "file": "packages/react/src/calendar.tsx",
+            "line": 29,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Anchor",
+            "file": "packages/react/src/anchor.tsx",
+            "line": 17,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Popover",
+            "file": "packages/react/src/popover.tsx",
+            "line": 52,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "SidePanel",
+            "file": "packages/react/src/side-panel.tsx",
+            "line": 58,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Splitter",
+            "file": "packages/react/src/splitter.tsx",
+            "line": 62,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Tour",
+            "file": "packages/react/src/tour.tsx",
+            "line": 66,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Tree",
+            "file": "packages/react/src/tree.tsx",
+            "line": 60,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "TransferList",
+            "file": "packages/react/src/transfer-list.tsx",
+            "line": 49,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Mentions",
+            "file": "packages/react/src/mentions.tsx",
+            "line": 46,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "CommandPalette",
+            "file": "packages/react/src/command-palette.tsx",
+            "line": 53,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Agreement",
+            "file": "packages/react/src/agreement.tsx",
+            "line": 37,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Top",
+            "file": "packages/react/src/top.tsx",
+            "line": 17,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Heading",
+            "file": "packages/react/src/heading.tsx",
+            "line": 20,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "TextFormat",
+            "file": "packages/react/src/text-formats.tsx",
+            "line": 22,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "ClipboardButton",
+            "file": "packages/react/src/clipboard.tsx",
+            "line": 26,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "ToggleGroup",
+            "file": "packages/react/src/toggle-group.tsx",
+            "line": 21,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "TagsInput",
+            "file": "packages/react/src/tags-input.tsx",
+            "line": 51,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "SkipNav",
+            "file": "packages/react/src/skip-nav.tsx",
+            "line": 13,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "BottomInfo",
+            "file": "packages/react/src/bottom-info.tsx",
+            "line": 17,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Sidebar",
+            "file": "packages/react/src/sidebar.tsx",
+            "line": 29,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "DateRangePicker",
+            "file": "packages/react/src/date-range.tsx",
+            "line": 32,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "OverlayStackProvider",
+            "file": "packages/react/src/overlay-stack.tsx",
+            "line": 70,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "useOverlayStack",
+            "file": "packages/react/src/overlay-stack.tsx",
+            "line": 53,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "useDialog",
+            "file": "packages/react/src/overlay-stack.tsx",
+            "line": 60,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "useSheet",
+            "file": "packages/react/src/overlay-stack.tsx",
+            "line": 64,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "AuthProviderButton",
+            "file": "packages/react/src/provider-button.tsx",
+            "line": 30,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "AuthScreenLayout",
+            "file": "packages/react/src/auth-screen.tsx",
+            "line": 27,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "DataTable",
+            "file": "packages/react/src/data-table.tsx",
+            "line": 47,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Collapsible",
+            "file": "packages/react/src/collapsible.tsx",
+            "line": 18,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "ContextMenu",
+            "file": "packages/react/src/context-menu.tsx",
+            "line": 32,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Menubar",
+            "file": "packages/react/src/menubar.tsx",
+            "line": 20,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Asset",
+            "file": "packages/react/src/asset.tsx",
+            "line": 24,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "AssetGroup",
+            "file": "packages/react/src/asset.tsx",
+            "line": 68,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./provider": [
+          {
+            "name": "useHjmTheme",
+            "file": "packages/react/src/provider.tsx",
+            "line": 233,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "useOptionalHjmTheme",
+            "file": "packages/react/src/provider.tsx",
+            "line": 242,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "useHjmDensityDefault",
+            "file": "packages/react/src/provider.tsx",
+            "line": 251,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "useTooltipCoordinator",
+            "file": "packages/react/src/provider.tsx",
+            "line": 262,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "HjmProvider",
+            "file": "packages/react/src/provider.tsx",
+            "line": 118,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./carousel": [
+          {
+            "name": "Carousel",
+            "file": "packages/react/src/carousel.tsx",
+            "line": 23,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./floating-action-button": [
+          {
+            "name": "useFloatingActionButtonScroll",
+            "file": "packages/react/src/floating-action-button.tsx",
+            "line": 54,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "resolveFloatingActionButtonContentClearance",
+            "file": "packages/design-contracts/dist/floating-action-button.d.ts",
+            "line": 74,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "FloatingActionButton",
+            "file": "packages/react/src/floating-action-button.tsx",
+            "line": 22,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./top-bar": [
+          {
+            "name": "TopBar",
+            "file": "packages/react/src/top-bar.tsx",
+            "line": 21,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./bottom-cta": [
+          {
+            "name": "BottomCTA",
+            "file": "packages/react/src/bottom-cta.tsx",
+            "line": 43,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./layout": [
+          {
+            "name": "Layout",
+            "file": "packages/react/src/layout.tsx",
+            "line": 137,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Text",
+            "file": "packages/react/src/layout.tsx",
+            "line": 315,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Surface",
+            "file": "packages/react/src/layout.tsx",
+            "line": 351,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Stack",
+            "file": "packages/react/src/layout.tsx",
+            "line": 404,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Container",
+            "file": "packages/react/src/layout.tsx",
+            "line": 449,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "AspectRatio",
+            "file": "packages/react/src/layout.tsx",
+            "line": 481,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "VisuallyHidden",
+            "file": "packages/react/src/layout.tsx",
+            "line": 503,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Grid",
+            "file": "packages/react/src/layout.tsx",
+            "line": 527,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Section",
+            "file": "packages/react/src/layout.tsx",
+            "line": 593,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./actions": [
+          {
+            "name": "Button",
+            "file": "packages/react/src/actions.tsx",
+            "line": 56,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "IconButton",
+            "file": "packages/react/src/actions.tsx",
+            "line": 131,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Link",
+            "file": "packages/react/src/actions.tsx",
+            "line": 206,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./forms": [
+          {
+            "name": "Field",
+            "file": "packages/react/src/forms.tsx",
+            "line": 133,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "TextField",
+            "file": "packages/react/src/forms.tsx",
+            "line": 237,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "TextArea",
+            "file": "packages/react/src/forms.tsx",
+            "line": 335,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "SearchField",
+            "file": "packages/react/src/forms.tsx",
+            "line": 450,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "PasswordField",
+            "file": "packages/react/src/forms.tsx",
+            "line": 555,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "OtpField",
+            "file": "packages/react/src/forms.tsx",
+            "line": 685,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "NativeSelect",
+            "file": "packages/react/src/advanced-forms.tsx",
+            "line": 78,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Combobox",
+            "file": "packages/react/src/advanced-forms.tsx",
+            "line": 215,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Form",
+            "file": "packages/react/src/advanced-forms.tsx",
+            "line": 515,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Select",
+            "file": "packages/react/src/select.tsx",
+            "line": 719,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "NumberField",
+            "file": "packages/react/src/number-field.tsx",
+            "line": 85,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Slider",
+            "file": "packages/react/src/slider.tsx",
+            "line": 87,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "DatePicker",
+            "file": "packages/react/src/date-picker.tsx",
+            "line": 45,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "FilePicker",
+            "file": "packages/react/src/file-picker.tsx",
+            "line": 43,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./password-field": [
+          {
+            "name": "PasswordField",
+            "file": "packages/react/src/forms.tsx",
+            "line": 555,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./otp-field": [
+          {
+            "name": "OtpField",
+            "file": "packages/react/src/forms.tsx",
+            "line": 685,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./number-field": [
+          {
+            "name": "NumberField",
+            "file": "packages/react/src/number-field.tsx",
+            "line": 85,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./slider": [
+          {
+            "name": "Slider",
+            "file": "packages/react/src/slider.tsx",
+            "line": 87,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./date-picker": [
+          {
+            "name": "DatePicker",
+            "file": "packages/react/src/date-picker.tsx",
+            "line": 45,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./calendar": [
+          {
+            "name": "Calendar",
+            "file": "packages/react/src/calendar.tsx",
+            "line": 29,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./file-picker": [
+          {
+            "name": "FilePicker",
+            "file": "packages/react/src/file-picker.tsx",
+            "line": 43,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./steps": [
+          {
+            "name": "Steps",
+            "file": "packages/react/src/steps.tsx",
+            "line": 23,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./upload-item": [
+          {
+            "name": "UploadItem",
+            "file": "packages/react/src/upload-item.tsx",
+            "line": 21,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./selection": [
+          {
+            "name": "Chip",
+            "file": "packages/react/src/selection.tsx",
+            "line": 85,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Checkbox",
+            "file": "packages/react/src/selection.tsx",
+            "line": 153,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Radio",
+            "file": "packages/react/src/selection.tsx",
+            "line": 260,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "CheckboxGroup",
+            "file": "packages/react/src/selection.tsx",
+            "line": 478,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "RadioGroup",
+            "file": "packages/react/src/selection.tsx",
+            "line": 536,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Switch",
+            "file": "packages/react/src/selection.tsx",
+            "line": 696,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "SegmentedControl",
+            "file": "packages/react/src/selection.tsx",
+            "line": 776,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./navigation": [
+          {
+            "name": "getTabId",
+            "file": "packages/react/src/navigation.tsx",
+            "line": 150,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "getTabPanelId",
+            "file": "packages/react/src/navigation.tsx",
+            "line": 154,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "getDynamicTabPanelId",
+            "file": "packages/react/src/navigation.tsx",
+            "line": 164,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "TabPanel",
+            "file": "packages/react/src/navigation.tsx",
+            "line": 190,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Tabs",
+            "file": "packages/react/src/navigation.tsx",
+            "line": 241,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Breadcrumb",
+            "file": "packages/react/src/breadcrumb.tsx",
+            "line": 62,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Pagination",
+            "file": "packages/react/src/pagination.tsx",
+            "line": 14,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "LoadMore",
+            "file": "packages/react/src/supplemental-navigation.tsx",
+            "line": 74,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Steps",
+            "file": "packages/react/src/steps.tsx",
+            "line": 23,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "isUnmodifiedPrimaryBottomNavigationClick",
+            "file": "packages/react/src/bottom-navigation.tsx",
+            "line": 70,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "shouldHideBottomNavigationForKeyboard",
+            "file": "packages/react/src/bottom-navigation.tsx",
+            "line": 86,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "getBottomNavigationGridColumn",
+            "file": "packages/react/src/bottom-navigation.tsx",
+            "line": 105,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "BottomNavigation",
+            "file": "packages/react/src/bottom-navigation.tsx",
+            "line": 294,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./breadcrumb": [
+          {
+            "name": "Breadcrumb",
+            "file": "packages/react/src/breadcrumb.tsx",
+            "line": 62,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./pagination": [
+          {
+            "name": "Pagination",
+            "file": "packages/react/src/pagination.tsx",
+            "line": 14,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./anchor": [
+          {
+            "name": "Anchor",
+            "file": "packages/react/src/anchor.tsx",
+            "line": 17,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./display": [
+          {
+            "name": "Badge",
+            "file": "packages/react/src/display.tsx",
+            "line": 50,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Tag",
+            "file": "packages/react/src/display.tsx",
+            "line": 92,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Card",
+            "file": "packages/react/src/display.tsx",
+            "line": 128,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "ListRow",
+            "file": "packages/react/src/display.tsx",
+            "line": 229,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Statistic",
+            "file": "packages/react/src/advanced-display.tsx",
+            "line": 427,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "StatisticGroup",
+            "file": "packages/react/src/advanced-display.tsx",
+            "line": 493,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Accordion",
+            "file": "packages/react/src/advanced-display.tsx",
+            "line": 103,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Avatar",
+            "file": "packages/react/src/advanced-display.tsx",
+            "line": 230,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "AvatarGroup",
+            "file": "packages/react/src/advanced-display.tsx",
+            "line": 297,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Divider",
+            "file": "packages/react/src/advanced-display.tsx",
+            "line": 329,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "List",
+            "file": "packages/react/src/advanced-display.tsx",
+            "line": 362,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "DescriptionList",
+            "file": "packages/react/src/advanced-display.tsx",
+            "line": 580,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Table",
+            "file": "packages/react/src/advanced-display.tsx",
+            "line": 703,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Timeline",
+            "file": "packages/react/src/advanced-display.tsx",
+            "line": 765,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Icon",
+            "file": "packages/react/src/supplemental-display.tsx",
+            "line": 91,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Image",
+            "file": "packages/react/src/supplemental-display.tsx",
+            "line": 218,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "CounterBadge",
+            "file": "packages/react/src/supplemental-display.tsx",
+            "line": 350,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "UploadItem",
+            "file": "packages/react/src/upload-item.tsx",
+            "line": 21,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./overlays": [
+          {
+            "name": "Dialog",
+            "file": "packages/react/src/overlays.tsx",
+            "line": 98,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "AlertDialog",
+            "file": "packages/react/src/overlays.tsx",
+            "line": 259,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Sheet",
+            "file": "packages/react/src/overlays.tsx",
+            "line": 470,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Tooltip",
+            "file": "packages/react/src/overlays.tsx",
+            "line": 670,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Menu",
+            "file": "packages/react/src/overlays.tsx",
+            "line": 1033,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./popover": [
+          {
+            "name": "Popover",
+            "file": "packages/react/src/popover.tsx",
+            "line": 52,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./side-panel": [
+          {
+            "name": "SidePanel",
+            "file": "packages/react/src/side-panel.tsx",
+            "line": 58,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./splitter": [
+          {
+            "name": "Splitter",
+            "file": "packages/react/src/splitter.tsx",
+            "line": 62,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./tour": [
+          {
+            "name": "Tour",
+            "file": "packages/react/src/tour.tsx",
+            "line": 66,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./tree": [
+          {
+            "name": "Tree",
+            "file": "packages/react/src/tree.tsx",
+            "line": 60,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./transfer-list": [
+          {
+            "name": "TransferList",
+            "file": "packages/react/src/transfer-list.tsx",
+            "line": 49,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./mentions": [
+          {
+            "name": "Mentions",
+            "file": "packages/react/src/mentions.tsx",
+            "line": 46,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./command-palette": [
+          {
+            "name": "CommandPalette",
+            "file": "packages/react/src/command-palette.tsx",
+            "line": 53,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./agreement": [
+          {
+            "name": "Agreement",
+            "file": "packages/react/src/agreement.tsx",
+            "line": 37,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./top": [
+          {
+            "name": "Top",
+            "file": "packages/react/src/top.tsx",
+            "line": 17,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./heading": [
+          {
+            "name": "Heading",
+            "file": "packages/react/src/heading.tsx",
+            "line": 20,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./text-formats": [
+          {
+            "name": "TextFormat",
+            "file": "packages/react/src/text-formats.tsx",
+            "line": 22,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./clipboard": [
+          {
+            "name": "ClipboardButton",
+            "file": "packages/react/src/clipboard.tsx",
+            "line": 26,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./toggle-group": [
+          {
+            "name": "ToggleGroup",
+            "file": "packages/react/src/toggle-group.tsx",
+            "line": 21,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./tags-input": [
+          {
+            "name": "TagsInput",
+            "file": "packages/react/src/tags-input.tsx",
+            "line": 51,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./skip-nav": [
+          {
+            "name": "SkipNav",
+            "file": "packages/react/src/skip-nav.tsx",
+            "line": 13,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./bottom-info": [
+          {
+            "name": "BottomInfo",
+            "file": "packages/react/src/bottom-info.tsx",
+            "line": 17,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./sidebar": [
+          {
+            "name": "Sidebar",
+            "file": "packages/react/src/sidebar.tsx",
+            "line": 29,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./overlay-stack": [
+          {
+            "name": "useOverlayStack",
+            "file": "packages/react/src/overlay-stack.tsx",
+            "line": 53,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "useDialog",
+            "file": "packages/react/src/overlay-stack.tsx",
+            "line": 60,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "useSheet",
+            "file": "packages/react/src/overlay-stack.tsx",
+            "line": 64,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "OverlayStackProvider",
+            "file": "packages/react/src/overlay-stack.tsx",
+            "line": 70,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./date-range": [
+          {
+            "name": "DateRangePicker",
+            "file": "packages/react/src/date-range.tsx",
+            "line": 32,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./provider-button": [
+          {
+            "name": "AuthProviderButton",
+            "file": "packages/react/src/provider-button.tsx",
+            "line": 30,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./auth-screen": [
+          {
+            "name": "AuthScreenLayout",
+            "file": "packages/react/src/auth-screen.tsx",
+            "line": 27,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./data-table": [
+          {
+            "name": "DataTable",
+            "file": "packages/react/src/data-table.tsx",
+            "line": 47,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./collapsible": [
+          {
+            "name": "Collapsible",
+            "file": "packages/react/src/collapsible.tsx",
+            "line": 18,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./context-menu": [
+          {
+            "name": "ContextMenu",
+            "file": "packages/react/src/context-menu.tsx",
+            "line": 32,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./menubar": [
+          {
+            "name": "Menubar",
+            "file": "packages/react/src/menubar.tsx",
+            "line": 20,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./asset": [
+          {
+            "name": "AssetGroup",
+            "file": "packages/react/src/asset.tsx",
+            "line": 68,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Asset",
+            "file": "packages/react/src/asset.tsx",
+            "line": 24,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./feedback": [
+          {
+            "name": "Notice",
+            "file": "packages/react/src/feedback.tsx",
+            "line": 41,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "EmptyState",
+            "file": "packages/react/src/feedback.tsx",
+            "line": 84,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Result",
+            "file": "packages/react/src/feedback.tsx",
+            "line": 126,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Progress",
+            "file": "packages/react/src/feedback.tsx",
+            "line": 209,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Spinner",
+            "file": "packages/react/src/feedback.tsx",
+            "line": 280,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Skeleton",
+            "file": "packages/react/src/feedback.tsx",
+            "line": 316,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./toast": [
+          {
+            "name": "useToast",
+            "file": "packages/react/src/toast.tsx",
+            "line": 209,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "ToastProvider",
+            "file": "packages/react/src/toast.tsx",
+            "line": 289,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Toast",
+            "file": "packages/react/src/toast.tsx",
+            "line": 174,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./evidence": [
+          {
+            "name": "reactRendererEvidenceSchemaVersion",
+            "file": "packages/react/src/evidence.ts",
+            "line": 3,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "reactRendererEvidence",
+            "file": "packages/react/src/evidence.ts",
+            "line": 207,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./thinking-orb": [
+          {
+            "name": "ThinkingOrb",
+            "file": "packages/react/src/thinking-orb.tsx",
+            "line": 7,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./statistic-motion": [
+          {
+            "name": "AnimatedStatistic",
+            "file": "packages/react/src/statistic-motion.tsx",
+            "line": 15,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./menu-morph": [
+          {
+            "name": "MorphingMenu",
+            "file": "packages/react/src/menu-morph.tsx",
+            "line": 17,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./affix": [
+          {
+            "name": "Affix",
+            "file": "packages/react/src/affix.tsx",
+            "line": 5,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./color-picker": [
+          {
+            "name": "ColorPicker",
+            "file": "packages/react/src/color-picker.tsx",
+            "line": 9,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./watermark": [
+          {
+            "name": "Watermark",
+            "file": "packages/react/src/watermark.tsx",
+            "line": 5,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./masonry": [
+          {
+            "name": "Masonry",
+            "file": "packages/react/src/masonry.tsx",
+            "line": 5,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./virtual-list": [
+          {
+            "name": "VirtualList",
+            "file": "packages/react/src/virtual-list.tsx",
+            "line": 5,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./qr-code": [
+          {
+            "name": "QRCode",
+            "file": "packages/react/src/qr-code.tsx",
+            "line": 5,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./sortable": [
+          {
+            "name": "SortableCollection",
+            "file": "packages/react/src/sortable.tsx",
+            "line": 32,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./swipe-actions": [
+          {
+            "name": "SwipeActions",
+            "file": "packages/react/src/swipe-actions.tsx",
+            "line": 10,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./content-transition": [
+          {
+            "name": "ContentTransition",
+            "file": "packages/react/src/content-transition.tsx",
+            "line": 13,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "TextTransition",
+            "file": "packages/react/src/content-transition.tsx",
+            "line": 35,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./carousel-motion": [
+          {
+            "name": "CarouselMotion",
+            "file": "packages/react/src/carousel-motion.tsx",
+            "line": 11,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./celebration": [
+          {
+            "name": "Celebration",
+            "file": "packages/react/src/celebration.tsx",
+            "line": 7,
+            "kind": "FunctionDeclaration"
+          }
+        ]
+      }
+    },
+    "react-native": {
+      "version": "1.10.0",
+      "entries": {
+        ".": [
+          {
+            "name": "HjmNativeProvider",
+            "file": "packages/react-native/src/provider.tsx",
+            "line": 151,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "useHjmNativeSafeAreaInsets",
+            "file": "packages/react-native/src/provider.tsx",
+            "line": 235,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "useHjmNativeTheme",
+            "file": "packages/react-native/src/provider.tsx",
+            "line": 226,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "hjmCompositionStyleKeys",
+            "file": "packages/react-native/src/composition-style.ts",
+            "line": 16,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "AspectRatio",
+            "file": "packages/react-native/src/primitives.tsx",
+            "line": 421,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Container",
+            "file": "packages/react-native/src/primitives.tsx",
+            "line": 392,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Grid",
+            "file": "packages/react-native/src/primitives.tsx",
+            "line": 457,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Icon",
+            "file": "packages/react-native/src/primitives.tsx",
+            "line": 552,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Layout",
+            "file": "packages/react-native/src/primitives.tsx",
+            "line": 120,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Section",
+            "file": "packages/react-native/src/primitives.tsx",
+            "line": 635,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Stack",
+            "file": "packages/react-native/src/primitives.tsx",
+            "line": 350,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Surface",
+            "file": "packages/react-native/src/primitives.tsx",
+            "line": 268,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Text",
+            "file": "packages/react-native/src/primitives.tsx",
+            "line": 182,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "BottomCTA",
+            "file": "packages/react-native/src/actions.tsx",
+            "line": 473,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Button",
+            "file": "packages/react-native/src/actions.tsx",
+            "line": 97,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "IconButton",
+            "file": "packages/react-native/src/actions.tsx",
+            "line": 258,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Link",
+            "file": "packages/react-native/src/actions.tsx",
+            "line": 376,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Checkbox",
+            "file": "packages/react-native/src/inputs.tsx",
+            "line": 1188,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "CheckboxGroup",
+            "file": "packages/react-native/src/inputs.tsx",
+            "line": 1557,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Chip",
+            "file": "packages/react-native/src/inputs.tsx",
+            "line": 2056,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "OtpField",
+            "file": "packages/react-native/src/inputs.tsx",
+            "line": 741,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "PasswordField",
+            "file": "packages/react-native/src/inputs.tsx",
+            "line": 620,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Radio",
+            "file": "packages/react-native/src/inputs.tsx",
+            "line": 1258,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "RadioGroup",
+            "file": "packages/react-native/src/inputs.tsx",
+            "line": 1445,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "SearchField",
+            "file": "packages/react-native/src/inputs.tsx",
+            "line": 439,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "SegmentedControl",
+            "file": "packages/react-native/src/inputs.tsx",
+            "line": 1859,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Switch",
+            "file": "packages/react-native/src/inputs.tsx",
+            "line": 1687,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "TextArea",
+            "file": "packages/react-native/src/inputs.tsx",
+            "line": 412,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "TextField",
+            "file": "packages/react-native/src/inputs.tsx",
+            "line": 406,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "NumberField",
+            "file": "packages/react-native/src/number-field.tsx",
+            "line": 89,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Slider",
+            "file": "packages/react-native/src/slider.tsx",
+            "line": 69,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "DatePicker",
+            "file": "packages/react-native/src/date-picker.tsx",
+            "line": 45,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "FilePicker",
+            "file": "packages/react-native/src/file-picker.tsx",
+            "line": 33,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Combobox",
+            "file": "packages/react-native/src/forms.tsx",
+            "line": 838,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Field",
+            "file": "packages/react-native/src/forms.tsx",
+            "line": 138,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Form",
+            "file": "packages/react-native/src/forms.tsx",
+            "line": 196,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Select",
+            "file": "packages/react-native/src/forms.tsx",
+            "line": 378,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "BottomNavigation",
+            "file": "packages/react-native/src/navigation.tsx",
+            "line": 656,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "getDynamicTabPanelId",
+            "file": "packages/react-native/src/navigation.tsx",
+            "line": 209,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "getTabId",
+            "file": "packages/react-native/src/navigation.tsx",
+            "line": 195,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "getTabPanelId",
+            "file": "packages/react-native/src/navigation.tsx",
+            "line": 199,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "LoadMore",
+            "file": "packages/react-native/src/navigation.tsx",
+            "line": 1903,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Menu",
+            "file": "packages/react-native/src/navigation.tsx",
+            "line": 1531,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "TabPanel",
+            "file": "packages/react-native/src/navigation.tsx",
+            "line": 236,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Tabs",
+            "file": "packages/react-native/src/navigation.tsx",
+            "line": 267,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "TopBar",
+            "file": "packages/react-native/src/navigation.tsx",
+            "line": 1162,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "TopBarAction",
+            "file": "packages/react-native/src/navigation.tsx",
+            "line": 1038,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Steps",
+            "file": "packages/react-native/src/steps.tsx",
+            "line": 24,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Accordion",
+            "file": "packages/react-native/src/data-display.tsx",
+            "line": 756,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Avatar",
+            "file": "packages/react-native/src/data-display.tsx",
+            "line": 647,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Badge",
+            "file": "packages/react-native/src/data-display.tsx",
+            "line": 115,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Card",
+            "file": "packages/react-native/src/data-display.tsx",
+            "line": 278,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "CounterBadge",
+            "file": "packages/react-native/src/data-display.tsx",
+            "line": 1398,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "DescriptionList",
+            "file": "packages/react-native/src/data-display.tsx",
+            "line": 922,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Divider",
+            "file": "packages/react-native/src/data-display.tsx",
+            "line": 702,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Image",
+            "file": "packages/react-native/src/data-display.tsx",
+            "line": 1136,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "List",
+            "file": "packages/react-native/src/data-display.tsx",
+            "line": 1463,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "ListRow",
+            "file": "packages/react-native/src/data-display.tsx",
+            "line": 399,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Tag",
+            "file": "packages/react-native/src/data-display.tsx",
+            "line": 209,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Statistic",
+            "file": "packages/react-native/src/data-display.tsx",
+            "line": 1544,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "StatisticGroup",
+            "file": "packages/react-native/src/data-display.tsx",
+            "line": 1741,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Timeline",
+            "file": "packages/react-native/src/data-display.tsx",
+            "line": 1832,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "UploadItem",
+            "file": "packages/react-native/src/upload-item.tsx",
+            "line": 25,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "EmptyState",
+            "file": "packages/react-native/src/feedback.tsx",
+            "line": 205,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Notice",
+            "file": "packages/react-native/src/feedback.tsx",
+            "line": 97,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Progress",
+            "file": "packages/react-native/src/feedback.tsx",
+            "line": 497,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Result",
+            "file": "packages/react-native/src/feedback.tsx",
+            "line": 332,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Skeleton",
+            "file": "packages/react-native/src/feedback.tsx",
+            "line": 667,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Spinner",
+            "file": "packages/react-native/src/feedback.tsx",
+            "line": 631,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Toast",
+            "file": "packages/react-native/src/feedback.tsx",
+            "line": 995,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "ToastRegion",
+            "file": "packages/react-native/src/feedback.tsx",
+            "line": 1211,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "useToastRegion",
+            "file": "packages/react-native/src/feedback.tsx",
+            "line": 1467,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "AlertDialog",
+            "file": "packages/react-native/src/overlays.tsx",
+            "line": 489,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Dialog",
+            "file": "packages/react-native/src/overlays.tsx",
+            "line": 231,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Sheet",
+            "file": "packages/react-native/src/overlays.tsx",
+            "line": 936,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Carousel",
+            "file": "packages/react-native/src/carousel.tsx",
+            "line": 24,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "FloatingActionButton",
+            "file": "packages/react-native/src/floating-action-button.tsx",
+            "line": 22,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "useFloatingActionButtonScroll",
+            "file": "packages/react-native/src/floating-action-button.tsx",
+            "line": 61,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "resolveFloatingActionButtonContentClearance",
+            "file": "packages/design-contracts/dist/floating-action-button.d.ts",
+            "line": 74,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Calendar",
+            "file": "packages/react-native/src/calendar.tsx",
+            "line": 28,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Agreement",
+            "file": "packages/react-native/src/agreement.tsx",
+            "line": 34,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Top",
+            "file": "packages/react-native/src/top.tsx",
+            "line": 20,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Heading",
+            "file": "packages/react-native/src/heading.tsx",
+            "line": 19,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "ToggleGroup",
+            "file": "packages/react-native/src/toggle-group.tsx",
+            "line": 24,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "BottomInfo",
+            "file": "packages/react-native/src/bottom-info.tsx",
+            "line": 18,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Collapsible",
+            "file": "packages/react-native/src/collapsible.tsx",
+            "line": 19,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Asset",
+            "file": "packages/react-native/src/asset.tsx",
+            "line": 24,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "AssetGroup",
+            "file": "packages/react-native/src/asset.tsx",
+            "line": 78,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "TagsInput",
+            "file": "packages/react-native/src/tags-input.tsx",
+            "line": 36,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "DateRangePicker",
+            "file": "packages/react-native/src/date-range.tsx",
+            "line": 34,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Mentions",
+            "file": "packages/react-native/src/mentions.tsx",
+            "line": 40,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "TransferList",
+            "file": "packages/react-native/src/transfer-list.tsx",
+            "line": 46,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "KeyboardAvoiding",
+            "file": "packages/react-native/src/keyboard.tsx",
+            "line": 29,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "resolveKeyboardAvoidanceBehavior",
+            "file": "packages/design-contracts/dist/native-platform.d.ts",
+            "line": 19,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "AuthProviderButton",
+            "file": "packages/react-native/src/provider-button.tsx",
+            "line": 26,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "AuthScreenLayout",
+            "file": "packages/react-native/src/auth-screen.tsx",
+            "line": 32,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./provider": [
+          {
+            "name": "HjmNativeProvider",
+            "file": "packages/react-native/src/provider.tsx",
+            "line": 151,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "useHjmNativeTheme",
+            "file": "packages/react-native/src/provider.tsx",
+            "line": 226,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "useHjmNativeSafeAreaInsets",
+            "file": "packages/react-native/src/provider.tsx",
+            "line": 235,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./carousel": [
+          {
+            "name": "Carousel",
+            "file": "packages/react-native/src/carousel.tsx",
+            "line": 24,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./floating-action-button": [
+          {
+            "name": "useFloatingActionButtonScroll",
+            "file": "packages/react-native/src/floating-action-button.tsx",
+            "line": 61,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "resolveFloatingActionButtonContentClearance",
+            "file": "packages/design-contracts/dist/floating-action-button.d.ts",
+            "line": 74,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "FloatingActionButton",
+            "file": "packages/react-native/src/floating-action-button.tsx",
+            "line": 22,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./top-bar": [
+          {
+            "name": "getTabId",
+            "file": "packages/react-native/src/navigation.tsx",
+            "line": 195,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "getTabPanelId",
+            "file": "packages/react-native/src/navigation.tsx",
+            "line": 199,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "getDynamicTabPanelId",
+            "file": "packages/react-native/src/navigation.tsx",
+            "line": 209,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "TabPanel",
+            "file": "packages/react-native/src/navigation.tsx",
+            "line": 236,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Tabs",
+            "file": "packages/react-native/src/navigation.tsx",
+            "line": 267,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "BottomNavigation",
+            "file": "packages/react-native/src/navigation.tsx",
+            "line": 656,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "TopBarAction",
+            "file": "packages/react-native/src/navigation.tsx",
+            "line": 1038,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "TopBar",
+            "file": "packages/react-native/src/navigation.tsx",
+            "line": 1162,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Menu",
+            "file": "packages/react-native/src/navigation.tsx",
+            "line": 1531,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "LoadMore",
+            "file": "packages/react-native/src/navigation.tsx",
+            "line": 1903,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./bottom-cta": [
+          {
+            "name": "Link",
+            "file": "packages/react-native/src/actions.tsx",
+            "line": 376,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "BottomCTA",
+            "file": "packages/react-native/src/actions.tsx",
+            "line": 473,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Button",
+            "file": "packages/react-native/src/actions.tsx",
+            "line": 97,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "IconButton",
+            "file": "packages/react-native/src/actions.tsx",
+            "line": 258,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./composition-style": [
+          {
+            "name": "hjmCompositionStyleKeys",
+            "file": "packages/react-native/src/composition-style.ts",
+            "line": 16,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./primitives": [
+          {
+            "name": "Surface",
+            "file": "packages/react-native/src/primitives.tsx",
+            "line": 268,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Stack",
+            "file": "packages/react-native/src/primitives.tsx",
+            "line": 350,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Container",
+            "file": "packages/react-native/src/primitives.tsx",
+            "line": 392,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "AspectRatio",
+            "file": "packages/react-native/src/primitives.tsx",
+            "line": 421,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Grid",
+            "file": "packages/react-native/src/primitives.tsx",
+            "line": 457,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Icon",
+            "file": "packages/react-native/src/primitives.tsx",
+            "line": 552,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Section",
+            "file": "packages/react-native/src/primitives.tsx",
+            "line": 635,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Layout",
+            "file": "packages/react-native/src/primitives.tsx",
+            "line": 120,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Text",
+            "file": "packages/react-native/src/primitives.tsx",
+            "line": 182,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./actions": [
+          {
+            "name": "Link",
+            "file": "packages/react-native/src/actions.tsx",
+            "line": 376,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "BottomCTA",
+            "file": "packages/react-native/src/actions.tsx",
+            "line": 473,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Button",
+            "file": "packages/react-native/src/actions.tsx",
+            "line": 97,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "IconButton",
+            "file": "packages/react-native/src/actions.tsx",
+            "line": 258,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./inputs": [
+          {
+            "name": "Checkbox",
+            "file": "packages/react-native/src/inputs.tsx",
+            "line": 1188,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Radio",
+            "file": "packages/react-native/src/inputs.tsx",
+            "line": 1258,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "RadioGroup",
+            "file": "packages/react-native/src/inputs.tsx",
+            "line": 1445,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "CheckboxGroup",
+            "file": "packages/react-native/src/inputs.tsx",
+            "line": 1557,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Switch",
+            "file": "packages/react-native/src/inputs.tsx",
+            "line": 1687,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "SegmentedControl",
+            "file": "packages/react-native/src/inputs.tsx",
+            "line": 1859,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Chip",
+            "file": "packages/react-native/src/inputs.tsx",
+            "line": 2056,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "TextField",
+            "file": "packages/react-native/src/inputs.tsx",
+            "line": 406,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "TextArea",
+            "file": "packages/react-native/src/inputs.tsx",
+            "line": 412,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "SearchField",
+            "file": "packages/react-native/src/inputs.tsx",
+            "line": 439,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "PasswordField",
+            "file": "packages/react-native/src/inputs.tsx",
+            "line": 620,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "OtpField",
+            "file": "packages/react-native/src/inputs.tsx",
+            "line": 741,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "NumberField",
+            "file": "packages/react-native/src/number-field.tsx",
+            "line": 89,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "Slider",
+            "file": "packages/react-native/src/slider.tsx",
+            "line": 69,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "DatePicker",
+            "file": "packages/react-native/src/date-picker.tsx",
+            "line": 45,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "FilePicker",
+            "file": "packages/react-native/src/file-picker.tsx",
+            "line": 33,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./password-field": [
+          {
+            "name": "PasswordField",
+            "file": "packages/react-native/src/inputs.tsx",
+            "line": 620,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./otp-field": [
+          {
+            "name": "OtpField",
+            "file": "packages/react-native/src/inputs.tsx",
+            "line": 741,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./number-field": [
+          {
+            "name": "NumberField",
+            "file": "packages/react-native/src/number-field.tsx",
+            "line": 89,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./slider": [
+          {
+            "name": "Slider",
+            "file": "packages/react-native/src/slider.tsx",
+            "line": 69,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./date-picker": [
+          {
+            "name": "DatePicker",
+            "file": "packages/react-native/src/date-picker.tsx",
+            "line": 45,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./calendar": [
+          {
+            "name": "Calendar",
+            "file": "packages/react-native/src/calendar.tsx",
+            "line": 28,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./agreement": [
+          {
+            "name": "Agreement",
+            "file": "packages/react-native/src/agreement.tsx",
+            "line": 34,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./top": [
+          {
+            "name": "Top",
+            "file": "packages/react-native/src/top.tsx",
+            "line": 20,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./heading": [
+          {
+            "name": "Heading",
+            "file": "packages/react-native/src/heading.tsx",
+            "line": 19,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./toggle-group": [
+          {
+            "name": "ToggleGroup",
+            "file": "packages/react-native/src/toggle-group.tsx",
+            "line": 24,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./bottom-info": [
+          {
+            "name": "BottomInfo",
+            "file": "packages/react-native/src/bottom-info.tsx",
+            "line": 18,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./collapsible": [
+          {
+            "name": "Collapsible",
+            "file": "packages/react-native/src/collapsible.tsx",
+            "line": 19,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./asset": [
+          {
+            "name": "Asset",
+            "file": "packages/react-native/src/asset.tsx",
+            "line": 24,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "AssetGroup",
+            "file": "packages/react-native/src/asset.tsx",
+            "line": 78,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./tags-input": [
+          {
+            "name": "TagsInput",
+            "file": "packages/react-native/src/tags-input.tsx",
+            "line": 36,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./date-range": [
+          {
+            "name": "DateRangePicker",
+            "file": "packages/react-native/src/date-range.tsx",
+            "line": 34,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./mentions": [
+          {
+            "name": "Mentions",
+            "file": "packages/react-native/src/mentions.tsx",
+            "line": 40,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./transfer-list": [
+          {
+            "name": "TransferList",
+            "file": "packages/react-native/src/transfer-list.tsx",
+            "line": 46,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./keyboard": [
+          {
+            "name": "KeyboardAvoiding",
+            "file": "packages/react-native/src/keyboard.tsx",
+            "line": 29,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "resolveKeyboardAvoidanceBehavior",
+            "file": "packages/design-contracts/dist/native-platform.d.ts",
+            "line": 19,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./provider-button": [
+          {
+            "name": "AuthProviderButton",
+            "file": "packages/react-native/src/provider-button.tsx",
+            "line": 26,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./auth-screen": [
+          {
+            "name": "AuthScreenLayout",
+            "file": "packages/react-native/src/auth-screen.tsx",
+            "line": 32,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "authScreenRecipe",
+            "file": "packages/design-contracts/dist/auth-screen.d.ts",
+            "line": 54,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./file-picker": [
+          {
+            "name": "FilePicker",
+            "file": "packages/react-native/src/file-picker.tsx",
+            "line": 33,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./steps": [
+          {
+            "name": "Steps",
+            "file": "packages/react-native/src/steps.tsx",
+            "line": 24,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./upload-item": [
+          {
+            "name": "UploadItem",
+            "file": "packages/react-native/src/upload-item.tsx",
+            "line": 25,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./forms": [
+          {
+            "name": "Field",
+            "file": "packages/react-native/src/forms.tsx",
+            "line": 138,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Form",
+            "file": "packages/react-native/src/forms.tsx",
+            "line": 196,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Select",
+            "file": "packages/react-native/src/forms.tsx",
+            "line": 378,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Combobox",
+            "file": "packages/react-native/src/forms.tsx",
+            "line": 838,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./navigation": [
+          {
+            "name": "getTabId",
+            "file": "packages/react-native/src/navigation.tsx",
+            "line": 195,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "getTabPanelId",
+            "file": "packages/react-native/src/navigation.tsx",
+            "line": 199,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "getDynamicTabPanelId",
+            "file": "packages/react-native/src/navigation.tsx",
+            "line": 209,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "TabPanel",
+            "file": "packages/react-native/src/navigation.tsx",
+            "line": 236,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Tabs",
+            "file": "packages/react-native/src/navigation.tsx",
+            "line": 267,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "BottomNavigation",
+            "file": "packages/react-native/src/navigation.tsx",
+            "line": 656,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "TopBarAction",
+            "file": "packages/react-native/src/navigation.tsx",
+            "line": 1038,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "TopBar",
+            "file": "packages/react-native/src/navigation.tsx",
+            "line": 1162,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Menu",
+            "file": "packages/react-native/src/navigation.tsx",
+            "line": 1531,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "LoadMore",
+            "file": "packages/react-native/src/navigation.tsx",
+            "line": 1903,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./data-display": [
+          {
+            "name": "Badge",
+            "file": "packages/react-native/src/data-display.tsx",
+            "line": 115,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Tag",
+            "file": "packages/react-native/src/data-display.tsx",
+            "line": 209,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Card",
+            "file": "packages/react-native/src/data-display.tsx",
+            "line": 278,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "ListRow",
+            "file": "packages/react-native/src/data-display.tsx",
+            "line": 399,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Avatar",
+            "file": "packages/react-native/src/data-display.tsx",
+            "line": 647,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Divider",
+            "file": "packages/react-native/src/data-display.tsx",
+            "line": 702,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Accordion",
+            "file": "packages/react-native/src/data-display.tsx",
+            "line": 756,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "DescriptionList",
+            "file": "packages/react-native/src/data-display.tsx",
+            "line": 922,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Image",
+            "file": "packages/react-native/src/data-display.tsx",
+            "line": 1136,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "CounterBadge",
+            "file": "packages/react-native/src/data-display.tsx",
+            "line": 1398,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "List",
+            "file": "packages/react-native/src/data-display.tsx",
+            "line": 1463,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Statistic",
+            "file": "packages/react-native/src/data-display.tsx",
+            "line": 1544,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "StatisticGroup",
+            "file": "packages/react-native/src/data-display.tsx",
+            "line": 1741,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Timeline",
+            "file": "packages/react-native/src/data-display.tsx",
+            "line": 1832,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./feedback": [
+          {
+            "name": "Notice",
+            "file": "packages/react-native/src/feedback.tsx",
+            "line": 97,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "EmptyState",
+            "file": "packages/react-native/src/feedback.tsx",
+            "line": 205,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Result",
+            "file": "packages/react-native/src/feedback.tsx",
+            "line": 332,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Progress",
+            "file": "packages/react-native/src/feedback.tsx",
+            "line": 497,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Spinner",
+            "file": "packages/react-native/src/feedback.tsx",
+            "line": 631,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Skeleton",
+            "file": "packages/react-native/src/feedback.tsx",
+            "line": 667,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Toast",
+            "file": "packages/react-native/src/feedback.tsx",
+            "line": 995,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "ToastRegion",
+            "file": "packages/react-native/src/feedback.tsx",
+            "line": 1211,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "useToastRegion",
+            "file": "packages/react-native/src/feedback.tsx",
+            "line": 1467,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./overlays": [
+          {
+            "name": "Dialog",
+            "file": "packages/react-native/src/overlays.tsx",
+            "line": 231,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "AlertDialog",
+            "file": "packages/react-native/src/overlays.tsx",
+            "line": 489,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "Sheet",
+            "file": "packages/react-native/src/overlays.tsx",
+            "line": 936,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./evidence": [
+          {
+            "name": "reactNativeRendererEvidenceSchemaVersion",
+            "file": "packages/react-native/src/evidence.ts",
+            "line": 3,
+            "kind": "VariableDeclaration"
+          },
+          {
+            "name": "reactNativeRendererEvidence",
+            "file": "packages/react-native/src/evidence.ts",
+            "line": 180,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./toast-liquid": [
+          {
+            "name": "createLiquidToastPresentation",
+            "file": "packages/react-native/src/toast-liquid.tsx",
+            "line": 26,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./thinking-orb": [
+          {
+            "name": "ThinkingOrb",
+            "file": "packages/react-native/src/thinking-orb.tsx",
+            "line": 10,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./image-viewer": [
+          {
+            "name": "ImageViewer",
+            "file": "packages/react-native/src/image-viewer.tsx",
+            "line": 43,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./keyboard-controller": [
+          {
+            "name": "KeyboardMotionProvider",
+            "file": "packages/react-native/src/keyboard-controller.tsx",
+            "line": 6,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "KeyboardDock",
+            "file": "packages/react-native/src/keyboard-controller.tsx",
+            "line": 20,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "KeyboardFormScrollView",
+            "file": "packages/react-native/src/keyboard-controller.tsx",
+            "line": 29,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./sheet-gesture": [
+          {
+            "name": "dismissTopGestureSheet",
+            "file": "packages/react-native/src/sheet-gesture.tsx",
+            "line": 32,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "GestureSheetProvider",
+            "file": "packages/react-native/src/sheet-gesture.tsx",
+            "line": 38,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "GestureSheet",
+            "file": "packages/react-native/src/sheet-gesture.tsx",
+            "line": 56,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "GestureSheetInput",
+            "file": "packages/react-native/src/sheet-gesture.tsx",
+            "line": 14,
+            "kind": "VariableDeclaration"
+          }
+        ],
+        "./context-menu-native": [
+          {
+            "name": "NativeContextMenu",
+            "file": "packages/react-native/src/context-menu-native.tsx",
+            "line": 19,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./masonry": [
+          {
+            "name": "Masonry",
+            "file": "packages/react-native/src/masonry.tsx",
+            "line": 7,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./virtual-list": [
+          {
+            "name": "VirtualList",
+            "file": "packages/react-native/src/virtual-list.tsx",
+            "line": 6,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./qr-code": [
+          {
+            "name": "QRCode",
+            "file": "packages/react-native/src/qr-code.tsx",
+            "line": 7,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./sortable": [
+          {
+            "name": "SortableCollection",
+            "file": "packages/react-native/src/sortable.tsx",
+            "line": 16,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./swipe-actions": [
+          {
+            "name": "SwipeActions",
+            "file": "packages/react-native/src/swipe-actions.tsx",
+            "line": 14,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./content-transition": [
+          {
+            "name": "ContentTransition",
+            "file": "packages/react-native/src/content-transition.tsx",
+            "line": 8,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "TextTransition",
+            "file": "packages/react-native/src/content-transition.tsx",
+            "line": 25,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./carousel-motion": [
+          {
+            "name": "CarouselMotion",
+            "file": "packages/react-native/src/carousel-motion.tsx",
+            "line": 21,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./celebration": [
+          {
+            "name": "Celebration",
+            "file": "packages/react-native/src/celebration.tsx",
+            "line": 8,
+            "kind": "FunctionDeclaration"
+          }
+        ],
+        "./screen-transition": [
+          {
+            "name": "SharedTransitionScreen",
+            "file": "packages/react-native/src/screen-transition.tsx",
+            "line": 12,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "SharedTransitionElement",
+            "file": "packages/react-native/src/screen-transition.tsx",
+            "line": 25,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "useSharedTransitionOptions",
+            "file": "packages/react-native/src/screen-transition.tsx",
+            "line": 32,
+            "kind": "FunctionDeclaration"
+          },
+          {
+            "name": "createHjmTransitionStack",
+            "file": "node_modules/.pnpm/react-native-screen-transitions@4.0.0_patch_hash=2225ab4ddd9a4f84f20dbc97f188c16e55f995_6c0496979e7be461326c05924c34ecb8/node_modules/react-native-screen-transitions/lib/typescript/navigators/react-navigation/index.d.ts",
+            "line": 11,
+            "kind": "VariableDeclaration"
+          }
+        ]
+      }
+    }
+  },
+  "sources": [
+    {
+      "path": "packages/design-contracts/src/affix.ts",
+      "lines": 6,
+      "sha256": "779e1820a070343a8f94b3c09392ab830c5ce355611f1794aa3cd2841b1facc2"
+    },
+    {
+      "path": "packages/design-contracts/src/agreement.ts",
+      "lines": 223,
+      "sha256": "230132efd964bcd30c7220836a25fd337ebaf678f61df942889a45a188b5bc42"
+    },
+    {
+      "path": "packages/design-contracts/src/alert-dialog.ts",
+      "lines": 249,
+      "sha256": "e9d577d62617b477cc566e05f57cec02b442addd4d5c086c933e07a5fa9db2e6"
+    },
+    {
+      "path": "packages/design-contracts/src/anchor.ts",
+      "lines": 42,
+      "sha256": "fc10a215c3ef3142268ea980b45abe4082f38ed62b3207f84c8207f9bf9c3fcd"
+    },
+    {
+      "path": "packages/design-contracts/src/aspect-ratio.ts",
+      "lines": 59,
+      "sha256": "cfb017a754ad57abf6318409f2f33a22b3012ea68691abded677182f35e94999"
+    },
+    {
+      "path": "packages/design-contracts/src/asset.ts",
+      "lines": 93,
+      "sha256": "0f8bd9cc0fee94431e6836974071a898d671d2d09e94ae3cc285ee1736948038"
+    },
+    {
+      "path": "packages/design-contracts/src/auth-screen.ts",
+      "lines": 143,
+      "sha256": "0882c5efb10b36962392b1e49740e02842555531833a912b9e6215db6c1d7a55"
+    },
+    {
+      "path": "packages/design-contracts/src/base-recipes.ts",
+      "lines": 293,
+      "sha256": "7cbdc0af94bc3491cb1098248b6715d2f0a45995a30c26433a186e37b5f970ec"
+    },
+    {
+      "path": "packages/design-contracts/src/behaviors.ts",
+      "lines": 1401,
+      "sha256": "69d37f161e884aae33823c441f6cc6031e6c1bd51ecaed886c7c494b9de21197"
+    },
+    {
+      "path": "packages/design-contracts/src/bottom-info.ts",
+      "lines": 81,
+      "sha256": "c1ae54b1cfa075cee57f0a5b5e9915edd9ed13a800066acca2253b804559299c"
+    },
+    {
+      "path": "packages/design-contracts/src/bottom-navigation-defaults.ts",
+      "lines": 18,
+      "sha256": "6e862c1b1cfdfc3e02f03f585f6d043be71c9a7d29f6b16ef75306df8f4f164e"
+    },
+    {
+      "path": "packages/design-contracts/src/bottom-navigation.ts",
+      "lines": 455,
+      "sha256": "ea0c2fd0501d44831565261aa1eefb0b73568002293863aea0250ecf4a1780c0"
+    },
+    {
+      "path": "packages/design-contracts/src/breadcrumb.ts",
+      "lines": 135,
+      "sha256": "171ad8c647894687e0da6bbead3301954ce76b0cb3727e607d402f3d17ecdd51"
+    },
+    {
+      "path": "packages/design-contracts/src/calendar.ts",
+      "lines": 489,
+      "sha256": "d1e809f823be5bfcf61944981774b1f494ffa9344a298cf0f0bc06799a135a1b"
+    },
+    {
+      "path": "packages/design-contracts/src/card.ts",
+      "lines": 90,
+      "sha256": "f2c08f1fbadec817ab4658ef005a31d1a830e0df7f921f1fedee050bd6a2bd63"
+    },
+    {
+      "path": "packages/design-contracts/src/carousel.ts",
+      "lines": 318,
+      "sha256": "eb940d70cf61b118af6e45c3facc60c5eff0a05e6052b1fcadbf652d581c812b"
+    },
+    {
+      "path": "packages/design-contracts/src/catalog.ts",
+      "lines": 489,
+      "sha256": "b30bb432952ca4958d0e012d4410912f24c5ac2bda345eb37c9c2c72a50056c4"
+    },
+    {
+      "path": "packages/design-contracts/src/collapsible.ts",
+      "lines": 55,
+      "sha256": "c282226a32659496233587054d13578d6af133a281899b6a526c133b4f79b0d0"
+    },
+    {
+      "path": "packages/design-contracts/src/collection.ts",
+      "lines": 432,
+      "sha256": "ae42d6ad4fef68d016f214d9b02ef869dc80ca5ac81aa655a07ee7be4bee4d6d"
+    },
+    {
+      "path": "packages/design-contracts/src/color-picker.ts",
+      "lines": 17,
+      "sha256": "c737f54afd245077f0cab636a627516fa2291800cc42f4b02fcbaad25b57b79d"
+    },
+    {
+      "path": "packages/design-contracts/src/color-references.ts",
+      "lines": 97,
+      "sha256": "9a95e607d679ab792ca12866001537b4d6dba20ead4d0f082baedec82ae40246"
+    },
+    {
+      "path": "packages/design-contracts/src/colors.ts",
+      "lines": 153,
+      "sha256": "ae7ae046019ae12d4e0b1deb729103657b6fe4ff5a71ec6cff2b7e178650b1c7"
+    },
+    {
+      "path": "packages/design-contracts/src/command-palette.ts",
+      "lines": 239,
+      "sha256": "d6c83521a698d7dc182dd31ee23058639073998c3630c934ad782901b590f9d5"
+    },
+    {
+      "path": "packages/design-contracts/src/component-contracts.ts",
+      "lines": 59,
+      "sha256": "1f7dbbcd0860273ff50a6fb417630a47743cce89f8afa421c9500e362abccb29"
+    },
+    {
+      "path": "packages/design-contracts/src/component-definitions.ts",
+      "lines": 204,
+      "sha256": "ec0fab8ca2efcdd6e7da60e2cda74e730a99592f105f7a320e505d24e6ec8b54"
+    },
+    {
+      "path": "packages/design-contracts/src/component-recipes.ts",
+      "lines": 2149,
+      "sha256": "ac6b1daba73dadb7e0c38f9205aff4748e2c39482fad8240dfd97038dd786bdd"
+    },
+    {
+      "path": "packages/design-contracts/src/component-references.ts",
+      "lines": 211,
+      "sha256": "0c8a3769a031a72bbf3164ccdef67e5a1b5827a7d0155c6bbbecbbca4de87504"
+    },
+    {
+      "path": "packages/design-contracts/src/container.ts",
+      "lines": 67,
+      "sha256": "a4abd1c03605cc3dd9a22f31bbd90ff25c05b189ffddd52ed9c184ca412f97e4"
+    },
+    {
+      "path": "packages/design-contracts/src/content-state.ts",
+      "lines": 248,
+      "sha256": "e3fde2f47ca5b9c5b44ae53767d0a0623a3cc18dd203f1d99854358be9fe597b"
+    },
+    {
+      "path": "packages/design-contracts/src/context-menu.ts",
+      "lines": 74,
+      "sha256": "ff345f37ff60bbad9bd350278a77f35f1dc5610da495fe669d34d7ab94d61b0b"
+    },
+    {
+      "path": "packages/design-contracts/src/counter-badge-recipe.ts",
+      "lines": 98,
+      "sha256": "1e0ed3c899f014f9b14bc4f562508c598d39397fad9100ba4c538d407f2a55a6"
+    },
+    {
+      "path": "packages/design-contracts/src/counter-badge.ts",
+      "lines": 33,
+      "sha256": "2371231c05a00d858f2ed322f23725afd2aafe75a8ef232b3de20f08c3c21b4e"
+    },
+    {
+      "path": "packages/design-contracts/src/data-table.ts",
+      "lines": 291,
+      "sha256": "086c1b44934b8156eec0ecd62b3831145dd3466d8f5bfc543f9f9e8dc3af56e3"
+    },
+    {
+      "path": "packages/design-contracts/src/dataviz.ts",
+      "lines": 82,
+      "sha256": "2c2216a35c4834dd26f6ad3b74f1583034a1395902678954f5f34104f2537200"
+    },
+    {
+      "path": "packages/design-contracts/src/date-picker.ts",
+      "lines": 289,
+      "sha256": "4495c17bd5d20081f28cbddc20a94b2b409366f80350e09604a188d67d832c66"
+    },
+    {
+      "path": "packages/design-contracts/src/date-range.ts",
+      "lines": 106,
+      "sha256": "f822bc1cbc4265804f87679e2dc9df8a4c372a06e21e0f109f4c35506c3d22fb"
+    },
+    {
+      "path": "packages/design-contracts/src/description-list.ts",
+      "lines": 133,
+      "sha256": "47a5dc8dc54ed9d02941d71d51fdbc8d2064224b19e5283f8abd1a80348f3e26"
+    },
+    {
+      "path": "packages/design-contracts/src/design-system-provider.ts",
+      "lines": 360,
+      "sha256": "3e374c9157d819c76380bc3227ff9a0162fad9739995c197ed47b61bf838da4f"
+    },
+    {
+      "path": "packages/design-contracts/src/evidence.ts",
+      "lines": 223,
+      "sha256": "053d600f4266e6645973b36359d4979b45af01704884b91cbae892e5bd1b701f"
+    },
+    {
+      "path": "packages/design-contracts/src/file-picker.ts",
+      "lines": 339,
+      "sha256": "53368c5d3f2f52eefc084cdc16c978c4795dc4ead0eb0d19fa0c9acbb344b5b1"
+    },
+    {
+      "path": "packages/design-contracts/src/floating-action-button.ts",
+      "lines": 246,
+      "sha256": "00869c2a3d88772ff491fba89f6662dda731e89a8ce531393dc54d5044867f60"
+    },
+    {
+      "path": "packages/design-contracts/src/form.ts",
+      "lines": 288,
+      "sha256": "d25c1678f4bf40adabfd65a80e7ef001592b4e59f5bcf6919f366d2a367f75f0"
+    },
+    {
+      "path": "packages/design-contracts/src/formatters.ts",
+      "lines": 104,
+      "sha256": "aabce1be0abed3b89c44755533cf3e52509354fbbddd9385a268b1765d1c012d"
+    },
+    {
+      "path": "packages/design-contracts/src/foundations.ts",
+      "lines": 297,
+      "sha256": "9b01d17602c887356af835511dafacd2cf53454bbe6751b324b2b66a557ae8d2"
+    },
+    {
+      "path": "packages/design-contracts/src/grid.ts",
+      "lines": 229,
+      "sha256": "b5460507d19fee268408b4d7af6da2d84f59ca5ad503203a0ee5a55e07b0589e"
+    },
+    {
+      "path": "packages/design-contracts/src/heading.ts",
+      "lines": 87,
+      "sha256": "923fcf5ab18539b6a3511b063c02d6361b7886a2875753144c606456c5e0b73f"
+    },
+    {
+      "path": "packages/design-contracts/src/icon-button-recipe.ts",
+      "lines": 109,
+      "sha256": "d6dd7fec8df78212cea312676d096431b94398d7be39096f5f1d92f155bf716e"
+    },
+    {
+      "path": "packages/design-contracts/src/icon.ts",
+      "lines": 213,
+      "sha256": "9ba4289b62dafbe086c07323ccc0c9d7dda2a23867ca26ffedd77b8d7eee853c"
+    },
+    {
+      "path": "packages/design-contracts/src/image.ts",
+      "lines": 155,
+      "sha256": "db9d68f14874d09622981c52a1744328e3fb89183f369c8e5ae52f6e61a9a75f"
+    },
+    {
+      "path": "packages/design-contracts/src/index.ts",
+      "lines": 678,
+      "sha256": "65590acd689692828485e131dd1b8844cc253e38142263646c43aeaa10b02df0"
+    },
+    {
+      "path": "packages/design-contracts/src/interaction-adapters.ts",
+      "lines": 58,
+      "sha256": "bef2c955e957e7771502fc94b59e318fafafea6635bf44072a9d2cf4de63595f"
+    },
+    {
+      "path": "packages/design-contracts/src/layout.ts",
+      "lines": 177,
+      "sha256": "9eb1cb164341a3fdcbc368d7a84147e1a506ee8dfe36849146f9b7271ff0efbd"
+    },
+    {
+      "path": "packages/design-contracts/src/link.ts",
+      "lines": 251,
+      "sha256": "2f19d5d0f658e2954b4e1de86d1048478a2bd59075fb59d473dc88856be8be04"
+    },
+    {
+      "path": "packages/design-contracts/src/load-more.ts",
+      "lines": 216,
+      "sha256": "cab2164d07d7add67cde90f3b60dc13d26d02ac0ee25c5d105c1677ae15e3e1c"
+    },
+    {
+      "path": "packages/design-contracts/src/masonry.ts",
+      "lines": 16,
+      "sha256": "94ed6946e21382d3dd503fa8532e8f07f9adea09ffbe546631fd0527116aef52"
+    },
+    {
+      "path": "packages/design-contracts/src/mentions.ts",
+      "lines": 154,
+      "sha256": "1cacdd261bd1bea3f8c57b6c1d9f38b32ad1e336bc6a4e0f20d418c3f0d4be5f"
+    },
+    {
+      "path": "packages/design-contracts/src/menubar.ts",
+      "lines": 126,
+      "sha256": "b2a279cdbf15de2e5b84d3eb2c42e4d55cfaa3634dec0949de20b5455b1d9e89"
+    },
+    {
+      "path": "packages/design-contracts/src/native-platform.ts",
+      "lines": 117,
+      "sha256": "af6f347bf983cd12be442516d01f79f44a33640af5ba826df2c18bcb2c29b64d"
+    },
+    {
+      "path": "packages/design-contracts/src/number-field.ts",
+      "lines": 348,
+      "sha256": "0bd78fdf4cf1459aab6e58957f7ef4377bf34c4038f08a8dc5806670b2819ab9"
+    },
+    {
+      "path": "packages/design-contracts/src/otp-field.ts",
+      "lines": 175,
+      "sha256": "000b9ea299091ae81cbb66051849506a281ca75c3f0a0a1fef6d536acb4857c1"
+    },
+    {
+      "path": "packages/design-contracts/src/pagination.ts",
+      "lines": 398,
+      "sha256": "51106f7081019cadacece4fe669a6e34a0e6458459b292bc387a224aae1c2817"
+    },
+    {
+      "path": "packages/design-contracts/src/palette-contrast.ts",
+      "lines": 69,
+      "sha256": "d07839834636aa9cf24ca1bb2f519d998a3e1a2d72890a0ab8e50c821ab3731a"
+    },
+    {
+      "path": "packages/design-contracts/src/password-field.ts",
+      "lines": 218,
+      "sha256": "ce3674564bd5abf28f8a9131a9892a5f9a2b9bd901b04cd951a2b379092c2646"
+    },
+    {
+      "path": "packages/design-contracts/src/popover.ts",
+      "lines": 285,
+      "sha256": "c78f58582cbbeab40b33210e54b7fee9f6310d7a35bc71751854b2504900e453"
+    },
+    {
+      "path": "packages/design-contracts/src/progress-recipe.ts",
+      "lines": 50,
+      "sha256": "bf9e2d23fd04150fade70a3b2e0e4f04da5b8c3b3ffab1907ca91bdb11e5c24c"
+    },
+    {
+      "path": "packages/design-contracts/src/provider-button.ts",
+      "lines": 144,
+      "sha256": "a651cc3a3d377aefb94e6dc29a41d4bb8be4eb144191c0e6d2d8929e47a37710"
+    },
+    {
+      "path": "packages/design-contracts/src/qr-code-recipe.ts",
+      "lines": 2,
+      "sha256": "d3ec7ce41e4b0c587636554126c4d0765ee2e083d55fc358f8978051235dd716"
+    },
+    {
+      "path": "packages/design-contracts/src/qr-code.ts",
+      "lines": 30,
+      "sha256": "75d1de2cb5517ccc5ecd0294a27786fe17a9b28c39af923dd93a1a0c5cb31c9f"
+    },
+    {
+      "path": "packages/design-contracts/src/recipes.ts",
+      "lines": 175,
+      "sha256": "5d5b76899669a993bf0a354a60cd704f9f6c3c6d5d74d7ffa82a0c9fae1b333a"
+    },
+    {
+      "path": "packages/design-contracts/src/responsive.ts",
+      "lines": 93,
+      "sha256": "1415f43f9d709e1fb300f094bf76245d22ba5440ef5893d47fd0225b5ad03e9d"
+    },
+    {
+      "path": "packages/design-contracts/src/result.ts",
+      "lines": 157,
+      "sha256": "3ec731898de3a36c5d58a7dc2b641ecf73396edd72c000d2a43341b85430f580"
+    },
+    {
+      "path": "packages/design-contracts/src/selection-helpers.ts",
+      "lines": 80,
+      "sha256": "5dbfa9d269e8f5ac4426dd58a718991615351b6e5eaf54dc621272d4a9452b70"
+    },
+    {
+      "path": "packages/design-contracts/src/semantic-colors.ts",
+      "lines": 90,
+      "sha256": "4b5627ee8d13b4d1dde206c08106878c4e3300e3e345edf69102b2f7938e2156"
+    },
+    {
+      "path": "packages/design-contracts/src/sheet.ts",
+      "lines": 174,
+      "sha256": "c566306046a9cb5c3e39cf73c788522ad0f56a8832085522bb26299da919aec9"
+    },
+    {
+      "path": "packages/design-contracts/src/showcase.ts",
+      "lines": 393,
+      "sha256": "1501b8c561a21072492c1c9f058c1d1ef3454a2842b17278890212e326436329"
+    },
+    {
+      "path": "packages/design-contracts/src/side-panel.ts",
+      "lines": 199,
+      "sha256": "40f7d800b89ee56fd7a258342eb5245fff227804b6edcddfa161c821ecb5dac1"
+    },
+    {
+      "path": "packages/design-contracts/src/sidebar.ts",
+      "lines": 162,
+      "sha256": "144c8652a05e87399cb349999f1a5c22615f76da9a720ec881b68bdcfaa4f4e6"
+    },
+    {
+      "path": "packages/design-contracts/src/skip-nav.ts",
+      "lines": 79,
+      "sha256": "e236f84de37bc5db2de9d9f7dd4c32c12cdb00334ec320f78ee1e9a9a2618d88"
+    },
+    {
+      "path": "packages/design-contracts/src/slider.ts",
+      "lines": 246,
+      "sha256": "5880e46fe06931436b225d49bd388360f6b73df31910b6951d866fb4aee4db63"
+    },
+    {
+      "path": "packages/design-contracts/src/splitter.ts",
+      "lines": 163,
+      "sha256": "beb5b21900cf1bca4bd0b12a6718b1bfb6bd0088b8b4483997077201eda05d00"
+    },
+    {
+      "path": "packages/design-contracts/src/statistic.ts",
+      "lines": 132,
+      "sha256": "caeb73c4950ac75902d79ea93f900b8bbbfbb7acecd35f3045f976a2ba26d3af"
+    },
+    {
+      "path": "packages/design-contracts/src/steps.ts",
+      "lines": 287,
+      "sha256": "0f020d28e85dd2e9a7fd27505b2a64f19471cd14dd50dd7e23149c8720f61df3"
+    },
+    {
+      "path": "packages/design-contracts/src/tag.ts",
+      "lines": 134,
+      "sha256": "16e8fc2113c77cccc4e1f51629ad0e53ff40a3d5b81f3412cfdbb3201cb97e67"
+    },
+    {
+      "path": "packages/design-contracts/src/tags-input.ts",
+      "lines": 186,
+      "sha256": "24bddb64572a32776c6f98e5684110237ae65163cb9aa28c11925654af5eb7f0"
+    },
+    {
+      "path": "packages/design-contracts/src/text-formats.ts",
+      "lines": 84,
+      "sha256": "617e4e67f869267776a74ea6d3790f92d9614fd0776f6dd9c4b75b98abd55071"
+    },
+    {
+      "path": "packages/design-contracts/src/thinking-orb-recipe.ts",
+      "lines": 9,
+      "sha256": "6aec71f72dc2cb31f7aba24ca0ea11192d1935eab12094248a9abd31f946545d"
+    },
+    {
+      "path": "packages/design-contracts/src/thinking-orb.ts",
+      "lines": 51,
+      "sha256": "903918ef6f2909b828f75ec5cb1f723197d7504b4084e2f3ff3fd41b1b7c238e"
+    },
+    {
+      "path": "packages/design-contracts/src/timeline.ts",
+      "lines": 222,
+      "sha256": "fa9a17eefed81e3985f2c144e49496bdba44fc39cedc81df912bc6853123c76b"
+    },
+    {
+      "path": "packages/design-contracts/src/toast-liquid.ts",
+      "lines": 116,
+      "sha256": "80858643aa071ae5339bdc18297d39458cc32182b3e9715551b79bfce2dc1ba6"
+    },
+    {
+      "path": "packages/design-contracts/src/toast.ts",
+      "lines": 754,
+      "sha256": "5f600476f516502cba372dc9967aea08cc8ff95cdd9c5a1cee56c97d70862a0b"
+    },
+    {
+      "path": "packages/design-contracts/src/toggle-group.ts",
+      "lines": 130,
+      "sha256": "852e7ea63eabd7ad7d094927c27d1266152dd6606012b74185223ad8e82d8388"
+    },
+    {
+      "path": "packages/design-contracts/src/tokens.ts",
+      "lines": 9,
+      "sha256": "a15bfa00779c1a0240bdcc9c4668e7f01b44de2da113ead989c25a7e58eb2029"
+    },
+    {
+      "path": "packages/design-contracts/src/tooltip.ts",
+      "lines": 173,
+      "sha256": "e89e46fc8044635c46a4d981672edecdca860c3e3075676c832fafb6fd69bdfc"
+    },
+    {
+      "path": "packages/design-contracts/src/top.ts",
+      "lines": 123,
+      "sha256": "dfce1f64a35a27fd55aa146f2bda4cce8c9c501b4a43c78fdca926a677ea4d28"
+    },
+    {
+      "path": "packages/design-contracts/src/tour.ts",
+      "lines": 383,
+      "sha256": "a6749ffd82c7dacd46d72b5d607eed209dde7e197ed3f77cb026c773c5a1d56d"
+    },
+    {
+      "path": "packages/design-contracts/src/transfer-list.ts",
+      "lines": 316,
+      "sha256": "131e88204e37277f22bafa7411413de2d35a9d495531fac0f5de370bda9f582f"
+    },
+    {
+      "path": "packages/design-contracts/src/tree-select.ts",
+      "lines": 182,
+      "sha256": "57ee95c4a6d6c75b0b921d2356ae17dc2aa109e0d03a2ed8baa46c87d7ab2846"
+    },
+    {
+      "path": "packages/design-contracts/src/tree.ts",
+      "lines": 361,
+      "sha256": "e47b8a48566dfb63a69a4cc1c5431eed27326682b20c295ac43550f28442b72d"
+    },
+    {
+      "path": "packages/design-contracts/src/upload-item.ts",
+      "lines": 250,
+      "sha256": "90e74ba13974b1a9e11fc9d972fbeded82c9f041d61e2c4025991a32b72f6be9"
+    },
+    {
+      "path": "packages/design-contracts/src/version.ts",
+      "lines": 3,
+      "sha256": "44885c6abaafea91246e05d62b378079dab85d7f6fb64031d721af504430caba"
+    },
+    {
+      "path": "packages/design-contracts/src/virtual-list.ts",
+      "lines": 11,
+      "sha256": "82aac3ff182c0f470bc13aee1fbf0a3e088e1c3c14d68156963b96b539e3664b"
+    },
+    {
+      "path": "packages/design-contracts/src/visually-hidden.ts",
+      "lines": 22,
+      "sha256": "f1c861c92aad85edff2956a927afcaf83d87070f7face86a5b9d3372ce699a35"
+    },
+    {
+      "path": "packages/design-contracts/src/watermark.ts",
+      "lines": 9,
+      "sha256": "3a8bd2dda0bccbb3c80c316be5bb6be16a70e8dd821657aece4a80b8840d0565"
+    },
+    {
+      "path": "packages/design-contracts/src/internal/thinking-orb/braid.ts",
+      "lines": 52,
+      "sha256": "793c0c5416318cc54bf7a39f8f5e5e6ff5f57a4e67649811a7bc93d4d83428d8"
+    },
+    {
+      "path": "packages/design-contracts/src/internal/thinking-orb/core.ts",
+      "lines": 129,
+      "sha256": "1dc4b1b8e0c9e84746e15e20fc33cd2cdab45c295208be9361a7027c47c666f5"
+    },
+    {
+      "path": "packages/design-contracts/src/internal/thinking-orb/lattice.ts",
+      "lines": 208,
+      "sha256": "e858ec2797af5a905566d2a4f9d88ced7f61a83135397319c34e6a9b65eeb2cb"
+    },
+    {
+      "path": "packages/design-contracts/src/internal/thinking-orb/morph.ts",
+      "lines": 141,
+      "sha256": "3bd3179ba887e9b4a7941e33c4b01d001907a460816f4c379719603f57d056ce"
+    },
+    {
+      "path": "packages/design-contracts/src/internal/thinking-orb/orbits.ts",
+      "lines": 82,
+      "sha256": "2da3eb1181407303e0c6024a9dbed2155d53c6a8524e4b2008f62b9a29d30d01"
+    },
+    {
+      "path": "packages/design-contracts/src/internal/thinking-orb/presets.ts",
+      "lines": 107,
+      "sha256": "48ff75c5a14f5f0a0b800a4d013e44df19d8fff18355f5e998878ec98518feb9"
+    },
+    {
+      "path": "packages/design-contracts/src/internal/thinking-orb/profiles.ts",
+      "lines": 164,
+      "sha256": "1ac8b57251217076675a734443b2645a632b0a0efdc0d906ff36acdaee39d9e6"
+    },
+    {
+      "path": "packages/design-contracts/src/internal/thinking-orb/registry.ts",
+      "lines": 31,
+      "sha256": "06e88dc36eb7e81f84274fb54870266b8423951f8ec6bcd27edfa843f35665a1"
+    },
+    {
+      "path": "packages/design-contracts/src/internal/thinking-orb/ribbon.ts",
+      "lines": 95,
+      "sha256": "a111d912d6ec439165333a16444be401249bc97028b5b364122294ab2bcaea1e"
+    },
+    {
+      "path": "packages/design-contracts/src/internal/thinking-orb/types.ts",
+      "lines": 23,
+      "sha256": "3a9c113aa24b7cbc0ea8e89caccbbe0e8bcbab54c36381df21bba7a0dc24c757"
+    },
+    {
+      "path": "packages/design-contracts/src/internal/thinking-orb/web.ts",
+      "lines": 100,
+      "sha256": "ebd032463dfaf45adbd94c79011d6e6a98439c7a7663328c31d78b3d7de7d19a"
+    },
+    {
+      "path": "packages/react/src/actions.tsx",
+      "lines": 253,
+      "sha256": "9beaf1585061f344a904e8145e49870db2031dd46fb6c751b64991d2c7e679e8"
+    },
+    {
+      "path": "packages/react/src/advanced-display.tsx",
+      "lines": 768,
+      "sha256": "ed71eea13c58767bac57670ab2b11dd573f3a76a709b03a02b9eea57c563bc4d"
+    },
+    {
+      "path": "packages/react/src/advanced-forms.tsx",
+      "lines": 573,
+      "sha256": "4a364cf08a637dc74d189c37e4e3e9412fa43ed9eff62dd47b60099a4cf5c1a1"
+    },
+    {
+      "path": "packages/react/src/advanced-navigation.tsx",
+      "lines": 4,
+      "sha256": "b2fa6b56d94b01919c04d5151005f62f4fb3248d47291ebba206d892ff9786e2"
+    },
+    {
+      "path": "packages/react/src/affix.tsx",
+      "lines": 40,
+      "sha256": "45c7dc3287756022ca06e7d1d1ff3669d0a606a7a86cb4f02228cab3edfb0d6b"
+    },
+    {
+      "path": "packages/react/src/agreement.tsx",
+      "lines": 141,
+      "sha256": "dccc55320e698a0cd792a39f5be6f821919fe95dbb5e50ced51d6df90c9c1c07"
+    },
+    {
+      "path": "packages/react/src/anchor.tsx",
+      "lines": 89,
+      "sha256": "d261d341cd527d91155ed35f52e5c46b38016b9aa3a3eb2930c086caaeceaf2c"
+    },
+    {
+      "path": "packages/react/src/asset.tsx",
+      "lines": 81,
+      "sha256": "a83290c0f8d6a2ebe0d601affd61d5e749b4fb32c58116fc436ad9bf6259db78"
+    },
+    {
+      "path": "packages/react/src/auth-screen.tsx",
+      "lines": 62,
+      "sha256": "a24b02ec80a5917101502fd9f30bae8d58399332008aafc2a564f56ec11dd923"
+    },
+    {
+      "path": "packages/react/src/bottom-cta.tsx",
+      "lines": 67,
+      "sha256": "897437d8e204b9c6048fb47a87f23fcefa605bcabe79cebee75784ec920c8cb6"
+    },
+    {
+      "path": "packages/react/src/bottom-info.tsx",
+      "lines": 45,
+      "sha256": "8b4cb7bc3909029534697045f79ef5ab12e98b48d524a09958bcf8d96a4c1bbe"
+    },
+    {
+      "path": "packages/react/src/bottom-navigation.tsx",
+      "lines": 300,
+      "sha256": "de25a545bf7e1deaa4f5469be68c29115c646dab2d106570379bb52fe3a44426"
+    },
+    {
+      "path": "packages/react/src/breadcrumb.tsx",
+      "lines": 66,
+      "sha256": "5d15d88097dd47a09fbd1f3c27ec117120489415eb15fad28d0a3b58fad2c5f7"
+    },
+    {
+      "path": "packages/react/src/calendar.tsx",
+      "lines": 108,
+      "sha256": "16c2901d78d3ce17461dfcffda73b3be3aecfaf65938afdd777cae1b7aef9c13"
+    },
+    {
+      "path": "packages/react/src/carousel-motion.tsx",
+      "lines": 43,
+      "sha256": "9c440cd07f6f9414e7f78d978d8d02988790f6659485cfc49ba8f64d15f7553c"
+    },
+    {
+      "path": "packages/react/src/carousel.tsx",
+      "lines": 104,
+      "sha256": "e2c5cfa0ac46a0a137d56138341425a7e19eadab10fca87e4f3243d09015f4f4"
+    },
+    {
+      "path": "packages/react/src/celebration.tsx",
+      "lines": 39,
+      "sha256": "49eddabb048006af1478b4dee811fd98acf47e31b5a8379f472b4d1582123964"
+    },
+    {
+      "path": "packages/react/src/clipboard.tsx",
+      "lines": 66,
+      "sha256": "91bafafcfec46ef44895a194ab4321cdd7b3d5b6c17281d0f2781edd96f13933"
+    },
+    {
+      "path": "packages/react/src/collapsible.tsx",
+      "lines": 60,
+      "sha256": "8b551ae52aea3de0fe45dea43be1891251eef7e320014303220a310caab50472"
+    },
+    {
+      "path": "packages/react/src/color-picker.tsx",
+      "lines": 43,
+      "sha256": "15c7739c5357637c25f6f90d51e1dc30a31e3138a4b5154050f00772706885dd"
+    },
+    {
+      "path": "packages/react/src/command-palette.tsx",
+      "lines": 217,
+      "sha256": "fece6417cc8b4985b2f28585fea0805a872cc5399497168a4f7778a95127cacc"
+    },
+    {
+      "path": "packages/react/src/composition-style.ts",
+      "lines": 51,
+      "sha256": "eafb7ebaefeeac36aac4b53e7053f5dac804eb065d74edbb19341c14bef350ce"
+    },
+    {
+      "path": "packages/react/src/content-transition.tsx",
+      "lines": 38,
+      "sha256": "0b6bc6187d28e38721edd0bcb3a4c169a4813cb846752e48bc3f6c1af0b51935"
+    },
+    {
+      "path": "packages/react/src/context-menu.tsx",
+      "lines": 208,
+      "sha256": "568bc57d0b7f0495c530b683e7b79c82a23faad4c4b055af2ab3c92dae74b6e7"
+    },
+    {
+      "path": "packages/react/src/data-table.tsx",
+      "lines": 193,
+      "sha256": "ef2b33f08fe3a32f6bbfde9cb42bce4f406dfe454e50ce24e239ff0ac5ad72fa"
+    },
+    {
+      "path": "packages/react/src/date-picker.tsx",
+      "lines": 185,
+      "sha256": "3d187c019bb9b40914f0b023c246f2e14ec7e75114e53b972ff54613cc5029dc"
+    },
+    {
+      "path": "packages/react/src/date-range.tsx",
+      "lines": 89,
+      "sha256": "193bd182b4f69f8fa3965cc1a45ad8a88dec91da37aea90415dae9e979fa4c05"
+    },
+    {
+      "path": "packages/react/src/display-public.ts",
+      "lines": 5,
+      "sha256": "02bb435f93a5194d5f9936fbeceafcb54e54a53c1692c9eb178488506aa9995e"
+    },
+    {
+      "path": "packages/react/src/display.tsx",
+      "lines": 325,
+      "sha256": "ba8e7d1916115b01bf93f795f532bcd131f9395533cbf5e0e8b885fc86ffd6e0"
+    },
+    {
+      "path": "packages/react/src/evidence.ts",
+      "lines": 331,
+      "sha256": "4f587f6ebac1f2655ab81f4fd58ba4fac1e064edf90631c45fb9cccf645aa729"
+    },
+    {
+      "path": "packages/react/src/feedback.tsx",
+      "lines": 342,
+      "sha256": "b3c6e7120290b5153084a4608e277758cc03fff9e82d31909256ac4740a71fc1"
+    },
+    {
+      "path": "packages/react/src/file-picker.tsx",
+      "lines": 124,
+      "sha256": "91f048a1091e0d4544267356ef18a5112164c8feee23873259ff2a766a9a645a"
+    },
+    {
+      "path": "packages/react/src/floating-action-button.tsx",
+      "lines": 74,
+      "sha256": "23b576a8cb07d776cfc724f3aa906d4e5a824d6a17a65970847f2eff8c70862a"
+    },
+    {
+      "path": "packages/react/src/forms-public.ts",
+      "lines": 8,
+      "sha256": "8965dbc0dceb6db2e728ae5403a9731a13ad3f4b119b34198dfbe214748fde72"
+    },
+    {
+      "path": "packages/react/src/forms.tsx",
+      "lines": 809,
+      "sha256": "a50851eb46c0390d6796656c5f89a10f3cc852fde9fea2664e25adfccf73e336"
+    },
+    {
+      "path": "packages/react/src/heading.tsx",
+      "lines": 48,
+      "sha256": "23a26f81e51774d7e06c8b75ad5ec4bedfd8d3fa9985bbfc2434d68cdf1268e0"
+    },
+    {
+      "path": "packages/react/src/index.ts",
+      "lines": 337,
+      "sha256": "20129f94ef0f176a62a852e1b1f2807a43fadd01fbd299699589df19b8ca2048"
+    },
+    {
+      "path": "packages/react/src/internal.ts",
+      "lines": 112,
+      "sha256": "ab0a84273e28c4e8f9a66b9d2b40a37d9678dc658aaa34e6f15b21d6d53c0144"
+    },
+    {
+      "path": "packages/react/src/layout.tsx",
+      "lines": 630,
+      "sha256": "cea503dcfcf0a49fd78de52ce5982f104314444d57d7dbf8e4d7015963ee4828"
+    },
+    {
+      "path": "packages/react/src/masonry.tsx",
+      "lines": 14,
+      "sha256": "2f6ce4a06a84dc14271600306839652bd94ed15f662b1cda6ed31ab5e978c9fd"
+    },
+    {
+      "path": "packages/react/src/mentions.tsx",
+      "lines": 189,
+      "sha256": "350192794c87673c3225db9de17807bb55ba9190bb3ff6897b7c8c7ef23a1059"
+    },
+    {
+      "path": "packages/react/src/menu-morph.tsx",
+      "lines": 79,
+      "sha256": "02fa9c0b94dedeaefaef4a910f4e9c5efb4dcc1cdfc09a8a78adfeac1930264a"
+    },
+    {
+      "path": "packages/react/src/menubar.tsx",
+      "lines": 196,
+      "sha256": "c922932ba55d2c991c26f2f16529e8528a821f742e093d3c4d33e57ad774f383"
+    },
+    {
+      "path": "packages/react/src/modal.tsx",
+      "lines": 450,
+      "sha256": "a635acfbab7c5daa9a2c19ac56f36d9efb26f9539b829ed8993a73cc1a462f31"
+    },
+    {
+      "path": "packages/react/src/navigation-public.ts",
+      "lines": 6,
+      "sha256": "e457d67e41e7dbcc21797ceed4bce210ce858386b44c5592c295f13772949ce1"
+    },
+    {
+      "path": "packages/react/src/navigation.tsx",
+      "lines": 463,
+      "sha256": "c18fddc4564e32db31b9d53a12ff9fbcb3ab9dd4be48b708b6865c13ced9c424"
+    },
+    {
+      "path": "packages/react/src/number-field.tsx",
+      "lines": 285,
+      "sha256": "53d7ad4c0b5c4643ec4922cfe85844654d2906148973347f1fd175d92f5bef29"
+    },
+    {
+      "path": "packages/react/src/otp-field.ts",
+      "lines": 2,
+      "sha256": "8721ee30ee390a534fd5c72d4518e89d5de7de67e5c8560287396472036ecb19"
+    },
+    {
+      "path": "packages/react/src/overlay-stack.tsx",
+      "lines": 123,
+      "sha256": "86c55c0a91750a9fa57f0a0fff16d70e803ce60cac30576051495d5ba28e0f03"
+    },
+    {
+      "path": "packages/react/src/overlays.tsx",
+      "lines": 1420,
+      "sha256": "b0d779b041795a65ed53e0e2b2a0dabcf30fcb9c814f42e7019ac24e3c42321b"
+    },
+    {
+      "path": "packages/react/src/pagination.tsx",
+      "lines": 91,
+      "sha256": "b044ba0abd3ad7cfb485341dd8b185399c0a9b63e60b0201121a8202f5197cf7"
+    },
+    {
+      "path": "packages/react/src/password-field.ts",
+      "lines": 2,
+      "sha256": "e622488c6fbc85b74f8615c6eec7e5ef61c3b2b57329aca2fb58574af3e3181b"
+    },
+    {
+      "path": "packages/react/src/popover.tsx",
+      "lines": 211,
+      "sha256": "2108dc1782eee74f38798733ec89dacadd10609571db636540bcbeb8683eacdd"
+    },
+    {
+      "path": "packages/react/src/portal.tsx",
+      "lines": 377,
+      "sha256": "420c47f95ac0faf4e5f43a42e6287c076f452ba04053a485302c33a5b8d957de"
+    },
+    {
+      "path": "packages/react/src/provider-button.tsx",
+      "lines": 72,
+      "sha256": "93fd3aaea6a3dd286674f5b6c2c3594a915c50a834215e177c9258008cbdff13"
+    },
+    {
+      "path": "packages/react/src/provider.tsx",
+      "lines": 265,
+      "sha256": "0c35cde13ceafbfd960e146fd2a93eea59ab2389b7df6724787e3952179d17d5"
+    },
+    {
+      "path": "packages/react/src/qr-code.tsx",
+      "lines": 15,
+      "sha256": "95100828fc6f699af3c0ce03e73eb817abc58ce356d8776716e8b0677d60db95"
+    },
+    {
+      "path": "packages/react/src/select.tsx",
+      "lines": 725,
+      "sha256": "b9adca69abe7cfb04be19724855d3e1728c15a6d0452cc24ae74844b7d179c42"
+    },
+    {
+      "path": "packages/react/src/selection.tsx",
+      "lines": 856,
+      "sha256": "41652dc2d73c3f89b06543663382b0472f2454b9b7c7849e24fa3c0b6fd8a306"
+    },
+    {
+      "path": "packages/react/src/side-panel.tsx",
+      "lines": 234,
+      "sha256": "8a86615a9e531387b7fc0457a9cdfea0f16d015c7e716ed1f4b74fcbc1ea6b44"
+    },
+    {
+      "path": "packages/react/src/sidebar.tsx",
+      "lines": 117,
+      "sha256": "abdabbcb0dd10a6e25f6d9c8941c7532820d316a31e9ca7d44693cedbd15bd79"
+    },
+    {
+      "path": "packages/react/src/skip-nav.tsx",
+      "lines": 48,
+      "sha256": "60ee8441e4edfbdd696f7a6627c82ee69d86ef0c177d63fdb1e201f7cdf04b68"
+    },
+    {
+      "path": "packages/react/src/slider.tsx",
+      "lines": 281,
+      "sha256": "bbb5b7c0c0a4d707ac3060b9a053b7db29aa45c074a4a68ed51e4789c1e0e331"
+    },
+    {
+      "path": "packages/react/src/sortable.tsx",
+      "lines": 98,
+      "sha256": "a0efed17e79410923ee2bdd7cc88ac7c115a548d04c49ffc304d0389d2c3f61b"
+    },
+    {
+      "path": "packages/react/src/splitter.tsx",
+      "lines": 203,
+      "sha256": "fe72060e1d076e6aa1f5c1e3b680218369e67790fe3f3acbcc7621dce6502caf"
+    },
+    {
+      "path": "packages/react/src/statistic-motion.tsx",
+      "lines": 32,
+      "sha256": "cbf2d8b10273a67f6db91874e2ace637658417e1c79f6aa49ba0becbb91ecc8b"
+    },
+    {
+      "path": "packages/react/src/steps.tsx",
+      "lines": 58,
+      "sha256": "7d03ab89833d466f803c81e672abef9538133c75fd635ab4d50bf034227c6a75"
+    },
+    {
+      "path": "packages/react/src/supplemental-display.tsx",
+      "lines": 394,
+      "sha256": "73d5737a60642fc39ef87831221937805544b385c43fd8dcfa5d22f8bcf07671"
+    },
+    {
+      "path": "packages/react/src/supplemental-navigation.tsx",
+      "lines": 211,
+      "sha256": "3647d9b74c3fdf6de6877e5be388726ebfa135f5590f6a69faddddbebf29f3a3"
+    },
+    {
+      "path": "packages/react/src/swipe-actions.tsx",
+      "lines": 25,
+      "sha256": "53a44e2bfadcb4bd5aa9ab9f81de0c27e1d2a00a9be32847ea5c705b43759854"
+    },
+    {
+      "path": "packages/react/src/tags-input.tsx",
+      "lines": 217,
+      "sha256": "56a88bd8af0fc84c2b140711c86f4fdd9f81848cbe1757328bfcdad2d4bc6c7c"
+    },
+    {
+      "path": "packages/react/src/text-formats.tsx",
+      "lines": 40,
+      "sha256": "fe77b252f43b8c1c27aa2a6a2c80e823e0bb98decb478706abe7a4d331117386"
+    },
+    {
+      "path": "packages/react/src/theme.ts",
+      "lines": 186,
+      "sha256": "ed6c0008d18a1ba763d878586a30803a6f73343c849e9c4d7d156b6930a850b1"
+    },
+    {
+      "path": "packages/react/src/thinking-orb.tsx",
+      "lines": 72,
+      "sha256": "a79c0417e5ead6858f2bd0f100d7504d78f571756e36a66f77fbe0e5145e8cb1"
+    },
+    {
+      "path": "packages/react/src/toast.tsx",
+      "lines": 526,
+      "sha256": "6f204073eb5c4ddd7c1b4ffa4fcf3dde7f003f913f00b5298bbf742872546edc"
+    },
+    {
+      "path": "packages/react/src/toggle-group.tsx",
+      "lines": 76,
+      "sha256": "955edc3356d547c73e43f3828e92ee9335c22ea76d150a2f9d9601d8ab9ea679"
+    },
+    {
+      "path": "packages/react/src/top-bar.tsx",
+      "lines": 53,
+      "sha256": "bdf9a1e7ef33510a73cc92bf4361c830888db1352c6a68bee2e92d3b3e9a656b"
+    },
+    {
+      "path": "packages/react/src/top.tsx",
+      "lines": 51,
+      "sha256": "ffd9460e00040946328a3fcaf51e67e0e162f07275da332b9fe1fb6c1b07a999"
+    },
+    {
+      "path": "packages/react/src/tour.tsx",
+      "lines": 225,
+      "sha256": "b189de4b6377456e99ddfe5b6b852044cee32c1b8fae3feb4098307c26361c35"
+    },
+    {
+      "path": "packages/react/src/transfer-list.tsx",
+      "lines": 206,
+      "sha256": "daa56c887dde34965b4ff28eb8dbaa619a0e0785dc78b28fb320d33f1cd7f310"
+    },
+    {
+      "path": "packages/react/src/tree.tsx",
+      "lines": 221,
+      "sha256": "42e25c098b9f6d023dff583126f9674e2f71825f5603331ee93183fc1532ea00"
+    },
+    {
+      "path": "packages/react/src/upload-item.tsx",
+      "lines": 80,
+      "sha256": "79bdc9da75a44a2162236b0f5fdd4a5bcfe2a9e44aeca0ff57328c8c92a145af"
+    },
+    {
+      "path": "packages/react/src/virtual-list.tsx",
+      "lines": 37,
+      "sha256": "d101f8ef701b73dd5f2dbb0d4ee98b3843c637896773ee44f94f4f86464a6080"
+    },
+    {
+      "path": "packages/react/src/watermark.tsx",
+      "lines": 19,
+      "sha256": "a37f3bca56806bfe2564e95c046024e82f26374273284b5be35d46ab3add13c1"
+    },
+    {
+      "path": "packages/react-native/src/actions.tsx",
+      "lines": 536,
+      "sha256": "de677192641ec98e7c107918c0acfa47c6821753afd97e40935eb1685fca5282"
+    },
+    {
+      "path": "packages/react-native/src/agreement.tsx",
+      "lines": 171,
+      "sha256": "fb67efc7a80dff81887b53120bfe9c69691b85e1e31fc5ec929eea7ad7b3047d"
+    },
+    {
+      "path": "packages/react-native/src/asset.tsx",
+      "lines": 90,
+      "sha256": "6f86d2e72d6429e9d11b52e4000c20cbc7fda4c09cc397dab2568a57e25b4d49"
+    },
+    {
+      "path": "packages/react-native/src/auth-screen.tsx",
+      "lines": 94,
+      "sha256": "fbc927e466bb07aa37ccf795f3657c77c836e791571e878016f3317c7aac8af9"
+    },
+    {
+      "path": "packages/react-native/src/bottom-info.tsx",
+      "lines": 38,
+      "sha256": "79167f173e10365494632a1fe5571caa2bce9297510a909690501401fc3752dc"
+    },
+    {
+      "path": "packages/react-native/src/calendar.tsx",
+      "lines": 102,
+      "sha256": "4271f4cf6055ad54fc998cba3e80d2ac844d708c2520f2618fb28ceb1ce203ce"
+    },
+    {
+      "path": "packages/react-native/src/carousel-motion.tsx",
+      "lines": 65,
+      "sha256": "bd38a433f8e28ed5bd3838b36ce575828fdaa68bdda98f986b18892b387a80d4"
+    },
+    {
+      "path": "packages/react-native/src/carousel.tsx",
+      "lines": 99,
+      "sha256": "efc92244986c01a7690d04cc11ba245be40dbcd9e6f6dd1827455bb510715aee"
+    },
+    {
+      "path": "packages/react-native/src/celebration.tsx",
+      "lines": 50,
+      "sha256": "1d19ee5f837b003e0a3e9a5cb0fc001ddfd486075d558cc5c63cce97be49bfa3"
+    },
+    {
+      "path": "packages/react-native/src/collapsible.tsx",
+      "lines": 50,
+      "sha256": "d09513db9651519cc434313109244ac1e177f70bd266c9a61c67155a035344fe"
+    },
+    {
+      "path": "packages/react-native/src/composition-style.ts",
+      "lines": 49,
+      "sha256": "b57279c31ac436a8d9a1ed02e10e9345e5a14e5e8f62aa0e1304f7df0f197472"
+    },
+    {
+      "path": "packages/react-native/src/content-transition.tsx",
+      "lines": 28,
+      "sha256": "095e424f6e8f7fc8df5f37a1eb5b9e2541b3b05a7bc1c224c7624144e33f265b"
+    },
+    {
+      "path": "packages/react-native/src/context-menu-native.tsx",
+      "lines": 33,
+      "sha256": "406f5dfd65fc3a6e70f951b4a4f69ec9e772c49c61db7d7aa88a96b8bc932a4c"
+    },
+    {
+      "path": "packages/react-native/src/data-display.tsx",
+      "lines": 1954,
+      "sha256": "62ed510c684bcaae914f4174b323c6864ce0d555fbadd2d2ce073576c15d13aa"
+    },
+    {
+      "path": "packages/react-native/src/date-picker.tsx",
+      "lines": 127,
+      "sha256": "c0bc1ca9342f0a94d9fb1b8520e1ff0eb7bb120ff220e9d719a21d3512518fb6"
+    },
+    {
+      "path": "packages/react-native/src/date-range.tsx",
+      "lines": 94,
+      "sha256": "7d37592ed8ac90ca87f64aeddbc136cb533ccff1bfc6fc6375fda514718dfc04"
+    },
+    {
+      "path": "packages/react-native/src/evidence.ts",
+      "lines": 280,
+      "sha256": "cf3675a5ffdde103ffd520ff615ea5309afd7a0a252b2c97019cb9e49263a785"
+    },
+    {
+      "path": "packages/react-native/src/feedback.tsx",
+      "lines": 1472,
+      "sha256": "c8857514e034876d413b27c7afe6ee8b82fb9409ff2d4cc086881e690e402140"
+    },
+    {
+      "path": "packages/react-native/src/file-picker.tsx",
+      "lines": 85,
+      "sha256": "e4dd2961e07e3373753bf3bda579941a577458d9108740c09cd98e5e2855813b"
+    },
+    {
+      "path": "packages/react-native/src/floating-action-button.tsx",
+      "lines": 73,
+      "sha256": "3bd18c0a99ec5b9575503446cc5ebfe3dc82e14fe0c4d481f24fb0c58caaed74"
+    },
+    {
+      "path": "packages/react-native/src/forms.tsx",
+      "lines": 1322,
+      "sha256": "e5257bf57c7a11af86a114db1fcff270790ccc131c750fdf7d0377357ed6ad70"
+    },
+    {
+      "path": "packages/react-native/src/heading.tsx",
+      "lines": 47,
+      "sha256": "1469c2622b4df04532b116329d7140bb566c73e0ea2418929a08370a7bfda371"
+    },
+    {
+      "path": "packages/react-native/src/image-viewer.tsx",
+      "lines": 91,
+      "sha256": "b7ae35daddb2e4b01e7f77a883418033cec48df4f3308b6705fa7e14520fb703"
+    },
+    {
+      "path": "packages/react-native/src/index.ts",
+      "lines": 294,
+      "sha256": "615c9b128b09a21fca4f930478d0fe08e25729d9ab8235c5ca31c4dccc359153"
+    },
+    {
+      "path": "packages/react-native/src/inputs-public.ts",
+      "lines": 6,
+      "sha256": "66a2c38b868530940e47a44768073334608dbc97d49dda23b44b2fbc4c809bc9"
+    },
+    {
+      "path": "packages/react-native/src/inputs.tsx",
+      "lines": 2175,
+      "sha256": "2bce86eaa3bc0ea397b9de302974712b2f33ca919c84860c0c7dc863ff28acdf"
+    },
+    {
+      "path": "packages/react-native/src/keyboard-controller.tsx",
+      "lines": 32,
+      "sha256": "629fb351142dbe4d2552b05891136ec31d40e6c600678e51edc7a2b5e3615fc8"
+    },
+    {
+      "path": "packages/react-native/src/keyboard.tsx",
+      "lines": 62,
+      "sha256": "07f82096035b082476b8e019eeff6484d068fed995ea97fa0d7b5e3af98708ca"
+    },
+    {
+      "path": "packages/react-native/src/masonry.tsx",
+      "lines": 17,
+      "sha256": "48474f2bda73d5cf655f0a34ec05c39a170c36f73962506f411cf0e756ddedc8"
+    },
+    {
+      "path": "packages/react-native/src/mentions.tsx",
+      "lines": 126,
+      "sha256": "a1cdb3773b921f28b7ac94c7fafcd5db91e9fb86e785afa518460bd04b5cc131"
+    },
+    {
+      "path": "packages/react-native/src/navigation.tsx",
+      "lines": 2081,
+      "sha256": "d66156a4baf60bc7afbb68f85b1922b8ee6d8badc24aff24bac6997a36b51d48"
+    },
+    {
+      "path": "packages/react-native/src/number-field.tsx",
+      "lines": 363,
+      "sha256": "cea01aab77f298f6ddd14dd54a1d49960cd78a3a6357774a0fe7e7e1cbd61d57"
+    },
+    {
+      "path": "packages/react-native/src/otp-field.ts",
+      "lines": 2,
+      "sha256": "f419cd6d7a34860997d3230fb176f4e63fe0933ac62fecc5dd9d500204fb7ef4"
+    },
+    {
+      "path": "packages/react-native/src/overlays.tsx",
+      "lines": 1382,
+      "sha256": "a8b49144ddca3e5c3934fab2f122e3bd37a1e702006430e0190c8442cdd3e670"
+    },
+    {
+      "path": "packages/react-native/src/password-field.ts",
+      "lines": 2,
+      "sha256": "30bd282c6fc6ac7c0ba6efce3418af6702cf32a1b171543787748fe57ad65452"
+    },
+    {
+      "path": "packages/react-native/src/primitives.tsx",
+      "lines": 705,
+      "sha256": "e81ccc0d51ae081dfffaaf3a21bd646646c1e55d3ef2eee087de5785716e3fd4"
+    },
+    {
+      "path": "packages/react-native/src/provider-button.tsx",
+      "lines": 77,
+      "sha256": "e9084adb75966f084445027741da88a6f8c3286bc66e707a657cd69151a5ecc2"
+    },
+    {
+      "path": "packages/react-native/src/provider.tsx",
+      "lines": 238,
+      "sha256": "e142923fc876f01b095e63e00779e210738550dd2e3fe1f13e4389dde206a1e1"
+    },
+    {
+      "path": "packages/react-native/src/qr-code.tsx",
+      "lines": 19,
+      "sha256": "5323d7e7812a0123b255addb4be1399bed6f49ecba7b4970bc505cea775bd58d"
+    },
+    {
+      "path": "packages/react-native/src/screen-transition.tsx",
+      "lines": 47,
+      "sha256": "244a9301fbf477fc90473e387b271e00f7e934b8cedd498cdf060294f80130dc"
+    },
+    {
+      "path": "packages/react-native/src/sheet-gesture.tsx",
+      "lines": 127,
+      "sha256": "d23cf4c168ca1f4c0d034c434167a94ccafa963d642cd036bba7196c0364c57b"
+    },
+    {
+      "path": "packages/react-native/src/slider.tsx",
+      "lines": 383,
+      "sha256": "1a7d3a96b967516b767adf15becf26975db9f61e5ceead7079140c0f3ed063e0"
+    },
+    {
+      "path": "packages/react-native/src/sortable.tsx",
+      "lines": 79,
+      "sha256": "b58d0dbf64a8574c4540fe3cdbf746d9dcab3317d18ece957edf22b4ffe96a30"
+    },
+    {
+      "path": "packages/react-native/src/steps.tsx",
+      "lines": 52,
+      "sha256": "be3ef2015170907a620230793b9c744b8e9584627eb76665c557281806426d52"
+    },
+    {
+      "path": "packages/react-native/src/swipe-actions.tsx",
+      "lines": 63,
+      "sha256": "83f52774c6c3f7d4a97ddf444af31a3a6828aaa3c45c8fa252de774716cac806"
+    },
+    {
+      "path": "packages/react-native/src/tags-input.tsx",
+      "lines": 152,
+      "sha256": "3539f512b0b3952fa3e5a2a83c3bf1ebb45332e32585b888732ea52adad6e7af"
+    },
+    {
+      "path": "packages/react-native/src/thinking-orb.tsx",
+      "lines": 63,
+      "sha256": "b90bb393f6f14ee8fab53be13bcab226d487428b3118341cdbbf7c05e1fae263"
+    },
+    {
+      "path": "packages/react-native/src/toast-liquid.tsx",
+      "lines": 161,
+      "sha256": "23bd5b5a9885a8403a742fdd80f004ef7a51a5480e2e4a35e44057c2475a1d83"
+    },
+    {
+      "path": "packages/react-native/src/toggle-group.tsx",
+      "lines": 83,
+      "sha256": "6d1e17bc1e9963fea988d521e1bd17fac6aa26d7934e7be98799a2df040dc91c"
+    },
+    {
+      "path": "packages/react-native/src/top.tsx",
+      "lines": 79,
+      "sha256": "02e32860cfae6b155abe8b1596fdc81bde5a891200a1bbc6011948fc587f1fd0"
+    },
+    {
+      "path": "packages/react-native/src/transfer-list.tsx",
+      "lines": 147,
+      "sha256": "a836f6c17b63637ea215593393333b383028bae976b354eaf4fa45fb2690f88f"
+    },
+    {
+      "path": "packages/react-native/src/upload-item.tsx",
+      "lines": 69,
+      "sha256": "4c058c629622f466df270f0d031201d8c43354c1ceeb4cac9a2c08931e1e6c1d"
+    },
+    {
+      "path": "packages/react-native/src/virtual-list.tsx",
+      "lines": 15,
+      "sha256": "27c241a533aa7bb0f6037537a41ef65a4bb49140af433e9adf70027d8466b014"
+    },
+    {
+      "path": "packages/react-native/src/internal/modal-lifecycle.ts",
+      "lines": 23,
+      "sha256": "de198d9af4bef81554efa1dfcb770f0579d230b256612e94443b21f1ec9400a3"
+    },
+    {
+      "path": "packages/react-native/src/internal/state.ts",
+      "lines": 52,
+      "sha256": "39fd6c2301fee1ce55c109c514861a1247124f0ed87dcd7b9c4dec137a8f4dc3"
+    },
+    {
+      "path": "packages/react-native/src/internal/styles.ts",
+      "lines": 83,
+      "sha256": "7555ad0e5641daf0627515e531499aeb15e8a9edd17a2d5cec2b31f7b34f50ec"
+    },
+    {
+      "path": "packages/react-native/src/internal/toast-presentation.ts",
+      "lines": 26,
+      "sha256": "a5e249a65f31e6787ad68d29c32b7297b94b12babf654e12b8afa4ec8cec2c19"
+    },
+    {
+      "path": "packages/react-native/src/internal/web-a11y.ts",
+      "lines": 196,
+      "sha256": "6eb3a24fa37c1be0be9ff47f8a0816ba4d76916fc78a72d00608c5584d2b51c8"
+    }
+  ],
+  "duplicateBlocks": [
+    {
+      "a": "packages/design-contracts/src/internal/thinking-orb/braid.ts",
+      "aLine": 13,
+      "b": "packages/design-contracts/src/internal/thinking-orb/ribbon.ts",
+      "bLine": 21,
+      "windows": 50,
+      "sample": ", cx , cy , 1 ) ; const rs = radiusScale ( size , o . rsPow ?? 0.6 ) ; const dots : Dot [ ] = [ ] ; const ghostN = o . ghostN ?? 150 ; for ("
+    },
+    {
+      "a": "packages/design-contracts/src/popover.ts",
+      "aLine": 127,
+      "b": "packages/design-contracts/src/tooltip.ts",
+      "bLine": 73,
+      "windows": 16,
+      "sample": "] ) ; const openStateKeys = new Set ( [ \"open\" , \"defaultOpen\" , \"onOpenChange\" ] ) ; function isObject ( value : unknown ) : value is Reado"
+    },
+    {
+      "a": "packages/design-contracts/src/internal/thinking-orb/lattice.ts",
+      "aLine": 105,
+      "b": "packages/design-contracts/src/internal/thinking-orb/lattice.ts",
+      "bLine": 146,
+      "windows": 13,
+      "sample": "; for ( let li = 0 ; li <= latRings ; li ++ ) { const lat = - Math . PI / 2 + ( li / latRings ) * Math . PI ; const cosLat = Math . cos ( la"
+    },
+    {
+      "a": "packages/design-contracts/src/internal/thinking-orb/orbits.ts",
+      "aLine": 46,
+      "b": "packages/design-contracts/src/internal/thinking-orb/orbits.ts",
+      "bLine": 64,
+      "windows": 11,
+      "sample": "; const [ px , py , z ] = pt ( ( ux * Math . cos ( a ) + vx * Math . sin ( a ) ) * ro , ( uy * Math . cos ( a ) + vy * Math . sin ( a ) ) * "
+    },
+    {
+      "a": "packages/react/src/actions.tsx",
+      "aLine": 65,
+      "b": "packages/react/src/actions.tsx",
+      "bLine": 139,
+      "windows": 7,
+      "sample": ", disabled , onClick , type = \"button\" , className , children , layoutStyle , style , ... props } , ref , ) { const ariaDisabled = props [ \""
+    },
+    {
+      "a": "packages/react-native/src/actions.tsx",
+      "aLine": 147,
+      "b": "packages/react-native/src/actions.tsx",
+      "bLine": 305,
+      "windows": 1,
+      "sample": "} accessibilityRole = \"button\" accessibilityState = { { ... accessibilityState , ... ( selected === undefined ? { } : { selected } ) , disab"
+    }
+  ]
+}

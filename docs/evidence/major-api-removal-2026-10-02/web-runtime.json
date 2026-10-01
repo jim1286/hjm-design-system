@@ -1,0 +1,25 @@
+{
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "results": [
+    {
+      "id": "components-actions--button",
+      "text": "ACTION · SHARED\n\nButton\ncontract: stable\nweb: stable\nnative: stable\nrecipe: buttonRecipe\nInteractive Web reference\nPrimary\nSecondary\nDisabled\nRequired evidence\nSurfaces\n\ncontract · web · native\n\nRequired scenarios\nContract\nDefault\nDark\nLong copy\n200% text\nRTL\nReduced motion\nAccessibility\nContract\n\nRecipe: buttonRecipe; branches: slots · defaults · "
+    },
+    {
+      "id": "components-inputs--select",
+      "text": "INPUT · ADAPTIVE\n\nSelect\ncontract: stable\nweb: stable\nnative: stable\nbehavior: select\nrecipe: selectRecipe\nInteractive Web reference\n언어\n한국어\n⌄\nRequired evidence\nSurfaces\n\ncontract · web · native\n\nRequired scenarios\nContract\nDefault\nDark\nLong copy\n200% text\nRTL\nReduced motion\nAccessibility\nKeyboard\nNative actions\nContract\n\nRecipe: selectRecipe; branc"
+    },
+    {
+      "id": "components-navigation--tabs",
+      "text": "NAVIGATION · SHARED\n\nTabs\ncontract: stable\nweb: stable\nnative: stable\nbehavior: tabs\nrecipe: tabsRecipe\nEVIDENCE-NEEDED\n\nWeb Arrow-key roving focus skips disabled tabs, keeps manual selection until activation, and scrolls a focused tab into view; reduced motion uses instant scrolling. Native exposes a contract-named activate action and labelled pan"
+    },
+    {
+      "id": "components-navigation--menu",
+      "text": "NAVIGATION · ADAPTIVE\n\nMenu\ncontract: stable\nweb: stable\nnative: stable\nbehavior: menu\nrecipe: menuRecipe\nInteractive Web reference\n작업 열기\nRequired evidence\nSurfaces\n\ncontract · web · native\n\nRequired scenarios\nContract\nDefault\nDark\nLong copy\n200% text\nRTL\nReduced motion\nAccessibility\nKeyboard\nNative actions\nContract\n\nRecipe: menuRecipe; branches: s"
+    }
+  ],
+  "errors": []
+}

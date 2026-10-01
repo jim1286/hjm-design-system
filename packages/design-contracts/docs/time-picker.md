@@ -95,7 +95,7 @@ catalog의 `{ name: "TimePicker", category: "input", platform: "adaptive", statu
 
 ## 2026-09-16: React/RN 작동 조합
 
-명시 요청에 따라 위 합성 경로를 양쪽 Showcase의 `Patterns/Time selection`에 구현했다.
+명시 요청에 따라 위 합성 경로를 양쪽 Showcase의 `패턴/시간 선택`에 구현했다.
 시 00–23와 분 00–59의 독립 Select, 두 값이 있어야 가능한 확정, 초기화, 변경 시 확정 결과 해제를
 포함한다. 새 TimePicker renderer를 선언하지 않고 기존 공개 `Select`를 그대로 조합한다.
 

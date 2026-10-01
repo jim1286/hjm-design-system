@@ -1,19 +1,29 @@
+import { toId, storyNameFromExport } from "storybook/internal/csf";
 import { readdir, readFile } from "node:fs/promises";
 import { componentCatalog, getComponentSurfaceStatus } from "@hjmds/design-contracts";
 
 const index = JSON.parse(await readFile(new URL("../storybook-static/index.json", import.meta.url), "utf8"));
 const entries = Object.values(index.entries ?? {});
-const navigationTitles = new Set(["Components/Overview", "Components/Catalog"]);
+const navigationTitles = new Set(["배포/컴포넌트/개요", "배포/컴포넌트/전체 목록"]);
 const referenceStories = entries.filter(
-  (entry) => entry.title?.startsWith("Components/") && !navigationTitles.has(entry.title),
+  (entry) => // Canonical family fixtures have three title levels. Individually registered
+  // optional stories add a fourth level and must not inflate the canonical count.
+  /^배포\/컴포넌트\/[^/]+$/.test(entry.title ?? "") && !navigationTitles.has(entry.title),
 );
 const expectedNames = componentCatalog.map(({ name }) => name);
-const canonicalName = (name) => name.replaceAll(" ", "");
-const actualNames = new Set(referenceStories.map((entry) => canonicalName(entry.name)));
+// Display names are localized; stable export IDs retain canonical coverage across translations.
+const canonicalName = (name) => toId(storyNameFromExport(name));
+const actualNames = new Set(referenceStories.map((entry) => entry.id.split("--")[1]));
 const missing = expectedNames.filter((name) => !actualNames.has(canonicalName(name)));
 if (missing.length > 0 || referenceStories.length !== expectedNames.length) {
   throw new Error(`Static Storybook must contain every canonical component story. Missing: ${missing.join(", ") || "none"}; found: ${referenceStories.length}`);
 }
+
+const misplaced = entries.filter(entry => !/^(배포|실험)\/(토큰|컴포넌트|구성|화면)\//.test(entry.title));
+if (misplaced.length) throw new Error(`Invalid Storybook hierarchy: ${misplaced.map(entry => entry.id).join(", ")}`);
+
+const untranslated = entries.filter(entry => !/[가-힣]/.test(entry.name) || entry.title.split("/").some(part => !/[가-힣]/.test(part)));
+if (untranslated.length) throw new Error(`Storybook labels must be Korean: ${untranslated.map(entry => entry.id).join(", ")}`);
 
 const classificationFor = (component) => {
   const status = getComponentSurfaceStatus(component, "web");
@@ -22,7 +32,7 @@ const classificationFor = (component) => {
   return "web-renderer";
 };
 const storyByName = new Map(
-  referenceStories.map((entry) => [canonicalName(entry.name), entry]),
+  referenceStories.map((entry) => [entry.id.split("--")[1], entry]),
 );
 const storiesWithIndexedClassification = referenceStories.filter((story) =>
   (story.tags ?? []).some((tag) => tag.startsWith("hjm-")),
@@ -69,19 +79,19 @@ if (classifiedTotal !== componentCatalog.length) {
   throw new Error(`Unexpected Showcase classification counts: ${JSON.stringify(classificationCounts)}`);
 }
 const requiredPages = [
-  ["Home/Overview", "Overview"],
-  ["Components/Overview", "Explorer"],
-  ["Components/Overview", "Foundations"],
-  ["Components/Overview", "Layout"],
-  ["Components/Overview", "Actions"],
-  ["Components/Overview", "Inputs"],
-  ["Components/Overview", "Navigation"],
-  ["Components/Overview", "Data display"],
-  ["Components/Overview", "Feedback"],
-  ["Components/Overview", "Overlays"],
-  ["Components/Overview", "Providers"],
-  ["Components/Overview", "Utilities"],
-  ["Components/Catalog", "Evidence Matrix"],
+  ["배포/컴포넌트/개요/사용 안내", "개요"],
+  ["배포/컴포넌트/개요", "전체 탐색"],
+  ["배포/컴포넌트/개요", "글자와 아이콘"],
+  ["배포/컴포넌트/개요", "레이아웃"],
+  ["배포/컴포넌트/개요", "동작"],
+  ["배포/컴포넌트/개요", "입력"],
+  ["배포/컴포넌트/개요", "탐색"],
+  ["배포/컴포넌트/개요", "데이터 표시"],
+  ["배포/컴포넌트/개요", "상태와 알림"],
+  ["배포/컴포넌트/개요", "오버레이"],
+  ["배포/컴포넌트/개요", "제공자 설정"],
+  ["배포/컴포넌트/개요", "보조 기능"],
+  ["배포/컴포넌트/전체 목록", "구현·검증 현황"],
 ];
 const missingPages = requiredPages.filter(
   ([title, name]) => !entries.some((entry) => entry.title === title && entry.name === name),
@@ -91,8 +101,8 @@ if (missingPages.length > 0) {
 }
 const leakedComponentExports = entries.filter(
   ({ title, name }) =>
-    (title === "Home/Overview" && name === "Introduction") ||
-    (title === "Components/Overview" && name === "Component Explorer"),
+    (title === "배포/컴포넌트/개요/사용 안내" && name === "Introduction") ||
+    (title === "배포/컴포넌트/개요" && name === "Component Explorer"),
 );
 if (leakedComponentExports.length > 0) {
   throw new Error("Story components must not leak into the sidebar as duplicate stories");

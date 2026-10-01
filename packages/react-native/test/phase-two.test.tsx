@@ -120,13 +120,13 @@ describe("@hjmds/react-native extended mobile renderer", () => {
     const renderer = renderWithProvider(
       <Select
         dismissLabel="선택 목록 닫기"
-        defaultValue="ko"
+        defaultSelectedKey="ko"
         label="언어"
         placeholder="언어 선택"
-        onValueChange={onValueChange}
-        options={[
-          { value: "ko", label: "한국어" },
-          { value: "en", label: "English" },
+        onSelectionChange={onValueChange}
+        items={[
+          { id: "ko", label: "한국어" , textValue: "한국어"},
+          { id: "en", label: "English" , textValue: "English"},
         ]}
       />,
       "rtl",
@@ -168,8 +168,8 @@ describe("@hjmds/react-native extended mobile renderer", () => {
         />
         <Menu
           dismissLabel="메뉴 닫기"
-          items={[{ value: "edit", label: "수정" }, { value: "delete", label: "삭제", tone: "danger" }]}
-          onSelect={vi.fn()}
+          items={[{ id: "edit", label: "수정" }, { id: "delete", label: "삭제", tone: "danger" }]}
+          onAction={vi.fn()}
           triggerLabel="더보기"
         />
       </>,
@@ -216,9 +216,10 @@ describe("@hjmds/react-native extended mobile renderer", () => {
           label="계정 정보"
         />
         <Image
-          accessibilityLabel="산 이미지"
+          decorative={false}
+        accessibilityLabel="산 이미지"
           fallback={<Text>이미지 없음</Text>}
-          source={{ uri: "https://example.com/mountain.png" }}
+          src="https://example.com/mountain.png" width={180} height={120}
         />
       </>,
       "rtl",
@@ -253,10 +254,11 @@ describe("@hjmds/react-native extended mobile renderer", () => {
     ));
     const renderer = renderWithProvider(
       <Image
+        decorative={false}
         accessibilityLabel="최적화 이미지"
         fallback={<Text>대체 이미지</Text>}
         renderImage={renderImage}
-        source={{ uri: "https://example.com/optimized.png" }}
+        src="https://example.com/optimized.png" width={180} height={120}
       />,
     );
     const host = renderer.root.findByProps({ testID: "optimized-image" });
@@ -315,7 +317,7 @@ describe("@hjmds/react-native extended mobile renderer", () => {
       </ToastRegion>,
     );
     act(() => {
-      controller?.show({
+      controller?.publish({
         id: "saved",
         title: "저장됨",
         description: "변경사항을 저장했습니다.",

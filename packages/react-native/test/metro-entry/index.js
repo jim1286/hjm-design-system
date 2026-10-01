@@ -1,3 +1,19 @@
+import { NavigationBar } from "@hjmds/react-native/navigation-bar";
+import * as optionalFamily0 from "@hjmds/react-native/icon-lucide";
+import * as optionalFamily1 from "@hjmds/react-native/duration-field";
+import * as optionalFamily2 from "@hjmds/react-native/inline-confirm";
+import * as optionalFamily3 from "@hjmds/react-native/reaction-picker";
+import * as optionalFamily4 from "@hjmds/react-native/notification-bell";
+import * as optionalFamily5 from "@hjmds/react-native/scroll-progress";
+import * as optionalFamily6 from "@hjmds/react-native/code-block";
+import * as optionalFamily7 from "@hjmds/react-native/activity-heatmap";
+import * as optionalFamily8 from "@hjmds/react-native/statistic-motion";
+import * as optionalFamily9 from "@hjmds/react-native/task-list";
+import * as optionalFamily10 from "@hjmds/react-native/folder-preview";
+import * as optionalFamily11 from "@hjmds/react-native/step-player";
+import * as optionalFamily12 from "@hjmds/react-native/voice-note";
+import * as optionalFamily13 from "@hjmds/react-native/grid-reveal";
+import * as optionalFamily14 from "@hjmds/react-native/gravity-letters";
 import { Masonry } from "@hjmds/react-native/masonry";
 import { VirtualList } from "@hjmds/react-native/virtual-list";
 import { Agreement } from "@hjmds/react-native/agreement";
@@ -46,6 +62,9 @@ import { Dialog } from "@hjmds/react-native/overlays";
 import { Icon, Text } from "@hjmds/react-native/primitives";
 import { HjmNativeProvider } from "@hjmds/react-native/provider";
 
+// Keep peer-free optional exports reachable so Metro checks their actual dependency graph.
+const optionalFamilyNames = [optionalFamily0, optionalFamily1, optionalFamily2, optionalFamily3, optionalFamily4, optionalFamily5, optionalFamily6, optionalFamily7, optionalFamily8, optionalFamily9, optionalFamily10, optionalFamily11, optionalFamily12, optionalFamily13, optionalFamily14].flatMap(family => Object.keys(family));
+
 const noop = () => undefined;
 const calendarGrid = {
   cells: [
@@ -64,7 +83,7 @@ function MetroSmokeApp() {
     React.createElement(
       View,
       null,
-      React.createElement(Text, { variant: "title" }, "HJM Metro smoke"),
+      React.createElement(Text, { variant: "title" }, `HJM Metro smoke: ${optionalFamilyNames.join(", ")}`),
       React.createElement(FloatingActionButton, {
         descriptor: { label: "새 기록", icon: { name: "add" } },
         renderIcon: () => React.createElement(Text, null, "＋"), onContentClearanceChange: noop,
@@ -208,6 +227,7 @@ function MetroSmokeApp() {
         onSelect: noop,
       }),
       React.createElement(Chip, { label: "필터", onPress: noop }),
+      React.createElement(NavigationBar, { label: "사이트 탐색", brand: React.createElement(Text, null, "HJM") }, React.createElement(Text, null, "홈")),
       React.createElement(BottomNavigation, {
         descriptor: {
           accessibilityLabel: "주요 메뉴",

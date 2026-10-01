@@ -1,0 +1,23 @@
+[
+  {
+    "state": "default",
+    "added": true,
+    "emptyValidation": true,
+    "faq": true,
+    "overflow": false
+  },
+  {
+    "state": "dark",
+    "added": true,
+    "emptyValidation": true,
+    "faq": true,
+    "overflow": false
+  },
+  {
+    "state": "large-text",
+    "added": true,
+    "emptyValidation": true,
+    "faq": true,
+    "overflow": false
+  }
+]

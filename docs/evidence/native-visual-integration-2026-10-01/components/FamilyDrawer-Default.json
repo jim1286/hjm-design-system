@@ -1,0 +1,182 @@
+[
+  {
+    "frame": {
+      "height": 874,
+      "x": 0,
+      "y": 0,
+      "width": 402
+    },
+    "enabled": true,
+    "role": "AXApplication",
+    "AXValue": null,
+    "help": null,
+    "AXFrame": "{{0, 0}, {402, 874}}",
+    "AXLabel": "HJM Native Showcase",
+    "role_description": "application",
+    "content_required": false,
+    "traits": [
+      "None"
+    ],
+    "pid": 57163,
+    "type": "Application",
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "subrole": null,
+    "title": null
+  },
+  {
+    "title": null,
+    "AXFrame": "{{16, 78}, {370, 40}}",
+    "traits": [
+      "Scrollable",
+      "StaticText",
+      "Header"
+    ],
+    "help": null,
+    "role": "AXHeading",
+    "role_description": "heading",
+    "type": "Heading",
+    "custom_actions": [],
+    "AXLabel": "함께하는 공간",
+    "subrole": null,
+    "enabled": true,
+    "content_required": false,
+    "pid": 57163,
+    "AXValue": null,
+    "AXUniqueId": null,
+    "frame": {
+      "y": 78,
+      "x": 16,
+      "height": 40,
+      "width": 370
+    }
+  },
+  {
+    "content_required": false,
+    "AXFrame": "{{16, 142}, {370, 20}}",
+    "pid": 57163,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "enabled": true,
+    "AXValue": null,
+    "AXLabel": "초대부터 알림 설정까지 한 자리에서 이어가요.",
+    "custom_actions": [],
+    "title": null,
+    "help": null,
+    "role": "AXStaticText",
+    "subrole": null,
+    "AXUniqueId": null,
+    "type": "StaticText",
+    "role_description": "text",
+    "frame": {
+      "y": 142,
+      "x": 16,
+      "width": 370,
+      "height": 20
+    }
+  },
+  {
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "role_description": "",
+    "AXValue": null,
+    "subrole": null,
+    "role": "AXGenericElement",
+    "pid": 57163,
+    "AXUniqueId": null,
+    "help": null,
+    "enabled": true,
+    "custom_actions": [],
+    "AXLabel": "공간 설정하기",
+    "type": "GenericElement",
+    "title": null,
+    "AXFrame": "{{16, 186}, {370, 44}}",
+    "content_required": false,
+    "frame": {
+      "x": 16,
+      "y": 186,
+      "width": 370,
+      "height": 44
+    }
+  },
+  {
+    "AXFrame": "{{362, 759}, {24, 24}}",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "role": "AXGenericElement",
+    "content_required": false,
+    "AXLabel": null,
+    "title": null,
+    "frame": {
+      "x": 362,
+      "y": 759,
+      "height": 24,
+      "width": 24
+    },
+    "custom_actions": [],
+    "pid": 57163,
+    "traits": [
+      "Scrollable"
+    ],
+    "help": null,
+    "type": "GenericElement",
+    "role_description": "",
+    "enabled": true,
+    "subrole": null
+  },
+  {
+    "enabled": true,
+    "AXLabel": "Patterns/Family drawer/Default",
+    "role": "AXGenericElement",
+    "traits": [
+      "Scrollable"
+    ],
+    "help": null,
+    "subrole": null,
+    "AXFrame": "{{6, 811.66666698455811}, {235.66667175292969, 17}}",
+    "AXUniqueId": "mobile-menu-button",
+    "content_required": false,
+    "role_description": "",
+    "pid": 57163,
+    "type": "GenericElement",
+    "frame": {
+      "width": 235.6666717529297,
+      "x": 6,
+      "y": 811.6666669845581,
+      "height": 17
+    },
+    "AXValue": null,
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "subrole": null,
+    "help": null,
+    "AXValue": null,
+    "AXFrame": "{{368, 806}, {28, 28}}",
+    "content_required": false,
+    "AXUniqueId": "mobile-addons-button",
+    "enabled": true,
+    "custom_actions": [],
+    "role_description": "button",
+    "frame": {
+      "height": 28,
+      "y": 806,
+      "width": 28,
+      "x": 368
+    },
+    "AXLabel": "Open addons panel",
+    "pid": 57163,
+    "title": null,
+    "type": "Button",
+    "role": "AXButton",
+    "traits": [
+      "Scrollable",
+      "Button"
+    ]
+  }
+]

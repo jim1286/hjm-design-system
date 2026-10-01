@@ -1,7 +1,8 @@
 import { createElement as _createElement } from "react";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { FieldMessage, NativeFieldFrame } from "./internal/field-frame.js";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
-import { glyph, radius, spacing, typography } from "@hjmds/design-contracts/foundations";
+import { glyph, radius, spacing, typography, } from "@hjmds/design-contracts/foundations";
 import { fieldRecipe, } from "@hjmds/design-contracts/recipes/base";
 import { chipRecipe, searchFieldRecipe, segmentedControlRecipe, selectionControlRecipe, selectionGroupRecipe, switchRecipe, } from "@hjmds/design-contracts/recipes";
 import { visibleControlHeight } from "@hjmds/design-contracts/components/design-system-provider";
@@ -9,7 +10,7 @@ import { passwordFieldRecipe, resolvePasswordFieldDescriptor, } from "@hjmds/des
 import { getOtpFieldSlotValues, otpFieldRecipe, resolveOtpFieldValue, } from "@hjmds/design-contracts/components/otp-field";
 import { getCheckboxNextState, reconcileCheckboxSelection, resolveControlAccessibleName, resolveInitialRadioValue, resolveInitialTabValue, reconcileRadioSelection, selectionGroupBehaviorDefaults, toggleCheckboxSelection, validateCheckboxSelection, validateRadioSelection, validateSelectionItems, } from "@hjmds/design-contracts/behaviors";
 import { forwardRef, useEffect, useId, useImperativeHandle, useRef, useState, } from "react";
-import { ActivityIndicator, Platform, Pressable, Switch as NativeSwitch, TextInput, View, } from "react-native";
+import { ActivityIndicator, Platform, Pressable, Switch as NativeSwitch, Text as NativeText, TextInput, View, } from "react-native";
 import { mixedCheckboxState, useControllableState } from "./internal/state.js";
 import { webChoiceProps, webOnly } from "./internal/web-a11y.js";
 import { logicalTextAlign, minimumTargetStyle, resolveNativeTextScaleProps, } from "./internal/styles.js";
@@ -27,12 +28,7 @@ function resolveFieldAccessibleName(label, accessibilityLabel) {
         ...(visibleLabel ? { visibleLabel } : {}),
     };
 }
-function FieldMessage({ error, supportText }) {
-    if (!error && !supportText)
-        return null;
-    return (_jsx(Text, { accessibilityLiveRegion: error ? "assertive" : "none", tone: error ? "danger" : "muted", variant: fieldRecipe.support.textVariant, children: error ?? supportText }));
-}
-const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultValue = "", onValueChange, description, supportText: legacySupportText, error, required = false, disabled = false, busy = false, variant = fieldRecipe.defaults.variant, shape, accessibilityLabel, inputStyle, containerStyle, layoutStyle, allowFontScaling, multiline, maxVisibleLines, minVisibleLines, align = fieldRecipe.defaults.align, search, searchSize = searchFieldRecipe.defaults.size, leading, trailing, onBlur, onFocus, ...props }, ref) {
+const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultValue = "", onValueChange, description, error, required = false, disabled = false, busy = false, variant = fieldRecipe.defaults.variant, shape, accessibilityLabel, layoutStyle, allowFontScaling, multiline, maxVisibleLines, minVisibleLines, align = fieldRecipe.defaults.align, search, recipeInputStyle, searchSize = searchFieldRecipe.defaults.size, leading, trailing, onBlur, onFocus, ...props }, ref) {
     const theme = useHjmNativeTheme();
     const { colors, environment, textScaling } = theme;
     const [focused, setFocused] = useState(false);
@@ -41,13 +37,16 @@ const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultV
         defaultValue,
         ...(onValueChange === undefined ? {} : { onChange: onValueChange }),
     });
-    const supportText = description ?? legacySupportText;
+    const supportText = description;
     const hint = error ?? supportText;
     const { accessibleName, visibleLabel } = resolveFieldAccessibleName(label, accessibilityLabel);
-    const resolvedShape = shape ?? (search ? searchFieldRecipe.defaults.shape : fieldRecipe.defaults.shape);
+    const resolvedShape = shape ??
+        (search ? searchFieldRecipe.defaults.shape : fieldRecipe.defaults.shape);
     const searchSizing = searchFieldRecipe.sizes[searchSize];
     const resolvedMaxVisibleLines = maxVisibleLines ?? fieldRecipe.multilineMaxVisibleLines;
-    const borderWidth = search ? searchFieldRecipe.borderWidth : fieldRecipe.borderWidth;
+    const borderWidth = search
+        ? searchFieldRecipe.borderWidth
+        : fieldRecipe.borderWidth;
     const borderColor = search
         ? resolveColorReference(error
             ? searchFieldRecipe.colors.invalid
@@ -71,11 +70,14 @@ const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultV
     const minHeight = multiline
         ? minVisibleLines === undefined
             ? fieldRecipe.multilineMinHeight
-            : Math.max(fieldRecipe.multilineMinHeight, textStyle.lineHeight * minVisibleLines + fieldRecipe.paddingVertical * 2)
+            : Math.max(fieldRecipe.multilineMinHeight, textStyle.lineHeight * minVisibleLines +
+                fieldRecipe.paddingVertical * 2)
         : search
             ? searchSizing.minHeight
             : fieldRecipe.minHeight;
-    const controlRadius = radius[search ? searchFieldRecipe.shapes[resolvedShape] : fieldRecipe.shapes[resolvedShape]];
+    const controlRadius = radius[search
+        ? searchFieldRecipe.shapes[resolvedShape]
+        : fieldRecipe.shapes[resolvedShape]];
     const inputTextScaleProps = resolveNativeTextScaleProps(textScaling, [
         {
             color: search
@@ -85,11 +87,13 @@ const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultV
             fontSize: textStyle.fontSize,
             fontWeight: textStyle.fontWeight,
             lineHeight: textStyle.lineHeight,
-            minHeight: minHeight - (borderWidth * 2),
-            ...(multiline && resolvedMaxVisibleLines !== null && resolvedMaxVisibleLines !== undefined
+            minHeight: minHeight - borderWidth * 2,
+            ...(multiline &&
+                resolvedMaxVisibleLines !== null &&
+                resolvedMaxVisibleLines !== undefined
                 ? {
-                    maxHeight: textStyle.lineHeight * resolvedMaxVisibleLines
-                        + (fieldRecipe.paddingVertical * 2),
+                    maxHeight: textStyle.lineHeight * resolvedMaxVisibleLines +
+                        fieldRecipe.paddingVertical * 2,
                 }
                 : {}),
             paddingHorizontal: 0,
@@ -99,42 +103,37 @@ const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultV
                 : logicalTextAlign(environment.direction),
             textAlignVertical: multiline ? "top" : "center",
         },
-        inputStyle,
+        recipeInputStyle,
     ], allowFontScaling);
-    return (_jsxs(View, { style: [
+    return (_jsx(NativeFieldFrame, { ...(visibleLabel === undefined ? {} : { label: visibleLabel }), required: required, ...(error === undefined ? {} : { error }), ...(supportText === undefined ? {} : { description: supportText }), style: [
             {
-                gap: fieldRecipe.label.gap,
                 opacity: disabled
                     ? search
                         ? searchFieldRecipe.states.disabledOpacity
                         : fieldRecipe.disabledOpacity
                     : 1,
             },
-            containerStyle,
             layoutStyle,
-        ], children: [visibleLabel ? (_jsxs(Text, { style: {
-                    color: colors[fieldRecipe.label.color],
-                    fontWeight: fieldRecipe.label.fontWeight,
-                }, tone: "body", variant: fieldRecipe.label.textVariant, children: [visibleLabel, required ? " *" : ""] })) : null, _jsxs(View, { style: { gap: fieldRecipe.support.gap }, children: [_jsxs(View, { style: {
-                            alignItems: multiline ? "stretch" : "center",
-                            backgroundColor,
-                            borderColor,
-                            borderRadius: controlRadius,
-                            borderWidth,
-                            direction: environment.direction,
-                            flexDirection: "row",
-                            gap: search ? searchSizing.gap : 0,
-                            minHeight,
-                            paddingHorizontal: search
-                                ? searchSizing.paddingHorizontal
-                                : fieldRecipe.paddingHorizontal,
-                        }, children: [leading ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", children: leading })) : null, _jsx(TextInput, { ...props, ...inputTextScaleProps, ref: ref, accessibilityHint: hint, accessibilityLabel: accessibleName, accessibilityRole: search ? "search" : undefined, accessibilityState: { busy, disabled }, editable: !disabled && !busy, multiline: multiline, onBlur: (event) => {
-                                    setFocused(false);
-                                    onBlur?.(event);
-                                }, onChangeText: setCurrentValue, onFocus: (event) => {
-                                    setFocused(true);
-                                    onFocus?.(event);
-                                }, placeholderTextColor: placeholderColor, value: currentValue }), trailing] }), _jsx(FieldMessage, { ...(error === undefined ? {} : { error }), ...(supportText === undefined ? {} : { supportText }) })] })] }));
+        ], children: _jsxs(View, { style: {
+                alignItems: multiline ? "stretch" : "center",
+                backgroundColor,
+                borderColor,
+                borderRadius: controlRadius,
+                borderWidth,
+                direction: environment.direction,
+                flexDirection: "row",
+                gap: search ? searchSizing.gap : 0,
+                minHeight,
+                paddingHorizontal: search
+                    ? searchSizing.paddingHorizontal
+                    : fieldRecipe.paddingHorizontal,
+            }, children: [leading ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", children: leading })) : null, _jsx(TextInput, { ...props, ...inputTextScaleProps, ref: ref, accessibilityHint: hint, accessibilityLabel: accessibleName, accessibilityRole: search ? "search" : undefined, accessibilityState: { busy, disabled }, editable: !disabled && !busy, multiline: multiline, onBlur: (event) => {
+                        setFocused(false);
+                        onBlur?.(event);
+                    }, onChangeText: setCurrentValue, onFocus: (event) => {
+                        setFocused(true);
+                        onFocus?.(event);
+                    }, placeholderTextColor: placeholderColor, value: currentValue }), trailing] }) }));
 });
 export const TextField = forwardRef(function TextField(props, ref) {
     return _jsx(FieldRenderer, { ...props, ref: ref, multiline: false, search: false });
@@ -237,7 +236,7 @@ export const PasswordField = forwardRef(function PasswordField({ revealed: revea
         }, 0);
         return () => clearTimeout(timeout);
     }, [revealed]);
-    return (_jsx(FieldRenderer, { ...props, ref: inputRef, autoComplete: autofillHint === "current" ? "current-password" : "new-password", disabled: disabled, inputStyle: [
+    return (_jsx(FieldRenderer, { ...props, ref: inputRef, autoComplete: autofillHint === "current" ? "current-password" : "new-password", disabled: disabled, recipeInputStyle: [
             size === "large"
                 ? {
                     fontSize: typography.bodyLarge.fontSize,
@@ -245,7 +244,6 @@ export const PasswordField = forwardRef(function PasswordField({ revealed: revea
                     minHeight: metrics.minHeight - (passwordFieldRecipe.frame.borderWidth * 2),
                 }
                 : undefined,
-            props.inputStyle,
         ], multiline: false, onSelectionChange: (event) => {
             selectionRef.current = event.nativeEvent.selection;
             onSelectionChange?.(event);
@@ -258,8 +256,8 @@ export const PasswordField = forwardRef(function PasswordField({ revealed: revea
             }), children: renderToggleIcon?.(appearance) ?? _jsx(DefaultPasswordToggleIcon, { ...appearance }) })) }));
 });
 /** One accessible numeric TextInput rendered through decorative OTP slots. */
-export const OtpField = forwardRef(function OtpField({ label, accessibilityLabel, description, supportText: legacySupportText, error, required = false, disabled = false, busy = false, readOnly = false, length, value: valueProp, defaultValue = "", onValueChange, onComplete, size = otpFieldRecipe.defaults.size, slotStyle, slotTextStyle, containerStyle, allowFontScaling, onBlur, onFocus, ...props }, ref) {
-    const supportText = description ?? legacySupportText;
+export const OtpField = forwardRef(function OtpField({ label, accessibilityLabel, description, error, required = false, disabled = false, busy = false, readOnly = false, length, value: valueProp, defaultValue = "", onValueChange, onComplete, size = otpFieldRecipe.defaults.size, presentation = "boxes", slotStyle, slotTextStyle, allowFontScaling, onBlur, onFocus, ...props }, ref) {
+    const supportText = description;
     const theme = useHjmNativeTheme();
     const { accessibleName, visibleLabel } = resolveFieldAccessibleName(label, accessibilityLabel);
     const [focused, setFocused] = useState(false);
@@ -289,7 +287,6 @@ export const OtpField = forwardRef(function OtpField({ label, accessibilityLabel
                 gap: fieldRecipe.label.gap,
                 opacity: disabled || busy ? otpFieldRecipe.states.disabledOpacity : 1,
             },
-            containerStyle,
         ], children: [visibleLabel ? (_jsxs(Text, { style: {
                     color: theme.colors[fieldRecipe.label.color],
                     fontWeight: fieldRecipe.label.fontWeight,
@@ -329,8 +326,10 @@ export const OtpField = forwardRef(function OtpField({ label, accessibilityLabel
                                                 alignItems: "center",
                                                 backgroundColor: theme.colors.bg,
                                                 borderColor,
-                                                borderRadius: radius[otpFieldRecipe.slot.radius],
-                                                borderWidth: otpFieldRecipe.slot.borderWidth,
+                                                borderRadius: presentation === "underline" ? 0 : radius[otpFieldRecipe.slot.radius],
+                                                // Underline changes only decoration; one TextInput still owns edits and autofill.
+                                                borderWidth: presentation === "underline" ? 0 : otpFieldRecipe.slot.borderWidth,
+                                                borderBottomWidth: presentation === "underline" ? 2 : otpFieldRecipe.slot.borderWidth,
                                                 flex: 1,
                                                 height: slotHeight,
                                                 justifyContent: "center",
@@ -376,12 +375,14 @@ function ChoiceRow({ kind, label, description, checked, disabled, readOnly, requ
         readOnly ? readOnlyLabel : undefined,
         invalid ? invalidLabel : undefined,
     ].filter(Boolean).join(". ") || undefined;
+    // Selection marks are artwork inside a fixed box, not readable copy. HJM Text
+    // applies controlled textScale even with allowFontScaling=false, clipping at 200%.
     const defaultIndicator = kind === "radio" ? (checked === true ? (_jsx(View, { style: {
             backgroundColor: indicatorColor,
             borderRadius: radius.full,
             height: metrics.control * selectionControlRecipe.radioDotRatio,
             width: metrics.control * selectionControlRecipe.radioDotRatio,
-        } })) : null) : checked === "mixed" ? (_jsx(Text, { accessible: false, align: "center", style: { color: indicatorColor }, variant: "label", children: "\u2212" })) : checked ? (_jsx(Text, { accessible: false, align: "center", style: { color: indicatorColor }, variant: "label", children: "\u2713" })) : null;
+        } })) : null) : checked ? (_jsx(NativeText, { accessible: false, allowFontScaling: false, style: { ...typography.label, color: indicatorColor, textAlign: "center" }, children: checked === "mixed" ? "−" : "✓" })) : null;
     return (_jsxs(Pressable, { accessibilityHint: resolvedHint, accessibilityLabel: label, accessibilityRole: kind, 
         // See mixedCheckboxState: a checkbox leaving "mixed" kept the suffix on Android.
         accessibilityState: kind === "checkbox" ? mixedCheckboxState(checked, { disabled: disabled || readOnly }) : { checked, disabled: disabled || readOnly }, ...webOnly(webChoiceProps({
@@ -467,12 +468,6 @@ export function Radio({ label, checked, defaultChecked = false, onCheckedChange,
     });
     return (_jsx(ChoiceRow, { ...visual, accessibilityHint: accessibilityHint, checked: selected, description: description, disabled: disabled, indicator: visual.indicator ?? "default", invalid: invalid, invalidLabel: invalidLabel, kind: "radio", label: label, leading: leading, onActivate: () => setSelected(true), readOnly: readOnly, readOnlyLabel: readOnlyLabel, renderIndicator: renderIndicator, renderLeading: renderLeading, required: required, requiredLabel: requiredLabel }));
 }
-function resolveAliasedItems(component, items, options) {
-    if ((items === undefined) === (options === undefined)) {
-        throw new TypeError(`${component} requires exactly one of items or options`);
-    }
-    return items ?? options;
-}
 function ChoiceGroupFrame({ label, accessibilityLabel, required, requiredLabel, readOnly, readOnlyLabel, disabled, description, error, role, orientation, presentation, style, children, }) {
     const theme = useHjmNativeTheme();
     const id = useId().replaceAll(":", "");
@@ -493,8 +488,12 @@ function ChoiceGroupFrame({ label, accessibilityLabel, required, requiredLabel, 
                     gap,
                 }, children: children }), error ? (_jsx(Text, { accessibilityLiveRegion: "assertive", accessibilityRole: "alert", tone: "danger", variant: selectionGroupRecipe.error.textVariant, children: error })) : description ? (_jsx(Text, { tone: "muted", variant: selectionGroupRecipe.description.textVariant, children: description })) : null] }));
 }
-export function RadioGroup({ label, accessibilityLabel, items, options, value, defaultValue, onValueChange, required = false, disabled = false, readOnly = false, invalid = false, description, error, requiredLabel, readOnlyLabel, invalidLabel, orientation = selectionGroupBehaviorDefaults.orientation, presentation = selectionGroupRecipe.defaults.presentation, size = selectionControlRecipe.defaults.size, indicator = "default", renderLeading, renderIndicator, style, ...slotStyles }) {
-    const resolvedItems = resolveAliasedItems("RadioGroup", items, options);
+export function RadioGroup(props) {
+    const { label, accessibilityLabel, items, value, defaultValue, onValueChange, required = false, disabled = false, readOnly = false, invalid = false, description, error, requiredLabel, readOnlyLabel, invalidLabel, orientation = selectionGroupBehaviorDefaults.orientation, presentation = selectionGroupRecipe.defaults.presentation, size = selectionControlRecipe.defaults.size, indicator = "default", renderLeading, renderIndicator, style, ...slotStyles } = props;
+    // Removed aliases must not silently change the selected collection in JavaScript callers.
+    if ("options" in props || !Array.isArray(items))
+        throw new TypeError("RadioGroup requires items; options was removed");
+    const resolvedItems = items;
     const selectionItems = resolvedItems.map((item) => ({
         id: item.value,
         label: item.label,
@@ -550,19 +549,11 @@ export function CheckboxGroup({ label, accessibilityLabel, items, value, default
             return (_createElement(ChoiceRow, { ...slotStyles, key: item.id, checked: optionSelected, description: item.description, disabled: optionDisabled, indicator: indicator, invalid: hasError, invalidLabel: invalidLabel ?? error, kind: "checkbox", label: item.label, onActivate: () => setSelected(toggleCheckboxSelection(items, selected, item.id)), presentation: presentation, readOnly: readOnly, readOnlyLabel: readOnlyLabel, renderIndicator: renderIndicator ? (props) => renderIndicator(item, props) : undefined, renderLeading: renderLeading ? (props) => renderLeading(item, props) : undefined, required: required, requiredLabel: requiredLabel, size: size }));
         }) }));
 }
-export function Switch({ label, labelVisibility = "visible", presentation = switchRecipe.presentationDefaults.native, testID, description, size = switchRecipe.defaults.size, checked, defaultChecked, onCheckedChange, value, defaultValue, onValueChange, disabled = false, accessibilityLabel, accessibilityHint, layoutStyle, style, ...props }) {
-    const hasCanonicalState = checked !== undefined
-        || defaultChecked !== undefined
-        || onCheckedChange !== undefined;
-    const hasLegacyState = value !== undefined
-        || defaultValue !== undefined
-        || onValueChange !== undefined;
-    if (hasCanonicalState && hasLegacyState) {
-        throw new TypeError("Switch cannot mix checked/defaultChecked/onCheckedChange with value/defaultValue/onValueChange");
+export function Switch({ label, labelVisibility = "visible", presentation = switchRecipe.presentationDefaults.native, testID, description, size = switchRecipe.defaults.size, checked, defaultChecked, onCheckedChange, disabled = false, accessibilityLabel, accessibilityHint, layoutStyle, style, ...props }) {
+    // Reject old JavaScript callers rather than silently dropping their controlled state.
+    if (["value", "defaultValue", "onValueChange"].some(key => key in props)) {
+        throw new TypeError("Switch no longer accepts value/defaultValue/onValueChange; use checked/defaultChecked/onCheckedChange");
     }
-    const resolvedChecked = checked ?? value;
-    const resolvedDefaultChecked = defaultChecked ?? defaultValue ?? false;
-    const resolvedOnCheckedChange = onCheckedChange ?? onValueChange;
     const { colors, environment, ...nativeTheme } = useHjmNativeTheme();
     const dimensions = switchRecipe.sizes[size];
     const stacked = presentation === "row" && labelVisibility === "visible"
@@ -577,11 +568,11 @@ export function Switch({ label, labelVisibility = "visible", presentation = swit
     const trackOn = resolveColorReference(disabled ? switchColors.trackOnDisabled : switchColors.trackOn, palette);
     const thumb = resolveColorReference(disabled ? switchColors.thumbDisabled : switchColors.thumbOff, palette);
     const [enabled, setEnabled] = useControllableState({
-        ...(resolvedChecked === undefined ? {} : { value: resolvedChecked }),
-        defaultValue: resolvedDefaultChecked,
-        ...(resolvedOnCheckedChange === undefined
+        ...(checked === undefined ? {} : { value: checked }),
+        defaultValue: (defaultChecked ?? false),
+        ...(onCheckedChange === undefined
             ? {}
-            : { onChange: resolvedOnCheckedChange }),
+            : { onChange: onCheckedChange }),
     });
     return (_jsxs(Pressable, { testID: testID, accessibilityHint: accessibilityHint ?? description, accessibilityLabel: accessibilityLabel ?? label, accessibilityRole: "switch", accessibilityState: { checked: enabled, disabled }, disabled: disabled, onPress: () => setEnabled(!enabled), style: ({ pressed }) => [
             minimumTargetStyle,
@@ -618,8 +609,12 @@ export function Switch({ label, labelVisibility = "visible", presentation = swit
                     ? { alignSelf: stacked ? "flex-start" : "center" }
                     : { height: dimensions.height, width: dimensions.width }, thumbColor: thumb, trackColor: { false: trackOff, true: trackOn }, value: enabled })] }));
 }
-export function SegmentedControl({ label, items, options, value, defaultValue, onValueChange, size = segmentedControlRecipe.defaults.size, disabled = false, style, }) {
-    const resolvedItems = resolveAliasedItems("SegmentedControl", items, options);
+export function SegmentedControl(props) {
+    const { label, items, value, defaultValue, onValueChange, size = segmentedControlRecipe.defaults.size, disabled = false, style, } = props;
+    // Removed aliases must not silently change the selected collection in JavaScript callers.
+    if ("options" in props || !Array.isArray(items))
+        throw new TypeError("SegmentedControl requires items; options was removed");
+    const resolvedItems = items;
     const theme = useHjmNativeTheme();
     const { environment } = theme;
     const sizeContract = segmentedControlRecipe.sizes[size];
@@ -712,7 +707,7 @@ export function SegmentedControl({ label, items, options, value, defaultValue, o
         }) }));
 }
 /** Action/filter chip with role-specific, controlled selection semantics. */
-export function Chip({ label, size = chipRecipe.defaults.size, disabled = false, leading, trailing, accessibilityLabel, accessibilityHint, layoutStyle, style, leadingStyle, indicatorStyle, labelStyle, trailingStyle, renderSelectionIndicator, selectionMode = "action", selected, onPress, }) {
+export function Chip({ label, size = chipRecipe.defaults.size, disabled = false, leading, trailing, accessibilityLabel, accessibilityHint, layoutStyle, leadingStyle, indicatorStyle, labelStyle, trailingStyle, renderSelectionIndicator, selectionMode = "action", selected, onPress, }) {
     const theme = useHjmNativeTheme();
     const selectable = selectionMode !== "action";
     const active = selectable && selected === true;
@@ -759,13 +754,14 @@ export function Chip({ label, size = chipRecipe.defaults.size, disabled = false,
                         : 1,
                 paddingHorizontal: metrics.paddingHorizontal,
             },
-            style,
             layoutStyle,
         ], children: [leading ? _jsx(View, { accessible: false, style: leadingStyle, children: leading }) : null, active ? (_jsx(View, { accessible: false, style: indicatorStyle, children: renderSelectionIndicator ? (renderSelectionIndicator({
                     selected: active,
                     color: indicatorColor,
                     size: glyph[chipRecipe.selectionIndicator.glyph],
-                })) : (_jsx(Text, { style: { color: indicatorColor }, variant: "caption", children: "\u2713" })) })) : null, _jsx(Text, { align: "center", style: [
+                })) : (
+                // Like Checkbox, the selection mark fits a fixed glyph slot; the chip label still scales.
+                _jsx(NativeText, { accessible: false, allowFontScaling: false, style: { ...typography.caption, color: indicatorColor }, children: "\u2713" })) })) : null, _jsx(Text, { align: "center", style: [
                     {
                         color: contentColor,
                         fontWeight: active

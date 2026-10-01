@@ -1,7 +1,7 @@
 import { type FieldAlign, type FieldShape, type FieldVariant } from "@hjmds/design-contracts/recipes/base";
 import { type ChipSize, type SearchFieldSize, type SegmentedControlSize, type SelectionControlPresentation, type SelectionControlSize, type SwitchSize, type SwitchPresentation } from "@hjmds/design-contracts/recipes";
 import { type PasswordFieldAutofillHint, type PasswordFieldSize } from "@hjmds/design-contracts/components/password-field";
-import { type OtpFieldSize } from "@hjmds/design-contracts/components/otp-field";
+import { type OtpFieldSize, type OtpFieldPresentation } from "@hjmds/design-contracts/components/otp-field";
 import { type CheckboxGroupSelection, type CheckboxState, type SelectionItemDescriptor, type SelectionOrientation } from "@hjmds/design-contracts/behaviors";
 import { type ReactNode } from "react";
 import { TextInput, type StyleProp, type GestureResponderEvent, type SwitchProps as NativeSwitchProps, type TextInputProps, type TextStyle, type ViewStyle } from "react-native";
@@ -35,28 +35,12 @@ type BaseFieldProps = Omit<TextInputProps, "accessibilityLabel" | "defaultValue"
     onValueChange?: (value: string) => void;
     /** Helper copy below the control; the same name as the Web renderer. */
     description?: string;
-    /**
-     * @deprecated Since 1.5.0; use `description`, the name the Web renderer uses.
-     * Kept for the 1.x train.
-     */
-    supportText?: string;
     error?: string;
     required?: boolean;
     disabled?: boolean;
     busy?: boolean;
     variant?: FieldVariant;
     shape?: FieldShape;
-    /**
-     * @deprecated Input color, typography, padding, and control height are recipe-owned. Request
-     * a semantic field axis instead of overriding them in product code.
-     * @see https://github.com/jim1286/hjm-design-system/blob/main/packages/design-contracts/docs/consumer-policy.md#31-react-native-legacy-style-compatibility-boundary
-     */
-    inputStyle?: StyleProp<TextStyle>;
-    /**
-     * @deprecated Legacy compatibility only. New apps must use `layoutStyle` for placement.
-     * @see https://github.com/jim1286/hjm-design-system/blob/main/packages/design-contracts/docs/consumer-policy.md#31-react-native-legacy-style-compatibility-boundary
-     */
-    containerStyle?: StyleProp<ViewStyle>;
     /** Canonical layout-only placement for the complete field. Controlled keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
@@ -115,6 +99,7 @@ export type OtpFieldProps = Omit<BaseFieldProps, "autoComplete" | "defaultValue"
     onValueChange?: (value: string) => void;
     onComplete?: (value: string) => void;
     size?: OtpFieldSize;
+    presentation?: OtpFieldPresentation;
     slotStyle?: StyleProp<ViewStyle>;
     slotTextStyle?: StyleProp<TextStyle>;
 }>;
@@ -187,8 +172,6 @@ export type RadioGroupItem<Value extends string = string> = Readonly<{
     accessibilityHint?: string;
     leading?: ReactNode;
 }>;
-/** @deprecated Use the renderer-neutral `RadioGroupItem` name. */
-export type RadioOption<Value extends string = string> = RadioGroupItem<Value>;
 type ChoiceGroupVisualProps = ChoiceVisualProps & Readonly<{
     orientation?: SelectionOrientation;
     disabled?: boolean;
@@ -203,11 +186,6 @@ type ChoiceGroupVisualProps = ChoiceVisualProps & Readonly<{
 }>;
 type RadioGroupCollectionProps<Value extends string> = Readonly<{
     items: readonly RadioGroupItem<Value>[];
-    options?: never;
-}> | Readonly<{
-    items?: never;
-    /** @deprecated Use the renderer-neutral `items` prop. */
-    options: readonly RadioOption<Value>[];
 }>;
 export type RadioGroupProps<Value extends string = string> = ChoiceGroupVisualProps & RadioGroupCollectionProps<Value> & Readonly<{
     label?: string | undefined;
@@ -218,7 +196,7 @@ export type RadioGroupProps<Value extends string = string> = ChoiceGroupVisualPr
     renderLeading?: (item: RadioGroupItem<Value>, props: ChoiceVisualRenderProps) => ReactNode;
     renderIndicator?: (item: RadioGroupItem<Value>, props: ChoiceVisualRenderProps) => ReactNode;
 }>;
-export declare function RadioGroup<Value extends string = string>({ label, accessibilityLabel, items, options, value, defaultValue, onValueChange, required, disabled, readOnly, invalid, description, error, requiredLabel, readOnlyLabel, invalidLabel, orientation, presentation, size, indicator, renderLeading, renderIndicator, style, ...slotStyles }: RadioGroupProps<Value>): import("react").JSX.Element;
+export declare function RadioGroup<Value extends string = string>(props: RadioGroupProps<Value>): import("react").JSX.Element;
 export type CheckboxGroupProps<Value extends string = string> = ChoiceGroupVisualProps & CheckboxGroupSelection<Value> & Readonly<{
     label?: string;
     accessibilityLabel?: string;
@@ -249,19 +227,8 @@ type SwitchCanonicalStateProps = Readonly<{
     defaultValue?: never;
     onValueChange?: never;
 }>;
-type SwitchLegacyStateProps = Readonly<{
-    checked?: never;
-    defaultChecked?: never;
-    onCheckedChange?: never;
-    /** @deprecated Use the renderer-neutral `checked` prop. */
-    value?: boolean;
-    /** @deprecated Use the renderer-neutral `defaultChecked` prop. */
-    defaultValue?: boolean;
-    /** @deprecated Use the renderer-neutral `onCheckedChange` prop. */
-    onValueChange?: (value: boolean) => void;
-}>;
-export type SwitchProps = SwitchBaseProps & (SwitchCanonicalStateProps | SwitchLegacyStateProps);
-export declare function Switch({ label, labelVisibility, presentation, testID, description, size, checked, defaultChecked, onCheckedChange, value, defaultValue, onValueChange, disabled, accessibilityLabel, accessibilityHint, layoutStyle, style, ...props }: SwitchProps): import("react").JSX.Element;
+export type SwitchProps = SwitchBaseProps & SwitchCanonicalStateProps;
+export declare function Switch({ label, labelVisibility, presentation, testID, description, size, checked, defaultChecked, onCheckedChange, disabled, accessibilityLabel, accessibilityHint, layoutStyle, style, ...props }: SwitchProps): import("react").JSX.Element;
 export type SegmentedControlItem<Value extends string = string> = Readonly<{
     value: Value;
     label: string;
@@ -269,8 +236,6 @@ export type SegmentedControlItem<Value extends string = string> = Readonly<{
     leading?: ReactNode;
     renderLeading?: (props: SegmentedControlLeadingRenderProps) => ReactNode;
 }>;
-/** @deprecated Use the renderer-neutral `SegmentedControlItem` name. */
-export type SegmentedControlOption<Value extends string = string> = SegmentedControlItem<Value>;
 export type SegmentedControlLeadingRenderProps = Readonly<{
     selected: boolean;
     disabled: boolean;
@@ -279,11 +244,6 @@ export type SegmentedControlLeadingRenderProps = Readonly<{
 }>;
 type SegmentedControlCollectionProps<Value extends string> = Readonly<{
     items: readonly SegmentedControlItem<Value>[];
-    options?: never;
-}> | Readonly<{
-    items?: never;
-    /** @deprecated Use the renderer-neutral `items` prop. */
-    options: readonly SegmentedControlOption<Value>[];
 }>;
 export type SegmentedControlProps<Value extends string = string> = SegmentedControlCollectionProps<Value> & Readonly<{
     label: string;
@@ -294,7 +254,7 @@ export type SegmentedControlProps<Value extends string = string> = SegmentedCont
     disabled?: boolean;
     style?: StyleProp<ViewStyle>;
 }>;
-export declare function SegmentedControl<Value extends string = string>({ label, items, options, value, defaultValue, onValueChange, size, disabled, style, }: SegmentedControlProps<Value>): import("react").JSX.Element;
+export declare function SegmentedControl<Value extends string = string>(props: SegmentedControlProps<Value>): import("react").JSX.Element;
 type ChipBaseProps = Readonly<{
     label: string;
     size?: ChipSize;
@@ -305,12 +265,6 @@ type ChipBaseProps = Readonly<{
     accessibilityHint?: string;
     /** Canonical layout-only placement. Controlled visual and state keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
-    /**
-     * @deprecated Legacy compatibility only. New apps must use `layoutStyle` and must not
-     * override color, typography, radius, control height, or interaction state.
-     * @see https://github.com/jim1286/hjm-design-system/blob/main/packages/design-contracts/docs/consumer-policy.md#31-react-native-legacy-style-compatibility-boundary
-     */
-    style?: StyleProp<ViewStyle>;
     leadingStyle?: HjmCompositionStyleProp;
     indicatorStyle?: HjmCompositionStyleProp;
     labelStyle?: StyleProp<TextStyle>;
@@ -334,6 +288,6 @@ type SelectionChipProps = Readonly<{
 }>;
 export type ChipProps = ChipBaseProps & (ActionChipProps | SelectionChipProps);
 /** Action/filter chip with role-specific, controlled selection semantics. */
-export declare function Chip({ label, size, disabled, leading, trailing, accessibilityLabel, accessibilityHint, layoutStyle, style, leadingStyle, indicatorStyle, labelStyle, trailingStyle, renderSelectionIndicator, selectionMode, selected, onPress, }: ChipProps): import("react").JSX.Element;
+export declare function Chip({ label, size, disabled, leading, trailing, accessibilityLabel, accessibilityHint, layoutStyle, leadingStyle, indicatorStyle, labelStyle, trailingStyle, renderSelectionIndicator, selectionMode, selected, onPress, }: ChipProps): import("react").JSX.Element;
 export {};
 //# sourceMappingURL=inputs.d.ts.map

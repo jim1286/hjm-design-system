@@ -1,0 +1,17 @@
+{
+  "device": "iPhone 17",
+  "os": "iOS 27.0",
+  "font": "Satoshi Regular",
+  "fontSha256": "711c6243cdc5431f9cc966e4de18bfb940365bad81acffd1e7948dbe3f254386",
+  "states": [
+    "Dark",
+    "LargeText"
+  ],
+  "textScale": {
+    "Dark": 1,
+    "LargeText": 2
+  },
+  "registration": "ready with HjmTypographyCandidate1",
+  "fontBundled": false,
+  "verification": "Actual native URI loading, mixed-script specimen and wrapping; does not assert per-glyph font identity or a separate bold font file"
+}

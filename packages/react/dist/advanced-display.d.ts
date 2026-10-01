@@ -1,3 +1,4 @@
+import type { AvatarFallbackContext } from "@hjmds/design-contracts/avatar-fallback";
 import { type DescriptionItemDescriptor, type DescriptionListColumns } from "@hjmds/design-contracts/components/description-list";
 import { type ComposeTimelineAccessibleName, type TimelineItemDescriptor } from "@hjmds/design-contracts/components/timeline";
 import { type ResolvedStatisticDescriptor, type StatisticDescriptor, type StatisticGroupDescriptor } from "@hjmds/design-contracts/components/statistic";
@@ -33,6 +34,7 @@ export type AvatarProps = Omit<HTMLAttributes<HTMLSpanElement>, "children"> & Re
     src?: string;
     alt?: string;
     fallback?: ReactNode;
+    renderFallback?: (context: AvatarFallbackContext) => ReactNode;
     size?: AvatarSize;
     shape?: AvatarShape;
     imageProps?: Omit<ImgHTMLAttributes<HTMLImageElement>, "alt" | "src">;
@@ -42,6 +44,7 @@ export declare const Avatar: import("react").ForwardRefExoticComponent<Omit<HTML
     src?: string;
     alt?: string;
     fallback?: ReactNode;
+    renderFallback?: (context: AvatarFallbackContext) => ReactNode;
     size?: AvatarSize;
     shape?: AvatarShape;
     imageProps?: Omit<ImgHTMLAttributes<HTMLImageElement>, "alt" | "src">;

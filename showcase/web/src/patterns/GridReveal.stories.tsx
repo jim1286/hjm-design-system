@@ -1,0 +1,7 @@
+import{useState}from"react";import type{Meta,StoryObj}from"@storybook/react-vite";
+import{GridReveal}from"@hjmds/react/grid-reveal";import{Image}from"@hjmds/react/display";import{Stack,Text}from"@hjmds/react/layout";import{Button}from"@hjmds/react/actions";import{revealImage}from"../../../shared/grid-reveal";
+function Preview(){const[ready,setReady]=useState(false);const[failed,setFailed]=useState(false);const[attempt,setAttempt]=useState(0);const reload=(broken:boolean)=>{setReady(false);setFailed(broken);setAttempt(value=>value+1);};return <Stack gap="lg"><GridReveal ready={ready}><Image key={attempt} src={failed?"data:image/png;base64,invalid":revealImage} width={320} height={200} decorative={false} accessibilityLabel="햇살과 겹친 산 능선" onLoadStatusChange={status=>setReady(status==="loaded")} fallback={<Text>이미지를 불러오지 못했어요.</Text>}/></GridReveal><Button onClick={()=>reload(false)}>다시 보기</Button><Button tone="ghost" onClick={()=>reload(true)}>이미지 오류 보기</Button><Text>이미지가 로드된 뒤에만 격자 효과를 시작해요. 오류 상태에서 다시 보기를 누르면 재시도합니다.</Text></Stack>;}
+const meta={ includeStories: ["Default","Dark","LargeText"],id: "components-display-grid-reveal", title: "배포/컴포넌트/시각 효과/격자 등장 효과",component:Preview}satisfies Meta<typeof Preview>;export default meta;type Story=StoryObj<typeof meta>;
+export const Default: Story = { name: "기본",};
+export const Dark: Story = { name: "어두운 테마",globals:{theme:"dark"}};
+export const LargeText: Story = { name: "큰 글자",globals:{textScale:"2"}};

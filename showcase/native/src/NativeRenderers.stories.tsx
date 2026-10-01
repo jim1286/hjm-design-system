@@ -1,3 +1,4 @@
+import { PatternStatus } from "./pattern-status";
 import { Agreement } from "@hjmds/react-native/agreement";
 import { Heading } from "@hjmds/react-native/heading";
 import { ToggleGroup } from "@hjmds/react-native/toggle-group";
@@ -165,6 +166,7 @@ function FoundationsPreview() {
 function ActionsPreview() {
   const [count, setCount] = useState(0);
   const [action, setAction] = useState("None");
+  const [authPending, setAuthPending] = useState(false);
   return (
     <StoryFrame>
       <StoryHeading>Actions</StoryHeading>
@@ -182,19 +184,22 @@ function ActionsPreview() {
         onNavigate={() => setAction("Open component docs")}
       />
       <AuthProviderButton
-        descriptor={{ label: "Continue with Google", provider: "google" }}
+        descriptor={{ label: "Google", provider: "google" }}
         logo={<Text>G</Text>}
         onPress={() => setAction("Provider login requested")}
       />
       {/* 로그인 화면 골격 — 슬롯만 받고 배치를 소유한다. 높이가 화면 전체라 미리보기에서는
           섹션 안에 그대로 둔다(스크롤은 부모가 갖는다). */}
       <AuthScreenLayout
+        mainCard
+        {...(authPending ? { pendingLabel: "로그인 중" } : {})}
         hero={<Text>Product mark, title and description</Text>}
         main={
           <AuthProviderButton
-            descriptor={{ label: "Continue with Google", provider: "google" }}
+            descriptor={{ label: "Google", provider: "google" }}
             logo={<Text>G</Text>}
-            onPress={() => setAction("Provider login requested")}
+            // Showcase completion delay; product adapters use the actual authentication result.
+            onPress={() => { setAuthPending(true); setTimeout(() => setAuthPending(false), 1200); }}
           />
         }
         footer={<Text tone="muted">Terms · Privacy</Text>}
@@ -204,7 +209,7 @@ function ActionsPreview() {
         secondaryAction={{ label: "Later", onPress: () => setAction("Later") }}
         description="Actions wrap instead of clipping at large text sizes."
       />
-    <Text accessibilityLiveRegion="polite">Last action: {action}</Text>
+    <PatternStatus>{`Last action: ${action}`}</PatternStatus>
     </StoryFrame>
   );
 }
@@ -252,13 +257,13 @@ function InputsPreview() {
         defaultValue="hjm-password"
         label="Password"
         revealLabel="Show password"
-        supportText="Reveal state never changes the password value."
+        description="Reveal state never changes the password value."
       />
       <OtpField
         defaultValue="128"
         label="Verification code"
         length={6}
-        supportText="Type or paste the full six-digit code."
+        description="Type or paste the full six-digit code."
       />
       <NumberField
         decrementLabel="Decrease quantity"
@@ -339,18 +344,18 @@ function InputsPreview() {
         label="Delivery"
         value={radio}
         onValueChange={setRadio}
-        options={[
+        items={[
           { value: "standard", label: "Standard" },
           { value: "express", label: "Express" },
         ]}
       />
-      <Switch label="Notifications" value={switched} onValueChange={setSwitched} />
+      <Switch label="Notifications" checked={switched} onCheckedChange={setSwitched} />
       <Chip label="Featured" selected={chip} onPress={setChip} selectionMode="multiple" />
       <SegmentedControl
         label="View"
         value={segment}
         onValueChange={setSegment}
-        options={[
+        items={[
           { value: "list", label: "List" },
           { value: "grid", label: "Grid" },
         ]}
@@ -400,9 +405,9 @@ function NavigationPreview() {
         label="Feed view"
         value={tab}
         onValueChange={setTab}
-        options={[
-          { value: "recent", label: "Recent" },
-          { value: "popular", label: "Popular" },
+        items={[
+          { id: "recent", label: "Recent" },
+          { id: "popular", label: "Popular" },
         ]}
       />
       <Steps
@@ -426,10 +431,10 @@ function NavigationPreview() {
         dismissLabel="Close"
         triggerLabel="More actions"
         items={[
-          { value: "edit", label: "Edit" },
-          { value: "delete", label: "Delete", tone: "danger" },
+          { id: "edit", label: "Edit" },
+          { id: "delete", label: "Delete", tone: "danger" },
         ]}
-        onSelect={(value) => setNavigationAction(value)}
+        onAction={(value) => setNavigationAction(value)}
       />
       <Text>Last action: {navigationAction}; loaded pages: {loads}</Text>
       <LoadMore
@@ -527,7 +532,7 @@ function ToastTrigger() {
   const toast = useToastRegion();
   return (
     <Button
-      onPress={() => toast.show({
+      onPress={() => toast.publish({
         id: `toast-${Date.now()}`,
         description: "Saved with the canonical Toast renderer.",
         durationMs: null,
@@ -613,7 +618,7 @@ function OverlaysPreview() {
 }
 
 const meta = {
-  title: "HJM Native/Renderer Gallery",
+  title: "배포/구성/네이티브 컴포넌트 모음",
   parameters: { controls: { disable: true } },
 } satisfies Meta;
 
@@ -647,14 +652,14 @@ function AgreementPreview() {
   );
 }
 
-export const Foundations: Story = { parameters: { hjm: { componentIds: nativeRendererStoryGroups.foundations } }, render: () => <FoundationsPreview /> };
-export const Actions: Story = { parameters: { hjm: { componentIds: nativeRendererStoryGroups.actions } }, render: () => <ActionsPreview /> };
-export const AgreementStory: Story = { name: "Agreement", parameters: { hjm: { componentIds: nativeRendererStoryGroups.agreement } }, render: () => <AgreementPreview /> };
-export const Inputs: Story = { parameters: { hjm: { componentIds: nativeRendererStoryGroups.inputs } }, render: () => <InputsPreview /> };
-export const Navigation: Story = { parameters: { hjm: { componentIds: nativeRendererStoryGroups.navigation } }, render: () => <NavigationPreview /> };
-export const DataDisplay: Story = { parameters: { hjm: { componentIds: nativeRendererStoryGroups.dataDisplay } }, render: () => <DataDisplayPreview /> };
-export const Feedback: Story = { parameters: { hjm: { componentIds: nativeRendererStoryGroups.feedback } }, render: () => <FeedbackPreview /> };
-export const Overlays: Story = { parameters: { hjm: { componentIds: nativeRendererStoryGroups.overlays } }, render: () => <OverlaysPreview /> };
+export const Foundations: Story = { name: "디자인 기초", parameters: { hjm: { componentIds: nativeRendererStoryGroups.foundations } }, render: () => <FoundationsPreview /> };
+export const Actions: Story = { name: "동작", parameters: { hjm: { componentIds: nativeRendererStoryGroups.actions } }, render: () => <ActionsPreview /> };
+export const AgreementStory: Story = { name: "약관 동의", parameters: { hjm: { componentIds: nativeRendererStoryGroups.agreement } }, render: () => <AgreementPreview /> };
+export const Inputs: Story = { name: "입력", parameters: { hjm: { componentIds: nativeRendererStoryGroups.inputs } }, render: () => <InputsPreview /> };
+export const Navigation: Story = { name: "탐색", parameters: { hjm: { componentIds: nativeRendererStoryGroups.navigation } }, render: () => <NavigationPreview /> };
+export const DataDisplay: Story = { name: "데이터 표시", parameters: { hjm: { componentIds: nativeRendererStoryGroups.dataDisplay } }, render: () => <DataDisplayPreview /> };
+export const Feedback: Story = { name: "상태와 알림", parameters: { hjm: { componentIds: nativeRendererStoryGroups.feedback } }, render: () => <FeedbackPreview /> };
+export const Overlays: Story = { name: "오버레이", parameters: { hjm: { componentIds: nativeRendererStoryGroups.overlays } }, render: () => <OverlaysPreview /> };
 
 const styles = StyleSheet.create({
   customInput: { borderColor: "#667085", borderRadius: 12, borderWidth: 1, minHeight: 44, paddingHorizontal: 16 },

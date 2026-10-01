@@ -1,3 +1,4 @@
+import { isObject, rejectUnknownKeys } from "./internal/object-validation.js";
 export const tooltipDescriptorDefaults = {
     placement: "top",
     align: "center",
@@ -19,21 +20,11 @@ const placements = new Set([
 const alignments = new Set(["start", "center", "end"]);
 const descriptorKeys = new Set(["content", "placement", "align"]);
 const openStateKeys = new Set(["open", "defaultOpen", "onOpenChange"]);
-function isObject(value) {
-    return value !== null && typeof value === "object" && !Array.isArray(value);
-}
-function rejectUnknownKeys(value, allowed, field) {
-    for (const key of Object.keys(value)) {
-        if (!allowed.has(key)) {
-            throw new TypeError(`Unsupported Tooltip ${field} field: ${key}`);
-        }
-    }
-}
 export function validateTooltipDescriptor(descriptor) {
     if (!isObject(descriptor)) {
         throw new TypeError("Tooltip descriptor must be an object");
     }
-    rejectUnknownKeys(descriptor, descriptorKeys, "descriptor");
+    rejectUnknownKeys(descriptor, descriptorKeys, "descriptor", "Tooltip");
     if (typeof descriptor.content !== "string" ||
         descriptor.content.trim().length === 0) {
         throw new TypeError("Tooltip content must not be empty");
@@ -61,7 +52,7 @@ export function validateTooltipOpenState(state) {
     if (!isObject(state)) {
         throw new TypeError("Tooltip open state must be an object");
     }
-    rejectUnknownKeys(state, openStateKeys, "open state");
+    rejectUnknownKeys(state, openStateKeys, "open state", "Tooltip");
     const runtime = state;
     const hasOpen = Object.prototype.hasOwnProperty.call(runtime, "open");
     const hasDefaultOpen = Object.prototype.hasOwnProperty.call(runtime, "defaultOpen");

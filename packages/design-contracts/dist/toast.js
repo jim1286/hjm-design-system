@@ -1,7 +1,8 @@
 export { liquidToastRecipe, resolveLiquidToastLayout, buildLiquidToastGeometry, validateLiquidToastAnchor } from "./toast-liquid.js";
 export const toastBehaviorDefaults = {
-    durationMs: 5000,
-    minimumDurationMs: 5000,
+    // 2026-10-02: product chose 3s over 5s for both presentations; actions may persist.
+    durationMs: 3000,
+    minimumDurationMs: 3000,
     priority: "normal",
     dismissOnAction: true,
     maxVisible: 1,
@@ -58,7 +59,7 @@ export function validateToastDescriptor(descriptor) {
         }
     }
 }
-/** Actionable notifications persist by default; every timer has a five-second floor. */
+/** Actions persist by default; timed notices follow the shared 3-second floor. */
 export function resolveToastDuration(descriptor) {
     validateToastDescriptor(descriptor);
     if (descriptor.durationMs === null)

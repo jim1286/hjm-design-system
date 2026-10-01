@@ -3,7 +3,6 @@ import {
   layoutBehavior,
   layoutRecipe,
   resolveLayoutWebLandmarks,
-  validateLayoutDescriptor,
   validateLayoutRegions,
   validateLayoutWebDescriptor,
   type LayoutDescriptor,
@@ -53,7 +52,7 @@ describe("Layout descriptor validation", () => {
     expect(() =>
       validateLayoutWebDescriptor({ hasHeader: true, skipLinkLabel: "본문으로 건너뛰기" }),
     ).not.toThrow();
-    expect(() => validateLayoutDescriptor({ hasHeader: true })).toThrow(/skipLinkLabel/);
+    expect(() => validateLayoutWebDescriptor({ hasHeader: true })).toThrow(/skipLinkLabel/);
   });
 
   it("does not require a skip link when only a footer is present", () => {

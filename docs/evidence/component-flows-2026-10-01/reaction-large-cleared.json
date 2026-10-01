@@ -1,0 +1,233 @@
+[
+  {
+    "frame": {
+      "width": 402,
+      "y": 0,
+      "height": 874,
+      "x": 0
+    },
+    "enabled": true,
+    "role": "AXApplication",
+    "AXValue": null,
+    "help": null,
+    "AXFrame": "{{0, 0}, {402, 874}}",
+    "AXLabel": "HJM Native Showcase",
+    "role_description": "application",
+    "content_required": false,
+    "traits": [
+      "None"
+    ],
+    "pid": 89686,
+    "type": "Application",
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "subrole": null,
+    "title": null
+  },
+  {
+    "title": null,
+    "AXFrame": "{{40, 102}, {322, 128}}",
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "help": null,
+    "role": "AXStaticText",
+    "role_description": "text",
+    "type": "StaticText",
+    "custom_actions": [],
+    "AXLabel": "작은 반응이 대화를 이어줘요.",
+    "subrole": null,
+    "enabled": true,
+    "content_required": false,
+    "pid": 89686,
+    "AXValue": null,
+    "AXUniqueId": null,
+    "frame": {
+      "y": 102,
+      "height": 128,
+      "width": 322,
+      "x": 40
+    }
+  },
+  {
+    "subrole": null,
+    "help": null,
+    "AXValue": null,
+    "AXFrame": "{{40, 254}, {64, 44}}",
+    "content_required": false,
+    "AXUniqueId": null,
+    "enabled": true,
+    "custom_actions": [],
+    "role_description": "",
+    "frame": {
+      "y": 254,
+      "width": 64,
+      "height": 44,
+      "x": 40
+    },
+    "AXLabel": "좋아요",
+    "pid": 89686,
+    "title": null,
+    "type": "GenericElement",
+    "role": "AXGenericElement",
+    "traits": [
+      "Button",
+      "Scrollable"
+    ]
+  },
+  {
+    "enabled": true,
+    "AXLabel": "마음에 들어요",
+    "role": "AXGenericElement",
+    "traits": [
+      "Button",
+      "Scrollable"
+    ],
+    "help": null,
+    "subrole": null,
+    "AXFrame": "{{112, 254}, {64, 44}}",
+    "AXUniqueId": null,
+    "content_required": false,
+    "role_description": "",
+    "pid": 89686,
+    "type": "GenericElement",
+    "frame": {
+      "width": 64,
+      "x": 112,
+      "y": 254,
+      "height": 44
+    },
+    "AXValue": null,
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "AXFrame": "{{184, 254}, {64, 44}}",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "role": "AXGenericElement",
+    "content_required": false,
+    "AXLabel": "축하해요",
+    "title": null,
+    "frame": {
+      "y": 254,
+      "x": 184,
+      "height": 44,
+      "width": 64
+    },
+    "custom_actions": [],
+    "pid": 89686,
+    "traits": [
+      "Button",
+      "Scrollable"
+    ],
+    "help": null,
+    "type": "GenericElement",
+    "role_description": "",
+    "enabled": true,
+    "subrole": null
+  },
+  {
+    "traits": [
+      "Button",
+      "Scrollable"
+    ],
+    "role_description": "",
+    "AXValue": null,
+    "subrole": "AXSwitch",
+    "role": "AXGenericElement",
+    "pid": 89686,
+    "AXUniqueId": null,
+    "help": null,
+    "enabled": true,
+    "custom_actions": [],
+    "AXLabel": "영감을 받았어요",
+    "type": "GenericElement",
+    "title": null,
+    "AXFrame": "{{256, 254}, {64, 44}}",
+    "content_required": false,
+    "frame": {
+      "width": 64,
+      "y": 254,
+      "height": 44,
+      "x": 256
+    }
+  },
+  {
+    "content_required": false,
+    "AXFrame": "{{362, 759}, {24, 24}}",
+    "pid": 89686,
+    "traits": [
+      "Scrollable"
+    ],
+    "enabled": true,
+    "AXValue": null,
+    "AXLabel": null,
+    "custom_actions": [],
+    "title": null,
+    "help": null,
+    "role": "AXGenericElement",
+    "subrole": null,
+    "AXUniqueId": null,
+    "type": "GenericElement",
+    "role_description": "",
+    "frame": {
+      "height": 24,
+      "y": 759,
+      "width": 24,
+      "x": 362
+    }
+  },
+  {
+    "help": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "AXUniqueId": "mobile-menu-button",
+    "frame": {
+      "y": 811.6666669845581,
+      "x": 6,
+      "width": 290.3333435058594,
+      "height": 17
+    },
+    "role_description": "",
+    "content_required": false,
+    "pid": 89686,
+    "type": "GenericElement",
+    "AXFrame": "{{6, 811.66666698455811}, {290.33334350585938, 17}}",
+    "role": "AXGenericElement",
+    "subrole": null,
+    "enabled": true,
+    "AXValue": null,
+    "AXLabel": "컴포넌트/동작/Reaction Picker/Large Text",
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "content_required": false,
+    "type": "Button",
+    "AXValue": null,
+    "AXUniqueId": "mobile-addons-button",
+    "enabled": true,
+    "role_description": "button",
+    "help": null,
+    "AXFrame": "{{368, 806}, {28, 28}}",
+    "title": null,
+    "frame": {
+      "x": 368,
+      "width": 28,
+      "height": 28,
+      "y": 806
+    },
+    "custom_actions": [],
+    "role": "AXButton",
+    "AXLabel": null,
+    "subrole": null,
+    "pid": 89686,
+    "traits": [
+      "Button",
+      "Scrollable"
+    ]
+  }
+]

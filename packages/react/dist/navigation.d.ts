@@ -1,3 +1,5 @@
+import { type TabsAppearance } from "@hjmds/design-contracts/gooey-navigation";
+export type { TabsAppearance };
 import { type TabsActivationMode, type TabsDirection, type TabsMountPolicy, type TabsOrientation, type TabsPanelMode } from "@hjmds/design-contracts/behaviors";
 import { type TabSize, type TabsLayout, type TabsOverflow } from "@hjmds/design-contracts/recipes";
 import { type HTMLAttributes, type ReactNode } from "react";
@@ -7,8 +9,6 @@ export type TabLeadingRenderProps = Readonly<{
     color: "currentColor";
     /** Pixel size resolved from `tabsRecipe.icon.glyph`. */
     size: number;
-    /** Compatibility alias for product icon libraries that name this value explicitly. */
-    glyphSize: number;
 }>;
 export type TabItem = Readonly<{
     id: string;
@@ -32,6 +32,7 @@ export type TabsProps = Omit<HTMLAttributes<HTMLDivElement>, "dir" | "onChange">
     activationMode?: TabsActivationMode;
     mountPolicy?: TabsMountPolicy;
     panelMode?: TabsPanelMode;
+    appearance?: TabsAppearance;
     orientation?: TabsOrientation;
     direction?: TabsDirection;
     loop?: boolean;
@@ -61,5 +62,4 @@ export type TabPanelProps = ExternalTabPanelBaseProps & (Readonly<{
 /** External panel host for products that keep routing, query, or scroll state outside Tabs. */
 export declare function TabPanel(props: TabPanelProps): import("react").JSX.Element | null;
 export declare const Tabs: import("react").ForwardRefExoticComponent<TabsProps & import("react").RefAttributes<HTMLDivElement>>;
-export {};
 //# sourceMappingURL=navigation.d.ts.map
