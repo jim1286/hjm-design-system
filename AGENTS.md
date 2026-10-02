@@ -24,7 +24,8 @@
   `pnpm api-map:check`를 실행한다. canonical catalog 확장과 companion/alternative/optional
   API 추가를 구분한다. 생성물을 직접 수정하지 않는다.
 - 공통 구현을 바꾸면 이를 소비하는 컴포넌트의 행동 회귀와 해당 renderer의 경계를 검증한다.
-  bundle budget은 측정 근거와 이유를 남겨 변경하며 실패를 숨기기 위해 완화하지 않는다.
+  bundle budget의 모듈 수·금지 모듈 검사는 즉시 실패한다. 바이트 상한은 110%까지 경보(WARN)이며
+  경보 범위의 증가를 위해 상한을 올리지 않는다([번들 크기 상한](docs/RELEASE_GOVERNANCE.md#번들-크기-상한), 2026-10-02 사용자 결정).
 
 ## 문서와 완료 보고
 
