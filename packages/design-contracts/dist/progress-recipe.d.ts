@@ -4,6 +4,7 @@ export declare const progressRecipe: {
         readonly size: "medium";
         readonly tone: "brand";
         readonly shape: "linear";
+        readonly max: 100;
     };
     readonly sizes: {
         readonly small: 4;

@@ -21,12 +21,12 @@
 
 로드맵의 공통 상태 축 표에는 `pending/current/complete/error`가 없다 — Steps 전용 축이다.
 각 step은 이 네 값 중 하나만 가지지만, **제품이 각 step에 개별 status를 배열로 넘기지
-않는다.** 대신 하나의 `currentStepId`(+ 선택적 `currentStepStatus: "current" | "error"`)만
+않는다.** 대신 하나의 `currentStepId`(+ 선택적 `currentStepStatus: "current" | "error" | "complete"`)만
 받고, `resolveStepsDescriptor`가 배열 위치로 나머지를 유도한다.
 
 ```
 index < cursor  → complete
-index === cursor → currentStepStatus (기본 "current", 실패 시 "error")
+index === cursor → currentStepStatus (기본 "current", 실패 시 "error", 끝나면 "complete")
 index > cursor  → pending
 ```
 
@@ -35,6 +35,11 @@ index > cursor  → pending
 (`SheetOpenState`, `ComboboxCollectionState`, `LoadMoreState`)과 같은 이유다: 유효하지 않은
 조합을 타입과 유도 규칙으로 만들 수 없게 한다. clickable을 공개하지 않기로 했으므로(아래
 참고) 흐름은 항상 cursor 기준 선형이라 이 유도가 항상 맞다.
+
+`"complete"`는 2026-10-02에 추가했다. 그 전에는 마지막 단계에 커서가 있으면 항상 "진행 중"으로
+읽혀 끝난 흐름을 표현할 수 없었고, STEA 후보 검토의 주문 처리 구성은 끝나면 Steps를 `Result`로
+바꿔 우회했다. cursor를 `"complete"`로 두면 cursor까지 완료, 그 뒤는 pending이라 위 선형 유도를
+깨지 않는다. 마지막 step에서 쓰면 전체 완료다. step별 status 배열은 여전히 받지 않는다.
 
 ### 순서를 접근성 이름에 남긴다
 
@@ -77,7 +82,8 @@ index > cursor  → pending
 
 ## 플랫폼 번역
 
-- Web: cursor step(`status === "current" | "error"`)에만 `aria-current="step"`을 단다.
+- Web: cursor step이 `"current" | "error"`일 때만 `aria-current="step"`을 단다. cursor가
+  `"complete"`면 진행 중인 단계가 없으므로 `aria-current`를 달지 않는다.
   마커 아이콘은 decorative(숨김)로 두고 root의 accessible name은 `accessibleName`
   하나다. `statusLabel`은 visually-hidden 텍스트 또는 `aria-describedby`로 덧붙인다.
   connector는 `aria-hidden`.

@@ -766,7 +766,8 @@ export const OtpField = forwardRef<HTMLInputElement, OtpFieldProps>(
             aria-label={ariaLabel}
             autoComplete="one-time-code"
             className={classNames("hjm-otp-field__input", className)}
-            disabled={disabled || busy}
+            // busy stays focusable (read-only); see otp-field.md.
+            disabled={disabled}
             id={ids.controlId}
             inputMode="numeric"
             maxLength={length}
@@ -783,7 +784,7 @@ export const OtpField = forwardRef<HTMLInputElement, OtpFieldProps>(
               onFocus?.(event);
             }}
             pattern="[0-9]*"
-            readOnly={readOnly}
+            readOnly={readOnly || busy}
             required={required}
             type="text"
             value={value}

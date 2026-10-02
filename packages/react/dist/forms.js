@@ -181,7 +181,9 @@ export const OtpField = forwardRef(function OtpField({ id, label, description, e
         wasCompleteRef.current = complete;
     }, [complete, onComplete, value]);
     const activeIndex = Math.min(value.length, length - 1);
-    return (_jsx(FieldFrame, { className: classNames("hjm-otp-field", fieldClassName), controlId: ids.controlId, description: description, disabled: (disabled ?? false) || busy, error: error, focused: focused, label: label, required: required ?? false, ...(description ? { descriptionId: ids.descriptionId } : {}), ...(error ? { errorId: ids.errorId } : {}), children: _jsxs("div", { className: "hjm-otp-field__control", "data-presentation": presentation, "data-complete": complete || undefined, "data-size": size, style: { "--hjm-otp-length": length }, children: [_jsx("input", { ...props, ref: ref, "aria-busy": busy || undefined, "aria-describedby": describedBy(ariaDescribedBy, description, error, ids.descriptionId, ids.errorId), "aria-invalid": error ? true : ariaInvalid, "aria-label": ariaLabel, autoComplete: "one-time-code", className: classNames("hjm-otp-field__input", className), disabled: disabled || busy, id: ids.controlId, inputMode: "numeric", maxLength: length, onBlur: (event) => {
+    return (_jsx(FieldFrame, { className: classNames("hjm-otp-field", fieldClassName), controlId: ids.controlId, description: description, disabled: (disabled ?? false) || busy, error: error, focused: focused, label: label, required: required ?? false, ...(description ? { descriptionId: ids.descriptionId } : {}), ...(error ? { errorId: ids.errorId } : {}), children: _jsxs("div", { className: "hjm-otp-field__control", "data-presentation": presentation, "data-complete": complete || undefined, "data-size": size, style: { "--hjm-otp-length": length }, children: [_jsx("input", { ...props, ref: ref, "aria-busy": busy || undefined, "aria-describedby": describedBy(ariaDescribedBy, description, error, ids.descriptionId, ids.errorId), "aria-invalid": error ? true : ariaInvalid, "aria-label": ariaLabel, autoComplete: "one-time-code", className: classNames("hjm-otp-field__input", className), 
+                    // busy stays focusable (read-only); see otp-field.md.
+                    disabled: disabled, id: ids.controlId, inputMode: "numeric", maxLength: length, onBlur: (event) => {
                         setFocused(false);
                         onBlur?.(event);
                     }, onChange: (event) => {
@@ -190,7 +192,7 @@ export const OtpField = forwardRef(function OtpField({ id, label, description, e
                     }, onFocus: (event) => {
                         setFocused(true);
                         onFocus?.(event);
-                    }, pattern: "[0-9]*", readOnly: readOnly, required: required, type: "text", value: value }), _jsx("div", { "aria-hidden": "true", className: "hjm-otp-field__slots", children: slots.map((digit, index) => (_jsx("span", { className: "hjm-otp-field__slot", "data-state": error
+                    }, pattern: "[0-9]*", readOnly: readOnly || busy, required: required, type: "text", value: value }), _jsx("div", { "aria-hidden": "true", className: "hjm-otp-field__slots", children: slots.map((digit, index) => (_jsx("span", { className: "hjm-otp-field__slot", "data-state": error
                             ? "invalid"
                             : focused && index === activeIndex
                                 ? "focused"

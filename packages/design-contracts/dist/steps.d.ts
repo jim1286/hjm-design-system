@@ -7,7 +7,7 @@
  */
 export type StepStatus = "pending" | "current" | "complete" | "error";
 /** Only the cursor step can be "current" or "error"; every other step is derived. */
-export type StepCursorStatus = Extract<StepStatus, "current" | "error">;
+export type StepCursorStatus = Extract<StepStatus, "current" | "error" | "complete">;
 export type StepItemDescriptor<Id extends string = string> = Readonly<{
     id: Id;
     label: string;

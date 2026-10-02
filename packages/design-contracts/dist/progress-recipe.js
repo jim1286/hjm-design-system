@@ -2,7 +2,8 @@ import { radius } from "./foundations.js";
 import { semanticColors } from "./semantic-colors.js";
 export const progressRecipe = {
     slots: ["root", "track", "indicator", "label", "value"],
-    defaults: { size: "medium", tone: "brand", shape: "linear" },
+    // Shared max default (Web was 100, Native 1): see docs/progress.md.
+    defaults: { size: "medium", tone: "brand", shape: "linear", max: 100 },
     sizes: { small: 4, medium: 8, large: 12 },
     /*
       같은 값을 원으로 그리는 변형이다. 새 컴포넌트가 아닌 이유는 의미가 완전히 같기

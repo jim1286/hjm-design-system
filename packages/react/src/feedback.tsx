@@ -212,7 +212,7 @@ export const Progress = forwardRef<HTMLProgressElement, ProgressProps>(
       label,
       value,
       valueText,
-      max = 100,
+      max = progressRecipe.defaults.max,
       size = progressRecipe.defaults.size,
       tone = progressRecipe.defaults.tone,
       shape = progressRecipe.defaults.shape,

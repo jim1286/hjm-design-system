@@ -35,7 +35,8 @@ export function validateStepsDescriptor(descriptor) {
     }
     if (descriptor.currentStepStatus !== undefined &&
         descriptor.currentStepStatus !== "current" &&
-        descriptor.currentStepStatus !== "error") {
+        descriptor.currentStepStatus !== "error" &&
+        descriptor.currentStepStatus !== "complete") {
         throw new TypeError(`Unsupported Steps currentStepStatus: ${String(descriptor.currentStepStatus)}`);
     }
 }

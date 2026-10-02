@@ -28,6 +28,7 @@
 | Native 입력 `inputStyle`·`containerStyle`, Image `containerStyle`, Section `titleStyle`·`descriptionStyle` | 배치는 `layoutStyle`, 입력 크기는 `size`, 문구는 typography recipe |
 | Contracts `validateLayoutDescriptor` | `validateLayoutWebDescriptor` 또는 `validateLayoutRegions` |
 | Catalog summary `fullyPreviewable`·`partiallyPreviewable`·`contractOnly` | `fullyMature`·`partiallyMature`·`plannedOnly` |
+| Native Progress `max` 기본값 1(분수) — **1.12.0** | 기본값 100(`progressRecipe.defaults.max`, Web과 동일). 분수를 넘기던 곳은 백분율로 바꾸거나 `max={1}`을 명시한다. 2026-10-02 사용자가 1.11과 같은 방식(관리 소비 앱 전수 이관, minor)으로 릴리스를 지시했다. 확인한 소비처: BurnTok `ProductRenderers.stories.tsx`의 `value={0.64}` |
 
 Select의 `onSelectionChange`에는 선택 해제를 뜻하는 null이 올 수 있다. 이전 비-null
 handler를 이관할 때는 null 처리 방침을 제품에서 명시한다. 메뉴의 실행과 선택 상태 변경은

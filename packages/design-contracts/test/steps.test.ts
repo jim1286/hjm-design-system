@@ -124,12 +124,6 @@ describe("Steps descriptor validation", () => {
     expect(() =>
       validateStepsDescriptor({
         ...descriptor,
-        currentStepStatus: "complete" as never,
-      }),
-    ).toThrow(/currentStepStatus/);
-    expect(() =>
-      validateStepsDescriptor({
-        ...descriptor,
         currentStepStatus: "nope" as never,
       }),
     ).toThrow(/currentStepStatus/);
@@ -172,6 +166,21 @@ describe("Steps status derivation", () => {
       "pending",
       "pending",
     ]);
+  });
+
+  it("lets the cursor step finish so the whole flow can read as complete", () => {
+    const steps = descriptor.steps;
+    const finished = resolveStepsDescriptor(
+      { steps, currentStepId: steps[steps.length - 1]!.id, currentStepStatus: "complete" },
+      { statusLabels, composeAccessibleName },
+    );
+    expect(finished.every((step) => step.status === "complete")).toBe(true);
+    // A complete cursor in the middle keeps the linear derivation: done up to it, pending after.
+    const middle = resolveStepsDescriptor(
+      { ...descriptor, currentStepStatus: "complete" },
+      { statusLabels, composeAccessibleName },
+    );
+    expect(middle.map((step) => step.status)).toEqual(["complete", "complete", "pending", "pending", "pending"]);
   });
 
   it("attaches position, total, composed accessible name, and status label", () => {

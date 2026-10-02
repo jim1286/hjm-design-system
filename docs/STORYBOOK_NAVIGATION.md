@@ -342,3 +342,22 @@ finance(shop/car) 대표 ID의 `--default`로 이동한다. Native는 제목 기
 폰트·줄 높이·자간·제목, 레이아웃·화면 폭, 테두리·그림자·투명도·겹침 순서까지
 공개 foundations의 모든 값을 공용 목록과 검사로 대조한다. 새 디자인 토큰을 생성하거나
 실험 UI를 승인한 변경은 아니다. Native 메뉴 생성·번들 전달과 실제 기기 화면 검증은 구분한다.
+
+
+## STEA 후보 구성 배포 승인 (2026-10-02)
+
+2026-10-02 사용자가 STEA Code 후보 검토로 만든 실험 7개를 "다 배포로 옮겨줘 맞는 곳들에"라고
+명시적으로 승인했다. 모두 여러 컴포넌트의 조합과 짧은 흐름이므로 같은 단계(`구성`)를 유지해 옮겼다.
+Web story id(`experimental-stea-*`)는 기존 링크 호환을 위해 보존하고, Native는 새 제목 기반 ID를 쓴다.
+근거와 검증은 [STEA 도입 계획](plans/stea-code-adoption-2026-10-02.md)에 있다.
+이는 Storybook 분류 승인이며 API 안정화·npm 게시·소비 앱 반영은 각각 따로 기록한다.
+
+| 이전 | 최종 경로 | Web ID |
+| --- | --- | --- |
+| 실험/구성/진행 단계/처리 단계와 재시도 | 배포/구성/진행 단계/처리 단계와 재시도 | experimental-stea-order-progress |
+| 실험/구성/인증/인증번호 확인과 다시 입력 | 배포/구성/인증/인증번호 확인과 다시 입력 | experimental-stea-otp-verify |
+| 실험/구성/일정/날짜 선택과 예정 목록 | 배포/구성/일정/날짜 선택과 예정 목록 | experimental-stea-schedule-card |
+| 실험/구성/데이터 요약/수치와 이전 대비 변화 | 배포/구성/데이터 요약/수치와 이전 대비 변화 | experimental-stea-stat-summary |
+| 실험/구성/정보 카드/앞면과 상세 정보 전환 | 배포/구성/정보 카드/앞면과 상세 정보 전환 | experimental-stea-flip-card |
+| 실험/구성/빈 상태/캐릭터와 시작 행동 | 배포/구성/빈 상태/캐릭터와 시작 행동 | experimental-stea-pixel-empty |
+| 실험/구성/정보 카드/일정과 식별 정보 티켓 | 배포/구성/정보 카드/일정과 식별 정보 티켓 | experimental-stea-event-ticket |
