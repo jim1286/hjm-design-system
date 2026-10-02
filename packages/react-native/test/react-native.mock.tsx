@@ -135,7 +135,7 @@ export function useColorScheme() {
 }
 
 export const I18nManager = { isRTL: false };
-export const PixelRatio = { getFontScale: () => windowDimensions.fontScale };
+export const PixelRatio = { get: () => 1, getFontScale: () => windowDimensions.fontScale };
 export const AccessibilityInfo = {
   isReduceMotionEnabled: async () => false,
   isScreenReaderEnabled: async () => false,

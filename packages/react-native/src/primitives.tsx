@@ -59,6 +59,7 @@ import {
   type ReactNode,
 } from "react";
 import {
+  PixelRatio,
   Text as NativeText,
   View,
   useWindowDimensions,
@@ -465,6 +466,13 @@ export function Grid({
     ],
   );
 
+  // The contract's exact width can sum, with gaps, to a fraction of a pixel over
+  // the row; flexWrap then pushes the last column down (4 columns showed as 3 on
+  // a 411dp/420dpi Android, Utilverse 2026-10-02). Floor to a device pixel so the
+  // row always fits; the remainder is under one device pixel per column.
+  const scale = PixelRatio.get();
+  const cellWidth = Math.floor(layout.columnWidth * scale) / scale;
+
   return (
     <View
       {...props}
@@ -483,7 +491,7 @@ export function Grid({
       {Children.toArray(children).map((child, index) => (
         <View
           key={isValidElement(child) && child.key !== null ? child.key : `hjm-grid-${index}`}
-          style={[{ width: layout.columnWidth }, itemStyle]}
+          style={[{ width: cellWidth }, itemStyle]}
         >
           {child}
         </View>
