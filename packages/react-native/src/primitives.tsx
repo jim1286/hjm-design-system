@@ -59,6 +59,7 @@ import {
   type ReactNode,
 } from "react";
 import {
+  PixelRatio,
   Text as NativeText,
   View,
   useWindowDimensions,
@@ -465,6 +466,10 @@ export function Grid({
     ],
   );
 
+  // Floor to a device pixel so fractional widths never wrap the last column.
+  const scale = PixelRatio.get();
+  const cellWidth = Math.floor(layout.columnWidth * scale) / scale;
+
   return (
     <View
       {...props}
@@ -483,7 +488,7 @@ export function Grid({
       {Children.toArray(children).map((child, index) => (
         <View
           key={isValidElement(child) && child.key !== null ? child.key : `hjm-grid-${index}`}
-          style={[{ width: layout.columnWidth }, itemStyle]}
+          style={[{ width: cellWidth }, itemStyle]}
         >
           {child}
         </View>
