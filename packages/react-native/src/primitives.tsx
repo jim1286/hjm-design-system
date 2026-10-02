@@ -466,10 +466,7 @@ export function Grid({
     ],
   );
 
-  // The contract's exact width can sum, with gaps, to a fraction of a pixel over
-  // the row; flexWrap then pushes the last column down (4 columns showed as 3 on
-  // a 411dp/420dpi Android, Utilverse 2026-10-02). Floor to a device pixel so the
-  // row always fits; the remainder is under one device pixel per column.
+  // Floor to a device pixel so fractional widths never wrap the last column.
   const scale = PixelRatio.get();
   const cellWidth = Math.floor(layout.columnWidth * scale) / scale;
 

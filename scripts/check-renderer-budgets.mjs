@@ -334,6 +334,9 @@ const rendererBudgets = [
       // Strict Effects-safe store lifetime adds measured 567 raw / 178 gzip bytes;
       // preserve teardown while avoiding disposal during development replay.
       { file: "feedback.js", raw: 8_100, gzip: 2_000 },
+      // Grid device-pixel floor (Utilverse 411dp wrap fix) adds exactly 189 raw / 89 gzip
+      // to primitives.js, measured against the committed 1.12.0 dist.
+      { file: "primitives.js", raw: 189, gzip: 89 },
     ],
     // 2026-10-01: internal/field-frame.js replaces repeated Field/TextField
     // label/support presentation. Only its consuming graphs gain one local edge;
