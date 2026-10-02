@@ -496,7 +496,7 @@ export type ProgressProps = ProgressName & Readonly<{
 
 export function Progress({
   value,
-  max = 1,
+  max = progressRecipe.defaults.max,
   label,
   accessibilityLabel,
   valueText,

@@ -276,7 +276,7 @@ return (<StoryFrame><BottomCTA
 function AuthProviderButtonExample({ variant }: { variant: PreviewVariant }) {
 const [action, setAction] = useState("None");
 return (<StoryFrame><AuthProviderButton
-        descriptor={{ label: "Google", provider: "google", busy: variant === "loading" }}
+        descriptor={{ label: "Google", provider: "google" }}
         logo={<Text>G</Text>}
         onPress={() => setAction("Provider login requested")}
       /><Text accessibilityLiveRegion="polite">Last action: {action}</Text></StoryFrame>);
@@ -734,7 +734,7 @@ return (<StoryFrame><Notice title="Ready to publish" description="All checks pas
 
 function ProgressExample({ variant }: { variant: PreviewVariant }) {
 
-return (<StoryFrame><Progress label="Upload progress" value={0.64} /></StoryFrame>);
+return (<StoryFrame><Progress label="Upload progress" value={64} /></StoryFrame>);
 }
 
 function SkeletonExample({ variant }: { variant: PreviewVariant }) {

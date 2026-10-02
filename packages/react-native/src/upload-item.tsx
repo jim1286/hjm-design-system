@@ -51,7 +51,7 @@ export function UploadItem({ descriptor, labels, onCancel, onRetry, leading, sty
         {descriptor.sizeLabel === undefined ? null : <Text tone="muted" variant="label">{descriptor.sizeLabel}</Text>}
         <Text accessibilityLiveRegion="polite" style={{ color: statusColor }} variant="label">{announcement.description}</Text>
         {/* The live sentence already displays progress; keep the bar named without repeating that sentence twice visually. */}
-        {descriptor.state.status === "uploading" ? <Progress accessibilityLabel={announcement.description} {...(descriptor.state.progress === null ? {} : { value: descriptor.state.progress })} valueText={announcement.description} /> : null}
+        {descriptor.state.status === "uploading" ? <Progress accessibilityLabel={announcement.description} {...(descriptor.state.progress === null ? {} : { value: descriptor.state.progress * 100 })} valueText={announcement.description} /> : null}
       </View>
       {action === null ? null : (
         <Pressable

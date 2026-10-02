@@ -610,7 +610,7 @@ export const defaultRenderCases = [
   { componentId: "empty-state", renderLongCopy: (copy) => <EmptyState title={copy} />, render: () => <EmptyState title="항목 없음" /> },
   { componentId: "result", renderLongCopy: (copy) => <Result status="success" title={copy} />, render: () => <Result status="success" title="저장됨" /> },
   { componentId: "notice", renderLongCopy: (copy) => <Notice title={copy} />, render: () => <Notice title="안내" /> },
-  { componentId: "progress", renderLongCopy: (copy) => <Progress label={copy} value={0.5} />, render: () => <Progress label="업로드" value={0.5} /> },
+  { componentId: "progress", renderLongCopy: (copy) => <Progress label={copy} value={50} />, render: () => <Progress label="업로드" value={50} /> },
   { componentId: "skeleton", render: () => <Skeleton accessibilityLabel="불러오는 중" /> },
   { componentId: "thinking-orb", render: () => <ThinkingOrb label="검색 중" paused /> },
   { componentId: "masonry", renderLongCopy: (copy) => <Masonry items={[copy]} keyExtractor={item => item} label="Cards" width={240} columns={1} getItemHeight={() => 300} renderItem={item => <Text>{item}</Text>} />, render: () => <Masonry items={["First", "Second"]} keyExtractor={item => item} label="Cards" width={240} getItemHeight={() => 120} renderItem={item => <Text>{item}</Text>} /> },

@@ -154,7 +154,7 @@ export function Result({ status, title, description, actions, renderIcon, style,
                     marginTop: spacing.xs,
                 }, children: [result.primaryAction ? (_jsx(Button, { accessibilityLabel: result.primaryAction.accessibilityLabel, onPress: result.primaryAction.onAction, children: result.primaryAction.label })) : null, result.secondaryAction ? (_jsx(Button, { accessibilityLabel: result.secondaryAction.accessibilityLabel, onPress: result.secondaryAction.onAction, tone: "secondary", children: result.secondaryAction.label })) : null] })) : null] }));
 }
-export function Progress({ value, max = 1, label, accessibilityLabel, valueText, accessibilityHint, size = progressRecipe.defaults.size, tone = progressRecipe.defaults.tone, shape = progressRecipe.defaults.shape, children, style, labelStyle, valueStyle, trackStyle, indicatorStyle, testID, }) {
+export function Progress({ value, max = progressRecipe.defaults.max, label, accessibilityLabel, valueText, accessibilityHint, size = progressRecipe.defaults.size, tone = progressRecipe.defaults.tone, shape = progressRecipe.defaults.shape, children, style, labelStyle, valueStyle, trackStyle, indicatorStyle, testID, }) {
     if (!Number.isFinite(max) || max <= 0) {
         throw new RangeError("Progress max must be a positive finite number");
     }

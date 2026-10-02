@@ -210,7 +210,11 @@ const budgets = [
     maxRawBytes: 340_000,
     // Node 24 measures 84.0 kB after factoring the guard; 100 gzip bytes
     // cover the split source graph, with the previous raw limit unchanged.
-    maxGzipBytes: 84_100,
+    // 1.12.0: Progress `defaults.max` and the Steps "complete" cursor status add
+    // code, not modules (65 unchanged). Rationale comments were cut to one-line
+    // doc pointers first; measured 84_129 gzip locally, plus the Node 24 CI margin
+    // used for ./recipes in 1.11.0.
+    maxGzipBytes: 84_250,
   },
   {
     // 2026-09-19 AuthScreenLayout: 계약 모듈 한 개가 그래프에 들어왔다. 기존

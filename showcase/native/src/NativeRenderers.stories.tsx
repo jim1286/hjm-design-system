@@ -550,7 +550,7 @@ function FeedbackPreview() {
       <StoryHeading>Feedback</StoryHeading>
       <EmptyState title="No drafts" description="Create a draft to see it here." action={<Button onPress={noop}>Create draft</Button>} />
       <Notice title="Ready to publish" description="All checks passed." tone="success" />
-      <Progress label="Upload progress" value={0.64} />
+      <Progress label="Upload progress" value={64} />
       <Skeleton accessibilityLabel="Loading preview" width="100%" height={52} />
       <Spinner label="Loading content" />
       <Result status="success" title="Published" description="Your creation is live." />
