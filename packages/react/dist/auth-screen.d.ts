@@ -7,6 +7,10 @@ export type AuthScreenLayoutProps = Omit<HTMLAttributes<HTMLElement>, "children"
     hero: ReactNode;
     /** The primary action block — provider buttons, or a product's own sign-in bundle. */
     main: ReactNode;
+    /** Product-localized progress label; presence replaces actions with one centred loader. */
+    pendingLabel?: string;
+    /** Let the layout own the action card; omit when the product already supplies a surface. */
+    mainCard?: boolean;
     /** Consent notice and policy links. Omit with `hasFooter: false`. */
     footer?: ReactNode;
     className?: string;
@@ -26,6 +30,10 @@ export declare const AuthScreenLayout: import("react").ForwardRefExoticComponent
     hero: ReactNode;
     /** The primary action block — provider buttons, or a product's own sign-in bundle. */
     main: ReactNode;
+    /** Product-localized progress label; presence replaces actions with one centred loader. */
+    pendingLabel?: string;
+    /** Let the layout own the action card; omit when the product already supplies a surface. */
+    mainCard?: boolean;
     /** Consent notice and policy links. Omit with `hasFooter: false`. */
     footer?: ReactNode;
     className?: string;

@@ -30,8 +30,8 @@ export function FloatingNotesPreview() {
   </>;
 }
 
-const meta = { title: "Patterns/Floating action button", component: FloatingNotesPreview, parameters: { layout: "fullscreen", hjm: { edgeToEdge: true } } } satisfies Meta<typeof FloatingNotesPreview>;
+const meta = { includeStories: ["Notes","LargeText"], id: "patterns-floating-action-button", title: "배포/구성/빠른 메모 작성", component: FloatingNotesPreview, parameters: { layout: "fullscreen", hjm: { edgeToEdge: true } } } satisfies Meta<typeof FloatingNotesPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
-export const Notes: Story = {};
-export const LargeText: Story = { globals: { textScale: "2" } };
+export const Notes: Story = { name: "메모",};
+export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };

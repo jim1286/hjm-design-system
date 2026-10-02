@@ -1,3 +1,4 @@
+import { resolveMenuTypeahead } from "./menu-typeahead.js";
 import {
   resolveContextMenuAnchor,
   type ContextMenuAnchor,
@@ -44,8 +45,7 @@ export function ContextMenu<Key extends string = string>({
   const [anchor, setAnchor] = useState<ContextMenuAnchor | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const longPress = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-  const typeahead = useRef("");
-  const typeaheadTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const typeahead = useRef({ value: "", time: 0 });
   const enabled = items.filter((item) => !item.disabled);
 
   const open = useCallback((reason: ContextMenuOpenReason, pointer: ContextMenuAnchor | null) => {
@@ -60,6 +60,7 @@ export function ContextMenu<Key extends string = string>({
       rect === null ? null : { left: rect.left, bottom: rect.bottom },
     ));
     setActiveIndex(0);
+    typeahead.current = { value: "", time: 0 };
   }, []);
 
   const setMenuRef = useCallback((node: HTMLDivElement | null) => {
@@ -100,14 +101,13 @@ export function ContextMenu<Key extends string = string>({
         setActiveIndex(event.key === "Home" ? 0 : Math.max(enabled.length - 1, 0));
         return;
       }
-      if (event.key.length === 1 && event.key !== " ") {
-        // Typeahead matches `textValue`, not the rendered label: a label may hold
-        // markup or a formatted number that nobody would type.
-        const query = (typeahead.current += event.key.toLowerCase());
-        clearTimeout(typeaheadTimer.current);
-        typeaheadTimer.current = setTimeout(() => { typeahead.current = ""; }, 700);
-        const match = enabled.findIndex((item) => item.textValue.toLowerCase().startsWith(query));
-        if (match >= 0) setActiveIndex(match);
+      if (event.key.length === 1 && event.key !== " " && !event.ctrlKey && !event.metaKey && !event.altKey) {
+        const result = resolveMenuTypeahead(enabled, activeIndex, event.key, typeahead.current, Date.now());
+        typeahead.current = result.state;
+        if (result.index !== undefined) {
+          event.preventDefault();
+          setActiveIndex(result.index);
+        }
         return;
       }
       if (event.key === "Enter" || event.key === " ") {

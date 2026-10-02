@@ -1,0 +1,440 @@
+[
+  {
+    "frame": {
+      "x": 0,
+      "y": 0,
+      "height": 874,
+      "width": 402
+    },
+    "enabled": true,
+    "role": "AXApplication",
+    "AXValue": null,
+    "help": null,
+    "AXFrame": "{{0, 0}, {402, 874}}",
+    "AXLabel": "HJM Native Showcase",
+    "role_description": "application",
+    "content_required": false,
+    "traits": [
+      "None"
+    ],
+    "pid": 63103,
+    "type": "Application",
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "subrole": null,
+    "title": null
+  },
+  {
+    "title": null,
+    "AXFrame": "{{36, 98}, {330, 40}}",
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "help": null,
+    "role": "AXStaticText",
+    "role_description": "text",
+    "type": "StaticText",
+    "custom_actions": [],
+    "AXLabel": "2026년 9월의 예제 기록입니다. 실제 사용자 통계가 아닙니다.",
+    "subrole": null,
+    "enabled": true,
+    "content_required": false,
+    "pid": 63103,
+    "AXValue": null,
+    "AXUniqueId": null,
+    "frame": {
+      "x": 36,
+      "y": 98,
+      "width": 330,
+      "height": 40
+    }
+  },
+  {
+    "content_required": false,
+    "AXFrame": "{{36, 162}, {330, 32}}",
+    "pid": 63103,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "enabled": true,
+    "AXValue": null,
+    "AXLabel": "작은 순간이 쌓인 한 달",
+    "custom_actions": [],
+    "title": null,
+    "help": null,
+    "role": "AXStaticText",
+    "subrole": null,
+    "AXUniqueId": null,
+    "type": "StaticText",
+    "role_description": "text",
+    "frame": {
+      "y": 162,
+      "x": 36,
+      "width": 330,
+      "height": 32
+    }
+  },
+  {
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "role_description": "text",
+    "AXValue": null,
+    "subrole": null,
+    "role": "AXStaticText",
+    "pid": 63103,
+    "AXUniqueId": null,
+    "help": null,
+    "enabled": true,
+    "custom_actions": [],
+    "AXLabel": "기록한 날과 머문 시간을 함께 돌아봐요.",
+    "type": "StaticText",
+    "title": null,
+    "AXFrame": "{{36, 218}, {330, 20}}",
+    "content_required": false,
+    "frame": {
+      "y": 218,
+      "x": 36,
+      "height": 20,
+      "width": 330
+    }
+  },
+  {
+    "AXFrame": "{{36, 262}, {80.333335876464844, 44}}",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "role": "AXButton",
+    "content_required": false,
+    "AXLabel": "최근 7일",
+    "title": null,
+    "frame": {
+      "height": 44,
+      "x": 36,
+      "y": 262,
+      "width": 80.33333587646484
+    },
+    "custom_actions": [],
+    "pid": 63103,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "help": null,
+    "type": "Button",
+    "role_description": "button",
+    "enabled": true,
+    "subrole": null
+  },
+  {
+    "enabled": true,
+    "AXLabel": "9월",
+    "role": "AXButton",
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "help": null,
+    "subrole": null,
+    "AXFrame": "{{128.33333587646484, 262}, {53.333343505859375, 44}}",
+    "AXUniqueId": null,
+    "content_required": false,
+    "role_description": "button",
+    "pid": 63103,
+    "type": "Button",
+    "frame": {
+      "x": 128.33333587646484,
+      "y": 262,
+      "width": 53.333343505859375,
+      "height": 44
+    },
+    "AXValue": null,
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "subrole": null,
+    "help": null,
+    "AXValue": null,
+    "AXFrame": "{{193.66667175292969, 262}, {55.666656494140625, 44}}",
+    "content_required": false,
+    "AXUniqueId": null,
+    "enabled": true,
+    "custom_actions": [],
+    "role_description": "",
+    "frame": {
+      "x": 193.6666717529297,
+      "y": 262,
+      "width": 55.666656494140625,
+      "height": 44
+    },
+    "AXLabel": "8월",
+    "pid": 63103,
+    "title": null,
+    "type": "GenericElement",
+    "role": "AXGenericElement",
+    "traits": [
+      "Selected",
+      "Scrollable",
+      "Button"
+    ]
+  },
+  {
+    "AXFrame": "{{36, 330}, {330, 20}}",
+    "AXValue": null,
+    "role": "AXStaticText",
+    "AXLabel": "2026-08-01 — 2026-08-31",
+    "custom_actions": [],
+    "content_required": false,
+    "subrole": null,
+    "AXUniqueId": null,
+    "title": null,
+    "type": "StaticText",
+    "enabled": true,
+    "pid": 63103,
+    "frame": {
+      "width": 330,
+      "height": 20,
+      "x": 36,
+      "y": 330
+    },
+    "help": null,
+    "role_description": "text",
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ]
+  },
+  {
+    "subrole": null,
+    "enabled": true,
+    "role_description": "",
+    "pid": 63103,
+    "AXValue": null,
+    "type": "GenericElement",
+    "custom_actions": [],
+    "content_required": false,
+    "AXFrame": "{{57, 395}, {288, 90}}",
+    "role": "AXGenericElement",
+    "AXUniqueId": null,
+    "title": null,
+    "AXLabel": "남긴 기록, 0",
+    "help": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "frame": {
+      "height": 90,
+      "x": 57,
+      "y": 395,
+      "width": 288
+    }
+  },
+  {
+    "frame": {
+      "y": 505,
+      "width": 288,
+      "height": 90,
+      "x": 57
+    },
+    "role": "AXGenericElement",
+    "AXUniqueId": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "pid": 63103,
+    "help": null,
+    "role_description": "",
+    "title": null,
+    "enabled": true,
+    "AXFrame": "{{57, 505}, {288, 90}}",
+    "custom_actions": [],
+    "AXValue": null,
+    "AXLabel": "기록한 날, 0",
+    "type": "GenericElement",
+    "subrole": null,
+    "content_required": false
+  },
+  {
+    "pid": 63103,
+    "content_required": false,
+    "title": null,
+    "AXFrame": "{{57, 615}, {288, 90}}",
+    "frame": {
+      "width": 288,
+      "y": 615,
+      "height": 90,
+      "x": 57
+    },
+    "role": "AXGenericElement",
+    "enabled": true,
+    "type": "GenericElement",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "role_description": "",
+    "help": null,
+    "subrole": null,
+    "custom_actions": [],
+    "AXLabel": "머문 시간 (분), 0"
+  },
+  {
+    "AXValue": null,
+    "type": "Heading",
+    "custom_actions": [],
+    "content_required": false,
+    "frame": {
+      "y": 790,
+      "x": 129,
+      "width": 144,
+      "height": 20
+    },
+    "title": null,
+    "traits": [
+      "Header",
+      "Scrollable",
+      "StaticText"
+    ],
+    "enabled": true,
+    "role_description": "heading",
+    "subrole": null,
+    "help": null,
+    "pid": 63103,
+    "AXFrame": "{{129, 790}, {144, 20}}",
+    "AXLabel": "아직 기록이 없는 달이에요",
+    "role": "AXHeading",
+    "AXUniqueId": null
+  },
+  {
+    "AXValue": null,
+    "enabled": true,
+    "help": null,
+    "AXFrame": "{{93.333332061767578, 818}, {215, 18}}",
+    "frame": {
+      "height": 18,
+      "y": 818,
+      "x": 93.33333206176758,
+      "width": 215
+    },
+    "subrole": null,
+    "content_required": false,
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "role_description": "text",
+    "AXLabel": "기록이 있는 9월로 돌아가 흐름을 살펴보세요.",
+    "pid": 63103,
+    "role": "AXStaticText",
+    "title": null,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "type": "StaticText"
+  },
+  {
+    "role": "AXButton",
+    "AXValue": null,
+    "subrole": null,
+    "AXFrame": "{{160.33333587646484, 844}, {81.333343505859375, 44}}",
+    "custom_actions": [],
+    "role_description": "button",
+    "pid": 63103,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "content_required": false,
+    "type": "Button",
+    "help": null,
+    "AXUniqueId": null,
+    "title": null,
+    "frame": {
+      "x": 160.33333587646484,
+      "width": 81.33334350585938,
+      "height": 44,
+      "y": 844
+    },
+    "AXLabel": "9월 보기",
+    "enabled": true
+  },
+  {
+    "help": null,
+    "AXFrame": "{{362, 759}, {24, 24}}",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "AXLabel": null,
+    "enabled": true,
+    "role_description": "",
+    "type": "GenericElement",
+    "traits": [
+      "Scrollable"
+    ],
+    "title": null,
+    "frame": {
+      "x": 362,
+      "width": 24,
+      "y": 759,
+      "height": 24
+    },
+    "custom_actions": [],
+    "content_required": false,
+    "role": "AXGenericElement",
+    "subrole": null,
+    "pid": 63103
+  },
+  {
+    "enabled": true,
+    "title": null,
+    "role": "AXGenericElement",
+    "role_description": "",
+    "AXFrame": "{{6, 811.66666698455811}, {217.66667175292969, 17}}",
+    "subrole": null,
+    "help": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "AXLabel": "Patterns/Dashboard/Default",
+    "AXValue": null,
+    "pid": 63103,
+    "AXUniqueId": "mobile-menu-button",
+    "type": "GenericElement",
+    "custom_actions": [],
+    "frame": {
+      "width": 217.6666717529297,
+      "height": 17,
+      "x": 6,
+      "y": 811.6666669845581
+    },
+    "content_required": false
+  },
+  {
+    "AXUniqueId": "mobile-addons-button",
+    "frame": {
+      "width": 28,
+      "x": 368,
+      "y": 806,
+      "height": 28
+    },
+    "content_required": false,
+    "type": "Button",
+    "custom_actions": [],
+    "role": "AXButton",
+    "AXValue": null,
+    "role_description": "button",
+    "subrole": null,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "title": null,
+    "AXLabel": "Open addons panel",
+    "enabled": true,
+    "help": null,
+    "pid": 63103,
+    "AXFrame": "{{368, 806}, {28, 28}}"
+  }
+]

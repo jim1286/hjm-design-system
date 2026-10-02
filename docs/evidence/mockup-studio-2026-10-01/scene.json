@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "format": "landscape",
+  "frame": "browser",
+  "background": "dawn",
+  "angle": -6,
+  "padding": 90,
+  "shadow": true,
+  "title": "작은 순간을 오래도록",
+  "subtitle": "나만의 기록을 소개하세요",
+  "seed": 17,
+  "asset": {
+    "fileName": "default.png",
+    "source": "HJM Storybook 실제 캡처",
+    "usage": "내부 시각 검증"
+  },
+  "output": {
+    "width": 1440,
+    "height": 900
+  },
+  "assetInput": "reselect-local-image",
+  "frameSource": "HJM original generic frame",
+  "font": "system-ui, sans-serif"
+}

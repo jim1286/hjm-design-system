@@ -1,0 +1,313 @@
+[
+  {
+    "subrole": null,
+    "help": null,
+    "AXValue": null,
+    "AXFrame": "{{0, 0}, {402, 874}}",
+    "content_required": false,
+    "AXUniqueId": null,
+    "enabled": true,
+    "custom_actions": [],
+    "role_description": "application",
+    "frame": {
+      "width": 402,
+      "height": 874,
+      "x": 0,
+      "y": 0
+    },
+    "AXLabel": "HJM Native Showcase",
+    "pid": 67845,
+    "title": null,
+    "type": "Application",
+    "role": "AXApplication",
+    "traits": [
+      "None"
+    ]
+  },
+  {
+    "enabled": true,
+    "AXLabel": "한 번에 붙여넣어도, 한 글자씩 입력해도 같은 인증번호입니다.",
+    "role": "AXStaticText",
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "help": null,
+    "subrole": null,
+    "AXFrame": "{{16, 78}, {370, 20}}",
+    "AXUniqueId": null,
+    "content_required": false,
+    "role_description": "text",
+    "pid": 67845,
+    "type": "StaticText",
+    "frame": {
+      "height": 20,
+      "x": 16,
+      "y": 78,
+      "width": 370
+    },
+    "AXValue": null,
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "AXFrame": "{{16, 122}, {370, 20}}",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "role": "AXStaticText",
+    "content_required": false,
+    "AXLabel": "인증번호 · 카드형",
+    "title": null,
+    "frame": {
+      "y": 122,
+      "width": 370,
+      "height": 20,
+      "x": 16
+    },
+    "custom_actions": [],
+    "pid": 67845,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "help": null,
+    "type": "StaticText",
+    "role_description": "text",
+    "enabled": true,
+    "subrole": null
+  },
+  {
+    "traits": [
+      "TextEntry",
+      "Scrollable",
+      "TextOperationsAvailable"
+    ],
+    "role_description": "text field",
+    "AXValue": "123456",
+    "subrole": null,
+    "role": "AXTextField",
+    "pid": 67845,
+    "AXUniqueId": null,
+    "help": null,
+    "enabled": true,
+    "custom_actions": [],
+    "AXLabel": "인증번호 · 카드형",
+    "type": "TextField",
+    "title": null,
+    "AXFrame": "{{16, 150}, {304, 44}}",
+    "content_required": false,
+    "frame": {
+      "width": 304,
+      "y": 150,
+      "height": 44,
+      "x": 16
+    }
+  },
+  {
+    "content_required": false,
+    "AXFrame": "{{16, 218}, {370, 20}}",
+    "pid": 67845,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "enabled": true,
+    "AXValue": null,
+    "AXLabel": "인증번호 · 밑줄형",
+    "custom_actions": [],
+    "title": null,
+    "help": null,
+    "role": "AXStaticText",
+    "subrole": null,
+    "AXUniqueId": null,
+    "type": "StaticText",
+    "role_description": "text",
+    "frame": {
+      "width": 370,
+      "x": 16,
+      "y": 218,
+      "height": 20
+    }
+  },
+  {
+    "title": null,
+    "AXFrame": "{{16, 246}, {304, 44}}",
+    "traits": [
+      "TextEntry",
+      "Scrollable",
+      "TextOperationsAvailable"
+    ],
+    "help": "인증번호를 다시 확인해 주세요.",
+    "role": "AXTextField",
+    "role_description": "text field",
+    "type": "TextField",
+    "custom_actions": [],
+    "AXLabel": "인증번호 · 밑줄형",
+    "subrole": null,
+    "enabled": true,
+    "content_required": false,
+    "pid": 67845,
+    "AXValue": "123456",
+    "AXUniqueId": null,
+    "frame": {
+      "x": 16,
+      "y": 246,
+      "height": 44,
+      "width": 304
+    }
+  },
+  {
+    "frame": {
+      "width": 370,
+      "height": 18,
+      "y": 298,
+      "x": 16
+    },
+    "enabled": true,
+    "role": "AXStaticText",
+    "AXValue": null,
+    "help": null,
+    "AXFrame": "{{16, 298}, {370, 18}}",
+    "AXLabel": "인증번호를 다시 확인해 주세요.",
+    "role_description": "text",
+    "content_required": false,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "pid": 67845,
+    "type": "StaticText",
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "subrole": null,
+    "title": null
+  },
+  {
+    "AXFrame": "{{16, 340}, {370, 20}}",
+    "AXValue": null,
+    "role": "AXStaticText",
+    "AXLabel": "입력이 완료됐어요.",
+    "custom_actions": [],
+    "content_required": false,
+    "subrole": null,
+    "AXUniqueId": null,
+    "title": null,
+    "type": "StaticText",
+    "enabled": true,
+    "pid": 67845,
+    "frame": {
+      "height": 20,
+      "y": 340,
+      "width": 370,
+      "x": 16
+    },
+    "help": null,
+    "role_description": "text",
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ]
+  },
+  {
+    "subrole": null,
+    "enabled": true,
+    "role_description": "button",
+    "pid": 67845,
+    "AXValue": null,
+    "type": "Button",
+    "custom_actions": [],
+    "content_required": false,
+    "AXFrame": "{{16, 384}, {370, 44}}",
+    "role": "AXButton",
+    "AXUniqueId": null,
+    "title": null,
+    "AXLabel": "오류 해제",
+    "help": null,
+    "traits": [
+      "Button",
+      "Scrollable"
+    ],
+    "frame": {
+      "x": 16,
+      "width": 370,
+      "height": 44,
+      "y": 384
+    }
+  },
+  {
+    "frame": {
+      "height": 24,
+      "x": 362,
+      "width": 24,
+      "y": 759
+    },
+    "role": "AXGenericElement",
+    "AXUniqueId": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "pid": 67845,
+    "help": null,
+    "role_description": "",
+    "title": null,
+    "enabled": true,
+    "AXFrame": "{{362, 759}, {24, 24}}",
+    "custom_actions": [],
+    "AXValue": null,
+    "AXLabel": null,
+    "type": "GenericElement",
+    "subrole": null,
+    "content_required": false
+  },
+  {
+    "pid": 67845,
+    "content_required": false,
+    "title": null,
+    "AXFrame": "{{6, 811.66666698455811}, {274.33334350585938, 17}}",
+    "frame": {
+      "height": 17,
+      "y": 811.6666669845581,
+      "x": 6,
+      "width": 274.3333435058594
+    },
+    "role": "AXGenericElement",
+    "enabled": true,
+    "type": "GenericElement",
+    "AXUniqueId": "mobile-menu-button",
+    "AXValue": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "role_description": "",
+    "help": null,
+    "subrole": null,
+    "custom_actions": [],
+    "AXLabel": "Components/Inputs/OtpField/Default"
+  },
+  {
+    "AXValue": null,
+    "type": "Button",
+    "custom_actions": [],
+    "content_required": false,
+    "frame": {
+      "y": 806,
+      "x": 368,
+      "width": 28,
+      "height": 28
+    },
+    "title": null,
+    "traits": [
+      "Button",
+      "Scrollable"
+    ],
+    "enabled": true,
+    "role_description": "button",
+    "subrole": null,
+    "help": null,
+    "pid": 67845,
+    "AXFrame": "{{368, 806}, {28, 28}}",
+    "AXLabel": "Open addons panel",
+    "role": "AXButton",
+    "AXUniqueId": "mobile-addons-button"
+  }
+]

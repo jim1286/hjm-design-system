@@ -1,9 +1,17 @@
-import { type IconDescriptor } from "@hjmds/design-contracts/components/icon";
+import { type IconDescriptor, type SemanticIconName } from "@hjmds/design-contracts/components/icon";
 import { type ImageDescriptor, type ImageLoadStatus } from "@hjmds/design-contracts/components/image";
 import { type CounterBadgeSize, type CounterBadgeTone, type CounterBadgeVariant } from "@hjmds/design-contracts/recipes";
 import { type CSSProperties, type HTMLAttributes, type ImgHTMLAttributes, type ReactElement, type ReactEventHandler, type ReactNode, type Ref, type SVGAttributes } from "react";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
-export type IconProps = Omit<SVGAttributes<SVGSVGElement>, "children" | "color"> & IconDescriptor;
+export type IconProps = Omit<SVGAttributes<SVGSVGElement>, "children" | "color"> & IconDescriptor & Readonly<{
+    /** Optional glyph inside the existing 24-unit SVG frame; HJM owns semantics. */
+    renderGlyph?: (props: Readonly<{
+        name: SemanticIconName;
+        size: number;
+        color: string;
+        strokeWidth: number;
+    }>) => ReactNode;
+}>;
 export declare const Icon: import("react").ForwardRefExoticComponent<IconProps & import("react").RefAttributes<SVGSVGElement>>;
 type ImageElementProps = Omit<ImgHTMLAttributes<HTMLImageElement>, "alt" | "aria-hidden" | "aria-label" | "children" | "className" | "height" | "onError" | "onLoad" | "role" | "src" | "style" | "width">;
 /** Canonical props handed to a framework adapter such as `next/image`. */

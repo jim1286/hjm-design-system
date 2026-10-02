@@ -1,0 +1,25 @@
+{
+  "node": "v26.9.0",
+  "baseline": "8543b6fb886321cff9a5d50837ffcb99db6b859e",
+  "files": [
+    "packages/react-native/dist/actions.js",
+    "packages/react-native/dist/internal/modal-lifecycle.js",
+    "packages/react-native/dist/internal/styles.js",
+    "packages/react-native/dist/overlays.js",
+    "packages/react-native/dist/primitives.js",
+    "packages/react-native/dist/provider.js"
+  ],
+  "modules": 6,
+  "before": {
+    "raw": 79996,
+    "gzip": 15332
+  },
+  "after": {
+    "raw": 80335,
+    "gzip": 15470
+  },
+  "delta": {
+    "raw": 339,
+    "gzip": 138
+  }
+}

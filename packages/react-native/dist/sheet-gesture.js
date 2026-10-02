@@ -1,4 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { fieldRecipe } from "@hjmds/design-contracts/recipes/base";
+import { radius, typography } from "@hjmds/design-contracts/foundations";
+import { resolveNativeTextScaleProps } from "./internal/styles.js";
 import { forwardRef, useCallback, useEffect, useRef } from "react";
 import { BackHandler, View } from "react-native";
 import { BottomSheetModal, BottomSheetModalProvider, BottomSheetScrollView, BottomSheetBackdrop, BottomSheetHandle, BottomSheetTextInput } from "@gorhom/bottom-sheet";
@@ -11,9 +14,20 @@ import { useHjmNativeSafeAreaInsets, useHjmNativeTheme } from "./provider.js";
  * border or padding, so it read as plain text (2026-09-30 audit).
  */
 export const GestureSheetInput = forwardRef(function GestureSheetInput({ style, ...props }, ref) {
-    const { colors, tokens } = useHjmNativeTheme();
-    return _jsx(BottomSheetTextInput, { ref: ref, placeholderTextColor: colors.textWeak, ...props, style: [{ borderColor: colors.borderControl, borderRadius: tokens.radius.md, borderWidth: 1, color: colors.text,
-                fontSize: tokens.typography.body.fontSize, minHeight: 48, paddingHorizontal: tokens.spacing.md }, style] });
+    const { colors, textScaling } = useHjmNativeTheme();
+    const metrics = typography[fieldRecipe.textVariant];
+    // Preserve the sheet's keyboard-tracking host, but derive its presentation
+    // and font scaling from the same recipe as TextField instead of a third style.
+    const scaled = resolveNativeTextScaleProps(textScaling, [{
+            borderColor: colors[fieldRecipe.states.idle.border],
+            borderRadius: radius[fieldRecipe.shapes[fieldRecipe.defaults.shape]],
+            borderWidth: fieldRecipe.borderWidth,
+            backgroundColor: colors[fieldRecipe.variants[fieldRecipe.defaults.variant].background],
+            color: colors.text, fontSize: metrics.fontSize, fontWeight: metrics.fontWeight,
+            lineHeight: metrics.lineHeight, minHeight: fieldRecipe.minHeight,
+            paddingHorizontal: fieldRecipe.paddingHorizontal, paddingVertical: fieldRecipe.paddingVertical,
+        }, style], props.allowFontScaling);
+    return _jsx(BottomSheetTextInput, { ref: ref, placeholderTextColor: colors[fieldRecipe.placeholder.color], ...props, ...scaled });
 });
 /**
  * Open sheets, newest last. Android back inside an RN Modal goes to the Modal's

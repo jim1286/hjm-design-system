@@ -149,4 +149,6 @@ export declare const otpFieldBehavior: {
     };
     readonly scenarios: readonly ["one-accessible-name-and-value-for-the-whole-field-never-per-slot-announcement", "one-tab-stop-native-text-editing-owns-typing-backspacing-and-paste", "paste-anywhere-in-the-value-is-sanitized-to-digits-and-clamped-to-length", "non-digit-characters-are-stripped-not-rejected-outright", "resolveOtpFieldValue-truncates-typed-or-pasted-overflow-instead-of-throwing", "a-too-long-committed-descriptor-still-throws-as-malformed-state", "alphanumeric-otp-is-out-of-scope-until-a-real-product-need-exists"];
 };
+/** Visual slots only; all presentations retain one real platform input. */
+export type OtpFieldPresentation = "boxes" | "underline";
 //# sourceMappingURL=otp-field.d.ts.map

@@ -4,6 +4,7 @@ import { describe, expect, expectTypeOf, it } from "vitest";
 
 import {
   Button,
+  Card,
   Field,
   HjmNativeProvider,
   Surface,
@@ -51,6 +52,23 @@ function flattenStyle(style: unknown): Record<string, unknown> {
 }
 
 describe("React Native composition style boundary", () => {
+  it("clips raised card media without removing the surface shadow", () => {
+    const renderer = render(<Card tone="raised" radius="lg" media={<View testID="card-media" />} />);
+    const clippingFrame = renderer.root.findAllByType(View).find(node => {
+      const style = flattenStyle(node.props.style);
+      return style.overflow === "hidden" && style.borderRadius === 16;
+    });
+    expect(clippingFrame?.findByProps({ testID: "card-media" })).toBeDefined();
+    const surface = renderer.root.findAllByType(View).find(node => flattenStyle(node.props.style).elevation === 4);
+    expect(flattenStyle(surface?.props.style).overflow).toBe("visible");
+    act(() => renderer.unmount());
+  });
+
+  it("rejects untyped public paint overrides without exposing the private recipe renderer", () => {
+    const unsafe = { style: { backgroundColor: "red" } };
+    expect(() => render(<Button {...unsafe}>Save</Button>)).toThrow("Button style/labelStyle were removed");
+  });
+
   it("exports one reusable layout-only type for Stable Core props", () => {
     const placement = {
       alignSelf: "stretch",
@@ -125,32 +143,27 @@ describe("React Native composition style boundary", () => {
     void invalidButtonPlacement;
   });
 
-  it("adds canonical placement without changing legacy raw-style runtime behavior", () => {
+  it("keeps recipe paint while accepting canonical placement", () => {
     const renderer = render(
       <>
         <Button
           layoutStyle={{ marginTop: 8, width: "100%" }}
           onPress={() => undefined}
-          style={{ backgroundColor: "#123456" }}
         >
           저장
         </Button>
         <Surface
           layoutStyle={{ flexGrow: 1, marginTop: 9 }}
-          style={{ backgroundColor: "#234567" }}
-          testID="legacy-surface"
+          testID="canonical-surface"
         />
         <Field
           label="사용자 정의 필드"
           layoutStyle={{ marginTop: 10 }}
-          style={{ backgroundColor: "#345678" }}
         >
           <View testID="field-control" />
         </Field>
         <TextArea
           accessibilityLabel="설명"
-          containerStyle={{ backgroundColor: "#456789" }}
-          inputStyle={{ fontSize: 31 }}
           layoutStyle={{ marginTop: 11 }}
         />
       </>,
@@ -158,28 +171,28 @@ describe("React Native composition style boundary", () => {
 
     const button = renderer.root.findByType(Pressable);
     expect(flattenStyle(button.props.style({ pressed: false }))).toMatchObject({
-      backgroundColor: "#123456",
+
       marginTop: 8,
       width: "100%",
     });
     const surfaceHost = renderer.root.findAllByType(View).find(
-      (node) => node.props.testID === "legacy-surface",
+      (node) => node.props.testID === "canonical-surface",
     );
     expect(flattenStyle(surfaceHost?.props.style)).toMatchObject({
-      backgroundColor: "#234567",
+
       flexGrow: 1,
       marginTop: 9,
     });
     expect(flattenStyle(renderer.root.findByProps({ testID: "field-control" }).parent?.props.style))
-      .toMatchObject({ backgroundColor: "#345678", marginTop: 10 });
+      .toMatchObject({ marginTop: 10 });
     expect(flattenStyle(renderer.root.findByType(TextInput).props.style))
-      .toMatchObject({ fontSize: 31 });
+      .not.toMatchObject({ fontSize: 31 });
     const textAreaFrame = renderer.root.findAllByType(View).find((node) => {
       const style = flattenStyle(node.props.style);
-      return style.backgroundColor === "#456789";
+      return style.marginTop === 11;
     });
     expect(flattenStyle(textAreaFrame?.props.style)).toMatchObject({
-      backgroundColor: "#456789",
+
       marginTop: 11,
     });
   });

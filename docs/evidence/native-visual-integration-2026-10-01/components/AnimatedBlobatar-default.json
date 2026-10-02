@@ -1,0 +1,207 @@
+[
+  {
+    "subrole": null,
+    "help": null,
+    "AXValue": null,
+    "AXFrame": "{{0, 0}, {402, 874}}",
+    "content_required": false,
+    "AXUniqueId": null,
+    "enabled": true,
+    "custom_actions": [],
+    "role_description": "application",
+    "frame": {
+      "height": 874,
+      "y": 0,
+      "width": 402,
+      "x": 0
+    },
+    "AXLabel": "HJM Native Showcase",
+    "pid": 57163,
+    "title": null,
+    "type": "Application",
+    "role": "AXApplication",
+    "traits": [
+      "None"
+    ]
+  },
+  {
+    "enabled": true,
+    "AXLabel": "미리보기",
+    "role": "AXImage",
+    "traits": [
+      "Scrollable",
+      "Image"
+    ],
+    "help": null,
+    "subrole": null,
+    "AXFrame": "{{16, 78}, {96, 96}}",
+    "AXUniqueId": null,
+    "content_required": false,
+    "role_description": "image",
+    "pid": 57163,
+    "type": "Image",
+    "frame": {
+      "width": 96,
+      "y": 78,
+      "height": 96,
+      "x": 16
+    },
+    "AXValue": null,
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "AXFrame": "{{16, 198}, {370, 20}}",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "role": "AXStaticText",
+    "content_required": false,
+    "AXLabel": "idle",
+    "title": null,
+    "frame": {
+      "x": 16,
+      "y": 198,
+      "width": 370,
+      "height": 20
+    },
+    "custom_actions": [],
+    "pid": 57163,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "help": null,
+    "type": "StaticText",
+    "role_description": "text",
+    "enabled": true,
+    "subrole": null
+  },
+  {
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "role_description": "button",
+    "AXValue": null,
+    "subrole": null,
+    "role": "AXButton",
+    "pid": 57163,
+    "AXUniqueId": null,
+    "help": null,
+    "enabled": true,
+    "custom_actions": [],
+    "AXLabel": "다음 표정",
+    "type": "Button",
+    "title": null,
+    "AXFrame": "{{16, 242}, {370, 44}}",
+    "content_required": false,
+    "frame": {
+      "height": 44,
+      "x": 16,
+      "width": 370,
+      "y": 242
+    }
+  },
+  {
+    "content_required": false,
+    "AXFrame": "{{16, 310}, {370, 44}}",
+    "pid": 57163,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "enabled": true,
+    "AXValue": null,
+    "AXLabel": "움직임 시작",
+    "custom_actions": [],
+    "title": null,
+    "help": null,
+    "role": "AXImage",
+    "subrole": null,
+    "AXUniqueId": null,
+    "type": "Image",
+    "role_description": "image",
+    "frame": {
+      "height": 44,
+      "x": 16,
+      "y": 310,
+      "width": 370
+    }
+  },
+  {
+    "title": null,
+    "AXFrame": "{{362, 759}, {24, 24}}",
+    "traits": [
+      "Scrollable"
+    ],
+    "help": null,
+    "role": "AXGenericElement",
+    "role_description": "",
+    "type": "GenericElement",
+    "custom_actions": [],
+    "AXLabel": null,
+    "subrole": null,
+    "enabled": true,
+    "content_required": false,
+    "pid": 57163,
+    "AXValue": null,
+    "AXUniqueId": null,
+    "frame": {
+      "y": 759,
+      "x": 362,
+      "height": 24,
+      "width": 24
+    }
+  },
+  {
+    "frame": {
+      "y": 811.6666669845581,
+      "width": 344.3333435058594,
+      "height": 17,
+      "x": 6
+    },
+    "enabled": true,
+    "role": "AXGenericElement",
+    "AXValue": null,
+    "help": null,
+    "AXFrame": "{{6, 811.66666698455811}, {344.33334350585938, 17}}",
+    "AXLabel": "Components/Display/Animated Blobatar/Default",
+    "role_description": "",
+    "content_required": false,
+    "traits": [
+      "Scrollable"
+    ],
+    "pid": 57163,
+    "type": "GenericElement",
+    "custom_actions": [],
+    "AXUniqueId": "mobile-menu-button",
+    "subrole": null,
+    "title": null
+  },
+  {
+    "type": "Button",
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "frame": {
+      "width": 28,
+      "height": 28,
+      "y": 806,
+      "x": 368
+    },
+    "title": null,
+    "help": null,
+    "role": "AXButton",
+    "AXFrame": "{{368, 806}, {28, 28}}",
+    "custom_actions": [],
+    "AXLabel": "Open addons panel",
+    "subrole": null,
+    "content_required": false,
+    "AXUniqueId": "mobile-addons-button",
+    "role_description": "button",
+    "AXValue": null,
+    "pid": 57163,
+    "enabled": true
+  }
+]

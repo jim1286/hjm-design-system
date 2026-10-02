@@ -4,7 +4,12 @@ import { semanticColors } from "./semantic-colors.js";
 
 export const progressRecipe = {
   slots: ["root", "track", "indicator", "label", "value"] as const,
-  defaults: { size: "medium", tone: "brand", shape: "linear" },
+  /*
+    max 기본값은 두 renderer가 이 값 하나를 읽는다. 2026-10-02 전에는 Web 100·Native 1로 달라
+    같은 value={76}이 Native에서만 RangeError를 냈다. 100을 고른 이유: Web 기존 동작과 문서 예제가
+    백분율이고, 1(분수)을 쓰는 곳은 내부 UploadItem처럼 max를 명시하면 되는 소수다.
+  */
+  defaults: { size: "medium", tone: "brand", shape: "linear", max: 100 },
   sizes: { small: 4, medium: 8, large: 12 },
   /*
     같은 값을 원으로 그리는 변형이다. 새 컴포넌트가 아닌 이유는 의미가 완전히 같기
@@ -34,6 +39,7 @@ export const progressRecipe = {
     size: "small" | "medium" | "large";
     tone: "brand" | "success" | "warning" | "danger";
     shape: "linear" | "circular";
+    max: number;
   };
   sizes: Record<"small" | "medium" | "large", number>;
   circular: {

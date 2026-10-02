@@ -109,7 +109,7 @@ FAB는 collection 항목이 아니다. 스크롤 콘텐츠 **뒤**에 오는 고
 
 ## 검증 화면
 
-2026-09-16: React/RN `Patterns/Floating action button`에 스크롤 목록 → 기록 작성
+2026-09-16: React/RN `패턴/빠른 메모 작성`에 스크롤 목록 → 기록 작성
 Dialog → 새 기록 추가 흐름을 구현했다. Flutter 앱은 이번 이관 범위에서 제외한다.
 
 ## React / React Native 공개 API

@@ -1,0 +1,21 @@
+[
+  {
+    "deterministicSeek": true,
+    "posterMatchesFrame": true,
+    "pauseFrame": "20",
+    "videoFile": "docs/evidence/scene-timeline-2026-10-01/hjm-scene.webm",
+    "videoBytes": 1387811
+  },
+  {
+    "cancel": true
+  },
+  {
+    "cancelledTracks": [
+      "ended"
+    ],
+    "darkAndLargeTextNoOverflow": true,
+    "reducedMotionPlaybackDisabled": true,
+    "reducedMotionScrubbing": true,
+    "finalPacing": "start-clock-anchored"
+  }
+]

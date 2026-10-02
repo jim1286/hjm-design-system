@@ -58,8 +58,8 @@ function cssShadow(value: (typeof shadow)[keyof typeof shadow]): string {
 }
 
 /**
- * Translate renderer-neutral foundations once at the Web boundary. Legacy
- * aliases stay available while Showcase CSS migrates to the namespaced scale.
+ * Translate renderer-neutral foundations once at the Web boundary.
+ * Namespaced color tokens avoid duplicate aliases drifting from the shared palette.
  */
 export function createWebThemeStyle(
   providerValue: DesignSystemProviderValue,
@@ -75,8 +75,6 @@ export function createWebThemeStyle(
 
   for (const [name, value] of Object.entries(colors)) {
     variables[`--hjm-color-${kebabCase(name)}`] = value;
-    // Backward-compatible aliases consumed by the current Showcase stylesheet.
-    variables[`--hjm-${kebabCase(name)}`] = value;
   }
   for (const [name, value] of Object.entries(palette.statusAccents)) {
     variables[`--hjm-accent-${kebabCase(name)}`] = value;

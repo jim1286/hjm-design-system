@@ -1,0 +1,181 @@
+[
+  {
+    "subrole": null,
+    "help": null,
+    "AXValue": null,
+    "AXFrame": "{{0, 0}, {402, 874}}",
+    "content_required": false,
+    "AXUniqueId": null,
+    "enabled": true,
+    "custom_actions": [],
+    "role_description": "application",
+    "frame": {
+      "y": 0,
+      "width": 402,
+      "height": 874,
+      "x": 0
+    },
+    "AXLabel": "HJM Native Showcase",
+    "pid": 89686,
+    "title": null,
+    "type": "Application",
+    "role": "AXApplication",
+    "traits": [
+      "None"
+    ]
+  },
+  {
+    "title": null,
+    "AXFrame": "{{16, 78}, {370, 200}}",
+    "traits": [
+      "Button",
+      "Scrollable"
+    ],
+    "help": null,
+    "role": "AXButton",
+    "role_description": "button",
+    "type": "Button",
+    "custom_actions": [],
+    "AXLabel": "이번 주 아이디어 · 3개",
+    "subrole": null,
+    "enabled": true,
+    "content_required": false,
+    "pid": 89686,
+    "AXValue": "expanded",
+    "AXUniqueId": null,
+    "frame": {
+      "x": 16,
+      "width": 370,
+      "height": 200,
+      "y": 78
+    }
+  },
+  {
+    "content_required": false,
+    "AXFrame": "{{16, 286}, {370, 80}}",
+    "pid": 89686,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "enabled": true,
+    "AXValue": null,
+    "AXLabel": "폴더를 열어 보관한 아이디어를 이어서 살펴보세요.",
+    "custom_actions": [],
+    "title": null,
+    "help": null,
+    "role": "AXStaticText",
+    "subrole": null,
+    "AXUniqueId": null,
+    "type": "StaticText",
+    "role_description": "text",
+    "frame": {
+      "y": 286,
+      "x": 16,
+      "width": 370,
+      "height": 80
+    }
+  },
+  {
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "role_description": "text",
+    "AXValue": null,
+    "subrole": null,
+    "role": "AXStaticText",
+    "pid": 89686,
+    "AXUniqueId": null,
+    "help": null,
+    "enabled": true,
+    "custom_actions": [],
+    "AXLabel": "여행 기록 · 새로운 습관 · 작은 메모",
+    "type": "StaticText",
+    "title": null,
+    "AXFrame": "{{16, 382}, {370, 80}}",
+    "content_required": false,
+    "frame": {
+      "height": 80,
+      "y": 382,
+      "width": 370,
+      "x": 16
+    }
+  },
+  {
+    "AXFrame": "{{362, 759}, {24, 24}}",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "role": "AXGenericElement",
+    "content_required": false,
+    "AXLabel": null,
+    "title": null,
+    "frame": {
+      "width": 24,
+      "y": 759,
+      "height": 24,
+      "x": 362
+    },
+    "custom_actions": [],
+    "pid": 89686,
+    "traits": [
+      "Scrollable"
+    ],
+    "help": null,
+    "type": "GenericElement",
+    "role_description": "",
+    "enabled": true,
+    "subrole": null
+  },
+  {
+    "enabled": true,
+    "AXLabel": "컴포넌트/데이터 표시/Folder Preview/Large Text",
+    "role": "AXGenericElement",
+    "traits": [
+      "Scrollable"
+    ],
+    "help": null,
+    "subrole": null,
+    "AXFrame": "{{6, 811.66666698455811}, {325.66665649414062, 17}}",
+    "AXUniqueId": "mobile-menu-button",
+    "content_required": false,
+    "role_description": "",
+    "pid": 89686,
+    "type": "GenericElement",
+    "frame": {
+      "y": 811.6666669845581,
+      "x": 6,
+      "height": 17,
+      "width": 325.6666564941406
+    },
+    "AXValue": null,
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "frame": {
+      "width": 28,
+      "x": 368,
+      "y": 806,
+      "height": 28
+    },
+    "enabled": true,
+    "role": "AXButton",
+    "AXValue": null,
+    "help": null,
+    "AXFrame": "{{368, 806}, {28, 28}}",
+    "AXLabel": null,
+    "role_description": "button",
+    "content_required": false,
+    "traits": [
+      "Button",
+      "Scrollable"
+    ],
+    "pid": 89686,
+    "type": "Button",
+    "custom_actions": [],
+    "AXUniqueId": "mobile-addons-button",
+    "subrole": null,
+    "title": null
+  }
+]

@@ -1,0 +1,339 @@
+[
+  {
+    "frame": {
+      "width": 402,
+      "height": 874,
+      "x": 0,
+      "y": 0
+    },
+    "enabled": true,
+    "role": "AXApplication",
+    "AXValue": null,
+    "help": null,
+    "AXFrame": "{{0, 0}, {402, 874}}",
+    "AXLabel": "HJM Native Showcase",
+    "role_description": "application",
+    "content_required": false,
+    "traits": [
+      "None"
+    ],
+    "pid": 57163,
+    "type": "Application",
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "subrole": null,
+    "title": null
+  },
+  {
+    "title": null,
+    "AXFrame": "{{101, 99}, {104, 48}}",
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "help": null,
+    "role": "AXStaticText",
+    "role_description": "text",
+    "type": "StaticText",
+    "custom_actions": [],
+    "AXLabel": "산책하며 남긴 메모",
+    "subrole": null,
+    "enabled": true,
+    "content_required": false,
+    "pid": 57163,
+    "AXValue": null,
+    "AXUniqueId": null,
+    "frame": {
+      "height": 48,
+      "y": 99,
+      "x": 101,
+      "width": 104
+    }
+  },
+  {
+    "content_required": false,
+    "AXFrame": "{{37, 191}, {328, 44}}",
+    "pid": 57163,
+    "traits": [
+      "Adjustable",
+      "Scrollable",
+      "NotEnabled"
+    ],
+    "enabled": false,
+    "AXValue": "0:12",
+    "AXLabel": "재생 위치",
+    "custom_actions": [],
+    "title": null,
+    "help": null,
+    "role": "AXGenericElement",
+    "subrole": null,
+    "AXUniqueId": null,
+    "type": "GenericElement",
+    "role_description": "",
+    "frame": {
+      "x": 37,
+      "width": 328,
+      "height": 44,
+      "y": 191
+    }
+  },
+  {
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "role_description": "text",
+    "AXValue": null,
+    "subrole": null,
+    "role": "AXStaticText",
+    "pid": 57163,
+    "AXUniqueId": null,
+    "help": null,
+    "enabled": true,
+    "custom_actions": [],
+    "AXLabel": "0:12 / 1:24",
+    "type": "StaticText",
+    "title": null,
+    "AXFrame": "{{37, 251}, {328, 20}}",
+    "content_required": false,
+    "frame": {
+      "x": 37,
+      "width": 328,
+      "y": 251,
+      "height": 20
+    }
+  },
+  {
+    "AXFrame": "{{37, 287}, {328, 20}}",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "role": "AXStaticText",
+    "content_required": false,
+    "AXLabel": "음성 메모를 불러오지 못했어요.",
+    "title": null,
+    "frame": {
+      "width": 328,
+      "height": 20,
+      "x": 37,
+      "y": 287
+    },
+    "custom_actions": [],
+    "pid": 57163,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "help": null,
+    "type": "StaticText",
+    "role_description": "text",
+    "enabled": true,
+    "subrole": null
+  },
+  {
+    "enabled": false,
+    "AXLabel": "재생",
+    "role": "AXButton",
+    "traits": [
+      "Button",
+      "Scrollable",
+      "NotEnabled"
+    ],
+    "help": null,
+    "subrole": "AXSwitch",
+    "AXFrame": "{{37, 323}, {56.333335876464844, 44}}",
+    "AXUniqueId": null,
+    "content_required": false,
+    "role_description": "switch",
+    "pid": 57163,
+    "type": "Button",
+    "frame": {
+      "width": 56.333335876464844,
+      "x": 37,
+      "y": 323,
+      "height": 44
+    },
+    "AXValue": null,
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "subrole": null,
+    "help": null,
+    "AXValue": null,
+    "AXFrame": "{{105.33333587646484, 323}, {84.333335876464844, 44}}",
+    "content_required": false,
+    "AXUniqueId": null,
+    "enabled": true,
+    "custom_actions": [],
+    "role_description": "",
+    "frame": {
+      "width": 84.33333587646484,
+      "y": 323,
+      "height": 44,
+      "x": 105.33333587646484
+    },
+    "AXLabel": "다시 시도",
+    "pid": 57163,
+    "title": null,
+    "type": "GenericElement",
+    "role": "AXGenericElement",
+    "traits": [
+      "Button",
+      "Scrollable"
+    ]
+  },
+  {
+    "AXUniqueId": null,
+    "frame": {
+      "height": 20,
+      "y": 408,
+      "width": 370,
+      "x": 16
+    },
+    "content_required": false,
+    "type": "StaticText",
+    "custom_actions": [],
+    "role": "AXStaticText",
+    "AXValue": null,
+    "role_description": "text",
+    "subrole": null,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "title": null,
+    "AXLabel": "재생 상태를 살펴보는 예제입니다. 실제 음성은 재생하지 않아요.",
+    "enabled": true,
+    "help": null,
+    "pid": 57163,
+    "AXFrame": "{{16, 408}, {370, 20}}"
+  },
+  {
+    "AXUniqueId": null,
+    "custom_actions": [],
+    "frame": {
+      "height": 44,
+      "x": 16,
+      "width": 370,
+      "y": 448
+    },
+    "subrole": null,
+    "content_required": false,
+    "AXValue": null,
+    "help": null,
+    "AXFrame": "{{16, 448}, {370, 44}}",
+    "enabled": true,
+    "traits": [
+      "Button",
+      "Scrollable"
+    ],
+    "type": "Button",
+    "role_description": "button",
+    "AXLabel": "로딩 상태",
+    "role": "AXButton",
+    "title": null,
+    "pid": 57163
+  },
+  {
+    "role": "AXGenericElement",
+    "AXUniqueId": null,
+    "type": "GenericElement",
+    "traits": [
+      "Button",
+      "Scrollable"
+    ],
+    "AXLabel": "오류 상태",
+    "frame": {
+      "y": 512,
+      "width": 370,
+      "height": 44,
+      "x": 16
+    },
+    "enabled": true,
+    "AXValue": null,
+    "AXFrame": "{{16, 512}, {370, 44}}",
+    "title": null,
+    "help": null,
+    "custom_actions": [],
+    "subrole": null,
+    "role_description": "",
+    "content_required": false,
+    "pid": 57163
+  },
+  {
+    "pid": 57163,
+    "role_description": "",
+    "role": "AXGenericElement",
+    "subrole": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "AXUniqueId": null,
+    "AXValue": null,
+    "AXFrame": "{{362, 759}, {24, 24}}",
+    "type": "GenericElement",
+    "custom_actions": [],
+    "help": null,
+    "frame": {
+      "width": 24,
+      "height": 24,
+      "y": 759,
+      "x": 362
+    },
+    "title": null,
+    "enabled": true,
+    "AXLabel": null,
+    "content_required": false
+  },
+  {
+    "content_required": false,
+    "AXValue": null,
+    "enabled": true,
+    "role": "AXGenericElement",
+    "title": null,
+    "AXFrame": "{{6, 811.66666698455811}, {296, 17}}",
+    "help": null,
+    "role_description": "",
+    "custom_actions": [],
+    "frame": {
+      "height": 17,
+      "y": 811.6666669845581,
+      "width": 296,
+      "x": 6
+    },
+    "AXLabel": "Components/Display/Voice Note/Default",
+    "subrole": null,
+    "type": "GenericElement",
+    "pid": 57163,
+    "traits": [
+      "Scrollable"
+    ],
+    "AXUniqueId": "mobile-menu-button"
+  },
+  {
+    "type": "Button",
+    "subrole": null,
+    "AXFrame": "{{368, 806}, {28, 28}}",
+    "pid": 57163,
+    "role_description": "button",
+    "AXLabel": "Open addons panel",
+    "custom_actions": [],
+    "content_required": false,
+    "traits": [
+      "Button",
+      "Scrollable"
+    ],
+    "role": "AXButton",
+    "AXValue": null,
+    "title": null,
+    "help": null,
+    "frame": {
+      "width": 28,
+      "x": 368,
+      "y": 806,
+      "height": 28
+    },
+    "enabled": true,
+    "AXUniqueId": "mobile-addons-button"
+  }
+]

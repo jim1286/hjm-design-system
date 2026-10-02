@@ -1,0 +1,233 @@
+[
+  {
+    "subrole": null,
+    "help": null,
+    "AXValue": null,
+    "AXFrame": "{{0, 0}, {402, 874}}",
+    "content_required": false,
+    "AXUniqueId": null,
+    "enabled": true,
+    "custom_actions": [],
+    "role_description": "application",
+    "frame": {
+      "height": 874,
+      "y": 0,
+      "x": 0,
+      "width": 402
+    },
+    "AXLabel": "HJM Native Showcase",
+    "pid": 57163,
+    "title": null,
+    "type": "Application",
+    "role": "AXApplication",
+    "traits": [
+      "None"
+    ]
+  },
+  {
+    "enabled": true,
+    "AXLabel": "작은 반응이 대화를 이어줘요.",
+    "role": "AXStaticText",
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "help": null,
+    "subrole": null,
+    "AXFrame": "{{40, 102}, {322, 32}}",
+    "AXUniqueId": null,
+    "content_required": false,
+    "role_description": "text",
+    "pid": 57163,
+    "type": "StaticText",
+    "frame": {
+      "x": 40,
+      "y": 102,
+      "width": 322,
+      "height": 32
+    },
+    "AXValue": null,
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "AXFrame": "{{40, 158}, {52, 44}}",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "role": "AXImage",
+    "content_required": false,
+    "AXLabel": "좋아요",
+    "title": null,
+    "frame": {
+      "x": 40,
+      "width": 52,
+      "y": 158,
+      "height": 44
+    },
+    "custom_actions": [],
+    "pid": 57163,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "help": null,
+    "type": "Image",
+    "role_description": "image",
+    "enabled": true,
+    "subrole": "AXSwitch"
+  },
+  {
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "role_description": "button",
+    "AXValue": null,
+    "subrole": null,
+    "role": "AXButton",
+    "pid": 57163,
+    "AXUniqueId": null,
+    "help": null,
+    "enabled": true,
+    "custom_actions": [],
+    "AXLabel": "마음에 들어요",
+    "type": "Button",
+    "title": null,
+    "AXFrame": "{{100, 158}, {52, 44}}",
+    "content_required": false,
+    "frame": {
+      "height": 44,
+      "x": 100,
+      "width": 52,
+      "y": 158
+    }
+  },
+  {
+    "content_required": false,
+    "AXFrame": "{{160, 158}, {52, 44}}",
+    "pid": 57163,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "enabled": true,
+    "AXValue": null,
+    "AXLabel": "축하해요",
+    "custom_actions": [],
+    "title": null,
+    "help": null,
+    "role": "AXButton",
+    "subrole": null,
+    "AXUniqueId": null,
+    "type": "Button",
+    "role_description": "button",
+    "frame": {
+      "y": 158,
+      "x": 160,
+      "width": 52,
+      "height": 44
+    }
+  },
+  {
+    "title": null,
+    "AXFrame": "{{220, 158}, {52, 44}}",
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "help": null,
+    "role": "AXButton",
+    "role_description": "button",
+    "type": "Button",
+    "custom_actions": [],
+    "AXLabel": "영감을 받았어요",
+    "subrole": null,
+    "enabled": true,
+    "content_required": false,
+    "pid": 57163,
+    "AXValue": null,
+    "AXUniqueId": null,
+    "frame": {
+      "x": 220,
+      "y": 158,
+      "width": 52,
+      "height": 44
+    }
+  },
+  {
+    "frame": {
+      "height": 24,
+      "y": 759,
+      "width": 24,
+      "x": 362
+    },
+    "enabled": true,
+    "role": "AXGenericElement",
+    "AXValue": null,
+    "help": null,
+    "AXFrame": "{{362, 759}, {24, 24}}",
+    "AXLabel": null,
+    "role_description": "",
+    "content_required": false,
+    "traits": [
+      "Scrollable"
+    ],
+    "pid": 57163,
+    "type": "GenericElement",
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "subrole": null,
+    "title": null
+  },
+  {
+    "type": "GenericElement",
+    "traits": [
+      "Scrollable"
+    ],
+    "frame": {
+      "width": 327,
+      "y": 811.6666669845581,
+      "height": 17,
+      "x": 6
+    },
+    "title": null,
+    "help": null,
+    "role": "AXGenericElement",
+    "AXFrame": "{{6, 811.66666698455811}, {327, 17}}",
+    "custom_actions": [],
+    "AXLabel": "Components/Actions/Reaction Picker/Default",
+    "subrole": null,
+    "content_required": false,
+    "AXUniqueId": "mobile-menu-button",
+    "role_description": "",
+    "AXValue": null,
+    "pid": 57163,
+    "enabled": true
+  },
+  {
+    "content_required": false,
+    "AXUniqueId": "mobile-addons-button",
+    "title": null,
+    "role": "AXButton",
+    "frame": {
+      "x": 368,
+      "y": 806,
+      "width": 28,
+      "height": 28
+    },
+    "custom_actions": [],
+    "AXFrame": "{{368, 806}, {28, 28}}",
+    "pid": 57163,
+    "role_description": "button",
+    "type": "Button",
+    "AXValue": null,
+    "enabled": true,
+    "subrole": null,
+    "help": null,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "AXLabel": "Open addons panel"
+  }
+]

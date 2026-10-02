@@ -43,8 +43,8 @@ const executableFamilyExports = Object.entries(packageJson.exports)
   .map(([exportPath, definition]) => [exportPath, getNativeRuntimeTarget(definition)])
   .filter(
     ([exportPath, target]) =>
-      // Optional effects and QR use the complete Expo showcase export; this baseline must resolve without their peers.
-      exportPath !== "." && exportPath !== "./toast-liquid" && !(["./sortable", "./swipe-actions", "./carousel-motion", "./celebration", "./screen-transition", "./qr-code", "./thinking-orb", "./image-viewer", "./keyboard-controller", "./sheet-gesture", "./context-menu-native"].includes(exportPath)) && typeof target === "string" && target.endsWith(".js"),
+      // SVG/Blobatar effects and QR use the complete Expo showcase export; this baseline must resolve without their peers.
+      exportPath !== "." && exportPath !== "./toast-liquid" && !(["./avatar-blobatar", "./avatar-blobatar-motion", "./effect-surface", "./sortable", "./swipe-actions", "./carousel-motion", "./celebration", "./screen-transition", "./qr-code", "./thinking-orb", "./image-viewer", "./keyboard-controller", "./sheet-gesture", "./context-menu-native"].includes(exportPath)) && typeof target === "string" && target.endsWith(".js"),
   );
 
 const requiredRendererSources = executableFamilyExports.map(([, target]) =>

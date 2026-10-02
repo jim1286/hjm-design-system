@@ -1,0 +1,21 @@
+{
+  "date": "2026-10-01",
+  "web": {
+    "desktop": [
+      1200,
+      900
+    ],
+    "mobile": [
+      390,
+      844
+    ],
+    "faceSelectAndApply": true,
+    "overflow": false,
+    "root": "<div class=\"hjm-root hjm-story-root\" data-hjm-provider=\"\" data-host=\"surface\" data-motion=\"reduced\" data-theme=\"dark\" data-text-scale=\"2\" data-large-text=\"true\" dir=\"rtl\" style=\"--hjm-backdrop-modal: rgba(0, 0, 0, 0.6); --hjm-text-scale: 2; --hjm-motion-scale: 0; color-scheme: dark; background-color: rgb(13, 17, 22); color: rgb(243, 245, 247); --hjm-color-bg: #0d1116; --hjm-color-surface: #161b22; --hjm-color-surface-alt: #1e232a; --hjm-color-surface-accent: #224159; --hjm-color-border: #6a788a;",
+    "errors": []
+  },
+  "native": {
+    "tests": "SVG host mocked; actual upstream generator exercised",
+    "device": "Device Hub timeoutReached on two attempts; not visually verified"
+  }
+}

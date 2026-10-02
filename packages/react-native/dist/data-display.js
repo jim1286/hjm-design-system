@@ -7,7 +7,7 @@ import { resolveTagDescriptor, resolveTagPresentation, tagRecipe, } from "@hjmds
 import { cardRecipe } from "@hjmds/design-contracts/components/card";
 import { imageRecipe, nativeResizeModes, resolveImageAspectRatio, resolveImageDescriptor, resolveImageFallbackAccessibilityLabel, } from "@hjmds/design-contracts/components/image";
 import { resolveTimelineDescriptor, timelineRecipe, } from "@hjmds/design-contracts/components/timeline";
-import { surfaceGeometry } from "@hjmds/design-contracts/recipes/base";
+import { surfaceDefaults, surfaceGeometry } from "@hjmds/design-contracts/recipes/base";
 import { accordionRecipe, counterBadgeRecipe, badgeRecipe, listRecipe, formatCounterBadgeCount, listRowRecipe, statisticRecipe, } from "@hjmds/design-contracts/recipes";
 import { Children, isValidElement, useEffect, useMemo, useState, } from "react";
 import { Image as NativeImage, LayoutAnimation, Pressable, StyleSheet, View, useWindowDimensions, } from "react-native";
@@ -54,11 +54,11 @@ export function Badge({ label, tone = badgeRecipe.defaults.tone, size = badgeRec
                     labelStyle,
                 ], variant: metrics.textVariant, children: label })] }));
 }
-export function Tag({ children, label, tone, accessibilityLabel, layoutStyle, style, labelStyle, ...props }) {
+export function Tag({ children, tone, accessibilityLabel, layoutStyle, style, labelStyle, ...props }) {
     const theme = useHjmNativeTheme();
-    const resolvedLabel = children ?? label;
+    const resolvedLabel = children;
     if (resolvedLabel === undefined) {
-        throw new TypeError("Tag requires children (or the deprecated label prop)");
+        throw new TypeError("Tag requires children");
     }
     const descriptor = resolveTagDescriptor({
         label: resolvedLabel,
@@ -83,30 +83,33 @@ export function Tag({ children, label, tone, accessibilityLabel, layoutStyle, st
             layoutStyle,
         ], children: _jsx(Text, { align: "center", emphasis: "medium", style: [{ color: presentation.content }, labelStyle], variant: tagRecipe.size.textVariant, children: descriptor.label }) }));
 }
-export function Card({ children, title, description, leading, media, actions, selected = cardRecipe.defaults.selected, tone = cardRecipe.defaults.tone, bordered = cardRecipe.defaults.bordered, padding = cardRecipe.defaults.padding, layoutStyle, style, ...props }) {
+export function Card({ children, title, description, leading, media, actions, selected = cardRecipe.defaults.selected, tone = cardRecipe.defaults.tone, bordered = cardRecipe.defaults.bordered, padding = cardRecipe.defaults.padding, layoutStyle, radius: cornerRadius = surfaceDefaults.radius, ...props }) {
     const { environment } = useHjmNativeTheme();
-    const bodyPadding = typeof padding === "number" ? padding : surfaceGeometry.paddings[padding];
+    const bodyPadding = surfaceGeometry.paddings[padding];
     const hasHeader = leading !== undefined || title !== undefined || description !== undefined;
-    return (_jsxs(Surface, { ...props, bordered: bordered, padding: "none", style: [{ overflow: "hidden" }, style, layoutStyle], tone: selected ? cardRecipe.selectedTone : tone, children: [media === undefined ? null : _jsx(View, { children: media }), _jsxs(View, { style: { gap: cardRecipe.body.gap, padding: bodyPadding }, children: [hasHeader ? (_jsxs(View, { style: {
-                            alignItems: "flex-start",
-                            direction: environment.direction,
-                            flexDirection: "row",
-                            gap: cardRecipe.header.gap,
-                        }, children: [leading === undefined ? null : (_jsx(View, { style: { flexShrink: 0 }, children: leading })), _jsxs(View, { style: { flex: 1, gap: cardRecipe.body.gap, minWidth: 0 }, children: [title === undefined ? null : (_jsx(Text, { accessibilityRole: "header", emphasis: "strong", tone: "primary", variant: "title", children: title })), description === undefined ? null : (_jsx(Text, { emphasis: "regular", tone: "muted", variant: "body", children: description }))] })] })) : null, children === undefined ? null : _jsx(View, { children: children })] }), actions === undefined ? null : (_jsx(View, { style: {
-                    direction: environment.direction,
-                    flexDirection: "row",
-                    flexWrap: "wrap",
-                    gap: cardRecipe.actions.gap,
-                    paddingBottom: cardRecipe.actions.paddingBottom,
-                    paddingHorizontal: cardRecipe.actions.paddingHorizontal,
-                }, children: actions }))] }));
+    return (_jsx(Surface, { ...props, bordered: bordered, padding: "none", radius: cornerRadius, ...(layoutStyle === undefined ? {} : { layoutStyle }), tone: selected ? cardRecipe.selectedTone : tone, children: _jsxs(View, { style: {
+                overflow: "hidden",
+                borderRadius: surfaceGeometry.radii[cornerRadius],
+            }, children: [media === undefined ? null : _jsx(View, { children: media }), _jsxs(View, { style: { gap: cardRecipe.body.gap, padding: bodyPadding }, children: [hasHeader ? (_jsxs(View, { style: {
+                                alignItems: "flex-start",
+                                direction: environment.direction,
+                                flexDirection: "row",
+                                gap: cardRecipe.header.gap,
+                            }, children: [leading === undefined ? null : (_jsx(View, { style: { flexShrink: 0 }, children: leading })), _jsxs(View, { style: { flex: 1, gap: cardRecipe.body.gap, minWidth: 0 }, children: [title === undefined ? null : (_jsx(Text, { accessibilityRole: "header", emphasis: "strong", tone: "primary", variant: "title", children: title })), description === undefined ? null : (_jsx(Text, { emphasis: "regular", tone: "muted", variant: "body", children: description }))] })] })) : null, children === undefined ? null : _jsx(View, { children: children })] }), actions === undefined ? null : (_jsx(View, { style: {
+                        direction: environment.direction,
+                        flexDirection: "row",
+                        flexWrap: "wrap",
+                        gap: cardRecipe.actions.gap,
+                        paddingBottom: cardRecipe.actions.paddingBottom,
+                        paddingHorizontal: cardRecipe.actions.paddingHorizontal,
+                    }, children: actions }))] }) }));
 }
-export function ListRow({ title, description, leading, trailing, titleMetadata, badge, trailingAction, trailingText, metadataLabel, trailingLabel, onPress, accessibilityLabel, accessibilityHint, disabled = false, density = listRowRecipe.defaults.density, selected: selectedProp, leadingShape = "square", layoutStyle, style, leadingStyle, contentStyle, titleStyle, titleRowStyle, descriptionStyle, trailingStyle, trailingActionStyle, containerProps, accessibilityState, ...props }) {
+export function ListRow({ title, description, leading, trailing, titleMetadata, trailingAction, trailingText, metadataLabel, trailingLabel, onPress, accessibilityLabel, accessibilityHint, disabled = false, density = listRowRecipe.defaults.density, selected: selectedProp, leadingShape = "square", layoutStyle, leadingStyle, contentStyle, titleStyle, titleRowStyle, descriptionStyle, trailingStyle, trailingActionStyle, containerProps, accessibilityState, ...props }) {
     const theme = useHjmNativeTheme();
     const metrics = listRowRecipe.density[density];
     const interactive = onPress !== undefined;
     const selected = selectedProp ?? listRowRecipe.defaults.selected;
-    const resolvedMetadata = titleMetadata ?? badge;
+    const resolvedMetadata = titleMetadata;
     const resolvedTrailingLabel = trailingLabel ?? trailingText;
     const composedLabel = accessibilityLabel ?? [
         title,
@@ -176,7 +179,6 @@ export function ListRow({ title, description, leading, trailing, titleMetadata, 
                 : { paddingHorizontal: metrics.paddingHorizontal }),
             paddingVertical: metrics.paddingVertical,
         },
-        trailingAction ? undefined : style,
         trailingAction ? undefined : layoutStyle,
     ];
     const main = interactive ? (_jsx(Pressable, { ...props, accessibilityHint: accessibilityHint, accessibilityLabel: composedLabel, accessibilityRole: "button", accessibilityState: {
@@ -197,7 +199,6 @@ export function ListRow({ title, description, leading, trailing, titleMetadata, 
                 minHeight: visualState.minHeight,
                 opacity: visualState.opacity,
             },
-            style,
             layoutStyle,
         ], children: [main, _jsx(View, { style: [
                     { flexShrink: 0, paddingEnd: metrics.paddingHorizontal },
@@ -213,11 +214,16 @@ function resolveInitials(name, provided) {
     return `${parts[0][0] ?? ""}${parts.length > 1 ? parts.at(-1)[0] ?? "" : ""}`
         .toLocaleUpperCase();
 }
-export function Avatar({ source, name, initials, size = 44, decorative = false, accessibilityLabel, style, imageStyle, }) {
+export function Avatar({ source, name, initials, renderFallback, size = 44, decorative = false, accessibilityLabel, style, imageStyle, }) {
     if (!Number.isFinite(size) || size < 24)
         throw new RangeError("Avatar size must be at least 24");
     const { colors } = useHjmNativeTheme();
-    const [failed, setFailed] = useState(false);
+    const sourceKey = source === undefined ? "none" : resolveImageSourceKey(source);
+    const [failedSource, setFailedSource] = useState(null);
+    // A replacement photo must retry even when the previous URI failed. Key by
+    // content rather than object identity, since hosts commonly inline { uri }.
+    const failed = failedSource === sourceKey;
+    useEffect(() => setFailedSource(null), [sourceKey]);
     const fallback = resolveInitials(name, initials);
     const mediaAccessibility = decorative
         ? { accessible: false }
@@ -235,7 +241,7 @@ export function Avatar({ source, name, initials, size = 44, decorative = false, 
                 width: size,
             },
             style,
-        ], children: source !== undefined && !failed ? (_jsx(NativeImage, { accessible: false, onError: () => setFailed(true), source: source, style: [{ height: size, width: size }, imageStyle] })) : (_jsx(Text, { align: "center", style: { color: colors.contentBrand }, variant: "label", children: fallback })) }));
+        ], children: source !== undefined && !failed ? (_jsx(NativeImage, { accessible: false, onError: () => setFailedSource(sourceKey), source: source, style: [{ height: size, width: size }, imageStyle] })) : (_jsx(View, { accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", children: renderFallback?.({ size, decorative: true }) ?? _jsx(Text, { align: "center", style: { color: colors.contentBrand }, variant: "label", children: fallback }) })) }));
 }
 export function Divider({ orientation = "horizontal", inset = 0, style }) {
     if (!Number.isFinite(inset) || inset < 0)
@@ -359,7 +365,7 @@ export function DescriptionList({ label, descriptor, availableWidth, style, item
             style,
         ], children: resolved.items.map((item) => (_jsxs(View, { accessibilityLabel: `${item.label}, ${item.value}`, accessible: true, style: [{ gap: spacing.xxs, width: itemWidth }, itemStyle], children: [_jsx(Text, { accessible: false, tone: "muted", variant: "label", children: item.label }), _jsx(Text, { accessible: false, tone: "primary", children: item.value })] }, item.id))) }));
 }
-function resolveLegacyImageSourceKey(source) {
+function resolveImageSourceKey(source) {
     if (typeof source === "number")
         return `asset:${source}`;
     try {
@@ -369,65 +375,22 @@ function resolveLegacyImageSourceKey(source) {
         return `source:${String(source)}`;
     }
 }
-function resolveLegacyMedia(decorative, accessibilityLabel) {
-    const resolvedDecorative = decorative ?? accessibilityLabel === undefined;
-    if (resolvedDecorative) {
-        if (accessibilityLabel !== undefined) {
-            throw new TypeError("Decorative Image must not provide accessibilityLabel");
-        }
-        return { decorative: true };
-    }
-    if (accessibilityLabel === undefined || accessibilityLabel.trim().length === 0) {
-        throw new TypeError("Informative Image accessibilityLabel must not be empty");
-    }
-    return { decorative: false, accessibilityLabel };
-}
 /** Intrinsic-size Native image with canonical fit, accessibility, and fallback semantics. */
 export function Image(imageProps) {
-    const { source: legacySource, src, width, height, fit, decorative, accessibilityLabel, sourceAdapter, fallback, onError, onLoad, onLoadStatusChange, renderImage, resizeMode, style, layoutStyle, containerStyle, ...nativeProps } = imageProps;
+    const { src, width, height, fit, decorative, accessibilityLabel, sourceAdapter, fallback, onError, onLoad, onLoadStatusChange, renderImage, resizeMode, style, layoutStyle, ...nativeProps } = imageProps;
     const theme = useHjmNativeTheme();
-    if (src !== undefined && legacySource !== undefined) {
-        throw new TypeError("Image accepts either canonical src or legacy source, not both");
-    }
-    if (src === undefined && legacySource === undefined) {
-        throw new TypeError("Image requires src or legacy source");
-    }
-    const descriptor = src === undefined
-        ? undefined
-        : resolveImageDescriptor({
-            src,
-            width: width,
-            height: height,
-            ...(fit === undefined ? {} : { fit }),
-            ...(decorative === undefined ? {} : { decorative }),
-            ...(accessibilityLabel === undefined ? {} : { accessibilityLabel }),
-        });
-    const legacyMedia = descriptor === undefined
-        ? resolveLegacyMedia(decorative, accessibilityLabel)
-        : undefined;
-    const resolvedDecorative = descriptor?.decorative ?? legacyMedia.decorative;
-    const resolvedAccessibilityLabel = descriptor?.decorative === false
-        ? descriptor.accessibilityLabel
-        : legacyMedia?.accessibilityLabel;
-    const resolvedFit = descriptor?.fit ?? fit;
-    const resolvedResizeMode = descriptor === undefined
-        ? resizeMode ?? (resolvedFit === undefined ? undefined : nativeResizeModes[resolvedFit])
-        : nativeResizeModes[descriptor.fit];
-    const sourceKey = descriptor === undefined
-        ? resolveLegacyImageSourceKey(legacySource)
-        : `src:${descriptor.src}`;
-    const source = useMemo(() => descriptor === undefined
-        ? legacySource
-        : sourceAdapter?.(descriptor) ?? { uri: descriptor.src }, [
-        descriptor?.accessibilityLabel,
-        descriptor?.decorative,
-        descriptor?.fit,
-        descriptor?.height,
-        descriptor?.src,
-        descriptor?.width,
-        legacySource,
-        sourceAdapter,
-    ]);
+    const descriptor = resolveImageDescriptor({
+        src, width, height,
+        ...(fit === undefined ? {} : { fit }),
+        ...(decorative === undefined ? {} : { decorative }),
+        ...(accessibilityLabel === undefined ? {} : { accessibilityLabel }),
+    });
+    const resolvedDecorative = descriptor.decorative;
+    const resolvedAccessibilityLabel = descriptor.decorative ? undefined : descriptor.accessibilityLabel;
+    const resolvedResizeMode = nativeResizeModes[descriptor.fit];
+    const sourceKey = `src:${descriptor.src}`;
+    const source = useMemo(() => sourceAdapter?.(descriptor) ?? { uri: descriptor.src }, [descriptor.accessibilityLabel, descriptor.decorative, descriptor.fit,
+        descriptor.height, descriptor.src, descriptor.width, sourceAdapter]);
     const [state, setState] = useState({ sourceKey, status: "loading" });
     const status = state.sourceKey === sourceKey ? state.status : "loading";
     useEffect(() => {
@@ -451,9 +414,7 @@ export function Image(imageProps) {
     };
     const handleLoad = reportLoad;
     const handleError = reportError;
-    const assetStyle = descriptor === undefined
-        ? style
-        : [StyleSheet.absoluteFill, style];
+    const assetStyle = [StyleSheet.absoluteFill, style];
     const adapterBase = {
         source,
         accessible: !resolvedDecorative,
@@ -472,15 +433,11 @@ export function Image(imageProps) {
         ...(assetStyle === undefined ? {} : { style: assetStyle }),
         nativeProps: {
             ...nativeProps,
-            ...(descriptor === undefined && width !== undefined ? { width } : {}),
-            ...(descriptor === undefined && height !== undefined ? { height } : {}),
             ...(resolvedResizeMode === undefined ? {} : { resizeMode: resolvedResizeMode }),
         },
     };
     const placeholderBackground = resolveColorReference(imageRecipe.placeholder.background, theme.palette);
-    const fallbackLabel = descriptor === undefined
-        ? resolvedAccessibilityLabel
-        : resolveImageFallbackAccessibilityLabel(descriptor);
+    const fallbackLabel = resolveImageFallbackAccessibilityLabel(descriptor);
     let visual;
     if (status === "error") {
         visual = (_jsx(View, { ...(resolvedDecorative
@@ -507,15 +464,6 @@ export function Image(imageProps) {
                     accessibilityRole: "image",
                 }), onError: handleError, onLoad: handleLoad, resizeMode: resolvedResizeMode, source: source, style: assetStyle }));
     }
-    else if (descriptor === undefined) {
-        visual = renderImage({
-            ...adapterBase,
-            ...(resolvedFit === undefined ? {} : { fit: resolvedFit }),
-            ...(width === undefined ? {} : { width }),
-            ...(height === undefined ? {} : { height }),
-            legacySource: true,
-        });
-    }
     else {
         visual = renderImage({
             ...adapterBase,
@@ -524,7 +472,6 @@ export function Image(imageProps) {
             width: descriptor.width,
             height: descriptor.height,
             fit: descriptor.fit,
-            legacySource: false,
         });
     }
     return (_jsx(View, { style: [
@@ -534,14 +481,9 @@ export function Image(imageProps) {
                 borderRadius: radius[imageRecipe.radius],
                 justifyContent: "center",
                 overflow: "hidden",
-                ...(descriptor === undefined
-                    ? {}
-                    : {
-                        aspectRatio: resolveImageAspectRatio(descriptor.width, descriptor.height),
-                        width: descriptor.width,
-                    }),
+                aspectRatio: resolveImageAspectRatio(descriptor.width, descriptor.height),
+                width: descriptor.width,
             },
-            containerStyle,
             layoutStyle,
         ], children: visual }));
 }

@@ -229,14 +229,15 @@ describe("Native provider and structural renderer regressions", () => {
     const imageStyle = { height: 120, width: 180 } as const;
     const renderer = render(
       <Image
+        decorative={false}
         accessibilityLabel="대표 이미지"
         blurRadius={2}
-        containerStyle={{ minHeight: 120 }}
+        layoutStyle={{ width: 180 }}
         fallback={<Text>이미지 대체</Text>}
         onError={onError}
         renderImage={renderImage}
         resizeMode="cover"
-        source={{ uri: "https://example.com/cover.png" }}
+        src="https://example.com/cover.png" width={180} height={120}
         style={imageStyle}
       />,
     );
@@ -247,8 +248,8 @@ describe("Native provider and structural renderer regressions", () => {
       accessibilityRole: "image",
       nativeProps: { blurRadius: 2, resizeMode: "cover" },
       source: { uri: "https://example.com/cover.png" },
-      style: imageStyle,
     });
+    expect(flattenStyle(adapterProps?.style)).toMatchObject(imageStyle);
     const event = { nativeEvent: { error: "network" } } as never;
     act(() => adapterProps?.onError(event));
     expect(onError).toHaveBeenCalledOnce();
@@ -259,7 +260,7 @@ describe("Native provider and structural renderer regressions", () => {
     )!;
     expect(fallback.props).toMatchObject({ accessible: true, accessibilityRole: "image" });
     expect(renderer.root.findAllByType(View).some(
-      (node) => flattenStyle(node.props.style).minHeight === 120,
+      (node) => flattenStyle(node.props.style).width === 180,
     )).toBe(true);
     expect(renderer.root.findAll((node) => node.children.includes("이미지 대체"))).not.toHaveLength(0);
 
@@ -271,7 +272,7 @@ describe("Native provider and structural renderer regressions", () => {
           decorativeProps = props;
           return <View />;
         }}
-        source={{ uri: "https://example.com/texture.png" }}
+        src="https://example.com/texture.png" width={180} height={120}
       />,
     );
     expect(decorativeProps?.accessible).toBe(false);
@@ -289,6 +290,7 @@ describe("Native provider and structural renderer regressions", () => {
     }));
     const renderer = render(
       <Image
+
         accessibilityLabel="2026 시즌 기록 차트"
         decorative={false}
         fit="fill"
@@ -318,7 +320,6 @@ describe("Native provider and structural renderer regressions", () => {
       },
       fit: "fill",
       height: 400,
-      legacySource: false,
       nativeProps: { resizeMode: nativeResizeModes.fill },
       resizeMode: nativeResizeModes.fill,
       source: {
@@ -356,7 +357,8 @@ describe("Native provider and structural renderer regressions", () => {
     const renderCanonical = (src: string) => (
       <HjmNativeProvider value={lightValue}>
         <Image
-          accessibilityLabel="경기 포스터"
+
+        accessibilityLabel="경기 포스터"
           decorative={false}
           height={180}
           onLoadStatusChange={onLoadStatusChange}
@@ -371,6 +373,7 @@ describe("Native provider and structural renderer regressions", () => {
     );
     const renderer = render(
       <Image
+
         accessibilityLabel="경기 포스터"
         decorative={false}
         height={180}
@@ -695,7 +698,6 @@ describe("Native canonical recipe bindings", () => {
     expect(flattenStyle(label.props.style)).toMatchObject({
       color: resolveColorReference(selected.content, lightValue.palette),
       fontWeight: chipRecipe.label.selectedFontWeight,
-      letterSpacing: 1,
     });
 
     const event = { nativeEvent: { locationX: 17 } } as GestureResponderEvent;
@@ -709,7 +711,6 @@ describe("Native canonical recipe bindings", () => {
         accessibilityState={{ expanded: true }}
         density="compact"
         description="상세 설명"
-        descriptionStyle={{ letterSpacing: 1 }}
         leading={<View testID="row-leading" />}
         onPress={vi.fn()}
         selected
@@ -750,7 +751,6 @@ describe("Native canonical recipe bindings", () => {
     expect(description.props.variant).toBe(listRowRecipe.description.textVariant);
     expect(flattenStyle(description.props.style)).toMatchObject({
       color: resolveColorReference(listRowRecipe.description.color, lightValue.palette),
-      letterSpacing: 1,
     });
   });
 
@@ -824,7 +824,6 @@ describe("Native canonical recipe bindings", () => {
     });
     expect(flattenStyle(copy(renderer, "세전 금액").props.style)).toMatchObject({
       color: resolveColorReference(statisticRecipe.hint.color, lightValue.palette),
-      letterSpacing: 1,
     });
   });
 
@@ -886,7 +885,6 @@ describe("Native canonical recipe bindings", () => {
     expect(flattenStyle(title.props.style)).toMatchObject({
       color: resolveColorReference(accordionRecipe.title.color, lightValue.palette),
       fontWeight: accordionRecipe.title.fontWeight,
-      letterSpacing: 1,
     });
 
     act(() => trigger.props.onPress());
@@ -912,10 +910,8 @@ describe("Native canonical recipe bindings", () => {
         actionStyle={{ minWidth: 77 }}
         contentStyle={{ marginTop: 5 }}
         description="설명"
-        descriptionStyle={{ letterSpacing: 1 }}
         headerStyle={{ marginTop: 3 }}
         title="개요"
-        titleStyle={{ fontSize: 25 }}
       >
         <View testID="section-content" />
       </Section>,
@@ -936,14 +932,12 @@ describe("Native canonical recipe bindings", () => {
     expect(title.props).toMatchObject({ accessibilityRole: "header", variant: sectionRecipe.title.textVariant });
     expect(flattenStyle(title.props.style)).toMatchObject({
       color: resolveColorReference(sectionRecipe.title.color, lightValue.palette),
-      fontSize: 25,
       fontWeight: sectionRecipe.title.fontWeight,
     });
     const description = copy(renderer, "설명");
     expect(description.props.variant).toBe(sectionRecipe.description.textVariant);
     expect(flattenStyle(description.props.style)).toMatchObject({
       color: resolveColorReference(sectionRecipe.description.color, lightValue.palette),
-      letterSpacing: 1,
     });
     expect(flattenStyle(renderer.root.findByProps({ testID: "section-action" }).parent?.props.style))
       .toMatchObject({ minWidth: 77 });
@@ -999,7 +993,6 @@ describe("Native canonical recipe bindings", () => {
         actionStyle={{ marginTop: 7 }}
         density="compact"
         description="필터를 바꿔보세요"
-        descriptionStyle={{ letterSpacing: 1 }}
         illustration={<View testID="empty-illustration" />}
         illustrationStyle={{ opacity: 0.8 }}
         title="결과 없음"
@@ -1030,7 +1023,6 @@ describe("Native canonical recipe bindings", () => {
     expect(description.props.variant).toBe(emptyStateRecipe.description.textVariant);
     expect(flattenStyle(description.props.style)).toMatchObject({
       color: resolveColorReference(emptyStateRecipe.description.color, lightValue.palette),
-      letterSpacing: 1,
     });
     expect(flattenStyle(renderer.root.findByProps({ testID: "empty-action" }).parent?.props.style))
       .toMatchObject({ marginTop: 7 });

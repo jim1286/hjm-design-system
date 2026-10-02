@@ -1,3 +1,4 @@
+import { TableSortButton } from "./table-sort-button.js";
 import {
   dataTableColumnDefaults,
   dataTableDefaults,
@@ -141,15 +142,14 @@ export const DataTable = forwardRef(function DataTable<
                 >
                   {column.sortable ? (
                     // A button inside the header, never the header itself.
-                    <button
-                      type="button"
+                    <TableSortButton
+                      header={column.header}
+                      direction={sorted}
+                      glyphs={{ ascending: "▲", descending: "▼", none: "↕" }}
                       className="hjm-data-table__sort"
-                      aria-label={labels.sortColumn(column.header, sortState as DataTableSortState<string>)}
-                      onClick={() => onSortChange?.(getNextDataTableSortState(sortState, column.id, sortCycle))}
-                    >
-                      <span>{column.header}</span>
-                      <span aria-hidden="true">{sorted === "ascending" ? "▲" : sorted === "descending" ? "▼" : "↕"}</span>
-                    </button>
+                      accessibleName={labels.sortColumn(column.header, sortState as DataTableSortState<string>)}
+                      onSort={() => onSortChange?.(getNextDataTableSortState(sortState, column.id, sortCycle))}
+                    />
                   ) : column.header}
                 </th>
               );

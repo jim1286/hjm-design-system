@@ -1,6 +1,6 @@
 {
   "name": "@hjmds/react",
-  "version": "1.10.0",
+  "version": "1.11.0",
   "description": "Accessible React 19 renderers for HJM design contracts.",
   "license": "MIT",
   "publishConfig": {
@@ -367,7 +367,97 @@
       "default": "./dist/celebration.js"
     },
     "./styles.css": "./dist/styles.css",
-    "./styles.layered.css": "./dist/styles.layered.css"
+    "./styles.layered.css": "./dist/styles.layered.css",
+    "./avatar-blobatar": {
+      "types": "./dist/avatar-blobatar.d.ts",
+      "import": "./dist/avatar-blobatar.js",
+      "default": "./dist/avatar-blobatar.js"
+    },
+    "./effect-surface": {
+      "types": "./dist/effect-surface.d.ts",
+      "import": "./dist/effect-surface.js",
+      "default": "./dist/effect-surface.js"
+    },
+    "./icon-lucide": {
+      "types": "./dist/icon-lucide.d.ts",
+      "import": "./dist/icon-lucide.js",
+      "default": "./dist/icon-lucide.js"
+    },
+    "./duration-field": {
+      "types": "./dist/duration-field.d.ts",
+      "import": "./dist/duration-field.js",
+      "default": "./dist/duration-field.js"
+    },
+    "./inline-confirm": {
+      "types": "./dist/inline-confirm.d.ts",
+      "import": "./dist/inline-confirm.js",
+      "default": "./dist/inline-confirm.js"
+    },
+    "./reaction-picker": {
+      "types": "./dist/reaction-picker.d.ts",
+      "import": "./dist/reaction-picker.js",
+      "default": "./dist/reaction-picker.js"
+    },
+    "./notification-bell": {
+      "types": "./dist/notification-bell.d.ts",
+      "import": "./dist/notification-bell.js",
+      "default": "./dist/notification-bell.js"
+    },
+    "./scroll-progress": {
+      "types": "./dist/scroll-progress.d.ts",
+      "import": "./dist/scroll-progress.js",
+      "default": "./dist/scroll-progress.js"
+    },
+    "./code-block": {
+      "types": "./dist/code-block.d.ts",
+      "import": "./dist/code-block.js",
+      "default": "./dist/code-block.js"
+    },
+    "./activity-heatmap": {
+      "types": "./dist/activity-heatmap.d.ts",
+      "import": "./dist/activity-heatmap.js",
+      "default": "./dist/activity-heatmap.js"
+    },
+    "./task-list": {
+      "types": "./dist/task-list.d.ts",
+      "import": "./dist/task-list.js",
+      "default": "./dist/task-list.js"
+    },
+    "./folder-preview": {
+      "types": "./dist/folder-preview.d.ts",
+      "import": "./dist/folder-preview.js",
+      "default": "./dist/folder-preview.js"
+    },
+    "./avatar-blobatar-motion": {
+      "types": "./dist/avatar-blobatar-motion.d.ts",
+      "import": "./dist/avatar-blobatar-motion.js",
+      "default": "./dist/avatar-blobatar-motion.js"
+    },
+    "./step-player": {
+      "types": "./dist/step-player.d.ts",
+      "import": "./dist/step-player.js",
+      "default": "./dist/step-player.js"
+    },
+    "./voice-note": {
+      "types": "./dist/voice-note.d.ts",
+      "import": "./dist/voice-note.js",
+      "default": "./dist/voice-note.js"
+    },
+    "./grid-reveal": {
+      "types": "./dist/grid-reveal.d.ts",
+      "import": "./dist/grid-reveal.js",
+      "default": "./dist/grid-reveal.js"
+    },
+    "./gravity-letters": {
+      "types": "./dist/gravity-letters.d.ts",
+      "import": "./dist/gravity-letters.js",
+      "default": "./dist/gravity-letters.js"
+    },
+    "./navigation-bar": {
+      "types": "./dist/navigation-bar.d.ts",
+      "import": "./dist/navigation-bar.js",
+      "default": "./dist/navigation-bar.js"
+    }
   },
   "files": [
     "dist",
@@ -385,7 +475,7 @@
     "test:visual": "vitest run --config vitest.visual.config.ts"
   },
   "peerDependencies": {
-    "@hjmds/design-contracts": ">=1.10.0 <1.11.0",
+    "@hjmds/design-contracts": ">=1.11.0 <1.12.0",
     "react": ">=19.0.0",
     "react-dom": ">=19.0.0",
     "@number-flow/react": "0.6.2",
@@ -395,7 +485,10 @@
     "@dnd-kit/react": "0.5.0",
     "embla-carousel-react": "8.6.0",
     "canvas-confetti": "1.9.4",
-    "@dnd-kit/dom": "0.5.0"
+    "@dnd-kit/dom": "0.5.0",
+    "blobatar": "2.7.0",
+    "@blobatar/react": "2.7.0",
+    "lucide-react": "1.49.0"
   },
   "devDependencies": {
     "@hjmds/design-contracts": "workspace:*",
@@ -416,7 +509,10 @@
     "embla-carousel-react": "8.6.0",
     "canvas-confetti": "1.9.4",
     "@types/canvas-confetti": "1.9.0",
-    "@dnd-kit/dom": "0.5.0"
+    "@dnd-kit/dom": "0.5.0",
+    "blobatar": "2.7.0",
+    "@blobatar/react": "2.7.0",
+    "lucide-react": "1.49.0"
   },
   "peerDependenciesMeta": {
     "@number-flow/react": {
@@ -441,6 +537,15 @@
       "optional": true
     },
     "@dnd-kit/dom": {
+      "optional": true
+    },
+    "blobatar": {
+      "optional": true
+    },
+    "@blobatar/react": {
+      "optional": true
+    },
+    "lucide-react": {
       "optional": true
     }
   }

@@ -60,6 +60,7 @@ describe("React Native canonical prop aliases", () => {
 
   it("keeps canonical and legacy prop families exclusive in TypeScript", () => {
     const canonicalSwitch = { label: "알림", checked: true } satisfies SwitchProps;
+    // @ts-expect-error Removed in the next major: use checked.
     const legacySwitch = { label: "알림", value: true } satisfies SwitchProps;
     const canonicalRadio = {
       accessibilityLabel: "배송",
@@ -67,6 +68,7 @@ describe("React Native canonical prop aliases", () => {
     } satisfies RadioGroupProps;
     const legacyRadio = {
       accessibilityLabel: "배송",
+      // @ts-expect-error Removed collection alias.
       options: [{ value: "standard", label: "일반" }],
     } satisfies RadioGroupProps;
     const canonicalSegmented = {
@@ -75,6 +77,7 @@ describe("React Native canonical prop aliases", () => {
     } satisfies SegmentedControlProps;
     const legacySegmented = {
       label: "보기",
+      // @ts-expect-error Removed collection alias.
       options: [{ value: "list", label: "목록" }],
     } satisfies SegmentedControlProps;
 
@@ -96,7 +99,7 @@ describe("React Native canonical prop aliases", () => {
     void missingSegmented;
   });
 
-  it("supports canonical Switch state and preserves deprecated aliases", () => {
+  it("supports canonical controlled and uncontrolled Switch state", () => {
     const controlledChange = vi.fn();
     const controlled = render(
       <Switch
@@ -123,16 +126,7 @@ describe("React Native canonical prop aliases", () => {
     act(() => byLabel(canonical, "canonical switch").props.onPress());
     expect(onCheckedChange).toHaveBeenCalledWith(false);
 
-    const onValueChange = vi.fn();
-    const legacy = render(
-      <Switch
-        defaultValue
-        label="legacy switch"
-        onValueChange={onValueChange}
-      />,
-    );
-    act(() => byLabel(legacy, "legacy switch").props.onPress());
-    expect(onValueChange).toHaveBeenCalledWith(false);
+
   });
 
   it("rejects mixed Switch state channels at runtime", () => {
@@ -142,10 +136,10 @@ describe("React Native canonical prop aliases", () => {
       onCheckedChange: vi.fn(),
       value: false,
     } as unknown as SwitchProps;
-    expect(() => render(<Switch {...props} />)).toThrow(/cannot mix/u);
+    expect(() => render(<Switch {...props} />)).toThrow(/no longer accepts/u);
   });
 
-  it("supports canonical RadioGroup items and preserves deprecated options", () => {
+  it("supports canonical RadioGroup items and uses canonical options", () => {
     const canonicalChange = vi.fn();
     const canonical = render(
       <RadioGroup
@@ -164,7 +158,7 @@ describe("React Native canonical prop aliases", () => {
     const legacy = render(
       <RadioGroup
         accessibilityLabel="legacy radio"
-        options={[{ value: "standard", label: "일반" }]}
+        items={[{ value: "standard", label: "일반" }]}
       />,
     );
     expect(byLabel(legacy, "일반").props.accessibilityState.checked).toBe(false);
@@ -178,11 +172,11 @@ describe("React Native canonical prop aliases", () => {
       options: [item],
     } as unknown as RadioGroupProps;
     const missing = { accessibilityLabel: "missing radio" } as RadioGroupProps;
-    expect(() => render(<RadioGroup {...mixed} />)).toThrow(/exactly one of items or options/u);
-    expect(() => render(<RadioGroup {...missing} />)).toThrow(/exactly one of items or options/u);
+    expect(() => render(<RadioGroup {...mixed} />)).toThrow(/requires items/u);
+    expect(() => render(<RadioGroup {...missing} />)).toThrow(/requires items/u);
   });
 
-  it("supports canonical SegmentedControl items and preserves deprecated options", () => {
+  it("supports canonical SegmentedControl items and uses canonical options", () => {
     const canonicalChange = vi.fn();
     const canonical = render(
       <SegmentedControl
@@ -201,7 +195,7 @@ describe("React Native canonical prop aliases", () => {
     const legacy = render(
       <SegmentedControl
         label="legacy segmented"
-        options={[{ value: "list", label: "목록" }]}
+        items={[{ value: "list", label: "목록" }]}
       />,
     );
     expect(byLabel(legacy, "목록").props.accessibilityState.checked).toBe(true);
@@ -216,10 +210,10 @@ describe("React Native canonical prop aliases", () => {
     } as unknown as SegmentedControlProps;
     const missing = { label: "missing segmented" } as SegmentedControlProps;
     expect(() => render(<SegmentedControl {...mixed} />)).toThrow(
-      /exactly one of items or options/u,
+      /requires items/u,
     );
     expect(() => render(<SegmentedControl {...missing} />)).toThrow(
-      /exactly one of items or options/u,
+      /requires items/u,
     );
   });
 
@@ -265,16 +259,16 @@ describe("React Native canonical prop aliases", () => {
     });
   });
 
-  it("preserves deprecated Tabs options and rejects mixed collection sources", () => {
+  it("uses canonical Tabs options and rejects mixed collection sources", () => {
     const onValueChange = vi.fn();
     const legacy = render(
       <Tabs
         defaultValue="overview"
         label="legacy tabs"
         onValueChange={onValueChange}
-        options={[
-          { value: "overview", label: "개요" },
-          { value: "activity", label: "활동" },
+        items={[
+          { id: "overview", label: "개요" },
+          { id: "activity", label: "활동" },
         ]}
       />,
     );
@@ -289,8 +283,8 @@ describe("React Native canonical prop aliases", () => {
       options: [option],
     } as unknown as TabsProps;
     const missing = { label: "missing tabs" } as TabsProps;
-    expect(() => render(<Tabs {...mixed} />)).toThrow(/exactly one of items or options/u);
-    expect(() => render(<Tabs {...missing} />)).toThrow(/exactly one of items or options/u);
+    expect(() => render(<Tabs {...mixed} />)).toThrow(/requires items/u);
+    expect(() => render(<Tabs {...missing} />)).toThrow(/requires items/u);
   });
 
   it("keeps canonical and deprecated Tabs sources exclusive in TypeScript", () => {
@@ -300,6 +294,7 @@ describe("React Native canonical prop aliases", () => {
     } satisfies TabsProps;
     const legacy = {
       label: "legacy tabs",
+      // @ts-expect-error Removed collection alias.
       options: [{ value: "overview", label: "개요" }],
     } satisfies TabsProps;
     expect(canonical.items[0]?.id).toBe("overview");

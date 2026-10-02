@@ -126,11 +126,6 @@ export function summarizeAntDesignCoverage(entries = componentCatalog) {
         fullyMature,
         partiallyMature,
         plannedOnly,
-        // Backward-compatible aliases. These names predate the evidence registry
-        // and must not be used as renderer or preview counts in new UI.
-        fullyPreviewable: fullyMature,
-        partiallyPreviewable: partiallyMature,
-        contractOnly: plannedOnly,
         relationships,
     };
 }

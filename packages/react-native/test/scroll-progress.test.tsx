@@ -1,0 +1,4 @@
+import {act,create,type ReactTestRenderer} from 'react-test-renderer';import{expect,it}from'vitest';
+import{ScrollProgress}from'../src/scroll-progress.js';import{Progress}from'../src/feedback.js';import{HjmNativeProvider}from'../src/provider.js';
+(globalThis as {IS_REACT_ACT_ENVIRONMENT?:boolean}).IS_REACT_ACT_ENVIRONMENT=true;
+it('passes clamped host metrics into canonical accessible Progress',()=>{let tree!:ReactTestRenderer;try{act(()=>{tree=create(<HjmNativeProvider><ScrollProgress label="Reading" metrics={{offset:100,contentSize:300,viewportSize:100}}/></HjmNativeProvider>);});expect(tree.root.findByType(Progress).props.value).toBe(.5);expect(tree.root.findByType(Progress).props.label).toBe('Reading');act(()=>tree.update(<HjmNativeProvider><ScrollProgress label="Reading" metrics={{offset:-20,contentSize:300,viewportSize:100}}/></HjmNativeProvider>));expect(tree.root.findByType(Progress).props.value).toBe(0);}finally{act(()=>tree.unmount());}});

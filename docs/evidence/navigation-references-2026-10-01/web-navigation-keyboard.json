@@ -1,0 +1,6 @@
+{
+  "openControlsResolves": true,
+  "endEnterSelectsDocument": true,
+  "selectionRestoresFocus": true,
+  "escapeRestoresFocus": true
+}

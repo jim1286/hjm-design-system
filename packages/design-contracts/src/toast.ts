@@ -86,8 +86,10 @@ export type ToastAnnouncement = Readonly<{
 }>;
 
 export const toastBehaviorDefaults = {
-  durationMs: 5000,
-  minimumDurationMs: 5000,
+  // 2026-10-02 product decision: both toast presentations use 3 seconds,
+  // replacing the former 5-second floor; actionable/null durations remain persistent.
+  durationMs: 3000,
+  minimumDurationMs: 3000,
   priority: "normal",
   dismissOnAction: true,
   maxVisible: 1,

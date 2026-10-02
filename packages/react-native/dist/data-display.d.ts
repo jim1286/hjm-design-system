@@ -1,3 +1,4 @@
+import type { AvatarFallbackContext } from "@hjmds/design-contracts/avatar-fallback";
 import { type DescriptionListDescriptor } from "@hjmds/design-contracts/components/description-list";
 import { type ResolvedStatisticDescriptor, type StatisticDescriptor, type StatisticGroupDescriptor } from "@hjmds/design-contracts/components/statistic";
 import { type TagTone as ContractTagTone } from "@hjmds/design-contracts/components/tag";
@@ -23,9 +24,7 @@ export type BadgeProps = Omit<ViewProps, "accessibilityLabel" | "accessible" | "
 export declare function Badge({ label, tone, size, variant, leading, accessibilityLabel, style, labelStyle, ...props }: BadgeProps): import("react").JSX.Element;
 export type TagTone = ContractTagTone;
 export type TagProps = Omit<ViewProps, "accessibilityLabel" | "accessible" | "children" | "style"> & Readonly<{
-    children?: string;
-    /** @deprecated Prefer renderer-neutral `children`. */
-    label?: string;
+    children: string;
     tone?: TagTone;
     accessibilityLabel?: string;
     style?: StyleProp<ViewStyle>;
@@ -33,7 +32,7 @@ export type TagProps = Omit<ViewProps, "accessibilityLabel" | "accessible" | "ch
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function Tag({ children, label, tone, accessibilityLabel, layoutStyle, style, labelStyle, ...props }: TagProps): import("react").JSX.Element;
+export declare function Tag({ children, tone, accessibilityLabel, layoutStyle, style, labelStyle, ...props }: TagProps): import("react").JSX.Element;
 export type CardProps = Omit<SurfaceProps, "children" | "padding"> & Readonly<{
     children?: ReactNode;
     title?: ReactNode;
@@ -46,7 +45,7 @@ export type CardProps = Omit<SurfaceProps, "children" | "padding"> & Readonly<{
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function Card({ children, title, description, leading, media, actions, selected, tone, bordered, padding, layoutStyle, style, ...props }: CardProps): import("react").JSX.Element;
+export declare function Card({ children, title, description, leading, media, actions, selected, tone, bordered, padding, layoutStyle, radius: cornerRadius, ...props }: CardProps): import("react").JSX.Element;
 export type ListRowProps = Omit<PressableProps, "accessibilityLabel" | "accessibilityRole" | "children" | "disabled" | "style"> & Readonly<{
     title: string;
     description?: string;
@@ -54,8 +53,6 @@ export type ListRowProps = Omit<PressableProps, "accessibilityLabel" | "accessib
     trailing?: ReactNode;
     /** Visible metadata placed beside the title, such as a Badge. */
     titleMetadata?: ReactNode;
-    /** @deprecated Prefer the renderer-neutral `titleMetadata` slot. */
-    badge?: ReactNode;
     /** A separate accessible target rendered beside, never inside, the row command. */
     trailingAction?: ReactNode;
     trailingText?: string;
@@ -72,12 +69,6 @@ export type ListRowProps = Omit<PressableProps, "accessibilityLabel" | "accessib
     leadingShape?: ListRowLeadingShape;
     /** Canonical layout-only placement. Controlled visual and state keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
-    /**
-     * @deprecated Legacy compatibility only. New apps must use `layoutStyle` and must not
-     * override color, typography, radius, row height, or interaction state.
-     * @see https://github.com/jim1286/hjm-design-system/blob/main/packages/design-contracts/docs/consumer-policy.md#31-react-native-legacy-style-compatibility-boundary
-     */
-    style?: StyleProp<ViewStyle>;
     leadingStyle?: HjmCompositionStyleProp;
     contentStyle?: HjmCompositionStyleProp;
     titleStyle?: StyleProp<TextStyle>;
@@ -87,7 +78,7 @@ export type ListRowProps = Omit<PressableProps, "accessibilityLabel" | "accessib
     trailingActionStyle?: HjmCompositionStyleProp;
     containerProps?: Omit<ViewProps, "children" | "style">;
 }>;
-export declare function ListRow({ title, description, leading, trailing, titleMetadata, badge, trailingAction, trailingText, metadataLabel, trailingLabel, onPress, accessibilityLabel, accessibilityHint, disabled, density, selected: selectedProp, leadingShape, layoutStyle, style, leadingStyle, contentStyle, titleStyle, titleRowStyle, descriptionStyle, trailingStyle, trailingActionStyle, containerProps, accessibilityState, ...props }: ListRowProps): import("react").JSX.Element;
+export declare function ListRow({ title, description, leading, trailing, titleMetadata, trailingAction, trailingText, metadataLabel, trailingLabel, onPress, accessibilityLabel, accessibilityHint, disabled, density, selected: selectedProp, leadingShape, layoutStyle, leadingStyle, contentStyle, titleStyle, titleRowStyle, descriptionStyle, trailingStyle, trailingActionStyle, containerProps, accessibilityState, ...props }: ListRowProps): import("react").JSX.Element;
 type AccessibleMedia = Readonly<{
     decorative: true;
     accessibilityLabel?: never;
@@ -99,12 +90,13 @@ type AvatarBaseProps = Readonly<{
     source?: ImageSourcePropType;
     name: string;
     initials?: string;
+    renderFallback?: (context: AvatarFallbackContext) => ReactNode;
     size?: number;
     style?: StyleProp<ViewStyle>;
     imageStyle?: StyleProp<ImageStyle>;
 }>;
 export type AvatarProps = AvatarBaseProps & AccessibleMedia;
-export declare function Avatar({ source, name, initials, size, decorative, accessibilityLabel, style, imageStyle, }: AvatarProps): import("react").JSX.Element;
+export declare function Avatar({ source, name, initials, renderFallback, size, decorative, accessibilityLabel, style, imageStyle, }: AvatarProps): import("react").JSX.Element;
 export type DividerProps = Readonly<{
     orientation?: "horizontal" | "vertical";
     inset?: number;
@@ -183,18 +175,8 @@ export type CanonicalImageRenderProps = ImageAdapterBaseProps & Readonly<{
     width: number;
     height: number;
     fit: ImageFit;
-    legacySource: false;
 }>;
-/** @deprecated Migrate the caller to canonical `src`/`width`/`height` props. */
-export type LegacyImageRenderProps = ImageAdapterBaseProps & Readonly<{
-    descriptor?: never;
-    src?: never;
-    width?: number;
-    height?: number;
-    fit?: ImageFit;
-    legacySource: true;
-}>;
-export type ImageRenderProps = CanonicalImageRenderProps | LegacyImageRenderProps;
+export type ImageRenderProps = CanonicalImageRenderProps;
 export type ImageSourceAdapter = (descriptor: ResolvedImageDescriptor) => ImageSourcePropType;
 type ImageSharedProps = ImageNativeProps & Readonly<{
     /** Visual content only; HJM retains the image's accessible name. */
@@ -207,12 +189,6 @@ type ImageSharedProps = ImageNativeProps & Readonly<{
     style?: StyleProp<ImageStyle>;
     /** Canonical layout-only placement of the reserved frame. */
     layoutStyle?: HjmCompositionStyleProp;
-    /**
-     * @deprecated Legacy compatibility only. New apps must use `layoutStyle`; the
-     * reserved frame's aspect ratio, clipping and background belong to the recipe.
-     * @see https://github.com/jim1286/hjm-design-system/blob/main/packages/design-contracts/docs/consumer-policy.md#31-react-native-legacy-style-compatibility-boundary
-     */
-    containerStyle?: StyleProp<ViewStyle>;
 }>;
 type CanonicalImageProps = ImageSharedProps & ImageDescriptor & Readonly<{
     source?: never;
@@ -220,20 +196,7 @@ type CanonicalImageProps = ImageSharedProps & ImageDescriptor & Readonly<{
     sourceAdapter?: ImageSourceAdapter;
     renderImage?: (props: CanonicalImageRenderProps) => ReactNode;
 }>;
-type LegacyImageProps = ImageSharedProps & AccessibleMedia & Readonly<{
-    /** @deprecated Use canonical `src`, `width`, `height`, and optional `fit`. */
-    source: ImageSourcePropType;
-    src?: never;
-    /** @deprecated Used only by the legacy Native source path. */
-    width?: number;
-    /** @deprecated Used only by the legacy Native source path. */
-    height?: number;
-    fit?: ImageFit;
-    sourceAdapter?: never;
-    /** @deprecated Migrate the host adapter to canonical Image props. */
-    renderImage?: (props: LegacyImageRenderProps) => ReactNode;
-}>;
-export type ImageProps = CanonicalImageProps | LegacyImageProps;
+export type ImageProps = CanonicalImageProps;
 /** Intrinsic-size Native image with canonical fit, accessibility, and fallback semantics. */
 export declare function Image(imageProps: ImageProps): import("react").JSX.Element;
 export type CounterBadgeProps = Readonly<{

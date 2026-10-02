@@ -1,0 +1,31 @@
+[
+  {
+    "state": "default",
+    "running": 7,
+    "finished": 0,
+    "stopped": 0,
+    "width": 390,
+    "scrollWidth": 390
+  },
+  {
+    "state": "dark",
+    "running": 7,
+    "finished": 0,
+    "stopped": 0,
+    "width": 390,
+    "scrollWidth": 390
+  },
+  {
+    "state": "large-text",
+    "running": 7,
+    "finished": 0,
+    "stopped": 0,
+    "width": 390,
+    "scrollWidth": 390
+  },
+  {
+    "storybookMotionGlobal": "reduced",
+    "animations": 0,
+    "note": "Storybook explicitly overrides OS preference; use its motion toolbar setting."
+  }
+]

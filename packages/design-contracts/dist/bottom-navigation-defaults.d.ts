@@ -1,4 +1,4 @@
-export type BottomNavigationPresentation = "bar" | "floating";
+export type BottomNavigationPresentation = "bar" | "floating" | "capsule";
 export type BottomNavigationDistribution = "equal" | "center-gap";
 export type BottomNavigationDensity = "compact" | "regular";
 /**

@@ -1,9 +1,12 @@
+import { buildOrbPresentation } from "./internal/thinking-orb/presentation.js";
 import { MODE_FRAMES } from "./internal/thinking-orb/registry.js";
 import { resolvePreset } from "./internal/thinking-orb/presets.js";
 export const thinkingOrbStates = ["working", "searching", "solving", "listening", "connecting", "weaving", "composing", "breathing", "shaping"];
 export { thinkingOrbRecipe } from "./thinking-orb-recipe.js";
 import { thinkingOrbRecipe } from "./thinking-orb-recipe.js";
-export function validateThinkingOrb({ state = "working", size = 64, speed = 1, label }) {
+export function validateThinkingOrb({ state = "working", size = 64, speed = 1, label, appearance = "state" }) {
+    if (!["state", "fluid", "matrix"].includes(appearance))
+        throw new TypeError("Unknown ThinkingOrb appearance");
     if (!thinkingOrbStates.includes(state))
         throw new TypeError("Unknown ThinkingOrb state");
     if (size !== 20 && size !== 64)
@@ -14,10 +17,12 @@ export function validateThinkingOrb({ state = "working", size = 64, speed = 1, l
         throw new TypeError("ThinkingOrb requires a localized label");
 }
 /** Theme-free, deterministic geometry; no DOM/React/native imports. */
-export function buildThinkingOrbFrame(state, size, time) {
-    validateThinkingOrb({ state, size, label: state });
+export function buildThinkingOrbFrame(state, size, time, appearance = "state") {
+    validateThinkingOrb({ state, size, label: state, appearance });
     if (!Number.isFinite(time) || time < 0)
         throw new RangeError("ThinkingOrb time must be finite and non-negative");
+    if (appearance !== "state")
+        return buildOrbPresentation(appearance, size, time);
     const preset = resolvePreset(state, size);
     return MODE_FRAMES[preset.mode](size, time * preset.speed, preset.opts);
 }

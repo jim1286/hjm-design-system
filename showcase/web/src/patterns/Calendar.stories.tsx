@@ -13,8 +13,8 @@ export function CalendarPreview() {
       onNavigateBeyondGrid={({ date, intent }, focusDate) => { const next = calendarExampleOverflowDate(date, intent); setMonth(next.slice(0, 7)); focusDate(next); }} />
   <div className="hjm-showcase-calendar-copy"><List label="선택한 날의 기록"><ListRow title={selected ?? "날짜를 선택해 주세요"} description={selected ? "선택한 날짜의 기록을 여기에서 확인해요." : "달력에서 날짜를 선택하면 기록이 보여요."} /></List></div></Stack>;
 }
-const meta = { title: "Patterns/Calendar", component: CalendarPreview, parameters: { hjm: { edgeToEdge: true } } } satisfies Meta<typeof CalendarPreview>;
+const meta = { includeStories: ["Records","LargeText"], id: "patterns-calendar", title: "배포/컴포넌트/입력/달력", component: CalendarPreview, parameters: { hjm: { edgeToEdge: true } } } satisfies Meta<typeof CalendarPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
-export const Records: Story = {};
-export const LargeText: Story = { globals: { textScale: "2" } };
+export const Records: Story = { name: "기록",};
+export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };

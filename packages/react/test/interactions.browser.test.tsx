@@ -269,11 +269,10 @@ describe("form and keyboard interactions", () => {
               {
                 id: "overview",
                 label: "개요",
-                renderLeading: ({ color, glyphSize, size }) => (
+                renderLeading: ({ color, size }) => (
                   <span
                     data-leading="overview"
                     data-color={color}
-                    data-glyph-size={glyphSize}
                     data-size={size}
                   />
                 ),
@@ -298,7 +297,7 @@ describe("form and keyboard interactions", () => {
     expect(history.getAttribute("aria-controls")).toBe("player-tabs-panel-game%20log");
     const leading = container.querySelector<HTMLElement>('[data-leading="overview"]')!;
     expect(leading.dataset.color).toBe("currentColor");
-    expect(leading.dataset.glyphSize).toBe(leading.dataset.size);
+    expect(Number(leading.dataset.size)).toBeGreaterThan(0);
     await act(async () => history.click());
     expect((document.getElementById("player-tabs-panel-game%20log") as HTMLElement).hidden).toBe(false);
     expect((document.getElementById("player-tabs-panel-overview") as HTMLElement).hidden).toBe(true);

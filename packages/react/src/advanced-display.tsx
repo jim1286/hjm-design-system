@@ -1,3 +1,6 @@
+import type { AvatarFallbackContext } from "@hjmds/design-contracts/avatar-fallback";
+import { TableSortButton } from "./table-sort-button.js";
+import { getNextDataTableSortState } from "@hjmds/design-contracts/components/data-table";
 import {
   resolveDescriptionListColumnCount,
   resolveDescriptionListDescriptor,
@@ -222,6 +225,7 @@ export type AvatarProps = Omit<HTMLAttributes<HTMLSpanElement>, "children"> &
     src?: string;
     alt?: string;
     fallback?: ReactNode;
+    renderFallback?: (context: AvatarFallbackContext) => ReactNode;
     size?: AvatarSize;
     shape?: AvatarShape;
     imageProps?: Omit<ImgHTMLAttributes<HTMLImageElement>, "alt" | "src">;
@@ -233,6 +237,7 @@ export const Avatar = forwardRef<HTMLSpanElement, AvatarProps>(function Avatar(
     src,
     alt = name,
     fallback,
+    renderFallback,
     size = avatarRecipe.defaults.size,
     shape = avatarRecipe.defaults.shape,
     imageProps,
@@ -272,7 +277,7 @@ export const Avatar = forwardRef<HTMLSpanElement, AvatarProps>(function Avatar(
           aria-label={alt.length > 0 ? alt : undefined}
           aria-hidden={alt.length === 0 || undefined}
         >
-          {fallback ?? initials(name)}
+          {renderFallback?.({ size: avatarRecipe.sizes[size], decorative: true }) ?? fallback ?? initials(name)}
         </span>
       )}
     </span>
@@ -604,6 +609,7 @@ export type TableProps<Row> = Omit<TableHTMLAttributes<HTMLTableElement>, "child
     wrapperClassName?: string;
   }>;
 
+// Table's callback cannot express null; share the sort policy with a two-state cycle.
 function TableInner<Row>(
   {
     columns,
@@ -650,25 +656,18 @@ function TableInner<Row>(
                 aria-sort={column.sortDirection ?? (column.sortable ? "none" : undefined)}
               >
                 {column.sortable ? (
-                  <button
-                    type="button"
+                  <TableSortButton
+                    header={column.header}
+                    {...(column.sortDirection === undefined ? {} : { direction: column.sortDirection })}
+                    glyphs={{ ascending: " ↑", descending: " ↓", none: " ↕" }}
                     className="hjm-table__sort"
-                    onClick={() =>
-                      onSortChange?.(
-                        column.id,
-                        column.sortDirection === "ascending" ? "descending" : "ascending",
-                      )
-                    }
-                  >
-                    {column.header}
-                    <span aria-hidden="true">
-                      {column.sortDirection === "ascending"
-                        ? " ↑"
-                        : column.sortDirection === "descending"
-                          ? " ↓"
-                          : " ↕"}
-                    </span>
-                  </button>
+                    onSort={() => {
+                      const next = getNextDataTableSortState(
+                        column.sortDirection ? { columnId: column.id, direction: column.sortDirection } : null,
+                        column.id, "two-state",
+                      );
+                      onSortChange?.(column.id, next!.direction);
+                    }} />
                 ) : column.header}
               </th>
             ))}

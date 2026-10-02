@@ -61,3 +61,5 @@ focus/dismiss와 텍스트 배치 회귀를 직접 확인하도록 위 테스트
 
 참조: [React Native Keyboard](https://reactnative.dev/docs/keyboard),
 [ScrollView](https://reactnative.dev/docs/scrollview).
+
+Native accessibility follow-up (2026-10-01): at 200% text scale, the close glyph was clipped inside the fixed IconButton frame. Dialog and Sheet now render that decorative glyph at a fixed icon size, matching Toast; title/body text still scales and the named close action and touch target are preserved. `sheet-viewport.test.tsx` checks both renderers and close callbacks.

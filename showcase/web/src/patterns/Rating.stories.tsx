@@ -14,9 +14,9 @@ export function RatingPreview({ step = 1 }: { step?: 1 | 0.5 }) {
     {saved !== null ? <Notice tone="success" title={`${saved}점으로 저장했어요`} /> : null}
   </Stack></Section>;
 }
-const meta = { title: "Patterns/Rating", component: RatingPreview } satisfies Meta<typeof RatingPreview>;
+const meta = { includeStories: ["WholePoint","HalfPoint","ReadOnlyAverage"], id: "patterns-rating", title: "배포/컴포넌트/입력/별점", component: RatingPreview } satisfies Meta<typeof RatingPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
-export const WholePoint: Story = {};
-export const HalfPoint: Story = { args: { step: 0.5 } };
-export const ReadOnlyAverage: Story = { render: () => <Statistic descriptor={{ id: "average-score", label: "평균 만족도", value: "4.3 / 5", hint: "예시 응답 120개" }} /> };
+export const WholePoint: Story = { name: "정수 단위",};
+export const HalfPoint: Story = { name: "반점 단위", args: { step: 0.5 } };
+export const ReadOnlyAverage: Story = { name: "평균 점수 표시", render: () => <Statistic descriptor={{ id: "average-score", label: "평균 만족도", value: "4.3 / 5", hint: "예시 응답 120개" }} /> };

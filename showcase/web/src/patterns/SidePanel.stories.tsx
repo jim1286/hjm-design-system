@@ -95,9 +95,9 @@ export function NonModalSidePanelPreview() {
   );
 }
 
-const meta = { title: "Patterns/SidePanel", component: SidePanelPreview } satisfies Meta<typeof SidePanelPreview>;
+const meta = { includeStories: ["ModalEditing","NonModalHelper","LargeText"], id: "patterns-sidepanel", title: "배포/컴포넌트/오버레이/측면 패널", component: SidePanelPreview } satisfies Meta<typeof SidePanelPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
-export const ModalEditing: Story = {};
-export const NonModalHelper: Story = { render: () => <NonModalSidePanelPreview /> };
-export const LargeText: Story = { globals: { textScale: "2" } };
+export const ModalEditing: Story = { name: "대화상자 편집",};
+export const NonModalHelper: Story = { name: "화면을 가리지 않는 도움말", render: () => <NonModalSidePanelPreview /> };
+export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };

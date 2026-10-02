@@ -114,8 +114,6 @@ export type MenuItem = Readonly<{
     trailing?: ReactNode;
     tone?: MenuItemTone;
     disabled?: boolean;
-    /** Backward-compatible item-local action; Menu onAction receives every activation. */
-    onSelect?: () => void;
 }>;
 export type MenuSection = Omit<MenuSectionDescriptor<string, string>, "items"> & Readonly<{
     items: readonly MenuItem[];

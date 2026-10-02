@@ -1,5 +1,11 @@
+import { FieldMessage, NativeFieldFrame } from "./internal/field-frame.js";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
-import { glyph, radius, spacing, typography } from "@hjmds/design-contracts/foundations";
+import {
+  glyph,
+  radius,
+  spacing,
+  typography,
+} from "@hjmds/design-contracts/foundations";
 import {
   fieldRecipe,
   type FieldAlign,
@@ -33,6 +39,7 @@ import {
   otpFieldRecipe,
   resolveOtpFieldValue,
   type OtpFieldSize,
+  type OtpFieldPresentation,
 } from "@hjmds/design-contracts/components/otp-field";
 import {
   getCheckboxNextState,
@@ -65,6 +72,7 @@ import {
   Platform,
   Pressable,
   Switch as NativeSwitch,
+  Text as NativeText,
   TextInput,
   View,
   type StyleProp,
@@ -127,28 +135,12 @@ type BaseFieldProps = Omit<
     onValueChange?: (value: string) => void;
     /** Helper copy below the control; the same name as the Web renderer. */
     description?: string;
-    /**
-     * @deprecated Since 1.5.0; use `description`, the name the Web renderer uses.
-     * Kept for the 1.x train.
-     */
-    supportText?: string;
     error?: string;
     required?: boolean;
     disabled?: boolean;
     busy?: boolean;
     variant?: FieldVariant;
     shape?: FieldShape;
-    /**
-     * @deprecated Input color, typography, padding, and control height are recipe-owned. Request
-     * a semantic field axis instead of overriding them in product code.
-     * @see https://github.com/jim1286/hjm-design-system/blob/main/packages/design-contracts/docs/consumer-policy.md#31-react-native-legacy-style-compatibility-boundary
-     */
-    inputStyle?: StyleProp<TextStyle>;
-    /**
-     * @deprecated Legacy compatibility only. New apps must use `layoutStyle` for placement.
-     * @see https://github.com/jim1286/hjm-design-system/blob/main/packages/design-contracts/docs/consumer-policy.md#31-react-native-legacy-style-compatibility-boundary
-     */
-    containerStyle?: StyleProp<ViewStyle>;
     /** Canonical layout-only placement for the complete field. Controlled keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
   }>;
@@ -163,7 +155,9 @@ function resolveFieldAccessibleName(
   const explicitAccessibleName = accessibilityLabel?.trim();
   const accessibleName = explicitAccessibleName || visibleLabel;
   if (!accessibleName) {
-    throw new TypeError("Field requires a non-empty label or accessibilityLabel");
+    throw new TypeError(
+      "Field requires a non-empty label or accessibilityLabel",
+    );
   }
   return {
     accessibleName,
@@ -171,178 +165,177 @@ function resolveFieldAccessibleName(
   };
 }
 
-function FieldMessage({ error, supportText }: Pick<BaseFieldProps, "error" | "supportText">) {
-  if (!error && !supportText) return null;
-  return (
-    <Text
-      accessibilityLiveRegion={error ? "assertive" : "none"}
-      tone={error ? "danger" : "muted"}
-      variant={fieldRecipe.support.textVariant}
-    >
-      {error ?? supportText}
-    </Text>
-  );
-}
-
 type FieldRendererProps = AccessibleFieldProps &
   Readonly<{
     multiline: boolean;
     search: boolean;
+    /** Internal recipe sizing for PasswordField; never exposed as a product style override. */
+    recipeInputStyle?: StyleProp<TextStyle>;
     searchSize?: SearchFieldSize;
     leading?: ReactNode;
     trailing?: ReactNode;
   }>;
 
-const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(function FieldRenderer(
-  {
-    label,
-    value,
-    defaultValue = "",
-    onValueChange,
-    description,
-    supportText: legacySupportText,
-    error,
-    required = false,
-    disabled = false,
-    busy = false,
-    variant = fieldRecipe.defaults.variant,
-    shape,
-    accessibilityLabel,
-    inputStyle,
-    containerStyle,
-    layoutStyle,
-    allowFontScaling,
-    multiline,
-    maxVisibleLines,
-  minVisibleLines,
-  align = fieldRecipe.defaults.align,
-    search,
-    searchSize = searchFieldRecipe.defaults.size,
-    leading,
-    trailing,
-    onBlur,
-    onFocus,
-    ...props
-  },
-  ref,
-) {
-  const theme = useHjmNativeTheme();
-  const { colors, environment, textScaling } = theme;
-  const [focused, setFocused] = useState(false);
-  const [currentValue, setCurrentValue] = useControllableState({
-    ...(value === undefined ? {} : { value }),
-    defaultValue,
-    ...(onValueChange === undefined ? {} : { onChange: onValueChange }),
-  });
-  const supportText = description ?? legacySupportText;
-  const hint = error ?? supportText;
-  const { accessibleName, visibleLabel } = resolveFieldAccessibleName(
-    label,
-    accessibilityLabel,
-  );
-  const resolvedShape = shape ?? (
-    search ? searchFieldRecipe.defaults.shape : fieldRecipe.defaults.shape
-  );
-  const searchSizing = searchFieldRecipe.sizes[searchSize];
-  const resolvedMaxVisibleLines = maxVisibleLines ?? fieldRecipe.multilineMaxVisibleLines;
-  const borderWidth = search ? searchFieldRecipe.borderWidth : fieldRecipe.borderWidth;
-  const borderColor = search
-    ? resolveColorReference(
-        error
-          ? searchFieldRecipe.colors.invalid
-          : focused
+const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(
+  function FieldRenderer(
+    {
+      label,
+      value,
+      defaultValue = "",
+      onValueChange,
+      description,
+      error,
+      required = false,
+      disabled = false,
+      busy = false,
+      variant = fieldRecipe.defaults.variant,
+      shape,
+      accessibilityLabel,
+
+      layoutStyle,
+      allowFontScaling,
+      multiline,
+      maxVisibleLines,
+      minVisibleLines,
+      align = fieldRecipe.defaults.align,
+      search,
+      recipeInputStyle,
+      searchSize = searchFieldRecipe.defaults.size,
+      leading,
+      trailing,
+      onBlur,
+      onFocus,
+      ...props
+    },
+    ref,
+  ) {
+    const theme = useHjmNativeTheme();
+    const { colors, environment, textScaling } = theme;
+    const [focused, setFocused] = useState(false);
+    const [currentValue, setCurrentValue] = useControllableState({
+      ...(value === undefined ? {} : { value }),
+      defaultValue,
+      ...(onValueChange === undefined ? {} : { onChange: onValueChange }),
+    });
+    const supportText = description;
+    const hint = error ?? supportText;
+    const { accessibleName, visibleLabel } = resolveFieldAccessibleName(
+      label,
+      accessibilityLabel,
+    );
+    const resolvedShape =
+      shape ??
+      (search ? searchFieldRecipe.defaults.shape : fieldRecipe.defaults.shape);
+    const searchSizing = searchFieldRecipe.sizes[searchSize];
+    const resolvedMaxVisibleLines =
+      maxVisibleLines ?? fieldRecipe.multilineMaxVisibleLines;
+    const borderWidth = search
+      ? searchFieldRecipe.borderWidth
+      : fieldRecipe.borderWidth;
+    const borderColor = search
+      ? resolveColorReference(
+          error
+            ? searchFieldRecipe.colors.invalid
+            : focused
             ? searchFieldRecipe.colors.focus
             : searchFieldRecipe.colors.border,
-        theme.palette,
-      )
-    : colors[
-        error
-          ? fieldRecipe.states.invalid.border
-          : focused
+          theme.palette,
+        )
+      : colors[
+          error
+            ? fieldRecipe.states.invalid.border
+            : focused
             ? fieldRecipe.states.focused.border
             : fieldRecipe.states.idle.border
-      ];
-  const backgroundColor = search && variant === fieldRecipe.defaults.variant
-    ? resolveColorReference(searchFieldRecipe.colors.background, theme.palette)
-    : colors[fieldRecipe.variants[variant].background];
-  const placeholderColor = search
-    ? resolveColorReference(searchFieldRecipe.colors.placeholder, theme.palette)
-    : colors[fieldRecipe.placeholder.color];
-  const textStyle = typography[search ? searchSizing.textVariant : fieldRecipe.textVariant];
-  // A composer that should open several lines tall asks in lines, not pixels,
-  // so the recipe keeps ownership of line height and vertical padding.
-  const minHeight = multiline
-    ? minVisibleLines === undefined
-      ? fieldRecipe.multilineMinHeight
-      : Math.max(
-          fieldRecipe.multilineMinHeight,
-          textStyle.lineHeight * minVisibleLines + fieldRecipe.paddingVertical * 2,
+        ];
+    const backgroundColor =
+      search && variant === fieldRecipe.defaults.variant
+        ? resolveColorReference(
+            searchFieldRecipe.colors.background,
+            theme.palette,
+          )
+        : colors[fieldRecipe.variants[variant].background];
+    const placeholderColor = search
+      ? resolveColorReference(
+          searchFieldRecipe.colors.placeholder,
+          theme.palette,
         )
-    : search
+      : colors[fieldRecipe.placeholder.color];
+    const textStyle =
+      typography[search ? searchSizing.textVariant : fieldRecipe.textVariant];
+    // A composer that should open several lines tall asks in lines, not pixels,
+    // so the recipe keeps ownership of line height and vertical padding.
+    const minHeight = multiline
+      ? minVisibleLines === undefined
+        ? fieldRecipe.multilineMinHeight
+        : Math.max(
+            fieldRecipe.multilineMinHeight,
+            textStyle.lineHeight * minVisibleLines +
+              fieldRecipe.paddingVertical * 2,
+          )
+      : search
       ? searchSizing.minHeight
       : fieldRecipe.minHeight;
-  const controlRadius = radius[
-    search ? searchFieldRecipe.shapes[resolvedShape] : fieldRecipe.shapes[resolvedShape]
-  ];
-  const inputTextScaleProps = resolveNativeTextScaleProps(
-    textScaling,
-    [
-      {
-        color: search
-          ? resolveColorReference(searchFieldRecipe.colors.content, theme.palette)
-          : colors.text,
-        flex: 1,
-        fontSize: textStyle.fontSize,
-        fontWeight: textStyle.fontWeight,
-        lineHeight: textStyle.lineHeight,
-        minHeight: minHeight - (borderWidth * 2),
-        ...(multiline && resolvedMaxVisibleLines !== null && resolvedMaxVisibleLines !== undefined
-          ? {
-            maxHeight: textStyle.lineHeight * resolvedMaxVisibleLines
-              + (fieldRecipe.paddingVertical * 2),
-          }
-          : {}),
-        paddingHorizontal: 0,
-        paddingVertical: fieldRecipe.paddingVertical,
-        textAlign: align === "center"
-          ? "center"
-          : logicalTextAlign(environment.direction),
-        textAlignVertical: multiline ? "top" : "center",
-      },
-      inputStyle,
-    ],
-    allowFontScaling,
-  );
-
-  return (
-    <View
-      style={[
+    const controlRadius =
+      radius[
+        search
+          ? searchFieldRecipe.shapes[resolvedShape]
+          : fieldRecipe.shapes[resolvedShape]
+      ];
+    const inputTextScaleProps = resolveNativeTextScaleProps(
+      textScaling,
+      [
         {
-          gap: fieldRecipe.label.gap,
-          opacity: disabled
-            ? search
-              ? searchFieldRecipe.states.disabledOpacity
-              : fieldRecipe.disabledOpacity
-            : 1,
+          color: search
+            ? resolveColorReference(
+                searchFieldRecipe.colors.content,
+                theme.palette,
+              )
+            : colors.text,
+          flex: 1,
+          fontSize: textStyle.fontSize,
+          fontWeight: textStyle.fontWeight,
+          lineHeight: textStyle.lineHeight,
+          minHeight: minHeight - borderWidth * 2,
+          ...(multiline &&
+          resolvedMaxVisibleLines !== null &&
+          resolvedMaxVisibleLines !== undefined
+            ? {
+                maxHeight:
+                  textStyle.lineHeight * resolvedMaxVisibleLines +
+                  fieldRecipe.paddingVertical * 2,
+              }
+            : {}),
+          paddingHorizontal: 0,
+          paddingVertical: fieldRecipe.paddingVertical,
+          textAlign:
+            align === "center"
+              ? "center"
+              : logicalTextAlign(environment.direction),
+          textAlignVertical: multiline ? "top" : "center",
         },
-        containerStyle,
-        layoutStyle,
-      ]}
-    >
-      {visibleLabel ? (
-        <Text
-          style={{
-            color: colors[fieldRecipe.label.color],
-            fontWeight: fieldRecipe.label.fontWeight,
-          }}
-          tone="body"
-          variant={fieldRecipe.label.textVariant}
-        >
-          {visibleLabel}
-          {required ? " *" : ""}
-        </Text>
-      ) : null}
-      <View style={{ gap: fieldRecipe.support.gap }}>
+        recipeInputStyle,
+      ],
+      allowFontScaling,
+    );
+
+    return (
+      <NativeFieldFrame
+        {...(visibleLabel === undefined ? {} : { label: visibleLabel })}
+        required={required}
+        {...(error === undefined ? {} : { error })}
+        {...(supportText === undefined ? {} : { description: supportText })}
+        style={[
+          {
+            opacity: disabled
+              ? search
+                ? searchFieldRecipe.states.disabledOpacity
+                : fieldRecipe.disabledOpacity
+              : 1,
+          },
+          layoutStyle,
+        ]}
+      >
         <View
           style={{
             alignItems: multiline ? "stretch" : "center",
@@ -392,14 +385,10 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(function FieldRe
           />
           {trailing}
         </View>
-        <FieldMessage
-          {...(error === undefined ? {} : { error })}
-          {...(supportText === undefined ? {} : { supportText })}
-        />
-      </View>
-    </View>
-  );
-});
+      </NativeFieldFrame>
+    );
+  },
+);
 
 export type TextFieldProps = AccessibleFieldProps;
 
@@ -674,7 +663,7 @@ export const PasswordField = forwardRef<TextInput, PasswordFieldProps>(function 
       ref={inputRef}
       autoComplete={autofillHint === "current" ? "current-password" : "new-password"}
       disabled={disabled}
-      inputStyle={[
+      recipeInputStyle={[
         size === "large"
           ? {
               fontSize: typography.bodyLarge.fontSize,
@@ -682,7 +671,6 @@ export const PasswordField = forwardRef<TextInput, PasswordFieldProps>(function 
               minHeight: metrics.minHeight - (passwordFieldRecipe.frame.borderWidth * 2),
             }
           : undefined,
-        props.inputStyle,
       ]}
       multiline={false}
       onSelectionChange={(event) => {
@@ -733,6 +721,7 @@ export type OtpFieldProps = Omit<
     onValueChange?: (value: string) => void;
     onComplete?: (value: string) => void;
     size?: OtpFieldSize;
+    presentation?: OtpFieldPresentation;
     slotStyle?: StyleProp<ViewStyle>;
     slotTextStyle?: StyleProp<TextStyle>;
   }>;
@@ -743,7 +732,6 @@ export const OtpField = forwardRef<TextInput, OtpFieldProps>(function OtpField(
     label,
     accessibilityLabel,
     description,
-    supportText: legacySupportText,
     error,
     required = false,
     disabled = false,
@@ -755,9 +743,10 @@ export const OtpField = forwardRef<TextInput, OtpFieldProps>(function OtpField(
     onValueChange,
     onComplete,
     size = otpFieldRecipe.defaults.size,
+    presentation = "boxes",
     slotStyle,
     slotTextStyle,
-    containerStyle,
+
     allowFontScaling,
     onBlur,
     onFocus,
@@ -765,7 +754,7 @@ export const OtpField = forwardRef<TextInput, OtpFieldProps>(function OtpField(
   },
   ref,
 ) {
-  const supportText = description ?? legacySupportText;
+  const supportText = description;
   const theme = useHjmNativeTheme();
   const { accessibleName, visibleLabel } = resolveFieldAccessibleName(label, accessibilityLabel);
   const [focused, setFocused] = useState(false);
@@ -800,7 +789,6 @@ export const OtpField = forwardRef<TextInput, OtpFieldProps>(function OtpField(
           gap: fieldRecipe.label.gap,
           opacity: disabled || busy ? otpFieldRecipe.states.disabledOpacity : 1,
         },
-        containerStyle,
       ]}
     >
       {visibleLabel ? (
@@ -886,8 +874,10 @@ export const OtpField = forwardRef<TextInput, OtpFieldProps>(function OtpField(
                     alignItems: "center",
                     backgroundColor: theme.colors.bg,
                     borderColor,
-                    borderRadius: radius[otpFieldRecipe.slot.radius],
-                    borderWidth: otpFieldRecipe.slot.borderWidth,
+                    borderRadius: presentation === "underline" ? 0 : radius[otpFieldRecipe.slot.radius],
+                    // Underline changes only decoration; one TextInput still owns edits and autofill.
+                    borderWidth: presentation === "underline" ? 0 : otpFieldRecipe.slot.borderWidth,
+                    borderBottomWidth: presentation === "underline" ? 2 : otpFieldRecipe.slot.borderWidth,
                     flex: 1,
                     height: slotHeight,
                     justifyContent: "center",
@@ -1029,6 +1019,8 @@ function ChoiceRow({
     readOnly ? readOnlyLabel : undefined,
     invalid ? invalidLabel : undefined,
   ].filter(Boolean).join(". ") || undefined;
+  // Selection marks are artwork inside a fixed box, not readable copy. HJM Text
+  // applies controlled textScale even with allowFontScaling=false, clipping at 200%.
   const defaultIndicator = kind === "radio" ? (
     checked === true ? (
       <View
@@ -1040,10 +1032,8 @@ function ChoiceRow({
         }}
       />
     ) : null
-  ) : checked === "mixed" ? (
-    <Text accessible={false} align="center" style={{ color: indicatorColor }} variant="label">−</Text>
   ) : checked ? (
-    <Text accessible={false} align="center" style={{ color: indicatorColor }} variant="label">✓</Text>
+    <NativeText accessible={false} allowFontScaling={false} style={{ ...typography.label, color: indicatorColor, textAlign: "center" }}>{checked === "mixed" ? "−" : "✓"}</NativeText>
   ) : null;
 
   return (
@@ -1314,9 +1304,6 @@ export type RadioGroupItem<Value extends string = string> = Readonly<{
   leading?: ReactNode;
 }>;
 
-/** @deprecated Use the renderer-neutral `RadioGroupItem` name. */
-export type RadioOption<Value extends string = string> = RadioGroupItem<Value>;
-
 type ChoiceGroupVisualProps = ChoiceVisualProps & Readonly<{
   orientation?: SelectionOrientation;
   disabled?: boolean;
@@ -1330,16 +1317,7 @@ type ChoiceGroupVisualProps = ChoiceVisualProps & Readonly<{
   invalidLabel?: string;
 }>;
 
-type RadioGroupCollectionProps<Value extends string> =
-  | Readonly<{
-      items: readonly RadioGroupItem<Value>[];
-      options?: never;
-    }>
-  | Readonly<{
-      items?: never;
-      /** @deprecated Use the renderer-neutral `items` prop. */
-      options: readonly RadioOption<Value>[];
-    }>;
+type RadioGroupCollectionProps<Value extends string> = Readonly<{ items: readonly RadioGroupItem<Value>[] }>;
 
 export type RadioGroupProps<Value extends string = string> = ChoiceGroupVisualProps &
   RadioGroupCollectionProps<Value> & Readonly<{
@@ -1351,17 +1329,6 @@ export type RadioGroupProps<Value extends string = string> = ChoiceGroupVisualPr
     renderLeading?: (item: RadioGroupItem<Value>, props: ChoiceVisualRenderProps) => ReactNode;
     renderIndicator?: (item: RadioGroupItem<Value>, props: ChoiceVisualRenderProps) => ReactNode;
   }>;
-
-function resolveAliasedItems<Item>(
-  component: "RadioGroup" | "SegmentedControl",
-  items: readonly Item[] | undefined,
-  options: readonly Item[] | undefined,
-): readonly Item[] {
-  if ((items === undefined) === (options === undefined)) {
-    throw new TypeError(`${component} requires exactly one of items or options`);
-  }
-  return items ?? options!;
-}
 
 function ChoiceGroupFrame({
   label,
@@ -1442,11 +1409,11 @@ function ChoiceGroupFrame({
   );
 }
 
-export function RadioGroup<Value extends string = string>({
+export function RadioGroup<Value extends string = string>(props: RadioGroupProps<Value>) {
+  const {
   label,
   accessibilityLabel,
   items,
-  options,
   value,
   defaultValue,
   onValueChange,
@@ -1467,8 +1434,10 @@ export function RadioGroup<Value extends string = string>({
   renderIndicator,
   style,
   ...slotStyles
-}: RadioGroupProps<Value>) {
-  const resolvedItems = resolveAliasedItems("RadioGroup", items, options);
+} = props;
+  // Removed aliases must not silently change the selected collection in JavaScript callers.
+  if ("options" in props || !Array.isArray(items)) throw new TypeError("RadioGroup requires items; options was removed");
+  const resolvedItems = items;
   const selectionItems = resolvedItems.map((item) => ({
     id: item.value,
     label: item.label,
@@ -1669,20 +1638,7 @@ type SwitchCanonicalStateProps = Readonly<{
   onValueChange?: never;
 }>;
 
-type SwitchLegacyStateProps = Readonly<{
-  checked?: never;
-  defaultChecked?: never;
-  onCheckedChange?: never;
-  /** @deprecated Use the renderer-neutral `checked` prop. */
-  value?: boolean;
-  /** @deprecated Use the renderer-neutral `defaultChecked` prop. */
-  defaultValue?: boolean;
-  /** @deprecated Use the renderer-neutral `onCheckedChange` prop. */
-  onValueChange?: (value: boolean) => void;
-}>;
-
-export type SwitchProps = SwitchBaseProps &
-  (SwitchCanonicalStateProps | SwitchLegacyStateProps);
+export type SwitchProps = SwitchBaseProps & SwitchCanonicalStateProps;
 
 export function Switch({
   label,
@@ -1694,9 +1650,6 @@ export function Switch({
   checked,
   defaultChecked,
   onCheckedChange,
-  value,
-  defaultValue,
-  onValueChange,
   disabled = false,
   accessibilityLabel,
   accessibilityHint,
@@ -1704,20 +1657,10 @@ export function Switch({
   style,
   ...props
 }: SwitchProps) {
-  const hasCanonicalState = checked !== undefined
-    || defaultChecked !== undefined
-    || onCheckedChange !== undefined;
-  const hasLegacyState = value !== undefined
-    || defaultValue !== undefined
-    || onValueChange !== undefined;
-  if (hasCanonicalState && hasLegacyState) {
-    throw new TypeError(
-      "Switch cannot mix checked/defaultChecked/onCheckedChange with value/defaultValue/onValueChange",
-    );
+  // Reject old JavaScript callers rather than silently dropping their controlled state.
+  if (["value", "defaultValue", "onValueChange"].some(key => key in props)) {
+    throw new TypeError("Switch no longer accepts value/defaultValue/onValueChange; use checked/defaultChecked/onCheckedChange");
   }
-  const resolvedChecked = checked ?? value;
-  const resolvedDefaultChecked = defaultChecked ?? defaultValue ?? false;
-  const resolvedOnCheckedChange = onCheckedChange ?? onValueChange;
   const { colors, environment, ...nativeTheme } = useHjmNativeTheme();
   const dimensions = switchRecipe.sizes[size];
   const stacked = presentation === "row" && labelVisibility === "visible"
@@ -1741,11 +1684,11 @@ export function Switch({
     palette,
   );
   const [enabled, setEnabled] = useControllableState({
-    ...(resolvedChecked === undefined ? {} : { value: resolvedChecked }),
-    defaultValue: resolvedDefaultChecked,
-    ...(resolvedOnCheckedChange === undefined
+    ...(checked === undefined ? {} : { value: checked }),
+    defaultValue: (defaultChecked ?? false),
+    ...(onCheckedChange === undefined
       ? {}
-      : { onChange: resolvedOnCheckedChange }),
+      : { onChange: onCheckedChange }),
   });
   return (
     <Pressable
@@ -1823,10 +1766,6 @@ export type SegmentedControlItem<Value extends string = string> = Readonly<{
   renderLeading?: (props: SegmentedControlLeadingRenderProps) => ReactNode;
 }>;
 
-/** @deprecated Use the renderer-neutral `SegmentedControlItem` name. */
-export type SegmentedControlOption<Value extends string = string> =
-  SegmentedControlItem<Value>;
-
 export type SegmentedControlLeadingRenderProps = Readonly<{
   selected: boolean;
   disabled: boolean;
@@ -1834,16 +1773,7 @@ export type SegmentedControlLeadingRenderProps = Readonly<{
   size: number;
 }>;
 
-type SegmentedControlCollectionProps<Value extends string> =
-  | Readonly<{
-      items: readonly SegmentedControlItem<Value>[];
-      options?: never;
-    }>
-  | Readonly<{
-      items?: never;
-      /** @deprecated Use the renderer-neutral `items` prop. */
-      options: readonly SegmentedControlOption<Value>[];
-    }>;
+type SegmentedControlCollectionProps<Value extends string> = Readonly<{ items: readonly SegmentedControlItem<Value>[] }>;
 
 export type SegmentedControlProps<Value extends string = string> =
   SegmentedControlCollectionProps<Value> & Readonly<{
@@ -1856,18 +1786,20 @@ export type SegmentedControlProps<Value extends string = string> =
     style?: StyleProp<ViewStyle>;
   }>;
 
-export function SegmentedControl<Value extends string = string>({
+export function SegmentedControl<Value extends string = string>(props: SegmentedControlProps<Value>) {
+  const {
   label,
   items,
-  options,
   value,
   defaultValue,
   onValueChange,
   size = segmentedControlRecipe.defaults.size,
   disabled = false,
   style,
-}: SegmentedControlProps<Value>) {
-  const resolvedItems = resolveAliasedItems("SegmentedControl", items, options);
+} = props;
+  // Removed aliases must not silently change the selected collection in JavaScript callers.
+  if ("options" in props || !Array.isArray(items)) throw new TypeError("SegmentedControl requires items; options was removed");
+  const resolvedItems = items;
   const theme = useHjmNativeTheme();
   const { environment } = theme;
   const sizeContract = segmentedControlRecipe.sizes[size];
@@ -2020,12 +1952,6 @@ type ChipBaseProps = Readonly<{
   accessibilityHint?: string;
   /** Canonical layout-only placement. Controlled visual and state keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
-  /**
-   * @deprecated Legacy compatibility only. New apps must use `layoutStyle` and must not
-   * override color, typography, radius, control height, or interaction state.
-   * @see https://github.com/jim1286/hjm-design-system/blob/main/packages/design-contracts/docs/consumer-policy.md#31-react-native-legacy-style-compatibility-boundary
-   */
-  style?: StyleProp<ViewStyle>;
   leadingStyle?: HjmCompositionStyleProp;
   indicatorStyle?: HjmCompositionStyleProp;
   labelStyle?: StyleProp<TextStyle>;
@@ -2062,7 +1988,7 @@ export function Chip({
   accessibilityLabel,
   accessibilityHint,
   layoutStyle,
-  style,
+
   leadingStyle,
   indicatorStyle,
   labelStyle,
@@ -2135,7 +2061,6 @@ export function Chip({
               : 1,
           paddingHorizontal: metrics.paddingHorizontal,
         },
-        style,
         layoutStyle,
       ]}
     >
@@ -2149,7 +2074,8 @@ export function Chip({
               size: glyph[chipRecipe.selectionIndicator.glyph],
             })
           ) : (
-            <Text style={{ color: indicatorColor }} variant="caption">✓</Text>
+            // Like Checkbox, the selection mark fits a fixed glyph slot; the chip label still scales.
+            <NativeText accessible={false} allowFontScaling={false} style={{ ...typography.caption, color: indicatorColor }}>✓</NativeText>
           )}
         </View>
       ) : null}

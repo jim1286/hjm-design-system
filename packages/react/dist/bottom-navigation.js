@@ -71,7 +71,7 @@ function BottomNavigationInner({ descriptor, configuration = {}, getHref, render
     const iconSize = iconRecipe.sizes[density.icon];
     if (hidden)
         return null;
-    return (_jsx("nav", { ...props, ref: ref, "aria-label": resolved.accessibilityLabel, className: classNames("hjm-bottom-navigation", className), "data-density": presentation.density, "data-distribution": presentation.distribution, "data-keyboard-behavior": presentation.keyboardBehavior, "data-presentation": presentation.presentation, dir: presentation.direction, style: {
+    return (_jsx("nav", { ...props, ref: ref, "aria-label": resolved.accessibilityLabel, className: classNames("hjm-bottom-navigation", className), "data-expanded-labels": (theme?.environment.textScale ?? 1) >= 1.5 || resolved.items.length > 4 ? "true" : "false", "data-density": presentation.density, "data-distribution": presentation.distribution, "data-keyboard-behavior": presentation.keyboardBehavior, "data-presentation": presentation.presentation, dir: presentation.direction, style: {
             "--hjm-bottom-navigation-center-gap": `${centerGap}px`,
             "--hjm-bottom-navigation-columns": resolved.items.length,
             "--hjm-bottom-navigation-half-columns": resolved.items.length / 2,
@@ -104,7 +104,7 @@ function BottomNavigationInner({ descriptor, configuration = {}, getHref, render
                             gridColumn: getBottomNavigationGridColumn(index, resolved.items.length, presentation.distribution),
                         };
                         if (item.disabled) {
-                            return (_jsx("li", { style: itemStyle, children: _jsx("span", { "aria-disabled": "true", "aria-label": item.resolvedAccessibilityLabel, className: "hjm-bottom-navigation__item", "data-state": "disabled", role: "link", children: content }) }, item.id));
+                            return (_jsx("li", { style: itemStyle, "data-selected": "false", children: _jsx("span", { "aria-disabled": "true", "aria-label": item.resolvedAccessibilityLabel, className: "hjm-bottom-navigation__item", "data-state": "disabled", role: "link", children: content }) }, item.id));
                         }
                         const href = getHref(item);
                         if (!href.trim()) {
@@ -125,7 +125,7 @@ function BottomNavigationInner({ descriptor, configuration = {}, getHref, render
                             },
                             children: content,
                         };
-                        return (_jsx("li", { style: itemStyle, children: renderLink ? renderLink(linkProps) : _jsx("a", { ...linkProps }) }, item.id));
+                        return (_jsx("li", { style: itemStyle, "data-selected": selected, children: renderLink ? renderLink(linkProps) : _jsx("a", { ...linkProps }) }, item.id));
                     }) }), primaryAction ? (_jsx("div", { className: "hjm-bottom-navigation__primary-action", children: primaryAction })) : null] }) }));
 }
 export const BottomNavigation = forwardRef(BottomNavigationInner);

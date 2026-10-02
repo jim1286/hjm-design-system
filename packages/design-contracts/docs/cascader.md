@@ -110,7 +110,7 @@ collection + tri-state 판정 모듈)으로 확정됐고, Tree renderer가 들�
   않으므로 막아 둔 자리를 여는 새 축이 필요 없다.
 
 그래서 catalog의 Cascader 행은 `prerequisite`에서 `composed`(Popover·Tree)로 옮겼고,
-작동 예제는 Showcase `Patterns/Tree`의 Cascader 화면이다. "만들지 않는다"는 판정 자체는
+작동 예제는 Showcase `컴포넌트/데이터 표시/Tree`의 Cascader 화면이다. "만들지 않는다"는 판정 자체는
 그대로다 — 바뀐 것은 흡수하는 쪽이 컴포넌트가 아니라 조합이라는 점뿐이다.
 
 

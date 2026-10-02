@@ -93,7 +93,7 @@ Backspace → 앞 칸으로)도 이 모델에서는 별도 로직이 필요 없�
 | 축 | 상태 |
 | --- | --- |
 | `value`(controlled, 하나의 문자열) | 공개 |
-| `availability`(enabled/disabled/readOnly/busy) | 공개 — 서버 인증 중 `busy` |
+| `availability`(enabled/disabled/readOnly/busy) | 공개 — 서버 인증 중 `busy`. Web은 busy를 disabled가 아니라 read-only + `aria-busy`로 표현한다(아래) |
 | `validation`(valid/invalid) | 공개 — 오류 카피는 Field의 `error` 슬롯 |
 | 칸별 포커스·칸별 접근성 발화 | **배제**(의도적) — 위 판정 참고 |
 | 영숫자 문자 집합 | **배제** — 측정된 요구 없음 |
@@ -102,3 +102,25 @@ Backspace → 앞 칸으로)도 이 모델에서는 별도 로직이 필요 없�
 
 이 조사 당시 제품 채택은 미확인이었다. 2026-09-29부터 제품 채택은 관측으로 분리하며,
 현재 성숙도는 catalog와 [승격 기준](stable-promotion.md)을 따른다.
+
+## Presentation options (2026-10-01)
+
+Web and Native accept `presentation="boxes" | "underline"`; boxes remains the
+compatible default. Underline removes the side/top slot outlines and keeps a
+strong bottom border with the same focus, filled and error colors. This changes
+only decorative slots: one actual input still owns selection, paste, numeric
+sanitization, SMS autocomplete and the completion callback. Never replace it with
+six separately focused fields to obtain this appearance.
+
+Both showcases place the interactive preview under 컴포넌트/입력/OtpField
+with Default, Dark and LargeText. The two presentations share a controlled sample
+value and an explicit error toggle. “Input complete” means six characters entered,
+not a successful server verification. Existing input behavior tests now exercise
+both presentations on Web and Native; actual device autofill remains separate QA.
+
+## busy 동안 포커스 유지 (2026-10-02)
+
+Web `busy`는 예전에 input을 disabled로 바꿨다. 포커스된 input이 disabled가 되면 브라우저가 포커스를
+`<body>`로 옮겨, 인증 실패 뒤 키보드 사용자가 처음부터 다시 탐색해야 했다(STEA 후보 검토의 인증번호
+구성에서 확인). 이제 busy는 read-only + `aria-busy`이고, 흐린 표시는 FieldFrame이 그대로 맡는다.
+Native는 처음부터 `editable={false}`와 `accessibilityState.busy`로 표현해 왔다.

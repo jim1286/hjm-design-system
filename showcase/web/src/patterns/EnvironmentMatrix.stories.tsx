@@ -37,12 +37,12 @@ function EnvironmentMatrix() {
   );
 }
 
-const meta = {
-  title: "Patterns/Environment Matrix",
+const meta = { includeStories: ["RequiredEvidence"],
+  id: "patterns-environment-matrix", title: "배포/구성/환경별 비교",
   component: EnvironmentMatrix,
   parameters: { controls: { disable: true } },
 } satisfies Meta<typeof EnvironmentMatrix>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
-export const RequiredEvidence: Story = {};
+export const RequiredEvidence: Story = { name: "필수 검증 항목",};

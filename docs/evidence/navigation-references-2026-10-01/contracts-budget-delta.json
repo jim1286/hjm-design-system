@@ -1,0 +1,10 @@
+{
+  "component-recipes": {
+    "raw": 526,
+    "gzip": 35
+  },
+  "bottom-navigation": {
+    "raw": 328,
+    "gzip": 105
+  }
+}

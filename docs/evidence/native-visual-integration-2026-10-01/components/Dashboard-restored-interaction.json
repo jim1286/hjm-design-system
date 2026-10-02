@@ -1,0 +1,1527 @@
+[
+  {
+    "frame": {
+      "x": 0,
+      "y": 0,
+      "width": 402,
+      "height": 874
+    },
+    "enabled": true,
+    "role": "AXApplication",
+    "AXValue": null,
+    "help": null,
+    "AXFrame": "{{0, 0}, {402, 874}}",
+    "AXLabel": "HJM Native Showcase",
+    "role_description": "application",
+    "content_required": false,
+    "traits": [
+      "None"
+    ],
+    "pid": 63103,
+    "type": "Application",
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "subrole": null,
+    "title": null
+  },
+  {
+    "title": null,
+    "AXFrame": "{{36, -67}, {330, 40}}",
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "help": null,
+    "role": "AXStaticText",
+    "role_description": "text",
+    "type": "StaticText",
+    "custom_actions": [],
+    "AXLabel": "2026년 9월의 예제 기록입니다. 실제 사용자 통계가 아닙니다.",
+    "subrole": null,
+    "enabled": true,
+    "content_required": false,
+    "pid": 63103,
+    "AXValue": null,
+    "AXUniqueId": null,
+    "frame": {
+      "y": -67,
+      "x": 36,
+      "width": 330,
+      "height": 40
+    }
+  },
+  {
+    "content_required": false,
+    "AXFrame": "{{36, -3}, {330, 32}}",
+    "pid": 63103,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "enabled": true,
+    "AXValue": null,
+    "AXLabel": "작은 순간이 쌓인 한 달",
+    "custom_actions": [],
+    "title": null,
+    "help": null,
+    "role": "AXStaticText",
+    "subrole": null,
+    "AXUniqueId": null,
+    "type": "StaticText",
+    "role_description": "text",
+    "frame": {
+      "y": -3,
+      "x": 36,
+      "height": 32,
+      "width": 330
+    }
+  },
+  {
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "role_description": "text",
+    "AXValue": null,
+    "subrole": null,
+    "role": "AXStaticText",
+    "pid": 63103,
+    "AXUniqueId": null,
+    "help": null,
+    "enabled": true,
+    "custom_actions": [],
+    "AXLabel": "기록한 날과 머문 시간을 함께 돌아봐요.",
+    "type": "StaticText",
+    "title": null,
+    "AXFrame": "{{36, 53}, {330, 20}}",
+    "content_required": false,
+    "frame": {
+      "height": 20,
+      "x": 36,
+      "y": 53,
+      "width": 330
+    }
+  },
+  {
+    "AXFrame": "{{36, 97}, {80.333335876464844, 44}}",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "role": "AXButton",
+    "content_required": false,
+    "AXLabel": "최근 7일",
+    "title": null,
+    "frame": {
+      "x": 36,
+      "y": 97,
+      "width": 80.33333587646484,
+      "height": 44
+    },
+    "custom_actions": [],
+    "pid": 63103,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "help": null,
+    "type": "Button",
+    "role_description": "button",
+    "enabled": true,
+    "subrole": null
+  },
+  {
+    "enabled": true,
+    "AXLabel": "9월",
+    "role": "AXButton",
+    "traits": [
+      "Scrollable",
+      "Selected",
+      "Button"
+    ],
+    "help": null,
+    "subrole": null,
+    "AXFrame": "{{128.33333587646484, 97}, {55.333343505859375, 44}}",
+    "AXUniqueId": null,
+    "content_required": false,
+    "role_description": "button",
+    "pid": 63103,
+    "type": "Button",
+    "frame": {
+      "x": 128.33333587646484,
+      "y": 97,
+      "width": 55.333343505859375,
+      "height": 44
+    },
+    "AXValue": null,
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "subrole": null,
+    "help": null,
+    "AXValue": null,
+    "AXFrame": "{{195.66667175292969, 97}, {53.666656494140625, 44}}",
+    "content_required": false,
+    "AXUniqueId": null,
+    "enabled": true,
+    "custom_actions": [],
+    "role_description": "",
+    "frame": {
+      "width": 53.666656494140625,
+      "height": 44,
+      "x": 195.6666717529297,
+      "y": 97
+    },
+    "AXLabel": "8월",
+    "pid": 63103,
+    "title": null,
+    "type": "GenericElement",
+    "role": "AXGenericElement",
+    "traits": [
+      "Scrollable",
+      "Button"
+    ]
+  },
+  {
+    "AXFrame": "{{36, 165}, {330, 20}}",
+    "AXValue": null,
+    "role": "AXStaticText",
+    "AXLabel": "2026-09-01 — 2026-09-30",
+    "custom_actions": [],
+    "content_required": false,
+    "subrole": null,
+    "AXUniqueId": null,
+    "title": null,
+    "type": "StaticText",
+    "enabled": true,
+    "pid": 63103,
+    "frame": {
+      "height": 20,
+      "x": 36,
+      "y": 165,
+      "width": 330
+    },
+    "help": null,
+    "role_description": "text",
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ]
+  },
+  {
+    "subrole": null,
+    "enabled": true,
+    "role_description": "",
+    "pid": 63103,
+    "AXValue": null,
+    "type": "GenericElement",
+    "custom_actions": [],
+    "content_required": false,
+    "AXFrame": "{{57, 230}, {288, 90}}",
+    "role": "AXGenericElement",
+    "AXUniqueId": null,
+    "title": null,
+    "AXLabel": "남긴 기록, 7",
+    "help": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "frame": {
+      "y": 230,
+      "width": 288,
+      "height": 90,
+      "x": 57
+    }
+  },
+  {
+    "frame": {
+      "width": 288,
+      "y": 340,
+      "height": 90,
+      "x": 57
+    },
+    "role": "AXGenericElement",
+    "AXUniqueId": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "pid": 63103,
+    "help": null,
+    "role_description": "",
+    "title": null,
+    "enabled": true,
+    "AXFrame": "{{57, 340}, {288, 90}}",
+    "custom_actions": [],
+    "AXValue": null,
+    "AXLabel": "기록한 날, 6",
+    "type": "GenericElement",
+    "subrole": null,
+    "content_required": false
+  },
+  {
+    "pid": 63103,
+    "content_required": false,
+    "title": null,
+    "AXFrame": "{{57, 450}, {288, 90}}",
+    "frame": {
+      "y": 450,
+      "x": 57,
+      "width": 288,
+      "height": 90
+    },
+    "role": "AXGenericElement",
+    "enabled": true,
+    "type": "GenericElement",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "role_description": "",
+    "help": null,
+    "subrole": null,
+    "custom_actions": [],
+    "AXLabel": "머문 시간 (분), 125"
+  },
+  {
+    "AXValue": null,
+    "type": "StaticText",
+    "custom_actions": [],
+    "content_required": false,
+    "frame": {
+      "height": 20,
+      "y": 585,
+      "x": 36,
+      "width": 330
+    },
+    "title": null,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "enabled": true,
+    "role_description": "text",
+    "subrole": null,
+    "help": null,
+    "pid": 63103,
+    "AXFrame": "{{36, 585}, {330, 20}}",
+    "AXLabel": "기록한 날",
+    "role": "AXStaticText",
+    "AXUniqueId": null
+  },
+  {
+    "AXValue": null,
+    "enabled": true,
+    "help": null,
+    "AXFrame": "{{36, 629}, {330, 44}}",
+    "frame": {
+      "x": 36,
+      "width": 330,
+      "height": 44,
+      "y": 629
+    },
+    "subrole": null,
+    "content_required": false,
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "role_description": "button",
+    "AXLabel": "날짜 목록으로 보기",
+    "pid": 63103,
+    "role": "AXButton",
+    "title": null,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "type": "Button"
+  },
+  {
+    "role": "AXGenericElement",
+    "AXValue": null,
+    "subrole": null,
+    "AXFrame": "{{56, 697}, {16, 16}}",
+    "custom_actions": [],
+    "role_description": "",
+    "pid": 63103,
+    "traits": [
+      "Scrollable"
+    ],
+    "content_required": false,
+    "type": "GenericElement",
+    "help": null,
+    "AXUniqueId": null,
+    "title": null,
+    "frame": {
+      "x": 56,
+      "width": 16,
+      "y": 697,
+      "height": 16
+    },
+    "AXLabel": "2026-09-07 · 0개 기록",
+    "enabled": true
+  },
+  {
+    "help": null,
+    "AXFrame": "{{76, 697}, {16, 16}}",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "AXLabel": "2026-09-14 · 0개 기록",
+    "enabled": true,
+    "role_description": "",
+    "type": "GenericElement",
+    "traits": [
+      "Scrollable"
+    ],
+    "title": null,
+    "frame": {
+      "width": 16,
+      "height": 16,
+      "x": 76,
+      "y": 697
+    },
+    "custom_actions": [],
+    "content_required": false,
+    "role": "AXGenericElement",
+    "subrole": null,
+    "pid": 63103
+  },
+  {
+    "enabled": true,
+    "title": null,
+    "role": "AXGenericElement",
+    "role_description": "",
+    "AXFrame": "{{96, 697}, {16, 16}}",
+    "subrole": null,
+    "help": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "AXLabel": "2026-09-21 · 0개 기록",
+    "AXValue": null,
+    "pid": 63103,
+    "AXUniqueId": null,
+    "type": "GenericElement",
+    "custom_actions": [],
+    "frame": {
+      "width": 16,
+      "x": 96,
+      "y": 697,
+      "height": 16
+    },
+    "content_required": false
+  },
+  {
+    "AXUniqueId": null,
+    "frame": {
+      "width": 16,
+      "y": 697,
+      "height": 16,
+      "x": 116
+    },
+    "content_required": false,
+    "type": "Button",
+    "custom_actions": [],
+    "role": "AXButton",
+    "AXValue": null,
+    "role_description": "button",
+    "subrole": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "title": null,
+    "AXLabel": "2026-09-28 · 2개 기록",
+    "enabled": true,
+    "help": null,
+    "pid": 63103,
+    "AXFrame": "{{116, 697}, {16, 16}}"
+  },
+  {
+    "AXUniqueId": null,
+    "custom_actions": [],
+    "frame": {
+      "width": 16,
+      "height": 16,
+      "y": 717,
+      "x": 36
+    },
+    "subrole": null,
+    "content_required": false,
+    "AXValue": null,
+    "help": null,
+    "AXFrame": "{{36, 717}, {16, 16}}",
+    "enabled": true,
+    "traits": [
+      "Scrollable"
+    ],
+    "type": "GenericElement",
+    "role_description": "",
+    "AXLabel": "2026-09-01 · 0개 기록",
+    "role": "AXGenericElement",
+    "title": null,
+    "pid": 63103
+  },
+  {
+    "role": "AXGenericElement",
+    "AXUniqueId": null,
+    "type": "GenericElement",
+    "traits": [
+      "Scrollable"
+    ],
+    "AXLabel": "2026-09-08 · 1개 기록",
+    "frame": {
+      "x": 56,
+      "y": 717,
+      "width": 16,
+      "height": 16
+    },
+    "enabled": true,
+    "AXValue": null,
+    "AXFrame": "{{56, 717}, {16, 16}}",
+    "title": null,
+    "help": null,
+    "custom_actions": [],
+    "subrole": null,
+    "role_description": "",
+    "content_required": false,
+    "pid": 63103
+  },
+  {
+    "pid": 63103,
+    "role_description": "",
+    "role": "AXGenericElement",
+    "subrole": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "AXUniqueId": null,
+    "AXValue": null,
+    "AXFrame": "{{76, 717}, {16, 16}}",
+    "type": "GenericElement",
+    "custom_actions": [],
+    "help": null,
+    "frame": {
+      "height": 16,
+      "y": 717,
+      "x": 76,
+      "width": 16
+    },
+    "title": null,
+    "enabled": true,
+    "AXLabel": "2026-09-15 · 0개 기록",
+    "content_required": false
+  },
+  {
+    "content_required": false,
+    "AXValue": null,
+    "enabled": true,
+    "role": "AXGenericElement",
+    "title": null,
+    "AXFrame": "{{96, 717}, {16, 16}}",
+    "help": null,
+    "role_description": "",
+    "custom_actions": [],
+    "frame": {
+      "y": 717,
+      "height": 16,
+      "width": 16,
+      "x": 96
+    },
+    "AXLabel": "2026-09-22 · 0개 기록",
+    "subrole": null,
+    "type": "GenericElement",
+    "pid": 63103,
+    "traits": [
+      "Scrollable"
+    ],
+    "AXUniqueId": null
+  },
+  {
+    "type": "Button",
+    "subrole": null,
+    "AXFrame": "{{116, 717}, {16, 16}}",
+    "pid": 63103,
+    "role_description": "button",
+    "AXLabel": "2026-09-29 · 0개 기록",
+    "custom_actions": [],
+    "content_required": false,
+    "traits": [
+      "Scrollable"
+    ],
+    "role": "AXButton",
+    "AXValue": null,
+    "title": null,
+    "help": null,
+    "frame": {
+      "y": 717,
+      "width": 16,
+      "height": 16,
+      "x": 116
+    },
+    "enabled": true,
+    "AXUniqueId": null
+  },
+  {
+    "AXValue": null,
+    "content_required": false,
+    "AXFrame": "{{36, 737}, {16, 16}}",
+    "role_description": "",
+    "enabled": true,
+    "help": null,
+    "role": "AXGenericElement",
+    "traits": [
+      "Scrollable"
+    ],
+    "type": "GenericElement",
+    "AXUniqueId": null,
+    "subrole": null,
+    "AXLabel": "2026-09-02 · 1개 기록",
+    "pid": 63103,
+    "custom_actions": [],
+    "title": null,
+    "frame": {
+      "x": 36,
+      "width": 16,
+      "y": 737,
+      "height": 16
+    }
+  },
+  {
+    "pid": 63103,
+    "AXValue": null,
+    "type": "GenericElement",
+    "custom_actions": [],
+    "AXLabel": "2026-09-09 · 0개 기록",
+    "AXUniqueId": null,
+    "title": null,
+    "role_description": "",
+    "traits": [
+      "Scrollable"
+    ],
+    "content_required": false,
+    "role": "AXGenericElement",
+    "frame": {
+      "height": 16,
+      "y": 737,
+      "width": 16,
+      "x": 56
+    },
+    "subrole": null,
+    "enabled": true,
+    "help": null,
+    "AXFrame": "{{56, 737}, {16, 16}}"
+  },
+  {
+    "role": "AXGenericElement",
+    "AXUniqueId": null,
+    "AXFrame": "{{76, 737}, {16, 16}}",
+    "title": null,
+    "frame": {
+      "height": 16,
+      "x": 76,
+      "width": 16,
+      "y": 737
+    },
+    "role_description": "",
+    "traits": [
+      "Scrollable"
+    ],
+    "content_required": false,
+    "help": null,
+    "custom_actions": [],
+    "AXValue": null,
+    "subrole": null,
+    "pid": 63103,
+    "enabled": true,
+    "AXLabel": "2026-09-16 · 1개 기록",
+    "type": "GenericElement"
+  },
+  {
+    "type": "GenericElement",
+    "traits": [
+      "Scrollable"
+    ],
+    "frame": {
+      "x": 96,
+      "width": 16,
+      "height": 16,
+      "y": 737
+    },
+    "title": null,
+    "help": null,
+    "role": "AXGenericElement",
+    "AXFrame": "{{96, 737}, {16, 16}}",
+    "custom_actions": [],
+    "AXLabel": "2026-09-23 · 0개 기록",
+    "subrole": null,
+    "content_required": false,
+    "AXUniqueId": null,
+    "role_description": "",
+    "AXValue": null,
+    "pid": 63103,
+    "enabled": true
+  },
+  {
+    "content_required": false,
+    "AXUniqueId": null,
+    "title": null,
+    "role": "AXGenericElement",
+    "frame": {
+      "height": 16,
+      "y": 737,
+      "width": 16,
+      "x": 116
+    },
+    "custom_actions": [],
+    "AXFrame": "{{116, 737}, {16, 16}}",
+    "pid": 63103,
+    "role_description": "",
+    "type": "GenericElement",
+    "AXValue": null,
+    "enabled": true,
+    "subrole": null,
+    "help": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "AXLabel": "2026-09-30 · 1개 기록"
+  },
+  {
+    "pid": 63103,
+    "title": null,
+    "role_description": "",
+    "AXUniqueId": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "type": "GenericElement",
+    "AXFrame": "{{36, 757}, {16, 16}}",
+    "subrole": null,
+    "role": "AXGenericElement",
+    "frame": {
+      "width": 16,
+      "x": 36,
+      "y": 757,
+      "height": 16
+    },
+    "enabled": true,
+    "AXLabel": "2026-09-03 · 0개 기록",
+    "AXValue": null,
+    "help": null,
+    "custom_actions": [],
+    "content_required": false
+  },
+  {
+    "subrole": null,
+    "content_required": false,
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "AXFrame": "{{56, 757}, {16, 16}}",
+    "AXLabel": "2026-09-10 · 0개 기록",
+    "help": null,
+    "frame": {
+      "height": 16,
+      "x": 56,
+      "y": 757,
+      "width": 16
+    },
+    "type": "GenericElement",
+    "AXValue": null,
+    "role": "AXGenericElement",
+    "pid": 63103,
+    "enabled": true,
+    "title": null,
+    "role_description": "",
+    "traits": [
+      "Scrollable"
+    ]
+  },
+  {
+    "AXFrame": "{{76, 757}, {16, 16}}",
+    "enabled": true,
+    "title": null,
+    "role_description": "",
+    "help": null,
+    "subrole": null,
+    "custom_actions": [],
+    "AXLabel": "2026-09-17 · 0개 기록",
+    "content_required": false,
+    "traits": [
+      "Scrollable"
+    ],
+    "frame": {
+      "y": 757,
+      "x": 76,
+      "width": 16,
+      "height": 16
+    },
+    "type": "GenericElement",
+    "AXValue": null,
+    "AXUniqueId": null,
+    "pid": 63103,
+    "role": "AXGenericElement"
+  },
+  {
+    "help": null,
+    "AXFrame": "{{96, 757}, {16, 16}}",
+    "traits": [
+      "Scrollable"
+    ],
+    "enabled": true,
+    "AXUniqueId": null,
+    "role": "AXGenericElement",
+    "content_required": false,
+    "custom_actions": [],
+    "frame": {
+      "x": 96,
+      "height": 16,
+      "y": 757,
+      "width": 16
+    },
+    "AXLabel": "2026-09-24 · 0개 기록",
+    "pid": 63103,
+    "title": null,
+    "type": "GenericElement",
+    "AXValue": null,
+    "role_description": "",
+    "subrole": null
+  },
+  {
+    "help": null,
+    "AXUniqueId": null,
+    "AXFrame": "{{36, 777}, {16, 16}}",
+    "type": "GenericElement",
+    "traits": [
+      "Scrollable"
+    ],
+    "role": "AXGenericElement",
+    "title": null,
+    "frame": {
+      "height": 16,
+      "x": 36,
+      "width": 16,
+      "y": 777
+    },
+    "content_required": false,
+    "enabled": true,
+    "AXLabel": "2026-09-04 · 0개 기록",
+    "role_description": "",
+    "pid": 63103,
+    "custom_actions": [],
+    "subrole": null,
+    "AXValue": null
+  },
+  {
+    "role_description": "",
+    "role": "AXGenericElement",
+    "custom_actions": [],
+    "title": null,
+    "AXLabel": "2026-09-11 · 0개 기록",
+    "AXFrame": "{{56, 777}, {16, 16}}",
+    "help": null,
+    "type": "GenericElement",
+    "subrole": null,
+    "frame": {
+      "y": 777,
+      "width": 16,
+      "height": 16,
+      "x": 56
+    },
+    "content_required": false,
+    "AXUniqueId": null,
+    "AXValue": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "enabled": true,
+    "pid": 63103
+  },
+  {
+    "role": "AXGenericElement",
+    "enabled": true,
+    "help": null,
+    "AXValue": null,
+    "custom_actions": [],
+    "AXLabel": "2026-09-18 · 0개 기록",
+    "type": "GenericElement",
+    "AXFrame": "{{76, 777}, {16, 16}}",
+    "role_description": "",
+    "subrole": null,
+    "title": null,
+    "frame": {
+      "height": 16,
+      "width": 16,
+      "x": 76,
+      "y": 777
+    },
+    "traits": [
+      "Scrollable"
+    ],
+    "content_required": false,
+    "pid": 63103,
+    "AXUniqueId": null
+  },
+  {
+    "role_description": "",
+    "AXValue": null,
+    "AXUniqueId": null,
+    "type": "GenericElement",
+    "role": "AXGenericElement",
+    "title": null,
+    "subrole": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "enabled": true,
+    "custom_actions": [],
+    "AXLabel": "2026-09-25 · 1개 기록",
+    "pid": 63103,
+    "help": null,
+    "AXFrame": "{{96, 777}, {16, 16}}",
+    "content_required": false,
+    "frame": {
+      "x": 96,
+      "y": 777,
+      "height": 16,
+      "width": 16
+    }
+  },
+  {
+    "title": null,
+    "frame": {
+      "height": 16,
+      "x": 36,
+      "width": 16,
+      "y": 797
+    },
+    "traits": [
+      "Scrollable"
+    ],
+    "pid": 63103,
+    "AXValue": null,
+    "help": null,
+    "AXUniqueId": null,
+    "content_required": false,
+    "AXFrame": "{{36, 797}, {16, 16}}",
+    "role_description": "",
+    "role": "AXGenericElement",
+    "AXLabel": "2026-09-05 · 0개 기록",
+    "enabled": true,
+    "custom_actions": [],
+    "type": "GenericElement",
+    "subrole": null
+  },
+  {
+    "content_required": false,
+    "title": null,
+    "AXFrame": "{{56, 797}, {16, 16}}",
+    "role": "AXGenericElement",
+    "subrole": null,
+    "help": null,
+    "pid": 63103,
+    "custom_actions": [],
+    "enabled": true,
+    "traits": [
+      "Scrollable"
+    ],
+    "frame": {
+      "x": 56,
+      "width": 16,
+      "height": 16,
+      "y": 797
+    },
+    "role_description": "",
+    "AXValue": null,
+    "type": "GenericElement",
+    "AXLabel": "2026-09-12 · 0개 기록",
+    "AXUniqueId": null
+  },
+  {
+    "type": "GenericElement",
+    "AXUniqueId": null,
+    "enabled": true,
+    "help": null,
+    "custom_actions": [],
+    "AXFrame": "{{76, 797}, {16, 16}}",
+    "frame": {
+      "x": 76,
+      "width": 16,
+      "height": 16,
+      "y": 797
+    },
+    "AXLabel": "2026-09-19 · 0개 기록",
+    "role": "AXGenericElement",
+    "traits": [
+      "Scrollable"
+    ],
+    "title": null,
+    "AXValue": null,
+    "subrole": null,
+    "pid": 63103,
+    "content_required": false,
+    "role_description": ""
+  },
+  {
+    "type": "GenericElement",
+    "traits": [
+      "Scrollable"
+    ],
+    "title": null,
+    "role_description": "",
+    "help": null,
+    "AXUniqueId": null,
+    "subrole": null,
+    "content_required": false,
+    "AXFrame": "{{96, 797}, {16, 16}}",
+    "AXValue": null,
+    "enabled": true,
+    "frame": {
+      "height": 16,
+      "width": 16,
+      "y": 797,
+      "x": 96
+    },
+    "role": "AXGenericElement",
+    "custom_actions": [],
+    "pid": 63103,
+    "AXLabel": "2026-09-26 · 0개 기록"
+  },
+  {
+    "type": "GenericElement",
+    "AXLabel": "2026-09-06 · 0개 기록",
+    "help": null,
+    "role_description": "",
+    "role": "AXGenericElement",
+    "custom_actions": [],
+    "frame": {
+      "width": 16,
+      "x": 36,
+      "height": 16,
+      "y": 817
+    },
+    "content_required": false,
+    "pid": 63103,
+    "subrole": null,
+    "AXValue": null,
+    "AXFrame": "{{36, 817}, {16, 16}}",
+    "title": null,
+    "enabled": true,
+    "traits": [
+      "Scrollable"
+    ],
+    "AXUniqueId": null
+  },
+  {
+    "help": null,
+    "role_description": "",
+    "AXLabel": "2026-09-13 · 0개 기록",
+    "content_required": false,
+    "role": "AXGenericElement",
+    "enabled": true,
+    "subrole": null,
+    "title": null,
+    "AXValue": null,
+    "type": "GenericElement",
+    "custom_actions": [],
+    "AXFrame": "{{56, 817}, {16, 16}}",
+    "traits": [
+      "Scrollable"
+    ],
+    "AXUniqueId": null,
+    "frame": {
+      "width": 16,
+      "y": 817,
+      "x": 56,
+      "height": 16
+    },
+    "pid": 63103
+  },
+  {
+    "enabled": true,
+    "title": null,
+    "subrole": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "content_required": false,
+    "pid": 63103,
+    "AXFrame": "{{76, 817}, {16, 16}}",
+    "frame": {
+      "x": 76,
+      "height": 16,
+      "y": 817,
+      "width": 16
+    },
+    "role": "AXGenericElement",
+    "custom_actions": [],
+    "AXValue": null,
+    "type": "GenericElement",
+    "help": null,
+    "role_description": "",
+    "AXUniqueId": null,
+    "AXLabel": "2026-09-20 · 0개 기록"
+  },
+  {
+    "custom_actions": [],
+    "AXFrame": "{{96, 817}, {16, 16}}",
+    "pid": 63103,
+    "help": null,
+    "frame": {
+      "x": 96,
+      "y": 817,
+      "width": 16,
+      "height": 16
+    },
+    "subrole": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "AXUniqueId": null,
+    "role_description": "",
+    "role": "AXGenericElement",
+    "type": "GenericElement",
+    "enabled": true,
+    "title": null,
+    "AXLabel": "2026-09-27 · 0개 기록",
+    "AXValue": null,
+    "content_required": false
+  },
+  {
+    "role": "AXStaticText",
+    "role_description": "text",
+    "subrole": null,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "AXUniqueId": null,
+    "frame": {
+      "y": 867,
+      "width": 90.66667175292969,
+      "height": 24,
+      "x": 45
+    },
+    "AXValue": null,
+    "type": "StaticText",
+    "title": null,
+    "enabled": true,
+    "pid": 63103,
+    "content_required": false,
+    "custom_actions": [],
+    "help": null,
+    "AXFrame": "{{45, 867}, {90.666671752929688, 24}}",
+    "AXLabel": "한 달 돌아보기"
+  },
+  {
+    "role_description": "text",
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "AXFrame": "{{45, 895}, {312, 20}}",
+    "AXLabel": "2026-09-30 · 20분",
+    "content_required": false,
+    "AXValue": null,
+    "type": "StaticText",
+    "frame": {
+      "height": 20,
+      "width": 312,
+      "x": 45,
+      "y": 895
+    },
+    "custom_actions": [],
+    "title": null,
+    "subrole": null,
+    "pid": 63103,
+    "AXUniqueId": null,
+    "help": null,
+    "enabled": true,
+    "role": "AXStaticText"
+  },
+  {
+    "role_description": "text",
+    "pid": 63103,
+    "type": "StaticText",
+    "AXUniqueId": null,
+    "subrole": null,
+    "AXLabel": "짧은 메모",
+    "AXValue": null,
+    "content_required": false,
+    "help": null,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "AXFrame": "{{45, 936}, {59.333335876464844, 24}}",
+    "role": "AXStaticText",
+    "frame": {
+      "height": 24,
+      "x": 45,
+      "y": 936,
+      "width": 59.333335876464844
+    },
+    "custom_actions": [],
+    "enabled": true,
+    "title": null
+  },
+  {
+    "title": null,
+    "role_description": "text",
+    "AXLabel": "2026-09-28 · 5분",
+    "pid": 63103,
+    "AXUniqueId": null,
+    "AXValue": null,
+    "role": "AXStaticText",
+    "content_required": false,
+    "subrole": null,
+    "custom_actions": [],
+    "type": "StaticText",
+    "help": null,
+    "enabled": true,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "frame": {
+      "width": 312,
+      "height": 20,
+      "y": 964,
+      "x": 45
+    },
+    "AXFrame": "{{45, 964}, {312, 20}}"
+  },
+  {
+    "title": null,
+    "custom_actions": [],
+    "type": "StaticText",
+    "AXUniqueId": null,
+    "enabled": true,
+    "frame": {
+      "width": 73.33333587646484,
+      "x": 45,
+      "y": 1005,
+      "height": 24
+    },
+    "role_description": "text",
+    "pid": 63103,
+    "AXValue": null,
+    "help": null,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "AXFrame": "{{45, 1005}, {73.333335876464844, 24}}",
+    "AXLabel": "조용한 오후",
+    "role": "AXStaticText",
+    "content_required": false,
+    "subrole": null
+  },
+  {
+    "AXValue": null,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "role": "AXStaticText",
+    "title": null,
+    "pid": 63103,
+    "enabled": true,
+    "help": null,
+    "role_description": "text",
+    "subrole": null,
+    "AXUniqueId": null,
+    "AXFrame": "{{45, 1033}, {312, 20}}",
+    "custom_actions": [],
+    "content_required": false,
+    "AXLabel": "2026-09-28 · 30분",
+    "type": "StaticText",
+    "frame": {
+      "y": 1033,
+      "height": 20,
+      "x": 45,
+      "width": 312
+    }
+  },
+  {
+    "custom_actions": [],
+    "subrole": null,
+    "enabled": true,
+    "role_description": "text",
+    "AXFrame": "{{45, 1074}, {59.333335876464844, 24}}",
+    "content_required": false,
+    "title": null,
+    "frame": {
+      "x": 45,
+      "y": 1074,
+      "height": 24,
+      "width": 59.333335876464844
+    },
+    "role": "AXStaticText",
+    "AXValue": null,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "AXLabel": "새로운 길",
+    "pid": 63103,
+    "help": null,
+    "AXUniqueId": null,
+    "type": "StaticText"
+  },
+  {
+    "AXLabel": "2026-09-25 · 25분",
+    "custom_actions": [],
+    "pid": 63103,
+    "content_required": false,
+    "AXFrame": "{{45, 1102}, {312, 20}}",
+    "AXValue": null,
+    "title": null,
+    "role": "AXStaticText",
+    "enabled": true,
+    "help": null,
+    "AXUniqueId": null,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "frame": {
+      "height": 20,
+      "y": 1102,
+      "x": 45,
+      "width": 312
+    },
+    "subrole": null,
+    "type": "StaticText",
+    "role_description": "text"
+  },
+  {
+    "custom_actions": [],
+    "subrole": null,
+    "type": "StaticText",
+    "pid": 63103,
+    "enabled": true,
+    "frame": {
+      "height": 24,
+      "x": 45,
+      "y": 1143,
+      "width": 59.333335876464844
+    },
+    "AXLabel": "생각 정리",
+    "help": null,
+    "AXValue": null,
+    "AXUniqueId": null,
+    "role_description": "text",
+    "role": "AXStaticText",
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "title": null,
+    "AXFrame": "{{45, 1143}, {59.333335876464844, 24}}",
+    "content_required": false
+  },
+  {
+    "content_required": false,
+    "role": "AXStaticText",
+    "enabled": true,
+    "AXFrame": "{{45, 1171}, {312, 20}}",
+    "custom_actions": [],
+    "role_description": "text",
+    "subrole": null,
+    "pid": 63103,
+    "AXValue": null,
+    "AXLabel": "2026-09-16 · 10분",
+    "title": null,
+    "help": null,
+    "AXUniqueId": null,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "frame": {
+      "y": 1171,
+      "width": 312,
+      "height": 20,
+      "x": 45
+    },
+    "type": "StaticText"
+  },
+  {
+    "AXFrame": "{{45, 1212}, {49.333335876464844, 24}}",
+    "AXValue": null,
+    "pid": 63103,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "enabled": true,
+    "type": "StaticText",
+    "AXUniqueId": null,
+    "title": null,
+    "help": null,
+    "frame": {
+      "y": 1212,
+      "x": 45,
+      "height": 24,
+      "width": 49.333335876464844
+    },
+    "role_description": "text",
+    "role": "AXStaticText",
+    "subrole": null,
+    "AXLabel": "책 한 장",
+    "content_required": false,
+    "custom_actions": []
+  },
+  {
+    "help": null,
+    "AXUniqueId": null,
+    "AXFrame": "{{45, 1240}, {312, 20}}",
+    "AXLabel": "2026-09-08 · 15분",
+    "type": "StaticText",
+    "frame": {
+      "y": 1240,
+      "height": 20,
+      "x": 45,
+      "width": 312
+    },
+    "title": null,
+    "role": "AXStaticText",
+    "AXValue": null,
+    "subrole": null,
+    "role_description": "text",
+    "content_required": false,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "pid": 63103,
+    "enabled": true,
+    "custom_actions": []
+  },
+  {
+    "AXFrame": "{{45, 1281}, {59.333335876464844, 24}}",
+    "type": "StaticText",
+    "role": "AXStaticText",
+    "AXLabel": "가을 산책",
+    "enabled": true,
+    "subrole": null,
+    "AXValue": null,
+    "content_required": false,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "custom_actions": [],
+    "title": null,
+    "role_description": "text",
+    "pid": 63103,
+    "AXUniqueId": null,
+    "help": null,
+    "frame": {
+      "y": 1281,
+      "x": 45,
+      "height": 24,
+      "width": 59.333335876464844
+    }
+  },
+  {
+    "title": null,
+    "AXFrame": "{{45, 1309}, {312, 20}}",
+    "type": "StaticText",
+    "pid": 63103,
+    "help": null,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "subrole": null,
+    "frame": {
+      "width": 312,
+      "x": 45,
+      "height": 20,
+      "y": 1309
+    },
+    "AXLabel": "2026-09-02 · 20분",
+    "role": "AXStaticText",
+    "content_required": false,
+    "enabled": true,
+    "role_description": "text",
+    "AXValue": null,
+    "custom_actions": [],
+    "AXUniqueId": null
+  },
+  {
+    "AXValue": null,
+    "subrole": null,
+    "AXLabel": null,
+    "content_required": false,
+    "role_description": "",
+    "custom_actions": [],
+    "pid": 63103,
+    "role": "AXGenericElement",
+    "AXUniqueId": null,
+    "frame": {
+      "x": 362,
+      "y": 759,
+      "width": 24,
+      "height": 24
+    },
+    "type": "GenericElement",
+    "traits": [
+      "Scrollable"
+    ],
+    "help": null,
+    "AXFrame": "{{362, 759}, {24, 24}}",
+    "title": null,
+    "enabled": true
+  },
+  {
+    "subrole": null,
+    "custom_actions": [],
+    "AXUniqueId": "mobile-menu-button",
+    "help": null,
+    "AXValue": null,
+    "type": "GenericElement",
+    "role": "AXGenericElement",
+    "content_required": false,
+    "pid": 63103,
+    "traits": [
+      "Scrollable"
+    ],
+    "enabled": true,
+    "role_description": "",
+    "frame": {
+      "y": 811.6666669845581,
+      "width": 217.6666717529297,
+      "height": 17,
+      "x": 6
+    },
+    "AXLabel": "Patterns/Dashboard/Default",
+    "title": null,
+    "AXFrame": "{{6, 811.66666698455811}, {217.66667175292969, 17}}"
+  },
+  {
+    "custom_actions": [],
+    "content_required": false,
+    "AXFrame": "{{368, 806}, {28, 28}}",
+    "help": null,
+    "AXUniqueId": "mobile-addons-button",
+    "title": null,
+    "frame": {
+      "x": 368,
+      "y": 806,
+      "height": 28,
+      "width": 28
+    },
+    "type": "Button",
+    "role": "AXButton",
+    "role_description": "button",
+    "subrole": null,
+    "AXLabel": "Open addons panel",
+    "pid": 63103,
+    "AXValue": null,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "enabled": true
+  }
+]

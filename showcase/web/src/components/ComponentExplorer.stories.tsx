@@ -1,3 +1,4 @@
+import { storyLabels } from "../../../shared/story-labels.js";
 import { useEffect, useMemo, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
@@ -27,16 +28,16 @@ type ExplorerProps = { initialCategory?: CategoryFilter };
 const catalog: readonly ComponentCatalogEntry[] = componentCatalog;
 
 const categoryLabels: Readonly<Record<ComponentCategory, string>> = {
-  foundation: "Foundations",
-  layout: "Layout",
-  action: "Actions",
-  input: "Inputs",
-  navigation: "Navigation",
-  "data-display": "Data display",
-  feedback: "Feedback",
-  overlay: "Overlays",
-  provider: "Providers",
-  utility: "Utilities",
+  foundation: "글자와 아이콘",
+  layout: "레이아웃",
+  action: "동작",
+  input: "입력",
+  navigation: "탐색",
+  "data-display": "데이터 표시",
+  feedback: "상태와 알림",
+  overlay: "오버레이",
+  provider: "제공자 설정",
+  utility: "보조 기능",
 };
 
 const categories = Object.keys(categoryLabels) as ComponentCategory[];
@@ -55,7 +56,7 @@ export function ComponentExplorer({ initialCategory = "all" }: ExplorerProps) {
     const normalizedQuery = query.trim().toLocaleLowerCase();
     return catalog.filter((entry) => {
       const referenceNames = getAntDesignReferencesFor(entry.name).map(({ name }) => name);
-      const searchable = [entry.name, entry.category, entry.platform, ...(entry.aliases ?? []), ...referenceNames]
+      const searchable = [storyLabels[entry.name] ?? entry.name, entry.name, entry.category, entry.platform, ...(entry.aliases ?? []), ...referenceNames]
         .join(" ")
         .toLocaleLowerCase();
       return (
@@ -77,57 +78,57 @@ export function ComponentExplorer({ initialCategory = "all" }: ExplorerProps) {
 
   return (
     <main className="hjm-page hjm-explorer">
-      <p className="hjm-eyebrow">Components</p>
-      <h1 className="hjm-title">Component explorer</h1>
+      <p className="hjm-eyebrow">컴포넌트</p>
+      <h1 className="hjm-title">전체 컴포넌트 탐색</h1>
       <p className="hjm-lead">
-        실제 Web reference, contract-only roadmap, Native-only 계약을 한곳에서 탐색합니다.
-        익숙한 ecosystem 이름도 검색할 수 있지만, API와 시각 언어는 HJM의 canonical contract를 따릅니다.
+        컴포넌트의 역할과 지원 환경을 비교하고 예제를 열어 보세요.
+        한글 이름과 개발용 API 이름으로 검색할 수 있습니다.
       </p>
 
       <section className="hjm-explorer-summary" aria-label="Explorer summary">
-        <span><strong>{showcaseCoverage.canonical}</strong> HJM components</span>
-        <span><strong>{showcaseCoverage.webReferences}</strong> Web references</span>
-        <span><strong>{showcaseCoverage.contractOnly}</strong> contract-only stories</span>
-        <span><strong>{showcaseCoverage.nativeOnly}</strong> Native-only stories</span>
-        <span><strong>{antDesignReferenceComponents.length}</strong> {antDesignReferenceSystem.name} references</span>
-        <span><strong>{filtered.length}</strong> visible results</span>
+        <span><strong>{showcaseCoverage.canonical}</strong> 컴포넌트</span>
+        <span><strong>{showcaseCoverage.webReferences}</strong> 웹 예제</span>
+        <span><strong>{showcaseCoverage.contractOnly}</strong> 계약만 등록</span>
+        <span><strong>{showcaseCoverage.nativeOnly}</strong> 앱 전용</span>
+        <span><strong>{antDesignReferenceComponents.length}</strong> {antDesignReferenceSystem.name} 참고 항목</span>
+        <span><strong>{filtered.length}</strong> 검색 결과</span>
       </section>
 
       <section className="hjm-explorer-tools" aria-label="Filter components">
         <label className="hjm-explorer-search">
-          <span>Search</span>
+          <span>검색</span>
           <input
             onChange={(event) => setQuery(event.currentTarget.value)}
-            placeholder="Button, Input, Listy, adaptive…"
+            placeholder="버튼, 로그인 화면, Button…"
             type="search"
             value={query}
           />
         </label>
         <label>
-          <span>Category</span>
+          <span>분류</span>
           <select onChange={(event) => setCategory(event.currentTarget.value as CategoryFilter)} value={category}>
-            <option value="all">All categories</option>
+            <option value="all">전체 분류</option>
             {categories.map((item) => <option key={item} value={item}>{categoryLabels[item]}</option>)}
           </select>
         </label>
         <label>
-          <span>Platform</span>
+          <span>지원 환경</span>
           <select onChange={(event) => setPlatform(event.currentTarget.value as PlatformFilter)} value={platform}>
-            <option value="all">All platforms</option>
-            <option value="shared">Shared</option>
-            <option value="adaptive">Adaptive</option>
-            <option value="web">Web</option>
-            <option value="native">Native</option>
+            <option value="all">전체 환경</option>
+            <option value="shared">웹·앱 공통</option>
+            <option value="adaptive">환경별 대응</option>
+            <option value="web">웹</option>
+            <option value="native">앱</option>
           </select>
         </label>
         <label>
-          <span>Status</span>
+          <span>구현 단계</span>
           <select onChange={(event) => setStatus(event.currentTarget.value as StatusFilter)} value={status}>
-            <option value="all">All statuses</option>
-            <option value="stable">Stable</option>
-            <option value="beta">Beta</option>
-            <option value="planned">Planned</option>
-            <option value="deprecated">Deprecated</option>
+            <option value="all">전체 단계</option>
+            <option value="stable">안정</option>
+            <option value="beta">시험 사용</option>
+            <option value="planned">구현 예정</option>
+            <option value="deprecated">사용 종료 예정</option>
           </select>
         </label>
       </section>
@@ -142,7 +143,7 @@ export function ComponentExplorer({ initialCategory = "all" }: ExplorerProps) {
         <section className="hjm-showcase-section" key={currentCategory} aria-labelledby={`explorer-${currentCategory}`}>
           <div className="hjm-section-heading">
             <h2 className="hjm-section-title" id={`explorer-${currentCategory}`}>{categoryLabels[currentCategory]}</h2>
-            <span className="hjm-muted">{entries.length} components</span>
+            <span className="hjm-muted">{entries.length}개 항목</span>
           </div>
           <div className="hjm-component-card-grid">
             {entries.map((entry) => {
@@ -151,17 +152,18 @@ export function ComponentExplorer({ initialCategory = "all" }: ExplorerProps) {
                 entry.name as (typeof componentCatalog)[number]["name"],
               );
               const storyLinkLabel = classification === "web-renderer"
-                ? "Open Web reference"
+                ? "웹 예제 열기"
                 : classification === "web-unsupported"
-                  ? "Open Native-only contract"
-                  : "Open contract & decision";
+                  ? "앱 전용 계약 보기"
+                  : "계약과 구현 계획 보기";
               return (
                 <article className="hjm-component-card" key={entry.name}>
                   <div className="hjm-component-card-topline">
                     <span className="hjm-component-glyph" aria-hidden="true">{entry.name.slice(0, 2)}</span>
                     <span className="hjm-pill" data-status={entry.status}>{entry.status}</span>
                   </div>
-                  <h3>{entry.name}</h3>
+                  <h3>{storyLabels[entry.name] ?? entry.name}</h3>
+                  <code>{entry.name}</code>
                   <p className="hjm-component-meta">{entry.platform} · {entry.recipe ? "visual recipe" : entry.nonVisualEvidence === "provider-adapter" ? "provider adapter" : "scope contract"}{entry.behavior ? ` · ${entry.behavior}` : ""}</p>
                   {entry.roadmap && <p className="hjm-component-roadmap" data-roadmap={entry.roadmap.state}><strong>{entry.roadmap.state}</strong>{entry.roadmap.summary}</p>}
                   {references.length > 0 && (
@@ -184,8 +186,8 @@ export function ComponentExplorer({ initialCategory = "all" }: ExplorerProps) {
   );
 }
 
-const meta = {
-  title: "Components/Overview",
+const meta = { includeStories: ["Explorer","Foundation","Layout","Actions","Inputs","Navigation","DataDisplay","Feedback","Overlays","Providers","Utilities"],
+  id: "components-overview", title: "배포/컴포넌트/개요",
   component: ComponentExplorer,
   excludeStories: ["ComponentExplorer"],
   args: { initialCategory: "all" },
@@ -195,14 +197,14 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Explorer: Story = {};
-export const Foundation: Story = { args: { initialCategory: "foundation" }, name: "Foundations" };
-export const Layout: Story = { args: { initialCategory: "layout" } };
-export const Actions: Story = { args: { initialCategory: "action" } };
-export const Inputs: Story = { args: { initialCategory: "input" } };
-export const Navigation: Story = { args: { initialCategory: "navigation" } };
-export const DataDisplay: Story = { args: { initialCategory: "data-display" }, name: "Data display" };
-export const Feedback: Story = { args: { initialCategory: "feedback" } };
-export const Overlays: Story = { args: { initialCategory: "overlay" } };
-export const Providers: Story = { args: { initialCategory: "provider" } };
-export const Utilities: Story = { args: { initialCategory: "utility" } };
+export const Explorer: Story = { name: "전체 탐색" };
+export const Foundation: Story = { args: { initialCategory: "foundation" }, name: "글자와 아이콘" };
+export const Layout: Story = { args: { initialCategory: "layout" }, name: "레이아웃" };
+export const Actions: Story = { args: { initialCategory: "action" }, name: "동작" };
+export const Inputs: Story = { args: { initialCategory: "input" }, name: "입력" };
+export const Navigation: Story = { args: { initialCategory: "navigation" }, name: "탐색" };
+export const DataDisplay: Story = { args: { initialCategory: "data-display" }, name: "데이터 표시" };
+export const Feedback: Story = { args: { initialCategory: "feedback" }, name: "상태와 알림" };
+export const Overlays: Story = { args: { initialCategory: "overlay" }, name: "오버레이" };
+export const Providers: Story = { args: { initialCategory: "provider" }, name: "제공자 설정" };
+export const Utilities: Story = { args: { initialCategory: "utility" }, name: "보조 기능" };

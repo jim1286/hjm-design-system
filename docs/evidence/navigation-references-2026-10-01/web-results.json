@@ -1,0 +1,32 @@
+[
+  {
+    "id": "capsulenavigation",
+    "state": "default",
+    "overflow": false
+  },
+  {
+    "id": "capsulenavigation",
+    "state": "dark",
+    "overflow": false
+  },
+  {
+    "id": "capsulenavigation",
+    "state": "large-text",
+    "overflow": false
+  },
+  {
+    "id": "navigationbar",
+    "state": "default",
+    "overflow": false
+  },
+  {
+    "id": "navigationbar",
+    "state": "dark",
+    "overflow": false
+  },
+  {
+    "id": "navigationbar",
+    "state": "large-text",
+    "overflow": false
+  }
+]

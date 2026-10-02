@@ -1,7 +1,7 @@
 import { type FieldAlign, type FieldShape, type FieldVariant } from "@hjmds/design-contracts/recipes/base";
 import { type SearchFieldSize } from "@hjmds/design-contracts/recipes";
 import { type PasswordFieldAutofillHint, type PasswordFieldSize } from "@hjmds/design-contracts/components/password-field";
-import { type OtpFieldSize } from "@hjmds/design-contracts/components/otp-field";
+import { type OtpFieldSize, type OtpFieldPresentation } from "@hjmds/design-contracts/components/otp-field";
 import { type HTMLAttributes, type InputHTMLAttributes, type ReactNode, type TextareaHTMLAttributes } from "react";
 type FieldCopyProps = Readonly<{
     label?: ReactNode;
@@ -195,6 +195,7 @@ export type OtpFieldProps = Omit<TextFieldProps, "autoComplete" | "defaultValue"
     onValueChange?: (value: string) => void;
     onComplete?: (value: string) => void;
     size?: OtpFieldSize;
+    presentation?: OtpFieldPresentation;
     busy?: boolean;
 }>;
 /** One accessible numeric input rendered as decorative OTP slots. */
@@ -205,6 +206,7 @@ export declare const OtpField: import("react").ForwardRefExoticComponent<Omit<Te
     onValueChange?: (value: string) => void;
     onComplete?: (value: string) => void;
     size?: OtpFieldSize;
+    presentation?: OtpFieldPresentation;
     busy?: boolean;
 }> & import("react").RefAttributes<HTMLInputElement>>;
 export {};

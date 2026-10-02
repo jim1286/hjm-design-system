@@ -24,6 +24,11 @@ Beta는 필요한 경우 선택해서 쓸 수 있으며, 기존 contract/TASKS�
 [브랜드 경계](packages/design-contracts/docs/brand-boundary.md)를 따릅니다.
 카탈로그 확장은 [동결 목록](packages/design-contracts/docs/catalog-freeze.json)으로 관리합니다.
 
+Storybook은 `배포`와 `실험` 아래에 각각 `토큰 → 컴포넌트 → 구성 → 화면`을 둡니다.
+2026-10-02 사용자 요청으로 큰 개념의 단계를 통일했습니다. 신규 항목은 실험에서 검토하고
+명시적 승인 후 배포 분류로 옮깁니다. 여기서 ‘배포’는 Storybook 분류이며 npm 게시·앱 출시와
+별개입니다. [단계별 배치와 승인 기준](docs/STORYBOOK_NAVIGATION.md)을 따릅니다.
+
 ## Why one repository
 
 Contracts와 두 renderer는 같은 API 변화에 함께 반응해야 합니다. 한 PR에서 계약, Web,
@@ -69,6 +74,8 @@ tarball을 vendoring하거나 Git ref와 package path로 고정하지 않습니�
 
 ## Development
 
+에이전트 작업은 [AGENTS.md](AGENTS.md)의 중복 검토·소유권·문서 최신화 기준을 따릅니다.
+
 ```bash
 pnpm install
 pnpm ci:check
@@ -94,6 +101,11 @@ Storybook을 한 번에 검증하는 CI의 canonical command입니다.
   `src/*.ts` 모듈이 source of truth이고, `docs/generated/*.json`은 CI와 도구를 위한
   생성 projection입니다.
 - catalog projection은 `pnpm contracts:sync`로 갱신합니다.
+- 공개 컴포넌트 전체 이름과 카탈로그의 관계는
+  [공개 API 대응표](docs/generated/public-component-map.md)에서 확인합니다.
+  2026-10-01 중복 조사에서 TextField·Table 등 목록 밖 API를 놓칠 수 있음을 확인해 추가했습니다.
+  `pnpm api-map:sync`로 source/export 대응표를 생성하고 `pnpm api-map:check`가 미분류 이름·drift를
+  검사합니다. root `check`에 이 검사를 연결한 이유는 catalog 검사만으로 companion·확장을 볼 수 없기 때문입니다.
 - renderer claim과 scenario debt projection은 전체 package build 뒤
   `pnpm evidence:sync`로 갱신합니다.
 - 앱 runtime에서는 root barrel보다 package별 granular subpath를 사용합니다.
@@ -105,3 +117,12 @@ Storybook을 한 번에 검증하는 CI의 canonical command입니다.
 기여, 보안 제보, 라이선스와 외부 디자인 시스템 비교 근거는 각각
 [`CONTRIBUTING.md`](CONTRIBUTING.md), [`SECURITY.md`](SECURITY.md), [`LICENSE`](LICENSE),
 [`library-gap-analysis.md`](packages/design-contracts/docs/library-gap-analysis.md)에서 확인할 수 있습니다.
+
+## 공통 작업 상태와 복구
+
+일반 저장·낙관적 변경·역연산은 선택적
+[`action-session` 계약](packages/design-contracts/docs/action-session.md)으로 기존 Button·입력·알림과
+합성할 수 있습니다. 기존 AlertDialog 및 앱의 mutation 계층과 중복 소유하지 않습니다.
+Web/Native 예제는 `실험/구성/공통 동작`에서 먼저 검토합니다. 게시·소비 앱 적용과는 별개입니다.
+
+제품 개발 시 [상호작용 적용·품질 기준](docs/INTERACTION_QUALITY.md)에서 구현된 예제, 상태 연결, 반응·프레임·복구 검증을 확인합니다.

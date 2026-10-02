@@ -14,7 +14,11 @@ import { semanticColors } from "./semantic-colors.js";
 export type StepStatus = "pending" | "current" | "complete" | "error";
 
 /** Only the cursor step can be "current" or "error"; every other step is derived. */
-export type StepCursorStatus = Extract<StepStatus, "current" | "error">;
+// "complete" lets the cursor say the flow is finished. Without it the last step
+// always read as "current", so a finished order looked unfinished and products
+// swapped Steps for Result (2026-10-02 STEA composition). A per-item status array
+// was rejected for the reason documented on StepsDescriptor.
+export type StepCursorStatus = Extract<StepStatus, "current" | "error" | "complete">;
 
 export type StepItemDescriptor<Id extends string = string> = Readonly<{
   id: Id;
@@ -119,7 +123,8 @@ export function validateStepsDescriptor<Id extends string>(
   if (
     descriptor.currentStepStatus !== undefined &&
     descriptor.currentStepStatus !== "current" &&
-    descriptor.currentStepStatus !== "error"
+    descriptor.currentStepStatus !== "error" &&
+    descriptor.currentStepStatus !== "complete"
   ) {
     throw new TypeError(
       `Unsupported Steps currentStepStatus: ${String(descriptor.currentStepStatus)}`,

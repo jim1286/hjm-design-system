@@ -86,9 +86,9 @@ export function DataTablePreview() {
   );
 }
 
-const meta = { title: "Patterns/CommandPalette", component: CommandPalettePreview } satisfies Meta<typeof CommandPalettePreview>;
+const meta = { includeStories: ["QuickActions","RecordTable","LargeText"], id: "patterns-commandpalette", title: "배포/컴포넌트/탐색/명령 검색", component: CommandPalettePreview } satisfies Meta<typeof CommandPalettePreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
-export const QuickActions: Story = {};
-export const RecordTable: Story = { render: () => <DataTablePreview /> };
-export const LargeText: Story = { globals: { textScale: "2" } };
+export const QuickActions: Story = { name: "빠른 실행",};
+export const RecordTable: Story = { name: "기록 표", render: () => <DataTablePreview /> };
+export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };

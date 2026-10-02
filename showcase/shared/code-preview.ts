@@ -1,0 +1,1 @@
+export const codePreview={label:'테마 설정 코드',language:'TypeScript',code:'const theme = {\n  appearance: "light",\n  spacing: 16,\n};\n',tokens:[{text:'const',tone:'keyword' as const},{text:' theme = {\n  appearance: '},{text:'"light"',tone:'string' as const},{text:',\n  spacing: '},{text:'16',tone:'number' as const},{text:',\n};\n'}]};

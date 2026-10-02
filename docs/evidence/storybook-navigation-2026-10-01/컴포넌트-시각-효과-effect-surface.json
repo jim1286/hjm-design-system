@@ -1,0 +1,539 @@
+[
+  {
+    "subrole": null,
+    "help": null,
+    "AXValue": null,
+    "AXFrame": "{{0, 0}, {402, 874}}",
+    "content_required": false,
+    "AXUniqueId": null,
+    "enabled": true,
+    "custom_actions": [],
+    "role_description": "application",
+    "frame": {
+      "x": 0,
+      "y": 0,
+      "height": 874,
+      "width": 402
+    },
+    "AXLabel": "HJM Native Showcase",
+    "pid": 89686,
+    "title": null,
+    "type": "Application",
+    "role": "AXApplication",
+    "traits": [
+      "None"
+    ]
+  },
+  {
+    "enabled": true,
+    "AXLabel": "하나의 얼굴, 여러 가지 표정.",
+    "role": "AXStaticText",
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "help": null,
+    "subrole": null,
+    "AXFrame": "{{40, 102}, {322, 32}}",
+    "AXUniqueId": null,
+    "content_required": false,
+    "role_description": "text",
+    "pid": 89686,
+    "type": "StaticText",
+    "frame": {
+      "height": 32,
+      "x": 40,
+      "y": 102,
+      "width": 322
+    },
+    "AXValue": null,
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "AXFrame": "{{40, 158}, {64, 64}}",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "role": "AXImage",
+    "content_required": false,
+    "AXLabel": "클로버",
+    "title": null,
+    "frame": {
+      "width": 64,
+      "height": 64,
+      "x": 40,
+      "y": 158
+    },
+    "custom_actions": [],
+    "pid": 89686,
+    "traits": [
+      "Scrollable",
+      "Image"
+    ],
+    "help": null,
+    "type": "Image",
+    "role_description": "image",
+    "enabled": true,
+    "subrole": null
+  },
+  {
+    "traits": [
+      "Scrollable",
+      "Image"
+    ],
+    "role_description": "image",
+    "AXValue": null,
+    "subrole": null,
+    "role": "AXImage",
+    "pid": 89686,
+    "AXUniqueId": null,
+    "help": null,
+    "enabled": true,
+    "custom_actions": [],
+    "AXLabel": "클로버 웃는 표정",
+    "type": "Image",
+    "title": null,
+    "AXFrame": "{{120, 158}, {64, 64}}",
+    "content_required": false,
+    "frame": {
+      "x": 120,
+      "y": 158,
+      "width": 64,
+      "height": 64
+    }
+  },
+  {
+    "content_required": false,
+    "AXFrame": "{{200, 158}, {36.333328247070312, 64}}",
+    "pid": 89686,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "enabled": true,
+    "AXValue": null,
+    "AXLabel": "클로버",
+    "custom_actions": [],
+    "title": null,
+    "help": null,
+    "role": "AXStaticText",
+    "subrole": null,
+    "AXUniqueId": null,
+    "type": "StaticText",
+    "role_description": "text",
+    "frame": {
+      "x": 200,
+      "width": 36.33332824707031,
+      "height": 64,
+      "y": 158
+    }
+  },
+  {
+    "title": null,
+    "AXFrame": "{{40, 694}, {322, 238}}",
+    "traits": [
+      "Scrollable"
+    ],
+    "help": null,
+    "role": "AXImage",
+    "role_description": "image",
+    "type": "Image",
+    "custom_actions": [],
+    "AXLabel": null,
+    "subrole": null,
+    "enabled": true,
+    "content_required": false,
+    "pid": 89686,
+    "AXValue": null,
+    "AXUniqueId": null,
+    "frame": {
+      "height": 238,
+      "x": 40,
+      "width": 322,
+      "y": 694
+    }
+  },
+  {
+    "frame": {
+      "height": 18,
+      "y": 726,
+      "x": 72,
+      "width": 258
+    },
+    "enabled": true,
+    "role": "AXStaticText",
+    "AXValue": null,
+    "help": null,
+    "AXFrame": "{{72, 726}, {258, 18}}",
+    "AXLabel": "grain",
+    "role_description": "text",
+    "content_required": false,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "pid": 89686,
+    "type": "StaticText",
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "subrole": null,
+    "title": null
+  },
+  {
+    "AXFrame": "{{72, 764}, {258, 32}}",
+    "AXValue": null,
+    "role": "AXStaticText",
+    "AXLabel": "작은 시작, 새로운 장면.",
+    "custom_actions": [],
+    "content_required": false,
+    "subrole": null,
+    "AXUniqueId": null,
+    "title": null,
+    "type": "StaticText",
+    "enabled": true,
+    "pid": 89686,
+    "frame": {
+      "y": 764,
+      "x": 72,
+      "width": 258,
+      "height": 32
+    },
+    "help": null,
+    "role_description": "text",
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ]
+  },
+  {
+    "subrole": null,
+    "enabled": true,
+    "role_description": "text",
+    "pid": 89686,
+    "AXValue": null,
+    "type": "StaticText",
+    "custom_actions": [],
+    "content_required": false,
+    "AXFrame": "{{72, 816}, {258, 20}}",
+    "role": "AXStaticText",
+    "AXUniqueId": null,
+    "title": null,
+    "AXLabel": "빛과 질감은 배경에, 중요한 이야기는 선명하게.",
+    "help": null,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "frame": {
+      "width": 258,
+      "height": 20,
+      "x": 72,
+      "y": 816
+    }
+  },
+  {
+    "frame": {
+      "x": 72,
+      "width": 258,
+      "y": 856,
+      "height": 44
+    },
+    "role": "AXButton",
+    "AXUniqueId": null,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "pid": 89686,
+    "help": null,
+    "role_description": "button",
+    "title": null,
+    "enabled": true,
+    "AXFrame": "{{72, 856}, {258, 44}}",
+    "custom_actions": [],
+    "AXValue": null,
+    "AXLabel": "이야기 시작하기",
+    "type": "Button",
+    "subrole": null,
+    "content_required": false
+  },
+  {
+    "pid": 89686,
+    "content_required": false,
+    "title": null,
+    "AXFrame": "{{27.119993090629578, 160.47999489307404}, {347.76001381874084, 257.04001021385193}}",
+    "frame": {
+      "y": 160.47999489307404,
+      "x": 27.119993090629578,
+      "height": 257.04001021385193,
+      "width": 347.76001381874084
+    },
+    "role": "AXImage",
+    "enabled": true,
+    "type": "Image",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "role_description": "image",
+    "help": null,
+    "subrole": null,
+    "custom_actions": [],
+    "AXLabel": null
+  },
+  {
+    "AXValue": null,
+    "type": "StaticText",
+    "custom_actions": [],
+    "content_required": false,
+    "frame": {
+      "width": 258,
+      "x": 72,
+      "y": 240,
+      "height": 32
+    },
+    "title": null,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "enabled": true,
+    "role_description": "text",
+    "subrole": null,
+    "help": null,
+    "pid": 89686,
+    "AXFrame": "{{72, 240}, {258, 32}}",
+    "AXLabel": "피치",
+    "role": "AXStaticText",
+    "AXUniqueId": null
+  },
+  {
+    "AXValue": null,
+    "enabled": true,
+    "help": null,
+    "AXFrame": "{{27.119993090629578, 422.47999489307404}, {347.76001381874084, 257.04001021385193}}",
+    "frame": {
+      "width": 347.76001381874084,
+      "y": 422.47999489307404,
+      "height": 257.04001021385193,
+      "x": 27.119993090629578
+    },
+    "subrole": null,
+    "content_required": false,
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "role_description": "image",
+    "AXLabel": null,
+    "pid": 89686,
+    "role": "AXImage",
+    "title": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "type": "Image"
+  },
+  {
+    "role": "AXImage",
+    "AXValue": null,
+    "subrole": null,
+    "AXFrame": "{{27.119993090629578, 684.47999489307404}, {347.76001381874084, 257.04001021385193}}",
+    "custom_actions": [],
+    "role_description": "image",
+    "pid": 89686,
+    "traits": [
+      "Scrollable"
+    ],
+    "content_required": false,
+    "type": "Image",
+    "help": null,
+    "AXUniqueId": null,
+    "title": null,
+    "frame": {
+      "x": 27.119993090629578,
+      "y": 684.479994893074,
+      "width": 347.76001381874084,
+      "height": 257.04001021385193
+    },
+    "AXLabel": null,
+    "enabled": true
+  },
+  {
+    "help": null,
+    "AXFrame": "{{72, 292}, {258, 20}}",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "AXLabel": "구름",
+    "enabled": true,
+    "role_description": "text",
+    "type": "StaticText",
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "title": null,
+    "frame": {
+      "y": 292,
+      "x": 72,
+      "width": 258,
+      "height": 20
+    },
+    "custom_actions": [],
+    "content_required": false,
+    "role": "AXStaticText",
+    "subrole": null,
+    "pid": 89686
+  },
+  {
+    "enabled": true,
+    "title": null,
+    "role": "AXImage",
+    "role_description": "image",
+    "AXFrame": "{{27.119993090629578, 946.47999489307404}, {347.76001381874084, 257.04001021385193}}",
+    "subrole": null,
+    "help": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "AXLabel": null,
+    "AXValue": null,
+    "pid": 89686,
+    "AXUniqueId": null,
+    "type": "Image",
+    "custom_actions": [],
+    "frame": {
+      "x": 27.119993090629578,
+      "y": 946.479994893074,
+      "width": 347.76001381874084,
+      "height": 257.04001021385193
+    },
+    "content_required": false
+  },
+  {
+    "help": null,
+    "frame": {
+      "height": 28,
+      "x": 14,
+      "y": 2259,
+      "width": 374
+    },
+    "role_description": "image",
+    "enabled": true,
+    "subrole": null,
+    "content_required": false,
+    "type": "Image",
+    "AXUniqueId": null,
+    "AXLabel": "Content Transition",
+    "traits": [
+      "Scrollable"
+    ],
+    "AXValue": null,
+    "title": null,
+    "pid": 89686,
+    "AXFrame": "{{14, 2259}, {374, 28}}",
+    "role": "AXImage",
+    "custom_actions": []
+  },
+  {
+    "role": "AXStaticText",
+    "AXLabel": "파도",
+    "AXFrame": "{{156.66666412353516, 344}, {88.666656494140625, 20}}",
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "pid": 89686,
+    "role_description": "text",
+    "frame": {
+      "width": 88.66665649414062,
+      "y": 344,
+      "height": 20,
+      "x": 156.66666412353516
+    },
+    "type": "StaticText",
+    "content_required": false,
+    "custom_actions": [],
+    "subrole": null,
+    "help": null,
+    "title": null,
+    "enabled": true,
+    "AXValue": null,
+    "AXUniqueId": null
+  },
+  {
+    "role": "AXGenericElement",
+    "enabled": true,
+    "content_required": false,
+    "frame": {
+      "y": 759,
+      "width": 24,
+      "height": 24,
+      "x": 362
+    },
+    "pid": 89686,
+    "subrole": null,
+    "AXValue": null,
+    "title": null,
+    "AXLabel": null,
+    "type": "GenericElement",
+    "custom_actions": [],
+    "traits": [
+      "Scrollable"
+    ],
+    "AXUniqueId": null,
+    "help": null,
+    "role_description": "",
+    "AXFrame": "{{362, 759}, {24, 24}}"
+  },
+  {
+    "type": "GenericElement",
+    "frame": {
+      "width": 290,
+      "height": 17,
+      "y": 811.6666669845581,
+      "x": 6
+    },
+    "role_description": "",
+    "role": "AXGenericElement",
+    "AXFrame": "{{6, 811.66666698455811}, {290, 17}}",
+    "custom_actions": [],
+    "subrole": null,
+    "AXValue": null,
+    "AXLabel": "컴포넌트/시각 효과/Effect Surface/Default",
+    "content_required": false,
+    "help": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "title": null,
+    "AXUniqueId": "mobile-menu-button",
+    "enabled": true,
+    "pid": 89686
+  },
+  {
+    "AXLabel": null,
+    "subrole": null,
+    "enabled": true,
+    "frame": {
+      "height": 28,
+      "y": 806,
+      "width": 28,
+      "x": 368
+    },
+    "role": "AXButton",
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "title": null,
+    "help": null,
+    "AXValue": null,
+    "AXFrame": "{{368, 806}, {28, 28}}",
+    "role_description": "button",
+    "custom_actions": [],
+    "content_required": false,
+    "pid": 89686,
+    "AXUniqueId": "mobile-addons-button",
+    "type": "Button"
+  }
+]

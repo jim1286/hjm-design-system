@@ -153,10 +153,10 @@ export function CascaderPreview() {
   );
 }
 
-const meta = { title: "Patterns/Tree", component: TreePreview } satisfies Meta<typeof TreePreview>;
+const meta = { includeStories: ["Folders","TreeSelectComposition","CascaderComposition","LargeText"], id: "patterns-tree", title: "배포/컴포넌트/데이터 표시/트리 목록", component: TreePreview } satisfies Meta<typeof TreePreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
-export const Folders: Story = {};
-export const TreeSelectComposition: Story = { render: () => <TreeSelectPreview /> };
-export const CascaderComposition: Story = { render: () => <CascaderPreview /> };
-export const LargeText: Story = { globals: { textScale: "2" } };
+export const Folders: Story = { name: "폴더",};
+export const TreeSelectComposition: Story = { name: "트리 선택 조합", render: () => <TreeSelectPreview /> };
+export const CascaderComposition: Story = { name: "단계별 선택 조합", render: () => <CascaderPreview /> };
+export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };

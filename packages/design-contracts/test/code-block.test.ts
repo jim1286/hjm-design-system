@@ -1,0 +1,2 @@
+import{expect,it}from'vitest';import{resolveCodeBlock}from'../src/code-block.js';
+it('preserves exact code including whitespace and rejects misleading highlights',()=>{const code='<script>\n  literal & text\n</script>';expect(resolveCodeBlock({code,label:'Source'}).tokens.map(t=>t.text).join('')).toBe(code);expect(()=>resolveCodeBlock({code,label:'Source',tokens:[{text:'different'}]})).toThrow();expect(()=>resolveCodeBlock({code,label:''})).toThrow();});

@@ -216,9 +216,6 @@ describe("component reference coverage", () => {
       fullyMature: 70,
       partiallyMature: 0,
       plannedOnly: 0,
-      fullyPreviewable: 70,
-      partiallyPreviewable: 0,
-      contractOnly: 0,
     });
     expect(
       summary.fullyMature + summary.partiallyMature + summary.plannedOnly,
@@ -226,8 +223,8 @@ describe("component reference coverage", () => {
     // SidePanel was the last partially mature target; decomposed Drawer now has
     // both halves shipped. Keep the axis reported rather than asserting it is
     // non-empty, so a future partial entry still has to state its own number.
-    expect(summary.partiallyPreviewable).toBe(summary.partiallyMature);
-    expect(summary.contractOnly).toBe(0);
+    expect(summary).not.toHaveProperty("partiallyPreviewable");
+    expect(summary).not.toHaveProperty("contractOnly");
 
     const coverageDocument = await readFile(
       new URL("../docs/ant-design-coverage.md", import.meta.url),

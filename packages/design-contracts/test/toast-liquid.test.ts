@@ -9,8 +9,8 @@ describe("Liquid presentation contract", () => {
     const store = createToastStore();
     store.publish(toast("a")); store.pause("a", "presentation"); store.pauseAll("occlusion");
     store.advanceTime(2000); store.resume("a", "presentation"); store.advanceTime(2000);
-    expect(store.getSnapshot().visible[0]?.timer.remainingMs).toBe(5000);
-    store.resumeAll("occlusion"); store.advanceTime(3000); store.publish({ ...toast("a"), description: "완료" });
+    expect(store.getSnapshot().visible[0]?.timer.remainingMs).toBe(3000);
+    store.resumeAll("occlusion"); store.advanceTime(1000); store.publish({ ...toast("a"), description: "완료" });
     expect(store.getSnapshot().visible[0]?.timer.remainingMs).toBe(2000);
     expect(store.getSnapshot().visible[0]?.descriptor.presentation).toBe("liquid");
     const dismissed = vi.fn(); store.publish({ ...toast("b"), onDismiss: dismissed });
@@ -22,10 +22,11 @@ describe("Liquid presentation contract", () => {
   it("uses explicit window frames and a capsule for stale measurements", () => {
     const input = { width: 358, height: 112, availableHeight: 650, anchor: { kind: "island", frame: { x: 132, y: 12, width: 126, height: 37.33 } } as const };
     const island = resolveLiquidToastLayout({ ...input, windowOrigin: { x: 16, y: 67 } });
-    expect(island.anchorY).toBe(-55); expect(island.cardTop).toBeCloseTo(16.33);
+    expect(island.anchorY).toBe(-55); expect(island.cardTop).toBeCloseTo(8.33);
     const capsule = resolveLiquidToastLayout(input);
-    expect(capsule.anchorWidth).toBe(88); expect(capsule.cardTop).toBe(58);
-    expect(resolveLiquidToastLayout({ ...input, windowOrigin: { x: 200, y: 0 } }).anchorWidth).toBe(88);
+    expect(capsule.anchorHeight).toBe(capsule.anchorWidth);
+    expect(capsule.anchorWidth).toBe(32); expect(capsule.cardTop).toBe(58);
+    expect(resolveLiquidToastLayout({ ...input, windowOrigin: { x: 200, y: 0 } }).anchorWidth).toBe(32);
     expect(resolveLiquidToastLayout({ ...input, height: 650 }).fits).toBe(false);
     expect(() => validateLiquidToastAnchor({ kind: "island", frame: { x: 0, y: 0, width: NaN, height: 10 } })).toThrow();
     expect(() => validateLiquidToastAnchor({ kind: "island", frame: {} } as never)).toThrow();
@@ -40,7 +41,7 @@ describe("Liquid presentation contract", () => {
       expect(g.width).toBeLessThanOrEqual(288);
     }
     const final = buildLiquidToastGeometry(1, 1, layout);
-    expect(final).toMatchObject({ width: 288, height: 170, y: 58, neckWidth: 0, offsetY: 0 });
+    expect(final).toMatchObject({ width: 288, height: 170, y: 58, radius: 12, neckWidth: 0, offsetY: 0 });
     expect(buildLiquidToastGeometry(0.4, 0, layout).neckWidth).toBeGreaterThan(0);
   });
 });

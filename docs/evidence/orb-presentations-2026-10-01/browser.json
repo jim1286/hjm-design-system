@@ -1,0 +1,27 @@
+[
+  {
+    "state": "default",
+    "canvases": 1,
+    "label": "검색 중"
+  },
+  {
+    "state": "dark",
+    "canvases": 1,
+    "label": "검색 중"
+  },
+  {
+    "state": "large-text",
+    "canvases": 1,
+    "label": "검색 중"
+  },
+  {
+    "state": "fluid",
+    "canvases": 1,
+    "label": "검색 중"
+  },
+  {
+    "state": "matrix",
+    "canvases": 1,
+    "label": "검색 중"
+  }
+]

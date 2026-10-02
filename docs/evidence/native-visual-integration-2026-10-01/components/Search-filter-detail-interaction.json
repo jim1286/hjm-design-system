@@ -1,0 +1,132 @@
+[
+  {
+    "content_required": false,
+    "AXFrame": "{{0, 0}, {402, 874}}",
+    "pid": 63103,
+    "traits": [
+      "None"
+    ],
+    "enabled": true,
+    "AXValue": null,
+    "AXLabel": "HJM Native Showcase",
+    "custom_actions": [],
+    "title": null,
+    "help": null,
+    "role": "AXApplication",
+    "subrole": null,
+    "AXUniqueId": null,
+    "type": "Application",
+    "role_description": "application",
+    "frame": {
+      "x": 0,
+      "width": 402,
+      "height": 874,
+      "y": 0
+    }
+  },
+  {
+    "traits": [
+      "Button",
+      "Scrollable"
+    ],
+    "role_description": "",
+    "AXValue": null,
+    "subrole": null,
+    "role": "AXGenericElement",
+    "pid": 63103,
+    "AXUniqueId": null,
+    "help": null,
+    "enabled": true,
+    "custom_actions": [],
+    "AXLabel": "닫기",
+    "type": "GenericElement",
+    "title": null,
+    "AXFrame": "{{337, 663}, {44, 44}}",
+    "content_required": false,
+    "frame": {
+      "height": 44,
+      "y": 663,
+      "width": 44,
+      "x": 337
+    }
+  },
+  {
+    "AXFrame": "{{21, 672}, {304, 26}}",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "role": "AXHeading",
+    "content_required": false,
+    "AXLabel": "비 오는 날의 산책",
+    "title": null,
+    "frame": {
+      "width": 304,
+      "x": 21,
+      "y": 672,
+      "height": 26
+    },
+    "custom_actions": [],
+    "pid": 63103,
+    "traits": [
+      "StaticText",
+      "Header",
+      "Scrollable"
+    ],
+    "help": null,
+    "type": "Heading",
+    "role_description": "heading",
+    "enabled": true,
+    "subrole": null
+  },
+  {
+    "enabled": true,
+    "AXLabel": "비가 그친 뒤 골목을 걸었어요. 다음에는 카메라를 가져가고 싶어요.",
+    "role": "AXStaticText",
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "help": null,
+    "subrole": null,
+    "AXFrame": "{{21, 723}, {360, 40}}",
+    "AXUniqueId": null,
+    "content_required": false,
+    "role_description": "text",
+    "pid": 63103,
+    "type": "StaticText",
+    "frame": {
+      "x": 21,
+      "y": 723,
+      "height": 40,
+      "width": 360
+    },
+    "AXValue": null,
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "subrole": null,
+    "help": null,
+    "AXValue": null,
+    "AXFrame": "{{21, 783}, {360, 44}}",
+    "content_required": false,
+    "AXUniqueId": null,
+    "enabled": true,
+    "custom_actions": [],
+    "role_description": "",
+    "frame": {
+      "height": 44,
+      "x": 21,
+      "width": 360,
+      "y": 783
+    },
+    "AXLabel": "닫기",
+    "pid": 63103,
+    "title": null,
+    "type": "GenericElement",
+    "role": "AXGenericElement",
+    "traits": [
+      "Button",
+      "Scrollable"
+    ]
+  }
+]

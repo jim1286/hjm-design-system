@@ -1,5 +1,12 @@
 # @hjmds/react
 
+Login screens use `AuthScreenLayout` from `@hjmds/react/auth-screen`. Set `mainCard` and supply
+provider buttons with name-only labels in `main`. During authentication, pass a localized
+`pendingLabel`: the actions become hidden and inert, their layout preserves the card dimensions,
+and one loader appears at its centre. Remove the prop on cancellation or failure to restore them.
+Keep the same `main` content mounted and avoid setting each button's `busy` at the same time.
+See the [login layout contract](../design-contracts/docs/auth-screen.md) for migration.
+
 React 19 renderer for `@hjmds/design-contracts`. Components render native HTML,
 keep controlled and uncontrolled state explicit, and expose stable `data-state`
 and `data-*` recipe axes for styling and tests.
@@ -165,3 +172,10 @@ action alongside the accessible code.
 ## Optional interaction adapters
 
 Stable `sortable`, `swipe-actions`, `content-transition`, `carousel-motion` and `celebration` entries are available through explicit subpath imports. See [installation, localized labels and behavior contracts](../../docs/interaction-adapters.md), including pinned peers and native verification limits. These adapters are not root exports.
+
+### Reference-inspired navigation
+
+`@hjmds/react/navigation-bar` exports [NavigationBar](../design-contracts/docs/navigation-bar.md),
+a brand/navigation/actions composition with a progressive glass surface.
+Existing [BottomNavigation](../design-contracts/docs/bottom-navigation.md) accepts
+`configuration={{ presentation: "capsule" }}` with an adjacent `primaryAction`.

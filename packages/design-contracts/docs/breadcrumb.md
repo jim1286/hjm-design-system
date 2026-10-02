@@ -74,7 +74,7 @@ Web에서는:
 경로도 유지합니다. 필수 props는 `label`, `items`이고 `ref`는 nav 요소를 가리킵니다.
 
 2026-09-16 사용자의 React/RN 라이브러리 확장 요청으로, 제품 채택 대기와 라이브러리 beta
-제공을 분리했습니다. `Patterns/WebNavigation`은 조상 링크로 보관함을 열고 다시 기록 목록으로
+제공을 분리했습니다. `갤러리/웹 탐색`은 조상 링크로 보관함을 열고 다시 기록 목록으로
 돌아오는 작동 예제입니다. 제품 채택이나 stable 증거로 계산하지 않습니다.
 
 [WAI Breadcrumb](https://www.w3.org/WAI/ARIA/apg/patterns/breadcrumb/)의 landmark·조상 링크·

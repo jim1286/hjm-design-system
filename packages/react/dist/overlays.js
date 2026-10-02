@@ -1,4 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
+import { resolveMenuTypeahead } from "./menu-typeahead.js";
 import { createAlertDialogSession, getAlertDialogInitialFocus, validateAlertDialogRequest, } from "@hjmds/design-contracts/components/alert-dialog";
 import { createSheetLifecycle, resolveNextSheetDetent, sheetBehaviorDefaults, } from "@hjmds/design-contracts/components/sheet";
 import { resolveTooltipDescriptor, tooltipBehaviorDefaults, } from "@hjmds/design-contracts/components/tooltip";
@@ -605,7 +606,6 @@ export const Menu = forwardRef(function Menu(props, ref) {
     const activateItem = (item, index) => {
         if (itemIsDisabled(item))
             return;
-        item.onSelect?.();
         onAction?.(item.id);
         if (selectionMode === "multiple") {
             const next = new Set(multipleValue);
@@ -623,23 +623,10 @@ export const Menu = forwardRef(function Menu(props, ref) {
         close("selection", true);
     };
     const runTypeahead = (key) => {
-        const currentTime = Date.now();
-        const previous = currentTime - typeaheadRef.current.time < 500
-            ? typeaheadRef.current.value
-            : "";
-        const combined = `${previous}${key}`.toLocaleLowerCase();
-        const search = new Set(combined).size === 1 ? key.toLocaleLowerCase() : combined;
-        typeaheadRef.current = { value: combined, time: currentTime };
-        for (let offset = 1; offset <= items.length; offset += 1) {
-            const index = (focusIndex + offset + items.length) % items.length;
-            const item = items[index];
-            if (item &&
-                !itemIsDisabled(item) &&
-                menuTextValue(item).toLocaleLowerCase().startsWith(search)) {
-                focusAt(index);
-                return;
-            }
-        }
+        const result = resolveMenuTypeahead(items.map((item) => ({ textValue: menuTextValue(item), disabled: itemIsDisabled(item) })), focusIndex, key, typeaheadRef.current, Date.now());
+        typeaheadRef.current = result.state;
+        if (result.index !== undefined)
+            focusAt(result.index);
     };
     useEffect(() => {
         if (!open)

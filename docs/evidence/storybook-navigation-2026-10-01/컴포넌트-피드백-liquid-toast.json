@@ -1,0 +1,181 @@
+[
+  {
+    "subrole": null,
+    "help": null,
+    "AXValue": null,
+    "AXFrame": "{{0, 0}, {402, 874}}",
+    "content_required": false,
+    "AXUniqueId": null,
+    "enabled": true,
+    "custom_actions": [],
+    "role_description": "application",
+    "frame": {
+      "x": 0,
+      "y": 0,
+      "width": 402,
+      "height": 874
+    },
+    "AXLabel": "HJM Native Showcase",
+    "pid": 89686,
+    "title": null,
+    "type": "Application",
+    "role": "AXApplication",
+    "traits": [
+      "None"
+    ]
+  },
+  {
+    "enabled": true,
+    "AXLabel": "물방울 알림",
+    "role": "AXStaticText",
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "help": null,
+    "subrole": null,
+    "AXFrame": "{{16, 258}, {370, 20}}",
+    "AXUniqueId": null,
+    "content_required": false,
+    "role_description": "text",
+    "pid": 89686,
+    "type": "StaticText",
+    "frame": {
+      "y": 258,
+      "x": 16,
+      "width": 370,
+      "height": 20
+    },
+    "AXValue": null,
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "AXFrame": "{{16, 294}, {370, 20}}",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "role": "AXStaticText",
+    "content_required": false,
+    "AXLabel": "물방울 애니메이션과 알림 표면을 확인하는 예제입니다.",
+    "title": null,
+    "frame": {
+      "x": 16,
+      "y": 294,
+      "width": 370,
+      "height": 20
+    },
+    "custom_actions": [],
+    "pid": 89686,
+    "traits": [
+      "StaticText",
+      "Scrollable"
+    ],
+    "help": null,
+    "type": "StaticText",
+    "role_description": "text",
+    "enabled": true,
+    "subrole": null
+  },
+  {
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "role_description": "image",
+    "AXValue": null,
+    "subrole": null,
+    "role": "AXImage",
+    "pid": 89686,
+    "AXUniqueId": null,
+    "help": null,
+    "enabled": true,
+    "custom_actions": [],
+    "AXLabel": "알림 띄우기",
+    "type": "Image",
+    "title": null,
+    "AXFrame": "{{16, 330}, {370, 44}}",
+    "content_required": false,
+    "frame": {
+      "height": 44,
+      "x": 16,
+      "y": 330,
+      "width": 370
+    }
+  },
+  {
+    "content_required": false,
+    "AXFrame": "{{362, 759}, {24, 24}}",
+    "pid": 89686,
+    "traits": [
+      "Scrollable"
+    ],
+    "enabled": true,
+    "AXValue": null,
+    "AXLabel": null,
+    "custom_actions": [],
+    "title": null,
+    "help": null,
+    "role": "AXGenericElement",
+    "subrole": null,
+    "AXUniqueId": null,
+    "type": "GenericElement",
+    "role_description": "",
+    "frame": {
+      "width": 24,
+      "y": 759,
+      "height": 24,
+      "x": 362
+    }
+  },
+  {
+    "title": null,
+    "AXFrame": "{{6, 811.66666698455811}, {260, 17}}",
+    "traits": [
+      "Scrollable"
+    ],
+    "help": null,
+    "role": "AXGenericElement",
+    "role_description": "",
+    "type": "GenericElement",
+    "custom_actions": [],
+    "AXLabel": "컴포넌트/피드백/Liquid Toast/Default",
+    "subrole": null,
+    "enabled": true,
+    "content_required": false,
+    "pid": 89686,
+    "AXValue": null,
+    "AXUniqueId": "mobile-menu-button",
+    "frame": {
+      "y": 811.6666669845581,
+      "width": 260,
+      "height": 17,
+      "x": 6
+    }
+  },
+  {
+    "frame": {
+      "width": 28,
+      "height": 28,
+      "y": 806,
+      "x": 368
+    },
+    "enabled": true,
+    "role": "AXButton",
+    "AXValue": null,
+    "help": null,
+    "AXFrame": "{{368, 806}, {28, 28}}",
+    "AXLabel": null,
+    "role_description": "button",
+    "content_required": false,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "pid": 89686,
+    "type": "Button",
+    "custom_actions": [],
+    "AXUniqueId": "mobile-addons-button",
+    "subrole": null,
+    "title": null
+  }
+]

@@ -4,15 +4,14 @@ import { AccessibilityInfo, PanResponder, View } from "react-native";
 import { Canvas, Group, Paint, Blur, ColorMatrix, RoundedRect, Shadow } from "@shopify/react-native-skia";
 import Animated, { cancelAnimation, interpolateColor, useAnimatedStyle, useDerivedValue, useSharedValue, withDelay, withSpring } from "react-native-reanimated";
 import { scheduleOnRN } from "react-native-worklets";
+import { shadow, stroke } from "@hjmds/design-contracts/foundations";
 import { withAlpha } from "@hjmds/design-contracts/colors";
-import { resolveColorReference } from "@hjmds/design-contracts/color-references";
-import { toastRecipe } from "@hjmds/design-contracts/recipes";
 import { buildLiquidToastGeometry, liquidToastRecipe as recipe, resolveLiquidToastLayout, validateLiquidToastAnchor } from "@hjmds/design-contracts/components/toast";
 import { useHjmNativeTheme } from "./provider.js";
-const cardShadow = toastRecipe.surface.shadow;
-// Skia Shadow takes one color, so the token opacity must be folded into it. Passing `color` alone drew an opaque black
-// halo (2026-09-30 iPhone 17 · iOS 27 capture: a dark rectangular band behind the card). Skia `blur` is a sigma while
-// RN shadowRadius is roughly two sigmas, so halve it to match the standard Toast.
+// 2026-10-02: a floating shadow plus the goo-filtered settled card looked inflated.
+// Use the shallow shared elevation; reserve the liquid filter for the transition only.
+const cardShadow = shadow.raised;
+// Skia blur uses sigma; halve the shared radius and include the token opacity.
 const shadowColor = withAlpha(cardShadow.color, cardShadow.opacity);
 const shadowBlur = cardShadow.radius / 2;
 // The halo reaches about three sigmas past the card. The canvas grows by that much on each side; a canvas exactly as wide
@@ -43,7 +42,10 @@ function LiquidSurface({ anchor, ...props }) {
     const fallback = reader || osReduced || theme.environment.reducedMotion || (height > 0 && !layout.fits);
     const drop = useSharedValue(0), expand = useSharedValue(0), reveal = useSharedValue(0), tint = useSharedValue(0), drag = useSharedValue(0);
     const geometry = useDerivedValue(() => buildLiquidToastGeometry(drop.value, expand.value, layout), [layout]);
-    const cardColor = resolveColorReference(toastRecipe.surface.background, theme.palette);
+    // 2026-10-02: the neutral fill looked muddy. Use clean white in the default light
+    // theme and a blue-tinted dark surface; keep the outline so white-on-white stays legible.
+    const cardColor = theme.environment.theme === "dark" ? theme.colors.surfaceAccent : theme.colors.bg;
+    const cardBorder = theme.colors.borderControl;
     const anchorColor = anchor.kind === "island" ? "#000000" : theme.colors.text;
     // Black is a physical occlusion match only for an explicitly supplied hardware frame.
     const dropletColor = useDerivedValue(() => interpolateColor(tint.value, [0, 1], [anchorColor, cardColor]));
@@ -58,7 +60,8 @@ function LiquidSurface({ anchor, ...props }) {
     const nh = useDerivedValue(() => geometry.value.neckHeight);
     const nr = useDerivedValue(() => geometry.value.neckWidth / 2);
     const opacity = useDerivedValue(() => Math.max(0, Math.min(1, expand.value)));
-    // An in-app capsule is only the starting point. Left on screen after the card settled it read as a second, floating
+    const liquidOpacity = useDerivedValue(() => 1 - Math.max(0, Math.min(1, expand.value)));
+    // An in-app circle is only the starting point. Left on screen after the card settled it read as a second, floating
     // Dynamic Island under the real one (2026-09-30 capture), so it fades out as the card expands and returns on exit.
     // A verified island frame stays: it covers the hardware cutout.
     const anchorOpacity = useDerivedValue(() => anchor.kind === "island"
@@ -66,7 +69,8 @@ function LiquidSurface({ anchor, ...props }) {
         : Math.max(0, Math.min(1, drop.value * 4)) * (1 - Math.max(0, Math.min(1, expand.value))));
     const contentStyle = useAnimatedStyle(() => ({
         opacity: reveal.value,
-        transform: [{ translateY: geometry.value.offsetY + drag.value }, { scale: 0.88 + Math.max(0, Math.min(1, reveal.value)) * 0.12 }],
+        // Keep text at its final scale so the card does not appear to inflate during reveal.
+        transform: [{ translateY: geometry.value.offsetY + drag.value }],
     }));
     useEffect(() => {
         let active = true;
@@ -155,6 +159,6 @@ function LiquidSurface({ anchor, ...props }) {
     if (fallback)
         return props.fallback;
     // Only decoration is rasterized. RN text and its independent action/close stay accessible.
-    return _jsxs(View, { pointerEvents: "box-none", style: { width: "100%", paddingTop: layout.cardTop, alignItems: "center" }, children: [height > 0 ? _jsx(Canvas, { pointerEvents: "none", accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { position: "absolute", top: layout.canvasTop, left: -canvasBleed, width: props.width + canvasBleed * 2, height: layout.canvasHeight + canvasBleed }, children: _jsxs(Group, { transform: [{ translateX: canvasBleed }], children: [_jsx(Group, { opacity: opacity, children: _jsx(RoundedRect, { x: x, y: y, width: w, height: h, r: r, color: cardColor, children: _jsx(Shadow, { dx: 0, dy: cardShadow.offsetY, blur: shadowBlur, color: shadowColor, shadowOnly: true }) }) }), _jsxs(Group, { layer: _jsxs(Paint, { children: [_jsx(Blur, { blur: recipe.blur }), _jsx(ColorMatrix, { matrix: [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, recipe.gain, -recipe.gain * recipe.threshold] })] }), children: [_jsx(Group, { opacity: anchorOpacity, children: _jsx(RoundedRect, { x: layout.anchorX + 4, y: layout.anchorY - layout.canvasTop + 4, width: Math.max(0, layout.anchorWidth - 8), height: Math.max(0, layout.anchorHeight - 8), r: layout.anchorHeight / 2, color: anchorColor }) }), _jsx(RoundedRect, { x: nx, y: ny, width: nw, height: nh, r: nr, color: anchorColor }), _jsx(RoundedRect, { x: x, y: y, width: w, height: h, r: r, color: dropletColor })] }), _jsx(Group, { opacity: anchorOpacity, children: _jsx(RoundedRect, { x: layout.anchorX, y: layout.anchorY - layout.canvasTop, width: layout.anchorWidth, height: layout.anchorHeight, r: layout.anchorHeight / 2, color: anchorColor }) })] }) }) : null, _jsx(Animated.View, { ...gesture.panHandlers, onLayout: event => setHeight(event.nativeEvent.layout.height), style: [{ width: "100%", maxWidth: recipe.maxWidth }, contentStyle], children: props.body })] });
+    return _jsxs(View, { pointerEvents: "box-none", style: { width: "100%", paddingTop: layout.cardTop, alignItems: "center" }, children: [height > 0 ? _jsx(Canvas, { pointerEvents: "none", accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { position: "absolute", top: layout.canvasTop, left: -canvasBleed, width: props.width + canvasBleed * 2, height: layout.canvasHeight + canvasBleed }, children: _jsxs(Group, { transform: [{ translateX: canvasBleed }], children: [_jsxs(Group, { opacity: opacity, children: [_jsx(RoundedRect, { x: x, y: y, width: w, height: h, r: r, color: cardColor, children: _jsx(Shadow, { dx: 0, dy: cardShadow.offsetY, blur: shadowBlur, color: shadowColor }) }), _jsx(RoundedRect, { x: x, y: y, width: w, height: h, r: r, color: cardBorder, style: "stroke", strokeWidth: stroke.subtle })] }), _jsxs(Group, { opacity: liquidOpacity, layer: _jsxs(Paint, { children: [_jsx(Blur, { blur: recipe.blur }), _jsx(ColorMatrix, { matrix: [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, recipe.gain, -recipe.gain * recipe.threshold] })] }), children: [_jsx(Group, { opacity: anchorOpacity, children: _jsx(RoundedRect, { x: layout.anchorX + 4, y: layout.anchorY - layout.canvasTop + 4, width: Math.max(0, layout.anchorWidth - 8), height: Math.max(0, layout.anchorHeight - 8), r: layout.anchorHeight / 2, color: anchorColor }) }), _jsx(RoundedRect, { x: nx, y: ny, width: nw, height: nh, r: nr, color: anchorColor }), _jsx(RoundedRect, { x: x, y: y, width: w, height: h, r: r, color: dropletColor })] }), _jsx(Group, { opacity: anchorOpacity, children: _jsx(RoundedRect, { x: layout.anchorX, y: layout.anchorY - layout.canvasTop, width: layout.anchorWidth, height: layout.anchorHeight, r: layout.anchorHeight / 2, color: anchorColor }) })] }) }) : null, _jsx(Animated.View, { ...gesture.panHandlers, onLayout: event => setHeight(event.nativeEvent.layout.height), style: [{ width: "100%", maxWidth: recipe.maxWidth }, contentStyle], children: props.body })] });
 }
 //# sourceMappingURL=toast-liquid.js.map

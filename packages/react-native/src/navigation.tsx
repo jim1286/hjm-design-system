@@ -1,29 +1,18 @@
-import { backdrop, glyph, radius, spacing } from "@hjmds/design-contracts/foundations";
+import {
+  getTabNavigationTarget,
+  resolveInitialTabValue,
+  tabsBehaviorDefaults,
+  type AsyncCollectionState,
+  type CollectionItemDescriptor,
+  type CollectionSectionDescriptor,
+  type CollectionSelectionModel,
+  type TabsActivationMode,
+  type TabsDirection,
+  type TabsMountPolicy,
+  type TabsOrientation,
+  type TabsPanelMode,
+} from "@hjmds/design-contracts/behaviors";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
-import {
-  bottomNavigationRecipe,
-  counterBadgeRecipe,
-  loadMoreRecipe,
-  menuRecipe,
-  spinnerRecipe,
-  tabsRecipe,
-  topBarRecipe,
-  type MenuDensity,
-  type LoadMoreDensity,
-  type TabSize,
-  type TabsLayout,
-  type TabsOverflow,
-} from "@hjmds/design-contracts/recipes";
-import {
-  createLoadMoreController,
-  validateLoadMoreDescriptor,
-  type LoadMoreDescriptor,
-  type LoadMoreMode,
-  type LoadMoreRequestHandler,
-  type LoadMoreRequestOutcome,
-  type LoadMoreRequestReason,
-} from "@hjmds/design-contracts/components/load-more";
-import type { LinkDestination } from "@hjmds/design-contracts/components/link";
 import {
   resolveBottomNavigationActivation,
   resolveBottomNavigationConfiguration,
@@ -35,39 +24,61 @@ import {
   type ResolvedBottomNavigationItemDescriptor,
 } from "@hjmds/design-contracts/components/bottom-navigation";
 import {
-  getTabNavigationTarget,
-  resolveInitialTabValue,
-  tabsBehaviorDefaults,
-  type TabsActivationMode,
-  type TabsDirection,
-  type TabsMountPolicy,
-  type TabsOrientation,
-  type TabsPanelMode,
-  type AsyncCollectionState,
-  type CollectionItemDescriptor,
-  type CollectionSectionDescriptor,
-  type CollectionSelectionModel,
-} from "@hjmds/design-contracts/behaviors";
-import {
   flattenCollectionItems,
   validateCollection,
   type CollectionSource,
 } from "@hjmds/design-contracts/components/collection";
+import type { LinkDestination } from "@hjmds/design-contracts/components/link";
+import {
+  createLoadMoreController,
+  validateLoadMoreDescriptor,
+  type LoadMoreDescriptor,
+  type LoadMoreMode,
+  type LoadMoreRequestHandler,
+  type LoadMoreRequestOutcome,
+  type LoadMoreRequestReason,
+} from "@hjmds/design-contracts/components/load-more";
+import {
+  backdrop,
+  glyph,
+  radius,
+  spacing,
+} from "@hjmds/design-contracts/foundations";
+import {
+  resolveGooeyIndicator,
+  type GooeyIndicatorRect,
+  type TabsAppearance,
+} from "@hjmds/design-contracts/gooey-navigation";
+import {
+  bottomNavigationRecipe,
+  counterBadgeRecipe,
+  loadMoreRecipe,
+  menuRecipe,
+  spinnerRecipe,
+  tabsRecipe,
+  topBarRecipe,
+  type LoadMoreDensity,
+  type MenuDensity,
+  type TabSize,
+  type TabsLayout,
+  type TabsOverflow,
+} from "@hjmds/design-contracts/recipes";
 import {
   forwardRef,
   useCallback,
   useEffect,
   useImperativeHandle,
   useLayoutEffect,
-  useMemo,
   useRef,
   useState,
-  type ReactNode,
   type ReactElement,
+  type ReactNode,
 } from "react";
 import {
-  ActivityIndicator,
   AccessibilityInfo,
+  ActivityIndicator,
+  Animated,
+  AppState,
   Keyboard,
   Modal,
   Platform,
@@ -82,19 +93,22 @@ import {
   type ViewStyle,
 } from "react-native";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
+import { RecipeButton } from "./internal/recipe-button.js";
 import { isWebRenderer, webOnly, webTabProps } from "./internal/web-a11y.js";
 
+export type { TabsAppearance };
+
 import { Button } from "./actions.js";
-import { useControllableState } from "./internal/state.js";
+import { Spinner } from "./feedback.js";
 import {
-  scheduleAfterNativeModalTeardown,
-  shouldAwaitNativeModalDismiss,
-  type NativeModalTeardownTask,
+scheduleAfterNativeModalTeardown,
+shouldAwaitNativeModalDismiss,
+type NativeModalTeardownTask,
 } from "./internal/modal-lifecycle.js";
+import { useControllableState } from "./internal/state.js";
 import { minimumTargetStyle } from "./internal/styles.js";
 import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
-import { Spinner } from "./feedback.js";
 
 export type TabItem<Value extends string = string> = Readonly<{
   id: Value;
@@ -108,27 +122,12 @@ export type TabItem<Value extends string = string> = Readonly<{
   panel?: ReactNode;
 }>;
 
-/** @deprecated Use the renderer-neutral `TabItem` with its canonical `id` key. */
-export type TabOption<Value extends string = string> = Readonly<{
-  value: Value;
-  label: string;
-  disabled?: boolean;
-  badge?: string;
-  badgeAccessibilityLabel?: string;
-  renderLeading?: (appearance: TabLeadingRenderProps) => ReactNode;
-  /** Optional localized name for this option's tab panel. */
-  panelAccessibilityLabel?: string;
-  panel?: ReactNode;
-}>;
-
 export type TabLeadingRenderProps = Readonly<{
   selected: boolean;
   disabled: boolean;
   color: string;
   /** Pixel size resolved from `tabsRecipe.icon.glyph`. */
   size: number;
-  /** Compatibility alias for product icon libraries. */
-  glyphSize: number;
 }>;
 
 type TabsSelection<Value extends string> =
@@ -150,6 +149,7 @@ type TabsBaseProps<Value extends string> = Readonly<{
   activationMode?: TabsActivationMode;
   mountPolicy?: TabsMountPolicy;
   panelMode?: TabsPanelMode;
+  appearance?: TabsAppearance;
   orientation?: TabsOrientation;
   direction?: TabsDirection;
   loop?: boolean;
@@ -163,30 +163,10 @@ type TabsBaseProps<Value extends string> = Readonly<{
   tabListStyle?: StyleProp<ViewStyle>;
 }>;
 
-type TabsCollectionProps<Value extends string> =
-  | Readonly<{
-      items: readonly TabItem<Value>[];
-      options?: never;
-    }>
-  | Readonly<{
-      items?: never;
-      /** @deprecated Use the renderer-neutral `items` prop. */
-      options: readonly TabOption<Value>[];
-    }>;
+type TabsCollectionProps<Value extends string> = Readonly<{ items: readonly TabItem<Value>[] }>;
 
 export type TabsProps<Value extends string = string> = TabsBaseProps<Value> &
   TabsCollectionProps<Value> & TabsSelection<Value>;
-
-function resolveTabItems<Value extends string>(
-  items: readonly TabItem<Value>[] | undefined,
-  options: readonly TabOption<Value>[] | undefined,
-): readonly TabItem<Value>[] {
-  if ((items === undefined) === (options === undefined)) {
-    throw new TypeError("Tabs requires exactly one of items or options");
-  }
-  if (items !== undefined) return items;
-  return options!.map(({ value, ...option }) => ({ ...option, id: value }));
-}
 
 function encodedTabId(value: string): string {
   return encodeURIComponent(value);
@@ -269,13 +249,13 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
     id,
     label,
     items,
-    options,
     value: valueProp,
     defaultValue,
     onValueChange,
     activationMode = tabsBehaviorDefaults.activationMode,
     mountPolicy = tabsBehaviorDefaults.mountPolicy,
     panelMode = tabsBehaviorDefaults.panelMode,
+    appearance = "standard",
     orientation = tabsBehaviorDefaults.orientation,
     direction: directionProp,
     loop = tabsBehaviorDefaults.loop,
@@ -291,7 +271,8 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
   if (panelMode === "dynamic" && mountPolicy !== "active") {
     throw new TypeError("Tabs dynamic panelMode requires active mountPolicy");
   }
-  const tabItems = useMemo(() => resolveTabItems(items, options), [items, options]);
+  if ("options" in props || !Array.isArray(items)) throw new TypeError("Tabs requires items; options was removed");
+  const tabItems = items;
   if (tabItems.length === 0) throw new TypeError("Tabs requires at least one option");
   const theme = useHjmNativeTheme();
   const { colors, environment } = theme;
@@ -326,6 +307,40 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
   const [focusValue, setFocusValue] = useState(selected);
   const [visited, setVisited] = useState<ReadonlySet<Value>>(() => new Set([selected]));
   const tabRefs = useRef(new Map<Value, View>());
+  const gooey = appearance === "gooey" && orientation === "horizontal";
+  const [indicatorRects, setIndicatorRects] = useState<Record<string, GooeyIndicatorRect>>({});
+  const tabScroll = useRef<ScrollView>(null);
+  const [tabViewport, setTabViewport] = useState(0);
+  const [tabContentWidth, setTabContentWidth] = useState(0);
+  const destination = indicatorRects[selected];
+  useLayoutEffect(() => {
+    if (orientation !== "horizontal" || !scrollable || fitted || !destination || !tabViewport) return;
+    // Center the chosen tab using physical measured coordinates in both directions.
+    // RTL starts at the opposite content edge; leaving that offset untouched clipped
+    // the selected label at 200% scale in the iOS showcase.
+    const x = Math.max(0, Math.min(destination.x + destination.width / 2 - tabViewport / 2, tabContentWidth - tabViewport));
+    tabScroll.current?.scrollTo({ x, animated: false });
+  }, [selected, destination, tabViewport, tabContentWidth, direction, orientation, scrollable, fitted]);
+  const previousIndicator = useRef<{ value: Value; rect: GooeyIndicatorRect } | null>(null);
+  const progress = useRef(new Animated.Value(1)).current;
+  const [indicatorRecipe, setIndicatorRecipe] = useState<ReturnType<typeof resolveGooeyIndicator> | null>(null);
+  useLayoutEffect(() => {
+    progress.stopAnimation(); progress.setValue(1);
+    if (!gooey || !destination) { previousIndicator.current = null; setIndicatorRecipe(null); return; }
+    const previous = previousIndicator.current;
+    const animate = previous && previous.value !== selected && !environment.reducedMotion && AppState.currentState === "active";
+    const recipe = resolveGooeyIndicator(animate ? previous.rect : destination, destination);
+    setIndicatorRecipe(recipe);
+    previousIndicator.current = { value: selected, rect: destination };
+    if (!animate) return;
+    progress.setValue(0);
+    // Width morphing must use the JS driver; transforms alone would distort the pill corners.
+    const animation = Animated.timing(progress, { toValue: 1, duration: recipe.duration, useNativeDriver: false });
+    animation.start();
+    const stop = () => { animation.stop(); progress.setValue(1); };
+    const subscription = AppState.addEventListener("change", state => { if (state !== "active") stop(); });
+    return () => { stop(); subscription.remove(); };
+  }, [gooey, selected, destination, environment.reducedMotion, progress]);
 
   useEffect(() => {
     if (!controlled && !storedValueValid) setSelected(collectionFallback);
@@ -365,6 +380,7 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
     const target = getTabNavigationTarget(descriptors, from, intent, loop);
     if (target !== undefined) focusTab(target);
   };
+  // Panel flexGrow preserves intrinsic height in auto-sized stacks; flex:1 collapsed it to zero.
   const hasPanels = renderPanels &&
     (children !== undefined || tabItems.some((item) => item.panel !== undefined));
 
@@ -381,6 +397,9 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
       ]}
     >
       <ScrollView
+        ref={tabScroll}
+        onLayout={event => setTabViewport(event.nativeEvent.layout.width)}
+        onContentSizeChange={width => setTabContentWidth(width)}
         nativeID={id}
         accessibilityLabel={label}
         accessibilityRole="tablist"
@@ -409,11 +428,22 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
           },
         ]}
       >
+        {gooey && indicatorRecipe ? <Animated.View pointerEvents="none" accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{
+          position: "absolute", bottom: 0, height: 6, borderRadius: radius.full,
+          backgroundColor: resolveColorReference(tabsRecipe.colors.indicator, theme.palette),
+          left: progress.interpolate({ inputRange: [...indicatorRecipe.input], outputRange: [...indicatorRecipe.x] }),
+          width: progress.interpolate({ inputRange: [...indicatorRecipe.input], outputRange: [...indicatorRecipe.width] }),
+        }} /> : null}
         {tabItems.map((item) => {
           const active = selected === item.id;
           return (
             <Pressable
               key={item.id}
+              onLayout={orientation === "horizontal" ? event => {
+                const { x, width } = event.nativeEvent.layout;
+                if (width <= 0) return;
+                setIndicatorRects(current => current[item.id]?.x === x && current[item.id]?.width === width ? current : { ...current, [item.id]: { x, width } });
+              } : undefined}
               nativeID={id ? getTabId(id, item.id) : undefined}
               role={Platform.OS === "ios" ? "button" : "tab"}
               ref={(node) => {
@@ -495,7 +525,6 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
                       theme.palette,
                     ),
                     size: glyph[tabsRecipe.icon.glyph],
-                    glyphSize: glyph[tabsRecipe.icon.glyph],
                   })}
                 </View>
               ) : null}
@@ -526,7 +555,7 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
                   <Text align="center" tone="brand" variant="caption">{item.badge}</Text>
                 </View>
               ) : null}
-              {active ? (
+              {active && !gooey ? (
                 <View
                   accessibilityElementsHidden
                   accessible={false}
@@ -564,7 +593,7 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
           nativeID={id ? getDynamicTabPanelId(id) : undefined}
           importantForAccessibility="yes"
           role="tabpanel"
-          style={{ flex: 1 }}
+          style={{ flexGrow: 1, flexShrink: 1 }}
         >
           {tabItems.find((item) => item.id === selected)?.panel ?? children?.(selected)}
         </View>
@@ -582,7 +611,7 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
             nativeID={id ? getTabPanelId(id, item.id) : undefined}
             importantForAccessibility={active ? "yes" : "no-hide-descendants"}
             role="tabpanel"
-            style={{ display: active ? "flex" : "none", flex: 1 }}
+            style={{ display: active ? "flex" : "none", flexGrow: 1, flexShrink: 1 }}
           >
             {item.panel ?? children?.(item.id)}
           </View>
@@ -683,6 +712,8 @@ export function BottomNavigation<
     },
     resolved.items.length,
   );
+  const capsule = presentation.presentation === "capsule";
+  const expandedLabels = theme.environment.textScale >= 1.5 || resolved.items.length > 4;
   const keyboardVisible = useBottomNavigationKeyboardVisible();
   const density = bottomNavigationRecipe.density[presentation.density];
   const presentationRecipe =
@@ -741,7 +772,10 @@ export function BottomNavigation<
         style={[
           {
             alignSelf: "center",
-            backgroundColor: surfaceBackground,
+            flexDirection: capsule ? "row" : "column",
+            alignItems: capsule ? "center" : undefined,
+            gap: capsule ? spacing.xs : 0,
+            backgroundColor: capsule ? "transparent" : surfaceBackground,
             borderColor: surfaceBorder,
             borderRadius: presentationRecipe.radius
               ? radius[presentationRecipe.radius]
@@ -769,10 +803,17 @@ export function BottomNavigation<
           accessibilityRole="tablist"
           style={[
             {
-              alignItems: "flex-start",
+              alignItems: capsule ? "stretch" : "flex-start",
               direction: presentation.direction,
               flexDirection: "row",
-              width: "100%",
+              width: capsule ? undefined : "100%",
+              flex: capsule ? 1 : undefined,
+              minWidth: 0,
+              padding: capsule ? spacing.xxs : 0,
+              backgroundColor: capsule ? surfaceBackground : undefined,
+              borderRadius: capsule ? radius.full : undefined,
+              borderWidth: capsule ? presentationRecipe.borderWidth : 0,
+              borderColor: surfaceBorder,
             },
             listStyle,
           ]}
@@ -815,15 +856,16 @@ export function BottomNavigation<
                   minimumTargetStyle,
                   {
                     alignItems: "center",
-                    backgroundColor: pressed ? pressedBackground : "transparent",
-                    borderRadius: radius.lg,
-                    flex: 1,
+                    backgroundColor: pressed ? pressedBackground : capsule && selected ? theme.colors.surfaceAccent : "transparent",
+                    borderRadius: capsule ? radius.full : radius.lg,
+                    flexDirection: capsule && !expandedLabels ? "row" : "column",
+                    flex: capsule && selected && !expandedLabels ? 2 : 1,
                     flexShrink: 1,
                     gap: density.gap,
-                    justifyContent: "flex-start",
+                    justifyContent: capsule ? "center" : "flex-start",
                     marginEnd: index === middleIndex ? centerGap : 0,
                     minHeight: density.itemMinHeight,
-                    minWidth: density.itemMinWidth,
+                    minWidth: capsule ? 44 : density.itemMinWidth,
                     opacity: item.disabled
                       ? bottomNavigationRecipe.states.disabledOpacity
                       : 1,
@@ -925,7 +967,7 @@ export function BottomNavigation<
                     </View>
                   ) : null}
                 </View>
-                <Text
+                {(!capsule || expandedLabels || selected) && <Text
                   align="center"
                   allowFontScaling={bottomNavigationRecipe.largeText.allowFontScaling}
                   maxFontSizeMultiplier={
@@ -942,7 +984,7 @@ export function BottomNavigation<
                   variant={density.label}
                 >
                   {item.label}
-                </Text>
+                </Text>}
               </Pressable>
             );
           })}
@@ -960,6 +1002,8 @@ export function BottomNavigation<
                 right: 0,
                 top: 0,
               },
+              // Keep creation outside route destinations; absolute center placement overlaps capsule labels.
+              capsule ? { position: "relative", left: undefined, right: undefined, top: undefined, bottom: undefined, flexShrink: 0 } : undefined,
               primaryActionStyle,
             ]}
           >
@@ -1411,17 +1455,10 @@ export function TopBar({
   );
 }
 
-export type MenuItem<Value extends string = string> = Readonly<{
-  value: Value;
-  label: string;
-  textValue?: string;
-  description?: string;
-  icon?: ReactNode;
-  shortcut?: string;
-  tone?: "default" | "danger";
-  disabled?: boolean;
-  accessibilityHint?: string;
-}>;
+/** Flat and sectioned menus share collection identifiers and rendering slots. */
+export type MenuItem<Value extends string = string> = Omit<
+  CollectionItemDescriptor<Value>, "textValue"
+> & Readonly<{ textValue?: string }>;
 
 export type MenuSection<
   Value extends string = string,
@@ -1499,7 +1536,6 @@ export type MenuProps<
     sections?: readonly MenuSection<Value, SectionKey>[];
     source?: CollectionSource<Value, SectionKey>;
     selection?: CollectionSelectionModel<Value>;
-    onSelect?: (value: Value) => void | Promise<void>;
     onAction?: (value: Value) => void | Promise<void>;
     onActionAfterDismiss?: (value: Value) => void | Promise<void>;
     onSelectionAfterDismiss?: (value: Value) => void | Promise<void>;
@@ -1538,7 +1574,6 @@ export function Menu<
   sections,
   source: sourceProp,
   selection = { mode: "none" },
-  onSelect,
   onAction,
   onActionAfterDismiss,
   onSelectionAfterDismiss,
@@ -1572,7 +1607,7 @@ export function Menu<
     ? { sections }
     : {
         items: (items ?? []).map((item) => ({
-          id: item.value,
+          id: item.id,
           label: item.label,
           textValue: item.textValue ?? item.label,
           ...(item.description === undefined ? {} : { description: item.description }),
@@ -1585,7 +1620,6 @@ export function Menu<
       });
   validateCollection(source);
   const collectionItems = flattenCollectionItems(source) as readonly CollectionItemDescriptor<Value>[];
-  const legacyItems = new Map((items ?? []).map((item) => [item.value, item] as const));
   if (collectionItems.length === 0 && asyncState.status === "idle") {
     throw new Error("Menu requires an item or a non-idle asyncState");
   }
@@ -1662,12 +1696,10 @@ export function Menu<
       selection.onSelectionChange?.(next);
       return;
     }
-    void onSelect?.(item.id);
     void onAction?.(item.id);
     close("selection", onActionAfterDismiss ? () => onActionAfterDismiss(item.id) : null);
   };
   const renderItem = (item: CollectionItemDescriptor<Value>) => {
-    const legacyItem = legacyItems.get(item.id);
     const selected = selection.mode === "single"
       ? selectedSingle === item.id
       : selection.mode === "multiple"
@@ -1683,7 +1715,7 @@ export function Menu<
       disabled: itemDisabled,
       color: resolveColorReference(menuRecipe.leading.color, theme.palette),
       size: glyph[menuRecipe.leading.glyph],
-    }) ?? legacyItem?.icon;
+    });
     const trailing = renderTrailing?.(item);
     return (
       <Pressable
@@ -1692,7 +1724,7 @@ export function Menu<
           if (node) itemRefs.current.set(item.id, node);
           else itemRefs.current.delete(item.id);
         }}
-        accessibilityHint={legacyItem?.accessibilityHint ?? item.description}
+        accessibilityHint={item.description}
         accessibilityLabel={item.label}
         accessibilityRole="menuitem"
         accessibilityState={{
@@ -1811,7 +1843,7 @@ export function Menu<
             }}
           />
           <View
-            accessibilityLabel={title}
+            accessibilityLabel={title.trim() || triggerLabel}
             accessibilityRole="menu"
             accessibilityViewIsModal
             style={{
@@ -1825,7 +1857,8 @@ export function Menu<
               width: "100%",
             }}
           >
-            <Text tone="primary" variant="title">{title}</Text>
+            {/* Empty titles intentionally hide the heading; rendering an empty Text still reserves a line box. */}
+            {title.trim() ? <Text tone="primary" variant="title">{title}</Text> : null}
             <ScrollView>
               {asyncState.status === "loading" || asyncState.status === "error" || asyncState.status === "empty" ? (
                 <View style={{ gap: spacing.sm, minHeight: densityContract.minHeight }}>
@@ -1865,12 +1898,6 @@ export type LoadMoreProps = Readonly<{
   onRequestError?: (error: unknown, reason: LoadMoreRequestReason) => void;
   /** Canonical layout-only placement. Controlled visual and state keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
-  /**
-   * @deprecated Legacy compatibility only. New apps must use `layoutStyle`; the
-   * footer's gap and vertical rhythm belong to the recipe density axis.
-   * @see https://github.com/jim1286/hjm-design-system/blob/main/packages/design-contracts/docs/consumer-policy.md#31-react-native-legacy-style-compatibility-boundary
-   */
-  style?: StyleProp<ViewStyle>;
 }>;
 
 export type LoadMoreHandle = Readonly<{
@@ -1908,7 +1935,7 @@ export const LoadMore = forwardRef<LoadMoreHandle, LoadMoreProps>(function LoadM
     onRequestOutcome,
     onRequestError,
     layoutStyle,
-    style,
+
   },
   ref,
 ) {
@@ -1984,12 +2011,11 @@ export const LoadMore = forwardRef<LoadMoreHandle, LoadMoreProps>(function LoadM
           gap: densityContract.gap,
           paddingVertical: densityContract.paddingVertical,
         },
-        style,
         layoutStyle,
       ]}
     >
       {state.status === "ready" ? (
-        <Button
+        <RecipeButton
           onPress={() => {
             void request("manual").catch(() => undefined);
           }}
@@ -2006,7 +2032,7 @@ export const LoadMore = forwardRef<LoadMoreHandle, LoadMoreProps>(function LoadM
           tone="link"
         >
           {labels.loadMore}
-        </Button>
+        </RecipeButton>
       ) : state.status === "loading" ? (
         <View
           accessibilityLabel={labels.loading}
@@ -2046,7 +2072,7 @@ export const LoadMore = forwardRef<LoadMoreHandle, LoadMoreProps>(function LoadM
           >
             {state.message}
           </Text>
-          <Button
+          <RecipeButton
             onPress={() => {
               void request("retry").catch(() => undefined);
             }}
@@ -2063,7 +2089,7 @@ export const LoadMore = forwardRef<LoadMoreHandle, LoadMoreProps>(function LoadM
             tone="link"
           >
             {labels.retry}
-          </Button>
+          </RecipeButton>
         </>
       ) : (
         <Text

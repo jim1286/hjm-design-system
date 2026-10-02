@@ -1,0 +1,207 @@
+[
+  {
+    "frame": {
+      "x": 0,
+      "y": 0,
+      "width": 402,
+      "height": 874
+    },
+    "enabled": true,
+    "role": "AXApplication",
+    "AXValue": null,
+    "help": null,
+    "AXFrame": "{{0, 0}, {402, 874}}",
+    "AXLabel": "HJM Native Showcase",
+    "role_description": "application",
+    "content_required": false,
+    "traits": [
+      "None"
+    ],
+    "pid": 57163,
+    "type": "Application",
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "subrole": null,
+    "title": null
+  },
+  {
+    "title": null,
+    "AXFrame": "{{84, 102}, {81, 40}}",
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "help": null,
+    "role": "AXStaticText",
+    "role_description": "text",
+    "type": "StaticText",
+    "custom_actions": [],
+    "AXLabel": "search",
+    "subrole": null,
+    "enabled": true,
+    "content_required": false,
+    "pid": 57163,
+    "AXValue": null,
+    "AXUniqueId": null,
+    "frame": {
+      "y": 102,
+      "x": 84,
+      "width": 81,
+      "height": 40
+    }
+  },
+  {
+    "content_required": false,
+    "AXFrame": "{{84, 166}, {96.333328247070312, 40}}",
+    "pid": 57163,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "enabled": true,
+    "AXValue": null,
+    "AXLabel": "settings",
+    "custom_actions": [],
+    "title": null,
+    "help": null,
+    "role": "AXStaticText",
+    "subrole": null,
+    "AXUniqueId": null,
+    "type": "StaticText",
+    "role_description": "text",
+    "frame": {
+      "y": 166,
+      "x": 84,
+      "height": 40,
+      "width": 96.33332824707031
+    }
+  },
+  {
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "role_description": "text",
+    "AXValue": null,
+    "subrole": null,
+    "role": "AXStaticText",
+    "pid": 57163,
+    "AXUniqueId": null,
+    "help": null,
+    "enabled": true,
+    "custom_actions": [],
+    "AXLabel": "notifications",
+    "type": "StaticText",
+    "title": null,
+    "AXFrame": "{{84, 230}, {148, 40}}",
+    "content_required": false,
+    "frame": {
+      "height": 40,
+      "x": 84,
+      "y": 230,
+      "width": 148
+    }
+  },
+  {
+    "AXFrame": "{{84, 294}, {59, 40}}",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "role": "AXStaticText",
+    "content_required": false,
+    "AXLabel": "back",
+    "title": null,
+    "frame": {
+      "x": 84,
+      "y": 294,
+      "width": 59,
+      "height": 40
+    },
+    "custom_actions": [],
+    "pid": 57163,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "help": null,
+    "type": "StaticText",
+    "role_description": "text",
+    "enabled": true,
+    "subrole": null
+  },
+  {
+    "enabled": true,
+    "AXLabel": null,
+    "role": "AXGenericElement",
+    "traits": [
+      "Scrollable"
+    ],
+    "help": null,
+    "subrole": null,
+    "AXFrame": "{{362, 759}, {24, 24}}",
+    "AXUniqueId": null,
+    "content_required": false,
+    "role_description": "",
+    "pid": 57163,
+    "type": "GenericElement",
+    "frame": {
+      "x": 362,
+      "width": 24,
+      "y": 759,
+      "height": 24
+    },
+    "AXValue": null,
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "subrole": null,
+    "help": null,
+    "AXValue": null,
+    "AXFrame": "{{6, 811.66666698455811}, {321, 17}}",
+    "content_required": false,
+    "AXUniqueId": "mobile-menu-button",
+    "enabled": true,
+    "custom_actions": [],
+    "role_description": "",
+    "frame": {
+      "height": 17,
+      "x": 6,
+      "width": 321,
+      "y": 811.6666669845581
+    },
+    "AXLabel": "Components/Display/Lucide Icon/Large Text",
+    "pid": 57163,
+    "title": null,
+    "type": "GenericElement",
+    "role": "AXGenericElement",
+    "traits": [
+      "Scrollable"
+    ]
+  },
+  {
+    "AXUniqueId": "mobile-addons-button",
+    "frame": {
+      "x": 368,
+      "y": 806,
+      "width": 28,
+      "height": 28
+    },
+    "content_required": false,
+    "help": null,
+    "type": "Button",
+    "enabled": true,
+    "role": "AXButton",
+    "custom_actions": [],
+    "AXValue": null,
+    "role_description": "button",
+    "subrole": null,
+    "title": null,
+    "AXFrame": "{{368, 806}, {28, 28}}",
+    "pid": 57163,
+    "AXLabel": "Open addons panel",
+    "traits": [
+      "Scrollable",
+      "Button"
+    ]
+  }
+]

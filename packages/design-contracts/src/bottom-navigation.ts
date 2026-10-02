@@ -250,7 +250,7 @@ function validateItem<Key extends string, IconName extends string>(
   if (item.badge !== undefined) validateBadge(item.badge);
 }
 
-const presentations = new Set<BottomNavigationPresentation>(["bar", "floating"]);
+const presentations = new Set<BottomNavigationPresentation>(["bar", "floating", "capsule"]);
 const distributions = new Set<BottomNavigationDistribution>(["equal", "center-gap"]);
 const densities = new Set<BottomNavigationDensity>(["compact", "regular"]);
 const directions = new Set<BottomNavigationDirection>(["ltr", "rtl"]);
@@ -312,6 +312,10 @@ export function validateBottomNavigationConfiguration(
     throw new TypeError(
       `Unsupported BottomNavigation keyboardBehavior: ${String(configuration.keyboardBehavior)}`,
     );
+  }
+  // Capsule actions sit beside the destination surface, so reserving a central gap would duplicate their space.
+  if (configuration.presentation === "capsule" && configuration.distribution === "center-gap") {
+    throw new TypeError("BottomNavigation capsule uses an adjacent action, not center-gap");
   }
   if (configuration.distribution === "center-gap" && itemCount % 2 !== 0) {
     throw new RangeError(

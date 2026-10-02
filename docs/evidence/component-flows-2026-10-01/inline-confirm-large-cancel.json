@@ -1,0 +1,260 @@
+[
+  {
+    "frame": {
+      "width": 402,
+      "x": 0,
+      "y": 0,
+      "height": 874
+    },
+    "enabled": true,
+    "role": "AXApplication",
+    "AXValue": null,
+    "help": null,
+    "AXFrame": "{{0, 0}, {402, 874}}",
+    "AXLabel": "HJM Native Showcase",
+    "role_description": "application",
+    "content_required": false,
+    "traits": [
+      "None"
+    ],
+    "pid": 89686,
+    "type": "Application",
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "subrole": null,
+    "title": null
+  },
+  {
+    "title": null,
+    "AXFrame": "{{40, 102}, {322, 128}}",
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "help": null,
+    "role": "AXStaticText",
+    "role_description": "text",
+    "type": "StaticText",
+    "custom_actions": [],
+    "AXLabel": "중요한 동작은 한 번 더.",
+    "subrole": null,
+    "enabled": true,
+    "content_required": false,
+    "pid": 89686,
+    "AXValue": null,
+    "AXUniqueId": null,
+    "frame": {
+      "y": 102,
+      "width": 322,
+      "height": 128,
+      "x": 40
+    }
+  },
+  {
+    "content_required": false,
+    "AXFrame": "{{40, 254}, {322, 80}}",
+    "pid": 89686,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "enabled": true,
+    "AXValue": null,
+    "AXLabel": "확인하는 동안에도 주변 맥락은 그대로 유지돼요.",
+    "custom_actions": [],
+    "title": null,
+    "help": null,
+    "role": "AXStaticText",
+    "subrole": null,
+    "AXUniqueId": null,
+    "type": "StaticText",
+    "role_description": "text",
+    "frame": {
+      "y": 254,
+      "height": 80,
+      "width": 322,
+      "x": 40
+    }
+  },
+  {
+    "traits": [
+      "Scrollable",
+      "Toggle",
+      "Button"
+    ],
+    "role_description": "switch",
+    "AXValue": "0",
+    "subrole": "AXSwitch",
+    "role": "AXButton",
+    "pid": 89686,
+    "AXUniqueId": null,
+    "help": null,
+    "enabled": true,
+    "custom_actions": [],
+    "AXLabel": "실패 응답 보기",
+    "type": "Button",
+    "title": null,
+    "AXFrame": "{{40, 358}, {322, 88}}",
+    "content_required": false,
+    "frame": {
+      "width": 322,
+      "y": 358,
+      "height": 88,
+      "x": 40
+    }
+  },
+  {
+    "AXFrame": "{{40, 470}, {322, 44}}",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "role": "AXGenericElement",
+    "content_required": false,
+    "AXLabel": "초안 삭제",
+    "title": null,
+    "frame": {
+      "height": 44,
+      "x": 40,
+      "y": 470,
+      "width": 322
+    },
+    "custom_actions": [],
+    "pid": 89686,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "help": null,
+    "type": "GenericElement",
+    "role_description": "",
+    "enabled": true,
+    "subrole": null
+  },
+  {
+    "enabled": true,
+    "AXLabel": "이 예제는 로컬 상태만 변경합니다.",
+    "role": "AXStaticText",
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "help": null,
+    "subrole": null,
+    "AXFrame": "{{40, 538}, {322, 80}}",
+    "AXUniqueId": null,
+    "content_required": false,
+    "role_description": "text",
+    "pid": 89686,
+    "type": "StaticText",
+    "frame": {
+      "x": 40,
+      "y": 538,
+      "width": 322,
+      "height": 80
+    },
+    "AXValue": null,
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "subrole": "AXSwitch",
+    "help": null,
+    "AXValue": null,
+    "AXFrame": "{{40, 642}, {322, 44}}",
+    "content_required": false,
+    "AXUniqueId": null,
+    "enabled": true,
+    "custom_actions": [],
+    "role_description": "",
+    "frame": {
+      "y": 642,
+      "x": 40,
+      "width": 322,
+      "height": 44
+    },
+    "AXLabel": "예제 다시 시작",
+    "pid": 89686,
+    "title": null,
+    "type": "GenericElement",
+    "role": "AXGenericElement",
+    "traits": [
+      "Scrollable",
+      "Button"
+    ]
+  },
+  {
+    "help": null,
+    "traits": [
+      "Scrollable"
+    ],
+    "AXUniqueId": null,
+    "frame": {
+      "x": 362,
+      "width": 24,
+      "height": 24,
+      "y": 759
+    },
+    "role_description": "",
+    "content_required": false,
+    "pid": 89686,
+    "type": "GenericElement",
+    "AXFrame": "{{362, 759}, {24, 24}}",
+    "role": "AXGenericElement",
+    "subrole": null,
+    "enabled": true,
+    "AXValue": null,
+    "AXLabel": null,
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "content_required": false,
+    "type": "GenericElement",
+    "AXValue": null,
+    "AXUniqueId": "mobile-menu-button",
+    "enabled": true,
+    "role_description": "",
+    "help": null,
+    "AXFrame": "{{6, 811.66666698455811}, {280, 17}}",
+    "title": null,
+    "frame": {
+      "y": 811.6666669845581,
+      "x": 6,
+      "width": 280,
+      "height": 17
+    },
+    "custom_actions": [],
+    "role": "AXGenericElement",
+    "AXLabel": "컴포넌트/동작/Inline Confirm/Large Text",
+    "subrole": null,
+    "pid": 89686,
+    "traits": [
+      "Scrollable"
+    ]
+  },
+  {
+    "help": null,
+    "content_required": false,
+    "AXFrame": "{{368, 806}, {28, 28}}",
+    "frame": {
+      "x": 368,
+      "y": 806,
+      "width": 28,
+      "height": 28
+    },
+    "subrole": null,
+    "role": "AXButton",
+    "AXUniqueId": "mobile-addons-button",
+    "AXLabel": null,
+    "custom_actions": [],
+    "pid": 89686,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "title": null,
+    "role_description": "button",
+    "enabled": true,
+    "AXValue": null,
+    "type": "Button"
+  }
+]

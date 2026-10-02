@@ -189,7 +189,7 @@ describe("Native core normalization", () => {
       <>
         <Text emphasis="strong" tone="subtle">본문</Text>
         <Stack axis="inline" align="end" justify="between"><Text>축</Text></Stack>
-        <Stack direction="row"><Text>호환</Text></Stack>
+        <Stack axis="inline"><Text>호환</Text></Stack>
       </>,
     );
     const nativeTexts = renderer.root.findAllByType(NativeText);
@@ -371,7 +371,7 @@ describe("Native core normalization", () => {
 
     expect(() =>
       renderWithProvider(
-        <Grid availableWidth={320} descriptor={{ columns: { compact: 1 } }} />,
+        <Grid availableWidth={320} {...{ columns: { compact: 1 } }} />,
       ),
     ).not.toThrow();
   });
@@ -379,9 +379,9 @@ describe("Native core normalization", () => {
   it("isolates deprecated content aliases to an explicit compatibility regression", () => {
     const renderer = renderWithProvider(
       <>
-        <Button label="이전 버튼" />
-        <Tag label="이전 태그" />
-        <IconButton accessibilityLabel="이전 아이콘" icon={<Text>×</Text>} />
+        <Button children="이전 버튼" />
+        <Tag>{"이전 태그"}</Tag>
+        <IconButton label="이전 아이콘" children={<Text>×</Text>} />
       </>,
     );
     const labels = renderer.root.findAllByType(NativeText).map(

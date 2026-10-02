@@ -1,0 +1,1 @@
+{"version":3,"file":"content-transition.d.ts","sourceRoot":"","sources":["../src/content-transition.ts"],"names":[],"mappings":"AAAA,MAAM,MAAM,uBAAuB,GAAG,MAAM,GAAG,MAAM,GAAG,OAAO,GAAG,OAAO,CAAC;AAC1E;oFACoF;AACpF,eAAO,MAAM,uBAAuB;;;;CAAgD,CAAC;AACrF;8EAC8E;AAC9E,wBAAgB,wBAAwB,CAAC,MAAM,GAAE,uBAAgC,EAAE,SAAS,GAAE,KAAK,GAAG,KAAa;;;;;EAQlH"}

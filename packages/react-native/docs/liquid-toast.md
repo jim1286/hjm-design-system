@@ -5,7 +5,7 @@ Promoted 2026-09-30 after fixing three device-visible defects and checking the i
 region-wide canvas, the capsule anchor stayed on screen as a second "island", and the droplet turned card-colored before
 leaving the anchor. [Record](../../../docs/evidence/liquid-toast-2026-09-30/README.md).
 
-Liquid Toast uses the existing Toast store with a capsule, connecting neck, droplet, card expansion
+Liquid Toast uses the existing Toast store with a circular in-app origin, connecting neck, droplet, card expansion
 and reverse exit inspired by expo-dynamic-notifications. It is an in-app effect, not ActivityKit,
 Live Activity or a background notification service. The upstream MIT notice ships with this package.
 
@@ -99,3 +99,49 @@ Installed checks on 2026-09-30 (no new simulator/emulator, no native rebuild): i
 host-supplied island frame, and Android 16 emulator with the capsule anchor ([record](../../../docs/evidence/liquid-toast-2026-09-30/README.md)).
 Other island models' frames are host-measured and unverified here; physical devices, frame times and spoken
 VoiceOver/TalkBack journeys remain consumer-release QA.
+
+## Current shape · 2026-10-02
+
+User feedback found the expanded notification too round and the default capsule too similar to
+Dynamic Island. The default in-app origin is now a 32 × 32 circle and the card corner radius is 16.
+The public `capsule` discriminator/key is retained for caller compatibility; its in-app geometry is circular.
+The default settled card top remains 58 logical units by reducing the gap to 26. Explicit host-supplied
+island geometry still uses the measured hardware frame. The RN content clipping and Skia surface
+use the same recipe radius to avoid a mismatched edge. Web continues the standard Toast fallback,
+whose lg corner is already 16; it does not render the Native liquid animation.
+
+This shape update has contract/type validation; older device recordings above show the previous shape.
+Use [interaction quality guidance](../../../docs/INTERACTION_QUALITY.md) for product performance verification.
+
+
+The follow-up depth refinement uses the shared `shadow.raised` elevation (opacity 0.08,
+radius 4, offsetY 1). The goo-filtered surface fades out as the clean card expands, so blur/alpha
+thresholding no longer reshapes the settled card edge. Content reveals without scaling text up.
+The droplet/neck transition remains; the settled notification is a flat, single surface with a light shadow.
+This change still requires visual confirmation on the target device; mock tests do not prove perceived depth.
+
+
+## Current card redesign · 2026-10-02
+
+The liquid notification is a two-row banner with a 12-unit corner. A small unboxed status glyph sits
+beside the title; the description takes the full second row. There is no separate leading badge column.
+The close target remains 44 units at the trailing top edge. Actions occupy a full-width footer with a
+subtle separator, replacing the detached pill. Long text wraps, including titleless cards. This changes
+only the liquid card; its circular origin, neck, timing and the ordinary Toast layout stay unchanged.
+
+This section supersedes the earlier 16-unit and rounded-square badge refinements above. Visual
+acceptance on the user's device is still pending; type and lifecycle tests do not establish visual quality.
+
+
+## Settled surface visibility correction · 2026-10-02
+
+The user's screenshot exposed a missing fill after the goo layer faded. The settled RoundedRect
+incorrectly used `Shadow shadowOnly`, which excludes the shape itself. The shadow now retains
+its input fill in both themes. Regression checks cover light and dark, but do not replace device rendering.
+See [Skia shadow semantics](https://shopify.github.io/react-native-skia/docs/image-filters/shadows/).
+
+### Card color refinement (2026-10-02)
+
+The default light card uses `bg` (white), while the dark card uses `surfaceAccent` (blue-tinted).
+This replaces the neutral gray fill after it was reported as dull. A single Skia outline remains
+to distinguish the light card from a white page; the accessible RN body stays transparent.

@@ -93,7 +93,7 @@ Expo Go cannot verify these linked native modules.
 
 ## Evidence and promotion
 
-Web stories: Patterns/Optional Motion. Native stories: Experimental/Optional Adapters.
+Web stories: 갤러리/모션 연동. Native stories: 실험실/선택적 연동.
 Tests cover adaptation logic and web browser behavior; native mocks cannot prove OS gestures,
 keyboard animation, accessibility focus, native linking or installed-device health. Keep native
 adapters experimental until iOS/Android device evidence exists. No consumer migration or publication
@@ -124,3 +124,26 @@ product image/menu behavior and removes the matching peers. There is no persiste
   reports transitive UI packages expecting Storybook 10.6 and safe-area-context 5.8 versus 5.7.
   Builds passing do not erase these warnings or prove device compatibility.
 - No npm publication, consumer migration, native binary build, commit or push was performed.
+
+## Shared behavior after the component overlap audit
+
+The 2026-10-01 audit found independent typeahead policies in Menu, MorphingMenu and ContextMenu.
+Their Web item searches now share the base Menu's 500ms reset, declared textValue, circular search
+and repeated-character cycling. Menu opening, OS context-menu behavior and presentation stay host-owned.
+
+CarouselMotion now resolves slide IDs, selected/inert state, accessible names and finite navigation
+through the canonical Carousel contract in both renderers. Its optional composeAccessibleName
+accepts the same localized position/name composer as Carousel; omitting it preserves the slide label.
+It remains a controlled swipe/motion presentation without autoplay or uncontrolled defaults.
+
+Native Field and built-in text inputs share a recipe-owned label/support/error frame.
+GestureSheetInput retains BottomSheetTextInput's keyboard tracking but now uses the base field's
+input geometry, typography, placeholder and provider font scaling instead of separate constants.
+
+## Static Avatar fallback — 2026-10-01
+
+Both renderer `/avatar-blobatar` entries now provide `createBlobatarFallback` for
+existing Avatar. They are optional factories, not new canonical components or
+root exports. See the [fallback contract](avatar-fallback.md) for installation,
+source recovery and identity/accessibility rules. This addition does not imply
+that the earlier device evidence covers Blobatar.

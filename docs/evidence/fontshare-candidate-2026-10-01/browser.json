@@ -1,0 +1,65 @@
+{
+  "source": "https://www.fontshare.com/fonts/satoshi",
+  "license": "https://www.fontshare.com/licenses/itf-ffl",
+  "fontFile": "Satoshi-Regular.woff2",
+  "sha256": "5aa97d938f523dd893c52473c3a021a0bf4ba0f95290edcc0749c088717f951f",
+  "states": [
+    {
+      "state": "default",
+      "fonts": [
+        {
+          "familyName": "Satoshi",
+          "postScriptName": "Satoshi-Regular",
+          "isCustomFont": true,
+          "glyphCount": 26
+        },
+        {
+          "familyName": "Apple SD Gothic Neo",
+          "postScriptName": "AppleSDGothicNeo-Regular",
+          "isCustomFont": false,
+          "glyphCount": 12
+        }
+      ],
+      "width": 390,
+      "scrollWidth": 390
+    },
+    {
+      "state": "dark",
+      "fonts": [
+        {
+          "familyName": "Satoshi",
+          "postScriptName": "Satoshi-Regular",
+          "isCustomFont": true,
+          "glyphCount": 26
+        },
+        {
+          "familyName": "Apple SD Gothic Neo",
+          "postScriptName": "AppleSDGothicNeo-Regular",
+          "isCustomFont": false,
+          "glyphCount": 12
+        }
+      ],
+      "width": 390,
+      "scrollWidth": 390
+    },
+    {
+      "state": "large-text",
+      "fonts": [
+        {
+          "familyName": "Satoshi",
+          "postScriptName": "Satoshi-Regular",
+          "isCustomFont": true,
+          "glyphCount": 25
+        },
+        {
+          "familyName": "Apple SD Gothic Neo",
+          "postScriptName": "AppleSDGothicNeo-Regular",
+          "isCustomFont": false,
+          "glyphCount": 12
+        }
+      ],
+      "width": 390,
+      "scrollWidth": 390
+    }
+  ]
+}

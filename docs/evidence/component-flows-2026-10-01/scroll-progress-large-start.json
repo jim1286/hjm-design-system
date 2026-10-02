@@ -1,0 +1,810 @@
+[
+  {
+    "subrole": null,
+    "help": null,
+    "AXValue": null,
+    "AXFrame": "{{0, 0}, {402, 874}}",
+    "content_required": false,
+    "AXUniqueId": null,
+    "enabled": true,
+    "custom_actions": [],
+    "role_description": "application",
+    "frame": {
+      "height": 874,
+      "x": 0,
+      "y": 0,
+      "width": 402
+    },
+    "AXLabel": "HJM Native Showcase",
+    "pid": 89686,
+    "title": null,
+    "type": "Application",
+    "role": "AXApplication",
+    "traits": [
+      "None"
+    ]
+  },
+  {
+    "enabled": true,
+    "AXLabel": "얼마나 읽었는지, 자연스럽게.",
+    "role": "AXHeading",
+    "traits": [
+      "Scrollable",
+      "StaticText",
+      "Header"
+    ],
+    "help": null,
+    "subrole": null,
+    "AXFrame": "{{16, 78}, {370, 240}}",
+    "AXUniqueId": null,
+    "content_required": false,
+    "role_description": "heading",
+    "pid": 89686,
+    "type": "Heading",
+    "frame": {
+      "width": 370,
+      "y": 78,
+      "height": 240,
+      "x": 16
+    },
+    "AXValue": null,
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "AXFrame": "{{16, 342}, {88.666664123535156, 36}}",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "role": "AXStaticText",
+    "content_required": false,
+    "AXLabel": "읽기 진행",
+    "title": null,
+    "frame": {
+      "y": 342,
+      "height": 36,
+      "width": 88.66666412353516,
+      "x": 16
+    },
+    "custom_actions": [],
+    "pid": 89686,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "help": null,
+    "type": "StaticText",
+    "role_description": "text",
+    "enabled": true,
+    "subrole": null
+  },
+  {
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "role_description": "text",
+    "AXValue": null,
+    "subrole": null,
+    "role": "AXStaticText",
+    "pid": 89686,
+    "AXUniqueId": null,
+    "help": null,
+    "enabled": true,
+    "custom_actions": [],
+    "AXLabel": "0%",
+    "type": "StaticText",
+    "title": null,
+    "AXFrame": "{{353.66665649414062, 344}, {32.333343505859375, 32}}",
+    "content_required": false,
+    "frame": {
+      "y": 344,
+      "width": 32.333343505859375,
+      "height": 32,
+      "x": 353.6666564941406
+    }
+  },
+  {
+    "content_required": false,
+    "AXFrame": "{{16, 418}, {370, 64}}",
+    "pid": 89686,
+    "traits": [
+      "Scrollable",
+      "StaticText",
+      "Header"
+    ],
+    "enabled": true,
+    "AXValue": null,
+    "AXLabel": "작은 시작",
+    "custom_actions": [],
+    "title": null,
+    "help": null,
+    "role": "AXHeading",
+    "subrole": null,
+    "AXUniqueId": null,
+    "type": "Heading",
+    "role_description": "heading",
+    "frame": {
+      "width": 370,
+      "x": 16,
+      "y": 418,
+      "height": 64
+    }
+  },
+  {
+    "title": null,
+    "AXFrame": "{{16, 494}, {370, 160}}",
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "help": null,
+    "role": "AXStaticText",
+    "role_description": "text",
+    "type": "StaticText",
+    "custom_actions": [],
+    "AXLabel": "좋은 경험은 필요한 순간에 필요한 정보만 보여줍니다. 화면을 천천히 내려 읽으며 진행 상태를 확인해 보세요.",
+    "subrole": null,
+    "enabled": true,
+    "content_required": false,
+    "pid": 89686,
+    "AXValue": null,
+    "AXUniqueId": null,
+    "frame": {
+      "y": 494,
+      "x": 16,
+      "height": 160,
+      "width": 370
+    }
+  },
+  {
+    "frame": {
+      "width": 370,
+      "y": 666,
+      "height": 160,
+      "x": 16
+    },
+    "enabled": true,
+    "role": "AXStaticText",
+    "AXValue": null,
+    "help": null,
+    "AXFrame": "{{16, 666}, {370, 160}}",
+    "AXLabel": "좋은 경험은 필요한 순간에 필요한 정보만 보여줍니다. 화면을 천천히 내려 읽으며 진행 상태를 확인해 보세요.",
+    "role_description": "text",
+    "content_required": false,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "pid": 89686,
+    "type": "StaticText",
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "subrole": null,
+    "title": null
+  },
+  {
+    "help": null,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "AXUniqueId": null,
+    "frame": {
+      "height": 160,
+      "y": 838,
+      "width": 370,
+      "x": 16
+    },
+    "role_description": "text",
+    "content_required": false,
+    "pid": 89686,
+    "type": "StaticText",
+    "AXFrame": "{{16, 838}, {370, 160}}",
+    "role": "AXStaticText",
+    "subrole": null,
+    "enabled": true,
+    "AXValue": null,
+    "AXLabel": "좋은 경험은 필요한 순간에 필요한 정보만 보여줍니다. 화면을 천천히 내려 읽으며 진행 상태를 확인해 보세요.",
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "content_required": false,
+    "type": "StaticText",
+    "AXValue": null,
+    "AXUniqueId": null,
+    "enabled": true,
+    "role_description": "text",
+    "help": null,
+    "AXFrame": "{{16, 1010}, {370, 160}}",
+    "title": null,
+    "frame": {
+      "y": 1010,
+      "x": 16,
+      "width": 370,
+      "height": 160
+    },
+    "custom_actions": [],
+    "role": "AXStaticText",
+    "AXLabel": "좋은 경험은 필요한 순간에 필요한 정보만 보여줍니다. 화면을 천천히 내려 읽으며 진행 상태를 확인해 보세요.",
+    "subrole": null,
+    "pid": 89686,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ]
+  },
+  {
+    "help": null,
+    "content_required": false,
+    "AXFrame": "{{16, 1182}, {370, 160}}",
+    "frame": {
+      "x": 16,
+      "width": 370,
+      "height": 160,
+      "y": 1182
+    },
+    "subrole": null,
+    "role": "AXStaticText",
+    "AXUniqueId": null,
+    "AXLabel": "좋은 경험은 필요한 순간에 필요한 정보만 보여줍니다. 화면을 천천히 내려 읽으며 진행 상태를 확인해 보세요.",
+    "custom_actions": [],
+    "pid": 89686,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "title": null,
+    "role_description": "text",
+    "enabled": true,
+    "AXValue": null,
+    "type": "StaticText"
+  },
+  {
+    "help": null,
+    "role_description": "heading",
+    "title": null,
+    "type": "Heading",
+    "custom_actions": [],
+    "AXValue": null,
+    "enabled": true,
+    "frame": {
+      "y": 1366,
+      "x": 16,
+      "width": 370,
+      "height": 64
+    },
+    "AXLabel": "반복 가능한 습관",
+    "subrole": null,
+    "AXUniqueId": null,
+    "AXFrame": "{{16, 1366}, {370, 64}}",
+    "pid": 89686,
+    "content_required": false,
+    "traits": [
+      "Scrollable",
+      "StaticText",
+      "Header"
+    ],
+    "role": "AXHeading"
+  },
+  {
+    "enabled": true,
+    "frame": {
+      "x": 16,
+      "y": 1442,
+      "width": 370,
+      "height": 160
+    },
+    "AXFrame": "{{16, 1442}, {370, 160}}",
+    "custom_actions": [],
+    "AXValue": null,
+    "role_description": "text",
+    "AXLabel": "좋은 경험은 필요한 순간에 필요한 정보만 보여줍니다. 화면을 천천히 내려 읽으며 진행 상태를 확인해 보세요.",
+    "role": "AXStaticText",
+    "type": "StaticText",
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "content_required": false,
+    "help": null,
+    "title": null,
+    "pid": 89686,
+    "AXUniqueId": null,
+    "subrole": null
+  },
+  {
+    "AXValue": null,
+    "help": null,
+    "pid": 89686,
+    "role": "AXStaticText",
+    "enabled": true,
+    "subrole": null,
+    "role_description": "text",
+    "type": "StaticText",
+    "custom_actions": [],
+    "AXLabel": "좋은 경험은 필요한 순간에 필요한 정보만 보여줍니다. 화면을 천천히 내려 읽으며 진행 상태를 확인해 보세요.",
+    "content_required": false,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "AXFrame": "{{16, 1614}, {370, 160}}",
+    "title": null,
+    "AXUniqueId": null,
+    "frame": {
+      "x": 16,
+      "width": 370,
+      "y": 1614,
+      "height": 160
+    }
+  },
+  {
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "enabled": true,
+    "content_required": false,
+    "AXLabel": "좋은 경험은 필요한 순간에 필요한 정보만 보여줍니다. 화면을 천천히 내려 읽으며 진행 상태를 확인해 보세요.",
+    "frame": {
+      "height": 160,
+      "y": 1786,
+      "x": 16,
+      "width": 370
+    },
+    "role": "AXStaticText",
+    "pid": 89686,
+    "AXUniqueId": null,
+    "title": null,
+    "custom_actions": [],
+    "AXFrame": "{{16, 1786}, {370, 160}}",
+    "help": null,
+    "role_description": "text",
+    "AXValue": null,
+    "type": "StaticText",
+    "subrole": null
+  },
+  {
+    "enabled": true,
+    "pid": 89686,
+    "role_description": "text",
+    "AXFrame": "{{16, 1958}, {370, 160}}",
+    "custom_actions": [],
+    "content_required": false,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "AXUniqueId": null,
+    "help": null,
+    "AXValue": null,
+    "frame": {
+      "height": 160,
+      "x": 16,
+      "width": 370,
+      "y": 1958
+    },
+    "AXLabel": "좋은 경험은 필요한 순간에 필요한 정보만 보여줍니다. 화면을 천천히 내려 읽으며 진행 상태를 확인해 보세요.",
+    "role": "AXStaticText",
+    "subrole": null,
+    "type": "StaticText",
+    "title": null
+  },
+  {
+    "custom_actions": [],
+    "frame": {
+      "y": 2130,
+      "width": 370,
+      "height": 160,
+      "x": 16
+    },
+    "AXUniqueId": null,
+    "help": null,
+    "AXValue": null,
+    "title": null,
+    "enabled": true,
+    "type": "StaticText",
+    "AXFrame": "{{16, 2130}, {370, 160}}",
+    "subrole": null,
+    "pid": 89686,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "role_description": "text",
+    "AXLabel": "좋은 경험은 필요한 순간에 필요한 정보만 보여줍니다. 화면을 천천히 내려 읽으며 진행 상태를 확인해 보세요.",
+    "role": "AXStaticText",
+    "content_required": false
+  },
+  {
+    "traits": [
+      "Scrollable",
+      "StaticText",
+      "Header"
+    ],
+    "AXValue": null,
+    "AXFrame": "{{16, 2314}, {370, 64}}",
+    "frame": {
+      "x": 16,
+      "width": 370,
+      "height": 64,
+      "y": 2314
+    },
+    "subrole": null,
+    "title": null,
+    "custom_actions": [],
+    "pid": 89686,
+    "help": null,
+    "type": "Heading",
+    "enabled": true,
+    "role": "AXHeading",
+    "content_required": false,
+    "role_description": "heading",
+    "AXLabel": "꾸준함의 기록",
+    "AXUniqueId": null
+  },
+  {
+    "custom_actions": [],
+    "AXLabel": "좋은 경험은 필요한 순간에 필요한 정보만 보여줍니다. 화면을 천천히 내려 읽으며 진행 상태를 확인해 보세요.",
+    "AXUniqueId": null,
+    "title": null,
+    "AXFrame": "{{16, 2390}, {370, 160}}",
+    "role_description": "text",
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "type": "StaticText",
+    "help": null,
+    "pid": 89686,
+    "subrole": null,
+    "AXValue": null,
+    "enabled": true,
+    "content_required": false,
+    "role": "AXStaticText",
+    "frame": {
+      "x": 16,
+      "y": 2390,
+      "width": 370,
+      "height": 160
+    }
+  },
+  {
+    "pid": 89686,
+    "AXValue": null,
+    "content_required": false,
+    "subrole": null,
+    "custom_actions": [],
+    "title": null,
+    "type": "StaticText",
+    "AXUniqueId": null,
+    "help": null,
+    "AXLabel": "좋은 경험은 필요한 순간에 필요한 정보만 보여줍니다. 화면을 천천히 내려 읽으며 진행 상태를 확인해 보세요.",
+    "enabled": true,
+    "AXFrame": "{{16, 2562}, {370, 160}}",
+    "role_description": "text",
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "role": "AXStaticText",
+    "frame": {
+      "height": 160,
+      "y": 2562,
+      "x": 16,
+      "width": 370
+    }
+  },
+  {
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "frame": {
+      "width": 370,
+      "height": 160,
+      "x": 16,
+      "y": 2734
+    },
+    "AXValue": null,
+    "type": "StaticText",
+    "AXUniqueId": null,
+    "help": null,
+    "content_required": false,
+    "custom_actions": [],
+    "AXLabel": "좋은 경험은 필요한 순간에 필요한 정보만 보여줍니다. 화면을 천천히 내려 읽으며 진행 상태를 확인해 보세요.",
+    "role": "AXStaticText",
+    "title": null,
+    "enabled": true,
+    "role_description": "text",
+    "subrole": null,
+    "AXFrame": "{{16, 2734}, {370, 160}}",
+    "pid": 89686
+  },
+  {
+    "AXLabel": "좋은 경험은 필요한 순간에 필요한 정보만 보여줍니다. 화면을 천천히 내려 읽으며 진행 상태를 확인해 보세요.",
+    "title": null,
+    "AXValue": null,
+    "help": null,
+    "role_description": "text",
+    "subrole": null,
+    "AXUniqueId": null,
+    "frame": {
+      "x": 16,
+      "width": 370,
+      "y": 2906,
+      "height": 160
+    },
+    "custom_actions": [],
+    "type": "StaticText",
+    "role": "AXStaticText",
+    "enabled": true,
+    "content_required": false,
+    "pid": 89686,
+    "AXFrame": "{{16, 2906}, {370, 160}}",
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ]
+  },
+  {
+    "title": null,
+    "type": "StaticText",
+    "help": null,
+    "frame": {
+      "height": 160,
+      "y": 3078,
+      "width": 370,
+      "x": 16
+    },
+    "AXFrame": "{{16, 3078}, {370, 160}}",
+    "role_description": "text",
+    "AXLabel": "좋은 경험은 필요한 순간에 필요한 정보만 보여줍니다. 화면을 천천히 내려 읽으며 진행 상태를 확인해 보세요.",
+    "subrole": null,
+    "content_required": false,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "pid": 89686,
+    "AXValue": null,
+    "role": "AXStaticText",
+    "custom_actions": [],
+    "AXUniqueId": null,
+    "enabled": true
+  },
+  {
+    "AXFrame": "{{16, 3262}, {370, 64}}",
+    "AXValue": null,
+    "enabled": true,
+    "content_required": false,
+    "custom_actions": [],
+    "pid": 89686,
+    "role_description": "heading",
+    "traits": [
+      "Scrollable",
+      "StaticText",
+      "Header"
+    ],
+    "frame": {
+      "height": 64,
+      "x": 16,
+      "width": 370,
+      "y": 3262
+    },
+    "role": "AXHeading",
+    "title": null,
+    "AXLabel": "다음으로 이어가기",
+    "AXUniqueId": null,
+    "help": null,
+    "type": "Heading",
+    "subrole": null
+  },
+  {
+    "AXFrame": "{{16, 3338}, {370, 160}}",
+    "subrole": null,
+    "frame": {
+      "width": 370,
+      "height": 160,
+      "y": 3338,
+      "x": 16
+    },
+    "title": null,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "AXValue": null,
+    "role_description": "text",
+    "help": null,
+    "role": "AXStaticText",
+    "enabled": true,
+    "custom_actions": [],
+    "content_required": false,
+    "pid": 89686,
+    "AXLabel": "좋은 경험은 필요한 순간에 필요한 정보만 보여줍니다. 화면을 천천히 내려 읽으며 진행 상태를 확인해 보세요.",
+    "type": "StaticText",
+    "AXUniqueId": null
+  },
+  {
+    "AXUniqueId": null,
+    "pid": 89686,
+    "frame": {
+      "width": 370,
+      "x": 16,
+      "y": 3510,
+      "height": 160
+    },
+    "custom_actions": [],
+    "role": "AXStaticText",
+    "AXFrame": "{{16, 3510}, {370, 160}}",
+    "content_required": false,
+    "title": null,
+    "AXLabel": "좋은 경험은 필요한 순간에 필요한 정보만 보여줍니다. 화면을 천천히 내려 읽으며 진행 상태를 확인해 보세요.",
+    "subrole": null,
+    "role_description": "text",
+    "help": null,
+    "enabled": true,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "AXValue": null,
+    "type": "StaticText"
+  },
+  {
+    "role_description": "text",
+    "AXValue": null,
+    "role": "AXStaticText",
+    "AXUniqueId": null,
+    "pid": 89686,
+    "enabled": true,
+    "title": null,
+    "custom_actions": [],
+    "AXFrame": "{{16, 3682}, {370, 160}}",
+    "AXLabel": "좋은 경험은 필요한 순간에 필요한 정보만 보여줍니다. 화면을 천천히 내려 읽으며 진행 상태를 확인해 보세요.",
+    "content_required": false,
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "subrole": null,
+    "help": null,
+    "type": "StaticText",
+    "frame": {
+      "x": 16,
+      "y": 3682,
+      "height": 160,
+      "width": 370
+    }
+  },
+  {
+    "role": "AXStaticText",
+    "AXValue": null,
+    "AXFrame": "{{16, 3854}, {370, 160}}",
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "type": "StaticText",
+    "content_required": false,
+    "AXUniqueId": null,
+    "custom_actions": [],
+    "title": null,
+    "help": null,
+    "frame": {
+      "height": 160,
+      "x": 16,
+      "y": 3854,
+      "width": 370
+    },
+    "subrole": null,
+    "AXLabel": "좋은 경험은 필요한 순간에 필요한 정보만 보여줍니다. 화면을 천천히 내려 읽으며 진행 상태를 확인해 보세요.",
+    "role_description": "text",
+    "pid": 89686,
+    "enabled": true
+  },
+  {
+    "subrole": null,
+    "frame": {
+      "width": 370,
+      "height": 160,
+      "x": 16,
+      "y": 4026
+    },
+    "traits": [
+      "Scrollable",
+      "StaticText"
+    ],
+    "pid": 89686,
+    "content_required": false,
+    "role_description": "text",
+    "role": "AXStaticText",
+    "title": null,
+    "help": null,
+    "AXValue": null,
+    "AXUniqueId": null,
+    "AXFrame": "{{16, 4026}, {370, 160}}",
+    "enabled": true,
+    "type": "StaticText",
+    "AXLabel": "좋은 경험은 필요한 순간에 필요한 정보만 보여줍니다. 화면을 천천히 내려 읽으며 진행 상태를 확인해 보세요.",
+    "custom_actions": []
+  },
+  {
+    "custom_actions": [],
+    "help": null,
+    "role": "AXGenericElement",
+    "AXLabel": null,
+    "role_description": "",
+    "traits": [
+      "Scrollable"
+    ],
+    "type": "GenericElement",
+    "AXUniqueId": null,
+    "AXFrame": "{{362, 759}, {24, 24}}",
+    "content_required": false,
+    "pid": 89686,
+    "title": null,
+    "frame": {
+      "x": 362,
+      "y": 759,
+      "width": 24,
+      "height": 24
+    },
+    "subrole": null,
+    "AXValue": null,
+    "enabled": true
+  },
+  {
+    "AXLabel": "컴포넌트/피드백/Scroll Progress/Large Text",
+    "title": null,
+    "enabled": true,
+    "AXFrame": "{{6, 811.66666698455811}, {300, 17}}",
+    "custom_actions": [],
+    "subrole": null,
+    "AXValue": null,
+    "frame": {
+      "width": 300,
+      "y": 811.6666669845581,
+      "x": 6,
+      "height": 17
+    },
+    "pid": 89686,
+    "type": "GenericElement",
+    "role_description": "",
+    "content_required": false,
+    "AXUniqueId": "mobile-menu-button",
+    "help": null,
+    "role": "AXGenericElement",
+    "traits": [
+      "Scrollable"
+    ]
+  },
+  {
+    "role_description": "button",
+    "subrole": null,
+    "content_required": false,
+    "pid": 89686,
+    "frame": {
+      "height": 28,
+      "y": 806,
+      "width": 28,
+      "x": 368
+    },
+    "help": null,
+    "AXLabel": null,
+    "custom_actions": [],
+    "enabled": true,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "AXFrame": "{{368, 806}, {28, 28}}",
+    "role": "AXButton",
+    "AXUniqueId": "mobile-addons-button",
+    "AXValue": null,
+    "title": null,
+    "type": "Button"
+  }
+]

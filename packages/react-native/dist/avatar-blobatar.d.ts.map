@@ -1,0 +1,1 @@
+{"version":3,"file":"avatar-blobatar.d.ts","sourceRoot":"","sources":["../src/avatar-blobatar.tsx"],"names":[],"mappings":"AAEA,OAAO,EAA2B,KAAK,qBAAqB,EAAE,KAAK,uBAAuB,EAAE,MAAM,yCAAyC,CAAC;AAC5I,OAAO,KAAK,EAAE,SAAS,EAAE,MAAM,OAAO,CAAC;AACvC,YAAY,EAAE,uBAAuB,EAAE,MAAM,yCAAyC,CAAC;AACvF,+EAA+E;AAC/E,wBAAgB,sBAAsB,CAAC,OAAO,EAAE,uBAAuB,GAAG,CAAC,OAAO,EAAE,qBAAqB,KAAK,SAAS,CAKtH"}

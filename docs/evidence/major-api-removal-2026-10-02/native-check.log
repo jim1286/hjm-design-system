@@ -1,0 +1,15 @@
+$ pnpm typecheck && pnpm test && pnpm bundle:check
+$ tsc -p tsconfig.json --noEmit
+$ vitest run
+
+ RUN  v4.1.11 /Users/jimin/Developer/app-portfolio/packages/hjm-design-system/packages/react-native
+
+
+ Test Files  76 passed (76)
+      Tests  927 passed (927)
+   Start at  01:33:17
+   Duration  10.34s (transform 10.60s, setup 0ms, import 24.43s, tests 4.14s, environment 4ms)
+
+$ pnpm build && node scripts/check-metro-bundle.mjs
+$ tsc -p tsconfig.build.json
+Metro Android production bundle OK | families=57 | modules=675 | raw=1395.6 KiB/1621.1 KiB | gzip=341.3 KiB/400.4 KiB | headroom=16.2% raw/17.3% gzip | preHermes=true | time=1.60s

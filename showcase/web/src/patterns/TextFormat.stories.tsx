@@ -57,10 +57,10 @@ export function AvatarGroupPreview() {
   );
 }
 
-const meta = { title: "Patterns/TextFormat", component: TextFormatPreview } satisfies Meta<typeof TextFormatPreview>;
+const meta = { includeStories: ["Formats","Clipboard","GroupedAvatars","LargeText"], id: "patterns-textformat", title: "배포/컴포넌트/글자와 아이콘/글자 서식", component: TextFormatPreview } satisfies Meta<typeof TextFormatPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
-export const Formats: Story = {};
-export const Clipboard: Story = { render: () => <ClipboardPreview /> };
-export const GroupedAvatars: Story = { render: () => <AvatarGroupPreview /> };
-export const LargeText: Story = { globals: { textScale: "2" } };
+export const Formats: Story = { name: "표현 형식",};
+export const Clipboard: Story = { name: "클립보드", render: () => <ClipboardPreview /> };
+export const GroupedAvatars: Story = { name: "아바타 그룹", render: () => <AvatarGroupPreview /> };
+export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };

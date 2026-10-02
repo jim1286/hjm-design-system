@@ -14,6 +14,36 @@ const packageJsonUrl = new URL("../package.json", import.meta.url);
  * Raising a budget requires an intentional review of the changed graph.
  */
 const budgets = [
+  // Optional action state store: measured 2504 raw / 889 gzip bytes; no dependency graph.
+  { exportPath: "./action-session", maxModules: 1, maxRawBytes: 2900, maxGzipBytes: 1050, forbiddenModules: metadataModules },
+  // Pure elastic-indicator geometry: 720 raw / 439 gzip bytes.
+  { exportPath: "./gooey-navigation", maxModules: 1, maxRawBytes: 850, maxGzipBytes: 520, forbiddenModules: metadataModules },
+  // Bounded grapheme geometry: 775 raw / 509 gzip bytes, one pure module.
+  { exportPath: "./gravity-letters", maxModules: 1, maxRawBytes: 900, maxGzipBytes: 600, forbiddenModules: metadataModules },
+  // Task validation reuses existing sortable identity validation; measured 2606/1145 bytes.
+  { exportPath: "./task-list", maxModules: 2, maxRawBytes: 3000, maxGzipBytes: 1400, forbiddenModules: metadataModules },
+  // Bounded calendar grid measured 2128 raw / 981 gzip bytes, no date-library dependency.
+  { exportPath: "./activity-heatmap", maxModules: 1, maxRawBytes: 2500, maxGzipBytes: 1150, forbiddenModules: metadataModules },
+  // Exact-source token validation measured 781 raw / 447 gzip bytes.
+  // VoiceNote metadata normalization measured 1084 raw / 455 gzip bytes; no dependencies.
+  // Theme studio composes existing colors and contrast rules: 6291 raw / 2380 gzip.
+  // Fixed reveal geometry plus existing timing foundations: 7014 raw / 2600 gzip.
+  { exportPath: "./grid-reveal", maxModules: 2, maxRawBytes: 8100, maxGzipBytes: 3000, forbiddenModules: metadataModules },
+  { exportPath: "./theme-studio", maxModules: 3, maxRawBytes: 7300, maxGzipBytes: 2800, forbiddenModules: metadataModules },
+  { exportPath: "./voice-note", maxModules: 1, maxRawBytes: 1250, maxGzipBytes: 530, forbiddenModules: metadataModules },
+  { exportPath: "./code-block", maxModules: 1, maxRawBytes: 950, maxGzipBytes: 550, forbiddenModules: metadataModules },
+  // Pure scroll ratio contract measured 567 raw / 333 gzip bytes.
+  { exportPath: "./scroll-progress", maxModules: 1, maxRawBytes: 700, maxGzipBytes: 400, forbiddenModules: metadataModules },
+  // Isolated integer duration and controlled reactions: measured 1289/610 and 1068/464 raw/gzip bytes.
+  { exportPath: "./duration-field", maxModules: 1, maxRawBytes: 1500, maxGzipBytes: 710, forbiddenModules: metadataModules },
+  { exportPath: "./reactions", maxModules: 1, maxRawBytes: 1250, maxGzipBytes: 550, forbiddenModules: metadataModules },
+  // Four bounded transform recipes; one pure module and no renderer dependency.
+  { exportPath: "./content-transition", maxModules: 1, maxRawBytes: 1200, maxGzipBytes: 600, forbiddenModules: metadataModules },
+  // 2026-10-01 measured 526/317 B and 6136/2254 B: optional avatar validation
+  // and deterministic effect geometry, no component catalog or renderer import.
+  // Motion-option validation extends the same pure contract to 967 raw / 437 gzip bytes; still one module.
+  { exportPath: "./avatar-fallback", maxModules: 1, maxRawBytes: 1150, maxGzipBytes: 550, forbiddenModules: metadataModules },
+  { exportPath: "./effect-surface", maxModules: 3, maxRawBytes: 7100, maxGzipBytes: 2650, forbiddenModules: metadataModules },
   // Pure optional intent validation; no renderer, engine or catalog imports.
   { exportPath: "./components/interaction-adapters", maxModules: 1, maxRawBytes: 3000, maxGzipBytes: 1300, forbiddenModules: metadataModules },
   // Pure sRGB, decorative-tile and sticky-offset contracts stay independent of renderer metadata.
@@ -170,9 +200,13 @@ const budgets = [
     // P2-c(asset) 한 모듈, dataviz 한 모듈 추가. 외부 의존성 없이 기존 foundations·
     // semantic-colors만 재사용한다 — 증가분이 곧 두 계약 파일과 catalog 문구다.
     // 1.6.0: raw 339_000 -> 340_000. AlertDialog stacked 순서·간격 두 값(339.1 kB). module 수 그대로.
-    maxModules: 64,
+    // 2026-10-01: Popover/Tooltip share internal/object-validation.js instead
+    // of duplicating shape guards. One reviewed pure helper edge; forbidden-module limits remain unchanged.
+    maxModules: 65,
     maxRawBytes: 340_000,
-    maxGzipBytes: 84_000,
+    // Node 24 measures 84.0 kB after factoring the guard; 100 gzip bytes
+    // cover the split source graph, with the previous raw limit unchanged.
+    maxGzipBytes: 84_100,
   },
   {
     // 2026-09-19 AuthScreenLayout: 계약 모듈 한 개가 그래프에 들어왔다. 기존
@@ -195,7 +229,10 @@ const budgets = [
     // semantic-colors만 재사용한다 — 증가분이 곧 두 계약 파일과 catalog 문구다.
     // Liquid Toast's pure geometry re-export adds one module; measured 343.8/87.2 kB.
     // Keep this shared with the Toast contract instead of duplicating renderer math.
-    maxModules: 60,
+    // 2026-10-01: Popover/Tooltip share internal/object-validation.js instead
+    // of duplicating shape guards. One reviewed pure helper edge; byte and
+    // forbidden-module limits remain unchanged.
+    maxModules: 61,
     maxRawBytes: 345_000,
     maxGzipBytes: 88_000,
   },
@@ -222,7 +259,10 @@ const budgets = [
     // 2026-09-29 Select's stable claim and renderer proof rationale add catalog copy with no module increase.
     // Tabs/BottomNavigation/LoadMore proof mappings add 363 raw / 180 gzip bytes to the unchanged 69-module catalog graph.
     // Masonry/VirtualList geometry and QR recipe add three neutral modules; QR encoder stays opt-in.
-    maxModules: 75,
+    // 2026-10-01: Popover/Tooltip share internal/object-validation.js instead
+    // of duplicating shape guards. One reviewed pure helper edge; byte and
+    // forbidden-module limits remain unchanged.
+    maxModules: 76,
     maxRawBytes: 394_812,
     maxGzipBytes: 98_307,
   },
@@ -252,8 +292,12 @@ const budgets = [
     // Masonry/VirtualList geometry and QR recipe add three neutral modules; QR encoder stays opt-in.
     // 1.10.0 Toast refresh adds badge/action recipe fields and their rationale comments (dist keeps comments);
     // module count unchanged. Measured showcase/evidence/root 403.8/410.1/568.8 kB raw.
-    maxModules: 76,
-    maxRawBytes: 404_400,
+    // 2026-10-01: Popover/Tooltip share internal/object-validation.js instead
+    // of duplicating shape guards. One reviewed pure helper edge; byte and
+    // forbidden-module limits remain unchanged.
+    maxModules: 77,
+    // Capsule recipe + validation: measured 526 + 328 raw bytes; same module graph.
+    maxRawBytes: 405_254,
     maxGzipBytes: 101_400,
   },
   {
@@ -286,8 +330,12 @@ const budgets = [
     // Masonry/VirtualList geometry and QR recipe add three neutral modules; QR encoder stays opt-in.
     // 1.10.0 Toast refresh adds badge/action recipe fields and their rationale comments (dist keeps comments);
     // module count unchanged. Measured showcase/evidence/root 403.8/410.1/568.8 kB raw.
-    maxModules: 78,
-    maxRawBytes: 410_700,
+    // 2026-10-01: Popover/Tooltip share internal/object-validation.js instead
+    // of duplicating shape guards. One reviewed pure helper edge; byte and
+    // forbidden-module limits remain unchanged.
+    maxModules: 79,
+    // Same capsule recipe/validation delta; preserve previous byte headroom.
+    maxRawBytes: 411_554,
     maxGzipBytes: 102_900,
   },
   {
@@ -308,7 +356,10 @@ const budgets = [
     // Liquid Toast adds the same pure contract module; measured 565.5/140.6 kB.
     // ThinkingOrb adds one recipe-only module; measured catalog/showcase/evidence 393.7/401.4/407.7 kB.
     // Masonry/VirtualList geometry and QR recipe add three neutral modules; QR encoder stays opt-in.
-    maxModules: 98,
+    // 2026-10-01: Popover/Tooltip share internal/object-validation.js instead
+    // of duplicating shape guards. One reviewed pure helper edge; byte and
+    // forbidden-module limits remain unchanged.
+    maxModules: 99,
     // 0.9.13에서 470_000/110_000을 올렸다. 증가분은 recipe의 근거 주석이며 tsc는
     // 주석을 dist에 그대로 싣는다. maxModules가 70으로 그대로라는 점이 import
     // 그래프가 늘지 않았다는 근거다. 이 한도를 다시 올릴 때는 module 수가 함께
@@ -321,7 +372,8 @@ const budgets = [
     // with the same 92-module graph; retain the metadata and leave a narrow 1 kB measured allowance.
     // Tabs/BottomNavigation/LoadMore proof mappings add 363 raw / 182 gzip bytes to the unchanged 92-module root graph.
     // 1.10.0 Toast refresh recipe fields + rationale comments; measured 568.8 kB raw, module count unchanged.
-    maxRawBytes: 569_500,
+    // Same capsule recipe/validation delta; see navigation reference evidence.
+    maxRawBytes: 570_354,
     // Calendar/composition evidence adds catalog copy; the root remains 70 modules
     // (473.6 kB raw / 111.0 kB gzip). Keep granular runtime budgets unchanged.
     // Popover 묶음에서 111.8 -> 112.3 kB gzip. 모듈별로 재면 catalog.js +522 B(Popover·

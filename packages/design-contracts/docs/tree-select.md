@@ -114,12 +114,12 @@ antd `TreeSelect`의 `checkStrictly`(부모/자식을 독립적으로 체크할�
 - 표면: `@hjmds/react/popover`의 `Popover`(트리거 + 팝업 + 확정 버튼)
 - collection: `@hjmds/react/tree`의 `Tree`(깊이 발표·화살표·확장)
 - 집계: 이 모듈의 `resolveTreeCheckedStates`/`toggleTreeCheckedSelection`
-- 예제: Showcase `Patterns/Tree`의 TreeSelect 화면
+- 예제: Showcase `컴포넌트/데이터 표시/Tree`의 TreeSelect 화면
 
 **Cascader도 같은 자리에서 끝난다.** catalog는 Cascader를 "TreeSelect에 path value와
 중간 단계 commit 축이 필요하다"는 prerequisite로 묶어 뒀는데, Tree renderer의 resolve
 결과가 이미 `parentId` 사슬을 들고 있어 경로는 파생이고, 중간 단계 확정은 그 노드를 그대로
 고르는 것이다. 새 축을 계약에 추가할 이유가 없어 prerequisite를 풀고 `composed`로 옮겼다
-(`Patterns/Tree`의 Cascader 화면). antd의 열(column) 방식 화면은 베끼지 않는다 — HJM의
+(`컴포넌트/데이터 표시/Tree`의 Cascader 화면). antd의 열(column) 방식 화면은 베끼지 않는다 — HJM의
 계층 탐색 어휘를 그대로 쓰는 쪽이 같은 문제를 이미 푼다.
 

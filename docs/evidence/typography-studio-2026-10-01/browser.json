@@ -1,0 +1,38 @@
+[
+  {
+    "state": "default",
+    "loaded": [
+      {
+        "family": "HjmStudio1",
+        "status": "loaded"
+      }
+    ],
+    "released": true,
+    "invalidFallback": true,
+    "overflow": false
+  },
+  {
+    "state": "dark",
+    "loaded": [
+      {
+        "family": "HjmStudio1",
+        "status": "loaded"
+      }
+    ],
+    "released": true,
+    "invalidFallback": true,
+    "overflow": false
+  },
+  {
+    "state": "large-text",
+    "loaded": [
+      {
+        "family": "HjmStudio1",
+        "status": "loaded"
+      }
+    ],
+    "released": true,
+    "invalidFallback": true,
+    "overflow": false
+  }
+]

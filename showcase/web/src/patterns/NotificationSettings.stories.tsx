@@ -28,8 +28,8 @@ function NotificationSettings() {
   </Stack>;
 }
 
-const meta = { title: "Patterns/Notification settings", component: NotificationSettings, parameters: { layout: "fullscreen", hjm: { edgeToEdge: true } } } satisfies Meta<typeof NotificationSettings>;
+const meta = { includeStories: ["Default","LargeText"], id: "patterns-notification-settings", title: "배포/화면/알림 설정", component: NotificationSettings, parameters: { layout: "fullscreen", hjm: { edgeToEdge: true } } } satisfies Meta<typeof NotificationSettings>;
 export default meta;
 type Story = StoryObj<typeof meta>;
-export const Default: Story = {};
-export const LargeText: Story = { globals: { textScale: "2", viewport: { value: "mobile1", isRotated: false } } };
+export const Default: Story = { name: "기본",};
+export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2", viewport: { value: "mobile1", isRotated: false } } };

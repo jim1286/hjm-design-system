@@ -1,6 +1,6 @@
 {
   "name": "@hjmds/react-native",
-  "version": "1.10.0",
+  "version": "1.11.0",
   "description": "Expo-independent React Native renderers for HJM design contracts.",
   "license": "MIT",
   "publishConfig": {
@@ -339,6 +339,120 @@
       "react-native": "./dist/screen-transition.js",
       "import": "./dist/screen-transition.js",
       "default": "./dist/screen-transition.js"
+    },
+    "./avatar-blobatar": {
+      "types": "./dist/avatar-blobatar.d.ts",
+      "react-native": "./dist/avatar-blobatar.js",
+      "import": "./dist/avatar-blobatar.js",
+      "default": "./dist/avatar-blobatar.js"
+    },
+    "./effect-surface": {
+      "types": "./dist/effect-surface.d.ts",
+      "react-native": "./dist/effect-surface.js",
+      "import": "./dist/effect-surface.js",
+      "default": "./dist/effect-surface.js"
+    },
+    "./icon-lucide": {
+      "types": "./dist/icon-lucide.d.ts",
+      "react-native": "./dist/icon-lucide.js",
+      "import": "./dist/icon-lucide.js",
+      "default": "./dist/icon-lucide.js"
+    },
+    "./duration-field": {
+      "types": "./dist/duration-field.d.ts",
+      "react-native": "./dist/duration-field.js",
+      "import": "./dist/duration-field.js",
+      "default": "./dist/duration-field.js"
+    },
+    "./inline-confirm": {
+      "types": "./dist/inline-confirm.d.ts",
+      "react-native": "./dist/inline-confirm.js",
+      "import": "./dist/inline-confirm.js",
+      "default": "./dist/inline-confirm.js"
+    },
+    "./reaction-picker": {
+      "types": "./dist/reaction-picker.d.ts",
+      "react-native": "./dist/reaction-picker.js",
+      "import": "./dist/reaction-picker.js",
+      "default": "./dist/reaction-picker.js"
+    },
+    "./notification-bell": {
+      "types": "./dist/notification-bell.d.ts",
+      "react-native": "./dist/notification-bell.js",
+      "import": "./dist/notification-bell.js",
+      "default": "./dist/notification-bell.js"
+    },
+    "./scroll-progress": {
+      "types": "./dist/scroll-progress.d.ts",
+      "react-native": "./dist/scroll-progress.js",
+      "import": "./dist/scroll-progress.js",
+      "default": "./dist/scroll-progress.js"
+    },
+    "./code-block": {
+      "types": "./dist/code-block.d.ts",
+      "react-native": "./dist/code-block.js",
+      "import": "./dist/code-block.js",
+      "default": "./dist/code-block.js"
+    },
+    "./activity-heatmap": {
+      "types": "./dist/activity-heatmap.d.ts",
+      "react-native": "./dist/activity-heatmap.js",
+      "import": "./dist/activity-heatmap.js",
+      "default": "./dist/activity-heatmap.js"
+    },
+    "./statistic-motion": {
+      "types": "./dist/statistic-motion.d.ts",
+      "react-native": "./dist/statistic-motion.js",
+      "import": "./dist/statistic-motion.js",
+      "default": "./dist/statistic-motion.js"
+    },
+    "./task-list": {
+      "types": "./dist/task-list.d.ts",
+      "react-native": "./dist/task-list.js",
+      "import": "./dist/task-list.js",
+      "default": "./dist/task-list.js"
+    },
+    "./folder-preview": {
+      "types": "./dist/folder-preview.d.ts",
+      "react-native": "./dist/folder-preview.js",
+      "import": "./dist/folder-preview.js",
+      "default": "./dist/folder-preview.js"
+    },
+    "./avatar-blobatar-motion": {
+      "types": "./dist/avatar-blobatar-motion.d.ts",
+      "react-native": "./dist/avatar-blobatar-motion.js",
+      "import": "./dist/avatar-blobatar-motion.js",
+      "default": "./dist/avatar-blobatar-motion.js"
+    },
+    "./step-player": {
+      "types": "./dist/step-player.d.ts",
+      "react-native": "./dist/step-player.js",
+      "import": "./dist/step-player.js",
+      "default": "./dist/step-player.js"
+    },
+    "./voice-note": {
+      "types": "./dist/voice-note.d.ts",
+      "react-native": "./dist/voice-note.js",
+      "import": "./dist/voice-note.js",
+      "default": "./dist/voice-note.js"
+    },
+    "./grid-reveal": {
+      "types": "./dist/grid-reveal.d.ts",
+      "react-native": "./dist/grid-reveal.js",
+      "import": "./dist/grid-reveal.js",
+      "default": "./dist/grid-reveal.js"
+    },
+    "./gravity-letters": {
+      "types": "./dist/gravity-letters.d.ts",
+      "react-native": "./dist/gravity-letters.js",
+      "import": "./dist/gravity-letters.js",
+      "default": "./dist/gravity-letters.js"
+    },
+    "./navigation-bar": {
+      "types": "./dist/navigation-bar.d.ts",
+      "react-native": "./dist/navigation-bar.js",
+      "import": "./dist/navigation-bar.js",
+      "default": "./dist/navigation-bar.js"
     }
   },
   "files": [
@@ -357,7 +471,7 @@
   },
   "peerDependencies": {
     "@gorhom/bottom-sheet": "5.2.14",
-    "@hjmds/design-contracts": ">=1.10.0 <1.11.0",
+    "@hjmds/design-contracts": ">=1.11.0 <1.12.0",
     "@react-native-menu/menu": "1.2.2",
     "@shopify/react-native-skia": "^2.6.2",
     "react": ">=19",
@@ -377,21 +491,24 @@
     "react-native-fast-confetti": "2.0.2",
     "react-native-screen-transitions": "4.0.0",
     "@react-navigation/native": "7.4.1",
-    "react-native-safe-area-context": "5.7.0"
+    "react-native-safe-area-context": "5.7.0",
+    "blobatar": "2.7.0",
+    "@blobatar/react-native": "2.7.0",
+    "lucide-react-native": "1.49.0"
   },
   "devDependencies": {
     "@babel/runtime": "7.29.7",
     "@gorhom/bottom-sheet": "5.2.14",
     "@hjmds/design-contracts": "workspace:*",
     "@react-native-menu/menu": "1.2.2",
-    "@react-native/metro-config": "0.81.6",
+    "@react-native/metro-config": "0.86.2",
     "@shopify/react-native-skia": "2.6.2",
     "@types/node": "^24.13.3",
     "@types/react": "^19.2.18",
     "@types/react-test-renderer": "^19.1.0",
-    "metro": "0.83.8",
+    "metro": "0.84.3",
     "react": "19.2.3",
-    "react-native": "^0.81.6",
+    "react-native": "0.86.2",
     "react-native-gesture-handler": "2.32.0",
     "react-native-ios-context-menu": "3.2.1",
     "react-native-ios-utilities": "5.2.0",
@@ -410,7 +527,10 @@
     "react-native-fast-confetti": "2.0.2",
     "react-native-screen-transitions": "4.0.0",
     "@react-navigation/native": "7.4.1",
-    "react-native-safe-area-context": "5.7.0"
+    "react-native-safe-area-context": "5.7.0",
+    "blobatar": "2.7.0",
+    "@blobatar/react-native": "2.7.0",
+    "lucide-react-native": "1.49.0"
   },
   "engines": {
     "node": ">=20"
@@ -471,6 +591,15 @@
       "optional": true
     },
     "react-native-safe-area-context": {
+      "optional": true
+    },
+    "blobatar": {
+      "optional": true
+    },
+    "@blobatar/react-native": {
+      "optional": true
+    },
+    "lucide-react-native": {
       "optional": true
     }
   }

@@ -1,7 +1,7 @@
 import { type ReactElement } from "react";
 // This proof file is listed by test/executed-scenarios.json; the workspace checker validates its cases against that registry.
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
-import { Animated, Keyboard, Platform, Pressable, ScrollView, View } from "react-native";
+import { Animated, Keyboard, Platform, Pressable, ScrollView, Text as NativeText, StyleSheet, View } from "react-native";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { sheetRecipe } from "@hjmds/design-contracts/recipes";
 import { Dialog, Sheet, type DialogProps, type SheetProps } from "../src/overlays.js";
@@ -188,4 +188,24 @@ describe("Overlay element titles", () => {
     const unnamed: SheetProps = { title: <Text>설정</Text>, closeLabel: "닫기" };
     expect([stringTitle, elementTitle, unnamed].length).toBe(3);
   });
+});
+
+
+it.each(["sheet", "dialog"] as const)("keeps the %s close icon fixed while content scales to 200%%", kind => {
+  const Overlay = kind === "sheet" ? Sheet : Dialog;
+  const onOpenChange = vi.fn();
+  render(<HjmNativeProvider reducedMotion textScale={2}>
+    <Overlay open title="확대된 제목" closeLabel="닫기" onOpenChange={onOpenChange}><Text>확대된 본문</Text></Overlay>
+  </HjmNativeProvider>);
+  const texts = renderer!.root.findAllByType(NativeText);
+  const icon = texts.find(node => node.props.children === "×")!;
+  const body = texts.find(node => node.props.children === "확대된 본문")!;
+  expect(icon.props.allowFontScaling).toBe(false);
+  expect(icon.props.accessible).toBe(false);
+  expect(StyleSheet.flatten(icon.props.style).fontSize).toBe(20);
+  expect(StyleSheet.flatten(body.props.style).fontSize).toBeGreaterThan(20);
+  const close = renderer!.root.findAllByType(Pressable).find(node => node.props.accessibilityLabel === "닫기")!;
+  expect(close.props.accessibilityRole).toBe("button");
+  act(() => close.props.onPress());
+  expect(onOpenChange).toHaveBeenCalledWith(false, { reason: "close-action" });
 });

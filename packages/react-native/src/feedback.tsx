@@ -24,6 +24,7 @@ import {
   type ResultStatus,
 } from "@hjmds/design-contracts/components/result";
 import {
+  liquidToastRecipe,
   createToastSession,
   createToastStore,
   resolveToastDescriptor,
@@ -52,6 +53,7 @@ import {
 } from "react";
 import {
   ActivityIndicator,
+  Text as NativeText,
   AccessibilityInfo,
   Animated,
   AppState,
@@ -473,8 +475,6 @@ export type ProgressProps = ProgressName & Readonly<{
   value?: number;
   max?: number;
   valueText?: string;
-  /** @deprecated Prefer the renderer-neutral `valueText`. */
-  valueLabel?: string;
   accessibilityHint?: string;
   size?: ProgressSize;
   /**
@@ -496,11 +496,10 @@ export type ProgressProps = ProgressName & Readonly<{
 
 export function Progress({
   value,
-  max = 1,
+  max = progressRecipe.defaults.max,
   label,
   accessibilityLabel,
   valueText,
-  valueLabel,
   accessibilityHint,
   size = progressRecipe.defaults.size,
   tone = progressRecipe.defaults.tone,
@@ -522,7 +521,7 @@ export function Progress({
   const theme = useHjmNativeTheme();
   const accessibleName = resolveControlAccessibleName(label, accessibilityLabel, "Progress");
   const percentage = value === undefined ? undefined : Math.round((value / max) * 100);
-  const resolvedValueText = valueText ?? valueLabel ?? (percentage === undefined ? undefined : `${percentage}%`);
+  const resolvedValueText = valueText ?? (percentage === undefined ? undefined : `${percentage}%`);
   return (
     <View
       accessibilityHint={accessibilityHint}
@@ -847,6 +846,15 @@ function ToastSurface({
     tone: resolved.tone,
   });
 
+  const closeControl = <IconButton
+    label={resolved.closeLabel}
+    onBlur={resumeFocus}
+    onFocus={pauseFocus}
+    onPress={() => onDismiss("close-action")}
+  >
+    <NativeText accessible={false} allowFontScaling={false} style={{ color: theme.colors.textMuted, fontSize: glyph[toastRecipe.close.glyph] }}>×</NativeText>
+  </IconButton>;
+
   return (
     <Animated.View
       accessible={false}
@@ -856,19 +864,20 @@ function ToastSurface({
       style={[
         {
           alignItems: "stretch",
-          backgroundColor: background,
+          // Liquid owns the surface; a second RN fill/border/shadow produced a double rim on iPhone (2026-10-01).
+          backgroundColor: managedMotion ? "transparent" : background,
           borderColor: border,
-          borderRadius: managedMotion ? 32 : radius[toastRecipe.surface.radius],
-          borderWidth: toastRecipe.surface.borderWidth,
+          borderRadius: managedMotion ? liquidToastRecipe.radius : radius[toastRecipe.surface.radius],
+          borderWidth: managedMotion ? 0 : toastRecipe.surface.borderWidth,
           gap: toastRecipe.surface.gap,
           maxWidth: toastRecipe.surface.maxWidth,
-          minHeight: managedMotion ? 74 : toastRecipe.surface.minHeight,
+          minHeight: managedMotion ? liquidToastRecipe.minHeight : toastRecipe.surface.minHeight,
           opacity: managedMotion ? 1 : motionProgress,
           overflow: "hidden",
           padding: toastRecipe.surface.padding,
           shadowColor: toastRecipe.surface.shadow.color,
           shadowOffset: { width: 0, height: toastRecipe.surface.shadow.offsetY },
-          shadowOpacity: toastRecipe.surface.shadow.opacity,
+          shadowOpacity: managedMotion ? 0 : toastRecipe.surface.shadow.opacity,
           shadowRadius: toastRecipe.surface.shadow.radius,
           transform: [{ translateY }],
           width: "100%",
@@ -903,6 +912,18 @@ function ToastSurface({
           {resolved.announcement}
         </Text>
       )}
+      {managedMotion ? (
+        // A full-width editorial banner replaces the badge/body/close three-column card.
+        // Keep only a small status glyph in the heading so long copy owns the entire second row.
+        <View style={{ gap: spacing.xs, direction: theme.environment.direction }}>
+          {resolved.title ? <View style={{ flexDirection: "row", alignItems: "flex-start", gap: spacing.xs, paddingEnd: toastRecipe.close.diameter, minHeight: glyph.md }}>
+            {renderedToneIcon === undefined ? null : <View accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ paddingTop: spacing.xxs, flexShrink: 0 }}>{renderedToneIcon}</View>}
+            <Text variant="bodyLarge" emphasis="strong" style={{ flex: 1, minWidth: 0, color: theme.colors.text }}>{resolved.title}</Text>
+          </View> : null}
+          <Text variant="body" style={{ color: theme.colors.textBody, paddingEnd: resolved.title ? 0 : toastRecipe.close.diameter }}>{resolved.description}</Text>
+          <View style={{ position: "absolute", top: -spacing.xs, end: -spacing.xs }}>{closeControl}</View>
+        </View>
+      ) : (
       <View
         style={{
           // Start-aligned so a multi-line or large-text toast keeps its badge beside the title (Web does the same).
@@ -948,15 +969,9 @@ function ToastSurface({
             {resolved.description}
           </Text>
         </View>
-        <IconButton
-          label={resolved.closeLabel}
-          onBlur={resumeFocus}
-          onFocus={pauseFocus}
-          onPress={() => onDismiss("close-action")}
-        >
-          <Text accessible={false} tone="muted" variant="title">×</Text>
-        </IconButton>
+        {closeControl}
       </View>
+      )}
       {resolved.action ? (
         // 1.10.0: tinted pill aligned to the end (toastRecipe.action) instead of a ghost text button.
         <Pressable
@@ -966,14 +981,16 @@ function ToastSurface({
           onFocus={pauseFocus}
           onPress={onAction}
           style={({ pressed }) => ({
-            alignItems: "center",
-            alignSelf: toastRecipe.action.align === "end" ? "flex-end" : "flex-start",
-            backgroundColor: resolveColorReference(toastRecipe.action.background, theme.palette),
-            borderRadius: radius[toastRecipe.action.radius],
+            alignItems: managedMotion ? "flex-start" : "center",
+            alignSelf: managedMotion ? "stretch" : toastRecipe.action.align === "end" ? "flex-end" : "flex-start",
+            backgroundColor: managedMotion ? "transparent" : resolveColorReference(toastRecipe.action.background, theme.palette),
+            borderTopWidth: managedMotion ? 1 : 0,
+            borderTopColor: theme.colors.border,
+            borderRadius: managedMotion ? 0 : radius[toastRecipe.action.radius],
             justifyContent: "center",
             minHeight: toastRecipe.action.minHeight,
             opacity: pressed ? toastRecipe.states.pressedOpacity : 1,
-            paddingHorizontal: toastRecipe.action.paddingHorizontal,
+            paddingHorizontal: managedMotion ? 0 : toastRecipe.action.paddingHorizontal,
           })}
         >
           <Text
@@ -1065,8 +1082,6 @@ export function Toast({
 export type ToastRegionController = Readonly<{
   /** Queues a toast; the same name as the Web `useToast().publish` and the contract store. */
   publish: (descriptor: ToastDescriptor) => ToastPublishResult;
-  /** @deprecated Since 1.5.0; use `publish`, the name Web and the contract store use. Kept for the 1.x train. */
-  show: (descriptor: ToastDescriptor) => ToastPublishResult;
   dismiss: (id: string, reason?: ToastDismissReason) => boolean;
   pause: (id: string, reason?: ToastPauseReason) => boolean;
   resume: (id: string, reason?: ToastPauseReason) => boolean;
@@ -1311,15 +1326,25 @@ export function ToastRegion({
     return changed;
   }, [emitChange, pruneRaw, store, flushTime]);
 
+  const storeLifetime = useRef(0);
+  const hasSeededDefaults = useRef(false);
   useEffect(() => {
-    flushTime();
-    for (const descriptor of initialDescriptors.current) {
-      rawDescriptors.current.set(descriptor.id, descriptor);
-      store.publish(descriptor);
+    storeLifetime.current += 1;
+    disposed.current = false;
+    lastTime.current = performance.now();
+    if (!hasSeededDefaults.current) {
+      hasSeededDefaults.current = true;
+      for (const descriptor of initialDescriptors.current) {
+        rawDescriptors.current.set(descriptor.id, descriptor);
+        store.publish(descriptor);
+      }
     }
     return () => {
       disposed.current = true;
-      store.dispose();
+      // Strict Effects/Fast Refresh replay setup with the same store; only a real
+      // unmount may destroy it. A microtask lets synchronous replay cancel disposal.
+      const ending = ++storeLifetime.current;
+      queueMicrotask(() => { if (storeLifetime.current === ending) store.dispose(); });
     };
   }, [store]);
 
@@ -1371,7 +1396,7 @@ export function ToastRegion({
     return () => clearTimeout(timeout);
   }, [snapshot.visible, store, flushTime]);
 
-  const show = useCallback((descriptor: ToastDescriptor) => {
+  const publish = useCallback((descriptor: ToastDescriptor) => {
     flushTime();
     rawDescriptors.current.set(descriptor.id, descriptor);
     const result = store.publish(descriptor);
@@ -1393,8 +1418,7 @@ export function ToastRegion({
     return store.invokeAction(id);
   }, [store]);
   const controller = {
-    publish: show,
-    show,
+    publish,
     dismiss,
     pause: (id: string, reason: ToastPauseReason = "programmatic") => { flushTime(); return !disposed.current && store.pause(id, reason); },
     resume: (id: string, reason: ToastPauseReason = "programmatic") => { flushTime(); return !disposed.current && store.resume(id, reason); },

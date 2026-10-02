@@ -70,14 +70,6 @@ export function validateLayoutWebDescriptor(descriptor: LayoutDescriptor): void 
   }
 }
 
-/**
- * @deprecated Use `validateLayoutRegions` for shared/Native structure or
- * `validateLayoutWebDescriptor` for a Web app shell.
- */
-export function validateLayoutDescriptor(descriptor: LayoutDescriptor): void {
-  validateLayoutWebDescriptor(descriptor);
-}
-
 export type LayoutLandmarkRole =
   | "banner"
   | "navigation"

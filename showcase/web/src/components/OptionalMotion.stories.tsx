@@ -13,6 +13,6 @@ function Demo() {
     <p aria-live="polite">{action}</p>
   </div>;
 }
-const meta = { title: "Patterns/Optional Motion", component: Demo } satisfies Meta<typeof Demo>;
+const meta = { includeStories: ["Playground"], id: "patterns-optional-motion", title: "배포/구성/모션 연동", component: Demo } satisfies Meta<typeof Demo>;
 export default meta;
-export const Playground: StoryObj<typeof meta> = {};
+export const Playground: StoryObj<typeof meta> = { name: "직접 조작",};

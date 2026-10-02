@@ -46,9 +46,9 @@ export function ConfirmPopoverPreview() {
       </Popover>}
   </Stack></Section>;
 }
-const meta = { title: "Patterns/Popover", component: PopoverPreview } satisfies Meta<typeof PopoverPreview>;
+const meta = { includeStories: ["Filters","ReversibleConfirmation","LargeText"], id: "patterns-popover", title: "배포/컴포넌트/오버레이/팝오버", component: PopoverPreview } satisfies Meta<typeof PopoverPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
-export const Filters: Story = {};
-export const ReversibleConfirmation: Story = { render: () => <ConfirmPopoverPreview /> };
-export const LargeText: Story = { globals: { textScale: "2" } };
+export const Filters: Story = { name: "필터",};
+export const ReversibleConfirmation: Story = { name: "취소 가능한 확인", render: () => <ConfirmPopoverPreview /> };
+export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };

@@ -1,0 +1,31 @@
+[
+  {
+    "state": "default",
+    "pngWidth": 1080,
+    "pngHeight": 1440,
+    "previewExportIdentical": true,
+    "width": 390,
+    "scrollWidth": 390
+  },
+  {
+    "state": "dark",
+    "pngWidth": 1080,
+    "pngHeight": 1080,
+    "previewExportIdentical": true,
+    "width": 390,
+    "scrollWidth": 390
+  },
+  {
+    "state": "large-text",
+    "pngWidth": 1440,
+    "pngHeight": 900,
+    "previewExportIdentical": true,
+    "width": 390,
+    "scrollWidth": 390
+  },
+  {
+    "sceneRoundtrip": true,
+    "requiresImageReselect": true,
+    "decodeErrorVisible": true
+  }
+]

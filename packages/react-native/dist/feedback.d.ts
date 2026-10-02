@@ -62,8 +62,6 @@ export type ProgressProps = ProgressName & Readonly<{
     value?: number;
     max?: number;
     valueText?: string;
-    /** @deprecated Prefer the renderer-neutral `valueText`. */
-    valueLabel?: string;
     accessibilityHint?: string;
     size?: ProgressSize;
     /**
@@ -82,7 +80,7 @@ export type ProgressProps = ProgressName & Readonly<{
     indicatorStyle?: StyleProp<ViewStyle>;
     testID?: string;
 }>;
-export declare function Progress({ value, max, label, accessibilityLabel, valueText, valueLabel, accessibilityHint, size, tone, shape, children, style, labelStyle, valueStyle, trackStyle, indicatorStyle, testID, }: ProgressProps): import("react").JSX.Element;
+export declare function Progress({ value, max, label, accessibilityLabel, valueText, accessibilityHint, size, tone, shape, children, style, labelStyle, valueStyle, trackStyle, indicatorStyle, testID, }: ProgressProps): import("react").JSX.Element;
 export type SpinnerProps = Readonly<{
     label: string;
     size?: "small" | "large";
@@ -126,8 +124,6 @@ export declare function Toast({ descriptor, onDismiss, placement, renderToneIcon
 export type ToastRegionController = Readonly<{
     /** Queues a toast; the same name as the Web `useToast().publish` and the contract store. */
     publish: (descriptor: ToastDescriptor) => ToastPublishResult;
-    /** @deprecated Since 1.5.0; use `publish`, the name Web and the contract store use. Kept for the 1.x train. */
-    show: (descriptor: ToastDescriptor) => ToastPublishResult;
     dismiss: (id: string, reason?: ToastDismissReason) => boolean;
     pause: (id: string, reason?: ToastPauseReason) => boolean;
     resume: (id: string, reason?: ToastPauseReason) => boolean;

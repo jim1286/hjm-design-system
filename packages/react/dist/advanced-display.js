@@ -1,4 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { TableSortButton } from "./table-sort-button.js";
+import { getNextDataTableSortState } from "@hjmds/design-contracts/components/data-table";
 import { resolveDescriptionListColumnCount, resolveDescriptionListDescriptor, } from "@hjmds/design-contracts/components/description-list";
 import { resolveTimelineDescriptor, } from "@hjmds/design-contracts/components/timeline";
 import { resolveStatisticDescriptor, validateStatisticGroup, } from "@hjmds/design-contracts/components/statistic";
@@ -95,7 +97,7 @@ function initials(name) {
         .join("")
         .toLocaleUpperCase();
 }
-export const Avatar = forwardRef(function Avatar({ name, src, alt = name, fallback, size = avatarRecipe.defaults.size, shape = avatarRecipe.defaults.shape, imageProps, className, ...props }, ref) {
+export const Avatar = forwardRef(function Avatar({ name, src, alt = name, fallback, renderFallback, size = avatarRecipe.defaults.size, shape = avatarRecipe.defaults.shape, imageProps, className, ...props }, ref) {
     if (name.trim().length === 0)
         throw new TypeError("Avatar name must not be empty");
     const [imageAvailable, setImageAvailable] = useState(Boolean(src));
@@ -104,7 +106,7 @@ export const Avatar = forwardRef(function Avatar({ name, src, alt = name, fallba
     return (_jsx("span", { ...props, ref: ref, className: classNames("hjm-avatar", className), "data-size": size, "data-shape": shape, "data-state": imageAvailable ? "image" : "fallback", children: src && imageAvailable ? (_jsx("img", { ...restImageProps, src: src, alt: alt, className: classNames("hjm-avatar__image", imageClassName), onError: (event) => {
                 setImageAvailable(false);
                 onError?.(event);
-            } })) : (_jsx("span", { className: "hjm-avatar__fallback", role: alt.length > 0 ? "img" : undefined, "aria-label": alt.length > 0 ? alt : undefined, "aria-hidden": alt.length === 0 || undefined, children: fallback ?? initials(name) })) }));
+            } })) : (_jsx("span", { className: "hjm-avatar__fallback", role: alt.length > 0 ? "img" : undefined, "aria-label": alt.length > 0 ? alt : undefined, "aria-hidden": alt.length === 0 || undefined, children: renderFallback?.({ size: avatarRecipe.sizes[size], decorative: true }) ?? fallback ?? initials(name) })) }));
 });
 /**
  * Overlapping avatars. The overlap comes from the recipe ratio rather than a
@@ -175,6 +177,7 @@ function DescriptionListInner({ items, columns, className, layoutStyle, style, .
     return (_jsx("dl", { ...props, ref: ref, className: classNames("hjm-description-list", className), "data-columns": resolvedColumns, "data-state": resolvedColumns < descriptor.columns ? "collapsed" : "ready", style: responsiveStyle, children: descriptor.items.map((item) => (_jsxs("div", { className: "hjm-description-list__item", children: [_jsx("dt", { className: "hjm-description-list__label", children: item.label }), _jsx("dd", { className: "hjm-description-list__value", children: item.value })] }, item.id))) }));
 }
 export const DescriptionList = forwardRef(DescriptionListInner);
+// Table's callback cannot express null; share the sort policy with a two-state cycle.
 function TableInner({ columns, rows, getRowKey, caption, emptyState, onSortChange, wrapperClassName, className, ...props }, ref) {
     if (columns.length === 0)
         throw new TypeError("Table requires at least one column");
@@ -198,11 +201,10 @@ function TableInner({ columns, rows, getRowKey, caption, emptyState, onSortChang
             throw new TypeError(`Duplicate Table row key: ${rowKey}`);
         seenRowKeys.add(rowKey);
     }
-    return (_jsx("div", { className: classNames("hjm-table-scroll", wrapperClassName), tabIndex: 0, children: _jsxs("table", { ...props, ref: ref, className: classNames("hjm-table", className), children: [caption ? _jsx("caption", { className: "hjm-table__caption", children: caption }) : null, _jsx("thead", { children: _jsx("tr", { children: columns.map((column) => (_jsx("th", { scope: "col", className: "hjm-table__header", "data-align": column.align ?? "start", "aria-sort": column.sortDirection ?? (column.sortable ? "none" : undefined), children: column.sortable ? (_jsxs("button", { type: "button", className: "hjm-table__sort", onClick: () => onSortChange?.(column.id, column.sortDirection === "ascending" ? "descending" : "ascending"), children: [column.header, _jsx("span", { "aria-hidden": "true", children: column.sortDirection === "ascending"
-                                            ? " ↑"
-                                            : column.sortDirection === "descending"
-                                                ? " ↓"
-                                                : " ↕" })] })) : column.header }, column.id))) }) }), _jsx("tbody", { children: rows.length === 0 ? (_jsx("tr", { children: _jsx("td", { className: "hjm-table__empty", colSpan: columns.length, children: emptyState }) })) : (rows.map((row, rowIndex) => (_jsx("tr", { className: "hjm-table__row", children: columns.map((column) => (_jsx("td", { className: "hjm-table__cell", "data-align": column.align ?? "start", children: column.cell(row, rowIndex) }, column.id))) }, rowKeys[rowIndex])))) })] }) }));
+    return (_jsx("div", { className: classNames("hjm-table-scroll", wrapperClassName), tabIndex: 0, children: _jsxs("table", { ...props, ref: ref, className: classNames("hjm-table", className), children: [caption ? _jsx("caption", { className: "hjm-table__caption", children: caption }) : null, _jsx("thead", { children: _jsx("tr", { children: columns.map((column) => (_jsx("th", { scope: "col", className: "hjm-table__header", "data-align": column.align ?? "start", "aria-sort": column.sortDirection ?? (column.sortable ? "none" : undefined), children: column.sortable ? (_jsx(TableSortButton, { header: column.header, ...(column.sortDirection === undefined ? {} : { direction: column.sortDirection }), glyphs: { ascending: " ↑", descending: " ↓", none: " ↕" }, className: "hjm-table__sort", onSort: () => {
+                                    const next = getNextDataTableSortState(column.sortDirection ? { columnId: column.id, direction: column.sortDirection } : null, column.id, "two-state");
+                                    onSortChange?.(column.id, next.direction);
+                                } })) : column.header }, column.id))) }) }), _jsx("tbody", { children: rows.length === 0 ? (_jsx("tr", { children: _jsx("td", { className: "hjm-table__empty", colSpan: columns.length, children: emptyState }) })) : (rows.map((row, rowIndex) => (_jsx("tr", { className: "hjm-table__row", children: columns.map((column) => (_jsx("td", { className: "hjm-table__cell", "data-align": column.align ?? "start", children: column.cell(row, rowIndex) }, column.id))) }, rowKeys[rowIndex])))) })] }) }));
 }
 export const Table = forwardRef(TableInner);
 function TimelineInner({ items, composeAccessibleName, className, ...props }, ref) {

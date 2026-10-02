@@ -6,7 +6,7 @@
 // The same painter also drives "breathing" (ring), via the `faceOn` flag:
 // a face-on circle whose radius — not its out-of-plane offset — undulates,
 // so it reads as a ring slowly morphing rather than a sash in orbit.
-import { fibDir, finalizeFrame, makeProj, radiusScale } from './core.js';
+import { ghostSphereDots, finalizeFrame, makeProj, radiusScale } from './core.js';
 export const frameRibbon = (size, t, o) => {
     const cx = size / 2;
     const cy = size / 2;
@@ -17,14 +17,7 @@ export const frameRibbon = (size, t, o) => {
     const camTilt = 0.3;
     const pt = makeProj(t * 0.1 * spin, camTilt, cx, cy, 1);
     const rs = radiusScale(size, o.rsPow ?? 0.6);
-    const dots = [];
-    const ghostN = o.ghostN ?? 150;
-    for (let i = 0; i < ghostN; i++) {
-        const d = fibDir(i, ghostN);
-        const [px, py, z] = pt(d[0] * R, d[1] * R, d[2] * R);
-        const depth = (z / R + 1) / 2;
-        dots.push({ x: px, y: py, z, r: 0.8 * rs, white: 0.78, a: 0.1 + 0.22 * depth });
-    }
+    const dots = ghostSphereDots(pt, R, rs, o.ghostN ?? 150);
     // The band plane, precessing (frozen when spin=0). The projection squashes
     // the band's great circle vertically by cos(ta + camTilt); face-on sets
     // ta = -camTilt so that term is 1 and the band reads as a true circle

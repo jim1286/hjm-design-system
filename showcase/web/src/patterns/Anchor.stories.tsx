@@ -21,9 +21,9 @@ export function AnchorPreview({ horizontal = true }: { horizontal?: boolean }) {
     </div>
   </Stack></Section>;
 }
-const meta = { title: "Patterns/Anchor", component: AnchorPreview } satisfies Meta<typeof AnchorPreview>;
+const meta = { includeStories: ["Guide","Vertical","LargeText"], id: "patterns-anchor", title: "배포/컴포넌트/탐색/문서 내 바로가기", component: AnchorPreview } satisfies Meta<typeof AnchorPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
-export const Guide: Story = {};
-export const Vertical: Story = { args: { horizontal: false } };
-export const LargeText: Story = { globals: { textScale: "2" } };
+export const Guide: Story = { name: "사용 안내",};
+export const Vertical: Story = { name: "세로 배치", args: { horizontal: false } };
+export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };

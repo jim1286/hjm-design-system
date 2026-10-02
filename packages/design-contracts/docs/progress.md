@@ -14,3 +14,11 @@
 
 **Native**는 conic gradient가 없어 회전한 반링으로 그린다. 그림을 위해 의존성을 들이지
 않는다 — 값은 wrapper가 발표하므로 이 도형은 장식이다.
+
+## max 기본값 통일 (2026-10-02)
+
+`max`를 생략하면 두 renderer 모두 `progressRecipe.defaults.max`(100)를 쓴다. 그 전에는 Web 100,
+Native 1이라 같은 `value={76}`이 Web에서는 76%, Native에서는 RangeError였다(STEA 후보 검토의
+수치 요약 구성을 Native 시뮬레이터에서 띄우다 발견). 100을 고른 이유는 Web 기존 동작과 문서 예제가
+백분율이기 때문이다. 0–1 분수가 자연스러운 곳(UploadItem의 업로드 비율)은 `max={1}`을 쓰거나
+백분율로 바꿔 넘긴다. Native 기본값이 바뀌므로 2.0 fixed major에 싣고 이관표에 기록했다.

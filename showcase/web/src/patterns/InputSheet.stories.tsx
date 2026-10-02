@@ -17,8 +17,8 @@ function InputSheet() {
     </Sheet>
   </Stack>;
 }
-const meta = { title: "Patterns/Input sheet", component: InputSheet } satisfies Meta<typeof InputSheet>;
+const meta = { includeStories: ["Default","LargeText"], id: "patterns-input-sheet", title: "배포/구성/입력 시트", component: InputSheet } satisfies Meta<typeof InputSheet>;
 export default meta;
 type Story = StoryObj<typeof meta>;
-export const Default: Story = {};
-export const LargeText: Story = { globals: { textScale: "2", viewport: { value: "mobile1", isRotated: false } } };
+export const Default: Story = { name: "기본",};
+export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2", viewport: { value: "mobile1", isRotated: false } } };

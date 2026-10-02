@@ -22,8 +22,7 @@ stable)이다. `Layout`이 그 콘텐츠나 상태를 다시 계약하면 두 �
   Web 전용 `validateLayoutWebDescriptor`가 이 규칙을 강제한다 — `hasHeader`나
   `sidebar`가 있는데 `skipLinkLabel`이 없으면 던진다. 공통
   `validateLayoutRegions`는 region/sidebar 구조만 검사하므로, bypass-link 개념이
-  없는 Native에 Web 요구를 강제하지 않는다. 기존 `validateLayoutDescriptor`는
-  Web validator의 호환 alias다.
+  없는 Native에 Web 요구를 강제하지 않는다. 기존 `validateLayoutDescriptor` 호환 alias는 2.0에서 제거했다.
 - **플랫폼 번역**: 성립하지만 비대칭적으로 성립한다. Web은 실제 랜드마크
   엘리먼트(`<header>`/`<nav>`/`<main>`/`<footer>`)가 있다. Native는 랜드마크
   개념 자체가 없다 — `accessibilityRole`은 heading/control용이지 페이지 영역용이

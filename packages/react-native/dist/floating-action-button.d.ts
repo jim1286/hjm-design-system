@@ -1,7 +1,7 @@
+import type { ButtonProps } from "./actions.js";
+import { resolveFloatingActionButtonContentClearance, type FloatingActionButtonDescriptor, type FloatingActionButtonLayoutMode } from "@hjmds/design-contracts/components/floating-action-button";
 import { type ReactNode } from "react";
 import { View, type NativeScrollEvent, type NativeSyntheticEvent } from "react-native";
-import { resolveFloatingActionButtonContentClearance, type FloatingActionButtonDescriptor, type FloatingActionButtonLayoutMode } from "@hjmds/design-contracts/components/floating-action-button";
-import { type ButtonProps } from "./actions.js";
 export { resolveFloatingActionButtonContentClearance };
 export type FloatingActionButtonProps = Pick<ButtonProps, "onPress" | "onFocus" | "onBlur" | "testID"> & Readonly<{
     descriptor: FloatingActionButtonDescriptor;

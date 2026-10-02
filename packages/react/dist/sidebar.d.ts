@@ -1,7 +1,10 @@
 import { type SidebarDescriptor, type SidebarItemDescriptor } from "@hjmds/design-contracts/components/sidebar";
 import { type ReactNode } from "react";
+export type SidebarAppearance = "standard" | "bounce" | "hook" | "proximity";
 export type SidebarProps<Id extends string = string, GroupId extends string = string> = Readonly<{
     descriptor: SidebarDescriptor<Id, GroupId>;
+    /** Decoration only; link hit areas and document-order keyboard navigation stay fixed. */
+    appearance?: SidebarAppearance;
     collapsed?: boolean;
     defaultCollapsed?: boolean;
     onCollapsedChange?: (collapsed: boolean) => void;

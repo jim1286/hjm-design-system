@@ -1,0 +1,180 @@
+[
+  {
+    "content_required": false,
+    "AXFrame": "{{0, 0}, {402, 874}}",
+    "pid": 57163,
+    "traits": [
+      "None"
+    ],
+    "enabled": true,
+    "AXValue": null,
+    "AXLabel": "HJM Native Showcase",
+    "custom_actions": [],
+    "title": null,
+    "help": null,
+    "role": "AXApplication",
+    "subrole": null,
+    "AXUniqueId": null,
+    "type": "Application",
+    "role_description": "application",
+    "frame": {
+      "width": 402,
+      "x": 0,
+      "y": 0,
+      "height": 874
+    }
+  },
+  {
+    "traits": [
+      "Scrollable"
+    ],
+    "role_description": "",
+    "AXValue": null,
+    "subrole": null,
+    "role": "AXGenericElement",
+    "pid": 57163,
+    "AXUniqueId": null,
+    "help": null,
+    "enabled": true,
+    "custom_actions": [],
+    "AXLabel": "이번 주 기록, 1,280, 로컬 예제 데이터",
+    "type": "GenericElement",
+    "title": null,
+    "AXFrame": "{{16, 78}, {370, 180}}",
+    "content_required": false,
+    "frame": {
+      "height": 180,
+      "y": 78,
+      "width": 370,
+      "x": 16
+    }
+  },
+  {
+    "AXFrame": "{{16, 282}, {106.66666412353516, 44}}",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "role": "AXGenericElement",
+    "content_required": false,
+    "AXLabel": "줄이기",
+    "title": null,
+    "frame": {
+      "width": 106.66666412353516,
+      "height": 44,
+      "y": 282,
+      "x": 16
+    },
+    "custom_actions": [],
+    "pid": 57163,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "help": null,
+    "type": "GenericElement",
+    "role_description": "",
+    "enabled": true,
+    "subrole": null
+  },
+  {
+    "enabled": true,
+    "AXLabel": "늘리기",
+    "role": "AXButton",
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "help": null,
+    "subrole": "AXSwitch",
+    "AXFrame": "{{134.66666412353516, 282}, {104.66665649414062, 44}}",
+    "AXUniqueId": null,
+    "content_required": false,
+    "role_description": "switch",
+    "pid": 57163,
+    "type": "Button",
+    "frame": {
+      "y": 282,
+      "width": 104.66665649414062,
+      "height": 44,
+      "x": 134.66666412353516
+    },
+    "AXValue": null,
+    "title": null,
+    "custom_actions": []
+  },
+  {
+    "subrole": null,
+    "help": null,
+    "AXValue": null,
+    "AXFrame": "{{362, 759}, {24, 24}}",
+    "content_required": false,
+    "AXUniqueId": null,
+    "enabled": true,
+    "custom_actions": [],
+    "role_description": "",
+    "frame": {
+      "height": 24,
+      "x": 362,
+      "width": 24,
+      "y": 759
+    },
+    "AXLabel": null,
+    "pid": 57163,
+    "title": null,
+    "type": "GenericElement",
+    "role": "AXGenericElement",
+    "traits": [
+      "Scrollable"
+    ]
+  },
+  {
+    "title": null,
+    "AXFrame": "{{6, 811.66666698455811}, {362, 17}}",
+    "traits": [
+      "Scrollable"
+    ],
+    "help": null,
+    "role": "AXGenericElement",
+    "role_description": "",
+    "type": "GenericElement",
+    "custom_actions": [],
+    "AXLabel": "Components/Display/Animated Statistic/Large Text",
+    "subrole": null,
+    "enabled": true,
+    "content_required": false,
+    "pid": 57163,
+    "AXValue": null,
+    "AXUniqueId": "mobile-menu-button",
+    "frame": {
+      "height": 17,
+      "y": 811.6666669845581,
+      "width": 362,
+      "x": 6
+    }
+  },
+  {
+    "frame": {
+      "width": 28,
+      "y": 806,
+      "height": 28,
+      "x": 368
+    },
+    "enabled": true,
+    "role": "AXButton",
+    "AXValue": null,
+    "help": null,
+    "AXFrame": "{{368, 806}, {28, 28}}",
+    "AXLabel": "Open addons panel",
+    "role_description": "button",
+    "content_required": false,
+    "traits": [
+      "Scrollable",
+      "Button"
+    ],
+    "pid": 57163,
+    "type": "Button",
+    "custom_actions": [],
+    "AXUniqueId": "mobile-addons-button",
+    "subrole": null,
+    "title": null
+  }
+]

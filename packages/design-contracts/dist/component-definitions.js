@@ -118,8 +118,7 @@ const kindByCategory = {
     utility: "utility",
 };
 /**
- * Backward-compatible normalized view over the v0.2 catalog. New consumers
- * should prefer this shape so a component can evolve to multiple recipes,
+ * Normalized catalog view. Consumers should prefer this shape so a component can evolve to multiple recipes,
  * behaviors, and different Web/Native maturity without another API rewrite.
  */
 export const componentDefinitions = componentCatalog.map((rawEntry) => {

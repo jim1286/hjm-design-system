@@ -23,6 +23,8 @@ export const authScreenRecipe = {
     footerText: typography.caption,
     /** 제공자 버튼 높이는 Provider 계약이 소유한다 — 여기서 다시 정하지 않는다. */
     providerMinHeight: authProviderButtonRecipe.minHeight,
+    // 2026-10-01: the action card stays mounted during login so its dimensions and background survive the loader.
+    mainCard: { padding: spacing.md, radius: radius.lg },
     densities: {
         regular: {
             heroGap: spacing.md,

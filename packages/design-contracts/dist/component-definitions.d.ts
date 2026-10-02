@@ -132,14 +132,13 @@ export type ComponentDefinition = Readonly<{
         }>;
     }>;
     docs: Readonly<{
-        /** New stable documentation key. Legacy Showcase IDs remain supported during migration. */
+        /** Stable documentation key; aliases are catalog search terms, not alternate component implementations. */
         storyId: `components/${ComponentId}`;
         aliases: readonly string[];
     }>;
 }>;
 /**
- * Backward-compatible normalized view over the v0.2 catalog. New consumers
- * should prefer this shape so a component can evolve to multiple recipes,
+ * Normalized catalog view. Consumers should prefer this shape so a component can evolve to multiple recipes,
  * behaviors, and different Web/Native maturity without another API rewrite.
  */
 export declare const componentDefinitions: readonly ComponentDefinition[];

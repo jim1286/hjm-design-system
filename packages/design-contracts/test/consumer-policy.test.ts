@@ -20,7 +20,7 @@ describe("consumer adoption policy", () => {
     expect(policy).toContain("`draft` /\n  `incubating`");
     expect(policy).toContain("timestamp가 있는 `verified` evidence");
     expect(policy).toContain("optional adoption");
-    expect(policy).toContain("정책 버전: **1.4.0**");
+    expect(policy).toContain("정책 버전: **2.0.0**");
     expect(policy).toContain("React Native legacy style compatibility boundary");
     expect(policy).toContain("`HjmCompositionStyle` / `layoutStyle`");
     expect(policy).toContain("위 네 조건과 소비 앱별 이관 목록을 충족한 다음 major에서");
@@ -80,13 +80,12 @@ describe("consumer adoption policy", () => {
       exports?: Record<string, { types?: string }>;
     };
 
-    expect(policy).toContain("신규 앱과 기존 앱의 새 화면은 legacy raw style prop을");
+    expect(policy).toContain("deprecated 공개 스타일 통로는 2.0에서 제거");
     expect(nativeReadme).toContain(
       "../design-contracts/docs/consumer-policy.md#31-react-native-legacy-style-compatibility-boundary",
     );
     expect(nativeReadme).toContain("type HjmCompositionStyle");
-    expect(nativeReadme).toContain("Published 1.x compatibility props remain available");
-    expect(nativeReadme).toContain("removal requires a future major");
+    expect(nativeReadme).toContain("Deprecated 1.x compatibility props are removed in 2.0");
     expect(nativePackage.exports?.["./composition-style"]?.types)
       .toBe("./dist/composition-style.d.ts");
     expect(compositionSource).toContain("export type HjmCompositionStyle");
@@ -104,8 +103,7 @@ describe("consumer adoption policy", () => {
     }
     for (const source of coreSources) {
       expect(source).toContain("layoutStyle");
-      expect(source).toContain("@deprecated Legacy compatibility only");
-      expect(source).toContain("consumer-policy.md#31-react-native-legacy-style-compatibility-boundary");
+      expect(source).not.toContain("@deprecated Legacy compatibility only");
     }
   });
 });

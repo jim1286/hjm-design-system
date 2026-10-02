@@ -1,0 +1,20 @@
+[
+  {
+    "state": "default",
+    "fixedBounds": true,
+    "collapseNames": true,
+    "overflow": false
+  },
+  {
+    "state": "dark",
+    "fixedBounds": true,
+    "collapseNames": true,
+    "overflow": false
+  },
+  {
+    "state": "large-text",
+    "fixedBounds": true,
+    "collapseNames": true,
+    "overflow": false
+  }
+]

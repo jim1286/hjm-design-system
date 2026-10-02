@@ -1,0 +1,17 @@
+[
+  {
+    "state": "default",
+    "overflow": false,
+    "slider": "12.1"
+  },
+  {
+    "state": "dark",
+    "overflow": false,
+    "slider": "12.1"
+  },
+  {
+    "state": "large-text",
+    "overflow": false,
+    "slider": "12.1"
+  }
+]

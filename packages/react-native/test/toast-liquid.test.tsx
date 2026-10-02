@@ -1,3 +1,4 @@
+import { StrictMode } from "react";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { AccessibilityInfo, AppState, View, type AppStateStatus } from "react-native";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -89,4 +90,41 @@ describe("Native Liquid Toast lifecycle", () => {
     act(() => { renderer = create(<HjmNativeProvider><ToastRegion defaultToasts={[message("fallback")]} /></HjmNativeProvider>); });
     expect(renderer!.root.findAll(n => n.props.accessibilityLabel === "fallback").length).toBeGreaterThan(0);
   });
+});
+
+it("draws liquid chrome once, keeping the accessible RN body transparent", async () => {
+  await mount(); await act(async () => { controller.publish(message('single-surface')); }); measure();
+  const body = renderer!.root.findAll(node => Array.isArray(node.props.style) && node.props.style.some((style: { minHeight?: number } | undefined) => style?.minHeight === 74))[0];
+  expect(body).toBeDefined();
+  expect(body!.props.style[0]).toMatchObject({backgroundColor:'transparent',borderWidth:0,shadowOpacity:0});
+});
+
+
+it("preserves a region through Strict Effects replay and disposes only on real unmount", async () => {
+  const dismissed = vi.fn();
+  await act(async () => {
+    renderer = create(<StrictMode><HjmNativeProvider><ToastRegion
+      defaultToasts={[{ ...message("initial"), durationMs: null, onDismiss: dismissed }]}
+    ><Capture /></ToastRegion></HjmNativeProvider></StrictMode>);
+  });
+  expect(dismissed).not.toHaveBeenCalled();
+  act(() => { controller.publish({ ...message("next"), durationMs: null }); });
+  expect(dismissed).not.toHaveBeenCalled();
+  await act(async () => { renderer!.unmount(); });
+  renderer = undefined;
+  expect(dismissed).toHaveBeenCalledExactlyOnceWith("interrupted");
+});
+
+
+it.each(["light", "dark"] as const)("retains the settled card fill alongside its shadow in %s theme", async (theme) => {
+  await act(async () => { renderer = create(<HjmNativeProvider theme={theme}><ToastRegion placement="top" presentationAdapter={adapter}><Capture /></ToastRegion></HjmNativeProvider>); });
+  await act(async () => { controller.publish(message("visible-surface")); });
+  measure(); completeMotion();
+  // Skia shadowOnly excludes the input shape. This must stay false even after the goo layer disappears.
+  const shadows = renderer!.root.findAll(node => node.props.dx === 0 && typeof node.props.blur === "number");
+  expect(shadows.length).toBeGreaterThan(0);
+  for (const shadow of shadows) {
+    expect(shadow.props.shadowOnly).not.toBe(true);
+    expect(shadow.parent?.props.color).toBeTruthy();
+  }
 });

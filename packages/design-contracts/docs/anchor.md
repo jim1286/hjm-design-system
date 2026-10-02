@@ -54,7 +54,7 @@ listener·observer·예약 frame을 해제합니다. CSS transform만으로 위�
 Web 전용입니다. Native 라우팅·목록 위치 이동은 해당 플랫폼과 제품이 소유하며 빈 RN wrapper를
 추가하지 않습니다. 중첩 트리 목차·자동 제목 수집·오버레이 anchor positioning은 포함하지 않습니다.
 
-`Patterns/Anchor`는 세 부분으로 나눈 읽기 가이드와 별도 스크롤 영역을 제공합니다.
+`컴포넌트/탐색/Anchor`는 세 부분으로 나눈 읽기 가이드와 별도 스크롤 영역을 제공합니다.
 브라우저 테스트는 위치 동기화·짧은 마지막 부분·offset·reduced motion·임시 focus 복원·
 fragment 복구·나중에 삽입된 대상·좁은 목차의 긴 label 줄바꿈·Tab/Enter 활성화와 문서 스크롤을 검사합니다.
 실제 제품 문서 채택·보조기기 검증은 남아 있습니다.

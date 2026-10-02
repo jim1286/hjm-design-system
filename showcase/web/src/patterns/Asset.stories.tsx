@@ -29,8 +29,8 @@ export function AssetPreview() {
   );
 }
 
-const meta = { title: "Patterns/Asset", component: AssetPreview } satisfies Meta<typeof AssetPreview>;
+const meta = { includeStories: ["MixedMedia","ReducedMotion"], id: "patterns-asset", title: "배포/컴포넌트/데이터 표시/이미지·영상 표시", component: AssetPreview } satisfies Meta<typeof AssetPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
-export const MixedMedia: Story = {};
-export const ReducedMotion: Story = { globals: { motion: "reduced" } };
+export const MixedMedia: Story = { name: "혼합 미디어",};
+export const ReducedMotion: Story = { name: "동작 줄이기", globals: { motion: "reduced" } };

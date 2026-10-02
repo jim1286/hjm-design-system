@@ -1,0 +1,17 @@
+{
+  "states": [
+    {
+      "state": "default",
+      "overflow": false
+    },
+    {
+      "state": "dark",
+      "overflow": false
+    },
+    {
+      "state": "large-text",
+      "overflow": false
+    }
+  ],
+  "queryCategorySaveDetailResetSort": true
+}

@@ -2,15 +2,21 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { createAlertDialogSession, getAlertDialogInitialFocus, validateAlertDialogRequest, } from "@hjmds/design-contracts/components/alert-dialog";
 import { canDismissSheet, createSheetLifecycle, sheetBehaviorDefaults, } from "@hjmds/design-contracts/components/sheet";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
-import { backdrop, easing, radius, spacing } from "@hjmds/design-contracts/foundations";
+import { backdrop, easing, glyph, radius, spacing } from "@hjmds/design-contracts/foundations";
 import { alertDialogRecipe, dialogRecipe, sheetRecipe, } from "@hjmds/design-contracts/recipes";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore, } from "react";
-import { AccessibilityInfo, Animated, Easing, Keyboard, Modal, Platform, ScrollView, Pressable, View, findNodeHandle, useWindowDimensions, } from "react-native";
+import { AccessibilityInfo, Animated, Easing, Keyboard, Modal, Platform, ScrollView, Text as NativeText, Pressable, View, findNodeHandle, useWindowDimensions, } from "react-native";
 import { Button, IconButton } from "./actions.js";
 import { scheduleAfterNativeModalTeardown, shouldAwaitNativeModalDismiss, } from "./internal/modal-lifecycle.js";
 import { minimumTargetStyle } from "./internal/styles.js";
 import { Text } from "./primitives.js";
 import { useHjmNativeSafeAreaInsets, useHjmNativeTheme } from "./provider.js";
+// A close glyph is icon artwork, not body copy. HJM Text applies controlled textScale
+// even with allowFontScaling=false, which clipped × in the fixed icon frame at 200%.
+function CloseGlyph() {
+    const { colors } = useHjmNativeTheme();
+    return _jsx(NativeText, { accessible: false, allowFontScaling: false, style: { color: colors.text, fontSize: glyph.sm, lineHeight: glyph.sm }, children: "\u00D7" });
+}
 function useReasonedOpenState({ open, defaultOpen = false, onOpenChange, }) {
     const controlledAtMount = useRef(open !== undefined);
     const controlled = open !== undefined;
@@ -237,7 +243,7 @@ export function Dialog({ open, defaultOpen, onOpenChange, title, accessibilityTi
                                 direction: environment.direction,
                                 flexDirection: "row",
                                 gap: spacing.sm,
-                            }, children: [_jsxs(View, { style: { flex: 1, gap: spacing.xs }, children: [_jsx(Text, { accessibilityRole: "header", tone: "primary", variant: "title", children: title }), description ? _jsx(Text, { tone: "muted", children: description }) : null] }), dismissible ? (_jsx(IconButton, { disabled: busy, label: closeLabel, onPress: () => requestClose("close-action"), children: _jsx(Text, { accessible: false, variant: "title", children: "\u00D7" }) })) : null] }), children, _jsx(OverlayActions, { busy: busy, onActionComplete: () => requestClose("close-action"), stacked: stackActions, ...(primaryAction === undefined ? {} : { primaryAction }), ...(secondaryAction === undefined ? {} : { secondaryAction }) })] })] }) }));
+                            }, children: [_jsxs(View, { style: { flex: 1, gap: spacing.xs }, children: [_jsx(Text, { accessibilityRole: "header", tone: "primary", variant: "title", children: title }), description ? _jsx(Text, { tone: "muted", children: description }) : null] }), dismissible ? (_jsx(IconButton, { disabled: busy, label: closeLabel, onPress: () => requestClose("close-action"), children: _jsx(CloseGlyph, {}) })) : null] }), children, _jsx(OverlayActions, { busy: busy, onActionComplete: () => requestClose("close-action"), stacked: stackActions, ...(primaryAction === undefined ? {} : { primaryAction }), ...(secondaryAction === undefined ? {} : { secondaryAction }) })] })] }) }));
 }
 /** Contract session owns duplicate confirms, busy dismissal, error and settlement. */
 export function AlertDialog({ open, defaultOpen, onOpenChange, request, returnFocusRef, onResult, contentStyle, onShow, ...modalProps }) {
@@ -822,7 +828,7 @@ export function Sheet({ open, defaultOpen, onOpenChange, title, accessibilityTit
                                 direction: environment.direction,
                                 flexDirection: "row",
                                 gap: spacing.sm,
-                            }, children: [_jsxs(View, { style: { flex: 1, gap: spacing.xs }, children: [_jsx(Text, { accessibilityRole: "header", tone: "primary", variant: "title", children: title }), description ? _jsx(Text, { tone: "muted", children: description }) : null] }), policy.dismissible ? (_jsx(IconButton, { disabled: busy && !policy.dismissWhileBusy, label: closeLabel, onPress: () => requestClose("close-action"), children: _jsx(Text, { accessible: false, variant: "title", children: "\u00D7" }) })) : null] }), scrollable ? (_jsx(ScrollView, { style: { flexShrink: 1, minHeight: 0 }, contentContainerStyle: { gap: sheetRecipe.body.gap }, keyboardShouldPersistTaps: "handled", keyboardDismissMode: Platform.OS === "ios" ? "interactive" : "on-drag", automaticallyAdjustKeyboardInsets: false, children: children })) : _jsx(View, { style: { gap: sheetRecipe.body.gap, flexShrink: 1 }, children: children }), footer ? (_jsx(View, { style: {
+                            }, children: [_jsxs(View, { style: { flex: 1, gap: spacing.xs }, children: [_jsx(Text, { accessibilityRole: "header", tone: "primary", variant: "title", children: title }), description ? _jsx(Text, { tone: "muted", children: description }) : null] }), policy.dismissible ? (_jsx(IconButton, { disabled: busy && !policy.dismissWhileBusy, label: closeLabel, onPress: () => requestClose("close-action"), children: _jsx(CloseGlyph, {}) })) : null] }), scrollable ? (_jsx(ScrollView, { style: { flexShrink: 1, minHeight: 0 }, contentContainerStyle: { gap: sheetRecipe.body.gap }, keyboardShouldPersistTaps: "handled", keyboardDismissMode: Platform.OS === "ios" ? "interactive" : "on-drag", automaticallyAdjustKeyboardInsets: false, children: children })) : _jsx(View, { style: { gap: sheetRecipe.body.gap, flexShrink: 1 }, children: children }), footer ? (_jsx(View, { style: {
                                 gap: sheetRecipe.footer.gap,
                                 flexShrink: 0,
                                 paddingTop: sheetRecipe.footer.paddingTop,

@@ -139,7 +139,7 @@ describe("Native field and choice product adapters", () => {
     const radio = render(
       <RadioGroup
         accessibilityLabel="기본 라디오 그룹"
-        options={[{ value: "standard", label: "기본 라디오" }]}
+        items={[{ value: "standard", label: "기본 라디오" }]}
       />,
     );
     const [radioStyle] = byLabel(radio, "기본 라디오").props.style({ pressed: false });
@@ -169,7 +169,7 @@ describe("Native field and choice product adapters", () => {
       <RadioGroup
         accessibilityLabel="배송"
         indicator="none"
-        options={[{ value: "fast", label: "빠름", description: "내일 도착" }]}
+        items={[{ value: "fast", label: "빠름", description: "내일 도착" }]}
         orientation="horizontal"
         presentation="card"
         renderLeading={radioLeading}
@@ -186,7 +186,7 @@ describe("Native field and choice product adapters", () => {
     render(
       <SegmentedControl
         label="보기"
-        options={[{ value: "list", label: "목록", renderLeading: segmentLeading }]}
+        items={[{ value: "list", label: "목록", renderLeading: segmentLeading }]}
       />,
     );
     expect(segmentLeading).toHaveBeenCalledWith(
@@ -233,7 +233,7 @@ describe("Native collection surfaces", () => {
     const menu = render(
       <Menu
         dismissLabel="닫기"
-        items={[{ value: "profile", label: "프로필" }]}
+        items={[{ id: "profile", label: "프로필" }]}
         onOpenChange={menuOpen}
         readOnly
         triggerLabel="계정 메뉴"

@@ -37,7 +37,7 @@ label/textValue, selection mode)을 따르는 항목 **목록**이고 그 role/k
 catalog에 별도 `planned` 항목으로 있는 `ConfirmPopover`(antd `Popconfirm`,
 `relationship: "adapted"`)는 이 Popover 위의 **조합**이다 — Popover의 anchored
 비모달 surface에 되돌릴 수 있는 행동의 확인·취소를 얹은 조합이다. 파괴적 동작은
-AlertDialog를 사용한다. `Patterns/Popover/ReversibleConfirmation`은 기록 보관·취소가
+AlertDialog를 사용한다. `컴포넌트/오버레이/Popover/ReversibleConfirmation`은 기록 보관·취소가
 작동하는 예제이며 새 독립 renderer 수에 더하지 않는다.
 
 ## 일반화한 계약
@@ -142,7 +142,7 @@ Dialog 안의 Popover는 첫 Escape를 소유한다. 내부 Menu가 Escape를 �
 
 2026-09-16 사용자의 확장 요청으로 Web beta를 제공했다. 2026-09-29 focus/keyboard·hover/touch·
 320px long-copy browser proof를 확인해 stable로 승격한다. Native는 `unsupported`; 제품 채택은 별도다.
-`Patterns/Popover/Filters`는 제목·즐겨찾기 조건 적용/취소/초기화와 실제 목록 교체를 제공한다.
+`컴포넌트/오버레이/Popover/Filters`는 제목·즐겨찾기 조건 적용/취소/초기화와 실제 목록 교체를 제공한다.
 `ReversibleConfirmation`은 보관 후 취소 버튼으로 초점을 옮기며 실제로 복원한다.
 
 [Radix Popover](https://www.radix-ui.com/primitives/docs/components/popover)의 비모달 focus·

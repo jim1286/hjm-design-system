@@ -71,12 +71,36 @@ describe("PasswordField", () => {
 });
 
 describe("OtpField", () => {
-  it("keeps one textbox while sanitizing paste and rendering decorative slots", async () => {
+  it("keeps focus on the input while busy instead of disabling it", async () => {
+    // Regression: busy used to disable the input, which dropped focus to <body>
+    // between "submit" and the server's answer (2026-10-02 showcase check).
+    const onValueChange = vi.fn();
+    const Harness = ({ busy }: { busy: boolean }) => (
+      <HjmProvider systemTheme="light">
+        <OtpField busy={busy} label="인증번호" length={6} defaultValue="123456" onValueChange={onValueChange} />
+      </HjmProvider>
+    );
+    await render(<Harness busy={false} />);
+    const input = container.querySelector<HTMLInputElement>(".hjm-otp-field__input")!;
+    input.focus();
+    await render(<Harness busy />);
+    expect(input.disabled).toBe(false);
+    expect(input.readOnly).toBe(true);
+    expect(input.getAttribute("aria-busy")).toBe("true");
+    expect(document.activeElement).toBe(input);
+    await render(<Harness busy={false} />);
+    expect(input.readOnly).toBe(false);
+    expect(document.activeElement).toBe(input);
+    expect(onValueChange).not.toHaveBeenCalled();
+  });
+
+  it.each(["boxes", "underline"] as const)("keeps one textbox while sanitizing paste and rendering decorative slots", async (presentation) => {
     const onValueChange = vi.fn();
     const onComplete = vi.fn();
     await render(
       <HjmProvider systemTheme="light">
         <OtpField
+          presentation={presentation}
           aria-label="Verification code"
           length={6}
           onComplete={onComplete}

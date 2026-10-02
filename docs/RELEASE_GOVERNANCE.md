@@ -1,6 +1,6 @@
 # 디자인 시스템 검증과 릴리스 계약
 
-상태: 현재 내부 릴리스 계약 · 2026-09-07
+상태: 현재 내부 릴리스 계약 · 검토일: 2026-10-01
 적용: 이 저장소의 contracts, React, React Native, 두 Showcase.
 기계 검사: [`scripts/check-release-governance.mjs`](../scripts/check-release-governance.mjs).
 
@@ -19,7 +19,7 @@ contracts를 같은 npm 버전으로 설치하고, 제품의 실제 화면·환�
 | 단계 | 실행 원본 | 검사 범위 |
 | --- | --- | --- |
 | PR/main 내부 검사 | `showcase.yml` → `pnpm ci:check` | package 계약·테스트·생성 drift·bundle·두 Showcase |
-| package 검사 | `pnpm check` | 세 package check, workspace/evidence/docs/governance 검사 |
+| package 검사 | `pnpm check` | 세 package check, renderer bundle, workspace/evidence/docs/governance/public API map 검사 |
 | release 후보 | `version-packages.yml` → `pnpm release:commit:check`와 `pnpm release:check` | release commit 형태, 내부 ci:check, release artifacts |
 | publish/tag | 같은 workflow에서 검사 이후 실행 | 세 package publish 후 같은 commit에 canonical tag |
 | 제품 검증 | 각 제품 저장소의 CI/기기 QA | 설치된 npm train을 소비한 제품 흐름·환경·migration |
@@ -77,16 +77,16 @@ minor bump가 범위를 벗어나고, changesets는 범위를 벗어나는 peer 
 변경이 1.0.0을 만들어 냈다. 버전 번호는 변경의 크기를 나타내야 하고 도구의 부수효과여서는
 안 된다.
 
-## Native 호환 API
+## 2.0 호환 API 제거
 
-[소비 정책](../packages/design-contracts/docs/consumer-policy.md#31-react-native-legacy-style-compatibility-boundary)의
-raw style 이관 규칙을 적용한다. `layoutStyle`을 제공하는 설치 버전에서는 좁은 composition
-API를 사용하고, 없는 버전에서는 wrapper 또는 검토한 semantic API를 사용한다.
-0.9 호환 API가 타입상 호출된다는 사실은 신규 raw style 채택의 허가가 아니다.
+2026-10-02 사용자가 관리 소비 앱을 함께 버전업하기로 결정했다. deprecated 스타일 통로와
+이전 상태·목록·배치 별칭을 2.0 fixed major에서 제거한다. 제거 범위와 대체 경로는
+[이관표](../packages/design-contracts/docs/migration-native-legacy-removal.md)가 정한다.
+1.x 설치본의 호환 동작을 현재 소스의 보장으로 설명하지 않는다. 내부 recipe 스타일은
+비공개 구현에 두고 제품 배치는 `layoutStyle`, 시각 값은 semantic API를 사용한다.
 
-타입에서 `layoutStyle`의 금지 key를 제외하는 검사, 기존 raw style 런타임 호환성,
-제품의 신규 raw style 유입 차단은 서로 다른 검증이다. 이 변경은 기존 raw style을 런타임에서
-제거하거나 필터링하지 않는다. 공지한 이관·evidence·breaking train 조건을 충족한 뒤 제거한다.
+타입 검사, 소비 dependency/lock 이관, 기기 증거, npm 게시는 각각 기록한다.
+후보 패키지로 검사한 결과만으로 게시·소비 설치 완료를 주장하지 않는다.
 
 ## 작업 순서
 
@@ -97,3 +97,14 @@ API를 사용하고, 없는 버전에서는 wrapper 또는 검토한 semantic AP
 5. package release가 승인된 작업일 때 release version/commit을 만들고 수동 workflow를 실행한다.
 
 로컬 검사, package publish, 소비 제품 구현 적합성, 원격 merge 권한을 별개 상태로 기록한다.
+
+## 공개 API 범위와 중복 검토
+
+2026-10-01 중복 조사에서 canonical catalog 밖의 공개 컴포넌트 이름을 확인했다.
+root check의 `api-map:check`는 모든 공개 컴포넌트 export를 분류하고 정의 충돌과
+생성 projection drift를 쓰기 없이 검사한다. governance 음성 테스트는 이 gate를
+삭제하거나 write mode로 바꾸는 것을 거부한다.
+
+기능·행동 중복은 이 검사로 판정하지 않는다. API 추가와 공통 구현 변경은
+[기여 지침](../CONTRIBUTING.md)의 기존 API 비교·공통 계약 재사용·선택 기준 문서화를 따른다.
+공개 범위 drift 검사 통과는 외부 소비 제품 검증이나 release gate 완료가 아니다.

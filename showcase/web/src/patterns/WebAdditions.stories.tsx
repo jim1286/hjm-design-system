@@ -13,8 +13,8 @@ export function WebAdditionsPreview({ mode = "color" }: { mode?: "color" | "wate
   // Fixed fixture distances make sticky transitions demonstrable without changing product sizing tokens.
   return <div style={{ maxWidth: "100%", height: 280, overflow: "auto" }}><div style={{ height: 160 }}>아래로 스크롤하여 고정을 확인하세요.</div><Affix offset={8} onChange={setFixed}><Button onClick={() => setSaved(!saved)}>{saved ? "저장됨" : "변경 저장"}</Button><span>{fixed ? "상단 고정 중" : "일반 위치"}</span></Affix><div style={{ height: 600 }}>고정되어도 버튼의 상태와 키보드 초점은 유지됩니다.</div></div>;
 }
-const meta = { title: "Patterns/Web additions", component: WebAdditionsPreview } satisfies Meta<typeof WebAdditionsPreview>;
+const meta = { includeStories: ["ChooseColor","MarkDocument","StickyAction"], id: "patterns-web-additions", title: "배포/구성/웹 보조 기능", component: WebAdditionsPreview } satisfies Meta<typeof WebAdditionsPreview>;
 export default meta;
-export const ChooseColor: StoryObj<typeof meta> = {};
-export const MarkDocument: StoryObj<typeof meta> = { args: { mode: "watermark" } };
-export const StickyAction: StoryObj<typeof meta> = { args: { mode: "affix" } };
+export const ChooseColor: StoryObj<typeof meta> = { name: "색상 선택",};
+export const MarkDocument: StoryObj<typeof meta> = { name: "문서 표시", args: { mode: "watermark" } };
+export const StickyAction: StoryObj<typeof meta> = { name: "고정 실행 영역", args: { mode: "affix" } };

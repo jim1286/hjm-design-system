@@ -114,11 +114,11 @@ describe("@hjmds/react-native vertical slice", () => {
         <Switch label="알림" />
         <SegmentedControl
           label="보기 방식"
-          options={[{ value: "list", label: "목록" }, { value: "grid", label: "격자" }]}
+          items={[{ value: "list", label: "목록" }, { value: "grid", label: "격자" }]}
         />
         <Tabs
           label="프로필 탭"
-          options={[{ value: "info", label: "정보" }, { value: "record", label: "기록" }]}
+          items={[{ id: "info", label: "정보" }, { id: "record", label: "기록" }]}
         />
       </>,
     );
@@ -154,10 +154,13 @@ describe("@hjmds/react-native vertical slice", () => {
   });
 
   it("announces determinate progress and rejects invalid values", () => {
-    const renderer = renderWithProvider(<Progress label="업로드" value={0.42} />);
+    // max defaults to the shared contract value (100), the same as Web. It used to be 1 on Native.
+    const renderer = renderWithProvider(<Progress label="업로드" value={42} />);
     const progress = renderer.root.find((node) => node.props.accessibilityRole === "progressbar");
     expect(progress.props.accessibilityValue).toEqual({ min: 0, max: 100, now: 42, text: "42%" });
-    expect(() => renderWithProvider(<Progress label="오류" value={1.1} />)).toThrow(RangeError);
+    const fraction = renderWithProvider(<Progress label="분수" value={0.42} max={1} />);
+    expect(fraction.root.find((node) => node.props.accessibilityRole === "progressbar").props.accessibilityValue.now).toBe(42);
+    expect(() => renderWithProvider(<Progress label="오류" value={101} />)).toThrow(RangeError);
   });
 
   it("maps Dialog to a modal accessibility boundary and closes uncontrolled state", () => {

@@ -4,11 +4,15 @@
  * Kept separate from the lifecycle: animation must never own a second queue.
  */
 export const liquidToastRecipe = {
-    capsule: { width: 88, height: 24 },
-    gap: 34,
+    // 2026-10-02: use a circular in-app origin rather than a second Dynamic Island.
+    // Keep the public capsule key; changing geometry does not require callers to migrate.
+    capsule: { width: 32, height: 32 },
+    // Preserve the settled card top (58) when increasing the anchor height from 24 to 32.
+    gap: 26,
     minHeight: 74,
     maxWidth: 396,
-    radius: 32,
+    // 2026-10-02 card redesign: the medium 12-unit corner supports a banner silhouette.
+    radius: 12,
     dropSize: 52,
     neckWidth: 60,
     blur: 14.3,
@@ -84,17 +88,17 @@ export function buildLiquidToastGeometry(drop, expand, layout) {
     const normal = peak ** 1.6 * (1 - peak) ** 1.4;
     const neck = n <= 0 || n >= 1 ? 0 : (n ** 1.6 * (1 - n) ** 1.4) / normal;
     const stretch = 1 + 0.38 * neck;
-    const droplet = 52 * grow;
+    const droplet = liquidToastRecipe.dropSize * grow;
     const width = Math.max(0, Math.min(layout.width, mix(droplet / stretch, layout.cardWidth, expand)));
     const height = Math.max(0, mix(droplet * stretch, layout.height, expand));
     const originY = layout.anchorY + layout.anchorHeight * 0.66;
     const centerY = mix(originY, layout.cardTop + layout.height / 2, drop);
     const centerX = mix(layout.anchorX + layout.anchorWidth / 2, layout.width / 2, clamp(expand));
-    const neckWidth = Math.max(0, Math.min(60, width) * neck);
+    const neckWidth = Math.max(0, Math.min(liquidToastRecipe.neckWidth, width) * neck);
     const neckY = layout.anchorY + layout.anchorHeight / 2;
     return {
         x: centerX - width / 2, y: centerY - height / 2, width, height,
-        radius: Math.max(0, Math.min(mix(droplet / 2, 32, expand), width / 2, height / 2)),
+        radius: Math.max(0, Math.min(mix(droplet / 2, liquidToastRecipe.radius, expand), width / 2, height / 2)),
         neckX: layout.anchorX + layout.anchorWidth / 2 - neckWidth / 2,
         neckY, neckWidth, neckHeight: Math.max(0, centerY - neckY),
         offsetY: centerY - (layout.cardTop + layout.height / 2),

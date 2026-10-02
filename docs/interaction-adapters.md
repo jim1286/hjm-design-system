@@ -80,12 +80,49 @@ const options = useSharedTransitionOptions('place-forest');
 // surface and keep retained inactive screens out of accessibility and hit testing.
 ```
 
-The adapter supplies measured paired-boundary zoom, HJM durations and system reduced-motion behavior. The host owns route parameters, matching IDs, focus/scroll restoration and navigation container. Native back and cancellation are handled by the navigation engine; button back, short-gesture cancellation and completed gesture back were exercised on the installed iOS showcase. The showcase has a complete Places → Detail → Places example in **Experimental/Interaction Adapters/Shared Screen Transition**. This is an opt-in router adapter, not a new global navigation layer or a web navigation abstraction.
+The adapter supplies measured paired-boundary zoom, HJM durations and system reduced-motion behavior. The host owns route parameters, matching IDs, focus/scroll restoration and navigation container. Native back and cancellation are handled by the navigation engine; button back, short-gesture cancellation and completed gesture back were exercised on the installed iOS showcase. The showcase has a complete Places → Detail → Places example in **실험/구성/드래그·스와이프·모션/카드 확대와 화면 전환**. This is an opt-in router adapter, not a new global navigation layer or a web navigation abstraction.
 
 ## Evidence and limits
 
 The new meaningful regressions cover controlled reordering, fixed disabled rows, stale drag cancellation, duplicate pending actions, errors, a single current content tree, explicit carousel navigation/inert slides, event dedupe under Strict Mode, reduced-motion particles and shared-boundary settings. Native engine mocks prove HJM adaptation, not real gestures or GPU behavior.
 
-Web and Native stories are under **Experimental/Interaction Adapters**. Validation commands and observed outcomes are recorded in [the adoption evidence](evidence/interaction-adapters-2026-09-30.md). Device Hub automation timed out; the user explicitly authorized idb fallback against the existing iPhone 17 / iOS 27 simulator. That limited native evidence is recorded separately from mocks. No physical-device, VoiceOver/TalkBack, release-binary, npm publication or consuming-app claim follows from these checks.
+Web and Native stories are under **실험/구성/드래그·스와이프·모션**. Validation commands and observed outcomes are recorded in [the adoption evidence](evidence/interaction-adapters-2026-09-30.md). Device Hub automation timed out; the user explicitly authorized idb fallback against the existing iPhone 17 / iOS 27 simulator. That limited native evidence is recorded separately from mocks. No physical-device, VoiceOver/TalkBack, release-binary, npm publication or consuming-app claim follows from these checks.
 
 Removal: replace optional imports with normal lists/action buttons, static content, base Carousel, Result/Toast and ordinary product routing, then remove unused peers and the exports patch. No persisted-state migration is introduced.
+
+## Content presentation presets — 2026-10-01
+
+Both `ContentTransition` and `TextTransition` accept optional `preset` values
+`fade` (existing default), `rise`, `slide`, and `scale`. Shared recipes live at
+`@hjmds/design-contracts/content-transition`. The inline slide mirrors in RTL;
+all settle at identity without changing layout geometry. Bounded distances avoid
+large decorative travel. Reduced motion and `motion="none"` keep a static single
+subtree; text is not split into individually spoken graphemes. Existing focus
+restoration and host background handling are retained. No new animation engine
+or duplicate transition component was introduced. Individual examples are under
+`컴포넌트/시각 효과/Content Transition` on both platforms.
+
+### Native AnimatedStatistic (2026-10-01)
+
+Native now exposes `/statistic-motion` with the same `value`, explicit `locale`,
+optional Intl `format`, `animated`, and value-free Statistic `descriptor` input as
+Web. The descriptor still requires `id` and `label`. Both pass Intl's final string
+to the canonical Statistic accessibility contract.
+
+Web retains NumberFlow's per-digit transition. Native composes the existing rise
+ContentTransition around Statistic rather than adding a numeric interpolation
+engine; it does not pretend that intermediate counts are actual product values.
+The shared transition's reduced-motion and AppState suspension behavior applies.
+`animated={false}` keeps a static value. Both platforms have role-based Default,
+Dark and LargeText examples under 컴포넌트/데이터 표시/Animated Statistic.
+
+### Expo integration and recovery
+
+See the [Expo interaction guide](expo-interactions.md) for reusable motion geometry,
+product-specific exclusions, cancellation, scroll competition, haptics and Go/dev-client
+boundaries. `contentTransitionMotion` exposes the existing geometry through the contract's
+`/content-transition` entry; no migration is required. Native now explicitly translates
+`easing.enter` and settles when a preset or direction changes during playback. The Native
+**배포/구성/Expo 인터랙션 복구** example composes existing components without adding a new API.
+
+Current integration guidance reviewed 2026-10-02: [product interaction quality](INTERACTION_QUALITY.md). Storybook experiment placement is independent of API maturity and package publication. Historical device evidence above remains dated evidence.
