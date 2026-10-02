@@ -589,18 +589,31 @@ async function assertExportTargetsExist(packageJson) {
   }
 }
 
-function checkBudget(budget, measurement) {
+// Byte limits are an alarm, not a gate. Caps sat at ~0% headroom, so a few rationale
+// comments failed CI and every change raised a cap plus wrote another comment about it
+// (2026-10-02 user decision, docs/RELEASE_GOVERNANCE.md "번들 크기 상한"). Over the cap
+// warns; only growth past the tolerance fails. Module counts and forbidden imports,
+// which catch accidental dependency edges, still fail immediately.
+export const BYTE_ALARM_TOLERANCE = 0.1;
+
+export function classifyBytes(measured, cap) {
+  if (measured <= cap) return "pass";
+  return measured <= cap * (1 + BYTE_ALARM_TOLERANCE) ? "warn" : "fail";
+}
+
+export function checkBudget(budget, measurement, warnings = []) {
   const failures = [];
   if (measurement.modules.length > budget.maxModules) {
     failures.push(`${measurement.modules.length} modules > ${budget.maxModules}`);
   }
-  if (measurement.rawBytes > budget.maxRawBytes) {
-    failures.push(`${toDisplayBytes(measurement.rawBytes)} raw > ${toDisplayBytes(budget.maxRawBytes)}`);
-  }
-  if (measurement.gzipBytes > budget.maxGzipBytes) {
-    failures.push(
-      `${toDisplayBytes(measurement.gzipBytes)} gzip > ${toDisplayBytes(budget.maxGzipBytes)}`,
-    );
+  for (const [kind, measured, cap] of [
+    ["raw", measurement.rawBytes, budget.maxRawBytes],
+    ["gzip", measurement.gzipBytes, budget.maxGzipBytes],
+  ]) {
+    const status = classifyBytes(measured, cap);
+    const message = `${toDisplayBytes(measured)} ${kind} > ${toDisplayBytes(cap)}`;
+    if (status === "fail") failures.push(`${message} (+${Math.round(BYTE_ALARM_TOLERANCE * 100)}% tolerance)`);
+    else if (status === "warn") warnings.push(message);
   }
 
   const forbidden = typeof budget.forbiddenModules === "function"
@@ -636,8 +649,9 @@ async function main() {
     const target = getExportTarget(packageJson, budget.exportPath);
     const entryFile = target.replace(/^\.\/dist\//, "");
     const measurement = await measureGraph(entryFile, availableModules);
-    const budgetFailures = checkBudget(budget, measurement);
-    const status = budgetFailures.length === 0 ? "PASS" : "FAIL";
+    const budgetWarnings = [];
+    const budgetFailures = checkBudget(budget, measurement, budgetWarnings);
+    const status = budgetFailures.length > 0 ? "FAIL" : budgetWarnings.length > 0 ? "WARN" : "PASS";
 
     console.log(
       `${status.padEnd(4)} ${budget.exportPath.padEnd(20)} ` +
@@ -648,6 +662,9 @@ async function main() {
 
     for (const failure of budgetFailures) {
       failures.push(`${budget.exportPath}: ${failure}`);
+    }
+    for (const warning of budgetWarnings) {
+      console.log(`     ${budget.exportPath}: ${warning} — within the byte alarm tolerance; record why or trim`);
     }
   }
 

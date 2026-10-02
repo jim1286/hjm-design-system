@@ -3,6 +3,25 @@ import { dirname, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { gzipSync } from "node:zlib";
 
+// Byte limits are an alarm, not a gate (2026-10-02 user decision, docs/RELEASE_GOVERNANCE.md
+// "번들 크기 상한"). Caps sat at ~0% headroom, so rationale comments alone failed CI and each
+// change raised a cap. Over the cap warns; only growth past the tolerance fails. Module
+// counts, optional-peer leaks and root-barrel traversal still fail immediately.
+export const BYTE_ALARM_TOLERANCE = 0.1;
+
+export function classifyByteBudget(measured, budget, regressions) {
+  const warnings = [];
+  for (const kind of ["raw", "gzip"]) {
+    const message = `${formatBytes(measured[kind])} ${kind} > ${formatBytes(budget[kind])}`;
+    if (measured[kind] > budget[kind] * (1 + BYTE_ALARM_TOLERANCE)) {
+      regressions.push(`${message} (+${Math.round(BYTE_ALARM_TOLERANCE * 100)}% tolerance)`);
+    } else if (measured[kind] > budget[kind]) {
+      warnings.push(message);
+    }
+  }
+  return warnings;
+}
+
 const workspaceRoot = fileURLToPath(new URL("../", import.meta.url));
 
 // Baselines are the reviewed 0.7 renderer graphs with roughly 15-25% byte headroom.
@@ -719,13 +738,8 @@ async function checkRenderer(renderer) {
     if (measured.modules > budget.modules) {
       regressions.push(`${measured.modules} modules > ${budget.modules}`);
     }
-    if (measured.raw > budget.raw) {
-      regressions.push(`${formatBytes(measured.raw)} raw > ${formatBytes(budget.raw)}`);
-    }
-    if (measured.gzip > budget.gzip) {
-      regressions.push(`${formatBytes(measured.gzip)} gzip > ${formatBytes(budget.gzip)}`);
-    }
-    const status = regressions.length === 0 ? "PASS" : "FAIL";
+    const warnings = classifyByteBudget(measured, budget, regressions);
+    const status = regressions.length > 0 ? "FAIL" : warnings.length > 0 ? "WARN" : "PASS";
     console.log(
       `${status.padEnd(4)} ${exportPath.padEnd(20)} ` +
         `${String(measured.modules).padStart(2)} modules  ` +
@@ -735,6 +749,7 @@ async function checkRenderer(renderer) {
         `${formatHeadroom(measured.gzip, budget.gzip)} gzip`,
     );
     for (const regression of regressions) failures.push(`${exportPath}: ${regression}`);
+    for (const warning of warnings) console.log(`     ${exportPath}: ${warning} — within the byte alarm tolerance; record why or trim`);
   }
 
   for (const [exportPath, target] of cssExports) {
@@ -743,13 +758,8 @@ async function checkRenderer(renderer) {
     const bytes = await readFile(resolve(packageDirectory, target));
     const measured = { raw: bytes.byteLength, gzip: gzipSync(bytes, { level: 9 }).byteLength };
     const regressions = [];
-    if (measured.raw > budget.raw) {
-      regressions.push(`${formatBytes(measured.raw)} raw > ${formatBytes(budget.raw)}`);
-    }
-    if (measured.gzip > budget.gzip) {
-      regressions.push(`${formatBytes(measured.gzip)} gzip > ${formatBytes(budget.gzip)}`);
-    }
-    const status = regressions.length === 0 ? "PASS" : "FAIL";
+    const warnings = classifyByteBudget(measured, budget, regressions);
+    const status = regressions.length > 0 ? "FAIL" : warnings.length > 0 ? "WARN" : "PASS";
     console.log(
       `${status.padEnd(4)} ${exportPath.padEnd(20)} ` +
         `${formatBytes(measured.raw).padStart(9)} raw  ` +
@@ -758,6 +768,7 @@ async function checkRenderer(renderer) {
         `${formatHeadroom(measured.gzip, budget.gzip)} gzip`,
     );
     for (const regression of regressions) failures.push(`${exportPath}: ${regression}`);
+    for (const warning of warnings) console.log(`     ${exportPath}: ${warning} — within the byte alarm tolerance; record why or trim`);
   }
 
   if (failures.length > 0) {
