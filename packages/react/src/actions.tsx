@@ -104,9 +104,10 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       disabled={disabled}
       onClick={handleClick}
     >
-      {loading ? <span className="hjm-button__spinner" aria-hidden="true" /> : leading}
+      {leading}
       <span className="hjm-button__label">{children}</span>
       {trailing}
+      {loading ? <span className="hjm-button__loading-indicator" aria-hidden="true"><span className="hjm-button__spinner" /></span> : null}
     </button>
   );
 });

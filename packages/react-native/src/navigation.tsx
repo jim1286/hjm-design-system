@@ -2051,15 +2051,6 @@ export const LoadMore = forwardRef<LoadMoreHandle, LoadMoreProps>(function LoadM
             )}
             size={loadMoreRecipe.spinner.size}
           />
-          <Text
-            accessible={false}
-            style={{
-              color: resolveColorReference(loadMoreRecipe.status.color, theme.palette),
-            }}
-            variant={loadMoreRecipe.status.textVariant}
-          >
-            {labels.loading}
-          </Text>
         </View>
       ) : state.status === "error" ? (
         <>

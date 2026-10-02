@@ -36,11 +36,13 @@ export function AuthProviderButton({ descriptor, logo, onPress, style }: AuthPro
   return (
     <Pressable
       accessibilityRole="button"
+      accessibilityLabel={descriptor.label}
       accessibilityState={{ busy, disabled }}
       disabled={disabled}
       onPress={onPress}
       style={[
         {
+          position: "relative",
           alignItems: "center",
           backgroundColor: surface.background,
           borderColor: surface.border ?? "transparent",
@@ -62,15 +64,16 @@ export function AuthProviderButton({ descriptor, logo, onPress, style }: AuthPro
           height: authProviderButtonRecipe.logoSize,
           justifyContent: "center",
           width: authProviderButtonRecipe.logoSize,
+          opacity: busy ? 0 : 1,
         }}
       >
         {logo}
       </View>
-      {/* Busy adds a spinner beside the label instead of replacing it. */}
-      <Text style={{ color: surface.content, flexShrink: 1 }} variant="body">
+      {/* Keep the measured label in place so the busy frame never shrinks. */}
+      <Text style={{ color: surface.content, flexShrink: 1, opacity: busy ? 0 : 1 }} variant="body">
         {descriptor.label}
       </Text>
-      {busy ? <ActivityIndicator color={surface.content} /> : null}
+      {busy ? <View pointerEvents="none" style={{ alignItems: "center", bottom: 0, justifyContent: "center", left: 0, position: "absolute", right: 0, top: 0 }}><ActivityIndicator color={surface.content} /></View> : null}
     </Pressable>
   );
 }

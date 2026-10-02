@@ -249,6 +249,10 @@ describe("Native core normalization", () => {
     expect(onLongPress).not.toHaveBeenCalled();
     expect(renderer.root.findByType(ActivityIndicator)).toBeDefined();
     expect(button.props.accessibilityLabel).toBe("저장");
+    const label = renderer.root.findByType(NativeText);
+    expect(flattenStyle(label.props.style).opacity).toBe(0);
+    const indicatorFrame = renderer.root.findAllByType(View).find((node) => flattenStyle(node.props.style).position === "absolute");
+    expect(flattenStyle(indicatorFrame?.props.style).justifyContent).toBe("center");
   });
 
   it("forwards action host refs, preserves caller state, and leaves rich Button content unwrapped", () => {

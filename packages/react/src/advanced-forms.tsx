@@ -458,7 +458,7 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
                   style={popupPosition.style}
                 >
                 {loading ? (
-                  <div className="hjm-combobox__message" role="status">{loadingMessage}</div>
+                  <div className="hjm-combobox__message" role="status"><span className="hjm-visually-hidden">{loadingMessage}</span></div>
                 ) : filteredItems.length === 0 ? (
                   <div className="hjm-combobox__message">{emptyMessage}</div>
                 ) : (

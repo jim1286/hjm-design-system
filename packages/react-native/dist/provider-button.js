@@ -10,8 +10,9 @@ export function AuthProviderButton({ descriptor, logo, onPress, style }) {
     const surface = resolveAuthProviderSurface(descriptor.provider, theme.environment.theme === "dark" ? "dark" : "light");
     const busy = descriptor.busy === true;
     const disabled = descriptor.disabled === true || busy;
-    return (_jsxs(Pressable, { accessibilityRole: "button", accessibilityState: { busy, disabled }, disabled: disabled, onPress: onPress, style: [
+    return (_jsxs(Pressable, { accessibilityRole: "button", accessibilityLabel: descriptor.label, accessibilityState: { busy, disabled }, disabled: disabled, onPress: onPress, style: [
             {
+                position: "relative",
                 alignItems: "center",
                 backgroundColor: surface.background,
                 borderColor: surface.border ?? "transparent",
@@ -30,6 +31,7 @@ export function AuthProviderButton({ descriptor, logo, onPress, style }) {
                     height: authProviderButtonRecipe.logoSize,
                     justifyContent: "center",
                     width: authProviderButtonRecipe.logoSize,
-                }, children: logo }), _jsx(Text, { style: { color: surface.content, flexShrink: 1 }, variant: "body", children: descriptor.label }), busy ? _jsx(ActivityIndicator, { color: surface.content }) : null] }));
+                    opacity: busy ? 0 : 1,
+                }, children: logo }), _jsx(Text, { style: { color: surface.content, flexShrink: 1, opacity: busy ? 0 : 1 }, variant: "body", children: descriptor.label }), busy ? _jsx(View, { pointerEvents: "none", style: { alignItems: "center", bottom: 0, justifyContent: "center", left: 0, position: "absolute", right: 0, top: 0 }, children: _jsx(ActivityIndicator, { color: surface.content }) }) : null] }));
 }
 //# sourceMappingURL=provider-button.js.map

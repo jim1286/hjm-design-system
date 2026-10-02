@@ -399,7 +399,7 @@ describe("Native collection surfaces", () => {
       />,
     );
     expect(select.root.findAllByType(ActivityIndicator)).not.toHaveLength(0);
-    expect(select.root.findAll((node) => node.children.includes("불러오는 중"))).not.toHaveLength(0);
+    expect(select.root.findAll((node) => node.props.accessibilityLabel === "불러오는 중")).not.toHaveLength(0);
 
     const menu = render(
       <Menu
@@ -410,7 +410,7 @@ describe("Native collection surfaces", () => {
         triggerLabel="메뉴"
       />,
     );
-    expect(menu.root.findAll((node) => node.children.includes("메뉴 불러오는 중"))).not.toHaveLength(0);
+    expect(menu.root.findAll((node) => node.props.accessibilityLabel === "메뉴 불러오는 중")).not.toHaveLength(0);
   });
 });
 

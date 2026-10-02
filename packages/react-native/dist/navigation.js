@@ -1052,14 +1052,12 @@ export const LoadMore = forwardRef(function LoadMore({ descriptor, onLoadMore, m
                 borderRadius: radius[loadMoreRecipe.trigger.radius],
                 minHeight: loadMoreRecipe.trigger.minHeight,
                 paddingHorizontal: loadMoreRecipe.trigger.paddingHorizontal,
-            }, tone: "link", children: labels.loadMore })) : state.status === "loading" ? (_jsxs(View, { accessibilityLabel: labels.loading, accessibilityRole: "progressbar", accessibilityState: { busy: true }, accessible: true, style: {
+            }, tone: "link", children: labels.loadMore })) : state.status === "loading" ? (_jsx(View, { accessibilityLabel: labels.loading, accessibilityRole: "progressbar", accessibilityState: { busy: true }, accessible: true, style: {
                 alignItems: "center",
                 flexDirection: "row",
                 gap: densityContract.gap,
                 justifyContent: "center",
-            }, children: [_jsx(ActivityIndicator, { color: resolveColorReference(spinnerRecipe.tones[loadMoreRecipe.spinner.tone], theme.palette), size: loadMoreRecipe.spinner.size }), _jsx(Text, { accessible: false, style: {
-                        color: resolveColorReference(loadMoreRecipe.status.color, theme.palette),
-                    }, variant: loadMoreRecipe.status.textVariant, children: labels.loading })] })) : state.status === "error" ? (_jsxs(_Fragment, { children: [_jsx(Text, { accessibilityLiveRegion: "assertive", style: { color: resolveColorReference(loadMoreRecipe.error.color, theme.palette) }, variant: loadMoreRecipe.error.textVariant, children: state.message }), _jsx(RecipeButton, { onPress: () => {
+            }, children: _jsx(ActivityIndicator, { color: resolveColorReference(spinnerRecipe.tones[loadMoreRecipe.spinner.tone], theme.palette), size: loadMoreRecipe.spinner.size }) })) : state.status === "error" ? (_jsxs(_Fragment, { children: [_jsx(Text, { accessibilityLiveRegion: "assertive", style: { color: resolveColorReference(loadMoreRecipe.error.color, theme.palette) }, variant: loadMoreRecipe.error.textVariant, children: state.message }), _jsx(RecipeButton, { onPress: () => {
                         void request("retry").catch(() => undefined);
                     }, labelStyle: {
                         color: resolveColorReference(loadMoreRecipe.trigger.color, theme.palette),

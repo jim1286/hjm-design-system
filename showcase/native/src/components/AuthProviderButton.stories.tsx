@@ -4,5 +4,6 @@ const meta = { title: "배포/컴포넌트/동작/소셜 로그인 버튼", comp
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본",};
+export const Loading: Story = { name: "로딩", args: { variant: "loading" } };
 export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
 export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };

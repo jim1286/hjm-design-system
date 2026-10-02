@@ -173,7 +173,7 @@ it("switches to the provider's own dark variant, not to an HJM color", async () 
   expect(getComputedStyle(buttonFor("naver")).backgroundColor).toBe("rgb(3, 169, 77)");
 });
 
-it("keeps the label and the width while busy, and blocks the press", async () => {
+it("keeps the width while showing only a centered spinner when busy, and blocks the press", async () => {
   const onClick = vi.fn();
   await act(async () => root.render(
     <HjmProvider reducedMotion>
@@ -189,7 +189,20 @@ it("keeps the label and the width while busy, and blocks the press", async () =>
   const busyButton = document.querySelector<HTMLButtonElement>('[data-provider="kakao"]')!;
   expect(busyButton.textContent).toContain("카카오로 계속하기");
   expect(Math.round(busyButton.getBoundingClientRect().width)).toBe(Math.round(idleWidth));
+  expect(getComputedStyle(busyButton.querySelector(".hjm-auth-provider-button__label")!).opacity).toBe("0");
+  expect(busyButton.querySelector(".hjm-auth-provider-button__loading-indicator .hjm-auth-provider-button__spinner")).not.toBeNull();
+  expect(busyButton.getAttribute("aria-label")).toBe("카카오로 계속하기");
   expect(busyButton.getAttribute("aria-busy")).toBe("true");
   await act(async () => busyButton.click());
   expect(onClick).not.toHaveBeenCalled();
+});
+
+it("preserves a Button's label and adornment footprint while loading", async () => {
+  await act(async () => root.render(<HjmProvider><Button leading={<span>★</span>} trailing={<span>→</span>}>저장하기</Button></HjmProvider>));
+  const idleWidth = host.querySelector<HTMLButtonElement>(".hjm-button")!.getBoundingClientRect().width;
+  await act(async () => root.render(<HjmProvider><Button loading leading={<span>★</span>} trailing={<span>→</span>}>저장하기</Button></HjmProvider>));
+  const busyButton = host.querySelector<HTMLButtonElement>(".hjm-button")!;
+  expect(Math.round(busyButton.getBoundingClientRect().width)).toBe(Math.round(idleWidth));
+  expect([...busyButton.children].filter((node) => getComputedStyle(node).opacity === "0")).toHaveLength(3);
+  expect(busyButton.querySelector(".hjm-button__loading-indicator .hjm-button__spinner")).not.toBeNull();
 });

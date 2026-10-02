@@ -188,7 +188,7 @@ export const LoadMore = forwardRef<HTMLDivElement, LoadMoreProps>(
         ) : state.status === "loading" ? (
           <div className="hjm-load-more__status" role="status">
             <span className="hjm-load-more__spinner" aria-hidden="true" />
-            {labels.loading}
+            <span className="hjm-visually-hidden">{labels.loading}</span>
           </div>
         ) : state.status === "error" ? (
           <div className="hjm-load-more__error">

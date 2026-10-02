@@ -13,6 +13,7 @@ import {
   TabPanel,
   Tabs,
 } from "../src/index.js";
+import "../src/styles.css";
 
 let container: HTMLDivElement;
 let root: Root;
@@ -135,6 +136,8 @@ describe("form and keyboard interactions", () => {
     expect(button.disabled).toBe(false);
     expect(button.getAttribute("aria-busy")).toBe("true");
     expect(button.getAttribute("aria-disabled")).toBe("true");
+    await vi.waitFor(() => expect(getComputedStyle(button.querySelector(".hjm-button__label")!).opacity).toBe("0"));
+    expect(button.querySelector(".hjm-button__loading-indicator .hjm-button__spinner")).not.toBeNull();
     await act(async () => button.click());
     expect(onClick).not.toHaveBeenCalled();
     expect(onSubmit).not.toHaveBeenCalled();

@@ -14,6 +14,18 @@
 - 구현자는 설치된 HJM 버전의 export·호환 문서를 확인한다. 저장소의 신규 API가 설치된
   게시 버전에 있다는 가정으로 import하지 않는다. 이미 Query mutation 등이 상태를
   소유하면 별도 action-session을 겹쳐 만들지 않고 같은 행동 규칙을 연결한다.
+- 2026-10-02 사용자 요청으로 실행 버튼의 로딩 중 글자·장식은 시각적으로 숨기고 원래
+  폭과 접근성 이름을 보존한 채 중앙 스피너 하나만 보인다. 단독 AuthProviderButton과
+  BottomCTA·InlineConfirm 등 Button 합성도 같은 규칙을 따른다. 스피너가 붙는
+  Select·Combobox 결과와 LoadMore, Native Spinner에서도 진행 문구를 시각적으로 숨기고
+  접근성 이름에 남긴다. 편집 중인 검색어는 사용자 입력값이므로 숨기지 않는다.
+
+| 전수 확인한 로딩 표면 | 시각적 처리 | 이름·상태 |
+| --- | --- | --- |
+| Button·BottomCTA·InlineConfirm·VoiceNote, AuthProviderButton | 기존 내용을 자리만 유지하고 중앙 스피너 하나 | 행동 이름과 busy 유지 |
+| IconButton·로그인 카드 | 기존부터 스피너 하나 | 기존 접근성 이름 유지 |
+| Select·Combobox 결과, Native Menu, LoadMore, Native Spinner | 진행 문구 없이 스피너 하나 | 현지화된 진행 이름 유지 |
+| SearchField·Combobox 입력칸 | 입력한 검색어와 스피너 | 입력값은 로딩 설명이 아니므로 보존 |
 
 ## 구현된 예제와 선택 기준
 

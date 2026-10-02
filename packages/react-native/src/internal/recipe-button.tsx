@@ -12,6 +12,7 @@ import { forwardRef } from "react";
 import {
   ActivityIndicator,
   Pressable,
+  View,
   type View as NativeView,
   type StyleProp,
   type TextStyle,
@@ -60,10 +61,11 @@ export const RecipeButton = forwardRef<NativeView, RecipeButtonProps>(
     const labelLines = resolveButtonLabelLines(
       isLargeTextScale(environment.textScale),
     );
-    const inactive = disabled || loading;
+    const inactive = disabled && !loading;
     const unavailable = disabled || (loading && disableWhileLoading);
-    const content =
-      loading && loadingLabel !== undefined ? loadingLabel : children;
+    // Preserve the idle content's measured width while the pending label remains the accessible name.
+    const content = children;
+    const announcedContent = loading && loadingLabel !== undefined ? loadingLabel : children;
     if (content === undefined || content === null || content === false) {
       throw new TypeError("Button requires children");
     }
@@ -86,7 +88,7 @@ export const RecipeButton = forwardRef<NativeView, RecipeButtonProps>(
         ref={ref}
         accessibilityLabel={
           accessibilityLabel ??
-          (typeof content === "string" ? content : undefined)
+          (typeof announcedContent === "string" ? announcedContent : undefined)
         }
         accessibilityRole="button"
         accessibilityState={{
@@ -135,12 +137,7 @@ export const RecipeButton = forwardRef<NativeView, RecipeButtonProps>(
           labelStyle,
         ]}
       >
-        {loading
-          ? renderLoadingIndicator?.({
-              color: contentColor,
-              size: "small",
-            }) ?? <ActivityIndicator color={contentColor} size="small" />
-          : leading}
+        {loading && leading != null ? <View style={{ opacity: 0 }}>{leading}</View> : leading}
         {typeof content === "string" || typeof content === "number" ? (
           <Text
             align={align === "leading" ? "auto" : "center"}
@@ -148,15 +145,18 @@ export const RecipeButton = forwardRef<NativeView, RecipeButtonProps>(
             // Wrap up to the recipe's cap instead of the single line RN gives by
             // default; the cap lifts under large text (buttonRecipe.label).
             {...(labelLines === null ? {} : { numberOfLines: labelLines })}
-            style={[{ color: contentColor }, labelStyle]}
+            style={[{ color: contentColor }, labelStyle, loading ? { opacity: 0 } : null]}
             variant={sizeContract.textVariant}
           >
             {content}
           </Text>
         ) : (
-          content
+          loading ? <View importantForAccessibility="no-hide-descendants" style={{ opacity: 0 }}>{content}</View> : content
         )}
-        {trailing}
+        {loading && trailing != null ? <View style={{ opacity: 0 }}>{trailing}</View> : trailing}
+        {loading ? <View pointerEvents="none" style={{ alignItems: "center", bottom: 0, justifyContent: "center", left: 0, position: "absolute", right: 0, top: 0 }}>
+          {renderLoadingIndicator?.({ color: contentColor, size: "small" }) ?? <ActivityIndicator color={contentColor} size="small" />}
+        </View> : null}
       </Pressable>
     );
   },

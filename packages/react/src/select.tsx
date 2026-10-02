@@ -600,6 +600,7 @@ function SelectInner<Key extends string, SectionKey extends string>(
           aria-controls={open ? listboxId : undefined}
           aria-activedescendant={open ? activeOptionId : undefined}
           aria-busy={busy || asyncState.status === "loading" || asyncState.status === "loadingMore" || undefined}
+          data-busy={busy || undefined}
           aria-invalid={error ? true : undefined}
           aria-describedby={describedBy}
           aria-readonly={readOnly || undefined}
@@ -626,7 +627,7 @@ function SelectInner<Key extends string, SectionKey extends string>(
             {resolvedSelectedItem?.label ?? placeholder}
           </span>
           {busy ? (
-            <span className="hjm-select__busy-indicator" aria-hidden="true" />
+            <span className="hjm-select__busy-overlay" aria-hidden="true"><span className="hjm-select__busy-indicator" /></span>
           ) : (
             <span className="hjm-select__indicator" aria-hidden="true">⌄</span>
           )}
@@ -653,7 +654,7 @@ function SelectInner<Key extends string, SectionKey extends string>(
                 className="hjm-select__message"
                 role={asyncState.status === "error" ? "alert" : "status"}
               >
-                {asyncState.message}
+                {asyncState.status === "loading" || asyncState.status === "loadingMore" ? <span className="hjm-visually-hidden">{asyncState.message}</span> : asyncState.message}
               </div>
             ) : null}
             {/* Rendered before the options: with no selection the active descendant
