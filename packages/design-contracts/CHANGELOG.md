@@ -1,5 +1,12 @@
 # @hjmds/design-contracts
 
+## 1.12.0
+
+### Minor Changes
+
+- 914b870: Unify the Progress `max` default at 100 through `progressRecipe.defaults.max`. Native previously defaulted to 1, so the same `value={76}` rendered on Web but threw a RangeError on Native. Native callers that pass fractions without `max` must either pass percentages or set `max={1}`. Native UploadItem now converts its 0–1 descriptor progress like Web does. Like the 1.11.0 API removals, this ships in a minor because the user decided on 2026-10-02 to migrate every managed consumer together; see packages/design-contracts/docs/migration-native-legacy-removal.md.
+- 914b870: Allow `currentStepStatus: "complete"` on Steps. The cursor step and every step before it read as complete, so a finished flow no longer shows its last step as in progress. The cursor gets no `aria-current` when complete. The single-cursor derivation is unchanged.
+
 ## 1.11.0
 
 ### Minor Changes
