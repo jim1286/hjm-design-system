@@ -10,7 +10,7 @@ import { glyph, typography, } from "@hjmds/design-contracts/foundations";
 import { surfaceDefaults, surfaceGeometry, surfaceRecipe, } from "@hjmds/design-contracts/recipes/base";
 import { sectionRecipe, stackRecipe, textRecipe, } from "@hjmds/design-contracts/recipes";
 import { Children, forwardRef, isValidElement, useEffect, useMemo, useState, } from "react";
-import { Text as NativeText, View, useWindowDimensions, } from "react-native";
+import { PixelRatio, Text as NativeText, View, useWindowDimensions, } from "react-native";
 import { useHjmNativeTheme } from "./provider.js";
 import { logicalTextAlign, resolveNativeTextScaleProps, } from "./internal/styles.js";
 /** Native shell translation: ordered regions without inventing Web landmark roles. */
@@ -176,6 +176,9 @@ export function Grid({ children, columns, gap, minColumnWidth, availableWidth, o
         layout.windowClass,
         onLayoutResolved,
     ]);
+    // Floor to a device pixel so fractional widths never wrap the last column.
+    const scale = PixelRatio.get();
+    const cellWidth = Math.floor(layout.columnWidth * scale) / scale;
     return (_jsx(View, { ...props, onLayout: handleLayout, style: [
             {
                 direction: environment.direction,
@@ -185,7 +188,7 @@ export function Grid({ children, columns, gap, minColumnWidth, availableWidth, o
                 rowGap: layout.rowGap,
             },
             style,
-        ], children: Children.toArray(children).map((child, index) => (_jsx(View, { style: [{ width: layout.columnWidth }, itemStyle], children: child }, isValidElement(child) && child.key !== null ? child.key : `hjm-grid-${index}`))) }));
+        ], children: Children.toArray(children).map((child, index) => (_jsx(View, { style: [{ width: cellWidth }, itemStyle], children: child }, isValidElement(child) && child.key !== null ? child.key : `hjm-grid-${index}`))) }));
 }
 /** Semantic Native icon frame without an Expo or third-party icon dependency. */
 export function Icon({ descriptor, renderGlyph, style, }) {

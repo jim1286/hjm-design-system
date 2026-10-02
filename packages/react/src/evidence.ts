@@ -207,7 +207,7 @@ function toastClaim(): ReactRendererEvidenceComponent {
 export const reactRendererEvidence = {
   schemaVersion: reactRendererEvidenceSchemaVersion,
   packageName: "@hjmds/react",
-  packageVersion: "1.12.0",
+  packageVersion: "1.12.1",
   surface: "web",
   components: [
     defaultClaim("top-bar", ["TopBar"], "./top-bar"),
