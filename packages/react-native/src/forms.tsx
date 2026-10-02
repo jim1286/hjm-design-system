@@ -625,20 +625,22 @@ export function Select<
             flexDirection: "row",
             gap: selectRecipe.value.gap,
             minHeight: sizeContract.minHeight,
-            opacity: disabled || busy ? selectRecipe.states.disabledOpacity : pressed ? 0.86 : 1,
+            opacity: disabled ? selectRecipe.states.disabledOpacity : pressed && !busy ? 0.86 : 1,
             paddingHorizontal: sizeContract.paddingHorizontal,
+            position: "relative",
           },
         ]}
       >
         {triggerLeading ? (
-          <View accessibilityElementsHidden accessible={false} importantForAccessibility="no-hide-descendants">
+          <View accessibilityElementsHidden accessible={false} importantForAccessibility="no-hide-descendants" style={{ opacity: busy ? 0 : 1 }}>
             {triggerLeading}
           </View>
         ) : null}
-        <Text style={{ flex: 1 }} tone={resolvedSelectedItem ? "body" : "muted"} variant={sizeContract.textVariant}>
+        <Text style={{ flex: 1, opacity: busy ? 0 : 1 }} tone={resolvedSelectedItem ? "body" : "muted"} variant={sizeContract.textVariant}>
           {resolvedSelectedItem?.label ?? placeholder}
         </Text>
-        {busy ? <ActivityIndicator size={glyph[selectRecipe.busyIndicator.glyph]} /> : <Text accessible={false} tone="muted">⌄</Text>}
+        <Text accessible={false} style={{ opacity: busy ? 0 : 1 }} tone="muted">⌄</Text>
+        {busy ? <View pointerEvents="none" style={{ alignItems: "center", bottom: 0, justifyContent: "center", left: 0, position: "absolute", right: 0, top: 0 }}><ActivityIndicator size={glyph[selectRecipe.busyIndicator.glyph]} /></View> : null}
       </Pressable>
       {error ? (
         <Text accessibilityLiveRegion="assertive" tone="danger" variant="caption">{error}</Text>
@@ -690,24 +692,23 @@ export function Select<
             <CollectionSheetHeader title={label ?? accessibleName} dismissLabel={dismissLabel} onDismiss={() => close("programmatic")} />
             <ScrollView>
               {blockingState ? (
-                <View style={{ gap: spacing.sm, minHeight: selectRecipe.stateMessage.minHeight }}>
+                <View accessibilityLabel={asyncState.status === "loading" ? asyncState.message : undefined} accessibilityRole={asyncState.status === "loading" ? "progressbar" : undefined} style={{ alignItems: "center", gap: spacing.sm, justifyContent: "center", minHeight: selectRecipe.stateMessage.minHeight }}>
                   {asyncState.status === "loading" ? <ActivityIndicator /> : null}
-                  <Text
+                  {asyncState.status !== "loading" ? <Text
                     accessibilityLiveRegion="polite"
                     accessibilityRole={asyncState.status === "error" ? "alert" : undefined}
                     tone={asyncState.status === "error" ? "danger" : "muted"}
                   >
                     {asyncState.message}
-                  </Text>
+                  </Text> : null}
                   {asyncState.status === "error" && onRetry ? (
                     <Button onPress={onRetry} tone="secondary">{retryLabel ?? dismissLabel}</Button>
                   ) : null}
                 </View>
               ) : collection}
               {asyncState.status === "loadingMore" ? (
-                <View accessibilityLiveRegion="polite" accessibilityState={{ busy: true }} style={{ alignItems: "center", flexDirection: "row", gap: spacing.xs }}>
+                <View accessibilityLabel={asyncState.message} accessibilityRole="progressbar" accessibilityState={{ busy: true }} style={{ alignItems: "center", justifyContent: "center" }}>
                   <ActivityIndicator />
-                  <Text tone="muted">{asyncState.message}</Text>
                 </View>
               ) : null}
             </ScrollView>
@@ -1256,15 +1257,15 @@ export function Combobox<
           >
             <CollectionSheetHeader title={sheetTitle ?? label ?? accessibleName} dismissLabel={dismissLabel} onDismiss={() => dismiss("programmatic")} />
             {viewStatus === "loading" || viewStatus === "prompt" || viewStatus === "error" || viewStatus === "empty" ? (
-              <View style={{ gap: spacing.sm, minHeight: comboboxRecipe.stateMessage.minHeight }}>
+              <View accessibilityLabel={viewStatus === "loading" ? stateMessage : undefined} accessibilityRole={viewStatus === "loading" ? "progressbar" : undefined} style={{ alignItems: "center", gap: spacing.sm, justifyContent: "center", minHeight: comboboxRecipe.stateMessage.minHeight }}>
                 {viewStatus === "loading" ? <ActivityIndicator /> : null}
-                <Text
+                {viewStatus !== "loading" ? <Text
                   accessibilityLiveRegion={viewStatus === "error" ? "assertive" : "polite"}
                   accessibilityRole={viewStatus === "error" ? "alert" : undefined}
                   tone={viewStatus === "error" ? "danger" : "muted"}
                 >
                   {stateMessage}
-                </Text>
+                </Text> : null}
                 {viewStatus === "error" && onRetry ? (
                   <Button onPress={onRetry} tone="secondary">{retryLabel ?? dismissLabel}</Button>
                 ) : null}
@@ -1273,9 +1274,8 @@ export function Combobox<
               <ScrollView keyboardShouldPersistTaps="handled">
                 {collection}
                 {viewStatus === "loadingMore" ? (
-                  <View accessibilityLiveRegion="polite" accessibilityState={{ busy: true }} style={{ alignItems: "center", flexDirection: "row", gap: spacing.xs }}>
+                  <View accessibilityLabel={stateMessage || loadingMoreMessage || loadingMessage} accessibilityRole="progressbar" accessibilityState={{ busy: true }} style={{ alignItems: "center", justifyContent: "center" }}>
                     <ActivityIndicator />
-                    <Text tone="muted">{stateMessage || loadingMoreMessage || loadingMessage}</Text>
                   </View>
                 ) : null}
               </ScrollView>

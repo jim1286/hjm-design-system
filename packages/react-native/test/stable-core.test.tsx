@@ -1,5 +1,5 @@
 import { act, create } from "react-test-renderer";
-import { Text, TextInput } from "react-native";
+import { ActivityIndicator, Pressable, Text, TextInput, View } from "react-native";
 import { describe, expect, it, vi } from "vitest";
 
 import { AuthProviderButton, Checkbox, CheckboxGroup, Chip, Combobox, DatePicker, Field, FloatingActionButton, HjmNativeProvider, Link, NumberField, OtpField, PasswordField, RadioGroup, SearchField, Select, SegmentedControl, Slider, Switch, TagsInput, ToggleGroup, ToastRegion } from "../src/index.js";
@@ -324,6 +324,21 @@ describe("Native stable core input-action evidence", () => {
     const button = renderer!.root.find((node) => node.props.accessibilityRole === "button");
     act(() => button.props.onPress());
     expect(onPress).toHaveBeenCalledOnce();
+  });
+
+  it("shows only a centered spinner for a busy provider button while retaining its accessible name", () => {
+    const onPress = vi.fn();
+    let renderer: ReturnType<typeof create>;
+    act(() => { renderer = create(<HjmNativeProvider><AuthProviderButton descriptor={{ provider: "google", label: "Google로 계속하기", busy: true }} logo={<Text>G</Text>} onPress={onPress} /></HjmNativeProvider>); });
+    const button = renderer!.root.findByType(Pressable);
+    expect(button.props.accessibilityLabel).toBe("Google로 계속하기");
+    expect(button.props.accessibilityState.busy).toBe(true);
+    expect(button.props.disabled).toBe(true);
+    expect(renderer!.root.findByType(ActivityIndicator)).toBeDefined();
+    const hiddenLabel = renderer!.root.find((node) => node.props.children === "Google로 계속하기" && node.props.style?.opacity === 0);
+    expect(hiddenLabel?.props.style.opacity).toBe(0);
+    const indicatorFrame = renderer!.root.findAllByType(View).find((node) => node.props.style?.position === "absolute");
+    expect(indicatorFrame?.props.style.justifyContent).toBe("center");
   });
 
   it("routes Link activation through the host press action", () => {

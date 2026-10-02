@@ -27,7 +27,7 @@ Web의 headingLevel은 페이지 구조가 정한다. div root이므로 Dialog �
 큰 글자에서는 제목을 다음 행으로 내려 행동과 겹치지 않게 한다.
 
 BottomCTA는 primaryAction 하나와 선택적인 secondaryAction, description을 받는다.
-loading은 표시 문구의 폭을 유지하고 중복 실행을 막는다. 큰 글자에서 세로로 쌓을 때
+loading은 표시 문구를 시각적으로 숨기되 원래 폭과 접근성 이름을 유지하고 중복 실행을 막는다. 큰 글자에서 세로로 쌓을 때
 가로 배치용 flex-basis를 해제한다. 가로 배치 값이 세로 높이로 해석되어 거대한 공백을
 만들었던 320px 브라우저 재현이 근거다. 간격은 Native와 같은 `bottomCtaRecipe.gap`이다.
 

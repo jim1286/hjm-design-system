@@ -276,7 +276,7 @@ return (<StoryFrame><BottomCTA
 function AuthProviderButtonExample({ variant }: { variant: PreviewVariant }) {
 const [action, setAction] = useState("None");
 return (<StoryFrame><AuthProviderButton
-        descriptor={{ label: "Google", provider: "google" }}
+        descriptor={{ label: "Google", provider: "google", busy: variant === "loading" }}
         logo={<Text>G</Text>}
         onPress={() => setAction("Provider login requested")}
       /><Text accessibilityLiveRegion="polite">Last action: {action}</Text></StoryFrame>);

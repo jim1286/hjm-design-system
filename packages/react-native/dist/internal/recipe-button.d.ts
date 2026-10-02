@@ -1,4 +1,4 @@
-import { type View as NativeView, type StyleProp, type TextStyle, type ViewStyle } from "react-native";
+import { View, type StyleProp, type TextStyle, type ViewStyle } from "react-native";
 export declare const RecipeButton: import("react").ForwardRefExoticComponent<Omit<import("react-native").PressableProps, "style" | "children" | "hitSlop" | "accessibilityRole" | "accessibilityState" | "disabled"> & Readonly<{
     children?: import("react").ReactNode;
     tone?: import("../actions.js").ButtonTone;
@@ -24,5 +24,5 @@ export declare const RecipeButton: import("react").ForwardRefExoticComponent<Omi
 }> & Readonly<{
     style?: StyleProp<ViewStyle>;
     labelStyle?: StyleProp<TextStyle>;
-}> & import("react").RefAttributes<NativeView>>;
+}> & import("react").RefAttributes<View>>;
 //# sourceMappingURL=recipe-button.d.ts.map

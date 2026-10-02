@@ -43,6 +43,10 @@ Native renderer는 각 플랫폼 host로 번역한다. 라이브러리 비교와
 `loading`과 `disabled`는 같은 상태가 아니다. 두 renderer 모두 loading 중 activation을
 막고 busy 상태를 보조 기술에 노출하지만, pending control의 focusability는 유지한다.
 명시적 `disabled`만 host의 disabled 상태가 된다.
+2026-10-02 사용자 요청에 따라 Button은 로딩 중 기존 글자·양쪽 장식을 시각적으로 숨기고
+버튼 중앙에 스피너 하나만 표시한다. 내용은 레이아웃에 남겨 폭을 유지하며 접근성 이름과
+busy 상태도 유지한다. 글자 옆에 스피너를 추가하는 이전 표현은 시각적 중복과 폭 변화를
+만들어 버렸다.
 
 IconButton은 보이는 텍스트가 없으므로 현지화된 `label`과 icon `children`을 두 renderer에서
 필수로 받는다. `size`는 36/44/52 visual diameter를 선택하고 small은 Web pseudo hit area와

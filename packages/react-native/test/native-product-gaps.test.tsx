@@ -148,7 +148,7 @@ describe("Native product renderer gaps", () => {
     expect(primary?.props.accessibilityState).toMatchObject({ busy: true });
     expect(byLabel(renderer, "도움말")).toBeTruthy();
     expect(renderer.root.findAllByType(NativeText).some((node) => node.props.children === "저장 중"))
-      .toBe(true);
+      .toBe(false);
     expect(flattenStyle(primary?.props.style({ pressed: false })).minHeight)
       .toBe(52);
     expect(bottomCtaRecipe.minHeight).toBeGreaterThanOrEqual(64);

@@ -46,6 +46,7 @@ export const AuthProviderButton = forwardRef<HTMLButtonElement, AuthProviderButt
         data-provider={descriptor.provider}
         data-busy={busy || undefined}
         aria-busy={busy || undefined}
+        aria-label={descriptor.label}
         disabled={descriptor.disabled === true || busy}
         className={classNames("hjm-auth-provider-button", className)}
         style={{
@@ -62,9 +63,9 @@ export const AuthProviderButton = forwardRef<HTMLButtonElement, AuthProviderButt
         } as CSSProperties}
       >
         <span aria-hidden="true" className="hjm-auth-provider-button__logo">{logo}</span>
-        {/* Busy keeps the label and the width; only the spinner is added. */}
+        {/* Retain the label's layout width while showing only the centered spinner. */}
         <span className="hjm-auth-provider-button__label">{descriptor.label}</span>
-        {busy ? <span aria-hidden="true" className="hjm-auth-provider-button__spinner" /> : null}
+        {busy ? <span aria-hidden="true" className="hjm-auth-provider-button__loading-indicator"><span className="hjm-auth-provider-button__spinner" /></span> : null}
       </button>
     );
   },

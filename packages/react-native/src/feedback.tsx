@@ -635,10 +635,9 @@ export function Spinner({ label, size = "small", style }: SpinnerProps) {
       accessibilityRole="progressbar"
       accessibilityState={{ busy: true }}
       accessible
-      style={[{ alignItems: "center", gap: spacing.xs, justifyContent: "center" }, style]}
+      style={[{ alignItems: "center", justifyContent: "center" }, style]}
     >
       <ActivityIndicator color={colors.contentBrand} size={size} />
-      <Text accessible={false} align="center" tone="muted" variant="caption">{label}</Text>
     </View>
   );
 }

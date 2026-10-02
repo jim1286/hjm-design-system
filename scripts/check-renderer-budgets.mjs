@@ -121,7 +121,8 @@ const rendererBudgets = [
       // Each includes actions + provider: measured 5 modules, 19.1/19.2 kB raw,
       // 4.89/4.90 kB gzip. Reuse preserves button/loading/theme contracts.
       "./top-bar": { modules: 5, raw: 21_000, gzip: 5_400 },
-      "./bottom-cta": { modules: 5, raw: 21_000, gzip: 5_400 },
+      // Spinner-only loading retains the label's layout; measured 25.2 kB raw with shared allowances, same 5 modules.
+      "./bottom-cta": { modules: 5, raw: 21_300, gzip: 5_400 },
       // 0.10.0: skeleton의 원 지름·펄스 길이·곡선·opacity를 recipe에서 읽어 CSS 변수로
       // 내보내면서 커졌다. modules가 3으로 그대로라 새 import 경로는 없다. 다음에 이
       // 한도를 올릴 때는 modules가 함께 늘었는지 먼저 확인한다.
@@ -297,10 +298,11 @@ const rendererBudgets = [
       // ColorPicker input/palette and decorative/sticky layout rules add 3.1 kB; measured total 155.9/25.3 kB.
       // Bounded sidebar decoration adds CSS only; no animation runtime dependency.
       // Capsule/header styles add measured 3339 raw / 600 gzip; preserve prior headroom.
-      "./styles.css": { raw: 162_839, gzip: 27_000 },
+      // Centered busy overlays add 602 raw bytes (163,441 measured); no new assets or animation runtime.
+      "./styles.css": { raw: 163_700, gzip: 27_000 },
       // Same rules wrapped in `@layer hjm { }` by packages/react/scripts/copy-styles.mjs;
       // the wrapper adds ~15 bytes, so this budget tracks styles.css plus that margin.
-      "./styles.layered.css": { raw: 162_903, gzip: 27_032 },
+      "./styles.layered.css": { raw: 163_800, gzip: 27_032 },
     },
   },
   {
@@ -396,7 +398,8 @@ const rendererBudgets = [
       // 2026-10-01: recipe-owned typography/geometry and controlled font scaling
       // replace the independent 48pt style. Measured 10.1 kB gzip incl provider;
       // +150 bytes covers that shared accessibility behavior, with unchanged edges/raw.
-      "./sheet-gesture": { modules: 5, raw: 41_000, gzip: 9_950 },
+      // Shared RecipeButton now reserves content width under its centered spinner; measured 42.4 kB raw, same graph.
+      "./sheet-gesture": { modules: 5, raw: 41_300, gzip: 9_950 },
       "./keyboard-controller": { modules: 1, raw: 1_600, gzip: 850 },
       "./context-menu-native": { modules: 1, raw: 1_500, gzip: 800 },
       // Optional Skia renderer shares provider only, leaving the root graph unchanged.
@@ -428,7 +431,8 @@ const rendererBudgets = [
       "./actions": { modules: 4, raw: 34_700, gzip: 7_900 },
       // Compatibility aliases retain existing family graphs; no tree-shaking claim.
       // Progress gained the circular shape, which the top-bar graph also reaches.
-      "./top-bar": { modules: 9, raw: 143_000, gzip: 28_200 },
+      // Spinner-only Button presentation adds ~0.1 kB gzip to both existing action graphs, without new modules.
+      "./top-bar": { modules: 9, raw: 143_000, gzip: 28_350 },
       "./bottom-cta": { modules: 4, raw: 34_700, gzip: 7_900 },
       // Inputs reexports DatePicker; the shared grid adds one transitive implementation.
       // 1.4 Switch row/inline and large-text reflow measure 170.7/31.4 kB, still 15 modules.
@@ -488,7 +492,7 @@ const rendererBudgets = [
       // decides whether VoiceOver calls the destination activatable.
       // 0.10.0: navigation은 feedback을 경유해 Skeleton을 포함한다. Skeleton이
       // recipe의 shape·펄스를 실제로 구현하면서 커졌고 modules는 9로 그대로다.
-      "./navigation": { modules: 9, raw: 143_000, gzip: 28_200 },
+      "./navigation": { modules: 9, raw: 143_000, gzip: 28_350 },
       // 2026-09-30: UploadItem action split + mixed-state helper measure 75.9/15.6 kB (gzip was 15_000).
       "./data-display": { modules: 6, raw: 77_000, gzip: 15_600 },
       "./feedback": { modules: 5, raw: 73_500, gzip: 15_100 },

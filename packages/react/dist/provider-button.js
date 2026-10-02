@@ -10,7 +10,7 @@ export const AuthProviderButton = forwardRef(function AuthProviderButton({ descr
     // HJM palette values into a brand fill.
     const surface = resolveAuthProviderSurface(descriptor.provider, theme?.environment.theme === "dark" ? "dark" : "light");
     const busy = descriptor.busy === true;
-    return (_jsxs("button", { ...props, ref: forwardedRef, type: props.type ?? "button", "data-provider": descriptor.provider, "data-busy": busy || undefined, "aria-busy": busy || undefined, disabled: descriptor.disabled === true || busy, className: classNames("hjm-auth-provider-button", className), style: {
+    return (_jsxs("button", { ...props, ref: forwardedRef, type: props.type ?? "button", "data-provider": descriptor.provider, "data-busy": busy || undefined, "aria-busy": busy || undefined, "aria-label": descriptor.label, disabled: descriptor.disabled === true || busy, className: classNames("hjm-auth-provider-button", className), style: {
             "--hjm-provider-background": surface.background,
             "--hjm-provider-content": surface.content,
             "--hjm-provider-border": surface.border ?? "transparent",
@@ -21,6 +21,6 @@ export const AuthProviderButton = forwardRef(function AuthProviderButton({ descr
             "--hjm-provider-padding": `${authProviderButtonRecipe.paddingHorizontal}px`,
             "--hjm-provider-logo-size": `${authProviderButtonRecipe.logoSize}px`,
             "--hjm-provider-focus-offset": `${authProviderButtonRecipe.focusOutlineOffset}px`,
-        }, children: [_jsx("span", { "aria-hidden": "true", className: "hjm-auth-provider-button__logo", children: logo }), _jsx("span", { className: "hjm-auth-provider-button__label", children: descriptor.label }), busy ? _jsx("span", { "aria-hidden": "true", className: "hjm-auth-provider-button__spinner" }) : null] }));
+        }, children: [_jsx("span", { "aria-hidden": "true", className: "hjm-auth-provider-button__logo", children: logo }), _jsx("span", { className: "hjm-auth-provider-button__label", children: descriptor.label }), busy ? _jsx("span", { "aria-hidden": "true", className: "hjm-auth-provider-button__loading-indicator", children: _jsx("span", { className: "hjm-auth-provider-button__spinner" }) }) : null] }));
 });
 //# sourceMappingURL=provider-button.js.map

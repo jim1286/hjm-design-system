@@ -3,15 +3,17 @@ import { isLargeTextScale, visibleControlHeight, } from "@hjmds/design-contracts
 import { control, radius, spacing } from "@hjmds/design-contracts/foundations";
 import { buttonRecipe, resolveButtonLabelLines, } from "@hjmds/design-contracts/recipes/base";
 import { forwardRef } from "react";
-import { ActivityIndicator, Pressable, } from "react-native";
+import { ActivityIndicator, Pressable, View, } from "react-native";
 import { Text } from "../primitives.js";
 import { useHjmNativeTheme } from "../provider.js";
 export const RecipeButton = forwardRef(function RecipeButton({ children, tone = buttonRecipe.defaults.tone, size = buttonRecipe.defaults.size, shape = buttonRecipe.defaults.shape, align = buttonRecipe.defaults.align, selected, disabled = false, loading = false, disableWhileLoading = false, growWithContent = false, loadingLabel, leading, trailing, fullWidth = false, hitSlop, layoutStyle, style, labelStyle, renderLoadingIndicator, accessibilityLabel, accessibilityState, onPress, onLongPress, ...props }, ref) {
     const { colors, environment } = useHjmNativeTheme();
     const labelLines = resolveButtonLabelLines(isLargeTextScale(environment.textScale));
-    const inactive = disabled || loading;
+    const inactive = disabled && !loading;
     const unavailable = disabled || (loading && disableWhileLoading);
-    const content = loading && loadingLabel !== undefined ? loadingLabel : children;
+    // Preserve the idle content's measured width while the pending label remains the accessible name.
+    const content = children;
+    const announcedContent = loading && loadingLabel !== undefined ? loadingLabel : children;
     if (content === undefined || content === null || content === false) {
         throw new TypeError("Button requires children");
     }
@@ -22,7 +24,7 @@ export const RecipeButton = forwardRef(function RecipeButton({ children, tone = 
     const contentColor = resolveColor(selectedContract?.content ?? toneContract.content);
     const visibleHeight = visibleControlHeight(sizeContract.height, environment.minimumVisualTarget);
     return (_jsxs(Pressable, { ...props, ref: ref, accessibilityLabel: accessibilityLabel ??
-            (typeof content === "string" ? content : undefined), accessibilityRole: "button", accessibilityState: {
+            (typeof announcedContent === "string" ? announcedContent : undefined), accessibilityRole: "button", accessibilityState: {
             ...accessibilityState,
             ...(selected === undefined ? {} : { selected }),
             disabled: unavailable,
@@ -54,11 +56,6 @@ export const RecipeButton = forwardRef(function RecipeButton({ children, tone = 
             layoutStyle,
             style,
             labelStyle,
-        ], children: [loading
-                ? renderLoadingIndicator?.({
-                    color: contentColor,
-                    size: "small",
-                }) ?? _jsx(ActivityIndicator, { color: contentColor, size: "small" })
-                : leading, typeof content === "string" || typeof content === "number" ? (_jsx(Text, { align: align === "leading" ? "auto" : "center", emphasis: "medium", ...(labelLines === null ? {} : { numberOfLines: labelLines }), style: [{ color: contentColor }, labelStyle], variant: sizeContract.textVariant, children: content })) : (content), trailing] }));
+        ], children: [loading && leading != null ? _jsx(View, { style: { opacity: 0 }, children: leading }) : leading, typeof content === "string" || typeof content === "number" ? (_jsx(Text, { align: align === "leading" ? "auto" : "center", emphasis: "medium", ...(labelLines === null ? {} : { numberOfLines: labelLines }), style: [{ color: contentColor }, labelStyle, loading ? { opacity: 0 } : null], variant: sizeContract.textVariant, children: content })) : (loading ? _jsx(View, { importantForAccessibility: "no-hide-descendants", style: { opacity: 0 }, children: content }) : content), loading && trailing != null ? _jsx(View, { style: { opacity: 0 }, children: trailing }) : trailing, loading ? _jsx(View, { pointerEvents: "none", style: { alignItems: "center", bottom: 0, justifyContent: "center", left: 0, position: "absolute", right: 0, top: 0 }, children: renderLoadingIndicator?.({ color: contentColor, size: "small" }) ?? _jsx(ActivityIndicator, { color: contentColor, size: "small" }) }) : null] }));
 });
 //# sourceMappingURL=recipe-button.js.map

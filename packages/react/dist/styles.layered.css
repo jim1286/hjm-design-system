@@ -246,6 +246,9 @@
 /* 라벨은 자르지 않고 두 줄까지 접는다(buttonRecipe.label). 잘린 행동 라벨은 무엇을 하는
    버튼인지 잃고, 무제한 줄바꿈은 하단 CTA 행 같은 남의 레이아웃을 밀어낸다. */
 .hjm-button__label { min-inline-size: 0; overflow-wrap: anywhere; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: var(--hjm-button-label-lines, 2); overflow: hidden; }
+/* Keep the original content in layout for stable width; the sole visible busy cue sits at the frame center. */
+.hjm-button[data-state="loading"] > :not(.hjm-button__loading-indicator) { opacity: 0; }
+.hjm-button__loading-indicator { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; }
 /* 큰 글자 설정에서는 상한을 푼다 — 사용자가 키운 글자를 잘라 내용을 숨기면 WCAG 1.4.4다. */
 [data-large-text="true"] .hjm-button__label { display: block; overflow: visible; }
 .hjm-button__spinner,
@@ -1231,6 +1234,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 /* Provider guideline colors cannot follow the theme without failing provider review.
    HJM owns geometry and an outer focus ring that remains visible on every brand fill. */
 .hjm-auth-provider-button {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1248,6 +1252,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   cursor: pointer;
 }
 .hjm-auth-provider-button:disabled { cursor: default; opacity: var(--hjm-opacity-disabled, 0.5); }
+.hjm-auth-provider-button[data-busy="true"]:disabled { opacity: 1; }
 .hjm-auth-provider-button:focus-visible {
   outline: 2px solid var(--hjm-color-focus);
   outline-offset: var(--hjm-provider-focus-offset);
@@ -1261,6 +1266,8 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   color: var(--hjm-provider-content);
 }
 .hjm-auth-provider-button__label { min-inline-size: 0; overflow-wrap: anywhere; }
+.hjm-auth-provider-button[data-busy="true"] > :not(.hjm-auth-provider-button__loading-indicator) { opacity: 0; }
+.hjm-auth-provider-button__loading-indicator { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; }
 .hjm-auth-provider-button__spinner {
   flex: 0 0 auto;
   inline-size: 1em;
@@ -2156,6 +2163,9 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-select__native { appearance: none; padding-inline-end: calc(var(--hjm-space-lg) + var(--hjm-space-sm)); cursor: pointer; }
 .hjm-select__anchor { position: relative; min-inline-size: 0; }
 .hjm-select__trigger { inline-size: 100%; justify-content: space-between; gap: var(--hjm-space-sm); color: var(--hjm-color-text); font: inherit; text-align: start; cursor: pointer; }
+.hjm-select__trigger[data-busy="true"] { position: relative; }
+.hjm-select__trigger[data-busy="true"] > :not(.hjm-select__busy-overlay) { opacity: 0; }
+.hjm-select__busy-overlay { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; }
 .hjm-select__trigger:disabled { cursor: not-allowed; }
 .hjm-select__trigger[aria-disabled="true"] { cursor: progress; }
 .hjm-select__leading, .hjm-select__option-leading { flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; color: var(--hjm-color-text-muted); }

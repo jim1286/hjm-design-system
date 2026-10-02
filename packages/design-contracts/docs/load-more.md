@@ -11,7 +11,9 @@ ready(requestKey) ─ request ─→ loading(requestKey)
 ```
 
 - `requestKey`는 cursor나 offset을 제품 adapter가 stable string으로 만든 값입니다.
-- `labels`는 load more/loading/retry/complete 네 상태의 현지화된 visible copy입니다. renderer가
+- `labels`는 load more/loading/retry/complete 네 상태의 현지화된 이름입니다. loading은
+  2026-10-02 사용자 요청에 따라 화면에 스피너만 보이고 접근성 이름으로 남습니다. 이전의
+  스피너 옆 문구는 같은 상태를 중복 표시하므로 제거했습니다. renderer가
   자체 문구나 영어 fallback을 만들지 않습니다.
 - `createLoadMoreController`는 한 controller에서 요청 하나만 허용합니다. 같은 sentinel의 반복
   노출이나 RN `onEndReached` 중복 호출이 query를 두 번 실행하지 못합니다.

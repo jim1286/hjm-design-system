@@ -373,16 +373,7 @@ describe("Native LoadMore collection binding", () => {
       ),
       size: loadMoreRecipe.spinner.size,
     });
-    const loadingCopy = loading.root.findAllByType(Text).find(
-      (node) => node.props.children === labels.loading,
-    );
-    expect(loadingCopy?.props).toMatchObject({
-      accessible: false,
-      variant: loadMoreRecipe.status.textVariant,
-    });
-    expect(flattenStyle(loadingCopy?.props.style)).toMatchObject({
-      color: resolveColorReference(loadMoreRecipe.status.color, providerValue.palette),
-    });
+    expect(loading.root.findAllByType(Text).some((node) => node.props.children === labels.loading)).toBe(false);
 
     const error = render(
       <LoadMore
