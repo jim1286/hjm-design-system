@@ -243,3 +243,20 @@ The renderer test workspace now uses `react-native@0.86.2`, matching the existin
 Native Storybook remains 10.4.4 with the binary's safe-area-context 5.7.0. Its caret ranges had resolved Native UI/theming/common to 10.6.0, whose UI requires safe-area 5.8.0 and Storybook ^10.5.4. Scoped workspace overrides pin these Native UI modules to 10.4.4 and their React renderer to 10.4.0; the latter declares Storybook ^10.4.0. Web keeps its existing 10.6 renderer. Upgrading safe-area merely to satisfy a development UI dependency was rejected because it would require changing the installed native binary. Remove these pins when the Native host, UI modules and native peers are intentionally upgraded together. Package manifests from the exact registry versions were inspected before changing resolution.
 
 React Native's 0.86 lane is already registered centrally for this workspace; no new library is introduced. Matching Metro toolchain lanes are recorded as described above. Installation uses `--ignore-scripts` because all affected changes are development JS/type dependencies and the existing native host is retained. Verification includes fresh peer resolution, package checks, both showcases and a development-host smoke.
+
+## Video dialog product host — 2026-10-07
+
+The reference audit requests an actual media preview, not a fake play button.
+Native Showcase uses `expo-video@57.0.5` (MIT), the Expo SDK 57 documented lane,
+only as the product-owned host inside the existing HJM Dialog. HJM published
+packages gain no video dependency or new overlay state engine. The central
+registry adds `npm:expo-video` / `registry:57` for this development host.
+
+The host is loaded only after `requireOptionalNativeModule("ExpoVideo")` succeeds,
+so an older development client can explain missing support without crashing.
+This fallback is not playback evidence. No native binary is rebuilt by installing
+the JS package. The hook releases its player on modal content unmount; autoplay,
+background playback, PiP and Native fullscreen are not enabled because a short
+preview must stop when its dialog closes. Remove the dependency when removing
+the Native preview. Web uses the browser video element with no extra engine.
+Source: https://docs.expo.dev/versions/v57.0.0/sdk/video/ .

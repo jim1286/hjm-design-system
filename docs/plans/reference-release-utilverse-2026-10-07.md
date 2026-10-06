@@ -10,10 +10,10 @@ UI·기능 검증을 거쳐 승격·릴리스하고 Utilverse의 대체 가능�
 | 요구 | 필요한 증거 | 현재 상태 |
 | --- | --- | --- |
 | 11개 사이트 전수 조사 | 사이트별 발견 URL 목록과 페이지별 검토·미확인 기록, 후보별 채택 판단 | 미완료. 이전 조사 수집 수를 UI 검토 수로 세지 않음 |
-| 권장 항목 모두 실험 구현 | 후보 목록과 Web/Native 공개 API·개별 스토리·사용 지침 연결 | 1차 7개 main 포함, 후속 후보 검토 중 |
+| 권장 항목 모두 실험 구현 | 후보 목록과 Web/Native 공개 API·개별 스토리·사용 지침 연결 | 로컬 main 10개 실험 구현, 추가 후보 검토 중 |
 | UI·기능 검증 | 밝음/어두움/큰 글자/RTL/모션 감소 및 실제 행동, 전체 시트와 기기 QA | PR #55 자동 검사 통과. 신규 시각·기기 검증 필요 |
 | 검증 후 승격 | 항목별 QA 근거, Storybook 양쪽 경로와 지침 동시 갱신 | 미실행. 사용자 승인일 2026-10-07, 검증 조건 충족 후 적용 |
-| HJM 릴리스 | 동기화된 버전·Changeset·CI, npm 세 패키지와 tag의 동일 SHA | 미실행. 현재 main 053e289 / 게시 1.13.1 |
+| HJM 릴리스 | 동기화된 버전·Changeset·CI, npm 세 패키지와 tag의 동일 SHA | 미실행. 게시 1.13.1 이후 실험·host 개선은 로컬 main 작업 중 |
 | Utilverse 적용·대체 | 모든 화면/컴포넌트 대조표, 공개 API 교체, 제품 상태·테마·데이터 회귀 | 사전 소스 조사 시작. 릴리스 후 정확한 npm 버전 설치 |
 
 ## 후속 후보와 검토 순서
@@ -35,7 +35,7 @@ UI·기능 검증을 거쳐 승격·릴리스하고 Utilverse의 대체 가능�
 | Dynamic / Expandable Toolbar | ContextToolbar 실험 | 키보드·초안 유지·초점 복귀 검증 |
 | Progressive Blur | 미구현 | 정보/조작을 가리지 않는 가장자리 표현, Native 지원·비용 비교 |
 | Noise / EffectSurface | 기존 grain/glow/mesh 유지 | 기존 preset과 차이가 있는 후보만 추가 |
-| Hero Video Dialog | 기본 예제 열기·닫기 실제 조사, 기존 Dialog 재사용 결정 | 제품 player host, 자막·오류·재생 검증과 양쪽 실험; 원본의 모달 접근성 결함을 복제하지 않음 |
+| Hero Video Dialog | 기존 Dialog + 제품 player host Web/Native 실험 구현. Web 실제 재생·실패 복구·닫기·초안 유지 확인 | Native 실제 기기, 제품 팔레트, 실제 유음 콘텐츠의 자막/대본 검증 남음. 무음 fixture를 자막 검증으로 세지 않음 |
 | Rating | 양 renderer 공개 API 및 실험 | 평균/입력/초기화·키보드·큰 글자 UI 검증 |
 | 3D icons | 그림과 시작 안내 실험 추가(Web/Native), CC0 원본 2개 | Web 흐름·다크·큰 글자·390px 확인, Native 실제 기기·다른 제품 팔레트 검증 남음 |
 | Number Ticker | AnimatedStatistic 유지 후보 | Intl/RTL/비라틴 숫자와 원본의 실제 이점 대조 |
@@ -119,3 +119,12 @@ heading·표시된 코드 import·소스 링크를 `reference-page-source-index.
 `renderImage({source,size,fallback,onError})`를 추가해 제품 host를 연결하고 프레임·접근성·
 대체 표시를 HJM에 남겼다. A→B→A 뒤 이전 이미지 실패가 새 이미지를 지우지 않도록
 source 세대 검사를 넣었다. 기존 Native Image 경로는 유지한다. 아직 미게시·앱 미적용이다.
+
+## 영상 다이얼로그 실험
+
+10번째 레퍼런스 실험으로 `실험/구성/정보 표시/영상 미리보기`를 두 Showcase에 추가했다.
+공개 Dialog를 재사용하고 플레이어만 제품 호스트로 공급한다. 6초 자체 생성 무음 fixture로
+Web 실제 재생과 decoder 오류→재시도를 확인했다. 닫기 즉시 플레이어를 제거하고 초안과
+초점 복귀를 유지한다. Native 모듈 없는 기존 개발 앱은 지원 누락 안내를 보여 준다.
+이 안내는 기기 재생 통과가 아니며 승격·릴리스 전에 실제 host 검증이 남는다.
+자세한 결과와 미확인 범위는 `docs/qa/2026-10-07-video-dialog.md`에 기록한다.

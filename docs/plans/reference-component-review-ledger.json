@@ -1876,13 +1876,13 @@
     {
       "url": "https://magicui.design/docs/components/hero-video-dialog",
       "name": "hero-video-dialog",
-      "existingMapping": "Dialog + Asset",
+      "existingMapping": "Dialog + product media host",
       "priorRationale": "영상 포스터→재생 구성 후보",
       "sourceAudit": "2026-10-06",
       "visualReview": "partial: 2026-10-07 IAB 1280x720, default thumbnail and open player inspected; second animation, dark and responsive variants pending",
       "interactionReview": "partial: Play video opens YouTube iframe. DOM has no dialog role; focus stays on trigger. Escape sent to trigger did not close. Icon close removes iframe after exit. Playback, captions and error recovery pending.",
-      "adoptionDecision": "recommend existing Dialog + product media host composition; preserve HJM focus/stack/Escape contracts instead of copying source modal. New experiment and real Web/Native playback validation pending.",
-      "implementationBoundary": "Asset is an image-semantic frame, not an interactive player container. Do not put video controls in its decorative/aria-hidden slot. Dialog.children can host a product player; Native showcase currently has no video host dependency.",
+      "adoptionDecision": "Web/Native experimental composition implemented 2026-10-07 using existing Dialog; Web actual playback, decode failure/retry, close/focus/draft preservation verified. Native device playback and product-palette comparison pending before promotion.",
+      "implementationBoundary": "Dialog.children hosts product media. Native Showcase-only expo-video is optional-probed before import; published packages gain no player dependency. Open=false unmounts player immediately. See docs/qa/2026-10-07-video-dialog.md.",
       "sourceCheck": {
         "status": "html",
         "checkedAt": "2026-10-06T15:58:18.994524+00:00",
