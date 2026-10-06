@@ -25,7 +25,7 @@ UI·기능 검증을 거쳐 승격·릴리스하고 Utilverse의 대체 가능�
 | --- | --- | --- |
 | Morphing Popover / Dialog | 원본 초점·초안 소실 확인. 양 Dialog renderer와 Web Popover에 motionOrigin 구현, 초안 보존 편집 실험에 비모달 변형 추가 | Dialog/Popover 전체 환경·기기·성능 검증. docs/qa/2026-10-07-overlay-origin-transition.md |
 | Transition Panel | Web 빠른 전환·입력 보존. Native 큰 글자 키보드 아래 입력 접근 문제를 화면 scroll host로 수정 | 필드 외곽 자동 노출·전체 환경·성능. docs/qa/2026-10-07-native-panel-noise.md |
-| Animated Background | Tabs gooey 유지. SegmentedControl selectionMotion=slide 실험 추가 | Web/Native 회귀 7개 통과, 기본·다크·큰 글자 Web UI 확인; 좁은 화면·팔레트·기기 검증 대기 |
+| Animated Background | Tabs gooey 유지. SegmentedControl selectionMotion=slide 실험 추가 | Web RTL 리사이즈 배경 이탈 수정, iOS 2배 글자 키보드 접근·다크/RTL 선택 확인. 팔레트·Android·접근성·성능 대기. docs/qa/2026-10-07-selection-motion.md |
 | Stateful Button | Web·iOS 실패→편집→현재 초안 저장 확인. pending 라벨·실패 설정 잠금·비서버 안내 보완 | 환경 조합·제품 상태 연결. docs/qa/2026-10-07-feedback-panel-reference.md |
 | File Upload | Web 실제 파일 제한·중복·취소·키보드 재시도 확인, 상태 전환 초점 수정. Native 합성 오류/재시도/성공 확인 | Native 시스템 picker·실제 전송 취소·환경 조합. docs/qa/2026-10-07-upload-reference.md |
 | Bento Grid | ProductBento 실험 | 좁은 화면/Native 정보 순서·레이아웃 검증 |

@@ -884,6 +884,9 @@ export const SegmentedControl = forwardRef<
       if (next !== bounds) { bounds = next; place(false); }
     });
     for (const item of track.querySelectorAll(".hjm-segmented__item")) observer?.observe(item);
+    // Fixed-width RTL pills move when the track resizes without changing their
+    // own size. Observing only items leaves the selected artwork at its old x.
+    observer?.observe(track);
     const visibility = () => place(false);
     document.addEventListener("visibilitychange", visibility);
     return () => { observer?.disconnect(); document.removeEventListener("visibilitychange", visibility); };

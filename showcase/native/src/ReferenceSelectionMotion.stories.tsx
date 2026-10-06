@@ -6,3 +6,5 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };
 export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
 export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };
+export const ReducedMotion: Story = { name: "동작 줄이기", globals: { motion: "reduced" } };
+export const Rtl: Story = { name: "오른쪽에서 왼쪽", globals: { direction: "rtl", theme: "dark", textScale: "2" } };

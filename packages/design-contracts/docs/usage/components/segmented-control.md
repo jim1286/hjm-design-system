@@ -150,6 +150,9 @@ Native는 `@hjmds/react-native/inputs`에서 같은 prop을 사용한다. `prese
 
 2026-10-07 Animated Background 비교에서 시각적 선택만 있는 외부 예제를 그대로 교체하면 radio/checked 의미를 잃는 것을 확인했다.
 `selectionMotion="slide"`는 기존 선택 엔진·키보드·접근성 이름·입력 위치를 유지하고 배경만 측정 위치로 이동한다.
+Web은 항목과 바깥 선택 영역의 크기를 함께 관찰한다. 2026-10-07 RTL pills에서 항목 너비는
+그대로인 채 부모 폭만 바뀌면 선택 배경이 이전 위치에 남는 오류를 수정했다. 크기 변경에는
+이동 모션을 재생하지 않고 새 위치에 맞춘다.
 기본은 `"none"`이며 opt-in 실험이다. 별도 버튼/선택 상태를 만들어 기존 라디오를 대체하지 않는다.
 
 - Web/Native 모두 `connected`와 `pills`에 적용한다. 큰 글자·RTL·줄바꿈에서는 실제 항목 위치를 측정한다.

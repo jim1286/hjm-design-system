@@ -631,7 +631,7 @@
       "visualReview": "2026-10-07 IAB: Segmented Control Day/Week layout observed at 1280x720",
       "interactionReview": "Week activated; data-checked=true moved; no aria-pressed/aria-selected on source buttons. Other demo variants and environment matrix pending.",
       "adoptionDecision": "recommended: keep HJM radio engine and add opt-in selection artwork motion",
-      "implementation": "SegmentedControl selectionMotion=slide; Web and Native experiment SelectionMotion; targeted tests 3+3 passed; UI/device verification pending"
+      "implementation": "SegmentedControl selectionMotion=slide in Web/Native. 2026-10-07: fixed Web RTL fixed-width pill track resize (90px regression); Native scrolling keyboard host added. iOS 26.5 light/2x input 42 retained through week selection, dark/RTL/2x selection artwork and checked state match. Full matrix/performance/screen readers remain pending. docs/qa/2026-10-07-selection-motion.md"
     },
     {
       "url": "https://motion-primitives.com/docs/animated-group",

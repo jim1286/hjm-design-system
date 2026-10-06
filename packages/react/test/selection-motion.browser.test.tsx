@@ -31,6 +31,21 @@ it("keeps pills inset, honors reduced motion and restores the static selection w
  await render(false);expect(host.querySelector(".hjm-segmented__highlight")).toBeNull();expect(host.querySelector('[data-highlight-ready="true"]')).toBeNull();
 });
 
+it("repositions fixed-width RTL pills when only their container width changes", async () => {
+ await act(async()=>root.render(<HjmProvider theme="dark" direction="rtl" reducedMotion><SegmentedControl label="기간" selectionMotion="slide" presentation="pills" items={items} value="day"/></HjmProvider>));
+ // Let the observer's initial delivery finish before testing a later resize.
+ await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
+ alignment();
+ // In RTL, narrowing the track moves a fixed-width pill without resizing it.
+ // Observing only each pill misses this layout change and leaves its artwork behind.
+ host.style.width="270px";
+ await expect.poll(()=>{
+  const marker=host.querySelector('.hjm-segmented__highlight')!.getBoundingClientRect();
+  const selected=host.querySelector('[data-state="checked"]')!.getBoundingClientRect();
+  return Math.abs(marker.left-selected.left);
+ }).toBeLessThan(1);
+});
+
 it("keeps the pill background behind the entire label at large text",async()=>{
  for(const scale of [1,2,3]) {
   await act(async()=>root.render(<HjmProvider textScale={scale} reducedMotion><SegmentedControl label="기간" selectionMotion="slide" presentation="pills" items={items} value="month"/></HjmProvider>));
