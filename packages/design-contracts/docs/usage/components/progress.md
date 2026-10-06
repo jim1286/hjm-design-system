@@ -137,3 +137,14 @@ const { before, after } = resolveScrollEdges(metrics);
 - Native 탄성 overscroll은 범위 안으로 제한한다. 가로 RTL offset은 제품 host가 논리적 전진 값으로 정규화한다.
 - 콘텐츠 크기가 바뀌면 새 metrics로 다시 계산한다. focus나 읽기 도구로 접근한 콘텐츠를 가리는지는
   이 순수 계산만으로 판단할 수 없다. 시각 효과 renderer가 해당 조작 상태에서 가림을 제거해야 한다.
+
+### 읽기 영역의 길이가 바뀔 때
+
+2026-10-07 외부 읽기 진행 효과 대조에서 window 장식과 실제 본문 영역의 진행률을
+구분했다. ScrollProgress는 독서 완료 증명이 아니라 지정한 host의 위치다. 제품의 동의·
+학습 완료를 스크롤 100%만으로 확정하지 않는다.
+
+양쪽 읽기 진행 표시 예제의 요약만 보기/전체 내용 보기로 내용 축소와 복원을 확인한다.
+Web은 useScrollMetrics의 resize/mutation 관찰, Native는 ScrollView의 onLayout·
+onContentSizeChange·onScroll을 연결한다. 길이를 줄인 뒤 예전 offset을 그대로 제품 상태로
+저장하지 않는다. 측정 전 viewport=0은 0, 측정 후 화면 안에 들어오는 내용은 1이다.

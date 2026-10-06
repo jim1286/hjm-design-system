@@ -39,7 +39,7 @@ UI·기능 검증을 거쳐 승격·릴리스하고 Utilverse의 대체 가능�
 | Rating | 양 renderer 공개 API 및 실험 | 평균/입력/초기화·키보드·큰 글자 UI 검증 |
 | 3D icons | 그림과 시작 안내 실험 추가(Web/Native), CC0 원본 2개 | Web 흐름·다크·큰 글자·390px 확인, Native 실제 기기·다른 제품 팔레트 검증 남음 |
 | Number Ticker | 공식 소스·기본 데모 대조 후 기존 엔진 유지. 양쪽 소수/음수·비라틴·지수·모션 감소·RTL 비교 스토리 추가 | Native 실제 변형·접근성 및 전체 환경 검증. docs/qa/2026-10-07-number-reference.md |
-| Scroll Progress / Tracing Beam | 기존 ScrollProgress/Timeline 유지 후보 | host 범위·크기 변경과 읽기 구성 비교 |
+| Scroll Progress / Tracing Beam | 원본 본문/선 관찰, 기존 ScrollProgress 유지. Web·iOS 본문 스크롤·축소·복원 검증 | 광선 표현·원본 속도 반응은 미확인. docs/qa/2026-10-07-reading-reference.md |
 | Animated List | ContentTransition enterOnMount + List 양 플랫폼 실험 추가. 초기 데이터 지연 없이 새 행 등장·초안 보존·재정렬·삭제·정지 | 전체 팔레트·RTL·성능·Native 환경 검증. 재정렬 이동 모션은 미구현. docs/qa/2026-10-07-live-list.md |
 
 ## 이번에 갱신한 관찰
