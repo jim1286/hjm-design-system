@@ -196,6 +196,7 @@
 | [앞면과 상세 정보 전환](compositions/stea-flip-card.md) | 정보 표시 | 모임·상품처럼 한 카드에 요약(앞면)과 상세 항목(뒷면)이 있고, 사용자가 버튼 하나로 두 면을 오가게 할 때 쓴다. | 배포 | Web · Native |
 | [영상 미리보기](compositions/video-dialog.md) | 정보 표시 | 현재 입력을 유지하면서 짧은 영상 설명을 확인할 때 쓴다. | 실험 | Web · Native |
 | [일정과 식별 정보 티켓](compositions/stea-event-ticket.md) | 정보 표시 | 공연·예약 입장권처럼 일시·장소·좌석 정보와 함께, 현장에서 보여 줄 QR 코드와 사람이 읽을 예매 번호를 한 카드에 담을 때 쓴다. | 배포 | Web · Native |
+| [질감 비교](compositions/texture-comparison.md) | 정보 표시 | 기존 반복 점 grain과 불규칙한 정적 noise를 같은 배경·강도로 비교할 때 쓴다. | 실험 | Web · Native |
 | [추가해도 유지되는 목록](compositions/live-list.md) | 정보 표시 | 입력 중인 목록에 새 데이터가 추가되거나 순서가 바뀌어도 기존 초안과 항목의 정체성을 유지할 때 쓴다. | 실험 | Web · Native |
 | [카드 묶음과 긴 목록](compositions/data-layouts.md) | 정보 표시 | 많은 항목을 화면에 늘어놓을 방식을 고를 때 쓴다. | 배포 | Web · Native |
 | [그림과 시작 안내](compositions/illustrated-outcome.md) | 피드백과 복구 | 빈 목록에서 시작을 안내하고 짧은 온보딩을 거쳐 결과를 보여 줄 때 쓴다. | 실험 | Web · Native |

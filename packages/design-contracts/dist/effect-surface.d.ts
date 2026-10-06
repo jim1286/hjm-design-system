@@ -1,5 +1,5 @@
 import { type ColorReference } from "./color-references.js";
-export type EffectLayer = "mesh" | "glow" | "grain";
+export type EffectLayer = "mesh" | "glow" | "grain" | "noise";
 export type EffectSurfaceDescriptor = Readonly<{
     layers?: readonly EffectLayer[];
     seed?: string;
@@ -15,6 +15,11 @@ export declare function resolveEffectSurface(descriptor?: EffectSurfaceDescripto
     period: number;
     active: boolean;
     colors: readonly [ColorReference, ColorReference, ColorReference];
+    noise: {
+        uri: string;
+        size: number;
+        offset: number;
+    } | undefined;
     points: {
         x: number;
         y: number;

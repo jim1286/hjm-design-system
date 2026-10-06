@@ -51,7 +51,10 @@ const budgets = [
   // and deterministic effect geometry, no component catalog or renderer import.
   // Motion-option validation extends the same pure contract to 967 raw / 437 gzip bytes; still one module.
   { exportPath: "./avatar-fallback", maxModules: 1, maxRawBytes: 1150, maxGzipBytes: 550, forbiddenModules: metadataModules },
-  { exportPath: "./effect-surface", maxModules: 3, maxRawBytes: 7100, maxGzipBytes: 2650, forbiddenModules: metadataModules },
+  // 2026-10-07: the fourth module is the generated static noise tile, with no imports.
+  // Native SVG turbulence is unimplemented; sharing this asset avoids a new GPU peer.
+  // The graph remains effect-surface -> color-references -> colors, plus internal/effect-noise.
+  { exportPath: "./effect-surface", maxModules: 4, maxRawBytes: 7100, maxGzipBytes: 2650, forbiddenModules: metadataModules },
   // Pure optional intent validation; no renderer, engine or catalog imports.
   { exportPath: "./components/interaction-adapters", maxModules: 1, maxRawBytes: 3000, maxGzipBytes: 1300, forbiddenModules: metadataModules },
   // Pure sRGB, decorative-tile and sticky-offset contracts stay independent of renderer metadata.

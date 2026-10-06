@@ -4,13 +4,13 @@ import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { AppState, Text, startedAnimatedTimings } from "./react-native.mock.js";
 import { expect, it, vi } from "vitest";
 const host = vi.hoisted(() => ({ fail: false }));
-vi.mock("react-native-svg", async () => { const { View } = await import("react-native"); return { default: (props: object) => { if (host.fail) throw new Error("SVG host unavailable"); return <View {...props} />; }, Circle: View, Defs: View, Ellipse: View, RadialGradient: View, Stop: View, Pattern: View, Rect: View }; });
+vi.mock("react-native-svg", async () => { const { View } = await import("react-native"); return { default: (props: object) => { if (host.fail) throw new Error("SVG host unavailable"); return <View {...props} />; }, Circle: View, Defs: View, Ellipse: View, RadialGradient: View, Stop: View, Pattern: View, Rect: View, Mask: View, Image: View }; });
 import { EffectSurface } from "../src/effect-surface.js";
 import { HjmNativeProvider } from "../src/provider.js";
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 it("freezes the actual seeded layers for reduced motion and hidden native hosts", () => {
   let tree!: ReactTestRenderer;
-  const render=(reducedMotion: boolean, visible: boolean) => <HjmNativeProvider reducedMotion={reducedMotion}><EffectSurface descriptor={{active:true,layers:['mesh','grain']}} visible={visible}><Text>Content</Text></EffectSurface></HjmNativeProvider>;
+  const render=(reducedMotion: boolean, visible: boolean) => <HjmNativeProvider reducedMotion={reducedMotion}><EffectSurface descriptor={{active:true,layers:['mesh','grain','noise']}} visible={visible}><Text>Content</Text></EffectSurface></HjmNativeProvider>;
   try {
     startedAnimatedTimings.splice(0);act(()=>{tree=create(render(true,true));});expect(startedAnimatedTimings).toHaveLength(0);
     expect(tree.root.findAll(node=>node.props.pointerEvents==='none').length > 0).toBe(true);

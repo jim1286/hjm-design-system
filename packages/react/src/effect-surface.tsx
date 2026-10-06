@@ -38,13 +38,18 @@ export function EffectSurface({ descriptor = {}, children, className, layoutStyl
   }, [effect.active, effect.period, environment.reducedMotion, visible]);
   const colors = effect.colors.map(color => resolveColorReference(color, palette));
   return <div ref={host} className={className} data-hjm-effect-surface="" style={{ ...layoutStyle, position: "relative", isolation: "isolate", overflow: "hidden", background: palette.theme.bg }}>
-    <svg ref={layer} aria-hidden="true" focusable="false" viewBox="0 0 100 100" preserveAspectRatio="none" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none", opacity: effect.intensity }}>
+    <svg ref={layer} aria-hidden="true" focusable="false" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none", opacity: effect.intensity }}>
+      {/* Keep noise in CSS-pixel units; the existing geometric layers retain their viewBox. */}
+      <defs>{effect.noise && <><pattern id={`${id}-noise-tile`} width={effect.noise.size} height={effect.noise.size} x={effect.noise.offset} patternUnits="userSpaceOnUse"><image href={effect.noise.uri} width={effect.noise.size} height={effect.noise.size} /></pattern><mask id={`${id}-noise-mask`} x={0} y={0} width="100%" height="100%" maskUnits="userSpaceOnUse"><rect width="100%" height="100%" fill={`url(#${id}-noise-tile)`} /></mask></>}</defs>
+      {effect.noise && <rect width="100%" height="100%" fill={palette.theme.text} mask={`url(#${id}-noise-mask)`} />}
+      <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
       <defs>{colors.map((color, index) => <radialGradient id={`${id}-${index}`} key={index}><stop offset="0%" stopColor={color} /><stop offset="100%" stopColor={color} stopOpacity={0} /></radialGradient>)}
         <pattern id={`${id}-grain`} width={4} height={4} patternUnits="userSpaceOnUse">{effect.points.map((point, index) => <circle key={index} cx={point.x / 25} cy={point.y / 25} r={point.radius / 10} fill={palette.theme.text} opacity={0.28} />)}</pattern>
       </defs>
       {effect.layers.includes("mesh") && effect.anchors.map((anchor, index) => <ellipse key={index} cx={anchor.x} cy={anchor.y} rx={65} ry={70} fill={`url(#${id}-${index})`} />)}
       {effect.layers.includes("glow") && <ellipse cx={50} cy={10} rx={70} ry={95} fill={`url(#${id}-0)`} />}
       {effect.layers.includes("grain") && <rect width={100} height={100} fill={`url(#${id}-grain)`} />}
+      </svg>
     </svg>
     <div style={{ position: "relative" }}>{children}</div>
   </div>;

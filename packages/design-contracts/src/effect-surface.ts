@@ -1,5 +1,6 @@
+import { effectNoiseTile } from "./internal/effect-noise.js";
 import { themeColor, type ColorReference } from "./color-references.js";
-export type EffectLayer = "mesh" | "glow" | "grain";
+export type EffectLayer = "mesh" | "glow" | "grain" | "noise";
 export type EffectSurfaceDescriptor = Readonly<{
   layers?: readonly EffectLayer[];
   seed?: string;
@@ -11,7 +12,7 @@ export type EffectSurfaceDescriptor = Readonly<{
 }>;
 export function resolveEffectSurface(descriptor: EffectSurfaceDescriptor = {}) {
   const layers = descriptor.layers ?? ["mesh"];
-  if (!layers.length || layers.length > 3 || new Set(layers).size !== layers.length || layers.some(layer => !["mesh", "glow", "grain"].includes(layer))) throw new TypeError("Choose one to three unique effect layers");
+  if (!layers.length || layers.length > 4 || new Set(layers).size !== layers.length || layers.some(layer => !["mesh", "glow", "grain", "noise"].includes(layer))) throw new TypeError("Choose one to four unique effect layers");
   const intensity = descriptor.intensity ?? 0.22;
   if (!Number.isFinite(intensity) || intensity < 0 || intensity > 1) throw new RangeError("Effect intensity must be between 0 and 1");
   const period = descriptor.period ?? 12;
@@ -26,5 +27,7 @@ export function resolveEffectSurface(descriptor: EffectSurfaceDescriptor = {}) {
   const points = Array.from({ length: 32 }, () => ({ x: Math.round(random() * 100), y: Math.round(random() * 100), radius: 0.2 + random() * 0.5 }));
   return { layers, intensity, period, active: descriptor.active ?? false,
     colors: descriptor.colors ?? [themeColor("primary"), themeColor("contentBrand"), themeColor("surfaceAccent")] as const,
+    // Fixed periodic raster is shared across hosts; seed shifts its phase, not its pixels.
+    noise: layers.includes("noise") ? { uri: effectNoiseTile, size: 64, offset: points[0]!.x / 4 } : undefined,
     points, anchors: points.slice(0, 3) };
 }

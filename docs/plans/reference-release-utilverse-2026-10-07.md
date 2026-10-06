@@ -10,7 +10,7 @@ UI·기능 검증을 거쳐 승격·릴리스하고 Utilverse의 대체 가능�
 | 요구 | 필요한 증거 | 현재 상태 |
 | --- | --- | --- |
 | 11개 사이트 전수 조사 | 사이트별 발견 URL 목록과 페이지별 검토·미확인 기록, 후보별 채택 판단 | 미완료. 이전 조사 수집 수를 UI 검토 수로 세지 않음 |
-| 권장 항목 모두 실험 구현 | 후보 목록과 Web/Native 공개 API·개별 스토리·사용 지침 연결 | 로컬 main 13개 실험 구현, 추가 후보 검토 중 |
+| 권장 항목 모두 실험 구현 | 후보 목록과 Web/Native 공개 API·개별 스토리·사용 지침 연결 | 로컬 main 14개 실험 구현, 추가 후보 검토 중 |
 | UI·기능 검증 | 밝음/어두움/큰 글자/RTL/모션 감소 및 실제 행동, 전체 시트와 기기 QA | PR #55 자동 검사 통과. 신규 시각·기기 검증 필요 |
 | 검증 후 승격 | 항목별 QA 근거, Storybook 양쪽 경로와 지침 동시 갱신 | 미실행. 사용자 승인일 2026-10-07, 검증 조건 충족 후 적용 |
 | HJM 릴리스 | 동기화된 버전·Changeset·CI, npm 세 패키지와 tag의 동일 SHA | 미실행. 게시 1.13.1 이후 실험·host 개선은 로컬 main 작업 중 |
@@ -34,7 +34,7 @@ UI·기능 검증을 거쳐 승격·릴리스하고 Utilverse의 대체 가능�
 | Image Comparison | Native SVG 실패를 PNG fixture로 수정, 실제 드래그/양끝 확인. 양 renderer RTL 캡션 방향 수정 | Native 환경 조합·스크롤 충돌·이미지 host 실패 안내. docs/qa/2026-10-07-image-comparison.md |
 | Dynamic / Expandable Toolbar | 단일 선택을 SegmentedControl로 수정. Web RTL 키보드·접기 포커스·초안 유지, iOS 키보드 중 선택·재개 확인 | Native 환경 조합·VoiceOver·제품 편집 모델. docs/qa/2026-10-07-toolbar-reference.md |
 | Progressive Blur | 경계·초점 보호를 포함한 양 renderer 실험 구현. iOS 실제 합성·끝 항목 선택·내용 축소·다크 확인 | Android 합성·접근성·제품 팔레트·비용 비교. progressive-blur-adoption-2026-10-07.md |
-| Noise / EffectSurface | 원본 기본·입력 질감과 HJM grain 실제 화면 대조. 원본 입력 조작 확인, 서로 다른 질감 | 동일 조건·Native host·비용 비교 후 별도 실험 판단. docs/qa/2026-10-07-native-panel-noise.md |
+| Noise / EffectSurface | 정적 noise 레이어와 동일 강도 grain 비교 실험 추가. Web 강도 변경 후 입력 유지·버튼, iOS 표시·입력·키보드 중 스크롤/버튼 확인 | 제품 팔레트·대비·성능·Android·접근성 검증. docs/qa/2026-10-07-noise-experiment.md |
 | Hero Video Dialog | 기존 Dialog + 제품 player host Web/Native 실험 구현. Web 실제 재생·실패 복구·닫기·초안 유지 확인 | Native 실제 기기, 제품 팔레트, 실제 유음 콘텐츠의 자막/대본 검증 남음. 무음 fixture를 자막 검증으로 세지 않음 |
 | Rating | Web 키보드/초기화 초점 버그 수정, iOS 큰 글자 선택·초기화·비활성 확인 | RTL·다크·제품 팔레트·스크린리더 검증. docs/qa/2026-10-07-rating-reference.md |
 | 3D icons | 그림과 시작 안내 실험 추가(Web/Native), CC0 원본 2개 | Web 흐름·다크·큰 글자·390px 확인, Native 실제 기기·다른 제품 팔레트 검증 남음 |

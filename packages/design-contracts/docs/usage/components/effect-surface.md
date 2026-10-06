@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [Composable decorative surfaces](../../effect-surface.md), 별도 보조 기능(supplemental)
 - 스토리북: `배포/컴포넌트/시각 효과/배경 시각 효과`
 
@@ -62,7 +62,7 @@ import { EffectSurface } from "@hjmds/react-native/effect-surface";
 
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
-| `descriptor.layers` | `mesh` · `glow` · `grain` | `["mesh"]` | 서로 다른 1~3개 |
+| `descriptor.layers` | `mesh` · `glow` · `grain` · `noise` | `["mesh"]` | 서로 다른 1~4개. noise는 미게시 실험 |
 | `descriptor.intensity` | 0~1 | `0.22` | — |
 | `descriptor.period` | 2~120초 | `12` | — |
 | `descriptor.seed` | 문자열 | `"hjm"` | 빈 문자열 금지 |
@@ -118,3 +118,5 @@ import { EffectSurface } from "@hjmds/react-native/effect-surface";
 - Native의 장식 실패 대비(error boundary)는 **렌더 오류**만 잡는다. peer가 없어 모듈 해석이 실패하면 앱 번들 자체가
   깨진다. `tsc` 통과를 설치 확인으로 보지 않는다.
 - descriptor 검증 오류는 대비 밖에 있어 그대로 던져진다. 값 범위를 지킨다.
+
+`noise`의 구현 차이·실험 조건은 [질감 비교](../compositions/texture-comparison.md)를 따른다. 기존 grain을 교체하지 않는다.

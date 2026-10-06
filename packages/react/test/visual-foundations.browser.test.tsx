@@ -9,7 +9,7 @@ import { HjmProvider } from "../src/provider.js";
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 it("keeps effects decorative and cancels active animation when reduced motion is enabled", async () => {
   const host = document.createElement("div");document.body.append(host);const root = createRoot(host);
-  const render = (reducedMotion: boolean) => <HjmProvider reducedMotion={reducedMotion}><EffectSurface descriptor={{ layers: ["mesh", "glow", "grain"], active: true }}><button>Continue</button></EffectSurface></HjmProvider>;
+  const render = (reducedMotion: boolean) => <HjmProvider reducedMotion={reducedMotion}><EffectSurface descriptor={{ layers: ["mesh", "glow", "grain", "noise"], active: true }}><button>Continue</button></EffectSurface></HjmProvider>;
   try {
     await act(() => root.render(render(false)));
     await act(async () => { await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))); });

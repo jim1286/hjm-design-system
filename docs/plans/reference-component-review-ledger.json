@@ -1243,8 +1243,8 @@
       "priorRationale": "선택적 배경·연결 효과, 수명주기 유지",
       "sourceAudit": "2026-10-07 official documentation describes SVG feTurbulence fractal noise. HJM current grain uses repeated circle pattern.",
       "visualReview": "2026-10-07 IAB light: default preview shows irregular fine texture; input-field demo visibly textured. HJM grain story inspected separately: faint regular repeated pattern. Different surfaces and opacity, not a controlled contrast/performance comparison.",
-      "interactionReview": "2026-10-07 input-field demo: typed texture demo, visible input value and caret confirmed. No subscription submitted. Dark, keyboard traversal, screen reader and performance not checked.",
-      "adoptionDecision": "Keep fractal noise as a separate EffectSurface comparison experiment candidate. Do not replace grain or mark already covered; compare equal surfaces and opacity, Native support, readability and cost before promotion.",
+      "interactionReview": "2026-10-07 input-field demo: typed texture demo, visible input value and caret confirmed. No subscription submitted. Dark, keyboard traversal, screen reader and performance not checked. HJM comparison: Web 22% -> 60% retains input and button status; iOS 26.5 Expo Go accepts 42, manual keyboard-on scroll exposes button and selection status. This does not verify original demo parity.",
+      "adoptionDecision": "2026-10-07: added experimental EffectSurface noise layer and Web/Native texture comparison. Own periodic value-noise PNG mask because react-native-svg FeTurbulence is unimplemented; not original Perlin pixel parity. No new peer. Promotion pending palette, contrast, performance, Android and accessibility checks. See docs/qa/2026-10-07-noise-experiment.md.",
       "sourceCheck": {
         "status": "html",
         "checkedAt": "2026-10-06T15:58:25.594412+00:00",
