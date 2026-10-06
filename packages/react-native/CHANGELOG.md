@@ -1,5 +1,60 @@
 # @hjmds/react-native
 
+## 1.14.0
+
+### Minor Changes
+
+- f98f4b5: Add Agreement descriptor.disabled to freeze consent changes during submission without altering required-item validity, selected consent, or detail reading. Keep Web focus and native disabled semantics, and provide matching interactive examples and usage guidance.
+
+  Keep large-text agreement labels readable by wrapping long detail actions beneath them, and render fixed-size selection marks without font scaling overflow.
+
+- f98f4b5: Allow Native Avatar to use a product image host with the canonical fallback and source-generation-safe error callback. This preserves consumer disk-cache and loading-fallback behavior without adding Expo Image to HJM. The default native Image renderer is unchanged.
+- f98f4b5: Add opt-in enterOnMount to ContentTransition for new data rows, preserving stable keys and existing default behavior. Provide a Web/Native live-list experiment with immediate batch updates, draft retention, deletion and motion controls.
+- f98f4b5: Show DateEntry group errors once while preserving affected-field borders and accessible descriptions. Respect externally described invalid state in Web TextField and add Native text-field invalid state plus accessibilityHint support. Announce native date group errors once on iOS.
+- f98f4b5: Expose experimental DateEntry through dedicated subpaths. Compose existing text fields with lossless date drafts, product-controlled parsing and error visibility, localized order and birthdate autocomplete. Keep calendar selection in DatePicker and Calendar.
+- f98f4b5: Add optional measured motionOrigin presentation to existing Dialog on both renderers. Keep canonical modal state, dismissal and focus ownership, retain Web content through exit, and guard stale Native measurement callbacks. Register the experimental draft-preserving editing composition; no external animation engine is introduced.
+- f98f4b5: Expose experimental DocumentResource through dedicated subpaths. Compose file metadata, independent preview/export/menu actions and explicit failure recovery. Distinguish download initiation from host-confirmed saving. Keep file access, permissions and durable outcomes product-owned; provide Web/Native usage and interactive examples.
+
+  Restore Web keyboard focus after removing preview retry within the same document, without taking focus from another control or a replacement document.
+
+  Allow product review gates to disable export and export retry without disabling document preview or preview recovery.
+
+- f98f4b5: Expose experimental FieldGroup through dedicated subpaths. Keep named groups, independent field feedback and guarded edits separate from form submission. Provide Web fieldset/legend semantics and Native per-control accessibility bindings.
+
+  Invalidate retained callbacks after committed field removal even when the same id is reinserted. Preserve active bindings across normal rerenders and Strict Mode effect replay, while blocking edits during cleanup and after unmount.
+
+- f98f4b5: Add controlled ImageViewer inspection with fit, double-fit and output-size modes, intrinsic image dimensions, clamped two-axis pan and accessible directional controls. Remount the image host and reset readiness on mode, viewport and retry changes. Preserve the existing Gallery when inspection is absent.
+- f98f4b5: Expose ImageViewer supportedOrientations and horizontal safe-area insets for full-screen viewing. Keep controls and feedback clear of landscape cutouts and allow localized button labels to wrap. Products retain manifest and OS rotation policy ownership.
+- f98f4b5: Allow ImageViewer to render product image hosts and report per-image loading, readiness and error states. Preserve host cache/display events while keeping retry and feedback in HJM. Ignore callbacks from retired attempts and sessions, and retain errors until retry.
+
+  Move retry feedback above the gallery gesture layer so real native taps reach it, and give feedback an opaque semantic surface for legibility over decoded images.
+
+- f98f4b5: Add isolated ProgressiveBlur subpaths with shared logical-edge, scroll-boundary and focus visibility rules. Web renders masked backdrop layers; Native accepts a product-owned blur/mask host and isolates decoration failures. Register an experimental list preview and usage guidance; no blur engine enters published renderer dependencies.
+- f98f4b5: Add experimental, granular Rating and ImageComparison compositions with shared validation,
+  localized accessibility, existing Image/Slider behavior and no new dependencies. Add opt-in
+  ContentTransition animateHeight without an exiting interactive subtree. Existing transition
+  defaults remain unchanged; no migration is required unless opting into the new APIs.
+
+  Provide matching experimental Web/Native stories for input/read-only ratings, image comparison,
+  adaptive panel height, action feedback, upload recovery, product feature cards and contextual tools.
+  See docs/plans/ui-reference-application-2026-10-06.md for adoption decisions and validation limits.
+
+- f98f4b5: Add opt-in SegmentedControl selectionMotion="slide" for connected and pill presentations. Keep the existing radio selection engine and hit targets, with measured RTL/large-text layout, reduced-motion and inactive-host fallback.
+
+  Keep Web pill selection backgrounds behind the entire scaled label by applying the same vertical inset padding as Native.
+
+- f98f4b5: Add an opt-in noise layer to EffectSurface with a shared static alpha tile and semantic tint. Existing grain and defaults remain unchanged. The Native SVG peer does not implement FeTurbulence, so this original raster texture avoids adding a new runtime. This is a visual experiment, not SVG-filter pixel parity.
+- f98f4b5: Add TaskList renderItemAction for independent per-item controls. Provide effective disabled state and keep the action below the checkbox so long labels remain readable and action presses do not toggle completion. The slot also works through renderCollection.
+
+### Patch Changes
+
+- f98f4b5: Keep image-comparison captions aligned with their physical before/after sides in RTL. Document image-host verification and use compatible deterministic PNG showcase fixtures.
+- f98f4b5: Promote the 17 reviewed Web/Native Storybook experiments and their usage guides after explicit user approval. Preserve Web story IDs and optional product-host boundaries. Keep Native onboarding guidance inside the existing scroll body so 200% text and a keyboard cannot collapse the input area; keep completion actions fixed. Repair the native Agreement artwork regression assertion and add DateEntry, FieldGroup and DocumentResource to the real Metro reachability fixture.
+
+  See docs/qa/2026-10-07-experiment-promotion-release.md for observed flows, release validation and unverified product environments.
+
+- f98f4b5: Keep built-in removal and menu glyphs inside their fixed icon frames at large text sizes. Preserve accessible control labels and scalable surrounding text; cover SearchField, recent search, applied filters, tags, message reply/attachment controls and reaction menus.
+
 ## 1.13.1
 
 ### Patch Changes
