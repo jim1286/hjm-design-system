@@ -5,8 +5,8 @@ import { easing, motion as timing } from "@hjmds/design-contracts/foundations";
 import { useHjmNativeTheme } from "./provider.js";
 import { Text } from "./primitives.js";
 
-export type ContentTransitionProps = { preset?: ContentTransitionPreset; stateKey: string; children: ReactNode; motion?: "system" | "none"; animateHeight?: boolean };
-export function ContentTransition({ stateKey, children, motion: preference = "system", preset = "fade", animateHeight = false }: ContentTransitionProps) {
+export type ContentTransitionProps = { preset?: ContentTransitionPreset; stateKey: string; children: ReactNode; motion?: "system" | "none"; animateHeight?: boolean; enterOnMount?: boolean };
+export function ContentTransition({ stateKey, children, motion: preference = "system", preset = "fade", animateHeight = false, enterOnMount = false }: ContentTransitionProps) {
   const { environment } = useHjmNativeTheme();
   const from = resolveContentTransition(preset, environment.direction);
   const opacity = useRef(new Animated.Value(1)).current;
@@ -32,10 +32,11 @@ export function ContentTransition({ stateKey, children, motion: preference = "sy
     // opacity/transform path stays on the native driver and inputs stay unique.
     Animated.timing(height, { toValue: next, duration: timing.normal, easing: Easing.bezier(...easing.enter), useNativeDriver: false }).start();
   };
-  const previous = useRef(stateKey);
+  const previous = useRef<string | null>(null);
   useEffect(() => {
     opacity.stopAnimation();
-    const changed = previous.current !== stateKey; previous.current = stateKey;
+    // A new data row can opt in without using a timer or changing an existing row's key.
+    const changed = previous.current === null ? enterOnMount : previous.current !== stateKey; previous.current = stateKey;
     if (!changed || environment.reducedMotion || preference === "none" || AppState.currentState !== "active") { opacity.setValue(1); return; }
     opacity.setValue(0);
     // RN's implicit easing differs from Web. Translate the shared curve instead
@@ -46,7 +47,7 @@ export function ContentTransition({ stateKey, children, motion: preference = "sy
     return () => { animation.stop(); sub.remove(); };
     // A new preset/direction mid-flight must settle the current content rather
     // than bend an already running transform onto a different path.
-  }, [stateKey, opacity, environment.reducedMotion, environment.direction, preference, preset]);
+  }, [stateKey, opacity, environment.reducedMotion, environment.direction, preference, preset, enterOnMount]);
   // Keep only the current subtree; exit copies could remain touchable or spoken.
   return <Animated.View style={heightEnabled && measured ? { height, overflow: "hidden" } : undefined}><View onLayout={animateHeight ? measureHeight : undefined}><Animated.View style={{ opacity, transform: [{ translateX: opacity.interpolate({ inputRange: [0, 1], outputRange: [from.translateX, 0] }) }, { translateY: opacity.interpolate({ inputRange: [0, 1], outputRange: [from.translateY, 0] }) }, { scale: opacity.interpolate({ inputRange: [0, 1], outputRange: [from.scale, 1] }) }] }}>{children}</Animated.View></View></Animated.View>;
 }

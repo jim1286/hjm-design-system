@@ -8,10 +8,10 @@ import { HjmNativeProvider } from "../src/provider.js";
 (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 let tree: ReactTestRenderer | undefined;
 afterEach(() => { if (tree) act(() => tree!.unmount()); tree = undefined; vi.restoreAllMocks(); });
-function render(key: string, options: { reduced?: boolean; direction?: "ltr" | "rtl"; preset?: ContentTransitionProps["preset"]; preference?: "system" | "none" } = {}) {
+function render(key: string, options: { enterOnMount?: boolean; reduced?: boolean; direction?: "ltr" | "rtl"; preset?: ContentTransitionProps["preset"]; preference?: "system" | "none" } = {}) {
   act(() => {
     const view = <HjmNativeProvider reducedMotion={options.reduced ?? false} direction={options.direction ?? "ltr"}>
-      <ContentTransition stateKey={key} preset={options.preset ?? "rise"} motion={options.preference ?? "system"}>{key}</ContentTransition>
+      <ContentTransition enterOnMount={options.enterOnMount ?? false} stateKey={key} preset={options.preset ?? "rise"} motion={options.preference ?? "system"}>{key}</ContentTransition>
     </HjmNativeProvider>;
     if (tree) tree.update(view); else tree = create(view);
   });
@@ -71,4 +71,23 @@ it("reduced motion renders new content immediately without starting the driver",
   render("first", { reduced: true }); render("latest", { reduced: true });
   expect(timing).not.toHaveBeenCalled();
   expect(JSON.stringify(tree!.toJSON())).toContain("latest");
+});
+
+it('animates a newly inserted row once, and disabling/re-enabling motion never replays it', () => {
+ const { timing, runs } = observeAnimation();
+ render('new-row', { enterOnMount: true });
+ expect(timing).toHaveBeenCalledOnce();
+ expect(JSON.stringify(tree!.toJSON())).toContain('new-row');
+ render('new-row', { enterOnMount: true });
+ expect(timing).toHaveBeenCalledOnce();
+ render('new-row', { enterOnMount: true, preference: 'none' });
+ expect(runs[0]!.stop).toHaveBeenCalledOnce();
+ render('new-row', { enterOnMount: true });
+ expect(timing).toHaveBeenCalledOnce();
+});
+it('does not animate an inserted row under reduced motion', () => {
+ const { timing } = observeAnimation();
+ render('new-row', { enterOnMount: true, reduced: true });
+ expect(timing).not.toHaveBeenCalled();
+ expect(JSON.stringify(tree!.toJSON())).toContain('new-row');
 });

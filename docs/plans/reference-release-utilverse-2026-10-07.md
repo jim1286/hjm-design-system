@@ -10,7 +10,7 @@ UI·기능 검증을 거쳐 승격·릴리스하고 Utilverse의 대체 가능�
 | 요구 | 필요한 증거 | 현재 상태 |
 | --- | --- | --- |
 | 11개 사이트 전수 조사 | 사이트별 발견 URL 목록과 페이지별 검토·미확인 기록, 후보별 채택 판단 | 미완료. 이전 조사 수집 수를 UI 검토 수로 세지 않음 |
-| 권장 항목 모두 실험 구현 | 후보 목록과 Web/Native 공개 API·개별 스토리·사용 지침 연결 | 로컬 main 12개 실험 구현, 추가 후보 검토 중 |
+| 권장 항목 모두 실험 구현 | 후보 목록과 Web/Native 공개 API·개별 스토리·사용 지침 연결 | 로컬 main 13개 실험 구현, 추가 후보 검토 중 |
 | UI·기능 검증 | 밝음/어두움/큰 글자/RTL/모션 감소 및 실제 행동, 전체 시트와 기기 QA | PR #55 자동 검사 통과. 신규 시각·기기 검증 필요 |
 | 검증 후 승격 | 항목별 QA 근거, Storybook 양쪽 경로와 지침 동시 갱신 | 미실행. 사용자 승인일 2026-10-07, 검증 조건 충족 후 적용 |
 | HJM 릴리스 | 동기화된 버전·Changeset·CI, npm 세 패키지와 tag의 동일 SHA | 미실행. 게시 1.13.1 이후 실험·host 개선은 로컬 main 작업 중 |
@@ -40,7 +40,7 @@ UI·기능 검증을 거쳐 승격·릴리스하고 Utilverse의 대체 가능�
 | 3D icons | 그림과 시작 안내 실험 추가(Web/Native), CC0 원본 2개 | Web 흐름·다크·큰 글자·390px 확인, Native 실제 기기·다른 제품 팔레트 검증 남음 |
 | Number Ticker | AnimatedStatistic 유지 후보 | Intl/RTL/비라틴 숫자와 원본의 실제 이점 대조 |
 | Scroll Progress / Tracing Beam | 기존 ScrollProgress/Timeline 유지 후보 | host 범위·크기 변경과 읽기 구성 비교 |
-| Animated List | ContentTransition 재사용 후보 | 실제 데이터 등장/삭제·모션 감소·정지와 목록 구성 |
+| Animated List | ContentTransition enterOnMount + List 양 플랫폼 실험 추가. 초기 데이터 지연 없이 새 행 등장·초안 보존·재정렬·삭제·정지 | 전체 팔레트·RTL·성능·Native 환경 검증. 재정렬 이동 모션은 미구현. docs/qa/2026-10-07-live-list.md |
 
 ## 이번에 갱신한 관찰
 

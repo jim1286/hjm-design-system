@@ -1,0 +1,10 @@
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { LiveListPreview } from "./live-list-preview";
+const meta = { includeStories: ["Default", "Dark", "LargeText", "ReducedMotion", "Rtl"], id: "compositions-live-list", title: "실험/구성/정보 표시/추가해도 유지되는 목록", component: LiveListPreview } satisfies Meta<typeof LiveListPreview>;
+export default meta;
+type Story = StoryObj<typeof meta>;
+export const Default: Story = { name: "기본" };
+export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
+export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };
+export const ReducedMotion: Story = { name: "동작 줄이기", globals: { motion: "reduced" } };
+export const Rtl: Story = { name: "오른쪽에서 왼쪽", globals: { direction: "rtl" } };

@@ -1646,15 +1646,16 @@
       "name": "animated-list",
       "existingMapping": "ContentTransition / List",
       "priorRationale": "등장 순서·일회성 진입 표현 후보",
-      "sourceAudit": "2026-10-06",
-      "visualReview": "pending",
-      "interactionReview": "pending",
-      "adoptionDecision": "pending",
+      "sourceAudit": "2026-10-07 official documentation and registry/magicui/animated-list.tsx reviewed: delay=1000, slice/reverse reveal, spring enter/exit, AnimatePresence; no local source copy.",
+      "visualReview": "partial 2026-10-07 IAB light 1280x720: notification preview grows from one row to multiple cards. Other source themes/responsive and full keyboard/reduced-motion behavior remain unverified.",
+      "interactionReview": "Read-only observation of automatic sequential reveal. No external action or notification submission performed.",
+      "adoptionDecision": "Absorb new-item entrance using existing ContentTransition enterOnMount plus List with stable ids. Do not delay actual data or retain interactive exit copies. Default initial render remains static. Products retain draft and data ownership.",
       "sourceCheck": {
         "status": "html",
         "checkedAt": "2026-10-06T15:58:09.145166+00:00",
         "evidence": "reference-page-source-index.json"
-      }
+      },
+      "implementationBoundary": "Web/Native live-list experiment implements immediate batch additions, retained drafts, reordering, removal and motion pause. Reordering changes data order immediately; sibling layout animation is not implemented. Full theme/performance matrix and promotion pending. See docs/qa/2026-10-07-live-list.md."
     },
     {
       "url": "https://magicui.design/docs/components/blur-fade",

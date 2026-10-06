@@ -10,6 +10,8 @@ export type ContentTransitionProps = {
   stateKey: string; children: ReactNode; motion?: "system" | "none";
   /** Opt-in measured height transition; never renders a second interactive panel. */
   animateHeight?: boolean;
+  /** Animate newly inserted content without changing its stable key or delaying its data. */
+  enterOnMount?: boolean;
   /** Layout belongs to the stable outer frame, not the keyed panel. */
   layoutStyle?: HjmCompositionStyleProp;
   /** Host chooses a meaningful focus destination, e.g. the new panel heading. */
@@ -17,7 +19,7 @@ export type ContentTransitionProps = {
 };
 /** Motion Primitives' keyed transition pattern, adapted to HJM's single active subtree.
  * No exiting interactive copy: it would duplicate fields and focus targets. See THIRD_PARTY_NOTICES. */
-export function ContentTransition({ stateKey, children, motion: preference = "system", preset = "fade", focusTarget, animateHeight = false, layoutStyle }: ContentTransitionProps) {
+export function ContentTransition({ stateKey, children, motion: preference = "system", preset = "fade", focusTarget, animateHeight = false, enterOnMount = false, layoutStyle }: ContentTransitionProps) {
   const { environment } = useHjmTheme();
   const from = resolveContentTransition(preset, environment.direction);
   const enabled = preference !== "none" && !environment.reducedMotion;
@@ -65,7 +67,7 @@ export function ContentTransition({ stateKey, children, motion: preference = "sy
   }, [stateKey, focusTarget]);
   // Caller placement stays on a separate stable wrapper so measuring and
   // animating the inner flow does not include the product margin or flex placement.
-  return <div style={layoutStyle}><div ref={frame}><div ref={measure} style={{ display: "flow-root" }}><motion.div ref={capturePanel} key={stateKey} initial={enabled && !first.current ? { opacity: from.opacity, x: from.translateX, y: from.translateY, scale: from.scale } : false}
+  return <div style={layoutStyle}><div ref={frame}><div ref={measure} style={{ display: "flow-root" }}><motion.div ref={capturePanel} key={stateKey} initial={enabled && (enterOnMount || !first.current) ? { opacity: from.opacity, x: from.translateX, y: from.translateY, scale: from.scale } : false}
     animate={{ opacity: 1, x: 0, y: 0, scale: 1 }} transition={{ duration: enabled ? timing.normal / 1000 : 0, ease: [...easing.enter] }}>{children}</motion.div></div></div></div>;
 }
 export type TextTransitionProps = { preset?: ContentTransitionPreset; text: string; motion?: "system" | "none"; layoutStyle?: HjmCompositionStyleProp };

@@ -4,14 +4,14 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: contract `src/content-transition.ts`(`resolveContentTransition`)
 - 스토리북: `배포/컴포넌트/시각 효과/내용 전환`
 
 ## 언제 쓰나
 
 같은 자리의 내용이 상태에 따라 바뀔 때(필터 결과 패널, 단계별 본문) 새 내용이 짧게 나타나도록 감싼다.
-`stateKey`가 바뀔 때만 움직이고, 화면에는 현재 내용 하나만 남는다.
+기본적으로 `stateKey`가 바뀔 때 움직이고, 화면에는 현재 내용 하나만 남는다.
 
 ## 쓰지 않을 때
 
@@ -69,13 +69,14 @@ import { ContentTransition } from "@hjmds/react-native/content-transition";
 | `preset` | `fade` · `rise` · `slide` · `scale` | `fade` | `rise`는 아래 12에서, `slide`는 가로 16(RTL이면 반대), `scale`은 0.96에서 시작 |
 | `motion` | `system` · `none` | `system` | `system`은 reduced motion을 따르고 `none`은 항상 즉시 교체 |
 | `stateKey` | `string` | — (필수) | 바뀔 때만 새 내용이 나타난다 |
+| `enterOnMount` | boolean | false | 미게시: 새 데이터 항목이 처음 추가될 때도 등장 전환. 이미 표시한 항목은 stable key를 유지한다 |
 | `animateHeight` | boolean | false | 내용의 측정 높이가 바뀔 때 주변 틀 높이를 전환한다. 모션 감소에서는 즉시 반영 |
 | Web `focusTarget` | `RefObject<HTMLElement \| null>` | — | 바뀌기 전 포커스가 안에 있었으면 전환 뒤 이 요소로 옮긴다 |
 | Web `layoutStyle` | 배치 전용 style | — | 바깥 고정 wrapper에 붙는다(키가 바뀌는 안쪽 패널이 아님) |
 
 콜백 prop은 없다. `TextTransition`은 `text: string`을 `stateKey`로 쓴다.
 
-- 첫 렌더는 움직이지 않는다. 시간은 `motion.normal`, 곡선은 `easing.enter` 토큰이다.
+- 기본 첫 렌더는 움직이지 않는다. `enterOnMount`는 새로 추가한 항목에만 선택하며 초기 서버 렌더 목록을 지연시키는 용도로 쓰지 않는다. 시간은 `motion.normal`, 곡선은 `easing.enter` 토큰이다.
 
 ## 배치
 
@@ -114,3 +115,11 @@ import { ContentTransition } from "@hjmds/react-native/content-transition";
 trigger 측정 시점과 같은 좌표계 보장은 제품이, 취소·재열기·exit presence·초점 복귀는
 해당 renderer가 소유한다. Motion Primitives의 원본에서 닫기 후 초점 손실과 작성 예제의 초안 소실을
 확인했으므로 geometry만 흡수하고 기존 HJM overlay 상태 엔진을 유지한다.
+
+
+### 실제 목록 데이터의 등장
+
+[추가해도 유지되는 목록](../compositions/live-list.md)은 stable id를 React key와 stateKey로
+쓰고 새 항목에만 enterOnMount를 켠다. 목록 전체의 stateKey를 배열 직렬화 값으로 바꾸면 Web의
+입력 subtree가 교체되므로 하지 않는다. 데이터는 즉시 전달하며 stagger 타이머로 감추지 않는다.
+삭제된 항목은 즉시 제거한다. 퇴장 사본을 남기지 않으므로 키보드·터치 대상도 함께 사라진다.

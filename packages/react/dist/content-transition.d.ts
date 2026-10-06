@@ -8,6 +8,8 @@ export type ContentTransitionProps = {
     motion?: "system" | "none";
     /** Opt-in measured height transition; never renders a second interactive panel. */
     animateHeight?: boolean;
+    /** Animate newly inserted content without changing its stable key or delaying its data. */
+    enterOnMount?: boolean;
     /** Layout belongs to the stable outer frame, not the keyed panel. */
     layoutStyle?: HjmCompositionStyleProp;
     /** Host chooses a meaningful focus destination, e.g. the new panel heading. */
@@ -15,7 +17,7 @@ export type ContentTransitionProps = {
 };
 /** Motion Primitives' keyed transition pattern, adapted to HJM's single active subtree.
  * No exiting interactive copy: it would duplicate fields and focus targets. See THIRD_PARTY_NOTICES. */
-export declare function ContentTransition({ stateKey, children, motion: preference, preset, focusTarget, animateHeight, layoutStyle }: ContentTransitionProps): import("react").JSX.Element;
+export declare function ContentTransition({ stateKey, children, motion: preference, preset, focusTarget, animateHeight, enterOnMount, layoutStyle }: ContentTransitionProps): import("react").JSX.Element;
 export type TextTransitionProps = {
     preset?: ContentTransitionPreset;
     text: string;
