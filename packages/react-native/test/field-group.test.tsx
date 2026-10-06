@@ -1,4 +1,5 @@
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
+import { StrictMode } from "react";
 import { TextInput, View } from "react-native";
 import { afterEach, expect, it, vi } from "vitest";
 import { FieldGroup, type FieldGroupBinding } from "../src/field-group.js";
@@ -19,12 +20,16 @@ it("keeps inputs individually accessible and combines group context with indepen
 });
 it("blocks old callbacks after group lock, member removal and unmount", () => {
   const change = vi.fn(); let binding: FieldGroupBinding | undefined;
-  const render = (disabled: boolean, removed = false) => <HjmNativeProvider><FieldGroup descriptor={{ label: "배송지", fields: removed ? [] : fields, disabled }}
-    renderField={field => { if (field.id === "a") binding = field; return <TextField {...field.controlProps} onValueChange={field.guardChange(change)} />; }} /></HjmNativeProvider>;
+  const render = (disabled: boolean, removed = false) => <StrictMode><HjmNativeProvider><FieldGroup descriptor={{ label: "배송지", fields: removed ? [] : fields, disabled }}
+    renderField={field => { if (field.id === "a") binding = field; return <TextField {...field.controlProps} onValueChange={field.guardChange(change)} />; }} /></HjmNativeProvider></StrictMode>;
   act(() => { tree = create(render(false)); }); const callback = binding!.guardChange(change);
   act(() => tree!.update(render(true))); callback("late"); expect(change).not.toHaveBeenCalled();
   act(() => tree!.update(render(false))); callback("ok"); expect(change).toHaveBeenCalledOnce();
   expect(tree!.root.findAllByType(TextInput)[1]!.props.editable).toBe(false);
   act(() => tree!.update(render(false, true))); callback("removed"); expect(change).toHaveBeenCalledOnce();
-  act(() => tree!.unmount()); tree = undefined; callback("unmounted"); expect(change).toHaveBeenCalledOnce();
+  act(() => tree!.update(render(false))); callback("old field"); expect(change).toHaveBeenCalledOnce();
+  const current = tree!.root.findAllByType(TextInput)[0]!.props.onChangeText;
+  act(() => current("new field")); expect(change).toHaveBeenLastCalledWith("new field");
+  expect(change).toHaveBeenCalledTimes(2);
+  act(() => tree!.unmount()); tree = undefined; callback("unmounted"); current("unmounted current"); expect(change).toHaveBeenCalledTimes(2);
 });

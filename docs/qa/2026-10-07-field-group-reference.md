@@ -37,5 +37,18 @@ AX에 세 입력이 개별 노드로 나타나며 그룹 이름이 각각 포함
 
 Native dark/RTL/큰 글자·Android·VoiceOver/TalkBack 실제 낭독, 서로 다른 제품 팔레트,
 TextField 외 Select/Checkbox/custom host 연결, 전체 조합·릴리스 CI·소비 앱 적용이 남았다.
-한 필드를 제거한 뒤 같은 id로 다시 만드는 경우 남아 있는 callback의 의미도 후속 검토한다.
 사이트 전수조사 완료나 전체 기능 동등성을 주장하지 않는다. 원시 캡처는 이 기록 후 제거한다.
+
+## 같은 ID 재추가 회귀 수정
+
+2026-10-07 `582badd` 뒤 후속 검증. 수정 전 공통 회귀에서 필드 제거→같은 ID 재추가 후
+이전 callback이 실행돼 `['stale', 'current']`가 기록됐다. 기대값은 새 필드의 `['current']`뿐이다.
+필드별 identity를 보존하되 제거 commit에서 폐기하고, 새로운 render binding은 commit 전까지
+비활성으로 둔다. effect cleanup은 별도 suspend로 차단해 Strict Mode replay를 필드 제거로
+오인하지 않는다. 그룹 잠금 해제와 재정렬은 기존 필드 identity를 유지한다.
+
+수정 후 contracts 7개, Web 실제 browser 회귀 4개, Native 모의 renderer 2개 통과.
+양 renderer Strict Mode에서 재추가 후 새 host 입력은 실행되고 이전 callback은 차단됐다.
+Native는 새 callback도 unmount 뒤 차단됨을 검사했다. 세 package typecheck/build,
+문서 링크 566개·usage·renderer graph budget/platform boundary 검사 통과.
+이번 회귀 수정은 자동 검사이며 Native 기기 화면·낭독을 새로 검증한 결과가 아니다.

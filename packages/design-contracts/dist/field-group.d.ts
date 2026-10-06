@@ -33,6 +33,8 @@ export type ResolvedFieldGroupMember = Readonly<{
 /** Late native events and retained callbacks must use the current committed group policy. */
 export declare function createFieldGroupEditSession(fields: readonly ResolvedFieldGroupMember[]): {
     update(next: readonly ResolvedFieldGroupMember[]): void;
+    /** Effect cleanup blocks events without treating Strict Mode replay as field removal. */
+    suspend(): void;
     guard<Args extends unknown[]>(id: string, callback: (...args: Args) => void): (...args: Args) => void;
 };
 export declare function resolveFieldGroup(descriptor: FieldGroupDescriptor): Readonly<{

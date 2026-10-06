@@ -33,12 +33,23 @@ function requireText(value: unknown, name: string): asserts value is string {
 /** Late native events and retained callbacks must use the current committed group policy. */
 export function createFieldGroupEditSession(fields: readonly ResolvedFieldGroupMember[]) {
   let enabled = new Set(fields.filter(field => !field.disabled).map(field => field.id));
+  const members = new Map(fields.map(field => [field.id, {}]));
   return {
     update(next: readonly ResolvedFieldGroupMember[]) {
+      const current = new Set(next.map(field => field.id));
+      // A reused id is a new mounted field after removal. Checking only enabled ids
+      // would revive queued events from the old field and overwrite the new draft.
+      for (const id of members.keys()) if (!current.has(id)) members.delete(id);
+      for (const id of current) if (!members.has(id)) members.set(id, {});
       enabled = new Set(next.filter(field => !field.disabled).map(field => field.id));
     },
+    /** Effect cleanup blocks events without treating Strict Mode replay as field removal. */
+    suspend() { enabled.clear(); },
     guard<Args extends unknown[]>(id: string, callback: (...args: Args) => void): (...args: Args) => void {
-      return (...args) => { if (enabled.has(id)) callback(...args); };
+      // A new host binds during render, before its committed policy enables it.
+      if (!members.has(id)) members.set(id, {});
+      const member = members.get(id);
+      return (...args) => { if (members.get(id) === member && enabled.has(id)) callback(...args); };
     },
   };
 }

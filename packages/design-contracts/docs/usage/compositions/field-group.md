@@ -49,7 +49,9 @@ CheckboxGroup/RadioGroup, 날짜 조각이면 DateEntry를 먼저 사용한다. 
 4. renderField의 controlProps를 개별 입력에 전달한다. FieldGroup이 도움말·오류를 이미 그리므로 같은 내용을
    TextField description/error에 다시 넣지 않는다. Web id·aria 연결을 덮어쓰지 않는다.
 5. 값 변경에는 guardChange로 감싼 callback을 전달한다. 그룹 잠금·개별 잠금·필드 제거·언마운트 후
-   남은 callback을 차단한다. 잠금 해제 시 원래 disabled인 필드는 계속 잠긴다.
+   남은 callback을 차단한다. 잠금 해제 시 원래 disabled인 필드는 계속 잠긴다. 제거가 commit된
+   필드를 같은 id로 다시 추가해도 이전 callback은 복구하지 않는다. 새 renderField의 guardChange를
+   사용한다. 2026-10-07 회귀에서 enabled id만 검사하면 이전 이벤트가 새 초안을 바꾸는 것을 확인했다.
 6. dynamic 필드 제거 시 해당 그룹 오류 대상도 함께 갱신한다. 사라진 id나 중복 오류 대상은 TypeError다.
 7. 제품이 값과 검증을 유지한다. 입력 순서·그룹 잠금 변경은 값을 초기화하지 않는다.
 

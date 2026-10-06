@@ -1,4 +1,4 @@
-import { act } from "react";
+import { act, StrictMode } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { page, userEvent } from "vitest/browser";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
@@ -10,6 +10,24 @@ let host: HTMLDivElement, root: Root;
 beforeEach(() => { (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true; host = document.createElement("div"); host.style.width = "320px"; document.body.append(host); root = createRoot(host); });
 afterEach(async () => { await act(async () => root.unmount()); host.remove(); });
 const fields = [{ id: "a", label: "주소", description: "건물 번호" }, { id: "b", label: "도시", disabled: true }];
+it("accepts new host input but rejects removed-host callbacks after same-id reinsertion in Strict Mode", async () => {
+  const change = vi.fn(); let retained: ((value: string) => void) | undefined;
+  const render = (present: boolean) => <StrictMode><HjmProvider><FieldGroup descriptor={{ label: "배송지", fields: present ? fields : [] }}
+    renderField={field => {
+      const onValueChange = field.guardChange(change);
+      if (field.id === "a") retained = onValueChange;
+      return <TextField {...field.controlProps} onValueChange={onValueChange} />;
+    }} /></HjmProvider></StrictMode>;
+  await act(async () => root.render(render(true)));
+  await act(async () => page.getByRole("textbox", { name: "주소", exact: true }).fill("first"));
+  expect(change).toHaveBeenLastCalledWith("first");
+  const old = retained!;
+  await act(async () => root.render(render(false)));
+  await act(async () => root.render(render(true)));
+  change.mockClear(); old("stale"); expect(change).not.toHaveBeenCalled();
+  await act(async () => page.getByRole("textbox", { name: "주소", exact: true }).fill("new"));
+  expect(change).toHaveBeenLastCalledWith("new");
+});
 it("associates distinct group and field messages without repeated errors or duplicate ids", async () => {
   await act(async () => root.render(<HjmProvider><FieldGroup descriptor={{ label: "배송지", description: "받을 곳", fields, error: { message: "주소 확인", fieldIds: ["a"] } }}
     renderField={({ controlProps }) => <TextField {...controlProps} />} />

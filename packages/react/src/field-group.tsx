@@ -18,7 +18,7 @@ export function FieldGroup({ descriptor, renderField, layoutStyle }: FieldGroupP
   const groupId = useId();
   const resolved = resolveFieldGroup(descriptor);
   const session = useRef(createFieldGroupEditSession(resolved.fields));
-  useLayoutEffect(() => { session.current.update(resolved.fields); return () => session.current.update([]); }, [resolved.fields]);
+  useLayoutEffect(() => { session.current.update(resolved.fields); return () => session.current.suspend(); }, [resolved.fields]);
   const groupSupport = [resolved.description ? `${groupId}-description` : undefined, resolved.error ? `${groupId}-error` : undefined].filter(Boolean).join(" ") || undefined;
   return <fieldset disabled={resolved.disabled} aria-describedby={groupSupport}
     style={{ border: 0, margin: 0, padding: 0, minInlineSize: 0, ...layoutStyle }}>

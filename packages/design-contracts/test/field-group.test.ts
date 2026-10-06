@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { resolveFieldGroup, type FieldGroupDescriptor } from "../src/field-group.js";
+import { createFieldGroupEditSession, resolveFieldGroup, type FieldGroupDescriptor } from "../src/field-group.js";
 
 const descriptor: FieldGroupDescriptor = {
   label: "배송지", description: "받을 주소를 입력하세요",
@@ -8,6 +8,19 @@ const descriptor: FieldGroupDescriptor = {
 };
 
 describe("related input group candidate", () => {
+  it("does not revive callbacks from a removed member when its id is reused", () => {
+    const fields = resolveFieldGroup(descriptor).fields;
+    const session = createFieldGroupEditSession(fields);
+    const values: string[] = [];
+    const old = session.guard("street", (value: string) => values.push(value));
+    session.update(fields.filter(field => field.id !== "street"));
+    const current = session.guard("street", (value: string) => values.push(value));
+    current("before commit");
+    session.update(fields);
+    old("stale");
+    current("current");
+    expect(values).toEqual(["current"]);
+  });
   it("preserves independent field feedback when a cross-field error affects only some members", () => {
     const resolved = resolveFieldGroup({ ...descriptor,
       fields: descriptor.fields.map(field => field.id === "street" ? { ...field, error: "번호를 확인하세요" } : field),

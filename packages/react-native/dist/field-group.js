@@ -7,7 +7,7 @@ import { Text } from "./primitives.js";
 export function FieldGroup({ descriptor, renderField, layoutStyle }) {
     const resolved = resolveFieldGroup(descriptor);
     const session = useRef(createFieldGroupEditSession(resolved.fields));
-    useLayoutEffect(() => { session.current.update(resolved.fields); return () => session.current.update([]); }, [resolved.fields]);
+    useLayoutEffect(() => { session.current.update(resolved.fields); return () => session.current.suspend(); }, [resolved.fields]);
     useEffect(() => {
         // iOS does not announce live regions; one group announcement avoids repeating errors per input.
         if (resolved.error && Platform.OS === "ios")
