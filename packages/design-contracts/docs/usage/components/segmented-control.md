@@ -144,3 +144,17 @@ Native는 `@hjmds/react-native/inputs`에서 같은 prop을 사용한다. `prese
   1.13.1부터는 레일 안에서 한 줄로 남으므로 그 분기를 지운다. 1.13.0에 머무는 제품만 우회를 유지한다.
 - 레일(가로 스크롤)은 바깥이 만든다. SearchScreen 안이면 `filtersOverflow="scroll"`, 그 밖이면 제품의 가로 ScrollView다.
   `pills`가 스스로 스크롤하지 않는 이유는 레일 안에 두 번째 가로 스크롤을 겹치지 않기 위해서다.
+
+
+### 선택 배경 이동
+
+2026-10-07 Animated Background 비교에서 시각적 선택만 있는 외부 예제를 그대로 교체하면 radio/checked 의미를 잃는 것을 확인했다.
+`selectionMotion="slide"`는 기존 선택 엔진·키보드·접근성 이름·입력 위치를 유지하고 배경만 측정 위치로 이동한다.
+기본은 `"none"`이며 opt-in 실험이다. 별도 버튼/선택 상태를 만들어 기존 라디오를 대체하지 않는다.
+
+- Web/Native 모두 `connected`와 `pills`에 적용한다. 큰 글자·RTL·줄바꿈에서는 실제 항목 위치를 측정한다.
+- 최초 배치와 resize는 즉시 맞추며 선택이 바뀔 때만 HJM `motion.normal` 시간으로 이동한다.
+- 모션 감소와 비활성 화면에서는 이동 효과를 중지한다. 동작 중인 입력·선택 값은 그대로다.
+- 조작 가능 영역·글자는 움직이거나 확대하지 않는다. 새 사용 예제는 [선택 배경 이동](../compositions/selection-motion.md)이다.
+
+2026-10-07 큰 글자 UI 확인에서 Web 2배 글자 줄은 40px인데 pill 배경은 28px였다. Native처럼 세로 padding에도 pills.inset(spacing.xs=8px)을 적용해 배경이 전체 줄을 감싸게 했다. 고정 높이를 늘리는 대신 줄 높이를 따라가므로 3배·줄바꿈도 유지한다.

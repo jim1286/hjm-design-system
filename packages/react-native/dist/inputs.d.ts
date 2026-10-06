@@ -304,6 +304,8 @@ export type SegmentedControlProps<Value extends string = string> = SegmentedCont
     onValueChange?: (value: Value) => void;
     size?: SegmentedControlSize;
     presentation?: "connected" | "pills";
+    /** Move only decorative selection artwork, never labels or hit targets. */
+    selectionMotion?: "none" | "slide";
     disabled?: boolean;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;

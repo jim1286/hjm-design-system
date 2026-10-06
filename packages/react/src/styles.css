@@ -2901,8 +2901,9 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 /* Filter pills keep the same native radio semantics and 44px hit target. The inner
    surface is compact; the group wraps at large type instead of clipping labels. */
 .hjm-segmented[data-presentation="pills"] { background:transparent; border:0; padding:0; }
+/* Keep the inset pill behind the whole line at large text (40px text / 28px fill was observed). Native already includes this inset as vertical padding. */
 .hjm-segmented[data-presentation="pills"] .hjm-segmented__items { flex-wrap:wrap; gap:var(--hjm-space-xs); overflow:visible; padding:0; border:0; border-radius:0; background:transparent; }
-.hjm-segmented[data-presentation="pills"] .hjm-segmented__item { position:relative; flex:0 1 auto; min-inline-size:0; min-block-size:var(--hjm-control-min-touch-target); border:0; border-radius:var(--hjm-radius-full); background:transparent; box-shadow:none; padding-inline:var(--hjm-space-md); color:var(--hjm-color-text-muted); }
+.hjm-segmented[data-presentation="pills"] .hjm-segmented__item { padding-block:var(--hjm-space-xs); position:relative; flex:0 1 auto; min-inline-size:0; min-block-size:var(--hjm-control-min-touch-target); border:0; border-radius:var(--hjm-radius-full); background:transparent; box-shadow:none; padding-inline:var(--hjm-space-md); color:var(--hjm-color-text-muted); }
 .hjm-segmented[data-presentation="pills"] .hjm-segmented__item::before { content:""; position:absolute; inset:var(--hjm-space-xs) 0; border-radius:var(--hjm-radius-full); background:var(--hjm-color-surface-alt); }
 .hjm-segmented[data-presentation="pills"] .hjm-segmented__item > span { position:relative; overflow-wrap:anywhere; }
 .hjm-segmented[data-presentation="pills"] .hjm-segmented__item[data-state="checked"] { color:var(--hjm-color-bg); font-weight:var(--hjm-font-weight-bold); }
@@ -2915,3 +2916,15 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-rating__option:has(input:focus-visible) { outline: 2px solid currentColor; outline-offset: 2px; }
 .hjm-rating__option:has(input:checked) { border-color: currentColor; }
 .hjm-rating__option:has(input:disabled) { opacity: .5; cursor: default; }
+
+/* Selection artwork moves independently; radios, labels and focus stay in place.
+   An opt-in avoids changing existing connected/pill consumers before review. */
+.hjm-segmented__items:has(> .hjm-segmented__highlight) { position: relative; isolation: isolate; }
+.hjm-segmented__highlight { position: absolute; pointer-events: none; z-index: 1; border-radius: var(--hjm-radius-md); background: var(--hjm-color-bg); box-shadow: inset 0 0 0 2px var(--hjm-color-focus); }
+.hjm-segmented__highlight[data-moving="true"] { transition: left var(--hjm-motion-normal) ease-out, top var(--hjm-motion-normal) ease-out, width var(--hjm-motion-normal) ease-out, height var(--hjm-motion-normal) ease-out; }
+.hjm-segmented__items[data-highlight-ready="true"] > .hjm-segmented__item[data-state="checked"] { background: transparent; box-shadow: none; }
+.hjm-segmented__items[data-highlight-ready="true"] > .hjm-segmented__item > span { position: relative; z-index: 2; pointer-events: none; }
+.hjm-segmented[data-presentation="pills"] .hjm-segmented__highlight { border-radius: var(--hjm-radius-full); background: var(--hjm-color-text-body); box-shadow: none; }
+.hjm-segmented[data-presentation="pills"] .hjm-segmented__items[data-highlight-ready="true"] > .hjm-segmented__item[data-state="checked"]::before { background: transparent; }
+[data-motion="reduced"] .hjm-segmented__highlight { transition: none; }
+@media (prefers-reduced-motion: reduce) { .hjm-segmented__highlight { transition: none; } }

@@ -29,6 +29,7 @@ import {
 import {
   forwardRef,
   useEffect,
+  useLayoutEffect,
   useId,
   useRef,
   type ButtonHTMLAttributes,
@@ -800,6 +801,8 @@ export type SegmentedControlProps = Omit<
     onValueChange?: (value: string) => void;
     size?: SegmentedControlSize;
     presentation?: "connected" | "pills";
+    /** Move only the selection artwork; radio semantics and hit targets stay fixed. */
+    selectionMotion?: "none" | "slide";
     name?: string;
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
@@ -817,6 +820,7 @@ export const SegmentedControl = forwardRef<
     onValueChange,
     size = segmentedControlRecipe.defaults.size,
     presentation = "connected",
+    selectionMotion = "none",
     name,
     className,
     layoutStyle,
@@ -856,6 +860,34 @@ export const SegmentedControl = forwardRef<
   useEffect(() => {
     if (!controlled && value !== storedValue) setValue(value);
   }, [controlled, setValue, storedValue, value]);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const highlightRef = useRef<HTMLSpanElement>(null);
+  const previousSelection = useRef<string | null>(null);
+  useLayoutEffect(() => {
+    const track = trackRef.current; const highlight = highlightRef.current;
+    if (selectionMotion !== "slide" || !track || !highlight) { previousSelection.current = null; if (track) delete track.dataset.highlightReady; return; }
+    const selected = Array.from(track.querySelectorAll<HTMLLabelElement>(".hjm-segmented__item")).find(item => item.dataset.state === "checked");
+    if (!selected) return;
+    const place = (animate: boolean) => {
+      // CSS owns reduced motion (both provider and OS); no provider import is
+      // added to this small selection entry just for decorative artwork.
+      highlight.dataset.moving = animate && !document.hidden ? "true" : "false";
+      const inset = presentation === "pills" ? Number.parseFloat(getComputedStyle(selected, "::before").top) || 0 : 0;
+      Object.assign(highlight.style, { left: `${selected.offsetLeft}px`, top: `${selected.offsetTop + inset}px`, width: `${selected.offsetWidth}px`, height: `${selected.offsetHeight - inset * 2}px`, opacity: selected.dataset.disabled === "true" ? "0.5" : "1" });
+      track.dataset.highlightReady = "true";
+    };
+    place(previousSelection.current !== null && previousSelection.current !== value);
+    previousSelection.current = value;
+    let bounds = `${selected.offsetLeft}:${selected.offsetTop}:${selected.offsetWidth}:${selected.offsetHeight}`;
+    const observer = typeof ResizeObserver === "undefined" ? undefined : new ResizeObserver(() => {
+      const next = `${selected.offsetLeft}:${selected.offsetTop}:${selected.offsetWidth}:${selected.offsetHeight}`;
+      if (next !== bounds) { bounds = next; place(false); }
+    });
+    for (const item of track.querySelectorAll(".hjm-segmented__item")) observer?.observe(item);
+    const visibility = () => place(false);
+    document.addEventListener("visibilitychange", visibility);
+    return () => { observer?.disconnect(); document.removeEventListener("visibilitychange", visibility); };
+  }, [value, items, presentation, selectionMotion]);
   return (
     <fieldset
       {...props}
@@ -866,7 +898,8 @@ export const SegmentedControl = forwardRef<
       data-presentation={presentation}
     >
       <legend className="hjm-visually-hidden">{label}</legend>
-      <div className="hjm-segmented__items">
+      <div className="hjm-segmented__items" ref={trackRef}>
+        {selectionMotion === "slide" ? <span ref={highlightRef} className="hjm-segmented__highlight" aria-hidden="true" /> : null}
         {items.map((item) => (
           <label
             key={item.value}

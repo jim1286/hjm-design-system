@@ -1,0 +1,2838 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Per-URL adoption evidence; list classification never means visual/interaction verification.",
+  "items": [
+    {
+      "url": "https://component.gallery/components/accordion/",
+      "name": "accordion",
+      "existingMapping": "Accordion",
+      "priorRationale": "기존 계약 유지, 열림 전환 비교",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/alert/",
+      "name": "alert",
+      "existingMapping": "Notice / AlertDialog",
+      "priorRationale": "정보 고지와 사용자 결정 요구를 분리",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/avatar/",
+      "name": "avatar",
+      "existingMapping": "Avatar / AvatarGroup",
+      "priorRationale": "집합·overflow 표현 흡수 검토",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/badge/",
+      "name": "badge",
+      "existingMapping": "Badge / CounterBadge",
+      "priorRationale": "상태와 개수의 의미 유지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/breadcrumbs/",
+      "name": "breadcrumbs",
+      "existingMapping": "Breadcrumb",
+      "priorRationale": "현재 위치·긴 경로 예제 비교",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/button-group/",
+      "name": "button-group",
+      "existingMapping": "Stack + Button / ToggleGroup",
+      "priorRationale": "일반 행동 묶음과 선택 묶음을 구분",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/button/",
+      "name": "button",
+      "existingMapping": "Button / IconButton",
+      "priorRationale": "완료 피드백 흡수 후보",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/card/",
+      "name": "card",
+      "existingMapping": "Card",
+      "priorRationale": "밀도·미리보기·행동 배치 비교",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/carousel/",
+      "name": "carousel",
+      "existingMapping": "Carousel / CarouselMotion",
+      "priorRationale": "이미 두 계층 존재, 엔진 교체 근거 없음",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/checkbox/",
+      "name": "checkbox",
+      "existingMapping": "Checkbox / CheckboxGroup",
+      "priorRationale": "선택·오류·그룹 계약 유지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/color-picker/",
+      "name": "color-picker",
+      "existingMapping": "ColorPicker",
+      "priorRationale": "색 입력과 토큰 편집 문맥 구분",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/combobox/",
+      "name": "combobox",
+      "existingMapping": "Combobox",
+      "priorRationale": "빈 결과·로딩·키보드 예제 비교",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/date-input/",
+      "name": "date-input",
+      "existingMapping": "DatePicker / Field",
+      "priorRationale": "분리된 일·월·년 입력의 전용 계약은 별도 검토",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/datepicker/",
+      "name": "datepicker",
+      "existingMapping": "DatePicker / DateRangePicker / Calendar",
+      "priorRationale": "새 달력 중복 추가보다 기간·오류 문맥 비교",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/drawer/",
+      "name": "drawer",
+      "existingMapping": "Sheet / SidePanel",
+      "priorRationale": "modal 보조 작업과 도킹 패널 구분",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/dropdown-menu/",
+      "name": "dropdown-menu",
+      "existingMapping": "Menu / ContextMenu / Menubar",
+      "priorRationale": "값 선택 Select와 구분",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/empty-state/",
+      "name": "empty-state",
+      "existingMapping": "EmptyState",
+      "priorRationale": "빈 검색·첫 사용·초기화 후의 행동 구분",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/fieldset/",
+      "name": "fieldset",
+      "existingMapping": "Form / Field / CheckboxGroup / RadioGroup",
+      "priorRationale": "관련 입력의 그룹 이름·설명 전달을 비교",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/file-upload/",
+      "name": "file-upload",
+      "existingMapping": "FilePicker / UploadItem",
+      "priorRationale": "선택→전송→오류·재시도 구성 후보",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/file/",
+      "name": "file",
+      "existingMapping": "UploadItem / Asset / ListRow",
+      "priorRationale": "다운로드용 파일 카드와 업로드 행의 의미 구분",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/footer/",
+      "name": "footer",
+      "existingMapping": "Layout / BottomInfo",
+      "priorRationale": "웹사이트 footer 구성과 앱 하단 조건 문구를 구분",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/form/",
+      "name": "form",
+      "existingMapping": "Form / Field",
+      "priorRationale": "검증·전송·복구 계약 유지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/header/",
+      "name": "header",
+      "existingMapping": "TopBar / NavigationBar",
+      "priorRationale": "본문 Top과 화면 chrome 구분",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/heading/",
+      "name": "heading",
+      "existingMapping": "Heading / Top",
+      "priorRationale": "시맨틱 단계와 시각 크기 비교",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/hero/",
+      "name": "hero",
+      "existingMapping": "Top / Asset / 기존 소개 화면",
+      "priorRationale": "전용 primitive보다 화면 구성 개선",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/icon/",
+      "name": "icon",
+      "existingMapping": "Icon / Asset",
+      "priorRationale": "작은 기능 glyph와 장식 일러스트 구분",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/image/",
+      "name": "image",
+      "existingMapping": "Image / Asset / GridReveal",
+      "priorRationale": "비교·확대는 별도 동작 경계",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/label/",
+      "name": "label",
+      "existingMapping": "Field 등 입력 API의 label",
+      "priorRationale": "label을 독립 시각 텍스트로 복제하지 않음",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/link/",
+      "name": "link",
+      "existingMapping": "Link",
+      "priorRationale": "버튼 행동과 이동 의미 구분",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/list/",
+      "name": "list",
+      "existingMapping": "List / ListRow / VirtualList",
+      "priorRationale": "정적 목록·행 행동·가상화 구분",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/modal/",
+      "name": "modal",
+      "existingMapping": "Dialog / AlertDialog / Sheet",
+      "priorRationale": "모핑 표현만 선택 흡수 검토",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/navigation/",
+      "name": "navigation",
+      "existingMapping": "NavigationBar / Sidebar / BottomNavigation / Anchor",
+      "priorRationale": "표면·이동 범위별 기존 선택 기준 유지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/pagination/",
+      "name": "pagination",
+      "existingMapping": "Pagination / LoadMore",
+      "priorRationale": "페이지 이동과 더 보기 구분",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/popover/",
+      "name": "popover",
+      "existingMapping": "Popover",
+      "priorRationale": "geometry 흡수 후보, overlay 행동 보존",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/progress-bar/",
+      "name": "progress-bar",
+      "existingMapping": "Progress / ScrollProgress",
+      "priorRationale": "실제 진행량 소유자 유지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/progress-indicator/",
+      "name": "progress-indicator",
+      "existingMapping": "Steps / StepPlayer",
+      "priorRationale": "실제 단계와 소개용 연출 구분",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/quote/",
+      "name": "quote",
+      "existingMapping": "TextFormat / Text 구성",
+      "priorRationale": "Web 표현은 존재, Native 전용 인용 API는 별도 검토",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/radio-button/",
+      "name": "radio-button",
+      "existingMapping": "Radio / RadioGroup",
+      "priorRationale": "선택 의미·키보드 유지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/rating/",
+      "name": "rating",
+      "existingMapping": "전용 공개 API 없음",
+      "priorRationale": "신규 후보, 읽기 전용·입력형 계약 분리",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/rich-text-editor/",
+      "name": "rich-text-editor",
+      "existingMapping": "EditorScreen과 동일 기능 아님",
+      "priorRationale": "문서 모델·IME·sanitize가 필요한 별도 큰 과제",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/search-input/",
+      "name": "search-input",
+      "existingMapping": "SearchField / SearchScreen",
+      "priorRationale": "입력·결과 화면·검색 서버 경계 유지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/segmented-control/",
+      "name": "segmented-control",
+      "existingMapping": "SegmentedControl",
+      "priorRationale": "기존 탭 indicator와 표현 공유 후보",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/select/",
+      "name": "select",
+      "existingMapping": "Select / NativeSelect",
+      "priorRationale": "host native 선택과 custom overlay 구분",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/separator/",
+      "name": "separator",
+      "existingMapping": "Divider",
+      "priorRationale": "장식 선과 의미 구분자 역할 비교",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/skeleton/",
+      "name": "skeleton",
+      "existingMapping": "Skeleton",
+      "priorRationale": "예상 콘텐츠 모양과 실제 loading 조건 유지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/skip-link/",
+      "name": "skip-link",
+      "existingMapping": "SkipNav",
+      "priorRationale": "기존 키보드 계약 유지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/slider/",
+      "name": "slider",
+      "existingMapping": "Slider",
+      "priorRationale": "이미지 비교의 조작 의미 재사용 후보",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/spinner/",
+      "name": "spinner",
+      "existingMapping": "Spinner / ThinkingOrb",
+      "priorRationale": "단순 대기와 실제 AI 작업 단계 구분",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/stack/",
+      "name": "stack",
+      "existingMapping": "Stack",
+      "priorRationale": "간격 토큰 유지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/stepper/",
+      "name": "stepper",
+      "existingMapping": "NumberField",
+      "priorRationale": "여기서는 숫자 증감, Steps와 다른 기능",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/table/",
+      "name": "table",
+      "existingMapping": "DataTable / Table",
+      "priorRationale": "행동과 단순 표시 계약의 기존 구분 유지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/tabs/",
+      "name": "tabs",
+      "existingMapping": "Tabs / TabPanel",
+      "priorRationale": "기존 gooey indicator 포함해 대조",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/text-input/",
+      "name": "text-input",
+      "existingMapping": "Field / TextField",
+      "priorRationale": "입력 상태·이름·오류 계약 유지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/textarea/",
+      "name": "textarea",
+      "existingMapping": "TextArea",
+      "priorRationale": "입력 보존·크기 변화·오류 예제 비교",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/toast/",
+      "name": "toast",
+      "existingMapping": "Toast / ToastProvider",
+      "priorRationale": "queue·update·pause·dismiss를 데모로 대체하지 않음",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/toggle/",
+      "name": "toggle",
+      "existingMapping": "Switch",
+      "priorRationale": "즉시 적용 설정과 폼 checkbox 구분",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/tooltip/",
+      "name": "tooltip",
+      "existingMapping": "Tooltip",
+      "priorRationale": "hover 전용 시각 효과로 교체하지 않음",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/tree-view/",
+      "name": "tree-view",
+      "existingMapping": "Tree",
+      "priorRationale": "키보드·계층·선택 계약 유지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/video/",
+      "name": "video",
+      "existingMapping": "Asset + host player",
+      "priorRationale": "자막·재생 제어·수명주기는 별도 검증",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://component.gallery/components/visually-hidden/",
+      "name": "visually-hidden",
+      "existingMapping": "VisuallyHidden",
+      "priorRationale": "시각 스타일보다 접근성 문맥 소유자 유지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://motion-primitives.com/docs/accordion",
+      "name": "accordion",
+      "existingMapping": "Accordion / Collapsible",
+      "priorRationale": "기존 열림 계약에 표현 흡수 검토",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://motion-primitives.com/docs/disclosure",
+      "name": "disclosure",
+      "existingMapping": "Accordion / Collapsible",
+      "priorRationale": "기존 열림 계약에 표현 흡수 검토",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://motion-primitives.com/docs/animated-background",
+      "name": "animated-background",
+      "existingMapping": "Tabs / SegmentedControl",
+      "priorRationale": "기존 선택 표시와 비교",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "2026-10-07 IAB: Segmented Control Day/Week layout observed at 1280x720",
+      "interactionReview": "Week activated; data-checked=true moved; no aria-pressed/aria-selected on source buttons. Other demo variants and environment matrix pending.",
+      "adoptionDecision": "recommended: keep HJM radio engine and add opt-in selection artwork motion",
+      "implementation": "SegmentedControl selectionMotion=slide; Web and Native experiment SelectionMotion; targeted tests 3+3 passed; UI/device verification pending"
+    },
+    {
+      "url": "https://motion-primitives.com/docs/animated-group",
+      "name": "animated-group",
+      "existingMapping": "ContentTransition / Grid / List",
+      "priorRationale": "등장 구성 후보, 읽기 지연 금지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://motion-primitives.com/docs/in-view",
+      "name": "in-view",
+      "existingMapping": "ContentTransition / Grid / List",
+      "priorRationale": "등장 구성 후보, 읽기 지연 금지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://motion-primitives.com/docs/transition-panel",
+      "name": "transition-panel",
+      "existingMapping": "ContentTransition / Grid / List",
+      "priorRationale": "등장 구성 후보, 읽기 지연 금지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://motion-primitives.com/docs/animated-number",
+      "name": "animated-number",
+      "existingMapping": "AnimatedStatistic",
+      "priorRationale": "현재 숫자 엔진 유지 권고",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://motion-primitives.com/docs/sliding-number",
+      "name": "sliding-number",
+      "existingMapping": "AnimatedStatistic",
+      "priorRationale": "현재 숫자 엔진 유지 권고",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://motion-primitives.com/docs/border-trail",
+      "name": "border-trail",
+      "existingMapping": "EffectSurface / Card",
+      "priorRationale": "선택적 장식 레이어 후보",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://motion-primitives.com/docs/glow-effect",
+      "name": "glow-effect",
+      "existingMapping": "EffectSurface / Card",
+      "priorRationale": "선택적 장식 레이어 후보",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://motion-primitives.com/docs/spotlight",
+      "name": "spotlight",
+      "existingMapping": "EffectSurface / Card",
+      "priorRationale": "선택적 장식 레이어 후보",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://motion-primitives.com/docs/carousel",
+      "name": "carousel",
+      "existingMapping": "Carousel / CarouselMotion",
+      "priorRationale": "현재 carousel 계약·engine 유지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://motion-primitives.com/docs/cursor",
+      "name": "cursor",
+      "existingMapping": "제품 장식 또는 optional 표현",
+      "priorRationale": "Web 소개용 표현, 기본 조작 UI 교체 제외",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://motion-primitives.com/docs/magnetic",
+      "name": "magnetic",
+      "existingMapping": "제품 장식 또는 optional 표현",
+      "priorRationale": "Web 소개용 표현, 기본 조작 UI 교체 제외",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://motion-primitives.com/docs/tilt",
+      "name": "tilt",
+      "existingMapping": "제품 장식 또는 optional 표현",
+      "priorRationale": "Web 소개용 표현, 기본 조작 UI 교체 제외",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://motion-primitives.com/docs/dialog",
+      "name": "dialog",
+      "existingMapping": "Dialog / Popover / MorphingMenu",
+      "priorRationale": "overlay 동작 유지, geometry만 비교",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://motion-primitives.com/docs/morphing-dialog",
+      "name": "morphing-dialog",
+      "existingMapping": "Dialog / Popover / MorphingMenu",
+      "priorRationale": "overlay 동작 유지, geometry만 비교",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://motion-primitives.com/docs/morphing-popover",
+      "name": "morphing-popover",
+      "existingMapping": "Dialog / Popover / MorphingMenu",
+      "priorRationale": "overlay 동작 유지, geometry만 비교",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://motion-primitives.com/docs/dock",
+      "name": "dock",
+      "existingMapping": "NavigationBar / BottomNavigation",
+      "priorRationale": "내비게이션 표현 비교, 확대 효과는 선택적",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://motion-primitives.com/docs/image-comparison",
+      "name": "image-comparison",
+      "existingMapping": "Image / Slider 기반 비교 구성",
+      "priorRationale": "신규 기능 후보",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://motion-primitives.com/docs/infinite-slider",
+      "name": "infinite-slider",
+      "existingMapping": "제품 마케팅 구성",
+      "priorRationale": "소개용 반복 띠 구성, 정지·중복 의미 필요",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://motion-primitives.com/docs/progressive-blur",
+      "name": "progressive-blur",
+      "existingMapping": "목록·이미지 장식",
+      "priorRationale": "가장자리 표현 후보, 실제 콘텐츠 가림 금지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://motion-primitives.com/docs/scroll-progress",
+      "name": "scroll-progress",
+      "existingMapping": "ScrollProgress / Timeline",
+      "priorRationale": "현재 host·범위 계약 유지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://motion-primitives.com/docs/spinning-text",
+      "name": "spinning-text",
+      "existingMapping": "Text / TextTransition / 제품 소개 표현",
+      "priorRationale": "읽기·상태 텍스트의 기본 표현 교체 제외",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://motion-primitives.com/docs/text-effect",
+      "name": "text-effect",
+      "existingMapping": "Text / TextTransition / 제품 소개 표현",
+      "priorRationale": "읽기·상태 텍스트의 기본 표현 교체 제외",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://motion-primitives.com/docs/text-loop",
+      "name": "text-loop",
+      "existingMapping": "Text / TextTransition / 제품 소개 표현",
+      "priorRationale": "읽기·상태 텍스트의 기본 표현 교체 제외",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://motion-primitives.com/docs/text-morph",
+      "name": "text-morph",
+      "existingMapping": "Text / TextTransition / 제품 소개 표현",
+      "priorRationale": "읽기·상태 텍스트의 기본 표현 교체 제외",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://motion-primitives.com/docs/text-roll",
+      "name": "text-roll",
+      "existingMapping": "Text / TextTransition / 제품 소개 표현",
+      "priorRationale": "읽기·상태 텍스트의 기본 표현 교체 제외",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://motion-primitives.com/docs/text-scramble",
+      "name": "text-scramble",
+      "existingMapping": "Text / TextTransition / 제품 소개 표현",
+      "priorRationale": "읽기·상태 텍스트의 기본 표현 교체 제외",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://motion-primitives.com/docs/text-shimmer",
+      "name": "text-shimmer",
+      "existingMapping": "Text / TextTransition / 제품 소개 표현",
+      "priorRationale": "읽기·상태 텍스트의 기본 표현 교체 제외",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://motion-primitives.com/docs/text-shimmer-wave",
+      "name": "text-shimmer-wave",
+      "existingMapping": "Text / TextTransition / 제품 소개 표현",
+      "priorRationale": "읽기·상태 텍스트의 기본 표현 교체 제외",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://motion-primitives.com/docs/toolbar-dynamic",
+      "name": "toolbar-dynamic",
+      "existingMapping": "EditorScreen / MessageComposer",
+      "priorRationale": "입력 문맥을 유지하는 구성 후보",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://motion-primitives.com/docs/toolbar-expandable",
+      "name": "toolbar-expandable",
+      "existingMapping": "EditorScreen / MessageComposer",
+      "priorRationale": "입력 문맥을 유지하는 구성 후보",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/android",
+      "name": "android",
+      "existingMapping": "Asset / 소개 화면",
+      "priorRationale": "기기 모형 구성, 제품 소개에 한정",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/iphone",
+      "name": "iphone",
+      "existingMapping": "Asset / 소개 화면",
+      "priorRationale": "기기 모형 구성, 제품 소개에 한정",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/safari",
+      "name": "safari",
+      "existingMapping": "Asset / 소개 화면",
+      "priorRationale": "기기 모형 구성, 제품 소개에 한정",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/animated-beam",
+      "name": "animated-beam",
+      "existingMapping": "EffectSurface / 제품 소개 구성",
+      "priorRationale": "선택적 배경·연결 효과, 수명주기 유지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/animated-grid-pattern",
+      "name": "animated-grid-pattern",
+      "existingMapping": "EffectSurface / 제품 소개 구성",
+      "priorRationale": "선택적 배경·연결 효과, 수명주기 유지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/backlight",
+      "name": "backlight",
+      "existingMapping": "EffectSurface / 제품 소개 구성",
+      "priorRationale": "선택적 배경·연결 효과, 수명주기 유지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/border-beam",
+      "name": "border-beam",
+      "existingMapping": "EffectSurface / 제품 소개 구성",
+      "priorRationale": "선택적 배경·연결 효과, 수명주기 유지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/dot-pattern",
+      "name": "dot-pattern",
+      "existingMapping": "EffectSurface / 제품 소개 구성",
+      "priorRationale": "선택적 배경·연결 효과, 수명주기 유지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/dotted-map",
+      "name": "dotted-map",
+      "existingMapping": "EffectSurface / 제품 소개 구성",
+      "priorRationale": "선택적 배경·연결 효과, 수명주기 유지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/flickering-grid",
+      "name": "flickering-grid",
+      "existingMapping": "EffectSurface / 제품 소개 구성",
+      "priorRationale": "선택적 배경·연결 효과, 수명주기 유지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/floating-3d-particles",
+      "name": "floating-3d-particles",
+      "existingMapping": "EffectSurface / 제품 소개 구성",
+      "priorRationale": "선택적 배경·연결 효과, 수명주기 유지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/globe",
+      "name": "globe",
+      "existingMapping": "EffectSurface / 제품 소개 구성",
+      "priorRationale": "선택적 배경·연결 효과, 수명주기 유지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/glyph-matrix",
+      "name": "glyph-matrix",
+      "existingMapping": "EffectSurface / 제품 소개 구성",
+      "priorRationale": "선택적 배경·연결 효과, 수명주기 유지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/grid-pattern",
+      "name": "grid-pattern",
+      "existingMapping": "EffectSurface / 제품 소개 구성",
+      "priorRationale": "선택적 배경·연결 효과, 수명주기 유지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/hexagon-pattern",
+      "name": "hexagon-pattern",
+      "existingMapping": "EffectSurface / 제품 소개 구성",
+      "priorRationale": "선택적 배경·연결 효과, 수명주기 유지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/icon-cloud",
+      "name": "icon-cloud",
+      "existingMapping": "EffectSurface / 제품 소개 구성",
+      "priorRationale": "선택적 배경·연결 효과, 수명주기 유지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/interactive-grid-pattern",
+      "name": "interactive-grid-pattern",
+      "existingMapping": "EffectSurface / 제품 소개 구성",
+      "priorRationale": "선택적 배경·연결 효과, 수명주기 유지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/light-rays",
+      "name": "light-rays",
+      "existingMapping": "EffectSurface / 제품 소개 구성",
+      "priorRationale": "선택적 배경·연결 효과, 수명주기 유지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/meteors",
+      "name": "meteors",
+      "existingMapping": "EffectSurface / 제품 소개 구성",
+      "priorRationale": "선택적 배경·연결 효과, 수명주기 유지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/neon-gradient-card",
+      "name": "neon-gradient-card",
+      "existingMapping": "EffectSurface / 제품 소개 구성",
+      "priorRationale": "선택적 배경·연결 효과, 수명주기 유지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/noise-texture",
+      "name": "noise-texture",
+      "existingMapping": "EffectSurface / 제품 소개 구성",
+      "priorRationale": "선택적 배경·연결 효과, 수명주기 유지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/orbiting-circles",
+      "name": "orbiting-circles",
+      "existingMapping": "EffectSurface / 제품 소개 구성",
+      "priorRationale": "선택적 배경·연결 효과, 수명주기 유지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/particles",
+      "name": "particles",
+      "existingMapping": "EffectSurface / 제품 소개 구성",
+      "priorRationale": "선택적 배경·연결 효과, 수명주기 유지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/retro-grid",
+      "name": "retro-grid",
+      "existingMapping": "EffectSurface / 제품 소개 구성",
+      "priorRationale": "선택적 배경·연결 효과, 수명주기 유지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/ripple",
+      "name": "ripple",
+      "existingMapping": "EffectSurface / 제품 소개 구성",
+      "priorRationale": "선택적 배경·연결 효과, 수명주기 유지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/shine-border",
+      "name": "shine-border",
+      "existingMapping": "EffectSurface / 제품 소개 구성",
+      "priorRationale": "선택적 배경·연결 효과, 수명주기 유지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/striped-pattern",
+      "name": "striped-pattern",
+      "existingMapping": "EffectSurface / 제품 소개 구성",
+      "priorRationale": "선택적 배경·연결 효과, 수명주기 유지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/warp-background",
+      "name": "warp-background",
+      "existingMapping": "EffectSurface / 제품 소개 구성",
+      "priorRationale": "선택적 배경·연결 효과, 수명주기 유지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/animated-circular-progress-bar",
+      "name": "animated-circular-progress-bar",
+      "existingMapping": "Progress(shape=circular)",
+      "priorRationale": "실제 진행률을 사용하는 원형 표현 비교",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/animated-gradient-text",
+      "name": "animated-gradient-text",
+      "existingMapping": "Text / TextTransition / 제품 표현",
+      "priorRationale": "소개용 타이포그래피, 일반 본문/상태 텍스트 교체 제외",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/animated-shiny-text",
+      "name": "animated-shiny-text",
+      "existingMapping": "Text / TextTransition / 제품 표현",
+      "priorRationale": "소개용 타이포그래피, 일반 본문/상태 텍스트 교체 제외",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/aurora-text",
+      "name": "aurora-text",
+      "existingMapping": "Text / TextTransition / 제품 표현",
+      "priorRationale": "소개용 타이포그래피, 일반 본문/상태 텍스트 교체 제외",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/comic-text",
+      "name": "comic-text",
+      "existingMapping": "Text / TextTransition / 제품 표현",
+      "priorRationale": "소개용 타이포그래피, 일반 본문/상태 텍스트 교체 제외",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/dia-text-reveal",
+      "name": "dia-text-reveal",
+      "existingMapping": "Text / TextTransition / 제품 표현",
+      "priorRationale": "소개용 타이포그래피, 일반 본문/상태 텍스트 교체 제외",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/hyper-text",
+      "name": "hyper-text",
+      "existingMapping": "Text / TextTransition / 제품 표현",
+      "priorRationale": "소개용 타이포그래피, 일반 본문/상태 텍스트 교체 제외",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/kinetic-text",
+      "name": "kinetic-text",
+      "existingMapping": "Text / TextTransition / 제품 표현",
+      "priorRationale": "소개용 타이포그래피, 일반 본문/상태 텍스트 교체 제외",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/line-shadow-text",
+      "name": "line-shadow-text",
+      "existingMapping": "Text / TextTransition / 제품 표현",
+      "priorRationale": "소개용 타이포그래피, 일반 본문/상태 텍스트 교체 제외",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/morphing-text",
+      "name": "morphing-text",
+      "existingMapping": "Text / TextTransition / 제품 표현",
+      "priorRationale": "소개용 타이포그래피, 일반 본문/상태 텍스트 교체 제외",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/scroll-based-velocity",
+      "name": "scroll-based-velocity",
+      "existingMapping": "Text / TextTransition / 제품 표현",
+      "priorRationale": "소개용 타이포그래피, 일반 본문/상태 텍스트 교체 제외",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/sparkles-text",
+      "name": "sparkles-text",
+      "existingMapping": "Text / TextTransition / 제품 표현",
+      "priorRationale": "소개용 타이포그래피, 일반 본문/상태 텍스트 교체 제외",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/spinning-text",
+      "name": "spinning-text",
+      "existingMapping": "Text / TextTransition / 제품 표현",
+      "priorRationale": "소개용 타이포그래피, 일반 본문/상태 텍스트 교체 제외",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/text-3d-flip",
+      "name": "text-3d-flip",
+      "existingMapping": "Text / TextTransition / 제품 표현",
+      "priorRationale": "소개용 타이포그래피, 일반 본문/상태 텍스트 교체 제외",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/text-animate",
+      "name": "text-animate",
+      "existingMapping": "Text / TextTransition / 제품 표현",
+      "priorRationale": "소개용 타이포그래피, 일반 본문/상태 텍스트 교체 제외",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/text-reveal",
+      "name": "text-reveal",
+      "existingMapping": "Text / TextTransition / 제품 표현",
+      "priorRationale": "소개용 타이포그래피, 일반 본문/상태 텍스트 교체 제외",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/typing-animation",
+      "name": "typing-animation",
+      "existingMapping": "Text / TextTransition / 제품 표현",
+      "priorRationale": "소개용 타이포그래피, 일반 본문/상태 텍스트 교체 제외",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/video-text",
+      "name": "video-text",
+      "existingMapping": "Text / TextTransition / 제품 표현",
+      "priorRationale": "소개용 타이포그래피, 일반 본문/상태 텍스트 교체 제외",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/word-rotate",
+      "name": "word-rotate",
+      "existingMapping": "Text / TextTransition / 제품 표현",
+      "priorRationale": "소개용 타이포그래피, 일반 본문/상태 텍스트 교체 제외",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/animated-list",
+      "name": "animated-list",
+      "existingMapping": "ContentTransition / List",
+      "priorRationale": "등장 순서·일회성 진입 표현 후보",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/blur-fade",
+      "name": "blur-fade",
+      "existingMapping": "ContentTransition / List",
+      "priorRationale": "등장 순서·일회성 진입 표현 후보",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/animated-theme-toggler",
+      "name": "animated-theme-toggler",
+      "existingMapping": "HjmProvider를 소비하는 제품 theme switch",
+      "priorRationale": "테마 전환 연출 후보, 데이터·focus 유지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/avatar-circles",
+      "name": "avatar-circles",
+      "existingMapping": "AvatarGroup",
+      "priorRationale": "기존 묶음 아바타의 배치 비교",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/bento-grid",
+      "name": "bento-grid",
+      "existingMapping": "Card / Grid / 소개 실험 화면",
+      "priorRationale": "기능 설명 구성 개선",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/client-tweet-card",
+      "name": "client-tweet-card",
+      "existingMapping": "제품별 embed",
+      "priorRationale": "외부 콘텐츠 임베드, 공용 core 편입 보류",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/tweet-card",
+      "name": "tweet-card",
+      "existingMapping": "제품별 embed",
+      "priorRationale": "외부 콘텐츠 임베드, 공용 core 편입 보류",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/code-comparison",
+      "name": "code-comparison",
+      "existingMapping": "CodeBlock",
+      "priorRationale": "코드 비교 구성 후보, diff 데이터는 별도",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/confetti",
+      "name": "confetti",
+      "existingMapping": "Celebration",
+      "priorRationale": "기존 celebration engine 유지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/cool-mode",
+      "name": "cool-mode",
+      "existingMapping": "제품 장식",
+      "priorRationale": "입력·링크 기본 동작 교체 제외",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/pointer",
+      "name": "pointer",
+      "existingMapping": "제품 장식",
+      "priorRationale": "입력·링크 기본 동작 교체 제외",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/smooth-cursor",
+      "name": "smooth-cursor",
+      "existingMapping": "제품 장식",
+      "priorRationale": "입력·링크 기본 동작 교체 제외",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/dock",
+      "name": "dock",
+      "existingMapping": "NavigationBar",
+      "priorRationale": "내비게이션 표현 비교",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/file-tree",
+      "name": "file-tree",
+      "existingMapping": "Tree",
+      "priorRationale": "정적 설명용 tree와 실제 탐색 구분",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/glare-hover",
+      "name": "glare-hover",
+      "existingMapping": "Card / EffectSurface",
+      "priorRationale": "카드의 hover 표현만 흡수 검토",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/magic-card",
+      "name": "magic-card",
+      "existingMapping": "Card / EffectSurface",
+      "priorRationale": "카드의 hover 표현만 흡수 검토",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/hero-video-dialog",
+      "name": "hero-video-dialog",
+      "existingMapping": "Dialog + Asset",
+      "priorRationale": "영상 포스터→재생 구성 후보",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "partial: 2026-10-07 IAB 1280x720, default thumbnail and open player inspected; second animation, dark and responsive variants pending",
+      "interactionReview": "partial: Play video opens YouTube iframe. DOM has no dialog role; focus stays on trigger. Escape sent to trigger did not close. Icon close removes iframe after exit. Playback, captions and error recovery pending.",
+      "adoptionDecision": "recommend existing Dialog + product media host composition; preserve HJM focus/stack/Escape contracts instead of copying source modal. New experiment and real Web/Native playback validation pending.",
+      "implementationBoundary": "Asset is an image-semantic frame, not an interactive player container. Do not put video controls in its decorative/aria-hidden slot. Dialog.children can host a product player; Native showcase currently has no video host dependency."
+    },
+    {
+      "url": "https://magicui.design/docs/components/highlighter",
+      "name": "highlighter",
+      "existingMapping": "Text / TextFormat",
+      "priorRationale": "강조 표현 후보, 문장 의미 유지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/interactive-hover-button",
+      "name": "interactive-hover-button",
+      "existingMapping": "Button",
+      "priorRationale": "버튼 상태/피드백에 선택 흡수",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/pulsating-button",
+      "name": "pulsating-button",
+      "existingMapping": "Button",
+      "priorRationale": "버튼 상태/피드백에 선택 흡수",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/rainbow-button",
+      "name": "rainbow-button",
+      "existingMapping": "Button",
+      "priorRationale": "버튼 상태/피드백에 선택 흡수",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/ripple-button",
+      "name": "ripple-button",
+      "existingMapping": "Button",
+      "priorRationale": "버튼 상태/피드백에 선택 흡수",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/shimmer-button",
+      "name": "shimmer-button",
+      "existingMapping": "Button",
+      "priorRationale": "버튼 상태/피드백에 선택 흡수",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/shiny-button",
+      "name": "shiny-button",
+      "existingMapping": "Button",
+      "priorRationale": "버튼 상태/피드백에 선택 흡수",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/lens",
+      "name": "lens",
+      "existingMapping": "Image / 이미지 확대 adapter",
+      "priorRationale": "이미지 확대 문맥과 기존 adapter 비교",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/marquee",
+      "name": "marquee",
+      "existingMapping": "제품 마케팅 구성",
+      "priorRationale": "소개용 반복 띠, 멈춤·중복 접근성 필요",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/number-ticker",
+      "name": "number-ticker",
+      "existingMapping": "AnimatedStatistic",
+      "priorRationale": "기존 Intl·방향·fallback 유지 권고",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/pixel-image",
+      "name": "pixel-image",
+      "existingMapping": "GridReveal / Image",
+      "priorRationale": "기존 reveal 표현과 비교",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/progressive-blur",
+      "name": "progressive-blur",
+      "existingMapping": "목록·이미지 장식",
+      "priorRationale": "가장자리 시각 힌트 후보",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/scroll-progress",
+      "name": "scroll-progress",
+      "existingMapping": "ScrollProgress",
+      "priorRationale": "현재 명시적 host 계약 유지",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://magicui.design/docs/components/terminal",
+      "name": "terminal",
+      "existingMapping": "CodeBlock / 소개 화면",
+      "priorRationale": "제품 소개용 코드 실행 표현",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/background-beams",
+      "name": "background-beams",
+      "existingMapping": "EffectSurface의 기존 레이어와 비교. semantic color·비활성 중지·정적 fallback 안에서만 선택 흡수.",
+      "priorRationale": "EffectSurface의 기존 레이어와 비교. semantic color·비활성 중지·정적 fallback 안에서만 선택 흡수.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/background-beams-with-collision",
+      "name": "background-beams-with-collision",
+      "existingMapping": "EffectSurface의 기존 레이어와 비교. semantic color·비활성 중지·정적 fallback 안에서만 선택 흡수.",
+      "priorRationale": "EffectSurface의 기존 레이어와 비교. semantic color·비활성 중지·정적 fallback 안에서만 선택 흡수.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/background-boxes",
+      "name": "background-boxes",
+      "existingMapping": "EffectSurface의 기존 레이어와 비교. semantic color·비활성 중지·정적 fallback 안에서만 선택 흡수.",
+      "priorRationale": "EffectSurface의 기존 레이어와 비교. semantic color·비활성 중지·정적 fallback 안에서만 선택 흡수.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/background-gradient",
+      "name": "background-gradient",
+      "existingMapping": "EffectSurface의 기존 레이어와 비교. semantic color·비활성 중지·정적 fallback 안에서만 선택 흡수.",
+      "priorRationale": "EffectSurface의 기존 레이어와 비교. semantic color·비활성 중지·정적 fallback 안에서만 선택 흡수.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/background-gradient-animation",
+      "name": "background-gradient-animation",
+      "existingMapping": "EffectSurface의 기존 레이어와 비교. semantic color·비활성 중지·정적 fallback 안에서만 선택 흡수.",
+      "priorRationale": "EffectSurface의 기존 레이어와 비교. semantic color·비활성 중지·정적 fallback 안에서만 선택 흡수.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/background-lines",
+      "name": "background-lines",
+      "existingMapping": "EffectSurface의 기존 레이어와 비교. semantic color·비활성 중지·정적 fallback 안에서만 선택 흡수.",
+      "priorRationale": "EffectSurface의 기존 레이어와 비교. semantic color·비활성 중지·정적 fallback 안에서만 선택 흡수.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/background-ripple-effect",
+      "name": "background-ripple-effect",
+      "existingMapping": "EffectSurface의 기존 레이어와 비교. semantic color·비활성 중지·정적 fallback 안에서만 선택 흡수.",
+      "priorRationale": "EffectSurface의 기존 레이어와 비교. semantic color·비활성 중지·정적 fallback 안에서만 선택 흡수.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/aurora-background",
+      "name": "aurora-background",
+      "existingMapping": "EffectSurface의 기존 레이어와 비교. semantic color·비활성 중지·정적 fallback 안에서만 선택 흡수.",
+      "priorRationale": "EffectSurface의 기존 레이어와 비교. semantic color·비활성 중지·정적 fallback 안에서만 선택 흡수.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/wavy-background",
+      "name": "wavy-background",
+      "existingMapping": "EffectSurface의 기존 레이어와 비교. semantic color·비활성 중지·정적 fallback 안에서만 선택 흡수.",
+      "priorRationale": "EffectSurface의 기존 레이어와 비교. semantic color·비활성 중지·정적 fallback 안에서만 선택 흡수.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/dotted-glow-background",
+      "name": "dotted-glow-background",
+      "existingMapping": "EffectSurface의 기존 레이어와 비교. semantic color·비활성 중지·정적 fallback 안에서만 선택 흡수.",
+      "priorRationale": "EffectSurface의 기존 레이어와 비교. semantic color·비활성 중지·정적 fallback 안에서만 선택 흡수.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/noise-background",
+      "name": "noise-background",
+      "existingMapping": "EffectSurface의 기존 레이어와 비교. semantic color·비활성 중지·정적 fallback 안에서만 선택 흡수.",
+      "priorRationale": "EffectSurface의 기존 레이어와 비교. semantic color·비활성 중지·정적 fallback 안에서만 선택 흡수.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/scales",
+      "name": "scales",
+      "existingMapping": "EffectSurface의 기존 레이어와 비교. semantic color·비활성 중지·정적 fallback 안에서만 선택 흡수.",
+      "priorRationale": "EffectSurface의 기존 레이어와 비교. semantic color·비활성 중지·정적 fallback 안에서만 선택 흡수.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/text-generate-effect",
+      "name": "text-generate-effect",
+      "existingMapping": "TextTransition 및 소개 문구의 선택적 연출. 일반 본문·상태 텍스트 교체 제외.",
+      "priorRationale": "TextTransition 및 소개 문구의 선택적 연출. 일반 본문·상태 텍스트 교체 제외.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/text-reveal-card",
+      "name": "text-reveal-card",
+      "existingMapping": "TextTransition 및 소개 문구의 선택적 연출. 일반 본문·상태 텍스트 교체 제외.",
+      "priorRationale": "TextTransition 및 소개 문구의 선택적 연출. 일반 본문·상태 텍스트 교체 제외.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/text-hover-effect",
+      "name": "text-hover-effect",
+      "existingMapping": "TextTransition 및 소개 문구의 선택적 연출. 일반 본문·상태 텍스트 교체 제외.",
+      "priorRationale": "TextTransition 및 소개 문구의 선택적 연출. 일반 본문·상태 텍스트 교체 제외.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/typewriter-effect",
+      "name": "typewriter-effect",
+      "existingMapping": "TextTransition 및 소개 문구의 선택적 연출. 일반 본문·상태 텍스트 교체 제외.",
+      "priorRationale": "TextTransition 및 소개 문구의 선택적 연출. 일반 본문·상태 텍스트 교체 제외.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/flip-words",
+      "name": "flip-words",
+      "existingMapping": "TextTransition 및 소개 문구의 선택적 연출. 일반 본문·상태 텍스트 교체 제외.",
+      "priorRationale": "TextTransition 및 소개 문구의 선택적 연출. 일반 본문·상태 텍스트 교체 제외.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/colourful-text",
+      "name": "colourful-text",
+      "existingMapping": "TextTransition 및 소개 문구의 선택적 연출. 일반 본문·상태 텍스트 교체 제외.",
+      "priorRationale": "TextTransition 및 소개 문구의 선택적 연출. 일반 본문·상태 텍스트 교체 제외.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/encrypted-text",
+      "name": "encrypted-text",
+      "existingMapping": "TextTransition 및 소개 문구의 선택적 연출. 일반 본문·상태 텍스트 교체 제외.",
+      "priorRationale": "TextTransition 및 소개 문구의 선택적 연출. 일반 본문·상태 텍스트 교체 제외.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/cover",
+      "name": "cover",
+      "existingMapping": "TextTransition 및 소개 문구의 선택적 연출. 일반 본문·상태 텍스트 교체 제외.",
+      "priorRationale": "TextTransition 및 소개 문구의 선택적 연출. 일반 본문·상태 텍스트 교체 제외.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/3d-card",
+      "name": "3d-card",
+      "existingMapping": "Card의 표현·카드 묶음 구성 후보. hover는 터치·키보드 대안이 필요하고 drag는 기존 adapter와 비교.",
+      "priorRationale": "Card의 표현·카드 묶음 구성 후보. hover는 터치·키보드 대안이 필요하고 drag는 기존 adapter와 비교.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/card-hover-effect",
+      "name": "card-hover-effect",
+      "existingMapping": "Card의 표현·카드 묶음 구성 후보. hover는 터치·키보드 대안이 필요하고 drag는 기존 adapter와 비교.",
+      "priorRationale": "Card의 표현·카드 묶음 구성 후보. hover는 터치·키보드 대안이 필요하고 drag는 기존 adapter와 비교.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/card-spotlight",
+      "name": "card-spotlight",
+      "existingMapping": "Card의 표현·카드 묶음 구성 후보. hover는 터치·키보드 대안이 필요하고 drag는 기존 adapter와 비교.",
+      "priorRationale": "Card의 표현·카드 묶음 구성 후보. hover는 터치·키보드 대안이 필요하고 drag는 기존 adapter와 비교.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/card-stack",
+      "name": "card-stack",
+      "existingMapping": "Card의 표현·카드 묶음 구성 후보. hover는 터치·키보드 대안이 필요하고 drag는 기존 adapter와 비교.",
+      "priorRationale": "Card의 표현·카드 묶음 구성 후보. hover는 터치·키보드 대안이 필요하고 drag는 기존 adapter와 비교.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/evervault-card",
+      "name": "evervault-card",
+      "existingMapping": "Card의 표현·카드 묶음 구성 후보. hover는 터치·키보드 대안이 필요하고 drag는 기존 adapter와 비교.",
+      "priorRationale": "Card의 표현·카드 묶음 구성 후보. hover는 터치·키보드 대안이 필요하고 drag는 기존 adapter와 비교.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/glare-card",
+      "name": "glare-card",
+      "existingMapping": "Card의 표현·카드 묶음 구성 후보. hover는 터치·키보드 대안이 필요하고 drag는 기존 adapter와 비교.",
+      "priorRationale": "Card의 표현·카드 묶음 구성 후보. hover는 터치·키보드 대안이 필요하고 drag는 기존 adapter와 비교.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/wobble-card",
+      "name": "wobble-card",
+      "existingMapping": "Card의 표현·카드 묶음 구성 후보. hover는 터치·키보드 대안이 필요하고 drag는 기존 adapter와 비교.",
+      "priorRationale": "Card의 표현·카드 묶음 구성 후보. hover는 터치·키보드 대안이 필요하고 drag는 기존 adapter와 비교.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/comet-card",
+      "name": "comet-card",
+      "existingMapping": "Card의 표현·카드 묶음 구성 후보. hover는 터치·키보드 대안이 필요하고 drag는 기존 adapter와 비교.",
+      "priorRationale": "Card의 표현·카드 묶음 구성 후보. hover는 터치·키보드 대안이 필요하고 drag는 기존 adapter와 비교.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/tooltip-card",
+      "name": "tooltip-card",
+      "existingMapping": "Card의 표현·카드 묶음 구성 후보. hover는 터치·키보드 대안이 필요하고 drag는 기존 adapter와 비교.",
+      "priorRationale": "Card의 표현·카드 묶음 구성 후보. hover는 터치·키보드 대안이 필요하고 drag는 기존 adapter와 비교.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/focus-cards",
+      "name": "focus-cards",
+      "existingMapping": "Card의 표현·카드 묶음 구성 후보. hover는 터치·키보드 대안이 필요하고 drag는 기존 adapter와 비교.",
+      "priorRationale": "Card의 표현·카드 묶음 구성 후보. hover는 터치·키보드 대안이 필요하고 drag는 기존 adapter와 비교.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/draggable-card",
+      "name": "draggable-card",
+      "existingMapping": "Card의 표현·카드 묶음 구성 후보. hover는 터치·키보드 대안이 필요하고 drag는 기존 adapter와 비교.",
+      "priorRationale": "Card의 표현·카드 묶음 구성 후보. hover는 터치·키보드 대안이 필요하고 drag는 기존 adapter와 비교.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/floating-navbar",
+      "name": "floating-navbar",
+      "existingMapping": "NavigationBar·Sidebar·Tabs·BottomNavigation과 대응. 선택 상태와 키보드 소유권은 기존 계약 유지.",
+      "priorRationale": "NavigationBar·Sidebar·Tabs·BottomNavigation과 대응. 선택 상태와 키보드 소유권은 기존 계약 유지.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/navbar-menu",
+      "name": "navbar-menu",
+      "existingMapping": "NavigationBar·Sidebar·Tabs·BottomNavigation과 대응. 선택 상태와 키보드 소유권은 기존 계약 유지.",
+      "priorRationale": "NavigationBar·Sidebar·Tabs·BottomNavigation과 대응. 선택 상태와 키보드 소유권은 기존 계약 유지.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/sidebar",
+      "name": "sidebar",
+      "existingMapping": "NavigationBar·Sidebar·Tabs·BottomNavigation과 대응. 선택 상태와 키보드 소유권은 기존 계약 유지.",
+      "priorRationale": "NavigationBar·Sidebar·Tabs·BottomNavigation과 대응. 선택 상태와 키보드 소유권은 기존 계약 유지.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/floating-dock",
+      "name": "floating-dock",
+      "existingMapping": "NavigationBar·Sidebar·Tabs·BottomNavigation과 대응. 선택 상태와 키보드 소유권은 기존 계약 유지.",
+      "priorRationale": "NavigationBar·Sidebar·Tabs·BottomNavigation과 대응. 선택 상태와 키보드 소유권은 기존 계약 유지.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/resizable-navbar",
+      "name": "resizable-navbar",
+      "existingMapping": "NavigationBar·Sidebar·Tabs·BottomNavigation과 대응. 선택 상태와 키보드 소유권은 기존 계약 유지.",
+      "priorRationale": "NavigationBar·Sidebar·Tabs·BottomNavigation과 대응. 선택 상태와 키보드 소유권은 기존 계약 유지.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/tabs",
+      "name": "tabs",
+      "existingMapping": "NavigationBar·Sidebar·Tabs·BottomNavigation과 대응. 선택 상태와 키보드 소유권은 기존 계약 유지.",
+      "priorRationale": "NavigationBar·Sidebar·Tabs·BottomNavigation과 대응. 선택 상태와 키보드 소유권은 기존 계약 유지.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/hero-parallax",
+      "name": "hero-parallax",
+      "existingMapping": "기존 제품 소개 실험 화면의 이미지·강조 슬롯 후보. 전역 토큰이나 기본 레이아웃으로 복사하지 않음.",
+      "priorRationale": "기존 제품 소개 실험 화면의 이미지·강조 슬롯 후보. 전역 토큰이나 기본 레이아웃으로 복사하지 않음.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/hero-highlight",
+      "name": "hero-highlight",
+      "existingMapping": "기존 제품 소개 실험 화면의 이미지·강조 슬롯 후보. 전역 토큰이나 기본 레이아웃으로 복사하지 않음.",
+      "priorRationale": "기존 제품 소개 실험 화면의 이미지·강조 슬롯 후보. 전역 토큰이나 기본 레이아웃으로 복사하지 않음.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/spotlight",
+      "name": "spotlight",
+      "existingMapping": "기존 제품 소개 실험 화면의 이미지·강조 슬롯 후보. 전역 토큰이나 기본 레이아웃으로 복사하지 않음.",
+      "priorRationale": "기존 제품 소개 실험 화면의 이미지·강조 슬롯 후보. 전역 토큰이나 기본 레이아웃으로 복사하지 않음.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/spotlight-new",
+      "name": "spotlight-new",
+      "existingMapping": "기존 제품 소개 실험 화면의 이미지·강조 슬롯 후보. 전역 토큰이나 기본 레이아웃으로 복사하지 않음.",
+      "priorRationale": "기존 제품 소개 실험 화면의 이미지·강조 슬롯 후보. 전역 토큰이나 기본 레이아웃으로 복사하지 않음.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/lamp",
+      "name": "lamp",
+      "existingMapping": "기존 제품 소개 실험 화면의 이미지·강조 슬롯 후보. 전역 토큰이나 기본 레이아웃으로 복사하지 않음.",
+      "priorRationale": "기존 제품 소개 실험 화면의 이미지·강조 슬롯 후보. 전역 토큰이나 기본 레이아웃으로 복사하지 않음.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/vortex",
+      "name": "vortex",
+      "existingMapping": "기존 제품 소개 실험 화면의 이미지·강조 슬롯 후보. 전역 토큰이나 기본 레이아웃으로 복사하지 않음.",
+      "priorRationale": "기존 제품 소개 실험 화면의 이미지·강조 슬롯 후보. 전역 토큰이나 기본 레이아웃으로 복사하지 않음.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/container-scroll-animation",
+      "name": "container-scroll-animation",
+      "existingMapping": "기존 제품 소개 실험 화면의 이미지·강조 슬롯 후보. 전역 토큰이나 기본 레이아웃으로 복사하지 않음.",
+      "priorRationale": "기존 제품 소개 실험 화면의 이미지·강조 슬롯 후보. 전역 토큰이나 기본 레이아웃으로 복사하지 않음.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/animated-modal",
+      "name": "animated-modal",
+      "existingMapping": "Dialog·Tooltip·Carousel·ContentTransition·Timeline에 나누어 비교. 모달/캐러셀 엔진 교체 근거 없음. 무한 반복·parallax는 소개용 선택 표현.",
+      "priorRationale": "Dialog·Tooltip·Carousel·ContentTransition·Timeline에 나누어 비교. 모달/캐러셀 엔진 교체 근거 없음. 무한 반복·parallax는 소개용 선택 표현.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/animated-testimonials",
+      "name": "animated-testimonials",
+      "existingMapping": "Dialog·Tooltip·Carousel·ContentTransition·Timeline에 나누어 비교. 모달/캐러셀 엔진 교체 근거 없음. 무한 반복·parallax는 소개용 선택 표현.",
+      "priorRationale": "Dialog·Tooltip·Carousel·ContentTransition·Timeline에 나누어 비교. 모달/캐러셀 엔진 교체 근거 없음. 무한 반복·parallax는 소개용 선택 표현.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/animated-tooltip",
+      "name": "animated-tooltip",
+      "existingMapping": "Dialog·Tooltip·Carousel·ContentTransition·Timeline에 나누어 비교. 모달/캐러셀 엔진 교체 근거 없음. 무한 반복·parallax는 소개용 선택 표현.",
+      "priorRationale": "Dialog·Tooltip·Carousel·ContentTransition·Timeline에 나누어 비교. 모달/캐러셀 엔진 교체 근거 없음. 무한 반복·parallax는 소개용 선택 표현.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/apple-cards-carousel",
+      "name": "apple-cards-carousel",
+      "existingMapping": "Dialog·Tooltip·Carousel·ContentTransition·Timeline에 나누어 비교. 모달/캐러셀 엔진 교체 근거 없음. 무한 반복·parallax는 소개용 선택 표현.",
+      "priorRationale": "Dialog·Tooltip·Carousel·ContentTransition·Timeline에 나누어 비교. 모달/캐러셀 엔진 교체 근거 없음. 무한 반복·parallax는 소개용 선택 표현.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/carousel",
+      "name": "carousel",
+      "existingMapping": "Dialog·Tooltip·Carousel·ContentTransition·Timeline에 나누어 비교. 모달/캐러셀 엔진 교체 근거 없음. 무한 반복·parallax는 소개용 선택 표현.",
+      "priorRationale": "Dialog·Tooltip·Carousel·ContentTransition·Timeline에 나누어 비교. 모달/캐러셀 엔진 교체 근거 없음. 무한 반복·parallax는 소개용 선택 표현.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/infinite-moving-cards",
+      "name": "infinite-moving-cards",
+      "existingMapping": "Dialog·Tooltip·Carousel·ContentTransition·Timeline에 나누어 비교. 모달/캐러셀 엔진 교체 근거 없음. 무한 반복·parallax는 소개용 선택 표현.",
+      "priorRationale": "Dialog·Tooltip·Carousel·ContentTransition·Timeline에 나누어 비교. 모달/캐러셀 엔진 교체 근거 없음. 무한 반복·parallax는 소개용 선택 표현.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/moving-border",
+      "name": "moving-border",
+      "existingMapping": "Dialog·Tooltip·Carousel·ContentTransition·Timeline에 나누어 비교. 모달/캐러셀 엔진 교체 근거 없음. 무한 반복·parallax는 소개용 선택 표현.",
+      "priorRationale": "Dialog·Tooltip·Carousel·ContentTransition·Timeline에 나누어 비교. 모달/캐러셀 엔진 교체 근거 없음. 무한 반복·parallax는 소개용 선택 표현.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/parallax-scroll",
+      "name": "parallax-scroll",
+      "existingMapping": "Dialog·Tooltip·Carousel·ContentTransition·Timeline에 나누어 비교. 모달/캐러셀 엔진 교체 근거 없음. 무한 반복·parallax는 소개용 선택 표현.",
+      "priorRationale": "Dialog·Tooltip·Carousel·ContentTransition·Timeline에 나누어 비교. 모달/캐러셀 엔진 교체 근거 없음. 무한 반복·parallax는 소개용 선택 표현.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/parallax-scroll-2",
+      "name": "parallax-scroll-2",
+      "existingMapping": "Dialog·Tooltip·Carousel·ContentTransition·Timeline에 나누어 비교. 모달/캐러셀 엔진 교체 근거 없음. 무한 반복·parallax는 소개용 선택 표현.",
+      "priorRationale": "Dialog·Tooltip·Carousel·ContentTransition·Timeline에 나누어 비교. 모달/캐러셀 엔진 교체 근거 없음. 무한 반복·parallax는 소개용 선택 표현.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/tracing-beam",
+      "name": "tracing-beam",
+      "existingMapping": "Dialog·Tooltip·Carousel·ContentTransition·Timeline에 나누어 비교. 모달/캐러셀 엔진 교체 근거 없음. 무한 반복·parallax는 소개용 선택 표현.",
+      "priorRationale": "Dialog·Tooltip·Carousel·ContentTransition·Timeline에 나누어 비교. 모달/캐러셀 엔진 교체 근거 없음. 무한 반복·parallax는 소개용 선택 표현.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/following-pointer",
+      "name": "following-pointer",
+      "existingMapping": "Dialog·Tooltip·Carousel·ContentTransition·Timeline에 나누어 비교. 모달/캐러셀 엔진 교체 근거 없음. 무한 반복·parallax는 소개용 선택 표현.",
+      "priorRationale": "Dialog·Tooltip·Carousel·ContentTransition·Timeline에 나누어 비교. 모달/캐러셀 엔진 교체 근거 없음. 무한 반복·parallax는 소개용 선택 표현.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/layout-text-flip",
+      "name": "layout-text-flip",
+      "existingMapping": "Dialog·Tooltip·Carousel·ContentTransition·Timeline에 나누어 비교. 모달/캐러셀 엔진 교체 근거 없음. 무한 반복·parallax는 소개용 선택 표현.",
+      "priorRationale": "Dialog·Tooltip·Carousel·ContentTransition·Timeline에 나누어 비교. 모달/캐러셀 엔진 교체 근거 없음. 무한 반복·parallax는 소개용 선택 표현.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/container-text-flip",
+      "name": "container-text-flip",
+      "existingMapping": "Dialog·Tooltip·Carousel·ContentTransition·Timeline에 나누어 비교. 모달/캐러셀 엔진 교체 근거 없음. 무한 반복·parallax는 소개용 선택 표현.",
+      "priorRationale": "Dialog·Tooltip·Carousel·ContentTransition·Timeline에 나누어 비교. 모달/캐러셀 엔진 교체 근거 없음. 무한 반복·parallax는 소개용 선택 표현.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/3d-marquee",
+      "name": "3d-marquee",
+      "existingMapping": "Dialog·Tooltip·Carousel·ContentTransition·Timeline에 나누어 비교. 모달/캐러셀 엔진 교체 근거 없음. 무한 반복·parallax는 소개용 선택 표현.",
+      "priorRationale": "Dialog·Tooltip·Carousel·ContentTransition·Timeline에 나누어 비교. 모달/캐러셀 엔진 교체 근거 없음. 무한 반복·parallax는 소개용 선택 표현.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/sparkles",
+      "name": "sparkles",
+      "existingMapping": "대부분 EffectSurface/Asset의 선택 표현. compare는 신규 이미지 비교 후보, lens는 기존 확대 adapter와 비교. webcam은 권한·개인정보가 포함되어 장식 기본값에서 제외.",
+      "priorRationale": "대부분 EffectSurface/Asset의 선택 표현. compare는 신규 이미지 비교 후보, lens는 기존 확대 adapter와 비교. webcam은 권한·개인정보가 포함되어 장식 기본값에서 제외.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/glowing-stars",
+      "name": "glowing-stars",
+      "existingMapping": "대부분 EffectSurface/Asset의 선택 표현. compare는 신규 이미지 비교 후보, lens는 기존 확대 adapter와 비교. webcam은 권한·개인정보가 포함되어 장식 기본값에서 제외.",
+      "priorRationale": "대부분 EffectSurface/Asset의 선택 표현. compare는 신규 이미지 비교 후보, lens는 기존 확대 adapter와 비교. webcam은 권한·개인정보가 포함되어 장식 기본값에서 제외.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/meteors",
+      "name": "meteors",
+      "existingMapping": "대부분 EffectSurface/Asset의 선택 표현. compare는 신규 이미지 비교 후보, lens는 기존 확대 adapter와 비교. webcam은 권한·개인정보가 포함되어 장식 기본값에서 제외.",
+      "priorRationale": "대부분 EffectSurface/Asset의 선택 표현. compare는 신규 이미지 비교 후보, lens는 기존 확대 adapter와 비교. webcam은 권한·개인정보가 포함되어 장식 기본값에서 제외.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/shooting-stars",
+      "name": "shooting-stars",
+      "existingMapping": "대부분 EffectSurface/Asset의 선택 표현. compare는 신규 이미지 비교 후보, lens는 기존 확대 adapter와 비교. webcam은 권한·개인정보가 포함되어 장식 기본값에서 제외.",
+      "priorRationale": "대부분 EffectSurface/Asset의 선택 표현. compare는 신규 이미지 비교 후보, lens는 기존 확대 adapter와 비교. webcam은 권한·개인정보가 포함되어 장식 기본값에서 제외.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/stars-background",
+      "name": "stars-background",
+      "existingMapping": "대부분 EffectSurface/Asset의 선택 표현. compare는 신규 이미지 비교 후보, lens는 기존 확대 adapter와 비교. webcam은 권한·개인정보가 포함되어 장식 기본값에서 제외.",
+      "priorRationale": "대부분 EffectSurface/Asset의 선택 표현. compare는 신규 이미지 비교 후보, lens는 기존 확대 adapter와 비교. webcam은 권한·개인정보가 포함되어 장식 기본값에서 제외.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/canvas-reveal-effect",
+      "name": "canvas-reveal-effect",
+      "existingMapping": "대부분 EffectSurface/Asset의 선택 표현. compare는 신규 이미지 비교 후보, lens는 기존 확대 adapter와 비교. webcam은 권한·개인정보가 포함되어 장식 기본값에서 제외.",
+      "priorRationale": "대부분 EffectSurface/Asset의 선택 표현. compare는 신규 이미지 비교 후보, lens는 기존 확대 adapter와 비교. webcam은 권한·개인정보가 포함되어 장식 기본값에서 제외.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/svg-mask-effect",
+      "name": "svg-mask-effect",
+      "existingMapping": "대부분 EffectSurface/Asset의 선택 표현. compare는 신규 이미지 비교 후보, lens는 기존 확대 adapter와 비교. webcam은 권한·개인정보가 포함되어 장식 기본값에서 제외.",
+      "priorRationale": "대부분 EffectSurface/Asset의 선택 표현. compare는 신규 이미지 비교 후보, lens는 기존 확대 adapter와 비교. webcam은 권한·개인정보가 포함되어 장식 기본값에서 제외.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/glowing-effect",
+      "name": "glowing-effect",
+      "existingMapping": "대부분 EffectSurface/Asset의 선택 표현. compare는 신규 이미지 비교 후보, lens는 기존 확대 adapter와 비교. webcam은 권한·개인정보가 포함되어 장식 기본값에서 제외.",
+      "priorRationale": "대부분 EffectSurface/Asset의 선택 표현. compare는 신규 이미지 비교 후보, lens는 기존 확대 adapter와 비교. webcam은 권한·개인정보가 포함되어 장식 기본값에서 제외.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/pointer-highlight",
+      "name": "pointer-highlight",
+      "existingMapping": "대부분 EffectSurface/Asset의 선택 표현. compare는 신규 이미지 비교 후보, lens는 기존 확대 adapter와 비교. webcam은 권한·개인정보가 포함되어 장식 기본값에서 제외.",
+      "priorRationale": "대부분 EffectSurface/Asset의 선택 표현. compare는 신규 이미지 비교 후보, lens는 기존 확대 adapter와 비교. webcam은 권한·개인정보가 포함되어 장식 기본값에서 제외.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/lens",
+      "name": "lens",
+      "existingMapping": "대부분 EffectSurface/Asset의 선택 표현. compare는 신규 이미지 비교 후보, lens는 기존 확대 adapter와 비교. webcam은 권한·개인정보가 포함되어 장식 기본값에서 제외.",
+      "priorRationale": "대부분 EffectSurface/Asset의 선택 표현. compare는 신규 이미지 비교 후보, lens는 기존 확대 adapter와 비교. webcam은 권한·개인정보가 포함되어 장식 기본값에서 제외.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/compare",
+      "name": "compare",
+      "existingMapping": "대부분 EffectSurface/Asset의 선택 표현. compare는 신규 이미지 비교 후보, lens는 기존 확대 adapter와 비교. webcam은 권한·개인정보가 포함되어 장식 기본값에서 제외.",
+      "priorRationale": "대부분 EffectSurface/Asset의 선택 표현. compare는 신규 이미지 비교 후보, lens는 기존 확대 adapter와 비교. webcam은 권한·개인정보가 포함되어 장식 기본값에서 제외.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/direction-aware-hover",
+      "name": "direction-aware-hover",
+      "existingMapping": "대부분 EffectSurface/Asset의 선택 표현. compare는 신규 이미지 비교 후보, lens는 기존 확대 adapter와 비교. webcam은 권한·개인정보가 포함되어 장식 기본값에서 제외.",
+      "priorRationale": "대부분 EffectSurface/Asset의 선택 표현. compare는 신규 이미지 비교 후보, lens는 기존 확대 adapter와 비교. webcam은 권한·개인정보가 포함되어 장식 기본값에서 제외.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/hover-border-gradient",
+      "name": "hover-border-gradient",
+      "existingMapping": "대부분 EffectSurface/Asset의 선택 표현. compare는 신규 이미지 비교 후보, lens는 기존 확대 adapter와 비교. webcam은 권한·개인정보가 포함되어 장식 기본값에서 제외.",
+      "priorRationale": "대부분 EffectSurface/Asset의 선택 표현. compare는 신규 이미지 비교 후보, lens는 기존 확대 adapter와 비교. webcam은 권한·개인정보가 포함되어 장식 기본값에서 제외.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/pixelated-canvas",
+      "name": "pixelated-canvas",
+      "existingMapping": "대부분 EffectSurface/Asset의 선택 표현. compare는 신규 이미지 비교 후보, lens는 기존 확대 adapter와 비교. webcam은 권한·개인정보가 포함되어 장식 기본값에서 제외.",
+      "priorRationale": "대부분 EffectSurface/Asset의 선택 표현. compare는 신규 이미지 비교 후보, lens는 기존 확대 adapter와 비교. webcam은 권한·개인정보가 포함되어 장식 기본값에서 제외.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/dither-shader",
+      "name": "dither-shader",
+      "existingMapping": "대부분 EffectSurface/Asset의 선택 표현. compare는 신규 이미지 비교 후보, lens는 기존 확대 adapter와 비교. webcam은 권한·개인정보가 포함되어 장식 기본값에서 제외.",
+      "priorRationale": "대부분 EffectSurface/Asset의 선택 표현. compare는 신규 이미지 비교 후보, lens는 기존 확대 adapter와 비교. webcam은 권한·개인정보가 포함되어 장식 기본값에서 제외.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/webcam-pixel-grid",
+      "name": "webcam-pixel-grid",
+      "existingMapping": "대부분 EffectSurface/Asset의 선택 표현. compare는 신규 이미지 비교 후보, lens는 기존 확대 adapter와 비교. webcam은 권한·개인정보가 포함되어 장식 기본값에서 제외.",
+      "priorRationale": "대부분 EffectSurface/Asset의 선택 표현. compare는 신규 이미지 비교 후보, lens는 기존 확대 adapter와 비교. webcam은 권한·개인정보가 포함되어 장식 기본값에서 제외.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/bento-grid",
+      "name": "bento-grid",
+      "existingMapping": "Grid·Card·Timeline 및 기존 화면 구성에 흡수 검토. sticky·CSS span의 Native 대응은 별도 설계.",
+      "priorRationale": "Grid·Card·Timeline 및 기존 화면 구성에 흡수 검토. sticky·CSS span의 Native 대응은 별도 설계.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/layout-grid",
+      "name": "layout-grid",
+      "existingMapping": "Grid·Card·Timeline 및 기존 화면 구성에 흡수 검토. sticky·CSS span의 Native 대응은 별도 설계.",
+      "priorRationale": "Grid·Card·Timeline 및 기존 화면 구성에 흡수 검토. sticky·CSS span의 Native 대응은 별도 설계.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/sticky-scroll-reveal",
+      "name": "sticky-scroll-reveal",
+      "existingMapping": "Grid·Card·Timeline 및 기존 화면 구성에 흡수 검토. sticky·CSS span의 Native 대응은 별도 설계.",
+      "priorRationale": "Grid·Card·Timeline 및 기존 화면 구성에 흡수 검토. sticky·CSS span의 Native 대응은 별도 설계.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/timeline",
+      "name": "timeline",
+      "existingMapping": "Grid·Card·Timeline 및 기존 화면 구성에 흡수 검토. sticky·CSS span의 Native 대응은 별도 설계.",
+      "priorRationale": "Grid·Card·Timeline 및 기존 화면 구성에 흡수 검토. sticky·CSS span의 Native 대응은 별도 설계.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/grid",
+      "name": "grid",
+      "existingMapping": "Grid·Card·Timeline 및 기존 화면 구성에 흡수 검토. sticky·CSS span의 Native 대응은 별도 설계.",
+      "priorRationale": "Grid·Card·Timeline 및 기존 화면 구성에 흡수 검토. sticky·CSS span의 Native 대응은 별도 설계.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/moving-line",
+      "name": "moving-line",
+      "existingMapping": "Grid·Card·Timeline 및 기존 화면 구성에 흡수 검토. sticky·CSS span의 Native 대응은 별도 설계.",
+      "priorRationale": "Grid·Card·Timeline 및 기존 화면 구성에 흡수 검토. sticky·CSS span의 Native 대응은 별도 설계.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/input",
+      "name": "input",
+      "existingMapping": "Field의 입력·label·복구 계약 유지. file-upload는 기존 FilePicker/UploadItem 구성 개선. 입력 소실 연출은 실패 복구를 우선.",
+      "priorRationale": "Field의 입력·label·복구 계약 유지. file-upload는 기존 FilePicker/UploadItem 구성 개선. 입력 소실 연출은 실패 복구를 우선.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/label",
+      "name": "label",
+      "existingMapping": "Field의 입력·label·복구 계약 유지. file-upload는 기존 FilePicker/UploadItem 구성 개선. 입력 소실 연출은 실패 복구를 우선.",
+      "priorRationale": "Field의 입력·label·복구 계약 유지. file-upload는 기존 FilePicker/UploadItem 구성 개선. 입력 소실 연출은 실패 복구를 우선.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/file-upload",
+      "name": "file-upload",
+      "existingMapping": "Field의 입력·label·복구 계약 유지. file-upload는 기존 FilePicker/UploadItem 구성 개선. 입력 소실 연출은 실패 복구를 우선.",
+      "priorRationale": "Field의 입력·label·복구 계약 유지. file-upload는 기존 FilePicker/UploadItem 구성 개선. 입력 소실 연출은 실패 복구를 우선.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/placeholders-and-vanish-input",
+      "name": "placeholders-and-vanish-input",
+      "existingMapping": "Field의 입력·label·복구 계약 유지. file-upload는 기존 FilePicker/UploadItem 구성 개선. 입력 소실 연출은 실패 복구를 우선.",
+      "priorRationale": "Field의 입력·label·복구 계약 유지. file-upload는 기존 FilePicker/UploadItem 구성 개선. 입력 소실 연출은 실패 복구를 우선.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/gooey-input",
+      "name": "gooey-input",
+      "existingMapping": "Field의 입력·label·복구 계약 유지. file-upload는 기존 FilePicker/UploadItem 구성 개선. 입력 소실 연출은 실패 복구를 우선.",
+      "priorRationale": "Field의 입력·label·복구 계약 유지. file-upload는 기존 FilePicker/UploadItem 구성 개선. 입력 소실 연출은 실패 복구를 우선.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/3d-pin",
+      "name": "3d-pin",
+      "existingMapping": "stateful-button은 기존 Button 상태 구성, code-block은 CodeBlock, loader는 Spinner/Progress, banner는 Notice와 대응. 지도·기기 모형은 제품 소개 자산. link-preview는 URL 조회/보안 정책을 제품이 소유.",
+      "priorRationale": "stateful-button은 기존 Button 상태 구성, code-block은 CodeBlock, loader는 Spinner/Progress, banner는 Notice와 대응. 지도·기기 모형은 제품 소개 자산. link-preview는 URL 조회/보안 정책을 제품이 소유.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/macbook-scroll",
+      "name": "macbook-scroll",
+      "existingMapping": "stateful-button은 기존 Button 상태 구성, code-block은 CodeBlock, loader는 Spinner/Progress, banner는 Notice와 대응. 지도·기기 모형은 제품 소개 자산. link-preview는 URL 조회/보안 정책을 제품이 소유.",
+      "priorRationale": "stateful-button은 기존 Button 상태 구성, code-block은 CodeBlock, loader는 Spinner/Progress, banner는 Notice와 대응. 지도·기기 모형은 제품 소개 자산. link-preview는 URL 조회/보안 정책을 제품이 소유.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/globe",
+      "name": "globe",
+      "existingMapping": "stateful-button은 기존 Button 상태 구성, code-block은 CodeBlock, loader는 Spinner/Progress, banner는 Notice와 대응. 지도·기기 모형은 제품 소개 자산. link-preview는 URL 조회/보안 정책을 제품이 소유.",
+      "priorRationale": "stateful-button은 기존 Button 상태 구성, code-block은 CodeBlock, loader는 Spinner/Progress, banner는 Notice와 대응. 지도·기기 모형은 제품 소개 자산. link-preview는 URL 조회/보안 정책을 제품이 소유.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/world-map",
+      "name": "world-map",
+      "existingMapping": "stateful-button은 기존 Button 상태 구성, code-block은 CodeBlock, loader는 Spinner/Progress, banner는 Notice와 대응. 지도·기기 모형은 제품 소개 자산. link-preview는 URL 조회/보안 정책을 제품이 소유.",
+      "priorRationale": "stateful-button은 기존 Button 상태 구성, code-block은 CodeBlock, loader는 Spinner/Progress, banner는 Notice와 대응. 지도·기기 모형은 제품 소개 자산. link-preview는 URL 조회/보안 정책을 제품이 소유.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/link-preview",
+      "name": "link-preview",
+      "existingMapping": "stateful-button은 기존 Button 상태 구성, code-block은 CodeBlock, loader는 Spinner/Progress, banner는 Notice와 대응. 지도·기기 모형은 제품 소개 자산. link-preview는 URL 조회/보안 정책을 제품이 소유.",
+      "priorRationale": "stateful-button은 기존 Button 상태 구성, code-block은 CodeBlock, loader는 Spinner/Progress, banner는 Notice와 대응. 지도·기기 모형은 제품 소개 자산. link-preview는 URL 조회/보안 정책을 제품이 소유.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/multi-step-loader",
+      "name": "multi-step-loader",
+      "existingMapping": "stateful-button은 기존 Button 상태 구성, code-block은 CodeBlock, loader는 Spinner/Progress, banner는 Notice와 대응. 지도·기기 모형은 제품 소개 자산. link-preview는 URL 조회/보안 정책을 제품이 소유.",
+      "priorRationale": "stateful-button은 기존 Button 상태 구성, code-block은 CodeBlock, loader는 Spinner/Progress, banner는 Notice와 대응. 지도·기기 모형은 제품 소개 자산. link-preview는 URL 조회/보안 정책을 제품이 소유.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/loader",
+      "name": "loader",
+      "existingMapping": "stateful-button은 기존 Button 상태 구성, code-block은 CodeBlock, loader는 Spinner/Progress, banner는 Notice와 대응. 지도·기기 모형은 제품 소개 자산. link-preview는 URL 조회/보안 정책을 제품이 소유.",
+      "priorRationale": "stateful-button은 기존 Button 상태 구성, code-block은 CodeBlock, loader는 Spinner/Progress, banner는 Notice와 대응. 지도·기기 모형은 제품 소개 자산. link-preview는 URL 조회/보안 정책을 제품이 소유.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/stateful-button",
+      "name": "stateful-button",
+      "existingMapping": "stateful-button은 기존 Button 상태 구성, code-block은 CodeBlock, loader는 Spinner/Progress, banner는 Notice와 대응. 지도·기기 모형은 제품 소개 자산. link-preview는 URL 조회/보안 정책을 제품이 소유.",
+      "priorRationale": "stateful-button은 기존 Button 상태 구성, code-block은 CodeBlock, loader는 Spinner/Progress, banner는 Notice와 대응. 지도·기기 모형은 제품 소개 자산. link-preview는 URL 조회/보안 정책을 제품이 소유.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/code-block",
+      "name": "code-block",
+      "existingMapping": "stateful-button은 기존 Button 상태 구성, code-block은 CodeBlock, loader는 Spinner/Progress, banner는 Notice와 대응. 지도·기기 모형은 제품 소개 자산. link-preview는 URL 조회/보안 정책을 제품이 소유.",
+      "priorRationale": "stateful-button은 기존 Button 상태 구성, code-block은 CodeBlock, loader는 Spinner/Progress, banner는 Notice와 대응. 지도·기기 모형은 제품 소개 자산. link-preview는 URL 조회/보안 정책을 제품이 소유.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/sticky-banner",
+      "name": "sticky-banner",
+      "existingMapping": "stateful-button은 기존 Button 상태 구성, code-block은 CodeBlock, loader는 Spinner/Progress, banner는 Notice와 대응. 지도·기기 모형은 제품 소개 자산. link-preview는 URL 조회/보안 정책을 제품이 소유.",
+      "priorRationale": "stateful-button은 기존 Button 상태 구성, code-block은 CodeBlock, loader는 Spinner/Progress, banner는 Notice와 대응. 지도·기기 모형은 제품 소개 자산. link-preview는 URL 조회/보안 정책을 제품이 소유.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/images-slider",
+      "name": "images-slider",
+      "existingMapping": "stateful-button은 기존 Button 상태 구성, code-block은 CodeBlock, loader는 Spinner/Progress, banner는 Notice와 대응. 지도·기기 모형은 제품 소개 자산. link-preview는 URL 조회/보안 정책을 제품이 소유.",
+      "priorRationale": "stateful-button은 기존 Button 상태 구성, code-block은 CodeBlock, loader는 Spinner/Progress, banner는 Notice와 대응. 지도·기기 모형은 제품 소개 자산. link-preview는 URL 조회/보안 정책을 제품이 소유.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/google-gemini-effect",
+      "name": "google-gemini-effect",
+      "existingMapping": "stateful-button은 기존 Button 상태 구성, code-block은 CodeBlock, loader는 Spinner/Progress, banner는 Notice와 대응. 지도·기기 모형은 제품 소개 자산. link-preview는 URL 조회/보안 정책을 제품이 소유.",
+      "priorRationale": "stateful-button은 기존 Button 상태 구성, code-block은 CodeBlock, loader는 Spinner/Progress, banner는 Notice와 대응. 지도·기기 모형은 제품 소개 자산. link-preview는 URL 조회/보안 정책을 제품이 소유.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/tailwindcss-buttons",
+      "name": "tailwindcss-buttons",
+      "existingMapping": "stateful-button은 기존 Button 상태 구성, code-block은 CodeBlock, loader는 Spinner/Progress, banner는 Notice와 대응. 지도·기기 모형은 제품 소개 자산. link-preview는 URL 조회/보안 정책을 제품이 소유.",
+      "priorRationale": "stateful-button은 기존 Button 상태 구성, code-block은 CodeBlock, loader는 Spinner/Progress, banner는 Notice와 대응. 지도·기기 모형은 제품 소개 자산. link-preview는 URL 조회/보안 정책을 제품이 소유.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/parallax-hero-images",
+      "name": "parallax-hero-images",
+      "existingMapping": "소개 화면 이미지 슬롯, reduced motion과 터치 대안 필요.",
+      "priorRationale": "소개 화면 이미지 슬롯, reduced motion과 터치 대안 필요.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/squiggly-text",
+      "name": "squiggly-text",
+      "existingMapping": "장식 텍스트 표현, 본문 대체 제외.",
+      "priorRationale": "장식 텍스트 표현, 본문 대체 제외.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/magnetic-button",
+      "name": "magnetic-button",
+      "existingMapping": "기존 Button 위치·hit target을 흔드는 기본 동작으로 채택하지 않음.",
+      "priorRationale": "기존 Button 위치·hit target을 흔드는 기본 동작으로 채택하지 않음.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/notch",
+      "name": "notch",
+      "existingMapping": "기존 navigation/MorphingMenu와 구성 비교. 운영체제 UI처럼 오인되는 배치는 피함.",
+      "priorRationale": "기존 navigation/MorphingMenu와 구성 비교. 운영체제 UI처럼 오인되는 배치는 피함.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/image-generation-loader",
+      "name": "image-generation-loader",
+      "existingMapping": "ThinkingOrb·Progress와 실제 생성 상태 연결. 데모 진행률을 제품 진행률로 사용하지 않음.",
+      "priorRationale": "ThinkingOrb·Progress와 실제 생성 상태 연결. 데모 진행률을 제품 진행률로 사용하지 않음.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/canvas-text",
+      "name": "canvas-text",
+      "existingMapping": "제품 소개용 장식. 일반 Text의 의미·선택·접근성 유지.",
+      "priorRationale": "제품 소개용 장식. 일반 Text의 의미·선택·접근성 유지.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/cloud-shader",
+      "name": "cloud-shader",
+      "existingMapping": "EffectSurface optional 배경 후보. GPU 비용 측정 전 기본 레이어 채택 보류.",
+      "priorRationale": "EffectSurface optional 배경 후보. GPU 비용 측정 전 기본 레이어 채택 보류.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/chromatic-image",
+      "name": "chromatic-image",
+      "existingMapping": "Asset 장식 후보. 이미지 원본 확인을 방해하는 기본 효과 제외.",
+      "priorRationale": "Asset 장식 후보. 이미지 원본 확인을 방해하는 기본 효과 제외.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/images-badge",
+      "name": "images-badge",
+      "existingMapping": "AvatarGroup/Asset의 미리보기 묶음 후보. Badge의 상태 의미와 분리.",
+      "priorRationale": "AvatarGroup/Asset의 미리보기 묶음 후보. Badge의 상태 의미와 분리.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/keyboard",
+      "name": "keyboard",
+      "existingMapping": "기기/키보드 모형은 제품 소개 구성. 실제 입력 컴포넌트 교체 제외.",
+      "priorRationale": "기기/키보드 모형은 제품 소개 구성. 실제 입력 컴포넌트 교체 제외.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/terminal",
+      "name": "terminal",
+      "existingMapping": "CodeBlock 기반 소개 구성. 타자 효과는 실제 실행 상태와 구분.",
+      "priorRationale": "CodeBlock 기반 소개 구성. 타자 효과는 실제 실행 상태와 구분.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/3d-globe",
+      "name": "3d-globe",
+      "existingMapping": "제품별 지도/장식. 지도 데이터·tooltip·canvas 대안은 별도 계약.",
+      "priorRationale": "제품별 지도/장식. 지도 데이터·tooltip·canvas 대안은 별도 계약.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/ascii-art",
+      "name": "ascii-art",
+      "existingMapping": "이미지의 선택적 표현, 기본 Image 교체 제외.",
+      "priorRationale": "이미지의 선택적 표현, 기본 Image 교체 제외.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/text-flipping-board",
+      "name": "text-flipping-board",
+      "existingMapping": "TextTransition/Statistic와 표현 비교. 값 읽기 지연과 숫자 지역화 계약 보존.",
+      "priorRationale": "TextTransition/Statistic와 표현 비교. 값 읽기 지연과 숫자 지역화 계약 보존.",
+      "sourceAudit": "2026-10-06",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "pending"
+    }
+  ]
+}

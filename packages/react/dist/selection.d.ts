@@ -187,6 +187,8 @@ export type SegmentedControlProps = Omit<FieldsetHTMLAttributes<HTMLFieldSetElem
     onValueChange?: (value: string) => void;
     size?: SegmentedControlSize;
     presentation?: "connected" | "pills";
+    /** Move only the selection artwork; radio semantics and hit targets stay fixed. */
+    selectionMotion?: "none" | "slide";
     name?: string;
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
@@ -199,6 +201,8 @@ export declare const SegmentedControl: import("react").ForwardRefExoticComponent
     onValueChange?: (value: string) => void;
     size?: SegmentedControlSize;
     presentation?: "connected" | "pills";
+    /** Move only the selection artwork; radio semantics and hit targets stay fixed. */
+    selectionMotion?: "none" | "slide";
     name?: string;
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;

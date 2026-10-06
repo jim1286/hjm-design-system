@@ -7,6 +7,7 @@ import {
   radius,
   spacing,
   typography,
+  motion as motionTiming,
 } from "@hjmds/design-contracts/foundations";
 import {
   fieldRecipe,
@@ -73,6 +74,9 @@ import {
 } from "react";
 import {
   ActivityIndicator,
+  Animated,
+  AppState,
+  Easing,
   Platform,
   Pressable,
   Switch as NativeSwitch,
@@ -1933,6 +1937,27 @@ export type SegmentedControlLeadingRenderProps = Readonly<{
 
 type SegmentedControlCollectionProps<Value extends string> = Readonly<{ items: readonly SegmentedControlItem<Value>[] }>;
 
+type SelectionHighlightRect = Readonly<{ x: number; y: number; width: number; height: number }>;
+function NativeSelectionHighlight({ rect, selection, reducedMotion, pills, disabled }: Readonly<{ rect: SelectionHighlightRect; selection: string; reducedMotion: boolean; pills: boolean; disabled: boolean }>) {
+  const theme = useHjmNativeTheme();
+  const positions = useRef({ x: new Animated.Value(rect.x), y: new Animated.Value(rect.y), width: new Animated.Value(rect.width), height: new Animated.Value(rect.height) }).current;
+  const previousSelection = useRef(selection);
+  useEffect(() => {
+    const keys = ["x", "y", "width", "height"] as const;
+    const settle = () => { for (const key of keys) { positions[key].stopAnimation(); positions[key].setValue(rect[key]); } };
+    const changed = previousSelection.current !== selection; previousSelection.current = selection;
+    if (!changed || reducedMotion || AppState.currentState !== "active") { settle(); return; }
+    // Width/height must follow measured text and wrapping, so use the layout
+    // driver instead of scaling labels or assuming equal-width index positions.
+    // The curve matches CSS ease-out; RN's implicit ease-in-out would drift from Web.
+    const animations = keys.map(key => Animated.timing(positions[key], { toValue: rect[key], duration: motionTiming.normal, easing: Easing.bezier(0, 0, 0.58, 1), useNativeDriver: false }));
+    animations.forEach(animation => animation.start());
+    const sub = AppState.addEventListener("change", state => { if (state !== "active") settle(); });
+    return () => { animations.forEach(animation => animation.stop()); sub.remove(); };
+  }, [rect.x, rect.y, rect.width, rect.height, selection, reducedMotion, positions]);
+  return <Animated.View pointerEvents="none" accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ position: "absolute", left: positions.x, top: positions.y, width: positions.width, height: positions.height, borderRadius: pills ? segmentedControlRecipe.pills.radius : radius[segmentedControlRecipe.item.radius], backgroundColor: resolveColorReference(pills ? segmentedControlRecipe.pills.selectedBackground : segmentedControlRecipe.item.selectedBackground, theme.palette), borderColor: resolveColorReference(segmentedControlRecipe.item.selectedBorder, theme.palette), borderWidth: pills ? 0 : segmentedControlRecipe.item.selectedBorderWidth, opacity: disabled ? segmentedControlRecipe.item.disabledOpacity : 1 }} />;
+}
+
 export type SegmentedControlProps<Value extends string = string> =
   SegmentedControlCollectionProps<Value> & Readonly<{
     label: string;
@@ -1941,6 +1966,8 @@ export type SegmentedControlProps<Value extends string = string> =
     onValueChange?: (value: Value) => void;
     size?: SegmentedControlSize;
     presentation?: "connected" | "pills";
+    /** Move only decorative selection artwork, never labels or hit targets. */
+    selectionMotion?: "none" | "slide";
     disabled?: boolean;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
@@ -1960,6 +1987,7 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
   onValueChange,
   size = segmentedControlRecipe.defaults.size,
   presentation = "connected",
+  selectionMotion = "none",
   disabled = false,
   layoutStyle,
   style,
@@ -2003,6 +2031,10 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
   useEffect(() => {
     if (!controlled && !storedValueValid) setSelected(collectionFallback);
   }, [collectionFallback, controlled, setSelected, storedValueValid]);
+  const [itemRects, setItemRects] = useState<Record<string, SelectionHighlightRect>>({});
+  const selectedRect = itemRects[selected];
+  const movingHighlight = selectionMotion === "slide" && selectedRect !== undefined;
+  const highlightRect = selectedRect && pills ? { ...selectedRect, y: selectedRect.y + segmentedControlRecipe.pills.inset, height: selectedRect.height - 2 * segmentedControlRecipe.pills.inset } : selectedRect;
   return (
     <View
       accessibilityLabel={label}
@@ -2029,6 +2061,7 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
         layoutStyle,
       ]}
     >
+      {movingHighlight && highlightRect ? <NativeSelectionHighlight rect={highlightRect} selection={selected} reducedMotion={environment.reducedMotion} pills={pills} disabled={disabled} /> : null}
       {resolvedItems.map((item) => {
         const isSelected = item.value === selected;
         const optionDisabled = disabled || item.disabled === true;
@@ -2047,6 +2080,14 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
         return (
           <Pressable
             key={item.value}
+            onLayout={selectionMotion === "slide" ? event => {
+              const { x, y, width, height } = event.nativeEvent.layout;
+              if (width <= 0 || height <= 0) return;
+              setItemRects(previous => {
+                const old = previous[item.value];
+                return old && old.x === x && old.y === y && old.width === width && old.height === height ? previous : { ...previous, [item.value]: { x, y, width, height } };
+              });
+            } : undefined}
             accessibilityLabel={item.label}
             accessibilityRole="radio"
             accessibilityState={{ checked: isSelected, disabled: optionDisabled }}
@@ -2056,13 +2097,13 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
             style={({ pressed }) => [
               {
                 alignItems: "center",
-                backgroundColor: !pills && isSelected
+                backgroundColor: !movingHighlight && !pills && isSelected
                   ? resolveColorReference(
                       segmentedControlRecipe.item.selectedBackground,
                       theme.palette,
                     )
                   : "transparent",
-                borderColor: isSelected
+                borderColor: isSelected && !movingHighlight
                   ? resolveColorReference(
                       segmentedControlRecipe.item.selectedBorder,
                       theme.palette,
@@ -2088,7 +2129,7 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
               },
             ]}
           >
-            {pills ? <View pointerEvents="none" accessible={false} style={{position:"absolute",left:0,right:0,top:segmentedControlRecipe.pills.inset,bottom:segmentedControlRecipe.pills.inset,borderRadius:segmentedControlRecipe.pills.radius,backgroundColor:isSelected?resolveColorReference(segmentedControlRecipe.pills.selectedBackground,theme.palette):theme.colors.surfaceAlt}}/> : null}
+            {pills ? <View pointerEvents="none" accessible={false} style={{position:"absolute",left:0,right:0,top:segmentedControlRecipe.pills.inset,bottom:segmentedControlRecipe.pills.inset,borderRadius:segmentedControlRecipe.pills.radius,backgroundColor:isSelected?(movingHighlight?"transparent":resolveColorReference(segmentedControlRecipe.pills.selectedBackground,theme.palette)):theme.colors.surfaceAlt}}/> : null}
             {leading ? (
               <View
                 accessibilityElementsHidden

@@ -57,3 +57,9 @@ export function ContextToolbarPreview() {
   const [open,setOpen]=useState(false);const [choice,setChoice]=useState("기본");
   return <Stack gap="md"><TextField label="작성 중인 기록" placeholder="도구를 열어도 입력은 유지돼요" /><Collapsible open={open} onOpenChange={setOpen} trigger={<span>표현 도구 · {choice}</span>}><Stack axis="inline" wrap>{["기본","인용","강조"].map(label=><Button key={label} tone="secondary" selected={choice===label} onClick={()=>setChoice(label)}>{label}</Button>)}</Stack></Collapsible><Text role="status">선택한 표현: {choice}</Text></Stack>;
 }
+
+export function SelectionMotionPreview() {
+  const [period, setPeriod] = useState("day");
+  const options = [{ value: "day", label: "하루" }, { value: "week", label: "일주일" }, { value: "month", label: "한 달" }];
+  return <Stack gap="lg"><Text variant="heading">기간 선택</Text><SegmentedControl label="연결형 기간 선택" items={options} value={period} onValueChange={setPeriod} selectionMotion="slide" /><SegmentedControl label="필터형 기간 선택" items={options} value={period} onValueChange={setPeriod} presentation="pills" selectionMotion="slide" /><Text>{period === "day" ? "오늘의 기록" : period === "week" ? "이번 주 기록" : "이번 달 기록"}</Text><TextField label="선택을 바꿔도 유지되는 메모" placeholder="선택 전후로 내용을 확인하세요" /></Stack>;
+}

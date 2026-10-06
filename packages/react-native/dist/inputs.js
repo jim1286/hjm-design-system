@@ -3,7 +3,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { FixedGlyph } from "./internal/fixed-glyph.js";
 import { FieldMessage, NativeFieldFrame } from "./internal/field-frame.js";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
-import { glyph, radius, spacing, typography, } from "@hjmds/design-contracts/foundations";
+import { glyph, radius, spacing, typography, motion as motionTiming, } from "@hjmds/design-contracts/foundations";
 import { fieldRecipe, } from "@hjmds/design-contracts/recipes/base";
 import { chipRecipe, searchFieldRecipe, segmentedControlRecipe, selectionControlRecipe, selectionGroupRecipe, switchRecipe, } from "@hjmds/design-contracts/recipes";
 import { visibleControlHeight } from "@hjmds/design-contracts/components/design-system-provider";
@@ -11,7 +11,7 @@ import { passwordFieldRecipe, resolvePasswordFieldDescriptor, } from "@hjmds/des
 import { getOtpFieldSlotValues, otpFieldRecipe, resolveOtpFieldValue, } from "@hjmds/design-contracts/components/otp-field";
 import { getCheckboxNextState, reconcileCheckboxSelection, resolveControlAccessibleName, resolveInitialRadioValue, resolveInitialTabValue, reconcileRadioSelection, selectionGroupBehaviorDefaults, toggleCheckboxSelection, validateCheckboxSelection, validateRadioSelection, validateSelectionItems, } from "@hjmds/design-contracts/behaviors";
 import { forwardRef, useCallback, useEffect, useId, useImperativeHandle, useLayoutEffect, useRef, useState, } from "react";
-import { ActivityIndicator, Platform, Pressable, Switch as NativeSwitch, Text as NativeText, TextInput, View, } from "react-native";
+import { ActivityIndicator, Animated, AppState, Easing, Platform, Pressable, Switch as NativeSwitch, Text as NativeText, TextInput, View, } from "react-native";
 import { mixedCheckboxState, useControllableState } from "./internal/state.js";
 import { webChoiceProps, webOnly } from "./internal/web-a11y.js";
 import { logicalTextAlign, minimumTargetStyle, resolveNativeTextScaleProps, } from "./internal/styles.js";
@@ -689,8 +689,35 @@ export function Switch({ label, labelVisibility = "visible", presentation = swit
                     ? { alignSelf: stacked ? "flex-start" : "center" }
                     : { height: dimensions.height, width: dimensions.width }, thumbColor: thumb, trackColor: { false: trackOff, true: trackOn }, value: enabled })] }));
 }
+function NativeSelectionHighlight({ rect, selection, reducedMotion, pills, disabled }) {
+    const theme = useHjmNativeTheme();
+    const positions = useRef({ x: new Animated.Value(rect.x), y: new Animated.Value(rect.y), width: new Animated.Value(rect.width), height: new Animated.Value(rect.height) }).current;
+    const previousSelection = useRef(selection);
+    useEffect(() => {
+        const keys = ["x", "y", "width", "height"];
+        const settle = () => { for (const key of keys) {
+            positions[key].stopAnimation();
+            positions[key].setValue(rect[key]);
+        } };
+        const changed = previousSelection.current !== selection;
+        previousSelection.current = selection;
+        if (!changed || reducedMotion || AppState.currentState !== "active") {
+            settle();
+            return;
+        }
+        // Width/height must follow measured text and wrapping, so use the layout
+        // driver instead of scaling labels or assuming equal-width index positions.
+        // The curve matches CSS ease-out; RN's implicit ease-in-out would drift from Web.
+        const animations = keys.map(key => Animated.timing(positions[key], { toValue: rect[key], duration: motionTiming.normal, easing: Easing.bezier(0, 0, 0.58, 1), useNativeDriver: false }));
+        animations.forEach(animation => animation.start());
+        const sub = AppState.addEventListener("change", state => { if (state !== "active")
+            settle(); });
+        return () => { animations.forEach(animation => animation.stop()); sub.remove(); };
+    }, [rect.x, rect.y, rect.width, rect.height, selection, reducedMotion, positions]);
+    return _jsx(Animated.View, { pointerEvents: "none", accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { position: "absolute", left: positions.x, top: positions.y, width: positions.width, height: positions.height, borderRadius: pills ? segmentedControlRecipe.pills.radius : radius[segmentedControlRecipe.item.radius], backgroundColor: resolveColorReference(pills ? segmentedControlRecipe.pills.selectedBackground : segmentedControlRecipe.item.selectedBackground, theme.palette), borderColor: resolveColorReference(segmentedControlRecipe.item.selectedBorder, theme.palette), borderWidth: pills ? 0 : segmentedControlRecipe.item.selectedBorderWidth, opacity: disabled ? segmentedControlRecipe.item.disabledOpacity : 1 } });
+}
 export function SegmentedControl(props) {
-    const { label, items, value, defaultValue, onValueChange, size = segmentedControlRecipe.defaults.size, presentation = "connected", disabled = false, layoutStyle, style, } = props;
+    const { label, items, value, defaultValue, onValueChange, size = segmentedControlRecipe.defaults.size, presentation = "connected", selectionMotion = "none", disabled = false, layoutStyle, style, } = props;
     // Removed aliases must not silently change the selected collection in JavaScript callers.
     if ("options" in props || !Array.isArray(items))
         throw new TypeError("SegmentedControl requires items; options was removed");
@@ -733,7 +760,11 @@ export function SegmentedControl(props) {
         if (!controlled && !storedValueValid)
             setSelected(collectionFallback);
     }, [collectionFallback, controlled, setSelected, storedValueValid]);
-    return (_jsx(View, { accessibilityLabel: label, accessibilityRole: "radiogroup", style: [
+    const [itemRects, setItemRects] = useState({});
+    const selectedRect = itemRects[selected];
+    const movingHighlight = selectionMotion === "slide" && selectedRect !== undefined;
+    const highlightRect = selectedRect && pills ? { ...selectedRect, y: selectedRect.y + segmentedControlRecipe.pills.inset, height: selectedRect.height - 2 * segmentedControlRecipe.pills.inset } : selectedRect;
+    return (_jsxs(View, { accessibilityLabel: label, accessibilityRole: "radiogroup", style: [
             {
                 backgroundColor: pills ? "transparent" : resolveColorReference(segmentedControlRecipe.container.background, theme.palette),
                 borderColor: resolveColorReference(segmentedControlRecipe.container.border, theme.palette),
@@ -747,52 +778,60 @@ export function SegmentedControl(props) {
             },
             style,
             layoutStyle,
-        ], children: resolvedItems.map((item) => {
-            const isSelected = item.value === selected;
-            const optionDisabled = disabled || item.disabled === true;
-            const contentColor = resolveColorReference(isSelected
-                ? (pills ? segmentedControlRecipe.pills.selectedContent : segmentedControlRecipe.item.selectedContent)
-                : segmentedControlRecipe.item.idleContent, theme.palette);
-            const leading = item.leading ?? item.renderLeading?.({
-                selected: isSelected,
-                disabled: optionDisabled,
-                color: contentColor,
-                size: glyph.sm,
-            });
-            return (_jsxs(Pressable, { accessibilityLabel: item.label, accessibilityRole: "radio", accessibilityState: { checked: isSelected, disabled: optionDisabled }, disabled: optionDisabled, hitSlop: sizeContract.hitSlop, onPress: () => setSelected(item.value), style: ({ pressed }) => [
-                    {
-                        alignItems: "center",
-                        backgroundColor: !pills && isSelected
-                            ? resolveColorReference(segmentedControlRecipe.item.selectedBackground, theme.palette)
-                            : "transparent",
-                        borderColor: isSelected
-                            ? resolveColorReference(segmentedControlRecipe.item.selectedBorder, theme.palette)
-                            : "transparent",
-                        borderRadius: radius[segmentedControlRecipe.item.radius],
-                        borderWidth: !pills && isSelected
-                            ? segmentedControlRecipe.item.selectedBorderWidth
-                            : 0,
-                        flex: stacked || pills ? undefined : 1,
-                        maxWidth: pills ? "100%" : undefined,
-                        gap: segmentedControlRecipe.item.gap,
-                        justifyContent: "center",
-                        minHeight: pills ? segmentedControlRecipe.pills.minHeight : sizeContract.minHeight,
-                        opacity: optionDisabled
-                            ? segmentedControlRecipe.item.disabledOpacity
-                            : pressed
-                                ? segmentedControlRecipe.item.pressedOpacity
-                                : 1,
-                        paddingHorizontal: pills ? spacing.md : sizeContract.paddingHorizontal,
-                        paddingVertical: pills ? segmentedControlRecipe.pills.inset : undefined,
-                        width: stacked ? "100%" : undefined,
-                    },
-                ], children: [pills ? _jsx(View, { pointerEvents: "none", accessible: false, style: { position: "absolute", left: 0, right: 0, top: segmentedControlRecipe.pills.inset, bottom: segmentedControlRecipe.pills.inset, borderRadius: segmentedControlRecipe.pills.radius, backgroundColor: isSelected ? resolveColorReference(segmentedControlRecipe.pills.selectedBackground, theme.palette) : theme.colors.surfaceAlt } }) : null, leading ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", children: leading })) : null, _jsx(Text, { align: "center", style: {
-                            color: contentColor,
-                            fontWeight: isSelected
-                                ? segmentedControlRecipe.item.selectedFontWeight
-                                : segmentedControlRecipe.item.fontWeight,
-                        }, tone: isSelected ? "brand" : "muted", variant: sizeContract.textVariant, children: item.label })] }, item.value));
-        }) }));
+        ], children: [movingHighlight && highlightRect ? _jsx(NativeSelectionHighlight, { rect: highlightRect, selection: selected, reducedMotion: environment.reducedMotion, pills: pills, disabled: disabled }) : null, resolvedItems.map((item) => {
+                const isSelected = item.value === selected;
+                const optionDisabled = disabled || item.disabled === true;
+                const contentColor = resolveColorReference(isSelected
+                    ? (pills ? segmentedControlRecipe.pills.selectedContent : segmentedControlRecipe.item.selectedContent)
+                    : segmentedControlRecipe.item.idleContent, theme.palette);
+                const leading = item.leading ?? item.renderLeading?.({
+                    selected: isSelected,
+                    disabled: optionDisabled,
+                    color: contentColor,
+                    size: glyph.sm,
+                });
+                return (_jsxs(Pressable, { onLayout: selectionMotion === "slide" ? event => {
+                        const { x, y, width, height } = event.nativeEvent.layout;
+                        if (width <= 0 || height <= 0)
+                            return;
+                        setItemRects(previous => {
+                            const old = previous[item.value];
+                            return old && old.x === x && old.y === y && old.width === width && old.height === height ? previous : { ...previous, [item.value]: { x, y, width, height } };
+                        });
+                    } : undefined, accessibilityLabel: item.label, accessibilityRole: "radio", accessibilityState: { checked: isSelected, disabled: optionDisabled }, disabled: optionDisabled, hitSlop: sizeContract.hitSlop, onPress: () => setSelected(item.value), style: ({ pressed }) => [
+                        {
+                            alignItems: "center",
+                            backgroundColor: !movingHighlight && !pills && isSelected
+                                ? resolveColorReference(segmentedControlRecipe.item.selectedBackground, theme.palette)
+                                : "transparent",
+                            borderColor: isSelected && !movingHighlight
+                                ? resolveColorReference(segmentedControlRecipe.item.selectedBorder, theme.palette)
+                                : "transparent",
+                            borderRadius: radius[segmentedControlRecipe.item.radius],
+                            borderWidth: !pills && isSelected
+                                ? segmentedControlRecipe.item.selectedBorderWidth
+                                : 0,
+                            flex: stacked || pills ? undefined : 1,
+                            maxWidth: pills ? "100%" : undefined,
+                            gap: segmentedControlRecipe.item.gap,
+                            justifyContent: "center",
+                            minHeight: pills ? segmentedControlRecipe.pills.minHeight : sizeContract.minHeight,
+                            opacity: optionDisabled
+                                ? segmentedControlRecipe.item.disabledOpacity
+                                : pressed
+                                    ? segmentedControlRecipe.item.pressedOpacity
+                                    : 1,
+                            paddingHorizontal: pills ? spacing.md : sizeContract.paddingHorizontal,
+                            paddingVertical: pills ? segmentedControlRecipe.pills.inset : undefined,
+                            width: stacked ? "100%" : undefined,
+                        },
+                    ], children: [pills ? _jsx(View, { pointerEvents: "none", accessible: false, style: { position: "absolute", left: 0, right: 0, top: segmentedControlRecipe.pills.inset, bottom: segmentedControlRecipe.pills.inset, borderRadius: segmentedControlRecipe.pills.radius, backgroundColor: isSelected ? (movingHighlight ? "transparent" : resolveColorReference(segmentedControlRecipe.pills.selectedBackground, theme.palette)) : theme.colors.surfaceAlt } }) : null, leading ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", children: leading })) : null, _jsx(Text, { align: "center", style: {
+                                color: contentColor,
+                                fontWeight: isSelected
+                                    ? segmentedControlRecipe.item.selectedFontWeight
+                                    : segmentedControlRecipe.item.fontWeight,
+                            }, tone: isSelected ? "brand" : "muted", variant: sizeContract.textVariant, children: item.label })] }, item.value));
+            })] }));
 }
 /** Action/filter chip with role-specific, controlled selection semantics. */
 export function Chip({ label, size = chipRecipe.defaults.size, disabled = false, leading, trailing, accessibilityLabel, accessibilityHint, layoutStyle, leadingStyle, indicatorStyle, labelStyle, trailingStyle, renderSelectionIndicator, selectionMode = "action", selected, onPress, }) {

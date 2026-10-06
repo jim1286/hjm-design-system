@@ -1,7 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { chipRecipe, iconRecipe, segmentedControlRecipe, selectionControlRecipe, selectionGroupRecipe, switchRecipe, } from "@hjmds/design-contracts/recipes";
 import { resolveControlAccessibleName, reconcileCheckboxSelection, reconcileRadioSelection, resolveInitialRadioValue, toggleCheckboxSelection, validateCheckboxSelection, validateRadioSelection, } from "@hjmds/design-contracts/behaviors";
-import { forwardRef, useEffect, useId, useRef, } from "react";
+import { forwardRef, useEffect, useLayoutEffect, useId, useRef, } from "react";
 import { classNames, composeRefs, useControllableState } from "./internal.js";
 /** Action/filter chip with explicit selection semantics and no hidden state. */
 export const Chip = forwardRef(function Chip({ label, size = chipRecipe.defaults.size, leading, trailing, renderSelectionIndicator, selectionMode = "action", selected, onSelectedChange, onPress, disabled, className, layoutStyle, style, ...props }, ref) {
@@ -189,7 +189,7 @@ export const Switch = forwardRef(function Switch({ label, labelVisibility = "vis
             onClick?.(event);
         }, children: [_jsx("span", { className: "hjm-switch__track", "aria-hidden": "true", children: _jsx("span", { className: "hjm-switch__thumb" }) }), _jsxs("span", { className: classNames("hjm-switch__copy", labelVisibility === "hidden" && "hjm-visually-hidden"), children: [_jsx("span", { id: labelId, className: "hjm-switch__label", children: label }), hasDescription ? _jsx("span", { id: descriptionId, className: "hjm-switch__description", children: description }) : null] })] }));
 });
-export const SegmentedControl = forwardRef(function SegmentedControl({ label, items, value: valueProp, defaultValue, onValueChange, size = segmentedControlRecipe.defaults.size, presentation = "connected", name, className, layoutStyle, style, ...props }, ref) {
+export const SegmentedControl = forwardRef(function SegmentedControl({ label, items, value: valueProp, defaultValue, onValueChange, size = segmentedControlRecipe.defaults.size, presentation = "connected", selectionMotion = "none", name, className, layoutStyle, style, ...props }, ref) {
     validateItems("SegmentedControl", items);
     const descriptors = items.map((item) => ({
         id: item.value,
@@ -223,6 +223,45 @@ export const SegmentedControl = forwardRef(function SegmentedControl({ label, it
         if (!controlled && value !== storedValue)
             setValue(value);
     }, [controlled, setValue, storedValue, value]);
-    return (_jsxs("fieldset", { ...props, ref: ref, style: { ...style, ...layoutStyle }, className: classNames("hjm-segmented", className), "data-size": size, "data-presentation": presentation, children: [_jsx("legend", { className: "hjm-visually-hidden", children: label }), _jsx("div", { className: "hjm-segmented__items", children: items.map((item) => (_jsxs("label", { className: "hjm-segmented__item", "data-state": item.value === value ? "checked" : "unchecked", "data-disabled": item.disabled || undefined, children: [_jsx("input", { type: "radio", name: name ?? generatedName, value: item.value, checked: item.value === value, disabled: item.disabled, required: true, onChange: () => setValue(item.value) }), _jsx("span", { children: item.label })] }, item.value))) })] }));
+    const trackRef = useRef(null);
+    const highlightRef = useRef(null);
+    const previousSelection = useRef(null);
+    useLayoutEffect(() => {
+        const track = trackRef.current;
+        const highlight = highlightRef.current;
+        if (selectionMotion !== "slide" || !track || !highlight) {
+            previousSelection.current = null;
+            if (track)
+                delete track.dataset.highlightReady;
+            return;
+        }
+        const selected = Array.from(track.querySelectorAll(".hjm-segmented__item")).find(item => item.dataset.state === "checked");
+        if (!selected)
+            return;
+        const place = (animate) => {
+            // CSS owns reduced motion (both provider and OS); no provider import is
+            // added to this small selection entry just for decorative artwork.
+            highlight.dataset.moving = animate && !document.hidden ? "true" : "false";
+            const inset = presentation === "pills" ? Number.parseFloat(getComputedStyle(selected, "::before").top) || 0 : 0;
+            Object.assign(highlight.style, { left: `${selected.offsetLeft}px`, top: `${selected.offsetTop + inset}px`, width: `${selected.offsetWidth}px`, height: `${selected.offsetHeight - inset * 2}px`, opacity: selected.dataset.disabled === "true" ? "0.5" : "1" });
+            track.dataset.highlightReady = "true";
+        };
+        place(previousSelection.current !== null && previousSelection.current !== value);
+        previousSelection.current = value;
+        let bounds = `${selected.offsetLeft}:${selected.offsetTop}:${selected.offsetWidth}:${selected.offsetHeight}`;
+        const observer = typeof ResizeObserver === "undefined" ? undefined : new ResizeObserver(() => {
+            const next = `${selected.offsetLeft}:${selected.offsetTop}:${selected.offsetWidth}:${selected.offsetHeight}`;
+            if (next !== bounds) {
+                bounds = next;
+                place(false);
+            }
+        });
+        for (const item of track.querySelectorAll(".hjm-segmented__item"))
+            observer?.observe(item);
+        const visibility = () => place(false);
+        document.addEventListener("visibilitychange", visibility);
+        return () => { observer?.disconnect(); document.removeEventListener("visibilitychange", visibility); };
+    }, [value, items, presentation, selectionMotion]);
+    return (_jsxs("fieldset", { ...props, ref: ref, style: { ...style, ...layoutStyle }, className: classNames("hjm-segmented", className), "data-size": size, "data-presentation": presentation, children: [_jsx("legend", { className: "hjm-visually-hidden", children: label }), _jsxs("div", { className: "hjm-segmented__items", ref: trackRef, children: [selectionMotion === "slide" ? _jsx("span", { ref: highlightRef, className: "hjm-segmented__highlight", "aria-hidden": "true" }) : null, items.map((item) => (_jsxs("label", { className: "hjm-segmented__item", "data-state": item.value === value ? "checked" : "unchecked", "data-disabled": item.disabled || undefined, children: [_jsx("input", { type: "radio", name: name ?? generatedName, value: item.value, checked: item.value === value, disabled: item.disabled, required: true, onChange: () => setValue(item.value) }), _jsx("span", { children: item.label })] }, item.value)))] })] }));
 });
 //# sourceMappingURL=selection.js.map

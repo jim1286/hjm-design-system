@@ -205,6 +205,7 @@
 | [캐릭터와 시작 행동](compositions/stea-pixel-empty.md) | 피드백과 복구 | 아직 만든 것이 없는 첫 빈 화면에 제품 캐릭터를 움직여 보이고 첫 행동 하나로 이끌 때 쓴다. | 배포 | Web · Native |
 | [끌기·밀기·화면 전환](compositions/interaction-adapters.md) | 직접 조작과 모션 | 순서 바꾸기·행 작업·내용 전환·카드 넘기기·달성 축하·카드 확대 화면 전환 같은 선택형 상호작용 어댑터를 한 화면에서 함께 쓸 때, 각 어댑터를 어디에 놓고 무엇으로 감싸야 하는지 확인하는 구성이다. | 배포 | Web · Native |
 | [높이가 이어지는 패널](compositions/adaptive-content.md) | 직접 조작과 모션 | 패널의 길이가 달라질 때 아래 행동이 새 높이로 이동해야 하는 작은 내용 영역에 쓴다. | 실험 | Web · Native |
+| [선택 배경 이동](compositions/selection-motion.md) | 직접 조작과 모션 | 짧은 단일 선택의 현재 항목을 이어지는 배경으로 보여 줄 때 쓴다. | 실험 | Web · Native |
 | [숫자 변화와 메뉴 변형](compositions/optional-motion.md) | 직접 조작과 모션 | 선택 설치 모션(숫자 자리 단위 변화, 메뉴 형태 변환)을 기존 컴포넌트 자리에 끼워 넣을 때 쓴다. | 배포 | Web |
 | [이미지·시트·키보드 조작](compositions/optional-adapters.md) | 직접 조작과 모션 | Native 앱 한 화면에서 이미지 확대 보기, 끌어서 높이를 바꾸는 시트, OS 길게 누르기 메뉴, 키보드를 따라 올라가는 하단 행동을 함께 쓸 때 provider 중첩 순서와 각 요소의 자리를 확인하는 구성이다. | 배포 | Native |
 | [내비게이션 바 비교](compositions/navigation-bar-collection.md) | 비교와 검증 | 하단 탭에 목적지 이동과 별개의 행동(작성·전원·기록 추가)을 함께 둘지, 선택한 목적지를 어떻게 보여 줄지 고를 때 이 비교를 본다. | 배포 | Web · Native |
