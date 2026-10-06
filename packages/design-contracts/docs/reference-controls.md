@@ -24,7 +24,8 @@
 - `before`, `after`는 `{src,width,height,label}`이고 같은 aspect ratio가 필요하다. 자동 crop·늘이기는
   비교 좌표를 바꾸므로 거부한다. 기본 Image가 로딩 오류의 이름과 fallback을 소유한다.
 - controlled `value`는 0~100이며 **왼쪽에 보이는 before의 비율**이다. 0이면 after 전체, 100이면 before 전체.
-  이미지는 RTL에서도 물리 좌표를 유지하고 문구는 제품 방향을 따른다.
+  이미지와 전후 라벨의 위치는 RTL에서도 물리 좌표를 유지하고 각 문구의 쓰기 방향은 제품 언어를 따른다.
+  2026-10-07 실제 RTL 화면에서 라벨만 반전되어 이미지와 불일치한 문제를 수정했다.
 - `label`, `getValueText`, `onValueChange`를 전달한다. Native에는 `decrementLabel`·`incrementLabel`도 필수다.
 - 구분선은 장식이며 드래그 핸들이 아니다. 아래의 기존 Slider로 드래그·키보드·Native adjustable
   action을 제공한다. 독자 PanResponder를 만들지 않아 세로 스크롤 판정을 Slider와 공유한다.

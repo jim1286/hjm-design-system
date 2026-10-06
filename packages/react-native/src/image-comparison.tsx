@@ -15,7 +15,9 @@ export function ImageComparison(props: ImageComparisonProps) {
   // Render both images at the full measured width. Resizing the clipped image
   // itself would zoom it and make before/after coordinates incomparable.
   const height = width / aspectRatio;
-  return <View style={{ gap: spacing.xs }}><View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", gap: spacing.sm }}><Text>{before.label}</Text><Text>{after.label}</Text></View>
+  // Match the physical left/right image coordinates instead of mirroring only
+  // the captions in RTL; the slider keeps its normal localized interaction.
+  return <View style={{ gap: spacing.xs }}><View style={{ direction: "ltr", flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", gap: spacing.sm }}><Text>{before.label}</Text><Text>{after.label}</Text></View>
     <View onLayout={event => setWidth(event.nativeEvent.layout.width)} style={{ aspectRatio, width: "100%", overflow: "hidden", backgroundColor: colors.surfaceAlt, direction: "ltr" }}>
       {width > 0 ? <>
         <Image src={after.src} width={width} height={height} decorative={false} accessibilityLabel={after.label} />

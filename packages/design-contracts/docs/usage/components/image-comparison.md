@@ -4,7 +4,7 @@
 - 상태: 실험
 - 지원: Web · Native
 - 적용: 미게시(1.13.1 이후)
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [계약](../../reference-controls.md)
 - 스토리북: `실험/컴포넌트/데이터 표시/이미지 전후 비교`
 
@@ -68,3 +68,13 @@ Native는 import를 `@hjmds/react-native/image-comparison`로 바꾼다.
 | 항목 | Web | Native |
 | --- | --- | --- |
 | 조작 | Web은 Slider의 range/키보드, Native는 Slider의 adjustable 및 증감 버튼을 그대로 사용한다. | 같은 의미를 플랫폼 host로 번역 |
+
+### 이미지 host와 fixture
+
+2026-10-07 iOS Expo Go에서 SVG data URI가 오류 fallback을 표시했지만 슬라이더는 정상
+동작했다. 예제는 `scripts/generate-comparison-fixtures.py`로 같은 좌표의 PNG를 생성해
+양쪽 기본 이미지 host에서 표시한다. 값 변경·AX 이미지 이름만으로 이미지 로딩 성공을
+판정하지 않는다. 제품은 지원되는 실제 자산 형식과 로딩/실패 화면을 확인한다.
+
+RTL에서도 보정 전 라벨은 왼쪽, 보정 후는 오른쪽이다. 슬라이더와 문구 쓰기 방향은
+제품 언어를 따르며 이미지 경계의 물리적 의미와 구분한다.

@@ -54,3 +54,11 @@ it("preserves caller layout while measured height settles", async () => {
  const child=host.querySelector("[data-layout-child]")!; let frame=child.parentElement; while(frame && frame.style.width!=="300px") frame=frame.parentElement;
  expect(frame?.style.width).toBe("300px"); expect(frame?.style.marginTop).toBe("12px");
 });
+
+it("keeps comparison captions on their physical image sides in RTL", async () => {
+ const image={src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='50'/%3E",width:100,height:50,label:"Before"};
+ await act(async()=>root.render(<HjmProvider direction="rtl"><ImageComparison label="Comparison" before={image} after={{...image,label:"After"}} value={50} onValueChange={()=>{}} getValueText={n=>`${n}%`}/></HjmProvider>));
+ const captions=host.querySelectorAll('.hjm-image-comparison > div:first-child > span');
+ expect(captions[0]!.getBoundingClientRect().left).toBeLessThan(captions[1]!.getBoundingClientRect().left);
+ expect(captions[0]!.getAttribute('dir')).toBe('auto');
+});

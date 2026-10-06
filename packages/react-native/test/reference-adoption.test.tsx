@@ -20,6 +20,7 @@ it("exposes native radio states, forwards a score and prevents disabled activati
 it("renders average as one named image without interactive stars",()=>{const tree=render(<Rating label="평균" value={3.5} getValueLabel={label} readOnly/>);expect(tree.root.findAllByType(Pressable)).toHaveLength(0);expect(tree.root.findAllByType(View).some(v=>v.props.accessibilityLabel==="평균: 3.5점")).toBe(true);act(()=>tree.unmount());});
 it("reuses adjustable slider host actions and preserves full image geometry",()=>{
  const change=vi.fn();const image={src:"photo.jpg",width:640,height:360,label:"사진"};const tree=render(<ImageComparison label="비교" before={image} after={image} value={50} onValueChange={change} getValueText={n=>`${n}%`} decrementLabel="줄이기" incrementLabel="늘리기"/>);
+ const captions=tree.root.findAllByType(View).find(v=>v.props.style?.justifyContent==="space-between")!;expect(captions.props.style.direction).toBe("ltr");
  const stage=tree.root.findAllByType(View).find(v=>v.props.style?.aspectRatio)!;act(()=>stage.props.onLayout({nativeEvent:{layout:{width:320,height:180}}}));
  const slider=tree.root.findByType(Slider);expect(slider.props.decrementLabel).toBe("줄이기");act(()=>slider.props.onValueChange(100));expect(change).toHaveBeenCalledWith(100);
  expect(tree.root.findAllByType(View).some(v=>v.props.style?.width===160&&v.props.style?.overflow==="hidden")).toBe(true);act(()=>tree.unmount());
