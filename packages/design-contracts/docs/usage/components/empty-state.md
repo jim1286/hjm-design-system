@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [Result와의 경계](../../result.md#emptystate와의-경계), [ContentState 범위 축](../../content-state.md), recipe `emptyStateRecipe`(`src/component-recipes.ts`)
 - 스토리북: `배포/컴포넌트/상태와 알림/빈 상태`
 
@@ -69,7 +69,9 @@ import { EmptyState } from "@hjmds/react-native/feedback";
 | Web `icon` · Native `illustration` | `ReactNode` | — | 장식, 접근성에서 숨김 |
 | `layoutStyle` | 배치 전용 style | — | 루트 배치. Native `style`·`illustrationStyle`·`titleStyle`·`descriptionStyle`·`actionStyle`은 deprecated |
 
-EmptyState 자체에는 콜백 prop이 없다.
+EmptyState 자체에는 콜백 prop이 없다. 2026-10-07 기존 예제의 생성 버튼에 동작이 없음을 확인해
+양 기본 스토리를 예시 생성 → 검색 0건 → 검색어 지우기 → 목록 복구로 연결했다. 이 데이터는
+메모리에만 존재한다. 검색·필터 화면 전체가 필요하면 [SearchScreen](../screens/common-search.md)을 쓴다.
 
 ## 배치
 
@@ -95,6 +97,12 @@ EmptyState 자체에는 콜백 prop이 없다.
 ```
 
 ## 꼭 지킬 것
+
+- 외부 라이브러리가 권한·실패·성공까지 EmptyState라고 불러도 HJM의 의미 경계를 유지한다.
+  부분 실패는 Notice, 끝난 결과는 Result다. 기기 권한과 서비스 접근 권한을 같은 복구 행동으로 연결하지 않는다.
+  2026-10-07 Primer/PatternFly 대조에서 이름보다 사용자 다음 행동을 기준으로 흡수하기로 했다.
+- 첫 표시부터 있던 빈 화면은 조용히 둔다(Web `aria-live="off"`, Native `announcement="none"`).
+  검색 후 0건으로 바뀔 때는 Web 기본 status, Native `announcement="polite"`로 알리며 입력 초점을 빼앗지 않는다.
 
 - 제목·설명·행동 문구는 i18n 키로 넣는다. "검색 0건"과 "아직 만든 것 없음"은 다른 문구로 구분한다.
 - 다음 행동이 있으면 `action`에 Button 하나를 둔다. 아이콘·일러스트는 장식이라 접근성에서 숨겨진다.

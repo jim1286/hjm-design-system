@@ -9,7 +9,7 @@ import { AuthProviderButton } from "@hjmds/react-native/provider-button";
 import { AuthScreenLayout } from "@hjmds/react-native/auth-screen";
 import { Carousel } from "@hjmds/react-native/carousel";
 import { Top } from "@hjmds/react-native/top";
-import { useState, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import { ScrollView, StyleSheet, TextInput, View } from "react-native";
 import { Button, BottomCTA, IconButton, Link } from "@hjmds/react-native/actions";
 import {
@@ -717,9 +717,23 @@ return (<StoryFrame><Asset descriptor={{ kind: "lottie", accessibilityLabel: "Ru
       </Asset></StoryFrame>);
 }
 
+// A local fixture exercises recovery; the previous Create draft button was a no-op.
 function EmptyStateExample({ variant }: { variant: PreviewVariant }) {
-
-return (<StoryFrame><EmptyState title="No drafts" description="Create a draft to see it here." action={<Button onPress={noop}>Create draft</Button>} /></StoryFrame>);
+  const [created, setCreated] = useState(false);
+  const [query, setQuery] = useState("");
+  const input = useRef<TextInput>(null);
+  const found = created && "예시 초안".includes(query.trim());
+  const focusSearch = () => input.current?.focus();
+  return <StoryFrame><Stack gap="md">
+    <Text>메모리에만 만드는 예시입니다. 새 항목 생성과 검색 결과 복구를 확인하세요.</Text>
+    <SearchField ref={input} label="초안 검색" clearLabel="검색어 지우기" busyLabel="검색 중" value={query} onValueChange={setQuery} />
+    {!created ? <EmptyState title="아직 초안이 없어요" description="첫 초안을 만들면 여기에 표시됩니다."
+      density="compact" announcement="none" action={<Button onPress={() => { setCreated(true); setQuery(""); focusSearch(); }}>예시 초안 만들기</Button>} /> :
+      !found ? <EmptyState title="검색 결과가 없어요" description="검색어를 바꾸거나 지우면 초안을 다시 볼 수 있습니다."
+        density="compact" announcement="polite" action={<Button tone="secondary" onPress={() => { setQuery(""); focusSearch(); }}>검색어 지우고 모두 보기</Button>} /> :
+        <List label="초안 목록"><ListRow title="예시 초안" description="이 화면에서만 유지되는 항목" /></List>}
+    {created ? <Button tone="secondary" onPress={() => { setCreated(false); setQuery(""); focusSearch(); }}>처음 상태로 돌아가기</Button> : null}
+  </Stack></StoryFrame>;
 }
 
 function ResultExample({ variant }: { variant: PreviewVariant }) {

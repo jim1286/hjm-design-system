@@ -22,7 +22,7 @@ import { AnchorPreview } from "../patterns/Anchor.previews.js";
 import { CalendarPreview } from "../patterns/Calendar.previews.js";
 import { FloatingActionButton as HjmFloatingActionButton } from "@hjmds/react/floating-action-button";
 import { Carousel as HjmCarousel } from "@hjmds/react/carousel";
-import { useState, type CSSProperties, type ReactNode } from "react";
+import { useRef, useState, type CSSProperties, type ReactNode } from "react";
 import {
   Button as HjmButton,
   IconButton as HjmIconButton,
@@ -125,6 +125,26 @@ import {
 } from "@hjmds/design-contracts/showcase";
 
 import { useWebDesignSystemEnvironment } from "../runtime/WebDesignSystemProvider";
+
+// The old empty-state button had no handler. Keep creation and search recovery observable
+// without adding a second data-state engine; this is a local, disposable fixture.
+function EmptyStateRecoveryPreview() {
+  const [created, setCreated] = useState(false);
+  const [query, setQuery] = useState("");
+  const input = useRef<HTMLInputElement>(null);
+  const found = created && "예시 초안".includes(query.trim());
+  const focusSearch = () => input.current?.focus();
+  return <HjmStack gap="md">
+    <HjmText>메모리에만 만드는 예시입니다. 새 항목 생성과 검색 결과 복구를 확인하세요.</HjmText>
+    <HjmSearchField ref={input} label="초안 검색" clearLabel="검색어 지우기" value={query} onValueChange={setQuery} />
+    {!created ? <HjmEmptyState title="아직 초안이 없어요" description="첫 초안을 만들면 여기에 표시됩니다."
+      density="compact" aria-live="off" action={<HjmButton onClick={() => { setCreated(true); setQuery(""); focusSearch(); }}>예시 초안 만들기</HjmButton>} /> :
+      !found ? <HjmEmptyState title="검색 결과가 없어요" description="검색어를 바꾸거나 지우면 초안을 다시 볼 수 있습니다."
+        density="compact" action={<HjmButton tone="secondary" onClick={() => { setQuery(""); focusSearch(); }}>검색어 지우고 모두 보기</HjmButton>} /> :
+        <HjmList label="초안 목록"><HjmListRow title="예시 초안" description="이 화면에서만 유지되는 항목" /></HjmList>}
+    {created ? <HjmButton tone="secondary" onClick={() => { setCreated(false); setQuery(""); focusSearch(); }}>처음 상태로 돌아가기</HjmButton> : null}
+  </HjmStack>;
+}
 
 export type ContractStoryProps = { name: ComponentName };
 
@@ -449,7 +469,7 @@ function WebPreviewRenderer({ name }: { name: RecipeWebRendererComponentName }) 
     case "Timeline": return <HjmTimeline composeAccessibleName={({ position, total, label }) => `${total}개 중 ${position}번째, ${label}`} items={[{ id: "created", label: "아이디어 생성", timestamp: "10:00", tone: "info" }, { id: "completed", label: "실행 완료", timestamp: "10:12", description: "결과를 저장했습니다.", tone: "success" }]} />;
     case "DescriptionList": return <HjmDescriptionList items={[{ id: "status", label: "상태", value: "준비됨" }, { id: "owner", label: "담당", value: "홍길동" }]} />;
     case "Image": return <HjmImage src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 180'%3E%3Crect width='320' height='180' fill='%23dbeafe'/%3E%3C/svg%3E" width={320} height={180} decorative={false} accessibilityLabel="연한 파란색 이미지 예시" />;
-    case "EmptyState": return <HjmEmptyState icon="◇" title="아직 항목이 없어요" description="새 항목을 추가하면 여기에 표시됩니다." action={<HjmButton>추가하기</HjmButton>} />;
+    case "EmptyState": return <EmptyStateRecoveryPreview />;
     case "Notice": return <HjmNotice title="저장 전 확인" description="입력한 내용을 다시 확인해 주세요." />;
     case "Progress": return <HjmProgress label="업로드" value={64} valueText="64%" />;
     case "ColorPicker": return <WebAdditionsPreview mode="color" />;

@@ -356,6 +356,9 @@
 /* searchFieldRecipe.sizes.* (emitted by theme.ts): medium padding 12 · gap 8 · clear 36 + slop 4, large 52 high ·
    padding 16 · gap 12 · clear 44. Size is applied to the input by TextField; size the control from that public attribute. */
 .hjm-search-field .hjm-field__control { padding-inline: var(--hjm-search-field-padding-medium, var(--hjm-space-sm)); gap: var(--hjm-search-field-gap-medium, var(--hjm-space-xs)); }
+/* WebKit/Blink add a second clear affordance to type=search. Keep the HJM button
+   so clearing has one localized name, onClear callback and focus-restoration path. */
+.hjm-search-field input[type="search"]::-webkit-search-cancel-button { -webkit-appearance: none; display: none; }
 .hjm-search-field:has(.hjm-field__input[data-size="large"]) .hjm-field__control { min-block-size: var(--hjm-control-button-large); padding-inline: var(--hjm-search-field-padding-large, var(--hjm-space-md)); gap: var(--hjm-search-field-gap-large, var(--hjm-space-sm)); }
 .hjm-search-field .hjm-field__input[data-size="large"] { min-block-size: calc(var(--hjm-control-button-large) - 2px); font-size: var(--hjm-type-body-large-size); line-height: var(--hjm-type-body-large-line-height); }
 /* The visible circle is the recipe diameter; ::after extends the hit area by clearHitSlop so the target stays 44. */
