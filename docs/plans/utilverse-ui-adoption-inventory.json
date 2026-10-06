@@ -5072,8 +5072,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "adopt-date-entry-preserve-civil-rules",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "7642a54",
+        "report": "docs/plans/utilverse-time-tools-adoption.md",
+        "reason": "Use DateEntry with product parser for start/end and existing choice controls; preserve civil calendar arithmetic, include-start semantics, before/after offset, D-day formatting, today local timezone and detailed copy output.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/features/ChecklistScreen.tsx",
@@ -9969,8 +9978,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "adopt-duration-confirm-preserve-deadlines",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "7642a54",
+        "report": "docs/plans/utilverse-time-tools-adoption.md",
+        "reason": "Compare DurationField seconds adapter min1/max86400 with current string-draft behavior; use shared confirmation and Notice. Retain absolute persisted endsAt, foreground-only250ms display, eight-timer limit, current-time reducer and separate OS alert service.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/features/ToolNotificationSettingsScreen.tsx",
@@ -10875,8 +10893,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "absorb-zone-and-time-selection",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "7642a54",
+        "report": "docs/plans/utilverse-time-tools-adoption.md",
+        "reason": "Compare Select for base, Combobox for cities, RadioGroup for repeated-time candidates and DateEntry/time selection. Preserve DST gap/overlap explicit resolution, 2-12 zones, base removal fallback, foreground-only ticks and no network request for clock skew.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/lib/preferences.tsx",
