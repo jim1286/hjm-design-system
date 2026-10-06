@@ -204,3 +204,20 @@ ImageViewer의 선택적 inspection 공개 API에 fit/2배/출력 크기와 방�
 확인했고 Native 1,201 테스트가 통과했다. 일반 Gallery 경로는 유지한다.
 [검증 범위](../qa/2026-10-07-image-viewer-host.md)에 Android·회전·스크린리더·Expo 표시 확인·
 제품 팔레트·성능 미확인을 남겼다. 아직 미게시·Utilverse 미적용이며 실험은 14개다.
+
+
+## 추가 후보: 기억하는 날짜 직접 입력
+
+2026-10-07 [Component Gallery Date input](https://component.gallery/components/date-input/)의
+18개 예제 목록에서 [GOV.UK 공식 지침](https://design-system.service.gov.uk/components/date-input/)과
+예제 HTML을 읽었다. 년·월·일의 독립 입력과 그룹 이름/오류, 부분 입력 보존, 생일 자동완성,
+자동 초점 이동을 하지 않는 계약은 달력에서 날짜를 고르는 행위와 다르다. HJM 5582ec7의
+Web DatePicker는 calendar dialog trigger, Native는 Sheet trigger이며 직접 분할 입력 API가 없다.
+기존 매핑 `DatePicker / Field`를 기능 동등성으로 인정하지 않는다.
+
+공통 날짜 조각 resolver + 기존 TextField/Form 구성으로 흡수할 수 있는지 실험 후보에 추가한다.
+기존 달력은 유지한다. 지역별 순서, 월 이름 입력, 미완성/잘못된 날짜/범위 오류, 큰 글자/키보드,
+Native 자동완성 지원과 스크린리더 그룹 의미를 검토한 뒤 양쪽 공개 구성과 실험을 설계한다.
+[Wise compact date input](https://wise.design/components/compact-date-input)은 이번 텍스트 조회에서
+본문이 거의 없어 동작 판단 근거로 사용하지 않았다. 18개 예제의 시각·상호작용은 미검토이며
+새 후보를 구현된 실험 수로 더하지 않는다. 현재 실험 수는 14개다.

@@ -127,10 +127,10 @@
       "name": "date-input",
       "existingMapping": "DatePicker / Field",
       "priorRationale": "분리된 일·월·년 입력의 전용 계약은 별도 검토",
-      "sourceAudit": "2026-10-06",
+      "sourceAudit": "2026-10-07: gallery currently lists 18 examples. Read GOV.UK official date-input guidance and example markup; Wise compact-date-input returned only a sparse text shell. Compared both HJM DatePicker Props and renderer sources at 5582ec7.",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "Additional experiment candidate: remembered-date entry with separate day/month/year drafts. HJM DatePicker is a calendar trigger/dialog or Sheet, not direct segmented entry; generic Field composition alone does not supply partial-date validation, ordering or group semantics. Investigate shared resolver plus existing TextField composition before adding a public primitive. See docs/plans/reference-release-utilverse-2026-10-07.md. Not implemented or visually verified."
     },
     {
       "url": "https://component.gallery/components/datepicker/",
