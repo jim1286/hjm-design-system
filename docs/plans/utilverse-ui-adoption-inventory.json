@@ -2197,8 +2197,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-domain-evaluate-layout",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "e7903e6",
+        "report": "docs/plans/utilverse-preview-display-adoption.md",
+        "reason": "Retain measured sign output, constant-speed motion, reader/reduced-motion fallback and wake lease. No FullScreenOverlay public API exists; ScreenLayout is layout only, Dialog remains bounded content.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/FileJobNotice.tsx",
@@ -2709,8 +2718,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "extend-before-replace",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "e7903e6",
+        "report": "docs/plans/utilverse-preview-display-adoption.md",
+        "reason": "ImageViewer lacks Expo onDisplay host, fit/double/output-pixel modes and explicit orientation contract; preserve review invalidation and local image policy.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/PhotoMaskEditor.tsx",

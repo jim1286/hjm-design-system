@@ -64,7 +64,7 @@ UI·기능 검증을 거쳐 승격·릴리스하고 Utilverse의 대체 가능�
 | components/AuthorAvatar.tsx | Pressable 아바타 | Avatar의 공개 행동/링크 슬롯 |
 | features/ConversationScreen.tsx | 메시지 주변 Pressable·NativeText | ChatMessage / MessageComposer / reaction 계약 |
 | features/ToolboxScreen.tsx | 제품 tile Pressable | Card / Grid / action 공개 슬롯, 제품 shell 테마 유지 |
-| components/DisplayPresentation.tsx | 전체 화면 native Modal | FullScreenOverlay / 화면 layout 비교, 화면 밝기·회전은 제품 host |
+| components/DisplayPresentation.tsx | 전체 화면 native Modal | ScreenLayout / Dialog 비교, 출력 geometry·회전·화면 유지는 제품 host |
 | 삭제·신고 확인 5개 화면 | Alert.alert | AlertDialog와 취소·파괴 행동·중복 제출 계약 |
 
 소스는 `apps/utilverse/apps/mobile/src/` 기준이다. 전체 route·feature·component inventory를 만들고
@@ -86,7 +86,8 @@ UI·기능 검증을 거쳐 승격·릴리스하고 Utilverse의 대체 가능�
 
 `node scripts/audit-consumer-ui.mjs <utilverse-root> docs/plans/utilverse-ui-adoption-inventory.json`
 명령으로 소비 저장소의 TypeScript parser를 사용해 `apps/mobile/src/**/*.tsx` 136개를 읽었다.
-JSX에서 실제 사용한 import·alias·행 번호·파일 hash를 기록했으며 파일별 review는 아직 pending이다.
+JSX에서 실제 사용한 import·alias·행 번호·파일 hash를 기록했다. 현재 두 파일은 source-reviewed이며
+나머지 134개는 pending이다. source-reviewed는 UI·동작 검증이나 채택 완료가 아니다.
 HJM import가 있다는 사실만으로 내부 자체 UI가 대체됐다고 판단하지 않는다. Alert.alert 같은
 JSX 밖 호출은 위 1차 대조 목록 및 후속 동작 분석으로 함께 확인한다.
 
@@ -164,3 +165,13 @@ Native 문장 주석의 후속 측정 후보로 Skia Paragraph를 실제 기존 
 있었다. fallback run 경계가 겹치는 문제를 공통 병합 함수로 수정했다. 일반 Native Text와
 줄바꿈은 달랐으며 선택·복사·폰트/스케일·장식 외곽·Android가 남아 있어 공개 컴포넌트나
 새 실험으로 등록하지 않았다. 내부 측정 후보 확인을 일반 본문 대체 완료로 세지 않는다.
+
+## Utilverse 미리보기·전광판 계약 대조
+
+2026-10-07 fa201bc의 두 컴포넌트와 호출부를 HJM e7903e6에 대조했다.
+계획의 FullScreenOverlay는 실제 공개 API가 아니므로 삭제했다. 사진 결과 확인은 Expo
+onDisplay에 의존하며 ImageViewer의 onLoad로 치환할 수 없다. 전광판의 출력 geometry와
+화면 유지 수명은 제품 소유다. 기존 Native Modal을 없애기 위해 기능을 줄이지 않는다.
+[파일별 판단과 남은 검증](utilverse-preview-display-adoption.md)에 채택 전제와 보존 계약을 적었다.
+현재 소비 manifest는 1.12.2-basic-screens-preview.6 로컬 tarball이다. HJM 게시 버전과
+소비 설치 버전을 혼동하지 않으며 이번 대조에서 Utilverse 소스를 수정하지 않았다.
