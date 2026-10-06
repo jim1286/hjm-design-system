@@ -86,8 +86,8 @@ UI·기능 검증을 거쳐 승격·릴리스하고 Utilverse의 대체 가능�
 
 `node scripts/audit-consumer-ui.mjs <utilverse-root> docs/plans/utilverse-ui-adoption-inventory.json`
 명령으로 소비 저장소의 TypeScript parser를 사용해 `apps/mobile/src/**/*.tsx` 136개를 읽었다.
-JSX에서 실제 사용한 import·alias·행 번호·파일 hash를 기록했다. 현재 여섯 파일은 source-reviewed이며
-나머지 130개는 pending이다. source-reviewed는 UI·동작 검증이나 채택 완료가 아니다.
+JSX에서 실제 사용한 import·alias·행 번호·파일 hash를 기록했다. 현재 여덟 파일은 source-reviewed이며
+나머지 128개는 pending이다. source-reviewed는 UI·동작 검증이나 채택 완료가 아니다.
 HJM import가 있다는 사실만으로 내부 자체 UI가 대체됐다고 판단하지 않는다. Alert.alert 같은
 JSX 밖 호출은 위 1차 대조 목록 및 후속 동작 분석으로 함께 확인한다.
 
@@ -255,3 +255,10 @@ contracts typecheck·build가 통과했다. 공개 renderer·스토리는 아직
 관련 입력 묶음을 양 renderer의 공개 `field-group` subpath와 Storybook에 연결했다. 현재 16개 실험이다.
 [검증 기록](../qa/2026-10-07-field-group-reference.md)에 자동 검사·Web 환경 조합·기존 iOS 기기의
 오류/입력/잠금/재정렬 관찰과 미확인 범위를 구분했다. 승격·릴리스·Utilverse 적용은 아직 하지 않았다.
+
+
+대화·도구함 두 화면의 전체 소스와 현재 HJM renderer를 대조했다.
+[채택 판단](utilverse-conversation-toolbox-adoption.md)에 검색 행·반응 집계·빈 상태의
+교체 경로와 durable command·가상화 pager 보존 조건을 기록했다. 대화 화면은 이미
+ChatScreen/ChatMessage를 사용하므로 초기 목록의 표현을 신규 전체 교체로 해석하지 않는다.
+현재 8/136 source-reviewed, 128 pending이다. 소비 구현·기기 검증·릴리스는 미실행이다.

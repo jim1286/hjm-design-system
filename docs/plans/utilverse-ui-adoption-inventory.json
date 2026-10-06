@@ -5078,8 +5078,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "partial-replacement-preserve-command-lifetime",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "fbf43bf",
+        "report": "docs/plans/utilverse-conversation-toolbox-adoption.md",
+        "reason": "Already uses ChatScreen and ChatMessage. Move reaction summary to actions with HJM Button; replace empty/failure presentation. Preserve scoped receipts, durable drafts, history jump and native keyboard/scroll ownership.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/features/CounterScreen.tsx",
@@ -9481,8 +9490,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "partial-replacement-retain-measured-pager",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "fbf43bf",
+        "report": "docs/plans/utilverse-conversation-toolbox-adoption.md",
+        "reason": "Replace search rows with ListRow and empty/failure UI with EmptyState/Notice. Keep measured virtualized launcher paging; Card is not an interactive tile and Carousel eagerly renders every slide. Tile press/peek contract requires further common API comparison.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/features/TranslationScreen.tsx",
