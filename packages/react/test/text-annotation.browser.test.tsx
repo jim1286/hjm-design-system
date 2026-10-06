@@ -80,3 +80,22 @@ it('cancels running decorations when reduced motion is enabled', async () => {
   await render(true); expect(host.getAnimations({subtree:true})).toHaveLength(0);
   expect(host.querySelector('[data-hjm-annotation-text]')!.textContent).toBe('선 그리기');
 });
+
+it('keeps the surrounding loop stroke outside every measured glyph rectangle at large text', async () => {
+  await act(async () => root.render(<HjmProvider reducedMotion><p style={{fontSize:32,lineHeight:1.8}}>앞 <TextAnnotation action="circle">강조할 긴 문장이 줄을 넘어 이어집니다</TextAnnotation> 뒤</p></HjmProvider>));
+  const glyphs = rects();
+  for (const path of host.querySelectorAll<SVGPathElement>('path')) {
+    const line = glyphs[Number(path.dataset.line)]!;
+    const transform = path.getScreenCTM()!;
+    const length = path.getTotalLength();
+    // Inspect the drawn curve, not just its bounding box: an ellipse can have
+    // a large bounding box while crossing the first and last letters inside it.
+    for (let distance = 0; distance <= length; distance += 0.5) {
+      const local = path.getPointAtLength(distance);
+      const point = new DOMPoint(local.x, local.y).matrixTransform(transform);
+      const halfStroke = Number(path.getAttribute('stroke-width')) / 2;
+      const outside = point.x + halfStroke <= line.left || point.x - halfStroke >= line.right || point.y + halfStroke <= line.top || point.y - halfStroke >= line.bottom;
+      expect(outside, `Loop overlaps text at ${point.x},${point.y}`).toBe(true);
+    }
+  }
+});

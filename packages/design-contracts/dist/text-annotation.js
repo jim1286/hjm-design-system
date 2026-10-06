@@ -39,11 +39,17 @@ export function resolveTextAnnotationGeometry(lines, action, options = {}) {
         // Empty lines and a not-yet-laid-out host do not produce stray marker dots.
         if (line.width === 0 || line.height === 0)
             continue;
-        const l = line.x - padding, r = line.x + line.width + padding;
-        const t = line.y - padding, b = line.y + line.height + padding;
-        const cx = l + (r - l) / 2, cy = t + (b - t) / 2;
         // Scale the wobble down for tiny fragments; it must not swallow punctuation.
         const wobble = Math.min(1, line.width / 8, line.height / 8);
+        // The surrounding loop must clear the actual text even if callers choose
+        // zero padding or a thick pen. Strike-through/crossed-off intentionally do not.
+        const gap = action === 'circle' ? Math.max(padding, strokeWidth / 2 + wobble) : padding;
+        const l = line.x - gap, r = line.x + line.width + gap;
+        const t = line.y - gap, b = line.y + line.height + gap;
+        const cx = l + (r - l) / 2, cy = t + (b - t) / 2;
+        // A modest outward bow keeps a loop distinct from the box without extending
+        // an ellipse by 40% of a long line's width into neighboring text or the screen edge.
+        const bow = action === 'circle' ? Math.min(line.width, line.height) * 0.12 : 0;
         const add = (d, paint) => paths.push({ d, paint, strokeWidth, lineIndex });
         if (action === 'highlight') {
             add(`M ${l} ${t + wobble} Q ${cx} ${t - wobble} ${r} ${t} L ${r - wobble} ${b} Q ${cx} ${b + wobble} ${l} ${b - wobble} Z`, 'fill');
@@ -65,10 +71,10 @@ export function resolveTextAnnotationGeometry(lines, action, options = {}) {
                         add(`M ${x1} ${y1} Q ${cx} ${y1 - wobble} ${x2} ${y1} L ${x2} ${y2} Q ${cx} ${y2 + wobble} ${x1} ${y2} Z`, 'stroke');
                         break;
                     case 'circle':
-                        // Four cubic curves keep the outline inside the measured rectangle
-                        // envelope. An ellipse based on the whole paragraph would enclose
-                        // blank gaps between wrapped lines instead of the selected words.
-                        add(`M ${x1} ${cy} C ${x1} ${y1} ${cx} ${y1} ${cx} ${y1} C ${x2} ${y1} ${x2} ${cy} ${x2} ${cy} C ${x2} ${y2} ${cx} ${y2} ${cx} ${y2} C ${x1} ${y2} ${x1} ${cy} ${x1} ${cy} Z`, 'stroke');
+                        // The original inscribed ellipse cut through end glyphs at 32px.
+                        // Bow each edge outward through the padded corners instead: every
+                        // segment stays outside the text rectangle while retaining a loose loop.
+                        add(`M ${x1} ${cy} Q ${x1 - bow} ${y1} ${x1} ${y1} Q ${cx} ${y1 - bow} ${x2} ${y1} Q ${x2 + bow} ${cy} ${x2} ${y2} Q ${cx} ${y2 + bow} ${x1} ${y2} Q ${x1 - bow} ${cy} ${x1} ${cy} Z`, 'stroke');
                         break;
                     case 'bracket': {
                         const arm = Math.min(line.height / 3, line.width / 4);
@@ -80,7 +86,7 @@ export function resolveTextAnnotationGeometry(lines, action, options = {}) {
         }
         // Include control points, both sketch passes and stroke caps so the SVG
         // viewBox cannot clip an underline or a bracket at large text sizes.
-        const outset = 2 * wobble + strokeWidth / 2;
+        const outset = Math.max(2 * wobble, bow + wobble / 2) + strokeWidth / 2;
         const left = l - outset, top = t - outset, right = r + outset, bottom = b + outset;
         if (!bounds)
             bounds = { x: left, y: top, width: right - left, height: bottom - top };

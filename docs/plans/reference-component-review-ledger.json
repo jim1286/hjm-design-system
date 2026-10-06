@@ -1934,7 +1934,7 @@
         "webRenderer": "internal-tested",
         "nativeRenderer": false,
         "experimentalStory": false,
-        "note": "12 geometry tests; 6 browser tests; Web/Native Showcase typechecks and Web build passed. Native nested Text measured 0x0 on iOS 26.5. No new experimental story."
+        "note": "12 geometry tests and 7 browser tests passed. Reproduced and fixed end-glyph overlap for the large-text surrounding loop; ellipse appearance and neighboring-line clearance remain under review. Native range measurement unresolved. No new experimental story."
       }
     },
     {
