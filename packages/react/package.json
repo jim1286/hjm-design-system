@@ -497,6 +497,11 @@
       "types": "./dist/field-group.d.ts",
       "import": "./dist/field-group.js",
       "default": "./dist/field-group.js"
+    },
+    "./document-resource": {
+      "types": "./dist/document-resource.d.ts",
+      "import": "./dist/document-resource.js",
+      "default": "./dist/document-resource.js"
     }
   },
   "files": [

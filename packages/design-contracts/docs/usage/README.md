@@ -46,7 +46,7 @@
 | [Breadcrumb](components/breadcrumb.md) | 탐색 | Web의 깊은 계층 화면에서 현재 위치까지의 경로를 보여 주고 상위 계층으로 바로 돌아가게 할 때 쓴다. | 배포 | Web |
 | [Button](components/button.md) | 동작 | 사용자가 누르면 무언가가 일어나는 텍스트 행동에 쓴다. | 배포 | Web · Native |
 | [Calendar](components/calendar.md) | 데이터 표시 | 화면에 항상 펼쳐진 한 달 격자에서 날짜 하나를 고를 때 쓴다. | 배포 | Web · Native |
-| [Card](components/card.md) | 데이터 표시 | 제목·설명·본문·행동이 한 덩어리로 읽히는 독립된 콘텐츠 단위에 쓴다. | 배포 | Web · Native |
+| [Card](components/card.md) | 데이터 표시 | 문서 metadata·미리보기·내보내기 상태는 실험 구성 DocumentResource를 먼저 대조한다. | 배포 | Web · Native |
 | [Carousel](components/carousel.md) | 데이터 표시 | 한 번에 카드 하나만 보이고 사용자가 순서대로 넘겨 보는 유한한 묶음에 쓴다. | 배포 | Web · Native |
 | [Celebration](components/celebration.md) | 구성/직접 조작과 모션 | 목표 달성, 첫 완료처럼 드물게 일어나는 성공 순간에 한 번 터지는 색종이 효과에 쓴다. | 배포 | Web · Native |
 | [ChatMessage](components/chat-message.md) | 구성/정보 표시 | DM·대화 타임라인의 메시지 한 개에 쓴다. | 배포 | Web · Native |
@@ -193,6 +193,7 @@
 | [보관함과 페이지 이동](compositions/web-navigation.md) | 탐색과 이동 | Web에서 상위 보관함 → 하위 모음으로 들어가고, 그 모음의 긴 목록을 페이지 단위로 넘겨 보는 탐색에 쓴다. | 배포 | Web |
 | [펼침과 메뉴](compositions/disclosure.md) | 탐색과 이동 | Web에서 내용을 숨겼다 펼치거나(Collapsible), 대상에 붙은 작업 메뉴를 우클릭·키보드로 열거나(ContextMenu), 데스크톱 앱처럼 상단 메뉴 막대를 두는(Menubar) 세 방식을 각각 보여 주는 모음이다. | 배포 | Web |
 | [대화 메시지](compositions/common-message.md) | 정보 표시 | 말풍선 하나하나에 반응·답장·원문 이동·전송 실패 후 다시 보내기를 붙일 때 쓴다. | 배포 | Web · Native |
+| [문서와 파일](compositions/document-resource.md) | 정보 표시 | 이름·형식·크기와 미리보기·내보내기·별도 메뉴를 함께 제공하는 문서에 쓴다. | 실험 | Web · Native |
 | [수치와 이전 대비 변화](compositions/stea-stat-summary.md) | 정보 표시 | 매출·주문·반품처럼 몇 개의 핵심 수치를 비교 기간과 함께 보이고, 증감의 방향과 좋고 나쁨을 색 없이도 읽히게 할 때 쓴다. | 배포 | Web · Native |
 | [알림 항목](compositions/common-notification.md) | 정보 표시 | 알림 한 행을 누르면 바로 읽음으로 바꾸고, 서버가 실패하면 읽지 않음으로 되돌릴 때 쓴다. | 배포 | Web · Native |
 | [앞면과 상세 정보 전환](compositions/stea-flip-card.md) | 정보 표시 | 모임·상품처럼 한 카드에 요약(앞면)과 상세 항목(뒷면)이 있고, 사용자가 버튼 하나로 두 면을 오가게 할 때 쓴다. | 배포 | Web · Native |

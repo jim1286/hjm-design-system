@@ -69,3 +69,27 @@ callback·버튼 identity를 확인했으며 기기 QA가 아니다.
 첫 Web 실행은 Vitest locator에 없는 isEnabled 사용 때문에 실패했고 expect.element(...).toBeEnabled로
 테스트 API를 수정한 뒤 통과했다. 제품 동작 실패로 기록하지 않는다. 실패 시 생성된 캡처는 이 기록 후 제거했다.
 공개 renderer·Storybook은 아직 없으며 실제 다운로드·native 저장 완료를 검증한 결과가 아니다.
+
+## 공개 진입점·실험과 Web 다운로드 확인
+
+2026-10-07 `7fa5453` 이후 로컬 main 변경. 양 renderer `document-resource` 공개 export와
+공개 props, 양쪽 Storybook 네 환경 변형, 구성 사용 지침을 연결했다. 현재 17번째 실험이며
+안정판 승격·npm 게시·Utilverse 적용은 아니다.
+
+- 회귀: Web browser 3개 + package boundary 1개, Native renderer/package 4개, 공유 fixture
+  2개(실패 재시도/중복 방지, 예제 지연 중 문서 교체 후 이전 host 미호출) 통과.
+- 세 package typecheck/build, 두 Showcase typecheck, usage:check, docs 링크 570개,
+  Storybook 417파일/922 Web id, 공개 API 대응표 306개 통과.
+- renderer graph: Web 전용 진입점 5모듈, Native 8모듈. platform/module 경계 통과.
+- IAB localhost:6006, 1280×720: 첫 내보내기 pending 잠금→합성 오류→재시도→시작 안내를
+  관찰했다. 다운로드 event wait는 15초 timeout이었지만 Downloads에 07:18:50 생성된
+  `문서-예제-1.txt` 76바이트가 존재했고 UTF-8 예제 본문과 바이트 단위로 일치했다.
+  SHA-256 `7a91912ce9e6711d163bc5a5a6b086f9b077e7095daf44dccaae8cfb47f830d5`.
+  이 한 번의 저장 증거를 모든 사용자 OS의 저장 성공 보장으로 확대하지 않는다. UI는 started다.
+- 미리보기 오류 중 파일명/형식 보존, 본문 보기 잠금과 내보내기 활성, 미리보기 재시도로
+  본문 복구를 확인했다. 검사 중 build HMR로 예제 상태가 초기화돼 빌드 완료 후 다시 확인했다.
+- Native 예제는 Share.share 텍스트 공유 host다. 실제 파일 저장과 기기 공유/취소·iOS 상태
+  알림·오류 복구 초점·전체 환경/팔레트/스크린리더는 미검증. 외부 6개 원본 전수도 미완료다.
+
+보존: 다운로드 검증 파일과 임시 budget 로그는 위 내용/hash 기록 후 제거한다. 화면은 도구로
+확인했으며 별도 원시 캡처 파일을 만들지 않았다. 재사용 fixture/test/source는 보존한다.

@@ -1,7 +1,7 @@
 ---
 "@hjmds/design-contracts": minor
-"@hjmds/react": patch
-"@hjmds/react-native": patch
+"@hjmds/react": minor
+"@hjmds/react-native": minor
 ---
 
-Expose the document-resource descriptor and controlled-action validation through a dedicated contracts subpath. Separate preview availability from saving, require explicit retry permission, and distinguish initiation from host-confirmed saving. Prepare internal Web/Native renderers with independent controls; renderer exports and Storybook experiments are not added yet.
+Expose experimental DocumentResource through dedicated subpaths. Compose file metadata, independent preview/export/menu actions and explicit failure recovery. Distinguish download initiation from host-confirmed saving. Keep file access, permissions and durable outcomes product-owned; provide Web/Native usage and interactive examples.

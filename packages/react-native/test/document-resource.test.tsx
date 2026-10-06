@@ -1,7 +1,7 @@
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { afterEach, expect, it, vi } from "vitest";
 import type { DocumentResourceDescriptor } from "@hjmds/design-contracts/document-resource";
-import { DocumentResource } from "../src/internal/document-resource.js";
+import { DocumentResource } from "../src/document-resource.js";
 import { HjmNativeProvider } from "../src/provider.js";
 import { Button } from "../src/actions.js";
 import { Surface, Text } from "../src/primitives.js";

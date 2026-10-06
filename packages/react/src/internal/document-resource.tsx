@@ -3,8 +3,10 @@ import { resolveDocumentResourceControls, type DocumentResourceControls } from "
 import { Button } from "../actions.js";
 import { Stack, Surface, Text } from "../layout.js";
 
-/** Internal candidate. Rendering a host result never initiates file access or transfer. */
-export function DocumentResource({ preview, moreAction, ...props }: DocumentResourceControls & Readonly<{ preview?: ReactNode; moreAction?: ReactNode }>) {
+export type DocumentResourceProps = DocumentResourceControls & Readonly<{ preview?: ReactNode; moreAction?: ReactNode }>;
+
+/** Rendering a host result never initiates file access or transfer. */
+export function DocumentResource({ preview, moreAction, ...props }: DocumentResourceProps) {
   const resource = resolveDocumentResourceControls(props);
   const { labels } = props;
   const previewFailed = resource.preview.status === "error";

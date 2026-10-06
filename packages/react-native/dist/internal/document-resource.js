@@ -2,7 +2,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { resolveDocumentResourceControls } from "@hjmds/design-contracts/document-resource";
 import { Button } from "../actions.js";
 import { Stack, Surface, Text } from "../primitives.js";
-/** Internal candidate; the native file/share host stays product-owned. */
+/** The native file/share host stays product-owned. */
 export function DocumentResource({ preview, moreAction, ...props }) {
     const resource = resolveDocumentResourceControls(props);
     const { labels } = props;

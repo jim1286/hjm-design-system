@@ -4,11 +4,16 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: recipe `cardRecipe`(`src/card.ts`), 바탕 `surfaceRecipe`(`src/base-recipes.ts`). 별도 계약 문서는 없다
 - 스토리북: `배포/컴포넌트/데이터 표시/카드`
 
 ## 언제 쓰나
+
+문서 metadata·미리보기·내보내기 상태는 실험 구성 [DocumentResource](../compositions/document-resource.md)를
+먼저 대조한다. 2026-10-07 파일 사례에서 일반 카드만으로 다운로드/저장 상태까지 동등하다고
+판단할 수 없음을 확인해 별도 구성으로 연결했다.
+
 
 제목·설명·본문·행동이 한 덩어리로 읽히는 독립된 콘텐츠 단위에 쓴다. 주문 요약, 설정 묶음,
 미리보기처럼 화면 안에서 경계가 보여야 하는 블록이 여기에 속한다. 위에서부터
@@ -30,6 +35,7 @@
 | 이름 | 역할 | Web | Native |
 | --- | --- | --- | --- |
 | `Card` | 기본 | `@hjmds/react`, `/display` | `@hjmds/react-native`, `/data-display` |
+| `DocumentResource` | 실험 문서 구성 | `@hjmds/react/document-resource` | `@hjmds/react-native/document-resource` |
 
 ## 최소 사용 예
 

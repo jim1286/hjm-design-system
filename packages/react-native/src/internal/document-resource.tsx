@@ -3,8 +3,10 @@ import { resolveDocumentResourceControls, type DocumentResourceControls } from "
 import { Button } from "../actions.js";
 import { Stack, Surface, Text } from "../primitives.js";
 
-/** Internal candidate; the native file/share host stays product-owned. */
-export function DocumentResource({ preview, moreAction, ...props }: DocumentResourceControls & Readonly<{ preview?: ReactNode; moreAction?: ReactNode }>) {
+export type DocumentResourceProps = DocumentResourceControls & Readonly<{ preview?: ReactNode; moreAction?: ReactNode }>;
+
+/** The native file/share host stays product-owned. */
+export function DocumentResource({ preview, moreAction, ...props }: DocumentResourceProps) {
   const resource = resolveDocumentResourceControls(props);
   const { labels } = props;
   const previewFailed = resource.preview.status === "error";

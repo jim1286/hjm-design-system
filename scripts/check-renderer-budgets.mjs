@@ -76,6 +76,8 @@ const rendererBudgets = [
       // DateEntry reuses forms/internal; inspected 3 local modules, no root barrel.
       // FieldGroup is one local module; input renderers are supplied through a public callback.
       "./field-group": { modules: 1, raw: 2675, gzip: 1051 },
+      // DocumentResource composes existing actions and layout primitives; no optional engine.
+      "./document-resource": { modules: 5, raw: 21560, gzip: 6279 },
       "./date-entry": { modules: 3, raw: 22051, gzip: 5305 },
       "./duration-field": { modules: 3, raw: 12200, gzip: 3700 },
       "./inline-confirm": { modules: 3, raw: 11000, gzip: 3050 },
@@ -418,6 +420,8 @@ const rendererBudgets = [
       // DateEntry reuses inputs and its field helpers/provider: 10 reviewed local modules.
       // FieldGroup reaches Text/primitives, provider and two style helpers; no root or optional engine.
       "./field-group": { modules: 5, raw: 25281, gzip: 6913 },
+      // DocumentResource composes existing actions and layout primitives; no optional engine.
+      "./document-resource": { modules: 8, raw: 42530, gzip: 13265 },
       "./date-entry": { modules: 10, raw: 100978, gzip: 22893 },
       "./duration-field": { modules: 6, raw: 40000, gzip: 9800 },
       "./inline-confirm": { modules: 5, raw: 41300, gzip: 9700 },

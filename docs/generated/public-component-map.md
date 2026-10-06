@@ -4,7 +4,7 @@
 
 ## @hjmds/react
 
-고유 공개 컴포넌트 및 provider 이름 159개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 160개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -56,6 +56,7 @@
 | DescriptionList | DescriptionList | canonical | root, ./display |
 | Dialog | Dialog | canonical | root, ./overlays |
 | Divider | Divider | canonical | root, ./display |
+| DocumentResource | Card | optional-extension | ./document-resource |
 | DurationField | NumberField | optional-extension | ./duration-field |
 | EditorScreen | 별도 보조 기능 | supplemental | ./screen-flows |
 | EffectSurface | 별도 보조 기능 | supplemental | ./effect-surface |
@@ -170,7 +171,7 @@
 
 ## @hjmds/react-native
 
-고유 공개 컴포넌트 및 provider 이름 145개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 146개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -213,6 +214,7 @@
 | DescriptionList | DescriptionList | canonical | root, ./data-display |
 | Dialog | Dialog | canonical | root, ./overlays |
 | Divider | Divider | canonical | root, ./data-display |
+| DocumentResource | Card | optional-extension | ./document-resource |
 | DurationField | NumberField | optional-extension | ./duration-field |
 | EditorScreen | 별도 보조 기능 | supplemental | ./screen-flows |
 | EffectSurface | 별도 보조 기능 | supplemental | ./effect-surface |

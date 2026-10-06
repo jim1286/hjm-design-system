@@ -473,6 +473,15 @@
         "role": "canonical"
       },
       {
+        "name": "DocumentResource",
+        "source": "packages/react/src/internal/document-resource.tsx",
+        "entries": [
+          "./document-resource"
+        ],
+        "canonicalComponent": "Card",
+        "role": "optional-extension"
+      },
+      {
         "name": "DurationField",
         "source": "packages/react/src/duration-field.tsx",
         "entries": [
@@ -1934,6 +1943,15 @@
         ],
         "canonicalComponent": "Divider",
         "role": "canonical"
+      },
+      {
+        "name": "DocumentResource",
+        "source": "packages/react-native/src/internal/document-resource.tsx",
+        "entries": [
+          "./document-resource"
+        ],
+        "canonicalComponent": "Card",
+        "role": "optional-extension"
       },
       {
         "name": "DurationField",

@@ -3,7 +3,7 @@ import { createRoot, type Root } from "react-dom/client";
 import { page } from "vitest/browser";
 import { beforeEach, afterEach, expect, it, vi } from "vitest";
 import type { DocumentResourceDescriptor } from "@hjmds/design-contracts/document-resource";
-import { DocumentResource } from "../src/internal/document-resource.js";
+import { DocumentResource } from "../src/document-resource.js";
 import { HjmProvider } from "../src/provider.js";
 import "../src/styles.css";
 let host: HTMLDivElement, root: Root;

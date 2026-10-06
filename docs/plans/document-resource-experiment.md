@@ -1,6 +1,6 @@
 # 문서·파일 구성 실험 계획
 
-검토일: 2026-10-07. 상태: 후보, 공개 API·Storybook 미구현. 현재 16개 실험 집계에 포함하지 않는다.
+검토일: 2026-10-07. 상태: 공개 API·양쪽 Storybook 실험 연결. 현재 17개 실험에 포함하며 승격 전 검증 중이다.
 근거는 [원본 대조](../qa/2026-10-07-file-reference.md). 단순 다운로드 링크부터 큰 미리보기와
 독립 행동까지 역할이 달라 기존 UploadItem의 성공 상태로 표시하는 대응을 폐기했다.
 
@@ -69,3 +69,16 @@ idle/pending/started/saved/cancelled/error를 분리한다. 오류 retryable은 
 
 다음 단계는 양 renderer 공개 props/진입점·사용 지침·실제 action-session host 예제와 Storybook이다.
 Native iOS 상태 알림, 오류 복구 초점, 전체 theme/큰 글자 실기기·OS 저장 검증도 남는다.
+
+## 공개 실험 연결
+
+2026-10-07 `7fa5453` 이후 양 renderer 전용 진입점과 타입, package boundary, API 대응표,
+번들 graph, 사용 지침을 연결했다. Storybook 기본/다크/큰 글자/RTL 네 변형이 등록됐다.
+공유 fixture는 공개 action-session을 주입받아 중복 작업을 막고 파일 교체/해제 시 reset한다.
+900ms 예제 지연 중 교체하면 이전 host 자체를 호출하지 않는다. OS가 이미 수락한 작업 취소는
+보장하지 않으며 이전 결과만 분리한다. 첫 실패와 재시도는 실제 host 호출 전 합성 오류다.
+
+Web host는 자체 생성 TXT 파일을 내보내며 실제 다운로드 내용 일치를 확인했다. Native host는
+React Native Share의 텍스트 공유로 시작/취소를 구분한다. 이는 native 파일 저장 구현·검증이
+아니므로 승격 전에 파일 host와 실제 기기 확인을 계속한다. iOS 상태 알림, 미리보기 오류
+복구 시 초점, 스크린리더, 제품 팔레트/Android 및 외부 원본 전체 변형 검증도 남는다.

@@ -2,7 +2,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { resolveDocumentResourceControls } from "@hjmds/design-contracts/document-resource";
 import { Button } from "../actions.js";
 import { Stack, Surface, Text } from "../layout.js";
-/** Internal candidate. Rendering a host result never initiates file access or transfer. */
+/** Rendering a host result never initiates file access or transfer. */
 export function DocumentResource({ preview, moreAction, ...props }) {
     const resource = resolveDocumentResourceControls(props);
     const { labels } = props;

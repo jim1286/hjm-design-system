@@ -501,6 +501,12 @@
       "react-native": "./dist/field-group.js",
       "import": "./dist/field-group.js",
       "default": "./dist/field-group.js"
+    },
+    "./document-resource": {
+      "types": "./dist/document-resource.d.ts",
+      "react-native": "./dist/document-resource.js",
+      "import": "./dist/document-resource.js",
+      "default": "./dist/document-resource.js"
     }
   },
   "files": [
