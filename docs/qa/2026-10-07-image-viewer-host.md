@@ -56,3 +56,25 @@ A→B→A 교체/close, 기본 RN load/error, collection key 충돌을 검사한
 진단 fixture와 회귀는 보존한다. SelectionMotion Default에 연결했던 임시 render/globals는 복구했다.
 검토한 변경 전 오류·첫 재시도 미복구·수정 후 오류·정상·다크 큰 글자 캡처와 임시 story 백업은
 이 기록 후 정리한다. 기존 Metro/시뮬레이터는 유지한다.
+
+## 회전 계약 후속 — 9487fff 이후
+
+Native Modal에 supportedOrientations를 전달하고 fullScreen을 명시했다. controls와
+feedback은 좌우 물리 inset + Container gutter로 배치하며 이미지 영역은 전체 폭을 쓴다.
+닫기·재시도·이전/다음에는 growWithContent를 적용해 긴 지역화 문구를 고정 높이에 가두지 않는다.
+
+추가 회귀 두 개는 landscape 허용 prop·비대칭 왼쪽 59/오른쪽 0 inset 전달과
+viewport layout 874×218 → 402×590 변경이 host 측정값에 반영되는지 검사한다.
+기존 gutter 회귀는 paddingHorizontal 대신 좌우 동일 padding을 검증하도록 갱신했다.
+두 테스트 파일 12개, Native 타입/빌드 통과. 이는 mock layout 입력이며 실제 회전 검증이 아니다.
+Showcase app.json은 portrait, Utilverse는 default다. idb ui에는 회전 명령이 없으며
+공유 기기나 앱 manifest를 임의로 바꾸지 않았다. 실제 회전/OS 잠금/긴 문구 UI 검증은 남는다.
+
+설치된 zoom-toolkit 5.1.1 GalleryRefType은 setIndex/reset/getState만 제공하고 정확한 scale
+설정은 없다. ResumableZoom은 setTransformState/zoom을 제공하지만 이를 교체하면 기존
+Gallery paging 계약까지 바뀐다. Gallery의 child size 기반 pan bounds는 확인했지만 확대된
+이미지 크기 기반 2배/pixel 보기의 실제 손가락 pan은 미검증이다. private shared value를
+건드려 배율 구현 완료로 세지 않는다. 현재 두 가지 명시적 배율은 여전히 추가 작업이다.
+
+최종 후속 검사: 관련 4파일 26개 회귀, Native Showcase 타입 검사, 문서 링크 552개,
+사용 지침·공개 API 대응표·renderer import graph/플랫폼 경계 통과. 예산 원시 로그는 정리했다.

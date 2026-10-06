@@ -1,4 +1,5 @@
 import { type ReactNode } from "react";
+import { type ModalProps } from "react-native";
 export type ImageViewerItem = {
     id: string;
     uri: string;
@@ -30,7 +31,11 @@ export type ImageViewerProps = {
     safeAreaInsets: {
         top: number;
         bottom: number;
+        left?: number;
+        right?: number;
     };
+    /** Allowed orientations still depend on the product manifest and OS rotation lock. */
+    supportedOrientations?: ModalProps["supportedOrientations"];
     closeLabel: string;
     previousLabel: string;
     nextLabel: string;

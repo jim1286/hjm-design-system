@@ -51,3 +51,7 @@ onImageStatusChange를 추가했다. HJM에서 캐시나 표시 이벤트를 강
 연결할 수 있다. 오류/retry 수명과 collection identity도 보완했다.
 [HJM 검증 기록](../qa/2026-10-07-image-viewer-host.md)은 RN Image fixture로 얻었으며
 Expo onDisplay·제품 결과 검토·명시적 배율·회전·소비 적용은 아직 검증하지 않았다.
+
+후속으로 ImageViewer에 supportedOrientations와 좌우 safe-area inset을 연결했다.
+정확한 배율은 Gallery ref가 제공하지 않아 child geometry 또는 별도 zoom host의
+동작 검증이 필요하다. 회전 prop/layout mock 검증은 실제 회전 증거가 아니다.

@@ -16,6 +16,7 @@ export function ImageViewerHostProbe() {
     <Button onPress={() => { failOnce.current = true; setOpen(true); }}>이미지 호스트 확인</Button>
     <Text>{status}</Text>
     <ImageViewer open={open} onClose={() => setOpen(false)} safeAreaInsets={insets}
+      supportedOrientations={["portrait", "landscape"]}
       items={[{ id: "valley", uri, label: "산과 계곡 사진" }]}
       closeLabel="닫기" previousLabel="이전" nextLabel="다음" loadingLabel="불러오는 중"
       errorLabel="진단용 첫 표시 실패" retryLabel="다시 시도"

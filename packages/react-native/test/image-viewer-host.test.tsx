@@ -1,6 +1,6 @@
 import { createElement, type ReactNode } from "react";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
-import { Image, View } from "react-native";
+import { Image, Modal, StyleSheet, View } from "react-native";
 import { afterEach, expect, it, vi } from "vitest";
 import { HjmNativeProvider } from "../src/provider.js";
 import { Button } from "../src/actions.js";
@@ -103,4 +103,32 @@ it("resets the session when collection IDs and URIs collide under delimiter join
   expect(notify).toHaveBeenCalledExactlyOnceWith({ item: second[1], status: "loading" });
   act(() => old.onError());
   expect(notify).toHaveBeenCalledTimes(1);
+});
+
+it("forwards product orientation and keeps controls and feedback inside asymmetric cutouts", () => {
+  render({ safeAreaInsets: { top: 0, bottom: 21, left: 59, right: 0 }, supportedOrientations: ["portrait", "landscape"] });
+  const modal = tree!.root.findByType(Modal);
+  expect(modal.props.presentationStyle).toBe("fullScreen");
+  expect(modal.props.supportedOrientations).toEqual(["portrait", "landscape"]);
+  const close = tree!.root.findAllByType(Button).find(node => node.props.children === "닫기")!;
+  const next = tree!.root.findAllByType(Button).find(node => node.props.children === "다음")!;
+  for (const node of [close, next]) {
+    const style = StyleSheet.flatten(node.parent!.props.style);
+    expect(style.paddingLeft - style.paddingRight).toBe(59);
+    expect(style.paddingRight).toBeGreaterThan(0);
+    expect(node.props.growWithContent).toBe(true);
+  }
+  const feedback = tree!.root.find(node => node.props.pointerEvents === "box-none");
+  const style = StyleSheet.flatten(feedback.props.style);
+  expect(style.paddingLeft - style.paddingRight).toBe(59);
+});
+
+it("re-measures the image viewport after a rotation layout without using screen aspect ratios", () => {
+  let host!: ImageViewerImageRenderProps;
+  render({ renderImage: props => { host = props; return <View />; } });
+  const layout = tree!.root.find(node => typeof node.props.onLayout === "function");
+  act(() => layout.props.onLayout({ nativeEvent: { layout: { width: 874, height: 218 } } }));
+  expect({ width: host.width, height: host.height }).toEqual({ width: 874, height: 218 });
+  act(() => layout.props.onLayout({ nativeEvent: { layout: { width: 402, height: 590 } } }));
+  expect({ width: host.width, height: host.height }).toEqual({ width: 402, height: 590 });
 });

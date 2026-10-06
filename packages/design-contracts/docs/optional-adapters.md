@@ -10,7 +10,10 @@ Default RN Image still uses onLoad; an Expo consumer can use onDisplay instead. 
 the image host, and callbacks from retired attempts or closed/replaced sessions are ignored.
 Failure stays terminal until retry. Closing sends no final status event; the product owns
 review invalidation on close, replacement and view-mode changes. This closes the host gap
-identified in Utilverse ADR-0020, but does not add its explicit fit/2x/pixels/orientation controls.
+identified in Utilverse ADR-0020, but does not add its explicit fit/2x/pixels controls.
+The Native Modal accepts supportedOrientations in fullScreen presentation. Optional left/right
+safe-area insets protect controls and feedback in landscape while the gallery remains full width.
+Products must supply updated insets and permit rotation in their manifests; OS rotation lock still applies.
 The additive Native-only props keep this optional subpath and its existing peers; the base Image
 renderers retain their own host APIs. There is no Web ImageViewer counterpart.
 

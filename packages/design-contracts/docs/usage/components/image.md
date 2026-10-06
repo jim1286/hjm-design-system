@@ -82,7 +82,8 @@ import { ImageViewer } from "@hjmds/react-native/image-viewer";
 | ImageViewer `items` | `id`·`uri`·`label` | — | 라벨 6종, `safeAreaInsets`가 필수 |
 | ImageViewer `initialIndex` | 0 이상 정수 | `0` | — |
 | ImageViewer `onClose` · `onIndexChange` | `() => void` · `(index: number) => void` | `onClose` 필수 | — |
-| ImageViewer `safeAreaInsets` | `{ top: number; bottom: number }` | 필수 | — |
+| ImageViewer `safeAreaInsets` | `{ top: number; bottom: number; left?: number; right?: number }` | 필수, 좌우 0 | 버튼·caption·상태 안내를 물리적 좌우 안전 영역 안에 배치. 사진은 전체 갤러리 폭 사용 |
+| ImageViewer `supportedOrientations` | RN Modal의 orientation 배열 | RN 기본값 | 제품 manifest·기기 회전 잠금 범위 안에서 허용. Modal은 fullScreen |
 | ImageViewer `renderImage` | `(props: ImageViewerImageRenderProps) => ReactNode` | RN Image | Native 전용, 미게시. `item`, 측정된 `width`·`height`, `onReady`·`onError`를 전달. 제품 이미지 host의 캐시·표시 이벤트를 연결 |
 | ImageViewer `onImageStatusChange` | `({ item, status }) => void` | 없음 | `loading`·`ready`·`error`. 마운트된 각 이미지 기준이며 비선택 페이지도 포함할 수 있음 |
 
@@ -134,7 +135,10 @@ import { ImageViewer } from "@hjmds/react-native/image-viewer";
 사용자의 검토 완료를 뜻하지 않는다. 상태 통지는 렌더링된 페이지마다 발생하므로 현재 선택·
 열림·결과 URI·보기 모드·사용자 확인 조건은 제품이 결합해야 한다. 닫을 때 별도의 상태 이벤트를
 보내지 않는다. 제품은 닫기/교체에서 검토를 무효화한다. host 변경만으로 세션이 새로 열리지 않는다.
-이 확장은 fit/2배/출력 pixel 보기나 orientation API를 추가하지 않았으며 Utilverse 대체 완료가 아니다.
+회전을 허용하는 제품은 `supportedOrientations={["portrait", "landscape"]}`와 갱신되는
+safeAreaInsets 네 방향을 제공한다. 앱 manifest가 portrait 고정이면 이 prop만으로 회전이 보장되지 않는다.
+화면 크기가 바뀌면 버튼을 제외한 남은 갤러리 영역을 다시 측정해 host에 전달한다.
+이 확장은 fit/2배/출력 pixel 보기를 아직 추가하지 않았으며 Utilverse 대체 완료가 아니다.
 
 ## 플랫폼 차이
 

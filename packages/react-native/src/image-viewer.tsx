@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
-import { AccessibilityInfo, Image, Modal, Platform, View, useWindowDimensions } from "react-native";
+import { AccessibilityInfo, Image, Modal, Platform, View, useWindowDimensions, type ModalProps } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Gallery } from "react-native-zoom-toolkit";
 import { containerDefaults, containerRecipe } from "@hjmds/design-contracts/components/container";
@@ -31,7 +31,9 @@ export type ImageViewerProps = {
   onImageStatusChange?: (event: ImageViewerImageStatusEvent) => void;
   onClose: () => void;
   onIndexChange?: (index: number) => void;
-  safeAreaInsets: { top: number; bottom: number };
+  safeAreaInsets: { top: number; bottom: number; left?: number; right?: number };
+  /** Allowed orientations still depend on the product manifest and OS rotation lock. */
+  supportedOrientations?: ModalProps["supportedOrientations"];
   closeLabel: string;
   previousLabel: string;
   nextLabel: string;
@@ -70,7 +72,6 @@ function ViewerImage({ item, width, height, renderImage, onImageStatusChange }: 
     {renderImage ? renderImage({ item, width, height, onReady, onError }) :
       <Image source={{ uri: item.uri }} accessibilityLabel={item.label}
         resizeMode="contain" style={{ width, height }} onLoad={onReady} onError={onError} />}
-
   </View>;
 }
 
@@ -91,6 +92,12 @@ export function ImageViewer(props: ImageViewerProps) {
 function ImageViewerSession(props: ImageViewerProps) {
   const theme = useHjmNativeTheme();
   const gutter = containerRecipe.gutters[containerDefaults.gutter];
+  // Landscape cutouts are physical edges, independent of text direction. Keep
+  // controls inside them while the photograph can use the full gallery width.
+  const controlInsets = {
+    paddingLeft: gutter + (props.safeAreaInsets.left ?? 0),
+    paddingRight: gutter + (props.safeAreaInsets.right ?? 0),
+  };
   const { width, height } = useWindowDimensions();
   // Measure remaining space after controls and safe areas; a screen-height ratio clips large text.
   const [viewport, setViewport] = useState({ width, height: height * 0.6 });
@@ -111,13 +118,14 @@ function ImageViewerSession(props: ImageViewerProps) {
     setStatuses(previous => new Map(previous).set(event.item.id, event.status));
     props.onImageStatusChange?.(event);
   };
-  return <Modal visible animationType={theme.environment.reducedMotion ? "none" : "fade"} onRequestClose={props.onClose}>
+  return <Modal visible presentationStyle="fullScreen" supportedOrientations={props.supportedOrientations}
+    animationType={theme.environment.reducedMotion ? "none" : "fade"} onRequestClose={props.onClose}>
     <GestureHandlerRootView style={{ flex: 1, backgroundColor: theme.colors.bg }}>
       <View accessibilityViewIsModal style={{ flex: 1, paddingTop: props.safeAreaInsets.top, paddingBottom: props.safeAreaInsets.bottom }}>
         {/* Controls and caption share the page gutter (Container's default); they
             ran edge to edge and the caption touched the screen edge (2026-09-30
             audit). The image area stays full-bleed so zoom keeps the whole width. */}
-        <View style={{ paddingHorizontal: gutter }}><Button onPress={props.onClose}>{props.closeLabel}</Button></View>
+        <View style={controlInsets}><Button growWithContent onPress={props.onClose}>{props.closeLabel}</Button></View>
         <View style={{ flex: 1 }} onLayout={event => { const { width: measuredWidth, height: measuredHeight } = event.nativeEvent.layout; if (measuredWidth > 0 && measuredHeight > 0) setViewport({ width: measuredWidth, height: measuredHeight }); }}>
           <Gallery key={galleryKey} data={[...props.items]} initialIndex={currentIndex} keyExtractor={item => item.id}
             rtl={theme.environment.direction === "rtl"} onIndexChange={change}
@@ -127,17 +135,17 @@ function ImageViewerSession(props: ImageViewerProps) {
           {/* Zoom Toolkit places a gesture layer above its rendered images. Keep feedback
               beside Gallery, not inside renderItem, so retry receives actual native touches.
               An opaque semantic surface keeps the copy legible over decoded photo pixels. */}
-          {currentStatus !== "ready" ? <View pointerEvents="box-none" style={{ position: "absolute", top: 0, bottom: 0, left: 0, right: 0, justifyContent: "center", alignItems: "center" }}>
+          {currentStatus !== "ready" ? <View pointerEvents="box-none" style={{ position: "absolute", top: 0, bottom: 0, left: 0, right: 0, justifyContent: "center", alignItems: "center", ...controlInsets }}>
             <Surface padding="md">
-              {currentStatus === "error" ? <View><Text accessibilityLiveRegion="assertive">{props.errorLabel}</Text><Button onPress={resetImages}>{props.retryLabel}</Button></View>
+              {currentStatus === "error" ? <View><Text accessibilityLiveRegion="assertive">{props.errorLabel}</Text><Button growWithContent onPress={resetImages}>{props.retryLabel}</Button></View>
                 : <Text accessibilityLiveRegion="polite">{props.loadingLabel}</Text>}
             </Surface>
           </View> : null}
         </View>
-        <View style={{ gap: theme.tokens.spacing.xs, paddingHorizontal: gutter, paddingTop: theme.tokens.spacing.sm }}>
+        <View style={{ gap: theme.tokens.spacing.xs, ...controlInsets, paddingTop: theme.tokens.spacing.sm }}>
           <Text accessibilityLiveRegion="polite">{props.items[currentIndex]?.label}</Text>
-          <Button disabled={currentIndex === 0} onPress={() => navigate(currentIndex - 1)}>{props.previousLabel}</Button>
-          <Button disabled={currentIndex >= props.items.length - 1} onPress={() => navigate(currentIndex + 1)}>{props.nextLabel}</Button>
+          <Button growWithContent disabled={currentIndex === 0} onPress={() => navigate(currentIndex - 1)}>{props.previousLabel}</Button>
+          <Button growWithContent disabled={currentIndex >= props.items.length - 1} onPress={() => navigate(currentIndex + 1)}>{props.nextLabel}</Button>
         </View>
       </View>
     </GestureHandlerRootView>

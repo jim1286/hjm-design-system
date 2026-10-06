@@ -187,3 +187,7 @@ iOS 실측에서 retry 터치가 Gallery gesture layer에 막히는 문제와 �
 가독성 문제를 수정했다. light·dark/2배 글자에서 재시도 복구를 확인했다.
 [검증 기록](../qa/2026-10-07-image-viewer-host.md). 명시적 배율·회전과 Expo onDisplay
 실기기 검증·Utilverse 적용은 남아 있으며 실험 개수와 전수 조사 완료 상태는 바꾸지 않는다.
+
+ImageViewer의 회전 허용 prop과 좌우 cutout 보호를 추가했다. 닫기·재시도·이전/다음은
+긴 문구가 줄바꿈될 수 있다. Gallery의 공개 ref에는 정확한 scale 설정이 없어
+2배/pixel 보기의 구현 경로를 별도 검증한다. 회전 실측과 명시적 배율은 아직 미완료다.

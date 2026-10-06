@@ -106,8 +106,9 @@ it("ImageViewer: caption and controls sit inside the page gutter", async () => {
     closeLabel="Close" previousLabel="Previous" nextLabel="Next" loadingLabel="Loading" errorLabel="Error" retryLabel="Retry" />);
   const caption = tree!.root.find((n) => n.props.children === "Deer" && n.props.accessibilityLiveRegion === "polite");
   let at: ReactTestInstance | null = caption.parent;
-  while (at && typeof flat(at.props.style).paddingHorizontal !== "number") at = at.parent;
-  expect(flat(at!.props.style).paddingHorizontal).toBeGreaterThan(0);
+  while (at && typeof flat(at.props.style).paddingLeft !== "number") at = at.parent;
+  expect(flat(at!.props.style).paddingLeft).toBeGreaterThan(0);
+  expect(flat(at!.props.style).paddingRight).toBe(flat(at!.props.style).paddingLeft);
 });
 
 it("Switch: on iOS the track restates centre alignment over RN's alignSelf flex-start", async () => {
