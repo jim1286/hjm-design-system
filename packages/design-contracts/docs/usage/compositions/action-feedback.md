@@ -4,7 +4,7 @@
 - 상태: 실험
 - 지원: Web · Native
 - 적용: 미게시(1.13.1 이후)
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: 공개 API를 사용하는 `showcase/*/reference-adoption-previews.tsx`
 - 스토리북: `실험/구성/피드백과 복구/버튼 완료 피드백`
 
@@ -21,9 +21,11 @@
 ## 배치
 
 ```text
-[제목 또는 현재 입력]
-[상태/내용 영역]
-[관련 행동과 결과]
+[제목]
+[기록 제목 입력]
+[저장 / 다시 저장 버튼]
+[진행·실패·성공 결과]
+[실패 체험 스위치 + 서버 요청 없음 안내]
 ```
 
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
@@ -34,7 +36,10 @@
 
 ## 흐름과 상태
 
-1. 입력→요청→실제 결과에 따라 성공/실패; 재시도도 같은 입력
+1. 입력→요청→실제 결과에 따라 성공/실패. 다시 저장은 클릭한 시점의 현재 초안을 새 요청으로 보낸다.
+   2026-10-07 실패 후 제목 수정·재저장 확인에서 기존 문서의 “같은 입력 재시도”와 구현이
+   다른 것을 확인했다. 편집 가능한 초안에 맞춰 현재 값 저장을 유지한다. 실패한 요청의
+   원래 값 재시도가 필요하면 별도 행동에서 action-session.retry를 연결하고 대상 값을 알린다.
 2. 서버 응답·파일 권한·문구·브랜드는 제품이 전달한다. Showcase의 예제 응답과 고정 데이터를 가져오지 않는다.
 
 | 상태 | 모습 | 포커스·알림 |
@@ -47,16 +52,20 @@
 
 ```tsx
 // Web
-<Button loading={busy} onClick={save}>{saveLabel}</Button>
+<Button loading={busy} onClick={save}>{busy ? pendingLabel : saveLabel}</Button>
 ```
 
 ```tsx
 // Native
-<Button loading={busy} onPress={save}>{saveLabel}</Button>
+<Button loading={busy} onPress={save}>{busy ? pendingLabel : saveLabel}</Button>
 ```
 
 Web은 `@hjmds/react`의 해당 granular entry, Native는 `@hjmds/react-native` entry를 쓴다.
 Button의 실행 콜백은 Web `onClick`, Native `onPress`로 연결한다. 위 골격의 도메인 함수·변수는 제품이 제공한다.
+
+예제 응답은 useDemoAction의 인위 지연이며 실제 네트워크·영구 저장이 아니다.
+완료 문구는 응답 확정 뒤 표시한다. 저장 중 입력 편집이 가능하므로, 저장 결과는 현재
+초안으로 바꿔 쓰지 말고 응답 값으로 표시한다. 실패 체험 설정은 요청 중 바꾸지 않는다.
 
 ## 플랫폼 차이
 

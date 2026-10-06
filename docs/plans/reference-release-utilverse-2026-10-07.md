@@ -24,9 +24,9 @@ UI·기능 검증을 거쳐 승격·릴리스하고 Utilverse의 대체 가능�
 | 후보 | 현재 구현/판단 | 남은 일 |
 | --- | --- | --- |
 | Morphing Popover / Dialog | 원본 초점·초안 소실 확인. 양 Dialog renderer와 Web Popover에 motionOrigin 구현, 초안 보존 편집 실험에 비모달 변형 추가 | Dialog/Popover 전체 환경·기기·성능 검증. docs/qa/2026-10-07-overlay-origin-transition.md |
-| Transition Panel | ContentTransition animateHeight 구현 | 실제 Web/Native 빠른 전환·입력 보존·큰 글자 UI 검증 |
+| Transition Panel | ContentTransition animateHeight 구현. Web390px dark/큰 글자 상세·빠른 방향키 전환·입력 보존 확인 | Native 실제 전환·전체 환경·성능. docs/qa/2026-10-07-feedback-panel-reference.md |
 | Animated Background | Tabs gooey 유지. SegmentedControl selectionMotion=slide 실험 추가 | Web/Native 회귀 7개 통과, 기본·다크·큰 글자 Web UI 확인; 좁은 화면·팔레트·기기 검증 대기 |
-| Stateful Button | ActionFeedback 실험 | 완료·실패·재시도와 UI 검증 |
+| Stateful Button | Web·iOS 실패→편집→현재 초안 저장 확인. pending 라벨·실패 설정 잠금·비서버 안내 보완 | 환경 조합·제품 상태 연결. docs/qa/2026-10-07-feedback-panel-reference.md |
 | File Upload | Web 실제 파일 제한·중복·취소·키보드 재시도 확인, 상태 전환 초점 수정. Native 합성 오류/재시도/성공 확인 | Native 시스템 picker·실제 전송 취소·환경 조합. docs/qa/2026-10-07-upload-reference.md |
 | Bento Grid | ProductBento 실험 | 좁은 화면/Native 정보 순서·레이아웃 검증 |
 | CTA | Ente/Webflow 갤러리 캡처 대조. ProductBento에 BottomCTA/BottomInfo·초안 유지·실패/재시도 연결. Web·iOS 실제 흐름 확인 | 전체 갤러리 시각 검토·제품 팔레트·Native 환경 조합. docs/qa/2026-10-07-cta-reference.md |

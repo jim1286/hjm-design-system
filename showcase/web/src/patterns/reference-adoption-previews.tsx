@@ -34,9 +34,10 @@ export function ActionFeedbackPreview() {
   const [draft,setDraft]=useState("");
   const status=state.status;
   return <Stack gap="md"><Text variant="heading">입력은 남기고, 결과는 분명하게</Text><TextField label="기록 제목" value={draft} onValueChange={setDraft} />
-    <Button loading={busy} disabled={!draft.trim()} onClick={()=>{void session.run(()=>request(draft),{retryable:true});}}>{status==="success"?"✓ 다시 저장":status==="error"?"다시 저장":"기록 저장"}</Button>
+    <Button loading={busy} disabled={!draft.trim()} onClick={()=>{void session.run(()=>request(draft),{retryable:true});}}>{busy?"기록 저장 중":status==="success"?"✓ 다시 저장":status==="error"?"다시 저장":"기록 저장"}</Button>
     <ContentTransition stateKey={status} animateHeight><Text role="status">{busy?"저장을 확인하고 있어요":status==="error"?"저장하지 못했어요. 제목은 남아 있으니 다시 시도해 주세요.":status==="success"?`저장한 제목: ${state.value}`:"제목을 입력한 뒤 저장해 주세요."}</Text></ContentTransition>
-    <Button tone="ghost" selected={failureArmed} onClick={toggleFailure}>예제: 다음 저장 실패</Button></Stack>;
+    <Button tone="ghost" selected={failureArmed} disabled={busy} onClick={toggleFailure}>예제: 다음 저장 실패</Button>
+    <Text>실제 서버 요청 없는 예제예요. 다시 저장하면 현재 입력한 제목을 사용해요.</Text></Stack>;
 }
 export function UploadRecoveryPreview() {
   const [items,setItems]=useState<UploadItemDescriptor[]>([]); const [notice,setNotice]=useState("");

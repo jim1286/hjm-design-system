@@ -4,7 +4,7 @@
 - 상태: 실험
 - 지원: Web · Native
 - 적용: 미게시(1.13.1 이후)
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: 공개 API를 사용하는 `showcase/*/reference-adoption-previews.tsx`
 - 스토리북: `실험/구성/직접 조작과 모션/높이가 이어지는 패널`
 
@@ -21,9 +21,9 @@
 ## 배치
 
 ```text
-[제목 또는 현재 입력]
-[상태/내용 영역]
-[관련 행동과 결과]
+[요약 / 상세 단일 선택]
+[높이가 바뀌는 콘텐츠 패널]
+[전환 바깥의 메모 입력: 유지]
 ```
 
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
@@ -56,7 +56,9 @@
 ```
 
 Web은 `@hjmds/react`의 해당 granular entry, Native는 `@hjmds/react-native` entry를 쓴다.
-Button의 실행 콜백은 Web `onClick`, Native `onPress`로 연결한다. 위 골격의 도메인 함수·변수는 제품이 제공한다.
+선택은 SegmentedControl의 onValueChange로 연결한다. 패널 바깥 입력은 unmount하지 않는다.
+2026-10-07 Web 390px·큰 글자에서 상세→요약 방향키 연속 전환 뒤 단일 내용과 초안 보존을
+확인했다. 이 확인은 프레임 속도나 Native 성능 동등성의 근거가 아니다.
 
 ## 플랫폼 차이
 
