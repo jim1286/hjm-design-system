@@ -819,9 +819,9 @@
       "existingMapping": "목록·이미지 장식",
       "priorRationale": "가장자리 표현 후보, 실제 콘텐츠 가림 금지",
       "sourceAudit": "2026-10-06",
-      "visualReview": "pending",
-      "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "visualReview": "partial: 2026-10-07 IAB accessible after web fetch returned 403; rendered page has artwork basic/hover and directional slider examples. Do not treat web fetch failure as site-wide browser block.",
+      "interactionReview": "partial: pointer over artwork reveals blur and author/title at opacity 1; no keyboard-focusable artwork control inside the preview. The direction demo is an automatic duplicated number strip, not input range. After CDP prefers-reduced-motion=reduce and reload, translateX changed from -1.8px to -1097px on consecutive observations; no pause control seen in the demo. Emulation restored. Dark/responsive/performance pending.",
+      "adoptionDecision": "Use static artwork edge only behind always-visible copy, or a scroll-metric-driven hint. Do not inherit hover-only visual copy or automatic strip movement that ignores reduced motion. Renderer implementation remains pending."
     },
     {
       "url": "https://motion-primitives.com/docs/scroll-progress",
@@ -2060,14 +2060,15 @@
       "existingMapping": "목록·이미지 장식",
       "priorRationale": "가장자리 시각 힌트 후보",
       "sourceAudit": "2026-10-06",
-      "visualReview": "pending",
-      "interactionReview": "pending",
-      "adoptionDecision": "pending",
+      "visualReview": "partial: 2026-10-07 IAB default light 1280x720. 400px list, 160px bottom effect, eight CSS backdrop-filter layers (0.5–64px). At scrollTop=1384, scrollHeight=1784, clientHeight=400, last item 19 remains visibly blurred.",
+      "interactionReview": "partial: actual wheel to list end; effect does not hide at the boundary. All eight layers have pointer-events:none. Keyboard, dark, responsive and performance pending.",
+      "adoptionDecision": "Keep conditional recommendation, not direct copy. Require scroll-metric-driven edge visibility and no masking of a focused control. Existing EffectSurface only supplies decorative background mesh/glow/grain; it cannot blur underlying content.",
       "sourceCheck": {
         "status": "html",
         "checkedAt": "2026-10-06T15:58:28.106655+00:00",
         "evidence": "reference-page-source-index.json"
-      }
+      },
+      "implementationBoundary": "New renderer implementation not yet added. Native actual backdrop requires a product/platform host; Expo SDK57 Android requires BlurTargetView and blurTarget/blurMethod. Semi-transparent legacy Android output is not accepted as equivalent blur. See docs/plans/progressive-blur-adoption-2026-10-07.md."
     },
     {
       "url": "https://magicui.design/docs/components/scroll-progress",

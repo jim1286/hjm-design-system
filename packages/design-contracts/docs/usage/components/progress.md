@@ -120,3 +120,20 @@ linear                               circular (Web)          circular (Native)
 ## 함정
 
 - 1.12.0 전 Native `max` 기본값은 1이었다. 분수 값을 넘기던 옛 코드는 `max={1}`을 명시해야 한다([이관표](../../migration-native-legacy-removal.md)).
+
+### 가장자리 힌트의 표시 여부
+
+2026-10-07 레퍼런스 조사에서 끝까지 스크롤한 마지막 행도 블러에 가려지는 문제를 확인했다.
+새 `resolveScrollEdges`는 같은 `ScrollMetrics`에서 논리적 이전/다음 콘텐츠 존재 여부를 계산한다.
+아직 미게시이며 `/scroll-progress` subpath에서 제공한다. 블러 renderer 자체를 제공한다는 뜻은 아니다.
+
+```ts
+import { resolveScrollEdges } from "@hjmds/design-contracts/scroll-progress";
+const { before, after } = resolveScrollEdges(metrics);
+```
+
+- viewportSize=0(미측정), 콘텐츠가 들어맞는 경우에는 둘 다 false다.
+- 소수 offset과 정수 콘텐츠 크기의 오차 때문에 1 logical pixel 이내는 경계로 취급한다.
+- Native 탄성 overscroll은 범위 안으로 제한한다. 가로 RTL offset은 제품 host가 논리적 전진 값으로 정규화한다.
+- 콘텐츠 크기가 바뀌면 새 metrics로 다시 계산한다. focus나 읽기 도구로 접근한 콘텐츠를 가리는지는
+  이 순수 계산만으로 판단할 수 없다. 시각 효과 renderer가 해당 조작 상태에서 가림을 제거해야 한다.

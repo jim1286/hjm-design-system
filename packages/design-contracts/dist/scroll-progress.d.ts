@@ -4,5 +4,11 @@ export type ScrollMetrics = Readonly<{
     contentSize: number;
     viewportSize: number;
 }>;
-export declare function resolveScrollProgress({ offset, contentSize, viewportSize }: ScrollMetrics): number;
+export declare function resolveScrollProgress(metrics: ScrollMetrics): number;
+export type ScrollEdges = Readonly<{
+    before: boolean;
+    after: boolean;
+}>;
+/** Whether more content exists in either logical direction; not a scroll action. */
+export declare function resolveScrollEdges(metrics: ScrollMetrics): ScrollEdges;
 //# sourceMappingURL=scroll-progress.d.ts.map

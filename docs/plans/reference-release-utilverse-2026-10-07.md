@@ -33,7 +33,7 @@ UI·기능 검증을 거쳐 승격·릴리스하고 Utilverse의 대체 가능�
 | Refero | REFERENCE_BRIEF 템플릿 | 전체 스타일 시각 검토와 역할별 제품 테마 대조 |
 | Image Comparison | 양 renderer 공개 API 및 실험 | 실제 드래그·스크롤 충돌·RTL·이미지 실패 UI 검증 |
 | Dynamic / Expandable Toolbar | ContextToolbar 실험 | 키보드·초안 유지·초점 복귀 검증 |
-| Progressive Blur | 미구현 | 정보/조작을 가리지 않는 가장자리 표현, Native 지원·비용 비교 |
+| Progressive Blur | 원본 마지막 행 가림 확인, 기존 ScrollMetrics에 경계 계산 추가. 효과 renderer 미구현 | 시작/끝·포커스 보호가 있는 실험 구현, Native 실제 blur/mask 합성·비용 비교. progressive-blur-adoption-2026-10-07.md |
 | Noise / EffectSurface | 기존 grain/glow/mesh 유지 | 기존 preset과 차이가 있는 후보만 추가 |
 | Hero Video Dialog | 기존 Dialog + 제품 player host Web/Native 실험 구현. Web 실제 재생·실패 복구·닫기·초안 유지 확인 | Native 실제 기기, 제품 팔레트, 실제 유음 콘텐츠의 자막/대본 검증 남음. 무음 fixture를 자막 검증으로 세지 않음 |
 | Rating | 양 renderer 공개 API 및 실험 | 평균/입력/초기화·키보드·큰 글자 UI 검증 |
