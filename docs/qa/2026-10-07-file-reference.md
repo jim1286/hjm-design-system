@@ -48,3 +48,11 @@ Nucleus 예제 다운로드는 실행하지 않았다. 브라우저 캡처는 �
 표시하지 않으며, HTML anchor의 다운로드 시작을 저장 완료로 판정하지 않는다.
 Lightning 키보드·모바일·스크린리더와 실제 전송, Brighton 대체 공개 원본 탐색은 남았다.
 이번 캡처는 도구에서 확인했고 로컬 원시 파일은 저장하지 않았다.
+
+## 내부 구현 검증
+
+`b680b19` 이후 문서 resolver 후보를 추가했다. 신규 8개와 기존 action-session 9개 검사는
+preview 오류와 저장의 독립성, started/cancelled가 saved로 표시되지 않음, pending 중 재실행 금지,
+명시적 retry 정책, 비활성, metadata 보존/불변성, 잘못된 상태 거절, A→B 뒤 A 성공/실패 무시를 다룬다.
+contracts typecheck/build도 통과했다. 이 검사는 실제 파일 다운로드·OS 저장이나 UI 검증이 아니다.
+새 export·renderer·Storybook은 없으며 17번째 실험으로 세지 않는다.

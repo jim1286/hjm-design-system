@@ -39,3 +39,18 @@ descriptor의 asset identity, 상태, callback 수명은 기존 action-session �
 
 외부 원본의 no-op 메뉴나 placeholder # 링크는 HJM 실험에서 그대로 흉내 내지 않는다.
 Brighton 두 원본이 현재 열리지 않는다는 사실은 전체 원본 조사 완료나 이 후보의 검증 면제를 뜻하지 않는다.
+
+## 내부 계약 구현
+
+2026-10-07 `b680b19` 이후 `src/document-resource.ts`에 순수 resolver를 추가했다.
+공개 subpath/renderer/스토리는 아직 없다. preview none/loading/ready/error와 save
+idle/pending/started/saved/cancelled/error를 분리한다. 오류 retryable은 명시해야 하며
+일반 저장 버튼으로 retryable=false를 우회하지 않는다. metadata는 제품 문자열을 보존한다.
+
+수명 제어는 기존 createActionSession의 run/reset을 재사용하며 새 비동기 엔진은 만들지 않는다.
+파일 교체·unmount에서 reset으로 이전 결과를 분리하고, OS 작업의 실제 취소 여부는 host가 소유한다.
+재실행 가능 여부·결과 확인은 제품 정책이다. renderer는 action session의 success만 보고 저장
+성공을 표시하면 안 되며 host 결과의 started/saved/cancelled 구분을 사용해야 한다.
+
+신규 resolver/수명 대조 8개와 기존 action-session 9개, contracts typecheck/build 통과.
+양 renderer·실제 다운로드/native 저장·UI 검증은 남아 있다. 실험 수는 16개로 유지한다.
