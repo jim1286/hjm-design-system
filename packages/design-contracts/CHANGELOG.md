@@ -1,5 +1,77 @@
 # @hjmds/design-contracts
 
+## 1.14.0
+
+### Minor Changes
+
+- 1dea6da: Add Agreement descriptor.disabled to freeze consent changes during submission without altering required-item validity, selected consent, or detail reading. Keep Web focus and native disabled semantics, and provide matching interactive examples and usage guidance.
+
+  Keep large-text agreement labels readable by wrapping long detail actions beneath them, and render fixed-size selection marks without font scaling overflow.
+
+- 81ce52a: Expose experimental DateEntry through dedicated subpaths. Compose existing text fields with lossless date drafts, product-controlled parsing and error visibility, localized order and birthdate autocomplete. Keep calendar selection in DatePicker and Calendar.
+- c09b716: Expose experimental DocumentResource through dedicated subpaths. Compose file metadata, independent preview/export/menu actions and explicit failure recovery. Distinguish download initiation from host-confirmed saving. Keep file access, permissions and durable outcomes product-owned; provide Web/Native usage and interactive examples.
+
+  Restore Web keyboard focus after removing preview retry within the same document, without taking focus from another control or a replacement document.
+
+  Allow product review gates to disable export and export retry without disabling document preview or preview recovery.
+
+- 56a5a03: Expose experimental FieldGroup through dedicated subpaths. Keep named groups, independent field feedback and guarded edits separate from form submission. Provide Web fieldset/legend semantics and Native per-control accessibility bindings.
+
+  Invalidate retained callbacks after committed field removal even when the same id is reinserted. Preserve active bindings across normal rerenders and Strict Mode effect replay, while blocking edits during cleanup and after unmount.
+
+- c3f8753: Add image inspection geometry for fit, double-fit and output-size viewing through the existing components/image subpath. Preserve image aspect ratio and expose centered pan bounds in layout units, with invalid and overflowed size validation. Renderer integration remains pending.
+- feef594: Add measured origin-to-destination geometry to the existing content-transition subpath. Invalid or missing layout and reduced motion retain the canonical overlay presentation. This resolver does not introduce a renderer morph API or change focus/presence behavior.
+- 87e8ea2: Add isolated ProgressiveBlur subpaths with shared logical-edge, scroll-boundary and focus visibility rules. Web renders masked backdrop layers; Native accepts a product-owned blur/mask host and isolates decoration failures. Register an experimental list preview and usage guidance; no blur engine enters published renderer dependencies.
+- 053e289: Add experimental, granular Rating and ImageComparison compositions with shared validation,
+  localized accessibility, existing Image/Slider behavior and no new dependencies. Add opt-in
+  ContentTransition animateHeight without an exiting interactive subtree. Existing transition
+  defaults remain unchanged; no migration is required unless opting into the new APIs.
+
+  Provide matching experimental Web/Native stories for input/read-only ratings, image comparison,
+  adaptive panel height, action feedback, upload recovery, product feature cards and contextual tools.
+  See docs/plans/ui-reference-application-2026-10-06.md for adoption decisions and validation limits.
+
+- 98ff957: Add resolveScrollEdges to the existing scroll-progress subpath so product edge hints disappear at the actual boundary, including fractional offsets, overscroll and content resizing. Existing progress semantics are unchanged; renderers still own their visual effects and focus handling.
+- fbecc70: Add an opt-in noise layer to EffectSurface with a shared static alpha tile and semantic tint. Existing grain and defaults remain unchanged. The Native SVG peer does not implement FeTurbulence, so this original raster texture avoids adding a new runtime. This is a visual experiment, not SVG-filter pixel parity.
+- e7903e6: Add mergeTextAnnotationFragments for measured runs on the same visual line.
+  This prevents overlapping marker washes at font-fallback boundaries while
+  preserving unselected gaps and distinct lines. A Native Skia diagnostic confirms
+  range geometry on Korean, emoji, and mixed-direction text, but is not a public
+  renderer or a replacement for native text selection.
+- eb5fd35: Expose the pure text-annotation geometry subpath and add an internal Web renderer
+  that measures actual inline line fragments, preserves text selection, and cancels
+  decorative motion for reduced-motion users. The renderer remains outside public
+  exports and Storybook until Native fragment measurement and visual review are
+  complete. See docs/text-annotation.md for the outstanding adoption boundary.
+
+  Merge touching Web bidi fragments in the same measured vertical band to remove interior annotation seams; preserve separate lines and unselected gaps.
+
+### Patch Changes
+
+- 247d12b: Allow Native Avatar to use a product image host with the canonical fallback and source-generation-safe error callback. This preserves consumer disk-cache and loading-fallback behavior without adding Expo Image to HJM. The default native Image renderer is unchanged.
+- e5d0ff1: Keep image-comparison captions aligned with their physical before/after sides in RTL. Document image-host verification and use compatible deterministic PNG showcase fixtures.
+- 893cf45: Add opt-in enterOnMount to ContentTransition for new data rows, preserving stable keys and existing default behavior. Provide a Web/Native live-list experiment with immediate batch updates, draft retention, deletion and motion controls.
+- 3dbfe94: Promote the 17 reviewed Web/Native Storybook experiments and their usage guides after explicit user approval. Preserve Web story IDs and optional product-host boundaries. Keep Native onboarding guidance inside the existing scroll body so 200% text and a keyboard cannot collapse the input area; keep completion actions fixed. Repair the native Agreement artwork regression assertion and add DateEntry, FieldGroup and DocumentResource to the real Metro reachability fixture.
+
+  See docs/qa/2026-10-07-experiment-promotion-release.md for observed flows, release validation and unverified product environments.
+
+- c333e38: Document the experimental illustrated empty-state/onboarding/result composition using existing public slots. Keep product artwork and media dependencies out of the renderer packages, preserve drafts through back navigation, and retain actions when decoration fails.
+- 65e0174: Document number-effect reference comparisons and locale-preserving AnimatedStatistic examples without replacing the existing renderer engines.
+- 190e819: Add optional measured-origin presentation to the existing Web Popover, sharing Dialog's animation lifecycle while preserving anchored placement, non-modal focus, dismissal and reduced-motion behavior. Document draft ownership and the Native Dialog/Sheet alternative.
+- 28ac155: Restore keyboard focus to the first rating option when clearing disables the clear button. Clarify the current supplemental rating contract alongside the historical Slider composition decision.
+- 4aa6563: Clarify explicit reading-host metrics, dynamic content measurement, and the distinction between scroll position and reading completion.
+- 284e6c8: Clarify product-introduction CTA guidance with existing BottomCTA/BottomInfo, retained drafts and recovery states. Keep external style extraction separate from observed product behavior.
+- 5af6cab: Add internal deterministic geometry for seven text annotation treatments using
+  renderer-measured line fragments. This is unfinished experimental infrastructure:
+  there is no public package export or renderer yet. See docs/text-annotation.md for
+  the measurement, accessibility, and motion work required before adoption.
+- 9592332: Keep experimental surrounding-loop strokes outside the measured text rectangle.
+  The previous inscribed ellipse crossed end glyphs at large text sizes. The new
+  outward-bowed loop includes pen width in its clearance and SVG bounds. Its visual
+  difference from an ellipse remains subject to experiment review.
+- b89a9c6: Clarify upload recovery focus destinations, consistent example file limits, and the boundary between local fixtures and real transfer cancellation.
+- b6feb70: Document the existing Dialog composition for product-owned video playback, error recovery, focus return and immediate media disposal. Add Web and Native experimental showcases without a new published player dependency.
+
 ## 1.13.1
 
 ### Patch Changes
