@@ -86,8 +86,8 @@ UI·기능 검증을 거쳐 승격·릴리스하고 Utilverse의 대체 가능�
 
 `node scripts/audit-consumer-ui.mjs <utilverse-root> docs/plans/utilverse-ui-adoption-inventory.json`
 명령으로 소비 저장소의 TypeScript parser를 사용해 `apps/mobile/src/**/*.tsx` 136개를 읽었다.
-JSX에서 실제 사용한 import·alias·행 번호·파일 hash를 기록했다. 현재 81개 파일은 source-reviewed이며
-나머지 55개는 pending이다. source-reviewed는 UI·동작 검증이나 채택 완료가 아니다.
+JSX에서 실제 사용한 import·alias·행 번호·파일 hash를 기록했다. 현재 87개 파일은 source-reviewed이며
+나머지 49개는 pending이다. source-reviewed는 UI·동작 검증이나 채택 완료가 아니다.
 HJM import가 있다는 사실만으로 내부 자체 UI가 대체됐다고 판단하지 않는다. Alert.alert 같은
 JSX 밖 호출은 위 1차 대조 목록 및 후속 동작 분석으로 함께 확인한다.
 
@@ -291,3 +291,7 @@ snapshot이며 Android·접근성·전체 환경은 아직 미검증이다. 실�
 ## 가입·계정 소스 검토 갱신
 
 10개 파일을 추가 검토해 81/136 source-reviewed다. [계정 채택 계획](utilverse-account-auth-adoption.md)에 Agreement의 버전별 동의·잠금, List/계정 행동, Notice 안내 교체와 제품 보존 계약을 기록했다. HJM 1dea6da의 잠금·큰 글자 수정은 완료했으나 소비 적용은 릴리스 후이며 아직 미실행이다.
+
+## 공개 콘텐츠 복구 소스 검토 갱신
+
+6개 파일 추가 검토로 87/136 source-reviewed다. [복구 UI 채택 계획](utilverse-public-recovery-adoption.md)에 이의 신청 확인창, 댓글 메뉴, 로컬 문서 복구와 실패 후 원문 비노출 계약을 기록했다. 소비 적용·runtime 검증은 미실행이다.

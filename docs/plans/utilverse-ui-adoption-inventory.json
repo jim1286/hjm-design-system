@@ -2273,8 +2273,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "review-menu-preserve-revision",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "3b8de6e",
+        "report": "docs/plans/utilverse-public-recovery-adoption.md",
+        "reason": "Compare existing Menu for owner/connection/busy-gated action choices and close-to-next-flow focus. Preserve durable pending edit ID, captured expectedRevision, uncertainty locks, conflict refresh and session-scoped invalidation. Keep edit/history forms separate.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/CommunityNotificationSettings.tsx",
@@ -2998,8 +3007,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "replace-with-notice",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "3b8de6e",
+        "report": "docs/plans/utilverse-public-recovery-adoption.md",
+        "reason": "Use persistent Notice for storage/invalid errors with explicit announcement; preserve member-vs-guest ownership text and read retry only when not ready. Ready write failure is not a read-retry action.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/PhotoFilePreview.tsx",
@@ -3325,8 +3343,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "replace-feedback-preserve-history",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "3b8de6e",
+        "report": "docs/plans/utilverse-public-recovery-adoption.md",
+        "reason": "Already Surface/Stack/selectable Text. Use Notice for failure, retaining immediate suppression of cached raw revisions after refresh denial/failure, scoped query and pagination.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/PushServiceScope.tsx",
@@ -3996,8 +4023,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "replace-feedback-preserve-recovery",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "3b8de6e",
+        "report": "docs/plans/utilverse-public-recovery-adoption.md",
+        "reason": "Use Notice for load failure while preserving durable per-account/target action document loading before mounting recovered command. Close does not discard uncertain intent.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/StoredPublicComposition.tsx",
@@ -4032,8 +4068,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "replace-feedback-preserve-recovery",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "3b8de6e",
+        "report": "docs/plans/utilverse-public-recovery-adoption.md",
+        "reason": "Use Notice for loading failure; preserve awaited document queue drain in addition to ready flag before mounting composer, optional unavailable surface and safe back route.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/TimerServiceScope.tsx",
@@ -6851,8 +6896,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "replace-confirmation-preserve-appeal",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "3b8de6e",
+        "report": "docs/plans/utilverse-public-recovery-adoption.md",
+        "reason": "Replace Alert.alert with AlertDialog confirmation only; preserve captured reason, clientAppealId, uncertain/done lock, receipt validation, identity-scoped invalidation and private in-memory appeal text.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/features/ModerationAppealsScreen.tsx",
