@@ -947,6 +947,15 @@
         "role": "canonical"
       },
       {
+        "name": "ProgressiveBlur",
+        "source": "packages/react/src/progressive-blur.tsx",
+        "entries": [
+          "./progressive-blur"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
         "name": "QRCode",
         "source": "packages/react/src/qr-code.tsx",
         "entries": [
@@ -2407,6 +2416,15 @@
         ],
         "canonicalComponent": "Progress",
         "role": "canonical"
+      },
+      {
+        "name": "ProgressiveBlur",
+        "source": "packages/react-native/src/progressive-blur.tsx",
+        "entries": [
+          "./progressive-blur"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
       },
       {
         "name": "QRCode",

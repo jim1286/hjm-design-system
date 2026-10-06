@@ -114,6 +114,7 @@
 | [Popover](components/popover.md) | 오버레이 | 트리거에 붙어 뜨는 비모달 표면 안에 **포커스를 받는 임의 콘텐츠**를 둘 때 쓴다. | 배포 | Web |
 | [ProfileScreen](components/profile-screen.md) | 화면/계정 | 내 프로필(또는 계정) 화면 틀에 쓴다. | 배포 | Web · Native |
 | [Progress](components/progress.md) | 상태와 알림 | 작업이 얼마나 진행됐는지 보여 줄 때 쓴다. | 배포 | Web · Native |
+| [ProgressiveBlur](components/progressive-blur.md) | 시각 효과 | 스크롤 영역의 바깥에 더 내용이 있음을 알리거나 장식 이미지 가장자리를 흐릴 때 쓴다. | 실험 | Web · Native |
 | [QRCode](components/qr-code.md) | 데이터 표시 | 문자열(초대 링크, 연결 코드, 결제·체크인 URL)을 다른 기기의 카메라로 스캔하게 할 때 쓴다. | 배포 | Web · Native |
 | [Radio](components/radio.md) | 입력 | 라디오 한 개를 제품이 직접 배치해야 할 때만 쓴다. | 배포 | Web · Native |
 | [RadioGroup](components/radio-group.md) | 입력 | 한 화면에 펼쳐 둔 선택지 중 정확히 하나를 고를 때 쓴다. | 배포 | Web · Native |

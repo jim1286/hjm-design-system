@@ -1,7 +1,8 @@
 # 가장자리 블러 도입 검토
 
-2026-10-07 사용자 요청의 후속 후보다. 상태: 소스·원본 UI 조사와 경계 계산 구현 완료,
-Web/Native 블러 실험 및 성능·기기 검증 미완료. 이 문서를 실험 등록이나 승격으로 세지 않는다.
+2026-10-07 사용자 요청의 후속 후보다. 상태: 공통 계약·Web/Native renderer 및 11번째
+실험 등록 구현. iOS 시뮬레이터의 실제 blur/mask 합성과 기본 흐름을 확인했으며,
+Android·성능·제품 팔레트 검증은 남았다. 승격·릴리스 완료가 아니다.
 
 ## 실제 원본 관찰
 
@@ -27,7 +28,9 @@ Web/Native 블러 실험 및 성능·기기 검증 미완료. 이 문서를 실�
   별도 scroll 상태 엔진을 만들지 않고 이 측정값을 재사용한다.
 - 새 `resolveScrollEdges(metrics)`를 같은 contracts subpath에 추가했다. 끝/시작·미측정·내용 맞춤·
   탄성 overscroll·소수 offset을 처리한다. 임의 타이머/진행률로 경계를 추정하지 않는다.
-- 경계 계산은 블러 또는 초점 보호의 구현 완료가 아니다. 아직 두 renderer에 효과를 추가하지 않았다.
+- `ProgressiveBlur`를 별도 granular subpath에 추가했다. Web은 CSS backdrop-filter/mask,
+  Native는 제품 renderLayer를 사용한다. Expo/마스크 의존성은 Showcase에만 둔다.
+  scroll descriptor는 실제 경계와 focused 상태를 요구하며, host 오류는 장식만 제거한다.
 
 ## Native 실제 호스트 요건
 
@@ -53,3 +56,22 @@ optional subpath 또는 제품 호스트 경계에서 정하고 원래 root impo
 
 별도 다운로드 미디어나 원문 HTML은 보관하지 않았다. 원본 화면 캡처는 관찰만 했으며
 추가로 원시 이미지 파일을 만들지 않았다. URL별 판단은 reference-component-review-ledger.json에 반영했다.
+
+## 구현 후 시뮬레이터 확인
+
+2026-10-07 02:04–02:08 KST, 로컬 main 98ff957 이후 미커밋 구현을 기존
+iPhone 17 Pro / iOS 26.5의 Expo Go 57.0.9에서 확인했다. 직접 Device Hub 창 조작이
+아닌 idb·simctl 대체 경로이며 Release/실물 기기 검증으로 세지 않는다.
+
+- 기본 목록을 실제 swipe로 끝까지 이동해 마지막 기록 12의 메모·선택 버튼이 선명함을 확인했다.
+  선택 12를 누르면 결과가 `기록 12 선택됨`으로 바뀌었다. 위쪽 효과만 남았다.
+- 끝에서 항목 하나만 보기로 줄이면 목록 처음으로 복원되고 양쪽 효과가 사라졌다.
+- 다크에서 기본 OS tint가 밝은 띠를 만드는 문제를 발견했다. 제품 host가
+  `useHjmNativeTheme().environment.theme`를 BlurView tint에 전달하도록 고쳐 같은 화면에서
+  밝은 띠가 사라진 것을 확인했다. OS appearance와 명시적인 HJM theme는 다를 수 있다.
+- 큰 글자 2배에서 문구 줄바꿈·메모·선택 버튼을 확인했다. 전체 비교 시트와
+  외부 키보드·스크린리더·두 제품 팔레트 및 Android 실제 합성은 후속 검증 대상이다.
+
+기기 시작 과정에서 Native Storybook 10.4.4의 includeStories 필터가 default meta까지
+제외하는 오류를 확인했다. 최근 그림·영상·블러 3개 파일에서 해당 옵션을 제거하고
+Native에서 같은 등록 오류를 거부하는 검사와 회귀 사례를 추가했다. Web의 includeStories는 유지한다.

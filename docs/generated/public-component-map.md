@@ -4,7 +4,7 @@
 
 ## @hjmds/react
 
-고유 공개 컴포넌트 및 provider 이름 156개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 157개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -105,6 +105,7 @@
 | Popover | Popover | canonical | root, ./popover |
 | ProfileScreen | 별도 보조 기능 | supplemental | ./screen-flows |
 | Progress | Progress | canonical | root, ./feedback |
+| ProgressiveBlur | 별도 보조 기능 | supplemental | ./progressive-blur |
 | QRCode | QRCode | canonical | ./qr-code |
 | Radio | Radio | canonical | root, ./selection |
 | RadioGroup | RadioGroup | canonical | root, ./selection |
@@ -167,7 +168,7 @@
 
 ## @hjmds/react-native
 
-고유 공개 컴포넌트 및 provider 이름 142개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 143개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -262,6 +263,7 @@
 | PhotoSourceSheet | 별도 보조 기능 | supplemental | ./screen-flows |
 | ProfileScreen | 별도 보조 기능 | supplemental | ./screen-flows |
 | Progress | Progress | canonical | root, ./feedback |
+| ProgressiveBlur | 별도 보조 기능 | supplemental | ./progressive-blur |
 | QRCode | QRCode | canonical | ./qr-code |
 | Radio | Radio | canonical | root, ./inputs |
 | RadioGroup | RadioGroup | canonical | root, ./inputs |

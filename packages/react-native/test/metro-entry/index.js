@@ -1,3 +1,4 @@
+import * as optionalFamily15 from "@hjmds/react-native/progressive-blur";
 import { SavedItemsScreen } from "@hjmds/react-native/saved-items";
 import { ProfileScreen } from "@hjmds/react-native/screen-flows";
 import { ScreenLayout } from "@hjmds/react-native/screens";
@@ -68,7 +69,7 @@ import { Icon, Text } from "@hjmds/react-native/primitives";
 import { HjmNativeProvider } from "@hjmds/react-native/provider";
 
 // Keep peer-free optional exports reachable so Metro checks their actual dependency graph.
-const optionalFamilyNames = [optionalFamily0, optionalFamily1, optionalFamily2, optionalFamily3, optionalFamily4, optionalFamily5, optionalFamily6, optionalFamily7, optionalFamily8, optionalFamily9, optionalFamily10, optionalFamily11, optionalFamily12, optionalFamily13, optionalFamily14].flatMap(family => Object.keys(family));
+const optionalFamilyNames = [optionalFamily0, optionalFamily1, optionalFamily2, optionalFamily3, optionalFamily4, optionalFamily5, optionalFamily6, optionalFamily7, optionalFamily8, optionalFamily9, optionalFamily10, optionalFamily11, optionalFamily12, optionalFamily13, optionalFamily14, optionalFamily15].flatMap(family => Object.keys(family));
 
 const noop = () => undefined;
 const calendarGrid = {

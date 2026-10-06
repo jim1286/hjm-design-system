@@ -10,7 +10,7 @@ UI·기능 검증을 거쳐 승격·릴리스하고 Utilverse의 대체 가능�
 | 요구 | 필요한 증거 | 현재 상태 |
 | --- | --- | --- |
 | 11개 사이트 전수 조사 | 사이트별 발견 URL 목록과 페이지별 검토·미확인 기록, 후보별 채택 판단 | 미완료. 이전 조사 수집 수를 UI 검토 수로 세지 않음 |
-| 권장 항목 모두 실험 구현 | 후보 목록과 Web/Native 공개 API·개별 스토리·사용 지침 연결 | 로컬 main 10개 실험 구현, 추가 후보 검토 중 |
+| 권장 항목 모두 실험 구현 | 후보 목록과 Web/Native 공개 API·개별 스토리·사용 지침 연결 | 로컬 main 11개 실험 구현, 추가 후보 검토 중 |
 | UI·기능 검증 | 밝음/어두움/큰 글자/RTL/모션 감소 및 실제 행동, 전체 시트와 기기 QA | PR #55 자동 검사 통과. 신규 시각·기기 검증 필요 |
 | 검증 후 승격 | 항목별 QA 근거, Storybook 양쪽 경로와 지침 동시 갱신 | 미실행. 사용자 승인일 2026-10-07, 검증 조건 충족 후 적용 |
 | HJM 릴리스 | 동기화된 버전·Changeset·CI, npm 세 패키지와 tag의 동일 SHA | 미실행. 게시 1.13.1 이후 실험·host 개선은 로컬 main 작업 중 |
@@ -33,7 +33,7 @@ UI·기능 검증을 거쳐 승격·릴리스하고 Utilverse의 대체 가능�
 | Refero | REFERENCE_BRIEF 템플릿 | 전체 스타일 시각 검토와 역할별 제품 테마 대조 |
 | Image Comparison | 양 renderer 공개 API 및 실험 | 실제 드래그·스크롤 충돌·RTL·이미지 실패 UI 검증 |
 | Dynamic / Expandable Toolbar | ContextToolbar 실험 | 키보드·초안 유지·초점 복귀 검증 |
-| Progressive Blur | 원본 마지막 행 가림 확인, 기존 ScrollMetrics에 경계 계산 추가. 효과 renderer 미구현 | 시작/끝·포커스 보호가 있는 실험 구현, Native 실제 blur/mask 합성·비용 비교. progressive-blur-adoption-2026-10-07.md |
+| Progressive Blur | 경계·초점 보호를 포함한 양 renderer 실험 구현. iOS 실제 합성·끝 항목 선택·내용 축소·다크 확인 | Android 합성·접근성·제품 팔레트·비용 비교. progressive-blur-adoption-2026-10-07.md |
 | Noise / EffectSurface | 기존 grain/glow/mesh 유지 | 기존 preset과 차이가 있는 후보만 추가 |
 | Hero Video Dialog | 기존 Dialog + 제품 player host Web/Native 실험 구현. Web 실제 재생·실패 복구·닫기·초안 유지 확인 | Native 실제 기기, 제품 팔레트, 실제 유음 콘텐츠의 자막/대본 검증 남음. 무음 fixture를 자막 검증으로 세지 않음 |
 | Rating | 양 renderer 공개 API 및 실험 | 평균/입력/초기화·키보드·큰 글자 UI 검증 |

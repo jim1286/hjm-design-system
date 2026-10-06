@@ -36,6 +36,8 @@ const budgets = [
   { exportPath: "./voice-note", maxModules: 1, maxRawBytes: 1250, maxGzipBytes: 530, forbiddenModules: metadataModules },
   { exportPath: "./code-block", maxModules: 1, maxRawBytes: 950, maxGzipBytes: 550, forbiddenModules: metadataModules },
   // Pure scroll ratio contract measured 567 raw / 333 gzip bytes.
+  // Progressive blur composes the existing logical scroll boundary resolver.
+  { exportPath: "./progressive-blur", maxModules: 2, maxRawBytes: 4000, maxGzipBytes: 1400, forbiddenModules: metadataModules },
   { exportPath: "./scroll-progress", maxModules: 1, maxRawBytes: 700, maxGzipBytes: 400, forbiddenModules: metadataModules },
   // Isolated integer duration and controlled reactions: measured 1289/610 and 1068/464 raw/gzip bytes.
   { exportPath: "./duration-field", maxModules: 1, maxRawBytes: 1500, maxGzipBytes: 710, forbiddenModules: metadataModules },

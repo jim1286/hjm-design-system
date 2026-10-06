@@ -482,6 +482,11 @@
       "types": "./dist/saved-items.d.ts",
       "import": "./dist/saved-items.js",
       "default": "./dist/saved-items.js"
+    },
+    "./progressive-blur": {
+      "types": "./dist/progressive-blur.d.ts",
+      "import": "./dist/progressive-blur.js",
+      "default": "./dist/progressive-blur.js"
     }
   },
   "files": [

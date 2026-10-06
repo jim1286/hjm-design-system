@@ -73,3 +73,13 @@ it("documents every foundation token group", async () => {
   const { foundationGroups } = await import("../../shared/token-reference");
   expect(Object.values(foundationGroups).flatMap(group => [...group.keys]).sort()).toEqual(Object.keys(tokens).sort());
 });
+
+it("rejects Native includeStories because the pinned runtime drops default metadata", async () => {
+  const checker = pathToFileURL(join(sourceRoot, "../../../scripts/check-storybook.mjs")).href;
+  const { collectModel, checkModel, parseStoryFile } = await import(/* @vite-ignore */ checker);
+  const model = await collectModel(fileURLToPath(new URL("../../../", import.meta.url)));
+  const target = model.files.find((file: { platform: string }) => file.platform === "native");
+  const bad = await parseStoryFile('const meta = { title: "실험/컴포넌트/시각 효과/가장자리 흐림", includeStories: ["Default"] }; export default meta; export const Default = {};', 'fixture.stories.tsx');
+  const { problems } = await checkModel({ ...model, files: model.files.map((file: unknown) => file === target ? { ...target, ...bad } : file) });
+  expect(problems.some((problem: string) => problem.includes("Native includeStories는 default metadata를 제거"))).toBe(true);
+});

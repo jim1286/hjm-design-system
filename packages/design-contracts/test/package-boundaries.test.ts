@@ -160,6 +160,7 @@ describe("package boundaries", () => {
       "./gooey-navigation",
       "./action-session",
       "./screen-patterns",
+      "./progressive-blur",
     ] as const;
 
     expect(Object.keys(packageJson.exports)).toEqual(expectedExports);

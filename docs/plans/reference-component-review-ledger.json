@@ -821,7 +821,8 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "partial: 2026-10-07 IAB accessible after web fetch returned 403; rendered page has artwork basic/hover and directional slider examples. Do not treat web fetch failure as site-wide browser block.",
       "interactionReview": "partial: pointer over artwork reveals blur and author/title at opacity 1; no keyboard-focusable artwork control inside the preview. The direction demo is an automatic duplicated number strip, not input range. After CDP prefers-reduced-motion=reduce and reload, translateX changed from -1.8px to -1097px on consecutive observations; no pause control seen in the demo. Emulation restored. Dark/responsive/performance pending.",
-      "adoptionDecision": "Use static artwork edge only behind always-visible copy, or a scroll-metric-driven hint. Do not inherit hover-only visual copy or automatic strip movement that ignores reduced motion. Renderer implementation remains pending."
+      "adoptionDecision": "Use static artwork edge only behind always-visible copy, or a scroll-metric-driven hint. Do not inherit hover-only visual copy or automatic strip movement that ignores reduced motion. Implemented as an experiment; promotion remains pending.",
+      "implementationBoundary": "2026-10-07: contracts and both granular renderers implemented; scroll edges and focused content remove decoration. Native product blur/mask host keeps Expo dependencies out of published renderer. iOS 26.5 Expo Go actual composition, end-item selection, shrink-to-fit, dark tint correction and large-text initial screen checked. Android actual composition, accessibility, product palettes and performance remain pending. See docs/qa/2026-10-07-progressive-blur.md."
     },
     {
       "url": "https://motion-primitives.com/docs/scroll-progress",
@@ -2068,7 +2069,7 @@
         "checkedAt": "2026-10-06T15:58:28.106655+00:00",
         "evidence": "reference-page-source-index.json"
       },
-      "implementationBoundary": "New renderer implementation not yet added. Native actual backdrop requires a product/platform host; Expo SDK57 Android requires BlurTargetView and blurTarget/blurMethod. Semi-transparent legacy Android output is not accepted as equivalent blur. See docs/plans/progressive-blur-adoption-2026-10-07.md."
+      "implementationBoundary": "2026-10-07: contracts and both granular renderers implemented; scroll edges and focused content remove decoration. Native product blur/mask host keeps Expo dependencies out of published renderer. iOS 26.5 Expo Go actual composition, end-item selection, shrink-to-fit, dark tint correction and large-text initial screen checked. Android actual composition, accessibility, product palettes and performance remain pending. See docs/qa/2026-10-07-progressive-blur.md."
     },
     {
       "url": "https://magicui.design/docs/components/scroll-progress",

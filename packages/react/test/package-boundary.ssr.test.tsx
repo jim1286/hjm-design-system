@@ -104,6 +104,7 @@ describe("@hjmds/react package boundary", () => {
       "./navigation-bar",
       "./screens", "./screen-flows",
       "./saved-items",
+      "./progressive-blur",
     ];
 
     expect(Object.keys(packageJson.exports)).toEqual([

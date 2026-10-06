@@ -122,6 +122,7 @@ describe("@hjmds/react-native package boundary", () => {
       "./navigation-bar",
       "./screens", "./screen-flows",
       "./saved-items",
+      "./progressive-blur",
     ];
     expect(Object.keys(packageJson.exports)).toEqual(expectedExportPaths);
     const familyTargets = expectedExportPaths.slice(1).filter((path) => path !== "./top-bar" && path !== "./bottom-cta").map((exportPath) => {

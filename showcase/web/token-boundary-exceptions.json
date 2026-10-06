@@ -544,6 +544,14 @@
       "property": "condition",
       "value": "(max-width: 48rem)",
       "reason": "This example switches its 2:1 editorial layout to source-order stacking before the image comparison and copy become cramped. It is demo geometry, not a shared product breakpoint; CSS media conditions cannot consume custom properties."
+    },
+    {
+      "file": "src/patterns/progressive-blur-preview.tsx",
+      "rule": "raw-length",
+      "selector": "ProgressiveBlurPreview/div[style]",
+      "property": "height",
+      "value": "320",
+      "reason": "Measured scroll fixture viewport shared with the Native preview; fixed geometry lets boundary and blur-on/off checks use the same content area, not a product sizing token."
     }
   ]
 }

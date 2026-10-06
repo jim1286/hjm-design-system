@@ -260,3 +260,23 @@ background playback, PiP and Native fullscreen are not enabled because a short
 preview must stop when its dialog closes. Remove the dependency when removing
 the Native preview. Web uses the browser video element with no extra engine.
 Source: https://docs.expo.dev/versions/v57.0.0/sdk/video/ .
+
+## Progressive blur experimental host — 2026-10-07
+
+The reference investigation found end-of-list occlusion and requires actual
+Web/Native comparison before promotion. Published ProgressiveBlur renderers add
+no blur/mask engine peer. Native receives a product-owned renderLayer callback;
+only Showcase installs expo-blur 57.0.3 (MIT), matching Expo SDK 57, and
+@react-native-masked-view/masked-view 0.3.2 (MIT), its bundled module lane.
+react-native-svg 15.15.5 is now a direct Showcase dependency because the example
+renders its alpha mask directly; this is the existing HJM peer version/lane.
+Expo Go 57 declares SVG 15.15.4, so the installed host must be checked separately
+and is not assumed identical to the 15.15.5 development-client host.
+
+The central registry adds the two new libraries and HJM consumption. Dynamic
+loading follows native module/view availability checks; absent support leaves the
+list usable with an explicit notice. Android connects BlurTargetView, blurTarget
+and dimezisBlurView so the legacy semitransparent fallback is not passed off as
+blur. Older-Android cost, masked UIKit backdrop behavior and per-device layer
+counts remain experimental until measured. Remove these Showcase dependencies
+if the host example is removed. No binary is rebuilt by installation.

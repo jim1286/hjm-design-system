@@ -672,6 +672,12 @@
       "react-native": "./dist/screen-patterns.js",
       "import": "./dist/screen-patterns.js",
       "default": "./dist/screen-patterns.js"
+    },
+    "./progressive-blur": {
+      "types": "./dist/progressive-blur.d.ts",
+      "react-native": "./dist/progressive-blur.js",
+      "import": "./dist/progressive-blur.js",
+      "default": "./dist/progressive-blur.js"
     }
   },
   "files": [

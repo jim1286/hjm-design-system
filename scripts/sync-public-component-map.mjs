@@ -40,7 +40,7 @@ const supplemental = new Set([
   "ScreenLayout", "SettingsScreen", "NotificationInboxScreen", "NotificationItem", "ChatScreen", "MessageComposer", "ChatMessage",
   "KeyboardAvoiding", "KeyboardMotionProvider", "KeyboardDock", "KeyboardFormScrollView",
   "SortableCollection", "SwipeActions", "ContentTransition", "TextTransition", "Celebration",
-  "SharedTransitionScreen", "SharedTransitionElement", "EffectSurface",
+  "SharedTransitionScreen", "SharedTransitionElement", "EffectSurface", "ProgressiveBlur",
 ]);
 const files = ["react", "react-native"].flatMap(pkg => {
   const sourceRoot = path.join(root, "packages", pkg, "src");

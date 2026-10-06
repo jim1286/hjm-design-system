@@ -83,6 +83,8 @@ const rendererBudgets = [
       "./avatar-blobatar": { modules: 1, raw: 900, gzip: 550 },
       // New isolated graphs measured at 21,520/6,013 B (effect) and 575/377 B (glyph factory).
       "./effect-surface": { modules: 4, raw: 24800, gzip: 6950 },
+      // Isolated decoration uses the same provider graph; no media/blur engine import.
+      "./progressive-blur": { modules: 4, raw: 24000, gzip: 6500 },
       "./icon-lucide": { modules: 1, raw: 750, gzip: 500 },
       // 2026-09-30: optional interaction graphs measured independently; ~20% byte headroom, exact module counts.
       "./sortable": { modules: 5, raw: 29800, gzip: 8000 },
@@ -417,6 +419,8 @@ const rendererBudgets = [
       "./avatar-blobatar": { modules: 1, raw: 900, gzip: 550 },
       // Native measurements: 9,056/2,891 B and 632/410 B; no extra local edges allowed.
       "./effect-surface": { modules: 2, raw: 10500, gzip: 3350 },
+      // Native platform blur is supplied by the product host, not this graph.
+      "./progressive-blur": { modules: 2, raw: 11000, gzip: 3500 },
       "./icon-lucide": { modules: 1, raw: 800, gzip: 520 },
       // 2026-09-30: optional interaction graphs measured independently; ~20% byte headroom, exact module counts.
       "./sortable": { modules: 5, raw: 44900, gzip: 10600 },
@@ -763,7 +767,7 @@ async function checkRenderer(renderer) {
     const regressions = [];
     // Opt-in peers must never become a hidden installation requirement of base entries.
     // Derive the peer list from the manifest so new optional runtimes cannot escape this gate.
-    const optionalEntries = new Set(["./avatar-blobatar-motion", "./effect-surface", "./icon-lucide", "./avatar-blobatar", "./sortable", "./swipe-actions", "./content-transition", "./carousel-motion", "./celebration", "./screen-transition", "./qr-code", "./thinking-orb", "./toast-liquid", "./statistic-motion", "./menu-morph", "./image-viewer", "./keyboard-controller", "./sheet-gesture", "./context-menu-native"]);
+    const optionalEntries = new Set(["./avatar-blobatar-motion", "./progressive-blur", "./effect-surface", "./icon-lucide", "./avatar-blobatar", "./sortable", "./swipe-actions", "./content-transition", "./carousel-motion", "./celebration", "./screen-transition", "./qr-code", "./thinking-orb", "./toast-liquid", "./statistic-motion", "./menu-morph", "./image-viewer", "./keyboard-controller", "./sheet-gesture", "./context-menu-native"]);
     if (!optionalEntries.has(exportPath)) {
       for (const [peer, metadata] of Object.entries(packageJson.peerDependenciesMeta ?? {})) {
         if (metadata.optional && measured.externals.some(specifier => specifier === peer || specifier.startsWith(`${peer}/`))) {

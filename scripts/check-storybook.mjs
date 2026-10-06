@@ -272,6 +272,7 @@ export async function parseStoryFile(source, file) {
     id: typeof meta.id === "string" ? meta.id : null,
     hasMeta: Boolean(metaObject),
     includeStories: includeStories ?? null,
+    hasIncludeStories: Object.hasOwn(meta, "includeStories"),
     excludeStories,
     objectExports,
     stories,
@@ -466,6 +467,12 @@ export async function checkModel(model) {
       }
     } else if (file.id) {
       problems.push(`S5 ${label}: Native meta에는 id를 쓰지 않는다(Native 10.4.4 runtime이 무시해 제목과 어긋난다)`);
+    }
+    // Native 10.4.4 prepareStories filters the default export through this list,
+    // then processCSFFile crashes on missing metadata. Remove when its import-map
+    // implementation preserves default metadata independently (2026-10-07 Expo Go).
+    if (file.platform === "native" && file.hasIncludeStories) {
+      problems.push(`S5 ${label}: Native includeStories는 default metadata를 제거한다(10.4.4). helper를 preview 모듈로 옮기고 includeStories를 생략한다`);
     }
     if (file.includeStories) {
       for (const name of file.includeStories) if (!file.stories.some((story) => story.exportName === name)) problems.push(`S5 ${label}: includeStories의 ${name} export가 없다`);

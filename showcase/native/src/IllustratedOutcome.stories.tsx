@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-native";
 import { IllustratedOutcomePreview } from "./illustrated-outcome-preview";
-const meta = { includeStories: ["Default", "Dark", "LargeText"], title: "실험/구성/피드백과 복구/그림과 시작 안내", component: IllustratedOutcomePreview } satisfies Meta<typeof IllustratedOutcomePreview>;
+// Native Storybook 10.4.4 filters default metadata through includeStories; omit it.
+const meta = { title: "실험/구성/피드백과 복구/그림과 시작 안내", component: IllustratedOutcomePreview } satisfies Meta<typeof IllustratedOutcomePreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };

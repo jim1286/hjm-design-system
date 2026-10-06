@@ -1,6 +1,6 @@
 # Storybook 탐색 규격
 
-검토일: 2026-10-06 · 적용: Web 및 React Native showcase · 강제: `pnpm storybook:check`([`scripts/check-storybook.mjs`](../scripts/check-storybook.mjs)), `pnpm usage:check`
+검토일: 2026-10-07 · 적용: Web 및 React Native showcase · 강제: `pnpm storybook:check`([`scripts/check-storybook.mjs`](../scripts/check-storybook.mjs)), `pnpm usage:check`
 
 2026-10-06 사용자 요청("스토리북 규격도 잡아줘. 지금 좀 난잡해", 구조는 "너가 권장하는 구조로, 깔끔하고 직관적으로" 위임)으로
 메뉴 구조를 규격으로 고정한다. 그 전에는 같은 단계 안에서 제목 깊이가 3·4·5로 섞였고, 둘째 분류 19개 중 12개가 항목 1개짜리
@@ -59,6 +59,11 @@
 
 두 preview에 같은 `storySort` 리터럴을 둔다(Storybook이 import한 상수를 storySort로 받는지 확인하지 않았다).
 검사기가 두 리터럴이 `expectedStorySort()`와 같은지 본다.
+
+Native 10.4.4에서는 meta의 `includeStories`를 사용하지 않는다. `prepareStories`가 default metadata도
+목록으로 필터링해 `processCSFFile`에서 id 오류로 시작을 막는다(2026-10-07 Expo Go 실제 확인).
+스토리 외 helper는 preview 모듈로 옮긴다. metadata를 독립 보존하는 runtime으로 업그레이드해
+실제 시작을 검증한 뒤 이 제약을 제거할 수 있다. Web의 includeStories는 유지한다.
 
 ### 1.3 항목 이름
 
