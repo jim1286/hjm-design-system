@@ -80,3 +80,31 @@ workspace sync 검사를 수행했다. 신규 지침/Changeset과 생성 dist를
 아직 Native 큰 글자·오류 교정/재정렬·영어 월, 양쪽 제품 팔레트·다크/RTL 시각 검토, 실제
 자동완성·VoiceOver/TalkBack·Android·IME 상세 검증은 남았다. 15번째 실험 등록을 승격·게시·
 Utilverse 채택 완료로 세지 않는다. 전체 레퍼런스 전수 검토도 여전히 미완료다.
+
+
+## 큰 글자·그룹 오류 후속 — 060842a 이후
+
+Web IAB 390×844, dark/RTL/textScale=2에서 공백 제출 시 같은 오류가 세 칸 아래 반복되어
+확인/순서 버튼이 아래로 밀렸다. DateEntry 오류를 그룹에서 한 번 표시하고, Web은 각 input의
+aria-invalid/aria-describedby로 연결했다. 기존 TextField의 aria-invalid만으로는 테두리가 바뀌지
+않던 경로를 공통 FieldFrame invalid 상태에 연결했다. Native는 TextField invalid와 외부
+accessibilityHint를 지원하고 그룹 Text/한 번의 iOS announce로 표시한다. error prop은 기존대로
+인라인 오류와 hint를 공급한다. 스크린리더 실제 낭독을 확인했다는 뜻은 아니다.
+
+같은 Web 조건의 수정 후 화면에서 오류 한 번·세 칸 오류 테두리와 두 행동 버튼을 확인했다.
+추가 브라우저 회귀는 320px/2배 글자 × light/dark × LTR/RTL에서 오류 ID 존재·44px 이상 입력
+높이·가로 넘침 없음·순서 재배치 후 같은 DOM 노드와 초점 보존을 확인했다.
+
+iPhone 17 Pro/iOS 26.5/Expo Go 8084 LargeText 스토리는 최초에 ScrollView가 없어 스와이프해도
+결과(y864)에 접근할 수 없었다. 예제 화면에 키보드 inset을 처리하는 ScrollView를 추가했다.
+수정 후 스와이프로 결과 y700에 접근했고 공백 제출 오류가 한 번 표시됐다. 이어 연도2024,
+월2, 일29를 입력해 오류를 없애고 키보드가 열린 상태에서 날짜 확인→2024-02-29 결과를
+확인했다. 입력 내부에서 시작한 첫 스와이프는 이동하지 않았으나 라벨 영역에서 시작하자
+스크롤됐다. DateEntry 자체에 중첩 스크롤을 넣지 않고 화면 호스트가 맡는다. 현재 확인은
+light/LTR/2배 글자며 다른 팔레트·Android·Native RTL/다크·VoiceOver/TalkBack·자동완성은 남았다.
+
+Native 전체 102파일/1,207 테스트 통과. 첫 전체 실행은 새 subpath가 package export 허용 목록에
+빠져 1건 실패했다. Native·Web·contracts 경계 목록을 실제 공개 진입점과 맞췄다(contracts의
+기존 text-annotation 누락도 포함). Native 전체 재실행 통과, Web 관련 필드4파일/25개와 후속
+DateEntry4개, Web package1개·contracts package4개 통과. iOS announce 중복 억제와 외부 hint
+회귀가 포함되며 실제 assistive technology 실행과 구분한다. 원시 iOS 결과 캡처는 기록 후 제거한다.

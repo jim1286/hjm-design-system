@@ -36,6 +36,8 @@ type BaseFieldProps = Omit<TextInputProps, "accessibilityLabel" | "defaultValue"
     /** Helper copy below the control; the same name as the Web renderer. */
     description?: string;
     error?: string;
+    /** External group errors can mark this field without repeating inline copy. Supply accessibilityHint. */
+    invalid?: boolean;
     required?: boolean;
     disabled?: boolean;
     busy?: boolean;

@@ -22,6 +22,8 @@ it("preserves partial drafts, connects affected errors and leaves Tab under user
   const year = page.getByRole("textbox", { name: "연도", exact: true });
   expect(host.querySelector('[autocomplete="bday-year"]')).not.toBeNull();
   expect(host.querySelectorAll('[aria-invalid="true"]')).toHaveLength(1);
+  expect(host.querySelectorAll('[data-state="invalid"]')).toHaveLength(1);
+  expect(host.querySelectorAll('[role="alert"]')).toHaveLength(1);
   await act(async () => year.fill("2024"));
   expect((document.activeElement as HTMLInputElement).value).toBe("2024");
   expect(host.querySelector('[aria-invalid="true"]')).toBeNull();
@@ -42,4 +44,31 @@ it("uses a strict Gregorian demo adapter without accepting date overflow", () =>
   expect(parseExampleDate({year:"2023",month:"Feb",day:"29"}).status).toBe("invalid");
   expect(parseExampleDate({year:"0000",month:"1",day:"1"}).status).toBe("invalid");
   expect(parseExampleDate({year:"20",month:"Feb",day:"29"}).status).toBe("incomplete");
+});
+
+it("keeps one group error and stable editable nodes at 200% in narrow LTR/RTL themes", async () => {
+  for (const theme of ["light", "dark"] as const) for (const direction of ["ltr", "rtl"] as const) {
+    const value = { year: "", month: "", day: "" };
+    const render = (order: readonly ["year", "month", "day"] | readonly ["day", "month", "year"]) =>
+      <HjmProvider theme={theme} direction={direction} textScale={2}>
+        <DateEntry value={value} onValueChange={() => undefined} order={order} labels={labels}
+          required showErrors parse={() => ({ status: "valid", value: "unused" })}
+          formatIssue={() => "날짜의 비어 있는 연도·월·일을 입력해 주세요."} />
+      </HjmProvider>;
+    await act(async () => root.render(render(["year", "month", "day"])));
+    expect(host.querySelectorAll('[role="alert"]')).toHaveLength(1);
+    expect(host.querySelectorAll('[data-state="invalid"]')).toHaveLength(3);
+    expect(host.scrollWidth).toBeLessThanOrEqual(320);
+    const inputs = [...host.querySelectorAll("input")];
+    const year = inputs[0]!;
+    for (const input of inputs) {
+      const ids = input.getAttribute("aria-describedby")!.split(" ");
+      expect(ids.every(id => document.getElementById(id))).toBe(true);
+      expect(input.getBoundingClientRect().height).toBeGreaterThanOrEqual(44);
+    }
+    await act(async () => year.focus());
+    await act(async () => root.render(render(["day", "month", "year"])));
+    expect(host.querySelectorAll("input")[2]).toBe(year);
+    expect(document.activeElement).toBe(year);
+  }
 });

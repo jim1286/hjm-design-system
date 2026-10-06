@@ -12,8 +12,10 @@ import { composeRefs, classNames, useControllableState } from "./internal.js";
   module-private context instead of widening TextField's public props.
 */
 const FieldDisabledOpacityContext = createContext(undefined);
-function FieldFrame({ controlId, label, description, error, descriptionId, errorId, required = false, disabled = false, focused = false, variant = fieldRecipe.defaults.variant, shape = fieldRecipe.defaults.shape, align = fieldRecipe.defaults.align, disabledOpacity, className, children, layoutStyle, style, ...props }) {
-    const state = disabled ? "disabled" : error ? "invalid" : focused ? "focused" : "idle";
+function FieldFrame({ controlId, label, description, error, descriptionId, errorId, required = false, disabled = false, focused = false, invalid = false, variant = fieldRecipe.defaults.variant, shape = fieldRecipe.defaults.shape, align = fieldRecipe.defaults.align, disabledOpacity, className, children, layoutStyle, style, ...props }) {
+    // A grouped field may reference one external error; aria-invalid must still
+    // use the invalid recipe even when no inline error copy is repeated.
+    const state = disabled ? "disabled" : error || invalid ? "invalid" : focused ? "focused" : "idle";
     const inheritedOpacity = useContext(FieldDisabledOpacityContext);
     const recipeOpacity = disabledOpacity ?? inheritedOpacity;
     return (_jsxs("div", { ...props, 
@@ -87,7 +89,7 @@ export const TextField = forwardRef(function TextField({ id, label, description,
         setFocused(false);
         onBlur?.(event);
     };
-    return (_jsx(FieldFrame, { controlId: ids.controlId, label: label, description: description, error: error, required: required ?? false, disabled: disabled ?? false, focused: focused, variant: variant ?? fieldRecipe.defaults.variant, shape: shape ?? fieldRecipe.defaults.shape, align: align ?? fieldRecipe.defaults.align, className: fieldClassName, ...(layoutStyle === undefined ? {} : { layoutStyle }), ...(description ? { descriptionId: ids.descriptionId } : {}), ...(error ? { errorId: ids.errorId } : {}), children: _jsxs("div", { className: "hjm-field__control", children: [leading ? _jsx("span", { className: "hjm-field__affix", children: leading }) : null, _jsx("input", { ...props, ref: ref, id: ids.controlId, className: classNames("hjm-field__input", className), required: required, disabled: disabled, "aria-invalid": error ? true : ariaInvalid, "aria-label": ariaLabel, "aria-describedby": describedBy(ariaDescribedBy, description, error, ids.descriptionId, ids.errorId), onFocus: handleFocus, onBlur: handleBlur, onChange: (event) => {
+    return (_jsx(FieldFrame, { controlId: ids.controlId, label: label, description: description, error: error, required: required ?? false, disabled: disabled ?? false, focused: focused, invalid: ariaInvalid === true || ariaInvalid === "true", variant: variant ?? fieldRecipe.defaults.variant, shape: shape ?? fieldRecipe.defaults.shape, align: align ?? fieldRecipe.defaults.align, className: fieldClassName, ...(layoutStyle === undefined ? {} : { layoutStyle }), ...(description ? { descriptionId: ids.descriptionId } : {}), ...(error ? { errorId: ids.errorId } : {}), children: _jsxs("div", { className: "hjm-field__control", children: [leading ? _jsx("span", { className: "hjm-field__affix", children: leading }) : null, _jsx("input", { ...props, ref: ref, id: ids.controlId, className: classNames("hjm-field__input", className), required: required, disabled: disabled, "aria-invalid": error ? true : ariaInvalid, "aria-label": ariaLabel, "aria-describedby": describedBy(ariaDescribedBy, description, error, ids.descriptionId, ids.errorId), onFocus: handleFocus, onBlur: handleBlur, onChange: (event) => {
                         onChange?.(event);
                         onValueChange?.(event.currentTarget.value);
                     } }), trailing ? _jsx("span", { className: "hjm-field__affix", children: trailing }) : null] }) }));

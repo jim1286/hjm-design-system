@@ -135,3 +135,12 @@ Web `@hjmds/react/date-entry`, Native `@hjmds/react-native/date-entry`의 Field 
 원문 초안·입력 순서·오류 대상을 공유하며 입력은 기존 TextField로 렌더링한다.
 [날짜 직접 입력 지침](../compositions/date-entry.md)에 배치·props·날짜 파싱 소유권이 있다.
 달력에서 날짜를 고르는 경우에는 기존 DatePicker를 쓴다.
+
+
+### 그룹 오류를 한 번 표시할 때
+
+Web TextField의 `aria-invalid={true}`는 외부 오류 ID를 `aria-describedby`로 연결하는 경우에도
+오류 테두리를 표시한다. Native TextField/TextArea의 `invalid`는 인라인 error 문구 없이 오류
+테두리를 표시하는 미게시 옵션이다. 같은 오류를 `accessibilityHint`로 연결하고 그룹 안내를
+별도로 보여 준다. error가 있으면 해당 문구가 hint보다 우선하고, hint가 없으면 description을 쓴다.
+2026-10-07 날짜 직접 입력의 큰 글자 오류가 세 번 반복된 관찰에 따라 이 경로를 추가했다.

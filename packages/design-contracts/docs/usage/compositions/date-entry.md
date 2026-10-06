@@ -28,7 +28,7 @@
 그룹 이름
 설명(선택)
 [연도]   [월]   [일]   ← 제품 order
- 오류     오류   오류  ← 잘못된 필드만
+오류 안내 한 번         ← 입력 위, 해당 칸 테두리로 연결
 [확인]                ← 제품 행동
 결과/서버 상태         ← 제품 소유
 ```
@@ -38,7 +38,7 @@
 | 바깥 틀 | Web fieldset / Native View | 제품 폼 안 | 최소 폭 0, 테두리 없는 그룹 |
 | 그룹 이름 | Web legend / Native Text label | 맨 위 | 아래 spacing.sm 12 |
 | 입력 | TextField 3개 | order 순서 | 간격 spacing.md 16, Web 최소 10ch 자동 줄바꿈, Native 기준 spacing.xxxl × 3 × textScale |
-| 오류 | TextField error | 해당 필드 아래 | 기존 Field recipe. 여러 필드에 걸친 오류는 각 해당 필드에 표시 |
+| 오류 | 그룹 안내 + TextField invalid | 입력 위 한 번 | 해당 필드만 오류 테두리, Web 설명 ID·Native hint 연결 |
 | 확인 | 제품 Button | 그룹 다음 | DateEntry 내부에 저장 버튼을 넣지 않음 |
 
 ## 흐름과 상태
@@ -56,7 +56,7 @@
 | --- | --- | --- |
 | 기본 | 세 입력과 설명 | 자동 초점 이동 없음 |
 | 진행 중 | 미완성 원문 유지 | 일반 Tab/터치로 이동, validation 노출은 제품 제어 |
-| 실패 | 잘못된 필드 아래 오류·테두리 | Web 연결된 오류 설명, Native 그룹+조각 이름과 오류 hint |
+| 실패 | 그룹 오류 한 번과 해당 필드의 오류 테두리 | Web 연결된 오류 설명, Native 그룹+조각 이름·오류 hint, iOS 그룹 안내 한 번 |
 | 확인 | 제품에 전달한 valid 값 | 확인 UI/서버 저장은 제품 소유 |
 | 비활성·읽기 전용 | 편집 차단 | 호스트가 늦게 edit 이벤트를 보내도 callback 차단 |
 
@@ -102,4 +102,5 @@ Android의 `birthdate-year/month/day`와 iOS의 명시적 `birthdateYear/Month/D
 - 서버 저장 완료와 valid 초안을 구분한다. 편집하면 이전 확인 결과를 무효화한다.
 - Showcase의 Gregorian/영어 월 파서는 예제 정책이며 HJM 기본 파서가 아니다.
 - Calendar로 부분 입력을 강제로 변환하거나 NumberField로 교체하면 원문 보존 계약이 깨진다.
-- 큰 글자/RTL/제품 팔레트·Native 키보드·스크린리더·자동완성 실제 검증은 남아 있다. 실험 등록은 승격·게시가 아니다.
+- Web 390px 다크/RTL/2배 글자와 iOS 2배 글자에서 오류 복구를 확인했다. 제품 팔레트·스크린리더·자동완성 실제 검증은 남아 있다. 실험 등록은 승격·게시가 아니다.
+- Native 화면 호스트는 키보드 inset을 처리하는 ScrollView 등으로 하단 행동에 접근할 수 있어야 한다. DateEntry 내부에 중첩 스크롤을 만들지 않는다.

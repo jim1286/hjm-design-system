@@ -30,7 +30,7 @@ function resolveFieldAccessibleName(label, accessibilityLabel) {
         ...(visibleLabel ? { visibleLabel } : {}),
     };
 }
-const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultValue = "", onValueChange, description, error, required = false, disabled = false, busy = false, variant = fieldRecipe.defaults.variant, shape, accessibilityLabel, layoutStyle, allowFontScaling, multiline, maxVisibleLines, minVisibleLines, align = fieldRecipe.defaults.align, search, recipeInputStyle, disabledOpacity, searchSize = searchFieldRecipe.defaults.size, leading, trailing, leadingAction, hjmCompactMultiline = false, onBlur, onFocus, onContentSizeChange, onSelectionChange, ...props }, ref) {
+const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultValue = "", onValueChange, description, error, invalid = false, accessibilityHint, required = false, disabled = false, busy = false, variant = fieldRecipe.defaults.variant, shape, accessibilityLabel, layoutStyle, allowFontScaling, multiline, maxVisibleLines, minVisibleLines, align = fieldRecipe.defaults.align, search, recipeInputStyle, disabledOpacity, searchSize = searchFieldRecipe.defaults.size, leading, trailing, leadingAction, hjmCompactMultiline = false, onBlur, onFocus, onContentSizeChange, onSelectionChange, ...props }, ref) {
     const resolvedDisabledOpacity = disabledOpacity ?? (search ? searchFieldRecipe.states.disabledOpacity : fieldRecipe.disabledOpacity);
     const theme = useHjmNativeTheme();
     const { colors, environment, textScaling } = theme;
@@ -50,7 +50,7 @@ const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultV
         ...(onValueChange === undefined ? {} : { onChange: onValueChange }),
     });
     const supportText = description;
-    const hint = error ?? supportText;
+    const hint = error ?? accessibilityHint ?? supportText;
     const { accessibleName, visibleLabel } = resolveFieldAccessibleName(label, accessibilityLabel);
     const resolvedShape = shape ??
         (search ? searchFieldRecipe.defaults.shape : fieldRecipe.defaults.shape);
@@ -60,12 +60,12 @@ const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultV
         ? searchFieldRecipe.borderWidth
         : fieldRecipe.borderWidth;
     const borderColor = search
-        ? resolveColorReference(error
+        ? resolveColorReference(error || invalid
             ? searchFieldRecipe.colors.invalid
             : focused
                 ? searchFieldRecipe.colors.focus
                 : searchFieldRecipe.colors.border, theme.palette)
-        : colors[error
+        : colors[error || invalid
             ? fieldRecipe.states.invalid.border
             : focused
                 ? fieldRecipe.states.focused.border

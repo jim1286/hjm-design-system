@@ -161,6 +161,8 @@ describe("package boundaries", () => {
       "./action-session",
       "./screen-patterns",
       "./progressive-blur",
+      "./text-annotation",
+      "./date-entry",
     ] as const;
 
     expect(Object.keys(packageJson.exports)).toEqual(expectedExports);

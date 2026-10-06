@@ -16,6 +16,7 @@ type FieldFrameProps = HTMLAttributes<HTMLDivElement> & FieldCopyProps & Readonl
     errorId?: string;
     disabled?: boolean;
     focused?: boolean;
+    invalid?: boolean;
     variant?: FieldVariant;
     shape?: FieldShape;
     align?: FieldAlign;

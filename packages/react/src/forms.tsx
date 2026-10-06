@@ -56,6 +56,7 @@ type FieldFrameProps = HTMLAttributes<HTMLDivElement> &
     errorId?: string;
     disabled?: boolean;
     focused?: boolean;
+    invalid?: boolean;
     variant?: FieldVariant;
     shape?: FieldShape;
     align?: FieldAlign;
@@ -84,6 +85,7 @@ function FieldFrame({
   required = false,
   disabled = false,
   focused = false,
+  invalid = false,
   variant = fieldRecipe.defaults.variant,
   shape = fieldRecipe.defaults.shape,
   align = fieldRecipe.defaults.align,
@@ -94,7 +96,9 @@ function FieldFrame({
   style,
   ...props
 }: FieldFrameProps) {
-  const state = disabled ? "disabled" : error ? "invalid" : focused ? "focused" : "idle";
+  // A grouped field may reference one external error; aria-invalid must still
+  // use the invalid recipe even when no inline error copy is repeated.
+  const state = disabled ? "disabled" : error || invalid ? "invalid" : focused ? "focused" : "idle";
   const inheritedOpacity = useContext(FieldDisabledOpacityContext);
   const recipeOpacity = disabledOpacity ?? inheritedOpacity;
   return (
@@ -318,6 +322,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
         required={required ?? false}
         disabled={disabled ?? false}
         focused={focused}
+        invalid={ariaInvalid === true || ariaInvalid === "true"}
         variant={variant ?? fieldRecipe.defaults.variant}
         shape={shape ?? fieldRecipe.defaults.shape}
         align={align ?? fieldRecipe.defaults.align}

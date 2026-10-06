@@ -1,7 +1,8 @@
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
-import { Platform } from "react-native";
+import { AccessibilityInfo, Platform, TextInput } from "react-native";
 import { afterEach, expect, it, vi } from "vitest";
 import { DateEntry } from "../src/date-entry.js";
+import { Text } from "../src/primitives.js";
 import { TextField } from "../src/inputs.js";
 import { HjmNativeProvider } from "../src/provider.js";
 (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
@@ -24,7 +25,7 @@ it("keeps partial values, exposes field group names and changes only the edited 
 });
 it("reveals only affected errors and retains draft values when order changes", () => {
   act(() => { tree = create(<HjmNativeProvider><DateEntry {...base} showErrors /></HjmNativeProvider>); });
-  expect(tree!.root.findAllByType(TextField).map(field => field.props.error)).toEqual(["연도를 확인해 주세요.", undefined, undefined]);
+  expect(tree!.root.findAllByType(TextField).map(field => field.props.invalid)).toEqual([true, false, false]);
   act(() => tree!.update(<HjmNativeProvider><DateEntry {...base} showErrors order={["day", "month", "year"]} /></HjmNativeProvider>));
   expect(tree!.root.findAllByType(TextField).map(field => field.props.value)).toEqual(["29", "Feb", "20"]);
 });
@@ -46,4 +47,23 @@ it("sets explicit iOS birthdate content types across supported RN peer versions"
     act(() => tree!.update(<HjmNativeProvider><DateEntry {...base} purpose="date" /></HjmNativeProvider>));
     expect(tree!.root.findAllByType(TextField).every(field => field.props.textContentType === "none")).toBe(true);
   } finally { Object.assign(Platform, { OS: originalOS }); }
+});
+
+it("shows one group error and preserves the error hint on the affected native input", () => {
+  act(() => { tree = create(<HjmNativeProvider><DateEntry {...base} showErrors /></HjmNativeProvider>); });
+  expect(tree!.root.findAllByType(Text).filter(node => node.props.children === "연도를 확인해 주세요.")).toHaveLength(1);
+  const fields = tree!.root.findAllByType(TextInput);
+  expect(fields[0]!.props.accessibilityHint).toBe("연도를 확인해 주세요.");
+  expect(fields[1]!.props.accessibilityHint).toBeUndefined();
+});
+it("announces a group error once on iOS and remains quiet on unchanged rerenders", () => {
+  const originalOS = Platform.OS;
+  Object.assign(Platform, { OS: "ios" });
+  const announce = vi.spyOn(AccessibilityInfo, "announceForAccessibility");
+  try {
+    act(() => { tree = create(<HjmNativeProvider><DateEntry {...base} showErrors /></HjmNativeProvider>); });
+    expect(announce).toHaveBeenCalledTimes(1);
+    act(() => tree!.update(<HjmNativeProvider><DateEntry {...base} showErrors order={["day", "month", "year"]} /></HjmNativeProvider>));
+    expect(announce).toHaveBeenCalledTimes(1);
+  } finally { announce.mockRestore(); Object.assign(Platform, { OS: originalOS }); }
 });

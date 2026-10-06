@@ -145,6 +145,8 @@ type BaseFieldProps = Omit<
     /** Helper copy below the control; the same name as the Web renderer. */
     description?: string;
     error?: string;
+    /** External group errors can mark this field without repeating inline copy. Supply accessibilityHint. */
+    invalid?: boolean;
     required?: boolean;
     disabled?: boolean;
     busy?: boolean;
@@ -196,6 +198,8 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(
       onValueChange,
       description,
       error,
+      invalid = false,
+      accessibilityHint,
       required = false,
       disabled = false,
       busy = false,
@@ -244,7 +248,7 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(
       ...(onValueChange === undefined ? {} : { onChange: onValueChange }),
     });
     const supportText = description;
-    const hint = error ?? supportText;
+    const hint = error ?? accessibilityHint ?? supportText;
     const { accessibleName, visibleLabel } = resolveFieldAccessibleName(
       label,
       accessibilityLabel,
@@ -260,7 +264,7 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(
       : fieldRecipe.borderWidth;
     const borderColor = search
       ? resolveColorReference(
-          error
+          error || invalid
             ? searchFieldRecipe.colors.invalid
             : focused
             ? searchFieldRecipe.colors.focus
@@ -268,7 +272,7 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(
           theme.palette,
         )
       : colors[
-          error
+          error || invalid
             ? fieldRecipe.states.invalid.border
             : focused
             ? fieldRecipe.states.focused.border
