@@ -1,7 +1,7 @@
 # 기존 실험 17개 검토·승급·HJM 게시
 
 2026-10-07 사용자 요청: "실험에 있는것들 검토후 승급 후 게시 먼저하자".
-판정: 기존 17개 Storybook 배포 분류를 승인 범위로 승급. npm 1.14.0 후보 검증 중.
+판정: 기존 17개 Storybook 배포 분류 승급·공개 배포 완료. npm 세 패키지 1.14.0 게시 및 latest 확인 완료.
 기준 소스: main 8a75741 이후의 본 작업. 소비 앱 적용·스토어 출시는 포함하지 않는다.
 
 ## 환경과 검토 방법
@@ -67,7 +67,62 @@ Storybook 승급은 catalog의 모든 API·OS 확장을 stable로 선언하거�
 Android 실제 화면, VoiceOver/TalkBack 실제 기기, 전체 제품 팔레트, 성능/메모리 장시간 측정, 유음 영상 자막,
 실제 업로드 서버·Native 시스템 picker·공유 수신 완료는 이번 게시 검토로 증명하지 않는다. Optional host는 제품 설치·권한·오류 처리가 필요하다.
 11개 사이트 전수 조사는 여전히 미완료이며 이번 17개 승급과 구분한다. Utilverse 의존성·제품 화면 이관도 게시 후 진행한다.
-회원 미리보기 신규 후보의 미커밋 파일은 /tmp/hjm-member-preview-followup-20261007에 보존해 이번 게시에서 제외했다.
+회원 미리보기 신규 후보의 미커밋 파일은 /Users/jimin/.codex/tmp/hjm-member-preview-followup-20261007에 보존해 이번 게시에서 제외했다.
 이 Markdown과 기존 개별 보고서·회귀 fixture·원본 자산은 보존한다. 전체 시트 임시 HTML과 이번 임시 screenshot/log는 결과 기록 후 제거한다.
 
 승급 후 검사: contracts 1005·Native 1215·Web SSR 278 통과. Web browser는 1120/1121 통과, 기존 menubar keyboard 사례가 선택 종료 대신 새 문서라며 실패했다. 같은 소스의 해당 browser 사례 단독 재실행은 1/1 통과했다. 이 결과를 전체 성공으로 세지 않고 버전 확정 뒤 canonical release:check를 다시 실행한다.
+
+## 최종 게시 영수증
+
+- release SHA: `8d6f6651ea71450014f5ca5e484b6b78bea8828b`, main 원격 반영 확인. canonical v1.14.0 태그도 같은 SHA.
+- [Release Packages run 37548646619](https://github.com/jim1286/hjm-design-system/actions/runs/37548646619): release commit·canonical release:check·세 package 게시·tag 모두 success.
+- 실제 원격 테스트: contracts 1005, Native 1215, Web SSR 278 / Chromium 1121, Native Showcase 21 / Web Showcase 43 모두 통과.
+- [Storybook run 37548645860](https://github.com/jim1286/hjm-design-system/actions/runs/37548645860): verify·deploy success. [공개 Storybook](https://jim1286.github.io/hjm-design-system/) index에서 17/17 Default가 배포 제목이며 실험 제목 0개, 기존 Web id 유지.
+- npm exact version과 latest: @hjmds/design-contracts / @hjmds/react / @hjmds/react-native 모두 1.14.0. 게시 직후 registry는 수 분간 404·이전 latest를 반환했으나 전파 후 다시 조회해 확인했다.
+- 중앙 sync-design-system.mjs는 세 tarball integrity·내부 manifest·Git tag/source manifest를 검증하고 release record 계획을 생성했다. 메타 checkout의 기존 main ahead 4 / behind 3 및 타 작업 dirty는 보존한다. 중앙 원격 동기화·소비 앱 설치/회귀는 후속 범위다.
+
+첫 후보는 Native Showcase에서 Stack의 허용되지 않는 minHeight 배치 prop 때문에 차단됐다. 게시되지 않은 후보 workflow를 취소하고 해당 prop을 제거했다. Native Showcase check 21개·타입 검사 통과 후, 기존 Git history를 재작성하지 않고 Changeset 후보를 복원해 같은 1.14.0 릴리스 커밋을 새로 생성했다. 최종 원격 canonical 검사도 전부 통과했다.
+
+보안 관측: workspace pnpm audit --prod는 Native Showcase의 기존 개발 도구 경로에서 critical 1 / high 6 / moderate 1 / low 1을 보고했다. shell-quote critical은 react-devtools-core/Expo CLI 경로다. 세 public package는 dependencies·bundledDependencies가 없으며 그 도구를 새 패키지 dependency로 포장하지 않는다. 이 관측을 소비 앱의 peer/runtime 무취약성으로 해석하지 않고 개발 도구 전이 의존성 부채로 남긴다. 이번 검증용 6006·8084 서버만 종료했고 다른 앱 서버·기기는 유지했다.
+
+## 원시 산출물 정리 영수증
+
+아래 이번 작업의 임시 파일은 SHA-256을 기록한 뒤 제거한다. 재사용 source·fixture·정식 PNG 자산·미완료 회원 미리보기 source는 보존한다.
+
+| 임시 파일 | SHA-256 |
+| --- | --- |
+| hjm-experiment-release-ci-20261007.log | `2baadd2dc9385e2f97de54ec9e1e641813d02d76f7efcf178421bc5bf4330ca6` |
+| hjm-experiment-release-ci-20261007-final.log | `67e66a210a975b6bcc099bfa60e45c35f56792cd1401b7ae6d1dba271bffa641` |
+| hjm-experiment-release-ci-20261007-third.log | `4908139cddbe00d0e3c0867608426df33d368c8b1d780931f26a8bbe3c0c464a` |
+| hjm-release-native-bundle.log | `61baefbbade2755d8be152882e02892f187d32f624c654c6ef1921de5f9a4d8c` |
+| hjm-release-native-current.png | `27d7efc74a31cb68f7d73f80cf09eeb197e0606e4acf8077ebcd0b0ecf7ffebb` |
+| hjm-release-native-menu.png | `1e9945f824c921db2e3138242478217a8d1028150dd6e358d9706d2b4562fe23` |
+| hjm-release-native-video.png | `414539af20cdc192c64c316cb29d42ef42a294132a0f58c5854227adfe2c0a78` |
+| hjm-release-native-video-error.png | `ea5a0221932a4c7e05aa5d38a8fe4858abce90618d74778ad553d823a89938ab` |
+| hjm-release-native-video-retry.png | `6f0153b2c0564c526e38f46ba311fa7457850093de3e364237288e66e7a760a9` |
+| hjm-release-native-intro-keyboard.png | `8ce2cd672a188cb577e0c686db66e26009cec471cc2e5ac09d1b19d80baa6e4d` |
+| hjm-release-native-intro-fixed.png | `c01a43f1ab61a3dc20b7548ba67e769aa4f2dd8a8844027d9bb0f22d0f2ca319` |
+| hjm-release-native-index-original.tsx | `9923377acc9991c1474aff018ff887c95ce8a4df01e15cf4ede77b47119fd9d4` |
+| hjm-release-onboarding-build.log | `24c42b76aecef2c39c8a5639a3536efb936b03bdac9a8f8be50c0e71ffbc7af8` |
+| hjm-release-onboarding-test.log | `54260aec9945c13fcc85a42a069711c9e1813856eea475e906ca83387abc1ce2` |
+| hjm-release-usage.log | `0484e97dc190e86b9979ec7fe1ae9c6a55f8a702a736cf6738d9b0ab0d20d4c0` |
+| hjm-release-promotion-ci.log | `fa44cc63e229c46cb5ad7968ab65a3b570f48ec4114755c9b6a2dffcd3598d73` |
+| hjm-promotion-paths.txt | `e448e238538a0b4844e867f40e3eff0ad98db4d2a81889e011998d69f4d0b4de` |
+| hjm-release-menubar-recheck.log | `cee4c11ee7672c0b3771e3fbd8cd819cb3feed64d766d413260b1089430885c6` |
+| hjm-release-version-20261007.log | `e156bc5b1fea796f3b7de4488a12d69ce6f830fb8fc182b81ef649a47ac0500d` |
+| hjm-release-final-check.log | `04b1cdb9423d6bcbd1c44354f1e964058a19a3fe54c21847c40a42d028cc49ca` |
+| hjm-release-audit-prod.json | `2e2158484a7a06ae6c5b4548d6f138999a960225db4aa95da473b7ff592f1563` |
+| hjm-release-version-repaired.log | `6c3a03ec1955bfb8cfd7780c4111f16381e8bd474c5c3f288c5656e8a73013fb` |
+| hjm-release-native-showcase-recheck.log | `98f1b69e029ffddcb0dd66c06799ca5a4a14e80ede503de357643d5069960a7c` |
+| hjm-release-artifacts-final.log | `60a83cb9cf7718b341533ad9eafa099464db03e38918eb7c7c89f33feb991eac` |
+| hjm-release-workflow-watch.log | `1c61c8119ac0d5c5df1259599c6bc85af29fc7abe52e17ec8e4e725801e19fbb` |
+| hjm-release-remote-complete.log | `3778eb788c1108c9d8320a4a0bf4b7935847f977f4e13949d1ce4acd71b8e8dc` |
+| hjm-central-release-plan.json | `19e08211a798d833ae04e5af25b263f97ca7713c9dc7d8e74b1dfd16800721ab` |
+| hjm-released-storybook-index.json | `64d0e374d372b14c55e3d887553bfdd496bd5c905c42235acb1916b22379989b` |
+| hjm-central-release-write.json | `b35472ed73604a199456687f1f3898eb11cc0fc83f429bb0a128855bed884166` |
+| hjm-central-release-test.log | `958193c29b3353bc1aa18a4639c98761fc8980fbe264b5b5ee4db384a0e59c8d` |
+| hjm-central-doc-links.log | `159695f9ae8025539a81376cdc84b949a3c42152300caff8e5417e1435554230` |
+| hjm-central-policy-consistency.log | `7f48d3d81d3562ea0f73d3c263c5b231ab8b046bc8957d1370b570546b32a070` |
+| supports-browser-keyboard-focus--menu-navigation--disabled-state--and-action-activation-1.png | `27d480e209eb5f40aed6434a758295ebde0bd1a719b9b99ced647a827fdcfb52` |
+
+중앙 등록 로컬 적용: sync-design-system --write 완료. release importer 회귀 10개, 루트 doc links 342개·policy consistency 87개 문서 검사 통과. 해당 네 파일만 메타 저장소에 로컬 커밋했으며 기존 4 ahead / 3 behind 이력·공유 dirty를 보존해 원격 push는 하지 않았다. HJM main 게시와 구분한다.

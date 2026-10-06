@@ -11,9 +11,9 @@ UI·기능 검증을 거쳐 승격·릴리스하고 Utilverse의 대체 가능�
 | --- | --- | --- |
 | 11개 사이트 전수 조사 | 사이트별 발견 URL 목록과 페이지별 검토·미확인 기록, 후보별 채택 판단 | 미완료. 이전 조사 수집 수를 UI 검토 수로 세지 않음 |
 | 권장 항목 모두 실험 구현 | 후보 목록과 Web/Native 공개 API·개별 스토리·사용 지침 연결 | 로컬 main 17개 실험 구현, 추가 후보 검토 중 |
-| UI·기능 검증 | 밝음/어두움/큰 글자/RTL/모션 감소 및 실제 행동, 전체 시트와 기기 QA | PR #55 자동 검사 통과. 신규 시각·기기 검증 필요 |
-| 검증 후 승격 | 항목별 QA 근거, Storybook 양쪽 경로와 지침 동시 갱신 | 로컬 적용: 17개 Web·Native 승급, [검토 결과](../qa/2026-10-07-experiment-promotion-release.md). 최종 CI 진행 |
-| HJM 릴리스 | 동기화된 버전·Changeset·CI, npm 세 패키지와 tag의 동일 SHA | 1.14.0 준비. npm 현재 1.13.1, 최종 CI·release workflow·registry 확인 전 게시 완료 아님 |
+| UI·기능 검증 | 밝음/어두움/큰 글자/RTL/모션 감소 및 실제 행동, 전체 시트와 기기 QA | 17개 전체 시트·개별 QA·iOS simulator 추가 흐름 및 최종 원격 canonical 검사 통과. 제품·미확인 환경은 QA에 별도 기록 |
+| 검증 후 승격 | 항목별 QA 근거, Storybook 양쪽 경로와 지침 동시 갱신 | 완료: 17개 Web·Native 승급·공개 Storybook 확인, [검토 결과](../qa/2026-10-07-experiment-promotion-release.md) |
+| HJM 릴리스 | 동기화된 버전·Changeset·CI, npm 세 패키지와 tag의 동일 SHA | 완료: 세 npm package latest 1.14.0, tag SHA 8d6f665, Release Packages 37548646619 success |
 | Utilverse 적용·대체 | 모든 화면/컴포넌트 대조표, 공개 API 교체, 제품 상태·테마·데이터 회귀 | 사전 소스 조사 시작. 릴리스 후 정확한 npm 버전 설치 |
 
 ## 후속 후보와 검토 순서
