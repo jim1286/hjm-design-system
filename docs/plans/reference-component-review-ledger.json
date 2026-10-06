@@ -1899,13 +1899,32 @@
       "existingMapping": "Text / TextFormat",
       "priorRationale": "강조 표현 후보, 문장 의미 유지",
       "sourceAudit": "2026-10-06",
-      "visualReview": "pending",
-      "interactionReview": "pending",
-      "adoptionDecision": "pending",
+      "visualReview": "partial",
+      "interactionReview": "partial",
+      "adoptionDecision": "experiment-candidate",
       "sourceCheck": {
         "status": "html",
         "checkedAt": "2026-10-06T15:58:19.746933+00:00",
         "evidence": "reference-page-source-index.json"
+      },
+      "review": {
+        "date": "2026-10-07",
+        "evidence": "../qa/2026-10-07-highlighter-reference.md",
+        "observations": [
+          "IAB 기본 데모의 주황 밑줄과 파랑 강조를 관찰하고 restart 버튼 실행 후 문장과 강조를 확인했다.",
+          "390px 데모에서 문장이 줄바꿈했다. 강조 조각 자체는 한 줄이므로 multiline 기능 검증은 아니다.",
+          "DOM의 두 rough-annotation SVG에 aria-hidden과 role이 없고 AX에는 이름 없는 image 두 개가 노출됐다. 실제 발화는 미검증이다."
+        ],
+        "sourceRevision": "cdb348cb4c72a9b54b554d8617801e479fbc8714",
+        "decision": "TextFormat은 web-only kbd/code/quote이고 직접 대응하지 않는다. 문장 주석의 공통 presentation 계약과 Web/Native renderer를 설계한 뒤 실험에 추가한다. 원본 복사 또는 기존 TextFormat으로 구현 완료 처리하지 않는다.",
+        "remaining": [
+          "여러 줄 한국어와 RTL 주석",
+          "reduced motion 처리",
+          "제품 팔레트 대비",
+          "텍스트 변경 및 리사이즈 후 위치",
+          "Native 문장 내 줄별 측정",
+          "실제 스크린리더"
+        ]
       }
     },
     {
