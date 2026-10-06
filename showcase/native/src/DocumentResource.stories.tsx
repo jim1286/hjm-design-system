@@ -13,6 +13,7 @@ function Demo() {
   const state = useSyncExternalStore(example.session.subscribe, example.session.getSnapshot, example.session.getSnapshot);
   const [file, setFile] = useState(1);
   const [longName, setLongName] = useState(false);
+  const [saveLocked, setSaveLocked] = useState(false);
   const [preview, setPreview] = useState<DocumentPreviewState>({ status: "ready" });
   const [expanded, setExpanded] = useState(false);
   const [details, setDetails] = useState(false);
@@ -24,11 +25,12 @@ function Demo() {
   return <ScrollView><Stack gap="md">
     <Text>자체 생성 TXT 파일을 공유합니다. 공유창을 연 것은 저장 완료나 취소 확인이 아닙니다.</Text>
     {!documentFileHostAvailable ? <Text>현재 개발 앱에는 파일 공유 기능이 없습니다.</Text> : null}
-    <DocumentResource descriptor={{ id: name, name, disabled: !documentFileHostAvailable, formatLabel: "TXT", description: "자체 생성 문서 · 첫 시도는 실패 예제", preview, save }}
+    <DocumentResource descriptor={{ id: name, name, saveDisabled: saveLocked, disabled: !documentFileHostAvailable, formatLabel: "TXT", description: "자체 생성 문서 · 첫 시도는 실패 예제", preview, save }}
       labels={{ ...documentResourceLabels, started: "공유창을 열었습니다. 저장 여부는 선택한 앱에서 확인하세요." }} preview={expanded ? <Text>{exampleDocumentText}</Text> : <Text>HJM 문서 예제</Text>}
       onPreview={() => setExpanded(!expanded)} onRetryPreview={() => setPreview({ status: "ready" })}
       onSave={() => { void example.save(name); }} onRetrySave={() => { void example.retry(); }}
       moreAction={<Button tone="ghost" onPress={() => setDetails(!details)}>{details ? "문서 정보 닫기" : "문서 정보"}</Button>} />
+    <Button tone="secondary" onPress={() => setSaveLocked(!saveLocked)}>{saveLocked ? "저장 잠금 해제" : "저장만 잠그기"}</Button>
     {details ? <Text>현재 파일: {name}. 실제 개인 자료나 서버 요청은 없습니다.</Text> : null}
     <Button tone="secondary" onPress={() => { example.reset(); setFile(value => value + 1); setExpanded(false); setDetails(false); }}>다른 문서로 바꾸기</Button>
     <Button tone="secondary" onPress={() => setPreview({ status: "error", message: "미리보기 오류 예제입니다.", retryable: true })}>미리보기 실패 확인</Button>

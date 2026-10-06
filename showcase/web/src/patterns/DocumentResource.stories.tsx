@@ -19,6 +19,7 @@ function Demo() {
   const state = useSyncExternalStore(example.session.subscribe, example.session.getSnapshot, example.session.getSnapshot);
   const [file, setFile] = useState(1);
   const [longName, setLongName] = useState(false);
+  const [saveLocked, setSaveLocked] = useState(false);
   const [preview, setPreview] = useState<DocumentPreviewState>({ status: "ready" });
   const [expanded, setExpanded] = useState(false);
   const [details, setDetails] = useState(false);
@@ -29,11 +30,12 @@ function Demo() {
     : state.value;
   return <Stack gap="md">
     <Text>브라우저에서 자체 생성 텍스트 파일을 다운로드합니다. 시작 안내는 저장 완료를 뜻하지 않습니다.</Text>
-    <DocumentResource descriptor={{ id: name, name, formatLabel: "TXT", description: "자체 생성 문서 · 첫 시도는 실패 예제", preview, save }}
+    <DocumentResource descriptor={{ id: name, name, saveDisabled: saveLocked, formatLabel: "TXT", description: "자체 생성 문서 · 첫 시도는 실패 예제", preview, save }}
       labels={documentResourceLabels} preview={expanded ? <Text>{exampleDocumentText}</Text> : <Text>HJM 문서 예제</Text>}
       onPreview={() => setExpanded(!expanded)} onRetryPreview={() => setPreview({ status: "ready" })}
       onSave={() => { void example.save(name); }} onRetrySave={() => { void example.retry(); }}
       moreAction={<Button tone="ghost" onClick={() => setDetails(!details)}>{details ? "문서 정보 닫기" : "문서 정보"}</Button>} />
+    <Button tone="secondary" onClick={() => setSaveLocked(!saveLocked)}>{saveLocked ? "저장 잠금 해제" : "저장만 잠그기"}</Button>
     {details ? <Text>현재 파일: {name}. 실제 개인 자료나 서버 요청은 없습니다.</Text> : null}
     <Button tone="secondary" onClick={() => { example.reset(); setFile(value => value + 1); setExpanded(false); setDetails(false); }}>다른 문서로 바꾸기</Button>
     <Button tone="secondary" onClick={() => setPreview({ status: "error", message: "미리보기 오류 예제입니다.", retryable: true })}>미리보기 실패 확인</Button>

@@ -58,7 +58,7 @@ describe("document resource candidate", () => {
     expect(Object.isFrozen(resolved.metadata)).toBe(true);
   });
   it("rejects unsupported states and error messages without retry policy", () => {
-    for (const patch of [ { name: " " }, { sizeLabel: "" }, { disabled: "yes" },
+    for (const patch of [ { name: " " }, { sizeLabel: "" }, { disabled: "yes" }, { saveDisabled: "yes" },
       { preview: { status: "success" } }, { save: { status: "error", message: "오류" } },
       { save: { status: "error", message: "", retryable: true } } ]) {
       expect(() => resolveDocumentResource({ ...resource, ...patch } as DocumentResourceDescriptor)).toThrow(TypeError);
@@ -76,4 +76,18 @@ describe("document resource candidate", () => {
     expect(await first).toEqual({ status: "ignored" });
     expect(session.getSnapshot().value).toEqual({ status: "started" });
   });
+});
+
+it("keeps preview and its retry available while product review blocks saving and save retry", () => {
+ for (const preview of [{status:"ready"}, {status:"error",message:"preview failed",retryable:true}] as const) {
+  for(const save of [{status:"idle"}, {status:"error",message:"save failed",retryable:true}] as const) {
+   const locked=resolveDocumentResource({...resource,preview,save,saveDisabled:true});
+   expect(locked.canSave).toBe(false);expect(locked.canRetrySave).toBe(false);
+   expect(locked.canPreview).toBe(preview.status==="ready");
+   expect(locked.canRetryPreview).toBe(preview.status==="error");
+   const unlocked=resolveDocumentResource({...resource,preview,save,saveDisabled:false});
+   expect(unlocked.canSave).toBe(save.status==="idle");
+   expect(unlocked.canRetrySave).toBe(save.status==="error");
+  }
+ }
 });

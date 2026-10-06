@@ -34,3 +34,14 @@ it("preserves one save button across pending and failure, and distinguishes init
  act(()=>tree!.update(render({status:"saved"})));
  texts=tree!.root.findAllByType(Text).map(node=>node.props.children);expect(texts).toContain("저장 완료");
 });
+
+it("keeps preview available when product review locks export",()=>{
+ const preview=vi.fn();
+ const render=(locked:boolean)=><HjmNativeProvider><DocumentResource descriptor={{...descriptor,saveDisabled:locked}} labels={labels} onPreview={preview} onSave={()=>{}}/></HjmNativeProvider>;
+ act(()=>{tree=create(render(true));});
+ const buttons=tree!.root.findAllByType(Button);
+ expect(buttons.map(button=>button.props.disabled)).toEqual([false,true]);
+ act(()=>buttons[0]!.props.onPress());expect(preview).toHaveBeenCalledOnce();
+ act(()=>tree!.update(render(false)));
+ expect(tree!.root.findAllByType(Button)[1]!.props.disabled).toBe(false);
+});

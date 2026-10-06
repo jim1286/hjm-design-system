@@ -57,6 +57,7 @@ Web에서 초점을 가진 미리보기 재시도 버튼이 제거되면 같은 
 
 Showcase에는 긴 파일명 전환과 미리보기 준비 중·실패·없음 조작이 있다. 이름을 전환하면
 기존 action-session 결과를 reset한다. 미리보기 로딩은 저장을 자동으로 잠그지 않는다.
+저장 잠금 토글은 미리보기와 그 재시도를 유지하며 저장·저장 재시도만 잠근다.
 
 ## 흐름과 상태
 
@@ -79,6 +80,12 @@ Showcase에는 긴 파일명 전환과 미리보기 준비 중·실패·없음 �
 | 실패 | 해당 오류·허용된 재시도 | 미리보기 실패가 저장을 자동으로 막지 않음 |
 | 시작/완료/취소 | 각각 다른 상태 문구 | Web status, Native live region; iOS 실제 알림 검증 대기 |
 | 비활성 | 기본·재시도 행동 비활성 | 제품 moreAction도 같은 정책을 공급해야 함 |
+
+`saveDisabled`는 기본 false이며 저장·저장 재시도만 막는다. 결과를 읽고 검토해야 내보낼 수
+있는 제품에서 사용한다. `disabled`는 미리보기까지 막으므로 검토 대기 상태에 대신 쓰지 않는다.
+2026-10-07 Utilverse PhotoOutputCard 조사에서 이 구분이 필요했다. 잠금은 진행 중인 OS 작업의
+취소나 권한 검사를 대신하지 않는다. 제품은 onSave 실행 직전에도 유효한 권한·검토 상태를 확인하고,
+`moreAction`에 별도 공유 행동을 넣었다면 그 행동에도 제품의 잠금 정책을 연결한다.
 
 ## 코드 골격
 
@@ -110,5 +117,6 @@ import { DocumentResource } from "@hjmds/react-native/document-resource";
 
 Showcase의 첫 실패는 합성 fixture이며 운영 서버 실패가 아니다. Native 텍스트 공유는 파일 저장
 검증을 대신하지 않는다. HJM이 제품의 실패를 저장 성공으로 해석하지 않도록 action-session의
-success와 host 결과 started/saved/cancelled를 따로 연결한다. 제품 metadata에 URL·서버 오류 원문을
+success와 host 결과 started/saved/cancelled를 따로 연결한다. 오류를 내부 상태로 기록하고
+resolve하는 제품 세션은 Promise 완료만으로 성공을 판단하지 말고 세션 snapshot의 결과·오류를 읽는다. 제품 metadata에 URL·서버 오류 원문을
 자동 노출하지 않는다. 아직 실험이며 전체 환경 검증·승격·npm 게시·소비 적용은 별도다.

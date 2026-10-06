@@ -71,3 +71,13 @@ it("uses save while a preview reloads and does not transfer retry focus to a rep
  await act(async()=>root.render(render("b",{status:"ready"})));
  expect(document.activeElement).toBe(document.body);
 });
+
+it("honors a save-only review gate while the preview remains actionable", async()=>{
+ const preview=vi.fn(),save=vi.fn(),retry=vi.fn();
+ for(const failed of [false,true]) {
+  await act(async()=>root.render(<HjmProvider><DocumentResource descriptor={{...descriptor,saveDisabled:true,save:failed?{status:"error",message:"保存失敗",retryable:true}:{status:"idle"}}} labels={labels} onPreview={preview} onSave={save} onRetrySave={retry}/></HjmProvider>));
+  await act(async()=>page.getByRole("button",{name:"미리보기",exact:true}).click());
+  await expect.element(page.getByRole("button",{name:failed?"저장 재시도":"저장",exact:true})).toBeDisabled();
+ }
+ expect(preview).toHaveBeenCalledTimes(2);expect(save).not.toHaveBeenCalled();expect(retry).not.toHaveBeenCalled();
+});

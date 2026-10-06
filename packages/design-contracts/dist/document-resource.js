@@ -40,12 +40,17 @@ export function resolveDocumentResource(descriptor) {
         if (descriptor[key] !== undefined)
             text(descriptor[key], key);
     }
-    if (descriptor.disabled !== undefined && typeof descriptor.disabled !== "boolean") {
-        throw new TypeError("Document resource disabled must be boolean");
+    for (const key of ["disabled", "saveDisabled"]) {
+        if (descriptor[key] !== undefined && typeof descriptor[key] !== "boolean") {
+            throw new TypeError(`Document resource ${key} must be boolean`);
+        }
     }
     state(descriptor.preview, ["none", "loading", "ready", "error"], "preview");
     state(descriptor.save, ["idle", "pending", "started", "saved", "cancelled", "error"], "save");
     const disabled = descriptor.disabled ?? false;
+    // Utilverse requires viewing the output before accepting export; whole-card disabling
+    // would prevent that review. The host owns the requirement, not a fake pending state.
+    const saveDisabled = disabled || descriptor.saveDisabled === true;
     const preview = Object.freeze({ ...descriptor.preview });
     const save = Object.freeze({ ...descriptor.save });
     return Object.freeze({
@@ -56,14 +61,15 @@ export function resolveDocumentResource(descriptor) {
         metadata: Object.freeze([descriptor.formatLabel, descriptor.sizeLabel].filter((value) => value !== undefined)),
         description: descriptor.description,
         disabled,
+        saveDisabled,
         preview,
         save,
         canPreview: !disabled && preview.status === "ready",
         canRetryPreview: !disabled && preview.status === "error" && preview.retryable,
         // Keep failures on the explicit retry path. A second ordinary save must not
         // bypass a host's retryable=false policy after an ambiguous OS response.
-        canSave: !disabled && save.status !== "pending" && save.status !== "error",
-        canRetrySave: !disabled && save.status === "error" && save.retryable,
+        canSave: !saveDisabled && save.status !== "pending" && save.status !== "error",
+        canRetrySave: !saveDisabled && save.status === "error" && save.retryable,
         // Browser anchor activation proves initiation, not file-system completion.
         saved: save.status === "saved",
     });

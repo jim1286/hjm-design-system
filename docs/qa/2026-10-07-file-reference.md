@@ -159,3 +159,12 @@ AC433031-1746-46C6-86A9-143A1FC839F8에서 idb/simctl로 검증했다. Device Hu
 두 Showcase 타입 검사와 문서/Storybook 규격 검사 통과. 이번 변경은 예제 조작 추가이며
 renderer를 수정하지 않았다. dark×2배×RTL 교차 조합·제품 palette·Android·접근성은 남는다.
 캡처는 검토 후 임시 파일을 제거했다. Native는 마지막 Rtl 스토리에서 보존하며 OS 설정은 바꾸지 않았다.
+
+## 저장 전 검토 게이트 (2026-10-07)
+
+Utilverse PhotoOutputCard는 결과 표시 확인과 사용자 검토 이전에도 미리보기는 제공한다.
+전체 disabled로 대응하면 검토 자체를 막으므로 DocumentResource.saveDisabled를 추가했다.
+저장·저장 재시도만 막고 미리보기·미리보기 재시도는 유지하며 양 Showcase에 잠금 토글을 제공한다.
+공통 계약 10개, Web 실제 브라우저 6개, Native renderer 3개 테스트 통과.
+세 패키지 typecheck/build 통과. 잠금→미리보기·재시도 유지→잠금 해제 후 저장 행동을 검사했다.
+이는 제품 파일 세션 채택이나 Native 기기 스크린리더 검증 완료를 뜻하지 않는다.

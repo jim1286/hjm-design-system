@@ -21,6 +21,8 @@ export type DocumentResourceDescriptor = Readonly<{
     sizeLabel?: string;
     description?: string;
     disabled?: boolean;
+    /** Product review/permission gates may block export while keeping preview accessible. */
+    saveDisabled?: boolean;
     preview: DocumentPreviewState;
     save: DocumentSaveState;
 }>;
@@ -51,6 +53,7 @@ export declare function resolveDocumentResourceControls(props: DocumentResourceC
     metadata: readonly string[];
     description: string | undefined;
     disabled: boolean;
+    saveDisabled: boolean;
     preview: Readonly<{
         status: "none" | "loading" | "ready";
     } | {
@@ -77,6 +80,7 @@ export declare function resolveDocumentResource(descriptor: DocumentResourceDesc
     metadata: readonly string[];
     description: string | undefined;
     disabled: boolean;
+    saveDisabled: boolean;
     preview: Readonly<{
         status: "none" | "loading" | "ready";
     } | {

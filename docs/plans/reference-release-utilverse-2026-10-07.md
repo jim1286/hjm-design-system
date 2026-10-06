@@ -86,8 +86,8 @@ UI·기능 검증을 거쳐 승격·릴리스하고 Utilverse의 대체 가능�
 
 `node scripts/audit-consumer-ui.mjs <utilverse-root> docs/plans/utilverse-ui-adoption-inventory.json`
 명령으로 소비 저장소의 TypeScript parser를 사용해 `apps/mobile/src/**/*.tsx` 136개를 읽었다.
-JSX에서 실제 사용한 import·alias·행 번호·파일 hash를 기록했다. 현재 24개 파일은 source-reviewed이며
-나머지 112개는 pending이다. source-reviewed는 UI·동작 검증이나 채택 완료가 아니다.
+JSX에서 실제 사용한 import·alias·행 번호·파일 hash를 기록했다. 현재 35개 파일은 source-reviewed이며
+나머지 101개는 pending이다. source-reviewed는 UI·동작 검증이나 채택 완료가 아니다.
 HJM import가 있다는 사실만으로 내부 자체 UI가 대체됐다고 판단하지 않는다. Alert.alert 같은
 JSX 밖 호출은 위 1차 대조 목록 및 후속 동작 분석으로 함께 확인한다.
 

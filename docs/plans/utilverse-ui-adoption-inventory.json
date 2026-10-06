@@ -2314,8 +2314,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "split-and-verify-target",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "73f938f",
+        "report": "docs/plans/utilverse-photo-export-adoption.md",
+        "reason": "Absorb status/error presentation with Notice; keep cleanup retry distinct from export retry and created/saved/shareReturned outcomes.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/HomeToolPreview.tsx",
@@ -2932,8 +2941,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "split-and-verify-target",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "73f938f",
+        "report": "docs/plans/utilverse-photo-export-adoption.md",
+        "reason": "Preserve original/result comparison, onDisplay review gate, separate save/share/edit actions; use saveDisabled only for matching single-export composition.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/PolicyLinks.tsx",
@@ -3143,8 +3161,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "split-and-verify-target",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "73f938f",
+        "report": "docs/plans/utilverse-photo-export-adoption.md",
+        "reason": "Already uses HJM Button; compare Clipboard contract while preserving keyed value, lifetime and actual clipboard receipt.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/ResultShare.tsx",
@@ -3185,8 +3212,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "split-and-verify-target",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "73f938f",
+        "report": "docs/plans/utilverse-photo-export-adoption.md",
+        "reason": "Keep native Share host and busy lifecycle; consider Notice failure presentation, never infer durable save from share result.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/ReviewLogin.tsx",
@@ -3410,8 +3446,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "split-and-verify-target",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "73f938f",
+        "report": "docs/plans/utilverse-photo-export-adoption.md",
+        "reason": "Replace visual frame with shared Surface candidate; preserve full-image contain and product picker host.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/SettingsSection.tsx",
@@ -3600,8 +3645,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "split-and-verify-target",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "73f938f",
+        "report": "docs/plans/utilverse-photo-export-adoption.md",
+        "reason": "Keep MessageComposer and OS picker ownership; verify stable attachment identity and busy/lifetime before changes.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/StoredPublicAction.tsx",
@@ -3894,8 +3948,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "split-and-verify-target",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "73f938f",
+        "report": "docs/plans/utilverse-photo-export-adoption.md",
+        "reason": "Keep existing ContentTransition/Surface composition and editable OCR live-region suppression.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/ToolResultAds.tsx",
@@ -7369,8 +7432,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "split-and-verify-target",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "73f938f",
+        "report": "docs/plans/utilverse-photo-export-adoption.md",
+        "reason": "Keep FileJobSession, alpha-to-JPEG consent and separate gallery/share actions; absorb eligible result and notice presentation.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/features/PhotoMaskScreen.tsx",
@@ -7765,15 +7837,33 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "split-and-verify-target",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "73f938f",
+        "report": "docs/plans/utilverse-photo-export-adoption.md",
+        "reason": "Keep resize budget/quality warnings, alpha consent, cancellation and cleanup; replace presentation only after host contract checks.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/features/PhotoScreen.tsx",
       "sha256": "9b5c95203739d9f1dafc7ed44e8b699e2da74bb73337882b8b149d4119d5b2ce",
       "renderedTags": [],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "split-and-verify-target",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "73f938f",
+        "report": "docs/plans/utilverse-photo-export-adoption.md",
+        "reason": "Keep platform resolution re-export; no independent UI replacement.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/features/PhotoScreen.web.tsx",
@@ -7807,8 +7897,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "split-and-verify-target",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "73f938f",
+        "report": "docs/plans/utilverse-photo-export-adoption.md",
+        "reason": "Keep native-only capability notice; stub is not a separate web product.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/features/PhotoStripScreen.tsx",
