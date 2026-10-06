@@ -59,7 +59,7 @@ UI·기능 검증을 거쳐 승격·릴리스하고 Utilverse의 대체 가능�
 
 | 소스 | 현재 구현 | 우선 대조할 HJM |
 | --- | --- | --- |
-| components/LanguageSelect.tsx | Sheet 안 Pressable 선택 행 | ListRow / 선택 목록 계약 |
+| components/LanguageSelect.tsx | Sheet 안 Pressable 선택 행 | Select로 선택창 전체 대체 검토 |
 | components/PhotoFilePreview.tsx | Native Modal + 이미지 미리보기 | ImageViewer / Dialog의 host·확대·닫기 계약 |
 | components/AuthorAvatar.tsx | Pressable 아바타 | Avatar의 공개 행동/링크 슬롯 |
 | features/ConversationScreen.tsx | 메시지 주변 Pressable·NativeText | ChatMessage / MessageComposer / reaction 계약 |
@@ -86,8 +86,8 @@ UI·기능 검증을 거쳐 승격·릴리스하고 Utilverse의 대체 가능�
 
 `node scripts/audit-consumer-ui.mjs <utilverse-root> docs/plans/utilverse-ui-adoption-inventory.json`
 명령으로 소비 저장소의 TypeScript parser를 사용해 `apps/mobile/src/**/*.tsx` 136개를 읽었다.
-JSX에서 실제 사용한 import·alias·행 번호·파일 hash를 기록했다. 현재 두 파일은 source-reviewed이며
-나머지 134개는 pending이다. source-reviewed는 UI·동작 검증이나 채택 완료가 아니다.
+JSX에서 실제 사용한 import·alias·행 번호·파일 hash를 기록했다. 현재 여섯 파일은 source-reviewed이며
+나머지 130개는 pending이다. source-reviewed는 UI·동작 검증이나 채택 완료가 아니다.
 HJM import가 있다는 사실만으로 내부 자체 UI가 대체됐다고 판단하지 않는다. Alert.alert 같은
 JSX 밖 호출은 위 1차 대조 목록 및 후속 동작 분석으로 함께 확인한다.
 
@@ -175,3 +175,9 @@ onDisplay에 의존하며 ImageViewer의 onLoad로 치환할 수 없다. 전광�
 [파일별 판단과 남은 검증](utilverse-preview-display-adoption.md)에 채택 전제와 보존 계약을 적었다.
 현재 소비 manifest는 1.12.2-basic-screens-preview.6 로컬 tarball이다. HJM 게시 버전과
 소비 설치 버전을 혼동하지 않으며 이번 대조에서 Utilverse 소스를 수정하지 않았다.
+
+언어 선택·Avatar·AuthorAvatar·SocialPhotoGallery 네 파일의 소스 대조를 추가했다.
+[선택·미디어 채택 판단](utilverse-selection-media-adoption.md)에 기존 API 연결과
+조회 수명·터치 대상·이니셜 보존 조건을 적었다. Carousel의 숨겨진 슬라이드도
+renderSlide가 실행되므로 선택 사진만 조회하도록 연결해야 한다. 사용 지침에도
+이 경계를 추가했다. 현재 소스 검토 6/136이며 소비 적용·기기 검증 수는 아니다.

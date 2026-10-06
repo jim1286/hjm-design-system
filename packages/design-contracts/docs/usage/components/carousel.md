@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [Carousel](../../carousel.md), `CarouselMotion`은 [선택형 어댑터](../../optional-adapters.md), contract `src/carousel.ts`
 - 스토리북: `배포/컴포넌트/데이터 표시/캐러셀`
 
@@ -99,6 +99,10 @@ import { Carousel } from "@hjmds/react-native/carousel";
 - 슬라이드 id는 유일하고 앞뒤 공백이 없어야 한다. 빈 배열은 던지므로 로딩·빈 상태는 마운트 전에 제품이 처리한다.
 - `composeAccessibleName`의 어순·조사는 제품 문구다. HJM은 위치 정보만 넘긴다.
 - 슬라이드 안의 시각 콘텐츠(카드·이미지)는 제품 소유다. 컨트롤·점·접근성 구조는 HJM 소유라 다시 만들지 않는다.
+- 두 renderer는 숨겨진 슬라이드에도 `renderSlide`를 호출한다. 숨김은 네트워크 요청 취소나
+  자식 unmount가 아니다. 권한 확인이 필요한 사진을 현재 페이지만 읽는 제품은 제어된
+  `currentKey`와 비교해 선택되지 않은 콘텐츠를 `null`로 반환한다. 2026-10-07 Utilverse의
+  선택 페이지 단독 조회·로그아웃 후 캐시 제거 계약을 대조하며 확인한 경계다.
 - 배치는 `layoutStyle`로만 한다. Native `style`은 deprecated(개발 모드 1회 경고, 다음 major 제거)다.
 
 ## 플랫폼 차이

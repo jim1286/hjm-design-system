@@ -1039,15 +1039,16 @@
           ]
         }
       ],
-      "review": "source-reviewed: 2026-10-07; runtime pending",
-      "decision": {
-        "assessment": "preserve reporting and permission logic; replace visual through shared Avatar wrapper",
-        "preserve": [
-          "other-member photo condition",
-          "idempotent report command",
-          "sheet close and auth requirements"
-        ],
-        "pending": "compare accessible action host and minimum touch area before replacing Pressable"
+      "review": "source-reviewed",
+      "decision": "split-and-verify-target",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "3c5547c",
+        "report": "docs/plans/utilverse-selection-media-adoption.md",
+        "reason": "Replace visual Avatar; retain product reporting command. Existing 26/28 plus 6 hitSlop is below 44 and chat parent is 32 wide; interaction host requires layout validation.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
       }
     },
     {
@@ -1082,18 +1083,16 @@
           ]
         }
       ],
-      "review": "source-reviewed: 2026-10-07; runtime pending",
-      "decision": {
-        "assessment": "replace after HJM release",
-        "target": "@hjmds/react-native Avatar with renderImage product host",
-        "preserve": [
-          "Expo Image disk cache",
-          "initial visible while loading",
-          "decorative semantics",
-          "photo version URI",
-          "explicit single initial"
-        ],
-        "prerequisite": "new renderImage slot implemented in HJM; not yet published; validate exact product sizes and palettes"
+      "review": "source-reviewed",
+      "decision": "replace-after-release",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "3c5547c",
+        "report": "docs/plans/utilverse-selection-media-adoption.md",
+        "reason": "Avatar renderImage preserves Expo disk cache and pending fallback; explicit initials preserve the product one-character format.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
       }
     },
     {
@@ -2458,8 +2457,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "replace-after-release",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "3c5547c",
+        "report": "docs/plans/utilverse-selection-media-adoption.md",
+        "reason": "Select owns the current-value trigger and dismissing single-selection sheet; preserve system availability and product persistence.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/NotificationSettings.tsx",
@@ -3421,8 +3429,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "replace-after-release",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "3c5547c",
+        "report": "docs/plans/utilverse-selection-media-adoption.md",
+        "reason": "Use controlled Carousel and mount only the selected query host; hidden slides otherwise still render. Preserve session-scoped visibility and no persisted image cache.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/SocialPhotoPicker.tsx",
