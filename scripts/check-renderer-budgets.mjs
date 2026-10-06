@@ -88,6 +88,8 @@ const rendererBudgets = [
       "./sortable": { modules: 5, raw: 29800, gzip: 8000 },
       "./swipe-actions": { modules: 3, raw: 9700, gzip: 2700 },
       "./content-transition": { modules: 4, raw: 22500, gzip: 6400 },
+      "./rating": { modules: 3, raw: 10900, gzip: 3100 },
+      "./image-comparison": { modules: 6, raw: 42200, gzip: 11500 },
       "./carousel-motion": { modules: 5, raw: 28700, gzip: 7600 },
       "./celebration": { modules: 4, raw: 23700, gzip: 6700 },
 
@@ -336,6 +338,9 @@ const rendererBudgets = [
     // 1.5.0: provider.js gained the brandPalette prop and its inheritance
     // context, measured +0.6 kB raw / +0.19 kB gzip; see the Web note above.
     sharedModuleAllowances: [
+      // FixedGlyph extracts the existing overlay glyph rule for search/tags/messages.
+      // Charge exactly one internal edge only to graphs that include it; no new peer.
+      { file: "internal/fixed-glyph.js", modules: 1, raw: 0, gzip: 0 },
       // Spinner was extracted from feedback for reuse by ScreenLayout without
       // importing toast/notice implementations. One internal edge, no byte increase.
       { file: "internal/spinner.js", modules: 1, raw: 0, gzip: 0 },
@@ -417,6 +422,8 @@ const rendererBudgets = [
       "./sortable": { modules: 5, raw: 44900, gzip: 10600 },
       "./swipe-actions": { modules: 5, raw: 43300, gzip: 10100 },
       "./content-transition": { modules: 4, raw: 26800, gzip: 7000 },
+      "./rating": { modules: 6, raw: 43600, gzip: 10200 },
+      "./image-comparison": { modules: 8, raw: 101700, gzip: 21000 },
       "./carousel-motion": { modules: 5, raw: 42500, gzip: 10100 },
       "./celebration": { modules: 2, raw: 9500, gzip: 3000 },
       "./screen-transition": { modules: 2, raw: 8400, gzip: 2700 },

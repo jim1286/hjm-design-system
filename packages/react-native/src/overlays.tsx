@@ -42,7 +42,6 @@ import {
   Modal,
   Platform,
   ScrollView,
-  Text as NativeText,
   Pressable,
   StyleSheet,
   View,
@@ -62,16 +61,14 @@ import {
   type NativeModalTeardownTask,
 } from "./internal/modal-lifecycle.js";
 import { isDevelopment, warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
+import { FixedGlyph } from "./internal/fixed-glyph.js";
 import { minimumTargetStyle } from "./internal/styles.js";
 import { Text } from "./primitives.js";
 import { useHjmNativeSafeAreaInsets, useHjmNativeTheme } from "./provider.js";
 
-// A close glyph is icon artwork, not body copy. HJM Text applies controlled textScale
-// even with allowFontScaling=false, which clipped × in the fixed icon frame at 200%.
+// A close glyph is icon artwork, not body copy; FixedGlyph keeps it inside IconButton's fixed frame.
 function CloseGlyph() {
-  const { colors } = useHjmNativeTheme();
-  return <NativeText accessible={false} allowFontScaling={false}
-    style={{ color: colors.text, fontSize: glyph.sm, lineHeight: glyph.sm }}>×</NativeText>;
+  return <FixedGlyph fontSize={glyph.sm}>×</FixedGlyph>;
 }
 
 // BT-QA-027: maximum text made a centered BurnTok confirmation taller than the

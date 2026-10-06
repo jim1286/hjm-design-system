@@ -1,0 +1,3 @@
+/* Bento is a composition, not a new Grid API; keep source order on narrow screens. */
+.hjm-reference-bento { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: var(--hjm-space-md); }
+@media (max-width: 48rem) { .hjm-reference-bento { grid-template-columns: minmax(0, 1fr); } }

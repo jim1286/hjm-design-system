@@ -1,3 +1,4 @@
+import { FixedGlyph } from "./internal/fixed-glyph.js";
 import { FieldMessage, NativeFieldFrame } from "./internal/field-frame.js";
 import type { FieldPrivateProps } from "./internal/field-private.js";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
@@ -551,13 +552,7 @@ export const SearchField = forwardRef<TextInput, SearchFieldProps>(function Sear
       }}
     >
       {renderClearIcon?.(iconProps) ?? (
-        <Text
-          align="center"
-          style={{ fontSize: iconProps.size, lineHeight: iconProps.size }}
-          tone="muted"
-        >
-          ×
-        </Text>
+        <FixedGlyph tone="muted" fontSize={iconProps.size}>×</FixedGlyph>
       )}
     </Pressable>
   ) : trailingNode;

@@ -1,4 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { FixedGlyph } from "./internal/fixed-glyph.js";
 import { removeTagAt, resolveTagsInputCommit, tagsInputRecipe, } from "@hjmds/design-contracts/components/tags-input";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { control, radius, spacing } from "@hjmds/design-contracts/foundations";
@@ -54,7 +55,7 @@ export function TagsInput({ label, tags: controlledTags, defaultTags, onTagsChan
                             backgroundColor: surface,
                         }, children: [_jsx(Text, { style: { color: content }, children: tag }), _jsx(Pressable, { accessibilityRole: "button", accessibilityLabel: composeRemoveLabel(tag), disabled: disabled, 
                                 // The visible chip is small; the touch target is not.
-                                hitSlop: tagsInputRecipe.remove.minTouchTarget / 2, onPress: () => setTags(removeTagAt(tags, index)), children: _jsx(Text, { style: { color: content }, children: "\u00D7" }) })] }, `${tag}-${index}`))), _jsx(TextInput, { accessibilityLabel: label, editable: !disabled, placeholder: placeholder, value: draft, onChangeText: changeDraft, 
+                                hitSlop: tagsInputRecipe.remove.minTouchTarget / 2, onPress: () => setTags(removeTagAt(tags, index)), children: _jsx(FixedGlyph, { color: content, children: "\u00D7" }) })] }, `${tag}-${index}`))), _jsx(TextInput, { accessibilityLabel: label, editable: !disabled, placeholder: placeholder, value: draft, onChangeText: changeDraft, 
                         // There is no keyboard commit vocabulary here: the return key is the
                         // only reliable one on a phone, so Comma/Space/Blur stay Web-only.
                         onSubmitEditing: () => commit(draft), 

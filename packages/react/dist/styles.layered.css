@@ -2910,4 +2910,11 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-segmented[data-presentation="pills"] .hjm-segmented__item[data-state="checked"]::before { background:var(--hjm-color-text-body); }
 .hjm-segmented[data-presentation="pills"] .hjm-segmented__item:focus-within { outline:2px solid var(--hjm-color-focus); outline-offset:2px; }
 
+/* Reference rating: real radios preserve browser keyboard and form behavior. */
+.hjm-rating__option { position: relative; display: inline-flex; align-items: center; justify-content: center; min-width: var(--hjm-control-min-touch-target); min-height: var(--hjm-control-min-touch-target); cursor: pointer; border: 1px solid var(--hjm-color-border); border-radius: var(--hjm-radius-sm); }
+.hjm-rating__option input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: inherit; }
+.hjm-rating__option:has(input:focus-visible) { outline: 2px solid currentColor; outline-offset: 2px; }
+.hjm-rating__option:has(input:checked) { border-color: currentColor; }
+.hjm-rating__option:has(input:disabled) { opacity: .5; cursor: default; }
+
 }

@@ -122,3 +122,8 @@ import { Image } from "react-native";
 | 첨부 목록 | CSS 클래스 `hjm-message-composer__attachments` | 가로 ScrollView |
 | 이벤트 이름 | `attachmentAction.onPress`(내부에서 onClick으로 연결) | `onPress` |
 | 배치 prop | `layoutStyle`(루트) | 없음 |
+
+
+### 고정 아이콘과 큰 글자
+
+2026-10-06 최근 검색 삭제 기호가 큰 글자에서 잘린 재현에 따라 Native 내장 삭제·메뉴 기호는 고정 아이콘 틀의 크기를 유지한다. 주변 제목·라벨은 계속 확대한다. Chip의 체크와 Toast 닫기는 기존 비확대 경로를 유지하며 회귀 검사에 포함한다. 제품이 전달한 아이콘 슬롯은 제품이 같은 조건을 검증한다.

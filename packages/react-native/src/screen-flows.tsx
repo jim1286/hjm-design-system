@@ -12,6 +12,7 @@ import { validateCommentThread, resolvePermissionAction, resolveOnboardingStep, 
 import { AccessibilityInfo, Keyboard, ScrollView, View, type NativeSyntheticEvent, type TextInputSubmitEditingEventData } from "react-native";
 import { containerRecipe, type ContainerGutter } from "@hjmds/design-contracts/components/container";
 import { ListRow } from "./data-display.js";
+import { FixedGlyph } from "./internal/fixed-glyph.js";
 import { Heading } from "./heading.js";
 import { Menu } from "./navigation.js";
 import { EmptyState, Skeleton } from "./feedback.js";
@@ -165,7 +166,7 @@ function SearchIdleSections({ recent, suggested, legacy, onCommit }: {
         <Button tone="ghost" size="small" onPress={recent.onClearAll}>{recent.clearAllLabel}</Button>
       </Stack>
       <Stack gap="xxs">{visible.map(item => <ListRow key={item} density="compact" leading={recent.icon} title={item} onPress={() => onCommit(item)}
-        trailingAction={<IconButton label={recent.removeLabel(item)} tone="ghost" onPress={() => recent.onRemove(item)}>{recent.removeIcon ?? <Text tone="muted">×</Text>}</IconButton>} />)}</Stack>
+        trailingAction={<IconButton label={recent.removeLabel(item)} tone="ghost" onPress={() => recent.onRemove(item)}>{recent.removeIcon ?? <FixedGlyph tone="muted">×</FixedGlyph>}</IconButton>} />)}</Stack>
     </Stack> : null}
     {suggested?.items.length ? <SearchSuggestedChips suggested={suggested} onCommit={onCommit} /> : null}
   </Stack>;
@@ -205,7 +206,7 @@ function SearchResultsHeader({ summary, applied, cause, onSortChange }: {
     </Stack> : null}
     {applied?.items.length ? <Stack axis="inline" wrap gap="xs" align="center">
       {applied.items.map(item => <Chip key={item.key} label={item.label} accessibilityLabel={applied.removeLabel(item.label)}
-        trailing={applied.removeIcon ?? <Text tone="muted">×</Text>} onPress={() => applied.onRemove(item.key)} />)}
+        trailing={applied.removeIcon ?? <FixedGlyph tone="muted">×</FixedGlyph>} onPress={() => applied.onRemove(item.key)} />)}
       <Button tone="ghost" size="small" onPress={applied.onClearAll}>{applied.clearAllLabel}</Button>
     </Stack> : null}
   </Stack>;
