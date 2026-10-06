@@ -2,12 +2,12 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { topDefaults, topRecipe, validateTopDescriptor, } from "@hjmds/design-contracts/components/top";
 import { forwardRef, createElement } from "react";
 import { classNames } from "./internal.js";
-export const Top = forwardRef(function Top({ descriptor, trailing, className }, forwardedRef) {
+export const Top = forwardRef(function Top({ descriptor, trailing, className, layoutStyle }, forwardedRef) {
     validateTopDescriptor(descriptor);
     const size = descriptor.size ?? topDefaults.size;
     const level = descriptor.headingLevel ?? topDefaults.headingLevel;
     const metrics = topRecipe.sizes[size];
-    return (_jsxs("header", { ref: forwardedRef, className: classNames("hjm-top", className), "data-size": size, style: {
+    return (_jsxs("header", { ref: forwardedRef, className: classNames("hjm-top", className), "data-size": size, style: { ...layoutStyle,
             "--hjm-top-title-size": `${metrics.title.fontSize}px`,
             "--hjm-top-title-line-height": `${metrics.title.lineHeight}px`,
             "--hjm-top-title-weight": metrics.title.fontWeight,

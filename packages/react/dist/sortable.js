@@ -82,6 +82,6 @@ export function SortableCollection(props) {
             const source = event.operation.source;
             if (source && isSortable(source))
                 commit(String(source.id), source.index, "drag");
-        }, children: [_jsx("ul", { ref: list, "aria-label": props.label, style: { listStyle: "none", margin: 0, padding: 0 }, children: props.items.map((item, index) => _jsx(Row, { item: item, index: index, count: props.items.length, disabled: props.disabled ?? false, reduced: environment.reducedMotion, labels: props.labels, move: to => commit(item.id, to, "keyboard"), children: props.renderItem(item) }, item.id)) }), _jsx("span", { role: "status", style: { position: "absolute", width: 1, height: 1, overflow: "hidden", clipPath: "inset(50%)" }, children: announcement })] });
+        }, children: [_jsx("ul", { ref: list, "aria-label": props.label, style: { listStyle: "none", margin: 0, padding: 0, ...props.layoutStyle }, children: props.items.map((item, index) => _jsx(Row, { item: item, index: index, count: props.items.length, disabled: props.disabled ?? false, reduced: environment.reducedMotion, labels: props.labels, move: to => commit(item.id, to, "keyboard"), children: props.renderItem(item) }, item.id)) }), _jsx("span", { role: "status", style: { position: "absolute", width: 1, height: 1, overflow: "hidden", clipPath: "inset(50%)" }, children: announcement })] });
 }
 //# sourceMappingURL=sortable.js.map

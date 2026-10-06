@@ -53,7 +53,17 @@ type TabsBaseProps<Value extends string> = Readonly<{
     /** Set false when panels are rendered separately with `TabPanel`. */
     renderPanels?: boolean;
     children?: (selectedValue: Value) => ReactNode;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
+    /**
+     * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement; `tabsRecipe` (`size`/`layout`/`appearance`) owns appearance. Removed in the next major
+     * (consumer-policy.md §3.1).
+     */
     style?: StyleProp<ViewStyle>;
+    /**
+     * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` on Tabs for placement; `layout`/`overflow` own the tab list. Removed in the next major
+     * (consumer-policy.md §3.1).
+     */
     tabListStyle?: StyleProp<ViewStyle>;
 }>;
 type TabsCollectionProps<Value extends string> = Readonly<{
@@ -68,6 +78,12 @@ type ExternalTabPanelBaseProps = Readonly<{
     activeValue: string;
     label: string;
     children: ReactNode;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
+    /**
+     * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement; panel content owns its own surface. Removed in the next major
+     * (consumer-policy.md §3.1).
+     */
     style?: StyleProp<ViewStyle>;
 }>;
 export type TabPanelProps = ExternalTabPanelBaseProps & (Readonly<{
@@ -110,13 +126,31 @@ export type BottomNavigationProps<Key extends string = string, IconName extends 
     primaryAction?: ReactNode;
     configuration?: BottomNavigationConfiguration;
     safeAreaBottom?: number;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
+    /**
+     * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement; `configuration` (presentation/density/distribution) owns appearance. Removed in the next major
+     * (consumer-policy.md §3.1).
+     */
     style?: StyleProp<ViewStyle>;
+    /**
+     * @deprecated Raw visual style bypasses the HJM recipe. Use `configuration.presentation`/`density`. Removed in the next major
+     * (consumer-policy.md §3.1).
+     */
     surfaceStyle?: StyleProp<ViewStyle>;
+    /**
+     * @deprecated Raw visual style bypasses the HJM recipe. Use `configuration.distribution`. Removed in the next major
+     * (consumer-policy.md §3.1).
+     */
     listStyle?: StyleProp<ViewStyle>;
+    /**
+     * @deprecated Raw visual style bypasses the HJM recipe. Use `configuration.distribution: "center-gap"`. Removed in the next major
+     * (consumer-policy.md §3.1).
+     */
     primaryActionStyle?: StyleProp<ViewStyle>;
 }>;
 /** Router-owned persistent destinations; activation emits intent without mutating selection. */
-export declare function BottomNavigation<Key extends string = string, IconName extends string = string>({ descriptor, onActivate, onLongActivate, renderIcon, renderBadge, getItemTestID, primaryAction, configuration, safeAreaBottom, style, surfaceStyle, listStyle, primaryActionStyle, }: BottomNavigationProps<Key, IconName>): import("react").JSX.Element | null;
+export declare function BottomNavigation<Key extends string = string, IconName extends string = string>({ descriptor, onActivate, onLongActivate, renderIcon, renderBadge, getItemTestID, primaryAction, configuration, safeAreaBottom, layoutStyle, style, surfaceStyle, listStyle, primaryActionStyle, }: BottomNavigationProps<Key, IconName>): import("react").JSX.Element | null;
 type TopBarActionHostProps = Omit<PressableProps, "accessible" | "accessibilityLabel" | "accessibilityRole" | "accessibilityState" | "children" | "disabled" | "onPress" | "role" | "style">;
 export type TopBarActionControlProps = TopBarActionHostProps & Readonly<{
     accessible: true;
@@ -141,7 +175,17 @@ type TopBarActionBaseProps = TopBarActionHostProps & Readonly<{
     disabled?: boolean;
     /** Back/close affordances may keep the product label accessibility-only. */
     labelVisibility?: "visible" | "accessibility-only";
+    /**
+     * @deprecated Raw visual style bypasses the HJM recipe. Use `labelVisibility`; `topBarRecipe.actionLabel` owns typography. Removed in the next major
+     * (consumer-policy.md §3.1).
+     */
     labelStyle?: StyleProp<TextStyle>;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
+    /**
+     * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement; `topBarRecipe.action` owns size and states. Removed in the next major
+     * (consumer-policy.md §3.1).
+     */
     style?: StyleProp<ViewStyle>;
 }>;
 type TopBarButtonActionProps = TopBarActionBaseProps & Readonly<{
@@ -178,13 +222,31 @@ export type TopBarProps = Readonly<{
     actions?: ReactNode;
     centered?: boolean;
     safeAreaTop?: number;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
+    /**
+     * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement; `centered`/`topBarRecipe` own appearance. Removed in the next major
+     * (consumer-policy.md §3.1).
+     */
     style?: StyleProp<ViewStyle>;
+    /**
+     * @deprecated Raw visual style bypasses the HJM recipe. Use `centered` and slot content; `topBarRecipe` owns slot sizing. Removed in the next major
+     * (consumer-policy.md §3.1).
+     */
     leadingStyle?: StyleProp<ViewStyle>;
+    /**
+     * @deprecated Raw visual style bypasses the HJM recipe. Use `topBarRecipe.title` typography. Removed in the next major
+     * (consumer-policy.md §3.1).
+     */
     titleStyle?: StyleProp<TextStyle>;
+    /**
+     * @deprecated Raw visual style bypasses the HJM recipe. Use `centered` and slot content; `topBarRecipe` owns slot sizing. Removed in the next major
+     * (consumer-policy.md §3.1).
+     */
     trailingStyle?: StyleProp<ViewStyle>;
 }>;
 /** Native screen top bar with logical action slots and large-text reflow. */
-export declare function TopBar({ title, titleLeading, onTitlePress, titleAccessibilityLabel, titleAccessibilityHint, leading, trailing, actions, centered, safeAreaTop, style, leadingStyle, titleStyle, trailingStyle, }: TopBarProps): import("react").JSX.Element;
+export declare function TopBar({ title, titleLeading, onTitlePress, titleAccessibilityLabel, titleAccessibilityHint, leading, trailing, actions, centered, safeAreaTop, layoutStyle, style, leadingStyle, titleStyle, trailingStyle, }: TopBarProps): import("react").JSX.Element;
 /** Flat and sectioned menus share collection identifiers and rendering slots. */
 export type MenuItem<Value extends string = string> = Omit<CollectionItemDescriptor<Value>, "textValue"> & Readonly<{
     textValue?: string;
@@ -205,7 +267,7 @@ export type MenuTriggerRenderProps = Readonly<{
     }>;
     onPress: () => void;
 }>;
-export type MenuProps<Value extends string = string, SectionKey extends string = string> = Omit<ModalProps, "animationType" | "children" | "onDismiss" | "onRequestClose" | "onShow" | "transparent" | "visible"> & Readonly<{
+export type MenuProps<Value extends string = string, SectionKey extends string = string> = Omit<ModalProps, "animationType" | "children" | "onDismiss" | "onRequestClose" | "onShow" | "style" | "transparent" | "visible"> & Readonly<{
     triggerLabel: string;
     title?: string;
     items?: readonly MenuItem<Value>[];
@@ -233,10 +295,16 @@ export type MenuProps<Value extends string = string, SectionKey extends string =
     dismissLabel: string;
     trigger?: ReactNode;
     renderTrigger?: (props: MenuTriggerRenderProps) => ReactElement;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
+    /**
+     * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement of the trigger host; `density`/`menuRecipe` own appearance. Removed in the next major
+     * (consumer-policy.md §3.1).
+     */
     style?: StyleProp<ViewStyle>;
 }>;
 /** Sectioned Native action/selection menu with teardown-safe action callbacks. */
-export declare function Menu<Value extends string = string, SectionKey extends string = string>({ triggerLabel, title, items, sections, source: sourceProp, selection, onAction, onActionAfterDismiss, onSelectionAfterDismiss, open, defaultOpen, onOpenChange, onDismiss, disabled, readOnly, busy, readOnlyLabel, asyncState, onRetry, retryLabel, density, renderLeading, renderTrailing, dismissLabel, trigger, renderTrigger, style, ...modalProps }: MenuProps<Value, SectionKey>): import("react").JSX.Element;
+export declare function Menu<Value extends string = string, SectionKey extends string = string>({ triggerLabel, title, items, sections, source: sourceProp, selection, onAction, onActionAfterDismiss, onSelectionAfterDismiss, open, defaultOpen, onOpenChange, onDismiss, disabled, readOnly, busy, readOnlyLabel, asyncState, onRetry, retryLabel, density, renderLeading, renderTrailing, dismissLabel, trigger, renderTrigger, layoutStyle, style, ...modalProps }: MenuProps<Value, SectionKey>): import("react").JSX.Element;
 export type LoadMoreProps = Readonly<{
     descriptor: LoadMoreDescriptor;
     onLoadMore: LoadMoreRequestHandler;

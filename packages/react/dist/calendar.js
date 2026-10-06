@@ -4,7 +4,7 @@ import { calendarRecipe as recipe, assertIsoCalendarMonth, validateCalendarDescr
 import { classNames, useControllableState } from "./internal.js";
 import { useOptionalHjmTheme } from "./provider.js";
 /** Inline single-date grid shared with DatePicker; month data remains product-owned. */
-export function Calendar({ descriptor, composeAccessibleName, previousMonth, nextMonth, onNavigateBeyondGrid, renderCellContent, size = "medium", autoFocus = false, className, ref }) {
+export function Calendar({ descriptor, composeAccessibleName, previousMonth, nextMonth, onNavigateBeyondGrid, renderCellContent, size = "medium", autoFocus = false, className, layoutStyle, ref }) {
     validateCalendarDescriptor(descriptor);
     for (const action of [previousMonth, nextMonth]) {
         if (!action)
@@ -47,7 +47,7 @@ export function Calendar({ descriptor, composeAccessibleName, previousMonth, nex
         }
     }, [gridKey, request, autoFocus, active]);
     const titleId = `hjm-calendar-${useId()}`;
-    return _jsxs("div", { ref: root, className: classNames("hjm-calendar", className), "data-size": size, style: { "--hjm-calendar-cell-size": `${recipe.sizes[size].cellDiameter}px`,
+    return _jsxs("div", { ref: root, className: classNames("hjm-calendar", className), "data-size": size, style: { ...layoutStyle, "--hjm-calendar-cell-size": `${recipe.sizes[size].cellDiameter}px`,
             "--hjm-calendar-disabled-opacity": recipe.day.disabledOpacity,
             "--hjm-calendar-outside-opacity": recipe.day.outsideFocusedMonthOpacity }, children: [_jsxs("div", { className: "hjm-calendar__header", children: [previousMonth ? _jsx("button", { type: "button", "aria-label": previousMonth.label, disabled: !descriptor.onFocusedMonthChange, onClick: () => descriptor.onFocusedMonthChange?.(previousMonth.month, "previous"), children: _jsx("span", { "aria-hidden": "true", children: theme?.environment.direction === "rtl" ? "›" : "‹" }) }) : _jsx("span", {}), _jsx("strong", { id: titleId, "aria-live": "polite", "aria-atomic": "true", children: descriptor.monthLabel }), nextMonth ? _jsx("button", { type: "button", "aria-label": nextMonth.label, disabled: !descriptor.onFocusedMonthChange, onClick: () => descriptor.onFocusedMonthChange?.(nextMonth.month, "next"), children: _jsx("span", { "aria-hidden": "true", children: theme?.environment.direction === "rtl" ? "‹" : "›" }) }) : _jsx("span", {})] }), _jsx("div", { className: "hjm-calendar__viewport", children: _jsxs("div", { role: "grid", "aria-labelledby": titleId, className: "hjm-calendar__grid", children: [_jsx("div", { role: "row", className: "hjm-calendar__week", children: descriptor.grid.weekdayLabels.map((label, index) => _jsx("span", { role: "columnheader", className: "hjm-calendar__weekday", children: label }, index)) }), Array.from({ length: cells.length / 7 }, (_, row) => _jsx("div", { role: "row", className: "hjm-calendar__week", children: cells.slice(row * 7, row * 7 + 7).map((cell, column) => "filler" in cell
                                 ? _jsx("span", { role: "gridcell", "aria-hidden": "true" }, `filler-${column}`)

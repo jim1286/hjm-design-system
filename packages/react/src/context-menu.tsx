@@ -18,6 +18,7 @@ import {
 } from "react";
 import { classNames } from "./internal.js";
 import { HjmPortal, getModalLayer } from "./modal.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type ContextMenuProps<Key extends string = string> = Readonly<{
   /** The region the menu belongs to; right-click and long-press are bound here. */
@@ -26,6 +27,8 @@ export type ContextMenuProps<Key extends string = string> = Readonly<{
   accessibilityLabel: string;
   onAction: (id: Key) => void;
   className?: string;
+  /** Canonical layout-only placement on the in-flow host; the menu popup itself is anchored, not placed. */
+  layoutStyle?: HjmCompositionStyleProp;
 }>;
 
 const longPressDelay = 500;
@@ -36,6 +39,7 @@ export function ContextMenu<Key extends string = string>({
   accessibilityLabel,
   onAction,
   className,
+  layoutStyle,
 }: ContextMenuProps<Key>) {
   const hostRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -138,6 +142,7 @@ export function ContextMenu<Key extends string = string>({
       ref={hostRef}
       tabIndex={0}
       className={classNames("hjm-context-menu-host", className)}
+      style={layoutStyle}
       onContextMenu={(event) => {
         event.preventDefault();
         open("pointer", { x: event.clientX, y: event.clientY });

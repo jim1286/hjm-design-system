@@ -8,7 +8,11 @@ const defaultFeedbackDuration = 2000;
  * The last one is the part that was always missing — a label that only changes
  * visually tells a non-sighted user nothing happened.
  */
-export const ClipboardButton = forwardRef(function ClipboardButton({ value, labels, feedbackDuration = defaultFeedbackDuration, onCopy, onCopyError, ...props }, forwardedRef) {
+export const ClipboardButton = forwardRef(function ClipboardButton(
+// Default `secondary` (2026-10-06): copying is a helper beside the screen's main action, and the
+// inherited Button default `primary` added a second primary to screens that already had one.
+// Pass `tone="primary"` explicitly when copying *is* the screen's main action.
+{ value, labels, feedbackDuration = defaultFeedbackDuration, onCopy, onCopyError, tone = "secondary", ...props }, forwardedRef) {
     const [copied, setCopied] = useState(false);
     const timer = useRef(undefined);
     useEffect(() => () => { if (timer.current !== undefined)
@@ -35,6 +39,6 @@ export const ClipboardButton = forwardRef(function ClipboardButton({ value, labe
             onCopyError?.(error);
         }
     }, [value, feedbackDuration, onCopy, onCopyError]);
-    return (_jsxs(_Fragment, { children: [_jsx(Button, { ...props, ref: forwardedRef, onClick: () => { void copy(); }, children: copied ? labels.copied : labels.idle }), _jsx("span", { role: "status", className: "hjm-visually-hidden", children: copied ? labels.copied : "" })] }));
+    return (_jsxs(_Fragment, { children: [_jsx(Button, { ...props, tone: tone, ref: forwardedRef, onClick: () => { void copy(); }, children: copied ? labels.copied : labels.idle }), _jsx("span", { role: "status", className: "hjm-visually-hidden", children: copied ? labels.copied : "" })] }));
 });
 //# sourceMappingURL=clipboard.js.map

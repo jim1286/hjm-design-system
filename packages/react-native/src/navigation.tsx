@@ -64,6 +64,7 @@ import {
   type TabsOverflow,
 } from "@hjmds/design-contracts/recipes";
 import {
+  Fragment,
   forwardRef,
   useCallback,
   useEffect,
@@ -93,6 +94,7 @@ import {
   type ViewStyle,
 } from "react-native";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
+import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { RecipeButton } from "./internal/recipe-button.js";
 import { isWebRenderer, webOnly, webTabProps } from "./internal/web-a11y.js";
 
@@ -108,7 +110,7 @@ type NativeModalTeardownTask,
 import { useControllableState } from "./internal/state.js";
 import { minimumTargetStyle } from "./internal/styles.js";
 import { Text } from "./primitives.js";
-import { useHjmNativeTheme } from "./provider.js";
+import { HjmNativeProvider, useHjmNativeTheme } from "./provider.js";
 
 export type TabItem<Value extends string = string> = Readonly<{
   id: Value;
@@ -159,7 +161,17 @@ type TabsBaseProps<Value extends string> = Readonly<{
   /** Set false when panels are rendered separately with `TabPanel`. */
   renderPanels?: boolean;
   children?: (selectedValue: Value) => ReactNode;
+  /** Canonical layout-only placement. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
+  /**
+   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement; `tabsRecipe` (`size`/`layout`/`appearance`) owns appearance. Removed in the next major
+   * (consumer-policy.md §3.1).
+   */
   style?: StyleProp<ViewStyle>;
+  /**
+   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` on Tabs for placement; `layout`/`overflow` own the tab list. Removed in the next major
+   * (consumer-policy.md §3.1).
+   */
   tabListStyle?: StyleProp<ViewStyle>;
 }>;
 
@@ -195,6 +207,12 @@ type ExternalTabPanelBaseProps = Readonly<{
   activeValue: string;
   label: string;
   children: ReactNode;
+  /** Canonical layout-only placement. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
+  /**
+   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement; panel content owns its own surface. Removed in the next major
+   * (consumer-policy.md §3.1).
+   */
   style?: StyleProp<ViewStyle>;
 }>;
 
@@ -214,7 +232,8 @@ export type TabPanelProps = ExternalTabPanelBaseProps &
 
 /** External panel host for products that keep routing, query, or list state outside Tabs. */
 export function TabPanel(props: TabPanelProps) {
-  const { tabsId, activeValue, label, children, style } = props;
+  const { tabsId, activeValue, label, children, layoutStyle, style } = props;
+  warnDeprecatedStyleProps("TabPanel", { style }, "layoutStyle for placement");
   const dynamic = props.mode === "dynamic";
   const value = dynamic ? activeValue : props.value;
   const selected = value === activeValue;
@@ -237,7 +256,7 @@ export function TabPanel(props: TabPanelProps) {
       importantForAccessibility={selected ? "auto" : "no-hide-descendants"}
       pointerEvents={selected ? "auto" : "none"}
       role="tabpanel"
-      style={[style, selected ? null : { display: "none" }]}
+      style={[style, layoutStyle, selected ? null : { display: "none" }]}
     >
       {children}
     </View>
@@ -264,9 +283,11 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
     overflow = tabsRecipe.defaults.overflow,
     renderPanels = true,
     children,
+    layoutStyle,
     style,
     tabListStyle,
   } = props;
+  warnDeprecatedStyleProps("Tabs", { style, tabListStyle }, "layoutStyle for placement and size/layout/overflow/appearance for the tab list");
   if (!label.trim()) throw new TypeError("Tabs label must not be empty");
   if (panelMode === "dynamic" && mountPolicy !== "active") {
     throw new TypeError("Tabs dynamic panelMode requires active mountPolicy");
@@ -392,6 +413,7 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
           gap: spacing.md,
         },
         style,
+        layoutStyle,
       ]}
     >
       <ScrollView
@@ -660,9 +682,27 @@ export type BottomNavigationProps<
   primaryAction?: ReactNode;
   configuration?: BottomNavigationConfiguration;
   safeAreaBottom?: number;
+  /** Canonical layout-only placement. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
+  /**
+   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement; `configuration` (presentation/density/distribution) owns appearance. Removed in the next major
+   * (consumer-policy.md §3.1).
+   */
   style?: StyleProp<ViewStyle>;
+  /**
+   * @deprecated Raw visual style bypasses the HJM recipe. Use `configuration.presentation`/`density`. Removed in the next major
+   * (consumer-policy.md §3.1).
+   */
   surfaceStyle?: StyleProp<ViewStyle>;
+  /**
+   * @deprecated Raw visual style bypasses the HJM recipe. Use `configuration.distribution`. Removed in the next major
+   * (consumer-policy.md §3.1).
+   */
   listStyle?: StyleProp<ViewStyle>;
+  /**
+   * @deprecated Raw visual style bypasses the HJM recipe. Use `configuration.distribution: "center-gap"`. Removed in the next major
+   * (consumer-policy.md §3.1).
+   */
   primaryActionStyle?: StyleProp<ViewStyle>;
 }>;
 
@@ -693,11 +733,17 @@ export function BottomNavigation<
   primaryAction,
   configuration = {},
   safeAreaBottom = 0,
+  layoutStyle,
   style,
   surfaceStyle,
   listStyle,
   primaryActionStyle,
 }: BottomNavigationProps<Key, IconName>) {
+  warnDeprecatedStyleProps(
+    "BottomNavigation",
+    { style, surfaceStyle, listStyle, primaryActionStyle },
+    "layoutStyle for placement and configuration (presentation/density/distribution) for appearance",
+  );
   const resolved = resolveBottomNavigationDescriptor(descriptor);
   if (!Number.isFinite(safeAreaBottom) || safeAreaBottom < 0) {
     throw new RangeError("BottomNavigation safeAreaBottom must be non-negative");
@@ -712,6 +758,9 @@ export function BottomNavigation<
   );
   const capsule = presentation.presentation === "capsule";
   const expandedLabels = theme.environment.textScale >= 1.5 || resolved.items.length > 4;
+  // Controlled providers bake scale into Text's style, so the native multiplier
+  // prop cannot enforce the recipe limit (BT-QA-021). Scope labels only; AX names stay.
+  const labelTextScale = Math.min(theme.environment.textScale, bottomNavigationRecipe.largeText.maxFontSizeMultiplier);
   const keyboardVisible = useBottomNavigationKeyboardVisible();
   const density = bottomNavigationRecipe.density[presentation.density];
   const presentationRecipe =
@@ -764,6 +813,7 @@ export function BottomNavigation<
           width: "100%",
         },
         style,
+        layoutStyle,
       ]}
     >
       <View
@@ -965,7 +1015,9 @@ export function BottomNavigation<
                     </View>
                   ) : null}
                 </View>
-                {(!capsule || expandedLabels || selected) && <Text
+                {(!capsule || expandedLabels || selected) && <HjmNativeProvider
+                  textScale={labelTextScale}
+                ><Text
                   align="center"
                   allowFontScaling={bottomNavigationRecipe.largeText.allowFontScaling}
                   maxFontSizeMultiplier={
@@ -982,7 +1034,7 @@ export function BottomNavigation<
                   variant={density.label}
                 >
                   {item.label}
-                </Text>}
+                </Text></HjmNativeProvider>}
               </Pressable>
             );
           })}
@@ -1051,7 +1103,17 @@ type TopBarActionBaseProps = TopBarActionHostProps & Readonly<{
   disabled?: boolean;
   /** Back/close affordances may keep the product label accessibility-only. */
   labelVisibility?: "visible" | "accessibility-only";
+  /**
+   * @deprecated Raw visual style bypasses the HJM recipe. Use `labelVisibility`; `topBarRecipe.actionLabel` owns typography. Removed in the next major
+   * (consumer-policy.md §3.1).
+   */
   labelStyle?: StyleProp<TextStyle>;
+  /** Canonical layout-only placement. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
+  /**
+   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement; `topBarRecipe.action` owns size and states. Removed in the next major
+   * (consumer-policy.md §3.1).
+   */
   style?: StyleProp<ViewStyle>;
 }>;
 
@@ -1086,9 +1148,11 @@ export function TopBarAction(props: TopBarActionProps) {
     disabled = false,
     labelVisibility = "visible",
     labelStyle,
+    layoutStyle,
     style,
     ...intentAndHostProps
   } = props;
+  warnDeprecatedStyleProps("TopBarAction", { style, labelStyle }, "layoutStyle for placement and labelVisibility/topBarRecipe for appearance");
   if (!label.trim()) throw new TypeError("TopBarAction label must not be empty");
   const resolvedAccessibilityLabel = accessibilityLabel ?? label;
   if (!resolvedAccessibilityLabel.trim()) {
@@ -1168,6 +1232,7 @@ export function TopBarAction(props: TopBarActionProps) {
         paddingHorizontal: topBarRecipe.action.paddingHorizontal,
       },
       style,
+      layoutStyle,
     ],
   };
   if (props.intent === "link") {
@@ -1194,9 +1259,27 @@ export type TopBarProps = Readonly<{
   actions?: ReactNode;
   centered?: boolean;
   safeAreaTop?: number;
+  /** Canonical layout-only placement. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
+  /**
+   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement; `centered`/`topBarRecipe` own appearance. Removed in the next major
+   * (consumer-policy.md §3.1).
+   */
   style?: StyleProp<ViewStyle>;
+  /**
+   * @deprecated Raw visual style bypasses the HJM recipe. Use `centered` and slot content; `topBarRecipe` owns slot sizing. Removed in the next major
+   * (consumer-policy.md §3.1).
+   */
   leadingStyle?: StyleProp<ViewStyle>;
+  /**
+   * @deprecated Raw visual style bypasses the HJM recipe. Use `topBarRecipe.title` typography. Removed in the next major
+   * (consumer-policy.md §3.1).
+   */
   titleStyle?: StyleProp<TextStyle>;
+  /**
+   * @deprecated Raw visual style bypasses the HJM recipe. Use `centered` and slot content; `topBarRecipe` owns slot sizing. Removed in the next major
+   * (consumer-policy.md §3.1).
+   */
   trailingStyle?: StyleProp<ViewStyle>;
 }>;
 
@@ -1212,11 +1295,17 @@ export function TopBar({
   actions,
   centered = topBarRecipe.defaults.centered,
   safeAreaTop = 0,
+  layoutStyle,
   style,
   leadingStyle,
   titleStyle,
   trailingStyle,
 }: TopBarProps) {
+  warnDeprecatedStyleProps(
+    "TopBar",
+    { style, leadingStyle, titleStyle, trailingStyle },
+    "layoutStyle for placement and centered/topBarRecipe for appearance",
+  );
   if (!Number.isFinite(safeAreaTop) || safeAreaTop < 0) {
     throw new RangeError("TopBar safeAreaTop must be non-negative");
   }
@@ -1342,10 +1431,14 @@ export function TopBar({
           paddingTop: safeAreaTop,
         },
         style,
+        layoutStyle,
       ]}
     >
       {largeText ? (
-        <>
+        // These branches have different host hierarchies. Reusing the full-width
+        // large row as a compact side slot left Fabric's layout stale after an OS
+        // text-size reset; replace that subtree instead of overriding it in apps.
+        <Fragment key="large-text">
           {hasLeading || hasTitle ? (
             <View
               style={{
@@ -1403,9 +1496,9 @@ export function TopBar({
               {trailingContent}
             </View>
           ) : null}
-        </>
+        </Fragment>
       ) : (
-        <>
+        <Fragment key="compact">
           {renderCompactLeadingSlot ? (
             <View
               style={[
@@ -1447,7 +1540,7 @@ export function TopBar({
               {hasTrailingContent ? trailingContent : null}
             </View>
           ) : null}
-        </>
+        </Fragment>
       )}
     </View>
   );
@@ -1524,6 +1617,7 @@ export type MenuProps<
   | "onDismiss"
   | "onRequestClose"
   | "onShow"
+  | "style"
   | "transparent"
   | "visible"
 > &
@@ -1558,6 +1652,12 @@ export type MenuProps<
     dismissLabel: string;
     trigger?: ReactNode;
     renderTrigger?: (props: MenuTriggerRenderProps) => ReactElement;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
+    /**
+     * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement of the trigger host; `density`/`menuRecipe` own appearance. Removed in the next major
+     * (consumer-policy.md §3.1).
+     */
     style?: StyleProp<ViewStyle>;
   }>;
 
@@ -1592,9 +1692,11 @@ export function Menu<
   dismissLabel,
   trigger,
   renderTrigger,
+  layoutStyle,
   style,
   ...modalProps
 }: MenuProps<Value, SectionKey>) {
+  warnDeprecatedStyleProps("Menu", { style }, "layoutStyle for placement and density for appearance");
   const providedSources = [sourceProp, items, sections].filter(
     (candidate) => candidate !== undefined,
   ).length;
@@ -1791,7 +1893,7 @@ export function Menu<
   };
 
   return (
-    <View style={style}>
+    <View style={[style, layoutStyle]}>
       <View ref={triggerRef}>
         {renderTrigger ? renderTrigger(triggerProps) : (
           <Pressable

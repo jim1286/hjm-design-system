@@ -1,7 +1,9 @@
+import { Container } from "@hjmds/react-native/primitives";
 // STEA Code P1 후보를 기존 HJM API만으로 조합한 실험 구성이다. 새 공개 API는 만들지 않는다.
 // 상태 규칙은 shared/stea-compositions.ts가 소유하고 이 파일은 Native 표현만 맡는다.
 import { useEffect, useReducer, useState, type ReactNode } from "react";
 import { ScrollView } from "react-native";
+import { Check } from "lucide-react-native";
 import { spacing } from "@hjmds/design-contracts/foundations";
 import { Button } from "@hjmds/react-native/actions";
 import { ContentTransition } from "@hjmds/react-native/content-transition";
@@ -10,6 +12,7 @@ import { Notice, Progress, Result } from "@hjmds/react-native/feedback";
 import { OtpField, SegmentedControl, Switch } from "@hjmds/react-native/inputs";
 import { Stack, Text } from "@hjmds/react-native/primitives";
 import { Steps } from "@hjmds/react-native/steps";
+import { PatternStatus } from "./pattern-status";
 // Metro resolves the shared TypeScript source by extension; a literal .js path has no file.
 import {
   canSubmitOtp, initialOrderState, initialOtpState, isOrderDone, orderCopy, orderReducer, orderStepsDescriptor,
@@ -18,7 +21,7 @@ import {
 } from "../../shared/stea-compositions";
 
 function Frame({ children }: { children: ReactNode }) {
-  return <ScrollView contentContainerStyle={{ padding: spacing.lg }} keyboardShouldPersistTaps="handled">{children}</ScrollView>;
+  return <ScrollView contentContainerStyle={{ paddingVertical: spacing.lg }} keyboardShouldPersistTaps="handled"><Container>{children}</Container></ScrollView>;
 }
 
 export function OrderProgressRetry() {
@@ -33,8 +36,8 @@ export function OrderProgressRetry() {
     <Stack gap="lg">
       <Steps descriptor={orderStepsDescriptor(state)} statusLabels={orderCopy.statusLabels} composeAccessibleName={steaStepName} />
       {/* iOS는 accessibilityLiveRegion을 무시하므로 빈 문구로 자리를 잡아 둘 이유가 없다. 빈 Text가 큰 틈을 남겼다(2026-10-02 시뮬레이터 확인). */}
-      {state.phase === "requesting" || done ? <Text accessibilityLiveRegion="polite">{done ? orderCopy.done : orderCopy.requesting}</Text> : null}
-      {state.phase === "failed" ? <Notice tone="danger" title={orderCopy.failed} /> : null}
+      {state.phase === "requesting" || done ? <PatternStatus announceOnMount>{done ? orderCopy.done : orderCopy.requesting}</PatternStatus> : null}
+      {state.phase === "failed" ? <Notice tone="danger" announcement="assertive" title={orderCopy.failed} /> : null}
       <Stack gap="sm">
         {done
           ? <Button tone="secondary" onPress={() => dispatch({ type: "restart" })}>{orderCopy.restart}</Button>
@@ -67,7 +70,7 @@ export function OtpVerifyRecover() {
   return <Frame><Card title={otpCopy.title} description={otpCopy.description}>
     <ContentTransition stateKey={state.phase === "verified" ? "verified" : "form"}>
       {state.phase === "verified"
-        ? <Result status="success" title={otpCopy.successTitle} description={otpCopy.successBody}
+        ? <Result status="success" renderIcon={({ color }) => <Check color={color} accessible={false} />} title={otpCopy.successTitle} description={otpCopy.successBody}
             actions={[{ label: otpCopy.again, onAction: () => dispatch({ type: "reset" }) }]} />
         : <Stack gap="md">
             <OtpField label={otpCopy.field} length={otpLength} value={state.value}
@@ -75,7 +78,7 @@ export function OtpVerifyRecover() {
               onComplete={() => dispatch({ type: "submit" })}
               busy={state.phase === "verifying"} disabled={state.phase === "locked"}
               description={otpCopy.hint} {...(error ? { error } : {})} />
-            {state.resent ? <Text accessibilityLiveRegion="polite" tone="muted">{otpCopy.resent}</Text> : null}
+            {state.resent ? <PatternStatus announceOnMount tone="muted">{otpCopy.resent}</PatternStatus> : null}
             <Button loading={state.phase === "verifying"} disabled={!canSubmitOtp(state) && state.phase !== "verifying"} onPress={() => dispatch({ type: "submit" })}>{otpCopy.submit}</Button>
             <Button tone="ghost" disabled={state.resendIn > 0 || state.phase === "verifying"} onPress={() => dispatch({ type: "resend" })}>
               {state.resendIn > 0 ? otpCopy.resendWait(state.resendIn) : otpCopy.resend}

@@ -104,4 +104,45 @@ describe("Dialog native actions", () => {
     expect(onOpenChange).not.toHaveBeenCalled();
     act(() => renderer.unmount());
   });
+  it("waits for async actions, blocks repeat/back, and keeps rejected input available for retry", async () => {
+    let resolve!: () => void;
+    let reject!: (error: Error) => void;
+    const onOpenChange = vi.fn(), onActionError = vi.fn();
+    const onPress = vi.fn(() => new Promise<void>((yes, no) => { resolve = yes; reject = no; }));
+    const renderer = render(<Dialog defaultOpen title="편집" closeLabel="닫기"
+      onOpenChange={onOpenChange} onActionError={onActionError}
+      primaryAction={{label:"저장", onPress}}><Text>보존할 초안</Text></Dialog>);
+    const button = () => renderer.root.find(node => node.props.accessibilityLabel === "저장");
+    act(() => { button().props.onPress(); button().props.onPress(); renderer.root.findByType(Modal).props.onRequestClose(); });
+    expect(onPress).toHaveBeenCalledTimes(1);
+    expect(onOpenChange).not.toHaveBeenCalled();
+    expect(boundary(renderer).props.accessibilityState.busy).toBe(true);
+    const error = new Error("offline");
+    await act(async () => reject(error));
+    expect(onActionError).toHaveBeenCalledWith(error);
+    expect(onOpenChange).not.toHaveBeenCalled();
+    expect(boundary(renderer).props.accessibilityState.busy).toBe(false);
+    act(() => button().props.onPress());
+    await act(async () => resolve());
+    expect(onOpenChange).toHaveBeenCalledExactlyOnceWith(false, {reason:"close-action"});
+    act(() => renderer.unmount());
+  });
+
+  it("ignores completion from a closed and reopened controlled session", async () => {
+    let resolve!: () => void;
+    const onOpenChange = vi.fn();
+    const props = {title:"편집", closeLabel:"닫기", onOpenChange,
+      primaryAction:{label:"저장", onPress:() => new Promise<void>(yes => {resolve = yes;})}};
+    const fixture = (open: boolean) => <HjmNativeProvider reducedMotion><Dialog {...props} open={open}/></HjmNativeProvider>;
+    const renderer = render(<Dialog {...props} open/>);
+    act(() => renderer.root.find(node => node.props.accessibilityLabel === "저장").props.onPress());
+    await act(async () => { renderer.update(fixture(false)); });
+    await act(async () => { await new Promise(resolve => setTimeout(resolve, 10)); });
+    act(() => renderer.update(fixture(true)));
+    await act(async () => resolve());
+    expect(onOpenChange).not.toHaveBeenCalled();
+    expect(boundary(renderer).props.accessibilityState.busy).toBe(false);
+    act(() => renderer.unmount());
+  });
+
 });

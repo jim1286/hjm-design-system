@@ -89,6 +89,8 @@ export type IconProps = Omit<
 > & IconDescriptor & Readonly<{
   /** Optional glyph inside the existing 24-unit SVG frame; HJM owns semantics. */
   renderGlyph?: (props: Readonly<{ name: SemanticIconName; size: number; color: string; strokeWidth: number }>) => ReactNode;
+  /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
 }>;
 
 export const Icon = forwardRef<SVGSVGElement, IconProps>(function Icon(
@@ -103,6 +105,7 @@ export const Icon = forwardRef<SVGSVGElement, IconProps>(function Icon(
     renderGlyph,
     className,
     style,
+    layoutStyle,
     ...props
   },
   ref,
@@ -145,7 +148,7 @@ export const Icon = forwardRef<SVGSVGElement, IconProps>(function Icon(
       aria-hidden={descriptor.decorative || undefined}
       aria-label={descriptor.decorative ? undefined : descriptor.accessibilityLabel}
       focusable="false"
-      style={style}
+      style={{ ...style, ...layoutStyle }}
     >
       {renderGlyph?.({ name: descriptor.name, size: 24, color: "currentColor", strokeWidth: iconRecipe.weights[descriptor.weight] }) ?? <path d={iconPaths[descriptor.name]} />}
     </svg>
@@ -211,6 +214,8 @@ export type ImageProps = ImageRootProps &
     onLoad?: ReactEventHandler<HTMLImageElement>;
     onError?: ReactEventHandler<HTMLImageElement>;
     onLoadStatusChange?: (status: Extract<ImageLoadStatus, "loaded" | "error">) => void;
+    /** Canonical layout-only placement on the root frame; the aspect ratio stays descriptor-owned. */
+    layoutStyle?: HjmCompositionStyleProp;
   }>;
 
 type ImageState = Readonly<{
@@ -236,6 +241,7 @@ export const Image = forwardRef<HTMLSpanElement, ImageProps>(function Image(
     onLoadStatusChange,
     className,
     style,
+    layoutStyle,
     ...props
   },
   ref,
@@ -322,6 +328,7 @@ export const Image = forwardRef<HTMLSpanElement, ImageProps>(function Image(
       style={{
         inlineSize: descriptor.width,
         ...style,
+        ...layoutStyle,
         aspectRatio: resolveImageAspectRatio(
           descriptor.width,
           descriptor.height,
@@ -388,6 +395,8 @@ export const CounterBadge = forwardRef<HTMLSpanElement, CounterBadgeProps>(
         data-dot={dot || undefined}
         style={dot ? { ...style, ...layoutStyle, "--hjm-counter-dot-size": `${counterBadgeRecipe.dotSize}px` } as typeof style : { ...style, ...layoutStyle }}
         aria-hidden={accessibilityLabel === undefined || undefined}
+        // A named count needs a semantic role; generic spans cannot carry aria-label.
+        role={accessibilityLabel === undefined ? undefined : "img"}
         aria-label={accessibilityLabel}
       >
         {dot ? null : label}

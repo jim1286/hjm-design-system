@@ -1,47 +1,21 @@
-import { PatternStatus } from "./pattern-status";
-import { useMemo, useState } from "react";
-import { ScrollView, View } from "react-native";
 import type { Meta, StoryObj } from "@storybook/react-native";
-import { Avatar } from "@hjmds/react-native/data-display";
-import { createBlobatarFallback } from "@hjmds/react-native/avatar-blobatar";
-import { Button } from "@hjmds/react-native/actions";
-import { TextField, Switch } from "@hjmds/react-native/inputs";
-import { Text } from "@hjmds/react-native/primitives";
-import { useHjmNativeTheme } from "@hjmds/react-native/provider";
-import { spacing, radius } from "@hjmds/design-contracts/foundations";
-import { profileCopy as copy, profileFaces, initialProfile } from "../../shared/profile-studio";
-
-export function ProfileStudio() {
-  const { colors } = useHjmNativeTheme();
-  const [draft, setDraft] = useState(initialProfile);
-  const [saved, setSaved] = useState(initialProfile);
-  const [applied, setApplied] = useState(false);
-  const face = useMemo(() => createBlobatarFallback({ seed: draft.seed }), [draft.seed]);
-  const dirty = JSON.stringify(draft) !== JSON.stringify(saved);
-  const change = (next: Partial<typeof draft>) => { setDraft({ ...draft, ...next }); setApplied(false); };
-  return <ScrollView automaticallyAdjustKeyboardInsets keyboardDismissMode="on-drag" keyboardShouldPersistTaps="handled" contentContainerStyle={{ padding: spacing.xl, gap: spacing.xl }}>
-    <View style={{ gap: spacing.sm }}><Text variant="label" tone="brand">{copy.eyebrow}</Text><Text variant="heading" accessibilityRole="header">{copy.title}</Text><Text tone="muted">{copy.intro}</Text></View>
-    <View style={{ padding: spacing.xxl, gap: spacing.md, borderRadius: radius.xl, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.bg, alignItems: "center" }}>
-      <Text tone="brand" variant="label">{copy.badge}</Text>
-      <Avatar name={draft.name.trim() || copy.profile} accessibilityLabel={draft.name.trim() || copy.profile} size={96} renderFallback={face} />
-      <Text variant="heading" accessibilityRole="header">{draft.name.trim() || copy.profile}</Text><Text tone="muted">{copy.member}</Text>
-    </View>
-    <View style={{ gap: spacing.md }}><Text variant="title" accessibilityRole="header">{copy.appearance}</Text><Text tone="muted">{copy.appearanceHint}</Text>
-      <View style={{ flexDirection: "row", flexWrap: "wrap", gap: spacing.sm }}>{profileFaces.map(item => <Button key={item.seed} tone="ghost" selected={draft.seed === item.seed} accessibilityLabel={item.label} onPress={() => change({ seed: item.seed })}>
-        <Avatar name={item.label} decorative size={32} renderFallback={createBlobatarFallback({ seed: item.seed })} />
-      </Button>)}</View>
-      <TextField label={copy.name} description={copy.nameHint} value={draft.name} {...(!draft.name.trim() ? { error: copy.empty } : {})} onValueChange={name => change({ name })} />
-    </View>
-    <View style={{ gap: spacing.md }}><Text variant="title" accessibilityRole="header">{copy.preferences}</Text><Switch label={copy.notification} description={copy.notificationHint} checked={draft.notifications} onCheckedChange={notifications => change({ notifications })} /></View>
-    <PatternStatus tone="muted">{applied ? copy.saved : copy.draft}</PatternStatus>
-    <Button disabled={!dirty || !draft.name.trim()} onPress={() => { setSaved(draft); setApplied(true); }}>{copy.save}</Button>
-    <Button tone="ghost" disabled={!dirty} onPress={() => { setDraft(saved); setApplied(false); }}>{copy.reset}</Button>
-  </ScrollView>;
-}
-const meta = { title: "배포/화면/프로필 편집", component: ProfileStudio } satisfies Meta<typeof ProfileStudio>;
+import { ProfileScreenPreview } from "./basic-screen-previews";
+import { ProfileFacePreview } from "./profile-face-preview";
+// 2026-10-06: the released hand-assembled 프로필 편집 and the experimental ProfileScreen-based 프로필 showed the same
+// editing task. The API-based screen wins; the face picker unique to the old editor stays as AvatarFallback
+// (FINAL_MAPPING §2). The file name is kept so history and the Web counterpart stay easy to find.
+const meta = { title: "배포/화면/계정/프로필", component: ProfileScreenPreview } satisfies Meta<typeof ProfileScreenPreview>;
 export default meta;
-
-// Default owns the interactive example; the duplicate Playground was removed.
-export const Default: StoryObj<typeof meta> = { name: "기본",};
-export const Dark: StoryObj<typeof meta> = { name: "어두운 테마", globals: { theme: "dark" } };
-export const LargeText: StoryObj<typeof meta> = { name: "큰 글자", globals: { textScale: "2" } };
+type Story = StoryObj<typeof meta>;
+export const Default: Story = { name: "기본" };
+export const Edit: Story = { name: "프로필 수정", args: { initialEditing: true } };
+export const AvatarFallback: Story = { name: "기본 얼굴 고르기", render: () => <ProfileFacePreview /> };
+export const Loading: Story = { name: "불러오는 중", args: { stateKind: "loading" } };
+export const Empty: Story = { name: "비어 있음", args: { stateKind: "empty" } };
+export const Error: Story = { name: "오류", args: { stateKind: "error" } };
+export const Restricted: Story = { name: "로그인 필요", args: { stateKind: "restricted" } };
+export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
+export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };
+export const EditDark: Story = { ...Edit, name: "프로필 수정 · 어두운 테마", globals: { theme: "dark" } };
+export const EditLargeText: Story = { ...Edit, name: "프로필 수정 · 큰 글자", globals: { textScale: "2" } };
+export const Recovery: Story = { name: "실패와 복구", args: { tools: true } };

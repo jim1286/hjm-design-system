@@ -142,3 +142,12 @@ describe("CommandPalette catalog and crosswalk", () => {
     expect(entry).toBeUndefined();
   });
 });
+
+describe("CommandPalette optional copy", () => {
+  it("validates optional emptyMessage and closeLabel only when present", () => {
+    const base = { accessibilityLabel: "명령 팔레트", searchPlaceholder: "명령 검색" };
+    expect(() => validateCommandPaletteDescriptor({ ...base, emptyMessage: " " })).toThrow(/emptyMessage/);
+    expect(() => validateCommandPaletteDescriptor({ ...base, closeLabel: "" })).toThrow(/closeLabel/);
+    expect(() => validateCommandPaletteDescriptor({ ...base, emptyMessage: "없어요", closeLabel: "닫기" })).not.toThrow();
+  });
+});

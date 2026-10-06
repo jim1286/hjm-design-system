@@ -13,6 +13,7 @@ import type {
 import { useState, type ReactNode } from "react";
 import { Calendar, type CalendarMonthAction } from "./calendar.js";
 import { classNames, useControllableState } from "./internal.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type DateRangePickerProps<Content = unknown> = Readonly<{
   /** The same grid Calendar renders; the product still owns month data. */
@@ -27,6 +28,8 @@ export type DateRangePickerProps<Content = unknown> = Readonly<{
   rangeLabels: Readonly<{ start: string; end: string; between: string }>;
   renderCellContent?: (date: string) => ReactNode;
   className?: string;
+  /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
 }>;
 
 export function DateRangePicker<Content = unknown>({
@@ -40,6 +43,7 @@ export function DateRangePicker<Content = unknown>({
   rangeLabels,
   renderCellContent,
   className,
+  layoutStyle,
 }: DateRangePickerProps<Content>) {
   const [value, setValue] = useControllableState<DateRangeValue>({
     ...(controlledValue === undefined ? {} : { value: controlledValue }),
@@ -53,6 +57,7 @@ export function DateRangePicker<Content = unknown>({
 
   return (
     <div
+      style={layoutStyle}
       className={classNames("hjm-date-range", className)}
       data-selecting={value.start !== null && value.end === null ? "" : undefined}
       data-complete={isCompleteDateRange(value) || undefined}

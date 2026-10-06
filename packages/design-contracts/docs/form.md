@@ -1,5 +1,7 @@
 # Form contract
 
+검토일: 2026-10-06 (세션 API와 renderer `Form`의 경계를 명시)
+
 ## 문제
 
 antd `Form`은 레이아웃과 상태 관리 라이브러리를 겸합니다(`useForm`, `dependencies`,
@@ -23,6 +25,22 @@ gap, control-to-support-text gap)을 `fieldRecipe`로 소유합니다. `Form`은
 다시 정의하지 않고, 프레임이 끝난 뒤 **다음 필드까지의 세로 간격**만 `formRecipe`로
 정의합니다. 한 필드 내부의 리듬을 바꾸고 싶다면 그것은 Field의 변경이지 Form의
 prop이 아닙니다.
+
+Native 한 줄 입력의 최소 높이는 실제 입력의 글자 배율과 line height, recipe padding,
+border를 함께 포함한다. 2026-10-05 번뚝 폴더 이름 입력에서 OS 최대 글자는 커졌지만
+고정 프레임은 그대로여서 글자가 넘쳤다(BT-QA-020). `TextField`와 `SearchField`가 공유하는
+renderer에서 프레임을 키우며, 제품에서 글자를 제한하거나 Form에 별도 높이를 주지 않는다.
+OS 배율·명시적 Provider 배율·입력의 `allowFontScaling`/`maxFontSizeMultiplier`를 같은
+방식으로 반영하고, 일반 배율로 돌아오면 높이도 돌아온다. 옆의 제품 버튼이 입력 폭을
+좁히면 제품이 행을 세로로 재배치한다. Web은 CSS 폰트·레이아웃 경계를 사용하므로
+Native의 OS 배율 계산을 추가하지 않는다. 공개 API는 바뀌지 않는다.
+
+iOS multiline 입력은 글자 배율을 바꿔도 기존 attributed 본문이 이전 크기에 남는 host 제약을 갖는다.
+2026-10-05 번뚝 TextArea에서 일반↔최대 전환 후 재진입해야만 본문 크기가 바뀌었다(BT-QA-025).
+Native renderer는 실제 배율이 바뀔 때 iOS multiline native editor만 교체하고 상위 draft state와
+forwarded ref, 현재 focus/selection을 보존한다. 스타일 변경만으로는 기존 attributed 본문을
+갱신하지 못하며, field 전체 교체는 제품 초안을 버리므로 사용하지 않는다. Android·일반 한 줄
+입력은 이 교체 경로를 사용하지 않는다. Web은 브라우저 폰트 layout을 유지하며 공개 API는 같다.
 
 ### 제출 세션
 
@@ -51,6 +69,33 @@ dispose()가 submitting 중 호출되면 그 attempt는 interrupted로 한 번�
   `submitting` 중에는 아무것도 바꾸지 않고 `false`를 돌려줍니다(경합 방지).
 - Form은 값을 들고 있지 않습니다. `submit(values)`가 호출될 때마다 그 순간의 값을
   전달받을 뿐이며, 언제 제출을 시작해도 되는지(dirty/valid 여부)는 제품이 판단합니다.
+
+### 세션 API와 renderer `Form`의 관계
+
+위의 `submit()`/`reset()`/`dispose()`는 `@hjmds/design-contracts/components/form`의
+`createFormSubmitSession(options)`이 돌려주는 객체(`FormSubmitSession`)의 API입니다.
+**renderer의 `Form` 컴포넌트는 이 세션을 노출하지 않습니다.** 2026-10-06 사용 지침 작성 중 이 절이
+renderer `Form`에서 `submit()`을 부를 수 있는 것처럼 읽힌다는 지적이 있어 구분을 명시합니다.
+
+| 표면 | 제출 진입 | 중복 차단 | 상태·오류 |
+| --- | --- | --- | --- |
+| Web `@hjmds/react` `Form` | `<form>` submit 이벤트 → `onSubmit(event)` | `onSubmit`이 Promise를 돌려주면 정산까지 `fieldset disabled`·`aria-busy` | 제품이 `busy`·`formError`를 prop으로 넘긴다 |
+| Native `@hjmds/react-native` `Form` | 내장 제출 버튼 → `onSubmit(values)` | 진행 중 재진입 무시, `accessibilityState.busy` | `status`/`defaultStatus`/`onStatusChange`, 거부 시 `error` 또는 `fallbackErrorMessage` |
+| contracts `createFormSubmitSession` | 제품이 `session.submit(values)` 호출 | `{ outcome: "blocked" }` 반환 | `getSnapshot()`/`subscribe()`, `reset()`, `dispose()`의 `interrupted` 정산 |
+
+두 renderer는 위 상태기계와 같은 규칙(재진입 차단, 실패 후 재시도 가능)을 각자 구현하지만,
+`reset()`·`dispose()`·`blocked`/`interrupted` 결과 객체는 제공하지 않습니다. 제품이 세션을
+직접 만드는 경우는 다음입니다.
+
+- 제출 결과(`succeeded`/`failed`/`blocked`/`interrupted`)를 값으로 받아 후속 흐름을 분기해야 할 때.
+- 화면을 떠날 때(언마운트·라우트 전환) 진행 중 제출을 `dispose()`로 한 번만 정산해야 할 때.
+- 제출 상태를 폼 밖(헤더 저장 버튼, 다른 화면)과 공유하거나, 제품 폼 라이브러리(React Hook Form 등)의
+  submit handler에 같은 규칙을 걸어야 할 때.
+
+이때 세션의 `getSnapshot()`을 renderer에 연결합니다. Web은 `busy={phase.status === "submitting"}`과
+`formError`(failed의 `message`)를, Native는 `status`와 `error`를 controlled로 넘깁니다. 세션과
+renderer 내장 상태를 동시에 진실의 원천으로 두지 않습니다. 단순한 폼은 renderer `Form`만으로 충분하며
+세션을 만들 필요가 없습니다.
 
 ### 오류 소유권
 
@@ -144,3 +189,9 @@ HJM renderer의 Native action 회귀와 사용 가능한 자동 검증을 기준
   Stack이 아직 실제 사용 사례 전까지 `planned` 이상으로 승격하지 않은 것과 같은
   이유로, Form도 actions 슬롯의 위치만 고정하고 그 안의 레이아웃 토큰은 만들지
   않습니다.
+
+### TextArea의 입력창 안 행동
+
+2026-10-05 사진/메시지 작성에서 별도 TextArea 구현이 생기지 않도록 Web/Native `TextArea.trailing`
+슬롯을 추가했다. 자동 높이·IME·값 변경 계약은 그대로이며, 입력 필드와 아이콘 버튼의 접근성 이름은
+각각 제공한다. 메시지에서는 `MessageComposer.sendIcon`이 이 슬롯을 합성한다.

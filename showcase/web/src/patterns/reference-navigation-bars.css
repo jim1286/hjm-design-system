@@ -1,7 +1,6 @@
 /* These scoped studies intentionally stay out of renderer defaults until review.
    Semantic colors and spacing still come from the inherited HJM theme. */
 .hjm-nav-study { padding: var(--hjm-space-xs); border-radius: var(--hjm-radius-xl); border: var(--hjm-field-border-width) solid var(--hjm-color-border); }
-.hjm-nav-study .hjm-bottom-navigation__surface { border-radius: var(--hjm-radius-full); }
 .hjm-nav-study--project .hjm-bottom-navigation__list,
 .hjm-nav-study--project .hjm-bottom-navigation__item { border-radius: var(--hjm-radius-lg); }
 

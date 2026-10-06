@@ -1,7 +1,9 @@
+import { SegmentedControl } from "@hjmds/react-native/inputs";
+import { Heading } from "@hjmds/react-native/heading";
 import { useState } from "react";
 import { PatternStatus } from "./pattern-status";
 import type { Meta, StoryObj } from "@storybook/react-native";
-import { Stack, Text } from "@hjmds/react-native/primitives";
+import { Container, Grid, Stack, Text } from "@hjmds/react-native/primitives";
 import { Button } from "@hjmds/react-native/actions";
 import { SearchField } from "@hjmds/react-native/inputs";
 import { Sheet } from "@hjmds/react-native/overlays";
@@ -30,16 +32,16 @@ function DiscoveryGallery() {
  const toggle=(id:string)=>setSaved(current=>current.includes(id)?current.filter(value=>value!==id):[...current,id]);
  const reset=()=>{setQuery("");setCategory("전체");setSavedOnly(false);};
  const { width } = useWindowDimensions();
- return <ScrollView automaticallyAdjustKeyboardInsets keyboardShouldPersistTaps="handled" contentContainerStyle={{ padding: spacing.lg }}><Stack gap="xl"><Stack gap="md"><Text tone="brand">작은 아이디어가 시작되는 곳</Text><Text variant="heading" accessibilityRole="header">다음 화면의 영감을 찾아보세요</Text><Text>마음에 드는 화면을 살펴보고 나만의 컬렉션에 담아보세요.</Text><SearchField label="작품 검색" placeholder="모바일, 작업 공간, 서연" clearLabel="검색어 지우기" busyLabel="검색 중" value={query} onValueChange={setQuery}/></Stack>
- <Stack axis="inline" wrap gap="sm">{galleryCategories.map(item=><Button key={item} selected={category===item} tone={category===item ? "primary" : "ghost"} onPress={()=>setCategory(item)}>{item}</Button>)}</Stack>
+ return <ScrollView automaticallyAdjustKeyboardInsets keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingVertical: spacing.lg }}><Container gutter="compact"><Stack gap="xl"><Stack gap="md"><Text tone="brand">작은 아이디어가 시작되는 곳</Text><Heading level="level3" >다음 화면의 영감을 찾아보세요</Heading><Text>마음에 드는 화면을 살펴보고 나만의 컬렉션에 담아보세요.</Text><SearchField label="작품 검색" placeholder="모바일, 작업 공간, 서연" clearLabel="검색어 지우기" busyLabel="검색 중" value={query} onValueChange={setQuery}/></Stack>
+ <SegmentedControl label="작품 카테고리" presentation="pills" items={galleryCategories.map(item => ({ value: item, label: item }))} value={category} onValueChange={value => { const item = galleryCategories.find(item => item === value); if (item) setCategory(item); }}/>
  <Stack axis="inline" wrap gap="sm"><Button tone="secondary" onPress={()=>setSort(sort==="popular"?"latest":"popular")}>{`정렬: ${sort==="popular"?"인기순":"최신순"}`}</Button><Button tone="ghost" selected={savedOnly} onPress={()=>setSavedOnly(!savedOnly)}>{`저장한 작품 ${saved.length}`}</Button></Stack>
  <PatternStatus>{`${results.length}개의 작품`}</PatternStatus>
- {results.length ? <View style={{ flexDirection: "row", flexWrap: "wrap", gap: spacing.lg }}>{results.map(item=><View key={item.id} style={{ width: width >= 700 ? "47%" : "100%" }}><Stack gap="sm"><Artwork entry={item}/><Text variant="label">{item.title}</Text><Text tone="muted">{item.author} · {item.category} · 좋아요 {item.likes}</Text><Stack axis="inline" wrap gap="sm"><Button tone="ghost" onPress={()=>setSelected(item)} accessibilityLabel={`${item.title} 보기`}>자세히 보기</Button><Button accessibilityLabel={`${item.title} ${saved.includes(item.id)?"저장 취소":"저장"}`} tone="secondary" selected={saved.includes(item.id)} onPress={()=>toggle(item.id)}>{saved.includes(item.id)?"저장됨":"저장"}</Button></Stack></Stack></View>)}</View> : <EmptyState title="찾는 작품이 없어요" description="다른 검색어나 카테고리로 다시 찾아보세요." action={<Button onPress={reset}>필터 초기화</Button>}/>}
+ {results.length ? <Grid columns={{ compact: 1, medium: 2, expanded: 3 }} gap={{ compact: "xl" }} minColumnWidth={{ compact: 320 }}>{results.map(item=><View key={item.id}><Stack gap="sm"><Artwork entry={item}/><Text variant="label">{item.title}</Text><Text tone="muted">{item.author} · {item.category} · 좋아요 {item.likes}</Text><Stack axis="inline" wrap gap="sm"><Button tone="ghost" onPress={()=>setSelected(item)} accessibilityLabel={`${item.title} 보기`}>자세히 보기</Button><Button accessibilityLabel={`${item.title} ${saved.includes(item.id)?"저장 취소":"저장"}`} tone="secondary" selected={saved.includes(item.id)} onPress={()=>toggle(item.id)}>{saved.includes(item.id)?"저장됨":"저장"}</Button></Stack></Stack></View>)}</Grid> : <EmptyState title="찾는 작품이 없어요" description="다른 검색어나 카테고리로 다시 찾아보세요." action={<Button onPress={reset}>필터 초기화</Button>}/>}
  <Text tone="muted">직접 만든 예제 작품입니다. 저장은 이 미리보기에서만 유지됩니다.</Text>
- <Sheet scrollable open={selected!==null} onOpenChange={open=>{if(!open)setSelected(null);}} title={selected?.title??"작품 상세"} closeLabel="닫기"><Stack gap="lg">{selected && <><Artwork entry={selected}/><Text>{selected.author} · {selected.category}</Text><Text>큰 제목과 명확한 행동, 여유 있는 간격으로 구성한 화면입니다.</Text><Button accessibilityLabel={`${selected.title} ${saved.includes(selected.id)?"저장 취소":"저장"}`} selected={saved.includes(selected.id)} onPress={()=>toggle(selected.id)}>{saved.includes(selected.id)?"저장 취소":"컬렉션에 저장"}</Button></>}</Stack></Sheet>
- </Stack></ScrollView>;
+ <Sheet scrollable open={selected!==null} onOpenChange={open=>{if(!open)setSelected(null);}} title={selected?.title??"작품 상세"} closeLabel="닫기" footer={selected ? <Button accessibilityLabel={`${selected.title} ${saved.includes(selected.id)?"저장 취소":"저장"}`} selected={saved.includes(selected.id)} onPress={()=>toggle(selected.id)}>{saved.includes(selected.id)?"저장 취소":"컬렉션에 저장"}</Button> : null}><Stack gap="lg">{selected && <><Artwork entry={selected}/><Text>{selected.author} · {selected.category}</Text><Text>큰 제목과 명확한 행동, 여유 있는 간격으로 구성한 화면입니다.</Text></>}</Stack></Sheet>
+ </Stack></Container></ScrollView>;
 }
-const meta = { title: "배포/화면/작품 탐색", component: DiscoveryGallery } satisfies Meta<typeof DiscoveryGallery>;
+const meta = { title: "배포/화면/검색/작품 탐색", component: DiscoveryGallery } satisfies Meta<typeof DiscoveryGallery>;
 export default meta;
 export const Default: StoryObj<typeof meta> = { name: "기본",};
 export const Dark: StoryObj<typeof meta> = { name: "어두운 테마", globals: { theme: "dark" } };

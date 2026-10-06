@@ -1,4 +1,5 @@
 import { type CSSProperties, type InputHTMLAttributes } from "react";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 type NativeSliderInputProps = Omit<InputHTMLAttributes<HTMLInputElement>, "aria-label" | "aria-orientation" | "aria-valuemax" | "aria-valuemin" | "aria-valuenow" | "aria-valuetext" | "children" | "className" | "defaultValue" | "max" | "min" | "onChange" | "readOnly" | "size" | "step" | "type" | "value">;
 export type SliderProps = NativeSliderInputProps & Readonly<{
     label: string;
@@ -14,6 +15,8 @@ export type SliderProps = NativeSliderInputProps & Readonly<{
     className?: string;
     inputClassName?: string;
     style?: CSSProperties;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** Native range semantics with HJM visuals and explicit change-end behavior. */
 export declare const Slider: import("react").ForwardRefExoticComponent<NativeSliderInputProps & Readonly<{
@@ -30,6 +33,8 @@ export declare const Slider: import("react").ForwardRefExoticComponent<NativeSli
     className?: string;
     inputClassName?: string;
     style?: CSSProperties;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }> & import("react").RefAttributes<HTMLInputElement>>;
 export {};
 //# sourceMappingURL=slider.d.ts.map

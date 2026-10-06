@@ -28,7 +28,7 @@ function intentForKey(key) {
     return undefined;
 }
 /** Native range semantics with HJM visuals and explicit change-end behavior. */
-export const Slider = forwardRef(function Slider({ id, label, min, max, step, value, defaultValue, onValueChange, onValueChangeEnd, getValueText, disabled = false, className, inputClassName, style, onBlur, onFocus, onKeyDown, onKeyUp, onLostPointerCapture, onPointerCancel, onPointerDown, onPointerUp, ...inputProps }, forwardedRef) {
+export const Slider = forwardRef(function Slider({ id, label, min, max, step, value, defaultValue, onValueChange, onValueChangeEnd, getValueText, disabled = false, className, inputClassName, style, onBlur, onFocus, onKeyDown, onKeyUp, onLostPointerCapture, onPointerCancel, onPointerDown, onPointerUp, layoutStyle, ...inputProps }, forwardedRef) {
     const generatedId = useId();
     const controlId = id ?? `hjm-slider-${generatedId.replaceAll(":", "")}`;
     const labelId = `${controlId}-label`;
@@ -134,6 +134,7 @@ export const Slider = forwardRef(function Slider({ id, label, min, max, step, va
     const fill = resolveSliderFillFraction(descriptor);
     const rootStyle = {
         ...style,
+        ...layoutStyle,
         "--hjm-slider-fill": `${fill * 100}%`,
     };
     const visibleValue = valueText ?? String(currentValue);

@@ -78,6 +78,12 @@ type ToastCardProps = Readonly<{
   onFocusResume?(): void;
   locale?: string;
   className?: string;
+  /**
+   * Remaining HTML attributes of the public controlled `Toast` (id, data-*, style, handlers).
+   * Spread first so the card's role, labelling, tone and state attributes always win;
+   * handlers the card also needs are composed rather than replaced.
+   */
+  htmlProps?: Omit<HTMLAttributes<HTMLDivElement>, "children" | "title" | "className">;
 }>;
 
 const ToastCard = forwardRef<HTMLDivElement, ToastCardProps>(function ToastCard(
@@ -92,6 +98,7 @@ const ToastCard = forwardRef<HTMLDivElement, ToastCardProps>(function ToastCard(
     onFocusResume,
     locale,
     className,
+    htmlProps,
   },
   ref,
 ) {
@@ -99,6 +106,7 @@ const ToastCard = forwardRef<HTMLDivElement, ToastCardProps>(function ToastCard(
   const titleId = `${baseId}-toast-title`;
   const descriptionId = `${baseId}-toast-description`;
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    htmlProps?.onKeyDown?.(event);
     if (event.key === "Escape") {
       event.preventDefault();
       onDismiss("escape");
@@ -106,18 +114,20 @@ const ToastCard = forwardRef<HTMLDivElement, ToastCardProps>(function ToastCard(
   };
   return (
     <div
+      {...htmlProps}
       ref={ref}
       className={classNames("hjm-toast", className)}
       data-tone={descriptor.tone}
       data-state={phase}
-      lang={locale}
+      lang={locale ?? htmlProps?.lang}
       role="group"
       aria-labelledby={descriptor.title ? titleId : undefined}
       aria-describedby={descriptionId}
-      onPointerEnter={onPointerPause}
-      onPointerLeave={onPointerResume}
-      onFocusCapture={onFocusPause}
+      onPointerEnter={(event) => { htmlProps?.onPointerEnter?.(event); onPointerPause?.(); }}
+      onPointerLeave={(event) => { htmlProps?.onPointerLeave?.(event); onPointerResume?.(); }}
+      onFocusCapture={(event) => { htmlProps?.onFocusCapture?.(event); onFocusPause?.(); }}
       onBlurCapture={(event) => {
+        htmlProps?.onBlurCapture?.(event);
         if (!event.currentTarget.contains(event.relatedTarget)) onFocusResume?.();
       }}
       onKeyDown={handleKeyDown}
@@ -164,6 +174,7 @@ const ToastCard = forwardRef<HTMLDivElement, ToastCardProps>(function ToastCard(
   );
 });
 
+// No `layoutStyle`: toasts are stacked inside the provider's fixed region, which owns their position.
 export type ToastProps = Omit<HTMLAttributes<HTMLDivElement>, "children" | "title"> &
   Readonly<{
     descriptor: ToastDescriptor;
@@ -172,7 +183,10 @@ export type ToastProps = Omit<HTMLAttributes<HTMLDivElement>, "children" | "titl
 
 /** Controlled single-toast renderer; ToastProvider supplies the full FIFO lifecycle. */
 export const Toast = forwardRef<HTMLDivElement, ToastProps>(function Toast(
-  { descriptor, onDismissRequest, className },
+  // Until 2026-10-06 only `className` reached the DOM although the type accepts every div attribute,
+  // so `id`, `data-*` and handlers were dropped silently. Narrowing the type instead would break
+  // consumers that already pass them, so the rest is forwarded (the card keeps its own role/labelling).
+  { descriptor, onDismissRequest, className, ...htmlProps },
   ref,
 ) {
   const resolved = resolveToastDescriptor(descriptor);
@@ -186,6 +200,7 @@ export const Toast = forwardRef<HTMLDivElement, ToastProps>(function Toast(
       descriptor={resolved}
       phase="visible"
       {...(className === undefined ? {} : { className })}
+      htmlProps={htmlProps}
       onDismiss={onDismissRequest}
       onAction={() => {
         const action = resolved.action;
@@ -212,6 +227,7 @@ export function useToast(): ToastApi {
   return value;
 }
 
+// No `layoutStyle`: the toast region is a fixed viewport layer owned by the provider recipe.
 export type ToastProviderProps = Readonly<{
   children: ReactNode;
   label: string;

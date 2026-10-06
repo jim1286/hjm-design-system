@@ -6,7 +6,7 @@ import { isLargeTextScale } from "@hjmds/design-contracts/components/design-syst
 import { classNames, useControllableState } from "./internal.js";
 import { useOptionalHjmTheme } from "./provider.js";
 /** Finite keyed cards. Hidden slides stay mounted but cannot receive focus. */
-export const Carousel = forwardRef(function Carousel({ label, slides, renderSlide, composeAccessibleName, labels, autoplay, currentKey, defaultCurrentKey, onCurrentKeyChange, className, onFocusCapture, onMouseEnter, onMouseLeave, onKeyDown, ...props }, ref) {
+export const Carousel = forwardRef(function Carousel({ label, slides, renderSlide, composeAccessibleName, labels, autoplay, currentKey, defaultCurrentKey, onCurrentKeyChange, className, onFocusCapture, onMouseEnter, onMouseLeave, onKeyDown, layoutStyle, ...props }, ref) {
     const theme = useOptionalHjmTheme();
     const [current, setCurrent] = useControllableState({
         ...(currentKey === undefined ? {} : { value: currentKey }),
@@ -42,7 +42,7 @@ export const Carousel = forwardRef(function Carousel({ label, slides, renderSlid
         setCurrent(key); }
     function move(intent) { select(getCarouselNavigationTarget(descriptor, intent)); }
     const rotationRequested = rotating && !last && !theme?.environment.reducedMotion;
-    return _jsxs("div", { ...props, ref: ref, role: "region", "aria-label": label, "aria-roledescription": "carousel", className: classNames("hjm-carousel", className), "data-large-text": isLargeTextScale(theme?.environment.textScale ?? 1), onFocusCapture: (event) => {
+    return _jsxs("div", { ...props, style: { ...props.style, ...layoutStyle }, ref: ref, role: "region", "aria-label": label, "aria-roledescription": "carousel", className: classNames("hjm-carousel", className), "data-large-text": isLargeTextScale(theme?.environment.textScale ?? 1), onFocusCapture: (event) => {
             // APG: leaving focus must not silently restart rotation. Explicit resume is required.
             if (!event.currentTarget.contains(event.relatedTarget))
                 setRotating(false);

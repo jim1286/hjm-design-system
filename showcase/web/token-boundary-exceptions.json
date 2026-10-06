@@ -506,7 +506,7 @@
       "reason": "Sidebar 데모 셸의 높이·테두리다. 실제 제품은 Layout이 이 자리를 정하므로 renderer 계약에 없다."
     },
     {
-      "file": "src/patterns/WebAdditions.stories.tsx",
+      "file": "src/patterns/WebAdditions.previews.tsx",
       "rule": "raw-length",
       "selector": "WebAdditionsPreview/div[style]",
       "property": "height",
@@ -514,7 +514,7 @@
       "reason": "Affix demonstration viewport and before/after scroll distances reproduce pinning in a bounded showcase. They are fixture geometry, not product sizing tokens; see design-contracts/docs/affix.md."
     },
     {
-      "file": "src/patterns/WebAdditions.stories.tsx",
+      "file": "src/patterns/WebAdditions.previews.tsx",
       "rule": "raw-length",
       "selector": "WebAdditionsPreview/div[style]",
       "property": "height",
@@ -522,20 +522,12 @@
       "reason": "Affix demonstration viewport and before/after scroll distances reproduce pinning in a bounded showcase. They are fixture geometry, not product sizing tokens; see design-contracts/docs/affix.md."
     },
     {
-      "file": "src/patterns/WebAdditions.stories.tsx",
+      "file": "src/patterns/WebAdditions.previews.tsx",
       "rule": "raw-length",
       "selector": "WebAdditionsPreview/div[style]",
       "property": "height",
       "value": "600",
       "reason": "Affix demonstration viewport and before/after scroll distances reproduce pinning in a bounded showcase. They are fixture geometry, not product sizing tokens; see design-contracts/docs/affix.md."
-    },
-    {
-      "file": "src/patterns/InteractionAdapters.stories.tsx",
-      "rule": "raw-length",
-      "selector": "Demo/div[style]",
-      "property": "maxWidth",
-      "value": "640",
-      "reason": "Isolated interaction playground width keeps reorder controls near the row label; this is demo geometry, not a product sizing token."
     },
     {
       "file": "src/patterns/InteractionAdapters.stories.tsx",

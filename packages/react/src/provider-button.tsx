@@ -12,6 +12,7 @@ import {
 } from "react";
 import { classNames } from "./internal.js";
 import { useOptionalHjmTheme } from "./provider.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type AuthProviderButtonProps = Omit<
   ButtonHTMLAttributes<HTMLButtonElement>,
@@ -25,10 +26,12 @@ export type AuthProviderButtonProps = Omit<
      */
     logo: ReactNode;
     className?: string;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
   }>;
 
 export const AuthProviderButton = forwardRef<HTMLButtonElement, AuthProviderButtonProps>(
-  function AuthProviderButton({ descriptor, logo, className, ...props }, forwardedRef) {
+  function AuthProviderButton({ descriptor, logo, className, layoutStyle, ...props }, forwardedRef) {
     validateAuthProviderButtonDescriptor(descriptor);
     const theme = useOptionalHjmTheme();
     // The theme only picks between the provider's own variants; it never mixes
@@ -49,7 +52,7 @@ export const AuthProviderButton = forwardRef<HTMLButtonElement, AuthProviderButt
         aria-label={descriptor.label}
         disabled={descriptor.disabled === true || busy}
         className={classNames("hjm-auth-provider-button", className)}
-        style={{
+        style={{ ...layoutStyle,
           "--hjm-provider-background": surface.background,
           "--hjm-provider-content": surface.content,
           "--hjm-provider-border": surface.border ?? "transparent",

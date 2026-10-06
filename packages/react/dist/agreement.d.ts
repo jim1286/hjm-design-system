@@ -1,4 +1,5 @@
 import { type AgreementDescriptor, type AgreementState } from "@hjmds/design-contracts/components/agreement";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type AgreementProps<Id extends string = string> = Readonly<{
     descriptor: AgreementDescriptor<Id>;
     checkedIds?: ReadonlySet<Id>;
@@ -13,6 +14,8 @@ export type AgreementProps<Id extends string = string> = Readonly<{
     /** Localized suffix marking an optional row, supplied by the product. */
     optionalLabel: string;
     className?: string;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 export declare const Agreement: <Id extends string = string>(props: AgreementProps<Id> & {
     ref?: React.Ref<HTMLDivElement>;

@@ -13,3 +13,16 @@ export function nextReaction(options: readonly ReactionOption[], current: string
   if (!option) throw new TypeError("Unknown reaction");
   return option.disabled ? current : current === id ? null : id;
 }
+
+/**
+ * The expanded catalog is product-localized; quick and additional IDs stay unique.
+ * The + button needs a localized name and something to reveal; the message stays short
+ * because this isolated entry has a byte cap (check-bundle-budget.mjs).
+ */
+export type ReactionMoreOptions = Readonly<{ label: string; options: readonly ReactionOption[] }>;
+export function resolveReactionOptions(options: readonly ReactionOption[], more?: ReactionMoreOptions): readonly ReactionOption[] {
+  const all = more ? [...options, ...more.options] : options;
+  if (more && !(more.label.trim() && more.options.length)) throw new TypeError("More reactions need a label and options");
+  validateReactions(all, null);
+  return all;
+}

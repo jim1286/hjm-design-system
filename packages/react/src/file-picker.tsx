@@ -19,6 +19,7 @@ import {
 } from "react";
 
 import { classNames, composeRefs } from "./internal.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type FilePickerProps = Omit<HTMLAttributes<HTMLDivElement>, "children" | "onSelect"> &
   Readonly<{
@@ -33,6 +34,8 @@ export type FilePickerProps = Omit<HTMLAttributes<HTMLDivElement>, "children" | 
     error?: ReactNode;
     inputId?: string;
     getCandidateId?: (file: File, index: number) => string;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
   }>;
 
 function defaultCandidateId(file: File, index: number): string {
@@ -54,6 +57,7 @@ export const FilePicker = forwardRef<HTMLDivElement, FilePickerProps>(function F
     inputId,
     getCandidateId = defaultCandidateId,
     className,
+    layoutStyle,
     ...props
   },
   ref,
@@ -85,7 +89,7 @@ export const FilePicker = forwardRef<HTMLDivElement, FilePickerProps>(function F
   };
 
   return (
-    <div {...props} ref={composeRefs(ref)} className={classNames("hjm-file-picker", className)} data-dragging={dragging || undefined} data-invalid={error !== undefined || undefined}>
+    <div {...props} style={{ ...props.style, ...layoutStyle }} ref={composeRefs(ref)} className={classNames("hjm-file-picker", className)} data-dragging={dragging || undefined} data-invalid={error !== undefined || undefined}>
       <span className="hjm-file-picker__label" id={`${id}-label`}>{label}</span>
       {/*
         The visible button below is the keyboard entry point. Before 1.5.0 this

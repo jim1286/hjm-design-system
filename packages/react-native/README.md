@@ -41,6 +41,10 @@ export function Screen() {
   `value`) switches those controls to deterministic scaling and disables OS multiplication, so the
   requested scale is applied exactly once. A nested Provider inherits that absolute scale; its own
   `textScale` replaces rather than multiplies the parent value.
+  Persistent `BottomNavigation` visual labels use their existing recipe limit of 1.4× in both
+  OS and controlled Provider modes. The full destination name and sibling body text retain
+  their ordinary accessibility contract. This fixes controlled-scale labels ignoring the
+  native multiplier limit (BurnTok BT-QA-021); no consumer prop change is needed.
 - Motion uses React Native's built-in `Animated` API and canonical recipe durations/easing; there
   is no third-party animation dependency. Reduced motion removes spatial exit movement and retains
   only the recipe-permitted enter opacity fallback.
@@ -263,6 +267,12 @@ or `accessibilityLabel`. `SearchField` can render product icons through `renderL
 `renderClearIcon`, and `renderBusyIndicator`; its trailing precedence is busy, then clear, then the
 passive `trailing` slot. `SegmentedControl` items can render their own leading visual.
 
+Single-line `TextField` and `SearchField` frames grow with the effective input text scale and
+shrink when it returns to normal. This prevents the OS large-text overflow observed in BurnTok
+folder names (BT-QA-020). Keep the recipe-owned minimum height; stack adjacent product actions
+when space is narrow. Do not override the frame with a fixed height to contain enlarged text.
+Explicit native font-scaling options still determine the same text and frame scale.
+
 `Checkbox` supports boolean and `"mixed"` state, read-only semantics, plain/card presentation,
 compact/default sizing, and replaceable leading/indicator visuals. `CheckboxGroup` validates unique
 enabled option keys and exposes controlled or uncontrolled immutable `ReadonlySet` selection.
@@ -418,3 +428,8 @@ with negative margins.
 with an opaque semantic surface and adaptive slots, without a required blur dependency.
 Existing [BottomNavigation](../design-contracts/docs/bottom-navigation.md) accepts the
 `capsule` presentation with an adjacent action and large-text label fallback.
+
+
+iOS TextArea의 실제 글자 배율이 바뀌면 기존 attributed 본문도 갱신한다(BT-QA-025). Native editor만 교체하고 초안·외부 ref·포커스·선택 영역을 보존하며, 같은 배율·Android·한 줄 입력은 재마운트하지 않는다. 공개 API 변경은 없다. 실제 Android 입력 동작 검증과 정식 게시/소비 버전 반영은 별도다.
+
+Dialog/AlertDialog viewport candidate BT-QA-027 keeps copy in an internal shrinking scroll body and actions outside it, with provider safe-area padding. Host contracts and normal-size BurnTok iOS confirmation/cancel pass; long-content device geometry remains pending after the user stopped enlarged-text QA. No public API migration or published-version claim.

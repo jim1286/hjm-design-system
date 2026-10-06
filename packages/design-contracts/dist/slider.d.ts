@@ -112,6 +112,14 @@ export declare const sliderRecipe: {
         readonly draggedOpacity: 0.64;
     };
     readonly radius: "full";
+    /**
+     * Header row [label ……… value] and its distance to the track. Added 2026-10-06: Web drew a 16px
+     * label–value gap and Native none, so a long label ran into the value on Native.
+     */
+    readonly header: {
+        readonly gap: 16;
+        readonly trackGap: 8;
+    };
 };
 export declare const sliderBehavior: {
     readonly controlled: readonly ["value", "defaultValue", "onValueChange"];

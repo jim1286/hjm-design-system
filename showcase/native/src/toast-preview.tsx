@@ -9,5 +9,5 @@ function Trigger({enhanced}:{enhanced:boolean}){const toast=useToastRegion();ret
 export function ToastPreview({enhanced=false}:{enhanced?:boolean}){
  // An overlay needs the canvas height. Nesting it in the old short ScrollView
  // anchored the bottom toast above the button and clipped it under the status bar.
- return <ToastRegion placement="top" maxVisible={1} style={{flex:1}} {...(enhanced?{presentationAdapter:liquid}:{})}><View style={{paddingTop:180,gap:spacing.md}}><Trigger enhanced={enhanced}/></View></ToastRegion>;
+ return <ToastRegion placement="top" maxVisible={1} layoutStyle={{flex:1}} {...(enhanced?{presentationAdapter:liquid}:{})}><View style={{paddingTop:180,gap:spacing.md}}><Trigger enhanced={enhanced}/></View></ToastRegion>;
 }

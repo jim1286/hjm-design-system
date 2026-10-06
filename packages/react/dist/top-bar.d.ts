@@ -1,4 +1,5 @@
 import { type HTMLAttributes, type MouseEventHandler, type ReactNode } from "react";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type TopBarProps = Omit<HTMLAttributes<HTMLDivElement>, "title" | "children"> & Readonly<{
     title?: string;
     titleLeading?: ReactNode;
@@ -10,6 +11,8 @@ export type TopBarProps = Omit<HTMLAttributes<HTMLDivElement>, "title" | "childr
     actions?: ReactNode;
     centered?: boolean;
     safeAreaTop?: number;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** Screen chrome stays composable inside pages and dialogs, without adding a second banner landmark. */
 export declare const TopBar: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLDivElement>, "title" | "children"> & Readonly<{
@@ -23,5 +26,7 @@ export declare const TopBar: import("react").ForwardRefExoticComponent<Omit<HTML
     actions?: ReactNode;
     centered?: boolean;
     safeAreaTop?: number;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }> & import("react").RefAttributes<HTMLDivElement>>;
 //# sourceMappingURL=top-bar.d.ts.map

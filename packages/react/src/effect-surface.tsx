@@ -1,10 +1,11 @@
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { resolveEffectSurface, type EffectSurfaceDescriptor } from "@hjmds/design-contracts/effect-surface";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { useHjmTheme } from "./provider.js";
-export type EffectSurfaceProps = Readonly<{ descriptor?: EffectSurfaceDescriptor; children: ReactNode; className?: string }>;
+export type EffectSurfaceProps = Readonly<{ descriptor?: EffectSurfaceDescriptor; children: ReactNode; className?: string; /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */ layoutStyle?: HjmCompositionStyleProp; }>;
 /** Decorative layers never receive pointer events or own the content's name. */
-export function EffectSurface({ descriptor = {}, children, className }: EffectSurfaceProps) {
+export function EffectSurface({ descriptor = {}, children, className, layoutStyle }: EffectSurfaceProps) {
   const { palette, environment } = useHjmTheme();
   const effect = resolveEffectSurface(descriptor);
   const id = useId().replace(/:/g, "");
@@ -36,7 +37,7 @@ export function EffectSurface({ descriptor = {}, children, className }: EffectSu
     return () => { animation?.cancel(); document.removeEventListener("visibilitychange", sync); };
   }, [effect.active, effect.period, environment.reducedMotion, visible]);
   const colors = effect.colors.map(color => resolveColorReference(color, palette));
-  return <div ref={host} className={className} data-hjm-effect-surface="" style={{ position: "relative", isolation: "isolate", overflow: "hidden", background: palette.theme.bg }}>
+  return <div ref={host} className={className} data-hjm-effect-surface="" style={{ ...layoutStyle, position: "relative", isolation: "isolate", overflow: "hidden", background: palette.theme.bg }}>
     <svg ref={layer} aria-hidden="true" focusable="false" viewBox="0 0 100 100" preserveAspectRatio="none" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none", opacity: effect.intensity }}>
       <defs>{colors.map((color, index) => <radialGradient id={`${id}-${index}`} key={index}><stop offset="0%" stopColor={color} /><stop offset="100%" stopColor={color} stopOpacity={0} /></radialGradient>)}
         <pattern id={`${id}-grain`} width={4} height={4} patternUnits="userSpaceOnUse">{effect.points.map((point, index) => <circle key={index} cx={point.x / 25} cy={point.y / 25} r={point.radius / 10} fill={palette.theme.text} opacity={0.28} />)}</pattern>

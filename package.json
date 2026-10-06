@@ -13,7 +13,7 @@
     "build": "pnpm -r --filter './packages/**' run build",
     "typecheck": "pnpm -r --filter './packages/**' run typecheck",
     "test": "pnpm -r --filter './packages/**' run test",
-    "check": "pnpm -r --filter './packages/**' run check && pnpm bundle:renderer:check && pnpm workspace:check && pnpm evidence:check && pnpm docs:check && pnpm governance:check && pnpm api-map:check",
+    "check": "pnpm -r --filter './packages/**' run check && pnpm bundle:renderer:check && pnpm workspace:check && pnpm evidence:check && pnpm docs:check && pnpm governance:check && pnpm api-map:check && pnpm usage:check && pnpm storybook:check",
     "contracts:sync": "pnpm --filter @hjmds/design-contracts contracts:sync",
     "contracts:check": "pnpm --filter @hjmds/design-contracts contracts:check",
     "bundle:check": "pnpm build && pnpm --filter @hjmds/design-contracts bundle:check && pnpm bundle:renderer:check",
@@ -37,7 +37,10 @@
     "release:check": "pnpm ci:check && node scripts/check-release-artifacts.mjs",
     "governance:check": "node --test scripts/check-release-governance.test.mjs && node scripts/check-release-governance.mjs",
     "api-map:sync": "node scripts/sync-public-component-map.mjs --write",
-    "api-map:check": "node scripts/sync-public-component-map.mjs"
+    "api-map:check": "node scripts/sync-public-component-map.mjs",
+    "usage:sync": "node scripts/check-usage-docs.mjs --write",
+    "usage:check": "node scripts/check-usage-docs.mjs",
+    "storybook:check": "node scripts/check-storybook.mjs"
   },
   "engines": {
     "node": ">=20"

@@ -31,3 +31,8 @@
 **플랫폼 번역.** Web은 `group` + `checkbox` + 별도 링크/버튼, Native는 checkbox
 accessibility state와 `openDetail` action이다. 두 표면 모두 전체 동의 행이 목록의 제목
 역할을 하도록 `surface.sunken` 위에 놓는다.
+
+**첫 상태도 알린다(2026-10-06).** `onStateChange`는 마운트 때 한 번 초기 상태로 불리고, 그 뒤 토글마다 불린다.
+이전에는 토글에서만 불려 `defaultCheckedIds`·`checkedIds`가 처음부터 필수를 채운 경우 첫 `satisfied: true`가 오지 않아,
+이 콜백에 연결한 제출 버튼이 꺼진 채 남았다. 파생 상태가 바뀔 때마다 부르는 대안은 호출 수가 렌더 횟수에 묶여 버렸다.
+호출 수를 세던 소비자는 마운트 1회가 늘어난다(Changeset `recipe-parity-followups`).

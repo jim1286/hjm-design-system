@@ -2,6 +2,7 @@ import { forwardRef, useEffect, useRef, useState, type HTMLAttributes, type Mous
 import { getAnchorCurrentId, resolveAnchorItems, type AnchorItem } from "@hjmds/design-contracts/components/anchor";
 import { classNames } from "./internal.js";
 import { useOptionalHjmTheme } from "./provider.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type AnchorProps = Omit<HTMLAttributes<HTMLElement>, "children"> & Readonly<{
   label: string;
   items: readonly AnchorItem[];
@@ -11,11 +12,13 @@ export type AnchorProps = Omit<HTMLAttributes<HTMLElement>, "children"> & Readon
   orientation?: "vertical" | "horizontal";
   historyMode?: "push" | "replace" | "none";
   onNavigate?: (id: string, event: MouseEvent<HTMLAnchorElement>) => void;
+  /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
 }>;
 
 /** Same-document table of contents; sticky positioning belongs to its host layout. */
 export const Anchor = forwardRef<HTMLElement, AnchorProps>(function Anchor({ label, items, container, offset = 0,
-  orientation = "vertical", historyMode = "push", onNavigate, className, ...props }, ref) {
+  orientation = "vertical", historyMode = "push", onNavigate, className, layoutStyle, ...props }, ref) {
   const resolved = resolveAnchorItems(items);
   if (!label.trim()) throw new TypeError("Anchor label must not be empty");
   getAnchorCurrentId([], offset);
@@ -73,7 +76,7 @@ export const Anchor = forwardRef<HTMLElement, AnchorProps>(function Anchor({ lab
     window.addEventListener("resize", schedule); window.addEventListener("hashchange", restoreHash); window.addEventListener("popstate", restoreHash);
     return () => { cancelAnimationFrame(frame); resize.disconnect(); mutation.disconnect(); source.removeEventListener("scroll", schedule); window.removeEventListener("resize", schedule); window.removeEventListener("hashchange", restoreHash); window.removeEventListener("popstate", restoreHash); };
   }, [idsKey, container, offset]);
-  return <nav {...props} ref={ref} aria-label={label} className={classNames("hjm-anchor", className)} data-orientation={orientation}>
+  return <nav {...props} style={{ ...props.style, ...layoutStyle }} ref={ref} aria-label={label} className={classNames("hjm-anchor", className)} data-orientation={orientation}>
     <ul className="hjm-anchor__list">{resolved.map((item) => <li key={item.id}><a href={item.href} className="hjm-anchor__link" aria-current={current === item.id ? "location" : undefined}
       onClick={(event) => {
         onNavigate?.(item.id, event);

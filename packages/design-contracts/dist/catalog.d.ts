@@ -4170,6 +4170,10 @@ export declare const recipeRegistry: {
             readonly color: "textMuted";
         };
         readonly disabledOpacity: 0.6;
+        readonly disabledScope: {
+            readonly dimmed: readonly ["label", "control"];
+            readonly unchanged: readonly ["hint", "error"];
+        };
     };
     readonly filePickerRecipe: {
         readonly slots: readonly ["root", "trigger", "dropzone", "hint", "error"];
@@ -5850,6 +5854,22 @@ export declare const recipeRegistry: {
         readonly defaults: {
             readonly size: "medium";
         };
+        readonly pills: {
+            readonly gap: 8;
+            readonly radius: 999;
+            readonly inset: 8;
+            readonly minHeight: 44;
+            readonly selectedBackground: Readonly<{
+                source: "theme";
+                key: "textBody";
+                alpha?: number;
+            }>;
+            readonly selectedContent: Readonly<{
+                source: "theme";
+                key: "bg";
+                alpha?: number;
+            }>;
+        };
         readonly adaptive: {
             readonly largeTextLayout: "stacked";
             readonly stackAtFontScale: 1.6;
@@ -6980,6 +7000,10 @@ export declare const recipeRegistry: {
             readonly draggedOpacity: 0.64;
         };
         readonly radius: "full";
+        readonly header: {
+            readonly gap: 16;
+            readonly trackGap: 8;
+        };
     };
     readonly spinnerRecipe: {
         readonly slots: readonly ["root"];
@@ -8195,6 +8219,7 @@ export declare const recipeRegistry: {
         readonly row: {
             readonly minHeight: 68;
             readonly paddingHorizontal: 16;
+            readonly paddingVertical: 8;
             readonly gap: 12;
             readonly radius: "md";
         };

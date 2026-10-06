@@ -2,7 +2,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { removeTagAt, resolveTagsInputActiveSuggestion, resolveTagsInputCommit, tagsInputBehaviorDefaults, tagsInputRecipe, } from "@hjmds/design-contracts/components/tags-input";
 import { forwardRef, useRef, useState, } from "react";
 import { classNames, composeRefs, useControllableState } from "./internal.js";
-export const TagsInput = forwardRef(function TagsInput({ label, tags: controlledTags, defaultTags, onTagsChange, onReject, onDraftChange, policy, commitKeys = tagsInputRecipe.defaults.commitKeys, suggestions, suggestionsLabel, composeRemoveLabel, placeholder, description, disabled = false, className, }, forwardedRef) {
+export const TagsInput = forwardRef(function TagsInput({ label, tags: controlledTags, defaultTags, onTagsChange, onReject, onDraftChange, policy, commitKeys = tagsInputRecipe.defaults.commitKeys, suggestions, suggestionsLabel, composeRemoveLabel, placeholder, description, disabled = false, className, layoutStyle, }, forwardedRef) {
     const [tags, setTags] = useControllableState({
         ...(controlledTags === undefined ? {} : { value: controlledTags }),
         defaultValue: defaultTags ?? [],
@@ -73,7 +73,7 @@ export const TagsInput = forwardRef(function TagsInput({ label, tags: controlled
         else
             setArmedIndex(last);
     };
-    return (_jsxs("div", { className: classNames("hjm-tags-input", className), "data-disabled": disabled || undefined, children: [_jsx("label", { className: "hjm-tags-input__label", htmlFor: id, children: label }), _jsxs("div", { className: "hjm-tags-input__frame", style: {
+    return (_jsxs("div", { style: layoutStyle, className: classNames("hjm-tags-input", className), "data-disabled": disabled || undefined, children: [_jsx("label", { className: "hjm-tags-input__label", htmlFor: id, children: label }), _jsxs("div", { className: "hjm-tags-input__frame", style: {
                     "--hjm-tags-min-height": `${tagsInputRecipe.frame.minHeight}px`,
                     "--hjm-tags-gap": `${tagsInputRecipe.frame.gap}px`,
                     "--hjm-tags-tag-min-height": `${tagsInputRecipe.tag.minHeight}px`,

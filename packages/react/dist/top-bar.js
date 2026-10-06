@@ -5,7 +5,7 @@ import { Button } from "./actions.js";
 import { classNames } from "./internal.js";
 import { useOptionalHjmTheme } from "./provider.js";
 /** Screen chrome stays composable inside pages and dialogs, without adding a second banner landmark. */
-export const TopBar = forwardRef(function TopBar({ title, titleLeading, onTitleClick, titleAccessibilityLabel, headingLevel = 1, leading, trailing, actions, centered = topBarRecipe.defaults.centered, safeAreaTop = 0, className, style, ...props }, ref) {
+export const TopBar = forwardRef(function TopBar({ title, titleLeading, onTitleClick, titleAccessibilityLabel, headingLevel = 1, leading, trailing, actions, centered = topBarRecipe.defaults.centered, safeAreaTop = 0, className, style, layoutStyle, ...props }, ref) {
     const theme = useOptionalHjmTheme();
     if (!Number.isFinite(safeAreaTop) || safeAreaTop < 0)
         throw new RangeError("TopBar safeAreaTop must be non-negative");
@@ -23,7 +23,7 @@ export const TopBar = forwardRef(function TopBar({ title, titleLeading, onTitleC
             "--hjm-top-bar-min-height": `${topBarRecipe.minHeight}px`,
             "--hjm-top-bar-padding": `${topBarRecipe.paddingHorizontal}px`,
             "--hjm-top-bar-gap": `${topBarRecipe.gap}px`,
-            "--hjm-top-bar-safe-area": `${safeAreaTop}px`, ...style,
+            "--hjm-top-bar-safe-area": `${safeAreaTop}px`, ...style, ...layoutStyle,
         }, children: [_jsx("div", { className: "hjm-top-bar__leading", children: leading }), _jsx("div", { className: "hjm-top-bar__title", children: title === undefined ? null : _jsx(Heading, { className: "hjm-top-bar__heading", children: onTitleClick ? _jsx(Button, { tone: "ghost", onClick: onTitleClick, "aria-label": titleAccessibilityLabel, leading: titleLeading, children: title })
                         : _jsxs("span", { "aria-label": titleAccessibilityLabel, children: [titleLeading, title] }) }) }), _jsx("div", { className: "hjm-top-bar__trailing", children: actions ?? trailing })] });
 });

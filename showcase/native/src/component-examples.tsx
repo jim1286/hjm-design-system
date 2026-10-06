@@ -765,7 +765,8 @@ return (<StoryFrame><><Button onPress={() => setDialogOpen(true)}>Open dialog</B
         title="Edit item"
         description="Canonical dialog renderer."
         closeLabel="Close"
-        primaryAction={{ label: "Save", onPress: () => setDialogOpen(false) }}
+        // No server in this renderer example; the action contract owns success dismissal.
+        primaryAction={{ label: "Save", onPress: () => undefined }}
       ><Text>Dialog content</Text></Dialog></></StoryFrame>);
 }
 

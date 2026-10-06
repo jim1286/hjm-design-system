@@ -7,8 +7,9 @@ import {
   type AgreementDescriptor,
   type AgreementState,
 } from "@hjmds/design-contracts/components/agreement";
-import { forwardRef, useId, useMemo } from "react";
+import { forwardRef, useEffect, useId, useMemo, useRef } from "react";
 import { classNames, useControllableState } from "./internal.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type AgreementProps<Id extends string = string> = Readonly<{
   descriptor: AgreementDescriptor<Id>;
@@ -24,6 +25,8 @@ export type AgreementProps<Id extends string = string> = Readonly<{
   /** Localized suffix marking an optional row, supplied by the product. */
   optionalLabel: string;
   className?: string;
+  /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
 }>;
 
 function Mark({ state }: { state: boolean | "mixed" }) {
@@ -45,6 +48,7 @@ export const Agreement = forwardRef(function Agreement<Id extends string = strin
     requiredLabel,
     optionalLabel,
     className,
+    layoutStyle,
   }: AgreementProps<Id>,
   forwardedRef: React.Ref<HTMLDivElement>,
 ) {
@@ -62,6 +66,17 @@ export const Agreement = forwardRef(function Agreement<Id extends string = strin
   const state = resolveAgreementState(descriptor, checked);
   const id = `${useId().replaceAll(":", "")}-agreement`;
 
+  // Report the initial state once on mount. Until 2026-10-06 only user toggles reported, so
+  // `defaultCheckedIds`/`checkedIds` that already satisfied every required item never produced a
+  // first `satisfied: true` and a submit button wired to this callback stayed disabled. Mount-only
+  // (not on every derived change) keeps the callback count to "initial + one per toggle"; StrictMode
+  // may repeat the same snapshot, which is idempotent for a consumer that stores it.
+  const initialStateRef = useRef(state);
+  const onStateChangeRef = useRef(onStateChange);
+  onStateChangeRef.current = onStateChange;
+  useEffect(() => {
+    onStateChangeRef.current?.(initialStateRef.current);
+  }, []);
   const commit = (next: ReadonlySet<Id>) => {
     setChecked(next);
     onStateChange?.(resolveAgreementState(descriptor, next));
@@ -72,6 +87,7 @@ export const Agreement = forwardRef(function Agreement<Id extends string = strin
       ref={forwardedRef}
       role="group"
       aria-label={descriptor.accessibilityLabel}
+      style={layoutStyle}
       className={classNames("hjm-agreement", className)}
     >
       <button

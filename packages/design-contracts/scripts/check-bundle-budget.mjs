@@ -14,6 +14,9 @@ const packageJsonUrl = new URL("../package.json", import.meta.url);
  * Raising a budget requires an intentional review of the changed graph.
  */
 const budgets = [
+  // Screen geometry reuses foundation tokens; the contract has no catalog/renderer dependencies.
+  // 2026-10-06 measured 11,524/4,028 with foundations; limit rounded up to 100 raw / 50 gzip.
+  { exportPath: "./screen-patterns", maxModules: 2, maxRawBytes: 11_600, maxGzipBytes: 4_050, forbiddenModules: metadataModules },
   // Optional action state store: measured 2504 raw / 889 gzip bytes; no dependency graph.
   { exportPath: "./action-session", maxModules: 1, maxRawBytes: 2900, maxGzipBytes: 1050, forbiddenModules: metadataModules },
   // Pure elastic-indicator geometry: 720 raw / 439 gzip bytes.
@@ -36,6 +39,8 @@ const budgets = [
   { exportPath: "./scroll-progress", maxModules: 1, maxRawBytes: 700, maxGzipBytes: 400, forbiddenModules: metadataModules },
   // Isolated integer duration and controlled reactions: measured 1289/610 and 1068/464 raw/gzip bytes.
   { exportPath: "./duration-field", maxModules: 1, maxRawBytes: 1500, maxGzipBytes: 710, forbiddenModules: metadataModules },
+  // 2026-10-06: resolveReactionOptions (expanded catalog) measures 1373/565 after trimming its message.
+  // Bytes are report-only since 2026-10-06; the baseline stays at the reviewed 1250/550.
   { exportPath: "./reactions", maxModules: 1, maxRawBytes: 1250, maxGzipBytes: 550, forbiddenModules: metadataModules },
   // Four bounded transform recipes; one pure module and no renderer dependency.
   { exportPath: "./content-transition", maxModules: 1, maxRawBytes: 1200, maxGzipBytes: 600, forbiddenModules: metadataModules },
@@ -589,31 +594,18 @@ async function assertExportTargetsExist(packageJson) {
   }
 }
 
-// Byte limits are an alarm, not a gate. Caps sat at ~0% headroom, so a few rationale
-// comments failed CI and every change raised a cap plus wrote another comment about it
-// (2026-10-02 user decision, docs/RELEASE_GOVERNANCE.md "번들 크기 상한"). Over the cap
-// warns; only growth past the tolerance fails. Module counts and forbidden imports,
-// which catch accidental dependency edges, still fail immediately.
-export const BYTE_ALARM_TOLERANCE = 0.1;
-
-export function classifyBytes(measured, cap) {
-  if (measured <= cap) return "pass";
-  return measured <= cap * (1 + BYTE_ALARM_TOLERANCE) ? "warn" : "fail";
+// Bytes are measured and reported, not enforced (2026-10-06 user decision: "상한 없애").
+// The 2026-10-02 alarm (+10% tolerance) still made comment-only growth fail CI and cap
+// debates. `maxRawBytes`/`maxGzipBytes` remain as reviewed baselines only. Module counts
+// and forbidden imports, which catch accidental dependency edges, still fail immediately.
+export function classifyBytes(_measured, _baseline) {
+  return "pass";
 }
 
 export function checkBudget(budget, measurement, warnings = []) {
   const failures = [];
   if (measurement.modules.length > budget.maxModules) {
     failures.push(`${measurement.modules.length} modules > ${budget.maxModules}`);
-  }
-  for (const [kind, measured, cap] of [
-    ["raw", measurement.rawBytes, budget.maxRawBytes],
-    ["gzip", measurement.gzipBytes, budget.maxGzipBytes],
-  ]) {
-    const status = classifyBytes(measured, cap);
-    const message = `${toDisplayBytes(measured)} ${kind} > ${toDisplayBytes(cap)}`;
-    if (status === "fail") failures.push(`${message} (+${Math.round(BYTE_ALARM_TOLERANCE * 100)}% tolerance)`);
-    else if (status === "warn") warnings.push(message);
   }
 
   const forbidden = typeof budget.forbiddenModules === "function"
@@ -651,7 +643,7 @@ async function main() {
     const measurement = await measureGraph(entryFile, availableModules);
     const budgetWarnings = [];
     const budgetFailures = checkBudget(budget, measurement, budgetWarnings);
-    const status = budgetFailures.length > 0 ? "FAIL" : budgetWarnings.length > 0 ? "WARN" : "PASS";
+    const status = budgetFailures.length > 0 ? "FAIL" : "PASS";
 
     console.log(
       `${status.padEnd(4)} ${budget.exportPath.padEnd(20)} ` +
@@ -662,9 +654,6 @@ async function main() {
 
     for (const failure of budgetFailures) {
       failures.push(`${budget.exportPath}: ${failure}`);
-    }
-    for (const warning of budgetWarnings) {
-      console.log(`     ${budget.exportPath}: ${warning} — within the byte alarm tolerance; record why or trim`);
     }
   }
 

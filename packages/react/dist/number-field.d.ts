@@ -1,5 +1,6 @@
 import { type NumberFieldSize, type NumberFieldValue } from "@hjmds/design-contracts/components/number-field";
 import { type InputHTMLAttributes, type ReactNode } from "react";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 type NativeNumberInputProps = Omit<InputHTMLAttributes<HTMLInputElement>, "aria-errormessage" | "aria-valuemax" | "aria-valuemin" | "aria-valuenow" | "aria-valuetext" | "children" | "className" | "defaultValue" | "disabled" | "max" | "min" | "onChange" | "readOnly" | "required" | "role" | "size" | "step" | "type" | "value">;
 export type NumberFieldProps = NativeNumberInputProps & Readonly<{
     label: ReactNode;
@@ -23,6 +24,11 @@ export type NumberFieldProps = NativeNumberInputProps & Readonly<{
     getValueText?: (value: number) => string;
     className?: string;
     inputClassName?: string;
+    /**
+     * Canonical layout-only placement on the field frame. `style` keeps going to
+     * the input element, where it always went, so existing callers do not move.
+     */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 /**
  * Exact numeric entry with a nullable draft and explicit single-step actions.
@@ -50,6 +56,11 @@ export declare const NumberField: import("react").ForwardRefExoticComponent<Nati
     getValueText?: (value: number) => string;
     className?: string;
     inputClassName?: string;
+    /**
+     * Canonical layout-only placement on the field frame. `style` keeps going to
+     * the input element, where it always went, so existing callers do not move.
+     */
+    layoutStyle?: HjmCompositionStyleProp;
 }> & import("react").RefAttributes<HTMLInputElement>>;
 export {};
 //# sourceMappingURL=number-field.d.ts.map

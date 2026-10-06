@@ -1,3 +1,4 @@
+import { layer } from "@hjmds/design-contracts/foundations";
 import { resolveMenuTypeahead } from "./menu-typeahead.js";
 import {
   createAlertDialogSession,
@@ -28,6 +29,7 @@ import {
   dialogRecipe,
   menuRecipe,
   sheetRecipe,
+  tooltipRecipe,
   type AlertDialogTone,
   type DialogSize,
   type MenuDensity,
@@ -61,6 +63,7 @@ import {
   type OpenState,
   type OverlayTrigger,
 } from "./modal.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type { OverlayTrigger } from "./modal.js";
 
@@ -70,6 +73,7 @@ export type DialogOpenChangeReason =
   | "escape"
   | "outside";
 
+// No `layoutStyle`: rendered in a modal portal centred by the recipe; there is no in-flow root to place.
 export type DialogProps = ModalOpenState<Readonly<{ reason: DialogOpenChangeReason }>> &
   Readonly<{
     title: ReactNode;
@@ -201,7 +205,12 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(function Dialog(
             data-state="open"
             style={{ zIndex: modalLayer }}
             onMouseDown={(event) => {
-              if (event.target === event.currentTarget) requestClose("outside");
+              if (event.target === event.currentTarget) {
+                // Diairy QA W16: Chrome's default backdrop blur can run after focus
+                // cleanup and undo its return target. Cancel that default, not the modal's dismissal.
+                event.preventDefault();
+                requestClose("outside");
+              }
             }}
           >
             <div
@@ -243,6 +252,7 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(function Dialog(
   );
 });
 
+// No `layoutStyle`: rendered in a modal portal centred by the recipe; there is no in-flow root to place.
 export type AlertDialogProps = ModalOpenState<
   Readonly<{ reason: AlertDialogOpenChangeReason }>
 > &
@@ -430,6 +440,7 @@ export type SheetPlacement = "bottom" | "start" | "end";
 
 export type SheetSize = keyof typeof sheetRecipe.sizes;
 
+// No `layoutStyle`: an edge-attached modal portal; its geometry is the recipe's.
 export type SheetProps = ModalOpenState<SheetOpenChangeDetails> &
   Readonly<{
     title: ReactNode;
@@ -582,10 +593,17 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(function Sheet(
             data-kind="sheet"
             data-modal-priority={modalPriority}
             data-placement={placement}
+            // Mirrors the content's detent so a `full` sheet can drop the positioner's top gutter (sheetRecipe.sizes.full).
+            data-detent={activeDetent ?? (size === "auto" ? undefined : size)}
             data-state="open"
             style={{ zIndex: modalLayer }}
             onMouseDown={(event) => {
-              if (event.target === event.currentTarget) requestClose("outside");
+              if (event.target === event.currentTarget) {
+                // Match Dialog: a real backdrop click must not undo return focus or
+                // move focus to body when busy/outside-dismiss policy keeps the sheet open.
+                event.preventDefault();
+                requestClose("outside");
+              }
             }}
           >
             <div
@@ -666,6 +684,8 @@ export type TooltipProps = OpenState<TooltipOpenChangeDetails> &
     focusOpenDelayMs?: number;
     portalContainer?: HTMLElement;
     className?: string;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
   }>;
 
 export const Tooltip = forwardRef<HTMLSpanElement, TooltipProps>(function Tooltip(
@@ -681,6 +701,7 @@ export const Tooltip = forwardRef<HTMLSpanElement, TooltipProps>(function Toolti
     defaultOpen,
     onOpenChange,
     className,
+    layoutStyle,
   },
   ref,
 ) {
@@ -830,7 +851,11 @@ export const Tooltip = forwardRef<HTMLSpanElement, TooltipProps>(function Toolti
   const popupPosition = useAnchoredPopup(triggerRef, tooltipNode, {
     align: descriptor.align,
     placement: descriptor.placement,
-    zIndex: 1100,
+    // tooltipRecipe.positioning (2026-10-06 follow-up): 4 from the trigger and 12 from the edge;
+    // the helper defaults 8/16 had made Web tooltips float further away than Native.
+    gap: tooltipRecipe.positioning.sideOffset,
+    viewportPadding: tooltipRecipe.positioning.collisionPadding,
+    zIndex: layer.tooltip,
   });
   const setTooltipRef = useCallback((node: HTMLSpanElement | null) => {
     setTooltipNode(node);
@@ -839,6 +864,7 @@ export const Tooltip = forwardRef<HTMLSpanElement, TooltipProps>(function Toolti
   return (
     <span
       ref={ref}
+      style={layoutStyle}
       className={classNames("hjm-tooltip", className)}
       data-placement={descriptor.placement}
       data-align={descriptor.align}
@@ -870,7 +896,14 @@ export const Tooltip = forwardRef<HTMLSpanElement, TooltipProps>(function Toolti
             className="hjm-tooltip__content"
             data-placement={popupPosition.placement}
             data-align={popupPosition.align}
-            style={popupPosition.style}
+            // The positioner's inline maxWidth (space left in the viewport) would override the stylesheet cap,
+            // so tooltipRecipe.content.maxWidth (280) is applied here too (2026-10-06; Web had grown to 320).
+            style={{
+              ...popupPosition.style,
+              maxWidth: typeof popupPosition.style.maxWidth === "number"
+                ? Math.min(popupPosition.style.maxWidth, tooltipRecipe.content.maxWidth)
+                : tooltipRecipe.content.maxWidth,
+            }}
             onPointerEnter={(event) => {
               if (event.pointerType !== "touch") clearTimer();
             }}
@@ -979,6 +1012,8 @@ type MenuBaseProps = Readonly<{
   onActionAfterDismiss?: (id: string) => void;
   portalContainer?: HTMLElement;
   className?: string;
+  /** Canonical layout-only placement on the in-flow wrapper around the trigger; the popup stays anchored. */
+  layoutStyle?: HjmCompositionStyleProp;
 }> & MenuSourceProps;
 
 export type MenuProps = OpenState<Readonly<{ reason: MenuOpenChangeReason }>> &
@@ -1049,6 +1084,7 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(function Menu(props, r
     defaultOpen,
     onOpenChange,
     className,
+    layoutStyle,
   } = props;
   const density = densityProp ?? densityDefault;
   const sections = props.sections;
@@ -1110,7 +1146,10 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(function Menu(props, r
   const afterDismissIdRef = useRef<string | undefined>(undefined);
   const typeaheadRef = useRef({ value: "", time: 0 });
   const id = `${useId().replaceAll(":", "")}-menu`;
-  const popupPosition = useAnchoredPopup(triggerRef, contentNode, { align, zIndex: 900 });
+  // menuRecipe offset/edge padding (2026-10-06 follow-up; helper default edge padding was 16).
+  const popupPosition = useAnchoredPopup(triggerRef, contentNode, {
+    align, gap: menuRecipe.sideOffset, viewportPadding: menuRecipe.collisionPadding, zIndex: layer.dropdown,
+  });
   const setMenuContentRef = useCallback((node: HTMLDivElement | null) => {
     contentRef.current = node;
     setContentNode(node);
@@ -1276,7 +1315,7 @@ export const Menu = forwardRef<HTMLDivElement, MenuProps>(function Menu(props, r
   const showItems = asyncState.status !== "empty" && asyncState.status !== "error";
 
   return (
-    <span ref={wrapperRef} className="hjm-menu" data-state={open ? "open" : "closed"}>
+    <span ref={wrapperRef} className="hjm-menu" style={layoutStyle} data-state={open ? "open" : "closed"}>
       {renderedTrigger}
       {open ? (
         <AnchoredPortal

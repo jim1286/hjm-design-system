@@ -3,8 +3,10 @@ import { topDefaults, topRecipe, validateTopDescriptor, } from "@hjmds/design-co
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { View } from "react-native";
 import { Text } from "./primitives.js";
+import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { useHjmNativeTheme } from "./provider.js";
-export function Top({ descriptor, trailing, style }) {
+export function Top({ descriptor, trailing, layoutStyle, style }) {
+    warnDeprecatedStyleProps("Top", { style }, "layoutStyle for placement; topRecipe owns appearance");
     validateTopDescriptor(descriptor);
     const theme = useHjmNativeTheme();
     const size = descriptor.size ?? topDefaults.size;
@@ -15,6 +17,7 @@ export function Top({ descriptor, trailing, style }) {
     return (_jsxs(View, { style: [
             { gap: topRecipe.gap, paddingBottom: metrics.paddingBottom, paddingTop: metrics.paddingTop },
             style,
+            layoutStyle,
         ], children: [descriptor.eyebrow ? (_jsx(Text, { style: { color: resolveColorReference(topRecipe.eyebrow.color, theme.palette) }, variant: topRecipe.eyebrow.textVariant, children: descriptor.eyebrow })) : null, _jsxs(View, { style: {
                     alignItems: stack ? "stretch" : "center",
                     flexDirection: stack ? "column" : "row",

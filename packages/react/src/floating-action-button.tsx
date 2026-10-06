@@ -10,6 +10,7 @@ import { assignRef, classNames } from "./internal.js";
 import { useOptionalHjmTheme } from "./provider.js";
 
 export { resolveFloatingActionButtonContentClearance };
+// No `layoutStyle`: fixed to the viewport corner with safe-area and content-clearance math the recipe owns; margins would desync `onContentClearanceChange`.
 export type FloatingActionButtonProps = Pick<ButtonProps, "onClick" | "onFocus" | "onBlur" | "id" | "className"> & Readonly<{
   descriptor: FloatingActionButtonDescriptor;
   renderIcon: (icon: Readonly<{ name: string; size: number; color: string; decorative: true }>) => ReactNode;

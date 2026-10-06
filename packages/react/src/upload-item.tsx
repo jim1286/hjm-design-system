@@ -8,6 +8,7 @@ import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
 
 import { Progress } from "./feedback.js";
 import { classNames } from "./internal.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type UploadItemProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> & Readonly<{
   descriptor: UploadItemDescriptor;
@@ -15,11 +16,13 @@ export type UploadItemProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> &
   onCancel?: (id: string) => void;
   onRetry?: (id: string) => void;
   leading?: ReactNode;
+  /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
 }>;
 
 /** One upload row whose available action is derived entirely from status. */
 export const UploadItem = forwardRef<HTMLDivElement, UploadItemProps>(function UploadItem(
-  { descriptor, labels, onCancel, onRetry, leading, className, ...props },
+  { descriptor, labels, onCancel, onRetry, leading, className, layoutStyle, ...props },
   ref,
 ) {
   const announcement = resolveUploadItemAnnouncement(descriptor, labels);
@@ -39,6 +42,7 @@ export const UploadItem = forwardRef<HTMLDivElement, UploadItemProps>(function U
   return (
     <div
       {...props}
+      style={{ ...props.style, ...layoutStyle }}
       ref={ref}
       aria-label={announcement.label}
       className={classNames("hjm-upload-item", className)}

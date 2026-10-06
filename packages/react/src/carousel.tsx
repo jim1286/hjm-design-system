@@ -8,6 +8,7 @@ import { Button } from "./actions.js";
 import { isLargeTextScale } from "@hjmds/design-contracts/components/design-system-provider";
 import { classNames, useControllableState } from "./internal.js";
 import { useOptionalHjmTheme } from "./provider.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type CarouselLabels = Readonly<{ previous: string; next: string; pause: string; resume: string; navigation: string }>;
 export type CarouselProps = Omit<HTMLAttributes<HTMLDivElement>, "children" | "onChange"> & CarouselSelection & Readonly<{
@@ -17,13 +18,15 @@ export type CarouselProps = Omit<HTMLAttributes<HTMLDivElement>, "children" | "o
   composeAccessibleName: ComposeCarouselAccessibleName;
   labels: CarouselLabels;
   autoplay?: CarouselAutoplayConfig;
+  /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
 }>;
 
 /** Finite keyed cards. Hidden slides stay mounted but cannot receive focus. */
 export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carousel({
   label, slides, renderSlide, composeAccessibleName, labels, autoplay,
   currentKey, defaultCurrentKey, onCurrentKeyChange, className,
-  onFocusCapture, onMouseEnter, onMouseLeave, onKeyDown, ...props
+  onFocusCapture, onMouseEnter, onMouseLeave, onKeyDown, layoutStyle, ...props
 }, ref) {
   const theme = useOptionalHjmTheme();
   const [current, setCurrent] = useControllableState({
@@ -56,7 +59,7 @@ export const Carousel = forwardRef<HTMLDivElement, CarouselProps>(function Carou
   function select(key: string) { setRotating(false); if (key !== current) setCurrent(key); }
   function move(intent: "next" | "previous") { select(getCarouselNavigationTarget(descriptor, intent)); }
   const rotationRequested = rotating && !last && !theme?.environment.reducedMotion;
-  return <div {...props} ref={ref} role="region" aria-label={label} aria-roledescription="carousel"
+  return <div {...props} style={{ ...props.style, ...layoutStyle }} ref={ref} role="region" aria-label={label} aria-roledescription="carousel"
     className={classNames("hjm-carousel", className)} data-large-text={isLargeTextScale(theme?.environment.textScale ?? 1)}
     onFocusCapture={(event) => {
       // APG: leaving focus must not silently restart rotation. Explicit resume is required.

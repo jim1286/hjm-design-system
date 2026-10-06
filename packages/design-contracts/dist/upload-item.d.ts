@@ -73,6 +73,11 @@ export declare const uploadItemRecipe: {
     readonly row: {
         readonly minHeight: 68;
         readonly paddingHorizontal: 16;
+        /**
+         * Added 2026-10-06: Native hard-coded 8 and Web used 12 with a 64px floor, so the same row
+         * measured 68 on Native and 64-ish+ on Web. One value now drives both renderers.
+         */
+        readonly paddingVertical: 8;
         readonly gap: 12;
         readonly radius: "md";
     };

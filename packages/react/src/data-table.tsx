@@ -15,9 +15,10 @@ import {
   type DataTableSortCycle,
   type DataTableSortState,
 } from "@hjmds/design-contracts/components/data-table";
-import { forwardRef, type CSSProperties, type ReactNode } from "react";
+import { forwardRef, useState, type CSSProperties, type ReactNode } from "react";
 import { useHjmDensityDefault } from "./provider.js";
 import { classNames } from "./internal.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type DataTableLabels = Readonly<{
   /** Accessible name for the table itself. */
@@ -43,7 +44,20 @@ export type DataTableProps<ColumnKey extends string = string, RowKey extends str
   /** Composed beneath the table by the product — pagination, load more, totals. */
   footer?: ReactNode;
   className?: string;
+  /** Canonical layout-only placement on the root wrapper. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
 }>;
+
+function selectedRowKeysFrom<RowKey extends string>(
+  selection: DataTableSelection<RowKey> | undefined,
+): ReadonlySet<RowKey> {
+  if (!selection || selection.mode === "none") return new Set<RowKey>();
+  if (selection.mode === "single") {
+    const key = selection.selectedKey ?? selection.defaultSelectedKey ?? null;
+    return key === null ? new Set<RowKey>() : new Set<RowKey>([key]);
+  }
+  return selection.selectedKeys ?? selection.defaultSelectedKeys ?? new Set<RowKey>();
+}
 
 export const DataTable = forwardRef(function DataTable<
   ColumnKey extends string = string,
@@ -62,6 +76,7 @@ export const DataTable = forwardRef(function DataTable<
     density: densityProp,
     footer,
     className,
+    layoutStyle,
   }: DataTableProps<ColumnKey, RowKey>,
   forwardedRef: React.Ref<HTMLTableElement>,
 ) {
@@ -73,25 +88,34 @@ export const DataTable = forwardRef(function DataTable<
   validateDataTableSortState(sortState, columns);
   const multiple = selection?.mode === "multiple";
   const single = selection?.mode === "single";
-  const selectedKeys: ReadonlySet<RowKey> = multiple
-    ? selection.selectedKeys ?? selection.defaultSelectedKeys ?? new Set<RowKey>()
-    : single
-      ? new Set<RowKey>(((selection.selectedKey ?? selection.defaultSelectedKey) ?? null) === null
-        ? []
-        : [(selection.selectedKey ?? selection.defaultSelectedKey)!])
-      : new Set<RowKey>();
+  // `defaultSelectedKey(s)` used to be re-read on every render, so an
+  // uncontrolled table reported the click to `onSelectionChange` but kept showing
+  // the default (same defect and fix as Tree, 2026-10-06). The uncontrolled value
+  // lives in state; a controlled `selectedKey(s)` (including `null`) still wins.
+  const selectionControlled = single
+    ? selection.selectedKey !== undefined
+    : multiple ? selection.selectedKeys !== undefined : true;
+  const [uncontrolledKeys, setUncontrolledKeys] = useState<ReadonlySet<RowKey>>(() => selectedRowKeysFrom(selection));
+  const selectedKeys: ReadonlySet<RowKey> = selectionControlled
+    ? selectedRowKeysFrom(selection)
+    : uncontrolledKeys;
+  const commitSelection = (next: ReadonlySet<RowKey>) => {
+    if (!selectionControlled) setUncontrolledKeys(next);
+  };
   const selectAllState = multiple ? resolveDataTableSelectAllState(rows, selectedKeys) : false;
 
   const toggleRow = (row: DataTableRowDescriptor<RowKey>) => {
     if (row.disabled || !selection || selection.mode === "none") return;
     if (selection.mode === "single") {
-      const current = selection.selectedKey ?? selection.defaultSelectedKey ?? null;
+      const current = selectedKeys.has(row.id) ? row.id : null;
       const next = current === row.id && selection.disallowEmptySelection !== true ? null : row.id;
+      commitSelection(next === null ? new Set<RowKey>() : new Set<RowKey>([next]));
       selection.onSelectionChange?.(next);
       return;
     }
     const next = new Set(selectedKeys);
     if (next.has(row.id)) next.delete(row.id); else next.add(row.id);
+    commitSelection(next);
     selection.onSelectionChange?.(next);
   };
   const toggleAll = () => {
@@ -102,11 +126,12 @@ export const DataTable = forwardRef(function DataTable<
     const next = selectAllState === true
       ? new Set([...selectedKeys].filter((id) => !selectable.some((row) => row.id === id)))
       : new Set([...selectedKeys, ...selectable.map((row) => row.id)]);
+    commitSelection(next);
     selection.onSelectionChange?.(next);
   };
 
   return (
-    <div className={classNames("hjm-data-table", className)} data-density={density}>
+    <div className={classNames("hjm-data-table", className)} style={layoutStyle} data-density={density}>
       {asyncState.status === "idle" ? null : (
         <p className="hjm-data-table__state" role={asyncState.status === "error" ? "alert" : "status"}>{asyncState.message}</p>
       )}

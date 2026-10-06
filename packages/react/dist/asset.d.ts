@@ -1,5 +1,6 @@
 import { type AssetDescriptor } from "@hjmds/design-contracts/components/asset";
 import { type ReactNode } from "react";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type AssetProps = Readonly<{
     descriptor: AssetDescriptor;
     /**
@@ -13,6 +14,8 @@ export type AssetProps = Readonly<{
     /** A small mark on the frame's outer corner (play, status dot). */
     accessory?: ReactNode;
     className?: string;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 export declare const Asset: import("react").ForwardRefExoticComponent<Readonly<{
     descriptor: AssetDescriptor;
@@ -27,6 +30,8 @@ export declare const Asset: import("react").ForwardRefExoticComponent<Readonly<{
     /** A small mark on the frame's outer corner (play, status dot). */
     accessory?: ReactNode;
     className?: string;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }> & import("react").RefAttributes<HTMLDivElement>>;
 export type AssetGroupProps = Readonly<{
     /** Accessible name for the group; the overlap alone does not say what it is. */
@@ -34,7 +39,9 @@ export type AssetGroupProps = Readonly<{
     size?: AssetDescriptor["size"];
     children: ReactNode;
     className?: string;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** Overlaps assets with the same ratio Avatar uses — they share a row on purpose. */
-export declare function AssetGroup({ label, size, children, className }: AssetGroupProps): import("react").JSX.Element;
+export declare function AssetGroup({ label, size, children, className, layoutStyle }: AssetGroupProps): import("react").JSX.Element;
 //# sourceMappingURL=asset.d.ts.map

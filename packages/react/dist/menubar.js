@@ -1,9 +1,10 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { layer } from "@hjmds/design-contracts/foundations";
 import { menubarRecipe, resolveMenubarNavigation, validateMenubarDescriptor, } from "@hjmds/design-contracts/components/menubar";
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { classNames, useControllableState } from "./internal.js";
 import { AnchoredPortal, useAnchoredPopup } from "./portal.js";
-export function Menubar({ descriptor, openMenuId: controlledOpen, defaultOpenMenuId, onOpenMenuIdChange, onAction, className, }) {
+export function Menubar({ descriptor, openMenuId: controlledOpen, defaultOpenMenuId, onOpenMenuIdChange, onAction, className, layoutStyle, }) {
     validateMenubarDescriptor(descriptor);
     const [openId, setOpenId] = useControllableState({
         ...(controlledOpen === undefined ? {} : { value: controlledOpen }),
@@ -26,7 +27,7 @@ export function Menubar({ descriptor, openMenuId: controlledOpen, defaultOpenMen
     const [panelNode, setPanelNode] = useState(null);
     const setPanelRef = useCallback((node) => setPanelNode(node), []);
     const openLabelRef = useMemo(() => ({ get current() { return openId === null ? null : labelRefs.current.get(openId) ?? null; } }), [openId]);
-    const panelPosition = useAnchoredPopup(openLabelRef, panelNode, { gap: 0, zIndex: 900 });
+    const panelPosition = useAnchoredPopup(openLabelRef, panelNode, { gap: 0, zIndex: layer.dropdown });
     useEffect(() => {
         if (openId === null)
             return;
@@ -52,7 +53,7 @@ export function Menubar({ descriptor, openMenuId: controlledOpen, defaultOpenMen
             setActiveItemIndex(0);
         }
     };
-    return (_jsx("div", { ref: rootRef, role: "menubar", "aria-label": descriptor.accessibilityLabel, className: classNames("hjm-menubar", className), style: {
+    return (_jsx("div", { ref: rootRef, role: "menubar", "aria-label": descriptor.accessibilityLabel, className: classNames("hjm-menubar", className), style: { ...layoutStyle,
             "--hjm-menubar-min-height": `${menubarRecipe.minHeight}px`,
             "--hjm-menubar-gap": `${menubarRecipe.gap}px`,
             "--hjm-menubar-padding": `${menubarRecipe.paddingHorizontal}px`,

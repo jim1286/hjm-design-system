@@ -3,6 +3,7 @@ import { type DatePickerDescriptor, type DatePickerSize } from "@hjmds/design-co
 import { type ReactNode } from "react";
 import { type StyleProp, type ViewStyle } from "react-native";
 import { type SheetProps } from "./overlays.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type DatePickerMonthAction = Readonly<{
     month: string;
     label: string;
@@ -25,8 +26,14 @@ export type DatePickerProps<Content = unknown> = Readonly<{
      * (2026-09-30 audit). Defaults to the HjmNativeProvider insets like Sheet.
      */
     safeAreaInsets?: SheetProps["safeAreaInsets"];
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
+    /**
+     * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement;
+     * the field recipe (`size`) owns appearance. Removed in the next major (consumer-policy.md §3.1).
+     */
     style?: StyleProp<ViewStyle>;
 }>;
 /** Native single-date trigger backed by the canonical Sheet overlay. */
-export declare function DatePicker<Content>({ descriptor, monthLabel, composeAccessibleName, previousMonth, nextMonth, clearLabel, closeLabel, size, description, error, renderCellContent, safeAreaInsets, style, }: DatePickerProps<Content>): import("react").JSX.Element;
+export declare function DatePicker<Content>({ descriptor, monthLabel, composeAccessibleName, previousMonth, nextMonth, clearLabel, closeLabel, size, description, error, renderCellContent, safeAreaInsets, layoutStyle, style, }: DatePickerProps<Content>): import("react").JSX.Element;
 //# sourceMappingURL=date-picker.d.ts.map

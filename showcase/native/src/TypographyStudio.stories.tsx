@@ -53,7 +53,7 @@ function TypographyStudio() {
     <Text tone="muted">폰트 등록이 끝난 뒤에만 비교 서체를 표시해요. 초기화하면 기본 서체로 돌아가며, 등록된 폰트는 앱을 종료할 때까지 유지됩니다.</Text>
   </Stack></ScrollView>;
 }
-const meta = { title: "배포/토큰/글꼴 편집", component: TypographyStudio } satisfies Meta<typeof TypographyStudio>;
+const meta = { title: "배포/토큰/편집 도구/글꼴 편집", component: TypographyStudio } satisfies Meta<typeof TypographyStudio>;
 export default meta;
 export const Default: StoryObj<typeof meta> = { name: "기본",};
 export const Dark: StoryObj<typeof meta> = { name: "어두운 테마", globals: { theme: "dark" } };

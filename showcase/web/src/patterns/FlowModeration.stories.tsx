@@ -1,0 +1,11 @@
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { ModerationFlowPreview } from "./screen-flow-previews";
+const meta = { id: "screen-flow-moderation", title: "배포/화면/소통/신고와 차단", component: ModerationFlowPreview } satisfies Meta<typeof ModerationFlowPreview>;
+export default meta;
+type Story = StoryObj<typeof meta>;
+export const Default: Story = { name: "기본" };
+export const Loading: Story = { name: "불러오는 중", args: {stateKind:"loading"} };
+export const Error: Story = { name: "오류", args: {stateKind:"error"} };
+export const Dark: Story = { name: "어두운 테마", globals: {theme:"dark"} };
+export const LargeText: Story = { name: "큰 글자", globals: {textScale:"2"} };
+export const Recovery: Story = { name: "실패와 복구", args: {tools:true} };

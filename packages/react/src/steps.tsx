@@ -8,6 +8,7 @@ import {
 import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
 
 import { classNames } from "./internal.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type StepsProps<Id extends string = string> = Omit<
   HTMLAttributes<HTMLOListElement>,
@@ -17,16 +18,18 @@ export type StepsProps<Id extends string = string> = Omit<
   statusLabels: StepsStatusLabels;
   composeAccessibleName: ComposeStepsAccessibleName;
   renderMark?: (status: StepStatus, position: number) => ReactNode;
+  /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
 }>;
 
 /** Linear, read-only progress steps with one canonical cursor. */
 export const Steps = forwardRef<HTMLOListElement, StepsProps>(function Steps(
-  { descriptor, statusLabels, composeAccessibleName, renderMark, className, ...props },
+  { descriptor, statusLabels, composeAccessibleName, renderMark, className, layoutStyle, ...props },
   ref,
 ) {
   const steps = resolveStepsDescriptor(descriptor, { statusLabels, composeAccessibleName });
   return (
-    <ol {...props} ref={ref} className={classNames("hjm-steps", className)}>
+    <ol {...props} style={{ ...props.style, ...layoutStyle }} ref={ref} className={classNames("hjm-steps", className)}>
       {steps.map((step, index) => (
         <li
           aria-label={step.accessibleName}

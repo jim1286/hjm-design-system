@@ -43,6 +43,10 @@ it("exposes a separator whose orientation is perpendicular to the pane axis", as
   expect(separator().getAttribute("aria-valuemax")).toBe("80");
   expect(separator().getAttribute("aria-valuetext")).toBe("40%");
   expect(separator().tabIndex).toBe(0);
+  // Short content does not scroll, so neither pane adds a dead Tab stop.
+  for (const pane of document.querySelectorAll<HTMLElement>(".hjm-splitter__pane")) {
+    expect(pane.hasAttribute("tabindex")).toBe(false);
+  }
   // Thin visible line inside a 44px hit target, as the recipe splits them.
   expect(Math.round(separator().getBoundingClientRect().width)).toBe(44);
   expect(Math.round(document.querySelector<HTMLElement>(".hjm-splitter__handle")!.getBoundingClientRect().width)).toBe(1);
@@ -125,4 +129,21 @@ it("ignores pointer and keyboard resize while disabled and stays out of the tab 
   await pointer("pointermove", box.left + box.width * 0.8);
   expect(separator().getAttribute("aria-valuenow")).toBe("40");
   expect(change).not.toHaveBeenCalled();
+});
+
+it("adds a pane Tab stop only while the pane overflows, so its content stays keyboard-scrollable", async () => {
+  const long = <div>{Array.from({ length: 60 }, (_, index) => <p key={index}>줄 {index}</p>)}</div>;
+  function Growing() {
+    const [rows, setRows] = useState(false);
+    return <><button type="button" onClick={() => setRows(true)}>늘리기</button><Fixture primaryPane={rows ? long : <p>목록</p>} /></>;
+  }
+  await act(async () => root.render(<Growing />));
+  await expect.poll(() => primary().hasAttribute("tabindex")).toBe(false);
+  // Content growth without a pane resize must still be noticed.
+  await act(async () => document.querySelector<HTMLButtonElement>("button")!.click());
+  await expect.poll(() => primary().tabIndex).toBe(0);
+  expect(document.querySelector<HTMLElement>('[data-pane="secondary"]')!.hasAttribute("tabindex")).toBe(false);
+  primary().focus();
+  await act(async () => userEvent.tab());
+  expect(document.activeElement).toBe(separator());
 });

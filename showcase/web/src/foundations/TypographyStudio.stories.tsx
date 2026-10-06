@@ -23,7 +23,7 @@ function TypographyStudio(){
  <Button onClick={clear}>{copy.reset}</Button><Text tone="muted">{copy.scope}</Text><CodeBlock label="서체 후보 설정" code={JSON.stringify({fileName,source,license,status,fallback:"system-ui, sans-serif"},null,2)} wrap/>
  </Stack></main>;
 }
-const meta={ includeStories: ["Default","Dark","LargeText"],id: "foundations-typography-studio", title: "배포/토큰/글꼴 편집",component:TypographyStudio} satisfies Meta<typeof TypographyStudio>;export default meta;type Story=StoryObj<typeof meta>;
+const meta={ includeStories: ["Default","Dark","LargeText"],id: "foundations-typography-studio", title: "배포/토큰/편집 도구/글꼴 편집",component:TypographyStudio} satisfies Meta<typeof TypographyStudio>;export default meta;type Story=StoryObj<typeof meta>;
 export const Default: Story = { name: "기본",};
 export const Dark: Story = { name: "어두운 테마",globals:{theme:"dark"}};
 export const LargeText: Story = { name: "큰 글자",globals:{textScale:"2"}};

@@ -19,29 +19,35 @@ const toneGlyphPaths = {
 function ToneGlyph({ tone }) {
     return (_jsx("svg", { viewBox: "0 0 24 24", width: "18", height: "18", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", focusable: "false", children: _jsx("path", { d: toneGlyphPaths[toastRecipe.tones[tone].mark] }) }));
 }
-const ToastCard = forwardRef(function ToastCard({ descriptor, phase, onAction, onDismiss, onPointerPause, onPointerResume, onFocusPause, onFocusResume, locale, className, }, ref) {
+const ToastCard = forwardRef(function ToastCard({ descriptor, phase, onAction, onDismiss, onPointerPause, onPointerResume, onFocusPause, onFocusResume, locale, className, htmlProps, }, ref) {
     const baseId = useId().replaceAll(":", "");
     const titleId = `${baseId}-toast-title`;
     const descriptionId = `${baseId}-toast-description`;
     const handleKeyDown = (event) => {
+        htmlProps?.onKeyDown?.(event);
         if (event.key === "Escape") {
             event.preventDefault();
             onDismiss("escape");
         }
     };
-    return (_jsxs("div", { ref: ref, className: classNames("hjm-toast", className), "data-tone": descriptor.tone, "data-state": phase, lang: locale, role: "group", "aria-labelledby": descriptor.title ? titleId : undefined, "aria-describedby": descriptionId, onPointerEnter: onPointerPause, onPointerLeave: onPointerResume, onFocusCapture: onFocusPause, onBlurCapture: (event) => {
+    return (_jsxs("div", { ...htmlProps, ref: ref, className: classNames("hjm-toast", className), "data-tone": descriptor.tone, "data-state": phase, lang: locale ?? htmlProps?.lang, role: "group", "aria-labelledby": descriptor.title ? titleId : undefined, "aria-describedby": descriptionId, onPointerEnter: (event) => { htmlProps?.onPointerEnter?.(event); onPointerPause?.(); }, onPointerLeave: (event) => { htmlProps?.onPointerLeave?.(event); onPointerResume?.(); }, onFocusCapture: (event) => { htmlProps?.onFocusCapture?.(event); onFocusPause?.(); }, onBlurCapture: (event) => {
+            htmlProps?.onBlurCapture?.(event);
             if (!event.currentTarget.contains(event.relatedTarget))
                 onFocusResume?.();
         }, onKeyDown: handleKeyDown, children: [_jsx("span", { className: "hjm-visually-hidden", role: descriptor.priority === "high" ? "alert" : "status", children: descriptor.announcement }), _jsx("span", { className: "hjm-toast__tone-mark", "aria-hidden": "true" }), _jsx("span", { className: "hjm-toast__icon", "aria-hidden": "true", children: _jsx(ToneGlyph, { tone: descriptor.tone }) }), _jsxs("span", { className: "hjm-toast__content", children: [descriptor.title ? (_jsx("strong", { id: titleId, className: "hjm-toast__title", children: descriptor.title })) : null, _jsx("span", { id: descriptionId, className: "hjm-toast__description", children: descriptor.description })] }), descriptor.action ? (_jsx("button", { type: "button", className: "hjm-toast__action", "aria-label": descriptor.action.accessibilityLabel, onClick: onAction, children: descriptor.action.label })) : null, _jsx("button", { type: "button", className: "hjm-toast__close", "aria-label": descriptor.closeLabel, onClick: () => onDismiss("close-action"), children: _jsx("svg", { "aria-hidden": "true", viewBox: "0 0 24 24", width: "16", height: "16", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", focusable: "false", children: _jsx("path", { d: "M18 6 6 18M6 6l12 12" }) }) })] }));
 });
 /** Controlled single-toast renderer; ToastProvider supplies the full FIFO lifecycle. */
-export const Toast = forwardRef(function Toast({ descriptor, onDismissRequest, className }, ref) {
+export const Toast = forwardRef(function Toast(
+// Until 2026-10-06 only `className` reached the DOM although the type accepts every div attribute,
+// so `id`, `data-*` and handlers were dropped silently. Narrowing the type instead would break
+// consumers that already pass them, so the rest is forwarded (the card keeps its own role/labelling).
+{ descriptor, onDismissRequest, className, ...htmlProps }, ref) {
     const resolved = resolveToastDescriptor(descriptor);
     const actionInvokedRef = useRef(false);
     useEffect(() => {
         actionInvokedRef.current = false;
     }, [descriptor]);
-    return (_jsx(ToastCard, { ref: ref, descriptor: resolved, phase: "visible", ...(className === undefined ? {} : { className }), onDismiss: onDismissRequest, onAction: () => {
+    return (_jsx(ToastCard, { ref: ref, descriptor: resolved, phase: "visible", ...(className === undefined ? {} : { className }), htmlProps: htmlProps, onDismiss: onDismissRequest, onAction: () => {
             const action = resolved.action;
             if (!action || actionInvokedRef.current)
                 return;

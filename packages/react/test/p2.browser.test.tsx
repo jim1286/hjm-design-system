@@ -36,6 +36,7 @@ it("shows a dot badge only with a name, because the dot carries the meaning", as
     </HjmProvider>,
   ));
   const badge = document.querySelector<HTMLElement>(".hjm-counter-badge")!;
+  expect(badge.getAttribute("role")).toBe("img");
   expect(badge.textContent).toBe("");
   expect(badge.getAttribute("aria-label")).toBe("읽지 않은 알림 있음");
   expect(Math.round(badge.getBoundingClientRect().width)).toBe(8);

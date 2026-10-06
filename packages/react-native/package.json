@@ -453,6 +453,24 @@
       "react-native": "./dist/navigation-bar.js",
       "import": "./dist/navigation-bar.js",
       "default": "./dist/navigation-bar.js"
+    },
+    "./screens": {
+      "types": "./dist/screens.d.ts",
+      "react-native": "./dist/screens.js",
+      "import": "./dist/screens.js",
+      "default": "./dist/screens.js"
+    },
+    "./screen-flows": {
+      "types": "./dist/screen-flows.d.ts",
+      "react-native": "./dist/screen-flows.js",
+      "import": "./dist/screen-flows.js",
+      "default": "./dist/screen-flows.js"
+    },
+    "./saved-items": {
+      "types": "./dist/saved-items.d.ts",
+      "react-native": "./dist/saved-items.js",
+      "import": "./dist/saved-items.js",
+      "default": "./dist/saved-items.js"
     }
   },
   "files": [
@@ -471,7 +489,7 @@
   },
   "peerDependencies": {
     "@gorhom/bottom-sheet": "5.2.14",
-    "@hjmds/design-contracts": ">=1.12.0 <1.13.0",
+    "@hjmds/design-contracts": ">=1.13.0 <1.14.0",
     "@react-native-menu/menu": "1.2.2",
     "@shopify/react-native-skia": "^2.6.2",
     "react": ">=19",

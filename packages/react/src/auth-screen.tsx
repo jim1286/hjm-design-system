@@ -4,6 +4,7 @@ import {
 } from "@hjmds/design-contracts/components/auth-screen";
 import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
 import { classNames } from "./internal.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type AuthScreenLayoutProps = Omit<HTMLAttributes<HTMLElement>, "children"> &
   AuthScreenDescriptor &
@@ -21,6 +22,8 @@ export type AuthScreenLayoutProps = Omit<HTMLAttributes<HTMLElement>, "children"
     /** Consent notice and policy links. Omit with `hasFooter: false`. */
     footer?: ReactNode;
     className?: string;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
   }>;
 
 /**
@@ -30,7 +33,7 @@ export type AuthScreenLayoutProps = Omit<HTMLAttributes<HTMLElement>, "children"
  */
 export const AuthScreenLayout = forwardRef<HTMLElement, AuthScreenLayoutProps>(
   function AuthScreenLayout(
-    { hero, main, footer, density, hasFooter, pendingLabel, mainCard = false, className, as: Element = "main", ...props },
+    { hero, main, footer, density, hasFooter, pendingLabel, mainCard = false, className, as: Element = "main", layoutStyle, ...props },
     forwardedRef,
   ) {
     const resolved = resolveAuthScreenDescriptor({
@@ -54,6 +57,7 @@ export const AuthScreenLayout = forwardRef<HTMLElement, AuthScreenLayoutProps>(
           ["--hjm-auth-screen-padding-inline" as string]: `${resolved.paddingInline}px`,
           ["--hjm-auth-screen-padding-block" as string]: `${resolved.paddingBlock}px`,
           ...props.style,
+          ...layoutStyle,
         }}
       >
         <div className="hjm-auth-screen__block">

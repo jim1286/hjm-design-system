@@ -57,6 +57,8 @@ describe("PasswordField", () => {
     expect(input.type).toBe("password");
     expect(input.autocomplete).toBe("current-password");
     expect(toggle.getAttribute("aria-label")).toBe("Show password");
+    // A plain action button: the name carries the next action, not a pressed state.
+    expect(toggle.hasAttribute("aria-pressed")).toBe(false);
 
     await act(async () => toggle.click());
 
@@ -65,6 +67,7 @@ describe("PasswordField", () => {
     expect(input.selectionStart).toBe(2);
     expect(input.selectionEnd).toBe(7);
     expect(toggle.getAttribute("aria-label")).toBe("Hide password");
+    expect(toggle.hasAttribute("aria-pressed")).toBe(false);
     expect(onRevealedChange).toHaveBeenLastCalledWith(true);
     expect(onValueChange).not.toHaveBeenCalled();
   });

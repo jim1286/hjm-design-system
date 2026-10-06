@@ -4,7 +4,7 @@ import {
   imageRecipe,
   nativeResizeModes,
 } from "@hjmds/design-contracts/components/image";
-import { control, glyph, radius, spacing } from "@hjmds/design-contracts/foundations";
+import { control, glyph, radius, shadow, spacing } from "@hjmds/design-contracts/foundations";
 import { buttonRecipe } from "@hjmds/design-contracts/recipes/base";
 import { iconButtonRecipe } from "@hjmds/design-contracts/recipes";
 import {
@@ -470,7 +470,8 @@ describe("minimumVisualTarget control geometry", () => {
   it("raises compact Button and Chip to the visible touch target when the axis is on", () => {
     const style = pressableStyle(byLabel(render(<Button size="small">Compact</Button>, strictValue), "Compact"));
     expect(style.minHeight).toBe(control.minTouchTarget);
-    expect(style.height).toBe(control.minTouchTarget);
+    // Visible target is a minimum; a translated or enlarged label may need more height.
+    expect(style.height).toBeUndefined();
     // Padding, color and radius still belong to the compact recipe.
     expect(style.paddingHorizontal).toBe(buttonRecipe.sizes.small.paddingHorizontal);
     expect(pressableStyle(byLabel(render(<Chip label="Tag" onPress={() => undefined} selected={false} selectionMode="single" size="small" />, strictValue), "Tag")).height)
@@ -513,6 +514,22 @@ describe("Recipe axes that replace product style overrides", () => {
     const base = render(<Button>Base</Button>);
     expect(pressableStyleOf(byLabel(base, "Base")).borderRadius).toBe(radius.md);
     expect(pressableStyleOf(byLabel(base, "Base")).justifyContent).toBe("center");
+  });
+
+  it.each([1, 2])("lets wrapped Button copy grow at text scale %s without changing its loading footprint", (textScale) => {
+    const value = resolveDesignSystemProviderValue({ textScale, theme: "light" }, { systemTheme: "light" });
+    const label = "변경한 설정을 확인하고 다음 단계로 이동하기";
+    for (const loading of [false, true]) {
+      const rendered = render(<Button loading={loading} fullWidth>{label}</Button>, value);
+      const frame = pressableStyleOf(byLabel(rendered, label));
+      expect(frame.height).toBeUndefined();
+      expect(frame.minHeight).toBe(control.buttonHeight.medium);
+      const text = copy(rendered, label);
+      // A row child without shrinking can overflow rather than wrap, even with no height cap.
+      expect(flattenStyle(text.props.style)).toMatchObject({ flexShrink: 1, minWidth: 0 });
+      expect(text.props.numberOfLines).toBe(textScale === 2 ? undefined : buttonRecipe.label.maxLines);
+      expect(flattenStyle(text.props.style).opacity).toBe(loading ? 0 : undefined);
+    }
   });
 
   it("frames the ListRow leading slot from the recipe instead of product styles", () => {
@@ -565,6 +582,7 @@ describe("Recipe axes that replace product style overrides", () => {
     expect(flattenStyle(flat.root.findByProps({ testID: "child" }).parent!.parent!.props.style).overflow)
       .toBe("hidden");
     const raised = render(<Surface tone="raised"><View testID="raised-child" /></Surface>);
+    expect(flattenStyle(raised.root.findByProps({ testID: "raised-child" }).parent!.parent!.props.style)).toMatchObject({ shadowColor: shadow.floating.color, shadowOpacity: shadow.floating.opacity, shadowRadius: shadow.floating.radius, shadowOffset: { width: 0, height: shadow.floating.offsetY } });
     expect(
       flattenStyle(raised.root.findByProps({ testID: "raised-child" }).parent!.parent!.props.style).overflow,
     ).toBe("visible");
@@ -1162,5 +1180,20 @@ describe("Skeleton pulse", () => {
       height: 88,
       width: "68%",
     });
+  });
+});
+
+describe("Button mixed text children", () => {
+  it("joins string and number children into one wrapped Text label and accessible name", () => {
+    const count = 3;
+    // `{count}개 공유` is an array of children; rendering it bare inside Pressable crashes on device.
+    const renderer = render(<Button>{count}개 공유</Button>);
+    expect(copy(renderer, "3개 공유")).toBeDefined();
+    expect(byLabel(renderer, "3개 공유")).toBeDefined();
+  });
+
+  it("keeps element children as-is", () => {
+    const renderer = render(<Button accessibilityLabel="아이콘과 글자"><View />{"글자"}</Button>);
+    expect(byLabel(renderer, "아이콘과 글자")).toBeDefined();
   });
 });

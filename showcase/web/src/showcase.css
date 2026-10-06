@@ -60,6 +60,11 @@ textarea {
 .hjm-page {
   width: min(100%, var(--hjm-layout-content-max-width));
   margin-inline: auto;
+  /* Page chrome carries API names ("DesignSystemProvider") and Latin·dot runs ("Google·Kakao·Naver·Apple") with no break
+     opportunity; at the 2x LargeText global they pushed 16 story pages up to 290px past a 390 viewport (2026-10-06 render
+     sweep). break-word only breaks when a line would overflow and leaves min-content sizing alone, unlike `anywhere`,
+     so component layouts inside the page are unaffected. */
+  overflow-wrap: break-word;
 }
 
 .hjm-eyebrow {
@@ -401,7 +406,9 @@ textarea {
 /* Reference concepts and roadmap decisions */
 .hjm-roadmap-callout {
   display: grid;
-  grid-template-columns: auto 1fr;
+  /* minmax(0, 1fr): a bare 1fr keeps the summary's min-content width, so a Latin·dot run with no break opportunity
+     pushed the callout past a 390 viewport at 2x text (2026-10-06 render sweep). */
+  grid-template-columns: auto minmax(0, 1fr);
   gap: calc(var(--hjm-space-xxs) + var(--hjm-stroke-strong)) calc(var(--hjm-space-sm) + var(--hjm-stroke-strong));
   align-items: center;
   margin-block-start: var(--hjm-space-xl);

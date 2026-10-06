@@ -2,6 +2,7 @@ import { type ComposeCalendarAccessibleName, type ResolvedCalendarDateCell } fro
 import { type DatePickerDescriptor, type DatePickerSize } from "@hjmds/design-contracts/components/date-picker";
 import { type ReactNode } from "react";
 import { type CalendarOverflow, type CalendarHandle } from "./calendar.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type DatePickerMonthAction = Readonly<{
     month: string;
     label: string;
@@ -20,7 +21,9 @@ export type DatePickerProps<Content = unknown> = Readonly<{
     onNavigateBeyondGrid?: (detail: CalendarOverflow, focusDate: CalendarHandle["focusDate"]) => void;
     renderCellContent?: (cell: ResolvedCalendarDateCell<Content>) => ReactNode;
     className?: string;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** Single-date field with an anchored, focus-bearing calendar dialog. */
-export declare function DatePicker<Content>({ descriptor, monthLabel, composeAccessibleName, previousMonth, nextMonth, clearLabel, closeLabel, size, description, error, renderCellContent, onNavigateBeyondGrid, className, }: DatePickerProps<Content>): import("react").JSX.Element;
+export declare function DatePicker<Content>({ descriptor, monthLabel, composeAccessibleName, previousMonth, nextMonth, clearLabel, closeLabel, size, description, error, renderCellContent, onNavigateBeyondGrid, className, layoutStyle, }: DatePickerProps<Content>): import("react").JSX.Element;
 //# sourceMappingURL=date-picker.d.ts.map

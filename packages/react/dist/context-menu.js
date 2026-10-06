@@ -6,7 +6,7 @@ import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState, } fro
 import { classNames } from "./internal.js";
 import { HjmPortal, getModalLayer } from "./modal.js";
 const longPressDelay = 500;
-export function ContextMenu({ children, items, accessibilityLabel, onAction, className, }) {
+export function ContextMenu({ children, items, accessibilityLabel, onAction, className, layoutStyle, }) {
     const hostRef = useRef(null);
     const menuRef = useRef(null);
     const [menuMounted, setMenuMounted] = useState(false);
@@ -101,7 +101,7 @@ export function ContextMenu({ children, items, accessibilityLabel, onAction, cla
             document.removeEventListener("pointerdown", onPointerDown);
         };
     }, [anchor, activeIndex, enabled, onAction]);
-    return (_jsxs("div", { ref: hostRef, tabIndex: 0, className: classNames("hjm-context-menu-host", className), onContextMenu: (event) => {
+    return (_jsxs("div", { ref: hostRef, tabIndex: 0, className: classNames("hjm-context-menu-host", className), style: layoutStyle, onContextMenu: (event) => {
             event.preventDefault();
             open("pointer", { x: event.clientX, y: event.clientY });
         }, onKeyDown: (event) => {

@@ -48,6 +48,13 @@
 `error=content.danger`이며, 어떤 상태도 색만으로 구분되지 않고 `statusText`
 슬롯의 문장이 항상 함께 있다.
 
+**진행률 단위.** `state.progress`는 Web/Native 모두 0–1 비율이다. 예를 들어 `0.64`는
+64%이며, 각 renderer가 내부 [[progress]]에 `value={64}`로 변환해 전달한다. Progress의
+기본 max가 100으로 통일돼도 이 descriptor 계약은 바뀌지 않는다. 2026-10-03 리포트 대조에서
+직접 Progress 호출의 이관과 이 합성 경계를 혼동할 위험을 확인해 명시했다. 제품에서 먼저
+100을 곱하는 대안은 내부 변환과 중복되므로 사용하지 않는다. 측정값이 없으면 `null`을 주며
+임의의 백분율을 만들지 않는다.
+
 **플랫폼 번역.**
 
 - Web: 행을 `role="group"`으로 묶고 진행 막대는 `role="progressbar"`, 취소/재시도는

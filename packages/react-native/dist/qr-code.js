@@ -4,13 +4,13 @@ import { useMemo } from "react";
 import { createQRMatrix, qrPath, qrCodeRecipe } from "@hjmds/design-contracts/components/qr-code";
 import { View } from "react-native";
 import Svg, { Path, Rect } from "react-native-svg";
-export function QRCode({ value, label, size = 192, level = "M", fallback }) {
+export function QRCode({ value, label, size = 192, level = "M", fallback, layoutStyle }) {
     const matrix = useMemo(() => createQRMatrix(value, qrcode, level), [value, level]);
     const modules = matrix.count + matrix.quietZone * 2;
     if (!label.trim() || fallback == null || fallback === false || !Number.isFinite(size) || size < modules * qrCodeRecipe.minModuleSize)
         throw new TypeError("QRCode needs an accessible label, alternative action and at least two pixels per module");
     // Integer-sized modules plus a four-module white quiet zone preserve scan geometry in both themes.
     const actualSize = Math.floor(size / modules) * modules;
-    return _jsxs(View, { children: [_jsx(View, { accessible: true, accessibilityRole: "image", accessibilityLabel: label, children: _jsxs(Svg, { width: actualSize, height: actualSize, viewBox: `0 0 ${modules} ${modules}`, accessible: false, children: [_jsx(Rect, { width: modules, height: modules, fill: qrCodeRecipe.background }), _jsx(Path, { d: qrPath(matrix), fill: qrCodeRecipe.foreground })] }) }), fallback] });
+    return _jsxs(View, { style: layoutStyle, children: [_jsx(View, { accessible: true, accessibilityRole: "image", accessibilityLabel: label, children: _jsxs(Svg, { width: actualSize, height: actualSize, viewBox: `0 0 ${modules} ${modules}`, accessible: false, children: [_jsx(Rect, { width: modules, height: modules, fill: qrCodeRecipe.background }), _jsx(Path, { d: qrPath(matrix), fill: qrCodeRecipe.foreground })] }) }), fallback] });
 }
 //# sourceMappingURL=qr-code.js.map

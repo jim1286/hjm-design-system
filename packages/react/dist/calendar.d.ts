@@ -1,5 +1,6 @@
 import { type ReactNode, type Ref } from "react";
 import { type CalendarDescriptor, type CalendarSize, type CalendarNavigationIntent, type ComposeCalendarAccessibleName, type ResolvedCalendarDateCell } from "@hjmds/design-contracts/components/calendar";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type CalendarMonthAction = Readonly<{
     month: string;
     label: string;
@@ -24,7 +25,9 @@ export type CalendarProps<Content = unknown> = Readonly<{
     autoFocus?: boolean;
     className?: string;
     ref?: Ref<CalendarHandle>;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** Inline single-date grid shared with DatePicker; month data remains product-owned. */
-export declare function Calendar<Content>({ descriptor, composeAccessibleName, previousMonth, nextMonth, onNavigateBeyondGrid, renderCellContent, size, autoFocus, className, ref }: CalendarProps<Content>): import("react").JSX.Element;
+export declare function Calendar<Content>({ descriptor, composeAccessibleName, previousMonth, nextMonth, onNavigateBeyondGrid, renderCellContent, size, autoFocus, className, layoutStyle, ref }: CalendarProps<Content>): import("react").JSX.Element;
 //# sourceMappingURL=calendar.d.ts.map

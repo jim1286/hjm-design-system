@@ -4,7 +4,7 @@
 .hjm-profile-studio__intro { display: grid; gap: var(--hjm-space-sm); margin-block-end: var(--hjm-space-xxxl); }
 .hjm-profile-studio h2 { margin: 0; font-size: var(--hjm-type-heading-size); line-height: var(--hjm-type-heading-line-height); }
 .hjm-profile-studio__layout { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--hjm-space-xxxl) * 8)), 1fr)); gap: var(--hjm-space-xxl); align-items: start; }
-.hjm-profile-studio__preview { display: flex; flex-direction: column; align-items: center; text-align: center; gap: var(--hjm-space-md); padding: var(--hjm-space-xxxl) var(--hjm-space-xl); border-radius: var(--hjm-radius-xl); border: var(--hjm-field-border-width) solid var(--hjm-color-border); background: radial-gradient(ellipse at top, color-mix(in srgb, var(--hjm-color-primary) 14%, var(--hjm-color-bg)), var(--hjm-color-bg)); }
+.hjm-profile-studio__preview { display: flex; flex-direction: column; align-items: center; text-align: center; gap: var(--hjm-space-md); padding: var(--hjm-space-xxl); border-radius: var(--hjm-radius-xl); border: var(--hjm-field-border-width) solid var(--hjm-color-border); background: radial-gradient(ellipse at top, color-mix(in srgb, var(--hjm-color-primary) 14%, var(--hjm-color-bg)), var(--hjm-color-bg)); }
 .hjm-profile-studio__badge { color: var(--hjm-color-content-brand); background: var(--hjm-color-bg); padding: var(--hjm-space-xs) var(--hjm-space-md); border-radius: var(--hjm-radius-full); }
 .hjm-profile-studio__portrait { padding: var(--hjm-space-xl); margin-block: var(--hjm-space-xl); border-radius: var(--hjm-radius-full); background: var(--hjm-color-bg); }
 .hjm-profile-studio__miniatures { display: flex; gap: var(--hjm-space-xs); margin-block-start: var(--hjm-space-xxl); }

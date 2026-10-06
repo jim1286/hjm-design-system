@@ -67,9 +67,15 @@ Native `unsupported`다. 제품 채택과 실제 보조기기 실측은 승격 �
   크기를 저장하는 owner가 의미 없는 쓰기를 하지 않도록.
 - 구현 중 실제 결함을 하나 잡았다: `onValueChangeEnd?.(commit(next))`는 handler가 없으면
   인자 평가까지 통째로 건너뛰어 키보드 조절이 조용히 죽는다. commit을 먼저 하고 알린다.
-- 로컬 검증: `test/splitter.browser.test.tsx` 6개(separator 의미·수직 방향과 44px hit
+- **pane은 넘칠 때만 Tab 정지점이 된다(2026-10-06 리뷰).** pane은 `overflow: auto`라
+  focusable 콘텐츠가 없으면 키보드로 스크롤할 수 없다(axe `scrollable-region-focusable`).
+  항상 `tabIndex=0`을 주면 separator 앞뒤에 이름 없는 빈 정지점 두 개가 생겨, 크기와
+  자식 변화를 관찰해 실제로 넘칠 때만 `tabIndex=0`을 붙인다. pane 이름(prop)을 요구하는
+  대안은 공개 API 추가·필수화가 필요해 택하지 않았다.
+- 로컬 검증: `test/splitter.browser.test.tsx` 7개(separator 의미·수직 방향과 44px hit
   target, 방향키 step과 Home/End 경계, 드래그 스냅과 드래그당 1회 end, RTL 드래그·키보드,
-  disabled, 실제 Tab focus와 focused keyboard resize)와 `컴포넌트/레이아웃/Splitter`.
+  disabled, 실제 Tab focus와 focused keyboard resize, 넘칠 때만 생기는 pane 정지점)와
+  `컴포넌트/레이아웃/Splitter`.
 
 **검증 범위.** Web Chromium renderer matrix가 긴 pane 콘텐츠·환경·접근성 증거를 제공한다.
 제품 vertical slice, screen reader 실측, 모든 OS 조합은 보증하지 않으며 소비 앱 릴리스 QA에서 확인한다.

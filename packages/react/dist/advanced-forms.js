@@ -1,4 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { layer } from "@hjmds/design-contracts/foundations";
 import { comboboxRecipe, selectRecipe, } from "@hjmds/design-contracts/recipes";
 import { formRecipe, } from "@hjmds/design-contracts/components/form";
 import { forwardRef, useCallback, useEffect, useId, useMemo, useRef, useState, } from "react";
@@ -27,7 +28,7 @@ function validateOptions(options, component) {
     }
 }
 /** A native select keeps browser keyboard, form, autofill, and mobile picker behavior. */
-export const NativeSelect = forwardRef(function NativeSelect({ id, label, description, error, options, placeholder, value: valueProp, defaultValue = "", onValueChange, size = selectRecipe.defaults.size, density = selectRecipe.defaults.density, fieldClassName, className, disabled = false, required = false, ...props }, ref) {
+export const NativeSelect = forwardRef(function NativeSelect({ id, label, description, error, options, placeholder, value: valueProp, defaultValue = "", onValueChange, size = selectRecipe.defaults.size, density = selectRecipe.defaults.density, fieldClassName, className, layoutStyle, disabled = false, required = false, ...props }, ref) {
     validateOptions(options, "Select");
     const controlId = useControlId(id, "select");
     const [value, setValue] = useControllableState({
@@ -39,7 +40,7 @@ export const NativeSelect = forwardRef(function NativeSelect({ id, label, descri
         !options.some((option) => option.value === value && !option.disabled)) {
         throw new RangeError(`Select value must identify an enabled option: ${value}`);
     }
-    return (_jsx(Field, { controlId: controlId, label: label, description: description, error: error, required: required, disabled: disabled, className: classNames("hjm-select", fieldClassName), "data-size": size, "data-density": density, children: (controlProps) => (_jsxs("div", { className: "hjm-field__control hjm-select__control", children: [_jsxs("select", { ...props, ...controlProps, ref: ref, value: value, className: classNames("hjm-field__input hjm-select__native", className), onChange: (event) => setValue(event.target.value), children: [placeholder !== undefined ? (_jsx("option", { value: "", disabled: required, children: placeholder })) : null, options.map((option) => (_jsx("option", { value: option.value, disabled: option.disabled, children: option.label }, option.value)))] }), _jsx("span", { className: "hjm-select__indicator", "aria-hidden": "true", children: "\u2304" })] })) }));
+    return (_jsx(Field, { controlId: controlId, label: label, description: description, error: error, required: required, disabled: disabled, className: classNames("hjm-select", fieldClassName), ...(layoutStyle === undefined ? {} : { layoutStyle }), "data-size": size, "data-density": density, children: (controlProps) => (_jsxs("div", { className: "hjm-field__control hjm-select__control", children: [_jsxs("select", { ...props, ...controlProps, ref: ref, value: value, className: classNames("hjm-field__input hjm-select__native", className), onChange: (event) => setValue(event.target.value), children: [placeholder !== undefined ? (_jsx("option", { value: "", disabled: required, children: placeholder })) : null, options.map((option) => (_jsx("option", { value: option.value, disabled: option.disabled, children: option.label }, option.value)))] }), _jsx("span", { className: "hjm-select__indicator", "aria-hidden": "true", children: "\u2304" })] })) }));
 });
 function nextEnabled(items, current, direction) {
     if (items.length === 0)
@@ -51,7 +52,7 @@ function nextEnabled(items, current, direction) {
     }
     return -1;
 }
-export const Combobox = forwardRef(function Combobox({ id, name, label, description, error, items, value: valueProp, defaultValue = "", onValueChange, inputValue: inputValueProp, defaultInputValue, onInputValueChange, open: openProp, defaultOpen = false, onOpenChange, emptyMessage, loading = false, loadingMessage, selectionRequiredMessage, openOnFocus = true, size = comboboxRecipe.defaults.size, density = comboboxRecipe.defaults.density, align = "start", fieldClassName, portalContainer, className, disabled = false, required = false, autoComplete = "off", onFocus, onBlur, onKeyDown, ...props }, forwardedRef) {
+export const Combobox = forwardRef(function Combobox({ id, name, label, description, error, items, value: valueProp, defaultValue = "", onValueChange, inputValue: inputValueProp, defaultInputValue, onInputValueChange, open: openProp, defaultOpen = false, onOpenChange, emptyMessage, loading = false, loadingMessage, selectionRequiredMessage, openOnFocus = true, size = comboboxRecipe.defaults.size, density = comboboxRecipe.defaults.density, align = "start", fieldClassName, portalContainer, className, layoutStyle, disabled = false, required = false, autoComplete = "off", onFocus, onBlur, onKeyDown, ...props }, forwardedRef) {
     validateOptions(items, "Combobox");
     const controlId = useControlId(id, "combobox");
     const listboxId = `${controlId}-listbox`;
@@ -62,8 +63,11 @@ export const Combobox = forwardRef(function Combobox({ id, name, label, descript
     const [listboxNode, setListboxNode] = useState(null);
     const popupPosition = useAnchoredPopup(inputRef, listboxNode, {
         align,
+        // comboboxRecipe.popover (= selectRecipe.popover), same correction as Select (2026-10-06).
+        gap: comboboxRecipe.popover.sideOffset,
+        viewportPadding: comboboxRecipe.popover.collisionPadding,
         matchAnchorWidth: true,
-        zIndex: 800,
+        zIndex: layer.dropdown,
     });
     const setListboxRef = useCallback((node) => {
         listboxRef.current = node;
@@ -177,7 +181,7 @@ export const Combobox = forwardRef(function Combobox({ id, name, label, descript
         }
     };
     const activeItem = activeIndex >= 0 ? filteredItems[activeIndex] : undefined;
-    return (_jsx(Field, { controlId: controlId, label: label, description: description, error: error, required: required, disabled: disabled, className: classNames("hjm-combobox", fieldClassName), "data-size": size, "data-density": density, "data-state": disabled ? "disabled" : open ? "open" : "closed", children: (controlProps) => (_jsxs("div", { ref: rootRef, className: "hjm-combobox__anchor", onBlur: (event) => {
+    return (_jsx(Field, { controlId: controlId, label: label, description: description, error: error, required: required, disabled: disabled, className: classNames("hjm-combobox", fieldClassName), ...(layoutStyle === undefined ? {} : { layoutStyle }), "data-size": size, "data-density": density, "data-state": disabled ? "disabled" : open ? "open" : "closed", children: (controlProps) => (_jsxs("div", { ref: rootRef, className: "hjm-combobox__anchor", onBlur: (event) => {
                 if (!event.currentTarget.contains(event.relatedTarget) &&
                     !listboxRef.current?.contains(event.relatedTarget))
                     setOpen(false, "blur");
@@ -203,7 +207,7 @@ export const Combobox = forwardRef(function Combobox({ id, name, label, descript
                                     setActiveIndex(index);
                             }, onClick: () => selectItem(item), children: item.label }, item.value)))) }) })) : null] })) }));
 });
-export const Form = forwardRef(function Form({ onSubmit, busy = false, formError, actions, density = formRecipe.defaults.density, className, children, ...props }, ref) {
+export const Form = forwardRef(function Form({ onSubmit, busy = false, formError, actions, density = formRecipe.defaults.density, className, children, layoutStyle, ...props }, ref) {
     const [submitting, setSubmitting] = useState(false);
     const submittingRef = useRef(false);
     const effectiveBusy = busy || submitting;
@@ -229,6 +233,6 @@ export const Form = forwardRef(function Form({ onSubmit, busy = false, formError
             });
         }
     };
-    return (_jsx("form", { ...props, ref: ref, className: classNames("hjm-form", className), "data-density": density, "data-state": effectiveBusy ? "busy" : formError ? "error" : "idle", "aria-busy": effectiveBusy || undefined, onSubmit: handleSubmit, children: _jsxs("fieldset", { className: "hjm-form__fieldset", disabled: effectiveBusy, children: [_jsx("div", { className: "hjm-form__fields", children: children }), formError ? (_jsx("div", { className: "hjm-form__error", role: "alert", children: formError })) : null, actions ? _jsx("div", { className: "hjm-form__actions", children: actions }) : null] }) }));
+    return (_jsx("form", { ...props, style: { ...props.style, ...layoutStyle }, ref: ref, className: classNames("hjm-form", className), "data-density": density, "data-state": effectiveBusy ? "busy" : formError ? "error" : "idle", "aria-busy": effectiveBusy || undefined, onSubmit: handleSubmit, children: _jsxs("fieldset", { className: "hjm-form__fieldset", disabled: effectiveBusy, children: [_jsx("div", { className: "hjm-form__fields", children: children }), formError ? (_jsx("div", { className: "hjm-form__error", role: "alert", children: formError })) : null, actions ? _jsx("div", { className: "hjm-form__actions", children: actions }) : null] }) }));
 });
 //# sourceMappingURL=advanced-forms.js.map

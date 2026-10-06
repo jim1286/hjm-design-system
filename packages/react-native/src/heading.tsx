@@ -7,16 +7,25 @@ import {
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import type { ReactNode } from "react";
 import type { StyleProp, TextStyle } from "react-native";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
+import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
 
 export type HeadingProps = HeadingDescriptor &
   Readonly<{
     children: ReactNode;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
+    /**
+     * @deprecated Raw text style bypasses `headingRecipe`. Use `layoutStyle` for placement and
+     * `level` for size/weight. Removed in the next major (consumer-policy.md §3.1).
+     */
     style?: StyleProp<TextStyle>;
   }>;
 
-export function Heading({ level, semanticLevel, children, style }: HeadingProps) {
+export function Heading({ level, semanticLevel, children, layoutStyle, style }: HeadingProps) {
+  warnDeprecatedStyleProps("Heading", { style }, "layoutStyle for placement and level for typography");
   const descriptor: HeadingDescriptor = {
     level,
     ...(semanticLevel === undefined ? {} : { semanticLevel }),
@@ -39,6 +48,7 @@ export function Heading({ level, semanticLevel, children, style }: HeadingProps)
         },
         style,
       ]}
+      {...(layoutStyle === undefined ? {} : { layoutStyle })}
     >
       {children}
     </Text>

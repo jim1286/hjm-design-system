@@ -5,6 +5,7 @@ import {
   fontFamily,
   fontWeight,
   motion,
+  layer,
   radius,
   shadow,
   spacing,
@@ -20,10 +21,15 @@ import {
 import { buttonRecipe, fieldRecipe } from "@hjmds/design-contracts/recipes/base";
 import {
   bottomNavigationRecipe,
+  comboboxRecipe,
   dialogRecipe,
   listRowRecipe,
+  menuRecipe,
+  searchFieldRecipe,
+  selectRecipe,
   sheetRecipe,
   skeletonRecipe,
+  tooltipRecipe,
   switchRecipe,
   toastRecipe,
 } from "@hjmds/design-contracts/recipes";
@@ -134,6 +140,10 @@ export function createHjmThemeStyle(
   style["--hjm-skeleton-easing"] = `cubic-bezier(${skeletonCurve.join(", ")})`;
   style["--hjm-skeleton-from-opacity"] = skeletonRecipe.animation.fromOpacity;
   style["--hjm-skeleton-to-opacity"] = skeletonRecipe.animation.toOpacity;
+  // Export the shared order instead of keeping a second numeric scale in CSS.
+  for (const [name, value] of Object.entries(layer)) {
+    style[`--hjm-layer-${kebab(name)}`] = value;
+  }
   for (const [name, token] of Object.entries(shadow)) {
     style[`--hjm-shadow-${kebab(name)}`] = shadowCss(token);
   }
@@ -165,6 +175,22 @@ export function createHjmThemeStyle(
   const toastExit = toastRecipe.transition.web.exit;
   style["--hjm-toast-exit-duration"] = environment.reducedMotion ? "0ms" : `${toastExit.duration}ms`;
   style["--hjm-toast-exit-easing"] = `cubic-bezier(${easing[toastExit.easing].join(", ")})`;
+  // SearchField geometry comes from searchFieldRecipe (2026-10-06 follow-up). Web had drawn TextField's
+  // 16px padding for both sizes and a 44px clear button even at `medium`, where the recipe and Native
+  // use a 36 circle with a 4px hit slop (44 target, 36 footprint).
+  for (const [name, size] of Object.entries(searchFieldRecipe.sizes)) {
+    style[`--hjm-search-field-padding-${name}`] = `${size.paddingHorizontal}px`;
+    style[`--hjm-search-field-gap-${name}`] = `${size.gap}px`;
+    style[`--hjm-search-field-clear-${name}`] = `${size.clearDiameter}px`;
+    style[`--hjm-search-field-clear-slop-${name}`] = `${size.clearHitSlop}px`;
+  }
+  style["--hjm-tooltip-max-width"] = `${tooltipRecipe.content.maxWidth}px`;
+  style["--hjm-tooltip-padding"] = `${tooltipRecipe.surface.padding}px`;
+  // Floating collection surfaces read their padding from the recipe (2026-10-06): the stylesheet's 4 had drifted from 8.
+  style["--hjm-menu-padding"] = `${menuRecipe.surface.padding}px`;
+  style["--hjm-select-popover-padding"] = `${selectRecipe.popover.padding}px`;
+  style["--hjm-combobox-popover-padding"] = `${comboboxRecipe.popover.padding}px`;
+  style["--hjm-tooltip-collision-padding"] = `${tooltipRecipe.positioning.collisionPadding}px`;
   style["--hjm-button-pressed-opacity"] = buttonRecipe.opacity.pressed;
   style["--hjm-button-disabled-opacity"] = buttonRecipe.opacity.disabled;
   style["--hjm-field-border-width"] = `${fieldRecipe.borderWidth}px`;

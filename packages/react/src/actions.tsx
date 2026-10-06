@@ -202,6 +202,8 @@ export type LinkProps = AnchorHTMLAttributes<HTMLAnchorElement> &
     trailing?: ReactNode;
     /** Framework adapter, for example Next.js Link, while HJM keeps link semantics and state. */
     renderAnchor?: (props: LinkRenderProps) => ReactElement;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
   }>;
 
 export const Link = forwardRef<HTMLAnchorElement, LinkProps>(function Link(
@@ -218,6 +220,7 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(function Link(
     onClick,
     className,
     children,
+    layoutStyle,
     ...props
   },
   ref,
@@ -231,6 +234,9 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(function Link(
   };
   const anchorProps: LinkRenderProps = {
     ...props,
+    // `renderAnchor` adapters receive the merged placement, so a framework Link
+    // gets the same position as the plain <a>.
+    ...(props.style === undefined && layoutStyle === undefined ? {} : { style: { ...props.style, ...layoutStyle } }),
     ref,
     className: classNames("hjm-link", className),
     "data-tone": tone,

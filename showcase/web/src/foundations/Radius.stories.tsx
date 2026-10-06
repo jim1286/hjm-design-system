@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { DimensionTokens } from "./token-reference-previews";
-const meta = { id: "foundations-radius", title: "배포/토큰/둥글기", component: DimensionTokens, args: {kind: "radius"}, parameters: {controls: {disable: true}} } satisfies Meta<typeof DimensionTokens>;
+const meta = { id: "foundations-radius", title: "배포/토큰/표면과 움직임/둥글기", component: DimensionTokens, args: {kind: "radius"}, parameters: {controls: {disable: true}} } satisfies Meta<typeof DimensionTokens>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };

@@ -7,7 +7,7 @@ import {
   type AlertDialogResult,
   type AlertDialogSession,
 } from "@hjmds/design-contracts/components/alert-dialog";
-import type { HjmCompositionStyleProp } from "./composition-style.js";
+import { hjmCompositionStyleKeys, type HjmCompositionStyleProp } from "./composition-style.js";
 import {
   canDismissSheet,
   createSheetLifecycle,
@@ -44,6 +44,7 @@ import {
   ScrollView,
   Text as NativeText,
   Pressable,
+  StyleSheet,
   View,
   findNodeHandle,
   useWindowDimensions,
@@ -60,6 +61,7 @@ import {
   shouldAwaitNativeModalDismiss,
   type NativeModalTeardownTask,
 } from "./internal/modal-lifecycle.js";
+import { isDevelopment, warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { minimumTargetStyle } from "./internal/styles.js";
 import { Text } from "./primitives.js";
 import { useHjmNativeSafeAreaInsets, useHjmNativeTheme } from "./provider.js";
@@ -70,6 +72,31 @@ function CloseGlyph() {
   const { colors } = useHjmNativeTheme();
   return <NativeText accessible={false} allowFontScaling={false}
     style={{ color: colors.text, fontSize: glyph.sm, lineHeight: glyph.sm }}>×</NativeText>;
+}
+
+// BT-QA-027: maximum text made a centered BurnTok confirmation taller than the
+// window, putting its title/cancel off-screen. Keep full copy in a bounded scroll
+// and actions outside it; capping fonts or clipping copy would hide the decision.
+function DialogScrollBody({ children, gap }: { children: ReactNode; gap: number }) {
+  return <ScrollView
+    style={{ flexGrow: 0, flexShrink: 1 }}
+    contentContainerStyle={{ gap }}
+    keyboardShouldPersistTaps="handled"
+    // Positioner owns safe-area clearance.
+    automaticallyAdjustContentInsets={false}
+    automaticallyAdjustKeyboardInsets={false}
+  >{children}</ScrollView>;
+}
+
+function useDialogViewportPadding() {
+  const insets = useHjmNativeSafeAreaInsets();
+  // Missing insets count as zero.
+  return {
+    paddingTop: spacing.md + (insets.top ?? 0),
+    paddingBottom: spacing.md + (insets.bottom ?? 0),
+    paddingLeft: spacing.md + (insets.left ?? 0),
+    paddingRight: spacing.md + (insets.right ?? 0),
+  };
 }
 
 export type OverlayAction = Readonly<{
@@ -153,13 +180,15 @@ function OverlayActions({
   secondaryAction,
   busy,
   stacked = false,
-  onActionComplete,
+  onAction,
+  pendingAction,
 }: Readonly<{
   primaryAction?: OverlayAction;
   secondaryAction?: OverlayAction;
   busy: boolean;
   stacked?: boolean;
-  onActionComplete: () => void;
+  onAction: (action: OverlayAction) => void;
+  pendingAction: OverlayAction | null;
 }>) {
   const { environment } = useHjmNativeTheme();
   if (!primaryAction && !secondaryAction) return null;
@@ -170,10 +199,8 @@ function OverlayActions({
           ? {}
           : { accessibilityHint: action.accessibilityHint })}
         disabled={busy || action.disabled === true}
-        onPress={() => {
-          void action.onPress();
-          onActionComplete();
-        }}
+        loading={pendingAction === action}
+        onPress={() => onAction(action)}
         tone={action.tone ?? fallbackTone}
       >
         {action.label}
@@ -223,9 +250,25 @@ export type DialogProps = NativeModalProps &
   OverlayTitleProps &
   Readonly<{
     description?: string;
+    /**
+     * Body below the fixed title row. It is placed in a bounded ScrollView, so do not pass a
+     * FlatList/SectionList here (nested virtualized lists lose virtualization and warn); use a
+     * Sheet or a plain mapped list for long collections.
+     */
     children?: ReactNode;
     primaryAction?: OverlayAction;
     secondaryAction?: OverlayAction;
+    /**
+     * Called when an action throws or its promise rejects. The dialog stays open with the action
+     * re-enabled; the host presents a localized, recoverable error. Without it, development builds
+     * log every failure with console.error (not warnOnce: deduplication would hide repeats), so a
+     * failed action does not vanish silently.
+     *
+     * The pending/settle logic is a run token, not contracts `createActionSession`: that store settles a
+     * microtask later and carries value/retry state, but a synchronous action must close in the same
+     * press. (Kept in this type comment so the rationale does not ship in the overlays bundle.)
+     */
+    onActionError?: (error: unknown) => void;
     dismissible?: boolean;
     busy?: boolean;
     size?: DialogSize;
@@ -248,7 +291,8 @@ export function Dialog({
   primaryAction,
   secondaryAction,
   dismissible = true,
-  busy = false,
+  busy: externalBusy = false,
+  onActionError,
   size = dialogRecipe.defaults.size,
   closeLabel,
   returnFocusRef,
@@ -256,8 +300,17 @@ export function Dialog({
   onShow,
   ...modalProps
 }: DialogProps) {
+  const [actionPending, setActionPending] = useState<OverlayAction | null>(null);
+  const actionRun = useRef<object | null>(null);
+  const busy = externalBusy || actionPending !== null;
+  // Late results must not close a reopened or unmounted dialog.
+  useEffect(() => {
+    if (open === false) { actionRun.current = null; setActionPending(null); }
+    return () => { actionRun.current = null; };
+  }, [open]);
   const { environment, palette } = useHjmNativeTheme();
   const accessibleTitle = resolveOverlayAccessibleTitle(title, accessibilityTitle);
+  const viewportPadding = useDialogViewportPadding();
   const { width: windowWidth } = useWindowDimensions();
   const [visible, changeOpen] = useReasonedOpenState({
     ...(open === undefined ? {} : { open }),
@@ -377,7 +430,28 @@ export function Dialog({
   }, [cancelExitFallback, motionProgress]);
 
   const requestClose = (reason: DialogOpenChangeReason) => {
-    if (dismissible && !busy) changeOpen(false, { reason });
+    if (dismissible && !busy && !actionRun.current) changeOpen(false, { reason });
+  };
+  const runAction = (action: OverlayAction) => {
+    if (busy || actionRun.current || action.disabled) return;
+    const run = {};
+    actionRun.current = run;
+    const finish = (succeeded: boolean, error?: unknown) => {
+      if (actionRun.current !== run) return;
+      actionRun.current = null;
+      setActionPending(null);
+      // Bypass requestClose: its captured busy state may be stale.
+      if (succeeded) { if (dismissible) changeOpen(false, { reason: "close-action" }); }
+      else if (onActionError) onActionError(error);
+      else if (isDevelopment()) console.error("[@hjmds/react-native] Dialog action failed without onActionError; the dialog stays open.", error);
+    };
+    try {
+      const result = action.onPress();
+      if (result && typeof result.then === "function") {
+        setActionPending(action);
+        void result.then(() => finish(true), error => finish(false, error));
+      } else finish(true);
+    } catch (error) { finish(false, error); }
   };
   const sizeRecipe = dialogRecipe.sizes[size];
   const contentBackground = resolveColorReference(dialogRecipe.content.background, palette);
@@ -411,7 +485,7 @@ export function Dialog({
           flex: 1,
           justifyContent: "center",
           opacity: motionProgress,
-          padding: spacing.md,
+          ...viewportPadding,
         }}
       >
         <Scrim />
@@ -439,6 +513,8 @@ export function Dialog({
               elevation: 8,
               gap: dialogRecipe.content.gap,
               maxWidth: sizeRecipe.maxWidth,
+              maxHeight: "100%",
+              flexShrink: 1,
               padding: sizeRecipe.padding,
               shadowColor: dialogRecipe.content.shadow.color,
               shadowOffset: { width: 0, height: dialogRecipe.content.shadow.offsetY },
@@ -449,32 +525,43 @@ export function Dialog({
             contentStyle,
           ]}
         >
-          <View
-            style={{
-              alignItems: "flex-start",
-              direction: environment.direction,
-              flexDirection: "row",
-              gap: spacing.sm,
-            }}
-          >
-            <View style={{ flex: 1, gap: spacing.xs }}>
-              <Text accessibilityRole="header" tone="primary" variant="title">{title}</Text>
-              {description ? <Text tone="muted">{description}</Text> : null}
+          {/* The title row stays outside the scroll so Close remains reachable while a long body
+              scrolls (2026-10-06 review). The description moves into the scroll: BT-QA-027 showed
+              maximum text can exceed the window, and only the title row is kept fixed. The wrapper
+              gap keeps title->description at spacing.xs and title->body at the recipe gap. */}
+          <View style={{ flexShrink: 1, gap: description ? spacing.xs : dialogRecipe.content.gap }}>
+            <View
+              style={{
+                alignItems: "flex-start",
+                direction: environment.direction,
+                flexDirection: "row",
+                gap: spacing.sm,
+              }}
+            >
+              <View style={{ flex: 1 }}>
+                <Text accessibilityRole="header" tone="primary" variant="title">{title}</Text>
+              </View>
+              {dismissible ? (
+                <IconButton
+                  disabled={busy}
+                  label={closeLabel}
+                  onPress={() => requestClose("close-action")}
+                >
+                  <CloseGlyph />
+                </IconButton>
+              ) : null}
             </View>
-            {dismissible ? (
-              <IconButton
-                disabled={busy}
-                label={closeLabel}
-                onPress={() => requestClose("close-action")}
-              >
-                <CloseGlyph />
-              </IconButton>
+            {description || children ? (
+              <DialogScrollBody gap={dialogRecipe.content.gap}>
+                {description ? <Text tone="muted">{description}</Text> : null}
+                {children}
+              </DialogScrollBody>
             ) : null}
           </View>
-          {children}
           <OverlayActions
             busy={busy}
-            onActionComplete={() => requestClose("close-action")}
+            onAction={runAction}
+            pendingAction={actionPending}
             stacked={stackActions}
             {...(primaryAction === undefined ? {} : { primaryAction })}
             {...(secondaryAction === undefined ? {} : { secondaryAction })}
@@ -491,8 +578,30 @@ export type AlertDialogProps = NativeModalProps &
     request: AlertDialogRequest;
     returnFocusRef?: RefObject<View | null>;
     onResult?: (result: AlertDialogResult) => void;
+    /**
+     * Layout keys only (`hjmCompositionStyleKeys`). Visual keys still apply but are deprecated:
+     * use `size`/`placement` and the recipe for appearance.
+     * @deprecated for visual keys. The next major narrows this to `HjmCompositionStyleProp`, like Dialog
+     * (consumer-policy.md §3.1).
+     */
     contentStyle?: StyleProp<ViewStyle>;
   }>;
+
+const compositionKeys = new Set<string>(hjmCompositionStyleKeys);
+
+/**
+ * 1.x keeps AlertDialog/Sheet `contentStyle` wide; warn only on visual keys (layout use is supported).
+ */
+function warnVisualContentStyle(component: string, contentStyle: StyleProp<ViewStyle>): void {
+  if (contentStyle === undefined || contentStyle === null) return;
+  const flattened = StyleSheet.flatten(contentStyle) ?? {};
+  const hasVisualKey = Object.keys(flattened).some(key => !compositionKeys.has(key));
+  warnDeprecatedStyleProps(
+    component,
+    { contentStyle: hasVisualKey ? contentStyle : undefined },
+    "layout-only keys in contentStyle and size/placement for appearance",
+  );
+}
 
 /** Contract session owns duplicate confirms, busy dismissal, error and settlement. */
 export function AlertDialog({
@@ -507,6 +616,8 @@ export function AlertDialog({
   ...modalProps
 }: AlertDialogProps) {
   validateAlertDialogRequest(request);
+  warnVisualContentStyle("AlertDialog", contentStyle);
+  const viewportPadding = useDialogViewportPadding();
   const { colors, environment, palette } = useHjmNativeTheme();
   const { width: windowWidth } = useWindowDimensions();
   const [visible, changeOpen] = useReasonedOpenState({
@@ -813,7 +924,7 @@ export function AlertDialog({
           flex: 1,
           justifyContent: "center",
           opacity: motionProgress,
-          padding: spacing.md,
+          ...viewportPadding,
         }}
       >
         <Scrim />
@@ -833,6 +944,8 @@ export function AlertDialog({
               elevation: 8,
               gap: alertDialogRecipe.content.gap,
               maxWidth: sizeRecipe.maxWidth,
+              maxHeight: "100%",
+              flexShrink: 1,
               padding: sizeRecipe.padding,
               shadowColor: alertDialogRecipe.content.shadow.color,
               shadowOffset: {
@@ -846,7 +959,7 @@ export function AlertDialog({
             contentStyle,
           ]}
         >
-          <View style={{ gap: spacing.xs }}>
+          <DialogScrollBody gap={spacing.xs}>
             <Text accessibilityRole="header" tone="primary" variant="title">{request.title}</Text>
             <Text tone="muted">{request.description}</Text>
             {error ? (
@@ -858,7 +971,7 @@ export function AlertDialog({
                 {error}
               </Text>
             ) : null}
-          </View>
+          </DialogScrollBody>
           <View
             style={{
               direction: environment.direction,
@@ -934,6 +1047,12 @@ export type SheetProps = NativeModalProps &
     returnFocusRef?: RefObject<View | null>;
     safeAreaInsets?: Partial<Insets>;
     onDismissComplete?: (detail: Readonly<{ reason: SheetDismissReason }>) => void;
+    /**
+     * Layout keys only (`hjmCompositionStyleKeys`). Visual keys still apply but are deprecated:
+     * use `size`/`placement` and the recipe for appearance.
+     * @deprecated for visual keys. The next major narrows this to `HjmCompositionStyleProp`, like Dialog
+     * (consumer-policy.md §3.1).
+     */
     contentStyle?: StyleProp<ViewStyle>;
     /** Opt in when the body contains inputs; the modal owns keyboard clearance. */
     keyboardAvoidance?: boolean;
@@ -965,6 +1084,7 @@ export function Sheet({
   onShow,
   ...modalProps
 }: SheetProps) {
+  warnVisualContentStyle("Sheet", contentStyle);
   const { environment, palette } = useHjmNativeTheme();
   // Default to the provider's window insets so a bare <Sheet> clears the home
   // indicator and navigation bar (2026-09-30 audit). Edges the call site passes win.
@@ -1310,7 +1430,9 @@ export function Sheet({
                   ? undefined
                   : Math.min(viewportHeight * sizeRatio, availableHeight),
               maxWidth: side ? 420 : undefined,
-              maxHeight: side
+              // maxHeightRatio caps only `auto`. A fixed size is already bounded by availableHeight
+              // (viewport − top inset − keyboard); capping it too stopped `full` at 90% (2026-10-06 follow-up).
+              maxHeight: side || sizeRatio !== null
                 ? availableHeight
                 : Math.min(availableHeight, viewportHeight * sheetRecipe.content.maxHeightRatio),
               paddingBottom: sheetRecipe.content.paddingBottom + bottomInset,

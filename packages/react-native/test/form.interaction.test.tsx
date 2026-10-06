@@ -1,6 +1,7 @@
 import { act, create } from "react-test-renderer";
-import { useState } from "react";
+import { createRef, useState } from "react";
 import { AccessibilityInfo, TextInput } from "react-native";
+import type { FormHandle } from "../src/forms.js";
 import type { RefObject } from "react";
 import { describe, expect, it, vi } from "vitest";
 import { Field, Form, HjmNativeProvider } from "../src/index.js";
@@ -91,4 +92,27 @@ describe("Form Native host actions", () => {
     expect(onSubmit).not.toHaveBeenCalled();
     setAccessibilityFocus.mockRestore();
   });
+});
+
+
+it("shares guarded submit with an external footer and keyboard without a duplicate button", async () => {
+  const ref = createRef<FormHandle>();
+  const invalid = {current: null} as RefObject<TextInput | null>;
+  let complete!: () => void;
+  const onSubmit = vi.fn(() => new Promise<void>(resolve => {complete = resolve;}));
+  let renderer!: ReturnType<typeof create>;
+  await act(async () => { renderer = create(<HjmNativeProvider><Form ref={ref} label="편집" values={{name:"초안"}}
+    firstInvalidFieldRef={invalid} submitLabel="저장" actions={null} onSubmit={onSubmit} fallbackErrorMessage="실패">{null}</Form></HjmNativeProvider>); });
+  expect(renderer.root.findAll(node => node.props.accessibilityLabel === "저장")).toHaveLength(0);
+  let submission!: Promise<void>;
+  act(() => { submission = ref.current!.submit(); void ref.current!.submit(); });
+  expect(onSubmit).toHaveBeenCalledExactlyOnceWith({name:"초안"});
+  await act(async () => { complete(); await submission; });
+  const focus = vi.fn();
+  invalid.current = {focus} as unknown as TextInput;
+  await act(async () => { await ref.current!.submit(); });
+  expect(focus).toHaveBeenCalledOnce();
+  expect(onSubmit).toHaveBeenCalledTimes(1);
+  act(() => renderer.unmount());
+  expect(ref.current).toBeNull();
 });

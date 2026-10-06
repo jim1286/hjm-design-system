@@ -74,6 +74,8 @@ export type LinkProps = AnchorHTMLAttributes<HTMLAnchorElement> & Readonly<{
     trailing?: ReactNode;
     /** Framework adapter, for example Next.js Link, while HJM keeps link semantics and state. */
     renderAnchor?: (props: LinkRenderProps) => ReactElement;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 export declare const Link: import("react").ForwardRefExoticComponent<AnchorHTMLAttributes<HTMLAnchorElement> & Readonly<{
     tone?: LinkTone;
@@ -83,5 +85,7 @@ export declare const Link: import("react").ForwardRefExoticComponent<AnchorHTMLA
     trailing?: ReactNode;
     /** Framework adapter, for example Next.js Link, while HJM keeps link semantics and state. */
     renderAnchor?: (props: LinkRenderProps) => ReactElement;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }> & import("react").RefAttributes<HTMLAnchorElement>>;
 //# sourceMappingURL=actions.d.ts.map

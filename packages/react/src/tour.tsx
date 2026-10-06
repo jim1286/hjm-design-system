@@ -24,6 +24,7 @@ import { classNames, composeRefs } from "./internal.js";
 import { AnchoredPortal, useAnchoredPopup } from "./portal.js";
 import { getModalLayer, HjmPortal, renderTrigger, useModalFocus, type OverlayTrigger } from "./modal.js";
 
+// No `layoutStyle`: the card is an anchored portal that follows each step's anchor; only the caller's trigger is in flow.
 export type TourProps<Id extends string = string> = Readonly<{
   descriptor: TourDescriptor<Id>;
   /** Resolves the product-owned anchor key to the element to point at. */
@@ -105,7 +106,8 @@ export const Tour = forwardRef(function Tour<Id extends string = string>(
   const advance = (reason: TourAdvanceReason) => {
     const outcome = resolveTourAdvance(descriptor, reason);
     // `no-op` is Previous on the first step: the contract makes that a decision,
-    // not a disabled button, so the control stays focusable and simply does nothing.
+    // not a removed control. The button renders `aria-disabled` (below) and this
+    // branch simply ignores it.
     if (outcome.type === "step") onStepChange(outcome.stepId, reason);
     else if (outcome.type === "close") close(outcome.reason);
   };
@@ -208,7 +210,13 @@ export const Tour = forwardRef(function Tour<Id extends string = string>(
           </div>
           <div className="hjm-tour__actions">
             <Button tone="ghost" onClick={() => close("skip")}>{descriptor.labels.skip}</Button>
-            <Button tone="secondary" disabled={resolved.isFirstStep} onClick={() => advance("previous")}>
+            {/*
+              `aria-disabled`, not `disabled`: a native disabled button drops focus to
+              <body> when the user arrives back on the first step with Previous, and
+              leaves a hole in the card's tab order. Button keeps an aria-disabled
+              control focusable and swallows the press (the Carousel boundary pattern).
+            */}
+            <Button tone="secondary" aria-disabled={resolved.isFirstStep || undefined} onClick={() => advance("previous")}>
               {descriptor.labels.previous}
             </Button>
             <Button onClick={() => advance("next")}>

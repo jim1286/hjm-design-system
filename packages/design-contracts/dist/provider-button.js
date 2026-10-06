@@ -61,6 +61,9 @@ export const authProviderButtonRecipe = {
     paddingHorizontal: spacing.md,
     gap: spacing.sm,
     logoSize: 20,
+    // 제공자 가이드가 라벨·색 표현을 소유한다(2026-10-06 사용자 위임 결정). 네이버 녹색·흰 글자
+    // 대비 3.09:1은 제공자 색 예외로 기록하고(docs/provider-button.md), titleLarge(20 heavy)로 키워
+    // 3:1 큰 글자 기준을 맞추는 대안은 가이드 밖의 라벨 표현이라 버렸다.
     label: typography.body,
     borderWidth: 1,
     /** 제공자 색 위에서도 보이도록 포커스 링은 바깥에 그린다. */

@@ -5,11 +5,14 @@ import { useSortable, isSortable } from "@dnd-kit/react/sortable";
 import { reorderIntent, validateItems, type SortableItem, type SortableLabels, type ReorderIntent } from "@hjmds/design-contracts/components/interaction-adapters";
 import { Button } from "./actions.js";
 import { useHjmTheme } from "./provider.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type SortableCollectionProps = {
   items: readonly SortableItem[]; label: string; labels: SortableLabels;
   renderItem(item: SortableItem): ReactNode;
   onCommit(intent: ReorderIntent): void; onCancel?(): void; disabled?: boolean;
+  /** Canonical layout-only placement on the list (DragDropProvider has no box of its own). */
+  layoutStyle?: HjmCompositionStyleProp;
 };
 function Row({ item, index, children, disabled, reduced, labels, move, count }: {
   item: SortableItem; index: number; children: ReactNode; disabled: boolean; reduced: boolean;
@@ -87,7 +90,7 @@ export function SortableCollection(props: SortableCollectionProps) {
     const source = event.operation.source;
     if (source && isSortable(source)) commit(String(source.id), source.index, "drag");
   }}>
-    <ul ref={list} aria-label={props.label} style={{ listStyle: "none", margin: 0, padding: 0 }}>
+    <ul ref={list} aria-label={props.label} style={{ listStyle: "none", margin: 0, padding: 0, ...props.layoutStyle }}>
       {props.items.map((item, index) => <Row key={item.id} item={item} index={index} count={props.items.length}
         disabled={props.disabled ?? false} reduced={environment.reducedMotion} labels={props.labels}
         move={to => commit(item.id, to, "keyboard")}>{props.renderItem(item)}</Row>)}

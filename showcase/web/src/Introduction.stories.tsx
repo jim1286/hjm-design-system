@@ -104,7 +104,7 @@ export function Introduction() {
           </p>
           <nav className="hjm-home-actions" aria-label="Showcase quick links">
             <a className="hjm-home-primary-link" href="?path=/story/components-overview--explorer">전체 컴포넌트 보기 <span aria-hidden>→</span></a>
-            <a className="hjm-home-secondary-link" href="?path=/story/foundations-colors--semantic-palette">Foundation 보기</a>
+            <a className="hjm-home-secondary-link" href="?path=/story/foundations-colors--default">Foundation 보기</a>
             <a className="hjm-home-secondary-link" href="?path=/story/components-catalog--evidence-matrix">Catalog 계약</a>
           </nav>
         </div>
@@ -239,5 +239,4 @@ const meta = { includeStories: ["Overview"],
 
 export default meta;
 type Story = StoryObj<typeof meta>;
-
 export const Overview: Story = { name: "개요",};

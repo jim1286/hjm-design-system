@@ -1,4 +1,5 @@
 import { jsx as _jsx } from "react/jsx-runtime";
+import { layer } from "@hjmds/design-contracts/foundations";
 import { isLargeTextScale } from "@hjmds/design-contracts/components/design-system-provider";
 import { cloneElement, useCallback, useEffect, useRef, useState, } from "react";
 import { createPortal } from "react-dom";
@@ -87,7 +88,9 @@ export function getModalLayer(priority) {
     if (!Number.isSafeInteger(priority)) {
         throw new TypeError("modalPriority must be a safe integer");
     }
-    return 1000 + priority;
+    // Keep priority ordering inside the shared modal tier; copied Web-only bases
+    // made product layer tokens disagree with actual overlay order.
+    return layer.modal + priority;
 }
 function getTopModal() {
     let top;

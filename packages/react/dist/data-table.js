@@ -1,10 +1,19 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { TableSortButton } from "./table-sort-button.js";
 import { dataTableColumnDefaults, dataTableDefaults, getNextDataTableSortState, resolveDataTableSelectAllState, validateDataTableColumns, validateDataTableRows, validateDataTableSortState, } from "@hjmds/design-contracts/components/data-table";
-import { forwardRef } from "react";
+import { forwardRef, useState } from "react";
 import { useHjmDensityDefault } from "./provider.js";
 import { classNames } from "./internal.js";
-export const DataTable = forwardRef(function DataTable({ columns, rows, labels, renderCell, selection, sortState = null, sortCycle = dataTableDefaults.sortCycle, onSortChange, asyncState = { status: "idle" }, density: densityProp, footer, className, }, forwardedRef) {
+function selectedRowKeysFrom(selection) {
+    if (!selection || selection.mode === "none")
+        return new Set();
+    if (selection.mode === "single") {
+        const key = selection.selectedKey ?? selection.defaultSelectedKey ?? null;
+        return key === null ? new Set() : new Set([key]);
+    }
+    return selection.selectedKeys ?? selection.defaultSelectedKeys ?? new Set();
+}
+export const DataTable = forwardRef(function DataTable({ columns, rows, labels, renderCell, selection, sortState = null, sortCycle = dataTableDefaults.sortCycle, onSortChange, asyncState = { status: "idle" }, density: densityProp, footer, className, layoutStyle, }, forwardedRef) {
     // Unconditional: `??` on the hook call would break the rules of hooks.
     const densityDefault = useHjmDensityDefault({ comfortable: "regular", compact: "compact" });
     const density = densityProp ?? densityDefault;
@@ -13,20 +22,29 @@ export const DataTable = forwardRef(function DataTable({ columns, rows, labels, 
     validateDataTableSortState(sortState, columns);
     const multiple = selection?.mode === "multiple";
     const single = selection?.mode === "single";
-    const selectedKeys = multiple
-        ? selection.selectedKeys ?? selection.defaultSelectedKeys ?? new Set()
-        : single
-            ? new Set(((selection.selectedKey ?? selection.defaultSelectedKey) ?? null) === null
-                ? []
-                : [(selection.selectedKey ?? selection.defaultSelectedKey)])
-            : new Set();
+    // `defaultSelectedKey(s)` used to be re-read on every render, so an
+    // uncontrolled table reported the click to `onSelectionChange` but kept showing
+    // the default (same defect and fix as Tree, 2026-10-06). The uncontrolled value
+    // lives in state; a controlled `selectedKey(s)` (including `null`) still wins.
+    const selectionControlled = single
+        ? selection.selectedKey !== undefined
+        : multiple ? selection.selectedKeys !== undefined : true;
+    const [uncontrolledKeys, setUncontrolledKeys] = useState(() => selectedRowKeysFrom(selection));
+    const selectedKeys = selectionControlled
+        ? selectedRowKeysFrom(selection)
+        : uncontrolledKeys;
+    const commitSelection = (next) => {
+        if (!selectionControlled)
+            setUncontrolledKeys(next);
+    };
     const selectAllState = multiple ? resolveDataTableSelectAllState(rows, selectedKeys) : false;
     const toggleRow = (row) => {
         if (row.disabled || !selection || selection.mode === "none")
             return;
         if (selection.mode === "single") {
-            const current = selection.selectedKey ?? selection.defaultSelectedKey ?? null;
+            const current = selectedKeys.has(row.id) ? row.id : null;
             const next = current === row.id && selection.disallowEmptySelection !== true ? null : row.id;
+            commitSelection(next === null ? new Set() : new Set([next]));
             selection.onSelectionChange?.(next);
             return;
         }
@@ -35,6 +53,7 @@ export const DataTable = forwardRef(function DataTable({ columns, rows, labels, 
             next.delete(row.id);
         else
             next.add(row.id);
+        commitSelection(next);
         selection.onSelectionChange?.(next);
     };
     const toggleAll = () => {
@@ -46,9 +65,10 @@ export const DataTable = forwardRef(function DataTable({ columns, rows, labels, 
         const next = selectAllState === true
             ? new Set([...selectedKeys].filter((id) => !selectable.some((row) => row.id === id)))
             : new Set([...selectedKeys, ...selectable.map((row) => row.id)]);
+        commitSelection(next);
         selection.onSelectionChange?.(next);
     };
-    return (_jsxs("div", { className: classNames("hjm-data-table", className), "data-density": density, children: [asyncState.status === "idle" ? null : (_jsx("p", { className: "hjm-data-table__state", role: asyncState.status === "error" ? "alert" : "status", children: asyncState.message })), _jsxs("table", { ref: forwardedRef, className: "hjm-data-table__table", "aria-label": labels.table, "aria-busy": asyncState.status === "loading" || undefined, children: [_jsx("thead", { children: _jsxs("tr", { children: [selection && selection.mode !== "none" ? (_jsx("th", { scope: "col", className: "hjm-data-table__selector", children: multiple ? (_jsx("button", { type: "button", role: "checkbox", "aria-checked": selectAllState === "mixed" ? "mixed" : String(selectAllState === true), "aria-label": labels.selectAll, className: "hjm-data-table__check", onClick: toggleAll, children: selectAllState === true ? "✓" : selectAllState === "mixed" ? "–" : "" })) : null })) : null, columns.map((column) => {
+    return (_jsxs("div", { className: classNames("hjm-data-table", className), style: layoutStyle, "data-density": density, children: [asyncState.status === "idle" ? null : (_jsx("p", { className: "hjm-data-table__state", role: asyncState.status === "error" ? "alert" : "status", children: asyncState.message })), _jsxs("table", { ref: forwardedRef, className: "hjm-data-table__table", "aria-label": labels.table, "aria-busy": asyncState.status === "loading" || undefined, children: [_jsx("thead", { children: _jsxs("tr", { children: [selection && selection.mode !== "none" ? (_jsx("th", { scope: "col", className: "hjm-data-table__selector", children: multiple ? (_jsx("button", { type: "button", role: "checkbox", "aria-checked": selectAllState === "mixed" ? "mixed" : String(selectAllState === true), "aria-label": labels.selectAll, className: "hjm-data-table__check", onClick: toggleAll, children: selectAllState === true ? "✓" : selectAllState === "mixed" ? "–" : "" })) : null })) : null, columns.map((column) => {
                                     const sorted = sortState?.columnId === column.id ? sortState.direction : null;
                                     return (_jsx("th", { scope: "col", "aria-sort": sorted ?? undefined, style: { inlineSize: column.width, textAlign: column.align ?? dataTableColumnDefaults.align }, children: column.sortable ? (
                                         // A button inside the header, never the header itself.

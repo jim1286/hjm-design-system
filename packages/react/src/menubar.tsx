@@ -1,3 +1,4 @@
+import { layer } from "@hjmds/design-contracts/foundations";
 import {
   menubarRecipe,
   resolveMenubarNavigation,
@@ -7,6 +8,7 @@ import {
 import { useCallback, useEffect, useId, useMemo, useRef, useState, type CSSProperties, type RefObject } from "react";
 import { classNames, useControllableState } from "./internal.js";
 import { AnchoredPortal, useAnchoredPopup } from "./portal.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type MenubarProps<Key extends string = string, MenuKey extends string = string> = Readonly<{
   descriptor: MenubarDescriptor<Key, MenuKey>;
@@ -15,6 +17,8 @@ export type MenubarProps<Key extends string = string, MenuKey extends string = s
   onOpenMenuIdChange?: (id: MenuKey | null) => void;
   onAction: (id: Key, menuId: MenuKey) => void;
   className?: string;
+  /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
 }>;
 
 export function Menubar<Key extends string = string, MenuKey extends string = string>({
@@ -24,6 +28,7 @@ export function Menubar<Key extends string = string, MenuKey extends string = st
   onOpenMenuIdChange,
   onAction,
   className,
+  layoutStyle,
 }: MenubarProps<Key, MenuKey>) {
   validateMenubarDescriptor(descriptor);
   const [openId, setOpenId] = useControllableState<MenuKey | null>({
@@ -50,7 +55,7 @@ export function Menubar<Key extends string = string, MenuKey extends string = st
     () => ({ get current() { return openId === null ? null : labelRefs.current.get(openId) ?? null; } }),
     [openId],
   );
-  const panelPosition = useAnchoredPopup(openLabelRef, panelNode, { gap: 0, zIndex: 900 });
+  const panelPosition = useAnchoredPopup(openLabelRef, panelNode, { gap: 0, zIndex: layer.dropdown });
 
   useEffect(() => {
     if (openId === null) return;
@@ -80,7 +85,7 @@ export function Menubar<Key extends string = string, MenuKey extends string = st
       role="menubar"
       aria-label={descriptor.accessibilityLabel}
       className={classNames("hjm-menubar", className)}
-      style={{
+      style={{ ...layoutStyle,
         "--hjm-menubar-min-height": `${menubarRecipe.minHeight}px`,
         "--hjm-menubar-gap": `${menubarRecipe.gap}px`,
         "--hjm-menubar-padding": `${menubarRecipe.paddingHorizontal}px`,

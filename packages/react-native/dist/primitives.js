@@ -6,13 +6,14 @@ import { getIconTransform, resolveIconDescriptor, } from "@hjmds/design-contract
 import { validateLayoutRegions, } from "@hjmds/design-contracts/components/layout";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { withAlpha } from "@hjmds/design-contracts/colors";
-import { glyph, typography, } from "@hjmds/design-contracts/foundations";
+import { glyph, shadow, typography, } from "@hjmds/design-contracts/foundations";
 import { surfaceDefaults, surfaceGeometry, surfaceRecipe, } from "@hjmds/design-contracts/recipes/base";
 import { sectionRecipe, stackRecipe, textRecipe, } from "@hjmds/design-contracts/recipes";
 import { Children, forwardRef, isValidElement, useEffect, useMemo, useState, } from "react";
 import { PixelRatio, Text as NativeText, View, useWindowDimensions, } from "react-native";
 import { useHjmNativeTheme } from "./provider.js";
 import { logicalTextAlign, resolveNativeTextScaleProps, } from "./internal/styles.js";
+import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 /** Native shell translation: ordered regions without inventing Web landmark roles. */
 export const Layout = forwardRef(function Layout({ children, header, footer, sidebar, headerProps, mainProps, footerProps, mainRef, style, ...props }, ref) {
     const hasHeader = header !== undefined && header !== null && header !== false;
@@ -71,10 +72,11 @@ export function Surface({ tone = surfaceDefaults.tone, padding = surfaceDefaults
     const elevatedStyle = contract.elevated
         ? {
             elevation: 4,
-            shadowColor: "#000000",
-            shadowOffset: { width: 0, height: 4 },
-            shadowOpacity: 0.12,
-            shadowRadius: 6,
+            // Use the same floating surface token as Web instead of a separate blur.
+            shadowColor: shadow.floating.color,
+            shadowOffset: { width: 0, height: shadow.floating.offsetY },
+            shadowOpacity: shadow.floating.opacity,
+            shadowRadius: shadow.floating.radius,
         }
         : undefined;
     return (_jsx(View, { ...props, style: [
@@ -127,6 +129,7 @@ export function Stack({ axis, gap = stackRecipe.defaults.gap, align = stackRecip
 }
 /** Shared centered content boundary for phones, tablets, and desktop-sized Native windows. */
 export function Container({ size, gutter, layoutStyle, style, ...props }) {
+    warnDeprecatedStyleProps("Container", { style }, "layoutStyle for placement and size/gutter for width and padding");
     const resolved = resolveContainerDescriptor({
         ...(size === undefined ? {} : { size }),
         ...(gutter === undefined ? {} : { gutter }),
@@ -191,7 +194,8 @@ export function Grid({ children, columns, gap, minColumnWidth, availableWidth, o
         ], children: Children.toArray(children).map((child, index) => (_jsx(View, { style: [{ width: cellWidth }, itemStyle], children: child }, isValidElement(child) && child.key !== null ? child.key : `hjm-grid-${index}`))) }));
 }
 /** Semantic Native icon frame without an Expo or third-party icon dependency. */
-export function Icon({ descriptor, renderGlyph, style, }) {
+export function Icon({ descriptor, renderGlyph, layoutStyle, style, }) {
+    warnDeprecatedStyleProps("Icon", { style }, "layoutStyle for placement and the icon descriptor for appearance");
     const resolved = resolveIconDescriptor(descriptor);
     const theme = useHjmNativeTheme();
     const colors = {
@@ -222,6 +226,7 @@ export function Icon({ descriptor, renderGlyph, style, }) {
                 width: size,
             },
             style,
+            layoutStyle,
         ], children: _jsx(View, { accessible: false, children: renderGlyph({
                 name: resolved.name,
                 size,
@@ -232,6 +237,7 @@ export function Icon({ descriptor, renderGlyph, style, }) {
 /** A large-text-safe content section with a logical header action slot. */
 export function Section({ title, description, action, children, headerStyle, copyStyle, actionStyle, contentStyle, layoutStyle, style, ...props }) {
     const theme = useHjmNativeTheme();
+    warnDeprecatedStyleProps("Section", { style }, "layoutStyle for placement; sectionRecipe owns appearance");
     const stackHeader = theme.environment.textScale >= 1.6;
     const hasHeader = title !== undefined || description !== undefined || action !== undefined;
     return (_jsxs(View, { ...props, style: [{ gap: sectionRecipe.gap }, style, layoutStyle], children: [hasHeader ? _jsxs(View, { style: [

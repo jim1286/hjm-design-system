@@ -3,7 +3,7 @@ import { sidebarDefaults, sidebarRecipe, validateSidebarDescriptor, } from "@hjm
 import { forwardRef, useState, } from "react";
 import { useOptionalHjmTheme } from "./provider.js";
 import { classNames, useControllableState } from "./internal.js";
-export const Sidebar = forwardRef(function Sidebar({ descriptor, appearance = "standard", collapsed: controlledCollapsed, defaultCollapsed, onCollapsedChange, collapseLabels, onNavigate, renderIcon, renderBadge, className, }, forwardedRef) {
+export const Sidebar = forwardRef(function Sidebar({ descriptor, appearance = "standard", collapsed: controlledCollapsed, defaultCollapsed, onCollapsedChange, collapseLabels, onNavigate, renderIcon, renderBadge, className, layoutStyle, }, forwardedRef) {
     validateSidebarDescriptor(descriptor);
     const theme = useOptionalHjmTheme();
     const animate = theme !== null && !theme.environment.reducedMotion;
@@ -26,7 +26,7 @@ export const Sidebar = forwardRef(function Sidebar({ descriptor, appearance = "s
         }, onPointerLeave: event => {
             for (const item of event.currentTarget.querySelectorAll(".hjm-sidebar__item"))
                 item.style.removeProperty("--hjm-sidebar-proximity");
-        }, style: {
+        }, style: { ...layoutStyle,
             "--hjm-sidebar-width": `${collapsed ? sidebarRecipe.widths.collapsed : sidebarRecipe.widths.expanded}px`,
             "--hjm-sidebar-item-height": `${sidebarRecipe.itemMinHeight}px`,
             "--hjm-sidebar-item-radius": `${sidebarRecipe.itemRadius}px`,

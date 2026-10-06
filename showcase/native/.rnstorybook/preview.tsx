@@ -20,10 +20,30 @@ function Insets({ children, theme, direction, textScale, reducedMotion }: {
 }
 
 const preview: Preview = {
-  // Put individual components first; grouped fixtures remain available for comparing composition.
-  // Keep the same approval roots and conceptual layers as Web (STORYBOOK_NAVIGATION.md);
-  // source/gallery-based grouping hid the difference between a control and a whole screen.
-  parameters: { options: { storySort: { order: ["배포", ["토큰", "컴포넌트", ["개요", "전체 목록", "글자와 아이콘", "레이아웃", "동작", "입력", "탐색", "데이터 표시", "상태와 알림", "오버레이", "시각 효과", "기반 기능"], "구성", "화면"], "실험", ["토큰", "컴포넌트", ["개요", "전체 목록", "글자와 아이콘", "레이아웃", "동작", "입력", "탐색", "데이터 표시", "상태와 알림", "오버레이", "시각 효과", "기반 기능"], "구성", "화면"], "*"] } } },
+  // Same literal as Web (.storybook/preview.tsx) and scripts/check-storybook.mjs expectedStorySort(); the checker fails
+  // on any difference, so change all three with docs/STORYBOOK_NAVIGATION.md §1. Titles are
+  // `<배포|실험>/<단계>/<분류>/<항목>` (2026-10-06 spec). `alphabetical` + `ko` orders items that `order` does not list
+  // (가나다); Native 10.4.4 sorts its on-device index with the same storybook preview-api storySort as Web.
+  // The 컴포넌트/개요 entries exist only on Web; listing them here keeps one literal for both platforms.
+  parameters: {
+    options: {
+      storySort: {
+        method: "alphabetical",
+        locales: "ko",
+        order: [
+          "배포", ["토큰", ["색과 글자", "공간과 크기", "표면과 움직임", "편집 도구"],
+          "컴포넌트", ["개요", ["사용 안내", "컴포넌트 찾기", "구현·검증 현황", "글자와 아이콘 모아 보기", "레이아웃 모아 보기", "동작 모아 보기", "입력 모아 보기", "탐색 모아 보기", "데이터 표시 모아 보기", "상태와 알림 모아 보기", "오버레이 모아 보기", "기반 기능 모아 보기"], "글자와 아이콘", "레이아웃", "동작", "입력", "탐색", "데이터 표시", "상태와 알림", "오버레이", "시각 효과", "기반 기능"],
+          "구성", ["입력과 작성", "선택과 필터", "탐색과 이동", "정보 표시", "피드백과 복구", "직접 조작과 모션", "비교와 검증"],
+          "화면", ["소개", ["서비스 소개", "온보딩", "권한 안내"], "계정", "설정", "검색", "콘텐츠", "소통", "화면 틀과 도구"]],
+          "실험", ["토큰", ["색과 글자", "공간과 크기", "표면과 움직임", "편집 도구"],
+          "컴포넌트", ["개요", ["사용 안내", "컴포넌트 찾기", "구현·검증 현황", "글자와 아이콘 모아 보기", "레이아웃 모아 보기", "동작 모아 보기", "입력 모아 보기", "탐색 모아 보기", "데이터 표시 모아 보기", "상태와 알림 모아 보기", "오버레이 모아 보기", "기반 기능 모아 보기"], "글자와 아이콘", "레이아웃", "동작", "입력", "탐색", "데이터 표시", "상태와 알림", "오버레이", "시각 효과", "기반 기능"],
+          "구성", ["입력과 작성", "선택과 필터", "탐색과 이동", "정보 표시", "피드백과 복구", "직접 조작과 모션", "비교와 검증"],
+          "화면", ["소개", ["서비스 소개", "온보딩", "권한 안내"], "계정", "설정", "검색", "콘텐츠", "소통", "화면 틀과 도구"]],
+          "*",
+        ],
+      },
+    },
+  },
   globalTypes: {
     theme: {
       name: "테마",
@@ -59,7 +79,9 @@ const preview: Preview = {
         ],
       },
     },
-    reducedMotion: {
+    // `motion` matches the Web toolbar key so stories can set the same globals on both platforms
+    // (was `reducedMotion` here until the 2026-10-06 Storybook spec).
+    motion: {
       name: "움직임",
       defaultValue: "full",
       toolbar: {
@@ -77,7 +99,7 @@ const preview: Preview = {
         theme={context.globals.theme === "dark" ? "dark" : "light"}
         direction={context.globals.direction === "rtl" ? "rtl" : "ltr"}
         textScale={context.globals.textScale === "2" ? 2 : context.globals.textScale === "1.5" ? 1.5 : 1}
-        reducedMotion={context.globals.reducedMotion === "reduced"}
+        reducedMotion={context.globals.motion === "reduced"}
       >
         <Canvas><Story /></Canvas>
       </Insets>

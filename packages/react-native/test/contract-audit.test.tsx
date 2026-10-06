@@ -81,7 +81,7 @@ function render(
 ): ReactTestRenderer {
   let renderer: ReactTestRenderer | undefined;
   act(() => {
-    renderer = create(tree(node, textScale, direction), { createNodeMock: () => ({}) });
+    renderer = create(tree(node, textScale, direction), { createNodeMock: () => ({ focus: vi.fn() }) });
   });
   return renderer!;
 }
@@ -328,12 +328,17 @@ describe("Native input and navigation intent", () => {
   });
 
   it("binds field geometry, type, support spacing, and state colors to fieldRecipe", () => {
+    // BT-QA-020 includes text line height, padding and borders in the frame;
+    // the recipe's minHeight is a floor, not an exact frame height.
+    const singleLineHeight = Math.max(fieldRecipe.minHeight, Math.ceil(
+      typography[fieldRecipe.textVariant].lineHeight + fieldRecipe.paddingVertical * 2 + fieldRecipe.borderWidth * 2,
+    ));
     const renderer = render(
       <TextField label="이름" placeholder="이름 입력" description="실명을 입력하세요" />,
     );
     const control = renderer.root.findAllByType(View).find((node) => {
       const style = flattenStyle(node.props.style);
-      return style.borderWidth === fieldRecipe.borderWidth && style.minHeight === fieldRecipe.minHeight;
+      return style.borderWidth === fieldRecipe.borderWidth && style.minHeight === singleLineHeight;
     })!;
     expect(flattenStyle(control.props.style)).toMatchObject({
       backgroundColor: lightProviderValue.palette.theme[
@@ -342,7 +347,7 @@ describe("Native input and navigation intent", () => {
       borderColor: lightProviderValue.palette.theme[fieldRecipe.states.idle.border],
       borderRadius: radius[fieldRecipe.shapes[fieldRecipe.defaults.shape]],
       borderWidth: fieldRecipe.borderWidth,
-      minHeight: fieldRecipe.minHeight,
+      minHeight: singleLineHeight,
       paddingHorizontal: fieldRecipe.paddingHorizontal,
     });
     const input = renderer.root.findByType(TextInput);
@@ -353,7 +358,7 @@ describe("Native input and navigation intent", () => {
       fontSize: typography[fieldRecipe.textVariant].fontSize,
       fontWeight: typography[fieldRecipe.textVariant].fontWeight,
       lineHeight: typography[fieldRecipe.textVariant].lineHeight,
-      minHeight: fieldRecipe.minHeight - (fieldRecipe.borderWidth * 2),
+      minHeight: singleLineHeight - (fieldRecipe.borderWidth * 2),
       paddingVertical: fieldRecipe.paddingVertical,
     });
     const copy = renderer.root.findAllByType(Text);
@@ -374,7 +379,7 @@ describe("Native input and navigation intent", () => {
     act(() => input.props.onFocus({}));
     const focusedControl = renderer.root.findAllByType(View).find((node) => {
       const style = flattenStyle(node.props.style);
-      return style.borderWidth === fieldRecipe.borderWidth && style.minHeight === fieldRecipe.minHeight;
+      return style.borderWidth === fieldRecipe.borderWidth && style.minHeight === singleLineHeight;
     })!;
     expect(flattenStyle(focusedControl.props.style).borderColor).toBe(
       lightProviderValue.palette.theme[fieldRecipe.states.focused.border],
@@ -514,7 +519,7 @@ describe("Native input and navigation intent", () => {
     );
   });
 
-  it("preserves a busy SearchField query and invokes the explicit clear callback", () => {
+  it("keeps a busy SearchField editable (Web parity) and invokes the explicit clear callback", () => {
     const onValueChange = vi.fn();
     const onClear = vi.fn();
     const renderer = render(
@@ -529,10 +534,14 @@ describe("Native input and navigation intent", () => {
       />,
     );
     const input = renderer.root.findByType(TextInput);
-    expect(input.props.editable).toBe(false);
+    // Before 2026-10-06 busy locked the editor and dropped keystrokes typed while results loaded;
+    // the Web SearchField keeps accepting input under aria-busy.
+    expect(input.props.editable).toBe(true);
+    expect(input.props.accessibilityState).toMatchObject({ busy: true });
     act(() => input.props.onChangeText("변경"));
-    expect(onValueChange).not.toHaveBeenCalled();
-    expect(renderer.root.findByType(TextInput).props.value).toBe("유지");
+    expect(onValueChange).toHaveBeenCalledWith("변경");
+    expect(() => byLabel(renderer, "검색어 지우기")).toThrow();
+    onValueChange.mockClear();
     act(() => {
       renderer.update(tree(
         <SearchField

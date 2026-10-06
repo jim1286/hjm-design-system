@@ -1,0 +1,4 @@
+/* Photos communicate content before metadata, matching the reference apps' collection/profile views. */
+.reference-photo { display:block; width:100%; object-fit:cover; border-radius:var(--hjm-radius-sm); }
+.reference-photo-tile { display:flex; flex-direction:column; align-items:stretch; gap:var(--hjm-space-xs); background:transparent; color:inherit; border:0; padding:0; cursor:pointer; text-align:start; font:inherit; min-width:0; }
+.reference-photo-tile:focus-visible { outline:var(--hjm-stroke-focus) solid var(--hjm-color-primary); outline-offset:var(--hjm-space-xxs); }

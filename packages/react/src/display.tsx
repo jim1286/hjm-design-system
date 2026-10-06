@@ -123,6 +123,8 @@ export type CardProps = Omit<HTMLAttributes<HTMLElement>, "title"> &
     bordered?: boolean;
     padding?: SurfacePadding;
     radius?: SurfaceRadius;
+    /** Canonical layout-only placement; forwarded to the root Surface, which applies it. */
+    layoutStyle?: HjmCompositionStyleProp;
   }>;
 
 export const Card = forwardRef<HTMLElement, CardProps>(function Card(

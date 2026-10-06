@@ -168,6 +168,11 @@ export const uploadItemRecipe = {
   row: {
     minHeight: layout.rowHeight.twoLine,
     paddingHorizontal: spacing.md,
+    /**
+     * Added 2026-10-06: Native hard-coded 8 and Web used 12 with a 64px floor, so the same row
+     * measured 68 on Native and 64-ish+ on Web. One value now drives both renderers.
+     */
+    paddingVertical: spacing.xs,
     gap: spacing.sm,
     radius: "md",
   },
@@ -206,7 +211,7 @@ export const uploadItemRecipe = {
     "retry",
   ];
   defaults: { size: "medium" };
-  row: { minHeight: number; paddingHorizontal: number; gap: number; radius: keyof typeof radius };
+  row: { minHeight: number; paddingHorizontal: number; paddingVertical: number; gap: number; radius: keyof typeof radius };
   name: { color: ColorReference; textVariant: TextVariant };
   meta: { color: ColorReference; textVariant: TextVariant };
   statusTones: Record<UploadItemStatus, ColorReference>;

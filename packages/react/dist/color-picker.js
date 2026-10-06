@@ -2,7 +2,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useEffect, useId, useState } from "react";
 import { colorPickerRecipe, normalizePickerColor, pickerOpacity, withPickerOpacity } from "@hjmds/design-contracts/components/color-picker";
 /** Controlled value; invalid text stays local until corrected or escaped. Native color UI supplies RGB only. */
-export function ColorPicker({ label, labels, value, onValueChange, alpha = false, disabled = false, presets = [] }) {
+export function ColorPicker({ label, labels, value, onValueChange, alpha = false, disabled = false, presets = [], layoutStyle }) {
     const color = normalizePickerColor(value, alpha);
     // HEX is an ordered code, so isolate its LTR text even when the surrounding labels use RTL.
     const palette = [...new Set(presets.map(preset => normalizePickerColor(preset, alpha)))];
@@ -28,7 +28,7 @@ export function ColorPicker({ label, labels, value, onValueChange, alpha = false
         }
         emit(next);
     }
-    return _jsxs("fieldset", { className: "hjm-color-picker", style: { "--hjm-color-picker-target": `${colorPickerRecipe.minTargetSize}px` }, "data-hjm-color-picker": true, disabled: disabled, children: [_jsx("legend", { children: label }), _jsxs("div", { className: "hjm-color-picker__row", children: [_jsxs("label", { className: "hjm-color-picker__native", children: [_jsx("span", { children: labels.color }), _jsx("input", { type: "color", value: color.slice(0, 7), onChange: event => emit(event.target.value + (alpha ? color.slice(7) : "")) })] }), _jsxs("label", { className: "hjm-color-picker__hex", children: [_jsx("span", { children: labels.hex }), _jsx("input", { type: "text", dir: "ltr", value: draft, spellCheck: false, autoComplete: "off", "aria-invalid": invalid || undefined, "aria-describedby": invalid ? `${id}-error` : undefined, onChange: event => { setDraft(event.target.value); setInvalid(false); }, onBlur: commit, onKeyDown: event => { if (event.key === "Enter") {
+    return _jsxs("fieldset", { className: "hjm-color-picker", style: { ...layoutStyle, "--hjm-color-picker-target": `${colorPickerRecipe.minTargetSize}px` }, "data-hjm-color-picker": true, disabled: disabled, children: [_jsx("legend", { children: label }), _jsxs("div", { className: "hjm-color-picker__row", children: [_jsxs("label", { className: "hjm-color-picker__native", children: [_jsx("span", { children: labels.color }), _jsx("input", { type: "color", value: color.slice(0, 7), onChange: event => emit(event.target.value + (alpha ? color.slice(7) : "")) })] }), _jsxs("label", { className: "hjm-color-picker__hex", children: [_jsx("span", { children: labels.hex }), _jsx("input", { type: "text", dir: "ltr", value: draft, spellCheck: false, autoComplete: "off", "aria-invalid": invalid || undefined, "aria-describedby": invalid ? `${id}-error` : undefined, onChange: event => { setDraft(event.target.value); setInvalid(false); }, onBlur: commit, onKeyDown: event => { if (event.key === "Enter") {
                                     event.preventDefault();
                                     commit();
                                 } if (event.key === "Escape") {

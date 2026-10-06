@@ -27,7 +27,7 @@ CSS 변수 재정의, 제품 자체 토큰 생성기)였고, 문서 세 개가 �
 ## 2. 모든 브랜드 팔레트는 대비 검사를 통과해야 한다
 
 `@hjmds/design-contracts/palette-contrast`의 `checkBrandPaletteContrast(brandPalette)`가 Provider와 같은 방식으로
-theme별 병합 결과를 검사하고, 기준 미달 쌍을 돌려준다. 빈 배열이어야 한다(MUST). 제품은 이 호출을
+theme별 병합 결과를 검사하고, theme별 기준 미달 쌍을 돌려준다. 반환 객체의 `light`와 `dark` 배열이 모두 비어 있어야 한다(MUST). 제품은 이 호출을
 자기 테스트에 두어 팔레트 변경마다 실행한다. 전체 팔레트는 `checkPaletteContrast(palette)`를 쓴다.
 
 | 쌍 | 최소 | 근거 |

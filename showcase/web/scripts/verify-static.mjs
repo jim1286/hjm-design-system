@@ -4,12 +4,10 @@ import { componentCatalog, getComponentSurfaceStatus } from "@hjmds/design-contr
 
 const index = JSON.parse(await readFile(new URL("../storybook-static/index.json", import.meta.url), "utf8"));
 const entries = Object.values(index.entries ?? {});
-const navigationTitles = new Set(["배포/컴포넌트/개요", "배포/컴포넌트/전체 목록"]);
-const referenceStories = entries.filter(
-  (entry) => // Canonical family fixtures have three title levels. Individually registered
-  // optional stories add a fourth level and must not inflate the canonical count.
-  /^배포\/컴포넌트\/[^/]+$/.test(entry.title ?? "") && !navigationTitles.has(entry.title),
-);
+// Canonical fixtures live on the nine role overview pages (`배포/컴포넌트/개요/<역할> 모아 보기`, moved there on
+// 2026-10-06 with their ids kept). Individual items (`배포/컴포넌트/<역할>/<항목>`) reuse the same previews and must not
+// inflate the canonical count; the 4-segment title rule itself is scripts/check-storybook.mjs S1.
+const referenceStories = entries.filter((entry) => /^배포\/컴포넌트\/개요\/.+ 모아 보기$/.test(entry.title ?? ""));
 const expectedNames = componentCatalog.map(({ name }) => name);
 // Display names are localized; stable export IDs retain canonical coverage across translations.
 const canonicalName = (name) => toId(storyNameFromExport(name));
@@ -80,18 +78,18 @@ if (classifiedTotal !== componentCatalog.length) {
 }
 const requiredPages = [
   ["배포/컴포넌트/개요/사용 안내", "개요"],
-  ["배포/컴포넌트/개요", "전체 탐색"],
-  ["배포/컴포넌트/개요", "글자와 아이콘"],
-  ["배포/컴포넌트/개요", "레이아웃"],
-  ["배포/컴포넌트/개요", "동작"],
-  ["배포/컴포넌트/개요", "입력"],
-  ["배포/컴포넌트/개요", "탐색"],
-  ["배포/컴포넌트/개요", "데이터 표시"],
-  ["배포/컴포넌트/개요", "상태와 알림"],
-  ["배포/컴포넌트/개요", "오버레이"],
-  ["배포/컴포넌트/개요", "제공자 설정"],
-  ["배포/컴포넌트/개요", "보조 기능"],
-  ["배포/컴포넌트/전체 목록", "구현·검증 현황"],
+  ["배포/컴포넌트/개요/컴포넌트 찾기", "전체 탐색"],
+  ["배포/컴포넌트/개요/컴포넌트 찾기", "글자와 아이콘"],
+  ["배포/컴포넌트/개요/컴포넌트 찾기", "레이아웃"],
+  ["배포/컴포넌트/개요/컴포넌트 찾기", "동작"],
+  ["배포/컴포넌트/개요/컴포넌트 찾기", "입력"],
+  ["배포/컴포넌트/개요/컴포넌트 찾기", "탐색"],
+  ["배포/컴포넌트/개요/컴포넌트 찾기", "데이터 표시"],
+  ["배포/컴포넌트/개요/컴포넌트 찾기", "상태와 알림"],
+  ["배포/컴포넌트/개요/컴포넌트 찾기", "오버레이"],
+  ["배포/컴포넌트/개요/컴포넌트 찾기", "제공자 설정"],
+  ["배포/컴포넌트/개요/컴포넌트 찾기", "보조 기능"],
+  ["배포/컴포넌트/개요/구현·검증 현황", "구현·검증 현황"],
 ];
 const missingPages = requiredPages.filter(
   ([title, name]) => !entries.some((entry) => entry.title === title && entry.name === name),
@@ -102,7 +100,7 @@ if (missingPages.length > 0) {
 const leakedComponentExports = entries.filter(
   ({ title, name }) =>
     (title === "배포/컴포넌트/개요/사용 안내" && name === "Introduction") ||
-    (title === "배포/컴포넌트/개요" && name === "Component Explorer"),
+    (title === "배포/컴포넌트/개요/컴포넌트 찾기" && name === "Component Explorer"),
 );
 if (leakedComponentExports.length > 0) {
   throw new Error("Story components must not leak into the sidebar as duplicate stories");

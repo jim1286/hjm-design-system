@@ -1,4 +1,5 @@
 import { FieldMessage, NativeFieldFrame } from "./internal/field-frame.js";
+import type { FieldPrivateProps } from "./internal/field-private.js";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import {
   glyph,
@@ -60,9 +61,11 @@ import {
 } from "@hjmds/design-contracts/behaviors";
 import {
   forwardRef,
+  useCallback,
   useEffect,
   useId,
   useImperativeHandle,
+  useLayoutEffect,
   useRef,
   useState,
   type ReactNode,
@@ -93,6 +96,7 @@ import {
 import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
+import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 
 type FieldAccessibleName =
   | Readonly<{
@@ -165,15 +169,17 @@ function resolveFieldAccessibleName(
   };
 }
 
-type FieldRendererProps = AccessibleFieldProps &
+type FieldRendererProps = AccessibleFieldProps & FieldPrivateProps &
   Readonly<{
     multiline: boolean;
     search: boolean;
     /** Internal recipe sizing for PasswordField; never exposed as a product style override. */
     recipeInputStyle?: StyleProp<TextStyle>;
+    /** Component recipe amount for fieldRecipe.disabledScope (PasswordField); defaults by `search`. */
+    disabledOpacity?: number;
     searchSize?: SearchFieldSize;
     leading?: ReactNode;
-    trailing?: ReactNode;
+    leadingAction?: ReactNode; trailing?: ReactNode;
   }>;
 
 const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(
@@ -200,18 +206,33 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(
       align = fieldRecipe.defaults.align,
       search,
       recipeInputStyle,
+      disabledOpacity,
       searchSize = searchFieldRecipe.defaults.size,
       leading,
       trailing,
+    leadingAction,
+      hjmCompactMultiline = false,
       onBlur,
       onFocus,
+      onContentSizeChange,
+      onSelectionChange,
       ...props
     },
     ref,
   ) {
+    const resolvedDisabledOpacity =
+      disabledOpacity ?? (search ? searchFieldRecipe.states.disabledOpacity : fieldRecipe.disabledOpacity);
     const theme = useHjmNativeTheme();
     const { colors, environment, textScaling } = theme;
     const [focused, setFocused] = useState(false);
+    const [contentHeight, setContentHeight] = useState(0);
+    const inputRef = useRef<TextInput>(null);
+    const restoreFocusRef = useRef(false);
+    const selectionRef = useRef<{ start: number; end: number } | null>(null);
+    const attachInput = useCallback((node: TextInput | null) => {
+      if (node === null) restoreFocusRef.current = inputRef.current?.isFocused?.() ?? false;
+      inputRef.current = node;
+    }, []);
     const [currentValue, setCurrentValue] = useControllableState({
       ...(value === undefined ? {} : { value }),
       defaultValue,
@@ -263,19 +284,41 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(
       : colors[fieldRecipe.placeholder.color];
     const textStyle =
       typography[search ? searchSizing.textVariant : fieldRecipe.textVariant];
+    // Native TextInput scales its text without enlarging a fixed frame (BT-QA-020).
+    // Size the one-line frame for the same scale instead of capping accessible text.
+    const frameTextScale = textScaling.mode === "controlled"
+      ? textScaling.scale
+      : allowFontScaling === false
+      ? 1
+      : Math.min(textScaling.scale, props.maxFontSizeMultiplier && props.maxFontSizeMultiplier > 0 ? props.maxFontSizeMultiplier : Infinity);
+    const singleLineMinHeight = Math.ceil(textStyle.lineHeight * frameTextScale + fieldRecipe.paddingVertical * 2 + borderWidth * 2);
+    // iOS RCTUITextView updates typingAttributes/placeholder but leaves existing
+    // attributed text at its old scale (BT-QA-025). Refresh only the native editor,
+    // keeping the field's draft state and restoring focus/selection instead of capping text.
+    const editorKey = Platform.OS === "ios" && multiline
+      ? `multiline-${frameTextScale}`
+      : "field";
+    // Deps: only an editorKey remount changes the handle; none re-attached callback refs every render.
+    useImperativeHandle(ref, () => inputRef.current as TextInput, [editorKey]);
+    useLayoutEffect(() => {
+      if (restoreFocusRef.current) {
+        inputRef.current?.focus?.();
+        const selection = props.selection ?? selectionRef.current;
+        if (selection) inputRef.current?.setNativeProps?.({ selection });
+        restoreFocusRef.current = false;
+      }
+    }, [editorKey, props.selection]);
     // A composer that should open several lines tall asks in lines, not pixels,
-    // so the recipe keeps ownership of line height and vertical padding.
+    // so the recipe keeps ownership of line height and vertical padding. Compact: see field-private.ts.
     const minHeight = multiline
       ? minVisibleLines === undefined
         ? fieldRecipe.multilineMinHeight
         : Math.max(
-            fieldRecipe.multilineMinHeight,
+            hjmCompactMultiline ? fieldRecipe.minHeight : fieldRecipe.multilineMinHeight,
             textStyle.lineHeight * minVisibleLines +
               fieldRecipe.paddingVertical * 2,
           )
-      : search
-      ? searchSizing.minHeight
-      : fieldRecipe.minHeight;
+      : Math.max(search ? searchSizing.minHeight : fieldRecipe.minHeight, singleLineMinHeight);
     const controlRadius =
       radius[
         search
@@ -297,6 +340,8 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(
           fontWeight: textStyle.fontWeight,
           lineHeight: textStyle.lineHeight,
           minHeight: minHeight - borderWidth * 2,
+          // Explicit line bounds opt into content-driven composer sizing, without changing ordinary editors.
+          ...(multiline && minVisibleLines !== undefined ? { height: Math.max(minHeight - borderWidth * 2, Math.min(currentValue ? contentHeight : 0, textStyle.lineHeight * (resolvedMaxVisibleLines ?? 1000) + fieldRecipe.paddingVertical * 2)) } : {}),
           ...(multiline &&
           resolvedMaxVisibleLines !== null &&
           resolvedMaxVisibleLines !== undefined
@@ -325,19 +370,15 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(
         required={required}
         {...(error === undefined ? {} : { error })}
         {...(supportText === undefined ? {} : { description: supportText })}
-        style={[
-          {
-            opacity: disabled
-              ? search
-                ? searchFieldRecipe.states.disabledOpacity
-                : fieldRecipe.disabledOpacity
-              : 1,
-          },
-          layoutStyle,
-        ]}
+        // fieldRecipe.disabledScope (2026-10-06): label and control fade, the hint and the
+        // error do not. This frame used to carry the opacity, which faded the support text
+        // that explains the locked state; Web made the same change in the same release.
+        {...(disabled ? { disabledOpacity: resolvedDisabledOpacity } : {})}
+        style={layoutStyle}
       >
         <View
           style={{
+            opacity: disabled ? resolvedDisabledOpacity : 1,
             alignItems: multiline ? "stretch" : "center",
             backgroundColor,
             borderColor,
@@ -361,19 +402,33 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(
               {leading}
             </View>
           ) : null}
+          {leadingAction ? <View style={{ alignSelf: "center" }}>{leadingAction}</View> : null}
           <TextInput
+            key={editorKey}
             {...props}
             {...inputTextScaleProps}
-            ref={ref}
+            ref={attachInput}
             accessibilityHint={hint}
             accessibilityLabel={accessibleName}
             accessibilityRole={search ? "search" : undefined}
             accessibilityState={{ busy, disabled }}
-            editable={!disabled && !busy}
+            // SearchField `busy` means "results are loading", not "this value is being committed":
+            // locking the editor dropped every keystroke typed while suggestions refreshed, while the
+            // Web SearchField keeps typing under `aria-busy` (2026-10-06 parity follow-up). Plain
+            // fields keep the lock because their busy means a pending save of the current value.
+            editable={!disabled && (search || !busy)}
             multiline={multiline}
             onBlur={(event) => {
               setFocused(false);
               onBlur?.(event);
+            }}
+            onContentSizeChange={event => {
+              if (multiline && minVisibleLines !== undefined) setContentHeight(event.nativeEvent.contentSize.height);
+              onContentSizeChange?.(event);
+            }}
+            onSelectionChange={event => {
+              selectionRef.current = event.nativeEvent.selection;
+              onSelectionChange?.(event);
             }}
             onChangeText={setCurrentValue}
             onFocus={(event) => {
@@ -396,7 +451,7 @@ export const TextField = forwardRef<TextInput, TextFieldProps>(function TextFiel
   return <FieldRenderer {...props} ref={ref} multiline={false} search={false} />;
 });
 
-export type TextAreaProps = AccessibleFieldProps;
+export type TextAreaProps = AccessibleFieldProps & Readonly<{ trailing?: ReactNode; leadingAction?: ReactNode }>;
 
 export const TextArea = forwardRef<TextInput, TextAreaProps>(function TextArea(props, ref) {
   return <FieldRenderer {...props} ref={ref} multiline search={false} />;
@@ -445,6 +500,9 @@ export const SearchField = forwardRef<TextInput, SearchFieldProps>(function Sear
   },
   ref,
 ) {
+  const inputRef = useRef<TextInput>(null);
+  // Single-line child editor never remounts.
+  useImperativeHandle(ref, () => inputRef.current as TextInput, []);
   const theme = useHjmNativeTheme();
   const searchSizing = searchFieldRecipe.sizes[size];
   const iconProps: SearchFieldAffordanceRenderProps = {
@@ -483,6 +541,7 @@ export const SearchField = forwardRef<TextInput, SearchFieldProps>(function Sear
       onPress={() => {
         setSearchValue("");
         onClear?.();
+        inputRef.current?.focus();
       }}
       style={{
         alignItems: "center",
@@ -505,13 +564,14 @@ export const SearchField = forwardRef<TextInput, SearchFieldProps>(function Sear
   return (
     <FieldRenderer
       {...props}
-      ref={ref}
+      ref={inputRef}
       busy={busy}
       disabled={disabled}
       leading={leading}
       multiline={false}
       onValueChange={(next) => {
-        if (!busy && !disabled) setSearchValue(next);
+        // Typing continues while busy (same as Web `loading`); only disabled ignores input.
+        if (!disabled) setSearchValue(next);
       }}
       search
       searchSize={size}
@@ -624,7 +684,8 @@ export const PasswordField = forwardRef<TextInput, PasswordFieldProps>(function 
 ) {
   const theme = useHjmNativeTheme();
   const inputRef = useRef<TextInput>(null);
-  useImperativeHandle(forwardedRef, () => inputRef.current as TextInput);
+  // Single-line child editor never remounts.
+  useImperativeHandle(forwardedRef, () => inputRef.current as TextInput, []);
   const selectionRef = useRef({ start: 0, end: 0 });
   const [revealed, setRevealed] = useControllableState({
     ...(revealedProp === undefined ? {} : { value: revealedProp }),
@@ -663,6 +724,8 @@ export const PasswordField = forwardRef<TextInput, PasswordFieldProps>(function 
       ref={inputRef}
       autoComplete={autofillHint === "current" ? "current-password" : "new-password"}
       disabled={disabled}
+      // passwordFieldRecipe.states owns the amount; both renderers used the field default 0.6 until 2026-10-06.
+      disabledOpacity={passwordFieldRecipe.states.disabledOpacity}
       recipeInputStyle={[
         size === "large"
           ? {
@@ -684,7 +747,10 @@ export const PasswordField = forwardRef<TextInput, PasswordFieldProps>(function 
         <Pressable
           accessibilityLabel={resolved.toggleAccessibleName}
           accessibilityRole="button"
-          accessibilityState={{ disabled, selected: revealed }}
+          // No `selected`: the label already names the next action, and VoiceOver
+          // would read "Selected, Hide password" — the Native twin of the
+          // `aria-pressed` the contract rules out (password-field.md, rationale 1).
+          accessibilityState={{ disabled }}
           disabled={disabled}
           onPress={() => setRevealed(!revealed)}
           style={({ pressed }) => ({
@@ -722,7 +788,15 @@ export type OtpFieldProps = Omit<
     onComplete?: (value: string) => void;
     size?: OtpFieldSize;
     presentation?: OtpFieldPresentation;
+    /**
+     * @deprecated Raw slot style bypasses `otpFieldRecipe`. Use `size` and `presentation` for slot
+     * appearance and `layoutStyle` for placement. Removed in the next major (consumer-policy.md §3.1).
+     */
     slotStyle?: StyleProp<ViewStyle>;
+    /**
+     * @deprecated Raw slot text style bypasses `otpFieldRecipe`; `size` selects the digit typography.
+     * Removed in the next major (consumer-policy.md §3.1).
+     */
     slotTextStyle?: StyleProp<TextStyle>;
   }>;
 
@@ -746,6 +820,9 @@ export const OtpField = forwardRef<TextInput, OtpFieldProps>(function OtpField(
     presentation = "boxes",
     slotStyle,
     slotTextStyle,
+    // Inherited from BaseFieldProps; before 1.13 it fell into `...props` and was spread onto the
+    // hidden TextInput, so OtpField silently ignored its own canonical placement prop.
+    layoutStyle,
 
     allowFontScaling,
     onBlur,
@@ -756,6 +833,11 @@ export const OtpField = forwardRef<TextInput, OtpFieldProps>(function OtpField(
 ) {
   const supportText = description;
   const theme = useHjmNativeTheme();
+  warnDeprecatedStyleProps(
+    "OtpField",
+    { slotStyle, slotTextStyle },
+    "size/presentation for slot appearance and layoutStyle for placement",
+  );
   const { accessibleName, visibleLabel } = resolveFieldAccessibleName(label, accessibilityLabel);
   const [focused, setFocused] = useState(false);
   const [value, setValue] = useControllableState({
@@ -781,14 +863,15 @@ export const OtpField = forwardRef<TextInput, OtpFieldProps>(function OtpField(
   const invalidBorder = resolveColorReference(otpFieldRecipe.slot.invalidBorder, theme.palette);
   const filledBorder = resolveColorReference(otpFieldRecipe.slot.filledBorder, theme.palette);
   const contentColor = resolveColorReference(otpFieldRecipe.slot.content, theme.palette);
+  // fieldRecipe.disabledScope: label and slots fade; the hint/error below keep full contrast.
+  // The whole column used to fade (2026-10-06 change, same as Web).
+  const disabledOpacity = disabled || busy ? otpFieldRecipe.states.disabledOpacity : 1;
 
   return (
     <View
       style={[
-        {
-          gap: fieldRecipe.label.gap,
-          opacity: disabled || busy ? otpFieldRecipe.states.disabledOpacity : 1,
-        },
+        { gap: fieldRecipe.label.gap },
+        layoutStyle,
       ]}
     >
       {visibleLabel ? (
@@ -796,6 +879,7 @@ export const OtpField = forwardRef<TextInput, OtpFieldProps>(function OtpField(
           style={{
             color: theme.colors[fieldRecipe.label.color],
             fontWeight: fieldRecipe.label.fontWeight,
+            opacity: disabledOpacity,
           }}
           tone="body"
           variant={fieldRecipe.label.textVariant}
@@ -808,6 +892,7 @@ export const OtpField = forwardRef<TextInput, OtpFieldProps>(function OtpField(
           style={{
             direction: "ltr",
             maxWidth: metrics.slotSize * length + metrics.gap * (length - 1),
+            opacity: disabledOpacity,
             position: "relative",
             width: "100%",
           }}
@@ -924,14 +1009,71 @@ type ChoiceVisualProps = Readonly<{
   presentation?: SelectionControlPresentation;
   size?: SelectionControlSize;
   indicator?: "default" | "none";
+  /** Canonical layout-only placement for the row (or the group frame). Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
+  /**
+   * @deprecated Raw visual style bypasses `selectionControlRecipe`. Use `layoutStyle` for placement and
+   * `presentation`/`size`/`indicator`/`renderIndicator`/`renderLeading` for appearance. Removed in the
+   * next major (consumer-policy.md §3.1).
+   */
   style?: StyleProp<ViewStyle>;
+  /**
+   * @deprecated Raw visual style bypasses `selectionControlRecipe`. Use `layoutStyle` for placement and
+   * `presentation`/`size`/`indicator`/`renderIndicator`/`renderLeading` for appearance. Removed in the
+   * next major (consumer-policy.md §3.1).
+   */
   controlStyle?: StyleProp<ViewStyle>;
+  /**
+   * @deprecated Raw visual style bypasses `selectionControlRecipe`. Use `layoutStyle` for placement and
+   * `presentation`/`size`/`indicator`/`renderIndicator`/`renderLeading` for appearance. Removed in the
+   * next major (consumer-policy.md §3.1).
+   */
   indicatorStyle?: StyleProp<ViewStyle>;
+  /**
+   * @deprecated Raw visual style bypasses `selectionControlRecipe`. Use `layoutStyle` for placement and
+   * `presentation`/`size`/`indicator`/`renderIndicator`/`renderLeading` for appearance. Removed in the
+   * next major (consumer-policy.md §3.1).
+   */
   leadingStyle?: StyleProp<ViewStyle>;
+  /**
+   * @deprecated Raw visual style bypasses `selectionControlRecipe`. Use `layoutStyle` for placement and
+   * `presentation`/`size`/`indicator`/`renderIndicator`/`renderLeading` for appearance. Removed in the
+   * next major (consumer-policy.md §3.1).
+   */
   contentStyle?: StyleProp<ViewStyle>;
+  /**
+   * @deprecated Raw visual style bypasses `selectionControlRecipe`. Use `layoutStyle` for placement and
+   * `presentation`/`size`/`indicator`/`renderIndicator`/`renderLeading` for appearance. Removed in the
+   * next major (consumer-policy.md §3.1).
+   */
   labelStyle?: StyleProp<TextStyle>;
+  /**
+   * @deprecated Raw visual style bypasses `selectionControlRecipe`. Use `layoutStyle` for placement and
+   * `presentation`/`size`/`indicator`/`renderIndicator`/`renderLeading` for appearance. Removed in the
+   * next major (consumer-policy.md §3.1).
+   */
   descriptionStyle?: StyleProp<TextStyle>;
 }>;
+
+const choiceVisualReplacement =
+  "layoutStyle for placement and presentation/size/indicator/renderIndicator/renderLeading for appearance";
+
+/** Public choice components share one deprecated slot list; ChoiceRow itself stays silent. */
+function warnChoiceVisualStyles(component: string, visual: ChoiceVisualProps): void {
+  warnDeprecatedStyleProps(
+    component,
+    {
+      style: visual.style,
+      controlStyle: visual.controlStyle,
+      indicatorStyle: visual.indicatorStyle,
+      leadingStyle: visual.leadingStyle,
+      contentStyle: visual.contentStyle,
+      labelStyle: visual.labelStyle,
+      descriptionStyle: visual.descriptionStyle,
+    },
+    choiceVisualReplacement,
+  );
+}
 
 type ChoiceRowProps = ChoiceVisualProps & Readonly<{
   kind: "checkbox" | "radio";
@@ -975,6 +1117,7 @@ function ChoiceRow({
   renderIndicator,
   onActivate,
   webTabIndex,
+  layoutStyle,
   style,
   controlStyle,
   indicatorStyle,
@@ -1079,6 +1222,7 @@ function ChoiceRow({
           paddingVertical: plate.useSizePadding ? metrics.paddingVertical : 0,
         },
         style,
+        layoutStyle,
       ]}
     >
       {indicator === "default" ? (
@@ -1194,6 +1338,7 @@ export function Checkbox({
   accessibilityHint,
   ...visual
 }: CheckboxProps) {
+  warnChoiceVisualStyles("Checkbox", visual);
   const [selected, setSelected] = useControllableState<CheckboxState>({
     ...(checked === undefined ? {} : { value: checked }),
     defaultValue: defaultChecked,
@@ -1264,6 +1409,7 @@ export function Radio({
   accessibilityHint,
   ...visual
 }: RadioProps) {
+  warnChoiceVisualStyles("Radio", visual);
   const [selected, setSelected] = useControllableState<boolean>({
     ...(checked === undefined ? {} : { value: checked }),
     defaultValue: defaultChecked,
@@ -1344,6 +1490,7 @@ function ChoiceGroupFrame({
   orientation,
   presentation,
   style,
+  layoutStyle,
   children,
 }: Readonly<{
   label?: string | undefined;
@@ -1359,6 +1506,7 @@ function ChoiceGroupFrame({
   orientation: SelectionOrientation;
   presentation: SelectionControlPresentation;
   style?: StyleProp<ViewStyle>;
+  layoutStyle?: HjmCompositionStyleProp | undefined;
   children: ReactNode;
 }>) {
   const theme = useHjmNativeTheme();
@@ -1380,12 +1528,17 @@ function ChoiceGroupFrame({
       accessibilityRole={role}
       accessibilityState={{ disabled: disabled || readOnly }}
       accessibilityValue={error ? { text: error } : undefined}
-      style={[{ direction: theme.environment.direction, gap: selectionGroupRecipe.supportGap }, style]}
+      style={[{ direction: theme.environment.direction, gap: selectionGroupRecipe.supportGap }, style, layoutStyle]}
     >
       {label ? (
         <Text nativeID={labelId} tone="primary" variant={selectionGroupRecipe.label.textVariant}>
           {label}{required ? requiredLabel ? ` (${requiredLabel})` : " *" : ""}
         </Text>
+      ) : null}
+      {/* selectionGroupRecipe.slots order label → description → items → error, as Web RadioGroup/CheckboxGroup.
+          Until 2026-10-06 Native put the description under the options; an error still replaces it. */}
+      {description && !error ? (
+        <Text tone="muted" variant={selectionGroupRecipe.description.textVariant}>{description}</Text>
       ) : null}
       <View
         style={{
@@ -1402,8 +1555,6 @@ function ChoiceGroupFrame({
         <Text accessibilityLiveRegion="assertive" accessibilityRole="alert" tone="danger" variant={selectionGroupRecipe.error.textVariant}>
           {error}
         </Text>
-      ) : description ? (
-        <Text tone="muted" variant={selectionGroupRecipe.description.textVariant}>{description}</Text>
       ) : null}
     </View>
   );
@@ -1432,9 +1583,12 @@ export function RadioGroup<Value extends string = string>(props: RadioGroupProps
   indicator = "default",
   renderLeading,
   renderIndicator,
+  layoutStyle,
   style,
   ...slotStyles
 } = props;
+  // Group `style` paints the frame; the remaining slot styles reach every row.
+  warnChoiceVisualStyles("RadioGroup", { style, ...slotStyles });
   // Removed aliases must not silently change the selected collection in JavaScript callers.
   if ("options" in props || !Array.isArray(items)) throw new TypeError("RadioGroup requires items; options was removed");
   const resolvedItems = items;
@@ -1478,6 +1632,7 @@ export function RadioGroup<Value extends string = string>(props: RadioGroupProps
       requiredLabel={requiredLabel}
       role="radiogroup"
       style={style}
+      layoutStyle={layoutStyle}
     >
       {resolvedItems.map((item) => {
         const optionDisabled = disabled || item.disabled === true;
@@ -1545,9 +1700,11 @@ export function CheckboxGroup<Value extends string = string>({
   indicator = "default",
   renderLeading,
   renderIndicator,
+  layoutStyle,
   style,
   ...slotStyles
 }: CheckboxGroupProps<Value>) {
+  warnChoiceVisualStyles("CheckboxGroup", { style, ...slotStyles });
   validateSelectionItems(items);
   if (value !== undefined) validateCheckboxSelection(items, value);
   const [storedValue, setSelected] = useControllableState<ReadonlySet<Value>>({
@@ -1574,6 +1731,7 @@ export function CheckboxGroup<Value extends string = string>({
       required={required}
       requiredLabel={requiredLabel}
       style={style}
+      layoutStyle={layoutStyle}
     >
       {items.map((item) => {
         const optionDisabled = disabled || item.disabled === true;
@@ -1626,6 +1784,10 @@ type SwitchBaseProps = Omit<
     accessibilityHint?: string;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
+    /**
+     * @deprecated Raw visual style bypasses `switchRecipe`. Use `layoutStyle` for placement and
+     * `presentation`/`size` for appearance. Removed in the next major (consumer-policy.md §3.1).
+     */
     style?: StyleProp<ViewStyle>;
   }>;
 
@@ -1661,6 +1823,7 @@ export function Switch({
   if (["value", "defaultValue", "onValueChange"].some(key => key in props)) {
     throw new TypeError("Switch no longer accepts value/defaultValue/onValueChange; use checked/defaultChecked/onCheckedChange");
   }
+  warnDeprecatedStyleProps("Switch", { style }, "layoutStyle for placement and presentation/size for appearance");
   const { colors, environment, ...nativeTheme } = useHjmNativeTheme();
   const dimensions = switchRecipe.sizes[size];
   const stacked = presentation === "row" && labelVisibility === "visible"
@@ -1782,7 +1945,14 @@ export type SegmentedControlProps<Value extends string = string> =
     defaultValue?: Value;
     onValueChange?: (value: Value) => void;
     size?: SegmentedControlSize;
+    presentation?: "connected" | "pills";
     disabled?: boolean;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
+    /**
+     * @deprecated Raw visual style bypasses `segmentedControlRecipe`. Use `layoutStyle` for placement
+     * and `size` for appearance. Removed in the next major (consumer-policy.md §3.1).
+     */
     style?: StyleProp<ViewStyle>;
   }>;
 
@@ -1794,11 +1964,15 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
   defaultValue,
   onValueChange,
   size = segmentedControlRecipe.defaults.size,
+  presentation = "connected",
   disabled = false,
+  layoutStyle,
   style,
 } = props;
   // Removed aliases must not silently change the selected collection in JavaScript callers.
   if ("options" in props || !Array.isArray(items)) throw new TypeError("SegmentedControl requires items; options was removed");
+  warnDeprecatedStyleProps("SegmentedControl", { style }, "layoutStyle for placement and size for appearance");
+  const pills = presentation === "pills";
   const resolvedItems = items;
   const theme = useHjmNativeTheme();
   const { environment } = theme;
@@ -1838,7 +2012,7 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
       accessibilityRole="radiogroup"
       style={[
         {
-          backgroundColor: resolveColorReference(
+          backgroundColor: pills ? "transparent" : resolveColorReference(
             segmentedControlRecipe.container.background,
             theme.palette,
           ),
@@ -1847,13 +2021,15 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
             theme.palette,
           ),
           borderRadius: radius[segmentedControlRecipe.container.radius],
-          borderWidth: segmentedControlRecipe.container.borderWidth,
+          borderWidth: pills ? 0 : segmentedControlRecipe.container.borderWidth,
           direction: environment.direction,
           flexDirection: stacked ? "column" : "row",
-          gap: segmentedControlRecipe.container.gap,
-          padding: segmentedControlRecipe.container.padding,
+          flexWrap: pills ? "wrap" : "nowrap",
+          gap: pills ? segmentedControlRecipe.pills.gap : segmentedControlRecipe.container.gap,
+          padding: pills ? 0 : segmentedControlRecipe.container.padding,
         },
         style,
+        layoutStyle,
       ]}
     >
       {resolvedItems.map((item) => {
@@ -1861,7 +2037,7 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
         const optionDisabled = disabled || item.disabled === true;
         const contentColor = resolveColorReference(
           isSelected
-            ? segmentedControlRecipe.item.selectedContent
+            ? (pills ? segmentedControlRecipe.pills.selectedContent : segmentedControlRecipe.item.selectedContent)
             : segmentedControlRecipe.item.idleContent,
           theme.palette,
         );
@@ -1883,7 +2059,7 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
             style={({ pressed }) => [
               {
                 alignItems: "center",
-                backgroundColor: isSelected
+                backgroundColor: !pills && isSelected
                   ? resolveColorReference(
                       segmentedControlRecipe.item.selectedBackground,
                       theme.palette,
@@ -1896,23 +2072,26 @@ export function SegmentedControl<Value extends string = string>(props: Segmented
                     )
                   : "transparent",
                 borderRadius: radius[segmentedControlRecipe.item.radius],
-                borderWidth: isSelected
+                borderWidth: !pills && isSelected
                   ? segmentedControlRecipe.item.selectedBorderWidth
                   : 0,
-                flex: stacked ? undefined : 1,
+                flex: stacked || pills ? undefined : 1,
+                maxWidth: pills ? "100%" : undefined,
                 gap: segmentedControlRecipe.item.gap,
                 justifyContent: "center",
-                minHeight: sizeContract.minHeight,
+                minHeight: pills ? segmentedControlRecipe.pills.minHeight : sizeContract.minHeight,
                 opacity: optionDisabled
                   ? segmentedControlRecipe.item.disabledOpacity
                   : pressed
                     ? segmentedControlRecipe.item.pressedOpacity
                     : 1,
-                paddingHorizontal: sizeContract.paddingHorizontal,
+                paddingHorizontal: pills ? spacing.md : sizeContract.paddingHorizontal,
+                paddingVertical: pills ? segmentedControlRecipe.pills.inset : undefined,
                 width: stacked ? "100%" : undefined,
               },
             ]}
           >
+            {pills ? <View pointerEvents="none" accessible={false} style={{position:"absolute",left:0,right:0,top:segmentedControlRecipe.pills.inset,bottom:segmentedControlRecipe.pills.inset,borderRadius:segmentedControlRecipe.pills.radius,backgroundColor:isSelected?resolveColorReference(segmentedControlRecipe.pills.selectedBackground,theme.palette):theme.colors.surfaceAlt}}/> : null}
             {leading ? (
               <View
                 accessibilityElementsHidden
@@ -1954,6 +2133,10 @@ type ChipBaseProps = Readonly<{
   layoutStyle?: HjmCompositionStyleProp;
   leadingStyle?: HjmCompositionStyleProp;
   indicatorStyle?: HjmCompositionStyleProp;
+  /**
+   * @deprecated Raw text style bypasses `chipRecipe.label`. Use `size` and `selected` for label
+   * typography. Removed in the next major (consumer-policy.md §3.1).
+   */
   labelStyle?: StyleProp<TextStyle>;
   trailingStyle?: HjmCompositionStyleProp;
   renderSelectionIndicator?: (props: Readonly<{
@@ -1999,6 +2182,7 @@ export function Chip({
   onPress,
 }: ChipProps) {
   const theme = useHjmNativeTheme();
+  warnDeprecatedStyleProps("Chip", { labelStyle }, "size/selected for label typography");
   const selectable = selectionMode !== "action";
   const active = selectable && selected === true;
   const metrics = chipRecipe.sizes[size];

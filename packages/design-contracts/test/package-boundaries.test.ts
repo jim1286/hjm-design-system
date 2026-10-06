@@ -159,6 +159,7 @@ describe("package boundaries", () => {
       "./gravity-letters",
       "./gooey-navigation",
       "./action-session",
+      "./screen-patterns",
     ] as const;
 
     expect(Object.keys(packageJson.exports)).toEqual(expectedExports);

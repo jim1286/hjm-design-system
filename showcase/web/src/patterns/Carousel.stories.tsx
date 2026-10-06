@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Carousel } from "@hjmds/react/carousel";
 import { Surface, Stack, Text } from "@hjmds/react/layout";
 
-const meta = { includeStories: ["Manual","OptionalAutoplay","LargeText"],
+const meta = { includeStories: ["Default","Manual","OptionalAutoplay","Dark","LargeText"],
   id: "patterns-carousel", title: "배포/컴포넌트/데이터 표시/캐러셀",
   component: Carousel,
   args: {
@@ -18,6 +18,8 @@ const meta = { includeStories: ["Manual","OptionalAutoplay","LargeText"],
 } satisfies Meta<typeof Carousel>;
 export default meta;
 type Story = StoryObj<typeof meta>;
+export const Default: Story = { name: "기본" };
 export const Manual: Story = { name: "수동 재생",};
 export const OptionalAutoplay: Story = { name: "자동 재생 연동", args: { autoplay: { intervalMs: 5000 } } };
+export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
 export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };

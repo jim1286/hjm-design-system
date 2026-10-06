@@ -1,3 +1,4 @@
+import { Heading } from "@hjmds/react/heading";
 import "./reference-navigation-bars.css";
 import { useState } from "react";
 import { BottomNavigation } from "@hjmds/react/navigation";
@@ -19,7 +20,7 @@ export function ReferenceBar({ reference }: { reference: NavigationBarReference 
  // renderer; these studies compose it instead of cloning ten navigation engines.
  const palette = referenceNavigationPalette(reference);
  return <HjmProvider brandPalette={palette} className={`hjm-nav-study hjm-nav-study--${reference.id}`}><Stack gap="md">
-  <Text variant="heading">{reference.title}</Text>
+  <Heading level="level3">{reference.title}</Heading>
   <Text>{reference.source}에서 착안</Text>
   <BottomNavigation descriptor={{ accessibilityLabel: reference.title, selectedKey: selected, items }}
    configuration={{ presentation: reference.presentation, density: "compact", distribution: action && reference.presentation !== "capsule" ? "center-gap" : "equal" }}
@@ -34,7 +35,7 @@ export function NavigationBehaviorPreview({ behavior }: { behavior: NavigationBe
  const options = navigationBarReferences.filter(item => (group.references as readonly string[]).includes(item.id));
  const [preset, setPreset] = useState<string>(options[0]!.id);
  const reference = options.find(item => item.id === preset) ?? options[0]!;
- return <Stack gap="md"><Text variant="heading">{group.title}</Text>
+ return <Stack gap="md"><Heading level="level3">{group.title}</Heading>
   {options.length > 1 && <Stack gap="sm">{options.map(item => <Button key={item.id} tone="secondary" selected={reference.id === item.id} onClick={() => setPreset(item.id)}>{item.source} 표현</Button>)}</Stack>}
   <ReferenceBar key={reference.id} reference={reference} />
  </Stack>;

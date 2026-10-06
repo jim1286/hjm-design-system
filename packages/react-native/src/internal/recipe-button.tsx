@@ -8,7 +8,7 @@ import {
   buttonRecipe,
   resolveButtonLabelLines,
 } from "@hjmds/design-contracts/recipes/base";
-import { forwardRef } from "react";
+import { Children, forwardRef, type ReactNode } from "react";
 import {
   ActivityIndicator,
   Pressable,
@@ -26,6 +26,20 @@ import type { ButtonProps } from "../actions.js";
 // Only HJM recipe compositions may override painting; package exports hide this module from products.
 type RecipeButtonProps = ButtonProps &
   Readonly<{ style?: StyleProp<ViewStyle>; labelStyle?: StyleProp<TextStyle> }>;
+// React Native cannot render a raw string outside <Text>. JSX such as `{count} shared` or
+// `Filter{suffix}` produces an array of strings/numbers, which the single-string check used to miss,
+// so the label rendered bare inside Pressable and crashed ("Text strings must be rendered within a
+// <Text> component", Showcase 2026-10-06). Joining keeps the same Text, wrapping cap and accessible
+// name as a single string, matching Web where mixed text children already work. Children that
+// contain elements still render as-is.
+function joinTextChildren(children: ReactNode): ReactNode {
+  if (!Array.isArray(children)) return children;
+  const parts = Children.toArray(children);
+  return parts.length > 0 && parts.every((part) => typeof part === "string" || typeof part === "number")
+    ? parts.join("")
+    : children;
+}
+
 export const RecipeButton = forwardRef<NativeView, RecipeButtonProps>(
   function RecipeButton(
     {
@@ -64,8 +78,9 @@ export const RecipeButton = forwardRef<NativeView, RecipeButtonProps>(
     const inactive = disabled && !loading;
     const unavailable = disabled || (loading && disableWhileLoading);
     // Preserve the idle content's measured width while the pending label remains the accessible name.
-    const content = children;
-    const announcedContent = loading && loadingLabel !== undefined ? loadingLabel : children;
+    const content = joinTextChildren(children);
+    const textContent = typeof content === "string" || typeof content === "number";
+    const announcedContent = loading && loadingLabel !== undefined ? loadingLabel : content;
     if (content === undefined || content === null || content === false) {
       throw new TypeError("Button requires children");
     }
@@ -118,7 +133,9 @@ export const RecipeButton = forwardRef<NativeView, RecipeButtonProps>(
             direction: environment.direction,
             flexDirection: "row",
             gap: spacing.xs,
-            ...(growWithContent ? {} : { height: visibleHeight }),
+            // Wrapped labels need their intrinsic height, especially when large text
+            // lifts the line cap. Fixed recipe height clipped the independent 2x fixture.
+            ...(growWithContent || textContent ? {} : { height: visibleHeight }),
             justifyContent: buttonRecipe.aligns[align],
             minHeight: visibleHeight,
             minWidth: control.minTouchTarget,
@@ -133,19 +150,17 @@ export const RecipeButton = forwardRef<NativeView, RecipeButtonProps>(
           },
           style,
           layoutStyle,
-          style,
-          labelStyle,
         ]}
       >
         {loading && leading != null ? <View style={{ opacity: 0 }}>{leading}</View> : leading}
-        {typeof content === "string" || typeof content === "number" ? (
+        {textContent ? (
           <Text
             align={align === "leading" ? "auto" : "center"}
             emphasis="medium"
             // Wrap up to the recipe's cap instead of the single line RN gives by
             // default; the cap lifts under large text (buttonRecipe.label).
             {...(labelLines === null ? {} : { numberOfLines: labelLines })}
-            style={[{ color: contentColor }, labelStyle, loading ? { opacity: 0 } : null]}
+            style={[{ color: contentColor, flexShrink: 1, minWidth: 0 }, labelStyle, loading ? { opacity: 0 } : null]}
             variant={sizeContract.textVariant}
           >
             {content}

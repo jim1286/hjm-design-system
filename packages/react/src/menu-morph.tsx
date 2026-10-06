@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { Button } from "./actions.js";
 import { Menu, type MenuItem } from "./overlays.js";
 import { useHjmTheme } from "./provider.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type MorphingMenuProps = {
   label: string;
@@ -12,10 +13,16 @@ export type MorphingMenuProps = {
   disabled?: boolean;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
+  /**
+   * Canonical layout-only placement. Applied to the morph root, or to the
+   * canonical Menu's wrapper when reduced motion/RTL falls back to it, so
+   * placement survives the switch.
+   */
+  layoutStyle?: HjmCompositionStyleProp;
 };
 
 /** Action-only morph presentation. Selection/async menus retain the full Menu. */
-export function MorphingMenu({ label, items, onAction, disabled = false, open: controlled, onOpenChange }: MorphingMenuProps) {
+export function MorphingMenu({ label, items, onAction, disabled = false, open: controlled, onOpenChange, layoutStyle }: MorphingMenuProps) {
   const theme = useHjmTheme();
   const [localOpen, setLocalOpen] = useState(false);
   const open = controlled ?? localOpen;
@@ -40,7 +47,7 @@ export function MorphingMenu({ label, items, onAction, disabled = false, open: c
   // The canonical Menu owns static/RTL behavior; Bloom's left/right geometry is physical.
   if (theme.environment.reducedMotion || theme.environment.direction === "rtl") {
     return <Menu label={label} trigger={<Button tone="secondary">{label}</Button>} items={items} disabled={disabled} open={open}
-      onOpenChange={change} {...(onAction ? { onAction } : {})} />;
+      {...(layoutStyle === undefined ? {} : { layoutStyle })} onOpenChange={change} {...(onAction ? { onAction } : {})} />;
   }
   const keyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     if (!open) {
@@ -66,7 +73,7 @@ export function MorphingMenu({ label, items, onAction, disabled = false, open: c
     }
     if (next !== undefined && next >= 0) { event.preventDefault(); event.stopPropagation(); nodes[next]?.focus(); }
   };
-  return <div ref={root} className="hjm-menu-morph" onKeyDownCapture={keyDown}>
+  return <div ref={root} className="hjm-menu-morph" style={layoutStyle} onKeyDownCapture={keyDown}>
     {/* Open toward following content; upstream defaults upward and can cover preceding values. */}
     <Bloom.Root direction="bottom" open={open} onOpenChange={change} modal={false}>
       <Bloom.Container buttonSize={{ width: 160, height: 44 }} menuWidth={240}

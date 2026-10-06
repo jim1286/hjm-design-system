@@ -11,10 +11,14 @@ import { CarouselMotion } from "@hjmds/react-native/carousel-motion";
 import { Celebration } from "@hjmds/react-native/celebration";
 import { SharedTransitionElement, SharedTransitionScreen, createHjmTransitionStack, useSharedTransitionOptions } from "@hjmds/react-native/screen-transition";
 import { Button } from "@hjmds/react-native/actions";
-import { Text } from "@hjmds/react-native/primitives";
-import { HjmNativeProvider, useHjmNativeTheme } from "@hjmds/react-native/provider";
+import { Text, Container, Stack as LayoutStack } from "@hjmds/react-native/primitives";
+import { useHjmNativeTheme } from "@hjmds/react-native/provider";
 import type { SortableItem } from "@hjmds/design-contracts/components/interaction-adapters";
 import type { BlankStackScreenProps } from "react-native-screen-transitions/react-navigation";
+
+import { Heading } from "@hjmds/react-native/heading";
+import { ListRow } from "@hjmds/react-native/data-display";
+import { PatternStatus } from "./pattern-status";
 
 const seed = [{ id: "forest", label: "숲길" }, { id: "sea", label: "바닷가" }, { id: "cafe", label: "작은 카페" }];
 const labels = {
@@ -27,13 +31,13 @@ type Routes = { Places: undefined; Detail: undefined };
 const Stack = createHjmTransitionStack<Routes>();
 const photo = { uri: "https://images.unsplash.com/photo-1472396961693-142e6e269027?w=800" };
 function Places({ navigation }: BlankStackScreenProps<Routes, "Places">) {
-  return <SharedTransitionScreen style={{ padding: 16, gap: 16 }}><Text variant="title">기억하고 싶은 장소</Text>
+  return <SharedTransitionScreen style={{ padding: 16, gap: 16 }}><Heading level="level3">기억하고 싶은 장소</Heading>
     <SharedTransitionElement id="place-forest"><Image source={photo} accessibilityLabel="숲과 산" style={{ width: 160, height: 120, borderRadius: 16 }} /></SharedTransitionElement>
     <Button onPress={() => navigation.navigate("Detail")}>숲길 상세 보기</Button></SharedTransitionScreen>;
 }
 function Detail({ navigation }: BlankStackScreenProps<Routes, "Detail">) {
   return <SharedTransitionScreen style={{ padding: 16, gap: 16 }}><SharedTransitionElement id="place-forest"><Image source={photo} accessibilityLabel="숲과 산" style={{ width: "100%", height: 280, borderRadius: 16 }} /></SharedTransitionElement>
-    <Text variant="title">조용한 숲길</Text><Text>사진이 원래 카드에서 상세 화면으로 이어집니다.</Text><Button onPress={() => navigation.goBack()}>목록으로 돌아가기</Button></SharedTransitionScreen>;
+    <Heading level="level3">조용한 숲길</Heading><Text>사진이 원래 카드에서 상세 화면으로 이어집니다.</Text><Button onPress={() => navigation.goBack()}>목록으로 돌아가기</Button></SharedTransitionScreen>;
 }
 function SharedDemo() {
   const options = useSharedTransitionOptions("place-forest");
@@ -46,19 +50,19 @@ function Interactions() {
   const [items, setItems] = useState(seed); const [openRow, setOpenRow] = useState<string | null>(null);
   const [action, setAction] = useState("선택 없음"); const [step, setStep] = useState(0);
   const [slide, setSlide] = useState("forest"); const [width, setWidth] = useState(280); const [event, setEvent] = useState(0);
-  return <View style={{ flex: 1 }}><ScrollView contentContainerStyle={{ padding: theme.tokens.spacing.md, gap: theme.tokens.spacing.lg }}>
-    <Text variant="title">즐겨찾기 순서</Text><SortableCollection items={items} label="즐겨찾기" labels={labels} renderItem={() => null}
+  return <View style={{ flex: 1 }}><ScrollView contentContainerStyle={{ paddingVertical: theme.tokens.spacing.md }}><Container gutter="compact"><LayoutStack gap="xl">
+    <Heading level="level3">즐겨찾기 순서</Heading><SortableCollection items={items} label="즐겨찾기" labels={labels} renderItem={() => null}
       onCommit={intent => setItems(intent.orderedIds.map(id => seed.find(item => item.id === id)!))} />
     <Text>현재 순서: {items.map(item => item.label).join(" → ")}</Text>
-    <Text variant="title">목록 작업</Text><SwipeActions rowId="note" label="내 기록" actionsLabel="기록 작업 보기" openRowId={openRow} onOpenRowChange={setOpenRow}
+    <Heading level="level3">목록 작업</Heading><SwipeActions rowId="note" label="내 기록" actionsLabel="기록 작업 보기" openRowId={openRow} onOpenRowChange={setOpenRow}
       actions={[{ id: "archive", label: "보관" }, { id: "delete", label: "삭제", intent: "danger", disabled: true }]} onAction={() => setAction("보관했어요")} onError={() => setAction("다시 시도해 주세요")}>
-      <View style={{ padding: theme.tokens.spacing.lg }}><Text>오늘 걸었던 숲길</Text></View></SwipeActions><Text>{action}</Text>
-    <Text variant="title">내용 전환</Text><Button onPress={() => setStep(value => value + 1)}>다음 상태</Button><ContentTransition stateKey={String(step)}><Text>{step % 2 ? "기록이 준비됐어요" : "새로운 기록을 시작해요"}</Text></ContentTransition>
+      <ListRow title="오늘 걸었던 숲길" /></SwipeActions><PatternStatus>{action}</PatternStatus>
+    <Heading level="level3">내용 전환</Heading><Button tone="secondary" onPress={() => setStep(value => value + 1)}>다음 상태</Button><ContentTransition stateKey={String(step)}><Text>{step % 2 ? "기록이 준비됐어요" : "새로운 기록을 시작해요"}</Text></ContentTransition>
     <TextTransition text={step % 2 ? "저장 완료 👨‍👩‍👧‍👦" : "나만의 하루 🌿"} />
     <View onLayout={e => setWidth(e.nativeEvent.layout.width)}><CarouselMotion width={width} height={160} slides={seed} currentKey={slide} onCurrentKeyChange={setSlide}
-      label="추천 장소" previousLabel="이전 장소" nextLabel="다음 장소" renderSlide={item => <View style={{ height: 160, justifyContent: "center", alignItems: "center", backgroundColor: theme.colors.surface }}><Text variant="title">{item.label}</Text></View>} /></View>
-    <Button onPress={() => setEvent(value => value + 1)}>기록 달성 축하</Button>{event > 0 ? <Text>{event}번째 기록을 남겼어요</Text> : null}
-  </ScrollView>
+      label="추천 장소" previousLabel="이전 장소" nextLabel="다음 장소" renderSlide={item => <View style={{ height: 160, justifyContent: "center", alignItems: "center", backgroundColor: theme.colors.surface }}><Heading level="level3">{item.label}</Heading></View>} /></View>
+    <Button tone="secondary" onPress={() => setEvent(value => value + 1)}>기록 달성 축하</Button>{event > 0 ? <Text>{event}번째 기록을 남겼어요</Text> : null}
+  </LayoutStack></Container></ScrollView>
     {/* A viewport overlay stays visible after scrolling; a content child starts offscreen. */}
     {event > 0 ? <Celebration eventId={`record-${event}`} /> : null}</View>;
 }
@@ -69,11 +73,15 @@ function Demo({ shared = false }: { shared?: boolean }) {
       <Button tone="secondary" onPress={() => setOpen(false)}>쇼케이스로 돌아가기</Button>{open ? shared ? <SharedDemo /> : <Interactions /> : null}
     </GestureHandlerRootView></Modal></>;
 }
-const meta = { title: "실험/구성/드래그·스와이프·모션", component: Demo } satisfies Meta<typeof Demo>;
+const meta = { title: "배포/구성/직접 조작과 모션/끌기·밀기·화면 전환", component: Demo } satisfies Meta<typeof Demo>;
 export default meta;
-export const Playground: StoryObj<typeof meta> = { name: "순서 이동·목록 작업·내용 전환",};
+export const Default: StoryObj<typeof meta> = { name: "기본",};
 export const SharedScreenTransition: StoryObj<typeof meta> = { name: "카드 확대와 화면 전환", args: { shared: true } };
+export const Dark: StoryObj<typeof meta> = { name: "어두운 테마", globals: { theme: "dark" } };
+export const LargeText: StoryObj<typeof meta> = { name: "큰 글자", globals: { textScale: "2" } };
 
-// Explicit scenarios make accessibility preferences reproducible without changing the device.
-export const ReducedMotion: StoryObj<typeof meta> = { name: "동작 줄이기", render: () => <HjmNativeProvider theme="dark" direction="rtl" textScale={2} reducedMotion><Demo /></HjmNativeProvider> };
-export const SharedReducedMotion: StoryObj<typeof meta> = { name: "공통 동작 줄이기", render: () => <HjmNativeProvider theme="dark" reducedMotion><Demo shared /></HjmNativeProvider> };
+// Explicit scenarios make accessibility preferences reproducible without changing the device. They set the shared
+// `motion` global instead of wrapping a provider in render: a nested provider hid the toolbar state and also forced
+// dark·RTL·200% into one story, so it no longer showed reduced motion alone (2026-10-06 Storybook spec).
+export const ReducedMotion: StoryObj<typeof meta> = { name: "동작 줄이기", globals: { motion: "reduced" } };
+export const SharedScreenTransitionReducedMotion: StoryObj<typeof meta> = { ...SharedScreenTransition, name: "카드 확대와 화면 전환 · 동작 줄이기", globals: { motion: "reduced" } };

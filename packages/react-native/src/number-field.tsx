@@ -20,6 +20,8 @@ import {
   type ViewStyle,
 } from "react-native";
 
+import type { HjmCompositionStyleProp } from "./composition-style.js";
+import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { useControllableState } from "./internal/state.js";
 import {
   logicalTextAlign,
@@ -72,7 +74,17 @@ export type NumberFieldProps = NativeNumberInputProps &
     /** Optional product formatting for assistive output, never the editable text. */
     getValueText?: (value: number) => string;
     inputMode?: "decimal" | "numeric" | "text";
+    /** Canonical layout-only placement for the complete field. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
+    /**
+     * @deprecated Raw input style bypasses `numberFieldRecipe`. Use `size` for control height and
+     * typography. Removed in the next major (consumer-policy.md §3.1; the 1.11 text-field removal).
+     */
     inputStyle?: StyleProp<TextStyle>;
+    /**
+     * @deprecated Raw container style bypasses `numberFieldRecipe`. Use `layoutStyle` for placement.
+     * Removed in the next major (consumer-policy.md §3.1).
+     */
     containerStyle?: StyleProp<ViewStyle>;
   }>;
 
@@ -110,6 +122,7 @@ export const NumberField = forwardRef<TextInput, NumberFieldProps>(
       inputMode,
       inputStyle,
       containerStyle,
+      layoutStyle,
       onBlur,
       onFocus,
       onSubmitEditing,
@@ -118,6 +131,11 @@ export const NumberField = forwardRef<TextInput, NumberFieldProps>(
     forwardedRef,
   ) {
     const { colors, environment, textScaling, tokens } = useHjmNativeTheme();
+    warnDeprecatedStyleProps(
+      "NumberField",
+      { inputStyle, containerStyle },
+      "layoutStyle for placement and size for the control",
+    );
     const controlled = value !== undefined;
     const [currentValue, setCurrentValue] = useControllableState<NumberFieldValue>({
       ...(value === undefined ? {} : { value }),
@@ -196,13 +214,16 @@ export const NumberField = forwardRef<TextInput, NumberFieldProps>(
     ) => resolveNativeTextScaleProps(textScaling, style, allowFontScaling);
 
     return (
-      <View style={[{ gap: numberFieldRecipe.support.gap }, containerStyle]}>
+      <View style={[{ gap: numberFieldRecipe.support.gap }, containerStyle, layoutStyle]}>
         <NativeText
           {...scaledText([
             tokens.typography[numberFieldRecipe.support.label.textVariant],
             {
               color: colors.textBody,
               fontWeight: numberFieldRecipe.support.label.fontWeight,
+              // fieldRecipe.disabledScope: the label fades with the control (it stayed at full
+              // contrast before 2026-10-06, while Web faded it); support text does not.
+              opacity: disabled ? numberFieldRecipe.states.disabledOpacity : 1,
               textAlign: logicalTextAlign(environment.direction),
             },
           ])}

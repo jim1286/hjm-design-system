@@ -1,25 +1,25 @@
-import { WebAdditionsPreview } from "../patterns/WebAdditions.stories.js";
+import { WebAdditionsPreview } from "../patterns/WebAdditions.previews.js";
 import { calendarExampleGrid } from "../../../shared/calendar-example.js";
-import { DataLayoutPreview } from "../patterns/DataLayouts.stories.js";
+import { DataLayoutPreview } from "../patterns/DataLayouts.previews.js";
 import { ThinkingOrb } from "@hjmds/react/thinking-orb";
-import { PopoverPreview } from "../patterns/Popover.stories.js";
-import { SidePanelPreview } from "../patterns/SidePanel.stories.js";
-import { SplitterPreview } from "../patterns/Splitter.stories.js";
-import { TourPreview } from "../patterns/Tour.stories.js";
-import { TreePreview } from "../patterns/Tree.stories.js";
-import { TransferListPreview, MentionsPreview } from "../patterns/TransferList.stories.js";
-import { CommandPalettePreview, DataTablePreview } from "../patterns/CommandPalette.stories.js";
-import { AgreementPreview, TopPreview, AuthProviderButtonPreview, AuthScreenLayoutPreview } from "../patterns/Agreement.stories.js";
-import { HeadingPreview } from "../patterns/Heading.stories.js";
-import { ToggleGroupPreview, TagsInputPreview } from "../patterns/ToggleGroup.stories.js";
-import { SidebarPreview, BottomInfoPreview } from "../patterns/Sidebar.stories.js";
-import { DateRangePreview } from "../patterns/DateRange.stories.js";
-import { TextFormatPreview } from "../patterns/TextFormat.stories.js";
-import { CollapsiblePreview, ContextMenuPreview, MenubarPreview } from "../patterns/Disclosure.stories.js";
-import { AssetPreview } from "../patterns/Asset.stories.js";
-import { WebNavigationPreview } from "../patterns/WebNavigation.stories.js";
-import { AnchorPreview } from "../patterns/Anchor.stories.js";
-import { CalendarPreview } from "../patterns/Calendar.stories.js";
+import { PopoverPreview } from "../patterns/Popover.previews.js";
+import { SidePanelPreview } from "../patterns/SidePanel.previews.js";
+import { SplitterPreview } from "../patterns/Splitter.previews.js";
+import { TourPreview } from "../patterns/Tour.previews.js";
+import { TreePreview } from "../patterns/Tree.previews.js";
+import { TransferListPreview, MentionsPreview } from "../patterns/TransferList.previews.js";
+import { CommandPalettePreview, DataTablePreview } from "../patterns/CommandPalette.previews.js";
+import { AgreementPreview, TopPreview, AuthProviderButtonPreview, AuthScreenLayoutPreview } from "../patterns/Agreement.previews.js";
+import { HeadingPreview } from "../patterns/Heading.previews.js";
+import { ToggleGroupPreview, TagsInputPreview } from "../patterns/ToggleGroup.previews.js";
+import { SidebarPreview, BottomInfoPreview } from "../patterns/Sidebar.previews.js";
+import { DateRangePreview } from "../patterns/DateRange.previews.js";
+import { TextFormatPreview } from "../patterns/TextFormat.previews.js";
+import { CollapsiblePreview, ContextMenuPreview, MenubarPreview } from "../patterns/Disclosure.previews.js";
+import { AssetPreview } from "../patterns/Asset.previews.js";
+import { WebNavigationPreview } from "../patterns/WebNavigation.previews.js";
+import { AnchorPreview } from "../patterns/Anchor.previews.js";
+import { CalendarPreview } from "../patterns/Calendar.previews.js";
 import { FloatingActionButton as HjmFloatingActionButton } from "@hjmds/react/floating-action-button";
 import { Carousel as HjmCarousel } from "@hjmds/react/carousel";
 import { useState, type CSSProperties, type ReactNode } from "react";
@@ -334,7 +334,9 @@ function ProviderValuePreview({
     <section
       aria-label="Resolved DesignSystemProvider value"
       className="hjm-demo-surface"
-      style={{ backgroundColor: palette.theme.bg, color: palette.theme.text }}
+      // Raw values ("success: #16a34a") have no break opportunity; at 2x text they widened the stage grid track
+      // past a 390 viewport and made the stage a keyboard-unreachable scroll region (2026-10-06 render sweep).
+      style={{ backgroundColor: palette.theme.bg, color: palette.theme.text, overflowWrap: "anywhere" }}
     >
       <h3>Resolved environment + palette</h3>
       <dl className="hjm-config">

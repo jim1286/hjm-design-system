@@ -2,11 +2,11 @@ import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { resolveDesignSystemProviderValue } from "@hjmds/design-contracts/components/design-system-provider";
-import { radius } from "@hjmds/design-contracts/foundations";
+import { layer, radius, shadow as shadowTokens } from "@hjmds/design-contracts/foundations";
 import { buttonRecipe, fieldRecipe } from "@hjmds/design-contracts/recipes/base";
 import { dialogRecipe, sheetRecipe, toastRecipe } from "@hjmds/design-contracts/recipes";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { Button, Dialog, HjmProvider, Sheet, TextField, ToastProvider, useToast } from "../src/index.js";
+import { Button, Dialog, HjmProvider, Menu, Sheet, Surface, TextField, ToastProvider, useToast } from "../src/index.js";
 import "../src/styles.css";
 
 /**
@@ -75,6 +75,7 @@ describe.each(["light", "dark"] as const)("Web renderer follows the recipes in %
     await flush();
     const dialog = document.body.querySelector<HTMLElement>(".hjm-dialog")!;
     const style = getComputedStyle(dialog);
+    expect(Number(getComputedStyle(dialog.parentElement!).zIndex)).toBe(layer.modal);
     expect(style.backgroundColor).toBe(rgb(resolveColorReference(dialogRecipe.content.background, palette)));
     expect(style.borderTopLeftRadius).toBe(`${radius[dialogRecipe.content.radius]}px`);
     expect(style.boxShadow).toBe(shadow(dialogRecipe.content.shadow));
@@ -98,10 +99,30 @@ describe.each(["light", "dark"] as const)("Web renderer follows the recipes in %
     await flush();
     const toast = document.body.querySelector<HTMLElement>(".hjm-toast")!;
     const style = getComputedStyle(toast);
+    expect(Number(getComputedStyle(toast.closest(".hjm-toast-viewport")!).zIndex)).toBe(layer.toast);
     expect(style.backgroundColor).toBe(rgb(resolveColorReference(toastRecipe.surface.background, palette)));
     expect(style.borderTopColor).toBe(rgb(resolveColorReference(toastRecipe.surface.border, palette)));
     expect(style.borderTopLeftRadius).toBe(`${radius[toastRecipe.surface.radius]}px`);
     expect(style.boxShadow).toBe(shadow(toastRecipe.surface.shadow));
+  });
+
+  it("uses shared elevation and dropdown tokens on actual portalled content", async () => {
+    await act(async () => root.render(
+      <HjmProvider theme={theme} systemTheme={theme}>
+        <Surface tone="raised">Elevated content</Surface>
+        <Menu defaultOpen trigger={<button type="button">Actions</button>} label="Actions"
+          items={[{ id: "edit", label: "Edit" }]} />
+      </HjmProvider>,
+    ));
+    await flush();
+    const surface = container.querySelector<HTMLElement>(".hjm-surface")!;
+    const menu = document.body.querySelector<HTMLElement>('[role="menu"]')!;
+    expect(getComputedStyle(surface).boxShadow).toBe(shadow(shadowTokens.floating));
+    expect(getComputedStyle(menu).boxShadow).toBe(shadow(shadowTokens.floating));
+    expect(Number(getComputedStyle(menu).zIndex)).toBe(layer.dropdown);
+    expect(layer.dropdown).toBeLessThan(layer.modal);
+    expect(layer.modal).toBeLessThan(layer.tooltip);
+    expect(layer.tooltip).toBeLessThan(layer.toast);
   });
 
   it("dims disabled Button and Field by the recipe opacities", async () => {
@@ -114,7 +135,11 @@ describe.each(["light", "dark"] as const)("Web renderer follows the recipes in %
     const button = container.querySelector<HTMLElement>(".hjm-button")!;
     const field = container.querySelector<HTMLElement>(".hjm-field")!;
     expect(Number(getComputedStyle(button).opacity)).toBeCloseTo(buttonRecipe.opacity.disabled);
-    expect(Number(getComputedStyle(field).opacity)).toBeCloseTo(fieldRecipe.disabledOpacity);
+    // fieldRecipe.disabledScope (2026-10-06): the label and control fade, not the frame, so
+    // the hint and error keep their contrast (field-disabled-scope.browser.test.tsx covers every input).
+    expect(Number(getComputedStyle(field).opacity)).toBe(1);
+    expect(Number(getComputedStyle(field.querySelector(".hjm-field__control")!).opacity)).toBeCloseTo(fieldRecipe.disabledOpacity);
+    expect(Number(getComputedStyle(field.querySelector(".hjm-field__label")!).opacity)).toBeCloseTo(fieldRecipe.disabledOpacity);
     const provider = container.querySelector<HTMLElement>("[data-hjm-provider]")!;
     expect(Number(getComputedStyle(provider).getPropertyValue("--hjm-button-pressed-opacity")))
       .toBeCloseTo(buttonRecipe.opacity.pressed);

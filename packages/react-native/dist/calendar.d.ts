@@ -1,5 +1,6 @@
 import { type ReactNode, type Ref } from "react";
 import { type CalendarDescriptor, type CalendarSize, type ComposeCalendarAccessibleName, type ResolvedCalendarDateCell } from "@hjmds/design-contracts/components/calendar";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type CalendarMonthAction = Readonly<{
     month: string;
     label: string;
@@ -15,7 +16,8 @@ export type CalendarProps<Content = unknown> = Readonly<{
     renderCellContent?: (cell: ResolvedCalendarDateCell<Content>) => ReactNode;
     size?: CalendarSize;
     ref?: Ref<CalendarHandle>;
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** Inline dates stay individually accessible; Native month paging uses explicit buttons. */
-export declare function Calendar<Content>({ descriptor, composeAccessibleName, previousMonth, nextMonth, renderCellContent, size, ref }: CalendarProps<Content>): import("react").JSX.Element;
+export declare function Calendar<Content>({ descriptor, composeAccessibleName, previousMonth, nextMonth, renderCellContent, size, ref, layoutStyle }: CalendarProps<Content>): import("react").JSX.Element;
 //# sourceMappingURL=calendar.d.ts.map

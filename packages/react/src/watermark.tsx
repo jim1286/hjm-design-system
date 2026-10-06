@@ -1,11 +1,14 @@
 import { useId, type ReactNode } from "react";
 import { resolveWatermark } from "@hjmds/design-contracts/components/watermark";
-export type WatermarkProps = Readonly<{ text: string | readonly string[]; children: ReactNode; tileWidth?: number; tileHeight?: number; rotate?: number; opacity?: number }>;
+import type { HjmCompositionStyleProp } from "./composition-style.js";
+export type WatermarkProps = Readonly<{ text: string | readonly string[]; children: ReactNode; tileWidth?: number; tileHeight?: number; rotate?: number; opacity?: number;
+  /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp }>;
 /** React escapes all text; an inline SVG pattern avoids canvas, external requests and markup interpolation. */
-export function Watermark({ text, children, tileWidth, tileHeight, rotate, opacity }: WatermarkProps) {
+export function Watermark({ text, children, tileWidth, tileHeight, rotate, opacity, layoutStyle }: WatermarkProps) {
   const config = resolveWatermark(text, tileWidth, tileHeight, rotate, opacity);
   const id = `hjm-watermark-${useId().replace(/[^a-zA-Z0-9_-]/g, "")}`;
-  return <div className="hjm-watermark" data-hjm-watermark>
+  return <div className="hjm-watermark" style={layoutStyle} data-hjm-watermark>
     <div className="hjm-watermark__content">{children}</div>
     <svg className="hjm-watermark__overlay" aria-hidden="true" focusable="false" width="100%" height="100%">
       <defs><pattern id={id} width={config.width} height={config.height} patternUnits="userSpaceOnUse">

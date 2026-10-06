@@ -114,6 +114,23 @@ it("treats Previous on the first step as a no-op and finishes the last step as c
   expect(changes.mock.calls.map(([, detail]) => detail.reason)).toEqual(["complete"]);
 });
 
+it("keeps the first step's Previous focusable while announcing it as unavailable", async () => {
+  const stepChanges = vi.fn();
+  await act(async () => root.render(<Fixture onStepChange={stepChanges} />));
+  await expect.poll(() => card()).not.toBeNull();
+  const previous = button("이전");
+  // A native `disabled` would drop the button from the tab order and lose focus.
+  expect(previous.disabled).toBe(false);
+  expect(previous.getAttribute("aria-disabled")).toBe("true");
+  await act(async () => previous.focus());
+  await key("Enter");
+  await key("Space");
+  expect(stepChanges).not.toHaveBeenCalled();
+  expect(document.activeElement).toBe(previous);
+  await click("다음");
+  await expect.poll(() => button("이전").getAttribute("aria-disabled")).toBeNull();
+});
+
 it("always exits on Escape and on Skip, whichever step is showing", async () => {
   const changes = vi.fn();
   await act(async () => root.render(<Fixture onOpenChange={changes} />));

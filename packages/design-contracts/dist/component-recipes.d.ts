@@ -1796,6 +1796,22 @@ export declare const segmentedControlRecipe: {
     readonly defaults: {
         readonly size: "medium";
     };
+    readonly pills: {
+        readonly gap: 8;
+        readonly radius: 999;
+        readonly inset: 8;
+        readonly minHeight: 44;
+        readonly selectedBackground: Readonly<{
+            source: "theme";
+            key: "textBody";
+            alpha?: number;
+        }>;
+        readonly selectedContent: Readonly<{
+            source: "theme";
+            key: "bg";
+            alpha?: number;
+        }>;
+    };
     readonly adaptive: {
         readonly largeTextLayout: "stacked";
         readonly stackAtFontScale: 1.6;
@@ -2970,6 +2986,7 @@ export declare const sheetRecipe: {
             readonly radius: 12;
             readonly offsetY: 4;
         };
+        /** Caps `size="auto"` only; fixed `sizes` (medium/large/full) are bounded by the safe-area viewport instead. */
         readonly maxHeightRatio: 0.9;
         readonly paddingHorizontal: 20;
         readonly paddingTop: 12;

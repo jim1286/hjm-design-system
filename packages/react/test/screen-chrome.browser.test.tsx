@@ -21,6 +21,31 @@ beforeEach(() => {
 afterEach(async () => { await act(async () => root.unmount()); host.remove(); await page.viewport(1280, 720); });
 
 describe("screen chrome layout", () => {
+  it("restores the compact title after a live text-scale round trip", async () => {
+    await page.viewport(390, 844);
+    const titleAction = vi.fn();
+    const renderChrome = (textScale: number) => (
+      <HjmProvider textScale={textScale} theme="dark" minimumVisualTarget>
+        <TopBar title="QA1005 수신계정" onTitleClick={titleAction}
+          leading={<IconButton label="뒤로">←</IconButton>}
+          actions={<Button tone="ghost">차단</Button>} />
+      </HjmProvider>
+    );
+    await act(async () => root.render(renderChrome(1)));
+    const title = host.querySelector<HTMLButtonElement>("h1 button")!;
+    const before = title.getBoundingClientRect();
+    await act(async () => root.render(renderChrome(2)));
+    expect(host.querySelector(".hjm-top-bar")?.getAttribute("data-large-text")).toBe("true");
+    await act(async () => root.render(renderChrome(1)));
+    const after = title.getBoundingClientRect();
+    expect(host.querySelector("h1 button")).toBe(title);
+    expect(after.width).toBeCloseTo(before.width, 1);
+    expect(after.left).toBeCloseTo(before.left, 1);
+    expect(after.height).toBeCloseTo(before.height, 1);
+    expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(390);
+    await act(async () => title.click());
+    expect(titleAction).toHaveBeenCalledOnce();
+  });
   it.each(["ltr", "rtl"] as const)("aligns indented-list titles and keeps compact switches named in %s", async (direction) => {
     await page.viewport(320, 844);
     const change = vi.fn();

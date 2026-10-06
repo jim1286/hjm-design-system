@@ -11,6 +11,8 @@ export type IconProps = Omit<SVGAttributes<SVGSVGElement>, "children" | "color">
         color: string;
         strokeWidth: number;
     }>) => ReactNode;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 export declare const Icon: import("react").ForwardRefExoticComponent<IconProps & import("react").RefAttributes<SVGSVGElement>>;
 type ImageElementProps = Omit<ImgHTMLAttributes<HTMLImageElement>, "alt" | "aria-hidden" | "aria-label" | "children" | "className" | "height" | "onError" | "onLoad" | "role" | "src" | "style" | "width">;
@@ -45,6 +47,8 @@ export type ImageProps = ImageRootProps & ImageDescriptor & Readonly<{
     onLoad?: ReactEventHandler<HTMLImageElement>;
     onError?: ReactEventHandler<HTMLImageElement>;
     onLoadStatusChange?: (status: Extract<ImageLoadStatus, "loaded" | "error">) => void;
+    /** Canonical layout-only placement on the root frame; the aspect ratio stays descriptor-owned. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** Intrinsic-size image with canonical alt semantics and an accessible fallback. */
 export declare const Image: import("react").ForwardRefExoticComponent<ImageProps & import("react").RefAttributes<HTMLSpanElement>>;

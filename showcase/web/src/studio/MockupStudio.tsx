@@ -1,7 +1,8 @@
+import { Heading } from "@hjmds/react/heading";
 import { SceneTimeline } from "./SceneTimeline";
 import { sampleSceneTimeline } from "../../../shared/scene-timeline";
 import { useEffect, useRef, useState } from "react";
-import { Stack, Surface, Text } from "@hjmds/react/layout";
+import { Container, Stack, Surface, Text } from "@hjmds/react/layout";
 import { Button } from "@hjmds/react/actions";
 import { TextField } from "@hjmds/react/forms";
 import { initialMockupScene, parseMockupScene, serializeMockupScene, sceneDimensions, type MockupScene } from "../../../shared/mockup-scene";
@@ -59,8 +60,8 @@ export function MockupStudio() {
     finally { if (mounted.current) setExporting(false); }
   }
   const dimensions = sceneDimensions(scene.format);
-  return <main><Stack gap="xl">
-    <Stack gap="sm"><Text variant="heading">목업 스튜디오</Text><Text>실제 화면을 넣고, 내 제품에 맞는 소개 이미지를 만들어 보세요.</Text></Stack>
+  return <main><Container><Stack gap="xl">
+    <Stack gap="sm"><Heading level="level3" semanticLevel={1}>목업 스튜디오</Heading><Text>실제 화면을 넣고, 내 제품에 맞는 소개 이미지를 만들어 보세요.</Text></Stack>
     <Surface padding="md"><canvas ref={canvas} role="img" aria-label={`${scene.title}. ${scene.frame === "phone" ? "휴대폰" : "브라우저"} 프레임 목업 미리보기`} style={{ width: "100%", height: "auto", maxHeight: "70vh", objectFit: "contain" }}/></Surface>
     <Text tone="muted">출력 {dimensions.width} × {dimensions.height} · 원본 화면 전체를 유지해요.</Text>
     <label>화면 캡처<input aria-label="화면 캡처" type="file" accept="image/png,image/jpeg,image/webp" style={{ width: "100%", maxWidth: "100%" }} onChange={event => { const file = event.target.files?.[0]; if (file) void load(file); event.target.value = ""; }}/></label>
@@ -77,7 +78,7 @@ export function MockupStudio() {
     <Button tone="secondary" selected={scene.shadow} onClick={() => patch({ shadow: !scene.shadow })}>그림자</Button>
     <TextField label="화면 출처" value={scene.asset.source} onValueChange={source => patch({ asset: { ...scene.asset, source } })}/>
     <TextField label="허용 사용 범위" value={scene.asset.usage} onValueChange={usage => patch({ asset: { ...scene.asset, usage } })}/>
-    <Stack axis="inline" wrap gap="sm"><Button disabled={!image || loading || exporting} onClick={() => void savePng()}>{exporting ? "내보내는 중" : "PNG 내보내기"}</Button><Button tone="secondary" onClick={() => downloadStudioBlob(new Blob([serializeMockupScene(scene)], { type: "application/json" }), "hjm-scene.json")}>장면 설정 저장</Button><Button tone="ghost" onClick={() => { request.current++; imageRef.current?.close(); imageRef.current = null; setImage(null); setScene(initialMockupScene); setFrame(0); setLoading(false); setStatus("스크린샷을 선택해 시작하세요."); }}>초기화</Button></Stack>
+    <Stack axis="inline" wrap gap="sm"><Button disabled={!image || loading || exporting} loading={exporting} onClick={() => void savePng()}>PNG 내보내기</Button><Button tone="secondary" onClick={() => downloadStudioBlob(new Blob([serializeMockupScene(scene)], { type: "application/json" }), "hjm-scene.json")}>장면 설정 저장</Button><Button tone="ghost" onClick={() => { request.current++; imageRef.current?.close(); imageRef.current = null; setImage(null); setScene(initialMockupScene); setFrame(0); setLoading(false); setStatus("스크린샷을 선택해 시작하세요."); }}>초기화</Button></Stack>
     <Text tone="muted">브라우저 안에서만 편집합니다. 화면 파일은 업로드하지 않으며, 장면 설정에는 파일 이름과 출처만 저장합니다. 프레임은 직접 만든 공용 형태입니다.</Text>
-  </Stack></main>;
+  </Stack></Container></main>;
 }

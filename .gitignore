@@ -10,3 +10,6 @@ packages/*/test/__screenshots__/
 # Expo prebuild regenerates the showcase projects from app.json and locked dependencies.
 showcase/native/android/
 showcase/native/ios/
+
+# Provider trademarks are injected locally from the private portfolio asset registry.
+showcase/*/.env.local

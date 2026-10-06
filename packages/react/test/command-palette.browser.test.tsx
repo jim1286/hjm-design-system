@@ -101,6 +101,15 @@ it("keeps one active result, skips disabled rows, and filters as the query narro
   expect(search().getAttribute("aria-activedescendant")).toContain("search");
 });
 
+it("keeps the active row when the parent re-renders with a new inline source object", async () => {
+  await act(async () => root.render(<Fixture />));
+  await key("ArrowDown");
+  expect(active()).toContain("기록 찾기");
+  // A parent re-render rebuilds `source={{ items }}`; only a new query may move the active row.
+  await act(async () => root.render(<Fixture onActivate={() => {}} />));
+  expect(active()).toContain("기록 찾기");
+});
+
 it("closes on activation regardless of dismiss policy and reports the reason", async () => {
   const onActivate = vi.fn(); const onOpenChange = vi.fn();
   await act(async () => root.render(<Fixture onActivate={onActivate} onOpenChange={onOpenChange} />));
@@ -136,4 +145,91 @@ it("dismisses on Escape and on an outside pointer, and honours a policy that for
   });
   expect(palette()).toBeNull();
   expect(onOpenChange.mock.calls.map(([, reason]) => reason)).toEqual(["escape", "outside"]);
+});
+
+// 2026-10-06: the renderer now follows the contract's ComboboxCollectionState
+// default (local filtering), names sections, announces one empty state, and
+// offers an opt-in close action. These cases pin that behaviour.
+function SectionedFixture({ queryState, onOpenChange, onActivate, closeLabel }: {
+  queryState?: Parameters<typeof CommandPalette>[0]["queryState"];
+  onOpenChange?: (open: boolean, reason: string) => void;
+  onActivate?: (id: string) => void;
+  closeLabel?: string;
+}) {
+  const [open, setOpen] = useState(true);
+  const [query, setQuery] = useState("");
+  return (
+    <HjmProvider reducedMotion>
+      <CommandPalette
+        open={open}
+        onOpenChange={(next, details) => { setOpen(next); onOpenChange?.(next, details.reason); }}
+        descriptor={{
+          accessibilityLabel: "명령 팔레트",
+          searchPlaceholder: "무엇을 할까요",
+          emptyMessage: "찾는 명령이 없어요",
+          ...(closeLabel ? { closeLabel } : {}),
+        }}
+        source={{
+          sections: [
+            { id: "recent", label: "최근", accessibilityLabel: "최근 실행한 명령", items: [commands[0]!] },
+            { id: "all", label: "명령어", items: commands.slice(1) },
+          ],
+        }}
+        query={query}
+        onQueryChange={setQuery}
+        onActivate={(id) => onActivate?.(id)}
+        {...(queryState ? { queryState } : {})}
+      />
+    </HjmProvider>
+  );
+}
+
+const groups = () => [...document.querySelectorAll<HTMLElement>('[role="group"]')].map((node) => node.getAttribute("aria-label"));
+const statuses = () => [...document.querySelectorAll<HTMLElement>(".hjm-command-palette__state")].map((node) => node.textContent);
+
+it("filters the source locally by default, names sections, and drops emptied sections", async () => {
+  await act(async () => root.render(<SectionedFixture />));
+  expect(groups()).toEqual(["최근 실행한 명령", "명령어"]);
+  await act(async () => page.getByRole("combobox", { name: "명령 팔레트" }).fill("지우기"));
+  expect(groups()).toEqual(["명령어"]);
+  expect([...document.querySelectorAll('[role="option"]')].map((node) => node.textContent)).toEqual(["기록 지우기"]);
+  expect(active()).toContain("기록 지우기");
+});
+
+it("announces a single empty state when nothing matches", async () => {
+  await act(async () => root.render(<SectionedFixture />));
+  await act(async () => page.getByRole("combobox", { name: "명령 팔레트" }).fill("없는 명령"));
+  expect(groups()).toEqual([]);
+  expect(statuses()).toEqual(["찾는 명령이 없어요"]);
+  expect(document.querySelector(".hjm-command-palette__state")?.getAttribute("role")).toBe("status");
+  expect(search().getAttribute("aria-activedescendant")).toBeNull();
+});
+
+it("keeps external results verbatim and does not activate stale ones", async () => {
+  const onActivate = vi.fn();
+  await act(async () => root.render(
+    <SectionedFixture
+      onActivate={onActivate}
+      queryState={{ filtering: "external", asyncState: { status: "loading", message: "찾는 중" }, queryValue: "ㄱㄹ", resultQuery: "ㄱ" }}
+    />,
+  ));
+  // External mode does not re-filter: every supplied row stays, but the
+  // results belong to an older query, so Enter and pointer do nothing.
+  await act(async () => page.getByRole("combobox", { name: "명령 팔레트" }).fill("ㄱㄹ"));
+  expect(document.querySelectorAll('[role="option"]')).toHaveLength(commands.length);
+  expect(statuses()).toEqual(["찾는 중"]);
+  await key("Enter");
+  await act(async () => optionOf("기록 찾기").dispatchEvent(new MouseEvent("mousedown", { bubbles: true, cancelable: true })));
+  expect(onActivate).not.toHaveBeenCalled();
+  expect(palette()).not.toBeNull();
+});
+
+it("renders the close button only with closeLabel and closes with the close-action reason", async () => {
+  const onOpenChange = vi.fn();
+  await act(async () => root.render(<SectionedFixture onOpenChange={onOpenChange} />));
+  expect(document.querySelector(".hjm-command-palette__close")).toBeNull();
+  await act(async () => root.render(<SectionedFixture onOpenChange={onOpenChange} closeLabel="닫기" />));
+  await act(async () => page.getByRole("button", { name: "닫기" }).click());
+  expect(palette()).toBeNull();
+  expect(onOpenChange.mock.calls).toEqual([[false, "close-action"]]);
 });

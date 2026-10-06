@@ -25,7 +25,10 @@ const defaultFeedbackDuration = 2000;
  */
 export const ClipboardButton = forwardRef<HTMLButtonElement, ClipboardButtonProps>(
   function ClipboardButton(
-    { value, labels, feedbackDuration = defaultFeedbackDuration, onCopy, onCopyError, ...props },
+    // Default `secondary` (2026-10-06): copying is a helper beside the screen's main action, and the
+    // inherited Button default `primary` added a second primary to screens that already had one.
+    // Pass `tone="primary"` explicitly when copying *is* the screen's main action.
+    { value, labels, feedbackDuration = defaultFeedbackDuration, onCopy, onCopyError, tone = "secondary", ...props },
     forwardedRef,
   ) {
     const [copied, setCopied] = useState(false);
@@ -54,7 +57,7 @@ export const ClipboardButton = forwardRef<HTMLButtonElement, ClipboardButtonProp
 
     return (
       <>
-        <Button {...props} ref={forwardedRef} onClick={() => { void copy(); }}>
+        <Button {...props} tone={tone} ref={forwardedRef} onClick={() => { void copy(); }}>
           {copied ? labels.copied : labels.idle}
         </Button>
         {/* The state change is announced, not only painted. */}

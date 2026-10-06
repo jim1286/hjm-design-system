@@ -1,5 +1,5 @@
 import { focusIndicatorContract } from "./component-contracts.js";
-import { control, opacity } from "./foundations.js";
+import { control, opacity, spacing } from "./foundations.js";
 import { assertFiniteNumber, numericRangeDefaults, snapToStep, stepNumericValue, validateNumericRangeConfig, } from "./number-field.js";
 import { semanticColors } from "./semantic-colors.js";
 function assertNonEmptyCopy(value, field) {
@@ -104,6 +104,11 @@ export const sliderRecipe = {
         draggedOpacity: opacity.dragged,
     },
     radius: "full",
+    /**
+     * Header row [label ……… value] and its distance to the track. Added 2026-10-06: Web drew a 16px
+     * label–value gap and Native none, so a long label ran into the value on Native.
+     */
+    header: { gap: spacing.md, trackGap: spacing.xs },
 };
 export const sliderBehavior = {
     controlled: ["value", "defaultValue", "onValueChange"],

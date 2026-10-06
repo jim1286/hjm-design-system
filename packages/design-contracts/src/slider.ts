@@ -1,7 +1,7 @@
 import type { ColorReference } from "./color-references.js";
 import type { BehaviorContract } from "./behaviors.js";
 import { focusIndicatorContract } from "./component-contracts.js";
-import { control, opacity, type TextVariant } from "./foundations.js";
+import { control, opacity, spacing, type TextVariant } from "./foundations.js";
 import {
   assertFiniteNumber,
   numericRangeDefaults,
@@ -171,6 +171,11 @@ export const sliderRecipe = {
     draggedOpacity: opacity.dragged,
   },
   radius: "full",
+  /**
+   * Header row [label ……… value] and its distance to the track. Added 2026-10-06: Web drew a 16px
+   * label–value gap and Native none, so a long label ran into the value on Native.
+   */
+  header: { gap: spacing.md, trackGap: spacing.xs },
 } as const satisfies {
   slots: readonly ["root", "track", "filledTrack", "thumb", "label", "valueLabel"];
   defaults: { size: SliderSize };
@@ -198,6 +203,7 @@ export const sliderRecipe = {
     disabledOpacity: number;
     draggedOpacity: number;
   };
+  header: { gap: number; trackGap: number };
   radius: "full";
 };
 

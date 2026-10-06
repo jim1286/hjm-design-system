@@ -56,7 +56,7 @@ function useKeyboardHidden(behavior) {
     }, [behavior]);
     return hidden;
 }
-function BottomNavigationInner({ descriptor, configuration = {}, getHref, renderIcon, renderLink, primaryAction, onActivate, className, style, ...props }, ref) {
+function BottomNavigationInner({ descriptor, configuration = {}, getHref, renderIcon, renderLink, primaryAction, onActivate, className, style, layoutStyle, ...props }, ref) {
     const resolved = resolveBottomNavigationDescriptor(descriptor);
     const theme = useOptionalHjmTheme();
     const direction = configuration.direction ?? theme?.environment.direction;
@@ -85,6 +85,7 @@ function BottomNavigationInner({ descriptor, configuration = {}, getHref, render
             "--hjm-bottom-navigation-outer-inline": `${presentationRecipe.outerPaddingHorizontal}px`,
             "--hjm-bottom-navigation-outer-top": `${presentationRecipe.outerPaddingTop}px`,
             ...style,
+            ...layoutStyle,
         }, children: _jsxs("div", { className: "hjm-bottom-navigation__surface", children: [_jsx("ul", { className: "hjm-bottom-navigation__list", children: resolved.items.map((item, index) => {
                         const selected = item.id === resolved.selectedKey;
                         const content = (_jsxs(_Fragment, { children: [_jsxs("span", { "aria-hidden": "true", className: "hjm-bottom-navigation__indicator", "data-state": selected ? "selected" : "idle", children: [renderIcon({

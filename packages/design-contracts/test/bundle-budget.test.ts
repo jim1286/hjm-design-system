@@ -71,14 +71,11 @@ describe("contract bundle-budget coverage", () => {
   });
 });
 
-describe("byte budget alarm (2026-10-02 policy)", () => {
-  it("warns over the cap and fails only past the tolerance", () => {
-    const { classifyBytes, BYTE_ALARM_TOLERANCE } = budgetChecker;
-    expect(BYTE_ALARM_TOLERANCE).toBe(0.1);
+describe("byte sizes are reported, not enforced (2026-10-06 policy)", () => {
+  it("never fails or warns on bytes", () => {
+    const { classifyBytes } = budgetChecker;
     expect(classifyBytes(1000, 1000)).toBe("pass");
-    expect(classifyBytes(1001, 1000)).toBe("warn");
-    expect(classifyBytes(1100, 1000)).toBe("warn");
-    expect(classifyBytes(1101, 1000)).toBe("fail");
+    expect(classifyBytes(5000, 1000)).toBe("pass");
   });
 
   it("still fails module growth and metadata leaks immediately", () => {
@@ -86,10 +83,10 @@ describe("byte budget alarm (2026-10-02 policy)", () => {
     const warnings: string[] = [];
     const failures = budgetChecker.checkBudget(
       budget,
-      { modules: ["a.js", "b.js", "catalog.js"], rawBytes: 1050, gzipBytes: 500 },
+      { modules: ["a.js", "b.js", "catalog.js"], rawBytes: 9050, gzipBytes: 5000 },
       warnings,
     );
     expect(failures).toEqual(["3 modules > 2", "metadata leak: catalog.js"]);
-    expect(warnings).toHaveLength(1);
+    expect(warnings).toHaveLength(0);
   });
 });

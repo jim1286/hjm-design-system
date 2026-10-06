@@ -1,4 +1,5 @@
 import { type TagsInputCommitKey, type TagsInputCommitResult, type TagsInputPolicy, type TagsInputSuggestion } from "@hjmds/design-contracts/components/tags-input";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type TagsInputProps = Readonly<{
     label: string;
     tags?: readonly string[];
@@ -27,6 +28,8 @@ export type TagsInputProps = Readonly<{
     description?: string;
     disabled?: boolean;
     className?: string;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 export declare const TagsInput: import("react").ForwardRefExoticComponent<Readonly<{
     label: string;
@@ -56,5 +59,7 @@ export declare const TagsInput: import("react").ForwardRefExoticComponent<Readon
     description?: string;
     disabled?: boolean;
     className?: string;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }> & import("react").RefAttributes<HTMLInputElement>>;
 //# sourceMappingURL=tags-input.d.ts.map

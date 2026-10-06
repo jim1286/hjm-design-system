@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { act, create, type ReactTestRendererJSON } from "react-test-renderer";
 import { resolveDesignSystemProviderValue } from "@hjmds/design-contracts/components/design-system-provider";
+import { bottomNavigationRecipe } from "@hjmds/design-contracts/recipes";
 import { describe, expect, it } from "vitest";
 import { HjmNativeProvider } from "../src/index.js";
 import { reactNativeRendererEvidence, type ReactNativeRendererEvidenceScenario } from "../src/evidence.js";
@@ -153,6 +154,14 @@ const checks: Readonly<Record<Exclude<ReactNativeRendererEvidenceScenario, "defa
       }
       if (["checkbox", "checkbox-group", "chip"].includes(item.componentId) && node.props.accessible === false && node.props.allowFontScaling === false && ["✓", "−"].includes(textOf(node.raw))) {
         expect(after).toBe(before);
+        return;
+      }
+      if (item.componentId === "bottom-navigation" && node.props.maxFontSizeMultiplier === bottomNavigationRecipe.largeText.maxFontSizeMultiplier) {
+        // BT-QA-021 applies the existing label cap even with controlled scaling;
+        // keep an exact recipe assertion rather than lowering every text check.
+        expect(typeof after === "number" ? after / before : 0).toBeCloseTo(
+          Math.min(environment.textScale, bottomNavigationRecipe.largeText.maxFontSizeMultiplier),
+        );
         return;
       }
       expect(typeof after === "number" ? after / before : 0, `Text "${textOf(node.raw).slice(0, 24)}" did not scale`).toBeGreaterThanOrEqual(1.5);

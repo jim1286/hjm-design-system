@@ -1,3 +1,4 @@
+import { layer } from "@hjmds/design-contracts/foundations";
 import {
   getCollectionNavigationIntent,
   getCollectionNavigationTarget,
@@ -31,6 +32,7 @@ import {
   useRef,
   useState,
   type ButtonHTMLAttributes,
+  type CSSProperties,
   type FocusEvent,
   type KeyboardEvent,
   type ReactElement,
@@ -38,6 +40,7 @@ import {
   type RefAttributes,
 } from "react";
 import { classNames, useControllableState } from "./internal.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 import {
   AnchoredPortal,
   useAnchoredPopup,
@@ -124,6 +127,11 @@ type SelectBaseProps<Key extends string> = Omit<
     /** Logical listbox alignment against the trigger; automatically mirrors in RTL. */
     align?: AnchoredPopupAlign;
     fieldClassName?: string;
+    /**
+     * Canonical layout-only placement on the field frame. `style` keeps going to
+     * the trigger button, where it always went, so existing callers do not move.
+     */
+    layoutStyle?: HjmCompositionStyleProp;
     portalContainer?: HTMLElement;
     locale?: string | readonly string[];
     renderLeading?: (
@@ -168,6 +176,7 @@ function SelectInner<Key extends string, SectionKey extends string>(
     density = selectRecipe.defaults.density,
     align = "start",
     fieldClassName,
+    layoutStyle,
     portalContainer,
     locale,
     renderLeading,
@@ -318,8 +327,12 @@ function SelectInner<Key extends string, SectionKey extends string>(
       : optionId(activeKey);
   const popupPosition = useAnchoredPopup(triggerRef, listboxNode, {
     align,
+    // Offset and edge padding come from selectRecipe.popover (2026-10-06 follow-up); the helper
+    // default edge padding 16 disagreed with the recipe's collisionPadding 8.
+    gap: selectRecipe.popover.sideOffset,
+    viewportPadding: selectRecipe.popover.collisionPadding,
     matchAnchorWidth: true,
-    zIndex: 800,
+    zIndex: layer.dropdown,
   });
   const setListboxRef = useCallback((node: HTMLDivElement | null) => {
     listboxRef.current = node;
@@ -569,6 +582,11 @@ function SelectInner<Key extends string, SectionKey extends string>(
     <div
       ref={rootRef}
       className={classNames("hjm-field hjm-select", fieldClassName)}
+      // fieldRecipe.disabledScope fades label and trigger; the amount is selectRecipe.states,
+      // which Native already read (Web used the frame default 0.6 until 2026-10-06).
+      style={disabled
+        ? ({ ...layoutStyle, "--hjm-field-disabled-opacity": selectRecipe.states.disabledOpacity } as CSSProperties)
+        : layoutStyle}
       data-state={disabled ? "disabled" : error ? "invalid" : open ? "focused" : "idle"}
       data-size={size}
       data-density={density}

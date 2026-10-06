@@ -2,13 +2,14 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { visibleControlHeight } from "@hjmds/design-contracts/components/design-system-provider";
 import { resolveLinkDescriptor, } from "@hjmds/design-contracts/components/link";
 import { glyph, radius, spacing } from "@hjmds/design-contracts/foundations";
-import { bottomCtaRecipe, iconButtonRecipe, resolveIconButtonPresentation, } from "@hjmds/design-contracts/recipes";
+import { bottomCtaRecipe, linkRecipe, iconButtonRecipe, resolveIconButtonPresentation, } from "@hjmds/design-contracts/recipes";
 import {} from "@hjmds/design-contracts/recipes/base";
 import { forwardRef } from "react";
 import { ActivityIndicator, Pressable, View, } from "react-native";
 import { RecipeButton } from "./internal/recipe-button.js";
+import { warnDeprecatedStyleProps, warnOnce } from "./internal/deprecated-style.js";
 import { minimumTargetStyle } from "./internal/styles.js";
-import { Text } from "./primitives.js";
+import { Icon, Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
 // Public callers compose placement through layoutStyle; visual overrides stay inside HJM recipes.
 export const Button = forwardRef(function Button(props, ref) {
@@ -20,6 +21,7 @@ export const Button = forwardRef(function Button(props, ref) {
 });
 export const IconButton = forwardRef(function IconButton({ label, children, tone = iconButtonRecipe.defaults.tone, size = iconButtonRecipe.defaults.size, shape = iconButtonRecipe.defaults.shape, selected, disabled = false, loading = false, disableWhileLoading = false, hitSlop, layoutStyle, style, renderLoadingIndicator, onPress, onLongPress, accessibilityState, ...props }, ref) {
     const theme = useHjmNativeTheme();
+    warnDeprecatedStyleProps("IconButton", { style }, "layoutStyle for placement and tone/size/shape/selected for appearance");
     const resolvedLabel = label;
     const resolvedIcon = children;
     if (resolvedLabel === undefined || resolvedLabel.trim().length === 0) {
@@ -72,9 +74,27 @@ export const IconButton = forwardRef(function IconButton({ label, children, tone
                 width: glyphSize,
             }, children: resolvedIcon })) }));
 });
-export function Link({ descriptor, onNavigate, leading, trailing, accessibilityHint, style, ...props }) {
+export function Link({ descriptor, onNavigate, leading, trailing, renderIcon, accessibilityHint, layoutStyle, style, ...props }) {
     const { colors, environment } = useHjmNativeTheme();
     const resolved = resolveLinkDescriptor(descriptor);
+    warnDeprecatedStyleProps("Link", { style }, "layoutStyle for placement; linkRecipe owns link appearance");
+    // Until 1.12 the resolver validated leadingIcon/trailingIcon but Native never drew them, so a
+    // descriptor shared with Web silently lost its chevron. A missing renderIcon now warns instead of
+    // throwing: throwing would crash apps that already passed icons which were simply invisible.
+    const renderDescriptorIcon = (icon, slot, fallback) => {
+        if (icon === null)
+            return fallback;
+        if (fallback !== undefined && fallback !== null && fallback !== false) {
+            warnOnce(`Link.${slot}.conflict`, `Link received both descriptor.${slot} and a ${slot === "leadingIcon" ? "leading" : "trailing"} node; the descriptor icon wins.`);
+        }
+        if (renderIcon === undefined) {
+            warnOnce(`Link.${slot}.renderIcon`, `Link descriptor.${slot} needs renderIcon to draw a glyph; the icon is not rendered.`);
+            return null;
+        }
+        return (_jsx(Icon, { descriptor: { name: icon.name, size: linkRecipe.icon.glyph, tone: "brand", decorative: true }, renderGlyph: renderIcon }));
+    };
+    const leadingNode = renderDescriptorIcon(resolved.leadingIcon, "leadingIcon", leading);
+    const trailingNode = renderDescriptorIcon(resolved.trailingIcon, "trailingIcon", trailing);
     return (_jsxs(Pressable, { ...props, accessibilityHint: accessibilityHint, accessibilityLabel: resolved.resolvedAccessibilityLabel, accessibilityRole: "link", onPress: () => void onNavigate(resolved.destination), style: ({ pressed }) => [
             minimumTargetStyle,
             {
@@ -86,7 +106,8 @@ export function Link({ descriptor, onNavigate, leading, trailing, accessibilityH
                 opacity: pressed ? 0.72 : 1,
             },
             style,
-        ], children: [leading ? _jsx(View, { accessible: false, children: leading }) : null, _jsx(Text, { style: { color: colors.contentBrand, textDecorationLine: "underline" }, variant: "bodyLarge", children: resolved.label }), trailing ? _jsx(View, { accessible: false, children: trailing }) : null] }));
+            layoutStyle,
+        ], children: [leadingNode ? _jsx(View, { accessible: false, children: leadingNode }) : null, _jsx(Text, { style: { color: colors.contentBrand, textDecorationLine: "underline" }, variant: "bodyLarge", children: resolved.label }), trailingNode ? _jsx(View, { accessible: false, children: trailingNode }) : null] }));
 }
 function BottomCTAButton({ action, fallbackTone, }) {
     return (_jsx(Button, { ...(action.accessibilityLabel === undefined ? {} : { accessibilityLabel: action.accessibilityLabel }), ...(action.accessibilityHint === undefined ? {} : { accessibilityHint: action.accessibilityHint }), ...(action.disabled === undefined ? {} : { disabled: action.disabled }), ...(action.loading === undefined ? {} : { loading: action.loading }), ...(action.loadingLabel === undefined ? {} : { loadingLabel: action.loadingLabel }), fullWidth: true, onPress: action.onPress, ...(action.size === undefined ? {} : { size: action.size }), tone: action.tone ?? fallbackTone, children: action.label }));
@@ -100,7 +121,8 @@ function isBottomCTAAction(value) {
         && typeof value.onPress === "function";
 }
 /** Native sticky-action content; products own its screen-edge positioning. */
-export function BottomCTA({ primaryAction, secondaryAction, description, accessibilityLabel, safeAreaBottom = 0, style, testID, }) {
+export function BottomCTA({ primaryAction, secondaryAction, description, accessibilityLabel, safeAreaBottom = 0, layoutStyle, style, testID, }) {
+    warnDeprecatedStyleProps("BottomCTA", { style }, "layoutStyle for placement; bottomCtaRecipe owns appearance");
     if (!Number.isFinite(safeAreaBottom) || safeAreaBottom < 0) {
         throw new RangeError("BottomCTA safeAreaBottom must be non-negative");
     }
@@ -128,6 +150,7 @@ export function BottomCTA({ primaryAction, secondaryAction, description, accessi
                 shadowRadius: bottomCtaRecipe.shadow.radius,
             },
             style,
+            layoutStyle,
         ], children: [description ? _jsx(Text, { tone: "muted", variant: "caption", children: description }) : null, _jsxs(View, { style: {
                     direction: environment.direction,
                     flexDirection: stackActions ? "column-reverse" : "row",

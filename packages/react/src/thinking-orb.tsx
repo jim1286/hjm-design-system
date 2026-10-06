@@ -1,10 +1,16 @@
 import { useEffect, useRef, type CSSProperties } from "react";
 import { buildThinkingOrbFrame, createThinkingOrbClock, thinkingOrbRecipe, validateThinkingOrb, type ThinkingOrbOptions } from "@hjmds/design-contracts/components/thinking-orb";
 import { useHjmTheme } from "./provider.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
-export type ThinkingOrbProps = ThinkingOrbOptions & Readonly<{ className?: string; style?: CSSProperties }>;
+export type ThinkingOrbProps = ThinkingOrbOptions & Readonly<{
+  className?: string;
+  style?: CSSProperties;
+  /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
+}>;
 /** Optional AI status presentation; ordinary loading retains Spinner. */
-export function ThinkingOrb({ state = "working", appearance = "state", size = 64, label, speed = 1, paused = false, active = true, className, style }: ThinkingOrbProps) {
+export function ThinkingOrb({ state = "working", appearance = "state", size = 64, label, speed = 1, paused = false, active = true, className, style, layoutStyle }: ThinkingOrbProps) {
   validateThinkingOrb({ state, appearance, size, speed, label });
   const theme = useHjmTheme();
   const ink = theme.palette.theme.text;
@@ -63,7 +69,7 @@ export function ThinkingOrb({ state = "working", appearance = "state", size = 64
       document.removeEventListener("visibilitychange", sync); window.removeEventListener("resize", resize);
     };
   }, [state, appearance, size, speed, active, paused, reduced, ink]);
-  return <span className={className} data-hjm-thinking-orb={state} role="status" aria-live="polite" aria-atomic="true" style={{ display: "inline-flex", ...style }}>
+  return <span className={className} data-hjm-thinking-orb={state} role="status" aria-live="polite" aria-atomic="true" style={{ display: "inline-flex", ...style, ...layoutStyle }}>
     <canvas ref={canvasRef} aria-hidden="true" style={{ width: size, height: size, display: "block" }} />
     {/* Inline hiding works for granular consumers who do not import the stylesheet. */}
     <span style={{ position: "absolute", width: 1, height: 1, padding: 0, margin: -1, overflow: "hidden", clipPath: "inset(50%)", whiteSpace: "nowrap", border: 0 }}>{label}</span>

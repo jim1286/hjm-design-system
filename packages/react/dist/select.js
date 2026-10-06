@@ -1,4 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { layer } from "@hjmds/design-contracts/foundations";
 import { getCollectionNavigationIntent, getCollectionNavigationTarget, getCollectionTypeaheadMatch, reconcileSelectSelection, resolveCollectionItem, resolveSelectSelectedItem, validateCollection, } from "@hjmds/design-contracts/components/collection";
 import { resolveControlAccessibleName, selectBehaviorDefaults, } from "@hjmds/design-contracts/behaviors";
 import { iconRecipe, selectRecipe, } from "@hjmds/design-contracts/recipes";
@@ -7,7 +8,7 @@ import { classNames, useControllableState } from "./internal.js";
 import { AnchoredPortal, useAnchoredPopup, } from "./portal.js";
 const emptySelectionKey = Symbol("hjm-select-empty-selection");
 function SelectInner(props, forwardedRef) {
-    const { items, sections, label, accessibilityLabel, description, error, placeholder, emptySelectionLabel, asyncState = { status: "idle" }, selectedItem, disallowEmptySelection = selectBehaviorDefaults.disallowEmptySelection, loop = selectBehaviorDefaults.loop, busy = false, readOnly = false, size = selectRecipe.defaults.size, density = selectRecipe.defaults.density, align = "start", fieldClassName, portalContainer, locale, renderLeading, renderOptionLeading, className, id: idProp, name, disabled = false, required = false, selectedKey: selectedKeyProp, defaultSelectedKey, onSelectionChange, open: openProp, defaultOpen = false, onOpenChange, onClick, onFocus, onBlur, onKeyDown, ...buttonProps } = props;
+    const { items, sections, label, accessibilityLabel, description, error, placeholder, emptySelectionLabel, asyncState = { status: "idle" }, selectedItem, disallowEmptySelection = selectBehaviorDefaults.disallowEmptySelection, loop = selectBehaviorDefaults.loop, busy = false, readOnly = false, size = selectRecipe.defaults.size, density = selectRecipe.defaults.density, align = "start", fieldClassName, layoutStyle, portalContainer, locale, renderLeading, renderOptionLeading, className, id: idProp, name, disabled = false, required = false, selectedKey: selectedKeyProp, defaultSelectedKey, onSelectionChange, open: openProp, defaultOpen = false, onOpenChange, onClick, onFocus, onBlur, onKeyDown, ...buttonProps } = props;
     const source = sections === undefined
         ? { items: items ?? [] }
         : { sections };
@@ -120,8 +121,12 @@ function SelectInner(props, forwardedRef) {
             : optionId(activeKey);
     const popupPosition = useAnchoredPopup(triggerRef, listboxNode, {
         align,
+        // Offset and edge padding come from selectRecipe.popover (2026-10-06 follow-up); the helper
+        // default edge padding 16 disagreed with the recipe's collisionPadding 8.
+        gap: selectRecipe.popover.sideOffset,
+        viewportPadding: selectRecipe.popover.collisionPadding,
         matchAnchorWidth: true,
-        zIndex: 800,
+        zIndex: layer.dropdown,
     });
     const setListboxRef = useCallback((node) => {
         listboxRef.current = node;
@@ -339,7 +344,12 @@ function SelectInner(props, forwardedRef) {
         color: "currentColor",
         size: triggerLeadingSize,
     });
-    return (_jsxs("div", { ref: rootRef, className: classNames("hjm-field hjm-select", fieldClassName), "data-state": disabled ? "disabled" : error ? "invalid" : open ? "focused" : "idle", "data-size": size, "data-density": density, "data-async-state": asyncState.status, "data-busy": busy || undefined, children: [label !== undefined ? (_jsxs("label", { className: "hjm-field__label", htmlFor: controlId, children: [label, required ? _jsx("span", { "aria-hidden": "true", children: " *" }) : null] })) : null, _jsxs("div", { className: "hjm-select__anchor", children: [_jsxs("button", { ...buttonProps, ref: (node) => {
+    return (_jsxs("div", { ref: rootRef, className: classNames("hjm-field hjm-select", fieldClassName), 
+        // fieldRecipe.disabledScope fades label and trigger; the amount is selectRecipe.states,
+        // which Native already read (Web used the frame default 0.6 until 2026-10-06).
+        style: disabled
+            ? { ...layoutStyle, "--hjm-field-disabled-opacity": selectRecipe.states.disabledOpacity }
+            : layoutStyle, "data-state": disabled ? "disabled" : error ? "invalid" : open ? "focused" : "idle", "data-size": size, "data-density": density, "data-async-state": asyncState.status, "data-busy": busy || undefined, children: [label !== undefined ? (_jsxs("label", { className: "hjm-field__label", htmlFor: controlId, children: [label, required ? _jsx("span", { "aria-hidden": "true", children: " *" }) : null] })) : null, _jsxs("div", { className: "hjm-select__anchor", children: [_jsxs("button", { ...buttonProps, ref: (node) => {
                             triggerRef.current = node;
                             if (typeof forwardedRef === "function")
                                 forwardedRef(node);

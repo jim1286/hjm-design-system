@@ -457,6 +457,21 @@
       "types": "./dist/navigation-bar.d.ts",
       "import": "./dist/navigation-bar.js",
       "default": "./dist/navigation-bar.js"
+    },
+    "./screens": {
+      "types": "./dist/screens.d.ts",
+      "import": "./dist/screens.js",
+      "default": "./dist/screens.js"
+    },
+    "./screen-flows": {
+      "types": "./dist/screen-flows.d.ts",
+      "import": "./dist/screen-flows.js",
+      "default": "./dist/screen-flows.js"
+    },
+    "./saved-items": {
+      "types": "./dist/saved-items.d.ts",
+      "import": "./dist/saved-items.js",
+      "default": "./dist/saved-items.js"
     }
   },
   "files": [
@@ -475,7 +490,7 @@
     "test:visual": "vitest run --config vitest.visual.config.ts"
   },
   "peerDependencies": {
-    "@hjmds/design-contracts": ">=1.12.0 <1.13.0",
+    "@hjmds/design-contracts": ">=1.13.0 <1.14.0",
     "react": ">=19.0.0",
     "react-dom": ">=19.0.0",
     "@number-flow/react": "0.6.2",

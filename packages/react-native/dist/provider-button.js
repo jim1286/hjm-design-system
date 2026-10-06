@@ -2,8 +2,10 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { authProviderButtonRecipe, resolveAuthProviderSurface, validateAuthProviderButtonDescriptor, } from "@hjmds/design-contracts/components/provider-button";
 import { ActivityIndicator, Pressable, View, } from "react-native";
 import { Text } from "./primitives.js";
+import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { useHjmNativeTheme } from "./provider.js";
-export function AuthProviderButton({ descriptor, logo, onPress, style }) {
+export function AuthProviderButton({ descriptor, logo, onPress, layoutStyle, style }) {
+    warnDeprecatedStyleProps("AuthProviderButton", { style }, "layoutStyle for placement; authProviderButtonRecipe owns appearance");
     validateAuthProviderButtonDescriptor(descriptor);
     const theme = useHjmNativeTheme();
     // The theme picks between the provider's own variants and nothing else.
@@ -26,6 +28,7 @@ export function AuthProviderButton({ descriptor, logo, onPress, style }) {
                 paddingHorizontal: authProviderButtonRecipe.paddingHorizontal,
             },
             style,
+            layoutStyle,
         ], children: [_jsx(View, { style: {
                     alignItems: "center",
                     height: authProviderButtonRecipe.logoSize,

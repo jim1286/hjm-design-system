@@ -5,6 +5,7 @@ import { sheetRecipe, type DialogSize, type MenuDensity, type MenuItemTone } fro
 import type { MenuSectionDescriptor } from "@hjmds/design-contracts/behaviors";
 import { type ReactNode } from "react";
 import { type ModalOpenState, type OpenState, type OverlayTrigger } from "./modal.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type { OverlayTrigger } from "./modal.js";
 export type DialogOpenChangeReason = "trigger" | "close-action" | "escape" | "outside";
 export type DialogProps = ModalOpenState<Readonly<{
@@ -102,6 +103,8 @@ export type TooltipProps = OpenState<TooltipOpenChangeDetails> & Readonly<{
     focusOpenDelayMs?: number;
     portalContainer?: HTMLElement;
     className?: string;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 export declare const Tooltip: import("react").ForwardRefExoticComponent<TooltipProps & import("react").RefAttributes<HTMLSpanElement>>;
 export type MenuItem = Readonly<{
@@ -173,6 +176,8 @@ type MenuBaseProps = Readonly<{
     onActionAfterDismiss?: (id: string) => void;
     portalContainer?: HTMLElement;
     className?: string;
+    /** Canonical layout-only placement on the in-flow wrapper around the trigger; the popup stays anchored. */
+    layoutStyle?: HjmCompositionStyleProp;
 }> & MenuSourceProps;
 export type MenuProps = OpenState<Readonly<{
     reason: MenuOpenChangeReason;

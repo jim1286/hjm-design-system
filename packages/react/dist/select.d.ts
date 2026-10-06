@@ -2,6 +2,7 @@ import { type SelectCollectionSectionDescriptor, type SelectCollectionSource, ty
 import { type AsyncCollectionState, type SelectItemDescriptor } from "@hjmds/design-contracts/behaviors";
 import { type SelectDensity, type SelectSize } from "@hjmds/design-contracts/recipes";
 import { type ButtonHTMLAttributes, type ReactElement, type ReactNode, type RefAttributes } from "react";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { type AnchoredPopupAlign } from "./portal.js";
 export type SelectItem<Key extends string = string> = SelectItemDescriptor<Key>;
 export type SelectSection<Key extends string = string, SectionKey extends string = string> = SelectCollectionSectionDescriptor<Key, SectionKey>;
@@ -60,6 +61,11 @@ type SelectBaseProps<Key extends string> = Omit<ButtonHTMLAttributes<HTMLButtonE
     /** Logical listbox alignment against the trigger; automatically mirrors in RTL. */
     align?: AnchoredPopupAlign;
     fieldClassName?: string;
+    /**
+     * Canonical layout-only placement on the field frame. `style` keeps going to
+     * the trigger button, where it always went, so existing callers do not move.
+     */
+    layoutStyle?: HjmCompositionStyleProp;
     portalContainer?: HTMLElement;
     locale?: string | readonly string[];
     renderLeading?: (item: SelectItemDescriptor<Key> | null, appearance: SelectLeadingRenderProps) => ReactNode;

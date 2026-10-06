@@ -148,9 +148,15 @@ renderer이며 Native는 계속 `unsupported`다. Web renderer 증거는 stable 
   설명을 담고 있어 그대로 두면 두 번 읽힌다.
 - **veil에는 dismiss handler가 없다.** 계약에 `outside` 사유 자체가 없으므로 실수로 찍은
   포인터가 둘러보기를 끝내지 못한다. Escape와 건너뛰기는 어느 단계에서나 나간다.
+- **첫 단계의 이전 버튼은 `aria-disabled`이고 `disabled`가 아니다(2026-10-06).** 계약의 결과는
+  `no-op`이다 — 컨트롤을 없애는 결정이 아니다. native `disabled`는 이전으로 첫 단계에 돌아온 순간 포커스를
+  `<body>`로 떨어뜨리고 카드의 탭 순서에 구멍을 낸다(사용 지침 작성 중 코드 주석 "포커스 가능"과 실제
+  `disabled`가 어긋난 것을 발견). Button의 aria-disabled 경로가 포커스를 유지하고 누름만 무효로 한다.
+  Native renderer는 아직 없으므로(`unsupported`) 같은 규칙을 구현할 때 `accessibilityState.disabled`와
+  포커스 유지로 번역한다.
 - **unmount는 `interrupted`로 한 번만 정산한다.** StrictMode의 probe cleanup과 실제
   unmount를 epoch로 구분한다(Sheet와 같은 방식).
-- 로컬 검증: `test/tour.browser.test.tsx` 7개(이름·안내·단계마다 초점 이동과 키보드
+- 로컬 검증: `test/tour.browser.test.tsx` 8개(첫 단계 이전의 포커스 유지·`aria-disabled` 포함, 이름·안내·단계마다 초점 이동과 키보드
   다음 단계에 맞춘 anchor 하이라이트, 배경 inert와 바깥 pointer 무시, 첫 단계 이전은
   no-op·마지막 다음은 complete, Escape·건너뛰기 탈출, unmount의 1회 interrupted,
   controlled owner 종료와 320px 배치, 긴 번역 copy 내부 스크롤·키보드 건너뛰기·호출자

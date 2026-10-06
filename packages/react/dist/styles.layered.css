@@ -77,7 +77,7 @@
 /* A child image would otherwise spill past the rounded corner. An elevated tone
    opts out because clipping cuts off its own shadow. */
 .hjm-surface[data-clips="true"] { overflow: hidden; }
-.hjm-surface[data-tone="raised"] { background: var(--hjm-color-bg); box-shadow: 0 4px 12px rgb(0 0 0 / 12%); }
+.hjm-surface[data-tone="raised"] { background: var(--hjm-color-bg); box-shadow: var(--hjm-shadow-floating); }
 .hjm-surface[data-tone="accent"] { background: var(--hjm-color-bg); }
 .hjm-surface[data-tone="sunken"] { background: var(--hjm-color-bg); }
 .hjm-surface[data-tone="subtle"] { background: var(--hjm-color-bg); }
@@ -130,7 +130,8 @@
 }
 .hjm-layout__skip-link {
   position: fixed;
-  z-index: 1400;
+  /* Focused skip links must remain reachable above transient notifications. */
+  z-index: calc(var(--hjm-layer-toast) + 1);
   inset-block-start: var(--hjm-space-sm);
   inset-inline-start: var(--hjm-space-sm);
   padding: var(--hjm-space-sm) var(--hjm-space-md);
@@ -315,7 +316,13 @@
    See issue #19. */
 .hjm-field[data-state="focused"] .hjm-field__control { border-color: var(--hjm-color-content-brand); box-shadow: 0 0 0 var(--hjm-field-focus-ring-width) var(--hjm-color-content-brand); }
 .hjm-field[data-state="invalid"] .hjm-field__control { border-color: var(--hjm-color-danger); }
-.hjm-field[data-state="disabled"] { opacity: var(--hjm-field-disabled-opacity); }
+/* fieldRecipe.disabledScope (2026-10-06): disabled fades the label and the control, not
+   the hint or the error, which explain why the field is locked or what to fix. Fading the
+   whole frame (the rule before) took their contrast down with it. Every direct child except
+   the support text fades, so a custom Field control dims without needing a class. A component
+   recipe value (Select, NumberField, OtpField, SearchField, PasswordField) arrives as an
+   inline --hjm-field-disabled-opacity on the root. */
+.hjm-field[data-state="disabled"] > :not(.hjm-field__description):not(.hjm-field__error) { opacity: var(--hjm-field-disabled-opacity); }
 .hjm-field__input {
   inline-size: 100%;
   min-inline-size: 0;
@@ -347,7 +354,15 @@
 .hjm-field__affix { display: inline-flex; align-items: center; color: var(--hjm-color-text-muted); }
 .hjm-field__description, .hjm-choice__description { color: var(--hjm-color-text-muted); font-size: var(--hjm-type-label-size); line-height: var(--hjm-type-label-line-height); }
 .hjm-field__error { color: var(--hjm-color-danger); font-size: var(--hjm-type-label-size); line-height: var(--hjm-type-label-line-height); }
-.hjm-search-field__clear { inline-size: var(--hjm-control-min-touch-target); block-size: var(--hjm-control-min-touch-target); display: inline-grid; place-items: center; border: 0; border-radius: 50%; color: inherit; background: transparent; font: inherit; cursor: pointer; }
+/* searchFieldRecipe.sizes.* (emitted by theme.ts): medium padding 12 · gap 8 · clear 36 + slop 4, large 52 high ·
+   padding 16 · gap 12 · clear 44. Size is applied to the input by TextField; size the control from that public attribute. */
+.hjm-search-field .hjm-field__control { padding-inline: var(--hjm-search-field-padding-medium, var(--hjm-space-sm)); gap: var(--hjm-search-field-gap-medium, var(--hjm-space-xs)); }
+.hjm-search-field:has(.hjm-field__input[data-size="large"]) .hjm-field__control { min-block-size: var(--hjm-control-button-large); padding-inline: var(--hjm-search-field-padding-large, var(--hjm-space-md)); gap: var(--hjm-search-field-gap-large, var(--hjm-space-sm)); }
+.hjm-search-field .hjm-field__input[data-size="large"] { min-block-size: calc(var(--hjm-control-button-large) - 2px); font-size: var(--hjm-type-body-large-size); line-height: var(--hjm-type-body-large-line-height); }
+/* The visible circle is the recipe diameter; ::after extends the hit area by clearHitSlop so the target stays 44. */
+.hjm-search-field__clear { --hjm-search-clear-slop: var(--hjm-search-field-clear-slop-medium, 4px); position: relative; flex: 0 0 auto; inline-size: var(--hjm-search-field-clear-medium, 36px); block-size: var(--hjm-search-field-clear-medium, 36px); display: inline-grid; place-items: center; border: 0; border-radius: 50%; color: inherit; background: transparent; font: inherit; cursor: pointer; }
+.hjm-search-field__clear::after { content: ""; position: absolute; inset: calc(-1 * var(--hjm-search-clear-slop)); border-radius: 50%; }
+.hjm-search-field:has(.hjm-field__input[data-size="large"]) .hjm-search-field__clear { --hjm-search-clear-slop: var(--hjm-search-field-clear-slop-large, 0px); inline-size: var(--hjm-search-field-clear-large, 44px); block-size: var(--hjm-search-field-clear-large, 44px); }
 .hjm-search-field__spinner { inline-size: 32px; block-size: 32px; display: inline-grid; place-items: center; color: var(--hjm-color-content-brand); }
 .hjm-search-field__spinner:empty::before { content: ""; inline-size: 1em; block-size: 1em; border: 2px solid currentColor; border-inline-end-color: transparent; border-radius: 50%; animation: hjm-spin 800ms linear infinite; }
 .hjm-password-field--large .hjm-field__control { min-block-size: var(--hjm-control-button-large); padding-inline: var(--hjm-space-lg); }
@@ -456,7 +471,7 @@
 
 .hjm-bottom-navigation {
   position: fixed;
-  z-index: 700;
+  z-index: var(--hjm-layer-sticky);
   inset-inline: 0;
   inset-block-end: 0;
   padding-block-start: var(--hjm-bottom-navigation-outer-top);
@@ -479,7 +494,7 @@
 .hjm-bottom-navigation[data-presentation="floating"] .hjm-bottom-navigation__surface {
   border: 1px solid var(--hjm-color-border);
   border-radius: var(--hjm-radius-xl);
-  box-shadow: 0 8px 24px rgb(0 0 0 / 18%);
+  box-shadow: var(--hjm-shadow-floating);
 }
 .hjm-bottom-navigation__list {
   display: grid;
@@ -787,10 +802,16 @@
 [dir="rtl"] .hjm-switch[data-state="checked"] .hjm-switch__thumb { transform: translateX(calc(-1 * var(--hjm-switch-track-offset))); }
 
 .hjm-segmented { min-inline-size: 0; padding: 0; border: 0; }
-.hjm-segmented__items { display: flex; min-inline-size: 0; gap: 2px; padding: 2px; border-radius: var(--hjm-radius-md); background: var(--hjm-color-bg); overflow-x: auto; }
-.hjm-segmented__item { position: relative; flex: 1 1 0; min-inline-size: max-content; min-block-size: var(--hjm-control-min-touch-target); display: grid; place-items: center; padding: var(--hjm-space-xs) var(--hjm-space-sm); border-radius: calc(var(--hjm-radius-md) - 2px); color: var(--hjm-color-text-muted); cursor: pointer; }
+/* segmentedControlRecipe (2026-10-06 follow-up): track padding/gap spacing.xxs 4, radius lg, 1px border; item radius md,
+   medium 44 · padding md, small 36 · padding sm with a 4px vertical hit slop. Web had drawn a 2px track with radius md,
+   no small size, and a 1px selected ring; Native already read the recipe. */
+.hjm-segmented__items { display: flex; min-inline-size: 0; gap: var(--hjm-space-xxs); padding: var(--hjm-space-xxs); border: 1px solid var(--hjm-color-border); border-radius: var(--hjm-radius-lg); background: var(--hjm-color-bg); overflow-x: auto; }
+.hjm-segmented__item { position: relative; flex: 1 1 0; min-inline-size: max-content; min-block-size: var(--hjm-control-min-touch-target); display: grid; place-items: center; gap: var(--hjm-space-xxs); padding: 0 var(--hjm-space-md); border-radius: var(--hjm-radius-md); color: var(--hjm-color-text-muted); font-weight: var(--hjm-font-weight-semibold); cursor: pointer; }
+.hjm-segmented[data-size="small"]:not([data-presentation="pills"]) .hjm-segmented__item { min-block-size: 36px; padding-inline: var(--hjm-space-sm); font-size: var(--hjm-type-label-size); line-height: var(--hjm-type-label-line-height); }
+/* Vertical only: neighbours are 4px apart, so a horizontal slop would overlap the next option's target. */
+.hjm-segmented[data-size="small"]:not([data-presentation="pills"]) .hjm-segmented__item::after { content: ""; position: absolute; inset: -4px 0; }
 .hjm-segmented__item input { position: absolute; opacity: 0; }
-.hjm-segmented__item[data-state="checked"] { box-shadow: inset 0 0 0 1px var(--hjm-color-content-brand); color: var(--hjm-color-text); background: var(--hjm-color-bg); font-weight: var(--hjm-font-weight-semibold); }
+.hjm-segmented__item[data-state="checked"] { box-shadow: inset 0 0 0 2px var(--hjm-color-focus); color: var(--hjm-color-content-brand); background: var(--hjm-color-bg); font-weight: var(--hjm-font-weight-bold); }
 .hjm-segmented__item[data-disabled="true"] { opacity: 0.5; cursor: not-allowed; }
 
 /* segmentedControlRecipe.adaptive.largeTextLayout stacks oversized labels, matching RN.
@@ -825,7 +846,7 @@
 
 .hjm-badge, .hjm-tag { display: inline-flex; align-items: center; gap: var(--hjm-space-xxs); max-inline-size: 100%; overflow-wrap: anywhere; }
 .hjm-badge { min-block-size: 24px; padding: 2px var(--hjm-space-xs); border: 1px solid transparent; border-radius: var(--hjm-radius-full); color: var(--hjm-color-text-muted); background: var(--hjm-color-bg); font-size: var(--hjm-type-caption-size); line-height: var(--hjm-type-caption-line-height); font-weight: var(--hjm-font-weight-bold); }
-.hjm-badge[data-size="small"] { min-block-size: 20px; font-size: var(--hjm-type-caption-size); }
+.hjm-badge[data-size="small"] { min-block-size: 20px; padding-inline: var(--hjm-space-xxs); font-size: var(--hjm-type-caption-size); } /* badgeRecipe.sizes.small.paddingHorizontal xxs 4 (2026-10-06; Web had kept medium's 8) */
 .hjm-badge[data-tone="strong"] { color: var(--hjm-color-bg); background: var(--hjm-color-text); }
 .hjm-badge[data-tone="brand"] { color: var(--hjm-color-content-brand); }
 .hjm-badge[data-tone="info"], .hjm-tag[data-tone="info"] { color: var(--hjm-accent-info); background: var(--hjm-color-bg); border-color: color-mix(in srgb, var(--hjm-accent-info) 30%, transparent); }
@@ -897,16 +918,22 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-section { display: grid; gap: var(--hjm-space-xs); min-inline-size: 0; overflow-wrap: anywhere; }
 .hjm-section__header { display: flex; align-items: center; justify-content: space-between; gap: var(--hjm-space-sm); min-inline-size: 0; }
 .hjm-section__copy { display: grid; flex: 1 1 auto; gap: var(--hjm-space-xxs); min-inline-size: 0; }
-.hjm-section__title { margin: 0; color: var(--hjm-color-text-body); font: inherit; font-weight: var(--hjm-font-weight-bold); overflow-wrap: anywhere; }
-.hjm-section__description { color: var(--hjm-color-text-muted); overflow-wrap: anywhere; }
+/* sectionRecipe.title is the `title` variant (18/26 bold) and description the `caption` variant (11/16), as Native draws them.
+   Until 2026-10-06 Web inherited body (14) for both, so the same Section header was smaller on Web. */
+.hjm-section__title { margin: 0; color: var(--hjm-color-text-body); font-size: var(--hjm-type-title-size); line-height: var(--hjm-type-title-line-height); font-weight: var(--hjm-font-weight-bold); overflow-wrap: anywhere; }
+.hjm-section__description { color: var(--hjm-color-text-muted); font-size: var(--hjm-type-caption-size); line-height: var(--hjm-type-caption-line-height); overflow-wrap: anywhere; }
 .hjm-section__action { flex: 0 0 auto; }
 .hjm-section__content { min-inline-size: 0; }
-@media (max-width: 640px) {
+/* Stack below breakpoint.medium (600), the shared compact/medium edge; 640 had been a Web-only number. */
+@media (max-width: 599.98px) {
   .hjm-section__header { align-items: stretch; flex-direction: column; }
 }
 
-.hjm-chip { min-block-size: var(--hjm-control-min-touch-target); display: inline-flex; align-items: center; gap: var(--hjm-space-xs); padding-inline: var(--hjm-space-sm); border: 1px solid var(--hjm-color-border); border-radius: 999px; background: var(--hjm-color-bg); color: var(--hjm-color-text-body); font: inherit; font-weight: var(--hjm-font-weight-medium); cursor: pointer; }
-.hjm-chip[data-size="small"] { min-block-size: 36px; padding-inline: var(--hjm-space-xs); }
+/* chipRecipe.sizes (2026-10-06 follow-up): medium 44 · padding md 16 · gap xs 8, small 36 · padding sm 12 · gap xxs 4 with a
+   4px vertical hit slop. Web had drawn padding 12/8 and gap 8 for both sizes. */
+.hjm-chip { position: relative; min-block-size: var(--hjm-control-min-touch-target); display: inline-flex; align-items: center; gap: var(--hjm-space-xs); padding-inline: var(--hjm-space-md); border: 1px solid var(--hjm-color-border); border-radius: 999px; background: var(--hjm-color-bg); color: var(--hjm-color-text-body); font: inherit; font-weight: var(--hjm-font-weight-medium); cursor: pointer; }
+.hjm-chip[data-size="small"] { min-block-size: 36px; padding-inline: var(--hjm-space-sm); gap: var(--hjm-space-xxs); }
+.hjm-chip[data-size="small"]::after { content: ""; position: absolute; inset: -4px 0; }
 .hjm-chip[data-selected] { border-color: var(--hjm-color-content-brand); background: var(--hjm-color-bg); color: var(--hjm-color-content-brand); }
 .hjm-chip:disabled { opacity: 0.5; cursor: not-allowed; }
 .hjm-chip:focus-visible { outline: var(--hjm-focus-width) solid var(--hjm-color-focus); outline-offset: var(--hjm-focus-offset); }
@@ -920,21 +947,31 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 /* Indent only the divider: moving the row shifted every title after the first
    and narrowed its text column in the notification-settings composition. */
 .hjm-list[data-separator="indented"] > .hjm-list__item + .hjm-list__item { position: relative; }
-.hjm-list[data-separator="indented"] > .hjm-list__item + .hjm-list__item::before { content: ""; position: absolute; inset-block-start: 0; inset-inline: var(--hjm-space-xl) 0; border-block-start: 1px solid var(--hjm-color-border); pointer-events: none; }
+.hjm-list[data-separator="indented"] > .hjm-list__item + .hjm-list__item::before { content: ""; position: absolute; inset-block-start: 0; inset-inline: calc(40px + var(--hjm-space-sm)) 0; border-block-start: 1px solid var(--hjm-color-border); pointer-events: none; } /* listRecipe.separators.indented.insetStart = leading 40 + sm 12 = 52, as Native (2026-10-06; Web had 24) */
 
-.hjm-statistic { display: grid; gap: var(--hjm-space-xxs); min-inline-size: 0; color: var(--hjm-color-text-body); }
+/* statisticRecipe.density (2026-10-06 follow-up): line gap comfortable xs 8 · compact xxs 4, surface padding md 16 · sm 12,
+   group gap xs 8. Web had drawn 4/2, a fixed 16 and 12, Native read the recipe. */
+.hjm-statistic { display: grid; gap: var(--hjm-space-xs); min-inline-size: 0; color: var(--hjm-color-text-body); }
 .hjm-statistic[data-presentation="surface"] { padding: var(--hjm-space-md); border: 1px solid var(--hjm-color-border); border-radius: var(--hjm-radius-md); background: var(--hjm-color-bg); }
-.hjm-statistic[data-density="compact"] { gap: 2px; }
-.hjm-statistic__label { color: var(--hjm-color-text-muted); font-weight: var(--hjm-font-weight-medium); overflow-wrap: anywhere; }
+.hjm-statistic[data-density="compact"] { gap: var(--hjm-space-xxs); }
+.hjm-statistic[data-density="compact"][data-presentation="surface"] { padding: var(--hjm-space-sm); }
+/* Text variants follow statisticRecipe as Native does: label `label` (compact `caption`) semibold, value `heading`
+   (compact `title`) heavy, affix `body` semibold in content.body, hint and trend `caption` (trend bold). Until 2026-10-06
+   Web drew a body-size medium label, a title-size value at both densities (scaled twice by --hjm-text-scale, which the
+   --hjm-type-* sizes already include) and muted affixes. */
+.hjm-statistic__label { color: var(--hjm-color-text-muted); font-size: var(--hjm-type-label-size); line-height: var(--hjm-type-label-line-height); font-weight: var(--hjm-font-weight-semibold); overflow-wrap: anywhere; }
+.hjm-statistic[data-density="compact"] .hjm-statistic__label { font-size: var(--hjm-type-caption-size); line-height: var(--hjm-type-caption-line-height); }
 .hjm-statistic__value-row { display: flex; align-items: baseline; flex-wrap: wrap; gap: var(--hjm-space-xxs); min-inline-size: 0; }
-.hjm-statistic__value { color: var(--hjm-color-text); font-size: calc(var(--hjm-type-title-size) * var(--hjm-text-scale, 1)); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
-.hjm-statistic__affix, .hjm-statistic__hint { color: var(--hjm-color-text-muted); }
-.hjm-statistic__trend { display: inline-flex; align-items: center; gap: var(--hjm-space-xxs); font-weight: var(--hjm-font-weight-medium); overflow-wrap: anywhere; }
+.hjm-statistic__value { color: var(--hjm-color-text); font-size: var(--hjm-type-heading-size); line-height: var(--hjm-type-heading-line-height); font-weight: var(--hjm-font-weight-heavy); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.hjm-statistic[data-density="compact"] .hjm-statistic__value { font-size: var(--hjm-type-title-size); line-height: var(--hjm-type-title-line-height); }
+.hjm-statistic__affix { color: var(--hjm-color-text-body); font-size: var(--hjm-type-body-size); line-height: var(--hjm-type-body-line-height); font-weight: var(--hjm-font-weight-semibold); }
+.hjm-statistic__hint { color: var(--hjm-color-text-muted); font-size: var(--hjm-type-caption-size); line-height: var(--hjm-type-caption-line-height); }
+.hjm-statistic__trend { display: inline-flex; align-items: center; gap: var(--hjm-space-xxs); font-size: var(--hjm-type-caption-size); line-height: var(--hjm-type-caption-line-height); font-weight: var(--hjm-font-weight-bold); overflow-wrap: anywhere; }
 .hjm-statistic__trend[data-tone="success"] { color: var(--hjm-accent-success); }
 .hjm-statistic__trend[data-tone="warning"] { color: var(--hjm-accent-warning); }
 .hjm-statistic__trend[data-tone="danger"] { color: var(--hjm-color-danger); }
-.hjm-statistic-group { display: grid; grid-template-columns: repeat(var(--hjm-statistic-columns), minmax(0, 1fr)); gap: var(--hjm-space-sm); min-inline-size: 0; }
-@media (max-width: 640px) {
+.hjm-statistic-group { display: grid; grid-template-columns: repeat(var(--hjm-statistic-columns), minmax(0, 1fr)); gap: var(--hjm-space-xs); min-inline-size: 0; }
+@media (max-width: 599.98px) {
   .hjm-statistic-group { grid-template-columns: minmax(0, 1fr); }
 }
 
@@ -949,7 +986,8 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-notice__action { flex: 0 0 auto; max-inline-size: 100%; }
 .hjm-notice__title, .hjm-notice__description { overflow-wrap: anywhere; }
 
-.hjm-empty-state { display: grid; justify-items: center; gap: var(--hjm-space-xs); padding: var(--hjm-space-xxl) var(--hjm-space-xl); color: var(--hjm-color-text-muted); text-align: center; }
+/* emptyStateRecipe.density.regular paddingVertical xxxl 40 (2026-10-06; Web had xxl 32, Native read the recipe). */
+.hjm-empty-state { display: grid; justify-items: center; gap: var(--hjm-space-xs); padding: var(--hjm-space-xxxl) var(--hjm-space-xl); color: var(--hjm-color-text-muted); text-align: center; }
 .hjm-empty-state[data-density="compact"] { padding-block: var(--hjm-space-xl); }
 .hjm-empty-state__title { color: var(--hjm-color-text); }
 .hjm-result { display: grid; justify-items: center; gap: var(--hjm-space-sm); padding: var(--hjm-space-xxxl) var(--hjm-space-xl); text-align: center; }
@@ -976,7 +1014,9 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   sweep. The element stays a <progress>, so the value, the indeterminate case
   and the announcement are unchanged — only the paint differs.
 */
-.hjm-progress[data-shape="circular"] { grid-template-columns: auto 1fr; align-items: center; }
+/* Copy row above the ring at the start edge, like the linear bar and Native (2026-10-06 follow-up). The ring used to sit
+   beside the copy (grid auto 1fr), so the same Progress laid out differently per platform. */
+.hjm-progress[data-shape="circular"] { justify-items: start; }
 .hjm-progress[data-shape="circular"] .hjm-progress__native { display: none; }
 .hjm-progress__ring {
   position: relative;
@@ -1054,7 +1094,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   border: 1px solid var(--hjm-color-border);
   border-radius: var(--hjm-radius-lg);
   background: var(--hjm-color-bg);
-  box-shadow: 0 16px 48px rgb(0 0 0 / 28%);
+  box-shadow: var(--hjm-shadow-overlay);
 }
 .hjm-command-palette__search {
   flex: 0 0 auto;
@@ -1084,13 +1124,17 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-command-palette__description { color: var(--hjm-color-text-muted); font-size: var(--hjm-type-label-size); }
 .hjm-command-palette__shortcut { color: var(--hjm-color-text-muted); font-size: var(--hjm-type-label-size); }
 .hjm-command-palette__state { margin: 0; padding: var(--hjm-space-md); color: var(--hjm-color-text-muted); }
+.hjm-command-palette__search-row { display: flex; border-block-end: 1px solid var(--hjm-color-border); }
+.hjm-command-palette__search-row > input { flex: 1; min-inline-size: 0; border: 0; }
+.hjm-command-palette__search-row > button { margin: 0; }
 
 /* DataTable --------------------------------------------------------------- */
 .hjm-data-table { display: flex; flex-direction: column; gap: var(--hjm-space-sm); min-inline-size: 0; }
 .hjm-data-table__table { inline-size: 100%; border-collapse: collapse; }
 .hjm-data-table__table th,
 .hjm-data-table__table td {
-  padding: var(--hjm-space-sm);
+  /* dataTableRecipe.density.regular: sm 12 / md 16 (2026-10-06; Web had 12 on all sides). */
+  padding: var(--hjm-space-sm) var(--hjm-space-md);
   border-block-end: 1px solid var(--hjm-color-border);
   vertical-align: top;
   overflow-wrap: anywhere;
@@ -1143,11 +1187,12 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   max-block-size: 14rem;
   overflow: auto;
   overscroll-behavior: contain;
-  padding: var(--hjm-space-xxs);
+  /* comboboxRecipe.popover.padding 8, like the Combobox listbox it reuses (4 until 2026-10-06). */
+  padding: var(--hjm-combobox-popover-padding, var(--hjm-space-xs));
   border: 1px solid var(--hjm-color-border);
   border-radius: var(--hjm-radius-md);
   background: var(--hjm-color-bg);
-  box-shadow: 0 12px 32px rgb(0 0 0 / 18%);
+  box-shadow: var(--hjm-shadow-floating);
   pointer-events: auto;
 }
 .hjm-mentions__option {
@@ -1209,12 +1254,13 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-transfer-list__mark[data-checked] { border-color: var(--hjm-color-primary); background: var(--hjm-color-primary); }
 .hjm-transfer-list__options { display: flex; flex-direction: column; padding: var(--hjm-space-xxs); }
 .hjm-transfer-list__option {
+  /* transferListRecipe.item = collectionItemContract: padding/gap sm 12, radius md (2026-10-06; Web had 8 and radius sm, Native 12). */
   display: flex;
   align-items: center;
-  gap: var(--hjm-space-xs);
+  gap: var(--hjm-space-sm);
   min-block-size: var(--hjm-control-min-touch-target);
-  padding-inline: var(--hjm-space-xs);
-  border-radius: var(--hjm-radius-sm);
+  padding-inline: var(--hjm-space-sm);
+  border-radius: var(--hjm-radius-md);
   overflow-wrap: anywhere;
 }
 /* The label is a flex item; reset its intrinsic min-width so long localized values wrap inside a narrow panel. */
@@ -1228,7 +1274,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-transfer-list__empty:focus-visible,
 .hjm-transfer-list__select-all:focus-visible { outline: 2px solid var(--hjm-color-focus); outline-offset: -2px; }
 .hjm-transfer-list__empty { margin: 0; padding: var(--hjm-space-md) var(--hjm-space-sm); color: var(--hjm-color-text-muted); }
-.hjm-transfer-list__actions { display: flex; flex-direction: column; gap: var(--hjm-space-xs); padding-block-start: var(--hjm-space-xl); }
+.hjm-transfer-list__actions { display: flex; flex-direction: column; gap: var(--hjm-space-sm); /* transferListRecipe.moveControls.gap sm 12, as Native */ padding-block-start: var(--hjm-space-xl); }
 
 /* AuthProviderButton ------------------------------------------------------ */
 /* Provider guideline colors cannot follow the theme without failing provider review.
@@ -1247,6 +1293,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   background: var(--hjm-provider-background);
   color: var(--hjm-provider-content);
   font: inherit;
+  /* authProviderButtonRecipe.label = typography.body; see docs/provider-button.md (provider colour exception). */
   font-size: var(--hjm-type-body-size);
   line-height: var(--hjm-type-body-line-height);
   cursor: pointer;
@@ -1358,7 +1405,8 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   /* A localized skip label can be longer than a narrow viewport; keep the focused link on-screen. */
   box-sizing: border-box;
   max-inline-size: calc(100vw - var(--hjm-skip-nav-offset) * 2);
-  z-index: 1300;
+  /* Focused skip links must remain reachable above transient notifications. */
+  z-index: calc(var(--hjm-layer-toast) + 1);
   display: inline-flex;
   align-items: center;
   min-block-size: var(--hjm-skip-nav-min-height);
@@ -1616,7 +1664,10 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-tags-input__suggestion[aria-selected="true"] { box-shadow: inset 0 0 0 1px var(--hjm-color-content-brand); background: var(--hjm-color-bg); }
 .hjm-tags-input__suggestion[aria-disabled="true"] { color: var(--hjm-color-text-weak); cursor: default; }
 .hjm-tags-input__description { margin: 0; color: var(--hjm-color-text-muted); font-size: var(--hjm-type-label-size); }
-.hjm-tags-input[data-disabled] .hjm-tags-input__frame { opacity: 0.6; cursor: default; }
+/* fieldRecipe.disabledScope: the label fades with the frame (it stayed at full contrast before
+   2026-10-06); the description keeps its contrast. The amount is the field default, not a literal. */
+.hjm-tags-input[data-disabled] :is(.hjm-tags-input__label, .hjm-tags-input__frame) { opacity: var(--hjm-field-disabled-opacity); }
+.hjm-tags-input[data-disabled] .hjm-tags-input__frame { cursor: default; }
 
 /* Heading ----------------------------------------------------------------- */
 /*
@@ -1827,7 +1878,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-portal[inert] { visibility: hidden; pointer-events: none; }
 .hjm-overlay {
   position: fixed;
-  z-index: 1000;
+  z-index: var(--hjm-layer-modal);
   inset: 0;
   display: flex;
   align-items: center;
@@ -1958,9 +2009,16 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  /* sheetRecipe.content/body/footer (2026-10-06 follow-up): padding top/bottom sm 12, sides lg 20, md 16 between
+     header·body·footer and footer.paddingTop sm 12 more, as Native draws it. Web had used the Dialog's 20 on every
+     side and between slots, so the same sheet was 16px taller on Web. */
+  gap: var(--hjm-space-md);
+  padding-block: var(--hjm-space-sm);
 }
 .hjm-sheet__header,
 .hjm-sheet__footer { flex: 0 0 auto; }
+.hjm-sheet > .hjm-sheet__header { min-block-size: var(--hjm-control-min-touch-target); gap: var(--hjm-space-sm); padding: 0 var(--hjm-space-lg); }
+.hjm-sheet > .hjm-sheet__footer { padding: var(--hjm-space-sm) var(--hjm-space-lg) 0; }
 .hjm-sheet__body {
   min-block-size: 0;
   flex: 1 1 auto;
@@ -1969,18 +2027,23 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   overflow: auto;
   overscroll-behavior: contain;
 }
+/* The scroll box keeps 4px inside so a child's focus ring is not clipped; the equal negative margin keeps the
+   visible spacing at the recipe's values. */
+.hjm-sheet > .hjm-sheet__body { gap: var(--hjm-space-md); padding: var(--hjm-space-xxs) var(--hjm-space-lg); margin-block: calc(-1 * var(--hjm-space-xxs)); } /* body.gap between children too, as Native */
 .hjm-sheet[data-placement="bottom"] {
   inline-size: min(var(--hjm-sheet-max-width), 100%);
   max-block-size: var(--hjm-sheet-max-height);
   border-end-start-radius: 0;
   border-end-end-radius: 0;
 }
-.hjm-sheet[data-placement="bottom"]:not([data-has-footer="true"]) > .hjm-sheet__body {
-  padding-block-end: calc(var(--hjm-space-lg) + env(safe-area-inset-bottom, 0px));
+.hjm-sheet[data-placement="bottom"] {
+  /* sheetRecipe.safeArea: additive bottom inset on top of content.paddingBottom. */
+  padding-block-end: calc(var(--hjm-space-sm) + env(safe-area-inset-bottom, 0px));
 }
-.hjm-sheet[data-placement="bottom"] > .hjm-sheet__footer {
-  padding-block-end: calc(var(--hjm-space-lg) + env(safe-area-inset-bottom, 0px));
-}
+/* sheetRecipe.sizes.full = 1: the whole height inside the top safe area. maxHeightRatio (0.9) caps only `auto`;
+   until 2026-10-06 it also capped `full` at 90% on both platforms. */
+.hjm-sheet-positioner[data-placement="bottom"][data-detent="full"] { padding-block-start: env(safe-area-inset-top, 0px); }
+.hjm-sheet[data-placement="bottom"][data-detent="full"] { max-block-size: 100%; }
 /* Detent handle: a control, so it carries the shared minimum target. */
 .hjm-sheet__handle-row { display: flex; justify-content: center; flex: 0 0 auto; }
 .hjm-sheet__handle {
@@ -2018,7 +2081,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   border-radius: 0;
   color: var(--hjm-color-text);
   background: var(--hjm-color-bg);
-  box-shadow: 0 16px 48px rgb(0 0 0 / 28%);
+  box-shadow: var(--hjm-shadow-overlay);
 }
 .hjm-side-panel[data-modal="false"] {
   position: fixed;
@@ -2091,7 +2154,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   border-radius: var(--hjm-radius-md);
   color: var(--hjm-color-text);
   background: var(--hjm-color-bg);
-  box-shadow: 0 16px 48px rgb(0 0 0 / 28%);
+  box-shadow: var(--hjm-shadow-overlay);
   pointer-events: auto;
 }
 .hjm-tour__counter { margin: 0; color: var(--hjm-color-text-muted); font-size: var(--hjm-type-label-size); }
@@ -2103,10 +2166,14 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-tooltip { position: relative; display: inline-flex; }
 .hjm-tooltip__content {
   position: fixed;
-  z-index: 1100;
+  z-index: var(--hjm-layer-tooltip);
   inline-size: max-content;
-  max-inline-size: min(20rem, 80vw);
-  padding: var(--hjm-space-xs) var(--hjm-space-sm);
+  /* tooltipRecipe.content.maxWidth 280 (theme.ts), never wider than the viewport minus collisionPadding 12 each side.
+     Until 2026-10-06 Web used min(20rem, 80vw), wider than the recipe. */
+  max-inline-size: min(var(--hjm-tooltip-max-width, 280px), calc(100vw - 2 * var(--hjm-tooltip-collision-padding, 12px)));
+  /* tooltipRecipe.surface.padding is spacing.xs (8) on every side. Until 2026-10-06 Web drew 8/12; the recipe has no
+     separate inline value and Native has no Tooltip that could justify one, so the recipe wins. */
+  padding: var(--hjm-tooltip-padding, var(--hjm-space-xs));
   border-radius: var(--hjm-radius-sm);
   color: var(--hjm-color-bg);
   background: var(--hjm-color-text);
@@ -2118,16 +2185,18 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-menu { position: relative; display: inline-flex; }
 .hjm-menu__content {
   position: fixed;
-  z-index: 900;
+  z-index: var(--hjm-layer-dropdown);
   min-inline-size: 13.75rem;
   max-inline-size: min(24rem, 90vw);
   max-block-size: calc(100dvh - (2 * var(--hjm-space-md)));
   overflow: auto;
-  padding: var(--hjm-space-xxs);
+  /* menuRecipe.surface (floatingSurfaceContract) padding spacing.xs 8. Until 2026-10-06 Web drew 4 here and in the
+     Select/Combobox/ContextMenu popups that share the same surface contract. */
+  padding: var(--hjm-menu-padding, var(--hjm-space-xs));
   border: 1px solid var(--hjm-color-border);
   border-radius: var(--hjm-radius-md);
   background: var(--hjm-color-bg);
-  box-shadow: 0 8px 24px rgb(0 0 0 / 18%);
+  box-shadow: var(--hjm-shadow-floating);
 }
 .hjm-menu__item {
   inline-size: 100%;
@@ -2137,7 +2206,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   gap: var(--hjm-space-sm);
   padding: var(--hjm-space-xs) var(--hjm-space-sm);
   border: 0;
-  border-radius: var(--hjm-radius-sm);
+  border-radius: var(--hjm-radius-md); /* menuRecipe.density.* = collectionItemContract.radius md (2026-10-06; was sm) */
   color: var(--hjm-color-text-body);
   background: transparent;
   font: inherit;
@@ -2174,7 +2243,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-select__indicator { flex: 0 0 auto; color: var(--hjm-color-text-muted); pointer-events: none; }
 .hjm-select__busy-indicator { flex: 0 0 auto; inline-size: 1em; block-size: 1em; border: 2px solid var(--hjm-color-content-brand); border-inline-end-color: transparent; border-radius: 50%; animation: hjm-spin 800ms linear infinite; }
 .hjm-select__native + .hjm-select__indicator { margin-inline-start: calc(-1 * var(--hjm-space-lg)); }
-.hjm-select__listbox { position: fixed; z-index: 800; max-inline-size: min(26.25rem, calc(100vw - (2 * var(--hjm-space-md)))); max-block-size: 22.5rem; overflow: auto; padding: var(--hjm-space-xxs); border: 1px solid var(--hjm-color-border); border-radius: var(--hjm-radius-md); background: var(--hjm-color-bg); box-shadow: 0 8px 24px rgb(0 0 0 / 18%); }
+.hjm-select__listbox { position: fixed; z-index: var(--hjm-layer-dropdown); max-inline-size: min(26.25rem, calc(100vw - (2 * var(--hjm-space-md)))); max-block-size: 22.5rem; overflow: auto; padding: var(--hjm-select-popover-padding, var(--hjm-space-xs)); /* selectRecipe.popover.padding 8 (was 4 until 2026-10-06) */ border: 1px solid var(--hjm-color-border); border-radius: var(--hjm-radius-md); background: var(--hjm-color-bg); box-shadow: var(--hjm-shadow-floating); }
 .hjm-select__section-label { padding: var(--hjm-space-xs) var(--hjm-space-sm); color: var(--hjm-color-text-muted); font-size: var(--hjm-type-label-size); font-weight: var(--hjm-font-weight-semibold); }
 .hjm-select__option, .hjm-select__message { min-block-size: var(--hjm-control-min-touch-target); display: flex; align-items: center; gap: var(--hjm-space-sm); padding: var(--hjm-space-xs) var(--hjm-space-sm); border-radius: var(--hjm-radius-sm); overflow-wrap: anywhere; }
 .hjm-select[data-density="comfortable"] .hjm-select__option,
@@ -2200,14 +2269,14 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 }
 .hjm-combobox__listbox {
   position: fixed;
-  z-index: 800;
+  z-index: var(--hjm-layer-dropdown);
   max-block-size: 22.5rem;
   overflow: auto;
-  padding: var(--hjm-space-xxs);
+  padding: var(--hjm-combobox-popover-padding, var(--hjm-space-xs)); /* comboboxRecipe.popover = selectRecipe.popover, 8 (was 4 until 2026-10-06) */
   border: 1px solid var(--hjm-color-border);
   border-radius: var(--hjm-radius-md);
   background: var(--hjm-color-bg);
-  box-shadow: 0 8px 24px rgb(0 0 0 / 18%);
+  box-shadow: var(--hjm-shadow-floating);
 }
 .hjm-combobox__option,
 .hjm-combobox__message {
@@ -2367,7 +2436,8 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-file-picker__hint { color: var(--hjm-color-text-muted); }
 .hjm-file-picker__error { color: var(--hjm-color-danger); }
 
-.hjm-upload-item { min-block-size: 4rem; display: flex; flex-wrap: wrap; align-items: center; gap: var(--hjm-space-sm); padding: var(--hjm-space-sm) var(--hjm-space-md); border: 1px solid var(--hjm-color-border); border-radius: var(--hjm-radius-md); }
+/* uploadItemRecipe.row: min 68 (layout.rowHeight.twoLine), padding xs 8 / md 16, gap sm (2026-10-06; Web had 64 and 12). */
+.hjm-upload-item { min-block-size: 68px; display: flex; flex-wrap: wrap; align-items: center; gap: var(--hjm-space-sm); padding: var(--hjm-space-xs) var(--hjm-space-md); border: 1px solid var(--hjm-color-border); border-radius: var(--hjm-radius-md); }
 .hjm-upload-item__leading { flex: 0 0 auto; }
 .hjm-upload-item__body { min-inline-size: 0; flex: 1 1 14rem; display: grid; gap: var(--hjm-space-xxs); }
 .hjm-upload-item__name { color: var(--hjm-color-text-body); overflow-wrap: anywhere; unicode-bidi: plaintext; }
@@ -2385,16 +2455,20 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-date-picker__label { color: var(--hjm-color-text); font-weight: var(--hjm-font-weight-semibold); }
 .hjm-date-picker__anchor { position: relative; display: flex; align-items: center; }
 .hjm-date-picker__trigger { inline-size: 100%; min-block-size: var(--hjm-control-min-touch-target); display: flex; align-items: center; gap: var(--hjm-space-sm); padding-inline: var(--hjm-space-md) 3rem; border: 1px solid var(--hjm-color-border); border-radius: var(--hjm-radius-md); color: var(--hjm-color-text-body); background: var(--hjm-color-bg); font: inherit; text-align: start; cursor: pointer; }
-.hjm-date-picker[data-size="large"] .hjm-date-picker__trigger { min-block-size: 3.5rem; padding-inline-start: var(--hjm-space-lg); }
+/* datePickerRecipe.sizes.large.minHeight is control.buttonHeight.large (52), as Select/NumberField large. Web drew 56 until 2026-10-06. */
+.hjm-date-picker[data-size="large"] .hjm-date-picker__trigger { min-block-size: var(--hjm-control-button-large); padding-inline-start: var(--hjm-space-lg); }
 .hjm-date-picker[data-invalid] .hjm-date-picker__trigger { border-color: var(--hjm-color-danger); }
+/* Same scope as .hjm-field (fieldRecipe.disabledScope); before 2026-10-06 a disabled DatePicker
+   looked enabled on both platforms. datePickerRecipe has no amount, so the field default applies. */
+.hjm-date-picker[data-disabled] :is(.hjm-date-picker__label, .hjm-date-picker__anchor) { opacity: var(--hjm-field-disabled-opacity); }
 .hjm-date-picker__trigger [data-placeholder] { color: var(--hjm-color-text-muted); }
 .hjm-date-picker__clear { position: absolute; inset-inline-end: 0; inline-size: var(--hjm-control-min-touch-target); block-size: var(--hjm-control-min-touch-target); border: 0; color: var(--hjm-color-text-muted); background: transparent; font: inherit; cursor: pointer; }
-.hjm-date-picker__popover { position: absolute; z-index: 800; inset-block-start: calc(100% + var(--hjm-space-xs)); inset-inline-start: 0; inline-size: min(22.5rem, calc(100vw - 2rem)); padding: var(--hjm-space-sm); border: 1px solid var(--hjm-color-border); border-radius: var(--hjm-radius-lg); color: var(--hjm-color-text); background: var(--hjm-color-bg); box-shadow: 0 8px 24px rgb(0 0 0 / 18%); }
+.hjm-date-picker__popover { position: absolute; z-index: var(--hjm-layer-dropdown); inset-block-start: calc(100% + var(--hjm-space-xs)); inset-inline-start: 0; inline-size: min(22.5rem, calc(100vw - 2rem)); padding: var(--hjm-space-sm); border: 1px solid var(--hjm-color-border); border-radius: var(--hjm-radius-lg); color: var(--hjm-color-text); background: var(--hjm-color-bg); box-shadow: var(--hjm-shadow-floating); }
 .hjm-date-picker__description { color: var(--hjm-color-text-muted); }
 .hjm-date-picker__error { color: var(--hjm-color-danger); }
 
 /* Toast ------------------------------------------------------------------ */
-.hjm-toast-viewport { position: fixed; z-index: 1200; inset-inline: max(var(--hjm-space-md), env(safe-area-inset-left)) max(var(--hjm-space-md), env(safe-area-inset-right)); display: flex; flex-direction: column; gap: var(--hjm-space-sm); max-inline-size: min(26.25rem, calc(100vw - (2 * var(--hjm-space-md)))); margin-inline: auto; pointer-events: none; }
+.hjm-toast-viewport { position: fixed; z-index: var(--hjm-layer-toast); inset-inline: max(var(--hjm-space-md), env(safe-area-inset-left)) max(var(--hjm-space-md), env(safe-area-inset-right)); display: flex; flex-direction: column; gap: var(--hjm-space-sm); max-inline-size: min(26.25rem, calc(100vw - (2 * var(--hjm-space-md)))); margin-inline: auto; pointer-events: none; }
 .hjm-toast-viewport[data-placement^="top"] { inset-block-start: max(var(--hjm-space-md), env(safe-area-inset-top)); }
 .hjm-toast-viewport[data-placement^="bottom"] { inset-block-end: calc(max(var(--hjm-space-md), env(safe-area-inset-bottom)) + var(--hjm-toast-bottom-offset, 0px)); flex-direction: column-reverse; }
 .hjm-toast-viewport[data-placement$="-start"] { margin-inline-start: 0; }
@@ -2492,7 +2566,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-top-bar[data-large-text="true"] .hjm-top-bar__title { grid-column: 1 / -1; grid-row: 2; padding-block: var(--hjm-space-xs); text-align: start; }
 .hjm-top-bar[data-large-text="true"] .hjm-top-bar__trailing { grid-column: 2; grid-row: 1; }
 .hjm-bottom-cta { display: grid; gap: var(--hjm-bottom-cta-gap); min-block-size: var(--hjm-bottom-cta-min-height); padding: var(--hjm-bottom-cta-padding-top) var(--hjm-bottom-cta-padding-inline) max(var(--hjm-bottom-cta-padding-bottom), env(safe-area-inset-bottom, 0px), var(--hjm-bottom-cta-safe-area)); border-block-start: 1px solid var(--hjm-color-border); background: var(--hjm-color-bg); }
-.hjm-bottom-cta[data-position="sticky"] { position: sticky; inset-block-end: 0; z-index: 1; }
+.hjm-bottom-cta[data-position="sticky"] { position: sticky; inset-block-end: 0; z-index: var(--hjm-layer-sticky); }
 .hjm-bottom-cta__description { margin: 0; font-size: var(--hjm-type-caption-size); line-height: var(--hjm-type-caption-line-height); color: var(--hjm-color-text-muted); overflow-wrap: anywhere; }
 .hjm-bottom-cta__actions { display: flex; flex-wrap: wrap; gap: var(--hjm-bottom-cta-gap); }
 .hjm-bottom-cta__actions > div { flex: 1 1 calc(var(--hjm-control-min-touch-target) * 3); min-inline-size: 0; }
@@ -2518,7 +2592,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 
 /* The viewport action follows the content in DOM order. Its measured clearance
    belongs on the scroll content, not on the fixed button (docs/floating-action-button.md). */
-.hjm-fab { position: fixed; z-index: 500; inset-inline-end: max(var(--hjm-fab-margin), env(safe-area-inset-right, 0px)); inset-block-end: calc(var(--hjm-fab-margin) + max(var(--hjm-fab-safe-area), env(safe-area-inset-bottom, 0px))); max-inline-size: calc(100% - var(--hjm-fab-margin) * 2); min-block-size: var(--hjm-fab-diameter); }
+.hjm-fab { position: fixed; z-index: var(--hjm-layer-sticky); inset-inline-end: max(var(--hjm-fab-margin), env(safe-area-inset-right, 0px)); inset-block-end: calc(var(--hjm-fab-margin) + max(var(--hjm-fab-safe-area), env(safe-area-inset-bottom, 0px))); max-inline-size: calc(100% - var(--hjm-fab-margin) * 2); min-block-size: var(--hjm-fab-diameter); }
 .hjm-fab__icon { display: flex; flex: 0 0 auto; align-items: center; justify-content: center; }
 .hjm-fab[data-direction="rtl"] { inset-inline-end: max(var(--hjm-fab-margin), env(safe-area-inset-left, 0px)); }
 .hjm-fab[data-mode="collapsed"] { inline-size: var(--hjm-fab-diameter); padding-inline: 0; gap: 0; }
@@ -2592,7 +2666,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 /* Both surfaces reuse the menu's floating look; only the anchor differs. */
 .hjm-context-menu-host { min-inline-size: 0; }
 .hjm-context-menu-host:focus-visible { outline: 2px solid var(--hjm-color-focus); outline-offset: 2px; }
-.hjm-context-menu { position: fixed; max-inline-size: min(24rem, 90vw); max-block-size: calc(100dvh - (2 * var(--hjm-space-md))); overflow: auto; padding: var(--hjm-space-xxs); border: 1px solid var(--hjm-color-border); border-radius: var(--hjm-radius-md); background: var(--hjm-color-bg); box-shadow: 0 8px 24px rgb(0 0 0 / 18%); }
+.hjm-context-menu { position: fixed; max-inline-size: min(24rem, 90vw); max-block-size: calc(100dvh - (2 * var(--hjm-space-md))); overflow: auto; padding: var(--hjm-menu-padding, var(--hjm-space-xs)); /* ContextMenu reads menuRecipe like Menu (was 4 until 2026-10-06) */ border: 1px solid var(--hjm-color-border); border-radius: var(--hjm-radius-md); background: var(--hjm-color-bg); box-shadow: var(--hjm-shadow-floating); }
 .hjm-context-menu__item { min-block-size: var(--hjm-control-min-touch-target); display: flex; align-items: center; justify-content: space-between; gap: var(--hjm-space-sm); padding: var(--hjm-space-xs) var(--hjm-space-sm); border-radius: var(--hjm-radius-sm); color: var(--hjm-color-text-body); cursor: pointer; }
 /* Wrap long labels so commands stay readable inside the viewport-bounded menu; truncation was rejected because it hides command meaning. */
 .hjm-context-menu__item > span { min-inline-size: 0; overflow-wrap: anywhere; }
@@ -2607,7 +2681,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-menubar__label[data-open] { background: var(--hjm-color-bg);  box-shadow: inset 0 0 0 1px var(--hjm-color-content-brand); }
 .hjm-menubar__label:disabled { opacity: 0.5; cursor: not-allowed; }
 .hjm-menubar__label:focus-visible { outline: 2px solid var(--hjm-color-focus); outline-offset: 2px; }
-.hjm-menubar__panel { position: absolute; inset-block-start: 100%; inset-inline-start: 0; z-index: 900; min-inline-size: 13.75rem; max-inline-size: min(24rem, 90vw); padding: var(--hjm-space-xxs); border: 1px solid var(--hjm-color-border); border-radius: var(--hjm-radius-md); background: var(--hjm-color-bg); box-shadow: 0 8px 24px rgb(0 0 0 / 18%); }
+.hjm-menubar__panel { position: absolute; inset-block-start: 100%; inset-inline-start: 0; z-index: var(--hjm-layer-dropdown); min-inline-size: 13.75rem; max-inline-size: min(24rem, 90vw); padding: var(--hjm-space-xxs); border: 1px solid var(--hjm-color-border); border-radius: var(--hjm-radius-md); background: var(--hjm-color-bg); box-shadow: var(--hjm-shadow-floating); }
 .hjm-menubar__item { min-block-size: var(--hjm-control-min-touch-target); display: flex; align-items: center; justify-content: space-between; gap: var(--hjm-space-sm); padding: var(--hjm-space-xs) var(--hjm-space-sm); border-radius: var(--hjm-radius-sm); color: var(--hjm-color-text-body); cursor: pointer; }
 .hjm-menubar__item[data-active] { background: var(--hjm-color-bg);  box-shadow: inset 0 0 0 1px var(--hjm-color-content-brand); }
 .hjm-menubar__item[data-tone="danger"] { color: var(--hjm-color-danger); }
@@ -2690,7 +2764,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-bottom-navigation[data-presentation="capsule"] .hjm-bottom-navigation__list {
   display: flex; flex: 1; min-inline-size: 0; padding: var(--hjm-space-xxs);
   background: var(--hjm-color-surface); border: 1px solid var(--hjm-color-border);
-  border-radius: var(--hjm-radius-full); box-shadow: 0 8px 24px rgb(0 0 0 / 12%);
+  border-radius: var(--hjm-radius-full); box-shadow: var(--hjm-shadow-floating);
 }
 .hjm-bottom-navigation[data-presentation="capsule"] li { flex: 1; min-inline-size: 44px; }
 .hjm-bottom-navigation[data-presentation="capsule"][data-expanded-labels="false"] li[data-selected="true"] { flex: 2; }
@@ -2710,7 +2784,7 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   display: flex; flex-wrap: wrap; align-items: center; gap: var(--hjm-space-md);
   padding: var(--hjm-space-sm); border: 1px solid var(--hjm-color-border);
   border-radius: var(--hjm-radius-xl); background: var(--hjm-color-surface);
-  color: var(--hjm-color-text); box-shadow: 0 8px 24px rgb(0 0 0 / 12%);
+  color: var(--hjm-color-text); box-shadow: var(--hjm-shadow-floating);
 }
 @supports (backdrop-filter: blur(20px)) {
   .hjm-navigation-bar { background: color-mix(in srgb, var(--hjm-color-surface) 92%, transparent); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
@@ -2723,5 +2797,111 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 @media (prefers-reduced-transparency: reduce), (forced-colors: active) { .hjm-navigation-bar { background: var(--hjm-color-surface); backdrop-filter: none; } }
 
 [data-motion="reduced"] .hjm-bottom-navigation[data-presentation="capsule"] .hjm-bottom-navigation__item { transition: none; }
+
+/* Screen bodies own remaining height so full-screen states center below the real header.
+   Auto margins (not unsafe center alignment) keep oversized translations scrollable. */
+.hjm-screen { display: flex; flex-direction: column; block-size: 100%; min-block-size: 0; inline-size: 100%; max-inline-size: var(--hjm-screen-width); margin-inline: auto; background: var(--hjm-color-bg); color: var(--hjm-color-text); }
+/* Header items sit screenPatternRecipe.itemGap (sm 12) apart and the state block stateGap (md 16), as Native. Until 2026-10-06
+   Web reused the content inset (16) for both, which also collapsed them to 0 with contentInset="none". */
+.hjm-screen__header { display: flex; flex-wrap: wrap; align-items: center; gap: var(--hjm-screen-item-gap, var(--hjm-space-sm)); padding: var(--hjm-screen-padding); flex: 0 0 auto; }
+.hjm-screen__heading { flex: 1 1 calc(var(--hjm-screen-header-min) * var(--hjm-text-scale, 1)); min-inline-size: 0; overflow-wrap: anywhere; }
+.hjm-screen__heading > * { margin: 0; }
+.hjm-screen__notice { padding-inline: var(--hjm-screen-padding); flex: 0 0 auto; }
+.hjm-screen__body { flex: 1 1 0%; min-block-size: 0; min-inline-size: 0; padding: var(--hjm-screen-padding); overflow-wrap: anywhere; }
+.hjm-screen__body[data-scroll="screen"] { overflow-y: auto; }
+.hjm-screen__body[data-scroll="content"] { display: flex; flex-direction: column; overflow: hidden; }
+.hjm-screen__body[data-replacement="true"] { display: flex; flex-direction: column; }
+.hjm-screen__state { margin-block: auto; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: var(--hjm-screen-state-gap, var(--hjm-space-md)); padding-block: var(--hjm-screen-gap); text-align: center; }
+.hjm-screen__footer { flex: 0 0 auto; padding: var(--hjm-screen-padding); padding-block-end: max(var(--hjm-screen-padding), env(safe-area-inset-bottom)); border-block-start: 1px solid var(--hjm-color-border); }
+/* SearchScreen filtersOverflow=scroll; why: screen-flows.tsx. Block padding keeps focus rings unclipped. */
+.hjm-search-screen__filters { --f: calc(var(--hjm-focus-width) + var(--hjm-focus-offset)); overflow-x: auto; margin: calc(-1 * var(--f)) calc(-1 * var(--hjm-screen-padding)); padding: var(--f) var(--hjm-screen-padding); scroll-padding-inline: var(--hjm-screen-padding); scrollbar-width: none; }
+.hjm-search-screen__filters > * { inline-size: max-content; }
+
+/* Settings use spacing and rules, not shaded cards, per the 2026-10-05 product direction. */
+.hjm-settings-section > .hjm-section__content { background: transparent; border-block-start: 1px solid var(--hjm-color-border); }
+.hjm-settings-section .hjm-list-row { background: transparent; }
+.hjm-notification-item { border-radius: 0; }
+.hjm-notification-item[data-unread="true"] { background: transparent; }
+/* screenPatternRecipe.itemGap (sm 12) between the context/reply/attachment rows and between the editor and send, as Native.
+   Web drew xs 8 until 2026-10-06. */
+.hjm-message-composer { display: flex; flex-direction: column; gap: var(--hjm-message-composer-gap, var(--hjm-space-sm)); }
+.hjm-message-composer__row { display: flex; gap: var(--hjm-message-composer-gap, var(--hjm-space-sm)); align-items: flex-end; }
+.hjm-message-composer__row > .hjm-field { flex: 1; min-inline-size: 0; }
+.hjm-message-composer__row > .hjm-button { flex-shrink: 0; }
+.hjm-chat-message { display: flex; align-items: flex-start; gap: var(--hjm-space-xs); }
+.hjm-chat-message[data-direction="outgoing"] { flex-direction: row-reverse; }
+/* A visible opposite edge distinguishes authorship even without color; long copy still wraps. */
+.hjm-chat-message__content { max-inline-size: var(--hjm-message-max-width); min-inline-size: 0; display: flex; flex-direction: column; align-items: flex-start; gap: var(--hjm-space-xxs); }
+.hjm-chat-message[data-direction="outgoing"] .hjm-chat-message__content { align-items: flex-end; }
+.hjm-chat-message__bubble { border: var(--hjm-stroke-default) solid var(--hjm-color-border); border-radius: var(--hjm-radius-lg); background: var(--hjm-color-bg); padding: var(--hjm-space-sm); overflow-wrap: anywhere; white-space: pre-wrap; }
+.hjm-chat-message[data-direction="outgoing"] .hjm-chat-message__bubble { background: var(--hjm-color-surface-accent); }
+.hjm-chat-message__meta { display: flex; align-items: center; gap: var(--hjm-space-xs); }
+.hjm-chat-message__reply { border-inline-start: 2px solid var(--hjm-color-content-brand); padding-inline-start: var(--hjm-space-xs); margin-block-end: var(--hjm-space-xs); }
+
+/* A composer starts at one control row rather than the document editor minimum;
+   content sizing grows up to the shared line cap without stealing the timeline. */
+.hjm-message-composer__row > .hjm-field { --hjm-field-multiline-min-height: var(--hjm-control-field-height); }
+.hjm-message-composer textarea { field-sizing: content; resize: none; }
+
+/* Social composition: one field boundary and no permanent attachment toolbar. */
+.hjm-field__control--multiline > .hjm-field__trailing { align-self: flex-end; }
+/* TextArea leadingAction: an action, so no muted .hjm-field__affix color; centred on the growing text. */
+.hjm-field__control--multiline > .hjm-field__leading { display: flex; align-self: center; }
+.hjm-message-composer__attachments { display: flex; gap: var(--hjm-space-sm); align-items: center; overflow-x: auto; }
+.hjm-message-composer__attachment { position: relative; flex: 0 0 var(--hjm-attachment-size); inline-size: var(--hjm-attachment-size); block-size: var(--hjm-attachment-size); }
+.hjm-message-composer__preview { inline-size: 100%; block-size: 100%; border-radius: var(--hjm-radius-md); overflow: hidden; }
+.hjm-message-composer__preview > img { inline-size: 100%; block-size: 100%; object-fit: cover; }
+/* Clip only the photo: its rounded mask must not cut the remove button or focus ring. */
+.hjm-message-composer__remove { position: absolute; inset-block-start: 0; inset-inline-end: 0; }
+.hjm-message-composer__remove-glyph { display: grid; place-items: center; flex: 0 0 auto; inline-size: var(--hjm-attachment-remove-size); block-size: var(--hjm-attachment-remove-size); font-size: calc(var(--hjm-attachment-remove-size) * .75); line-height: 1; background: var(--hjm-color-bg); border-radius: var(--hjm-radius-full); }
+.hjm-message-reactions { border-radius: var(--hjm-radius-full); padding: var(--hjm-space-xs); max-inline-size: calc(100vw - 24px); inline-size: max-content; }
+/* Keep Popover's localized heading/close action available to assistive technology. */
+.hjm-message-reactions > .hjm-popover__header { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+/* The close button stays a Tab stop (Escape is not discoverable for every keyboard user), so
+   reveal the header while it holds focus instead of leaving a 1px focus target. Removing the
+   button from the tab order was rejected: it would leave the dialog without a visible exit. */
+.hjm-message-reactions > .hjm-popover__header:focus-within { position: static; width: auto; height: auto; margin: 0 0 var(--hjm-space-xs); overflow: visible; clip-path: none; white-space: normal; }
+
+/* The expanded reaction catalog needs a bounded panel rather than the quick-row pill. */
+.hjm-message-reactions:has([data-expanded="true"]) { border-radius: var(--hjm-radius-lg); inline-size: min(20rem, calc(100vw - 24px)); }
+
+/* ReactionPicker. 20rem is screenPatternRecipe.reactionMenuWidth (320) and 15rem matches Native's
+   240pt catalog height at the default root size; rem keeps both proportional to large text.
+   Copied here because importing screen-patterns would add a module edge to the ./reaction-picker
+   entry (budget: 3 modules). Remove the copies when the reactions contract exports these sizes. */
+.hjm-reaction-picker { display: flex; flex-direction: row; min-inline-size: 0; }
+.hjm-reaction-picker[data-expanded] { flex-direction: column; }
+.hjm-reaction-picker__options { display: flex; flex: 1; flex-wrap: wrap; gap: var(--hjm-space-xs); min-inline-size: 0; }
+.hjm-reaction-picker[data-layout="strip"]:not([data-expanded]) > .hjm-reaction-picker__options { flex-wrap: nowrap; overflow-x: auto; }
+.hjm-reaction-picker[data-expanded] > .hjm-reaction-picker__options { overflow-y: auto; max-block-size: 15rem; inline-size: min(20rem, 100%); }
+.hjm-reaction-picker > :last-child { flex-shrink: 0; }
+/* Only the chat strip enlarges glyphs, to the title type step Native's strip uses. The default
+   wrap layout keeps the button's own size, as published before the strip existed. */
+.hjm-reaction-picker[data-layout="strip"] .hjm-reaction-picker__glyph { font-size: var(--hjm-type-title-size); line-height: var(--hjm-type-title-line-height); }
+
+/* The embedded circle uses the small 36px recipe; centre it in the field rather than on the text baseline.
+   Reduce only its trailing inset to 8px, preserving the text's 16px leading padding. */
+.hjm-message-composer[data-send-presentation="circle"] .hjm-field__trailing { display: flex; align-self: center; margin-inline-end: calc(var(--hjm-space-xs) - var(--hjm-space-md)); margin-inline-start: var(--hjm-space-sm); }
+
+/* Saved collections use a two-column cover grid, then a dense three-column media grid.
+   Product thumbnails are slots; colors and spacing stay on HJM semantic tokens. */
+.hjm-saved-collection,.hjm-saved-post { min-width:0; margin:0; padding:0; border:0; background:transparent; color:inherit; font:inherit; text-align:start; cursor:pointer; }
+.hjm-saved-collection { display:flex; flex-direction:column; gap:var(--hjm-space-sm); }
+.hjm-saved-collection__cover { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); width:100%; aspect-ratio:1; gap:var(--hjm-space-xxs); overflow:hidden; border-radius:var(--hjm-radius-md); background:var(--hjm-color-surface-alt); }
+.hjm-saved-collection__cover > span { min-width:0; min-height:0; overflow:hidden; }
+.hjm-saved-post { aspect-ratio:1; overflow:hidden; background:var(--hjm-color-surface-alt); }
+.hjm-saved-collection__cover img,.hjm-saved-post img { width:100%; height:100%; object-fit:cover; border-radius:0; display:block; }
+.hjm-saved-collection:focus-visible,.hjm-saved-post:focus-visible { outline:2px solid var(--hjm-color-focus); outline-offset:2px; }
+
+/* Filter pills keep the same native radio semantics and 44px hit target. The inner
+   surface is compact; the group wraps at large type instead of clipping labels. */
+.hjm-segmented[data-presentation="pills"] { background:transparent; border:0; padding:0; }
+.hjm-segmented[data-presentation="pills"] .hjm-segmented__items { flex-wrap:wrap; gap:var(--hjm-space-xs); overflow:visible; padding:0; border:0; border-radius:0; background:transparent; }
+.hjm-segmented[data-presentation="pills"] .hjm-segmented__item { position:relative; flex:0 1 auto; min-inline-size:0; min-block-size:var(--hjm-control-min-touch-target); border:0; border-radius:var(--hjm-radius-full); background:transparent; box-shadow:none; padding-inline:var(--hjm-space-md); color:var(--hjm-color-text-muted); }
+.hjm-segmented[data-presentation="pills"] .hjm-segmented__item::before { content:""; position:absolute; inset:var(--hjm-space-xs) 0; border-radius:var(--hjm-radius-full); background:var(--hjm-color-surface-alt); }
+.hjm-segmented[data-presentation="pills"] .hjm-segmented__item > span { position:relative; overflow-wrap:anywhere; }
+.hjm-segmented[data-presentation="pills"] .hjm-segmented__item[data-state="checked"] { color:var(--hjm-color-bg); font-weight:var(--hjm-font-weight-bold); }
+.hjm-segmented[data-presentation="pills"] .hjm-segmented__item[data-state="checked"]::before { background:var(--hjm-color-text-body); }
+.hjm-segmented[data-presentation="pills"] .hjm-segmented__item:focus-within { outline:2px solid var(--hjm-color-focus); outline-offset:2px; }
 
 }

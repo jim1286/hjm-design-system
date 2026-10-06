@@ -32,7 +32,7 @@ export function validateReleaseGovernance({ packages, releaseWorkflow, showcaseW
   // 커밋 전 게이트와 CI가 서로 다른 명령을 말했고, main에서 실패하는 테스트를 안은 채
   // 1.0.0~1.0.2가 통과했다 (#21). package.json은 주석을 담지 못하므로 근거는 여기 둔다.
   requireEqual(scripts["ci:check"], "pnpm check && pnpm showcase:native:check && pnpm showcase:web:check && pnpm showcase:web:build", "ci:check");
-  requireEqual(scripts["check"], "pnpm -r --filter './packages/**' run check && pnpm bundle:renderer:check && pnpm workspace:check && pnpm evidence:check && pnpm docs:check && pnpm governance:check && pnpm api-map:check", "check");
+  requireEqual(scripts["check"], "pnpm -r --filter './packages/**' run check && pnpm bundle:renderer:check && pnpm workspace:check && pnpm evidence:check && pnpm docs:check && pnpm governance:check && pnpm api-map:check && pnpm usage:check && pnpm storybook:check", "check");
   requireEqual(scripts["release:check"], "pnpm ci:check && node scripts/check-release-artifacts.mjs", "release:check");
   requireEqual(scripts["governance:check"], "node --test scripts/check-release-governance.test.mjs && node scripts/check-release-governance.mjs", "governance:check");
   requireEqual(scripts["workspace:check"], "node scripts/check-workspace-sync.mjs", "workspace:check");
@@ -40,6 +40,11 @@ export function validateReleaseGovernance({ packages, releaseWorkflow, showcaseW
   // The overlap audit found public companions/extensions absent from the catalog.
   // Guard the source/export projection too; a write-mode gate would hide drift.
   requireEqual(scripts["api-map:check"], "node scripts/sync-public-component-map.mjs", "api-map:check");
+  // 사용 지침 게이트(2026-10-06): --write로 바꾸면 누락·drift를 고쳐 쓰고 통과해 버린다.
+  requireEqual(scripts["usage:check"], "node scripts/check-usage-docs.mjs", "usage:check");
+  // Storybook 규격 게이트(2026-10-06 사용자 결정 "스토리북 규격도 잡아줘"): --write-ids는 새 Web story id를
+  // 스냅숏에 더해 버리므로 검사 명령에 붙이면 URL 추가·삭제 검토를 건너뛴다.
+  requireEqual(scripts["storybook:check"], "node scripts/check-storybook.mjs", "storybook:check");
   requireEqual(packages.contracts.scripts.check, "pnpm typecheck && pnpm test && pnpm build && pnpm contracts:check && pnpm bundle:check", "contracts check");
   requireEqual(packages.contracts.scripts["contracts:check"], "node scripts/sync-contract-artifacts.mjs", "contracts projection check");
   requireEqual(packages.react.scripts.check, "pnpm typecheck && pnpm test && pnpm build", "React check");

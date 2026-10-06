@@ -25,7 +25,7 @@ function ThemeStudio(){
  </Stack>)}<Text tone="muted">{copy.note}</Text><Button onClick={()=>{setPalette({});setRevision(value=>value+1);}}>{copy.reset}</Button><Button onClick={()=>void save()}>{copy.export}</Button>{exportError?<Text>{copy.failedExport}</Text>:null}<CodeBlock label="브랜드 팔레트 설정" code={exportStudioPalette(palette)} language="json" wrap/>
  </Stack></main>;
 }
-const meta={ includeStories: ["Default","Dark","LargeText"],id: "foundations-theme-studio", title: "배포/토큰/테마 편집",component:ThemeStudio} satisfies Meta<typeof ThemeStudio>;export default meta;type Story=StoryObj<typeof meta>;
+const meta={ includeStories: ["Default","Dark","LargeText"],id: "foundations-theme-studio", title: "배포/토큰/편집 도구/테마 편집",component:ThemeStudio} satisfies Meta<typeof ThemeStudio>;export default meta;type Story=StoryObj<typeof meta>;
 export const Default: Story = { name: "기본",};
 export const Dark: Story = { name: "어두운 테마",globals:{theme:"dark"}};
 export const LargeText: Story = { name: "큰 글자",globals:{textScale:"2"}};

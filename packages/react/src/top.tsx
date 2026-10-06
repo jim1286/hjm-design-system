@@ -6,16 +6,19 @@ import {
 } from "@hjmds/design-contracts/components/top";
 import { forwardRef, createElement, type CSSProperties, type ReactNode } from "react";
 import { classNames } from "./internal.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type TopProps = Readonly<{
   descriptor: TopDescriptor;
   /** Secondary action sharing the title row; drops below it when space runs out. */
   trailing?: ReactNode;
   className?: string;
+  /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
 }>;
 
 export const Top = forwardRef<HTMLElement, TopProps>(function Top(
-  { descriptor, trailing, className },
+  { descriptor, trailing, className, layoutStyle },
   forwardedRef,
 ) {
   validateTopDescriptor(descriptor);
@@ -27,7 +30,7 @@ export const Top = forwardRef<HTMLElement, TopProps>(function Top(
       ref={forwardedRef}
       className={classNames("hjm-top", className)}
       data-size={size}
-      style={{
+      style={{ ...layoutStyle,
         "--hjm-top-title-size": `${metrics.title.fontSize}px`,
         "--hjm-top-title-line-height": `${metrics.title.lineHeight}px`,
         "--hjm-top-title-weight": metrics.title.fontWeight,

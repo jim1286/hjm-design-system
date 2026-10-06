@@ -1,8 +1,11 @@
 import { useId, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { resolveVirtualWindow, validateListKeys } from "@hjmds/design-contracts/components/virtual-list";
-export type VirtualListProps<T> = { items: readonly T[]; keyExtractor: (item: T) => string; renderItem: (item: T, index: number) => ReactNode; rowHeight: number; height: number; label: string; empty?: ReactNode; overscan?: number };
+import type { HjmCompositionStyleProp } from "./composition-style.js";
+export type VirtualListProps<T> = { items: readonly T[]; keyExtractor: (item: T) => string; renderItem: (item: T, index: number) => ReactNode; rowHeight: number; height: number; label: string; empty?: ReactNode; overscan?: number;
+  /** Canonical layout-only placement on the scroll viewport. `height` stays the prop's: the window math reads it. */
+  layoutStyle?: HjmCompositionStyleProp };
 /** Fixed-height rows are an explicit host contract; use List for unconstrained flowing copy. */
-export function VirtualList<T>({ items, keyExtractor, renderItem, rowHeight, height, label, empty, overscan = 3 }: VirtualListProps<T>) {
+export function VirtualList<T>({ items, keyExtractor, renderItem, rowHeight, height, label, empty, overscan = 3, layoutStyle }: VirtualListProps<T>) {
   const keys = useMemo(() => items.map(keyExtractor), [items, keyExtractor]); validateListKeys(keys, label);
   const [scrollTop, setScrollTop] = useState(0);
   const [active, setActive] = useState(0);
@@ -15,7 +18,7 @@ export function VirtualList<T>({ items, keyExtractor, renderItem, rowHeight, hei
   // Keep keyboard/descendant focus mounted when wheel scrolling moves it outside the window.
   const indices = [...new Set([...Array.from({ length: range.end - range.start }, (_, i) => i + range.start), ...(items.length ? [selected] : []), ...(focused !== null && focused < items.length ? [focused] : [])])].sort((a,b) => a-b);
   return <div data-hjm-virtual-list className="hjm-virtual-list" ref={host} role="list" aria-label={label} tabIndex={0}
-    style={{ overflowY: "auto", height, position: "relative" }} onScroll={event => setScrollTop(event.currentTarget.scrollTop)}
+    style={{ ...layoutStyle, overflowY: "auto", height, position: "relative" }} onScroll={event => setScrollTop(event.currentTarget.scrollTop)}
     onKeyDown={event => {
       if (!items.length || !(event.target instanceof HTMLElement) || (event.target !== event.currentTarget && !event.target.hasAttribute("data-virtual-row"))) return;
       const next = event.key === "ArrowDown" ? Math.min(selected + 1, items.length - 1) : event.key === "ArrowUp" ? Math.max(0, selected - 1) : event.key === "Home" ? 0 : event.key === "End" ? items.length - 1 : null;

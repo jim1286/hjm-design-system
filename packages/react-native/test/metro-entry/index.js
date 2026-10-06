@@ -1,3 +1,6 @@
+import { SavedItemsScreen } from "@hjmds/react-native/saved-items";
+import { ProfileScreen } from "@hjmds/react-native/screen-flows";
+import { ScreenLayout } from "@hjmds/react-native/screens";
 import { NavigationBar } from "@hjmds/react-native/navigation-bar";
 import * as optionalFamily0 from "@hjmds/react-native/icon-lucide";
 import * as optionalFamily1 from "@hjmds/react-native/duration-field";
@@ -266,6 +269,9 @@ function MetroSmokeApp() {
       }),
       React.createElement(Masonry, { items: ["a"], keyExtractor: item => item, width: 320, label: "Cards", getItemHeight: () => 100, renderItem: item => React.createElement(Text, null, item) }),
       React.createElement(VirtualList, { items: ["a"], keyExtractor: item => item, height: 200, rowHeight: 100, label: "Items", renderItem: item => React.createElement(Text, null, item) }),
+      React.createElement(ScreenLayout, { title: "화면" }, React.createElement(Text, null, "공통 화면")),
+      React.createElement(SavedItemsScreen, { title:"Saved", items:[], collections:[], labels:{allItems:"All",privateNotice:"Private",back:"Back",empty:"Empty",createCollection:"Create"}, onOpenCollection:noop,onOpenItem:noop,onBack:noop,onCreateCollection:noop,renderThumbnail:()=>null,renderDetail:()=>null }),
+      React.createElement(ProfileScreen, { title: "Profile", summary: null, edit: {label: "Edit", onAction: noop} }),
       React.createElement(ToastRegion, null),
       React.createElement(TextTransition, { text: "현재 상태" }),
       React.createElement(Dialog, { closeLabel: "닫기", defaultOpen: false, title: "확인" }),

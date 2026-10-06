@@ -10,6 +10,10 @@ test("current internal release gates are connected without claiming external con
 for (const [name, mutate, expected] of [
   ["public API map gate is removed", (s) => { s.packages.root.scripts.check = s.packages.root.scripts.check.replace(" && pnpm api-map:check", ""); }, /check/],
   ["public API map gate hides drift in write mode", (s) => { s.packages.root.scripts["api-map:check"] += " --write"; }, /api-map:check/],
+  ["usage guide gate is removed", (s) => { s.packages.root.scripts.check = s.packages.root.scripts.check.replace(" && pnpm usage:check", ""); }, /check/],
+  ["usage guide gate hides drift in write mode", (s) => { s.packages.root.scripts["usage:check"] += " --write"; }, /usage:check/],
+  ["Storybook navigation gate is removed", (s) => { s.packages.root.scripts.check = s.packages.root.scripts.check.replace(" && pnpm storybook:check", ""); }, /check/],
+  ["Storybook gate registers new story ids instead of failing", (s) => { s.packages.root.scripts["storybook:check"] += " --write-ids"; }, /storybook:check/],
   ["release bypasses canonical CI", (s) => { s.packages.root.scripts["release:check"] = "node scripts/check-release-artifacts.mjs"; }, /release:check/],
   ["scenario registry checks are removed", (s) => { s.packages.root.scripts.check = s.packages.root.scripts.check.replace(" && pnpm workspace:check", ""); }, /check/],
   ["generated drift check becomes write mode", (s) => { s.packages.root.scripts["evidence:check"] += " --write"; }, /evidence:check/],

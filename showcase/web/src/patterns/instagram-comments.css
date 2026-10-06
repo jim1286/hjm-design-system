@@ -1,0 +1,7 @@
+/* Instagram-style comment hierarchy uses existing tokens and controls; no shaded cards. */
+.hjm-instagram-comments .hjm-screen__header { border-block-end: var(--hjm-stroke-default) solid var(--hjm-color-border); }
+.hjm-instagram-comments .hjm-screen__heading { text-align: center; padding-inline-start: var(--hjm-control-min-touch-target); }
+.hjm-instagram-comments .hjm-screen__heading h1 { font-size: var(--hjm-type-title-size); }
+.hjm-instagram-comments .hjm-screen__body { padding-block-start: var(--hjm-space-lg); }
+.hjm-instagram-comments .hjm-screen__footer .hjm-field { --hjm-field-multiline-min-height: var(--hjm-control-field-height); }
+.hjm-instagram-comments textarea { field-sizing: content; resize: none; }

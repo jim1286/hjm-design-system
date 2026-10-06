@@ -7,6 +7,8 @@ import {
 } from "@hjmds/design-contracts/components/carousel";
 import { Button } from "./actions.js";
 import { Text } from "./primitives.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
+import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { useHjmNativeTheme } from "./provider.js";
 import { useControllableState } from "./internal/state.js";
 
@@ -18,11 +20,18 @@ export type CarouselProps = CarouselSelection & Readonly<{
   composeAccessibleName: ComposeCarouselAccessibleName;
   labels: CarouselLabels;
   autoplay?: CarouselAutoplayConfig;
+  /** Canonical layout-only placement. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
+  /**
+   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement;
+   * `carouselRecipe` owns appearance. Removed in the next major (consumer-policy.md §3.1).
+   */
   style?: StyleProp<ViewStyle>;
 }>;
 
 export function Carousel({ label, slides, renderSlide, composeAccessibleName, labels, autoplay,
-  currentKey, defaultCurrentKey, onCurrentKeyChange, style }: CarouselProps) {
+  currentKey, defaultCurrentKey, onCurrentKeyChange, layoutStyle, style }: CarouselProps) {
+  warnDeprecatedStyleProps("Carousel", { style }, "layoutStyle for placement; carouselRecipe owns appearance");
   const { environment, tokens } = useHjmNativeTheme();
   const [current, setCurrent] = useControllableState({
     ...(currentKey === undefined ? {} : { value: currentKey }),
@@ -69,7 +78,7 @@ export function Carousel({ label, slides, renderSlide, composeAccessibleName, la
     },
   });
   const selected = resolved.find((slide) => slide.current)!;
-  return <View style={[{ gap: carouselRecipe.sizes.medium.gap, direction: environment.direction }, style]}>
+  return <View style={[{ gap: carouselRecipe.sizes.medium.gap, direction: environment.direction }, style, layoutStyle]}>
     {autoplay ? <Button tone="ghost" disabled={environment.reducedMotion || screenReader}
       onPress={() => { if (last) setCurrent(slides[0]!.id); setRotating(!rotating || last); }}>
       {rotating && !last && !environment.reducedMotion && !screenReader ? labels.pause : labels.resume}

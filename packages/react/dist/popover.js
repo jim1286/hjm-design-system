@@ -1,7 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { cloneElement, createContext, forwardRef, useCallback, useContext, useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
 import { canDismissPopover, popoverBehaviorDefaults, popoverHoverDelay, popoverRecipe, resolvePopoverDescriptor, validatePopoverOpenState } from "@hjmds/design-contracts/components/popover";
-import { easing } from "@hjmds/design-contracts/foundations";
+import { easing, layer } from "@hjmds/design-contracts/foundations";
 import { Button } from "./actions.js";
 import { classNames, composeRefs } from "./internal.js";
 import { AnchoredPortal, getPopoverOwner, useAnchoredPopup } from "./portal.js";
@@ -97,9 +97,10 @@ export const Popover = forwardRef(function Popover({ trigger, title, closeLabel,
     }, [open, present, reduced]);
     const position = useAnchoredPopup(triggerRef, open || present ? node : null, {
         placement: resolved.placement, align: resolved.align, gap: popoverRecipe.sideOffset,
-        // Contextual forms sit above menus (900) and below tooltips (1100); a modal
-        // owner supplies its own layer through the shared positioning helper.
-        viewportPadding: popoverRecipe.collisionPadding, zIndex: 950, fallbackAxis: true,
+        // Contextual forms share the dropdown tier with menus (DOM order puts a popover opened
+        // from a menu above it) and stay below tooltips; a modal owner supplies its own layer
+        // through the shared positioning helper.
+        viewportPadding: popoverRecipe.collisionPadding, zIndex: layer.dropdown, fallbackAxis: true,
     });
     const setContent = useCallback((value) => { setNode(value); }, []);
     const contentRef = useCallback(composeRefs(setContent, ref), [setContent, ref]);

@@ -33,7 +33,7 @@ export const IconButton = forwardRef(function IconButton({ label, tone = iconBut
     };
     return (_jsx("button", { ...props, style: { ...style, ...layoutStyle }, ref: ref, type: type, className: classNames("hjm-icon-button", className), "data-tone": tone, "data-size": size, "data-shape": shape, ...(selected === undefined ? {} : { "data-selected": selected, "aria-pressed": selected }), "data-state": loading ? "loading" : unavailable ? "disabled" : "idle", "aria-label": label, "aria-busy": loading || undefined, "aria-disabled": unavailable || undefined, disabled: disabled, onClick: handleClick, children: loading ? _jsx("span", { className: "hjm-button__spinner", "aria-hidden": "true" }) : children }));
 });
-export const Link = forwardRef(function Link({ tone = linkRecipe.defaults.tone, variant = linkRecipe.defaults.variant, disabled = false, leading, trailing, renderAnchor, target, rel, tabIndex, onClick, className, children, ...props }, ref) {
+export const Link = forwardRef(function Link({ tone = linkRecipe.defaults.tone, variant = linkRecipe.defaults.variant, disabled = false, leading, trailing, renderAnchor, target, rel, tabIndex, onClick, className, children, layoutStyle, ...props }, ref) {
     const handleClick = (event) => {
         if (disabled) {
             event.preventDefault();
@@ -43,6 +43,9 @@ export const Link = forwardRef(function Link({ tone = linkRecipe.defaults.tone, 
     };
     const anchorProps = {
         ...props,
+        // `renderAnchor` adapters receive the merged placement, so a framework Link
+        // gets the same position as the plain <a>.
+        ...(props.style === undefined && layoutStyle === undefined ? {} : { style: { ...props.style, ...layoutStyle } }),
         ref,
         className: classNames("hjm-link", className),
         "data-tone": tone,

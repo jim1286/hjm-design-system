@@ -2,7 +2,7 @@ import { act, useState } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
-import type { DataTableSortState } from "@hjmds/design-contracts/components/data-table";
+import type { DataTableSelection, DataTableSortState } from "@hjmds/design-contracts/components/data-table";
 import { DataTable } from "../src/data-table.js";
 import { HjmProvider } from "../src/provider.js";
 import "../src/styles.css";
@@ -96,6 +96,47 @@ it("uses radio semantics for a single-selection table", async () => {
   await act(async () => control.click());
   expect(check("함께 먹은 저녁 선택").getAttribute("aria-checked")).toBe("true");
   await act(async () => check("느리게 걸었던 오후 선택").click());
+  expect(check("함께 먹은 저녁 선택").getAttribute("aria-checked")).toBe("false");
+});
+
+it("keeps an uncontrolled default selection in its own state for single and multiple tables", async () => {
+  const render = (selection: DataTableSelection<string>) => root.render(
+    <HjmProvider reducedMotion>
+      <DataTable columns={columns} rows={rows} labels={labels} renderCell={(rowId, columnId) => cells[rowId]![columnId]}
+        selection={selection} />
+    </HjmProvider>,
+  );
+  const onSingle = vi.fn();
+  await act(async () => render({ mode: "single", defaultSelectedKey: "walk", onSelectionChange: onSingle }));
+  expect(check("느리게 걸었던 오후 선택").getAttribute("aria-checked")).toBe("true");
+  await act(async () => check("함께 먹은 저녁 선택").click());
+  expect(onSingle.mock.calls).toEqual([["meal"]]);
+  expect(check("함께 먹은 저녁 선택").getAttribute("aria-checked")).toBe("true");
+  expect(check("느리게 걸었던 오후 선택").getAttribute("aria-checked")).toBe("false");
+  await act(async () => root.unmount());
+  root = createRoot(host);
+
+  const onMultiple = vi.fn();
+  await act(async () => render({ mode: "multiple", defaultSelectedKeys: new Set(["walk"]), onSelectionChange: onMultiple }));
+  expect(check("모두 선택").getAttribute("aria-checked")).toBe("mixed");
+  await act(async () => check("함께 먹은 저녁 선택").click());
+  expect(check("모두 선택").getAttribute("aria-checked")).toBe("true");
+  expect(rowOf("함께 먹은 저녁").getAttribute("aria-selected")).toBe("true");
+  await act(async () => check("모두 선택").click());
+  expect(check("느리게 걸었던 오후 선택").getAttribute("aria-checked")).toBe("false");
+  expect(onMultiple).toHaveBeenCalledTimes(2);
+});
+
+it("leaves a controlled selection to its owner even when the owner ignores the change", async () => {
+  const ignored = vi.fn();
+  await act(async () => root.render(
+    <HjmProvider reducedMotion>
+      <DataTable columns={columns} rows={rows} labels={labels} renderCell={(rowId, columnId) => cells[rowId]![columnId]}
+        selection={{ mode: "single", selectedKey: null, onSelectionChange: ignored }} />
+    </HjmProvider>,
+  ));
+  await act(async () => check("함께 먹은 저녁 선택").click());
+  expect(ignored.mock.calls).toEqual([["meal"]]);
   expect(check("함께 먹은 저녁 선택").getAttribute("aria-checked")).toBe("false");
 });
 

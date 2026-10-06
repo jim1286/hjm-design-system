@@ -22,6 +22,8 @@ import {
   type ViewStyle,
 } from "react-native";
 
+import type { HjmCompositionStyleProp } from "./composition-style.js";
+import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { useControllableState } from "./internal/state.js";
 import { logicalTextAlign, resolveNativeTextScaleProps } from "./internal/styles.js";
 import { useHjmNativeTheme } from "./provider.js";
@@ -61,7 +63,17 @@ export type SliderProps = NativeSliderViewProps &
     /** Product-owned visible and accessible value formatting. */
     getValueText?: (value: number) => string;
     onLayout?: (event: LayoutChangeEvent) => void;
+    /** Canonical layout-only placement for the complete slider. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
+    /**
+     * @deprecated Raw container style bypasses `sliderRecipe`. Use `layoutStyle` for placement.
+     * Removed in the next major (consumer-policy.md §3.1).
+     */
     containerStyle?: StyleProp<ViewStyle>;
+    /**
+     * @deprecated Raw control style bypasses `sliderRecipe` (track, thumb and hit target).
+     * Removed in the next major (consumer-policy.md §3.1).
+     */
     controlStyle?: StyleProp<ViewStyle>;
   }>;
 
@@ -85,11 +97,17 @@ export const Slider = forwardRef<View, SliderProps>(function Slider(
     onLayout,
     containerStyle,
     controlStyle,
+    layoutStyle,
     ...viewProps
   },
   forwardedRef,
 ) {
   const { colors, environment, textScaling, tokens } = useHjmNativeTheme();
+  warnDeprecatedStyleProps(
+    "Slider",
+    { containerStyle, controlStyle },
+    "layoutStyle for placement; sliderRecipe owns the track and thumb",
+  );
   const [currentValue, setCurrentValue] = useControllableState<number>({
     ...(value === undefined ? {} : { value }),
     defaultValue: defaultValue ?? min,
@@ -260,10 +278,11 @@ export const Slider = forwardRef<View, SliderProps>(function Slider(
     <View
       style={[
         {
-          gap: tokens.spacing.xs,
+          gap: sliderRecipe.header.trackGap,
           opacity: disabled ? sliderRecipe.states.disabledOpacity : 1,
         },
         containerStyle,
+        layoutStyle,
       ]}
     >
       <View
@@ -274,6 +293,7 @@ export const Slider = forwardRef<View, SliderProps>(function Slider(
           alignItems: "baseline",
           direction: environment.direction,
           flexDirection: "row",
+          gap: sliderRecipe.header.gap,
           justifyContent: "space-between",
         }}
       >

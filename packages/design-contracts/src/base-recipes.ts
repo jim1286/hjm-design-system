@@ -232,6 +232,23 @@ export const fieldRecipe = {
   },
   placeholder: { color: "textMuted" },
   disabledOpacity: 0.6,
+  /**
+   * Which slots `disabledOpacity` fades (2026-10-06). Label and control dim; the
+   * hint and the error keep their contrast, because they are the text that says
+   * why the field is locked or what to fix. Renderers used to fade the whole
+   * frame, so the small support text (`support.textVariant`) — already the
+   * lowest-contrast text in the field — lost contrast too. Fading nothing was
+   * rejected: the label and the control are what tell the user the field is off.
+   *
+   * Every field-family input follows this scope. The amount is the component
+   * recipe's own `states.disabledOpacity` where it has one (SearchField,
+   * PasswordField, OtpField, NumberField, Select); otherwise this recipe's
+   * `disabledOpacity` (TextField, TextArea, Field, Combobox, DatePicker, TagsInput).
+   */
+  disabledScope: {
+    dimmed: ["label", "control"],
+    unchanged: ["hint", "error"],
+  },
 } as const satisfies {
   slots: readonly string[];
   defaults: { variant: FieldVariant; shape: FieldShape; align: FieldAlign };
@@ -264,6 +281,10 @@ export const fieldRecipe = {
   };
   placeholder: { color: keyof ThemeColors };
   disabledOpacity: number;
+  disabledScope: {
+    dimmed: readonly ("label" | "control")[];
+    unchanged: readonly ("hint" | "error")[];
+  };
 };
 
 /**

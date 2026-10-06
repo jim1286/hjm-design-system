@@ -7,8 +7,9 @@ import { createLoadMoreController, validateLoadMoreDescriptor, } from "@hjmds/de
 import { backdrop, glyph, radius, spacing, } from "@hjmds/design-contracts/foundations";
 import { resolveGooeyIndicator, } from "@hjmds/design-contracts/gooey-navigation";
 import { bottomNavigationRecipe, counterBadgeRecipe, loadMoreRecipe, menuRecipe, spinnerRecipe, tabsRecipe, topBarRecipe, } from "@hjmds/design-contracts/recipes";
-import { forwardRef, useCallback, useEffect, useImperativeHandle, useLayoutEffect, useRef, useState, } from "react";
+import { Fragment, forwardRef, useCallback, useEffect, useImperativeHandle, useLayoutEffect, useRef, useState, } from "react";
 import { AccessibilityInfo, ActivityIndicator, Animated, AppState, Keyboard, Modal, Platform, Pressable, ScrollView, View, findNodeHandle, } from "react-native";
+import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { RecipeButton } from "./internal/recipe-button.js";
 import { isWebRenderer, webOnly, webTabProps } from "./internal/web-a11y.js";
 import { Button } from "./actions.js";
@@ -17,7 +18,7 @@ import { scheduleAfterNativeModalTeardown, shouldAwaitNativeModalDismiss, } from
 import { useControllableState } from "./internal/state.js";
 import { minimumTargetStyle } from "./internal/styles.js";
 import { Text } from "./primitives.js";
-import { useHjmNativeTheme } from "./provider.js";
+import { HjmNativeProvider, useHjmNativeTheme } from "./provider.js";
 function encodedTabId(value) {
     return encodeURIComponent(value);
 }
@@ -34,7 +35,8 @@ export function getDynamicTabPanelId(tabsId) {
 }
 /** External panel host for products that keep routing, query, or list state outside Tabs. */
 export function TabPanel(props) {
-    const { tabsId, activeValue, label, children, style } = props;
+    const { tabsId, activeValue, label, children, layoutStyle, style } = props;
+    warnDeprecatedStyleProps("TabPanel", { style }, "layoutStyle for placement");
     const dynamic = props.mode === "dynamic";
     const value = dynamic ? activeValue : props.value;
     const selected = value === activeValue;
@@ -50,10 +52,11 @@ export function TabPanel(props) {
         (mountPolicy === "visited" && visited);
     if (!mounted)
         return null;
-    return (_jsx(View, { nativeID: getTabPanelId(tabsId, value, dynamic ? "dynamic" : "keyed"), accessibilityLabel: label, accessibilityLabelledBy: getTabId(tabsId, dynamic ? activeValue : value), accessibilityElementsHidden: !selected, importantForAccessibility: selected ? "auto" : "no-hide-descendants", pointerEvents: selected ? "auto" : "none", role: "tabpanel", style: [style, selected ? null : { display: "none" }], children: children }));
+    return (_jsx(View, { nativeID: getTabPanelId(tabsId, value, dynamic ? "dynamic" : "keyed"), accessibilityLabel: label, accessibilityLabelledBy: getTabId(tabsId, dynamic ? activeValue : value), accessibilityElementsHidden: !selected, importantForAccessibility: selected ? "auto" : "no-hide-descendants", pointerEvents: selected ? "auto" : "none", role: "tabpanel", style: [style, layoutStyle, selected ? null : { display: "none" }], children: children }));
 }
 export function Tabs(props) {
-    const { id, label, items, value: valueProp, defaultValue, onValueChange, activationMode = tabsBehaviorDefaults.activationMode, mountPolicy = tabsBehaviorDefaults.mountPolicy, panelMode = tabsBehaviorDefaults.panelMode, appearance = "standard", orientation = tabsBehaviorDefaults.orientation, direction: directionProp, loop = tabsBehaviorDefaults.loop, size = tabsRecipe.defaults.size, layout = tabsRecipe.defaults.layout, overflow = tabsRecipe.defaults.overflow, renderPanels = true, children, style, tabListStyle, } = props;
+    const { id, label, items, value: valueProp, defaultValue, onValueChange, activationMode = tabsBehaviorDefaults.activationMode, mountPolicy = tabsBehaviorDefaults.mountPolicy, panelMode = tabsBehaviorDefaults.panelMode, appearance = "standard", orientation = tabsBehaviorDefaults.orientation, direction: directionProp, loop = tabsBehaviorDefaults.loop, size = tabsRecipe.defaults.size, layout = tabsRecipe.defaults.layout, overflow = tabsRecipe.defaults.overflow, renderPanels = true, children, layoutStyle, style, tabListStyle, } = props;
+    warnDeprecatedStyleProps("Tabs", { style, tabListStyle }, "layoutStyle for placement and size/layout/overflow/appearance for the tab list");
     if (!label.trim())
         throw new TypeError("Tabs label must not be empty");
     if (panelMode === "dynamic" && mountPolicy !== "active") {
@@ -191,6 +194,7 @@ export function Tabs(props) {
                 gap: spacing.md,
             },
             style,
+            layoutStyle,
         ], children: [_jsxs(ScrollView, { ref: tabScroll, onLayout: event => setTabViewport(event.nativeEvent.layout.width), onContentSizeChange: width => setTabContentWidth(width), nativeID: id, accessibilityLabel: label, accessibilityRole: "tablist", horizontal: orientation === "horizontal", scrollEnabled: scrollable && !fitted, showsHorizontalScrollIndicator: false, showsVerticalScrollIndicator: false, style: tabListStyle, contentContainerStyle: [
                     {
                         borderBottomColor: orientation === "horizontal"
@@ -332,7 +336,8 @@ function useBottomNavigationKeyboardVisible() {
     return visible;
 }
 /** Router-owned persistent destinations; activation emits intent without mutating selection. */
-export function BottomNavigation({ descriptor, onActivate, onLongActivate, renderIcon, renderBadge, getItemTestID, primaryAction, configuration = {}, safeAreaBottom = 0, style, surfaceStyle, listStyle, primaryActionStyle, }) {
+export function BottomNavigation({ descriptor, onActivate, onLongActivate, renderIcon, renderBadge, getItemTestID, primaryAction, configuration = {}, safeAreaBottom = 0, layoutStyle, style, surfaceStyle, listStyle, primaryActionStyle, }) {
+    warnDeprecatedStyleProps("BottomNavigation", { style, surfaceStyle, listStyle, primaryActionStyle }, "layoutStyle for placement and configuration (presentation/density/distribution) for appearance");
     const resolved = resolveBottomNavigationDescriptor(descriptor);
     if (!Number.isFinite(safeAreaBottom) || safeAreaBottom < 0) {
         throw new RangeError("BottomNavigation safeAreaBottom must be non-negative");
@@ -344,6 +349,9 @@ export function BottomNavigation({ descriptor, onActivate, onLongActivate, rende
     }, resolved.items.length);
     const capsule = presentation.presentation === "capsule";
     const expandedLabels = theme.environment.textScale >= 1.5 || resolved.items.length > 4;
+    // Controlled providers bake scale into Text's style, so the native multiplier
+    // prop cannot enforce the recipe limit (BT-QA-021). Scope labels only; AX names stay.
+    const labelTextScale = Math.min(theme.environment.textScale, bottomNavigationRecipe.largeText.maxFontSizeMultiplier);
     const keyboardVisible = useBottomNavigationKeyboardVisible();
     const density = bottomNavigationRecipe.density[presentation.density];
     const presentationRecipe = bottomNavigationRecipe.presentations[presentation.presentation];
@@ -371,6 +379,7 @@ export function BottomNavigation({ descriptor, onActivate, onLongActivate, rende
                 width: "100%",
             },
             style,
+            layoutStyle,
         ], children: _jsxs(View, { style: [
                 {
                     alignSelf: "center",
@@ -508,14 +517,14 @@ export function BottomNavigation({ descriptor, onActivate, onLongActivate, rende
                                                 }, children: _jsx(Text, { accessible: false, align: "center", style: {
                                                         color: resolveColorReference(badgeTone.content, theme.palette),
                                                         fontWeight: counterBadgeRecipe.fontWeight,
-                                                    }, variant: badgeMetrics.textVariant, children: item.badge.visibleLabel }) })) })) : null] }), (!capsule || expandedLabels || selected) && _jsx(Text, { align: "center", allowFontScaling: bottomNavigationRecipe.largeText.allowFontScaling, maxFontSizeMultiplier: bottomNavigationRecipe.largeText.maxFontSizeMultiplier, style: {
-                                        color: selected ? selectedLabelColor : idleColor,
-                                        flexShrink: 1,
-                                        fontWeight: selected
-                                            ? bottomNavigationRecipe.label.selectedFontWeight
-                                            : bottomNavigationRecipe.label.fontWeight,
-                                        minWidth: 0,
-                                    }, variant: density.label, children: item.label })] }, item.id));
+                                                    }, variant: badgeMetrics.textVariant, children: item.badge.visibleLabel }) })) })) : null] }), (!capsule || expandedLabels || selected) && _jsx(HjmNativeProvider, { textScale: labelTextScale, children: _jsx(Text, { align: "center", allowFontScaling: bottomNavigationRecipe.largeText.allowFontScaling, maxFontSizeMultiplier: bottomNavigationRecipe.largeText.maxFontSizeMultiplier, style: {
+                                            color: selected ? selectedLabelColor : idleColor,
+                                            flexShrink: 1,
+                                            fontWeight: selected
+                                                ? bottomNavigationRecipe.label.selectedFontWeight
+                                                : bottomNavigationRecipe.label.fontWeight,
+                                            minWidth: 0,
+                                        }, variant: density.label, children: item.label }) })] }, item.id));
                     }) }), primaryAction ? (_jsx(View, { pointerEvents: "box-none", style: [
                         {
                             alignItems: "center",
@@ -533,7 +542,8 @@ export function BottomNavigation({ descriptor, onActivate, onLongActivate, rende
 }
 /** Recipe-owned icon-over-micro-label action for Native screen chrome. */
 export function TopBarAction(props) {
-    const { label, accessibilityLabel, accessibilityState, children, disabled = false, labelVisibility = "visible", labelStyle, style, ...intentAndHostProps } = props;
+    const { label, accessibilityLabel, accessibilityState, children, disabled = false, labelVisibility = "visible", labelStyle, layoutStyle, style, ...intentAndHostProps } = props;
+    warnDeprecatedStyleProps("TopBarAction", { style, labelStyle }, "layoutStyle for placement and labelVisibility/topBarRecipe for appearance");
     if (!label.trim())
         throw new TypeError("TopBarAction label must not be empty");
     const resolvedAccessibilityLabel = accessibilityLabel ?? label;
@@ -596,6 +606,7 @@ export function TopBarAction(props) {
                 paddingHorizontal: topBarRecipe.action.paddingHorizontal,
             },
             style,
+            layoutStyle,
         ],
     };
     if (props.intent === "link") {
@@ -608,7 +619,8 @@ export function TopBarAction(props) {
     return props.renderAction?.(controlProps) ?? _jsx(Pressable, { ...controlProps });
 }
 /** Native screen top bar with logical action slots and large-text reflow. */
-export function TopBar({ title, titleLeading, onTitlePress, titleAccessibilityLabel, titleAccessibilityHint, leading, trailing, actions, centered = topBarRecipe.defaults.centered, safeAreaTop = 0, style, leadingStyle, titleStyle, trailingStyle, }) {
+export function TopBar({ title, titleLeading, onTitlePress, titleAccessibilityLabel, titleAccessibilityHint, leading, trailing, actions, centered = topBarRecipe.defaults.centered, safeAreaTop = 0, layoutStyle, style, leadingStyle, titleStyle, trailingStyle, }) {
+    warnDeprecatedStyleProps("TopBar", { style, leadingStyle, titleStyle, trailingStyle }, "layoutStyle for placement and centered/topBarRecipe for appearance");
     if (!Number.isFinite(safeAreaTop) || safeAreaTop < 0) {
         throw new RangeError("TopBar safeAreaTop must be non-negative");
     }
@@ -687,7 +699,12 @@ export function TopBar({ title, titleLeading, onTitlePress, titleAccessibilityLa
                 paddingTop: safeAreaTop,
             },
             style,
-        ], children: largeText ? (_jsxs(_Fragment, { children: [hasLeading || hasTitle ? (_jsxs(View, { style: {
+            layoutStyle,
+        ], children: largeText ? (
+        // These branches have different host hierarchies. Reusing the full-width
+        // large row as a compact side slot left Fabric's layout stale after an OS
+        // text-size reset; replace that subtree instead of overriding it in apps.
+        _jsxs(Fragment, { children: [hasLeading || hasTitle ? (_jsxs(View, { style: {
                         alignItems: "center",
                         direction: theme.environment.direction,
                         flexDirection: "row",
@@ -712,7 +729,7 @@ export function TopBar({ title, titleLeading, onTitlePress, titleAccessibilityLa
                             width: "100%",
                         },
                         trailingStyle,
-                    ], children: trailingContent })) : null] })) : (_jsxs(_Fragment, { children: [renderCompactLeadingSlot ? (_jsx(View, { style: [
+                    ], children: trailingContent })) : null] }, "large-text")) : (_jsxs(Fragment, { children: [renderCompactLeadingSlot ? (_jsx(View, { style: [
                         {
                             alignItems: "center",
                             direction: theme.environment.direction,
@@ -737,7 +754,7 @@ export function TopBar({ title, titleLeading, onTitlePress, titleAccessibilityLa
                             minWidth: topBarRecipe.sideMinWidth,
                         },
                         trailingStyle,
-                    ], children: hasTrailingContent ? trailingContent : null })) : null] })) }));
+                    ], children: hasTrailingContent ? trailingContent : null })) : null] }, "compact")) }));
 }
 function useMenuAfterDismiss(visible) {
     const shownRef = useRef(false);
@@ -773,7 +790,8 @@ function useMenuAfterDismiss(visible) {
     };
 }
 /** Sectioned Native action/selection menu with teardown-safe action callbacks. */
-export function Menu({ triggerLabel, title = triggerLabel, items, sections, source: sourceProp, selection = { mode: "none" }, onAction, onActionAfterDismiss, onSelectionAfterDismiss, open, defaultOpen = false, onOpenChange, onDismiss, disabled = false, readOnly = false, busy = false, readOnlyLabel, asyncState = { status: "idle" }, onRetry, retryLabel, density = menuRecipe.defaults.density, renderLeading, renderTrailing, dismissLabel, trigger, renderTrigger, style, ...modalProps }) {
+export function Menu({ triggerLabel, title = triggerLabel, items, sections, source: sourceProp, selection = { mode: "none" }, onAction, onActionAfterDismiss, onSelectionAfterDismiss, open, defaultOpen = false, onOpenChange, onDismiss, disabled = false, readOnly = false, busy = false, readOnlyLabel, asyncState = { status: "idle" }, onRetry, retryLabel, density = menuRecipe.defaults.density, renderLeading, renderTrailing, dismissLabel, trigger, renderTrigger, layoutStyle, style, ...modalProps }) {
+    warnDeprecatedStyleProps("Menu", { style }, "layoutStyle for placement and density for appearance");
     const providedSources = [sourceProp, items, sections].filter((candidate) => candidate !== undefined).length;
     if (providedSources !== 1) {
         throw new TypeError("Menu requires exactly one of source, items, or sections");
@@ -936,7 +954,7 @@ export function Menu({ triggerLabel, title = triggerLabel, items, sections, sour
                 requestOpen(!visible, "trigger");
         },
     };
-    return (_jsxs(View, { style: style, children: [_jsx(View, { ref: triggerRef, children: renderTrigger ? renderTrigger(triggerProps) : (_jsx(Pressable, { accessibilityHint: readOnly ? readOnlyLabel : undefined, accessibilityLabel: triggerLabel, accessibilityRole: "button", accessibilityState: triggerProps.accessibilityState, disabled: disabled || readOnly || busy, onPress: triggerProps.onPress, style: ({ pressed }) => [
+    return (_jsxs(View, { style: [style, layoutStyle], children: [_jsx(View, { ref: triggerRef, children: renderTrigger ? renderTrigger(triggerProps) : (_jsx(Pressable, { accessibilityHint: readOnly ? readOnlyLabel : undefined, accessibilityLabel: triggerLabel, accessibilityRole: "button", accessibilityState: triggerProps.accessibilityState, disabled: disabled || readOnly || busy, onPress: triggerProps.onPress, style: ({ pressed }) => [
                         minimumTargetStyle,
                         {
                             alignItems: "center",

@@ -8,6 +8,7 @@ import {
 } from "@hjmds/design-contracts/components/toggle-group";
 import { forwardRef, useMemo, type CSSProperties } from "react";
 import { classNames, useControllableState } from "./internal.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type ToggleGroupProps<Id extends string = string> = Readonly<{
   descriptor: ToggleGroupDescriptor<Id>;
@@ -16,6 +17,8 @@ export type ToggleGroupProps<Id extends string = string> = Readonly<{
   onPressedIdsChange?: (ids: ReadonlySet<Id>) => void;
   size?: ToggleGroupSize;
   className?: string;
+  /** Canonical layout-only placement on the root group. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
 }>;
 
 export const ToggleGroup = forwardRef(function ToggleGroup<Id extends string = string>(
@@ -26,6 +29,7 @@ export const ToggleGroup = forwardRef(function ToggleGroup<Id extends string = s
     onPressedIdsChange,
     size = toggleGroupRecipe.defaults.size,
     className,
+    layoutStyle,
   }: ToggleGroupProps<Id>,
   forwardedRef: React.Ref<HTMLDivElement>,
 ) {
@@ -48,6 +52,7 @@ export const ToggleGroup = forwardRef(function ToggleGroup<Id extends string = s
       className={classNames("hjm-toggle-group", className)}
       data-size={size}
       style={{
+        ...layoutStyle,
         "--hjm-toggle-min-height": `${metrics.minHeight}px`,
         "--hjm-toggle-padding": `${metrics.paddingHorizontal}px`,
         "--hjm-toggle-gap": `${toggleGroupRecipe.gap}px`,

@@ -18,6 +18,8 @@ type ChipBaseProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "children" | 
         color: "currentColor";
         size: number;
     }>) => ReactNode;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 type ActionChipProps = Readonly<{
     selectionMode?: "action";
@@ -45,8 +47,13 @@ export type CheckboxProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type" |
     presentation?: SelectionControlPresentation;
     size?: SelectionControlSize;
     renderLeading?: (appearance: ChoiceLeadingRenderProps) => ReactNode;
+    /**
+     * Canonical layout-only placement on the root `<label>`. `style` keeps going
+     * to the native input, where it always went, so existing callers do not move.
+     */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare const Checkbox: import("react").ForwardRefExoticComponent<Omit<InputHTMLAttributes<HTMLInputElement>, "onChange" | "children" | "defaultChecked" | "size" | "type" | "checked"> & Readonly<{
+export declare const Checkbox: import("react").ForwardRefExoticComponent<Omit<InputHTMLAttributes<HTMLInputElement>, "onChange" | "size" | "children" | "defaultChecked" | "type" | "checked"> & Readonly<{
     label: ReactNode;
     description?: ReactNode;
     checked?: boolean;
@@ -57,6 +64,11 @@ export declare const Checkbox: import("react").ForwardRefExoticComponent<Omit<In
     presentation?: SelectionControlPresentation;
     size?: SelectionControlSize;
     renderLeading?: (appearance: ChoiceLeadingRenderProps) => ReactNode;
+    /**
+     * Canonical layout-only placement on the root `<label>`. `style` keeps going
+     * to the native input, where it always went, so existing callers do not move.
+     */
+    layoutStyle?: HjmCompositionStyleProp;
 }> & RefAttributes<HTMLInputElement>>;
 type RadioState = Readonly<{
     checked: boolean;
@@ -74,6 +86,11 @@ export type RadioProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type" | "c
     presentation?: SelectionControlPresentation;
     size?: SelectionControlSize;
     renderLeading?: (appearance: ChoiceLeadingRenderProps) => ReactNode;
+    /**
+     * Canonical layout-only placement on the root `<label>`. `style` keeps going
+     * to the native input, where it always went, so existing callers do not move.
+     */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** Native radio item primitive. Use RadioGroup when the renderer owns group state. */
 export declare const Radio: import("react").ForwardRefExoticComponent<RadioProps & RefAttributes<HTMLInputElement>>;
@@ -91,6 +108,8 @@ type CheckboxGroupBaseProps<Key extends string> = Omit<FieldsetHTMLAttributes<HT
     required?: boolean;
     readOnly?: boolean;
     renderLeading?: (item: CheckboxGroupItem<Key>, appearance: ChoiceLeadingRenderProps) => ReactNode;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 export type CheckboxGroupProps<Key extends string = string> = CheckboxGroupBaseProps<Key> & CheckboxGroupSelection<Key>;
 export declare const CheckboxGroup: <Key extends string = string>(props: CheckboxGroupProps<Key> & RefAttributes<HTMLFieldSetElement>) => ReactElement;
@@ -121,6 +140,8 @@ export type RadioGroupProps = Omit<FieldsetHTMLAttributes<HTMLFieldSetElement>, 
     required?: boolean;
     readOnly?: boolean;
     renderLeading?: (item: RadioGroupItem, appearance: ChoiceLeadingRenderProps) => ReactNode;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 export declare const RadioGroup: import("react").ForwardRefExoticComponent<RadioGroupProps & RefAttributes<HTMLFieldSetElement>>;
 export type SwitchProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "role" | "onChange" | "value"> & Readonly<{
@@ -165,7 +186,10 @@ export type SegmentedControlProps = Omit<FieldsetHTMLAttributes<HTMLFieldSetElem
     defaultValue?: string;
     onValueChange?: (value: string) => void;
     size?: SegmentedControlSize;
+    presentation?: "connected" | "pills";
     name?: string;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 export declare const SegmentedControl: import("react").ForwardRefExoticComponent<Omit<FieldsetHTMLAttributes<HTMLFieldSetElement>, "value" | "defaultValue" | "onChange"> & Readonly<{
     label: string;
@@ -174,6 +198,9 @@ export declare const SegmentedControl: import("react").ForwardRefExoticComponent
     defaultValue?: string;
     onValueChange?: (value: string) => void;
     size?: SegmentedControlSize;
+    presentation?: "connected" | "pills";
     name?: string;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }> & RefAttributes<HTMLFieldSetElement>>;
 //# sourceMappingURL=selection.d.ts.map

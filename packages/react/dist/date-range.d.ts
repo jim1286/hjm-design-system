@@ -2,6 +2,7 @@ import { type DateRangeValue } from "@hjmds/design-contracts/components/date-ran
 import type { CalendarDescriptor, ComposeCalendarAccessibleName } from "@hjmds/design-contracts/components/calendar";
 import { type ReactNode } from "react";
 import { type CalendarMonthAction } from "./calendar.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type DateRangePickerProps<Content = unknown> = Readonly<{
     /** The same grid Calendar renders; the product still owns month data. */
     descriptor: Omit<CalendarDescriptor<Content>, "selectedDate" | "defaultSelectedDate" | "onSelectionChange">;
@@ -19,6 +20,8 @@ export type DateRangePickerProps<Content = unknown> = Readonly<{
     }>;
     renderCellContent?: (date: string) => ReactNode;
     className?: string;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function DateRangePicker<Content = unknown>({ descriptor, composeAccessibleName, value: controlledValue, defaultValue, onValueChange, previousMonth, nextMonth, rangeLabels, renderCellContent, className, }: DateRangePickerProps<Content>): import("react").JSX.Element;
+export declare function DateRangePicker<Content = unknown>({ descriptor, composeAccessibleName, value: controlledValue, defaultValue, onValueChange, previousMonth, nextMonth, rangeLabels, renderCellContent, className, layoutStyle, }: DateRangePickerProps<Content>): import("react").JSX.Element;
 //# sourceMappingURL=date-range.d.ts.map

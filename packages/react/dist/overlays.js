@@ -1,9 +1,10 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
+import { layer } from "@hjmds/design-contracts/foundations";
 import { resolveMenuTypeahead } from "./menu-typeahead.js";
 import { createAlertDialogSession, getAlertDialogInitialFocus, validateAlertDialogRequest, } from "@hjmds/design-contracts/components/alert-dialog";
 import { createSheetLifecycle, resolveNextSheetDetent, sheetBehaviorDefaults, } from "@hjmds/design-contracts/components/sheet";
 import { resolveTooltipDescriptor, tooltipBehaviorDefaults, } from "@hjmds/design-contracts/components/tooltip";
-import { dialogRecipe, menuRecipe, sheetRecipe, } from "@hjmds/design-contracts/recipes";
+import { dialogRecipe, menuRecipe, sheetRecipe, tooltipRecipe, } from "@hjmds/design-contracts/recipes";
 import { cloneElement, forwardRef, useCallback, useEffect, useId, useRef, useState, useSyncExternalStore, } from "react";
 import { Button } from "./actions.js";
 import { classNames, composeRefs, useControllableState } from "./internal.js";
@@ -80,8 +81,12 @@ export const Dialog = forwardRef(function Dialog({ trigger, title, description, 
         onEscape: () => requestClose("escape"),
     });
     return (_jsxs(_Fragment, { children: [trigger === undefined ? null : renderTrigger(trigger, triggerRef, open, contentId, "dialog", () => changeOpen(true, { reason: "trigger" })), open ? (_jsx(HjmPortal, { ...(portalContainer === undefined ? {} : { container: portalContainer }), children: _jsx("div", { className: "hjm-overlay", "data-kind": "dialog", "data-modal-priority": modalPriority, "data-state": "open", style: { zIndex: modalLayer }, onMouseDown: (event) => {
-                        if (event.target === event.currentTarget)
+                        if (event.target === event.currentTarget) {
+                            // Diairy QA W16: Chrome's default backdrop blur can run after focus
+                            // cleanup and undo its return target. Cancel that default, not the modal's dismissal.
+                            event.preventDefault();
                             requestClose("outside");
+                        }
                     }, children: _jsxs("div", { ref: mergedContentRef, id: contentId, role: "dialog", "aria-modal": "true", "aria-labelledby": titleId, "aria-describedby": description ? descriptionId : undefined, "aria-busy": busy || undefined, tabIndex: -1, className: classNames("hjm-dialog", className), "data-hjm-modal-content": "", "data-size": size, "data-state": busy ? "busy" : "idle", children: [_jsxs("header", { className: "hjm-dialog__header", children: [_jsx("h2", { id: titleId, className: "hjm-dialog__title", children: title }), dismissible ? (_jsx("button", { type: "button", className: "hjm-dialog__close", "aria-label": closeLabel, disabled: busy, onClick: () => requestClose("close-action"), children: "\u00D7" })) : null] }), description ? _jsx("p", { id: descriptionId, className: "hjm-dialog__description", children: description }) : null, children ? _jsx("div", { className: "hjm-dialog__body", children: children }) : null, footer ? _jsx("footer", { className: "hjm-dialog__footer", children: footer }) : null] }) }) })) : null] }));
 });
 export const AlertDialog = forwardRef(function AlertDialog({ trigger, request, icon, size = dialogRecipe.defaults.size, returnFocusRef, modalPriority = 0, portalContainer, open: openProp, defaultOpen, onOpenChange, className, }, forwardedRef) {
@@ -239,9 +244,13 @@ export const Sheet = forwardRef(function Sheet({ trigger, title, description, ch
         ...(trigger === undefined ? {} : { fallbackReturnRef: triggerRef }),
         onEscape: () => requestClose("escape"),
     });
-    return (_jsxs(_Fragment, { children: [trigger === undefined ? null : renderTrigger(trigger, triggerRef, open, contentId, "dialog", () => changeOpen(true, { reason: "trigger" })), open ? (_jsx(HjmPortal, { ...(portalContainer === undefined ? {} : { container: portalContainer }), children: _jsx("div", { className: "hjm-overlay hjm-sheet-positioner", "data-kind": "sheet", "data-modal-priority": modalPriority, "data-placement": placement, "data-state": "open", style: { zIndex: modalLayer }, onMouseDown: (event) => {
-                        if (event.target === event.currentTarget)
+    return (_jsxs(_Fragment, { children: [trigger === undefined ? null : renderTrigger(trigger, triggerRef, open, contentId, "dialog", () => changeOpen(true, { reason: "trigger" })), open ? (_jsx(HjmPortal, { ...(portalContainer === undefined ? {} : { container: portalContainer }), children: _jsx("div", { className: "hjm-overlay hjm-sheet-positioner", "data-kind": "sheet", "data-modal-priority": modalPriority, "data-placement": placement, "data-detent": activeDetent ?? (size === "auto" ? undefined : size), "data-state": "open", style: { zIndex: modalLayer }, onMouseDown: (event) => {
+                        if (event.target === event.currentTarget) {
+                            // Match Dialog: a real backdrop click must not undo return focus or
+                            // move focus to body when busy/outside-dismiss policy keeps the sheet open.
+                            event.preventDefault();
                             requestClose("outside");
+                        }
                     }, children: _jsxs("div", { ref: composeRefs(contentRef, forwardedRef), id: contentId, role: "dialog", "aria-modal": "true", "aria-labelledby": titleId, "aria-describedby": description ? descriptionId : undefined, "aria-busy": busy || undefined, tabIndex: -1, className: classNames("hjm-sheet", className), "data-hjm-modal-content": "", "data-placement": placement, "data-detent": activeDetent ?? (size === "auto" ? undefined : size), "data-has-footer": footer ? true : undefined, "data-state": busy ? "busy" : "idle", children: [detents && detentLabels && activeDetent ? (_jsx("div", { className: "hjm-sheet__handle-row", children: _jsx("button", { type: "button", className: "hjm-sheet__handle", "aria-label": resolveNextSheetDetent(detents, activeDetent, "expand") === null
                                         ? detentLabels.collapse
                                         : detentLabels.expand, onClick: () => {
@@ -251,7 +260,7 @@ export const Sheet = forwardRef(function Sheet({ trigger, title, description, ch
                                             onDetentChange?.(next);
                                     }, children: _jsx("span", { "aria-hidden": "true", className: "hjm-sheet__handle-bar" }) }) })) : null, _jsxs("header", { className: "hjm-sheet__header", children: [_jsxs("div", { children: [_jsx("h2", { id: titleId, className: "hjm-sheet__title", children: title }), description ? _jsx("p", { id: descriptionId, className: "hjm-sheet__description", children: description }) : null] }), policy.dismissible ? (_jsx("button", { type: "button", className: "hjm-dialog__close", "aria-label": closeLabel, disabled: busy && !policy.dismissWhileBusy, onClick: () => requestClose("close-action"), children: "\u00D7" })) : null] }), children ? _jsx("div", { className: "hjm-sheet__body", children: children }) : null, footer ? _jsx("footer", { className: "hjm-sheet__footer", children: footer }) : null] }) }) })) : null] }));
 });
-export const Tooltip = forwardRef(function Tooltip({ trigger, content, placement, align, pointerOpenDelayMs = tooltipBehaviorDefaults.pointerOpenDelayMs, focusOpenDelayMs = tooltipBehaviorDefaults.focusOpenDelayMs, portalContainer, open: openProp, defaultOpen, onOpenChange, className, }, ref) {
+export const Tooltip = forwardRef(function Tooltip({ trigger, content, placement, align, pointerOpenDelayMs = tooltipBehaviorDefaults.pointerOpenDelayMs, focusOpenDelayMs = tooltipBehaviorDefaults.focusOpenDelayMs, portalContainer, open: openProp, defaultOpen, onOpenChange, className, layoutStyle, }, ref) {
     const descriptor = resolveTooltipDescriptor({
         content,
         ...(placement === undefined ? {} : { placement }),
@@ -396,12 +405,16 @@ export const Tooltip = forwardRef(function Tooltip({ trigger, content, placement
     const popupPosition = useAnchoredPopup(triggerRef, tooltipNode, {
         align: descriptor.align,
         placement: descriptor.placement,
-        zIndex: 1100,
+        // tooltipRecipe.positioning (2026-10-06 follow-up): 4 from the trigger and 12 from the edge;
+        // the helper defaults 8/16 had made Web tooltips float further away than Native.
+        gap: tooltipRecipe.positioning.sideOffset,
+        viewportPadding: tooltipRecipe.positioning.collisionPadding,
+        zIndex: layer.tooltip,
     });
     const setTooltipRef = useCallback((node) => {
         setTooltipNode(node);
     }, []);
-    return (_jsxs("span", { ref: ref, className: classNames("hjm-tooltip", className), "data-placement": descriptor.placement, "data-align": descriptor.align, "data-state": visible ? "open" : "closed", onPointerEnter: (event) => {
+    return (_jsxs("span", { ref: ref, style: layoutStyle, className: classNames("hjm-tooltip", className), "data-placement": descriptor.placement, "data-align": descriptor.align, "data-state": visible ? "open" : "closed", onPointerEnter: (event) => {
             if (event.pointerType !== "touch")
                 clearTimer();
         }, onPointerLeave: (event) => {
@@ -413,7 +426,15 @@ export const Tooltip = forwardRef(function Tooltip({ trigger, content, placement
                 return;
             }
             schedule(false, 0, { reason: "pointer-leave" });
-        }, children: [renderedTrigger, visible ? (_jsx(AnchoredPortal, { anchorRef: triggerRef, ssrFallback: "inline", ...(portalContainer === undefined ? {} : { container: portalContainer }), children: _jsx("span", { ref: setTooltipRef, id: id, role: "tooltip", className: "hjm-tooltip__content", "data-placement": popupPosition.placement, "data-align": popupPosition.align, style: popupPosition.style, onPointerEnter: (event) => {
+        }, children: [renderedTrigger, visible ? (_jsx(AnchoredPortal, { anchorRef: triggerRef, ssrFallback: "inline", ...(portalContainer === undefined ? {} : { container: portalContainer }), children: _jsx("span", { ref: setTooltipRef, id: id, role: "tooltip", className: "hjm-tooltip__content", "data-placement": popupPosition.placement, "data-align": popupPosition.align, 
+                    // The positioner's inline maxWidth (space left in the viewport) would override the stylesheet cap,
+                    // so tooltipRecipe.content.maxWidth (280) is applied here too (2026-10-06; Web had grown to 320).
+                    style: {
+                        ...popupPosition.style,
+                        maxWidth: typeof popupPosition.style.maxWidth === "number"
+                            ? Math.min(popupPosition.style.maxWidth, tooltipRecipe.content.maxWidth)
+                            : tooltipRecipe.content.maxWidth,
+                    }, onPointerEnter: (event) => {
                         if (event.pointerType !== "touch")
                             clearTimer();
                     }, onPointerLeave: (event) => {
@@ -474,7 +495,7 @@ export const Menu = forwardRef(function Menu(props, ref) {
         comfortable: menuRecipe.defaults.density,
         compact: "compact",
     });
-    const { trigger, label, density: densityProp, align = "start", disabled = false, asyncState = { status: "idle" }, onAction, onActionAfterDismiss, portalContainer, open: openProp, defaultOpen, onOpenChange, className, } = props;
+    const { trigger, label, density: densityProp, align = "start", disabled = false, asyncState = { status: "idle" }, onAction, onActionAfterDismiss, portalContainer, open: openProp, defaultOpen, onOpenChange, className, layoutStyle, } = props;
     const density = densityProp ?? densityDefault;
     const sections = props.sections;
     const items = sections === undefined ? props.items : sections.flatMap((section) => section.items);
@@ -536,7 +557,10 @@ export const Menu = forwardRef(function Menu(props, ref) {
     const afterDismissIdRef = useRef(undefined);
     const typeaheadRef = useRef({ value: "", time: 0 });
     const id = `${useId().replaceAll(":", "")}-menu`;
-    const popupPosition = useAnchoredPopup(triggerRef, contentNode, { align, zIndex: 900 });
+    // menuRecipe offset/edge padding (2026-10-06 follow-up; helper default edge padding was 16).
+    const popupPosition = useAnchoredPopup(triggerRef, contentNode, {
+        align, gap: menuRecipe.sideOffset, viewportPadding: menuRecipe.collisionPadding, zIndex: layer.dropdown,
+    });
     const setMenuContentRef = useCallback((node) => {
         contentRef.current = node;
         setContentNode(node);
@@ -706,7 +730,7 @@ export const Menu = forwardRef(function Menu(props, ref) {
         }
     };
     const showItems = asyncState.status !== "empty" && asyncState.status !== "error";
-    return (_jsxs("span", { ref: wrapperRef, className: "hjm-menu", "data-state": open ? "open" : "closed", children: [renderedTrigger, open ? (_jsx(AnchoredPortal, { anchorRef: triggerRef, ssrFallback: "inline", ...(portalContainer === undefined ? {} : { container: portalContainer }), children: _jsxs("div", { ref: setMenuContentRef, id: id, role: "menu", "aria-label": label, className: classNames("hjm-menu__content", className), "data-density": density, "data-async-state": asyncState.status, "data-placement": popupPosition.placement, "data-align": popupPosition.align, "aria-busy": asyncState.status === "loading" || asyncState.status === "loadingMore" || undefined, style: popupPosition.style, tabIndex: -1, onKeyDown: handleMenuKeyDown, children: [asyncState.status !== "idle" ? (_jsx("div", { className: "hjm-menu__state-message", role: asyncState.status === "error" ? "alert" : "status", children: asyncState.message })) : null, showItems ? (sections === undefined ? items.map((item, index) => {
+    return (_jsxs("span", { ref: wrapperRef, className: "hjm-menu", style: layoutStyle, "data-state": open ? "open" : "closed", children: [renderedTrigger, open ? (_jsx(AnchoredPortal, { anchorRef: triggerRef, ssrFallback: "inline", ...(portalContainer === undefined ? {} : { container: portalContainer }), children: _jsxs("div", { ref: setMenuContentRef, id: id, role: "menu", "aria-label": label, className: classNames("hjm-menu__content", className), "data-density": density, "data-async-state": asyncState.status, "data-placement": popupPosition.placement, "data-align": popupPosition.align, "aria-busy": asyncState.status === "loading" || asyncState.status === "loadingMore" || undefined, style: popupPosition.style, tabIndex: -1, onKeyDown: handleMenuKeyDown, children: [asyncState.status !== "idle" ? (_jsx("div", { className: "hjm-menu__state-message", role: asyncState.status === "error" ? "alert" : "status", children: asyncState.message })) : null, showItems ? (sections === undefined ? items.map((item, index) => {
                             const selected = itemSelected(item.id);
                             const itemDisabled = itemIsDisabled(item);
                             const role = selectionMode === "single"

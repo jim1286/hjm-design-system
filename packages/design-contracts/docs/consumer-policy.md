@@ -2,7 +2,7 @@
 
 상태: **Normative**
 정책 버전: **2.0.0**
-검토일: 2026-10-02 · 전체 소비 이관에 따른 deprecated API 제거
+검토일: 2026-10-06 · Web `layoutStyle` 전수 제공(이전: 2026-10-02 deprecated API 제거)
 적용 대상: 신규 HJM Web·React Native 앱과 기존 앱의 새 화면
 
 이 원문은 `@hjmds/design-contracts/consumer-policy.md`에서 제공한다. 소비 앱은 설치한
@@ -98,6 +98,10 @@ foundation이 모두 stable이 됐으므로, 중앙 app profile의 다음 개정
 1.x 설치본의 caller-last 호환 동작은 역사적 동작이며 현재 소스에 유지되지 않습니다.
 
 - 배치에는 `layoutStyle`을 쓰고, 제공하지 않는 컴포넌트는 외부 composition wrapper를 씁니다.
+  Web은 2026-10-06부터 화면 흐름 안에 루트가 있는 모든 공개 컴포넌트가 `layoutStyle`을 받습니다.
+  사용 지침을 쓰다가 일부 컴포넌트에만 이 prop이 있어 wrapper나 내부 input에 걸리는 `style`로
+  배치하던 것을 확인해 넓혔습니다. 제외 대상은 provider·portal/viewport layer·recipe가 위치를 고정하는
+  요소이며 그 목록과 이유는 `@hjmds/react`의 `composition-style.ts`와 각 props 타입 주석에 있습니다.
 - `HjmCompositionStyle` / `layoutStyle`은 margin, width, flex 계열과 `alignSelf`만 제공합니다. color,
   typography, padding, gap, border, radius, height, opacity, transform은 recipe/semantic API 소유입니다.
 - 내부 조합의 스타일은 비공개 renderer에 두며 앱에서 해당 내부 파일을 import하지 않습니다.

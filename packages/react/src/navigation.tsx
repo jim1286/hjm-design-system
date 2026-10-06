@@ -31,6 +31,7 @@ import {
 } from "react";
 import { classNames, useControllableState } from "./internal.js";
 import { useOptionalHjmTheme } from "./provider.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type TabLeadingRenderProps = Readonly<{
   selected: boolean;
@@ -77,6 +78,8 @@ export type TabsProps = Omit<HTMLAttributes<HTMLDivElement>, "dir" | "onChange">
     overflow?: TabsOverflow;
     /** Set false when panels are rendered separately with `TabPanel`. */
     renderPanels?: boolean;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
   }>;
 
 function validateItems(items: readonly TabItem[]): void {
@@ -172,6 +175,8 @@ type ExternalTabPanelBaseProps = Omit<HTMLAttributes<HTMLDivElement>, "id"> &
     tabsId: string;
     activeValue: string;
     children: ReactNode;
+    /** Canonical layout-only placement on the panel element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
   }>;
 
 export type TabPanelProps = ExternalTabPanelBaseProps &
@@ -202,9 +207,10 @@ export function TabPanel(props: TabPanelProps) {
       activeValue: _activeValue,
       children: _children,
       mode: _mode,
+      layoutStyle,
       ...htmlProps
     } = props;
-    hostProps = htmlProps;
+    hostProps = { ...htmlProps, style: { ...htmlProps.style, ...layoutStyle } };
   } else {
     const {
       tabsId: _tabsId,
@@ -213,9 +219,10 @@ export function TabPanel(props: TabPanelProps) {
       mode: _mode,
       value: _value,
       mountPolicy: _mountPolicy,
+      layoutStyle,
       ...htmlProps
     } = props;
-    hostProps = htmlProps;
+    hostProps = { ...htmlProps, style: { ...htmlProps.style, ...layoutStyle } };
   }
   const [visited, setVisited] = useState(selected);
   useEffect(() => {
@@ -263,6 +270,7 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
     value: valueProp,
     defaultValue,
     onValueChange,
+    layoutStyle,
     ...rest
   } = props;
   validateItems(items);
@@ -408,6 +416,7 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
   return (
     <div
       {...rest}
+      style={{ ...rest.style, ...layoutStyle }}
       ref={ref}
       id={baseId}
       className={classNames("hjm-tabs", className)}

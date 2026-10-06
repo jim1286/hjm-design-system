@@ -20,6 +20,7 @@ import {
 } from "react";
 import { Button } from "./actions.js";
 import { classNames, composeRefs, useControllableState } from "./internal.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type TransferListLabels = Readonly<{
   source: string;
@@ -39,6 +40,8 @@ export type TransferListProps<Id extends string = string> = Readonly<{
   /** Receives which ids moved, in origin-panel order, so the product announces it. */
   onMove?: (movedIds: readonly Id[], direction: TransferListMoveDirection) => void;
   className?: string;
+  /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
 }>;
 
 const emptySelection = <Id extends string>(): TransferListSelection<Id> => ({
@@ -55,6 +58,7 @@ export const TransferList = forwardRef(function TransferList<Id extends string =
     onTargetKeysChange,
     onMove,
     className,
+    layoutStyle,
   }: TransferListProps<Id>,
   forwardedRef: React.Ref<HTMLDivElement>,
 ) {
@@ -187,7 +191,7 @@ export const TransferList = forwardRef(function TransferList<Id extends string =
   };
 
   return (
-    <div ref={composeRefs(rootRef, forwardedRef)} className={classNames("hjm-transfer-list", className)}>
+    <div ref={composeRefs(rootRef, forwardedRef)} style={layoutStyle} className={classNames("hjm-transfer-list", className)}>
       {renderPanel("source")}
       <div className="hjm-transfer-list__actions">
         <Button tone="secondary" disabled={selection.source.size === 0} onClick={() => move("toTarget")}>

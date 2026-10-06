@@ -1,4 +1,5 @@
 import { NativeFieldFrame } from "./internal/field-frame.js";
+import { fieldRecipe } from "@hjmds/design-contracts/recipes/base";
 import {
   formRecipe,
   type FormSubmitStatus,
@@ -36,6 +37,8 @@ import {
   type SelectSize,
 } from "@hjmds/design-contracts/recipes";
 import {
+  useImperativeHandle,
+  type Ref,
   useCallback,
   useEffect,
   useLayoutEffect,
@@ -74,6 +77,7 @@ import {
 import { Text } from "./primitives.js";
 import { useHjmNativeSafeAreaInsets, useHjmNativeTheme } from "./provider.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
+import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 
 type NativeCollectionLeadingRenderProps = Readonly<{
   placement: "trigger" | "option";
@@ -158,7 +162,10 @@ export function Field({
     accessibilityState: { disabled },
   };
   return (
+    // fieldRecipe.disabledScope: the frame fades the label. The control is the consumer's and is a direct
+    // child (no wrapper View, see field-frame.tsx), so it dims itself from accessibilityState.disabled.
     <NativeFieldFrame label={label} required={required} groupControl={false} style={layoutStyle}
+      {...(disabled ? { disabledOpacity: fieldRecipe.disabledOpacity } : {})}
       {...(error === undefined ? {} : { error })}
       {...(description === undefined ? {} : { description })}>
       {typeof children === "function" ? children(controlProps) : children}
@@ -166,12 +173,17 @@ export function Field({
   );
 }
 
+export type FormHandle = Readonly<{ submit(): Promise<void> }>;
+
 export type FormProps<Values> = Readonly<{
   label: string;
   values: Values;
   onSubmit: (values: Values) => void | Promise<void>;
   children: ReactNode;
   submitLabel: string;
+  /** Override the built-in action, including null for a host footer. Both routes use ref.submit(). */
+  actions?: ReactNode;
+  ref?: Ref<FormHandle>;
   status?: FormSubmitStatus;
   defaultStatus?: FormSubmitStatus;
   onStatusChange?: (status: FormSubmitStatus) => void;
@@ -185,6 +197,12 @@ export type FormProps<Values> = Readonly<{
    * Form uses it to focus the control and move screen-reader focus before submitting.
    */
   firstInvalidFieldRef?: RefObject<TextInput | null>;
+  /** Canonical layout-only placement. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
+  /**
+   * @deprecated Raw visual style bypasses `formRecipe`. Use `layoutStyle` for placement and `density` for field rhythm.
+   * Removed in the next major (consumer-policy.md §3.1).
+   */
   style?: StyleProp<ViewStyle>;
 }>;
 
@@ -198,6 +216,8 @@ export function Form<Values>({
   onSubmit,
   children,
   submitLabel,
+  actions,
+  ref,
   status,
   defaultStatus = "idle",
   onStatusChange,
@@ -206,8 +226,10 @@ export function Form<Values>({
   disabled = false,
   density = "comfortable",
   firstInvalidFieldRef,
+  layoutStyle,
   style,
 }: FormProps<Values>) {
+  warnDeprecatedStyleProps("Form", { style }, "layoutStyle for placement and density for field rhythm");
   const [submitStatus, setSubmitStatus] = useControllableState({
     ...(status === undefined ? {} : { value: status }),
     defaultValue: defaultStatus,
@@ -220,7 +242,7 @@ export function Form<Values>({
 
   useEffect(() => {
     mountedRef.current = true;
-    return () => {
+  return () => {
       mountedRef.current = false;
     };
   }, []);
@@ -259,11 +281,14 @@ export function Form<Values>({
     }
   };
 
+  // Keyboard return and a sheet footer share validation/reentrancy instead of reimplementing submission.
+  useImperativeHandle(ref, () => ({ submit }));
+
   return (
     <View
       accessibilityLabel={label}
       accessibilityState={{ busy, disabled }}
-      style={[{ gap: formRecipe.density[density].fieldGap }, style]}
+      style={[{ gap: formRecipe.density[density].fieldGap }, style, layoutStyle]}
     >
       {children}
       {error ?? internalError ? (
@@ -271,13 +296,13 @@ export function Form<Values>({
           <Text tone="danger">{error ?? internalError}</Text>
         </View>
       ) : null}
-      <Button
+      {actions !== undefined ? actions : <Button
         disabled={disabled}
         loading={busy}
         onPress={() => void submit()}
       >
         {submitLabel}
-      </Button>
+      </Button>}
     </View>
   );
 }
@@ -345,6 +370,12 @@ export type SelectProps<
     dismissLabel: string;
     /** Optional localized name for the option-list region; defaults neutrally to label. */
     optionsAccessibilityLabel?: string;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
+    /**
+     * @deprecated Raw visual style bypasses `selectRecipe`. Use `layoutStyle` for placement and `size`/`density` for appearance.
+     * Removed in the next major (consumer-policy.md §3.1).
+     */
     style?: StyleProp<ViewStyle>;
   }>;
 
@@ -398,9 +429,11 @@ export function Select<
   onDismiss,
   dismissLabel,
   optionsAccessibilityLabel,
+  layoutStyle,
   style,
   ...modalProps
 }: SelectProps<Value, SectionKey>) {
+  warnDeprecatedStyleProps("Select", { style }, "layoutStyle for placement and size/density for appearance");
   const providedSources = [sourceProp, items, sections].filter(
     (candidate) => candidate !== undefined,
   ).length;
@@ -596,8 +629,9 @@ export function Select<
   const blockingState = asyncState.status === "loading" || asyncState.status === "error" || asyncState.status === "empty";
 
   return (
-    <View style={[{ gap: spacing.xs }, style]}>
-      {label ? <Text tone="primary" variant="label">{label}{required ? " *" : ""}</Text> : null}
+    <View style={[{ gap: spacing.xs }, style, layoutStyle]}>
+      {/* fieldRecipe.disabledScope: the label fades with the trigger, the support text does not. */}
+      {label ? <Text tone="primary" variant="label" style={disabled ? { opacity: selectRecipe.states.disabledOpacity } : undefined}>{label}{required ? " *" : ""}</Text> : null}
       <Pressable
         ref={triggerRef}
         accessibilityLabel={accessibleName}
@@ -793,6 +827,12 @@ export type ComboboxProps<
     dismissLabel: string;
     /** Optional localized name for the result region; defaults neutrally to label. */
     resultsAccessibilityLabel?: string;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
+    /**
+     * @deprecated Raw visual style bypasses `comboboxRecipe`. Use `layoutStyle` for placement and `density` for appearance.
+     * Removed in the next major (consumer-policy.md §3.1).
+     */
     style?: StyleProp<ViewStyle>;
   }>;
 
@@ -855,9 +895,11 @@ export function Combobox<
   clearLabel,
   dismissLabel,
   resultsAccessibilityLabel,
+  layoutStyle,
   style,
   ...modalProps
 }: ComboboxProps<Key, SectionKey>) {
+  warnDeprecatedStyleProps("Combobox", { style }, "layoutStyle for placement and density for appearance");
   const providedSources = [sourceProp, items, sections].filter(
     (candidate) => candidate !== undefined,
   ).length;
@@ -1134,8 +1176,10 @@ export function Combobox<
   }) : filteredItems.map(renderOption);
 
   return (
-    <View style={[{ gap: spacing.xs }, style]}>
-      {label ? <Text tone="primary" variant="label">{label}{required ? " *" : ""}</Text> : null}
+    <View style={[{ gap: spacing.xs }, style, layoutStyle]}>
+      {/* fieldRecipe.disabledScope: label and input frame fade, the support text does not. comboboxRecipe has no
+          amount, so the field default applies; before 2026-10-06 a disabled Native Combobox did not dim at all. */}
+      {label ? <Text tone="primary" variant="label" style={disabled ? { opacity: fieldRecipe.disabledOpacity } : undefined}>{label}{required ? " *" : ""}</Text> : null}
       <View
         style={{
           alignItems: "center",
@@ -1146,6 +1190,7 @@ export function Combobox<
           direction: environment.direction,
           flexDirection: "row",
           minHeight: sizeContract.minHeight,
+          opacity: disabled ? fieldRecipe.disabledOpacity : 1,
           paddingStart: spacing.sm,
         }}
       >

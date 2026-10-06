@@ -1,0 +1,5 @@
+import {expect,it} from "vitest";
+import {resolvePermissionAction,resolveOnboardingStep,validateCommentThread} from "../src/screen-patterns.js";
+it("maps explicit permission states without requesting access",()=>{expect(["prompt","denied","granted","unavailable"].map(value=>resolvePermissionAction(value as "prompt"))).toEqual(["request","settings","continue",null]);});
+it("guards empty/out-of-range onboarding",()=>{expect(()=>resolveOnboardingStep(0,0)).toThrow();expect(()=>resolveOnboardingStep(2,2)).toThrow();expect(resolveOnboardingStep(1,0)).toEqual({first:true,last:true});});
+it("rejects orphaned, duplicate and nested reply records",()=>{expect(()=>validateCommentThread([{id:"a",parentId:null},{id:"b",parentId:"a"}])).not.toThrow();expect(()=>validateCommentThread([{id:"a",parentId:"missing"}])).toThrow();expect(()=>validateCommentThread([{id:"a",parentId:null},{id:"a",parentId:null}])).toThrow();expect(()=>validateCommentThread([{id:"a",parentId:null},{id:"b",parentId:"a"},{id:"c",parentId:"b"}])).toThrow();});

@@ -50,6 +50,14 @@ icon은 HJM semantic name만 고릅니다. decorative 처리와 size/tone/weight
 color, stroke, fixed direction을 넘겨 이 문법을 바꾸지 못합니다. arbitrary ReactNode와 중첩
 button/link도 열지 않습니다.
 
+Native는 전역 icon registry가 없으므로 `Link`가 `renderIcon`(semantic name → glyph) 경계를 받고,
+descriptor의 `leadingIcon`/`trailingIcon`을 `Icon`으로 감싸 `linkRecipe.icon.glyph` 크기·link tone·
+decorative·RTL mirroring을 HJM이 정합니다. 2026-10-06 사용 지침 점검에서 Native가 아이콘을 검증만 하고
+그리지 않아 Web과 공유한 descriptor의 chevron이 사라지는 것을 확인해 고쳤습니다. `renderIcon` 없이
+icon을 넘기면 개발 모드에서 한 번 경고하고 그리지 않습니다. 이미 아이콘을 넘기던 1.x 앱이 실행 중
+죽지 않도록 throw 대신 경고를 택했습니다. descriptor icon과 `leading`/`trailing` node를 함께 주면 descriptor가
+slot을 가집니다. Native `style`은 deprecated이며 배치는 `layoutStyle`로 합니다.
+
 core descriptor와 destination은 허용된 key만 받으며 renderer의 `className`, `target`, `replace`
 같은 플랫폼 prop을 섞지 않습니다. resolver는 검증된 label, canonical `{ kind, href }`, semantic
 icon identity만 새 객체로 반환해 입력 객체의 숨은 확장 필드를 플랫폼 사이에 전달하지 않습니다.

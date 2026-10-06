@@ -1,8 +1,11 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { affixRecipe, validateAffixOffset } from "@hjmds/design-contracts/components/affix";
-export type AffixProps = Readonly<{ children: ReactNode; offset?: number; disabled?: boolean; onChange?: (affixed: boolean) => void }>;
+import type { HjmCompositionStyleProp } from "./composition-style.js";
+export type AffixProps = Readonly<{ children: ReactNode; offset?: number; disabled?: boolean; onChange?: (affixed: boolean) => void;
+  /** Canonical layout-only placement on the sticky box. `position`/`top` stay Affix-owned. */
+  layoutStyle?: HjmCompositionStyleProp }>;
 /** CSS keeps natural flow, parent boundaries and focus intact; JS only observes state and oversize content. */
-export function Affix({ children, offset = affixRecipe.offset, disabled = false, onChange }: AffixProps) {
+export function Affix({ children, offset = affixRecipe.offset, disabled = false, onChange, layoutStyle }: AffixProps) {
   validateAffixOffset(offset);
   const marker = useRef<HTMLSpanElement>(null);
   const content = useRef<HTMLDivElement>(null);
@@ -35,5 +38,5 @@ export function Affix({ children, offset = affixRecipe.offset, disabled = false,
     measure(); document.addEventListener("scroll", schedule, true); window.addEventListener("resize", schedule);
     return () => { cancelAnimationFrame(frame); resize.disconnect(); document.removeEventListener("scroll", schedule, true); window.removeEventListener("resize", schedule); };
   }, [offset, disabled, oversize]);
-  return <><span ref={marker} className="hjm-affix__marker" aria-hidden="true" /><div ref={content} data-hjm-affix data-affixed={affixed} data-oversize={oversize} className="hjm-affix" style={{ position: disabled || oversize ? "relative" : affixRecipe.position, top: disabled || oversize ? undefined : offset }}>{children}</div></>;
+  return <><span ref={marker} className="hjm-affix__marker" aria-hidden="true" /><div ref={content} data-hjm-affix data-affixed={affixed} data-oversize={oversize} className="hjm-affix" style={{ ...layoutStyle, position: disabled || oversize ? "relative" : affixRecipe.position, top: disabled || oversize ? undefined : offset }}>{children}</div></>;
 }
