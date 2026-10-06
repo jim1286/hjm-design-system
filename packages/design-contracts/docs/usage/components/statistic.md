@@ -121,3 +121,14 @@ import { Statistic } from "@hjmds/react-native/data-display";
 - Web `AnimatedStatistic`은 reduced motion, RTL, 라틴 숫자가 아닌 numbering system, `ar`·`fa`·`he`·`ur` locale,
   `scientific`·`engineering` 표기에서는 애니메이션 없이 `Intl` 결과 문자열만 그린다.
 - `AnimatedStatistic`의 `descriptor`에는 `value`를 넣지 않는다. 값은 `value` prop의 숫자로 받는다.
+
+### 외부 숫자 효과 대조
+
+2026-10-07 Number Ticker 공식 소스와 기본 데모를 대조했다. 진입 시 중간 숫자를 표시하는
+효과와 실제 값 변경은 구분한다. 현재 AnimatedStatistic의 Intl locale과 RTL·비라틴 숫자·
+지수 표기 fallback을 유지하며 별도 count-up 엔진을 추가하지 않는다. 숫자가 올라가는 효과를
+실제 집계 과정으로 오해시키지 않기 위해 제품은 확정한 값을 전달한다.
+
+양쪽 움직이는 수치 Storybook에 소수와 음수(de-DE), 비라틴 숫자(ar-EG), 지수 표기(en-US),
+동작 줄이기와 RTL 비교를 제공한다. 소수·음수 예제는 기록 개수가 아닌 측정값이다.
+Web은 자리 단위 전환, Native는 지표 전체 전환이며 같은 시각 효과를 보장하지 않는다.

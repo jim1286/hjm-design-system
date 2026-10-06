@@ -34,11 +34,11 @@ UI·기능 검증을 거쳐 승격·릴리스하고 Utilverse의 대체 가능�
 | Image Comparison | 양 renderer 공개 API 및 실험 | 실제 드래그·스크롤 충돌·RTL·이미지 실패 UI 검증 |
 | Dynamic / Expandable Toolbar | ContextToolbar 실험 | 키보드·초안 유지·초점 복귀 검증 |
 | Progressive Blur | 경계·초점 보호를 포함한 양 renderer 실험 구현. iOS 실제 합성·끝 항목 선택·내용 축소·다크 확인 | Android 합성·접근성·제품 팔레트·비용 비교. progressive-blur-adoption-2026-10-07.md |
-| Noise / EffectSurface | 기존 grain/glow/mesh 유지 | 기존 preset과 차이가 있는 후보만 추가 |
+| Noise / EffectSurface | 기존 grain은 반복 점 패턴, 원본 Noise Texture는 fractal noise로 정적 소스상 차이 확인 | 실제 질감·양 플랫폼 비용 비교 후 추가 여부 결정 |
 | Hero Video Dialog | 기존 Dialog + 제품 player host Web/Native 실험 구현. Web 실제 재생·실패 복구·닫기·초안 유지 확인 | Native 실제 기기, 제품 팔레트, 실제 유음 콘텐츠의 자막/대본 검증 남음. 무음 fixture를 자막 검증으로 세지 않음 |
 | Rating | 양 renderer 공개 API 및 실험 | 평균/입력/초기화·키보드·큰 글자 UI 검증 |
 | 3D icons | 그림과 시작 안내 실험 추가(Web/Native), CC0 원본 2개 | Web 흐름·다크·큰 글자·390px 확인, Native 실제 기기·다른 제품 팔레트 검증 남음 |
-| Number Ticker | AnimatedStatistic 유지 후보 | Intl/RTL/비라틴 숫자와 원본의 실제 이점 대조 |
+| Number Ticker | 공식 소스·기본 데모 대조 후 기존 엔진 유지. 양쪽 소수/음수·비라틴·지수·모션 감소·RTL 비교 스토리 추가 | Native 실제 변형·접근성 및 전체 환경 검증. docs/qa/2026-10-07-number-reference.md |
 | Scroll Progress / Tracing Beam | 기존 ScrollProgress/Timeline 유지 후보 | host 범위·크기 변경과 읽기 구성 비교 |
 | Animated List | ContentTransition enterOnMount + List 양 플랫폼 실험 추가. 초기 데이터 지연 없이 새 행 등장·초안 보존·재정렬·삭제·정지 | 전체 팔레트·RTL·성능·Native 환경 검증. 재정렬 이동 모션은 미구현. docs/qa/2026-10-07-live-list.md |
 
