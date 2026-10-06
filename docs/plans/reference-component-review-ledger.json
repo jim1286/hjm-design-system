@@ -1927,14 +1927,14 @@
         ]
       },
       "implementation": {
-        "status": "web-internal-native-measurement-gap",
+        "status": "web-internal-native-skia-probe",
         "source": "packages/design-contracts/src/text-annotation.ts",
         "tests": "packages/design-contracts/test/text-annotation.test.ts",
         "publicExport": "contracts-geometry-only",
         "webRenderer": "internal-tested",
-        "nativeRenderer": false,
+        "nativeRenderer": "diagnostic-only",
         "experimentalStory": false,
-        "note": "12 geometry tests and 7 browser tests passed. Reproduced and fixed end-glyph overlap for the large-text surrounding loop; ellipse appearance and neighboring-line clearance remain under review. Native range measurement unresolved. No new experimental story."
+        "note": "15 geometry tests; 7 existing Web browser tests. iOS Skia paragraph range prototype handles Korean/emoji/mixed RTL and width changes after merging font runs. Native selection, fonts/scaling, overflow, Android, public renderer and Storybook remain incomplete."
       }
     },
     {

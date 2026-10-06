@@ -105,3 +105,34 @@ IAB 1280×720 dark/RTL/32px/line-height=1.8 화면에서 이전에 끝 글자를
 선이 바깥으로 이동한 것을 확인했다. 형태는 타원보다 둥근 테두리에 가까워졌으므로
 표현 선택은 실험 검토로 남긴다. 좁은 줄 간격의 이웃 줄 충돌, 모든 팔레트와 Native는
 이번 통과 범위에 포함하지 않는다. 재현 테스트와 fixture를 보존하고 실패 캡처는 정리한다.
+
+## 10. Native Skia 범위 측정 후보
+
+기존 기기/Expo Go/Metro를 그대로 사용해 `TextAnnotationSkiaProbe.tsx`를 실행했다.
+추가 설치·native build 없이 이미 설치된 Skia 2.6.2의 ParagraphBuilder, getRectsForRange,
+getLineMetrics, getGlyphPositionAtCoordinate와 Canvas/Paragraph를 사용했다. 측정한
+Paragraph를 그대로 그리며 아래 Native Text는 독립적인 비교 자료다.
+
+| 문장 | UTF-16 범위 | 폭 | 원시 run → 병합 영역 | 관찰 |
+| --- | --- | --- | --- | --- |
+| 한글 | 5–42 | 280 | 23→3 | 수정 전 run 경계가 겹쳐 진했음. 같은 줄의 맞닿은 run 병합 후 연속 강조, 앞/뒤 문장 제외 |
+| 접두부 emoji + 피부색/ZWJ emoji | 5–31 | 280 | 9→2 | 앞 🙂 제외, 강조 안 👩🏽‍💻 포함, 뒤 문장 제외 |
+| 아랍어 + English 123 | 4–64 | 280 | 21→3 | 혼합 방향에도 앞/뒤 문장 제외 |
+| 같은 RTL 문장 | 4–64 | 184 | 21→5 | 폭 변경 뒤 5줄로 재측정·재표시 |
+
+병합은 measured line identity 안에서 수행한다. Native fixture는 실제 line metrics와
+rect의 수직 교집합이 가장 큰 줄을 선택한다. 이 매핑은 여러 baseline·첨자·큰 inline
+이미지 등을 전수 검증한 일반 알고리즘이 아니다. 공통 계약은 이미 결정된 lineIndex만
+받고, gap 보존/논리 입력 순서와 무관한 물리 정렬/Float32 인접 오차/유효성/overflow를
+검사한다. 계약 테스트는 총 15개 통과했다.
+
+Canvas와 Native Text의 줄바꿈이 다르므로 Skia 좌표를 Native Text 위에 적용하는 방안은
+배제했다. Canvas에는 본문 읽기 이름을 주고 그림 자식은 접근성에서 숨겼으나 실제
+VoiceOver·TalkBack 발화나 선택·복사는 미검증이다. Canvas 자체는 Native Text의
+selectable 동작을 제공하지 않는다. 본문 교체나 Native 공개 API 완료의 근거가 아니다.
+또한 RTL 원시 rect 하나가 x=-6.38로 나와 Canvas 경계와 장식 외곽의 처리도 남아 있다.
+
+contracts 빌드 전 fixture HMR가 새 helper를 먼저 참조해 undefined 함수 오류가 한 번
+발생했다. 빌드 후 정상 실행을 확인하고 기존 오류 오버레이를 닫았다. 반복적인 runtime
+실패로 판단하거나 Metro/기기를 새로 띄우지 않았다. 임시 story render는 원래대로 복구했다.
+진단 fixture와 계약 테스트는 보존하고 원시 캡처 및 임시 story 백업은 정리한다.

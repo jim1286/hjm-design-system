@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { resolveTextAnnotationGeometry as resolve, textAnnotationActions } from '../src/text-annotation.js';
+import { mergeTextAnnotationFragments as merge, resolveTextAnnotationGeometry as resolve, textAnnotationActions } from '../src/text-annotation.js';
 
 describe('text annotation measured geometry', () => {
   const lines = [{ x: 20, y: 0, width: 200, height: 32 }, { x: 20, y: 40, width: 64, height: 32 }];
@@ -51,5 +51,35 @@ describe('text annotation measured geometry', () => {
     expect(() => resolve([{ x: Number.MAX_VALUE, y: 0, width: Number.MAX_VALUE, height: 24 }], 'box')).toThrow(RangeError);
     // Runtime JavaScript consumers can supply values outside the TypeScript union.
     expect(() => resolve(lines, 'unknown' as 'box')).toThrow(TypeError);
+  });
+  it('coalesces adjacent font fallback runs without darkening their overlapping padding', () => {
+    const fragments = [
+      { lineIndex:0,x:75.62,y:7.8,width:62.279991,height:28.8 },
+      { lineIndex:0,x:137.899994,y:10.92,width:6.660004,height:24 },
+      { lineIndex:0,x:144.559998,y:7.8,width:20.76001,height:28.8 },
+      { lineIndex:1,x:0,y:46.8,width:20.76,height:28.8 },
+    ];
+    const original = JSON.stringify(fragments), result = merge(fragments);
+    expect(result).toHaveLength(2);
+    expect(result[0]!.x).toBe(75.62);
+    expect(result[0]!.width).toBeCloseTo(89.700008,5);
+    expect(result[0]!.height).toBeCloseTo(28.8,5);
+    expect(resolve(result,'highlight').paths).toHaveLength(2);
+    expect(JSON.stringify(fragments)).toBe(original);
+  });
+  it('keeps unselected bidi gaps and distinct visual lines separate regardless of logical input order', () => {
+    const result = merge([
+      {lineIndex:0,x:100,y:0,width:30,height:24},
+      {lineIndex:1,x:0,y:20,width:40,height:24},
+      {lineIndex:0,x:0,y:0,width:40,height:24},
+      {lineIndex:0,x:20,y:0,width:20,height:24},
+    ]);
+    expect(result).toEqual([{x:0,y:0,width:40,height:24},{x:100,y:0,width:30,height:24},{x:0,y:20,width:40,height:24}]);
+  });
+  it('rejects invalid line identities and drops empty measured runs', () => {
+    const base={lineIndex:0,x:0,y:0,width:40,height:24};
+    for(const patch of [{lineIndex:-1},{lineIndex:0.5},{lineIndex:NaN},{width:-1},{y:Infinity}]) expect(()=>merge([{...base,...patch}])).toThrow(RangeError);
+    expect(merge([{...base,width:0},{...base,height:0}])).toEqual([]);
+    expect(()=>merge([{...base,x:-Number.MAX_VALUE,width:Number.MAX_VALUE},{...base,width:Number.MAX_VALUE}])).toThrow(RangeError);
   });
 });

@@ -12,6 +12,9 @@ export type TextAnnotationRect = Readonly<{
     width: number;
     height: number;
 }>;
+export type TextAnnotationFragment = TextAnnotationRect & Readonly<{
+    lineIndex: number;
+}>;
 export type TextAnnotationPath = Readonly<{
     d: string;
     /** Filled marker strokes belong behind the text; outlines are unfilled. */
@@ -23,6 +26,11 @@ export type TextAnnotationGeometry = Readonly<{
     paths: readonly TextAnnotationPath[];
     bounds: TextAnnotationRect | null;
 }>;
+/** Merge adjacent font/bidi runs only within their measured visual line. A gap
+ * in a partial selection stays unpainted even when both runs share a line.
+ * Hosts supply line identity from the same layout engine that paints the text.
+ */
+export declare function mergeTextAnnotationFragments(fragments: readonly TextAnnotationFragment[]): TextAnnotationRect[];
 /**
  * Small deterministic offsets give the two passes a hand-drawn character.
  * Random-per-render geometry was rejected: unrelated state updates must not

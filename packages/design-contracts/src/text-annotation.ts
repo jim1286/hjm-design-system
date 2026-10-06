@@ -9,6 +9,7 @@ export const textAnnotationActions = [
 ] as const;
 export type TextAnnotationAction = typeof textAnnotationActions[number];
 export type TextAnnotationRect = Readonly<{ x: number; y: number; width: number; height: number }>;
+export type TextAnnotationFragment = TextAnnotationRect & Readonly<{ lineIndex: number }>;
 export type TextAnnotationPath = Readonly<{
   d: string;
   /** Filled marker strokes belong behind the text; outlines are unfilled. */
@@ -23,6 +24,33 @@ export type TextAnnotationGeometry = Readonly<{
 
 function finite(value: number, name: string): void {
   if (!Number.isFinite(value)) throw new RangeError(`${name} must be finite`);
+}
+
+/** Merge adjacent font/bidi runs only within their measured visual line. A gap
+ * in a partial selection stays unpainted even when both runs share a line.
+ * Hosts supply line identity from the same layout engine that paints the text.
+ */
+export function mergeTextAnnotationFragments(fragments: readonly TextAnnotationFragment[]): TextAnnotationRect[] {
+  for (const fragment of fragments) {
+    for (const name of ['x', 'y', 'width', 'height'] as const) finite(fragment[name], name);
+    if (fragment.width < 0 || fragment.height < 0 || !Number.isSafeInteger(fragment.lineIndex) || fragment.lineIndex < 0) throw new RangeError('Invalid text annotation fragment');
+    finite(fragment.x + fragment.width, 'Fragment right'); finite(fragment.y + fragment.height, 'Fragment bottom');
+  }
+  const ordered = fragments.filter(fragment => fragment.width > 0 && fragment.height > 0).map(fragment => ({ ...fragment })).sort((a, b) => a.lineIndex - b.lineIndex || a.x - b.x);
+  const merged: TextAnnotationFragment[] = [];
+  for (const fragment of ordered) {
+    const previous = merged[merged.length - 1];
+    // Skia exposes Float32 edges: measured adjacent runs differed by ~0.00001px.
+    // 0.01 logical px absorbs this rounding, not a visible inter-word/selection gap.
+    if (previous && previous.lineIndex === fragment.lineIndex && fragment.x <= previous.x + previous.width + 0.01) {
+      const y = Math.min(previous.y, fragment.y);
+      merged[merged.length - 1] = { lineIndex: previous.lineIndex, x: previous.x, y, width: Math.max(previous.x + previous.width, fragment.x + fragment.width) - previous.x, height: Math.max(previous.y + previous.height, fragment.y + fragment.height) - y };
+    } else merged.push(fragment);
+  }
+  return merged.map(({ x, y, width, height }) => {
+    finite(width, 'Merged width'); finite(height, 'Merged height');
+    return { x, y, width, height };
+  });
 }
 
 /**

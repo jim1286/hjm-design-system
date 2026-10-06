@@ -27,6 +27,10 @@ SVG 경로를 만든다. `@hjmds/design-contracts/text-annotation` subpath로 �
   이웃 줄과의 충돌 및 팔레트 검증은 남아 있으며 원본 동등 표현으로 주장하지 않는다.
 - 음수 크기, 비유한 좌표와 계산 overflow는 렌더링 전 거부한다. 스크롤·상대 위치 때문에
   음수 x/y는 유효하며 소수 단위 측정도 유지한다.
+- `mergeTextAnnotationFragments`는 같은 실제 줄(lineIndex)의 맞닿은 글꼴 조각을 합친다.
+  Native Skia가 한글·공백 fallback을 23개 조각으로 반환해 marker padding이 겹친 실측을
+  반영한 기능이다. Float32 경계 오차만 흡수하도록 0.01px 허용 오차를 사용하며 선택하지
+  않은 gap이나 다른 줄은 합치지 않는다. 이 함수가 줄 번호를 문자열에서 추측하지 않는다.
 
 ## Web 내부 renderer와 Native의 남은 계약
 
@@ -43,6 +47,14 @@ Native 0.86.2/Expo Go 57.0.9/iOS 26.5에서 진단 fixture를 실행했다. 부�
 measure는 0×0이었다. 이 경로를 실제 줄별 측정으로 사용할 수 없다. 진단 소스는
 `showcase/native/src/devtools/TextAnnotationMeasurementProbe.tsx`에 보존했다.
 
+후속 `TextAnnotationSkiaProbe.tsx`는 Skia 2.6.2의 Paragraph로 측정하고 **같은 Paragraph**를
+그린다. getRectsForRange와 실제 line metrics를 이용해 한글 23→3, emoji 9→2, 혼합 RTL
+21→3개의 표시 영역을 얻었다. RTL 폭 280→184에서 5줄로 다시 배치했다. 이 좌표를 다른
+Native Text 위에 올리는 것은 금지한다. 비교 fixture에서 두 엔진의 줄바꿈이 달랐다.
+이는 Native renderer 후보의 측정 증거이며 일반 Text 대체가 아니다. Canvas의 읽기 이름만으로
+Native Text 선택·복사 기능이 생기지 않는다. 폰트·스케일·외곽 잘림·선택·접근성·Android를
+해결하고 공개 API/실험으로 연결하는 일이 남았다.
+
 Web은 inline 문장과 Range.getClientRects의 줄 조각, Native는 실제 텍스트 레이아웃에서
 문장 일부의 줄별 위치를 얻어야 한다. 전체 문단을 주석으로 바꾸는 것으로 이 요구를
 대체하지 않는다. 글꼴 로드·문구 교체·글자 크기·폭 변경마다 최신 geometry를 공급한다.
@@ -55,7 +67,7 @@ Web은 inline 문장과 Range.getClientRects의 줄 조각, Native는 실제 텍
 
 ## 검증 범위
 
-현재 계약 테스트는 줄 조각 분리, RTL 물리 좌표 유지, 7가지 경로의 결정성, 소수·음수
+현재 계약 테스트 15개는 줄 조각 분리/병합, RTL 물리 좌표 유지, 7가지 경로의 결정성, 소수·음수
 좌표, 빈 상태, 재측정, 비정상 입력을 확인한다. 실제 글자 측정, 글자 대비, 모션, 성능,
 스크린리더 또는 소비 앱 채택의 증거는 아니다. 별도 Web 브라우저 테스트 7개는 실제
 DOM 측정·줄바꿈·선택·RTL·폭 변경·문구 교체·모션 감소를 검증했다. 전체 스타일·기기·성능
