@@ -1242,9 +1242,9 @@
       "existingMapping": "EffectSurface / 제품 소개 구성",
       "priorRationale": "선택적 배경·연결 효과, 수명주기 유지",
       "sourceAudit": "2026-10-07 official documentation describes SVG feTurbulence fractal noise. HJM current grain uses repeated circle pattern.",
-      "visualReview": "pending",
-      "interactionReview": "pending",
-      "adoptionDecision": "Not visually equivalent to existing grain. Keep fractal texture as an open comparison candidate; do not mark covered based on the word noise alone.",
+      "visualReview": "2026-10-07 IAB light: default preview shows irregular fine texture; input-field demo visibly textured. HJM grain story inspected separately: faint regular repeated pattern. Different surfaces and opacity, not a controlled contrast/performance comparison.",
+      "interactionReview": "2026-10-07 input-field demo: typed texture demo, visible input value and caret confirmed. No subscription submitted. Dark, keyboard traversal, screen reader and performance not checked.",
+      "adoptionDecision": "Keep fractal noise as a separate EffectSurface comparison experiment candidate. Do not replace grain or mark already covered; compare equal surfaces and opacity, Native support, readability and cost before promotion.",
       "sourceCheck": {
         "status": "html",
         "checkedAt": "2026-10-06T15:58:25.594412+00:00",

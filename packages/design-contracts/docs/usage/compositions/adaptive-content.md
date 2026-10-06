@@ -65,4 +65,15 @@ Web은 `@hjmds/react`의 해당 granular entry, Native는 `@hjmds/react-native` 
 | 항목 | Web | Native |
 | --- | --- | --- |
 | 배치/테마 | Stack과 HjmProvider | Stack과 HjmNativeProvider |
-| 큰 글자·좁은 폭 | 줄바꿈·단일 내용 | 같은 순서, OS 화면 검증은 별도 |
+| 큰 글자·좁은 폭 | 줄바꿈·단일 내용 | 동일 순서와 스크롤 host 필요 |
+
+
+### Native 입력과 화면 끝
+
+2026-10-07 큰 글자에서 상세 패널이 늘어나면 키보드 아래로 메모가 밀려났고,
+스크롤 없는 Showcase canvas에서는 다시 접근할 수 없었다. Native 예제는
+ScreenLayout의 본문 스크롤과 바깥 KeyboardAvoiding으로 사용 가능한 높이를 확보한다.
+Storybook의 기존 gutter 때문에 contentInset=none을 쓰고, 마지막 입력의 테두리가
+스크롤 경계에 걸리지 않도록 본문 끝에 spacing.md(16) 여백을 둔다.
+본문 조합 자체에 두 번째 scroll view를 만들지 말고 제품의 기존 화면 host를 재사용한다.
+KeyboardAvoiding은 아래 여백을 제공하며 포커스된 필드를 자동 탐색하는 API는 아니다.

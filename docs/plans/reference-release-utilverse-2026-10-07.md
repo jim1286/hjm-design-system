@@ -24,7 +24,7 @@ UI·기능 검증을 거쳐 승격·릴리스하고 Utilverse의 대체 가능�
 | 후보 | 현재 구현/판단 | 남은 일 |
 | --- | --- | --- |
 | Morphing Popover / Dialog | 원본 초점·초안 소실 확인. 양 Dialog renderer와 Web Popover에 motionOrigin 구현, 초안 보존 편집 실험에 비모달 변형 추가 | Dialog/Popover 전체 환경·기기·성능 검증. docs/qa/2026-10-07-overlay-origin-transition.md |
-| Transition Panel | ContentTransition animateHeight 구현. Web390px dark/큰 글자 상세·빠른 방향키 전환·입력 보존 확인 | Native 실제 전환·전체 환경·성능. docs/qa/2026-10-07-feedback-panel-reference.md |
+| Transition Panel | Web 빠른 전환·입력 보존. Native 큰 글자 키보드 아래 입력 접근 문제를 화면 scroll host로 수정 | 필드 외곽 자동 노출·전체 환경·성능. docs/qa/2026-10-07-native-panel-noise.md |
 | Animated Background | Tabs gooey 유지. SegmentedControl selectionMotion=slide 실험 추가 | Web/Native 회귀 7개 통과, 기본·다크·큰 글자 Web UI 확인; 좁은 화면·팔레트·기기 검증 대기 |
 | Stateful Button | Web·iOS 실패→편집→현재 초안 저장 확인. pending 라벨·실패 설정 잠금·비서버 안내 보완 | 환경 조합·제품 상태 연결. docs/qa/2026-10-07-feedback-panel-reference.md |
 | File Upload | Web 실제 파일 제한·중복·취소·키보드 재시도 확인, 상태 전환 초점 수정. Native 합성 오류/재시도/성공 확인 | Native 시스템 picker·실제 전송 취소·환경 조합. docs/qa/2026-10-07-upload-reference.md |
@@ -34,7 +34,7 @@ UI·기능 검증을 거쳐 승격·릴리스하고 Utilverse의 대체 가능�
 | Image Comparison | Native SVG 실패를 PNG fixture로 수정, 실제 드래그/양끝 확인. 양 renderer RTL 캡션 방향 수정 | Native 환경 조합·스크롤 충돌·이미지 host 실패 안내. docs/qa/2026-10-07-image-comparison.md |
 | Dynamic / Expandable Toolbar | 단일 선택을 SegmentedControl로 수정. Web RTL 키보드·접기 포커스·초안 유지, iOS 키보드 중 선택·재개 확인 | Native 환경 조합·VoiceOver·제품 편집 모델. docs/qa/2026-10-07-toolbar-reference.md |
 | Progressive Blur | 경계·초점 보호를 포함한 양 renderer 실험 구현. iOS 실제 합성·끝 항목 선택·내용 축소·다크 확인 | Android 합성·접근성·제품 팔레트·비용 비교. progressive-blur-adoption-2026-10-07.md |
-| Noise / EffectSurface | 기존 grain은 반복 점 패턴, 원본 Noise Texture는 fractal noise로 정적 소스상 차이 확인 | 실제 질감·양 플랫폼 비용 비교 후 추가 여부 결정 |
+| Noise / EffectSurface | 원본 기본·입력 질감과 HJM grain 실제 화면 대조. 원본 입력 조작 확인, 서로 다른 질감 | 동일 조건·Native host·비용 비교 후 별도 실험 판단. docs/qa/2026-10-07-native-panel-noise.md |
 | Hero Video Dialog | 기존 Dialog + 제품 player host Web/Native 실험 구현. Web 실제 재생·실패 복구·닫기·초안 유지 확인 | Native 실제 기기, 제품 팔레트, 실제 유음 콘텐츠의 자막/대본 검증 남음. 무음 fixture를 자막 검증으로 세지 않음 |
 | Rating | Web 키보드/초기화 초점 버그 수정, iOS 큰 글자 선택·초기화·비활성 확인 | RTL·다크·제품 팔레트·스크린리더 검증. docs/qa/2026-10-07-rating-reference.md |
 | 3D icons | 그림과 시작 안내 실험 추가(Web/Native), CC0 원본 2개 | Web 흐름·다크·큰 글자·390px 확인, Native 실제 기기·다른 제품 팔레트 검증 남음 |

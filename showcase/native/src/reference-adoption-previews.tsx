@@ -1,3 +1,4 @@
+import { spacing } from "@hjmds/design-contracts/foundations";
 import { KeyboardAvoiding } from "@hjmds/react-native/keyboard";
 import { ScreenLayout } from "@hjmds/react-native/screens";
 import { BottomCTA } from "@hjmds/react-native/bottom-cta";
@@ -28,9 +29,12 @@ export function ImageComparisonPreview() {
 }
 export function AdaptiveContentPreview() {
   const [panel, setPanel] = useState("summary");
-  return <Stack gap="md"><SegmentedControl label="기록 정보" items={[{value:"summary",label:"요약"},{value:"details",label:"상세"}]} value={panel} onValueChange={setPanel} />
+  // Large text plus the expanded panel can move the memo below the keyboard.
+  // The canvas needs a scroll host; end spacing keeps the final field border off
+  // its clipping edge when the keyboard reduces the available viewport.
+  return <KeyboardAvoiding style={{ flex: 1 }}><ScreenLayout title="기록 정보" header={<></>} contentInset="none"><Stack gap="md" layoutStyle={{ marginBottom: spacing.md }}><SegmentedControl label="기록 정보" items={[{value:"summary",label:"요약"},{value:"details",label:"상세"}]} value={panel} onValueChange={setPanel} />
     <ContentTransition stateKey={panel} animateHeight preset="rise"><Surface padding="lg"><Stack gap="md"><Text variant="title">오늘의 기록</Text><Text>{panel==="summary"?"산책하며 만난 장면을 한 줄로 남겼어요.":"사진과 메모를 함께 보며 그날의 분위기를 떠올려요. 골목의 작은 가게, 걷다가 만난 고양이, 잠시 쉬어 간 공원까지 오늘의 장면을 모았어요."}</Text>{panel==="details"?<Text>나중에 다시 걷고 싶은 길이나 함께 나누고 싶은 생각을 메모로 남겨 보세요.</Text>:null}</Stack></Surface></ContentTransition>
-    <TextField label="전환해도 남는 메모" placeholder="메모를 입력한 뒤 전환해 보세요" /></Stack>;
+    <TextField label="전환해도 남는 메모" placeholder="메모를 입력한 뒤 전환해 보세요" /></Stack></ScreenLayout></KeyboardAvoiding>;
 }
 export function ActionFeedbackPreview() {
   const { state, session, request, busy, failureArmed, toggleFailure } = useDemoAction("");
