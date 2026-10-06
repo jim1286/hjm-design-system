@@ -1,6 +1,8 @@
 import { cloneElement, createContext, forwardRef, useCallback, useContext, useEffect, useId, useRef, useState, useSyncExternalStore, type CSSProperties, type ReactNode, type RefObject } from "react";
 import { canDismissPopover, popoverBehaviorDefaults, popoverHoverDelay, popoverRecipe, resolvePopoverDescriptor, validatePopoverOpenState, type PopoverDescriptor, type PopoverDismissPolicy, type PopoverDismissReason, type PopoverOpenChangeDetails, type PopoverOpenOn, type PopoverOpenState } from "@hjmds/design-contracts/components/popover";
 import { easing, layer } from "@hjmds/design-contracts/foundations";
+import type { TransitionRect } from "@hjmds/design-contracts/content-transition";
+import { useOverlayOriginMotion } from "./internal/overlay-origin-motion.js";
 import { Button } from "./actions.js";
 import { classNames, composeRefs } from "./internal.js";
 import { AnchoredPortal, getPopoverOwner, useAnchoredPopup } from "./portal.js";
@@ -22,6 +24,8 @@ export type PopoverProps = PopoverOpenState & Readonly<{
    * replaces it, because hover does not exist on touch or for a keyboard.
    */
   openOn?: PopoverOpenOn;
+  /** Optional trigger bounds in viewport coordinates; state and focus remain non-modal. */
+  motionOrigin?: TransitionRect;
   initialFocusRef?: RefObject<HTMLElement | null>;
   portalContainer?: HTMLElement;
   className?: string;
@@ -51,7 +55,7 @@ function contains(content: HTMLElement, target: Node): boolean {
 }
 
 export const Popover = forwardRef<HTMLDivElement, PopoverProps>(function Popover({ trigger, title, closeLabel,
-  description, descriptor = {}, children, dismissPolicy, openOn = popoverBehaviorDefaults.openOn, initialFocusRef, portalContainer, className,
+  description, descriptor = {}, children, dismissPolicy, openOn = popoverBehaviorDefaults.openOn, initialFocusRef, portalContainer, className, motionOrigin,
   open: controlledOpen, defaultOpen, onOpenChange }, ref) {
   if (!title.trim() || !closeLabel.trim()) throw new TypeError("Popover title and closeLabel must not be empty");
   const resolved = resolvePopoverDescriptor(descriptor);
@@ -107,10 +111,13 @@ export const Popover = forwardRef<HTMLDivElement, PopoverProps>(function Popover
     // Contextual forms share the dropdown tier with menus (DOM order puts a popover opened
     // from a menu above it) and stay below tooltips; a modal owner supplies its own layer
     // through the shared positioning helper.
-    viewportPadding: popoverRecipe.collisionPadding, zIndex: layer.dropdown, fallbackAxis: true,
+    viewportPadding: popoverRecipe.collisionPadding, zIndex: layer.dropdown, fallbackAxis: true, layoutDimensions: motionOrigin !== undefined,
+  });
+  const motion = useOverlayOriginMotion(open, motionOrigin, reduced, {
+    ready: position.style.visibility === "visible", transition: popoverRecipe.transition,
   });
   const setContent = useCallback((value: HTMLDivElement | null) => { setNode(value); }, []);
-  const contentRef = useCallback(composeRefs(setContent, ref), [setContent, ref]);
+  const contentRef = useCallback(composeRefs(setContent, ref, motion.setNode), [setContent, ref, motion.setNode]);
   useEffect(() => {
     if (!open) {
       if (didFocus.current) {
@@ -199,7 +206,7 @@ export const Popover = forwardRef<HTMLDivElement, PopoverProps>(function Popover
     boxShadow: `0 ${popoverRecipe.surface.shadow.offsetY}px ${popoverRecipe.surface.shadow.radius}px ${popoverRecipe.surface.shadow.color}${Math.round(popoverRecipe.surface.shadow.opacity * 255).toString(16).padStart(2, "0")}`,
 
   } as CSSProperties;
-  return <>{renderedTrigger}{open || present ? <AnchoredPortal anchorRef={triggerRef} ssrFallback="inline" {...(portalContainer ? { container: portalContainer } : {})}>
+  return <>{renderedTrigger}{open || present || motion.visible ? <AnchoredPortal anchorRef={triggerRef} ssrFallback="inline" {...(portalContainer ? { container: portalContainer } : {})}>
     <ParentPopoverOpen.Provider value={open}><div ref={contentRef} id={id} role="dialog" tabIndex={-1} data-hjm-popover-content="" data-state={open ? "open" : "closed"}
       aria-hidden={!open || undefined} inert={!open || undefined} aria-label={resolved.accessibilityLabel} aria-labelledby={resolved.accessibilityLabel ? undefined : `${id}-title`} aria-describedby={description ? `${id}-description` : undefined}
       className={classNames("hjm-popover", className)} style={style} data-placement={position.placement} data-align={position.align} {...hoverHandlers}

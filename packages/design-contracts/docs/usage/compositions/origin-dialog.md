@@ -19,6 +19,7 @@
 | 컴포넌트 | 역할 | 지침 |
 | --- | --- | --- |
 | Button | 측정할 열기 버튼과 저장 | [버튼](../components/button.md) |
+| Popover | Web에서 페이지를 계속 볼 수 있는 비모달 편집 변형 | [팝오버](../components/popover.md) |
 | Dialog | 기존 모달 상태·닫기·초점 복귀와 선택적인 공간 전환 | [대화상자](../components/dialog.md) |
 | TextField | 제품 상태에 보존하는 초안 | [필드](../components/field.md) |
 | Text | 확정한 결과 표시 | [텍스트](../components/text.md) |
@@ -86,3 +87,20 @@
 | 닫기 | Escape·바깥·닫기 | Back·바깥·닫기 |
 
 키보드·회전·스크롤에 의한 목적지 변화, 실제 기기와 제품 테마 비교는 승격 전 검증한다.
+
+
+### Web의 페이지 안에서 편집 변형
+
+`Contextual`·`ContextualDark`·`ContextualLargeText`는 기존 Popover의 선택적인 `motionOrigin`을
+사용한다. 기본 360px 표면이 버튼 아래 8px 간격으로 열리고 viewport 충돌에 따라 배치가 바뀐다.
+본문은 Stack gap md=16px 안에 오류 → TextField → 저장 순서다. Native는 모달 편집 변형을 쓴다.
+
+```tsx
+<Popover title={title} closeLabel={closeLabel} motionOrigin={origin}
+  trigger={<Button ref={triggerRef} onClick={() => setOrigin(triggerRef.current?.getBoundingClientRect())}>{openLabel}</Button>}>
+  {({ close }) => <Editor draft={draft} onDraftChange={setDraft} onSave={() => save(draft).then(close)} />}
+</Popover>
+```
+
+비모달에서는 Escape/닫기 직후 기존 규칙대로 초점을 복귀한다. 바깥 클릭이나 Tab으로 이동한
+초점은 되가져오지 않는다. 저장 실패는 초안·열림을 유지하고, 닫았다 다시 열어도 제품 draft는 남는다.

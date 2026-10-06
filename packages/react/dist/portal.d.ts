@@ -25,12 +25,14 @@ type AnchoredPopupOptions = Readonly<{
     zIndex?: number;
     /** Wide contextual content may switch to the block axis in a narrow viewport. */
     fallbackAxis?: boolean;
+    /** Ignore presentation transforms when sizing an animated surface. */
+    layoutDimensions?: boolean;
 }>;
 /**
  * Positions a fixed portal popup against its anchor using logical alignment.
  * The popup flips vertically and shifts horizontally to stay inside the visual
  * viewport, then follows every scroll/resize source that can move either node.
  */
-export declare function useAnchoredPopup(anchorRef: RefObject<HTMLElement | null>, popup: HTMLElement | null, { align, fallbackAxis, gap, matchAnchorWidth, placement: preferredPlacement, viewportPadding, zIndex, }?: AnchoredPopupOptions): AnchoredPopupPosition;
+export declare function useAnchoredPopup(anchorRef: RefObject<HTMLElement | null>, popup: HTMLElement | null, { align, fallbackAxis, layoutDimensions, gap, matchAnchorWidth, placement: preferredPlacement, viewportPadding, zIndex, }?: AnchoredPopupOptions): AnchoredPopupPosition;
 export {};
 //# sourceMappingURL=portal.d.ts.map

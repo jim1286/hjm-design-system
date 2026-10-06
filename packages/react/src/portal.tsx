@@ -137,6 +137,8 @@ type AnchoredPopupOptions = Readonly<{
   zIndex?: number;
   /** Wide contextual content may switch to the block axis in a narrow viewport. */
   fallbackAxis?: boolean;
+  /** Ignore presentation transforms when sizing an animated surface. */
+  layoutDimensions?: boolean;
 }>;
 
 const hiddenPopupPosition: AnchoredPopupPosition = {
@@ -177,6 +179,7 @@ export function useAnchoredPopup(
   {
     align = "start",
     fallbackAxis = false,
+    layoutDimensions = false,
     gap = 8,
     matchAnchorWidth = false,
     placement: preferredPlacement = "bottom",
@@ -194,7 +197,9 @@ export function useAnchoredPopup(
     if (!anchor || !popup || !anchor.isConnected || !popup.isConnected) return;
 
     const anchorRect = anchor.getBoundingClientRect();
-    const popupRect = popup.getBoundingClientRect();
+    // Origin transitions may temporarily shrink/enlarge the surface. Collision
+    // placement needs its final layout size, otherwise resize/scroll makes it drift.
+    const popupRect = layoutDimensions ? { width: popup.offsetWidth, height: popup.offsetHeight } : popup.getBoundingClientRect();
     const visualViewport = window.visualViewport;
     const viewportLeft = visualViewport?.offsetLeft ?? 0;
     const viewportTop = visualViewport?.offsetTop ?? 0;
@@ -338,6 +343,7 @@ export function useAnchoredPopup(
     align,
     anchorRef,
     fallbackAxis,
+    layoutDimensions,
     gap,
     matchAnchorWidth,
     popup,

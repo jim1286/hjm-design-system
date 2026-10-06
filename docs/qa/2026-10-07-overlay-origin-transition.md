@@ -102,3 +102,45 @@ Web 첫 확인 도중 package build의 HMR로 화면이 초기화돼 그 구간�
 
 완료한 자동 검사·타입·build 로그는 위 결과와 대조 후 제거했다. 실제 앱과 Storybook의
 개발 서버는 다른 검증에서 재사용하도록 유지했다. 이번 단계는 원시 스크린샷 파일을 만들지 않았다.
+
+
+## 2026-10-07 후속: Web Popover 통합
+
+### 변경과 이유
+
+- 기존 Web Popover에 `motionOrigin?: TransitionRect`를 추가했다. 별도 MorphingPopover 상태 엔진을
+  만들지 않고 Dialog의 내부 animation helper를 공유하되 Popover recipe의 시간·easing을 사용한다.
+- portal의 충돌 회피 위치가 확정된 뒤 destination을 측정한다. 위치 확정 전 (0, 0)을 측정하면
+  출발점이 엉뚱해지므로 readiness를 helper에 전달한다.
+- 공간 전환 중에는 popup layout 크기로 충돌을 계산한다. 변형 중인 bounding rect를 재사용하면
+  resize/scroll 때 배치가 흔들린다. 기존 호출은 기존 측정을 유지한다.
+- 논리적 닫힘 즉시 inert/aria-hidden, 외부 클릭의 초점 유지, Escape/닫기 초점 복귀는 기존 계약이다.
+  종료 중 재열기는 같은 subtree를 유지하고 이전 완료를 무시한다. 제품 상태의 draft는 최종 unmount 후에도 남는다.
+- 기존 실험 `버튼에서 이어지는 편집`에 Web `Contextual`/`ContextualDark`/`ContextualLargeText`
+  세 변형을 추가했다. 실험 항목 수는 12개 그대로다. Native Popover는 기존대로 미지원이며 Dialog/Sheet를 쓴다.
+
+### 검증 결과
+
+| 범위 | 결과 |
+| --- | --- |
+| Popover 신규 브라우저 회귀 2개 | 위치 확정 후 시작·scale 중 resize 배치 유지·빠른 재열기·초안·외부 pointer 초점·모션 감소 Escape 통과 |
+| 기존 Popover + Dialog origin 회귀 | 신규 포함 17개 통과 |
+| 실제 IAB 기본 UI | 한국어 초안 수정 → 저장 실패 → 닫기 시 트리거 초점 → 재열기 시 초안·오류 유지 → 재시도 성공과 결과 표시 통과 |
+| 다크 UI | 제목·입력·초점 테두리·저장 행동의 표면 확인 |
+| 390×844 / 글자 2배 / 오류 UI | 표면 x16 y226, 360×408. 오류 문구 줄바꿈, 입력·닫기·저장 확인. document 가로 overflow 없음 |
+
+전체 `pnpm ci:check`는 contracts 960, Web node 278/browser 1,091, Native 1,188 검사와
+bundle·workspace·evidence·docs·governance·API map·usage를 통과한 뒤 Storybook 변형 순서 규칙에서
+실패했다. Contextual 기본 변형을 Dark 앞에 배치해 수정한 뒤 `storybook:check`를 통과했다
+(407 files, 895 Web ids). 앞선 전체 호출을 exit 0으로 보고하지 않는다.
+
+남은 범위: 두 제품 팔레트와 RTL·모션 감소의 실제 화면 조합, 전체 상태 모아보기, 실제 프레임·성능,
+Dialog의 Native 추가 검증과 기타 레퍼런스 조사. 이 결과만으로 승격·릴리스 완료로 판단하지 않는다.
+
+
+수정 후 남은 Showcase 단계도 각각 exit 0으로 끝났다: Native typecheck/18 tests,
+Web typecheck/43 tests/token 검사, production Storybook build 및 static verify
+(103 canonical component stories, 13 navigation pages). Web Popover graph는
+7 modules / raw 56.9 kB / gzip 13.8 kB이며 optional peer 추가는 없다.
+사용 지침·문서 링크·diff whitespace 검사도 통과했다. 이번 단계의 완료된 원시 검사 로그는
+이 기록으로 대체해 제거했고 개발 서버는 유지했다. 화면은 도구로 관찰했으며 별도 원시 이미지 파일은 만들지 않았다.

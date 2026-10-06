@@ -119,7 +119,7 @@ function samePosition(previous, next) {
  * The popup flips vertically and shifts horizontally to stay inside the visual
  * viewport, then follows every scroll/resize source that can move either node.
  */
-export function useAnchoredPopup(anchorRef, popup, { align = "start", fallbackAxis = false, gap = 8, matchAnchorWidth = false, placement: preferredPlacement = "bottom", viewportPadding = 16, zIndex = layer.dropdown, } = {}) {
+export function useAnchoredPopup(anchorRef, popup, { align = "start", fallbackAxis = false, layoutDimensions = false, gap = 8, matchAnchorWidth = false, placement: preferredPlacement = "bottom", viewportPadding = 16, zIndex = layer.dropdown, } = {}) {
     const [position, setPosition] = useState(() => ({
         ...hiddenPopupPosition,
         align,
@@ -129,7 +129,9 @@ export function useAnchoredPopup(anchorRef, popup, { align = "start", fallbackAx
         if (!anchor || !popup || !anchor.isConnected || !popup.isConnected)
             return;
         const anchorRect = anchor.getBoundingClientRect();
-        const popupRect = popup.getBoundingClientRect();
+        // Origin transitions may temporarily shrink/enlarge the surface. Collision
+        // placement needs its final layout size, otherwise resize/scroll makes it drift.
+        const popupRect = layoutDimensions ? { width: popup.offsetWidth, height: popup.offsetHeight } : popup.getBoundingClientRect();
         const visualViewport = window.visualViewport;
         const viewportLeft = visualViewport?.offsetLeft ?? 0;
         const viewportTop = visualViewport?.offsetTop ?? 0;
@@ -250,6 +252,7 @@ export function useAnchoredPopup(anchorRef, popup, { align = "start", fallbackAx
         align,
         anchorRef,
         fallbackAxis,
+        layoutDimensions,
         gap,
         matchAnchorWidth,
         popup,

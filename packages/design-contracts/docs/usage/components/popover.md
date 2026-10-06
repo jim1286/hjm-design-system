@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [Popover](../../popover.md), [ConfirmPopover 조합](../../confirm-popover.md), `src/popover.ts`(`popoverRecipe`)
 - 스토리북: `배포/컴포넌트/오버레이/팝오버`
 
@@ -63,6 +63,7 @@ Native 예는 없다(renderer 없음).
 | `dismissPolicy`(부분 지정) | `{ dismissible?, outsideDismiss?, escapeDismiss?, focusOutDismiss? }`(`boolean`) | 모두 `true` | |
 | `open` · `defaultOpen` | `boolean` | 비제어 `false` | 제어하면 `onOpenChange` 필수 |
 | `onOpenChange` | `(open: boolean, details: { reason }) => void` | — | `reason`: `trigger` · `close-action` · `outside-pointer` · `outside-focus` · `escape` · `programmatic` |
+| `motionOrigin` | `TransitionRect` | — | 미게시: 열기 직전 viewport 좌표. 위치 확정 뒤 공간 전환하며 기존 비모달 초점·닫기 정책 유지 |
 | `initialFocusRef` | `RefObject<HTMLElement \| null>` | 첫 포커스 가능 요소 | 열릴 때 처음 포커스 |
 | `portalContainer` | `HTMLElement` | `document.body` | 표면을 붙일 곳 |
 | `className` | 문자열 | — | `layoutStyle`은 받지 않는다(아래 함정) |
@@ -106,3 +107,8 @@ Native 예는 없다(renderer 없음).
 - Popover는 `layoutStyle`을 받지 않는다(Web `layoutStyle` 제외 15개 중 하나). 렌더하는 것이 제품 trigger와 떠 있는 portal뿐이라
   배치는 trigger 쪽(또는 감싼 요소)에서 한다.
 - 부모 Popover가 닫히면 안에 중첩된 Popover도 닫히고 `onOpenChange(false, { reason: "programmatic" })`가 온다. 제어형이면 이 reason도 처리한다.
+
+- `motionOrigin`은 출발 버튼의 `getBoundingClientRect()` 값이다. 모션 감소·잘못된 좌표·WAAPI 미지원이면
+  공간 전환을 생략하고 기존 표현을 쓴다. 닫혔을 때는 즉시 inert/aria-hidden으로 입력에서 제외한다.
+- 초안은 Popover 위의 제품 상태에 둔다. 종료 후 portal이 제거되므로 내부 비제어 입력에만 두면 사라진다.
+- 공간 전환 실험은 [버튼에서 이어지는 편집](../compositions/origin-dialog.md)의 Web 전용 변형이다.

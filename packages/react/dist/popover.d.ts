@@ -1,5 +1,6 @@
 import { type ReactNode, type RefObject } from "react";
 import { type PopoverDescriptor, type PopoverDismissPolicy, type PopoverOpenOn, type PopoverOpenState } from "@hjmds/design-contracts/components/popover";
+import type { TransitionRect } from "@hjmds/design-contracts/content-transition";
 import type { OverlayTrigger } from "./overlays.js";
 export type PopoverContentActions = Readonly<{
     close(): void;
@@ -17,6 +18,8 @@ export type PopoverProps = PopoverOpenState & Readonly<{
      * replaces it, because hover does not exist on touch or for a keyboard.
      */
     openOn?: PopoverOpenOn;
+    /** Optional trigger bounds in viewport coordinates; state and focus remain non-modal. */
+    motionOrigin?: TransitionRect;
     initialFocusRef?: RefObject<HTMLElement | null>;
     portalContainer?: HTMLElement;
     className?: string;

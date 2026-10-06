@@ -782,7 +782,8 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "partial 2026-10-07 IAB light 1280x720: basic, custom-transition and textarea examples present. Inspected textarea variant; other variants/dark/responsive pending.",
       "interactionReview": "Add Note focuses textarea. After test draft and Escape, popover disappears and activeElement is BODY; reopening shows empty textarea. Submit was not invoked.",
-      "adoptionDecision": "Absorb geometry without copying source session ownership: HJM must retain draft in product state, dismiss policies and focus return. resolveOriginTransition added to contracts; renderer integration and experiment still pending."
+      "adoptionDecision": "Absorb geometry into the existing Web Popover without copying source session ownership. motionOrigin uses shared Dialog presentation lifecycle and existing Popover placement, focus and dismissal. Product owns retained draft; Native uses Dialog/Sheet.",
+      "implementationBoundary": "2026-10-07: implemented Web Popover motionOrigin and three contextual editing variants within the existing origin-dialog experiment. Chromium regression covers final placement, resize while scaled, rapid reopen, outside-pointer focus and reduced-motion Escape. IAB verified failed save, retained draft after close/reopen, successful retry, light/dark and 390px large-text error layout. Full palette/RTL/frame-performance matrix and promotion remain pending; see docs/qa/2026-10-07-overlay-origin-transition.md."
     },
     {
       "url": "https://motion-primitives.com/docs/dock",

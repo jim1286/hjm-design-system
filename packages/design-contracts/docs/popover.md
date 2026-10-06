@@ -154,3 +154,18 @@ Dialog 안의 Popover는 첫 Escape를 소유한다. 내부 Menu가 Escape를 �
 재시도, dismiss 정책, 중첩 modal/menu, 선택형 hover 지연과 touch/keyboard press 경로,
 320px·2배 글자·RTL·충돌 배치, exit 격리를 다룬다.
 제품 채택·실제 보조기기 검증은 남아 있다.
+
+
+## 선택적 출발 위치 전환 (미게시, 2026-10-07)
+
+Motion Primitives의 Add Note 예제에서 닫기 후 초안과 트리거 초점이 사라지는 것을 확인했다.
+별도 MorphingPopover 상태 엔진을 도입하는 대신 기존 Popover에 `motionOrigin?: TransitionRect`를
+추가한다. viewport 좌표를 받고, 충돌 회피 위치가 확정된 후 Dialog와 공유하는 WAAPI 표현 helper를 쓴다.
+시간·easing은 Popover recipe가 소유한다. 움직이는 크기를 충돌 계산에 다시 넣으면 스크롤 중 위치가
+흔들리므로 측정에는 layout 크기를 쓴다. 기존 호출은 기존 측정·opacity 전환을 유지한다.
+
+이 옵션은 비모달 의미를 바꾸지 않는다. Escape/닫기는 기존 시점에 트리거로 초점을 돌리고,
+바깥 클릭/Tab은 이동한 대상의 초점을 유지한다. 닫는 동안 inert/aria-hidden이며 빠른 재열기는
+이전 animation 완료를 무시한다. 초안과 서버 저장은 제품 소유이며 portal 밖에서 보존한다.
+잘못된 좌표·모션 감소·WAAPI 미지원은 공간 전환 없이 기존 경로를 사용한다.
+Native Popover는 여전히 제공하지 않는다. 모바일의 같은 편집 목적에는 Dialog/Sheet를 사용한다.

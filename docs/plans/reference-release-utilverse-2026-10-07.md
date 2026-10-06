@@ -23,7 +23,7 @@ UI·기능 검증을 거쳐 승격·릴리스하고 Utilverse의 대체 가능�
 
 | 후보 | 현재 구현/판단 | 남은 일 |
 | --- | --- | --- |
-| Morphing Popover / Dialog | 원본 초점·초안 소실 확인. 양 Dialog renderer와 초안 보존 편집 실험 구현, Popover는 미구현 | Dialog 전체 환경·기기·성능 검증과 Popover 통합. docs/qa/2026-10-07-overlay-origin-transition.md |
+| Morphing Popover / Dialog | 원본 초점·초안 소실 확인. 양 Dialog renderer와 Web Popover에 motionOrigin 구현, 초안 보존 편집 실험에 비모달 변형 추가 | Dialog/Popover 전체 환경·기기·성능 검증. docs/qa/2026-10-07-overlay-origin-transition.md |
 | Transition Panel | ContentTransition animateHeight 구현 | 실제 Web/Native 빠른 전환·입력 보존·큰 글자 UI 검증 |
 | Animated Background | Tabs gooey 유지. SegmentedControl selectionMotion=slide 실험 추가 | Web/Native 회귀 7개 통과, 기본·다크·큰 글자 Web UI 확인; 좁은 화면·팔레트·기기 검증 대기 |
 | Stateful Button | ActionFeedback 실험 | 완료·실패·재시도와 UI 검증 |
