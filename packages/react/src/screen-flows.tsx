@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState, type KeyboardEvent, type ReactNode, type RefObject } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type ReactNode, type RefObject } from "react";
 import { ScreenLayout, type ScreenLayoutProps } from "./screens.js";
 import { Button, IconButton } from "./actions.js";
 import { Stack, Text, Grid, VisuallyHidden } from "./layout.js";
@@ -10,6 +10,7 @@ import { type UploadItemDescriptor, type UploadItemLabels } from "@hjmds/design-
 import { type AlertDialogRequest } from "@hjmds/design-contracts/components/alert-dialog";
 import { validateCommentThread, resolvePermissionAction, resolveOnboardingStep, resolveSearchCommit, resolveSearchEmptyCause, resolveSearchScreenPhase, resolveFocusAfterRemoval, screenPatternRecipe, searchScreenRecipe, type SearchEmptyCause, type PermissionScreenStatus, type PhotoSource, type PhotoSourceLabels } from "@hjmds/design-contracts/screen-patterns";
 import { resolveWindowClass } from "@hjmds/design-contracts/responsive";
+import { containerRecipe, type ContainerGutter } from "@hjmds/design-contracts/components/container";
 import { ListRow } from "./display.js";
 import { Heading } from "./heading.js";
 import { EmptyState, Skeleton } from "./feedback.js";
@@ -333,12 +334,14 @@ type SearchCommitSlot = {committedQuery?: never; onSubmit?: (query:string)=>void
 export type SearchScreenProps<F = unknown> = Base & SearchInputSlot & SearchCommitSlot & SearchProgressSlot & {query:string;queryLabel:string;onQueryChange(value:string):void;onSearch(query:string,context:{signal:AbortSignal}):void;debounceMs?:number;filters?:ReactNode;recentSearches?:ReactNode;children:ReactNode;
  /** `scroll` keeps `filters` on one horizontally scrolling line that bleeds to the screen edges. */
  filtersOverflow?:"wrap"|"scroll";
+ /** Gutter the host (Container `gutter`, Sheet = `regular`) already applies around this screen; the scroll rail bleeds over it too. */
+ hostGutter?:ContainerGutter;
  /** `hidden` drops the visible label (the field keeps `queryLabel` as its accessible name and placeholder). */
  queryLabelVisibility?:"visible"|"hidden";
  recentQueries?:SearchRecentQueries;suggestedQueries?:SearchSuggestedQueries;suggestions?:SearchSuggestions;
  resultSummary?:SearchResultSummary;appliedFilters?:SearchAppliedFilters;filterSheet?:SearchFilterSheet<F>};
 /** Abort is supplied to the host request; the host must ignore aborted responses before committing results. */
-export function SearchScreen<F = unknown>({query,queryLabel,queryField,queryClearLabel,onQueryChange,onSearch,debounceMs=300,filters,recentSearches,children,onSubmit,committedQuery,filtersOverflow="wrap",queryLabelVisibility="visible",searching,searchingLabel,recentQueries,suggestedQueries,suggestions,resultSummary,appliedFilters,filterSheet,...screen}:SearchScreenProps<F>){
+export function SearchScreen<F = unknown>({query,queryLabel,queryField,queryClearLabel,onQueryChange,onSearch,debounceMs=300,filters,recentSearches,children,onSubmit,committedQuery,filtersOverflow="wrap",hostGutter="none",queryLabelVisibility="visible",searching,searchingLabel,recentQueries,suggestedQueries,suggestions,resultSummary,appliedFilters,filterSheet,...screen}:SearchScreenProps<F>){
  // The host owns localized copy. A custom queryField owns its own clear affordance.
  if (queryField == null && !queryClearLabel?.trim()) throw new TypeError("SearchScreen requires a localized queryClearLabel for its default search field");
  const callback=useRef(onSearch);callback.current=onSearch;
@@ -349,6 +352,12 @@ export function SearchScreen<F = unknown>({query,queryLabel,queryField,queryClea
  // Every commit path funnels through here so "only committed searches are recorded" holds at the API:
  // onSearch (debounced typing) never reaches onSubmit. Without onSubmit (one-step search) a pick only fills the field.
  const commit=(value:string)=>{const next=resolveSearchCommit(value);if(next===null)return;if(next!==query)onQueryChange(next);onSubmit?.(next);};
+ // A picked suggestion/recent/suggested query unmounts with its phase, which dropped focus to <body>; move it to the
+ // results region first (1.13.1, utilverse adoption 2026-10-06, Native twin: Keyboard.dismiss on every commit).
+ // Leaving the field also closes a mobile browser's keyboard. Enter keeps focus in the field instead: it is still on
+ // screen with the committed text, and moving it would make keyboard users Shift+Tab back to refine. Rejected: blur()
+ // without a target, which leaves focus on <body> and loses the reading position for screen readers.
+ const pick=(value:string)=>{if(resolveSearchCommit(value)!==null)bodyHost.current?.focus({preventScroll:true});commit(value);};
  // onSubmit separates "typing" from "committed" (recent-search writes, suggestion → results) without making
  // products rebuild the default field through queryField (2026-10-06 search redesign, usage/components/search-screen.md).
  // Enter while an IME is composing (Korean/Japanese) only confirms the syllable, so it must not commit.
@@ -367,7 +376,9 @@ export function SearchScreen<F = unknown>({query,queryLabel,queryField,queryClea
  const rail=!showRail?null:trigger&&filters!=null?<Stack axis="inline" gap="xs" wrap={filtersOverflow==="wrap"}>{trigger}{filters}</Stack>:trigger??filters;
  // Wrapping chips grow the pinned area line by line at large text; the scroll rail caps it at one row.
  // A product-owned CSS/ScrollView rail would re-derive bleed, scroll padding and RTL per app.
- const filterSlot=rail!=null&&filtersOverflow==="scroll"?<div className="hjm-search-screen__filters" data-overflow="scroll">{rail}</div>:rail;
+ // contentInset="none" leaves the gutter to the host, which CSS cannot see; hostGutter names it (Native twin).
+ const bleed=(screen.contentInset==="none"?0:screenPatternRecipe.padding)+containerRecipe.gutters[hostGutter];
+ const filterSlot=rail!=null&&filtersOverflow==="scroll"?<div className="hjm-search-screen__filters" data-overflow="scroll" style={{"--hjm-search-filters-bleed":`${bleed}px`} as CSSProperties}>{rail}</div>:rail;
  const visibleSuggestions=suggestions?.items.slice(0,Math.max(0,suggestions.maxVisible??searchScreenRecipe.suggestionVisible)).length??0;
  const countAnnouncement=phase==="typing"&&suggestions?suggestions.countLabel(visibleSuggestions):phase==="results"&&resultSummary&&resultSummary.count!==null?resultSummary.countLabel(resultSummary.count):"";
  // 2026-10-06 utilverse adoption: products swapped the whole field just to show progress. The Web spinner is
@@ -379,12 +390,12 @@ export function SearchScreen<F = unknown>({query,queryLabel,queryField,queryClea
  const clearApplied=()=>{focus.schedule({list:"clearApplied",index:-1,from:appliedCount});appliedFilters!.onClearAll();};
  // A new order starts at the top; the previous offset would land mid-list in unrelated results.
  const changeSort=(id:string)=>{resultSummary?.sort?.onChange(id);bodyHost.current?.closest(".hjm-screen__body")?.scrollTo?.({top:0});};
- const idle=<SearchIdleSections recent={recentQueries} suggested={suggestedQueries} legacy={recentSearches} onCommit={commit} hostRef={focus.recentHost} onRemove={removeRecent} onClearAll={clearRecent}/>;
+ const idle=<SearchIdleSections recent={recentQueries} suggested={suggestedQueries} legacy={recentSearches} onCommit={pick} hostRef={focus.recentHost} onRemove={removeRecent} onClearAll={clearRecent}/>;
  const body=phase==="idle"?<>{idle}{committedQuery===undefined?children:null}</>
-  :phase==="typing"?(suggestions?<SearchSuggestionList query={query} suggestions={suggestions} onCommit={commit}/>:null)
+  :phase==="typing"?(suggestions?<SearchSuggestionList query={query} suggestions={suggestions} onCommit={pick}/>:null)
   :<><SearchResultsHeader summary={resultSummary} applied={appliedFilters} cause={cause} appliedHost={focus.appliedHost} onRemove={removeApplied} onClearAll={clearApplied} onSortChange={changeSort}/>
-   <SearchResultsBody summary={resultSummary} applied={appliedFilters} suggested={suggestedQueries} cause={cause} onCommit={commit} onClearAll={clearApplied}>{children}</SearchResultsBody></>;
- return <><ScreenLayout {...screen} notice={<Stack gap="sm" ref={fieldHost}>{queryField ?? <SearchField {...labelProps} clearLabel={queryClearLabel!} value={query} onValueChange={onQueryChange} loading={searching??false} {...submitProps}/>}{filterSlot}{screen.notice}</Stack>}><Stack gap="lg" ref={bodyHost}>{suggestions||resultSummary||searchingLabel?<SearchAnnouncement text={announcement}/>:null}{body}</Stack></ScreenLayout>
+   <SearchResultsBody summary={resultSummary} applied={appliedFilters} suggested={suggestedQueries} cause={cause} onCommit={pick} onClearAll={clearApplied}>{children}</SearchResultsBody></>;
+ return <><ScreenLayout {...screen} notice={<Stack gap="sm" ref={fieldHost}>{queryField ?? <SearchField {...labelProps} clearLabel={queryClearLabel!} value={query} onValueChange={onQueryChange} loading={searching??false} {...submitProps}/>}{filterSlot}{screen.notice}</Stack>}><Stack gap="lg" ref={bodyHost} className="hjm-search-screen__results" tabIndex={-1}>{suggestions||resultSummary||searchingLabel?<SearchAnnouncement text={announcement}/>:null}{body}</Stack></ScreenLayout>
   {filterSheet?<SearchFilterSheetView sheet={filterSheet}/>:null}</>;
 }
 

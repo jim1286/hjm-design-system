@@ -841,6 +841,13 @@ export function Sheet({ open, defaultOpen, onOpenChange, title, accessibilityTit
         inputRange: [0, 1],
         outputRange: [hiddenTranslation, 0],
     });
+    // A fixed-height sheet (side, or a `size` step) gives the body the height left after header and footer,
+    // as Web `.hjm-sheet__body { flex: 1 1 auto }` does, so a `flex: 1` child (a SearchScreen, a list) fills it.
+    // The content-sized body collapsed such a child to 0pt and only the search field painted (utilverse chat
+    // tool picker, 1.13.0 adoption 2026-10-06; the product patched it with a window-height flexBasis).
+    // `auto` stays content-sized: growing there has no free space to take. The ScrollView body grows too, so the
+    // footer sits at the bottom on both platforms; its content container does not, so scroll content keeps its height.
+    const bodyFill = side || sizeRatio !== null ? { flexGrow: 1, minHeight: 0 } : {};
     const contentBackground = resolveColorReference(sheetRecipe.content.background, palette);
     const contentBorder = resolveColorReference(sheetRecipe.content.border, palette);
     return (_jsx(Modal, { ...modalProps, animationType: "none", onDismiss: () => {
@@ -910,7 +917,7 @@ export function Sheet({ open, defaultOpen, onOpenChange, title, accessibilityTit
                                 direction: environment.direction,
                                 flexDirection: "row",
                                 gap: spacing.sm,
-                            }, children: [_jsxs(View, { style: { flex: 1, gap: spacing.xs }, children: [_jsx(Text, { accessibilityRole: "header", tone: "primary", variant: "title", children: title }), description ? _jsx(Text, { tone: "muted", children: description }) : null] }), policy.dismissible ? (_jsx(IconButton, { disabled: busy && !policy.dismissWhileBusy, label: closeLabel, onPress: () => requestClose("close-action"), children: _jsx(CloseGlyph, {}) })) : null] }), scrollable ? (_jsx(ScrollView, { style: { flexShrink: 1, minHeight: 0 }, contentContainerStyle: { gap: sheetRecipe.body.gap }, keyboardShouldPersistTaps: "handled", keyboardDismissMode: Platform.OS === "ios" ? "interactive" : "on-drag", automaticallyAdjustKeyboardInsets: false, children: children })) : _jsx(View, { style: { gap: sheetRecipe.body.gap, flexShrink: 1 }, children: children }), footer ? (_jsx(View, { style: {
+                            }, children: [_jsxs(View, { style: { flex: 1, gap: spacing.xs }, children: [_jsx(Text, { accessibilityRole: "header", tone: "primary", variant: "title", children: title }), description ? _jsx(Text, { tone: "muted", children: description }) : null] }), policy.dismissible ? (_jsx(IconButton, { disabled: busy && !policy.dismissWhileBusy, label: closeLabel, onPress: () => requestClose("close-action"), children: _jsx(CloseGlyph, {}) })) : null] }), scrollable ? (_jsx(ScrollView, { style: { flexShrink: 1, minHeight: 0, ...bodyFill }, contentContainerStyle: { gap: sheetRecipe.body.gap }, keyboardShouldPersistTaps: "handled", keyboardDismissMode: Platform.OS === "ios" ? "interactive" : "on-drag", automaticallyAdjustKeyboardInsets: false, children: children })) : _jsx(View, { style: { gap: sheetRecipe.body.gap, flexShrink: 1, ...bodyFill }, children: children }), footer ? (_jsx(View, { style: {
                                 gap: sheetRecipe.footer.gap,
                                 flexShrink: 0,
                                 paddingTop: sheetRecipe.footer.paddingTop,

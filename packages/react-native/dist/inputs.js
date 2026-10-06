@@ -699,7 +699,9 @@ export function SegmentedControl(props) {
     const theme = useHjmNativeTheme();
     const { environment } = theme;
     const sizeContract = segmentedControlRecipe.sizes[size];
-    const stacked = segmentedControlRecipe.adaptive.largeTextLayout === "stacked"
+    // Pills keep their row at large text (segmentedControlRecipe.pills.largeTextLayout, 1.13.1): they wrap in a
+    // block and stay one line in a rail. Stacking them made a filter rail a ~440pt column (utilverse, 2026-10-06).
+    const stacked = !pills && segmentedControlRecipe.adaptive.largeTextLayout === "stacked"
         && environment.textScale >= segmentedControlRecipe.adaptive.stackAtFontScale;
     const descriptors = resolvedItems.map((item) => ({
         id: item.value,
@@ -832,7 +834,10 @@ export function Chip({ label, size = chipRecipe.defaults.size, disabled = false,
                 direction: theme.environment.direction,
                 flexDirection: "row",
                 gap: metrics.gap,
-                height: visibleControlHeight(metrics.height, theme.environment.minimumVisualTarget),
+                // A floor, not a fixed height, as Button does for text content and as Web `.hjm-chip` already does
+                // (min-block-size): the fixed 36 clipped the filter-trigger and suggested-query labels at accessibility-large
+                // (utilverse 1.13.0 adoption, 2026-10-06). At 1x the label fits, so the chip is still 36.
+                minHeight: visibleControlHeight(metrics.height, theme.environment.minimumVisualTarget),
                 opacity: disabled
                     ? chipRecipe.states.disabledOpacity
                     : pressed

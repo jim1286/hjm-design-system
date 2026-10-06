@@ -261,6 +261,11 @@ export const searchFieldRecipe = {
 export const chipRecipe = {
     slots: ["root", "leading", "indicator", "label", "trailing"],
     defaults: { size: "small", selected: false },
+    /**
+     * `height` is the minimum visible height; a label taller than it grows the chip (Web `min-block-size`,
+     * Native `minHeight` from 1.13.1). Native used it as a fixed height and clipped labels at large text
+     * (utilverse 1.13.0 adoption, 2026-10-06), unlike Web and Button.
+     */
     sizes: {
         small: {
             height: control.chipHeight.small,
@@ -608,11 +613,21 @@ export const segmentedControlRecipe = {
     // Category filters share the single-selection engine, with a compact surface inside a 44 target.
     // See usage/components/segmented-control.md; no separate filter-selection state is introduced.
     pills: { gap: spacing.xs, radius: radius.full, inset: spacing.xs, minHeight: control.minTouchTarget,
-        selectedBackground: semanticColors.content.body, selectedContent: semanticColors.canvas },
+        selectedBackground: semanticColors.content.body, selectedContent: semanticColors.canvas,
+        /**
+         * Pills are content-width, so large text keeps the row: it wraps inside a block and stays one line
+         * inside a horizontal scroller (SearchScreen `filtersOverflow="scroll"`, a product rail). `adaptive`
+         * stacking is for the equal-width connected track only. Stacking pills too turned a seven-theme
+         * filter rail into a ~440pt column at accessibility-large (utilverse 1.13.0 adoption, 2026-10-06),
+         * and the product swapped in a Select to escape it. Rejected: a pills-only scroll prop, because
+         * the host already owns the rail and a second scroller inside it would nest horizontal scrolling.
+         */
+        largeTextLayout: "wrap" },
     adaptive: {
         // Equal-width rows stop being comparable when every short label wraps one
         // Hangul syllable per line. Native renderers stack the options before that
         // point so each choice remains a readable phrase and a 44pt target.
+        // Applies to presentation="connected" only; pills follow `pills.largeTextLayout`.
         largeTextLayout: "stacked",
         stackAtFontScale: largeTextThreshold,
     },

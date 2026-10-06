@@ -1353,6 +1353,13 @@ export function Sheet({
     inputRange: [0, 1],
     outputRange: [hiddenTranslation, 0],
   });
+  // A fixed-height sheet (side, or a `size` step) gives the body the height left after header and footer,
+  // as Web `.hjm-sheet__body { flex: 1 1 auto }` does, so a `flex: 1` child (a SearchScreen, a list) fills it.
+  // The content-sized body collapsed such a child to 0pt and only the search field painted (utilverse chat
+  // tool picker, 1.13.0 adoption 2026-10-06; the product patched it with a window-height flexBasis).
+  // `auto` stays content-sized: growing there has no free space to take. The ScrollView body grows too, so the
+  // footer sits at the bottom on both platforms; its content container does not, so scroll content keeps its height.
+  const bodyFill = side || sizeRatio !== null ? { flexGrow: 1, minHeight: 0 } : {};
   const contentBackground = resolveColorReference(
     sheetRecipe.content.background,
     palette,
@@ -1485,7 +1492,7 @@ export function Sheet({
           {/* Keyboard clearance belongs to the enclosing modal; UIKit must not add it again. */}
           {scrollable ? (
             <ScrollView
-              style={{ flexShrink: 1, minHeight: 0 }}
+              style={{ flexShrink: 1, minHeight: 0, ...bodyFill }}
               contentContainerStyle={{ gap: sheetRecipe.body.gap }}
               keyboardShouldPersistTaps="handled"
               keyboardDismissMode={Platform.OS === "ios" ? "interactive" : "on-drag"}
@@ -1493,7 +1500,7 @@ export function Sheet({
             >
               {children}
             </ScrollView>
-          ) : <View style={{ gap: sheetRecipe.body.gap, flexShrink: 1 }}>{children}</View>}
+          ) : <View style={{ gap: sheetRecipe.body.gap, flexShrink: 1, ...bodyFill }}>{children}</View>}
           {footer ? (
             <View
               style={{

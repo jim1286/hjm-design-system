@@ -1331,6 +1331,8 @@ describe("expanded cross-platform component contracts", () => {
       largeTextLayout: "stacked",
       stackAtFontScale: 1.6,
     });
+    // 1.13.1: content-width pills never stack; they wrap in a block and stay one line in a rail.
+    expect(segmentedControlRecipe.pills.largeTextLayout).toBe("wrap");
     for (const size of Object.values(tabsRecipe.sizes)) {
       expect(size.minHeight).toBeGreaterThanOrEqual(control.minTouchTarget);
     }

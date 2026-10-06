@@ -463,7 +463,8 @@ describe("minimumVisualTarget control geometry", () => {
   it("keeps compact recipe heights when the axis is off", () => {
     expect(pressableStyle(byLabel(render(<Button size="small">Compact</Button>), "Compact")).minHeight)
       .toBe(control.buttonHeight.small);
-    expect(pressableStyle(byLabel(render(<Chip label="Tag" onPress={() => undefined} selected={false} selectionMode="single" size="small" />), "Tag")).height)
+    // 1.13.1: the chip height is a floor (minHeight) so large text can grow it, as Button does.
+    expect(pressableStyle(byLabel(render(<Chip label="Tag" onPress={() => undefined} selected={false} selectionMode="single" size="small" />), "Tag")).minHeight)
       .toBe(chipRecipe.sizes.small.height);
   });
 
@@ -474,7 +475,7 @@ describe("minimumVisualTarget control geometry", () => {
     expect(style.height).toBeUndefined();
     // Padding, color and radius still belong to the compact recipe.
     expect(style.paddingHorizontal).toBe(buttonRecipe.sizes.small.paddingHorizontal);
-    expect(pressableStyle(byLabel(render(<Chip label="Tag" onPress={() => undefined} selected={false} selectionMode="single" size="small" />, strictValue), "Tag")).height)
+    expect(pressableStyle(byLabel(render(<Chip label="Tag" onPress={() => undefined} selected={false} selectionMode="single" size="small" />, strictValue), "Tag")).minHeight)
       .toBe(control.minTouchTarget);
   });
 
@@ -695,7 +696,7 @@ describe("Native canonical recipe bindings", () => {
       borderRadius: radius[chipRecipe.radius],
       borderWidth: chipRecipe.borderWidth,
       gap: metrics.gap,
-      height: metrics.height,
+      minHeight: metrics.height,
       paddingHorizontal: metrics.paddingHorizontal,
     });
     expect(flattenStyle(chip.props.style({ pressed: true })).opacity)

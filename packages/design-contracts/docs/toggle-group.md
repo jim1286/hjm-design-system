@@ -26,3 +26,9 @@ single 모드를 넣지 않는 것이 규칙이다.
 2026-10-06 요청에 따라 단일 선택 카테고리는 `SegmentedControl presentation="pills"`로 제공한다.
 복수 선택 ToggleGroup의 계약은 바꾸지 않는다. 필터 UI가 서로 비슷하더라도 선택 개수를 합치면 해제·키보드 의미가 달라지기 때문이다.
 자세한 크기·테마·배치는 [SegmentedControl 사용 지침](usage/components/segmented-control.md)을 따른다.
+
+1.13.1 patch(2026-10-06 utilverse 1.13.0 적용 결함): `pills`는 큰 글자에서 세로로 쌓지 않는다(`segmentedControlRecipe.pills.largeTextLayout`
+`"wrap"`). 블록 안에서는 줄바꿈하고 가로 스크롤 줄 안에서는 한 줄로 남는다. 쌓기(`adaptive.largeTextLayout` `"stacked"`)는 같은 폭으로
+나뉘는 `connected` 트랙의 규칙이다. 내용 폭인 pills까지 쌓아 주제 7개 레일이 accessibility-large에서 약 440pt 기둥이 됐고, 제품은 그 크기부터
+Select로 바꿨다. pills 전용 스크롤 prop은 버렸다: 레일은 바깥(SearchScreen `filtersOverflow="scroll"`, 제품 ScrollView)이 소유하고,
+그 안에 두 번째 가로 스크롤을 겹치게 된다. 선택(radio)·포커스 이동 의미는 바꾸지 않았다.

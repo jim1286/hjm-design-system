@@ -10,7 +10,8 @@ import { UploadItem } from "./upload-item.js";
 import {} from "@hjmds/design-contracts/components/upload-item";
 import {} from "@hjmds/design-contracts/components/alert-dialog";
 import { validateCommentThread, resolvePermissionAction, resolveOnboardingStep, resolveSearchCommit, resolveSearchEmptyCause, resolveSearchScreenPhase, screenPatternRecipe, searchScreenRecipe } from "@hjmds/design-contracts/screen-patterns";
-import { AccessibilityInfo, ScrollView, View } from "react-native";
+import { AccessibilityInfo, Keyboard, ScrollView, View } from "react-native";
+import { containerRecipe } from "@hjmds/design-contracts/components/container";
 import { ListRow } from "./data-display.js";
 import { Heading } from "./heading.js";
 import { Menu } from "./navigation.js";
@@ -105,7 +106,7 @@ function SearchFilterSheetView({ sheet }) {
     return _jsx(Sheet, { open: sheet.open, onOpenChange: open => sheet.onOpenChange(open), title: sheet.title, closeLabel: sheet.labels.close, size: sheet.size ?? "large", scrollable: true, footer: footer, children: sheet.renderContent(draft, setDraft) });
 }
 /** Abort is supplied to the host request; the host must ignore aborted responses before committing results. */
-export function SearchScreen({ query, queryLabel, queryField, queryClearLabel, onQueryChange, onSearch, debounceMs = 300, filters, recentSearches, children, onSubmit, committedQuery, filtersOverflow = "wrap", queryLabelVisibility = "visible", searching, searchingLabel, recentQueries, suggestedQueries, suggestions, resultSummary, appliedFilters, filterSheet, ...screen }) {
+export function SearchScreen({ query, queryLabel, queryField, queryClearLabel, onQueryChange, onSearch, debounceMs = 300, filters, recentSearches, children, onSubmit, committedQuery, filtersOverflow = "wrap", hostGutter = "none", queryLabelVisibility = "visible", searching, searchingLabel, recentQueries, suggestedQueries, suggestions, resultSummary, appliedFilters, filterSheet, ...screen }) {
     // The host owns localized copy. A custom queryField owns its own clear affordance.
     if (queryField == null && !queryClearLabel?.trim())
         throw new TypeError("SearchScreen requires a localized queryClearLabel for its default search field");
@@ -114,8 +115,11 @@ export function SearchScreen({ query, queryLabel, queryField, queryClearLabel, o
     useEffect(() => { const controller = new AbortController(); const timer = setTimeout(() => callback.current(query, { signal: controller.signal }), Math.max(0, debounceMs)); return () => { clearTimeout(timer); controller.abort(); }; }, [query, debounceMs]);
     // Every commit path funnels through here so "only committed searches are recorded" holds at the API:
     // onSearch (debounced typing) never reaches onSubmit. Without onSubmit (one-step search) a pick only fills the field.
+    // Every commit closes the keyboard so results get the screen. The search key already blurs the field; a picked
+    // suggestion/recent/suggested query did not, and utilverse called Keyboard.dismiss() in onSubmit (1.13.0 adoption,
+    // 2026-10-06). Done here, not in onSubmit, so one-step search (no onSubmit) behaves the same.
     const commit = (value) => { const next = resolveSearchCommit(value); if (next === null)
-        return; if (next !== query)
+        return; Keyboard.dismiss(); if (next !== query)
         onQueryChange(next); onSubmit?.(next); };
     // onSubmit separates "typing" from "committed" without making products rebuild the default field through
     // queryField (2026-10-06 search redesign, usage/components/search-screen.md). The single-line TextInput keeps
@@ -132,7 +136,11 @@ export function SearchScreen({ query, queryLabel, queryField, queryClearLabel, o
     const rail = !showRail ? null : trigger && filters != null ? _jsxs(Stack, { axis: "inline", gap: "xs", wrap: filtersOverflow === "wrap", children: [trigger, filters] }) : trigger ?? filters;
     // Wrapping chips grow the pinned area line by line at large text; the scroll rail caps it at one row.
     // It bleeds over ScreenLayout's notice padding so chips scroll to the screen edge instead of clipping mid-chip.
-    const inset = screen.contentInset === "none" ? 0 : screenPatternRecipe.padding;
+    // With contentInset="none" the host owns the gutter, which SearchScreen cannot measure; `hostGutter` names it so the
+    // rail still reaches the host edge (utilverse 1.13.0 adoption, 2026-10-06: the rail stopped at the Container/Sheet
+    // padding). A token name, not a number, keeps product code off raw spacing. Rejected: measuring the window offset
+    // (layout jump on the first frame, and wrong inside a centered max-width host).
+    const inset = (screen.contentInset === "none" ? 0 : screenPatternRecipe.padding) + containerRecipe.gutters[hostGutter];
     const filterSlot = rail != null && filtersOverflow === "scroll" ? _jsx(ScrollView, { horizontal: true, showsHorizontalScrollIndicator: false, keyboardShouldPersistTaps: "handled", style: { marginHorizontal: -inset, flexGrow: 0 }, contentContainerStyle: { paddingHorizontal: inset }, children: rail }) : rail;
     const visibleSuggestions = suggestions?.items.slice(0, Math.max(0, suggestions.maxVisible ?? searchScreenRecipe.suggestionVisible)).length ?? 0;
     const countAnnouncement = phase === "typing" && suggestions ? suggestions.countLabel(visibleSuggestions) : phase === "results" && resultSummary && resultSummary.count !== null ? resultSummary.countLabel(resultSummary.count) : "";

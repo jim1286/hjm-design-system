@@ -74,11 +74,11 @@ import { Chip } from "@hjmds/react-native/inputs";
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
-| 크기 | 내용 폭. 높이 `small` 36 · `medium` 44(`control.chipHeight`), 모서리 `radius.full`. `small`은 위아래 4를 넓혀(Native hitSlop, Web `::after`) 터치 영역을 44에 맞춘다 | `chipRecipe.sizes`, `react-native/src/inputs.tsx` |
+| 크기 | 내용 폭. 최소 높이 `small` 36 · `medium` 44(`control.chipHeight`, 두 플랫폼 모두 최소값이라 라벨이 크면 늘어난다), 모서리 `radius.full`. `small`은 위아래 4를 넓혀(Native hitSlop, Web `::after`) 터치 영역을 44에 맞춘다 | `chipRecipe.sizes`, `react-native/src/inputs.tsx` |
 | 간격 | 좌우 여백 `small` `spacing.sm` 12 · `medium` `spacing.md` 16, 아이콘↔라벨 `small` `spacing.xxs` 4 · `medium` `spacing.xs` 8(두 플랫폼). 칩 사이는 부모가 정한다(`spacing.xs` 8 권장) | `chipRecipe.sizes`, `.hjm-chip` |
 | 순서·정렬 | 필터 줄·태그 묶음으로 가로로 나란히 둔다. 안쪽은 [선택 표시] → [leading] → [라벨] → [trailing]. 선택 상태는 브랜드 테두리·글자색 | `chipRecipe.slots`, `.hjm-chip[data-selected]` |
 | 고정·스크롤 | 고정 영역이 없다. 칩이 많으면 부모가 줄바꿈하거나 가로 스크롤 영역을 둔다. 검색 화면의 필터 칩 줄은 [SearchScreen](search-screen.md) `filtersOverflow="scroll"`이 가로 스크롤을 소유한다 | `SearchScreen` |
-| 좁은 폭·큰 글자 | 라벨이 줄바꿈된다(`overflow-wrap: anywhere`). 높이는 최소값이라 늘어난다 | `.hjm-chip__label` |
+| 좁은 폭·큰 글자 | 라벨이 줄바꿈된다(Web `overflow-wrap: anywhere`). 높이는 최소값이라 라벨 높이만큼 늘어난다(Web `min-block-size`, Native `minHeight`) | `.hjm-chip__label`, Native `Chip` |
 
 ## 꼭 지킬 것
 
@@ -97,8 +97,11 @@ import { Chip } from "@hjmds/react-native/inputs";
 | `label` 타입 | `ReactNode` | `string` |
 | 배치 | `layoutStyle` | `layoutStyle`, 슬롯별 `leadingStyle`·`indicatorStyle`·`trailingStyle`(배치 key만) |
 | 선택 표시 위치 | 표시 → leading → 라벨 | leading → 표시 → 라벨 |
+| 높이 | `min-block-size` | `minHeight`(미게시(1.13.1 이후). 1.13.0 이하는 고정 `height`) |
 
 ## 함정
 
 - 두 renderer의 선택 콜백 이름이 다르다. Web 코드를 옮기면서 `onSelectedChange`를 Native에 넘기면
   타입 오류가 나고, Native의 `onPress(next, event)`를 Web에 넘기면 첫 인자가 이벤트다.
+- 1.13.0 이하 Native Chip은 높이가 고정(`height` 36)이라 큰 글자에서 라벨 아래가 잘렸다(2026-10-06 utilverse 적용, SearchScreen
+  `필터` 칩·추천 검색어 칩, accessibility-large). 1.13.1부터 Button처럼 최소 높이다. 제품이 `layoutStyle`로 높이를 다시 고정하지 않는다.

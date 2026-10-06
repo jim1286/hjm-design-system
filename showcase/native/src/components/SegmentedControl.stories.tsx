@@ -11,3 +11,5 @@ export const Pills: Story = { name: "알약 모양", render: () => <CategoryFilt
 export const Disabled: Story = { name: "비활성", render: () => <CategoryFilterPreview disabled /> };
 export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
 export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };
+// 1.13.1: pills keep their row at large text (wrap here, one line in a rail) instead of stacking a column.
+export const PillsLargeText: Story = { ...Pills, name: "알약 모양 · 큰 글자", globals: { textScale: "2" } };

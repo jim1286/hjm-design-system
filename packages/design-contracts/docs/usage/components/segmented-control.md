@@ -74,7 +74,7 @@ import { SegmentedControl } from "@hjmds/react-native/inputs";
 | `disabled` | `boolean` | `false` | 전체 비활성(Web은 fieldset 속성) |
 | `layoutStyle` | 배치 전용 style 객체 | — | 바깥 배치 |
 
-Native는 글자 크기 160% 이상(`stackAtFontScale`)에서 항목을 세로로 쌓는다.
+`connected`는 글자 크기 160% 이상(`stackAtFontScale`)에서 항목을 세로로 쌓는다. `pills`는 쌓지 않는다(`pills.largeTextLayout` `wrap`, 미게시(1.13.1 이후)).
 
 ## 배치
 
@@ -84,7 +84,7 @@ Native는 글자 크기 160% 이상(`stackAtFontScale`)에서 항목을 세로�
 | 간격 | 트랙 안쪽 여백·항목 간격 `container.padding`·`gap` `spacing.xxs` 4. 트랙 모서리 `radius.lg` 16(테두리 1). 선택 항목 모서리 `radius.md` 12, 선택 테두리 2(`stroke.strong`). 아래 내용과 `layout.contentGap` 16 | `segmentedControlRecipe.container`·`item`, `.hjm-segmented__items` |
 | 순서·정렬 | 항목은 같은 폭으로 나뉘고(Native `flex: 1`, Web `flex: 1 1 0`) 트랙은 부모 폭을 채운다. 전환할 내용 바로 위, 화면 좌우 여백(`layout.pagePadding`) 안 | Native `SegmentedControl`, `.hjm-segmented__item` |
 | 고정·스크롤 | 고정되지 않는다. Web 항목은 글자보다 좁아지지 않아(`min-inline-size: max-content`) 넘치면 트랙이 가로 스크롤된다. Native는 스크롤하지 않는다 | `.hjm-segmented__items`(overflow-x) |
-| 좁은 폭·큰 글자 | 항목을 세로로 쌓는다. Native는 글자 크기 160% 이상, Web은 provider `data-large-text` 또는 폭 11em 이하 | `segmentedControlRecipe.adaptive`, `largeTextThreshold` 1.6, `.hjm-segmented` @media |
+| 좁은 폭·큰 글자 | `connected`는 항목을 세로로 쌓는다. Native는 글자 크기 160% 이상, Web은 provider `data-large-text` 또는 폭 11em 이하. `pills`는 쌓지 않고 가로 줄을 유지한다: 블록 안에서는 줄바꿈, 가로 스크롤 줄(SearchScreen `filtersOverflow="scroll"`, 제품 레일) 안에서는 한 줄 | `segmentedControlRecipe.adaptive`·`pills.largeTextLayout`, `largeTextThreshold` 1.6, `.hjm-segmented` @media |
 
 ```text
 ┌───────────────────────────────┐  트랙: radius.lg 16, padding 4 (Native)
@@ -124,7 +124,7 @@ Native는 글자 크기 160% 이상(`stackAtFontScale`)에서 항목을 세로�
 - `presentation="pills"`: 카테고리·작성자·기간처럼 같은 목록의 범위를 좁힐 때 쓴다.
 - 터치 영역은 크기 옵션과 관계없이 최소 `control.minTouchTarget` 44, 안쪽 표면은 위아래 `spacing.xs` 8만큼 들어간다. 눈에 보이는 모양을 작게 해도 터치 영역을 줄이지 않는다.
 - 좌우 `spacing.md` 16, 항목 사이 `spacing.xs` 8, 모서리 `radius.full`. 비선택은 `surfaceAlt`, 선택은 `content.body`/`canvas` 반전이다. 색은 제품 provider에서 따라온다.
-- 항목은 내용 폭이며 좁아지면 줄바꿈한다. 2배 글자는 기존 접근성 규칙대로 세로로 쌓으며, 라벨 높이만큼 항목도 늘어난다.
+- 항목은 내용 폭이며 좁아지면 줄바꿈한다. 큰 글자에서도 세로로 쌓지 않는다(`pills.largeTextLayout` `wrap`): 블록 안에서는 줄바꿈하고, 가로 스크롤 줄 안에서는 한 줄로 남아 스크롤된다. 라벨 높이만큼 항목도 늘어난다. 선택 상태(radio)와 포커스 이동(Web 화살표, Native 접근성 순서)은 배치와 관계없이 같다.
 - 그룹 이름은 `label`, 하나의 선택은 `value`/`onValueChange`. 복수 조건은 ToggleGroup, 화면 이동은 Tabs/Navigation을 쓴다.
 - 예제의 전체 선택값도 실제 항목으로 넣는다. 선택된 항목을 다시 눌러도 선택을 해제하지 않는다.
 
@@ -135,4 +135,12 @@ import { SegmentedControl } from "@hjmds/react/selection";
 ```
 
 Native는 `@hjmds/react-native/inputs`에서 같은 prop을 사용한다. `presentation`은 게시 버전 1.12.1에 없다(미게시, 1.12.1 이후). 게시·소비 앱 반영 전에는 연결형을 쓴다.
-스토리는 `버튼형 선택`의 `알약 모양`·`비활성`이다. 2026-10-06 사용자 승인으로 실험 `입력/카테고리 필터` 항목을 배포하면서 별도 공개 API가 아니라 이 표현이라 그 스토리로 합쳤다([승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정)). Storybook 배포는 npm 게시가 아니다.
+스토리는 `버튼형 선택`의 `알약 모양`·`비활성`·`알약 모양 · 큰 글자`다. 2026-10-06 사용자 승인으로 실험 `입력/카테고리 필터` 항목을 배포하면서 별도 공개 API가 아니라 이 표현이라 그 스토리로 합쳤다([승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정)). Storybook 배포는 npm 게시가 아니다.
+
+## 함정
+
+- 1.13.0 이하는 `pills`도 글자 크기 160%부터 세로로 쌓았다. 한 줄 레일에 둔 주제 7개가 accessibility-large에서 약 440pt
+  기둥이 됐고(2026-10-06 utilverse 적용, iPhone 17 Pro · iOS 26.5), 제품은 그 크기부터 Select로 바꾸는 우회를 넣었다.
+  1.13.1부터는 레일 안에서 한 줄로 남으므로 그 분기를 지운다. 1.13.0에 머무는 제품만 우회를 유지한다.
+- 레일(가로 스크롤)은 바깥이 만든다. SearchScreen 안이면 `filtersOverflow="scroll"`, 그 밖이면 제품의 가로 ScrollView다.
+  `pills`가 스스로 스크롤하지 않는 이유는 레일 안에 두 번째 가로 스크롤을 겹치지 않기 위해서다.

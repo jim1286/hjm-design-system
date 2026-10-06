@@ -9,7 +9,8 @@ import { UploadItem } from "./upload-item.js";
 import { type UploadItemDescriptor, type UploadItemLabels } from "@hjmds/design-contracts/components/upload-item";
 import { type AlertDialogRequest } from "@hjmds/design-contracts/components/alert-dialog";
 import { validateCommentThread, resolvePermissionAction, resolveOnboardingStep, resolveSearchCommit, resolveSearchEmptyCause, resolveSearchScreenPhase, screenPatternRecipe, searchScreenRecipe, type SearchEmptyCause, type PermissionScreenStatus, type PhotoSource, type PhotoSourceLabels } from "@hjmds/design-contracts/screen-patterns";
-import { AccessibilityInfo, ScrollView, View, type NativeSyntheticEvent, type TextInputSubmitEditingEventData } from "react-native";
+import { AccessibilityInfo, Keyboard, ScrollView, View, type NativeSyntheticEvent, type TextInputSubmitEditingEventData } from "react-native";
+import { containerRecipe, type ContainerGutter } from "@hjmds/design-contracts/components/container";
 import { ListRow } from "./data-display.js";
 import { Heading } from "./heading.js";
 import { Menu } from "./navigation.js";
@@ -259,19 +260,24 @@ type SearchCommitSlot = {committedQuery?: never; onSubmit?: (query:string)=>void
 export type SearchScreenProps<F = unknown> = Base & SearchInputSlot & SearchCommitSlot & SearchProgressSlot & {query:string;queryLabel:string;onQueryChange(value:string):void;onSearch(query:string,context:{signal:AbortSignal}):void;debounceMs?:number;filters?:ReactNode;recentSearches?:ReactNode;children:ReactNode;
  /** `scroll` keeps `filters` on one horizontally scrolling line that bleeds to the screen edges. */
  filtersOverflow?:"wrap"|"scroll";
+ /** Gutter the host (Container `gutter`, Sheet = `regular`) already applies around this screen; the scroll rail bleeds over it too. */
+ hostGutter?:ContainerGutter;
  /** `hidden` drops the visible label (the field keeps `queryLabel` as its accessible name and placeholder). */
  queryLabelVisibility?:"visible"|"hidden";
  recentQueries?:SearchRecentQueries;suggestedQueries?:SearchSuggestedQueries;suggestions?:SearchSuggestions;
  resultSummary?:SearchResultSummary;appliedFilters?:SearchAppliedFilters;filterSheet?:SearchFilterSheet<F>};
 /** Abort is supplied to the host request; the host must ignore aborted responses before committing results. */
-export function SearchScreen<F = unknown>({query,queryLabel,queryField,queryClearLabel,onQueryChange,onSearch,debounceMs=300,filters,recentSearches,children,onSubmit,committedQuery,filtersOverflow="wrap",queryLabelVisibility="visible",searching,searchingLabel,recentQueries,suggestedQueries,suggestions,resultSummary,appliedFilters,filterSheet,...screen}:SearchScreenProps<F>){
+export function SearchScreen<F = unknown>({query,queryLabel,queryField,queryClearLabel,onQueryChange,onSearch,debounceMs=300,filters,recentSearches,children,onSubmit,committedQuery,filtersOverflow="wrap",hostGutter="none",queryLabelVisibility="visible",searching,searchingLabel,recentQueries,suggestedQueries,suggestions,resultSummary,appliedFilters,filterSheet,...screen}:SearchScreenProps<F>){
  // The host owns localized copy. A custom queryField owns its own clear affordance.
  if (queryField == null && !queryClearLabel?.trim()) throw new TypeError("SearchScreen requires a localized queryClearLabel for its default search field");
  const callback=useRef(onSearch);callback.current=onSearch;
  useEffect(()=>{const controller=new AbortController();const timer=setTimeout(()=>callback.current(query,{signal:controller.signal}),Math.max(0,debounceMs));return()=>{clearTimeout(timer);controller.abort();};},[query,debounceMs]);
  // Every commit path funnels through here so "only committed searches are recorded" holds at the API:
  // onSearch (debounced typing) never reaches onSubmit. Without onSubmit (one-step search) a pick only fills the field.
- const commit=(value:string)=>{const next=resolveSearchCommit(value);if(next===null)return;if(next!==query)onQueryChange(next);onSubmit?.(next);};
+ // Every commit closes the keyboard so results get the screen. The search key already blurs the field; a picked
+ // suggestion/recent/suggested query did not, and utilverse called Keyboard.dismiss() in onSubmit (1.13.0 adoption,
+ // 2026-10-06). Done here, not in onSubmit, so one-step search (no onSubmit) behaves the same.
+ const commit=(value:string)=>{const next=resolveSearchCommit(value);if(next===null)return;Keyboard.dismiss();if(next!==query)onQueryChange(next);onSubmit?.(next);};
  // onSubmit separates "typing" from "committed" without making products rebuild the default field through
  // queryField (2026-10-06 search redesign, usage/components/search-screen.md). The single-line TextInput keeps
  // its default blur-on-submit, so the keyboard closes and results get the screen. The debounce is left alone.
@@ -287,7 +293,11 @@ export function SearchScreen<F = unknown>({query,queryLabel,queryField,queryClea
  const rail=!showRail?null:trigger&&filters!=null?<Stack axis="inline" gap="xs" wrap={filtersOverflow==="wrap"}>{trigger}{filters}</Stack>:trigger??filters;
  // Wrapping chips grow the pinned area line by line at large text; the scroll rail caps it at one row.
  // It bleeds over ScreenLayout's notice padding so chips scroll to the screen edge instead of clipping mid-chip.
- const inset=screen.contentInset==="none"?0:screenPatternRecipe.padding;
+ // With contentInset="none" the host owns the gutter, which SearchScreen cannot measure; `hostGutter` names it so the
+ // rail still reaches the host edge (utilverse 1.13.0 adoption, 2026-10-06: the rail stopped at the Container/Sheet
+ // padding). A token name, not a number, keeps product code off raw spacing. Rejected: measuring the window offset
+ // (layout jump on the first frame, and wrong inside a centered max-width host).
+ const inset=(screen.contentInset==="none"?0:screenPatternRecipe.padding)+containerRecipe.gutters[hostGutter];
  const filterSlot=rail!=null&&filtersOverflow==="scroll"?<ScrollView horizontal showsHorizontalScrollIndicator={false} keyboardShouldPersistTaps="handled" style={{marginHorizontal:-inset,flexGrow:0}} contentContainerStyle={{paddingHorizontal:inset}}>{rail}</ScrollView>:rail;
  const visibleSuggestions=suggestions?.items.slice(0,Math.max(0,suggestions.maxVisible??searchScreenRecipe.suggestionVisible)).length??0;
  const countAnnouncement=phase==="typing"&&suggestions?suggestions.countLabel(visibleSuggestions):phase==="results"&&resultSummary&&resultSummary.count!==null?resultSummary.countLabel(resultSummary.count):"";

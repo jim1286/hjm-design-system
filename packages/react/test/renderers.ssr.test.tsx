@@ -331,13 +331,16 @@ describe("SegmentedControl large-text layout", () => {
       "utf8",
     );
     const stacks = segmentedControlRecipe.adaptive.largeTextLayout === "stacked";
-    const rule = /@media \(max-width: 11em\) \{\s*\.hjm-segmented__items \{[^}]*flex-direction: column;/;
+    // 1.13.1: the stacking selectors exclude pills (segmentedControlRecipe.pills.largeTextLayout "wrap").
+    const connected = '.hjm-segmented:not([data-presentation="pills"])';
+    const rule = /@media \(max-width: 11em\) \{\s*\.hjm-segmented:not\(\[data-presentation="pills"\]\) \.hjm-segmented__items \{[^}]*flex-direction: column;/;
     expect(rule.test(css)).toBe(stacks);
+    expect(segmentedControlRecipe.pills.largeTextLayout).toBe("wrap");
     if (!stacks) return;
-    expect(css).toContain(".hjm-segmented__item { flex: 0 0 auto; min-inline-size: 0; }");
+    expect(css).toContain(`${connected} .hjm-segmented__item { flex: 0 0 auto; min-inline-size: 0; }`);
     // 브라우저 기본 글꼴만이 web의 large-text 신호가 아니다. provider에 textScale을
     // 선언한 제품은 `data-large-text`로 같은 전환을 받아야 한다 (#20).
-    expect(css).toContain('[data-large-text="true"] .hjm-segmented__items { flex-direction: column;');
+    expect(css).toContain(`[data-large-text="true"] ${connected} .hjm-segmented__items { flex-direction: column;`);
   });
 
   /* 계약은 임계값 하나를 말하는데(`stackAtFontScale`), 렌더러가 그것을 각자 숫자로

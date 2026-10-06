@@ -817,13 +817,15 @@
    Both browser font size (em query) and provider data-large-text must trigger it (#20).
    11em = 176px at100%, 352px at200%: measured row333px fits360px but overflows320px.
    Reset flex and max-content in columns to avoid collapsed height and unwrapped labels.
-   renderers.ssr.test.tsx checks that the recipe still declares stacked. */
+   renderers.ssr.test.tsx checks that the recipe still declares stacked.
+   Pills are excluded (segmentedControlRecipe.pills.largeTextLayout "wrap", 1.13.1): they wrap in a block and
+   stay one line in a scroll rail. Stacking them turned a filter rail into a tall column (utilverse, 2026-10-06). */
 @media (max-width: 11em) {
-  .hjm-segmented__items { flex-direction: column; overflow-x: visible; }
-  .hjm-segmented__item { flex: 0 0 auto; min-inline-size: 0; }
+  .hjm-segmented:not([data-presentation="pills"]) .hjm-segmented__items { flex-direction: column; overflow-x: visible; }
+  .hjm-segmented:not([data-presentation="pills"]) .hjm-segmented__item { flex: 0 0 auto; min-inline-size: 0; }
 }
-[data-large-text="true"] .hjm-segmented__items { flex-direction: column; overflow-x: visible; }
-[data-large-text="true"] .hjm-segmented__item { flex: 0 0 auto; min-inline-size: 0; }
+[data-large-text="true"] .hjm-segmented:not([data-presentation="pills"]) .hjm-segmented__items { flex-direction: column; overflow-x: visible; }
+[data-large-text="true"] .hjm-segmented:not([data-presentation="pills"]) .hjm-segmented__item { flex: 0 0 auto; min-inline-size: 0; }
 
 .hjm-tabs { min-inline-size: 0; }
 .hjm-tabs__list { display: flex; gap: var(--hjm-space-xs); min-inline-size: 0; overflow-x: auto; border-block-end: 1px solid var(--hjm-color-border); }
@@ -2812,8 +2814,12 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 .hjm-screen__body[data-replacement="true"] { display: flex; flex-direction: column; }
 .hjm-screen__state { margin-block: auto; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: var(--hjm-screen-state-gap, var(--hjm-space-md)); padding-block: var(--hjm-screen-gap); text-align: center; }
 .hjm-screen__footer { flex: 0 0 auto; padding: var(--hjm-screen-padding); padding-block-end: max(var(--hjm-screen-padding), env(safe-area-inset-bottom)); border-block-start: 1px solid var(--hjm-color-border); }
-/* SearchScreen filtersOverflow=scroll; why: screen-flows.tsx. Block padding keeps focus rings unclipped. */
-.hjm-search-screen__filters { --f: calc(var(--hjm-focus-width) + var(--hjm-focus-offset)); overflow-x: auto; margin: calc(-1 * var(--f)) calc(-1 * var(--hjm-screen-padding)); padding: var(--f) var(--hjm-screen-padding); scroll-padding-inline: var(--hjm-screen-padding); scrollbar-width: none; }
+/* SearchScreen filtersOverflow=scroll; why: screen-flows.tsx. Block padding keeps focus rings unclipped.
+   --hjm-search-filters-bleed = screen padding + hostGutter (1.13.1), set inline by SearchScreen. */
+.hjm-search-screen__filters { --f: calc(var(--hjm-focus-width) + var(--hjm-focus-offset)); --b: var(--hjm-search-filters-bleed, var(--hjm-screen-padding)); overflow-x: auto; margin: calc(-1 * var(--f)) calc(-1 * var(--b)); padding: var(--f) var(--b); scroll-padding-inline: var(--b); scrollbar-width: none; }
+/* Landing target after a picked query commits (1.13.1). It is not a control, so it draws no focus ring;
+   the polite count announcement says what arrived. */
+.hjm-search-screen__results:focus { outline: none; }
 .hjm-search-screen__filters > * { inline-size: max-content; }
 
 /* Settings use spacing and rules, not shaded cards, per the 2026-10-05 product direction. */

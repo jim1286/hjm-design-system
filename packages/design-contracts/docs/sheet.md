@@ -75,3 +75,12 @@ Diairy QA W16 reproduced Chrome default backdrop blur undoing Dialog focus retur
 - Web 여백은 Native와 같은 recipe 값이다: 위아래 `content.paddingTop/Bottom`(sm 12), 좌우 `paddingHorizontal`(lg 20),
   머리·본문·footer 사이 `body.gap`(md 16), footer 위 `footer.paddingTop`(sm 12). Web은 Dialog 여백(20)을 쓰고 있었다.
   본문 스크롤 상자는 자식 포커스 링이 잘리지 않도록 4px 안쪽 여백과 같은 크기의 음수 margin을 둔다(보이는 간격은 recipe 값).
+
+## 고정 높이 본문 채우기 (1.13.1, 2026-10-06)
+
+고정 높이 Native Sheet(`size` `medium`·`large`·`full`, 옆 시트)의 본문은 머리·footer를 뺀 남은 높이를 차지한다(`flexGrow: 1`, `minHeight: 0`).
+`scrollable`이면 ScrollView가 늘고 그 내용 컨테이너는 늘지 않는다. Web `.hjm-sheet__body`는 이미 `flex: 1 1 auto`였다.
+계기: utilverse가 1.13.0을 적용하며 `size="large"` Sheet 안에 SearchScreen을 넣었는데, 본문이 내용 높이 View라 ScreenLayout의 `flex: 1` 루트가
+0pt가 되고 검색 입력만 그려졌다(iPhone 17 Pro · iOS 26.5, 이전 코드로도 재현). 제품은 창 높이 `flexBasis`로 우회했다.
+`auto`는 내용 높이 그대로다(늘 남는 공간이 없다). 바뀌는 모습: 고정 높이 시트의 `footer`가 본문 바로 아래가 아니라 시트 아래에 붙는다(Web과 같다).
+버린 대안: 새 `bodyLayout` prop(기본값을 그대로 두면 Web과 다른 동작이 남고 제품마다 켜야 한다).

@@ -5869,6 +5869,7 @@ export declare const recipeRegistry: {
                 key: "bg";
                 alpha?: number;
             }>;
+            readonly largeTextLayout: "wrap";
         };
         readonly adaptive: {
             readonly largeTextLayout: "stacked";
