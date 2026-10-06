@@ -1,29 +1,35 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { AccessibilityInfo, Image, Modal, Platform, View, useWindowDimensions } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Gallery } from "react-native-zoom-toolkit";
 import { containerDefaults, containerRecipe } from "@hjmds/design-contracts/components/container";
 import { Button } from "./actions.js";
-import { Text } from "./primitives.js";
+import { Surface, Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
-function ViewerImage({ item, width, height, loadingLabel, errorLabel, retryLabel }) {
+function ViewerImage({ item, width, height, renderImage, onImageStatusChange }) {
     const [status, setStatus] = useState("loading");
-    const [attempt, setAttempt] = useState(0);
-    let feedback = null;
-    if (status === "loading")
-        feedback = _jsx(Text, { accessibilityLiveRegion: "polite", children: loadingLabel });
-    // The failure is announced like the loading copy. Until 2026-10-06 only loading carried a live region,
-    // so a screen reader user heard "loading" and then nothing when the image failed. Android reads the
-    // assertive live region; iOS has no live regions, so it is announced explicitly (same as Result).
-    useEffect(() => {
-        if (status !== "error" || Platform.OS !== "ios")
+    const currentStatus = useRef("loading");
+    const alive = useRef(false);
+    const notify = useRef(onImageStatusChange);
+    useLayoutEffect(() => { notify.current = onImageStatusChange; });
+    useLayoutEffect(() => {
+        alive.current = true;
+        return () => { alive.current = false; };
+    }, []);
+    useEffect(() => { notify.current?.({ item, status }); }, [item.id, item.uri, status]);
+    const report = (next) => {
+        // Failure is terminal until explicit retry. Some native hosts can emit both
+        // load/display and error callbacks for an old request; the last one must not win.
+        if (!alive.current || currentStatus.current === "error" || currentStatus.current === next)
             return;
-        AccessibilityInfo.announceForAccessibility(errorLabel);
-    }, [status, errorLabel]);
-    if (status === "error")
-        feedback = _jsxs(View, { children: [_jsx(Text, { accessibilityLiveRegion: "assertive", children: errorLabel }), _jsx(Button, { onPress: () => { setStatus("loading"); setAttempt(value => value + 1); }, children: retryLabel })] });
-    return _jsxs(View, { style: { width, height, justifyContent: "center" }, children: [_jsx(Image, { source: { uri: item.uri }, accessibilityLabel: item.label, resizeMode: "contain", style: { width, height }, onLoad: () => setStatus("ready"), onError: () => setStatus("error") }, `${item.uri}:${attempt}`), feedback ? _jsx(View, { style: { position: "absolute", alignSelf: "center" }, children: feedback }) : null] });
+        currentStatus.current = next;
+        setStatus(next);
+    };
+    const onReady = () => report("ready");
+    const onError = () => report("error");
+    return _jsx(View, { style: { width, height, justifyContent: "center" }, children: renderImage ? renderImage({ item, width, height, onReady, onError }) :
+            _jsx(Image, { source: { uri: item.uri }, accessibilityLabel: item.label, resizeMode: "contain", style: { width, height }, onLoad: onReady, onError: onError }) });
 }
 /** Unmount the session on close so every open starts at the requested image. */
 export function ImageViewer(props) {
@@ -35,8 +41,9 @@ export function ImageViewer(props) {
         !Number.isInteger(props.initialIndex ?? 0) || (props.initialIndex ?? 0) < 0 || (props.initialIndex ?? 0) >= props.items.length) {
         throw new TypeError("ImageViewer needs named images, localized controls and a valid index");
     }
-    // A replaced collection starts a fresh session; stale indexes must not reach the gesture engine.
-    return _jsx(ImageViewerSession, { ...props }, props.items.map(item => `${item.id}:${item.uri}`).join("|"));
+    // Structured identity avoids delimiter collisions in product IDs/URIs. A replaced
+    // collection must retire image callbacks as well as reset the gesture engine.
+    return _jsx(ImageViewerSession, { ...props }, JSON.stringify(props.items.map(item => [item.id, item.uri])));
 }
 function ImageViewerSession(props) {
     const theme = useHjmNativeTheme();
@@ -46,12 +53,24 @@ function ImageViewerSession(props) {
     const [viewport, setViewport] = useState({ width, height: height * 0.6 });
     const [index, setIndex] = useState(props.initialIndex ?? 0);
     const [galleryKey, setGalleryKey] = useState(0);
+    const [statuses, setStatuses] = useState(new Map());
     const currentIndex = Math.min(index, props.items.length - 1);
     const change = (next) => { setIndex(next); props.onIndexChange?.(next); };
     // Accessible buttons remount at the selected index; paging must not require a swipe.
     // Gallery uses a short paging transition; reduced motion removes it entirely.
-    const navigate = (next) => { change(next); setGalleryKey(value => value + 1); };
-    return _jsx(Modal, { visible: true, animationType: theme.environment.reducedMotion ? "none" : "fade", onRequestClose: props.onClose, children: _jsx(GestureHandlerRootView, { style: { flex: 1, backgroundColor: theme.colors.bg }, children: _jsxs(View, { accessibilityViewIsModal: true, style: { flex: 1, paddingTop: props.safeAreaInsets.top, paddingBottom: props.safeAreaInsets.bottom }, children: [_jsx(View, { style: { paddingHorizontal: gutter }, children: _jsx(Button, { onPress: props.onClose, children: props.closeLabel }) }), _jsx(View, { style: { flex: 1 }, onLayout: event => { const { width: measuredWidth, height: measuredHeight } = event.nativeEvent.layout; if (measuredWidth > 0 && measuredHeight > 0)
-                            setViewport({ width: measuredWidth, height: measuredHeight }); }, children: _jsx(Gallery, { data: [...props.items], initialIndex: currentIndex, keyExtractor: item => item.id, rtl: theme.environment.direction === "rtl", onIndexChange: change, snapTimingConfig: { duration: theme.environment.reducedMotion ? 0 : 250 }, renderItem: item => _jsx(ViewerImage, { item: item, width: viewport.width, height: viewport.height, loadingLabel: props.loadingLabel, errorLabel: props.errorLabel, retryLabel: props.retryLabel }, item.uri) }, galleryKey) }), _jsxs(View, { style: { gap: theme.tokens.spacing.xs, paddingHorizontal: gutter, paddingTop: theme.tokens.spacing.sm }, children: [_jsx(Text, { accessibilityLiveRegion: "polite", children: props.items[currentIndex]?.label }), _jsx(Button, { disabled: currentIndex === 0, onPress: () => navigate(currentIndex - 1), children: props.previousLabel }), _jsx(Button, { disabled: currentIndex >= props.items.length - 1, onPress: () => navigate(currentIndex + 1), children: props.nextLabel })] })] }) }) });
+    const resetImages = () => { setStatuses(new Map()); setGalleryKey(value => value + 1); };
+    const navigate = (next) => { change(next); resetImages(); };
+    const currentStatus = statuses.get(props.items[currentIndex].id) ?? "loading";
+    useEffect(() => {
+        if (currentStatus === "error" && Platform.OS === "ios")
+            AccessibilityInfo.announceForAccessibility(props.errorLabel);
+    }, [currentStatus, currentIndex, props.errorLabel]);
+    const reportImageStatus = (event) => {
+        setStatuses(previous => new Map(previous).set(event.item.id, event.status));
+        props.onImageStatusChange?.(event);
+    };
+    return _jsx(Modal, { visible: true, animationType: theme.environment.reducedMotion ? "none" : "fade", onRequestClose: props.onClose, children: _jsx(GestureHandlerRootView, { style: { flex: 1, backgroundColor: theme.colors.bg }, children: _jsxs(View, { accessibilityViewIsModal: true, style: { flex: 1, paddingTop: props.safeAreaInsets.top, paddingBottom: props.safeAreaInsets.bottom }, children: [_jsx(View, { style: { paddingHorizontal: gutter }, children: _jsx(Button, { onPress: props.onClose, children: props.closeLabel }) }), _jsxs(View, { style: { flex: 1 }, onLayout: event => { const { width: measuredWidth, height: measuredHeight } = event.nativeEvent.layout; if (measuredWidth > 0 && measuredHeight > 0)
+                            setViewport({ width: measuredWidth, height: measuredHeight }); }, children: [_jsx(Gallery, { data: [...props.items], initialIndex: currentIndex, keyExtractor: item => item.id, rtl: theme.environment.direction === "rtl", onIndexChange: change, snapTimingConfig: { duration: theme.environment.reducedMotion ? 0 : 250 }, renderItem: item => _jsx(ViewerImage, { item: item, width: viewport.width, height: viewport.height, renderImage: props.renderImage, onImageStatusChange: reportImageStatus }, item.uri) }, galleryKey), currentStatus !== "ready" ? _jsx(View, { pointerEvents: "box-none", style: { position: "absolute", top: 0, bottom: 0, left: 0, right: 0, justifyContent: "center", alignItems: "center" }, children: _jsx(Surface, { padding: "md", children: currentStatus === "error" ? _jsxs(View, { children: [_jsx(Text, { accessibilityLiveRegion: "assertive", children: props.errorLabel }), _jsx(Button, { onPress: resetImages, children: props.retryLabel })] })
+                                        : _jsx(Text, { accessibilityLiveRegion: "polite", children: props.loadingLabel }) }) }) : null] }), _jsxs(View, { style: { gap: theme.tokens.spacing.xs, paddingHorizontal: gutter, paddingTop: theme.tokens.spacing.sm }, children: [_jsx(Text, { accessibilityLiveRegion: "polite", children: props.items[currentIndex]?.label }), _jsx(Button, { disabled: currentIndex === 0, onPress: () => navigate(currentIndex - 1), children: props.previousLabel }), _jsx(Button, { disabled: currentIndex >= props.items.length - 1, onPress: () => navigate(currentIndex + 1), children: props.nextLabel })] })] }) }) });
 }
 //# sourceMappingURL=image-viewer.js.map

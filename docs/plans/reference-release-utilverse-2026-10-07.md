@@ -181,3 +181,9 @@ onDisplay에 의존하며 ImageViewer의 onLoad로 치환할 수 없다. 전광�
 조회 수명·터치 대상·이니셜 보존 조건을 적었다. Carousel의 숨겨진 슬라이드도
 renderSlide가 실행되므로 선택 사진만 조회하도록 연결해야 한다. 사용 지침에도
 이 경계를 추가했다. 현재 소스 검토 6/136이며 소비 적용·기기 검증 수는 아니다.
+
+ImageViewer의 제품 이미지 host·상태 이벤트를 구현하고 stale callback 회귀를 추가했다.
+iOS 실측에서 retry 터치가 Gallery gesture layer에 막히는 문제와 사진 위 오류 문구의
+가독성 문제를 수정했다. light·dark/2배 글자에서 재시도 복구를 확인했다.
+[검증 기록](../qa/2026-10-07-image-viewer-host.md). 명시적 배율·회전과 Expo onDisplay
+실기기 검증·Utilverse 적용은 남아 있으며 실험 개수와 전수 조사 완료 상태는 바꾸지 않는다.

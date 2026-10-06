@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [Image](../../image.md), [GridReveal](../../grid-reveal.md), [ImageViewer](../../optional-adapters.md#behavior-boundaries), recipe `imageRecipe`(`src/image.ts`)
 - 스토리북: `배포/컴포넌트/데이터 표시/이미지` · `배포/컴포넌트/시각 효과/격자 등장 효과`
 
@@ -83,6 +83,8 @@ import { ImageViewer } from "@hjmds/react-native/image-viewer";
 | ImageViewer `initialIndex` | 0 이상 정수 | `0` | — |
 | ImageViewer `onClose` · `onIndexChange` | `() => void` · `(index: number) => void` | `onClose` 필수 | — |
 | ImageViewer `safeAreaInsets` | `{ top: number; bottom: number }` | 필수 | — |
+| ImageViewer `renderImage` | `(props: ImageViewerImageRenderProps) => ReactNode` | RN Image | Native 전용, 미게시. `item`, 측정된 `width`·`height`, `onReady`·`onError`를 전달. 제품 이미지 host의 캐시·표시 이벤트를 연결 |
+| ImageViewer `onImageStatusChange` | `({ item, status }) => void` | 없음 | `loading`·`ready`·`error`. 마운트된 각 이미지 기준이며 비선택 페이지도 포함할 수 있음 |
 
 - 실패하면 중립 배경 위에 오류 기호를 그리고, 정보 이미지의 이름은 그대로 유지한다. `fallback`은 시각만 바꾼다.
 
@@ -104,6 +106,35 @@ import { ImageViewer } from "@hjmds/react-native/image-viewer";
 - ImageViewer는 `open`으로 제어하고 닫히면 상태를 버린다. 라벨·`id`가 비거나 중복이면 `TypeError`.
 - ImageViewer는 불러오는 중(`loadingLabel`)과 실패(`errorLabel`)를 모두 알린다. 실패는 Android assertive live region, iOS는 `announceForAccessibility`다(미게시(1.12.1 이후). 1.12.1은 실패를 알리지 않았다).
 - 원격 이미지 권한·URL 수명·캐시는 제품 소유다. HJM은 메타데이터를 가져오지 않는다.
+
+### Native ImageViewer의 제품 이미지 호스트
+
+Utilverse의 사진 결과 확인은 Expo `onDisplay`에 의존한다(ADR-0020). RN Image `onLoad`를
+그대로 표시 완료로 간주하지 않도록 기존 optional ImageViewer에 host 슬롯을 추가했다.
+HJM에 Expo 의존성을 넣거나 별도 갤러리를 복제하지 않는다. 아래는 Expo를 이미 쓰는 제품의 연결 예다.
+
+```tsx
+import { Image as ExpoImage } from "expo-image";
+import { ImageViewer } from "@hjmds/react-native/image-viewer";
+
+<ImageViewer {...viewerProps}
+  renderImage={({ item, width, height, onReady, onError }) => (
+    <ExpoImage source={{ uri: item.uri }} cachePolicy="none" contentFit="contain"
+      accessibilityLabel={item.label} style={{ width, height }}
+      onDisplay={onReady} onError={onError} />
+  )}
+  onImageStatusChange={({ item, status }) => recordImageStatus(item.id, status)}
+/>
+```
+
+`viewerProps`는 위의 open/items/라벨/inset/닫기 props다. host는 이미지의 접근성 이름과
+크기를 연결하고 상태 문구·재시도 버튼을 다시 만들지 않는다. 재시도는 host를 새로 마운트한다.
+이전 시도의 이벤트와 닫힌 세션의 이벤트는 무시하며 오류는 재시도 전까지 유지한다.
+`ready`는 연결한 host 이벤트의 의미일 뿐이다. 기본 경로는 계속 RN onLoad이므로 실제 표시나
+사용자의 검토 완료를 뜻하지 않는다. 상태 통지는 렌더링된 페이지마다 발생하므로 현재 선택·
+열림·결과 URI·보기 모드·사용자 확인 조건은 제품이 결합해야 한다. 닫을 때 별도의 상태 이벤트를
+보내지 않는다. 제품은 닫기/교체에서 검토를 무효화한다. host 변경만으로 세션이 새로 열리지 않는다.
+이 확장은 fit/2배/출력 pixel 보기나 orientation API를 추가하지 않았으며 Utilverse 대체 완료가 아니다.
 
 ## 플랫폼 차이
 

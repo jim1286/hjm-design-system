@@ -165,5 +165,5 @@ const gutter = resolveWindowClass(useWindowDimensions().width) === "compact" ? "
 - KeyboardDock은 window 기준 좌표를 쓴다. Storybook 캔버스처럼 아래에 다른 영역이 남는 host에서는 위치가 어긋나 스토리가 전체 화면 `Modal`로 띄운다. 제품도 앱 크기 host에서 쓴다.
 - NativeContextMenu 패치(Zeego 3.0.6 관련)는 HJM 설치로 적용되지 않는다. `@hjmds/react-native/docs/patches/`를 제품에 복사해 등록한다.
 - 필요한 optional peer(`react-native-zoom-toolkit` 5.1.1, `react-native-keyboard-controller` 1.22.5, `@gorhom/bottom-sheet` 5.2.14, `zeego` 3.0.6 등)가 없으면 기기 Metro 번들이 실패한다.
-- 현재 `ImageViewer`는 로딩 문구만 live region이고 실패 문구(`errorLabel`)는 알리지 않는다. 실패를 낭독해야 하면 제품이 따로 알린다(renderer 수정 후보).
+- `ImageViewer` 실패는 Android assertive live region과 iOS announceForAccessibility로 알린다. 제품이 같은 오류를 다시 낭독하지 않는다. 제품 이미지 host와 상태 이벤트 연결은 [Image 사용 지침](../components/image.md)의 Native ImageViewer 절을 따른다.
 - 2026-10-06 예제 검수에서 머리·본문·하단의 좌우 여백을 Container compact로 맞추고 본문 간격은 Stack md로 옮겼다. 안전 영역·키보드 좌표는 바깥 host가 유지한다. 메뉴 결과는 상태 문구와 iOS/Android 알림을 함께 갱신한다.

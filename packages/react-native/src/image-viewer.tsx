@@ -1,17 +1,34 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { AccessibilityInfo, Image, Modal, Platform, View, useWindowDimensions } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Gallery } from "react-native-zoom-toolkit";
 import { containerDefaults, containerRecipe } from "@hjmds/design-contracts/components/container";
 import { Button } from "./actions.js";
-import { Text } from "./primitives.js";
+import { Surface, Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
 
 export type ImageViewerItem = { id: string; uri: string; label: string };
+export type ImageViewerImageStatus = "loading" | "ready" | "error";
+export type ImageViewerImageRenderProps = Readonly<{
+  item: ImageViewerItem;
+  width: number;
+  height: number;
+  /** Product host readiness: Expo hosts can use onDisplay instead of onLoad. */
+  onReady: () => void;
+  onError: () => void;
+}>;
+export type ImageViewerImageStatusEvent = Readonly<{
+  item: ImageViewerItem;
+  status: ImageViewerImageStatus;
+}>;
 export type ImageViewerProps = {
   open: boolean;
   items: readonly ImageViewerItem[];
   initialIndex?: number;
+  /** The frame, feedback and retry remain HJM-owned; caching/display belong to the host. */
+  renderImage?: (props: ImageViewerImageRenderProps) => ReactNode;
+  /** Per mounted image, including offscreen pages. Not an export approval or visibility proof. */
+  onImageStatusChange?: (event: ImageViewerImageStatusEvent) => void;
   onClose: () => void;
   onIndexChange?: (index: number) => void;
   safeAreaInsets: { top: number; bottom: number };
@@ -23,26 +40,37 @@ export type ImageViewerProps = {
   retryLabel: string;
 };
 
-function ViewerImage({ item, width, height, loadingLabel, errorLabel, retryLabel }: {
+type ViewerImageProps = {
   item: ImageViewerItem; width: number; height: number;
-  loadingLabel: string; errorLabel: string; retryLabel: string;
-}) {
-  const [status, setStatus] = useState("loading");
-  const [attempt, setAttempt] = useState(0);
-  let feedback: ReactNode = null;
-  if (status === "loading") feedback = <Text accessibilityLiveRegion="polite">{loadingLabel}</Text>;
-  // The failure is announced like the loading copy. Until 2026-10-06 only loading carried a live region,
-  // so a screen reader user heard "loading" and then nothing when the image failed. Android reads the
-  // assertive live region; iOS has no live regions, so it is announced explicitly (same as Result).
-  useEffect(() => {
-    if (status !== "error" || Platform.OS !== "ios") return;
-    AccessibilityInfo.announceForAccessibility(errorLabel);
-  }, [status, errorLabel]);
-  if (status === "error") feedback = <View><Text accessibilityLiveRegion="assertive">{errorLabel}</Text><Button onPress={() => { setStatus("loading"); setAttempt(value => value + 1); }}>{retryLabel}</Button></View>;
+  renderImage?: ImageViewerProps["renderImage"];
+  onImageStatusChange?: ImageViewerProps["onImageStatusChange"];
+};
+
+function ViewerImage({ item, width, height, renderImage, onImageStatusChange }: ViewerImageProps) {
+  const [status, setStatus] = useState<ImageViewerImageStatus>("loading");
+  const currentStatus = useRef<ImageViewerImageStatus>("loading");
+  const alive = useRef(false);
+  const notify = useRef(onImageStatusChange);
+  useLayoutEffect(() => { notify.current = onImageStatusChange; });
+  useLayoutEffect(() => {
+    alive.current = true;
+    return () => { alive.current = false; };
+  }, []);
+  useEffect(() => { notify.current?.({ item, status }); }, [item.id, item.uri, status]);
+  const report = (next: "ready" | "error") => {
+    // Failure is terminal until explicit retry. Some native hosts can emit both
+    // load/display and error callbacks for an old request; the last one must not win.
+    if (!alive.current || currentStatus.current === "error" || currentStatus.current === next) return;
+    currentStatus.current = next;
+    setStatus(next);
+  };
+  const onReady = () => report("ready");
+  const onError = () => report("error");
   return <View style={{ width, height, justifyContent: "center" }}>
-    <Image key={`${item.uri}:${attempt}`} source={{ uri: item.uri }} accessibilityLabel={item.label}
-      resizeMode="contain" style={{ width, height }} onLoad={() => setStatus("ready")} onError={() => setStatus("error")} />
-    {feedback ? <View style={{ position: "absolute", alignSelf: "center" }}>{feedback}</View> : null}
+    {renderImage ? renderImage({ item, width, height, onReady, onError }) :
+      <Image source={{ uri: item.uri }} accessibilityLabel={item.label}
+        resizeMode="contain" style={{ width, height }} onLoad={onReady} onError={onError} />}
+
   </View>;
 }
 
@@ -55,8 +83,9 @@ export function ImageViewer(props: ImageViewerProps) {
     !Number.isInteger(props.initialIndex ?? 0) || (props.initialIndex ?? 0) < 0 || (props.initialIndex ?? 0) >= props.items.length) {
     throw new TypeError("ImageViewer needs named images, localized controls and a valid index");
   }
-  // A replaced collection starts a fresh session; stale indexes must not reach the gesture engine.
-  return <ImageViewerSession key={props.items.map(item => `${item.id}:${item.uri}`).join("|")} {...props} />;
+  // Structured identity avoids delimiter collisions in product IDs/URIs. A replaced
+  // collection must retire image callbacks as well as reset the gesture engine.
+  return <ImageViewerSession key={JSON.stringify(props.items.map(item => [item.id, item.uri]))} {...props} />;
 }
 
 function ImageViewerSession(props: ImageViewerProps) {
@@ -67,11 +96,21 @@ function ImageViewerSession(props: ImageViewerProps) {
   const [viewport, setViewport] = useState({ width, height: height * 0.6 });
   const [index, setIndex] = useState(props.initialIndex ?? 0);
   const [galleryKey, setGalleryKey] = useState(0);
+  const [statuses, setStatuses] = useState<ReadonlyMap<string, ImageViewerImageStatus>>(new Map());
   const currentIndex = Math.min(index, props.items.length - 1);
   const change = (next: number) => { setIndex(next); props.onIndexChange?.(next); };
   // Accessible buttons remount at the selected index; paging must not require a swipe.
   // Gallery uses a short paging transition; reduced motion removes it entirely.
-  const navigate = (next: number) => { change(next); setGalleryKey(value => value + 1); };
+  const resetImages = () => { setStatuses(new Map()); setGalleryKey(value => value + 1); };
+  const navigate = (next: number) => { change(next); resetImages(); };
+  const currentStatus = statuses.get(props.items[currentIndex]!.id) ?? "loading";
+  useEffect(() => {
+    if (currentStatus === "error" && Platform.OS === "ios") AccessibilityInfo.announceForAccessibility(props.errorLabel);
+  }, [currentStatus, currentIndex, props.errorLabel]);
+  const reportImageStatus = (event: ImageViewerImageStatusEvent) => {
+    setStatuses(previous => new Map(previous).set(event.item.id, event.status));
+    props.onImageStatusChange?.(event);
+  };
   return <Modal visible animationType={theme.environment.reducedMotion ? "none" : "fade"} onRequestClose={props.onClose}>
     <GestureHandlerRootView style={{ flex: 1, backgroundColor: theme.colors.bg }}>
       <View accessibilityViewIsModal style={{ flex: 1, paddingTop: props.safeAreaInsets.top, paddingBottom: props.safeAreaInsets.bottom }}>
@@ -84,7 +123,16 @@ function ImageViewerSession(props: ImageViewerProps) {
             rtl={theme.environment.direction === "rtl"} onIndexChange={change}
             snapTimingConfig={{ duration: theme.environment.reducedMotion ? 0 : 250 }}
             renderItem={item => <ViewerImage key={item.uri} item={item} width={viewport.width} height={viewport.height}
-              loadingLabel={props.loadingLabel} errorLabel={props.errorLabel} retryLabel={props.retryLabel} />} />
+              renderImage={props.renderImage} onImageStatusChange={reportImageStatus} />} />
+          {/* Zoom Toolkit places a gesture layer above its rendered images. Keep feedback
+              beside Gallery, not inside renderItem, so retry receives actual native touches.
+              An opaque semantic surface keeps the copy legible over decoded photo pixels. */}
+          {currentStatus !== "ready" ? <View pointerEvents="box-none" style={{ position: "absolute", top: 0, bottom: 0, left: 0, right: 0, justifyContent: "center", alignItems: "center" }}>
+            <Surface padding="md">
+              {currentStatus === "error" ? <View><Text accessibilityLiveRegion="assertive">{props.errorLabel}</Text><Button onPress={resetImages}>{props.retryLabel}</Button></View>
+                : <Text accessibilityLiveRegion="polite">{props.loadingLabel}</Text>}
+            </Surface>
+          </View> : null}
         </View>
         <View style={{ gap: theme.tokens.spacing.xs, paddingHorizontal: gutter, paddingTop: theme.tokens.spacing.sm }}>
           <Text accessibilityLiveRegion="polite">{props.items[currentIndex]?.label}</Text>

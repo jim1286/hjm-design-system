@@ -1,12 +1,30 @@
+import { type ReactNode } from "react";
 export type ImageViewerItem = {
     id: string;
     uri: string;
     label: string;
 };
+export type ImageViewerImageStatus = "loading" | "ready" | "error";
+export type ImageViewerImageRenderProps = Readonly<{
+    item: ImageViewerItem;
+    width: number;
+    height: number;
+    /** Product host readiness: Expo hosts can use onDisplay instead of onLoad. */
+    onReady: () => void;
+    onError: () => void;
+}>;
+export type ImageViewerImageStatusEvent = Readonly<{
+    item: ImageViewerItem;
+    status: ImageViewerImageStatus;
+}>;
 export type ImageViewerProps = {
     open: boolean;
     items: readonly ImageViewerItem[];
     initialIndex?: number;
+    /** The frame, feedback and retry remain HJM-owned; caching/display belong to the host. */
+    renderImage?: (props: ImageViewerImageRenderProps) => ReactNode;
+    /** Per mounted image, including offscreen pages. Not an export approval or visibility proof. */
+    onImageStatusChange?: (event: ImageViewerImageStatusEvent) => void;
     onClose: () => void;
     onIndexChange?: (index: number) => void;
     safeAreaInsets: {

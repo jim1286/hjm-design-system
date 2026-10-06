@@ -43,3 +43,11 @@ Dialog의 NativeModalProps는 orientation/presentation props를 통과시키지�
 
 이번 작업은 소스 판단 두 건과 잘못된 API 이름 정정이다. 소비 코드 변경·테스트 실행·기기 QA·
 HJM 공개 API 확장·게시를 수행하지 않았다. 원시 캡처나 임시 실행 산출물은 생성하지 않았다.
+
+## 후속 구현 — 2026-10-07
+
+위 표는 e7903e6 snapshot이다. 이후 Native ImageViewer에 renderImage와
+onImageStatusChange를 추가했다. HJM에서 캐시나 표시 이벤트를 강제하지 않고 제품 host를
+연결할 수 있다. 오류/retry 수명과 collection identity도 보완했다.
+[HJM 검증 기록](../qa/2026-10-07-image-viewer-host.md)은 RN Image fixture로 얻었으며
+Expo onDisplay·제품 결과 검토·명시적 배율·회전·소비 적용은 아직 검증하지 않았다.

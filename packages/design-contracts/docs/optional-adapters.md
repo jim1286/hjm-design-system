@@ -1,5 +1,19 @@
 # Optional presentation adapters
 
+## Image host extension — 2026-10-07 (unpublished)
+
+Native ImageViewer accepts `renderImage` with the item, measured viewport width/height and
+`onReady`/`onError`. This lets a product retain Expo display events and cache policy without
+adding Expo to the adapter. `onImageStatusChange` reports loading/ready/error for every mounted
+item, including offscreen pages. It is not current-page visibility or user review approval.
+Default RN Image still uses onLoad; an Expo consumer can use onDisplay instead. Retry remounts
+the image host, and callbacks from retired attempts or closed/replaced sessions are ignored.
+Failure stays terminal until retry. Closing sends no final status event; the product owns
+review invalidation on close, replacement and view-mode changes. This closes the host gap
+identified in Utilverse ADR-0020, but does not add its explicit fit/2x/pixels/orientation controls.
+The additive Native-only props keep this optional subpath and its existing peers; the base Image
+renderers retain their own host APIs. There is no Web ImageViewer counterpart.
+
 ## Current evidence — 2026-09-30
 
 The six opt-in entries are implemented. The earlier checkout verification below is a historical
