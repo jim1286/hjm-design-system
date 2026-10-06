@@ -128,9 +128,9 @@
       "existingMapping": "DatePicker / Field",
       "priorRationale": "분리된 일·월·년 입력의 전용 계약은 별도 검토",
       "sourceAudit": "2026-10-07: gallery currently lists 18 examples. Read GOV.UK official date-input guidance and example markup; Wise compact-date-input returned only a sparse text shell. Compared both HJM DatePicker Props and renderer sources at 5582ec7.",
-      "visualReview": "pending",
-      "interactionReview": "pending",
-      "adoptionDecision": "Additional experiment candidate: remembered-date entry with separate day/month/year drafts. HJM DatePicker is a calendar trigger/dialog or Sheet, not direct segmented entry; generic Field composition alone does not supply partial-date validation, ordering or group semantics. Investigate shared resolver plus existing TextField composition before adding a public primitive. See docs/plans/reference-release-utilverse-2026-10-07.md. Not implemented or visually verified."
+      "visualReview": "Partial: GOV.UK standalone default and single-field error examples inspected at 1280x720. Three labeled inputs, focused partial year, retained day/month with only year error. Other gallery examples unreviewed. Wise compact route redirects to /404.",
+      "interactionReview": "GOV.UK fixture: entered day=29, Tab focused month, entered Feb and partial year=20; values retained. Static demo has no submit/validation proof. No screen-reader or mobile check.",
+      "adoptionDecision": "Additional experiment candidate: remembered-date entry with separate day/month/year drafts. HJM DatePicker is a calendar trigger/dialog or Sheet, not direct segmented entry; generic Field composition alone does not supply partial-date validation, ordering or group semantics. Investigate shared resolver plus existing TextField composition before adding a public primitive. See docs/plans/reference-release-utilverse-2026-10-07.md. Not implemented or visually verified. Internal draft resolver and 6 tests now implemented; no public export/renderer or new story. docs/qa/2026-10-07-date-entry-reference.md"
     },
     {
       "url": "https://component.gallery/components/datepicker/",
