@@ -39,8 +39,9 @@ SVG 경로를 만든다. `@hjmds/design-contracts/text-annotation` subpath로 �
 제외하고, 문구·앞 문장·조상 크기 및 스타일·글꼴 로드 변화에 재측정한다. 새 문구가 이전
 문구 경로를 받지 않도록 측정 세대를 나눈다. 동일 geometry에는 state 갱신을 보내지 않는다.
 진입 모션은 motion.slow=320ms, 모션 감소 또는 숨겨진 문서에서는 즉시 표시하며,
-리사이즈에는 다시 재생하지 않는다. highlight의 20% brand wash는 실험값이고 제품 팔레트
-대비 검증이 남았다. renderer는 아직 package exports에 넣지 않았다.
+리사이즈에는 다시 재생하지 않는다. highlight의 20% brand wash는 실험값이다. HJM 기본·Utilverse·BurnTok의
+light/dark × bg/surface × body/muted 24조합에서는 합성 뒤 4.5:1을 통과했으며,
+다른 표면·제품 색·이미지 배경의 대비를 보장하지 않는다. renderer는 아직 package exports에 넣지 않았다.
 
 Native 0.86.2/Expo Go 57.0.9/iOS 26.5에서 진단 fixture를 실행했다. 부모의 onTextLayout은
 폭 280→184에서 2→3줄을 보고했으나 중첩 Text의 onTextLayout/onLayout은 관찰되지 않았고
@@ -77,3 +78,8 @@ DOM 측정·줄바꿈·선택·RTL·폭 변경·문구 교체·모션 감소를 
 
 공개 export·양 renderer·사용 지침·실험 스토리·UI 및 행동 증거가 연결된 다음에 실험 수에
 포함한다. 안정화·npm 게시·Utilverse 적용은 사용자 요청의 후속 단계로 남아 있다.
+
+Web의 같은 top/height 수직 대역에서 맞닿은 bidi run은 기존 fragment 병합 계약으로
+한 주석을 그린다. 390px 아랍어/영어 혼합 문장에서 내부 세로선이 생긴 실측에 따른
+수정이다. 수직 대역이 다르거나 실제 수평 gap이 있으면 합치지 않는다. 추가된 회귀·
+제품 대비·진입 모션 재생 검사까지 Web 브라우저 테스트는 10개다.

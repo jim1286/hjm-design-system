@@ -5,6 +5,7 @@ import { HjmProvider } from '../src/provider.js';
 import { TextAnnotation } from '../src/text-annotation.js';
 import { textAnnotationActions } from '@hjmds/design-contracts/text-annotation';
 import '../src/styles.css';
+import { annotationPalettes } from './fixtures/text-annotation-palettes.js';
 
 let host: HTMLDivElement, root: Root;
 beforeEach(() => {
@@ -19,15 +20,17 @@ function rects() {
 }
 function aligned() {
   const glyphs = rects(), paths = host.querySelectorAll<SVGPathElement>('path');
-  for (const path of paths) {
-    const line = glyphs[Number(path.dataset.line)]!;
-    const box = path.getBoundingClientRect();
-    expect(box.left).toBeLessThanOrEqual(line.left + 0.01);
-    expect(box.right).toBeGreaterThanOrEqual(line.right - 0.01);
-    expect(box.top).toBeLessThanOrEqual(line.top + 0.01);
-    expect(box.bottom).toBeGreaterThanOrEqual(line.bottom - 0.01);
+  for (const glyph of glyphs) {
+    // A path may enclose several touching bidi runs. Every selected glyph must
+    // still be covered, and its vertical band cannot expand to another line.
+    const covers = Array.from(paths).some(path => {
+      const box = path.getBoundingClientRect();
+      return box.left <= glyph.left + 0.01 && box.right >= glyph.right - 0.01 && box.top <= glyph.top + 0.01 && box.bottom >= glyph.bottom - 0.01 && box.height < glyph.height + 8;
+    });
+    expect(covers).toBe(true);
   }
-  expect(paths).toHaveLength(glyphs.length);
+  expect(paths.length).toBeGreaterThanOrEqual(new Set(glyphs.map(rect => rect.top)).size);
+  expect(paths.length).toBeLessThanOrEqual(glyphs.length);
 }
 
 it('decorates only the inline fragment while preserving original wrapping, selection and surrounding text', async () => {
@@ -98,4 +101,49 @@ it('keeps the surrounding loop stroke outside every measured glyph rectangle at 
       expect(outside, `Loop overlaps text at ${point.x},${point.y}`).toBe(true);
     }
   }
+});
+
+function rgb(color: string): number[] {
+  const channels = color.match(/[\d.]+/g)!.map(Number);
+  return channels.slice(0, 3);
+}
+function contrast(a: number[], b: number[]): number {
+  const luminance = (channels: number[]) => channels.map(value => { const v = value / 255; return v <= .04045 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4; }).reduce((sum, value, index) => sum + value * [0.2126, 0.7152, 0.0722][index]!, 0);
+  const x = luminance(a), y = luminance(b);
+  return (Math.max(x, y) + .05) / (Math.min(x, y) + .05);
+}
+it('preserves readable body and muted text contrast over product backgrounds after marker compositing', async () => {
+  const findings: string[] = [];
+  for (const [name, brandPalette] of Object.entries(annotationPalettes)) for (const theme of ['light', 'dark'] as const) for (const surface of ['bg', 'surface']) for (const foreground of ['text-body', 'text-muted']) {
+    await act(async () => root.render(<HjmProvider theme={theme} reducedMotion {...(brandPalette ? {brandPalette} : {})}><p style={{background:`var(--hjm-color-${surface})`,color:`var(--hjm-color-${foreground})`}}><TextAnnotation>작은 본문도 읽을 수 있어야 합니다</TextAnnotation></p></HjmProvider>));
+    const paragraph = getComputedStyle(host.querySelector('p')!), path = getComputedStyle(host.querySelector('path')!);
+    const bg = rgb(paragraph.backgroundColor), fg = rgb(paragraph.color), ink = rgb(path.fill), alpha = Number(path.fillOpacity);
+    const composed = bg.map((value, index) => value * (1 - alpha) + ink[index]! * alpha);
+    // Do not blame marker ink for a pre-existing unreadable product palette.
+    expect(contrast(fg,bg), `${name}/${theme}/${surface}/${foreground} baseline`).toBeGreaterThanOrEqual(4.5);
+    if (contrast(fg, composed) < 4.5) findings.push(`${name}/${theme}/${surface}/${foreground}: ${contrast(fg, composed).toFixed(2)}`);
+  }
+  expect(findings).toEqual([]);
+});
+
+it('plays entry motion for new content but not for a width-only reflow', async () => {
+  const render = (value: string) => act(async () => root.render(<HjmProvider reducedMotion={false}><p><TextAnnotation action="underline">{value}</TextAnnotation></p></HjmProvider>));
+  await render(text);
+  expect(host.getAnimations({subtree:true}).length).toBeGreaterThan(0);
+  await Promise.all(host.getAnimations({subtree:true}).map(animation => animation.finished));
+  await act(async () => { host.style.width = '184px'; await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))); });
+  expect(host.getAnimations({subtree:true})).toHaveLength(0);
+  await render('문구가 바뀌면 새로운 주석을 그립니다');
+  expect(host.getAnimations({subtree:true}).length).toBeGreaterThan(0);
+});
+
+it('draws a single enclosure for touching bidi fragments on the same visual line', async () => {
+  host.style.width = '1000px';
+  await act(async () => root.render(<HjmProvider reducedMotion direction="rtl"><p style={{fontSize:32,lineHeight:1.8}}>قبل <TextAnnotation action="box">نص عربي مع English 123 ثم نص عربي</TextAnnotation> بعد</p></HjmProvider>));
+  const fragments = rects();
+  expect(fragments.length).toBeGreaterThan(1);
+  expect(new Set(fragments.map(rect => rect.top)).size).toBe(1);
+  // A logical string can be several shaped bidi runs, but two pen passes must
+  // surround the continuous selected line rather than adding an interior seam.
+  expect(host.querySelectorAll('path')).toHaveLength(2);
 });

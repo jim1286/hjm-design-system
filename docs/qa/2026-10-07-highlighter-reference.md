@@ -136,3 +136,28 @@ contracts 빌드 전 fixture HMR가 새 helper를 먼저 참조해 undefined 함
 발생했다. 빌드 후 정상 실행을 확인하고 기존 오류 오버레이를 닫았다. 반복적인 runtime
 실패로 판단하거나 Metro/기기를 새로 띄우지 않았다. 임시 story render는 원래대로 복구했다.
 진단 fixture와 계약 테스트는 보존하고 원시 캡처 및 임시 story 백업은 정리한다.
+
+## 11. 제품 팔레트와 Web 혼합 방향 조각 (2026-10-07)
+
+HJM 기본·Utilverse indigo-violet·BurnTok 제품 표면을 재사용 가능한 fixture에 추가했다.
+각 light/dark × bg/surface × body/muted의 24가지 조합에서 브라우저가 계산한 실제 색과
+20% marker 합성 뒤 본문 대비가 모두 4.5:1 이상이었다. 제품 팔레트 전체 규칙·모든
+표면·이미지 배경을 검증한 주장은 아니다. 새 모션 검사는 reducedMotion=false에서
+최초 애니메이션 완료 후 폭만 변경하면 재생하지 않고 새 문구에는 재생하는 것을 확인했다.
+
+IAB 1280px Utilverse light 16px·dark 32px 보조 본문, 390×844 BurnTok dark 32px
+혼합 아랍어/English 및 light 16px에서 일곱 형태를 한 장에 모아 확인했다.
+혼합 문장의 같은 줄 두 run이 같은 y=399.0390625/height=38, x=95.6328125/185.375에서
+맞닿지만 각각 enclosure를 그려 중간에 세로선이 생겼다. 단일 줄 bidi 회귀 테스트를 먼저
+추가해 2개여야 할 pen path가 6개로 실패하는 것을 확인했다.
+
+Web Range rect 중 top/height가 0.01px 이내로 같은 수직 대역만 동일 lineIndex로 묶어
+기존 mergeTextAnnotationFragments에 연결했다. 실제 수평 gap은 보존한다. 단순 수직
+겹침이나 문자열 순서로 줄을 추측하지 않으므로 좁은 line-height의 서로 다른 줄을 합치지 않는다.
+높이가 다른 fallback run까지 일반화한 줄 식별은 아니며 후속 엔진/폰트 검증 대상이다.
+
+수정 후 브라우저 테스트 총 10개와 React typecheck/build 통과. IAB HMR가 옵션을 초기화해
+BurnTok/dark/RTL/32px/보조 본문/아랍어 문장을 다시 선택하고, 390px에서 box·circle·bracket의
+중간 세로선 및 crossed-off의 분할이 사라진 것을 확인했다. Native 공개 API·선택·복사·기기
+낭독과 전체 환경 승격 검증은 미완료다. 공개 실험 수를 늘리지 않는다. 재사용 fixture·테스트와
+이 기록을 보존하고 임시 Vite/탭/viewport override 및 실패 원시 캡처는 정리한다.

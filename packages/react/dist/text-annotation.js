@@ -1,6 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { motion } from '@hjmds/design-contracts/foundations';
-import { resolveTextAnnotationGeometry } from '@hjmds/design-contracts/text-annotation';
+import { mergeTextAnnotationFragments, resolveTextAnnotationGeometry } from '@hjmds/design-contracts/text-annotation';
 import { useLayoutEffect, useRef, useState } from 'react';
 import { useHjmTheme } from './provider.js';
 export function TextAnnotation({ children, action = 'highlight' }) {
@@ -29,7 +29,20 @@ export function TextAnnotation({ children, action = 'highlight' }) {
             range.selectNodeContents(text);
             // Range rectangles are actual shaped fragments, including mixed-direction
             // runs. An inline-block or character-width estimate changes line wrapping.
-            const next = Array.from(range.getClientRects()).filter(rect => rect.width > 0 && rect.height > 0).map(rect => ({ x: rect.left - origin.left, y: rect.top - origin.top, width: rect.width, height: rect.height }));
+            const fragments = Array.from(range.getClientRects()).filter(rect => rect.width > 0 && rect.height > 0);
+            const bands = [];
+            const next = mergeTextAnnotationFragments(fragments.map(rect => {
+                // Chromium splits a mixed Arabic/English line into adjacent bidi runs.
+                // Separate outlines create interior seams (QA highlighter §11). Merge
+                // only measured matching vertical bands; guessing by character order or
+                // overlap alone could merge distinct lines with a tight line-height.
+                let lineIndex = bands.findIndex(band => Math.abs(band.top - rect.top) < 0.01 && Math.abs(band.height - rect.height) < 0.01);
+                if (lineIndex < 0) {
+                    lineIndex = bands.length;
+                    bands.push({ top: rect.top, height: rect.height });
+                }
+                return { x: rect.left - origin.left, y: rect.top - origin.top, width: rect.width, height: rect.height, lineIndex };
+            }));
             const signature = JSON.stringify([children, next]);
             if (measured.current !== signature) {
                 measured.current = signature;
