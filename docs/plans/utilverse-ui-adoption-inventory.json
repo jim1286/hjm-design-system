@@ -4922,8 +4922,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "absorb-copy-and-confirm-preserve-expression",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "6d64fe2",
+        "report": "docs/plans/utilverse-numeric-tools-adoption.md",
+        "reason": "Already Grid/Button/TextField. Replace direct Clipboard feedback with existing ResultCopy host and history clear with AlertDialog or rearmed InlineConfirm; preserve expression parser, owner-scoped history and calculation despite storage failure.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/features/CalendarScreen.tsx",
@@ -6000,8 +6009,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "absorb-disclosure-preserve-money",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "6d64fe2",
+        "report": "docs/plans/utilverse-numeric-tools-adoption.md",
+        "reason": "Keep string TextField and BigInt result comparison; absorb condition disclosure with Accordion and validation Notice. Preserve discount/coupon ordering, optional cap and result invalidation on edit.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/features/DisplayBoardScreen.tsx",
@@ -6211,8 +6229,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "absorb-status-preserve-rate-snapshot",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "6d64fe2",
+        "report": "docs/plans/utilverse-numeric-tools-adoption.md",
+        "reason": "Use Notice/Section for cache and failure states; retain exact string input, origin-scoped cache restore, snapshot-date-bound calculations, JPY basis100, per-currency rounding, tiny-result restrictions and source/date/stale copy-share provenance.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/features/ExpenseSplitScreen.tsx",
@@ -6389,8 +6416,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "replace-selector-confirm-preserve-ledger",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "6d64fe2",
+        "report": "docs/plans/utilverse-numeric-tools-adoption.md",
+        "reason": "Use Select for payer, SegmentedControl for equal/percent, InlineConfirm for local expense deletion and Accordion for breakdown. Preserve immutable editor draft/cancel, participant dependencies, exact percent allocation, anonymized export and no-payment meaning.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/features/LadderScreen.tsx",
@@ -10490,8 +10526,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "replace-choice-search-preserve-precision",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "6d64fe2",
+        "report": "docs/plans/utilverse-numeric-tools-adoption.md",
+        "reason": "Replace selected dimension buttons with RadioGroup and unit SearchField/button list with Combobox; retain cross-dimension source search, constrained destination, swap, 6/12/18 precision, absolute-zero and too-small errors, exact string copy.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/features/UnitPriceScreen.tsx",
@@ -10593,8 +10638,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-ranking-absorb-field-groups",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "6d64fe2",
+        "report": "docs/plans/utilverse-numeric-tools-adoption.md",
+        "reason": "Already HJM results; compare FieldGroup/Section for product inputs and Notice for errors. Preserve stable product IDs, 2-8 items, tied best prices, dimension switch clearing amount but retaining price/packs and scroll reset.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/features/WorldClockScreen.tsx",
