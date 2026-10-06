@@ -32,7 +32,7 @@ UI·기능 검증을 거쳐 승격·릴리스하고 Utilverse의 대체 가능�
 | CTA | Ente/Webflow 갤러리 캡처 대조. ProductBento에 BottomCTA/BottomInfo·초안 유지·실패/재시도 연결. Web·iOS 실제 흐름 확인 | 전체 갤러리 시각 검토·제품 팔레트·Native 환경 조합. docs/qa/2026-10-07-cta-reference.md |
 | Refero | Wise 캡처·역할 추출 간 불일치를 확인해 REFERENCE_BRIEF에 관찰/추론 구분 추가 | 전체 스타일 시각 검토와 역할별 제품 테마 대조 |
 | Image Comparison | Native SVG 실패를 PNG fixture로 수정, 실제 드래그/양끝 확인. 양 renderer RTL 캡션 방향 수정 | Native 환경 조합·스크롤 충돌·이미지 host 실패 안내. docs/qa/2026-10-07-image-comparison.md |
-| Dynamic / Expandable Toolbar | ContextToolbar 실험 | 키보드·초안 유지·초점 복귀 검증 |
+| Dynamic / Expandable Toolbar | 단일 선택을 SegmentedControl로 수정. Web RTL 키보드·접기 포커스·초안 유지, iOS 키보드 중 선택·재개 확인 | Native 환경 조합·VoiceOver·제품 편집 모델. docs/qa/2026-10-07-toolbar-reference.md |
 | Progressive Blur | 경계·초점 보호를 포함한 양 renderer 실험 구현. iOS 실제 합성·끝 항목 선택·내용 축소·다크 확인 | Android 합성·접근성·제품 팔레트·비용 비교. progressive-blur-adoption-2026-10-07.md |
 | Noise / EffectSurface | 기존 grain은 반복 점 패턴, 원본 Noise Texture는 fractal noise로 정적 소스상 차이 확인 | 실제 질감·양 플랫폼 비용 비교 후 추가 여부 결정 |
 | Hero Video Dialog | 기존 Dialog + 제품 player host Web/Native 실험 구현. Web 실제 재생·실패 복구·닫기·초안 유지 확인 | Native 실제 기기, 제품 팔레트, 실제 유음 콘텐츠의 자막/대본 검증 남음. 무음 fixture를 자막 검증으로 세지 않음 |

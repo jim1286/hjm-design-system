@@ -79,8 +79,17 @@ export function ProductBentoPreview() {
     {state.value ? <Text>저장된 제목: {state.value}</Text> : null}</Stack></ScreenLayout></KeyboardAvoiding>;
 }
 export function ContextToolbarPreview() {
-  const [open,setOpen]=useState(false);const [choice,setChoice]=useState("기본");
-  return <Stack gap="md"><TextField label="작성 중인 기록" placeholder="도구를 열어도 입력은 유지돼요" /><Collapsible open={open} onOpenChange={setOpen} trigger={<Text>표현 도구 · {choice}</Text>}><Stack axis="inline" wrap>{["기본","인용","강조"].map(label=><Button key={label} tone="secondary" selected={choice===label} onPress={()=>setChoice(label)}>{label}</Button>)}</Stack></Collapsible><Text accessibilityLiveRegion="polite">선택한 표현: {choice}</Text></Stack>;
+  const [open, setOpen] = useState(false);
+  const [choice, setChoice] = useState("기본");
+  // Exactly one expression is active. Independent selected Buttons announce
+  // unrelated toggles and omit the shared single-selection keyboard contract.
+  return <Stack gap="md">
+    <TextField label="작성 중인 기록" placeholder="도구를 열어도 입력은 유지돼요" />
+    <Collapsible open={open} onOpenChange={setOpen} trigger={<Text>표현 도구 · {choice}</Text>}>
+      <SegmentedControl label="기록 표현" presentation="pills" items={["기본", "인용", "강조"].map(label => ({ value: label, label }))} value={choice} onValueChange={setChoice} />
+    </Collapsible>
+    <Text accessibilityLiveRegion="polite">선택한 표현: {choice}</Text>
+  </Stack>;
 }
 
 export function SelectionMotionPreview() {
