@@ -19,6 +19,43 @@ export type DocumentResourceDescriptor = Readonly<{
   save: DocumentSaveState;
 }>;
 
+export type DocumentResourceLabels = Readonly<{
+  preview: string;
+  previewLoading: string;
+  previewUnavailable: string;
+  retryPreview: string;
+  save: string;
+  saving: string;
+  started: string;
+  saved: string;
+  cancelled: string;
+  retrySave: string;
+}>;
+
+export type DocumentResourceControls = Readonly<{
+  descriptor: DocumentResourceDescriptor;
+  labels: DocumentResourceLabels;
+  onPreview?: () => void;
+  onRetryPreview?: () => void;
+  onSave: () => void;
+  onRetrySave?: () => void;
+}>;
+
+/** Controlled UI only: hosts connect the existing action session to their verified results. */
+export function resolveDocumentResourceControls(props: DocumentResourceControls) {
+  const resource = resolveDocumentResource(props.descriptor);
+  for (const key of ["preview", "previewLoading", "previewUnavailable", "retryPreview", "save", "saving", "started", "saved", "cancelled", "retrySave"] as const) {
+    text(props.labels[key], `labels.${key}`);
+  }
+  if (typeof props.onSave !== "function") throw new TypeError("Document resource requires onSave");
+  for (const key of ["onPreview", "onRetryPreview", "onRetrySave"] as const) {
+    if (props[key] !== undefined && typeof props[key] !== "function") throw new TypeError(`Document resource ${key} must be a function`);
+  }
+  if (resource.preview.status === "error" && resource.preview.retryable && !props.onRetryPreview) throw new TypeError("Retryable preview requires onRetryPreview");
+  if (resource.save.status === "error" && resource.save.retryable && !props.onRetrySave) throw new TypeError("Retryable save requires onRetrySave");
+  return resource;
+}
+
 function text(value: unknown, field: string): asserts value is string {
   if (typeof value !== "string" || !value.trim()) throw new TypeError(`Document resource ${field} must be nonempty text`);
 }

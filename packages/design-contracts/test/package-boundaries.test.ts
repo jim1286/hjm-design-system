@@ -164,6 +164,7 @@ describe("package boundaries", () => {
       "./text-annotation",
       "./date-entry",
       "./field-group",
+      "./document-resource",
     ] as const;
 
     expect(Object.keys(packageJson.exports)).toEqual(expectedExports);

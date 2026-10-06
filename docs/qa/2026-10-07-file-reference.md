@@ -56,3 +56,16 @@ preview 오류와 저장의 독립성, started/cancelled가 saved로 표시되�
 명시적 retry 정책, 비활성, metadata 보존/불변성, 잘못된 상태 거절, A→B 뒤 A 성공/실패 무시를 다룬다.
 contracts typecheck/build도 통과했다. 이 검사는 실제 파일 다운로드·OS 저장이나 UI 검증이 아니다.
 새 export·renderer·Storybook은 없으며 17번째 실험으로 세지 않는다.
+
+## 내부 renderer 회귀
+
+2026-10-07 `c09b716` 이후 contracts subpath와 내부 Web/Native renderer를 연결했다.
+contracts resolver 9개·action-session 9개·package boundary 4개, Web browser 3개·Native renderer
+2개 통과. 세 package typecheck/build 통과. Web은 독립 버튼의 실제 클릭, preview 오류 후 metadata
+보존·저장 가능, 위험한 retry 차단·한 저장 버튼, started/saved 차이, 320px와 2배 글자에서
+light/dark × LTR/RTL의 긴 파일명 overflow를 검사했다. Native는 모의 renderer의 props/누름
+callback·버튼 identity를 확인했으며 기기 QA가 아니다.
+
+첫 Web 실행은 Vitest locator에 없는 isEnabled 사용 때문에 실패했고 expect.element(...).toBeEnabled로
+테스트 API를 수정한 뒤 통과했다. 제품 동작 실패로 기록하지 않는다. 실패 시 생성된 캡처는 이 기록 후 제거했다.
+공개 renderer·Storybook은 아직 없으며 실제 다운로드·native 저장 완료를 검증한 결과가 아니다.

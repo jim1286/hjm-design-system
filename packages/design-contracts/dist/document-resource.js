@@ -1,3 +1,21 @@
+/** Controlled UI only: hosts connect the existing action session to their verified results. */
+export function resolveDocumentResourceControls(props) {
+    const resource = resolveDocumentResource(props.descriptor);
+    for (const key of ["preview", "previewLoading", "previewUnavailable", "retryPreview", "save", "saving", "started", "saved", "cancelled", "retrySave"]) {
+        text(props.labels[key], `labels.${key}`);
+    }
+    if (typeof props.onSave !== "function")
+        throw new TypeError("Document resource requires onSave");
+    for (const key of ["onPreview", "onRetryPreview", "onRetrySave"]) {
+        if (props[key] !== undefined && typeof props[key] !== "function")
+            throw new TypeError(`Document resource ${key} must be a function`);
+    }
+    if (resource.preview.status === "error" && resource.preview.retryable && !props.onRetryPreview)
+        throw new TypeError("Retryable preview requires onRetryPreview");
+    if (resource.save.status === "error" && resource.save.retryable && !props.onRetrySave)
+        throw new TypeError("Retryable save requires onRetrySave");
+    return resource;
+}
 function text(value, field) {
     if (typeof value !== "string" || !value.trim())
         throw new TypeError(`Document resource ${field} must be nonempty text`);

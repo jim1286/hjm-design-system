@@ -45,6 +45,8 @@ const budgets = [
   // Pure date draft contract: no calendar engine, renderer or metadata imports.
   // Group feedback/session is one pure module, with no renderer or catalog import.
   { exportPath: "./field-group", maxModules: 1, maxRawBytes: 5000, maxGzipBytes: 1800, forbiddenModules: metadataModules },
+  // Pure descriptor/control validation: no renderer, I/O or catalog graph.
+  { exportPath: "./document-resource", maxModules: 1, maxRawBytes: 3875, maxGzipBytes: 1314, forbiddenModules: metadataModules },
   { exportPath: "./date-entry", maxModules: 1, maxRawBytes: 5000, maxGzipBytes: 1800, forbiddenModules: metadataModules },
   { exportPath: "./duration-field", maxModules: 1, maxRawBytes: 1500, maxGzipBytes: 710, forbiddenModules: metadataModules },
   // 2026-10-06: resolveReactionOptions (expanded catalog) measures 1373/565 after trimming its message.

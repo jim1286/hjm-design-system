@@ -54,3 +54,18 @@ idle/pending/started/saved/cancelled/error를 분리한다. 오류 retryable은 
 
 신규 resolver/수명 대조 8개와 기존 action-session 9개, contracts typecheck/build 통과.
 양 renderer·실제 다운로드/native 저장·UI 검증은 남아 있다. 실험 수는 16개로 유지한다.
+
+## 내부 renderer 연결
+
+2026-10-07 후속: contracts의 `document-resource` subpath를 열고 양 renderer 내부 후보를 추가했다.
+공개 렌더러 export와 스토리는 아직 없다. Surface/Stack/Text/Button을 합성하며 파일 이름은
+자동 heading으로 만들지 않는다. 버튼은 세로로 배치해 긴 문구가 다른 행동을 밀어내지 않도록 한다.
+미리보기·저장·메뉴는 독립 대상이고 저장 버튼은 pending/error 전환에도 같은 위치에 유지한다.
+
+제품은 descriptor와 action callbacks를 공급한다. pending은 외부 action-session 상태에 연결해야
+하며 컴포넌트가 네트워크를 호출하거나 단순 callback 반환을 저장 receipt로 추론하지 않는다.
+오류 재시도를 표시하려면 callback도 있어야 한다. labels와 callback 유효성은 공통 resolver가 검사한다.
+계약 subpath는 한 모듈·I/O 없음으로 budget에 등록했고 root export는 추가하지 않았다.
+
+다음 단계는 양 renderer 공개 props/진입점·사용 지침·실제 action-session host 예제와 Storybook이다.
+Native iOS 상태 알림, 오류 복구 초점, 전체 theme/큰 글자 실기기·OS 저장 검증도 남는다.

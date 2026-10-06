@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { createActionSession } from "../src/action-session.js";
-import { resolveDocumentResource, type DocumentResourceDescriptor, type DocumentSaveState } from "../src/document-resource.js";
+import { resolveDocumentResource, resolveDocumentResourceControls, type DocumentResourceDescriptor, type DocumentResourceLabels, type DocumentSaveState } from "../src/document-resource.js";
 
 const resource: DocumentResourceDescriptor = {
   id: "guide:revision-2", name: "사용 안내.pdf", formatLabel: "PDF", sizeLabel: "2.5 MB",
@@ -8,6 +8,13 @@ const resource: DocumentResourceDescriptor = {
 };
 
 describe("document resource candidate", () => {
+  it("requires localized control names and an executable callback for an advertised retry", () => {
+    const labels: DocumentResourceLabels = { preview:"보기",previewLoading:"로딩",previewUnavailable:"없음",retryPreview:"그림 재시도",save:"저장",saving:"저장 중",started:"시작",saved:"완료",cancelled:"취소",retrySave:"저장 재시도" };
+    const props = {descriptor:resource,labels,onSave:()=>{}};
+    expect(()=>resolveDocumentResourceControls({...props,labels:{...labels,save:" "}})).toThrow(TypeError);
+    expect(()=>resolveDocumentResourceControls({...props,descriptor:{...resource,save:{status:"error",message:"오류",retryable:true}}})).toThrow("onRetrySave");
+    expect(()=>resolveDocumentResourceControls({...props,descriptor:{...resource,preview:{status:"error",message:"오류",retryable:true}}})).toThrow("onRetryPreview");
+  });
   it("preserves file metadata through preview failure without blocking independent saving", () => {
     const resolved = resolveDocumentResource({ ...resource, preview: { status: "error", message: "그림을 표시할 수 없습니다", retryable: true } });
     expect(resolved.metadata).toEqual(["PDF", "2.5 MB"]);

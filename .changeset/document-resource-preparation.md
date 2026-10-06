@@ -1,5 +1,7 @@
 ---
-"@hjmds/design-contracts": patch
+"@hjmds/design-contracts": minor
+"@hjmds/react": patch
+"@hjmds/react-native": patch
 ---
 
-Prepare an internal document-resource composition resolver. Separate preview availability from save status, distinguish download initiation from host-confirmed saving, and require explicit retry permission. No public package entry or renderer is added yet.
+Expose the document-resource descriptor and controlled-action validation through a dedicated contracts subpath. Separate preview availability from saving, require explicit retry permission, and distinguish initiation from host-confirmed saving. Prepare internal Web/Native renderers with independent controls; renderer exports and Storybook experiments are not added yet.
