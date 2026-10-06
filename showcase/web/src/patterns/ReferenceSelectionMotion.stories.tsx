@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { SelectionMotionPreview } from "./reference-adoption-previews";
-const meta = { includeStories: ["Default", "Dark", "LargeText", "ReducedMotion", "Rtl"], id: "reference-adoption-selectionmotion", title: "실험/구성/직접 조작과 모션/선택 배경 이동", component: SelectionMotionPreview } satisfies Meta<typeof SelectionMotionPreview>;
+const meta = { includeStories: ["Default", "Dark", "LargeText", "ReducedMotion", "Rtl"], id: "reference-adoption-selectionmotion", title: "배포/구성/직접 조작과 모션/선택 배경 이동", component: SelectionMotionPreview } satisfies Meta<typeof SelectionMotionPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };

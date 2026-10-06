@@ -83,7 +83,7 @@
 | [Icon](components/icon.md) | 글자와 아이콘 | HJM semantic 이름(`search`, `back`, `chevronEnd`, `notifications` 등 43개)으로 고르는 그림 기호에 쓴다. | 배포 | Web · Native |
 | [IconButton](components/icon-button.md) | 동작 | 보이는 글자 없이 아이콘만으로 표시하는 행동에 쓴다. | 배포 | Web · Native |
 | [Image](components/image.md) | 데이터 표시 | 원본 크기를 아는 사진·차트 이미지를 로드 전에 자리를 잡아 두고, 실패해도 의미를 잃지 않게 보여 줄 때 쓴다. | 배포 | Web · Native |
-| [ImageComparison](components/image-comparison.md) | 데이터 표시 | 같은 좌표와 비율의 두 이미지를 겹쳐 변화량을 비교할 때 쓴다. | 실험 | Web · Native |
+| [ImageComparison](components/image-comparison.md) | 데이터 표시 | 같은 좌표와 비율의 두 이미지를 겹쳐 변화량을 비교할 때 쓴다. | 배포 | Web · Native |
 | [KeyboardAvoiding](components/keyboard-avoiding.md) | — | 추가 native peer 없이 하단 행동(BottomCTA, 채팅 입력창)이 소프트웨어 키보드에 가려지지 않게 할 때 쓴다. | 배포 | Native |
 | [KeyboardDock](components/keyboard-dock.md) | 구성/직접 조작과 모션 | `react-native-keyboard-controller`를 설치한 앱에서 화면 하단에 고정된 행동(BottomCTA, 채팅 입력창)이 키보드와 함께 위아래로 움직이게 할 때 쓴다(Native 전용, 별도 보조 기능. API 성숙도는 실험적 어댑터). 내부는 `KeyboardStickyView`이며, 여백을 바꾸는 대신 키보드 움직임을 따라 translate 한다. | 배포 | Native |
 | [KeyboardFormScrollView](components/keyboard-form-scroll-view.md) | 구성/직접 조작과 모션 | 입력 필드가 여러 개인 세로 스크롤 폼(가입, 프로필 수정, 주소 입력)에서 포커스된 필드가 키보드에 가려지지 않게 스크롤해 줄 때 쓴다(Native 전용, 별도 보조 기능. API 성숙도는 실험적 어댑터). 내부는 `react-native-keyboard-controller`의 `KeyboardAwareScrollView`이고, `keyboardShouldPersistTaps="handled"`로 고정돼 키보드가 열린 채 버튼을 눌러도 탭이 전달된다. | 배포 | Native |
@@ -114,11 +114,11 @@
 | [Popover](components/popover.md) | 오버레이 | 트리거에 붙어 뜨는 비모달 표면 안에 **포커스를 받는 임의 콘텐츠**를 둘 때 쓴다. | 배포 | Web |
 | [ProfileScreen](components/profile-screen.md) | 화면/계정 | 내 프로필(또는 계정) 화면 틀에 쓴다. | 배포 | Web · Native |
 | [Progress](components/progress.md) | 상태와 알림 | 작업이 얼마나 진행됐는지 보여 줄 때 쓴다. | 배포 | Web · Native |
-| [ProgressiveBlur](components/progressive-blur.md) | 시각 효과 | 스크롤 영역의 바깥에 더 내용이 있음을 알리거나 장식 이미지 가장자리를 흐릴 때 쓴다. | 실험 | Web · Native |
+| [ProgressiveBlur](components/progressive-blur.md) | 시각 효과 | 스크롤 영역의 바깥에 더 내용이 있음을 알리거나 장식 이미지 가장자리를 흐릴 때 쓴다. | 배포 | Web · Native |
 | [QRCode](components/qr-code.md) | 데이터 표시 | 문자열(초대 링크, 연결 코드, 결제·체크인 URL)을 다른 기기의 카메라로 스캔하게 할 때 쓴다. | 배포 | Web · Native |
 | [Radio](components/radio.md) | 입력 | 라디오 한 개를 제품이 직접 배치해야 할 때만 쓴다. | 배포 | Web · Native |
 | [RadioGroup](components/radio-group.md) | 입력 | 한 화면에 펼쳐 둔 선택지 중 정확히 하나를 고를 때 쓴다. | 배포 | Web · Native |
-| [Rating](components/rating.md) | 입력 | 정수 점수를 선택하거나 계산된 소수 평균을 읽기 전용으로 보여 줄 때 쓴다. | 실험 | Web · Native |
+| [Rating](components/rating.md) | 입력 | 정수 점수를 선택하거나 계산된 소수 평균을 읽기 전용으로 보여 줄 때 쓴다. | 배포 | Web · Native |
 | [Result](components/result.md) | 상태와 알림 | 사용자 행동 뒤 흐름이 **끝난** 화면에 쓴다. | 배포 | Web · Native |
 | [SavedItemsScreen](components/saved-items-screen.md) | 화면/콘텐츠 | 저장한 이미지·게시물을 컬렉션 표지 → 사진 격자 → 상세 순서로 탐색할 때 쓴다. | 배포 | Web · Native |
 | [ScreenLayout](components/screen-layout.md) | 화면/화면 틀과 도구 | 한 라우트 화면의 뼈대가 필요할 때 쓴다. | 배포 | Web · Native |
@@ -171,19 +171,19 @@
 
 | 지침 | 분류 | 언제 쓰나 | 상태 | 지원 |
 | --- | --- | --- | --- | --- |
-| [관련 입력 묶음](compositions/field-group.md) | 입력과 작성 | 주소·연락처처럼 여러 입력이 하나의 질문에 답할 때 쓴다. | 실험 | Web · Native |
-| [날짜 직접 입력](compositions/date-entry.md) | 입력과 작성 | 사용자가 알고 있는 날짜를 직접 입력할 때 쓴다. | 실험 | Web · Native |
+| [관련 입력 묶음](compositions/field-group.md) | 입력과 작성 | 주소·연락처처럼 여러 입력이 하나의 질문에 답할 때 쓴다. | 배포 | Web · Native |
+| [날짜 직접 입력](compositions/date-entry.md) | 입력과 작성 | 사용자가 알고 있는 날짜를 직접 입력할 때 쓴다. | 배포 | Web · Native |
 | [늦은 응답보다 최신 검색 유지](compositions/interaction-flow-search.md) | 입력과 작성 | 검색어를 바꿔 다시 검색했을 때 먼저 보낸 요청이 늦게 도착해도 최신 검색 결과를 덮어쓰지 않게 할 때 쓴다. | 배포 | Web · Native |
 | [단계별 드로어](compositions/family-drawer.md) | 입력과 작성 | 초대 → 설정 → 확인처럼 짧은 단계 2~5개를 현재 화면을 떠나지 않고 하단 시트 안에서 차례로 진행할 때 쓴다. | 배포 | Web · Native |
 | [닫았다 열고 초안 이어쓰기](compositions/interaction-flow-draft.md) | 입력과 작성 | 메모·댓글처럼 시트에서 쓰던 글을 저장하지 않고 닫았다가 다시 열었을 때, 쓰던 초안을 그대로 이어 쓰게 할 때 쓴다. | 배포 | Web · Native |
 | [댓글 작성](compositions/purpose-input-comment.md) | 입력과 작성 | 게시물·기록 아래에서 댓글이나 특정 댓글에 대한 답글을 남기고, 실패하면 글과 답글 대상을 그대로 남겨 다시 등록하게 할 때 쓴다. | 배포 | Web · Native |
 | [메시지 작성](compositions/purpose-input-message.md) | 입력과 작성 | 대화 화면 하단에서 글과 사진 여러 장을 함께 보내고, 실패하면 글·사진·답장 대상을 그대로 남겨 다시 보내게 할 때 쓴다. | 배포 | Web · Native |
-| [버튼에서 이어지는 편집](compositions/origin-dialog.md) | 입력과 작성 | 현재 화면의 항목을 짧게 편집하고 돌아올 때 출발 위치를 시각적으로 연결한다. | 실험 | Web · Native |
+| [버튼에서 이어지는 편집](compositions/origin-dialog.md) | 입력과 작성 | 현재 화면의 항목을 짧게 편집하고 돌아올 때 출발 위치를 시각적으로 연결한다. | 배포 | Web · Native |
 | [빠른 메모 작성](compositions/floating-action-button.md) | 입력과 작성 | 스크롤되는 기록 목록 위에 떠 있는 생성 버튼으로 짧은 입력 대화상자를 열고, 저장하면 새 항목을 목록 맨 위에 넣을 때 쓴다. | 배포 | Web · Native |
 | [선택 내용 검토와 수정](compositions/reference-review.md) | 입력과 작성 | 선택 내용을 검토하고 수정 후 명시적으로 확정 흐름이 필요할 때 쓴다. | 배포 | Web · Native |
 | [인증번호 확인과 다시 입력](compositions/stea-otp-verify.md) | 입력과 작성 | 문자·메일로 받은 숫자 인증번호를 입력하고 서버 확인을 기다린 뒤, 틀리면 남은 횟수를 보여 주고 다시 받게 하는 흐름에 쓴다. | 배포 | Web · Native |
 | [입력 시트](compositions/input-sheet.md) | 입력과 작성 | 현재 화면 위에 하단 시트를 띄워 짧은 입력(이름 바꾸기, 메모 한 줄)을 받고, 키보드가 올라와도 본문을 스크롤하며 완료 버튼에 닿게 할 때 쓴다. | 배포 | Web · Native |
-| [입력을 유지하는 도구](compositions/context-toolbar.md) | 입력과 작성 | 작성 중인 입력을 보존한 채 선택적 도구를 펼쳐야 할 때 쓴다. | 실험 | Web · Native |
+| [입력을 유지하는 도구](compositions/context-toolbar.md) | 입력과 작성 | 작성 중인 입력을 보존한 채 선택적 도구를 펼쳐야 할 때 쓴다. | 배포 | Web · Native |
 | [첫 작업을 만들고 이어하기](compositions/reference-first.md) | 입력과 작성 | 첫 기록을 단계별 작성하고 중단한 초안 이어가기 흐름이 필요할 때 쓴다. | 배포 | Web · Native |
 | [날짜 선택과 예정 목록](compositions/stea-schedule-card.md) | 선택과 필터 | 한 주처럼 짧은 날짜 범위에서 날짜 하나를 고르면 같은 카드 안의 일정 목록이 그 날짜로 바뀌는 요약 카드에 쓴다. | 배포 | Web · Native |
 | [대표 항목과 묶음 전체 선택](compositions/selection-scope.md) | 선택과 필터 | 사진 묶음·스레드처럼 대표 항목 하나와 묶음 전체가 같은 모양으로 보일 때, 공유·삭제·이동 전에 대상 범위와 개수를 고르고 문구로 확인한 뒤 적용하게 할 때 쓴다. | 배포 | Web · Native |
@@ -193,28 +193,28 @@
 | [보관함과 페이지 이동](compositions/web-navigation.md) | 탐색과 이동 | Web에서 상위 보관함 → 하위 모음으로 들어가고, 그 모음의 긴 목록을 페이지 단위로 넘겨 보는 탐색에 쓴다. | 배포 | Web |
 | [펼침과 메뉴](compositions/disclosure.md) | 탐색과 이동 | Web에서 내용을 숨겼다 펼치거나(Collapsible), 대상에 붙은 작업 메뉴를 우클릭·키보드로 열거나(ContextMenu), 데스크톱 앱처럼 상단 메뉴 막대를 두는(Menubar) 세 방식을 각각 보여 주는 모음이다. | 배포 | Web |
 | [대화 메시지](compositions/common-message.md) | 정보 표시 | 말풍선 하나하나에 반응·답장·원문 이동·전송 실패 후 다시 보내기를 붙일 때 쓴다. | 배포 | Web · Native |
-| [문서와 파일](compositions/document-resource.md) | 정보 표시 | 이름·형식·크기와 미리보기·내보내기·별도 메뉴를 함께 제공하는 문서에 쓴다. | 실험 | Web · Native |
+| [문서와 파일](compositions/document-resource.md) | 정보 표시 | 이름·형식·크기와 미리보기·내보내기·별도 메뉴를 함께 제공하는 문서에 쓴다. | 배포 | Web · Native |
 | [수치와 이전 대비 변화](compositions/stea-stat-summary.md) | 정보 표시 | 매출·주문·반품처럼 몇 개의 핵심 수치를 비교 기간과 함께 보이고, 증감의 방향과 좋고 나쁨을 색 없이도 읽히게 할 때 쓴다. | 배포 | Web · Native |
 | [알림 항목](compositions/common-notification.md) | 정보 표시 | 알림 한 행을 누르면 바로 읽음으로 바꾸고, 서버가 실패하면 읽지 않음으로 되돌릴 때 쓴다. | 배포 | Web · Native |
 | [앞면과 상세 정보 전환](compositions/stea-flip-card.md) | 정보 표시 | 모임·상품처럼 한 카드에 요약(앞면)과 상세 항목(뒷면)이 있고, 사용자가 버튼 하나로 두 면을 오가게 할 때 쓴다. | 배포 | Web · Native |
-| [영상 미리보기](compositions/video-dialog.md) | 정보 표시 | 현재 입력을 유지하면서 짧은 영상 설명을 확인할 때 쓴다. | 실험 | Web · Native |
+| [영상 미리보기](compositions/video-dialog.md) | 정보 표시 | 현재 입력을 유지하면서 짧은 영상 설명을 확인할 때 쓴다. | 배포 | Web · Native |
 | [일정과 식별 정보 티켓](compositions/stea-event-ticket.md) | 정보 표시 | 공연·예약 입장권처럼 일시·장소·좌석 정보와 함께, 현장에서 보여 줄 QR 코드와 사람이 읽을 예매 번호를 한 카드에 담을 때 쓴다. | 배포 | Web · Native |
-| [질감 비교](compositions/texture-comparison.md) | 정보 표시 | 기존 반복 점 grain과 불규칙한 정적 noise를 같은 배경·강도로 비교할 때 쓴다. | 실험 | Web · Native |
-| [추가해도 유지되는 목록](compositions/live-list.md) | 정보 표시 | 입력 중인 목록에 새 데이터가 추가되거나 순서가 바뀌어도 기존 초안과 항목의 정체성을 유지할 때 쓴다. | 실험 | Web · Native |
+| [질감 비교](compositions/texture-comparison.md) | 정보 표시 | 기존 반복 점 grain과 불규칙한 정적 noise를 같은 배경·강도로 비교할 때 쓴다. | 배포 | Web · Native |
+| [추가해도 유지되는 목록](compositions/live-list.md) | 정보 표시 | 입력 중인 목록에 새 데이터가 추가되거나 순서가 바뀌어도 기존 초안과 항목의 정체성을 유지할 때 쓴다. | 배포 | Web · Native |
 | [카드 묶음과 긴 목록](compositions/data-layouts.md) | 정보 표시 | 많은 항목을 화면에 늘어놓을 방식을 고를 때 쓴다. | 배포 | Web · Native |
-| [그림과 시작 안내](compositions/illustrated-outcome.md) | 피드백과 복구 | 빈 목록에서 시작을 안내하고 짧은 온보딩을 거쳐 결과를 보여 줄 때 쓴다. | 실험 | Web · Native |
-| [버튼 완료 피드백](compositions/action-feedback.md) | 피드백과 복구 | 입력을 유지하며 저장의 진행·성공·재시도 가능 실패를 보여 줄 때 쓴다. | 실험 | Web · Native |
+| [그림과 시작 안내](compositions/illustrated-outcome.md) | 피드백과 복구 | 빈 목록에서 시작을 안내하고 짧은 온보딩을 거쳐 결과를 보여 줄 때 쓴다. | 배포 | Web · Native |
+| [버튼 완료 피드백](compositions/action-feedback.md) | 피드백과 복구 | 입력을 유지하며 저장의 진행·성공·재시도 가능 실패를 보여 줄 때 쓴다. | 배포 | Web · Native |
 | [변경 저장과 이탈 확인](compositions/reference-settings.md) | 피드백과 복구 | 저장값과 편집 초안을 비교해 이탈 확인 흐름이 필요할 때 쓴다. | 배포 | Web · Native |
 | [보관과 실행 취소](compositions/action-recovery-undo.md) | 피드백과 복구 | 보관·숨기기·목록에서 빼기처럼 제품이 역연산을 제공하는 작업 뒤에, 같은 자리에서 실행 취소를 주고 그 복구 요청이 성공해야 화면을 되돌릴 때 쓴다. | 배포 | Web · Native |
-| [선택과 오류 복구](compositions/upload-recovery.md) | 피드백과 복구 | 파일 선택과 전송 상태의 취소·재시도를 연결할 때 쓴다. | 실험 | Web · Native |
+| [선택과 오류 복구](compositions/upload-recovery.md) | 피드백과 복구 | 파일 선택과 전송 상태의 취소·재시도를 연결할 때 쓴다. | 배포 | Web · Native |
 | [저장과 재시도](compositions/action-recovery-save.md) | 피드백과 복구 | 입력한 내용을 서버에 저장하는 폼 한 덩어리에서 저장 중 중복 실행을 막고, 실패하면 입력을 지우지 않은 채 제출했던 값 그대로 다시 보낼 때 쓴다. | 배포 | Web · Native |
 | [중단해도 남는 현재 상태](compositions/expo-interactions.md) | 피드백과 복구 | 버튼으로 상태를 빠르게 바꾸거나 전환 도중 내용을 닫아도 현재 상태가 바로 보이고 남아야 하는 영역에 쓴다. | 배포 | Native |
 | [즉시 반영과 복구](compositions/action-recovery-optimistic.md) | 피드백과 복구 | 북마크·좋아요·알림 켜기처럼 되돌려도 피해가 없는 저위험 토글을 누르는 즉시 화면에 반영하고, 서버가 실패하면 직전 확인 값으로 되돌릴 때 쓴다. | 배포 | Web · Native |
 | [처리 단계와 재시도](compositions/stea-order-progress.md) | 피드백과 복구 | 주문·신청처럼 서버가 단계를 하나씩 확정하는 처리 과정을 보여 주고, 확정에 실패하면 같은 단계를 다시 요청하게 할 때 쓴다. | 배포 | Web · Native |
 | [캐릭터와 시작 행동](compositions/stea-pixel-empty.md) | 피드백과 복구 | 아직 만든 것이 없는 첫 빈 화면에 제품 캐릭터를 움직여 보이고 첫 행동 하나로 이끌 때 쓴다. | 배포 | Web · Native |
 | [끌기·밀기·화면 전환](compositions/interaction-adapters.md) | 직접 조작과 모션 | 순서 바꾸기·행 작업·내용 전환·카드 넘기기·달성 축하·카드 확대 화면 전환 같은 선택형 상호작용 어댑터를 한 화면에서 함께 쓸 때, 각 어댑터를 어디에 놓고 무엇으로 감싸야 하는지 확인하는 구성이다. | 배포 | Web · Native |
-| [높이가 이어지는 패널](compositions/adaptive-content.md) | 직접 조작과 모션 | 패널의 길이가 달라질 때 아래 행동이 새 높이로 이동해야 하는 작은 내용 영역에 쓴다. | 실험 | Web · Native |
-| [선택 배경 이동](compositions/selection-motion.md) | 직접 조작과 모션 | 짧은 단일 선택의 현재 항목을 이어지는 배경으로 보여 줄 때 쓴다. | 실험 | Web · Native |
+| [높이가 이어지는 패널](compositions/adaptive-content.md) | 직접 조작과 모션 | 패널의 길이가 달라질 때 아래 행동이 새 높이로 이동해야 하는 작은 내용 영역에 쓴다. | 배포 | Web · Native |
+| [선택 배경 이동](compositions/selection-motion.md) | 직접 조작과 모션 | 짧은 단일 선택의 현재 항목을 이어지는 배경으로 보여 줄 때 쓴다. | 배포 | Web · Native |
 | [숫자 변화와 메뉴 변형](compositions/optional-motion.md) | 직접 조작과 모션 | 선택 설치 모션(숫자 자리 단위 변화, 메뉴 형태 변환)을 기존 컴포넌트 자리에 끼워 넣을 때 쓴다. | 배포 | Web |
 | [이미지·시트·키보드 조작](compositions/optional-adapters.md) | 직접 조작과 모션 | Native 앱 한 화면에서 이미지 확대 보기, 끌어서 높이를 바꾸는 시트, OS 길게 누르기 메뉴, 키보드를 따라 올라가는 하단 행동을 함께 쓸 때 provider 중첩 순서와 각 요소의 자리를 확인하는 구성이다. | 배포 | Native |
 | [내비게이션 바 비교](compositions/navigation-bar-collection.md) | 비교와 검증 | 하단 탭에 목적지 이동과 별개의 행동(작성·전원·기록 추가)을 함께 둘지, 선택한 목적지를 어떻게 보여 줄지 고를 때 이 비교를 본다. | 배포 | Web · Native |
@@ -232,7 +232,7 @@
 | [서비스 소개](screens/landing.md) | 소개 | 제품을 처음 보는 사람에게 한 문장 가치 제안을 보여 주고 같은 화면에서 첫 행동(짧은 입력)을 체험하게 하는 소개 화면이다. | 배포 | Web · Native |
 | [온보딩](screens/flow-onboarding.md) | 소개 | 첫 실행 사용자를 몇 단계(소개 → 관심 주제 → 시작)로 안내하고 마지막 단계에서 완료를 저장하는 화면을 OnboardingScreen 하나로 구성한다. | 배포 | Web · Native |
 | [권한 안내](screens/flow-permission.md) | 소개 | PermissionScreen을 사용해 권한 안내 흐름을 구성한다. | 배포 | Web · Native |
-| [기능 카드와 주 행동](screens/product-bento.md) | 소개 | 기능을 실제 미리보기로 보여 주고 첫 행동으로 이어지는 소개 화면이다. | 실험 | Web · Native |
+| [기능 카드와 주 행동](screens/product-bento.md) | 소개 | 기능을 실제 미리보기로 보여 주고 첫 행동으로 이어지는 소개 화면이다. | 배포 | Web · Native |
 | [로그인](screens/common-login.md) | 계정 | AuthScreenLayout을 사용해 로그인 흐름을 구성한다. | 배포 | Web · Native |
 | [프로필](screens/common-profile.md) | 계정 | 내 프로필을 보고(요약·게시물·계정 메뉴) 고치는(사진·이름·소개) 화면을 ProfileScreen과 EditorScreen으로 구성한다. | 배포 | Web · Native |
 | [알림 설정](screens/notification-settings.md) | 설정 | 알림 종류 몇 개를 스위치로 켜고 끈 뒤 하단 버튼 하나로 저장하는 설정 화면이다. | 배포 | Web · Native |

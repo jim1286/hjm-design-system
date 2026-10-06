@@ -47,22 +47,24 @@ const agreement: AgreementDescriptor = {
   ],
 };
 
-it("Agreement: on-brand check glyph, stable all-row name and a rebuildable mixed state", () => {
+it("Agreement: on-brand fixed check artwork, stable all-row name and a rebuildable mixed state", () => {
   let palette: ReturnType<typeof useHjmNativeTheme>["palette"] | undefined;
   function Probe() { palette = useHjmNativeTheme().palette; return null; }
   render(<><Probe /><Agreement descriptor={agreement} requiredLabel="(required)" optionalLabel="(optional)" /></>);
   const rows = () => hosts((node) => String(node.type) === "Pressable" && node.props.accessibilityRole === "checkbox");
   act(() => rows()[0]!.props.onPress());
-  const glyph = hosts((node) => String(node.type) === "Text" && node.props.children === "✓")[0]!;
-  expect(flat(glyph.props.style).color).toBe(resolveColorReference(selectionControlRecipe.states.indicator, palette!));
-  expect(glyph.props.accessible).toBe(false);
+  // The large-text fix replaced the font glyph with fixed artwork. Keep this audit's
+  // original contrast and accessibility assertions on the visible mark, not removed text.
+  const mark = hosts((node) => String(node.type) === "View" && flat(node.props.style).borderLeftWidth === 2)[0]!;
+  expect(flat(mark.props.style).borderColor).toBe(resolveColorReference(selectionControlRecipe.states.indicator, palette!));
+  expect(mark.props.accessible).toBe(false);
 
   act(() => rows()[1]!.props.onPress());
   expect(rows()[0]!.props.accessibilityLabel).toBe("Agree to everything");
-  expect(rows()[0]!.props.accessibilityState).toEqual({ checked: "mixed", busy: false });
+  expect(rows()[0]!.props.accessibilityState).toEqual({ checked: "mixed", busy: false, disabled: false });
   act(() => rows()[0]!.props.onPress());
   // busy:false forces RN Android to rebuild the description when mixed ends.
-  expect(rows()[0]!.props.accessibilityState).toEqual({ checked: true, busy: false });
+  expect(rows()[0]!.props.accessibilityState).toEqual({ checked: true, busy: false, disabled: false });
   expect(rows()[0]!.props.accessibilityLabel).toBe("Agree to everything");
   expect(rows()[1]!.props.accessibilityLabel).toBe("Terms of service (required)");
 });

@@ -45,7 +45,7 @@ function Demo() {
     <Button tone="secondary" onClick={() => { example.reset(); example.failNext(); }}>내보내기 실패 다시 설정</Button>
   </Stack>;
 }
-const meta = { id: "compositions-information-document-resource", includeStories: ["Default", "Dark", "LargeText", "Rtl"], title: "실험/구성/정보 표시/문서와 파일", component: Demo } satisfies Meta<typeof Demo>;
+const meta = { id: "compositions-information-document-resource", includeStories: ["Default", "Dark", "LargeText", "Rtl"], title: "배포/구성/정보 표시/문서와 파일", component: Demo } satisfies Meta<typeof Demo>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };

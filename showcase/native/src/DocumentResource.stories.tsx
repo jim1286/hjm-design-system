@@ -40,7 +40,7 @@ function Demo() {
     <Button tone="secondary" onPress={() => { example.reset(); example.failNext(); }}>내보내기 실패 다시 설정</Button>
   </Stack></ScrollView>;
 }
-const meta = { title: "실험/구성/정보 표시/문서와 파일", component: Demo } satisfies Meta<typeof Demo>;
+const meta = { title: "배포/구성/정보 표시/문서와 파일", component: Demo } satisfies Meta<typeof Demo>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };

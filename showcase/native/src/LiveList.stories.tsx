@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-native";
 import { LiveListPreview } from "./live-list-preview";
-const meta = { title: "실험/구성/정보 표시/추가해도 유지되는 목록", component: LiveListPreview } satisfies Meta<typeof LiveListPreview>;
+const meta = { title: "배포/구성/정보 표시/추가해도 유지되는 목록", component: LiveListPreview } satisfies Meta<typeof LiveListPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };

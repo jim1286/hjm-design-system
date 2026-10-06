@@ -25,7 +25,7 @@ function Demo() {
     <Button tone="secondary" onPress={() => setReverse(!reverse)}>입력 순서 바꾸기</Button>
   </Stack></ScrollView>;
 }
-const meta = { title: "실험/구성/입력과 작성/관련 입력 묶음", component: Demo } satisfies Meta<typeof Demo>;
+const meta = { title: "배포/구성/입력과 작성/관련 입력 묶음", component: Demo } satisfies Meta<typeof Demo>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };

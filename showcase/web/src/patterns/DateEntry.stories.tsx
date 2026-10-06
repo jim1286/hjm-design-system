@@ -20,7 +20,7 @@ function Demo() {
     <Text role="status">{result ? `확인한 날짜: ${result}` : "아직 확인하지 않았습니다."}</Text>
   </Stack>;
 }
-const meta = { id: "compositions-input-date-entry", includeStories: ["Default", "Dark", "LargeText", "Rtl"], title: "실험/구성/입력과 작성/날짜 직접 입력", component: Demo } satisfies Meta<typeof Demo>;
+const meta = { id: "compositions-input-date-entry", includeStories: ["Default", "Dark", "LargeText", "Rtl"], title: "배포/구성/입력과 작성/날짜 직접 입력", component: Demo } satisfies Meta<typeof Demo>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };

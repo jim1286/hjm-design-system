@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-native";
 import { VideoDialogPreview } from "./video-dialog-preview";
 // Native Storybook 10.4.4 filters default metadata through includeStories; omit it.
-const meta = { title: "실험/구성/정보 표시/영상 미리보기", component: VideoDialogPreview } satisfies Meta<typeof VideoDialogPreview>;
+const meta = { title: "배포/구성/정보 표시/영상 미리보기", component: VideoDialogPreview } satisfies Meta<typeof VideoDialogPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };

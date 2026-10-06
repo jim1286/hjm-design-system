@@ -1,6 +1,6 @@
 # 디자인 시스템 검증과 릴리스 계약
 
-상태: 현재 내부 릴리스 계약 · 검토일: 2026-10-01
+상태: 현재 내부 릴리스 계약 · 검토일: 2026-10-07
 적용: 이 저장소의 contracts, React, React Native, 두 Showcase.
 기계 검사: [`scripts/check-release-governance.mjs`](../scripts/check-release-governance.mjs).
 
@@ -131,3 +131,7 @@ root check의 `api-map:check`는 모든 공개 컴포넌트 export를 분류하�
 기능·행동 중복은 이 검사로 판정하지 않는다. API 추가와 공통 구현 변경은
 [기여 지침](../CONTRIBUTING.md)의 기존 API 비교·공통 계약 재사용·선택 기준 문서화를 따른다.
 공개 범위 drift 검사 통과는 외부 소비 제품 검증이나 release gate 완료가 아니다.
+
+## 1.14.0 준비 근거
+
+2026-10-07 사용자가 기존 실험 검토·승급·npm 게시를 먼저 요청했다. Rating·ImageComparison·DateEntry 등 선택 API와 구성 지침이 추가되어 patch 대신 1.14.0을 선택한다. 두 renderer의 contracts peer는 version 실행 전에 `>=1.14.0 <1.15.0`으로 옮긴다. [검토 보고서](qa/2026-10-07-experiment-promotion-release.md)가 실제 환경과 미확인 범위를 기록한다.

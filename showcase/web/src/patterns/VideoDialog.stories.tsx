@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { VideoDialogPreview } from "./video-dialog-preview";
-const meta = { includeStories: ["Default", "Dark", "LargeText"], id: "compositions-information-video-preview", title: "실험/구성/정보 표시/영상 미리보기", component: VideoDialogPreview } satisfies Meta<typeof VideoDialogPreview>;
+const meta = { includeStories: ["Default", "Dark", "LargeText"], id: "compositions-information-video-preview", title: "배포/구성/정보 표시/영상 미리보기", component: VideoDialogPreview } satisfies Meta<typeof VideoDialogPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };

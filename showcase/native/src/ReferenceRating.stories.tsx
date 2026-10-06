@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-native";
 import { RatingPreview } from "./reference-adoption-previews";
-const meta = { title: "실험/컴포넌트/입력/별점 선택", component: RatingPreview } satisfies Meta<typeof RatingPreview>;
+const meta = { title: "배포/컴포넌트/입력/별점 선택", component: RatingPreview } satisfies Meta<typeof RatingPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };

@@ -217,6 +217,33 @@ stories 파일 안 구현(§1.7 목표), 상태 arg 이름. 빌드 index 기준 
 
 ## 2. 승인 기록
 
+### 2026-10-07 기존 실험 17개 검토 후 배포와 npm 게시
+
+- 사용자 요청: "실험에 있는것들 검토후 승급 후 게시 먼저하자". 이번 대상은 기존 17개이며 새 회원 미리보기 후보는 후속 작업이다.
+- [항목별 검토와 수정](qa/2026-10-07-experiment-promotion-release.md)을 근거로 Web·Native의 첫 마디만 변경한다. Web 명시 ID를 보존한다.
+- 이 승인은 Storybook 배포와 HJM npm 게시를 포함한다. catalog 성숙도 변경과 소비 제품 출시는 별도 증거가 필요하다.
+
+| 최종 경로 | 플랫폼 | Web id |
+| --- | --- | --- |
+| 배포/구성/입력과 작성/관련 입력 묶음 | Web · Native | `street` |
+| 배포/구성/입력과 작성/날짜 직접 입력 | Web · Native | `compositions-input-date-entry` |
+| 배포/구성/입력과 작성/버튼에서 이어지는 편집 | Web · Native | `compositions-input-origin-dialog` |
+| 배포/구성/입력과 작성/입력을 유지하는 도구 | Web · Native | `reference-adoption-contexttoolbar` |
+| 배포/구성/정보 표시/문서와 파일 | Web · Native | `compositions-information-document-resource` |
+| 배포/구성/정보 표시/영상 미리보기 | Web · Native | `compositions-information-video-preview` |
+| 배포/구성/정보 표시/질감 비교 | Web · Native | `reference-adoption-texturecomparison` |
+| 배포/구성/정보 표시/추가해도 유지되는 목록 | Web · Native | `compositions-live-list` |
+| 배포/구성/직접 조작과 모션/높이가 이어지는 패널 | Web · Native | `reference-adoption-adaptivecontent` |
+| 배포/구성/직접 조작과 모션/선택 배경 이동 | Web · Native | `reference-adoption-selectionmotion` |
+| 배포/구성/피드백과 복구/그림과 시작 안내 | Web · Native | `compositions-feedback-illustrated-outcome` |
+| 배포/구성/피드백과 복구/버튼 완료 피드백 | Web · Native | `reference-adoption-actionfeedback` |
+| 배포/구성/피드백과 복구/선택과 오류 복구 | Web · Native | `reference-adoption-uploadrecovery` |
+| 배포/컴포넌트/데이터 표시/이미지 전후 비교 | Web · Native | `reference-adoption-imagecomparison` |
+| 배포/컴포넌트/시각 효과/가장자리 흐림 | Web · Native | `compositions-information-scroll-edge-blur` |
+| 배포/컴포넌트/입력/별점 선택 | Web · Native | `reference-adoption-rating` |
+| 배포/화면/소개/기능 카드와 주 행동 | Web · Native | `reference-adoption-productbento` |
+
+
 ### 2.1 2026-10-06 전체 승격과 규격 확정
 
 - 승인: 2026-10-06 사용자. "실험 41개를 정리한 뒤 전부 배포로 옮긴다. 겹치는 항목은 합친 뒤 옮긴다." 메뉴 구조·어휘는

@@ -7,11 +7,21 @@ import {AlertDialog} from "../src/overlays.js";
 import {EditorScreen,ModerationScreen,PermissionScreen,OnboardingScreen,SearchScreen} from "../src/screen-flows.js";
 import {useState, type ReactNode} from "react";
 import {ScrollView,StyleSheet,TextInput} from "react-native";
+import {Text} from "../src/primitives.js";
 function render(child:ReactNode){let tree:ReactTestRenderer;act(()=>{tree=create(<HjmNativeProvider theme="dark" textScale={2}>{child}</HjmNativeProvider>);});return tree!;}
 it("keeps dirty draft mounted while native discard confirmation is shown",()=>{const leave=vi.fn();const tree=render(<EditorScreen title="작성" dirty submit={{label:"저장",onAction:()=>{}}} cancel={{label:"닫기",onAction:leave}} discard={{mode:"confirm",title:"버릴까요",description:"초안",confirmLabel:"버리기",cancelLabel:"유지",fallbackErrorMessage:"실패"}}>내용</EditorScreen>);act(()=>tree.root.findAllByType(Button).find(button=>button.props.children==="닫기")!.props.onPress());expect(leave).not.toHaveBeenCalled();expect(tree.root.findByType(AlertDialog).props.open).toBe(true);act(()=>tree.unmount());});
 it("disables reporting without a selected reason and forwards valid selection",()=>{const select=vi.fn();const tree=render(<ModerationScreen title="신고" reasons={[{value:"spam",label:"스팸"}]} reason={null} onReasonChange={select} reasonLabel="사유" submit={{label:"신고하기",onAction:()=>{}}}/>);expect(tree.root.findAllByType(Button).find(button=>button.props.children==="신고하기")!.props.disabled).toBe(true);act(()=>tree.root.findByType(RadioGroup).props.onValueChange("spam"));expect(select).toHaveBeenCalledWith("spam");act(()=>tree.unmount());});
 it("uses the settings callback only for denied permission",()=>{const request=vi.fn(),settings=vi.fn();const tree=render(<PermissionScreen title="알림" status="denied" explanation="안내" request={{label:"허용",onAction:request}} settings={{label:"설정",onAction:settings}} continueAction={{label:"계속",onAction:()=>{}}}/>);expect(request).not.toHaveBeenCalled();act(()=>tree.root.findByType(Button).props.onPress());expect(settings).toHaveBeenCalledOnce();act(()=>tree.unmount());});
 it("completes a one-step onboarding without an invalid next cursor",()=>{const finish=vi.fn(),move=vi.fn();const tree=render(<OnboardingScreen steps={[{id:"one",title:"시작",description:"안내",content:"내용"}]} index={0} onIndexChange={move} nextLabel="다음" backLabel="이전" complete={{label:"완료",onAction:finish}} progressLabel={()=>"1/1"}/>);act(()=>tree.root.findByType(Button).props.onPress());expect(finish).toHaveBeenCalledOnce();expect(move).not.toHaveBeenCalled();act(()=>tree.unmount());});
+it("keeps large onboarding guidance scrollable while completion stays outside the scroll body",()=>{
+ const tree=render(<OnboardingScreen steps={[{id:"one",title:"긴 시작 안내",description:"키보드가 열려도 안내와 입력에 도달해야 합니다.",content:<TextInput value="초안"/>}]} index={0} onIndexChange={()=>{}} nextLabel="다음" backLabel="이전" complete={{label:"완료",onAction:()=>{}}} progressLabel={()=>"1/1"}/>);
+ const body=tree.root.findByType(ScrollView);
+ expect(body.findAllByType(Text).map(node=>node.props.children)).toContain("긴 시작 안내");
+ expect(body.findByType(TextInput).props.value).toBe("초안");
+ expect(body.findAllByType(Button)).toHaveLength(0);
+ expect(tree.root.findByType(Button).props.children).toBe("완료");
+ act(()=>tree.unmount());
+});
 it("cancels queued native search when unmounted",()=>{vi.useFakeTimers();const query=vi.fn();const tree=render(<SearchScreen queryClearLabel="검색어 지우기" title="검색" query="a" queryLabel="검색어" onQueryChange={()=>{}} onSearch={query}>{null}</SearchScreen>);act(()=>tree.unmount());act(()=>{vi.advanceTimersByTime(500);});expect(query).not.toHaveBeenCalled();vi.useRealTimers();});
 
 it("uses product comment actions without inventing writes and preserves paging", async()=>{

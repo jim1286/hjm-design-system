@@ -1,12 +1,14 @@
 # ProgressiveBlur
 
 - 단계: 컴포넌트
-- 상태: 실험
+- 상태: 배포
 - 지원: Web · Native
-- 적용: 미게시(1.13.1 이후)
+- 적용: 1.14.0
 - 검토일: 2026-10-07
 - 근거: `src/progressive-blur.ts`, [도입 검토](../../../../../docs/plans/progressive-blur-adoption-2026-10-07.md)
-- 스토리북: `실험/컴포넌트/시각 효과/가장자리 흐림`
+- 스토리북: `배포/컴포넌트/시각 효과/가장자리 흐림`
+
+승급: 2026-10-07 사용자 승인, [검토 결과](../../../../../docs/qa/2026-10-07-experiment-promotion-release.md). Storybook 분류이며 제품 적용 증거는 별도다.
 
 ## 언제 쓰나
 

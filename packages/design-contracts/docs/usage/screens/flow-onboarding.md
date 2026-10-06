@@ -11,7 +11,7 @@
 ## 목적
 
 첫 실행 사용자를 몇 단계(소개 → 관심 주제 → 시작)로 안내하고 마지막 단계에서 완료를 저장하는 화면을 OnboardingScreen 하나로 구성한다.
-단계 제목·설명은 화면 머리, 진행 문구는 머리 아래, 이동 버튼은 footer에 고정하고 단계 본문만 바꾼다. 권한 요청·로그인·가입은
+단계 제목·설명은 화면 맨 위, 진행 문구는 그 아래에 둔다. Web은 머리를 고정하고 Native는 제목·설명·진행을 본문과 함께 스크롤한다. 이동 버튼은 footer에 고정한다. 권한 요청·로그인·가입은
 이 화면에 없다([권한 안내](flow-permission.md), [로그인](common-login.md)).
 스토리는 `기본`(1단계부터 직접 넘기기), `관심 주제 고르기`(2단계를 바로 연 상태), `실패와 복구`(다음 완료 저장 실패 → 다시 시작하기)다.
 2026-10-06 배포 직접 조립 온보딩(Steps·ContentTransition·여러 개 고르는 주제 버튼)을 이 항목으로 합쳤고, 그 고유 상태인
@@ -44,8 +44,8 @@
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
 | 바깥 틀 | OnboardingScreen(내부 ScreenLayout `scroll="screen"`) | route 본문. host가 남은 높이·safe area·키보드를 준다 | 폭 최대 720, 바깥 padding `spacing.md` 16([ScreenLayout 배치](../components/screen-layout.md#배치)). 화면 props는 `layoutStyle`만 받는다 |
-| 머리 | `steps[index].title`·`description` + `skip`(ghost Button) | 맨 위, 고정 | 제목 열 최소 120 × 글자 배율, 모자라면 건너뛰기가 다음 줄로 내려간다 |
-| 진행 문구 | `progressLabel(current, total)` → Text `variant="caption" tone="muted"` | 머리 아래 notice 자리, 고정 | 좌우 16 |
+| 머리 | `steps[index].title`·`description` + `skip`(ghost Button) | 맨 위, Web 고정·Native 본문 스크롤 | 제목 열 최소 120 × 글자 배율, 모자라면 건너뛰기가 다음 줄로 내려간다 |
+| 진행 문구 | `progressLabel(current, total)` → Text `variant="caption" tone="muted"` | 머리 아래, Web notice 고정·Native 본문 스크롤 | 좌우 16 |
 | 단계 본문 | `steps[index].content` | 진행 문구 아래, 본문 스크롤 | 본문 안 간격은 제품 소유. 예제는 Stack `gap="lg"` 20 |
 | 관심 주제 | Stack `axis="inline" wrap gap="xs"`(Web `role="group"` + 이름) > [Chip](../components/chip.md) `selectionMode="multiple"` | 2단계 content 안 | 칩 높이 `small` 36(Native hitSlop으로 터치 44), 사이 `spacing.xs` 8 |
 | 저장 실패 | [Notice](../components/notice.md) `tone="danger"` + `action` | 마지막 단계 content 맨 아래 | 본문 Stack 간격을 따른다 |
@@ -191,3 +191,5 @@ const topicPicker = <Stack axis="inline" wrap gap="xs">
 - 완료 `pending` 동안에도 이전 버튼은 막히지 않는다. 저장 중 단계 이동이 문제가 되면 `onIndexChange`에서 무시한다.
 - 현재 스토리의 진행 문구는 `` `${index} / ${total}` `` 고정 문자열이다. 제품은 보간 키 하나(`onboarding.progress`)를 쓴다.
 - Storybook은 실제 서버·라우터 연동 증거가 아니다. 기본·어두운 테마·큰 글자와 실패와 복구를 각각 확인한다.
+
+2026-10-07 iOS 26.5 / 200% 글자에서 키보드가 열린 시작 안내의 고정 머리가 본문 높이를 모두 소비했다. Native는 기존 ScreenLayout의 본문 스크롤 안으로 단계 안내를 옮겨 입력에 도달하게 하고 footer의 완료·이전 버튼은 유지한다. [검토 결과](../../../../../docs/qa/2026-10-07-experiment-promotion-release.md).

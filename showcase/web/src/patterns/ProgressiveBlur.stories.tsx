@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ProgressiveBlurPreview } from "./progressive-blur-preview";
-const meta = { includeStories: ["Default", "Dark", "LargeText"], id: "compositions-information-scroll-edge-blur", title: "실험/컴포넌트/시각 효과/가장자리 흐림", component: ProgressiveBlurPreview } satisfies Meta<typeof ProgressiveBlurPreview>;
+const meta = { includeStories: ["Default", "Dark", "LargeText"], id: "compositions-information-scroll-edge-blur", title: "배포/컴포넌트/시각 효과/가장자리 흐림", component: ProgressiveBlurPreview } satisfies Meta<typeof ProgressiveBlurPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };

@@ -1,12 +1,14 @@
 # 그림과 시작 안내
 
 - 단계: 구성
-- 상태: 실험
+- 상태: 배포
 - 지원: Web · Native
-- 적용: 미게시(1.13.1 이후)
+- 적용: 1.14.0
 - 검토일: 2026-10-07
 - 근거: `showcase/web/src/patterns/illustrated-outcome-preview.tsx`, `showcase/native/src/illustrated-outcome-preview.tsx`
-- 스토리북: `실험/구성/피드백과 복구/그림과 시작 안내`
+- 스토리북: `배포/구성/피드백과 복구/그림과 시작 안내`
+
+승급: 2026-10-07 사용자 승인, [검토 결과](../../../../../docs/qa/2026-10-07-experiment-promotion-release.md). Storybook 분류이며 제품 적용 증거는 별도다.
 
 ## 언제 쓰나
 
