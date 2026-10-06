@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [ListRow](../../list-row.md), recipe `listRowRecipe`(`src/component-recipes.ts`)
 - 스토리북: `배포/컴포넌트/데이터 표시/목록 행`
 
@@ -101,6 +101,8 @@ import { Avatar, ListRow } from "@hjmds/react-native/data-display";
 ```
 
 ## 꼭 지킬 것
+
+- Web `href`는 탐색 링크이며 `download` prop은 없다. 다운로드 속성이 필요한 파일은 [Link](link.md)를 사용한다. 큰 미리보기와 다운로드·메뉴 등 독립 행동은 Card로 구성하며 클릭 가능한 행 안에 링크를 중첩하지 않는다. 2026-10-07 파일 사례 대조에서 파일 행의 외형만으로 다운로드 지원을 추론한 대응표를 바로잡았다.
 
 - 제목·설명은 i18n 키로 넣는다. leading의 사진·아이콘은 장식으로 두고 의미는 제목이 말한다.
 - 행 안에 다른 버튼을 넣지 않는다. Native는 별도 target을 `trailingAction`에 둔다(행 명령 옆에 따로 그린다).

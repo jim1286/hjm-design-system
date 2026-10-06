@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [Link](../../link.md), recipe `linkRecipe`(`src/component-recipes.ts`), 목적지 검증 `src/link.ts`
 - 스토리북: `배포/컴포넌트/동작/링크`
 
@@ -94,6 +94,8 @@ const renderGlyph = createLucideGlyph({ chevronEnd: ChevronRight }); // 제품�
 | 좁은 폭·큰 글자 | 긴 문구는 줄바꿈된다(Web `overflow-wrap: anywhere`, `max-inline-size: 100%`). 자르지 않는다 | `react/src/styles.css`(`.hjm-link`) |
 
 ## 꼭 지킬 것
+
+- Web 파일 다운로드는 실제 `href`와 anchor `download` 속성을 사용한다. 파일 설명·형식·크기는 제품이 정확한 현지화 문구로 제공한다. Native Link는 탐색 계약이므로 파일 저장·공유 작업의 완료나 실패를 자동 처리하지 않는다. 2026-10-07 Nucleus/TFWM 파일 사례 대조에서 탐색·다운로드·업로드를 같은 상태로 분류하지 않기 위해 이 경계를 명시했다.
 
 - 라벨은 i18n 키로 넣는다. 접근성 이름을 따로 줄 때도 보이는 문구를 포함한다.
 - navigation을 `onClick`/`onPress` callback으로 대신하지 않는다. Web은 실제 `href`를, Native는 `destination`을 둔다.

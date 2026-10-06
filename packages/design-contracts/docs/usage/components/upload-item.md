@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [UploadItem](../../upload-item.md), `src/upload-item.ts`(`uploadItemRecipe`)
 - 스토리북: `배포/컴포넌트/데이터 표시/업로드 항목`
 
@@ -83,6 +83,8 @@ import { UploadItem } from "@hjmds/react-native/upload-item";
 | 좁은 폭·큰 글자 | Web은 본문 블록이 14rem 아래로 줄면 행동 버튼이 다음 줄 끝으로 내려간다. Native는 한 줄을 유지하고 이름이 줄바꿈된다 | `.hjm-upload-item__body`(flex: 1 1 14rem), `.hjm-upload-item`(flex-wrap) |
 
 ## 꼭 지킬 것
+
+- 이미 게시된 문서를 열거나 내려받는 목록에 `success` 상태를 전용하지 않는다. 이 API의 행동은 업로드 취소·재시도이며 다운로드 행동이 아니다. Web 다운로드는 [Link](link.md), 미리보기와 여러 행동은 [Card](card.md)를 대조한다. 2026-10-07 파일 사례 조사에서 다운로드와 업로드의 초기 대응표가 같은 계약으로 오인될 수 있어 구분했다.
 
 - `progress`에 100을 곱해 넘기지 않는다. renderer가 내부 Progress에 `value={progress * 100}`으로 바꾼다.
 - `uploading` 상태에서 `onCancel`이, `error` 상태에서 `onRetry`가 없으면 렌더 중 `TypeError`가 난다.
