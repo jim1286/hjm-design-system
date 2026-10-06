@@ -1665,8 +1665,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-card-preserve-availability",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "7269392",
+        "report": "docs/plans/utilverse-social-host-adoption.md",
+        "reason": "Already Surface/Stack/Button; preserve preview hiding description/actions, product artwork, runtime-gated run and always-available details navigation. Compare higher card composition only if independent actions remain.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/ChatToolPicker.tsx",
@@ -1747,8 +1756,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "absorb-filter-results-preserve-search",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "7269392",
+        "report": "docs/plans/utilverse-social-host-adoption.md",
+        "reason": "Already Sheet/SearchScreen/SearchField. Replace pill Button theme selectors with single-selection API and result Buttons with ListRow. Preserve settled query/abort handling, localized keyword search, privacy copy and choose-only callback.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/ChoiceField.tsx",
@@ -1965,8 +1983,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-picker-preserve-target-state",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "7269392",
+        "report": "docs/plans/utilverse-social-host-adoption.md",
+        "reason": "Already ReactionPicker/Sheet/IconButton. Preserve tap-heart vs long-press full picker, guest login, target-state idempotent PUT, controlled receipt-driven reaction and uncertainty feedback. Verify picker accessibility alternative to long press.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/CommentReplyComposer.tsx",
@@ -2070,8 +2097,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "absorb-composer-context-preserve-durable-send",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "7269392",
+        "report": "docs/plans/utilverse-social-host-adoption.md",
+        "reason": "Use existing MessageComposer replyTo/context/leadingAction to absorb exterior quote/avatar where geometry and missing-parent semantics match; retain pending document lock, original retry parent ID, schema/client ID, draft write before send and done-only success toast.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/CommentReportForm.tsx",
@@ -3463,15 +3499,33 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-ad-host-and-lifecycle",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "7269392",
+        "report": "docs/plans/utilverse-social-host-adoption.md",
+        "reason": "Native SDK host already surrounded by HJM Divider/Stack/Text. Preserve lazy SDK, foreground/focus/keyboard gates, abortable consent start, non-personalized request, adaptive measured width and failure hiding; do not centralize SDK or unit IDs.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/ResultAdBanner.tsx",
       "sha256": "563b920ba8240c61954b8ac3da99bdfb26d6f98ecf4e2ffc129e847a7ee6246c",
       "renderedTags": [],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-platform-host",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "7269392",
+        "report": "docs/plans/utilverse-social-host-adoption.md",
+        "reason": "Unsupported web ad surface intentionally null; do not create fake placeholder/ad UI.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/ResultCopy.tsx",
@@ -4576,8 +4630,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-official-attribution-absorb-error",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "7269392",
+        "report": "docs/plans/utilverse-social-host-adoption.md",
+        "reason": "Retain Google asset and destination; compare effective HJM theme with current system scheme for logo contrast, use Notice for link failure. Do not recolor/recreate official mark or count attribution as generic illustration.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/UiGlyph.tsx",
