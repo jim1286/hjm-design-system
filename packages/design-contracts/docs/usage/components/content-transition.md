@@ -100,3 +100,16 @@ import { ContentTransition } from "@hjmds/react-native/content-transition";
 | 포커스 복원 | `focusTarget`: 바뀌기 전 포커스가 안에 있었으면 그 요소로 옮긴다 | 없음 |
 | 앱이 백그라운드로 감 | 해당 없음 | 진행 중 전환을 멈추고 바로 표시 |
 | 배치 prop | `layoutStyle`(바깥 wrapper) | 없음 |
+
+### 측정 기반 overlay 전환 준비 (미게시)
+
+`@hjmds/design-contracts/content-transition`의 `resolveOriginTransition(origin, destination, reducedMotion)`은
+같은 물리 viewport 좌표계의 `TransitionRect { x, y, width, height }` 두 개를 받는다.
+도착 경계의 중심 기준 translateX/Y와 scaleX/Y를 반환한다. RTL 좌표를 다시 뒤집지 않는다.
+미측정·0 크기·비유한 값·계산 overflow·모션 감소에서는 null로 일반 overlay 표현을 유지한다.
+
+이 함수는 renderer의 morph prop이나 완성된 실험이 아니다. 기존 ContentTransition의
+단일 subtree 전환과 Native SharedTransitionElement의 라우터 전환을 대체하지 않는다.
+trigger 측정 시점, 같은 좌표계 보장, 취소·재열기, exit presence, 초점 복귀는 renderer가
+연결해야 한다. Motion Primitives의 원본에서 닫기 후 초점 손실과 작성 예제의 초안 소실을
+확인했으므로 geometry만 흡수하고 기존 HJM overlay 상태 엔진을 유지한다.

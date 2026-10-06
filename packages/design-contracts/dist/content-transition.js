@@ -12,4 +12,25 @@ export function resolveContentTransition(preset = "fade", direction = "ltr") {
         default: throw new TypeError("Unsupported content transition preset");
     }
 }
+/** Invert the destination around its center so it starts at the trigger bounds.
+ * A renderer interpolates this transform to identity and owns cancellation,
+ * measurement freshness, presence and focus; this resolver never clones content. */
+export function resolveOriginTransition(origin, destination, reducedMotion = false) {
+    // Missing/zero geometry occurs before layout and after trigger removal. Keep
+    // the canonical overlay available instead of throwing or guessing coordinates.
+    if (reducedMotion || !origin || !destination)
+        return null;
+    for (const rect of [origin, destination]) {
+        if (![rect.x, rect.y, rect.width, rect.height].every(Number.isFinite) || rect.width <= 0 || rect.height <= 0)
+            return null;
+    }
+    const transform = {
+        translateX: (origin.x - destination.x) + (origin.width - destination.width) / 2,
+        translateY: (origin.y - destination.y) + (origin.height - destination.height) / 2,
+        scaleX: origin.width / destination.width,
+        scaleY: origin.height / destination.height,
+    };
+    // Finite measurements can still overflow or underflow during subtraction/division.
+    return Object.values(transform).every(Number.isFinite) && transform.scaleX > 0 && transform.scaleY > 0 ? transform : null;
+}
 //# sourceMappingURL=content-transition.js.map

@@ -23,7 +23,7 @@ UI·기능 검증을 거쳐 승격·릴리스하고 Utilverse의 대체 가능�
 
 | 후보 | 현재 구현/판단 | 남은 일 |
 | --- | --- | --- |
-| Morphing Popover / Dialog | geometry 표현 미구현 | 기존 overlay focus/stack/닫기/키보드 계약 위에서 선택적 전환 설계·실험 |
+| Morphing Popover / Dialog | 원본 초점·초안 소실 확인, 측정 geometry resolver 추가. renderer 표현 미구현 | 기존 overlay focus/stack/닫기/키보드 계약 위에서 선택적 전환 실험. docs/qa/2026-10-07-overlay-origin-transition.md |
 | Transition Panel | ContentTransition animateHeight 구현 | 실제 Web/Native 빠른 전환·입력 보존·큰 글자 UI 검증 |
 | Animated Background | Tabs gooey 유지. SegmentedControl selectionMotion=slide 실험 추가 | Web/Native 회귀 7개 통과, 기본·다크·큰 글자 Web UI 확인; 좁은 화면·팔레트·기기 검증 대기 |
 | Stateful Button | ActionFeedback 실험 | 완료·실패·재시도와 UI 검증 |

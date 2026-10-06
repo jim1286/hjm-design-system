@@ -769,9 +769,9 @@
       "existingMapping": "Dialog / Popover / MorphingMenu",
       "priorRationale": "overlay 동작 유지, geometry만 비교",
       "sourceAudit": "2026-10-06",
-      "visualReview": "pending",
-      "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "visualReview": "partial 2026-10-07 IAB light 1280x720: page lists lamp, book and image variants. Opened lamp card; centered detail measured 500x658.6px. Other variants/dark/responsive pending.",
+      "interactionReview": "Lamp example focuses first external link on open. Escape removes dialog; activeElement becomes BODY rather than the trigger. Did not follow external link.",
+      "adoptionDecision": "Retain conditional recommendation for measured geometry only. Preserve HJM modal focus/priority/dismiss-complete lifecycle. Existing Native router shared-element adapter does not own local overlay transitions."
     },
     {
       "url": "https://motion-primitives.com/docs/morphing-popover",
@@ -779,9 +779,9 @@
       "existingMapping": "Dialog / Popover / MorphingMenu",
       "priorRationale": "overlay 동작 유지, geometry만 비교",
       "sourceAudit": "2026-10-06",
-      "visualReview": "pending",
-      "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "visualReview": "partial 2026-10-07 IAB light 1280x720: basic, custom-transition and textarea examples present. Inspected textarea variant; other variants/dark/responsive pending.",
+      "interactionReview": "Add Note focuses textarea. After test draft and Escape, popover disappears and activeElement is BODY; reopening shows empty textarea. Submit was not invoked.",
+      "adoptionDecision": "Absorb geometry without copying source session ownership: HJM must retain draft in product state, dismiss policies and focus return. resolveOriginTransition added to contracts; renderer integration and experiment still pending."
     },
     {
       "url": "https://motion-primitives.com/docs/dock",
