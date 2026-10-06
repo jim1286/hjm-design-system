@@ -86,8 +86,8 @@ UI·기능 검증을 거쳐 승격·릴리스하고 Utilverse의 대체 가능�
 
 `node scripts/audit-consumer-ui.mjs <utilverse-root> docs/plans/utilverse-ui-adoption-inventory.json`
 명령으로 소비 저장소의 TypeScript parser를 사용해 `apps/mobile/src/**/*.tsx` 136개를 읽었다.
-JSX에서 실제 사용한 import·alias·행 번호·파일 hash를 기록했다. 현재 여덟 파일은 source-reviewed이며
-나머지 128개는 pending이다. source-reviewed는 UI·동작 검증이나 채택 완료가 아니다.
+JSX에서 실제 사용한 import·alias·행 번호·파일 hash를 기록했다. 현재 열네 파일은 source-reviewed이며
+나머지 122개는 pending이다. source-reviewed는 UI·동작 검증이나 채택 완료가 아니다.
 HJM import가 있다는 사실만으로 내부 자체 UI가 대체됐다고 판단하지 않는다. Alert.alert 같은
 JSX 밖 호출은 위 1차 대조 목록 및 후속 동작 분석으로 함께 확인한다.
 
@@ -262,3 +262,9 @@ contracts typecheck·build가 통과했다. 공개 renderer·스토리는 아직
 교체 경로와 durable command·가상화 pager 보존 조건을 기록했다. 대화 화면은 이미
 ChatScreen/ChatMessage를 사용하므로 초기 목록의 표현을 신규 전체 교체로 해석하지 않는다.
 현재 8/136 source-reviewed, 128 pending이다. 소비 구현·기기 검증·릴리스는 미실행이다.
+
+
+삭제·신고·차단·명령 피드백 여섯 TSX를 상세 검토했다. 현재 14/136 source-reviewed,
+122 pending이다. [상태 의미와 교체 조건](utilverse-destructive-actions-adoption.md)에
+Promise resolve와 서버 성공의 차이, Sheet 자식 명령의 닫힘 정책 연결을 기록했다.
+소비 코드·기기 QA·릴리스는 미실행이다.

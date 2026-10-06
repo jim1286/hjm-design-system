@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: `AlertDialogRequest`·`createAlertDialogSession`(`src/alert-dialog.ts`), recipe `alertDialogRecipe`, Popover와의 경계 [ConfirmPopover 결정](../../confirm-popover.md), Native 긴 문구 처리 [Dialog](../../dialog.md)
 - 스토리북: `배포/컴포넌트/오버레이/확인 대화상자`
 
@@ -126,5 +126,11 @@ import { AlertDialog } from "@hjmds/react-native/overlays";
 
 ## 함정
 
+- `onConfirm`은 Promise가 resolve되면 확인 성공으로 처리한다. 제품 command가 실패를 자체
+  snapshot에 기록하고 Promise를 resolve하는 경우 그대로 연결하지 않는다. 2026-10-07 Utilverse
+  삭제·신고 조사에서 이 차이를 확인했다. 작업까지 대화상자가 기다리는 경로는 receipt/실패를
+  명시적으로 변환하는 adapter가 필요하다. 사용자 동의만 받는 경로는 `onConfirm` 없이 확인을
+  마치고, Native `onResult`에서 제품 작업을 시작한다. 이때 `confirmed`는 동의 결과이며 서버
+  삭제·Apple 인증·로컬 정리의 성공을 뜻하지 않는다. 처리 결과는 제품 상태 화면이 계속 보여 준다.
 - Native에서 매우 긴 확인 문구는 본문이 스크롤되도록 바뀌었지만 큰 글자 실기기 검증은 끝나지 않았다([Dialog](../../dialog.md)).
   문구를 자르거나 글자 크기 상한으로 피하지 않는다.

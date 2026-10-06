@@ -1151,8 +1151,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-hjm-form-replace-feedback",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "5bc85ef",
+        "report": "docs/plans/utilverse-destructive-actions-adoption.md",
+        "reason": "Keep revision read, target-state write and cache invalidation; inspect Notice presentation without changing uncertain close policy.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/Celebration.tsx",
@@ -1326,8 +1335,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-hjm-sheet-connect-child-busy",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "5bc85ef",
+        "report": "docs/plans/utilverse-destructive-actions-adoption.md",
+        "reason": "Already HJM Sheet/ReactionPicker. Child sending state is not connected to Sheet dismissal; distinguish durable uncertain exit from block policy.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/ChatToolCard.tsx",
@@ -1550,8 +1568,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "replace-presentation-preserve-command-state",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "5bc85ef",
+        "report": "docs/plans/utilverse-destructive-actions-adoption.md",
+        "reason": "Notice can own uncertain/error presentation; preserve product fault mappings, retry identity and silent done.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/CommandNotice.tsx",
@@ -1587,8 +1614,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "replace-presentation-preserve-safety-copy",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "5bc85ef",
+        "report": "docs/plans/utilverse-destructive-actions-adoption.md",
+        "reason": "Notice can own presentation; preserve safetyFaultCopy and same-input uncertain retry.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/CommentReactions.tsx",
@@ -1847,8 +1883,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-hjm-form-preserve-durable-report",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "5bc85ef",
+        "report": "docs/plans/utilverse-destructive-actions-adoption.md",
+        "reason": "Already HJM form; preserve captured revision, private durable reason and same-request retry.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/CommentRevisionActions.tsx",
@@ -5290,8 +5335,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "replace-confirmation-preserve-deletion-state",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "5bc85ef",
+        "report": "docs/plans/utilverse-destructive-actions-adoption.md",
+        "reason": "Use AlertDialog for consent only; coordinator resolves even on failure. Preserve separate server/local/Apple states and start provider work after modal exit.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/features/DiscountScreen.tsx",
