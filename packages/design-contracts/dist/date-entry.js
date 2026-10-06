@@ -62,4 +62,17 @@ export function resolveDateEntryDraft({ draft, order, required, parse }) {
     return { draft: snapshot, status, value, issue,
         fields: order.map(part => ({ part, value: snapshot[part], invalid: issue?.fields.includes(part) ?? false })) };
 }
+export function resolveDateEntryControl(props) {
+    if (["label", ...parts].some(key => !props.labels?.[key]?.trim()) ||
+        typeof props.onValueChange !== "function" || typeof props.formatIssue !== "function" ||
+        (props.purpose !== undefined && !["date", "birthdate"].includes(props.purpose)) ||
+        (props.monthInput !== undefined && !["text", "numeric"].includes(props.monthInput))) {
+        throw new TypeError("Date entry needs labels, callbacks and valid input policies");
+    }
+    const resolved = resolveDateEntryDraft({ draft: props.value, order: props.order, required: props.required ?? false, parse: props.parse });
+    const error = props.showErrors && resolved.issue ? props.formatIssue(resolved.issue) : undefined;
+    if (error !== undefined && (typeof error !== "string" || !error.trim()))
+        throw new TypeError("Date entry issue text must not be empty");
+    return { ...resolved, error };
+}
 //# sourceMappingURL=date-entry.js.map

@@ -127,3 +127,11 @@ TextField와 같은 테두리·글꼴·placeholder 색을 입힌다. 라벨·도
 - Native `TextField`·`Field`의 `error`·`description`은 `string`이라 `exactOptionalPropertyTypes`에서 `undefined`를 받지
   않는다(TS2375). 위 예처럼 조건부 spread로 넘긴다. Web은 `ReactNode`라 `undefined`를 그대로 넘겨도 된다.
 - Web `Field`는 `controlId`가 필수이고, Native `Field`에는 `controlId`가 없다. 공용 코드에서 같은 props 객체를 넘기지 않는다.
+
+### 날짜 조각 직접 입력 (실험·미게시)
+
+알고 있는 날짜를 년·월·일로 직접 편집하려면 `DateEntry`를 사용한다.
+Web `@hjmds/react/date-entry`, Native `@hjmds/react-native/date-entry`의 Field 확장이다.
+원문 초안·입력 순서·오류 대상을 공유하며 입력은 기존 TextField로 렌더링한다.
+[날짜 직접 입력 지침](../compositions/date-entry.md)에 배치·props·날짜 파싱 소유권이 있다.
+달력에서 날짜를 고르는 경우에는 기존 DatePicker를 쓴다.

@@ -73,6 +73,8 @@ const rendererBudgets = [
       "./scroll-progress": { modules: 4, raw: 17400, gzip: 4400 },
       // 2026-10-01 compound controls: measured local graphs, ~15% byte headroom;
       // exact module limits preserve reuse of NumberField/Button/IconButton/CounterBadge.
+      // DateEntry reuses forms/internal; inspected 3 local modules, no root barrel.
+      "./date-entry": { modules: 3, raw: 22051, gzip: 5305 },
       "./duration-field": { modules: 3, raw: 12200, gzip: 3700 },
       "./inline-confirm": { modules: 3, raw: 11000, gzip: 3050 },
       // 2026-10-06 measured 9.6/2.7 kB, above this baseline: the `more` catalog, layoutStyle and returning
@@ -411,6 +413,8 @@ const rendererBudgets = [
       "./scroll-progress": { modules: 6, raw: 89500, gzip: 19000 },
       // 2026-10-01 compound controls: measured local graphs, ~15% byte headroom;
       // exact module limits preserve reuse of NumberField/Button/IconButton/CounterBadge.
+      // DateEntry reuses inputs and its field helpers/provider: 10 reviewed local modules.
+      "./date-entry": { modules: 10, raw: 100978, gzip: 22893 },
       "./duration-field": { modules: 6, raw: 40000, gzip: 9800 },
       "./inline-confirm": { modules: 5, raw: 41300, gzip: 9700 },
       "./reaction-picker": { modules: 5, raw: 39800, gzip: 9300 },

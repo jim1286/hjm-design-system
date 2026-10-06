@@ -4,7 +4,7 @@
 
 ## @hjmds/react
 
-고유 공개 컴포넌트 및 provider 이름 157개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 158개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -50,6 +50,7 @@
 | ContextMenu | ContextMenu | canonical | root, ./context-menu |
 | CounterBadge | CounterBadge | canonical | root, ./display |
 | DataTable | DataTable | canonical | root, ./data-table |
+| DateEntry | Field | optional-extension | ./date-entry |
 | DatePicker | DatePicker | canonical | root, ./date-picker, ./forms |
 | DateRangePicker | DateRangePicker | canonical | root, ./date-range |
 | DescriptionList | DescriptionList | canonical | root, ./display |
@@ -168,7 +169,7 @@
 
 ## @hjmds/react-native
 
-고유 공개 컴포넌트 및 provider 이름 143개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 144개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -205,6 +206,7 @@
 | Container | Container | canonical | root, ./primitives |
 | ContentTransition | 별도 보조 기능 | supplemental | ./content-transition |
 | CounterBadge | CounterBadge | canonical | root, ./data-display |
+| DateEntry | Field | optional-extension | ./date-entry |
 | DatePicker | DatePicker | canonical | root, ./date-picker, ./inputs |
 | DateRangePicker | DateRangePicker | canonical | root, ./date-range |
 | DescriptionList | DescriptionList | canonical | root, ./data-display |

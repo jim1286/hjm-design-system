@@ -1,4 +1,4 @@
-/** Internal candidate for direct date entry; not a public package entry yet. */
+/** Experimental direct date entry contract; date calculation remains product-owned. */
 export type DateEntryPart = "year" | "month" | "day";
 export type DateEntryDraft = Readonly<Record<DateEntryPart, string>>;
 export type DateEntryOrder = readonly [DateEntryPart, DateEntryPart, DateEntryPart];
@@ -76,4 +76,36 @@ export function resolveDateEntryDraft({ draft, order, required, parse }: {
   }
   return { draft: snapshot, status, value, issue,
     fields: order.map(part => ({ part, value: snapshot[part], invalid: issue?.fields.includes(part) ?? false })) };
+}
+
+export type DateEntryControlProps = Readonly<{
+  value: DateEntryDraft;
+  onValueChange: (draft: DateEntryDraft) => void;
+  order: DateEntryOrder;
+  parse: (draft: DateEntryDraft) => DateEntryParseResult;
+  labels: Readonly<Record<DateEntryPart | "label", string>>;
+  formatIssue: (issue: DateEntryIssue) => string;
+  description?: string;
+  required?: boolean;
+  disabled?: boolean;
+  readOnly?: boolean;
+  /** Products reveal validation on submit/blur; typing never forces errors visible. */
+  showErrors?: boolean;
+  purpose?: "date" | "birthdate";
+  /** Text is the default so localized month names remain enterable. */
+  monthInput?: "text" | "numeric";
+  onBlur?: (part: DateEntryPart) => void;
+}>;
+
+export function resolveDateEntryControl(props: DateEntryControlProps) {
+  if (["label", ...parts].some(key => !props.labels?.[key as keyof typeof props.labels]?.trim()) ||
+    typeof props.onValueChange !== "function" || typeof props.formatIssue !== "function" ||
+    (props.purpose !== undefined && !["date", "birthdate"].includes(props.purpose)) ||
+    (props.monthInput !== undefined && !["text", "numeric"].includes(props.monthInput))) {
+    throw new TypeError("Date entry needs labels, callbacks and valid input policies");
+  }
+  const resolved = resolveDateEntryDraft({ draft: props.value, order: props.order, required: props.required ?? false, parse: props.parse });
+  const error = props.showErrors && resolved.issue ? props.formatIssue(resolved.issue) : undefined;
+  if (error !== undefined && (typeof error !== "string" || !error.trim())) throw new TypeError("Date entry issue text must not be empty");
+  return { ...resolved, error };
 }

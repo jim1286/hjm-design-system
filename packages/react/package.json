@@ -487,6 +487,11 @@
       "types": "./dist/progressive-blur.d.ts",
       "import": "./dist/progressive-blur.js",
       "default": "./dist/progressive-blur.js"
+    },
+    "./date-entry": {
+      "types": "./dist/date-entry.d.ts",
+      "import": "./dist/date-entry.js",
+      "default": "./dist/date-entry.js"
     }
   },
   "files": [

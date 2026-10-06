@@ -684,6 +684,12 @@
       "react-native": "./dist/text-annotation.js",
       "import": "./dist/text-annotation.js",
       "default": "./dist/text-annotation.js"
+    },
+    "./date-entry": {
+      "types": "./dist/date-entry.d.ts",
+      "react-native": "./dist/date-entry.js",
+      "import": "./dist/date-entry.js",
+      "default": "./dist/date-entry.js"
     }
   },
   "files": [

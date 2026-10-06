@@ -67,3 +67,16 @@ describe("direct date entry draft contract", () => {
     expect(() => resolve({ ...draft, year: 2024 } as unknown as DateEntryDraft)).toThrow(TypeError);
   });
 });
+
+it("formats errors only when requested and rejects empty user-facing error text", async () => {
+  const { resolveDateEntryControl } = await import("../src/date-entry.js");
+  const formatIssue = vi.fn(() => "연도가 필요합니다");
+  const props = { value: { year: "", month: "Feb", day: "29" }, order,
+    labels: { label: "날짜", year: "연도", month: "월", day: "일" },
+    onValueChange: () => undefined, parse, formatIssue };
+  expect(resolveDateEntryControl(props).error).toBeUndefined();
+  expect(formatIssue).not.toHaveBeenCalled();
+  expect(resolveDateEntryControl({ ...props, showErrors: true }).error).toBe("연도가 필요합니다");
+  expect(() => resolveDateEntryControl({ ...props, showErrors: true, formatIssue: () => " " })).toThrow(TypeError);
+  expect(() => resolveDateEntryControl({ ...props, labels: { ...props.labels, year: " " } })).toThrow(TypeError);
+});

@@ -45,3 +45,38 @@ renderer 연결 단계에서 다뤄야 하며 resolver 호출 자체가 UI 오�
 월 이름 키보드 접근, IME, 오류 노출 시점, 큰 글자·좁은 폭·RTL·테마·스크린리더를 연결/검증해야 한다.
 현재 package export·공개 renderer·Storybook 실험 등록은 없다. 실험 수는 14개이고 승격·릴리스·
 Utilverse 적용과 무관한 준비 단계다. 브라우저 캡처는 인라인 관찰이며 별도 원시 파일을 보존하지 않았다.
+
+
+## 공개 구성·15번째 실험 연결 — 5f14fe1 이후
+
+DateEntry를 Field optional extension으로 분류하고 contracts/Web/Native의 전용 date-entry
+subpath로 공개했다. root barrel에 추가하지 않는다. 새 primitive 대신 기존 TextField를 세 번
+합성한다. `실험/구성/입력과 작성/날짜 직접 입력`에 기본·다크·큰 글자·RTL 스토리와 사용 지침을
+양쪽에 추가했다. package export의 JSON 변경 이유는 이 분리와 지침에 기록한다.
+
+브라우저 회귀 3개는 부분 입력→교정·Tab·320px 폭, readOnly, 예제 파서의 윤년/전각/불가능한
+날짜를 검사한다. Native 회귀 4개는 원문·오류 대상·순서 전환·잠긴 입력 callback과 iOS
+contentType 연결을 검사한다. contracts 7개는 기존 6개와 오류 노출 정책/빈 문구 거부다.
+RN 0.86 runtime은 bday 토큰을 변환하지만 패키지의 지원 RN 타입에서는 이를 받지 않아,
+Android autoComplete birthdate-*와 iOS 명시적 textContentType을 연결했다. cast로 숨기지 않았다.
+
+IAB의 실제 Web 기본 화면에서 2023/Feb/29를 확인해 세 필드 오류를 관찰한 후 2024로 교정해
+2024-02-29를 확인했다. 입력 순서를 일/월/연도로 바꿔도 값과 결과가 보존됐다. 이때 예시 hint가
+기존 순서에 머무는 오류를 발견해 order에 맞춰 바꾸도록 수정했다. 1280×720 light/LTR 확인이다.
+
+기존 iPhone 17 Pro/iOS 26.5 Expo Go/8084에서 신규 스토리를 직접 열었다. idb/ simctl 대체
+도구로 입력·접근성 값·화면을 확인했다. 첫 입력 묶음에서 연도/월 값이 남지 않았지만 빌드·
+Fast Refresh와 겹쳐 원인을 확정하지 않았다. 빌드 종료 확인 뒤 각 필드 값을 읽으며 다시 입력해
+2024/2/29와 확인한 날짜 2024-02-29를 확인했다. 알파벳 키 주입은 한글 자판으로 ㄹㄷㅠ가 입력돼
+세 글자를 삭제하고 숫자 월로 교정했다. 따라서 Native 영어 월 이름 입력 성공으로 세지 않는다.
+키보드가 열린 채 확인 버튼과 결과에 접근할 수 있었다. 개발 도구 톱니가 일 라벨 일부를 가리킨
+캡처는 제품 겹침으로 분류하지 않으며 원시 캡처는 이 기록 후 제거한다.
+
+모듈 graph는 Web date-entry/forms/internal 3개, Native date-entry/inputs 및 내부 field·state·
+style·provider 등 10개를 조사해 budget에 등록했다. 새 외부 의존성은 없다. 양 renderer build,
+각 package 타입, 양 Showcase 타입, API map/usage/Storybook 규격, renderer/contracts bundle,
+workspace sync 검사를 수행했다. 신규 지침/Changeset과 생성 dist를 같은 변경에 포함한다.
+
+아직 Native 큰 글자·오류 교정/재정렬·영어 월, 양쪽 제품 팔레트·다크/RTL 시각 검토, 실제
+자동완성·VoiceOver/TalkBack·Android·IME 상세 검증은 남았다. 15번째 실험 등록을 승격·게시·
+Utilverse 채택 완료로 세지 않는다. 전체 레퍼런스 전수 검토도 여전히 미완료다.

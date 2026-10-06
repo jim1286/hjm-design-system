@@ -42,6 +42,8 @@ const budgets = [
   { exportPath: "./progressive-blur", maxModules: 2, maxRawBytes: 4000, maxGzipBytes: 1400, forbiddenModules: metadataModules },
   { exportPath: "./scroll-progress", maxModules: 1, maxRawBytes: 700, maxGzipBytes: 400, forbiddenModules: metadataModules },
   // Isolated integer duration and controlled reactions: measured 1289/610 and 1068/464 raw/gzip bytes.
+  // Pure date draft contract: no calendar engine, renderer or metadata imports.
+  { exportPath: "./date-entry", maxModules: 1, maxRawBytes: 5000, maxGzipBytes: 1800, forbiddenModules: metadataModules },
   { exportPath: "./duration-field", maxModules: 1, maxRawBytes: 1500, maxGzipBytes: 710, forbiddenModules: metadataModules },
   // 2026-10-06: resolveReactionOptions (expanded catalog) measures 1373/565 after trimming its message.
   // Bytes are report-only since 2026-10-06; the baseline stays at the reviewed 1250/550.

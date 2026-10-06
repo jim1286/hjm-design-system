@@ -413,6 +413,15 @@
         "role": "canonical"
       },
       {
+        "name": "DateEntry",
+        "source": "packages/react/src/date-entry.tsx",
+        "entries": [
+          "./date-entry"
+        ],
+        "canonicalComponent": "Field",
+        "role": "optional-extension"
+      },
+      {
         "name": "DatePicker",
         "source": "packages/react/src/date-picker.tsx",
         "entries": [
@@ -1856,6 +1865,15 @@
         ],
         "canonicalComponent": "CounterBadge",
         "role": "canonical"
+      },
+      {
+        "name": "DateEntry",
+        "source": "packages/react-native/src/date-entry.tsx",
+        "entries": [
+          "./date-entry"
+        ],
+        "canonicalComponent": "Field",
+        "role": "optional-extension"
       },
       {
         "name": "DatePicker",

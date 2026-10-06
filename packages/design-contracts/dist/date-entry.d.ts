@@ -1,4 +1,4 @@
-/** Internal candidate for direct date entry; not a public package entry yet. */
+/** Experimental direct date entry contract; date calculation remains product-owned. */
 export type DateEntryPart = "year" | "month" | "day";
 export type DateEntryDraft = Readonly<Record<DateEntryPart, string>>;
 export type DateEntryOrder = readonly [DateEntryPart, DateEntryPart, DateEntryPart];
@@ -38,4 +38,34 @@ export declare function resolveDateEntryDraft({ draft, order, required, parse }:
     required: boolean;
     parse: (draft: DateEntryDraft) => DateEntryParseResult;
 }): ResolvedDateEntry;
+export type DateEntryControlProps = Readonly<{
+    value: DateEntryDraft;
+    onValueChange: (draft: DateEntryDraft) => void;
+    order: DateEntryOrder;
+    parse: (draft: DateEntryDraft) => DateEntryParseResult;
+    labels: Readonly<Record<DateEntryPart | "label", string>>;
+    formatIssue: (issue: DateEntryIssue) => string;
+    description?: string;
+    required?: boolean;
+    disabled?: boolean;
+    readOnly?: boolean;
+    /** Products reveal validation on submit/blur; typing never forces errors visible. */
+    showErrors?: boolean;
+    purpose?: "date" | "birthdate";
+    /** Text is the default so localized month names remain enterable. */
+    monthInput?: "text" | "numeric";
+    onBlur?: (part: DateEntryPart) => void;
+}>;
+export declare function resolveDateEntryControl(props: DateEntryControlProps): {
+    error: string | undefined;
+    draft: DateEntryDraft;
+    status: "empty" | "incomplete" | "invalid" | "valid";
+    value: string | null;
+    issue: DateEntryIssue | null;
+    fields: readonly Readonly<{
+        part: DateEntryPart;
+        value: string;
+        invalid: boolean;
+    }>[];
+};
 //# sourceMappingURL=date-entry.d.ts.map
