@@ -781,8 +781,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "split-and-verify-target",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "a035f5d",
+        "report": "docs/plans/utilverse-settings-tools-adoption.md",
+        "reason": "Keep product SDK privacy flow and busy/checking conditions; absorb failure/section presentation.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/AnalyticsScope.tsx",
@@ -833,8 +842,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "split-and-verify-target",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "a035f5d",
+        "report": "docs/plans/utilverse-settings-tools-adoption.md",
+        "reason": "Keep Switch and product analytics store; replace failure presentation and standalone section only.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/AppDock.tsx",
@@ -1531,8 +1549,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "split-and-verify-target",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "a035f5d",
+        "report": "docs/plans/utilverse-settings-tools-adoption.md",
+        "reason": "Existing HJM selection adapter; compare width/locale/text-scale switching, reject null callbacks rather than unchecked Value cast.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/CommandFeedback.tsx",
@@ -2604,8 +2631,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "split-and-verify-target",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "a035f5d",
+        "report": "docs/plans/utilverse-settings-tools-adoption.md",
+        "reason": "Replace per-tool navigation assembly with ListRow; preserve permission, persistence, rescheduling and OS-settings actions.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/PdfPageCanvas.tsx",
@@ -3309,8 +3345,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "split-and-verify-target",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "a035f5d",
+        "report": "docs/plans/utilverse-settings-tools-adoption.md",
+        "reason": "Compare TopBar navigation plus Section identity; preserve deep-link fallback, dismiss side and large artwork/subtitle.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/SelectedPhoto.tsx",
@@ -3400,8 +3445,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "split-and-verify-target",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "a035f5d",
+        "report": "docs/plans/utilverse-settings-tools-adoption.md",
+        "reason": "Replace standalone custom heading/separator with Section, Divider and Stack; avoid duplicate embedded section headers.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/SocialPhotoGallery.tsx",
@@ -3749,8 +3803,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "split-and-verify-target",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "a035f5d",
+        "report": "docs/plans/utilverse-settings-tools-adoption.md",
+        "reason": "Retain product adapter for localized tool identity, artwork and navigation; use shared header composition.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/ToolNotificationControl.tsx",
@@ -3955,8 +4018,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "split-and-verify-target",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "a035f5d",
+        "report": "docs/plans/utilverse-settings-tools-adoption.md",
+        "reason": "Already uses shared screens/BottomCTA; preserve virtualized renderScroll and measured keyboard host until geometry parity.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/TranslationAttribution.tsx",
@@ -5500,8 +5572,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "split-and-verify-target",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "a035f5d",
+        "report": "docs/plans/utilverse-settings-tools-adoption.md",
+        "reason": "Keep HJM inputs and product validation/presentation snapshot; absorb error presentation and choice composition.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/features/ExchangeScreen.tsx",
@@ -8799,8 +8880,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "split-and-verify-target",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "a035f5d",
+        "report": "docs/plans/utilverse-settings-tools-adoption.md",
+        "reason": "Already uses SettingsScreen. Shell selection can use RadioGroup artwork slots; preserve persisted preferences and pending/error state.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/features/TeamsScreen.tsx",

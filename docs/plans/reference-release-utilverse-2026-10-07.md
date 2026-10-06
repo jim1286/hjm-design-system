@@ -86,8 +86,8 @@ UI·기능 검증을 거쳐 승격·릴리스하고 Utilverse의 대체 가능�
 
 `node scripts/audit-consumer-ui.mjs <utilverse-root> docs/plans/utilverse-ui-adoption-inventory.json`
 명령으로 소비 저장소의 TypeScript parser를 사용해 `apps/mobile/src/**/*.tsx` 136개를 읽었다.
-JSX에서 실제 사용한 import·alias·행 번호·파일 hash를 기록했다. 현재 열네 파일은 source-reviewed이며
-나머지 122개는 pending이다. source-reviewed는 UI·동작 검증이나 채택 완료가 아니다.
+JSX에서 실제 사용한 import·alias·행 번호·파일 hash를 기록했다. 현재 24개 파일은 source-reviewed이며
+나머지 112개는 pending이다. source-reviewed는 UI·동작 검증이나 채택 완료가 아니다.
 HJM import가 있다는 사실만으로 내부 자체 UI가 대체됐다고 판단하지 않는다. Alert.alert 같은
 JSX 밖 호출은 위 1차 대조 목록 및 후속 동작 분석으로 함께 확인한다.
 
@@ -276,3 +276,9 @@ Web 실패→재시도에서 실제 76바이트 UTF-8 다운로드와 원문 일
 텍스트 Share host이므로 native 파일 저장 검증으로 세지 않는다. 자동 회귀·타입·빌드와
 공개 API/문서/스토리 규격은 통과했지만 기기·제품 팔레트·접근성 및 원본 전수 검토는 남는다.
 [검증 범위](../qa/2026-10-07-file-reference.md). 승격·릴리스·소비 앱 적용은 미실행이다.
+
+
+설정·도구 화면 열 TSX를 추가 검토해 현재 24/136 source-reviewed, 112 pending이다.
+[채택 계획](utilverse-settings-tools-adoption.md)에 기존 SettingsScreen 재사용, 테마 RadioGroup·
+알림 ListRow·Section/Notice 교체 후보와 TopBar/키보드/전광판 host 경계를 기록했다.
+전체 136 파일 hash는 소비 fa201bc9와 다시 일치 확인했다. 소비 코드·기기 QA는 아직 미실행이다.

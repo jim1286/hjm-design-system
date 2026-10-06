@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [Native platform](../../native-platform.md#키보드-회피), 판정 `resolveKeyboardInset`(`src/native-platform.ts`)
 - 스토리북: 없음
 
@@ -13,6 +13,11 @@
 추가 native peer 없이 하단 행동(BottomCTA, 채팅 입력창)이 소프트웨어 키보드에 가려지지 않게 할 때 쓴다.
 키보드가 뜨면 측정한 높이만큼 아래 여백을 늘리고, 내려가면 safe area 여백만 남긴다.
 `react-native-keyboard-controller`를 설치하지 않은 앱의 기본 선택이다(Native 전용, 별도 보조 기능).
+
+이 컴포넌트는 keyboard event의 높이를 사용하며 wrapper의 window 위치와 실제 겹침은
+측정하지 않는다. 2026-10-07 Utilverse의 측정 기반 host 대조에서 이 차이를 확인했다.
+이미 adjustResize나 제품 host가 겹침을 처리하면 중첩하지 말고, safe area·하단 독·회전에서
+같은 여백이 두 번 적용되지 않는지 확인한 뒤 교체한다.
 
 ## 쓰지 않을 때
 
