@@ -6,6 +6,8 @@ import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type DateEntryProps = DateEntryControlProps & Readonly<{ layoutStyle?: HjmCompositionStyleProp }>;
+// Older supported RN typings exclude web bday tokens. Explicit iOS content types
+// and Android hints preserve autocomplete on both peer versions.
 const birthdateContentTypes = { year: "birthdateYear", month: "birthdateMonth", day: "birthdateDay" } as const;
 export function DateEntry(props: DateEntryProps) {
   const resolved = resolveDateEntryControl(props);
@@ -21,8 +23,6 @@ export function DateEntry(props: DateEntryProps) {
         <TextField label={props.labels[field.part]} accessibilityLabel={`${props.labels.label}, ${props.labels[field.part]}`}
           value={field.value} required={props.required ?? false} disabled={props.disabled ?? false} readOnly={props.readOnly ?? false}
           inputMode={field.part === "month" && props.monthInput !== "numeric" ? "text" : "numeric"}
-          // Older supported RN typings exclude web bday tokens. Explicit iOS
-          // content types and Android hints preserve autocomplete on both peer versions.
           autoComplete={props.purpose === "birthdate" ? `birthdate-${field.part}` : "off"}
           {...(Platform.OS === "ios" ? { textContentType: props.purpose === "birthdate" ? birthdateContentTypes[field.part] : "none" } : {})}
           autoCorrect={false} autoCapitalize="none"
