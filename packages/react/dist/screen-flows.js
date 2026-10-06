@@ -11,6 +11,7 @@ import {} from "@hjmds/design-contracts/components/upload-item";
 import {} from "@hjmds/design-contracts/components/alert-dialog";
 import { validateCommentThread, resolvePermissionAction, resolveOnboardingStep, resolveSearchCommit, resolveSearchEmptyCause, resolveSearchScreenPhase, resolveFocusAfterRemoval, screenPatternRecipe, searchScreenRecipe } from "@hjmds/design-contracts/screen-patterns";
 import { resolveWindowClass } from "@hjmds/design-contracts/responsive";
+import { containerRecipe } from "@hjmds/design-contracts/components/container";
 import { ListRow } from "./display.js";
 import { Heading } from "./heading.js";
 import { EmptyState, Skeleton } from "./feedback.js";
@@ -147,7 +148,7 @@ function SearchFilterSheetView({ sheet }) {
     return _jsx(Sheet, { open: sheet.open, onOpenChange: open => sheet.onOpenChange(open), title: sheet.title, closeLabel: sheet.labels.close, placement: session?.side ? "end" : "bottom", size: sheet.size ?? "large", footer: footer, children: sheet.renderContent(draft, setDraft) });
 }
 /** Abort is supplied to the host request; the host must ignore aborted responses before committing results. */
-export function SearchScreen({ query, queryLabel, queryField, queryClearLabel, onQueryChange, onSearch, debounceMs = 300, filters, recentSearches, children, onSubmit, committedQuery, filtersOverflow = "wrap", queryLabelVisibility = "visible", searching, searchingLabel, recentQueries, suggestedQueries, suggestions, resultSummary, appliedFilters, filterSheet, ...screen }) {
+export function SearchScreen({ query, queryLabel, queryField, queryClearLabel, onQueryChange, onSearch, debounceMs = 300, filters, recentSearches, children, onSubmit, committedQuery, filtersOverflow = "wrap", hostGutter = "none", queryLabelVisibility = "visible", searching, searchingLabel, recentQueries, suggestedQueries, suggestions, resultSummary, appliedFilters, filterSheet, ...screen }) {
     // The host owns localized copy. A custom queryField owns its own clear affordance.
     if (queryField == null && !queryClearLabel?.trim())
         throw new TypeError("SearchScreen requires a localized queryClearLabel for its default search field");
@@ -162,6 +163,13 @@ export function SearchScreen({ query, queryLabel, queryField, queryClearLabel, o
     const commit = (value) => { const next = resolveSearchCommit(value); if (next === null)
         return; if (next !== query)
         onQueryChange(next); onSubmit?.(next); };
+    // A picked suggestion/recent/suggested query unmounts with its phase, which dropped focus to <body>; move it to the
+    // results region first (1.13.1, utilverse adoption 2026-10-06, Native twin: Keyboard.dismiss on every commit).
+    // Leaving the field also closes a mobile browser's keyboard. Enter keeps focus in the field instead: it is still on
+    // screen with the committed text, and moving it would make keyboard users Shift+Tab back to refine. Rejected: blur()
+    // without a target, which leaves focus on <body> and loses the reading position for screen readers.
+    const pick = (value) => { if (resolveSearchCommit(value) !== null)
+        bodyHost.current?.focus({ preventScroll: true }); commit(value); };
     // onSubmit separates "typing" from "committed" (recent-search writes, suggestion → results) without making
     // products rebuild the default field through queryField (2026-10-06 search redesign, usage/components/search-screen.md).
     // Enter while an IME is composing (Korean/Japanese) only confirms the syllable, so it must not commit.
@@ -181,7 +189,9 @@ export function SearchScreen({ query, queryLabel, queryField, queryClearLabel, o
     const rail = !showRail ? null : trigger && filters != null ? _jsxs(Stack, { axis: "inline", gap: "xs", wrap: filtersOverflow === "wrap", children: [trigger, filters] }) : trigger ?? filters;
     // Wrapping chips grow the pinned area line by line at large text; the scroll rail caps it at one row.
     // A product-owned CSS/ScrollView rail would re-derive bleed, scroll padding and RTL per app.
-    const filterSlot = rail != null && filtersOverflow === "scroll" ? _jsx("div", { className: "hjm-search-screen__filters", "data-overflow": "scroll", children: rail }) : rail;
+    // contentInset="none" leaves the gutter to the host, which CSS cannot see; hostGutter names it (Native twin).
+    const bleed = (screen.contentInset === "none" ? 0 : screenPatternRecipe.padding) + containerRecipe.gutters[hostGutter];
+    const filterSlot = rail != null && filtersOverflow === "scroll" ? _jsx("div", { className: "hjm-search-screen__filters", "data-overflow": "scroll", style: { "--hjm-search-filters-bleed": `${bleed}px` }, children: rail }) : rail;
     const visibleSuggestions = suggestions?.items.slice(0, Math.max(0, suggestions.maxVisible ?? searchScreenRecipe.suggestionVisible)).length ?? 0;
     const countAnnouncement = phase === "typing" && suggestions ? suggestions.countLabel(visibleSuggestions) : phase === "results" && resultSummary && resultSummary.count !== null ? resultSummary.countLabel(resultSummary.count) : "";
     // 2026-10-06 utilverse adoption: products swapped the whole field just to show progress. The Web spinner is
@@ -193,11 +203,11 @@ export function SearchScreen({ query, queryLabel, queryField, queryClearLabel, o
     const clearApplied = () => { focus.schedule({ list: "clearApplied", index: -1, from: appliedCount }); appliedFilters.onClearAll(); };
     // A new order starts at the top; the previous offset would land mid-list in unrelated results.
     const changeSort = (id) => { resultSummary?.sort?.onChange(id); bodyHost.current?.closest(".hjm-screen__body")?.scrollTo?.({ top: 0 }); };
-    const idle = _jsx(SearchIdleSections, { recent: recentQueries, suggested: suggestedQueries, legacy: recentSearches, onCommit: commit, hostRef: focus.recentHost, onRemove: removeRecent, onClearAll: clearRecent });
+    const idle = _jsx(SearchIdleSections, { recent: recentQueries, suggested: suggestedQueries, legacy: recentSearches, onCommit: pick, hostRef: focus.recentHost, onRemove: removeRecent, onClearAll: clearRecent });
     const body = phase === "idle" ? _jsxs(_Fragment, { children: [idle, committedQuery === undefined ? children : null] })
-        : phase === "typing" ? (suggestions ? _jsx(SearchSuggestionList, { query: query, suggestions: suggestions, onCommit: commit }) : null)
-            : _jsxs(_Fragment, { children: [_jsx(SearchResultsHeader, { summary: resultSummary, applied: appliedFilters, cause: cause, appliedHost: focus.appliedHost, onRemove: removeApplied, onClearAll: clearApplied, onSortChange: changeSort }), _jsx(SearchResultsBody, { summary: resultSummary, applied: appliedFilters, suggested: suggestedQueries, cause: cause, onCommit: commit, onClearAll: clearApplied, children: children })] });
-    return _jsxs(_Fragment, { children: [_jsx(ScreenLayout, { ...screen, notice: _jsxs(Stack, { gap: "sm", ref: fieldHost, children: [queryField ?? _jsx(SearchField, { ...labelProps, clearLabel: queryClearLabel, value: query, onValueChange: onQueryChange, loading: searching ?? false, ...submitProps }), filterSlot, screen.notice] }), children: _jsxs(Stack, { gap: "lg", ref: bodyHost, children: [suggestions || resultSummary || searchingLabel ? _jsx(SearchAnnouncement, { text: announcement }) : null, body] }) }), filterSheet ? _jsx(SearchFilterSheetView, { sheet: filterSheet }) : null] });
+        : phase === "typing" ? (suggestions ? _jsx(SearchSuggestionList, { query: query, suggestions: suggestions, onCommit: pick }) : null)
+            : _jsxs(_Fragment, { children: [_jsx(SearchResultsHeader, { summary: resultSummary, applied: appliedFilters, cause: cause, appliedHost: focus.appliedHost, onRemove: removeApplied, onClearAll: clearApplied, onSortChange: changeSort }), _jsx(SearchResultsBody, { summary: resultSummary, applied: appliedFilters, suggested: suggestedQueries, cause: cause, onCommit: pick, onClearAll: clearApplied, children: children })] });
+    return _jsxs(_Fragment, { children: [_jsx(ScreenLayout, { ...screen, notice: _jsxs(Stack, { gap: "sm", ref: fieldHost, children: [queryField ?? _jsx(SearchField, { ...labelProps, clearLabel: queryClearLabel, value: query, onValueChange: onQueryChange, loading: searching ?? false, ...submitProps }), filterSlot, screen.notice] }), children: _jsxs(Stack, { gap: "lg", ref: bodyHost, className: "hjm-search-screen__results", tabIndex: -1, children: [suggestions || resultSummary || searchingLabel ? _jsx(SearchAnnouncement, { text: announcement }) : null, body] }) }), filterSheet ? _jsx(SearchFilterSheetView, { sheet: filterSheet }) : null] });
 }
 export function PermissionScreen({ status, illustration, explanation, request, settings, continueAction, skip, ...screen }) { const kind = resolvePermissionAction(status); const primary = kind === "request" ? request : kind === "settings" ? settings : kind === "continue" ? continueAction : null; return _jsx(ScreenLayout, { ...screen, footer: _jsxs(Stack, { gap: "sm", children: [primary ? _jsx(Action, { action: primary }) : null, skip ? _jsx(Action, { action: skip, secondary: true }) : null] }), children: _jsxs(Stack, { gap: "xl", align: "center", children: [illustration, explanation] }) }); }
 export function OnboardingScreen({ steps, index, onIndexChange, nextLabel, backLabel, complete, skip, progressLabel, layoutStyle }) { const position = resolveOnboardingStep(steps.length, index); const step = steps[index]; return _jsx(ScreenLayout, { ...(layoutStyle === undefined ? {} : { layoutStyle }), title: step.title, description: step.description, actions: skip ? _jsx(Action, { action: skip, secondary: true }) : null, notice: _jsx(Text, { variant: "caption", tone: "muted", children: progressLabel(index + 1, steps.length) }), footer: _jsxs(Stack, { gap: "sm", children: [_jsx(Action, { action: position.last ? complete : { label: nextLabel, onAction: () => onIndexChange(index + 1) } }), !position.first ? _jsx(Action, { action: { label: backLabel, onAction: () => onIndexChange(index - 1) }, secondary: true }) : null] }), children: step.content }); }

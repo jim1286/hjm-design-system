@@ -4,6 +4,7 @@ import { type SheetProps } from "./overlays.js";
 import { type UploadItemDescriptor, type UploadItemLabels } from "@hjmds/design-contracts/components/upload-item";
 import { type AlertDialogRequest } from "@hjmds/design-contracts/components/alert-dialog";
 import { type PermissionScreenStatus, type PhotoSource, type PhotoSourceLabels } from "@hjmds/design-contracts/screen-patterns";
+import { type ContainerGutter } from "@hjmds/design-contracts/components/container";
 /** Copy, pending state and mutations are controlled by the consuming product. */
 export type ScreenFlowAction = Readonly<{
     label: string;
@@ -251,6 +252,8 @@ export type SearchScreenProps<F = unknown> = Base & SearchInputSlot & SearchComm
     children: ReactNode;
     /** `scroll` keeps `filters` on one horizontally scrolling line that bleeds to the screen edges. */
     filtersOverflow?: "wrap" | "scroll";
+    /** Gutter the host (Container `gutter`, Sheet = `regular`) already applies around this screen; the scroll rail bleeds over it too. */
+    hostGutter?: ContainerGutter;
     /** `hidden` drops the visible label (the field keeps `queryLabel` as its accessible name and placeholder). */
     queryLabelVisibility?: "visible" | "hidden";
     recentQueries?: SearchRecentQueries;
@@ -261,7 +264,7 @@ export type SearchScreenProps<F = unknown> = Base & SearchInputSlot & SearchComm
     filterSheet?: SearchFilterSheet<F>;
 };
 /** Abort is supplied to the host request; the host must ignore aborted responses before committing results. */
-export declare function SearchScreen<F = unknown>({ query, queryLabel, queryField, queryClearLabel, onQueryChange, onSearch, debounceMs, filters, recentSearches, children, onSubmit, committedQuery, filtersOverflow, queryLabelVisibility, searching, searchingLabel, recentQueries, suggestedQueries, suggestions, resultSummary, appliedFilters, filterSheet, ...screen }: SearchScreenProps<F>): import("react").JSX.Element;
+export declare function SearchScreen<F = unknown>({ query, queryLabel, queryField, queryClearLabel, onQueryChange, onSearch, debounceMs, filters, recentSearches, children, onSubmit, committedQuery, filtersOverflow, hostGutter, queryLabelVisibility, searching, searchingLabel, recentQueries, suggestedQueries, suggestions, resultSummary, appliedFilters, filterSheet, ...screen }: SearchScreenProps<F>): import("react").JSX.Element;
 export type PermissionScreenProps = Base & {
     status: PermissionScreenStatus;
     illustration?: ReactNode;

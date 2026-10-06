@@ -605,6 +605,11 @@ export declare const chipRecipe: {
         readonly size: "small";
         readonly selected: false;
     };
+    /**
+     * `height` is the minimum visible height; a label taller than it grows the chip (Web `min-block-size`,
+     * Native `minHeight` from 1.13.1). Native used it as a fixed height and clipped labels at large text
+     * (utilverse 1.13.0 adoption, 2026-10-06), unlike Web and Button.
+     */
     readonly sizes: {
         readonly small: {
             readonly height: 36;
@@ -1811,6 +1816,15 @@ export declare const segmentedControlRecipe: {
             key: "bg";
             alpha?: number;
         }>;
+        /**
+         * Pills are content-width, so large text keeps the row: it wraps inside a block and stays one line
+         * inside a horizontal scroller (SearchScreen `filtersOverflow="scroll"`, a product rail). `adaptive`
+         * stacking is for the equal-width connected track only. Stacking pills too turned a seven-theme
+         * filter rail into a ~440pt column at accessibility-large (utilverse 1.13.0 adoption, 2026-10-06),
+         * and the product swapped in a Select to escape it. Rejected: a pills-only scroll prop, because
+         * the host already owns the rail and a second scroller inside it would nest horizontal scrolling.
+         */
+        readonly largeTextLayout: "wrap";
     };
     readonly adaptive: {
         readonly largeTextLayout: "stacked";

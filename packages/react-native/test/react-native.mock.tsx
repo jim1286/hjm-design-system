@@ -177,6 +177,8 @@ let keyboardVisible = false;
 let keyboardMetrics: MockKeyboardMetrics | undefined;
 export const Keyboard = {
   isVisible: () => keyboardVisible,
+  // SearchScreen closes the keyboard on every commit (2026-10-06 utilverse adoption gap); tests spy on this.
+  dismiss: () => { keyboardVisible = false; keyboardMetrics = undefined; },
   metrics: () => keyboardMetrics,
   addListener: (event: KeyboardEventName, listener: (event: MockKeyboardEvent) => void) => {
     const listeners = keyboardListeners.get(event) ?? new Set<(event: MockKeyboardEvent) => void>();

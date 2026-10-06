@@ -365,6 +365,7 @@
     "components-inputs-segmented-control--disabled",
     "components-inputs-segmented-control--large-text",
     "components-inputs-segmented-control--pills",
+    "components-inputs-segmented-control--pills-large-text",
     "components-inputs-select--dark",
     "components-inputs-select--default",
     "components-inputs-select--large-text",

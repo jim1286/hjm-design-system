@@ -68,7 +68,7 @@ Native · Web < 960: 아래 시트(size large)        Web ≥ 960(expanded): 옆
 
 | 영역 | 컴포넌트 | 위치 | 크기·간격 |
 | --- | --- | --- | --- |
-| 바깥 틀 | SearchScreen(ScreenLayout) | route 본문, host가 남은 높이·safe area·키보드 처리 | 폭 최대 `layout.readingMaxWidth` 720, 좌우 `spacing.md` 16. Native 본문 `scrollProps={{ keyboardDismissMode: "on-drag" }}` |
+| 바깥 틀 | SearchScreen(ScreenLayout) | route 본문, host가 남은 높이·safe area·키보드 처리 | 폭 최대 `layout.readingMaxWidth` 720, 좌우 `spacing.md` 16. host가 여백을 주면 `contentInset="none"` + 그 여백 이름 `hostGutter`(Container `gutter`, Sheet 안은 `regular`). Native 본문 `scrollProps={{ keyboardDismissMode: "on-drag" }}` |
 | 머리 | `title` + `leading`(IconButton 뒤로) | 맨 위 | `description`은 비운다(고정 영역 한 줄 절약) |
 | 검색 입력 | 기본 SearchField(`queryLabel`·`queryLabelVisibility="hidden"`·`queryClearLabel`·`onSubmit`·`searching`) | 머리 아래, 고정 | `medium` 44 |
 | 필터 칩 줄 | HJM `filterSheet.trigger` Chip + 제품 `filters`(Stack inline gap `xs` > Chip `small`) | 검색 입력 아래, 고정, 결과 단계에만 | 입력과 `spacing.sm` 12, 칩 36(+Native hitSlop 4), 칩 사이 `spacing.xs` 8. `filtersOverflow="scroll"` |
@@ -247,13 +247,16 @@ import { SearchScreen } from "@hjmds/react-native/screen-flows";
 | 다크 | semantic token만 쓰므로 따로 처리하지 않는다. 일치 강조는 색이 아니라 굵기라 다크·색각 차이에서도 남는다. 예제 색을 제품 기본값으로 복사하지 않는다 |
 | 좁은 폭 | 320에서 칩 줄은 화면 끝까지 스크롤, 적용 조건 칩은 줄바꿈, 시트는 아래 전폭 |
 | 넓은 폭(Web ≥ 960) | 한 열(최대 720) 유지, 필터 시트는 `placement="end"` 옆 시트로 결과를 가리지 않는다. 상시 왼쪽 필터 패널은 ScreenLayout 폭 계약 밖이라 두지 않는다 |
-| 키보드 | Native 본문 ScrollView가 `keyboardShouldPersistTaps="handled"`라 키보드가 떠 있어도 제안 행이 한 번에 눌린다. 검색 키로 확정하면 키보드가 닫힌다 |
+| 키보드 | Native 본문 ScrollView가 `keyboardShouldPersistTaps="handled"`라 키보드가 떠 있어도 제안 행이 한 번에 눌린다. 검색 키뿐 아니라 제안·최근·추천을 골라 확정해도 키보드가 닫힌다(Native `Keyboard.dismiss()`, Web은 결과 영역으로 포커스, 미게시(1.13.1 이후)) |
+| 큰 글자 · 칩 줄 안 pills | 칩 줄에 SegmentedControl `presentation="pills"`를 넣어도 세로로 쌓이지 않고 한 줄 가로 스크롤로 남는다(미게시(1.13.1 이후). 1.13.0 이하는 약 440pt 기둥이 됐다). 칩 높이는 라벨에 맞춰 늘어난다(Native Chip `minHeight`) |
 
 ## 플랫폼 차이
 
 | 항목 | Web | Native |
 | --- | --- | --- |
 | 확정 신호 | Enter(IME 조합 중 Enter 무시) | 키보드 검색 키 |
+| 고른 검색어로 확정한 뒤 | 결과 영역(`.hjm-search-screen__results`)으로 포커스. Enter 확정은 입력에 남는다 | 키보드를 닫고 포커스는 옮기지 않는다 |
+| `contentInset="none"` host 안 칩 줄 | `hostGutter`만큼 host 가장자리까지 | 같음 |
 | 일치 강조 | `suggestions.items[].match` 범위를 굵게. 결과 행은 제품이 ListRow `title`에 `Text emphasis="strong"` | ListRow `title`이 문자열이라 강조하지 않는다(`match`는 무시) |
 | 개수 알림(SearchScreen) | 숨긴 `role="status"` 영역 하나 | `AccessibilityInfo.announceForAccessibilityWithOptions(…, { queue: true })` |
 | 조건·최근 검색 삭제 뒤 포커스 | 다음 칩·× → 없으면 `필터` 칩·검색 입력 | 이동하지 않는다(스크린 리더 커서 유지) |
@@ -272,3 +275,5 @@ import { SearchScreen } from "@hjmds/react-native/screen-flows";
 - `committedQuery`를 주고 `children`에 제안·로딩·0건을 다시 그리면 SearchScreen이 그린 것과 겹친다. 두 단계 검색에서 `children`은 결과 목록만 담는다.
 - 최근 검색 저장소를 `onSearch`에 연결하지 않는다. SearchScreen은 확정만 `onSubmit`으로 보내므로 거기서만 저장한다.
 - Storybook은 실제 검색 서버·라우터 연동 증거가 아니다. Native 화면은 2026-10-06 개편에서 시뮬레이터로 확인하지 않았다(구조는 렌더 테스트로만 확인).
+- 시트 안 검색(채팅 도구 고르기 등)은 Sheet `size`를 `medium`·`large`로 주고 `scrollable` 없이 SearchScreen을 넣는다. SearchScreen은 `contentInset="none"`·`hostGutter="regular"`.
+  1.13.0 이하 Native는 이 조합에서 화면이 0pt가 되고 칩 줄이 시트 여백에서 잘렸다(2026-10-06 utilverse, [Sheet 함정](../components/sheet.md#함정)).
