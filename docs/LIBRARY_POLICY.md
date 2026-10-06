@@ -280,3 +280,19 @@ and dimezisBlurView so the legacy semitransparent fallback is not passed off as
 blur. Older-Android cost, masked UIKit backdrop behavior and per-device layer
 counts remain experimental until measured. Remove these Showcase dependencies
 if the host example is removed. No binary is rebuilt by installation.
+
+## Document file export Showcase host — 2026-10-07
+
+The reference experiment must exercise an actual file, rather than calling text sharing a file save.
+Native Showcase adds MIT expo-file-system 57.0.7 and expo-sharing 57.0.22, pinned to the installed
+Expo 57.0.25 bundled module lanes. Published contracts/renderers gain no storage or sharing peer.
+The central registry already permits registry:57 and now records HJM consumption. FileSystem and
+ExpoSharing native availability is checked before loading either package; no binary is rebuilt.
+
+The host writes a generated TXT into a unique Showcase cache directory, verifies readback, then
+opens the share sheet. No personal files or remote URLs are read. expo-sharing returns Promise<void>
+and does not expose a saved/cancelled receipt, so only initiation is displayed. Cache files remain
+available to receiving applications; deleting them immediately after the Promise resolves could
+race a recipient read. QA removes only verified fixture files after recording their hash. Removing
+this example also removes its two Showcase dependencies. Sources: the installed packages' public
+types/native implementations and https://docs.expo.dev/versions/v57.0.0/sdk/sharing/ .

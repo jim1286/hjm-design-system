@@ -82,3 +82,9 @@ Web host는 자체 생성 TXT 파일을 내보내며 실제 다운로드 내용 
 React Native Share의 텍스트 공유로 시작/취소를 구분한다. 이는 native 파일 저장 구현·검증이
 아니므로 승격 전에 파일 host와 실제 기기 확인을 계속한다. iOS 상태 알림, 미리보기 오류
 복구 시 초점, 스크린리더, 제품 팔레트/Android 및 외부 원본 전체 변형 검증도 남는다.
+
+
+Native 후속: 텍스트 Share 예제를 실제 TXT cache 생성→readback→expo-sharing host로 교체했다.
+기존 iOS 26.5 Expo Go에서 파일에 저장→나의 iPhone 저장 및 두 사본의 76바이트/hash 일치를
+확인했다. shareAsync의 반환은 저장/취소 receipt가 아니므로 UI는 started만 표시한다.
+Android·접근성·환경 조합은 계속 남는다. 상세 근거는 파일 QA 보고서의 마지막 절에 있다.

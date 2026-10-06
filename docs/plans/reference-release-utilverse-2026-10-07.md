@@ -282,3 +282,8 @@ Web 실패→재시도에서 실제 76바이트 UTF-8 다운로드와 원문 일
 [채택 계획](utilverse-settings-tools-adoption.md)에 기존 SettingsScreen 재사용, 테마 RadioGroup·
 알림 ListRow·Section/Notice 교체 후보와 TopBar/키보드/전광판 host 경계를 기록했다.
 전체 136 파일 hash는 소비 fa201bc9와 다시 일치 확인했다. 소비 코드·기기 QA는 아직 미실행이다.
+
+
+문서·파일 Native host를 실제 TXT 생성/읽기 확인/OS 공유로 보완했다. iOS 26.5에서 파일에
+저장까지 실행하고 Files 사본의 내용 hash를 확인했다. 이전 텍스트 Share 한계 기록은 당시
+snapshot이며 Android·접근성·전체 환경은 아직 미검증이다. 실험 17개/승격·릴리스 미실행 유지.

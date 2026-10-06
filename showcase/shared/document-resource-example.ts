@@ -8,7 +8,7 @@ export const documentResourceLabels: DocumentResourceLabels = {
 };
 export const exampleDocumentText = "HJM 문서 예제\n개인 자료가 없는 자체 생성 텍스트입니다.\n";
 // This fixture directory is not a package; each Showcase injects its public runtime import.
-export function createDocumentResourceExample(createSession: typeof createActionSession, host: (name: string, body: string) => Promise<DocumentSaveState>) {
+export function createDocumentResourceExample(createSession: typeof createActionSession, host: (name: string, body: string, isCurrent: () => boolean) => Promise<DocumentSaveState>) {
   const session = createSession<DocumentSaveState>({ status: "idle" });
   let failNext = true;
   let generation = 0;
@@ -23,7 +23,7 @@ export function createDocumentResourceExample(createSession: typeof createAction
         await new Promise(resolve => setTimeout(resolve, 900));
         if (current !== generation) throw new Error("detached");
         if (failNext) { failNext = false; throw new Error("example failure"); }
-        return host(name, exampleDocumentText);
+        return host(name, exampleDocumentText, () => current === generation);
       }, { retryable: true });
     },
     retry() { return session.retry(); },

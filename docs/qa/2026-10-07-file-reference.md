@@ -106,3 +106,37 @@ commit 후 같은 문서/현재 body일 때만 사용 가능한 preview 또는 s
 통과. 첫 typecheck는 테스트가 exactOptionalPropertyTypes에서 optional prop에 undefined를
 전달해 실패했으며 조건부 prop 생략으로 수정했다. Native 스크린리더 초점은 이 결과에 포함되지 않는다.
 실패 캡처와 임시 budget 로그는 이 기록 후 삭제하고 회귀 소스는 유지한다.
+
+## Native 실제 TXT 공유·파일 저장
+
+`bb32c0f` 이후 Showcase에 expo-file-system 57.0.7 / expo-sharing 57.0.22를 추가했다.
+Expo 57.0.25 bundledNativeModules와 일치하며 공개 HJM package 의존성은 바뀌지 않는다.
+공통 fixture는 host에 isCurrent guard를 전달해 availability 대기 중 파일 변경도 무효화한다.
+Native host는 자체 TXT를 고유 cache 경로에 작성하고 textSync readback이 일치한 뒤 공유한다.
+처음 probe는 옛 이름 ExpoFileSystem을 써서 누락 안내가 나왔으며 설치된 공식 소스의 실제
+모듈 이름 FileSystem으로 수정한 뒤 공유 가능을 확인했다.
+
+기존 iPhone 17 Pro / iOS 26.5 / Expo Go 57.0.9, UDID
+AC433031-1746-46C6-86A9-143A1FC839F8에서 idb/simctl로 검증했다. Device Hub CUA는 사용하지
+않았으며 새 기기·native build·기존 runtime 재시작도 하지 않았다. 기본 light/글자 배율이다.
+
+1. 문서 내보내기 첫 합성 실패→재시도에서 OS 공유창을 확인했다. 제목 문서-예제-1,
+   텍스트 문서·76바이트, Copy/파일에 저장 대상이 실제로 표시됐다.
+2. 파일에 저장→나의 iPhone→저장을 눌러 예제로 복귀했다. 완료 문구는 저장 성공 대신
+   공유창을 열었다는 안내다. Expo shareAsync는 Promise<void>이고 취소/저장 receipt가 없다.
+3. Simulator의 Showcase cache와 File Provider Storage에 생성된 문서-예제-1.txt를 각각 읽어
+   76바이트, SHA-256 `7a91912ce9e6711d163bc5a5a6b086f9b077e7095daf44dccaae8cfb47f830d5`
+   일치를 확인했다. NFD 파일명을 NFC로 비교했다. 이 fixture 저장은 실제 관측이지만 공통 API가
+   모든 공유 결과를 판정할 수 있다는 뜻은 아니다.
+4. 공유창을 다시 열고 바깥을 눌러 닫았다. 취소를 저장 완료로 표시하지 않으며 같은 시작 안내로
+   복귀한다. 수신 앱이 읽는 도중 파일 삭제를 피하려고 host는 share Promise 직후 제거하지 않는다.
+
+검사: Native Showcase check(스토리 생성, 타입, 6파일 21테스트), Web Showcase typecheck 통과.
+공유 fixture 회귀는 3개이며 native availability 대기 중 교체 후 guard false/결과 ignored를 포함한다.
+중앙 library policy 정적 검사 통과(6 manifests/70 libraries). 중앙 등록부는 기존 dirty 변경을
+보존한 채 HJM 두 라이브러리 소비만 추가했으며 전체 dirty 파일을 이 작업 커밋으로 가져오지 않는다.
+
+남음: Android/iPad, VoiceOver/TalkBack·iOS status 알림, 큰 글자/다크/RTL/제품 palette 조합,
+권한·디스크 실패, 외부 여섯 원본의 나머지 변형. 승격·npm 게시·Utilverse 적용은 미실행.
+보존: 위 hash/흐름을 남긴 뒤 이번 생성 fixture의 cache 사본/Files 사본과 임시 screenshot을
+정리한다. 재사용 host·회귀·조사 기록은 보존한다.
