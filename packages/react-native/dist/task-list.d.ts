@@ -6,11 +6,16 @@ export type TaskListProps = Readonly<{
     onCompletedChange: (id: string, completed: boolean) => void;
     disabled?: boolean;
     emptyContent?: ReactNode;
+    /** Independent row action below the checkbox; apply disabled to the supplied control. */
+    renderItemAction?: (context: Readonly<{
+        item: TaskItem;
+        disabled: boolean;
+    }>) => ReactNode;
     renderCollection?: (context: Readonly<{
         items: readonly TaskItem[];
         renderItem: (item: TaskItem) => ReactNode;
     }>) => ReactNode;
 }>;
 /** Canonical Checkbox/List own semantics; optional collection composition keeps drag peers out of this entry. */
-export declare function TaskList({ label, items, onCompletedChange, disabled, emptyContent, renderCollection }: TaskListProps): import("react").JSX.Element;
+export declare function TaskList({ label, items, onCompletedChange, disabled, emptyContent, renderItemAction, renderCollection }: TaskListProps): import("react").JSX.Element;
 //# sourceMappingURL=task-list.d.ts.map

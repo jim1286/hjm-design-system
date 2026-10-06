@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: recipe `listRecipe`(`src/component-recipes.ts`), TaskList 계약: [Task list](../../task-list.md)
 - 스토리북: `배포/컴포넌트/데이터 표시/목록` · `배포/컴포넌트/입력/할 일 목록`
 
@@ -77,6 +77,7 @@ import { Text } from "@hjmds/react-native/primitives";
 | TaskList `items` | `readonly TaskItem[]` — `{ id, label, completed, description?, disabled? }` | — | `id`·`label`이 비거나 `id`가 중복되거나 `completed`가 boolean이 아니면 `TypeError` |
 | TaskList `onCompletedChange` | `(id: string, completed: boolean) => void` | — | 필수. 체크 하나마다 한 번. 목록 순서·저장은 제품이 정한다 |
 | TaskList `disabled` | `true` · `false` | `false` | 전체 체크박스를 끈다 |
+| TaskList `renderItemAction` | `({ item, disabled }) => ReactNode` | — | 체크 아래 별도 행동. disabled는 전체/항목 잠금의 합이며 제품 버튼에 전달한다. 간격 spacing.sm 12, 체크 안에 중첩하지 않음 |
 | TaskList `emptyContent` | ReactNode | — | `items`가 비면 `List` 안에 그린다 |
 | TaskList `renderCollection` | `(context: { items, renderItem: (item: TaskItem) => ReactNode }) => ReactNode` | — | SortableCollection을 합성할 수 있다. 이때 목록 루트는 제품이 그린다 |
 | TaskList `layoutStyle`(Web) | 배치 key만 | — | List 루트 배치. `renderCollection`을 쓰면 무시되고 제품 루트를 배치한다. Native TaskList는 `layoutStyle`이 없다 |
@@ -117,3 +118,5 @@ import { Text } from "@hjmds/react-native/primitives";
 | 구조 | `role="list"` + 자식마다 `role="listitem"` | `accessibilityRole="list"` |
 | 구분선 | CSS(`data-separator`) | 행 사이 1px `View` |
 | 배치 | `layoutStyle`(+ `className`) | `layoutStyle`(`style`은 deprecated) |
+
+2026-10-07 Utilverse 항목 삭제 채택을 위해 `renderItemAction`을 추가했다. 체크와 삭제의 초점·누름을 분리하고 큰 글자 라벨 폭을 보존하도록 행동을 다음 줄에 둔다. `renderCollection`의 `renderItem`에도 포함된다. 삭제 저장·실패·되돌리기는 제품이 처리한다.

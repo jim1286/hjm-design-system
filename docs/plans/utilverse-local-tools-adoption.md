@@ -20,7 +20,7 @@
 TaskList는 완료 Checkbox와 목록 렌더러를 제공하지만 항목 삭제 슬롯이 없다. renderCollection으로
 외부 조립은 가능하나 제품이 다시 행 배치를 만드는 방식보다 공통 per-item action 슬롯을 검토한다.
 삭제는 Checkbox와 독립된 focus/press target이어야 하며 선택 토글로 전파되면 안 된다.
-현재 기능 일부만 남기는 교체는 하지 않는다. 이 보완은 아직 미구현이다.
+현재 기능 일부만 남기는 교체는 하지 않는다. 2026-10-07 후속으로 renderItemAction({item, disabled})를 양 renderer에 구현했다. 체크 아래 별도 행동 줄을 제공하고 custom collection에도 유지한다. Web/Native 회귀 각 2개 통과; 기기 검증과 게시·소비 교체는 남았다.
 
 ScoreNumeral은 테이블 건너편에서 읽는 48/64pt 숫자다. Statistic의 현재 density는 title/heading
 범위이며 임의 valueStyle은 deprecated다. 표시 크기 공개 축 또는 전용 결과 숫자 계약을 검토한 뒤

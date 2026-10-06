@@ -1,6 +1,6 @@
 # Task list
 
-Reviewed: 2026-10-01. Web and Native expose TaskList through `/task-list`.
+Reviewed: 2026-10-07. Web and Native expose TaskList through `/task-list`.
 TaskList composes existing List and Checkbox rather than creating another selection
 or gesture engine. Each controlled item has unique `id`, localized `label`, boolean
 `completed`, optional `description` and `disabled`. Invalid identity/completion data
@@ -30,3 +30,17 @@ found that 200% text scaling enlarged Checkbox's decorative mark beyond its fixe
 Native Checkbox now keeps the checked/mixed artwork at the recipe typography size
 while its label and description continue scaling. TaskList inherits this correction
 through Checkbox; it does not provide a second selection indicator.
+
+## Independent item actions
+
+`renderItemAction({item, disabled})` optionally supplies a product-localized control below
+that item's checkbox. `disabled` combines the list and item disabled flags; pass it to
+the control. The slot does not save, remove, or confirm anything itself. Keep asynchronous
+storage and rollback in the product. The action is a sibling of Checkbox, never inside its
+label, so it has its own press/focus target. It follows the checkbox with spacing.sm (12)
+and remains part of renderItem when renderCollection supplies sorting.
+
+The separate line preserves the full label width at large text sizes. Utilverse checklist
+rows need deletion alongside completion (2026-10-07 consumer audit), which the previous
+completion-only API could not express without rebuilding row layout. Both showcases now
+include independent delete actions; device drag/focus/large-text action QA remains pending.
