@@ -177,10 +177,10 @@
       "name": "fieldset",
       "existingMapping": "Form / Field / CheckboxGroup / RadioGroup",
       "priorRationale": "관련 입력의 그룹 이름·설명 전달을 비교",
-      "sourceAudit": "2026-10-06",
-      "visualReview": "pending",
-      "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "sourceAudit": "2026-10-07: 32 gallery entries enumerated. GOV.UK and Headless UI documentation compared with HJM Form, selection groups and date/duration groups. The category mixes generic groups, single-field frames and selection groups.",
+      "visualReview": "Partial: GOV.UK address-group standalone example inspected at 1280x720; four individually labeled inputs under one question. Remaining originals and gallery thumbnails not visually reviewed.",
+      "interactionReview": "GOV.UK synthetic first address value retained after Tab moved to optional second line; fieldset first legend and four autocomplete values read from DOM. Screen reader, disabled and errors not exercised.",
+      "adoptionDecision": "Recommend a related-input-group experiment: existing Form owns submission and is not a generic named fieldset. Preserve selection/date domain APIs; do not nest Form to obtain grouping. Implementation and Native accessibility bridge pending. docs/plans/field-group-experiment.md"
     },
     {
       "url": "https://component.gallery/components/file-upload/",
