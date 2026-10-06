@@ -193,36 +193,81 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-existing-hjm",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "ad7b77a",
+        "report": "docs/plans/utilverse-shell-routing-adoption.md",
+        "reason": "Keep HJM provider/Container/ToastRegion, single OS fontScale application and home-only shell. Preserve service/provider lifetimes and safe-area ownership.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/app/account.tsx",
       "sha256": "734b11462283d8f622bd6114d8178f1f3f99e693f29bcdc0c92ded2b935345cd",
       "renderedTags": [],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-route-adapter",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "ad7b77a",
+        "report": "docs/plans/utilverse-shell-routing-adoption.md",
+        "reason": "Keep Expo Router re-export: export { default } from '../features/AccountScreen'; Feature review is separate; route wrapper review does not validate destination behavior.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/app/blocked-users.tsx",
       "sha256": "7a91b99765901af98868eee1a3a8464784f91850b9980089d62a6c10f7f26fa6",
       "renderedTags": [],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-route-adapter",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "ad7b77a",
+        "report": "docs/plans/utilverse-shell-routing-adoption.md",
+        "reason": "Keep Expo Router re-export: export { default } from '../features/BlockedUsersScreen'; Feature review is separate; route wrapper review does not validate destination behavior.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/app/community/[id].tsx",
       "sha256": "96d6db1a9b39ba3cbcbe538287bf541532d308c8a372475fc8c07579913e8341",
       "renderedTags": [],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-route-adapter",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "ad7b77a",
+        "report": "docs/plans/utilverse-shell-routing-adoption.md",
+        "reason": "Keep Expo Router re-export: export { default } from '../../features/CommunityScreen'; Feature review is separate; route wrapper review does not validate destination behavior.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/app/delete-account.tsx",
       "sha256": "59b1ba076771e246b347b535ec8fd5d7a96c95aa0eadde6ac86c50851d7c5b93",
       "renderedTags": [],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-route-adapter",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "ad7b77a",
+        "report": "docs/plans/utilverse-shell-routing-adoption.md",
+        "reason": "Keep Expo Router re-export: export { default } from '../features/DeleteAccountScreen'; Feature review is separate; route wrapper review does not validate destination behavior.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/app/dev-push.tsx",
@@ -258,36 +303,81 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-product-host",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "ad7b77a",
+        "report": "docs/plans/utilverse-shell-routing-adoption.md",
+        "reason": "Already HJM controls; preserve development iOS bundle/ticket gate and lazy SDK import; production notification permission work is not a styling replacement.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/app/index.tsx",
       "sha256": "93570680dfc5abd440d9e5f4c1fbf8cd20ae37256adc66a9be27fb43c9ef4291",
       "renderedTags": [],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-route-adapter",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "ad7b77a",
+        "report": "docs/plans/utilverse-shell-routing-adoption.md",
+        "reason": "Keep Expo Router re-export: export { default } from '../features/ToolboxScreen'; Feature review is separate; route wrapper review does not validate destination behavior.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/app/login.tsx",
       "sha256": "12efd2ba96ae125d3413eb8394168763667f04e691a34f6fc5fb0acdde49fac0",
       "renderedTags": [],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-route-adapter",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "ad7b77a",
+        "report": "docs/plans/utilverse-shell-routing-adoption.md",
+        "reason": "Keep Expo Router re-export: export { default } from '../features/LoginScreen'; Feature review is separate; route wrapper review does not validate destination behavior.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/app/messages/index.tsx",
       "sha256": "1a8bb37a6373f0cb84a7e2a7f590e4f91750f12825f5a78603410c1fc789ee10",
       "renderedTags": [],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-route-adapter",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "ad7b77a",
+        "report": "docs/plans/utilverse-shell-routing-adoption.md",
+        "reason": "Keep Expo Router re-export: export { default } from '../../features/ConversationScreen'; Feature review is separate; route wrapper review does not validate destination behavior.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/app/moderated-content.tsx",
       "sha256": "269b979081169844fae622ac1dc54d5460180f76941686273a993072772c6b07",
       "renderedTags": [],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-route-adapter",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "ad7b77a",
+        "report": "docs/plans/utilverse-shell-routing-adoption.md",
+        "reason": "Keep Expo Router re-export: export { default } from '../features/ModeratedContentScreen'; Feature review is separate; route wrapper review does not validate destination behavior.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/app/notification-tools.tsx",
@@ -370,71 +460,161 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "replace-with-existing-hjm",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "ad7b77a",
+        "report": "docs/plans/utilverse-shell-routing-adoption.md",
+        "reason": "Replace composed navigation Button row with ListRow title/description/leading/trailing; preserve disabled availability and search/session gates.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/app/notifications.tsx",
       "sha256": "cd1e7473ca31b9178cccdfa155b42d5ef42b9a34d0a63cf1307f860ff3512409",
       "renderedTags": [],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-route-adapter",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "ad7b77a",
+        "report": "docs/plans/utilverse-shell-routing-adoption.md",
+        "reason": "Keep Expo Router re-export: export { default } from '../features/NotificationInboxScreen'; Feature review is separate; route wrapper review does not validate destination behavior.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/app/ops/appeals/[id].tsx",
       "sha256": "4aa968956b6c4c70c859b974fb0fa26fce6ebcf6819c5055fe05047a4bdfa739",
       "renderedTags": [],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-route-adapter",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "ad7b77a",
+        "report": "docs/plans/utilverse-shell-routing-adoption.md",
+        "reason": "Keep Expo Router re-export: export { ModerationAppealDetailScreen as default } from '../../../features/ModerationAppealsScreen'; Feature review is separate; route wrapper review does not validate destination behavior.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/app/ops/appeals/index.tsx",
       "sha256": "734a9dfa2573ae1e53d58ed98427d0723d6e7fd8ba690d2d60f2747bde8e47b1",
       "renderedTags": [],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-route-adapter",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "ad7b77a",
+        "report": "docs/plans/utilverse-shell-routing-adoption.md",
+        "reason": "Keep Expo Router re-export: export { default } from '../../../features/ModerationAppealsScreen'; Feature review is separate; route wrapper review does not validate destination behavior.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/app/ops/reports/[kind]/[id].tsx",
       "sha256": "15f0b8a7f3933480ddf7ae57e76fc953a7bc00bb2ddfeb25d716594718071665",
       "renderedTags": [],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-route-adapter",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "ad7b77a",
+        "report": "docs/plans/utilverse-shell-routing-adoption.md",
+        "reason": "Keep Expo Router re-export: export { ModerationDetailScreen as default } from '../../../../features/ModerationScreen'; Feature review is separate; route wrapper review does not validate destination behavior.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/app/ops/reports/index.tsx",
       "sha256": "58bb880b31f5299c797f349bfe91b569ef8da5743b7d49383d0497f27e7241ef",
       "renderedTags": [],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-route-adapter",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "ad7b77a",
+        "report": "docs/plans/utilverse-shell-routing-adoption.md",
+        "reason": "Keep Expo Router re-export: export { default } from '../../../features/ModerationScreen'; Feature review is separate; route wrapper review does not validate destination behavior.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/app/polls/[id].tsx",
       "sha256": "7412bc67c43a305ebd2a793722e48514a76bb7cb970b42a10e7b42b2d57dde65",
       "renderedTags": [],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-route-adapter",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "ad7b77a",
+        "report": "docs/plans/utilverse-shell-routing-adoption.md",
+        "reason": "Keep Expo Router re-export: export { default } from '../../features/PollDetailScreen'; Feature review is separate; route wrapper review does not validate destination behavior.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/app/profile.tsx",
       "sha256": "6b92f00b8ab7ddca3c74da8d3555c93db430d6c343c6036102779b55123625c4",
       "renderedTags": [],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-route-adapter",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "ad7b77a",
+        "report": "docs/plans/utilverse-shell-routing-adoption.md",
+        "reason": "Keep Expo Router re-export: export { default } from '../features/ProfileEditScreen'; Feature review is separate; route wrapper review does not validate destination behavior.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/app/settings.tsx",
       "sha256": "b45586c98f3df42add9adc1629f38e05c5ea8c3b0c494c9b7608cab41cb5ca76",
       "renderedTags": [],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-route-adapter",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "ad7b77a",
+        "report": "docs/plans/utilverse-shell-routing-adoption.md",
+        "reason": "Keep Expo Router re-export: export { default } from '../features/SettingsScreen'; Feature review is separate; route wrapper review does not validate destination behavior.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/app/tool-notifications/[id].tsx",
       "sha256": "b012b39750042e9ce7df1a3afb0f4a0dbe9e42de1b4014ac12991454bd04b8bc",
       "renderedTags": [],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-route-adapter",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "ad7b77a",
+        "report": "docs/plans/utilverse-shell-routing-adoption.md",
+        "reason": "Keep Expo Router re-export: export { default } from '../../features/ToolNotificationSettingsScreen'; Feature review is separate; route wrapper review does not validate destination behavior.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/app/tools/[id].tsx",
@@ -736,8 +916,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-product-host",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "ad7b77a",
+        "report": "docs/plans/utilverse-shell-routing-adoption.md",
+        "reason": "Keep execution availability, history/analytics boundary and route keyed ToolResultAds; tool-specific implementations remain independently audited.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/AdPrivacySettings.tsx",
@@ -797,8 +986,17 @@
       "file": "apps/mobile/src/components/AnalyticsScope.tsx",
       "sha256": "80efc4b3b462afba20d20a7060c55bc45a2d9486a1164f1f3e313df24c23d136",
       "renderedTags": [],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-product-host",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "ad7b77a",
+        "report": "docs/plans/utilverse-shell-routing-adoption.md",
+        "reason": "No visual UI; preserve catalog screen naming, initialization and navigation observation.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/AnalyticsSettings.tsx",
@@ -905,8 +1103,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-existing-hjm",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "ad7b77a",
+        "report": "docs/plans/utilverse-shell-routing-adoption.md",
+        "reason": "Home-only launcher already Surface/Button/Stack; persistent BottomNavigation would change role, five product frames and artwork sizes. Compare accessibility and labels without replacing shell identity.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/AppleProviderButton.native.tsx",
@@ -2378,8 +2585,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-existing-hjm",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "ad7b77a",
+        "report": "docs/plans/utilverse-shell-routing-adoption.md",
+        "reason": "Already lazy mounted Sheet; preserve navigation after onDismissComplete and availability gating, no 30-sheet eager mount.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/HomeWallpaper.tsx",
@@ -2402,8 +2618,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-product-host",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "ad7b77a",
+        "report": "docs/plans/utilverse-shell-routing-adoption.md",
+        "reason": "Product image host and slow drift; EffectSurface provides mesh/glow/grain/noise, not equivalent image motion. Verify background suspension and current binary instead of trusting old SVG-absence comment.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/LadderBoard.tsx",
@@ -2435,8 +2660,17 @@
       "file": "apps/mobile/src/components/LanguageHandoffScope.tsx",
       "sha256": "c6c754780946a490a00a82b28491034d34e17c9686f4ab58ae6e7df7749faa4b",
       "renderedTags": [],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-product-host",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "ad7b77a",
+        "report": "docs/plans/utilverse-shell-routing-adoption.md",
+        "reason": "No visual UI; retain sensitive OCR handoff clearing on background/unmount.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/LanguageNotice.tsx",
@@ -3053,15 +3287,33 @@
       "file": "apps/mobile/src/components/PushServiceScope.tsx",
       "sha256": "d163dbc23753a94855ed52764294a7af5b951e0f36dc9bf46e356fcfd12aabc0",
       "renderedTags": [],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-product-host",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "ad7b77a",
+        "report": "docs/plans/utilverse-shell-routing-adoption.md",
+        "reason": "No visual UI; retain restore gate, account/locale ownership, generation-safe observation and abort cleanup.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/ReminderServiceScope.tsx",
       "sha256": "a9783255c877eb4c8bb162a97cc30d86cb7f791ba0bfcfa2344d983738bab886",
       "renderedTags": [],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-product-host",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "ad7b77a",
+        "report": "docs/plans/utilverse-shell-routing-adoption.md",
+        "reason": "No visual UI; keep service cleanup and notification-to-tool routing.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/ResultAdBanner.native.tsx",
@@ -3733,8 +3985,17 @@
       "file": "apps/mobile/src/components/TimerServiceScope.tsx",
       "sha256": "eb093a0371a3ff2bdb3d76849b53ab1c7b00df4147e94ad2326edbcef489da4c",
       "renderedTags": [],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-product-host",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "ad7b77a",
+        "report": "docs/plans/utilverse-shell-routing-adoption.md",
+        "reason": "No visual UI; keep timer service cleanup and a13 routing.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/ToolAccessGate.tsx",
@@ -3787,8 +4048,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-existing-hjm",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "ad7b77a",
+        "report": "docs/plans/utilverse-shell-routing-adoption.md",
+        "reason": "Already ScreenLayout state/actions; preserve five availability states, login return intent, detail route and tool artwork.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/ToolArtwork.tsx",
@@ -3804,8 +4074,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-product-host",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "ad7b77a",
+        "report": "docs/plans/utilverse-shell-routing-adoption.md",
+        "reason": "Product shell-specific artwork via Expo Image; decorative role and contain remain product asset host.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/ToolHeader.tsx",
@@ -3991,8 +4270,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-product-host",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "ad7b77a",
+        "report": "docs/plans/utilverse-shell-routing-adoption.md",
+        "reason": "Result ownership map and route-keyed single ad host are product behavior, not a generic result component.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/ToolScreenLayout.tsx",
@@ -4161,8 +4449,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "split-and-verify-target",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "ad7b77a",
+        "report": "docs/plans/utilverse-shell-routing-adoption.md",
+        "reason": "Already HJM Icon host. Normalize semantic aliases (next to chevronEnd) for RTL, use inverse tone instead of onPrimary color bypass; custom tool/send artwork remains host-owned.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/features/AccountScreen.tsx",
@@ -9530,8 +9827,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-existing-hjm",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "ad7b77a",
+        "report": "docs/plans/utilverse-shell-routing-adoption.md",
+        "reason": "Catalog fallback uses HJM Stack/ToolHeader; preserve id-keyed screen and scroll/keyboard behavior.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/features/ToolboxScreen.tsx",
@@ -10224,8 +10530,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-product-host",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "ad7b77a",
+        "report": "docs/plans/utilverse-shell-routing-adoption.md",
+        "reason": "Provider-only device-scoped preferences; preserve locale update without remounting routes or losing drafts.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/lib/session.tsx",
@@ -10246,8 +10561,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-product-host",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "ad7b77a",
+        "report": "docs/plans/utilverse-shell-routing-adoption.md",
+        "reason": "Provider-only auth/deletion lifecycle; keep query cancel-clear before identity changes and deletion receipt before restore.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     }
   ]
 }
