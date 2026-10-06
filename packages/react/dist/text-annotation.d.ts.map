@@ -1,0 +1,1 @@
+{"version":3,"file":"text-annotation.d.ts","sourceRoot":"","sources":["../src/text-annotation.tsx"],"names":[],"mappings":"AACA,OAAO,EAAiC,KAAK,oBAAoB,EAA2B,MAAM,yCAAyC,CAAC;AAI5I;;GAEG;AACH,MAAM,MAAM,mBAAmB,GAAG,QAAQ,CAAC;IACzC,QAAQ,EAAE,MAAM,CAAC;IACjB,MAAM,CAAC,EAAE,oBAAoB,CAAC;CAC/B,CAAC,CAAC;AAEH,wBAAgB,cAAc,CAAC,EAAE,QAAQ,EAAE,MAAoB,EAAE,EAAE,mBAAmB,+BAyFrF"}

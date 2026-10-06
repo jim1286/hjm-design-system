@@ -1927,14 +1927,14 @@
         ]
       },
       "implementation": {
-        "status": "internal-geometry-only",
+        "status": "web-internal-native-measurement-gap",
         "source": "packages/design-contracts/src/text-annotation.ts",
         "tests": "packages/design-contracts/test/text-annotation.test.ts",
-        "publicExport": false,
-        "webRenderer": false,
+        "publicExport": "contracts-geometry-only",
+        "webRenderer": "internal-tested",
         "nativeRenderer": false,
         "experimentalStory": false,
-        "note": "12 geometry tests and contracts typecheck passed; does not prove rendered UI or add an experiment."
+        "note": "12 geometry tests; 6 browser tests; Web/Native Showcase typechecks and Web build passed. Native nested Text measured 0x0 on iOS 26.5. No new experimental story."
       }
     },
     {

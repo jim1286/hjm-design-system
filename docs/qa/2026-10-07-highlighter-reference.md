@@ -57,3 +57,33 @@ Node 24.20.0 / pnpm 11.18.0에서 계약 테스트 12개 통과, contracts typec
 첫 typecheck에서 forEach 클로저 안 bounds 변경에 대한 타입 추론 오류를 발견했고
 for-of 루프로 바꾼 뒤 통과했다. 이 검사는 실제 글꼴 측정·모션·화면 렌더링 검증이 아니다.
 공개 export와 Web/Native renderer 연결은 아직 남아 있다.
+
+## 8. Web 연결 및 Native 측정 조사
+
+Web 내부 renderer를 추가하고 contracts의 순수 geometry subpath를 연결했다.
+Web renderer는 package exports 및 Storybook에 아직 등록하지 않았다.
+`packages/react/test/fixtures/text-annotation.html`은 내부 렌더러 QA용이며 소비 예제가 아니다.
+
+- Chromium 브라우저 테스트 6개: 실제 줄별 경로, 본문 선택·복사, 원래 줄바꿈 유지,
+  7가지 action, RTL/큰 글자, 280→184 폭 변경, 앞 문장 변경, 짧은 문구/빈 문구,
+  모션 감소 전환 시 animation 취소를 확인했다. 최종 재실행은 act 경고 없이 통과했다.
+- Web typecheck/build, Native Showcase typecheck, API 대응표·workspace sync 통과.
+- contracts bundle 검사는 새 subpath 1 module, 약 5.5kB raw / 2.0kB gzip을 보고했다.
+  모듈 수 gate 통과이며 크기는 정보다. 전체 ci:check는 이번에 실행하지 않았다.
+- IAB 1280×720 기본 화면에 7가지 형태를 함께 표시해 확인했다. dark/RTL/32px 및
+  390×844에서 highlight/underline/box의 줄별 위치를 확인했다. 원형 주석은 끝 글자에
+  선이 겹쳐 보이므로 곡률·여백의 시각적 다듬기가 남았다. 전체 형태의 작은 화면 완료가 아니다.
+- HMR 뒤 옵션이 초기화되어 dark/RTL/큰 글자를 다시 선택한 후 390px 화면을 확인했다.
+  설정했었다는 이력만으로 최종 화면 환경을 판단하지 않았다.
+
+Native는 기존 iPhone 17 Pro/iOS 26.5, Expo Go 57.0.9, RN 0.86.2, Metro 8084에서
+측정 fixture를 실행했다. Device Hub CUA 사용 금지에 따라 simctl/idb를 사용했으며
+Device Hub UI 검증이나 실물 기기 증거로 세지 않는다. 280px 부모 문단은 2줄(높이 40),
+184px은 3줄(높이 60)이었으나 중첩 조각의 onTextLayout/onLayout은 관찰되지 않았고
+measure는 x=0/y=0/width=0/height=0이었다. 부모 전체 문단의 좌표를 조각 좌표로
+대용하면 앞/뒤 문장까지 칠해지므로 그 대안은 채택하지 않았다.
+
+일시적으로 기본 선택 배경 스토리의 render에 fixture를 연결했다가 검사 후 원복했다.
+재현 가능한 fixture 소스만 보존한다. Native 측정의 다음 후보는 공개된 범위 측정 엔진이나
+동일한 텍스트 레이아웃을 사용하는 선택적 native host이며 정확한 범위·폰트·접근성을
+확인하기 전에는 문자열 길이 추정 또는 전체 문단 강조로 대체하지 않는다.

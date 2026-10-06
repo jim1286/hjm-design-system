@@ -35,6 +35,8 @@ const budgets = [
   { exportPath: "./theme-studio", maxModules: 3, maxRawBytes: 7300, maxGzipBytes: 2800, forbiddenModules: metadataModules },
   { exportPath: "./voice-note", maxModules: 1, maxRawBytes: 1250, maxGzipBytes: 530, forbiddenModules: metadataModules },
   { exportPath: "./code-block", maxModules: 1, maxRawBytes: 950, maxGzipBytes: 550, forbiddenModules: metadataModules },
+  // Text annotation geometry is one pure module; renderer measurement stays outside contracts.
+  { exportPath: "./text-annotation", maxModules: 1, maxRawBytes: 5800, maxGzipBytes: 1900, forbiddenModules: metadataModules },
   // Pure scroll ratio contract measured 567 raw / 333 gzip bytes.
   // Progressive blur composes the existing logical scroll boundary resolver.
   { exportPath: "./progressive-blur", maxModules: 2, maxRawBytes: 4000, maxGzipBytes: 1400, forbiddenModules: metadataModules },
