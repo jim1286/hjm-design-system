@@ -10,7 +10,7 @@ UI·기능 검증을 거쳐 승격·릴리스하고 Utilverse의 대체 가능�
 | 요구 | 필요한 증거 | 현재 상태 |
 | --- | --- | --- |
 | 11개 사이트 전수 조사 | 사이트별 발견 URL 목록과 페이지별 검토·미확인 기록, 후보별 채택 판단 | 미완료. 이전 조사 수집 수를 UI 검토 수로 세지 않음 |
-| 권장 항목 모두 실험 구현 | 후보 목록과 Web/Native 공개 API·개별 스토리·사용 지침 연결 | 로컬 main 11개 실험 구현, 추가 후보 검토 중 |
+| 권장 항목 모두 실험 구현 | 후보 목록과 Web/Native 공개 API·개별 스토리·사용 지침 연결 | 로컬 main 12개 실험 구현, 추가 후보 검토 중 |
 | UI·기능 검증 | 밝음/어두움/큰 글자/RTL/모션 감소 및 실제 행동, 전체 시트와 기기 QA | PR #55 자동 검사 통과. 신규 시각·기기 검증 필요 |
 | 검증 후 승격 | 항목별 QA 근거, Storybook 양쪽 경로와 지침 동시 갱신 | 미실행. 사용자 승인일 2026-10-07, 검증 조건 충족 후 적용 |
 | HJM 릴리스 | 동기화된 버전·Changeset·CI, npm 세 패키지와 tag의 동일 SHA | 미실행. 게시 1.13.1 이후 실험·host 개선은 로컬 main 작업 중 |
@@ -23,7 +23,7 @@ UI·기능 검증을 거쳐 승격·릴리스하고 Utilverse의 대체 가능�
 
 | 후보 | 현재 구현/판단 | 남은 일 |
 | --- | --- | --- |
-| Morphing Popover / Dialog | 원본 초점·초안 소실 확인, 측정 geometry resolver 추가. renderer 표현 미구현 | 기존 overlay focus/stack/닫기/키보드 계약 위에서 선택적 전환 실험. docs/qa/2026-10-07-overlay-origin-transition.md |
+| Morphing Popover / Dialog | 원본 초점·초안 소실 확인. 양 Dialog renderer와 초안 보존 편집 실험 구현, Popover는 미구현 | Dialog 전체 환경·기기·성능 검증과 Popover 통합. docs/qa/2026-10-07-overlay-origin-transition.md |
 | Transition Panel | ContentTransition animateHeight 구현 | 실제 Web/Native 빠른 전환·입력 보존·큰 글자 UI 검증 |
 | Animated Background | Tabs gooey 유지. SegmentedControl selectionMotion=slide 실험 추가 | Web/Native 회귀 7개 통과, 기본·다크·큰 글자 Web UI 확인; 좁은 화면·팔레트·기기 검증 대기 |
 | Stateful Button | ActionFeedback 실험 | 완료·실패·재시도와 UI 검증 |

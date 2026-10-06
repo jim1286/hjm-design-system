@@ -1,3 +1,4 @@
+import type { TransitionRect } from "@hjmds/design-contracts/content-transition";
 import { type AlertDialogOpenChangeReason, type AlertDialogRequest } from "@hjmds/design-contracts/components/alert-dialog";
 import { type SheetDetent, type SheetDismissPolicy, type SheetDismissReason, type SheetOpenChangeDetails } from "@hjmds/design-contracts/components/sheet";
 import { type TooltipAlign, type TooltipOpenChangeDetails, type TooltipPlacement } from "@hjmds/design-contracts/components/tooltip";
@@ -15,6 +16,8 @@ export type DialogProps = ModalOpenState<Readonly<{
     description?: ReactNode;
     children?: ReactNode;
     footer?: ReactNode;
+    /** Optional measured trigger bounds in viewport coordinates; keeps canonical modal behavior. */
+    motionOrigin?: TransitionRect;
     size?: DialogSize;
     dismissible?: boolean;
     busy?: boolean;

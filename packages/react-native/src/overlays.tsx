@@ -1,3 +1,4 @@
+import { resolveOriginTransition, type TransitionRect } from "@hjmds/design-contracts/content-transition";
 import {
   createAlertDialogSession,
   getAlertDialogInitialFocus,
@@ -268,6 +269,8 @@ export type DialogProps = NativeModalProps &
     onActionError?: (error: unknown) => void;
     dismissible?: boolean;
     busy?: boolean;
+    /** Trigger bounds measured in window coordinates immediately before opening. */
+    motionOrigin?: TransitionRect;
     size?: DialogSize;
     /** Localized accessible name for the close action. */
     closeLabel: string;
@@ -291,6 +294,7 @@ export function Dialog({
   busy: externalBusy = false,
   onActionError,
   size = dialogRecipe.defaults.size,
+  motionOrigin,
   closeLabel,
   returnFocusRef,
   contentStyle,
@@ -336,14 +340,39 @@ export function Dialog({
     exitFallbackTask.current?.cancel();
     exitFallbackTask.current = null;
   }, []);
+  const originContentRef = useRef<View>(null);
+  const originLayout = useRef<{ width: number; height: number } | null>(null);
+  const originRef = useRef(motionOrigin); originRef.current = motionOrigin;
+  const measurementRun = useRef(0);
+  const measurementDeadline = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [originTransform, setOriginTransform] = useState<ReturnType<typeof resolveOriginTransition>>(null);
   const startEnter = useCallback(() => {
+    const run = ++measurementRun.current;
+    if (measurementDeadline.current) clearTimeout(measurementDeadline.current);
+    let measured = false;
     motionProgress.stopAnimation();
-    Animated.timing(motionProgress, {
-      toValue: 1,
-      duration: dialogRecipe.transition.enter.duration,
-      easing: Easing.bezier(...easing[dialogRecipe.transition.enter.easing]),
-      useNativeDriver: true,
-    }).start();
+    const play = (destination?: TransitionRect) => {
+      if (measured || run !== measurementRun.current || !visibleRef.current) return;
+      measured = true;
+      if (measurementDeadline.current) clearTimeout(measurementDeadline.current);
+      measurementDeadline.current = null;
+      setOriginTransform(resolveOriginTransition(originRef.current, destination, reducedMotionRef.current));
+      Animated.timing(motionProgress, {
+        toValue: 1,
+        duration: dialogRecipe.transition.enter.duration,
+        easing: Easing.bezier(...easing[dialogRecipe.transition.enter.easing]),
+        useNativeDriver: true,
+      }).start();
+    };
+    // Measure the actual modal window, never infer its center from the app window:
+    // safe areas and keyboards change the destination independently of the trigger.
+    if (originRef.current && !reducedMotionRef.current && originContentRef.current?.measureInWindow) {
+      // Optional geometry must not leave an invisible modal if a host drops the callback.
+      // Limit that wait to the existing enter interval; late results cannot restart it.
+      measurementDeadline.current = setTimeout(() => play(), dialogRecipe.transition.enter.duration);
+      try { originContentRef.current.measureInWindow((x, y, width, height) => play({ x, y, width, height })); }
+      catch { play(); }
+    } else play();
   }, [motionProgress]);
   const completeExit = useCallback(
     (token: number) => {
@@ -365,6 +394,9 @@ export function Dialog({
   );
   const startExit = useCallback(
     (token: number) => {
+      measurementRun.current += 1;
+      if (measurementDeadline.current) clearTimeout(measurementDeadline.current);
+      measurementDeadline.current = null;
       motionProgress.stopAnimation();
       Animated.timing(motionProgress, {
         toValue: 0,
@@ -422,6 +454,8 @@ export function Dialog({
   }, [cancelExitFallback, completeExit, nativeVisible]);
 
   useEffect(() => () => {
+    measurementRun.current += 1;
+    if (measurementDeadline.current) clearTimeout(measurementDeadline.current);
     cancelExitFallback();
     motionProgress.stopAnimation();
   }, [cancelExitFallback, motionProgress]);
@@ -494,7 +528,15 @@ export function Dialog({
             style={{ bottom: 0, left: 0, position: "absolute", right: 0, top: 0 }}
           />
         ) : null}
-        <View
+        <Animated.View ref={originContentRef}
+          onLayout={(event) => {
+            const { width, height } = event.nativeEvent.layout;
+            const previous = originLayout.current;
+            originLayout.current = { width, height };
+            // Error copy, keyboard or rotation may change the destination after entry.
+            // Fade instead of returning through stale dimensions; a later open remeasures.
+            if (previous && (previous.width !== width || previous.height !== height)) setOriginTransform(null);
+          }}
           accessibilityLabel={[accessibleTitle, description].filter(Boolean).join(", ")}
           accessibilityState={{ busy }}
           accessibilityViewIsModal
@@ -519,6 +561,12 @@ export function Dialog({
               shadowRadius: dialogRecipe.content.shadow.radius,
               width: "100%",
             },
+            originTransform && !environment.reducedMotion ? { transform: [
+              { translateX: motionProgress.interpolate({ inputRange: [0, 1], outputRange: [originTransform.translateX, 0] }) },
+              { translateY: motionProgress.interpolate({ inputRange: [0, 1], outputRange: [originTransform.translateY, 0] }) },
+              { scaleX: motionProgress.interpolate({ inputRange: [0, 1], outputRange: [originTransform.scaleX, 1] }) },
+              { scaleY: motionProgress.interpolate({ inputRange: [0, 1], outputRange: [originTransform.scaleY, 1] }) },
+            ] } : undefined,
             contentStyle,
           ]}
         >
@@ -563,7 +611,7 @@ export function Dialog({
             {...(primaryAction === undefined ? {} : { primaryAction })}
             {...(secondaryAction === undefined ? {} : { secondaryAction })}
           />
-        </View>
+        </Animated.View>
       </Animated.View>
     </Modal>
   );

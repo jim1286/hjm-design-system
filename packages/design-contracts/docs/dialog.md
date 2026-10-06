@@ -1,7 +1,7 @@
 # Dialog
 
 Dialog provides a modal boundary for a task that needs the user's attention. This
-Reviewed: 2026-10-05. The original
+Reviewed: 2026-10-07. The original
 contract was recorded during the 2026-09-29 promotion audit because Web and Native
 already had different title APIs and dismissal sources, while there was no single
 component guide describing their shared behavior.
@@ -45,3 +45,18 @@ screen-reader behavior remains a separate consumer validation concern.
 Native accessibility follow-up (2026-10-01): at 200% text scale, the close glyph was clipped inside the fixed IconButton frame. Dialog and Sheet now render that decorative glyph at a fixed icon size, matching Toast; title/body text still scales and the named close action and touch target are preserved. `sheet-viewport.test.tsx` checks both renderers and close callbacks.
 
 Native viewport candidate (BT-QA-027, 2026-10-05): BurnTok local QA exposed a long confirmation extending beyond the visible screen. Dialog and AlertDialog now constrain the content surface and provide a shrinking scroll body, with actions outside that body and provider safe-area padding. Host tests cover those structural contracts and cancellation; they cannot prove Yoga geometry. Ordinary-size iOS confirmation and cancellation were checked. Enlarged-text device verification remains pending: the user stopped that QA scope before the candidate was confirmed, so this is not a completed device fix. Font caps and clipped copy were rejected because they remove readable content.
+
+## Optional measured origin motion (unpublished experiment)
+
+`motionOrigin` supplies a trigger rectangle measured immediately before opening in the same physical
+viewport/window coordinate system as the destination. The existing content-transition resolver supplies
+the inverse transform. Source investigation found lost trigger focus and discarded drafts in the external
+Morphing Dialog/Popover demos, so this presentation reuses canonical Dialog state rather than replacing
+the modal engine. It does not implement shared image/text identities or a new Popover engine.
+
+Web retains one subtree through exit and suppresses stale animation completion when reopened.
+Native uses the actual modal measurement and bounds its optional measurement wait by the existing
+enter duration, falling back to ordinary presentation if the host fails to reply. Reduced motion skips
+spatial interpolation. Device geometry, resizing/keyboard behavior, themes and performance remain
+experimental until the QA report verifies them. See the usage guide and
+[origin transition QA](../../../docs/qa/2026-10-07-overlay-origin-transition.md).

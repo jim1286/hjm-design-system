@@ -771,7 +771,8 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "partial 2026-10-07 IAB light 1280x720: page lists lamp, book and image variants. Opened lamp card; centered detail measured 500x658.6px. Other variants/dark/responsive pending.",
       "interactionReview": "Lamp example focuses first external link on open. Escape removes dialog; activeElement becomes BODY rather than the trigger. Did not follow external link.",
-      "adoptionDecision": "Retain conditional recommendation for measured geometry only. Preserve HJM modal focus/priority/dismiss-complete lifecycle. Existing Native router shared-element adapter does not own local overlay transitions."
+      "adoptionDecision": "Retain conditional recommendation for measured geometry only. Preserve HJM modal focus/priority/dismiss-complete lifecycle. Existing Native router shared-element adapter does not own local overlay transitions.",
+      "implementationBoundary": "2026-10-07: optional motionOrigin added to existing Web/Native Dialog with an experimental editing composition. Web retains one subtree until exit; Native guards stale/missing measurement and drops stale size geometry. Actual Web and iOS draft/failure/reopen flows checked; theme matrix, animation frames/performance, Android and promotion pending. See docs/qa/2026-10-07-overlay-origin-transition.md."
     },
     {
       "url": "https://motion-primitives.com/docs/morphing-popover",

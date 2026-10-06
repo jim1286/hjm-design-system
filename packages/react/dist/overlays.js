@@ -1,4 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
+import { useOverlayOriginMotion } from "./internal/overlay-origin-motion.js";
 import { layer } from "@hjmds/design-contracts/foundations";
 import { resolveMenuTypeahead } from "./menu-typeahead.js";
 import { createAlertDialogSession, getAlertDialogInitialFocus, validateAlertDialogRequest, } from "@hjmds/design-contracts/components/alert-dialog";
@@ -9,28 +10,30 @@ import { cloneElement, forwardRef, useCallback, useEffect, useId, useRef, useSta
 import { Button } from "./actions.js";
 import { classNames, composeRefs, useControllableState } from "./internal.js";
 import { AnchoredPortal, useAnchoredPopup } from "./portal.js";
-import { useHjmDensityDefault, useTooltipCoordinator } from "./provider.js";
+import { useHjmDensityDefault, useTooltipCoordinator, useOptionalHjmTheme } from "./provider.js";
 import { containsEventTarget, getModalLayer, HjmPortal, renderTrigger, useModalFocus, useOpenState, } from "./modal.js";
-export const Dialog = forwardRef(function Dialog({ trigger, title, description, children, footer, size = dialogRecipe.defaults.size, dismissible = dialogRecipe.defaults.dismissible, busy = false, closeLabel, initialFocusRef, returnFocusRef, onDismissComplete, modalPriority = 0, portalContainer, open: openProp, defaultOpen, onOpenChange, className, }, forwardedRef) {
+export const Dialog = forwardRef(function Dialog({ trigger, title, description, children, footer, size = dialogRecipe.defaults.size, motionOrigin, dismissible = dialogRecipe.defaults.dismissible, busy = false, closeLabel, initialFocusRef, returnFocusRef, onDismissComplete, modalPriority = 0, portalContainer, open: openProp, defaultOpen, onOpenChange, className, }, forwardedRef) {
     const modalLayer = getModalLayer(modalPriority);
     const [open, changeOpen] = useOpenState({
         ...(openProp === undefined ? {} : { open: openProp }),
         ...(defaultOpen === undefined ? {} : { defaultOpen }),
         ...(onOpenChange === undefined ? {} : { onOpenChange }),
     });
+    const theme = useOptionalHjmTheme();
+    const { visible, setNode: setMotionNode } = useOverlayOriginMotion(open, motionOrigin, theme?.environment.reducedMotion);
     const triggerRef = useRef(null);
     const contentRef = useRef(null);
-    const mergedContentRef = composeRefs(contentRef, forwardedRef);
+    const mergedContentRef = composeRefs(contentRef, forwardedRef, setMotionNode);
     const id = useId().replaceAll(":", "");
     const contentId = `${id}-dialog`;
     const titleId = `${id}-title`;
     const descriptionId = `${id}-description`;
     const dismissReasonRef = useRef(undefined);
-    const wasOpenRef = useRef(open);
+    const wasOpenRef = useRef(visible);
     const completeRef = useRef(onDismissComplete);
     completeRef.current = onDismissComplete;
-    const openRef = useRef(open);
-    openRef.current = open;
+    const openRef = useRef(visible);
+    openRef.current = visible;
     const requestClose = (reason) => {
         if (!dismissible || busy)
             return;
@@ -45,16 +48,17 @@ export const Dialog = forwardRef(function Dialog({ trigger, title, description, 
         queueMicrotask(() => queueMicrotask(() => completeRef.current?.({ reason })));
     };
     useEffect(() => {
-        if (open) {
+        if (visible) {
             wasOpenRef.current = true;
-            dismissReasonRef.current = undefined;
+            if (open)
+                dismissReasonRef.current = undefined;
             return;
         }
         if (!wasOpenRef.current)
             return;
         wasOpenRef.current = false;
         settle();
-    }, [open]);
+    }, [open, visible]);
     const epochRef = useRef(0);
     useEffect(() => {
         const epoch = epochRef.current + 1;
@@ -72,7 +76,7 @@ export const Dialog = forwardRef(function Dialog({ trigger, title, description, 
         };
     }, []);
     useModalFocus({
-        active: open,
+        active: visible,
         priority: modalPriority,
         contentRef,
         ...(initialFocusRef === undefined ? {} : { initialFocusRef }),
@@ -80,14 +84,14 @@ export const Dialog = forwardRef(function Dialog({ trigger, title, description, 
         ...(trigger === undefined ? {} : { fallbackReturnRef: triggerRef }),
         onEscape: () => requestClose("escape"),
     });
-    return (_jsxs(_Fragment, { children: [trigger === undefined ? null : renderTrigger(trigger, triggerRef, open, contentId, "dialog", () => changeOpen(true, { reason: "trigger" })), open ? (_jsx(HjmPortal, { ...(portalContainer === undefined ? {} : { container: portalContainer }), children: _jsx("div", { className: "hjm-overlay", "data-kind": "dialog", "data-modal-priority": modalPriority, "data-state": "open", style: { zIndex: modalLayer }, onMouseDown: (event) => {
+    return (_jsxs(_Fragment, { children: [trigger === undefined ? null : renderTrigger(trigger, triggerRef, open, contentId, "dialog", () => changeOpen(true, { reason: "trigger" })), visible ? (_jsx(HjmPortal, { ...(portalContainer === undefined ? {} : { container: portalContainer }), children: _jsx("div", { className: "hjm-overlay", "data-kind": "dialog", "data-modal-priority": modalPriority, "data-state": "open", style: { zIndex: modalLayer }, onMouseDown: (event) => {
                         if (event.target === event.currentTarget) {
                             // Diairy QA W16: Chrome's default backdrop blur can run after focus
                             // cleanup and undo its return target. Cancel that default, not the modal's dismissal.
                             event.preventDefault();
                             requestClose("outside");
                         }
-                    }, children: _jsxs("div", { ref: mergedContentRef, id: contentId, role: "dialog", "aria-modal": "true", "aria-labelledby": titleId, "aria-describedby": description ? descriptionId : undefined, "aria-busy": busy || undefined, tabIndex: -1, className: classNames("hjm-dialog", className), "data-hjm-modal-content": "", "data-size": size, "data-state": busy ? "busy" : "idle", children: [_jsxs("header", { className: "hjm-dialog__header", children: [_jsx("h2", { id: titleId, className: "hjm-dialog__title", children: title }), dismissible ? (_jsx("button", { type: "button", className: "hjm-dialog__close", "aria-label": closeLabel, disabled: busy, onClick: () => requestClose("close-action"), children: "\u00D7" })) : null] }), description ? _jsx("p", { id: descriptionId, className: "hjm-dialog__description", children: description }) : null, children ? _jsx("div", { className: "hjm-dialog__body", children: children }) : null, footer ? _jsx("footer", { className: "hjm-dialog__footer", children: footer }) : null] }) }) })) : null] }));
+                    }, children: _jsxs("div", { ref: mergedContentRef, id: contentId, role: "dialog", "aria-modal": "true", "aria-labelledby": titleId, "aria-describedby": description ? descriptionId : undefined, "aria-busy": busy || undefined, inert: !open, "aria-hidden": !open || undefined, tabIndex: -1, className: classNames("hjm-dialog", className), "data-hjm-modal-content": "", "data-size": size, "data-state": busy ? "busy" : "idle", children: [_jsxs("header", { className: "hjm-dialog__header", children: [_jsx("h2", { id: titleId, className: "hjm-dialog__title", children: title }), dismissible ? (_jsx("button", { type: "button", className: "hjm-dialog__close", "aria-label": closeLabel, disabled: busy, onClick: () => requestClose("close-action"), children: "\u00D7" })) : null] }), description ? _jsx("p", { id: descriptionId, className: "hjm-dialog__description", children: description }) : null, children ? _jsx("div", { className: "hjm-dialog__body", children: children }) : null, footer ? _jsx("footer", { className: "hjm-dialog__footer", children: footer }) : null] }) }) })) : null] }));
 });
 export const AlertDialog = forwardRef(function AlertDialog({ trigger, request, icon, size = dialogRecipe.defaults.size, returnFocusRef, modalPriority = 0, portalContainer, open: openProp, defaultOpen, onOpenChange, className, }, forwardedRef) {
     const modalLayer = getModalLayer(modalPriority);

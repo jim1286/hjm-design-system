@@ -176,6 +176,7 @@
 | [닫았다 열고 초안 이어쓰기](compositions/interaction-flow-draft.md) | 입력과 작성 | 메모·댓글처럼 시트에서 쓰던 글을 저장하지 않고 닫았다가 다시 열었을 때, 쓰던 초안을 그대로 이어 쓰게 할 때 쓴다. | 배포 | Web · Native |
 | [댓글 작성](compositions/purpose-input-comment.md) | 입력과 작성 | 게시물·기록 아래에서 댓글이나 특정 댓글에 대한 답글을 남기고, 실패하면 글과 답글 대상을 그대로 남겨 다시 등록하게 할 때 쓴다. | 배포 | Web · Native |
 | [메시지 작성](compositions/purpose-input-message.md) | 입력과 작성 | 대화 화면 하단에서 글과 사진 여러 장을 함께 보내고, 실패하면 글·사진·답장 대상을 그대로 남겨 다시 보내게 할 때 쓴다. | 배포 | Web · Native |
+| [버튼에서 이어지는 편집](compositions/origin-dialog.md) | 입력과 작성 | 현재 화면의 항목을 짧게 편집하고 돌아올 때 출발 위치를 시각적으로 연결한다. | 실험 | Web · Native |
 | [빠른 메모 작성](compositions/floating-action-button.md) | 입력과 작성 | 스크롤되는 기록 목록 위에 떠 있는 생성 버튼으로 짧은 입력 대화상자를 열고, 저장하면 새 항목을 목록 맨 위에 넣을 때 쓴다. | 배포 | Web · Native |
 | [선택 내용 검토와 수정](compositions/reference-review.md) | 입력과 작성 | 선택 내용을 검토하고 수정 후 명시적으로 확정 흐름이 필요할 때 쓴다. | 배포 | Web · Native |
 | [인증번호 확인과 다시 입력](compositions/stea-otp-verify.md) | 입력과 작성 | 문자·메일로 받은 숫자 인증번호를 입력하고 서버 확인을 기다린 뒤, 틀리면 남은 횟수를 보여 주고 다시 받게 하는 흐름에 쓴다. | 배포 | Web · Native |

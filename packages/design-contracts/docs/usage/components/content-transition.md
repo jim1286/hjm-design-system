@@ -108,8 +108,9 @@ import { ContentTransition } from "@hjmds/react-native/content-transition";
 도착 경계의 중심 기준 translateX/Y와 scaleX/Y를 반환한다. RTL 좌표를 다시 뒤집지 않는다.
 미측정·0 크기·비유한 값·계산 overflow·모션 감소에서는 null로 일반 overlay 표현을 유지한다.
 
-이 함수는 renderer의 morph prop이나 완성된 실험이 아니다. 기존 ContentTransition의
+이 함수 자체는 renderer나 상태 엔진이 아니다. Dialog의 선택적 motionOrigin 표현이
+이 계산을 사용한다([Dialog 지침](dialog.md)). 기존 ContentTransition의
 단일 subtree 전환과 Native SharedTransitionElement의 라우터 전환을 대체하지 않는다.
-trigger 측정 시점, 같은 좌표계 보장, 취소·재열기, exit presence, 초점 복귀는 renderer가
-연결해야 한다. Motion Primitives의 원본에서 닫기 후 초점 손실과 작성 예제의 초안 소실을
+trigger 측정 시점과 같은 좌표계 보장은 제품이, 취소·재열기·exit presence·초점 복귀는
+해당 renderer가 소유한다. Motion Primitives의 원본에서 닫기 후 초점 손실과 작성 예제의 초안 소실을
 확인했으므로 geometry만 흡수하고 기존 HJM overlay 상태 엔진을 유지한다.

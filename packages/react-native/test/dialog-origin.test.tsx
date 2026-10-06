@@ -1,0 +1,46 @@
+import { act, create, type ReactTestRenderer } from 'react-test-renderer';
+import { Animated, Modal } from 'react-native';
+import { afterEach, expect, it, vi } from 'vitest';
+import { Dialog } from '../src/overlays.js';
+import { HjmNativeProvider } from '../src/provider.js';
+import { dialogRecipe } from '@hjmds/design-contracts/recipes';
+(globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+let tree: ReactTestRenderer | undefined;
+afterEach(() => { act(() => tree?.unmount()); tree = undefined; vi.useRealTimers(); vi.restoreAllMocks(); });
+const origin = { x: 20, y: 80, width: 100, height: 44 };
+const boundary = () => tree!.root.find(node => node.props.role === 'dialog');
+it('uses actual modal window measurements and keeps the canonical named modal and close action', () => {
+ const onOpenChange = vi.fn();
+ const measureInWindow = vi.fn((callback: (x: number, y: number, width: number, height: number) => void) => callback(100, 200, 320, 300));
+ act(() => { tree = create(<HjmNativeProvider reducedMotion={false}><Dialog open title="Edit" closeLabel="Close" motionOrigin={origin} onOpenChange={onOpenChange}/></HjmNativeProvider>, { createNodeMock: () => ({ measureInWindow }) }); });
+ act(() => tree!.root.findByType(Modal).props.onShow({}));
+ expect(measureInWindow).toHaveBeenCalledOnce();
+ act(() => boundary().props.onLayout({ nativeEvent: { layout: { width: 320, height: 300 } } }));
+ const transforms = Object.assign({}, ...boundary().props.style).transform;
+ expect(transforms[0].translateX.configuration.outputRange).toEqual([-190, 0]);
+ expect(transforms[1].translateY.configuration.outputRange).toEqual([-248, 0]);
+ expect(transforms[2].scaleX.configuration.outputRange).toEqual([0.3125, 1]);
+ expect(boundary().props.accessibilityViewIsModal).toBe(true);
+ act(() => boundary().props.onLayout({ nativeEvent: { layout: { width: 320, height: 360 } } }));
+ expect(Object.assign({}, ...boundary().props.style).transform).toBeUndefined();
+ act(() => tree!.root.findByType(Modal).props.onRequestClose());
+ expect(onOpenChange).toHaveBeenCalledExactlyOnceWith(false, { reason: 'back' });
+});
+it('falls back if measurement never returns and ignores the late callback', () => {
+ vi.useFakeTimers(); const timing = vi.spyOn(Animated, 'timing'); let measured: ((...args: number[]) => void) | undefined;
+ act(() => { tree = create(<HjmNativeProvider reducedMotion={false}><Dialog defaultOpen title="Edit" closeLabel="Close" motionOrigin={origin}/></HjmNativeProvider>, { createNodeMock: () => ({ measureInWindow: (callback: typeof measured) => { measured = callback; } }) }); });
+ act(() => tree!.root.findByType(Modal).props.onShow({}));
+ expect(timing).not.toHaveBeenCalled();
+ act(() => { vi.advanceTimersByTime(dialogRecipe.transition.enter.duration); });
+ expect(timing).toHaveBeenCalledOnce();
+ expect(Object.assign({}, ...boundary().props.style).transform).toBeUndefined();
+ act(() => measured?.(100, 200, 320, 300));
+ expect(timing).toHaveBeenCalledOnce();
+});
+it('does not measure or move the modal under reduced motion', () => {
+ const measureInWindow = vi.fn();
+ act(() => { tree = create(<HjmNativeProvider reducedMotion><Dialog defaultOpen title="Static" closeLabel="Close" motionOrigin={origin}/></HjmNativeProvider>, { createNodeMock: () => ({ measureInWindow }) }); });
+ act(() => tree!.root.findByType(Modal).props.onShow({}));
+ expect(measureInWindow).not.toHaveBeenCalled();
+ expect(Object.assign({}, ...boundary().props.style).transform).toBeUndefined();
+});

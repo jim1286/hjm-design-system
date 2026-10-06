@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [Dialog](../../dialog.md), [명령형 오버레이](../../overlay-stack.md), recipe `dialogRecipe`(`src/component-recipes.ts`)
 - 스토리북: `배포/컴포넌트/오버레이/대화상자`
 
@@ -174,3 +174,20 @@ Native, 큰 글자 또는 폭 < 480:   [      취소      ]
 - Native `DialogProps`는 RN `Modal` props(`style` 포함)를 그대로 받는다. 배치는 `contentStyle`로만 준다.
 - Native는 제어형과 비제어형을 렌더 중에 바꾸면 예외가 난다.
 - Native 기본 렌더러 예제는 실제 저장 서버가 없는 동기 완료 예시다. 제품에서는 저장 Promise를 반환하며, 예제의 영문 고정 문구는 제품 i18n 키로 치환한다. 닫기는 action이 요청하는 `close-action`이 맡는다.
+
+### 선택적인 트리거 형태 전환 (미게시 실험)
+
+양 renderer의 `motionOrigin?: TransitionRect`는 열기 직전에 측정한 트리거의
+`{ x, y, width, height }`를 받는다. Web은 getBoundingClientRect, Native는 measureInWindow로
+얻은 물리 viewport/window 좌표를 전달한다. 별도 HJM morph wrapper를 만들지 않고 기존
+Dialog의 제목·닫기·busy·초점 복귀·초안 소유 계약을 그대로 사용한다.
+
+Web은 닫기 전환이 끝나야 portal을 제거하고 onDismissComplete와 초점 복귀를 실행한다.
+닫는 동안 내용은 inert이며 빠른 재열기는 같은 subtree를 유지하고 오래된 완료를 취소한다.
+Native는 실제 Modal 콘텐츠를 측정하며 콜백이 오지 않으면 기존 enter 시간 내 일반 표시로
+복귀한다. 뒤늦은 측정으로 닫힌 세션을 되살리지 않는다. 측정이 없거나 모션 감소이면
+공간 전환 없이 기존 표현을 쓴다. Native에서 진입 후 크기가 달라지면 이전 측정으로
+닫지 않고 일반 fade로 복귀한다. 다음 open에서 다시 측정한다. 이 옵션의 실험은 `버튼에서 이어지는 편집` 구성이다.
+
+초안은 제품 상태에 두고 닫을 때 삭제하지 않는다. 내용·화면 회전·키보드로 목적지 크기가
+달라지는 흐름은 실제 기기 검증 후 채택한다. 원점이 다른 좌표계를 혼합하지 않는다.

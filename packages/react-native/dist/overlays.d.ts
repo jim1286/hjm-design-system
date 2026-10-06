@@ -1,3 +1,4 @@
+import { type TransitionRect } from "@hjmds/design-contracts/content-transition";
 import { type AlertDialogOpenChangeReason, type AlertDialogRequest, type AlertDialogResult } from "@hjmds/design-contracts/components/alert-dialog";
 import { type HjmCompositionStyleProp } from "./composition-style.js";
 import { type SheetDismissPolicy, type SheetDismissReason, type SheetOpenChangeDetails } from "@hjmds/design-contracts/components/sheet";
@@ -59,6 +60,8 @@ export type DialogProps = NativeModalProps & ReasonedOpenProps<DialogOpenChangeR
     onActionError?: (error: unknown) => void;
     dismissible?: boolean;
     busy?: boolean;
+    /** Trigger bounds measured in window coordinates immediately before opening. */
+    motionOrigin?: TransitionRect;
     size?: DialogSize;
     /** Localized accessible name for the close action. */
     closeLabel: string;
@@ -67,7 +70,7 @@ export type DialogProps = NativeModalProps & ReasonedOpenProps<DialogOpenChangeR
     contentStyle?: HjmCompositionStyleProp;
 }>;
 /** Native modal boundary with one reasoned close intent for each user attempt. */
-export declare function Dialog({ open, defaultOpen, onOpenChange, title, accessibilityTitle, description, children, primaryAction, secondaryAction, dismissible, busy: externalBusy, onActionError, size, closeLabel, returnFocusRef, contentStyle, onShow, ...modalProps }: DialogProps): import("react").JSX.Element;
+export declare function Dialog({ open, defaultOpen, onOpenChange, title, accessibilityTitle, description, children, primaryAction, secondaryAction, dismissible, busy: externalBusy, onActionError, size, motionOrigin, closeLabel, returnFocusRef, contentStyle, onShow, ...modalProps }: DialogProps): import("react").JSX.Element;
 export type AlertDialogProps = NativeModalProps & ReasonedOpenProps<AlertDialogOpenChangeReason> & Readonly<{
     request: AlertDialogRequest;
     returnFocusRef?: RefObject<View | null>;

@@ -1,3 +1,5 @@
+import type { TransitionRect } from "@hjmds/design-contracts/content-transition";
+import { useOverlayOriginMotion } from "./internal/overlay-origin-motion.js";
 import { layer } from "@hjmds/design-contracts/foundations";
 import { resolveMenuTypeahead } from "./menu-typeahead.js";
 import {
@@ -51,7 +53,7 @@ import {
 import { Button } from "./actions.js";
 import { classNames, composeRefs, useControllableState } from "./internal.js";
 import { AnchoredPortal, useAnchoredPopup } from "./portal.js";
-import { useHjmDensityDefault, useTooltipCoordinator } from "./provider.js";
+import { useHjmDensityDefault, useTooltipCoordinator, useOptionalHjmTheme } from "./provider.js";
 import {
   containsEventTarget,
   getModalLayer,
@@ -80,6 +82,8 @@ export type DialogProps = ModalOpenState<Readonly<{ reason: DialogOpenChangeReas
     description?: ReactNode;
     children?: ReactNode;
     footer?: ReactNode;
+    /** Optional measured trigger bounds in viewport coordinates; keeps canonical modal behavior. */
+    motionOrigin?: TransitionRect;
     size?: DialogSize;
     dismissible?: boolean;
     busy?: boolean;
@@ -108,6 +112,7 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(function Dialog(
     children,
     footer,
     size = dialogRecipe.defaults.size,
+    motionOrigin,
     dismissible = dialogRecipe.defaults.dismissible,
     busy = false,
     closeLabel,
@@ -129,20 +134,22 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(function Dialog(
     ...(defaultOpen === undefined ? {} : { defaultOpen }),
     ...(onOpenChange === undefined ? {} : { onOpenChange }),
   });
+  const theme = useOptionalHjmTheme();
+  const { visible, setNode: setMotionNode } = useOverlayOriginMotion(open, motionOrigin, theme?.environment.reducedMotion);
   const triggerRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  const mergedContentRef = composeRefs(contentRef, forwardedRef);
+  const mergedContentRef = composeRefs(contentRef, forwardedRef, setMotionNode);
   const id = useId().replaceAll(":", "");
   const contentId = `${id}-dialog`;
   const titleId = `${id}-title`;
   const descriptionId = `${id}-description`;
   type DialogSettleReason = Exclude<DialogOpenChangeReason, "trigger"> | "programmatic";
   const dismissReasonRef = useRef<DialogSettleReason | undefined>(undefined);
-  const wasOpenRef = useRef(open);
+  const wasOpenRef = useRef(visible);
   const completeRef = useRef(onDismissComplete);
   completeRef.current = onDismissComplete;
-  const openRef = useRef(open);
-  openRef.current = open;
+  const openRef = useRef(visible);
+  openRef.current = visible;
   const requestClose = (reason: Exclude<DialogOpenChangeReason, "trigger">) => {
     if (!dismissible || busy) return;
     dismissReasonRef.current = reason;
@@ -156,11 +163,11 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(function Dialog(
     queueMicrotask(() => queueMicrotask(() => completeRef.current?.({ reason })));
   };
   useEffect(() => {
-    if (open) { wasOpenRef.current = true; dismissReasonRef.current = undefined; return; }
+    if (visible) { wasOpenRef.current = true; if (open) dismissReasonRef.current = undefined; return; }
     if (!wasOpenRef.current) return;
     wasOpenRef.current = false;
     settle();
-  }, [open]);
+  }, [open, visible]);
   const epochRef = useRef(0);
   useEffect(() => {
     const epoch = epochRef.current + 1;
@@ -177,7 +184,7 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(function Dialog(
     };
   }, []);
   useModalFocus({
-    active: open,
+    active: visible,
     priority: modalPriority,
     contentRef,
     ...(initialFocusRef === undefined ? {} : { initialFocusRef }),
@@ -196,7 +203,7 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(function Dialog(
         "dialog",
         () => changeOpen(true, { reason: "trigger" }),
       )}
-      {open ? (
+      {visible ? (
         <HjmPortal {...(portalContainer === undefined ? {} : { container: portalContainer })}>
           <div
             className="hjm-overlay"
@@ -221,6 +228,8 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(function Dialog(
               aria-labelledby={titleId}
               aria-describedby={description ? descriptionId : undefined}
               aria-busy={busy || undefined}
+              inert={!open}
+              aria-hidden={!open || undefined}
               tabIndex={-1}
               className={classNames("hjm-dialog", className)}
               data-hjm-modal-content=""

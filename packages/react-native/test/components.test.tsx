@@ -180,7 +180,7 @@ describe("@hjmds/react-native vertical slice", () => {
     );
     expect(renderer.root.findByType(Modal).props.visible).toBe(true);
     expect(renderer.root.findByType(Modal).props.animationType).toBe("none");
-    const boundary = renderer.root.findAllByType(View).find(
+    const boundary = renderer.root.findAll((node) => node.props.role === "dialog").find(
       (node: ReactTestInstance) => node.props.accessibilityViewIsModal === true,
     );
     expect(boundary?.props.accessibilityLabel).toContain("삭제할까요?");

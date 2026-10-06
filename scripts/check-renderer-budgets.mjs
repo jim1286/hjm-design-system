@@ -26,6 +26,8 @@ const rendererBudgets = [
     // and drifted): measured +3.1 kB raw / +0.84 kB gzip. provider.js gained the
     // brandPalette prop and its inheritance context: +0.7 kB / +0.24 kB.
     sharedModuleAllowances: [
+      // Dialog origin motion adds one isolated lifecycle helper to its consumers; no optional engine peer.
+      { file: "internal/overlay-origin-motion.js", modules: 1, raw: 0, gzip: 0 },
       // Spinner was extracted from feedback for reuse by ScreenLayout without
       // importing toast/notice implementations. One internal edge, no byte increase.
       { file: "internal/spinner.js", modules: 1, raw: 0, gzip: 0 },

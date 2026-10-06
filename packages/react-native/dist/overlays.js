@@ -1,4 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { resolveOriginTransition } from "@hjmds/design-contracts/content-transition";
 import { createAlertDialogSession, getAlertDialogInitialFocus, validateAlertDialogRequest, } from "@hjmds/design-contracts/components/alert-dialog";
 import { hjmCompositionStyleKeys } from "./composition-style.js";
 import { canDismissSheet, createSheetLifecycle, sheetBehaviorDefaults, } from "@hjmds/design-contracts/components/sheet";
@@ -101,7 +102,7 @@ function resolveOverlayAccessibleTitle(title, accessibilityTitle) {
     throw new TypeError("An element `title` requires `accessibilityTitle` for the modal accessible name");
 }
 /** Native modal boundary with one reasoned close intent for each user attempt. */
-export function Dialog({ open, defaultOpen, onOpenChange, title, accessibilityTitle, description, children, primaryAction, secondaryAction, dismissible = true, busy: externalBusy = false, onActionError, size = dialogRecipe.defaults.size, closeLabel, returnFocusRef, contentStyle, onShow, ...modalProps }) {
+export function Dialog({ open, defaultOpen, onOpenChange, title, accessibilityTitle, description, children, primaryAction, secondaryAction, dismissible = true, busy: externalBusy = false, onActionError, size = dialogRecipe.defaults.size, motionOrigin, closeLabel, returnFocusRef, contentStyle, onShow, ...modalProps }) {
     const [actionPending, setActionPending] = useState(null);
     const actionRun = useRef(null);
     const busy = externalBusy || actionPending !== null;
@@ -140,14 +141,49 @@ export function Dialog({ open, defaultOpen, onOpenChange, title, accessibilityTi
         exitFallbackTask.current?.cancel();
         exitFallbackTask.current = null;
     }, []);
+    const originContentRef = useRef(null);
+    const originLayout = useRef(null);
+    const originRef = useRef(motionOrigin);
+    originRef.current = motionOrigin;
+    const measurementRun = useRef(0);
+    const measurementDeadline = useRef(null);
+    const [originTransform, setOriginTransform] = useState(null);
     const startEnter = useCallback(() => {
+        const run = ++measurementRun.current;
+        if (measurementDeadline.current)
+            clearTimeout(measurementDeadline.current);
+        let measured = false;
         motionProgress.stopAnimation();
-        Animated.timing(motionProgress, {
-            toValue: 1,
-            duration: dialogRecipe.transition.enter.duration,
-            easing: Easing.bezier(...easing[dialogRecipe.transition.enter.easing]),
-            useNativeDriver: true,
-        }).start();
+        const play = (destination) => {
+            if (measured || run !== measurementRun.current || !visibleRef.current)
+                return;
+            measured = true;
+            if (measurementDeadline.current)
+                clearTimeout(measurementDeadline.current);
+            measurementDeadline.current = null;
+            setOriginTransform(resolveOriginTransition(originRef.current, destination, reducedMotionRef.current));
+            Animated.timing(motionProgress, {
+                toValue: 1,
+                duration: dialogRecipe.transition.enter.duration,
+                easing: Easing.bezier(...easing[dialogRecipe.transition.enter.easing]),
+                useNativeDriver: true,
+            }).start();
+        };
+        // Measure the actual modal window, never infer its center from the app window:
+        // safe areas and keyboards change the destination independently of the trigger.
+        if (originRef.current && !reducedMotionRef.current && originContentRef.current?.measureInWindow) {
+            // Optional geometry must not leave an invisible modal if a host drops the callback.
+            // Limit that wait to the existing enter interval; late results cannot restart it.
+            measurementDeadline.current = setTimeout(() => play(), dialogRecipe.transition.enter.duration);
+            try {
+                originContentRef.current.measureInWindow((x, y, width, height) => play({ x, y, width, height }));
+            }
+            catch {
+                play();
+            }
+        }
+        else
+            play();
     }, [motionProgress]);
     const completeExit = useCallback((token) => {
         if (pendingExitRef.current?.token !== token)
@@ -168,6 +204,10 @@ export function Dialog({ open, defaultOpen, onOpenChange, title, accessibilityTi
             focusNativeTarget(returnFocusRef);
     }, [cancelExitFallback, motionProgress, returnFocusRef, startEnter]);
     const startExit = useCallback((token) => {
+        measurementRun.current += 1;
+        if (measurementDeadline.current)
+            clearTimeout(measurementDeadline.current);
+        measurementDeadline.current = null;
         motionProgress.stopAnimation();
         Animated.timing(motionProgress, {
             toValue: 0,
@@ -223,6 +263,9 @@ export function Dialog({ open, defaultOpen, onOpenChange, title, accessibilityTi
         return cancelExitFallback;
     }, [cancelExitFallback, completeExit, nativeVisible]);
     useEffect(() => () => {
+        measurementRun.current += 1;
+        if (measurementDeadline.current)
+            clearTimeout(measurementDeadline.current);
         cancelExitFallback();
         motionProgress.stopAnimation();
     }, [cancelExitFallback, motionProgress]);
@@ -281,7 +324,15 @@ export function Dialog({ open, defaultOpen, onOpenChange, title, accessibilityTi
                 justifyContent: "center",
                 opacity: motionProgress,
                 ...viewportPadding,
-            }, children: [_jsx(Scrim, {}), dismissible ? (_jsx(Pressable, { accessible: false, importantForAccessibility: "no-hide-descendants", onPress: () => requestClose("outside"), style: { bottom: 0, left: 0, position: "absolute", right: 0, top: 0 } })) : null, _jsxs(View, { accessibilityLabel: [accessibleTitle, description].filter(Boolean).join(", "), accessibilityState: { busy }, accessibilityViewIsModal: true, importantForAccessibility: "yes", role: "dialog", style: [
+            }, children: [_jsx(Scrim, {}), dismissible ? (_jsx(Pressable, { accessible: false, importantForAccessibility: "no-hide-descendants", onPress: () => requestClose("outside"), style: { bottom: 0, left: 0, position: "absolute", right: 0, top: 0 } })) : null, _jsxs(Animated.View, { ref: originContentRef, onLayout: (event) => {
+                        const { width, height } = event.nativeEvent.layout;
+                        const previous = originLayout.current;
+                        originLayout.current = { width, height };
+                        // Error copy, keyboard or rotation may change the destination after entry.
+                        // Fade instead of returning through stale dimensions; a later open remeasures.
+                        if (previous && (previous.width !== width || previous.height !== height))
+                            setOriginTransform(null);
+                    }, accessibilityLabel: [accessibleTitle, description].filter(Boolean).join(", "), accessibilityState: { busy }, accessibilityViewIsModal: true, importantForAccessibility: "yes", role: "dialog", style: [
                         {
                             alignSelf: "center",
                             backgroundColor: contentBackground,
@@ -300,6 +351,12 @@ export function Dialog({ open, defaultOpen, onOpenChange, title, accessibilityTi
                             shadowRadius: dialogRecipe.content.shadow.radius,
                             width: "100%",
                         },
+                        originTransform && !environment.reducedMotion ? { transform: [
+                                { translateX: motionProgress.interpolate({ inputRange: [0, 1], outputRange: [originTransform.translateX, 0] }) },
+                                { translateY: motionProgress.interpolate({ inputRange: [0, 1], outputRange: [originTransform.translateY, 0] }) },
+                                { scaleX: motionProgress.interpolate({ inputRange: [0, 1], outputRange: [originTransform.scaleX, 1] }) },
+                                { scaleY: motionProgress.interpolate({ inputRange: [0, 1], outputRange: [originTransform.scaleY, 1] }) },
+                            ] } : undefined,
                         contentStyle,
                     ], children: [_jsxs(View, { style: { flexShrink: 1, gap: description ? spacing.xs : dialogRecipe.content.gap }, children: [_jsxs(View, { style: {
                                         alignItems: "flex-start",

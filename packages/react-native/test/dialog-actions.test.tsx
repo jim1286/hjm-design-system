@@ -1,6 +1,6 @@
 import { act, create, type ReactTestInstance, type ReactTestRenderer } from "react-test-renderer";
 // This proof file is listed by test/executed-scenarios.json; the workspace checker validates its cases against that registry.
-import { Modal, Pressable, View } from "react-native";
+import { Modal, Pressable } from "react-native";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { Dialog, HjmNativeProvider, Text } from "../src/index.js";
@@ -75,7 +75,7 @@ describe("Dialog native actions", () => {
       />,
     );
     const modal = renderer.root.findByType(Modal);
-    const overlay = renderer.root.findAllByType(View).find((node) => node.props.accessibilityViewIsModal);
+    const overlay = renderer.root.findAll((node) => node.props.role === "dialog").find((node) => node.props.accessibilityViewIsModal);
     const close = renderer.root.find((node) => node.props.accessibilityLabel === "닫기");
     const action = renderer.root.find((node) => node.props.accessibilityLabel === "저장");
     const outside = renderer.root.findAllByType(Pressable).find((node) => node.props.accessible === false);

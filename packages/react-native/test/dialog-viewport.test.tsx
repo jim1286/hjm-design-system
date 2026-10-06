@@ -38,7 +38,7 @@ describe.each(["dialog", "alertdialog"] as const)("%s constrained viewport", (ro
     });
     const boundary = renderer!.root.find((node) => node.props.role === role);
     expect(Object.assign({}, ...boundary.props.style)).toMatchObject({ maxHeight: "100%", flexShrink: 1 });
-    const positioner = renderer!.root.findByType(Animated.View);
+    const positioner = renderer!.root.findAllByType(Animated.View).find(node => node.props.style?.flex === 1)!;
     expect(positioner.props.style).toMatchObject({
       paddingTop: 59 + spacing.md, paddingBottom: 34 + spacing.md,
     });
