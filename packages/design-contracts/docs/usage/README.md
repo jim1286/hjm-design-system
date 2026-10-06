@@ -194,6 +194,7 @@
 | [앞면과 상세 정보 전환](compositions/stea-flip-card.md) | 정보 표시 | 모임·상품처럼 한 카드에 요약(앞면)과 상세 항목(뒷면)이 있고, 사용자가 버튼 하나로 두 면을 오가게 할 때 쓴다. | 배포 | Web · Native |
 | [일정과 식별 정보 티켓](compositions/stea-event-ticket.md) | 정보 표시 | 공연·예약 입장권처럼 일시·장소·좌석 정보와 함께, 현장에서 보여 줄 QR 코드와 사람이 읽을 예매 번호를 한 카드에 담을 때 쓴다. | 배포 | Web · Native |
 | [카드 묶음과 긴 목록](compositions/data-layouts.md) | 정보 표시 | 많은 항목을 화면에 늘어놓을 방식을 고를 때 쓴다. | 배포 | Web · Native |
+| [그림과 시작 안내](compositions/illustrated-outcome.md) | 피드백과 복구 | 빈 목록에서 시작을 안내하고 짧은 온보딩을 거쳐 결과를 보여 줄 때 쓴다. | 실험 | Web · Native |
 | [버튼 완료 피드백](compositions/action-feedback.md) | 피드백과 복구 | 입력을 유지하며 저장의 진행·성공·재시도 가능 실패를 보여 줄 때 쓴다. | 실험 | Web · Native |
 | [변경 저장과 이탈 확인](compositions/reference-settings.md) | 피드백과 복구 | 저장값과 편집 초안을 비교해 이탈 확인 흐름이 필요할 때 쓴다. | 배포 | Web · Native |
 | [보관과 실행 취소](compositions/action-recovery-undo.md) | 피드백과 복구 | 보관·숨기기·목록에서 빼기처럼 제품이 역연산을 제공하는 작업 뒤에, 같은 자리에서 실행 취소를 주고 그 복구 요청이 성공해야 화면을 되돌릴 때 쓴다. | 배포 | Web · Native |

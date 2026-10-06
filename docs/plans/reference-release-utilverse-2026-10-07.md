@@ -37,7 +37,7 @@ UI·기능 검증을 거쳐 승격·릴리스하고 Utilverse의 대체 가능�
 | Noise / EffectSurface | 기존 grain/glow/mesh 유지 | 기존 preset과 차이가 있는 후보만 추가 |
 | Hero Video Dialog | 기본 예제 열기·닫기 실제 조사, 기존 Dialog 재사용 결정 | 제품 player host, 자막·오류·재생 검증과 양쪽 실험; 원본의 모달 접근성 결함을 복제하지 않음 |
 | Rating | 양 renderer 공개 API 및 실험 | 평균/입력/초기화·키보드·큰 글자 UI 검증 |
-| 3D icons | 제품 자산 슬롯 유지 | CC0 자산별 시각 검토와 EmptyState/Result/Onboarding 구성 |
+| 3D icons | 그림과 시작 안내 실험 추가(Web/Native), CC0 원본 2개 | Web 흐름·다크·큰 글자·390px 확인, Native 실제 기기·다른 제품 팔레트 검증 남음 |
 | Number Ticker | AnimatedStatistic 유지 후보 | Intl/RTL/비라틴 숫자와 원본의 실제 이점 대조 |
 | Scroll Progress / Tracing Beam | 기존 ScrollProgress/Timeline 유지 후보 | host 범위·크기 변경과 읽기 구성 비교 |
 | Animated List | ContentTransition 재사용 후보 | 실제 데이터 등장/삭제·모션 감소·정지와 목록 구성 |

@@ -2833,6 +2833,26 @@
       "visualReview": "pending",
       "interactionReview": "pending",
       "adoptionDecision": "pending"
+    },
+    {
+      "url": "https://3dicons.co/icons/628100-notebook?angle=dynamic",
+      "name": "Notebook",
+      "existingMapping": "EmptyState / OnboardingScreen / Result product artwork slots",
+      "sourceAudit": "2026-10-07",
+      "visualReview": "dynamic/color 500px transparent PNG inspected locally and in Web default/dark/large-text composition; other variants pending",
+      "interactionReview": "Web empty → onboarding → draft/back/next → result; no-artwork flow retained; Native device pending",
+      "adoptionDecision": "implemented experimental composition 그림과 시작 안내 using existing public API; two CC0 showcase-only assets, no new runtime package dependency",
+      "evidence": "docs/qa/2026-10-07-illustrated-outcome.md"
+    },
+    {
+      "url": "https://3dicons.co/icons/1b714e-tick?angle=dynamic",
+      "name": "Tick",
+      "existingMapping": "EmptyState / OnboardingScreen / Result product artwork slots",
+      "sourceAudit": "2026-10-07",
+      "visualReview": "dynamic/color 500px transparent PNG inspected locally and in Web default/dark/large-text composition; other variants pending",
+      "interactionReview": "Web empty → onboarding → draft/back/next → result; no-artwork flow retained; Native device pending",
+      "adoptionDecision": "implemented experimental composition 그림과 시작 안내 using existing public API; two CC0 showcase-only assets, no new runtime package dependency",
+      "evidence": "docs/qa/2026-10-07-illustrated-outcome.md"
     }
   ]
 }
