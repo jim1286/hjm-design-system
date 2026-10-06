@@ -108,6 +108,10 @@ import { Avatar } from "@hjmds/react-native/data-display";
 | 크기·모양 축 | 4단 이름 · `circle`/`rounded` | 숫자 · 원만 |
 | 묶음 | `AvatarGroup` | 없음 |
 
+2026-10-07 실제 Showcase 비교에서 `AvatarGroup`을 `ListRow.leading`에 넣으면 단일 이미지용
+40×40 프레임에 그룹과 남은 인원이 잘렸다. 단일 Avatar는 그 슬롯을 사용하고, 묶음은 Card 본문의
+Stack처럼 내용 폭을 수용하는 영역에 둔다. leading의 overflow/크기를 CSS로 우회하지 않는다.
+
 ## 함정
 
 - `src`/`source`에 `undefined`를 직접 넘기면 `exactOptionalPropertyTypes`에서 타입 오류다. 사진이 없으면 prop을 빼거나 spread로 조건부로 넣는다.

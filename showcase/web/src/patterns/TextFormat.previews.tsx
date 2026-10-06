@@ -2,7 +2,7 @@ import { TextFormat } from "@hjmds/react/text-formats";
 import { ClipboardButton } from "@hjmds/react/clipboard";
 import { CounterBadge } from "@hjmds/react/display";
 import { Avatar, AvatarGroup } from "@hjmds/react/display";
-import { ListRow, List } from "@hjmds/react/display";
+import { Card } from "@hjmds/react/display";
 import { Stack, Section } from "@hjmds/react/layout";
 
 export function TextFormatPreview() {
@@ -39,20 +39,18 @@ export function ClipboardPreview() {
 export function AvatarGroupPreview() {
   return (
     <Section title="함께한 사람들" description="겹침 비율은 레시피가 정하고, 남은 인원 문구는 제품이 만듭니다.">
-      <List label="함께한 기록">
-        <ListRow
-          title="느리게 걸었던 오후"
-          description="미나, 민수 외 3명"
-          leading={
-            <AvatarGroup label="함께한 사람 5명" overflow="+3">
-              <Avatar name="미나" />
-              <Avatar name="민수" />
-            </AvatarGroup>
-          }
-          trailing={<CounterBadge count={1} dot accessibilityLabel="읽지 않은 댓글 있음" />}
-        />
-      </List>
+      {/* A ListRow leading slot is a single 40px image frame and clips a group.
+          Keep the group in Card content instead of overriding that shared slot. */}
+      <Card title="느리게 걸었던 오후" description="미나, 민수 외 3명">
+        <Stack axis="inline" gap="sm" align="center" wrap>
+          {/* This example's numeric +count token keeps its order in an RTL page. */}
+          <AvatarGroup label="함께한 사람 5명" overflow={<bdi dir="ltr">+3</bdi>}>
+            <Avatar name="미나" />
+            <Avatar name="민수" />
+          </AvatarGroup>
+          <CounterBadge count={1} dot accessibilityLabel="읽지 않은 댓글 있음" />
+        </Stack>
+      </Card>
     </Section>
   );
 }
-

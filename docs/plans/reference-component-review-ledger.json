@@ -27,10 +27,10 @@
       "name": "avatar",
       "existingMapping": "Avatar / AvatarGroup",
       "priorRationale": "집합·overflow 표현 흡수 검토",
-      "sourceAudit": "2026-10-06",
-      "visualReview": "pending",
-      "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "sourceAudit": "2026-10-07: current gallery lists 38 examples. Primer AvatarStack documentation reviewed; linked Gestalt AvatarGroup returned 404. HJM Web AvatarGroup has product-owned overflow copy; Native has no group renderer.",
+      "visualReview": "Partial: gallery first row inspected. HJM 1280 dark/RTL/2x exposed clipping in ListRow leading; corrected example verified at 390x844 dark/RTL/2x. Remaining gallery examples not visually reviewed.",
+      "interactionReview": "Static group example only; accessible group count and child names inspected. Overflow is decorative; no member-picker interaction or screen-reader run.",
+      "adoptionDecision": "Keep existing group API; fix misused 40x40 leading slot by composing Card body + Stack. Isolate +3 direction in example. No evidence to replace engine or add hover-only expansion. Native group and interactive member disclosure remain review candidates. docs/qa/2026-10-07-avatar-breadcrumb-reference.md"
     },
     {
       "url": "https://component.gallery/components/badge/",
@@ -47,10 +47,10 @@
       "name": "breadcrumbs",
       "existingMapping": "Breadcrumb",
       "priorRationale": "현재 위치·긴 경로 예제 비교",
-      "sourceAudit": "2026-10-06",
-      "visualReview": "pending",
-      "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "sourceAudit": "2026-10-07: gallery has 55 examples; definition, layout and nav/ol/current-page guidance read and compared with current Breadcrumb contract/source.",
+      "visualReview": "Partial: first gallery row and HJM default at 390px dark/RTL/2x inspected. Full 55 example screenshots not reviewed.",
+      "interactionReview": "HJM ancestor activated with Return; hash changes to records, current page becomes non-link and focus moves to new content. Long-copy LTR/RTL coverage checked separately in browser regression.",
+      "adoptionDecision": "Keep Web-only Breadcrumb and existing wrapping behavior for now; do not add a duplicate engine. Collapsed trails or Native adaptation are not verified requirements. docs/qa/2026-10-07-avatar-breadcrumb-reference.md"
     },
     {
       "url": "https://component.gallery/components/button-group/",
