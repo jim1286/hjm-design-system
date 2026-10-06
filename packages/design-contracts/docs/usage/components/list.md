@@ -120,3 +120,5 @@ import { Text } from "@hjmds/react-native/primitives";
 | 배치 | `layoutStyle`(+ `className`) | `layoutStyle`(`style`은 deprecated) |
 
 2026-10-07 Utilverse 항목 삭제 채택을 위해 `renderItemAction`을 추가했다. 체크와 삭제의 초점·누름을 분리하고 큰 글자 라벨 폭을 보존하도록 행동을 다음 줄에 둔다. `renderCollection`의 `renderItem`에도 포함된다. 삭제 저장·실패·되돌리기는 제품이 처리한다.
+
+항목 삭제 뒤에는 제품이 다음 항목의 독립 행동(없으면 이전 항목, 목록이 비면 후속 행동)으로 초점을 복구한다. Web Showcase는 ref와 커밋 후 focus 예시를 제공한다. Native 접근성 초점 검증은 아직 남아 있다.
