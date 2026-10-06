@@ -1,3 +1,7 @@
+import { KeyboardAvoiding } from "@hjmds/react-native/keyboard";
+import { ScreenLayout } from "@hjmds/react-native/screens";
+import { BottomCTA } from "@hjmds/react-native/bottom-cta";
+import { BottomInfo } from "@hjmds/react-native/bottom-info";
 import { useState } from "react";
 import { View } from "react-native";
 import { Button } from "@hjmds/react-native/actions";
@@ -50,9 +54,27 @@ export function UploadRecoveryPreview() {
 }
 export function ProductBentoPreview() {
   const [started,setStarted]=useState(false);
-  return <Stack gap="lg"><Text tone="brand" variant="label">장면 기록</Text><Text variant="heading">기록을 더 선명하게</Text><Text>사진의 변화와 그날의 생각을 한곳에 모아 보세요.</Text>
+  const [draft, setDraft] = useState("");
+  const [details, setDetails] = useState(false);
+  const { session, state, request, failureArmed, toggleFailure, busy } = useDemoAction("");
+  // Keep conditions and the draft outside the conditional editor. Returning to
+  // the introduction must not hide the product boundary or discard unfinished work.
+  const save = () => { const submitted = draft.trim(); if (submitted) void session.run(() => request(submitted), { retryable: true }); };
+  // The Native Storybook canvas is not scrollable. Use the canonical screen host
+  // so the long feature preview cannot strand its CTA below the viewport.
+  return <KeyboardAvoiding style={{ flex: 1 }}><ScreenLayout title="기록을 더 선명하게" contentInset="none"
+    header={<Stack gap="md"><Text tone="brand" variant="label">장면 기록</Text><Text variant="heading">기록을 더 선명하게</Text><Text>사진의 변화와 그날의 생각을 한곳에 모아 보세요.</Text></Stack>}>
+    <Stack gap="lg">
     <View style={{ gap: 16 }}><Surface padding="lg"><ImageComparisonPreview /></Surface><Stack gap="md"><Surface padding="lg"><Stack gap="sm"><Text variant="title">한 줄로 시작</Text><Text>짧은 제목을 적고, 필요한 만큼 이야기를 더하세요.</Text></Stack></Surface><Surface padding="lg"><Stack gap="sm"><Text variant="title">내가 고른 장면</Text><Text>다시 보고 싶은 순간을 직접 선택해요.</Text></Stack></Surface></Stack></View>
-    <Button onPress={()=>setStarted(true)}>첫 기록 시작하기</Button>{started?<TextField label="첫 기록 제목" autoFocus />:<Text variant="caption" tone="muted">계정과 저장 방식은 사용하는 제품에서 안내합니다.</Text>}</Stack>;
+    {started ? <TextField label="첫 기록 제목" value={draft} onValueChange={setDraft} autoFocus /> : null}
+    {details ? <Surface padding="md"><Text>사진을 비교하고 제목을 적으면 이 화면의 미리보기에 추가돼요. 다른 사람에게 전송되지는 않아요.</Text></Surface> : null}
+    <BottomCTA description={started ? "입력한 제목으로 미리보기를 만들어요." : "먼저 사진을 비교하거나 첫 기록을 작성해 보세요."}
+      primaryAction={{ label: started ? "미리보기에 저장" : "첫 기록 시작하기", onPress: started ? save : () => setStarted(true), loading: busy, loadingLabel: "미리보기 저장 중", disabled: started && !draft.trim() }}
+      secondaryAction={{ label: started ? "소개로 돌아가기" : details ? "사용 방법 접기" : "사용 방법 보기", onPress: started ? () => setStarted(false) : () => setDetails(value => !value), disabled: busy }}/>
+    <BottomInfo items={["실제 서버 요청 없이 체험하는 예제예요.", "제목은 이 화면이 열려 있는 동안만 유지돼요. 계정 생성이나 결제는 없어요."]}/>
+    {started ? <Button tone="ghost" selected={failureArmed} disabled={busy} onPress={toggleFailure}>다음 저장 실패 체험</Button> : null}
+    <Text accessibilityLiveRegion="polite">{state.status === "error" ? "저장하지 못했어요. 제목은 유지되어 있어요. 다시 저장해 주세요." : state.status === "success" ? "미리보기에 저장했어요." : state.status === "pending" ? "저장 중이에요." : "아직 저장하지 않았어요."}</Text>
+    {state.value ? <Text>저장된 제목: {state.value}</Text> : null}</Stack></ScreenLayout></KeyboardAvoiding>;
 }
 export function ContextToolbarPreview() {
   const [open,setOpen]=useState(false);const [choice,setChoice]=useState("기본");

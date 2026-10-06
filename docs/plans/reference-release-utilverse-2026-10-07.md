@@ -29,8 +29,8 @@ UI·기능 검증을 거쳐 승격·릴리스하고 Utilverse의 대체 가능�
 | Stateful Button | ActionFeedback 실험 | 완료·실패·재시도와 UI 검증 |
 | File Upload | UploadRecovery 실험 | 선택·중복·취소·오류 복구 검증 |
 | Bento Grid | ProductBento 실험 | 좁은 화면/Native 정보 순서·레이아웃 검증 |
-| CTA | ProductBento에 주 행동 연결 | CTA Gallery 추가 시각 검토와 구성 다양성 검토 |
-| Refero | REFERENCE_BRIEF 템플릿 | 전체 스타일 시각 검토와 역할별 제품 테마 대조 |
+| CTA | Ente/Webflow 갤러리 캡처 대조. ProductBento에 BottomCTA/BottomInfo·초안 유지·실패/재시도 연결. Web·iOS 실제 흐름 확인 | 전체 갤러리 시각 검토·제품 팔레트·Native 환경 조합. docs/qa/2026-10-07-cta-reference.md |
+| Refero | Wise 캡처·역할 추출 간 불일치를 확인해 REFERENCE_BRIEF에 관찰/추론 구분 추가 | 전체 스타일 시각 검토와 역할별 제품 테마 대조 |
 | Image Comparison | 양 renderer 공개 API 및 실험 | 실제 드래그·스크롤 충돌·RTL·이미지 실패 UI 검증 |
 | Dynamic / Expandable Toolbar | ContextToolbar 실험 | 키보드·초안 유지·초점 복귀 검증 |
 | Progressive Blur | 경계·초점 보호를 포함한 양 renderer 실험 구현. iOS 실제 합성·끝 항목 선택·내용 축소·다크 확인 | Android 합성·접근성·제품 팔레트·비용 비교. progressive-blur-adoption-2026-10-07.md |

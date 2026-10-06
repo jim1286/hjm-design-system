@@ -4165,6 +4165,36 @@
         "checkedAt": "2026-10-06T16:00:28.472269+00:00",
         "evidence": "reference-page-source-index.json"
       }
+    },
+    {
+      "url": "https://www.cta.gallery/cta/ente",
+      "name": "cta-ente",
+      "existingMapping": "Button / BottomCTA / product-owned store assets",
+      "priorRationale": "platform-appropriate actions and consistent supporting copy",
+      "sourceAudit": "2026-10-07 gallery detail and download category",
+      "visualReview": "Gallery desktop/mobile captures viewed in IAB: desktop groups store, web and desktop choices; mobile emphasizes mobile stores and More platforms. Gallery screenshot only, not live Ente interaction.",
+      "interactionReview": "pending on original product; no download or external CTA invoked",
+      "adoptionDecision": "Keep store badges and platform destinations product-owned. Use existing Button/Link composition and explicit supported-platform copy; no HJM store-logo bundle or new generic CTA engine."
+    },
+    {
+      "url": "https://www.cta.gallery/cta/webflow",
+      "name": "cta-webflow",
+      "existingMapping": "BottomCTA / BottomInfo / existing ProductBento experiment",
+      "priorRationale": "clear primary/secondary choice beside value proposition",
+      "sourceAudit": "2026-10-07 gallery detail and pricing category",
+      "visualReview": "Gallery desktop/mobile captures viewed in IAB: blue Get started primary next to restrained Talk to sales, headline/copy above and product screenshot below. Static captures do not prove conversion or behavior.",
+      "interactionReview": "pending on original product; external signup/sales actions not invoked",
+      "adoptionDecision": "Absorb primary/secondary hierarchy into existing ProductBento with BottomCTA. Keep product conditions visible with BottomInfo and validate local draft/recovery. Do not copy pricing, imagery or brand colors."
+    },
+    {
+      "url": "https://styles.refero.design/style/367c0c6e-73a7-441c-a8ff-91d139ac60dc",
+      "name": "refero-wise",
+      "existingMapping": "REFERENCE_BRIEF / semantic tokens / product brandPalette",
+      "priorRationale": "role-based visual brief with evidence boundaries",
+      "sourceAudit": "2026-10-07 detail page and DESIGN.md text reviewed; extracted measurements are normalized and roles interpreted per source disclaimer",
+      "visualReview": "IAB screenshot shows a green Get Started button beside Learn about receiving money. Narrative says lime accent marks CTAs; extracted color role says not primary CTA; later text says no distinct primary action color observed. These contradict each other.",
+      "interactionReview": "read-only reference inspection; original Wise financial service not used",
+      "adoptionDecision": "Do not import inferred role labels as authoritative tokens. Extend REFERENCE_BRIEF to separate observed capture, source behavior, normalized measurement, role inference and reconstructed HTML. Preserve HJM accessibility and product semantic choices."
     }
   ]
 }
