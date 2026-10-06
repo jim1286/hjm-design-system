@@ -180,7 +180,7 @@
       "sourceAudit": "2026-10-07: 32 gallery entries enumerated. GOV.UK and Headless UI documentation compared with HJM Form, selection groups and date/duration groups. The category mixes generic groups, single-field frames and selection groups.",
       "visualReview": "Partial: GOV.UK address-group standalone example inspected at 1280x720; four individually labeled inputs under one question. Remaining originals and gallery thumbnails not visually reviewed.",
       "interactionReview": "GOV.UK synthetic first address value retained after Tab moved to optional second line; fieldset first legend and four autocomplete values read from DOM. Screen reader, disabled and errors not exercised.",
-      "adoptionDecision": "Recommend a related-input-group experiment: existing Form owns submission and is not a generic named fieldset. Preserve selection/date domain APIs; do not nest Form to obtain grouping. Internal resolver implemented with six passing regressions for scoped feedback, order and lock restoration; public renderers and Native accessibility bridge pending. docs/plans/field-group-experiment.md"
+      "adoptionDecision": "FieldGroup added as the 16th experiment through contracts/Web/Native field-group subpaths. Existing domain groups and Form remain separate. Web browser 3 and Native renderer 2 tests pass; Web dark/RTL/2x and iOS basic error/edit/lock/reorder observed. Full original-source review, real screen readers, Android and product palette coverage remain. docs/qa/2026-10-07-field-group-reference.md"
     },
     {
       "url": "https://component.gallery/components/file-upload/",

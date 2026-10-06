@@ -171,6 +171,7 @@
 
 | 지침 | 분류 | 언제 쓰나 | 상태 | 지원 |
 | --- | --- | --- | --- | --- |
+| [관련 입력 묶음](compositions/field-group.md) | 입력과 작성 | 주소·연락처처럼 여러 입력이 하나의 질문에 답할 때 쓴다. | 실험 | Web · Native |
 | [날짜 직접 입력](compositions/date-entry.md) | 입력과 작성 | 사용자가 알고 있는 날짜를 직접 입력할 때 쓴다. | 실험 | Web · Native |
 | [늦은 응답보다 최신 검색 유지](compositions/interaction-flow-search.md) | 입력과 작성 | 검색어를 바꿔 다시 검색했을 때 먼저 보낸 요청이 늦게 도착해도 최신 검색 결과를 덮어쓰지 않게 할 때 쓴다. | 배포 | Web · Native |
 | [단계별 드로어](compositions/family-drawer.md) | 입력과 작성 | 초대 → 설정 → 확인처럼 짧은 단계 2~5개를 현재 화면을 떠나지 않고 하단 시트 안에서 차례로 진행할 때 쓴다. | 배포 | Web · Native |

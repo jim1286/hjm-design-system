@@ -1,4 +1,4 @@
-/** Internal related-input grouping candidate. Values and submit/validation timing remain product-owned. */
+/** Related-input grouping contract. Values and submit/validation timing remain product-owned. */
 export type FieldGroupMember = Readonly<{
     id: string;
     label: string;
@@ -30,6 +30,11 @@ export type ResolvedFieldGroupMember = Readonly<{
         text: string;
     }>[];
 }>;
+/** Late native events and retained callbacks must use the current committed group policy. */
+export declare function createFieldGroupEditSession(fields: readonly ResolvedFieldGroupMember[]): {
+    update(next: readonly ResolvedFieldGroupMember[]): void;
+    guard<Args extends unknown[]>(id: string, callback: (...args: Args) => void): (...args: Args) => void;
+};
 export declare function resolveFieldGroup(descriptor: FieldGroupDescriptor): Readonly<{
     label: string;
     description: string | undefined;

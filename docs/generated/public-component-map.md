@@ -4,7 +4,7 @@
 
 ## @hjmds/react
 
-고유 공개 컴포넌트 및 provider 이름 158개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 159개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -61,6 +61,7 @@
 | EffectSurface | 별도 보조 기능 | supplemental | ./effect-surface |
 | EmptyState | EmptyState | canonical | root, ./feedback |
 | Field | Field | canonical | root, ./forms |
+| FieldGroup | Field | optional-extension | ./field-group |
 | FilePicker | FilePicker | canonical | root, ./file-picker, ./forms |
 | FloatingActionButton | FloatingActionButton | canonical | root, ./floating-action-button |
 | FolderPreview | Collapsible | optional-extension | ./folder-preview |
@@ -169,7 +170,7 @@
 
 ## @hjmds/react-native
 
-고유 공개 컴포넌트 및 provider 이름 144개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 145개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -217,6 +218,7 @@
 | EffectSurface | 별도 보조 기능 | supplemental | ./effect-surface |
 | EmptyState | EmptyState | canonical | root, ./feedback |
 | Field | Field | canonical | root, ./forms |
+| FieldGroup | Field | optional-extension | ./field-group |
 | FilePicker | FilePicker | canonical | root, ./file-picker, ./inputs |
 | FloatingActionButton | FloatingActionButton | canonical | root, ./floating-action-button |
 | FolderPreview | Collapsible | optional-extension | ./folder-preview |

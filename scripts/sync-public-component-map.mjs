@@ -25,7 +25,7 @@ const extensions = {
   TaskList: "List",
   ScrollProgress: "Progress",
   ReactionPicker: "Button", NotificationBell: "IconButton",
-  DateEntry: "Field", DurationField: "NumberField", InlineConfirm: "Button",
+  FieldGroup: "Field", DateEntry: "Field", DurationField: "NumberField", InlineConfirm: "Button",
   AnimatedStatistic: "Statistic", MorphingMenu: "Menu", CarouselMotion: "Carousel",
   ImageViewer: "Image", GestureSheet: "Sheet", GestureSheetProvider: "Sheet", GestureSheetInput: "Field",
   NativeContextMenu: "ContextMenu",

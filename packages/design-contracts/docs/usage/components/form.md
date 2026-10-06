@@ -16,7 +16,7 @@
 
 Form은 주소·연락처처럼 관련 입력을 이름 붙여 묶는 일반 fieldset API가 아니다.
 Web 내부 fieldset은 제출 중 잠금을 위한 것이며 그룹 legend를 제공하지 않는다.
-그룹 제목을 만들려고 Form을 중첩하지 않는다. 2026-10-07 GOV.UK 주소 그룹과 대조해
+그룹 제목을 만들려고 Form을 중첩하지 않는다. 일반 관련 입력은 [FieldGroup](../compositions/field-group.md) 실험에서 제공한다. 2026-10-07 GOV.UK 주소 그룹과 대조해
 제출 경계와 입력 그룹을 구분했다. 선택 묶음은 CheckboxGroup/RadioGroup, 날짜 부분 입력은 DateEntry를 사용한다.
 
 ## 쓰지 않을 때

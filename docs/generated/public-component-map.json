@@ -520,6 +520,15 @@
         "role": "canonical"
       },
       {
+        "name": "FieldGroup",
+        "source": "packages/react/src/field-group.tsx",
+        "entries": [
+          "./field-group"
+        ],
+        "canonicalComponent": "Field",
+        "role": "optional-extension"
+      },
+      {
         "name": "FilePicker",
         "source": "packages/react/src/file-picker.tsx",
         "entries": [
@@ -1972,6 +1981,15 @@
         ],
         "canonicalComponent": "Field",
         "role": "canonical"
+      },
+      {
+        "name": "FieldGroup",
+        "source": "packages/react-native/src/field-group.tsx",
+        "entries": [
+          "./field-group"
+        ],
+        "canonicalComponent": "Field",
+        "role": "optional-extension"
       },
       {
         "name": "FilePicker",

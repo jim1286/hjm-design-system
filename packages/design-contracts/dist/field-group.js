@@ -2,6 +2,19 @@ function requireText(value, name) {
     if (typeof value !== "string" || !value.trim())
         throw new TypeError(`Field group ${name} must be nonempty text`);
 }
+/** Late native events and retained callbacks must use the current committed group policy. */
+export function createFieldGroupEditSession(fields) {
+    let enabled = new Set(fields.filter(field => !field.disabled).map(field => field.id));
+    return {
+        update(next) {
+            enabled = new Set(next.filter(field => !field.disabled).map(field => field.id));
+        },
+        guard(id, callback) {
+            return (...args) => { if (enabled.has(id))
+                callback(...args); };
+        },
+    };
+}
 function optionalText(value, name) {
     if (value !== undefined)
         requireText(value, name);

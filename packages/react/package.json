@@ -492,6 +492,11 @@
       "types": "./dist/date-entry.d.ts",
       "import": "./dist/date-entry.js",
       "default": "./dist/date-entry.js"
+    },
+    "./field-group": {
+      "types": "./dist/field-group.d.ts",
+      "import": "./dist/field-group.js",
+      "default": "./dist/field-group.js"
     }
   },
   "files": [

@@ -1,5 +1,7 @@
 ---
-"@hjmds/design-contracts": patch
+"@hjmds/design-contracts": minor
+"@hjmds/react": minor
+"@hjmds/react-native": minor
 ---
 
-Prepare an internal related-field group resolver with scoped feedback and independent disabled state restoration. No public entry point or renderer is added by this preparation.
+Expose experimental FieldGroup through dedicated subpaths. Keep named groups, independent field feedback and guarded edits separate from form submission. Provide Web fieldset/legend semantics and Native per-control accessibility bindings.

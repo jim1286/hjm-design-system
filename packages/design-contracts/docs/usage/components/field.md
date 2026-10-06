@@ -144,3 +144,9 @@ Web TextField의 `aria-invalid={true}`는 외부 오류 ID를 `aria-describedby`
 테두리를 표시하는 미게시 옵션이다. 같은 오류를 `accessibilityHint`로 연결하고 그룹 안내를
 별도로 보여 준다. error가 있으면 해당 문구가 hint보다 우선하고, hint가 없으면 description을 쓴다.
 2026-10-07 날짜 직접 입력의 큰 글자 오류가 세 번 반복된 관찰에 따라 이 경로를 추가했다.
+
+### 관련 입력 그룹 (실험·미게시)
+
+여러 입력이 한 질문에 답하면 `FieldGroup`을 사용한다. Form의 제출 경계와 구분하며
+`@hjmds/react/field-group`, `@hjmds/react-native/field-group`에서 제공한다.
+[관련 입력 묶음 지침](../compositions/field-group.md)의 renderField 연결·오류·잠금 규칙을 따른다.

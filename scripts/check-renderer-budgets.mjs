@@ -74,6 +74,8 @@ const rendererBudgets = [
       // 2026-10-01 compound controls: measured local graphs, ~15% byte headroom;
       // exact module limits preserve reuse of NumberField/Button/IconButton/CounterBadge.
       // DateEntry reuses forms/internal; inspected 3 local modules, no root barrel.
+      // FieldGroup is one local module; input renderers are supplied through a public callback.
+      "./field-group": { modules: 1, raw: 2675, gzip: 1051 },
       "./date-entry": { modules: 3, raw: 22051, gzip: 5305 },
       "./duration-field": { modules: 3, raw: 12200, gzip: 3700 },
       "./inline-confirm": { modules: 3, raw: 11000, gzip: 3050 },
@@ -414,6 +416,8 @@ const rendererBudgets = [
       // 2026-10-01 compound controls: measured local graphs, ~15% byte headroom;
       // exact module limits preserve reuse of NumberField/Button/IconButton/CounterBadge.
       // DateEntry reuses inputs and its field helpers/provider: 10 reviewed local modules.
+      // FieldGroup reaches Text/primitives, provider and two style helpers; no root or optional engine.
+      "./field-group": { modules: 5, raw: 25281, gzip: 6913 },
       "./date-entry": { modules: 10, raw: 100978, gzip: 22893 },
       "./duration-field": { modules: 6, raw: 40000, gzip: 9800 },
       "./inline-confirm": { modules: 5, raw: 41300, gzip: 9700 },

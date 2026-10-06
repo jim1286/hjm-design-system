@@ -163,6 +163,7 @@ describe("package boundaries", () => {
       "./progressive-blur",
       "./text-annotation",
       "./date-entry",
+      "./field-group",
     ] as const;
 
     expect(Object.keys(packageJson.exports)).toEqual(expectedExports);

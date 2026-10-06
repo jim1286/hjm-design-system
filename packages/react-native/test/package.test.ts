@@ -124,6 +124,7 @@ describe("@hjmds/react-native package boundary", () => {
       "./saved-items",
       "./progressive-blur",
       "./date-entry",
+      "./field-group",
     ];
     expect(Object.keys(packageJson.exports)).toEqual(expectedExportPaths);
     const familyTargets = expectedExportPaths.slice(1).filter((path) => path !== "./top-bar" && path !== "./bottom-cta").map((exportPath) => {
