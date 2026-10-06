@@ -1,5 +1,5 @@
 import { collectionItemContract, focusIndicatorContract } from "./component-contracts.js";
-import { control, spacing } from "./foundations.js";
+import { control, opacity, spacing } from "./foundations.js";
 import { semanticColors } from "./semantic-colors.js";
 import { reconcileCheckboxSelection, toggleCheckboxSelection, } from "./selection-helpers.js";
 function assertNonEmpty(value, field) {
@@ -13,6 +13,8 @@ export function validateAgreementDescriptor(descriptor) {
     if (!Array.isArray(descriptor.items) || descriptor.items.length === 0) {
         throw new RangeError("Agreement must contain at least one item");
     }
+    if (descriptor.disabled !== undefined && typeof descriptor.disabled !== "boolean")
+        throw new TypeError("Agreement disabled must be a boolean");
     const ids = new Set();
     for (const item of descriptor.items) {
         assertNonEmpty(item.id, "item id");
@@ -54,6 +56,10 @@ export function resolveAgreementState(descriptor, checkedIds) {
 /** 개별 항목 토글. 비활성 항목 보호는 공용 helper가 이미 갖고 있다. */
 export function toggleAgreementItem(descriptor, checkedIds, id) {
     validateAgreementDescriptor(descriptor);
+    // Utilverse registration must freeze required consents during a request.
+    // Disabling each required item is invalid and would change the denominator.
+    if (descriptor.disabled)
+        return checkedIds;
     return toggleCheckboxSelection(descriptor.items, checkedIds, id);
 }
 /**
@@ -63,6 +69,8 @@ export function toggleAgreementItem(descriptor, checkedIds, id) {
  */
 export function toggleAgreementAll(descriptor, checkedIds) {
     const { all } = resolveAgreementState(descriptor, checkedIds);
+    if (descriptor.disabled)
+        return checkedIds;
     const next = new Set(checkedIds);
     for (const item of descriptor.items) {
         if (item.disabled)
@@ -96,6 +104,9 @@ export const agreementRecipe = {
         color: semanticColors.content.primary,
     },
     item: collectionItemContract,
+    // Reserve most row width for consent text. Long detail labels wrap below it
+    // instead of squeezing large Korean labels into one-character columns.
+    itemLayout: { labelBasis: "70%" },
     detail: {
         color: semanticColors.content.secondary,
         textVariant: "label",
@@ -103,11 +114,11 @@ export const agreementRecipe = {
     },
     required: { color: semanticColors.content.brand, textVariant: "label" },
     gap: spacing.xs,
-    states: { focus: focusIndicatorContract },
+    states: { focus: focusIndicatorContract, disabledOpacity: opacity.disabled },
 };
 export const agreementBehavior = {
     controlled: ["checkedIds", "defaultCheckedIds", "onCheckedIdsChange"],
-    inputs: ["items", "allLabel", "accessibilityLabel"],
+    inputs: ["items", "allLabel", "accessibilityLabel", "disabled"],
     events: ["onDetail"],
     stateAxes: {
         availability: ["enabled", "disabled"],

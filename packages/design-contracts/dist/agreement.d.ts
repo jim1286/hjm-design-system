@@ -29,6 +29,8 @@ export type AgreementDescriptor<Id extends string = string> = Readonly<{
     /** 전체 동의 행의 라벨. 필수이므로 renderer가 임의 문구를 만들지 않는다. */
     allLabel: string;
     items: readonly AgreementItemDescriptor<Id>[];
+    /** Freeze consent changes during submission; detail reading remains available. */
+    disabled?: boolean;
 }>;
 export declare function validateAgreementDescriptor<Id extends string>(descriptor: AgreementDescriptor<Id>): void;
 export type AgreementState<Id extends string = string> = Readonly<{
@@ -130,6 +132,9 @@ export declare const agreementRecipe: {
             alpha?: number;
         }>;
     };
+    readonly itemLayout: {
+        readonly labelBasis: "70%";
+    };
     readonly detail: {
         readonly color: Readonly<{
             source: "theme";
@@ -158,11 +163,12 @@ export declare const agreementRecipe: {
             readonly width: 2;
             readonly offset: 2;
         };
+        readonly disabledOpacity: 0.5;
     };
 };
 export declare const agreementBehavior: {
     readonly controlled: readonly ["checkedIds", "defaultCheckedIds", "onCheckedIdsChange"];
-    readonly inputs: readonly ["items", "allLabel", "accessibilityLabel"];
+    readonly inputs: readonly ["items", "allLabel", "accessibilityLabel", "disabled"];
     readonly events: readonly ["onDetail"];
     readonly stateAxes: {
         readonly availability: readonly ["enabled", "disabled"];

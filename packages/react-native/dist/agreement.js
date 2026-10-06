@@ -28,6 +28,8 @@ export function Agreement({ descriptor, checkedIds: controlledChecked, defaultCh
         onStateChangeRef.current?.(initialStateRef.current);
     }, []);
     const commit = (next) => {
+        if (descriptor.disabled)
+            return;
         if (controlledChecked === undefined)
             setInternal(next);
         onCheckedIdsChange?.(next);
@@ -47,11 +49,18 @@ export function Agreement({ descriptor, checkedIds: controlledChecked, defaultCh
             borderRadius: radius.sm,
             borderWidth: 1,
             height: spacing.md,
+            flexShrink: 0,
             justifyContent: "center",
             width: spacing.md,
-        }, children: value === false ? null : (_jsx(Text, { accessible: false, style: { color: glyphColor }, variant: "caption", children: value === "mixed" ? "–" : "✓" })) }));
-    return (_jsxs(View, { accessibilityLabel: descriptor.accessibilityLabel, accessibilityRole: "none", style: [{ gap: agreementRecipe.gap }, style, layoutStyle], children: [_jsxs(Pressable, { accessibilityLabel: descriptor.allLabel, accessibilityRole: "checkbox", accessibilityState: mixedCheckboxState(state.all), onPress: () => commit(toggleAgreementAll(descriptor, checked)), style: {
+        }, children: value === false ? null : (
+        // Fixed artwork: HJM Text scales even if OS scaling is disabled, which
+        // pushed the previous check glyph outside this 16pt frame at 2x.
+        _jsx(View, { accessible: false, style: value === "mixed"
+                ? { width: 10, height: 2, backgroundColor: glyphColor }
+                : { width: 8, height: 4, borderLeftWidth: 2, borderBottomWidth: 2, borderColor: glyphColor, transform: [{ rotate: "-45deg" }] } })) }));
+    return (_jsxs(View, { accessibilityLabel: descriptor.accessibilityLabel, accessibilityRole: "none", style: [{ gap: agreementRecipe.gap }, style, layoutStyle], children: [_jsxs(Pressable, { accessibilityLabel: descriptor.allLabel, accessibilityRole: "checkbox", accessibilityState: { ...mixedCheckboxState(state.all), disabled: descriptor.disabled === true }, disabled: descriptor.disabled === true, onPress: () => commit(toggleAgreementAll(descriptor, checked)), style: {
                     alignItems: "center",
+                    opacity: descriptor.disabled ? agreementRecipe.states.disabledOpacity : 1,
                     backgroundColor: resolveColorReference(agreementRecipe.all.background, theme.palette),
                     borderRadius: radius.md,
                     flexDirection: "row",
@@ -59,16 +68,23 @@ export function Agreement({ descriptor, checkedIds: controlledChecked, defaultCh
                     minHeight: agreementRecipe.all.minHeight,
                     paddingHorizontal: agreementRecipe.all.paddingHorizontal,
                     paddingVertical: agreementRecipe.all.paddingVertical,
-                }, children: [mark(state.all), _jsx(Text, { variant: agreementRecipe.all.textVariant, children: descriptor.allLabel })] }), descriptor.items.map((item) => (_jsxs(View, { style: { gap: spacing.xxs }, children: [_jsxs(View, { style: { alignItems: "center", flexDirection: "row", gap: spacing.xs }, children: [_jsxs(Pressable
+                }, children: [mark(state.all), _jsx(Text, { variant: agreementRecipe.all.textVariant, children: descriptor.allLabel })] }), descriptor.items.map((item) => (_jsxs(View, { style: { gap: spacing.xxs }, children: [_jsxs(View, { style: { alignItems: "center", flexDirection: "row", flexWrap: "wrap", gap: spacing.xs }, children: [_jsxs(Pressable
                             // Named explicitly so the check glyph never leaks into the name ("✓, Terms").
                             , { 
                                 // Named explicitly so the check glyph never leaks into the name ("✓, Terms").
-                                accessibilityLabel: `${item.label} ${item.required === true ? requiredLabel : optionalLabel}`, accessibilityRole: "checkbox", accessibilityState: { checked: checked.has(item.id), disabled: item.disabled === true }, disabled: item.disabled === true, onPress: () => commit(toggleAgreementItem(descriptor, checked, item.id)), style: {
+                                accessibilityLabel: `${item.label} ${item.required === true ? requiredLabel : optionalLabel}`, accessibilityRole: "checkbox", accessibilityState: { checked: checked.has(item.id), disabled: descriptor.disabled === true || item.disabled === true }, disabled: descriptor.disabled === true || item.disabled === true, onPress: () => { if (!item.disabled)
+                                    commit(toggleAgreementItem(descriptor, checked, item.id)); }, style: {
                                     alignItems: "center",
-                                    flex: 1,
+                                    flexBasis: agreementRecipe.itemLayout.labelBasis,
+                                    flexGrow: 1,
+                                    flexShrink: 1,
+                                    // Yoga can shrink a percentage flex basis before wrapping; protect the label
+                                    // so a long detail action moves below instead of squeezing consent text.
+                                    minWidth: agreementRecipe.itemLayout.labelBasis,
+                                    opacity: descriptor.disabled || item.disabled ? agreementRecipe.states.disabledOpacity : 1,
                                     flexDirection: "row",
                                     gap: agreementRecipe.item.gap,
                                     minHeight: agreementRecipe.item.minHeight,
-                                }, children: [mark(checked.has(item.id)), _jsx(Text, { style: { flex: 1 }, variant: agreementRecipe.item.label.textVariant, children: `${item.label} ${item.required === true ? requiredLabel : optionalLabel}` })] }), item.detail ? (_jsx(Pressable, { accessibilityRole: "button", onPress: () => onDetail?.(item.id), style: { justifyContent: "center", minHeight: agreementRecipe.detail.minHeight, paddingHorizontal: spacing.xs }, children: _jsx(Text, { style: { color: resolveColorReference(agreementRecipe.detail.color, theme.palette), textDecorationLine: "underline" }, variant: agreementRecipe.detail.textVariant, children: item.detail.label }) })) : null] }), item.description ? (_jsx(Text, { style: { color: resolveColorReference(agreementRecipe.item.description.color, theme.palette), paddingStart: spacing.xl }, variant: agreementRecipe.item.description.textVariant, children: item.description })) : null] }, item.id)))] }));
+                                }, children: [mark(checked.has(item.id)), _jsx(Text, { style: { flex: 1 }, variant: agreementRecipe.item.label.textVariant, children: `${item.label} ${item.required === true ? requiredLabel : optionalLabel}` })] }), item.detail ? (_jsx(Pressable, { accessibilityRole: "button", onPress: () => onDetail?.(item.id), style: { justifyContent: "center", maxWidth: "100%", minHeight: agreementRecipe.detail.minHeight, paddingHorizontal: spacing.xs }, children: _jsx(Text, { style: { color: resolveColorReference(agreementRecipe.detail.color, theme.palette), textDecorationLine: "underline" }, variant: agreementRecipe.detail.textVariant, children: item.detail.label }) })) : null] }), item.description ? (_jsx(Text, { style: { color: resolveColorReference(agreementRecipe.item.description.color, theme.palette), paddingStart: spacing.xl }, variant: agreementRecipe.item.description.textVariant, children: item.description })) : null] }, item.id)))] }));
 }
 //# sourceMappingURL=agreement.js.map

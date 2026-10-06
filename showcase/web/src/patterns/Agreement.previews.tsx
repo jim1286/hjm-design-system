@@ -101,3 +101,18 @@ export function AuthScreenLayoutPreview({ loading = false }: { loading?: boolean
     footer={<span>개인정보 처리방침 · 이용약관</span>} />;
 }
 
+
+export function AgreementLockedPreview() {
+  const [disabled, setDisabled] = useState(true);
+  const [checked, setChecked] = useState<ReadonlySet<string>>(new Set(['terms']));
+  const [detail, setDetail] = useState('');
+  return <Stack gap="md">
+    <p>제출 중 동의 변경만 잠급니다. 전문은 계속 읽을 수 있습니다.</p>
+    <Agreement descriptor={{ accessibilityLabel: '가입 약관', allLabel: '전체 동의', disabled, items: [
+      {id:'terms',label:'서비스 이용약관',required:true,detail:{label:'이용약관 읽기'}},
+      {id:'privacy',label:'개인정보 처리방침',required:true,detail:{label:'개인정보 처리방침 읽기'}},
+    ] }} checkedIds={checked} onCheckedIdsChange={setChecked} onDetail={setDetail} requiredLabel="(필수)" optionalLabel="(선택)" />
+    {detail ? <p>{detail === 'terms' ? '이용약관 예시 본문' : '개인정보 처리방침 예시 본문'} — 실제 가입이나 동의 저장은 하지 않습니다.</p> : null}
+    <Button tone="secondary" onClick={() => setDisabled(!disabled)}>{disabled ? '동의 잠금 해제' : '동의 변경 잠그기'}</Button>
+  </Stack>;
+}

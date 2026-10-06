@@ -32,7 +32,7 @@ export type AgreementProps<Id extends string = string> = Readonly<{
 function Mark({ state }: { state: boolean | "mixed" }) {
   return (
     <span aria-hidden="true" className="hjm-agreement__mark" data-state={String(state)}>
-      {state === true ? "✓" : state === "mixed" ? "–" : ""}
+      {state === false ? null : <span className="hjm-agreement__ink" />}
     </span>
   );
 }
@@ -78,6 +78,7 @@ export const Agreement = forwardRef(function Agreement<Id extends string = strin
     onStateChangeRef.current?.(initialStateRef.current);
   }, []);
   const commit = (next: ReadonlySet<Id>) => {
+    if (descriptor.disabled) return;
     setChecked(next);
     onStateChange?.(resolveAgreementState(descriptor, next));
   };
@@ -94,6 +95,8 @@ export const Agreement = forwardRef(function Agreement<Id extends string = strin
         type="button"
         role="checkbox"
         aria-checked={state.all === "mixed" ? "mixed" : String(state.all === true) as "true" | "false"}
+        // Keep an already focused consent control reachable while a request locks it.
+        aria-disabled={descriptor.disabled || undefined}
         className="hjm-agreement__all"
         onClick={() => commit(toggleAgreementAll(descriptor, checked))}
       >
@@ -110,10 +113,10 @@ export const Agreement = forwardRef(function Agreement<Id extends string = strin
                 role="checkbox"
                 id={`${id}-${item.id}`}
                 aria-checked={itemChecked}
-                aria-disabled={item.disabled || undefined}
+                aria-disabled={descriptor.disabled || item.disabled || undefined}
                 aria-describedby={item.description ? `${id}-${item.id}-description` : undefined}
                 className="hjm-agreement__toggle"
-                onClick={() => { if (!item.disabled) commit(toggleAgreementItem(descriptor, checked, item.id)); }}
+                onClick={() => { if (!descriptor.disabled && !item.disabled) commit(toggleAgreementItem(descriptor, checked, item.id)); }}
               >
                 <Mark state={itemChecked} />
                 <span className="hjm-agreement__copy">

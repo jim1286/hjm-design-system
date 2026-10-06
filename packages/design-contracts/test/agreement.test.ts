@@ -94,3 +94,16 @@ describe("Agreement catalog wiring", () => {
     expect(agreementRecipe.item.minHeight).toBeGreaterThanOrEqual(44);
   });
 });
+
+
+it("freezes the whole agreement without changing required consent or its denominator", () => {
+  const locked = { ...descriptor, disabled: true };
+  const checked = new Set(["terms"]);
+  expect(toggleAgreementAll(locked, checked)).toBe(checked);
+  expect(toggleAgreementItem(locked, checked, "privacy")).toBe(checked);
+  expect(resolveAgreementState(locked, checked)).toEqual(resolveAgreementState(descriptor, checked));
+  const unlocked = toggleAgreementAll({ ...locked, disabled: false }, checked);
+  expect(resolveAgreementState(descriptor, unlocked).satisfied).toBe(true);
+  expect(() => validateAgreementDescriptor({ ...descriptor, disabled: "true" as unknown as boolean })).toThrow(/boolean/);
+  expect(() => validateAgreementDescriptor({ ...locked, items: [{ id: "terms", label: "Terms", required: true, disabled: true }] })).toThrow(/required and disabled/);
+});

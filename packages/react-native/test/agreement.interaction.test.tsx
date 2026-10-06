@@ -57,3 +57,30 @@ it("toggles native consent through checkbox host actions and opens details witho
   expect(onStateChange).toHaveBeenCalledTimes(stateChangeCount);
   expect(onCheckedIdsChange).toHaveBeenLastCalledWith(new Set(["news"]));
 });
+
+
+it("locks required consent without disabling full-text reading, then resumes from the same selection", () => {
+  const changes = vi.fn(), states = vi.fn(), details = vi.fn();
+  let renderer!: ReturnType<typeof create>;
+  const ui = (disabled: boolean) => <HjmNativeProvider reducedMotion><Agreement descriptor={{...descriptor, disabled}} defaultCheckedIds={new Set(['terms'])} onCheckedIdsChange={changes} onStateChange={states} onDetail={details} requiredLabel="(필수)" optionalLabel="(선택)" /></HjmNativeProvider>;
+  act(() => { renderer = create(ui(true)); });
+  const boxes = () => renderer.root.findAll(node => String(node.type) === 'Pressable' && node.props.accessibilityRole === 'checkbox');
+  expect(boxes()[0]!.props.accessibilityState.checked).toBe('mixed');
+  for (const box of boxes()) {
+    expect(box.props.disabled).toBe(true);
+    expect(box.props.accessibilityState.disabled).toBe(true);
+    act(() => box.props.onPress());
+  }
+  expect(changes).not.toHaveBeenCalled();
+  expect(states).toHaveBeenCalledTimes(1);
+  const detail = renderer.root.findAll(node => String(node.type) === 'Pressable' && node.props.accessibilityRole === 'button')[0]!;
+  expect(detail.props.disabled).not.toBe(true);
+  act(() => detail.props.onPress());
+  expect(details).toHaveBeenCalledWith('terms');
+  act(() => renderer.update(ui(false)));
+  expect(boxes()[1]!.props.accessibilityState.checked).toBe(true);
+  act(() => boxes()[0]!.props.onPress());
+  expect(changes).toHaveBeenLastCalledWith(new Set(['terms','news']));
+  expect(states.mock.lastCall?.[0].satisfied).toBe(true);
+  act(() => renderer.unmount());
+});

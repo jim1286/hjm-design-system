@@ -1,7 +1,7 @@
 import type { BehaviorContract } from "./behaviors.js";
 import type { ColorReference } from "./color-references.js";
 import { collectionItemContract, focusIndicatorContract } from "./component-contracts.js";
-import { control, spacing } from "./foundations.js";
+import { control, opacity, spacing } from "./foundations.js";
 import { semanticColors } from "./semantic-colors.js";
 import {
   reconcileCheckboxSelection,
@@ -40,6 +40,8 @@ export type AgreementDescriptor<Id extends string = string> = Readonly<{
   /** 전체 동의 행의 라벨. 필수이므로 renderer가 임의 문구를 만들지 않는다. */
   allLabel: string;
   items: readonly AgreementItemDescriptor<Id>[];
+  /** Freeze consent changes during submission; detail reading remains available. */
+  disabled?: boolean;
 }>;
 
 function assertNonEmpty(value: string, field: string): void {
@@ -56,6 +58,7 @@ export function validateAgreementDescriptor<Id extends string>(
   if (!Array.isArray(descriptor.items) || descriptor.items.length === 0) {
     throw new RangeError("Agreement must contain at least one item");
   }
+  if (descriptor.disabled !== undefined && typeof descriptor.disabled !== "boolean") throw new TypeError("Agreement disabled must be a boolean");
   const ids = new Set<Id>();
   for (const item of descriptor.items) {
     assertNonEmpty(item.id, "item id");
@@ -116,6 +119,9 @@ export function toggleAgreementItem<Id extends string>(
   id: Id,
 ): ReadonlySet<Id> {
   validateAgreementDescriptor(descriptor);
+  // Utilverse registration must freeze required consents during a request.
+  // Disabling each required item is invalid and would change the denominator.
+  if (descriptor.disabled) return checkedIds;
   return toggleCheckboxSelection(descriptor.items, checkedIds, id);
 }
 
@@ -129,6 +135,7 @@ export function toggleAgreementAll<Id extends string>(
   checkedIds: ReadonlySet<Id>,
 ): ReadonlySet<Id> {
   const { all } = resolveAgreementState(descriptor, checkedIds);
+  if (descriptor.disabled) return checkedIds;
   const next = new Set(checkedIds);
   for (const item of descriptor.items) {
     if (item.disabled) continue;
@@ -164,6 +171,9 @@ export const agreementRecipe = {
     color: semanticColors.content.primary,
   },
   item: collectionItemContract,
+  // Reserve most row width for consent text. Long detail labels wrap below it
+  // instead of squeezing large Korean labels into one-character columns.
+  itemLayout: { labelBasis: "70%" as const },
   detail: {
     color: semanticColors.content.secondary,
     textVariant: "label" as const,
@@ -171,7 +181,7 @@ export const agreementRecipe = {
   },
   required: { color: semanticColors.content.brand, textVariant: "label" as const },
   gap: spacing.xs,
-  states: { focus: focusIndicatorContract },
+  states: { focus: focusIndicatorContract, disabledOpacity: opacity.disabled },
 } as const satisfies {
   slots: readonly ["root", "all", "list", "item", "label", "detail"];
   all: {
@@ -185,15 +195,16 @@ export const agreementRecipe = {
     color: ColorReference;
   };
   item: typeof collectionItemContract;
+  itemLayout: { labelBasis: "70%" };
   detail: { color: ColorReference; textVariant: "label"; minHeight: number };
   required: { color: ColorReference; textVariant: "label" };
   gap: number;
-  states: { focus: typeof focusIndicatorContract };
+  states: { focus: typeof focusIndicatorContract; disabledOpacity: number };
 };
 
 export const agreementBehavior = {
   controlled: ["checkedIds", "defaultCheckedIds", "onCheckedIdsChange"],
-  inputs: ["items", "allLabel", "accessibilityLabel"],
+  inputs: ["items", "allLabel", "accessibilityLabel", "disabled"],
   events: ["onDetail"],
   stateAxes: {
     availability: ["enabled", "disabled"],

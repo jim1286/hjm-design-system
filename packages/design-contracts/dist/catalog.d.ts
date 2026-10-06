@@ -2175,6 +2175,9 @@ export declare const recipeRegistry: {
                 alpha?: number;
             }>;
         };
+        readonly itemLayout: {
+            readonly labelBasis: "70%";
+        };
         readonly detail: {
             readonly color: Readonly<{
                 source: "theme";
@@ -2203,6 +2206,7 @@ export declare const recipeRegistry: {
                 readonly width: 2;
                 readonly offset: 2;
             };
+            readonly disabledOpacity: 0.5;
         };
     };
     readonly topRecipe: {

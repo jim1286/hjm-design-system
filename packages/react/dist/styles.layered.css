@@ -1753,26 +1753,36 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   font-size: var(--hjm-type-body-large-size);
   line-height: var(--hjm-type-body-large-line-height);
 }
+/* Consent locking does not fade or disable the separate full-text links. */
+.hjm-agreement__all[aria-disabled="true"],
+.hjm-agreement__toggle[aria-disabled="true"] { cursor: not-allowed; opacity: var(--hjm-opacity-disabled, 0.5); }
 .hjm-agreement__list { display: flex; flex-direction: column; }
 .hjm-agreement__item {
-  display: grid;
-  grid-template-columns: 1fr auto;
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--hjm-space-xs);
   padding-inline: var(--hjm-space-sm);
 }
+/* agreementRecipe.itemLayout.labelBasis: details wrap before consent copy is
+   squeezed into vertical text at 2x scale (Utilverse adoption QA, 2026-10-07). */
+.hjm-agreement__toggle { flex: 1 1 70%; min-inline-size: 0; }
 .hjm-agreement__item[data-disabled] { color: var(--hjm-color-text-weak); }
 .hjm-agreement__copy { display: flex; min-inline-size: 0; flex-wrap: wrap; align-items: baseline; gap: var(--hjm-space-xxs); overflow-wrap: anywhere; }
 .hjm-agreement__required { color: var(--hjm-color-text-muted); font-size: var(--hjm-type-label-size); }
 .hjm-agreement__required[data-required] { color: var(--hjm-color-content-brand, var(--hjm-color-primary)); }
 .hjm-agreement__description {
-  grid-column: 1 / -1;
+  flex: 1 0 100%;
+  order: 3;
   margin: 0 0 var(--hjm-space-xs);
   color: var(--hjm-color-text-muted);
   font-size: var(--hjm-type-label-size);
 }
 .hjm-agreement__detail {
   display: inline-flex;
+  order: 2;
+  max-inline-size: 100%;
+  overflow-wrap: anywhere;
   align-items: center;
   min-block-size: var(--hjm-control-min-touch-target);
   padding: 0 var(--hjm-space-xs);
@@ -1794,6 +1804,10 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
   color: var(--hjm-color-on-primary);
   font-size: var(--hjm-type-label-size);
 }
+/* A mark is fixed artwork, not font-scaled copy. The former text glyph escaped
+   the 16px frame when the provider doubled label typography. */
+.hjm-agreement__mark[data-state="true"] .hjm-agreement__ink { inline-size: 8px; block-size: 4px; border-left: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(-45deg); }
+.hjm-agreement__mark[data-state="mixed"] .hjm-agreement__ink { inline-size: 10px; block-size: 2px; background: currentColor; }
 .hjm-agreement__mark[data-state="true"],
 .hjm-agreement__mark[data-state="mixed"] { border-color: var(--hjm-color-primary); background: var(--hjm-color-primary); }
 .hjm-agreement__all:focus-visible,

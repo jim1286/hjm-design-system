@@ -671,6 +671,7 @@
     "home-overview--overview",
     "patterns-agreement--dark",
     "patterns-agreement--default",
+    "patterns-agreement--disabled",
     "patterns-agreement--large-text",
     "patterns-agreement--screen-title",
     "patterns-agreement--sign-in-loading",

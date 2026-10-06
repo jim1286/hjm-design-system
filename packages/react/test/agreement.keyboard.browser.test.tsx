@@ -5,6 +5,7 @@ import { userEvent } from "vitest/browser";
 import type { AgreementDescriptor } from "@hjmds/design-contracts/components/agreement";
 import { Agreement } from "../src/agreement.js";
 import { HjmProvider } from "../src/provider.js";
+import "../src/styles.css";
 import executedScenarioRegistry from "./executed-scenarios.json" with { type: "json" };
 
 export const agreementKeyboardCases = [{ componentId: "agreement" }] as const;
@@ -103,4 +104,47 @@ it("uses keyboard consent actions and keeps opening details separate from agreem
   expect(document.activeElement).toBe(submit);
   await act(async () => userEvent.keyboard("{Enter}"));
   expect(onSubmit).toHaveBeenCalledOnce();
+});
+
+
+it("locks pending required consent while retaining focus, detail access and the prior selection", async () => {
+  const changes = vi.fn(), states = vi.fn(), details = vi.fn();
+  const draw = (disabled: boolean) => render(<HjmProvider reducedMotion><Agreement descriptor={{...descriptor, disabled}} defaultCheckedIds={new Set(["terms"])} onCheckedIdsChange={changes} onStateChange={states} onDetail={details} requiredLabel="(필수)" optionalLabel="(선택)" /></HjmProvider>);
+  await draw(false);
+  box("전체 동의").focus();
+  await draw(true);
+  expect(document.activeElement).toBe(box("전체 동의"));
+  expect(box("전체 동의").getAttribute("aria-checked")).toBe("mixed");
+  for (const checkbox of container.querySelectorAll<HTMLElement>('[role="checkbox"]')) {
+    expect(checkbox.getAttribute('aria-disabled')).toBe('true');
+    checkbox.focus();
+    await act(async () => userEvent.keyboard('{Space}'));
+  }
+  expect(changes).not.toHaveBeenCalled();
+  expect(states).toHaveBeenCalledTimes(1);
+  expect(box("서비스 이용약관").getAttribute('aria-checked')).toBe('true');
+  await act(async () => container.querySelector<HTMLButtonElement>('.hjm-agreement__detail')!.click());
+  expect(details).toHaveBeenCalledWith('terms');
+  await draw(false);
+  box("전체 동의").focus();
+  await act(async () => userEvent.keyboard('{Space}'));
+  expect(changes).toHaveBeenLastCalledWith(new Set(['terms','privacy','news']));
+  expect(states.mock.lastCall?.[0].satisfied).toBe(true);
+});
+
+it("keeps large-text labels wide and selection marks inside their fixed frames", async () => {
+  container.style.width = '358px';
+  await render(<HjmProvider reducedMotion textScale={2}><Agreement descriptor={{accessibilityLabel:'약관',allLabel:'전체 동의',items:[{id:'terms',label:'개인정보 처리방침',required:true,detail:{label:'개인정보 처리방침 읽기'}}]}} defaultCheckedIds={new Set(['terms'])} requiredLabel="(필수)" optionalLabel="(선택)" /></HjmProvider>);
+  const toggle = container.querySelector('.hjm-agreement__toggle')!.getBoundingClientRect();
+  const detail = container.querySelector('.hjm-agreement__detail')!.getBoundingClientRect();
+  expect(toggle.width).toBeGreaterThan(300);
+  expect(detail.top).toBeGreaterThanOrEqual(toggle.bottom);
+  for (const mark of container.querySelectorAll('.hjm-agreement__mark')) {
+    const range = document.createRange(); range.selectNodeContents(mark);
+    const frame = mark.getBoundingClientRect();
+    for (const drawn of range.getClientRects()) {
+      expect(drawn.top).toBeGreaterThanOrEqual(frame.top);
+      expect(drawn.bottom).toBeLessThanOrEqual(frame.bottom);
+    }
+  }
 });

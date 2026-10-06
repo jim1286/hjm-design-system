@@ -702,7 +702,7 @@ export declare const behaviorRegistry: {
     };
     readonly agreement: {
         readonly controlled: readonly ["checkedIds", "defaultCheckedIds", "onCheckedIdsChange"];
-        readonly inputs: readonly ["items", "allLabel", "accessibilityLabel"];
+        readonly inputs: readonly ["items", "allLabel", "accessibilityLabel", "disabled"];
         readonly events: readonly ["onDetail"];
         readonly stateAxes: {
             readonly availability: readonly ["enabled", "disabled"];
