@@ -1,5 +1,153 @@
 # @hjmds/design-contracts
 
+## 1.13.0
+
+### Minor Changes
+
+- def5311: Add experimental category pills through the existing SegmentedControl contract and SavedItemsScreen through ListDetailScreen/Grid. Preserve app-owned themes, collection membership and persistence; document and demonstrate both platforms. Improve keyboard access to scrolling story surfaces and labeled badges.
+
+  Use the shared Spinner for initial screen loading, retaining localized accessibility names without visible loading copy. Preserve keyboard scrolling when a virtualized screen switches to replacement guidance.
+
+- def5311: CommandPalette now implements the filtering, empty-state, and section-naming behaviour its contract already declared.
+
+  - Web `CommandPalette` filters `source` by `query` locally by default (case-insensitive substring over `label` and `textValue`, the same rule as the Native Combobox). Pass `queryState={{ filtering: "external", asyncState, queryValue, resultQuery }}` to show product-filtered results verbatim; stale external results (`queryValue !== resultQuery`) stay visible but cannot be activated. Sections emptied by filtering are dropped.
+  - `CommandPaletteDescriptor` gains optional `emptyMessage` (announced once for the whole list when no result is visible; an `asyncState` message still wins) and optional `closeLabel` (renders a close button that dismisses with `"close-action"`). Both are validated as non-empty when present.
+  - Section groups are named by `accessibilityLabel ?? label`.
+
+  Migration: products that already filter with a substring rule need no change. Products that pass fuzzy, ranked, or server results without `filtering: "external"` must add it, otherwise the renderer narrows those results again. To show empty copy, move it from an ad-hoc `asyncState: { status: "empty" }` to `descriptor.emptyMessage` (the old route still works).
+
+  The active row now resets only when the query changes. Previously a parent re-render that
+  passed `source`/`queryState` as inline objects snapped the active row back to the first item,
+  so arrow keys and pointer hover could not move it.
+
+- def5311: Add themed PhotoSourceSheet with localized camera/library choices. Native selection waits for modal dismissal; Web preserves file-input user activation. Capture and permission adapters remain product-owned.
+- def5311: Add an optional plus action to ReactionPicker that expands a product-localized emoji catalog,
+  with combined validation and same-reaction removal even when the selected value is outside
+  quick reactions. Existing callers without `more` retain their quick list, and on Web the default
+  `layout="wrap"` keeps the button's glyph size; only `layout="strip"` (the chat reaction row) enlarges
+  glyphs to the title type step, matching Native's strip. Choosing a catalog-only emoji collapses the
+  catalog and moves keyboard focus to the plus toggle instead of dropping it to the page.
+
+  Add ChatMessage horizontal swipe-to-reply (without a visible reply button), accessible message actions, and a separate quote-navigation button;
+  MessageComposer accepts a controlled reply target and cancel action. Native ScreenLayout can
+  expose its scroll host ref. Product callbacks retain reply IDs, message loading, scrolling,
+  and receipt-driven clearing. Web/Native experimental stories demonstrate sending a targeted
+  reply, cancelling without losing the draft, and scrolling to an existing quoted message.
+
+- def5311: Close the Web/Native drifts found while writing the usage guides (2026-10-06 follow-ups). The recipe stays the single source; renderers that disagreed now read it.
+
+  **Visual changes (no API change; review screens that measured the old values)**
+
+  - `Sheet size="full"` (both): fills the height inside the top safe area. `sheetRecipe.content.maxHeightRatio` (0.9) now caps only `size="auto"`; it used to stop `full` at 90%.
+  - Web `Sheet`: content padding 12 top/bottom · 20 sides, 16 between header/body/footer and between body children, and 12 above the footer (`sheetRecipe`), as Native. It used the Dialog's 20 everywhere, so the same sheet was taller on Web.
+  - Web `ScreenLayout`: header items 12 apart (`screenPatternRecipe.itemGap`) and the state block `stateGap` 16. Both used the content inset, so they collapsed to 0 with `contentInset="none"`.
+  - Web `SearchField`: `medium` padding 12 · gap 8 and a 36px clear circle with a 4px hit slop (still a 44 target); `large` padding 16 · gap 12 · clear 44 (`searchFieldRecipe.sizes`).
+  - Web `Select`/`Combobox`/`Menu`: 8px from the viewport edge (`collisionPadding`), not 16. `Tooltip`: 4px from its trigger, 12px from the edge, at most 280px wide (`tooltipRecipe`). Menu items use radius md (12).
+  - Web `SegmentedControl`: 4px track padding/gap, radius lg with a 1px border, 2px selected ring, semibold/bold labels, and the `small` size (36 + 4px slop) that had no CSS.
+  - Web `Chip` (`small` 12/4, `medium` 16/8 padding/gap with a 4px slop on `small`), `Badge size="small"` padding 4, `Statistic` (line gap 8/4, compact surface padding 12, group gap 8), `TransferList` (rows 12, move buttons 12 apart), `UploadItem` (min 68, padding 8/16), `DataTable` regular cells 12/16, `EmptyState` regular 40 vertical, indented `List` separators start at 52.
+  - Web `Section` header and `StatisticGroup` stack below `breakpoint.medium` (600) instead of 640.
+  - Web circular `Progress`: the label row sits above the ring, as the linear bar and Native.
+  - `Result` (both): actions render secondary → primary like every other action row. Primary still comes first in `actions`.
+  - Web `ClipboardButton`: default `tone` is now `secondary`; it added a second primary next to a screen's main action. Pass `tone="primary"` to keep the old look.
+  - `AuthProviderButton` (both): labels return to `typography.body`. The provider guideline owns label and colour; the Naver green contrast is recorded as a provider colour exception (`docs/provider-button.md`).
+  - Web `Tooltip`: 8px padding on every side (`tooltipRecipe.surface.padding`); it drew 8 × 12.
+  - Web `Section`: title uses the `title` variant (18/26 bold) and description `caption` (11/16), as Native. Both inherited body (14).
+  - Web `Menu`/`ContextMenu`/`Select`/`Combobox` popups and the `Mentions` list: 8px inner padding (`floatingSurfaceContract.padding`), not 4. Native `Mentions` list padding 8 and radius md from `comboboxRecipe.popover`.
+  - Web `Mentions` list: 8px from the field and 8px from the viewport edge (`comboboxRecipe.popover`), not 16.
+  - `DatePicker` (both) trigger heights follow `datePickerRecipe.sizes`: medium 44, large 52 (Web large was 56; Native was 48/56).
+  - Web `MessageComposer`: 12px (`screenPatternRecipe.itemGap`) between rows and between the editor and the send button, as Native. It was 8.
+  - Web `Statistic` text follows `statisticRecipe`: label `label` semibold (compact `caption`), value `heading` heavy (compact `title`), prefix/suffix `body` semibold in the body colour, hint and trend `caption` (trend bold). The value no longer scales twice with large text.
+  - Native `TagsInput` suggestion rows and `Collapsible` triggers keep a 44 minimum height. Native `RadioGroup`/`CheckboxGroup` descriptions sit above the options (slot order), as Web. Native `Slider` header has a 16 label–value gap.
+  - Disabled fields (both) fade the label and the control only; the hint and the error keep full contrast (`fieldRecipe.disabledScope`). The whole frame used to fade, support text included. The amount is the component recipe's `states.disabledOpacity` where it has one, else `fieldRecipe.disabledOpacity` (0.6). So Web `Select`, `NumberField`, `OtpField`, `SearchField` and `PasswordField` (both platforms for the last) fade to 0.5 instead of 0.6; Native `NumberField`/`Select` labels now fade with the control; Native `Combobox` and `DatePicker` (both platforms) did not dim at all and now fade at 0.6; `TagsInput` fades its label too, at 0.6 on both (the Native frame was 0.5). Native custom `Field` fades its label; its consumer control is a direct child and dims itself from `accessibilityState.disabled` (Web still fades it through the frame). Screens that faded their own hint or error under a disabled field can drop that.
+
+  **Behaviour**
+
+  - `Agreement` (both) calls `onStateChange` once on mount with the initial state, so `defaultCheckedIds`/`checkedIds` that already satisfy the required items enable a submit button. Consumers that counted calls see one more at mount.
+  - `Avatar` initials (both) come from `resolveAvatarInitials` (`@hjmds/design-contracts/avatar-fallback`): first and last word in code points. Web used the first two words ("Kim Min Jun" → "KM", now "KJ"); Native could split surrogate pairs.
+  - Native `SearchField` keeps accepting input while `busy`, as Web does under `loading`; only `disabled` ignores typing. `SearchScreen` `searching` therefore no longer drops keystrokes typed while suggestions refresh, so it can stay on during live suggestion requests. The clear button is still replaced by the progress indicator while busy.
+  - Native `ImageViewer` announces the load failure (assertive live region, iOS announcement), not only the loading copy.
+  - Web `Toast` forwards the remaining HTML attributes (id, data-\*, handlers) it already accepted in its type; role and labelling stay owned by the toast.
+  - Web `Masonry` empty state is a named `group` (a bare div cannot carry `aria-label`).
+
+  **Additions**
+
+  - Native `DurationField` and `QRCode` accept `layoutStyle`.
+  - Contracts: `resolveAvatarInitials`, `sliderRecipe.header`, `uploadItemRecipe.row.paddingVertical`, `fieldRecipe.disabledScope`.
+
+- def5311: Add opt-in screen-patterns/screens entries for shared settings, notification inbox and chat layouts, reusing the existing login layout and canonical primitives. Products retain routing, localized copy, data, permissions, persistence and keyboard adapters. Existing APIs are unchanged; no automatic consumer migration. Screen state replacement is distinct from refresh/save notices. See design-contracts/docs/screen-patterns.md for ownership and package export rationale.
+
+  Add comments/search/saved/profile composition examples, unshaded settings and activity rows, and content-sized message composers without a manual resize handle. Native explicitly bounded multiline inputs grow and shrink with their content; MessageComposer starts from the single-control minimum, while public TextArea `minVisibleLines` keeps the 80pt `multilineMinHeight` floor.
+
+  Add opt-in screen-flows entries for list/detail, draft editing, profile/account, moderation, media selection, debounced search, permission and onboarding flows, plus controlled comment threads. Media uses responsive thumbnail grids and separately localized action names; search keeps recent queries in the scrollable body. Products retain OS pickers, uploads, router guards, persistence and server operations.
+
+  Separate library selection from post-selection uploads with optional library and selectionSummary slots. Showcase uses a system-picker-style three-column grid with ordered selection and a fixed completion area; align search filter controls with their summary.
+
+  Add optional header submit placement and custom moderation reason picker slots while preserving existing defaults. Refine screen header sizing for compact screens and large text, and use a rounded chat composer with unshaded incoming bubbles. Refresh twelve Web/Native screen examples from documented product references.
+
+- def5311: SearchScreen now owns the two-step search flow that only existed in the Storybook preview, so products can adopt it through the public API instead of copying Showcase code. All props are optional and additive on Web and Native; without them SearchScreen renders and behaves exactly as before.
+
+  - `committedQuery` (requires `onSubmit`) splits idle / typing / results. Every commit — Enter or the keyboard search key, the "search ‘q’" row, a suggestion, a recent or suggested query — goes through `onSubmit` with a trimmed, nonblank value; debounced `onSearch` never does, so "record only committed searches" holds at the API. `onSubmit` (unreleased) now trims and drops blank commits.
+  - `recentQueries` (rows commit, per-row remove, clear all), `suggestedQueries` (chips, also shown under a query-caused zero result) and `suggestions` (commit row plus up to six rows, `match` bolded on Web).
+  - `resultSummary` (count with polite announcement, `null` = loading skeleton rows instead of `children`, sort Menu that scrolls back to the top, a `notice` slot for retained-results errors, `empty` copy with a cause-specific recovery), `appliedFilters` (removable chips plus clear all) and `filterSheet` (draft copied on open, discarded on any close, applied only from the primary action whose label carries the live `count(draft)`; reset always present and disabled at the default; optional rail trigger named with the applied count).
+  - Web moves focus after removing an applied chip or recent row to the next item, then the filter trigger or the search field. Native keeps the screen-reader cursor.
+  - `queryLabelVisibility="hidden"` drops the visible label and uses `queryLabel` as the accessible name and placeholder.
+  - `searching` + `searchingLabel` (both or neither) is one name for the default field's progress (Web `loading`, Native `busy`/`busyLabel`). Native SearchField ignores typing while busy, so turn it on for committed result requests only.
+  - `@hjmds/design-contracts/screen-patterns` adds `resolveSearchScreenPhase`, `resolveSearchCommit`, `resolveSearchEmptyCause`, `resolveFocusAfterRemoval` and `searchScreenRecipe`.
+
+  The `배포/화면/검색/검색 결과와 필터` previews now use this API and keep only example data. Native `./screen-flows` and `./saved-items` gain two reviewed module edges (heading, navigation). No migration is needed.
+
+- def5311: Extend experimental screen compositions with controlled multi-photo previews, individual removal,
+  photo-only sending and an optional inline send icon. Preserve the existing text-button API and
+  receipt-owned draft clearing. Extend TextArea with a trailing action slot rather than duplicating
+  its growing-input behavior.
+
+  Connect ChatMessage long press and accessible activation to the existing ReactionPicker, with
+  single-row layout, same-reaction removal and dismissal. Web movement cancels the hold gesture.
+  Native uses core Modal and requires no optional context-menu package. Missing native safe-area
+  edges contribute zero to dialog viewport padding rather than producing NaN.
+
+  These changes include Web/Native experimental stories and interaction tests; they do not publish
+  packages, promote stories, or migrate consumers from the currently installed 1.12.1 release.
+
+### Patch Changes
+
+- def5311: Let Native string/number Button labels shrink and wrap within their available width, using the recipe height as a minimum so enlarged text is not clipped. Preserve the label footprint while loading and retain explicit growWithContent for custom visual children. Independent nine-sample guidance validation reproduced the 2x-text clipping on iPhone 17 Pro / iOS 26.5. Align Button and Dialog usage guidance with loading and asynchronous-action contracts; no API migration or publication is performed here.
+
+  Native Button now joins string/number children such as `{count}개 공유` into one label. Before, that
+  array rendered bare inside Pressable and crashed on device with "Text strings must be rendered within a
+  <Text> component"; Web already accepted mixed text children.
+
+- def5311: Recreate Native TopBar's internal layout subtree when OS text scaling switches
+  between large-text and compact layouts. This prevents a full-width large-text
+  host from retaining its layout when reused as a compact side slot. Public props
+  remain compatible; slot-local state/focus can reset during this structural change,
+  so persistent product state should live outside TopBar. Web keeps its existing
+  DOM/CSS layout. Consumer installs and package publication are separate steps.
+- def5311: Preserve Dialog and Sheet return focus after a real pointer click on the backdrop. Prevent the backdrop default blur from undoing modal cleanup or moving focus outside a busy modal; leave inside controls and dismissal policy unchanged. Diairy QA W16 supplies real pointer regression evidence. Native has no corresponding DOM default and remains unchanged. No public API or migration is required.
+
+  The Native patch entry follows the fixed release train; no Native implementation changed because it has no browser mousedown default.
+
+- def5311: Use foundation layer and elevation tokens in Web surfaces and anchored overlays, and the floating shadow token for Native Surface. Preserve modal-owned popup ordering and keyboard skip-link visibility. The usage handoff audit found that the documented token scale diverged from hard-coded renderer values; update the related usage guides and browser/native regressions together. No new public component or release publication is introduced.
+
+  Web `@hjmds/react` is a minor change because the absolute `z-index` numbers move to the `layer` token scale (`@hjmds/design-contracts/foundations`, emitted as `--hjm-layer-*`). The relative order of HJM's own layers is unchanged except where noted below.
+
+  | Web surface                                                                                                 | Before      | After                                                                                                       |
+  | ----------------------------------------------------------------------------------------------------------- | ----------- | ----------------------------------------------------------------------------------------------------------- |
+  | BottomCTA (`data-position="sticky"`)                                                                        | 1           | 100 (`sticky`)                                                                                              |
+  | FloatingActionButton                                                                                        | 500         | 100 (`sticky`)                                                                                              |
+  | BottomNavigation                                                                                            | 700         | 100 (`sticky`)                                                                                              |
+  | Select/Combobox listbox, DatePicker popover, `useAnchoredPopup` default, advanced-forms popups              | 800         | 400 (`dropdown`)                                                                                            |
+  | Menu, Menubar panel, Mentions list                                                                          | 900         | 400 (`dropdown`)                                                                                            |
+  | Popover                                                                                                     | 950         | 400 (`dropdown`) — shares the menu tier; a popover opened from a menu is portaled later and paints above it |
+  | Dialog/AlertDialog/Sheet/SidePanel overlay, ContextMenu, CommandPalette, Tour backdrop (`getModalLayer(0)`) | 1000        | 900 (`modal`); Tour popup 1001 → 901                                                                        |
+  | Tooltip                                                                                                     | 1100        | 950 (`tooltip`)                                                                                             |
+  | Toast viewport                                                                                              | 1200        | 1000 (`toast`)                                                                                              |
+  | SkipNav, Layout skip link                                                                                   | 1300 / 1400 | 1001 (`toast + 1`)                                                                                          |
+
+  `modalPriority` still adds to the modal base (`getModalLayer(priority) = layer.modal + priority`), but the base moved from 1000 to 900, so the thresholds shift: a modal now covers tooltips from priority 51 (was 101), toasts from 101 (was 201), and the skip links from 102 (was 401).
+
+  Migration: an app `z-index` set directly against the old numbers can now land on the other side of an HJM layer. For example, an app header at 500 used to sit under menus (800/900) and now covers them (400), and an app banner at 950 used to sit under dialogs (1000) and now covers them (900). Express app layers relative to the tokens instead of copying numbers: `var(--hjm-layer-sticky)` for app chrome that menus must cover, a value below `var(--hjm-layer-dropdown)` for in-page floating content, and above `var(--hjm-layer-toast)` only for something that must cover every HJM layer. Re-check any `modalPriority` above 50 against the thresholds above.
+
 ## 1.12.1
 
 ## 1.12.0
