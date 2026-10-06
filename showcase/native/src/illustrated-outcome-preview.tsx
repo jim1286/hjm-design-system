@@ -26,7 +26,7 @@ export function IllustratedOutcomePreview() {
  // OnboardingScreen owns a flex scroll host; its parent must provide bounded
  // height or the body collapses under the footer. Put demonstration controls in
  // its existing scroll body so a keyboard cannot squeeze them over fixed actions.
- return <KeyboardAvoiding style={{ flex: 1 }}><Stack gap="lg" layoutStyle={{ flex: 1, minHeight: 0 }}>
+ return <KeyboardAvoiding style={{ flex: 1 }}><Stack gap="lg" layoutStyle={{ flex: 1 }}>
   {stage !== "intro" ? artworkToggle : null}
   {stage === "empty" ? <EmptyState title="첫 기록을 기다리고 있어요" description="기록을 시작하는 두 단계를 체험해 보세요." illustration={notebook} action={<Button onPress={()=>{setIndex(0);setStage("intro");}}>기록 시작하기</Button>}/> : stage === "intro" ?
    <OnboardingScreen steps={[
