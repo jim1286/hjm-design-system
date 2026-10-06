@@ -27,7 +27,7 @@ UI·기능 검증을 거쳐 승격·릴리스하고 Utilverse의 대체 가능�
 | Transition Panel | ContentTransition animateHeight 구현 | 실제 Web/Native 빠른 전환·입력 보존·큰 글자 UI 검증 |
 | Animated Background | Tabs gooey 유지. SegmentedControl selectionMotion=slide 실험 추가 | Web/Native 회귀 7개 통과, 기본·다크·큰 글자 Web UI 확인; 좁은 화면·팔레트·기기 검증 대기 |
 | Stateful Button | ActionFeedback 실험 | 완료·실패·재시도와 UI 검증 |
-| File Upload | UploadRecovery 실험 | 선택·중복·취소·오류 복구 검증 |
+| File Upload | Web 실제 파일 제한·중복·취소·키보드 재시도 확인, 상태 전환 초점 수정. Native 합성 오류/재시도/성공 확인 | Native 시스템 picker·실제 전송 취소·환경 조합. docs/qa/2026-10-07-upload-reference.md |
 | Bento Grid | ProductBento 실험 | 좁은 화면/Native 정보 순서·레이아웃 검증 |
 | CTA | Ente/Webflow 갤러리 캡처 대조. ProductBento에 BottomCTA/BottomInfo·초안 유지·실패/재시도 연결. Web·iOS 실제 흐름 확인 | 전체 갤러리 시각 검토·제품 팔레트·Native 환경 조합. docs/qa/2026-10-07-cta-reference.md |
 | Refero | Wise 캡처·역할 추출 간 불일치를 확인해 REFERENCE_BRIEF에 관찰/추론 구분 추가 | 전체 스타일 시각 검토와 역할별 제품 테마 대조 |

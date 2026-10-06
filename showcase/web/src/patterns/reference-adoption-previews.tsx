@@ -1,6 +1,6 @@
 import { BottomCTA } from "@hjmds/react/bottom-cta";
 import { BottomInfo } from "@hjmds/react/bottom-info";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Button } from "@hjmds/react/actions";
 import { Stack, Surface, Text } from "@hjmds/react/layout";
 import { TextField } from "@hjmds/react/forms";
@@ -40,13 +40,23 @@ export function ActionFeedbackPreview() {
 }
 export function UploadRecoveryPreview() {
   const [items,setItems]=useState<UploadItemDescriptor[]>([]); const [notice,setNotice]=useState("");
-  const change=(id:string,state:UploadItemDescriptor["state"])=>setItems(current=>changeUploadState(current,id,state));
+  const fileRegions = useRef(new Map<string, HTMLDivElement>());
+  const addExample = useRef<HTMLButtonElement>(null);
+  const change=(id:string,state:UploadItemDescriptor["state"])=>{
+    const region = fileRegions.current.get(id);
+    // State actions unmount on start/cancel/retry. Keep keyboard position in the
+    // same file instead of letting the removed action drop focus to the page.
+    if (region?.contains(document.activeElement)) region.focus();
+    setItems(current=>changeUploadState(current,id,state));
+  };
   return <Stack gap="md"><Text variant="heading">파일 선택부터 다시 전송까지</Text>
     <FilePicker descriptor={{mode:"multiple",accept:["image/*"],maxCount:3,maxSizeBytes:5*1024*1024}} label="기록 사진" buttonLabel="사진 선택" dropzoneLabel="여기에 사진을 놓아 주세요" existingCount={items.length} getCandidateId={file=>`${file.name}:${file.size}:${file.lastModified}`} onSelect={result=>{setItems(current=>mergeSelectedFiles(current,result.accepted));setNotice(result.rejected.length?"추가하지 못한 파일이 있어요. 이미지 3개, 파일당 5MB까지 선택할 수 있어요.":"같은 파일은 한 번만 추가해요.");}} />
-    <Button tone="secondary" onClick={()=>setItems(current=>mergeSelectedFiles(current,[sampleFile]).slice(0,3))}>예제 사진 추가</Button>
-    <Text role="status">{notice||"파일은 서버로 전송하지 않습니다. 아래 예제 응답으로 상태를 확인하세요."}</Text>
-    {items.map(item=><Surface key={item.id} padding="md"><Stack gap="sm"><UploadItem descriptor={item} labels={uploadLabels} onCancel={id=>change(id,{status:"pending"})} onRetry={id=>change(id,{status:"uploading",progress:null})} />
-      <Stack axis="inline" wrap>{item.state.status==="pending"?<Button onClick={()=>change(item.id,{status:"uploading",progress:null})}>전송 시작</Button>:null}{item.state.status==="uploading"?<><Button tone="secondary" onClick={()=>change(item.id,{status:"success"})}>예제: 성공 응답</Button><Button tone="secondary" onClick={()=>change(item.id,{status:"error",message:"연결이 끊겼어요. 다시 전송해 주세요."})}>예제: 실패 응답</Button></>:null}<Button tone="ghost" disabled={item.state.status==="uploading"} onClick={()=>setItems(current=>current.filter(file=>file.id!==item.id))}>선택에서 제거</Button></Stack></Stack></Surface>)}
+    <Button ref={addExample} tone="secondary" onClick={()=>setItems(current=>mergeSelectedFiles(current,[sampleFile]).slice(0,3))}>예제 사진 추가</Button>
+    {/* Keep the demo boundary visible when a rejection replaces the status notice. */}
+    <Text>파일은 서버로 전송하지 않습니다. 아래 예제 응답으로 상태를 확인하세요.</Text>
+    {notice ? <Text role="status">{notice}</Text> : null}
+    {items.map(item=><Surface key={item.id} padding="md"><div role="group" aria-label={item.name} tabIndex={-1} ref={node=>{ if(node) fileRegions.current.set(item.id,node); else fileRegions.current.delete(item.id); }}><Stack gap="sm"><UploadItem descriptor={item} labels={uploadLabels} onCancel={id=>change(id,{status:"pending"})} onRetry={id=>change(id,{status:"uploading",progress:null})} />
+      <Stack axis="inline" wrap>{item.state.status==="pending"?<Button onClick={()=>change(item.id,{status:"uploading",progress:null})}>전송 시작</Button>:null}{item.state.status==="uploading"?<><Button tone="secondary" onClick={()=>change(item.id,{status:"success"})}>예제: 성공 응답</Button><Button tone="secondary" onClick={()=>change(item.id,{status:"error",message:"연결이 끊겼어요. 다시 전송해 주세요."})}>예제: 실패 응답</Button></>:null}<Button tone="ghost" disabled={item.state.status==="uploading"} onClick={()=>{addExample.current?.focus();setItems(current=>current.filter(file=>file.id!==item.id));}}>선택에서 제거</Button></Stack></Stack></div></Surface>)}
   </Stack>;
 }
 export function ProductBentoPreview() {
