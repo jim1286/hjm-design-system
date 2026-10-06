@@ -1,0 +1,40 @@
+import { act, create, type ReactTestRenderer } from "react-test-renderer";
+import { Image, View } from "react-native";
+import { afterEach, expect, it, vi } from "vitest";
+import { Avatar, type AvatarImageRenderProps } from "../src/data-display.js";
+import { HjmNativeProvider } from "../src/provider.js";
+(globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+let tree: ReactTestRenderer | undefined;
+afterEach(() => { act(() => tree?.unmount()); tree = undefined; });
+it("lets a product image host preserve canonical fallback while loading and report failure", () => {
+ let host!: AvatarImageRenderProps;
+ const renderImage = vi.fn((props: AvatarImageRenderProps) => { host = props; return <View testID="product-image">{props.fallback}</View>; });
+ const render = (uri: string) => <HjmNativeProvider><Avatar name="Kim Min Jun" decorative size={28} source={{uri}} renderImage={renderImage}/></HjmNativeProvider>;
+ act(() => { tree = create(render("a")); });
+ expect(host.source).toEqual({uri:"a"}); expect(host.size).toBe(28);
+ expect(JSON.stringify(tree!.toJSON())).toContain("KJ");
+ expect(tree!.root.findAllByType(Image)).toHaveLength(0);
+ act(() => host.onError());
+ expect(tree!.root.findAllByProps({testID:"product-image"})).toHaveLength(0);
+ expect(JSON.stringify(tree!.toJSON())).toContain("KJ");
+ const calls = renderImage.mock.calls.length;
+ act(() => tree!.update(render("a"))); expect(renderImage).toHaveBeenCalledTimes(calls);
+ act(() => tree!.update(render("b"))); expect(tree!.root.findAllByProps({testID:"product-image"}).length).toBeGreaterThan(0);
+});
+it("rejects callbacks from replaced source generations, including A to B to A", () => {
+ let host!: AvatarImageRenderProps;
+ const renderImage = (props: AvatarImageRenderProps) => { host = props; return <View testID="product-image"/>; };
+ const render = (uri: string) => <HjmNativeProvider><Avatar name="지민" accessibilityLabel="지민" source={{uri}} renderImage={renderImage}/></HjmNativeProvider>;
+ act(() => { tree = create(render("a")); }); const oldA = host.onError;
+ act(() => tree!.update(render("b"))); const oldB = host.onError;
+ act(() => tree!.update(render("a")));
+ act(() => { oldA(); oldB(); });
+ expect(tree!.root.findAllByProps({testID:"product-image"}).length).toBeGreaterThan(0);
+ act(() => host.onError()); expect(tree!.root.findAllByProps({testID:"product-image"})).toHaveLength(0);
+});
+it("keeps the standard native Image path when no host is supplied", () => {
+ act(() => { tree = create(<HjmNativeProvider><Avatar name="지민" decorative source={{uri:"photo"}}/></HjmNativeProvider>); });
+ expect(tree!.root.findByType(Image).props.source).toEqual({uri:"photo"});
+ act(() => tree!.root.findByType(Image).props.onError());
+ expect(tree!.root.findAllByType(Image)).toHaveLength(0);
+});

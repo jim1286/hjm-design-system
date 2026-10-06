@@ -11,7 +11,7 @@ import { imageRecipe, nativeResizeModes, resolveImageAspectRatio, resolveImageDe
 import { resolveTimelineDescriptor, timelineRecipe, } from "@hjmds/design-contracts/components/timeline";
 import { surfaceDefaults, surfaceGeometry } from "@hjmds/design-contracts/recipes/base";
 import { accordionRecipe, counterBadgeRecipe, badgeRecipe, listRecipe, formatCounterBadgeCount, listRowRecipe, statisticRecipe, } from "@hjmds/design-contracts/recipes";
-import { Children, isValidElement, useEffect, useMemo, useState, } from "react";
+import { Children, isValidElement, useEffect, useMemo, useRef, useState, } from "react";
 import { Image as NativeImage, LayoutAnimation, Pressable, StyleSheet, View, useWindowDimensions, } from "react-native";
 import { useControllableState } from "./internal/state.js";
 import { minimumTargetStyle } from "./internal/styles.js";
@@ -212,13 +212,22 @@ export function ListRow({ title, description, leading, trailing, titleMetadata, 
                     trailingActionStyle,
                 ], children: trailingAction })] }));
 }
-export function Avatar({ source, name, initials, renderFallback, size = 44, decorative = false, accessibilityLabel, style, imageStyle, layoutStyle, }) {
+export function Avatar({ source, renderImage, name, initials, renderFallback, size = 44, decorative = false, accessibilityLabel, style, imageStyle, layoutStyle, }) {
     if (!Number.isFinite(size) || size < 24)
         throw new RangeError("Avatar size must be at least 24");
     warnDeprecatedStyleProps("Avatar", { style, imageStyle }, "layoutStyle for placement and size/renderFallback for appearance");
     const { colors } = useHjmNativeTheme();
     const sourceKey = source === undefined ? "none" : resolveImageSourceKey(source);
     const [failedSource, setFailedSource] = useState(null);
+    // URI equality alone cannot reject an old A callback after A→B→A. A source
+    // generation token preserves product cache/display hosts without stale failures.
+    const sourceGeneration = useMemo(() => ({ key: sourceKey }), [sourceKey]);
+    const currentGeneration = useRef(sourceGeneration);
+    currentGeneration.current = sourceGeneration;
+    const failImage = () => {
+        if (currentGeneration.current === sourceGeneration)
+            setFailedSource(sourceKey);
+    };
     // A replacement photo must retry even when the previous URI failed. Key by
     // content rather than object identity, since hosts commonly inline { uri }.
     const failed = failedSource === sourceKey;
@@ -241,7 +250,8 @@ export function Avatar({ source, name, initials, renderFallback, size = 44, deco
             },
             style,
             layoutStyle,
-        ], children: source !== undefined && !failed ? (_jsx(NativeImage, { accessible: false, onError: () => setFailedSource(sourceKey), source: source, style: [{ height: size, width: size }, imageStyle] })) : (_jsx(View, { accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", children: renderFallback?.({ size, decorative: true }) ?? _jsx(Text, { align: "center", style: { color: colors.contentBrand }, variant: "label", children: fallback }) })) }));
+        ], children: source !== undefined && !failed ? (renderImage ? (_jsx(View, { accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { height: size, width: size }, children: renderImage({ source, size, onError: failImage,
+                fallback: renderFallback?.({ size, decorative: true }) ?? _jsx(Text, { align: "center", style: { color: colors.contentBrand }, variant: "label", children: fallback }) }) })) : (_jsx(NativeImage, { accessible: false, onError: failImage, source: source, style: [{ height: size, width: size }, imageStyle] }))) : (_jsx(View, { accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", children: renderFallback?.({ size, decorative: true }) ?? _jsx(Text, { align: "center", style: { color: colors.contentBrand }, variant: "label", children: fallback }) })) }));
 }
 export function Divider({ orientation = "horizontal", inset = 0, style, layoutStyle }) {
     if (!Number.isFinite(inset) || inset < 0)

@@ -112,8 +112,18 @@ type AccessibleMedia = Readonly<{
     decorative?: false;
     accessibilityLabel: string;
 }>;
+export type AvatarImageRenderProps = Readonly<{
+    source: ImageSourcePropType;
+    size: number;
+    /** Canonical initials/custom fallback, for the host to keep visible until display. */
+    fallback: ReactNode;
+    /** Report a failure for this source generation; replaced-source callbacks are ignored. */
+    onError: () => void;
+}>;
 type AvatarBaseProps = Readonly<{
     source?: ImageSourcePropType;
+    /** Product image host (e.g. Expo disk caching), without changing the avatar frame. */
+    renderImage?: (props: AvatarImageRenderProps) => ReactNode;
     name: string;
     initials?: string;
     renderFallback?: (context: AvatarFallbackContext) => ReactNode;
@@ -132,7 +142,7 @@ type AvatarBaseProps = Readonly<{
     layoutStyle?: HjmCompositionStyleProp;
 }>;
 export type AvatarProps = AvatarBaseProps & AccessibleMedia;
-export declare function Avatar({ source, name, initials, renderFallback, size, decorative, accessibilityLabel, style, imageStyle, layoutStyle, }: AvatarProps): import("react").JSX.Element;
+export declare function Avatar({ source, renderImage, name, initials, renderFallback, size, decorative, accessibilityLabel, style, imageStyle, layoutStyle, }: AvatarProps): import("react").JSX.Element;
 export type DividerProps = Readonly<{
     orientation?: "horizontal" | "vertical";
     inset?: number;

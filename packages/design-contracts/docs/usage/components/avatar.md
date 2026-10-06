@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [Avatar fallback and Blobatar](../../avatar-fallback.md), recipe `avatarRecipe`(`src/component-recipes.ts`)
 - 스토리북: `배포/컴포넌트/데이터 표시/아바타` · `배포/컴포넌트/데이터 표시/블로바타 캐릭터` · `배포/컴포넌트/데이터 표시/움직이는 블로바타 캐릭터`
 
@@ -76,6 +76,7 @@ import { Avatar } from "@hjmds/react-native/data-display";
 | Web `alt` | `string` | `name` | `""`이면 보조기기에서 숨긴다 |
 | Web `imageProps` | `img` 속성(`alt`·`src` 제외) | — | `onError`는 `(event: SyntheticEvent<HTMLImageElement>) => void`이며 대체 표시로 바꾼 뒤 불린다 |
 | Native `accessibilityLabel` · `decorative` | `{ accessibilityLabel: string }` 또는 `{ decorative: true }` | — | 둘 중 하나가 타입으로 강제된다 |
+| Native `renderImage` | `(context: AvatarImageRenderProps) => ReactNode` | 기본 Native Image | 제품의 이미지 캐시·표시 호스트를 연결한다(미게시, 1.13.1 이후). `source`, `size`, HJM `fallback`, 세대가 보호된 `onError` 제공 |
 | Native `initials` | `string` | 이름에서 계산 | 앞뒤 공백을 지우고 최대 3자, 대문자 |
 | `layoutStyle` | margin·width·flex·`alignSelf` | — | 배치 전용. Native `style`·`imageStyle`은 deprecated — layoutStyle 또는 `size`/`renderFallback` |
 | `AvatarGroup`(Web) `label` · `size` · `overflow` | `string` · Avatar 크기 · `ReactNode` | `label` 필수 · `size` `medium` | 빈 `label`은 `TypeError`. `overflow`는 제품이 만든 "+3" 같은 문구이며 `aria-hidden`이다(남은 인원은 `label`에 담는다). 겹침은 크기의 30%다 |
@@ -112,3 +113,30 @@ import { Avatar } from "@hjmds/react-native/data-display";
 - `src`/`source`에 `undefined`를 직접 넘기면 `exactOptionalPropertyTypes`에서 타입 오류다. 사진이 없으면 prop을 빼거나 spread로 조건부로 넣는다.
 - Web `AvatarGroup`은 이제 `style`을 버리지 않고 `layoutStyle`과 합친다. 겹침 변수(`--hjm-avatar-overlap`)는 마지막에 덮이므로 `style`로 겹침을 바꿀 수 없다.
 - 이니셜은 두 플랫폼 모두 `resolveAvatarInitials`(`@hjmds/design-contracts/avatar-fallback`)로 첫 단어와 마지막 단어의 첫 글자(code point)다. 1.12.1까지 Web은 앞 두 단어를 써서 "Kim Min Jun"이 Web "KM", Native "KJ"였다(미게시 변경). 1.12.1에서 일치가 필요하면 Native `initials`·Web `fallback`으로 같은 값을 준다.
+
+### Native 제품 이미지 호스트
+
+Utilverse는 Expo Image의 disk 캐시와 로딩 동안 이니셜을 유지한다. 공통 Avatar로 바꿀 때
+그 계약을 잃지 않도록 `renderImage`를 제공한다. 새 아바타 컴포넌트나 Expo 의존성을
+HJM에 추가하지 않고 원형 프레임·대체 문자·접근성은 기존 Avatar에 남긴다.
+
+```tsx
+import { Image as ExpoImage } from "expo-image";
+import { Avatar } from "@hjmds/react-native/data-display";
+
+<Avatar name={displayName} decorative source={{ uri }} size={28}
+  renderImage={({ source, size, fallback, onError }) => (
+    <View style={{ width: size, height: size, alignItems: "center", justifyContent: "center" }}>
+      {fallback}
+      <ExpoImage source={source} cachePolicy="disk" contentFit="cover" accessible={false}
+        style={{ position: "absolute", width: size, height: size }} onError={onError} />
+    </View>
+  )}
+/>
+```
+
+제품이 import하는 `View`·Expo Image는 호스트 구현이며 HJM 색·원형·테두리를 덮지 않는다.
+실패 시 전달된 `onError`를 호출해야 공통 대체 표시로 바뀐다. 이전 source의 callback은
+A→B→A로 되돌아와도 무시한다. source를 같은 값으로 재생성하는 것은 재시도가 아니다.
+슬롯의 자식은 장식 전용이며 공통 wrapper가 접근성 트리에서 숨긴다. 버튼·링크를 넣지 않는다.
+기본 Native Image 경로는 그대로다. Web은 기존 img/imageProps 경로를 사용한다.

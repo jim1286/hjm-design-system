@@ -195,6 +195,7 @@ export {
   type AccordionIndicatorRenderProps,
   type AccordionProps,
   type AvatarProps,
+  type AvatarImageRenderProps,
   type BadgeProps,
   type BadgeVariant,
   type CardProps,

@@ -66,6 +66,7 @@ import {
   isValidElement,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
@@ -659,8 +660,19 @@ type AccessibleMedia =
   | Readonly<{ decorative: true; accessibilityLabel?: never }>
   | Readonly<{ decorative?: false; accessibilityLabel: string }>;
 
+export type AvatarImageRenderProps = Readonly<{
+  source: ImageSourcePropType;
+  size: number;
+  /** Canonical initials/custom fallback, for the host to keep visible until display. */
+  fallback: ReactNode;
+  /** Report a failure for this source generation; replaced-source callbacks are ignored. */
+  onError: () => void;
+}>;
+
 type AvatarBaseProps = Readonly<{
   source?: ImageSourcePropType;
+  /** Product image host (e.g. Expo disk caching), without changing the avatar frame. */
+  renderImage?: (props: AvatarImageRenderProps) => ReactNode;
   name: string;
   initials?: string;
   renderFallback?: (context: AvatarFallbackContext) => ReactNode;
@@ -683,6 +695,7 @@ export type AvatarProps = AvatarBaseProps & AccessibleMedia;
 
 export function Avatar({
   source,
+  renderImage,
   name,
   initials,
   renderFallback,
@@ -698,6 +711,14 @@ export function Avatar({
   const { colors } = useHjmNativeTheme();
   const sourceKey = source === undefined ? "none" : resolveImageSourceKey(source);
   const [failedSource, setFailedSource] = useState<string | null>(null);
+  // URI equality alone cannot reject an old A callback after A→B→A. A source
+  // generation token preserves product cache/display hosts without stale failures.
+  const sourceGeneration = useMemo(() => ({ key: sourceKey }), [sourceKey]);
+  const currentGeneration = useRef(sourceGeneration);
+  currentGeneration.current = sourceGeneration;
+  const failImage = () => {
+    if (currentGeneration.current === sourceGeneration) setFailedSource(sourceKey);
+  };
   // A replacement photo must retry even when the previous URI failed. Key by
   // content rather than object identity, since hosts commonly inline { uri }.
   const failed = failedSource === sourceKey;
@@ -726,12 +747,15 @@ export function Avatar({
       ]}
     >
       {source !== undefined && !failed ? (
-        <NativeImage
-          accessible={false}
-          onError={() => setFailedSource(sourceKey)}
-          source={source}
-          style={[{ height: size, width: size }, imageStyle]}
-        />
+        renderImage ? (
+          <View accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ height: size, width: size }}>
+            {renderImage({ source, size, onError: failImage,
+              fallback: renderFallback?.({ size, decorative: true }) ?? <Text align="center" style={{ color: colors.contentBrand }} variant="label">{fallback}</Text> })}
+          </View>
+        ) : (
+          <NativeImage accessible={false} onError={failImage} source={source}
+            style={[{ height: size, width: size }, imageStyle]} />
+        )
       ) : (
         <View accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
           {renderFallback?.({ size, decorative: true }) ?? <Text align="center" style={{ color: colors.contentBrand }} variant="label">{fallback}</Text>}

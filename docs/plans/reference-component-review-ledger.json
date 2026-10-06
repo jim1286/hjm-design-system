@@ -941,7 +941,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:06.892511+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/iphone",
@@ -951,7 +956,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:21.864796+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/safari",
@@ -961,7 +971,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:30.483621+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/animated-beam",
@@ -971,7 +986,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:07.075903+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/animated-grid-pattern",
@@ -981,7 +1001,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:08.497873+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/backlight",
@@ -991,7 +1016,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:10.844556+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/border-beam",
@@ -1001,7 +1031,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:12.573529+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/dot-pattern",
@@ -1011,7 +1046,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:15.187414+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/dotted-map",
@@ -1021,7 +1061,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:15.860751+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/flickering-grid",
@@ -1031,7 +1076,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:16.742537+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/floating-3d-particles",
@@ -1041,7 +1091,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:16.812006+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/globe",
@@ -1051,7 +1106,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:17.552282+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/glyph-matrix",
@@ -1061,7 +1121,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:18.219624+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/grid-pattern",
@@ -1071,7 +1136,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:18.480777+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/hexagon-pattern",
@@ -1081,7 +1151,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:19.272297+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/icon-cloud",
@@ -1091,7 +1166,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:20.863231+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/interactive-grid-pattern",
@@ -1101,7 +1181,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:20.863255+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/light-rays",
@@ -1111,7 +1196,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:23.155519+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/meteors",
@@ -1121,7 +1211,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:24.466808+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/neon-gradient-card",
@@ -1131,7 +1226,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:25.594389+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/noise-texture",
@@ -1141,7 +1241,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:25.594412+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/orbiting-circles",
@@ -1151,7 +1256,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:26.576315+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/particles",
@@ -1161,7 +1271,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:27.107895+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/retro-grid",
@@ -1171,7 +1286,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:29.433470+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/ripple",
@@ -1181,7 +1301,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:29.578020+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/shine-border",
@@ -1191,7 +1316,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:32.181946+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/striped-pattern",
@@ -1201,7 +1331,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:34.556904+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/warp-background",
@@ -1211,7 +1346,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:37.803417+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/animated-circular-progress-bar",
@@ -1221,7 +1361,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:07.718244+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/animated-gradient-text",
@@ -1231,7 +1376,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:08.287650+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/animated-shiny-text",
@@ -1241,7 +1391,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:09.238762+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/aurora-text",
@@ -1251,7 +1406,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:09.994962+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/comic-text",
@@ -1261,7 +1421,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:13.392317+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/dia-text-reveal",
@@ -1271,7 +1436,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:14.336352+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/hyper-text",
@@ -1281,7 +1451,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:20.078660+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/kinetic-text",
@@ -1291,7 +1466,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:22.479019+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/line-shadow-text",
@@ -1301,7 +1481,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:23.305911+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/morphing-text",
@@ -1311,7 +1496,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:24.719827+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/scroll-based-velocity",
@@ -1321,7 +1511,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:31.197618+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/sparkles-text",
@@ -1331,7 +1526,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:33.783989+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/spinning-text",
@@ -1341,7 +1541,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:33.821916+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/text-3d-flip",
@@ -1351,7 +1556,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:35.479591+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/text-animate",
@@ -1361,7 +1571,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:35.479608+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/text-reveal",
@@ -1371,7 +1586,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:36.362224+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/typing-animation",
@@ -1381,7 +1601,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:37.077355+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/video-text",
@@ -1391,7 +1616,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:37.149551+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/word-rotate",
@@ -1401,7 +1631,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:37.860531+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/animated-list",
@@ -1411,7 +1646,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:09.145166+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/blur-fade",
@@ -1421,7 +1661,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:11.739839+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/animated-theme-toggler",
@@ -1431,7 +1676,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:09.863557+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/avatar-circles",
@@ -1441,7 +1691,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:10.844541+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/bento-grid",
@@ -1451,7 +1706,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:11.629637+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/client-tweet-card",
@@ -1471,7 +1731,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:36.422730+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/code-comparison",
@@ -1481,7 +1746,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:12.656429+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/confetti",
@@ -1491,7 +1761,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:13.496531+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/cool-mode",
@@ -1501,7 +1776,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:14.209762+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/pointer",
@@ -1511,7 +1791,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:27.941757+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/smooth-cursor",
@@ -1521,7 +1806,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:33.053448+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/dock",
@@ -1531,7 +1821,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:14.967112+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/file-tree",
@@ -1541,7 +1836,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:15.860776+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/glare-hover",
@@ -1551,7 +1851,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:17.453023+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/magic-card",
@@ -1561,7 +1866,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:23.875301+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/hero-video-dialog",
@@ -1572,7 +1882,12 @@
       "visualReview": "partial: 2026-10-07 IAB 1280x720, default thumbnail and open player inspected; second animation, dark and responsive variants pending",
       "interactionReview": "partial: Play video opens YouTube iframe. DOM has no dialog role; focus stays on trigger. Escape sent to trigger did not close. Icon close removes iframe after exit. Playback, captions and error recovery pending.",
       "adoptionDecision": "recommend existing Dialog + product media host composition; preserve HJM focus/stack/Escape contracts instead of copying source modal. New experiment and real Web/Native playback validation pending.",
-      "implementationBoundary": "Asset is an image-semantic frame, not an interactive player container. Do not put video controls in its decorative/aria-hidden slot. Dialog.children can host a product player; Native showcase currently has no video host dependency."
+      "implementationBoundary": "Asset is an image-semantic frame, not an interactive player container. Do not put video controls in its decorative/aria-hidden slot. Dialog.children can host a product player; Native showcase currently has no video host dependency.",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:18.994524+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/highlighter",
@@ -1582,7 +1897,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:19.746933+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/interactive-hover-button",
@@ -1592,7 +1912,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:21.598428+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/pulsating-button",
@@ -1602,7 +1927,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:28.586643+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/rainbow-button",
@@ -1612,7 +1942,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:28.678077+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/ripple-button",
@@ -1622,7 +1957,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:30.483601+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/shimmer-button",
@@ -1632,7 +1972,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:32.068137+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/shiny-button",
@@ -1642,7 +1987,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:32.983065+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/lens",
@@ -1652,7 +2002,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:22.557055+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/marquee",
@@ -1662,7 +2017,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:24.009678+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/number-ticker",
@@ -1672,7 +2032,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:26.331516+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/pixel-image",
@@ -1682,7 +2047,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:27.378548+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/progressive-blur",
@@ -1692,7 +2062,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:28.106655+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/scroll-progress",
@@ -1702,7 +2077,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:31.323462+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/terminal",
@@ -1712,7 +2092,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T15:58:34.625464+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/background-beams",
@@ -1722,7 +2107,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:04.130552+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/background-beams-with-collision",
@@ -1732,7 +2122,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:04.486184+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/background-boxes",
@@ -1742,7 +2137,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:04.512318+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/background-gradient",
@@ -1752,7 +2152,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:04.955704+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/background-gradient-animation",
@@ -1762,7 +2167,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:05.168229+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/background-lines",
@@ -1772,7 +2182,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:05.364651+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/background-ripple-effect",
@@ -1782,7 +2197,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:05.562152+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/aurora-background",
@@ -1792,7 +2212,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:04.085063+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/wavy-background",
@@ -1802,7 +2227,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:30.605100+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/dotted-glow-background",
@@ -1812,7 +2242,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:10.504672+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/noise-background",
@@ -1822,7 +2257,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:22.553718+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/scales",
@@ -1832,7 +2272,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:24.721445+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/text-generate-effect",
@@ -1842,7 +2287,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:28.946310+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/text-reveal-card",
@@ -1852,7 +2302,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:29.431887+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/text-hover-effect",
@@ -1862,7 +2317,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:28.990685+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/typewriter-effect",
@@ -1872,7 +2332,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:30.224794+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/flip-words",
@@ -1882,7 +2347,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:12.353062+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/colourful-text",
@@ -1892,7 +2362,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:08.486752+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/encrypted-text",
@@ -1902,7 +2377,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:11.082529+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/cover",
@@ -1912,7 +2392,13 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "unavailable",
+        "checkedAt": "2026-10-06T16:00:09.837559+00:00",
+        "evidence": "reference-page-source-index.json",
+        "error": "HTTP Error 404: Not Found"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/3d-card",
@@ -1922,7 +2408,13 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "unavailable",
+        "checkedAt": "2026-10-06T16:00:01.666692+00:00",
+        "evidence": "reference-page-source-index.json",
+        "error": "HTTP Error 404: Not Found"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/card-hover-effect",
@@ -1932,7 +2424,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:06.800065+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/card-spotlight",
@@ -1942,7 +2439,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:06.839233+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/card-stack",
@@ -1952,7 +2454,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:07.193737+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/evervault-card",
@@ -1962,7 +2469,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:11.082550+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/glare-card",
@@ -1972,7 +2484,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:13.750993+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/wobble-card",
@@ -1982,7 +2499,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:30.992728+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/comet-card",
@@ -1992,7 +2514,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:08.877573+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/tooltip-card",
@@ -2002,7 +2529,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:29.827615+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/focus-cards",
@@ -2012,7 +2544,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:12.891000+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/draggable-card",
@@ -2022,7 +2559,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:10.605670+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/floating-navbar",
@@ -2032,7 +2574,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:12.766581+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/navbar-menu",
@@ -2042,7 +2589,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:22.160025+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/sidebar",
@@ -2052,7 +2604,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:25.468286+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/floating-dock",
@@ -2062,7 +2619,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:12.483828+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/resizable-navbar",
@@ -2072,7 +2634,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:24.332650+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/tabs",
@@ -2082,7 +2649,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:27.677918+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/hero-parallax",
@@ -2092,7 +2664,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:15.760653+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/hero-highlight",
@@ -2102,7 +2679,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:15.384764+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/spotlight",
@@ -2112,7 +2694,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:26.036008+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/spotlight-new",
@@ -2122,7 +2709,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:26.338130+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/lamp",
@@ -2132,7 +2724,13 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "unavailable",
+        "checkedAt": "2026-10-06T16:00:18.625633+00:00",
+        "evidence": "reference-page-source-index.json",
+        "error": "HTTP Error 404: Not Found"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/vortex",
@@ -2142,7 +2740,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:30.235961+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/container-scroll-animation",
@@ -2152,7 +2755,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:09.312724+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/animated-modal",
@@ -2162,7 +2770,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:02.832140+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/animated-testimonials",
@@ -2172,7 +2785,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:03.292737+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/animated-tooltip",
@@ -2182,7 +2800,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:03.292759+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/apple-cards-carousel",
@@ -2192,7 +2815,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:03.687368+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/carousel",
@@ -2202,7 +2830,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:07.591800+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/infinite-moving-cards",
@@ -2212,7 +2845,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:17.284301+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/moving-border",
@@ -2222,7 +2860,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:21.344509+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/parallax-scroll",
@@ -2232,7 +2875,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:23.069680+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/parallax-scroll-2",
@@ -2242,7 +2890,13 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "unavailable",
+        "checkedAt": "2026-10-06T16:00:23.408144+00:00",
+        "evidence": "reference-page-source-index.json",
+        "error": "HTTP Error 404: Not Found"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/tracing-beam",
@@ -2252,7 +2906,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:29.833251+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/following-pointer",
@@ -2262,7 +2921,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:13.169038+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/layout-text-flip",
@@ -2272,7 +2936,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:19.451342+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/container-text-flip",
@@ -2282,7 +2951,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:09.697896+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/3d-marquee",
@@ -2292,7 +2966,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:02.417396+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/sparkles",
@@ -2302,7 +2981,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:25.874223+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/glowing-stars",
@@ -2312,7 +2996,13 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "unavailable",
+        "checkedAt": "2026-10-06T16:00:14.157564+00:00",
+        "evidence": "reference-page-source-index.json",
+        "error": "HTTP Error 404: Not Found"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/meteors",
@@ -2322,7 +3012,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:21.241272+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/shooting-stars",
@@ -2332,7 +3027,13 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "unavailable",
+        "checkedAt": "2026-10-06T16:00:25.118798+00:00",
+        "evidence": "reference-page-source-index.json",
+        "error": "HTTP Error 404: Not Found"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/stars-background",
@@ -2342,7 +3043,13 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "unavailable",
+        "checkedAt": "2026-10-06T16:00:26.881022+00:00",
+        "evidence": "reference-page-source-index.json",
+        "error": "HTTP Error 404: Not Found"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/canvas-reveal-effect",
@@ -2352,7 +3059,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:06.380257+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/svg-mask-effect",
@@ -2362,7 +3074,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:27.658144+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/glowing-effect",
@@ -2372,7 +3089,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:14.109280+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/pointer-highlight",
@@ -2382,7 +3104,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:23.900140+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/lens",
@@ -2392,7 +3119,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:19.467840+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/compare",
@@ -2402,7 +3134,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:08.891742+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/direction-aware-hover",
@@ -2412,7 +3149,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:10.096568+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/hover-border-gradient",
@@ -2422,7 +3164,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:16.350877+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/pixelated-canvas",
@@ -2432,7 +3179,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:23.490548+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/dither-shader",
@@ -2442,7 +3194,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:10.191472+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/webcam-pixel-grid",
@@ -2452,7 +3209,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:30.634588+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/bento-grid",
@@ -2462,7 +3224,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:05.989588+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/layout-grid",
@@ -2472,7 +3239,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:19.050246+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/sticky-scroll-reveal",
@@ -2482,7 +3254,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:27.271865+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/timeline",
@@ -2492,7 +3269,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:29.431918+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/grid",
@@ -2502,7 +3284,13 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "unavailable",
+        "checkedAt": "2026-10-06T16:00:14.997142+00:00",
+        "evidence": "reference-page-source-index.json",
+        "error": "HTTP Error 404: Not Found"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/moving-line",
@@ -2512,7 +3300,13 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "unavailable",
+        "checkedAt": "2026-10-06T16:00:21.803381+00:00",
+        "evidence": "reference-page-source-index.json",
+        "error": "HTTP Error 404: Not Found"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/input",
@@ -2522,7 +3316,13 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "unavailable",
+        "checkedAt": "2026-10-06T16:00:17.693760+00:00",
+        "evidence": "reference-page-source-index.json",
+        "error": "HTTP Error 404: Not Found"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/label",
@@ -2532,7 +3332,13 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "unavailable",
+        "checkedAt": "2026-10-06T16:00:18.487242+00:00",
+        "evidence": "reference-page-source-index.json",
+        "error": "HTTP Error 404: Not Found"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/file-upload",
@@ -2542,7 +3348,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:12.078139+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/placeholders-and-vanish-input",
@@ -2552,7 +3363,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:23.778443+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/gooey-input",
@@ -2562,7 +3378,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:14.517605+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/3d-pin",
@@ -2572,7 +3393,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:02.436291+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/macbook-scroll",
@@ -2582,7 +3408,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:20.827472+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/globe",
@@ -2592,7 +3423,13 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "unavailable",
+        "checkedAt": "2026-10-06T16:00:13.751010+00:00",
+        "evidence": "reference-page-source-index.json",
+        "error": "HTTP Error 404: Not Found"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/world-map",
@@ -2602,7 +3439,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:31.039225+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/link-preview",
@@ -2612,7 +3454,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:19.849229+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/multi-step-loader",
@@ -2622,7 +3469,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:21.803400+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/loader",
@@ -2632,7 +3484,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:19.922680+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/stateful-button",
@@ -2642,7 +3499,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:26.881062+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/code-block",
@@ -2652,7 +3514,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:08.486727+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/sticky-banner",
@@ -2662,7 +3529,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:27.237950+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/images-slider",
@@ -2672,7 +3544,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:17.183182+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/google-gemini-effect",
@@ -2682,7 +3559,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:14.980458+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/tailwindcss-buttons",
@@ -2692,7 +3574,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:28.075002+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/parallax-hero-images",
@@ -2702,7 +3589,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:23.013534+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/squiggly-text",
@@ -2712,7 +3604,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:26.422191+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/magnetic-button",
@@ -2722,7 +3619,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:20.957658+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/notch",
@@ -2732,7 +3634,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:22.666328+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/image-generation-loader",
@@ -2742,7 +3649,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:16.769288+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/canvas-text",
@@ -2752,7 +3664,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:06.438663+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/cloud-shader",
@@ -2762,7 +3679,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:08.030601+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/chromatic-image",
@@ -2772,7 +3694,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:07.627709+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/images-badge",
@@ -2782,7 +3709,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:16.793470+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/keyboard",
@@ -2792,7 +3724,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:18.192990+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/terminal",
@@ -2802,7 +3739,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:28.075138+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/3d-globe",
@@ -2812,7 +3754,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:02.026905+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/ascii-art",
@@ -2822,7 +3769,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:03.698086+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://ui.aceternity.com/components/text-flipping-board",
@@ -2832,7 +3784,12 @@
       "sourceAudit": "2026-10-06",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:28.554583+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     },
     {
       "url": "https://3dicons.co/icons/628100-notebook?angle=dynamic",
@@ -2853,6 +3810,356 @@
       "interactionReview": "Web empty → onboarding → draft/back/next → result; no-artwork flow retained; Native device pending",
       "adoptionDecision": "implemented experimental composition 그림과 시작 안내 using existing public API; two CC0 showcase-only assets, no new runtime package dependency",
       "evidence": "docs/qa/2026-10-07-illustrated-outcome.md"
+    },
+    {
+      "url": "https://ui.aceternity.com/components/3d-card-effect",
+      "name": "3d-card-effect",
+      "existingMapping": "Card / optional tilt expression",
+      "sourceAudit": "2026-10-07",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "compare existing mapped API first; candidate recommendation pending actual examples and behavior review",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:02.026765+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
+    },
+    {
+      "url": "https://ui.aceternity.com/components/add-utilities",
+      "name": "add-utilities",
+      "existingMapping": "installation tooling; no new UI",
+      "sourceAudit": "2026-10-07",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "documentation/tooling page; no UI implementation recommendation",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:02.821502+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
+    },
+    {
+      "url": "https://ui.aceternity.com/components/bento-grids",
+      "name": "bento-grids",
+      "existingMapping": "ProductBento experiment / Grid / Card",
+      "sourceAudit": "2026-10-07",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "compare existing mapped API first; candidate recommendation pending actual examples and behavior review",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:05.989603+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
+    },
+    {
+      "url": "https://ui.aceternity.com/components/cards-free",
+      "name": "cards-free",
+      "existingMapping": "Card / Surface",
+      "sourceAudit": "2026-10-07",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "compare existing mapped API first; candidate recommendation pending actual examples and behavior review",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:07.224755+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
+    },
+    {
+      "url": "https://ui.aceternity.com/components/cli",
+      "name": "cli",
+      "existingMapping": "installation tooling; no new UI",
+      "sourceAudit": "2026-10-07",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "documentation/tooling page; no UI implementation recommendation",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:07.992720+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
+    },
+    {
+      "url": "https://ui.aceternity.com/components/container-cover",
+      "name": "container-cover",
+      "existingMapping": "TextTransition / product heading composition",
+      "sourceAudit": "2026-10-07",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "compare existing mapped API first; candidate recommendation pending actual examples and behavior review",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:09.280831+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
+    },
+    {
+      "url": "https://ui.aceternity.com/components/expandable-card",
+      "name": "expandable-card",
+      "existingMapping": "Collapsible / ContentTransition / Dialog",
+      "sourceAudit": "2026-10-07",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "compare existing mapped API first; candidate recommendation pending actual examples and behavior review",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:11.524320+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
+    },
+    {
+      "url": "https://ui.aceternity.com/components/feature-sections",
+      "name": "feature-sections",
+      "existingMapping": "ProductBento / product presentation",
+      "sourceAudit": "2026-10-07",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "compare existing mapped API first; candidate recommendation pending actual examples and behavior review",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:11.524500+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
+    },
+    {
+      "url": "https://ui.aceternity.com/components/feature-sections-free",
+      "name": "feature-sections-free",
+      "existingMapping": "ProductBento / product presentation",
+      "sourceAudit": "2026-10-07",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "compare existing mapped API first; candidate recommendation pending actual examples and behavior review",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:11.945541+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
+    },
+    {
+      "url": "https://ui.aceternity.com/components/github-globe",
+      "name": "github-globe",
+      "existingMapping": "product visual host / Asset",
+      "sourceAudit": "2026-10-07",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "compare existing mapped API first; candidate recommendation pending actual examples and behavior review",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:13.277975+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
+    },
+    {
+      "url": "https://ui.aceternity.com/components/glowing-stars-effect",
+      "name": "glowing-stars-effect",
+      "existingMapping": "EffectSurface / product decorative layer",
+      "sourceAudit": "2026-10-07",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "compare existing mapped API first; candidate recommendation pending actual examples and behavior review",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:14.517519+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
+    },
+    {
+      "url": "https://ui.aceternity.com/components/grid-and-dot-backgrounds",
+      "name": "grid-and-dot-backgrounds",
+      "existingMapping": "EffectSurface decorative layer comparison",
+      "sourceAudit": "2026-10-07",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "compare existing mapped API first; candidate recommendation pending actual examples and behavior review",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:15.341756+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
+    },
+    {
+      "url": "https://ui.aceternity.com/components/hero-sections",
+      "name": "hero-sections",
+      "existingMapping": "product introduction composition",
+      "sourceAudit": "2026-10-07",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "compare existing mapped API first; candidate recommendation pending actual examples and behavior review",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:15.801526+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
+    },
+    {
+      "url": "https://ui.aceternity.com/components/hero-sections-free",
+      "name": "hero-sections-free",
+      "existingMapping": "product introduction composition",
+      "sourceAudit": "2026-10-07",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "compare existing mapped API first; candidate recommendation pending actual examples and behavior review",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:16.350894+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
+    },
+    {
+      "url": "https://ui.aceternity.com/components/install-nextjs",
+      "name": "install-nextjs",
+      "existingMapping": "installation tooling; no new UI",
+      "sourceAudit": "2026-10-07",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "documentation/tooling page; no UI implementation recommendation",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:17.769143+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
+    },
+    {
+      "url": "https://ui.aceternity.com/components/install-tailwindcss",
+      "name": "install-tailwindcss",
+      "existingMapping": "installation tooling; no new UI",
+      "sourceAudit": "2026-10-07",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "documentation/tooling page; no UI implementation recommendation",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:18.050015+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
+    },
+    {
+      "url": "https://ui.aceternity.com/components/lamp-effect",
+      "name": "lamp-effect",
+      "existingMapping": "EffectSurface glow / product heading",
+      "sourceAudit": "2026-10-07",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "compare existing mapped API first; candidate recommendation pending actual examples and behavior review",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:19.050230+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
+    },
+    {
+      "url": "https://ui.aceternity.com/components/login-and-signup-sections",
+      "name": "login-and-signup-sections",
+      "existingMapping": "AuthScreenLayout / AuthProviderButton",
+      "sourceAudit": "2026-10-07",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "compare existing mapped API first; candidate recommendation pending actual examples and behavior review",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:20.249842+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
+    },
+    {
+      "url": "https://ui.aceternity.com/components/logo-clouds",
+      "name": "logo-clouds",
+      "existingMapping": "Asset / brand-owned logo slots",
+      "sourceAudit": "2026-10-07",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "compare existing mapped API first; candidate recommendation pending actual examples and behavior review",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:20.351521+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
+    },
+    {
+      "url": "https://ui.aceternity.com/components/navbars",
+      "name": "navbars",
+      "existingMapping": "NavigationBar / Menu",
+      "sourceAudit": "2026-10-07",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "compare existing mapped API first; candidate recommendation pending actual examples and behavior review",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:22.215632+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
+    },
+    {
+      "url": "https://ui.aceternity.com/components/pricing-sections",
+      "name": "pricing-sections",
+      "existingMapping": "Card / Grid / product-owned billing",
+      "sourceAudit": "2026-10-07",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "compare existing mapped API first; candidate recommendation pending actual examples and behavior review",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:24.332631+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
+    },
+    {
+      "url": "https://ui.aceternity.com/components/shaders",
+      "name": "shaders",
+      "existingMapping": "EffectSurface / optional shader host",
+      "sourceAudit": "2026-10-07",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "compare existing mapped API first; candidate recommendation pending actual examples and behavior review",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:24.811494+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
+    },
+    {
+      "url": "https://ui.aceternity.com/components/shooting-stars-and-stars-background",
+      "name": "shooting-stars-and-stars-background",
+      "existingMapping": "EffectSurface / optional decorative animation",
+      "sourceAudit": "2026-10-07",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "compare existing mapped API first; candidate recommendation pending actual examples and behavior review",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:25.245293+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
+    },
+    {
+      "url": "https://ui.aceternity.com/components/signup-form",
+      "name": "signup-form",
+      "existingMapping": "AuthScreenLayout / Field / Button",
+      "sourceAudit": "2026-10-07",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "compare existing mapped API first; candidate recommendation pending actual examples and behavior review",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:25.643288+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
+    },
+    {
+      "url": "https://ui.aceternity.com/components/testimonials",
+      "name": "testimonials",
+      "existingMapping": "Card / Avatar / Carousel",
+      "sourceAudit": "2026-10-07",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "adoptionDecision": "compare existing mapped API first; candidate recommendation pending actual examples and behavior review",
+      "sourceCheck": {
+        "status": "html",
+        "checkedAt": "2026-10-06T16:00:28.472269+00:00",
+        "evidence": "reference-page-source-index.json"
+      }
     }
   ]
 }

@@ -1039,8 +1039,16 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed: 2026-10-07; runtime pending",
+      "decision": {
+        "assessment": "preserve reporting and permission logic; replace visual through shared Avatar wrapper",
+        "preserve": [
+          "other-member photo condition",
+          "idempotent report command",
+          "sheet close and auth requirements"
+        ],
+        "pending": "compare accessible action host and minimum touch area before replacing Pressable"
+      }
     },
     {
       "file": "apps/mobile/src/components/Avatar.tsx",
@@ -1074,8 +1082,19 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed: 2026-10-07; runtime pending",
+      "decision": {
+        "assessment": "replace after HJM release",
+        "target": "@hjmds/react-native Avatar with renderImage product host",
+        "preserve": [
+          "Expo Image disk cache",
+          "initial visible while loading",
+          "decorative semantics",
+          "photo version URI",
+          "explicit single initial"
+        ],
+        "prerequisite": "new renderImage slot implemented in HJM; not yet published; validate exact product sizes and palettes"
+      }
     },
     {
       "file": "apps/mobile/src/components/BlockAuthorForm.tsx",

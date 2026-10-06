@@ -96,3 +96,26 @@ Native Image `onLoad`만 사용하며 host-render/표시 확인 슬롯이 없다
 시점이 바뀌므로 릴리스 전 공통 host 확장 또는 공통 overlay+제품 이미지 host 구성을 검토해야 한다.
 LanguageSelect는 ListRow의 고정 접근성 역할을 보완하려고 별도 radio Pressable을 사용한다.
 HJM RadioGroup의 renderIndicator와 세로 row presentation으로 같은 의미·체크 표시를 지원하는지 비교한다.
+
+
+## 2026-10-07 공식 페이지 범위 재검사
+
+`python3 scripts/audit-reference-pages.py`로 Magic UI·Aceternity 사이트맵 757개 정규화 URL에서
+시작해 HTML 내부 링크를 따라 발견 큐가 빌 때까지 검사했다. 총 1,194 URL: Magic UI HTML 286,
+Aceternity HTML 893, 404 14, 오디오 1. 이 검사는 정적 HTML 범위이며 브라우저에서만 나타나는
+링크·로그인·유료 영역·전체 화면과 동작 검토를 완료했다는 뜻이 아니다. URL·응답·hash·제목 요소·
+heading·표시된 코드 import·소스 링크를 `reference-page-source-index.json`에 보존했다.
+원문 HTML은 보존하지 않는다. 반복 탐색은 기존 기록으로 재개하며 21st는 자동 수집 대상에서 제외한다.
+
+기존 Aceternity 후보에 있는 12개 주소가 404였다. 실제 source 파일 이름과 문서 route가
+일치하지 않는 항목을 새로 대조해야 한다. 내부 링크에서 찾은 목록 밖 25개 페이지를 ledger에
+추가했다(설치/도구 문서 4개 포함). 오래된 URL을 조용히 지우지 않고 404 근거를 남긴다.
+원문 title 요소에는 SVG 제목도 섞일 수 있어 document title이라고 표시하지 않으며,
+표시 코드 import가 비어 있다는 사실을 의존성이 없다는 근거로 쓰지 않는다.
+
+## Utilverse Avatar 채택에 필요한 호스트 확장
+
+자체 Avatar는 Expo Image disk 캐시와 로딩 중 이니셜 유지가 있다. Native HJM Avatar에
+`renderImage({source,size,fallback,onError})`를 추가해 제품 host를 연결하고 프레임·접근성·
+대체 표시를 HJM에 남겼다. A→B→A 뒤 이전 이미지 실패가 새 이미지를 지우지 않도록
+source 세대 검사를 넣었다. 기존 Native Image 경로는 유지한다. 아직 미게시·앱 미적용이다.
