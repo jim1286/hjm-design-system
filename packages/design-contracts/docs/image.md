@@ -1,5 +1,22 @@
 # Image contract
 
+## 정확한 결과 크기 검사 — 2026-10-07, 미게시
+
+Utilverse ADR-0020의 사진 결과 확인은 fit·2배·출력 크기를 구분한다. 기존 Image의 cover/contain/fill은
+요소 안에서 이미지를 맞추는 방법이며, 확대 검사 viewport/이동 경계와 다르다. 새 이미지 primitive를
+만들지 않고 기존 `components/image` subpath에 `resolveImageInspectionGeometry(image, viewport, mode)`를 추가한다.
+
+- `mode`: `fit`은 남은 viewport에 전체 이미지를 맞추며 작은 이미지는 확대한다. `double`은 그 2배다.
+- `pixels`: 출력 이미지의 width/height와 같은 layout 단위. 기기의 물리 pixel과 1:1이라는 뜻이 아니다.
+- 반환은 scale/width/height와 중앙 기준 양·음 이동 한계 panBounds.x/y다. 모자라는 축의 이동 한계는 0이다.
+- image/viewport 크기는 양수·유한값이어야 한다. 미측정 0이나 계산 overflow는 RangeError로 거절한다.
+  알려지지 않은 mode는 TypeError다. renderer는 실제 viewport 측정 후 호출해야 한다.
+
+600×600 사진, 402×454 viewport의 2배는 804×804, 이동 한계는 x ±201/y ±175다. iOS의
+zoom-toolkit Gallery는 scale=1 상태의 세로 pan을 pull로 처리해 손을 떼면 0으로 돌려보냈다.
+같은 peer의 ResumableZoom에서는 위 한계를 실측했다. Gallery private scale을 바꾸거나 원본 크기를
+속이지 않는다. 이 순수 geometry는 아직 ImageViewer의 공개 배율 UI에 연결되지 않았다.
+
 **문제.** 이 시스템에 이미지가 하나도 없었습니다. 사진 콘텐츠(선수 프로필 사진, FA 등급
 차트 이미지)를 레이아웃 밀림 없이, 로드 실패에도 의미를 잃지 않게 보여 주는 첫 계약입니다.
 

@@ -78,3 +78,43 @@ Gallery paging 계약까지 바뀐다. Gallery의 child size 기반 pan bounds�
 
 최종 후속 검사: 관련 4파일 26개 회귀, Native Showcase 타입 검사, 문서 링크 552개,
 사용 지침·공개 API 대응표·renderer import graph/플랫폼 경계 통과. 예산 원시 로그는 정리했다.
+
+## 정확한 배율 엔진 실측 — 71d70c7 이후
+
+`ImageViewerScaleProbe.tsx`를 잠시 기존 Default render에 연결했다. 동일한 iPhone 17 Pro/iOS 26.5,
+Metro 8084/Expo Go에서 기존 600×600 valley.jpg를 사용했다. Surface로 둘러싼 진단 조작부를
+제외한 실측 viewport는 402×454 layout 단위다. 첫 SafeAreaView 진단은 Modal 안에서 inset을
+얻지 못해 상단 y=17이었다. 부모에서 useSafeAreaInsets로 얻은 top/bottom을 Modal View에
+전달한 뒤 y=79에서 닫기 버튼을 확인하고 아래 실측을 진행했다. 새 기기·빌드는 없었다.
+
+| 엔진/보기 | 이미지 크기 | 동작과 측정 |
+| --- | --- | --- |
+| Gallery, double, zoomEnabled=false | 804×804 | 세로 위 방향 swipe 후 getState 이동 (0,0). 확대 사진의 아래쪽에 머물 수 없음 |
+| ResumableZoom, double, min/maxScale=1 | 804×804 | 세로 swipe 후 (0,-175), 반대 대각선 swipe 후 (201,175). 계산한 경계 도달 |
+| ResumableZoom, pixels | 600×600 | 안전한 지점에서 대각선 swipe 후 (-99,-73). 계산한 경계 도달 |
+| ResumableZoom, fit | 402×402 | swipe 후 (0,0). 전체 사진과 위·아래 여백 표시 확인 |
+
+Gallery 소스의 `isPullingVertical = isVerticalPan && scale === 1 && !vertical`와 release 시
+translateY=0 복귀가 실제 관찰을 설명한다. oversized child와 zoomEnabled=false만으로 기존
+Gallery에 exact mode를 붙이는 방안은 채택하지 않는다. ResumableZoom은 이 진단에서
+pinchEnabled/tapsEnabled=false, panMode=clamp로 이미지 수치를 고정했다. 일반 Gallery의
+pinch·paging을 없애는 변경을 하지 않았으며, 검사 모드와 일반 보기의 계약 분리가 필요하다.
+
+pixels 첫 swipe에서 이동이 0이었지만 캡처상 개발 도구 톱니가 이동했다. 시작점이 톱니 영역에
+겹쳐 터치가 갤러리에 가지 않았던 시행이므로 엔진 실패로 집계하지 않았다. 톱니를 피한
+(300,600)→(100,350) swipe에서 (-99,-73)을 확인했다. 기기/엔진을 재시작하지 않았다.
+
+공통 `resolveImageInspectionGeometry`를 기존 components/image 진입점에 추가했다. 신규 4개와
+기존 Image 12개, 총 16개 계약 테스트·타입·빌드가 통과했다. 진단 fixture는 이 helper로 옮겼으며
+Native Showcase 타입 검사를 수행했다. 테스트는 실제 수치·portrait/landscape·긴 이미지·작은
+이미지의 fit 확대와 pixels 구분·잘못된 크기/overflow를 검사한다.
+
+기기 판정 범위는 기본 light/LTR, 사진 한 장, 위 모드/좌표뿐이다. Android·실제 회전·RTL·
+다크/큰 글자·VoiceOver/TalkBack·비드래그 이동 조작·이미지 교체/실패/재시도·Expo onDisplay·
+pixel decode 정확도와 성능은 미검증이다. public ImageViewer 배율 UI는 아직 추가하지 않았다.
+계산 helper와 진단을 구현 완료·실험 추가·승격으로 세지 않는다. 임시 Default 연결은 원복했고
+원시 bottom/pixels/fit 캡처와 story 백업은 이 기록 이후 제거한다. fixture와 테스트는 보존한다.
+
+배율 geometry 후속 검사: API 대응표·문서 링크 553개·사용 지침·workspace 동기화·
+contracts bundle budget 통과. 진단의 모드/viewport 변경 시 이전 측정값도 지우도록 했으며
+최종 Native Showcase 타입 검사 통과. bundle 원시 로그는 정리했다.

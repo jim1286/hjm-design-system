@@ -191,3 +191,8 @@ iOS 실측에서 retry 터치가 Gallery gesture layer에 막히는 문제와 �
 ImageViewer의 회전 허용 prop과 좌우 cutout 보호를 추가했다. 닫기·재시도·이전/다음은
 긴 문구가 줄바꿈될 수 있다. Gallery의 공개 ref에는 정확한 scale 설정이 없어
 2배/pixel 보기의 구현 경로를 별도 검증한다. 회전 실측과 명시적 배율은 아직 미완료다.
+
+정확한 배율 진단에서 Gallery의 scale=1 세로 pan은 손을 떼면 0으로 돌아갔다.
+ResumableZoom은 804×804/402×454의 ±201/±175, 출력 크기 600×600의
+±99/±73 경계에 머물 수 있었다. 공통 image geometry와 회귀를 추가했으며
+공개 배율 UI·접근 가능한 이동·모드 변경 검토 무효화는 다음 구현 지점이다.

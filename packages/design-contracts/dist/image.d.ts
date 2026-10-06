@@ -1,5 +1,22 @@
 export type ImageFit = "cover" | "contain" | "fill";
 export type ImageLoadStatus = "idle" | "loading" | "loaded" | "error";
+export type ImageInspectionMode = "fit" | "double" | "pixels";
+/** Exact image inspection sizes use layout units, not device physical pixels (Utilverse ADR-0020). */
+export declare function resolveImageInspectionGeometry(image: Readonly<{
+    width: number;
+    height: number;
+}>, viewport: Readonly<{
+    width: number;
+    height: number;
+}>, mode: ImageInspectionMode): {
+    scale: number;
+    width: number;
+    height: number;
+    panBounds: {
+        x: number;
+        y: number;
+    };
+};
 export declare const imageDefaults: {
     readonly fit: "cover";
 };

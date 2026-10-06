@@ -55,3 +55,7 @@ Expo onDisplay·제품 결과 검토·명시적 배율·회전·소비 적용은
 후속으로 ImageViewer에 supportedOrientations와 좌우 safe-area inset을 연결했다.
 정확한 배율은 Gallery ref가 제공하지 않아 child geometry 또는 별도 zoom host의
 동작 검증이 필요하다. 회전 prop/layout mock 검증은 실제 회전 증거가 아니다.
+
+기존 Gallery에 oversized child를 넣는 방안은 세로 pan이 0으로 복귀해 부적합했다.
+ResumableZoom의 exact-size pan은 기존 iOS 기기에서 맞춤/2배/출력 크기로 확인했다.
+공통 resolveImageInspectionGeometry를 추가했으나 ImageViewer에 UI로 연결하지는 않았다.

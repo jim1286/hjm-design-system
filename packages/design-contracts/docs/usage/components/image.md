@@ -140,6 +140,24 @@ safeAreaInsets 네 방향을 제공한다. 앱 manifest가 portrait 고정이면
 화면 크기가 바뀌면 버튼을 제외한 남은 갤러리 영역을 다시 측정해 host에 전달한다.
 이 확장은 fit/2배/출력 pixel 보기를 아직 추가하지 않았으며 Utilverse 대체 완료가 아니다.
 
+### 결과 검사 크기 계산
+
+`@hjmds/design-contracts/components/image`의 `resolveImageInspectionGeometry`는 원본과
+실측 viewport 크기, `fit | double | pixels`를 받아 scale·width·height·panBounds를 반환한다.
+fit은 전체가 들어가는 크기, double은 fit의 2배, pixels는 원본 수치와 같은 layout 단위다.
+기기의 물리 pixel 배율을 추정하지 않는다. 0 크기는 측정 전 상태이므로 호출을 미룬다.
+
+```ts
+import { resolveImageInspectionGeometry } from "@hjmds/design-contracts/components/image";
+
+const geometry = resolveImageInspectionGeometry(
+  { width: 600, height: 600 }, { width: 402, height: 454 }, "double",
+); // width/height 804, panBounds x=201 y=175 (중앙에서 양방향)
+```
+
+이는 검사 UI를 만들 때 renderer가 쓰는 공통 계산이며 Image의 fit prop이나 ImageViewer의
+배율 prop이 아니다. 공개 배율 UI·보기 변경 시 검토 무효화·접근 가능한 이동 조작은 후속 구현이다.
+
 ## 플랫폼 차이
 
 | 항목 | Web | Native |

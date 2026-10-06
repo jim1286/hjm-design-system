@@ -1,4 +1,23 @@
 import { semanticColors } from "./semantic-colors.js";
+/** Exact image inspection sizes use layout units, not device physical pixels (Utilverse ADR-0020). */
+export function resolveImageInspectionGeometry(image, viewport, mode) {
+    if (![image.width, image.height, viewport.width, viewport.height].every(value => Number.isFinite(value) && value > 0)) {
+        throw new RangeError("Image inspection needs positive finite image and viewport sizes");
+    }
+    if (mode !== "fit" && mode !== "double" && mode !== "pixels")
+        throw new TypeError("Unknown image inspection mode");
+    // Fit can enlarge a small result, as the existing product preview does. Clamping
+    // it to 1 would make fit and pixels indistinguishable for those images.
+    const scale = mode === "pixels" ? 1 : Math.min(viewport.width / image.width, viewport.height / image.height) * (mode === "double" ? 2 : 1);
+    const width = image.width * scale, height = image.height * scale;
+    if (![scale, width, height].every(value => Number.isFinite(value) && value > 0)) {
+        throw new RangeError("Image inspection geometry exceeds finite layout range");
+    }
+    return { scale, width, height, panBounds: {
+            x: Math.max(0, width - viewport.width) / 2,
+            y: Math.max(0, height - viewport.height) / 2,
+        } };
+}
 export const imageDefaults = {
     fit: "cover",
 };
