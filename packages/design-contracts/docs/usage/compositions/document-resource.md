@@ -55,6 +55,9 @@ Web에서 초점을 가진 미리보기 재시도 버튼이 제거되면 같은 
 초점이 body로 떨어진 회귀에 따른 규칙이다. 제품이 다른 문서로 바꾸거나 사용자가 이미 다른
 요소에 초점을 둔 경우에는 자동 이동하지 않는다. Native 스크린리더 복구는 별도 검증 대상이다.
 
+Showcase에는 긴 파일명 전환과 미리보기 준비 중·실패·없음 조작이 있다. 이름을 전환하면
+기존 action-session 결과를 reset한다. 미리보기 로딩은 저장을 자동으로 잠그지 않는다.
+
 ## 흐름과 상태
 
 1. 양 renderer의 `/document-resource`에서 DocumentResource를 import한다. root export는 없다.

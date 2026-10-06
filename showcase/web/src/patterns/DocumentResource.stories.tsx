@@ -18,11 +18,12 @@ function Demo() {
   const [example] = useState(() => createDocumentResourceExample(createActionSession, exportDocument));
   const state = useSyncExternalStore(example.session.subscribe, example.session.getSnapshot, example.session.getSnapshot);
   const [file, setFile] = useState(1);
+  const [longName, setLongName] = useState(false);
   const [preview, setPreview] = useState<DocumentPreviewState>({ status: "ready" });
   const [expanded, setExpanded] = useState(false);
   const [details, setDetails] = useState(false);
   useEffect(() => () => example.reset(), [example]);
-  const name = `문서-예제-${file}.txt`;
+  const name = longName ? `${"분기별_검토_".repeat(6)}document-resource-${file}.txt` : `문서-예제-${file}.txt`;
   const save: DocumentSaveState = state.status === "pending" ? { status: "pending" }
     : state.status === "error" ? { status: "error", message: "예시 실패입니다. 같은 문서를 다시 내보낼 수 있습니다.", retryable: true }
     : state.value;
@@ -36,6 +37,8 @@ function Demo() {
     {details ? <Text>현재 파일: {name}. 실제 개인 자료나 서버 요청은 없습니다.</Text> : null}
     <Button tone="secondary" onClick={() => { example.reset(); setFile(value => value + 1); setExpanded(false); setDetails(false); }}>다른 문서로 바꾸기</Button>
     <Button tone="secondary" onClick={() => setPreview({ status: "error", message: "미리보기 오류 예제입니다.", retryable: true })}>미리보기 실패 확인</Button>
+    <Button tone="secondary" onClick={() => { example.reset(); setLongName(!longName); }}>{longName ? "짧은 파일명으로 복원" : "긴 파일명 확인"}</Button>
+    <Button tone="secondary" onClick={() => setPreview({ status: "loading" })}>미리보기 준비 중 확인</Button>
     <Button tone="secondary" onClick={() => setPreview({ status: "none" })}>미리보기 없는 문서</Button>
     <Button tone="secondary" onClick={() => { example.reset(); example.failNext(); }}>내보내기 실패 다시 설정</Button>
   </Stack>;

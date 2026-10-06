@@ -140,3 +140,22 @@ AC433031-1746-46C6-86A9-143A1FC839F8에서 idb/simctl로 검증했다. Device Hu
 권한·디스크 실패, 외부 여섯 원본의 나머지 변형. 승격·npm 게시·Utilverse 적용은 미실행.
 보존: 위 hash/흐름을 남긴 뒤 이번 생성 fixture의 cache 사본/Files 사본과 임시 screenshot을
 정리한다. 재사용 host·회귀·조사 기록은 보존한다.
+
+## Native 큰 글자·다크·RTL 후속 확인
+
+`d9d5545` 이후 양쪽 Showcase에 긴 파일명 전환과 preview loading 조작을 추가했다. 긴 이름은
+한글 반복과 영문 확장자를 포함하지만 실제 파일 시스템 basename 한도를 넘기기 위한 fixture는 아니다.
+파일명을 바꿀 때 action-session을 reset해 이전 이름의 내보내기 결과를 분리한다.
+
+동일 iPhone 17 Pro/iOS 26.5, idb/simctl 대체 도구로 다음을 확인했다.
+- LargeText(2배), 402×874: 긴 파일명이 336pt 폭에서 200pt 높이로 줄바꿈됐다. 본문/내보내기
+  버튼이 보이고, 스크롤 후 맨 아래 실패 재설정 버튼까지 도달했다. 첫 합성 실패 안내는 80pt
+  높이로 표시됐다. loading 조작 후 본문 보기만 비활성화되고 저장 재시도는 활성 상태였다.
+- Dark(1배): 파일 metadata/행동을 실제 화면에서 확인하고 preview 실패→재시도→본문 복구를
+  확인했다. 색상 대비 수치를 측정한 결과는 아니며 제품 palette 검증으로 세지 않는다.
+- Rtl(1배): 해당 Story가 선택된 상태와 화면을 확인했다. 이 fixture의 본문은 한국어/영문이므로
+  아랍어·히브리어 bidi 읽기 순서·스크린리더 검증으로 확대하지 않는다.
+
+두 Showcase 타입 검사와 문서/Storybook 규격 검사 통과. 이번 변경은 예제 조작 추가이며
+renderer를 수정하지 않았다. dark×2배×RTL 교차 조합·제품 palette·Android·접근성은 남는다.
+캡처는 검토 후 임시 파일을 제거했다. Native는 마지막 Rtl 스토리에서 보존하며 OS 설정은 바꾸지 않았다.
