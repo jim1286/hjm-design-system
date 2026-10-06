@@ -8,16 +8,25 @@ import { resolveColorReference } from "@hjmds/design-contracts/color-references"
 import type { ReactNode } from "react";
 import { View, type StyleProp, type ViewStyle } from "react-native";
 import { Text } from "./primitives.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
+import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { useHjmNativeTheme } from "./provider.js";
 
 export type TopProps = Readonly<{
   descriptor: TopDescriptor;
   /** Secondary action sharing the title row; stacks below it at large text. */
   trailing?: ReactNode;
+  /** Canonical layout-only placement. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
+  /**
+   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement;
+   * `topRecipe` owns appearance. Removed in the next major (consumer-policy.md §3.1).
+   */
   style?: StyleProp<ViewStyle>;
 }>;
 
-export function Top({ descriptor, trailing, style }: TopProps) {
+export function Top({ descriptor, trailing, layoutStyle, style }: TopProps) {
+  warnDeprecatedStyleProps("Top", { style }, "layoutStyle for placement; topRecipe owns appearance");
   validateTopDescriptor(descriptor);
   const theme = useHjmNativeTheme();
   const size = descriptor.size ?? topDefaults.size;
@@ -30,6 +39,7 @@ export function Top({ descriptor, trailing, style }: TopProps) {
       style={[
         { gap: topRecipe.gap, paddingBottom: metrics.paddingBottom, paddingTop: metrics.paddingTop },
         style,
+        layoutStyle,
       ]}
     >
       {descriptor.eyebrow ? (

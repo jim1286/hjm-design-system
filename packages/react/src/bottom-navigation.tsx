@@ -25,6 +25,7 @@ import {
   type RefAttributes,
 } from "react";
 import { classNames } from "./internal.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { useOptionalHjmTheme } from "./provider.js";
 
 const virtualKeyboardMinimumOcclusion = 120;
@@ -65,6 +66,8 @@ export type BottomNavigationProps<
     renderLink?: (props: BottomNavigationLinkRenderProps) => ReactElement;
     primaryAction?: ReactNode;
     onActivate?: (activation: BottomNavigationActivation<Key>) => void;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
   }>;
 
 export function isUnmodifiedPrimaryBottomNavigationClick(
@@ -153,6 +156,7 @@ function BottomNavigationInner<
     onActivate,
     className,
     style,
+    layoutStyle,
     ...props
   }: BottomNavigationProps<Key, IconName>,
   ref: ForwardedRef<HTMLElement>,
@@ -203,6 +207,7 @@ function BottomNavigationInner<
         "--hjm-bottom-navigation-outer-inline": `${presentationRecipe.outerPaddingHorizontal}px`,
         "--hjm-bottom-navigation-outer-top": `${presentationRecipe.outerPaddingTop}px`,
         ...style,
+        ...layoutStyle,
       } as CSSProperties}
     >
       <div className="hjm-bottom-navigation__surface">

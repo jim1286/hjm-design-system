@@ -42,14 +42,14 @@ export function SceneTimeline({ scene, image, frame, onFrame, onTimeline }: { sc
   return <Stack gap="md"><Text variant="heading">장면 타임라인</Text>
     <Slider label="재생 위치" min={0} max={total} step={1} value={Math.min(frame, total)} onValueChange={value => { setPlaying(false); onFrame(value); }} getValueText={value => `${(value / timeline.fps).toFixed(2)}초`}/>
     <Text>{(Math.min(frame,total) / timeline.fps).toFixed(2)} / {timeline.duration.toFixed(2)}초 · {timeline.fps}fps</Text>
-    <Stack axis="inline" wrap gap="sm"><Button disabled={!image || environment.reducedMotion || busy} onClick={() => setPlaying(value => !value)}>{playing ? "일시 정지" : "재생"}</Button><Button tone="ghost" onClick={() => { setPlaying(false); onFrame(0); }}>처음으로</Button></Stack>
+    <Stack axis="inline" wrap gap="sm"><Button tone="secondary" disabled={!image || environment.reducedMotion || busy} onClick={() => setPlaying(value => !value)}>{playing ? "일시 정지" : "재생"}</Button><Button tone="ghost" onClick={() => { setPlaying(false); onFrame(0); }}>처음으로</Button></Stack>
     {environment.reducedMotion ? <Text tone="muted">모션 줄이기가 켜져 있어요. 슬라이더로 정지된 장면을 확인할 수 있습니다.</Text> : null}
     <Text emphasis="strong">움직임</Text><Stack axis="inline" wrap gap="sm">{([ ["float", "천천히 떠오르기"], ["arrive", "화면 등장"] ] as const).map(([preset,label]) => <Button key={preset} tone="secondary" selected={timeline.preset === preset} onClick={() => onTimeline({ ...timeline, preset })}>{label}</Button>)}</Stack>
     <Text emphasis="strong">길이</Text><Stack axis="inline" wrap gap="sm">{([3,6,9] as const).map(duration => <Button key={duration} tone="ghost" selected={timeline.duration === duration} onClick={() => { onFrame(0); onTimeline({ ...timeline, duration, posterFrame: Math.min(timeline.posterFrame, duration * timeline.fps) }); }}>{duration}초</Button>)}</Stack>
     <Stack axis="inline" wrap gap="sm">{([24,30] as const).map(fps => <Button key={fps} tone="ghost" selected={timeline.fps === fps} onClick={() => { onFrame(0); onTimeline({ ...timeline, fps, posterFrame: Math.min(fps * timeline.duration, Math.round(timeline.posterFrame * fps / timeline.fps)) }); }}>{fps}fps</Button>)}</Stack>
     <Stack axis="inline" wrap gap="sm"><Button tone="secondary" onClick={() => onTimeline({ ...timeline, posterFrame: Math.min(frame,total) })}>현재 장면을 포스터로</Button><Button disabled={!image} tone="secondary" onClick={() => void poster()}>포스터 PNG 저장</Button></Stack>
     <Text tone="muted">포스터 {(timeline.posterFrame / timeline.fps).toFixed(2)}초 · 영상 {format?.includes("mp4") ? "MP4" : format ? "WebM" : "출력 미지원"}</Text>
-    <Stack axis="inline" wrap gap="sm"><Button disabled={!image || !format || busy} onClick={() => void video()}>{busy ? `영상 출력 ${progress}%` : "영상 내보내기"}</Button>{busy ? <Button tone="ghost" onClick={() => controller.current?.abort()}>출력 취소</Button> : null}</Stack>
+    <Stack axis="inline" wrap gap="sm"><Button tone="secondary" loading={busy} disabled={!image || !format || busy} onClick={() => void video()}>영상 내보내기</Button>{busy ? <Button tone="ghost" onClick={() => controller.current?.abort()}>출력 취소</Button> : null}</Stack>
     <Text role="status">{status}</Text><Text tone="muted">영상 출력 중에는 이 화면을 열어 두세요. 다른 탭으로 이동하면 취소합니다. 이미지·장면·시간이 같으면 같은 장면을 그리며, 압축과 재생 시간은 브라우저 인코더에 따라 조금 달라질 수 있어요.</Text>
   </Stack>;
 }

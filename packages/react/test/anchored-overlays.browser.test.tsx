@@ -1,3 +1,4 @@
+import { layer } from "@hjmds/design-contracts/foundations";
 import { StrictMode, act, useState } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -189,8 +190,9 @@ describe("anchored portal popups", () => {
     });
     await act(async () => window.dispatchEvent(new Event("resize")));
     await flush();
+    // selectRecipe.popover.collisionPadding (8) on each side since 2026-10-06; the helper default was 16.
     expect(Number.parseFloat(listbox.style.minWidth))
-      .toBeLessThanOrEqual(viewportWidth - 32);
+      .toBeLessThanOrEqual(viewportWidth - 16);
     expect(Number.parseFloat(listbox.style.minWidth))
       .toBeLessThanOrEqual(Number.parseFloat(listbox.style.maxWidth));
 
@@ -273,7 +275,8 @@ describe("anchored portal popups", () => {
     expect(document.head.inert).toBe(false);
     expect(document.head.hasAttribute("aria-hidden")).toBe(false);
     expect(getComputedStyle(popupHost).visibility).not.toBe("hidden");
-    expect(Number(menu.style.zIndex)).toBeGreaterThan(Number(overlay.style.zIndex));
+    expect(Number(overlay.style.zIndex)).toBe(layer.modal);
+    expect(Number(menu.style.zIndex)).toBe(layer.modal + 1);
     firstItem.focus();
     await flush();
     expect(document.activeElement).toBe(firstItem);

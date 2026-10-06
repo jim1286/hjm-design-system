@@ -3,14 +3,14 @@ import { authProviderButtonRecipe, resolveAuthProviderSurface, validateAuthProvi
 import { forwardRef, } from "react";
 import { classNames } from "./internal.js";
 import { useOptionalHjmTheme } from "./provider.js";
-export const AuthProviderButton = forwardRef(function AuthProviderButton({ descriptor, logo, className, ...props }, forwardedRef) {
+export const AuthProviderButton = forwardRef(function AuthProviderButton({ descriptor, logo, className, layoutStyle, ...props }, forwardedRef) {
     validateAuthProviderButtonDescriptor(descriptor);
     const theme = useOptionalHjmTheme();
     // The theme only picks between the provider's own variants; it never mixes
     // HJM palette values into a brand fill.
     const surface = resolveAuthProviderSurface(descriptor.provider, theme?.environment.theme === "dark" ? "dark" : "light");
     const busy = descriptor.busy === true;
-    return (_jsxs("button", { ...props, ref: forwardedRef, type: props.type ?? "button", "data-provider": descriptor.provider, "data-busy": busy || undefined, "aria-busy": busy || undefined, "aria-label": descriptor.label, disabled: descriptor.disabled === true || busy, className: classNames("hjm-auth-provider-button", className), style: {
+    return (_jsxs("button", { ...props, ref: forwardedRef, type: props.type ?? "button", "data-provider": descriptor.provider, "data-busy": busy || undefined, "aria-busy": busy || undefined, "aria-label": descriptor.label, disabled: descriptor.disabled === true || busy, className: classNames("hjm-auth-provider-button", className), style: { ...layoutStyle,
             "--hjm-provider-background": surface.background,
             "--hjm-provider-content": surface.content,
             "--hjm-provider-border": surface.border ?? "transparent",

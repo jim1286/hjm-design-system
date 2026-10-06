@@ -1,9 +1,11 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import { headingRecipe, resolveHeadingSemanticLevel, validateHeadingDescriptor, } from "@hjmds/design-contracts/components/heading";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
+import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
-export function Heading({ level, semanticLevel, children, style }) {
+export function Heading({ level, semanticLevel, children, layoutStyle, style }) {
+    warnDeprecatedStyleProps("Heading", { style }, "layoutStyle for placement and level for typography");
     const descriptor = {
         level,
         ...(semanticLevel === undefined ? {} : { semanticLevel }),
@@ -19,6 +21,6 @@ export function Heading({ level, semanticLevel, children, style }) {
                 lineHeight: metrics.lineHeight,
             },
             style,
-        ], children: children }));
+        ], ...(layoutStyle === undefined ? {} : { layoutStyle }), children: children }));
 }
 //# sourceMappingURL=heading.js.map

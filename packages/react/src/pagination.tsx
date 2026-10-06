@@ -1,6 +1,7 @@
 import { resolvePaginationDescriptor, type ComposePaginationAccessibleName, type PaginationChangeHandler, type PaginationDescriptor, type PaginationLabels } from "@hjmds/design-contracts/components/pagination";
 import { forwardRef, type HTMLAttributes } from "react";
 import { classNames } from "./internal.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type PaginationProps = Omit<HTMLAttributes<HTMLElement>, "children"> &
   Readonly<{
@@ -9,6 +10,8 @@ export type PaginationProps = Omit<HTMLAttributes<HTMLElement>, "children"> &
     labels: PaginationLabels;
     composeAccessibleName: ComposePaginationAccessibleName;
     onPageChange: PaginationChangeHandler;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
   }>;
 
 export const Pagination = forwardRef<HTMLElement, PaginationProps>(
@@ -20,6 +23,7 @@ export const Pagination = forwardRef<HTMLElement, PaginationProps>(
       composeAccessibleName,
       onPageChange,
       className,
+      layoutStyle,
       ...props
     },
     ref,
@@ -34,6 +38,7 @@ export const Pagination = forwardRef<HTMLElement, PaginationProps>(
     return (
       <nav
         {...props}
+        style={{ ...props.style, ...layoutStyle }}
         ref={ref}
         className={classNames("hjm-pagination", className)}
         aria-label={label}

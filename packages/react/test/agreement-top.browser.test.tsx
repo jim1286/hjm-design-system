@@ -3,6 +3,7 @@ import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import type { AgreementDescriptor } from "@hjmds/design-contracts/components/agreement";
+import { typography } from "@hjmds/design-contracts/foundations";
 import { Agreement } from "../src/agreement.js";
 import { Top } from "../src/top.js";
 import { AuthProviderButton } from "../src/provider-button.js";
@@ -154,6 +155,9 @@ it("paints provider buttons from the guideline table and never from the theme", 
   // Google's light variant is the only one that needs the guideline's border.
   expect(getComputedStyle(buttonFor("google")).borderTopWidth).toBe("1px");
   expect(getComputedStyle(buttonFor("kakao")).borderTopWidth).toBe("0px");
+  // The provider guideline owns the label treatment: labels stay at typography.body
+  // (docs/provider-button.md records the Naver green contrast as a provider colour exception).
+  expect(getComputedStyle(buttonFor("naver")).fontSize).toBe(`${typography.body.fontSize}px`);
   // A stack of providers lines up: same height and radius for all four.
   const heights = new Set(["google", "kakao", "naver", "apple"].map((id) => Math.round(buttonFor(id).getBoundingClientRect().height)));
   expect(heights.size).toBe(1);

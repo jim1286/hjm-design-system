@@ -34,6 +34,11 @@
    `play`/`pause`처럼 서로 다른 아이콘 이름이 지금 상태가 아니라 누르면 일어날 동작을
    가리킨다(`semanticIconNames`).
 
+**renderer 번역(2026-10-06 정정).** Web 토글은 `aria-pressed` 없는 `<button>`, Native 토글은
+`accessibilityState`에 `selected` 없이 `disabled`만 싣는다. 이전 구현은 Web에 `aria-pressed`, Native에
+`selected: revealed`를 붙여 "비밀번호 숨기기, 눌림/선택됨"처럼 다음 행동과 현재 상태를 함께 읽혀 위 판정 1과
+어긋났다. 두 renderer 테스트가 상태 속성의 부재를 고정한다.
+
 **타입으로 강제한 지점.** `PasswordToggleAccessibleNameInfo`는 `revealed`가 아니라
 `willReveal`(= `!revealed`)을 담아 제품에 넘긴다. 필드 이름을 "현재 상태"로 지어
 어차피 뒤집어야 하는 계산을 제품 composer 안에 숨기지 않고, 호출부(`resolvePasswordFieldDescriptor`)에서

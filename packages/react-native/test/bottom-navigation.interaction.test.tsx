@@ -1,4 +1,8 @@
 import { act, create } from "react-test-renderer";
+import { Text as NativeText } from "react-native";
+import { __setWindowDimensions } from "./react-native.mock.js";
+import { typography } from "@hjmds/design-contracts/foundations";
+import { bottomNavigationRecipe } from "@hjmds/design-contracts/recipes";
 import { expect, it, vi } from "vitest";
 import { BottomNavigation, HjmNativeProvider, Text } from "../src/index.js";
 import type { BottomNavigationActivation } from "@hjmds/design-contracts/components/bottom-navigation";
@@ -69,4 +73,47 @@ it("keeps hidden capsule destinations named and restores visible labels at large
   act(() => tree.update(render(2)));
   expect(tree.root.findAllByType(Text).some(node => node.props.children === "검색")).toBe(true);
   act(() => tree.unmount());
+});
+
+it("honors the navigation label scale limit under a controlled Provider", () => {
+  let tree!: ReturnType<typeof create>;
+  const label = "메시지";
+  const render = (scale: number) => <HjmNativeProvider theme="light" textScale={scale}>
+    <BottomNavigation descriptor={{ accessibilityLabel: "탐색", selectedKey: "home", items: [
+      { id: "home", label: "홈", icon: { name: "home" } },
+      { id: "messages", label, icon: { name: "mail" } },
+    ] }} configuration={{ density: "compact" }} renderIcon={() => null} onActivate={() => undefined} getItemTestID={item => `scaled-${item.id}`} />
+  </HjmNativeProvider>;
+  act(() => { tree = create(render(3)); });
+  const messageText = () => tree.root.findAllByType(NativeText).find(node => node.props.children === label)!;
+  const baseSize = typography[bottomNavigationRecipe.density.compact.label].fontSize;
+  const style = () => Object.assign({}, ...(Array.isArray(messageText().props.style) ? messageText().props.style : [messageText().props.style]));
+  expect(style().fontSize).toBe(baseSize * bottomNavigationRecipe.largeText.maxFontSizeMultiplier);
+  expect(tree.root.findByProps({ testID: "scaled-messages" }).props.accessibilityLabel).toBe(label);
+  act(() => tree.update(render(1)));
+  expect(style().fontSize).toBe(baseSize);
+  act(() => tree.unmount());
+});
+
+it("applies the same label limit to OS text without capping sibling body text", () => {
+  __setWindowDimensions({ width: 402, height: 874, scale: 3, fontScale: 3 });
+  let tree!: ReturnType<typeof create>;
+  try {
+    act(() => { tree = create(<HjmNativeProvider theme="light">
+      <Text variant="body">본문</Text>
+      <BottomNavigation descriptor={{ accessibilityLabel: "탐색", selectedKey: "home", items: [
+        { id: "home", label: "홈", icon: { name: "home" } },
+        { id: "messages", label: "메시지", icon: { name: "mail" } },
+      ] }} configuration={{ density: "compact" }} renderIcon={() => null} onActivate={() => undefined} />
+    </HjmNativeProvider>); });
+    const text = (copy: string) => tree.root.findAllByType(NativeText).find(node => node.props.children === copy)!;
+    expect(text("메시지").props.style.fontSize).toBe(typography[bottomNavigationRecipe.density.compact.label].fontSize * 1.4);
+    const bodyStyle = Object.assign({}, ...(Array.isArray(text("본문").props.style) ? text("본문").props.style : [text("본문").props.style]));
+    expect(bodyStyle.fontSize).toBe(typography.body.fontSize);
+    expect(text("본문").props.allowFontScaling).toBe(true);
+    expect(text("메시지").props.allowFontScaling).toBe(false);
+  } finally {
+    act(() => tree.unmount());
+    __setWindowDimensions({ width: 402, height: 874, scale: 3, fontScale: 1 });
+  }
 });

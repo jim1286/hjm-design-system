@@ -3,7 +3,7 @@ import { useLayoutEffect, useRef } from "react";
 import { gridRevealTiles, gridRevealDuration } from "@hjmds/design-contracts/grid-reveal";
 import { useHjmTheme } from "./provider.js";
 /** Connect ready to Image.onLoadStatusChange; the image retains loading/error/accessibility. */
-export function GridReveal({ ready, active = true, children }) {
+export function GridReveal({ ready, active = true, children, layoutStyle }) {
     const { environment } = useHjmTheme();
     const overlay = useRef(null);
     useLayoutEffect(() => {
@@ -16,6 +16,6 @@ export function GridReveal({ ready, active = true, children }) {
         document.addEventListener("visibilitychange", visibility);
         return () => { stop(); document.removeEventListener("visibilitychange", visibility); };
     }, [ready, active, environment.reducedMotion]);
-    return _jsxs("div", { style: { position: "relative" }, children: [children, _jsx("div", { ref: overlay, "aria-hidden": "true", style: { position: "absolute", inset: 0, pointerEvents: "none", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gridTemplateRows: "repeat(4, 1fr)" }, children: gridRevealTiles.map(tile => _jsx("span", { style: { opacity: 0, background: "var(--hjm-color-bg)" } }, tile.id)) })] });
+    return _jsxs("div", { style: { ...layoutStyle, position: "relative" }, children: [children, _jsx("div", { ref: overlay, "aria-hidden": "true", style: { position: "absolute", inset: 0, pointerEvents: "none", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gridTemplateRows: "repeat(4, 1fr)" }, children: gridRevealTiles.map(tile => _jsx("span", { style: { opacity: 0, background: "var(--hjm-color-bg)" } }, tile.id)) })] });
 }
 //# sourceMappingURL=grid-reveal.js.map

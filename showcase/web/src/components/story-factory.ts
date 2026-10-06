@@ -26,7 +26,7 @@ const sectionIds: Readonly<Record<ComponentCategory, string>> = {
   utility: "infrastructure",
 };
 
-const explorerStoryIds: Readonly<Record<ComponentCategory, string>> = {
+const explorerStoryIds:Readonly<Record<ComponentCategory, string>> = {
   foundation: "foundation",
   layout: "layout",
   action: "actions",

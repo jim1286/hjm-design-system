@@ -1,13 +1,15 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { createAlertDialogSession, getAlertDialogInitialFocus, validateAlertDialogRequest, } from "@hjmds/design-contracts/components/alert-dialog";
+import { hjmCompositionStyleKeys } from "./composition-style.js";
 import { canDismissSheet, createSheetLifecycle, sheetBehaviorDefaults, } from "@hjmds/design-contracts/components/sheet";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { backdrop, easing, glyph, radius, spacing } from "@hjmds/design-contracts/foundations";
 import { alertDialogRecipe, dialogRecipe, sheetRecipe, } from "@hjmds/design-contracts/recipes";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore, } from "react";
-import { AccessibilityInfo, Animated, Easing, Keyboard, Modal, Platform, ScrollView, Text as NativeText, Pressable, View, findNodeHandle, useWindowDimensions, } from "react-native";
+import { AccessibilityInfo, Animated, Easing, Keyboard, Modal, Platform, ScrollView, Text as NativeText, Pressable, StyleSheet, View, findNodeHandle, useWindowDimensions, } from "react-native";
 import { Button, IconButton } from "./actions.js";
 import { scheduleAfterNativeModalTeardown, shouldAwaitNativeModalDismiss, } from "./internal/modal-lifecycle.js";
+import { isDevelopment, warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { minimumTargetStyle } from "./internal/styles.js";
 import { Text } from "./primitives.js";
 import { useHjmNativeSafeAreaInsets, useHjmNativeTheme } from "./provider.js";
@@ -16,6 +18,24 @@ import { useHjmNativeSafeAreaInsets, useHjmNativeTheme } from "./provider.js";
 function CloseGlyph() {
     const { colors } = useHjmNativeTheme();
     return _jsx(NativeText, { accessible: false, allowFontScaling: false, style: { color: colors.text, fontSize: glyph.sm, lineHeight: glyph.sm }, children: "\u00D7" });
+}
+// BT-QA-027: maximum text made a centered BurnTok confirmation taller than the
+// window, putting its title/cancel off-screen. Keep full copy in a bounded scroll
+// and actions outside it; capping fonts or clipping copy would hide the decision.
+function DialogScrollBody({ children, gap }) {
+    return _jsx(ScrollView, { style: { flexGrow: 0, flexShrink: 1 }, contentContainerStyle: { gap }, keyboardShouldPersistTaps: "handled", 
+        // Positioner owns safe-area clearance.
+        automaticallyAdjustContentInsets: false, automaticallyAdjustKeyboardInsets: false, children: children });
+}
+function useDialogViewportPadding() {
+    const insets = useHjmNativeSafeAreaInsets();
+    // Missing insets count as zero.
+    return {
+        paddingTop: spacing.md + (insets.top ?? 0),
+        paddingBottom: spacing.md + (insets.bottom ?? 0),
+        paddingLeft: spacing.md + (insets.left ?? 0),
+        paddingRight: spacing.md + (insets.right ?? 0),
+    };
 }
 function useReasonedOpenState({ open, defaultOpen = false, onOpenChange, }) {
     const controlledAtMount = useRef(open !== undefined);
@@ -60,16 +80,13 @@ function Scrim() {
             top: 0,
         } }));
 }
-function OverlayActions({ primaryAction, secondaryAction, busy, stacked = false, onActionComplete, }) {
+function OverlayActions({ primaryAction, secondaryAction, busy, stacked = false, onAction, pendingAction, }) {
     const { environment } = useHjmNativeTheme();
     if (!primaryAction && !secondaryAction)
         return null;
     const renderAction = (action, fallbackTone) => (_jsx(View, { style: { flex: stacked ? undefined : 1, width: stacked ? "100%" : undefined }, children: _jsx(Button, { ...(action.accessibilityHint === undefined
                 ? {}
-                : { accessibilityHint: action.accessibilityHint }), disabled: busy || action.disabled === true, onPress: () => {
-                void action.onPress();
-                onActionComplete();
-            }, tone: action.tone ?? fallbackTone, children: action.label }) }));
+                : { accessibilityHint: action.accessibilityHint }), disabled: busy || action.disabled === true, loading: pendingAction === action, onPress: () => onAction(action), tone: action.tone ?? fallbackTone, children: action.label }) }));
     return (_jsxs(View, { style: {
             direction: environment.direction,
             flexDirection: stacked ? "column" : "row",
@@ -85,9 +102,21 @@ function resolveOverlayAccessibleTitle(title, accessibilityTitle) {
     throw new TypeError("An element `title` requires `accessibilityTitle` for the modal accessible name");
 }
 /** Native modal boundary with one reasoned close intent for each user attempt. */
-export function Dialog({ open, defaultOpen, onOpenChange, title, accessibilityTitle, description, children, primaryAction, secondaryAction, dismissible = true, busy = false, size = dialogRecipe.defaults.size, closeLabel, returnFocusRef, contentStyle, onShow, ...modalProps }) {
+export function Dialog({ open, defaultOpen, onOpenChange, title, accessibilityTitle, description, children, primaryAction, secondaryAction, dismissible = true, busy: externalBusy = false, onActionError, size = dialogRecipe.defaults.size, closeLabel, returnFocusRef, contentStyle, onShow, ...modalProps }) {
+    const [actionPending, setActionPending] = useState(null);
+    const actionRun = useRef(null);
+    const busy = externalBusy || actionPending !== null;
+    // Late results must not close a reopened or unmounted dialog.
+    useEffect(() => {
+        if (open === false) {
+            actionRun.current = null;
+            setActionPending(null);
+        }
+        return () => { actionRun.current = null; };
+    }, [open]);
     const { environment, palette } = useHjmNativeTheme();
     const accessibleTitle = resolveOverlayAccessibleTitle(title, accessibilityTitle);
+    const viewportPadding = useDialogViewportPadding();
     const { width: windowWidth } = useWindowDimensions();
     const [visible, changeOpen] = useReasonedOpenState({
         ...(open === undefined ? {} : { open }),
@@ -199,8 +228,41 @@ export function Dialog({ open, defaultOpen, onOpenChange, title, accessibilityTi
         motionProgress.stopAnimation();
     }, [cancelExitFallback, motionProgress]);
     const requestClose = (reason) => {
-        if (dismissible && !busy)
+        if (dismissible && !busy && !actionRun.current)
             changeOpen(false, { reason });
+    };
+    const runAction = (action) => {
+        if (busy || actionRun.current || action.disabled)
+            return;
+        const run = {};
+        actionRun.current = run;
+        const finish = (succeeded, error) => {
+            if (actionRun.current !== run)
+                return;
+            actionRun.current = null;
+            setActionPending(null);
+            // Bypass requestClose: its captured busy state may be stale.
+            if (succeeded) {
+                if (dismissible)
+                    changeOpen(false, { reason: "close-action" });
+            }
+            else if (onActionError)
+                onActionError(error);
+            else if (isDevelopment())
+                console.error("[@hjmds/react-native] Dialog action failed without onActionError; the dialog stays open.", error);
+        };
+        try {
+            const result = action.onPress();
+            if (result && typeof result.then === "function") {
+                setActionPending(action);
+                void result.then(() => finish(true), error => finish(false, error));
+            }
+            else
+                finish(true);
+        }
+        catch (error) {
+            finish(false, error);
+        }
     };
     const sizeRecipe = dialogRecipe.sizes[size];
     const contentBackground = resolveColorReference(dialogRecipe.content.background, palette);
@@ -219,7 +281,7 @@ export function Dialog({ open, defaultOpen, onOpenChange, title, accessibilityTi
                 flex: 1,
                 justifyContent: "center",
                 opacity: motionProgress,
-                padding: spacing.md,
+                ...viewportPadding,
             }, children: [_jsx(Scrim, {}), dismissible ? (_jsx(Pressable, { accessible: false, importantForAccessibility: "no-hide-descendants", onPress: () => requestClose("outside"), style: { bottom: 0, left: 0, position: "absolute", right: 0, top: 0 } })) : null, _jsxs(View, { accessibilityLabel: [accessibleTitle, description].filter(Boolean).join(", "), accessibilityState: { busy }, accessibilityViewIsModal: true, importantForAccessibility: "yes", role: "dialog", style: [
                         {
                             alignSelf: "center",
@@ -230,6 +292,8 @@ export function Dialog({ open, defaultOpen, onOpenChange, title, accessibilityTi
                             elevation: 8,
                             gap: dialogRecipe.content.gap,
                             maxWidth: sizeRecipe.maxWidth,
+                            maxHeight: "100%",
+                            flexShrink: 1,
                             padding: sizeRecipe.padding,
                             shadowColor: dialogRecipe.content.shadow.color,
                             shadowOffset: { width: 0, height: dialogRecipe.content.shadow.offsetY },
@@ -238,16 +302,29 @@ export function Dialog({ open, defaultOpen, onOpenChange, title, accessibilityTi
                             width: "100%",
                         },
                         contentStyle,
-                    ], children: [_jsxs(View, { style: {
-                                alignItems: "flex-start",
-                                direction: environment.direction,
-                                flexDirection: "row",
-                                gap: spacing.sm,
-                            }, children: [_jsxs(View, { style: { flex: 1, gap: spacing.xs }, children: [_jsx(Text, { accessibilityRole: "header", tone: "primary", variant: "title", children: title }), description ? _jsx(Text, { tone: "muted", children: description }) : null] }), dismissible ? (_jsx(IconButton, { disabled: busy, label: closeLabel, onPress: () => requestClose("close-action"), children: _jsx(CloseGlyph, {}) })) : null] }), children, _jsx(OverlayActions, { busy: busy, onActionComplete: () => requestClose("close-action"), stacked: stackActions, ...(primaryAction === undefined ? {} : { primaryAction }), ...(secondaryAction === undefined ? {} : { secondaryAction }) })] })] }) }));
+                    ], children: [_jsxs(View, { style: { flexShrink: 1, gap: description ? spacing.xs : dialogRecipe.content.gap }, children: [_jsxs(View, { style: {
+                                        alignItems: "flex-start",
+                                        direction: environment.direction,
+                                        flexDirection: "row",
+                                        gap: spacing.sm,
+                                    }, children: [_jsx(View, { style: { flex: 1 }, children: _jsx(Text, { accessibilityRole: "header", tone: "primary", variant: "title", children: title }) }), dismissible ? (_jsx(IconButton, { disabled: busy, label: closeLabel, onPress: () => requestClose("close-action"), children: _jsx(CloseGlyph, {}) })) : null] }), description || children ? (_jsxs(DialogScrollBody, { gap: dialogRecipe.content.gap, children: [description ? _jsx(Text, { tone: "muted", children: description }) : null, children] })) : null] }), _jsx(OverlayActions, { busy: busy, onAction: runAction, pendingAction: actionPending, stacked: stackActions, ...(primaryAction === undefined ? {} : { primaryAction }), ...(secondaryAction === undefined ? {} : { secondaryAction }) })] })] }) }));
+}
+const compositionKeys = new Set(hjmCompositionStyleKeys);
+/**
+ * 1.x keeps AlertDialog/Sheet `contentStyle` wide; warn only on visual keys (layout use is supported).
+ */
+function warnVisualContentStyle(component, contentStyle) {
+    if (contentStyle === undefined || contentStyle === null)
+        return;
+    const flattened = StyleSheet.flatten(contentStyle) ?? {};
+    const hasVisualKey = Object.keys(flattened).some(key => !compositionKeys.has(key));
+    warnDeprecatedStyleProps(component, { contentStyle: hasVisualKey ? contentStyle : undefined }, "layout-only keys in contentStyle and size/placement for appearance");
 }
 /** Contract session owns duplicate confirms, busy dismissal, error and settlement. */
 export function AlertDialog({ open, defaultOpen, onOpenChange, request, returnFocusRef, onResult, contentStyle, onShow, ...modalProps }) {
     validateAlertDialogRequest(request);
+    warnVisualContentStyle("AlertDialog", contentStyle);
+    const viewportPadding = useDialogViewportPadding();
     const { colors, environment, palette } = useHjmNativeTheme();
     const { width: windowWidth } = useWindowDimensions();
     const [visible, changeOpen] = useReasonedOpenState({
@@ -476,7 +553,7 @@ export function AlertDialog({ open, defaultOpen, onOpenChange, request, returnFo
                 flex: 1,
                 justifyContent: "center",
                 opacity: motionProgress,
-                padding: spacing.md,
+                ...viewportPadding,
             }, children: [_jsx(Scrim, {}), _jsxs(View, { accessibilityLabel: `${request.title}, ${request.description}`, accessibilityState: { busy }, accessibilityViewIsModal: true, importantForAccessibility: "yes", role: "alertdialog", style: [
                         {
                             alignSelf: "center",
@@ -487,6 +564,8 @@ export function AlertDialog({ open, defaultOpen, onOpenChange, request, returnFo
                             elevation: 8,
                             gap: alertDialogRecipe.content.gap,
                             maxWidth: sizeRecipe.maxWidth,
+                            maxHeight: "100%",
+                            flexShrink: 1,
                             padding: sizeRecipe.padding,
                             shadowColor: alertDialogRecipe.content.shadow.color,
                             shadowOffset: {
@@ -498,7 +577,7 @@ export function AlertDialog({ open, defaultOpen, onOpenChange, request, returnFo
                             width: "100%",
                         },
                         contentStyle,
-                    ], children: [_jsxs(View, { style: { gap: spacing.xs }, children: [_jsx(Text, { accessibilityRole: "header", tone: "primary", variant: "title", children: request.title }), _jsx(Text, { tone: "muted", children: request.description }), error ? (_jsx(Text, { accessibilityLiveRegion: "assertive", accessibilityRole: "alert", style: { color: errorColor }, children: error })) : null] }), _jsxs(View, { style: {
+                    ], children: [_jsxs(DialogScrollBody, { gap: spacing.xs, children: [_jsx(Text, { accessibilityRole: "header", tone: "primary", variant: "title", children: request.title }), _jsx(Text, { tone: "muted", children: request.description }), error ? (_jsx(Text, { accessibilityLiveRegion: "assertive", accessibilityRole: "alert", style: { color: errorColor }, children: error })) : null] }), _jsxs(View, { style: {
                                 direction: environment.direction,
                                 flexDirection: stackActions ? "column" : "row",
                                 gap: stackActions
@@ -525,6 +604,7 @@ export function AlertDialog({ open, defaultOpen, onOpenChange, request, returnFo
 }
 /** Native Sheet applies policy before emitting a concrete dismissal reason. */
 export function Sheet({ open, defaultOpen, onOpenChange, title, accessibilityTitle, description, children, footer, placement = "bottom", size = sheetRecipe.defaults.size, busy = false, dismissPolicy, closeLabel, returnFocusRef, safeAreaInsets: suppliedSafeAreaInsets, onDismissComplete, contentStyle, keyboardAvoidance = false, scrollable = false, onShow, ...modalProps }) {
+    warnVisualContentStyle("Sheet", contentStyle);
     const { environment, palette } = useHjmNativeTheme();
     // Default to the provider's window insets so a bare <Sheet> clears the home
     // indicator and navigation bar (2026-09-30 audit). Edges the call site passes win.
@@ -797,7 +877,9 @@ export function Sheet({ open, defaultOpen, onOpenChange, title, accessibilityTit
                                     ? undefined
                                     : Math.min(viewportHeight * sizeRatio, availableHeight),
                             maxWidth: side ? 420 : undefined,
-                            maxHeight: side
+                            // maxHeightRatio caps only `auto`. A fixed size is already bounded by availableHeight
+                            // (viewport − top inset − keyboard); capping it too stopped `full` at 90% (2026-10-06 follow-up).
+                            maxHeight: side || sizeRatio !== null
                                 ? availableHeight
                                 : Math.min(availableHeight, viewportHeight * sheetRecipe.content.maxHeightRatio),
                             paddingBottom: sheetRecipe.content.paddingBottom + bottomInset,

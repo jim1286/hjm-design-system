@@ -19,3 +19,10 @@ single 모드를 넣지 않는 것이 규칙이다.
 **tab stop.** 각 토글이 자기 tab stop이다. 도구 모음식 roving focus를 쓰지 않는 이유는
 묶음이 대개 2~4개로 짧고, roving은 "그룹 안에서 화살표로 이동"이라는 추가 학습을
 요구하기 때문이다. 항목이 많아지는 실제 화면이 나오면 그때 축을 연다.
+
+
+### 카테고리 필터 표현
+
+2026-10-06 요청에 따라 단일 선택 카테고리는 `SegmentedControl presentation="pills"`로 제공한다.
+복수 선택 ToggleGroup의 계약은 바꾸지 않는다. 필터 UI가 서로 비슷하더라도 선택 개수를 합치면 해제·키보드 의미가 달라지기 때문이다.
+자세한 크기·테마·배치는 [SegmentedControl 사용 지침](usage/components/segmented-control.md)을 따른다.

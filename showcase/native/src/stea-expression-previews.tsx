@@ -1,3 +1,4 @@
+import { Container } from "@hjmds/react-native/primitives";
 // STEA Code 후보 중 표현 3종을 기존 HJM API로 다시 만든 실험이다. 새 공개 API는 만들지 않는다.
 // 데이터와 캐릭터 프레임은 shared/stea-expressions.ts가 소유한다.
 import { useEffect, useState, type ReactNode } from "react";
@@ -16,7 +17,7 @@ import {
 } from "../../shared/stea-expressions";
 
 function Frame({ children }: { children: ReactNode }) {
-  return <ScrollView contentContainerStyle={{ padding: spacing.lg }}>{children}</ScrollView>;
+  return <ScrollView contentContainerStyle={{ paddingVertical: spacing.lg }}><Container>{children}</Container></ScrollView>;
 }
 
 export function FlipInfoCard() {

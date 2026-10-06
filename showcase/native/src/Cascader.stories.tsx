@@ -26,4 +26,6 @@ function CascaderExample() {
 }
 const meta = { title: "배포/컴포넌트/입력/단계별 선택", component: CascaderExample } satisfies Meta<typeof CascaderExample>;
 export default meta;
-export const ChooseRegion: StoryObj<typeof meta> = { name: "지역 선택",};
+export const Default: StoryObj<typeof meta> = { name: "기본",};
+export const Dark: StoryObj<typeof meta> = { name: "어두운 테마", globals: { theme: "dark" } };
+export const LargeText: StoryObj<typeof meta> = { name: "큰 글자", globals: { textScale: "2" } };

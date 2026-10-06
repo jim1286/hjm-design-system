@@ -4,11 +4,13 @@ import {
   type MentionMatch,
   type MentionTriggerConfig,
 } from "@hjmds/design-contracts/components/mentions";
-import { spacing } from "@hjmds/design-contracts/foundations";
+import { radius, spacing } from "@hjmds/design-contracts/foundations";
+import { comboboxRecipe } from "@hjmds/design-contracts/recipes";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Pressable, View, type NativeSyntheticEvent, type StyleProp, type TextInputSelectionChangeEventData, type ViewStyle } from "react-native";
 import { TextArea, type TextAreaProps } from "./inputs.js";
 import { Text } from "./primitives.js";
+import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { useHjmNativeTheme } from "./provider.js";
 
 export type MentionCandidate = Readonly<{
@@ -34,6 +36,10 @@ export type MentionsProps<TriggerId extends string = string> =
     /** Localized accessible name for the candidate list. */
     listLabel: string;
     renderCandidate?: (candidate: MentionCandidate) => ReactNode;
+    /**
+     * @deprecated Raw list style bypasses the candidate list renderer; it has no replacement slot.
+     * Use the inherited `layoutStyle` for placement. Removed in the next major (consumer-policy.md §3.1).
+     */
     listStyle?: StyleProp<ViewStyle>;
   }>;
 
@@ -50,6 +56,7 @@ export function Mentions<TriggerId extends string = string>({
   ...textAreaProps
 }: MentionsProps<TriggerId>) {
   const { colors } = useHjmNativeTheme();
+  warnDeprecatedStyleProps("Mentions", { listStyle }, "layoutStyle for placement; the candidate list owns its appearance");
   /*
     Native has no caret position on change — only `onSelectionChange` reports
     it. So the cursor is tracked separately and the contract's trigger search
@@ -101,7 +108,9 @@ export function Mentions<TriggerId extends string = string>({
         <View
           accessibilityLabel={listLabel}
           accessibilityRole="list"
-          style={[{ gap: spacing.xxs, borderWidth: 1, borderColor: colors.border, borderRadius: 12, padding: spacing.xxs }, listStyle]}
+          // Same popover surface as Combobox (mentions.ts): padding and radius from comboboxRecipe.popover, 8 and md.
+          // Until 2026-10-06 the padding was 4 while the Web list and the recipe moved to 8.
+          style={[{ gap: spacing.xxs, borderWidth: comboboxRecipe.popover.borderWidth, borderColor: colors.border, borderRadius: radius[comboboxRecipe.popover.radius], padding: comboboxRecipe.popover.padding }, listStyle]}
         >
           {candidates.length === 0 ? (
             <Text tone="muted" variant="caption">{emptyMessage}</Text>

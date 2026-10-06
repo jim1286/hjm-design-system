@@ -1,5 +1,6 @@
 import { type SidebarDescriptor, type SidebarItemDescriptor } from "@hjmds/design-contracts/components/sidebar";
 import { type ReactNode } from "react";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type SidebarAppearance = "standard" | "bounce" | "hook" | "proximity";
 export type SidebarProps<Id extends string = string, GroupId extends string = string> = Readonly<{
     descriptor: SidebarDescriptor<Id, GroupId>;
@@ -18,6 +19,8 @@ export type SidebarProps<Id extends string = string, GroupId extends string = st
     renderIcon?: (item: SidebarItemDescriptor<Id>) => ReactNode;
     renderBadge?: (count: number, item: SidebarItemDescriptor<Id>) => ReactNode;
     className?: string;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 export declare const Sidebar: <Id extends string = string, GroupId extends string = string>(props: SidebarProps<Id, GroupId> & {
     ref?: React.Ref<HTMLElement>;

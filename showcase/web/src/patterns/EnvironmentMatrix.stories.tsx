@@ -37,12 +37,14 @@ function EnvironmentMatrix() {
   );
 }
 
-const meta = { includeStories: ["RequiredEvidence"],
-  id: "patterns-environment-matrix", title: "배포/구성/환경별 비교",
+const meta = { includeStories: ["Default","Dark","LargeText"],
+  id: "patterns-environment-matrix", title: "배포/구성/비교와 검증/환경 조합 검증",
   component: EnvironmentMatrix,
   parameters: { controls: { disable: true } },
 } satisfies Meta<typeof EnvironmentMatrix>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
-export const RequiredEvidence: Story = { name: "필수 검증 항목",};
+export const Default: Story = { name: "기본",};
+export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
+export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };

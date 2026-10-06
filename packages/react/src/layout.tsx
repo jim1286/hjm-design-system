@@ -118,6 +118,8 @@ export type LayoutProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> &
       AnchorHTMLAttributes<HTMLAnchorElement>,
       "children" | "href"
     >;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
   }>;
 
 function hasRegionContent(content: ReactNode | undefined): boolean {
@@ -148,6 +150,7 @@ export const Layout = forwardRef<HTMLDivElement, LayoutProps>(function Layout(
     footerProps,
     skipLinkProps,
     className,
+    layoutStyle,
     ...props
   },
   ref,
@@ -248,6 +251,7 @@ export const Layout = forwardRef<HTMLDivElement, LayoutProps>(function Layout(
   return (
     <div
       {...props}
+      style={{ ...props.style, ...layoutStyle }}
       ref={ref}
       className={classNames("hjm-layout", className)}
       data-hjm-component="Layout"
@@ -475,11 +479,13 @@ export type AspectRatioProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> 
   Readonly<{
     children?: ReactNode;
     ratio?: AspectRatioValue;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
   }>;
 
 /** Responsive media frame. Products retain object-fit, crop, and content semantics. */
 export const AspectRatio = forwardRef<HTMLDivElement, AspectRatioProps>(function AspectRatio(
-  { ratio, className, style, ...props },
+  { ratio, className, layoutStyle, style, ...props },
   ref,
 ) {
   const resolved = resolveAspectRatioDescriptor(
@@ -491,11 +497,12 @@ export const AspectRatio = forwardRef<HTMLDivElement, AspectRatioProps>(function
       ref={ref}
       className={classNames("hjm-aspect-ratio", className)}
       data-ratio={resolved.source}
-      style={{ aspectRatio: resolved.ratio, ...style }}
+      style={{ ...layoutStyle, aspectRatio: resolved.ratio, ...style }}
     />
   );
 });
 
+// No `layoutStyle`: the element is clipped to 1px by design, so placement has no visible effect.
 export type VisuallyHiddenProps = HTMLAttributes<HTMLSpanElement> &
   Readonly<{ children: ReactNode }>;
 
@@ -587,6 +594,8 @@ export type SectionProps = Omit<HTMLAttributes<HTMLElement>, "children" | "title
     action?: ReactNode;
     children: ReactNode;
     headingLevel?: 2 | 3 | 4 | 5 | 6;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
   }>;
 
 /** Large-text-safe semantic content section with an optional header action. */
@@ -598,13 +607,15 @@ export const Section = forwardRef<HTMLElement, SectionProps>(function Section(
     children,
     headingLevel = 2,
     className,
+    layoutStyle,
+    style,
     ...props
   },
   ref,
 ) {
   const hasHeader = title !== undefined || description !== undefined || action !== undefined;
   return (
-    <section {...props} ref={ref} className={classNames("hjm-section", className)}>
+    <section {...props} style={{ ...style, ...layoutStyle }} ref={ref} className={classNames("hjm-section", className)}>
       {hasHeader ? (
         <header className="hjm-section__header">
           <div className="hjm-section__copy">

@@ -67,7 +67,7 @@ describe("@hjmds/react-native vertical slice", () => {
     expect(button.props.accessibilityState).toEqual({ disabled: false, busy: false });
     expect(
       flattenStyle(button.props.style({ pressed: false, focused: false, hovered: false })),
-    ).toMatchObject({ height: 44, minHeight: 44, minWidth: 44 });
+    ).toMatchObject({ minHeight: 44, minWidth: 44 });
     act(() => button.props.onPress());
     expect(onPress).toHaveBeenCalledOnce();
   });

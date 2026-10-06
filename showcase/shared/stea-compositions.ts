@@ -149,6 +149,7 @@ export type OtpState = Readonly<{
   attemptsLeft: number;
   resendIn: number;
   resent: boolean;
+  resendCount: number;
 }>;
 export type OtpAction =
   | { type: "change"; value: string }
@@ -164,6 +165,7 @@ export const initialOtpState: OtpState = {
   attemptsLeft: otpMaxAttempts,
   resendIn: otpResendCooldownSeconds,
   resent: false,
+  resendCount: 0,
 };
 
 export const canSubmitOtp = (state: OtpState) =>
@@ -188,7 +190,7 @@ export function otpReducer(state: OtpState, action: OtpAction): OtpState {
       return state.resendIn > 0 ? { ...state, resendIn: state.resendIn - 1 } : state;
     case "resend":
       if (state.resendIn > 0 || state.phase === "verifying" || state.phase === "verified") return state;
-      return { ...initialOtpState, resent: true };
+      return { ...initialOtpState, resent: true, resendCount: state.resendCount + 1 };
     case "reset":
       return initialOtpState;
   }

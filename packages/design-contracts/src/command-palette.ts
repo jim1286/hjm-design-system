@@ -152,6 +152,20 @@ export function canDismissCommandPalette(
 export type CommandPaletteDescriptor = Readonly<{
   accessibilityLabel: string;
   searchPlaceholder: string;
+  /**
+   * Product-localized copy announced once when the visible result list is
+   * empty. Optional (added 2026-10-06) so existing descriptors stay valid;
+   * without it a renderer shows no empty copy rather than inventing an
+   * untranslated fallback. An `asyncState` `empty`/`error`/`loading` message
+   * still takes precedence because the product adapter knows more.
+   */
+  emptyMessage?: string;
+  /**
+   * Accessible name of the visible close action that dismisses with
+   * `"close-action"`. Optional for the same compatibility reason; without it
+   * the palette closes through Escape/outside/activation only, as before.
+   */
+  closeLabel?: string;
 }>;
 
 function assertNonEmpty(value: string, field: string): void {
@@ -168,17 +182,15 @@ export function validateCommandPaletteDescriptor(
   }
   assertNonEmpty(descriptor.accessibilityLabel, "accessibilityLabel");
   assertNonEmpty(descriptor.searchPlaceholder, "searchPlaceholder");
+  for (const f of ["emptyMessage", "closeLabel"] as const) {
+    const v = descriptor[f];
+    if (v !== undefined) assertNonEmpty(v, f);
+  }
 }
 
-/**
- * Anatomy only — chrome for the modal shell and the pinned search field,
- * reusing the exact tokens Dialog-family and Menu-family recipes already use
- * (`floatingSurfaceContract`, `fieldFrameContract`, `collectionItemContract`)
- * instead of inventing new ones. Result rows and section labels reuse
- * `collectionItemContract` the same way `menuRecipe`/`treeRecipe` do — a
- * command result is chrome-identical to a Menu item, it just lives in a
- * modal instead of an anchored popup.
- */
+// Anatomy only; reuses Dialog/Menu chrome tokens. Rationale: docs/command-palette.md
+// "HJM 기본값" (moved out of JSDoc 2026-10-06 because dist keeps comments and the
+// behaviors bundle that re-exports this module sits at its byte budget).
 export const commandPaletteRecipe = {
   slots: [
     "backdrop",

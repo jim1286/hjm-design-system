@@ -65,6 +65,7 @@ export function useSheet(): OverlayStackApi["openSheet"] {
   return useOverlayStack().openSheet;
 }
 
+// No `layoutStyle`: a context provider with no box of its own.
 export type OverlayStackProviderProps = Readonly<{ children: ReactNode }>;
 
 export function OverlayStackProvider({ children }: OverlayStackProviderProps): ReactElement {

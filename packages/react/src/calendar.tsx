@@ -7,6 +7,7 @@ import {
 } from "@hjmds/design-contracts/components/calendar";
 import { classNames, useControllableState } from "./internal.js";
 import { useOptionalHjmTheme } from "./provider.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type CalendarMonthAction = Readonly<{ month: string; label: string }>;
 export type CalendarHandle = Readonly<{ focusDate(date: string): void }>;
@@ -23,11 +24,13 @@ export type CalendarProps<Content = unknown> = Readonly<{
   autoFocus?: boolean;
   className?: string;
   ref?: Ref<CalendarHandle>;
+  /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
 }>;
 
 /** Inline single-date grid shared with DatePicker; month data remains product-owned. */
 export function Calendar<Content>({ descriptor, composeAccessibleName, previousMonth, nextMonth,
-  onNavigateBeyondGrid, renderCellContent, size = "medium", autoFocus = false, className, ref }: CalendarProps<Content>) {
+  onNavigateBeyondGrid, renderCellContent, size = "medium", autoFocus = false, className, layoutStyle, ref }: CalendarProps<Content>) {
   validateCalendarDescriptor(descriptor);
   for (const action of [previousMonth, nextMonth]) {
     if (!action) continue;
@@ -63,7 +66,7 @@ export function Calendar<Content>({ descriptor, composeAccessibleName, previousM
   }, [gridKey, request, autoFocus, active]);
   const titleId = `hjm-calendar-${useId()}`;
   return <div ref={root} className={classNames("hjm-calendar", className)} data-size={size}
-    style={{ "--hjm-calendar-cell-size": `${recipe.sizes[size].cellDiameter}px`,
+    style={{ ...layoutStyle, "--hjm-calendar-cell-size": `${recipe.sizes[size].cellDiameter}px`,
       "--hjm-calendar-disabled-opacity": recipe.day.disabledOpacity,
       "--hjm-calendar-outside-opacity": recipe.day.outsideFocusedMonthOpacity } as CSSProperties}>
     <div className="hjm-calendar__header">

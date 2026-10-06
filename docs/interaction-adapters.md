@@ -80,13 +80,13 @@ const options = useSharedTransitionOptions('place-forest');
 // surface and keep retained inactive screens out of accessibility and hit testing.
 ```
 
-The adapter supplies measured paired-boundary zoom, HJM durations and system reduced-motion behavior. The host owns route parameters, matching IDs, focus/scroll restoration and navigation container. Native back and cancellation are handled by the navigation engine; button back, short-gesture cancellation and completed gesture back were exercised on the installed iOS showcase. The showcase has a complete Places → Detail → Places example in **실험/구성/드래그·스와이프·모션/카드 확대와 화면 전환**. This is an opt-in router adapter, not a new global navigation layer or a web navigation abstraction.
+The adapter supplies measured paired-boundary zoom, HJM durations and system reduced-motion behavior. The host owns route parameters, matching IDs, focus/scroll restoration and navigation container. Native back and cancellation are handled by the navigation engine; button back, short-gesture cancellation and completed gesture back were exercised on the installed iOS showcase. The showcase has a complete Places → Detail → Places example in **배포/구성/직접 조작과 모션/끌기·밀기·화면 전환** › 카드 확대와 화면 전환. This is an opt-in router adapter, not a new global navigation layer or a web navigation abstraction.
 
 ## Evidence and limits
 
 The new meaningful regressions cover controlled reordering, fixed disabled rows, stale drag cancellation, duplicate pending actions, errors, a single current content tree, explicit carousel navigation/inert slides, event dedupe under Strict Mode, reduced-motion particles and shared-boundary settings. Native engine mocks prove HJM adaptation, not real gestures or GPU behavior.
 
-Web and Native stories are under **실험/구성/드래그·스와이프·모션**. Validation commands and observed outcomes are recorded in [the adoption evidence](evidence/interaction-adapters-2026-09-30.md). Device Hub automation timed out; the user explicitly authorized idb fallback against the existing iPhone 17 / iOS 27 simulator. That limited native evidence is recorded separately from mocks. No physical-device, VoiceOver/TalkBack, release-binary, npm publication or consuming-app claim follows from these checks.
+Web and Native stories are under **배포/구성/직접 조작과 모션/끌기·밀기·화면 전환** (moved from 실험/구성/드래그·스와이프·모션 by the 2026-10-06 user-approved Storybook promotion, [record](STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정)). Validation commands and observed outcomes are recorded in [the adoption evidence](evidence/interaction-adapters-2026-09-30.md). Device Hub automation timed out; the user explicitly authorized idb fallback against the existing iPhone 17 / iOS 27 simulator. That limited native evidence is recorded separately from mocks. No physical-device, VoiceOver/TalkBack, release-binary, npm publication or consuming-app claim follows from these checks.
 
 Removal: replace optional imports with normal lists/action buttons, static content, base Carousel, Result/Toast and ordinary product routing, then remove unused peers and the exports patch. No persisted-state migration is introduced.
 
@@ -123,6 +123,6 @@ product-specific exclusions, cancellation, scroll competition, haptics and Go/de
 boundaries. `contentTransitionMotion` exposes the existing geometry through the contract's
 `/content-transition` entry; no migration is required. Native now explicitly translates
 `easing.enter` and settles when a preset or direction changes during playback. The Native
-**배포/구성/Expo 인터랙션 복구** example composes existing components without adding a new API.
+**배포/구성/피드백과 복구/중단해도 남는 현재 상태** example (formerly 배포/구성/Expo 인터랙션 복구) composes existing components without adding a new API.
 
-Current integration guidance reviewed 2026-10-02: [product interaction quality](INTERACTION_QUALITY.md). Storybook experiment placement is independent of API maturity and package publication. Historical device evidence above remains dated evidence.
+Current integration guidance reviewed 2026-10-02: [product interaction quality](INTERACTION_QUALITY.md). Storybook placement (all 배포 since the 2026-10-06 promotion) is independent of API maturity and package publication. Historical device evidence above remains dated evidence.

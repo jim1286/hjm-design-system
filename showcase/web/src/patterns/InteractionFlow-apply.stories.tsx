@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ApplyOrDiscardSelection } from "./interaction-flow-previews";
-const meta = { includeStories: ["Default", "Dark", "LargeText"], id: "experimental-interaction-apply", title: "실험/구성/상호작용 예제/선택 후 적용·취소", component: ApplyOrDiscardSelection } satisfies Meta<typeof ApplyOrDiscardSelection>;
+const meta = { includeStories: ["Default","Dark","LargeText"], id: "experimental-interaction-apply", title: "배포/구성/선택과 필터/선택 후 적용·취소", component: ApplyOrDiscardSelection } satisfies Meta<typeof ApplyOrDiscardSelection>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };

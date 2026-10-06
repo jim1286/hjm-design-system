@@ -3,6 +3,7 @@ import { type SearchFieldSize } from "@hjmds/design-contracts/recipes";
 import { type PasswordFieldAutofillHint, type PasswordFieldSize } from "@hjmds/design-contracts/components/password-field";
 import { type OtpFieldSize, type OtpFieldPresentation } from "@hjmds/design-contracts/components/otp-field";
 import { type HTMLAttributes, type InputHTMLAttributes, type ReactNode, type TextareaHTMLAttributes } from "react";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 type FieldCopyProps = Readonly<{
     label?: ReactNode;
     description?: ReactNode;
@@ -18,7 +19,11 @@ type FieldFrameProps = HTMLAttributes<HTMLDivElement> & FieldCopyProps & Readonl
     variant?: FieldVariant;
     shape?: FieldShape;
     align?: FieldAlign;
+    /** Component recipe override of fieldRecipe.disabledOpacity (OtpField). */
+    disabledOpacity?: number;
     children: ReactNode;
+    /** Canonical layout-only placement on the field frame (`.hjm-field`), not the input. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 export type FieldControlProps = Readonly<{
     id: string;
@@ -27,7 +32,7 @@ export type FieldControlProps = Readonly<{
     "aria-invalid"?: true;
     "aria-describedby"?: string;
 }>;
-export type FieldProps = Omit<FieldFrameProps, "children" | "descriptionId" | "errorId"> & Readonly<{
+export type FieldProps = Omit<FieldFrameProps, "children" | "descriptionId" | "errorId" | "disabledOpacity"> & Readonly<{
     label: ReactNode;
     children: ReactNode | ((props: FieldControlProps) => ReactNode);
 }>;
@@ -45,6 +50,11 @@ type SharedInputProps = FieldCopyProps & Readonly<{
     leading?: ReactNode;
     trailing?: ReactNode;
     fieldClassName?: string;
+    /**
+     * Canonical layout-only placement on the field frame. `style` keeps going to
+     * the input element, where it always went, so existing callers do not move.
+     */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 export type TextFieldProps = Omit<InputHTMLAttributes<HTMLInputElement>, "size"> & SharedInputProps & Readonly<{
     /**
@@ -72,6 +82,11 @@ export declare const TextField: import("react").ForwardRefExoticComponent<Omit<I
     leading?: ReactNode;
     trailing?: ReactNode;
     fieldClassName?: string;
+    /**
+     * Canonical layout-only placement on the field frame. `style` keeps going to
+     * the input element, where it always went, so existing callers do not move.
+     */
+    layoutStyle?: HjmCompositionStyleProp;
 }> & Readonly<{
     /**
      * Receives the next string value, the same callback name and shape as the
@@ -81,7 +96,13 @@ export declare const TextField: import("react").ForwardRefExoticComponent<Omit<I
      */
     onValueChange?: (value: string) => void;
 }> & import("react").RefAttributes<HTMLInputElement>>;
-export type TextAreaProps = TextareaHTMLAttributes<HTMLTextAreaElement> & Omit<SharedInputProps, "leading" | "trailing"> & Readonly<{
+export type TextAreaProps = TextareaHTMLAttributes<HTMLTextAreaElement> & Omit<SharedInputProps, "leading"> & Readonly<{
+    /**
+     * Action before the text inside the field frame (for example a composer's camera button),
+     * vertically centred while the text grows. Mirrors `trailing`; `leading` stays omitted because
+     * TextField's `leading` is a decorative affix with muted color, not an action slot.
+     */
+    leadingAction?: ReactNode;
     /**
      * Lower bound for a growing multiline field, in visible lines. Height is
      * recipe-owned, so this semantic axis replaces a `min-height` override.
@@ -90,7 +111,13 @@ export type TextAreaProps = TextareaHTMLAttributes<HTMLTextAreaElement> & Omit<S
     /** Upper bound for a growing multiline field, in visible lines. */
     maxVisibleLines?: number;
 }>;
-export declare const TextArea: import("react").ForwardRefExoticComponent<TextareaHTMLAttributes<HTMLTextAreaElement> & Omit<SharedInputProps, "leading" | "trailing"> & Readonly<{
+export declare const TextArea: import("react").ForwardRefExoticComponent<TextareaHTMLAttributes<HTMLTextAreaElement> & Omit<SharedInputProps, "leading"> & Readonly<{
+    /**
+     * Action before the text inside the field frame (for example a composer's camera button),
+     * vertically centred while the text grows. Mirrors `trailing`; `leading` stays omitted because
+     * TextField's `leading` is a decorative affix with muted color, not an action slot.
+     */
+    leadingAction?: ReactNode;
     /**
      * Lower bound for a growing multiline field, in visible lines. Height is
      * recipe-owned, so this semantic axis replaces a `min-height` override.
@@ -137,6 +164,11 @@ export declare const SearchField: import("react").ForwardRefExoticComponent<Omit
     leading?: ReactNode;
     trailing?: ReactNode;
     fieldClassName?: string;
+    /**
+     * Canonical layout-only placement on the field frame. `style` keeps going to
+     * the input element, where it always went, so existing callers do not move.
+     */
+    layoutStyle?: HjmCompositionStyleProp;
 }> & Readonly<{
     value?: string;
     defaultValue?: string;

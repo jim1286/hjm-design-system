@@ -2,18 +2,31 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { agreementRecipe, reconcileAgreementSelection, resolveAgreementState, toggleAgreementAll, toggleAgreementItem, validateAgreementDescriptor, } from "@hjmds/design-contracts/components/agreement";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { radius, spacing } from "@hjmds/design-contracts/foundations";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Pressable, View } from "react-native";
 import { mixedCheckboxState } from "./internal/state.js";
 import { Text } from "./primitives.js";
+import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { useHjmNativeTheme } from "./provider.js";
-export function Agreement({ descriptor, checkedIds: controlledChecked, defaultCheckedIds, onCheckedIdsChange, onStateChange, onDetail, requiredLabel, optionalLabel, style, }) {
+export function Agreement({ descriptor, checkedIds: controlledChecked, defaultCheckedIds, onCheckedIdsChange, onStateChange, onDetail, requiredLabel, optionalLabel, layoutStyle, style, }) {
+    warnDeprecatedStyleProps("Agreement", { style }, "layoutStyle for placement; agreementRecipe owns appearance");
     validateAgreementDescriptor(descriptor);
     const theme = useHjmNativeTheme();
     const [internal, setInternal] = useState(defaultCheckedIds ?? new Set());
     const raw = controlledChecked ?? internal;
     const checked = useMemo(() => reconcileAgreementSelection(descriptor, raw), [descriptor, raw]);
     const state = resolveAgreementState(descriptor, checked);
+    // Report the initial state once on mount. Until 2026-10-06 only user toggles reported, so
+    // `defaultCheckedIds`/`checkedIds` that already satisfied every required item never produced a
+    // first `satisfied: true` and a submit button wired to this callback stayed disabled. Mount-only
+    // (not on every derived change) keeps the callback count to "initial + one per toggle"; StrictMode
+    // may repeat the same snapshot, which is idempotent for a consumer that stores it.
+    const initialStateRef = useRef(state);
+    const onStateChangeRef = useRef(onStateChange);
+    onStateChangeRef.current = onStateChange;
+    useEffect(() => {
+        onStateChangeRef.current?.(initialStateRef.current);
+    }, []);
     const commit = (next) => {
         if (controlledChecked === undefined)
             setInternal(next);
@@ -37,7 +50,7 @@ export function Agreement({ descriptor, checkedIds: controlledChecked, defaultCh
             justifyContent: "center",
             width: spacing.md,
         }, children: value === false ? null : (_jsx(Text, { accessible: false, style: { color: glyphColor }, variant: "caption", children: value === "mixed" ? "–" : "✓" })) }));
-    return (_jsxs(View, { accessibilityLabel: descriptor.accessibilityLabel, accessibilityRole: "none", style: [{ gap: agreementRecipe.gap }, style], children: [_jsxs(Pressable, { accessibilityLabel: descriptor.allLabel, accessibilityRole: "checkbox", accessibilityState: mixedCheckboxState(state.all), onPress: () => commit(toggleAgreementAll(descriptor, checked)), style: {
+    return (_jsxs(View, { accessibilityLabel: descriptor.accessibilityLabel, accessibilityRole: "none", style: [{ gap: agreementRecipe.gap }, style, layoutStyle], children: [_jsxs(Pressable, { accessibilityLabel: descriptor.allLabel, accessibilityRole: "checkbox", accessibilityState: mixedCheckboxState(state.all), onPress: () => commit(toggleAgreementAll(descriptor, checked)), style: {
                     alignItems: "center",
                     backgroundColor: resolveColorReference(agreementRecipe.all.background, theme.palette),
                     borderRadius: radius.md,

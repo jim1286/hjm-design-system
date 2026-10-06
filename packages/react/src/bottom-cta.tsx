@@ -4,6 +4,7 @@ import { forwardRef, type CSSProperties, type HTMLAttributes, type MouseEventHan
 import { Button, type ButtonSize, type ButtonTone } from "./actions.js";
 import { classNames } from "./internal.js";
 import { useOptionalHjmTheme } from "./provider.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type BottomCTAAction = Readonly<{
   label: string;
@@ -24,6 +25,8 @@ export type BottomCTAProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> & 
   safeAreaBottom?: number;
   /** Sticky remains in document flow; fixed overlays would need a measured content spacer. */
   position?: "flow" | "sticky";
+  /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
 }>;
 
 function Action({ action, tone }: { action: BottomCTAAction; tone: ButtonTone }) {
@@ -42,7 +45,7 @@ function isAction(value: BottomCTAAction | ReactNode): value is BottomCTAAction 
 /** One primary action with optional supporting copy and a secondary action, matching Native's slots. */
 export const BottomCTA = forwardRef<HTMLDivElement, BottomCTAProps>(function BottomCTA({
   primaryAction, secondaryAction, description, accessibilityLabel, safeAreaBottom = 0,
-  position = "flow", className, style, ...props
+  position = "flow", className, style, layoutStyle, ...props
 }, ref) {
   const theme = useOptionalHjmTheme();
   if (!Number.isFinite(safeAreaBottom) || safeAreaBottom < 0) throw new RangeError("BottomCTA safeAreaBottom must be non-negative");
@@ -55,7 +58,7 @@ export const BottomCTA = forwardRef<HTMLDivElement, BottomCTAProps>(function Bot
       "--hjm-bottom-cta-padding-top": `${bottomCtaRecipe.paddingTop}px`,
       "--hjm-bottom-cta-padding-bottom": `${bottomCtaRecipe.paddingBottom}px`,
       "--hjm-bottom-cta-gap": `${bottomCtaRecipe.gap}px`,
-      "--hjm-bottom-cta-safe-area": `${safeAreaBottom}px`, ...style,
+      "--hjm-bottom-cta-safe-area": `${safeAreaBottom}px`, ...style, ...layoutStyle,
     } as CSSProperties}>
     {description ? <p className="hjm-bottom-cta__description">{description}</p> : null}
     <div className="hjm-bottom-cta__actions">

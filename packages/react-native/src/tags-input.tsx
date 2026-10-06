@@ -7,10 +7,13 @@ import {
   type TagsInputSuggestion,
 } from "@hjmds/design-contracts/components/tags-input";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
-import { radius, spacing } from "@hjmds/design-contracts/foundations";
+import { control, radius, spacing } from "@hjmds/design-contracts/foundations";
+import { fieldRecipe } from "@hjmds/design-contracts/recipes/base";
 import { useState } from "react";
 import { Pressable, TextInput, View, type StyleProp, type ViewStyle } from "react-native";
 import { Text } from "./primitives.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
+import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { useHjmNativeTheme } from "./provider.js";
 
 export type TagsInputProps = Readonly<{
@@ -30,6 +33,12 @@ export type TagsInputProps = Readonly<{
   placeholder?: string;
   description?: string;
   disabled?: boolean;
+  /** Canonical layout-only placement. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
+  /**
+   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement;
+   * `tagsInputRecipe` owns appearance. Removed in the next major (consumer-policy.md §3.1).
+   */
   style?: StyleProp<ViewStyle>;
 }>;
 
@@ -47,8 +56,10 @@ export function TagsInput({
   placeholder,
   description,
   disabled = false,
+  layoutStyle,
   style,
 }: TagsInputProps) {
+  warnDeprecatedStyleProps("TagsInput", { style }, "layoutStyle for placement; tagsInputRecipe owns appearance");
   const { palette } = useHjmNativeTheme();
   const [internal, setInternal] = useState<readonly string[]>(defaultTags ?? []);
   const tags = controlledTags ?? internal;
@@ -70,8 +81,10 @@ export function TagsInput({
   };
 
   return (
-    <View style={[{ gap: tagsInputRecipe.frame.gap }, style]}>
-      <Text variant="label">{label}</Text>
+    <View style={[{ gap: tagsInputRecipe.frame.gap }, style, layoutStyle]}>
+      {/* fieldRecipe.disabledScope: label and frame fade by the field default (Web drew 0.6, this drew a
+          literal 0.5 on the frame only until 2026-10-06); the description keeps full contrast. */}
+      <Text variant="label" style={disabled ? { opacity: fieldRecipe.disabledOpacity } : undefined}>{label}</Text>
       <View
         style={{
           backgroundColor: resolveColorReference(tagsInputRecipe.frame.background, palette),
@@ -84,7 +97,7 @@ export function TagsInput({
           borderWidth: 1,
           borderColor: border,
           borderRadius: radius.md,
-          opacity: disabled ? 0.5 : 1,
+          opacity: disabled ? fieldRecipe.disabledOpacity : 1,
         }}
       >
         {tags.map((tag, index) => (
@@ -138,7 +151,9 @@ export function TagsInput({
               accessibilityState={{ disabled: item.disabled === true }}
               disabled={item.disabled === true || disabled}
               onPress={() => commit(item.value ?? item.label)}
-              style={{ minHeight: tagsInputRecipe.tag.minHeight, justifyContent: "center", paddingHorizontal: spacing.xs }}
+              // A suggestion row is a touch target, not a tag chip: `tag.minHeight` (28) is the chip's
+              // visual height and left these rows under 44 (2026-10-06 follow-up). Web already uses 44.
+              style={{ minHeight: control.minTouchTarget, justifyContent: "center", paddingHorizontal: spacing.xs }}
             >
               <Text style={{ color: content }}>{item.label}</Text>
             </Pressable>

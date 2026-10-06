@@ -10,10 +10,12 @@ import {
 } from "@hjmds/design-contracts/components/agreement";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { radius, spacing } from "@hjmds/design-contracts/foundations";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Pressable, View, type StyleProp, type ViewStyle } from "react-native";
 import { mixedCheckboxState } from "./internal/state.js";
 import { Text } from "./primitives.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
+import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { useHjmNativeTheme } from "./provider.js";
 
 export type AgreementProps<Id extends string = string> = Readonly<{
@@ -28,6 +30,12 @@ export type AgreementProps<Id extends string = string> = Readonly<{
   requiredLabel: string;
   /** Localized suffix marking an optional row, supplied by the product. */
   optionalLabel: string;
+  /** Canonical layout-only placement. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
+  /**
+   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement;
+   * `agreementRecipe` owns appearance. Removed in the next major (consumer-policy.md §3.1).
+   */
   style?: StyleProp<ViewStyle>;
 }>;
 
@@ -40,8 +48,10 @@ export function Agreement<Id extends string = string>({
   onDetail,
   requiredLabel,
   optionalLabel,
+  layoutStyle,
   style,
 }: AgreementProps<Id>) {
+  warnDeprecatedStyleProps("Agreement", { style }, "layoutStyle for placement; agreementRecipe owns appearance");
   validateAgreementDescriptor(descriptor);
   const theme = useHjmNativeTheme();
   const [internal, setInternal] = useState<ReadonlySet<Id>>(defaultCheckedIds ?? new Set<Id>());
@@ -51,6 +61,17 @@ export function Agreement<Id extends string = string>({
     [descriptor, raw],
   );
   const state = resolveAgreementState(descriptor, checked);
+  // Report the initial state once on mount. Until 2026-10-06 only user toggles reported, so
+  // `defaultCheckedIds`/`checkedIds` that already satisfied every required item never produced a
+  // first `satisfied: true` and a submit button wired to this callback stayed disabled. Mount-only
+  // (not on every derived change) keeps the callback count to "initial + one per toggle"; StrictMode
+  // may repeat the same snapshot, which is idempotent for a consumer that stores it.
+  const initialStateRef = useRef(state);
+  const onStateChangeRef = useRef(onStateChange);
+  onStateChangeRef.current = onStateChange;
+  useEffect(() => {
+    onStateChangeRef.current?.(initialStateRef.current);
+  }, []);
   const commit = (next: ReadonlySet<Id>) => {
     if (controlledChecked === undefined) setInternal(next);
     onCheckedIdsChange?.(next);
@@ -86,7 +107,7 @@ export function Agreement<Id extends string = string>({
   );
 
   return (
-    <View accessibilityLabel={descriptor.accessibilityLabel} accessibilityRole="none" style={[{ gap: agreementRecipe.gap }, style]}>
+    <View accessibilityLabel={descriptor.accessibilityLabel} accessibilityRole="none" style={[{ gap: agreementRecipe.gap }, style, layoutStyle]}>
       {/*
         An explicit label keeps the name stable: without it Android derived the
         content description from the mixed state and read "mixed" as the name

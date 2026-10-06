@@ -227,3 +227,55 @@ it("expands and collapses a parent by row tap and by its disclosure glyph, keepi
   await key("ArrowRight");
   expect(item("9월").getAttribute("aria-expanded")).toBe("true");
 });
+
+it("keeps an uncontrolled default selection in its own state and moves it on activation", async () => {
+  const onSelect = vi.fn();
+  const name = ({ label }: { label: string }) => label;
+  await act(async () => root.render(
+    <HjmProvider reducedMotion>
+      <Tree label="단일" nodes={[...nodes]} composeAccessibleName={name}
+        selection={{ mode: "single", defaultSelectedKey: "archive", onSelectionChange: onSelect }} />
+    </HjmProvider>,
+  ));
+  expect(item("보관함").getAttribute("aria-selected")).toBe("true");
+  await act(async () => tap(item("2026년")));
+  expect(onSelect.mock.calls).toEqual([["2026"]]);
+  expect(item("2026년").getAttribute("aria-selected")).toBe("true");
+  expect(item("보관함").getAttribute("aria-selected")).toBe("false");
+  await act(async () => item("보관함").focus());
+  await key("Enter");
+  expect(item("보관함").getAttribute("aria-selected")).toBe("true");
+  expect(item("2026년").getAttribute("aria-selected")).toBe("false");
+});
+
+it("keeps an uncontrolled multiple selection and leaves a controlled one to its owner", async () => {
+  const name = ({ label }: { label: string }) => label;
+  const onMultiple = vi.fn();
+  await act(async () => root.render(
+    <HjmProvider reducedMotion>
+      <Tree label="다중" nodes={[...nodes]} composeAccessibleName={name}
+        selection={{ mode: "multiple", defaultSelectedKeys: new Set(["archive"]), onSelectionChange: onMultiple }} />
+    </HjmProvider>,
+  ));
+  await act(async () => item("2026년").focus());
+  await key("Enter");
+  expect(item("2026년").getAttribute("aria-selected")).toBe("true");
+  expect(item("보관함").getAttribute("aria-selected")).toBe("true");
+  expect([...onMultiple.mock.calls[0]![0]].sort()).toEqual(["2026", "archive"]);
+  await act(async () => item("보관함").focus());
+  await key("Enter");
+  expect(item("보관함").getAttribute("aria-selected")).toBe("false");
+
+  // A controlled tree whose owner ignores the change keeps showing the owner's value.
+  const ignored = vi.fn();
+  await act(async () => root.render(
+    <HjmProvider reducedMotion>
+      <Tree label="제어" nodes={[...nodes]} composeAccessibleName={name}
+        selection={{ mode: "single", selectedKey: null, onSelectionChange: ignored }} />
+    </HjmProvider>,
+  ));
+  await act(async () => item("보관함").focus());
+  await key("Enter");
+  expect(ignored.mock.calls).toEqual([["archive"]]);
+  expect(item("보관함").getAttribute("aria-selected")).toBe("false");
+});

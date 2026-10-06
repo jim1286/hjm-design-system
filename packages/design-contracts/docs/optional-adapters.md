@@ -93,7 +93,7 @@ Expo Go cannot verify these linked native modules.
 
 ## Evidence and promotion
 
-Web stories: 갤러리/모션 연동. Native stories: 실험실/선택적 연동.
+Web stories: `배포/구성/직접 조작과 모션/숫자 변화와 메뉴 변형`. Native stories: `배포/구성/직접 조작과 모션/이미지·시트·키보드 조작` (the earlier 갤러리/모션 연동 and 실험실/선택적 연동 menus; moved by the 2026-10-06 user-approved Storybook promotion, which is not an API promotion).
 Tests cover adaptation logic and web browser behavior; native mocks cannot prove OS gestures,
 keyboard animation, accessibility focus, native linking or installed-device health. Keep native
 adapters experimental until iOS/Android device evidence exists. No consumer migration or publication

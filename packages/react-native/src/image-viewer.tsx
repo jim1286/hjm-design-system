@@ -1,5 +1,5 @@
-import { useState, type ReactNode } from "react";
-import { Image, Modal, View, useWindowDimensions } from "react-native";
+import { useEffect, useState, type ReactNode } from "react";
+import { AccessibilityInfo, Image, Modal, Platform, View, useWindowDimensions } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Gallery } from "react-native-zoom-toolkit";
 import { containerDefaults, containerRecipe } from "@hjmds/design-contracts/components/container";
@@ -31,7 +31,14 @@ function ViewerImage({ item, width, height, loadingLabel, errorLabel, retryLabel
   const [attempt, setAttempt] = useState(0);
   let feedback: ReactNode = null;
   if (status === "loading") feedback = <Text accessibilityLiveRegion="polite">{loadingLabel}</Text>;
-  if (status === "error") feedback = <View><Text>{errorLabel}</Text><Button onPress={() => { setStatus("loading"); setAttempt(value => value + 1); }}>{retryLabel}</Button></View>;
+  // The failure is announced like the loading copy. Until 2026-10-06 only loading carried a live region,
+  // so a screen reader user heard "loading" and then nothing when the image failed. Android reads the
+  // assertive live region; iOS has no live regions, so it is announced explicitly (same as Result).
+  useEffect(() => {
+    if (status !== "error" || Platform.OS !== "ios") return;
+    AccessibilityInfo.announceForAccessibility(errorLabel);
+  }, [status, errorLabel]);
+  if (status === "error") feedback = <View><Text accessibilityLiveRegion="assertive">{errorLabel}</Text><Button onPress={() => { setStatus("loading"); setAttempt(value => value + 1); }}>{retryLabel}</Button></View>;
   return <View style={{ width, height, justifyContent: "center" }}>
     <Image key={`${item.uri}:${attempt}`} source={{ uri: item.uri }} accessibilityLabel={item.label}
       resizeMode="contain" style={{ width, height }} onLoad={() => setStatus("ready")} onError={() => setStatus("error")} />

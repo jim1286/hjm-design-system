@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Toast } from "@hjmds/react/toast";
 
-const meta = { includeStories: ["Compact","LiquidHintFallback","LongCopyWithAction","ToneGallery"],
-  id: "patterns-toast-layout", title: "배포/구성/토스트 배치",
+const meta = { includeStories: ["Default","LiquidHintFallback","LongCopyWithAction","ToneGallery","Dark","LargeText"],
+  id: "patterns-toast-layout", title: "배포/구성/비교와 검증/토스트 배치 비교",
   component: Toast,
   args: {
     descriptor: { id: "saved", description: "저장했어요", closeLabel: "닫기" },
@@ -16,7 +16,7 @@ type Story = StoryObj<typeof meta>;
 
 // Use a compact viewport to exercise the same responsive rule as the product.
 // A narrow parent in a desktop viewport alone does not activate that rule.
-export const Compact: Story = { name: "간결한 배치",
+export const Default: Story = { name: "기본",
   globals: { viewport: { value: "mobile1", isRotated: false } },
 };
 
@@ -27,9 +27,11 @@ export const LiquidHintFallback: Story = { name: "리퀴드 효과 대체 표시
     action: { label: "결과 열기", onAction: () => {} } } },
 };
 
-export const LongCopyWithAction: Story = { name: "긴 문구와 실행 버튼",
-  ...Compact,
-  globals: { ...Compact.globals, textScale: "2" },
+export const LongCopyWithAction: Story = {
+  ...Default,
+  // name after the spread: `{ name, ...Default }` let the spread overwrite it (2026-10-06 three "간결한 배치" entries).
+  name: "긴 문구와 실행 버튼",
+  globals: { ...Default.globals, textScale: "2" },
   args: {
     descriptor: {
       id: "retry",
@@ -42,8 +44,9 @@ export const LongCopyWithAction: Story = { name: "긴 문구와 실행 버튼",
 };
 
 // 1.10.0 refresh review: every tone badge, with and without an action, in one frame (docs/toast.md).
-export const ToneGallery: Story = { name: "상태별 비교",
-  ...Compact,
+export const ToneGallery: Story = {
+  ...Default,
+  name: "상태별 비교",
   render: () => (
     <div style={{ display: "grid", gap: "var(--hjm-space-sm)" }}>
       <Toast descriptor={{ id: "g-neutral", title: "검토하고 있어요", description: "다 되면 알려 드릴게요. 그동안 써 보셔도 돼요.", closeLabel: "닫기" }} onDismissRequest={() => {}} />
@@ -54,3 +57,6 @@ export const ToneGallery: Story = { name: "상태별 비교",
     </div>
   ),
 };
+
+export const Dark: Story = { ...Default, name: "어두운 테마", globals: { ...Default.globals, theme: "dark" } };
+export const LargeText: Story = { ...Default, name: "큰 글자", globals: { ...Default.globals, textScale: "2" } };

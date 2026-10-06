@@ -55,6 +55,8 @@ for (const theme of ["light", "dark"] as const) {
 
 // 2026-09-30 responsive audit WR-0930-6: the clear button was hardcoded 32x32
 // while DatePicker's clear already used the 44px control touch target.
+// 2026-10-06: the visible circle follows searchFieldRecipe.sizes.medium (36) and ::after adds the 4px hit slop,
+// so the touch target is still 44 (it was a 44 visible button before).
 it("sizes the SearchField clear button to the 44px control touch target", async () => {
   await page.viewport(390, 720);
   await act(async () => root.render(<HjmProvider theme="light">
@@ -62,8 +64,8 @@ it("sizes the SearchField clear button to the 44px control touch target", async 
   </HjmProvider>));
   const clear = host.querySelector<HTMLButtonElement>(".hjm-search-field__clear")!;
   const rect = clear.getBoundingClientRect();
-  expect(rect.width).toBeGreaterThanOrEqual(44);
-  expect(rect.height).toBeGreaterThanOrEqual(44);
+  expect(rect.width).toBe(36);
+  expect(rect.height).toBe(36);
   expect(hasHitArea(clear)).toBe(true);
   expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(390);
 });

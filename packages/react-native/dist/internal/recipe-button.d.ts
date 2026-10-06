@@ -1,6 +1,7 @@
+import { type ReactNode } from "react";
 import { View, type StyleProp, type TextStyle, type ViewStyle } from "react-native";
 export declare const RecipeButton: import("react").ForwardRefExoticComponent<Omit<import("react-native").PressableProps, "style" | "children" | "hitSlop" | "accessibilityRole" | "accessibilityState" | "disabled"> & Readonly<{
-    children?: import("react").ReactNode;
+    children?: ReactNode;
     tone?: import("../actions.js").ButtonTone;
     size?: import("../actions.js").ButtonSize;
     shape?: import("../actions.js").ButtonShape;
@@ -10,9 +11,9 @@ export declare const RecipeButton: import("react").ForwardRefExoticComponent<Omi
     loading?: boolean;
     disableWhileLoading?: boolean;
     growWithContent?: boolean;
-    loadingLabel?: import("react").ReactNode;
-    leading?: import("react").ReactNode;
-    trailing?: import("react").ReactNode;
+    loadingLabel?: ReactNode;
+    leading?: ReactNode;
+    trailing?: ReactNode;
     fullWidth?: boolean;
     hitSlop?: import("react-native").PressableProps["hitSlop"];
     accessibilityState?: import("react-native").PressableProps["accessibilityState"];
@@ -20,7 +21,7 @@ export declare const RecipeButton: import("react").ForwardRefExoticComponent<Omi
     renderLoadingIndicator?: (props: Readonly<{
         color: string;
         size: "small";
-    }>) => import("react").ReactNode;
+    }>) => ReactNode;
 }> & Readonly<{
     style?: StyleProp<ViewStyle>;
     labelStyle?: StyleProp<TextStyle>;

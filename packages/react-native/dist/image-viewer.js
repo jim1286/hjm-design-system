@@ -1,6 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { useState } from "react";
-import { Image, Modal, View, useWindowDimensions } from "react-native";
+import { useEffect, useState } from "react";
+import { AccessibilityInfo, Image, Modal, Platform, View, useWindowDimensions } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Gallery } from "react-native-zoom-toolkit";
 import { containerDefaults, containerRecipe } from "@hjmds/design-contracts/components/container";
@@ -13,8 +13,16 @@ function ViewerImage({ item, width, height, loadingLabel, errorLabel, retryLabel
     let feedback = null;
     if (status === "loading")
         feedback = _jsx(Text, { accessibilityLiveRegion: "polite", children: loadingLabel });
+    // The failure is announced like the loading copy. Until 2026-10-06 only loading carried a live region,
+    // so a screen reader user heard "loading" and then nothing when the image failed. Android reads the
+    // assertive live region; iOS has no live regions, so it is announced explicitly (same as Result).
+    useEffect(() => {
+        if (status !== "error" || Platform.OS !== "ios")
+            return;
+        AccessibilityInfo.announceForAccessibility(errorLabel);
+    }, [status, errorLabel]);
     if (status === "error")
-        feedback = _jsxs(View, { children: [_jsx(Text, { children: errorLabel }), _jsx(Button, { onPress: () => { setStatus("loading"); setAttempt(value => value + 1); }, children: retryLabel })] });
+        feedback = _jsxs(View, { children: [_jsx(Text, { accessibilityLiveRegion: "assertive", children: errorLabel }), _jsx(Button, { onPress: () => { setStatus("loading"); setAttempt(value => value + 1); }, children: retryLabel })] });
     return _jsxs(View, { style: { width, height, justifyContent: "center" }, children: [_jsx(Image, { source: { uri: item.uri }, accessibilityLabel: item.label, resizeMode: "contain", style: { width, height }, onLoad: () => setStatus("ready"), onError: () => setStatus("error") }, `${item.uri}:${attempt}`), feedback ? _jsx(View, { style: { position: "absolute", alignSelf: "center" }, children: feedback }) : null] });
 }
 /** Unmount the session on close so every open starts at the requested image. */

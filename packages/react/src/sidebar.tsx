@@ -13,6 +13,7 @@ import {
 } from "react";
 import { useOptionalHjmTheme } from "./provider.js";
 import { classNames, useControllableState } from "./internal.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type SidebarAppearance = "standard" | "bounce" | "hook" | "proximity";
 
@@ -30,6 +31,8 @@ export type SidebarProps<Id extends string = string, GroupId extends string = st
   renderIcon?: (item: SidebarItemDescriptor<Id>) => ReactNode;
   renderBadge?: (count: number, item: SidebarItemDescriptor<Id>) => ReactNode;
   className?: string;
+  /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
 }>;
 
 export const Sidebar = forwardRef(function Sidebar<Id extends string = string, GroupId extends string = string>(
@@ -44,6 +47,7 @@ export const Sidebar = forwardRef(function Sidebar<Id extends string = string, G
     renderIcon,
     renderBadge,
     className,
+    layoutStyle,
   }: SidebarProps<Id, GroupId>,
   forwardedRef: React.Ref<HTMLElement>,
 ) {
@@ -77,7 +81,7 @@ export const Sidebar = forwardRef(function Sidebar<Id extends string = string, G
       onPointerLeave={event => {
         for (const item of event.currentTarget.querySelectorAll<HTMLElement>(".hjm-sidebar__item")) item.style.removeProperty("--hjm-sidebar-proximity");
       }}
-      style={{
+      style={{ ...layoutStyle,
         "--hjm-sidebar-width": `${collapsed ? sidebarRecipe.widths.collapsed : sidebarRecipe.widths.expanded}px`,
         "--hjm-sidebar-item-height": `${sidebarRecipe.itemMinHeight}px`,
         "--hjm-sidebar-item-radius": `${sidebarRecipe.itemRadius}px`,

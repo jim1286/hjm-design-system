@@ -52,7 +52,6 @@ import {
   type ReactNode,
 } from "react";
 import {
-  ActivityIndicator,
   Text as NativeText,
   AccessibilityInfo,
   Animated,
@@ -73,6 +72,8 @@ import type { ToastPresentationAdapter } from "./internal/toast-presentation.js"
 export type { ToastPresentationAdapter } from "./internal/toast-presentation.js";
 
 import { Button, IconButton } from "./actions.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
+import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
 
@@ -93,7 +94,13 @@ export type NoticeProps = Omit<ViewProps, "children" | "style"> & Readonly<{
   icon?: ReactNode;
   renderIcon?: (props: NoticeIconRenderProps) => ReactNode;
   action?: ReactNode;
+  /**
+   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement and `tone` for appearance.
+   * Removed in the next major (consumer-policy.md §3.1).
+   */
   style?: StyleProp<ViewStyle>;
+  /** Canonical layout-only placement. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
 }>;
 
 export function Notice({
@@ -105,8 +112,10 @@ export function Notice({
   renderIcon,
   action,
   style,
+  layoutStyle,
   ...props
 }: NoticeProps) {
+  warnDeprecatedStyleProps("Notice", { style }, "layoutStyle for placement and tone for appearance");
   const theme = useHjmNativeTheme();
   const toneContract = noticeRecipe.tones[tone];
   const foreground = resolveColorReference(toneContract.foreground, theme.palette);
@@ -139,6 +148,7 @@ export function Notice({
           padding: noticeRecipe.padding,
         },
         style,
+        layoutStyle,
       ]}
     >
       <View
@@ -197,11 +207,33 @@ export type EmptyStateProps = Omit<ViewProps, "children" | "style"> & Readonly<{
   announcement?: AnnouncementMode;
   accessibilityLabel?: string;
   titleRole?: "header";
+  /**
+   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement and `density`/`align` for appearance.
+   * Removed in the next major (consumer-policy.md §3.1).
+   */
   style?: StyleProp<ViewStyle>;
+  /**
+   * @deprecated Raw visual style bypasses the HJM recipe. Use `illustration` content and `density` for appearance.
+   * Removed in the next major (consumer-policy.md §3.1).
+   */
   illustrationStyle?: StyleProp<ViewStyle>;
+  /**
+   * @deprecated Raw visual style bypasses the HJM recipe. Use the empty-state typography recipe for appearance.
+   * Removed in the next major (consumer-policy.md §3.1).
+   */
   titleStyle?: StyleProp<TextStyle>;
+  /**
+   * @deprecated Raw visual style bypasses the HJM recipe. Use the empty-state typography recipe for appearance.
+   * Removed in the next major (consumer-policy.md §3.1).
+   */
   descriptionStyle?: StyleProp<TextStyle>;
+  /**
+   * @deprecated Raw visual style bypasses the HJM recipe. Use the `action` node's own semantic props for appearance.
+   * Removed in the next major (consumer-policy.md §3.1).
+   */
   actionStyle?: StyleProp<ViewStyle>;
+  /** Canonical layout-only placement. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
 }>;
 
 export function EmptyState({
@@ -219,8 +251,14 @@ export function EmptyState({
   titleStyle,
   descriptionStyle,
   actionStyle,
+  layoutStyle,
   ...props
 }: EmptyStateProps) {
+  warnDeprecatedStyleProps(
+    "EmptyState",
+    { style, illustrationStyle, titleStyle, descriptionStyle, actionStyle },
+    "layoutStyle for placement and density/align for appearance",
+  );
   const theme = useHjmNativeTheme();
   const contentLabel = [title, description].filter(Boolean).join(", ");
   const announcementText = accessibilityLabel ?? [title, description].filter(Boolean).join(". ");
@@ -249,6 +287,7 @@ export function EmptyState({
           paddingVertical: emptyStateRecipe.density[density].paddingVertical,
         },
         style,
+        layoutStyle,
       ]}
     >
       {announcement === "none" || Platform.OS === "ios" ? null : (
@@ -324,10 +363,17 @@ export type ResultIconRenderProps = Readonly<{
   backgroundColor: string;
 }>;
 
-export type ResultProps = Omit<ViewProps, "children"> &
+export type ResultProps = Omit<ViewProps, "children" | "style"> &
   ResultDescriptor &
   Readonly<{
     renderIcon?: (props: ResultIconRenderProps) => ReactNode;
+    /**
+     * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement and `status` for appearance.
+     * Removed in the next major (consumer-policy.md §3.1).
+     */
+    style?: StyleProp<ViewStyle>;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
   }>;
 
 /** Terminal flow outcome with platform announcement and canonical actions. */
@@ -338,8 +384,10 @@ export function Result({
   actions,
   renderIcon,
   style,
+  layoutStyle,
   ...props
 }: ResultProps) {
+  warnDeprecatedStyleProps("Result", { style }, "layoutStyle for placement and status for appearance");
   const theme = useHjmNativeTheme();
   const result = resolveResultDescriptor({
     status,
@@ -385,6 +433,7 @@ export function Result({
           paddingVertical: resultRecipe.paddingVertical,
         },
         style,
+        layoutStyle,
       ]}
     >
       <View
@@ -444,14 +493,8 @@ export function Result({
             marginTop: spacing.xs,
           }}
         >
-          {result.primaryAction ? (
-            <Button
-              accessibilityLabel={result.primaryAction.accessibilityLabel}
-              onPress={result.primaryAction.onAction}
-            >
-              {result.primaryAction.label}
-            </Button>
-          ) : null}
+          {/* Button row rule (usage/components/button.md): secondary → primary, so the main action ends the row
+              like Dialog footers. Until 2026-10-06 Result drew primary first, the reverse of every other action row. */}
           {result.secondaryAction ? (
             <Button
               accessibilityLabel={result.secondaryAction.accessibilityLabel}
@@ -459,6 +502,14 @@ export function Result({
               tone="secondary"
             >
               {result.secondaryAction.label}
+            </Button>
+          ) : null}
+          {result.primaryAction ? (
+            <Button
+              accessibilityLabel={result.primaryAction.accessibilityLabel}
+              onPress={result.primaryAction.onAction}
+            >
+              {result.primaryAction.label}
             </Button>
           ) : null}
         </View>
@@ -486,11 +537,33 @@ export type ProgressProps = ProgressName & Readonly<{
   /** Content inside the ring. Ignored when linear. */
   children?: ReactNode;
   tone?: ProgressTone;
+  /**
+   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement and `tone`/`size`/`shape` for appearance.
+   * Removed in the next major (consumer-policy.md §3.1).
+   */
   style?: StyleProp<ViewStyle>;
+  /**
+   * @deprecated Raw visual style bypasses the HJM recipe. Use the progress label typography recipe for appearance.
+   * Removed in the next major (consumer-policy.md §3.1).
+   */
   labelStyle?: StyleProp<TextStyle>;
+  /**
+   * @deprecated Raw visual style bypasses the HJM recipe. Use `valueText` and the progress typography recipe for appearance.
+   * Removed in the next major (consumer-policy.md §3.1).
+   */
   valueStyle?: StyleProp<TextStyle>;
+  /**
+   * @deprecated Raw visual style bypasses the HJM recipe. Use `size`/`shape` for appearance.
+   * Removed in the next major (consumer-policy.md §3.1).
+   */
   trackStyle?: StyleProp<ViewStyle>;
+  /**
+   * @deprecated Raw visual style bypasses the HJM recipe. Use `tone` for appearance.
+   * Removed in the next major (consumer-policy.md §3.1).
+   */
   indicatorStyle?: StyleProp<ViewStyle>;
+  /** Canonical layout-only placement. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
   testID?: string;
 }>;
 
@@ -510,8 +583,14 @@ export function Progress({
   valueStyle,
   trackStyle,
   indicatorStyle,
+  layoutStyle,
   testID,
 }: ProgressProps) {
+  warnDeprecatedStyleProps(
+    "Progress",
+    { style, labelStyle, valueStyle, trackStyle, indicatorStyle },
+    "layoutStyle for placement and tone/size/shape for appearance",
+  );
   if (!Number.isFinite(max) || max <= 0) {
     throw new RangeError("Progress max must be a positive finite number");
   }
@@ -535,7 +614,7 @@ export function Progress({
         ...(resolvedValueText === undefined ? {} : { text: resolvedValueText }),
       }}
       testID={testID}
-      style={[{ gap: spacing.xs }, style]}
+      style={[{ gap: spacing.xs }, style, layoutStyle]}
     >
       {label === undefined ? null : (
         <View
@@ -621,26 +700,7 @@ export function Progress({
   );
 }
 
-export type SpinnerProps = Readonly<{
-  label: string;
-  size?: "small" | "large";
-  style?: StyleProp<ViewStyle>;
-}>;
-
-export function Spinner({ label, size = "small", style }: SpinnerProps) {
-  const { colors } = useHjmNativeTheme();
-  return (
-    <View
-      accessibilityLabel={label}
-      accessibilityRole="progressbar"
-      accessibilityState={{ busy: true }}
-      accessible
-      style={[{ alignItems: "center", justifyContent: "center" }, style]}
-    >
-      <ActivityIndicator color={colors.contentBrand} size={size} />
-    </View>
-  );
-}
+export { Spinner, type SpinnerProps } from "./internal/spinner.js";
 
 export type SkeletonShape = keyof typeof skeletonRecipe.shapes;
 
@@ -651,7 +711,13 @@ export type SkeletonProps = Readonly<{
   height?: number;
   radius?: number;
   accessibilityLabel?: string;
+  /**
+   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement and `shape`/`width`/`height` for appearance.
+   * Removed in the next major (consumer-policy.md §3.1).
+   */
   style?: StyleProp<ViewStyle>;
+  /** Canonical layout-only placement. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
 }>;
 
 /**
@@ -670,7 +736,9 @@ export function Skeleton({
   radius: radiusValue,
   accessibilityLabel,
   style,
+  layoutStyle,
 }: SkeletonProps) {
+  warnDeprecatedStyleProps("Skeleton", { style }, "layoutStyle for placement and shape/width/height for appearance");
   const { environment, palette } = useHjmNativeTheme();
   const shapeSpec = skeletonRecipe.shapes[shape];
   const { duration, easing: easingName, fromOpacity, toOpacity } =
@@ -735,6 +803,7 @@ export function Skeleton({
           width: resolvedWidth,
         },
         style,
+        layoutStyle,
       ]}
     />
   );
@@ -745,7 +814,13 @@ export type ToastProps = Readonly<{
   onDismiss?: (reason: ToastDismissReason) => void;
   placement?: ToastPlacement;
   renderToneIcon?: (props: ToastToneIconRenderProps) => ReactNode;
+  /**
+   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement and the descriptor `tone`/`placement` for appearance.
+   * Removed in the next major (consumer-policy.md §3.1).
+   */
   style?: StyleProp<ViewStyle>;
+  /** Canonical layout-only placement. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
 }>;
 
 export type ToastToneIconRenderProps = Readonly<{
@@ -1014,7 +1089,9 @@ export function Toast({
   placement = toastRecipe.defaults.placement,
   renderToneIcon,
   style,
+  layoutStyle,
 }: ToastProps) {
+  warnDeprecatedStyleProps("Toast", { style }, "layoutStyle for placement and the descriptor tone for appearance");
   const descriptorRef = useRef(descriptor);
   const additionalDismissRef = useRef(onDismiss);
   descriptorRef.current = descriptor;
@@ -1073,7 +1150,7 @@ export function Toast({
       placement={placement}
       {...(renderToneIcon === undefined ? {} : { renderToneIcon })}
       snapshot={snapshot}
-      style={style}
+      style={[style, layoutStyle]}
     />
   );
 }
@@ -1123,8 +1200,18 @@ export type ToastRegionProps = Readonly<{
   /** Additional product-owned offset, for example a persistent bottom bar. */
   keyboardOffset?: number;
   renderToneIcon?: (props: ToastToneIconRenderProps) => ReactNode;
+  /**
+   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement and `placement`/`safeAreaInsets` for appearance.
+   * Removed in the next major (consumer-policy.md §3.1).
+   */
   style?: StyleProp<ViewStyle>;
+  /**
+   * @deprecated Raw visual style bypasses the HJM recipe. Use each descriptor's `tone` for appearance.
+   * Removed in the next major (consumer-policy.md §3.1).
+   */
   toastStyle?: StyleProp<ViewStyle>;
+  /** Canonical layout-only placement. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
 }>;
 
 function useToastKeyboardHeight(enabled: boolean): number {
@@ -1242,7 +1329,13 @@ export function ToastRegion({
   renderToneIcon,
   style,
   toastStyle,
+  layoutStyle,
 }: ToastRegionProps) {
+  warnDeprecatedStyleProps(
+    "ToastRegion",
+    { style, toastStyle },
+    "layoutStyle for placement and placement/safeAreaInsets/descriptor tone for appearance",
+  );
   if (presentationAdapter && (presentationAdapter.kind !== "liquid" || placement !== "top" || maxVisible !== 1)) {
     throw new TypeError("Liquid Toast requires top placement and maxVisible=1");
   }
@@ -1436,7 +1529,7 @@ export function ToastRegion({
     + (bottomPlacement ? safeBottom + keyboardHeight + keyboardOffset : safeTop);
   return (
     <ToastRegionContext.Provider value={controller}>
-      <View style={[{ flex: hasChildren ? 1 : undefined }, style]}>
+      <View style={[{ flex: hasChildren ? 1 : undefined }, style, layoutStyle]}>
         {children}
         <View
           ref={viewportRef}

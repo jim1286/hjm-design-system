@@ -96,14 +96,16 @@ selection·320px long-copy proof를 통과해 2026-09-29 stable로 승격한다.
   제품이 한다.
 - **선택은 공용 collection 모델 그대로다.** multiple은 checkbox, single은 radio 의미를
   쓰고, 머리글의 tri-state는 `resolveDataTableSelectAllState`가 파생한다. disabled 행은
-  분모·분자 양쪽에서 빠진다.
+  분모·분자 양쪽에서 빠진다. `selectedKey(s)`가 있으면 controlled, `defaultSelectedKey(s)`만 있으면
+  renderer가 첫 값을 내부 상태로 보관하고 행·전체 선택으로 갱신한다(2026-10-06 정정: default를 매 렌더 다시
+  읽어 클릭 후에도 표시가 바뀌지 않았다. Tree와 같은 결함·같은 수정).
 - **셀 하나에 focusable 컨트롤은 최대 하나다.** roving tabindex grid 탐색을 도입하지 않고
   기본 tab 순서를 쓴다.
 - **페이지네이션은 표 아래에 조합한다.** `footer` slot은 제품이 채우고 표가 소유하지 않는다.
 - 키보드는 표 전체를 하나의 ARIA grid로 만들지 않고 native Tab 순서를 쓴다. 실제 브라우저 입력으로
   select-all·정렬·행 선택 버튼이 Tab 순서에 있고 Space/Enter로 동작하는지 확인한다. 방향키 셀 탐색은
   계약에 없다 — 제품 수요가 확인되지 않은 full grid interaction은 별도 계약으로 다룬다.
-- 로컬 검증: `test/data-table.browser.test.tsx` 5개(header 안 정렬 버튼과 aria-sort 3단계,
-  tri-state 선택과 disabled 제외, 단일 선택 radio 의미, 셀당 컨트롤 하나와 기본 tab 순서,
-  async 상태 발표와 footer 조합), `test/data-table.keyboard.browser.test.tsx` 1개(실제 Tab·Enter·Space
+- 로컬 검증: `test/data-table.browser.test.tsx` 8개(header 안 정렬 버튼과 aria-sort 3단계,
+  tri-state 선택과 disabled 제외, 단일 선택 radio 의미, 비제어 single·multiple 선택 보관과
+  controlled 소유자 우선, 셀당 컨트롤 하나와 기본 tab 순서, async 상태 발표와 footer 조합, 44px hit area), `test/data-table.keyboard.browser.test.tsx` 1개(실제 Tab·Enter·Space
   입력), 그리고 `컴포넌트/탐색/Command Palette`의 표 화면.

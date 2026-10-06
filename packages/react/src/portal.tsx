@@ -1,3 +1,4 @@
+import { layer } from "@hjmds/design-contracts/foundations";
 import {
   useCallback,
   useEffect,
@@ -180,7 +181,7 @@ export function useAnchoredPopup(
     matchAnchorWidth = false,
     placement: preferredPlacement = "bottom",
     viewportPadding = 16,
-    zIndex = 800,
+    zIndex = layer.dropdown,
   }: AnchoredPopupOptions = {},
 ): AnchoredPopupPosition {
   const [position, setPosition] = useState<AnchoredPopupPosition>(() => ({

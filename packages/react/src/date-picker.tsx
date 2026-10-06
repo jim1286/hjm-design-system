@@ -20,6 +20,7 @@ import {
 
 import { Calendar, type CalendarOverflow, type CalendarHandle } from "./calendar.js";
 import { classNames } from "./internal.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 const popoverViewportInset = 16;
 
@@ -39,6 +40,8 @@ export type DatePickerProps<Content = unknown> = Readonly<{
   onNavigateBeyondGrid?: (detail: CalendarOverflow, focusDate: CalendarHandle["focusDate"]) => void;
   renderCellContent?: (cell: ResolvedCalendarDateCell<Content>) => ReactNode;
   className?: string;
+  /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
 }>;
 
 /** Single-date field with an anchored, focus-bearing calendar dialog. */
@@ -56,6 +59,7 @@ export function DatePicker<Content>({
   renderCellContent,
   onNavigateBeyondGrid,
   className,
+  layoutStyle,
 }: DatePickerProps<Content>) {
   validateDatePickerDescriptor(descriptor);
   const generatedId = useId().replaceAll(":", "");
@@ -147,7 +151,7 @@ export function DatePicker<Content>({
   const label = descriptor.label ?? descriptor.accessibilityLabel;
   const triggerText = resolveDatePickerTriggerText(descriptor);
   return (
-    <div className={classNames("hjm-date-picker", className)} data-invalid={descriptor.invalid || error !== undefined || undefined} data-size={size}>
+    <div style={layoutStyle} className={classNames("hjm-date-picker", className)} data-disabled={descriptor.disabled || undefined} data-invalid={descriptor.invalid || error !== undefined || undefined} data-size={size}>
       {descriptor.label === undefined ? null : <span className="hjm-date-picker__label">{descriptor.label}</span>}
       <div className="hjm-date-picker__anchor">
         <button

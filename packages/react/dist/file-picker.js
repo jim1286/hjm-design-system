@@ -6,7 +6,7 @@ function defaultCandidateId(file, index) {
     return `${file.name}:${file.size}:${file.lastModified}:${index}`;
 }
 /** Native file input plus an optional Web dropzone sharing one selection resolver. */
-export const FilePicker = forwardRef(function FilePicker({ descriptor, label, buttonLabel, dropzoneLabel, onSelect, existingCount = 0, disabled = false, hint, error, inputId, getCandidateId = defaultCandidateId, className, ...props }, ref) {
+export const FilePicker = forwardRef(function FilePicker({ descriptor, label, buttonLabel, dropzoneLabel, onSelect, existingCount = 0, disabled = false, hint, error, inputId, getCandidateId = defaultCandidateId, className, layoutStyle, ...props }, ref) {
     validateFilePickerTriggers("web", filePickerTriggerDefaults.web);
     const resolved = resolveFilePickerDescriptor(descriptor);
     const generatedId = useId();
@@ -33,7 +33,7 @@ export const FilePicker = forwardRef(function FilePicker({ descriptor, label, bu
         if (!disabled && event.dataTransfer.files.length > 0)
             commit(event.dataTransfer.files);
     };
-    return (_jsxs("div", { ...props, ref: composeRefs(ref), className: classNames("hjm-file-picker", className), "data-dragging": dragging || undefined, "data-invalid": error !== undefined || undefined, children: [_jsx("span", { className: "hjm-file-picker__label", id: `${id}-label`, children: label }), _jsx("input", { accept: resolved.accept?.join(","), "aria-labelledby": `${id}-label`, className: "hjm-visually-hidden", disabled: disabled, id: id, tabIndex: -1, multiple: resolved.mode === "multiple", onChange: handleChange, ref: inputRef, type: "file" }), _jsxs("div", { className: "hjm-file-picker__dropzone", onDragEnter: (event) => { event.preventDefault(); if (!disabled)
+    return (_jsxs("div", { ...props, style: { ...props.style, ...layoutStyle }, ref: composeRefs(ref), className: classNames("hjm-file-picker", className), "data-dragging": dragging || undefined, "data-invalid": error !== undefined || undefined, children: [_jsx("span", { className: "hjm-file-picker__label", id: `${id}-label`, children: label }), _jsx("input", { accept: resolved.accept?.join(","), "aria-labelledby": `${id}-label`, className: "hjm-visually-hidden", disabled: disabled, id: id, tabIndex: -1, multiple: resolved.mode === "multiple", onChange: handleChange, ref: inputRef, type: "file" }), _jsxs("div", { className: "hjm-file-picker__dropzone", onDragEnter: (event) => { event.preventDefault(); if (!disabled)
                     setDragging(true); }, onDragLeave: (event) => { if (!event.currentTarget.contains(event.relatedTarget))
                     setDragging(false); }, onDragOver: (event) => event.preventDefault(), onDrop: handleDrop, children: [_jsx("span", { children: dropzoneLabel }), _jsx("button", { disabled: disabled, onClick: () => inputRef.current?.click(), type: "button", children: buttonLabel })] }), hint === undefined ? null : _jsx("span", { className: "hjm-file-picker__hint", children: hint }), error === undefined ? null : _jsx("span", { className: "hjm-file-picker__error", role: "alert", children: error })] }));
 });

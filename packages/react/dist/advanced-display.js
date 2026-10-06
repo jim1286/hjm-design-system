@@ -1,4 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { resolveAvatarInitials } from "@hjmds/design-contracts/avatar-fallback";
 import { TableSortButton } from "./table-sort-button.js";
 import { getNextDataTableSortState } from "@hjmds/design-contracts/components/data-table";
 import { resolveDescriptionListColumnCount, resolveDescriptionListDescriptor, } from "@hjmds/design-contracts/components/description-list";
@@ -40,7 +41,7 @@ function accordionFocusTarget(items, currentIndex, key) {
     }
     return currentIndex;
 }
-export const Accordion = forwardRef(function Accordion({ items, value: valueProp, defaultValue = [], onValueChange, allowsMultipleExpanded = accordionRecipe.defaults.allowsMultipleExpanded, density = accordionRecipe.defaults.density, headingLevel = 3, className, ...props }, ref) {
+export const Accordion = forwardRef(function Accordion({ items, value: valueProp, defaultValue = [], onValueChange, allowsMultipleExpanded = accordionRecipe.defaults.allowsMultipleExpanded, density = accordionRecipe.defaults.density, headingLevel = 3, className, layoutStyle, ...props }, ref) {
     validateAccordionItems(items);
     const [value, setValue] = useControllableState({
         ...(valueProp === undefined ? {} : { value: valueProp }),
@@ -69,7 +70,7 @@ export const Accordion = forwardRef(function Accordion({ items, value: valueProp
                 ? [...value, id]
                 : [id]);
     };
-    return (_jsx("div", { ...props, ref: ref, className: classNames("hjm-accordion", className), "data-density": density, "data-multiple": allowsMultipleExpanded || undefined, children: items.map((item, index) => {
+    return (_jsx("div", { ...props, style: { ...props.style, ...layoutStyle }, ref: ref, className: classNames("hjm-accordion", className), "data-density": density, "data-multiple": allowsMultipleExpanded || undefined, children: items.map((item, index) => {
             const expanded = value.includes(item.id);
             const triggerId = `${baseId}-accordion-trigger-${index}`;
             const panelId = `${baseId}-accordion-panel-${index}`;
@@ -88,40 +89,35 @@ export const Accordion = forwardRef(function Accordion({ items, value: valueProp
             return (_jsxs("div", { className: "hjm-accordion__item", "data-state": item.disabled ? "disabled" : expanded ? "expanded" : "collapsed", children: [createElement(`h${headingLevel}`, { className: "hjm-accordion__header" }, trigger), _jsx("div", { id: panelId, role: "region", className: "hjm-accordion__panel", "aria-labelledby": triggerId, hidden: !expanded, children: item.panel })] }, item.id));
         }) }));
 });
-function initials(name) {
-    return name
-        .trim()
-        .split(/\s+/u)
-        .slice(0, 2)
-        .map((part) => Array.from(part)[0] ?? "")
-        .join("")
-        .toLocaleUpperCase();
-}
-export const Avatar = forwardRef(function Avatar({ name, src, alt = name, fallback, renderFallback, size = avatarRecipe.defaults.size, shape = avatarRecipe.defaults.shape, imageProps, className, ...props }, ref) {
+export const Avatar = forwardRef(function Avatar({ name, src, alt = name, fallback, renderFallback, size = avatarRecipe.defaults.size, shape = avatarRecipe.defaults.shape, imageProps, className, layoutStyle, ...props }, ref) {
     if (name.trim().length === 0)
         throw new TypeError("Avatar name must not be empty");
     const [imageAvailable, setImageAvailable] = useState(Boolean(src));
     useEffect(() => setImageAvailable(Boolean(src)), [src]);
     const { onError, className: imageClassName, ...restImageProps } = imageProps ?? {};
-    return (_jsx("span", { ...props, ref: ref, className: classNames("hjm-avatar", className), "data-size": size, "data-shape": shape, "data-state": imageAvailable ? "image" : "fallback", children: src && imageAvailable ? (_jsx("img", { ...restImageProps, src: src, alt: alt, className: classNames("hjm-avatar__image", imageClassName), onError: (event) => {
+    return (_jsx("span", { ...props, style: { ...props.style, ...layoutStyle }, ref: ref, className: classNames("hjm-avatar", className), "data-size": size, "data-shape": shape, "data-state": imageAvailable ? "image" : "fallback", children: src && imageAvailable ? (_jsx("img", { ...restImageProps, src: src, alt: alt, className: classNames("hjm-avatar__image", imageClassName), onError: (event) => {
                 setImageAvailable(false);
                 onError?.(event);
-            } })) : (_jsx("span", { className: "hjm-avatar__fallback", role: alt.length > 0 ? "img" : undefined, "aria-label": alt.length > 0 ? alt : undefined, "aria-hidden": alt.length === 0 || undefined, children: renderFallback?.({ size: avatarRecipe.sizes[size], decorative: true }) ?? fallback ?? initials(name) })) }));
+            } })) : (_jsx("span", { className: "hjm-avatar__fallback", role: alt.length > 0 ? "img" : undefined, "aria-label": alt.length > 0 ? alt : undefined, "aria-hidden": alt.length === 0 || undefined, children: renderFallback?.({ size: avatarRecipe.sizes[size], decorative: true }) ?? fallback ?? resolveAvatarInitials(name) })) }));
 });
 /**
  * Overlapping avatars. The overlap comes from the recipe ratio rather than a
  * pixel value so it holds across all four sizes, and the group carries one
  * accessible name instead of letting a reader walk five unlabelled images.
  */
-export const AvatarGroup = forwardRef(function AvatarGroup({ label, children, size = avatarRecipe.defaults.size, overflow, className, ...props }, ref) {
+export const AvatarGroup = forwardRef(function AvatarGroup({ label, children, size = avatarRecipe.defaults.size, overflow, className, layoutStyle, style, ...props }, ref) {
     if (label.trim().length === 0)
         throw new TypeError("AvatarGroup label must not be empty");
     const offset = Math.round(avatarRecipe.sizes[size] * avatarRecipe.overlapRatio);
-    return (_jsxs("span", { ...props, ref: ref, role: "group", "aria-label": label, className: classNames("hjm-avatar-group", className), "data-size": size, style: { "--hjm-avatar-overlap": `${offset}px` }, children: [children, overflow ? _jsx("span", { className: "hjm-avatar-group__overflow", "aria-hidden": "true", children: overflow }) : null] }));
+    return (_jsxs("span", { ...props, ref: ref, role: "group", "aria-label": label, className: classNames("hjm-avatar-group", className), "data-size": size, 
+        // The caller `style` used to be replaced by the overlap variable; merge it
+        // and keep the recipe overlap last so it stays size-derived.
+        style: { ...style, ...layoutStyle, "--hjm-avatar-overlap": `${offset}px` }, children: [children, overflow ? _jsx("span", { className: "hjm-avatar-group__overflow", "aria-hidden": "true", children: overflow }) : null] }));
 });
-export const Divider = forwardRef(function Divider({ orientation = dividerRecipe.defaults.orientation, inset = dividerRecipe.defaults.inset, decorative = false, className, ...props }, ref) {
+export const Divider = forwardRef(function Divider({ orientation = dividerRecipe.defaults.orientation, inset = dividerRecipe.defaults.inset, decorative = false, className, layoutStyle, ...props }, ref) {
     return createElement(orientation === "horizontal" ? "hr" : "div", {
         ...props,
+        style: { ...props.style, ...layoutStyle },
         ref,
         className: classNames("hjm-divider", className),
         "data-orientation": orientation,
@@ -132,13 +128,13 @@ export const Divider = forwardRef(function Divider({ orientation = dividerRecipe
     });
 });
 /** Semantic list container that owns separators around composed rows. */
-export const List = forwardRef(function List({ label, children, separator = listRecipe.defaults.separator, appearance = "plain", className, ...props }, ref) {
+export const List = forwardRef(function List({ label, children, separator = listRecipe.defaults.separator, appearance = "plain", className, layoutStyle, ...props }, ref) {
     if (!label.trim())
         throw new TypeError("List label must not be empty");
     const items = Children.toArray(children);
-    return (_jsx("div", { ...props, ref: ref, "aria-label": label, className: classNames("hjm-list", className), "data-appearance": appearance, "data-separator": separator, role: "list", children: items.map((item, index) => (_jsx("div", { className: "hjm-list__item", role: "listitem", children: item }, isValidElement(item) && item.key !== null ? item.key : `hjm-list-${index}`))) }));
+    return (_jsx("div", { ...props, style: { ...props.style, ...layoutStyle }, ref: ref, "aria-label": label, className: classNames("hjm-list", className), "data-appearance": appearance, "data-separator": separator, role: "list", children: items.map((item, index) => (_jsx("div", { className: "hjm-list__item", role: "listitem", children: item }, isValidElement(item) && item.key !== null ? item.key : `hjm-list-${index}`))) }));
 });
-export function Statistic({ descriptor, density = "comfortable", presentation = "plain", contextLabel, accessibilityLabel, composeAccessibilityLabel, renderTrendMark, renderValue, className, ...props }) {
+export function Statistic({ descriptor, density = "comfortable", presentation = "plain", contextLabel, accessibilityLabel, composeAccessibilityLabel, renderTrendMark, renderValue, className, layoutStyle, ...props }) {
     const resolved = resolveStatisticDescriptor(descriptor);
     const valueText = `${resolved.prefix ?? ""}${resolved.value}${resolved.suffix ?? ""}`;
     const announcement = accessibilityLabel ?? composeAccessibilityLabel?.({
@@ -153,13 +149,13 @@ export function Statistic({ descriptor, density = "comfortable", presentation = 
     const trendName = resolved.trend
         ? statisticRecipe.trend.marks[resolved.trend.direction]
         : undefined;
-    return (_jsxs("article", { ...props, "aria-label": announcement, className: classNames("hjm-statistic", className), "data-density": density, "data-presentation": presentation, children: [_jsx("span", { "aria-hidden": "true", className: "hjm-statistic__label", children: resolved.label }), _jsxs("span", { "aria-hidden": "true", className: "hjm-statistic__value-row", children: [resolved.prefix ? _jsx("span", { className: "hjm-statistic__affix", children: resolved.prefix }) : null, _jsx("strong", { className: "hjm-statistic__value", children: renderValue?.(resolved.value) ?? resolved.value }), resolved.suffix ? _jsx("span", { className: "hjm-statistic__affix", children: resolved.suffix }) : null] }), resolved.trend ? (_jsxs("span", { "aria-hidden": "true", className: "hjm-statistic__trend", "data-tone": resolved.trend.tone, children: [_jsx("span", { className: "hjm-statistic__trend-mark", children: renderTrendMark?.({ name: trendName, color: "currentColor", size: 16 }) ?? (resolved.trend.direction === "up" ? "↑" : resolved.trend.direction === "down" ? "↓" : "—") }), resolved.trend.label] })) : null, resolved.hint ? _jsx("span", { "aria-hidden": "true", className: "hjm-statistic__hint", children: resolved.hint }) : null] }));
+    return (_jsxs("article", { ...props, style: { ...props.style, ...layoutStyle }, "aria-label": announcement, className: classNames("hjm-statistic", className), "data-density": density, "data-presentation": presentation, children: [_jsx("span", { "aria-hidden": "true", className: "hjm-statistic__label", children: resolved.label }), _jsxs("span", { "aria-hidden": "true", className: "hjm-statistic__value-row", children: [resolved.prefix ? _jsx("span", { className: "hjm-statistic__affix", children: resolved.prefix }) : null, _jsx("strong", { className: "hjm-statistic__value", children: renderValue?.(resolved.value) ?? resolved.value }), resolved.suffix ? _jsx("span", { className: "hjm-statistic__affix", children: resolved.suffix }) : null] }), resolved.trend ? (_jsxs("span", { "aria-hidden": "true", className: "hjm-statistic__trend", "data-tone": resolved.trend.tone, children: [_jsx("span", { className: "hjm-statistic__trend-mark", children: renderTrendMark?.({ name: trendName, color: "currentColor", size: 16 }) ?? (resolved.trend.direction === "up" ? "↑" : resolved.trend.direction === "down" ? "↓" : "—") }), resolved.trend.label] })) : null, resolved.hint ? _jsx("span", { "aria-hidden": "true", className: "hjm-statistic__hint", children: resolved.hint }) : null] }));
 }
-export function StatisticGroup({ label, descriptor, density, presentation, composeAccessibilityLabel, renderTrendMark, className, style, ...props }) {
+export function StatisticGroup({ label, descriptor, density, presentation, composeAccessibilityLabel, renderTrendMark, className, style, layoutStyle, ...props }) {
     validateStatisticGroup(descriptor);
     if (!label.trim())
         throw new TypeError("StatisticGroup label must not be empty");
-    return (_jsx("div", { ...props, "aria-label": label, className: classNames("hjm-statistic-group", className), role: "list", style: { ...style, "--hjm-statistic-columns": descriptor.columns ?? statisticRecipe.defaults.columns }, children: descriptor.items.map((item) => (_jsx("div", { role: "listitem", children: _jsx(Statistic, { contextLabel: label, descriptor: item, ...(composeAccessibilityLabel === undefined ? {} : { composeAccessibilityLabel }), ...(density === undefined ? {} : { density }), ...(presentation === undefined ? {} : { presentation }), ...(renderTrendMark === undefined ? {} : { renderTrendMark }) }) }, item.id))) }));
+    return (_jsx("div", { ...props, "aria-label": label, className: classNames("hjm-statistic-group", className), role: "list", style: { ...style, ...layoutStyle, "--hjm-statistic-columns": descriptor.columns ?? statisticRecipe.defaults.columns }, children: descriptor.items.map((item) => (_jsx("div", { role: "listitem", children: _jsx(Statistic, { contextLabel: label, descriptor: item, ...(composeAccessibilityLabel === undefined ? {} : { composeAccessibilityLabel }), ...(density === undefined ? {} : { density }), ...(presentation === undefined ? {} : { presentation }), ...(renderTrendMark === undefined ? {} : { renderTrendMark }) }) }, item.id))) }));
 }
 function DescriptionListInner({ items, columns, className, layoutStyle, style, ...props }, forwardedRef) {
     const descriptor = resolveDescriptionListDescriptor({
@@ -178,7 +174,7 @@ function DescriptionListInner({ items, columns, className, layoutStyle, style, .
 }
 export const DescriptionList = forwardRef(DescriptionListInner);
 // Table's callback cannot express null; share the sort policy with a two-state cycle.
-function TableInner({ columns, rows, getRowKey, caption, emptyState, onSortChange, wrapperClassName, className, ...props }, ref) {
+function TableInner({ columns, rows, getRowKey, caption, emptyState, onSortChange, wrapperClassName, className, layoutStyle, ...props }, ref) {
     if (columns.length === 0)
         throw new TypeError("Table requires at least one column");
     const ids = new Set();
@@ -201,15 +197,18 @@ function TableInner({ columns, rows, getRowKey, caption, emptyState, onSortChang
             throw new TypeError(`Duplicate Table row key: ${rowKey}`);
         seenRowKeys.add(rowKey);
     }
-    return (_jsx("div", { className: classNames("hjm-table-scroll", wrapperClassName), tabIndex: 0, children: _jsxs("table", { ...props, ref: ref, className: classNames("hjm-table", className), children: [caption ? _jsx("caption", { className: "hjm-table__caption", children: caption }) : null, _jsx("thead", { children: _jsx("tr", { children: columns.map((column) => (_jsx("th", { scope: "col", className: "hjm-table__header", "data-align": column.align ?? "start", "aria-sort": column.sortDirection ?? (column.sortable ? "none" : undefined), children: column.sortable ? (_jsx(TableSortButton, { header: column.header, ...(column.sortDirection === undefined ? {} : { direction: column.sortDirection }), glyphs: { ascending: " ↑", descending: " ↓", none: " ↕" }, className: "hjm-table__sort", onSort: () => {
+    return (
+    // Placement belongs to the scroll wrapper (the visual root); `style` keeps
+    // going to the <table>, where it always went.
+    _jsx("div", { className: classNames("hjm-table-scroll", wrapperClassName), style: layoutStyle, tabIndex: 0, children: _jsxs("table", { ...props, ref: ref, className: classNames("hjm-table", className), children: [caption ? _jsx("caption", { className: "hjm-table__caption", children: caption }) : null, _jsx("thead", { children: _jsx("tr", { children: columns.map((column) => (_jsx("th", { scope: "col", className: "hjm-table__header", "data-align": column.align ?? "start", "aria-sort": column.sortDirection ?? (column.sortable ? "none" : undefined), children: column.sortable ? (_jsx(TableSortButton, { header: column.header, ...(column.sortDirection === undefined ? {} : { direction: column.sortDirection }), glyphs: { ascending: " ↑", descending: " ↓", none: " ↕" }, className: "hjm-table__sort", onSort: () => {
                                     const next = getNextDataTableSortState(column.sortDirection ? { columnId: column.id, direction: column.sortDirection } : null, column.id, "two-state");
                                     onSortChange?.(column.id, next.direction);
                                 } })) : column.header }, column.id))) }) }), _jsx("tbody", { children: rows.length === 0 ? (_jsx("tr", { children: _jsx("td", { className: "hjm-table__empty", colSpan: columns.length, children: emptyState }) })) : (rows.map((row, rowIndex) => (_jsx("tr", { className: "hjm-table__row", children: columns.map((column) => (_jsx("td", { className: "hjm-table__cell", "data-align": column.align ?? "start", children: column.cell(row, rowIndex) }, column.id))) }, rowKeys[rowIndex])))) })] }) }));
 }
 export const Table = forwardRef(TableInner);
-function TimelineInner({ items, composeAccessibleName, className, ...props }, ref) {
+function TimelineInner({ items, composeAccessibleName, className, layoutStyle, ...props }, ref) {
     const resolved = resolveTimelineDescriptor({ items }, { composeAccessibleName });
-    return (_jsx("ol", { ...props, ref: ref, className: classNames("hjm-timeline", className), children: resolved.map((item, index) => (_jsxs("li", { "aria-label": item.accessibleName, className: "hjm-timeline__item", "data-tone": item.tone, children: [_jsxs("span", { className: "hjm-timeline__rail", "aria-hidden": "true", children: [_jsx("span", { className: "hjm-timeline__dot" }), index < resolved.length - 1 ? (_jsx("span", { className: "hjm-timeline__connector" })) : null] }), _jsxs("span", { className: "hjm-timeline__content", children: [_jsxs("span", { className: "hjm-timeline__heading", children: [_jsx("strong", { className: "hjm-timeline__label", children: item.label }), item.timestamp ? (_jsx("time", { className: "hjm-timeline__timestamp", children: item.timestamp })) : null] }), item.description ? (_jsx("span", { className: "hjm-timeline__description", children: item.description })) : null] })] }, item.id))) }));
+    return (_jsx("ol", { ...props, style: { ...props.style, ...layoutStyle }, ref: ref, className: classNames("hjm-timeline", className), children: resolved.map((item, index) => (_jsxs("li", { "aria-label": item.accessibleName, className: "hjm-timeline__item", "data-tone": item.tone, children: [_jsxs("span", { className: "hjm-timeline__rail", "aria-hidden": "true", children: [_jsx("span", { className: "hjm-timeline__dot" }), index < resolved.length - 1 ? (_jsx("span", { className: "hjm-timeline__connector" })) : null] }), _jsxs("span", { className: "hjm-timeline__content", children: [_jsxs("span", { className: "hjm-timeline__heading", children: [_jsx("strong", { className: "hjm-timeline__label", children: item.label }), item.timestamp ? (_jsx("time", { className: "hjm-timeline__timestamp", children: item.timestamp })) : null] }), item.description ? (_jsx("span", { className: "hjm-timeline__description", children: item.description })) : null] })] }, item.id))) }));
 }
 export const Timeline = forwardRef(TimelineInner);
 //# sourceMappingURL=advanced-display.js.map

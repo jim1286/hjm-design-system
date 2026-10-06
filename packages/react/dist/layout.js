@@ -19,7 +19,7 @@ function assertMainId(id) {
     }
 }
 /** Accessible Web app shell with real landmarks and bypass navigation. */
-export const Layout = forwardRef(function Layout({ children, header, footer, sidebar, skipLinkLabel, mainId: mainIdProp, mainRef: forwardedMainRef, headerProps, mainProps, footerProps, skipLinkProps, className, ...props }, ref) {
+export const Layout = forwardRef(function Layout({ children, header, footer, sidebar, skipLinkLabel, mainId: mainIdProp, mainRef: forwardedMainRef, headerProps, mainProps, footerProps, skipLinkProps, className, layoutStyle, ...props }, ref) {
     const generatedId = `hjm-main-${useId().replaceAll(":", "")}`;
     const internalMainRef = useRef(null);
     const mainId = mainIdProp ?? generatedId;
@@ -83,7 +83,7 @@ export const Layout = forwardRef(function Layout({ children, header, footer, sid
         main.focus({ preventScroll: true });
         main.scrollIntoView?.({ block: "start" });
     };
-    return (_jsxs("div", { ...props, ref: ref, className: classNames("hjm-layout", className), "data-hjm-component": "Layout", "data-sidebar-mode": sidebar?.mode ?? "none", children: [skipLinkLabel === undefined ? null : (_jsx("a", { ...restSkipLinkProps, href: `#${mainId}`, className: classNames("hjm-layout__skip-link", skipLinkClassName), onClick: moveFocusToMain, children: skipLinkLabel })), hasHeader ? (_jsx("header", { ...restHeaderProps, className: classNames("hjm-layout__header", headerClassName), children: header })) : null, sidebarNode, _jsx("main", { ...restMainProps, ref: composeRefs(internalMainRef, forwardedMainRef), id: mainId, className: classNames("hjm-layout__main", mainClassName), tabIndex: -1, style: {
+    return (_jsxs("div", { ...props, style: { ...props.style, ...layoutStyle }, ref: ref, className: classNames("hjm-layout", className), "data-hjm-component": "Layout", "data-sidebar-mode": sidebar?.mode ?? "none", children: [skipLinkLabel === undefined ? null : (_jsx("a", { ...restSkipLinkProps, href: `#${mainId}`, className: classNames("hjm-layout__skip-link", skipLinkClassName), onClick: moveFocusToMain, children: skipLinkLabel })), hasHeader ? (_jsx("header", { ...restHeaderProps, className: classNames("hjm-layout__header", headerClassName), children: header })) : null, sidebarNode, _jsx("main", { ...restMainProps, ref: composeRefs(internalMainRef, forwardedMainRef), id: mainId, className: classNames("hjm-layout__main", mainClassName), tabIndex: -1, style: {
                     maxInlineSize: layoutRecipe.main.maxWidth,
                     paddingInline: layoutRecipe.main.paddingHorizontal,
                     ...mainStyle,
@@ -154,9 +154,9 @@ export const Container = forwardRef(function Container({ size, gutter, className
         } }));
 });
 /** Responsive media frame. Products retain object-fit, crop, and content semantics. */
-export const AspectRatio = forwardRef(function AspectRatio({ ratio, className, style, ...props }, ref) {
+export const AspectRatio = forwardRef(function AspectRatio({ ratio, className, layoutStyle, style, ...props }, ref) {
     const resolved = resolveAspectRatioDescriptor(ratio === undefined ? {} : { ratio });
-    return (_jsx("div", { ...props, ref: ref, className: classNames("hjm-aspect-ratio", className), "data-ratio": resolved.source, style: { aspectRatio: resolved.ratio, ...style } }));
+    return (_jsx("div", { ...props, ref: ref, className: classNames("hjm-aspect-ratio", className), "data-ratio": resolved.source, style: { ...layoutStyle, aspectRatio: resolved.ratio, ...style } }));
 });
 /** Keeps meaningful copy available to assistive technology without visible layout. */
 export const VisuallyHidden = forwardRef(function VisuallyHidden({ className, ...props }, ref) {
@@ -191,8 +191,8 @@ export const Grid = forwardRef(function Grid({ columns, gap, minColumnWidth, win
         } }));
 });
 /** Large-text-safe semantic content section with an optional header action. */
-export const Section = forwardRef(function Section({ title, description, action, children, headingLevel = 2, className, ...props }, ref) {
+export const Section = forwardRef(function Section({ title, description, action, children, headingLevel = 2, className, layoutStyle, style, ...props }, ref) {
     const hasHeader = title !== undefined || description !== undefined || action !== undefined;
-    return (_jsxs("section", { ...props, ref: ref, className: classNames("hjm-section", className), children: [hasHeader ? (_jsxs("header", { className: "hjm-section__header", children: [_jsxs("div", { className: "hjm-section__copy", children: [title === undefined ? null : createElement(`h${headingLevel}`, { className: "hjm-section__title" }, title), description === undefined ? null : (_jsx("div", { className: "hjm-section__description", children: description }))] }), action === undefined ? null : _jsx("div", { className: "hjm-section__action", children: action })] })) : null, _jsx("div", { className: "hjm-section__content", children: children })] }));
+    return (_jsxs("section", { ...props, style: { ...style, ...layoutStyle }, ref: ref, className: classNames("hjm-section", className), children: [hasHeader ? (_jsxs("header", { className: "hjm-section__header", children: [_jsxs("div", { className: "hjm-section__copy", children: [title === undefined ? null : createElement(`h${headingLevel}`, { className: "hjm-section__title" }, title), description === undefined ? null : (_jsx("div", { className: "hjm-section__description", children: description }))] }), action === undefined ? null : _jsx("div", { className: "hjm-section__action", children: action })] })) : null, _jsx("div", { className: "hjm-section__content", children: children })] }));
 });
 //# sourceMappingURL=layout.js.map

@@ -1,3 +1,5 @@
+import { layer } from "@hjmds/design-contracts/foundations";
+import { comboboxRecipe } from "@hjmds/design-contracts/recipes";
 import {
   findActiveMentionTrigger,
   resolveMentionInsertion,
@@ -54,6 +56,9 @@ export const Mentions = forwardRef(function Mentions<TriggerId extends string = 
     listLabel,
     renderCandidate,
     className,
+    // Inherited from TextAreaProps; taken here so placement moves the whole
+    // mentions block (field + candidate popup anchor), not only the inner field.
+    layoutStyle,
     ...textAreaProps
   }: MentionsProps<TriggerId>,
   forwardedRef: React.Ref<HTMLTextAreaElement>,
@@ -114,11 +119,15 @@ export const Mentions = forwardRef(function Mentions<TriggerId extends string = 
   };
 
   const position = useAnchoredPopup(inputRef, open ? list : null, {
-    placement: "bottom", align: "start", matchAnchorWidth: true, zIndex: 900,
+    placement: "bottom", align: "start", matchAnchorWidth: true, zIndex: layer.dropdown,
+    // The candidate list is Combobox's popover contract verbatim (mentions.ts), so its offset and edge padding are
+    // comboboxRecipe.popover's 8/8. Until 2026-10-06 the helper defaults (8 and 16) applied, a Web-only 16 edge.
+    gap: comboboxRecipe.popover.sideOffset,
+    viewportPadding: comboboxRecipe.popover.collisionPadding,
   });
 
   return (
-    <div className={classNames("hjm-mentions", className)}>
+    <div className={classNames("hjm-mentions", className)} style={layoutStyle}>
       <TextArea
         {...textAreaProps}
         ref={composeRefs(inputRef, forwardedRef)}

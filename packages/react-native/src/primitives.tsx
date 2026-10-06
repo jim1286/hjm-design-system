@@ -26,6 +26,7 @@ import { resolveColorReference } from "@hjmds/design-contracts/color-references"
 import { withAlpha, type ThemeColors } from "@hjmds/design-contracts/colors";
 import {
   glyph,
+  shadow,
   typography,
   type TextVariant,
 } from "@hjmds/design-contracts/foundations";
@@ -77,6 +78,7 @@ import {
   resolveNativeTextScaleProps,
 } from "./internal/styles.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
+import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 
 export type {
   StackAlign,
@@ -261,10 +263,11 @@ export function Surface({
   const elevatedStyle: ViewStyle | undefined = contract.elevated
     ? {
         elevation: 4,
-        shadowColor: "#000000",
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.12,
-        shadowRadius: 6,
+        // Use the same floating surface token as Web instead of a separate blur.
+        shadowColor: shadow.floating.color,
+        shadowOffset: { width: 0, height: shadow.floating.offsetY },
+        shadowOpacity: shadow.floating.opacity,
+        shadowRadius: shadow.floating.radius,
       }
     : undefined;
   return (
@@ -349,17 +352,23 @@ export function Stack({
   );
 }
 
-export type ContainerProps = Omit<ViewProps, "children"> & Readonly<{
+export type ContainerProps = Omit<ViewProps, "children" | "style"> & Readonly<{
   children?: ReactNode;
   size?: ContainerSize;
   gutter?: ContainerGutter;
   /** Canonical layout-only placement. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
+  /**
+   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement;
+   * `size`/`gutter` (container descriptor) owns appearance. Removed in the next major (consumer-policy.md §3.1).
+   */
+  style?: StyleProp<ViewStyle>;
 }>;
 
 /** Shared centered content boundary for phones, tablets, and desktop-sized Native windows. */
 export function Container({ size, gutter, layoutStyle,
   style, ...props }: ContainerProps) {
+  warnDeprecatedStyleProps("Container", { style }, "layoutStyle for placement and size/gutter for width and padding");
   const resolved = resolveContainerDescriptor({
     ...(size === undefined ? {} : { size }),
     ...(gutter === undefined ? {} : { gutter }),
@@ -508,6 +517,12 @@ export type IconProps<Name extends string = string> = Readonly<{
   descriptor: IconDescriptor<Name>;
   /** Tree-shakeable product glyph boundary; HJM owns all appearance values. */
   renderGlyph: (props: NativeIconRenderProps<Name>) => ReactNode;
+  /** Canonical layout-only placement. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
+  /**
+   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement;
+   * the descriptor (`size`, `tone`, `weight`, `directionality`) owns appearance. Removed in the next major (consumer-policy.md §3.1).
+   */
   style?: StyleProp<ViewStyle>;
 }>;
 
@@ -515,8 +530,10 @@ export type IconProps<Name extends string = string> = Readonly<{
 export function Icon<Name extends string = string>({
   descriptor,
   renderGlyph,
+  layoutStyle,
   style,
 }: IconProps<Name>) {
+  warnDeprecatedStyleProps("Icon", { style }, "layoutStyle for placement and the icon descriptor for appearance");
   const resolved = resolveIconDescriptor(descriptor);
   const theme = useHjmNativeTheme();
   const colors = {
@@ -551,6 +568,7 @@ export function Icon<Name extends string = string>({
           width: size,
         },
         style,
+        layoutStyle,
       ]}
     >
       <View accessible={false}>
@@ -565,7 +583,7 @@ export function Icon<Name extends string = string>({
   );
 }
 
-export type SectionProps = Omit<ViewProps, "children"> &
+export type SectionProps = Omit<ViewProps, "children" | "style"> &
   Readonly<{
     title?: string;
     description?: string;
@@ -584,6 +602,11 @@ export type SectionProps = Omit<ViewProps, "children"> &
     contentStyle?: HjmCompositionStyleProp;
       /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
+    /**
+     * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement;
+     * `sectionRecipe` owns appearance. Removed in the next major (consumer-policy.md §3.1).
+     */
+    style?: StyleProp<ViewStyle>;
 }>;
 
 /** A large-text-safe content section with a logical header action slot. */
@@ -602,6 +625,7 @@ export function Section({
   ...props
 }: SectionProps) {
   const theme = useHjmNativeTheme();
+  warnDeprecatedStyleProps("Section", { style }, "layoutStyle for placement; sectionRecipe owns appearance");
   const stackHeader = theme.environment.textScale >= 1.6;
   const hasHeader = title !== undefined || description !== undefined || action !== undefined;
   return (

@@ -42,7 +42,20 @@ type HjmControlledStyleExclusions = Readonly<{
   [Key in HjmControlledStyleKey]?: never;
 }>;
 
-/** Canonical, layout-only style accepted by HJM component roots. */
+/**
+ * Canonical, layout-only style accepted by HJM component roots.
+ *
+ * Every public Web component with an in-flow root takes `layoutStyle` (2026-10-06
+ * sweep; `test/composition-style.ssr.test.tsx` renders them), including the
+ * `./screens`, `./screen-flows` and `./saved-items` screens through ScreenLayout
+ * (ListDetailScreen and SavedItemsScreen place their outer two-pane host). The
+ * exceptions have no in-flow box to place: providers (HjmProvider, OverlayStackProvider,
+ * ToastProvider), viewport/portal layers (Dialog, AlertDialog, Sheet, PhotoSourceSheet,
+ * SidePanel, Popover, Tour, CommandPalette, Toast, Celebration), and recipe-pinned or
+ * hidden elements (FloatingActionButton, SkipNav, VisuallyHidden). Most of their props
+ * types carry the reason. CommandPalette's and PhotoSourceSheet's are recorded only here:
+ * both render a modal portal surface.
+ */
 export type HjmCompositionStyle = Readonly<Pick<CSSProperties, HjmCompositionStyleKey>> &
   HjmControlledStyleExclusions;
 

@@ -120,6 +120,8 @@ describe("@hjmds/react-native package boundary", () => {
       "./grid-reveal",
       "./gravity-letters",
       "./navigation-bar",
+      "./screens", "./screen-flows",
+      "./saved-items",
     ];
     expect(Object.keys(packageJson.exports)).toEqual(expectedExportPaths);
     const familyTargets = expectedExportPaths.slice(1).filter((path) => path !== "./top-bar" && path !== "./bottom-cta").map((exportPath) => {

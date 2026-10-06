@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { OrderProgressRetry } from "./stea-composition-previews";
 // STEA Code 후보 검토(docs/plans/stea-code-adoption-2026-10-02.md). 2026-10-02 사용자 승인으로 실험에서 배포로 옮겼다(Web id 보존).
-const meta = { includeStories: ["Default", "Dark", "LargeText"], id: "experimental-stea-order-progress", title: "배포/구성/진행 단계/처리 단계와 재시도", component: OrderProgressRetry } satisfies Meta<typeof OrderProgressRetry>;
+const meta = { includeStories: ["Default","Dark","LargeText"], id: "experimental-stea-order-progress", title: "배포/구성/피드백과 복구/처리 단계와 재시도", component: OrderProgressRetry } satisfies Meta<typeof OrderProgressRetry>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };

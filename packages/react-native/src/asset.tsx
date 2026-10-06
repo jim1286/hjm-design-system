@@ -7,6 +7,8 @@ import {
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import type { ReactNode } from "react";
 import { View, type StyleProp, type ViewStyle } from "react-native";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
+import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { useHjmNativeTheme } from "./provider.js";
 
 export type AssetProps = Readonly<{
@@ -18,10 +20,17 @@ export type AssetProps = Readonly<{
   children: ReactNode | ((state: Readonly<{ animate: boolean }>) => ReactNode);
   /** A small mark on the frame's outer corner (play, status dot). */
   accessory?: ReactNode;
+  /** Canonical layout-only placement. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
+  /**
+   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement;
+   * `assetRecipe` owns appearance. Removed in the next major (consumer-policy.md §3.1).
+   */
   style?: StyleProp<ViewStyle>;
 }>;
 
-export function Asset({ descriptor, children, accessory, style }: AssetProps) {
+export function Asset({ descriptor, children, accessory, layoutStyle, style }: AssetProps) {
+  warnDeprecatedStyleProps("Asset", { style }, "layoutStyle for placement; assetRecipe owns appearance");
   validateAssetDescriptor(descriptor);
   const { palette, environment } = useHjmNativeTheme();
   const size = assetRecipe.sizes[descriptor.size ?? assetRecipe.defaults.size];
@@ -32,7 +41,7 @@ export function Asset({ descriptor, children, accessory, style }: AssetProps) {
   const animate = shouldAnimateAsset(descriptor.kind, environment.reducedMotion);
   return (
     <View
-      style={[{ position: "relative" }, style]}
+      style={[{ position: "relative" }, style, layoutStyle]}
       accessible={!decorative}
       accessibilityRole={decorative ? "none" : "image"}
       {...(decorative
@@ -71,14 +80,21 @@ export type AssetGroupProps = Readonly<{
   label: string;
   size?: AssetDescriptor["size"];
   children: ReactNode;
+  /** Canonical layout-only placement. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
+  /**
+   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement;
+   * `assetRecipe` owns appearance. Removed in the next major (consumer-policy.md §3.1).
+   */
   style?: StyleProp<ViewStyle>;
 }>;
 
 /** Overlaps assets with the same ratio Avatar uses — they share a row on purpose. */
-export function AssetGroup({ label, size = assetRecipe.defaults.size, children, style }: AssetGroupProps) {
+export function AssetGroup({ label, size = assetRecipe.defaults.size, children, layoutStyle, style }: AssetGroupProps) {
+  warnDeprecatedStyleProps("AssetGroup", { style }, "layoutStyle for placement; assetRecipe owns appearance");
   const overlap = -Math.round(assetRecipe.sizes[size] * assetRecipe.overlapRatio);
   return (
-    <View accessibilityRole="none" accessible accessibilityLabel={label} style={[{ flexDirection: "row", alignItems: "center" }, style]}>
+    <View accessibilityRole="none" accessible accessibilityLabel={label} style={[{ flexDirection: "row", alignItems: "center" }, style, layoutStyle]}>
       {Array.isArray(children)
         ? children.map((child, index) => (
             <View key={index} style={index === 0 ? undefined : { marginStart: overlap }}>{child}</View>

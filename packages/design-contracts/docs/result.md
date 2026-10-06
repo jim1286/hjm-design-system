@@ -92,6 +92,9 @@ Web/Native 모두 아이콘 + 제목 + 설명 + action 슬롯을 세로로 쌓�
 그대로 조합합니다 — Result 자체의 recipe는 아이콘 tone, 타이포그래피 위계, 슬롯 사이
 gap만 제공합니다.
 
+행동 줄은 **보조 → 주** 순서로 그린다(`actions` 배열은 여전히 첫 번째가 primary). 다른 모든 가로 행동 줄과 Dialog footer가
+주 행동을 줄 끝에 두는데, Result만 primary를 먼저 그려 반대였다(2026-10-06 후속 점검, [Button 지침](usage/components/button.md)).
+
 ## 제품 화면 검증
 
 제품에서 채택할 때는 primary-only, primary+secondary, action-없음 중 실제 사용하는

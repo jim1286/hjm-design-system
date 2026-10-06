@@ -42,11 +42,13 @@ describe("Native PasswordField", () => {
     expect(input.props.autoComplete).toBe("new-password");
     expect(input.props.textContentType).toBe("newPassword");
 
+    // A plain action button: the label carries the next action, not a selected state.
+    expect(byLabel(renderer, "비밀번호 보기").props.accessibilityState?.selected).toBeUndefined();
     act(() => byLabel(renderer, "비밀번호 보기").props.onPress());
 
     expect(renderer.root.findByType(TextInput).props.secureTextEntry).toBe(false);
     expect(renderer.root.findByType(TextInput).props.value).toBe("secret-value");
-    expect(byLabel(renderer, "비밀번호 숨기기")).toBeTruthy();
+    expect(byLabel(renderer, "비밀번호 숨기기").props.accessibilityState?.selected).toBeUndefined();
     expect(onRevealedChange).toHaveBeenLastCalledWith(true);
     expect(onValueChange).not.toHaveBeenCalled();
   });

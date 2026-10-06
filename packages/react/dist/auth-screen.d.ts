@@ -1,5 +1,6 @@
 import { type AuthScreenDescriptor } from "@hjmds/design-contracts/components/auth-screen";
 import { type HTMLAttributes, type ReactNode } from "react";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type AuthScreenLayoutProps = Omit<HTMLAttributes<HTMLElement>, "children"> & AuthScreenDescriptor & Readonly<{
     /** Use section inside a product shell that already owns the main landmark. */
     as?: "main" | "section";
@@ -14,6 +15,8 @@ export type AuthScreenLayoutProps = Omit<HTMLAttributes<HTMLElement>, "children"
     /** Consent notice and policy links. Omit with `hasFooter: false`. */
     footer?: ReactNode;
     className?: string;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 /**
  * Two regions: hero + main stay one vertically centred block, the footer sits at
@@ -37,5 +40,7 @@ export declare const AuthScreenLayout: import("react").ForwardRefExoticComponent
     /** Consent notice and policy links. Omit with `hasFooter: false`. */
     footer?: ReactNode;
     className?: string;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }> & import("react").RefAttributes<HTMLElement>>;
 //# sourceMappingURL=auth-screen.d.ts.map

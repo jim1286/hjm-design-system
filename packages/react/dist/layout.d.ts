@@ -42,6 +42,8 @@ export type LayoutProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> & Rea
     mainProps?: Omit<LayoutRegionProps, "id" | "tabIndex">;
     footerProps?: LayoutRegionProps;
     skipLinkProps?: Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "children" | "href">;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** Accessible Web app shell with real landmarks and bypass navigation. */
 export declare const Layout: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLDivElement>, "children"> & Readonly<{
@@ -57,6 +59,8 @@ export declare const Layout: import("react").ForwardRefExoticComponent<Omit<HTML
     mainProps?: Omit<LayoutRegionProps, "id" | "tabIndex">;
     footerProps?: LayoutRegionProps;
     skipLinkProps?: Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "children" | "href">;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }> & import("react").RefAttributes<HTMLDivElement>>;
 export type TextProps = Omit<HTMLAttributes<HTMLElement>, "children"> & Readonly<{
     children: ReactNode;
@@ -130,11 +134,15 @@ export declare const Container: import("react").ForwardRefExoticComponent<Omit<H
 export type AspectRatioProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> & Readonly<{
     children?: ReactNode;
     ratio?: AspectRatioValue;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** Responsive media frame. Products retain object-fit, crop, and content semantics. */
 export declare const AspectRatio: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLDivElement>, "children"> & Readonly<{
     children?: ReactNode;
     ratio?: AspectRatioValue;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }> & import("react").RefAttributes<HTMLDivElement>>;
 export type VisuallyHiddenProps = HTMLAttributes<HTMLSpanElement> & Readonly<{
     children: ReactNode;
@@ -171,6 +179,8 @@ export type SectionProps = Omit<HTMLAttributes<HTMLElement>, "children" | "title
     action?: ReactNode;
     children: ReactNode;
     headingLevel?: 2 | 3 | 4 | 5 | 6;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** Large-text-safe semantic content section with an optional header action. */
 export declare const Section: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLElement>, "title" | "children"> & Readonly<{
@@ -179,6 +189,8 @@ export declare const Section: import("react").ForwardRefExoticComponent<Omit<HTM
     action?: ReactNode;
     children: ReactNode;
     headingLevel?: 2 | 3 | 4 | 5 | 6;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }> & import("react").RefAttributes<HTMLElement>>;
 export type { GridGap };
 export type { AspectRatioValue, ContainerGutter, ContainerSize };

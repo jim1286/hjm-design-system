@@ -15,7 +15,7 @@ function Catalog() {
         story가 증명해야 할 범위입니다.
       </p>
       <section className="hjm-showcase-section" aria-label="Component catalog">
-        <div className="hjm-table-wrap">
+        <div className="hjm-table-wrap" tabIndex={0} role="region" aria-label="컴포넌트 검증 표">
           <table className="hjm-showcase-table">
             <thead>
               <tr>
@@ -54,7 +54,7 @@ function Catalog() {
 }
 
 const meta = { includeStories: ["EvidenceMatrix"],
-  id: "components-catalog", title: "배포/컴포넌트/전체 목록",
+  id: "components-catalog", title: "배포/컴포넌트/개요/구현·검증 현황",
   component: Catalog,
   parameters: { controls: { disable: true } },
 } satisfies Meta<typeof Catalog>;

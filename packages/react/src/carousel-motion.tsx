@@ -4,12 +4,15 @@ import type { SortableItem } from "@hjmds/design-contracts/components/interactio
 import { resolveCarouselDescriptor, getCarouselNavigationTarget, type ComposeCarouselAccessibleName } from "@hjmds/design-contracts/components/carousel";
 import { Button } from "./actions.js";
 import { useHjmTheme } from "./provider.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type CarouselMotionProps = {
   slides: readonly SortableItem[]; currentKey: string; onCurrentKeyChange(key: string): void;
   /** Optional localized position/name composer shared with the base Carousel. */
   composeAccessibleName?: ComposeCarouselAccessibleName;
   renderSlide(item: SortableItem): ReactNode; label: string; previousLabel: string; nextLabel: string;
+  /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
 };
 export function CarouselMotion(props: CarouselMotionProps) {
   const descriptor = { slides: props.slides, currentKey: props.currentKey };
@@ -43,7 +46,7 @@ export function CarouselMotion(props: CarouselMotionProps) {
     return () => { api.off("select", select); };
   }, [api]);
   useEffect(() => { syncing.current = true; api?.scrollTo(index, environment.reducedMotion); syncing.current = false; }, [api, index, environment.reducedMotion]);
-  return <section aria-label={props.label} aria-roledescription="carousel">
+  return <section aria-label={props.label} aria-roledescription="carousel" style={props.layoutStyle}>
     <div ref={viewport} style={{ overflow: "hidden" }}><div style={{ display: "flex", touchAction: "pan-y pinch-zoom" }}>
       {props.slides.map((slide, i) => <div key={slide.id} role="group" aria-roledescription="slide" aria-label={resolved[i]!.accessibleName} aria-hidden={resolved[i]!.inert} inert={resolved[i]!.inert}
         style={{ flex: "0 0 100%", minWidth: 0 }}>{props.renderSlide(slide)}</div>)}

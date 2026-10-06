@@ -26,6 +26,7 @@ import {
   type ModalOpenState,
 } from "./modal.js";
 
+// No `layoutStyle`: an edge-attached portal panel; only its optional trigger is in flow, and the caller places that.
 export type SidePanelProps = ModalOpenState<SidePanelOpenChangeDetails> &
   Readonly<{
     title: ReactNode;

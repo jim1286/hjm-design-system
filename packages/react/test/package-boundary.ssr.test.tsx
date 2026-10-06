@@ -102,6 +102,8 @@ describe("@hjmds/react package boundary", () => {
       "./grid-reveal",
       "./gravity-letters",
       "./navigation-bar",
+      "./screens", "./screen-flows",
+      "./saved-items",
     ];
 
     expect(Object.keys(packageJson.exports)).toEqual([

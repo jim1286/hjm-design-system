@@ -1,6 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { getNextSplitterValue, resolveSplitterBoundaryValue, resolveSplitterDragValue, resolveSplitterSeparatorOrientation, splitterDefaults, splitterRecipe, validateSplitterDescriptor, } from "@hjmds/design-contracts/components/splitter";
-import { forwardRef, useRef, useState, } from "react";
+import { forwardRef, useEffect, useRef, useState, } from "react";
 import { classNames, composeRefs, useControllableState } from "./internal.js";
 /*
   The value is a percentage of the root box: `min`/`max`/`step` stay in the
@@ -20,7 +20,30 @@ function fractionFromPointer(root, axis, clientX, clientY) {
     const flipped = horizontal && getComputedStyle(root).direction === "rtl";
     return (flipped ? span - offset : offset) / span;
 }
-export const Splitter = forwardRef(function Splitter({ label, min, max, step, axis = splitterDefaults.axis, value: controlledValue, defaultValue, onValueChange, onValueChangeEnd, getValueText, disabled = false, primaryPane, secondaryPane, className, style, }, forwardedRef) {
+// Scrolling panes need a keyboard stop (axe scrollable-region-focusable), but only while they
+// overflow: always-on tabIndex added two dead stops. Pane labels would need a breaking prop.
+function useScrollableTabStop() {
+    const [node, setNode] = useState(null);
+    const [scrollable, setScrollable] = useState(false);
+    useEffect(() => {
+        if (!node)
+            return;
+        const measure = () => setScrollable(node.scrollHeight > node.clientHeight || node.scrollWidth > node.clientWidth);
+        measure();
+        if (typeof ResizeObserver === "undefined")
+            return;
+        // Content can grow without resizing the pane: watch children and mutations too.
+        const resize = new ResizeObserver(measure);
+        const observe = () => { resize.disconnect(); resize.observe(node); for (const child of node.children)
+            resize.observe(child); };
+        observe();
+        const mutation = new MutationObserver(() => { observe(); measure(); });
+        mutation.observe(node, { childList: true, subtree: true, characterData: true });
+        return () => { resize.disconnect(); mutation.disconnect(); };
+    }, [node]);
+    return [scrollable, setNode];
+}
+export const Splitter = forwardRef(function Splitter({ label, min, max, step, axis = splitterDefaults.axis, value: controlledValue, defaultValue, onValueChange, onValueChangeEnd, getValueText, disabled = false, primaryPane, secondaryPane, className, layoutStyle, style, }, forwardedRef) {
     const [value, setValue] = useControllableState({
         ...(controlledValue === undefined ? {} : { value: controlledValue }),
         defaultValue: defaultValue ?? min,
@@ -92,8 +115,10 @@ export const Splitter = forwardRef(function Splitter({ label, min, max, step, ax
         setDragging(false);
         onValueChangeEnd?.(value);
     };
+    const [primaryScrollable, primaryPaneRef] = useScrollableTabStop();
+    const [secondaryScrollable, secondaryPaneRef] = useScrollableTabStop();
     const fraction = max === min ? 0 : (value - min) / (max - min);
-    return (_jsxs("div", { ref: composeRefs(rootRef, forwardedRef), className: classNames("hjm-splitter", className), "data-axis": axis, "data-dragging": dragging || undefined, style: { ...style, "--hjm-splitter-primary": `${fraction * 100}%` }, children: [_jsx("div", { className: "hjm-splitter__pane", "data-pane": "primary", children: primaryPane }), _jsx("div", { role: "separator", "aria-orientation": resolveSplitterSeparatorOrientation(axis), "aria-label": label, "aria-valuenow": value, "aria-valuemin": min, "aria-valuemax": max, "aria-valuetext": descriptor.valueText, "aria-disabled": disabled || undefined, tabIndex: disabled ? -1 : 0, className: "hjm-splitter__separator", style: { "--hjm-splitter-hit-target": `${splitterRecipe.separator.hitTarget}px`, "--hjm-splitter-thickness": `${splitterRecipe.separator.thickness}px` }, onKeyDown: onKeyDown, onPointerDown: onPointerDown, onPointerMove: resize, onPointerUp: endDrag, onPointerCancel: endDrag, children: _jsx("span", { className: "hjm-splitter__handle", "aria-hidden": "true" }) }), _jsx("div", { className: "hjm-splitter__pane", "data-pane": "secondary", children: secondaryPane })] }));
+    return (_jsxs("div", { ref: composeRefs(rootRef, forwardedRef), className: classNames("hjm-splitter", className), "data-axis": axis, "data-dragging": dragging || undefined, style: { ...style, ...layoutStyle, "--hjm-splitter-primary": `${fraction * 100}%` }, children: [_jsx("div", { ref: primaryPaneRef, className: "hjm-splitter__pane", tabIndex: primaryScrollable ? 0 : undefined, "data-pane": "primary", children: primaryPane }), _jsx("div", { role: "separator", "aria-orientation": resolveSplitterSeparatorOrientation(axis), "aria-label": label, "aria-valuenow": value, "aria-valuemin": min, "aria-valuemax": max, "aria-valuetext": descriptor.valueText, "aria-disabled": disabled || undefined, tabIndex: disabled ? -1 : 0, className: "hjm-splitter__separator", style: { "--hjm-splitter-hit-target": `${splitterRecipe.separator.hitTarget}px`, "--hjm-splitter-thickness": `${splitterRecipe.separator.thickness}px` }, onKeyDown: onKeyDown, onPointerDown: onPointerDown, onPointerMove: resize, onPointerUp: endDrag, onPointerCancel: endDrag, children: _jsx("span", { className: "hjm-splitter__handle", "aria-hidden": "true" }) }), _jsx("div", { ref: secondaryPaneRef, className: "hjm-splitter__pane", tabIndex: secondaryScrollable ? 0 : undefined, "data-pane": "secondary", children: secondaryPane })] }));
 });
 function arrowIntent(key, axis, flipped) {
     // Only the axis the panes are arranged along resizes; the other pair of arrow

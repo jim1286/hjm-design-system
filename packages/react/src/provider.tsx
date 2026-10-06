@@ -106,6 +106,7 @@ type HjmProviderValueProps = Readonly<{
  */
 export type HjmProviderHost = "surface" | "contents";
 
+// No `layoutStyle`: a theme/context provider, not a placed component; place its children.
 export type HjmProviderProps = Omit<
   HTMLAttributes<HTMLDivElement>,
   "children" | "dir"

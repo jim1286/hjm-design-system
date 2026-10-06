@@ -85,6 +85,8 @@ import {
 
 import { nativeRendererStoryGroups } from "./story-registry";
 
+import { spacing } from "@hjmds/design-contracts/foundations";
+
 const noop = () => undefined;
 
 const previewCalendarGrid = {
@@ -100,16 +102,17 @@ const previewCalendarGrid = {
 function StoryFrame({ children }: { children: ReactNode }) {
   return (
     <ScrollView
+      automaticallyAdjustKeyboardInsets
       contentContainerStyle={styles.frame}
       keyboardShouldPersistTaps="handled"
     >
-      {children}
+      <Container gutter="compact"><Stack gap="md">{children}</Stack></Container>
     </ScrollView>
   );
 }
 
 function StoryHeading({ children }: { children: string }) {
-  return <Text accessibilityRole="header" emphasis="strong" variant="heading">{children}</Text>;
+  return <Heading level="level2">{children}</Heading>;
 }
 
 function Glyph({ name }: { name: string }) {
@@ -580,7 +583,8 @@ function OverlaysPreview() {
         title="Edit item"
         description="Canonical dialog renderer."
         closeLabel="Close"
-        primaryAction={{ label: "Save", onPress: () => setDialogOpen(false) }}
+        // No server in this renderer example; the action contract owns success dismissal.
+        primaryAction={{ label: "Save", onPress: () => undefined }}
       ><Text>Dialog content</Text></Dialog>
       <AlertDialog
         open={alertOpen}
@@ -618,7 +622,7 @@ function OverlaysPreview() {
 }
 
 const meta = {
-  title: "배포/구성/네이티브 컴포넌트 모음",
+  title: "배포/구성/비교와 검증/네이티브 컴포넌트 기기 확인",
   parameters: { controls: { disable: true } },
 } satisfies Meta;
 
@@ -652,7 +656,7 @@ function AgreementPreview() {
   );
 }
 
-export const Foundations: Story = { name: "디자인 기초", parameters: { hjm: { componentIds: nativeRendererStoryGroups.foundations } }, render: () => <FoundationsPreview /> };
+export const Default: Story = { name: "기본", parameters: { hjm: { componentIds: nativeRendererStoryGroups.foundations } }, render: () => <FoundationsPreview /> };
 export const Actions: Story = { name: "동작", parameters: { hjm: { componentIds: nativeRendererStoryGroups.actions } }, render: () => <ActionsPreview /> };
 export const AgreementStory: Story = { name: "약관 동의", parameters: { hjm: { componentIds: nativeRendererStoryGroups.agreement } }, render: () => <AgreementPreview /> };
 export const Inputs: Story = { name: "입력", parameters: { hjm: { componentIds: nativeRendererStoryGroups.inputs } }, render: () => <InputsPreview /> };
@@ -660,10 +664,12 @@ export const Navigation: Story = { name: "탐색", parameters: { hjm: { componen
 export const DataDisplay: Story = { name: "데이터 표시", parameters: { hjm: { componentIds: nativeRendererStoryGroups.dataDisplay } }, render: () => <DataDisplayPreview /> };
 export const Feedback: Story = { name: "상태와 알림", parameters: { hjm: { componentIds: nativeRendererStoryGroups.feedback } }, render: () => <FeedbackPreview /> };
 export const Overlays: Story = { name: "오버레이", parameters: { hjm: { componentIds: nativeRendererStoryGroups.overlays } }, render: () => <OverlaysPreview /> };
+export const Dark: Story = { ...Default, name: "어두운 테마", globals: { theme: "dark" } };
+export const LargeText: Story = { ...Default, name: "큰 글자", globals: { textScale: "2" } };
 
 const styles = StyleSheet.create({
   customInput: { borderColor: "#667085", borderRadius: 12, borderWidth: 1, minHeight: 44, paddingHorizontal: 16 },
-  frame: { gap: 16, paddingBottom: 48 },
+  frame: { paddingVertical: spacing.md },
   layout: { minHeight: 144 },
   mediaFrameContent: { alignItems: "center", flex: 1, justifyContent: "center" },
 });

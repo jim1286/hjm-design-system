@@ -3,6 +3,7 @@ import { forwardRef, type CSSProperties, type HTMLAttributes, type MouseEventHan
 import { Button } from "./actions.js";
 import { classNames } from "./internal.js";
 import { useOptionalHjmTheme } from "./provider.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type TopBarProps = Omit<HTMLAttributes<HTMLDivElement>, "title" | "children"> & Readonly<{
   title?: string;
@@ -15,13 +16,15 @@ export type TopBarProps = Omit<HTMLAttributes<HTMLDivElement>, "title" | "childr
   actions?: ReactNode;
   centered?: boolean;
   safeAreaTop?: number;
+  /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
 }>;
 
 /** Screen chrome stays composable inside pages and dialogs, without adding a second banner landmark. */
 export const TopBar = forwardRef<HTMLDivElement, TopBarProps>(function TopBar({
   title, titleLeading, onTitleClick, titleAccessibilityLabel, headingLevel = 1,
   leading, trailing, actions, centered = topBarRecipe.defaults.centered, safeAreaTop = 0,
-  className, style, ...props
+  className, style, layoutStyle, ...props
 }, ref) {
   const theme = useOptionalHjmTheme();
   if (!Number.isFinite(safeAreaTop) || safeAreaTop < 0) throw new RangeError("TopBar safeAreaTop must be non-negative");
@@ -38,7 +41,7 @@ export const TopBar = forwardRef<HTMLDivElement, TopBarProps>(function TopBar({
       "--hjm-top-bar-min-height": `${topBarRecipe.minHeight}px`,
       "--hjm-top-bar-padding": `${topBarRecipe.paddingHorizontal}px`,
       "--hjm-top-bar-gap": `${topBarRecipe.gap}px`,
-      "--hjm-top-bar-safe-area": `${safeAreaTop}px`, ...style,
+      "--hjm-top-bar-safe-area": `${safeAreaTop}px`, ...style, ...layoutStyle,
     } as CSSProperties}>
     <div className="hjm-top-bar__leading">{leading}</div>
     <div className="hjm-top-bar__title">

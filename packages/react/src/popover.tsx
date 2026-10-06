@@ -1,6 +1,6 @@
 import { cloneElement, createContext, forwardRef, useCallback, useContext, useEffect, useId, useRef, useState, useSyncExternalStore, type CSSProperties, type ReactNode, type RefObject } from "react";
 import { canDismissPopover, popoverBehaviorDefaults, popoverHoverDelay, popoverRecipe, resolvePopoverDescriptor, validatePopoverOpenState, type PopoverDescriptor, type PopoverDismissPolicy, type PopoverDismissReason, type PopoverOpenChangeDetails, type PopoverOpenOn, type PopoverOpenState } from "@hjmds/design-contracts/components/popover";
-import { easing } from "@hjmds/design-contracts/foundations";
+import { easing, layer } from "@hjmds/design-contracts/foundations";
 import { Button } from "./actions.js";
 import { classNames, composeRefs } from "./internal.js";
 import { AnchoredPortal, getPopoverOwner, useAnchoredPopup } from "./portal.js";
@@ -8,6 +8,7 @@ import { useOptionalHjmTheme } from "./provider.js";
 import type { OverlayTrigger } from "./overlays.js";
 
 export type PopoverContentActions = Readonly<{ close(): void }>;
+// No `layoutStyle`: renders the caller's trigger plus an anchored portal; place the trigger instead.
 export type PopoverProps = PopoverOpenState & Readonly<{
   trigger: OverlayTrigger;
   title: string;
@@ -103,9 +104,10 @@ export const Popover = forwardRef<HTMLDivElement, PopoverProps>(function Popover
   }, [open, present, reduced]);
   const position = useAnchoredPopup(triggerRef, open || present ? node : null, {
     placement: resolved.placement, align: resolved.align, gap: popoverRecipe.sideOffset,
-    // Contextual forms sit above menus (900) and below tooltips (1100); a modal
-    // owner supplies its own layer through the shared positioning helper.
-    viewportPadding: popoverRecipe.collisionPadding, zIndex: 950, fallbackAxis: true,
+    // Contextual forms share the dropdown tier with menus (DOM order puts a popover opened
+    // from a menu above it) and stay below tooltips; a modal owner supplies its own layer
+    // through the shared positioning helper.
+    viewportPadding: popoverRecipe.collisionPadding, zIndex: layer.dropdown, fallbackAxis: true,
   });
   const setContent = useCallback((value: HTMLDivElement | null) => { setNode(value); }, []);
   const contentRef = useCallback(composeRefs(setContent, ref), [setContent, ref]);

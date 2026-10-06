@@ -7,6 +7,7 @@ import {
 import { forwardRef, type CSSProperties, type ReactNode } from "react";
 import { classNames } from "./internal.js";
 import { useOptionalHjmTheme } from "./provider.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type AssetProps = Readonly<{
   descriptor: AssetDescriptor;
@@ -19,10 +20,12 @@ export type AssetProps = Readonly<{
   /** A small mark on the frame's outer corner (play, status dot). */
   accessory?: ReactNode;
   className?: string;
+  /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
 }>;
 
 export const Asset = forwardRef<HTMLDivElement, AssetProps>(function Asset(
-  { descriptor, children, accessory, className },
+  { descriptor, children, accessory, className, layoutStyle },
   forwardedRef,
 ) {
   validateAssetDescriptor(descriptor);
@@ -42,7 +45,7 @@ export const Asset = forwardRef<HTMLDivElement, AssetProps>(function Asset(
       role={decorative ? "presentation" : "img"}
       aria-hidden={decorative || undefined}
       aria-label={decorative ? undefined : descriptor.accessibilityLabel}
-      style={{
+      style={{ ...layoutStyle,
         "--hjm-asset-size": `${size}px`,
         "--hjm-asset-radius": `${shape}px`,
         "--hjm-asset-accessory-offset": `${assetRecipe.accessory.offset}px`,
@@ -62,17 +65,19 @@ export type AssetGroupProps = Readonly<{
   size?: AssetDescriptor["size"];
   children: ReactNode;
   className?: string;
+  /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
 }>;
 
 /** Overlaps assets with the same ratio Avatar uses — they share a row on purpose. */
-export function AssetGroup({ label, size = assetRecipe.defaults.size, children, className }: AssetGroupProps) {
+export function AssetGroup({ label, size = assetRecipe.defaults.size, children, className, layoutStyle }: AssetGroupProps) {
   const pixels = assetRecipe.sizes[size];
   return (
     <div
       className={classNames("hjm-asset-group", className)}
       role="group"
       aria-label={label}
-      style={{ "--hjm-asset-overlap": `${-Math.round(pixels * assetRecipe.overlapRatio)}px` } as CSSProperties}
+      style={{ ...layoutStyle, "--hjm-asset-overlap": `${-Math.round(pixels * assetRecipe.overlapRatio)}px` } as CSSProperties}
     >
       {children}
     </div>

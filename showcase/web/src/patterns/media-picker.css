@@ -1,0 +1,13 @@
+/* System picker reference: dense image grid, overlaid selection, and a fixed completion area.
+   Keep filename/upload cards out of the library; those belong to the post-selection workflow. */
+.photo-library { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:var(--hjm-space-xxs); margin-inline:calc(-1 * var(--hjm-space-md)); }
+.photo-library__tile { position:relative; display:block; border:0; padding:0; background:transparent; cursor:pointer; aspect-ratio:1; min-width:0; }
+.photo-library__tile img { display:block; width:100%; height:100%; object-fit:cover; }
+.photo-library__tile:disabled { opacity:.45; cursor:default; }
+.photo-library__tile:focus-visible { outline:var(--hjm-space-xxs) solid var(--hjm-color-primary); outline-offset:calc(-1 * var(--hjm-space-xxs)); z-index:1; }
+.photo-library__number { position:absolute; top:var(--hjm-space-xs); right:var(--hjm-space-xs); width:calc(var(--hjm-space-xl) * var(--hjm-text-scale, 1)); height:calc(var(--hjm-space-xl) * var(--hjm-text-scale, 1)); display:flex; align-items:center; justify-content:center; border:calc(var(--hjm-space-xxs) / 2) solid var(--hjm-color-on-primary); border-radius:var(--hjm-radius-full); color:var(--hjm-color-on-primary); background:transparent; font:inherit; font-size:var(--hjm-type-caption-size); font-weight:var(--hjm-font-weight-bold); }
+.photo-library__tile[aria-checked=true] .photo-library__number { background:var(--hjm-color-primary); }
+.photo-library__selection { display:flex; gap:var(--hjm-space-xs); overflow-x:auto; }
+.photo-library__selection button { position:relative; padding:0; border:0; flex:none; width:calc(var(--hjm-space-xxxl) * 2); height:calc(var(--hjm-space-xxxl) * 2); background:transparent; cursor:pointer; }
+.photo-library__selection img { width:100%; height:100%; object-fit:cover; border-radius:var(--hjm-radius-sm); }
+.photo-library__selection span { position:absolute; top:0; right:0; background:var(--hjm-color-primary); color:var(--hjm-color-on-primary); width:calc(var(--hjm-space-lg) * var(--hjm-text-scale, 1)); height:calc(var(--hjm-space-lg) * var(--hjm-text-scale, 1)); border-radius:var(--hjm-radius-full); }

@@ -67,5 +67,7 @@ describe("otp verification", () => {
     const cooled = runOtp(Array.from({ length: initialOtpState.resendIn }, () => ({ type: "tick" }) as OtpAction), locked);
     const resent = otpReducer(cooled, { type: "resend" });
     expect(resent).toMatchObject({ phase: "editing", attemptsLeft: otpMaxAttempts, value: "", resent: true });
+    const secondReady = runOtp(Array.from({ length: initialOtpState.resendIn }, () => ({ type: "tick" }) as OtpAction), resent);
+    expect(otpReducer(secondReady, { type: "resend" }).resendCount).toBe(2);
   });
 });

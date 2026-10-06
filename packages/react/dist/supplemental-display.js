@@ -51,7 +51,7 @@ const iconPaths = {
     visibilityOff: "m3 3 18 18M10.6 5.2A9 9 0 0 1 12 5c6 0 10 7 10 7a17 17 0 0 1-2.1 3M6.6 6.6C3.8 8.5 2 12 2 12s4 7 10 7a9 9 0 0 0 3.4-.7M9.9 9.9a3 3 0 0 0 4.2 4.2",
     warning: "M12 3 2.7 20h18.6L12 3Zm0 6v4m0 3h.01",
 };
-export const Icon = forwardRef(function Icon({ name, size, tone, weight, directionality, decorative, accessibilityLabel, renderGlyph, className, style, ...props }, ref) {
+export const Icon = forwardRef(function Icon({ name, size, tone, weight, directionality, decorative, accessibilityLabel, renderGlyph, className, style, layoutStyle, ...props }, ref) {
     const descriptor = resolveIconDescriptor({
         name,
         ...(size === undefined ? {} : { size }),
@@ -64,10 +64,10 @@ export const Icon = forwardRef(function Icon({ name, size, tone, weight, directi
     const theme = useOptionalHjmTheme();
     const transform = getIconTransform(descriptor.directionality, theme?.environment.direction ?? "ltr");
     const dimension = iconRecipe.sizes[descriptor.size];
-    return (_jsx("svg", { ...props, ref: ref, viewBox: "0 0 24 24", fill: "none", xmlns: "http://www.w3.org/2000/svg", className: classNames("hjm-icon", className), "data-name": descriptor.name, "data-size": descriptor.size, "data-tone": descriptor.tone, "data-weight": descriptor.weight, "data-transform": transform, width: dimension, height: dimension, stroke: "currentColor", strokeWidth: iconRecipe.weights[descriptor.weight], strokeLinecap: "round", strokeLinejoin: "round", role: descriptor.decorative ? undefined : "img", "aria-hidden": descriptor.decorative || undefined, "aria-label": descriptor.decorative ? undefined : descriptor.accessibilityLabel, focusable: "false", style: style, children: renderGlyph?.({ name: descriptor.name, size: 24, color: "currentColor", strokeWidth: iconRecipe.weights[descriptor.weight] }) ?? _jsx("path", { d: iconPaths[descriptor.name] }) }));
+    return (_jsx("svg", { ...props, ref: ref, viewBox: "0 0 24 24", fill: "none", xmlns: "http://www.w3.org/2000/svg", className: classNames("hjm-icon", className), "data-name": descriptor.name, "data-size": descriptor.size, "data-tone": descriptor.tone, "data-weight": descriptor.weight, "data-transform": transform, width: dimension, height: dimension, stroke: "currentColor", strokeWidth: iconRecipe.weights[descriptor.weight], strokeLinecap: "round", strokeLinejoin: "round", role: descriptor.decorative ? undefined : "img", "aria-hidden": descriptor.decorative || undefined, "aria-label": descriptor.decorative ? undefined : descriptor.accessibilityLabel, focusable: "false", style: { ...style, ...layoutStyle }, children: renderGlyph?.({ name: descriptor.name, size: 24, color: "currentColor", strokeWidth: iconRecipe.weights[descriptor.weight] }) ?? _jsx("path", { d: iconPaths[descriptor.name] }) }));
 });
 /** Intrinsic-size image with canonical alt semantics and an accessible fallback. */
-export const Image = forwardRef(function Image({ src, width, height, fit, decorative, accessibilityLabel, imageProps, renderImage, fallback, imageRef, onLoad, onError, onLoadStatusChange, className, style, ...props }, ref) {
+export const Image = forwardRef(function Image({ src, width, height, fit, decorative, accessibilityLabel, imageProps, renderImage, fallback, imageRef, onLoad, onError, onLoadStatusChange, className, style, layoutStyle, ...props }, ref) {
     const descriptor = resolveImageDescriptor({
         src,
         width,
@@ -121,6 +121,7 @@ export const Image = forwardRef(function Image({ src, width, height, fit, decora
     return (_jsx("span", { ...props, ref: ref, className: classNames("hjm-image", className), "data-fit": descriptor.fit, "data-status": status, style: {
             inlineSize: descriptor.width,
             ...style,
+            ...layoutStyle,
             aspectRatio: resolveImageAspectRatio(descriptor.width, descriptor.height),
         }, children: visual }));
 });
@@ -135,6 +136,8 @@ export const CounterBadge = forwardRef(function CounterBadge({ count, max = coun
     }
     if (label === null)
         return null;
-    return (_jsx("span", { ...props, ref: ref, className: classNames("hjm-counter-badge", className), "data-tone": tone, "data-size": size, "data-variant": variant, "data-dot": dot || undefined, style: dot ? { ...style, ...layoutStyle, "--hjm-counter-dot-size": `${counterBadgeRecipe.dotSize}px` } : { ...style, ...layoutStyle }, "aria-hidden": accessibilityLabel === undefined || undefined, "aria-label": accessibilityLabel, children: dot ? null : label }));
+    return (_jsx("span", { ...props, ref: ref, className: classNames("hjm-counter-badge", className), "data-tone": tone, "data-size": size, "data-variant": variant, "data-dot": dot || undefined, style: dot ? { ...style, ...layoutStyle, "--hjm-counter-dot-size": `${counterBadgeRecipe.dotSize}px` } : { ...style, ...layoutStyle }, "aria-hidden": accessibilityLabel === undefined || undefined, 
+        // A named count needs a semantic role; generic spans cannot carry aria-label.
+        role: accessibilityLabel === undefined ? undefined : "img", "aria-label": accessibilityLabel, children: dot ? null : label }));
 });
 //# sourceMappingURL=supplemental-display.js.map

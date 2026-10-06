@@ -11,6 +11,8 @@ import { useEffect, useRef, useState } from "react";
 import { Pressable, View, type StyleProp, type ViewStyle } from "react-native";
 
 import { Text } from "./primitives.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
+import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { useHjmNativeTheme } from "./provider.js";
 
 export type FilePickerProps = Readonly<{
@@ -26,6 +28,12 @@ export type FilePickerProps = Readonly<{
   disabled?: boolean;
   hint?: string;
   error?: string;
+  /** Canonical layout-only placement. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
+  /**
+   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement;
+   * `filePickerRecipe` owns appearance. Removed in the next major (consumer-policy.md §3.1).
+   */
   style?: StyleProp<ViewStyle>;
 }>;
 
@@ -41,8 +49,10 @@ export function FilePicker({
   disabled = false,
   hint,
   error,
+  layoutStyle,
   style,
 }: FilePickerProps) {
+  warnDeprecatedStyleProps("FilePicker", { style }, "layoutStyle for placement; filePickerRecipe owns appearance");
   validateFilePickerTriggers("native", ["button"]);
   const resolved = resolveFilePickerDescriptor(descriptor);
   const { colors } = useHjmNativeTheme();
@@ -65,7 +75,7 @@ export function FilePicker({
     }
   };
   return (
-    <View style={[{ gap: 6 }, style]}>
+    <View style={[{ gap: 6 }, style, layoutStyle]}>
       <Text emphasis="strong" variant="label">{label}</Text>
       <Pressable
         accessibilityLabel={buttonLabel}

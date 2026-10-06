@@ -1,5 +1,6 @@
 import { type SplitterAxis } from "@hjmds/design-contracts/components/splitter";
 import { type CSSProperties, type ReactNode } from "react";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type SplitterProps = Readonly<{
     /** Required accessible name for the separator. */
     label: string;
@@ -20,6 +21,8 @@ export type SplitterProps = Readonly<{
     secondaryPane: ReactNode;
     className?: string;
     style?: CSSProperties;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 export declare const Splitter: import("react").ForwardRefExoticComponent<Readonly<{
     /** Required accessible name for the separator. */
@@ -41,5 +44,7 @@ export declare const Splitter: import("react").ForwardRefExoticComponent<Readonl
     secondaryPane: ReactNode;
     className?: string;
     style?: CSSProperties;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }> & import("react").RefAttributes<HTMLDivElement>>;
 //# sourceMappingURL=splitter.d.ts.map

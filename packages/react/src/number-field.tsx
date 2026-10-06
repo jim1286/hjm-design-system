@@ -1,5 +1,6 @@
 import {
   commitNumberFieldInput,
+  numberFieldRecipe,
   parseNumberFieldInput,
   resolveNumberFieldDescriptor,
   resolveNumberFieldInputStepperState,
@@ -13,6 +14,7 @@ import {
   useId,
   useRef,
   useState,
+  type CSSProperties,
   type FocusEvent,
   type InputHTMLAttributes,
   type KeyboardEvent,
@@ -20,6 +22,7 @@ import {
 } from "react";
 
 import { classNames, composeRefs, useControllableState } from "./internal.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 type NativeNumberInputProps = Omit<
   InputHTMLAttributes<HTMLInputElement>,
@@ -67,6 +70,11 @@ export type NumberFieldProps = NativeNumberInputProps &
     getValueText?: (value: number) => string;
     className?: string;
     inputClassName?: string;
+    /**
+     * Canonical layout-only placement on the field frame. `style` keeps going to
+     * the input element, where it always went, so existing callers do not move.
+     */
+    layoutStyle?: HjmCompositionStyleProp;
   }>;
 
 function valueToInput(value: NumberFieldValue): string {
@@ -104,6 +112,7 @@ export const NumberField = forwardRef<HTMLInputElement, NumberFieldProps>(
       getValueText,
       className,
       inputClassName,
+      layoutStyle,
       inputMode,
       onBlur,
       onFocus,
@@ -207,6 +216,11 @@ export const NumberField = forwardRef<HTMLInputElement, NumberFieldProps>(
     return (
       <div
         className={classNames("hjm-field", "hjm-number-field", className)}
+        // fieldRecipe.disabledScope fades label and control; the amount is this component's
+        // recipe (numberFieldRecipe.states), as on Native — the frame default is fieldRecipe's.
+        style={disabled
+          ? ({ ...layoutStyle, "--hjm-field-disabled-opacity": numberFieldRecipe.states.disabledOpacity } as CSSProperties)
+          : layoutStyle}
         data-availability={disabled ? "disabled" : readOnly ? "readOnly" : "enabled"}
         data-size={size}
         data-state={state}

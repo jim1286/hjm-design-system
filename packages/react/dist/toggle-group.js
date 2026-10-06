@@ -2,7 +2,7 @@ import { jsx as _jsx } from "react/jsx-runtime";
 import { reconcileToggleGroupSelection, toggleGroupRecipe, toggleGroupSelection, validateToggleGroupDescriptor, } from "@hjmds/design-contracts/components/toggle-group";
 import { forwardRef, useMemo } from "react";
 import { classNames, useControllableState } from "./internal.js";
-export const ToggleGroup = forwardRef(function ToggleGroup({ descriptor, pressedIds: controlledPressed, defaultPressedIds, onPressedIdsChange, size = toggleGroupRecipe.defaults.size, className, }, forwardedRef) {
+export const ToggleGroup = forwardRef(function ToggleGroup({ descriptor, pressedIds: controlledPressed, defaultPressedIds, onPressedIdsChange, size = toggleGroupRecipe.defaults.size, className, layoutStyle, }, forwardedRef) {
     validateToggleGroupDescriptor(descriptor);
     const [rawPressed, setPressed] = useControllableState({
         ...(controlledPressed === undefined ? {} : { value: controlledPressed }),
@@ -12,6 +12,7 @@ export const ToggleGroup = forwardRef(function ToggleGroup({ descriptor, pressed
     const pressed = useMemo(() => reconcileToggleGroupSelection(descriptor, rawPressed), [descriptor, rawPressed]);
     const metrics = toggleGroupRecipe.sizes[size];
     return (_jsx("div", { ref: forwardedRef, role: "group", "aria-label": descriptor.accessibilityLabel, className: classNames("hjm-toggle-group", className), "data-size": size, style: {
+            ...layoutStyle,
             "--hjm-toggle-min-height": `${metrics.minHeight}px`,
             "--hjm-toggle-padding": `${metrics.paddingHorizontal}px`,
             "--hjm-toggle-gap": `${toggleGroupRecipe.gap}px`,

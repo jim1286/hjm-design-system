@@ -17,6 +17,8 @@ function RatingPreview({ step = 1 }: { step?: 1 | 0.5 }) {
 const meta = { title: "배포/컴포넌트/입력/별점", component: RatingPreview } satisfies Meta<typeof RatingPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
-export const WholePoint: Story = { name: "정수 단위",};
+export const Default: Story = { name: "기본",};
 export const HalfPoint: Story = { name: "반점 단위", args: { step: 0.5 } };
 export const ReadOnlyAverage: Story = { name: "평균 점수 표시", render: () => <Statistic descriptor={{ id: "average-score", label: "평균 만족도", value: "4.3 / 5", hint: "예시 응답 120개" }} /> };
+export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
+export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };

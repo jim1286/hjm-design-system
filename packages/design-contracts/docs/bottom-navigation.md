@@ -1,5 +1,7 @@
 # BottomNavigation contract
 
+검토일: 2026-10-05
+
 `BottomNavigation`은 콘텐츠 panel을 바꾸는 `Tabs`가 아니라 앱의 안정된 최상위 route를
 이동합니다. 같은 destination 의미를 Web의 link와 React Native navigator tab으로 적응시키며,
 route state는 제품 router 한 곳에서만 소유합니다. 각 renderer의 환경 matrix, Web route-link
@@ -108,6 +110,10 @@ status/live role이나 별도 accessibility label을 추가하면 같은 정보�
 - item target은 최소 44×44입니다. label은 항상 보이고 font scaling을 허용하며 고정 item 높이와
   한 줄 clipping을 사용하지 않습니다. 모든 destination을 동시에 유지해야 하는 persistent chrome의
   visual label은 최대 `1.4×`까지만 커지고, 원문 전체는 item의 접근성 이름으로 유지합니다.
+  Native에서는 명시적 Provider/value가 글자 배율을 style에 굽는 경로에도 같은 제한을
+  적용합니다. 2026-10-05 번뚝 최대 글자 QA에서 native multiplier prop만 전달하면
+  controlled Provider의 3배 style에는 제한이 작동하지 않았습니다(BT-QA-021).
+  기존 Provider API로 라벨에만 recipe 배율을 적용하며 본문·목적지 접근성 이름은 보존합니다.
 - safe-area bottom inset은 recipe의 최소 padding에 더합니다. `max(base, inset)`으로 대체하지
   않습니다.
 - 긴 label은 320px viewport의 Web geometry matrix와 React Native renderer matrix에서 확인합니다.

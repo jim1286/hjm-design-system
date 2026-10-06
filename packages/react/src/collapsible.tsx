@@ -5,6 +5,7 @@ import {
 } from "@hjmds/design-contracts/components/collapsible";
 import { forwardRef, useId, useState, type CSSProperties, type ReactNode } from "react";
 import { classNames } from "./internal.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type CollapsibleProps = CollapsibleOpenState &
   Readonly<{
@@ -13,10 +14,12 @@ export type CollapsibleProps = CollapsibleOpenState &
     children: ReactNode;
     disabled?: boolean;
     className?: string;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
   }>;
 
 export const Collapsible = forwardRef<HTMLDivElement, CollapsibleProps>(function Collapsible(
-  { trigger, children, disabled = false, className, ...openState },
+  { trigger, children, disabled = false, className, layoutStyle, ...openState },
   forwardedRef,
 ) {
   validateCollapsibleOpenState(openState as CollapsibleOpenState);
@@ -29,7 +32,7 @@ export const Collapsible = forwardRef<HTMLDivElement, CollapsibleProps>(function
       ref={forwardedRef}
       className={classNames("hjm-collapsible", className)}
       data-state={open ? "open" : "closed"}
-      style={{ "--hjm-collapsible-gap": `${collapsibleRecipe.gap}px` } as CSSProperties}
+      style={{ ...layoutStyle, "--hjm-collapsible-gap": `${collapsibleRecipe.gap}px` } as CSSProperties}
     >
       <button
         type="button"

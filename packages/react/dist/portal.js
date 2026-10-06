@@ -1,4 +1,5 @@
 import { jsx as _jsx } from "react/jsx-runtime";
+import { layer } from "@hjmds/design-contracts/foundations";
 import { useCallback, useEffect, useRef, useState, } from "react";
 import { createPortal } from "react-dom";
 /** Nearest interactive popover, including descendants rendered through another portal. */
@@ -118,7 +119,7 @@ function samePosition(previous, next) {
  * The popup flips vertically and shifts horizontally to stay inside the visual
  * viewport, then follows every scroll/resize source that can move either node.
  */
-export function useAnchoredPopup(anchorRef, popup, { align = "start", fallbackAxis = false, gap = 8, matchAnchorWidth = false, placement: preferredPlacement = "bottom", viewportPadding = 16, zIndex = 800, } = {}) {
+export function useAnchoredPopup(anchorRef, popup, { align = "start", fallbackAxis = false, gap = 8, matchAnchorWidth = false, placement: preferredPlacement = "bottom", viewportPadding = 16, zIndex = layer.dropdown, } = {}) {
     const [position, setPosition] = useState(() => ({
         ...hiddenPopupPosition,
         align,

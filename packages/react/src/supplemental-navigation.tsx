@@ -23,6 +23,7 @@ import {
   type HTMLAttributes,
 } from "react";
 import { classNames } from "./internal.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 function createLoadMoreControllerFacade(): Readonly<{
   facade: LoadMoreController;
@@ -65,6 +66,8 @@ export type LoadMoreProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> &
     onRequestError?: (error: unknown, reason: LoadMoreRequestReason) => void;
     intersectionRoot?: Element | Document | null;
     rootMargin?: string;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
   }>;
 
 /**
@@ -83,6 +86,8 @@ export const LoadMore = forwardRef<HTMLDivElement, LoadMoreProps>(
       intersectionRoot = null,
       rootMargin = "200px 0px",
       className,
+      layoutStyle,
+      style,
       ...props
     },
     ref,
@@ -169,6 +174,7 @@ export const LoadMore = forwardRef<HTMLDivElement, LoadMoreProps>(
     return (
       <div
         {...props}
+        style={{ ...style, ...layoutStyle }}
         ref={ref}
         className={classNames("hjm-load-more", className)}
         data-mode={mode}

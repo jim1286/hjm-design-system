@@ -65,7 +65,7 @@ export function OtpVerifyRecover() {
   useEffect(() => {
     if (state.phase === "editing" && state.resent) input.current?.focus();
     if (state.phase === "verified") result.current?.focus();
-  }, [state.phase, state.resent]);
+  }, [state.phase, state.resendCount]);
   // 성공 화면 전환은 서버 확인(respond) 뒤에만 일어난다. 입력 중에는 같은 subtree를 유지해 슬롯이 움직이지 않는다.
   return <Card title={otpCopy.title} description={otpCopy.description}>
     <ContentTransition stateKey={state.phase === "verified" ? "verified" : "form"}>

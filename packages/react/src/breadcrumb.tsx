@@ -1,6 +1,7 @@
 import { resolveBreadcrumbDescriptor, type BreadcrumbItemDescriptor } from "@hjmds/design-contracts/components/breadcrumb";
 import { forwardRef, type ForwardedRef, type HTMLAttributes, type ReactElement, type ReactNode, type RefAttributes } from "react";
 import { classNames } from "./internal.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type BreadcrumbProps<Id extends string = string> = Omit<
   HTMLAttributes<HTMLElement>,
@@ -10,6 +11,8 @@ export type BreadcrumbProps<Id extends string = string> = Omit<
     label: string;
     items: readonly BreadcrumbItemDescriptor<Id>[];
     separator?: ReactNode;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
   }>;
 
 function BreadcrumbInner<Id extends string>(
@@ -18,6 +21,7 @@ function BreadcrumbInner<Id extends string>(
     items,
     separator,
     className,
+    layoutStyle,
     ...props
   }: BreadcrumbProps<Id>,
   ref: ForwardedRef<HTMLElement>,
@@ -27,6 +31,7 @@ function BreadcrumbInner<Id extends string>(
   return (
     <nav
       {...props}
+      style={{ ...props.style, ...layoutStyle }}
       ref={ref}
       className={classNames("hjm-breadcrumb", className)}
       aria-label={label}

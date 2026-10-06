@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { EventTicket } from "./stea-expression-previews";
 // STEA Code 후보 검토(docs/plans/stea-code-adoption-2026-10-02.md). 2026-10-02 사용자 승인으로 실험에서 배포로 옮겼다(Web id 보존).
-const meta = { includeStories: ["Default", "Dark", "LargeText"], id: "experimental-stea-event-ticket", title: "배포/구성/정보 카드/일정과 식별 정보 티켓", component: EventTicket } satisfies Meta<typeof EventTicket>;
+const meta = { includeStories: ["Default","Dark","LargeText"], id: "experimental-stea-event-ticket", title: "배포/구성/정보 표시/일정과 식별 정보 티켓", component: EventTicket } satisfies Meta<typeof EventTicket>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };

@@ -23,7 +23,9 @@ import {
   type OtpFieldPresentation,
 } from "@hjmds/design-contracts/components/otp-field";
 import {
+  createContext,
   forwardRef,
+  useContext,
   useEffect,
   useId,
   useLayoutEffect,
@@ -37,6 +39,7 @@ import {
   type TextareaHTMLAttributes,
 } from "react";
 import { composeRefs, classNames, useControllableState } from "./internal.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 type FieldCopyProps = Readonly<{
   label?: ReactNode;
@@ -56,8 +59,20 @@ type FieldFrameProps = HTMLAttributes<HTMLDivElement> &
     variant?: FieldVariant;
     shape?: FieldShape;
     align?: FieldAlign;
+    /** Component recipe override of fieldRecipe.disabledOpacity (OtpField). */
+    disabledOpacity?: number;
     children: ReactNode;
+    /** Canonical layout-only placement on the field frame (`.hjm-field`), not the input. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
   }>;
+
+/*
+  How far a disabled field fades its label and control (fieldRecipe.disabledScope). The
+  frame defaults to fieldRecipe.disabledOpacity; SearchField and PasswordField render
+  through the public TextField, so they hand their own recipe value down this
+  module-private context instead of widening TextField's public props.
+*/
+const FieldDisabledOpacityContext = createContext<number | undefined>(undefined);
 
 function FieldFrame({
   controlId,
@@ -72,14 +87,29 @@ function FieldFrame({
   variant = fieldRecipe.defaults.variant,
   shape = fieldRecipe.defaults.shape,
   align = fieldRecipe.defaults.align,
+  disabledOpacity,
   className,
   children,
+  layoutStyle,
+  style,
   ...props
 }: FieldFrameProps) {
   const state = disabled ? "disabled" : error ? "invalid" : focused ? "focused" : "idle";
+  const inheritedOpacity = useContext(FieldDisabledOpacityContext);
+  const recipeOpacity = disabledOpacity ?? inheritedOpacity;
   return (
     <div
       {...props}
+      // The stylesheet fades the label and control with --hjm-field-disabled-opacity
+      // (theme value: fieldRecipe.disabledOpacity); a component recipe value is set
+      // here, only while disabled, so enabled roots keep their old inline style.
+      style={{
+        ...style,
+        ...layoutStyle,
+        ...(disabled && recipeOpacity !== undefined
+          ? ({ "--hjm-field-disabled-opacity": recipeOpacity } as CSSProperties)
+          : {}),
+      }}
       className={classNames("hjm-field", className)}
       data-state={state}
       data-variant={variant}
@@ -123,7 +153,7 @@ export type FieldControlProps = Readonly<{
 
 export type FieldProps = Omit<
   FieldFrameProps,
-  "children" | "descriptionId" | "errorId"
+  "children" | "descriptionId" | "errorId" | "disabledOpacity"
 > &
   Readonly<{
     label: ReactNode;
@@ -221,6 +251,11 @@ type SharedInputProps = FieldCopyProps &
     leading?: ReactNode;
     trailing?: ReactNode;
     fieldClassName?: string;
+    /**
+     * Canonical layout-only placement on the field frame. `style` keeps going to
+     * the input element, where it always went, so existing callers do not move.
+     */
+    layoutStyle?: HjmCompositionStyleProp;
   }>;
 
 export type TextFieldProps = Omit<InputHTMLAttributes<HTMLInputElement>, "size"> &
@@ -258,6 +293,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
       "aria-describedby": ariaDescribedBy,
       "aria-invalid": ariaInvalid,
       "aria-label": ariaLabel,
+      layoutStyle,
       ...props
     },
     ref,
@@ -286,6 +322,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
         shape={shape ?? fieldRecipe.defaults.shape}
         align={align ?? fieldRecipe.defaults.align}
         className={fieldClassName}
+        {...(layoutStyle === undefined ? {} : { layoutStyle })}
         {...(description ? { descriptionId: ids.descriptionId } : {})}
         {...(error ? { errorId: ids.errorId } : {})}
       >
@@ -322,8 +359,14 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
 );
 
 export type TextAreaProps = TextareaHTMLAttributes<HTMLTextAreaElement> &
-  Omit<SharedInputProps, "leading" | "trailing"> &
+  Omit<SharedInputProps, "leading"> &
   Readonly<{
+    /**
+     * Action before the text inside the field frame (for example a composer's camera button),
+     * vertically centred while the text grows. Mirrors `trailing`; `leading` stays omitted because
+     * TextField's `leading` is a decorative affix with muted color, not an action slot.
+     */
+    leadingAction?: ReactNode;
     /**
      * Lower bound for a growing multiline field, in visible lines. Height is
      * recipe-owned, so this semantic axis replaces a `min-height` override.
@@ -344,6 +387,8 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
       disabled,
       variant,
       shape,
+      trailing,
+      leadingAction,
       align,
       fieldClassName,
       className,
@@ -355,6 +400,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
       minVisibleLines,
       maxVisibleLines,
       style,
+      layoutStyle,
       ...props
     },
     ref,
@@ -384,10 +430,12 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
         shape={shape ?? fieldRecipe.defaults.shape}
         align={align ?? fieldRecipe.defaults.align}
         className={fieldClassName}
+        {...(layoutStyle === undefined ? {} : { layoutStyle })}
         {...(description ? { descriptionId: ids.descriptionId } : {})}
         {...(error ? { errorId: ids.errorId } : {})}
       >
         <div className="hjm-field__control hjm-field__control--multiline">
+          {leadingAction ? <span className="hjm-field__leading">{leadingAction}</span> : null}
           <textarea
             {...props}
             ref={ref}
@@ -414,6 +462,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
               onBlur?.(event);
             }}
           />
+          {trailing ? <span className="hjm-field__trailing">{trailing}</span> : null}
         </div>
       </FieldFrame>
     );
@@ -483,6 +532,7 @@ export const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(
     };
     const canClear = value.length > 0 && !disabled;
     return (
+      <FieldDisabledOpacityContext.Provider value={searchFieldRecipe.states.disabledOpacity}>
       <TextField
         {...props}
         ref={composeRefs(inputRef, forwardedRef)}
@@ -522,6 +572,7 @@ export const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(
           ) : trailing
         }
       />
+      </FieldDisabledOpacityContext.Provider>
     );
   },
 );
@@ -614,6 +665,7 @@ export const PasswordField = forwardRef<HTMLInputElement, PasswordFieldProps>(
     };
 
     return (
+      <FieldDisabledOpacityContext.Provider value={passwordFieldRecipe.states.disabledOpacity}>
       <TextField
         {...props}
         ref={composeRefs(inputRef, forwardedRef)}
@@ -632,8 +684,10 @@ export const PasswordField = forwardRef<HTMLInputElement, PasswordFieldProps>(
         readOnly={readOnly}
         trailing={(
           <button
+            // No `aria-pressed`: the name already says the next action ("Show/Hide
+            // password"), and a pressed state on top would read as "Hide password,
+            // pressed" — two answers to one question (password-field.md, rationale 1).
             aria-label={resolved.toggleAccessibleName}
-            aria-pressed={revealed}
             className="hjm-password-field__toggle"
             data-revealed={revealed || undefined}
             disabled={disabled}
@@ -655,6 +709,7 @@ export const PasswordField = forwardRef<HTMLInputElement, PasswordFieldProps>(
         type={resolved.webInputType}
         value={value}
       />
+      </FieldDisabledOpacityContext.Provider>
     );
   },
 );
@@ -710,6 +765,7 @@ export const OtpField = forwardRef<HTMLInputElement, OtpFieldProps>(
       "aria-describedby": ariaDescribedBy,
       "aria-invalid": ariaInvalid,
       "aria-label": ariaLabel,
+      layoutStyle,
       ...props
     },
     ref,
@@ -734,6 +790,8 @@ export const OtpField = forwardRef<HTMLInputElement, OtpFieldProps>(
     return (
       <FieldFrame
         className={classNames("hjm-otp-field", fieldClassName)}
+        disabledOpacity={otpFieldRecipe.states.disabledOpacity}
+        {...(layoutStyle === undefined ? {} : { layoutStyle })}
         controlId={ids.controlId}
         description={description}
         disabled={(disabled ?? false) || busy}

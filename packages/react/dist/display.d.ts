@@ -47,6 +47,8 @@ export type CardProps = Omit<HTMLAttributes<HTMLElement>, "title"> & Readonly<{
     bordered?: boolean;
     padding?: SurfacePadding;
     radius?: SurfaceRadius;
+    /** Canonical layout-only placement; forwarded to the root Surface, which applies it. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 export declare const Card: import("react").ForwardRefExoticComponent<Omit<HTMLAttributes<HTMLElement>, "title"> & Readonly<{
     title?: ReactNode;
@@ -60,6 +62,8 @@ export declare const Card: import("react").ForwardRefExoticComponent<Omit<HTMLAt
     bordered?: boolean;
     padding?: SurfacePadding;
     radius?: SurfaceRadius;
+    /** Canonical layout-only placement; forwarded to the root Surface, which applies it. */
+    layoutStyle?: HjmCompositionStyleProp;
 }> & import("react").RefAttributes<HTMLElement>>;
 export type ListRowProps = Omit<HTMLAttributes<HTMLElement>, "title" | "onClick"> & Readonly<{
     title: ReactNode;

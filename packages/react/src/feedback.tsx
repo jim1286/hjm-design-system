@@ -3,13 +3,10 @@ import {
   noticeRecipe,
   progressRecipe,
   skeletonRecipe,
-  spinnerRecipe,
   type NoticeTone,
   type ProgressShape,
   type ProgressSize,
   type ProgressTone,
-  type SpinnerSize,
-  type SpinnerTone,
 } from "@hjmds/design-contracts/recipes";
 import {
   resolveResultDescriptor,
@@ -24,6 +21,7 @@ import {
 } from "react";
 import { classNames } from "./internal.js";
 import { Button } from "./actions.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 // The HTML `title` attribute (tooltip string) shares its name with the heading slot.
 // Left in the intersection, `string & ReactNode` collapses the slot to `string`, so
@@ -36,6 +34,8 @@ export type NoticeProps = Omit<HTMLAttributes<HTMLElement>, "title"> &
     action?: ReactNode;
     icon?: ReactNode;
     tone?: NoticeTone;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
   }>;
 
 export const Notice = forwardRef<HTMLElement, NoticeProps>(function Notice(
@@ -46,6 +46,7 @@ export const Notice = forwardRef<HTMLElement, NoticeProps>(function Notice(
     icon,
     tone = noticeRecipe.defaults.tone,
     className,
+    layoutStyle,
     ...props
   },
   ref,
@@ -54,6 +55,7 @@ export const Notice = forwardRef<HTMLElement, NoticeProps>(function Notice(
   return (
     <section
       {...props}
+      style={{ ...props.style, ...layoutStyle }}
       ref={ref}
       className={classNames("hjm-notice", className)}
       data-tone={tone}
@@ -79,6 +81,8 @@ export type EmptyStateProps = Omit<HTMLAttributes<HTMLDivElement>, "title"> &
     action?: ReactNode;
     icon?: ReactNode;
     density?: EmptyStateDensity;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
   }>;
 
 export const EmptyState = forwardRef<HTMLDivElement, EmptyStateProps>(
@@ -90,6 +94,7 @@ export const EmptyState = forwardRef<HTMLDivElement, EmptyStateProps>(
       icon,
       density = emptyStateRecipe.defaults.density,
       className,
+      layoutStyle,
       ...props
     },
     ref,
@@ -97,6 +102,7 @@ export const EmptyState = forwardRef<HTMLDivElement, EmptyStateProps>(
     return (
       <div
         {...props}
+        style={{ ...props.style, ...layoutStyle }}
         ref={ref}
         className={classNames("hjm-empty-state", className)}
         data-density={density}
@@ -120,6 +126,8 @@ export type ResultProps = Omit<
     headingLevel?: 1 | 2;
     /** Optional product glyph; its meaning is already carried by title/status. */
     icon?: ReactNode;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
   }>;
 
 /** A terminal flow outcome. EmptyState remains reserved for fillable content. */
@@ -133,6 +141,7 @@ export const Result = forwardRef<HTMLDivElement, ResultProps>(function Result(
     icon,
     className,
     role,
+    layoutStyle,
     ...props
   },
   ref,
@@ -148,6 +157,7 @@ export const Result = forwardRef<HTMLDivElement, ResultProps>(function Result(
   return (
     <div
       {...props}
+      style={{ ...props.style, ...layoutStyle }}
       ref={ref}
       className={classNames("hjm-result", className)}
       data-status={result.status}
@@ -162,14 +172,8 @@ export const Result = forwardRef<HTMLDivElement, ResultProps>(function Result(
       ) : null}
       {result.primaryAction || result.secondaryAction ? (
         <div className="hjm-result__actions">
-          {result.primaryAction ? (
-            <Button
-              aria-label={result.primaryAction.accessibilityLabel}
-              onClick={result.primaryAction.onAction}
-            >
-              {result.primaryAction.label}
-            </Button>
-          ) : null}
+          {/* Button row rule (usage/components/button.md): secondary → primary, so the main action ends the row
+              like Dialog footers. Until 2026-10-06 Result drew primary first, the reverse of every other action row. */}
           {result.secondaryAction ? (
             <Button
               aria-label={result.secondaryAction.accessibilityLabel}
@@ -177,6 +181,14 @@ export const Result = forwardRef<HTMLDivElement, ResultProps>(function Result(
               tone="secondary"
             >
               {result.secondaryAction.label}
+            </Button>
+          ) : null}
+          {result.primaryAction ? (
+            <Button
+              aria-label={result.primaryAction.accessibilityLabel}
+              onClick={result.primaryAction.onAction}
+            >
+              {result.primaryAction.label}
             </Button>
           ) : null}
         </div>
@@ -204,6 +216,8 @@ export type ProgressProps = Omit<
     shape?: ProgressShape;
     /** Content inside the ring — a percentage, a count, an icon. Ignored when linear. */
     children?: ReactNode;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
   }>;
 
 export const Progress = forwardRef<HTMLProgressElement, ProgressProps>(
@@ -218,6 +232,7 @@ export const Progress = forwardRef<HTMLProgressElement, ProgressProps>(
       shape = progressRecipe.defaults.shape,
       children,
       className,
+      layoutStyle,
       ...props
     },
     ref,
@@ -240,13 +255,16 @@ export const Progress = forwardRef<HTMLProgressElement, ProgressProps>(
         data-tone={tone}
         data-shape={shape}
         data-state={value === undefined ? "indeterminate" : "determinate"}
+        // `layoutStyle` lands on this frame, not on the native <progress> that
+        // receives the rest props, so placement moves the label and bar together.
         style={shape === "circular" ? ({
+          ...layoutStyle,
           "--hjm-progress-diameter": `${diameter}px`,
           "--hjm-progress-stroke": `${strokeWidth}px`,
           // Conic sweep instead of an SVG arc: the same token drives both
           // shapes and no second color pipeline appears.
           "--hjm-progress-sweep": value === undefined ? "25%" : `${(value / max) * 100}%`,
-        } as CSSProperties) : undefined}
+        } as CSSProperties) : layoutStyle}
       >
         <span className="hjm-progress__copy">
           <span>{label}</span>
@@ -270,38 +288,7 @@ export const Progress = forwardRef<HTMLProgressElement, ProgressProps>(
   },
 );
 
-export type SpinnerProps = HTMLAttributes<HTMLSpanElement> &
-  Readonly<{
-    label: string;
-    size?: SpinnerSize;
-    tone?: SpinnerTone;
-  }>;
-
-export const Spinner = forwardRef<HTMLSpanElement, SpinnerProps>(function Spinner(
-  {
-    label,
-    size = spinnerRecipe.defaults.size,
-    tone = spinnerRecipe.defaults.tone,
-    className,
-    ...props
-  },
-  ref,
-) {
-  return (
-    <span
-      {...props}
-      ref={ref}
-      className={classNames("hjm-spinner", className)}
-      data-size={size}
-      data-tone={tone}
-      role="status"
-      aria-live="polite"
-    >
-      <span className="hjm-spinner__glyph" aria-hidden="true" />
-      <span className="hjm-visually-hidden">{label}</span>
-    </span>
-  );
-});
+export { Spinner, type SpinnerProps } from "./internal/spinner.js";
 
 type SkeletonShape = keyof typeof skeletonRecipe.shapes;
 
@@ -311,6 +298,8 @@ export type SkeletonProps = Omit<HTMLAttributes<HTMLSpanElement>, "children"> &
     animated?: boolean;
     width?: string | number;
     height?: string | number;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
   }>;
 
 export const Skeleton = forwardRef<HTMLSpanElement, SkeletonProps>(
@@ -322,6 +311,7 @@ export const Skeleton = forwardRef<HTMLSpanElement, SkeletonProps>(
       height,
       className,
       style,
+      layoutStyle,
       ...props
     },
     ref,
@@ -334,7 +324,7 @@ export const Skeleton = forwardRef<HTMLSpanElement, SkeletonProps>(
         data-shape={shape}
         data-animated={animated}
         aria-hidden="true"
-        style={{ width, height, ...style }}
+        style={{ width, height, ...style, ...layoutStyle }}
       />
     );
   },

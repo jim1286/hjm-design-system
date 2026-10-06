@@ -1,5 +1,6 @@
 import { type BottomNavigationActivation, type BottomNavigationConfiguration, type BottomNavigationDescriptor, type ResolvedBottomNavigationItemDescriptor } from "@hjmds/design-contracts/components/bottom-navigation";
 import { type AnchorHTMLAttributes, type HTMLAttributes, type MouseEvent, type ReactElement, type ReactNode, type RefAttributes } from "react";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type BottomNavigationIconRenderProps<Key extends string = string, IconName extends string = string> = Readonly<{
     item: ResolvedBottomNavigationItemDescriptor<Key, IconName>;
     name: IconName;
@@ -23,6 +24,8 @@ export type BottomNavigationProps<Key extends string = string, IconName extends 
     renderLink?: (props: BottomNavigationLinkRenderProps) => ReactElement;
     primaryAction?: ReactNode;
     onActivate?: (activation: BottomNavigationActivation<Key>) => void;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 export declare function isUnmodifiedPrimaryBottomNavigationClick(event: Pick<MouseEvent<HTMLAnchorElement>, "altKey" | "button" | "ctrlKey" | "defaultPrevented" | "metaKey" | "shiftKey">): boolean;
 export declare function shouldHideBottomNavigationForKeyboard(input: Readonly<{

@@ -24,7 +24,7 @@ function render(node: ReactNode): ReactTestRenderer {
   act(() => {
     renderer = create(
       <HjmNativeProvider reducedMotion theme="light">{node}</HjmNativeProvider>,
-      { createNodeMock: () => ({}) },
+      { createNodeMock: () => ({ focus: vi.fn() }) },
     );
   });
   return renderer!;

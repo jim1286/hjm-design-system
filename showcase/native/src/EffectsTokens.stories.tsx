@@ -1,6 +1,6 @@
 import type {Meta, StoryObj} from "@storybook/react-native";
 import {FoundationValues} from "./token-reference-previews";
-const meta = {title:"배포/토큰/그림자와 투명도", component:FoundationValues, args:{group:"effects"}, parameters:{controls:{disable:true}}} satisfies Meta<typeof FoundationValues>;
+const meta = {title:"배포/토큰/표면과 움직임/그림자와 투명도", component:FoundationValues, args:{group:"effects"}, parameters:{controls:{disable:true}}} satisfies Meta<typeof FoundationValues>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = {name:"기본"};

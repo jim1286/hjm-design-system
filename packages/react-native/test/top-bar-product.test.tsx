@@ -256,6 +256,44 @@ describe("Native TopBar product API", () => {
     expect(onTitlePress).toHaveBeenCalledOnce();
   });
 
+  it("does not recycle the full-width large-text row as a compact side slot", () => {
+    const onTitlePress = vi.fn();
+    const onBack = vi.fn();
+    const node = (
+      <TopBar
+        actions={<TopBarAction label="차단" onPress={vi.fn()}><View /></TopBarAction>}
+        leading={<TopBarAction label="뒤로" onPress={onBack}><View /></TopBarAction>}
+        onTitlePress={onTitlePress}
+        title="QA1005 수신계정"
+        titleLeading={<View testID="peer-avatar" />}
+      />
+    );
+    const renderer = render(node, "ltr", 1.8);
+    const largeRow = renderer.root.findAllByType(View).find((view) => {
+      const style = flattenStyle(view.props.style);
+      return style.width === "100%" && style.alignItems === "center";
+    });
+    expect(largeRow).toBeDefined();
+
+    act(() => renderer.update(
+      <HjmNativeProvider value={providerValue("ltr", 1)}>{node}</HjmNativeProvider>,
+    ));
+    const compactLeading = renderer.root.findAllByType(View).find((view) => {
+      const style = flattenStyle(view.props.style);
+      return style.flex === 1 && style.justifyContent === "flex-start";
+    });
+    // RN/Fabric retained the former full-width host's layout in a live font-size
+    // transition; static style assertions alone did not expose this regression.
+    expect(compactLeading).toBeDefined();
+    expect(compactLeading).not.toBe(largeRow);
+    const toolbar = renderer.root.find((view) => view.props.accessibilityRole === "toolbar");
+    expect(semanticOrder(toolbar)).toEqual(["뒤로", "QA1005 수신계정", "차단"]);
+    act(() => byLabel(renderer, "QA1005 수신계정").props.onPress({}));
+    act(() => byLabel(renderer, "뒤로").props.onPress({}));
+    expect(onTitlePress).toHaveBeenCalledOnce();
+    expect(onBack).toHaveBeenCalledOnce();
+  });
+
   it("exposes separate button and router-link adapters with guarded activation", () => {
     const onAction = vi.fn();
     const onNavigate = vi.fn();

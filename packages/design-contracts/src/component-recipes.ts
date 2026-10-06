@@ -950,6 +950,10 @@ export const comboboxRecipe = {
 export const segmentedControlRecipe = {
   slots: ["root", "item", "label", "indicator"] as const,
   defaults: { size: "medium" },
+  // Category filters share the single-selection engine, with a compact surface inside a 44 target.
+  // See usage/components/segmented-control.md; no separate filter-selection state is introduced.
+  pills: { gap: spacing.xs, radius: radius.full, inset: spacing.xs, minHeight: control.minTouchTarget,
+    selectedBackground: semanticColors.content.body, selectedContent: semanticColors.canvas },
   adaptive: {
     // Equal-width rows stop being comparable when every short label wraps one
     // Hangul syllable per line. Native renderers stack the options before that
@@ -1672,6 +1676,7 @@ export const sheetRecipe = {
     borderWidth: floatingSurfaceContract.borderWidth,
     radius: "xl",
     shadow: floatingSurfaceContract.shadow,
+    /** Caps `size="auto"` only; fixed `sizes` (medium/large/full) are bounded by the safe-area viewport instead. */
     maxHeightRatio: 0.9,
     paddingHorizontal: spacing.lg,
     paddingTop: spacing.sm,

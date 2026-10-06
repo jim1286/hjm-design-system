@@ -1,12 +1,15 @@
 import { useEffect, useId, useState, type CSSProperties } from "react";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { colorPickerRecipe, normalizePickerColor, pickerOpacity, withPickerOpacity } from "@hjmds/design-contracts/components/color-picker";
 export type ColorPickerLabels = Readonly<{ color: string; hex: string; opacity: string; invalid: string }>;
 export type ColorPickerProps = Readonly<{
   label: string; labels: ColorPickerLabels; value: string; onValueChange: (value: string) => void;
   alpha?: boolean; disabled?: boolean; presets?: readonly string[];
+  /** Canonical layout-only placement on the root `<fieldset>`. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** Controlled value; invalid text stays local until corrected or escaped. Native color UI supplies RGB only. */
-export function ColorPicker({ label, labels, value, onValueChange, alpha = false, disabled = false, presets = [] }: ColorPickerProps) {
+export function ColorPicker({ label, labels, value, onValueChange, alpha = false, disabled = false, presets = [], layoutStyle }: ColorPickerProps) {
   const color = normalizePickerColor(value, alpha);
   // HEX is an ordered code, so isolate its LTR text even when the surrounding labels use RTL.
   const palette = [...new Set(presets.map(preset => normalizePickerColor(preset, alpha)))];
@@ -26,7 +29,7 @@ export function ColorPicker({ label, labels, value, onValueChange, alpha = false
     } catch { setInvalid(true); return; }
     emit(next);
   }
-  return <fieldset className="hjm-color-picker" style={{ "--hjm-color-picker-target": `${colorPickerRecipe.minTargetSize}px` } as CSSProperties} data-hjm-color-picker disabled={disabled}>
+  return <fieldset className="hjm-color-picker" style={{ ...layoutStyle, "--hjm-color-picker-target": `${colorPickerRecipe.minTargetSize}px` } as CSSProperties} data-hjm-color-picker disabled={disabled}>
     <legend>{label}</legend>
     <div className="hjm-color-picker__row">
       <label className="hjm-color-picker__native"><span>{labels.color}</span><input type="color" value={color.slice(0, 7)} onChange={event => emit(event.target.value + (alpha ? color.slice(7) : ""))} /></label>

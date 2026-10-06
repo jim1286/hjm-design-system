@@ -4,9 +4,11 @@ import {
   type LinkDescriptor,
   type LinkDestination,
 } from "@hjmds/design-contracts/components/link";
+import type { SemanticIconName } from "@hjmds/design-contracts/components/icon";
 import { glyph, radius, spacing } from "@hjmds/design-contracts/foundations";
 import {
   bottomCtaRecipe,
+  linkRecipe,
   iconButtonRecipe,
   resolveIconButtonPresentation,
   type IconButtonTone as ContractIconButtonTone,
@@ -32,8 +34,9 @@ import {
 import { RecipeButton } from "./internal/recipe-button.js";
 
 import type { HjmCompositionStyleProp } from "./composition-style.js";
+import { warnDeprecatedStyleProps, warnOnce } from "./internal/deprecated-style.js";
 import { minimumTargetStyle } from "./internal/styles.js";
-import { Text } from "./primitives.js";
+import { Icon, Text, type NativeIconRenderProps } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
 
 export type ButtonTone = ContractButtonTone;
@@ -113,6 +116,10 @@ export type IconButtonProps = Omit<
     disableWhileLoading?: boolean;
     hitSlop?: PressableProps["hitSlop"];
     accessibilityState?: PressableProps["accessibilityState"];
+    /**
+     * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement and
+     * `tone`/`size`/`shape`/`selected` for appearance. Removed in the next major (consumer-policy.md §3.1).
+     */
     style?: StyleProp<ViewStyle>;
     renderLoadingIndicator?: (props: Readonly<{ color: string; size: "small" }>) => ReactNode;
       /** Canonical layout-only placement. Controlled visual keys are excluded. */
@@ -139,6 +146,7 @@ export const IconButton = forwardRef<NativeView, IconButtonProps>(function IconB
   ...props
 }: IconButtonProps, ref) {
   const theme = useHjmNativeTheme();
+  warnDeprecatedStyleProps("IconButton", { style }, "layoutStyle for placement and tone/size/shape/selected for appearance");
   const resolvedLabel = label;
   const resolvedIcon = children;
   if (resolvedLabel === undefined || resolvedLabel.trim().length === 0) {
@@ -231,7 +239,19 @@ export type LinkProps = Omit<
     onNavigate: (destination: LinkDestination) => void | Promise<void>;
     leading?: ReactNode;
     trailing?: ReactNode;
+    /**
+     * Product glyph boundary for `descriptor.leadingIcon` / `trailingIcon`. HJM resolves size
+     * (`linkRecipe.icon.glyph`), the link tone, decorative semantics and RTL mirroring through `Icon`,
+     * so the caller only maps a semantic name to a glyph (for example `createLucideGlyph`).
+     */
+    renderIcon?: (props: NativeIconRenderProps<SemanticIconName>) => ReactNode;
     accessibilityHint?: string;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
+    /**
+     * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement; link
+     * color, underline and target size belong to `linkRecipe`. Removed in the next major (consumer-policy.md §3.1).
+     */
     style?: StyleProp<ViewStyle>;
   }>;
 
@@ -240,12 +260,46 @@ export function Link({
   onNavigate,
   leading,
   trailing,
+  renderIcon,
   accessibilityHint,
+  layoutStyle,
   style,
   ...props
 }: LinkProps) {
   const { colors, environment } = useHjmNativeTheme();
   const resolved = resolveLinkDescriptor(descriptor);
+  warnDeprecatedStyleProps("Link", { style }, "layoutStyle for placement; linkRecipe owns link appearance");
+  // Until 1.12 the resolver validated leadingIcon/trailingIcon but Native never drew them, so a
+  // descriptor shared with Web silently lost its chevron. A missing renderIcon now warns instead of
+  // throwing: throwing would crash apps that already passed icons which were simply invisible.
+  const renderDescriptorIcon = (
+    icon: typeof resolved.leadingIcon,
+    slot: "leadingIcon" | "trailingIcon",
+    fallback: ReactNode,
+  ): ReactNode => {
+    if (icon === null) return fallback;
+    if (fallback !== undefined && fallback !== null && fallback !== false) {
+      warnOnce(
+        `Link.${slot}.conflict`,
+        `Link received both descriptor.${slot} and a ${slot === "leadingIcon" ? "leading" : "trailing"} node; the descriptor icon wins.`,
+      );
+    }
+    if (renderIcon === undefined) {
+      warnOnce(
+        `Link.${slot}.renderIcon`,
+        `Link descriptor.${slot} needs renderIcon to draw a glyph; the icon is not rendered.`,
+      );
+      return null;
+    }
+    return (
+      <Icon
+        descriptor={{ name: icon.name, size: linkRecipe.icon.glyph, tone: "brand", decorative: true }}
+        renderGlyph={renderIcon}
+      />
+    );
+  };
+  const leadingNode = renderDescriptorIcon(resolved.leadingIcon, "leadingIcon", leading);
+  const trailingNode = renderDescriptorIcon(resolved.trailingIcon, "trailingIcon", trailing);
   return (
     <Pressable
       {...props}
@@ -264,16 +318,17 @@ export function Link({
           opacity: pressed ? 0.72 : 1,
         },
         style,
+        layoutStyle,
       ]}
     >
-      {leading ? <View accessible={false}>{leading}</View> : null}
+      {leadingNode ? <View accessible={false}>{leadingNode}</View> : null}
       <Text
         style={{ color: colors.contentBrand, textDecorationLine: "underline" }}
         variant="bodyLarge"
       >
         {resolved.label}
       </Text>
-      {trailing ? <View accessible={false}>{trailing}</View> : null}
+      {trailingNode ? <View accessible={false}>{trailingNode}</View> : null}
     </Pressable>
   );
 }
@@ -297,6 +352,12 @@ export type BottomCTAProps = Readonly<{
   description?: string;
   accessibilityLabel?: string;
   safeAreaBottom?: number;
+  /** Canonical layout-only placement. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
+  /**
+   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement;
+   * surface, border and shadow belong to `bottomCtaRecipe`. Removed in the next major (consumer-policy.md §3.1).
+   */
   style?: StyleProp<ViewStyle>;
   testID?: string;
 }>;
@@ -338,9 +399,11 @@ export function BottomCTA({
   description,
   accessibilityLabel,
   safeAreaBottom = 0,
+  layoutStyle,
   style,
   testID,
 }: BottomCTAProps) {
+  warnDeprecatedStyleProps("BottomCTA", { style }, "layoutStyle for placement; bottomCtaRecipe owns appearance");
   if (!Number.isFinite(safeAreaBottom) || safeAreaBottom < 0) {
     throw new RangeError("BottomCTA safeAreaBottom must be non-negative");
   }
@@ -373,6 +436,7 @@ export function BottomCTA({
           shadowRadius: bottomCtaRecipe.shadow.radius,
         },
         style,
+        layoutStyle,
       ]}
     >
       {description ? <Text tone="muted" variant="caption">{description}</Text> : null}

@@ -16,6 +16,8 @@ import { Pressable, ScrollView, View, type StyleProp, type ViewStyle } from "rea
 import { Button } from "./actions.js";
 import { Text } from "./primitives.js";
 import { mixedCheckboxState, useControllableState } from "./internal/state.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
+import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { useHjmNativeTheme } from "./provider.js";
 
 export type TransferListLabels = Readonly<{
@@ -35,6 +37,12 @@ export type TransferListProps<Id extends string = string> = Readonly<{
   onTargetKeysChange?: (keys: ReadonlySet<Id>) => void;
   /** Receives which ids moved, in origin-panel order, so the product announces it. */
   onMove?: (movedIds: readonly Id[], direction: TransferListMoveDirection) => void;
+  /** Canonical layout-only placement. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
+  /**
+   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement;
+   * the transfer list renderer owns appearance. Removed in the next major (consumer-policy.md §3.1).
+   */
   style?: StyleProp<ViewStyle>;
 }>;
 
@@ -50,8 +58,10 @@ export function TransferList<Id extends string = string>({
   defaultTargetKeys,
   onTargetKeysChange,
   onMove,
+  layoutStyle,
   style,
 }: TransferListProps<Id>) {
+  warnDeprecatedStyleProps("TransferList", { style }, "layoutStyle for placement; the transfer list renderer owns appearance");
   const { colors } = useHjmNativeTheme();
   const [targetKeys, setTargetKeys] = useControllableState<ReadonlySet<Id>>({
     ...(controlledTargetKeys === undefined ? {} : { value: controlledTargetKeys }),
@@ -123,7 +133,7 @@ export function TransferList<Id extends string = string>({
   };
 
   return (
-    <View style={[{ gap: spacing.sm }, style]}>
+    <View style={[{ gap: spacing.sm }, style, layoutStyle]}>
       <Text variant="label">{labels.source}</Text>
       {renderPanel("source")}
       {/*

@@ -4,6 +4,7 @@ import { Asset } from "./asset.js";
 import { Button } from "./actions.js";
 import { Slider } from "./slider.js";
 import { Stack, Surface, Text } from "./layout.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type VoiceNoteProps = Readonly<{
   descriptor: VoiceNoteDescriptor;
@@ -14,13 +15,15 @@ export type VoiceNoteProps = Readonly<{
   onPlayingChange: (playing: boolean) => void;
   onSeek: (seconds: number) => void;
   onRetry?: () => void;
+  /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
 }>;
 
 /** Audio engine, network, file permission and playback lifecycle remain host-owned. */
-export function VoiceNote({ descriptor, labels, formatTime, artwork, onPlayingChange, onSeek, onRetry }: VoiceNoteProps) {
+export function VoiceNote({ descriptor, labels, formatTime, artwork, onPlayingChange, onSeek, onRetry, layoutStyle }: VoiceNoteProps) {
   const media = resolveVoiceNote(descriptor);
   const error = media.state === "error";
-  return <Surface padding="lg"><Stack gap="md">
+  return <Surface padding="lg" {...(layoutStyle === undefined ? {} : { layoutStyle })}><Stack gap="md">
     <Stack axis="inline" gap="md">
       {artwork ? <Asset descriptor={{kind:"image",decorative:true,shape:"circle"}}>{artwork}</Asset> : null}
       <Text emphasis="strong">{media.title}</Text>

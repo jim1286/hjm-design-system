@@ -13,7 +13,7 @@ function selectedIds(selection) {
     }
     return selection.selectedKeys ?? selection.defaultSelectedKeys ?? new Set();
 }
-export const Tree = forwardRef(function Tree({ label, nodes, composeAccessibleName, expandedKeys: controlledExpanded, defaultExpandedKeys, onExpandedKeysChange, selection, checkedStates, onCheckedToggle, asyncState = { status: "idle" }, renderToggle, className, }, forwardedRef) {
+export const Tree = forwardRef(function Tree({ label, nodes, composeAccessibleName, expandedKeys: controlledExpanded, defaultExpandedKeys, onExpandedKeysChange, selection, checkedStates, onCheckedToggle, asyncState = { status: "idle" }, renderToggle, className, layoutStyle, }, forwardedRef) {
     const [expandedKeys, setExpandedKeys] = useControllableState({
         ...(controlledExpanded === undefined ? {} : { value: controlledExpanded }),
         defaultValue: defaultExpandedKeys ?? new Set(),
@@ -25,7 +25,15 @@ export const Tree = forwardRef(function Tree({ label, nodes, composeAccessibleNa
     const liveExpanded = useMemo(() => reconcileTreeExpansion(nodes, expandedKeys), [nodes, expandedKeys]);
     const resolved = useMemo(() => resolveTreeDescriptor(nodes, liveExpanded, { composeAccessibleName }), [nodes, liveExpanded, composeAccessibleName]);
     const visible = useMemo(() => resolved.filter((node) => node.visible), [resolved]);
-    const selected = selectedIds(selection);
+    // `defaultSelectedKey(s)` used to be re-read on every render, so an
+    // uncontrolled tree reported the click to `onSelectionChange` but kept showing
+    // the default. Keep the uncontrolled value in state like `useControllableState`
+    // does for expansion; a controlled `selectedKey(s)` (including `null`) still wins.
+    const selectionControlled = selection?.mode === "single"
+        ? selection.selectedKey !== undefined
+        : selection?.mode === "multiple" ? selection.selectedKeys !== undefined : true;
+    const [uncontrolledSelected, setUncontrolledSelected] = useState(() => selectedIds(selection));
+    const selected = selectionControlled ? selectedIds(selection) : uncontrolledSelected;
     const [focusedId, setFocusedId] = useState(null);
     // Roving tab stop: one node is tabbable, and it must stay a real visible node
     // after a collapse removed the previously focused descendant.
@@ -48,16 +56,20 @@ export const Tree = forwardRef(function Tree({ label, nodes, composeAccessibleNa
         if (node.disabled || !selection || selection.mode === "none")
             return;
         if (selection.mode === "single") {
-            const current = selection.selectedKey ?? selection.defaultSelectedKey ?? null;
+            const current = selected.has(node.id) ? node.id : null;
             const next = current === node.id && selection.disallowEmptySelection !== true ? null : node.id;
+            if (!selectionControlled)
+                setUncontrolledSelected(next === null ? new Set() : new Set([next]));
             selection.onSelectionChange?.(next);
             return;
         }
-        const next = new Set(selection.selectedKeys ?? selection.defaultSelectedKeys ?? []);
+        const next = new Set(selected);
         if (next.has(node.id))
             next.delete(node.id);
         else
             next.add(node.id);
+        if (!selectionControlled)
+            setUncontrolledSelected(next);
         selection.onSelectionChange?.(next);
     };
     const onKeyDown = (event, node) => {
@@ -104,7 +116,7 @@ export const Tree = forwardRef(function Tree({ label, nodes, composeAccessibleNa
             focusNode(match);
         }
     };
-    return (_jsxs("div", { ref: composeRefs(rootRef, forwardedRef), role: "tree", "aria-label": label, "aria-busy": asyncState.status === "loading" || asyncState.status === "loadingMore" || undefined, "aria-multiselectable": selection?.mode === "multiple" || undefined, className: classNames("hjm-tree", className), style: { "--hjm-tree-indent": `${treeRecipe.indentPerLevel}px` }, children: [asyncState.status === "empty" || asyncState.status === "error" || asyncState.status === "loading" ? (_jsx("p", { className: "hjm-tree__state", role: asyncState.status === "error" ? "alert" : "status", children: asyncState.message })) : null, visible.map((node) => (_jsxs("div", { role: "treeitem", "data-hjm-tree-node": node.id, "aria-level": node.depth, "aria-posinset": node.position, "aria-setsize": node.siblingCount, "aria-expanded": node.hasChildren ? node.expanded : undefined, "aria-selected": selection && selection.mode !== "none" ? selected.has(node.id) : undefined, "aria-checked": checkedStates ? (checkedStates.get(node.id) === "mixed" ? "mixed" : String(checkedStates.get(node.id) === true)) : undefined, "aria-disabled": node.disabled || undefined, "aria-label": node.accessibleName, 
+    return (_jsxs("div", { ref: composeRefs(rootRef, forwardedRef), role: "tree", "aria-label": label, "aria-busy": asyncState.status === "loading" || asyncState.status === "loadingMore" || undefined, "aria-multiselectable": selection?.mode === "multiple" || undefined, className: classNames("hjm-tree", className), style: { ...layoutStyle, "--hjm-tree-indent": `${treeRecipe.indentPerLevel}px` }, children: [asyncState.status === "empty" || asyncState.status === "error" || asyncState.status === "loading" ? (_jsx("p", { className: "hjm-tree__state", role: asyncState.status === "error" ? "alert" : "status", children: asyncState.message })) : null, visible.map((node) => (_jsxs("div", { role: "treeitem", "data-hjm-tree-node": node.id, "aria-level": node.depth, "aria-posinset": node.position, "aria-setsize": node.siblingCount, "aria-expanded": node.hasChildren ? node.expanded : undefined, "aria-selected": selection && selection.mode !== "none" ? selected.has(node.id) : undefined, "aria-checked": checkedStates ? (checkedStates.get(node.id) === "mixed" ? "mixed" : String(checkedStates.get(node.id) === true)) : undefined, "aria-disabled": node.disabled || undefined, "aria-label": node.accessibleName, 
                 // One tab stop for the whole tree; the glyph is decorative, not a
                 // nested control, so a node is the only focusable thing in a row.
                 tabIndex: node.id === activeId ? 0 : -1, className: "hjm-tree__node", style: { "--hjm-tree-depth": node.depth - 1 }, onClick: (event) => {

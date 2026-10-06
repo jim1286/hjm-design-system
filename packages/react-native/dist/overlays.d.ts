@@ -1,5 +1,5 @@
 import { type AlertDialogOpenChangeReason, type AlertDialogRequest, type AlertDialogResult } from "@hjmds/design-contracts/components/alert-dialog";
-import type { HjmCompositionStyleProp } from "./composition-style.js";
+import { type HjmCompositionStyleProp } from "./composition-style.js";
 import { type SheetDismissPolicy, type SheetDismissReason, type SheetOpenChangeDetails } from "@hjmds/design-contracts/components/sheet";
 import { sheetRecipe, type DialogSize } from "@hjmds/design-contracts/recipes";
 import { type ReactElement, type ReactNode, type RefObject } from "react";
@@ -38,9 +38,25 @@ export type OverlayTitleProps = Readonly<{
 }>;
 export type DialogProps = NativeModalProps & ReasonedOpenProps<DialogOpenChangeReason> & OverlayTitleProps & Readonly<{
     description?: string;
+    /**
+     * Body below the fixed title row. It is placed in a bounded ScrollView, so do not pass a
+     * FlatList/SectionList here (nested virtualized lists lose virtualization and warn); use a
+     * Sheet or a plain mapped list for long collections.
+     */
     children?: ReactNode;
     primaryAction?: OverlayAction;
     secondaryAction?: OverlayAction;
+    /**
+     * Called when an action throws or its promise rejects. The dialog stays open with the action
+     * re-enabled; the host presents a localized, recoverable error. Without it, development builds
+     * log every failure with console.error (not warnOnce: deduplication would hide repeats), so a
+     * failed action does not vanish silently.
+     *
+     * The pending/settle logic is a run token, not contracts `createActionSession`: that store settles a
+     * microtask later and carries value/retry state, but a synchronous action must close in the same
+     * press. (Kept in this type comment so the rationale does not ship in the overlays bundle.)
+     */
+    onActionError?: (error: unknown) => void;
     dismissible?: boolean;
     busy?: boolean;
     size?: DialogSize;
@@ -51,11 +67,17 @@ export type DialogProps = NativeModalProps & ReasonedOpenProps<DialogOpenChangeR
     contentStyle?: HjmCompositionStyleProp;
 }>;
 /** Native modal boundary with one reasoned close intent for each user attempt. */
-export declare function Dialog({ open, defaultOpen, onOpenChange, title, accessibilityTitle, description, children, primaryAction, secondaryAction, dismissible, busy, size, closeLabel, returnFocusRef, contentStyle, onShow, ...modalProps }: DialogProps): import("react").JSX.Element;
+export declare function Dialog({ open, defaultOpen, onOpenChange, title, accessibilityTitle, description, children, primaryAction, secondaryAction, dismissible, busy: externalBusy, onActionError, size, closeLabel, returnFocusRef, contentStyle, onShow, ...modalProps }: DialogProps): import("react").JSX.Element;
 export type AlertDialogProps = NativeModalProps & ReasonedOpenProps<AlertDialogOpenChangeReason> & Readonly<{
     request: AlertDialogRequest;
     returnFocusRef?: RefObject<View | null>;
     onResult?: (result: AlertDialogResult) => void;
+    /**
+     * Layout keys only (`hjmCompositionStyleKeys`). Visual keys still apply but are deprecated:
+     * use `size`/`placement` and the recipe for appearance.
+     * @deprecated for visual keys. The next major narrows this to `HjmCompositionStyleProp`, like Dialog
+     * (consumer-policy.md §3.1).
+     */
     contentStyle?: StyleProp<ViewStyle>;
 }>;
 /** Contract session owns duplicate confirms, busy dismissal, error and settlement. */
@@ -82,6 +104,12 @@ export type SheetProps = NativeModalProps & ReasonedOpenProps<SheetOpenChangeDet
     onDismissComplete?: (detail: Readonly<{
         reason: SheetDismissReason;
     }>) => void;
+    /**
+     * Layout keys only (`hjmCompositionStyleKeys`). Visual keys still apply but are deprecated:
+     * use `size`/`placement` and the recipe for appearance.
+     * @deprecated for visual keys. The next major narrows this to `HjmCompositionStyleProp`, like Dialog
+     * (consumer-policy.md §3.1).
+     */
     contentStyle?: StyleProp<ViewStyle>;
     /** Opt in when the body contains inputs; the modal owns keyboard clearance. */
     keyboardAvoidance?: boolean;

@@ -1,3 +1,4 @@
+import { layer } from "@hjmds/design-contracts/foundations";
 import {
   comboboxRecipe,
   selectRecipe,
@@ -24,6 +25,7 @@ import {
   type ReactNode,
   type SelectHTMLAttributes,
 } from "react";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 import { Field } from "./forms.js";
 import { classNames, composeRefs, useControllableState } from "./internal.js";
 import { AnchoredPortal, useAnchoredPopup } from "./portal.js";
@@ -72,6 +74,11 @@ export type NativeSelectProps = Omit<
     size?: SelectSize;
     density?: SelectDensity;
     fieldClassName?: string;
+    /**
+     * Canonical layout-only placement on the field frame. `style` keeps going to
+     * the native control, where it always went, so existing callers do not move.
+     */
+    layoutStyle?: HjmCompositionStyleProp;
   }>;
 
 /** A native select keeps browser keyboard, form, autofill, and mobile picker behavior. */
@@ -90,6 +97,7 @@ export const NativeSelect = forwardRef<HTMLSelectElement, NativeSelectProps>(fun
     density = selectRecipe.defaults.density,
     fieldClassName,
     className,
+    layoutStyle,
     disabled = false,
     required = false,
     ...props
@@ -119,6 +127,7 @@ export const NativeSelect = forwardRef<HTMLSelectElement, NativeSelectProps>(fun
       required={required}
       disabled={disabled}
       className={classNames("hjm-select", fieldClassName)}
+      {...(layoutStyle === undefined ? {} : { layoutStyle })}
       data-size={size}
       data-density={density}
     >
@@ -197,6 +206,11 @@ export type ComboboxProps = Omit<
     align?: "start" | "end";
     fieldClassName?: string;
     portalContainer?: HTMLElement;
+    /**
+     * Canonical layout-only placement on the field frame. `style` keeps going to
+     * the input, where it always went, so existing callers do not move.
+     */
+    layoutStyle?: HjmCompositionStyleProp;
   }>;
 
 function nextEnabled(
@@ -241,6 +255,7 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
       fieldClassName,
       portalContainer,
       className,
+      layoutStyle,
       disabled = false,
       required = false,
       autoComplete = "off",
@@ -261,8 +276,11 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
     const [listboxNode, setListboxNode] = useState<HTMLDivElement | null>(null);
     const popupPosition = useAnchoredPopup(inputRef, listboxNode, {
       align,
+      // comboboxRecipe.popover (= selectRecipe.popover), same correction as Select (2026-10-06).
+      gap: comboboxRecipe.popover.sideOffset,
+      viewportPadding: comboboxRecipe.popover.collisionPadding,
       matchAnchorWidth: true,
-      zIndex: 800,
+      zIndex: layer.dropdown,
     });
     const setListboxRef = useCallback((node: HTMLDivElement | null) => {
       listboxRef.current = node;
@@ -388,6 +406,7 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
         required={required}
         disabled={disabled}
         className={classNames("hjm-combobox", fieldClassName)}
+        {...(layoutStyle === undefined ? {} : { layoutStyle })}
         data-size={size}
         data-density={density}
         data-state={disabled ? "disabled" : open ? "open" : "closed"}
@@ -510,6 +529,8 @@ export type FormProps = Omit<FormHTMLAttributes<HTMLFormElement>, "onSubmit"> &
     formError?: ReactNode;
     actions?: ReactNode;
     density?: FormDensity;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
   }>;
 
 export const Form = forwardRef<HTMLFormElement, FormProps>(function Form(
@@ -521,6 +542,7 @@ export const Form = forwardRef<HTMLFormElement, FormProps>(function Form(
     density = formRecipe.defaults.density,
     className,
     children,
+    layoutStyle,
     ...props
   },
   ref,
@@ -553,6 +575,7 @@ export const Form = forwardRef<HTMLFormElement, FormProps>(function Form(
   return (
     <form
       {...props}
+      style={{ ...props.style, ...layoutStyle }}
       ref={ref}
       className={classNames("hjm-form", className)}
       data-density={density}

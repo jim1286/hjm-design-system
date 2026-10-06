@@ -12,6 +12,8 @@ import { minimumTargetStyle } from "./internal/styles.js";
 import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
 
+import type { HjmCompositionStyleProp } from "./composition-style.js";
+
 export type CalendarMonthAction = Readonly<{ month: string; label: string }>;
 export type CalendarHandle = Readonly<{ focusDate(date: string): void }>;
 export type CalendarProps<Content = unknown> = Readonly<{
@@ -22,11 +24,12 @@ export type CalendarProps<Content = unknown> = Readonly<{
   renderCellContent?: (cell: ResolvedCalendarDateCell<Content>) => ReactNode;
   size?: CalendarSize;
   ref?: Ref<CalendarHandle>;
+  layoutStyle?: HjmCompositionStyleProp;
 }>;
 
 /** Inline dates stay individually accessible; Native month paging uses explicit buttons. */
 export function Calendar<Content>({ descriptor, composeAccessibleName, previousMonth, nextMonth,
-  renderCellContent, size = "medium", ref }: CalendarProps<Content>) {
+  renderCellContent, size = "medium", ref, layoutStyle }: CalendarProps<Content>) {
   validateCalendarDescriptor(descriptor);
   for (const action of [previousMonth, nextMonth]) {
     if (!action) continue;
@@ -64,7 +67,7 @@ export function Calendar<Content>({ descriptor, composeAccessibleName, previousM
         style={[minimumTargetStyle, { alignItems: "center", justifyContent: "center" }]}>
         <Text accessible={false}>{(reason === "previous") !== (environment.direction === "rtl") ? "‹" : "›"}</Text>
       </Pressable> : <View accessible={false} style={minimumTargetStyle} />;
-  return <View style={{ gap: recipe.header.gap, direction: environment.direction }}>
+  return <View style={[layoutStyle, { gap: recipe.header.gap, direction: environment.direction }]}>
     <View style={{ flexDirection: "row", alignItems: "center", gap: recipe.header.gap }}>
       {nav(previousMonth, "previous")}
       <Text accessibilityRole="header" accessibilityLiveRegion="polite" variant={recipe.header.monthLabel.textVariant}

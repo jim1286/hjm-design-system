@@ -10,6 +10,7 @@ import {
 } from "@hjmds/design-contracts/components/splitter";
 import {
   forwardRef,
+  useEffect,
   useRef,
   useState,
   type CSSProperties,
@@ -18,6 +19,7 @@ import {
   type ReactNode,
 } from "react";
 import { classNames, composeRefs, useControllableState } from "./internal.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type SplitterProps = Readonly<{
   /** Required accessible name for the separator. */
@@ -39,6 +41,8 @@ export type SplitterProps = Readonly<{
   secondaryPane: ReactNode;
   className?: string;
   style?: CSSProperties;
+  /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
 }>;
 
 /*
@@ -59,6 +63,27 @@ function fractionFromPointer(root: HTMLElement, axis: SplitterAxis, clientX: num
   return (flipped ? span - offset : offset) / span;
 }
 
+// Scrolling panes need a keyboard stop (axe scrollable-region-focusable), but only while they
+// overflow: always-on tabIndex added two dead stops. Pane labels would need a breaking prop.
+function useScrollableTabStop(): readonly [boolean, (node: HTMLDivElement | null) => void] {
+  const [node, setNode] = useState<HTMLDivElement | null>(null);
+  const [scrollable, setScrollable] = useState(false);
+  useEffect(() => {
+    if (!node) return;
+    const measure = () => setScrollable(node.scrollHeight > node.clientHeight || node.scrollWidth > node.clientWidth);
+    measure();
+    if (typeof ResizeObserver === "undefined") return;
+    // Content can grow without resizing the pane: watch children and mutations too.
+    const resize = new ResizeObserver(measure);
+    const observe = () => { resize.disconnect(); resize.observe(node); for (const child of node.children) resize.observe(child); };
+    observe();
+    const mutation = new MutationObserver(() => { observe(); measure(); });
+    mutation.observe(node, { childList: true, subtree: true, characterData: true });
+    return () => { resize.disconnect(); mutation.disconnect(); };
+  }, [node]);
+  return [scrollable, setNode] as const;
+}
+
 export const Splitter = forwardRef<HTMLDivElement, SplitterProps>(function Splitter(
   {
     label,
@@ -75,6 +100,7 @@ export const Splitter = forwardRef<HTMLDivElement, SplitterProps>(function Split
     primaryPane,
     secondaryPane,
     className,
+    layoutStyle,
     style,
   },
   forwardedRef,
@@ -146,6 +172,8 @@ export const Splitter = forwardRef<HTMLDivElement, SplitterProps>(function Split
     onValueChangeEnd?.(value);
   };
 
+  const [primaryScrollable, primaryPaneRef] = useScrollableTabStop();
+  const [secondaryScrollable, secondaryPaneRef] = useScrollableTabStop();
   const fraction = max === min ? 0 : (value - min) / (max - min);
   return (
     <div
@@ -153,9 +181,9 @@ export const Splitter = forwardRef<HTMLDivElement, SplitterProps>(function Split
       className={classNames("hjm-splitter", className)}
       data-axis={axis}
       data-dragging={dragging || undefined}
-      style={{ ...style, "--hjm-splitter-primary": `${fraction * 100}%` } as CSSProperties}
+      style={{ ...style, ...layoutStyle, "--hjm-splitter-primary": `${fraction * 100}%` } as CSSProperties}
     >
-      <div className="hjm-splitter__pane" data-pane="primary">{primaryPane}</div>
+      <div ref={primaryPaneRef} className="hjm-splitter__pane" tabIndex={primaryScrollable ? 0 : undefined} data-pane="primary">{primaryPane}</div>
       <div
         role="separator"
         // Perpendicular by contract: side-by-side panes have a vertical bar.
@@ -177,7 +205,7 @@ export const Splitter = forwardRef<HTMLDivElement, SplitterProps>(function Split
       >
         <span className="hjm-splitter__handle" aria-hidden="true" />
       </div>
-      <div className="hjm-splitter__pane" data-pane="secondary">{secondaryPane}</div>
+      <div ref={secondaryPaneRef} className="hjm-splitter__pane" tabIndex={secondaryScrollable ? 0 : undefined} data-pane="secondary">{secondaryPane}</div>
     </div>
   );
 });

@@ -3,6 +3,7 @@ import confetti from "canvas-confetti";
 import { celebrationColors, celebrationRecipe, validateEventId, type CelebrationPreset } from "@hjmds/design-contracts/components/interaction-adapters";
 import { useHjmTheme } from "./provider.js";
 
+// No `layoutStyle`: a full-viewport, pointer-transparent effect layer.
 export type CelebrationProps = { eventId: string; preset?: CelebrationPreset; onComplete?(): void };
 export function Celebration({ eventId, preset = "small-burst", onComplete }: CelebrationProps) {
   validateEventId(eventId);

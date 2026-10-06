@@ -9,6 +9,12 @@ export type CommandPaletteProps<Key extends string = string> = Readonly<{
     onActivate: CommandPaletteActivateHandler<Key>;
     /** Runs after the palette is gone, for a command that opens the next surface. */
     onActivateAfterDismiss?: CommandPaletteActivateHandler<Key>;
+    /**
+     * Combobox's collection state. Omitted or `filtering: "local"` filters
+     * `source` by `query` in the renderer (label/textValue substring); pass
+     * `filtering: "external"` with `queryValue`/`resultQuery` when the product
+     * already filtered or ranked the results (server or fuzzy search).
+     */
     queryState?: CommandPaletteQueryState;
     dismissPolicy?: Partial<CommandPaletteDismissPolicy>;
     open?: boolean;

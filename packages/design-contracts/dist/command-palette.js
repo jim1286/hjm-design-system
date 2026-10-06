@@ -28,16 +28,15 @@ export function validateCommandPaletteDescriptor(descriptor) {
     }
     assertNonEmpty(descriptor.accessibilityLabel, "accessibilityLabel");
     assertNonEmpty(descriptor.searchPlaceholder, "searchPlaceholder");
+    for (const f of ["emptyMessage", "closeLabel"]) {
+        const v = descriptor[f];
+        if (v !== undefined)
+            assertNonEmpty(v, f);
+    }
 }
-/**
- * Anatomy only — chrome for the modal shell and the pinned search field,
- * reusing the exact tokens Dialog-family and Menu-family recipes already use
- * (`floatingSurfaceContract`, `fieldFrameContract`, `collectionItemContract`)
- * instead of inventing new ones. Result rows and section labels reuse
- * `collectionItemContract` the same way `menuRecipe`/`treeRecipe` do — a
- * command result is chrome-identical to a Menu item, it just lives in a
- * modal instead of an anchored popup.
- */
+// Anatomy only; reuses Dialog/Menu chrome tokens. Rationale: docs/command-palette.md
+// "HJM 기본값" (moved out of JSDoc 2026-10-06 because dist keeps comments and the
+// behaviors bundle that re-exports this module sits at its byte budget).
 export const commandPaletteRecipe = {
     slots: [
         "backdrop",

@@ -24,6 +24,7 @@ import {
 } from "react";
 import { classNames, composeRefs, useControllableState } from "./internal.js";
 import { useOptionalHjmTheme } from "./provider.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type TreeProps<Id extends string = string> = Readonly<{
   label: string;
@@ -44,6 +45,8 @@ export type TreeProps<Id extends string = string> = Readonly<{
   /** Product-owned glyph for the expand/collapse affordance; decorative by contract. */
   renderToggle?: (state: Readonly<{ expanded: boolean }>) => ReactNode;
   className?: string;
+  /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
 }>;
 
 const typeaheadResetMs = 500;
@@ -71,6 +74,7 @@ export const Tree = forwardRef(function Tree<Id extends string = string>(
     asyncState = { status: "idle" },
     renderToggle,
     className,
+    layoutStyle,
   }: TreeProps<Id>,
   forwardedRef: React.Ref<HTMLDivElement>,
 ) {
@@ -88,7 +92,15 @@ export const Tree = forwardRef(function Tree<Id extends string = string>(
     [nodes, liveExpanded, composeAccessibleName],
   );
   const visible = useMemo(() => resolved.filter((node) => node.visible), [resolved]);
-  const selected = selectedIds(selection);
+  // `defaultSelectedKey(s)` used to be re-read on every render, so an
+  // uncontrolled tree reported the click to `onSelectionChange` but kept showing
+  // the default. Keep the uncontrolled value in state like `useControllableState`
+  // does for expansion; a controlled `selectedKey(s)` (including `null`) still wins.
+  const selectionControlled = selection?.mode === "single"
+    ? selection.selectedKey !== undefined
+    : selection?.mode === "multiple" ? selection.selectedKeys !== undefined : true;
+  const [uncontrolledSelected, setUncontrolledSelected] = useState<ReadonlySet<Id>>(() => selectedIds(selection));
+  const selected = selectionControlled ? selectedIds(selection) : uncontrolledSelected;
   const [focusedId, setFocusedId] = useState<Id | null>(null);
   // Roving tab stop: one node is tabbable, and it must stay a real visible node
   // after a collapse removed the previously focused descendant.
@@ -108,13 +120,15 @@ export const Tree = forwardRef(function Tree<Id extends string = string>(
   const toggleSelection = (node: ResolvedTreeNodeDescriptor<Id>) => {
     if (node.disabled || !selection || selection.mode === "none") return;
     if (selection.mode === "single") {
-      const current = selection.selectedKey ?? selection.defaultSelectedKey ?? null;
+      const current = selected.has(node.id) ? node.id : null;
       const next = current === node.id && selection.disallowEmptySelection !== true ? null : node.id;
+      if (!selectionControlled) setUncontrolledSelected(next === null ? new Set<Id>() : new Set<Id>([next]));
       selection.onSelectionChange?.(next);
       return;
     }
-    const next = new Set(selection.selectedKeys ?? selection.defaultSelectedKeys ?? []);
+    const next = new Set(selected);
     if (next.has(node.id)) next.delete(node.id); else next.add(node.id);
+    if (!selectionControlled) setUncontrolledSelected(next);
     selection.onSelectionChange?.(next);
   };
 
@@ -159,7 +173,7 @@ export const Tree = forwardRef(function Tree<Id extends string = string>(
       aria-busy={asyncState.status === "loading" || asyncState.status === "loadingMore" || undefined}
       aria-multiselectable={selection?.mode === "multiple" || undefined}
       className={classNames("hjm-tree", className)}
-      style={{ "--hjm-tree-indent": `${treeRecipe.indentPerLevel}px` } as CSSProperties}
+      style={{ ...layoutStyle, "--hjm-tree-indent": `${treeRecipe.indentPerLevel}px` } as CSSProperties}
     >
       {asyncState.status === "empty" || asyncState.status === "error" || asyncState.status === "loading" ? (
         <p className="hjm-tree__state" role={asyncState.status === "error" ? "alert" : "status"}>{asyncState.message}</p>

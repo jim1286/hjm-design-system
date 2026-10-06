@@ -3,6 +3,7 @@ export type { TabsAppearance };
 import { type TabsActivationMode, type TabsDirection, type TabsMountPolicy, type TabsOrientation, type TabsPanelMode } from "@hjmds/design-contracts/behaviors";
 import { type TabSize, type TabsLayout, type TabsOverflow } from "@hjmds/design-contracts/recipes";
 import { type HTMLAttributes, type ReactNode } from "react";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type TabLeadingRenderProps = Readonly<{
     selected: boolean;
     disabled: boolean;
@@ -41,6 +42,8 @@ export type TabsProps = Omit<HTMLAttributes<HTMLDivElement>, "dir" | "onChange">
     overflow?: TabsOverflow;
     /** Set false when panels are rendered separately with `TabPanel`. */
     renderPanels?: boolean;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 export declare function getTabId(tabsId: string, value: string): string;
 export declare function getTabPanelId(tabsId: string, value: string, mode?: TabsPanelMode): string;
@@ -49,6 +52,8 @@ type ExternalTabPanelBaseProps = Omit<HTMLAttributes<HTMLDivElement>, "id"> & Re
     tabsId: string;
     activeValue: string;
     children: ReactNode;
+    /** Canonical layout-only placement on the panel element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 export type TabPanelProps = ExternalTabPanelBaseProps & (Readonly<{
     mode: "dynamic";

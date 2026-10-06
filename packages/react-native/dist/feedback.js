@@ -6,11 +6,13 @@ import { emptyStateRecipe, noticeRecipe, progressRecipe, skeletonRecipe, toastRe
 import { resolveResultDescriptor, resultRecipe, } from "@hjmds/design-contracts/components/result";
 import { liquidToastRecipe, createToastSession, createToastStore, resolveToastDescriptor, toastBehaviorDefaults, } from "@hjmds/design-contracts/components/toast";
 import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, } from "react";
-import { ActivityIndicator, Text as NativeText, AccessibilityInfo, Animated, AppState, Easing, Keyboard, Platform, Pressable, View, useWindowDimensions, } from "react-native";
+import { Text as NativeText, AccessibilityInfo, Animated, AppState, Easing, Keyboard, Platform, Pressable, View, useWindowDimensions, } from "react-native";
 import { Button, IconButton } from "./actions.js";
+import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
-export function Notice({ title, description, tone = noticeRecipe.defaults.tone, announcement = "none", icon, renderIcon, action, style, ...props }) {
+export function Notice({ title, description, tone = noticeRecipe.defaults.tone, announcement = "none", icon, renderIcon, action, style, layoutStyle, ...props }) {
+    warnDeprecatedStyleProps("Notice", { style }, "layoutStyle for placement and tone for appearance");
     const theme = useHjmNativeTheme();
     const toneContract = noticeRecipe.tones[tone];
     const foreground = resolveColorReference(toneContract.foreground, theme.palette);
@@ -37,6 +39,7 @@ export function Notice({ title, description, tone = noticeRecipe.defaults.tone, 
                 padding: noticeRecipe.padding,
             },
             style,
+            layoutStyle,
         ], children: [_jsxs(View, { style: {
                     alignItems: "flex-start",
                     direction: theme.environment.direction,
@@ -49,7 +52,8 @@ export function Notice({ title, description, tone = noticeRecipe.defaults.tone, 
                             width: glyph[noticeRecipe.iconSize],
                         }, children: resolvedIcon })), _jsxs(View, { style: { flex: 1, gap: noticeRecipe.contentGap, minWidth: 0 }, children: [_jsx(Text, { style: { color: foreground, fontWeight: noticeRecipe.title.fontWeight }, variant: noticeRecipe.title.textVariant, children: title }), description ? (_jsx(Text, { style: { color: resolveColorReference(noticeRecipe.description.color, theme.palette) }, variant: noticeRecipe.description.textVariant, children: description })) : null] })] }), action] }));
 }
-export function EmptyState({ title, description, illustration, action, density = emptyStateRecipe.defaults.density, align = "center", announcement = "none", accessibilityLabel, titleRole = "header", style, illustrationStyle, titleStyle, descriptionStyle, actionStyle, ...props }) {
+export function EmptyState({ title, description, illustration, action, density = emptyStateRecipe.defaults.density, align = "center", announcement = "none", accessibilityLabel, titleRole = "header", style, illustrationStyle, titleStyle, descriptionStyle, actionStyle, layoutStyle, ...props }) {
+    warnDeprecatedStyleProps("EmptyState", { style, illustrationStyle, titleStyle, descriptionStyle, actionStyle }, "layoutStyle for placement and density/align for appearance");
     const theme = useHjmNativeTheme();
     const contentLabel = [title, description].filter(Boolean).join(", ");
     const announcementText = accessibilityLabel ?? [title, description].filter(Boolean).join(". ");
@@ -74,6 +78,7 @@ export function EmptyState({ title, description, illustration, action, density =
                 paddingVertical: emptyStateRecipe.density[density].paddingVertical,
             },
             style,
+            layoutStyle,
         ], children: [announcement === "none" || Platform.OS === "ios" ? null : (_jsx(Text, { accessibilityLabel: announcementText, accessibilityLiveRegion: announcement, accessibilityRole: announcement === "assertive" ? "alert" : undefined, accessible: true, style: { height: 1, opacity: 0, position: "absolute", width: 1 }, children: announcementText })), usesUpperSpacers ? _jsx(View, { accessible: false, style: { flexGrow: 1 } }) : null, illustration ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", style: [
                     {
                         alignItems: "center",
@@ -96,7 +101,8 @@ export function EmptyState({ title, description, illustration, action, density =
                 ], variant: emptyStateRecipe.description.textVariant, children: description })) : null, action ? _jsx(View, { style: actionStyle, children: action }) : null, usesUpperSpacers ? _jsx(View, { accessible: false, style: { flexGrow: 3 } }) : null] }));
 }
 /** Terminal flow outcome with platform announcement and canonical actions. */
-export function Result({ status, title, description, actions, renderIcon, style, ...props }) {
+export function Result({ status, title, description, actions, renderIcon, style, layoutStyle, ...props }) {
+    warnDeprecatedStyleProps("Result", { style }, "layoutStyle for placement and status for appearance");
     const theme = useHjmNativeTheme();
     const result = resolveResultDescriptor({
         status,
@@ -129,6 +135,7 @@ export function Result({ status, title, description, actions, renderIcon, style,
                 paddingVertical: resultRecipe.paddingVertical,
             },
             style,
+            layoutStyle,
         ], children: [_jsx(View, { accessible: false, style: {
                     alignItems: "center",
                     backgroundColor: iconBackgroundColor,
@@ -152,9 +159,10 @@ export function Result({ status, title, description, actions, renderIcon, style,
                     gap: resultRecipe.actionsGap,
                     justifyContent: "center",
                     marginTop: spacing.xs,
-                }, children: [result.primaryAction ? (_jsx(Button, { accessibilityLabel: result.primaryAction.accessibilityLabel, onPress: result.primaryAction.onAction, children: result.primaryAction.label })) : null, result.secondaryAction ? (_jsx(Button, { accessibilityLabel: result.secondaryAction.accessibilityLabel, onPress: result.secondaryAction.onAction, tone: "secondary", children: result.secondaryAction.label })) : null] })) : null] }));
+                }, children: [result.secondaryAction ? (_jsx(Button, { accessibilityLabel: result.secondaryAction.accessibilityLabel, onPress: result.secondaryAction.onAction, tone: "secondary", children: result.secondaryAction.label })) : null, result.primaryAction ? (_jsx(Button, { accessibilityLabel: result.primaryAction.accessibilityLabel, onPress: result.primaryAction.onAction, children: result.primaryAction.label })) : null] })) : null] }));
 }
-export function Progress({ value, max = progressRecipe.defaults.max, label, accessibilityLabel, valueText, accessibilityHint, size = progressRecipe.defaults.size, tone = progressRecipe.defaults.tone, shape = progressRecipe.defaults.shape, children, style, labelStyle, valueStyle, trackStyle, indicatorStyle, testID, }) {
+export function Progress({ value, max = progressRecipe.defaults.max, label, accessibilityLabel, valueText, accessibilityHint, size = progressRecipe.defaults.size, tone = progressRecipe.defaults.tone, shape = progressRecipe.defaults.shape, children, style, labelStyle, valueStyle, trackStyle, indicatorStyle, layoutStyle, testID, }) {
+    warnDeprecatedStyleProps("Progress", { style, labelStyle, valueStyle, trackStyle, indicatorStyle }, "layoutStyle for placement and tone/size/shape for appearance");
     if (!Number.isFinite(max) || max <= 0) {
         throw new RangeError("Progress max must be a positive finite number");
     }
@@ -170,7 +178,7 @@ export function Progress({ value, max = progressRecipe.defaults.max, label, acce
             max: 100,
             ...(percentage === undefined ? {} : { now: percentage }),
             ...(resolvedValueText === undefined ? {} : { text: resolvedValueText }),
-        }, testID: testID, style: [{ gap: spacing.xs }, style], children: [label === undefined ? null : (_jsxs(View, { accessible: false, style: {
+        }, testID: testID, style: [{ gap: spacing.xs }, style, layoutStyle], children: [label === undefined ? null : (_jsxs(View, { accessible: false, style: {
                     alignItems: "center",
                     direction: theme.environment.direction,
                     flexDirection: "row",
@@ -215,10 +223,7 @@ export function Progress({ value, max = progressRecipe.defaults.max, label, acce
                         indicatorStyle,
                     ] }) }))] }));
 }
-export function Spinner({ label, size = "small", style }) {
-    const { colors } = useHjmNativeTheme();
-    return (_jsx(View, { accessibilityLabel: label, accessibilityRole: "progressbar", accessibilityState: { busy: true }, accessible: true, style: [{ alignItems: "center", justifyContent: "center" }, style], children: _jsx(ActivityIndicator, { color: colors.contentBrand, size: size }) }));
-}
+export { Spinner } from "./internal/spinner.js";
 /**
  * Consumes the same skeletonRecipe as the web renderer. Until 0.10.0 this drew a
  * static View at a fixed height of 16, reading neither the recipe shapes nor its
@@ -227,7 +232,8 @@ export function Spinner({ label, size = "small", style }) {
  * width/height/radius stay for callers already on the 0.9 train and win over
  * `shape`. Migration: .changeset/skeleton-pulse-by-default.md
  */
-export function Skeleton({ shape = skeletonRecipe.defaults.shape, animated = skeletonRecipe.defaults.animated, width, height, radius: radiusValue, accessibilityLabel, style, }) {
+export function Skeleton({ shape = skeletonRecipe.defaults.shape, animated = skeletonRecipe.defaults.animated, width, height, radius: radiusValue, accessibilityLabel, style, layoutStyle, }) {
+    warnDeprecatedStyleProps("Skeleton", { style }, "layoutStyle for placement and shape/width/height for appearance");
     const { environment, palette } = useHjmNativeTheme();
     const shapeSpec = skeletonRecipe.shapes[shape];
     const { duration, easing: easingName, fromOpacity, toOpacity } = skeletonRecipe.animation;
@@ -277,6 +283,7 @@ export function Skeleton({ shape = skeletonRecipe.defaults.shape, animated = ske
                 width: resolvedWidth,
             },
             style,
+            layoutStyle,
         ] }));
 }
 function ToastSurface({ snapshot, managedMotion = false, announces = true, suspended = false, onDismiss, onAction, onExitComplete, onPause, onResume, placement, renderToneIcon, style, }) {
@@ -409,7 +416,8 @@ function ToastSurface({ snapshot, managedMotion = false, announces = true, suspe
                     }, variant: toastRecipe.action.textVariant, children: resolved.action.label }) })) : null] }));
 }
 /** One Native toast driven by the same exactly-once session as a queued region. */
-export function Toast({ descriptor, onDismiss, placement = toastRecipe.defaults.placement, renderToneIcon, style, }) {
+export function Toast({ descriptor, onDismiss, placement = toastRecipe.defaults.placement, renderToneIcon, style, layoutStyle, }) {
+    warnDeprecatedStyleProps("Toast", { style }, "layoutStyle for placement and the descriptor tone for appearance");
     const descriptorRef = useRef(descriptor);
     const additionalDismissRef = useRef(onDismiss);
     descriptorRef.current = descriptor;
@@ -450,7 +458,7 @@ export function Toast({ descriptor, onDismiss, placement = toastRecipe.defaults.
     };
     return (_jsx(ToastSurface, { onAction: () => {
             session.invokeAction();
-        }, onDismiss: completeDismiss, onExitComplete: () => session.completeExit(), onPause: (reason) => session.pause(reason), onResume: (reason) => session.resume(reason), placement: placement, ...(renderToneIcon === undefined ? {} : { renderToneIcon }), snapshot: snapshot, style: style }));
+        }, onDismiss: completeDismiss, onExitComplete: () => session.completeExit(), onPause: (reason) => session.pause(reason), onResume: (reason) => session.resume(reason), placement: placement, ...(renderToneIcon === undefined ? {} : { renderToneIcon }), snapshot: snapshot, style: [style, layoutStyle] }));
 }
 const ToastRegionContext = createContext(null);
 function useToastKeyboardHeight(enabled) {
@@ -536,7 +544,8 @@ function PresentedToast({ adapter, width, availableHeight, windowOrigin, ...prop
     return _jsxs(_Fragment, { children: [announcer, _jsx(Surface, { anchor: selected.anchor, snapshot: props.snapshot, width: width, availableHeight: availableHeight, ...(windowOrigin === undefined ? {} : { windowOrigin }), suspended: props.suspended ?? false, body: _jsx(ToastSurface, { ...props, announces: false, managedMotion: true }), fallback: fallback, onPause: props.onPause, onResume: props.onResume, onDismiss: props.onDismiss, onExitComplete: props.onExitComplete })] });
 }
 /** Bounded FIFO region with one clock, app-state pause and teardown interruption. */
-export function ToastRegion({ presentationAdapter, occluded = false, children, accessibilityLabel, toasts, defaultToasts = [], onToastsChange, maxVisible = toastBehaviorDefaults.maxVisible, maxQueued = toastBehaviorDefaults.maxQueued, duplicatePolicy = toastBehaviorDefaults.duplicatePolicy, timerUpdatePolicy = toastBehaviorDefaults.timerUpdatePolicy, overflowPolicy = toastBehaviorDefaults.overflowPolicy, placement = toastRecipe.defaults.placement, safeAreaInsets = {}, avoidKeyboard = true, keyboardOffset = 0, renderToneIcon, style, toastStyle, }) {
+export function ToastRegion({ presentationAdapter, occluded = false, children, accessibilityLabel, toasts, defaultToasts = [], onToastsChange, maxVisible = toastBehaviorDefaults.maxVisible, maxQueued = toastBehaviorDefaults.maxQueued, duplicatePolicy = toastBehaviorDefaults.duplicatePolicy, timerUpdatePolicy = toastBehaviorDefaults.timerUpdatePolicy, overflowPolicy = toastBehaviorDefaults.overflowPolicy, placement = toastRecipe.defaults.placement, safeAreaInsets = {}, avoidKeyboard = true, keyboardOffset = 0, renderToneIcon, style, toastStyle, layoutStyle, }) {
+    warnDeprecatedStyleProps("ToastRegion", { style, toastStyle }, "layoutStyle for placement and placement/safeAreaInsets/descriptor tone for appearance");
     if (presentationAdapter && (presentationAdapter.kind !== "liquid" || placement !== "top" || maxVisible !== 1)) {
         throw new TypeError("Liquid Toast requires top placement and maxVisible=1");
     }
@@ -723,7 +732,7 @@ export function ToastRegion({ presentationAdapter, occluded = false, children, a
             : "center";
     const blockOffset = toastRecipe.viewport.inset
         + (bottomPlacement ? safeBottom + keyboardHeight + keyboardOffset : safeTop);
-    return (_jsx(ToastRegionContext.Provider, { value: controller, children: _jsxs(View, { style: [{ flex: hasChildren ? 1 : undefined }, style], children: [children, _jsx(View, { ref: viewportRef, onLayout: event => {
+    return (_jsx(ToastRegionContext.Provider, { value: controller, children: _jsxs(View, { style: [{ flex: hasChildren ? 1 : undefined }, style, layoutStyle], children: [children, _jsx(View, { ref: viewportRef, onLayout: event => {
                         setViewportWidth(event.nativeEvent.layout.width);
                         viewportRef.current?.measureInWindow?.((x, y) => setWindowOrigin(previous => previous?.x === x && previous?.y === y ? previous : { x, y }));
                     }, accessibilityLabel: accessibilityLabel, accessibilityElementsHidden: suspended, importantForAccessibility: suspended ? "no-hide-descendants" : "auto", pointerEvents: suspended ? "none" : "box-none", style: {

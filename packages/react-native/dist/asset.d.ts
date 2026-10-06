@@ -1,6 +1,7 @@
 import { type AssetDescriptor } from "@hjmds/design-contracts/components/asset";
 import type { ReactNode } from "react";
 import { type StyleProp, type ViewStyle } from "react-native";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type AssetProps = Readonly<{
     descriptor: AssetDescriptor;
     /**
@@ -12,16 +13,28 @@ export type AssetProps = Readonly<{
     }>) => ReactNode);
     /** A small mark on the frame's outer corner (play, status dot). */
     accessory?: ReactNode;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
+    /**
+     * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement;
+     * `assetRecipe` owns appearance. Removed in the next major (consumer-policy.md §3.1).
+     */
     style?: StyleProp<ViewStyle>;
 }>;
-export declare function Asset({ descriptor, children, accessory, style }: AssetProps): import("react").JSX.Element;
+export declare function Asset({ descriptor, children, accessory, layoutStyle, style }: AssetProps): import("react").JSX.Element;
 export type AssetGroupProps = Readonly<{
     /** Accessible name for the group; the overlap alone does not say what it is. */
     label: string;
     size?: AssetDescriptor["size"];
     children: ReactNode;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
+    /**
+     * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement;
+     * `assetRecipe` owns appearance. Removed in the next major (consumer-policy.md §3.1).
+     */
     style?: StyleProp<ViewStyle>;
 }>;
 /** Overlaps assets with the same ratio Avatar uses — they share a row on purpose. */
-export declare function AssetGroup({ label, size, children, style }: AssetGroupProps): import("react").JSX.Element;
+export declare function AssetGroup({ label, size, children, layoutStyle, style }: AssetGroupProps): import("react").JSX.Element;
 //# sourceMappingURL=asset.d.ts.map

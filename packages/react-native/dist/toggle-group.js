@@ -4,8 +4,10 @@ import { resolveColorReference } from "@hjmds/design-contracts/color-references"
 import { useMemo, useState } from "react";
 import { Pressable, View } from "react-native";
 import { Text } from "./primitives.js";
+import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { useHjmNativeTheme } from "./provider.js";
-export function ToggleGroup({ descriptor, pressedIds: controlledPressed, defaultPressedIds, onPressedIdsChange, size = toggleGroupRecipe.defaults.size, style, }) {
+export function ToggleGroup({ descriptor, pressedIds: controlledPressed, defaultPressedIds, onPressedIdsChange, size = toggleGroupRecipe.defaults.size, layoutStyle, style, }) {
+    warnDeprecatedStyleProps("ToggleGroup", { style }, "layoutStyle for placement; toggleGroupRecipe (size) owns appearance");
     validateToggleGroupDescriptor(descriptor);
     const theme = useHjmNativeTheme();
     const [internal, setInternal] = useState(defaultPressedIds ?? new Set());
@@ -17,7 +19,7 @@ export function ToggleGroup({ descriptor, pressedIds: controlledPressed, default
             setInternal(next);
         onPressedIdsChange?.(next);
     };
-    return (_jsx(View, { accessibilityLabel: descriptor.accessibilityLabel, style: [{ flexDirection: "row", flexWrap: "wrap", gap: toggleGroupRecipe.gap }, style], children: descriptor.items.map((item) => {
+    return (_jsx(View, { accessibilityLabel: descriptor.accessibilityLabel, style: [{ flexDirection: "row", flexWrap: "wrap", gap: toggleGroupRecipe.gap }, style, layoutStyle], children: descriptor.items.map((item) => {
             const on = pressed.has(item.id);
             const tone = on ? toggleGroupRecipe.pressed : toggleGroupRecipe.idle;
             return (_jsx(Pressable, { accessibilityRole: "button", 

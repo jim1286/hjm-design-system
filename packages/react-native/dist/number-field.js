@@ -2,6 +2,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { commitNumberFieldInput, numberFieldRecipe, parseNumberFieldInput, resolveNumberFieldDescriptor, resolveNumberFieldInputStepperState, stepNumberFieldInput, } from "@hjmds/design-contracts/components/number-field";
 import { forwardRef, useEffect, useState } from "react";
 import { Pressable, Text as NativeText, TextInput, View, } from "react-native";
+import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { useControllableState } from "./internal/state.js";
 import { logicalTextAlign, minimumTargetStyle, resolveNativeTextScaleProps, } from "./internal/styles.js";
 import { useHjmNativeTheme } from "./provider.js";
@@ -14,8 +15,9 @@ function defaultInputMode(min, step) {
     return Number.isInteger(step) ? "numeric" : "decimal";
 }
 /** Expo-independent exact numeric input sharing the Web range/step resolver. */
-export const NumberField = forwardRef(function NumberField({ label, min, max, step, value, defaultValue = null, onValueChange, description, error, required = false, disabled = false, readOnly = false, size = "medium", decrementLabel, incrementLabel, accessibilityLabel, accessibilityHint, getValueText, inputMode, inputStyle, containerStyle, onBlur, onFocus, onSubmitEditing, ...inputProps }, forwardedRef) {
+export const NumberField = forwardRef(function NumberField({ label, min, max, step, value, defaultValue = null, onValueChange, description, error, required = false, disabled = false, readOnly = false, size = "medium", decrementLabel, incrementLabel, accessibilityLabel, accessibilityHint, getValueText, inputMode, inputStyle, containerStyle, layoutStyle, onBlur, onFocus, onSubmitEditing, ...inputProps }, forwardedRef) {
     const { colors, environment, textScaling, tokens } = useHjmNativeTheme();
+    warnDeprecatedStyleProps("NumberField", { inputStyle, containerStyle }, "layoutStyle for placement and size for the control");
     const controlled = value !== undefined;
     const [currentValue, setCurrentValue] = useControllableState({
         ...(value === undefined ? {} : { value }),
@@ -90,11 +92,14 @@ export const NumberField = forwardRef(function NumberField({ label, min, max, st
             },
         };
     const scaledText = (style, allowFontScaling) => resolveNativeTextScaleProps(textScaling, style, allowFontScaling);
-    return (_jsxs(View, { style: [{ gap: numberFieldRecipe.support.gap }, containerStyle], children: [_jsx(NativeText, { ...scaledText([
+    return (_jsxs(View, { style: [{ gap: numberFieldRecipe.support.gap }, containerStyle, layoutStyle], children: [_jsx(NativeText, { ...scaledText([
                     tokens.typography[numberFieldRecipe.support.label.textVariant],
                     {
                         color: colors.textBody,
                         fontWeight: numberFieldRecipe.support.label.fontWeight,
+                        // fieldRecipe.disabledScope: the label fades with the control (it stayed at full
+                        // contrast before 2026-10-06, while Web faded it); support text does not.
+                        opacity: disabled ? numberFieldRecipe.states.disabledOpacity : 1,
                         textAlign: logicalTextAlign(environment.direction),
                     },
                 ]), children: visibleLabel }), _jsxs(View, { style: {

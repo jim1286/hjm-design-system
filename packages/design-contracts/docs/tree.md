@@ -56,7 +56,9 @@ controlled/uncontrolled 분기는 렌더러가 끝낸다.
 ### 선택
 
 `TreeSelectionModel<Id>`(= `CollectionSelectionModel<Id>`)로 `none|single|multiple`을
-그대로 받는다. 새 모델을 만들지 않았다.
+그대로 받는다. 새 모델을 만들지 않았다. 펼침과 같이 `selectedKey(s)`가 있으면 controlled,
+`defaultSelectedKey(s)`만 있으면 renderer가 첫 값을 내부 상태로 보관하고 이후 활성화로 갱신한다
+(2026-10-06 정정: Web이 default를 매 렌더 다시 읽어 클릭 후에도 표시가 바뀌지 않았다).
 
 ### 비활성 노드는 선택만 막는다
 
@@ -140,7 +142,8 @@ label proof를 통과해 2026-09-29 stable로 승격한다. Native는 `unsupport
 - **tri-state 체크는 노드 자체에 실린다.** `checkedStates`(=`resolveTreeCheckedStates`
   결과)를 주면 행이 `aria-checked`로 true/false/mixed를 말한다. 체크박스를 행 안에 넣으면
   tab stop 규칙이 깨지므로 넣지 않았다.
-- 브라우저 검증: `test/tree.browser.test.tsx` 8개. 기존 여섯 동작(깊이·형제 위치 발표,
+- 브라우저 검증: `test/tree.browser.test.tsx` 11개. 2026-10-06에 비제어 single·multiple 선택 보관과
+  controlled 소유자 우선을 확인하는 2개를 더했다. 기존 여섯 동작(깊이·형제 위치 발표,
   단일 tab stop과 roving, 펼침·접힘과 접힌 subtree 건너뛰기, RTL 화살표 반전,
   disabled의 선택만 차단·타이핑 검색, tri-state 파생과 enabled leaf만의 cascade)에 더해,
   포커스된 자식에서 부모로 돌아온 뒤 접어도 선택 상태와 포커스가 유지되는지, 320px 폭에서

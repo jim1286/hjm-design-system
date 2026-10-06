@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { type StepsProps } from "./steps.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type StepPlayerProps = Readonly<{
     descriptor: StepsProps["descriptor"];
     statusLabels: StepsProps["statusLabels"];
@@ -18,7 +19,9 @@ export type StepPlayerProps = Readonly<{
     /** Host resets its cursor/progress and chooses whether replay starts immediately. */
     onReplay: () => void;
     children?: ReactNode;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** Controlled playback chrome: Steps owns the cursor and Progress owns range semantics. */
-export declare function StepPlayer({ descriptor, statusLabels, composeAccessibleName, progress, playing, disabled, labels, onPlayingChange, onReplay, children }: StepPlayerProps): import("react").JSX.Element;
+export declare function StepPlayer({ descriptor, statusLabels, composeAccessibleName, progress, playing, disabled, labels, onPlayingChange, onReplay, children, layoutStyle }: StepPlayerProps): import("react").JSX.Element;
 //# sourceMappingURL=step-player.d.ts.map

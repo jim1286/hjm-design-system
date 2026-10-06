@@ -3,7 +3,7 @@ import { emptyDateRange, isCompleteDateRange, resolveDateRangeCellState, resolve
 import { useState } from "react";
 import { Calendar } from "./calendar.js";
 import { classNames, useControllableState } from "./internal.js";
-export function DateRangePicker({ descriptor, composeAccessibleName, value: controlledValue, defaultValue, onValueChange, previousMonth, nextMonth, rangeLabels, renderCellContent, className, }) {
+export function DateRangePicker({ descriptor, composeAccessibleName, value: controlledValue, defaultValue, onValueChange, previousMonth, nextMonth, rangeLabels, renderCellContent, className, layoutStyle, }) {
     const [value, setValue] = useControllableState({
         ...(controlledValue === undefined ? {} : { value: controlledValue }),
         defaultValue: defaultValue ?? emptyDateRange,
@@ -13,7 +13,7 @@ export function DateRangePicker({ descriptor, composeAccessibleName, value: cont
     // The hovered date previews the not-yet-committed end through the same cell
     // state function the committed range uses.
     const [hovered, setHovered] = useState(null);
-    return (_jsx("div", { className: classNames("hjm-date-range", className), "data-selecting": value.start !== null && value.end === null ? "" : undefined, "data-complete": isCompleteDateRange(value) || undefined, onMouseLeave: () => setHovered(null), children: _jsx(Calendar, { descriptor: {
+    return (_jsx("div", { style: layoutStyle, className: classNames("hjm-date-range", className), "data-selecting": value.start !== null && value.end === null ? "" : undefined, "data-complete": isCompleteDateRange(value) || undefined, onMouseLeave: () => setHovered(null), children: _jsx(Calendar, { descriptor: {
                 ...descriptor,
                 // Calendar keeps single selection: the range's own edges are painted
                 // through cell content and data attributes, not by lying to it.

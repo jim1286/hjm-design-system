@@ -3,25 +3,12 @@ import { dirname, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { gzipSync } from "node:zlib";
 
-// Byte limits are an alarm, not a gate (2026-10-02 user decision, docs/RELEASE_GOVERNANCE.md
-// "번들 크기 상한"). Caps sat at ~0% headroom, so rationale comments alone failed CI and each
-// change raised a cap. Over the cap warns; only growth past the tolerance fails. Module
-// counts, optional-peer leaks and root-barrel traversal still fail immediately.
-export const BYTE_ALARM_TOLERANCE = 0.1;
-
-export function classifyByteBudget(measured, budget, regressions) {
-  const warnings = [];
-  for (const kind of ["raw", "gzip"]) {
-    const message = `${formatBytes(measured[kind])} ${kind} > ${formatBytes(budget[kind])}`;
-    if (measured[kind] > budget[kind] * (1 + BYTE_ALARM_TOLERANCE)) {
-      regressions.push(`${message} (+${Math.round(BYTE_ALARM_TOLERANCE * 100)}% tolerance)`);
-    } else if (measured[kind] > budget[kind]) {
-      warnings.push(message);
-    }
-  }
-  return warnings;
-}
-
+// Bytes are measured and reported, not enforced (2026-10-06 user decision: "상한 없애").
+// The 2026-10-02 alarm (+10% tolerance) still turned comment-only and feature growth into
+// CI failures and cap debates. The `raw`/`gzip` numbers below are reviewed baselines: the
+// report prints growth against them so a large jump stays visible in review. Module counts,
+// optional-peer leaks and root-barrel traversal still fail immediately — those catch import
+// edges that crash device Metro while typecheck and tests pass, which byte size never did.
 const workspaceRoot = fileURLToPath(new URL("../", import.meta.url));
 
 // Baselines are the reviewed 0.7 renderer graphs with roughly 15-25% byte headroom.
@@ -39,6 +26,9 @@ const rendererBudgets = [
     // and drifted): measured +3.1 kB raw / +0.84 kB gzip. provider.js gained the
     // brandPalette prop and its inheritance context: +0.7 kB / +0.24 kB.
     sharedModuleAllowances: [
+      // Spinner was extracted from feedback for reuse by ScreenLayout without
+      // importing toast/notice implementations. One internal edge, no byte increase.
+      { file: "internal/spinner.js", modules: 1, raw: 0, gzip: 0 },
       // Gooey Tabs adds 2513 raw / 674 gzip bytes to navigation.js, no local import edge.
       { file: "navigation.js", raw: 2600, gzip: 700 },
       // Sidebar presentation adds 1476 raw / 496 gzip bytes to its emitted module.
@@ -83,6 +73,8 @@ const rendererBudgets = [
       // exact module limits preserve reuse of NumberField/Button/IconButton/CounterBadge.
       "./duration-field": { modules: 3, raw: 12200, gzip: 3700 },
       "./inline-confirm": { modules: 3, raw: 11000, gzip: 3050 },
+      // 2026-10-06 measured 9.6/2.7 kB, above this baseline: the `more` catalog, layoutStyle and returning
+      // focus to the toggle when a catalog button unmounts on collapse.
       "./reaction-picker": { modules: 3, raw: 9000, gzip: 2500 },
       "./notification-bell": { modules: 6, raw: 39200, gzip: 10700 },
 
@@ -155,6 +147,8 @@ const rendererBudgets = [
       "./layout": { modules: 2, raw: 17_000, gzip: 4_500 },
       // Splitter reuses NumberField's range judgment from contracts and adds no
       // renderer dependency: measured 8.9 kB raw / 2.9 kB gzip over 2 modules.
+      // 2026-10-06 measured 10.4/3.3 kB, above this baseline: layoutStyle plus measuring pane overflow so a
+      // pane is a Tab stop only while it scrolls (review: unconditional stops were dead).
       "./splitter": { modules: 2, raw: 10_000, gzip: 3_200 },
       "./actions": { modules: 2, raw: 7_000, gzip: 1_900 },
       // The forms barrel reexports DatePicker, which now imports the shared Calendar.
@@ -216,6 +210,17 @@ const rendererBudgets = [
       // AuthScreenLayout은 계약 resolver와 `classNames`만 쓰고 다른 컴포넌트를
       // 부르지 않는다 — 슬롯으로 받기 때문이다. 그래서 그래프가 가장 얕다.
       "./auth-screen": { modules: 3, raw: 12_000, gzip: 3_600 },
+      // DM reactions intentionally compose internal/message-reactions, ReactionPicker, Popover and
+      // portal. Reimplementing focus/collision would duplicate Popover; no root barrel or optional
+      // peer enters this opt-in screen graph. Unreleased entries: limits are the 2026-10-06 measured
+      // base (graph minus shared allowances) rounded up to 100 raw / 50 gzip, not provisional headroom.
+      // ./screens 14 modules 105,772/24,359 (base 13, 101,672/23,179).
+      "./screens": { modules: 13, raw: 101_700, gzip: 23_200 },
+      // Separate opt-in workflow graph includes confirmation dialogs and upload controls.
+      // 21 modules 204,540/42,909 (base 20, 200,440/41,729).
+      "./screen-flows": { modules: 20, raw: 200_500, gzip: 41_750 },
+      // SavedItemsScreen adds one renderer: 22 modules 207,552/43,673 (base 21, 203,452/42,493).
+      "./saved-items": { modules: 21, raw: 203_500, gzip: 42_500 },
       // Exposes the existing scale; no new dependency: 3.5 kB raw / 1.2 kB gzip.
       "./heading": { modules: 2, raw: 4_200, gzip: 1_400 },
       // Elements over existing tokens, and the clipboard button over Button:
@@ -331,6 +336,9 @@ const rendererBudgets = [
     // 1.5.0: provider.js gained the brandPalette prop and its inheritance
     // context, measured +0.6 kB raw / +0.19 kB gzip; see the Web note above.
     sharedModuleAllowances: [
+      // Spinner was extracted from feedback for reuse by ScreenLayout without
+      // importing toast/notice implementations. One internal edge, no byte increase.
+      { file: "internal/spinner.js", modules: 1, raw: 0, gzip: 0 },
       // 2.0: private RecipeButton keeps FAB/LoadMore paint overrides out of the public
       // Button API. One explicit local edge replaces exposing private props to products.
       // Reviewed emitted graphs: sheet-gesture 41.8/10.2 kB and navigation 154.3/31.8 kB;
@@ -356,6 +364,10 @@ const rendererBudgets = [
       // Grid device-pixel floor (Utilverse 411dp wrap fix) adds exactly 189 raw / 89 gzip
       // to primitives.js, measured against the committed 1.12.0 dist.
       { file: "primitives.js", raw: 189, gzip: 89 },
+      // 2026-10-06 1.13: one shared dev-only warner for deprecated visual style props, measured
+      // 1657 raw / 818 gzip. A per-component inline warning was rejected: it repeats the
+      // dedupe/__DEV__ logic in ~40 files. Per-file call-site growth is reported against the baselines.
+      { file: "internal/deprecated-style.js", modules: 1, raw: 1_657, gzip: 818 },
     ],
     // 2026-10-01: internal/field-frame.js replaces repeated Field/TextField
     // label/support presentation. Only its consuming graphs gain one local edge;
@@ -421,7 +433,8 @@ const rendererBudgets = [
       // replace the independent 48pt style. Measured 10.1 kB gzip incl provider;
       // +150 bytes covers that shared accessibility behavior, with unchanged edges/raw.
       // Shared RecipeButton now reserves content width under its centered spinner; measured 42.4 kB raw, same graph.
-      "./sheet-gesture": { modules: 5, raw: 41_300, gzip: 9_950 },
+      // 2026-10-06 1.13: + composition-style.js through overlays (see ./overlays).
+      "./sheet-gesture": { modules: 6, raw: 42_333, gzip: 10_526 },
       "./keyboard-controller": { modules: 1, raw: 1_600, gzip: 850 },
       "./context-menu-native": { modules: 1, raw: 1_500, gzip: 800 },
       // Optional Skia renderer shares provider only, leaving the root graph unchanged.
@@ -460,7 +473,8 @@ const rendererBudgets = [
       // 1.4 Switch row/inline and large-text reflow measure 170.7/31.4 kB, still 15 modules.
       // Calendar equal-column fix and the expanded validation preserve the 15-module graph; measured gzip 32.3 kB.
       // 2026-09-30 native audit fixes (Switch, Combobox, Tags, Slider, NumberField, sheet insets) measure 179.1/34.2 kB (was 178_000/32_600).
-      "./inputs": { modules: 16, raw: 184_000, gzip: 34_600 },
+      // 2026-10-06 1.13: + composition-style.js through overlays (see ./overlays).
+      "./inputs": { modules: 17, raw: 185_033, gzip: 35_176 },
       "./password-field": { modules: 9, raw: 105_000, gzip: 20_000 },
       "./otp-field": { modules: 9, raw: 105_000, gzip: 20_000 },
       // 2026-09-30: announced value text + provider insets measure 19.8/5.2 kB (gzip was 4_900).
@@ -481,6 +495,23 @@ const rendererBudgets = [
       // AuthScreenLayout keeps RN hosts and uses the existing provider only for the opt-in action card palette.
       // 2026-10-01: centred pending/card state measured 9.4/3.0 kB; existing limits cover it without loosening the gate.
       "./auth-screen": { modules: 3, raw: 14_000, gzip: 4_200 },
+      // Native screen composition: existing input/display hosts dominate, plus the core Modal
+      // reaction helper and ReactionPicker. Keep optional keyboard peers outside this entry.
+      // Unreleased entries: limits are the 2026-10-06 measured base (graph minus shared allowances)
+      // rounded up to 100 raw / 50 gzip, not provisional headroom. Includes the review fixes
+      // (ChatMessage accessibility, private ListRow/TextArea inputs: +0.7 kB raw on ./screens).
+      // ./screens 15 modules 178,300/36,888 (base 12, 174,575/35,242).
+      "./screens": { modules: 12, raw: 174_600, gzip: 35_250 },
+      // Keep workflow dependencies out of the lightweight screens entry; overlays brings
+      // composition-style.js. 21 modules 292,899/58,757 (base 18, 281,074/55,111).
+      // 2026-10-06 SearchScreen public API (sections, sort Menu, filter sheet) adds two reviewed edges:
+      // heading.js (section titles need the header role and level5 recipe) and navigation.js (Native Menu
+      // for sort, the same control the Web renderer uses). Inlined in screen-flows.tsx instead of an internal
+      // module so the Web graph stays at its limit. Measured 23 modules 376.8/75.0 kB.
+      "./screen-flows": { modules: 20, raw: 281_100, gzip: 55_150 },
+      // SavedItemsScreen adds its renderer and Grid primitives: 22 modules 296,100/59,361
+      // (base 19, 284,275/55,715). +2 SearchScreen edges as above (24 modules).
+      "./saved-items": { modules: 21, raw: 284_300, gzip: 55_750 },
       // Same primitive graph as Top: 21.0 kB raw / 5.4 kB gzip over 4 modules.
       "./heading": { modules: 4, raw: 23_000, gzip: 6_000 },
       // Same primitive graph as the other Native additions: 22.6/5.8 kB.
@@ -503,7 +534,8 @@ const rendererBudgets = [
       "./mentions": { modules: 8, raw: 88_000, gzip: 18_200 },
       "./transfer-list": { modules: 6, raw: 41_000, gzip: 9_500 },
       "./keyboard": { modules: 1, raw: 2_800, gzip: 1_200 },
-      "./date-picker": { modules: 10, raw: 105_000, gzip: 21_500 },
+      // 2026-10-06 1.13: + composition-style.js through overlays (see ./overlays).
+      "./date-picker": { modules: 11, raw: 106_033, gzip: 22_076 },
       "./file-picker": { modules: 4, raw: 24_000, gzip: 6_500 },
       "./steps": { modules: 4, raw: 25_000, gzip: 6_500 },
       "./upload-item": { modules: 6, raw: 82_000, gzip: 17_000 },
@@ -524,7 +556,10 @@ const rendererBudgets = [
       // CloseGlyph fixes the reproduced 200% clipping: +339 raw / +138 gzip bytes
       // over that exact six-module baseline; no new graph edge, peer or raw allowance.
       // Evidence: docs/evidence/pattern-polish-2026-10-01/overlay-close-budget.json.
-      "./overlays": { modules: 6, raw: 84_500, gzip: 15_258 },
+      // 2026-10-06 1.13: AlertDialog/Sheet contentStyle warn only for non-layout keys, so overlays
+      // imports the runtime hjmCompositionStyleKeys list (composition-style.js, 1033 raw / 576 gzip)
+      // instead of duplicating it. Warning on every contentStyle was rejected: layout-only use stays valid.
+      "./overlays": { modules: 7, raw: 85_533, gzip: 15_834 },
       // evidence 목록에 auth-screen 한 줄이 늘었다.
       // 1.5.0: per-scenario proofs from the Native scenario matrix tables:
       // measured 8.1 kB raw / 2.23 kB gzip.
@@ -738,18 +773,16 @@ async function checkRenderer(renderer) {
     if (measured.modules > budget.modules) {
       regressions.push(`${measured.modules} modules > ${budget.modules}`);
     }
-    const warnings = classifyByteBudget(measured, budget, regressions);
-    const status = regressions.length > 0 ? "FAIL" : warnings.length > 0 ? "WARN" : "PASS";
+    const status = regressions.length > 0 ? "FAIL" : "PASS";
     console.log(
       `${status.padEnd(4)} ${exportPath.padEnd(20)} ` +
         `${String(measured.modules).padStart(2)} modules  ` +
         `${formatBytes(measured.raw).padStart(9)} raw  ` +
         `${formatBytes(measured.gzip).padStart(8)} gzip  ` +
-        `headroom=${formatHeadroom(measured.raw, budget.raw)} raw/` +
+        `vs baseline=${formatHeadroom(measured.raw, budget.raw)} raw/` +
         `${formatHeadroom(measured.gzip, budget.gzip)} gzip`,
     );
     for (const regression of regressions) failures.push(`${exportPath}: ${regression}`);
-    for (const warning of warnings) console.log(`     ${exportPath}: ${warning} — within the byte alarm tolerance; record why or trim`);
   }
 
   for (const [exportPath, target] of cssExports) {
@@ -758,17 +791,15 @@ async function checkRenderer(renderer) {
     const bytes = await readFile(resolve(packageDirectory, target));
     const measured = { raw: bytes.byteLength, gzip: gzipSync(bytes, { level: 9 }).byteLength };
     const regressions = [];
-    const warnings = classifyByteBudget(measured, budget, regressions);
-    const status = regressions.length > 0 ? "FAIL" : warnings.length > 0 ? "WARN" : "PASS";
+    const status = regressions.length > 0 ? "FAIL" : "PASS";
     console.log(
       `${status.padEnd(4)} ${exportPath.padEnd(20)} ` +
         `${formatBytes(measured.raw).padStart(9)} raw  ` +
         `${formatBytes(measured.gzip).padStart(8)} gzip  ` +
-        `headroom=${formatHeadroom(measured.raw, budget.raw)} raw/` +
+        `vs baseline=${formatHeadroom(measured.raw, budget.raw)} raw/` +
         `${formatHeadroom(measured.gzip, budget.gzip)} gzip`,
     );
     for (const regression of regressions) failures.push(`${exportPath}: ${regression}`);
-    for (const warning of warnings) console.log(`     ${exportPath}: ${warning} — within the byte alarm tolerance; record why or trim`);
   }
 
   if (failures.length > 0) {

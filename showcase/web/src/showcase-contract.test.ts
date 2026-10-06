@@ -249,8 +249,12 @@ describe("web showcase coverage", () => {
       };
       if (algorithmRecipes[name]) {
         expect(consumedRecipeValues, name).toEqual(algorithmRecipes[name]);
-        const marker = { Affix: "data-hjm-affix", Masonry: "data-hjm-masonry", VirtualList: "data-hjm-virtual-list", QRCode: "data-hjm-qr-code" }[name as "Affix" | "Masonry" | "VirtualList" | "QRCode"];
-        expect(renderWithProvider(createElement(ContractStory, { name: name as ComponentName }))).toContain(marker);
+        // Masonry cannot know its slot width during SSR. Rendering a guessed 320px grid
+        // hid clipping in nested slots; the browser mounts it after ResizeObserver.
+        const marker = { Affix: "data-hjm-affix", Masonry: "data-hjm-masonry-host", VirtualList: "data-hjm-virtual-list", QRCode: "data-hjm-qr-code" }[name as "Affix" | "Masonry" | "VirtualList" | "QRCode"];
+        const html = renderWithProvider(createElement(ContractStory, { name: name as ComponentName }));
+        expect(html).toContain(marker);
+        if (name === "Masonry") expect(html).not.toContain('data-hjm-masonry=""');
         continue;
       }
       expect(presentation.consumption.resolvedColor !== null ||

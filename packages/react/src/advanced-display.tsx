@@ -1,4 +1,4 @@
-import type { AvatarFallbackContext } from "@hjmds/design-contracts/avatar-fallback";
+import { resolveAvatarInitials, type AvatarFallbackContext } from "@hjmds/design-contracts/avatar-fallback";
 import { TableSortButton } from "./table-sort-button.js";
 import { getNextDataTableSortState } from "@hjmds/design-contracts/components/data-table";
 import {
@@ -70,6 +70,8 @@ export type AccordionProps = Omit<HTMLAttributes<HTMLDivElement>, "onChange"> &
     allowsMultipleExpanded?: boolean;
     density?: AccordionDensity;
     headingLevel?: 2 | 3 | 4 | 5 | 6;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
   }>;
 
 function validateAccordionItems(items: readonly AccordionItem[]): void {
@@ -114,6 +116,7 @@ export const Accordion = forwardRef<HTMLDivElement, AccordionProps>(
       density = accordionRecipe.defaults.density,
       headingLevel = 3,
       className,
+      layoutStyle,
       ...props
     },
     ref,
@@ -150,6 +153,7 @@ export const Accordion = forwardRef<HTMLDivElement, AccordionProps>(
     return (
       <div
         {...props}
+        style={{ ...props.style, ...layoutStyle }}
         ref={ref}
         className={classNames("hjm-accordion", className)}
         data-density={density}
@@ -209,15 +213,6 @@ export const Accordion = forwardRef<HTMLDivElement, AccordionProps>(
   },
 );
 
-function initials(name: string): string {
-  return name
-    .trim()
-    .split(/\s+/u)
-    .slice(0, 2)
-    .map((part) => Array.from(part)[0] ?? "")
-    .join("")
-    .toLocaleUpperCase();
-}
 
 export type AvatarProps = Omit<HTMLAttributes<HTMLSpanElement>, "children"> &
   Readonly<{
@@ -229,6 +224,8 @@ export type AvatarProps = Omit<HTMLAttributes<HTMLSpanElement>, "children"> &
     size?: AvatarSize;
     shape?: AvatarShape;
     imageProps?: Omit<ImgHTMLAttributes<HTMLImageElement>, "alt" | "src">;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
   }>;
 
 export const Avatar = forwardRef<HTMLSpanElement, AvatarProps>(function Avatar(
@@ -242,6 +239,7 @@ export const Avatar = forwardRef<HTMLSpanElement, AvatarProps>(function Avatar(
     shape = avatarRecipe.defaults.shape,
     imageProps,
     className,
+    layoutStyle,
     ...props
   },
   ref,
@@ -253,6 +251,7 @@ export const Avatar = forwardRef<HTMLSpanElement, AvatarProps>(function Avatar(
   return (
     <span
       {...props}
+      style={{ ...props.style, ...layoutStyle }}
       ref={ref}
       className={classNames("hjm-avatar", className)}
       data-size={size}
@@ -277,7 +276,7 @@ export const Avatar = forwardRef<HTMLSpanElement, AvatarProps>(function Avatar(
           aria-label={alt.length > 0 ? alt : undefined}
           aria-hidden={alt.length === 0 || undefined}
         >
-          {renderFallback?.({ size: avatarRecipe.sizes[size], decorative: true }) ?? fallback ?? initials(name)}
+          {renderFallback?.({ size: avatarRecipe.sizes[size], decorative: true }) ?? fallback ?? resolveAvatarInitials(name)}
         </span>
       )}
     </span>
@@ -292,6 +291,8 @@ export type AvatarGroupProps = Omit<HTMLAttributes<HTMLSpanElement>, "children">
     size?: AvatarSize;
     /** Product-composed overflow copy such as "+3"; the count is the product's. */
     overflow?: ReactNode;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
   }>;
 
 /**
@@ -300,7 +301,7 @@ export type AvatarGroupProps = Omit<HTMLAttributes<HTMLSpanElement>, "children">
  * accessible name instead of letting a reader walk five unlabelled images.
  */
 export const AvatarGroup = forwardRef<HTMLSpanElement, AvatarGroupProps>(function AvatarGroup(
-  { label, children, size = avatarRecipe.defaults.size, overflow, className, ...props },
+  { label, children, size = avatarRecipe.defaults.size, overflow, className, layoutStyle, style, ...props },
   ref,
 ) {
   if (label.trim().length === 0) throw new TypeError("AvatarGroup label must not be empty");
@@ -313,7 +314,9 @@ export const AvatarGroup = forwardRef<HTMLSpanElement, AvatarGroupProps>(functio
       aria-label={label}
       className={classNames("hjm-avatar-group", className)}
       data-size={size}
-      style={{ "--hjm-avatar-overlap": `${offset}px` } as CSSProperties}
+      // The caller `style` used to be replaced by the overlap variable; merge it
+      // and keep the recipe overlap last so it stays size-derived.
+      style={{ ...style, ...layoutStyle, "--hjm-avatar-overlap": `${offset}px` } as CSSProperties}
     >
       {children}
       {overflow ? <span className="hjm-avatar-group__overflow" aria-hidden="true">{overflow}</span> : null}
@@ -329,6 +332,8 @@ export type DividerProps = HTMLAttributes<HTMLElement> &
     orientation?: DividerOrientation;
     inset?: DividerInset;
     decorative?: boolean;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
   }>;
 
 export const Divider = forwardRef<HTMLElement, DividerProps>(function Divider(
@@ -337,12 +342,14 @@ export const Divider = forwardRef<HTMLElement, DividerProps>(function Divider(
     inset = dividerRecipe.defaults.inset,
     decorative = false,
     className,
+    layoutStyle,
     ...props
   },
   ref,
 ) {
   return createElement(orientation === "horizontal" ? "hr" : "div", {
     ...props,
+    style: { ...props.style, ...layoutStyle },
     ref,
     className: classNames("hjm-divider", className),
     "data-orientation": orientation,
@@ -361,6 +368,8 @@ export type ListProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> &
     children: ReactNode;
     separator?: keyof typeof listRecipe.separators;
     appearance?: ListAppearance;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
   }>;
 
 /** Semantic list container that owns separators around composed rows. */
@@ -371,6 +380,7 @@ export const List = forwardRef<HTMLDivElement, ListProps>(function List(
     separator = listRecipe.defaults.separator,
     appearance = "plain",
     className,
+    layoutStyle,
     ...props
   },
   ref,
@@ -380,6 +390,7 @@ export const List = forwardRef<HTMLDivElement, ListProps>(function List(
   return (
     <div
       {...props}
+      style={{ ...props.style, ...layoutStyle }}
       ref={ref}
       aria-label={label}
       className={classNames("hjm-list", className)}
@@ -427,6 +438,8 @@ export type StatisticProps<Id extends string = string> = Omit<
   renderTrendMark?: (props: StatisticTrendMarkRenderProps) => ReactNode;
   /** Optional visual adapter; the descriptor remains the accessible value source. */
   renderValue?: (value: string) => ReactNode;
+  /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
 }>;
 
 export function Statistic<Id extends string = string>({
@@ -439,6 +452,7 @@ export function Statistic<Id extends string = string>({
   renderTrendMark,
   renderValue,
   className,
+  layoutStyle,
   ...props
 }: StatisticProps<Id>) {
   const resolved = resolveStatisticDescriptor(descriptor);
@@ -457,6 +471,7 @@ export function Statistic<Id extends string = string>({
   return (
     <article
       {...props}
+      style={{ ...props.style, ...layoutStyle }}
       aria-label={announcement}
       className={classNames("hjm-statistic", className)}
       data-density={density}
@@ -493,6 +508,8 @@ export type StatisticGroupProps<Id extends string = string> = Omit<
   presentation?: StatisticPresentation;
   composeAccessibilityLabel?: ComposeStatisticAccessibilityLabel<Id>;
   renderTrendMark?: (props: StatisticTrendMarkRenderProps) => ReactNode;
+  /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
 }>;
 
 export function StatisticGroup<Id extends string = string>({
@@ -504,6 +521,7 @@ export function StatisticGroup<Id extends string = string>({
   renderTrendMark,
   className,
   style,
+  layoutStyle,
   ...props
 }: StatisticGroupProps<Id>) {
   validateStatisticGroup(descriptor);
@@ -514,7 +532,7 @@ export function StatisticGroup<Id extends string = string>({
       aria-label={label}
       className={classNames("hjm-statistic-group", className)}
       role="list"
-      style={{ ...style, "--hjm-statistic-columns": descriptor.columns ?? statisticRecipe.defaults.columns } as CSSProperties}
+      style={{ ...style, ...layoutStyle, "--hjm-statistic-columns": descriptor.columns ?? statisticRecipe.defaults.columns } as CSSProperties}
     >
       {descriptor.items.map((item) => (
         <div key={item.id} role="listitem">
@@ -607,6 +625,8 @@ export type TableProps<Row> = Omit<TableHTMLAttributes<HTMLTableElement>, "child
     emptyState: ReactNode;
     onSortChange?: (columnId: string, direction: TableSortDirection) => void;
     wrapperClassName?: string;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
   }>;
 
 // Table's callback cannot express null; share the sort policy with a two-state cycle.
@@ -620,6 +640,7 @@ function TableInner<Row>(
     onSortChange,
     wrapperClassName,
     className,
+    layoutStyle,
     ...props
   }: TableProps<Row>,
   ref: ForwardedRef<HTMLTableElement>,
@@ -642,7 +663,9 @@ function TableInner<Row>(
     seenRowKeys.add(rowKey);
   }
   return (
-    <div className={classNames("hjm-table-scroll", wrapperClassName)} tabIndex={0}>
+    // Placement belongs to the scroll wrapper (the visual root); `style` keeps
+    // going to the <table>, where it always went.
+    <div className={classNames("hjm-table-scroll", wrapperClassName)} style={layoutStyle} tabIndex={0}>
       <table {...props} ref={ref} className={classNames("hjm-table", className)}>
         {caption ? <caption className="hjm-table__caption">{caption}</caption> : null}
         <thead>
@@ -710,6 +733,8 @@ export type TimelineProps<Id extends string = string> = Omit<
   Readonly<{
     items: readonly TimelineItemDescriptor<Id>[];
     composeAccessibleName: ComposeTimelineAccessibleName;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
   }>;
 
 function TimelineInner<Id extends string = string>(
@@ -717,6 +742,7 @@ function TimelineInner<Id extends string = string>(
     items,
     composeAccessibleName,
     className,
+    layoutStyle,
     ...props
   }: TimelineProps<Id>,
   ref: ForwardedRef<HTMLOListElement>,
@@ -728,6 +754,7 @@ function TimelineInner<Id extends string = string>(
   return (
     <ol
       {...props}
+      style={{ ...props.style, ...layoutStyle }}
       ref={ref}
       className={classNames("hjm-timeline", className)}
     >

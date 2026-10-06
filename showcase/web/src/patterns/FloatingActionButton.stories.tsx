@@ -5,6 +5,7 @@ import { TopBar } from "@hjmds/react/top-bar";
 import { List, ListRow } from "@hjmds/react/display";
 import { Dialog } from "@hjmds/react/overlays";
 import { TextArea } from "@hjmds/react/forms";
+import { Container } from "@hjmds/react/layout";
 import { Button } from "@hjmds/react/actions";
 
 export function FloatingNotesPreview() {
@@ -15,10 +16,10 @@ export function FloatingNotesPreview() {
   const [open, setOpen] = useState(false); const [draft, setDraft] = useState("");
   function save() { if (!draft.trim()) return; setNotes((items) => [draft.trim(), ...items]); setOpen(false); setDraft(""); target?.scrollTo({ top: 0 }); }
   return <>
-    <div ref={setTarget} style={{ blockSize: "100dvh", overflowY: "auto" }}>
+    <div ref={setTarget} tabIndex={0} role="region" aria-label="최근 기록" style={{ blockSize: "100dvh", overflowY: "auto" }}>
       <div style={{ paddingBottom: clearance }}>
         <TopBar title="나의 기록" />
-        <List label="최근 기록">{notes.map((note, index) => <ListRow key={`${index}-${note}`} title={note} description="작은 순간도 모아두면 오래 남아요." />)}</List>
+        <Container gutter="compact"><List label="최근 기록">{notes.map((note, index) => <ListRow key={`${index}-${note}`} title={note} description="작은 순간도 모아두면 오래 남아요." />)}</List></Container>
       </div>
     </div>
     <FloatingActionButton descriptor={{ label: "새 기록", icon: { name: "add" }, layoutMode }} renderIcon={() => <span>＋</span>}
@@ -30,8 +31,9 @@ export function FloatingNotesPreview() {
   </>;
 }
 
-const meta = { includeStories: ["Notes","LargeText"], id: "patterns-floating-action-button", title: "배포/구성/빠른 메모 작성", component: FloatingNotesPreview, parameters: { layout: "fullscreen", hjm: { edgeToEdge: true } } } satisfies Meta<typeof FloatingNotesPreview>;
+const meta = { includeStories: ["Default","Dark","LargeText"], id: "patterns-floating-action-button", title: "배포/구성/입력과 작성/빠른 메모 작성", component: FloatingNotesPreview, parameters: { layout: "fullscreen", hjm: { edgeToEdge: true } } } satisfies Meta<typeof FloatingNotesPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
-export const Notes: Story = { name: "메모",};
+export const Default: Story = { name: "기본",};
+export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
 export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };

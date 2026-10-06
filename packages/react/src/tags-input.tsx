@@ -17,6 +17,7 @@ import {
   type KeyboardEvent,
 } from "react";
 import { classNames, composeRefs, useControllableState } from "./internal.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type TagsInputProps = Readonly<{
   label: string;
@@ -46,6 +47,8 @@ export type TagsInputProps = Readonly<{
   description?: string;
   disabled?: boolean;
   className?: string;
+  /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
 }>;
 
 export const TagsInput = forwardRef<HTMLInputElement, TagsInputProps>(function TagsInput(
@@ -65,6 +68,7 @@ export const TagsInput = forwardRef<HTMLInputElement, TagsInputProps>(function T
     description,
     disabled = false,
     className,
+    layoutStyle,
   },
   forwardedRef,
 ) {
@@ -141,7 +145,7 @@ export const TagsInput = forwardRef<HTMLInputElement, TagsInputProps>(function T
   };
 
   return (
-    <div className={classNames("hjm-tags-input", className)} data-disabled={disabled || undefined}>
+    <div style={layoutStyle} className={classNames("hjm-tags-input", className)} data-disabled={disabled || undefined}>
       <label className="hjm-tags-input__label" htmlFor={id}>{label}</label>
       <div
         className="hjm-tags-input__frame"

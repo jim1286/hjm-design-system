@@ -19,6 +19,7 @@ import {
 } from "react";
 
 import { classNames, useControllableState } from "./internal.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 type NativeSliderInputProps = Omit<
   InputHTMLAttributes<HTMLInputElement>,
@@ -56,6 +57,8 @@ export type SliderProps = NativeSliderInputProps &
     className?: string;
     inputClassName?: string;
     style?: CSSProperties;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
   }>;
 
 type SliderInteraction = "keyboard" | "pointer";
@@ -108,6 +111,7 @@ export const Slider = forwardRef<HTMLInputElement, SliderProps>(function Slider(
     onPointerCancel,
     onPointerDown,
     onPointerUp,
+    layoutStyle,
     ...inputProps
   },
   forwardedRef,
@@ -213,6 +217,7 @@ export const Slider = forwardRef<HTMLInputElement, SliderProps>(function Slider(
   const fill = resolveSliderFillFraction(descriptor);
   const rootStyle: SliderRootStyle = {
     ...style,
+    ...layoutStyle,
     "--hjm-slider-fill": `${fill * 100}%`,
   };
   const visibleValue = valueText ?? String(currentValue);

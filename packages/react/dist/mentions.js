@@ -1,10 +1,15 @@
 import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
+import { layer } from "@hjmds/design-contracts/foundations";
+import { comboboxRecipe } from "@hjmds/design-contracts/recipes";
 import { findActiveMentionTrigger, resolveMentionInsertion, } from "@hjmds/design-contracts/components/mentions";
 import { forwardRef, useEffect, useId, useRef, useState, } from "react";
 import { TextArea } from "./forms.js";
 import { classNames, composeRefs } from "./internal.js";
 import { AnchoredPortal, useAnchoredPopup } from "./portal.js";
-export const Mentions = forwardRef(function Mentions({ value, onValueChange, triggers, candidates, onMentionQueryChange, emptyMessage, listLabel, renderCandidate, className, ...textAreaProps }, forwardedRef) {
+export const Mentions = forwardRef(function Mentions({ value, onValueChange, triggers, candidates, onMentionQueryChange, emptyMessage, listLabel, renderCandidate, className, 
+// Inherited from TextAreaProps; taken here so placement moves the whole
+// mentions block (field + candidate popup anchor), not only the inner field.
+layoutStyle, ...textAreaProps }, forwardedRef) {
     const inputRef = useRef(null);
     const [match, setMatch] = useState(null);
     const [activeIndex, setActiveIndex] = useState(0);
@@ -61,9 +66,13 @@ export const Mentions = forwardRef(function Mentions({ value, onValueChange, tri
         }
     };
     const position = useAnchoredPopup(inputRef, open ? list : null, {
-        placement: "bottom", align: "start", matchAnchorWidth: true, zIndex: 900,
+        placement: "bottom", align: "start", matchAnchorWidth: true, zIndex: layer.dropdown,
+        // The candidate list is Combobox's popover contract verbatim (mentions.ts), so its offset and edge padding are
+        // comboboxRecipe.popover's 8/8. Until 2026-10-06 the helper defaults (8 and 16) applied, a Web-only 16 edge.
+        gap: comboboxRecipe.popover.sideOffset,
+        viewportPadding: comboboxRecipe.popover.collisionPadding,
     });
-    return (_jsxs("div", { className: classNames("hjm-mentions", className), children: [_jsx(TextArea, { ...textAreaProps, ref: composeRefs(inputRef, forwardedRef), value: value, role: "combobox", "aria-expanded": open, "aria-controls": open ? id : undefined, "aria-autocomplete": "list", "aria-activedescendant": open && activeCandidate ? `${id}-${activeCandidate.id}` : undefined, onChange: (event) => {
+    return (_jsxs("div", { className: classNames("hjm-mentions", className), style: layoutStyle, children: [_jsx(TextArea, { ...textAreaProps, ref: composeRefs(inputRef, forwardedRef), value: value, role: "combobox", "aria-expanded": open, "aria-controls": open ? id : undefined, "aria-autocomplete": "list", "aria-activedescendant": open && activeCandidate ? `${id}-${activeCandidate.id}` : undefined, onChange: (event) => {
                     onValueChange(event.target.value);
                     syncMatch(event.target.value, event.target.selectionStart ?? event.target.value.length);
                 }, onKeyUp: (event) => {

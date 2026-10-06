@@ -3,7 +3,7 @@ import { useLayoutEffect, useRef } from "react";
 import { gravityLetterMotion, resolveGravityLetters } from "@hjmds/design-contracts/gravity-letters";
 import { useHjmTheme } from "./provider.js";
 /** Decorative only: provide the meaningful heading outside this hidden presentation. */
-export function GravityLetters({ glyphs, active = false, replayKey = 0 }) {
+export function GravityLetters({ glyphs, active = false, replayKey = 0, layoutStyle }) {
     const { environment } = useHjmTheme();
     const root = useRef(null);
     const signature = JSON.stringify(glyphs);
@@ -19,6 +19,6 @@ export function GravityLetters({ glyphs, active = false, replayKey = 0 }) {
         document.addEventListener("visibilitychange", visibility);
         return () => { stop(); document.removeEventListener("visibilitychange", visibility); };
     }, [signature, active, replayKey, environment.reducedMotion]);
-    return _jsx("span", { ref: root, "aria-hidden": "true", style: { display: "flex", flexWrap: "wrap", pointerEvents: "none", paddingTop: 36 }, children: units.map((unit, index) => _jsx("span", { style: { display: "inline-block", whiteSpace: "pre" }, children: unit.glyph }, index)) });
+    return _jsx("span", { ref: root, "aria-hidden": "true", style: { display: "flex", flexWrap: "wrap", pointerEvents: "none", paddingTop: 36, ...layoutStyle }, children: units.map((unit, index) => _jsx("span", { style: { display: "inline-block", whiteSpace: "pre" }, children: unit.glyph }, index)) });
 }
 //# sourceMappingURL=gravity-letters.js.map

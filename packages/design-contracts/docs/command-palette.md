@@ -1,5 +1,7 @@
 # CommandPalette contract
 
+검토일: 2026-10-06 (Web renderer의 local/external 필터링·빈 결과·section 이름·닫기 버튼 반영)
+
 ## 문제
 
 키보드로 전체 앱의 행동을 검색해 실행한다(⌘K 스타일). antd에는 이 문제에 직접
@@ -45,6 +47,16 @@ CommandPalette는 "Combobox + 모달 표면 + 전역 단축키"로 보일 수 �
 `CommandPaletteInput`/`CommandPaletteQueryState`는 각각 `ComboboxInput`/
 `ComboboxCollectionState`의 별칭이다.
 
+- `filtering`을 생략하거나 `"local"`이면 renderer가 `query`로 `source`를 거른다. 규칙은
+  `label`·`textValue`에 대한 대소문자 무시 부분 일치이며 Native Combobox의 local 규칙과 같다. 접두 일치(typeahead 규칙)는 "지우기"처럼 단어 중간으로 찾는 명령
+  검색에 맞지 않아 쓰지 않았다.
+- `"external"`이면 제품이 이미 거르거나 순위를 매긴 결과(서버·fuzzy 검색)를 그대로 보여 주고,
+  `queryValue !== resultQuery`인 낡은 결과는 표시하되 실행할 수 없다(Native Combobox와 같은 규칙).
+- 거른 뒤 비는 section은 제목째 뺀다.
+- 이 해석은 contracts helper가 아니라 Web renderer 내부 함수에 둔다. 소비하는 renderer가 Web 하나뿐이고
+  (Native unsupported), 이 모듈을 재수출하는 contracts `./behaviors` 묶음이 2026-10-06 측정에서 바이트 상한
+  바로 아래(약 345.0 kB)라 helper 약 2 kB가 경보를 냈기 때문이다. Native 대응이 생기면 contracts로 올린다.
+
 ### 실행(activate)은 Menu의 onAction 모양을 따르되 자급자족한다
 
 `onActivate`(즉시 실행)와 `onActivateAfterDismiss`(퇴장 전환이 끝난 뒤 실행)로
@@ -75,7 +87,14 @@ surface를 연다")과 같은 순서가 필요하고, `onActivateAfterDismiss`�
 ### 설명
 
 `CommandPaletteDescriptor`는 `accessibilityLabel`과 `searchPlaceholder` 둘 다
-**필수**다. Popover의 `accessibilityLabel`은 선택 사항이었다(콘텐츠가 보통 자체
+**필수**다. 2026-10-06에 선택 필드 두 개를 더했다. 기존 descriptor가 그대로 유효하도록 선택으로 두었고,
+값이 있으면 비어 있지 않아야 한다.
+
+- `emptyMessage` — 보이는 결과가 0개일 때 목록 전체에 **한 번** 알리는 문구. `asyncState`가
+  `idle`이 아니면 그 message가 우선한다(제품 어댑터가 더 많이 안다). 없으면 빈 상태 문구를 표시하지 않는다.
+  renderer가 번역되지 않은 대체 문구를 만들지 않기 위해서다.
+- `closeLabel` — 보이는 닫기 버튼의 접근 가능한 이름. 있으면 버튼이 `"close-action"`으로 닫는다
+  (정책상 `dismissible: false`면 막힌다). 없으면 이전처럼 Escape·바깥·실행으로만 닫힌다. Popover의 `accessibilityLabel`은 선택 사항이었다(콘텐츠가 보통 자체
 heading을 가지므로) — CommandPalette는 다르다: `role="dialog"` 표면에 보이는 제목이
 없고 검색 입력 하나뿐이라, 검색창 placeholder만으로 렌더러마다 다른 접근 가능한
 이름을 만들 위험이 있다. 그래서 명시적으로 요구한다.
@@ -132,6 +151,30 @@ Native는 `unsupported`다. 전역 단축키는 제품 소유다.
   방향키는 계약의 `getCollectionNavigationTarget`(disabled 건너뜀)을 쓴다.
 - **query가 바뀌면 활성 행이 첫 결과로 되돌아간다.** Enter의 대상이 언제나 분명해야 한다.
 - **전역 단축키는 제품 소유다.** 이 renderer는 여는 키를 정하지 않는다.
-- 로컬 검증: `test/command-palette.browser.test.tsx` 5개(이름·초점·배경 inert, 활성 행과
+- 로컬 검증: `test/command-palette.browser.test.tsx`(이름·초점·배경 inert, 좁은 화면 긴 문구, 활성 행과
   disabled 건너뜀·재필터, 실행 시 강제 종료와 사유, 종료 후 후속 명령 순서, Escape·바깥
   pointer 종료)와 `컴포넌트/탐색/Command Palette`.
+
+### 2026-10-06 보강
+
+사용 지침 작성 중 이 계약이 말하는 local/external 필터링과 빈 결과 상태가 renderer에 없다는 것이
+드러났다. 그때까지 Web renderer는 받은 `source`를 거르지 않고 그대로 그렸고(제품이 직접 걸렀다),
+빈 결과는 `asyncState` message로만 표시했으며, section의 `accessibilityLabel`을 쓰지 않았고,
+`close-action` 사유를 낼 닫기 버튼이 없었다. 지금은 다음과 같다.
+
+- **local 필터링이 기본이다.** `ComboboxCollectionState`의 기본값이 원래 local이었으므로 계약 쪽으로
+  맞췄다. 이미 직접 거르던 제품은 그대로 동작한다(부분 집합을 다시 거를 뿐). 자체 순위·fuzzy·서버
+  검색처럼 local 규칙보다 넓은 결과를 주는 제품은 `queryState={{ filtering: "external", asyncState,
+  queryValue, resultQuery }}`를 넘겨야 결과가 줄지 않는다.
+- **빈 결과는 목록 전체에 한 번** `role="status"`로 알린다(`descriptor.emptyMessage` 또는 asyncState).
+  활성 행이 없으므로 `aria-activedescendant`도 비운다.
+- **section 이름**은 `accessibilityLabel ?? label`로 `role="group"`의 `aria-label`에 연결한다.
+  보이는 제목은 group 이름과 겹쳐 두 번 읽히지 않도록 `aria-hidden`이다.
+- **닫기 버튼**은 `descriptor.closeLabel`이 있을 때만 검색 행에 그린다.
+- **typeahead는 별도로 구현하지 않는다.** 초점이 항상 검색 입력에 있어 입력한 글자가 곧 query다.
+  `getCollectionTypeaheadMatch`를 겹쳐 쓰면 같은 키 입력이 필터와 활성 행 점프를 동시에 일으킨다.
+  표의 "typeahead 재사용"은 이 renderer에서는 검색 입력이 그 역할을 대신하는 것으로 읽는다.
+- **Native는 여전히 `unsupported`다.** catalog가 `platform: web`이고 Native renderer 파일이 없다.
+  이번 보강은 Web만 바꿨다.
+- 검증: 위 파일에 local 필터링·빈 section 제거, 단일 빈 상태, external 결과 유지와 낡은 결과 실행 차단,
+  닫기 버튼 사유 4개를 더했고 contracts `test/command-palette.test.ts`에 선택 문구 검증을 더했다.

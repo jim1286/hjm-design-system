@@ -4,7 +4,7 @@ const meta = { title: "배포/컴포넌트/입력/입력 필드", component: Nat
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본",};
+export const Error: Story = { name: "오류", args: { variant: "error" } };
+export const Disabled: Story = { name: "비활성", args: { variant: "disabled" } };
 export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
 export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };
-export const Disabled: Story = { name: "비활성", args: { variant: "disabled" } };
-export const Error: Story = { name: "오류", args: { variant: "error" } };

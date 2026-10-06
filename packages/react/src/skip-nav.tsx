@@ -6,6 +6,7 @@ import {
 import { forwardRef, type AnchorHTMLAttributes, type CSSProperties } from "react";
 import { classNames } from "./internal.js";
 
+// No `layoutStyle`: off-screen until focused, then pinned by the recipe offset; moving it would hide the focus target.
 export type SkipNavProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href" | "children"> &
   SkipNavDescriptor &
   Readonly<{ className?: string }>;

@@ -13,6 +13,8 @@ import {
   type ViewStyle,
 } from "react-native";
 import { Text } from "./primitives.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
+import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { useHjmNativeTheme } from "./provider.js";
 
 export type AuthProviderButtonProps = Readonly<{
@@ -20,10 +22,17 @@ export type AuthProviderButtonProps = Readonly<{
   /** The provider's own mark, supplied by the product — never bundled here. */
   logo: ReactNode;
   onPress: () => void;
+  /** Canonical layout-only placement. Controlled visual keys are excluded. */
+  layoutStyle?: HjmCompositionStyleProp;
+  /**
+   * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement;
+   * the provider surface (`authProviderButtonRecipe`) owns appearance. Removed in the next major (consumer-policy.md §3.1).
+   */
   style?: StyleProp<ViewStyle>;
 }>;
 
-export function AuthProviderButton({ descriptor, logo, onPress, style }: AuthProviderButtonProps) {
+export function AuthProviderButton({ descriptor, logo, onPress, layoutStyle, style }: AuthProviderButtonProps) {
+  warnDeprecatedStyleProps("AuthProviderButton", { style }, "layoutStyle for placement; authProviderButtonRecipe owns appearance");
   validateAuthProviderButtonDescriptor(descriptor);
   const theme = useHjmNativeTheme();
   // The theme picks between the provider's own variants and nothing else.
@@ -56,6 +65,7 @@ export function AuthProviderButton({ descriptor, logo, onPress, style }: AuthPro
           paddingHorizontal: authProviderButtonRecipe.paddingHorizontal,
         },
         style,
+        layoutStyle,
       ]}
     >
       <View

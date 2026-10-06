@@ -1,6 +1,7 @@
 import { type ComposeTreeAccessibleName, type TreeAsyncState, type TreeNodeDescriptor, type TreeSelectionModel } from "@hjmds/design-contracts/components/tree";
 import type { CheckboxState } from "@hjmds/design-contracts/behaviors";
 import { type ReactNode } from "react";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type TreeProps<Id extends string = string> = Readonly<{
     label: string;
     nodes: readonly TreeNodeDescriptor<Id>[];
@@ -22,6 +23,8 @@ export type TreeProps<Id extends string = string> = Readonly<{
         expanded: boolean;
     }>) => ReactNode;
     className?: string;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 export declare const Tree: <Id extends string = string>(props: TreeProps<Id> & {
     ref?: React.Ref<HTMLDivElement>;

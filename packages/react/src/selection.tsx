@@ -63,6 +63,8 @@ type ChipBaseProps = Omit<
       color: "currentColor";
       size: number;
     }>) => ReactNode;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
   }>;
 
 type ActionChipProps = Readonly<{
@@ -95,6 +97,8 @@ export const Chip = forwardRef<HTMLButtonElement, ChipProps>(function Chip(
     onPress,
     disabled,
     className,
+    layoutStyle,
+    style,
     ...props
   },
   ref,
@@ -104,6 +108,7 @@ export const Chip = forwardRef<HTMLButtonElement, ChipProps>(function Chip(
   return (
     <button
       {...props}
+      style={{ ...style, ...layoutStyle }}
       ref={ref}
       aria-checked={selectable ? active : undefined}
       className={classNames("hjm-chip", className)}
@@ -148,6 +153,11 @@ export type CheckboxProps = Omit<
     presentation?: SelectionControlPresentation;
     size?: SelectionControlSize;
     renderLeading?: (appearance: ChoiceLeadingRenderProps) => ReactNode;
+    /**
+     * Canonical layout-only placement on the root `<label>`. `style` keeps going
+     * to the native input, where it always went, so existing callers do not move.
+     */
+    layoutStyle?: HjmCompositionStyleProp;
   }>;
 
 export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
@@ -167,6 +177,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
       renderLeading,
       className,
       onClick,
+      layoutStyle,
       ...props
     },
     forwardedRef,
@@ -186,6 +197,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
     return (
       <label
         className={classNames("hjm-choice", className)}
+        style={layoutStyle}
         data-kind="checkbox"
         data-state={indeterminate ? "mixed" : checked ? "checked" : "unchecked"}
         data-disabled={disabled || undefined}
@@ -254,6 +266,11 @@ export type RadioProps = Omit<
     presentation?: SelectionControlPresentation;
     size?: SelectionControlSize;
     renderLeading?: (appearance: ChoiceLeadingRenderProps) => ReactNode;
+    /**
+     * Canonical layout-only placement on the root `<label>`. `style` keeps going
+     * to the native input, where it always went, so existing callers do not move.
+     */
+    layoutStyle?: HjmCompositionStyleProp;
   }>;
 
 /** Native radio item primitive. Use RadioGroup when the renderer owns group state. */
@@ -272,6 +289,7 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(function Radio(
     renderLeading,
     className,
     onClick,
+    layoutStyle,
     ...props
   },
   ref,
@@ -286,6 +304,7 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(function Radio(
   return (
     <label
       className={classNames("hjm-choice", className)}
+      style={layoutStyle}
       data-kind="radio"
       data-state={checked ? "checked" : "unchecked"}
       data-disabled={disabled || undefined}
@@ -351,6 +370,8 @@ type CheckboxGroupBaseProps<Key extends string> = Omit<
       item: CheckboxGroupItem<Key>,
       appearance: ChoiceLeadingRenderProps,
     ) => ReactNode;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
   }>;
 
 export type CheckboxGroupProps<Key extends string = string> =
@@ -375,6 +396,8 @@ function CheckboxGroupInner<Key extends string>(
     onValueChange,
     disabled,
     className,
+    layoutStyle,
+    style,
     ...props
   }: CheckboxGroupProps<Key>,
   ref: React.ForwardedRef<HTMLFieldSetElement>,
@@ -404,6 +427,7 @@ function CheckboxGroupInner<Key extends string>(
     <fieldset
       {...props}
       ref={ref}
+      style={{ ...style, ...layoutStyle }}
       className={classNames("hjm-checkbox-group", className)}
       data-orientation={orientation}
       data-presentation={presentation}
@@ -512,6 +536,8 @@ export type RadioGroupProps = Omit<
       item: RadioGroupItem,
       appearance: ChoiceLeadingRenderProps,
     ) => ReactNode;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
   }>;
 
 function validateItems(
@@ -553,6 +579,8 @@ export const RadioGroup = forwardRef<HTMLFieldSetElement, RadioGroupProps>(
       renderLeading,
       disabled,
       className,
+      layoutStyle,
+      style,
       ...props
     },
     ref,
@@ -605,6 +633,7 @@ export const RadioGroup = forwardRef<HTMLFieldSetElement, RadioGroupProps>(
       <fieldset
         {...props}
         ref={ref}
+        style={{ ...style, ...layoutStyle }}
         className={classNames("hjm-radio-group", className)}
         data-orientation={orientation}
         data-presentation={presentation}
@@ -770,7 +799,10 @@ export type SegmentedControlProps = Omit<
     defaultValue?: string;
     onValueChange?: (value: string) => void;
     size?: SegmentedControlSize;
+    presentation?: "connected" | "pills";
     name?: string;
+    /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
   }>;
 
 export const SegmentedControl = forwardRef<
@@ -784,8 +816,11 @@ export const SegmentedControl = forwardRef<
     defaultValue,
     onValueChange,
     size = segmentedControlRecipe.defaults.size,
+    presentation = "connected",
     name,
     className,
+    layoutStyle,
+    style,
     ...props
   },
   ref,
@@ -825,8 +860,10 @@ export const SegmentedControl = forwardRef<
     <fieldset
       {...props}
       ref={ref}
+      style={{ ...style, ...layoutStyle }}
       className={classNames("hjm-segmented", className)}
       data-size={size}
+      data-presentation={presentation}
     >
       <legend className="hjm-visually-hidden">{label}</legend>
       <div className="hjm-segmented__items">

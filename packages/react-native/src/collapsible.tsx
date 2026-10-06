@@ -4,8 +4,11 @@ import {
   type CollapsibleOpenState,
 } from "@hjmds/design-contracts/components/collapsible";
 import { useState, type ReactNode } from "react";
+import { control } from "@hjmds/design-contracts/foundations";
 import { Pressable, View, type StyleProp, type ViewStyle } from "react-native";
 import { Text } from "./primitives.js";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
+import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 
 export type CollapsibleProps = CollapsibleOpenState &
   Readonly<{
@@ -13,16 +16,23 @@ export type CollapsibleProps = CollapsibleOpenState &
     trigger: ReactNode;
     children: ReactNode;
     disabled?: boolean;
+    /** Canonical layout-only placement. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
+    /**
+     * @deprecated Raw visual style bypasses the HJM recipe. Use `layoutStyle` for placement;
+     * `collapsibleRecipe` owns appearance. Removed in the next major (consumer-policy.md §3.1).
+     */
     style?: StyleProp<ViewStyle>;
   }>;
 
-export function Collapsible({ trigger, children, disabled = false, style, ...openState }: CollapsibleProps) {
+export function Collapsible({ trigger, children, disabled = false, layoutStyle, style, ...openState }: CollapsibleProps) {
+  warnDeprecatedStyleProps("Collapsible", { style }, "layoutStyle for placement; collapsibleRecipe owns appearance");
   validateCollapsibleOpenState(openState as CollapsibleOpenState);
   const controlled = openState.open !== undefined;
   const [internalOpen, setInternalOpen] = useState(openState.defaultOpen ?? false);
   const open = openState.open ?? internalOpen;
   return (
-    <View style={[{ gap: collapsibleRecipe.gap }, style]}>
+    <View style={[{ gap: collapsibleRecipe.gap }, style, layoutStyle]}>
       <Pressable
         accessibilityRole="button"
         accessibilityState={{ expanded: open, disabled }}
@@ -32,7 +42,9 @@ export function Collapsible({ trigger, children, disabled = false, style, ...ope
           if (!controlled) setInternalOpen(next);
           openState.onOpenChange?.(next);
         }}
-        style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: collapsibleRecipe.gap }}
+        // The trigger is the only control here, so it keeps the shared 44 target like Web
+        // `.hjm-collapsible__trigger`; a one-line text trigger was ~20 tall (2026-10-06 follow-up).
+        style={{ minHeight: control.minTouchTarget, flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: collapsibleRecipe.gap }}
       >
         {typeof trigger === "string" ? <Text>{trigger}</Text> : trigger}
         {/* Decoration only: the expanded state travels through accessibilityState. */}

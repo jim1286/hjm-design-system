@@ -187,7 +187,7 @@ export function ComponentExplorer({ initialCategory = "all" }: ExplorerProps) {
 }
 
 const meta = { includeStories: ["Explorer","Foundation","Layout","Actions","Inputs","Navigation","DataDisplay","Feedback","Overlays","Providers","Utilities"],
-  id: "components-overview", title: "배포/컴포넌트/개요",
+  id: "components-overview", title: "배포/컴포넌트/개요/컴포넌트 찾기",
   component: ComponentExplorer,
   excludeStories: ["ComponentExplorer"],
   args: { initialCategory: "all" },
@@ -196,7 +196,6 @@ const meta = { includeStories: ["Explorer","Foundation","Layout","Actions","Inpu
 
 export default meta;
 type Story = StoryObj<typeof meta>;
-
 export const Explorer: Story = { name: "전체 탐색" };
 export const Foundation: Story = { args: { initialCategory: "foundation" }, name: "글자와 아이콘" };
 export const Layout: Story = { args: { initialCategory: "layout" }, name: "레이아웃" };

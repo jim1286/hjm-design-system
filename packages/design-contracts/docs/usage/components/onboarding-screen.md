@@ -1,0 +1,106 @@
+# OnboardingScreen
+
+- 단계: 컴포넌트
+- 상태: 배포
+- 지원: Web · Native
+- 적용: 미게시(1.12.1 이후)
+- 검토일: 2026-10-06
+- 근거: [반복 화면 조합](../../screen-patterns.md), Web·Native `src/screens.tsx`·`src/screen-flows.tsx`; 기존 개별 지침을 새 규격으로 통합. 예제 스토리는 2026-10-06 사용자 승인으로 스토리북 배포([승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정)). 스토리북 배포는 API 게시가 아니다(`적용` 참고)
+- 스토리북: `배포/화면/소개/온보딩`
+
+## 언제 쓰나
+
+첫 실행 소개·초기 설정처럼 **몇 단계를 차례로 넘기는 화면**에 쓴다. 현재 단계의 제목·설명·본문,
+진행 문구(“2/4”), 다음·이전·건너뛰기·완료 행동을 [ScreenLayout](screen-layout.md) 위에 조합한다.
+단계 범위가 틀리면 렌더 중 던진다.
+
+## 쓰지 않을 때
+
+| 상황 | 대신 쓸 것 |
+| --- | --- |
+| 단계 표시만 필요(본문은 자유 배치) | [Steps](steps.md) |
+| 화면 위에 겹치는 기능 안내 | [Tour](tour.md) |
+| 권한 하나를 요청하는 단계 | [PermissionScreen](permission-screen.md) |
+| 좌우로 넘기는 이미지 소개 | [Carousel](carousel.md) |
+
+## 공개 이름과 import
+
+| 이름 | 역할 | Web | Native |
+| --- | --- | --- | --- |
+| `OnboardingScreen` | supplemental, 루트 barrel에 없음 | `/screen-flows` | `/screen-flows` |
+
+`@hjmds/react/screen-flows`, `@hjmds/react-native/screen-flows`로만 import한다. 추가 optional peer는 없다.
+
+## 최소 사용 예
+
+```tsx
+// Web
+import { OnboardingScreen } from "@hjmds/react/screen-flows";
+
+<OnboardingScreen
+  steps={[
+    { id: "welcome", title: t("onboarding.welcome.title"), description: t("onboarding.welcome.body"), content: welcomeArt },
+    { id: "goal", title: t("onboarding.goal.title"), description: t("onboarding.goal.body"), content: goalPicker },
+  ]}
+  index={index}
+  onIndexChange={setIndex}
+  nextLabel={t("common.next")}
+  backLabel={t("common.back")}
+  complete={{ label: t("onboarding.start"), onAction: finish, pending: saving }}
+  skip={{ label: t("common.skip"), onAction: finish }}
+  progressLabel={(current, total) => t("onboarding.progress", { current, total })}
+/>
+```
+
+```tsx
+// Native — props는 Web과 같다
+import { OnboardingScreen } from "@hjmds/react-native/screen-flows";
+
+<OnboardingScreen
+  steps={[
+    { id: "welcome", title: t("onboarding.welcome.title"), description: t("onboarding.welcome.body"), content: welcomeArt },
+    { id: "goal", title: t("onboarding.goal.title"), description: t("onboarding.goal.body"), content: goalPicker },
+  ]}
+  index={index}
+  onIndexChange={setIndex}
+  nextLabel={t("common.next")}
+  backLabel={t("common.back")}
+  complete={{ label: t("onboarding.start"), onAction: finish, pending: saving }}
+  skip={{ label: t("common.skip"), onAction: finish }}
+  progressLabel={(current, total) => t("onboarding.progress", { current, total })}
+/>
+```
+
+### 제품이 공급할 것
+
+| prop | 내용 |
+| --- | --- |
+| `steps` | `{ id, title, description, content }[]`. 1개 이상. 제목·설명은 지역화 문자열, `content`는 단계 본문 |
+| `index`, `onIndexChange` | 현재 단계(0부터, 제어형). 범위를 벗어나면 던진다 |
+| `nextLabel`, `backLabel` | 다음·이전 문구. 첫 단계에는 이전이 없다 |
+| `complete` | 마지막 단계의 주 행동 `{ label, onAction, disabled?, pending? }` |
+| `skip` | 선택. 상단 actions 자리에 보조 버튼으로 놓인다 |
+| `progressLabel(current, total)` | 1부터 센 현재 단계와 전체 수로 진행 문구를 만든다 |
+
+## 배치
+
+| 항목 | 값 | 근거 |
+| --- | --- | --- |
+| 크기 | 한 단계의 ScreenLayout 폭(최대 720); 다음·완료·이전은 `Button` 기본 크기 | `OnboardingScreen` |
+| 간격 | 화면 padding `spacing.md` 16(진행 문구 notice는 좌우만); footer 다음/완료–이전 `spacing.sm` 12; 단계 본문 안 간격은 `content`(제품) 소유 | Web·Native `OnboardingScreen` `Stack gap="sm"` |
+| 순서·정렬 | 헤더(단계 제목·설명 → 건너뛰기 ghost) → 진행 문구(caption) → 단계 `content` → footer(다음 또는 완료 primary → 이전 ghost, 첫 단계는 이전 없음) | 렌더 순서 |
+| 고정·스크롤 | 헤더·진행 문구·footer 고정, 단계 본문 화면 스크롤 | `ScreenLayout` |
+| 좁은 폭·큰 글자 | 제목 열 최소 폭 120 × 글자 배율, 모자라면 건너뛰기가 다음 줄로 내려간다; footer 버튼은 세로로 쌓인다 | `screenPatternRecipe.headerMinWidth` |
+
+## 꼭 지킬 것
+
+- 단계에서 고른 값의 저장, 완료 여부 저장, 다시 보여 주지 않기는 제품 소유다. `complete.onAction`에서 처리한다.
+- ScreenLayout의 `header`·`state`·`contentInset` 같은 화면 props는 받지 않는다. 화면 틀을 바꿔야 하면 ScreenLayout으로 직접 조합한다.
+  배치 prop은 `layoutStyle` 하나이며 Web·Native 모두 화면 루트(ScreenLayout)에 넘긴다.
+- 문구·일러스트·브랜드 이미지는 제품 소유다. `content`에 제품 자산을 넣는다.
+
+## 플랫폼 차이
+
+| 항목 | Web | Native |
+| --- | --- | --- |
+| 배치 prop | `layoutStyle`(ScreenLayout 루트, 미게시(1.12.1 이후)) | `layoutStyle`(ScreenLayout 루트, 미게시(1.12.1 이후)) |

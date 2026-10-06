@@ -16,16 +16,18 @@ export function FieldMessage({ error, supportText }: Readonly<{ error?: string; 
 
 // Custom Field and built-in text inputs used separate label/support renderers.
 // Keep the host control in a slot so its keyboard/ref behavior stays unchanged.
-export function NativeFieldFrame({ label, required = false, error, description, children, style, groupControl = true }: Readonly<{
+// `disabledOpacity` fades only the label here (fieldRecipe.disabledScope); the caller fades its
+// control, and the hint/error message keeps full contrast.
+export function NativeFieldFrame({ label, required = false, error, description, children, style, groupControl = true, disabledOpacity }: Readonly<{
   label?: string; required?: boolean; error?: string; description?: string;
-  children: ReactNode; style?: StyleProp<ViewStyle>; groupControl?: boolean;
+  children: ReactNode; style?: StyleProp<ViewStyle>; groupControl?: boolean; disabledOpacity?: number;
 }>) {
   const { colors } = useHjmNativeTheme();
   const message = <FieldMessage {...(error === undefined ? {} : { error })}
     {...(description === undefined ? {} : { supportText: description })} />;
   return <View style={[{ gap: fieldRecipe.label.gap }, style]}>
     {label ? <Text tone="body" variant={fieldRecipe.label.textVariant}
-      style={{ color: colors[fieldRecipe.label.color], fontWeight: fieldRecipe.label.fontWeight }}>
+      style={{ color: colors[fieldRecipe.label.color], fontWeight: fieldRecipe.label.fontWeight, ...(disabledOpacity === undefined ? {} : { opacity: disabledOpacity }) }}>
       {label}{required ? " *" : ""}
     </Text> : null}
     {/* Custom Field keeps its direct control children: another View would change

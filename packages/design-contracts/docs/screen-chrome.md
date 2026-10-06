@@ -1,5 +1,7 @@
 # 화면 제목과 마지막 행동
 
+검토일: 2026-10-05
+
 2026-09-16: 앱 감사에서 Native 전용 TopBar/BottomCTA 때문에 같은 제품의 Web에
 별도 헤더와 푸터가 생기는 공백을 확인했다. 기존 Native recipe를 React에 연결한다.
 TDS의 [ListRow](https://tossmini-docs.toss.im/tds-mobile/components/ListRow/list-row-overview/)와
@@ -25,6 +27,14 @@ Web의 headingLevel은 페이지 구조가 정한다. div root이므로 Dialog �
 두 번째 banner landmark를 만들지 않는다. `centered`는 남은 제목 영역 내 정렬이다.
 짧은 행동 문구를 압축하던 동일 폭 좌우 열 대신 콘텐츠 폭을 보장하고 제목이 줄바꿈한다.
 큰 글자에서는 제목을 다음 행으로 내려 행동과 겹치지 않게 한다.
+
+Native는 OS 글자 크기가 변경되어 큰 글자/compact 구조가 전환될 때 해당 내부
+subtree를 새로 구성한다. 2026-10-05 번뚝의 iOS 26.5 개발 런타임에서 최대 글자를
+일반 크기로 줄인 뒤 full-width 행 host가 compact leading 슬롯으로 재사용되며
+제목이 좁은 오른쪽 칸에 남았다. 정적 스타일만 검사하거나 앱에서 폭을 덮는 대신
+구조가 다른 host의 identity를 분리한다. 전환 시 슬롯 내부의 로컬 상태·포커스는
+재생성될 수 있으므로 유지할 제품 상태는 TopBar 밖에서 소유한다. Web은 동일한
+DOM 슬롯을 유지하며 CSS로 배치하므로 이 Native host 교체를 적용하지 않는다.
 
 BottomCTA는 primaryAction 하나와 선택적인 secondaryAction, description을 받는다.
 loading은 표시 문구를 시각적으로 숨기되 원래 폭과 접근성 이름을 유지하고 중복 실행을 막는다. 큰 글자에서 세로로 쌓을 때

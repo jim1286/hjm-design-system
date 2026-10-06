@@ -18,3 +18,9 @@ Web은 `-webkit-line-clamp`, Native는 `numberOfLines`로 같은 답을 쓴다.
 
 **숫자는 recipe에만 있다.** 스타일시트는 `--hjm-button-label-lines`를 읽고 렌더러가 그
 변수를 recipe에서 채운다 — 두 벌이 되면 언젠가 어긋난다.
+
+
+2026-10-06 독립 재구현의 Native 2배 글자에서 `numberOfLines` 상한만 풀고 버튼 높이는
+44로 고정해 긴 문구가 잘리는 것을 확인했다. 문자열·숫자 라벨은 recipe 높이를 최소값으로만
+사용하고 row 안에서 폭을 줄여 줄바꿈한다. 로딩은 같은 라벨의 공간을 유지한다. 이미지 등
+사용자 콘텐츠의 기본 고정 높이는 유지하며 `growWithContent`로 확장한다.

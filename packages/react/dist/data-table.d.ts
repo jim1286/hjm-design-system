@@ -1,5 +1,6 @@
 import { type DataTableAsyncState, type DataTableColumnDescriptor, type DataTableDensity, type DataTableRowDescriptor, type DataTableSelection, type DataTableSortCycle, type DataTableSortState } from "@hjmds/design-contracts/components/data-table";
 import { type ReactNode } from "react";
+import type { HjmCompositionStyleProp } from "./composition-style.js";
 export type DataTableLabels = Readonly<{
     /** Accessible name for the table itself. */
     table: string;
@@ -23,6 +24,8 @@ export type DataTableProps<ColumnKey extends string = string, RowKey extends str
     /** Composed beneath the table by the product — pagination, load more, totals. */
     footer?: ReactNode;
     className?: string;
+    /** Canonical layout-only placement on the root wrapper. Controlled visual keys are excluded. */
+    layoutStyle?: HjmCompositionStyleProp;
 }>;
 export declare const DataTable: <ColumnKey extends string = string, RowKey extends string = string>(props: DataTableProps<ColumnKey, RowKey> & {
     ref?: React.Ref<HTMLTableElement>;

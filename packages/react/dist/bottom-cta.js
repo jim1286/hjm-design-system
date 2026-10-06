@@ -14,7 +14,7 @@ function isAction(value) {
     return typeof value === "object" && value !== null && "label" in value && "onClick" in value;
 }
 /** One primary action with optional supporting copy and a secondary action, matching Native's slots. */
-export const BottomCTA = forwardRef(function BottomCTA({ primaryAction, secondaryAction, description, accessibilityLabel, safeAreaBottom = 0, position = "flow", className, style, ...props }, ref) {
+export const BottomCTA = forwardRef(function BottomCTA({ primaryAction, secondaryAction, description, accessibilityLabel, safeAreaBottom = 0, position = "flow", className, style, layoutStyle, ...props }, ref) {
     const theme = useOptionalHjmTheme();
     if (!Number.isFinite(safeAreaBottom) || safeAreaBottom < 0)
         throw new RangeError("BottomCTA safeAreaBottom must be non-negative");
@@ -24,7 +24,7 @@ export const BottomCTA = forwardRef(function BottomCTA({ primaryAction, secondar
             "--hjm-bottom-cta-padding-top": `${bottomCtaRecipe.paddingTop}px`,
             "--hjm-bottom-cta-padding-bottom": `${bottomCtaRecipe.paddingBottom}px`,
             "--hjm-bottom-cta-gap": `${bottomCtaRecipe.gap}px`,
-            "--hjm-bottom-cta-safe-area": `${safeAreaBottom}px`, ...style,
+            "--hjm-bottom-cta-safe-area": `${safeAreaBottom}px`, ...style, ...layoutStyle,
         }, children: [description ? _jsx("p", { className: "hjm-bottom-cta__description", children: description }) : null, _jsxs("div", { className: "hjm-bottom-cta__actions", children: [secondaryAction == null ? null : _jsx("div", { className: "hjm-bottom-cta__secondary", children: isAction(secondaryAction) ? _jsx(Action, { action: secondaryAction, tone: "secondary" }) : secondaryAction }), _jsx("div", { className: "hjm-bottom-cta__primary", children: _jsx(Action, { action: primaryAction, tone: "primary" }) })] })] });
 });
 //# sourceMappingURL=bottom-cta.js.map

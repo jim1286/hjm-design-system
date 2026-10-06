@@ -133,6 +133,7 @@ export {
   type FieldControlProps,
   type FieldProps,
   type FormProps,
+  type FormHandle,
   type SelectSection,
   type SelectLeadingRenderProps,
   type SelectProps,

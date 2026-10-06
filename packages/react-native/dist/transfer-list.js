@@ -6,12 +6,14 @@ import { Pressable, ScrollView, View } from "react-native";
 import { Button } from "./actions.js";
 import { Text } from "./primitives.js";
 import { mixedCheckboxState, useControllableState } from "./internal/state.js";
+import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { useHjmNativeTheme } from "./provider.js";
 const emptySelection = () => ({
     source: new Set(),
     target: new Set(),
 });
-export function TransferList({ items, labels, targetKeys: controlledTargetKeys, defaultTargetKeys, onTargetKeysChange, onMove, style, }) {
+export function TransferList({ items, labels, targetKeys: controlledTargetKeys, defaultTargetKeys, onTargetKeysChange, onMove, layoutStyle, style, }) {
+    warnDeprecatedStyleProps("TransferList", { style }, "layoutStyle for placement; the transfer list renderer owns appearance");
     const { colors } = useHjmNativeTheme();
     const [targetKeys, setTargetKeys] = useControllableState({
         ...(controlledTargetKeys === undefined ? {} : { value: controlledTargetKeys }),
@@ -42,6 +44,6 @@ export function TransferList({ items, labels, targetKeys: controlledTargetKeys, 
                         return (_jsx(Pressable, { accessibilityRole: "checkbox", accessibilityLabel: item.label, accessibilityState: { checked, disabled: item.disabled === true }, disabled: item.disabled === true, onPress: () => setSelection(toggleTransferListSelection(descriptor, selection, panel, item.id)), style: { minHeight: 44, justifyContent: "center", paddingHorizontal: spacing.sm }, children: _jsxs(Text, { children: [checked ? "✓ " : "", item.label] }) }, item.id));
                     })) })] }));
     };
-    return (_jsxs(View, { style: [{ gap: spacing.sm }, style], children: [_jsx(Text, { variant: "label", children: labels.source }), renderPanel("source"), _jsxs(View, { style: { flexDirection: "row", gap: spacing.sm, justifyContent: "center" }, children: [_jsx(Button, { tone: "secondary", disabled: selection.source.size === 0, onPress: () => move("toTarget"), children: labels.toTarget }), _jsx(Button, { tone: "secondary", disabled: selection.target.size === 0, onPress: () => move("toSource"), children: labels.toSource })] }), _jsx(Text, { variant: "label", children: labels.target }), renderPanel("target")] }));
+    return (_jsxs(View, { style: [{ gap: spacing.sm }, style, layoutStyle], children: [_jsx(Text, { variant: "label", children: labels.source }), renderPanel("source"), _jsxs(View, { style: { flexDirection: "row", gap: spacing.sm, justifyContent: "center" }, children: [_jsx(Button, { tone: "secondary", disabled: selection.source.size === 0, onPress: () => move("toTarget"), children: labels.toTarget }), _jsx(Button, { tone: "secondary", disabled: selection.target.size === 0, onPress: () => move("toSource"), children: labels.toSource })] }), _jsx(Text, { variant: "label", children: labels.target }), renderPanel("target")] }));
 }
 //# sourceMappingURL=transfer-list.js.map

@@ -72,3 +72,10 @@ adds installed iPhone 17 / iOS 27 simulator captures and active/stopped CPU samp
 from the real upstream runtime. The inactive frame-loop correction is backed by
 those samples. This does not establish physical-device GPU timing, battery use,
 or exhaustive geometry and screen-reader behavior.
+
+## Initials (2026-10-06)
+
+`resolveAvatarInitials(name, provided?)` is the one initials rule for both renderers: the first character of the first and
+the last word, counted in code points. Web had taken the first two words and Native the first and last, so "Kim Min Jun"
+read "KM" on Web and "KJ" on Native; Native also split surrogate pairs. First+last was kept because it shows the family and
+given names instead of a middle name. Native `initials` still overrides (at most three code points).
