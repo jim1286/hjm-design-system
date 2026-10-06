@@ -69,6 +69,7 @@ import { ContentTransition } from "@hjmds/react-native/content-transition";
 | `preset` | `fade` · `rise` · `slide` · `scale` | `fade` | `rise`는 아래 12에서, `slide`는 가로 16(RTL이면 반대), `scale`은 0.96에서 시작 |
 | `motion` | `system` · `none` | `system` | `system`은 reduced motion을 따르고 `none`은 항상 즉시 교체 |
 | `stateKey` | `string` | — (필수) | 바뀔 때만 새 내용이 나타난다 |
+| `animateHeight` | boolean | false | 내용의 측정 높이가 바뀔 때 주변 틀 높이를 전환한다. 모션 감소에서는 즉시 반영 |
 | Web `focusTarget` | `RefObject<HTMLElement \| null>` | — | 바뀌기 전 포커스가 안에 있었으면 전환 뒤 이 요소로 옮긴다 |
 | Web `layoutStyle` | 배치 전용 style | — | 바깥 고정 wrapper에 붙는다(키가 바뀌는 안쪽 패널이 아님) |
 
@@ -80,7 +81,7 @@ import { ContentTransition } from "@hjmds/react-native/content-transition";
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
-| 크기 | 자체 크기·여백이 없다. Web은 `div` 두 겹(블록), Native는 `Animated.View` 하나로 감싼다 | `packages/react/src/content-transition.tsx`, `packages/react-native/src/content-transition.tsx` |
+| 크기 | 자체 크기·여백이 없다. Web은 배치 wrapper·높이 틀·측정 flow·keyed panel, Native는 바깥 Animated.View·측정 View·표현 Animated.View로 감싼다 | `packages/react/src/content-transition.tsx`, `packages/react-native/src/content-transition.tsx` |
 | 간격 | 자체 간격이 없다. 위아래 간격은 감싸는 [Stack](stack.md) 등이 정한다. 움직임 폭(세로 12·가로 16·0.96배)만큼 래퍼 밖으로 잠깐 밀려 나오므로 바로 옆 요소와 간격을 둔다 | `src/content-transition.ts` |
 | 순서·정렬 | 바뀌는 영역 하나만 감싼다(결과 패널, 단계 본문). 필터 막대·탭·제목처럼 그대로 남는 부분은 바깥에 둔다 | — |
 | 고정·스크롤 | Native 래퍼에는 `flex`가 없어 남은 높이를 채우지 않는다. 화면 높이를 채워야 하는 내용이면 바깥 View가 높이를 정한다 | `packages/react-native/src/content-transition.tsx` |

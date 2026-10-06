@@ -148,7 +148,7 @@ const checks: Readonly<Record<Exclude<ReactNativeRendererEvidenceScenario, "defa
       if (typeof before !== "number") return;
       // Decorative glyphs opt out of text scaling to fit their fixed icon slot;
       // verify that exception stays fixed, while all readable copy still grows.
-      if (["toast", "dialog", "sheet"].includes(item.componentId) && node.props.accessible === false && node.props.allowFontScaling === false && textOf(node.raw) === "×") {
+      if (["toast", "dialog", "sheet", "tags-input"].includes(item.componentId) && node.props.accessible === false && node.props.allowFontScaling === false && textOf(node.raw) === "×") {
         expect(after).toBe(before);
         return;
       }

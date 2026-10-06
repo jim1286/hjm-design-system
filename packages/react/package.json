@@ -356,6 +356,16 @@
       "import": "./dist/content-transition.js",
       "default": "./dist/content-transition.js"
     },
+    "./rating": {
+      "types": "./dist/rating.d.ts",
+      "import": "./dist/rating.js",
+      "default": "./dist/rating.js"
+    },
+    "./image-comparison": {
+      "types": "./dist/image-comparison.d.ts",
+      "import": "./dist/image-comparison.js",
+      "default": "./dist/image-comparison.js"
+    },
     "./carousel-motion": {
       "types": "./dist/carousel-motion.d.ts",
       "import": "./dist/carousel-motion.js",

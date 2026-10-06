@@ -219,3 +219,8 @@ import { SearchScreen } from "@hjmds/react-native/screen-flows";
   떨어졌다. utilverse는 `onSubmit`에서 `Keyboard.dismiss()`를 불렀다(2026-10-06). 1.13.1부터 SearchScreen이 닫으므로 그 호출을 지운다.
 - 1.13.0 이하에서는 `contentInset="none"`이면 `scroll` 줄이 전혀 넓어지지 않아 host 여백(Container·Sheet)에서 잘렸다. 1.13.1부터 `hostGutter`로 맞춘다.
 - 시트 안 SearchScreen은 Sheet `size`를 `auto` 밖으로 주고 `scrollable` 없이 넣는다. 1.13.0 이하 Native는 이때 화면이 0pt가 됐다([Sheet 함정](sheet.md#함정)).
+
+
+### 고정 아이콘과 큰 글자
+
+2026-10-06 최근 검색 삭제 기호가 큰 글자에서 잘린 재현에 따라 Native 내장 삭제·메뉴 기호는 고정 아이콘 틀의 크기를 유지한다. 주변 제목·라벨은 계속 확대한다. Chip의 체크와 Toast 닫기는 기존 비확대 경로를 유지하며 회귀 검사에 포함한다. 제품이 전달한 아이콘 슬롯은 제품이 같은 조건을 검증한다.

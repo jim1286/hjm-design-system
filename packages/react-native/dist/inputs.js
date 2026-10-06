@@ -1,5 +1,6 @@
 import { createElement as _createElement } from "react";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { FixedGlyph } from "./internal/fixed-glyph.js";
 import { FieldMessage, NativeFieldFrame } from "./internal/field-frame.js";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { glyph, radius, spacing, typography, } from "@hjmds/design-contracts/foundations";
@@ -212,7 +213,7 @@ export const SearchField = forwardRef(function SearchField({ clearLabel, busyLab
             height: searchSizing.clearDiameter,
             justifyContent: "center",
             width: searchSizing.clearDiameter,
-        }, children: renderClearIcon?.(iconProps) ?? (_jsx(Text, { align: "center", style: { fontSize: iconProps.size, lineHeight: iconProps.size }, tone: "muted", children: "\u00D7" })) })) : trailingNode;
+        }, children: renderClearIcon?.(iconProps) ?? (_jsx(FixedGlyph, { tone: "muted", fontSize: iconProps.size, children: "\u00D7" })) })) : trailingNode;
     return (_jsx(FieldRenderer, { ...props, ref: inputRef, busy: busy, disabled: disabled, leading: leading, multiline: false, onValueChange: (next) => {
             // Typing continues while busy (same as Web `loading`); only disabled ignores input.
             if (!disabled)

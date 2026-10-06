@@ -1,3 +1,4 @@
+import { FixedGlyph } from "./internal/fixed-glyph.js";
 import {
   removeTagAt,
   resolveTagsInputCommit,
@@ -122,7 +123,7 @@ export function TagsInput({
               hitSlop={tagsInputRecipe.remove.minTouchTarget / 2}
               onPress={() => setTags(removeTagAt(tags, index))}
             >
-              <Text style={{ color: content }}>×</Text>
+              <FixedGlyph color={content}>×</FixedGlyph>
             </Pressable>
           </View>
         ))}

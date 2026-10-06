@@ -4,7 +4,7 @@
 
 ## @hjmds/react
 
-고유 공개 컴포넌트 및 provider 이름 154개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 156개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -72,6 +72,7 @@
 | Icon | Icon | canonical | root, ./display |
 | IconButton | IconButton | canonical | root, ./actions |
 | Image | Image | canonical | root, ./display |
+| ImageComparison | 별도 보조 기능 | supplemental | ./image-comparison |
 | InlineConfirm | Button | optional-extension | ./inline-confirm |
 | Layout | Layout | canonical | root, ./layout |
 | Link | Link | canonical | root, ./actions |
@@ -107,6 +108,7 @@
 | QRCode | QRCode | canonical | ./qr-code |
 | Radio | Radio | canonical | root, ./selection |
 | RadioGroup | RadioGroup | canonical | root, ./selection |
+| Rating | 별도 보조 기능 | supplemental | ./rating |
 | ReactionPicker | Button | optional-extension | ./reaction-picker |
 | Result | Result | canonical | root, ./feedback |
 | SavedItemsScreen | 별도 보조 기능 | supplemental | ./saved-items |
@@ -165,7 +167,7 @@
 
 ## @hjmds/react-native
 
-고유 공개 컴포넌트 및 provider 이름 140개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 142개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -227,6 +229,7 @@
 | Icon | Icon | canonical | root, ./primitives |
 | IconButton | IconButton | canonical | root, ./actions, ./bottom-cta |
 | Image | Image | canonical | root, ./data-display |
+| ImageComparison | 별도 보조 기능 | supplemental | ./image-comparison |
 | ImageViewer | Image | optional-extension | ./image-viewer |
 | InlineConfirm | Button | optional-extension | ./inline-confirm |
 | KeyboardAvoiding | 별도 보조 기능 | supplemental | root, ./keyboard |
@@ -262,6 +265,7 @@
 | QRCode | QRCode | canonical | ./qr-code |
 | Radio | Radio | canonical | root, ./inputs |
 | RadioGroup | RadioGroup | canonical | root, ./inputs |
+| Rating | 별도 보조 기능 | supplemental | ./rating |
 | ReactionPicker | Button | optional-extension | ./reaction-picker |
 | Result | Result | canonical | root, ./feedback |
 | SavedItemsScreen | 별도 보조 기능 | supplemental | ./saved-items |

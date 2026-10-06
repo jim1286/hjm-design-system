@@ -322,6 +322,18 @@
       "import": "./dist/content-transition.js",
       "default": "./dist/content-transition.js"
     },
+    "./rating": {
+      "types": "./dist/rating.d.ts",
+      "react-native": "./dist/rating.js",
+      "import": "./dist/rating.js",
+      "default": "./dist/rating.js"
+    },
+    "./image-comparison": {
+      "types": "./dist/image-comparison.d.ts",
+      "react-native": "./dist/image-comparison.js",
+      "import": "./dist/image-comparison.js",
+      "default": "./dist/image-comparison.js"
+    },
     "./carousel-motion": {
       "types": "./dist/carousel-motion.d.ts",
       "react-native": "./dist/carousel-motion.js",

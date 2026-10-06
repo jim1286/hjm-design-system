@@ -6,18 +6,17 @@ import { resolveColorReference } from "@hjmds/design-contracts/color-references"
 import { backdrop, easing, glyph, radius, spacing } from "@hjmds/design-contracts/foundations";
 import { alertDialogRecipe, dialogRecipe, sheetRecipe, } from "@hjmds/design-contracts/recipes";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore, } from "react";
-import { AccessibilityInfo, Animated, Easing, Keyboard, Modal, Platform, ScrollView, Text as NativeText, Pressable, StyleSheet, View, findNodeHandle, useWindowDimensions, } from "react-native";
+import { AccessibilityInfo, Animated, Easing, Keyboard, Modal, Platform, ScrollView, Pressable, StyleSheet, View, findNodeHandle, useWindowDimensions, } from "react-native";
 import { Button, IconButton } from "./actions.js";
 import { scheduleAfterNativeModalTeardown, shouldAwaitNativeModalDismiss, } from "./internal/modal-lifecycle.js";
 import { isDevelopment, warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
+import { FixedGlyph } from "./internal/fixed-glyph.js";
 import { minimumTargetStyle } from "./internal/styles.js";
 import { Text } from "./primitives.js";
 import { useHjmNativeSafeAreaInsets, useHjmNativeTheme } from "./provider.js";
-// A close glyph is icon artwork, not body copy. HJM Text applies controlled textScale
-// even with allowFontScaling=false, which clipped × in the fixed icon frame at 200%.
+// A close glyph is icon artwork, not body copy; FixedGlyph keeps it inside IconButton's fixed frame.
 function CloseGlyph() {
-    const { colors } = useHjmNativeTheme();
-    return _jsx(NativeText, { accessible: false, allowFontScaling: false, style: { color: colors.text, fontSize: glyph.sm, lineHeight: glyph.sm }, children: "\u00D7" });
+    return _jsx(FixedGlyph, { fontSize: glyph.sm, children: "\u00D7" });
 }
 // BT-QA-027: maximum text made a centered BurnTok confirmation taller than the
 // window, putting its title/cancel off-screen. Keep full copy in a bounded scroll

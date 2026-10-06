@@ -97,7 +97,7 @@ describe("@hjmds/react-native package boundary", () => {
       "./qr-code",
       "./sortable",
       "./swipe-actions",
-      "./content-transition",
+      "./content-transition", "./rating", "./image-comparison",
       "./carousel-motion",
       "./celebration",
       "./screen-transition",

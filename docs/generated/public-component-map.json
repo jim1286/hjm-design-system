@@ -629,6 +629,15 @@
         "role": "canonical"
       },
       {
+        "name": "ImageComparison",
+        "source": "packages/react/src/image-comparison.tsx",
+        "entries": [
+          "./image-comparison"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
         "name": "InlineConfirm",
         "source": "packages/react/src/inline-confirm.tsx",
         "entries": [
@@ -965,6 +974,15 @@
         ],
         "canonicalComponent": "RadioGroup",
         "role": "canonical"
+      },
+      {
+        "name": "Rating",
+        "source": "packages/react/src/rating.tsx",
+        "entries": [
+          "./rating"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
       },
       {
         "name": "ReactionPicker",
@@ -2075,6 +2093,15 @@
         "role": "canonical"
       },
       {
+        "name": "ImageComparison",
+        "source": "packages/react-native/src/image-comparison.tsx",
+        "entries": [
+          "./image-comparison"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
         "name": "ImageViewer",
         "source": "packages/react-native/src/image-viewer.tsx",
         "entries": [
@@ -2409,6 +2436,15 @@
         ],
         "canonicalComponent": "RadioGroup",
         "role": "canonical"
+      },
+      {
+        "name": "Rating",
+        "source": "packages/react-native/src/rating.tsx",
+        "entries": [
+          "./rating"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
       },
       {
         "name": "ReactionPicker",

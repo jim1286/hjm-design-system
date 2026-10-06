@@ -143,3 +143,8 @@ function useProfileSavedToast() {
   어댑터는 render 밖에서 만들거나 memo한다.
 - ToastRegion 배치는 `layoutStyle={{ flex: 1 }}`로 쓴다. Native 예제도 이 경로를 사용한다.
 - Web `Toast` 단독 렌더는 나머지 HTML 속성(id·data-*·이벤트)을 루트에 전달한다(미게시(1.12.1 이후). 1.12.1은 `className`만 전달). `role`·`aria-labelledby`·`aria-describedby`·`data-tone`·`data-state`는 Toast가 정하므로 덮이지 않는다. 배치는 Provider를 쓴다.
+
+
+### 고정 아이콘과 큰 글자
+
+2026-10-06 최근 검색 삭제 기호가 큰 글자에서 잘린 재현에 따라 Native 내장 삭제·메뉴 기호는 고정 아이콘 틀의 크기를 유지한다. 주변 제목·라벨은 계속 확대한다. Chip의 체크와 Toast 닫기는 기존 비확대 경로를 유지하며 회귀 검사에 포함한다. 제품이 전달한 아이콘 슬롯은 제품이 같은 조건을 검증한다.

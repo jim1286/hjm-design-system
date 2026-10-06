@@ -118,3 +118,8 @@ import { SearchField } from "@hjmds/react-native/inputs";
 | 진행 중 입력 | 입력 가능(`aria-busy`) | 입력 가능(`accessibilityState.busy`). 2026-10-06까지 Native는 `busy`인 동안 입력을 무시했다(1.12.1 이후 미게시) |
 | 입력 요소 | `<input type="search">`, 원시 `onChange`도 전달 | `TextInput` |
 | 배치 | `layoutStyle`·`fieldClassName`(필드 틀), `style`은 안쪽 input | `layoutStyle` |
+
+
+### 고정 아이콘과 큰 글자
+
+2026-10-06 최근 검색 삭제 기호가 큰 글자에서 잘린 재현에 따라 Native 내장 삭제·메뉴 기호는 고정 아이콘 틀의 크기를 유지한다. 주변 제목·라벨은 계속 확대한다. Chip의 체크와 Toast 닫기는 기존 비확대 경로를 유지하며 회귀 검사에 포함한다. 제품이 전달한 아이콘 슬롯은 제품이 같은 조건을 검증한다.

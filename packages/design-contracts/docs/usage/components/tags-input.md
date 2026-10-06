@@ -109,3 +109,8 @@ import { TagsInput } from "@hjmds/react-native/tags-input";
 | 후보 이동 | ArrowUp/Down(끝에서 순환) | 후보를 버튼으로 누름 |
 | ref | `forwardRef`(`input`) | 없음 |
 | 스타일 prop | `className`, `layoutStyle` | `layoutStyle`(`style`은 deprecated) |
+
+
+### 고정 아이콘과 큰 글자
+
+2026-10-06 최근 검색 삭제 기호가 큰 글자에서 잘린 재현에 따라 Native 내장 삭제·메뉴 기호는 고정 아이콘 틀의 크기를 유지한다. 주변 제목·라벨은 계속 확대한다. Chip의 체크와 Toast 닫기는 기존 비확대 경로를 유지하며 회귀 검사에 포함한다. 제품이 전달한 아이콘 슬롯은 제품이 같은 조건을 검증한다.

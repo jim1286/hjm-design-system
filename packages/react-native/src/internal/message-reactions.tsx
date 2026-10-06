@@ -4,7 +4,7 @@ import { scrim } from "@hjmds/design-contracts/foundations";
 import { screenPatternRecipe } from "@hjmds/design-contracts/screen-patterns";
 import { useHjmNativeSafeAreaInsets, useHjmNativeTheme } from "../provider.js";
 import { Button, IconButton } from "../actions.js";
-import { Text } from "../primitives.js";
+import { FixedGlyph } from "./fixed-glyph.js";
 import { ReactionPicker, type ReactionPickerProps } from "../reaction-picker.js";
 
 type Props = ReactionPickerProps & Readonly<{ closeLabel: string; menuAction?: Readonly<{label:string;onPress():void;disabled?:boolean}>; children: ReactNode; interactiveContent?:boolean; replyAction?: Readonly<{label:string;onPress():void;disabled?:boolean}> }>;
@@ -42,7 +42,7 @@ export function MessageReactions({ children, closeLabel, replyAction, menuAction
       onAccessibilityAction={event => { if(event.nativeEvent.actionName === "reply") { if(replyAction && !replyAction.disabled) replyAction.onPress(); } else if (!picker.disabled) setAnchor(height / 2); }}>{children}</Pressable>
     {/* An interactive album must keep its own page buttons in the AX tree. A separate menu target
         preserves reaction/reply access instead of merging the whole album into one button. */}
-    {interactiveContent?<IconButton label={picker.label} tone="ghost" size="small" disabled={picker.disabled??false} onPress={()=>setAnchor(height/2)} accessibilityActions={replyAction&&!replyAction.disabled?[{name:"reply",label:replyAction.label}]:[]} onAccessibilityAction={event=>{if(event.nativeEvent.actionName==="reply"&&replyAction&&!replyAction.disabled)replyAction.onPress();}}><Text>···</Text></IconButton>:null}
+    {interactiveContent?<IconButton label={picker.label} tone="ghost" size="small" disabled={picker.disabled??false} onPress={()=>setAnchor(height/2)} accessibilityActions={replyAction&&!replyAction.disabled?[{name:"reply",label:replyAction.label}]:[]} onAccessibilityAction={event=>{if(event.nativeEvent.actionName==="reply"&&replyAction&&!replyAction.disabled)replyAction.onPress();}}><FixedGlyph>···</FixedGlyph></IconButton>:null}
     <Modal visible={open} transparent statusBarTranslucent animationType={environment.reducedMotion ? "none" : "fade"}
       onRequestClose={close} onDismiss={() => { restore(); runQueuedAction(); }} onShow={focusPicker}>
       <View style={{ flex: 1 }}>
@@ -62,7 +62,7 @@ export function MessageReactions({ children, closeLabel, replyAction, menuAction
           <View ref={firstAction} accessible accessibilityRole="button" accessibilityLabel={closeLabel}
             accessibilityActions={[{ name: "activate" }]} onAccessibilityAction={event => { if (event.nativeEvent.actionName === "activate") close(); }}
             style={{ alignSelf: "flex-start", backgroundColor: colors.bg, borderRadius: tokens.radius.full }}>
-            <IconButton label={closeLabel} tone="ghost" onPress={close}><Text>×</Text></IconButton>
+            <IconButton label={closeLabel} tone="ghost" onPress={close}><FixedGlyph>×</FixedGlyph></IconButton>
           </View>
         </View>
       </View>

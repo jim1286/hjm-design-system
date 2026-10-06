@@ -40,6 +40,8 @@ import { AppRegistry, View } from "react-native";
 
 import { Button, Link } from "@hjmds/react-native/actions";
 import { Carousel } from "@hjmds/react-native/carousel";
+import { Rating } from "@hjmds/react-native/rating";
+import { ImageComparison } from "@hjmds/react-native/image-comparison";
 import { TextTransition } from "@hjmds/react-native/content-transition";
 import { TopBar } from "@hjmds/react-native/top-bar";
 import { BottomCTA } from "@hjmds/react-native/bottom-cta";
@@ -273,6 +275,8 @@ function MetroSmokeApp() {
       React.createElement(SavedItemsScreen, { title:"Saved", items:[], collections:[], labels:{allItems:"All",privateNotice:"Private",back:"Back",empty:"Empty",createCollection:"Create"}, onOpenCollection:noop,onOpenItem:noop,onBack:noop,onCreateCollection:noop,renderThumbnail:()=>null,renderDetail:()=>null }),
       React.createElement(ProfileScreen, { title: "Profile", summary: null, edit: {label: "Edit", onAction: noop} }),
       React.createElement(ToastRegion, null),
+      React.createElement(Rating, { label: "평균", value: 3.5, readOnly: true, getValueLabel: String }),
+      React.createElement(ImageComparison, { label: "비교", before: {src: "https://example.com/before.png", width: 10, height: 10, label: "전"}, after: {src: "https://example.com/after.png", width: 10, height: 10, label: "후"}, value: 50, onValueChange: noop, getValueText: String, decrementLabel: "감소", incrementLabel: "증가" }),
       React.createElement(TextTransition, { text: "현재 상태" }),
       React.createElement(Dialog, { closeLabel: "닫기", defaultOpen: false, title: "확인" }),
     ),

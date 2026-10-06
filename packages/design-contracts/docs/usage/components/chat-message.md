@@ -120,3 +120,8 @@ import { Text } from "@hjmds/react-native/primitives";
   (부작용·고유 ref를 두지 않는다).
 - `reactions`의 `options`와 `more.options`는 id가 합쳐서 유일하고 emoji·label이 비어 있지 않아야 한다. `value`가
   목록에 없는 id면 렌더 중 `TypeError`가 난다(`validateReactions`). 서버가 모르는 반응을 돌려줄 때를 대비한다.
+
+
+### 고정 아이콘과 큰 글자
+
+2026-10-06 최근 검색 삭제 기호가 큰 글자에서 잘린 재현에 따라 Native 내장 삭제·메뉴 기호는 고정 아이콘 틀의 크기를 유지한다. 주변 제목·라벨은 계속 확대한다. Chip의 체크와 Toast 닫기는 기존 비확대 경로를 유지하며 회귀 검사에 포함한다. 제품이 전달한 아이콘 슬롯은 제품이 같은 조건을 검증한다.

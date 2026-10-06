@@ -105,3 +105,8 @@ import { Chip } from "@hjmds/react-native/inputs";
   타입 오류가 나고, Native의 `onPress(next, event)`를 Web에 넘기면 첫 인자가 이벤트다.
 - 1.13.0 이하 Native Chip은 높이가 고정(`height` 36)이라 큰 글자에서 라벨 아래가 잘렸다(2026-10-06 utilverse 적용, SearchScreen
   `필터` 칩·추천 검색어 칩, accessibility-large). 1.13.1부터 Button처럼 최소 높이다. 제품이 `layoutStyle`로 높이를 다시 고정하지 않는다.
+
+
+### 고정 아이콘과 큰 글자
+
+2026-10-06 최근 검색 삭제 기호가 큰 글자에서 잘린 재현에 따라 Native 내장 삭제·메뉴 기호는 고정 아이콘 틀의 크기를 유지한다. 주변 제목·라벨은 계속 확대한다. Chip의 체크와 Toast 닫기는 기존 비확대 경로를 유지하며 회귀 검사에 포함한다. 제품이 전달한 아이콘 슬롯은 제품이 같은 조건을 검증한다.

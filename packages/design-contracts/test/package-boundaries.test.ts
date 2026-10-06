@@ -146,7 +146,7 @@ describe("package boundaries", () => {
       // Optional visual contracts remain granular and must retain explicit Metro conditions.
       "./avatar-fallback",
       "./effect-surface",
-      "./content-transition",
+      "./content-transition", "./reference-controls",
       "./duration-field",
       "./reactions",
       "./scroll-progress",
