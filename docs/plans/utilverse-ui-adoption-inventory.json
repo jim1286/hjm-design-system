@@ -2348,8 +2348,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-controls-replace-feedback",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "c72330f",
+        "report": "docs/plans/utilverse-notifications-adoption.md",
+        "reason": "Already SegmentedControl/Button. Use Section/Notice for structure and phase/error feedback; retain server expectedRevision, account/origin/tool query scope, no automatic retry/private background refresh and explicit device-registration permission action.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/CycleOperatorPage.tsx",
@@ -4281,8 +4290,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-switch-replace-feedback",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "c72330f",
+        "report": "docs/plans/utilverse-notifications-adoption.md",
+        "reason": "Already Switch. Use Notice for denied/failed/storage states while preserving master enable, document pending, timer readiness and service-owned state; checked preference is not OS delivery proof.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/ToolResult.tsx",
@@ -7512,8 +7530,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "absorb-item-actions-preserve-query-lifetime",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "c72330f",
+        "report": "docs/plans/utilverse-notifications-adoption.md",
+        "reason": "Already shared NotificationInboxScreen/NotificationItem. Absorb read action using inherited ListRow trailingAction and common separators; retain blur unmount, account/filter/tool keys, receipt-before-confirmation, abort guards and scoped invalidation.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/features/OcrScreen.tsx",
@@ -9936,8 +9963,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "replace-date-time-and-feedback",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "c72330f",
+        "report": "docs/plans/utilverse-notifications-adoption.md",
+        "reason": "Compare DatePicker/DateEntry and hour/minute Select composition; preserve local civil-time validation, tomorrow calendar arithmetic, eight-reminder limit, queued storage mutation before scheduler refresh. Existing ScreenLayout scroll=content correctly delegates scrolling to child.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/features/ToolScreen.tsx",
