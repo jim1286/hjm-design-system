@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { type ReactNode } from "react";
 import { type DocumentResourceControls } from "@hjmds/design-contracts/document-resource";
 export type DocumentResourceProps = DocumentResourceControls & Readonly<{
     preview?: ReactNode;

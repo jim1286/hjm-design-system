@@ -43,3 +43,31 @@ it("wraps a long unbroken name and actions at large text in both themes and dire
   expect(host.scrollWidth).toBeLessThanOrEqual(320);
  }
 });
+it("returns keyboard focus from a removed retry to preview or save without stealing external focus", async()=>{
+ const outside=document.createElement("button");outside.textContent="다른 작업";document.body.append(outside);
+ try {
+  for(const hasPreview of [true,false]) {
+   const render=(failed:boolean)=><HjmProvider><DocumentResource descriptor={{...descriptor,preview:failed?{status:"error",message:"그림 오류",retryable:true}:{status:"ready"}}} labels={labels} {...(hasPreview?{onPreview:()=>{}}:{})} onSave={()=>{}} onRetryPreview={()=>{}}/></HjmProvider>;
+   await act(async()=>root.render(render(true)));
+   const retry=Array.from(host.querySelectorAll("button")).find(button=>button.textContent==="그림 재시도")!;
+   retry.focus();expect(document.activeElement).toBe(retry);
+   await act(async()=>root.render(render(false)));
+   expect(document.activeElement?.textContent).toBe(hasPreview?"미리보기":"저장");
+   await act(async()=>root.render(render(true)));
+   outside.focus();await act(async()=>root.render(render(false)));
+   expect(document.activeElement).toBe(outside);
+  }
+ } finally {outside.remove();}
+});
+it("uses save while a preview reloads and does not transfer retry focus to a replacement document", async()=>{
+ const render=(id:string,preview:DocumentResourceDescriptor["preview"]) => <HjmProvider><DocumentResource descriptor={{...descriptor,id,preview}} labels={labels} onPreview={()=>{}} onSave={()=>{}} onRetryPreview={()=>{}}/></HjmProvider>;
+ const failed={status:"error",message:"그림 오류",retryable:true} as const;
+ await act(async()=>root.render(render("a",failed)));
+ Array.from(host.querySelectorAll("button")).find(button=>button.textContent==="그림 재시도")!.focus();
+ await act(async()=>root.render(render("a",{status:"loading"})));
+ expect(document.activeElement?.textContent).toBe("저장");
+ await act(async()=>root.render(render("a",failed)));
+ Array.from(host.querySelectorAll("button")).find(button=>button.textContent==="그림 재시도")!.focus();
+ await act(async()=>root.render(render("b",{status:"ready"})));
+ expect(document.activeElement).toBe(document.body);
+});

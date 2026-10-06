@@ -93,3 +93,16 @@ callback·버튼 identity를 확인했으며 기기 QA가 아니다.
 
 보존: 다운로드 검증 파일과 임시 budget 로그는 위 내용/hash 기록 후 제거한다. 화면은 도구로
 확인했으며 별도 원시 캡처 파일을 만들지 않았다. 재사용 fixture/test/source는 보존한다.
+
+## Web 재시도 제거 후 키보드 초점 수정
+
+`1db42de` 후 browser 회귀에서 retry 버튼에 focus한 뒤 preview ready로 바꾸면 activeElement가
+body가 되는 실패를 재현했다. Web renderer는 ref 분리 전에 해당 버튼의 focus 소유를 기록하고,
+commit 후 같은 문서/현재 body일 때만 사용 가능한 preview 또는 save 버튼으로 복귀한다.
+문서 identity가 바뀌었거나 외부 버튼으로 이동했다면 초점을 가져오지 않는다. 로딩 전환에서는
+비활성 preview를 건너뛰고 save를 사용한다. 별도 비동기 작업/플랫폼 모듈은 추가하지 않았다.
+
+수정 후 Web browser 5개 통과(기존 3개 + 초점 2개), Web typecheck/build 및 renderer graph 검사
+통과. 첫 typecheck는 테스트가 exactOptionalPropertyTypes에서 optional prop에 undefined를
+전달해 실패했으며 조건부 prop 생략으로 수정했다. Native 스크린리더 초점은 이 결과에 포함되지 않는다.
+실패 캡처와 임시 budget 로그는 이 기록 후 삭제하고 회귀 소스는 유지한다.
