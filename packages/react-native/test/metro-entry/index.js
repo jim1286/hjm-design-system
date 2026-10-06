@@ -1,3 +1,5 @@
+import { ProfileScreen } from "@hjmds/react-native/screen-flows";
+import { ScreenLayout } from "@hjmds/react-native/screens";
 import { NavigationBar } from "@hjmds/react-native/navigation-bar";
 import * as optionalFamily0 from "@hjmds/react-native/icon-lucide";
 import * as optionalFamily1 from "@hjmds/react-native/duration-field";
@@ -37,6 +39,8 @@ import { AppRegistry, View } from "react-native";
 
 import { Button, Link } from "@hjmds/react-native/actions";
 import { Carousel } from "@hjmds/react-native/carousel";
+import { Rating } from "@hjmds/react-native/rating";
+import { ImageComparison } from "@hjmds/react-native/image-comparison";
 import { TextTransition } from "@hjmds/react-native/content-transition";
 import { TopBar } from "@hjmds/react-native/top-bar";
 import { BottomCTA } from "@hjmds/react-native/bottom-cta";
@@ -266,7 +270,11 @@ function MetroSmokeApp() {
       }),
       React.createElement(Masonry, { items: ["a"], keyExtractor: item => item, width: 320, label: "Cards", getItemHeight: () => 100, renderItem: item => React.createElement(Text, null, item) }),
       React.createElement(VirtualList, { items: ["a"], keyExtractor: item => item, height: 200, rowHeight: 100, label: "Items", renderItem: item => React.createElement(Text, null, item) }),
+      React.createElement(ScreenLayout, { title: "화면" }, React.createElement(Text, null, "공통 화면")),
+      React.createElement(ProfileScreen, { title: "Profile", summary: null, edit: {label: "Edit", onAction: noop} }),
       React.createElement(ToastRegion, null),
+      React.createElement(Rating, { label: "평균", value: 3.5, readOnly: true, getValueLabel: String }),
+      React.createElement(ImageComparison, { label: "비교", before: {src: "https://example.com/before.png", width: 10, height: 10, label: "전"}, after: {src: "https://example.com/after.png", width: 10, height: 10, label: "후"}, value: 50, onValueChange: noop, getValueText: String, decrementLabel: "감소", incrementLabel: "증가" }),
       React.createElement(TextTransition, { text: "현재 상태" }),
       React.createElement(Dialog, { closeLabel: "닫기", defaultOpen: false, title: "확인" }),
     ),

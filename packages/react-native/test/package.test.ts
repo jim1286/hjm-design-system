@@ -98,6 +98,9 @@ describe("@hjmds/react-native package boundary", () => {
       "./sortable",
       "./swipe-actions",
       "./content-transition",
+      "./rating",
+      "./image-comparison",
+
       "./carousel-motion",
       "./celebration",
       "./screen-transition",
@@ -120,6 +123,7 @@ describe("@hjmds/react-native package boundary", () => {
       "./grid-reveal",
       "./gravity-letters",
       "./navigation-bar",
+      "./screens", "./screen-flows",
     ];
     expect(Object.keys(packageJson.exports)).toEqual(expectedExportPaths);
     const familyTargets = expectedExportPaths.slice(1).filter((path) => path !== "./top-bar" && path !== "./bottom-cta").map((exportPath) => {

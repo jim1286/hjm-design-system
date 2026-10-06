@@ -589,6 +589,12 @@
       "import": "./dist/content-transition.js",
       "default": "./dist/content-transition.js"
     },
+    "./reference-controls": {
+      "types": "./dist/reference-controls.d.ts",
+      "react-native": "./dist/reference-controls.js",
+      "import": "./dist/reference-controls.js",
+      "default": "./dist/reference-controls.js"
+    },
     "./duration-field": {
       "types": "./dist/duration-field.d.ts",
       "react-native": "./dist/duration-field.js",
@@ -660,6 +666,12 @@
       "react-native": "./dist/action-session.js",
       "import": "./dist/action-session.js",
       "default": "./dist/action-session.js"
+    },
+    "./screen-patterns": {
+      "types": "./dist/screen-patterns.d.ts",
+      "react-native": "./dist/screen-patterns.js",
+      "import": "./dist/screen-patterns.js",
+      "default": "./dist/screen-patterns.js"
     }
   },
   "files": [

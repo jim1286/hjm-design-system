@@ -9,7 +9,7 @@ import { visibleControlHeight } from "@hjmds/design-contracts/components/design-
 import { passwordFieldRecipe, resolvePasswordFieldDescriptor, } from "@hjmds/design-contracts/components/password-field";
 import { getOtpFieldSlotValues, otpFieldRecipe, resolveOtpFieldValue, } from "@hjmds/design-contracts/components/otp-field";
 import { getCheckboxNextState, reconcileCheckboxSelection, resolveControlAccessibleName, resolveInitialRadioValue, resolveInitialTabValue, reconcileRadioSelection, selectionGroupBehaviorDefaults, toggleCheckboxSelection, validateCheckboxSelection, validateRadioSelection, validateSelectionItems, } from "@hjmds/design-contracts/behaviors";
-import { forwardRef, useEffect, useId, useImperativeHandle, useRef, useState, } from "react";
+import { forwardRef, useCallback, useEffect, useId, useImperativeHandle, useLayoutEffect, useRef, useState, } from "react";
 import { ActivityIndicator, Platform, Pressable, Switch as NativeSwitch, Text as NativeText, TextInput, View, } from "react-native";
 import { mixedCheckboxState, useControllableState } from "./internal/state.js";
 import { webChoiceProps, webOnly } from "./internal/web-a11y.js";
@@ -28,10 +28,20 @@ function resolveFieldAccessibleName(label, accessibilityLabel) {
         ...(visibleLabel ? { visibleLabel } : {}),
     };
 }
-const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultValue = "", onValueChange, description, error, required = false, disabled = false, busy = false, variant = fieldRecipe.defaults.variant, shape, accessibilityLabel, layoutStyle, allowFontScaling, multiline, maxVisibleLines, minVisibleLines, align = fieldRecipe.defaults.align, search, recipeInputStyle, searchSize = searchFieldRecipe.defaults.size, leading, trailing, onBlur, onFocus, ...props }, ref) {
+const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultValue = "", onValueChange, description, error, required = false, disabled = false, busy = false, variant = fieldRecipe.defaults.variant, shape, accessibilityLabel, layoutStyle, allowFontScaling, multiline, maxVisibleLines, minVisibleLines, align = fieldRecipe.defaults.align, search, recipeInputStyle, searchSize = searchFieldRecipe.defaults.size, leading, trailing, leadingAction, onBlur, onFocus, onContentSizeChange, onSelectionChange, ...props }, ref) {
     const theme = useHjmNativeTheme();
     const { colors, environment, textScaling } = theme;
     const [focused, setFocused] = useState(false);
+    const [contentHeight, setContentHeight] = useState(0);
+    const inputRef = useRef(null);
+    const restoreFocusRef = useRef(false);
+    const selectionRef = useRef(null);
+    const attachInput = useCallback((node) => {
+        if (node === null)
+            restoreFocusRef.current = inputRef.current?.isFocused?.() ?? false;
+        inputRef.current = node;
+    }, []);
+    useImperativeHandle(ref, () => inputRef.current);
     const [currentValue, setCurrentValue] = useControllableState({
         ...(value === undefined ? {} : { value }),
         defaultValue,
@@ -65,16 +75,37 @@ const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultV
         ? resolveColorReference(searchFieldRecipe.colors.placeholder, theme.palette)
         : colors[fieldRecipe.placeholder.color];
     const textStyle = typography[search ? searchSizing.textVariant : fieldRecipe.textVariant];
+    // Native TextInput scales its text without enlarging a fixed frame (BT-QA-020).
+    // Size the one-line frame for the same scale instead of capping accessible text.
+    const frameTextScale = textScaling.mode === "controlled"
+        ? textScaling.scale
+        : allowFontScaling === false
+            ? 1
+            : Math.min(textScaling.scale, props.maxFontSizeMultiplier && props.maxFontSizeMultiplier > 0 ? props.maxFontSizeMultiplier : Infinity);
+    const singleLineMinHeight = Math.ceil(textStyle.lineHeight * frameTextScale + fieldRecipe.paddingVertical * 2 + borderWidth * 2);
+    // iOS RCTUITextView updates typingAttributes/placeholder but leaves existing
+    // attributed text at its old scale (BT-QA-025). Refresh only the native editor,
+    // keeping the field's draft state and restoring focus/selection instead of capping text.
+    const editorKey = Platform.OS === "ios" && multiline
+        ? `multiline-${frameTextScale}`
+        : "field";
+    useLayoutEffect(() => {
+        if (restoreFocusRef.current) {
+            inputRef.current?.focus?.();
+            const selection = props.selection ?? selectionRef.current;
+            if (selection)
+                inputRef.current?.setNativeProps?.({ selection });
+            restoreFocusRef.current = false;
+        }
+    }, [editorKey, props.selection]);
     // A composer that should open several lines tall asks in lines, not pixels,
     // so the recipe keeps ownership of line height and vertical padding.
     const minHeight = multiline
         ? minVisibleLines === undefined
             ? fieldRecipe.multilineMinHeight
-            : Math.max(fieldRecipe.multilineMinHeight, textStyle.lineHeight * minVisibleLines +
+            : Math.max(fieldRecipe.minHeight, textStyle.lineHeight * minVisibleLines +
                 fieldRecipe.paddingVertical * 2)
-        : search
-            ? searchSizing.minHeight
-            : fieldRecipe.minHeight;
+        : Math.max(search ? searchSizing.minHeight : fieldRecipe.minHeight, singleLineMinHeight);
     const controlRadius = radius[search
         ? searchFieldRecipe.shapes[resolvedShape]
         : fieldRecipe.shapes[resolvedShape]];
@@ -88,6 +119,8 @@ const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultV
             fontWeight: textStyle.fontWeight,
             lineHeight: textStyle.lineHeight,
             minHeight: minHeight - borderWidth * 2,
+            // Explicit line bounds opt into content-driven composer sizing, without changing ordinary editors.
+            ...(multiline && minVisibleLines !== undefined ? { height: Math.max(minHeight - borderWidth * 2, Math.min(currentValue ? contentHeight : 0, textStyle.lineHeight * (resolvedMaxVisibleLines ?? 1000) + fieldRecipe.paddingVertical * 2)) } : {}),
             ...(multiline &&
                 resolvedMaxVisibleLines !== null &&
                 resolvedMaxVisibleLines !== undefined
@@ -127,13 +160,20 @@ const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultV
                 paddingHorizontal: search
                     ? searchSizing.paddingHorizontal
                     : fieldRecipe.paddingHorizontal,
-            }, children: [leading ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", children: leading })) : null, _jsx(TextInput, { ...props, ...inputTextScaleProps, ref: ref, accessibilityHint: hint, accessibilityLabel: accessibleName, accessibilityRole: search ? "search" : undefined, accessibilityState: { busy, disabled }, editable: !disabled && !busy, multiline: multiline, onBlur: (event) => {
+            }, children: [leading ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", children: leading })) : null, leadingAction ? _jsx(View, { style: { alignSelf: "center" }, children: leadingAction }) : null, _jsx(TextInput, { ...props, ...inputTextScaleProps, ref: attachInput, accessibilityHint: hint, accessibilityLabel: accessibleName, accessibilityRole: search ? "search" : undefined, accessibilityState: { busy, disabled }, editable: !disabled && !busy, multiline: multiline, onBlur: (event) => {
                         setFocused(false);
                         onBlur?.(event);
+                    }, onContentSizeChange: event => {
+                        if (multiline && minVisibleLines !== undefined)
+                            setContentHeight(event.nativeEvent.contentSize.height);
+                        onContentSizeChange?.(event);
+                    }, onSelectionChange: event => {
+                        selectionRef.current = event.nativeEvent.selection;
+                        onSelectionChange?.(event);
                     }, onChangeText: setCurrentValue, onFocus: (event) => {
                         setFocused(true);
                         onFocus?.(event);
-                    }, placeholderTextColor: placeholderColor, value: currentValue }), trailing] }) }));
+                    }, placeholderTextColor: placeholderColor, value: currentValue }, editorKey), trailing] }) }));
 });
 export const TextField = forwardRef(function TextField(props, ref) {
     return _jsx(FieldRenderer, { ...props, ref: ref, multiline: false, search: false });

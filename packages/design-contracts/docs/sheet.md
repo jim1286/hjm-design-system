@@ -63,3 +63,7 @@ focus/dismiss와 텍스트 배치 회귀를 직접 확인하도록 위 테스트
 [ScrollView](https://reactnative.dev/docs/scrollview).
 
 Native accessibility follow-up (2026-10-01): at 200% text scale, the close glyph was clipped inside the fixed IconButton frame. Dialog and Sheet now render that decorative glyph at a fixed icon size, matching Toast; title/body text still scales and the named close action and touch target are preserved. `sheet-viewport.test.tsx` checks both renderers and close callbacks.
+
+## Backdrop focus preservation (2026-10-03)
+
+Diairy QA W16 reproduced Chrome default backdrop blur undoing Dialog focus return; Sheet used the same handler. Both Web renderers prevent the backdrop-only mousedown default while retaining dismissal policy and busy guards. Inner controls keep their default pointer behavior. Native has no DOM mousedown default and its host focus path is unchanged. `modal-outside-focus.browser.test.tsx` uses real pointer input rather than synthetic event dispatch to verify return focus, next Tab order, and focus containment while busy.

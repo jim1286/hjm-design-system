@@ -147,6 +147,8 @@ describe("package boundaries", () => {
       "./avatar-fallback",
       "./effect-surface",
       "./content-transition",
+      "./reference-controls",
+
       "./duration-field",
       "./reactions",
       "./scroll-progress",
@@ -159,6 +161,7 @@ describe("package boundaries", () => {
       "./gravity-letters",
       "./gooey-navigation",
       "./action-session",
+      "./screen-patterns",
     ] as const;
 
     expect(Object.keys(packageJson.exports)).toEqual(expectedExports);

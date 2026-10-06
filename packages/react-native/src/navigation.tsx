@@ -64,6 +64,7 @@ import {
   type TabsOverflow,
 } from "@hjmds/design-contracts/recipes";
 import {
+  Fragment,
   forwardRef,
   useCallback,
   useEffect,
@@ -108,7 +109,7 @@ type NativeModalTeardownTask,
 import { useControllableState } from "./internal/state.js";
 import { minimumTargetStyle } from "./internal/styles.js";
 import { Text } from "./primitives.js";
-import { useHjmNativeTheme } from "./provider.js";
+import { HjmNativeProvider, useHjmNativeTheme } from "./provider.js";
 
 export type TabItem<Value extends string = string> = Readonly<{
   id: Value;
@@ -712,6 +713,9 @@ export function BottomNavigation<
   );
   const capsule = presentation.presentation === "capsule";
   const expandedLabels = theme.environment.textScale >= 1.5 || resolved.items.length > 4;
+  // Controlled providers bake scale into Text's style, so the native multiplier
+  // prop cannot enforce the recipe limit (BT-QA-021). Scope labels only; AX names stay.
+  const labelTextScale = Math.min(theme.environment.textScale, bottomNavigationRecipe.largeText.maxFontSizeMultiplier);
   const keyboardVisible = useBottomNavigationKeyboardVisible();
   const density = bottomNavigationRecipe.density[presentation.density];
   const presentationRecipe =
@@ -965,7 +969,9 @@ export function BottomNavigation<
                     </View>
                   ) : null}
                 </View>
-                {(!capsule || expandedLabels || selected) && <Text
+                {(!capsule || expandedLabels || selected) && <HjmNativeProvider
+                  textScale={labelTextScale}
+                ><Text
                   align="center"
                   allowFontScaling={bottomNavigationRecipe.largeText.allowFontScaling}
                   maxFontSizeMultiplier={
@@ -982,7 +988,7 @@ export function BottomNavigation<
                   variant={density.label}
                 >
                   {item.label}
-                </Text>}
+                </Text></HjmNativeProvider>}
               </Pressable>
             );
           })}
@@ -1345,7 +1351,10 @@ export function TopBar({
       ]}
     >
       {largeText ? (
-        <>
+        // These branches have different host hierarchies. Reusing the full-width
+        // large row as a compact side slot left Fabric's layout stale after an OS
+        // text-size reset; replace that subtree instead of overriding it in apps.
+        <Fragment key="large-text">
           {hasLeading || hasTitle ? (
             <View
               style={{
@@ -1403,9 +1412,9 @@ export function TopBar({
               {trailingContent}
             </View>
           ) : null}
-        </>
+        </Fragment>
       ) : (
-        <>
+        <Fragment key="compact">
           {renderCompactLeadingSlot ? (
             <View
               style={[
@@ -1447,7 +1456,7 @@ export function TopBar({
               {hasTrailingContent ? trailingContent : null}
             </View>
           ) : null}
-        </>
+        </Fragment>
       )}
     </View>
   );

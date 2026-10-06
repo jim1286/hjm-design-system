@@ -5,12 +5,14 @@ export type ContentTransitionProps = {
     stateKey: string;
     children: ReactNode;
     motion?: "system" | "none";
+    /** Opt-in measured height transition; never renders a second interactive panel. */
+    animateHeight?: boolean;
     /** Host chooses a meaningful focus destination, e.g. the new panel heading. */
     focusTarget?: RefObject<HTMLElement | null>;
 };
 /** Motion Primitives' keyed transition pattern, adapted to HJM's single active subtree.
  * No exiting interactive copy: it would duplicate fields and focus targets. See THIRD_PARTY_NOTICES. */
-export declare function ContentTransition({ stateKey, children, motion: preference, preset, focusTarget }: ContentTransitionProps): import("react").JSX.Element;
+export declare function ContentTransition({ stateKey, children, motion: preference, preset, focusTarget, animateHeight }: ContentTransitionProps): import("react").JSX.Element;
 export type TextTransitionProps = {
     preset?: ContentTransitionPreset;
     text: string;

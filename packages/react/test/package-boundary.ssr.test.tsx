@@ -78,6 +78,9 @@ describe("@hjmds/react package boundary", () => {
       "./sortable",
       "./swipe-actions",
       "./content-transition",
+      "./rating",
+      "./image-comparison",
+
       "./carousel-motion",
       "./celebration",
     ];
@@ -102,6 +105,7 @@ describe("@hjmds/react package boundary", () => {
       "./grid-reveal",
       "./gravity-letters",
       "./navigation-bar",
+      "./screens", "./screen-flows",
     ];
 
     expect(Object.keys(packageJson.exports)).toEqual([

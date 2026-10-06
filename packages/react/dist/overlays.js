@@ -80,8 +80,12 @@ export const Dialog = forwardRef(function Dialog({ trigger, title, description, 
         onEscape: () => requestClose("escape"),
     });
     return (_jsxs(_Fragment, { children: [trigger === undefined ? null : renderTrigger(trigger, triggerRef, open, contentId, "dialog", () => changeOpen(true, { reason: "trigger" })), open ? (_jsx(HjmPortal, { ...(portalContainer === undefined ? {} : { container: portalContainer }), children: _jsx("div", { className: "hjm-overlay", "data-kind": "dialog", "data-modal-priority": modalPriority, "data-state": "open", style: { zIndex: modalLayer }, onMouseDown: (event) => {
-                        if (event.target === event.currentTarget)
+                        if (event.target === event.currentTarget) {
+                            // Diairy QA W16: Chrome's default backdrop blur can run after focus
+                            // cleanup and undo its return target. Cancel that default, not the modal's dismissal.
+                            event.preventDefault();
                             requestClose("outside");
+                        }
                     }, children: _jsxs("div", { ref: mergedContentRef, id: contentId, role: "dialog", "aria-modal": "true", "aria-labelledby": titleId, "aria-describedby": description ? descriptionId : undefined, "aria-busy": busy || undefined, tabIndex: -1, className: classNames("hjm-dialog", className), "data-hjm-modal-content": "", "data-size": size, "data-state": busy ? "busy" : "idle", children: [_jsxs("header", { className: "hjm-dialog__header", children: [_jsx("h2", { id: titleId, className: "hjm-dialog__title", children: title }), dismissible ? (_jsx("button", { type: "button", className: "hjm-dialog__close", "aria-label": closeLabel, disabled: busy, onClick: () => requestClose("close-action"), children: "\u00D7" })) : null] }), description ? _jsx("p", { id: descriptionId, className: "hjm-dialog__description", children: description }) : null, children ? _jsx("div", { className: "hjm-dialog__body", children: children }) : null, footer ? _jsx("footer", { className: "hjm-dialog__footer", children: footer }) : null] }) }) })) : null] }));
 });
 export const AlertDialog = forwardRef(function AlertDialog({ trigger, request, icon, size = dialogRecipe.defaults.size, returnFocusRef, modalPriority = 0, portalContainer, open: openProp, defaultOpen, onOpenChange, className, }, forwardedRef) {
@@ -240,8 +244,12 @@ export const Sheet = forwardRef(function Sheet({ trigger, title, description, ch
         onEscape: () => requestClose("escape"),
     });
     return (_jsxs(_Fragment, { children: [trigger === undefined ? null : renderTrigger(trigger, triggerRef, open, contentId, "dialog", () => changeOpen(true, { reason: "trigger" })), open ? (_jsx(HjmPortal, { ...(portalContainer === undefined ? {} : { container: portalContainer }), children: _jsx("div", { className: "hjm-overlay hjm-sheet-positioner", "data-kind": "sheet", "data-modal-priority": modalPriority, "data-placement": placement, "data-state": "open", style: { zIndex: modalLayer }, onMouseDown: (event) => {
-                        if (event.target === event.currentTarget)
+                        if (event.target === event.currentTarget) {
+                            // Match Dialog: a real backdrop click must not undo return focus or
+                            // move focus to body when busy/outside-dismiss policy keeps the sheet open.
+                            event.preventDefault();
                             requestClose("outside");
+                        }
                     }, children: _jsxs("div", { ref: composeRefs(contentRef, forwardedRef), id: contentId, role: "dialog", "aria-modal": "true", "aria-labelledby": titleId, "aria-describedby": description ? descriptionId : undefined, "aria-busy": busy || undefined, tabIndex: -1, className: classNames("hjm-sheet", className), "data-hjm-modal-content": "", "data-placement": placement, "data-detent": activeDetent ?? (size === "auto" ? undefined : size), "data-has-footer": footer ? true : undefined, "data-state": busy ? "busy" : "idle", children: [detents && detentLabels && activeDetent ? (_jsx("div", { className: "hjm-sheet__handle-row", children: _jsx("button", { type: "button", className: "hjm-sheet__handle", "aria-label": resolveNextSheetDetent(detents, activeDetent, "expand") === null
                                         ? detentLabels.collapse
                                         : detentLabels.expand, onClick: () => {

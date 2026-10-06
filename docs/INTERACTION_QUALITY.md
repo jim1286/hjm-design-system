@@ -1,6 +1,6 @@
 # 제품 상호작용 적용과 품질 기준
 
-검토일: 2026-10-02 · 적용: HJM Web/React Native 및 이를 채택하는 제품
+검토일: 2026-10-05 · 적용: HJM Web/React Native 및 이를 채택하는 제품
 
 ## 목표와 소유권
 
@@ -61,6 +61,29 @@ Web/Native 스토리는 이 의미를 확인하는 실험 UI이며 외부 서비
 [선택적 상호작용](interaction-adapters.md), [Expo 연결](expo-interactions.md),
 [전체 스토리 분류](STORYBOOK_NAVIGATION.md).
 
+### 항목 재사용과 화면 숨김의 상태 소유권
+
+2026-10-05 리포트 대조와 공식 문서 재확인에서 행 재활용·화면 숨김·시트 교체가 서로
+다른 수명주기를 가진다는 점을 확인했다. 다음은 해당 기능을 쓰는 제품의 선택 기준이며,
+현재 소비 앱의 결함 판정이나 새 라이브러리 설치 요구가 아니다.
+
+- 재활용 목록의 즐겨찾기·선택·초안은 안정적인 항목 ID로 제품 상태에 연결한다.
+  다른 item으로 재사용된 행의 임시 펼침·이미지 로딩 상태가 이전 항목에서 넘어가지 않는지
+  확인한다. [FlashList 2.x](https://shopify.github.io/flash-list/docs/recycling/)의
+  `useRecyclingState`는 설치 버전이 지원할 때 임시 상태에 선택적으로 사용한다.
+  모든 상태를 초기화하는 대안은 사용자의 저장된 선택까지 잃으므로 채택하지 않는다.
+- [React Activity](https://react.dev/reference/react/Activity)는 숨긴 웹 UI의 상태를
+  보존하지만 Effect를 정리하고 다시 표시할 때 재생성한다. 지속 업로드·타이머의 진실값과
+  저장 작업은 숨겨지는 패널의 Effect에만 두지 않는다. 숨김·재표시·실제 unmount를 구분해
+  구독 중복과 작업 유실을 확인한다. DOM 문서만으로 RN 지원을 가정하지 않는다.
+- [Expo SDK 57 BottomSheet](https://docs.expo.dev/versions/v57.0.0/sdk/ui/drop-in-replacements/bottomsheet/)는
+  native modal/web drawer이며 지속 인라인 peek를 지원하지 않는다. 호환 prop 중 동작하지
+  않는 것도 있으므로 HJM Sheet/GestureSheet를 이름만 보고 교체하지 않는다. 모달 여부,
+  snap 상태, 키보드, Back·닫힘, 포커스 복귀를 설치 버전·대상 플랫폼에서 대조한다.
+
+기존 HJM 선택·시트 계약을 유지하며, 실제 긴 목록·숨김 패널·교체 요구가 있는 경우에만
+해당 경계의 검증을 추가한다. 적용·보류 목록은 [일일 반영 기록](plans/daily-design-research-2026-10-05.md)에 있다.
+
 ## 제품에서 구현하는 순서
 
 1. 제품 DESIGN 문서에 사용자 과제, 참조한 동작과 선택 이유, 기존 HJM 항목, 적용 표면을 적는다.
@@ -77,6 +100,25 @@ Web/Native 스토리는 이 의미를 확인하는 실험 UI이며 외부 서비
 
 리퀴드 토스트는 Native 선택적 표현이다. 기본 시작점은 32×32 원형, 펼쳐진 카드 반경은 12이며
 웹에서는 기존 일반 토스트로 표시한다. [현재 계약](../packages/react-native/docs/liquid-toast.md)을 따른다.
+
+### 수치와 소비 환경을 연결할 때
+
+2026-10-03 리포트는 진행률 단위와 테스트 환경을 섞으면 정상 동작을 고치거나 검증 범위를
+과장할 수 있음을 보여줬다. [대조 기록](plans/daily-design-research-2026-10-03.md)에 따라
+기존 제품 통합 기준을 다음처럼 구체화한다. 새로운 전체 기기 게이트를 추가하는 규칙은 아니다.
+
+- 수치 입력은 타입 이름만으로 단위를 추정하지 않는다. [Progress](../packages/design-contracts/docs/progress.md)의
+  기본 max는 100이지만 [UploadItem](../packages/design-contracts/docs/upload-item.md)의 progress는
+  0–1이며 renderer가 변환한다. 직접 호출과 합성 descriptor를 구분하고, 측정값이 없는 상태는
+  불확정으로 유지한다. 단위 이관을 숫자 검색·일괄 치환만으로 끝내지 않는다.
+- 검증 기록에는 실행 환경과 도달한 행동을 적는다. Chromium에서 Native shim을 실행한 것은
+  네이티브 기기 검증이 아니다. 시뮬레이터 렌더와 실제 입력·닫기·복구의 조작 결과도 구분한다.
+- iframe·WebView·선택적 Native adapter는 실제 소비 화면의 부모 CSP·메시지 연결 또는
+  네이티브 모듈 연결이 있는 환경에서 확인한다. 격리된 예제나 패키지 설치 성공을 제품 통합
+  성공으로 간주하지 않는다. 필요한 환경이 없으면 해당 경계를 미검증으로 남긴다.
+- 파일 생성이 사용자 과제인 화면은 생성 후 실제 열기·저장·공유까지 해당 경로를 확인한다.
+  PDF의 그림이 보인다는 결과와 한글 텍스트 복사·글꼴 포함 결과는 별도로 기록한다.
+  생성만 확인한 결과로 제품의 파일 사용 흐름까지 통과했다고 쓰지 않는다.
 
 ## 자연스러운 표현의 기본 조건
 
@@ -132,3 +174,11 @@ Release 실기기에서 수행한다. 문서 보완이나 단순 Storybook 확�
 성능에 영향을 주는 새 제스처·화면 전환·대량 목록·효과 변경에서 측정을 갱신한다.
 문구 수정마다 전체 장치 시험을 반복하지 않는다. 제품 성능이 미측정이면 ‘동작 확인’까지만
 보고하고 ‘레퍼런스 수준 성능 검증 완료’라고 쓰지 않는다.
+
+### DM 반응과 사진 작성
+
+2026-10-05 제품 기능을 공통화하면서 `MessageComposer`와 `ChatMessage`를 확장했다.
+사진만 보내기·전송 실패 시 초안 보존·pending 삭제 잠금, 길게 누르기 중 이동 취소·같은 반응 해제를
+Web 브라우저/Native renderer 테스트에 포함한다. 상세 소유권과 접근성 입력은
+[화면 조합 계약](../packages/design-contracts/docs/screen-patterns.md)을 따른다.
+Native renderer 테스트는 실제 VoiceOver/TalkBack·기기 화면 검증의 대체가 아니다.

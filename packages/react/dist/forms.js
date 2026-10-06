@@ -73,7 +73,7 @@ export const TextField = forwardRef(function TextField({ id, label, description,
                         onValueChange?.(event.currentTarget.value);
                     } }), trailing ? _jsx("span", { className: "hjm-field__affix", children: trailing }) : null] }) }));
 });
-export const TextArea = forwardRef(function TextArea({ id, label, description, error, required, disabled, variant, shape, align, fieldClassName, className, onFocus, onBlur, "aria-describedby": ariaDescribedBy, "aria-invalid": ariaInvalid, "aria-label": ariaLabel, minVisibleLines, maxVisibleLines, style, ...props }, ref) {
+export const TextArea = forwardRef(function TextArea({ id, label, description, error, required, disabled, variant, shape, trailing, leadingAction, align, fieldClassName, className, onFocus, onBlur, "aria-describedby": ariaDescribedBy, "aria-invalid": ariaInvalid, "aria-label": ariaLabel, minVisibleLines, maxVisibleLines, style, ...props }, ref) {
     const ids = useFieldIds(id);
     const [focused, setFocused] = useState(false);
     requireFieldAccessibleName(label, ariaLabel);
@@ -86,13 +86,13 @@ export const TextArea = forwardRef(function TextArea({ id, label, description, e
             ? {}
             : { "--hjm-field-max-visible-lines": maxVisibleLines }),
     };
-    return (_jsx(FieldFrame, { controlId: ids.controlId, label: label, description: description, error: error, required: required ?? false, disabled: disabled ?? false, focused: focused, variant: variant ?? fieldRecipe.defaults.variant, shape: shape ?? fieldRecipe.defaults.shape, align: align ?? fieldRecipe.defaults.align, className: fieldClassName, ...(description ? { descriptionId: ids.descriptionId } : {}), ...(error ? { errorId: ids.errorId } : {}), children: _jsx("div", { className: "hjm-field__control hjm-field__control--multiline", children: _jsx("textarea", { ...props, ref: ref, id: ids.controlId, className: classNames("hjm-field__input", className), style: { ...style, ...lineBounds }, required: required, disabled: disabled, "aria-invalid": error ? true : ariaInvalid, "aria-label": ariaLabel, "aria-describedby": describedBy(ariaDescribedBy, description, error, ids.descriptionId, ids.errorId), onFocus: (event) => {
-                    setFocused(true);
-                    onFocus?.(event);
-                }, onBlur: (event) => {
-                    setFocused(false);
-                    onBlur?.(event);
-                } }) }) }));
+    return (_jsx(FieldFrame, { controlId: ids.controlId, label: label, description: description, error: error, required: required ?? false, disabled: disabled ?? false, focused: focused, variant: variant ?? fieldRecipe.defaults.variant, shape: shape ?? fieldRecipe.defaults.shape, align: align ?? fieldRecipe.defaults.align, className: fieldClassName, ...(description ? { descriptionId: ids.descriptionId } : {}), ...(error ? { errorId: ids.errorId } : {}), children: _jsxs("div", { className: "hjm-field__control hjm-field__control--multiline", children: [leadingAction ? _jsx("span", { style: { alignSelf: "center", display: "flex" }, children: leadingAction }) : null, _jsx("textarea", { ...props, ref: ref, id: ids.controlId, className: classNames("hjm-field__input", className), style: { ...style, ...lineBounds }, required: required, disabled: disabled, "aria-invalid": error ? true : ariaInvalid, "aria-label": ariaLabel, "aria-describedby": describedBy(ariaDescribedBy, description, error, ids.descriptionId, ids.errorId), onFocus: (event) => {
+                        setFocused(true);
+                        onFocus?.(event);
+                    }, onBlur: (event) => {
+                        setFocused(false);
+                        onBlur?.(event);
+                    } }), trailing ? _jsx("span", { className: "hjm-field__trailing", children: trailing }) : null] }) }));
 });
 export const SearchField = forwardRef(function SearchField({ value: valueProp, defaultValue = "", onValueChange, onChange, size = searchFieldRecipe.defaults.size, clearLabel, onClear, loading = false, renderSearchIcon, renderClearIcon, renderLoadingIndicator, leading, trailing, fieldClassName, disabled, "aria-busy": ariaBusy, ...props }, forwardedRef) {
     const [value, setValue] = useControllableState({

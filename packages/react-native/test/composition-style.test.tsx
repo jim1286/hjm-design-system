@@ -282,7 +282,7 @@ describe("multiline field height axis", () => {
     ).toBe("left");
   });
 
-  it("never shrinks below the recipe minimum", () => {
+  it("lets explicit one-line composers start at the single control minimum", () => {
     const renderer = render(
       <HjmNativeProvider theme="light">
         <TextArea label="본문" minVisibleLines={1} value="" onValueChange={() => {}} />
@@ -293,7 +293,18 @@ describe("multiline field height axis", () => {
       ...[renderer.root.findByType(TextInput).props.style].flat(4).filter(Boolean),
     );
     expect(flattened.minHeight).toBe(
-      fieldRecipe.multilineMinHeight - fieldRecipe.borderWidth * 2,
+      fieldRecipe.minHeight - fieldRecipe.borderWidth * 2,
     );
   });
+});
+
+it("grows, caps and shrinks a bounded composer with its measured content", () => {
+  const tree = render(<HjmNativeProvider><TextArea label="댓글" minVisibleLines={1} maxVisibleLines={5} value="내용" /></HjmNativeProvider>);
+  const input = () => tree.root.findByType(TextInput);
+  const style = () => Object.assign({}, ...[input().props.style].flat(4).filter(Boolean));
+  const initial = style().height;
+  act(() => input().props.onContentSizeChange({nativeEvent:{contentSize:{width:200,height:1000}}}));
+  expect(style().height).toBe(style().maxHeight);
+  act(() => input().props.onContentSizeChange({nativeEvent:{contentSize:{width:200,height:initial}}}));
+  expect(style().height).toBe(initial);
 });

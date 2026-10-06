@@ -14,6 +14,8 @@ const packageJsonUrl = new URL("../package.json", import.meta.url);
  * Raising a budget requires an intentional review of the changed graph.
  */
 const budgets = [
+  // Screen geometry reuses foundation tokens; the contract has no catalog/renderer dependencies.
+  { exportPath: "./screen-patterns", maxModules: 2, maxRawBytes: 16000, maxGzipBytes: 5000, forbiddenModules: metadataModules },
   // Optional action state store: measured 2504 raw / 889 gzip bytes; no dependency graph.
   { exportPath: "./action-session", maxModules: 1, maxRawBytes: 2900, maxGzipBytes: 1050, forbiddenModules: metadataModules },
   // Pure elastic-indicator geometry: 720 raw / 439 gzip bytes.
@@ -38,6 +40,9 @@ const budgets = [
   { exportPath: "./duration-field", maxModules: 1, maxRawBytes: 1500, maxGzipBytes: 710, forbiddenModules: metadataModules },
   { exportPath: "./reactions", maxModules: 1, maxRawBytes: 1250, maxGzipBytes: 550, forbiddenModules: metadataModules },
   // Four bounded transform recipes; one pure module and no renderer dependency.
+  // Rating validation and image comparison reuse Image's descriptor validation;
+  // measured 5 modules, 12909 raw / 3924 gzip. No catalog or renderer dependency.
+  { exportPath: "./reference-controls", maxModules: 5, maxRawBytes: 14900, maxGzipBytes: 4600, forbiddenModules: metadataModules },
   { exportPath: "./content-transition", maxModules: 1, maxRawBytes: 1200, maxGzipBytes: 600, forbiddenModules: metadataModules },
   // 2026-10-01 measured 526/317 B and 6136/2254 B: optional avatar validation
   // and deterministic effect geometry, no component catalog or renderer import.

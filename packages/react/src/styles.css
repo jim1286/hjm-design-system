@@ -2722,3 +2722,68 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 @media (prefers-reduced-transparency: reduce), (forced-colors: active) { .hjm-navigation-bar { background: var(--hjm-color-surface); backdrop-filter: none; } }
 
 [data-motion="reduced"] .hjm-bottom-navigation[data-presentation="capsule"] .hjm-bottom-navigation__item { transition: none; }
+
+/* Screen bodies own remaining height so full-screen states center below the real header.
+   Auto margins (not unsafe center alignment) keep oversized translations scrollable. */
+.hjm-screen { display: flex; flex-direction: column; block-size: 100%; min-block-size: 0; inline-size: 100%; max-inline-size: var(--hjm-screen-width); margin-inline: auto; background: var(--hjm-color-bg); color: var(--hjm-color-text); }
+.hjm-screen__header { display: flex; flex-wrap: wrap; align-items: center; gap: var(--hjm-screen-padding); padding: var(--hjm-screen-padding); flex: 0 0 auto; }
+.hjm-screen__heading { flex: 1 1 calc(var(--hjm-screen-header-min) * var(--hjm-text-scale, 1)); min-inline-size: 0; overflow-wrap: anywhere; }
+.hjm-screen__heading > * { margin: 0; }
+.hjm-screen__notice { padding-inline: var(--hjm-screen-padding); flex: 0 0 auto; }
+.hjm-screen__body { flex: 1 1 0%; min-block-size: 0; min-inline-size: 0; padding: var(--hjm-screen-padding); overflow-wrap: anywhere; }
+.hjm-screen__body[data-scroll="screen"] { overflow-y: auto; }
+.hjm-screen__body[data-scroll="content"] { display: flex; flex-direction: column; overflow: hidden; }
+.hjm-screen__body[data-replacement="true"] { display: flex; flex-direction: column; }
+.hjm-screen__state { margin-block: auto; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: var(--hjm-screen-padding); padding-block: var(--hjm-screen-gap); text-align: center; }
+.hjm-screen__footer { flex: 0 0 auto; padding: var(--hjm-screen-padding); padding-block-end: max(var(--hjm-screen-padding), env(safe-area-inset-bottom)); border-block-start: 1px solid var(--hjm-color-border); }
+
+/* Settings use spacing and rules, not shaded cards, per the 2026-10-05 product direction. */
+.hjm-settings-section > .hjm-section__content { background: transparent; border-block-start: 1px solid var(--hjm-color-border); }
+.hjm-settings-section .hjm-list-row { background: transparent; }
+.hjm-notification-item { border-radius: 0; }
+.hjm-notification-item[data-unread="true"] { background: transparent; }
+.hjm-message-composer { display: flex; flex-direction: column; gap: var(--hjm-space-xs); }
+.hjm-message-composer__row { display: flex; gap: var(--hjm-space-xs); align-items: flex-end; }
+.hjm-message-composer__row > .hjm-field { flex: 1; min-inline-size: 0; }
+.hjm-message-composer__row > .hjm-button { flex-shrink: 0; }
+.hjm-chat-message { display: flex; align-items: flex-start; gap: var(--hjm-space-xs); }
+.hjm-chat-message[data-direction="outgoing"] { flex-direction: row-reverse; }
+/* A visible opposite edge distinguishes authorship even without color; long copy still wraps. */
+.hjm-chat-message__content { max-inline-size: var(--hjm-message-max-width); min-inline-size: 0; display: flex; flex-direction: column; align-items: flex-start; gap: var(--hjm-space-xxs); }
+.hjm-chat-message[data-direction="outgoing"] .hjm-chat-message__content { align-items: flex-end; }
+.hjm-chat-message__bubble { border: var(--hjm-stroke-default) solid var(--hjm-color-border); border-radius: var(--hjm-radius-lg); background: var(--hjm-color-bg); padding: var(--hjm-space-sm); overflow-wrap: anywhere; white-space: pre-wrap; }
+.hjm-chat-message[data-direction="outgoing"] .hjm-chat-message__bubble { background: var(--hjm-color-surface-accent); }
+.hjm-chat-message__meta { display: flex; align-items: center; gap: var(--hjm-space-xs); }
+.hjm-chat-message__reply { border-inline-start: 2px solid var(--hjm-color-content-brand); padding-inline-start: var(--hjm-space-xs); margin-block-end: var(--hjm-space-xs); }
+
+/* A composer starts at one control row rather than the document editor minimum;
+   content sizing grows up to the shared line cap without stealing the timeline. */
+.hjm-message-composer__row > .hjm-field { --hjm-field-multiline-min-height: var(--hjm-control-field-height); }
+.hjm-message-composer textarea { field-sizing: content; resize: none; }
+
+/* Social composition: one field boundary and no permanent attachment toolbar. */
+.hjm-field__control--multiline > .hjm-field__trailing { align-self: flex-end; }
+.hjm-message-composer__attachments { display: flex; gap: var(--hjm-space-sm); align-items: center; overflow-x: auto; }
+.hjm-message-composer__attachment { position: relative; flex: 0 0 var(--hjm-attachment-size); inline-size: var(--hjm-attachment-size); block-size: var(--hjm-attachment-size); }
+.hjm-message-composer__preview { inline-size: 100%; block-size: 100%; border-radius: var(--hjm-radius-md); overflow: hidden; }
+.hjm-message-composer__preview > img { inline-size: 100%; block-size: 100%; object-fit: cover; }
+/* Clip only the photo: its rounded mask must not cut the remove button or focus ring. */
+.hjm-message-composer__remove { position: absolute; inset-block-start: 0; inset-inline-end: 0; }
+.hjm-message-composer__remove-glyph { display: grid; place-items: center; flex: 0 0 auto; inline-size: var(--hjm-attachment-remove-size); block-size: var(--hjm-attachment-remove-size); font-size: calc(var(--hjm-attachment-remove-size) * .75); line-height: 1; background: var(--hjm-color-bg); border-radius: var(--hjm-radius-full); }
+.hjm-message-reactions { border-radius: var(--hjm-radius-full); padding: var(--hjm-space-xs); max-inline-size: calc(100vw - 24px); inline-size: max-content; }
+/* Keep Popover's localized heading/close action available to assistive technology. */
+.hjm-message-reactions > .hjm-popover__header { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* The expanded reaction catalog needs a bounded panel rather than the quick-row pill. */
+.hjm-message-reactions:has([data-expanded="true"]) { border-radius: var(--hjm-radius-lg); inline-size: min(20rem, calc(100vw - 24px)); }
+
+/* The embedded circle uses the small 36px recipe; centre it in the field rather than on the text baseline.
+   Reduce only its trailing inset to 8px, preserving the text's 16px leading padding. */
+.hjm-message-composer[data-send-presentation="circle"] .hjm-field__trailing { display: flex; align-self: center; margin-inline-end: calc(var(--hjm-space-xs) - var(--hjm-space-md)); margin-inline-start: var(--hjm-space-sm); }
+
+/* Reference rating: real radios preserve browser keyboard and form behavior. */
+.hjm-rating__option { position: relative; display: inline-flex; align-items: center; justify-content: center; min-width: var(--hjm-control-min-touch-target); min-height: var(--hjm-control-min-touch-target); cursor: pointer; border: 1px solid var(--hjm-color-border); border-radius: var(--hjm-radius-sm); }
+.hjm-rating__option input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: inherit; }
+.hjm-rating__option:has(input:focus-visible) { outline: 2px solid currentColor; outline-offset: 2px; }
+.hjm-rating__option:has(input:checked) { border-color: currentColor; }
+.hjm-rating__option:has(input:disabled) { opacity: .5; cursor: default; }

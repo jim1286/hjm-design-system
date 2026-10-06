@@ -72,6 +72,31 @@ function CloseGlyph() {
     style={{ color: colors.text, fontSize: glyph.sm, lineHeight: glyph.sm }}>×</NativeText>;
 }
 
+// BT-QA-027: maximum text made a centered BurnTok confirmation taller than the
+// window, putting its title/cancel off-screen. Keep full copy in a bounded scroll
+// and actions outside it; capping fonts or clipping copy would hide the decision.
+function DialogScrollBody({ children, gap }: { children: ReactNode; gap: number }) {
+  return <ScrollView
+    style={{ flexGrow: 0, flexShrink: 1 }}
+    contentContainerStyle={{ gap }}
+    keyboardShouldPersistTaps="handled"
+    // The modal positioner owns safe-area clearance; UIKit must not add it again.
+    automaticallyAdjustContentInsets={false}
+    automaticallyAdjustKeyboardInsets={false}
+  >{children}</ScrollView>;
+}
+
+function useDialogViewportPadding() {
+  const insets = useHjmNativeSafeAreaInsets();
+  // Insets are optional for hosts without a safe-area provider; absence contributes zero, not NaN.
+  return {
+    paddingTop: spacing.md + (insets.top ?? 0),
+    paddingBottom: spacing.md + (insets.bottom ?? 0),
+    paddingLeft: spacing.md + (insets.left ?? 0),
+    paddingRight: spacing.md + (insets.right ?? 0),
+  };
+}
+
 export type OverlayAction = Readonly<{
   label: string;
   onPress: () => void | Promise<void>;
@@ -258,6 +283,7 @@ export function Dialog({
 }: DialogProps) {
   const { environment, palette } = useHjmNativeTheme();
   const accessibleTitle = resolveOverlayAccessibleTitle(title, accessibilityTitle);
+  const viewportPadding = useDialogViewportPadding();
   const { width: windowWidth } = useWindowDimensions();
   const [visible, changeOpen] = useReasonedOpenState({
     ...(open === undefined ? {} : { open }),
@@ -411,7 +437,7 @@ export function Dialog({
           flex: 1,
           justifyContent: "center",
           opacity: motionProgress,
-          padding: spacing.md,
+          ...viewportPadding,
         }}
       >
         <Scrim />
@@ -439,6 +465,8 @@ export function Dialog({
               elevation: 8,
               gap: dialogRecipe.content.gap,
               maxWidth: sizeRecipe.maxWidth,
+              maxHeight: "100%",
+              flexShrink: 1,
               padding: sizeRecipe.padding,
               shadowColor: dialogRecipe.content.shadow.color,
               shadowOffset: { width: 0, height: dialogRecipe.content.shadow.offsetY },
@@ -449,29 +477,31 @@ export function Dialog({
             contentStyle,
           ]}
         >
-          <View
-            style={{
-              alignItems: "flex-start",
-              direction: environment.direction,
-              flexDirection: "row",
-              gap: spacing.sm,
-            }}
-          >
-            <View style={{ flex: 1, gap: spacing.xs }}>
-              <Text accessibilityRole="header" tone="primary" variant="title">{title}</Text>
-              {description ? <Text tone="muted">{description}</Text> : null}
+          <DialogScrollBody gap={dialogRecipe.content.gap}>
+            <View
+              style={{
+                alignItems: "flex-start",
+                direction: environment.direction,
+                flexDirection: "row",
+                gap: spacing.sm,
+              }}
+            >
+              <View style={{ flex: 1, gap: spacing.xs }}>
+                <Text accessibilityRole="header" tone="primary" variant="title">{title}</Text>
+                {description ? <Text tone="muted">{description}</Text> : null}
+              </View>
+              {dismissible ? (
+                <IconButton
+                  disabled={busy}
+                  label={closeLabel}
+                  onPress={() => requestClose("close-action")}
+                >
+                  <CloseGlyph />
+                </IconButton>
+              ) : null}
             </View>
-            {dismissible ? (
-              <IconButton
-                disabled={busy}
-                label={closeLabel}
-                onPress={() => requestClose("close-action")}
-              >
-                <CloseGlyph />
-              </IconButton>
-            ) : null}
-          </View>
-          {children}
+            {children}
+          </DialogScrollBody>
           <OverlayActions
             busy={busy}
             onActionComplete={() => requestClose("close-action")}
@@ -507,6 +537,7 @@ export function AlertDialog({
   ...modalProps
 }: AlertDialogProps) {
   validateAlertDialogRequest(request);
+  const viewportPadding = useDialogViewportPadding();
   const { colors, environment, palette } = useHjmNativeTheme();
   const { width: windowWidth } = useWindowDimensions();
   const [visible, changeOpen] = useReasonedOpenState({
@@ -813,7 +844,7 @@ export function AlertDialog({
           flex: 1,
           justifyContent: "center",
           opacity: motionProgress,
-          padding: spacing.md,
+          ...viewportPadding,
         }}
       >
         <Scrim />
@@ -833,6 +864,8 @@ export function AlertDialog({
               elevation: 8,
               gap: alertDialogRecipe.content.gap,
               maxWidth: sizeRecipe.maxWidth,
+              maxHeight: "100%",
+              flexShrink: 1,
               padding: sizeRecipe.padding,
               shadowColor: alertDialogRecipe.content.shadow.color,
               shadowOffset: {
@@ -846,7 +879,7 @@ export function AlertDialog({
             contentStyle,
           ]}
         >
-          <View style={{ gap: spacing.xs }}>
+          <DialogScrollBody gap={spacing.xs}>
             <Text accessibilityRole="header" tone="primary" variant="title">{request.title}</Text>
             <Text tone="muted">{request.description}</Text>
             {error ? (
@@ -858,7 +891,7 @@ export function AlertDialog({
                 {error}
               </Text>
             ) : null}
-          </View>
+          </DialogScrollBody>
           <View
             style={{
               direction: environment.direction,

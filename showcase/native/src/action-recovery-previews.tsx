@@ -5,7 +5,7 @@ import { TextField } from "@hjmds/react-native/inputs";
 import { Stack, Text } from "@hjmds/react-native/primitives";
 import { PatternStatus } from "./pattern-status";
 
-function useDemoAction<T>(initial: T) {
+export function useDemoAction<T>(initial: T) {
  const [session] = useState(() => createActionSession(initial));
  const state = useSyncExternalStore(session.subscribe, session.getSnapshot, session.getSnapshot);
  const failNext = useRef(false);

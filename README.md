@@ -126,3 +126,23 @@ Storybook을 한 번에 검증하는 CI의 canonical command입니다.
 Web/Native 예제는 `실험/구성/공통 동작`에서 먼저 검토합니다. 게시·소비 앱 적용과는 별개입니다.
 
 제품 개발 시 [상호작용 적용·품질 기준](docs/INTERACTION_QUALITY.md)에서 구현된 예제, 상태 연결, 반응·프레임·복구 검증을 확인합니다.
+
+## 반복 화면
+
+로그인은 기존 `AuthScreenLayout`을 쓰고, 설정·알림함·채팅은 opt-in
+`@hjmds/react/screens` 또는 `@hjmds/react-native/screens`에서 조합합니다.
+`SettingsScreen`, `NotificationInboxScreen`, `NotificationItem`, `ChatScreen`,
+`MessageComposer`, `ChatMessage`, `ScreenLayout`은 실험 단계의 화면 API입니다.
+[화면 계약과 채택 방법](packages/design-contracts/docs/screen-patterns.md)에서 제품 데이터·라우팅·
+번역·키보드 경계와 초기 로딩/갱신 상태의 구분을 확인하세요.
+
+기본 화면 예제에 댓글(답글·공감·게시), 검색(결과·빈 상태), 저장 목록(해제·되돌리기),
+프로필(수정·상세)을 추가했습니다. 별도 중복 API 대신 `ScreenLayout`·`MessageComposer`·기존 행을
+조합한 `showcase/*/src/**/basic-screen-previews.tsx`를 제품 구현의 출발점으로 사용합니다.
+소셜 로고의 로컬 미리보기는 포트폴리오 루트에서
+`node scripts/sync-auth-provider-logos.mjs --local-showcase --write` 후 개발 서버를 실행합니다.
+로고는 무시되는 `.env.local`에만 투사하며 공개 소스·npm에는 포함하지 않습니다.
+
+기본 흐름은 `@hjmds/react/screen-flows` / `@hjmds/react-native/screen-flows`에서 제공합니다.
+목록·작성·프로필·신고·사진·검색·권한·온보딩과 댓글의 사용법 및 제품 소유 범위는
+[화면 계약](packages/design-contracts/docs/screen-patterns.md#기본-흐름-공개-조합-2026-10-05)을 확인하세요.

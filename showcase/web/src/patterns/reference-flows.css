@@ -1,0 +1,7 @@
+.hjm-reference { max-inline-size: calc(var(--hjm-space-xxxl) * 22); margin-inline: auto; padding: var(--hjm-space-xl); }
+.hjm-reference__columns { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--hjm-space-xxxl) * 6)), 1fr)); gap: var(--hjm-space-xl); align-items: start; }
+.hjm-reference__columns > * { min-inline-size: 0; }
+.hjm-reference__reading { display: grid; gap: var(--hjm-space-lg); max-inline-size: calc(var(--hjm-space-xxxl) * 14); }
+.hjm-reference__art { position: relative; isolation: isolate; overflow: hidden; aspect-ratio: 1.6; background: var(--hjm-color-surface-accent); border-radius: var(--hjm-radius-lg); padding: var(--hjm-space-lg); display: flex; align-items: end; }
+.hjm-reference__sun { position: absolute; z-index: -1; inline-size: 25%; aspect-ratio: 1; border-radius: 50%; inset-block-start: 15%; inset-inline-end: 15%; background: var(--hjm-color-primary); }
+.hjm-reference__land { position: absolute; z-index: -1; inline-size: 130%; block-size: 55%; border-radius: 50%; inset-inline-start: -10%; inset-block-end: -15%; background: var(--hjm-color-surface-alt); }

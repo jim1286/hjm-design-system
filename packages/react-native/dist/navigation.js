@@ -7,7 +7,7 @@ import { createLoadMoreController, validateLoadMoreDescriptor, } from "@hjmds/de
 import { backdrop, glyph, radius, spacing, } from "@hjmds/design-contracts/foundations";
 import { resolveGooeyIndicator, } from "@hjmds/design-contracts/gooey-navigation";
 import { bottomNavigationRecipe, counterBadgeRecipe, loadMoreRecipe, menuRecipe, spinnerRecipe, tabsRecipe, topBarRecipe, } from "@hjmds/design-contracts/recipes";
-import { forwardRef, useCallback, useEffect, useImperativeHandle, useLayoutEffect, useRef, useState, } from "react";
+import { Fragment, forwardRef, useCallback, useEffect, useImperativeHandle, useLayoutEffect, useRef, useState, } from "react";
 import { AccessibilityInfo, ActivityIndicator, Animated, AppState, Keyboard, Modal, Platform, Pressable, ScrollView, View, findNodeHandle, } from "react-native";
 import { RecipeButton } from "./internal/recipe-button.js";
 import { isWebRenderer, webOnly, webTabProps } from "./internal/web-a11y.js";
@@ -17,7 +17,7 @@ import { scheduleAfterNativeModalTeardown, shouldAwaitNativeModalDismiss, } from
 import { useControllableState } from "./internal/state.js";
 import { minimumTargetStyle } from "./internal/styles.js";
 import { Text } from "./primitives.js";
-import { useHjmNativeTheme } from "./provider.js";
+import { HjmNativeProvider, useHjmNativeTheme } from "./provider.js";
 function encodedTabId(value) {
     return encodeURIComponent(value);
 }
@@ -344,6 +344,9 @@ export function BottomNavigation({ descriptor, onActivate, onLongActivate, rende
     }, resolved.items.length);
     const capsule = presentation.presentation === "capsule";
     const expandedLabels = theme.environment.textScale >= 1.5 || resolved.items.length > 4;
+    // Controlled providers bake scale into Text's style, so the native multiplier
+    // prop cannot enforce the recipe limit (BT-QA-021). Scope labels only; AX names stay.
+    const labelTextScale = Math.min(theme.environment.textScale, bottomNavigationRecipe.largeText.maxFontSizeMultiplier);
     const keyboardVisible = useBottomNavigationKeyboardVisible();
     const density = bottomNavigationRecipe.density[presentation.density];
     const presentationRecipe = bottomNavigationRecipe.presentations[presentation.presentation];
@@ -508,14 +511,14 @@ export function BottomNavigation({ descriptor, onActivate, onLongActivate, rende
                                                 }, children: _jsx(Text, { accessible: false, align: "center", style: {
                                                         color: resolveColorReference(badgeTone.content, theme.palette),
                                                         fontWeight: counterBadgeRecipe.fontWeight,
-                                                    }, variant: badgeMetrics.textVariant, children: item.badge.visibleLabel }) })) })) : null] }), (!capsule || expandedLabels || selected) && _jsx(Text, { align: "center", allowFontScaling: bottomNavigationRecipe.largeText.allowFontScaling, maxFontSizeMultiplier: bottomNavigationRecipe.largeText.maxFontSizeMultiplier, style: {
-                                        color: selected ? selectedLabelColor : idleColor,
-                                        flexShrink: 1,
-                                        fontWeight: selected
-                                            ? bottomNavigationRecipe.label.selectedFontWeight
-                                            : bottomNavigationRecipe.label.fontWeight,
-                                        minWidth: 0,
-                                    }, variant: density.label, children: item.label })] }, item.id));
+                                                    }, variant: badgeMetrics.textVariant, children: item.badge.visibleLabel }) })) })) : null] }), (!capsule || expandedLabels || selected) && _jsx(HjmNativeProvider, { textScale: labelTextScale, children: _jsx(Text, { align: "center", allowFontScaling: bottomNavigationRecipe.largeText.allowFontScaling, maxFontSizeMultiplier: bottomNavigationRecipe.largeText.maxFontSizeMultiplier, style: {
+                                            color: selected ? selectedLabelColor : idleColor,
+                                            flexShrink: 1,
+                                            fontWeight: selected
+                                                ? bottomNavigationRecipe.label.selectedFontWeight
+                                                : bottomNavigationRecipe.label.fontWeight,
+                                            minWidth: 0,
+                                        }, variant: density.label, children: item.label }) })] }, item.id));
                     }) }), primaryAction ? (_jsx(View, { pointerEvents: "box-none", style: [
                         {
                             alignItems: "center",
@@ -687,7 +690,11 @@ export function TopBar({ title, titleLeading, onTitlePress, titleAccessibilityLa
                 paddingTop: safeAreaTop,
             },
             style,
-        ], children: largeText ? (_jsxs(_Fragment, { children: [hasLeading || hasTitle ? (_jsxs(View, { style: {
+        ], children: largeText ? (
+        // These branches have different host hierarchies. Reusing the full-width
+        // large row as a compact side slot left Fabric's layout stale after an OS
+        // text-size reset; replace that subtree instead of overriding it in apps.
+        _jsxs(Fragment, { children: [hasLeading || hasTitle ? (_jsxs(View, { style: {
                         alignItems: "center",
                         direction: theme.environment.direction,
                         flexDirection: "row",
@@ -712,7 +719,7 @@ export function TopBar({ title, titleLeading, onTitlePress, titleAccessibilityLa
                             width: "100%",
                         },
                         trailingStyle,
-                    ], children: trailingContent })) : null] })) : (_jsxs(_Fragment, { children: [renderCompactLeadingSlot ? (_jsx(View, { style: [
+                    ], children: trailingContent })) : null] }, "large-text")) : (_jsxs(Fragment, { children: [renderCompactLeadingSlot ? (_jsx(View, { style: [
                         {
                             alignItems: "center",
                             direction: theme.environment.direction,
@@ -737,7 +744,7 @@ export function TopBar({ title, titleLeading, onTitlePress, titleAccessibilityLa
                             minWidth: topBarRecipe.sideMinWidth,
                         },
                         trailingStyle,
-                    ], children: hasTrailingContent ? trailingContent : null })) : null] })) }));
+                    ], children: hasTrailingContent ? trailingContent : null })) : null] }, "compact")) }));
 }
 function useMenuAfterDismiss(visible) {
     const shownRef = useRef(false);

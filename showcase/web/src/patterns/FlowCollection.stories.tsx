@@ -1,0 +1,11 @@
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { CollectionFlowPreview } from "./screen-flow-previews";
+const meta = { id: "screen-flow-collection", title: "실험/화면/기본 흐름/목록과 상세", component: CollectionFlowPreview } satisfies Meta<typeof CollectionFlowPreview>;
+export default meta;
+type Story = StoryObj<typeof meta>;
+export const Default: Story = { name: "기본" };
+export const Dark: Story = { name: "어두운 테마", globals: {theme:"dark"} };
+export const LargeText: Story = { name: "큰 글자", globals: {textScale:"2"} };
+export const Recovery: Story = { name: "복구 흐름", args: {tools:true} };
+export const Loading: Story = { name: "불러오는 중", args: {stateKind:"loading"} };
+export const Error: Story = { name: "오류", args: {stateKind:"error"} };

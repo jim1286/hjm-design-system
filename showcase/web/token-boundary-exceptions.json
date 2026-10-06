@@ -544,6 +544,14 @@
       "property": "minHeight",
       "value": "160",
       "reason": "Fixed carousel demo geometry makes slide movement visible without imposing a height on the renderer or consuming products."
+    },
+    {
+      "file": "src/patterns/reference-adoption.css",
+      "rule": "raw-length",
+      "selector": "@media",
+      "property": "condition",
+      "value": "(max-width: 48rem)",
+      "reason": "This example switches its 2:1 editorial layout to source-order stacking before the image comparison and copy become cramped. It is demo geometry, not a shared product breakpoint; CSS media conditions cannot consume custom properties."
     }
   ]
 }

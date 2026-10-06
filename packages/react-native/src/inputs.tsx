@@ -60,9 +60,11 @@ import {
 } from "@hjmds/design-contracts/behaviors";
 import {
   forwardRef,
+  useCallback,
   useEffect,
   useId,
   useImperativeHandle,
+  useLayoutEffect,
   useRef,
   useState,
   type ReactNode,
@@ -173,7 +175,7 @@ type FieldRendererProps = AccessibleFieldProps &
     recipeInputStyle?: StyleProp<TextStyle>;
     searchSize?: SearchFieldSize;
     leading?: ReactNode;
-    trailing?: ReactNode;
+    leadingAction?: ReactNode; trailing?: ReactNode;
   }>;
 
 const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(
@@ -203,8 +205,11 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(
       searchSize = searchFieldRecipe.defaults.size,
       leading,
       trailing,
+    leadingAction,
       onBlur,
       onFocus,
+      onContentSizeChange,
+      onSelectionChange,
       ...props
     },
     ref,
@@ -212,6 +217,15 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(
     const theme = useHjmNativeTheme();
     const { colors, environment, textScaling } = theme;
     const [focused, setFocused] = useState(false);
+    const [contentHeight, setContentHeight] = useState(0);
+    const inputRef = useRef<TextInput>(null);
+    const restoreFocusRef = useRef(false);
+    const selectionRef = useRef<{ start: number; end: number } | null>(null);
+    const attachInput = useCallback((node: TextInput | null) => {
+      if (node === null) restoreFocusRef.current = inputRef.current?.isFocused?.() ?? false;
+      inputRef.current = node;
+    }, []);
+    useImperativeHandle(ref, () => inputRef.current as TextInput);
     const [currentValue, setCurrentValue] = useControllableState({
       ...(value === undefined ? {} : { value }),
       defaultValue,
@@ -263,19 +277,39 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(
       : colors[fieldRecipe.placeholder.color];
     const textStyle =
       typography[search ? searchSizing.textVariant : fieldRecipe.textVariant];
+    // Native TextInput scales its text without enlarging a fixed frame (BT-QA-020).
+    // Size the one-line frame for the same scale instead of capping accessible text.
+    const frameTextScale = textScaling.mode === "controlled"
+      ? textScaling.scale
+      : allowFontScaling === false
+      ? 1
+      : Math.min(textScaling.scale, props.maxFontSizeMultiplier && props.maxFontSizeMultiplier > 0 ? props.maxFontSizeMultiplier : Infinity);
+    const singleLineMinHeight = Math.ceil(textStyle.lineHeight * frameTextScale + fieldRecipe.paddingVertical * 2 + borderWidth * 2);
+    // iOS RCTUITextView updates typingAttributes/placeholder but leaves existing
+    // attributed text at its old scale (BT-QA-025). Refresh only the native editor,
+    // keeping the field's draft state and restoring focus/selection instead of capping text.
+    const editorKey = Platform.OS === "ios" && multiline
+      ? `multiline-${frameTextScale}`
+      : "field";
+    useLayoutEffect(() => {
+      if (restoreFocusRef.current) {
+        inputRef.current?.focus?.();
+        const selection = props.selection ?? selectionRef.current;
+        if (selection) inputRef.current?.setNativeProps?.({ selection });
+        restoreFocusRef.current = false;
+      }
+    }, [editorKey, props.selection]);
     // A composer that should open several lines tall asks in lines, not pixels,
     // so the recipe keeps ownership of line height and vertical padding.
     const minHeight = multiline
       ? minVisibleLines === undefined
         ? fieldRecipe.multilineMinHeight
         : Math.max(
-            fieldRecipe.multilineMinHeight,
+            fieldRecipe.minHeight,
             textStyle.lineHeight * minVisibleLines +
               fieldRecipe.paddingVertical * 2,
           )
-      : search
-      ? searchSizing.minHeight
-      : fieldRecipe.minHeight;
+      : Math.max(search ? searchSizing.minHeight : fieldRecipe.minHeight, singleLineMinHeight);
     const controlRadius =
       radius[
         search
@@ -297,6 +331,8 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(
           fontWeight: textStyle.fontWeight,
           lineHeight: textStyle.lineHeight,
           minHeight: minHeight - borderWidth * 2,
+          // Explicit line bounds opt into content-driven composer sizing, without changing ordinary editors.
+          ...(multiline && minVisibleLines !== undefined ? { height: Math.max(minHeight - borderWidth * 2, Math.min(currentValue ? contentHeight : 0, textStyle.lineHeight * (resolvedMaxVisibleLines ?? 1000) + fieldRecipe.paddingVertical * 2)) } : {}),
           ...(multiline &&
           resolvedMaxVisibleLines !== null &&
           resolvedMaxVisibleLines !== undefined
@@ -361,10 +397,12 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(
               {leading}
             </View>
           ) : null}
+          {leadingAction ? <View style={{ alignSelf: "center" }}>{leadingAction}</View> : null}
           <TextInput
+            key={editorKey}
             {...props}
             {...inputTextScaleProps}
-            ref={ref}
+            ref={attachInput}
             accessibilityHint={hint}
             accessibilityLabel={accessibleName}
             accessibilityRole={search ? "search" : undefined}
@@ -374,6 +412,14 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(
             onBlur={(event) => {
               setFocused(false);
               onBlur?.(event);
+            }}
+            onContentSizeChange={event => {
+              if (multiline && minVisibleLines !== undefined) setContentHeight(event.nativeEvent.contentSize.height);
+              onContentSizeChange?.(event);
+            }}
+            onSelectionChange={event => {
+              selectionRef.current = event.nativeEvent.selection;
+              onSelectionChange?.(event);
             }}
             onChangeText={setCurrentValue}
             onFocus={(event) => {
@@ -396,7 +442,7 @@ export const TextField = forwardRef<TextInput, TextFieldProps>(function TextFiel
   return <FieldRenderer {...props} ref={ref} multiline={false} search={false} />;
 });
 
-export type TextAreaProps = AccessibleFieldProps;
+export type TextAreaProps = AccessibleFieldProps & Readonly<{ trailing?: ReactNode; leadingAction?: ReactNode }>;
 
 export const TextArea = forwardRef<TextInput, TextAreaProps>(function TextArea(props, ref) {
   return <FieldRenderer {...props} ref={ref} multiline search={false} />;

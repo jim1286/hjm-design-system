@@ -1,5 +1,7 @@
 # Form contract
 
+검토일: 2026-10-05
+
 ## 문제
 
 antd `Form`은 레이아웃과 상태 관리 라이브러리를 겸합니다(`useForm`, `dependencies`,
@@ -23,6 +25,22 @@ gap, control-to-support-text gap)을 `fieldRecipe`로 소유합니다. `Form`은
 다시 정의하지 않고, 프레임이 끝난 뒤 **다음 필드까지의 세로 간격**만 `formRecipe`로
 정의합니다. 한 필드 내부의 리듬을 바꾸고 싶다면 그것은 Field의 변경이지 Form의
 prop이 아닙니다.
+
+Native 한 줄 입력의 최소 높이는 실제 입력의 글자 배율과 line height, recipe padding,
+border를 함께 포함한다. 2026-10-05 번뚝 폴더 이름 입력에서 OS 최대 글자는 커졌지만
+고정 프레임은 그대로여서 글자가 넘쳤다(BT-QA-020). `TextField`와 `SearchField`가 공유하는
+renderer에서 프레임을 키우며, 제품에서 글자를 제한하거나 Form에 별도 높이를 주지 않는다.
+OS 배율·명시적 Provider 배율·입력의 `allowFontScaling`/`maxFontSizeMultiplier`를 같은
+방식으로 반영하고, 일반 배율로 돌아오면 높이도 돌아온다. 옆의 제품 버튼이 입력 폭을
+좁히면 제품이 행을 세로로 재배치한다. Web은 CSS 폰트·레이아웃 경계를 사용하므로
+Native의 OS 배율 계산을 추가하지 않는다. 공개 API는 바뀌지 않는다.
+
+iOS multiline 입력은 글자 배율을 바꿔도 기존 attributed 본문이 이전 크기에 남는 host 제약을 갖는다.
+2026-10-05 번뚝 TextArea에서 일반↔최대 전환 후 재진입해야만 본문 크기가 바뀌었다(BT-QA-025).
+Native renderer는 실제 배율이 바뀔 때 iOS multiline native editor만 교체하고 상위 draft state와
+forwarded ref, 현재 focus/selection을 보존한다. 스타일 변경만으로는 기존 attributed 본문을
+갱신하지 못하며, field 전체 교체는 제품 초안을 버리므로 사용하지 않는다. Android·일반 한 줄
+입력은 이 교체 경로를 사용하지 않는다. Web은 브라우저 폰트 layout을 유지하며 공개 API는 같다.
 
 ### 제출 세션
 
@@ -144,3 +162,9 @@ HJM renderer의 Native action 회귀와 사용 가능한 자동 검증을 기준
   Stack이 아직 실제 사용 사례 전까지 `planned` 이상으로 승격하지 않은 것과 같은
   이유로, Form도 actions 슬롯의 위치만 고정하고 그 안의 레이아웃 토큰은 만들지
   않습니다.
+
+### TextArea의 입력창 안 행동
+
+2026-10-05 사진/메시지 작성에서 별도 TextArea 구현이 생기지 않도록 Web/Native `TextArea.trailing`
+슬롯을 추가했다. 자동 높이·IME·값 변경 계약은 그대로이며, 입력 필드와 아이콘 버튼의 접근성 이름은
+각각 제공한다. 메시지에서는 `MessageComposer.sendIcon`이 이 슬롯을 합성한다.

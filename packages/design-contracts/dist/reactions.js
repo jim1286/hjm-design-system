@@ -17,4 +17,11 @@ export function nextReaction(options, current, id) {
         throw new TypeError("Unknown reaction");
     return option.disabled ? current : current === id ? null : id;
 }
+export function resolveReactionOptions(options, more) {
+    if (more && (!more.label.trim() || !more.options.length))
+        throw new TypeError("More reactions require a localized label and options");
+    const all = more ? [...options, ...more.options] : options;
+    validateReactions(all, null);
+    return all;
+}
 //# sourceMappingURL=reactions.js.map

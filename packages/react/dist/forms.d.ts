@@ -81,20 +81,22 @@ export declare const TextField: import("react").ForwardRefExoticComponent<Omit<I
      */
     onValueChange?: (value: string) => void;
 }> & import("react").RefAttributes<HTMLInputElement>>;
-export type TextAreaProps = TextareaHTMLAttributes<HTMLTextAreaElement> & Omit<SharedInputProps, "leading" | "trailing"> & Readonly<{
+export type TextAreaProps = TextareaHTMLAttributes<HTMLTextAreaElement> & Omit<SharedInputProps, "leading"> & Readonly<{
     /**
      * Lower bound for a growing multiline field, in visible lines. Height is
      * recipe-owned, so this semantic axis replaces a `min-height` override.
      */
+    leadingAction?: ReactNode;
     minVisibleLines?: number;
     /** Upper bound for a growing multiline field, in visible lines. */
     maxVisibleLines?: number;
 }>;
-export declare const TextArea: import("react").ForwardRefExoticComponent<TextareaHTMLAttributes<HTMLTextAreaElement> & Omit<SharedInputProps, "leading" | "trailing"> & Readonly<{
+export declare const TextArea: import("react").ForwardRefExoticComponent<TextareaHTMLAttributes<HTMLTextAreaElement> & Omit<SharedInputProps, "leading"> & Readonly<{
     /**
      * Lower bound for a growing multiline field, in visible lines. Height is
      * recipe-owned, so this semantic axis replaces a `min-height` override.
      */
+    leadingAction?: ReactNode;
     minVisibleLines?: number;
     /** Upper bound for a growing multiline field, in visible lines. */
     maxVisibleLines?: number;

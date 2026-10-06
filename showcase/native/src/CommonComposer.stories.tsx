@@ -1,0 +1,15 @@
+import type { Meta, StoryObj } from "@storybook/react-native";
+import { MessageComposerPreview } from "./common-screen-previews";
+const meta = { title: "실험/구성/공통 화면/메시지 작성", component: MessageComposerPreview } satisfies Meta<typeof MessageComposerPreview>;
+export default meta;
+type Story = StoryObj<typeof meta>;
+export const Default: Story = { name: "기본" };
+export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
+export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };
+export const Loading: Story = { name: "불러오는 중", args: { stateKind: "loading" } };
+export const Empty: Story = { name: "새 소식 없음", args: { stateKind: "empty" } };
+export const Error: Story = { name: "연결 복구", args: { stateKind: "error" } };
+export const Restricted: Story = { name: "로그인 필요", args: { stateKind: "restricted" } };
+export const Recovery: Story = { name: "실패와 초안 복구", args: { tools: true } };
+
+export const Photos: Story = { name: "여러 사진 전송", args: { initialPhotos: 2, tools: true } };

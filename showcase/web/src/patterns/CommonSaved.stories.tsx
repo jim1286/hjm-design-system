@@ -1,0 +1,12 @@
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { SavedScreenPreview } from "./basic-screen-previews";
+const meta = { id: "common-screen-saved", title: "실험/화면/공통 화면/저장한 항목", component: SavedScreenPreview } satisfies Meta<typeof SavedScreenPreview>;
+export default meta;
+type Story = StoryObj<typeof meta>;
+export const Default: Story = { name: "기본" };
+export const Dark: Story = { name: "어두운 테마", globals: {theme:"dark"} };
+export const LargeText: Story = { name: "큰 글자", globals: {textScale:"2"} };
+export const Loading: Story = { name: "불러오는 중", args: {stateKind:"loading"} };
+export const Empty: Story = { name: "빈 화면", args: {stateKind:"empty"} };
+export const Error: Story = { name: "오류와 복구", args: {stateKind:"error"} };
+export const Restricted: Story = { name: "로그인 필요", args: {stateKind:"restricted"} };

@@ -322,12 +322,13 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
 );
 
 export type TextAreaProps = TextareaHTMLAttributes<HTMLTextAreaElement> &
-  Omit<SharedInputProps, "leading" | "trailing"> &
+  Omit<SharedInputProps, "leading"> &
   Readonly<{
     /**
      * Lower bound for a growing multiline field, in visible lines. Height is
      * recipe-owned, so this semantic axis replaces a `min-height` override.
      */
+    leadingAction?: ReactNode;
     minVisibleLines?: number;
     /** Upper bound for a growing multiline field, in visible lines. */
     maxVisibleLines?: number;
@@ -344,6 +345,8 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
       disabled,
       variant,
       shape,
+      trailing,
+      leadingAction,
       align,
       fieldClassName,
       className,
@@ -388,6 +391,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
         {...(error ? { errorId: ids.errorId } : {})}
       >
         <div className="hjm-field__control hjm-field__control--multiline">
+          {leadingAction ? <span style={{ alignSelf: "center", display: "flex" }}>{leadingAction}</span> : null}
           <textarea
             {...props}
             ref={ref}
@@ -414,6 +418,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
               onBlur?.(event);
             }}
           />
+          {trailing ? <span className="hjm-field__trailing">{trailing}</span> : null}
         </div>
       </FieldFrame>
     );

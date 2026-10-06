@@ -322,6 +322,18 @@
       "import": "./dist/content-transition.js",
       "default": "./dist/content-transition.js"
     },
+    "./rating": {
+      "types": "./dist/rating.d.ts",
+      "react-native": "./dist/rating.js",
+      "import": "./dist/rating.js",
+      "default": "./dist/rating.js"
+    },
+    "./image-comparison": {
+      "types": "./dist/image-comparison.d.ts",
+      "react-native": "./dist/image-comparison.js",
+      "import": "./dist/image-comparison.js",
+      "default": "./dist/image-comparison.js"
+    },
     "./carousel-motion": {
       "types": "./dist/carousel-motion.d.ts",
       "react-native": "./dist/carousel-motion.js",
@@ -453,6 +465,18 @@
       "react-native": "./dist/navigation-bar.js",
       "import": "./dist/navigation-bar.js",
       "default": "./dist/navigation-bar.js"
+    },
+    "./screens": {
+      "types": "./dist/screens.d.ts",
+      "react-native": "./dist/screens.js",
+      "import": "./dist/screens.js",
+      "default": "./dist/screens.js"
+    },
+    "./screen-flows": {
+      "types": "./dist/screen-flows.d.ts",
+      "react-native": "./dist/screen-flows.js",
+      "import": "./dist/screen-flows.js",
+      "default": "./dist/screen-flows.js"
     }
   },
   "files": [

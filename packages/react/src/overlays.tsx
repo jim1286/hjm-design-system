@@ -201,7 +201,12 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(function Dialog(
             data-state="open"
             style={{ zIndex: modalLayer }}
             onMouseDown={(event) => {
-              if (event.target === event.currentTarget) requestClose("outside");
+              if (event.target === event.currentTarget) {
+                // Diairy QA W16: Chrome's default backdrop blur can run after focus
+                // cleanup and undo its return target. Cancel that default, not the modal's dismissal.
+                event.preventDefault();
+                requestClose("outside");
+              }
             }}
           >
             <div
@@ -585,7 +590,12 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(function Sheet(
             data-state="open"
             style={{ zIndex: modalLayer }}
             onMouseDown={(event) => {
-              if (event.target === event.currentTarget) requestClose("outside");
+              if (event.target === event.currentTarget) {
+                // Match Dialog: a real backdrop click must not undo return focus or
+                // move focus to body when busy/outside-dismiss policy keeps the sheet open.
+                event.preventDefault();
+                requestClose("outside");
+              }
             }}
           >
             <div

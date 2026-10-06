@@ -57,6 +57,10 @@ const rendererBudgets = [
     // to those three pre-allowance limits; Node 24 additionally needs 100 gzip bytes
     // on display (18.4 kB measured). Other byte/optional-peer gates stay fixed.
     budgets: {
+      // Reference controls are opt-in compositions; measured 3 modules/9452 raw/2683 gzip
+      // and 6 modules/36672 raw/9994 gzip. No root export or additional peer.
+      "./rating": { modules: 3, raw: 10900, gzip: 3100 },
+      "./image-comparison": { modules: 6, raw: 42200, gzip: 11500 },
       // Glass header composition: 4 modules, 18730 raw / 5174 gzip; provider allowances apply.
       "./navigation-bar": { modules: 4, raw: 17500, gzip: 5000 },
       // GravityLetters provider graph: 19763 raw / 5556 gzip; bounded DOM motion, no peer.
@@ -216,6 +220,14 @@ const rendererBudgets = [
       // AuthScreenLayout은 계약 resolver와 `classNames`만 쓰고 다른 컴포넌트를
       // 부르지 않는다 — 슬롯으로 받기 때문이다. 그래서 그래프가 가장 얕다.
       "./auth-screen": { modules: 3, raw: 12_000, gzip: 3_600 },
+      // DM reactions intentionally compose internal/message-reactions, ReactionPicker, Popover and
+      // portal: 13 modules / 97.7 kB raw / 22.3 kB gzip. Reimplementing focus/collision would
+      // duplicate Popover; no root barrel or optional peer enters this opt-in screen graph.
+      // Structural baseline update under RELEASE_GOVERNANCE, not a byte-warning increase.
+      "./screens": { modules: 13, raw: 98_000, gzip: 22_500 },
+      // Separate opt-in workflow graph includes confirmation dialogs and upload controls.
+      // Inherits three new screen modules; portal was already present through dialogs.
+      "./screen-flows": { modules: 20, raw: 210_000, gzip: 43_000 },
       // Exposes the existing scale; no new dependency: 3.5 kB raw / 1.2 kB gzip.
       "./heading": { modules: 2, raw: 4_200, gzip: 1_400 },
       // Elements over existing tokens, and the clipboard button over Button:
@@ -361,6 +373,10 @@ const rendererBudgets = [
     // label/support presentation. Only its consuming graphs gain one local edge;
     // provider, native-linking and optional-peer boundaries remain unchanged.
     budgets: {
+      // Reuse native primitives and Image/Slider rather than a new SVG/gesture peer.
+      // Measured 6 modules/37908 raw/8848 gzip and 8 modules/88433 raw/18193 gzip.
+      "./rating": { modules: 6, raw: 43600, gzip: 10200 },
+      "./image-comparison": { modules: 8, raw: 101700, gzip: 21000 },
       // Native opaque header fallback: 2 modules, 7123 raw / 2264 gzip; no blur peer.
       "./navigation-bar": { modules: 2, raw: 7500, gzip: 2500 },
       // GravityLetters uses canonical Text: 23498 raw / 6194 gzip, Core Animated only.
@@ -481,6 +497,14 @@ const rendererBudgets = [
       // AuthScreenLayout keeps RN hosts and uses the existing provider only for the opt-in action card palette.
       // 2026-10-01: centred pending/card state measured 9.4/3.0 kB; existing limits cover it without loosening the gate.
       "./auth-screen": { modules: 3, raw: 14_000, gzip: 4_200 },
+      // Native screen composition graph: 11 modules / 147,709 raw / 29,297 gzip;
+      // existing input/display hosts dominate. Keep optional keyboard peers outside this entry.
+      // Core Modal reaction helper + ReactionPicker: measured 13 modules including the
+      // existing shared-module allowance. Byte budgets already cover 160.0/32.2 kB.
+      "./screens": { modules: 12, raw: 170_000, gzip: 33_700 },
+      // Keep workflow dependencies out of the existing lightweight screens entry.
+      // Inherits the reaction helper graph: 18 modules including the shared allowance.
+      "./screen-flows": { modules: 17, raw: 310_000, gzip: 61_000 },
       // Same primitive graph as Top: 21.0 kB raw / 5.4 kB gzip over 4 modules.
       "./heading": { modules: 4, raw: 23_000, gzip: 6_000 },
       // Same primitive graph as the other Native additions: 22.6/5.8 kB.

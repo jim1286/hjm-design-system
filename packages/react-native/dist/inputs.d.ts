@@ -47,8 +47,11 @@ type BaseFieldProps = Omit<TextInputProps, "accessibilityLabel" | "defaultValue"
 type AccessibleFieldProps = BaseFieldProps & FieldAccessibleName;
 export type TextFieldProps = AccessibleFieldProps;
 export declare const TextField: import("react").ForwardRefExoticComponent<AccessibleFieldProps & import("react").RefAttributes<TextInput>>;
-export type TextAreaProps = AccessibleFieldProps;
-export declare const TextArea: import("react").ForwardRefExoticComponent<AccessibleFieldProps & import("react").RefAttributes<TextInput>>;
+export type TextAreaProps = AccessibleFieldProps & Readonly<{
+    trailing?: ReactNode;
+    leadingAction?: ReactNode;
+}>;
+export declare const TextArea: import("react").ForwardRefExoticComponent<TextAreaProps & import("react").RefAttributes<TextInput>>;
 export type SearchFieldAffordanceRenderProps = Readonly<{
     color: string;
     size: number;
