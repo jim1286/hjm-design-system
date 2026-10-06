@@ -142,3 +142,8 @@ HJM에서는 문장 줄바꿈·텍스트 선택을 보존하고 장식은 접근
 공통 주석 계약과 양 renderer 측정·모션 감소·제품 팔레트를 설계한 뒤 실험으로 구현한다.
 원본 문서의 duration 기본값 500ms와 해당 source의 600ms 차이도 관찰했다.
 상세 근거와 미확인 범위는 [문장 강조 조사](../qa/2026-10-07-highlighter-reference.md)에 있다.
+
+문장 주석의 공통 geometry 구현을 시작했다. `packages/design-contracts/src/text-annotation.ts`는
+실제 측정한 줄 조각에서 7가지 주석의 결정적 경로와 잘림 방지 bounds를 만든다.
+현재는 내부 모듈이며 공개 export·양 renderer·실험 스토리는 아직 없다. 문장 일부의
+Native 줄별 측정이 다음 구현 지점이다. 실험 수를 늘리거나 UI 검증으로 집계하지 않는다.

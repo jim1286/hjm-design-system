@@ -1925,6 +1925,16 @@
           "Native 문장 내 줄별 측정",
           "실제 스크린리더"
         ]
+      },
+      "implementation": {
+        "status": "internal-geometry-only",
+        "source": "packages/design-contracts/src/text-annotation.ts",
+        "tests": "packages/design-contracts/test/text-annotation.test.ts",
+        "publicExport": false,
+        "webRenderer": false,
+        "nativeRenderer": false,
+        "experimentalStory": false,
+        "note": "12 geometry tests and contracts typecheck passed; does not prove rendered UI or add an experiment."
       }
     },
     {

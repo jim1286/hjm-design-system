@@ -46,3 +46,14 @@ HJM은 의미 있는 HTML 요소를 제공하는 기존 TextFormat과 문장 위
 
 관측 결과는 이 리포트와 URL별 ledger에 보존했다. 원본 미디어는 저장·재배포하지 않았다.
 이번 변경은 조사 문서뿐이며 기능 테스트나 릴리스 검증 통과로 집계하지 않는다.
+
+## 7. 공통 geometry 구현 후 검사
+
+`src/text-annotation.ts`에 7개 주석의 경로 계산을 추가했다. 원본 rough-notation을
+복사하지 않고 renderer가 공급하는 줄별 사각형을 사용한다. 난수 없는 두 번 그리기로
+재렌더마다 선이 흔들리는 것을 방지한다. 빈 줄은 제외하고 경로 외곽까지 bounds에 포함한다.
+
+Node 24.20.0 / pnpm 11.18.0에서 계약 테스트 12개 통과, contracts typecheck 통과.
+첫 typecheck에서 forEach 클로저 안 bounds 변경에 대한 타입 추론 오류를 발견했고
+for-of 루프로 바꾼 뒤 통과했다. 이 검사는 실제 글꼴 측정·모션·화면 렌더링 검증이 아니다.
+공개 export와 Web/Native renderer 연결은 아직 남아 있다.
