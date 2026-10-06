@@ -19,6 +19,9 @@ it("uses real radio keyboard selection, form values and explicit clearing",async
  expect(new FormData(host.querySelector("form")!).get("rating")).toBe("3");
  await page.getByRole("button",{name:"지우기",exact:true}).click();
  expect(host.querySelector("input:checked")).toBeNull();expect(host.textContent).toContain("미평가");
+ expect(document.activeElement).toBe(host.querySelector('input[value="1"]'));
+ await userEvent.keyboard(" ");
+ expect(new FormData(host.querySelector("form")!).get("rating")).toBe("1");
 });
 it("keeps read-only averages non-interactive and disabled ratings inert",async()=>{
  const change=vi.fn();await act(async()=>root.render(<HjmProvider theme="dark" direction="rtl" textScale={2}><Rating label="평균" value={3.5} readOnly getValueLabel={label}/><Rating label="잠김" value={2} onValueChange={change} disabled getValueLabel={label}/></HjmProvider>));

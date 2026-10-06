@@ -4,7 +4,7 @@
 - 상태: 실험
 - 지원: Web · Native
 - 적용: 미게시(1.13.1 이후)
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [계약](../../reference-controls.md)
 - 스토리북: `실험/컴포넌트/입력/별점 선택`
 
@@ -61,6 +61,7 @@ Native는 import를 `@hjmds/react-native/rating`로 바꾼다.
 
 ## 꼭 지킬 것
 
+- Web 초기화 후 첫 별점으로 초점이 돌아온다. Space로 다시 선택할 수 있다.
 - label, value, getValueLabel을 제품 언어로 공급한다. 입력형은 onValueChange가 필수이고 평균형에는 전달하지 않는다.
 - 브랜드는 HJM provider의 semantic palette로 연결한다. 점수 집계·이미지 변환·저장은 제품 소유다.
 

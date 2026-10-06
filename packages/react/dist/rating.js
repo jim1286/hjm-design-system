@@ -1,5 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { useId } from "react";
+import { useId, useRef } from "react";
 import { resolveRating } from "@hjmds/design-contracts/reference-controls";
 import { Button } from "./actions.js";
 function Star({ fraction }) {
@@ -10,6 +10,7 @@ export function Rating(props) {
     const { label, value, readOnly = false, disabled = false, getValueLabel, clearLabel, name, layoutStyle } = props;
     const { max, fractions } = resolveRating(props);
     const id = useId();
+    const firstOption = useRef(null);
     const valueLabel = getValueLabel(value);
     if (!valueLabel.trim() || (clearLabel !== undefined && !clearLabel.trim()))
         throw new TypeError("Rating text must not be empty");
@@ -21,8 +22,13 @@ export function Rating(props) {
                     const optionLabel = getValueLabel(score);
                     if (!optionLabel.trim())
                         throw new TypeError("Rating option text must not be empty");
-                    return _jsxs("label", { className: "hjm-rating__option", children: [_jsx("input", { type: "radio", name: name ?? id, value: score, checked: value === score, "aria-label": optionLabel, onChange: () => { if (!disabled)
+                    return _jsxs("label", { className: "hjm-rating__option", children: [_jsx("input", { ref: index === 0 ? firstOption : undefined, type: "radio", name: name ?? id, value: score, checked: value === score, "aria-label": optionLabel, onChange: () => { if (!disabled)
                                     props.onValueChange?.(score); } }), _jsx(Star, { fraction: fractions[index] })] }, score);
-                }) }), _jsx("div", { role: "status", children: valueLabel }), clearLabel ? _jsx(Button, { tone: "ghost", disabled: disabled || value === null, onClick: () => props.onValueChange?.(null), children: clearLabel }) : null] });
+                }) }), _jsx("div", { role: "status", children: valueLabel }), clearLabel ? _jsx(Button, { tone: "ghost", disabled: disabled || value === null, onClick: () => {
+                    // Clearing disables this button. Move focus before the controlled update so
+                    // keyboard users can choose again instead of losing their place to body.
+                    firstOption.current?.focus();
+                    props.onValueChange?.(null);
+                }, children: clearLabel }) : null] });
 }
 //# sourceMappingURL=rating.js.map

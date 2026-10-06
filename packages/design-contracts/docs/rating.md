@@ -1,4 +1,9 @@
-# Rating — 계약을 만들지 않는다
+# Rating — 과거 판단과 현재 계약
+
+> 2026-10-07 현재 상태 정정: 2026-10-06 사용자 레퍼런스 적용 요청으로 정수 선택·미평가·소수 평균을
+> 구분하는 supplemental Rating을 추가했다. 현재 계약은 [reference-controls](reference-controls.md),
+> import와 배치는 [사용 지침](usage/components/rating.md)을 따른다. 아래 “만들지 않는다”는 과거 판단이며
+> 현재 API 부재를 뜻하지 않는다. Slider 기반 반점 입력 예제는 별도 용도로 유지한다.
 
 > 2026-09-30 정리: 구현된 조합을 미구현으로 집계하지 않도록 독립 Planned 행과 catalog ID를 제거했다.
 > 기존 조합 예제와 공개 helper는 유지하며, 참조표는 실제 구성 컴포넌트로 연결한다.

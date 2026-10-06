@@ -36,7 +36,7 @@ UI·기능 검증을 거쳐 승격·릴리스하고 Utilverse의 대체 가능�
 | Progressive Blur | 경계·초점 보호를 포함한 양 renderer 실험 구현. iOS 실제 합성·끝 항목 선택·내용 축소·다크 확인 | Android 합성·접근성·제품 팔레트·비용 비교. progressive-blur-adoption-2026-10-07.md |
 | Noise / EffectSurface | 기존 grain은 반복 점 패턴, 원본 Noise Texture는 fractal noise로 정적 소스상 차이 확인 | 실제 질감·양 플랫폼 비용 비교 후 추가 여부 결정 |
 | Hero Video Dialog | 기존 Dialog + 제품 player host Web/Native 실험 구현. Web 실제 재생·실패 복구·닫기·초안 유지 확인 | Native 실제 기기, 제품 팔레트, 실제 유음 콘텐츠의 자막/대본 검증 남음. 무음 fixture를 자막 검증으로 세지 않음 |
-| Rating | 양 renderer 공개 API 및 실험 | 평균/입력/초기화·키보드·큰 글자 UI 검증 |
+| Rating | Web 키보드/초기화 초점 버그 수정, iOS 큰 글자 선택·초기화·비활성 확인 | RTL·다크·제품 팔레트·스크린리더 검증. docs/qa/2026-10-07-rating-reference.md |
 | 3D icons | 그림과 시작 안내 실험 추가(Web/Native), CC0 원본 2개 | Web 흐름·다크·큰 글자·390px 확인, Native 실제 기기·다른 제품 팔레트 검증 남음 |
 | Number Ticker | 공식 소스·기본 데모 대조 후 기존 엔진 유지. 양쪽 소수/음수·비라틴·지수·모션 감소·RTL 비교 스토리 추가 | Native 실제 변형·접근성 및 전체 환경 검증. docs/qa/2026-10-07-number-reference.md |
 | Scroll Progress / Tracing Beam | 원본 본문/선 관찰, 기존 ScrollProgress 유지. Web·iOS 본문 스크롤·축소·복원 검증 | 광선 표현·원본 속도 반응은 미확인. docs/qa/2026-10-07-reading-reference.md |

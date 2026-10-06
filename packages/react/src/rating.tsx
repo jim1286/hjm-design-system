@@ -1,5 +1,5 @@
 import type { HjmCompositionStyleProp } from "./composition-style.js";
-import { useId, type CSSProperties } from "react";
+import { useId, useRef, type CSSProperties } from "react";
 import { resolveRating, type RatingDescriptor } from "@hjmds/design-contracts/reference-controls";
 import { Button } from "./actions.js";
 
@@ -21,6 +21,7 @@ export function Rating(props: RatingProps) {
   const { label, value, readOnly = false, disabled = false, getValueLabel, clearLabel, name, layoutStyle } = props;
   const { max, fractions } = resolveRating(props);
   const id = useId();
+  const firstOption = useRef<HTMLInputElement>(null);
   const valueLabel = getValueLabel(value);
   if (!valueLabel.trim() || (clearLabel !== undefined && !clearLabel.trim())) throw new TypeError("Rating text must not be empty");
   const row: CSSProperties = { display: "flex", flexWrap: "wrap", gap: "var(--hjm-space-xs)" };
@@ -32,11 +33,16 @@ export function Rating(props: RatingProps) {
       const optionLabel = getValueLabel(score);
       if (!optionLabel.trim()) throw new TypeError("Rating option text must not be empty");
       return <label key={score} className="hjm-rating__option">
-        <input type="radio" name={name ?? id} value={score} checked={value === score} aria-label={optionLabel} onChange={() => { if (!disabled) props.onValueChange?.(score); }} />
+        <input ref={index === 0 ? firstOption : undefined} type="radio" name={name ?? id} value={score} checked={value === score} aria-label={optionLabel} onChange={() => { if (!disabled) props.onValueChange?.(score); }} />
         <Star fraction={fractions[index]!} />
       </label>;
     })}</div>
     <div role="status">{valueLabel}</div>
-    {clearLabel ? <Button tone="ghost" disabled={disabled || value === null} onClick={() => props.onValueChange?.(null)}>{clearLabel}</Button> : null}
+    {clearLabel ? <Button tone="ghost" disabled={disabled || value === null} onClick={() => {
+      // Clearing disables this button. Move focus before the controlled update so
+      // keyboard users can choose again instead of losing their place to body.
+      firstOption.current?.focus();
+      props.onValueChange?.(null);
+    }}>{clearLabel}</Button> : null}
   </fieldset>;
 }
