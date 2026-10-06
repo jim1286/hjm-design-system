@@ -1443,8 +1443,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "conditional-shared-adapter-adoption",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "42393da",
+        "report": "docs/plans/utilverse-random-score-adoption.md",
+        "reason": "Shared Celebration currently statically imports react-native-fast-confetti; consumer has Reanimated4.5.1 but not this peer. Validate/install supported optional host after release before replacement, preserving reduced-motion/noninteractive decoration and completion independent of animation.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/ChatMessageSheet.tsx",
@@ -2698,8 +2707,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-product-diagram",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "42393da",
+        "report": "docs/plans/utilverse-random-score-adoption.md",
+        "reason": "Retain validated numeric lane/bridge SVG and horizontal geometry. Path slice follows domain replay cursor; participant labels stay outside SVG. Generic Steps is not a ladder diagram replacement.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/LanguageHandoffScope.tsx",
@@ -3652,8 +3670,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-product-diagram",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "42393da",
+        "report": "docs/plans/utilverse-random-score-adoption.md",
+        "reason": "Retain wheel SVG and Animated rotation tied to rouletteSlotCenter/stop-angle domain. Only ordinal numbers enter SVG; candidate names stay in HJM labels. Product artwork palette remains product-owned.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/ScoreNumeral.tsx",
@@ -6570,8 +6597,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "absorb-selection-progress-preserve-replay",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "42393da",
+        "report": "docs/plans/utilverse-random-score-adoption.md",
+        "reason": "Compare Select/RadioGroup for participants, Progress for cursor and Accordion for all outcomes. StepPlayer is conditional because its visible Steps need semantic stages. Preserve replay generation cancellation and no redraw on play/pause/replay.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/features/LoginScreen.tsx",
@@ -6849,8 +6885,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "absorb-exclusions-confirm-preserve-result",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "42393da",
+        "report": "docs/plans/utilverse-random-score-adoption.md",
+        "reason": "Replace exclusion selected buttons with multi-selection contract and history Alert.alert with AlertDialog; keep product ball art, too-few remaining validation, secure generation, 30-record cap and result retained on history-save failure.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/features/ModeratedContentScreen.tsx",
@@ -9262,8 +9307,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "absorb-feedback-preserve-single-draw",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "42393da",
+        "report": "docs/plans/utilverse-random-score-adoption.md",
+        "reason": "Already HJM controls; use Notice for saved/error states. Preserve one immutable secure selection driving rotation and final result, animation cancellation guard, saved-input recovery and reduced-motion same outcome.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/features/ScoreboardScreen.tsx",
@@ -9382,8 +9436,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "absorb-confirm-preserve-score-queue",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "42393da",
+        "report": "docs/plans/utilverse-random-score-adoption.md",
+        "reason": "Replace manual reset/remove confirmation and Notice feedback. Retain +/- while storage pending, separate structural/undo lock, adaptive one-column threshold and large ScoreNumeral requirement.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/features/SettingsScreen.tsx",
@@ -9653,8 +9716,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "absorb-input-groups-preserve-artwork",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "42393da",
+        "report": "docs/plans/utilverse-random-score-adoption.md",
+        "reason": "Compare bounded NumberField for team count only after preserving parser errors; shared Section/Notice and static label treatment for members. Do not use action/selection Chip for noninteractive names. Preserve stable duplicate entry IDs, secure distribution and export labels.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/features/TextToolsScreen.tsx",
