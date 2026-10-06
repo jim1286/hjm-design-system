@@ -3669,8 +3669,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "review-display-scale-extension",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "5388909",
+        "report": "docs/plans/utilverse-local-tools-adoption.md",
+        "reason": "Custom 48/64pt artifact numeral with single HJM textScale and fit-to-width. Statistic currently exposes caption/title/heading density, no display-size axis; do not shrink across-table score or use deprecated valueStyle as adoption.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/ScreenHeader.tsx",
@@ -5201,8 +5210,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "extend-task-list-before-adoption",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "5388909",
+        "report": "docs/plans/utilverse-local-tools-adoption.md",
+        "reason": "Compare TaskList but add or compose a public per-item action slot for deletion without nesting a button in Checkbox. Preserve timestamped completion, limits40/200, list cloning, single undo and storage-confirmed transitions.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/features/CommunityScreen.tsx",
@@ -5831,8 +5849,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "absorb-confirm-preserve-queued-taps",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "5388909",
+        "report": "docs/plans/utilverse-local-tools-adoption.md",
+        "reason": "Replace manual reset/remove confirmation and storage feedback; keep increment/decrement/undo enabled while queued writes pending, enforce floor in reducer, and gate structural changes separately.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/features/DeleteAccountScreen.tsx",
@@ -7424,8 +7451,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "absorb-confirm-preserve-durable-draft",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "5388909",
+        "report": "docs/plans/utilverse-local-tools-adoption.md",
+        "reason": "Already SearchField/SegmentedControl/TextArea. Replace delete/discard prompts and status Notice; keep raw composition persisted through singleton queue, current-ref flush before save, owner reset, view-only sort and filtered export.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/features/NotificationInboxScreen.tsx",
@@ -7800,8 +7836,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "absorb-options-preserve-secret-session",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "5388909",
+        "report": "docs/plans/utilverse-local-tools-adoption.md",
+        "reason": "Compare CheckboxGroup and preset RadioGroup/NumberField only with explicit custom-length state. Preserve SecretSession generation/copy lifetime, background clear, secure random, hidden non-autofill result and no secret in transition keys; generic ResultCopy is not equivalent.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/features/PhotoConvertScreen.tsx",
@@ -9738,8 +9783,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "absorb-metrics-and-options-preserve-preview",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "5388909",
+        "report": "docs/plans/utilverse-local-tools-adoption.md",
+        "reason": "Compare StatisticGroup for four counters and CheckboxGroup for cleanup options. Preserve original/preview/apply/undo reducer, empty output vs absent preview, private fixed transition key and text length limits.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/features/TimersScreen.tsx",
