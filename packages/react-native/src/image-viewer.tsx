@@ -4,10 +4,13 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Gallery } from "react-native-zoom-toolkit";
 import { containerDefaults, containerRecipe } from "@hjmds/design-contracts/components/container";
 import { Button } from "./actions.js";
+import { SegmentedControl } from "./inputs.js";
+import { ImageInspection, type ImageViewerInspection } from "./internal/image-inspection.js";
+export type { ImageViewerInspection } from "./internal/image-inspection.js";
 import { Surface, Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
 
-export type ImageViewerItem = { id: string; uri: string; label: string };
+export type ImageViewerItem = { id: string; uri: string; label: string; width?: number; height?: number };
 export type ImageViewerImageStatus = "loading" | "ready" | "error";
 export type ImageViewerImageRenderProps = Readonly<{
   item: ImageViewerItem;
@@ -25,6 +28,8 @@ export type ImageViewerProps = {
   open: boolean;
   items: readonly ImageViewerItem[];
   initialIndex?: number;
+  /** Exact-size review requires positive intrinsic width/height on every item. */
+  inspection?: ImageViewerInspection;
   /** The frame, feedback and retry remain HJM-owned; caching/display belong to the host. */
   renderImage?: (props: ImageViewerImageRenderProps) => ReactNode;
   /** Per mounted image, including offscreen pages. Not an export approval or visibility proof. */
@@ -84,9 +89,16 @@ export function ImageViewer(props: ImageViewerProps) {
     !Number.isInteger(props.initialIndex ?? 0) || (props.initialIndex ?? 0) < 0 || (props.initialIndex ?? 0) >= props.items.length) {
     throw new TypeError("ImageViewer needs named images, localized controls and a valid index");
   }
+  if (props.inspection) {
+    if (!["fit", "double", "pixels"].includes(props.inspection.mode) ||
+      Object.values(props.inspection.labels).some(label => !label.trim()) ||
+      props.items.some(item => !Number.isFinite(item.width) || !Number.isFinite(item.height) || (item.width ?? 0) <= 0 || (item.height ?? 0) <= 0)) {
+      throw new TypeError("Image inspection requires a valid mode, labels and intrinsic image sizes");
+    }
+  }
   // Structured identity avoids delimiter collisions in product IDs/URIs. A replaced
   // collection must retire image callbacks as well as reset the gesture engine.
-  return <ImageViewerSession key={JSON.stringify(props.items.map(item => [item.id, item.uri]))} {...props} />;
+  return <ImageViewerSession key={JSON.stringify(props.items.map(item => [item.id, item.uri, item.width, item.height]))} {...props} />;
 }
 
 function ImageViewerSession(props: ImageViewerProps) {
@@ -126,7 +138,14 @@ function ImageViewerSession(props: ImageViewerProps) {
             ran edge to edge and the caption touched the screen edge (2026-09-30
             audit). The image area stays full-bleed so zoom keeps the whole width. */}
         <View style={controlInsets}><Button growWithContent onPress={props.onClose}>{props.closeLabel}</Button></View>
-        <View style={{ flex: 1 }} onLayout={event => { const { width: measuredWidth, height: measuredHeight } = event.nativeEvent.layout; if (measuredWidth > 0 && measuredHeight > 0) setViewport({ width: measuredWidth, height: measuredHeight }); }}>
+        {props.inspection ? <View style={controlInsets}><SegmentedControl label={props.inspection.labels.mode}
+          value={props.inspection.mode} onValueChange={props.inspection.onModeChange}
+          items={[{ value: "fit", label: props.inspection.labels.fit }, { value: "double", label: props.inspection.labels.double }, { value: "pixels", label: props.inspection.labels.pixels }]} /></View> : null}
+        {props.inspection ? <ImageInspection key={`${currentIndex}:${props.inspection.mode}`} config={props.inspection}
+          imageSize={{ width: props.items[currentIndex]!.width!, height: props.items[currentIndex]!.height! }} controlsInset={controlInsets}
+          feedbackLabels={{ loading: props.loadingLabel, error: props.errorLabel, retry: props.retryLabel }}
+          renderImage={(width, height, report) => <ViewerImage item={props.items[currentIndex]!} width={width} height={height}
+            renderImage={props.renderImage} onImageStatusChange={event => { report(event.status); reportImageStatus(event); }} />} /> : <View style={{ flex: 1 }} onLayout={event => { const { width: measuredWidth, height: measuredHeight } = event.nativeEvent.layout; if (measuredWidth > 0 && measuredHeight > 0) setViewport({ width: measuredWidth, height: measuredHeight }); }}>
           <Gallery key={galleryKey} data={[...props.items]} initialIndex={currentIndex} keyExtractor={item => item.id}
             rtl={theme.environment.direction === "rtl"} onIndexChange={change}
             snapTimingConfig={{ duration: theme.environment.reducedMotion ? 0 : 250 }}
@@ -141,11 +160,11 @@ function ImageViewerSession(props: ImageViewerProps) {
                 : <Text accessibilityLiveRegion="polite">{props.loadingLabel}</Text>}
             </Surface>
           </View> : null}
-        </View>
+        </View>}
         <View style={{ gap: theme.tokens.spacing.xs, ...controlInsets, paddingTop: theme.tokens.spacing.sm }}>
           <Text accessibilityLiveRegion="polite">{props.items[currentIndex]?.label}</Text>
-          <Button growWithContent disabled={currentIndex === 0} onPress={() => navigate(currentIndex - 1)}>{props.previousLabel}</Button>
-          <Button growWithContent disabled={currentIndex >= props.items.length - 1} onPress={() => navigate(currentIndex + 1)}>{props.nextLabel}</Button>
+          {(!props.inspection || props.items.length > 1) ? <><Button growWithContent disabled={currentIndex === 0} onPress={() => navigate(currentIndex - 1)}>{props.previousLabel}</Button>
+          <Button growWithContent disabled={currentIndex >= props.items.length - 1} onPress={() => navigate(currentIndex + 1)}>{props.nextLabel}</Button></> : null}
         </View>
       </View>
     </GestureHandlerRootView>

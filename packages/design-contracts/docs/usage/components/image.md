@@ -138,7 +138,7 @@ import { ImageViewer } from "@hjmds/react-native/image-viewer";
 회전을 허용하는 제품은 `supportedOrientations={["portrait", "landscape"]}`와 갱신되는
 safeAreaInsets 네 방향을 제공한다. 앱 manifest가 portrait 고정이면 이 prop만으로 회전이 보장되지 않는다.
 화면 크기가 바뀌면 버튼을 제외한 남은 갤러리 영역을 다시 측정해 host에 전달한다.
-이 확장은 fit/2배/출력 pixel 보기를 아직 추가하지 않았으며 Utilverse 대체 완료가 아니다.
+아래 inspection 확장은 미게시이며, Expo 표시 확인·결과 승인 회귀와 Utilverse 채택은 별도 검증한다.
 
 ### 결과 검사 크기 계산
 
@@ -155,8 +155,34 @@ const geometry = resolveImageInspectionGeometry(
 ); // width/height 804, panBounds x=201 y=175 (중앙에서 양방향)
 ```
 
-이는 검사 UI를 만들 때 renderer가 쓰는 공통 계산이며 Image의 fit prop이나 ImageViewer의
-배율 prop이 아니다. 공개 배율 UI·보기 변경 시 검토 무효화·접근 가능한 이동 조작은 후속 구현이다.
+### Native 결과 검사 보기 (미게시)
+
+`ImageViewer`의 선택적 `inspection`은 위 계산을 사용한다. 모든 `items`에 실제 출력의
+양수 `width`·`height`를 제공한다. 일반 Gallery의 pinch/paging과 별개로 고정 배율의 결과를
+검사하는 용도다. `inspection`을 생략하면 기존 Gallery 동작을 유지한다.
+
+```tsx
+<ImageViewer {...viewerProps}
+  items={[{ id: "result", uri: outputUri, label: resultLabel, width: outputWidth, height: outputHeight }]}
+  inspection={{
+    mode, onModeChange: next => { invalidateReview(); setMode(next); },
+    labels: { mode: "결과 보기", fit: "맞춤", double: "2배", pixels: "출력 크기",
+      left: "왼쪽", right: "오른쪽", up: "위", down: "아래", center: "중앙" },
+    getPositionText: ({ x, y }) => `위치 ${Math.round(x)}, ${Math.round(y)}`,
+  }} />
+```
+
+문구는 예시이며 제품 i18n에서 공급한다. 닫기 아래 SegmentedControl, 남은 이미지 viewport,
+방향/중앙 버튼과 위치 안내, 이미지 설명 순으로 배치한다. 큰 글자에서는 선택·방향 버튼이
+줄바꿈되며 그 아래 실제 남은 viewport로 배율을 다시 계산한다. `renderImage`의 width/height는
+이 모드에서 **이미지의 표시 크기**이며 viewport보다 클 수 있다.
+
+- fit은 전체 맞춤, double은 fit의 2배, pixels는 출력 수치와 같은 layout 단위다. 물리 기기 pixel의 1:1 decode를 보장하지 않는다.
+- 드래그 또는 방향 버튼으로 양축 끝까지 이동한다. 버튼은 viewport의 80%씩 이동해 20% 문맥을 유지하며 물리 방향은 RTL에서도 뒤집지 않는다. 넘침이 없는 축은 비활성이다.
+- 확대/축소 pinch·double tap과 swipe 페이지 전환은 사용하지 않는다. 여러 이미지는 이전/다음 버튼으로 전환하고 한 장이면 두 버튼을 숨긴다.
+- 모드·viewport·이미지·재시도가 바뀌면 중앙에서 새 host를 열고 loading부터 시작한다. 폐기된 host/제스처 콜백은 새 상태를 바꾸거나 위치를 알리지 않는다.
+- 위치는 이미지 중앙에서 본 viewport의 x/y 오프셋과 maxX/maxY 한계다. `getPositionText`는 비어 있지 않은 지역화 문자열을 반환한다. 화면에서는 한 줄로 제한해 위치 문구 변화가 viewport를 바꾸지 않게 하고 접근성 이름은 전체를 제공한다.
+- 위치 알림은 Android live region, iOS 완료된 이동의 announce API를 사용한다. 실제 스크린리더 검증은 남아 있다. 제품의 표시 완료/수동 확인/내보내기 승인 계약은 기존 host 절대로 유지한다.
 
 ## 플랫폼 차이
 

@@ -441,7 +441,12 @@ const rendererBudgets = [
       "./qr-code": { modules: 1, raw: 1_800, gzip: 900 },
       // 2026-09-29 measured local adapter graphs: viewer 37.4/8.9 kB, sheet 36.2/8.6 kB;
       // keyboard 1.2/0.6 kB and OS menu 1.1/0.5 kB. External native peers are Metro-checked separately.
-      "./image-viewer": { modules: 5, raw: 42_000, gzip: 10_000 },
+      // 2026-10-07 exact-size inspection reuses SegmentedControl instead of cloning
+      // selection semantics. Reviewed 13 local modules: inputs adds field-frame,
+      // fixed-glyph, state and web-a11y; internal/image-inspection owns the optional
+      // ResumableZoom host. No root barrel/Expo/new external peer enters the graph.
+      // See docs/qa/2026-10-07-image-viewer-host.md; measured 130.1/29.6 kB.
+      "./image-viewer": { modules: 13, raw: 130_100, gzip: 29_600 },
       // 2026-10-01: recipe-owned typography/geometry and controlled font scaling
       // replace the independent 48pt style. Measured 10.1 kB gzip incl provider;
       // +150 bytes covers that shared accessibility behavior, with unchanged edges/raw.

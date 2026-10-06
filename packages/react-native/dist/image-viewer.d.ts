@@ -1,9 +1,13 @@
 import { type ReactNode } from "react";
 import { type ModalProps } from "react-native";
+import { type ImageViewerInspection } from "./internal/image-inspection.js";
+export type { ImageViewerInspection } from "./internal/image-inspection.js";
 export type ImageViewerItem = {
     id: string;
     uri: string;
     label: string;
+    width?: number;
+    height?: number;
 };
 export type ImageViewerImageStatus = "loading" | "ready" | "error";
 export type ImageViewerImageRenderProps = Readonly<{
@@ -22,6 +26,8 @@ export type ImageViewerProps = {
     open: boolean;
     items: readonly ImageViewerItem[];
     initialIndex?: number;
+    /** Exact-size review requires positive intrinsic width/height on every item. */
+    inspection?: ImageViewerInspection;
     /** The frame, feedback and retry remain HJM-owned; caching/display belong to the host. */
     renderImage?: (props: ImageViewerImageRenderProps) => ReactNode;
     /** Per mounted image, including offscreen pages. Not an export approval or visibility proof. */

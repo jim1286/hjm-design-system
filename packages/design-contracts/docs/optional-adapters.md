@@ -10,7 +10,15 @@ Default RN Image still uses onLoad; an Expo consumer can use onDisplay instead. 
 the image host, and callbacks from retired attempts or closed/replaced sessions are ignored.
 Failure stays terminal until retry. Closing sends no final status event; the product owns
 review invalidation on close, replacement and view-mode changes. This closes the host gap
-identified in Utilverse ADR-0020, but does not add its explicit fit/2x/pixels controls.
+identified in Utilverse ADR-0020. The optional controlled `inspection` config adds fit/2x/output-size
+review using positive intrinsic item width/height, the shared image geometry resolver and ResumableZoom.
+It fixes the image scale and provides clamped pan plus non-drag directional/center controls; the
+ordinary Gallery keeps its pinch/paging behavior when inspection is absent. Inspection pages use
+previous/next buttons, not swipe paging. Mode, viewport, item and retry changes remount the host,
+retire callbacks and reset readiness/position. Output-size means layout units, not physical device pixels.
+Host width/height are the computed image dimensions in inspection mode (possibly larger than the viewport).
+The [image usage guide](usage/components/image.md) defines labels, placement and review invalidation.
+This is unpublished and is not proof of Expo onDisplay validation or Utilverse adoption.
 The Native Modal accepts supportedOrientations in fullScreen presentation. Optional left/right
 safe-area insets protect controls and feedback in landscape while the gallery remains full width.
 Products must supply updated insets and permit rotation in their manifests; OS rotation lock still applies.

@@ -118,3 +118,45 @@ pixel decode 정확도와 성능은 미검증이다. public ImageViewer 배율 U
 배율 geometry 후속 검사: API 대응표·문서 링크 553개·사용 지침·workspace 동기화·
 contracts bundle budget 통과. 진단의 모드/viewport 변경 시 이전 측정값도 지우도록 했으며
 최종 Native Showcase 타입 검사 통과. bundle 원시 로그는 정리했다.
+
+
+## 공개 inspection API 연결 — c3f8753 이후
+
+기존 ImageViewer의 선택적 inspection에 제어된 fit/double/pixels, 원본 크기와 지역화 문구를
+연결했다. 앞선 Gallery/ResumableZoom 비교 결과에 따라 exact-size 모드만 ResumableZoom을
+사용하며 일반 Gallery는 유지한다. 모드 선택은 기존 SegmentedControl, 이동은 기존 Button을
+재사용한다. 새 컴포넌트/15번째 실험 등록이나 승격으로 세지 않는다.
+
+기존 iPhone 17 Pro/iOS 26.5, Expo Go/Metro 8084에서 공개 API를 사용하는
+ImageViewerHostProbe(inspection)를 기존 스토리에 임시 연결해 확인했다. Device Hub CUA는
+지침상 금지되어 idb 입력·접근성 트리와 simctl 캡처로 확인했다. 실제 VoiceOver 실행은 아니다.
+600×600 valley 사진의 RN Image host에 첫 onLoad를 오류로 바꾸는 합성 실패를 사용했다.
+
+| 조건 | 실제 관찰 |
+| --- | --- |
+| light/기본 글자 | 첫 오류→재시도 복구. 2배에서 오른쪽 (201,0), 아래 (201,108). 출력 크기 전환 후 오른쪽 (99,0) |
+| dark/2배 글자 | 보기 선택 3개가 세로 배치, 이동 버튼 줄바꿈, 오류·재시도·중앙·위치·설명 모두 화면 안에 표시. 재시도 복구 후 2배 오른쪽 (201,0) |
+
+dark 마지막 입력 직후 관찰에서는 (0,0)이었으므로 즉시 성공으로 세지 않았다. 화면이 준비된
+후 오른쪽 버튼을 다시 눌러 선택 상태 `2배 checked`와 위치 (201,0)을 직접 확인했다.
+초기 이미지 승인 없이 이동하는 것을 허용하지 않으며, 위치 문구는 한 줄과 전체 접근성 이름을
+병행해 문구 줄바꿈이 viewport를 변경하고 방금 한 이동을 초기화하지 않게 했다.
+
+Native 전체 101파일/1,201 테스트 통과. 추가 4개는 정확한 크기·비드래그 양축 경계·중앙,
+모드/viewport 변경 및 실패/재시도의 폐기된 host 무효화, fit 이동 비활성, iOS 완료 이동 알림과
+resize/close 후 늦은 gesture 알림 억제를 검사한다. 테스트의 모의 엔진을 실기기 증거로 세지 않는다.
+iOS 접근성 announce 추가 이후 실제 스크린리더 동작은 미검증이다.
+
+Android·실제 회전·RTL·VoiceOver/TalkBack·서로 다른 제품 팔레트·Expo onDisplay·실제 네트워크
+실패·큰 출력 이미지 decode/성능·다중 이미지 inspector 전환은 남았다. 사용 지침/계약/Changeset은
+추가했지만 npm 게시·Utilverse 적용·실험 승격은 수행하지 않았다. 임시 스토리 연결은 원복했고,
+확인에 사용한 두 원시 캡처와 임시 백업/실패한 budget 로그는 기록 후 제거한다.
+
+번들 경계: ImageViewer graph는 5개에서 13개로 증가했다. internal/image-inspection 및
+기존 inputs(SegmentedControl)가 사용하는 field-frame/fixed-glyph/state/web-a11y 등이 포함된다.
+공통 선택 엔진을 복제하지 않기 위한 증가이며 root barrel·Expo 의존성·새 peer는 없다.
+검토한 13개 graph에 맞춰 module 기준을 갱신했다. 바이트는 상한 아닌 관측 지표다.
+
+최종 검사: Native build·typecheck, Native Showcase typecheck, renderer bundle/경계,
+API 대응표·사용 지침·문서 링크 554개·workspace 동기화·Storybook 정적 규격 통과.
+이는 원격 CI나 실험 전체 검증·릴리스 완료가 아니다.

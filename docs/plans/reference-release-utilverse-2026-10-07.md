@@ -196,3 +196,11 @@ ImageViewer의 회전 허용 prop과 좌우 cutout 보호를 추가했다. 닫�
 ResumableZoom은 804×804/402×454의 ±201/±175, 출력 크기 600×600의
 ±99/±73 경계에 머물 수 있었다. 공통 image geometry와 회귀를 추가했으며
 공개 배율 UI·접근 가능한 이동·모드 변경 검토 무효화는 다음 구현 지점이다.
+
+
+ImageViewer의 선택적 inspection 공개 API에 fit/2배/출력 크기와 방향/중앙 버튼을 연결했다.
+실제 남은 viewport에서 공통 geometry를 계산하며 크기·모드·재시도 변경 시 새 host의 표시
+확인을 다시 기다린다. iOS light와 dark/2배 글자에서 합성 실패 복구·배율 전환·버튼 이동을
+확인했고 Native 1,201 테스트가 통과했다. 일반 Gallery 경로는 유지한다.
+[검증 범위](../qa/2026-10-07-image-viewer-host.md)에 Android·회전·스크린리더·Expo 표시 확인·
+제품 팔레트·성능 미확인을 남겼다. 아직 미게시·Utilverse 미적용이며 실험은 14개다.
