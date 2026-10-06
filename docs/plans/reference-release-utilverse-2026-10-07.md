@@ -86,8 +86,8 @@ UI·기능 검증을 거쳐 승격·릴리스하고 Utilverse의 대체 가능�
 
 `node scripts/audit-consumer-ui.mjs <utilverse-root> docs/plans/utilverse-ui-adoption-inventory.json`
 명령으로 소비 저장소의 TypeScript parser를 사용해 `apps/mobile/src/**/*.tsx` 136개를 읽었다.
-JSX에서 실제 사용한 import·alias·행 번호·파일 hash를 기록했다. 현재 71개 파일은 source-reviewed이며
-나머지 65개는 pending이다. source-reviewed는 UI·동작 검증이나 채택 완료가 아니다.
+JSX에서 실제 사용한 import·alias·행 번호·파일 hash를 기록했다. 현재 81개 파일은 source-reviewed이며
+나머지 55개는 pending이다. source-reviewed는 UI·동작 검증이나 채택 완료가 아니다.
 HJM import가 있다는 사실만으로 내부 자체 UI가 대체됐다고 판단하지 않는다. Alert.alert 같은
 JSX 밖 호출은 위 1차 대조 목록 및 후속 동작 분석으로 함께 확인한다.
 
@@ -287,3 +287,7 @@ Web 실패→재시도에서 실제 76바이트 UTF-8 다운로드와 원문 일
 문서·파일 Native host를 실제 TXT 생성/읽기 확인/OS 공유로 보완했다. iOS 26.5에서 파일에
 저장까지 실행하고 Files 사본의 내용 hash를 확인했다. 이전 텍스트 Share 한계 기록은 당시
 snapshot이며 Android·접근성·전체 환경은 아직 미검증이다. 실험 17개/승격·릴리스 미실행 유지.
+
+## 가입·계정 소스 검토 갱신
+
+10개 파일을 추가 검토해 81/136 source-reviewed다. [계정 채택 계획](utilverse-account-auth-adoption.md)에 Agreement의 버전별 동의·잠금, List/계정 행동, Notice 안내 교체와 제품 보존 계약을 기록했다. HJM 1dea6da의 잠금·큰 글자 수정은 완료했으나 소비 적용은 릴리스 후이며 아직 미실행이다.

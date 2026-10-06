@@ -1138,15 +1138,33 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-existing-hjm",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "1dea6da",
+        "report": "docs/plans/utilverse-account-auth-adoption.md",
+        "reason": "Already AuthProviderButton with projected official logo, theme variants and busy guard. Native provider host remains product-owned.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/AppleProviderButton.tsx",
       "sha256": "fe6fb38090fd5efc7ff8a9d0bd87da9f49203528065b80c8ac60bf76cb940c9f",
       "renderedTags": [],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-platform-host",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "1dea6da",
+        "report": "docs/plans/utilverse-account-auth-adoption.md",
+        "reason": "Web returns null for unsupported Apple provider; do not replace with a fake provider button.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/AuthIssue.tsx",
@@ -1162,8 +1180,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "replace-with-notice",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "1dea6da",
+        "report": "docs/plans/utilverse-account-auth-adoption.md",
+        "reason": "Use Notice assertive announcement while preserving ten distinct issue mappings, especially logout/deletion pending and storage uncertainty.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/AuthorAvatar.tsx",
@@ -2697,8 +2724,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "replace-with-notice",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "1dea6da",
+        "report": "docs/plans/utilverse-account-auth-adoption.md",
+        "reason": "Use Notice for progress, fault and outcome announcements; preserve engine-vs-input errors and empty OCR outcome distinction.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/LanguageSelect.tsx",
@@ -3229,8 +3265,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-existing-hjm",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "1dea6da",
+        "report": "docs/plans/utilverse-account-auth-adoption.md",
+        "reason": "Already Link; preserve HTTPS/no-credentials/no-hash URL validation, open failure callback and touch target. Legal content stays product-owned.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/PublicContentHistory.tsx",
@@ -3528,8 +3573,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-existing-hjm",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "1dea6da",
+        "report": "docs/plans/utilverse-account-auth-adoption.md",
+        "reason": "Already TextField/PasswordField/Button with focus transfer and busy behavior. Keep caller server+review gates and credentials inside auth coordinator.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/components/RouletteWheel.tsx",
@@ -4580,8 +4634,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "replace-groups-preserve-profile",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "1dea6da",
+        "report": "docs/plans/utilverse-account-auth-adoption.md",
+        "reason": "Use List for local divider wrappers and ProfileScreen accountActions with danger Button instead of deprecated ListRow titleStyle. Keep deletion as navigation and preserve account recovery gates.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/features/BlockedUsersScreen.tsx",
@@ -4664,8 +4727,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "retain-state-consider-list-row",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "1dea6da",
+        "report": "docs/plans/utilverse-account-auth-adoption.md",
+        "reason": "Preserve scoped infinite query, deduplication and inline unblock confirmation outside pressable rows. Existing ScreenLayout/Surface/Button may use ListRow with trailingAction without changing confirmation ownership.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/features/CalculatorScreen.tsx",
@@ -6536,8 +6608,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "replace-consent-preserve-auth",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "1dea6da",
+        "report": "docs/plans/utilverse-account-auth-adoption.md",
+        "reason": "Replace two required Checkbox controls with Agreement after submission-lock release; preserve synchronous version-bound consent invalidation, registration schema, pending action snapshot, reviewer gates and centered header.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/features/LottoScreen.tsx",
@@ -8678,8 +8759,17 @@
           ]
         }
       ],
-      "review": "pending",
-      "decision": null
+      "review": "source-reviewed",
+      "decision": "replace-feedback-preserve-editor",
+      "reviewEvidence": {
+        "date": "2026-10-07",
+        "consumerHead": "fa201bc90e4c94219de0f4f51ac0328987ad1cb2",
+        "hjmHead": "1dea6da",
+        "report": "docs/plans/utilverse-account-auth-adoption.md",
+        "reason": "Already EditorScreen with discard and controlled pending. Use Notice for errors; retain idempotent writes and validated receipt before profileChanged/toast. Picker concurrency and identity changes need runtime QA.",
+        "runtimeVerification": "pending",
+        "adoption": "not-started"
+      }
     },
     {
       "file": "apps/mobile/src/features/QrCreatePanel.tsx",
