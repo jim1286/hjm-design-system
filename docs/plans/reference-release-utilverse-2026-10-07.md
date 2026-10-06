@@ -248,4 +248,5 @@ Web dark/RTL/390px/2배 글자, iOS light/2배 글자 입력→오류 복구→�
 
 GOV.UK 주소 그룹의 실제 화면·입력·Tab 이동과 HJM 제출/선택/날짜 API를 대조했다.
 일반 입력 그룹은 기존 Form으로 대체되지 않으므로 [별도 실험 계획](field-group-experiment.md)에
-공개 계약·Native 접근성·오류/잠금 검증 조건을 등록했다. 구현 전 후보이며 15개 집계에는 포함하지 않는다.
+공개 계약·Native 접근성·오류/잠금 검증 조건을 등록했다. 내부 공통 resolver와 회귀 6개를 추가했고
+contracts typecheck·build가 통과했다. 공개 renderer·스토리는 아직 없으며 15개 집계에는 포함하지 않는다.
