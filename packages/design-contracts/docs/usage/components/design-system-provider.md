@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [DesignSystemProvider](../../design-system-provider.md), [브랜드 경계](../../brand-boundary.md)(브랜드 규칙 단일 원본), [테마 주입](../../theming.md), [팔레트 결정](../../theme-palette.md)
 - 스토리북: `배포/컴포넌트/기반 기능/디자인 시스템 설정`
 
@@ -77,7 +77,8 @@ expect(checkBrandPaletteContrast(PRODUCT_BRAND_PALETTE)).toEqual({ light: [], da
 | `reducedMotion` | `true` · `false` | `false` | — |
 | `minimumVisualTarget` | `true` · `false` | `false` | — |
 | `brandPalette` | `{ light?, dark? }` | — | 각각 `ThemeColors` 17개 key 중 필요한 것만 넘긴다(부분 병합). 상태 강조색은 덮을 수 없다. 중첩 Provider는 가장 가까운 상위의 값을 물려받는다 |
-| `value` | `DesignSystemProviderValue`(`resolveDesignSystemProviderValue` 결과) | — | 테스트·스토리·임베딩용. 환경 prop·`brandPalette`와 함께 쓸 수 없고(타입이 막는다), 주면 OS theme·모션 관찰과 상위 `brandPalette` 상속이 멈춘다 |
+| `designProfile` | `HjmDesignProfile` | 가장 가까운 상위 프로필 또는 없음 | 미게시 실험. `hjmDesignPresets` 또는 `defineHjmDesignProfile` 결과만 넣는다. [프로필 계약](../../design-profile.md)의 토큰·질감·전환·구성·화면 기본값을 상속한다 |
+| `value` | `DesignSystemProviderValue`(`resolveDesignSystemProviderValue` 결과) | — | 테스트·스토리·임베딩용. 환경 prop·`brandPalette`·`designProfile`과 함께 쓸 수 없고(타입이 막는다), 주면 OS theme·모션 관찰과 상위 `brandPalette` 상속이 멈춘다 |
 | `safeAreaInsets`(Native) | `{ top?, right?, bottom?, left? }`(pt) | `{}` | 보통 `useSafeAreaInsets()` 결과. 중첩 Provider는 가장 가까운 상위 값을 물려받는다 |
 
 - 이벤트·콜백 prop은 없다. 해석된 값은 Web `useHjmTheme()`, Native `useHjmNativeTheme()`로 읽는다.
@@ -97,8 +98,8 @@ expect(checkBrandPaletteContrast(PRODUCT_BRAND_PALETTE)).toEqual({ light: [], da
 
 ## 꼭 지킬 것
 
-- 제품 브랜드는 `brandPalette` prop으로만 넣는다. 전체 `value`를 손으로 조립하는 것은 테스트·임베딩용이다
-  ([브랜드 경계 §1](../../brand-boundary.md#1-지원하는-경로는-brandpalette-하나다)).
+- 색만 바꾸면 `brandPalette`, 표현·구성도 바꾸면 검증한 `designProfile`을 쓴다. 전체 `value`를 손으로 조립하는 것은 테스트·임베딩용이다
+  ([브랜드 경계 §1](../../brand-boundary.md#1-지원하는-제품-설정-경로)).
 - **Showcase·Theme Studio의 예시 색·자산·테마를 제품 기본값으로 복사하지 않는다**(2026-10-05 규칙). 색은 제품 목적과
   기존 디자인에서 정해 `brandPalette`의 semantic key로 연결하고, 로고·이미지·문구는 각 컴포넌트의 공개 슬롯으로 넘긴다.
 - 모든 브랜드 팔레트는 `checkBrandPaletteContrast` 결과가 빈 배열이어야 한다(MUST).

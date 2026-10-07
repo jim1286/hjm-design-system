@@ -1,6 +1,6 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import { resolveDesignSystemProviderValue, validateDesignSystemProviderValue, } from "@hjmds/design-contracts/components/design-system-provider";
-import { spacing, radius, typography } from "@hjmds/design-contracts/foundations";
+import { spacing, radius, typography, shadow, fontFamily } from "@hjmds/design-contracts/foundations";
 import { createContext, useContext, useEffect, useMemo, useState, useSyncExternalStore, } from "react";
 import { AccessibilityInfo, I18nManager, Platform, useColorScheme, useWindowDimensions, } from "react-native";
 const HjmNativeThemeContext = createContext(null);
@@ -46,8 +46,9 @@ function toEnvironmentInput(props) {
             : { minimumVisualTarget: props.minimumVisualTarget }),
     };
 }
-export function HjmNativeProvider({ children, theme, direction, textScale, reducedMotion, minimumVisualTarget, brandPalette: suppliedBrandPalette, value: suppliedValue, safeAreaInsets: suppliedInsets, }) {
+export function HjmNativeProvider({ children, theme, direction, textScale, reducedMotion, minimumVisualTarget, brandPalette: suppliedBrandPalette, designProfile: suppliedDesignProfile, value: suppliedValue, safeAreaInsets: suppliedInsets, }) {
     const parent = useContext(HjmNativeThemeContext);
+    const designProfile = suppliedDesignProfile ?? parent?.designProfile;
     const inheritedInsets = useContext(HjmNativeSafeAreaContext);
     const safeAreaInsets = suppliedInsets ?? inheritedInsets;
     const inheritedBrandPalette = useContext(HjmNativeBrandPaletteContext);
@@ -75,6 +76,7 @@ export function HjmNativeProvider({ children, theme, direction, textScale, reduc
             systemTextScale,
             systemReducedMotion,
             ...(brandPalette === undefined ? {} : { brandPalette }),
+            ...(designProfile === undefined ? {} : { designProfile }),
             ...(parent === null ? {} : { parent: parent.environment }),
         });
         validateDesignSystemProviderValue(resolved);
@@ -88,9 +90,9 @@ export function HjmNativeProvider({ children, theme, direction, textScale, reduc
                 mode: textScalingMode,
                 scale: resolved.environment.textScale,
             },
-            tokens: { spacing, radius, typography },
+            tokens: { spacing, radius, typography, shadow, fontFamily, ...resolved.designProfile?.tokens },
         };
-    }, [brandPalette, environment, parent, suppliedValue, systemReducedMotion, systemTextScale, systemTheme]);
+    }, [brandPalette, designProfile, environment, parent, suppliedValue, systemReducedMotion, systemTextScale, systemTheme]);
     return (_jsx(HjmNativeThemeContext.Provider, { value: contextValue, children: _jsx(HjmNativeBrandPaletteContext.Provider, { value: brandPalette, children: _jsx(HjmNativeSafeAreaContext.Provider, { value: safeAreaInsets, children: children }) }) }));
 }
 export function useHjmNativeTheme() {

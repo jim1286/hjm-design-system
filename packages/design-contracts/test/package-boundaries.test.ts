@@ -165,6 +165,9 @@ describe("package boundaries", () => {
       "./date-entry",
       "./field-group",
       "./document-resource",
+      // Profiles are optional: core imports must not pull the preset registry.
+      "./design-profile",
+      "./design-profile-layout",
     ] as const;
 
     expect(Object.keys(packageJson.exports)).toEqual(expectedExports);

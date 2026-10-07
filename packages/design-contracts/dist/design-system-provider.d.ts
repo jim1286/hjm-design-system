@@ -1,3 +1,4 @@
+import type { HjmDesignProfile } from "./design-profile.js";
 import type { ColorReferencePalette } from "./color-references.js";
 import { type ResolvedTheme, type ThemeColors, type ThemePreference } from "./colors.js";
 /**
@@ -99,6 +100,9 @@ export type ResolveDesignSystemEnvironmentOptions = Readonly<{
      * keys are replaced; the rest keep the HJM defaults.
      */
     brandPalette?: Readonly<Partial<Record<ResolvedTheme, Readonly<Partial<ThemeColors>>>>>;
+    /** Use defineHjmDesignProfile once at the product boundary; importing its registry
+     * here at runtime would force every granular component to bundle all reference packs. */
+    designProfile?: HjmDesignProfile;
     /** A nested renderer inherits the already-resolved parent before consulting OS defaults. */
     parent?: ResolvedDesignSystemEnvironment;
 }>;
@@ -106,6 +110,8 @@ export type DesignSystemProviderValue = Readonly<{
     environment: ResolvedDesignSystemEnvironment;
     /** Palette consumed directly by `resolveColorReference`. */
     palette: ColorReferencePalette;
+    /** Optional to preserve existing pre-resolved provider values. */
+    designProfile?: HjmDesignProfile;
 }>;
 /**
  * Runtime boundary for the resolved palette a renderer receives, including one

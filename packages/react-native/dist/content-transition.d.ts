@@ -8,7 +8,7 @@ export type ContentTransitionProps = {
     animateHeight?: boolean;
     enterOnMount?: boolean;
 };
-export declare function ContentTransition({ stateKey, children, motion: preference, preset, animateHeight, enterOnMount }: ContentTransitionProps): import("react").JSX.Element;
+export declare function ContentTransition({ stateKey, children, motion: preference, preset: suppliedPreset, animateHeight, enterOnMount }: ContentTransitionProps): import("react").JSX.Element;
 export declare function TextTransition({ text, motion: preference, preset }: {
     preset?: ContentTransitionPreset;
     text: string;

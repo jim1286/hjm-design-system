@@ -5,8 +5,9 @@ import { Animated, AppState, Easing, View } from "react-native";
 import { easing, motion as timing } from "@hjmds/design-contracts/foundations";
 import { useHjmNativeTheme } from "./provider.js";
 import { Text } from "./primitives.js";
-export function ContentTransition({ stateKey, children, motion: preference = "system", preset = "fade", animateHeight = false, enterOnMount = false }) {
-    const { environment } = useHjmNativeTheme();
+export function ContentTransition({ stateKey, children, motion: preference = "system", preset: suppliedPreset, animateHeight = false, enterOnMount = false }) {
+    const { environment, designProfile } = useHjmNativeTheme();
+    const preset = suppliedPreset ?? designProfile?.interactions.contentTransition ?? "fade";
     const from = resolveContentTransition(preset, environment.direction);
     const opacity = useRef(new Animated.Value(1)).current;
     const height = useRef(new Animated.Value(0)).current;

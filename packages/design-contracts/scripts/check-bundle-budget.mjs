@@ -14,6 +14,11 @@ const packageJsonUrl = new URL("../package.json", import.meta.url);
  * Raising a budget requires an intentional review of the changed graph.
  */
 const budgets = [
+  // Reference packs reuse contrast/color/effect validation including the existing noise
+  // raster. Only this opt-in entry reaches the registry; provider imports its type only.
+  { exportPath: "./design-profile", maxModules: 7, maxRawBytes: 36664, maxGzipBytes: 14815, forbiddenModules: metadataModules },
+  // Profile layout is pure foundation geometry, with no palette/texture registry edge.
+  { exportPath: "./design-profile-layout", maxModules: 2, maxRawBytes: 7961, maxGzipBytes: 2910, forbiddenModules: metadataModules },
   // Screen geometry reuses foundation tokens; the contract has no catalog/renderer dependencies.
   // 2026-10-06 measured 11,524/4,028 with foundations; limit rounded up to 100 raw / 50 gzip.
   { exportPath: "./screen-patterns", maxModules: 2, maxRawBytes: 11_600, maxGzipBytes: 4_050, forbiddenModules: metadataModules },

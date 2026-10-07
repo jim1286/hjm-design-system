@@ -1,4 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { useDesignProfileDefaults } from "./internal.js";
 import { chipRecipe, iconRecipe, segmentedControlRecipe, selectionControlRecipe, selectionGroupRecipe, switchRecipe, } from "@hjmds/design-contracts/recipes";
 import { resolveControlAccessibleName, reconcileCheckboxSelection, reconcileRadioSelection, resolveInitialRadioValue, toggleCheckboxSelection, validateCheckboxSelection, validateRadioSelection, } from "@hjmds/design-contracts/behaviors";
 import { forwardRef, useEffect, useLayoutEffect, useId, useRef, } from "react";
@@ -189,7 +190,9 @@ export const Switch = forwardRef(function Switch({ label, labelVisibility = "vis
             onClick?.(event);
         }, children: [_jsx("span", { className: "hjm-switch__track", "aria-hidden": "true", children: _jsx("span", { className: "hjm-switch__thumb" }) }), _jsxs("span", { className: classNames("hjm-switch__copy", labelVisibility === "hidden" && "hjm-visually-hidden"), children: [_jsx("span", { id: labelId, className: "hjm-switch__label", children: label }), hasDescription ? _jsx("span", { id: descriptionId, className: "hjm-switch__description", children: description }) : null] })] }));
 });
-export const SegmentedControl = forwardRef(function SegmentedControl({ label, items, value: valueProp, defaultValue, onValueChange, size = segmentedControlRecipe.defaults.size, presentation = "connected", selectionMotion = "none", name, className, layoutStyle, style, ...props }, ref) {
+export const SegmentedControl = forwardRef(function SegmentedControl({ label, items, value: valueProp, defaultValue, onValueChange, size = segmentedControlRecipe.defaults.size, presentation = "connected", selectionMotion: suppliedSelectionMotion, name, className, layoutStyle, style, ...props }, ref) {
+    const designProfile = useDesignProfileDefaults();
+    const selectionMotion = suppliedSelectionMotion ?? designProfile?.interactions.selectionMotion ?? "none";
     validateItems("SegmentedControl", items);
     const descriptors = items.map((item) => ({
         id: item.value,

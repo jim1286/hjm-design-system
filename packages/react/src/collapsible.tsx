@@ -13,19 +13,23 @@ export type CollapsibleProps = CollapsibleOpenState &
     trigger: ReactNode;
     children: ReactNode;
     disabled?: boolean;
+    /** Inline tools stay expanded without a disclosure trigger. */
+    presentation?: "disclosure" | "inline";
+    /** Preserve local input state while hidden; hidden content stays inaccessible. */
+    keepMounted?: boolean;
     className?: string;
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
   }>;
 
 export const Collapsible = forwardRef<HTMLDivElement, CollapsibleProps>(function Collapsible(
-  { trigger, children, disabled = false, className, layoutStyle, ...openState },
+  { trigger, children, disabled = false, presentation = "disclosure", keepMounted = false, className, layoutStyle, ...openState },
   forwardedRef,
 ) {
   validateCollapsibleOpenState(openState as CollapsibleOpenState);
   const controlled = openState.open !== undefined;
   const [internalOpen, setInternalOpen] = useState(openState.defaultOpen ?? false);
-  const open = openState.open ?? internalOpen;
+  const open = presentation === "inline" || (openState.open ?? internalOpen);
   const id = `${useId().replaceAll(":", "")}-collapsible`;
   return (
     <div
@@ -35,6 +39,7 @@ export const Collapsible = forwardRef<HTMLDivElement, CollapsibleProps>(function
       style={{ ...layoutStyle, "--hjm-collapsible-gap": `${collapsibleRecipe.gap}px` } as CSSProperties}
     >
       <button
+        hidden={presentation === "inline"}
         type="button"
         className="hjm-collapsible__trigger"
         aria-expanded={open}
@@ -49,13 +54,10 @@ export const Collapsible = forwardRef<HTMLDivElement, CollapsibleProps>(function
         {trigger}
         <span aria-hidden="true" className="hjm-collapsible__marker">{open ? "▾" : "▸"}</span>
       </button>
-      {/*
-        Unmounted when closed rather than visually hidden: content left in the
-        tree stays reachable by search and by a screen reader, which contradicts
-        what the collapsed state says.
-      */}
-      {open ? (
-        <div id={`${id}-content`} role="region" className="hjm-collapsible__content">{children}</div>
+      {/* Optional persistence keeps theme changes and closing tools from erasing local
+          drafts. The HTML hidden boundary removes closed content from focus and speech. */}
+      {open || keepMounted ? (
+        <div hidden={!open} id={`${id}-content`} role="region" className="hjm-collapsible__content">{children}</div>
       ) : null}
     </div>
   );

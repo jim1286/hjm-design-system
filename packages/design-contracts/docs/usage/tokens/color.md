@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [브랜드 경계](../../brand-boundary.md), [테마 팔레트](../../theme-palette.md), [테마 사용법](../../theming.md), `src/colors.ts`, `src/semantic-colors.ts`, `src/component-recipes.ts`(`textRecipe`·`iconRecipe`), `src/base-recipes.ts`(`buttonRecipe`·`surfaceRecipe`), `packages/react/src/theme.ts`, `packages/react-native/src/provider.tsx`
 - 스토리북: `배포/토큰/색과 글자/색상`
 
@@ -127,7 +127,7 @@ import { HjmProvider } from "@hjmds/react/provider";
 
 - `#0369a1`, `"gray"` 같은 색 값을 직접 쓰지 않는다. `THEMES.light.primary`를 import해 고정하는 것도 다크 모드와 브랜드를 깨뜨린다.
   현재 palette(`useHjmTheme()`·`useHjmNativeTheme()`)를 읽는다.
-- 제품 브랜드를 `--hjm-color-*` 재정의나 `.hjm-*` 덮어쓰기로 넣지 않는다. 경로는 `brandPalette` 하나다([브랜드 경계](../../brand-boundary.md)).
+- 제품 브랜드를 `--hjm-color-*` 재정의나 `.hjm-*` 덮어쓰기로 넣지 않는다. 색만 바꾸면 `brandPalette`, 여러 표현 축을 함께 선택하면 검증한 `designProfile`을 쓴다([브랜드 경계](../../brand-boundary.md)).
 - 성공·오류 색을 브랜드 색으로, 브랜드 색을 상태 색으로 쓰지 않는다.
 - `textWeak`로 읽혀야 하는 문구를 쓰지 않는다. 보조 문구는 `textMuted`·`textSub`다.
 - 채운 `primary`·`dangerFill`·`accentFill` 위에 `text`를 올리지 않는다. 짝(`onPrimary`·`onDanger`·`onAccentFill`)을 쓴다.
@@ -140,3 +140,10 @@ import { HjmProvider } from "@hjmds/react/provider";
 | 테마 색 읽기 | `--hjm-color-<kebab key>` CSS 변수 또는 `useHjmTheme().palette.theme` | `useHjmNativeTheme().colors` |
 | 피드백 색 | `--hjm-accent-<tone>`, `--hjm-accent-fill-<tone>` | `theme.palette.statusAccents` · `statusAccentFills` |
 | alpha 섞기 | CSS `color-mix` | `resolveColorReference` 또는 `withAlpha` |
+
+### 디자인 프로필(실험·미게시)
+
+위 표는 프로필 없는 기본값이다. 앱이 [디자인 프로필](../../design-profile.md)을 선택하면 연결된
+컴포넌트는 Web CSS 변수 또는 Native `theme.tokens`/semantic palette를 읽는다.
+직접 foundations를 import한 값은 기본 상수이므로 프로필 변경을 따라가지 않는다. 현재 연결 API의 범위는
+프로필 계약에서 확인하고 앱 CSS로 내부 값을 덮지 않는다.

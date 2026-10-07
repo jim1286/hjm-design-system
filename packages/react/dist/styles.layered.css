@@ -2947,4 +2947,12 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 [data-motion="reduced"] .hjm-segmented__highlight { transition: none; }
 @media (prefers-reduced-motion: reduce) { .hjm-segmented__highlight { transition: none; } }
 
+/* Explicit hidden rules beat the trigger's flex display; retained tools must leave focus and speech. */
+.hjm-collapsible__trigger[hidden], .hjm-collapsible__content[hidden] { display: none; }
+/* The enclosing Surface owns its color/elevation; this layer contributes decoration only. */
+.hjm-profile-card-effect { background: transparent !important; }
+/* Profile header columns cannot keep the row's minimum flex-basis as a tall empty spacer. */
+.hjm-screen[data-presentation="editorial"] .hjm-screen__heading,
+.hjm-screen[data-presentation="landscape"] .hjm-screen__heading { flex: 0 1 auto; inline-size: 100%; }
+
 }

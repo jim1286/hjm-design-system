@@ -1,3 +1,5 @@
+import { DesignProfileContext } from "./internal.js";
+import type { HjmDesignProfile } from "@hjmds/design-contracts/design-profile";
 import {
   designSystemEnvironmentDefaults,
   isLargeTextScale,
@@ -79,6 +81,8 @@ type HjmProviderEnvironmentProps = Readonly<{
    * following the OS theme and reduced-motion settings.
    */
   brandPalette?: HjmBrandPalette;
+  /** Appearance and interaction defaults defined once by the product. Explicit props win. */
+  designProfile?: HjmDesignProfile;
 }>;
 
 type HjmProviderValueProps = Readonly<{
@@ -92,6 +96,7 @@ type HjmProviderValueProps = Readonly<{
   density?: never;
   systemTheme?: never;
   brandPalette?: never;
+  designProfile?: never;
 }>;
 
 /**
@@ -128,6 +133,7 @@ export const HjmProvider = forwardRef<HTMLDivElement, HjmProviderProps>(
       density,
       systemTheme,
       brandPalette: suppliedBrandPalette,
+      designProfile: suppliedDesignProfile,
       host = "surface",
       value: suppliedValue,
       className,
@@ -137,6 +143,7 @@ export const HjmProvider = forwardRef<HTMLDivElement, HjmProviderProps>(
     ref,
   ) {
     const parent = useContext(HjmThemeContext);
+    const designProfile = suppliedDesignProfile ?? parent?.designProfile;
     const inheritedBrandPalette = useContext(HjmBrandPaletteContext);
     const brandPalette = suppliedBrandPalette ?? inheritedBrandPalette;
     const observesSystem = suppliedValue === undefined;
@@ -157,6 +164,7 @@ export const HjmProvider = forwardRef<HTMLDivElement, HjmProviderProps>(
     const value = suppliedValue ?? resolveDesignSystemProviderValue(input, {
       systemTheme: resolvedSystemTheme,
       ...(brandPalette === undefined ? {} : { brandPalette }),
+      ...(designProfile === undefined ? {} : { designProfile }),
       ...(parent === null ? {} : { parent: parent.environment }),
       ...(reducedMotion === undefined && parent === null
         ? { systemReducedMotion: prefersReducedMotion }
@@ -207,25 +215,28 @@ export const HjmProvider = forwardRef<HTMLDivElement, HjmProviderProps>(
 
     return (
       <HjmThemeContext.Provider value={value}>
-        <HjmBrandPaletteContext.Provider value={suppliedValue === undefined ? brandPalette : undefined}>
-          <TooltipCoordinatorContext.Provider value={tooltipCoordinator}>
-            <div
-              {...rest}
-              ref={ref}
-              className={classNames("hjm-root", className)}
-              data-hjm-provider=""
-              data-host={host}
-              data-motion={environment.reducedMotion ? "reduced" : "full"}
-              data-theme={environment.theme}
-              data-text-scale={environment.textScale}
-              data-large-text={largeText}
-              dir={environment.direction}
-              style={{ ...createHjmThemeStyle(value), ...style }}
-            >
-              {children}
-            </div>
-          </TooltipCoordinatorContext.Provider>
-        </HjmBrandPaletteContext.Provider>
+        <DesignProfileContext.Provider value={value.designProfile}>
+          <HjmBrandPaletteContext.Provider value={suppliedValue === undefined ? brandPalette : undefined}>
+            <TooltipCoordinatorContext.Provider value={tooltipCoordinator}>
+              <div
+                {...rest}
+                ref={ref}
+                className={classNames("hjm-root", className)}
+                data-hjm-provider=""
+                data-host={host}
+                data-motion={environment.reducedMotion ? "reduced" : "full"}
+                data-theme={environment.theme}
+                data-design-profile={value.designProfile?.id}
+                data-text-scale={environment.textScale}
+                data-large-text={largeText}
+                dir={environment.direction}
+                style={{ ...createHjmThemeStyle(value), ...style }}
+              >
+                {children}
+              </div>
+            </TooltipCoordinatorContext.Provider>
+          </HjmBrandPaletteContext.Provider>
+        </DesignProfileContext.Provider>
       </HjmThemeContext.Provider>
     );
   },

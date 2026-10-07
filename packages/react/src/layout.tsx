@@ -1,3 +1,4 @@
+import { useDesignProfileDefaults } from "./internal.js";
 import {
   resolveGridLayout,
   type GridDescriptor,
@@ -321,7 +322,7 @@ export const Text = forwardRef<HTMLElement, TextProps>(function Text(
     as = "span",
     variant = textRecipe.defaults.variant,
     tone = textRecipe.defaults.tone,
-    emphasis = textRecipe.defaults.emphasis,
+    emphasis: suppliedEmphasis,
     className,
     layoutStyle,
     style,
@@ -329,6 +330,8 @@ export const Text = forwardRef<HTMLElement, TextProps>(function Text(
   },
   ref,
 ) {
+  const profile = useDesignProfileDefaults();
+  const emphasis = suppliedEmphasis ?? textRecipe.defaults.emphasis;
   return createElement(as, {
     ...props,
     ref,
@@ -337,7 +340,7 @@ export const Text = forwardRef<HTMLElement, TextProps>(function Text(
     "data-tone": tone,
     "data-emphasis": emphasis,
     // Placement wins over the legacy `style`, matching Surface's ordering.
-    style: { ...style, ...layoutStyle },
+    style: { ...style, ...layoutStyle, ...(profile && suppliedEmphasis === undefined ? { fontWeight: profile.tokens.typography[variant].fontWeight } : {}) },
   });
 });
 
@@ -380,7 +383,7 @@ export const Surface = forwardRef<HTMLElement, SurfaceProps>(function Surface(
     "data-radius": radius,
     style: {
       padding: surfaceGeometry.paddings[padding],
-      borderRadius: surfaceGeometry.radii[radius],
+      borderRadius: `var(--hjm-radius-${radius})`,
       ...style,
       ...layoutStyle,
     },

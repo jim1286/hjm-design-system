@@ -37,7 +37,7 @@ const supplemental = new Set([
   "CodeBlock", "ActivityHeatmap",
   // Screen compositions reuse canonical primitives; they do not expand the frozen catalog.
   "SavedItemsScreen", "CommentThreadScreen", "ListDetailScreen", "EditorScreen", "ProfileScreen", "ModerationScreen", "MediaSelectionScreen", "PhotoSourceSheet", "SearchScreen", "PermissionScreen", "OnboardingScreen",
-  "ScreenLayout", "SettingsScreen", "NotificationInboxScreen", "NotificationItem", "ChatScreen", "MessageComposer", "ChatMessage",
+  "OverviewScreen", "ScreenLayout", "SettingsScreen", "NotificationInboxScreen", "NotificationItem", "ChatScreen", "MessageComposer", "ChatMessage",
   "KeyboardAvoiding", "KeyboardMotionProvider", "KeyboardDock", "KeyboardFormScrollView",
   "SortableCollection", "SwipeActions", "ContentTransition", "TextTransition", "Celebration",
   "SharedTransitionScreen", "SharedTransitionElement", "EffectSurface", "ProgressiveBlur",

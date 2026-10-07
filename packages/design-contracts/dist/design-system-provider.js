@@ -186,12 +186,14 @@ export function resolveDesignSystemEnvironment(input, options) {
 export function resolveDesignSystemProviderValue(input, options) {
     const environment = resolveDesignSystemEnvironment(input, options);
     const brandOverride = options.brandPalette?.[environment.theme];
+    const basePalette = options.designProfile?.palette[environment.theme] ?? THEMES[environment.theme];
     const value = {
         environment,
+        ...(options.designProfile === undefined ? {} : { designProfile: options.designProfile }),
         palette: {
             theme: brandOverride === undefined
-                ? THEMES[environment.theme]
-                : { ...THEMES[environment.theme], ...brandOverride },
+                ? basePalette
+                : { ...basePalette, ...brandOverride },
             statusAccents: ACCENTS[environment.theme],
             statusAccentFills: accentFill,
         },

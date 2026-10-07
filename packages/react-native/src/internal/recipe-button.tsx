@@ -3,7 +3,7 @@ import {
   isLargeTextScale,
   visibleControlHeight,
 } from "@hjmds/design-contracts/components/design-system-provider";
-import { control, radius, spacing } from "@hjmds/design-contracts/foundations";
+import { control, spacing } from "@hjmds/design-contracts/foundations";
 import {
   buttonRecipe,
   resolveButtonLabelLines,
@@ -71,7 +71,7 @@ export const RecipeButton = forwardRef<NativeView, RecipeButtonProps>(
     }: RecipeButtonProps,
     ref,
   ) {
-    const { colors, environment } = useHjmNativeTheme();
+    const { colors, environment, tokens } = useHjmNativeTheme();
     const labelLines = resolveButtonLabelLines(
       isLargeTextScale(environment.textScale),
     );
@@ -128,7 +128,7 @@ export const RecipeButton = forwardRef<NativeView, RecipeButtonProps>(
             borderColor: resolveColor(
               selectedContract?.border ?? toneContract.border,
             ),
-            borderRadius: radius[buttonRecipe.shapes[shape]],
+            borderRadius: tokens.radius[buttonRecipe.shapes[shape]],
             borderWidth: (selectedContract ?? toneContract).border ? 1 : 0,
             direction: environment.direction,
             flexDirection: "row",

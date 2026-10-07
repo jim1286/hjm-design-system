@@ -6,8 +6,9 @@ import { easing, motion as timing } from "@hjmds/design-contracts/foundations";
 import { useHjmTheme } from "./provider.js";
 /** Motion Primitives' keyed transition pattern, adapted to HJM's single active subtree.
  * No exiting interactive copy: it would duplicate fields and focus targets. See THIRD_PARTY_NOTICES. */
-export function ContentTransition({ stateKey, children, motion: preference = "system", preset = "fade", focusTarget, animateHeight = false, enterOnMount = false, layoutStyle }) {
-    const { environment } = useHjmTheme();
+export function ContentTransition({ stateKey, children, motion: preference = "system", preset: suppliedPreset, focusTarget, animateHeight = false, enterOnMount = false, layoutStyle }) {
+    const { environment, designProfile } = useHjmTheme();
+    const preset = suppliedPreset ?? designProfile?.interactions.contentTransition ?? "fade";
     const from = resolveContentTransition(preset, environment.direction);
     const enabled = preference !== "none" && !environment.reducedMotion;
     const frame = useRef(null);

@@ -126,6 +126,8 @@ describe("@hjmds/react-native package boundary", () => {
       "./date-entry",
       "./field-group",
       "./document-resource",
+      // Profiles are optional: core imports must not pull the preset registry.
+      "./design-profile",
     ];
     expect(Object.keys(packageJson.exports)).toEqual(expectedExportPaths);
     const familyTargets = expectedExportPaths.slice(1).filter((path) => path !== "./top-bar" && path !== "./bottom-cta").map((exportPath) => {

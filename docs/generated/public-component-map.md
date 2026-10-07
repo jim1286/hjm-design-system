@@ -4,7 +4,7 @@
 
 ## @hjmds/react
 
-고유 공개 컴포넌트 및 provider 이름 160개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 161개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -101,6 +101,7 @@
 | OnboardingScreen | 별도 보조 기능 | supplemental | ./screen-flows |
 | OtpField | OtpField | canonical | root, ./forms, ./otp-field |
 | OverlayStackProvider | Dialog | companion-or-alternative | root, ./overlay-stack |
+| OverviewScreen | 별도 보조 기능 | supplemental | ./design-profile |
 | Pagination | Pagination | canonical | root, ./navigation, ./pagination |
 | PasswordField | PasswordField | canonical | root, ./forms, ./password-field |
 | PermissionScreen | 별도 보조 기능 | supplemental | ./screen-flows |
@@ -171,7 +172,7 @@
 
 ## @hjmds/react-native
 
-고유 공개 컴포넌트 및 provider 이름 146개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 147개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -264,6 +265,7 @@
 | NumberField | NumberField | canonical | root, ./inputs, ./number-field |
 | OnboardingScreen | 별도 보조 기능 | supplemental | ./screen-flows |
 | OtpField | OtpField | canonical | root, ./inputs, ./otp-field |
+| OverviewScreen | 별도 보조 기능 | supplemental | ./design-profile |
 | PasswordField | PasswordField | canonical | root, ./inputs, ./password-field |
 | PermissionScreen | 별도 보조 기능 | supplemental | ./screen-flows |
 | PhotoSourceSheet | 별도 보조 기능 | supplemental | ./screen-flows |

@@ -49,6 +49,9 @@ const rendererBudgets = [
     // to those three pre-allowance limits; Node 24 additionally needs 100 gzip bytes
     // on display (18.4 kB measured). Other byte/optional-peer gates stay fixed.
     budgets: {
+      // Optional profile overview reuses ScreenLayout/Grid/disclosure/effect engines;
+      // reviewed 18 local modules, 124678 raw / 29326 gzip. No preset registry or motion peer.
+      "./design-profile": { modules: 16, raw: 120600, gzip: 28150 },
       // Glass header composition: 4 modules, 18730 raw / 5174 gzip; provider allowances apply.
       "./navigation-bar": { modules: 4, raw: 17500, gzip: 5000 },
       // GravityLetters provider graph: 19763 raw / 5556 gzip; bounded DOM motion, no peer.
@@ -388,6 +391,9 @@ const rendererBudgets = [
     // label/support presentation. Only its consuming graphs gain one local edge;
     // provider, native-linking and optional-peer boundaries remain unchanged.
     budgets: {
+      // Optional overview reuses existing screen/input engines; SVG decoration is an
+      // explicit optional peer of this subpath. Reviewed 19 modules, 199239/42907 B.
+      "./design-profile": { modules: 15, raw: 195600, gzip: 41300 },
       // Native opaque header fallback: 2 modules, 7123 raw / 2264 gzip; no blur peer.
       "./navigation-bar": { modules: 2, raw: 7500, gzip: 2500 },
       // GravityLetters uses canonical Text: 23498 raw / 6194 gzip, Core Animated only.
@@ -786,7 +792,7 @@ async function checkRenderer(renderer) {
     const regressions = [];
     // Opt-in peers must never become a hidden installation requirement of base entries.
     // Derive the peer list from the manifest so new optional runtimes cannot escape this gate.
-    const optionalEntries = new Set(["./avatar-blobatar-motion", "./progressive-blur", "./effect-surface", "./icon-lucide", "./avatar-blobatar", "./sortable", "./swipe-actions", "./content-transition", "./carousel-motion", "./celebration", "./screen-transition", "./qr-code", "./thinking-orb", "./toast-liquid", "./statistic-motion", "./menu-morph", "./image-viewer", "./keyboard-controller", "./sheet-gesture", "./context-menu-native"]);
+    const optionalEntries = new Set(["./design-profile", "./avatar-blobatar-motion", "./progressive-blur", "./effect-surface", "./icon-lucide", "./avatar-blobatar", "./sortable", "./swipe-actions", "./content-transition", "./carousel-motion", "./celebration", "./screen-transition", "./qr-code", "./thinking-orb", "./toast-liquid", "./statistic-motion", "./menu-morph", "./image-viewer", "./keyboard-controller", "./sheet-gesture", "./context-menu-native"]);
     if (!optionalEntries.has(exportPath)) {
       for (const [peer, metadata] of Object.entries(packageJson.peerDependenciesMeta ?? {})) {
         if (metadata.optional && measured.externals.some(specifier => specifier === peer || specifier.startsWith(`${peer}/`))) {

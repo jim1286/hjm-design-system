@@ -507,6 +507,12 @@
       "react-native": "./dist/document-resource.js",
       "import": "./dist/document-resource.js",
       "default": "./dist/document-resource.js"
+    },
+    "./design-profile": {
+      "types": "./dist/design-profile.d.ts",
+      "react-native": "./dist/design-profile.js",
+      "import": "./dist/design-profile.js",
+      "default": "./dist/design-profile.js"
     }
   },
   "files": [

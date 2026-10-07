@@ -6,11 +6,11 @@ import { getIconTransform, resolveIconDescriptor, } from "@hjmds/design-contract
 import { validateLayoutRegions, } from "@hjmds/design-contracts/components/layout";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { withAlpha } from "@hjmds/design-contracts/colors";
-import { glyph, shadow, typography, } from "@hjmds/design-contracts/foundations";
+import { glyph, fontFamily, } from "@hjmds/design-contracts/foundations";
 import { surfaceDefaults, surfaceGeometry, surfaceRecipe, } from "@hjmds/design-contracts/recipes/base";
 import { sectionRecipe, stackRecipe, textRecipe, } from "@hjmds/design-contracts/recipes";
 import { Children, forwardRef, isValidElement, useEffect, useMemo, useState, } from "react";
-import { PixelRatio, Text as NativeText, View, useWindowDimensions, } from "react-native";
+import { PixelRatio, Platform, Text as NativeText, View, useWindowDimensions, } from "react-native";
 import { useHjmNativeTheme } from "./provider.js";
 import { logicalTextAlign, resolveNativeTextScaleProps, } from "./internal/styles.js";
 import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
@@ -36,8 +36,15 @@ export const Layout = forwardRef(function Layout({ children, header, footer, sid
         : (_jsx(View, { ...sidebar.containerProps, accessibilityLabel: sidebar.label, children: sidebar.children }));
     return (_jsxs(View, { ...props, ref: ref, style: [{ flex: 1 }, style], children: [hasHeader ? _jsx(View, { ...headerProps, children: header }) : null, sidebar?.mode === "overlay" ? sidebar.renderOverlay(sidebarNode) : sidebarNode, _jsx(View, { ...mainProps, ref: mainRef, style: [{ flex: 1 }, mainProps?.style], children: children }), hasFooter ? _jsx(View, { ...footerProps, children: footer }) : null] }));
 });
-export const Text = forwardRef(function Text({ children, variant = textRecipe.defaults.variant, tone = textRecipe.defaults.tone, emphasis = textRecipe.defaults.emphasis, align, allowFontScaling, layoutStyle, style, ...props }, ref) {
-    const { colors, environment, textScaling } = useHjmNativeTheme();
+export const Text = forwardRef(function Text({ children, variant = textRecipe.defaults.variant, tone = textRecipe.defaults.tone, emphasis: suppliedEmphasis, align, allowFontScaling, layoutStyle, style, ...props }, ref) {
+    const { colors, environment, textScaling, tokens, designProfile } = useHjmNativeTheme();
+    const emphasis = suppliedEmphasis ?? textRecipe.defaults.emphasis;
+    const firstFont = tokens.fontFamily.ui[0];
+    // CSS generic monospace names are not iOS font names; translate the intent.
+    // Custom font registration remains the app's responsibility, as before.
+    const uiFont = firstFont === "ui-monospace" || firstFont === "monospace"
+        ? (Platform.OS === "ios" ? "Menlo" : "monospace")
+        : firstFont !== fontFamily.ui[0] ? firstFont : undefined;
     const toneColors = {
         primary: colors.text,
         body: colors.textBody,
@@ -49,10 +56,11 @@ export const Text = forwardRef(function Text({ children, variant = textRecipe.de
         inverse: colors.onPrimary,
     };
     const resolvedText = resolveNativeTextScaleProps(textScaling, [
-        typography[variant],
+        tokens.typography[variant],
         {
             color: toneColors[tone],
-            fontWeight: textRecipe.emphasis[emphasis],
+            fontWeight: designProfile && suppliedEmphasis === undefined ? tokens.typography[variant].fontWeight : textRecipe.emphasis[emphasis],
+            ...(uiFont === undefined ? {} : { fontFamily: uiFont }),
             textAlign: align ?? logicalTextAlign(environment.direction),
         },
         style,
@@ -64,19 +72,21 @@ function resolveThemeColor(colors, key) {
     return colors[key];
 }
 export function Surface({ tone = surfaceDefaults.tone, padding = surfaceDefaults.padding, radius: radiusValue = surfaceDefaults.radius, bordered, layoutStyle, ...props }) {
-    const { colors } = useHjmNativeTheme();
+    const { colors, tokens, designProfile } = useHjmNativeTheme();
     const normalizedTone = tone;
     const contract = surfaceRecipe[normalizedTone];
     const shouldDrawBorder = bordered ?? (surfaceDefaults.bordered || contract.borderAlways);
     const borderColor = resolveThemeColor(colors, contract.border);
     const elevatedStyle = contract.elevated
         ? {
-            elevation: 4,
+            // Android elevation approximates the selected shadow; a zero-opacity
+            // profile must also suppress its platform shadow. Keep legacy elevation otherwise.
+            elevation: designProfile ? (tokens.shadow.floating.opacity === 0 ? 0 : Math.max(tokens.shadow.floating.radius, Math.abs(tokens.shadow.floating.offsetY))) : 4,
             // Use the same floating surface token as Web instead of a separate blur.
-            shadowColor: shadow.floating.color,
-            shadowOffset: { width: 0, height: shadow.floating.offsetY },
-            shadowOpacity: shadow.floating.opacity,
-            shadowRadius: shadow.floating.radius,
+            shadowColor: tokens.shadow.floating.color,
+            shadowOffset: { width: 0, height: tokens.shadow.floating.offsetY },
+            shadowOpacity: tokens.shadow.floating.opacity,
+            shadowRadius: tokens.shadow.floating.radius,
         }
         : undefined;
     return (_jsx(View, { ...props, style: [
@@ -87,7 +97,7 @@ export function Surface({ tone = surfaceDefaults.tone, padding = surfaceDefaults
                         ? borderColor
                         : withAlpha(borderColor, contract.borderAlpha)
                     : "transparent",
-                borderRadius: surfaceGeometry.radii[radiusValue],
+                borderRadius: tokens.radius[radiusValue],
                 borderWidth: 1,
                 // A child image would otherwise spill past the rounded corner. An
                 // elevated tone opts out because clipping cuts off its own shadow.

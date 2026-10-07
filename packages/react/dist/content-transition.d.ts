@@ -17,7 +17,7 @@ export type ContentTransitionProps = {
 };
 /** Motion Primitives' keyed transition pattern, adapted to HJM's single active subtree.
  * No exiting interactive copy: it would duplicate fields and focus targets. See THIRD_PARTY_NOTICES. */
-export declare function ContentTransition({ stateKey, children, motion: preference, preset, focusTarget, animateHeight, enterOnMount, layoutStyle }: ContentTransitionProps): import("react").JSX.Element;
+export declare function ContentTransition({ stateKey, children, motion: preference, preset: suppliedPreset, focusTarget, animateHeight, enterOnMount, layoutStyle }: ContentTransitionProps): import("react").JSX.Element;
 export type TextTransitionProps = {
     preset?: ContentTransitionPreset;
     text: string;

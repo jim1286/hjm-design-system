@@ -1,6 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { isLargeTextScale, visibleControlHeight, } from "@hjmds/design-contracts/components/design-system-provider";
-import { control, radius, spacing } from "@hjmds/design-contracts/foundations";
+import { control, spacing } from "@hjmds/design-contracts/foundations";
 import { buttonRecipe, resolveButtonLabelLines, } from "@hjmds/design-contracts/recipes/base";
 import { Children, forwardRef } from "react";
 import { ActivityIndicator, Pressable, View, } from "react-native";
@@ -21,7 +21,7 @@ function joinTextChildren(children) {
         : children;
 }
 export const RecipeButton = forwardRef(function RecipeButton({ children, tone = buttonRecipe.defaults.tone, size = buttonRecipe.defaults.size, shape = buttonRecipe.defaults.shape, align = buttonRecipe.defaults.align, selected, disabled = false, loading = false, disableWhileLoading = false, growWithContent = false, loadingLabel, leading, trailing, fullWidth = false, hitSlop, layoutStyle, style, labelStyle, renderLoadingIndicator, accessibilityLabel, accessibilityState, onPress, onLongPress, ...props }, ref) {
-    const { colors, environment } = useHjmNativeTheme();
+    const { colors, environment, tokens } = useHjmNativeTheme();
     const labelLines = resolveButtonLabelLines(isLargeTextScale(environment.textScale));
     const inactive = disabled && !loading;
     const unavailable = disabled || (loading && disableWhileLoading);
@@ -50,7 +50,7 @@ export const RecipeButton = forwardRef(function RecipeButton({ children, tone = 
                 alignItems: "center",
                 backgroundColor: resolveColor(selectedContract?.background ?? toneContract.background),
                 borderColor: resolveColor(selectedContract?.border ?? toneContract.border),
-                borderRadius: radius[buttonRecipe.shapes[shape]],
+                borderRadius: tokens.radius[buttonRecipe.shapes[shape]],
                 borderWidth: (selectedContract ?? toneContract).border ? 1 : 0,
                 direction: environment.direction,
                 flexDirection: "row",

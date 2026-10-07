@@ -1,4 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { useDesignProfileDefaults } from "./internal.js";
 import { resolveGridLayout, } from "@hjmds/design-contracts/grid";
 import { resolveAspectRatioDescriptor, } from "@hjmds/design-contracts/components/aspect-ratio";
 import { resolveContainerDescriptor, } from "@hjmds/design-contracts/components/container";
@@ -89,7 +90,9 @@ export const Layout = forwardRef(function Layout({ children, header, footer, sid
                     ...mainStyle,
                 }, children: children }), hasFooter ? (_jsx("footer", { ...restFooterProps, className: classNames("hjm-layout__footer", footerClassName), children: footer })) : null] }));
 });
-export const Text = forwardRef(function Text({ as = "span", variant = textRecipe.defaults.variant, tone = textRecipe.defaults.tone, emphasis = textRecipe.defaults.emphasis, className, layoutStyle, style, ...props }, ref) {
+export const Text = forwardRef(function Text({ as = "span", variant = textRecipe.defaults.variant, tone = textRecipe.defaults.tone, emphasis: suppliedEmphasis, className, layoutStyle, style, ...props }, ref) {
+    const profile = useDesignProfileDefaults();
+    const emphasis = suppliedEmphasis ?? textRecipe.defaults.emphasis;
     return createElement(as, {
         ...props,
         ref,
@@ -98,7 +101,7 @@ export const Text = forwardRef(function Text({ as = "span", variant = textRecipe
         "data-tone": tone,
         "data-emphasis": emphasis,
         // Placement wins over the legacy `style`, matching Surface's ordering.
-        style: { ...style, ...layoutStyle },
+        style: { ...style, ...layoutStyle, ...(profile && suppliedEmphasis === undefined ? { fontWeight: profile.tokens.typography[variant].fontWeight } : {}) },
     });
 });
 export const Surface = forwardRef(function Surface({ as = "div", tone = surfaceDefaults.tone, bordered, padding = surfaceDefaults.padding, radius = surfaceDefaults.radius, className, layoutStyle, style, ...props }, ref) {
@@ -116,7 +119,7 @@ export const Surface = forwardRef(function Surface({ as = "div", tone = surfaceD
         "data-radius": radius,
         style: {
             padding: surfaceGeometry.paddings[padding],
-            borderRadius: surfaceGeometry.radii[radius],
+            borderRadius: `var(--hjm-radius-${radius})`,
             ...style,
             ...layoutStyle,
         },

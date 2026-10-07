@@ -6,8 +6,9 @@ import { useHjmNativeTheme } from "./provider.js";
 import { Text } from "./primitives.js";
 
 export type ContentTransitionProps = { preset?: ContentTransitionPreset; stateKey: string; children: ReactNode; motion?: "system" | "none"; animateHeight?: boolean; enterOnMount?: boolean };
-export function ContentTransition({ stateKey, children, motion: preference = "system", preset = "fade", animateHeight = false, enterOnMount = false }: ContentTransitionProps) {
-  const { environment } = useHjmNativeTheme();
+export function ContentTransition({ stateKey, children, motion: preference = "system", preset: suppliedPreset, animateHeight = false, enterOnMount = false }: ContentTransitionProps) {
+  const { environment, designProfile } = useHjmNativeTheme();
+  const preset = suppliedPreset ?? designProfile?.interactions.contentTransition ?? "fade";
   const from = resolveContentTransition(preset, environment.direction);
   const opacity = useRef(new Animated.Value(1)).current;
   const height = useRef(new Animated.Value(0)).current;

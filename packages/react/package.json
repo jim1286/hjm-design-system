@@ -502,6 +502,11 @@
       "types": "./dist/document-resource.d.ts",
       "import": "./dist/document-resource.js",
       "default": "./dist/document-resource.js"
+    },
+    "./design-profile": {
+      "types": "./dist/design-profile.d.ts",
+      "import": "./dist/design-profile.js",
+      "default": "./dist/design-profile.js"
     }
   },
   "files": [

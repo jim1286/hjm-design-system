@@ -1,6 +1,6 @@
 # 테마 주입 — 내 브랜드색으로 시작하기
 
-검토일: 2026-10-06 (`value` 중심 예시를 1.5.0 `brandPalette` prop 경로로 정정)
+검토일: 2026-10-07 (`value` 중심 예시를 1.5.0 `brandPalette` prop 경로로 정정)
 
 HJM은 `theme`(light/dark/system) 같은 **환경**과, 그 환경이 해석된 **값**을 분리해서
 받는다. 제품 브랜드색은 값 쪽에 넣는다. 이 문서는 새 제품이 처음 부딪히는 그 경로만
@@ -8,7 +8,7 @@ HJM은 `theme`(light/dark/system) 같은 **환경**과, 그 환경이 해석된 
 단일 원본이다.** 팔레트를 어떻게 고를지는 [theme-palette.md](./theme-palette.md), 색의 의미 구분은
 [identity.md](./identity.md)에 있다.
 
-## 두 가지 사용 방식
+## 제품 설정 사용 방식
 
 ### 1. 기본 팔레트로 시작 (환경만 넘긴다)
 
@@ -56,7 +56,7 @@ React Native도 같은 모양이다(`<HjmNativeProvider theme={preference} brand
 
 `value`(`resolveDesignSystemProviderValue` 결과 전체)는 1.4까지 브랜드를 넣는 유일한 방법이었고, 지금도
 타입상 지원한다. 하지만 `value`를 넘기면 Provider가 OS 설정 관찰을 멈추고 `brandPalette` 상속도 끊기므로
-브랜드 경로로 쓰지 않는다([brand-boundary.md §1](./brand-boundary.md#1-지원하는-경로는-brandpalette-하나다)).
+브랜드 경로로 쓰지 않는다([brand-boundary.md §1](./brand-boundary.md#1-지원하는-제품-설정-경로)).
 남은 용도는 다음뿐이다.
 
 - 테스트·스토리에서 환경을 결정적으로 고정할 때(SSR·테스트만 필요하면 `systemTheme` prop으로도 충분한지 먼저 본다).
@@ -73,10 +73,23 @@ import { checkBrandPaletteContrast } from "@hjmds/design-contracts/palette-contr
 expect(checkBrandPaletteContrast(PRODUCT_BRAND_PALETTE)).toEqual({ light: [], dark: [] });
 ```
 
+### 3. 표현·구성도 함께 선택 (`designProfile`, 실험·미게시)
+
+```tsx
+import { defineHjmDesignProfile } from "@hjmds/design-contracts/design-profile";
+const productDesign = defineHjmDesignProfile({ extends: "forest", id: "product-forest", compositions: { collection: "rows" } });
+<HjmProvider designProfile={productDesign}><App /></HjmProvider>
+// Native는 동일 데이터를 HjmNativeProvider.designProfile에 넣는다.
+```
+
+앱이 설정 파일을 소유하고 한 번 주입한다. 기본 팩은 참고용이며 제품 목적에 맞게 선택·수정한다.
+상태·서버 확정은 테마에 넣지 않는다. 현재 지원 API와 연결 범위는 [프로필 계약](design-profile.md)을 따른다.
+
 ## 덮어도 되는 것과 아닌 것
 
-규칙은 [brand-boundary.md](./brand-boundary.md)에 있다. 요약하면 `brandPalette`의 17개 semantic key만 바꿀 수 있고,
-상태 강조색과 컴포넌트별 색은 바꿀 수 없으며, `.hjm-*`·`--hjm-*` CSS 재정의는 지원하는 경로가 아니다.
+규칙은 [brand-boundary.md](./brand-boundary.md)에 있다. 색만 바꿀 때는 `brandPalette`의 17개 semantic key를 쓰고,
+표현·기본 전환·배치를 바꿀 때는 검증한 `designProfile` 축을 쓴다.
+상태 강조색과 임의 컴포넌트별 색은 바꿀 수 없으며, `.hjm-*`·`--hjm-*` CSS 재정의는 지원하는 경로가 아니다.
 
 ## 어댑터를 두는 이유
 

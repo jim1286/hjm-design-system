@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: `src/foundations.ts`(`shadow`·`opacity`·`stateLayer`·`overlay`·`backdrop`·`scrim`), `src/component-contracts.ts`(`floatingSurfaceContract`), `src/component-recipes.ts`(`dialogRecipe`·`sheetRecipe`·`toastRecipe`·`bottomCtaRecipe`), `packages/react/src/theme.ts`, `packages/react/src/styles.css`, `packages/react-native/src/primitives.tsx`
 - 스토리북: `배포/토큰/표면과 움직임/그림자와 투명도`
 
@@ -84,3 +84,10 @@ const s = shadow.floating;
 | HJM 목록 팝업 그림자 | `--hjm-shadow-floating`(Select·Menubar·DatePicker·Menu·Popover) | Modal 기반 메뉴는 해당 플랫폼 표면 계약 |
 
 2026-10-06 후속 검수에서 정의만 있던 Web 그림자 변수를 실제 떠 있는 표면에 연결했다. CommandPalette·Tour 같은 큰 강조 표면은 `shadow.overlay`, 일반 popup·Surface는 `shadow.floating`을 쓴다. Native Surface의 별도 blur 6도 floating token으로 맞췄다. 포커스 링·선택 테두리·스위치 손잡이의 inset 표현은 높이 그림자가 아니므로 각 컴포넌트 상태 계약을 유지한다.
+
+### 디자인 프로필(실험·미게시)
+
+위 표는 프로필 없는 기본값이다. 앱이 [디자인 프로필](../../design-profile.md)을 선택하면 연결된
+컴포넌트는 Web CSS 변수 또는 Native `theme.tokens`/semantic palette를 읽는다.
+직접 foundations를 import한 값은 기본 상수이므로 프로필 변경을 따라가지 않는다. 현재 연결 API의 범위는
+프로필 계약에서 확인하고 앱 CSS로 내부 값을 덮지 않는다.

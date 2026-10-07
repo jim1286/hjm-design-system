@@ -59,6 +59,7 @@ export function createHjmThemeStyle(
   value: DesignSystemProviderValue,
 ): HjmThemeStyle {
   const { environment, palette } = value;
+  const profileTokens = value.designProfile?.tokens;
   const style: HjmThemeStyle = {
     "--hjm-backdrop-modal": `color-mix(in srgb, ${backdrop.modal.color} ${backdrop.modal.opacity * 100}%, transparent)`,
     "--hjm-text-scale": environment.textScale,
@@ -80,10 +81,10 @@ export function createHjmThemeStyle(
   for (const [name, value] of Object.entries(spacing)) {
     style[`--hjm-space-${kebab(name)}`] = `${value}px`;
   }
-  for (const [name, value] of Object.entries(radius)) {
+  for (const [name, value] of Object.entries(profileTokens?.radius ?? radius)) {
     style[`--hjm-radius-${kebab(name)}`] = `${value}px`;
   }
-  for (const [name, value] of Object.entries(typography)) {
+  for (const [name, value] of Object.entries(profileTokens?.typography ?? typography)) {
     style[`--hjm-type-${kebab(name)}-size`] =
       `calc(${rem(value.fontSize)} * var(--hjm-text-scale))`;
     style[`--hjm-type-${kebab(name)}-line-height`] =
@@ -99,7 +100,7 @@ export function createHjmThemeStyle(
       : `${value}ms`;
   }
 
-  style["--hjm-font-family-ui"] = fontFamily.ui.join(", ");
+  style["--hjm-font-family-ui"] = (profileTokens?.fontFamily.ui ?? fontFamily.ui).join(", ");
   for (const [name, value] of Object.entries(stroke)) {
     style[`--hjm-stroke-${kebab(name)}`] = `${value}px`;
   }
@@ -144,7 +145,7 @@ export function createHjmThemeStyle(
   for (const [name, value] of Object.entries(layer)) {
     style[`--hjm-layer-${kebab(name)}`] = value;
   }
-  for (const [name, token] of Object.entries(shadow)) {
+  for (const [name, token] of Object.entries(profileTokens?.shadow ?? shadow)) {
     style[`--hjm-shadow-${kebab(name)}`] = shadowCss(token);
   }
   // Overlay chrome and sizes come from the recipes Native reads (1.5.0).

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, useSyncExternalStore, } from "react";
+import { createContext, useContext, useCallback, useEffect, useState, useSyncExternalStore, } from "react";
 export function classNames(...values) {
     const result = values.filter(Boolean).join(" ");
     return result.length > 0 ? result : undefined;
@@ -64,5 +64,11 @@ export function useElementWidth(externalRef) {
         return () => observer.disconnect();
     }, [node]);
     return [width, ref];
+}
+// This existing helper module is already used by provider and granular selection.
+// Keeping resolved data here avoids importing provider recipes or all preset packs.
+export const DesignProfileContext = createContext(undefined);
+export function useDesignProfileDefaults() {
+    return useContext(DesignProfileContext);
 }
 //# sourceMappingURL=internal.js.map

@@ -1,3 +1,4 @@
+import { useDesignProfileDefaults } from "./internal.js";
 import {
   headingRecipe,
   resolveHeadingSemanticLevel,
@@ -31,7 +32,9 @@ export const Heading = forwardRef<HTMLHeadingElement, HeadingProps>(function Hea
     ...(semanticLevel === undefined ? {} : { semanticLevel }),
   };
   validateHeadingDescriptor(descriptor);
-  const metrics = headingRecipe.levels[level];
+  const profile = useDesignProfileDefaults();
+  const profileRole = level === "level3" ? "heading" : level === "level4" ? "titleLarge" : level === "level5" ? "title" : undefined;
+  const metrics = (profileRole ? profile?.tokens.typography[profileRole] : undefined) ?? headingRecipe.levels[level];
   // Visual size and document level are separate axes: the element comes from
   // the semantic level, the type comes from the visual one.
   return createElement(

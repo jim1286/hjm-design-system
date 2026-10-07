@@ -1,7 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { visibleControlHeight } from "@hjmds/design-contracts/components/design-system-provider";
 import { resolveLinkDescriptor, } from "@hjmds/design-contracts/components/link";
-import { glyph, radius, spacing } from "@hjmds/design-contracts/foundations";
+import { glyph, spacing } from "@hjmds/design-contracts/foundations";
 import { bottomCtaRecipe, linkRecipe, iconButtonRecipe, resolveIconButtonPresentation, } from "@hjmds/design-contracts/recipes";
 import {} from "@hjmds/design-contracts/recipes/base";
 import { forwardRef } from "react";
@@ -50,7 +50,7 @@ export const IconButton = forwardRef(function IconButton({ label, children, tone
                 alignItems: "center",
                 backgroundColor: presentation.background ?? "transparent",
                 borderColor: presentation.border ?? "transparent",
-                borderRadius: radius[iconButtonRecipe.shapes[shape]],
+                borderRadius: theme.tokens.radius[iconButtonRecipe.shapes[shape]],
                 borderWidth: 1,
                 height: visibleDiameter,
                 justifyContent: "center",

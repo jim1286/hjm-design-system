@@ -1,6 +1,7 @@
+import type { HjmDesignProfile } from "@hjmds/design-contracts/design-profile";
 import { type DesignSystemDirection, type DesignSystemProviderValue, type DesignSystemTextScale, type ResolveDesignSystemEnvironmentOptions } from "@hjmds/design-contracts/components/design-system-provider";
 import type { ThemePreference } from "@hjmds/design-contracts/colors";
-import { spacing, radius, typography } from "@hjmds/design-contracts/foundations";
+import { spacing } from "@hjmds/design-contracts/foundations";
 import { type ReactNode } from "react";
 import type { NativeTextScaling } from "./internal/styles.js";
 export type HjmNativeTheme = DesignSystemProviderValue & Readonly<{
@@ -13,8 +14,10 @@ export type HjmNativeTheme = DesignSystemProviderValue & Readonly<{
     textScaling: NativeTextScaling;
     tokens: Readonly<{
         spacing: typeof spacing;
-        radius: typeof radius;
-        typography: typeof typography;
+        radius: HjmDesignProfile["tokens"]["radius"];
+        typography: HjmDesignProfile["tokens"]["typography"];
+        shadow: HjmDesignProfile["tokens"]["shadow"];
+        fontFamily: HjmDesignProfile["tokens"]["fontFamily"];
     }>;
 }>;
 /** Per-theme partial palette merged over the HJM defaults; see docs/brand-boundary.md. */
@@ -32,6 +35,8 @@ type HjmNativeProviderEnvironmentProps = Readonly<{
      * reduced-motion settings.
      */
     brandPalette?: HjmNativeBrandPalette;
+    /** Appearance and interaction defaults defined once by the product. Explicit props win. */
+    designProfile?: HjmDesignProfile;
 }>;
 type HjmNativeProviderValueProps = Readonly<{
     /** Pre-resolved environment and product palette for first-party renderer adaptation. */
@@ -42,6 +47,7 @@ type HjmNativeProviderValueProps = Readonly<{
     reducedMotion?: never;
     minimumVisualTarget?: never;
     brandPalette?: never;
+    designProfile?: never;
 }>;
 /** Window insets in points, usually `useSafeAreaInsets()` from react-native-safe-area-context. */
 export type HjmNativeSafeAreaInsets = Readonly<{
@@ -62,7 +68,7 @@ export type HjmNativeProviderProps = Readonly<{
      */
     safeAreaInsets?: HjmNativeSafeAreaInsets;
 }> & (HjmNativeProviderEnvironmentProps | HjmNativeProviderValueProps);
-export declare function HjmNativeProvider({ children, theme, direction, textScale, reducedMotion, minimumVisualTarget, brandPalette: suppliedBrandPalette, value: suppliedValue, safeAreaInsets: suppliedInsets, }: HjmNativeProviderProps): import("react").JSX.Element;
+export declare function HjmNativeProvider({ children, theme, direction, textScale, reducedMotion, minimumVisualTarget, brandPalette: suppliedBrandPalette, designProfile: suppliedDesignProfile, value: suppliedValue, safeAreaInsets: suppliedInsets, }: HjmNativeProviderProps): import("react").JSX.Element;
 export declare function useHjmNativeTheme(): HjmNativeTheme;
 /** Insets supplied to the nearest HjmNativeProvider; `{}` when the host supplied none. */
 export declare function useHjmNativeSafeAreaInsets(): HjmNativeSafeAreaInsets;

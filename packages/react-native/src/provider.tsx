@@ -1,3 +1,4 @@
+import type { HjmDesignProfile } from "@hjmds/design-contracts/design-profile";
 import {
   resolveDesignSystemProviderValue,
   validateDesignSystemProviderValue,
@@ -8,7 +9,7 @@ import {
   type ResolveDesignSystemEnvironmentOptions,
 } from "@hjmds/design-contracts/components/design-system-provider";
 import type { ThemePreference } from "@hjmds/design-contracts/colors";
-import { spacing, radius, typography } from "@hjmds/design-contracts/foundations";
+import { spacing, radius, typography, shadow, fontFamily } from "@hjmds/design-contracts/foundations";
 import {
   createContext,
   useContext,
@@ -39,8 +40,10 @@ export type HjmNativeTheme = DesignSystemProviderValue &
     textScaling: NativeTextScaling;
     tokens: Readonly<{
       spacing: typeof spacing;
-      radius: typeof radius;
-      typography: typeof typography;
+      radius: HjmDesignProfile["tokens"]["radius"];
+      typography: HjmDesignProfile["tokens"]["typography"];
+      shadow: HjmDesignProfile["tokens"]["shadow"];
+      fontFamily: HjmDesignProfile["tokens"]["fontFamily"];
     }>;
   }>;
 
@@ -60,6 +63,8 @@ type HjmNativeProviderEnvironmentProps = Readonly<{
    * reduced-motion settings.
    */
   brandPalette?: HjmNativeBrandPalette;
+  /** Appearance and interaction defaults defined once by the product. Explicit props win. */
+  designProfile?: HjmDesignProfile;
 }>;
 
 type HjmNativeProviderValueProps = Readonly<{
@@ -71,6 +76,7 @@ type HjmNativeProviderValueProps = Readonly<{
   reducedMotion?: never;
   minimumVisualTarget?: never;
   brandPalette?: never;
+  designProfile?: never;
 }>;
 
 /** Window insets in points, usually `useSafeAreaInsets()` from react-native-safe-area-context. */
@@ -156,10 +162,12 @@ export function HjmNativeProvider({
   reducedMotion,
   minimumVisualTarget,
   brandPalette: suppliedBrandPalette,
+  designProfile: suppliedDesignProfile,
   value: suppliedValue,
   safeAreaInsets: suppliedInsets,
 }: HjmNativeProviderProps) {
   const parent = useContext(HjmNativeThemeContext);
+  const designProfile = suppliedDesignProfile ?? parent?.designProfile;
   const inheritedInsets = useContext(HjmNativeSafeAreaContext);
   const safeAreaInsets = suppliedInsets ?? inheritedInsets;
   const inheritedBrandPalette = useContext(HjmNativeBrandPaletteContext);
@@ -196,6 +204,7 @@ export function HjmNativeProvider({
         systemTextScale,
         systemReducedMotion,
         ...(brandPalette === undefined ? {} : { brandPalette }),
+        ...(designProfile === undefined ? {} : { designProfile }),
         ...(parent === null ? {} : { parent: parent.environment }),
       },
     );
@@ -210,9 +219,9 @@ export function HjmNativeProvider({
         mode: textScalingMode,
         scale: resolved.environment.textScale,
       },
-      tokens: { spacing, radius, typography },
+      tokens: { spacing, radius, typography, shadow, fontFamily, ...resolved.designProfile?.tokens },
     };
-  }, [brandPalette, environment, parent, suppliedValue, systemReducedMotion, systemTextScale, systemTheme]);
+  }, [brandPalette, designProfile, environment, parent, suppliedValue, systemReducedMotion, systemTextScale, systemTheme]);
 
   return (
     <HjmNativeThemeContext.Provider value={contextValue}>

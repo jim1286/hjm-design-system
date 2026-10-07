@@ -11,7 +11,7 @@
 ## 언제 쓰나
 
 이웃 없이 혼자 접었다 펴는 한 덩어리에 쓴다. "더 보기", 필터 패널, 접히는 본문이 여기에 속한다.
-닫히면 내용은 트리에서 빠진다.
+기본값에서는 닫히면 내용은 트리에서 빠진다. `keepMounted`는 로컬 입력을 보존하고 hidden/display:none 접근성 경계로 내용을 숨긴다.
 
 ## 쓰지 않을 때
 
@@ -110,3 +110,9 @@ import { FolderPreview } from "@hjmds/react-native/folder-preview";
 
 - 현재 랜딩 스토리(Web·Native `Landing.stories.tsx`)는 FAQ 여러 항목을 `Collapsible` 반복으로 그린다. 서로 연결된
   여러 항목은 [Accordion](accordion.md)이 규칙이다(한 번에 하나 펼침·키보드 이동·heading 위계를 Accordion이 소유한다).
+
+### 프로필 도구의 표현
+
+2026-10-07 테마 전환 시 입력이 사라지는 문제를 피하려고 `presentation="inline"`과 `keepMounted`를 추가했다.
+inline은 트리거를 숨기고 항상 내용을 펼친다. 기본 disclosure는 기존 open/defaultOpen 규칙을 유지한다.
+keepMounted가 있어도 닫힌 내용은 포커스·스크린리더·터치 대상에서 제외한다. 단순 read-only 내용은 기존 기본값을 쓴다.

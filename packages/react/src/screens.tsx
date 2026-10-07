@@ -1,3 +1,4 @@
+import { resolveDesignProfileScreen, type DesignProfileScreenPresentation } from "@hjmds/design-contracts/design-profile-layout";
 import { MessageReactions } from "./internal/message-reactions.js";
 import type { ReactionPickerProps } from "./reaction-picker.js";
 import { Button, IconButton } from "./actions.js";
@@ -8,7 +9,7 @@ import { Heading } from "./heading.js";
 import { Spinner } from "./internal/spinner.js";
 import { Section, Stack, Text } from "./layout.js";
 import { ListRow, type ListRowProps } from "./display.js";
-import { classNames } from "./internal.js";
+import { classNames, useDesignProfileDefaults } from "./internal.js";
 import type { HjmCompositionStyleProp } from "./composition-style.js";
 
 export type ScreenLayoutProps = Readonly<{
@@ -16,6 +17,8 @@ export type ScreenLayoutProps = Readonly<{
   /** Preserve host navigation while the shared shell owns content and state. */
   header?: ReactNode;
   contentInset?: "default" | "none";
+  /** Explicit layout wins over the nearest design profile. */
+  presentation?: DesignProfileScreenPresentation;
   description?: string;
   leading?: ReactNode;
   actions?: ReactNode;
@@ -36,16 +39,21 @@ export type ScreenLayoutProps = Readonly<{
 }>;
 
 /** Shared screen shell. Routing, data, permission checks and mutation state remain product-owned. */
-export function ScreenLayout({ title, header, contentInset = "default", description, leading, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", as: Element = "main", className, layoutStyle }: ScreenLayoutProps) {
+export function ScreenLayout({ title, header, contentInset = "default", presentation: suppliedPresentation, description, leading, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", as: Element = "main", className, layoutStyle }: ScreenLayoutProps) {
   const id = useId();
+  // Screens historically work with the stylesheet alone. Optional context keeps
+  // that path while inheriting profiles from an enclosing Provider when present.
+  const designProfile = useDesignProfileDefaults();
+  const presentation = suppliedPresentation ?? designProfile?.screens.overview;
+  const profileLayout = presentation === undefined ? undefined : resolveDesignProfileScreen(presentation);
   const resolved = resolveScreenContentState(state);
   // Replacement text owns scrolling even when the ready state delegates it to
   // a virtual list. Use the rendered mode for keyboard access as well as CSS.
   const bodyScroll = resolved.replacesContent ? "screen" : scroll;
   const recipe = screenPatternRecipe;
-  return <Element aria-labelledby={header ? undefined : id} aria-label={header ? title : undefined} data-content-inset={contentInset} className={classNames("hjm-screen", className)}
-    style={{ "--hjm-screen-width": `${recipe.maxWidth}px`, "--hjm-screen-padding": `${contentInset === "none" ? 0 : recipe.padding}px`, "--hjm-screen-gap": `${recipe.sectionGap}px`, "--hjm-screen-item-gap": `${recipe.itemGap}px`, "--hjm-screen-state-gap": `${recipe.stateGap}px`, "--hjm-screen-header-min": `${recipe.headerMinWidth}px`, ...layoutStyle } as React.CSSProperties}>
-    {header ?? <header className="hjm-screen__header">
+  return <Element aria-labelledby={header ? undefined : id} aria-label={header ? title : undefined} data-content-inset={contentInset} data-presentation={presentation} className={classNames("hjm-screen", className)}
+    style={{ backgroundColor: designProfile?.material.canvas ? "transparent" : undefined, "--hjm-screen-width": `${profileLayout?.maxWidth ?? recipe.maxWidth}px`, "--hjm-screen-padding": `${contentInset === "none" ? 0 : recipe.padding}px`, "--hjm-screen-gap": `${profileLayout?.gap ?? recipe.sectionGap}px`, "--hjm-screen-item-gap": `${recipe.itemGap}px`, "--hjm-screen-state-gap": `${recipe.stateGap}px`, "--hjm-screen-header-min": `${recipe.headerMinWidth}px`, ...layoutStyle } as React.CSSProperties}>
+    {header ?? <header className="hjm-screen__header" style={profileLayout ? { flexDirection: profileLayout.headerAxis, alignItems: profileLayout.centered ? "center" : undefined, textAlign: profileLayout.centered ? "center" : undefined } : undefined}>
       {leading}<div className="hjm-screen__heading"><Heading level="level3" semanticLevel={1} id={id}>{title}</Heading>
         {description ? <Text as="p" tone="muted">{description}</Text> : null}</div>{actions}
     </header>}

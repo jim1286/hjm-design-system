@@ -26,8 +26,7 @@ import { resolveColorReference } from "@hjmds/design-contracts/color-references"
 import { withAlpha, type ThemeColors } from "@hjmds/design-contracts/colors";
 import {
   glyph,
-  shadow,
-  typography,
+  fontFamily,
   type TextVariant,
 } from "@hjmds/design-contracts/foundations";
 import {
@@ -61,6 +60,7 @@ import {
 } from "react";
 import {
   PixelRatio,
+  Platform,
   Text as NativeText,
   View,
   useWindowDimensions,
@@ -183,7 +183,7 @@ export const Text = forwardRef<NativeText, TextProps>(function Text(
     children,
     variant = textRecipe.defaults.variant,
     tone = textRecipe.defaults.tone,
-    emphasis = textRecipe.defaults.emphasis,
+    emphasis: suppliedEmphasis,
     align,
     allowFontScaling,
     layoutStyle,
@@ -192,7 +192,14 @@ export const Text = forwardRef<NativeText, TextProps>(function Text(
   },
   ref,
 ) {
-  const { colors, environment, textScaling } = useHjmNativeTheme();
+  const { colors, environment, textScaling, tokens, designProfile } = useHjmNativeTheme();
+  const emphasis = suppliedEmphasis ?? textRecipe.defaults.emphasis;
+  const firstFont = tokens.fontFamily.ui[0];
+  // CSS generic monospace names are not iOS font names; translate the intent.
+  // Custom font registration remains the app's responsibility, as before.
+  const uiFont = firstFont === "ui-monospace" || firstFont === "monospace"
+    ? (Platform.OS === "ios" ? "Menlo" : "monospace")
+    : firstFont !== fontFamily.ui[0] ? firstFont : undefined;
   const toneColors: Readonly<Record<TextTone, string>> = {
     primary: colors.text,
     body: colors.textBody,
@@ -206,10 +213,11 @@ export const Text = forwardRef<NativeText, TextProps>(function Text(
   const resolvedText = resolveNativeTextScaleProps(
     textScaling,
     [
-      typography[variant],
+      tokens.typography[variant],
       {
         color: toneColors[tone],
-        fontWeight: textRecipe.emphasis[emphasis],
+        fontWeight: designProfile && suppliedEmphasis === undefined ? tokens.typography[variant].fontWeight : textRecipe.emphasis[emphasis],
+        ...(uiFont === undefined ? {} : { fontFamily: uiFont }),
         textAlign: align ?? logicalTextAlign(environment.direction),
       },
       style,
@@ -255,19 +263,21 @@ export function Surface({
 
   ...props
 }: SurfaceProps) {
-  const { colors } = useHjmNativeTheme();
+  const { colors, tokens, designProfile } = useHjmNativeTheme();
   const normalizedTone = tone;
   const contract = surfaceRecipe[normalizedTone];
   const shouldDrawBorder = bordered ?? (surfaceDefaults.bordered || contract.borderAlways);
   const borderColor = resolveThemeColor(colors, contract.border);
   const elevatedStyle: ViewStyle | undefined = contract.elevated
     ? {
-        elevation: 4,
+        // Android elevation approximates the selected shadow; a zero-opacity
+        // profile must also suppress its platform shadow. Keep legacy elevation otherwise.
+        elevation: designProfile ? (tokens.shadow.floating.opacity === 0 ? 0 : Math.max(tokens.shadow.floating.radius, Math.abs(tokens.shadow.floating.offsetY))) : 4,
         // Use the same floating surface token as Web instead of a separate blur.
-        shadowColor: shadow.floating.color,
-        shadowOffset: { width: 0, height: shadow.floating.offsetY },
-        shadowOpacity: shadow.floating.opacity,
-        shadowRadius: shadow.floating.radius,
+        shadowColor: tokens.shadow.floating.color,
+        shadowOffset: { width: 0, height: tokens.shadow.floating.offsetY },
+        shadowOpacity: tokens.shadow.floating.opacity,
+        shadowRadius: tokens.shadow.floating.radius,
       }
     : undefined;
   return (
@@ -281,7 +291,7 @@ export function Surface({
               ? borderColor
               : withAlpha(borderColor, contract.borderAlpha)
             : "transparent",
-          borderRadius: surfaceGeometry.radii[radiusValue],
+          borderRadius: tokens.radius[radiusValue],
           borderWidth: 1,
           // A child image would otherwise spill past the rounded corner. An
           // elevated tone opts out because clipping cuts off its own shadow.

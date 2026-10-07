@@ -29,3 +29,9 @@ chrome이 따라오고 그걸 다시 CSS로 지우게 된다. 그래서 별도�
   host-renderer evidence; it does not claim physical keyboard, VoiceOver, or TalkBack verification.
 - Native and Web long-copy fixtures put the long label in the trigger itself. The child body stays
   short so the scenario tests the constrained interactive label rather than arbitrary content.
+
+## 프로필 도구의 표현
+
+2026-10-07 테마 전환 시 입력이 사라지는 문제를 피하려고 `presentation="inline"`과 `keepMounted`를 추가했다.
+inline은 트리거를 숨기고 항상 내용을 펼친다. 기본 disclosure는 기존 open/defaultOpen 규칙을 유지한다.
+keepMounted가 있어도 닫힌 내용은 포커스·스크린리더·터치 대상에서 제외한다. 단순 read-only 내용은 기존 기본값을 쓴다.

@@ -108,6 +108,8 @@ describe("@hjmds/react package boundary", () => {
       "./date-entry",
       "./field-group",
       "./document-resource",
+      // Profiles are optional: core imports must not pull the preset registry.
+      "./design-profile",
     ];
 
     expect(Object.keys(packageJson.exports)).toEqual([

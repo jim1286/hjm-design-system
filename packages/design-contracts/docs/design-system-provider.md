@@ -143,3 +143,10 @@ catalog 상태는 `beta`다. Web과 RN, 두 제품에서 값 해석·Context 전
 중첩 Provider의 omitted axis 상속 경계까지 확인됐다. 다만 이 상속 adapter가 포함된
 추가 제품 릴리스 증거는 아직 없으므로 roadmap은 다음 승격 조건을
 `evidence-needed`로 기록하고 `stable`을 과장하지 않는다.
+
+## 디자인 프로필 연결(실험·미게시)
+
+2026-10-07 사용자 요청으로 options의 `designProfile`에 정규화한 프로필을 받고 해석된 값에도 전달한다.
+기본 semantic 팔레트는 프로필의 현재 테마 값이며 `brandPalette`가 그 위에 병합된다. 환경·상태 강조색은
+기존 계약을 유지한다. 코어 Provider는 프로필 레지스트리를 런타임 import하지 않는다(type-only).
+renderer 기본값·선택 기준·부분 상속은 [디자인 프로필 계약](design-profile.md)을 따른다.

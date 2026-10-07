@@ -1,3 +1,4 @@
+import { resolveDesignProfileScreen, type DesignProfileScreenPresentation } from "@hjmds/design-contracts/design-profile-layout";
 import { MessageReactions } from "./internal/message-reactions.js";
 import type { ReactionPickerProps } from "./reaction-picker.js";
 import { Button, IconButton } from "./actions.js";
@@ -20,6 +21,8 @@ export type ScreenLayoutProps = Readonly<{
   header?: ReactNode;
   /** Hosts that already inset routes avoid applying the shared gutter twice. */
   contentInset?: "default" | "none";
+  /** Explicit layout wins over the nearest design profile. */
+  presentation?: DesignProfileScreenPresentation;
   description?: string;
   leading?: ReactNode;
   actions?: ReactNode;
@@ -37,12 +40,14 @@ export type ScreenLayoutProps = Readonly<{
   scrollProps?: Pick<ScrollViewProps, "refreshControl" | "keyboardDismissMode" | "showsVerticalScrollIndicator" | "showsHorizontalScrollIndicator">;
 }>;
 
-export function ScreenLayout({ title, header, contentInset = "default", description, leading, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", layoutStyle, testID, scrollRef, scrollProps }: ScreenLayoutProps) {
+export function ScreenLayout({ title, header, contentInset = "default", presentation: suppliedPresentation, description, leading, actions, notice, footer, state = { kind: "ready" }, stateAction, children, scroll = "screen", layoutStyle, testID, scrollRef, scrollProps }: ScreenLayoutProps) {
   const resolved = resolveScreenContentState(state);
-  const { colors, environment } = useHjmNativeTheme();
+  const { colors, environment, designProfile } = useHjmNativeTheme();
+  const presentation = suppliedPresentation ?? designProfile?.screens.overview;
+  const profileLayout = presentation === undefined ? undefined : resolveDesignProfileScreen(presentation);
   const recipe = screenPatternRecipe;
   const padding = contentInset === "none" ? 0 : recipe.padding;
-  const body = state.kind === "ready" ? children : <View style={{ marginVertical: "auto", flexShrink: 0, alignItems: "center", gap: recipe.stateGap, paddingVertical: recipe.sectionGap }}>
+  const body = state.kind === "ready" ? children : <View style={{ marginVertical: "auto", flexShrink: 0, alignItems: "center", gap: recipe.stateGap, paddingVertical: profileLayout?.gap ?? recipe.sectionGap }}>
     {/* Keep loading copy in Spinner's accessibility name rather than a visible
         second status, matching the shared spinner-only loading contract. */}
     {resolved.busy ? <Spinner label={[state.title, state.description].filter(Boolean).join(". ")} /> : <View accessibilityLiveRegion={resolved.announcement} style={{ alignItems: "center", gap: recipe.itemGap }}>
@@ -50,16 +55,17 @@ export function ScreenLayout({ title, header, contentInset = "default", descript
       {state.description ? <Text tone="muted" align="center">{state.description}</Text> : null}
     </View>}{stateAction}
   </View>;
-  return <View testID={testID} style={[{ flex: 1, minHeight: 0, width: "100%", maxWidth: recipe.maxWidth, alignSelf: "center", backgroundColor: colors.bg }, layoutStyle]}>
+  return <View testID={testID} style={[{ flex: 1, minHeight: 0, width: "100%", maxWidth: profileLayout?.maxWidth ?? recipe.maxWidth, alignSelf: "center", backgroundColor: designProfile?.material.canvas ? "transparent" : colors.bg }, layoutStyle]}>
     {/* Not TopBar: this is the page heading (titleLarge + description, actions wrap under the title at
         large text), while TopBar is a fixed-height app bar with a single-line title and safe-area top.
         Importing it would also pull navigation.js (tabs/gooey indicator) into every screens graph.
         Hosts that want the app bar pass <TopBar> through `header`. */}
-    {header ?? <View style={{ flexDirection: "row", flexWrap: "wrap", alignItems: "center", padding, gap: recipe.itemGap }}>
+    {header ?? <View style={{ flexDirection: profileLayout?.headerAxis ?? "row", flexWrap: "wrap", alignItems: profileLayout ? (profileLayout.centered ? "center" : "flex-start") : "center", padding, gap: recipe.itemGap }}>
       {/* Reserve a readable title column; wrapping moves actions below it at large text. */}
-      {leading}<View style={{ flexGrow: 1, flexShrink: 1, flexBasis: recipe.headerMinWidth * environment.textScale }}>
-        <Text variant="titleLarge" accessibilityRole="header">{title}</Text>
-        {description ? <Text tone="muted">{description}</Text> : null}
+      {leading}<View style={{ flexGrow: 1, flexShrink: 1, ...(profileLayout?.headerAxis === "column" ? { width: "100%" as const } : { flexBasis: recipe.headerMinWidth * environment.textScale }) }}>
+        {/* Profile headings share the Web heading role; preserve the legacy title role without a profile. */}
+        <Text variant={profileLayout ? "heading" : "titleLarge"} {...(profileLayout?.centered ? { align: "center" as const } : {})} accessibilityRole="header">{title}</Text>
+        {description ? <Text tone="muted" {...(profileLayout?.centered ? { align: "center" as const } : {})}>{description}</Text> : null}
       </View>{actions}
     </View>}
     {notice ? <View style={{ paddingHorizontal: padding }}>{notice}</View> : null}

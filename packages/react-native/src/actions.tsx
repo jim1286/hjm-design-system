@@ -5,7 +5,7 @@ import {
   type LinkDestination,
 } from "@hjmds/design-contracts/components/link";
 import type { SemanticIconName } from "@hjmds/design-contracts/components/icon";
-import { glyph, radius, spacing } from "@hjmds/design-contracts/foundations";
+import { glyph, spacing } from "@hjmds/design-contracts/foundations";
 import {
   bottomCtaRecipe,
   linkRecipe,
@@ -189,7 +189,7 @@ export const IconButton = forwardRef<NativeView, IconButtonProps>(function IconB
           alignItems: "center",
           backgroundColor: presentation.background ?? "transparent",
           borderColor: presentation.border ?? "transparent",
-          borderRadius: radius[iconButtonRecipe.shapes[shape]],
+          borderRadius: theme.tokens.radius[iconButtonRecipe.shapes[shape]],
           borderWidth: 1,
           height: visibleDiameter,
           justifyContent: "center",

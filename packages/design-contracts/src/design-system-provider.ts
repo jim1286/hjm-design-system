@@ -1,3 +1,4 @@
+import type { HjmDesignProfile } from "./design-profile.js";
 import type { ColorReferencePalette } from "./color-references.js";
 import { control, largeTextThreshold } from "./foundations.js";
 import {
@@ -134,6 +135,9 @@ export type ResolveDesignSystemEnvironmentOptions = Readonly<{
    * keys are replaced; the rest keep the HJM defaults.
    */
   brandPalette?: Readonly<Partial<Record<ResolvedTheme, Readonly<Partial<ThemeColors>>>>>;
+  /** Use defineHjmDesignProfile once at the product boundary; importing its registry
+   * here at runtime would force every granular component to bundle all reference packs. */
+  designProfile?: HjmDesignProfile;
   /** A nested renderer inherits the already-resolved parent before consulting OS defaults. */
   parent?: ResolvedDesignSystemEnvironment;
 }>;
@@ -142,6 +146,8 @@ export type DesignSystemProviderValue = Readonly<{
   environment: ResolvedDesignSystemEnvironment;
   /** Palette consumed directly by `resolveColorReference`. */
   palette: ColorReferencePalette;
+  /** Optional to preserve existing pre-resolved provider values. */
+  designProfile?: HjmDesignProfile;
 }>;
 
 const themeColorKeys = Object.keys(THEMES.light) as readonly (keyof typeof THEMES.light)[];
@@ -344,12 +350,14 @@ export function resolveDesignSystemProviderValue(
 ): DesignSystemProviderValue {
   const environment = resolveDesignSystemEnvironment(input, options);
   const brandOverride = options.brandPalette?.[environment.theme];
+  const basePalette = options.designProfile?.palette[environment.theme] ?? THEMES[environment.theme];
   const value = {
     environment,
+    ...(options.designProfile === undefined ? {} : { designProfile: options.designProfile }),
     palette: {
       theme: brandOverride === undefined
-        ? THEMES[environment.theme]
-        : { ...THEMES[environment.theme], ...brandOverride },
+        ? basePalette
+        : { ...basePalette, ...brandOverride },
       statusAccents: ACCENTS[environment.theme],
       statusAccentFills: accentFill,
     },

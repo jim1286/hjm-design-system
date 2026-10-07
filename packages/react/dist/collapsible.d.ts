@@ -6,6 +6,10 @@ export type CollapsibleProps = CollapsibleOpenState & Readonly<{
     trigger: ReactNode;
     children: ReactNode;
     disabled?: boolean;
+    /** Inline tools stay expanded without a disclosure trigger. */
+    presentation?: "disclosure" | "inline";
+    /** Preserve local input state while hidden; hidden content stays inaccessible. */
+    keepMounted?: boolean;
     className?: string;
     /** Canonical layout-only placement on the root element. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;

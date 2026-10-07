@@ -1,0 +1,202 @@
+import { THEMES } from "./colors.js";
+import { radius, fontFamily, typography, shadow, fontWeight } from "./foundations.js";
+import { checkPaletteContrast } from "./palette-contrast.js";
+import { resolveEffectSurface } from "./effect-surface.js";
+const neutral = {
+    id: "neutral", palette: THEMES,
+    tokens: { radius, fontFamily, typography, shadow },
+    material: { canvas: null, card: null },
+    interactions: { contentTransition: "fade", selectionMotion: "none" },
+    compositions: { collection: "rows", toolbar: "inline" },
+    screens: { overview: "dashboard" },
+};
+/** Profiles deliberately differ in interaction and arrangement, not just hue.
+ * No font asset is bundled or implied: custom font loading remains product-owned. */
+const presetInputs = {
+    retro: {
+        id: "retro",
+        palette: {
+            light: { bg: "#fff8e8", surface: "#fffdf5", surfaceAlt: "#eee0c5", surfaceAccent: "#f6d4a0", border: "#d1bd96", borderControl: "#75604b", primary: "#973c20", contentBrand: "#80321a", text: "#2c2119", textBody: "#413123", textMuted: "#594637", textSub: "#695646", textWeak: "#857461" },
+            dark: { bg: "#211a16", surface: "#2d241d", surfaceAlt: "#3b3025", surfaceAccent: "#5e3827", border: "#807260", borderControl: "#b7a387", primary: "#af5437", contentBrand: "#ffc38b", text: "#fff5e1", textBody: "#ead8bb", textMuted: "#d5c1a3", textSub: "#bea88b", textWeak: "#a18e74" },
+        },
+        tokens: { radius: { sm: 2, md: 4, lg: 6, xl: 8 } },
+        material: { canvas: { layers: ["noise"], intensity: 0.08, active: false, seed: "retro" } },
+        interactions: { contentTransition: "slide", selectionMotion: "none" },
+        compositions: { collection: "grid", toolbar: "inline" },
+        screens: { overview: "dashboard" },
+    },
+    paper: {
+        id: "paper",
+        palette: {
+            light: { bg: "#f9f5ed", surface: "#fffdf8", surfaceAlt: "#eee8dc", surfaceAccent: "#e7dac8", border: "#d6cabb", borderControl: "#776b5c", primary: "#665039", contentBrand: "#58432e", text: "#28231c", textBody: "#40382d", textMuted: "#5b5145", textSub: "#6e6253", textWeak: "#887b69" },
+            dark: { bg: "#1b1916", surface: "#27231e", surfaceAlt: "#332d25", surfaceAccent: "#4f4132", border: "#847561", borderControl: "#b8a68c", primary: "#83684c", contentBrand: "#e3bf91", text: "#f8f0e1", textBody: "#e5d9c4", textMuted: "#d0c0a6", textSub: "#b8a78d", textWeak: "#a18e72" },
+        },
+        tokens: { radius: { sm: 4, md: 6, lg: 8, xl: 12 } },
+        material: { canvas: { layers: ["grain"], intensity: 0.06, active: false, seed: "paper" } },
+        interactions: { contentTransition: "fade", selectionMotion: "none" },
+        compositions: { collection: "rows", toolbar: "collapsible" },
+        screens: { overview: "editorial" },
+    },
+    forest: {
+        id: "forest",
+        palette: {
+            light: { bg: "#f2f7ef", surface: "#fbfdf8", surfaceAlt: "#e0ebda", surfaceAccent: "#d5e8c9", border: "#bdcdb5", borderControl: "#65765c", primary: "#285c35", contentBrand: "#23512d", text: "#1d2b1b", textBody: "#30422c", textMuted: "#485c41", textSub: "#5c6e54", textWeak: "#7b8b71" },
+            dark: { bg: "#111c15", surface: "#1b2a1e", surfaceAlt: "#293a2a", surfaceAccent: "#304d32", border: "#6b816a", borderControl: "#95ac8d", primary: "#477c54", contentBrand: "#a8d994", text: "#eff7e9", textBody: "#d8e9cf", textMuted: "#bdd4b3", textSub: "#a1bd94", textWeak: "#87a17b" },
+        },
+        tokens: { radius: { sm: 10, md: 16, lg: 24, xl: 32 } },
+        material: { canvas: { layers: ["mesh", "glow"], intensity: 0.1, active: false, seed: "forest" } },
+        interactions: { contentTransition: "rise", selectionMotion: "slide" },
+        compositions: { collection: "cards", toolbar: "collapsible" },
+        screens: { overview: "landscape" },
+    },
+    minimal: {
+        id: "minimal",
+        palette: { light: { primary: "#404040", contentBrand: "#333333", surfaceAccent: "#eeeeee" }, dark: { primary: "#727272", contentBrand: "#dddddd", surfaceAccent: "#303030" } },
+        tokens: { radius: { sm: 4, md: 8, lg: 12, xl: 16 }, shadow: { raised: { opacity: 0 }, floating: { opacity: 0.08 } } },
+        interactions: { contentTransition: "fade", selectionMotion: "none" },
+        compositions: { collection: "rows", toolbar: "inline" }, screens: { overview: "dashboard" },
+    },
+    editorial: {
+        id: "editorial",
+        palette: { light: { primary: "#59435f", contentBrand: "#513a57", surfaceAccent: "#eee4f0" }, dark: { primary: "#846b8e", contentBrand: "#ead0f2", surfaceAccent: "#392a3e" } },
+        tokens: { radius: { sm: 0, md: 2, lg: 4, xl: 8 }, typography: { heading: { fontSize: 28, lineHeight: 38, fontWeight: fontWeight.medium }, body: { lineHeight: 24 } } },
+        interactions: { contentTransition: "rise", selectionMotion: "none" },
+        compositions: { collection: "rows", toolbar: "collapsible" }, screens: { overview: "editorial" },
+    },
+    brutalist: {
+        id: "brutalist",
+        palette: { light: { primary: "#171717", contentBrand: "#171717", surfaceAccent: "#e8ed91", border: "#171717" }, dark: { primary: "#727272", contentBrand: "#f0f3a3", surfaceAccent: "#393a1c", border: "#cccccc" } },
+        tokens: { radius: { sm: 0, md: 0, lg: 0, xl: 0 }, shadow: { raised: { radius: 0, offsetY: 4, opacity: 0.25 }, floating: { radius: 0, offsetY: 6, opacity: 0.3 } }, typography: { heading: { fontSize: 30, lineHeight: 38, fontWeight: fontWeight.heavy } } },
+        interactions: { contentTransition: "slide", selectionMotion: "none" },
+        compositions: { collection: "cards", toolbar: "inline" }, screens: { overview: "editorial" },
+    },
+    glass: {
+        id: "glass",
+        palette: { light: { primary: "#435e91", contentBrand: "#354c78", surfaceAccent: "#e4ecf7" }, dark: { primary: "#5673a3", contentBrand: "#c1d8ff", surfaceAccent: "#233654" } },
+        tokens: { radius: { sm: 12, md: 18, lg: 26, xl: 36 }, shadow: { floating: { radius: 24, opacity: 0.12, offsetY: 8 } } },
+        material: { canvas: { layers: ["mesh"], intensity: 0.16, active: false, seed: "glass" }, card: { layers: ["glow"], intensity: 0.06, active: false, seed: "glass-card" } },
+        interactions: { contentTransition: "fade", selectionMotion: "slide" },
+        compositions: { collection: "cards", toolbar: "inline" }, screens: { overview: "landscape" },
+    },
+    aurora: {
+        id: "aurora",
+        palette: { light: { primary: "#62409b", contentBrand: "#58388b", surfaceAccent: "#ece2fa" }, dark: { primary: "#8161b1", contentBrand: "#dbc3ff", surfaceAccent: "#392651" } },
+        tokens: { radius: { sm: 8, md: 14, lg: 22, xl: 30 } },
+        material: { canvas: { layers: ["mesh", "glow"], intensity: 0.2, active: true, period: 30, seed: "aurora" } },
+        interactions: { contentTransition: "scale", selectionMotion: "slide" },
+        compositions: { collection: "grid", toolbar: "collapsible" }, screens: { overview: "landscape" },
+    },
+    terminal: {
+        id: "terminal",
+        palette: { light: { primary: "#235837", contentBrand: "#245435", surfaceAccent: "#deefdf" }, dark: { primary: "#467f54", contentBrand: "#95e2a6", surfaceAccent: "#203b28" } },
+        tokens: { radius: { sm: 2, md: 4, lg: 6, xl: 8 }, fontFamily: { ui: fontFamily.code }, shadow: { raised: { opacity: 0 }, floating: { radius: 0, offsetY: 0, opacity: 0 } } },
+        interactions: { contentTransition: "fade", selectionMotion: "none" },
+        compositions: { collection: "rows", toolbar: "collapsible" }, screens: { overview: "dashboard" },
+    },
+    clay: {
+        id: "clay",
+        palette: { light: { primary: "#904663", contentBrand: "#803b57", surfaceAccent: "#f7e1eb" }, dark: { primary: "#a25e7d", contentBrand: "#f1bed4", surfaceAccent: "#482b3a" } },
+        tokens: { radius: { sm: 14, md: 22, lg: 32, xl: 44 }, shadow: { raised: { radius: 16, offsetY: 6, opacity: 0.12 }, floating: { radius: 28, offsetY: 12, opacity: 0.18 } } },
+        material: { card: { layers: ["grain"], intensity: 0.04, active: false, seed: "clay" } },
+        interactions: { contentTransition: "scale", selectionMotion: "slide" },
+        compositions: { collection: "cards", toolbar: "collapsible" }, screens: { overview: "dashboard" },
+    },
+};
+function freeze(value) {
+    if (value !== null && typeof value === "object") {
+        for (const item of Object.values(value))
+            freeze(item);
+        Object.freeze(value);
+    }
+    return value;
+}
+function choose(value, allowed, field) {
+    if (!allowed.includes(value))
+        throw new TypeError(`Unsupported design profile ${field}`);
+}
+function merge(base, input) {
+    const palette = {
+        light: { ...base.palette.light, ...input.palette?.light },
+        dark: { ...base.palette.dark, ...input.palette?.dark },
+    };
+    // fromEntries loses fixed keys; iteration over the complete base preserves every role.
+    const type = Object.fromEntries(Object.entries(base.tokens.typography).map(([key, value]) => [key, { ...value, ...input.tokens?.typography?.[key] }]));
+    // The complete base shadow record has the same key-preservation guarantee.
+    const elevation = Object.fromEntries(Object.entries(base.tokens.shadow).map(([key, value]) => [key, { ...value, ...input.tokens?.shadow?.[key] }]));
+    const profile = {
+        id: input.id ?? base.id, palette,
+        tokens: {
+            radius: { ...base.tokens.radius, ...input.tokens?.radius },
+            // Copy caller-owned arrays: freezing the resolved profile must never freeze app input.
+            fontFamily: { ui: [...(input.tokens?.fontFamily?.ui ?? base.tokens.fontFamily.ui)], code: [...(input.tokens?.fontFamily?.code ?? base.tokens.fontFamily.code)] },
+            typography: type, shadow: elevation,
+        },
+        material: { ...base.material, ...input.material },
+        interactions: { ...base.interactions, ...input.interactions },
+        compositions: { ...base.compositions, ...input.compositions },
+        screens: { ...base.screens, ...input.screens },
+    };
+    if (!profile.id.trim())
+        throw new TypeError("Design profile id must not be empty");
+    for (const mode of ["light", "dark"]) {
+        for (const [key, value] of Object.entries(palette[mode])) {
+            if (!(key in THEMES[mode]) || !/^#[0-9a-f]{6}$/i.test(value))
+                throw new TypeError(`Invalid design profile palette ${mode}.${key}`);
+        }
+        if (checkPaletteContrast(palette[mode]).length)
+            throw new RangeError(`Design profile ${mode} palette fails required contrast pairs`);
+    }
+    for (const [key, value] of Object.entries(profile.tokens.radius)) {
+        if (!(key in radius) || !Number.isFinite(value) || value < 0 || value > 999)
+            throw new RangeError("Invalid design profile radius");
+    }
+    // Circles/pills retain their semantic geometry; product corners apply to other roles.
+    if (profile.tokens.radius.full !== radius.full)
+        throw new RangeError("Design profile must preserve full radius");
+    for (const value of Object.values(type)) {
+        if (!Number.isFinite(value.fontSize) || value.fontSize < 11 || value.fontSize > 96 || !Number.isFinite(value.lineHeight) || value.lineHeight < value.fontSize || value.lineHeight > 144)
+            throw new RangeError("Invalid design profile typography");
+        choose(value.fontWeight, ["400", "500", "600", "700", "800"], "fontWeight");
+    }
+    for (const families of Object.values(profile.tokens.fontFamily)) {
+        if (!families.length || families.some(family => !family.trim()))
+            throw new TypeError("Design profile font families must not be empty");
+    }
+    for (const token of Object.values(elevation)) {
+        if (!/^#[0-9a-f]{6}$/i.test(token.color) || !Number.isFinite(token.opacity) || token.opacity < 0 || token.opacity > 1 || !Number.isFinite(token.radius) || token.radius < 0 || token.radius > 96 || !Number.isFinite(token.offsetY) || Math.abs(token.offsetY) > 96)
+            throw new RangeError("Invalid design profile shadow");
+    }
+    const material = Object.fromEntries(Object.entries(profile.material).map(([role, descriptor]) => {
+        if (descriptor === null)
+            return [role, null];
+        resolveEffectSurface(descriptor);
+        // Deep-copy material data as well: a preset resolver must not own caller state.
+        return [role, { ...descriptor, ...(descriptor.layers ? { layers: [...descriptor.layers] } : {}), ...(descriptor.colors ? { colors: descriptor.colors.map(color => ({ ...color })) } : {}) }];
+    }));
+    choose(profile.interactions.contentTransition, ["fade", "rise", "slide", "scale"], "contentTransition");
+    choose(profile.interactions.selectionMotion, ["none", "slide"], "selectionMotion");
+    choose(profile.compositions.collection, ["rows", "cards", "grid"], "collection");
+    choose(profile.compositions.toolbar, ["inline", "collapsible"], "toolbar");
+    choose(profile.screens.overview, ["dashboard", "editorial", "landscape"], "overview");
+    return freeze({ ...profile, material });
+}
+export const hjmDesignPresets = freeze({
+    neutral: merge(neutral, {}),
+    retro: merge(neutral, presetInputs.retro),
+    paper: merge(neutral, presetInputs.paper),
+    forest: merge(neutral, presetInputs.forest),
+    minimal: merge(neutral, presetInputs.minimal),
+    editorial: merge(neutral, presetInputs.editorial),
+    brutalist: merge(neutral, presetInputs.brutalist),
+    glass: merge(neutral, presetInputs.glass),
+    aurora: merge(neutral, presetInputs.aurora),
+    terminal: merge(neutral, presetInputs.terminal),
+    clay: merge(neutral, presetInputs.clay),
+});
+export function defineHjmDesignProfile(input = {}) {
+    const base = hjmDesignPresets[input.extends ?? "neutral"];
+    if (!base)
+        throw new TypeError("Unknown HJM design preset");
+    return merge(base, input);
+}
+//# sourceMappingURL=design-profile.js.map

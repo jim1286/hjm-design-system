@@ -3,7 +3,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { FixedGlyph } from "./internal/fixed-glyph.js";
 import { FieldMessage, NativeFieldFrame } from "./internal/field-frame.js";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
-import { glyph, radius, spacing, typography, motion as motionTiming, } from "@hjmds/design-contracts/foundations";
+import { glyph, spacing, typography, motion as motionTiming, } from "@hjmds/design-contracts/foundations";
 import { fieldRecipe, } from "@hjmds/design-contracts/recipes/base";
 import { chipRecipe, searchFieldRecipe, segmentedControlRecipe, selectionControlRecipe, selectionGroupRecipe, switchRecipe, } from "@hjmds/design-contracts/recipes";
 import { visibleControlHeight } from "@hjmds/design-contracts/components/design-system-provider";
@@ -76,7 +76,7 @@ const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultV
     const placeholderColor = search
         ? resolveColorReference(searchFieldRecipe.colors.placeholder, theme.palette)
         : colors[fieldRecipe.placeholder.color];
-    const textStyle = typography[search ? searchSizing.textVariant : fieldRecipe.textVariant];
+    const textStyle = theme.tokens.typography[search ? searchSizing.textVariant : fieldRecipe.textVariant];
     // Native TextInput scales its text without enlarging a fixed frame (BT-QA-020).
     // Size the one-line frame for the same scale instead of capping accessible text.
     const frameTextScale = textScaling.mode === "controlled"
@@ -110,7 +110,7 @@ const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultV
             : Math.max(hjmCompactMultiline ? fieldRecipe.minHeight : fieldRecipe.multilineMinHeight, textStyle.lineHeight * minVisibleLines +
                 fieldRecipe.paddingVertical * 2)
         : Math.max(search ? searchSizing.minHeight : fieldRecipe.minHeight, singleLineMinHeight);
-    const controlRadius = radius[search
+    const controlRadius = theme.tokens.radius[search
         ? searchFieldRecipe.shapes[resolvedShape]
         : fieldRecipe.shapes[resolvedShape]];
     const inputTextScaleProps = resolveNativeTextScaleProps(textScaling, [
@@ -333,7 +333,7 @@ layoutStyle, allowFontScaling, onBlur, onFocus, ...props }, ref) {
     }, [complete, onComplete, value]);
     const metrics = otpFieldRecipe.sizes[size];
     const activeIndex = Math.min(value.length, length - 1);
-    const slotHeight = Math.max(metrics.slotSize, typography[metrics.textVariant].lineHeight * theme.environment.textScale + spacing.xs * 2);
+    const slotHeight = Math.max(metrics.slotSize, theme.tokens.typography[metrics.textVariant].lineHeight * theme.environment.textScale + spacing.xs * 2);
     const baseBorder = resolveColorReference(otpFieldRecipe.slot.border, theme.palette);
     const focusBorder = resolveColorReference(otpFieldRecipe.slot.focusBorder, theme.palette);
     const invalidBorder = resolveColorReference(otpFieldRecipe.slot.invalidBorder, theme.palette);
@@ -386,7 +386,7 @@ layoutStyle, allowFontScaling, onBlur, onFocus, ...props }, ref) {
                                                 alignItems: "center",
                                                 backgroundColor: theme.colors.bg,
                                                 borderColor,
-                                                borderRadius: presentation === "underline" ? 0 : radius[otpFieldRecipe.slot.radius],
+                                                borderRadius: presentation === "underline" ? 0 : theme.tokens.radius[otpFieldRecipe.slot.radius],
                                                 // Underline changes only decoration; one TextInput still owns edits and autofill.
                                                 borderWidth: presentation === "underline" ? 0 : otpFieldRecipe.slot.borderWidth,
                                                 borderBottomWidth: presentation === "underline" ? 2 : otpFieldRecipe.slot.borderWidth,
@@ -452,7 +452,7 @@ function ChoiceRow({ kind, label, description, checked, disabled, readOnly, requ
     // applies controlled textScale even with allowFontScaling=false, clipping at 200%.
     const defaultIndicator = kind === "radio" ? (checked === true ? (_jsx(View, { style: {
             backgroundColor: indicatorColor,
-            borderRadius: radius.full,
+            borderRadius: theme.tokens.radius.full,
             height: metrics.control * selectionControlRecipe.radioDotRatio,
             width: metrics.control * selectionControlRecipe.radioDotRatio,
         } })) : null) : checked ? (_jsx(NativeText, { accessible: false, allowFontScaling: false, style: { ...typography.label, color: indicatorColor, textAlign: "center" }, children: checked === "mixed" ? "−" : "✓" })) : null;
@@ -476,7 +476,7 @@ function ChoiceRow({ kind, label, description, checked, disabled, readOnly, requ
                 borderColor: plateBorder
                     ? resolveColorReference(plateBorder, theme.palette)
                     : "transparent",
-                borderRadius: radius[plate.radius],
+                borderRadius: theme.tokens.radius[plate.radius],
                 borderWidth: plate.borderWidth,
                 direction: theme.environment.direction,
                 flexDirection: "row",
@@ -499,7 +499,7 @@ function ChoiceRow({ kind, label, description, checked, disabled, readOnly, requ
                             ? selectionControlRecipe.states.checkedBackground
                             : selectionControlRecipe.states.idleBackground, theme.palette),
                         borderColor: resolveColorReference(controlBorder, theme.palette),
-                        borderRadius: radius[selectionControlRecipe.shapes[kind]],
+                        borderRadius: theme.tokens.radius[selectionControlRecipe.shapes[kind]],
                         borderWidth: 1,
                         height: metrics.control,
                         justifyContent: "center",
@@ -714,10 +714,10 @@ function NativeSelectionHighlight({ rect, selection, reducedMotion, pills, disab
             settle(); });
         return () => { animations.forEach(animation => animation.stop()); sub.remove(); };
     }, [rect.x, rect.y, rect.width, rect.height, selection, reducedMotion, positions]);
-    return _jsx(Animated.View, { pointerEvents: "none", accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { position: "absolute", left: positions.x, top: positions.y, width: positions.width, height: positions.height, borderRadius: pills ? segmentedControlRecipe.pills.radius : radius[segmentedControlRecipe.item.radius], backgroundColor: resolveColorReference(pills ? segmentedControlRecipe.pills.selectedBackground : segmentedControlRecipe.item.selectedBackground, theme.palette), borderColor: resolveColorReference(segmentedControlRecipe.item.selectedBorder, theme.palette), borderWidth: pills ? 0 : segmentedControlRecipe.item.selectedBorderWidth, opacity: disabled ? segmentedControlRecipe.item.disabledOpacity : 1 } });
+    return _jsx(Animated.View, { pointerEvents: "none", accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { position: "absolute", left: positions.x, top: positions.y, width: positions.width, height: positions.height, borderRadius: pills ? segmentedControlRecipe.pills.radius : theme.tokens.radius[segmentedControlRecipe.item.radius], backgroundColor: resolveColorReference(pills ? segmentedControlRecipe.pills.selectedBackground : segmentedControlRecipe.item.selectedBackground, theme.palette), borderColor: resolveColorReference(segmentedControlRecipe.item.selectedBorder, theme.palette), borderWidth: pills ? 0 : segmentedControlRecipe.item.selectedBorderWidth, opacity: disabled ? segmentedControlRecipe.item.disabledOpacity : 1 } });
 }
 export function SegmentedControl(props) {
-    const { label, items, value, defaultValue, onValueChange, size = segmentedControlRecipe.defaults.size, presentation = "connected", selectionMotion = "none", disabled = false, layoutStyle, style, } = props;
+    const { label, items, value, defaultValue, onValueChange, size = segmentedControlRecipe.defaults.size, presentation = "connected", selectionMotion: suppliedSelectionMotion, disabled = false, layoutStyle, style, } = props;
     // Removed aliases must not silently change the selected collection in JavaScript callers.
     if ("options" in props || !Array.isArray(items))
         throw new TypeError("SegmentedControl requires items; options was removed");
@@ -762,13 +762,14 @@ export function SegmentedControl(props) {
     }, [collectionFallback, controlled, setSelected, storedValueValid]);
     const [itemRects, setItemRects] = useState({});
     const selectedRect = itemRects[selected];
+    const selectionMotion = suppliedSelectionMotion ?? theme.designProfile?.interactions.selectionMotion ?? "none";
     const movingHighlight = selectionMotion === "slide" && selectedRect !== undefined;
     const highlightRect = selectedRect && pills ? { ...selectedRect, y: selectedRect.y + segmentedControlRecipe.pills.inset, height: selectedRect.height - 2 * segmentedControlRecipe.pills.inset } : selectedRect;
     return (_jsxs(View, { accessibilityLabel: label, accessibilityRole: "radiogroup", style: [
             {
                 backgroundColor: pills ? "transparent" : resolveColorReference(segmentedControlRecipe.container.background, theme.palette),
                 borderColor: resolveColorReference(segmentedControlRecipe.container.border, theme.palette),
-                borderRadius: radius[segmentedControlRecipe.container.radius],
+                borderRadius: theme.tokens.radius[segmentedControlRecipe.container.radius],
                 borderWidth: pills ? 0 : segmentedControlRecipe.container.borderWidth,
                 direction: environment.direction,
                 flexDirection: stacked ? "column" : "row",
@@ -807,7 +808,7 @@ export function SegmentedControl(props) {
                             borderColor: isSelected && !movingHighlight
                                 ? resolveColorReference(segmentedControlRecipe.item.selectedBorder, theme.palette)
                                 : "transparent",
-                            borderRadius: radius[segmentedControlRecipe.item.radius],
+                            borderRadius: theme.tokens.radius[segmentedControlRecipe.item.radius],
                             borderWidth: !pills && isSelected
                                 ? segmentedControlRecipe.item.selectedBorderWidth
                                 : 0,
@@ -869,7 +870,7 @@ export function Chip({ label, size = chipRecipe.defaults.size, disabled = false,
                 alignSelf: "flex-start",
                 backgroundColor: resolveColorReference(presentation.background, theme.palette),
                 borderColor: resolveColorReference(presentation.border, theme.palette),
-                borderRadius: radius[chipRecipe.radius],
+                borderRadius: theme.tokens.radius[chipRecipe.radius],
                 borderWidth: chipRecipe.borderWidth,
                 direction: theme.environment.direction,
                 flexDirection: "row",

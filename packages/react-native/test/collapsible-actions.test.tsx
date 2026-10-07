@@ -1,3 +1,4 @@
+import * as React from "react";
 import { act, create, type ReactTestRenderer } from "react-test-renderer";
 import { Pressable } from "react-native";
 import { afterEach, expect, it } from "vitest";
@@ -46,4 +47,16 @@ it("exposes expanded accessibility state and toggles content through the native 
   act(() => trigger().props.onPress());
   expect(trigger().props.accessibilityState.expanded).toBe(false);
   expect(renderer.root.findAllByType(Text).map((node) => node.props.children)).toEqual(["배송 안내", "▸"]);
+});
+
+it("retains local content on collapse and expands inline tools without an accessible trigger", () => {
+  let mounts = 0;
+  function Draft() { React.useEffect(() => { mounts += 1; }, []); return <Text>초안</Text>; }
+  act(() => { renderer = create(<HjmNativeProvider><Collapsible trigger="도구" defaultOpen keepMounted><Draft /></Collapsible></HjmNativeProvider>); });
+  act(() => renderer.root.findByType(Pressable).props.onPress());
+  expect(mounts).toBe(1);
+  expect(renderer.root.findAll(node => node.props.importantForAccessibility === "no-hide-descendants").length).toBeGreaterThan(0);
+  act(() => renderer.update(<HjmNativeProvider><Collapsible trigger="도구" presentation="inline" keepMounted><Draft /></Collapsible></HjmNativeProvider>));
+  expect(mounts).toBe(1);
+  expect(renderer.root.findByType(Pressable).props.style.display).toBe("none");
 });

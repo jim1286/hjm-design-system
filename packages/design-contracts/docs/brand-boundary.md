@@ -1,6 +1,6 @@
 # 브랜드 경계 — 제품이 바꿀 수 있는 것과 그 경로
 
-상태: 규범 · 2026-09-26 · 이 문서가 브랜드·테마 주입 규칙의 단일 원본이다.
+상태: 규범 · 검토일: 2026-10-07 · 이 문서가 브랜드·테마 주입 규칙의 단일 원본이다.
 [theming.md](./theming.md)는 사용법 예시, [consumer-policy.md](./consumer-policy.md)는 채택 정책,
 [design-system-provider.md](./design-system-provider.md)는 환경 축 설계를 다루며 브랜드 규칙은 여기로 링크한다.
 
@@ -9,11 +9,11 @@ CSS 변수 재정의, 제품 자체 토큰 생성기)였고, 문서 세 개가 �
 (`.hjm-*` 재정의 금지 vs 특이도를 맞추면 허용, 부분 덮어쓰기 배제 vs `brandPalette` 권장). 그리고 제품 팔레트의
 대비를 아무도 검사하지 않았다. 이 문서가 그 셋을 하나로 정한다.
 
-## 1. 지원하는 경로는 `brandPalette` 하나다
+## 1. 지원하는 제품 설정 경로
 
-- 제품 브랜드는 Provider의 `brandPalette` prop으로 넣는다(`<HjmProvider brandPalette={…}>`,
+- 색만 바꾸는 제품 브랜드는 Provider의 `brandPalette` prop으로 넣는다(`<HjmProvider brandPalette={…}>`,
   `<HjmNativeProvider brandPalette={…}>`, 1.5.0). theme별로 17개 `ThemeColors` key 중 필요한 것만 넘기고,
-  나머지는 HJM 기본값을 쓴다(부분 병합). Provider는 계속 OS theme·글자 크기·모션 설정을 따르고,
+  나머지는 선택된 프로필 또는 HJM 기본값을 쓴다(부분 병합). Provider는 계속 OS theme·글자 크기·모션 설정을 따르고,
   중첩 Provider는 가장 가까운 상위의 `brandPalette`를 물려받는다.
 - 상태 강조색(`statusAccents`·`statusAccentFills`)은 덮을 수 없다. "오류·성공"과 "브랜드"가 같은 색이 되는
   것을 막는다.
@@ -24,11 +24,20 @@ CSS 변수 재정의, 제품 자체 토큰 생성기)였고, 문서 세 개가 �
   브랜드 경로가 아니다. 부분 병합으로 표현할 수 없는 요구는 계약 공백이므로 이슈로 올린다.
   17개 key를 모두 채운 `brandPalette`는 허용되지만 아래 대비 검사를 반드시 통과해야 한다.
 
+2026-10-07 사용자 요청으로 색뿐 아니라 질감·컴포넌트 기본 전환·구성·화면 배치를 한 번 선택하는
+[디자인 프로필](./design-profile.md)을 추가했다(현재 실험·미게시). `defineHjmDesignProfile`로 정규화한
+앱 소유 데이터를 Provider의 `designProfile`로 주입한다. CSS/전체 value 우회나 테마별 상태 엔진 복제는
+허용하지 않는다. `brandPalette`는 프로필의 해당 light/dark 팔레트 위에 병합된다. 글꼴 자산·로고·문구·데이터는
+제품 소유이며 현재 연결 범위와 미지원 표현은 프로필 계약에 명시한다.
+
 ## 2. 모든 브랜드 팔레트는 대비 검사를 통과해야 한다
 
 `@hjmds/design-contracts/palette-contrast`의 `checkBrandPaletteContrast(brandPalette)`가 Provider와 같은 방식으로
 theme별 병합 결과를 검사하고, theme별 기준 미달 쌍을 돌려준다. 반환 객체의 `light`와 `dark` 배열이 모두 비어 있어야 한다(MUST). 제품은 이 호출을
 자기 테스트에 두어 팔레트 변경마다 실행한다. 전체 팔레트는 `checkPaletteContrast(palette)`를 쓴다.
+프로필도 쓸 때는 기본 팔레트만 검사하는 `checkBrandPaletteContrast` 대신 각 모드의
+`{ ...designProfile.palette[mode], ...brandPalette[mode] }` 최종 결과를 `checkPaletteContrast`로 검사한다.
+프로필 자체의 검증이 뒤에 얹은 브랜드색의 대비까지 보장하지는 않는다.
 
 | 쌍 | 최소 | 근거 |
 | --- | --- | --- |
@@ -84,6 +93,6 @@ HJM 기본 light·dark 팔레트도 같은 검사를 통과한다(`test/palette-
 HJM: semantic color role과 light/dark 대비, spacing·type scale·radius·motion·touch target, component anatomy·상태·
 키보드·screen-reader 행동, loading·empty·error·disabled·focus 문법.
 
-제품: 이름·로고·대표 이미지, `brandPalette`로 표현한 브랜드 색, 도메인 상태 → `AccentTone` 매핑, 콘텐츠 밀도와
+제품: 이름·로고·대표 이미지, 검증한 `designProfile` 데이터와 `brandPalette`로 표현한 브랜드 색, 도메인 상태 → `AccentTone` 매핑, 콘텐츠 밀도와
 정보 우선순위, copy·i18n·내비게이션 구조. 제품 고유 gradient는 light/dark·on-color 대비와 reduce-motion을 제품 테스트로
 검증한다([consumer-policy.md §4](./consumer-policy.md#4-제품-정체성-경계)).

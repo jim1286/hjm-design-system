@@ -1,3 +1,4 @@
+import { useDesignProfileDefaults } from "./internal.js";
 import {
   chipRecipe,
   iconRecipe,
@@ -820,7 +821,7 @@ export const SegmentedControl = forwardRef<
     onValueChange,
     size = segmentedControlRecipe.defaults.size,
     presentation = "connected",
-    selectionMotion = "none",
+    selectionMotion: suppliedSelectionMotion,
     name,
     className,
     layoutStyle,
@@ -829,6 +830,8 @@ export const SegmentedControl = forwardRef<
   },
   ref,
 ) {
+  const designProfile = useDesignProfileDefaults();
+  const selectionMotion = suppliedSelectionMotion ?? designProfile?.interactions.selectionMotion ?? "none";
   validateItems("SegmentedControl", items);
   const descriptors = items.map((item) => ({
     id: item.value,

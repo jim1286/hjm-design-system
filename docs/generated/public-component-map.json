@@ -905,6 +905,15 @@
         "role": "companion-or-alternative"
       },
       {
+        "name": "OverviewScreen",
+        "source": "packages/react/src/design-profile.tsx",
+        "entries": [
+          "./design-profile"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
+      },
+      {
         "name": "Pagination",
         "source": "packages/react/src/pagination.tsx",
         "entries": [
@@ -2422,6 +2431,15 @@
         ],
         "canonicalComponent": "OtpField",
         "role": "canonical"
+      },
+      {
+        "name": "OverviewScreen",
+        "source": "packages/react-native/src/design-profile.tsx",
+        "entries": [
+          "./design-profile"
+        ],
+        "canonicalComponent": null,
+        "role": "supplemental"
       },
       {
         "name": "PasswordField",

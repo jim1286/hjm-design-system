@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: `src/foundations.ts`(`typography`·`heading`·`fontFamily`·`fontWeight`·`letterSpacing`·`numeric`·`largeTextThreshold`), `src/component-recipes.ts`(`textRecipe`), `packages/react/src/theme.ts`, `packages/react/src/provider.tsx`, `packages/react-native/src/provider.tsx`
 - 스토리북: `배포/토큰/색과 글자/타이포그래피`
 
@@ -87,3 +87,10 @@ import { Heading } from "@hjmds/react-native/heading";
 | 단위 | rem(16px 기준) × `--hjm-text-scale` | dp. OS 글자 크기를 따르고, Provider `textScale`을 주면 HJM이 한 번만 곱한다 |
 | 서체 | `--hjm-font-family-ui` 목록 | OS 기본 서체(HJM이 `fontFamily`를 지정하지 않음) |
 | 큰 글자 판정 | 루트 `data-large-text` | `isLargeTextScale(environment.textScale)` |
+
+### 디자인 프로필(실험·미게시)
+
+위 표는 프로필 없는 기본값이다. 앱이 [디자인 프로필](../../design-profile.md)을 선택하면 연결된
+컴포넌트는 Web CSS 변수 또는 Native `theme.tokens`/semantic palette를 읽는다.
+직접 foundations를 import한 값은 기본 상수이므로 프로필 변경을 따라가지 않는다. 현재 연결 API의 범위는
+프로필 계약에서 확인하고 앱 CSS로 내부 값을 덮지 않는다.

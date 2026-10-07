@@ -1,3 +1,4 @@
+import type { HjmDesignProfile } from "@hjmds/design-contracts/design-profile";
 import { type DesignSystemDensity, type DesignSystemDirection, type DesignSystemProviderValue, type DesignSystemTextScale, type ResolveDesignSystemEnvironmentOptions } from "@hjmds/design-contracts/components/design-system-provider";
 import type { ResolvedTheme, ThemePreference } from "@hjmds/design-contracts/colors";
 import { type HTMLAttributes, type ReactNode } from "react";
@@ -26,6 +27,8 @@ type HjmProviderEnvironmentProps = Readonly<{
      * following the OS theme and reduced-motion settings.
      */
     brandPalette?: HjmBrandPalette;
+    /** Appearance and interaction defaults defined once by the product. Explicit props win. */
+    designProfile?: HjmDesignProfile;
 }>;
 type HjmProviderValueProps = Readonly<{
     /** Complete, validated environment and semantic product palette. */
@@ -38,6 +41,7 @@ type HjmProviderValueProps = Readonly<{
     density?: never;
     systemTheme?: never;
     brandPalette?: never;
+    designProfile?: never;
 }>;
 /**
  * How the provider's own host element participates in layout and painting.

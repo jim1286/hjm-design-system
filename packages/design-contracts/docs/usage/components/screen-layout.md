@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 미게시(1.12.1 이후)
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [반복 화면 조합](../../screen-patterns.md), Web·Native `src/screens.tsx`·`src/screen-flows.tsx`; 기존 개별 지침을 새 규격으로 통합. 예제 스토리는 2026-10-06 사용자 승인으로 스토리북 배포([승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정)). 스토리북 배포는 API 게시가 아니다(`적용` 참고)
 - 스토리북: `배포/화면/화면 틀과 도구/화면 골격과 상태`
 
@@ -79,6 +79,7 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 | `stateAction` | `ReactNode` | 없음 | 상태 안내 아래 행동(재시도 등) |
 | `scroll` | `"screen"` · `"content"` | `"screen"` | `content`는 본문 자식(가상화 목록)이 스크롤을 소유한다. 상태 교체 중에는 `screen`으로 돌아간다 |
 | `contentInset` | `"default"` · `"none"` | `"default"` | `none`은 헤더·notice·본문·footer padding을 0으로(Native는 footer 위 테두리도 뺀다) |
+| `presentation` | `"dashboard"` · `"editorial"` · `"landscape"` | 가장 가까운 profile.screens.overview / 없으면 기존 골격 | 미게시 실험. 명시값이 프로필을 이긴다. 헤더 배치·읽기 폭만 바꾸고 상태·입력·행동 슬롯은 유지한다 |
 | `as` (Web) | `"main"` · `"section"` | `"main"` | 제품 셸에 이미 `<main>`이 있으면 `section` |
 | `layoutStyle` | `HjmCompositionStyleProp` | 없음 | 화면 루트 배치 전용(예: 분할 화면의 `flex`·`width`). ScreenLayout 위에 만든 화면은 모두 이 prop을 루트까지 넘긴다 |
 | `className` (Web) | `string` | 없음 | 식별·배치 보조. 색·여백을 덮지 않는다 |
@@ -117,3 +118,10 @@ import { ScreenLayout } from "@hjmds/react-native/screens";
 ## 함정
 
 - 이미 `<main>`이 있는 제품 셸 안에서는 `as="section"`을 준다. 중첩 main이 생긴다.
+
+### 디자인 프로필의 화면 표현
+
+`presentation` 명시값, 가장 가까운 프로필의 screens.overview, 기존 화면 골격 순으로 선택한다.
+dashboard는 가로 헤더/1200 목록 폭, editorial은 세로 헤더/720 읽기 폭, landscape는 중앙 세로 헤더/1200 폭이다.
+폭은 foundations의 contentMaxWidth/readingMaxWidth다. 프로필을 지정하지 않으면 기존 recipe 배치를 유지한다.
+같은 header/body/notice/footer 및 상태 엔진을 유지하며 입력 subtree를 테마별로 교체하지 않는다.

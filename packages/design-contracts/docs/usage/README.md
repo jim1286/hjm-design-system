@@ -107,6 +107,7 @@
 | [NumberField](components/number-field.md) | 입력 | 범위가 정해진 **정확한 수 하나**를 입력받을 때 쓴다. | 배포 | Web · Native |
 | [OnboardingScreen](components/onboarding-screen.md) | 화면/소개 | 첫 실행 소개·초기 설정처럼 **몇 단계를 차례로 넘기는 화면**에 쓴다. | 배포 | Web · Native |
 | [OtpField](components/otp-field.md) | 입력 | 문자·메일로 받은 **숫자 인증번호**를 칸 모양으로 입력받을 때 쓴다. | 배포 | Web · Native |
+| [OverviewScreen](components/overview-screen.md) | 레이아웃 | 같은 데이터와 기능을 유지하면서 테마별 행·카드·격자와 도구 배치를 선택하는 목록 화면에 쓴다. | 실험 | Web · Native |
 | [Pagination](components/pagination.md) | 탐색 | 총 개수(또는 총 페이지 수)가 정해진 결과 집합에서 사용자가 **임의의 페이지로 바로 이동**해야 할 때 Web에서 쓴다. | 배포 | Web |
 | [PasswordField](components/password-field.md) | 입력 | 비밀번호를 입력받고, 필요할 때만 값을 눈으로 확인하게 할 때 쓴다. | 배포 | Web · Native |
 | [PermissionScreen](components/permission-screen.md) | 화면/소개 | 카메라·위치·알림 같은 권한이 **왜 필요한지 설명하고 다음 행동을 고르게 하는** 화면에 쓴다. | 배포 | Web · Native |
@@ -222,6 +223,7 @@
 | [복합 입력 모음](compositions/compound-controls.md) | 비교와 검증 | 기존 컨트롤을 묶은 네 가지 복합 입력(소요 시간, 버튼 자리 확인, 이모지 반응, 알림 종)을 화면 안 한 블록으로 둘 때 쓴다. | 배포 | Web · Native |
 | [시각 효과 모음](compositions/visual-foundations.md) | 비교와 검증 | 배경 질감, 의미 이름 아이콘, 사진 없는 프로필 얼굴, 문장 전환처럼 화면의 분위기를 더하는 선택 표현을 고를 때 이 모음을 본다. | 배포 | Web · Native |
 | [웹 전용 보조 컴포넌트](compositions/web-additions.md) | 비교와 검증 | Web에만 있는 보조 컴포넌트 세 개(색 고르기, 문서 워터마크, 스크롤 중 고정되는 실행 영역)를 실제 쓰임 하나씩과 함께 보여 주는 모음이다. | 배포 | Web |
+| [테마 조합](compositions/design-profile-comparison.md) | 비교와 검증 | 같은 기능에 10가지 표현을 적용하고 앱의 프로필 선택을 검토할 때 쓴다. | 실험 | Web · Native |
 | [토스트 배치 비교](compositions/toast-layout.md) | 비교와 검증 | Toast 카드 한 장의 내부 배치(톤 배지·제목·설명·닫기·실행 버튼)와 화면 위 위치를 좁은 폭·큰 글자·긴 문구·톤별로 확인하는 비교 스토리다. | 배포 | Web |
 | [환경 조합 검증](compositions/environment-matrix.md) | 비교와 검증 | 제품 화면이 테마·쓰기 방향·글자 크기·모션 설정이 달라져도 같은 의미를 유지하는지 확인할 때, 어떤 환경 조합과 검증 항목을 골라 볼지 정하는 기준표로 쓴다. | 배포 | Web |
 

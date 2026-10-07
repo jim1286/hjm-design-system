@@ -99,3 +99,20 @@ describe("brandPalette prop", () => {
     expect(defaults.palette.theme.primary).not.toBe("#123456");
   });
 });
+
+describe("designProfile inheritance", () => {
+  it("inherits a reference pack through nested providers and keeps brand overrides above it", async () => {
+    const { hjmDesignPresets } = await import("@hjmds/design-contracts/design-profile");
+    const values: HjmNativeTheme[] = [];
+    act(() => {
+      renderer = create(<HjmNativeProvider theme="dark" designProfile={hjmDesignPresets.forest} brandPalette={{ dark: { primary: "#123456" } }}>
+        <HjmNativeProvider textScale={2}><Probe onRender={value => values.push(value)} /></HjmNativeProvider>
+      </HjmNativeProvider>);
+    });
+    expect(values[0]!.designProfile).toBe(hjmDesignPresets.forest);
+    expect(values[0]!.tokens.radius.lg).toBe(24);
+    expect(values[0]!.colors.primary).toBe("#123456");
+    expect(values[0]!.colors.bg).toBe(hjmDesignPresets.forest.palette.dark.bg);
+    expect(values[0]!.environment.textScale).toBe(2);
+  });
+});

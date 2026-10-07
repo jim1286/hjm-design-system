@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: `src/foundations.ts`(`radius`), `src/base-recipes.ts`(`buttonRecipe.shapes`·`fieldRecipe.shapes`·`surfaceDefaults`), `src/component-recipes.ts`, `packages/react/src/theme.ts`
 - 스토리북: `배포/토큰/표면과 움직임/둥글기`
 
@@ -51,3 +51,10 @@ const styles = StyleSheet.create({ thumb: { borderRadius: radius.md, overflow: "
 - `border-radius: 10px`처럼 토큰에 없는 값을 쓰지 않는다.
 - HJM 컴포넌트의 radius를 `style`·`className`으로 덮지 않는다. Button·필드는 `shape`, Surface는 `radius` prop으로만 고른다.
 - 원형을 만들려고 `50%`나 폭의 절반을 계산하지 않는다. `radius.full`을 쓴다.
+
+### 디자인 프로필(실험·미게시)
+
+위 표는 프로필 없는 기본값이다. 앱이 [디자인 프로필](../../design-profile.md)을 선택하면 연결된
+컴포넌트는 Web CSS 변수 또는 Native `theme.tokens`/semantic palette를 읽는다.
+직접 foundations를 import한 값은 기본 상수이므로 프로필 변경을 따라가지 않는다. 현재 연결 API의 범위는
+프로필 계약에서 확인하고 앱 CSS로 내부 값을 덮지 않는다.

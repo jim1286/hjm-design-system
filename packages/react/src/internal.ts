@@ -1,4 +1,7 @@
+import type { HjmDesignProfile } from "@hjmds/design-contracts/design-profile";
 import {
+  createContext,
+  useContext,
   useCallback,
   useEffect,
   useState,
@@ -108,4 +111,11 @@ export function useElementWidth<Element extends HTMLElement>(
   }, [node]);
 
   return [width, ref] as const;
+}
+
+// This existing helper module is already used by provider and granular selection.
+// Keeping resolved data here avoids importing provider recipes or all preset packs.
+export const DesignProfileContext = createContext<HjmDesignProfile | undefined>(undefined);
+export function useDesignProfileDefaults(): HjmDesignProfile | undefined {
+  return useContext(DesignProfileContext);
 }

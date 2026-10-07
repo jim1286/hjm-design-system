@@ -16,6 +16,10 @@ export type CollapsibleProps = CollapsibleOpenState &
     trigger: ReactNode;
     children: ReactNode;
     disabled?: boolean;
+    /** Inline tools stay expanded without a disclosure trigger. */
+    presentation?: "disclosure" | "inline";
+    /** Preserve local input state while hidden; hidden content stays inaccessible. */
+    keepMounted?: boolean;
     /** Canonical layout-only placement. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
     /**
@@ -25,12 +29,12 @@ export type CollapsibleProps = CollapsibleOpenState &
     style?: StyleProp<ViewStyle>;
   }>;
 
-export function Collapsible({ trigger, children, disabled = false, layoutStyle, style, ...openState }: CollapsibleProps) {
+export function Collapsible({ trigger, children, disabled = false, presentation = "disclosure", keepMounted = false, layoutStyle, style, ...openState }: CollapsibleProps) {
   warnDeprecatedStyleProps("Collapsible", { style }, "layoutStyle for placement; collapsibleRecipe owns appearance");
   validateCollapsibleOpenState(openState as CollapsibleOpenState);
   const controlled = openState.open !== undefined;
   const [internalOpen, setInternalOpen] = useState(openState.defaultOpen ?? false);
-  const open = openState.open ?? internalOpen;
+  const open = presentation === "inline" || (openState.open ?? internalOpen);
   return (
     <View style={[{ gap: collapsibleRecipe.gap }, style, layoutStyle]}>
       <Pressable
@@ -44,18 +48,15 @@ export function Collapsible({ trigger, children, disabled = false, layoutStyle, 
         }}
         // The trigger is the only control here, so it keeps the shared 44 target like Web
         // `.hjm-collapsible__trigger`; a one-line text trigger was ~20 tall (2026-10-06 follow-up).
-        style={{ minHeight: control.minTouchTarget, flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: collapsibleRecipe.gap }}
+        style={{ display: presentation === "inline" ? "none" : "flex", minHeight: control.minTouchTarget, flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: collapsibleRecipe.gap }}
       >
         {typeof trigger === "string" ? <Text>{trigger}</Text> : trigger}
         {/* Decoration only: the expanded state travels through accessibilityState. */}
         <Text accessibilityElementsHidden importantForAccessibility="no">{open ? "▾" : "▸"}</Text>
       </Pressable>
-      {/*
-        Unmounted when closed rather than hidden: content left in the tree stays
-        reachable by the screen reader, which contradicts the collapsed state.
-        There is no aria-controls on native — the nesting is the relationship.
-      */}
-      {open ? <View>{children}</View> : null}
+      {/* Display and accessibility agree: retained input state must not leave
+          collapsed tools reachable to assistive technology or hit testing. */}
+      {open || keepMounted ? <View accessibilityElementsHidden={!open} importantForAccessibility={open ? "auto" : "no-hide-descendants"} style={{ display: open ? "flex" : "none" }}>{children}</View> : null}
     </View>
   );
 }

@@ -1,3 +1,4 @@
+import { type DesignProfileScreenPresentation } from "@hjmds/design-contracts/design-profile-layout";
 import type { ReactionPickerProps } from "./reaction-picker.js";
 import { type Ref, type ReactNode } from "react";
 import { ScrollView, type TextInput, type ScrollViewProps } from "react-native";
@@ -10,6 +11,8 @@ export type ScreenLayoutProps = Readonly<{
     header?: ReactNode;
     /** Hosts that already inset routes avoid applying the shared gutter twice. */
     contentInset?: "default" | "none";
+    /** Explicit layout wins over the nearest design profile. */
+    presentation?: DesignProfileScreenPresentation;
     description?: string;
     leading?: ReactNode;
     actions?: ReactNode;
@@ -26,7 +29,7 @@ export type ScreenLayoutProps = Readonly<{
     scrollRef?: Ref<ScrollView>;
     scrollProps?: Pick<ScrollViewProps, "refreshControl" | "keyboardDismissMode" | "showsVerticalScrollIndicator" | "showsHorizontalScrollIndicator">;
 }>;
-export declare function ScreenLayout({ title, header, contentInset, description, leading, actions, notice, footer, state, stateAction, children, scroll, layoutStyle, testID, scrollRef, scrollProps }: ScreenLayoutProps): import("react").JSX.Element;
+export declare function ScreenLayout({ title, header, contentInset, presentation: suppliedPresentation, description, leading, actions, notice, footer, state, stateAction, children, scroll, layoutStyle, testID, scrollRef, scrollProps }: ScreenLayoutProps): import("react").JSX.Element;
 export type SettingsScreenSection = Readonly<{
     id: string;
     title: string;

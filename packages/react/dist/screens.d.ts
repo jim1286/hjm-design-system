@@ -1,3 +1,4 @@
+import { type DesignProfileScreenPresentation } from "@hjmds/design-contracts/design-profile-layout";
 import type { ReactionPickerProps } from "./reaction-picker.js";
 import { type Ref, type ReactNode } from "react";
 import { type MessageAttachmentDescriptor, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState } from "@hjmds/design-contracts/screen-patterns";
@@ -8,6 +9,8 @@ export type ScreenLayoutProps = Readonly<{
     /** Preserve host navigation while the shared shell owns content and state. */
     header?: ReactNode;
     contentInset?: "default" | "none";
+    /** Explicit layout wins over the nearest design profile. */
+    presentation?: DesignProfileScreenPresentation;
     description?: string;
     leading?: ReactNode;
     actions?: ReactNode;
@@ -27,7 +30,7 @@ export type ScreenLayoutProps = Readonly<{
     layoutStyle?: HjmCompositionStyleProp;
 }>;
 /** Shared screen shell. Routing, data, permission checks and mutation state remain product-owned. */
-export declare function ScreenLayout({ title, header, contentInset, description, leading, actions, notice, footer, state, stateAction, children, scroll, as: Element, className, layoutStyle }: ScreenLayoutProps): import("react").JSX.Element;
+export declare function ScreenLayout({ title, header, contentInset, presentation: suppliedPresentation, description, leading, actions, notice, footer, state, stateAction, children, scroll, as: Element, className, layoutStyle }: ScreenLayoutProps): import("react").JSX.Element;
 export type SettingsScreenSection = Readonly<{
     id: string;
     title: string;
