@@ -27,9 +27,9 @@ HJM HjmProvider의 controlled theme/designProfile 및 environment.reducedMotion�
 
 | 범위 | 전체 분모 | 이번 독해 | 미확인 |
 | --- | ---: | ---: | --- |
-| Magic UI 수집 페이지 | 257 | 본문 전체 178, 부분 2 | 본문 77개 미검토 |
+| Magic UI 수집 페이지 | 257 | 본문 전체 248, 부분 2 | 본문 7개 미검토 |
 | 그중 docs | 92 | 전체 90, 부분 2 | Animated Beam/Dock의 긴 SVG 원시 geometry 및 일부 잘린 중간 구간 |
-| 그중 홈페이지와 blog | 165 | 홈페이지 및 blog 첫 87개, 총 88 | blog 77개 |
+| 그중 홈페이지와 blog | 165 | 홈페이지 및 blog 첫 157개, 총 158 | blog 7개 |
 | 컴포넌트 Manual 구현 | 77 | 77페이지, URL별 범위와 판단은 인덱스 manualReview/Notes | MCP Manual·설치 provider 탭과 실제 예제 상태 |
 | 실제 화면·선택 흐름 | 별도 | Ripple Button·Animated Theme Toggler·BentoGrid·HeroVideoDialog 4페이지의 데스크톱 선택 상태 | 나머지 페이지·모든 예제·환경 조합 |
 
@@ -432,3 +432,75 @@ Blog68~77 main·모든code/table/FAQ를 전체 읽었다. 현재168전체+2부�
 Blog78~87의 semantic main·모든code/table/FAQ·promotion을 끝까지 읽었다. 현재178전체+2부분/77미독해, Manual77·실제시각4/flow4·후보67경로는 그대로다. Nav→탐색크기비교, 12개Next템플릿→서비스목적별소개 기존후보에 합쳤다. Next프레임워크/구조7글과 1줄placeholder1글은 정보·미제공 콘텐츠로 비등록이다.
 
 [Next Tailwind 글](https://magicui.design/blog/next-js-tailwind)은19min 가이드라는머리말 뒤에 `Next.js and Tailwind are working!` 한문장만 있어, **캡처본문 전체독해**와 실제가이드확보를 구분했다. 다른원문은 generic package/import·캐시·SSR보장·라우팅버전·TSaliasunderscore·성능 통계의 미검증 상태를 각각 index에 기록했다. Next라우팅/권한/세션/data/cache/deploy는 제품소유이며 HJM컴포넌트교체나 CI·설치·게시를 실행한 것이 아니다. 12개외부템플릿 live/유료source 및 실제navigation state는 미확인이다.
+
+### Magic UI core 188 · 다음10개 batch
+
+Blog88~97의 main·모든code/table/FAQ를 끝까지 읽었다. 현재188전체+2부분/67미독해, Manual77·실제시각4/flow4·후보67경로 그대로다. Portfolio/template3글→서비스목적별소개, Pricing21브랜드→요금제비교, Reactanimation13역할→내용진입 및 이미연결된기존효과 구성에 묶었다. Framework/코딩권장5글은 별도UI역할 없는 정보글 비등록. Index에 URL별 범위·후보·미확인·비등록 이유를 보존했다.
+
+가격 비교는 audience/product Tabs, 기간전환, 사용량 Slider/input, 확대 featurecomparison과 FAQ의 역할로 나누고 실제가격계산·결제·환불·증언은 제품이 공급한다. 외부21개 pricing사이트 실제가입/결제를 검증한 것은 아니다. Animation글의 [Source]/[Percentage] 빈통계, SSR이면JS없이animation가능하다는설명, Bootstrap3/5 혼합·전체접근성보장, React권장35제목/34본문 차이도 실제source판단으로 기록했다. 원문제안 라이브러리·CDN·설치·배포는 실행하지 않았다.
+
+
+## Magic blog 98–107 본문 독해 checkpoint
+
+수집257개 중 본문 전체198·부분2·미독해57. 홈페이지와 blog 첫107개까지 실제 semantic main 전체를 읽었다. Manual77·실제 화면4·선택 flow4는 그대로이며, 전수 완료·실험 등록 완료가 아니다. URL별 전체 독해 범위와 현재 판정을 인덱스에 보존했다.
+
+- React design patterns/frameworks는 정보성 가이드다. HOC props/ref 미전달, container/fetch placeholder, 온도 render-prop의 입력 문자열 `value+273.15` 결합, React16.8을 최신으로 부르는 문장, Router 항목의 virtualization 혼합 등을 그대로 규격으로 채택하지 않는다.
+- header/navbar/navigation은 기존 `실험/구성/비교와 검증/탐색 크기 비교`, hero/React landing21개는 `실험/화면/소개/서비스 목적별 소개`에 연결한다. JSX의 고정 색·글꼴·spacing, action 없는 CTA, 설명만 있는 mobile overlay와 keyboard/focus 계약을 기존 HJM 탐색/화면 규격으로 보완한다. 외부21개 live/source는 미검토다.
+- infinite-scroll은 `실험/구성/탐색과 이동/계속 읽기와 복구`에 합친다. 본문 전체에 실제 observer/hook 구현은 없고 설명·비교·FAQ다. 기존 LoadMore requestKey·manual fallback·오류 중 행 유지·complete/empty 상태, VirtualList 고정 행/Native endpoint 제한을 유지하고 cursor/query/cancel/back-position은 제품이 소유한다.
+- file-upload는 `실험/구성/입력과 작성/파일 선택과 복구`에 합친다. FilePicker의 accepted/rejected와 UploadItem의 `progress: 0..1|null`을 재사용한다. 원본 sample의 라벨 없는 file input·role/value 없는 progress div·완성되지 않은 ProgressUploader·취소/늦은 응답/preview 정리가 없는 조각을 복사하지 않는다. 실제 전송 바이트와 서버 확정 성공은 구분하며 chunk/transport는 제품 소유다. FilePicker·UploadItem·선택과 오류 복구 usage 전체를 대조했다.
+- form-validation은 `실험/구성/입력과 작성/입력 전환과 유지`에 연결한다. custom hook은 상태 초기화까지만, RHF는 오류 표시 없이 register까지만, Formik sample은 라벨·password 판정 없는 조각이다. HJM Form/Field/TextField의 첫 오류 초점·중복 제출·진행·실패 계약을 유지하고 검증 schema와 요청은 제품이 갖는다. 가이드의 일반화된 library API/성능 주장으로 새 엔진을 만들지 않는다.
+
+Form 사용 지침을 다시 읽은 현재 시점에는 Native에 대한 오래된 ‘밖에서 제출 불가/내장 버튼 숨김 불가’ 문단과 아래의 `FormHandle.submit()`/`actions={null}` 지침이 함께 있어 문서 내부 모순을 root에 전달했다. B는 실제 Native 재현이나 공용 문서 수정을 하지 않았다. 후보 경로는 기존67개 그대로이며 모두 조사 후 root 등록 대기다.
+
+
+## Magic blog 108–117 본문 독해 checkpoint
+
+257수집 페이지 중 본문 전체208·부분2·미독해47. 홈페이지와 blog 첫117개까지 전체 semantic main을 실제 읽었다. Manual77·실제 화면4·선택 flow4는 바뀌지 않았다. 전수 완료나 실험 등록 완료가 아니다. 모든 source별 범위·불채택 사유·경로는 인덱스에 남겼다.
+
+React libraries24/Native libraries21/beginner projects7/tips/UX19는 기존 역할을 설명하는 정보성 자료다. Router의 virtualization 혼합, Web Magic을 Native 라이브러리로 추천하는 문장, Lottie는 항상 성능 영향 없다는 주장, tips 제목15개와 실제6개·중복4/5, client const의 API key 권고를 HJM 규격으로 가져오지 않는다. native module·camera·Firebase·라우팅·스토리지·알림 권한은 제품 소유이며 설치·native build를 하지 않았다.
+
+Portfolio19개·responsive template7개·SaaS practices7개는 기존 `실험/화면/소개/서비스 목적별 소개`에서 audience/section/media/dark 표현을 비교한다. 외부 live19개·marketplace/template/source·라이선스는 미검토다. framework 비교 글의 shiny-button JSX는 기존 버튼 표현 경로에 합치며 새 스타일 엔진을 만들지 않는다. 브랜드500만 선언하고600을 쓰는 snippet, ∞회전 장식·fixed높이·type/reduced/pending 미구현을 그대로 채택하지 않는다.
+
+Search input with icon은 `실험/구성/입력과 작성/펼쳐 쓰는 검색`에 합쳤다. SearchField usage 전체와 대조했다. 원본 앞 문장은 icon이면 label 불필요라고 하지만 뒤 문장은 label 필수라 하고, 최종 ‘production-ready’ TSX에는 앞 예제의 label도 접근성 이름도 빠져 있다. Enter 제출 설명에도 form은 없으며 clear 설명은 `setQuery('')`만 있어 `onSearchChange` 반영이 없다. HJM의 필수 접근성 이름·clearLabel·입력 유지·loading/busy·제품 query/cancel 계약을 재사용한다. fixed left/width를 RTL·token 규격으로 채택하지 않는다. 후보67경로는 그대로이며 실제 등록은 root 대기다.
+
+
+## Magic blog 118–127 본문 독해 checkpoint
+
+257수집 페이지 중 본문 전체218·부분2·미독해37. 홈페이지와 blog 첫127개까지 전체 semantic main을 실제 읽었다. Manual77·실제 화면4·선택 flow4는 그대로다. source 수집·독해·실제 검증·등록 완료를 분리한다.
+
+Semantic/MUI·shadcn·Tailwind component library·CDN은 정보성 설명으로 기록했다. Material Design과 MUI package 혼합, shadcn은 외부 의존성이 없다는 문장과 Radix/CLI dependency 설명의 모순, script 설치 후 link를 찾으라는 CDN 검증 설명, 현재지원/성능/접근성 보증은 그대로 채택하지 않는다. generic dialog JSX는 설명만 있으며 위험행동의 confirm/cancel 흐름을 구현하지 않는다. 새 framework나 per-app 복제 엔진은 없다.
+
+sidebar는 기존 탐색 크기 비교에 연결한다. 실제 sidebar/Escape/focus-trap/useBreakpoint는 구현 코드 없이 설명까지만이며 mobile modal과 desktop persistent navigation의 초점 범위를 구분해야 한다. aria-hidden만으로 숨긴 focusable을 제거했다고 판단하지 않는다. social-proof41개는 기존 고객 후기 탐색으로 합친다. 실제 제품의 quote·media·판매/stock/count 데이터와 permission을 가져와야 하며 fixture를 운영 사회적 증거처럼 표시하지 않는다. 이 글이 예시로 설명하는 Amazon/Airbnb/Yelp/LinkedIn을 방문했다고 세지 않는다. startup11요소/7brand는 기존 목적별 소개로 합치고 광고·CRM·동의·외부 form transport를 HJM에 넣지 않는다.
+
+radius tutorial은 기존 누름 표현/프로필 geometry 비교 안에서 Button/Card의 rounded/md/full/none을 비교할 후보로 연결했다. 새 반경 숫자나 hover 전용 engine을 만들지 않는다. 버튼 guide는 기존 Button 동작·진행·disabled·token 규격을 유지하고 config의 escaped/underscore glob과 ‘Cancel=destructive’ 일반화를 채택하지 않는다. Grid tutorial은 column snippet `grid-col-3`와 설명 `grid-cols-3`의 차이를 기록하고 기존 기능 카드 묶음/Grid/Card로 합친다. DOM 순서·큰 글자·좁은 폭을 실제로 검증하기 전 완료로 세지 않는다. 후보67경로 그대로, 모두 root 등록 대기다.
+
+
+## Magic blog 128–137 본문 독해 checkpoint
+
+257수집 페이지 중 본문 전체228·부분2·미독해27. 홈페이지 및 blog 첫137개까지 실제 semantic main 전체를 읽었다. Manual77·실제 화면4·선택 flow4는 그대로다. 전수 완료·실험 등록 완료가 아니다. URL별 범위와 조건은 인덱스에 보존했다.
+
+설치/React/template12/free12/theme/dark/font/landing12/landing-template/portfolio12 글을 모두 읽었다. 버전 경계 없이 Tailwind4 언급과 init/PostCSS/@tailwind 설정을 함께 쓰는 설치 조각, placeholder href·mobile menu 부재, 외부 provider 비용/라이선스/현재 지원/시장 점유/전환 수치는 실행하거나 검증한 사실이 아니다. 136글은 featuresData.js를 만들라고 하지만 실제 data code는 보이지 않는 범위로 기록했다. 템플릿 링크를 열거나 12개씩의 실제 화면을 검사했다고 세지 않는다. 소개·기능 카드·테마 전환의 기존 경로로 합치며 새 엔진을 만들지 않는다.
+
+Dark guide의 hex값 CSS 변수를 hsl(var(...))에 넣는 코드 조합은 맞지 않는다. 이 판단은 소스 독해이며 실제 브라우저 재현이 아니다. Provider는 light 초기값, 별도 script는 dark 추가만 하고 saved/system 초기화·저장 실패·system 변경·다중 provider 정리를 하나의 흐름으로 구현하지 않는다. 전역300ms transition에는 감소 모션 guard도 없다. 기존 `실험/구성/비교와 검증/테마 전환 비교`에서 HjmProvider/HjmNativeProvider controlled theme를 재사용하고 persistence는 제품이 갖는다. 폰트의10px xxs나 fixed h-screen은 HJM 큰 글자 검증 없이 token으로 넣지 않는다. 모든 후보67경로는 조사 후 root 등록 대기다.
+
+
+## Magic blog 138–147 본문 독해 checkpoint
+
+257수집 페이지 중 본문 전체238·부분2·미독해17. 홈페이지와 blog 첫147개 전체를 실제 읽었다. Manual77·실제 화면4·선택flow4는 그대로다. 글자15표현은 기존 글자 표현 비교, card의product/content/profile 역할은 기존 기능 카드 묶음, 모션은 기존 내용 진입 표현, 로딩은 기존 대기 단계와 진행으로 합쳤다. generic framework9/library15/Tailwind–Bootstrap/TS–JS/React framework 비교는 정보성으로 기록했다. 별도 library/컴파일러를 설치하지 않았다.
+
+text-loading-bar는 실제로는 Loading60%/Processing75% rendered markup·타이머 JS·React interface 설명뿐이며 완성 React TSX는 없다. 앞의 width transition과 뒤 scaleX 권고가 다르고 blend-mode difference의 대비 보장 주장은 검증되지 않았다. Progress usage 전체와 대조해 label/value/max/valueText, 불확정 value 생략, 실제 처리량만 표시하는 기존 계약을 유지한다. 글자 예제는 h1의무한360도 회전과 미검증 magicui FadeIn/Typewriter import를 복사하지 않는다.
+
+새68번째 후보 `실험/구성/선택과 필터/날짜와 시각 선택`은 DatePicker·Select·Section·Stack·Text·Button·Notice와 배포 시간 선택 구성을 합쳐 비교한다. DatePicker와 시간 선택 usage 전체를 대조했다. 원본141은 DatePickerProps외에달력/time/keyboard 구현이 설명뿐이며 opacity/pointer-events-none은 키보드 비활성 보장이 아니다. 기존 ISO날짜와 시·분 controlled값, 달 이동 시 선택 유지, 진행 잠금·실패 값 보존·재시도를 재사용한다. 민간 날짜·예약 시간대·DST·로캘·서버 규칙은 제품 소유이며 DateTimePicker 새 엔진이나 date library를 넣지 않는다. 실제 이 구성의화면/동작은 아직 미검증, root 등록 대기다.
+
+TypeScript글의 `100 * "2"`를1002/NaN이라 설명하는 오류, typecheck와 transpile성능 혼합, magic-ui-cli·AnimatedGrid설치 조각은 HJM 근거로채택하지 않는다. 해당 값의브라우저 재현/공식compiler지원/외부 framework 성능은 이번 source독해 범위에없다. 모든 source별 판단은 인덱스에 남겼다.
+
+
+## Magic blog 148–157 본문 독해 checkpoint
+
+257수집 페이지 중 본문 전체248·부분2·미독해7. 홈페이지 및 blog 첫157개전체를실제읽었다. Manual77·실제시각4·선택flow4는변경없다.68고유후보경로는그대로이며전수완료/실험등록완료아니다.
+
+패턴·theme·hierarchy·waitlist·animation-tools·webapp·bestpractices·trend15·animation15·footer7/22/6/13의모든보이는본문과코드를읽었다. 기능카드/테마전환/목적별소개/내용진입/하단링크의기존경로로합쳤다. theme는정의상색이외상태·동작까지설명하지만실제예제는두색Card와주석useState뿐이다. retro/pixel/Memphis/neon/glass/skeuomorph/gradient/duotone목록은기존profile/EffectSurface/Text 표현 후보로연결하며새토큰/엔진구현근거로세지않는다. theme의neverpureblack·UIkit항상unstyled 주장은공유규격으로가져오지않는다.
+
+Footer는기존 `실험/구성/탐색과 이동/하단 링크 묶음`에합쳤다. footer7유형/22요소/6지침/13브랜드를읽은것이며13실제외부화면을검토했다는뜻이아니다. NoFooter가능문장과모든사이트footer필수문장이함께있으며copyright/약관/쿠키문구가법적준수증거는아니다. 실제linkgroup·법률문구·contact/newsletter전송·권한은제품이갖는다. waitlist3브랜드도소개본문뿐이며타이머/stock/가짜후기·CRM·메시지를자동도입하지않는다.
+
+성능/SEO/시장/행동숫자와Magic의접근성·반응형보장은source주장이다. Animation-tools제목10개에실제본문은Magic중심이고, webapp에는편집지시문이남아있으며trend마지막번호5·security설명만있는구간을기록했다. 원문브랜드mascot사실/성능을독립검증하지않았다. HJM은기존semantic/input/focus/lifecycle계약을유지하고analytics/auth/server/cache/deploy는제품규격소유다.

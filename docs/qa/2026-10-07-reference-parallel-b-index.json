@@ -2373,700 +2373,2180 @@
       "sourceSha256": "e1e465cdfd181b0e1dab0e6fee1dac39ccab634c1d1e6fac88b8e7d42ffc6502",
       "capturedAt": "2026-10-07T03:50:01Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 22121
+      "extractedCharacters": 22121,
+      "readScope": "Entire captured semantic main including all prose/tables/visible code/FAQ/promotion; external links/images/live visual/behavior pending.",
+      "reviewNotes": "Entire23 Next portfolio summaries/features/customization/ending read. Horizontal/BW/darklight/RTL/MDX/projecteducation/contact variants are purpose choices, not verified external23 live pages/source. Several entries are plainReact/Bootstrap/jQuery despite Next label; no native/responsive guarantee. Existing intro screen composition reuses cards/images/nav; personal credentials/projectfacts/assets productowned.",
+      "usageReview": "all-visible-tutorial-code-read",
+      "usageReviewNotes": "Public article only; all code/prose read, distinct from component Manual or actualpreview.",
+      "experimentProposal": {
+        "path": "실험/화면/소개/서비스 목적별 소개",
+        "existingApis": [
+          "ScreenLayout",
+          "Card",
+          "Grid",
+          "Button",
+          "Image",
+          "Affix"
+        ],
+        "decision": "composition-reference",
+        "registration": "pending-root-after-research",
+        "readiness": "article-summary-only-external-screens-pending",
+        "scope": "Purpose-specific visual hierarchy/section-order/primary-action alternatives within the existing introduction screen. Do not create45 engines from brand examples or copy provider/auth/checkout semantics.",
+        "requiredStates": [
+          "Default",
+          "Dark",
+          "LargeText"
+        ],
+        "conditionalStates": [
+          "ReducedMotion",
+          "Rtl"
+        ],
+        "preconditions": "All illustrative image/live external reference screens and actual state/accessibility remain unreviewed; external claims are not conversion proof."
+      }
     },
     {
       "url": "https://magicui.design/blog/nextjs-website-template",
       "sourceSha256": "aed3e638d0a349787982ae039789b558a43f379ea7e1acfc9fcde20fd04c6b96",
       "capturedAt": "2026-10-07T03:50:03Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 21545
+      "extractedCharacters": 21545,
+      "readScope": "Entire captured semantic main including all prose/tables/visible code/FAQ/promotion; external links/images/live visual/behavior pending.",
+      "reviewNotes": "Entire template strategy/checklist/env/setup/Tailwindconfig/TSpricing interface/performance/FAQ/ending read. Claims alltemplates .env.local ignored/performanceSEO inherited not verified actualrepos. Staticbrand hex/config is not HJM theme adoption; TS pricing has no render/action/failure engine. Premiumquality/marketprices/userclaims not measures; purpose-specific intro group reused, no template installed or providerconfigured.",
+      "usageReview": "all-visible-tutorial-code-read",
+      "usageReviewNotes": "Public article only; all code/prose read, distinct from component Manual or actualpreview.",
+      "experimentProposal": {
+        "path": "실험/화면/소개/서비스 목적별 소개",
+        "existingApis": [
+          "ScreenLayout",
+          "Card",
+          "Grid",
+          "Button",
+          "Image",
+          "Affix"
+        ],
+        "decision": "composition-reference",
+        "registration": "pending-root-after-research",
+        "readiness": "article-summary-only-external-screens-pending",
+        "scope": "Purpose-specific visual hierarchy/section-order/primary-action alternatives within the existing introduction screen. Do not create45 engines from brand examples or copy provider/auth/checkout semantics.",
+        "requiredStates": [
+          "Default",
+          "Dark",
+          "LargeText"
+        ],
+        "conditionalStates": [
+          "ReducedMotion",
+          "Rtl"
+        ],
+        "preconditions": "All illustrative image/live external reference screens and actual state/accessibility remain unreviewed; external claims are not conversion proof."
+      }
     },
     {
       "url": "https://magicui.design/blog/portfolio-landing-page",
       "sourceSha256": "083907193acaa544f9c76a182b732e0a1e4ea8f8fce7b50361797a9e9e94194d",
       "capturedAt": "2026-10-07T03:50:05Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 17565
+      "extractedCharacters": 17565,
+      "readScope": "Entire captured semantic main including all prose/tables/visible code/FAQ/promotion; external links/images/live visual/behavior pending.",
+      "reviewNotes": "Entire portfolio goals/5sections/howto/5brands/commonality/3musthave/ending read. Project count suggestions conflict5-10 vs3-5; not fixedtokens/rules. Externalbrand live/media/parallax/slider behaviors unvisited; ownAPI ScreenLayout/Card/Grid/Image/Button suffice intro/projectdetail variations, no extra portfolio engine. Credentials/result/testimonial/contact exactproducttruth.",
+      "usageReview": "all-visible-tutorial-code-read",
+      "usageReviewNotes": "Public article only; all code/prose read, distinct from component Manual or actualpreview.",
+      "experimentProposal": {
+        "path": "실험/화면/소개/서비스 목적별 소개",
+        "existingApis": [
+          "ScreenLayout",
+          "Card",
+          "Grid",
+          "Button",
+          "Image",
+          "Affix"
+        ],
+        "decision": "composition-reference",
+        "registration": "pending-root-after-research",
+        "readiness": "article-summary-only-external-screens-pending",
+        "scope": "Purpose-specific visual hierarchy/section-order/primary-action alternatives within the existing introduction screen. Do not create45 engines from brand examples or copy provider/auth/checkout semantics.",
+        "requiredStates": [
+          "Default",
+          "Dark",
+          "LargeText"
+        ],
+        "conditionalStates": [
+          "ReducedMotion",
+          "Rtl"
+        ],
+        "preconditions": "All illustrative image/live external reference screens and actual state/accessibility remain unreviewed; external claims are not conversion proof."
+      }
     },
     {
       "url": "https://magicui.design/blog/pricing-page-examples",
       "sourceSha256": "e5b809e7e1feefd1222f0edb60aa4cab5fd5985de95e75ef6b6bb1b2c98b7df0",
       "capturedAt": "2026-10-07T03:50:07Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 25660
+      "extractedCharacters": 25660,
+      "readScope": "Entire captured semantic main including all prose/tables/visible code/FAQ/promotion; external links/images/live visual/behavior pending.",
+      "reviewNotes": "Entire pricing7elements/howto/21brands/bestpractice/why/ending read. Variants include audience/product Tabs, periodtoggle, usage Slider/input calculator, expandedfeaturecomparison and FAQ/contact. Reuse existing plancomparison group Card/Tabs/Slider/Accordion/Button; calculator/server prices/bundles/checkout/payment/returntruth productowned. Fakeurgency or fixedabovefold/allplans not HJM policy. All21 externalactual purchase/source/visual unverified.",
+      "usageReview": "all-visible-tutorial-code-read",
+      "usageReviewNotes": "Public article only; all code/prose read, distinct from component Manual or actualpreview.",
+      "experimentProposal": {
+        "path": "실험/화면/소개/요금제 비교",
+        "existingApis": [
+          "ScreenLayout",
+          "Card",
+          "Grid",
+          "Button",
+          "Tabs",
+          "Statistic"
+        ],
+        "decision": "reuse-existing-engine-expression-or-composition",
+        "registration": "pending-root-after-research",
+        "readiness": "article-summary-only-external-screens-pending",
+        "scope": "Pricing tiers/billing display/add-on/enterprise variants, product owns actual billing terms/checkout. Localized digits and period switches must not move controls or hide terms.",
+        "requiredStates": [
+          "Default",
+          "Dark",
+          "LargeText"
+        ],
+        "conditionalStates": [
+          "ReducedMotion",
+          "Rtl"
+        ],
+        "preconditions": "Original Code/implementation, all variants and keyboard/touch/focus/disabled/pending/error/recovery where relevant need review. Root verifies existing title collision and public API/usage contracts before actual registration.",
+        "actualVerification": "Entire public pricing article;21 externalpricing/purchase flows unverified."
+      }
     },
     {
       "url": "https://magicui.design/blog/react-animation-examples",
       "sourceSha256": "671eb7914b9de3f7ced5ca2062946939563879c3761a579b51e6d09117fd5995",
       "capturedAt": "2026-10-07T03:50:09Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 20469
+      "extractedCharacters": 20469,
+      "readScope": "Entire captured semantic main including all prose/tables/visible code/FAQ/promotion; external links/images/live visual/behavior pending.",
+      "reviewNotes": "Entire animationoverview/13 examples/techniques/Magic usage/tips/ending read. [Source]/[Percentage] placeholder studies and repeatedpage-transition prose are not evidence; nodemoimplementation13flows supplied. Intended roles alreadymapped ContentTransition/Progress/Spinner/Button/Form/Tooltip/Notice/EffectSurface; use existing entrygroup, no blanketanimation or13engines. Realmotion/keyboard/failure/visibility stillpending.",
+      "usageReview": "all-visible-tutorial-code-read",
+      "usageReviewNotes": "Public article only; all code/prose read, distinct from component Manual or actualpreview.",
+      "experimentProposal": {
+        "path": "실험/컴포넌트/시각 효과/내용 진입 표현",
+        "existingApis": [
+          "ContentTransition"
+        ],
+        "decision": "reuse-existing-engine-expression",
+        "registration": "pending-root-after-research",
+        "scope": "Scroll-triggered entry/stagger idea on existing ContentTransition with content-visible fallback, lifecycle/reduced state and focus preserved. No duplicate observer engine and no unverified blog package/import adoption.",
+        "requiredStates": [
+          "Default",
+          "Dark",
+          "LargeText"
+        ],
+        "conditionalStates": [
+          "ReducedMotion",
+          "Rtl",
+          "Disabled",
+          "Pending",
+          "Failed",
+          "Recovery"
+        ],
+        "actualVerification": "Only URL-specific visualReview/interactionReview counts; no implied completion.",
+        "readiness": "public-tutorial-code-only-runtime-pending"
+      }
     },
     {
       "url": "https://magicui.design/blog/react-animation-libraries",
       "sourceSha256": "43161fc24b4e4d9d77bb0a2c769390283a9d5bd0dffdcfb094655aefcae081d4",
       "capturedAt": "2026-10-07T03:50:11Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 18426
+      "extractedCharacters": 18426,
+      "readScope": "Entire captured semantic main including all prose/tables/visible code/FAQ/promotion; external links/images/live visual/behavior pending.",
+      "reviewNotes": "Entire13 animationlibrary features/selectioncriteria/ending read. SSR compatibility does not prove animations run withoutJS; generic allbrowser/native/performance/GitHub facts not benchmarked or versionverified. Lifecycle/unmount/fallback are already HJM checks. No libraryadoption/replacement/installation; information only.",
+      "usageReview": "all-visible-tutorial-code-read",
+      "usageReviewNotes": "Public article only; all code/prose read, distinct from component Manual or actualpreview.",
+      "experimentProposal": {
+        "path": null,
+        "decision": "informational-guide-only",
+        "registration": "not-applicable",
+        "reason": "Resource/framework/setup information provides no distinct UI role beyond already mapped components; source recipes/claims not executed or independently validated."
+      }
     },
     {
       "url": "https://magicui.design/blog/react-best-practices",
       "sourceSha256": "33b6ff5b7ef5da78b8b0e1a22b04701f240379e7830661b437344717b810abf3",
       "capturedAt": "2026-10-07T03:50:13Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 23944
+      "extractedCharacters": 23944,
+      "readScope": "Entire captured semantic main including all prose/tables/visible code/FAQ/promotion; external links/images/live visual/behavior pending.",
+      "reviewNotes": "Entire Reactoverview/challenges/34 numberedpractices/title35/ending read. Functionalstateless/faster-arrow/nolexicalscope/Reduxcreator/defaultbundle assertions not currentprimaryverified. Style advice conflictingcombineCSS vsseparateCSS is not newpolicy. Reuse/stateownership/RationaleComments preserve ownrepo standard; no distinctUI role or code/runtimeevidence. Information only.",
+      "usageReview": "all-visible-tutorial-code-read",
+      "usageReviewNotes": "Public article only; all code/prose read, distinct from component Manual or actualpreview.",
+      "experimentProposal": {
+        "path": null,
+        "decision": "informational-guide-only",
+        "registration": "not-applicable",
+        "reason": "Resource/framework/setup information provides no distinct UI role beyond already mapped components; source recipes/claims not executed or independently validated."
+      }
     },
     {
       "url": "https://magicui.design/blog/react-bootstrap",
       "sourceSha256": "d5d08e3868560f36482bbf3dd66ed9e478b7bf14a417abb4955f14c48a453afa",
       "capturedAt": "2026-10-07T03:50:15Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 15466
+      "extractedCharacters": 15466,
+      "readScope": "Entire captured semantic main including all prose/tables/visible code/FAQ/promotion; external links/images/live visual/behavior pending.",
+      "reviewNotes": "Entire Bootstrapfeatures/5reasons/3components/Grid code/setup/alternatives/ending read. Article mixturesBootstrap3 SplitButton/MenuItem vs5, contradictory firstinstalljquerypopper then none, generic guaranteesallcompliance. Grid/Accordion/Breadcrumb/nav roles alreadyexisting HJM; no shownbehaviorgap. No import/CDN/install or secondbootstrapJS engine; information only.",
+      "usageReview": "all-visible-tutorial-code-read",
+      "usageReviewNotes": "Public article only; all code/prose read, distinct from component Manual or actualpreview.",
+      "experimentProposal": {
+        "path": null,
+        "decision": "informational-guide-only",
+        "registration": "not-applicable",
+        "reason": "Resource/framework/setup information provides no distinct UI role beyond already mapped components; source recipes/claims not executed or independently validated."
+      }
     },
     {
       "url": "https://magicui.design/blog/react-component-best-practices",
       "sourceSha256": "85acf4f0245a012fce44700ac4614121d49dc4c2b1bc1a9be9f9393d3ce3bc18",
       "capturedAt": "2026-10-07T03:50:17Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 18366
+      "extractedCharacters": 18366,
+      "readScope": "Entire captured semantic main including all prose/tables/visible code/FAQ/promotion; external links/images/live visual/behavior pending.",
+      "reviewNotes": "Entire13 componentpractices/virtualization/memo/props/errorboundary/5challenges/ending read. Virtualization prose nameslibrary but no example or variableheight behavior; existingVirtualList fixedgeometry shouldnot implyarbitrarytableflow. Props immutable doesnot mean no updates, functional/class/Reduxcreator assertions not proof. No libraryinstall/baseline/performance verified. Informationonly, existing roles unchanged.",
+      "usageReview": "all-visible-tutorial-code-read",
+      "usageReviewNotes": "Public article only; all code/prose read, distinct from component Manual or actualpreview.",
+      "experimentProposal": {
+        "path": null,
+        "decision": "informational-guide-only",
+        "registration": "not-applicable",
+        "reason": "Resource/framework/setup information provides no distinct UI role beyond already mapped components; source recipes/claims not executed or independently validated."
+      }
     },
     {
       "url": "https://magicui.design/blog/react-css-framework",
       "sourceSha256": "74df5971fc50c504a37c516dd8b1a34aed1241c50930154a248dd7fd64cc75e3",
       "capturedAt": "2026-10-07T03:50:20Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 27117
+      "extractedCharacters": 27117,
+      "readScope": "Entire captured semantic main including all prose/tables/visible code/FAQ/promotion; external links/images/live visual/behavior pending.",
+      "reviewNotes": "Entire24 ReactCSS framework summaries/features/selection/ending read. Classification frameworkversuscomponentlibrary/accessibility claims inconsistent; current npm/starcounts/lifecycle/nativeperf/costs unverified. Rebass/ThemeUI constrainttoken concepts already HJM providercontract, not newAPI. Source no componentimplementation/testedUXgap; informationonly and no adoption/migration.",
+      "usageReview": "all-visible-tutorial-code-read",
+      "usageReviewNotes": "Public article only; all code/prose read, distinct from component Manual or actualpreview.",
+      "experimentProposal": {
+        "path": null,
+        "decision": "informational-guide-only",
+        "registration": "not-applicable",
+        "reason": "Resource/framework/setup information provides no distinct UI role beyond already mapped components; source recipes/claims not executed or independently validated."
+      }
     },
     {
       "url": "https://magicui.design/blog/react-design-patterns",
       "sourceSha256": "ec97155cd93d894e49775cdd86edf62829e96db9e8baabbf249c6a043d718560",
       "capturedAt": "2026-10-07T03:50:22Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 17519
+      "extractedCharacters": 17519,
+      "readScope": "Entire captured semantic main, including visible code, all narrative sections, FAQs and source promotion footer; external sites/media/runtime and hidden/provider sections not reviewed.",
+      "reviewNotes": "Eight design-pattern examples and five best-practice sections fully read. HOC does not forward props/ref; container this.state initialization and fetch are placeholders. Temperature input yields strings: value+273.15 concatenates rather than numeric Celsius conversion; no numeric validation/label. React16.8 latest claim is source prose, not current verified guidance. No distinct UI-role candidate or new wrapper engine.",
+      "experimentProposal": {
+        "path": null,
+        "decision": "informational-guide-only",
+        "registration": "not-applicable",
+        "reason": "Resource/framework/setup information provides no distinct UI role beyond already mapped components; source recipes/claims not executed or independently validated."
+      }
     },
     {
       "url": "https://magicui.design/blog/react-frameworks",
       "sourceSha256": "70faad76fc23a7f2c923d0b39287660668743c437fb4a4a324398d7c802d1164",
       "capturedAt": "2026-10-07T03:50:24Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 31804
+      "extractedCharacters": 31804,
+      "readScope": "Entire captured semantic main, including visible code, all narrative sections, FAQs and source promotion footer; external sites/media/runtime and hidden/provider sections not reviewed.",
+      "reviewNotes": "All23 framework/library entries and conclusion fully read. React Router entry mixes in virtualization/windowing; framework/library/component/state/animation tools mixed. Material Kit size string lacks a number. Claimed accessible/native/SSR compatibility, package counts/ranking and mandatory Magic adoption unverified. No dependency change or distinct UI-role candidate.",
+      "experimentProposal": {
+        "path": null,
+        "decision": "informational-guide-only",
+        "registration": "not-applicable",
+        "reason": "Resource/framework/setup information provides no distinct UI role beyond already mapped components; source recipes/claims not executed or independently validated."
+      }
     },
     {
       "url": "https://magicui.design/blog/react-header",
       "sourceSha256": "25c487357d67b31bbb824576050044322ce578ed70088c5c4f88e94ec01a951d",
       "capturedAt": "2026-10-07T03:50:26Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 15658
+      "extractedCharacters": 15658,
+      "readScope": "Entire captured semantic main, including visible code, all narrative sections, FAQs and source promotion footer; external sites/media/runtime and hidden/provider sections not reviewed.",
+      "reviewNotes": "All header anatomy, styling, responsive, accessibility, FAQ sections read. Main advertises snippets but has no concrete header JSX/CSS implementation. Logo/navigation/search/account/header-vs-hero compare existing navigation APIs; router/auth/product state remain product-owned. Bounce/above-fold claims are not measured evidence.",
+      "experimentProposal": {
+        "path": "실험/구성/비교와 검증/탐색 크기 비교",
+        "existingApis": [
+          "TopBar",
+          "Sidebar",
+          "Menu",
+          "Link",
+          "Layout"
+        ],
+        "decision": "optional-expression",
+        "registration": "pending-root-after-research",
+        "scope": "Existing navigation purpose/layout comparison including responsive nested-menu ideas. Accessible button actions and actual destinations, current-page state, focus/dismiss/RTL and viewport collision; no global ul CSS or hover-only input engine.",
+        "requiredStates": [
+          "Default",
+          "Dark",
+          "LargeText"
+        ],
+        "conditionalStates": [
+          "ReducedMotion",
+          "Rtl",
+          "Disabled",
+          "Pending",
+          "Failed",
+          "Recovery"
+        ],
+        "actualVerification": "Entire captured article and relevant existing HJM usage contract comparison; no article example runtime or external referenced live screen verified.",
+        "readiness": "public-tutorial-only-runtime-pending"
+      }
     },
     {
       "url": "https://magicui.design/blog/react-hero-component",
       "sourceSha256": "9ca0ef6a892f9f77ed724fc4652203c76b68b4befa6626b5c982b9fd972143aa",
       "capturedAt": "2026-10-07T03:50:28Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 19134
+      "extractedCharacters": 19134,
+      "readScope": "Entire captured semantic main, including visible code, all narrative sections, FAQs and source promotion footer; external sites/media/runtime and hidden/provider sections not reviewed.",
+      "reviewNotes": "Entire hero JSX/CSS plus Sass/media/CTA/accessibility/FAQ read. Hero GetStarted has no action handler. Literal #fff/#ddd/#3498db, padding and font sizes are examples, not HJM tokens. CSS/Sass nesting prose internally contradictory; always-lazy initially visible hero guidance not adopted. Conversion/performance claims unmeasured. Reuse existing introduction composition.",
+      "experimentProposal": {
+        "path": "실험/화면/소개/서비스 목적별 소개",
+        "existingApis": [
+          "ScreenLayout",
+          "Card",
+          "Grid",
+          "Button",
+          "Image",
+          "Affix"
+        ],
+        "decision": "composition-reference",
+        "registration": "pending-root-after-research",
+        "readiness": "public-tutorial-only-runtime-pending",
+        "scope": "Purpose-specific visual hierarchy/section-order/primary-action alternatives within the existing introduction screen. Do not create45 engines from brand examples or copy provider/auth/checkout semantics.",
+        "requiredStates": [
+          "Default",
+          "Dark",
+          "LargeText"
+        ],
+        "conditionalStates": [
+          "ReducedMotion",
+          "Rtl"
+        ],
+        "preconditions": "All illustrative image/live external reference screens and actual state/accessibility remain unreviewed; external claims are not conversion proof.",
+        "actualVerification": "Entire captured article and relevant existing HJM usage contract comparison; no article example runtime or external referenced live screen verified."
+      }
     },
     {
       "url": "https://magicui.design/blog/react-infinite-scroll",
       "sourceSha256": "1453f849a33b33e80b1dc8ec6fbddf53c63611268dc030265fc8cea4ad4b2aab",
       "capturedAt": "2026-10-07T03:50:30Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 22269
+      "extractedCharacters": 22269,
+      "readScope": "Entire captured semantic main, including visible code, all narrative sections, FAQs and source promotion footer; external sites/media/runtime and hidden/provider sections not reviewed.",
+      "reviewNotes": "Entire hook/observer, custom-vs-library comparison, virtualization, loading/retry/manual fallback, live announcement/focus, SEO pagination and back-position-restoration narrative read; no executable observer/hook implementation in captured main. Reuse existing LoadMore requestKey/List/VirtualList/Pagination with manual and error/complete paths; product owns cursor/query/cancel and restoration. Source20-30%,25%,5k production claims are not performance proof. No new observer or windowing engine.",
+      "experimentProposal": {
+        "path": "실험/구성/탐색과 이동/계속 읽기와 복구",
+        "existingApis": [
+          "List",
+          "VirtualList",
+          "LoadMore",
+          "Pagination",
+          "EmptyState",
+          "Notice"
+        ],
+        "decision": "reuse-existing-api-comparison-or-composition",
+        "registration": "pending-root-after-research",
+        "scope": "Automatic vs bounded/hybrid/manual reading with existing LoadMore requestKey and real product query state. Preserve rows on error, retry same cursor, complete/empty/source changes, footer access and focus. VirtualList fixed-row limitation and Native no-end-callback require manual or product FlatList; no duplicate observer/dedup/virtualization engine. Product owns cursor/query/cancellation/navigation restoration.",
+        "requiredStates": [
+          "Default",
+          "Dark",
+          "LargeText"
+        ],
+        "conditionalStates": [
+          "ReducedMotion",
+          "Rtl",
+          "Pending",
+          "Disabled",
+          "Failed",
+          "Recovery",
+          "Empty",
+          "Complete"
+        ],
+        "readiness": "public-tutorial-only-runtime-pending",
+        "actualVerification": "Entire captured article and relevant existing HJM usage contract comparison; no article example runtime or external referenced live screen verified."
+      }
     },
     {
       "url": "https://magicui.design/blog/react-js-file-upload",
       "sourceSha256": "319dcef3ad13c3f2f93380bc21514a6a37410957ef52f9c56af53290cee3f652",
       "capturedAt": "2026-10-07T03:50:32Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 20711
+      "extractedCharacters": 20711,
+      "readScope": "Entire captured semantic main, including visible code, all narrative sections, FAQs and source promotion footer; external sites/media/runtime and hidden/provider sections not reviewed.",
+      "reviewNotes": "Entire file input/change, Axios FormData request, progress code, dropzone/FileReader narrative, chunk/server assembly, validation/multiple-file/FAQ read. Sample file input lacks label; ProgressUploader contains no final rendered input; raw progress div lacks role/value semantics; literal colors and transition not tokens. Cancellation/stale progress/preview cleanup not implemented in shown snippets; chunked transfer is narrative/product upload responsibility. Reuse existing FilePicker accepted/rejected, UploadItem 0..1|null and selection/recovery composition; unknown total must stay indeterminate, transport completion is not server success.",
+      "experimentProposal": {
+        "path": "실험/구성/입력과 작성/파일 선택과 복구",
+        "existingApis": [
+          "FilePicker",
+          "UploadItem"
+        ],
+        "decision": "reuse-expression-or-composition",
+        "registration": "pending-root-after-research",
+        "readiness": "public-tutorial-only-runtime-pending",
+        "requiredStates": [
+          "Default",
+          "Dark",
+          "LargeText"
+        ],
+        "conditionalStates": [
+          "ReducedMotion",
+          "Rtl",
+          "Disabled",
+          "Pending",
+          "Failed",
+          "Recovery"
+        ],
+        "scope": "Use existing HJM semantic/input/state/lifecycle contracts; proposed expression, no source-copy/new engine. Root checks title collision and existing story reuse.",
+        "preconditions": "Source licence, all hidden Usage/Manual, actual keyboard/touch/reduced/lifecycle and supported Web/Native remain URL-specific. Product owns mock copy/data/media/backend.",
+        "actualVerification": "Entire captured article and relevant existing HJM usage contract comparison; no article example runtime or external referenced live screen verified."
+      }
     },
     {
       "url": "https://magicui.design/blog/react-js-form-validation",
       "sourceSha256": "252398024dec029e78a6c1bafd139f6bbcf5abb3618e3806268c7ab2ccd6b887",
       "capturedAt": "2026-10-07T03:50:34Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 21201
+      "extractedCharacters": 21201,
+      "readScope": "Entire captured semantic main, including visible code, all narrative sections, FAQs and source promotion footer; external sites/media/runtime and hidden/provider sections not reviewed.",
+      "reviewNotes": "Entire custom-hook scaffold/login validator, RHF registration, Formik email validation/timeout example, Yup/async/conditional/dynamic/server-error/FAQ read. Custom hook only initializes values/errors; handlers/submission not implemented. RHF example registers required email without rendering error; Formik fields lack labels and password validation in shown validate, timeout has no cleanup. Generic setError across different form libraries is not HJM contract. Reuse Form/Field/TextField first-error focus and submit session; validation schema/domain/network remain product-owned, not new validation engine. Current HJM Form usage has contradictory old Native no-external-submit prose versus FormHandle/actions documented below; runtime not reproduced.",
+      "experimentProposal": {
+        "path": "실험/구성/입력과 작성/입력 전환과 유지",
+        "existingApis": [
+          "TextField",
+          "Form"
+        ],
+        "decision": "reuse-expression-or-composition",
+        "registration": "pending-root-after-research",
+        "readiness": "public-tutorial-only-runtime-pending",
+        "requiredStates": [
+          "Default",
+          "Dark",
+          "LargeText"
+        ],
+        "conditionalStates": [
+          "ReducedMotion",
+          "Rtl",
+          "Disabled",
+          "Pending",
+          "Failed",
+          "Recovery"
+        ],
+        "scope": "Use existing HJM semantic/input/state/lifecycle contracts; proposed expression, no source-copy/new engine. Root checks title collision and existing story reuse.",
+        "preconditions": "Source licence, all hidden Usage/Manual, actual keyboard/touch/reduced/lifecycle and supported Web/Native remain URL-specific. Product owns mock copy/data/media/backend.",
+        "actualVerification": "Entire captured article and relevant existing HJM usage contract comparison; no article example runtime or external referenced live screen verified."
+      }
     },
     {
       "url": "https://magicui.design/blog/react-js-navbar",
       "sourceSha256": "90dca7648988947f61bb67caceff4ac8932ad094285f23d566e3e1ff16822017",
       "capturedAt": "2026-10-07T03:50:36Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 20474
+      "extractedCharacters": 20474,
+      "readScope": "Entire captured semantic main, including visible code, all narrative sections, FAQs and source promotion footer; external sites/media/runtime and hidden/provider sections not reviewed.",
+      "reviewNotes": "Entire Vite/Tailwind setup, JSX nav, state/mobile description, AnimatedShinyText/ShimmerButton, fixed overlay/touch target, active NavLink/sticky FAQ read. Mobile toggle and overlay described rather than complete implementation; no actual keyboard/focus/Escape source. Source default ShimmerButton import not inferred correct against named registry export. Sticky z50 and literal44 not copied as tokens. Existing navigation comparison absorbs expression; source usage/download/conversion metrics unverified.",
+      "experimentProposal": {
+        "path": "실험/구성/비교와 검증/탐색 크기 비교",
+        "existingApis": [
+          "TopBar",
+          "Sidebar",
+          "Menu",
+          "Link",
+          "Layout"
+        ],
+        "decision": "optional-expression",
+        "registration": "pending-root-after-research",
+        "scope": "Existing navigation purpose/layout comparison including responsive nested-menu ideas. Accessible button actions and actual destinations, current-page state, focus/dismiss/RTL and viewport collision; no global ul CSS or hover-only input engine.",
+        "requiredStates": [
+          "Default",
+          "Dark",
+          "LargeText"
+        ],
+        "conditionalStates": [
+          "ReducedMotion",
+          "Rtl",
+          "Disabled",
+          "Pending",
+          "Failed",
+          "Recovery"
+        ],
+        "actualVerification": "Entire captured article and relevant existing HJM usage contract comparison; no article example runtime or external referenced live screen verified.",
+        "readiness": "public-tutorial-only-runtime-pending"
+      }
     },
     {
       "url": "https://magicui.design/blog/react-js-navigation-bar",
       "sourceSha256": "9281b86b28fa6a1aac05b1f2822919f257395119cd233ce4167e3b4d3678d038",
       "capturedAt": "2026-10-07T03:50:38Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 21314
+      "extractedCharacters": 21314,
+      "readScope": "Entire captured semantic main, including visible code, all narrative sections, FAQs and source promotion footer; external sites/media/runtime and hidden/provider sections not reviewed.",
+      "reviewNotes": "Entire scaffold/mobile breakpoints/useState, Link/NavLink/auth conditional, dropdown accessibility/Motion, Context/useReducer, sticky/a11y/build-vs-library FAQ read. No complete styled nav/keyboard/focus/overlay source; only small JSX snippets. Claim Link preserves all form state/scroll and Context only updates specific consumed fields is not adopted as guarantee. Routing/prefetch version assumptions remain product-owned. Reuse existing TopBar/Sidebar/Menu/Link/Layout with HJM behavior, not new router/global context.",
+      "experimentProposal": {
+        "path": "실험/구성/비교와 검증/탐색 크기 비교",
+        "existingApis": [
+          "TopBar",
+          "Sidebar",
+          "Menu",
+          "Link",
+          "Layout"
+        ],
+        "decision": "optional-expression",
+        "registration": "pending-root-after-research",
+        "scope": "Existing navigation purpose/layout comparison including responsive nested-menu ideas. Accessible button actions and actual destinations, current-page state, focus/dismiss/RTL and viewport collision; no global ul CSS or hover-only input engine.",
+        "requiredStates": [
+          "Default",
+          "Dark",
+          "LargeText"
+        ],
+        "conditionalStates": [
+          "ReducedMotion",
+          "Rtl",
+          "Disabled",
+          "Pending",
+          "Failed",
+          "Recovery"
+        ],
+        "actualVerification": "Entire captured article and relevant existing HJM usage contract comparison; no article example runtime or external referenced live screen verified.",
+        "readiness": "public-tutorial-only-runtime-pending"
+      }
     },
     {
       "url": "https://magicui.design/blog/react-landing-page",
       "sourceSha256": "2436df90f283bcceb36ead9da74e3765e619701559bb2fc9ea045181842bcad1",
       "capturedAt": "2026-10-07T03:50:40Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 26703
+      "extractedCharacters": 26703,
+      "readScope": "Entire captured semantic main, including visible code, all narrative sections, FAQs and source promotion footer; external sites/media/runtime and hidden/provider sections not reviewed.",
+      "reviewNotes": "Entire21 template summaries, anatomy, feature criteria, audience/branding/research/CTA/form, layout/customization/media/animation and conclusion read. Named React list includes Flutter/Bootstrap/CRA-oriented entries. Each external live demo/source/license still unvisited; summary SSR/performance/responsiveness/conversion claims not QA proof. No21 new engines; service-purpose introduction variants use existing APIs; product owns media/consent/submission.",
+      "experimentProposal": {
+        "path": "실험/화면/소개/서비스 목적별 소개",
+        "existingApis": [
+          "ScreenLayout",
+          "Card",
+          "Grid",
+          "Button",
+          "Image",
+          "Affix"
+        ],
+        "decision": "composition-reference",
+        "registration": "pending-root-after-research",
+        "readiness": "public-tutorial-only-runtime-pending",
+        "scope": "Purpose-specific visual hierarchy/section-order/primary-action alternatives within the existing introduction screen. Do not create45 engines from brand examples or copy provider/auth/checkout semantics.",
+        "requiredStates": [
+          "Default",
+          "Dark",
+          "LargeText"
+        ],
+        "conditionalStates": [
+          "ReducedMotion",
+          "Rtl"
+        ],
+        "preconditions": "All illustrative image/live external reference screens and actual state/accessibility remain unreviewed; external claims are not conversion proof.",
+        "actualVerification": "Entire captured article and relevant existing HJM usage contract comparison; no article example runtime or external referenced live screen verified."
+      }
     },
     {
       "url": "https://magicui.design/blog/react-libraries",
       "sourceSha256": "16c689478d824bf6058e46f719432237492b25130ac106371341c909a29b1046",
       "capturedAt": "2026-10-07T03:50:42Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 25946
+      "extractedCharacters": 25946,
+      "readScope": "Entire captured semantic main including visible code, every narrative/numbered entry, comparison/FAQ and source promotion footer. External sources/media/provider/hidden sections and runtime remain unreviewed.",
+      "reviewNotes": "Entire24 library/framework/state/animation/tool entries, selection criteria and concluding integration sections read. Router incorrectly described with windowing/virtualization; Material Kit KB lacks number. Framework vs tool/component mixed; all-component accessibility/native/compatibility and Magic automatically harmonizing other libraries not verified. No package change or distinct UI role.",
+      "experimentProposal": {
+        "path": null,
+        "decision": "informational-guide-only",
+        "registration": "not-applicable",
+        "reason": "Resource/framework/setup information provides no distinct UI role beyond already mapped components; source recipes/claims not executed or independently validated."
+      }
     },
     {
       "url": "https://magicui.design/blog/react-native-libraries",
       "sourceSha256": "3b5b87410207ea8d9dff72dba0e2a21bed1469bcb193e3706cbfded9a3800f91",
       "capturedAt": "2026-10-07T03:50:44Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 27727
+      "extractedCharacters": 27727,
+      "readScope": "Entire captured semantic main including visible code, every narrative/numbered entry, comparison/FAQ and source promotion footer. External sources/media/provider/hidden sections and runtime remain unreviewed.",
+      "reviewNotes": "Entire21 RN library entries plus benefits/challenges/install/linking guide read, including literal malformed markdown after npm run ios. Web React/Tailwind/DOM-based Magic ranked as RN library without native implementation proof; Maps and Mapview duplicate role. All current version/star/support/performance claims unverified; Lottie always no-impact assertion not adopted. Camera/Firebase/native module permissions/transport are product boundaries. No native build/pod/install performed or new UI engine candidate.",
+      "experimentProposal": {
+        "path": null,
+        "decision": "informational-guide-only",
+        "registration": "not-applicable",
+        "reason": "Resource/framework/setup information provides no distinct UI role beyond already mapped components; source recipes/claims not executed or independently validated."
+      }
     },
     {
       "url": "https://magicui.design/blog/react-portfolio-template",
       "sourceSha256": "931917c5277d6c3dfde70aabecb1a81a1493139db29190e89aed33babeca078c",
       "capturedAt": "2026-10-07T03:50:46Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 20339
+      "extractedCharacters": 20339,
+      "readScope": "Entire captured semantic main including visible code, every narrative/numbered entry, comparison/FAQ and source promotion footer. External sources/media/provider/hidden sections and runtime remain unreviewed.",
+      "reviewNotes": "Entire19 portfolio template summaries plus responsive/customization/SEO/performance and branding/media/animation guide read. Hero/About/Work/Education/Projects/Hackathon/Contact/Blog are introduction variant roles, not19 engines. External sources/live screens/licences pending. Claimed100h saving/full responsive/accessibility/SEO are prose not measurement. Reuse existing introduction screen and product-owned content/media.",
+      "experimentProposal": {
+        "path": "실험/화면/소개/서비스 목적별 소개",
+        "existingApis": [
+          "ScreenLayout",
+          "Card",
+          "Grid",
+          "Button",
+          "Image",
+          "Affix"
+        ],
+        "decision": "composition-reference",
+        "registration": "pending-root-after-research",
+        "readiness": "public-tutorial-only-runtime-pending",
+        "scope": "Purpose-specific visual hierarchy/section-order/primary-action alternatives within the existing introduction screen. Do not create45 engines from brand examples or copy provider/auth/checkout semantics.",
+        "requiredStates": [
+          "Default",
+          "Dark",
+          "LargeText"
+        ],
+        "conditionalStates": [
+          "ReducedMotion",
+          "Rtl"
+        ],
+        "preconditions": "All illustrative image/live external reference screens and actual state/accessibility remain unreviewed; external claims are not conversion proof.",
+        "actualVerification": "Entire article and existing HJM usage/API static comparison; no article example runtime or external live reference verified."
+      }
     },
     {
       "url": "https://magicui.design/blog/react-projects-for-beginners",
       "sourceSha256": "b528cd3fd7adfd50c61bdfcb2190aaf0a7fc70a1d1a7aae9eaefefa838067791",
       "capturedAt": "2026-10-07T03:50:48Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 24717
+      "extractedCharacters": 24717,
+      "readScope": "Entire captured semantic main including visible code, every narrative/numbered entry, comparison/FAQ and source promotion footer. External sources/media/provider/hidden sections and runtime remain unreviewed.",
+      "reviewNotes": "All seven project-learning resources, pros/cons, implementation comparison and follow-up sections read. Resources provide learning curricula rather than a distinct UI API. Says Pro pricing notpublic yet same captured footer prints199; source mismatch not pricing verification. Courses/current costs/benefits/external activities unverified. No signup/purchase/messages or new UI experiment role.",
+      "experimentProposal": {
+        "path": null,
+        "decision": "informational-guide-only",
+        "registration": "not-applicable",
+        "reason": "Resource/framework/setup information provides no distinct UI role beyond already mapped components; source recipes/claims not executed or independently validated."
+      }
     },
     {
       "url": "https://magicui.design/blog/react-tips",
       "sourceSha256": "a9a8e805278dcd2814d705ac92b139b92e0a4c47d0cb7fda56f023f32205a9ff",
       "capturedAt": "2026-10-07T03:50:50Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 13165
+      "extractedCharacters": 13165,
+      "readScope": "Entire captured semantic main including visible code, every narrative/numbered entry, comparison/FAQ and source promotion footer. External sources/media/provider/hidden sections and runtime remain unreviewed.",
+      "reviewNotes": "Full React tips/fragments/constants/TypeScript/container/cleanup snippets and five challenges read. Title promises15tips, actual numbered list has6 and4/5 duplicate container prose. API keys described as client constants is not security policy; CRA/current advice unverified. i18n stays product registry/contracts. Lifecycle cleanup already HJM criterion, no new role/dependency.",
+      "experimentProposal": {
+        "path": null,
+        "decision": "informational-guide-only",
+        "registration": "not-applicable",
+        "reason": "Resource/framework/setup information provides no distinct UI role beyond already mapped components; source recipes/claims not executed or independently validated."
+      }
     },
     {
       "url": "https://magicui.design/blog/react-ui-framework",
       "sourceSha256": "b05473cb09c74fc2a2367136b0141c60cb6f9529315e953e189d35304c6b1e8b",
       "capturedAt": "2026-10-07T03:50:52Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 26652
+      "extractedCharacters": 26652,
+      "readScope": "Entire captured semantic main including visible code, every narrative/numbered entry, comparison/FAQ and source promotion footer. External sources/media/provider/hidden sections and runtime remain unreviewed.",
+      "reviewNotes": "Entire framework criteria/comparison, MUI/Chakra theme snippets, shiny-button JSX, project matching/migration/FAQ read. Chakra snippet defines brand500 but references600; Ant styling/build/performance/version claims not verified. Shiny button uses infinitely spinning large decoration, fixedh12, literalgradient and no explicittype/reduced/disabled/pending control. Compare existing Button expression group only, retain HJM public action and tokens, not framework swap or enginecopy.",
+      "experimentProposal": {
+        "path": "실험/구성/비교와 검증/누름 표현 비교",
+        "existingApis": [
+          "Button"
+        ],
+        "decision": "optional-expression",
+        "registration": "pending-root-after-research",
+        "scope": "Expression or composition using current API; no new duplicate engine. Preconditions and source risks remain in manualReviewNotes and reviewNotes.",
+        "requiredStates": [
+          "Default",
+          "Dark",
+          "LargeText"
+        ],
+        "conditionalStates": [
+          "ReducedMotion",
+          "Rtl",
+          "Disabled",
+          "Pending",
+          "Failed",
+          "Recovery"
+        ],
+        "actualVerification": "Entire article and existing HJM usage/API static comparison; no article example runtime or external live reference verified.",
+        "readiness": "public-tutorial-only-runtime-pending"
+      }
     },
     {
       "url": "https://magicui.design/blog/react-ux",
       "sourceSha256": "b3a261b8f5eba2071d4cde1bc16691dde0b84fbc41176ad72e48e6a5e90c7ff4",
       "capturedAt": "2026-10-07T03:50:54Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 20059
+      "extractedCharacters": 20059,
+      "readScope": "Entire captured semantic main including visible code, every narrative/numbered entry, comparison/FAQ and source promotion footer. External sources/media/provider/hidden sections and runtime remain unreviewed.",
+      "reviewNotes": "All19 UX principles/seven libraries/React benefits/three named apps read. Always-spinner/sameTouchable/allLottie noimpact are not HJM policy; Web Magic listed asRN again. Platform-safe-area/keyboard/notice/segment/brand/theme/accessibility principles already existing contracts, no demonstrated new role or runtime improvement. Instagram fullmigration/UberEats taxi/currentlibrary claims unverified. No nativeQA measured.",
+      "experimentProposal": {
+        "path": null,
+        "decision": "informational-guide-only",
+        "registration": "not-applicable",
+        "reason": "Resource/framework/setup information provides no distinct UI role beyond already mapped components; source recipes/claims not executed or independently validated."
+      }
     },
     {
       "url": "https://magicui.design/blog/responsive-web-design-templates",
       "sourceSha256": "2377928608111942a9f099457eef363e5d52f3248cc00ec429ddda98baf5f862",
       "capturedAt": "2026-10-07T03:50:56Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 26238
+      "extractedCharacters": 26238,
+      "readScope": "Entire captured semantic main including visible code, every narrative/numbered entry, comparison/FAQ and source promotion footer. External sources/media/provider/hidden sections and runtime remain unreviewed.",
+      "reviewNotes": "All seven marketplace/template summaries, licensing/support/platform/export notes, comparison and decision sections read. Intro SaaS sections/blog/darkrole can join existing purpose intro composition; noexternal marketplace live/template/source visited. All templates pretested/fully responsive/currentlicense/support/cost claims source-only and not review completion. No purchase/import/hosting/framework change.",
+      "experimentProposal": {
+        "path": "실험/화면/소개/서비스 목적별 소개",
+        "existingApis": [
+          "ScreenLayout",
+          "Card",
+          "Grid",
+          "Button",
+          "Image",
+          "Affix"
+        ],
+        "decision": "composition-reference",
+        "registration": "pending-root-after-research",
+        "readiness": "public-tutorial-only-runtime-pending",
+        "scope": "Purpose-specific visual hierarchy/section-order/primary-action alternatives within the existing introduction screen. Do not create45 engines from brand examples or copy provider/auth/checkout semantics.",
+        "requiredStates": [
+          "Default",
+          "Dark",
+          "LargeText"
+        ],
+        "conditionalStates": [
+          "ReducedMotion",
+          "Rtl"
+        ],
+        "preconditions": "All illustrative image/live external reference screens and actual state/accessibility remain unreviewed; external claims are not conversion proof.",
+        "actualVerification": "Entire article and existing HJM usage/API static comparison; no article example runtime or external live reference verified."
+      }
     },
     {
       "url": "https://magicui.design/blog/saas-landing-page-best-practices",
       "sourceSha256": "9ca51cc0c07900d4586307bb4535caadcd849a6b8b3142334913def357979c6c",
       "capturedAt": "2026-10-07T03:50:58Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 26581
+      "extractedCharacters": 26581,
+      "readScope": "Entire captured semantic main including visible code, every narrative/numbered entry, comparison/FAQ and source promotion footer. External sources/media/provider/hidden sections and runtime remain unreviewed.",
+      "reviewNotes": "All seven SaaS design/tools/CRO/CRM/inspiration/resources, comparison/next steps read. Magic paragraph points Website ui.aceternity.com; title practices largely platform recommendations not actual UI implementation. Existing introsection combinations absorb visual role. Automatedlead/email/SmartTraffic/CRM/analytics/product experimentation are outsideHJM, no integrations or conversion claims adopted. Externalplatform live/subscription/licences notverified.",
+      "experimentProposal": {
+        "path": "실험/화면/소개/서비스 목적별 소개",
+        "existingApis": [
+          "ScreenLayout",
+          "Card",
+          "Grid",
+          "Button",
+          "Image",
+          "Affix"
+        ],
+        "decision": "composition-reference",
+        "registration": "pending-root-after-research",
+        "readiness": "public-tutorial-only-runtime-pending",
+        "scope": "Purpose-specific visual hierarchy/section-order/primary-action alternatives within the existing introduction screen. Do not create45 engines from brand examples or copy provider/auth/checkout semantics.",
+        "requiredStates": [
+          "Default",
+          "Dark",
+          "LargeText"
+        ],
+        "conditionalStates": [
+          "ReducedMotion",
+          "Rtl"
+        ],
+        "preconditions": "All illustrative image/live external reference screens and actual state/accessibility remain unreviewed; external claims are not conversion proof.",
+        "actualVerification": "Entire article and existing HJM usage/API static comparison; no article example runtime or external live reference verified."
+      }
     },
     {
       "url": "https://magicui.design/blog/search-input-with-icon",
       "sourceSha256": "08cbfd6ce8c38f6b9a6fc5f71167d1bbe64d02faa2d77e3f76b872aa95214a3d",
       "capturedAt": "2026-10-07T03:51:00Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 21748
+      "extractedCharacters": 21748,
+      "readScope": "Entire captured semantic main including visible code, every narrative/numbered entry, comparison/FAQ and source promotion footer. External sources/media/provider/hidden sections and runtime remain unreviewed.",
+      "reviewNotes": "Full HTML/CSS, Tailwind JSX, reusable TSX search plus icon-placement/clear/focus/a11y sections read. Opening says icon requires no label, later says labelrequired. FirstHTML/React snippets noform despite Enter-submit prose; final production-readyTSX loses prior label and lacksaccessible name, documentedinitialValue missinginterface. Clear narrative calls only setQuery(empty) without onSearchChange, no actualclearcode. Fixedleftpadding/width/iconfocus cannot replaceHJM RTL/tokens. Reuse SearchField icons/clear/loading/busy with query/cancel product-owned; focus-expansion is conditionalexpression comparison, no newsearch engine.",
+      "experimentProposal": {
+        "path": "실험/구성/입력과 작성/펼쳐 쓰는 검색",
+        "existingApis": [
+          "SearchField"
+        ],
+        "decision": "reuse-expression-or-composition",
+        "registration": "pending-root-after-research",
+        "readiness": "public-tutorial-only-runtime-pending",
+        "requiredStates": [
+          "Default",
+          "Dark",
+          "LargeText"
+        ],
+        "conditionalStates": [
+          "ReducedMotion",
+          "Rtl",
+          "Disabled",
+          "Pending",
+          "Failed",
+          "Recovery"
+        ],
+        "scope": "Use existing HJM semantic/input/state/lifecycle contracts; proposed expression, no source-copy/new engine. Root checks title collision and existing story reuse.",
+        "preconditions": "Source licence, all hidden Usage/Manual, actual keyboard/touch/reduced/lifecycle and supported Web/Native remain URL-specific. Product owns mock copy/data/media/backend.",
+        "actualVerification": "Entire article and existing HJM usage/API static comparison; no article example runtime or external live reference verified."
+      }
     },
     {
       "url": "https://magicui.design/blog/semantic-ui-vs-material-ui",
       "sourceSha256": "d06d57120a52e161b0b42728eb5f8758a8ae203066f6e6c9a741f0f63ea01954",
       "capturedAt": "2026-10-07T03:51:02Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 22411
+      "extractedCharacters": 22411,
+      "readScope": "Entire captured semantic main including all numbered lists, visible code, comparisons/FAQs and promotion footer; external sources/media/provider tabs and runtime not reviewed.",
+      "reviewNotes": "EntireSemantic/MUI comparison, design/theme/ecosystem/framework/a11y, eight named company use cases, pros/cons and decision guide read. Material Design language vs MUI package and Semantic CSS vs React wrapper blurred; no independently verified company implementation or WCAG guarantees. Information-only no UIrole/dependencychange.",
+      "experimentProposal": {
+        "path": null,
+        "decision": "informational-guide-only",
+        "registration": "not-applicable",
+        "reason": "Resource/framework/setup information provides no distinct UI role beyond already mapped components; source recipes/claims not executed or independently validated."
+      }
     },
     {
       "url": "https://magicui.design/blog/shadcn-ui",
       "sourceSha256": "21109616e51e430649e449d6efdb9e5908330fa3284a250c5f7f76d0a28cddd9",
       "capturedAt": "2026-10-07T03:51:04Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 27497
+      "extractedCharacters": 27497,
+      "readScope": "Entire captured semantic main including all numbered lists, visible code, comparisons/FAQs and promotion footer; external sources/media/provider tabs and runtime not reviewed.",
+      "reviewNotes": "Entire ownership/composition/Radix/Tailwind/CLI, Dialog JSX, side-by-sidecomparison, initialization/Button use, customization/team/update/FAQ read. Claims zeroexternaldependencies/no versioningconflicts conflict with own Radix dependency/CLIhandlesdependencies paragraphs. Dialog deletion description has no confirm/cancel action. Source-only metrics and command/version presets unverified. Do not copy per-app engines or create newgeneric dialog; existing API/theme architecture remains.",
+      "experimentProposal": {
+        "path": null,
+        "decision": "informational-guide-only",
+        "registration": "not-applicable",
+        "reason": "Resource/framework/setup information provides no distinct UI role beyond already mapped components; source recipes/claims not executed or independently validated."
+      }
     },
     {
       "url": "https://magicui.design/blog/sidebar-for-website",
       "sourceSha256": "74e526cb19a12a5902d078f47df1882552dd9d9df415e98678984285d9a441de",
       "capturedAt": "2026-10-07T03:51:06Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 26134
+      "extractedCharacters": 26134,
+      "readScope": "Entire captured semantic main including all numbered lists, visible code, comparisons/FAQs and promotion footer; external sources/media/provider tabs and runtime not reviewed.",
+      "reviewNotes": "Entire sidebar types/setup/props/controlledparent JSX/responsive breakpoint/animation/accessibility/performance/placement-width-mobile FAQs read. No Sidebar implementation, Escape listener/focus trap/useBreakpoint only prose. aria-hidden alone must not leave keyboard focusable hiddencontent; focus trap for mobilemodal unlike persistentdesktop navigation. Literalleft/w16/w64/240..320 notHJMtoken. Reuse navigationcomparison with Sidebar/Sheet/Menu and logical RTL/platform contract; no newresize/navigation engine.",
+      "experimentProposal": {
+        "path": "실험/구성/비교와 검증/탐색 크기 비교",
+        "existingApis": [
+          "TopBar",
+          "Sidebar",
+          "Menu",
+          "Link",
+          "Layout"
+        ],
+        "decision": "optional-expression",
+        "registration": "pending-root-after-research",
+        "scope": "Existing navigation purpose/layout comparison including responsive nested-menu ideas. Accessible button actions and actual destinations, current-page state, focus/dismiss/RTL and viewport collision; no global ul CSS or hover-only input engine.",
+        "requiredStates": [
+          "Default",
+          "Dark",
+          "LargeText"
+        ],
+        "conditionalStates": [
+          "ReducedMotion",
+          "Rtl",
+          "Disabled",
+          "Pending",
+          "Failed",
+          "Recovery"
+        ],
+        "actualVerification": "Entire captured article and existing HJM static API comparison only; article/external live flow not verified.",
+        "readiness": "public-tutorial-only-runtime-pending"
+      }
     },
     {
       "url": "https://magicui.design/blog/social-proof-on-website",
       "sourceSha256": "f65b58906acaff527769ef11d2ae5508993063548cacd3db07aeadfab71bb3fd",
       "capturedAt": "2026-10-07T03:51:08Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 30910
+      "extractedCharacters": 30910,
+      "readScope": "Entire captured semantic main including all numbered lists, visible code, comparisons/FAQs and promotion footer; external sources/media/provider tabs and runtime not reviewed.",
+      "reviewNotes": "Entire41social-proof strategies plus definition/placement/fourbrands/mistakes/source claims read. Testimonial/cards/carousel/media/casestudy/metrics/notice roles groupedwith existingcustomer-review composition. Sales/lowstock/livecounts cannotuse fabricatedfixture asactual; quote/media/review permission and accurateproduct data belongproduct. Stats/conversion/bluecheckplatform claims unverified. Nocontactcustomer/email/socialposting/integration/action performed. Externalbrandlives remainpending.",
+      "experimentProposal": {
+        "path": "실험/구성/정보 표시/고객 후기 탐색",
+        "existingApis": [
+          "Carousel",
+          "Card",
+          "Avatar",
+          "Grid",
+          "Button",
+          "ContentTransition"
+        ],
+        "decision": "reuse-existing-engine-expression-or-composition",
+        "registration": "pending-root-after-research",
+        "readiness": "public-tutorial-only-runtime-pending",
+        "scope": "Existing customer-review composition variants: still quote cards, optional carousel with pause/static fallback, video/case-study links and product-supplied factual content. No brand/media/quote scrape or review engine duplication.",
+        "requiredStates": [
+          "Default",
+          "Dark",
+          "LargeText"
+        ],
+        "conditionalStates": [
+          "ReducedMotion",
+          "Rtl"
+        ],
+        "preconditions": "Original Code/implementation, all variants and keyboard/touch/focus/disabled/pending/error/recovery where relevant need review. Root verifies existing title collision and public API/usage contracts before actual registration.",
+        "actualVerification": "Entire captured article and existing HJM static API comparison only; article/external live flow not verified."
+      }
     },
     {
       "url": "https://magicui.design/blog/startup-landing-page",
       "sourceSha256": "b33f0b5fcc2d60bd6fe15bb0d81b52c1bcc8e45d3e84afbc9c5191097fb35055",
       "capturedAt": "2026-10-07T03:51:10Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 22354
+      "extractedCharacters": 22354,
+      "readScope": "Entire captured semantic main including all numbered lists, visible code, comparisons/FAQs and promotion footer; external sources/media/provider tabs and runtime not reviewed.",
+      "reviewNotes": "Entirestartup leadcapture/clickthrough definition, elevenelements, benefits/buildguide/sevenbrand summaries/sourcepitch read. Map audience/sectionorder/primaryaction existingintro; productowns copy/media/contact/authanalytics/campaign. 1:1attention rule mustnotremove requiredconsent/footer/navigation unconditionally. Magic nocodingbuilder claims and5.89/10%conversionbenchmark notvalidation. Sevenexternallives/source pending.",
+      "experimentProposal": {
+        "path": "실험/화면/소개/서비스 목적별 소개",
+        "existingApis": [
+          "ScreenLayout",
+          "Card",
+          "Grid",
+          "Button",
+          "Image",
+          "Affix"
+        ],
+        "decision": "composition-reference",
+        "registration": "pending-root-after-research",
+        "readiness": "public-tutorial-only-runtime-pending",
+        "scope": "Purpose-specific visual hierarchy/section-order/primary-action alternatives within the existing introduction screen. Do not create45 engines from brand examples or copy provider/auth/checkout semantics.",
+        "requiredStates": [
+          "Default",
+          "Dark",
+          "LargeText"
+        ],
+        "conditionalStates": [
+          "ReducedMotion",
+          "Rtl"
+        ],
+        "preconditions": "All illustrative image/live external reference screens and actual state/accessibility remain unreviewed; external claims are not conversion proof.",
+        "actualVerification": "Entire captured article and existing HJM static API comparison only; article/external live flow not verified."
+      }
     },
     {
       "url": "https://magicui.design/blog/tailwind-border-radius",
       "sourceSha256": "a229cf9e0000e0636107a4ac99efed44cbc314fb0ae411e292485afbe0c0da69",
       "capturedAt": "2026-10-07T03:51:12Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 6200
+      "extractedCharacters": 6200,
+      "readScope": "Entire captured semantic main including all numbered lists, visible code, comparisons/FAQs and promotion footer; external sources/media/provider tabs and runtime not reviewed.",
+      "reviewNotes": "Entire radius utility definitions and all button/card hover/responsive JSX/nextsteps read. Rounded/md/full/none cancompare existing Button/Card/designprofilegeometry ratherthan newtokenvocabulary. Hover changingcardradius is optional decorative expression, not action/focus semantic; literalTailwindradius/breakpoint/colors not HJMdefaults. Global psychological preference for rounds notpolicy. Actual geometry/screens/runtime pending.",
+      "experimentProposal": {
+        "path": "실험/구성/비교와 검증/누름 표현 비교",
+        "existingApis": [
+          "Button",
+          "Card",
+          "HjmProvider",
+          "HjmNativeProvider"
+        ],
+        "decision": "optional-expression",
+        "registration": "pending-root-after-research",
+        "scope": "Radius/geometry comparison within existing Button/Card/design-profile expressions; no new token values or hover-only interaction engine. Existing theme/profile owns radius; actual profile projection/state checks still required.",
+        "requiredStates": [
+          "Default",
+          "Dark",
+          "LargeText"
+        ],
+        "conditionalStates": [
+          "ReducedMotion",
+          "Rtl",
+          "Disabled",
+          "Pending",
+          "Failed",
+          "Recovery"
+        ],
+        "actualVerification": "Entire captured article and existing HJM static API comparison only; article/external live flow not verified.",
+        "readiness": "public-tutorial-only-runtime-pending"
+      }
     },
     {
       "url": "https://magicui.design/blog/tailwind-cdn-html",
       "sourceSha256": "f5f36ef505759890c1e4a49ff6801149d7d9f46ee27bf6247f3c4f1f297f0423",
       "capturedAt": "2026-10-07T03:51:14Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 6160
+      "extractedCharacters": 6160,
+      "readScope": "Entire captured semantic main including all numbered lists, visible code, comparisons/FAQs and promotion footer; external sources/media/provider tabs and runtime not reviewed.",
+      "reviewNotes": "EntireCDN definition/installHTML/sample/troubleshooting/nextsteps read. Installs script httpscdn.tailwindcss.com but verifying/troubleshooting says inspect link; latest/mostsecure/compatibility/performance promises notverified. Information-only setupguide; noCDN script imported or dependency installed, no newUIrole.",
+      "experimentProposal": {
+        "path": null,
+        "decision": "informational-guide-only",
+        "registration": "not-applicable",
+        "reason": "Resource/framework/setup information provides no distinct UI role beyond already mapped components; source recipes/claims not executed or independently validated."
+      }
     },
     {
       "url": "https://magicui.design/blog/tailwind-css-button",
       "sourceSha256": "d58a241e1db525e1cdc9f03c14467e5d1f9b41fd9e2f62fa6a988b47887ba2e8",
       "capturedAt": "2026-10-07T03:51:16Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 20589
+      "extractedCharacters": 20589,
+      "readScope": "Entire captured semantic main including all numbered lists, visible code, comparisons/FAQs and promotion footer; external sources/media/provider tabs and runtime not reviewed.",
+      "reviewNotes": "Entirebuttonstate/variants/accessibility/icons, configglobs/performance, skeletonandfinishedclsx+twMerge Button, FAQ read. Captured earlyexamples show onlybuttontextnotfullcode, finishedcomponent lacks explicit type and loading/statepolicy; destructiveCancelgeneralization notHJMmeaning. Config contains escaped/underscored globs, sourcepayload/60%claimsnotmeasurement. Compare existingButton public semantic/action/disabled/pending/reduced/tokenaxis; no newutilitybutton engine.",
+      "experimentProposal": {
+        "path": "실험/구성/비교와 검증/누름 표현 비교",
+        "existingApis": [
+          "Button"
+        ],
+        "decision": "optional-expression",
+        "registration": "pending-root-after-research",
+        "scope": "Expression or composition using current API; no new duplicate engine. Preconditions and source risks remain in manualReviewNotes and reviewNotes.",
+        "requiredStates": [
+          "Default",
+          "Dark",
+          "LargeText"
+        ],
+        "conditionalStates": [
+          "ReducedMotion",
+          "Rtl",
+          "Disabled",
+          "Pending",
+          "Failed",
+          "Recovery"
+        ],
+        "actualVerification": "Entire captured article and existing HJM static API comparison only; article/external live flow not verified.",
+        "readiness": "public-tutorial-only-runtime-pending"
+      }
     },
     {
       "url": "https://magicui.design/blog/tailwind-css-component-library",
       "sourceSha256": "e34d284778350a78f07b88476592844ab0da7e7af2bd091959f877638534eba2",
       "capturedAt": "2026-10-07T03:51:18Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 27195
+      "extractedCharacters": 27195,
+      "readScope": "Entire captured semantic main including all numbered lists, visible code, comparisons/FAQs and promotion footer; external sources/media/provider tabs and runtime not reviewed.",
+      "reviewNotes": "Entirelibrary/headless definition, a11y/customization/docscriteria, styled-vs-headlesscomparison, Magicfocus, integration/variants/FAQ read. No distinctrendered UIimplementation beyond prose/Buttonusage, no0-cost/performance/guaranteeda11y adoption. Claimsallanimationsneverbogdown/brandadoption/unqualifiedstaticCSSbenefitsunverified. Information-only no framework/package changes; themeprimitive ownershipalreadyHJM.",
+      "experimentProposal": {
+        "path": null,
+        "decision": "informational-guide-only",
+        "registration": "not-applicable",
+        "reason": "Resource/framework/setup information provides no distinct UI role beyond already mapped components; source recipes/claims not executed or independently validated."
+      }
     },
     {
       "url": "https://magicui.design/blog/tailwind-css-grid",
       "sourceSha256": "026549ecb98397718ff07e8a0d4535e59cdc9d19e8e287313a33b57cfe4fe287",
       "capturedAt": "2026-10-07T03:51:20Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 6849
+      "extractedCharacters": 6849,
+      "readScope": "Entire captured semantic main including all numbered lists, visible code, comparisons/FAQs and promotion footer; external sources/media/provider tabs and runtime not reviewed.",
+      "reviewNotes": "EntireGrid-vs-Flex/cheatsheet/Card and column/row galleries/nextsteps code read. Column gallery snippets use grid-col-3 while explanation says grid-cols-3; FC<any> andfixed3rows flowcol notstrict/sharedcontract. Reuse existingGrid/Card functioncardgroup; preserveDOMreading/focusorder, narrow/large wrapping andHJMspacing insteadof copyingclasscounts/brandcolors. Actualvisual/runtime pending.",
+      "experimentProposal": {
+        "path": "실험/구성/정보 표시/기능 카드 묶음",
+        "existingApis": [
+          "Grid",
+          "Card",
+          "Button",
+          "Link"
+        ],
+        "decision": "reuse-improve",
+        "registration": "pending-root-after-research",
+        "scope": "Expression or composition using current API; no new duplicate engine. Preconditions and source risks remain in manualReviewNotes and reviewNotes.",
+        "requiredStates": [
+          "Default",
+          "Dark",
+          "LargeText"
+        ],
+        "conditionalStates": [
+          "ReducedMotion",
+          "Rtl",
+          "Disabled",
+          "Pending",
+          "Failed",
+          "Recovery"
+        ],
+        "actualVerification": "Entire captured article and existing HJM static API comparison only; article/external live flow not verified.",
+        "readiness": "public-tutorial-only-runtime-pending"
+      }
     },
     {
       "url": "https://magicui.design/blog/tailwind-css-install",
       "sourceSha256": "e59f888a1096e270ea2ae2ed408dc0e9507d1234d8daaff033e1f1acda7f0871",
       "capturedAt": "2026-10-07T03:51:22Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 22199
+      "extractedCharacters": 22199,
+      "readScope": "Entire captured semantic main, every visible prose/table/code/FAQ/closing section; hidden tabs, external live templates and runtime states excluded.",
+      "reviewNotes": "Entire installation/provider/CDN/performance prose and every visible code block read. Tailwind4 mention coexists with unversioned init/PostCSS/@tailwind setup; not executed. PlayCDN production warning differs from other CDN blog claims. Performance/adoption numbers are source claims, no distinct UI role.",
+      "experimentProposal": {
+        "path": null,
+        "decision": "informational-guide-only",
+        "registration": "not-applicable",
+        "reason": "Resource/framework/setup information provides no distinct UI role beyond already mapped components; source recipes/claims not executed or independently validated."
+      }
     },
     {
       "url": "https://magicui.design/blog/tailwind-css-react",
       "sourceSha256": "5cc08b020249f57df9d23ff69eaa1038376fd4da8ad81d8abfd0a4ce824c6584",
       "capturedAt": "2026-10-07T03:51:24Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 21330
+      "extractedCharacters": 21330,
+      "readScope": "Entire captured semantic main, every visible prose/table/code/FAQ/closing section; hidden tabs, external live templates and runtime states excluded.",
+      "reviewNotes": "Entire React/Tailwind guide read. Config/arbitrary sizing/brand literals, static ProductCard, disabled ActionButton without explicit type/loading, NavItem isActive styling without aria-current. Setup/runtime/version support not verified; reuse Card/Grid/Button/Link APIs, preserve meaning and states.",
+      "experimentProposal": {
+        "path": "실험/구성/정보 표시/기능 카드 묶음",
+        "existingApis": [
+          "Grid",
+          "Card",
+          "Button",
+          "Link"
+        ],
+        "decision": "reuse-improve",
+        "registration": "pending-root-after-research",
+        "scope": "Expression or composition using current API; no new duplicate engine. Preconditions and source risks remain in manualReviewNotes and reviewNotes.",
+        "requiredStates": [
+          "Default",
+          "Dark",
+          "LargeText"
+        ],
+        "conditionalStates": [
+          "ReducedMotion",
+          "Rtl",
+          "Disabled",
+          "Pending",
+          "Failed",
+          "Recovery"
+        ],
+        "actualVerification": "Entire public tutorial only. External examples/source and actual visual/state behavior unverified.",
+        "readiness": "public-tutorial-only-runtime-pending"
+      }
     },
     {
       "url": "https://magicui.design/blog/tailwind-css-template",
       "sourceSha256": "58e4319f2574cb4538fb4edb81efe49d7c1c1f127395c9dae4282796d68c6519",
       "capturedAt": "2026-10-07T03:51:26Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 27034
+      "extractedCharacters": 27034,
+      "readScope": "Entire captured semantic main, every visible prose/table/code/FAQ/closing section; hidden tabs, external live templates and runtime states excluded.",
+      "reviewNotes": "Entire twelve template-provider descriptions/table/pricing/customization selection read. Marketing/admin/ecommerce/blog mixed; external templates, licenses, costs, current support and runtime not independently inspected. No twelve new engines.",
+      "experimentProposal": {
+        "path": "실험/화면/소개/서비스 목적별 소개",
+        "existingApis": [
+          "ScreenLayout",
+          "Card",
+          "Grid",
+          "Button",
+          "Image",
+          "Affix"
+        ],
+        "decision": "composition-reference",
+        "registration": "pending-root-after-research",
+        "readiness": "public-tutorial-only-runtime-pending",
+        "scope": "Purpose-specific visual hierarchy/section-order/primary-action alternatives within the existing introduction screen. Do not create45 engines from brand examples or copy provider/auth/checkout semantics.",
+        "requiredStates": [
+          "Default",
+          "Dark",
+          "LargeText"
+        ],
+        "conditionalStates": [
+          "ReducedMotion",
+          "Rtl"
+        ],
+        "preconditions": "All illustrative image/live external reference screens and actual state/accessibility remain unreviewed; external claims are not conversion proof.",
+        "actualVerification": "Entire public tutorial only. External examples/source and actual visual/state behavior unverified."
+      }
     },
     {
       "url": "https://magicui.design/blog/tailwind-css-templates-free",
       "sourceSha256": "1aef82fef86ff174459e9f188b85cb75667e413128a7423d85657c26fdbf5fb8",
       "capturedAt": "2026-10-07T03:51:28Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 26577
+      "extractedCharacters": 26577,
+      "readScope": "Entire captured semantic main, every visible prose/table/code/FAQ/closing section; hidden tabs, external live templates and runtime states excluded.",
+      "reviewNotes": "Entire twelve free platform descriptions/customization/FAQ read. External template screens/source/license not inspected; provider accessibility/framework/performance claims not validated. Reuse introduction and existing dashboard roles only after actual template review.",
+      "experimentProposal": {
+        "path": "실험/화면/소개/서비스 목적별 소개",
+        "existingApis": [
+          "ScreenLayout",
+          "Card",
+          "Grid",
+          "Button",
+          "Image",
+          "Affix"
+        ],
+        "decision": "composition-reference",
+        "registration": "pending-root-after-research",
+        "readiness": "public-tutorial-only-runtime-pending",
+        "scope": "Purpose-specific visual hierarchy/section-order/primary-action alternatives within the existing introduction screen. Do not create45 engines from brand examples or copy provider/auth/checkout semantics.",
+        "requiredStates": [
+          "Default",
+          "Dark",
+          "LargeText"
+        ],
+        "conditionalStates": [
+          "ReducedMotion",
+          "Rtl"
+        ],
+        "preconditions": "All illustrative image/live external reference screens and actual state/accessibility remain unreviewed; external claims are not conversion proof.",
+        "actualVerification": "Entire public tutorial only. External examples/source and actual visual/state behavior unverified."
+      }
     },
     {
       "url": "https://magicui.design/blog/tailwind-css-themes",
       "sourceSha256": "b0065f3ade5461eb8e4bf7d79f86cb0d91129487c0a6c9a642daef2805845400",
       "capturedAt": "2026-10-07T03:51:30Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 27005
+      "extractedCharacters": 27005,
+      "readScope": "Entire captured semantic main, every visible prose/table/code/FAQ/closing section; hidden tabs, external live templates and runtime states excluded.",
+      "reviewNotes": "Entire theme guide/config/font/dark/plugins/headless selection/migration read. Central semantic color/type/spacing direction fits HJM; numerical market/conversion claims and current plugin/config compatibility not verified. No new theme engine or arbitrary size tokens.",
+      "experimentProposal": {
+        "path": "실험/구성/비교와 검증/테마 전환 비교",
+        "existingApis": [
+          "HjmProvider",
+          "HjmNativeProvider"
+        ],
+        "decision": "platform-presentation",
+        "registration": "pending-root-after-research",
+        "scope": "Expression or composition using current API; no new duplicate engine. Preconditions and source risks remain in manualReviewNotes and reviewNotes.",
+        "requiredStates": [
+          "Default",
+          "Dark",
+          "LargeText"
+        ],
+        "conditionalStates": [
+          "ReducedMotion",
+          "Rtl",
+          "Disabled",
+          "Pending",
+          "Failed",
+          "Recovery"
+        ],
+        "actualVerification": "Entire public tutorial only. External examples/source and actual visual/state behavior unverified.",
+        "readiness": "public-tutorial-only-runtime-pending"
+      }
     },
     {
       "url": "https://magicui.design/blog/tailwind-dark-mode",
       "sourceSha256": "16380f9f025a344083c67f27d352f94b2e51981886196d6f0562a85181353581",
       "capturedAt": "2026-10-07T03:51:32Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 18777
+      "extractedCharacters": 18777,
+      "readScope": "Entire captured semantic main, every visible prose/table/code/FAQ/closing section; hidden tabs, external live templates and runtime states excluded.",
+      "reviewNotes": "Entire dark-mode guide, all prepaint/provider/persistence/CSS snippets and FAQ read. Hex-valued CSS vars fed to hsl(var(...)) are incompatible in source. Provider starts light without integrated saved/system init; separate script only adds dark, storage exceptions/system changes/multi-provider cleanup absent. Global transition lacks reduced-motion guard. Reuse controlled HjmProvider/HjmNativeProvider; persistence belongs to product. No runtime/firstpaint validation.",
+      "experimentProposal": {
+        "path": "실험/구성/비교와 검증/테마 전환 비교",
+        "existingApis": [
+          "HjmProvider",
+          "HjmNativeProvider"
+        ],
+        "decision": "platform-presentation",
+        "registration": "pending-root-after-research",
+        "scope": "Expression or composition using current API; no new duplicate engine. Preconditions and source risks remain in manualReviewNotes and reviewNotes.",
+        "requiredStates": [
+          "Default",
+          "Dark",
+          "LargeText"
+        ],
+        "conditionalStates": [
+          "ReducedMotion",
+          "Rtl",
+          "Disabled",
+          "Pending",
+          "Failed",
+          "Recovery"
+        ],
+        "actualVerification": "Entire public tutorial only. External examples/source and actual visual/state behavior unverified.",
+        "readiness": "public-tutorial-only-runtime-pending"
+      }
     },
     {
       "url": "https://magicui.design/blog/tailwind-font-size",
       "sourceSha256": "32e22cdb35ba5d5ab459a4abb0a56bdea5831788e6e335255d910db45f5a6a4a",
       "capturedAt": "2026-10-07T03:51:34Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 6602
+      "extractedCharacters": 6602,
+      "readScope": "Entire captured semantic main, every visible prose/table/code/FAQ/closing section; hidden tabs, external live templates and runtime states excluded.",
+      "reviewNotes": "Entire font-size table, responsive/code examples and config prose read. text-md list versus text-base examples; xxs10px and fixed h-screen centering do not establish HJM large-text conformance. Existing typography/fontFamily roles only; no arbitrary tiny token.",
+      "experimentProposal": {
+        "path": null,
+        "decision": "informational-guide-only",
+        "registration": "not-applicable",
+        "reason": "Resource/framework/setup information provides no distinct UI role beyond already mapped components; source recipes/claims not executed or independently validated."
+      }
     },
     {
       "url": "https://magicui.design/blog/tailwind-landing-page",
       "sourceSha256": "60d405da94c7c334e4b97a009bc9a0429c3dc46ac43d77ba8d973e505a43fc89",
       "capturedAt": "2026-10-07T03:51:36Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 18705
+      "extractedCharacters": 18705,
+      "readScope": "Entire captured semantic main, every visible prose/table/code/FAQ/closing section; hidden tabs, external live templates and runtime states excluded.",
+      "reviewNotes": "Entire landing guide/twelve template descriptions/header code/SEO/deployment FAQ read. Static header href placeholders and absent mobile menu; unversioned old setup/CDN example not executed. External twelve live templates unreviewed. Reuse purpose-specific intro with HJM state contracts, product owns transport/SEO/deploy.",
+      "experimentProposal": {
+        "path": "실험/화면/소개/서비스 목적별 소개",
+        "existingApis": [
+          "ScreenLayout",
+          "Card",
+          "Grid",
+          "Button",
+          "Image",
+          "Affix"
+        ],
+        "decision": "composition-reference",
+        "registration": "pending-root-after-research",
+        "readiness": "public-tutorial-only-runtime-pending",
+        "scope": "Purpose-specific visual hierarchy/section-order/primary-action alternatives within the existing introduction screen. Do not create45 engines from brand examples or copy provider/auth/checkout semantics.",
+        "requiredStates": [
+          "Default",
+          "Dark",
+          "LargeText"
+        ],
+        "conditionalStates": [
+          "ReducedMotion",
+          "Rtl"
+        ],
+        "preconditions": "All illustrative image/live external reference screens and actual state/accessibility remain unreviewed; external claims are not conversion proof.",
+        "actualVerification": "Entire public tutorial only. External examples/source and actual visual/state behavior unverified."
+      }
     },
     {
       "url": "https://magicui.design/blog/tailwind-landing-page-templates",
       "sourceSha256": "2d9450d2a5c5bea2ed15d12f30f5a31cce2c8f68aaaecbfc0a5fb06c8bf4ec58",
       "capturedAt": "2026-10-07T03:51:38Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 20757
+      "extractedCharacters": 20757,
+      "readScope": "Entire captured semantic main, every visible prose/table/code/FAQ/closing section; hidden tabs, external live templates and runtime states excluded.",
+      "reviewNotes": "Entire template selection/provider table/Vite-Tailwind setup/component-data separation/motion/responsive/a11y/deploy text read. Source featuresData.js is announced without a visible data code block. Old unversioned init config and escaped glob not adopted. Focus/semantic/alt criteria are useful, but no real responsive/focus test or template external screen inspection. Existing introduction/Card/Grid/Button only; provider pricing/support/adoption claims source-only.",
+      "experimentProposal": {
+        "path": "실험/화면/소개/서비스 목적별 소개",
+        "existingApis": [
+          "ScreenLayout",
+          "Card",
+          "Grid",
+          "Button",
+          "Image",
+          "Affix"
+        ],
+        "decision": "composition-reference",
+        "registration": "pending-root-after-research",
+        "readiness": "public-tutorial-only-runtime-pending",
+        "scope": "Purpose-specific visual hierarchy/section-order/primary-action alternatives within the existing introduction screen. Do not create45 engines from brand examples or copy provider/auth/checkout semantics.",
+        "requiredStates": [
+          "Default",
+          "Dark",
+          "LargeText"
+        ],
+        "conditionalStates": [
+          "ReducedMotion",
+          "Rtl"
+        ],
+        "preconditions": "All illustrative image/live external reference screens and actual state/accessibility remain unreviewed; external claims are not conversion proof.",
+        "actualVerification": "Entire public tutorial only. External examples/source and actual visual/state behavior unverified."
+      }
     },
     {
       "url": "https://magicui.design/blog/tailwind-portfolio-template",
       "sourceSha256": "a9d3c798cd9425ac8b95f2247aa0a33af39722fd82dfc5f3541be481055e88c7",
       "capturedAt": "2026-10-07T03:51:40Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 14022
+      "extractedCharacters": 14022,
+      "readScope": "Entire captured semantic main, every visible prose/table/code/FAQ/closing section; hidden tabs, external live templates and runtime states excluded.",
+      "reviewNotes": "Entire twelve portfolio/template descriptions/all section/customization guidance read. Admin/portfolio/blog/landing roles mixed. External twelve live templates/code/forms/media/license unreviewed. Existing intro hierarchy and product-owned contact/transport, no template duplication.",
+      "experimentProposal": {
+        "path": "실험/화면/소개/서비스 목적별 소개",
+        "existingApis": [
+          "ScreenLayout",
+          "Card",
+          "Grid",
+          "Button",
+          "Image",
+          "Affix"
+        ],
+        "decision": "composition-reference",
+        "registration": "pending-root-after-research",
+        "readiness": "public-tutorial-only-runtime-pending",
+        "scope": "Purpose-specific visual hierarchy/section-order/primary-action alternatives within the existing introduction screen. Do not create45 engines from brand examples or copy provider/auth/checkout semantics.",
+        "requiredStates": [
+          "Default",
+          "Dark",
+          "LargeText"
+        ],
+        "conditionalStates": [
+          "ReducedMotion",
+          "Rtl"
+        ],
+        "preconditions": "All illustrative image/live external reference screens and actual state/accessibility remain unreviewed; external claims are not conversion proof.",
+        "actualVerification": "Entire public tutorial only. External examples/source and actual visual/state behavior unverified."
+      }
     },
     {
       "url": "https://magicui.design/blog/tailwind-vs-bootstrap",
       "sourceSha256": "a443f6a2d93f5b5a24c6574107a16a1754014f97d0ab944f42cbbd17ad8f7c63",
       "capturedAt": "2026-10-07T03:51:42Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 20716
+      "extractedCharacters": 20716,
+      "readScope": "Entire captured semantic main and all visible prose/table/code/FAQ/closing sections; hidden source, external examples and runtime excluded.",
+      "reviewNotes": "Entire Tailwind/Bootstrap descriptions/all comparison/company/choice sections read. Framework/resource information, no distinct UI role. Bootstrap utility compatibility/Magic integration/70percent speed/company usage claims are not verified. No library adoption.",
+      "experimentProposal": {
+        "path": null,
+        "decision": "informational-guide-only",
+        "registration": "not-applicable",
+        "reason": "Resource/framework/setup information provides no distinct UI role beyond already mapped components; source recipes/claims not executed or independently validated."
+      }
     },
     {
       "url": "https://magicui.design/blog/text-animation-css",
       "sourceSha256": "6496d58ce669add7b135e0d8fbefeb77effae2c5c5c6caa821d57ab1b159a1eb",
       "capturedAt": "2026-10-07T03:51:44Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 17527
+      "extractedCharacters": 17527,
+      "readScope": "Entire captured semantic main and all visible prose/table/code/FAQ/closing sections; hidden source, external examples and runtime excluded.",
+      "reviewNotes": "Entire15 text-animation descriptions/keyframe code/Magic guide read. h1 loops360degree rotation infinitely; no reduced/static/visible fallback or full15 implementation. FadeIn/Typewriter from magicui conflicts registry docs, not executed. Reuse Text/ContentTransition expression with grapheme/readability/semantic state preserved; source39percent engagement unverified.",
+      "experimentProposal": {
+        "path": "실험/구성/비교와 검증/글자 표현 비교",
+        "existingApis": [
+          "Text",
+          "ContentTransition"
+        ],
+        "decision": "optional-expression",
+        "registration": "pending-root-after-research",
+        "scope": "Expression or composition using current API; no new duplicate engine. Preconditions and source risks remain in manualReviewNotes and reviewNotes.",
+        "requiredStates": [
+          "Default",
+          "Dark",
+          "LargeText"
+        ],
+        "conditionalStates": [
+          "ReducedMotion",
+          "Rtl",
+          "Disabled",
+          "Pending",
+          "Failed",
+          "Recovery"
+        ],
+        "actualVerification": "Entire public tutorial and stated existing usage only; actual visual/state behavior unverified.",
+        "readiness": "public-tutorial-only-runtime-pending"
+      }
     },
     {
       "url": "https://magicui.design/blog/text-loading-bar",
       "sourceSha256": "9336c39acf41a3bc85210cd2b29a7cf24d8685bd69fa3bf61e034d055c9f388f",
       "capturedAt": "2026-10-07T03:51:46Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 20864
+      "extractedCharacters": 20864,
+      "readScope": "Entire captured semantic main and all visible prose/table/code/FAQ/closing sections; hidden source, external examples and runtime excluded.",
+      "reviewNotes": "Entire progress guide/all simulated-JS/Tailwind/API/ARIA/FAQ content read. Basic HTML visible as rendered Loading60percent and Processing75percent, no complete reusable React implementation. Timer increments fake progress; width animation earlier conflicts later scaleX recommendation. mix-blend-mode difference does not establish guaranteed contrast; white text over gray unverified. Existing Progress usage fully read: label/value/max/valueText and indeterminate semantics; no new loading engine or fake completion.",
+      "experimentProposal": {
+        "path": "실험/구성/피드백과 복구/대기 단계와 진행",
+        "existingApis": [
+          "Spinner",
+          "Skeleton",
+          "Progress",
+          "Steps"
+        ],
+        "decision": "reuse-existing-api-comparison-or-composition",
+        "registration": "pending-root-after-research",
+        "scope": "Reuse real async/product progress and existing region feedback. Distinguish indeterminate, determinate, skeleton, timeout/error/retry and reduced/static states; no fake completion or new loading engine.",
+        "requiredStates": [
+          "Default",
+          "Dark",
+          "LargeText"
+        ],
+        "conditionalStates": [
+          "ReducedMotion",
+          "Rtl",
+          "Pending",
+          "Disabled",
+          "Failed",
+          "Recovery"
+        ],
+        "readiness": "public-tutorial-only-runtime-pending",
+        "actualVerification": "Entire public tutorial and stated existing usage only; actual visual/state behavior unverified."
+      }
     },
     {
       "url": "https://magicui.design/blog/time-and-date-picker",
       "sourceSha256": "0f05ca3c7029b2028d8a607ffac3805f5bace0f3391a474848fc960c470eea71",
       "capturedAt": "2026-10-07T03:51:48Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 21457
+      "extractedCharacters": 21457,
+      "readScope": "Entire captured semantic main and all visible prose/table/code/FAQ/closing sections; hidden source, external examples and runtime excluded.",
+      "reviewNotes": "Entire picker guide/interface/date-time state/ARIA/keyboard/locale/FAQ read. Only DatePickerProps actual code, calendar/time/keyboard implementations are narrative. CSS opacity/pointer-events-none cannot ensure keyboard-disabled semantics. Date object guidance first says modify same object then newDate; UTC-only generic claim does not settle civil/date-only/DST/appointment zone. Existing DatePicker/time-selection usage fully read; controlled ISOdate plus Select hour/minute and validation/recovery, product timezone/rules/locale. Actual picker runtime unverified.",
+      "experimentProposal": {
+        "path": "실험/구성/선택과 필터/날짜와 시각 선택",
+        "existingApis": [
+          "DatePicker",
+          "Select",
+          "Section",
+          "Stack",
+          "Text",
+          "Button",
+          "Notice"
+        ],
+        "decision": "reuse-existing-api-comparison-or-composition",
+        "registration": "pending-root-after-research",
+        "scope": "Combine existing single ISOdate picker and hour/minute time-selection composition; preserve independent controlled values, blocked-cell semantics, month-navigation selection retention, pending locking and retry value retention. Product owns civil-date/timezone/DST/rules/locale/transport; no DateTimePicker engine or new date library.",
+        "requiredStates": [
+          "Default",
+          "Dark",
+          "LargeText"
+        ],
+        "conditionalStates": [
+          "Rtl",
+          "ReducedMotion",
+          "Disabled",
+          "Pending",
+          "Failed",
+          "Recovery"
+        ],
+        "readiness": "public-tutorial-only-runtime-pending",
+        "actualVerification": "Entire public tutorial and stated existing usage only; actual visual/state behavior unverified."
+      }
     },
     {
       "url": "https://magicui.design/blog/typescript-vs-javascript-differences",
       "sourceSha256": "57c6b5db3c5bb8642b7b77acbeaf82cc80c8a65bfa747e72b0bd654f19745612",
       "capturedAt": "2026-10-07T03:51:50Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 26178
+      "extractedCharacters": 26178,
+      "readScope": "Entire captured semantic main and all visible prose/table/code/FAQ/closing sections; hidden source, external examples and runtime excluded.",
+      "reviewNotes": "Entire TS/JS guide/all code/table/performance/ecosystem/FAQ read. calculateTotal(100,string2) multiply evaluates200, not sourceclaimed1002/NaN; static type checking not runtime validation. SWC/esbuild speed discussion mixed typechecking/transpilation; release/benchmarks not verified. No distinct UI role/library or compiler change.",
+      "experimentProposal": {
+        "path": null,
+        "decision": "informational-guide-only",
+        "registration": "not-applicable",
+        "reason": "Resource/framework/setup information provides no distinct UI role beyond already mapped components; source recipes/claims not executed or independently validated."
+      }
     },
     {
       "url": "https://magicui.design/blog/ui-animation",
       "sourceSha256": "743023deebe9e4f733fcde7d80e55d8160ddfbf41cae5fa5663afe0c303d7fa2",
       "capturedAt": "2026-10-07T03:51:52Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 22340
+      "extractedCharacters": 22340,
+      "readScope": "Entire captured semantic main and all visible prose/table/code/FAQ/closing sections; hidden source, external examples and runtime excluded.",
+      "reviewNotes": "Entire animation guide/types/CSS/Motion/Magic snippets/psychology/three brand cases/tips read. Magic Button import not verified/currentregistry; progress overtime explanation does not justify fake percentages. Toggle-motion advice useful but no actual reduced controls in snippet. Reuse ContentTransition existing lifecycle/entry; product haptics/story/async semantics.",
+      "experimentProposal": {
+        "path": "실험/컴포넌트/시각 효과/내용 진입 표현",
+        "existingApis": [
+          "ContentTransition"
+        ],
+        "decision": "reuse-existing-engine-expression",
+        "registration": "pending-root-after-research",
+        "scope": "Scroll-triggered entry/stagger idea on existing ContentTransition with content-visible fallback, lifecycle/reduced state and focus preserved. No duplicate observer engine and no unverified blog package/import adoption.",
+        "requiredStates": [
+          "Default",
+          "Dark",
+          "LargeText"
+        ],
+        "conditionalStates": [
+          "ReducedMotion",
+          "Rtl",
+          "Disabled",
+          "Pending",
+          "Failed",
+          "Recovery"
+        ],
+        "actualVerification": "Entire public tutorial and stated existing usage only; actual visual/state behavior unverified.",
+        "readiness": "public-tutorial-only-runtime-pending"
+      }
     },
     {
       "url": "https://magicui.design/blog/ui-card-design",
       "sourceSha256": "5d0c105d0d082bbe9bb261a3395596d50b0283948844db4c7c35b60f9116dfdf",
       "capturedAt": "2026-10-07T03:51:54Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 21223
+      "extractedCharacters": 21223,
+      "readScope": "Entire captured semantic main and all visible prose/table/code/FAQ/closing sections; hidden source, external examples and runtime excluded.",
+      "reviewNotes": "Entire card anatomy/table/hierarchy/a11y/product-content-profile patterns/AI/future/FAQ read. No complete card implementation or actual three brand/product screen inspected. Reuse Card/Grid/Link/Button/Image/Avatar for purpose-specific content hierarchy; dynamic recommendation/analytics product-owned.94/200percent/$100ROI claims not proof. Do not hide required facts only for narrow width.",
+      "experimentProposal": {
+        "path": "실험/구성/정보 표시/기능 카드 묶음",
+        "existingApis": [
+          "Grid",
+          "Card",
+          "Button",
+          "Link"
+        ],
+        "decision": "reuse-improve",
+        "registration": "pending-root-after-research",
+        "scope": "Expression or composition using current API; no new duplicate engine. Preconditions and source risks remain in manualReviewNotes and reviewNotes.",
+        "requiredStates": [
+          "Default",
+          "Dark",
+          "LargeText"
+        ],
+        "conditionalStates": [
+          "ReducedMotion",
+          "Rtl",
+          "Disabled",
+          "Pending",
+          "Failed",
+          "Recovery"
+        ],
+        "actualVerification": "Entire public tutorial and stated existing usage only; actual visual/state behavior unverified.",
+        "readiness": "public-tutorial-only-runtime-pending"
+      }
     },
     {
       "url": "https://magicui.design/blog/ui-framework-for-react",
       "sourceSha256": "3b2813cc4c212b66e555f1315f2052547b31a2fff3243ed77eafdebb0ec1e3e3",
       "capturedAt": "2026-10-07T03:51:56Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 22655
+      "extractedCharacters": 22655,
+      "readScope": "Entire captured semantic main and all visible prose/table/code/FAQ/closing sections; hidden source, external examples and runtime excluded.",
+      "reviewNotes": "Entire React framework evaluation/comparison/AnimatedGrid snippets/CLI/FAQ read. magic-ui-cli init/add and AnimatedGrid import/--duration/--gap not verified against live registry, unlike previously readManual AnimatedGridPattern. Semantic/a11y/performance/library adoption claims not guarantees. Information guide no distinct newUIrole; optional decorative grid already mapped in Manual, no engine install.",
+      "experimentProposal": {
+        "path": null,
+        "decision": "informational-guide-only",
+        "registration": "not-applicable",
+        "reason": "Resource/framework/setup information provides no distinct UI role beyond already mapped components; source recipes/claims not executed or independently validated."
+      }
     },
     {
       "url": "https://magicui.design/blog/ui-frameworks",
       "sourceSha256": "08ebc53304cd28f2b786f7f2858d91dae852a9309118eeb6f0efd4d426ed7dad",
       "capturedAt": "2026-10-07T03:51:58Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 21660
+      "extractedCharacters": 21660,
+      "readScope": "Entire captured semantic main and all visible prose/table/code/FAQ/closing sections; hidden source, external examples and runtime excluded.",
+      "reviewNotes": "Entire nineframework descriptions/eightselection criteria/future/currentclaims read. Framework and UIkit scopes mixed; duplicated accessibility heading, Angular WhenToUse empty. No actual component source/visual/compatibility/security/performance verification. Resource information no distinct UI role.",
+      "experimentProposal": {
+        "path": null,
+        "decision": "informational-guide-only",
+        "registration": "not-applicable",
+        "reason": "Resource/framework/setup information provides no distinct UI role beyond already mapped components; source recipes/claims not executed or independently validated."
+      }
     },
     {
       "url": "https://magicui.design/blog/ui-libraries",
       "sourceSha256": "b53544654f68db9454010a9f529030c562aa98cd1fe165c4e34649af41ec7d34",
       "capturedAt": "2026-10-07T03:52:00Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 25800
+      "extractedCharacters": 25800,
+      "readScope": "Entire captured semantic main and all visible prose/table/code/FAQ/closing sections; hidden source, external examples and runtime excluded.",
+      "reviewNotes": "Entire15 libraries/all duplicated choosing sections/10implementation practices read. Includes CSS/framework/Nuxt/Next/UIkit mixed; MagicWeb cross-framework/accessibility/support claims not runtime proof. Existing roles already mapped, no extraengine/library adoption; currentsupport/performance/compatibility not verified.",
+      "experimentProposal": {
+        "path": null,
+        "decision": "informational-guide-only",
+        "registration": "not-applicable",
+        "reason": "Resource/framework/setup information provides no distinct UI role beyond already mapped components; source recipes/claims not executed or independently validated."
+      }
     },
     {
       "url": "https://magicui.design/blog/user-interface-design-patterns",
       "sourceSha256": "6f5a6d36df1a6502fde2b75c3e341cdb0e4f13f5e38bb2385389a191c29a4138",
       "capturedAt": "2026-10-07T03:52:02Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 22308
+      "extractedCharacters": 22308,
+      "readScope": "Entire captured semantic main and all visible prose/table/code/FAQ/closing sections; hidden code and external live examples/runtime excluded.",
+      "reviewNotes": "Entire patterns/history/WIMP/mobile/four-category promise/mainthree groups/Magic bento/dynamic forms/validation/FAQ read. No complete live pattern code. Immediate success afterSubmit wording not real async confirmation; hover bento has keyboard risks already actually observed. Reuse Card/Grid/Button/Link navigation and feedback roles.60/70/85percent claims not measured.",
+      "experimentProposal": {
+        "path": "실험/구성/정보 표시/기능 카드 묶음",
+        "existingApis": [
+          "Grid",
+          "Card",
+          "Button",
+          "Link"
+        ],
+        "decision": "reuse-improve",
+        "registration": "pending-root-after-research",
+        "scope": "Expression or composition using current API; no new duplicate engine. Preconditions and source risks remain in manualReviewNotes and reviewNotes.",
+        "requiredStates": [
+          "Default",
+          "Dark",
+          "LargeText"
+        ],
+        "conditionalStates": [
+          "ReducedMotion",
+          "Rtl",
+          "Disabled",
+          "Pending",
+          "Failed",
+          "Recovery"
+        ],
+        "actualVerification": "Entire public tutorial only. External source/live screens and actual behavior unverified.",
+        "readiness": "public-tutorial-only-runtime-pending"
+      }
     },
     {
       "url": "https://magicui.design/blog/user-interface-themes",
       "sourceSha256": "4385f9ad211b7a38bcf7433d909ba8ef33cded59d31ec676b493e16338329152",
       "capturedAt": "2026-10-07T03:52:04Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 22815
+      "extractedCharacters": 22815,
+      "readScope": "Entire captured semantic main and all visible prose/table/code/FAQ/closing sections; hidden code and external live examples/runtime excluded.",
+      "reviewNotes": "Entire theme philosophy/light-dark/material/minimal/flat/highcontrast/branded/alltoken/state/a11y/inlineCard/FAQ read. Central theme direction alignsHJM; actual JSX only hardcoded light/dark Card styles and commentedstate, no themeengine. UIkit universallyunstyled/neverpureblack/eye-strain and market assertions not standards proof. Existing HjmProvider/HjmNativeProvider semantic/profile states, persistence product-owned; no10newthemes or newengine fromprose.",
+      "experimentProposal": {
+        "path": "실험/구성/비교와 검증/테마 전환 비교",
+        "existingApis": [
+          "HjmProvider",
+          "HjmNativeProvider"
+        ],
+        "decision": "platform-presentation",
+        "registration": "pending-root-after-research",
+        "scope": "Expression or composition using current API; no new duplicate engine. Preconditions and source risks remain in manualReviewNotes and reviewNotes.",
+        "requiredStates": [
+          "Default",
+          "Dark",
+          "LargeText"
+        ],
+        "conditionalStates": [
+          "ReducedMotion",
+          "Rtl",
+          "Disabled",
+          "Pending",
+          "Failed",
+          "Recovery"
+        ],
+        "actualVerification": "Entire public tutorial only. External source/live screens and actual behavior unverified.",
+        "readiness": "public-tutorial-only-runtime-pending"
+      }
     },
     {
       "url": "https://magicui.design/blog/visual-hierarchy-in-web-design",
       "sourceSha256": "b105954031e3c358803850a117f9a1627f1c19285cd017b7fefbecb094e966d9",
       "capturedAt": "2026-10-07T03:52:06Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 26532
+      "extractedCharacters": 26532,
+      "readScope": "Entire captured semantic main and all visible prose/table/code/FAQ/closing sections; hidden code and external live examples/runtime excluded.",
+      "reviewNotes": "Entire hierarchyprinciples/tables/HeroCTA/allheatmap/AB/SEO/FAQread. Hero fixed5xl/blue/buttonwithouttypehandlerdarkpending;sourcecallssimplifiedMagicheroonlyprose. ExistingpurposeintroScreenLayout/Text/Button hierarchy,DOM semanticorderandRTL remain. Heatmaps analytics/experimentmeasurements productowned;nojobs/servicesinstalled,noactualconversionproof.",
+      "experimentProposal": {
+        "path": "실험/화면/소개/서비스 목적별 소개",
+        "existingApis": [
+          "ScreenLayout",
+          "Card",
+          "Grid",
+          "Button",
+          "Image",
+          "Affix"
+        ],
+        "decision": "composition-reference",
+        "registration": "pending-root-after-research",
+        "readiness": "public-tutorial-only-runtime-pending",
+        "scope": "Purpose-specific visual hierarchy/section-order/primary-action alternatives within the existing introduction screen. Do not create45 engines from brand examples or copy provider/auth/checkout semantics.",
+        "requiredStates": [
+          "Default",
+          "Dark",
+          "LargeText"
+        ],
+        "conditionalStates": [
+          "ReducedMotion",
+          "Rtl"
+        ],
+        "preconditions": "All illustrative image/live external reference screens and actual state/accessibility remain unreviewed; external claims are not conversion proof.",
+        "actualVerification": "Entire public tutorial only. External source/live screens and actual behavior unverified."
+      }
     },
     {
       "url": "https://magicui.design/blog/waitlist-landing-page",
       "sourceSha256": "d62652fe4769ebb70fb123e6518faf0662cea9ac852270ee121d16ff3da4a1c6",
       "capturedAt": "2026-10-07T03:52:08Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 16901
+      "extractedCharacters": 16901,
+      "readScope": "Entire captured semantic main and all visible prose/table/code/FAQ/closing sections; hidden code and external live examples/runtime excluded.",
+      "reviewNotes": "Entire waitlistvalue/signupelements/urgency/exitpopup/TypeformJotform/thankyou/AB/threebrand/bestpracticesread. No actualsignupcode/live3examples. Existingintro+Form/Button/Notice; realpending/accepted/error/retry/emailconfirmationownedproduct. No fake countdown/stock/waitlist/socialproof or autoCRM/messages.",
+      "experimentProposal": {
+        "path": "실험/화면/소개/서비스 목적별 소개",
+        "existingApis": [
+          "ScreenLayout",
+          "Card",
+          "Grid",
+          "Button",
+          "Image",
+          "Affix"
+        ],
+        "decision": "composition-reference",
+        "registration": "pending-root-after-research",
+        "readiness": "public-tutorial-only-runtime-pending",
+        "scope": "Purpose-specific visual hierarchy/section-order/primary-action alternatives within the existing introduction screen. Do not create45 engines from brand examples or copy provider/auth/checkout semantics.",
+        "requiredStates": [
+          "Default",
+          "Dark",
+          "LargeText"
+        ],
+        "conditionalStates": [
+          "ReducedMotion",
+          "Rtl"
+        ],
+        "preconditions": "All illustrative image/live external reference screens and actual state/accessibility remain unreviewed; external claims are not conversion proof.",
+        "actualVerification": "Entire public tutorial only. External source/live screens and actual behavior unverified."
+      }
     },
     {
       "url": "https://magicui.design/blog/web-animation-tools",
       "sourceSha256": "98e79aed367e6abaaf17777d34dbefa926c6dbf5c5faa954fdaecc2e587e7dcb",
       "capturedAt": "2026-10-07T03:52:10Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 21357
+      "extractedCharacters": 21357,
+      "readScope": "Entire captured semantic main and all visible prose/table/code/FAQ/closing sections; hidden code and external live examples/runtime excluded.",
+      "reviewNotes": "Entireanimationtoolguide/Magicfeatures/performanceaccessibility/fivebrandcases/15trends/endingread. Title10toolsbutmainonlyMagicplusnamedlibraries, no10toolimplementations. SEOanimationsfavored/mobilesupport/SVGlightweight/Lottieefficiency assertions source-only. Existingentry/lifecyclegroups, noGSAP/Lottie/newchartlibraryinstall,externalfivebrandflowunreviewed.",
+      "experimentProposal": {
+        "path": "실험/컴포넌트/시각 효과/내용 진입 표현",
+        "existingApis": [
+          "ContentTransition"
+        ],
+        "decision": "reuse-existing-engine-expression",
+        "registration": "pending-root-after-research",
+        "scope": "Scroll-triggered entry/stagger idea on existing ContentTransition with content-visible fallback, lifecycle/reduced state and focus preserved. No duplicate observer engine and no unverified blog package/import adoption.",
+        "requiredStates": [
+          "Default",
+          "Dark",
+          "LargeText"
+        ],
+        "conditionalStates": [
+          "ReducedMotion",
+          "Rtl",
+          "Disabled",
+          "Pending",
+          "Failed",
+          "Recovery"
+        ],
+        "actualVerification": "Entire public tutorial only. External source/live screens and actual behavior unverified.",
+        "readiness": "public-tutorial-only-runtime-pending"
+      }
     },
     {
       "url": "https://magicui.design/blog/web-application-design",
       "sourceSha256": "1919ad6f966567970e043de0d2c656cc2e4820a49ecfccc57f4ebc8c0258f40a",
       "capturedAt": "2026-10-07T03:52:12Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 30066
+      "extractedCharacters": 30066,
+      "readScope": "Entire captured semantic main and all visible prose/table/code/FAQ/closing sections; hidden code and external live examples/runtime excluded.",
+      "reviewNotes": "Entire webappcharacteristics/devlifecycle/10principles/FAQmetrics/endingread. Literaleditorialinstruction Suggestashort2-wordsubtopictitle remains. Genericarchitecture/auth/security/backend/analyticsoutsideHJM; noactualappscreen/componentcode/newdistinctrole. Qualitativecriteria only, universalMagicaccessibility/supportclaimsnotproof.",
+      "experimentProposal": {
+        "path": null,
+        "decision": "informational-guide-only",
+        "registration": "not-applicable",
+        "reason": "Resource/framework/setup information provides no distinct UI role beyond already mapped components; source recipes/claims not executed or independently validated."
+      }
     },
     {
       "url": "https://magicui.design/blog/web-design-best-practices",
       "sourceSha256": "4963b213a5b17383785700d66bda72df6c7485f9a9934f9de6e5e8adc0dcfa5a",
       "capturedAt": "2026-10-07T03:52:14Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 27581
+      "extractedCharacters": 27581,
+      "readScope": "Entire captured semantic main and all visible prose/table/code/FAQ/closing sections; hidden code and external live examples/runtime excluded.",
+      "reviewNotes": "Entireperformance10/principles/responsive/accessibility/hierarchy/mistakes/typography/usertesting/toolslistsread. No executable component/code and noactualperformancemeasurement. Generic cacheCDNserver/analytics/SEO productowned;80/50/94/7percentandblanketMagicresponsiveaccessible assertionsnotverification. AsyncloadingCSS notadoptedblindly.",
+      "experimentProposal": {
+        "path": null,
+        "decision": "informational-guide-only",
+        "registration": "not-applicable",
+        "reason": "Resource/framework/setup information provides no distinct UI role beyond already mapped components; source recipes/claims not executed or independently validated."
+      }
     },
     {
       "url": "https://magicui.design/blog/web-design-trends",
       "sourceSha256": "b36ae8c39411fe1af7fb3af860aacdf7edc9c47b67ffcdf540947821e3e4200e",
       "capturedAt": "2026-10-07T03:52:16Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 24084
+      "extractedCharacters": 24084,
+      "readScope": "Entire captured semantic main and all visible prose/table/code/FAQ/closing sections; hidden code and external live examples/runtime excluded.",
+      "reviewNotes": "Entire15trenddescriptions/allintegration/a11y/analytics/privacy/endingread. Retro/pixel/Memphis/neon/skeuomorph/glass/gradient/duotone are styleideas without implementation. Finalitemnumber5not15; securitysectionannouncesmeasureswithoutlist. ExistingthemeprofileandEffectSurface/Text presentation, noARVRvoice/chat/newanalyticsengine. Sourcefirstimpression/currenttrend/neverrecover claimsnotmeasured.",
+      "experimentProposal": {
+        "path": "실험/구성/비교와 검증/테마 전환 비교",
+        "existingApis": [
+          "HjmProvider",
+          "HjmNativeProvider"
+        ],
+        "decision": "platform-presentation",
+        "registration": "pending-root-after-research",
+        "scope": "Expression or composition using current API; no new duplicate engine. Preconditions and source risks remain in manualReviewNotes and reviewNotes.",
+        "requiredStates": [
+          "Default",
+          "Dark",
+          "LargeText"
+        ],
+        "conditionalStates": [
+          "ReducedMotion",
+          "Rtl",
+          "Disabled",
+          "Pending",
+          "Failed",
+          "Recovery"
+        ],
+        "actualVerification": "Entire public tutorial only. External source/live screens and actual behavior unverified.",
+        "readiness": "public-tutorial-only-runtime-pending"
+      }
     },
     {
       "url": "https://magicui.design/blog/website-animation-examples",
       "sourceSha256": "36a35d32e5d07f38566ad9d2ce76aa0087b20248ad4e407e1592adce68bdf5ea",
       "capturedAt": "2026-10-07T03:52:18Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 24539
+      "extractedCharacters": 24539,
+      "readScope": "Entire captured semantic main and all visible prose/table/code/FAQ/closing sections; hidden code and external live examples/runtime excluded.",
+      "reviewNotes": "Entire15animationtypes/allgoals/designtest/performance/factors/endingread. Brandmascotfacts Slackpaperclip/Behancecharacter sourceclaimsnotverified. No15liveimplementations;SVG/animationperformanceguaranteesnotproof,left-to-rightglobaldirectionnotRTLcontract. Existingentry/feedback/themeexpressiongroups;productbrandassets/transport remain.",
+      "experimentProposal": {
+        "path": "실험/컴포넌트/시각 효과/내용 진입 표현",
+        "existingApis": [
+          "ContentTransition"
+        ],
+        "decision": "reuse-existing-engine-expression",
+        "registration": "pending-root-after-research",
+        "scope": "Scroll-triggered entry/stagger idea on existing ContentTransition with content-visible fallback, lifecycle/reduced state and focus preserved. No duplicate observer engine and no unverified blog package/import adoption.",
+        "requiredStates": [
+          "Default",
+          "Dark",
+          "LargeText"
+        ],
+        "conditionalStates": [
+          "ReducedMotion",
+          "Rtl",
+          "Disabled",
+          "Pending",
+          "Failed",
+          "Recovery"
+        ],
+        "actualVerification": "Entire public tutorial only. External source/live screens and actual behavior unverified.",
+        "readiness": "public-tutorial-only-runtime-pending"
+      }
     },
     {
       "url": "https://magicui.design/blog/website-footer",
       "sourceSha256": "be9d7557a6badc3db099e37e1528c99133d72f443da511c9142bff99edef4b02",
       "capturedAt": "2026-10-07T03:52:20Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 25903
+      "extractedCharacters": 25903,
+      "readScope": "Entire captured semantic main and all visible prose/table/code/FAQ/closing sections; hidden code and external live examples/runtime excluded.",
+      "reviewNotes": "Entire7footertypes/22elements/6practices/13brandexamples/endingread. Noactual13externalfooters orcompleteimplementation. NoFooter optional earlier vsallwebsitesneedfooter later; copyright/terms/cookieclaimsarenotlegalcomplianceproof. ExistingLink/Text/Layout/Asset lowerlinkgroups;productlegal/contact/newslettertransport/permission. Neverhidelegalrequiredcopy or enforce globalcontactplacement.",
+      "experimentProposal": {
+        "path": "실험/구성/탐색과 이동/하단 링크 묶음",
+        "existingApis": [
+          "Layout",
+          "Link",
+          "Text",
+          "Asset"
+        ],
+        "decision": "reuse-existing-engine-expression-or-composition",
+        "registration": "pending-root-after-research",
+        "readiness": "public-tutorial-only-runtime-pending",
+        "scope": "Footer grid/centered/large brand variants. Product owns link groups and legal copy; animated wordmark optional with static fallback.",
+        "requiredStates": [
+          "Default",
+          "Dark",
+          "LargeText"
+        ],
+        "conditionalStates": [
+          "ReducedMotion",
+          "Rtl"
+        ],
+        "preconditions": "Original Code/implementation, all variants and keyboard/touch/focus/disabled/pending/error/recovery where relevant need review. Root verifies existing title collision and public API/usage contracts before actual registration.",
+        "actualVerification": "Entire public tutorial only. External source/live screens and actual behavior unverified."
+      }
     },
     {
       "url": "https://magicui.design/blog/website-header-examples",
@@ -6276,9 +7756,9 @@
   ],
   "reviewCounts": {
     "capturedPages": 257,
-    "staticMainRead": 178,
+    "staticMainRead": 248,
     "staticMainPartial": 2,
-    "staticMainPending": 77,
+    "staticMainPending": 7,
     "manualImplementationRead": 77,
     "renderedSelectedPages": 4,
     "selectedFlowPages": 4
@@ -20891,7 +22371,7 @@
     "aceternityBlockUrlsMapped": 180,
     "aceternityBlockCatalogueUrlsExcluded": 22,
     "aceternityLabIdeaUrlsMapped": 6,
-    "magicBlogUrlsMapped": 40,
-    "uniquePathsAcrossAssignedSites": 67
+    "magicBlogUrlsMapped": 85,
+    "uniquePathsAcrossAssignedSites": 68
   }
 }
