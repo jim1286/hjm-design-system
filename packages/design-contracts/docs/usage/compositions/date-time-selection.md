@@ -3,7 +3,7 @@
 - 단계: 구성
 - 상태: 배포
 - 지원: Web · Native
-- 적용: 미게시(1.14.0 이후)
+- 적용: 1.16.0
 - 검토일: 2026-10-08
 - 근거: [Magic 조사](../../../../../docs/qa/2026-10-07-reference-parallel-b.md), 양 Showcase `date-time-selection-preview.tsx`, shared `date-time-selection.ts`
 - 스토리북: `배포/구성/선택과 필터/날짜와 시각 선택`

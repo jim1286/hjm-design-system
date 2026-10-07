@@ -3,7 +3,7 @@
 - 단계: 구성
 - 상태: 배포
 - 지원: Web · Native
-- 적용: 미게시(1.15.0 이후)
+- 적용: 1.16.0
 - 검토일: 2026-10-08
 - 근거: [원제품과 기존 API 대조](../../../../../docs/plans/aceternity-interaction-adoption-2026-10-07.md), 양 Showcase `collection-detail-preview.tsx`
 - 스토리북: `배포/구성/직접 조작과 모션/카드 상세 연결`

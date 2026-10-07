@@ -1,6 +1,6 @@
 # Finite collection rail
 
-검토일: 2026-10-07 · 새 공개 진입점 미게시(1.15.0 이후)
+검토일: 2026-10-08 · 공개 진입점: 1.16.0
 
 2026-10-07 Aceternity 다중 카드 예제와 기존 API를 대조했다. 기존 List는 세로 행 의미/구분선,
 Carousel/CarouselMotion은 단일 활성 패널의 숨김·inert·선택을 소유한다. 여러 카드가 함께 보이며

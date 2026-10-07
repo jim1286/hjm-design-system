@@ -3,7 +3,7 @@
 - 단계: 구성
 - 상태: 배포
 - 지원: Web · Native
-- 적용: 미게시(1.14.0 이후)
+- 적용: 1.16.0
 - 검토일: 2026-10-08
 - 근거: [후보 조사](../../../../../docs/qa/2026-10-07-reference-parallel-b.md), 양 Showcase `command-records-preview.tsx`
 - 스토리북: `배포/구성/정보 표시/명령 기록 표시`

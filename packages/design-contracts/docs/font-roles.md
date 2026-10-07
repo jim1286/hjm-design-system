@@ -1,6 +1,6 @@
 # Display, reading and technical font roles
 
-검토일: 2026-10-07 · 추가 역할은 1.15.0 이후 미게시
+검토일: 2026-10-08 · 추가 역할: 1.16.0
 
 조사 후보 A-05/C-T01은 제목과 읽기 본문에 다른 서체를 사용하는 실제 차이를 남겼다.
 기존 `tokens.fontFamily.ui/code`만으로는 크기를 변경해도 이 차이를 전달할 수 없었다.
@@ -36,7 +36,7 @@ iOS는 Apple이 열거한 동일 시스템 이름, 다른 Native host는 serif�
 
 [사용 지침](usage/tokens/font-roles.md)·[프로필](design-profile.md)·[타이포그래피](usage/tokens/typography.md)를 함께 따른다.
 
-## 조작 라벨과 읽기 본문의 구분 — 미게시
+## 조작 라벨과 읽기 본문의 구분 — 1.16.0
 
 2026-10-07 소비 감사에서 Native 조작 라벨 24곳이 body/bodyLarge 크기를 사용하면서 읽기 서체로 해석됐다.
 Button의 내부 라벨·제공자 버튼·ToggleGroup·선택 컨트롤·Switch·SegmentedControl·Chip·Tabs·Menu·Select·

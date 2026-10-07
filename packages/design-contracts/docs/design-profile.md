@@ -1,6 +1,6 @@
 # 디자인 프리셋 계약
 
-검토일: 2026-10-07 · 상태: 기본 10종 프로필 1.15.0 게시 · 후속 글자/질감/토큰 소비 개선 미게시
+검토일: 2026-10-08 · 상태: 기본 10종 프로필 1.15.0 · 후속 글자/질감/토큰 소비 개선 1.16.0
 
 사용자가 레트로·종이·숲 등의 테마에 따라 같은 기능의 상호작용·구성·화면 배치도 자동으로 달라지고, 앱이 자기 테마를 한 번 주입하기를 요청했다. 색상 프리셋만으로는 그 요구를 충족하지 못하므로 네 축을 하나의 데이터 계약으로 둔다. 기존 상태 엔진을 테마마다 복제하는 방식은 채택하지 않는다.
 
@@ -57,7 +57,7 @@ export const productDesign = defineHjmDesignProfile({
 
 ## 현재 증거와 남은 조건
 
-공통 데이터·Provider·기본 토큰 소비·상호작용 기본값·OverviewScreen 구성과 화면·양쪽 Storybook 비교를 구현했다. 2026-10-07 npm 1.15.0의 세 tarball integrity와 design-profile 진입점, 기본 10종 계약을 확인했다. 후속 CollectionRail·Text.fontRole·ruledSpacing과 토큰 소비 개선은 해당 게시본에 포함되지 않는다. 필요한 후보 조사는 마감했고, 확인한 모서리·제목 메트릭·UI 라벨·Toast 행간 누락을 [후속 QA](../../../docs/qa/2026-10-07-design-profile-research.md)에 따라 수정했다. 이는 모든 공개 컴포넌트/플랫폼 자동 검수 완료가 아니다.
+공통 데이터·Provider·기본 토큰 소비·상호작용 기본값·OverviewScreen 구성과 화면·양쪽 Storybook 비교를 구현했다. 2026-10-07 npm 1.15.0의 세 tarball integrity와 design-profile 진입점, 기본 10종 계약을 확인했다. 후속 CollectionRail·Text.fontRole·ruledSpacing과 토큰 소비 개선은 해당 1.15.0 게시본에 포함되지 않으며, 2026-10-08 npm 세 tarball을 검증한 1.16.0부터 제공한다. 필요한 후보 조사는 마감했고, 확인한 모서리·제목 메트릭·UI 라벨·Toast 행간 누락을 [후속 QA](../../../docs/qa/2026-10-07-design-profile-research.md)에 따라 수정했다. 이는 모든 공개 컴포넌트/플랫폼 자동 검수 완료가 아니다.
 
 브라우저의 입력 유지·복구와 선택 환경은 위 QA에, 기존 iPhone 17 Pro/iOS26.5 개발 호스트에서 수행한 테마·카드/글자/종이·전환/날짜/명령·독립 OverviewScreen 선택 흐름은 [Native QA](../../../docs/qa/2026-10-07-native-reference-validation.md)에 있다. Android·실물/Release 성능·실제 VoiceOver 순회와 소비 앱 반영은 미확인이다. OS 최대 글자 및 최대값 모사는 검사·후속·완료 조건에서 제외한다. 기본 npm 게시와 실험 승급, 후속 npm 게시, 소비 제품 적용을 각각 구분한다.
 
@@ -270,14 +270,14 @@ fallback은 유지한다. Web은 일반 Toast fallback이므로 Native 효과를
 2026-10-07 A-05/C-T01 적용: optional `tokens.fontFamily.display/reading`은 제목과 본문 역할을
 독립적으로 지정한다. 생략하면 현재 ui stack을 따르므로 기존 ui-only 제품 설정은 유지된다.
 Heading/Text의 의미·크기·굵기와 입력/버튼의 ui는 바꾸지 않는다. `Text.fontRole`로 명시 역할을 선택한다.
-[역할 계약](font-roles.md)과 [사용 지침](usage/tokens/font-roles.md)을 따른다. 이 추가 API는 1.15.0 이후 미게시다.
+[역할 계약](font-roles.md)과 [사용 지침](usage/tokens/font-roles.md)을 따른다. 이 추가 API는 1.16.0부터 제공한다.
 
 ## 종이 줄무늬와 앱 소유 표현
 
 2026-10-07 A-02의 줄무늬는 기존 점/노이즈와 구분되는 표현이라 EffectSurface의 정적 ruled 레이어로 보완했다.
 paper canvas는 grain+ruled/intensity0.06/ruledSpacing24다. 실제 내용은 회전하거나 선의 기준에 맞추지 않는다.
 앱은 `material.canvas`를 grain만으로 교체하거나 ruledSpacing을 지정한다. 새로운 종이 상태/입력 엔진은 없다.
-이 변경은 1.15.0 이후 미게시이며 [실험 사용 지침](usage/compositions/paper-surface.md)과 [질감 계약](effect-surface.md)을 따른다.
+이 변경은 1.16.0부터 제공하며 [사용 지침](usage/compositions/paper-surface.md)과 [질감 계약](effect-surface.md)을 따른다.
 
 
 ## 플로팅 실행 버튼의 깊이 상속

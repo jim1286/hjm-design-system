@@ -3,7 +3,7 @@
 - 단계: 토큰
 - 상태: 배포
 - 지원: Web · Native
-- 적용: 미게시(1.15.0 이후)
+- 적용: 1.16.0
 - 검토일: 2026-10-08
 - 근거: [서체 역할 계약](../../font-roles.md), `src/foundations.ts`, `src/design-profile.ts`, 양 renderer Text/Heading/Provider
 - 스토리북: `배포/토큰/색과 글자/표시·읽기·기술 글자`
