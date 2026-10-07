@@ -119,3 +119,132 @@ Langbase237은 desktop에서 Start free→Get a demo가 나란하고 mobile에�
 기본 화면 실제 독해 **360/505**(desktop/mobile355, desktop-only5). 모든 상세 원제품 flow는 기존 Unikorns anchor 부분 확인을 제외하면 pending이며, 이 숫자는 정적 이미지 독해만 나타낸다. Rows357의 ruled paper/hand illustration과 yellow CTA는 paper 계열 참고, Ruul359의 좌측 help action+우측 FAQ는 기존 Accordion/FAQ composition 재사용 후보다.
 
 유사 소개인 Poch-studio322와 Poch.studio323의 캡처는 큰 손그림 전화/Call us와 작은 portrait/video 카드로 다르다. 같은 소개라고 시각 검토 URL을 합치지 않았다. Revolut348은 desktop Stocks와 mobile Commodities라는 서로 다른 콘텐츠를 보여 준다. 단순 반응형 reflow로 단정할 수 없어 gallery preview의 서로 다른 state일 수 있다고 기록하며 원제품과의 동일성은 pending으로 둔다.
+
+## 순서별 시각 checkpoint — 상세 0–419
+
+기본 화면 실제 독해 **420/505**(desktop/mobile415, desktop-only5)까지 진행했다. fullPage 저장 수와 실제 독해 수는 이번 checkpoint에서420이지만 원제품 flow/코드·작은 모든 문구·전체 상태 검증은 별도 pending이다. CTA 전체551의 소개/분류 또는 비상세 고유 본문 읽기 층은 기존과 같고, live 신규 Numa는 별도 pending으로 유지한다.
+
+Sapphic365의 pink paper/scissors 입력 구성, Spring390의 photo+paper 형태 이름/성/이메일 구성, Studioloop404의 cream/handdraw newsletter는 기존 Card/Form/Button에 질감·폰트·브랜드 asset 옵션을 조합할 후보다. CAPTCHA가 보이는 Sage363은 challenge를 실행하지 않았으며 form 성공/실패 상태도 확인하지 않았다. Slush380의 newsletter/help 두 패널과 Storytale400의 resource/newsletter 두 카드는 기능 의도에 따라 composition을 고르는 사례다.
+
+Sui407의 iridescent image와 translucent form은 정적 캡처에서 확인했으며 실제 motion/glass 성능 검증은 아니다. Teachable418은 audience size 선택이 있는 첫 step처럼 보이는 폼 캡처로, 선택 후 이동/복구/전송 동작은 미확인이다. SVZ412와 svz413은 같은 브랜드라도 yellow organic3D와 white fuzzy3D로 다르므로 시각 URL을 합치지 않았다.
+
+## 순서별 시각 checkpoint — 알려진 상세 505 기본 화면 층
+
+기존551 snapshot의 상세 **505/505 기본 정적 화면을 실제 읽었다**. desktop/mobile 두 이미지500, desktop-only template5(Draftr, Habitline, FintechX, Flexora, Pixera)다. crop/contact-sheet의 색·기본 영역·행동 위치·정적 세로 재배치를 확인한 층이며 **사이트 전체 페이지/전체 상태 검토 완료가 아니다**. 46 비상세 기본 시각·갤러리 live 전체 동작·related CTA 상세 연결·원제품 코드/상태/라이선스·발견 closure·작은 모든 문구의 정밀 판독은 남았다. 551 소개/분류/비상세 고유 본문층과505 기본시각층은 서로 다른 집계다.
+
+420–504에서는 The Subtext427의 black/white mailbox photo와 white newsletter, Victoria463의 pink ruled paper/taped note와 purple action, Workflow493의 dotted paper 같은 바탕, Zenwood502의 dashed card edge/작은 tree 장식을 확인했다. Forest/paper/retro 조합에는 texture나 brand asset을 표현 슬롯으로 공급하고 기존 form 입력·action·focus·pending/recovery 계약을 유지하는 방향이 맞다. Zkpass504는 lime stepped action과 선형 글자, Wheregiantsroam481은 화살표 패턴과 Play를 보여 주지만 실제 hover/motion을 확인한 것은 아니다.
+
+Thursdayboots429는 newsletter modal에 Men/Women 선택이 있고 Transform9437은 전화 입력/action과 demo를 나누므로 필드 의미와 전송 intent는 theme가 임의로 바꾸지 않는다. Web-meetcleo475는 단일 Get app 카드, web.meetcleo476은 QR와 두 store action으로 달라 유사 소개 URL도 별도 이미지로 읽었다. Unikorns450 갤러리는 forest/photo 폼이지만 앞서 확인한 현재 원제품 form과 capture 필드가 다르므로 gallery를 최신 implementation 증거로 사용하지 않는다.
+
+### live 신규 Numa — snapshot 밖 별도 읽기
+
+[Get-ripe-copy/Numa](https://www.cta.gallery/cta/get-ripe-copy)의 현재 DOM 본문을 읽었다. 소개는 smart insulin pump concept, taxonomy는 All types/Call-to-Buy·Ecommerce·Light, related는 Get-ripe/Eternalblue/Animos다. 소개의 의료 기능은 사이트 자기 설명이며 제품의 의학적 효능을 확인하지 않았다. Desktop/mobile 정적 이미지 두 개를 실제 읽었고 white surface·blue gradient·큰 Start living 제목·product image·Pre-order Numa action을 확인했다. 작은 하단 disclaimer의 모든 문구, original pump/product 구현·구매 flow는 미확인이다.
+
+기존551 snapshot source층과505상세 시각층은 그대로 유지하고, live 신규1의 DOM 본문/기본시각을 별도 필드로 기록했다. 현재 알려진 최소552이며 discoveryClosure=false, allPagesReviewComplete=false다. 이 페이지도 기존 hero/Card/Image/Button 슬롯의 제품 asset 조합으로 먼저 흡수하고 새로운 구매/의료 동작을 theme로 추가하지 않는다.
+
+## Minimal/DesignBookmark 본문 순서 checkpoint — 각각 상세 80
+
+Minimal 기존3,433 snapshot에서 `Back` 소개/preview metadata 구조의 상세3,199와 비상세234를 식별했다(구조 식별은 독해 완료 수가 아니다). 그 상세 순서 **0–79의80 URL**에서 소개·이름/외부 domain·type·submitter/credit·게시일·preview viewport/DPR·desktop/mobile label을 실제 읽었다. Related/Similar Websites와 원제품본문/HTML code는 제외한 층이며 시각/flow는 pending이다. 1991 Books·246Queen·3drops·AI Aerobics 등의 type은 비어 있고, 14islands/Aesse/Aaron Shapiro/Aino/246Queen처럼 같은 이름과 domain에도 다른 게시일의 별도 URL이 있으므로 합치지 않는다. Viewport/DPR metadata는 실제 breakpoint·접근성 증거가 아니다.
+
+DesignBookmark 현재 수집1,659/knownqueue2,657 중tool 상세1,556 구조를 식별하고 tool순서 **0–79의80 URL**에서 breadcrumb·title·pricing label·About/Features 본문을 실제 읽었다. 원래 crawler/PID/raw data는 보존했다. Related/Alternatives·vendor 코드/라이선스/화면 동작은 pending이다. 8bitcn은 기존 읽기를 중복 합산하지 않고 이80에 포함했다. Adobe Spectrum40, Aceternity25, 3dicons10, 21st6, 23rd7, 8bitcn14의 소개는 참고 연결이며 원사이트 실제 계약/라이선스를 이 directory 소개로 인증하지 않는다. 특히 Free/Freemium/Paid 분류를 token이나 dependency 허용 정책으로 옮기지 않는다.
+
+이전 추가 본문 읽기(새80과 별도): Minimal `/tag/editorial/`, `/tag/environmental/`, `/tag/museum-gallery/`, `/tag/science/`의 captured category navigation/item names; DesignBookmark `/design`, `/design/design-systems`의 captured 목록/소개. Design systems 목록의 Balsa UI와 Springs는 theme/DTGC·motion 관련 후보 소개지만 API/renderer/원본 license를 확인하지 않아 도입/교체하지 않는다. 기존 home/Ogon/검색/8bitcn drawer partiallive 범위는 최초 표를 유지한다.
+
+### 순서 본문 checkpoint — 각각 0–159
+
+Minimal 상세 소개/preview metadata160/3,199, DesignBookmark toolAbout/pricing/category160/현재수집tool분모까지 실제 읽었다. 범위는 앞선80과 동일하고 읽은 원문 excerpt·source SHA·URL을 A index에 보존했다. 서로 다른게시일의 AKU/Ajeeb/AndyChung 같은URL을 합치지 않으며 일부type 빈값은 추천 자동근거로 쓰지 않는다.
+
+DesignBookmark Alphredo86은 translucent/opaque color 동일 appearance 변환 소개, ArkUI139는 unstyled accessible cross-framework 소개, AntDesign110/Atlassian156/Atomize157는 디자인시스템 소개다. 해당 원사이트 API나 contrast/accessibility 실측을 확인하지 않았으므로 HJM API교체·의존성 도입으로 승급하지 않는다. AppleHIG125 About에 JavaScript-required 문구가 섞이고 AmazonQ90은 end-of-support notice가 섞여 있어 수집 소개만으로 원문 정책/유효 버전을 확정하면 안 된다. 기존 token/color·primitives 접근성 계약에서 부족이 확인됐을 때만 해당 원문을 따라 검토한다.
+
+### 순서 본문 checkpoint — 각각 0–279
+
+Minimal **280/3,199 상세 고유preview metadata**를 실제 읽었다. 첫160은 description도 읽었고160–279는 `Back`부터 preview까지 고유 본문을 읽으며 exact공통 Copy link/Copied/Download/Viewport1440x800/DPR1.33 블록만 출력에서 제외했다. 이새120의 반복description 문장은 독해 완료로 세지 않았다. index에 URL별 scope와 읽은본문excerpt를 구분한다. DesignBookmark **280 tool 상세 About/pricing/category**를 읽었고 related/vendor/시각/flow는 pending이다.
+
+DesignBookmark Balsa186·BoardUI244·BeautifulUI202·Bencho211·beUI218·BorderBeam253·BoringAvatars254는 각각 theme/source distribution·dashboard·AI state·interactive blocks·motion·border decoration·generated avatar 소개다. 현재HJM의 색/profile·Card/Grid·input/state·motion treatment·Avatar/primitive와 먼저 비교하는 후보이며 directory 텍스트만으로 교체할 이유는 아직 없다. 기능과 관련 없는 HR/결제/automation 도구 소개도 누락시키지 않고 순서읽기를 유지했다. Minimal은 Aspen Search234의 분리된brand/design/dev/illustration credits처럼 source별소유가 나뉘는 사례를 확인했고 브랜드자산을 sharedtoken으로 복사하지 않는다.
+
+### 순서 본문 checkpoint — 각각 0–399
+
+Minimal 상세metadata **400/3,199**(description추가160), DesignBookmark tool본문 **400**까지 실제 읽고 URL별 excerpt/SHA를 업데이트했다. snapshot 전수시각/flow완료로 합산하지 않는다. Minimal Bïrch337의 designer/developer credit, Bobbi353의 design/video credit, BlankInside341의 디자인 credit를 확인했고 provenance를 보존했다. BaseDesign282/Base283, Bedow300/301, Bleed343/344/345, Blok348/349는 별도 URL/domain/게시일을 그대로 남겼다.
+
+DesignBookmark CanvasUI315·Carbon325·CentralIcon334·Chakra335·Checklist345·Chromatic352의 소개를 읽었다. Canvas/WebGL 효과는 웹 전용에 가까운 별도검토 대상이고 기존 두 renderer 공유를 대신하지 않는다. Checklists/visual testing 도구는 품질절차 참고이며 디자인API교체 후보로 분류하지 않는다. 일부 About(Clipwing378/Forms&Surveys 등) category는 소개기능과 어긋나므로 category별 자동승급하지 않는다. 원본계약·code·interaction은 pending이다.
+
+## CTA46 비상세 desktop 첫viewport 읽기층
+
+비상세46/46을 현재 desktop1280×720 첫viewport로 실제 읽었고 URL별 viewport/headings/screenshot SHA를 index에 저장했다. 긴listing의 모든 아래카드/전체페이지시각이나 gallery모바일레이아웃을 확인한 것은 아니므로 상세505 desktop/mobile preview층과 합산하지 않는다. 첫 `/categories` 캡처가 빈흰화면이어서 성공에서 제외한 뒤 해당URL을 다시 열어 AllCategories DOM과실제이미지가 나타난 것을 읽고 교정했다. 최초빈캡처는 `listing-03-initial-blank.png`로 분리했다.
+
+현재 첫viewport에서 `/categories/all-types`는 제목이 없고 소개와grid가 시작하며 `/mode`에는 “Content here” 소개가 보였다. 이는 참고사이트구현 관찰이고 HJM미흡이나 디자인패턴으로 복제하지 않는다. submit에는 SiteURL/Designer/DesignerLink/Submittedby 이름 등의 입력이 보여 기존 form composition 참고이고 required·검증·전송/복구동작은 실행하지 않았다. subscribe에는 이메일과 SubscribeNow가 있으나 실제가입/전송을 하지 않았다. categories는8종, industry/mode는별도정보축이라는 목록구성을 기존navigation/filter/Card/Grid로 흡수할수있으며 엔진교체 근거는 아니다.
+
+CTA 남음: 비상세46의긴전체시각/모바일live·gallery모든controls의flow·상세related연결 및원제품full본문/코드/라이선스/동작·발견closure·작은전체문구. 현재551snapshot소스층+상세505기본시각+비상세46첫viewport+신규Numa1은 각기 다른완료층으로 유지한다.
+
+## Minimal 순서 시각 checkpoint — 상세 0–11
+
+첫12 desktoppreview를 실제 읽었으며 제공된mobilepreview가있는6개(1/2/3/6/9/11)는 버튼전환 후 실제 모바일이미지도 읽었다. 나머지6은현재갤러리에 Mobile버튼이없어 desktop-only로 분리했다. 원제품실제mobilebreakpoint/전체상태/작은전체문구는 미확인이다. source메타400·이12시각·추가갤러리partialflow6은 별도층이다.
+
+![Minimal 첫12 desktoppreview 기본배치](assets/parallel-a-minimal-000-011.jpg)
+
+![제공된6 mobilepreview 전환후 확인](assets/parallel-a-minimal-mobile-001-011.jpg)
+
+0 Landskab은 gray/white 프로젝트표,1 101은 sparkler photo와serif 문장·하단navigation,2 10Things는 dark imagegrid+newsletter,3 108Supply는 dark editorial motion-template grid/filter다. source E-commerce분류만으로 실제상품종류를 확정하지 않는다.4 10×16은white에 pastelgradient텍스트,5 124m2는white serif editorial+interior image,6 +13322566869는red/orange 큰타이포/portrait,7 14islands2017은geometricmulticolor로고,8 14islands2020은portrait/video+play,9 Tatem은blur/photo위 translucentwaitlistcard,10 1979Radio는black/white collage와INTRO글자,11 1991Books는blackphotogrid/editorial이다.
+
+기존공개API색인과실제export를 대조하여 표는 DataTable(Web)·행구성, grid는Card/Grid, imagepreview는AspectRatio, 보기선택은SegmentedControl 또는서로다른panel인Tabs를 먼저고른다. Native DataTable export가없으므로 web표를 native지원으로 주장하지 않는다. 원본gallery의디자인별배치는brandasset/intentcomposition표현후보이며 입력/전송/탭계약을 교체할근거가아니다.
+
+Mobile 전환은 최초 accessible name을 단순Mobile로 추정한selector가실패해서 현재DOM의 “View mobile screenshot”과button본문Mobile을 확인한뒤 전환했다. 실제viewport메타는1440x800/DPR1.33→375x667/DPR2로변경했고image도변했다. 이6개는갤러리의click+preview변경partialflow만확인했으며 keyboard/focus-return/원제품interaction은미완료다.
+
+### Minimal 순서 시각 checkpoint — 상세0–23
+
+첫24 desktoppreview(두preview11+desktop-only13)의 기본시각을 실제 읽었다. 제공Mobile11개는 click→metadata/image변경partialflow를 확인한 범위며 original동작·gallerykeyboard미완료다. 12 19h47은dark미니멀typo/작은하단링크,13 1×1은cloud/lamp사진,14 2020ISASONG은blue/white표와AddYourSong,15 23d.1은큰editorialtype,16/17 246Queen은white공간과건축사진,18 247은portrait/제품3열,19 27b는red큰로고와mockup,20 33Letters는blue/yellow3Dletter,21 3drops는darkphone3Dmockup,22 Unsplash는black큰연혁문장,23 52Obsessions는darkblogcard열이다.
+
+특히27b의desktop/mobile중앙내용,33Letters의mobileheadline노출,2020ISASONG의mobile표밀도는 서로 달라 단순반응형재배치로 단정하지 않는다. gallery의서로다른capture시점/state/scroll일수있어 original동일성pending으로 유지한다. 19h47의작은darkcopy와2020ISASONG의아주작은mobilecopy는 정밀판독/대비실측미확인이다. 246Queen유사이미지는서로다른URL/게시일을 합치지않았다. 기존Card/Grid/Image/DataTable/typography표현후보이고 새로운interaction승급근거는 아니다.
+
+### 순서 본문 checkpoint — 각각0–599
+
+Minimal 고유preview메타 **600/3,199**(description도읽음160), DesignBookmark toolAbout/Features·pricing/category **600**을 실제읽고기존시각24의증거를보존한채 URL별index를갱신했다. 공통label·반복Submitter=이름·반복category/title만exact중복제거하여출력했고유일본문값·credits·dates·About/Features는유지했다. source평문파싱이나capture를독해완료로자동합산하지않는다.
+
+Minimal ChusRetroOS507은이름에retro가있는portfolio고유메타,CozyJournal578은app분류의메타다. 실제시각/동작은아직pending으로두고이름만으로retro/paper테마에승급하지않는다. 여러brand/design/dev크레딧을가진ChainGPT465도원자산복사후보가아니다.
+
+DesignBookmark ColorLeap406·ColorReview409·ConverlyColors441·Coolors450은역사palettes·contrast·Radix-style scales/radius·palette lock 소개이고 Ditther586은dither/ASCII/halftone/grain 소개다. theme참고팔레트/질감축에연결할수있는탐색후보지만실제원페이지출력·정확한contrast·code/license·renderer를보지않아HJMcolor contract나textureAPI를교체하지않는다. DesignSpells552/Details568은interaction참고소개,CreateUI472/DesignSystemsRepo557/DjectStudio588은라이브러리/kit소개라기존공개component·recipe·theme로흡수가능한항목을먼저비교해야한다. “free”,“accessible”,“open-source”directory분류를실제인증으로쓰지않는다.
+
+## 조사 후 실험 등록 제안 — 현재 발견28개 후보
+
+사용자추가요청 “조사끝나면 실험에다등록해줘 규격지키면서”에따라, **현재관찰된서로다른추가·개선·교체후보28개**를 아래처럼모았다. 사이트조사와등록은아직미완료이고 실제스토리/공개API는수정하지않았다. 수백개같은form/grid/hero는각기독해증거를보존하면서같은행동·표현후보로묶는다. 매번새component를만들어기존API를중복하지않는다. 아래경로는등록제안이며 `Default/Dark/LargeText`와그역할에맞는상태, globals환경, Web불변id·Nativeid제약 등 [스토리북규격](../STORYBOOK_NAVIGATION.md) §1.1–1.6을따라root가조사후등록한다.
+
+기존실험 **테마조합/영상미리보기**는해당항목변형에흡수한다. 이미배포된 **질감비교/일정과식별정보티켓**은실험으로옮기지않고기존API재사용을검토한다. 기존`HjmDesignProfile`의11preset·palettecontrast·material표면·content/selection motion·collection/toolbar/overview값을읽어비교했다. 외부motion/라이브러리는소개만읽은경우별도보류한다. **확정API교체0건,등록완료0건**이다.
+
+| 후보 | 제안 실험 경로 | 기존 API 우선 및 판단 | 불채택 이유·미확인 |
+| --- | --- | --- | --- |
+| A-01 테마 조합 | `실험/구성/비교와 검증/테마 조합` | HjmDesignProfile/hjmDesignPresets + theme tokens/material/interactions/compositions/screens; 기존11 presets · 흡수·기존실험변형 | 기존 실험 항목의 표현/구성 변형으로 흡수. 새 theme registry 또는11개별폴더 불필요. 원제품 motion/state·font/asset license 미확인. |
+| A-02 종이 표면과 경계 | `실험/구성/비교와 검증/종이 표면과 경계` | EffectSurface grain/noise + Card/Form/Button + paper profile; 기존 배포 질감 비교/티켓 · 개선후보·기존API조합 | ruled/tape/rotation/perforation/scallop는 기존grain과 동일하지 않음. 두 renderer clip/큰글자/대비·원본asset 미확인. 배포 항목 이동 없이 새비교 또는 기존스토리변형 검토. |
+| A-03 계단 모양 테두리 | `실험/컴포넌트/시각 효과/계단 모양 테두리` | retro radius/shadow + Card/Button; 일반radius만으로 stepped outline 동일표현 불가 · 추가후보·보류 | pixel/selection-handle 경계의 두renderer·확대글자·focusring clipping/code/license 검토 후 역할단일surface인지 결정. 신규primitive 확정 아님. |
+| A-04 색 조합과 대비 | `실험/토큰/색과 글자/색 조합과 대비` | semantic palette/brandPalette + checkPaletteContrast + existing profile palette · 흡수·기존값비교 | 팔레트/gradient 참고를 제품의미와 대비계약 안에서 비교. directory 도구 소개만으로 WCAG/색재현/license 보증하지 않음. 새로운색엔진 불필요. |
+| A-05 제목 위계와 줄바꿈 | `실험/토큰/색과 글자/제목 위계와 줄바꿈` | profile heading/typography/fontFamily + Heading/Text · 흡수·크기변형 | 큰editorial/serif/pixel title은 typography/profile 비교. 폰트 실제 license/Korean fallback·large text 및원제품resize 미확인. |
+| A-06 사진 위 입력 카드 | `실험/구성/입력과 작성/사진 위 입력 카드` | Card/Image/Form/Field/TextField/Textarea/Button + forest/glass profile · 흡수·구성변형 | newsletter/contact field schema는 제품 intent. 사진은 제품asset이며 sharedtoken 복사아님. 갤러리와현재Unikorns필드가달라 원제품전송/복구미확인. |
+| A-07 비쳐 보이는 표면 | `실험/컴포넌트/시각 효과/비쳐 보이는 표면` | profile material.surface blurStrength/fillOpacity/insetShadows + Card/EffectSurface · 흡수·기존표면비교 | 현재 surface contract 범위에서 비교; iridescent 사진/motion을 실제shader검증으로 세지 않음. renderer blur/performance/reduced motion·텍스트대비 미확인. |
+| A-08 입체 장식과 행동 | `실험/구성/정보 표시/입체 장식과 행동` | Image/AspectRatio + Card/Button/Heading; clay/forest profile · 흡수·제품asset슬롯 | 3D mascot/geometry/portrait는 식별자산/장식. 새3Dengine/shared상표token 불필요. 원asset/code/license·nativeperformance 미확인. |
+| A-09 버튼 순서와 의도 | `실험/구성/비교와 검증/버튼 순서와 의도` | Button/Link + action slots/Grid/Stack + overview/intent recipe · 개선후보·의도계약 | primary/secondary 순서는 theme로 무작위변경하지 않음. Langbase desktop free→demo/mobile demo→free 등 제품우선순위 별도. originalbreakpoint/state 미확인. |
+| A-10 구독 정보 입력 | `실험/구성/입력과 작성/구독 정보 입력` | Form/Field/TextField/Select/Checkbox/Button + FormState/action recovery · 흡수·폼변형 | 이메일/name/budget/interest schema로 변형. mandatory/consent/전송API는 제품소유. gallery submit/pending/failed/success 미확인. |
+| A-11 관심과 동의 선택 | `실험/구성/선택과 필터/관심과 동의 선택` | Checkbox/FieldGroup/Form + existing controlled selection · 흡수·기존입력조합 | 선택과법적동의 의미를 장식 theme로 치환하지 않음. consent/keyboard/error announcement/실전서버 미확인. |
+| A-12 단계별 가입 입력 | `실험/구성/입력과 작성/단계별 가입 입력` | Form/Select/RadioGroup/FieldGroup + FormState; 상태는제품schema · 개선후보·짧은흐름 | 단계전환·이전입력유지·실패복구 필요성을 실험에서 검토. 정적 첫step만 확인하여 원제품 step엔진/자동다음동작은 미확인. |
+| A-13 팝업 입력과 닫기 | `실험/구성/입력과 작성/팝업 입력과 닫기` | Dialog/Sheet/Form/close action + existing overlay contract · 흡수·기존오버레이변형 | close/YesNo/email/promo variant를 기존control로. original focus trap/keyboard/restore/backdrop-dismiss/submit 미확인; overlay엔진교체 없음. |
+| A-14 신청 옵션과 비용 | `실험/화면/소개/신청 옵션과 비용` | Card/Grid/DescriptionList/Button + 기존티켓/상품소개구성 · 흡수·화면변형 | 가격tiers/free trial/구매/구독은 의미상다름. 원결제/약관/성공단계 미실행, theme가 구매intent를 바꾸지 않음. |
+| A-15 문의와 질문 답변 | `실험/구성/정보 표시/문의와 질문 답변` | Accordion + help/action Card/Stack/Grid · 흡수·기존질문구성 | FAQ/help/newsletter/resource 조합의 정보순서. original accordion/route/supportflow 미확인. |
+| A-16 자료 검색과 선택 | `실험/화면/검색/자료 검색과 선택` | SearchScreen/query/filters/suggestions/resultSummary + Grid/Card + existing300msdebounce/AbortSignal · 흡수·기존검색상태변형 | Minimal homepaper검색/DesignBookmarkretro검색 partiallive만 확인. 0건/loading/error/fullfilter·로그인bookmarkcloud/keyboard복구미확인. 새검색엔진 불필요. |
+| A-17 목록 옆 상세 보기 | `실험/구성/탐색과 이동/목록 옆 상세 보기` | Sheet/Dialog + controlled query/selection; list/detail state separation · 흡수·기존상세변형 | DesignBookmark8bitcn drawer→Escapeclose후query유지는확인. focusreturn/URL/deeplink/scroll복구未확인. 새drawerengine 교체없음. |
+| A-18 기기별 미리보기 | `실험/구성/정보 표시/기기별 미리보기` | Tabs 또는SegmentedControl + Image/AspectRatio; panel vs scalar semantics선택 · 흡수·기존선택과미디어 | Minimal11버튼click→viewport375x667/DPR2+image변경확인. gallerynative/keyboard/focus-return/원제품actualviewport 미확인. |
+| A-19 달력과 문의 안내 | `실험/구성/정보 표시/달력과 문의 안내` | DatePicker/DateEntry/DataTable(Web) 또는staticGrid; 기존문의action · 보류·정적표시구분 | Janvi date/grid가 실제입력인지 장식/달력표시인지 미확인. theme에서 날짜입력엔진을 자동추가하지 않음. |
+| A-20 영상 미리보기 | `실험/구성/정보 표시/영상 미리보기` | 기존실험영상미리보기 + Image/AspectRatio/explicitPlay action · 흡수·기존실험변형 | gallery정적play/영상thumb만 관찰. originalplay/pause/caption/reducedmotion 및리소스실패 未확인; autoplay엔진추가안함. |
+| A-21 앱 받기와 코드 보기 | `실험/구성/탐색과 이동/앱 받기와 코드 보기` | Button/Link/Image/AspectRatio; file이면기존DocumentResource 검토 · 흡수·목적별download구성 | QR/store/freefile/gatedsignup 의미를 구분. QR 실제scan·store/download/권한/구매flow 미실행. storelogo는제품asset. |
+| A-22 미리보기 실패와 재시도 | `실험/구성/피드백과 복구/미리보기 실패와 재시도` | Image/AspectRatio/loading/error recovery + existing support/actions · 개선후보·로딩관찰 | CTA clip광고오인·106–114blank·categoriesinitialblank와MinimalOgoninitialimageblank 근거. 로컬fixture 재시도/공간유지검토, 원사이트장애원인/HJM결함 확정아님. |
+| A-23 화면 상태와 순서 | `실험/구성/비교와 검증/화면 상태와 순서` | DesignProfile/OverviewScreen + explicit intent/state + samefixture · 개선후보·동일상태비교 | 서로다른gallerycapture state/date/scroll을 theme반응형변화로오인하지않음. fixture동일상태·제품actionpriority 유지 검토; original실제statepending. |
+| A-24 작업 목록과 설명 | `실험/화면/콘텐츠/작업 목록과 설명` | DataTable(Web)/Card/Grid/Text/Heading + collection rows/cards/grid · 흡수·기존목록변형 | Landskabtable/photo/art/editorial/blogcard 참고. native표export없으므로nativeDataTable지원주장않음; sort/filter/pagination/originalflow미확인. |
+| A-25 질감과 글자 표현 | `실험/구성/비교와 검증/질감과 글자 표현` | EffectSurface grain/noise + typography/profile; ASCII/dither외부소개와 비교 · 조사보류·소개만읽음 | 원도구imageoutput/code/license·두renderer 실제동작 미확인. CSS/ASCII/GPUengine 무조건추가안함; 필요한표현차이확인후실험범위결정. |
+| A-26 입력과 상태 구현 비교 | `실험/구성/비교와 검증/입력과 상태 구현 비교` | 현재공개입력/상태/오버레이/표면/recipe + 기존사용지침 · 교체후보보류·소개만읽음 | 라이브러리headless/React/Vue/theme/motion/AIstate 소개범위. 원API/code/라이선스/native지원/접근성 품질·현HJM결함 미확인이라 교체/의존성추가0건. |
+| A-27 아이콘과 아바타 조합 | `실험/구성/정보 표시/아이콘과 아바타 조합` | Icon/Image/Avatar; AvatarGroup은Webexport + 제품assetrenderer슬롯 · 흡수·asset비교보류 | 3Dicon/portrait/mascot/대체avatar소개. 원source/code/license/semanticname/큰글자clip미확인, directoryfree주장은라이선스증거아님. 3dicons원사이트는C담당조사와합치기. |
+| A-28 대비와 상태 검토 | `실험/구성/비교와 검증/대비와 상태 검토` | palettecontrast + existingDark/LargeText/ReducedMotion/Rtl/statefixtures + Storybook · 흡수·검토절차참고 | a11y/contrast/visualtest/viewport툴소개만읽음. 기존로컬criteria를먼저활용; 자동체커/의존성설치·원격CI실행없음. |
+
+각후보의정확한URL/검토층은동반 A index `experimentCandidateCheckpoint.candidates[].sources`에전부기록했다. 아직도메인소개만있는대상은 실제vendor/code검토전등록완료나교체확정으로바꾸지않는다. 새후보발견시이목록에추가하며불필요한동일API는변형으로흡수한다.
+
+### 후보 경로 정정·출처 정밀화
+
+현재 소스를 다시 확인하니 영상 미리보기는 양 renderer에서 이미 `배포/구성/정보 표시/영상 미리보기`이며 Web id는 `compositions-information-video-preview`다. A-20은 기존 배포 항목의 변형·개선 후보로 연결하고 같은 이름의 실험을 새로 만들지 않는다. 이전 표의 기존 실험이라는 표현은 이 현재 상태로 정정한다. 등록·승급 완료는 주장하지 않는다.
+
+구독 양식 후보에서 Janvi 연락 달력과 Wrike 무료 체험을 제외했고, 영상 후보에서 정적 장식만으로 영상이라고 확정할 수 없는 출처를 제외했다. 앱/코드 후보도 실제 download/store/QR가 관찰된 출처로 제한했다. Minimal 출처의 mobile 여부는 개별 visual record가 증명하는 경우에만 인정한다. 28개는 현재 기록된 후보 범주이며 이후 미검토 페이지에서 추가 후보가 나올 수 있으므로 목록 전수 완료 플래그는 false다.

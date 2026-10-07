@@ -27,9 +27,9 @@ HJM HjmProvider의 controlled theme/designProfile 및 environment.reducedMotion�
 
 | 범위 | 전체 분모 | 이번 독해 | 미확인 |
 | --- | ---: | ---: | --- |
-| Magic UI 수집 페이지 | 257 | 본문 전체 102, 부분 2 | 본문 153개 미검토 |
+| Magic UI 수집 페이지 | 257 | 본문 전체 112, 부분 2 | 본문 143개 미검토 |
 | 그중 docs | 92 | 전체 90, 부분 2 | Animated Beam/Dock의 긴 SVG 원시 geometry 및 일부 잘린 중간 구간 |
-| 그중 홈페이지와 blog | 165 | 홈페이지 및 blog 첫 11개, 총 12 | blog 153개 |
+| 그중 홈페이지와 blog | 165 | 홈페이지 및 blog 첫 21개, 총 22 | blog 143개 |
 | 컴포넌트 Manual 구현 | 77 | 77페이지, URL별 범위와 판단은 인덱스 manualReview/Notes | MCP Manual·설치 provider 탭과 실제 예제 상태 |
 | 실제 화면·선택 흐름 | 별도 | Ripple Button·Animated Theme Toggler·BentoGrid·HeroVideoDialog 4페이지의 데스크톱 선택 상태 | 나머지 페이지·모든 예제·환경 조합 |
 
@@ -57,6 +57,8 @@ Magic 77 컴포넌트의 보이는 Manual 구현 TSX/CSS를 모두 읽었다. �
 
 Blog app-landing-page부터 best-web-design-tools까지 6개 main 전체를 추가 독해했다. 첫 11개 blog의 권고를 기술 채택 근거로 그대로 사용하지 않는다. best-react-native-ui-library는 Web DOM Magic UI를 Native UI 권고에 포함하고 Firebase·Maps·starter도 함께 분류한다. best-react-ui-framework는 Fluent UI를 두 번 나열하고 CRA 권고를 포함한다. best-web-design-tools에는 본문 중 편집 지시가 남아 있다. 실제 linked 제품 화면·툴 상태·2024 수치의 현재성을 확인한 것은 아니다. Aura/Bellish의 자연·공예 분위기나 명확한 hero/CTA/pricing 구조는 제품 테마·기존 HJM 구성의 표현 후보로만 남긴다.
 
+Blog best-web-developer-portfolios부터 cool-react-components까지 10개 main 전체를 추가 독해했다. cards-ui-design의 grid/list/masonry 목적은 기존 collection 구성을 대조하는 참고이다. carousel-user-interface는 magicui-react Carousel 설치를 안내하지만 현재 docs의 registry 경로와 다르며, 동적 fetch 예제는 schema·취소·cache·retry를 제공하지 않으므로 제품 Query 계약을 대체하지 않는다. 색 이론의 palette harmony·60/30/10은 참고 표현이며 90%/35% 성과 수치나 AAA UI 대비 표를 표준 근거로 복사하지 않는다. 이 checkpoint 뒤에는 parent 분업 요청대로 Aceternity501 main·Manual 원문 미검토를 줄인다. Magic143blog 및 raw SVG 일부·전체 시각/flow 잔여는 계속 미완료로 남긴다.
+
 ### BentoGrid 실제 키보드 CTA
 
 URL: https://magicui.design/docs/components/bento-grid
@@ -74,6 +76,14 @@ Manual 전체를 읽었다. Shiki 실패 catch는 원본 code를 `<pre>${beforeC
 URL: https://magicui.design/docs/components/hero-video-dialog
 
 default dark preview에서 Play video에 Enter를 보내 overlay/iframe이 1개씩 생기는 것을 확인했다. activeElement는 뒤의 Play video trigger 그대로였다. 그 focus에서 Escape를 보내도 overlay/iframe이 남아 있었다. [Escape 후 상태 증거](assets/parallel-b-magic-hero-dialog-escape.png). 원본 Manual은 overlay에 role=button/tabIndex=0과 keyDown을 두지만 dialog 의미·초기 focus·trap을 제공하지 않는다. overlay에 직접 focus한 뒤 Escape를 보내면 exit 후 둘 다 0으로 정리되는 것을 확인하고 agent가 연 preview를 닫았다. YouTube 재생은 시작하지 않았다. 8개 animation variant·close pointer·focus restore·반복 열기·좁은 화면은 아직 전수 검증하지 않았다. HJM Dialog와 motionOrigin/media 슬롯에 표현만 연결하는 방향을 유지한다.
+
+## Aceternity 본문·Manual 증분 범위
+
+수집 501 URL의 별도 상태를 같은 인덱스 additionalSites에 보존한다. 이번 B의 전체 본문 독해 484, 부분 1(ai-recommendations), 미검토 16이다. Manual 전체 10, 실제 선택 화면/flow 2(FileUpload·AnimatedModal)이며 parent가 이전에 검토한 네 페이지는 중복 완료로 더하지 않는다. ai-recommendations의 427,980자 catalog는 첫 구간 이후 출력이 잘려 전체 완료로 세지 않는다.
+
+URL: https://ui.aceternity.com/components/3d-card-effect
+
+현재 본문 description·CLI·모든 CardContainer/Body/Item props, 기본과 With rotation 두 Code Usage 및 Manual TSX/util을 모두 읽었다. mouse 좌표를25로 나눈 tilt, perspective1000, fixed h-96/w-96 기본 크기, 자식 transform useEffect의 mouseEnter 의존성을 확인했다. focus·reduced·touch 제어는 local source에 없고 translate 문자열에도 px를 붙인다. 이는 실제 예외 동작 재현이 아닌 소스 판단이다. 기존 Card/semantic action 슬롯 위에 hover 깊이 표현만 검토한다. 데모 이미지·텍스트·CTA는 제품 소유이며 그대로 기본 테마로 복사하지 않는다. actual preview는 Loading 상태가 포함되어 이 페이지의 시각/flow 완료 수를 올리지 않았다.
 
 ## Aceternity: File Upload
 
@@ -101,3 +111,184 @@ URL: https://21st.dev/ 및 https://21st.dev/@kokonutd/components/button-colorful
 이번 추가 실행에서 Motion의 새 완료 수를 올리지 않았다. 기존 36 기본 페이지·33 구현·96 예제의 정적 조사 및 당시 선택 흐름 범위는 원 보고서 그대로다. Aceternity 기존 tabs/stateful-button/expandable-card/layout-grid 선택 동작도 이번 새 완료 수에 중복해서 넣지 않는다.
 
 네 사이트 전체 페이지·연결 프리뷰·variant·키보드·focus·light/dark·좁은 화면·큰 글자·RTL·reduced motion은 전수 완료가 아니다. 이 문서는 다음 관찰을 계속 추가한다.
+
+## Aceternity 3D·배경 본문 checkpoint
+
+3D Globe·Marquee·Pin 및 add-utilities부터 background-ripple-effect까지 captured core 본문을 모두 읽었다. 숨긴 Manual·Code·Tailwind v3 탭은 자동 완료로 세지 않는다. 인덱스 URL별 scope와 pending 항목을 남겼다. 전체 본문 19/501, 부분 1, 미독해 481, Manual 5, 실제 선택 화면/flow는 여전히 FileUpload 1개이다.
+
+- https://ui.aceternity.com/components/3d-globe: 16,833자 Manual 전체와 util/dependency를 읽었다. three/R3F/drei Canvas와 unpkg NASA texture, OrbitControls 자동회전, 마커 mouse div 및 frame별 visibility 계산은 데이터 시각화 별도 경계다. initialRotation·atmosphereBlur·markerSize 등 props의 실제 연결은 읽은 구현에서 확인되지 않았다. 모든 Code Usage와 실제 조작은 남아 있다.
+- https://ui.aceternity.com/components/3d-marquee: Manual 전체와 top·Standard·Full screen 세 Usage를 따로 열어 읽었다. four slices/fixed1720 plane/infinite10·15s motion와 generic alt가 있다. Full screen은 pointer-none 배경과 overlay, focus ring 버튼을 둔다. HJM Image/AssetGroup·Grid·EffectSurface를 대체할 근거가 아니며 관성/3D 표현 후보로만 기록한다.
+- https://ui.aceternity.com/components/3d-pin: Manual 전체와 Usage를 읽었다. outer anchor 안 inner anchor, hover-only 숨김, 무한 pulse 구현이다. 실제 keyboard/DOM 재현은 아직 하지 않았으며 HJM Card의 단일 링크·action 의미를 유지한다.
+
+본문 범위의 add-utilities는 과거 motion12alpha/React19rc override 예제를 포함한다. 현재 지원성 확인 없이 dependency를 바꾸지 않는다. AnimatedModal/Testimonial/Tooltip·AppleCarousel·ASCII·Aurora·Beams/Collision·Boxes·Gradient/Animation·Lines·Ripple 모든 공개 props/CSS/예제 제목은 읽었으며 숨긴 구현과 모든 실제 화면은 별도 미검토다. 배경 계열은 HJM EffectSurface의 static/reduced/IO/document visibility 조건과 대조하는 방향을 유지한다.
+
+## Aceternity Animated Modal 실제 상태와 39-page checkpoint
+
+본문 core는 BentoGrid부터 DitherShader까지 20개를 추가 독해해 총 39/501, 부분 1, pending 461이다. URL마다 공개 description·CLI·모든 보이는 props/소스 snippet·예제 제목을 읽었으며 숨긴 Code/Manual/alternate tab은 따로 pending이다. CardSpotlight props 마지막 description은 원 수집본 자체가 `con`에서 끝나므로 그 이후 원문은 미확인이다. Manual은 Modal/Testimonial/Tooltip을 추가하여8개, 실제 선택 desktop/flow는2개이다.
+
+https://ui.aceternity.com/components/animated-modal 의 Manual+전체 Usage를 읽고 실제 dark 1280×720에서 trigger Enter→Escape→Cancel Enter→unnamed close Enter 순서로 확인했다. 열기 후 focus는 배경 trigger이고 role=dialog0, body overflow hidden이다. Escape와 Cancel 후에도 내용이 남는다. [Escape 상태 증거](assets/parallel-b-aceternity-modal-escape.png). close 버튼 Enter로 exit 후 heading0/overflow auto/activeBODY를 확인했다. Book Now·결제·예약 행동은 실행하지 않았다. HJM Dialog의 의미·초기 focus·trap·restore·Escape·scrolllock 계약을 유지하고 3D spring/blur 표현만 흡수한다.
+
+https://ui.aceternity.com/components/animated-testimonials 의 전체 Manual+Usage는 모든 이미지, 랜덤 회전, 5s autoplay,28px 무명 arrow button, active name/quote 배열 접근을 제공한다. 빈배열·배열변경·pause/focus/reduced에 대한 실제 재현은 남아 있다. https://ui.aceternity.com/components/animated-tooltip 의 Manual+Usage는 hover-only div, mousemove RAF·name키를 사용하며 focus/tooltipARIA·unmount RAF cleanup은 없다. 이것도 소스 판단이며 아직 실제키보드 flow 완료 수를 올리지 않는다.
+
+https://ui.aceternity.com/components/dither-shader 의 core props는 retro용 Bayer/halftone/noise/crosshatch, duotone/custom palette와 animated=false 기본을 제공한다. HJM Image에 제품/플랫폼별 정적 fallback을 가진 optional treatment로 표현을 흡수할 후보지만 Manual·실제 screenshot·image 실패·모션 검토가 남아 있어 채택 완료가 아니다. Cloud/Chromatic/Canvas 계열도 실제 GPU/lifecycle/readability 증거가 없는 상태에서 공통 기본으로 승급하지 않는다.
+
+## Aceternity 68-page core checkpoint
+
+DottedGlow부터 Keyboard까지 본문 core를 순서대로 읽었다(FileUpload는 기존 독해라 중복 증가 없음). 총68전체+1부분/501, core미독해432, Manual9, 실제선택2이다. 본문 완료는 현재 captured description/CLI/all visible props/snippets/all example headings 독해를 뜻하고 숨긴 구현·사용예제·전체실제검증 완료가 아니다. 각 URL의 범위를 index에 보존했다.
+
+https://ui.aceternity.com/components/gooey-input 는 7,624자 Manual+단일Usage까지 읽었다. useId SVG/layout ID, native disabled,button type/focus ring,controlled value를 제공하지만 input이 button 내부에 있으며 placeholder 외 label이 없다. 빈 blur에서 collapse/값clear, nonempty blur 유지, Escape/닫기/search action 연결은 없다. actual 입력 flow는 아직 검증하지 않았다. HJM Search/TextField의 입력·검색·clear·error/focus 계약 위에 detached icon/width spring 표현을 흡수하는 후보로 남긴다.
+
+Free feature/hero의 compliance/uptime/성과 카피는 예시다. Keyboard의 IO listener·사운드 및 Cloud/GitHubGlobe의 GPU 조건은 설명일 뿐 실제 검증 완료가 아니다. ImageGenerationLoader의 4s scan을 실제 업로드/생성 progress로 쓰거나 InfiniteMovingCards hover pause만으로 접근성 완료를 주장하지 않는다.
+
+## Aceternity component core 전 페이지 독해 checkpoint
+
+수집목록328~443의 `/components/`116 URL core본문을 전부 읽었다. 각 페이지 description/CLI/현재보이는props/CSS·util 소스/모든예제제목/보이는콘텐츠를 실제 독해한 범위다. 숨긴 Manual·Code·v3·package/provider 탭까지 읽은것은 아니며 각각 pending 상태를 유지했다. 소스가 길다고 키워드만 분류해서 완료로 세지 않았다. 전체Aceternity501분모에서는116본문전체+1부분,384미독해다. Manual9·실제선택2도 별도다.
+
+Scales는 horizontal/vertical/diagonal과 size/color API의 정적패턴 후보다. Noise/Spotlight/Meteors/Stars/Vortex/Waves는 기존 EffectSurface의 bounded layer/static/reduced/visibility 조건과 대조한다. Notch·Sidebar·ResizableNavbar는 현재 Navigation/selection/Popover 계약을 조합하는 후보이며 branded제품 페이지를 복사하는결론이 아니다. Lens의 unused callback, MultiStep timer와 ImagesSlider autopause/keyboard claim은 문서와실제구현을 구분해 남겼다.
+
+WebcamPixelGrid 설명/props만 읽었으며 카메라 권한 요청을 열거나 승인하지 않았다. Terminal/Keyboard 사운드도 실행하지 않았다. 필요한 interaction검증은사용자 의도와제품기능에 맞는 fixtures/정적fallback부터확인한다. TailwindButtons의 공개ButtonsCard source와 전체20이름은읽었으나 숨긴20버튼Code를 읽은것은 아니다.
+
+## Aceternity 공개 block prose 30 URL checkpoint
+
+Blocks catalog(9)부터 Cards category(38)까지30URL을 별도 core 독해했다. ShootingStars/SkewLines(19·20)은 batch출력 중 잘린부분을 다시 전체읽은뒤 완료처리했다. Backgrounds·Bento·Blog/TOC/검색/카드의 전체 공개설명/예제콘텐츠/모든제목을 읽었으나 Codepanel과 실제render는 pending이다. Catalog의 all-access 포함표시는 실제구매권한·잠긴source조사완료가 아니다. Aceternity 전체146core전체+1부분,354미독해/501; Manual10/actual선택2.
+
+Scales Manual과5개UsageCode를 모두별도로열어읽었다. repeating-linear-gradient와0/90/315도,size/color의 정적표현이므로 HJMEffectSurface의 bounded staticpattern 후보로검토한다. 원본에는 decorative aria-hidden/pointer-events 없음,값clamp와nativefallback없음이므로 그대로공통채택하지않는다. 아직실제시각완료가아니다.
+
+GooeyInput 비교를 HJM 실제공개 [SearchField](../../packages/react/src/forms.tsx)로확인했다. SearchField는 controlled/uncontrolled/nativeinput/clearLabel/loading으로입력을유지하며,clear버튼type·name·focus복구와aria-busy를제공한다. 따라서 Gooey의검색엔진복제는필요없고 기존 SearchField의독립surface/leading icon에표현만고려한다. Blog검색의fuzzy검색도제품데이터/Query/indexer를대체하지않는다.
+
+## Aceternity Cards·Contact·CTA·Empty·FAQ·Feature prose checkpoint
+
+수집목록39~68의30URL 공개 core를 추가 독해했다. Feature category(67)는 모든24개예제제목/현재보이는카피·모형콘텐츠·예시코드까지 읽었다. 총176core전체+1부분/501,324미독해; Manual10/actual선택2를 유지한다. Contact에는 입력·제출을하지않았으며 FAQ의환불/개인정보·Feature의SOC2/HIPAA/업무성과·더미모델라우팅문구는 실제제품근거로복사하지않는다.
+
+CTA의 centered/masonry/split/dashed/noise/portrait 조합은 기존Grid/Card/Button/AvatarGroup 및EffectSurface 위composition slots 검토자료다. EmptyState의3paths·containedfan·portrait·dragswipe는 동일한실제create/docs/selector계약의표현차이다. FAQ의always-open3col·single-openAccordion·groupedFAQ는각semanticengine을유지하며reduced/focus/키보드/좁은화면을확인한후승급해야한다. 현재는소스Code및모든실제flow를읽거나검증하지않았으므로채택완료가아니다.
+
+## Aceternity 186 core와 Block Code 접근 경계
+
+수집69~78의10개Feature개별공개설명을추가독해해186core전체+1부분/501,314미독해다. Feature Motion/Tabs의hover+focus pause는문서에서읽은계약이며실제재현완료로세지않는다.
+
+https://ui.aceternity.com/blocks/backgrounds/background-grid-with-dots 에서 Code를직접누르자 실제구현대신all-access Annual/Lifetime 구매UI가표시되었다. 이한URL의접근잠금을확인했으며다른블록이모두잠겼다고추정하지않는다. 공개설명완료와Code미독해를분리한다. 루트AGENTS에따라AsideVault에저장된Aceternity기존계정/세션을확인했다(세션 CKST4hGqrIUcPHlo). 저장된Aceternity계정이없고임시페이지도로그아웃상태였다. 임시Aside탭은닫았다. 결제/신규계정/약관수락을하지않으며권한없이잠긴코드를우회하지않는다.
+
+## Aceternity 216 core checkpoint
+
+79~108의30URL을추가독해했다. Feature 개별설명과Footers4variant,Hero category의26모든제목/보이는예제콘텐츠 및11개별Hero본문을읽었다. 전체216core전체+1부분/501,284미독해이며Manual10/실제선택2는그대로다. 숨긴Code및모든실제시각/상태조사는남아있다.
+
+목적에맞는composition차이로 square-edge3panels·borderedgrid·centeredhero·media-split·masonry·hub-illustration을기록했다. Dither/mesh/noise/staticline은material표현축후보이고 Navbar/Tabs/Accordion/Field/Dialog/Progress의같은기능계약은기존HJM에남긴다. FlickeringLights의점멸, infinitecanvas의키보드/정적대체, FooterBigText의대형움직임은Source·실제reduced 검토없이는채택하지않는다.
+
+## Aceternity 246 core checkpoint
+
+109~138의30URL을추가독해했다. Hero나머지설명과Illustrations catalog22개의모든제목/현재보이는콘텐츠 및개별14설명을읽었다. 전체246core전체+1부분/501,254미독해; Manual10/실제선택2를유지한다. 이페이지들은OS기능/실제Chat/파일전송/meeting/presence가아닌제품설명용모형일수있으므로기존HJM상태·입력계약을이데모timer로대체하지않는다.
+
+Folded-paper/noise·framedScales·rough-notation의종이테마표현, dither의레트로표현과SVGisometric/fan/3Dframe은한기능의material+composition 차이참고다. 필요하면decorative aria-hidden/pointer-events-none·정적/감소모션대체·안정적인텍스트및제품asset ownership을유지하는기존engine에표현만연결한다. 아직Code·실제contrast·focus·모든모션상태검증완료가아니다.
+
+### Aceternity core 266 checkpoint
+
+Illustrations의 Macbook icons부터 worldmap까지 8개, 로그인 catalog와 개별 form 7개, logo cloud catalog 및 앞 4개 예제까지 5개 공개 core 본문을 추가 전체 독해했다. 자동 탭/로고 교체·uptime/회의/계정 예시는 실제 상태 엔진 증거가 아니다. 로그인 화면의 social provider·terms는 제품 인증/LS 계약을 유지하고, logo marquee의 hover pause를 키보드 pause 보장으로 해석하지 않는다. 소스·Manual·실제 화면/flow 수는 이번 본문 batch로 늘리지 않았다.
+
+### Aceternity core 306 checkpoint
+
+Logo cloud 나머지 3개부터 navbars·pricing·shaders·sidebars·stats·team 전 catalogue와 개별 core, testimonials catalogue까지 40 URL을 추가 전체 독해했다. Navbar/Sidebar는 기존 navigation 및 disclosure, 가격/팀은 Card/Grid/Avatar/action, changelog는 Tabs/Timeline을 먼저 재사용한다. Pricing With Switch의 설명상 Starter/Basic/Pro/Enterprise와 실제 캡처 Starter/Medium/Influencer/Celebrity, Add On 설명 Growth와 preview Professional 불일치를 기록했다. 소스에서 확인하지 않은 애니메이션 정지·접근성·결제 동작을 보장하지 않는다. Manual 10·실제 flow 2는 유지한다.
+
+### Aceternity core 326 checkpoint
+
+Testimonials 개별 9개와 text animation catalogue/개별 5개, blog 목록·article/index 홍보 페이지와 blog 첫 3개 전체 본문/코드를 추가 읽었다. 출력이 잘린 blog 구간은 개별 semantic main 또는 전체 본문으로 다시 읽은 뒤 완료를 기록했다. Motion/GSAP 글의 shared card modal 예시는 dialog/focus/Escape 계약이 없으므로 HJM Dialog를 대체하지 않는다. Text Generate Typewriter의 음향 sprite는 읽기만 했고 다운로드·재생하지 않았다. 템플릿 글의 WCAG/Lighthouse 주장은 검증 완료가 아니며 채택 근거로 계산하지 않는다.
+
+## 조사 후 실험 등록 제안 — 아직 등록 안 함
+
+사용자의 2026-10-07 추가 요청으로 검토된 원본의 추가·개선·교체 후보를 인덱스 `experimentProposal`에 연결한다. Storybook 탐색 규격 §1에 따라 정확히 네 마디, 고정 단계/분류 어휘, 16자 이하 한글 항목으로 제안한다. 같은 기능의 원본 변형은 별도 엔진·항목을 복제하지 않고 동일 항목의 스토리로 흡수한다. 기본·어두운 테마·큰 글자는 필수이고 동작 줄이기·RTL 및 입력/진행/실패 상태는 실제 역할에 맞춰 추가한다. 부모가 기존 제목 충돌·지원 플랫폼·사용 지침과 최종 등록을 확인한다.
+
+Magic Manual 77 URL을 빠짐 없이 매핑했다. 이 중 74 URL은 27개 기존 API 표현/구성 그룹으로, Pointer·SmoothCursor·TweetCard 3개는 원본 엔진 불채택 근거를 남겼다. 숫자는 실험 27개 구현 완료가 아니며 현재 비교 가능한 공개 API를 재사용하는 등록 제안이다. Aceternity와 이후 미독해 페이지의 매핑은 이어서 추가한다.
+
+| 제안 경로 | 기존 API | 원본 변형 수 |
+| --- | --- | ---: |
+| 실험/구성/비교와 검증/기기 액자 비교 | Asset, AspectRatio, Image | 3 |
+| 실험/구성/정보 표시/항목 연결선 | Grid, Card, EffectSurface | 1 |
+| 실험/구성/비교와 검증/진행 표시 비교 | Progress | 1 |
+| 실험/구성/비교와 검증/글자 표현 비교 | Text, ContentTransition | 18 |
+| 실험/토큰/표면과 움직임/반복 무늬 | EffectSurface | 8 |
+| 실험/구성/정보 표시/알림 진입 표현 | NotificationItem, List, ContentTransition | 1 |
+| 실험/구성/비교와 검증/테마 전환 비교 | DesignSystemProvider | 1 |
+| 실험/구성/정보 표시/사람 묶음 표시 | AvatarGroup | 1 |
+| 실험/구성/비교와 검증/표면 빛 표현 | Card, EffectSurface | 6 |
+| 실험/구성/정보 표시/기능 카드 묶음 | Grid, Card, Button, Link | 1 |
+| 실험/컴포넌트/시각 효과/내용 진입 표현 | ContentTransition | 1 |
+| 실험/구성/정보 표시/코드 전후 비교 | CodeBlock, Grid | 1 |
+| 실험/구성/직접 조작과 모션/완료 순간 축하 | Celebration, Button | 2 |
+| 실험/구성/비교와 검증/탐색 크기 비교 | BottomNavigation, Sidebar | 1 |
+| 실험/구성/정보 표시/지역과 위치 표시 | Card, Tooltip | 2 |
+| 실험/구성/정보 표시/파일 계층 탐색 | Tree | 1 |
+| 실험/토큰/표면과 움직임/입자와 빛 | EffectSurface | 8 |
+| 실험/구성/정보 표시/영상 미리보기 | Dialog, Asset, Button | 1 |
+| 실험/구성/정보 표시/아이콘 공간 배치 | Asset, Grid, Button | 2 |
+| 실험/구성/비교와 검증/누름 표현 비교 | Button | 6 |
+| 실험/구성/정보 표시/이미지 확대 비교 | Image, Dialog | 1 |
+| 실험/구성/정보 표시/흐르는 소개 목록 | List, Card, ContentTransition | 2 |
+| 실험/구성/정보 표시/수치 변화 표현 | Statistic, ContentTransition | 1 |
+| 실험/구성/정보 표시/이미지 조각 진입 | GridReveal, Image | 1 |
+| 실험/구성/비교와 검증/가장자리 흐림 | ProgressiveBlur | 1 |
+| 실험/구성/정보 표시/읽기 진행 표시 | ScrollProgress | 1 |
+| 실험/구성/정보 표시/명령 기록 표시 | CodeBlock, ContentTransition | 1 |
+
+### Aceternity core 376 checkpoint
+
+Blog 마지막 두 글·Brand Facts·Card 홍보 FAQ와 category index 두 URL/44 상세를 추가 읽었다. Category 공통 navigation/footer를 제외한 핵심 heading/filter/모든 이름·설명·유료 label/Coming Soon을 실제 출력해 읽었으며 URL 유사성으로 생략하지 않았다. Category 목록은 새 후보·실험을 만드는 근거로 중복 계산하지 않는다. Brand Facts의 200+/100+/30+ 및 가격·사용자 수와 블로그의 166/17/120,000+ 등은 원문별 주장이고 현재 검증 수로 사용하지 않는다.
+
+### Aceternity core 431 checkpoint
+
+Category 상세 나머지 54개와 Components 전체 catalog를 실제 본문으로 추가 읽었다. Special/Card/Features 등 긴 목록도 이름·설명 전체를 읽었으며 별칭 URL을 유사하다고 생략하지 않았다. Changelog의 긴 출력은 중간이 잘려 완료에 올리지 않았고 다음 독해로 남겼다. 현재 Manual 10·실제 선택 flow 2이며 캡처된 501 URL의 core 미독해 69, AI recommendations 부분 1이다.
+
+### Aceternity 후보 매핑과 core 447 checkpoint
+
+Components 116 URL 전체를 매핑했다. 111 URL은 32개 역할별 기존 API 표현/구성 그룹, 설치/utility 네 개와 Following Pointer는 비등록/불채택 근거를 기록했다. Manual 10개 이외는 public-body-only로 숨겨진 소스와 실제 상태를 확인했다고 주장하지 않는다. 기존 항목의 스토리로 변형을 합치기 우선이다.
+
+Affiliate·비교/guide·설치·Labs 일곱 URL·Pro 라이선스까지 16개 core를 추가 읽었다. Labs 개별 6개는 모두 Loading playground로 구현·실제화면/flow 미확인이다. 설치의 legacy-peer-deps를 실행하거나 정책에 채택하지 않았다. `/licence`의 Pro Item 재배포/marketplace 파생 제한과 무료 OSS 계약은 구분한다. 후보는 기존 HJM 엔진에 아이디어를 흡수하는 제안이며 원본 복사가 아니다.
+
+| 제안 경로 | 기존 API | 원본 변형 수 |
+| --- | --- | ---: |
+| 실험/구성/비교와 검증/카드 깊이 비교 | Card, EffectSurface | 9 |
+| 실험/구성/정보 표시/지역과 위치 표시 | Card, Tooltip | 3 |
+| 실험/구성/정보 표시/흐르는 소개 목록 | List, Card, ContentTransition | 2 |
+| 실험/구성/정보 표시/목적지 카드 강조 | Card, Link | 1 |
+| 실험/구성/직접 조작과 모션/카드 상세 연결 | Card, Dialog, ContentTransition | 3 |
+| 실험/구성/정보 표시/고객 후기 탐색 | Carousel, Card, Avatar | 5 |
+| 실험/구성/정보 표시/대상 설명과 미리보기 | Tooltip, Popover, Link | 3 |
+| 실험/구성/비교와 검증/이미지 표현 비교 | Image, Asset, EffectSurface | 5 |
+| 실험/토큰/표면과 움직임/입자와 빛 | EffectSurface | 25 |
+| 실험/토큰/표면과 움직임/반복 무늬 | EffectSurface | 2 |
+| 실험/구성/정보 표시/기능 카드 묶음 | Grid, Card, Button, Link | 4 |
+| 실험/구성/비교와 검증/글자 표현 비교 | Text, ContentTransition | 14 |
+| 실험/구성/정보 표시/이미지 전후 비교 | ImageComparison | 1 |
+| 실험/구성/정보 표시/문구 뒤 강조 | Text, EffectSurface | 1 |
+| 실험/구성/직접 조작과 모션/스크롤 장면 비교 | Affix, ScrollProgress, ContentTransition, Image | 7 |
+| 실험/구성/직접 조작과 모션/카드 위치 조작 | Card, Button | 1 |
+| 실험/구성/입력과 작성/파일 선택과 복구 | FilePicker, UploadItem | 1 |
+| 실험/구성/비교와 검증/탐색 크기 비교 | BottomNavigation, Sidebar, Menu, Layout | 6 |
+| 실험/구성/입력과 작성/펼쳐 쓰는 검색 | SearchField | 1 |
+| 실험/구성/정보 표시/생성 이미지 진행 | Progress, GridReveal, Image | 1 |
+| 실험/구성/정보 표시/미리보기 묶음 | AvatarGroup, Image | 1 |
+| 실험/구성/정보 표시/입력 기기 모형 | Asset, Button | 1 |
+| 실험/구성/정보 표시/이미지 확대 비교 | Image, Dialog | 1 |
+| 실험/구성/피드백과 복구/대기 단계와 진행 | Spinner, Progress, Steps | 2 |
+| 실험/구성/비교와 검증/누름 표현 비교 | Button | 3 |
+| 실험/구성/입력과 작성/입력 전환과 유지 | TextField, Form | 1 |
+| 실험/화면/계정/가입 정보 입력 | Form, AuthScreenLayout | 1 |
+| 실험/구성/정보 표시/상단 고정 안내 | Notice, Affix | 1 |
+| 실험/구성/비교와 검증/선택 표시 비교 | Tabs | 1 |
+| 실험/구성/정보 표시/명령 기록 표시 | CodeBlock, ContentTransition | 2 |
+| 실험/구성/정보 표시/날짜별 변화 기록 | Timeline, Tabs | 1 |
+| 실험/구성/비교와 검증/카메라 화면 표현 | Asset, PermissionScreen | 1 |
+
+### Aceternity core 466 checkpoint
+
+Templates 목록과 17개 개별 판매 소개 및 Terms의 공개 본문 전체를 URL별로 읽었다. 반복되는 Features라도 개별 출력해 읽었고 내용이 같다는 이유로 완료 처리하지 않았다. Design/Development Studio와 Productized Agency는 heading Next16과 문단 Next15가 다르며 버전 현재성을 단정하지 않는다. 이 템플릿들은 `실험/화면/소개/서비스 목적별 소개` 한 항목의 목적별 변형 후보로 연결했으나 실제 linked preview/유료 코드/전체 페이지 상태는 미검토다. Startup의 Cal.com 예약은 설명만 읽고 실제 예약하지 않았다.
+
+### Aceternity core 471 checkpoint
+
+Changelog 날짜 목록과 44,731자 core를 세 겹침 구간으로 끝까지 읽었다. Privacy·Refunds·Sponsor·Box Shadow Generator의 공개 본문/FAQ/26 preset 이름·편집 control label도 전체 읽었다. Box Shadow는 `실험/토큰/편집 도구/그림자 편집` 후보로 매핑했지만 실제 CSS 값·키보드·복사·여러 layer 흐름은 아직 미검토다. Changelog의 2026-07-15 Next16 전수 업그레이드 선언을 개별 판매 페이지 Next15와 독립 기록하고 현재 source stack을 확인한 것으로 세지 않는다.
+
+### Aceternity core 478 checkpoint
+
+Home와 Tailwind/Motion·Background·Bento·AI SaaS·Motion·Minimal 일곱 aggregate 페이지의 전체 core/FAQ/related를 읽었다(반복 사이트 후기/YouTube/footer는 공통 promotion으로 범위 제외). Bento와 AI의 첫 문구 6개와 실제7개 목록 차이를 기록했다. AI SaaS FAQ는 실제 모델 chat API를 포함하지 않는다고 명시하므로 화면 mock을 기능 구현으로 등록하지 않는다. Minimal의 type/spacing 제한은 기존 토큰/제품 팔레트에서 표현하며 원본 고정 px·0.97 scale 등을 새 기본값으로 복사하지 않는다.
+
+### Aceternity core 484 checkpoint
+
+Contact·CTA·FAQ·Feature·Footer·Hero aggregate 여섯 페이지의 모든 개별 요약/가이드/FAQ/related를 읽었다. Hero22→실제26, Feature22→실제24, CTA6→실제7 차이를 기록했다. 원문의 SEO·보안·conversion·모든 모션이 transform-only라는 주장을 실제 구현 검증이나 HJM 새 정책으로 승격하지 않는다. linked block별 후보와 중복 등록하지 않는다.
