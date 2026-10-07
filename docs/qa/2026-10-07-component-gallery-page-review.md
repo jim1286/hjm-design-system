@@ -53,6 +53,14 @@
 | 상세 지침 + W3C 원문 | 12개 읽음, ARIA 설명 오류 2개 대조 | 다수 사례의 관례와 공식 행동 규칙을 구분 |
 | lazy image 전체 scroll 캡처 | 66페이지 완료 | capture는 source/visual review와 별도 상태로 보존. main img 2,853개는 로드 실패 0, page error 0. 장식/중복 이미지가 포함되므로 2,671개 예제 전수 시각 확인 수로 쓰지 않음 |
 
+### 긴 페이지 캡처의 신뢰성 재확인
+
+하단 전수 시각 검토를 시작하면서 기존 fullPage 이미지의 일부 구간이 실제 본문과 다른 것을 발견했다. Changelog에는 빈 구간이 있었고 Accordion은 약 16,384px 부근에서 상단 내용이 다시 나타났다. 본문 추출과 이미지 로드 성공은 전체 긴 화면의 올바른 paint 증거가 아니다. 외부 사이트의 실제 사용자 화면 결함으로 확정하지 않는다.
+
+content-visibility를 임시로 visible로 설정한 재캡처는 Changelog 본문을 보였지만 Accordion의 반복은 남았다. 이 캡처 방법은 채택하지 않았고 해당 작업 소유 프로세스만 종료했다. 원본을 수정하지 않은 실제 scroll viewport(1440×1000, 100px 겹침)를 차례로 캡처하는 방식으로 전환했다. 아직 모든 새 캡처를 시각 검토하지 않았으므로 하단 전수 완료로 계산하지 않는다.
+
+기존 모음에서 홈·About·Contribute·Design systems의 보이는 본문/목록과 컴포넌트 색인 하단을 추가로 읽었다. Accordion 101개 예제의 기본 thumbnail/카드 표현은 확인했지만 원본 linked 구현과 실제 접힘 동작은 별도다. 분리선·묶인 테두리·카드형·본문 일부 노출·inline 더보기·좌/우 indicator를 기존 Accordion/Collapsible의 표현 비교 후보로 기록한다. 긴 페이지의 상세 지침/footer 화면은 새 viewport 캡처로 다시 확인한다.
+
 ## 6. 미확인 범위와 후속 조건
 
 | 미확인 항목 | 후속 조건 |

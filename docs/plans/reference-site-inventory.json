@@ -6248,7 +6248,19 @@
         "generalPageTextReview": "home, about, contribute, design-systems and full changelog read; general-page lower visual review pending",
         "fullScrollImageCount": 2853,
         "fullScrollImageLoadFailures": 0,
-        "fullScrollPageErrors": 0
+        "fullScrollPageErrors": 0,
+        "fullPageCaptureReliability": "Oversized fullPage images contain blank/repeated lower sections; not accepted as complete lower-page visual evidence. Unaltered scroll-viewport recapture in progress.",
+        "additionalThumbnailReview": {
+          "accordion": 101,
+          "scope": "default gallery thumbnail/card appearances, not linked implementation behavior"
+        },
+        "scrollViewportRecapture": {
+          "pagesCaptured": 15,
+          "viewportTiles": 242,
+          "state": "running",
+          "review": "pending",
+          "checkedAt": "2026-10-07T01:58:52.171516+00:00"
+        }
       }
     },
     {
@@ -19301,6 +19313,13 @@
         "errors": 9,
         "state": "running",
         "scope": "Fetched text pending individual source/visual/interaction review"
+      },
+      "sourceUrlRepairs": {
+        "rawSpaceUrls": 9,
+        "http200": 9,
+        "reason": "Local urllib formatting errors repaired by percent-encoding spaces; original URL identities preserved. Separate recovery file avoids overwriting the live crawler.",
+        "sourceReview": "extracted-pending-review",
+        "checkedAt": "2026-10-07T01:58:52.171516+00:00"
       }
     },
     {
