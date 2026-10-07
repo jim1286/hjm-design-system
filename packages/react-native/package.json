@@ -513,6 +513,12 @@
       "react-native": "./dist/design-profile.js",
       "import": "./dist/design-profile.js",
       "default": "./dist/design-profile.js"
+    },
+    "./collection-rail": {
+      "types": "./dist/collection-rail.d.ts",
+      "react-native": "./dist/collection-rail.js",
+      "import": "./dist/collection-rail.js",
+      "default": "./dist/collection-rail.js"
     }
   },
   "files": [

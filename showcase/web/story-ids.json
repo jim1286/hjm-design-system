@@ -2,6 +2,12 @@
   "schemaVersion": 1,
   "note": "Web Storybook story id(URL) 목록. scripts/check-storybook.mjs가 대조한다. --write-ids는 새 id만 더하고, 지운 id는 사람이 retired에 대체 id와 함께 옮긴다.",
   "active": [
+    "collection-detail--dark",
+    "collection-detail--default",
+    "collection-detail--empty",
+    "collection-detail--large-text",
+    "collection-detail--reduced-motion",
+    "collection-detail--rtl",
     "common-screen-chat--dark",
     "common-screen-chat--default",
     "common-screen-chat--empty",

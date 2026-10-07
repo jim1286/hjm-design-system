@@ -49,6 +49,9 @@ const rendererBudgets = [
     // to those three pre-allowance limits; Node 24 additionally needs 100 gzip bytes
     // on display (18.4 kB measured). Other byte/optional-peer gates stay fixed.
     budgets: {
+      // Finite multi-visible rail reuses Button/provider instead of Carousel selection.
+      // Reviewed 5 local modules, 35037 raw / 9277 gzip; base excludes existing shared allowances.
+      "./collection-rail": { modules: 5, raw: 31000, gzip: 8100 },
       // Optional profile overview reuses ScreenLayout/Grid/disclosure/effect engines;
       // reviewed 18 local modules, 124678 raw / 29326 gzip. No preset registry or motion peer.
       "./design-profile": { modules: 16, raw: 120600, gzip: 28150 },
@@ -391,6 +394,9 @@ const rendererBudgets = [
     // label/support presentation. Only its consuming graphs gain one local edge;
     // provider, native-linking and optional-peer boundaries remain unchanged.
     budgets: {
+      // Finite rail reuses Button/primitives and a horizontal ScrollView, without a gesture peer.
+      // Reviewed 7 local modules, 53520 raw / 13476 gzip; base excludes shared helper allowances.
+      "./collection-rail": { modules: 5, raw: 50600, gzip: 12100 },
       // Optional overview reuses existing screen/input engines; SVG decoration is an
       // explicit optional peer of this subpath. Reviewed 19 modules, 199239/42907 B.
       "./design-profile": { modules: 15, raw: 195600, gzip: 41300 },

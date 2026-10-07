@@ -25,7 +25,7 @@ OS 최대 글자와 최대값을 모사한 확대는 설계·구현·검증·후
 | [Component Gallery](https://component.gallery/) | 역할별 비교와 목록·카드·캐러셀 의미 | 이미 있는 HJM 의미·행동 계약을 우선한다. 갤러리와 원제품 상태 검증을 구분한다 |
 | [CTA](https://www.cta.gallery/) | 주 행동, 사회적 증거, 가입/다운로드/선택 흐름 배치 | 기존 Button·Form·Notice·ScreenLayout 조합. 여러 CTA 표현을 별도 버튼 엔진으로 등록하지 않는다 |
 | [21st](https://21st.dev/) | 확인한 공개 구현과 목적별 인터페이스 | 잠긴 코드나 Loading/NotFound 본문에서 기능을 추정하지 않는다. 미독해 12,460 URL 원장은 전수 미완료 상태로 보존한다 |
-| [Aceternity](https://ui.aceternity.com/) | Manual 코드, 선택한 실제 상태/확장 카드·가로 카드 탐색 | 입력·모달·복구는 HJM 엔진을 유지한다. 다중 카드가 보이는 유한 목록 배치는 현재 API 차이로 남긴다 |
+| [Aceternity](https://ui.aceternity.com/) | Manual 코드, 선택한 실제 상태/확장 카드·가로 카드 탐색 | 입력·모달·복구는 HJM 엔진을 유지한다. 다중 카드가 보이는 유한 목록 배치는 List companion으로 구현하고 카드 상세 실험에 연결했다 |
 | [Magic UI](https://magicui.design/) | 제공 Manual 코드, 터미널/날짜·시각/미디어/누름 표현 | 명령 기록·날짜/시각 선택은 실제 실험에 연결했다. 장식 모션은 상태 확정 엔진과 분리한다 |
 | [Motion Primitives](https://motion-primitives.com/) | 전환·탭·팝오버·캐러셀·반복의 제공 코드와 선택한 실제 흐름 | 내용 전환 비교는 등록했다. 반복/배율/공유 요소는 지원하지 않는 동작을 기존 API 이름으로 제공했다고 표시하지 않는다 |
 | [Uiverse](https://uiverse.io/) | 누름·초점·표면 표현 | Button/Pressable 의미를 유지하며 표현만 선택적으로 검토한다. CSS 복사는 Native 동등 구현이 아니다 |
@@ -49,7 +49,7 @@ OS 최대 글자와 최대값을 모사한 확대는 설계·구현·검증·후
 | 내용 전환 | 기존 `ContentTransition`와 Tabs/OnboardingScreen 합성 | `실험/구성/비교와 검증/내용 전환 비교` 등록 | 실제 제공 행동 검수 후 승급·게시 |
 | 날짜·시각 선택 | 기존 DatePicker/Select, 날짜와 시각 draft/요청 수명 분리 | `실험/구성/선택과 필터/날짜와 시각 선택` 등록 | 지원 플랫폼의 실제 흐름 검수 후 승급·게시 |
 | 명령 기록 | CodeBlock/Tabs/ClipboardButton, OS 복사 수명 개선 | `실험/구성/정보 표시/명령 기록 표시` 등록, 복사 및 메뉴 입력 회귀 수정 main 반영 | Native 실제 OS/입력 경계 검수, 승급·게시. 셸 실행/실시간 서버 기록은 제품 소유 |
-| 여러 카드 탐색과 상세 | List의 기존 세로 의미·Carousel의 단일 active panel과 다른 유한 다중 항목 배치. Card.actions→Dialog는 기존 API 재사용 | [설계 판단](aceternity-interaction-adoption-2026-10-07.md#가로-카드-목록과-상세--실제-원본-검토-후-설계-판단), 아직 미구현·미등록 | 공통 배치/탐색 계약·양 renderer·초점/읽기 순서·끝/폭 변경·상태 유지 구현. 후기/미디어/상품 후보와 하나로 병합 |
+| 여러 카드 탐색과 상세 | List의 기존 세로 의미·Carousel의 단일 active panel과 다른 유한 다중 항목 배치. Card.actions→Dialog는 기존 API 재사용 | `CollectionRail` 계약·양 renderer와 카드 상세 실험 등록. Web 10종 light/dark·폭/끝·초안/모달 복귀 검수, Native host 회귀/타입 확인. [결과](../qa/2026-10-07-collection-detail.md). 1.15.0 이후 미게시 | Native 실제 touch/읽기 순서/OS 초점 검수와 승급·게시. 후기/미디어 목적별 변형은 별도 미반영 |
 | 나머지 목적별 구성·표현 | 각 조사 작업의 후보 판단을 전역 중복 병합 | 후보 처분 완료. 개별 변형의 적용·등록은 별도 | 기존 경로에 변형을 흡수하거나 필요한 고유 구성을 등록. 불채택·보류도 이유/조건 보존 |
 
 [실제 등록부](reference-experiment-registrations-2026-10-07.json)는 root가 양 Storybook 파일,

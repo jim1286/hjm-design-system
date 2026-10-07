@@ -11,6 +11,8 @@ const ts = require("typescript");
 const catalogSource = fs.readFileSync(path.join(root, "packages/design-contracts/src/catalog.ts"), "utf8");
 const canonical = new Set([...catalogSource.matchAll(/\{ name: "([^"]+)", category:/g)].map(match => match[1]));
 const companions = {
+  // Finite all-interactive placement extends List; it is not a selected Carousel panel.
+  CollectionRail: "List",
   NavigationBar: "TopBar",
   TextField: "Field", NativeSelect: "Select", Table: "DataTable", TabPanel: "Tabs",
   AvatarGroup: "Avatar", StatisticGroup: "Statistic", ToastProvider: "Toast", ToastRegion: "Toast",

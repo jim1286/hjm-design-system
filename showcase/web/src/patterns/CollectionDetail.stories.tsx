@@ -1,0 +1,11 @@
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { CollectionDetailPreview } from "./collection-detail-preview";
+const meta = { id: "collection-detail", title: "실험/구성/직접 조작과 모션/카드 상세 연결", component: CollectionDetailPreview } satisfies Meta<typeof CollectionDetailPreview>;
+export default meta;
+type Story = StoryObj<typeof meta>;
+export const Default: Story = { name: "기본" };
+export const Empty: Story = { name: "비어 있음", args: { empty: true } };
+export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
+export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };
+export const ReducedMotion: Story = { name: "동작 줄이기", globals: { motion: "reduced" } };
+export const Rtl: Story = { name: "오른쪽에서 왼쪽", globals: { direction: "rtl" } };

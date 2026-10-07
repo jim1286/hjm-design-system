@@ -326,6 +326,15 @@
         "role": "canonical"
       },
       {
+        "name": "CollectionRail",
+        "source": "packages/react/src/collection-rail.tsx",
+        "entries": [
+          "./collection-rail"
+        ],
+        "canonicalComponent": "List",
+        "role": "companion-or-alternative"
+      },
+      {
         "name": "ColorPicker",
         "source": "packages/react/src/color-picker.tsx",
         "entries": [
@@ -1844,6 +1853,15 @@
         ],
         "canonicalComponent": "Collapsible",
         "role": "canonical"
+      },
+      {
+        "name": "CollectionRail",
+        "source": "packages/react-native/src/collection-rail.tsx",
+        "entries": [
+          "./collection-rail"
+        ],
+        "canonicalComponent": "List",
+        "role": "companion-or-alternative"
       },
       {
         "name": "Combobox",

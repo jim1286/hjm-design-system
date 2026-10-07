@@ -4,7 +4,7 @@
 
 ## @hjmds/react
 
-고유 공개 컴포넌트 및 provider 이름 161개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 162개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -41,6 +41,7 @@
 | ClipboardButton | Button | companion-or-alternative | root, ./clipboard |
 | CodeBlock | 별도 보조 기능 | supplemental | ./code-block |
 | Collapsible | Collapsible | canonical | root, ./collapsible |
+| CollectionRail | List | companion-or-alternative | ./collection-rail |
 | ColorPicker | ColorPicker | canonical | ./color-picker |
 | Combobox | Combobox | canonical | root, ./forms |
 | CommandPalette | CommandPalette | canonical | root, ./command-palette |
@@ -172,7 +173,7 @@
 
 ## @hjmds/react-native
 
-고유 공개 컴포넌트 및 provider 이름 147개. 재노출된 이름은 한 번만 센다.
+고유 공개 컴포넌트 및 provider 이름 148개. 재노출된 이름은 한 번만 센다.
 
 | 공개 API | 계약 | 역할 | import 경로 |
 | --- | --- | --- | --- |
@@ -204,6 +205,7 @@
 | Chip | Chip | canonical | root, ./inputs |
 | CodeBlock | 별도 보조 기능 | supplemental | ./code-block |
 | Collapsible | Collapsible | canonical | root, ./collapsible |
+| CollectionRail | List | companion-or-alternative | ./collection-rail |
 | Combobox | Combobox | canonical | root, ./forms |
 | CommentThreadScreen | 별도 보조 기능 | supplemental | ./screen-flows |
 | Container | Container | canonical | root, ./primitives |

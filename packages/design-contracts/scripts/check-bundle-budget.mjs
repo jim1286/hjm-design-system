@@ -14,6 +14,9 @@ const packageJsonUrl = new URL("../package.json", import.meta.url);
  * Raising a budget requires an intentional review of the changed graph.
  */
 const budgets = [
+  // Finite geometry reuses stable-ID validation and foundations, not Carousel selection.
+  // Reviewed 3 pure modules, 13795 raw / 4638 gzip; metadata and renderer edges stay forbidden.
+  { exportPath: "./collection-rail", maxModules: 3, maxRawBytes: 13800, maxGzipBytes: 4650, forbiddenModules: metadataModules },
   // Reference packs reuse contrast/color/effect validation including the existing noise
   // raster. Only this opt-in entry reaches the registry; provider imports its type only.
   { exportPath: "./design-profile", maxModules: 7, maxRawBytes: 36664, maxGzipBytes: 14815, forbiddenModules: metadataModules },

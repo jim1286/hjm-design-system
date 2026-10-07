@@ -507,6 +507,11 @@
       "types": "./dist/design-profile.d.ts",
       "import": "./dist/design-profile.js",
       "default": "./dist/design-profile.js"
+    },
+    "./collection-rail": {
+      "types": "./dist/collection-rail.d.ts",
+      "import": "./dist/collection-rail.js",
+      "default": "./dist/collection-rail.js"
     }
   },
   "files": [

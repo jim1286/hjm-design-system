@@ -53,8 +53,10 @@
         "C-P01"
       ],
       "decision": "One finite multi-visible collection placement contract; compose existing Card.actions and Dialog for optional detail. Testimonials and media are data/purpose variations, not two scroll engines.",
-      "status": "design-confirmed-not-implemented",
-      "designEvidence": "docs/plans/aceternity-interaction-adoption-2026-10-07.md"
+      "status": "common-rail-and-record-detail-implemented-web-reviewed-native-device-pending",
+      "designEvidence": "docs/plans/aceternity-interaction-adoption-2026-10-07.md",
+      "implementationEvidence": "docs/qa/2026-10-07-collection-detail.md",
+      "remainingPurposeVariants": "Testimonials and filmstrip/media assets remain purpose variations; the record-card fixture proves the common rail only."
     },
     {
       "id": "theme-propagation",
@@ -1194,8 +1196,9 @@
       "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
       "maximumFontExcluded": true,
       "matchingStoryTitles": [],
-      "implementationStatus": "adoption-decision-only",
-      "registrationEvidence": null
+      "implementationStatus": "common-rail-adopted-purpose-variant-pending",
+      "registrationEvidence": null,
+      "commonContractEvidence": "docs/qa/2026-10-07-collection-detail.md"
     },
     {
       "id": "B-2f2e2df08985",
@@ -1835,9 +1838,12 @@
       "sourcePointer": "finalCandidateDisposition.items/실험/구성/직접 조작과 모션/카드 상세 연결",
       "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
       "maximumFontExcluded": true,
-      "matchingStoryTitles": [],
-      "implementationStatus": "adoption-decision-only",
-      "registrationEvidence": null
+      "matchingStoryTitles": [
+        "실험/구성/직접 조작과 모션/카드 상세 연결"
+      ],
+      "implementationStatus": "registered-experimental",
+      "registrationEvidence": "docs/qa/2026-10-07-collection-detail.md",
+      "implementationBoundary": "Record cards compose existing Card/TextField/Dialog with the new List companion. Native host regressions are not device verification."
     },
     {
       "id": "B-b7d8f12a16af",
@@ -2541,8 +2547,9 @@
       "sourceIndex": "docs/qa/2026-10-07-reference-parallel-c-ledger.json",
       "maximumFontExcluded": true,
       "matchingStoryTitles": [],
-      "implementationStatus": "adoption-decision-only",
-      "registrationEvidence": null
+      "implementationStatus": "common-rail-adopted-purpose-variant-pending",
+      "registrationEvidence": null,
+      "commonContractEvidence": "docs/qa/2026-10-07-collection-detail.md"
     },
     {
       "id": "C-P02",
@@ -3997,7 +4004,8 @@
       "order": 3,
       "id": "finite-collection-detail",
       "decision": "Implement one finite multi-visible collection contract and compose existing Card/Dialog detail and independent actions.",
-      "status": "not-implemented"
+      "status": "common-rail-and-record-detail-implemented-web-reviewed-native-device-pending",
+      "evidence": "docs/qa/2026-10-07-collection-detail.md"
     },
     {
       "order": 4,
@@ -4008,7 +4016,7 @@
     {
       "order": 5,
       "id": "registered-experiment-review",
-      "decision": "Review the three verified new compositions and the theme experiment, then promote/publish before consumer dependency adoption.",
+      "decision": "Review four new compositions and the improved theme experiment; promote/publish only verified behavior before consumer adoption. CollectionRail is not part of published 1.15.0.",
       "status": "registered-not-promoted-or-published"
     }
   ]

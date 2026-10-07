@@ -110,6 +110,7 @@ describe("@hjmds/react package boundary", () => {
       "./document-resource",
       // Profiles are optional: core imports must not pull the preset registry.
       "./design-profile",
+      "./collection-rail",
     ];
 
     expect(Object.keys(packageJson.exports)).toEqual([

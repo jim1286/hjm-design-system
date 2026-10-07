@@ -19,6 +19,7 @@
 | 화면 형태 | 쓸 것 |
 | --- | --- |
 | 수십 개 이하의 행을 한 번에 그림(설정, 계정 메뉴, 검색 결과 한 페이지) | `List` + `ListRow` |
+| 유한 카드 여러 장의 독립 입력/행동을 함께 보여주는 가로 탐색 | `CollectionRail` (미게시 실험, 아래 가로 배치 지침) |
 | 행 한 줄의 제목·설명·앞뒤 슬롯 | [ListRow](list-row.md) |
 | 높이가 고정된 행 수백~수천 개를 창 안에서 스크롤 | [VirtualList](virtual-list.md) |
 | 이어지는 목록의 다음 페이지 요청 footer | [LoadMore](load-more.md) (List·VirtualList 아래에 둔다) |
@@ -106,6 +107,82 @@ Native `grouped` 프레임은 Provider의 `tokens.radius.lg`를 읽는다. plain
 └──────────────────────────────────────────────────┘
 [ LoadMore ]
 ```
+
+### CollectionRail 가로 배치
+
+새 `CollectionRail`은 미게시(1.15.0 이후) 실험 companion이다. 기존 List의 배포/호환 계약은 유지한다.
+
+#### 언제 쓰나
+
+이미 불러온 유한 카드/자료를 여러 개 함께 읽고 가로로 탐색할 때 쓴다. 독립 입력·버튼·링크는 계속 접근 가능하며
+스크롤 anchor는 선택 값과 다르다. 모든 항목을 그리는 List의 companion이며 큰 데이터의 가상화는 제공하지 않는다.
+
+#### 쓰지 않을 때
+
+| 상황 | 대신 쓸 것 |
+| --- | --- |
+| 한 패널만 선택·표시하고 다른 패널은 숨김 | [Carousel](carousel.md) |
+| 세로 행과 구분선 | [List](list.md)·[ListRow](list-row.md) |
+| 수백~수천 데이터 | [VirtualList](virtual-list.md) 또는 별도 가상화 계약 |
+| 드래그로 순서를 확정 | [SortableCollection](sortable-collection.md) |
+
+#### 공개 이름과 import
+
+| 이름 | 역할 | Web | Native |
+| --- | --- | --- | --- |
+| `CollectionRail` | List companion — 유한 가로 배치/탐색 | `@hjmds/react/collection-rail` | `@hjmds/react-native/collection-rail` |
+
+`CollectionRailItem`·geometry/resolver는 `@hjmds/design-contracts/collection-rail`. 신규 granular entry만 사용하고 추가 peer/root import는 없다.
+
+#### 최소 사용 예
+
+```tsx
+import { CollectionRail } from "@hjmds/react/collection-rail";
+// Native: @hjmds/react-native/collection-rail
+<CollectionRail label={t("records.title")} items={records}
+  labels={{ previous: t("records.previous"), next: t("records.next"), navigation: t("records.navigation") }}
+  renderItem={item => <RecordCard item={item} />} emptyContent={<EmptyRecords />} />
+```
+
+#### 축과 기본값
+
+| prop | 값 | 기본값 | 설명 |
+| --- | --- | --- | --- |
+| `label` | string | 필수 | 현지화된 목록 이름 |
+| `items` | `{id,label}[]` | 필수 | 안정·고유·빈 값 아닌 ID/label, empty 허용 |
+| `renderItem` | `(item) => ReactNode` | 필수 | 버튼·입력·카드는 기존 공개 API 사용 |
+| `labels` | previous/next/navigation string | 필수 | 스크롤 행동 이름, empty 금지 |
+| `density` | compact/comfortable | comfortable | 최대 폭240/360, 실제 폭에서 clamp |
+| `defaultStartKey` | item ID | 첫 항목 | 초기 위치만. 선택/상세 값 아님 |
+| `onStartKeyChange` | `(key: string|null) => void` | 생략 | 앞쪽 항목 변화 관찰; 선택 확정 callback 아님 |
+| `emptyContent` | ReactNode | 생략 | 제품의 빈 목록 내용 |
+| `layoutStyle` | 공개 배치 key | 생략 | 루트 배치. 카드 시각 표현은 Card/Provider |
+
+#### 배치
+
+| 항목 | 값 | 근거 |
+| --- | --- | --- |
+| 크기 | 가용 viewport 폭, item 최대240/360. viewport358일 때 item334·다음 item8px 일부 | `collectionRailRecipe.itemMaxWidth/edgeHint`, `layout.readingMaxWidth`720/`spacing.xl`24 |
+| 간격 | item 간16, controls 위/사이12, track 상하8 | `spacing.md`16, `spacing.sm`12, `spacing.xs`8 |
+| 순서·정렬 | items 데이터 순서와 stable key 유지; controls 끝쪽. RTL은 논리 방향 번역 | resolver 및 renderer의 명시적 direction |
+| 고정·스크롤 | viewport만 실제 가로 scroll, controls는 밖. 끝에서 멈추고 자동 이동 없음 | 공통 maxOffset·target resolver |
+| 좁은 폭·큰 글자 | 기본 글자의 좁은 폭에서 실제 측정으로 카드 폭을 줄임. 최대 글자 조건은 제외 | 2026-10-07 사용자 범위, root AGENTS.md |
+
+#### 꼭 지킬 것
+
+같은 항목에 안정 ID를 쓰고 테마/폭을 subtree key로 두지 않는다. 카드 전체를 버튼으로 만들어 입력/상세 버튼을 중첩하지 않는다.
+초점 카드 노출은 선택을 확정하지 않는다. 서버 조회·선택·권한·초안·상세 콘텐츠는 제품이 소유한다.
+앱은 Showcase를 import하지 않는다. 설치한 게시 버전의 entry가 있는지 확인한 뒤 사용한다.
+
+#### 플랫폼 차이
+
+| 항목 | Web | Native |
+| --- | --- | --- |
+| 스크롤 | clientWidth·ResizeObserver·negative RTL scrollLeft | onLayout·LTR ScrollView 물리 offset·RTL row placement |
+| 키보드 | viewport/controls의 방향·Home/End, input 키 유지 | 플랫폼 ScrollView·자식 입력·명시적 previous/next; 실제 OS 검수 필요 |
+| 부분 노출 | 모든 listitem mounted·inert 아님, 초점 시 최소 노출 | removeClippedSubviews=false, 자식 접근성 유지, focus 노출 |
+| 끝 행동 | aria-disabled로 끝에서도 호출 행동 초점 유지 | 기존 Button disabled 상태 |
+
 
 ## 꼭 지킬 것
 
