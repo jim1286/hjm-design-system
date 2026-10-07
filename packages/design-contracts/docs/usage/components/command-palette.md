@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [CommandPalette contract](../../command-palette.md), recipe `commandPaletteRecipe`(`src/command-palette.ts`)
 - 스토리북: `배포/컴포넌트/오버레이/명령 검색`
 
@@ -54,8 +54,8 @@ import { CommandPalette } from "@hjmds/react/command-palette";
 />
 ```
 
-`paletteSource`는 `{ sections: [{ id: "recent", label: t("palette.recent"), items: recentItems }, …] }`처럼 만들고
-`useMemo`로 고정한다. 기본(`queryState` 없음)은 renderer가 `query`로 항목의 `label`·`textValue`를 부분 일치로 거른다.
+`paletteSource`는 `{ sections: [{ id: "recent", label: t("palette.recent"), items: recentItems }, …] }`처럼 만든다.
+기본(`queryState` 없음)은 renderer가 `query`로 항목의 `label`·`textValue`를 부분 일치로 거른다.
 항목은 `{ id, label, textValue, description?, shortcut?, disabled?, tone? }`이다. 항목의 label·description·shortcut과
 섹션 label은 제품 i18n에서 만든다.
 
@@ -116,10 +116,15 @@ Native: 없음.
 
 ## 함정
 
-- 현재 renderer는 `query`·`source`·`queryState`의 참조가 바뀔 때마다 활성 행을 첫 활성 항목으로 되돌린다(`useEffect` 의존성).
-  `source`나 `queryState`를 JSX 안에서 객체 리터럴로 만들면 렌더마다 참조가 바뀌어 화살표 키·마우스로 옮긴 활성 행이
-  바로 첫 행으로 돌아간다. 둘 다 `useMemo`로 고정한다.
+- 현재 renderer는 `query`가 바뀔 때 활성 행을 첫 활성 항목으로 되돌린다. `source`·`queryState`의
+  새 참조만으로는 키보드 선택을 초기화하지 않는다. 선택한 ID가 결과에서 없어지면 첫 활성 행으로
+  돌아간다. 2026-10-07 실제 source의 의존성과 부모 재렌더 회귀를 대조해 예전 참조 경고를 정정했다.
 - 닫을 때 `query`를 지우는 것은 제품 몫이다. 비우지 않으면 다음에 열 때 이전 검색어가 남는다.
 - `filtering: "external"`인데 `resultQuery`를 갱신하지 않으면 결과가 보이기만 하고 Enter·클릭이 먹지 않는다(`aria-disabled`).
 - 현재 Web 스토리는 제품 쪽에서 `label.includes(query)`로 직접 거르고 결과가 없을 때 `asyncState` `empty`로 안내하며
   `closeLabel`이 없다. 새 코드는 로컬 필터링 기본값과 `emptyMessage`·`closeLabel`을 쓴다.
+
+2026-10-07 동일한 메뉴 입력 패턴을 검사해 늦은 mouseenter가 키보드로 선택한 명령을 되돌리는
+문제를 재현했다. 미게시(1.14.0 이후) 수정은 실제 마우스 이동으로만 활성 행을 바꾸므로 팝업
+배치의 경계 이벤트는 키보드 선택을 덮지 않는다. 검색 초기화·비활성/오래된 결과 잠금·클릭 실행은
+유지한다. [검증 기록](../../../../../docs/qa/2026-10-07-command-records.md).

@@ -95,3 +95,19 @@ it("supports browser keyboard focus, menu navigation, disabled state, and action
   expect(document.querySelector('[role="menu"]')).toBeNull();
   expect(document.activeElement).toBe(file);
 });
+
+it("keeps the keyboard item when layout causes a late mouse enter, then follows actual mouse movement", async () => {
+  await act(async () => root.render(<HjmProvider><Menubar descriptor={{ accessibilityLabel: "주 메뉴", menus }} onAction={() => undefined} /></HjmProvider>));
+  const file = host.querySelector<HTMLButtonElement>('[aria-haspopup="menu"]')!;
+  file.focus();
+  await act(async () => userEvent.keyboard("{ArrowDown}{ArrowDown}"));
+  const panel = document.querySelector<HTMLElement>('[role="menu"]')!;
+  const first = panel.querySelector<HTMLElement>('[role="menuitem"]')!;
+  expect(panel.querySelector('[data-active=""]')?.textContent).toContain("종료");
+  // Browsers can enter a newly positioned popup under a stationary cursor;
+  // that boundary event is not a user's request to undo keyboard navigation.
+  await act(async () => first.dispatchEvent(new MouseEvent("mouseover", { bubbles: true, relatedTarget: document.body })));
+  expect(panel.querySelector('[data-active=""]')?.textContent).toContain("종료");
+  await act(async () => userEvent.hover(first));
+  expect(panel.querySelector('[data-active=""]')?.textContent).toContain("새 문서");
+});

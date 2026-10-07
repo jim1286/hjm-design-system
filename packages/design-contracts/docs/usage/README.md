@@ -195,6 +195,7 @@
 | [보관함과 페이지 이동](compositions/web-navigation.md) | 탐색과 이동 | Web에서 상위 보관함 → 하위 모음으로 들어가고, 그 모음의 긴 목록을 페이지 단위로 넘겨 보는 탐색에 쓴다. | 배포 | Web |
 | [펼침과 메뉴](compositions/disclosure.md) | 탐색과 이동 | Web에서 내용을 숨겼다 펼치거나(Collapsible), 대상에 붙은 작업 메뉴를 우클릭·키보드로 열거나(ContextMenu), 데스크톱 앱처럼 상단 메뉴 막대를 두는(Menubar) 세 방식을 각각 보여 주는 모음이다. | 배포 | Web |
 | [대화 메시지](compositions/common-message.md) | 정보 표시 | 말풍선 하나하나에 반응·답장·원문 이동·전송 실패 후 다시 보내기를 붙일 때 쓴다. | 배포 | Web · Native |
+| [명령 기록 표시](compositions/command-records.md) | 정보 표시 | 명령 원문과 출력 기록을 선택·읽기·복사할 때 쓴다. | 실험 | Web · Native |
 | [문서와 파일](compositions/document-resource.md) | 정보 표시 | 이름·형식·크기와 미리보기·내보내기·별도 메뉴를 함께 제공하는 문서에 쓴다. | 배포 | Web · Native |
 | [수치와 이전 대비 변화](compositions/stea-stat-summary.md) | 정보 표시 | 매출·주문·반품처럼 몇 개의 핵심 수치를 비교 기간과 함께 보이고, 증감의 방향과 좋고 나쁨을 색 없이도 읽히게 할 때 쓴다. | 배포 | Web · Native |
 | [알림 항목](compositions/common-notification.md) | 정보 표시 | 알림 한 행을 누르면 바로 읽음으로 바꾸고, 서버가 실패하면 읽지 않음으로 되돌릴 때 쓴다. | 배포 | Web · Native |

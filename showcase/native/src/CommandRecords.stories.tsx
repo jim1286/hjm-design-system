@@ -1,0 +1,13 @@
+import type { Meta, StoryObj } from "@storybook/react-native";
+import { CommandRecordsPreview } from "./command-records-preview";
+const meta = { title: "실험/구성/정보 표시/명령 기록 표시", component: CommandRecordsPreview } satisfies Meta<typeof CommandRecordsPreview>;
+export default meta;
+type Story = StoryObj<typeof meta>;
+export const Default: Story = { name: "기본" };
+export const Pending: Story = { name: "처리 중", args: { initialStatus: "pending" } };
+export const Failed: Story = { name: "실패 후 입력 유지", args: { initialStatus: "failed" } };
+export const CopyFailed: Story = { name: "복사 실패", args: { copyFailed: true } };
+export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
+export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };
+export const ReducedMotion: Story = { name: "동작 줄이기", globals: { motion: "reduced" } };
+export const Rtl: Story = { name: "오른쪽에서 왼쪽", globals: { direction: "rtl" } };

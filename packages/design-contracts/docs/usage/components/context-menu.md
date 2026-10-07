@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [ContextMenu](../../context-menu.md), [선택 어댑터](../../optional-adapters.md), recipe `menuRecipe`
 - 스토리북: `배포/컴포넌트/탐색/상황별 메뉴`
 
@@ -134,3 +134,9 @@ import { Pressable } from "react-native";
 | 항목 `textValue`·`shortcut` | 있음 | 없음 |
 | 열림 알림 | 없음 | `onOpenChange(open)` |
 | 성숙도 | stable | 실험적 어댑터(기기 증거 전까지 canonical unsupported) |
+
+2026-10-07 Web 키보드 회귀에서 팝업이 정지한 커서 아래에 배치된 뒤 mouseenter가 활성 항목을
+첫 항목으로 되돌리는 문제를 재현했다. 미게시(1.14.0 이후) 수정은 실제 마우스 이동으로 항목을
+바꾸며, 늦은 경계 이벤트만으로 키보드 선택을 덮지 않는다. 클릭·키보드 실행·포커스 복귀와
+Native OS 어댑터는 기존 계약을 유지한다. 고정 대기 시간을 추가하지 않고 입력 의도를 구분했다.
+[검증 기록](../../../../../docs/qa/2026-10-07-command-records.md).

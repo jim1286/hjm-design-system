@@ -111,5 +111,13 @@ Native 코드 제목은 `tokens.fontFamily.ui`, 선택 가능한 원문과 그 t
 ## 함정
 
 - 복사는 화면의 주 행동과 경쟁하지 않도록 `ClipboardButton tone="secondary" size="small"`을 쓴다. Web 예제도 이 구성을 따른다.
-- `ClipboardButton`은 `navigator.clipboard`가 거부되면 상태를 바꾸지 않고 `onCopyError`만 부른다. 이 콜백을 비워 두면
+- `ClipboardButton`은 `navigator.clipboard`가 거부되면 성공 상태로 바꾸지 않고 `onCopyError`만 부른다. 이 콜백을 비워 두면
   사용자는 실패를 알 수 없다.
+
+2026-10-07 명령 기록 후보를 구현하며 지연 OS 응답을 검증한 결과, 이전 원문의 복사 성공/오류가
+새 원문과 언마운트 뒤에도 callback을 호출하고 중복 쓰기를 허용했다. 미게시(1.14.0 이후) 후속
+수정은 OS 쓰기 동안 Button loading/aria-busy/aria-disabled로 잠그고 키보드 포커스를 유지한다.
+원문이 바뀌어도 진행 중 OS 쓰기는 취소할 수 없으므로 완료까지 새 쓰기를 막는다. 이전 결과의
+성공 표시·callback은 무시하고 완료 뒤 현재 원문을 다시 복사할 수 있다. value가 바뀔 때마다
+세대를 나누므로 A→B→A 변경도 이전 요청의 성공으로 오인하지 않는다. 제품은 이미 시작된
+OS 쓰기 자체가 취소됐다고 안내하지 않는다. [검증 기록](../../../../../docs/qa/2026-10-07-command-records.md).

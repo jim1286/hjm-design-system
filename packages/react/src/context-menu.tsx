@@ -181,6 +181,8 @@ export function ContextMenu<Key extends string = string>({
             } as CSSProperties}
           >
             {items.map((item) => {
+              // A newly positioned menu can enter a stationary cursor; that
+              // boundary event must not undo the user's keyboard selection.
               const index = enabled.findIndex((candidate) => candidate.id === item.id);
               return (
                 <div
@@ -191,7 +193,7 @@ export function ContextMenu<Key extends string = string>({
                   data-active={index === activeIndex && !item.disabled ? "" : undefined}
                   data-tone={item.tone}
                   className="hjm-context-menu__item"
-                  onMouseEnter={() => { if (index >= 0) setActiveIndex(index); }}
+                  onMouseMove={() => { if (index >= 0) setActiveIndex(index); }}
                   onClick={() => {
                     if (item.disabled) return;
                     onAction(item.id as Key);

@@ -2,7 +2,7 @@ import { act, useState } from "react";
 // This proof file is listed by test/executed-scenarios.json; the workspace checker validates its cases against that registry.
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
-import { page } from "vitest/browser";
+import { page, userEvent } from "vitest/browser";
 import { CommandPalette } from "../src/command-palette.js";
 import { HjmProvider } from "../src/provider.js";
 import "../src/styles.css";
@@ -108,6 +108,20 @@ it("keeps the active row when the parent re-renders with a new inline source obj
   // A parent re-render rebuilds `source={{ items }}`; only a new query may move the active row.
   await act(async () => root.render(<Fixture onActivate={() => {}} />));
   expect(active()).toContain("기록 찾기");
+});
+
+it("preserves the keyboard result after a layout-driven mouse enter until the mouse moves", async () => {
+  await act(async () => root.render(<Fixture />));
+  await expect.poll(() => document.activeElement).toBe(search());
+  await act(async () => userEvent.keyboard("{ArrowDown}"));
+  expect(active()).toContain("기록 찾기");
+  const first = optionOf("새 기록 쓰기");
+  // A result entering a stationary cursor is a layout change, not an intent
+  // to replace the keyboard-selected command before Enter activates it.
+  await act(async () => first.dispatchEvent(new MouseEvent("mouseover", { bubbles: true, relatedTarget: document.body })));
+  expect(active()).toContain("기록 찾기");
+  await act(async () => userEvent.hover(first));
+  expect(active()).toContain("새 기록 쓰기");
 });
 
 it("closes on activation regardless of dismiss policy and reports the reason", async () => {

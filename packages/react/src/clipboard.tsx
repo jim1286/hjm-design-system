@@ -32,32 +32,60 @@ export const ClipboardButton = forwardRef<HTMLButtonElement, ClipboardButtonProp
     forwardedRef,
   ) {
     const [copied, setCopied] = useState(false);
+    const [copying, setCopying] = useState(false);
+    const pending = useRef(false);
+    const generation = useRef(0);
+    const mounted = useRef(false);
     const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-    useEffect(() => () => { if (timer.current !== undefined) clearTimeout(timer.current); }, []);
+    useEffect(() => {
+      mounted.current = true;
+      setCopying(pending.current);
+      return () => {
+        mounted.current = false;
+        generation.current += 1;
+        if (timer.current !== undefined) clearTimeout(timer.current);
+      };
+    }, []);
     useEffect(() => {
       // A new value makes the previous "copied" claim false: it referred to the
       // old string, and leaving it up tells the user something untrue.
+      generation.current += 1;
       setCopied(false);
       if (timer.current !== undefined) clearTimeout(timer.current);
     }, [value]);
 
     const copy = useCallback(async () => {
+      // OS clipboard promises cannot be cancelled. A per-value generation ignores
+      // obsolete feedback/callbacks instead of announcing an old source as copied.
+      // A ref also closes the gap before React paints the unavailable busy button.
+      if (!mounted.current || pending.current) return;
+      const request = ++generation.current;
+      pending.current = true;
+      setCopying(true);
+      setCopied(false);
+      if (timer.current !== undefined) clearTimeout(timer.current);
       try {
         await navigator.clipboard.writeText(value);
+        if (!mounted.current || request !== generation.current) return;
         setCopied(true);
-        onCopy?.(value);
         if (timer.current !== undefined) clearTimeout(timer.current);
         timer.current = setTimeout(() => setCopied(false), feedbackDuration);
+        onCopy?.(value);
       } catch (error) {
         // Clipboard access can be denied; swallowing that would leave the user
         // believing the value was copied.
-        onCopyError?.(error);
+        if (mounted.current && request === generation.current) onCopyError?.(error);
+      } finally {
+        // Keep the OS write single-flight across value changes as well: starting a
+        // second write early could let the first overwrite its clipboard contents.
+        pending.current = false;
+        if (mounted.current) setCopying(false);
       }
     }, [value, feedbackDuration, onCopy, onCopyError]);
 
     return (
       <>
-        <Button {...props} tone={tone} ref={forwardedRef} onClick={() => { void copy(); }}>
+        <Button {...props} tone={tone} loading={props.loading || copying} ref={forwardedRef} onClick={() => { void copy(); }}>
           {copied ? labels.copied : labels.idle}
         </Button>
         {/* The state change is announced, not only painted. */}

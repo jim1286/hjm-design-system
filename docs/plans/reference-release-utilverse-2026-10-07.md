@@ -494,3 +494,8 @@ Magic UI의 알려진 공개 URL 257개의 source fetch가 exit=0/HTTP200 257로
 `실험/구성/선택과 필터/날짜와 시각 선택`에 등록했다.
 [검증과 Form 안내 정정](../qa/2026-10-07-date-time-selection.md),
 [후보별 실제 등록부](reference-experiment-registrations-2026-10-07.json). 전수 조사·Native 기기·승급·게시 완료 아님.
+
+2026-10-07 명령 기록 후보: 기존 CodeBlock/Tabs/ClipboardButton으로 양 플랫폼8스토리와
+사용 지침을 `실험/구성/정보 표시/명령 기록 표시`에 등록했다. 복사 요청의 중복/이전 응답을
+Chromium에서 재현해 공통 ClipboardButton을 보완했다. [근거·한계](../qa/2026-10-07-command-records.md).
+Native 실제 OS·승급·게시·전수 조사 완료는 아니다.

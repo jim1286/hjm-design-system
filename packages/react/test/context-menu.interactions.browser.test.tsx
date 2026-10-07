@@ -97,3 +97,19 @@ it("opens from the keyboard, tracks the active item, and restores focus after di
   expect(document.querySelector(".hjm-context-menu")).toBeNull();
   expect(document.activeElement).toBe(origin);
 });
+
+it("keeps the keyboard item after a late mouse enter until the user moves the mouse", async () => {
+  await act(async () => root.render(<HjmProvider reducedMotion><ContextMenu accessibilityLabel="기록 메뉴" items={items} onAction={() => undefined}><button type="button">기록 열기</button></ContextMenu></HjmProvider>));
+  host.querySelector("button")!.focus();
+  await act(async () => userEvent.keyboard("{Shift>}{F10}{/Shift}{ArrowDown}"));
+  const menu = document.querySelector<HTMLElement>('.hjm-context-menu')!;
+  const first = menu.querySelector<HTMLElement>('[role="menuitem"]')!;
+  const activeLabel = () => document.getElementById(menu.getAttribute("aria-activedescendant")!)?.textContent;
+  expect(activeLabel()).toContain("삭제");
+  // Popup placement can generate mouseover without moving the pointer. Keep
+  // the keyboard choice until mouse movement expresses a different intent.
+  await act(async () => first.dispatchEvent(new MouseEvent("mouseover", { bubbles: true, relatedTarget: document.body })));
+  expect(activeLabel()).toContain("삭제");
+  await act(async () => userEvent.hover(first));
+  expect(activeLabel()).toContain("이름 변경");
+});

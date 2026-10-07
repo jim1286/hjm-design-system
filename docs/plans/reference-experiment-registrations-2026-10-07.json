@@ -42,6 +42,29 @@
         "LargeText",
         "Rtl"
       ]
+    },
+    {
+      "path": "실험/구성/정보 표시/명령 기록 표시",
+      "status": "registered-experimental",
+      "sourceUrls": [
+        "https://magicui.design/docs/components/terminal",
+        "https://ui.aceternity.com/components/code-block"
+      ],
+      "sourceScope": "Public bodies and B full Manual reviews compared. Existing CodeBlock/Tabs composition with public ClipboardButton lifecycle improvement; inert fixtures, not command execution or full original-state audit.",
+      "webStory": "showcase/web/src/patterns/CommandRecords.stories.tsx",
+      "nativeStory": "showcase/native/src/CommandRecords.stories.tsx",
+      "usage": "packages/design-contracts/docs/usage/compositions/command-records.md",
+      "evidence": "docs/qa/2026-10-07-command-records.md",
+      "variants": [
+        "Default",
+        "Pending",
+        "Failed",
+        "CopyFailed",
+        "Dark",
+        "LargeText",
+        "ReducedMotion",
+        "Rtl"
+      ]
     }
   ]
 }

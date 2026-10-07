@@ -264,6 +264,8 @@ export const CommandPalette = forwardRef(function CommandPalette<Key extends str
                 >
                   {section.label ? <p className="hjm-command-palette__section-label" aria-hidden="true">{section.label}</p> : null}
                   {section.items.map((item) => {
+                    // Positioning or filtering can enter a stationary cursor;
+                    // only mouse movement should override keyboard navigation.
                     const inert = item.disabled === true || !results.current;
                     return (
                     <div
@@ -278,7 +280,7 @@ export const CommandPalette = forwardRef(function CommandPalette<Key extends str
                         event.preventDefault();
                         if (!inert) activate(item.id as Key, "pointer");
                       }}
-                      onMouseEnter={() => { if (!inert) setActiveId(item.id as Key); }}
+                      onMouseMove={() => { if (!inert) setActiveId(item.id as Key); }}
                     >
                       {renderLeading?.(item.id as Key)}
                       <span className="hjm-command-palette__copy">

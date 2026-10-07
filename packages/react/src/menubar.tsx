@@ -167,6 +167,8 @@ export function Menubar<Key extends string = string, MenuKey extends string = st
               <AnchoredPortal anchorRef={openLabelRef} ssrFallback="inline">
               <div ref={setPanelRef} id={panelId} role="menu" aria-label={menu.label} className="hjm-menubar__panel" data-placement={panelPosition.placement} style={panelPosition.style}>
                 {menu.items.map((item) => {
+                  // Popup positioning can cause mouseenter under a stationary
+                  // cursor. Only movement should replace a keyboard choice.
                   const index = openItems.findIndex((candidate) => candidate.id === item.id);
                   return (
                     <div
@@ -176,7 +178,7 @@ export function Menubar<Key extends string = string, MenuKey extends string = st
                       data-active={index === activeItemIndex && item.disabled !== true ? "" : undefined}
                       data-tone={item.tone}
                       className="hjm-menubar__item"
-                      onMouseEnter={() => { if (index >= 0) setActiveItemIndex(index); }}
+                      onMouseMove={() => { if (index >= 0) setActiveItemIndex(index); }}
                       onClick={() => {
                         if (item.disabled) return;
                         onAction(item.id as Key, menu.id);
