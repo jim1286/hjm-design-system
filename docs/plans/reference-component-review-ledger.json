@@ -1758,7 +1758,7 @@
       "priorRationale": "등장 구성 후보, 읽기 지연 금지",
       "sourceAudit": "2026-10-07: published Manual implementation fully read; all other example code and environment/interaction variants tracked separately.",
       "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
-      "interactionReview": "pending",
+      "interactionReview": "2026-10-07: partial live keyboard flow in both previews. Three tabs selected with Enter, ArrowRight leaves current button. Four card steps and Previous verified. Final Close is a no-op on desktop and 390px dark/reduced; Code confirms null final branch. Prior/next headings coexist during sampled transitions; settled DOM has one. Timing, large text, RTL, spoken AT and Native pending.",
       "adoptionDecision": "기존 API + 표현 비교 — activeIndex에 따른 keyed enter/exit. 원본은 index 범위 검증·입력 보존·출력 확정·초점 이동을 별도 제공하지 않는다. 기존 단일 active subtree·제품 상태·focusTarget·height motion을 유지한다. 실험 구현/승격/게시 완료 아님.",
       "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
       "exampleSourceExtraction": {
@@ -1798,6 +1798,22 @@
             "screenshotDigest": "8e5d8330975862cef2179d62e710579b44845c7f058956f76894d7f3efc55af8"
           }
         ]
+      },
+      "livePanelReview": {
+        "status": "partial",
+        "checkedAt": "2026-10-07T06:40:00Z",
+        "scope": "Desktop keyboard and 390px dark/reduced final state; transition timings not measured",
+        "evidence": "../qa/2026-10-07-motion-reference-page-review.md",
+        "proof": "../qa/assets/2026-10-07-motion-panel-last-step.png",
+        "digest": "6f5f04f19bc34a7029344f429f3f7ebe1502b21184af9e8e61aa8b58e5613797"
+      },
+      "experimentProposal": {
+        "status": "proposed-not-registered",
+        "path": "실험/구성/비교와 검증/내용 전환 비교",
+        "approach": "Preserve existing Tabs selection/focus semantics and ContentTransition active subtree/focusTarget/height motion. Use published OnboardingScreen for a complete step flow; no duplicated state engine. Retain deployed stories.",
+        "comparison": "Catalog/API map and both source renderers; npm 1.14.0 /screen-flows exports, declaration and implementation verified from published archives. Existing usage corrected for actual platform layout.",
+        "variants": "Tabs appearance and step-card height; same product state and completion callback. Default/Dark/LargeText plus focus, draft retention and reduced motion checks.",
+        "evidence": "../qa/2026-10-07-motion-reference-page-review.md"
       }
     },
     {

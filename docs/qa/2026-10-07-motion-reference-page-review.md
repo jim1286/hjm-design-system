@@ -76,7 +76,7 @@
 | /docs/tilt | Manual 전체 읽음 | 미완료/비상호작용 문서 | 제품 장식 또는 optional 표현; 최종 채택 판단 미완료 |
 | /docs/toolbar-dynamic | Code 전체 읽음 | 미완료/비상호작용 문서 | EditorScreen / MessageComposer; 최종 채택 판단 미완료 |
 | /docs/toolbar-expandable | Code 전체 읽음 | 미완료/비상호작용 문서 | EditorScreen / MessageComposer; 최종 채택 판단 미완료 |
-| /docs/transition-panel | Manual 전체 읽음 | 미완료/비상호작용 문서 | ContentTransition / Grid / List; 최종 채택 판단 미완료 |
+| /docs/transition-panel | Manual·Code 2개 전체 읽음 | 탭 3개·단계 4개 실제 조작, 환경 부분 확인 | 기존 Tabs·ContentTransition·OnboardingScreen 유지; 표현 비교 후보 |
 
 ## 5. 검사·관찰 결과
 
@@ -291,6 +291,48 @@ wrapper API를 늘리지 않는다. 연구가 끝난 뒤 표현 비교를
   SHA-256 `4822aaa4f996fa42ee206863b769982b0adb84d671c5a19eb6a174c1a29045b8`.
   최초 IAB/기본 CDP 캡처의 viewport 스케일이 DOM 측정과 달라 증거로 제외하고, CSS viewport
   x0/y99.5/390×844 clip을 명시한 최종 캡처로 덮어써 직접 읽었다.
+
+### 내용 전환 두 예제와 게시 API 대조 — 15:40 KST
+
+`/docs/transition-panel`의 실제 Tabs 및 Card Preview를 임시 IAB 탭 76에서
+확인했다. 조사 후 media/viewport override를 해제하고 탭을 닫았다.
+
+| 예제 | 실제 관찰 | HJM 적용 판단 |
+| --- | --- | --- |
+| 탭 전환 | Aesthetics → Art → Technique → Aesthetics를 Enter로 선택해 각 내용을 확인. ArrowRight는 선택을 옮기지 않음. 선택 버튼의 role/aria-selected/aria-pressed/aria-controls와 패널 연결 정보 없음 | HJM Tabs의 선택·초점·키보드 의미를 유지하고 ContentTransition의 표현만 비교 |
+| 단계 카드 | Brand → Product → Website → Design System. Previous로 Website 복귀 후 마지막 단계 재진입. 마지막 Close의 Enter는 desktop 및 390px dark/reduced에서 단계·초점 유지 | 원본 Code의 마지막 onClick 분기가 null임을 재확인. 실제 완료 callback과 controlled index를 이미 제공하는 OnboardingScreen 재사용; 닫힘 없는 상태 엔진을 복제하지 않음 |
+
+390×844 dark/reduced에서 문서 `scrollWidth=innerWidth=390`이고 최종 제목 영역은
+x58/폭274였다. 고정 w364 표기만으로 실제 overflow 실패를 주장하지 않는다. 전환 중
+접근성 트리에서 이전·다음 제목이 함께 보인 표본이 있고 모션 감소에서도 동일한 표본을
+관찰했다. 정착 후 DOM에는 현재 제목 하나만 남았다. 정확한 노출 시간, 모든 전환 프레임,
+음성 출력, 큰 글자·RTL·Native는 미확인이다. 정착 후 animations 빈 목록은 모션 감소
+구현이 올바르다는 증거로 사용하지 않는다.
+
+양 renderer ContentTransition의 단일 active subtree·focusTarget·animateHeight와
+OnboardingScreen의 단계 범위 검증·완료 행동을 읽었다. npm의 게시된 1.14.0 tarball도
+메모리에서 읽어 양쪽 `/screen-flows` export·Props·실제 OnboardingScreen 렌더를 대조했다.
+기존 사용 지침의 미게시 layoutStyle 표기와 Native 고정 안내 설명이 오래돼 교정했다.
+Web은 제목/설명/건너뛰기를 헤더, 진행을 notice에 두고 Native는 이 안내를 함께 스크롤하는
+본문에 둔다. 같은 화면이므로 플랫폼별 큰 글자 배치를 유지한다.
+
+게시 tarball SHA-256:
+
+- `@hjmds/react@1.14.0`: `5e94e700641e541f55d98025a8b814a84da707c001ecf74dbba8701ee2a2f783`.
+- `@hjmds/react-native@1.14.0`: `54b1e145dea61eb820d9ffc01cb5e6081e02cc4b0ee514ef892c6563e887dbf6`.
+
+실험 제안은 `실험/구성/비교와 검증/내용 전환 비교`에 연결했다. 기존 배포 내용 전환 및
+온보딩은 보존한다. 탭 표현과 단계 높이 전환을 같은 기능·데이터로 비교하며 초안 유지,
+완료 callback, 초점, 모션 감소를 함께 검토한다. Default/Dark/LargeText와 사용 지침을
+갖춘 실제 스토리 등록 전까지 상태는 `proposed-not-registered`다.
+
+[마지막 단계의 실제 Close 상태](assets/2026-10-07-motion-panel-last-step.png),
+SHA-256 `6f5f04f19bc34a7029344f429f3f7ebe1502b21184af9e8e61aa8b58e5613797`.
+
+동적인 AX 번호가 바뀐 뒤 일괄 Next 요청의 일부가 실패해 완료 행동 수에 포함하지 않았다.
+새 트리와 버튼 이름으로 다시 확인했다. read-only evaluate의 getAnimations 미제공 및
+focus-emulation timeout은 도구 오류로 분리하고 같은 탭의 새 AX 상태로 재개했다.
+원본 동작 코드 변경·신규 wrapper·게시·원격 CI 실행은 없다.
 
 ## 6. 미확인 범위와 후속 조건
 
