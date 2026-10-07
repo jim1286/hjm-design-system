@@ -4,5 +4,7 @@ const meta = { title: "실험/구성/비교와 검증/테마 조합", component:
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };
+export const ProductNotes: Story = { name: "앱 테마 · 산책", args: { initialProduct: "field-notes" } };
+export const ProductReading: Story = { name: "앱 테마 · 문장", args: { initialProduct: "reading-room" } };
 export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
 export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };

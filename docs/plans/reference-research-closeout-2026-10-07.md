@@ -45,7 +45,7 @@ OS 최대 글자와 최대값을 모사한 확대는 설계·구현·검증·후
 
 | 적용 단위 | 기존 기능과 결정 | 현재 상태 | 필요한 후속 |
 | --- | --- | --- | --- |
-| 10종 테마와 앱 소유 설정 | `defineHjmDesignProfile`·Provider·semantic palette·Heading/Surface·OverviewScreen·Tabs 기본값 재사용 | 레트로·종이·숲·미니멀·에디토리얼·브루탈리즘·유리·오로라·터미널·클레이 구현, 기존 테마 조합 실험 있음. 미게시 | 제품 프로필 적용 예시와 남은 공개 컴포넌트 토큰 소비 보완. 브랜드·폰트·로고/그림·설정 저장은 제품 소유 |
+| 10종 테마와 앱 소유 설정 | `defineHjmDesignProfile`·Provider·semantic palette·Heading/Surface·OverviewScreen·Tabs 기본값 재사용 | 10종 구현과 기존 실험에 앱 소유 설정 2종을 추가. Web 30조합·상태 유지 및 일부 좁은 다크/RTL/모션 감소 확인, Native 등록/타입 확인. [결과](../qa/2026-10-07-product-theme-propagation.md). 미게시 | Native 실제 흐름과 남은 공개 컴포넌트 토큰 소비 검수. 브랜드·폰트·로고/그림·설정 저장은 제품 소유 |
 | 내용 전환 | 기존 `ContentTransition`와 Tabs/OnboardingScreen 합성 | `실험/구성/비교와 검증/내용 전환 비교` 등록 | 실제 제공 행동 검수 후 승급·게시 |
 | 날짜·시각 선택 | 기존 DatePicker/Select, 날짜와 시각 draft/요청 수명 분리 | `실험/구성/선택과 필터/날짜와 시각 선택` 등록 | 지원 플랫폼의 실제 흐름 검수 후 승급·게시 |
 | 명령 기록 | CodeBlock/Tabs/ClipboardButton, OS 복사 수명 개선 | `실험/구성/정보 표시/명령 기록 표시` 등록, 복사 및 메뉴 입력 회귀 수정 main 반영 | Native 실제 OS/입력 경계 검수, 승급·게시. 셸 실행/실시간 서버 기록은 제품 소유 |

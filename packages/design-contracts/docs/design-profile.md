@@ -22,6 +22,18 @@ export const productDesign = defineHjmDesignProfile({
 
 이 helper는 검증한 불변 프로필을 만든다. Web `HjmProvider.designProfile`, Native `HjmNativeProvider.designProfile`에 넣으며, 중첩 Provider는 가장 가까운 프로필을 상속한다. 기존 프로필 없는 소비자의 기본값은 유지한다.
 
+### 제품 설정과 참고 테마를 조합하기
+
+같은 제품이 `extends`만 바꾸면 나머지 부분 지정은 계속 제품 소유다. `palette`는 light/dark의 지정 역할만,
+`compositions`·`screens`·`interactions`는 지정 축만 덮고 모서리·글자·질감 등의 미지정 값은 참고 테마를 상속한다.
+기록/계정/라우팅 상태를 프로필 객체에 넣거나 프로필 id를 React subtree key로 써서 교체하지 않는다.
+
+2026-10-07 필요한 조사 후 기존 테마 조합 실험에 산책 노트(녹색/cards/landscape)와 문장 모음(보라/rows/editorial)
+두 앱 설정 fixture를 추가했다. 두 플랫폼은 같은 순수 설정을 공유하며 각 workspace의 실제 공개 helper로 검증한다.
+앱 브랜드를 새 HJM preset/global registry로 등록하지 않고 기존 10종 위에 조합하는 경계를 보여 주기 위한 선택이다.
+이 fixture는 운영 제품의 테마 적용이나 Native 기기 검증 증거가 아니다. 앱은 자신의 설정 파일과 제품 데이터를 넣는다.
+행동·상태와 실제 지원 축은 [사용 지침](usage/compositions/design-profile-comparison.md)을 따른다.
+
 ## 축과 기본값
 
 | 축 | 중립 기본값 | 참고 프리셋의 차이 |

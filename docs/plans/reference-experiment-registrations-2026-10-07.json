@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "scope": "Verified candidate registrations by root. This does not imply global reference research, promotion, publication or Native device completion. Existing deployed references remain separate.",
+  "scope": "Verified registrations and adopted variants by root. Existing target improvements are distinguished from new experiments. Research is closed for adoption; registration does not imply promotion, publication or Native device completion.",
   "items": [
     {
       "path": "실험/구성/비교와 검증/내용 전환 비교",
@@ -65,6 +65,33 @@
         "ReducedMotion",
         "Rtl"
       ]
+    },
+    {
+      "path": "실험/구성/비교와 검증/테마 조합",
+      "status": "existing-experiment-variants-adopted",
+      "registrationKind": "improve-existing",
+      "sourceUrls": [
+        "https://www.8bitcn.com/docs/components/theme-selector",
+        "https://styles.refero.design/"
+      ],
+      "sourceScope": "Existing 10-profile comparison reused; app-owned configuration added through the public defineHjmDesignProfile helper. Whole-site review remains false. Web 30-combination state preservation plus selected narrow dark RTL/reduced-motion flows verified; Native typecheck/registration only.",
+      "webStory": "showcase/web/src/patterns/DesignProfile.stories.tsx",
+      "nativeStory": "showcase/native/src/DesignProfile.stories.tsx",
+      "usage": "packages/design-contracts/docs/usage/compositions/design-profile-comparison.md",
+      "evidence": "docs/qa/2026-10-07-product-theme-propagation.md",
+      "variants": [
+        "Default",
+        "ProductNotes",
+        "ProductReading",
+        "Dark",
+        "LargeText"
+      ],
+      "addedVariants": [
+        "ProductNotes",
+        "ProductReading"
+      ],
+      "maximumFontExcluded": true,
+      "publication": "not-published"
     }
   ]
 }

@@ -6,6 +6,7 @@ export const profileOptions = [
 export const profileCopy = {
   title: "테마 조합", intro: "같은 기록·도구·저장 행동을 10가지 표현으로 비교해요. 테마를 바꿔도 입력과 선택을 유지해요.",
   choose: "표현 선택", compare: "10개 테마 한눈에 보기", show: "비교 펼치기", hide: "비교 접기",
+  product: "앱 테마 적용", productNote: "앱의 브랜드·구성·화면 설정을 참고 테마와 조합해요. 입력과 선택은 유지해요.",
   screen: "오늘의 기록", description: "산책과 독서, 작은 기록을 모아 보세요.", tools: "기록 도구", name: "기록 이름", initial: "저녁 산책",
   filter: "기록 기간", day: "오늘", week: "이번 주", save: "미리보기 기록 저장", retry: "다시 저장", fail: "저장 실패 재현",
   idle: "저장 전", pending: "기록 저장 중", saved: "미리보기 기록을 저장했어요", failed: "저장에 실패했어요. 입력을 유지했어요.",

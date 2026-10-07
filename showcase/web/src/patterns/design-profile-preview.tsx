@@ -17,8 +17,13 @@ import { Toast } from "@hjmds/react/toast";
 import { Card } from "@hjmds/react/display";
 import { Heading } from "@hjmds/react/heading";
 import { Asset } from "@hjmds/react/asset";
-import { hjmDesignPresets, type HjmDesignPreset } from "@hjmds/design-contracts/design-profile";
+import { defineHjmDesignProfile, hjmDesignPresets } from "@hjmds/design-contracts/design-profile";
 import { profileCopy as copy, profileOptions, profileHeadingSamples } from "../../../shared/design-profile";
+import { productDesignOptions, createPreviewProductResolver, type PreviewProductDesign, type ReferenceDesignPreset } from "../../../shared/product-design";
+
+// Resolve immutable app configurations once; profile changes never key or replace
+// the record, input, tab, overlay or pending-action owners.
+const resolvePreviewProductDesign = createPreviewProductResolver(preset => hjmDesignPresets[preset], defineHjmDesignProfile);
 
 export function RecordSample() {
   const [name, setName] = useState<string>(copy.initial);
@@ -99,20 +104,24 @@ function ProfileAssetSample({ onNextTheme }: { onNextTheme: () => void }) {
   </Stack></Collapsible>;
 }
 
-export function DesignProfileComparison() {
-  const [preset, setPreset] = useState<HjmDesignPreset>("retro");
+export function DesignProfileComparison({ initialProduct = "reference" }: { initialProduct?: PreviewProductDesign }) {
+  const [preset, setPreset] = useState<ReferenceDesignPreset>("retro");
+  const [product, setProduct] = useState<PreviewProductDesign>(initialProduct);
+  const design = resolvePreviewProductDesign(preset, product);
   return <Stack gap="xl"><Text variant="heading">{copy.title}</Text><Text>{copy.intro}</Text>
+    <SegmentedControl label={copy.product} presentation="pills" items={productDesignOptions.map(option => ({ value: option.id, label: option.label }))} value={product} onValueChange={value => { const option = productDesignOptions.find(option => option.id === value); if (option) setProduct(option.id); }} />
+    <Text tone="muted">{copy.productNote}</Text>
     <SegmentedControl label={copy.choose} presentation="pills" items={profileOptions.map(option => ({ value: option.id, label: option.label }))} value={preset} onValueChange={value => { const option = profileOptions.find(option => option.id === value); if (option) setPreset(option.id); }} />
-    <HjmProvider designProfile={hjmDesignPresets[preset]}><Stack gap="xl"><RecordSample />
+    <HjmProvider designProfile={design}><Stack gap="xl"><RecordSample />
       <Collapsible trigger={copy.headingScale} defaultOpen><Stack gap="sm">{profileHeadingSamples.map(sample => <Heading key={sample.level} level={sample.level} semanticLevel={3}>{sample.label}</Heading>)}</Stack></Collapsible>
     </Stack></HjmProvider>
-    <HjmProvider designProfile={hjmDesignPresets[preset]}><ProfileMaterialSample onNextTheme={() => setPreset(profileOptions[(profileOptions.findIndex(option => option.id === preset) + 1) % profileOptions.length]!.id)} /></HjmProvider>
-    <HjmProvider designProfile={hjmDesignPresets[preset]}><ProfileTabsSample onNextTheme={() => setPreset(profileOptions[(profileOptions.findIndex(option => option.id === preset) + 1) % profileOptions.length]!.id)} /></HjmProvider>
-    <HjmProvider designProfile={hjmDesignPresets[preset]}><ProfileAssetSample onNextTheme={() => setPreset(profileOptions[(profileOptions.findIndex(option => option.id === preset) + 1) % profileOptions.length]!.id)} /></HjmProvider>
-    <HjmProvider designProfile={hjmDesignPresets[preset]}><CodeBlock label={copy.codeTitle} code={copy.codeSource} wrap /></HjmProvider>
-    <HjmProvider designProfile={hjmDesignPresets[preset]}><ProfileChromeSample onNextTheme={() => setPreset(profileOptions[(profileOptions.findIndex(option => option.id === preset) + 1) % profileOptions.length]!.id)} /></HjmProvider>
+    <HjmProvider designProfile={design}><ProfileMaterialSample onNextTheme={() => setPreset(profileOptions[(profileOptions.findIndex(option => option.id === preset) + 1) % profileOptions.length]!.id)} /></HjmProvider>
+    <HjmProvider designProfile={design}><ProfileTabsSample onNextTheme={() => setPreset(profileOptions[(profileOptions.findIndex(option => option.id === preset) + 1) % profileOptions.length]!.id)} /></HjmProvider>
+    <HjmProvider designProfile={design}><ProfileAssetSample onNextTheme={() => setPreset(profileOptions[(profileOptions.findIndex(option => option.id === preset) + 1) % profileOptions.length]!.id)} /></HjmProvider>
+    <HjmProvider designProfile={design}><CodeBlock label={copy.codeTitle} code={copy.codeSource} wrap /></HjmProvider>
+    <HjmProvider designProfile={design}><ProfileChromeSample onNextTheme={() => setPreset(profileOptions[(profileOptions.findIndex(option => option.id === preset) + 1) % profileOptions.length]!.id)} /></HjmProvider>
     <Text tone="muted">{copy.limitation}</Text>
-    <Collapsible trigger={copy.compare} defaultOpen>{profileOptions.map(option => <HjmProvider key={option.id} designProfile={hjmDesignPresets[option.id]}><Stack gap="md"><Text variant="title">{option.label}</Text><RecordSample /></Stack></HjmProvider>)}</Collapsible>
+    <Collapsible trigger={copy.compare} defaultOpen>{profileOptions.map(option => <HjmProvider key={option.id} designProfile={resolvePreviewProductDesign(option.id, product)}><Stack gap="md"><Text variant="title">{option.label}</Text><RecordSample /></Stack></HjmProvider>)}</Collapsible>
   </Stack>;
 }
 
