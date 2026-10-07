@@ -16,6 +16,7 @@ import { Notice, Skeleton } from "@hjmds/react/feedback";
 import { Toast } from "@hjmds/react/toast";
 import { Card } from "@hjmds/react/display";
 import { Heading } from "@hjmds/react/heading";
+import { Asset } from "@hjmds/react/asset";
 import { hjmDesignPresets, type HjmDesignPreset } from "@hjmds/design-contracts/design-profile";
 import { profileCopy as copy, profileOptions, profileHeadingSamples } from "../../../shared/design-profile";
 
@@ -85,6 +86,19 @@ function ProfileTabsSample({ onNextTheme }: { onNextTheme: () => void }) {
   </Stack></Collapsible>;
 }
 
+function ProfileAssetSample({ onNextTheme }: { onNextTheme: () => void }) {
+  // Reuse the already attributed CC0 fixture; theme selection changes the frame,
+  // not the product-owned illustration or its meaning (shared/assets/reference-icons/README.md).
+  const image = new URL("../../../shared/assets/reference-icons/tick.png", import.meta.url).href;
+  return <Collapsible trigger={copy.assets}><Stack gap="md">
+    <Stack axis="inline" gap="md" wrap>{([
+      ["rounded", copy.assetRounded], ["square", copy.assetSquare], ["circle", copy.assetCircle],
+    ] as const).map(([shape, label]) => <Stack key={shape} gap="sm"><Text>{label}</Text>
+      <Asset descriptor={{ kind: "image", size: "xlarge", shape, decorative: true }}><img src={image} alt="" /></Asset>
+    </Stack>)}</Stack><Text tone="muted">{copy.assetNote}</Text><Button onClick={onNextTheme}>{copy.nextTheme}</Button>
+  </Stack></Collapsible>;
+}
+
 export function DesignProfileComparison() {
   const [preset, setPreset] = useState<HjmDesignPreset>("retro");
   return <Stack gap="xl"><Text variant="heading">{copy.title}</Text><Text>{copy.intro}</Text>
@@ -94,6 +108,7 @@ export function DesignProfileComparison() {
     </Stack></HjmProvider>
     <HjmProvider designProfile={hjmDesignPresets[preset]}><ProfileMaterialSample onNextTheme={() => setPreset(profileOptions[(profileOptions.findIndex(option => option.id === preset) + 1) % profileOptions.length]!.id)} /></HjmProvider>
     <HjmProvider designProfile={hjmDesignPresets[preset]}><ProfileTabsSample onNextTheme={() => setPreset(profileOptions[(profileOptions.findIndex(option => option.id === preset) + 1) % profileOptions.length]!.id)} /></HjmProvider>
+    <HjmProvider designProfile={hjmDesignPresets[preset]}><ProfileAssetSample onNextTheme={() => setPreset(profileOptions[(profileOptions.findIndex(option => option.id === preset) + 1) % profileOptions.length]!.id)} /></HjmProvider>
     <HjmProvider designProfile={hjmDesignPresets[preset]}><CodeBlock label={copy.codeTitle} code={copy.codeSource} wrap /></HjmProvider>
     <HjmProvider designProfile={hjmDesignPresets[preset]}><ProfileChromeSample onNextTheme={() => setPreset(profileOptions[(profileOptions.findIndex(option => option.id === preset) + 1) % profileOptions.length]!.id)} /></HjmProvider>
     <Text tone="muted">{copy.limitation}</Text>

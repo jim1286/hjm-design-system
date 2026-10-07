@@ -1,7 +1,9 @@
 import { Tabs, type TabsAppearance } from "@hjmds/react-native/navigation";
 import { CodeBlock } from "@hjmds/react-native/code-block";
 import { useMemo, useRef, useState } from "react";
-import { Platform, ScrollView, StyleSheet, View } from "react-native";
+import { Image, Platform, ScrollView, StyleSheet, View } from "react-native";
+import { Asset } from "@hjmds/react-native/asset";
+import { assetRecipe } from "@hjmds/design-contracts/components/asset";
 import { requireOptionalNativeModule } from "expo";
 import { HjmNativeProvider, useHjmNativeTheme } from "@hjmds/react-native/provider";
 import { BottomCTA, Button } from "@hjmds/react-native/actions";
@@ -105,6 +107,21 @@ function ProfileTabsSample({ onNextTheme }: { onNextTheme: () => void }) {
   </Stack></Collapsible>;
 }
 
+function ProfileAssetSample({ onNextTheme }: { onNextTheme: () => void }) {
+  // The existing attributed fixture is unchanged; Asset owns the frame and
+  // the product's image host supplies decode/contain (shared/assets/reference-icons/README.md).
+  const image = require("../../shared/assets/reference-icons/tick.png");
+  return <Collapsible trigger={copy.assets}><Stack gap="md">
+    <Stack axis="inline" gap="md" wrap>{([
+      ["rounded", copy.assetRounded], ["square", copy.assetSquare], ["circle", copy.assetCircle],
+    ] as const).map(([shape, label]) => <Stack key={shape} gap="sm"><Text>{label}</Text>
+      <Asset descriptor={{ kind: "image", size: "xlarge", shape, decorative: true }}>
+        <Image source={image} accessible={false} resizeMode="contain" style={{ width: assetRecipe.sizes.xlarge, height: assetRecipe.sizes.xlarge }} />
+      </Asset>
+    </Stack>)}</Stack><Text tone="muted">{copy.assetNote}</Text><Button onPress={onNextTheme}>{copy.nextTheme}</Button>
+  </Stack></Collapsible>;
+}
+
 export function DesignProfileComparison() {
   const [preset, setPreset] = useState<HjmDesignPreset>("retro");
   return <ScrollView keyboardShouldPersistTaps="handled"><Stack gap="xl"><Text variant="heading">{copy.title}</Text><Text>{copy.intro}</Text>
@@ -113,6 +130,7 @@ export function DesignProfileComparison() {
     <HjmNativeProvider designProfile={hjmDesignPresets[preset]}><Collapsible trigger={copy.headingScale} defaultOpen><Stack gap="sm">{profileHeadingSamples.map(sample => <Heading key={sample.level} level={sample.level} semanticLevel={3}>{sample.label}</Heading>)}</Stack></Collapsible></HjmNativeProvider>
     <HjmNativeProvider designProfile={hjmDesignPresets[preset]}><ProfileMaterialSample onNextTheme={() => setPreset(profileOptions[(profileOptions.findIndex(option => option.id === preset) + 1) % profileOptions.length]!.id)} /></HjmNativeProvider>
     <HjmNativeProvider designProfile={hjmDesignPresets[preset]}><ProfileTabsSample onNextTheme={() => setPreset(profileOptions[(profileOptions.findIndex(option => option.id === preset) + 1) % profileOptions.length]!.id)} /></HjmNativeProvider>
+    <HjmNativeProvider designProfile={hjmDesignPresets[preset]}><ProfileAssetSample onNextTheme={() => setPreset(profileOptions[(profileOptions.findIndex(option => option.id === preset) + 1) % profileOptions.length]!.id)} /></HjmNativeProvider>
     <HjmNativeProvider designProfile={hjmDesignPresets[preset]}><CodeBlock label={copy.codeTitle} code={copy.codeSource} wrap /></HjmNativeProvider>
     <HjmNativeProvider designProfile={hjmDesignPresets[preset]}><ProfileChromeSample onNextTheme={() => setPreset(profileOptions[(profileOptions.findIndex(option => option.id === preset) + 1) % profileOptions.length]!.id)} /></HjmNativeProvider>
     <HjmNativeProvider designProfile={hjmDesignPresets[preset]}><Collapsible trigger={copy.liquidToast}><View style={{ height: 520 }}>{/* A bounded region keeps the optional canvas out of other comparison sections. */}<ToastPreview enhanced onNextTheme={() => setPreset(profileOptions[(profileOptions.findIndex(option => option.id === preset) + 1) % profileOptions.length]!.id)} /></View></Collapsible></HjmNativeProvider>

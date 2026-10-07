@@ -253,7 +253,7 @@
       "reviewedOn": "2026-10-07",
       "sourceReview": "unique body text read; common header/footer read separately",
       "defaultVisualReview": "icon and detail area inspected",
-      "interactionReview": "pending",
+      "interactionReview": "2026-10-07: selected keyboard color/angle flows verified; see liveVariantReview. This is not all-state review.",
       "adoptionDecision": "Compare product-owned illustration through existing Asset/EmptyState/OnboardingScreen/Result slots; no new public API or asset adoption established by this page review",
       "remaining": [
         "angle/color/selection and keyboard states",
@@ -261,7 +261,18 @@
         "asset-specific use and theme verification",
         "similar-item rows and footer visual review"
       ],
-      "report": "../qa/2026-10-07-3dicons-page-review.md"
+      "report": "../qa/2026-10-07-3dicons-page-review.md",
+      "liveVariantReview": {
+        "status": "partial",
+        "checkedAt": "2026-10-07T06:56:00Z",
+        "loadedVariants": [
+          "color/front",
+          "color/dynamic"
+        ],
+        "scope": "Desktop live keyboard selection plus actual decoded preview; Ghost clay/dynamic also390px dark/reduced. Other states/environments/AT and downloads pending.",
+        "evidence": "../qa/2026-10-07-3dicons-page-review.md"
+      },
+      "existingApiComparison": "Asset/Image for product manifest media; RadioGroup/SegmentedControl for named available options. Rounded Asset radius profile gap reproduced and fixed on both renderers; square/circle preserved. Existing theme comparison augmented, new selection composition not registered."
     },
     {
       "url": "https://3dicons.co/icons/0dc921-linkedin",
@@ -673,7 +684,7 @@
       "reviewedOn": "2026-10-07",
       "sourceReview": "unique body text read; common header/footer read separately",
       "defaultVisualReview": "icon and detail area inspected",
-      "interactionReview": "pending",
+      "interactionReview": "2026-10-07: selected keyboard color/angle flows verified; see liveVariantReview. This is not all-state review.",
       "adoptionDecision": "Compare product-owned illustration through existing Asset/EmptyState/OnboardingScreen/Result slots; no new public API or asset adoption established by this page review",
       "remaining": [
         "angle/color/selection and keyboard states",
@@ -681,7 +692,21 @@
         "asset-specific use and theme verification",
         "similar-item rows and footer visual review"
       ],
-      "report": "../qa/2026-10-07-3dicons-page-review.md"
+      "report": "../qa/2026-10-07-3dicons-page-review.md",
+      "liveVariantReview": {
+        "status": "partial",
+        "checkedAt": "2026-10-07T06:56:00Z",
+        "loadedVariants": [
+          "color/front",
+          "clay/front",
+          "gradient/dynamic",
+          "gradient/iso",
+          "premium/iso"
+        ],
+        "scope": "Desktop live keyboard selection plus actual decoded preview; Ghost clay/dynamic also390px dark/reduced. Other states/environments/AT and downloads pending.",
+        "evidence": "../qa/2026-10-07-3dicons-page-review.md"
+      },
+      "existingApiComparison": "Asset/Image for product manifest media; RadioGroup/SegmentedControl for named available options. Rounded Asset radius profile gap reproduced and fixed on both renderers; square/circle preserved. Existing theme comparison augmented, new selection composition not registered."
     },
     {
       "url": "https://3dicons.co/icons/1c6625-3d",
@@ -753,7 +778,7 @@
       "reviewedOn": "2026-10-07",
       "sourceReview": "unique body text read; common header/footer read separately",
       "defaultVisualReview": "icon and detail area inspected",
-      "interactionReview": "pending",
+      "interactionReview": "2026-10-07: selected keyboard color/angle flows verified; see liveVariantReview. This is not all-state review.",
       "adoptionDecision": "Compare product-owned illustration through existing Asset/EmptyState/OnboardingScreen/Result slots; no new public API or asset adoption established by this page review",
       "remaining": [
         "angle/color/selection and keyboard states",
@@ -761,7 +786,18 @@
         "asset-specific use and theme verification",
         "similar-item rows and footer visual review"
       ],
-      "report": "../qa/2026-10-07-3dicons-page-review.md"
+      "report": "../qa/2026-10-07-3dicons-page-review.md",
+      "liveVariantReview": {
+        "status": "partial",
+        "checkedAt": "2026-10-07T06:56:00Z",
+        "loadedVariants": [
+          "color/front",
+          "clay/dynamic"
+        ],
+        "scope": "Desktop live keyboard selection plus actual decoded preview; Ghost clay/dynamic also390px dark/reduced. Other states/environments/AT and downloads pending.",
+        "evidence": "../qa/2026-10-07-3dicons-page-review.md"
+      },
+      "existingApiComparison": "Asset/Image for product manifest media; RadioGroup/SegmentedControl for named available options. Rounded Asset radius profile gap reproduced and fixed on both renderers; square/circle preserved. Existing theme comparison augmented, new selection composition not registered."
     },
     {
       "url": "https://3dicons.co/icons/269bcd-gift-box",
@@ -1513,7 +1549,7 @@
       "reviewedOn": "2026-10-07",
       "sourceReview": "unique body text read; common header/footer read separately",
       "defaultVisualReview": "icon and detail area inspected",
-      "interactionReview": "pending",
+      "interactionReview": "2026-10-07: selected keyboard color/angle flows verified; see liveVariantReview. This is not all-state review.",
       "adoptionDecision": "Compare product-owned illustration through existing Asset/EmptyState/OnboardingScreen/Result slots; no new public API or asset adoption established by this page review",
       "remaining": [
         "angle/color/selection and keyboard states",
@@ -1521,7 +1557,18 @@
         "asset-specific use and theme verification",
         "similar-item rows and footer visual review"
       ],
-      "report": "../qa/2026-10-07-3dicons-page-review.md"
+      "report": "../qa/2026-10-07-3dicons-page-review.md",
+      "liveVariantReview": {
+        "status": "partial",
+        "checkedAt": "2026-10-07T06:56:00Z",
+        "loadedVariants": [
+          "color/front",
+          "color/dynamic"
+        ],
+        "scope": "Desktop live keyboard selection plus actual decoded preview; Ghost clay/dynamic also390px dark/reduced. Other states/environments/AT and downloads pending.",
+        "evidence": "../qa/2026-10-07-3dicons-page-review.md"
+      },
+      "existingApiComparison": "Asset/Image for product manifest media; RadioGroup/SegmentedControl for named available options. Rounded Asset radius profile gap reproduced and fixed on both renderers; square/circle preserved. Existing theme comparison augmented, new selection composition not registered."
     },
     {
       "url": "https://3dicons.co/icons/544d0d-cauldron",

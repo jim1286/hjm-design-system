@@ -7,9 +7,12 @@ import { useHjmNativeTheme } from "./provider.js";
 export function Asset({ descriptor, children, accessory, layoutStyle, style }) {
     warnDeprecatedStyleProps("Asset", { style }, "layoutStyle for placement; assetRecipe owns appearance");
     validateAssetDescriptor(descriptor);
-    const { palette, environment } = useHjmNativeTheme();
+    const { palette, environment, tokens } = useHjmNativeTheme();
     const size = assetRecipe.sizes[descriptor.size ?? assetRecipe.defaults.size];
-    const shape = assetRecipe.shapes[descriptor.shape ?? assetRecipe.defaults.shape];
+    const shapeKey = descriptor.shape ?? assetRecipe.defaults.shape;
+    // Rounded follows the nearest profile; square/circle keep their explicit
+    // geometry so a brand radius cannot turn a circular illustration into a card.
+    const shape = shapeKey === "rounded" ? tokens.radius.md : assetRecipe.shapes[shapeKey];
     const decorative = descriptor.decorative ?? false;
     // The frame freezes nothing itself — it has no player. It hands the one
     // answer to the slot so the product does not re-derive the preference.

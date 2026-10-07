@@ -58,3 +58,85 @@
 - 원시 HTML·캡처·재확인·도구는 전수 검토를 이어가는 자료이므로 종료와 QA 대조 전 보존한다.
 - 영구 문서에는 판단·수치·재현·digest·미확인 범위를 남긴다. 임시 파일을 영구 링크로 사용하지 않는다.
 - [11개 사이트 목록](../plans/reference-site-inventory.json)과 [페이지 원장](../plans/3dicons-page-review-ledger.json)에 현재 범위를 기록한다.
+
+## 8. 재질·각도 실제 선택과 Asset 테마 상속 — 15:56 KST
+
+후속은 임시 IAB 탭77에서 실제 공개 상세4개를 조작했다. 앞선222페이지 기본 검토를
+전수 상태 검토로 올리지 않는다. 사용자 별도 로그인·설치·다운로드·copy는 하지 않았다.
+
+| 상세 | 실제 이미지까지 확인한 변형 | 선택만 확인한 상태 |
+| --- | --- | --- |
+| Tick `1b714e` | color/front, clay/front, gradient/dynamic, gradient/iso, premium/iso (400px 실제 이미지) | gradient/front는 방향키 선택만 확인 |
+| Ghost `231450` | color/front, clay/dynamic (400px 실제 이미지). clay/dynamic은 390×844에서도 표시 | clay/front 선택만 확인 |
+| Threads `04e52c` | color/front, color/dynamic | — |
+| Threads `537509` | color/front, color/dynamic. 원형 그림이며 첫 Threads의 둥근 사각과 별도 자산 | — |
+
+Tick은 Space로 clay 선택, ArrowRight로 gradient 선택이 바뀐다. 모든7 radio의 tabindex는0,
+두 radiogroup의 aria-labelledby 대상은 각0개였다. download의 Enter로 메뉴를 열어
+current/각도별/all/FBX/Blend 항목을 읽고 Escape로 닫은 뒤 download 초점 복귀를 확인했다.
+메뉴 이름을 파일 다운로드 성공이나 해당 파일 라이선스 확인으로 세지 않는다.
+
+Ghost의390px 환경은 문서 scrollWidth=innerWidth=390, 프리뷰 폭172px이고 media query의
+dark/reduced=true였다. 사이트는 이 환경에서도 밝은 상세 배경을 표시했다. 글자200%/RTL,
+음성 AT, 모든 메뉴와 모든 자산 조합은 확인하지 않았다. 초기 전환에서 src가 비고 로딩
+대체가 나온 뒤 실제 이미지가 로드됐다. 예약 프레임이 있는 모습만 확인했으며 CLS/시간축을
+전수 계측하지 않았다. 기본 IAB 캡처가 viewport 축소로 보여 최종 proof는 CSS clip390×844로
+다시 캡처했다. media/viewport를 해제하고 탭을 닫았다.
+
+Social 두 상세는 color1종·각도2종만 제공한다. V1/Halloween의4×3 옵션을 모든 자산에
+강제하면 없는 경로를 만든다. 테마는 제품 소유 manifest의 실제 제공 조합을 골라 Asset/Image
+슬롯에 넣어야 하며 HJM이 재질/각도를 생성하거나 그림 뜻을 바꾸지 않는다. Tick의
+TICK/TOCK/WATCH 태그를 제품의 확인/성공 대체 텍스트로 복사하지 않는다. 장식 3D는
+기능 Icon/Button이나 공식 제공자 자산을 대신하지 않는다. 상세의 CC0 표시와 이미 채택된
+Tick fixture 귀속을 확인했고 새로운 파일을 라이브러리에 도입하지 않았다.
+
+기존 API 지도·Asset 계약·양 renderer를 비교하며 rounded 액자가 foundation12를
+직접 써서 프로필 radius.md를 우회함을 발견했다. Web computed radius12px≠retro4px,
+Native frame radius12≠4를 신규 회귀검사에서 각각 재현한 뒤 수정했다. rounded만 가장
+가까운 프로필의 md를 따르고 명시 square0/circle999·120px 크기·라벨·미디어 인스턴스는
+유지한다. 공개 wrapper/상태 엔진/새 자산 선택 API를 추가하지 않았다.
+
+기존 `실험/구성/비교와 검증/테마 조합`의 접힌 ‘자산 액자 비교’에 같은 이미지를 넣었다.
+Web·Native 두 Preview와 사용 지침에 기존 Tick fixture로 rounded/square/circle 및 다음
+테마를 연결했다. 신규 후보의 실험 등록 수를 늘리지 않고 기존 테마 실험의 상속 누락을 고친다.
+자산 변형 선택 구성 후보의 최종 등록·전체 조사·승격·npm 게시·제품 반영은 아직 남는다.
+
+검사:
+
+- 변경 전 신규 Web/Native 각1건이 같은 상속 누락으로 실패. 변경 후 Web Asset/profile+density
+  2파일4건, Native Asset/profile+기존design-profile 2파일10건 통과. 무프로필·중립 포함11preset·
+  사용자 프로필, light/dark·큰 글자/RTL/reduced·중첩 Provider·초안/초점/미디어 유지 확인.
+- Native Showcase registry/component stories 2파일7건 통과.
+- 양 renderer build/typecheck·양 Showcase typecheck 통과. docs579파일·usage
+  12토큰/139컴포넌트/54구성/22화면·Storybook421파일/929Webid·공개API지도308·workspace/
+  evidence 동기화·renderer graph 경계 통과. 해당 범위의 로컬 검사이며 전체 release gate가 아니다.
+- 실제 로컬 Web의 LargeText story를390px·dark·RTL·reduced로 열어10preset을 다음 테마로
+  순회했다. provider globals2/dark/rtl/reduced, 이미지 naturalWidth500, 세 액자120px,
+  모든 상태 scrollWidth390을 확인했다. rounded radius는 아래 표와 같고 square0/circle999는
+  계속 유지됐다. 기본 desktop/light의 레트로 액자도 직접 읽었다.
+
+| preset | rounded radius.md(px) |
+| --- | --- |
+| retro | 4 |
+| paper | 6 |
+| forest | 16 |
+| minimal | 8 |
+| editorial | 2 |
+| brutalist | 0 |
+| glass | 18 |
+| aurora | 14 |
+| terminal | 4 |
+| clay | 22 |
+
+증거:
+
+- [원본 Ghost의 모바일 변형](assets/2026-10-07-3dicons-ghost-clay-mobile.png), SHA-256
+  `ed3454667265eac32156e07eff28d5751600297ecdf358d60ec72d87a3a6a73b`.
+- [HJM10테마 액자 한 장 비교](assets/2026-10-07-asset-profile-contact-sheet.png), SHA-256
+  `2189b419407dfd7354c5db8b2e5bdd305054acaf52fb8f0bbd39a255b0c7a947`.
+  실제358px폭 패널 캡처10개를 픽셀 크기 유지한 채 합쳤다. 상단 preset/radius 표시는 실제
+  DOM 관찰값을 추가한 라벨이며 원본 화면을 재생성하지 않았다. 직접 읽어 상속/동일그림/명시
+  모양/큰 글자 줄바꿈을 확인했다. 검토 범위는 액자 패널이며 다른 화면까지 통과시킨 근거가 아니다.
+
+미확인: Native 실제 decode/기기 레이아웃·VoiceOver/TalkBack, OS/GPU·성능·원사이트 모든
+자산/선택 조합, 모든 기능 아이콘/다른 token consumer. 원격 CI·버전상승·릴리스 없음.

@@ -21,6 +21,7 @@
 | OverviewScreen | 도구·목록·주 행동 | [목록 화면](../components/overview-screen.md) |
 | Tabs | 프로필 상속/명시 표시와 방문한 패널의 초안 유지 | [탭](../components/tabs.md) |
 | Card | 무늬 위의 표면 질감과 초안 | [카드](../components/card.md) |
+| Asset | 같은 그림의 프로필 둥근 액자와 명시한 정사각·원형 비교 | [자산](../components/asset.md) |
 | Heading | 선택 테마의 5단계 제목 크기 | [제목](../components/heading.md) |
 | BottomCTA | 저장·실패 재현과 위쪽 그림자 | [하단 행동](../components/bottom-cta.md) |
 | Popover(Web) | 비모달 초안과 같은 프로필 순회 | [팝오버](../components/popover.md) |
@@ -37,6 +38,7 @@
 선택한 프로필: 제목 크기 비교(5단계, 문서 단계 h3 유지)
 표면 질감 비교: 장식 무늬 → Card 제목/설명 → 같은 초안 → 다음 테마
 탭 선택 표시 비교: 테마 따르기/밑줄/이동/늘어남 → 기록/보관함 → 같은 초안 → 다음 테마
+자산 액자 비교(기본 접힘): 같은 기존 Tick 그림 → 둥근/정사각/원형 → 다음 테마
 입력·알림·오버레이 비교: Notice → Skeleton → Toast → Dialog/Sheet 열기
 오버레이: 제목/닫기 → 같은 초안 → 다음 테마(현재 10종 순환)
 10종 비교: 각 이름 → 같은 화면
@@ -48,6 +50,7 @@
 | 이름/기간 | TextField·SegmentedControl | 도구 | `spacing.md` 16 |
 | 목록 | OverviewScreen | 본문 | [목록 배치](../components/overview-screen.md#배치) |
 | 저장/실패 | BottomCTA | footer | `spacing.sm` 12; 주 행동 후 ghost 실패 재현 |
+| 자산 비교 | Asset·Stack | 탭 비교 아래 | `xlarge` 120px, `spacing.md` 16, 좁으면 줄바꿈. rounded는 프로필 radius.md, square 0, circle foundation full 유지 |
 
 ## 흐름과 상태
 
@@ -56,6 +59,8 @@
 3. 무늬 배경의 카드에 입력하고 다음 테마를 누른다. 유리·클레이 질감과 같은 초안 유지를 확인한다. Native 지원/접근성 설정에 따라 불투명 대체 경로도 확인한다.
 4. 대화상자/패널을 열고 초안을 바꾼 뒤 다음 테마를 누른다. 열린 오버레이 안에서 프로필을 바꾸며 초안/문서 역할을 유지한다. 닫고 다시 열어도 제어 초안은 남는다.
 5. 미리보기 저장 또는 실패 재현을 누른다. 실패 후 같은 입력을 재시도한다.
+6. 자산 액자 비교를 펼쳐 다음 테마를 누른다. 같은 기존 CC0 그림과 120px 액자를 유지하며
+   rounded만 프로필을 따른다. 이 예제는 그림 재질·각도 자동 선택이나 Native 이미지 decode 검증의 완료 근거가 아니다.
 
 | 상태 | 모습 | 포커스·알림 |
 | --- | --- | --- |

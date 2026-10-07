@@ -31,7 +31,10 @@ export const Asset = forwardRef<HTMLDivElement, AssetProps>(function Asset(
   validateAssetDescriptor(descriptor);
   const theme = useOptionalHjmTheme();
   const size = assetRecipe.sizes[descriptor.size ?? assetRecipe.defaults.size];
-  const shape = assetRecipe.shapes[descriptor.shape ?? assetRecipe.defaults.shape];
+  const shapeKey = descriptor.shape ?? assetRecipe.defaults.shape;
+  // Rounded is a theme radius role; explicit square/circle are media geometry.
+  // Keeping the recipe's numeric radius would bypass nested product profiles.
+  const shape = shapeKey === "rounded" ? theme?.designProfile?.tokens.radius.md ?? assetRecipe.shapes.rounded : assetRecipe.shapes[shapeKey];
   const decorative = descriptor.decorative ?? false;
   // The frame reports whether motion is allowed so the product's player can
   // read one answer instead of re-deriving the preference per surface.

@@ -4,9 +4,13 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [Asset contract](../../asset.md), [VoiceNote](../../voice-note.md), recipe `assetRecipe`(`src/asset.ts`)
 - 스토리북: `배포/컴포넌트/데이터 표시/이미지·영상 표시` · `배포/컴포넌트/데이터 표시/음성 메모`
+
+개발 중인 프로필 지원에서 `rounded`는 가장 가까운 프로필의 `tokens.radius.md`를 따른다.
+프로필이 없으면 기존 12px이고 명시한 square/circle은 그대로다. 이 보강은 아직 미게시이며
+1.12.1의 기존 Asset 제공 여부와 구분한다([근거](../../../../../docs/qa/2026-10-07-3dicons-page-review.md)).
 
 ## 언제 쓰나
 
@@ -97,7 +101,7 @@ import { VoiceNote } from "@hjmds/react-native/voice-note";
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
-| 크기 | 정사각 액자. 한 변 `small` 32 · `medium` 48 · `large` 72 · `xlarge` 120. 모서리 `square` 0 · `rounded` `radius.md` 12 · `circle` `radius.full`. 터치 대상이 아니므로 누를 수 있게 하려면 감싸는 버튼·행이 최소 44를 확보한다 | `assetRecipe.sizes`·`shapes`, `.hjm-asset__frame` |
+| 크기 | 정사각 액자. 한 변 `small` 32 · `medium` 48 · `large` 72 · `xlarge` 120. 모서리 `square` 0 · `rounded` `radius.md`(무프로필 12, 미게시 보강에서는 프로필 값) · `circle` foundation `radius.full`. 터치 대상이 아니므로 누를 수 있게 하려면 감싸는 버튼·행이 최소 44를 확보한다 | `assetRecipe.sizes`·`shapes`, `.hjm-asset__frame` |
 | 간격 | `accessory`는 액자 끝·아래 모서리 바깥으로 `spacing.xxs` 4 띄워 붙으므로 옆 요소와 `spacing.xs` 8 이상 띄운다. `AssetGroup` 겹침은 크기의 30%(48이면 −14) | `assetRecipe.accessory`·`overlapRatio`, `react/src/asset.tsx` |
 | 순서·정렬 | 늘어나지 않는 인라인 요소(Web `inline-flex`, `flex: 0 0 auto`). 행 안에서는 시작 쪽에 둔다. 한 줄에 종류가 다른 그림을 섞을 때 모두 같은 `size`·`shape`를 준다 | `.hjm-asset`, `assetBehavior.scenarios` |
 | 고정·스크롤 | 고정 영역이 없다 | — |
@@ -109,6 +113,9 @@ import { VoiceNote } from "@hjmds/react-native/voice-note";
   둘 다 준 경우 모두 렌더 중 `TypeError`가 난다.
 - reduced motion에서는 숨기지 말고 `animate`로 재생을 멈춘다. 판단을 제품에서 다시 만들지 않는다.
 - Lottie·비디오·오디오 엔진, 그림 자산은 제품 소유다. HJM은 액자·크기·겹침·표식 위치만 소유한다.
+- 테마별 그림은 제품의 자산 목록에서 선택해 슬롯에 넣는다. Asset이 URL을 만들거나 재질·각도
+  변형을 자동 생성하지 않는다. 자산마다 지원하는 조합과 실패 대체를 확인하며, 3D 제공자의
+  태그를 의미 있는 대체 텍스트로 그대로 복사하지 않는다. 기능 아이콘은 Icon/Button 계약을 쓴다.
 - `VoiceNote`의 재생 위치는 실제 플레이어 값을 넘긴다. 내부 타이머로 진행을 꾸미지 않는다.
 
 ## 플랫폼 차이

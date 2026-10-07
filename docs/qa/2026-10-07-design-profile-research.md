@@ -913,3 +913,17 @@ recipe/literal 감사 및 11사이트 전수 검토. 원격 CI·버전 상승·n
 
 사용자 추가 요청에 따라 조사팀은 모든 채택/개선 후보의 근거와 최종 실험 경로를 매핑한다.
 조사 완료 뒤 규격에 맞춘 실제 등록과 대조하며, 현재 후보 목록을 등록 완료로 세지 않는다.
+
+### 자산 액자의 프로필 상속 — 15:56 KST
+
+3dicons의 색/각도 실제 선택을 대조하며 Asset rounded가 양 renderer에서 foundation12를
+고정함을 발견했다. nearest profile radius.md를 상속하도록 수정하고 explicit square0/circle999,
+크기·라벨·매체/입력 인스턴스를 유지했다. 기존 테마 조합의 접힌 액자 비교와 양쪽 사용 지침을
+보강했다. 원본3D 변형 선택은 제품 자산 manifest 소유이며 이번 source가 자동 선택을 새로
+제공한 것은 아니다([실제 재현·수정·10테마 비교·검사](2026-10-07-3dicons-page-review.md#8-재질각도-실제-선택과-asset-테마-상속--1556-kst)).
+
+변경 전 신규 Web/Native 회귀 각1실패, 수정 후 Web4/Native10통과. 양 renderer build/typecheck,
+양 Showcase typecheck, docs/usage/Storybook/API지도/workspace/evidence/renderer경계 통과.
+실제 Web390px dark/RTL/200%/reduced 10종 그림 로드와 액자·명시모양·줄바꿈을 한 장으로
+검토했다. Native 기기 decode·AT·성능, 전수조사·새 후보 등록·승격·게시·Utilverse 적용은
+아직 미완료다. 원격 CI·버전상승·릴리스를 실행하지 않았다.

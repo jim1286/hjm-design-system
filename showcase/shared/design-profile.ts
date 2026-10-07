@@ -22,6 +22,8 @@ export const profileCopy = {
   overlayTitle: "기록 편집", overlayDraft: "오버레이 초안", nextTheme: "다음 테마",
   chromeNotice: "테마를 바꿔도 초안은 유지돼요.", toastCopy: "미리보기 기록을 저장했어요.",
   liquidToast: "물방울 알림의 테마 비교",
+  assets: "자산 액자 비교", assetRounded: "테마의 둥근 모서리", assetSquare: "명시한 정사각", assetCircle: "명시한 원형",
+  assetNote: "같은 기존 확인 그림으로 액자를 비교해요. 그림의 재질·각도는 바뀌지 않아요.",
 };
 export const profileHeadingSamples = [
   { level: "level1", label: "큰 제목" }, { level: "level2", label: "주 제목" },
