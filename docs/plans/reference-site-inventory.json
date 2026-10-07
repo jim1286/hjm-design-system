@@ -6156,12 +6156,12 @@
         "scope": "Fetched text pending individual source/visual/interaction review; no HTML link closure claim"
       },
       "sourceCaptureProgress": {
-        "checkedAt": "2026-10-07T04:50:07.702264+00:00",
-        "capturedRecords": 1252,
-        "http200": 1252,
+        "checkedAt": "2026-10-07T05:02:04.110165+00:00",
+        "capturedRecords": 1323,
+        "http200": 1323,
         "knownQueueUrls": 2657,
         "scope": "Fetched/extracted public source; not source reading, visual or interaction review",
-        "lastCapturedAt": "2026-10-07T04:50:04Z",
+        "lastCapturedAt": "2026-10-07T05:01:54Z",
         "allReviewComplete": false,
         "status": "running-process-confirmed"
       }
@@ -19432,12 +19432,12 @@
         "checkedAt": "2026-10-07T01:58:52.171516+00:00"
       },
       "sourceCaptureProgress": {
-        "checkedAt": "2026-10-07T04:50:07.702264+00:00",
-        "capturedRecords": 6062,
-        "http200": 6052,
+        "checkedAt": "2026-10-07T05:02:04.110165+00:00",
+        "capturedRecords": 6414,
+        "http200": 6404,
         "knownQueueUrls": 12460,
         "scope": "Fetched/extracted public source; not source reading, visual or interaction review",
-        "lastCapturedAt": "2026-10-07T04:50:06Z",
+        "lastCapturedAt": "2026-10-07T05:02:02Z",
         "allReviewComplete": false,
         "status": "running-process-confirmed"
       }
@@ -19964,6 +19964,20 @@
         "allReviewComplete": false,
         "status": "completed-known-queue",
         "terminalExitCode": 0
+      },
+      "selectedInteractionReview": {
+        "checkedAt": "2026-10-07T05:02:04.110165+00:00",
+        "pages": [
+          "https://ui.aceternity.com/components/tabs",
+          "https://ui.aceternity.com/components/stateful-button",
+          "https://ui.aceternity.com/components/expandable-card",
+          "https://ui.aceternity.com/components/layout-grid"
+        ],
+        "sourceScope": "Visible descriptions/props, provided Manual component/hook and Code demos including both expandable variants",
+        "visualAndInteractionScope": "Selected desktop/light flows only; see per-URL ledger and adoption plan",
+        "allReviewComplete": false,
+        "report": "../qa/2026-10-07-design-profile-research.md",
+        "adoptionPlan": "aceternity-interaction-adoption-2026-10-07.md"
       }
     },
     {

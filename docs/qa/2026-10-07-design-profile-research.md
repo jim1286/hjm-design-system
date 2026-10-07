@@ -691,3 +691,72 @@ pnpm storybook:check
 
 재사용 symbol 감사는 `/Users/jimin/.codex/tmp/hjm-profile-font-hosts-20261007/audit-native-text-hosts.mjs`에 보존했다.
 새 inventory 출력은 다시 생성할 수 있지만 당시 digest/시각 관찰을 현재 실행 결과로 대체하지 않는다.
+
+## 후속 조사: Aceternity 탭·상태 버튼·상세 카드
+
+기준: main `3021ce0` · 2026-10-07 14:02 KST.
+이전 사용자 상태 질문에서는 새 구현을 수행하지 않았으므로 이번 목표 턴은 실제 원본 검토와
+게시 API 대조를 이어갔다. [채택 판단](../plans/aceternity-interaction-adoption-2026-10-07.md)에
+네 페이지별 읽은 소스·실제 행동·기존 API와 미지원 차이를 보존했다.
+
+### 직접 확인
+
+- Aceternity tabs/stateful-button/expandable-card/layout-grid의 설명·props와 제공 Manual/Code를
+  읽었다. expandable-card의 Standard/Grid와 outside-click hook을 포함한다. 클릭 후 상태는
+  live IAB Chromium 1280px desktop/light DOM과 실제 화면으로 확인했다.
+- 탭은 Services/Random의 선택 표시와 쌓인 콘텐츠, 상태 버튼은 같은 실행의 loader→check와
+  기본 표시 복귀, 카드 두 배치의 첫 상세와 독립 Standard Escape 닫힘, layout-grid의
+  첫/네 번째 상세와 바깥 누름 닫힘을 확인했다. 그 외 모든 상태/항목을 검토한 것은 아니다.
+- 상태 버튼의 pending에서 disabled=false/aria-busy=null을 확인했다. 제공 구현에는
+  rejection/finally 정리와 자동 중복 차단이 없지만 실패를 주입해 검증한 것은 아니다.
+- 첫 2500ms 버튼 success 관찰은 만료됐고 동일 live 실행을 다시 관찰해 check display=block/
+  loader display=none을 확인했다. 만료를 종료로 판단하거나 실행을 다시 시작하지 않았다.
+- 문서 중복 예제의 heading은 focus 가능한 키 입력 대상이 아니었다. 독립 Standard preview의
+  실제 detail link에 Escape를 보내 닫힘 완료 뒤 링크0을 확인했다. 도구의 heading press 실패를
+  원본 Escape 실패로 판정하지 않는다. dialog role0은 DOM 관찰이며 전체 접근성 감사 결과가 아니다.
+
+### API 비교와 지침 반영
+
+공개 API 대응표·두 renderer의 navigation/actions/overlays/Grid/Card 경로를 대조했다.
+별도 stateful button/expandable card 엔진 대신 Button의 제품 pending/확정/복구, Card.actions의
+Button→Dialog.motionOrigin, 인라인 Collapsible, 반응형 Grid/OverviewScreen 선택 기준을 연결했다.
+이미지/제목별 shared-element와 unequal CSS span은 현재 일반 상세/열 수 API와 같다고 세지 않는다.
+profile selectionMotion은 현재 SegmentedControl에 연결되며 Tabs appearance에는 연결되지 않아
+후속 구현 후보로 남겼다. slide와 gooey를 같은 효과로 자동 매핑하지 않았다.
+
+Dialog의 `motionOrigin`은 지침 하단에는 있었지만 축 표에는 없고 미게시 표기가 남아 있었다.
+npm registry의 각 1.14.0 tarball을 설치 없이 메모리에서 열어 공개 타입을 읽었다.
+
+| npm package | 확인 타입 | registry integrity metadata |
+| --- | --- | --- |
+| `@hjmds/react@1.14.0` | `package/dist/overlays.d.ts:20` motionOrigin | `sha512-6t/4x1ajTTZEEpcGsh/bbGSVqmFvdIzETfNisOLLTu75FVmNHgdkgm5+PMJ2bcUR72WFIOERVjBGVayOMhR3bA==` |
+| `@hjmds/react-native@1.14.0` | `package/dist/overlays.d.ts:64` motionOrigin, 함수73 | `sha512-TWHjEaSkXbdpGseAdv1ayzhH8HpXAjSBWcy2dNoN10hGDwcoRWLwGbyxD3tqPSKl326EKU7omOHXSYXBgeqIgQ==` |
+
+release commit `8d6f665`의 양 source에도 prop이 있다. 계약과 지침을 게시 API·실험 표현으로
+정정하고 Dialog 축 표와 실제 Card.actions/Button의 측정·open 골격을 추가했다.
+현재 테마 후속 변경의 게시/실험 승급/기기 성능 검증을 뜻하지 않는다.
+
+### 수집·미확인 범위
+
+14:02 KST 원래 Designbookmark PID80505/21st PID83201의 실제 ps command를 확인했다.
+1323/2657 HTTP2001323,6414/12460 HTTP2006404 record다. source capture이며 독해/시각/행동
+진척으로 합산하지 않는다. 원래 process/원본을 보존하고 inventory에 같은 시점만 갱신했다.
+ledger 네 URL의 source/선택된 visual/interaction은 partial로 갱신했고 전체 완료는 false다.
+
+새 runtime/API/peer/버전 변경, 원격 CI, 게시, 소비 앱 변경과 Native 기기 검증은 없다.
+원본 코드·자산을 복사하지 않았고 이 후속 작업이 새 로컬 캡처/로그 파일을 만들지 않았으므로
+해당 원시 파일 삭제 대상은 없다. 실제 화면은 도구 관찰로 확인했으며 영구 이미지 증거는 없다.
+사이트 전수 상태 검토·Tabs 프로필 선택 표시·shared-element/span 후보·실기기/성능은 남는다.
+
+### 로컬 문서 검증
+
+pinned Node24.20.0 환경에서 `pnpm docs:check`(569 Markdown), `pnpm usage:check`(토큰12·
+컴포넌트139·구성54·화면22), `pnpm api-map:check`(308 platform API 이름)가 통과했다.
+문서/분류/링크 검사이며 런타임·원격 CI·기기·사이트 전수 검증으로 세지 않는다.
+
+Dialog 지침의 새 `RecordDetail` TSX를 그대로 추출해 제품 소유 `t`/`RecordFields` 선언만 붙이고,
+현재 dist 선언을 NodeNext paths로 연결한 임시 fixture에서 strict/exactOptionalPropertyTypes/noEmit
+typecheck도 exit0으로 통과했다. 첫 harness는 extension 없는 NodeNext paths여서 module을 찾지
+못했다. `.d.ts` 파일 경로로 수정한 뒤 같은 예제를 검사했으며 예제 소스를 타입에 맞춰 우회하지
+않았다. 임시 fixture는 TemporaryDirectory 종료로 정리했다. 타입 검증은 실제 열기/초점 복귀
+실행이나 제품 편집 상태 보존 성공을 뜻하지 않는다.

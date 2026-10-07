@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [Gooey navigation](../../gooey-navigation.md), `src/component-recipes.ts`(`tabsRecipe`), `src/behaviors.ts`(`tabsBehaviorDefaults`)
 - 스토리북: `배포/컴포넌트/탐색/탭`, `배포/컴포넌트/탐색/선택 표시가 이어지는 탭`
 
@@ -128,6 +128,14 @@ import { Tabs } from "@hjmds/react-native/navigation";
 | import 경로 | `/navigation` | `/navigation`, `/top-bar` |
 
 ## 함정
+
+- 2026-10-07 [Animated Tabs 대조](../../../../../docs/plans/aceternity-interaction-adoption-2026-10-07.md)에서
+  선택 표시의 이동과 겹친 패널의 이동을 구분했다. 현재 `appearance="gooey"`는 표시선만 늘어나며,
+  패널을 겹쳐 복제하거나 순서를 바꾸지 않는다. `designProfile.interactions.selectionMotion`은
+  현재 SegmentedControl에 연결되며 Tabs의 `appearance`를 자동 변경하지 않는다. `slide`와 `gooey`를
+  같은 의미로 간주하지 않는다. 전환 표현이 필요하면 [ContentTransition](content-transition.md)의
+  단일 콘텐츠 전환과 Tabs의 `mountPolicy`·`panelMode`를 함께 검토한다. 프로필이 탭·패널 수명을
+  자동 결정하거나 active 패널의 unmount 후 로컬 초안을 보존한다고 안내하지 않는다.
 
 - Native `Tabs`는 예전 `options` prop을 받으면 `TypeError`("options was removed")를 던진다. `items`로 옮긴다.
 - 외부 `TabPanel`을 쓸 때 Tabs에 `id`를 주지 않으면 Web은 생성 id를 써서 `tabsId`를 맞출 수 없다.

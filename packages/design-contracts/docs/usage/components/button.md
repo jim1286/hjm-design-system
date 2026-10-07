@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [버튼 라벨 줄바꿈](../../button-label.md), `src/base-recipes.ts`(`buttonRecipe`), `src/foundations.ts`(`control.buttonHeight`)
 - 스토리북: `배포/컴포넌트/동작/버튼`, `배포/컴포넌트/동작/버튼 안에서 확인`, `배포/컴포넌트/동작/반응 선택`
 
@@ -94,6 +94,12 @@ import { Button } from "@hjmds/react-native/actions";
 ```
 
 ## 꼭 지킬 것
+
+- 2026-10-07 [Stateful Button 대조](../../../../../docs/plans/aceternity-interaction-adoption-2026-10-07.md)를
+  기존 [실행과 복구](../../action-session.md)와 비교했다. Button은 callback의 Promise를 자동으로
+  기다려 성공을 판정하는 엔진이 아니다. 제품 mutation 또는 기존 action-session의 pending을
+  `loading`에 연결하고 실제 확정 뒤 성공 문구를 보여 준다. 실패하면 초안을 보존하고 재시도를
+  제공한다. Promise가 resolve됐다는 이유만으로 도메인 응답의 실패를 성공으로 표시하지 않는다.
 
 - 라벨은 i18n 키로 넣는다. 자르지 말고 두 줄을 넘으면 카피를 고친다([라벨 정책](../../button-label.md)).
 - 배치는 `layoutStyle`로만 한다. 색·radius·높이를 `style`/`className`으로 덮지 않는다.

@@ -16,6 +16,13 @@ Carousel·Checkbox를 기존 API와 대조했고 Native Card의 내부 media cli
 
 ## 테마·재질 소유권 — 2026-10-07 사용자 선택
 
+2026-10-07 14:02 KST 후속: Aceternity 탭·상태 버튼·확장 카드(Standard/Grid)·layout-grid의
+제공 구현과 선택된 실제 desktop/light 동작을 [기존 API와 대조](aceternity-interaction-adoption-2026-10-07.md)했다.
+Button의 상태/복구와 Card.actions→Dialog.motionOrigin 경로를 사용 지침에 연결했다. npm 1.14.0
+양 renderer tarball에서 motionOrigin 타입을 직접 확인해 오래된 미게시 표기도 정정했다.
+profile selectionMotion→Tabs 연결과 unequal-span/shared-element 차이는 후속 구현 후보이며,
+이 네 URL의 검토도 모든 환경/상태/연결 페이지 완료는 아니다. ledger의 범위를 partial로 유지한다.
+
 사용자가 여러 테마·질감을 토큰에 넣을지, 공통 기본값은 HJM에 두고 제품별로 관리할지 물었고 후자를 선택했다. 공통 규격으로 제품의 분위기가 같아지는 것을 피하면서 검증·재사용을 유지하기 위한 경계다. 기존 [브랜드 경계](../../packages/design-contracts/docs/brand-boundary.md)를 시작점으로 사용한다.
 
 | HJM이 제공할 것 | 제품이 관리할 것 |

@@ -5062,16 +5062,26 @@
     {
       "url": "https://ui.aceternity.com/components/tabs",
       "name": "tabs",
-      "existingMapping": "NavigationBar·Sidebar·Tabs·BottomNavigation과 대응. 선택 상태와 키보드 소유권은 기존 계약 유지.",
+      "existingMapping": "Tabs / TabPanel / optional ContentTransition",
       "priorRationale": "NavigationBar·Sidebar·Tabs·BottomNavigation과 대응. 선택 상태와 키보드 소유권은 기존 계약 유지.",
-      "sourceAudit": "2026-10-06",
-      "visualReview": "pending",
-      "interactionReview": "pending",
-      "adoptionDecision": "pending",
+      "sourceAudit": "2026-10-07: complete visible description/props and provided Manual/Code implementation read; linked pages remain pending",
+      "visualReview": "partial",
+      "interactionReview": "partial",
+      "adoptionDecision": "Absorb selection/content change via existing APIs; profile selectionMotion does not yet select Tabs appearance; retain as implementation follow-up",
       "sourceCheck": {
         "status": "html",
         "checkedAt": "2026-10-06T16:00:27.677918+00:00",
         "evidence": "reference-page-source-index.json"
+      },
+      "pageReviewEvidence": "../qa/2026-10-07-design-profile-research.md",
+      "selectedInteractionReview": {
+        "checkedAt": "2026-10-07T05:02:04.110165+00:00",
+        "viewport": "default 1280px desktop/light Chromium",
+        "source": "Manual component and Code demo read; stacked/reordered panels and active-key lifetime compared",
+        "observed": "Services and Random clicks; selected indicator and stacked panel appearance",
+        "remaining": "Other items/states, viewports, dark, RTL, text scale, reduced motion, accessibility and performance; linked pages remain pending",
+        "allReviewComplete": false,
+        "adoptionPlan": "aceternity-interaction-adoption-2026-10-07.md"
       }
     },
     {
@@ -5652,16 +5662,26 @@
     {
       "url": "https://ui.aceternity.com/components/layout-grid",
       "name": "layout-grid",
-      "existingMapping": "Grid·Card·Timeline 및 기존 화면 구성에 흡수 검토. sticky·CSS span의 Native 대응은 별도 설계.",
+      "existingMapping": "Grid / Card / OverviewScreen / Dialog.motionOrigin",
       "priorRationale": "Grid·Card·Timeline 및 기존 화면 구성에 흡수 검토. sticky·CSS span의 Native 대응은 별도 설계.",
-      "sourceAudit": "2026-10-06",
-      "visualReview": "pending",
-      "interactionReview": "pending",
-      "adoptionDecision": "pending",
+      "sourceAudit": "2026-10-07: complete visible description/props and provided Manual/Code implementation read; linked pages remain pending",
+      "visualReview": "partial",
+      "interactionReview": "partial",
+      "adoptionDecision": "Reuse responsive collection/detail APIs; unequal spans and shared element parity require separate compatibility design",
       "sourceCheck": {
         "status": "html",
         "checkedAt": "2026-10-06T16:00:19.050246+00:00",
         "evidence": "reference-page-source-index.json"
+      },
+      "pageReviewEvidence": "../qa/2026-10-07-design-profile-research.md",
+      "selectedInteractionReview": {
+        "checkedAt": "2026-10-07T05:02:04.110165+00:00",
+        "viewport": "default 1280px desktop/light Chromium",
+        "source": "Manual component and Code demo read; unequal spans, selected/last-selected and in-region enlargement compared",
+        "observed": "Four default thumbnails; first and fourth details and outside-click dismissal",
+        "remaining": "Other items/states, viewports, dark, RTL, text scale, reduced motion, accessibility and performance; linked pages remain pending",
+        "allReviewComplete": false,
+        "adoptionPlan": "aceternity-interaction-adoption-2026-10-07.md"
       }
     },
     {
@@ -5934,16 +5954,26 @@
     {
       "url": "https://ui.aceternity.com/components/stateful-button",
       "name": "stateful-button",
-      "existingMapping": "stateful-button은 기존 Button 상태 구성, code-block은 CodeBlock, loader는 Spinner/Progress, banner는 Notice와 대응. 지도·기기 모형은 제품 소개 자산. link-preview는 URL 조회/보안 정책을 제품이 소유.",
+      "existingMapping": "Button / product mutation or createActionSession / Notice / ContentTransition",
       "priorRationale": "stateful-button은 기존 Button 상태 구성, code-block은 CodeBlock, loader는 Spinner/Progress, banner는 Notice와 대응. 지도·기기 모형은 제품 소개 자산. link-preview는 URL 조회/보안 정책을 제품이 소유.",
-      "sourceAudit": "2026-10-06",
-      "visualReview": "pending",
-      "interactionReview": "pending",
-      "adoptionDecision": "pending",
+      "sourceAudit": "2026-10-07: complete visible description/props and provided Manual/Code implementation read; linked pages remain pending",
+      "visualReview": "partial",
+      "interactionReview": "partial",
+      "adoptionDecision": "Reuse existing pending/domain confirmation/failure recovery; no second async button engine",
       "sourceCheck": {
         "status": "html",
         "checkedAt": "2026-10-06T16:00:26.881062+00:00",
         "evidence": "reference-page-source-index.json"
+      },
+      "pageReviewEvidence": "../qa/2026-10-07-design-profile-research.md",
+      "selectedInteractionReview": {
+        "checkedAt": "2026-10-07T05:02:04.110165+00:00",
+        "viewport": "default 1280px desktop/light Chromium",
+        "source": "Manual component and delayed-Promise Code demo read; no automatic pending disable/busy or rejection cleanup in provided path",
+        "observed": "Same run loading then success/check and return to idle; pending disabled=false and aria-busy=null observed",
+        "remaining": "Other items/states, viewports, dark, RTL, text scale, reduced motion, accessibility and performance; linked pages remain pending",
+        "allReviewComplete": false,
+        "adoptionPlan": "aceternity-interaction-adoption-2026-10-07.md"
       }
     },
     {
@@ -6338,15 +6368,25 @@
     {
       "url": "https://ui.aceternity.com/components/expandable-card",
       "name": "expandable-card",
-      "existingMapping": "Collapsible / ContentTransition / Dialog",
-      "sourceAudit": "2026-10-07",
-      "visualReview": "pending",
-      "interactionReview": "pending",
-      "adoptionDecision": "compare existing mapped API first; candidate recommendation pending actual examples and behavior review",
+      "existingMapping": "Card.actions Button / Dialog.motionOrigin / Collapsible",
+      "sourceAudit": "2026-10-07: complete visible description/props and provided Manual/Code implementation read; linked pages remain pending",
+      "visualReview": "partial",
+      "interactionReview": "partial",
+      "adoptionDecision": "Absorb ordinary details in existing Dialog; inline expansion uses Collapsible; per-image/title shared element parity remains unsupported",
       "sourceCheck": {
         "status": "html",
         "checkedAt": "2026-10-06T16:00:11.524320+00:00",
         "evidence": "reference-page-source-index.json"
+      },
+      "pageReviewEvidence": "../qa/2026-10-07-design-profile-research.md",
+      "selectedInteractionReview": {
+        "checkedAt": "2026-10-07T05:02:04.110165+00:00",
+        "viewport": "default 1280px desktop/light Chromium",
+        "source": "Standard and Grid Code implementations plus outside-click hook read; layout identities, overflow and dismissal compared",
+        "observed": "Standard and Grid first detail opened; standalone Standard Escape removed detail link",
+        "remaining": "Other items/states, viewports, dark, RTL, text scale, reduced motion, accessibility and performance; linked pages remain pending",
+        "allReviewComplete": false,
+        "adoptionPlan": "aceternity-interaction-adoption-2026-10-07.md"
       }
     },
     {

@@ -82,6 +82,12 @@ import { Button } from "@hjmds/react-native/actions";
 
 Card 자체에는 콜백이 없다. 누름 행동은 `actions`의 Button(Web `onClick: (event: MouseEvent<HTMLButtonElement>) => void`, Native `onPress`)이 갖는다.
 
+2026-10-07 [확장 카드·그리드 대조](../../../../../docs/plans/aceternity-interaction-adoption-2026-10-07.md)에서
+카드와 상세 표시를 별도 새 카드 엔진으로 복제할 필요가 없는 경우를 확인했다. 상세는 `actions`의
+Button으로 [Dialog](dialog.md)를 열고, 위치 연결이 필요하면 Dialog의 `motionOrigin`을 사용한다.
+같은 흐름 안에서 내용을 늘릴 때는 [Collapsible](collapsible.md)를 고른다. 이미지·제목이 각각 이동하는
+shared-element 효과와 일반 상세 Dialog는 다르며, 전자를 제공한다고 안내하지 않는다.
+
 ### 프로필 표면 질감(미게시)
 
 선택한 `designProfile.material.surface`를 자동으로 읽는다. glass는 지원하는 Web에서 실제 배경 흐림,

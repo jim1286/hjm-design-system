@@ -46,7 +46,11 @@ Native accessibility follow-up (2026-10-01): at 200% text scale, the close glyph
 
 Native viewport candidate (BT-QA-027, 2026-10-05): BurnTok local QA exposed a long confirmation extending beyond the visible screen. Dialog and AlertDialog now constrain the content surface and provide a shrinking scroll body, with actions outside that body and provider safe-area padding. Host tests cover those structural contracts and cancellation; they cannot prove Yoga geometry. Ordinary-size iOS confirmation and cancellation were checked. Enlarged-text device verification remains pending: the user stopped that QA scope before the candidate was confirmed, so this is not a completed device fix. Font caps and clipped copy were rejected because they remove readable content.
 
-## Optional measured origin motion (unpublished experiment)
+## Optional measured origin motion (published API, experimental presentation)
+
+2026-10-07 Aceternity card/grid comparison exposed a stale publication label here.
+Both npm 1.14.0 renderer tarballs include `DialogProps.motionOrigin` in `dist/overlays.d.ts`,
+matching release commit `8d6f665`. Publication does not close the device/performance debt below.
 
 `motionOrigin` supplies a trigger rectangle measured immediately before opening in the same physical
 viewport/window coordinate system as the destination. The existing content-transition resolver supplies
