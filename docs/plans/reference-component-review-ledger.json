@@ -607,10 +607,16 @@
       "name": "accordion",
       "existingMapping": "Accordion / Collapsible",
       "priorRationale": "기존 열림 계약에 표현 흡수 검토",
-      "sourceAudit": "2026-10-06",
-      "visualReview": "pending",
-      "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "sourceAudit": "2026-10-07: full Manual implementation reviewed; see per-page rationale in evidence report.",
+      "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
+      "interactionReview": "2026-10-07: one desktop/light demo flow observed; exact states and failures in evidence report. Not all examples/keyboard/focus/pointer combinations.",
+      "adoptionDecision": "기존 API 유지. 높이/opacity 전환과 아이콘 회전만 표현 후보. 원본 trigger에는 aria-expanded만 있고 내용 연결 ID가 없으므로 원본 상태 엔진을 교체 도입하지 않는다.",
+      "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
+      "exampleSourceExtraction": {
+        "date": "2026-10-07",
+        "exampleCount": 3,
+        "status": "extracted; review separate"
+      }
     },
     {
       "url": "https://motion-primitives.com/docs/disclosure",
@@ -618,9 +624,15 @@
       "existingMapping": "Accordion / Collapsible",
       "priorRationale": "기존 열림 계약에 표현 흡수 검토",
       "sourceAudit": "2026-10-06",
-      "visualReview": "pending",
-      "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
+      "interactionReview": "2026-10-07: one desktop/light demo flow observed; exact states and failures in evidence report. Not all examples/keyboard/focus/pointer combinations.",
+      "adoptionDecision": "pending",
+      "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
+      "exampleSourceExtraction": {
+        "date": "2026-10-07",
+        "exampleCount": 2,
+        "status": "extracted; review separate"
+      }
     },
     {
       "url": "https://motion-primitives.com/docs/animated-background",
@@ -628,10 +640,16 @@
       "existingMapping": "Tabs / SegmentedControl",
       "priorRationale": "기존 선택 표시와 비교",
       "sourceAudit": "2026-10-06",
-      "visualReview": "2026-10-07 IAB: Segmented Control Day/Week layout observed at 1280x720",
+      "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "Week activated; data-checked=true moved; no aria-pressed/aria-selected on source buttons. Other demo variants and environment matrix pending.",
       "adoptionDecision": "recommended: keep HJM radio engine and add opt-in selection artwork motion",
-      "implementation": "SegmentedControl selectionMotion=slide in Web/Native. 2026-10-07: fixed Web RTL fixed-width pill track resize (90px regression); Native scrolling keyboard host added. iOS 26.5 light/2x input 42 retained through week selection, dark/RTL/2x selection artwork and checked state match. Full matrix/performance/screen readers remain pending. docs/qa/2026-10-07-selection-motion.md"
+      "implementation": "SegmentedControl selectionMotion=slide in Web/Native. 2026-10-07: fixed Web RTL fixed-width pill track resize (90px regression); Native scrolling keyboard host added. iOS 26.5 light/2x input 42 retained through week selection, dark/RTL/2x selection artwork and checked state match. Full matrix/performance/screen readers remain pending. docs/qa/2026-10-07-selection-motion.md",
+      "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
+      "exampleSourceExtraction": {
+        "date": "2026-10-07",
+        "exampleCount": 4,
+        "status": "extracted; review separate"
+      }
     },
     {
       "url": "https://motion-primitives.com/docs/animated-group",
@@ -639,9 +657,15 @@
       "existingMapping": "ContentTransition / Grid / List",
       "priorRationale": "등장 구성 후보, 읽기 지연 금지",
       "sourceAudit": "2026-10-06",
-      "visualReview": "pending",
+      "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
+      "exampleSourceExtraction": {
+        "date": "2026-10-07",
+        "exampleCount": 3,
+        "status": "extracted; review separate"
+      }
     },
     {
       "url": "https://motion-primitives.com/docs/in-view",
@@ -649,9 +673,15 @@
       "existingMapping": "ContentTransition / Grid / List",
       "priorRationale": "등장 구성 후보, 읽기 지연 금지",
       "sourceAudit": "2026-10-06",
-      "visualReview": "pending",
+      "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
+      "exampleSourceExtraction": {
+        "date": "2026-10-07",
+        "exampleCount": 3,
+        "status": "extracted; review separate"
+      }
     },
     {
       "url": "https://motion-primitives.com/docs/transition-panel",
@@ -659,19 +689,31 @@
       "existingMapping": "ContentTransition / Grid / List",
       "priorRationale": "등장 구성 후보, 읽기 지연 금지",
       "sourceAudit": "2026-10-06",
-      "visualReview": "pending",
+      "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
+      "exampleSourceExtraction": {
+        "date": "2026-10-07",
+        "exampleCount": 2,
+        "status": "extracted; review separate"
+      }
     },
     {
       "url": "https://motion-primitives.com/docs/animated-number",
       "name": "animated-number",
-      "existingMapping": "AnimatedStatistic",
+      "existingMapping": "AnimatedStatistic (optional statistic-motion)",
       "priorRationale": "현재 숫자 엔진 유지 권고",
-      "sourceAudit": "2026-10-06",
-      "visualReview": "pending",
+      "sourceAudit": "2026-10-07: full Manual implementation reviewed; see per-page rationale in evidence report.",
+      "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "기존 API 유지. 원본은 매 프레임 Math.round(...).toLocaleString()으로 암묵 locale을 사용한다. HJM의 명시 locale·Intl format·모션 감소·RTL fallback을 유지한다.",
+      "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
+      "exampleSourceExtraction": {
+        "date": "2026-10-07",
+        "exampleCount": 3,
+        "status": "extracted; review separate"
+      }
     },
     {
       "url": "https://motion-primitives.com/docs/sliding-number",
@@ -679,9 +721,15 @@
       "existingMapping": "AnimatedStatistic",
       "priorRationale": "현재 숫자 엔진 유지 권고",
       "sourceAudit": "2026-10-06",
-      "visualReview": "pending",
+      "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
+      "exampleSourceExtraction": {
+        "date": "2026-10-07",
+        "exampleCount": 3,
+        "status": "extracted; review separate"
+      }
     },
     {
       "url": "https://motion-primitives.com/docs/border-trail",
@@ -689,9 +737,15 @@
       "existingMapping": "EffectSurface / Card",
       "priorRationale": "선택적 장식 레이어 후보",
       "sourceAudit": "2026-10-06",
-      "visualReview": "pending",
+      "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
+      "exampleSourceExtraction": {
+        "date": "2026-10-07",
+        "exampleCount": 3,
+        "status": "extracted; review separate"
+      }
     },
     {
       "url": "https://motion-primitives.com/docs/glow-effect",
@@ -699,9 +753,15 @@
       "existingMapping": "EffectSurface / Card",
       "priorRationale": "선택적 장식 레이어 후보",
       "sourceAudit": "2026-10-06",
-      "visualReview": "pending",
+      "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
+      "exampleSourceExtraction": {
+        "date": "2026-10-07",
+        "exampleCount": 3,
+        "status": "extracted; review separate"
+      }
     },
     {
       "url": "https://motion-primitives.com/docs/spotlight",
@@ -709,9 +769,15 @@
       "existingMapping": "EffectSurface / Card",
       "priorRationale": "선택적 장식 레이어 후보",
       "sourceAudit": "2026-10-06",
-      "visualReview": "pending",
+      "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
+      "exampleSourceExtraction": {
+        "date": "2026-10-07",
+        "exampleCount": 3,
+        "status": "extracted; review separate"
+      }
     },
     {
       "url": "https://motion-primitives.com/docs/carousel",
@@ -719,9 +785,15 @@
       "existingMapping": "Carousel / CarouselMotion",
       "priorRationale": "현재 carousel 계약·engine 유지",
       "sourceAudit": "2026-10-06",
-      "visualReview": "pending",
+      "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
+      "exampleSourceExtraction": {
+        "date": "2026-10-07",
+        "exampleCount": 4,
+        "status": "extracted; review separate"
+      }
     },
     {
       "url": "https://motion-primitives.com/docs/cursor",
@@ -729,9 +801,15 @@
       "existingMapping": "제품 장식 또는 optional 표현",
       "priorRationale": "Web 소개용 표현, 기본 조작 UI 교체 제외",
       "sourceAudit": "2026-10-06",
-      "visualReview": "pending",
+      "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
+      "exampleSourceExtraction": {
+        "date": "2026-10-07",
+        "exampleCount": 3,
+        "status": "extracted; review separate"
+      }
     },
     {
       "url": "https://motion-primitives.com/docs/magnetic",
@@ -739,9 +817,15 @@
       "existingMapping": "제품 장식 또는 optional 표현",
       "priorRationale": "Web 소개용 표현, 기본 조작 UI 교체 제외",
       "sourceAudit": "2026-10-06",
-      "visualReview": "pending",
+      "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
+      "exampleSourceExtraction": {
+        "date": "2026-10-07",
+        "exampleCount": 2,
+        "status": "extracted; review separate"
+      }
     },
     {
       "url": "https://motion-primitives.com/docs/tilt",
@@ -749,30 +833,48 @@
       "existingMapping": "제품 장식 또는 optional 표현",
       "priorRationale": "Web 소개용 표현, 기본 조작 UI 교체 제외",
       "sourceAudit": "2026-10-06",
-      "visualReview": "pending",
+      "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
+      "exampleSourceExtraction": {
+        "date": "2026-10-07",
+        "exampleCount": 2,
+        "status": "extracted; review separate"
+      }
     },
     {
       "url": "https://motion-primitives.com/docs/dialog",
       "name": "dialog",
-      "existingMapping": "Dialog / Popover / MorphingMenu",
+      "existingMapping": "Dialog",
       "priorRationale": "overlay 동작 유지, geometry만 비교",
-      "sourceAudit": "2026-10-06",
-      "visualReview": "pending",
-      "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "sourceAudit": "2026-10-07: full Manual implementation reviewed; see per-page rationale in evidence report.",
+      "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
+      "interactionReview": "2026-10-07: one desktop/light demo flow observed; exact states and failures in evidence report. Not all examples/keyboard/focus/pointer combinations.",
+      "adoptionDecision": "기존 API 유지. 키보드 열기/Escape 닫기 확인; 닫은 뒤 BODY로 초점 이동. 전환 표현만 비교하며 기존 닫기·초점 복귀 계약은 보존한다.",
+      "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
+      "exampleSourceExtraction": {
+        "date": "2026-10-07",
+        "exampleCount": 5,
+        "status": "extracted; review separate"
+      }
     },
     {
       "url": "https://motion-primitives.com/docs/morphing-dialog",
       "name": "morphing-dialog",
-      "existingMapping": "Dialog / Popover / MorphingMenu",
+      "existingMapping": "Dialog.motionOrigin / 버튼에서 이어지는 편집 구성",
       "priorRationale": "overlay 동작 유지, geometry만 비교",
-      "sourceAudit": "2026-10-06",
-      "visualReview": "partial 2026-10-07 IAB light 1280x720: page lists lamp, book and image variants. Opened lamp card; centered detail measured 500x658.6px. Other variants/dark/responsive pending.",
-      "interactionReview": "Lamp example focuses first external link on open. Escape removes dialog; activeElement becomes BODY rather than the trigger. Did not follow external link.",
-      "adoptionDecision": "Retain conditional recommendation for measured geometry only. Preserve HJM modal focus/priority/dismiss-complete lifecycle. Existing Native router shared-element adapter does not own local overlay transitions.",
-      "implementationBoundary": "2026-10-07: optional motionOrigin added to existing Web/Native Dialog with an experimental editing composition. Web retains one subtree until exit; Native guards stale/missing measurement and drops stale size geometry. Actual Web and iOS draft/failure/reopen flows checked; theme matrix, animation frames/performance, Android and promotion pending. See docs/qa/2026-10-07-overlay-origin-transition.md."
+      "sourceAudit": "2026-10-07: full Manual implementation reviewed; see per-page rationale in evidence report.",
+      "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
+      "interactionReview": "2026-10-07: one desktop/light demo flow observed; exact states and failures in evidence report. Not all examples/keyboard/focus/pointer combinations.",
+      "adoptionDecision": "별도 MorphingDialog API를 만들지 않는다. 원본 제목·설명 aria ID 대상 없음, Escape 뒤 트리거 초점 복귀 없음. 기존 Dialog.motionOrigin과 제품 소유 초안 구성에 흡수한다.",
+      "implementationBoundary": "2026-10-07: optional motionOrigin added to existing Web/Native Dialog with an experimental editing composition. Web retains one subtree until exit; Native guards stale/missing measurement and drops stale size geometry. Actual Web and iOS draft/failure/reopen flows checked; theme matrix, animation frames/performance, Android and promotion pending. See docs/qa/2026-10-07-overlay-origin-transition.md.",
+      "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
+      "exampleSourceExtraction": {
+        "date": "2026-10-07",
+        "exampleCount": 3,
+        "status": "extracted; review separate"
+      }
     },
     {
       "url": "https://motion-primitives.com/docs/morphing-popover",
@@ -780,10 +882,16 @@
       "existingMapping": "Dialog / Popover / MorphingMenu",
       "priorRationale": "overlay 동작 유지, geometry만 비교",
       "sourceAudit": "2026-10-06",
-      "visualReview": "partial 2026-10-07 IAB light 1280x720: basic, custom-transition and textarea examples present. Inspected textarea variant; other variants/dark/responsive pending.",
+      "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "Add Note focuses textarea. After test draft and Escape, popover disappears and activeElement is BODY; reopening shows empty textarea. Submit was not invoked.",
       "adoptionDecision": "Absorb geometry into the existing Web Popover without copying source session ownership. motionOrigin uses shared Dialog presentation lifecycle and existing Popover placement, focus and dismissal. Product owns retained draft; Native uses Dialog/Sheet.",
-      "implementationBoundary": "2026-10-07: implemented Web Popover motionOrigin and three contextual editing variants within the existing origin-dialog experiment. Chromium regression covers final placement, resize while scaled, rapid reopen, outside-pointer focus and reduced-motion Escape. IAB verified failed save, retained draft after close/reopen, successful retry, light/dark and 390px large-text error layout. Full palette/RTL/frame-performance matrix and promotion remain pending; see docs/qa/2026-10-07-overlay-origin-transition.md."
+      "implementationBoundary": "2026-10-07: implemented Web Popover motionOrigin and three contextual editing variants within the existing origin-dialog experiment. Chromium regression covers final placement, resize while scaled, rapid reopen, outside-pointer focus and reduced-motion Escape. IAB verified failed save, retained draft after close/reopen, successful retry, light/dark and 390px large-text error layout. Full palette/RTL/frame-performance matrix and promotion remain pending; see docs/qa/2026-10-07-overlay-origin-transition.md.",
+      "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
+      "exampleSourceExtraction": {
+        "date": "2026-10-07",
+        "exampleCount": 3,
+        "status": "extracted; review separate"
+      }
     },
     {
       "url": "https://motion-primitives.com/docs/dock",
@@ -791,19 +899,31 @@
       "existingMapping": "NavigationBar / BottomNavigation",
       "priorRationale": "내비게이션 표현 비교, 확대 효과는 선택적",
       "sourceAudit": "2026-10-06",
-      "visualReview": "pending",
+      "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
+      "exampleSourceExtraction": {
+        "date": "2026-10-07",
+        "exampleCount": 1,
+        "status": "extracted; review separate"
+      }
     },
     {
       "url": "https://motion-primitives.com/docs/image-comparison",
       "name": "image-comparison",
-      "existingMapping": "Image / Slider 기반 비교 구성",
+      "existingMapping": "ImageComparison",
       "priorRationale": "신규 기능 후보",
-      "sourceAudit": "2026-10-06",
-      "visualReview": "pending",
-      "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "sourceAudit": "2026-10-07: full Manual implementation reviewed; see per-page rationale in evidence report.",
+      "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
+      "interactionReview": "2026-10-07: one desktop/light demo flow observed; exact states and failures in evidence report. Not all examples/keyboard/focus/pointer combinations.",
+      "adoptionDecision": "기존 1.14 API 유지. 원본 mouse drag는 50%→약80% 작동하지만 role=slider와 키보드 조절이 없다. HJM은 기존 Slider로 range/키보드/Native adjustable를 유지한다. 이미지 위 drag 표현 필요성은 별도 실험 판단으로 남긴다.",
+      "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
+      "exampleSourceExtraction": {
+        "date": "2026-10-07",
+        "exampleCount": 4,
+        "status": "extracted; review separate"
+      }
     },
     {
       "url": "https://motion-primitives.com/docs/infinite-slider",
@@ -811,9 +931,15 @@
       "existingMapping": "제품 마케팅 구성",
       "priorRationale": "소개용 반복 띠 구성, 정지·중복 의미 필요",
       "sourceAudit": "2026-10-06",
-      "visualReview": "pending",
+      "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
+      "exampleSourceExtraction": {
+        "date": "2026-10-07",
+        "exampleCount": 3,
+        "status": "extracted; review separate"
+      }
     },
     {
       "url": "https://motion-primitives.com/docs/progressive-blur",
@@ -821,10 +947,16 @@
       "existingMapping": "목록·이미지 장식",
       "priorRationale": "가장자리 표현 후보, 실제 콘텐츠 가림 금지",
       "sourceAudit": "2026-10-06",
-      "visualReview": "partial: 2026-10-07 IAB accessible after web fetch returned 403; rendered page has artwork basic/hover and directional slider examples. Do not treat web fetch failure as site-wide browser block.",
+      "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "partial: pointer over artwork reveals blur and author/title at opacity 1; no keyboard-focusable artwork control inside the preview. The direction demo is an automatic duplicated number strip, not input range. After CDP prefers-reduced-motion=reduce and reload, translateX changed from -1.8px to -1097px on consecutive observations; no pause control seen in the demo. Emulation restored. Dark/responsive/performance pending.",
       "adoptionDecision": "Use static artwork edge only behind always-visible copy, or a scroll-metric-driven hint. Do not inherit hover-only visual copy or automatic strip movement that ignores reduced motion. Implemented as an experiment; promotion remains pending.",
-      "implementationBoundary": "2026-10-07: contracts and both granular renderers implemented; scroll edges and focused content remove decoration. Native product blur/mask host keeps Expo dependencies out of published renderer. iOS 26.5 Expo Go actual composition, end-item selection, shrink-to-fit, dark tint correction and large-text initial screen checked. Android actual composition, accessibility, product palettes and performance remain pending. See docs/qa/2026-10-07-progressive-blur.md."
+      "implementationBoundary": "2026-10-07: contracts and both granular renderers implemented; scroll edges and focused content remove decoration. Native product blur/mask host keeps Expo dependencies out of published renderer. iOS 26.5 Expo Go actual composition, end-item selection, shrink-to-fit, dark tint correction and large-text initial screen checked. Android actual composition, accessibility, product palettes and performance remain pending. See docs/qa/2026-10-07-progressive-blur.md.",
+      "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
+      "exampleSourceExtraction": {
+        "date": "2026-10-07",
+        "exampleCount": 3,
+        "status": "extracted; review separate"
+      }
     },
     {
       "url": "https://motion-primitives.com/docs/scroll-progress",
@@ -832,9 +964,15 @@
       "existingMapping": "ScrollProgress / Timeline",
       "priorRationale": "현재 host·범위 계약 유지",
       "sourceAudit": "2026-10-06",
-      "visualReview": "pending",
+      "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
+      "exampleSourceExtraction": {
+        "date": "2026-10-07",
+        "exampleCount": 3,
+        "status": "extracted; review separate"
+      }
     },
     {
       "url": "https://motion-primitives.com/docs/spinning-text",
@@ -842,9 +980,15 @@
       "existingMapping": "Text / TextTransition / 제품 소개 표현",
       "priorRationale": "읽기·상태 텍스트의 기본 표현 교체 제외",
       "sourceAudit": "2026-10-06",
-      "visualReview": "pending",
+      "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
+      "exampleSourceExtraction": {
+        "date": "2026-10-07",
+        "exampleCount": 3,
+        "status": "extracted; review separate"
+      }
     },
     {
       "url": "https://motion-primitives.com/docs/text-effect",
@@ -852,9 +996,15 @@
       "existingMapping": "Text / TextTransition / 제품 소개 표현",
       "priorRationale": "읽기·상태 텍스트의 기본 표현 교체 제외",
       "sourceAudit": "2026-10-06",
-      "visualReview": "pending",
+      "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
+      "exampleSourceExtraction": {
+        "date": "2026-10-07",
+        "exampleCount": 8,
+        "status": "extracted; review separate"
+      }
     },
     {
       "url": "https://motion-primitives.com/docs/text-loop",
@@ -862,19 +1012,31 @@
       "existingMapping": "Text / TextTransition / 제품 소개 표현",
       "priorRationale": "읽기·상태 텍스트의 기본 표현 교체 제외",
       "sourceAudit": "2026-10-06",
-      "visualReview": "pending",
+      "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
+      "exampleSourceExtraction": {
+        "date": "2026-10-07",
+        "exampleCount": 3,
+        "status": "extracted; review separate"
+      }
     },
     {
       "url": "https://motion-primitives.com/docs/text-morph",
       "name": "text-morph",
-      "existingMapping": "Text / TextTransition / 제품 소개 표현",
+      "existingMapping": "Text / TextTransition",
       "priorRationale": "읽기·상태 텍스트의 기본 표현 교체 제외",
-      "sourceAudit": "2026-10-06",
-      "visualReview": "pending",
-      "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "sourceAudit": "2026-10-07: full Manual implementation reviewed; see per-page rationale in evidence report.",
+      "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
+      "interactionReview": "2026-10-07: one desktop/light demo flow observed; exact states and failures in evidence report. Not all examples/keyboard/focus/pointer combinations.",
+      "adoptionDecision": "공통 텍스트 전환 표현 후보. Continue→Confirm과 한글 입력의 aria-label 갱신 확인. 원본은 split('')으로 코드 유닛을 나누므로 emoji·결합 문자·모션 감소를 확인하기 전 채택 확정하지 않는다.",
+      "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
+      "exampleSourceExtraction": {
+        "date": "2026-10-07",
+        "exampleCount": 2,
+        "status": "extracted; review separate"
+      }
     },
     {
       "url": "https://motion-primitives.com/docs/text-roll",
@@ -882,9 +1044,15 @@
       "existingMapping": "Text / TextTransition / 제품 소개 표현",
       "priorRationale": "읽기·상태 텍스트의 기본 표현 교체 제외",
       "sourceAudit": "2026-10-06",
-      "visualReview": "pending",
+      "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
+      "exampleSourceExtraction": {
+        "date": "2026-10-07",
+        "exampleCount": 3,
+        "status": "extracted; review separate"
+      }
     },
     {
       "url": "https://motion-primitives.com/docs/text-scramble",
@@ -892,9 +1060,15 @@
       "existingMapping": "Text / TextTransition / 제품 소개 표현",
       "priorRationale": "읽기·상태 텍스트의 기본 표현 교체 제외",
       "sourceAudit": "2026-10-06",
-      "visualReview": "pending",
+      "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
+      "exampleSourceExtraction": {
+        "date": "2026-10-07",
+        "exampleCount": 3,
+        "status": "extracted; review separate"
+      }
     },
     {
       "url": "https://motion-primitives.com/docs/text-shimmer",
@@ -902,9 +1076,15 @@
       "existingMapping": "Text / TextTransition / 제품 소개 표현",
       "priorRationale": "읽기·상태 텍스트의 기본 표현 교체 제외",
       "sourceAudit": "2026-10-06",
-      "visualReview": "pending",
+      "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
+      "exampleSourceExtraction": {
+        "date": "2026-10-07",
+        "exampleCount": 2,
+        "status": "extracted; review separate"
+      }
     },
     {
       "url": "https://motion-primitives.com/docs/text-shimmer-wave",
@@ -912,9 +1092,15 @@
       "existingMapping": "Text / TextTransition / 제품 소개 표현",
       "priorRationale": "읽기·상태 텍스트의 기본 표현 교체 제외",
       "sourceAudit": "2026-10-06",
-      "visualReview": "pending",
+      "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
+      "exampleSourceExtraction": {
+        "date": "2026-10-07",
+        "exampleCount": 2,
+        "status": "extracted; review separate"
+      }
     },
     {
       "url": "https://motion-primitives.com/docs/toolbar-dynamic",
@@ -922,9 +1108,15 @@
       "existingMapping": "EditorScreen / MessageComposer",
       "priorRationale": "입력 문맥을 유지하는 구성 후보",
       "sourceAudit": "2026-10-06",
-      "visualReview": "pending",
+      "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
+      "exampleSourceExtraction": {
+        "date": "2026-10-07",
+        "exampleCount": 1,
+        "status": "extracted; review separate"
+      }
     },
     {
       "url": "https://motion-primitives.com/docs/toolbar-expandable",
@@ -932,9 +1124,15 @@
       "existingMapping": "EditorScreen / MessageComposer",
       "priorRationale": "입력 문맥을 유지하는 구성 후보",
       "sourceAudit": "2026-10-06",
-      "visualReview": "pending",
+      "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
       "interactionReview": "pending",
-      "adoptionDecision": "pending"
+      "adoptionDecision": "pending",
+      "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
+      "exampleSourceExtraction": {
+        "date": "2026-10-07",
+        "exampleCount": 1,
+        "status": "extracted; review separate"
+      }
     },
     {
       "url": "https://magicui.design/docs/components/android",
