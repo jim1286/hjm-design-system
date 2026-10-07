@@ -1,5 +1,16 @@
 # @hjmds/design-contracts
 
+## 1.16.0
+
+### Minor Changes
+
+- 89d03ba: Add the granular `collection-rail` entry for finite, independently interactive multi-visible collections. The shared placement/scroll resolver handles measured widths, logical RTL navigation, finite ends and focus exposure; Web and Native keep every keyed item mounted and compose existing Card/Dialog detail actions.
+
+  Use CollectionRail for finite horizontal collections, List for vertical rows, and Carousel for a single selected/inert panel. Product selection, drafts, server state and detail data remain product-owned. Existing imports/props are unchanged; no optional peer or root export is introduced. Rationale and usage are in `docs/collection-rail.md` and its usage guides. This addition remains experimental and outside the 1.15.0 publication snapshot.
+
+- 0a7ddfc: Add optional display/reading font stacks to app-owned design profiles and a Text fontRole override. Heading and titled/body Text default to their family roles; ui/code-only profiles keep their current fonts. Font assets and native registration stay product-owned. This resolves the independent display/reading reference gap without changing text metrics, heading semantics, input state or adding a typography engine.
+- 13d5525: Add a static ruled layer and validated ruledSpacing to EffectSurface. Paper profiles compose it with grain. Ruling stays in host units outside decorative motion, while existing input, focus, content and optional SVG-host failure contracts are preserved. Tape, rotation and torn boundaries are not supplied by this layer.
+
 ## 1.15.0
 
 ### Minor Changes

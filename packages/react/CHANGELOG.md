@@ -1,5 +1,30 @@
 # @hjmds/react
 
+## 1.16.0
+
+### Minor Changes
+
+- 89d03ba: Add the granular `collection-rail` entry for finite, independently interactive multi-visible collections. The shared placement/scroll resolver handles measured widths, logical RTL navigation, finite ends and focus exposure; Web and Native keep every keyed item mounted and compose existing Card/Dialog detail actions.
+
+  Use CollectionRail for finite horizontal collections, List for vertical rows, and Carousel for a single selected/inert panel. Product selection, drafts, server state and detail data remain product-owned. Existing imports/props are unchanged; no optional peer or root export is introduced. Rationale and usage are in `docs/collection-rail.md` and its usage guides. This addition remains experimental and outside the 1.15.0 publication snapshot.
+
+- 0a7ddfc: Add optional display/reading font stacks to app-owned design profiles and a Text fontRole override. Heading and titled/body Text default to their family roles; ui/code-only profiles keep their current fonts. Font assets and native registration stay product-owned. This resolves the independent display/reading reference gap without changing text metrics, heading semantics, input state or adding a typography engine.
+- 13d5525: Add a static ruled layer and validated ruledSpacing to EffectSurface. Paper profiles compose it with grain. Ruling stays in host units outside decorative motion, while existing input, focus, content and optional SVG-host failure contracts are preserved. Tape, rotation and torn boundaries are not supplied by this layer.
+
+### Patch Changes
+
+- 8dd30cd: Make FloatingActionButton consume the nearest design profile's existing floating shadow role. Flat profiles also remove Android elevation. Keep legacy depth without a profile and preserve the action instance, focus, scroll collapse, safe-area positioning and content clearance. No new public prop is required.
+- b37c88b: Make Sidebar, SkipNav and Menubar corners follow the nearest Web profile, and connect Native FilePicker, UploadItem and TransferList corners to their existing md roles. Preserve standalone recipe geometry, selection, focus, disabled states and host actions.
+
+  Connect both Top renderers to the existing large heading.level2 and medium typography.titleLarge profile roles while preserving default metrics, semantic heading level, display font and trailing action state.
+
+- b37c88b: Keep Native action, selection, navigation and picker labels on the nearest profile UI font while retaining reading fonts for body content. Match Web TopBar behavior: clickable titles use UI fonts and static headings use display fonts.
+
+  Connect Web Toast title and description line heights to selected profile body typography while preserving legacy ratios without a profile. Preserve host actions, selection, edited drafts, focus and dismissal behavior.
+
+- e0d5b39: Declare client boundaries on the granular layout and provider entries so React Server Component pages can pass a serializable product profile and server-owned children without evaluating React context in the server module graph. Other entries and Native renderers are unchanged; applications keep the existing wrapper until a package version containing this fix is published.
+- 88bbe6a: ToggleGroup inherits the closest product design profile's md corner role on both renderers while retaining neutral recipe corners, multiple selection, disabled states and focused Web actions. No new prop or selection engine is introduced.
+
 ## 1.15.0
 
 ### Minor Changes
