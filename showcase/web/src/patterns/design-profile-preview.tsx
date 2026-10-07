@@ -1,3 +1,4 @@
+import { FloatingActionButton } from "@hjmds/react/floating-action-button";
 import { Tabs, type TabsAppearance } from "@hjmds/react/navigation";
 import { CodeBlock } from "@hjmds/react/code-block";
 import { useRef, useState } from "react";
@@ -127,4 +128,24 @@ export function DesignProfileComparison({ initialProduct = "reference" }: { init
 
 export function OverviewPreview() {
   return <HjmProvider designProfile={hjmDesignPresets.forest}><RecordSample /></HjmProvider>;
+}
+
+
+// One route-level FAB is studied separately so comparison tiles cannot add
+// multiple viewport-fixed actions or hide another sample's input/CTA.
+export function DesignProfileFloatingActionComparison() {
+  const [preset, setPreset] = useState<ReferenceDesignPreset>("retro");
+  const [count, setCount] = useState(0);
+  const [clearance, setClearance] = useState(0);
+  return <HjmProvider designProfile={hjmDesignPresets[preset]}><div style={{ minHeight: "100dvh", paddingBottom: clearance }}><Stack gap="md">
+    <Heading level="level4">{copy.floatingAction}</Heading>
+    <SegmentedControl label={copy.choose} presentation="pills" items={profileOptions.map(option => ({ value: option.id, label: option.label }))}
+      value={preset} onValueChange={value => { const option = profileOptions.find(option => option.id === value); if (option) setPreset(option.id); }} />
+    <Text role="status">{copy.floatingActivated}: {count}</Text>
+    <Button onClick={() => setPreset(profileOptions[(profileOptions.findIndex(option => option.id === preset) + 1) % profileOptions.length]!.id)}>{copy.nextTheme}</Button>
+    <Text>{copy.limitation}</Text>
+  </Stack></div>
+    <FloatingActionButton descriptor={{ label: copy.floatingCreate, icon: { name: "add" } }} renderIcon={() => <span>＋</span>}
+      onContentClearanceChange={setClearance} onClick={() => setCount(current => current + 1)} />
+  </HjmProvider>;
 }

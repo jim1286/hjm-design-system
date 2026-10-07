@@ -2,6 +2,7 @@ import { Tabs, type TabsAppearance } from "@hjmds/react-native/navigation";
 import { CodeBlock } from "@hjmds/react-native/code-block";
 import { useMemo, useRef, useState } from "react";
 import { Image, Platform, ScrollView, StyleSheet, View } from "react-native";
+import { FloatingActionButton, useFloatingActionButtonScroll } from "@hjmds/react-native/floating-action-button";
 import { Asset } from "@hjmds/react-native/asset";
 import { assetRecipe } from "@hjmds/design-contracts/components/asset";
 import { requireOptionalNativeModule } from "expo";
@@ -150,4 +151,27 @@ export function DesignProfileComparison({ initialProduct = "reference" }: { init
 
 export function OverviewPreview() {
   return <HjmNativeProvider designProfile={hjmDesignPresets.forest}><RecordSample /></HjmNativeProvider>;
+}
+
+
+// A separate study keeps one floating action in a bounded route, rather than
+// pinning additional FABs over every tile in the full profile comparison.
+export function DesignProfileFloatingActionComparison() {
+  const [preset, setPreset] = useState<ReferenceDesignPreset>("retro");
+  const [count, setCount] = useState(0);
+  const [clearance, setClearance] = useState(0);
+  const { layoutMode, onScroll } = useFloatingActionButtonScroll();
+  return <HjmNativeProvider designProfile={hjmDesignPresets[preset]}><View style={{ height: 640 }}>
+    <ScrollView onScroll={onScroll} scrollEventThrottle={16 /* Match frame cadence so the existing scroll-direction action responds promptly. */} contentContainerStyle={{ paddingBottom: clearance }}><Stack gap="md">
+      <Heading level="level4">{copy.floatingAction}</Heading>
+      <SegmentedControl label={copy.choose} presentation="pills" items={profileOptions.map(option => ({ value: option.id, label: option.label }))}
+        value={preset} onValueChange={value => { const option = profileOptions.find(option => option.id === value); if (option) setPreset(option.id); }} />
+      <Text accessibilityLiveRegion="polite">{copy.floatingActivated}: {count}</Text>
+      <Button onPress={() => setPreset(profileOptions[(profileOptions.findIndex(option => option.id === preset) + 1) % profileOptions.length]!.id)}>{copy.nextTheme}</Button>
+      <Text>{copy.limitation}</Text>
+    </Stack></ScrollView>
+    <FloatingActionButton descriptor={{ label: copy.floatingCreate, icon: { name: "add" }, layoutMode }}
+      renderIcon={({ color }) => <Text style={{ color }}>＋</Text>}
+      onContentClearanceChange={setClearance} onPress={() => setCount(current => current + 1)} />
+  </View></HjmNativeProvider>;
 }

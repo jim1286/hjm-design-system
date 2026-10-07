@@ -276,3 +276,12 @@ Heading/Text의 의미·크기·굵기와 입력/버튼의 ui는 바꾸지 않�
 paper canvas는 grain+ruled/intensity0.06/ruledSpacing24다. 실제 내용은 회전하거나 선의 기준에 맞추지 않는다.
 앱은 `material.canvas`를 grain만으로 교체하거나 ruledSpacing을 지정한다. 새로운 종이 상태/입력 엔진은 없다.
 이 변경은 1.15.0 이후 미게시이며 [실험 사용 지침](usage/compositions/paper-surface.md)과 [질감 계약](effect-surface.md)을 따른다.
+
+
+## 플로팅 실행 버튼의 깊이 상속
+
+2026-10-07 후속 소비 감사에서 FAB의 양 renderer가 floating recipe 값을 직접 읽어
+무그림자 앱 테마에서도 그림자가 남았다. 기존 `shadow.floating`을 연결하며 Native는
+공통 elevation 해석기를 재사용한다. 0-opacity는 Android 그림자도 제거한다. FAB의 원/pill은
+고정된 행동 geometry라 radius 변경 축으로 흡수하지 않고, 클릭·포커스·접힘·여백은 유지한다.
+새 공개 API 없이 같은 컴포넌트의 소비 경로를 고친 변경이며 npm 게시 상태는 별도다.

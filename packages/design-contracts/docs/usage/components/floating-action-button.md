@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [FloatingActionButton](../../floating-action-button.md), recipe `floatingActionButtonRecipe`(`src/floating-action-button.ts`)
 - 스토리북: `배포/컴포넌트/동작/플로팅 실행 버튼`
 
@@ -136,3 +136,13 @@ const [clearance, setClearance] = useState(0);
 
 - 모드마다 Button과 IconButton을 바꿔 끼우면 focus와 ref를 잃는다. 이 컴포넌트 하나로 접고 편다.
 - Native `safeAreaBottomInset`은 OS 하단 inset만이다. 화면 안 도구막대 높이는 제품이 따로 더한다.
+
+
+### 테마의 깊이 상속
+
+2026-10-07 테마 소비 감사에서 FAB만 recipe의 고정 그림자를 읽어 같은 화면의
+카드·오버레이·하단 행동과 깊이가 달랐다. 가까운 Provider의 designProfile이 있으면
+`tokens.shadow.floating`을 읽는다. 모양은 기존 원·pill을 유지하고 프로필 모서리로 바꾸지 않는다.
+프로필 없는 기존 소비자는 같은 recipe 그림자/elevation을 유지한다.
+Native에서 opacity0은 Android elevation도0으로 해석한다. 제품은 각 FAB에 그림자 prop을
+넣지 않고 루트 프로필을 한 번 주입한다. 클릭·접힘·접근성 이름·safe area·clearance는 그대로다.

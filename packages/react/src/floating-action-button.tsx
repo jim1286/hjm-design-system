@@ -45,7 +45,10 @@ export const FloatingActionButton = forwardRef<HTMLButtonElement, FloatingAction
     style={{ "--hjm-fab-diameter": `${recipe.circle.diameter}px`, "--hjm-fab-margin": `${recipe.margin}px`,
       "--hjm-fab-safe-area": `${safeAreaBottomInset}px`, "--hjm-fab-duration": `${recipe.transition.duration}ms`,
       "--hjm-fab-easing": `cubic-bezier(${easing[recipe.transition.easing].join(",")})`,
-      boxShadow: `0 ${recipe.shadow.offsetY}px ${recipe.shadow.radius}px color-mix(in srgb, ${recipe.shadow.color} ${recipe.shadow.opacity * 100}%, transparent)` } as CSSProperties}
+      // Match other floating chrome under a profile; keep the stylesheet-only
+      // legacy path rather than requiring a Provider for existing consumers.
+      boxShadow: theme?.designProfile ? "var(--hjm-shadow-floating)"
+        : `0 ${recipe.shadow.offsetY}px ${recipe.shadow.radius}px color-mix(in srgb, ${recipe.shadow.color} ${recipe.shadow.opacity * 100}%, transparent)` } as CSSProperties}
     leading={<span aria-hidden="true" className="hjm-fab__icon">{renderIcon({ name: resolved.icon.name, size: glyph[recipe.circle.glyph], color: "currentColor", decorative: true })}</span>}>
     {resolved.label}
   </Button>;

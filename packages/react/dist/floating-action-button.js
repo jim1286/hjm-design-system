@@ -30,7 +30,10 @@ export const FloatingActionButton = forwardRef(function FloatingActionButton({ d
     return _jsx(Button, { ...props, ref: (node) => { buttonRef.current = node; assignRef(forwardedRef, node); }, className: classNames("hjm-fab", className), size: "large", tone: "primary", shape: "pill", "data-mode": resolved.layoutMode, "data-direction": theme?.environment.direction ?? "ltr", "data-reduced-motion": theme?.environment.reducedMotion ?? false, "aria-label": resolved.resolvedAccessibilityLabel, style: { "--hjm-fab-diameter": `${recipe.circle.diameter}px`, "--hjm-fab-margin": `${recipe.margin}px`,
             "--hjm-fab-safe-area": `${safeAreaBottomInset}px`, "--hjm-fab-duration": `${recipe.transition.duration}ms`,
             "--hjm-fab-easing": `cubic-bezier(${easing[recipe.transition.easing].join(",")})`,
-            boxShadow: `0 ${recipe.shadow.offsetY}px ${recipe.shadow.radius}px color-mix(in srgb, ${recipe.shadow.color} ${recipe.shadow.opacity * 100}%, transparent)` }, leading: _jsx("span", { "aria-hidden": "true", className: "hjm-fab__icon", children: renderIcon({ name: resolved.icon.name, size: glyph[recipe.circle.glyph], color: "currentColor", decorative: true }) }), children: resolved.label });
+            // Match other floating chrome under a profile; keep the stylesheet-only
+            // legacy path rather than requiring a Provider for existing consumers.
+            boxShadow: theme?.designProfile ? "var(--hjm-shadow-floating)"
+                : `0 ${recipe.shadow.offsetY}px ${recipe.shadow.radius}px color-mix(in srgb, ${recipe.shadow.color} ${recipe.shadow.opacity * 100}%, transparent)` }, leading: _jsx("span", { "aria-hidden": "true", className: "hjm-fab__icon", children: renderIcon({ name: resolved.icon.name, size: glyph[recipe.circle.glyph], color: "currentColor", decorative: true }) }), children: resolved.label });
 });
 /** Omit target for window scrolling; null waits for a custom scroll element to mount. */
 export function useFloatingActionButtonScroll(target) {

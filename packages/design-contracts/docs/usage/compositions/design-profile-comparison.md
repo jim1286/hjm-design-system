@@ -112,3 +112,14 @@ slide로 해석되고 나머지 6종은 standard다. 명시 값은 프로필보�
 이 샘플의 패널 수명을 기본값으로 복사하지 않고 초안과 탭의 사용 목적에 맞춰 선택한다.
 
 Web의 팝오버는 비모달 편집 초안과 테마 순회를 추가 비교한다. Native의 같은 용도는 기존 Sheet 경로다. 저장/실패 샘플은 두 플랫폼 공개 BottomCTA이며 브랜드가 바뀌어도 같은 저장 상태·초안·재시도 callback을 유지한다.
+
+
+### 플로팅 행동 변형
+
+2026-10-07 FAB의 그림자 소비 누락을 수정하며 같은 실험의 `FloatingAction` 변형을 추가했다.
+10종 선택 → 행동 실행 횟수/다음 테마 → 논리적 끝 하단의 단일 FAB로 비교한다.
+Web은 기존 viewport-fixed 배치, Native는 기존 비교 화면과 같은 640unit fixture viewport 안의
+absolute 배치를 사용한다. 전체 비교 tile마다 FAB를 붙이면 행동이 겹치므로 별도 변형으로 둔다.
+두 플랫폼 모두 공개 FloatingActionButton의 `onContentClearanceChange` 값을 본문 하단
+padding으로 예약한다. 프로필 전환은 같은 버튼과 실행 횟수를 유지하며 실제 저장/서버 호출은 없다.
+[플로팅 실행 버튼](../components/floating-action-button.md)의 원/pill과 행동·여백 계약을 따른다.

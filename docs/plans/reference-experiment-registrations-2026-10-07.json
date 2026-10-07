@@ -119,26 +119,31 @@
         "Default",
         "ProductNotes",
         "ProductReading",
+        "FloatingAction",
         "Dark",
         "LargeText"
       ],
       "addedVariants": [
         "ProductNotes",
-        "ProductReading"
+        "ProductReading",
+        "FloatingAction"
       ],
       "maximumFontExcluded": true,
       "publication": "not-reverified-in-this-device-run",
       "nativeValidation": {
         "evidence": "docs/qa/2026-10-07-native-reference-validation.md",
         "status": "selected-ios-development-flows-verified",
-        "scope": "Actual iPhone17Pro/iOS26.5 development UI: ProductNotes/ProductReading renders; edited Product66 survives product configuration and forest preset switches. This is selected flow evidence, not all native variants.",
+        "scope": "Actual iPhone17Pro/iOS26.5 development UI: ProductNotes/ProductReading renders; edited Product66 survives product configuration and forest preset switches. This is selected flow evidence, not all native variants. Actual FloatingAction variant: touch-select ten presets keeps activation count1 and available action, then activates again on clay to count2.",
         "unverified": [
           "Android",
           "physical-device and Release performance",
           "VoiceOver traversal",
           "published-consumer adoption"
         ]
-      }
+      },
+      "followupEvidence": [
+        "docs/qa/2026-10-07-design-profile-research.md"
+      ]
     },
     {
       "path": "실험/구성/직접 조작과 모션/카드 상세 연결",

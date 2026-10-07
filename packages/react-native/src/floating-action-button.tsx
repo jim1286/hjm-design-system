@@ -27,6 +27,7 @@ import {
 import { RecipeButton } from "./internal/recipe-button.js";
 import { Text } from "./primitives.js";
 import { useHjmNativeTheme } from "./provider.js";
+import { resolveNativeShadowElevation } from "./internal/styles.js";
 
 export { resolveFloatingActionButtonContentClearance };
 export type FloatingActionButtonProps = Pick<ButtonProps, "onPress" | "onFocus" | "onBlur" | "testID"> & Readonly<{
@@ -40,7 +41,10 @@ export type FloatingActionButtonProps = Pick<ButtonProps, "onPress" | "onFocus" 
 export const FloatingActionButton = forwardRef<View, FloatingActionButtonProps>(function FloatingActionButton({
   descriptor, renderIcon, safeAreaBottomInset = 0, onContentClearanceChange, ...props
 }, ref) {
-  const { colors, environment } = useHjmNativeTheme();
+  const { colors, environment, designProfile } = useHjmNativeTheme();
+  // A profile owns floating depth throughout the screen. Reuse the existing
+  // elevation translation so a flat theme also removes Android's host shadow.
+  const surfaceShadow = designProfile?.tokens.shadow.floating ?? recipe.shadow;
   const { width } = useWindowDimensions();
   const resolved = resolveFloatingActionButtonDescriptor(descriptor);
   const minimumClearance = resolveFloatingActionButtonContentClearance(safeAreaBottomInset);
@@ -60,11 +64,9 @@ export const FloatingActionButton = forwardRef<View, FloatingActionButtonProps>(
     style={{ position: "absolute", bottom: recipe.margin + safeAreaBottomInset,
       ...(environment.direction === "rtl" ? { left: recipe.margin } : { right: recipe.margin }),
       maxWidth: width - recipe.margin * 2, minHeight: recipe.circle.diameter,
-      shadowColor: recipe.shadow.color, shadowOpacity: recipe.shadow.opacity,
-      shadowRadius: recipe.shadow.radius, shadowOffset: { width: 0, height: recipe.shadow.offsetY },
-      // Android elevation has no blur-radius contract; use the reviewed floating
-      // radius tier rather than inventing a separate FAB shadow strength.
-      elevation: recipe.shadow.radius,
+      shadowColor: surfaceShadow.color, shadowOpacity: surfaceShadow.opacity,
+      shadowRadius: surfaceShadow.radius, shadowOffset: { width: 0, height: surfaceShadow.offsetY },
+      ...resolveNativeShadowElevation(surfaceShadow, designProfile !== undefined, recipe.shadow.radius),
       ...(collapsed ? { width: recipe.circle.diameter, paddingHorizontal: 0 } : { paddingVertical: recipe.margin / 2 }),
     }}>
     <View style={{ flexDirection: "row", alignItems: "center", flexShrink: 1, gap: collapsed ? 0 : recipe.margin / 2 }}>

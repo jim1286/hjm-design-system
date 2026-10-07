@@ -46,7 +46,7 @@ OS 최대 글자와 최대값을 모사한 확대는 설계·구현·검증·후
 
 | 적용 단위 | 기존 기능과 결정 | 현재 상태 | 필요한 후속 |
 | --- | --- | --- | --- |
-| 10종 테마와 앱 소유 설정 | `defineHjmDesignProfile`·Provider·semantic palette·Heading/Surface·OverviewScreen·Tabs 기본값 재사용 | 10종 구현과 기존 실험에 앱 소유 설정 2종을 추가. Web 30조합·상태 유지 및 일부 좁은 다크/RTL/모션 감소 확인, Native 두 앱 설정 전환·숲 preset에서 편집 초안 유지 확인(전체 Native tile 검수 아님). [결과](../qa/2026-10-07-product-theme-propagation.md). 게시·소비 상태는 이번 기기 검수에서 재확인하지 않음 | 남은 공개 컴포넌트 토큰 소비 검수와 미확인 플랫폼/실물 범위를 분리한다. 브랜드·폰트·로고/그림·설정 저장은 제품 소유 |
+| 10종 테마와 앱 소유 설정 | `defineHjmDesignProfile`·Provider·semantic palette·Heading/Surface·OverviewScreen·Tabs 기본값 재사용 | 10종 구현과 기존 실험에 앱 소유 설정 2종 및 플로팅 행동 비교 변형을 추가. FAB의 양 renderer floating 그림자 누락을 수정하고 Web20조합/실제 iOS10종에서 같은 행동 유지 확인. Web 30조합·상태 유지 및 일부 좁은 다크/RTL/모션 감소 확인, Native 두 앱 설정 전환·숲 preset에서 편집 초안 유지 확인(전체 Native tile 검수 아님). [결과](../qa/2026-10-07-product-theme-propagation.md). 게시·소비 상태는 이번 기기 검수에서 재확인하지 않음 | 남은 공개 컴포넌트 토큰 소비 검수와 미확인 플랫폼/실물 범위를 분리한다. 브랜드·폰트·로고/그림·설정 저장은 제품 소유 |
 | 내용 전환 | 기존 `ContentTransition`와 Tabs/OnboardingScreen 합성 | `실험/구성/비교와 검증/내용 전환 비교` 등록. 실제 iOS 초안/6표현/10테마 유지, footer 수정 후 단계 이동·실패·재시도·완료·재시작 확인 | 선택 기기 검수와 전체 플랫폼/성능을 구분하며 승급·게시 상태 별도 확인 |
 | 날짜·시각 선택 | 기존 DatePicker/Select, 날짜와 시각 draft/요청 수명 분리 | `실험/구성/선택과 필터/날짜와 시각 선택` 등록. 실제 iOS 달력/시/분·처리 중 잠금·실패 입력 유지·재시도·초기화 확인 | 선택 기기 검수와 모든 환경을 구분하며 승급·게시 상태 별도 확인 |
 | 명령 기록 | CodeBlock/Tabs/ClipboardButton, OS 복사 수명 개선 | `실험/구성/정보 표시/명령 기록 표시` 등록, 복사 및 메뉴 입력 회귀 수정 main 반영. 실제 iOS 가로 touch·10테마 원문 유지·실패/재시도·시스템 Copy의 fixture bytes 일치 확인 | 미확인 플랫폼/AT/성능을 분리하며 승급·게시 상태 별도 확인. 셸 실행/실시간 서버 기록은 제품 소유 |

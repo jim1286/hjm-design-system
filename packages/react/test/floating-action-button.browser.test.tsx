@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { FloatingActionButton, useFloatingActionButtonScroll, resolveFloatingActionButtonContentClearance } from "../src/floating-action-button.js";
 import { HjmProvider } from "../src/provider.js";
+import { defineHjmDesignProfile, type HjmDesignProfile } from "@hjmds/design-contracts/design-profile";
 import "../src/styles.css";
 
 let host: HTMLDivElement; let root: Root;
@@ -24,6 +25,23 @@ function ScrollFixture({ scale = 1, direction = "ltr" as "ltr" | "rtl" }) {
 }
 
 describe("FloatingActionButton", () => {
+  it("inherits product floating depth without replacing the focused action and restores legacy depth", async () => {
+    const flat = defineHjmDesignProfile({ tokens: { shadow: { floating: { opacity: 0 } } } });
+    const deep = defineHjmDesignProfile({ tokens: { shadow: { floating: { color: "#123456", opacity: 0.5, radius: 13, offsetY: 7 } } } });
+    const click = vi.fn();
+    const render = (designProfile?: HjmDesignProfile) => act(async () => root.render(<HjmProvider {...(designProfile ? { designProfile } : {})} reducedMotion>
+      <HjmProvider><FloatingActionButton descriptor={{ label: "새 기록", icon: { name: "add" } }}
+        renderIcon={() => <span>＋</span>} onContentClearanceChange={() => {}} onClick={click} /></HjmProvider>
+    </HjmProvider>));
+    await render();
+    const button = host.querySelector<HTMLButtonElement>(".hjm-fab")!;
+    const legacy = getComputedStyle(button).boxShadow; button.focus();
+    await render(flat); expect(getComputedStyle(button).boxShadow).toContain("rgba(0, 0, 0, 0)");
+    await render(deep); expect(getComputedStyle(button).boxShadow).toContain("rgba(18, 52, 86, 0.5)");
+    expect(host.querySelector(".hjm-fab")).toBe(button); expect(document.activeElement).toBe(button);
+    await act(async () => button.click()); expect(click).toHaveBeenCalledTimes(1);
+    await render(); expect(getComputedStyle(button).boxShadow).toBe(legacy); expect(document.activeElement).toBe(button);
+  });
   it("collapses after accumulated scroll, expands toward the start and retains the same focused button", async () => {
     await page.viewport(320, 500); await act(async () => root.render(<ScrollFixture />));
     const scroll = host.querySelector<HTMLElement>("[data-scroll]")!;

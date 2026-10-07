@@ -141,3 +141,12 @@ Web browser 테스트는 스크롤 방향, focus/ref 보존, 양방향 배치, �
 safe area와 마지막 내용의 도달 가능성을 검사한다. Native 테스트는 onScroll,
 같은 Button 유지, logical end, onLayout clearance와 행동을 검사한다.
 기기 스크린 리더/키보드 및 제품 배포 증거는 별도로 쌓으며 beta로 유지한다.
+
+
+## 프로필 그림자의 실제 소비 — 2026-10-07
+
+recipe는 기존 floating 역할을 정하며, designProfile이 있으면 양 renderer가 가장 가까운
+Provider의 해당 역할 값을 읽는다. FAB에 별도 shadow prop을 추가하거나 recipe를 제품별로
+복제하지 않는다. Web은 resolved floating CSS 변수, Native는 iOS shadow 및 기존 공통
+Android elevation 변환을 사용한다. opacity0이면 elevation도0이며 프로필 없는 경우 기존
+recipe/elevation을 유지한다. 위치·원/pill·접힘·동일 버튼 identity와 clearance 계약은 바뀌지 않는다.

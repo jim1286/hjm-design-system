@@ -927,3 +927,41 @@ recipe/literal 감사 및 11사이트 전수 검토. 원격 CI·버전 상승·n
 실제 Web390px dark/RTL/200%/reduced 10종 그림 로드와 액자·명시모양·줄바꿈을 한 장으로
 검토했다. Native 기기 decode·AT·성능, 전수조사·새 후보 등록·승격·게시·Utilverse 적용은
 아직 미완료다. 원격 CI·버전상승·릴리스를 실행하지 않았다.
+
+
+## FAB 프로필 그림자 소비와 같은 실험의 비교 변형 — 21:06 KST
+
+시작 main `7741bde59a06abce2612707c0e8921cd66e58140`. 후속 정적 소비 대조에서
+양 FAB가 floating recipe 값을 직접 읽어 무그림자/깊이 변경을 놓쳤다. Web은 프로필일 때
+resolved `--hjm-shadow-floating`, Native는 가까운 프로필의 기존 floating token 및 공통
+Android elevation 해석기를 읽는다. 프로필 없는 recipe depth는 유지한다. 새 API·prop은 없다.
+
+기존 `실험/구성/비교와 검증/테마 조합`에 `FloatingAction` 변형을 양쪽에 등록했다.
+테마 선택→실행 횟수→단일 생성 행동이며 여러 비교 tile 위에 FAB를 겹치지 않는다.
+Web의 viewport-fixed FAB와 Native의 기존 비교 높이640unit positioned viewport를 사용한다.
+같은 공개 clearance callback을 콘텐츠 하단 padding으로 예약한다. 데이터/서버 저장은 없다.
+
+- Native 집중 host 회귀: 새 flat/custom/legacy 프로필·가까운 Provider 상속·같은 버튼/행동 유지 및 기존 scroll-direction 테스트 2건 통과. 기존 textScale2 검사 2건은 실행하지 않았다.
+- Web 집중 Chromium 회귀: flat/custom/legacy 그림자·가까운 Provider·같은 포커스/클릭 및 기존 누적 scroll 검사 2건 통과. 기존 scale2 검사 3건은 실행하지 않았다.
+- 양 renderer build/typecheck, 양 Showcase typecheck 통과. import-graph/금지 peer 경계 통과.
+- Web 실제 새 비교 preview에서 390×844의 10종×light/dark 20조합을 UI 다음 테마로 순회했다. root `data-theme`/`data-design-profile`, 같은 FAB DOM/포커스 및 실행 횟수1을 대조했다. 임시 증거 harness 검사1건 통과.
+- 임시 첫 screenshot path `/tmp`는 Vite fs 경계로 거부됐다. 허용된 본인 screenshot 경로에 저장했다. 첫 preview harness는 src Provider와 dist preview Provider context를 혼용해 dark가 실제로 light였으므로 최종 dark 증거로 사용하지 않았다. 같은 public Provider로 바꿔 모든 실제 theme 값을 단언하고 최종20장을 다시 캡처했다. resize measurement의 act 경고는 harness 한계로 남기며 제품 오류/실물 성능으로 해석하지 않는다.
+- 실제 기존 Device Hub iPhone17Pro/iOS26.5·402×874·HJM 개발 호스트 PID2686·Metro8187 PID54288에서 새 변형에 진입했다. 각 10종을 touch로 선택한 뒤 실행 횟수1과 FAB를 확인했고 clay에서 재실행해2가 됐다. 실제 창10967 캡처31장(Web20/Native11)을 한 장에 모아 보고 clay/brutalist 및 dark 원본을 대조했다.
+- Native 환경/기기는 재시작·새로 만들거나 build하지 않았다. touch/AX는 idb, 진입은 simctl deep link, 시각 판단은 실제 Device Hub 창 픽셀을 사용했다. Cua로 Device Hub를 연결하지 않았다. 공유 comments dirty 및 다른 runtime은 보존했다.
+- Native dark/RTL·VoiceOver·Android·실물/Release 성능·운영 소비 앱·npm 게시·승급은 이번 결과의 범위가 아니다. 최대 글자/모사 확대는 실행하지 않았고 후속/차단 조건으로 두지 않는다.
+
+| 최종 source | SHA-256 |
+| --- | --- |
+| Web floating-action-button.tsx | 407fe0812f4a1af43a88aa01e588b5e2c2b2193c2fb967bb5222d42ef9ca3f65 |
+| Native floating-action-button.tsx | a01f0c4255c59b5c86fd302b2643209d1ba33894f6d60f7888f04da82f54ed7e |
+| Web design-profile-preview.tsx | bf8849a52a8f0eb3677ef93b6f023f02e187a63955073b913ea13c1f2c8e49cf |
+| Native design-profile-preview.tsx | 4b634bb73922cb255bc7f77495270916e593b2fec368c6a3e0fb513832245be1 |
+
+정적 usage 13토큰/139컴포넌트/59구성/22화면과 Storybook433파일/970ID, 문서 링크592개, 공개 API 대응표310개, Web token 경계313 source/70선언 통과.
+새 Web ID는 `design-profile-comparison--floating-action`이며 기존 ID는 유지했다.
+Changeset은 양 renderer patch이며 버전 상승·원격 CI/dispatch·npm 게시는 하지 않았다.
+전체 기존 컴포넌트의 모든 역할 소비/기기 상태 완료로 확대하지 않는다.
+
+VQ PNG SHA-256 `9ecd360173d9abeb43a7f5cc6c178c0343139c8be692b3c75f192d0c0378c246`. 본인 raw/helper 45파일/4817178bytes의 정렬 JSON manifest SHA-256 `a75396d810c3d0008bc914f9953e6937387506e86041e6c5bdceaca780827a21`.
+검토 후 본인 `/tmp/hjm-fab-profile-20261007`, 두 본인 screenshot 하위 경로 및 임시 증거 test를 제거했고 경로 부재를 확인했다.
+실제 source·fixture·새 행동 회귀 검사는 보존한다.
