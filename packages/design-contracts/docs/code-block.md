@@ -1,6 +1,6 @@
 # Code block
 
-Reviewed: 2026-10-01. Optional `/code-block` entries in both renderers expose
+Reviewed: 2026-10-07. Optional `/code-block` entries in both renderers expose
 `CodeBlock`. This is a source preview, not an editor or executable HTML renderer.
 The visual integration request required syntax presentation without another input
 or clipboard engine, so source validation belongs to contracts and actions are slots.
@@ -30,3 +30,12 @@ host tests check selectable content and scroll/wrap composition. The
 200% controlled text scaling and actual iOS simulator long-press Copy, with exact
 source/clipboard equality. Header and source use the common text-scale helper;
 token spans inherit once. Android clipboard and physical-device verification remain separate.
+
+
+The product design profile supplies `tokens.fontFamily.code` and `tokens.typography.body`
+to both source hosts. Syntax spans inherit those metrics and the original code remains
+unchanged. Native translates the default generic monospace intent to Menlo on iOS and
+monospace on Android; custom font installation stays with the product. The source is
+LTR inside an RTL shell: an actual RTL comparison moved the trailing semicolon to the
+beginning of the displayed statement. Localized headings and surrounding controls retain
+the product direction. This is a reading-order decision, not a source-text rewrite.

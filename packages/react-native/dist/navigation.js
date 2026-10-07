@@ -389,7 +389,7 @@ export function BottomNavigation({ descriptor, onActivate, onLongActivate, rende
                     backgroundColor: capsule ? "transparent" : surfaceBackground,
                     borderColor: surfaceBorder,
                     borderRadius: presentationRecipe.radius
-                        ? radius[presentationRecipe.radius]
+                        ? theme.tokens.radius[presentationRecipe.radius]
                         : 0,
                     borderTopWidth: presentation.presentation === "bar" ? presentationRecipe.borderWidth : 0,
                     borderWidth: presentation.presentation === "floating" ? presentationRecipe.borderWidth : 0,
@@ -446,7 +446,7 @@ export function BottomNavigation({ descriptor, onActivate, onLongActivate, rende
                                 {
                                     alignItems: "center",
                                     backgroundColor: pressed ? pressedBackground : capsule && selected ? theme.colors.surfaceAccent : "transparent",
-                                    borderRadius: capsule ? radius.full : radius.lg,
+                                    borderRadius: capsule ? radius.full : theme.tokens.radius.lg,
                                     flexDirection: capsule && !expandedLabels ? "row" : "column",
                                     flex: capsule && selected && !expandedLabels ? 2 : 1,
                                     flexShrink: 1,
@@ -472,7 +472,7 @@ export function BottomNavigation({ descriptor, onActivate, onLongActivate, rende
                                 },
                             ], children: [_jsxs(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", style: {
                                         alignItems: "center",
-                                        borderRadius: radius[bottomNavigationRecipe.indicator.radius],
+                                        borderRadius: theme.tokens.radius[bottomNavigationRecipe.indicator.radius],
                                         borderWidth: bottomNavigationRecipe.indicator.borderWidth,
                                         justifyContent: "center",
                                         minHeight: bottomNavigationRecipe.indicator.minHeight,
@@ -508,7 +508,7 @@ export function BottomNavigation({ descriptor, onActivate, onLongActivate, rende
                                                     borderColor: badgeVariant.border
                                                         ? resolveColorReference(badgeVariant.border, theme.palette)
                                                         : "transparent",
-                                                    borderRadius: radius[counterBadgeRecipe.radius],
+                                                    borderRadius: theme.tokens.radius[counterBadgeRecipe.radius],
                                                     borderWidth: badgeVariant.borderWidth,
                                                     justifyContent: "center",
                                                     minHeight: badgeMetrics.height,
@@ -932,7 +932,7 @@ export function Menu({ triggerLabel, title = triggerLabel, items, sections, sour
                         : pressed
                             ? resolveColorReference(densityContract.highlightedBackground, theme.palette)
                             : "transparent",
-                    borderRadius: radius[densityContract.radius],
+                    borderRadius: theme.tokens.radius[densityContract.radius],
                     direction: environment.direction,
                     flexDirection: "row",
                     gap: densityContract.gap,
@@ -974,7 +974,7 @@ export function Menu({ triggerLabel, title = triggerLabel, items, sections, sour
                             } }), _jsxs(View, { accessibilityLabel: title.trim() || triggerLabel, accessibilityRole: "menu", accessibilityViewIsModal: true, style: {
                                 alignSelf: "center",
                                 backgroundColor: colors.bg,
-                                borderRadius: radius.lg,
+                                borderRadius: theme.tokens.radius.lg,
                                 gap: spacing.sm,
                                 maxHeight: "75%",
                                 maxWidth: 520,
@@ -1067,7 +1067,7 @@ export const LoadMore = forwardRef(function LoadMore({ descriptor, onLoadMore, m
                 color: resolveColorReference(loadMoreRecipe.trigger.color, theme.palette),
                 fontWeight: loadMoreRecipe.trigger.fontWeight,
             }, size: "small", style: {
-                borderRadius: radius[loadMoreRecipe.trigger.radius],
+                borderRadius: theme.tokens.radius[loadMoreRecipe.trigger.radius],
                 minHeight: loadMoreRecipe.trigger.minHeight,
                 paddingHorizontal: loadMoreRecipe.trigger.paddingHorizontal,
             }, tone: "link", children: labels.loadMore })) : state.status === "loading" ? (_jsx(View, { accessibilityLabel: labels.loading, accessibilityRole: "progressbar", accessibilityState: { busy: true }, accessible: true, style: {
@@ -1081,7 +1081,7 @@ export const LoadMore = forwardRef(function LoadMore({ descriptor, onLoadMore, m
                         color: resolveColorReference(loadMoreRecipe.trigger.color, theme.palette),
                         fontWeight: loadMoreRecipe.trigger.fontWeight,
                     }, size: "small", style: {
-                        borderRadius: radius[loadMoreRecipe.trigger.radius],
+                        borderRadius: theme.tokens.radius[loadMoreRecipe.trigger.radius],
                         minHeight: loadMoreRecipe.trigger.minHeight,
                         paddingHorizontal: loadMoreRecipe.trigger.paddingHorizontal,
                     }, tone: "link", children: labels.retry })] })) : (_jsx(Text, { accessibilityLiveRegion: "polite", style: { color: resolveColorReference(loadMoreRecipe.end.color, theme.palette) }, variant: loadMoreRecipe.end.textVariant, children: labels.complete })) }));

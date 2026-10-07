@@ -38,7 +38,7 @@ export function Badge({ label, tone = badgeRecipe.defaults.tone, size = badgeRec
                     ? "transparent"
                     : resolveColorReference(presentation.background, theme.palette),
                 borderColor,
-                borderRadius: radius[badgeRecipe.radius],
+                borderRadius: theme.tokens.radius[badgeRecipe.radius],
                 borderWidth: presentation.border || variantPresentation.borderFallback
                     ? badgeRecipe.borderWidth
                     : 0,
@@ -76,7 +76,7 @@ export function Tag({ children, tone, accessibilityLabel, layoutStyle, style, la
                 alignSelf: "flex-start",
                 backgroundColor: presentation.background,
                 borderColor: presentation.border ?? "transparent",
-                borderRadius: radius[tagRecipe.radius],
+                borderRadius: theme.tokens.radius[tagRecipe.radius],
                 borderWidth: tagRecipe.borderWidth,
                 direction: theme.environment.direction,
                 flexDirection: "row",
@@ -142,7 +142,7 @@ export function ListRow({ title, description, leading, trailing, titleMetadata, 
         justifyContent: "center",
         overflow: "hidden",
         width: listRowRecipe.leadingSize,
-        ...(leadingRadius === null ? {} : { borderRadius: radius[leadingRadius] }),
+        ...(leadingRadius === null ? {} : { borderRadius: theme.tokens.radius[leadingRadius] }),
     };
     const rowContent = (_jsxs(_Fragment, { children: [leading ? (_jsx(View, { accessible: interactive ? false : undefined, importantForAccessibility: interactive ? "no-hide-descendants" : "auto", style: [leadingFrameStyle, leadingStyle], children: leading })) : null, _jsxs(View, { style: [{ flex: 1, gap: spacing.xxs, minWidth: 0 }, contentStyle], children: [_jsxs(View, { style: [
                             {
@@ -493,7 +493,7 @@ export function Image(imageProps) {
             {
                 alignItems: "center",
                 backgroundColor: placeholderBackground,
-                borderRadius: radius[imageRecipe.radius],
+                borderRadius: theme.tokens.radius[imageRecipe.radius],
                 justifyContent: "center",
                 overflow: "hidden",
                 aspectRatio: resolveImageAspectRatio(descriptor.width, descriptor.height),
@@ -552,7 +552,7 @@ export function CounterBadge({ count, accessibilityLabel, max = counterBadgeReci
 /** Semantic list container that owns separator rhythm around composed rows. */
 export function List({ label, children, separator = listRecipe.defaults.separator, appearance = "plain", style, layoutStyle, ...props }) {
     warnDeprecatedStyleProps("List", { style }, "layoutStyle for placement and appearance/separator for appearance");
-    const { colors, environment } = useHjmNativeTheme();
+    const { colors, environment, tokens } = useHjmNativeTheme();
     const items = Children.toArray(children);
     const separatorContract = listRecipe.separators[separator];
     if (!label.trim())
@@ -563,7 +563,7 @@ export function List({ label, children, separator = listRecipe.defaults.separato
                 ...(appearance === "grouped"
                     ? {
                         backgroundColor: colors.bg,
-                        borderRadius: radius.lg,
+                        borderRadius: tokens.radius.lg,
                         overflow: "hidden",
                     }
                     : {}),
@@ -625,7 +625,7 @@ function renderStatistic({ descriptor, density = "comfortable", presentation = "
                 borderColor: presentationContract.border
                     ? resolveColorReference(presentationContract.border, theme.palette)
                     : "transparent",
-                borderRadius: radius[presentationContract.radius],
+                borderRadius: theme.tokens.radius[presentationContract.radius],
                 borderWidth: presentationContract.borderWidth,
                 gap: densityContract.gap,
                 minWidth: 0,

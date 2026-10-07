@@ -1,5 +1,4 @@
 import { fieldRecipe } from "@hjmds/design-contracts/recipes/base";
-import { radius, typography } from "@hjmds/design-contracts/foundations";
 import { resolveNativeTextScaleProps } from "./internal/styles.js";
 import { forwardRef, useCallback, useEffect, useRef, type ComponentProps, type ElementRef, type ReactNode } from "react";
 import { BackHandler, View } from "react-native";
@@ -16,13 +15,13 @@ type GestureSheetInputProps = ComponentProps<typeof BottomSheetTextInput>;
  */
 export const GestureSheetInput = forwardRef<ElementRef<typeof BottomSheetTextInput>, GestureSheetInputProps>(
   function GestureSheetInput({ style, ...props }, ref) {
-    const { colors, textScaling } = useHjmNativeTheme();
-    const metrics = typography[fieldRecipe.textVariant];
+    const { colors, textScaling, tokens } = useHjmNativeTheme();
+    const metrics = tokens.typography[fieldRecipe.textVariant];
     // Preserve the sheet's keyboard-tracking host, but derive its presentation
     // and font scaling from the same recipe as TextField instead of a third style.
     const scaled = resolveNativeTextScaleProps(textScaling, [{
       borderColor: colors[fieldRecipe.states.idle.border],
-      borderRadius: radius[fieldRecipe.shapes[fieldRecipe.defaults.shape]],
+      borderRadius: tokens.radius[fieldRecipe.shapes[fieldRecipe.defaults.shape]],
       borderWidth: fieldRecipe.borderWidth,
       backgroundColor: colors[fieldRecipe.variants[fieldRecipe.defaults.variant].background],
       color: colors.text, fontSize: metrics.fontSize, fontWeight: metrics.fontWeight,

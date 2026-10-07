@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [Statistic](../../statistic.md), [optional adapters](../../optional-adapters.md), `src/component-recipes.ts`(`statisticRecipe`)
 - 스토리북: `배포/컴포넌트/데이터 표시/수치 표시`, `배포/컴포넌트/데이터 표시/움직이는 수치`
 
@@ -87,6 +87,8 @@ import { Statistic } from "@hjmds/react-native/data-display";
 | Native `style`·`labelStyle`·`valueStyle`·`affixStyle`·`trendStyle`·`hintStyle`, 그룹 `style`·`itemStyle` | `StyleProp` | — | deprecated — `layoutStyle` 또는 `density`·`presentation`. 개발 모드에서 한 번 경고하고 다음 major에서 제거된다 |
 
 ## 배치
+
+Native 프레임의 모서리는 `statisticRecipe.presentations`의 역할을 Provider token에서 해석한다. 수치·locale·낭독 문구는 제품 데이터 그대로다.
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |

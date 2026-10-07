@@ -1,3 +1,4 @@
+import { CodeBlock } from "@hjmds/react/code-block";
 import { useRef, useState } from "react";
 import { HjmProvider } from "@hjmds/react/provider";
 import { Button } from "@hjmds/react/actions";
@@ -69,6 +70,7 @@ export function DesignProfileComparison() {
       <Collapsible trigger={copy.headingScale} defaultOpen><Stack gap="sm">{profileHeadingSamples.map(sample => <Heading key={sample.level} level={sample.level} semanticLevel={3}>{sample.label}</Heading>)}</Stack></Collapsible>
     </Stack></HjmProvider>
     <HjmProvider designProfile={hjmDesignPresets[preset]}><ProfileMaterialSample onNextTheme={() => setPreset(profileOptions[(profileOptions.findIndex(option => option.id === preset) + 1) % profileOptions.length]!.id)} /></HjmProvider>
+    <HjmProvider designProfile={hjmDesignPresets[preset]}><CodeBlock label={copy.codeTitle} code={copy.codeSource} wrap /></HjmProvider>
     <HjmProvider designProfile={hjmDesignPresets[preset]}><ProfileChromeSample onNextTheme={() => setPreset(profileOptions[(profileOptions.findIndex(option => option.id === preset) + 1) % profileOptions.length]!.id)} /></HjmProvider>
     <Text tone="muted">{copy.limitation}</Text>
     <Collapsible trigger={copy.compare} defaultOpen>{profileOptions.map(option => <HjmProvider key={option.id} designProfile={hjmDesignPresets[option.id]}><Stack gap="md"><Text variant="title">{option.label}</Text><RecordSample /></Stack></HjmProvider>)}</Collapsible>

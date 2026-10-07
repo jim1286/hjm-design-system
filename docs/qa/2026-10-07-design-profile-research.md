@@ -484,3 +484,112 @@ Aceternity known queue 501개는 기존 crawler session exit0과 501 HTTP200을 
 | `narrow-glass.png` | `567a9cd160d8867b6c08a9521d572614d6036e081c92dfe9df982b0890399037` |
 | `checks.json` | `e5c9f84c001039248d79b5a284cb0027bf0951ec47e5e7554c54a3156676b794` |
 | `make-review-sheet.py` | `cc479d23035d0fb0dd87a535b9a2c34bd587b92bb908c8a2f90596a82e772bec` |
+
+
+## 후속 적용: 모서리·서체의 실제 소비 경로
+
+기준: main `e6a9ab42ebb0ee3fcc1a698fb8bd45087f3cd20f` 이후 미게시 변경. 기존 공개 API를 유지하며
+Native의 14개 source 파일에서 프로필을 놓치던 읽기를 Provider token에 연결했다. 버전/원격 CI/npm 변경 없음.
+
+### 추가 원본 리서치와 선택
+
+- [Tailwind theme 변수](https://tailwindcss.com/docs/theme)의 token namespace와 소비 utility 연결을 읽었다.
+  색 이외 서체·모서리의 정의도 실제 소비 경로가 필요하다는 구조를 비교했다. Tailwind 도입/코드 복사 없음.
+- [shadcn theming](https://ui.shadcn.com/docs/theming)의 semantic 쌍과 radius scale을 읽었다.
+  역할을 유지하고 값을 공유하는 원리를 기존 HJM recipe/Provider에 적용했다. 단일 비율 radius로 기존 프로필의
+  독립 sm/md/lg/xl를 바꾸거나 CSS 전용 구조를 Native에 복사하지 않는다. 두 사이트 전체 검토가 아니다.
+
+### 실제 변경과 상태
+
+- Agreement, TagsInput, Mentions, DatePicker, BottomNavigation, Menu, LoadMore, Badge/Tag/ListRow/Image/List/Statistic,
+  ActivityHeatmap, FolderPreview, NavigationBar, SavedItemsScreen의 radius 역할을 Provider에서 해석한다.
+  원형/pill의 full, square leading의 무모서리, 날짜 원형, 고정 selection glyph 의미는 유지한다.
+- PasswordField large는 프로필 bodyLarge를 읽고 그 줄 높이로 프레임도 계산한다. 테스트 중 폰트만 바뀌고
+  recipeInputStyle의 minHeight=50이 계산한 높이를 덮는 결함이 드러났다. 내부 recipe minimum/variant로 연결해
+  2배 제품 글자 54px/lineHeight80px에 대해 input minHeight>=80을 확인했다. reveal 후 같은 초안 유지.
+- Calendar custom-content의 높이도 프로필 label lineHeight를 사용한다. optional GestureSheetInput과 CodeBlock의
+  typography를 Provider에 연결하고 controlled textScale은 한 번 적용한다. 제품 code font는 Web 변수와 Native
+  source host에 연결한다. default generic code font의 플랫폼 번역과 제품 font 등록 책임을 구분한다.
+- 실제 RTL CodeBlock 비교에서 세미콜론이 문장 앞에 표시됐다. 원문은 바꾸지 않고 코드 본문 LTR로 교정했다.
+  제목과 주변 UI는 RTL 그대로다. Web native-host browser 검사에서 제품 code font/38px·60px 줄 높이,
+  neutral/retro 복원, source 원문/DOM/focus 유지 확인. Native는 38px·60px과 ProductMono 설정 값 확인이며
+  실제 font 등록/기기 glyph 렌더 성공의 근거가 아니다.
+
+### 감사 범위
+
+TypeScript symbol 감사의 explicit foundations radius/typography/shadow/fontFamily runtime 읽기는
+51→21이다. Native 일반 소비 읽기 31개를 연결하고 Web의 code-font fallback 읽기 1개를 추가했다.
+남은 21개는 Web 프로필 미지정 fallback6, Native 기본 UI font 비교1, 고정 glyph5, 고정 full8,
+Liquid Toast 별도 host shadow1이다. 이 감사는 recipe의 numeric 값·CSS literal·다른 import를 전수 검사하지
+않으므로 전체 컴포넌트/토큰 적용 완료로 보고하지 않는다. before/after JSON digest를 아래 보존한다.
+
+### 로컬 검증과 실제 비교
+
+- Native 관련 행동 13파일 94검사 통과. 최초 통합 14파일 중 새 fixture의 newline 표기를 수정한 뒤 새 profile
+  regression을 다시 실행했다. 최종 profile-token-consumers/gesture-sheet-tokens 2파일 5검사 통과.
+  폼 초안·태그·동의·열린 메뉴 selection, 날짜/모서리 role·neutral 복원, optional host 경계의 실제 source를 검증한다.
+- Web design-profile browser 1파일 7검사와 CSS-variable SSR 1파일 2검사 통과.
+- 두 renderer build/typecheck 및 두 Showcase typecheck 통과. 공개 API 대응표 308이름, usage
+  12토큰/139컴포넌트/54구성/22화면과 renderer import/optional-peer 경계 검사 통과.
+- 실제 IAB에서 같은 공개 CodeBlock 원문으로 10종 light1x + 10종 dark/RTL/2x를 캡처/대조했다.
+  코드 원문은 전부 정확히 같고 LTR, scrollWidth=clientWidth=1216이다. dark body28px, 일반 줄 높이40px,
+  editorial48px를 확인했다. wide CDP 원시 캡처는 backing 좌표가 달라 채택하지 않고 tab screenshot의 문서 좌표 clip으로 재캡처했다. scroll 후 viewport 좌표를 clip에 넣은 시도도 제외하고 최종 22개를 문서 좌표로 다시 캡처했다. 캡처 전후 profile 값도 일치함을 확인했다.
+- 실제 390px dark/RTL/2x의 editorial/terminal에서 pageWidth=viewport390, 코드 scrollWidth=clientWidth358,
+  줄바꿈과 세미콜론 순서 확인. editorial radio 조작의 observation timeout 후 실제 checked/profile 상태를 먼저
+  확인하고 다시 누르지 않았다. 캡처 후 viewport override를 해제했다.
+
+![10종의 실제 코드 비교](assets/2026-10-07-profile-code-comparison.webp)
+
+![390px 코드 줄바꿈](assets/2026-10-07-profile-code-narrow.webp)
+
+실제 Native/optional gesture host·font 설치·VoiceOver/TalkBack·GPU 성능·제품 채택은 아직 미검증이다.
+기존 전체 Browser ContextMenu 실패를 이 검사로 해결했다고 세지 않는다. 실험 승급/npm 게시 전 전체 검수는 남아 있다.
+
+### 사이트 수집 checkpoint
+
+Minimal Gallery known queue 3433/3433은 original crawler session exit0와 HTTP200 3433 확인.
+이것은 수집 완료이며 개별 source 독해·시각·상태/인터랙션 전수 검토 완료가 아니다.
+Designbookmark/21st 원래 process는 실제 live 확인했고 계속 수집한다. inventory의 수집 시각/count와
+모든 allReviewComplete=false를 유지했다. 미완료 원본과 수집 process는 제거/재시작하지 않는다.
+
+### 원시 자료 정리
+
+실제 비교 WebP 2개와 재사용 script는 보존한다. 이 작업 소유 PNG22/화면 체크 JSON과 before/after 감사 JSON은
+아래 SHA-256 검증 후 제거했다. 미완료 reference source crawl과 재사용 script/fixture는 보존한다.
+
+| 파일 | SHA-256 |
+| --- | --- |
+| `audit-foundation-imports-after.mjs` | `cfc3ba741eba5b57d64ab38383b971f43d518fdeff446163a73f20971f46e602` |
+| `audit-foundation-imports.mjs` | `0de3fe7124152af5fac69b712a2cb3aa4f6ab78652bcd2d196eae63d04c35a72` |
+| `checks.json` | `4709c05dc574776b4284eb53936f29c60d8640d16393e31cc9b538202ff9a58e` |
+| `dark-aurora.png` | `286442b2796f57ded5a8cd87e4402ca8b36efe0b44707614903921d6497cc4f5` |
+| `dark-brutalist.png` | `93fc0f9335c5cb3fc076d2c46115b39f787e7af36e206016ee3635b95b56e355` |
+| `dark-clay.png` | `2aa39f63bafe5a9e074e4ab9b2d69f8af5e11f789d68debc27dec4d836fb2036` |
+| `dark-editorial.png` | `bbbc3bbac3b51c826b289934271b2d6557f50dbe2b74afd185d0a6c1438b2eb0` |
+| `dark-forest.png` | `ca348ca2d4d29c75879c77849b8fade809bbb185e12f6cd05556fe7161b1acd6` |
+| `dark-glass.png` | `c2a9a8c9058e2b2486533ea9a4b31647e2b5966e3b754d661f9ab318f9e8fa20` |
+| `dark-minimal.png` | `087074cd569a6b20254a98bf4a96c1a4cd3c1bdb4609b2d18dc30feec7f5f62b` |
+| `dark-paper.png` | `7d1bf000820f39bff5efb1222ab2a9919fa2c8803bbd9732aab75be1bbb1492e` |
+| `dark-retro.png` | `3985a057c64268072b274045416e0f393b092fe4aca31fb15afcbaa95c39b7be` |
+| `dark-terminal.png` | `eefb74a6d38885ca01ffa9f7571835029234da71649fe74f47b0bc4836aae53a` |
+| `foundation-import-after.json` | `642dac362def849b8deae4c801ff5cf40114b3dfd1c810afc4f69b95fd9347c6` |
+| `foundation-import-before.json` | `bdf156341bb1f2b7a93854abecbb6ab9b539150c8d990b94f24de6f5c3fc5294` |
+| `light-aurora.png` | `45673937dea434690d4951e6944746ed2ecf77693a1e6e1475b9f9031d0219ca` |
+| `light-brutalist.png` | `a50058a3624956d119834de5f2621acb157755a03a4b2003f442b0330377427c` |
+| `light-clay.png` | `8f65b7056a7da046dea54481ef9380991c40d52b3887538735d9a7dcdeb79143` |
+| `light-editorial.png` | `c828344ca65973e92747c759cb4bfce725caf2bd9ba11020fe4f0e380c538097` |
+| `light-forest.png` | `28794e139d10264efa09f620adee4c4d9b40876717a3ed4607fc5542842d497e` |
+| `light-glass.png` | `d0048fe9715a0d8972398349b900a7624b1fda86b075f24d0097603f618f8aa0` |
+| `light-minimal.png` | `4dad40929eaca52ac3c245fb97cf7361a30a4d2c8b1806c0de954ab489d45994` |
+| `light-paper.png` | `c0688f1787b52c6e0214a2b12c6f9939a3ad89ddf79891cabb3cebb7c7bdc5c0` |
+| `light-retro.png` | `5e83194faebd4938ec030c92f3b544422243cb97cb0e2aa1fd802f9f63069927` |
+| `light-terminal.png` | `4716c84305476267b45bf3d515d3a677c48f5bee84a64eb11f6340857f3c7b4e` |
+| `make-code-review.py` | `200909de1f96a1e53888ea8136e432901c0bdbc1256a3dc451f8f81b52614448` |
+| `narrow-editorial.png` | `104216c1a7a61b4b79e943128d13ac923590e4e6e681798938ebad3ff40ba7c6` |
+| `narrow-terminal.png` | `dde019f6d34d0d2177817f34ceba34d1932c1db9c9fa0ce6f0bb73d956c69068` |
+
+- Web Showcase 경계/theme 계약 4파일 18검사, token boundary 301소스/69선언 통과.
+- `pnpm showcase:web:build` exit=0, Storybook static build 및 103 canonical Web story/13 navigation page 검증 통과.
+- `hjm-token-consumers-showcase-build.log` SHA-256 `dfe4dd21e045ffa7a7430138db50455abfd8eb70a5999326d02889fe34787d8c`.
+
+후속 변경의 docs 567 Markdown, usage/evidence 및 Storybook 421파일/929Web id 정적 검사 통과. 이 검사들은 실제 기기·사이트 전수 검토·npm 게시 완료를 증명하지 않는다.

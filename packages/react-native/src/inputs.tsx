@@ -180,7 +180,9 @@ type FieldRendererProps = AccessibleFieldProps & FieldPrivateProps &
     multiline: boolean;
     search: boolean;
     /** Internal recipe sizing for PasswordField; never exposed as a product style override. */
-    recipeInputStyle?: StyleProp<TextStyle>;
+    recipeMinHeight?: number;
+    /** Recipe text must drive both glyph metrics and frame growth at large text sizes. */
+    recipeTextVariant?: keyof typeof typography;
     /** Component recipe amount for fieldRecipe.disabledScope (PasswordField); defaults by `search`. */
     disabledOpacity?: number;
     searchSize?: SearchFieldSize;
@@ -213,7 +215,8 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(
       minVisibleLines,
       align = fieldRecipe.defaults.align,
       search,
-      recipeInputStyle,
+      recipeMinHeight,
+      recipeTextVariant,
       disabledOpacity,
       searchSize = searchFieldRecipe.defaults.size,
       leading,
@@ -291,7 +294,7 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(
         )
       : colors[fieldRecipe.placeholder.color];
     const textStyle =
-      theme.tokens.typography[search ? searchSizing.textVariant : fieldRecipe.textVariant];
+      theme.tokens.typography[search ? searchSizing.textVariant : recipeTextVariant ?? fieldRecipe.textVariant];
     // Native TextInput scales its text without enlarging a fixed frame (BT-QA-020).
     // Size the one-line frame for the same scale instead of capping accessible text.
     const frameTextScale = textScaling.mode === "controlled"
@@ -326,7 +329,7 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(
             textStyle.lineHeight * minVisibleLines +
               fieldRecipe.paddingVertical * 2,
           )
-      : Math.max(search ? searchSizing.minHeight : fieldRecipe.minHeight, singleLineMinHeight);
+      : Math.max(search ? searchSizing.minHeight : recipeMinHeight ?? fieldRecipe.minHeight, singleLineMinHeight);
     const controlRadius =
       theme.tokens.radius[
         search
@@ -367,7 +370,6 @@ const FieldRenderer = forwardRef<TextInput, FieldRendererProps>(
               : logicalTextAlign(environment.direction),
           textAlignVertical: multiline ? "top" : "center",
         },
-        recipeInputStyle,
       ],
       allowFontScaling,
     );
@@ -701,6 +703,7 @@ export const PasswordField = forwardRef<TextInput, PasswordFieldProps>(function 
         willReveal ? revealLabel : concealLabel,
     },
   );
+  // Size is a minimum; both text and frame derive from themed metrics so large text cannot be clipped.
   const metrics = passwordFieldRecipe.sizes[size];
   const toggleColor = resolveColorReference(passwordFieldRecipe.toggle.color, theme.palette);
   const appearance: PasswordFieldToggleRenderProps = {
@@ -728,15 +731,8 @@ export const PasswordField = forwardRef<TextInput, PasswordFieldProps>(function 
       disabled={disabled}
       // passwordFieldRecipe.states owns the amount; both renderers used the field default 0.6 until 2026-10-06.
       disabledOpacity={passwordFieldRecipe.states.disabledOpacity}
-      recipeInputStyle={[
-        size === "large"
-          ? {
-              fontSize: typography.bodyLarge.fontSize,
-              lineHeight: typography.bodyLarge.lineHeight,
-              minHeight: metrics.minHeight - (passwordFieldRecipe.frame.borderWidth * 2),
-            }
-          : undefined,
-      ]}
+      recipeTextVariant={size === "large" ? "bodyLarge" : fieldRecipe.textVariant}
+      recipeMinHeight={metrics.minHeight}
       multiline={false}
       onSelectionChange={(event) => {
         selectionRef.current = event.nativeEvent.selection;

@@ -4,7 +4,7 @@ import {
   type MentionMatch,
   type MentionTriggerConfig,
 } from "@hjmds/design-contracts/components/mentions";
-import { radius, spacing } from "@hjmds/design-contracts/foundations";
+import { spacing } from "@hjmds/design-contracts/foundations";
 import { comboboxRecipe } from "@hjmds/design-contracts/recipes";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Pressable, View, type NativeSyntheticEvent, type StyleProp, type TextInputSelectionChangeEventData, type ViewStyle } from "react-native";
@@ -55,7 +55,7 @@ export function Mentions<TriggerId extends string = string>({
   listStyle,
   ...textAreaProps
 }: MentionsProps<TriggerId>) {
-  const { colors } = useHjmNativeTheme();
+  const { colors, tokens } = useHjmNativeTheme();
   warnDeprecatedStyleProps("Mentions", { listStyle }, "layoutStyle for placement; the candidate list owns its appearance");
   /*
     Native has no caret position on change — only `onSelectionChange` reports
@@ -110,7 +110,7 @@ export function Mentions<TriggerId extends string = string>({
           accessibilityRole="list"
           // Same popover surface as Combobox (mentions.ts): padding and radius from comboboxRecipe.popover, 8 and md.
           // Until 2026-10-06 the padding was 4 while the Web list and the recipe moved to 8.
-          style={[{ gap: spacing.xxs, borderWidth: comboboxRecipe.popover.borderWidth, borderColor: colors.border, borderRadius: radius[comboboxRecipe.popover.radius], padding: comboboxRecipe.popover.padding }, listStyle]}
+          style={[{ gap: spacing.xxs, borderWidth: comboboxRecipe.popover.borderWidth, borderColor: colors.border, borderRadius: tokens.radius[comboboxRecipe.popover.radius], padding: comboboxRecipe.popover.padding }, listStyle]}
         >
           {candidates.length === 0 ? (
             <Text tone="muted" variant="caption">{emptyMessage}</Text>

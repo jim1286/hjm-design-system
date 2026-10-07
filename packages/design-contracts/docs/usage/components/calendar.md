@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [Calendar](../../calendar.md), recipe `calendarRecipe`(`src/calendar.ts`)
 - 스토리북: `배포/컴포넌트/데이터 표시/달력`
 
@@ -79,6 +79,8 @@ import { Calendar } from "@hjmds/react-native/calendar";
 | `layoutStyle` | margin·width·flex·`alignSelf` | — | 배치 전용. Native도 같은 배치 슬롯을 받는다 |
 
 ## 배치
+
+Native `renderCellContent` 최소 높이는 Provider의 `tokens.typography.label.lineHeight × textScale`다. 날짜의 원형 geometry와 선택 계약은 별도다.
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |

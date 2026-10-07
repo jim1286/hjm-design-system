@@ -177,3 +177,22 @@ const effects = useMemo(() => ({
 실험 ‘테마 조합’의 무늬 배경 위 공개 Card에서 입력한 초안과 다음 테마 버튼으로 비교한다.
 Web 실제 표시·Native mock-host 회귀·기기 미확인 범위는 [QA 기록](../../../docs/qa/2026-10-07-design-profile-research.md)에 보존한다.
 오버레이/상단 바 등 Surface를 쓰지 않는 모든 공개 소비자에 이 material까지 반영 완료한 것은 아니다.
+
+
+## 모서리·서체 소비 경로 보완
+
+2026-10-07 후속 감사에서 Native의 날짜·태그·약관·목록·메뉴·상단 바·저장 컬렉션 등은
+recipe가 정한 역할을 foundation에서 직접 읽어 프로필의 모서리를 놓쳤다. 같은 공개 API가
+Provider의 `tokens.radius`에서 역할을 해석하도록 연결했다. 원·pill의 full, 날짜 셀의 원형,
+selection glyph의 고정 geometry는 별도 계약으로 유지한다. 테마가 상태 엔진을 대체하지 않는다.
+
+PasswordField large, Calendar custom content, CodeBlock, optional GestureSheetInput도
+Provider typography를 읽는다. PasswordField는 같은 줄 높이로 프레임을 계산하며 size recipe는
+최소 높이로만 사용한다. CodeBlock의 `fontFamily.code`는 Web CSS 변수와 Native host로 연결하고
+글자 확대는 한 번만 적용한다. 사용자 font 등록·실기기 glyph/줄바꿈은 제품 검증 대상이다.
+
+구조 비교 근거: [Tailwind theme 변수](https://tailwindcss.com/docs/theme)는 서체·모서리 등
+범주별 token과 실제 소비 utility를 연결하고, [shadcn theme](https://ui.shadcn.com/docs/theming)는
+semantic foreground/background와 공유 radius scale을 소비 컴포넌트에 연결한다. HJM도 기존
+semantic role을 재사용하되 CSS 생성기·단일 비율 radius를 새 의존성으로 도입하지 않는다.
+기존 프로필의 sm/md/lg/xl 개별 값과 네이티브 번역·상태 계약을 유지하는 선택이다.

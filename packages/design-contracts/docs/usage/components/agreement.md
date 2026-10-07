@@ -82,6 +82,8 @@ import { Agreement } from "@hjmds/react-native/agreement";
 
 ## 배치
 
+Native의 전체 동의 프레임 `md`와 선택 표시 `sm`은 Provider의 `tokens.radius`를 읽는다. 제품 프로필 교체는 동의 상태를 초기화하지 않는다.
+
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | 폭을 꽉 채운다. 전체 동의 줄 최소 44(`control.minTouchTarget`), 항목 줄 최소 44, [전문 보기] 높이 44, 체크 표시 16×16(`spacing.md`) | `agreementRecipe`, `collectionItemContract`, `.hjm-agreement__mark` |

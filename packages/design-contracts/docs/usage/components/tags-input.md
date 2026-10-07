@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [TagsInput](../../tags-input.md), `src/tags-input.ts`(`tagsInputRecipe`)
 - 스토리북: `배포/컴포넌트/입력/태그 입력`
 
@@ -83,6 +83,8 @@ import { TagsInput } from "@hjmds/react-native/tags-input";
 | `style`(Native) | `StyleProp<ViewStyle>` | — | deprecated — `layoutStyle`. 개발 모드에서 한 번 경고하고 다음 major에서 제거된다 |
 
 ## 배치
+
+Native 입력 프레임의 `md` 모서리는 Provider의 `tokens.radius.md`를 읽는다. pill 태그와 고정 삭제 glyph는 그대로이며 프로필 교체는 입력 중인 초안·태그를 유지한다.
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |

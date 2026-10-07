@@ -5,7 +5,7 @@
     {
       "site": "minimal.gallery",
       "checkedOn": "2026-10-07",
-      "evidence": "sitemap URLs only, not page or visual review",
+      "evidence": "Known discovered queue fetched/extracted: 3433 URLs, HTTP200 3433, original crawler session exit 0 verified. Individual source reading, visual and interaction review remains incomplete; no discovery closure claim.",
       "sitemaps": [
         "https://minimal.gallery/wp-sitemap-posts-page-1.xml",
         "https://minimal.gallery/wp-sitemap-posts-post-1.xml",
@@ -3465,13 +3465,15 @@
         "scope": "Fetched text pending individual source/visual/interaction review; no HTML link closure claim"
       },
       "sourceCaptureProgress": {
-        "checkedAt": "2026-10-07T04:22:13.498796+00:00",
-        "capturedRecords": 3203,
-        "http200": 3203,
+        "checkedAt": "2026-10-07T04:38:56.682303+00:00",
+        "capturedRecords": 3433,
+        "http200": 3433,
         "knownQueueUrls": 3433,
         "scope": "Fetched/extracted public source; not source reading, visual or interaction review",
-        "lastCapturedAt": "2026-10-07T04:22:10Z",
-        "allReviewComplete": false
+        "lastCapturedAt": "2026-10-07T04:33:45Z",
+        "allReviewComplete": false,
+        "status": "completed-known-queue",
+        "terminalExitCode": 0
       }
     },
     {
@@ -6154,12 +6156,12 @@
         "scope": "Fetched text pending individual source/visual/interaction review; no HTML link closure claim"
       },
       "sourceCaptureProgress": {
-        "checkedAt": "2026-10-07T04:22:13.498796+00:00",
-        "capturedRecords": 1084,
-        "http200": 1084,
+        "checkedAt": "2026-10-07T04:38:56.682303+00:00",
+        "capturedRecords": 1185,
+        "http200": 1185,
         "knownQueueUrls": 2657,
         "scope": "Fetched/extracted public source; not source reading, visual or interaction review",
-        "lastCapturedAt": "2026-10-07T04:22:03Z",
+        "lastCapturedAt": "2026-10-07T04:38:53Z",
         "allReviewComplete": false
       }
     },
@@ -19429,12 +19431,12 @@
         "checkedAt": "2026-10-07T01:58:52.171516+00:00"
       },
       "sourceCaptureProgress": {
-        "checkedAt": "2026-10-07T04:22:13.498796+00:00",
-        "capturedRecords": 5248,
-        "http200": 5238,
+        "checkedAt": "2026-10-07T04:38:56.682303+00:00",
+        "capturedRecords": 5736,
+        "http200": 5726,
         "knownQueueUrls": 12460,
         "scope": "Fetched/extracted public source; not source reading, visual or interaction review",
-        "lastCapturedAt": "2026-10-07T04:22:08Z",
+        "lastCapturedAt": "2026-10-07T04:38:56Z",
         "allReviewComplete": false
       }
     },
@@ -22110,5 +22112,21 @@
       }
     }
   ],
-  "snapshotDate": "2026-10-07"
+  "snapshotDate": "2026-10-07",
+  "additionalThemeArchitectureReferences": [
+    {
+      "url": "https://tailwindcss.com/docs/theme",
+      "reviewedOn": "2026-10-07",
+      "sourceScope": "Theme token namespaces and consumer mapping; not a full-site audit",
+      "adopted": "Existing HJM font/radius roles must reach real renderer consumers",
+      "allReviewComplete": false
+    },
+    {
+      "url": "https://ui.shadcn.com/docs/theming",
+      "reviewedOn": "2026-10-07",
+      "sourceScope": "Semantic foreground/background pairs and shared radius scale; not a full-site audit",
+      "adopted": "Preserve role names while resolving values from product profiles; retain separate sm/md/lg/xl values",
+      "allReviewComplete": false
+    }
+  ]
 }

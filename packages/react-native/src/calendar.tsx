@@ -1,4 +1,3 @@
-import { typography } from "@hjmds/design-contracts/foundations";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { isWebRenderer, webOnly } from "./internal/web-a11y.js";
 import { useImperativeHandle, useRef, useEffect, useState, type ReactNode, type Ref } from "react";
@@ -36,7 +35,7 @@ export function Calendar<Content>({ descriptor, composeAccessibleName, previousM
     assertIsoCalendarMonth(action.month, "month action");
     if (!action.label.trim()) throw new TypeError("Calendar month action label must not be empty");
   }
-  const { colors, environment, palette } = useHjmNativeTheme();
+  const { colors, environment, palette, tokens } = useHjmNativeTheme();
   const [selected, setSelected] = useControllableState<string | null>({
     ...(descriptor.selectedDate === undefined ? {} : { value: descriptor.selectedDate }),
     defaultValue: descriptor.defaultSelectedDate ?? null,
@@ -95,7 +94,7 @@ export function Calendar<Content>({ descriptor, composeAccessibleName, previousM
               <View accessible={false} style={{ width: diameter, minHeight: diameter, alignItems: "center", justifyContent: "center", borderRadius: diameter / 2, borderWidth: recipe.day.today.borderWidth, borderColor: cell.isToday ? resolveColorReference(recipe.day.today.border, palette) : "transparent", backgroundColor: cell.isSelected ? colors.primary : "transparent" }}>
               <Text accessible={false} variant={recipe.sizes[size].textVariant} align="center"
                 style={{ color: cell.isSelected ? colors.onPrimary : colors.textBody, fontVariant: ["tabular-nums"] }}>{Number(cell.date.slice(-2))}</Text></View>
-              {renderCellContent ? <View accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ minHeight: typography.label.lineHeight * environment.textScale }}>{renderCellContent(cell)}</View> : null}
+              {renderCellContent ? <View accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ minHeight: tokens.typography.label.lineHeight * environment.textScale }}>{renderCellContent(cell)}</View> : null}
             </Pressable>)}
         </View>)}
       </View>

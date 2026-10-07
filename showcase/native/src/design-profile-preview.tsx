@@ -1,3 +1,4 @@
+import { CodeBlock } from "@hjmds/react-native/code-block";
 import { useMemo, useRef, useState } from "react";
 import { Platform, ScrollView, StyleSheet, View } from "react-native";
 import { requireOptionalNativeModule } from "expo";
@@ -89,6 +90,7 @@ export function DesignProfileComparison() {
     <View style={{ height: 640 }}>{/* A comparison tile supplies a bounded route viewport; ScreenLayout owns its inner scrolling. */}<HjmNativeProvider designProfile={hjmDesignPresets[preset]}><RecordSample /></HjmNativeProvider></View>
     <HjmNativeProvider designProfile={hjmDesignPresets[preset]}><Collapsible trigger={copy.headingScale} defaultOpen><Stack gap="sm">{profileHeadingSamples.map(sample => <Heading key={sample.level} level={sample.level} semanticLevel={3}>{sample.label}</Heading>)}</Stack></Collapsible></HjmNativeProvider>
     <HjmNativeProvider designProfile={hjmDesignPresets[preset]}><ProfileMaterialSample onNextTheme={() => setPreset(profileOptions[(profileOptions.findIndex(option => option.id === preset) + 1) % profileOptions.length]!.id)} /></HjmNativeProvider>
+    <HjmNativeProvider designProfile={hjmDesignPresets[preset]}><CodeBlock label={copy.codeTitle} code={copy.codeSource} wrap /></HjmNativeProvider>
     <HjmNativeProvider designProfile={hjmDesignPresets[preset]}><ProfileChromeSample onNextTheme={() => setPreset(profileOptions[(profileOptions.findIndex(option => option.id === preset) + 1) % profileOptions.length]!.id)} /></HjmNativeProvider>
     <Text tone="muted">{copy.limitation}</Text>
     <Collapsible trigger={copy.compare} defaultOpen>{profileOptions.map(option => <HjmNativeProvider key={option.id} designProfile={hjmDesignPresets[option.id]}><Stack gap="md"><Text variant="title">{option.label}</Text><View style={{ height: 640 }}><RecordSample /></View></Stack></HjmNativeProvider>)}</Collapsible>

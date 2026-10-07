@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [Collapsible](../../collapsible.md), `FolderPreview`는 [Folder preview](../../folder-preview.md), recipe `collapsibleRecipe`(`src/collapsible.ts`)
 - 스토리북: `배포/컴포넌트/데이터 표시/접기와 펼치기` · `배포/컴포넌트/데이터 표시/폴더 미리보기`
 
@@ -80,6 +80,8 @@ import { FolderPreview } from "@hjmds/react-native/folder-preview";
 | `FolderPreview` `layoutStyle` | margin·width·flex·`alignSelf` | — | Web만 |
 
 ## 배치
+
+FolderPreview의 Native preview `md`와 앞면 `lg`는 Provider radius를 읽는다. 기존 Collapsible·전환·장식 접근성 제외를 유지한다.
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |

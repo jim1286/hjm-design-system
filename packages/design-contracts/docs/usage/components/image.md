@@ -91,6 +91,8 @@ import { ImageViewer } from "@hjmds/react-native/image-viewer";
 
 ## 배치
 
+Native 이미지 프레임은 `imageRecipe.radius` 역할을 Provider의 `tokens.radius`에서 읽는다. intrinsic 치수·대체 상태·접근성 구분은 유지한다.
+
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | 자리는 `width`·`height` 비율로 미리 잡는다(Web `aspect-ratio`, Native `aspectRatio`). 로드 전후로 높이가 바뀌지 않는다. 모서리는 `radius.md` 12로 잘린다(`imageRecipe.radius`) | `design-contracts/src/image.ts`(`imageRecipe`), `design-contracts/src/foundations.ts`(`radius`), `react/src/supplemental-display.tsx`(Image) |

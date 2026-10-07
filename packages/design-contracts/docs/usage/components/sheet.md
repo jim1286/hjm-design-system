@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [Sheet 입력 화면과 가용 영역](../../sheet.md), [optional adapters](../../optional-adapters.md)(Native 제스처 확장), `src/component-recipes.ts`(`sheetRecipe`), `src/sheet.ts`(`sheetBehaviorDefaults`)
 - 스토리북: `배포/컴포넌트/오버레이/시트`
 
@@ -98,6 +98,8 @@ import { Sheet } from "@hjmds/react-native/overlays";
 
 
 ## 배치
+
+선택형 GestureSheetInput은 Provider typography와 field recipe radius 역할을 읽고 textScale을 한 번 적용한다. optional keyboard-tracking host는 그대로다.
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |

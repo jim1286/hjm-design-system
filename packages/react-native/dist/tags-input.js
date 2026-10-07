@@ -2,7 +2,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { FixedGlyph } from "./internal/fixed-glyph.js";
 import { removeTagAt, resolveTagsInputCommit, tagsInputRecipe, } from "@hjmds/design-contracts/components/tags-input";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
-import { control, radius, spacing } from "@hjmds/design-contracts/foundations";
+import { control, spacing } from "@hjmds/design-contracts/foundations";
 import { fieldRecipe } from "@hjmds/design-contracts/recipes/base";
 import { useState } from "react";
 import { Pressable, TextInput, View } from "react-native";
@@ -11,7 +11,7 @@ import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { useHjmNativeTheme } from "./provider.js";
 export function TagsInput({ label, tags: controlledTags, defaultTags, onTagsChange, onReject, onDraftChange, policy, suggestions, suggestionsLabel, composeRemoveLabel, placeholder, description, disabled = false, layoutStyle, style, }) {
     warnDeprecatedStyleProps("TagsInput", { style }, "layoutStyle for placement; tagsInputRecipe owns appearance");
-    const { palette } = useHjmNativeTheme();
+    const { palette, tokens } = useHjmNativeTheme();
     const [internal, setInternal] = useState(defaultTags ?? []);
     const tags = controlledTags ?? internal;
     const [draft, setDraft] = useState("");
@@ -43,7 +43,7 @@ export function TagsInput({ label, tags: controlledTags, defaultTags, onTagsChan
                     padding: spacing.xs,
                     borderWidth: 1,
                     borderColor: border,
-                    borderRadius: radius.md,
+                    borderRadius: tokens.radius.md,
                     opacity: disabled ? fieldRecipe.disabledOpacity : 1,
                 }, children: [tags.map((tag, index) => (_jsxs(View, { style: {
                             minHeight: tagsInputRecipe.tag.minHeight,

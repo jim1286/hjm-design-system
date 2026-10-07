@@ -1,5 +1,4 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { typography } from "@hjmds/design-contracts/foundations";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
 import { isWebRenderer, webOnly } from "./internal/web-a11y.js";
 import { useImperativeHandle, useRef, useEffect, useState } from "react";
@@ -19,7 +18,7 @@ export function Calendar({ descriptor, composeAccessibleName, previousMonth, nex
         if (!action.label.trim())
             throw new TypeError("Calendar month action label must not be empty");
     }
-    const { colors, environment, palette } = useHjmNativeTheme();
+    const { colors, environment, palette, tokens } = useHjmNativeTheme();
     const [selected, setSelected] = useControllableState({
         ...(descriptor.selectedDate === undefined ? {} : { value: descriptor.selectedDate }),
         defaultValue: descriptor.defaultSelectedDate ?? null,
@@ -61,6 +60,6 @@ export function Calendar({ descriptor, composeAccessibleName, previousMonth, nex
                                         targets.current.delete(cell.date); }, accessibilityRole: "button", accessibilityLabel: cell.accessibleName, ...webOnly({ "aria-pressed": cell.isSelected, "aria-disabled": !cell.selectable }), accessibilityState: { selected: cell.isSelected, disabled: !cell.selectable }, onPress: () => { if (cell.selectable)
                                         setSelected(cell.date); }, style: { ...columnStyle, minHeight: diameter, alignItems: "center", justifyContent: "flex-start",
                                         borderRadius: diameter / 2,
-                                        opacity: !cell.selectable ? recipe.day.disabledOpacity : cell.outsideFocusedMonth ? recipe.day.outsideFocusedMonthOpacity : 1 }, children: [_jsx(View, { accessible: false, style: { width: diameter, minHeight: diameter, alignItems: "center", justifyContent: "center", borderRadius: diameter / 2, borderWidth: recipe.day.today.borderWidth, borderColor: cell.isToday ? resolveColorReference(recipe.day.today.border, palette) : "transparent", backgroundColor: cell.isSelected ? colors.primary : "transparent" }, children: _jsx(Text, { accessible: false, variant: recipe.sizes[size].textVariant, align: "center", style: { color: cell.isSelected ? colors.onPrimary : colors.textBody, fontVariant: ["tabular-nums"] }, children: Number(cell.date.slice(-2)) }) }), renderCellContent ? _jsx(View, { accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { minHeight: typography.label.lineHeight * environment.textScale }, children: renderCellContent(cell) }) : null] }, cell.date)) }, row))] }) })] });
+                                        opacity: !cell.selectable ? recipe.day.disabledOpacity : cell.outsideFocusedMonth ? recipe.day.outsideFocusedMonthOpacity : 1 }, children: [_jsx(View, { accessible: false, style: { width: diameter, minHeight: diameter, alignItems: "center", justifyContent: "center", borderRadius: diameter / 2, borderWidth: recipe.day.today.borderWidth, borderColor: cell.isToday ? resolveColorReference(recipe.day.today.border, palette) : "transparent", backgroundColor: cell.isSelected ? colors.primary : "transparent" }, children: _jsx(Text, { accessible: false, variant: recipe.sizes[size].textVariant, align: "center", style: { color: cell.isSelected ? colors.onPrimary : colors.textBody, fontVariant: ["tabular-nums"] }, children: Number(cell.date.slice(-2)) }) }), renderCellContent ? _jsx(View, { accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: { minHeight: tokens.typography.label.lineHeight * environment.textScale }, children: renderCellContent(cell) }) : null] }, cell.date)) }, row))] }) })] });
 }
 //# sourceMappingURL=calendar.js.map

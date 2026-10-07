@@ -59,6 +59,7 @@ export function createHjmThemeStyle(value) {
             : `${value}ms`;
     }
     style["--hjm-font-family-ui"] = (profileTokens?.fontFamily.ui ?? fontFamily.ui).join(", ");
+    style["--hjm-font-family-code"] = (profileTokens?.fontFamily.code ?? fontFamily.code).join(", ");
     for (const [name, value] of Object.entries(stroke)) {
         style[`--hjm-stroke-${kebab(name)}`] = `${value}px`;
     }

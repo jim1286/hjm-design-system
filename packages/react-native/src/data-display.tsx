@@ -162,7 +162,7 @@ export function Badge({
             ? "transparent"
             : resolveColorReference(presentation.background, theme.palette),
           borderColor,
-          borderRadius: radius[badgeRecipe.radius],
+          borderRadius: theme.tokens.radius[badgeRecipe.radius],
           borderWidth: presentation.border || variantPresentation.borderFallback
             ? badgeRecipe.borderWidth
             : 0,
@@ -260,7 +260,7 @@ export function Tag({
           alignSelf: "flex-start",
           backgroundColor: presentation.background,
           borderColor: presentation.border ?? "transparent",
-          borderRadius: radius[tagRecipe.radius],
+          borderRadius: theme.tokens.radius[tagRecipe.radius],
           borderWidth: tagRecipe.borderWidth,
           direction: theme.environment.direction,
           flexDirection: "row",
@@ -495,7 +495,7 @@ export function ListRow({
     justifyContent: "center",
     overflow: "hidden",
     width: listRowRecipe.leadingSize,
-    ...(leadingRadius === null ? {} : { borderRadius: radius[leadingRadius] }),
+    ...(leadingRadius === null ? {} : { borderRadius: theme.tokens.radius[leadingRadius] }),
   } as const satisfies ViewStyle;
   const rowContent = (
     <>
@@ -1374,7 +1374,7 @@ export function Image(imageProps: ImageProps) {
         {
           alignItems: "center",
           backgroundColor: placeholderBackground,
-          borderRadius: radius[imageRecipe.radius],
+          borderRadius: theme.tokens.radius[imageRecipe.radius],
           justifyContent: "center",
           overflow: "hidden",
           aspectRatio: resolveImageAspectRatio(descriptor.width, descriptor.height),
@@ -1505,7 +1505,7 @@ export function List({
   ...props
 }: ListProps) {
   warnDeprecatedStyleProps("List", { style }, "layoutStyle for placement and appearance/separator for appearance");
-  const { colors, environment } = useHjmNativeTheme();
+  const { colors, environment, tokens } = useHjmNativeTheme();
   const items = Children.toArray(children);
   const separatorContract = listRecipe.separators[separator];
   if (!label.trim()) throw new TypeError("List label must not be empty");
@@ -1520,7 +1520,7 @@ export function List({
           ...(appearance === "grouped"
             ? {
                 backgroundColor: colors.bg,
-                borderRadius: radius.lg,
+                borderRadius: tokens.radius.lg,
                 overflow: "hidden" as const,
               }
             : {}),
@@ -1677,7 +1677,7 @@ function renderStatistic<Id extends string = string>({
           borderColor: presentationContract.border
             ? resolveColorReference(presentationContract.border, theme.palette)
             : "transparent",
-          borderRadius: radius[presentationContract.radius],
+          borderRadius: theme.tokens.radius[presentationContract.radius],
           borderWidth: presentationContract.borderWidth,
           gap: densityContract.gap,
           minWidth: 0,

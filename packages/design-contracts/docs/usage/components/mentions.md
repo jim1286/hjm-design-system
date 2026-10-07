@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [Mentions](../../mentions.md), 트리거 판정 `src/mentions.ts`
 - 스토리북: `배포/컴포넌트/입력/사용자 언급`
 
@@ -73,6 +73,8 @@ import { Mentions } from "@hjmds/react-native/mentions";
 | 나머지 입력 prop | `label`, `description`, `error` 등 | — | [TextArea](text-area.md)를 따른다 |
 
 ## 배치
+
+Native 후보 목록의 모서리는 `comboboxRecipe.popover.radius` 역할을 Provider의 `tokens.radius`에서 해석한다. 프로필 교체가 입력·caret·후보 선택을 초기화하지 않는다.
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |

@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [Code block](../../code-block.md), contract `src/code-block.ts`
 - 스토리북: `배포/컴포넌트/데이터 표시/코드 블록`
 
@@ -77,6 +77,8 @@ import { CodeBlock } from "@hjmds/react-native/code-block";
 | `ClipboardButton` `tone` · `size` | [Button](button.md)과 같다 | `secondary` · `medium`(1.12.1은 `primary`) | 코드 블록 안에서는 `small`로 낮춘다 |
 
 ## 배치
+
+양 플랫폼의 코드 본문은 프로필 `fontFamily.code`와 `typography.body`를 읽고 구문 span은 상속한다. Native의 기본 monospace 의도는 iOS Menlo/Android monospace로 번역하고 custom font 등록은 제품이 한다. 코드 본문은 RTL 화면에서도 LTR 읽기 순서를 유지한다.
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |

@@ -13,6 +13,7 @@ import { Card } from "../src/display.js";
 import { Heading } from "../src/heading.js";
 import { Dialog, Sheet } from "../src/overlays.js";
 import { Toast } from "../src/toast.js";
+import { CodeBlock } from "../src/code-block.js";
 import "../src/styles.css";
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
@@ -165,5 +166,29 @@ it("uses real glass filtering and clay inset shadows without replacing focused c
     await render(hjmDesignPresets.neutral);
     expect(getComputedStyle(surface).boxShadow).not.toContain("inset");
     expect(getComputedStyle(surface).backdropFilter).toBe("none");
+  } finally { await act(() => root.unmount()); host.remove(); }
+});
+
+
+it("themes selectable code font and metrics across nested product profiles without changing code or focused content", async () => {
+  const host = document.createElement("div"); document.body.append(host); const root = createRoot(host);
+  const product = defineHjmDesignProfile({ extends: "paper", tokens: { fontFamily: { code: ["Courier New", "monospace"] }, typography: { body: { fontSize: 19, lineHeight: 30 } } } });
+  const code = 'const 기록 = 12;\n';
+  const render = (profile: typeof product) => act(() => root.render(<HjmProvider theme="dark" direction="rtl" textScale={2} reducedMotion designProfile={profile}>
+    <HjmProvider><CodeBlock code={code} label="소스" tokens={[{text:'const',tone:'keyword'},{text:' 기록 = 12;\n'}]} wrap /></HjmProvider>
+  </HjmProvider>));
+  try {
+    await render(product);
+    const pre = host.querySelector('pre')!; const source = host.querySelector('code')!; pre.focus();
+    expect(source.textContent).toBe(code);
+    expect(getComputedStyle(source).fontFamily).toContain('Courier New');
+    expect(getComputedStyle(source).fontSize).toBe('38px');
+    expect(getComputedStyle(source).direction).toBe('ltr');
+    expect(getComputedStyle(source).lineHeight).toBe('60px');
+    await render(hjmDesignPresets.retro);
+    expect(host.querySelector('pre')).toBe(pre); expect(host.querySelector('code')).toBe(source);
+    expect(document.activeElement).toBe(pre); expect(source.textContent).toBe(code);
+    expect(getComputedStyle(source).fontFamily).not.toContain('Courier New');
+    expect(getComputedStyle(source).fontSize).toBe(`${hjmDesignPresets.retro.tokens.typography.body.fontSize * 2}px`);
   } finally { await act(() => root.unmount()); host.remove(); }
 });

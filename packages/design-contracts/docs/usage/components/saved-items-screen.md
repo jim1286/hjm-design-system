@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 미게시(1.12.1 이후)
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [반복 화면 계약](../../screen-patterns.md); 저장한 항목을 Instagram의 컬렉션 탐색 방식으로 바꾸라는 사용자 요청. 기존 ListDetailScreen·Grid를 합성하며 별도 저장 엔진은 만들지 않는다. 예제 스토리는 2026-10-06 사용자 승인으로 스토리북 배포([승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정)). 스토리북 배포는 API 게시가 아니다(`적용` 참고)
 - 스토리북: `배포/화면/콘텐츠/저장한 항목`
 
@@ -91,6 +91,8 @@ import { SavedItemsScreen } from "@hjmds/react-native/saved-items";
 | className(Web) | `string` | 없음 | 안쪽 목록 ScreenLayout에 붙는다 |
 
 ## 배치
+
+Native collection cover의 모서리는 Provider의 `tokens.radius.md`다. 저장 항목·컬렉션·선택·탐색 계약은 바꾸지 않는다.
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |

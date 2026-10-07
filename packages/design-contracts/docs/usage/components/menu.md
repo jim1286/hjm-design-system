@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [Dropdown 판정](../../dropdown.md), [Popover 경계](../../popover.md), `src/component-recipes.ts`(`menuRecipe`)
 - 스토리북: `배포/컴포넌트/탐색/메뉴`
 
@@ -83,6 +83,8 @@ import { Menu } from "@hjmds/react-native/navigation";
 | `layoutStyle` | 배치 전용 style 객체 | — | Web은 트리거를 감싼 흐름 안 wrapper, Native는 트리거 host. 표면(popup·Modal)은 따라 움직이지 않는다 |
 
 ## 배치
+
+Native popover와 항목 모서리는 Provider token에서 recipe 역할을 해석한다. 선택·열림·dismiss와 action 순서는 프로필 교체로 초기화하지 않는다.
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |

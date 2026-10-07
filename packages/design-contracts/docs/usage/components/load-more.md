@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [LoadMore](../../load-more.md), `src/component-recipes.ts`(`loadMoreRecipe`), `src/load-more.ts`(상태·controller)
 - 스토리북: `배포/컴포넌트/탐색/더 보기`
 
@@ -75,6 +75,8 @@ const loadMore = useRef<LoadMoreHandle>(null);
 | `layoutStyle` | 배치 전용 style 객체 | — | 바깥 여백·폭 같은 배치만. 시각 값은 받지 않는다 |
 
 ## 배치
+
+Native trigger 모서리는 Provider token에서 `loadMoreRecipe.trigger.radius`를 읽는다. requestKey·중복 요청 방지와 요청 상태는 그대로다.
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |

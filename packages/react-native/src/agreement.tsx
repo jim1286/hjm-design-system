@@ -9,7 +9,7 @@ import {
   type AgreementState,
 } from "@hjmds/design-contracts/components/agreement";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
-import { radius, spacing } from "@hjmds/design-contracts/foundations";
+import { spacing } from "@hjmds/design-contracts/foundations";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Pressable, View, type StyleProp, type ViewStyle } from "react-native";
 import { mixedCheckboxState } from "./internal/state.js";
@@ -92,7 +92,7 @@ export function Agreement<Id extends string = string>({
         alignItems: "center",
         backgroundColor: value === false ? "transparent" : markColor,
         borderColor: value === false ? borderColor : markColor,
-        borderRadius: radius.sm,
+        borderRadius: theme.tokens.radius.sm,
         borderWidth: 1,
         height: spacing.md,
         flexShrink: 0,
@@ -128,7 +128,7 @@ export function Agreement<Id extends string = string>({
           alignItems: "center",
           opacity: descriptor.disabled ? agreementRecipe.states.disabledOpacity : 1,
           backgroundColor: resolveColorReference(agreementRecipe.all.background, theme.palette),
-          borderRadius: radius.md,
+          borderRadius: theme.tokens.radius.md,
           flexDirection: "row",
           gap: agreementRecipe.all.gap,
           minHeight: agreementRecipe.all.minHeight,

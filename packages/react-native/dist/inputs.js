@@ -30,7 +30,7 @@ function resolveFieldAccessibleName(label, accessibilityLabel) {
         ...(visibleLabel ? { visibleLabel } : {}),
     };
 }
-const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultValue = "", onValueChange, description, error, invalid = false, accessibilityHint, required = false, disabled = false, busy = false, variant = fieldRecipe.defaults.variant, shape, accessibilityLabel, layoutStyle, allowFontScaling, multiline, maxVisibleLines, minVisibleLines, align = fieldRecipe.defaults.align, search, recipeInputStyle, disabledOpacity, searchSize = searchFieldRecipe.defaults.size, leading, trailing, leadingAction, hjmCompactMultiline = false, onBlur, onFocus, onContentSizeChange, onSelectionChange, ...props }, ref) {
+const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultValue = "", onValueChange, description, error, invalid = false, accessibilityHint, required = false, disabled = false, busy = false, variant = fieldRecipe.defaults.variant, shape, accessibilityLabel, layoutStyle, allowFontScaling, multiline, maxVisibleLines, minVisibleLines, align = fieldRecipe.defaults.align, search, recipeMinHeight, recipeTextVariant, disabledOpacity, searchSize = searchFieldRecipe.defaults.size, leading, trailing, leadingAction, hjmCompactMultiline = false, onBlur, onFocus, onContentSizeChange, onSelectionChange, ...props }, ref) {
     const resolvedDisabledOpacity = disabledOpacity ?? (search ? searchFieldRecipe.states.disabledOpacity : fieldRecipe.disabledOpacity);
     const theme = useHjmNativeTheme();
     const { colors, environment, textScaling } = theme;
@@ -76,7 +76,7 @@ const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultV
     const placeholderColor = search
         ? resolveColorReference(searchFieldRecipe.colors.placeholder, theme.palette)
         : colors[fieldRecipe.placeholder.color];
-    const textStyle = theme.tokens.typography[search ? searchSizing.textVariant : fieldRecipe.textVariant];
+    const textStyle = theme.tokens.typography[search ? searchSizing.textVariant : recipeTextVariant ?? fieldRecipe.textVariant];
     // Native TextInput scales its text without enlarging a fixed frame (BT-QA-020).
     // Size the one-line frame for the same scale instead of capping accessible text.
     const frameTextScale = textScaling.mode === "controlled"
@@ -109,7 +109,7 @@ const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultV
             ? fieldRecipe.multilineMinHeight
             : Math.max(hjmCompactMultiline ? fieldRecipe.minHeight : fieldRecipe.multilineMinHeight, textStyle.lineHeight * minVisibleLines +
                 fieldRecipe.paddingVertical * 2)
-        : Math.max(search ? searchSizing.minHeight : fieldRecipe.minHeight, singleLineMinHeight);
+        : Math.max(search ? searchSizing.minHeight : recipeMinHeight ?? fieldRecipe.minHeight, singleLineMinHeight);
     const controlRadius = theme.tokens.radius[search
         ? searchFieldRecipe.shapes[resolvedShape]
         : fieldRecipe.shapes[resolvedShape]];
@@ -140,7 +140,6 @@ const FieldRenderer = forwardRef(function FieldRenderer({ label, value, defaultV
                 : logicalTextAlign(environment.direction),
             textAlignVertical: multiline ? "top" : "center",
         },
-        recipeInputStyle,
     ], allowFontScaling);
     return (_jsx(NativeFieldFrame, { ...(visibleLabel === undefined ? {} : { label: visibleLabel }), required: required, ...(error === undefined ? {} : { error }), ...(supportText === undefined ? {} : { description: supportText }), ...(disabled ? { disabledOpacity: resolvedDisabledOpacity } : {}), style: layoutStyle, children: _jsxs(View, { style: {
                 opacity: disabled ? resolvedDisabledOpacity : 1,
@@ -266,6 +265,7 @@ export const PasswordField = forwardRef(function PasswordField({ revealed: revea
     const resolved = resolvePasswordFieldDescriptor({ revealed, autofillHint }, {
         composeToggleAccessibleName: ({ willReveal }) => willReveal ? revealLabel : concealLabel,
     });
+    // Size is a minimum; both text and frame derive from themed metrics so large text cannot be clipped.
     const metrics = passwordFieldRecipe.sizes[size];
     const toggleColor = resolveColorReference(passwordFieldRecipe.toggle.color, theme.palette);
     const appearance = {
@@ -285,15 +285,7 @@ export const PasswordField = forwardRef(function PasswordField({ revealed: revea
     }, [revealed]);
     return (_jsx(FieldRenderer, { ...props, ref: inputRef, autoComplete: autofillHint === "current" ? "current-password" : "new-password", disabled: disabled, 
         // passwordFieldRecipe.states owns the amount; both renderers used the field default 0.6 until 2026-10-06.
-        disabledOpacity: passwordFieldRecipe.states.disabledOpacity, recipeInputStyle: [
-            size === "large"
-                ? {
-                    fontSize: typography.bodyLarge.fontSize,
-                    lineHeight: typography.bodyLarge.lineHeight,
-                    minHeight: metrics.minHeight - (passwordFieldRecipe.frame.borderWidth * 2),
-                }
-                : undefined,
-        ], multiline: false, onSelectionChange: (event) => {
+        disabledOpacity: passwordFieldRecipe.states.disabledOpacity, recipeTextVariant: size === "large" ? "bodyLarge" : fieldRecipe.textVariant, recipeMinHeight: metrics.minHeight, multiline: false, onSelectionChange: (event) => {
             selectionRef.current = event.nativeEvent.selection;
             onSelectionChange?.(event);
         }, search: false, secureTextEntry: resolved.nativeSecureTextEntry, textContentType: autofillHint === "current" ? "password" : "newPassword", trailing: (_jsx(Pressable, { accessibilityLabel: resolved.toggleAccessibleName, accessibilityRole: "button", 

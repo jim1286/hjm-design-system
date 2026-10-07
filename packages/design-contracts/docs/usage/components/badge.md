@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: recipe `badgeRecipe`(`src/component-recipes.ts`)
 - 스토리북: `배포/컴포넌트/데이터 표시/배지`
 
@@ -58,6 +58,8 @@ import { Badge } from "@hjmds/react-native/data-display";
 콜백이 없다. 누를 수 없는 표시다.
 
 ## 배치
+
+Native 모서리는 Provider token에서 recipe 역할을 읽는다. Badge의 `full`은 고정 pill 역할(999)이라 테마가 이를 사각형으로 바꾸지 않는다.
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |

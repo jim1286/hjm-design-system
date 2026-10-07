@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [화면 제목과 마지막 행동](../../screen-chrome.md), [NavigationBar](../../navigation-bar.md), `src/component-recipes.ts`(`topBarRecipe`)
 - 스토리북: `배포/컴포넌트/탐색/상단 탐색 막대`, `배포/컴포넌트/탐색/검색·메뉴가 있는 상단 바`, `배포/컴포넌트/탐색/내비게이션 바`
 
@@ -82,6 +82,8 @@ import { TopBar, TopBarAction } from "@hjmds/react-native/top-bar";
 | `NavigationBar` | `label`·`brand`·`children` 필수, `actions` 선택 | — | Web만 `layoutStyle`도 받는다 |
 
 ## 배치
+
+NavigationBar의 Native 프레임 모서리는 Provider의 `tokens.radius.xl`을 읽는다. 기존 불투명 semantic 표면과 목적지·행동 슬롯을 유지한다.
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |

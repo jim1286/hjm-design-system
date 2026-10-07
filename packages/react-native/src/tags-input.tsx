@@ -8,7 +8,7 @@ import {
   type TagsInputSuggestion,
 } from "@hjmds/design-contracts/components/tags-input";
 import { resolveColorReference } from "@hjmds/design-contracts/color-references";
-import { control, radius, spacing } from "@hjmds/design-contracts/foundations";
+import { control, spacing } from "@hjmds/design-contracts/foundations";
 import { fieldRecipe } from "@hjmds/design-contracts/recipes/base";
 import { useState } from "react";
 import { Pressable, TextInput, View, type StyleProp, type ViewStyle } from "react-native";
@@ -61,7 +61,7 @@ export function TagsInput({
   style,
 }: TagsInputProps) {
   warnDeprecatedStyleProps("TagsInput", { style }, "layoutStyle for placement; tagsInputRecipe owns appearance");
-  const { palette } = useHjmNativeTheme();
+  const { palette, tokens } = useHjmNativeTheme();
   const [internal, setInternal] = useState<readonly string[]>(defaultTags ?? []);
   const tags = controlledTags ?? internal;
   const [draft, setDraft] = useState("");
@@ -97,7 +97,7 @@ export function TagsInput({
           padding: spacing.xs,
           borderWidth: 1,
           borderColor: border,
-          borderRadius: radius.md,
+          borderRadius: tokens.radius.md,
           opacity: disabled ? fieldRecipe.disabledOpacity : 1,
         }}
       >

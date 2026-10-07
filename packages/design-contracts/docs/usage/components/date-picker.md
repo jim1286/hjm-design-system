@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [DatePicker](../../date-picker.md), 격자는 [Calendar](../../calendar.md), recipe `datePickerRecipe`(`src/date-picker.ts`)
 - 스토리북: `배포/컴포넌트/입력/날짜 선택`
 
@@ -94,6 +94,8 @@ import { DatePicker } from "@hjmds/react-native/date-picker";
 | `layoutStyle` | 배치 전용 style | — | 루트 배치. Native `style`은 deprecated |
 
 ## 배치
+
+Native trigger 모서리는 `datePickerRecipe.frame.radius` 역할을 Provider의 `tokens.radius`에서 읽는다. 날짜·열림·선택 계약은 유지한다.
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |

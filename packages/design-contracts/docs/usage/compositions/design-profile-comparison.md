@@ -77,3 +77,5 @@ import { OverviewScreen } from "@hjmds/react-native/design-profile";
 ```
 
 제품은 Showcase를 import하지 않고 공개 API에 제품 문구/데이터를 넣는다. 유리 blur·클레이 inset shadow의 플랫폼 조건과 기기 미확인 범위는 [QA](../../../../../docs/qa/2026-10-07-design-profile-research.md)에 남긴다.
+
+코드 비교는 양 플랫폼의 공개 `CodeBlock`을 사용한다. 같은 원문에 프로필 code font·body metrics를 적용하며 RTL에서도 코드 본문은 LTR로 읽는다.

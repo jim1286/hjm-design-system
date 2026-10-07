@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [PasswordField](../../password-field.md), `src/password-field.ts`(`passwordFieldRecipe`)
 - 스토리북: `배포/컴포넌트/입력/비밀번호 입력`
 
@@ -100,6 +100,8 @@ const passwordRef = useRef<TextInput>(null);
 | `ref` | Web `HTMLInputElement` · Native `TextInput` | — | return 키로 다음 칸 focus를 옮길 때 쓴다 |
 
 ## 배치
+
+Native `large`는 프로필의 `typography.bodyLarge`를 읽고 그 줄 높이로 프레임도 늘린다. recipe의 최소 높이가 큰 글자 프레임을 덮지 않으며 controlled textScale은 한 번만 적용한다.
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |

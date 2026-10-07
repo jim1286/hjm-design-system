@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [Tag contract](../../tag.md), `src/tag.ts`(`tagRecipe`)
 - 스토리북: `배포/컴포넌트/데이터 표시/태그`
 
@@ -58,6 +58,8 @@ import { Tag } from "@hjmds/react-native/data-display";
 모양은 radius `sm` 사각형, 최소 높이 20(큰 글자에서 늘어남), caption 크기 semibold 글자다.
 
 ## 배치
+
+Native의 모서리는 Provider의 `tokens.radius.sm`이다. metadata 의미와 tone은 변하지 않는다.
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |

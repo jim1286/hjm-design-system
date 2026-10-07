@@ -86,6 +86,8 @@ import { Text } from "@hjmds/react-native/primitives";
 
 ## 배치
 
+Native `grouped` 프레임은 Provider의 `tokens.radius.lg`를 읽는다. plain 목록과 separator 의미는 변하지 않는다.
+
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | 화면 본문 폭을 채우는 세로 묶음이다. `grouped`는 배경 `--hjm-color-bg`와 모서리 `radius.lg` 16으로 한 덩어리가 된다 | `design-contracts/src/foundations.ts`(`radius`), `react/src/styles.css`(`.hjm-list`) |

@@ -77,6 +77,8 @@ import { Avatar, ListRow } from "@hjmds/react-native/data-display";
 
 ## 배치
 
+Native 원형 leading의 `full`은 Provider token에서 읽지만 고정 원형 역할을 유지한다. square leading은 모서리를 부여하지 않는다.
+
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
 | 크기 | 폭은 부모를 가득 채운다(Web `inline-size: 100%`). leading 프레임은 40×40(`leadingSize`), `circle`이면 `radius.full`. trailing 아이콘은 `glyph.sm` 20. 최소 높이는 아래 density 표 | `design-contracts/src/component-recipes.ts`(`listRowRecipe`), `design-contracts/src/foundations.ts`(`layout.rowHeight`) |

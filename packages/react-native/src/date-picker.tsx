@@ -10,7 +10,6 @@ import {
   type DatePickerOpenChangeReason,
   type DatePickerSize,
 } from "@hjmds/design-contracts/components/date-picker";
-import { radius } from "@hjmds/design-contracts/foundations";
 import { fieldRecipe } from "@hjmds/design-contracts/recipes/base";
 import { useRef, useState, type ReactNode } from "react";
 import { Pressable, View, type StyleProp, type ViewStyle } from "react-native";
@@ -71,7 +70,7 @@ export function DatePicker<Content>({
 }: DatePickerProps<Content>) {
   warnDeprecatedStyleProps("DatePicker", { style }, "layoutStyle for placement; size owns appearance");
   validateDatePickerDescriptor(descriptor);
-  const { colors, environment } = useHjmNativeTheme();
+  const { colors, environment, tokens } = useHjmNativeTheme();
   const controlledOpen = descriptor.open !== undefined;
   const [internalOpen, setInternalOpen] = useState(descriptor.defaultOpen ?? false);
   const open = controlledOpen ? descriptor.open === true : internalOpen;
@@ -112,7 +111,7 @@ export function DatePicker<Content>({
           ref={returnFocusRef}
           // Trigger height and inset come from datePickerRecipe.sizes (medium 44 · 16, large 52 · 20), the field frame
           // Select and NumberField share. Until 2026-10-06 Native drew 48/56 and Web 44/56, three different heights.
-          style={({ pressed }) => ({ alignItems: "center", backgroundColor: colors.bg, borderColor: descriptor.invalid || error ? colors.danger : colors.borderControl, borderRadius: radius[datePickerRecipe.frame.radius], borderWidth: datePickerRecipe.frame.borderWidth, flex: 1, flexDirection: "row", gap: 8, minHeight: datePickerRecipe.sizes[size].minHeight, opacity: pressed ? 0.72 : 1, paddingHorizontal: datePickerRecipe.sizes[size].paddingHorizontal })}
+          style={({ pressed }) => ({ alignItems: "center", backgroundColor: colors.bg, borderColor: descriptor.invalid || error ? colors.danger : colors.borderControl, borderRadius: tokens.radius[datePickerRecipe.frame.radius], borderWidth: datePickerRecipe.frame.borderWidth, flex: 1, flexDirection: "row", gap: 8, minHeight: datePickerRecipe.sizes[size].minHeight, opacity: pressed ? 0.72 : 1, paddingHorizontal: datePickerRecipe.sizes[size].paddingHorizontal })}
         >
           <Text accessible={false}>▣</Text>
           <Text style={{ color: descriptor.displayValue === null ? colors.textMuted : colors.textBody }}>{triggerText}</Text>

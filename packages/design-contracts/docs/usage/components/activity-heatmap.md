@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [Activity heatmap](../../activity-heatmap.md), descriptor `resolveActivityHeatmap`(`src/activity-heatmap.ts`)
 - 스토리북: `배포/컴포넌트/데이터 표시/활동 히트맵`
 
@@ -73,6 +73,8 @@ import { ActivityHeatmap } from "@hjmds/react-native/activity-heatmap";
 | Web `layoutStyle` | margin·width·flex·`alignSelf` | — | 바깥 배치 전용. Native는 없다(바깥 wrapper) |
 
 ## 배치
+
+Native 데이터 셀 모서리는 Provider의 `tokens.radius.sm / 4`다. Web의 같은 역할과 맞추며 날짜·0·누락 데이터의 의미는 색과 분리한다.
 
 | 항목 | 값 | 근거 |
 | --- | --- | --- |
