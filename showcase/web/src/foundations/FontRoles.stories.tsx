@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { FontRolePreview } from "./font-role-preview";
-const meta = { id: "font-roles", title: "실험/토큰/색과 글자/표시·읽기·기술 글자", component: FontRolePreview } satisfies Meta<typeof FontRolePreview>;
+const meta = { id: "font-roles", title: "배포/토큰/색과 글자/표시·읽기·기술 글자", component: FontRolePreview } satisfies Meta<typeof FontRolePreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };

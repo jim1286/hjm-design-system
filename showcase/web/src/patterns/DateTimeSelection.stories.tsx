@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { DateTimeSelectionPreview } from "./date-time-selection-preview";
-const meta = { id: "composition-selection-date-time", includeStories: ["Default", "Pending", "Failed", "Disabled", "Dark", "LargeText", "Rtl"], title: "실험/구성/선택과 필터/날짜와 시각 선택", component: DateTimeSelectionPreview } satisfies Meta<typeof DateTimeSelectionPreview>;
+const meta = { id: "composition-selection-date-time", includeStories: ["Default", "Pending", "Failed", "Disabled", "Dark", "LargeText", "Rtl"], title: "배포/구성/선택과 필터/날짜와 시각 선택", component: DateTimeSelectionPreview } satisfies Meta<typeof DateTimeSelectionPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };

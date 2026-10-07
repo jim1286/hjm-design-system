@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { CommandRecordsPreview } from "./command-records-preview";
-const meta = { id: "composition-information-command-records", includeStories: ["Default", "Pending", "Failed", "CopyFailed", "Dark", "LargeText", "ReducedMotion", "Rtl"], title: "실험/구성/정보 표시/명령 기록 표시", component: CommandRecordsPreview } satisfies Meta<typeof CommandRecordsPreview>;
+const meta = { id: "composition-information-command-records", includeStories: ["Default", "Pending", "Failed", "CopyFailed", "Dark", "LargeText", "ReducedMotion", "Rtl"], title: "배포/구성/정보 표시/명령 기록 표시", component: CommandRecordsPreview } satisfies Meta<typeof CommandRecordsPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };

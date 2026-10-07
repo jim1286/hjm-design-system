@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { DesignProfileComparison, DesignProfileFloatingActionComparison } from "./design-profile-preview";
-const meta = { id: "design-profile-comparison", includeStories: ["Default", "ProductNotes", "ProductReading", "FloatingAction", "Dark", "LargeText"], title: "실험/구성/비교와 검증/테마 조합", component: DesignProfileComparison } satisfies Meta<typeof DesignProfileComparison>;
+const meta = { id: "design-profile-comparison", includeStories: ["Default", "ProductNotes", "ProductReading", "FloatingAction", "Dark", "LargeText"], title: "배포/구성/비교와 검증/테마 조합", component: DesignProfileComparison } satisfies Meta<typeof DesignProfileComparison>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };

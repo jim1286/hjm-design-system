@@ -1,12 +1,12 @@
 # OverviewScreen
 
 - 단계: 컴포넌트
-- 상태: 실험
+- 상태: 배포
 - 지원: Web · Native
 - 적용: 1.15.0
-- 검토일: 2026-10-07
+- 검토일: 2026-10-08
 - 근거: [디자인 프로필](../../design-profile.md), 양 renderer `src/design-profile.tsx`; 기존 ScreenLayout·Grid·Collapsible의 상태 엔진을 재사용한다.
-- 스토리북: `실험/컴포넌트/레이아웃/목록 화면 골격`
+- 스토리북: `배포/컴포넌트/레이아웃/목록 화면 골격`
 
 ## 언제 쓰나
 

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { CollectionDetailPreview } from "./collection-detail-preview";
-const meta = { id: "collection-detail", title: "실험/구성/직접 조작과 모션/카드 상세 연결", component: CollectionDetailPreview } satisfies Meta<typeof CollectionDetailPreview>;
+const meta = { id: "collection-detail", title: "배포/구성/직접 조작과 모션/카드 상세 연결", component: CollectionDetailPreview } satisfies Meta<typeof CollectionDetailPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };

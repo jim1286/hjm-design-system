@@ -150,3 +150,7 @@ root check의 `api-map:check`는 모든 공개 컴포넌트 export를 분류하�
 기능·행동 중복은 이 검사로 판정하지 않는다. API 추가와 공통 구현 변경은
 [기여 지침](../CONTRIBUTING.md)의 기존 API 비교·공통 계약 재사용·선택 기준 문서화를 따른다.
 공개 범위 drift 검사 통과는 외부 소비 제품 검증이나 release gate 완료가 아니다.
+
+### 2026-10-08 1.16.0 peer train 준비
+
+CollectionRail과 글자 역할 등 additive API를 1.16.0으로 게시하기 위해 renderer peer를 버전 생성 전에 `>=1.16.0 <1.17.0`으로 옮긴다. 이전 범위를 유지하면 Changesets가 peer 범위 이탈을 major로 올리므로 위의 authored-next-train 순서를 따른다. 승격 승인 범위는 Storybook 탐색 규격 §2에 기록했다.

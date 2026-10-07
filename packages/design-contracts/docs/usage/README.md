@@ -13,7 +13,7 @@
 | --- | --- | --- | --- | --- |
 | [색상](tokens/color.md) | 색과 글자 | 색은 팔레트 이름(파랑·회색)이 아니라 배경·글자·브랜드·피드백·테두리 **역할**로 고른다. | 배포 | Web · Native |
 | [타이포그래피](tokens/typography.md) | 색과 글자 | 글자 크기·줄 높이·굵기를 정할 때 쓴다. | 배포 | Web · Native |
-| [표시·읽기·기술 글자](tokens/font-roles.md) | 색과 글자 | 앱의 제목·읽기용 본문·입력/조작 문구·기술값을 서로 다른 서체로 표시할 때 쓴다. | 실험 | Web · Native |
+| [표시·읽기·기술 글자](tokens/font-roles.md) | 색과 글자 | 앱의 제목·읽기용 본문·입력/조작 문구·기술값을 서로 다른 서체로 표시할 때 쓴다. | 배포 | Web · Native |
 | [간격](tokens/spacing.md) | 공간과 크기 | 요소 사이 간격(gap)과 영역 안쪽 여백(padding)을 정할 때 쓴다. | 배포 | Web · Native |
 | [크기](tokens/size.md) | 공간과 크기 | 아이콘·작은 그림(glyph)의 크기와 누를 수 있는 컨트롤의 높이·최소 터치 영역을 정할 때 쓴다. | 배포 | Web · Native |
 | [화면 여백과 너비](tokens/layout.md) | 공간과 크기 | 화면 좌우 여백·본문 최대 폭·구획 간격·행 높이·breakpoint를 정하는 화면 배치의 기준값이다. | 배포 | Web · Native |
@@ -108,7 +108,7 @@
 | [NumberField](components/number-field.md) | 입력 | 범위가 정해진 **정확한 수 하나**를 입력받을 때 쓴다. | 배포 | Web · Native |
 | [OnboardingScreen](components/onboarding-screen.md) | 화면/소개 | 첫 실행 소개·초기 설정처럼 **몇 단계를 차례로 넘기는 화면**에 쓴다. | 배포 | Web · Native |
 | [OtpField](components/otp-field.md) | 입력 | 문자·메일로 받은 **숫자 인증번호**를 칸 모양으로 입력받을 때 쓴다. | 배포 | Web · Native |
-| [OverviewScreen](components/overview-screen.md) | 레이아웃 | 같은 데이터와 기능을 유지하면서 테마별 행·카드·격자와 도구 배치를 선택하는 목록 화면에 쓴다. | 실험 | Web · Native |
+| [OverviewScreen](components/overview-screen.md) | 레이아웃 | 같은 데이터와 기능을 유지하면서 테마별 행·카드·격자와 도구 배치를 선택하는 목록 화면에 쓴다. | 배포 | Web · Native |
 | [Pagination](components/pagination.md) | 탐색 | 총 개수(또는 총 페이지 수)가 정해진 결과 집합에서 사용자가 **임의의 페이지로 바로 이동**해야 할 때 Web에서 쓴다. | 배포 | Web |
 | [PasswordField](components/password-field.md) | 입력 | 비밀번호를 입력받고, 필요할 때만 값을 눈으로 확인하게 할 때 쓴다. | 배포 | Web · Native |
 | [PermissionScreen](components/permission-screen.md) | 화면/소개 | 카메라·위치·알림 같은 권한이 **왜 필요한지 설명하고 다음 행동을 고르게 하는** 화면에 쓴다. | 배포 | Web · Native |
@@ -188,7 +188,7 @@
 | [입력을 유지하는 도구](compositions/context-toolbar.md) | 입력과 작성 | 작성 중인 입력을 보존한 채 선택적 도구를 펼쳐야 할 때 쓴다. | 배포 | Web · Native |
 | [첫 작업을 만들고 이어하기](compositions/reference-first.md) | 입력과 작성 | 첫 기록을 단계별 작성하고 중단한 초안 이어가기 흐름이 필요할 때 쓴다. | 배포 | Web · Native |
 | [날짜 선택과 예정 목록](compositions/stea-schedule-card.md) | 선택과 필터 | 한 주처럼 짧은 날짜 범위에서 날짜 하나를 고르면 같은 카드 안의 일정 목록이 그 날짜로 바뀌는 요약 카드에 쓴다. | 배포 | Web · Native |
-| [날짜와 시각 선택](compositions/date-time-selection.md) | 선택과 필터 | 기록·알림의 날짜 하나와 하루 안의 시각을 함께 고를 때 쓴다. | 실험 | Web · Native |
+| [날짜와 시각 선택](compositions/date-time-selection.md) | 선택과 필터 | 기록·알림의 날짜 하나와 하루 안의 시각을 함께 고를 때 쓴다. | 배포 | Web · Native |
 | [대표 항목과 묶음 전체 선택](compositions/selection-scope.md) | 선택과 필터 | 사진 묶음·스레드처럼 대표 항목 하나와 묶음 전체가 같은 모양으로 보일 때, 공유·삭제·이동 전에 대상 범위와 개수를 고르고 문구로 확인한 뒤 적용하게 할 때 쓴다. | 배포 | Web · Native |
 | [사진 촬영과 앨범 선택](compositions/photo-source.md) | 선택과 필터 | 명시적으로 선택 후 플랫폼 picker 실행 흐름이 필요할 때 쓴다. | 배포 | Web · Native |
 | [선택 후 적용·취소](compositions/interaction-flow-apply.md) | 선택과 필터 | 표시 방식·정렬·필터처럼 시트에서 여러 번 바꿔 본 뒤 적용을 눌러야 화면에 반영되고, 취소하거나 닫으면 기존 선택을 유지해야 할 때 쓴다. | 배포 | Web · Native |
@@ -196,7 +196,7 @@
 | [보관함과 페이지 이동](compositions/web-navigation.md) | 탐색과 이동 | Web에서 상위 보관함 → 하위 모음으로 들어가고, 그 모음의 긴 목록을 페이지 단위로 넘겨 보는 탐색에 쓴다. | 배포 | Web |
 | [펼침과 메뉴](compositions/disclosure.md) | 탐색과 이동 | Web에서 내용을 숨겼다 펼치거나(Collapsible), 대상에 붙은 작업 메뉴를 우클릭·키보드로 열거나(ContextMenu), 데스크톱 앱처럼 상단 메뉴 막대를 두는(Menubar) 세 방식을 각각 보여 주는 모음이다. | 배포 | Web |
 | [대화 메시지](compositions/common-message.md) | 정보 표시 | 말풍선 하나하나에 반응·답장·원문 이동·전송 실패 후 다시 보내기를 붙일 때 쓴다. | 배포 | Web · Native |
-| [명령 기록 표시](compositions/command-records.md) | 정보 표시 | 명령 원문과 출력 기록을 선택·읽기·복사할 때 쓴다. | 실험 | Web · Native |
+| [명령 기록 표시](compositions/command-records.md) | 정보 표시 | 명령 원문과 출력 기록을 선택·읽기·복사할 때 쓴다. | 배포 | Web · Native |
 | [문서와 파일](compositions/document-resource.md) | 정보 표시 | 이름·형식·크기와 미리보기·내보내기·별도 메뉴를 함께 제공하는 문서에 쓴다. | 배포 | Web · Native |
 | [수치와 이전 대비 변화](compositions/stea-stat-summary.md) | 정보 표시 | 매출·주문·반품처럼 몇 개의 핵심 수치를 비교 기간과 함께 보이고, 증감의 방향과 좋고 나쁨을 색 없이도 읽히게 할 때 쓴다. | 배포 | Web · Native |
 | [알림 항목](compositions/common-notification.md) | 정보 표시 | 알림 한 행을 누르면 바로 읽음으로 바꾸고, 서버가 실패하면 읽지 않음으로 되돌릴 때 쓴다. | 배포 | Web · Native |
@@ -221,15 +221,15 @@
 | [선택 배경 이동](compositions/selection-motion.md) | 직접 조작과 모션 | 짧은 단일 선택의 현재 항목을 이어지는 배경으로 보여 줄 때 쓴다. | 배포 | Web · Native |
 | [숫자 변화와 메뉴 변형](compositions/optional-motion.md) | 직접 조작과 모션 | 선택 설치 모션(숫자 자리 단위 변화, 메뉴 형태 변환)을 기존 컴포넌트 자리에 끼워 넣을 때 쓴다. | 배포 | Web |
 | [이미지·시트·키보드 조작](compositions/optional-adapters.md) | 직접 조작과 모션 | Native 앱 한 화면에서 이미지 확대 보기, 끌어서 높이를 바꾸는 시트, OS 길게 누르기 메뉴, 키보드를 따라 올라가는 하단 행동을 함께 쓸 때 provider 중첩 순서와 각 요소의 자리를 확인하는 구성이다. | 배포 | Native |
-| [카드 탐색과 상세 연결](compositions/collection-detail.md) | 직접 조작과 모션 | 유한 카드 여러 장의 독립 입력을 보존하면서 탐색하고 별도 상세 모달을 열 때 쓴다. | 실험 | Web · Native |
+| [카드 탐색과 상세 연결](compositions/collection-detail.md) | 직접 조작과 모션 | 유한 카드 여러 장의 독립 입력을 보존하면서 탐색하고 별도 상세 모달을 열 때 쓴다. | 배포 | Web · Native |
 | [내비게이션 바 비교](compositions/navigation-bar-collection.md) | 비교와 검증 | 하단 탭에 목적지 이동과 별개의 행동(작성·전원·기록 추가)을 함께 둘지, 선택한 목적지를 어떻게 보여 줄지 고를 때 이 비교를 본다. | 배포 | Web · Native |
-| [내용 전환 비교](compositions/content-transition-comparison.md) | 비교와 검증 | 동일 내용의 전환 표현을 테마와 비교하거나 단계별 입력·완료·복구를 검토할 때 쓴다. | 실험 | Web · Native |
+| [내용 전환 비교](compositions/content-transition-comparison.md) | 비교와 검증 | 동일 내용의 전환 표현을 테마와 비교하거나 단계별 입력·완료·복구를 검토할 때 쓴다. | 배포 | Web · Native |
 | [네이티브 컴포넌트 기기 확인](compositions/native-renderers.md) | 비교와 검증 | Native 공개 컴포넌트가 실제 기기·시뮬레이터에서 그려지고 눌리는지 범주별로 한 화면에서 확인할 때 쓴다. | 배포 | Native |
 | [복합 입력 모음](compositions/compound-controls.md) | 비교와 검증 | 기존 컨트롤을 묶은 네 가지 복합 입력(소요 시간, 버튼 자리 확인, 이모지 반응, 알림 종)을 화면 안 한 블록으로 둘 때 쓴다. | 배포 | Web · Native |
 | [시각 효과 모음](compositions/visual-foundations.md) | 비교와 검증 | 배경 질감, 의미 이름 아이콘, 사진 없는 프로필 얼굴, 문장 전환처럼 화면의 분위기를 더하는 선택 표현을 고를 때 이 모음을 본다. | 배포 | Web · Native |
 | [웹 전용 보조 컴포넌트](compositions/web-additions.md) | 비교와 검증 | Web에만 있는 보조 컴포넌트 세 개(색 고르기, 문서 워터마크, 스크롤 중 고정되는 실행 영역)를 실제 쓰임 하나씩과 함께 보여 주는 모음이다. | 배포 | Web |
-| [종이 줄무늬 비교](compositions/paper-surface.md) | 비교와 검증 | 같은 입력·기록에서 종이 preset의 grain+ruled 상속과 앱이 지정한 평면/줄무늬 표현을 비교한다. | 실험 | Web · Native |
-| [테마 조합](compositions/design-profile-comparison.md) | 비교와 검증 | 같은 기능에 10가지 표현을 적용하고, 앱 소유 테마 설정을 넣었을 때 네 단계의 전파와 상태 유지를 검토할 때 쓴다. | 실험 | Web · Native |
+| [종이 줄무늬 비교](compositions/paper-surface.md) | 비교와 검증 | 같은 입력·기록에서 종이 preset의 grain+ruled 상속과 앱이 지정한 평면/줄무늬 표현을 비교한다. | 배포 | Web · Native |
+| [테마 조합](compositions/design-profile-comparison.md) | 비교와 검증 | 같은 기능에 10가지 표현을 적용하고, 앱 소유 테마 설정을 넣었을 때 네 단계의 전파와 상태 유지를 검토할 때 쓴다. | 배포 | Web · Native |
 | [토스트 배치 비교](compositions/toast-layout.md) | 비교와 검증 | Toast 카드 한 장의 내부 배치(톤 배지·제목·설명·닫기·실행 버튼)와 화면 위 위치를 좁은 폭·큰 글자·긴 문구·톤별로 확인하는 비교 스토리다. | 배포 | Web |
 | [환경 조합 검증](compositions/environment-matrix.md) | 비교와 검증 | 제품 화면이 테마·쓰기 방향·글자 크기·모션 설정이 달라져도 같은 의미를 유지하는지 확인할 때, 어떤 환경 조합과 검증 항목을 골라 볼지 정하는 기준표로 쓴다. | 배포 | Web |
 

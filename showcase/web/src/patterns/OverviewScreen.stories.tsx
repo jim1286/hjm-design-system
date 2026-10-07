@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { OverviewPreview } from "./design-profile-preview";
-const meta = { id: "design-profile-overview", includeStories: ["Default", "Dark", "LargeText"], title: "실험/컴포넌트/레이아웃/목록 화면 골격", component: OverviewPreview, parameters: { hjm: { optionalEntry: "design-profile" } } } satisfies Meta<typeof OverviewPreview>;
+const meta = { id: "design-profile-overview", includeStories: ["Default", "Dark", "LargeText"], title: "배포/컴포넌트/레이아웃/목록 화면 골격", component: OverviewPreview, parameters: { hjm: { optionalEntry: "design-profile" } } } satisfies Meta<typeof OverviewPreview>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = { name: "기본" };
