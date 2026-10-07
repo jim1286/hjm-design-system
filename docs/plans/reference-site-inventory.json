@@ -6255,11 +6255,28 @@
           "scope": "default gallery thumbnail/card appearances, not linked implementation behavior"
         },
         "scrollViewportRecapture": {
-          "pagesCaptured": 15,
-          "viewportTiles": 242,
+          "pagesCaptured": 43,
+          "viewportTiles": 510,
           "state": "running",
-          "review": "pending",
-          "checkedAt": "2026-10-07T01:58:52.171516+00:00"
+          "review": "Accordion lower-page viewport tiles 9 inspected; remaining new tiles pending",
+          "checkedAt": "2026-10-07T02:01:11.419748+00:00"
+        },
+        "accordionLowerViewportReview": {
+          "tiles": 9,
+          "fromY": 15300,
+          "throughY": 22817,
+          "sha256": [
+            "33b13543ea48246caa182d0de2d9217965ebafb8a85fd62c2a657b65c2622ae2",
+            "e6d56ba8e9f38445aae4bc70605e3064ab2b279e324e9745dea69d672b491b52",
+            "6e937b3631153ce3da84bdab76f1a45891ef3370a99723a38a2671ad5eeb5eb8",
+            "e53307b5ecd7614d16fb1f26f07df25242c39b12890b69b40d4a32bf7411f425",
+            "b5439ff899155041c3cdea0ac4fb8cc733cbeb54968f406ba2515fb3d71ddff8",
+            "d6867d0c32846c0bf4d6c3808604b5b8c2b58a4090ea53c91385e48cffc47f89",
+            "68501b49fcd6cd1e4602def1a5ae6da84939d20ca026466e4a550f7f4c14a163",
+            "30c7de07baf906288742b7d81e024506a49368df221271a1eec5754f4fbd0902",
+            "3f97b8494bcf0e362f9f1c69a6af1f09ba37d03c11c15d4c686d14d45e534f44"
+          ],
+          "scope": "actual lower-page visible layout and body; linked implementation and interactions pending"
         }
       }
     },

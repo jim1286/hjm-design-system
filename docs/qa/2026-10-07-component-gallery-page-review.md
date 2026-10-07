@@ -61,6 +61,12 @@ content-visibility를 임시로 visible로 설정한 재캡처는 Changelog 본�
 
 기존 모음에서 홈·About·Contribute·Design systems의 보이는 본문/목록과 컴포넌트 색인 하단을 추가로 읽었다. Accordion 101개 예제의 기본 thumbnail/카드 표현은 확인했지만 원본 linked 구현과 실제 접힘 동작은 별도다. 분리선·묶인 테두리·카드형·본문 일부 노출·inline 더보기·좌/우 indicator를 기존 Accordion/Collapsible의 표현 비교 후보로 기록한다. 긴 페이지의 상세 지침/footer 화면은 새 viewport 캡처로 다시 확인한다.
 
+### 실제 scroll viewport로 하단 재검토
+
+Accordion의 y=15,300~22,817 구간을 실제 스크롤 viewport 9장으로 연속 확인했다. 마지막 Details/Workday 예제 카드, 상세 설명·두 markup 방식·상호작용·스타일·사용 지침·각주·Resources·Name distribution·footer가 정상 표시됐다. 기존 과대 fullPage 캡처의 상단 반복을 실제 사이트 결함으로 분류하지 않는다. 기본 예제 카드 101개 확인 범위는 기존 모음에서 보인 상단 목록과 이 마지막 카드 확인을 합친 것이며 linked design system의 구현/동작 검토는 여전히 남아 있다.
+
+새 viewport 9장의 URL·위치·SHA-256·검토 시각을 작업 증거에 보존했다. 다른 페이지의 새 viewport 캡처는 아직 전수 시각 검토하지 않았다.
+
 ## 6. 미확인 범위와 후속 조건
 
 | 미확인 항목 | 후속 조건 |
