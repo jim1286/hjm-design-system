@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "scope": "Verified registrations and adopted variants by root. Existing target improvements are distinguished from new experiments. Research is closed for adoption; registration does not imply promotion, publication or Native device completion.",
+  "scope": "Seven research adoption records: six new experiments and one existing experiment improvement, verified against both Storybooks and usage documents. Necessary research is closed; selected Native development evidence is item-specific. Registration does not imply promotion, publication or consumer adoption.",
   "items": [
     {
       "path": "실험/구성/비교와 검증/내용 전환 비교",
@@ -32,7 +32,8 @@
           "VoiceOver traversal",
           "published-consumer adoption"
         ]
-      }
+      },
+      "registrationKind": "new-experiment"
     },
     {
       "path": "실험/구성/선택과 필터/날짜와 시각 선택",
@@ -65,7 +66,8 @@
           "VoiceOver traversal",
           "published-consumer adoption"
         ]
-      }
+      },
+      "registrationKind": "new-experiment"
     },
     {
       "path": "실험/구성/정보 표시/명령 기록 표시",
@@ -100,7 +102,8 @@
           "VoiceOver traversal",
           "published-consumer adoption"
         ]
-      }
+      },
+      "registrationKind": "new-experiment"
     },
     {
       "path": "실험/구성/비교와 검증/테마 조합",
@@ -259,5 +262,22 @@
         ]
       }
     }
-  ]
+  ],
+  "reconciliation": {
+    "date": "2026-10-07",
+    "sourceCommit": "8dd30cd6245f200e42bb382935bee63d7f48ca9a",
+    "registeredRecords": 7,
+    "newExperiments": 6,
+    "existingExperimentImprovements": 1,
+    "existingRelatedExperiment": {
+      "path": "실험/컴포넌트/레이아웃/목록 화면 골격",
+      "webStory": "showcase/web/src/patterns/OverviewScreen.stories.tsx",
+      "nativeStory": "showcase/native/src/OverviewScreen.stories.tsx",
+      "usage": "packages/design-contracts/docs/usage/components/overview-screen.md",
+      "classification": "pre-existing-related-experiment-not-an-additional-research-registration"
+    },
+    "researchStatus": "closed-for-selected-adoption",
+    "exhaustiveReviewComplete": false,
+    "maximumFontExcluded": true
+  }
 }

@@ -10,7 +10,17 @@
     "exhaustiveReviewComplete": false,
     "candidateDecisionComplete": true,
     "automaticBulkResearchResume": false,
-    "reason": "Latest user instruction narrows page research to implementation-needed evidence. Historical unread pages remain evidence boundaries rather than current completion or release blockers."
+    "reason": "Latest user instruction narrows page research to implementation-needed evidence. Historical unread pages remain evidence boundaries rather than current completion or release blockers.",
+    "selectedAdoptionUnits": [
+      "theme-propagation",
+      "content-transitions",
+      "date-time-selection",
+      "code-and-record-display",
+      "finite-collection-detail",
+      "typography-hierarchy-and-roles",
+      "ruled-paper"
+    ],
+    "optionalVariantPolicy": "Remaining decorative boundaries, ViewTransition, tracking/small-caps, testimonials/media fixtures and purpose-specific CTA/form variants are recorded options, not required additional research or implementation in the selected adoption scope."
   },
   "counts": {
     "candidateRecords": 149,
@@ -53,10 +63,11 @@
         "C-P01"
       ],
       "decision": "One finite multi-visible collection placement contract; compose existing Card.actions and Dialog for optional detail. Testimonials and media are data/purpose variations, not two scroll engines.",
-      "status": "common-rail-and-record-detail-implemented-web-reviewed-native-device-pending",
+      "status": "implemented-web-reviewed-selected-ios-development-flows-verified",
       "designEvidence": "docs/plans/aceternity-interaction-adoption-2026-10-07.md",
       "implementationEvidence": "docs/qa/2026-10-07-collection-detail.md",
-      "remainingPurposeVariants": "Testimonials and filmstrip/media assets remain purpose variations; the record-card fixture proves the common rail only."
+      "remainingPurposeVariants": "Testimonials and filmstrip/media assets remain purpose variations; the record-card fixture proves the common rail only.",
+      "nativeValidationEvidence": "docs/qa/2026-10-07-native-reference-validation.md"
     },
     {
       "id": "theme-propagation",
@@ -66,9 +77,10 @@
         "C-S06"
       ],
       "decision": "Existing 10-theme comparison and product-defined profile propagation share one Provider path. A possible Web ViewTransition is a separate optional visual improvement; it is not another registry.",
-      "status": "app-owned-profile-variants-implemented-web-reviewed-native-device-pending",
+      "status": "implemented-web-reviewed-selected-ios-development-flows-verified",
       "implementationEvidence": "docs/qa/2026-10-07-product-theme-propagation.md",
-      "remainingOptionalVariant": "Web ViewTransition from B-9b94fe0ec132 has not been implemented; it is not required for the app-owned profile fixture."
+      "remainingOptionalVariant": "Web ViewTransition from B-9b94fe0ec132 has not been implemented; it is not required for the app-owned profile fixture.",
+      "nativeValidationEvidence": "docs/qa/2026-10-07-native-reference-validation.md"
     },
     {
       "id": "palette-and-contrast",
@@ -86,8 +98,9 @@
         "C-T01"
       ],
       "decision": "Reuse heading metrics/hierarchy. Optional display/reading font families and Text.fontRole now propagate through both renderers; existing ui/code profiles retain current UI fallbacks. Tracking/small-caps and product font assets remain separate.",
-      "status": "family-roles-implemented-web-reviewed-native-device-pending",
-      "evidence": "docs/qa/2026-10-07-font-roles.md"
+      "status": "implemented-web-reviewed-selected-ios-development-flows-verified",
+      "evidence": "docs/qa/2026-10-07-font-roles.md",
+      "nativeValidationEvidence": "docs/qa/2026-10-07-native-reference-validation.md"
     },
     {
       "id": "state-and-intent-comparison",
@@ -115,9 +128,11 @@
         "C-T06"
       ],
       "decision": "Use existing material fill/blur/inset and role-based shadows. Static ruled paper is now a supported EffectSurface layer and paper canvas. Torn, taped, perforated or hand-drawn boundaries remain unsupported shapes; further role-depth variants need separate adoption evidence.",
-      "status": "ruled-paper-and-existing-depth-partially-implemented",
+      "status": "ruled-paper-and-profile-floating-depth-implemented-selected-flows-verified",
       "implementationEvidence": "docs/qa/2026-10-07-ruled-paper.md",
-      "remainingScope": "Tape/rotation/torn/perforated boundaries and further role-depth variants are not implemented; Native actual device review pending."
+      "remainingScope": "Tape/rotation/torn/perforated/hand-drawn boundaries are optional unsupported treatments outside the selected adoption scope. Selected iOS development raster/input checks are recorded; Android, physical-device/Release performance and VoiceOver remain unverified.",
+      "nativeValidationEvidence": "docs/qa/2026-10-07-native-reference-validation.md",
+      "additionalImplementationEvidence": "docs/qa/2026-10-07-design-profile-research.md"
     },
     {
       "id": "code-and-record-display",
@@ -126,7 +141,9 @@
         "C-C06"
       ],
       "decision": "Use the registered command-records CodeBlock/Tabs/ClipboardButton composition for the overlapping technical-value display need. Real command execution, live stream and business status are product-owned.",
-      "status": "adoption-target-consolidated-not-all-variants-implemented"
+      "status": "registered-command-records-selected-web-and-ios-development-flows-verified",
+      "implementationEvidence": "docs/qa/2026-10-07-command-records.md",
+      "nativeValidationEvidence": "docs/qa/2026-10-07-native-reference-validation.md"
     }
   ],
   "items": [
@@ -148,7 +165,9 @@
       "implementationStatus": "existing-target-app-owned-profile-variants-adopted",
       "registrationEvidence": "docs/plans/reference-experiment-registrations-2026-10-07.json",
       "adoptionEvidence": "docs/qa/2026-10-07-product-theme-propagation.md",
-      "adoptionBoundary": "Synthetic two-product configuration and 10 presets; not real product adoption, Native device proof, optional ViewTransition or publication."
+      "adoptionBoundary": "Synthetic two-product configuration and ten named presets, with selected actual iOS development state-preservation and FAB actions. Not published-consumer adoption, every Native combination, optional ViewTransition or publication.",
+      "nativeValidationEvidence": "docs/qa/2026-10-07-native-reference-validation.md",
+      "additionalAdoptionEvidence": "docs/qa/2026-10-07-design-profile-research.md"
     },
     {
       "id": "A-02",
@@ -168,7 +187,8 @@
       "implementationStatus": "ruled-layer-and-paper-profile-implemented-not-all-boundary-variants",
       "registrationEvidence": "docs/qa/2026-10-07-ruled-paper.md",
       "realizedPath": "실험/구성/비교와 검증/종이 줄무늬 비교",
-      "remainingScope": "Native device rasterization/readability/input/OS focus. Tape/rotation/torn/perforated/scalloped boundaries remain unsupported; source assets and original live flows are not verified."
+      "remainingScope": "Selected iOS development ruling raster/input/save/detail/close verified after viewport and tile fixes. Android, physical-device/Release performance and AT remain unverified. Tape/rotation/torn/perforated/scalloped boundaries are optional unsupported treatments outside the selected adoption scope.",
+      "nativeValidationEvidence": "docs/qa/2026-10-07-native-reference-validation.md"
     },
     {
       "id": "A-03",
@@ -220,7 +240,8 @@
       "implementationStatus": "family-roles-and-hierarchy-implemented-not-all-variants",
       "registrationEvidence": "docs/qa/2026-10-07-font-roles.md",
       "realizedPath": "실험/토큰/색과 글자/표시·읽기·기술 글자",
-      "remainingScope": "Native device font/glyph/fallback verification; product font assets/licensing/loading; contextual tracking and small-caps are not implemented here."
+      "remainingScope": "Selected actual iOS development role rendering, ten-theme draft/detail preservation and terminal inheritance verified. Exact glyph/fallback identity, product font assets/licensing/loading and untested platforms remain unverified; tracking/small-caps are optional unsupported treatments.",
+      "nativeValidationEvidence": "docs/qa/2026-10-07-native-reference-validation.md"
     },
     {
       "id": "A-06",
@@ -1051,7 +1072,8 @@
         "실험/구성/선택과 필터/날짜와 시각 선택"
       ],
       "implementationStatus": "registered-experimental",
-      "registrationEvidence": "docs/qa/2026-10-07-date-time-selection.md"
+      "registrationEvidence": "docs/qa/2026-10-07-date-time-selection.md",
+      "nativeValidationEvidence": "docs/qa/2026-10-07-native-reference-validation.md"
     },
     {
       "id": "B-264315e2fbd9",
@@ -1325,7 +1347,8 @@
         "실험/구성/정보 표시/명령 기록 표시"
       ],
       "implementationStatus": "registered-experimental",
-      "registrationEvidence": "docs/qa/2026-10-07-command-records.md"
+      "registrationEvidence": "docs/qa/2026-10-07-command-records.md",
+      "nativeValidationEvidence": "docs/qa/2026-10-07-native-reference-validation.md"
     },
     {
       "id": "B-e0992711fb51",
@@ -1854,7 +1877,8 @@
       ],
       "implementationStatus": "registered-experimental",
       "registrationEvidence": "docs/qa/2026-10-07-collection-detail.md",
-      "implementationBoundary": "Record cards compose existing Card/TextField/Dialog with the new List companion. Native host regressions are not device verification."
+      "implementationBoundary": "Record cards compose existing Card/TextField/Dialog with the new List companion. Web and selected actual iOS development rail/detail flows are recorded; host tests alone are not device evidence and published-consumer adoption remains separate.",
+      "nativeValidationEvidence": "docs/qa/2026-10-07-native-reference-validation.md"
     },
     {
       "id": "B-b7d8f12a16af",
@@ -2245,7 +2269,8 @@
       "implementationStatus": "family-roles-and-hierarchy-implemented-not-all-variants",
       "registrationEvidence": "docs/qa/2026-10-07-font-roles.md",
       "realizedPath": "실험/토큰/색과 글자/표시·읽기·기술 글자",
-      "remainingScope": "Native device font/glyph/fallback verification; product font assets/licensing/loading; contextual tracking and small-caps are not implemented here."
+      "remainingScope": "Selected actual iOS development role rendering, ten-theme draft/detail preservation and terminal inheritance verified. Exact glyph/fallback identity, product font assets/licensing/loading and untested platforms remain unverified; tracking/small-caps are optional unsupported treatments.",
+      "nativeValidationEvidence": "docs/qa/2026-10-07-native-reference-validation.md"
     },
     {
       "id": "C-T02",
@@ -2893,7 +2918,9 @@
       "implementationStatus": "existing-target-app-owned-profile-variants-adopted",
       "registrationEvidence": "docs/plans/reference-experiment-registrations-2026-10-07.json",
       "adoptionEvidence": "docs/qa/2026-10-07-product-theme-propagation.md",
-      "adoptionBoundary": "Synthetic two-product configuration and 10 presets; not real product adoption, Native device proof, optional ViewTransition or publication."
+      "adoptionBoundary": "Synthetic two-product configuration and ten named presets, with selected actual iOS development state-preservation and FAB actions. Not published-consumer adoption, every Native combination, optional ViewTransition or publication.",
+      "nativeValidationEvidence": "docs/qa/2026-10-07-native-reference-validation.md",
+      "additionalAdoptionEvidence": "docs/qa/2026-10-07-design-profile-research.md"
     },
     {
       "id": "C-G01",
@@ -4006,28 +4033,32 @@
       "order": 1,
       "id": "theme-propagation",
       "decision": "Improve the existing 10-theme comparison with app-owned profile configuration and preserve tokens→component→composition→screen defaults.",
-      "status": "app-config-variants-implemented-web-reviewed-native-device-pending",
-      "evidence": "docs/qa/2026-10-07-product-theme-propagation.md"
+      "status": "implemented-web-reviewed-selected-ios-development-flows-verified",
+      "evidence": "docs/qa/2026-10-07-product-theme-propagation.md",
+      "nativeValidationEvidence": "docs/qa/2026-10-07-native-reference-validation.md"
     },
     {
       "order": 2,
       "id": "surface-material-and-depth",
       "decision": "Reuse paper/glass/clay material options; isolate invalid exported values; add unsupported treatments only through explicit supported contracts.",
-      "status": "ruled-paper-added-existing-depth-and-boundary-followup",
-      "evidence": "docs/qa/2026-10-07-ruled-paper.md"
+      "status": "ruled-paper-and-profile-floating-depth-implemented-selected-flows-verified",
+      "evidence": "docs/qa/2026-10-07-ruled-paper.md",
+      "additionalEvidence": "docs/qa/2026-10-07-design-profile-research.md",
+      "nativeValidationEvidence": "docs/qa/2026-10-07-native-reference-validation.md"
     },
     {
       "order": 3,
       "id": "finite-collection-detail",
       "decision": "Implement one finite multi-visible collection contract and compose existing Card/Dialog detail and independent actions.",
-      "status": "common-rail-and-record-detail-implemented-web-reviewed-native-device-pending",
-      "evidence": "docs/qa/2026-10-07-collection-detail.md"
+      "status": "implemented-web-reviewed-selected-ios-development-flows-verified",
+      "evidence": "docs/qa/2026-10-07-collection-detail.md",
+      "nativeValidationEvidence": "docs/qa/2026-10-07-native-reference-validation.md"
     },
     {
       "order": 4,
       "id": "purpose-state-compositions",
-      "decision": "Absorb necessary form/selection/CTA/media variants into existing targets; keep user intent and pending/failed/retry state ownership intact.",
-      "status": "variant-adoption-pending"
+      "decision": "The selected transition, date/time and command-record compositions are registered. Further form/selection/CTA/media variants remain documented options; do not resume bulk research or treat every candidate as mandatory implementation.",
+      "status": "additional-purpose-variants-outside-selected-adoption-scope"
     },
     {
       "order": 5,
