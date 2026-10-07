@@ -259,6 +259,39 @@ viewport를 해제, System theme 복원과 reduced=false/1280 확인 뒤 본 탭
 로컬 문서 링크575파일, 사용 지침12토큰/139컴포넌트/54구성/22화면 검사를 통과했다.
 동작 코드는 바꾸지 않아 runtime 테스트·빌드를 반복하지 않았으며 원격 CI는 실행하지 않았다.
 
+### 도구 모음 두 예제의 실제 동작과 등록 후보 — 15:21 KST
+
+같은 사이트의 `/docs/toolbar-dynamic`·`/docs/toolbar-expandable` 실제 Preview를
+키보드로 확인했다. 두 페이지 모두 Code 예제 하나의 독해/기본 시각 기록을 이미 갖고 있으며,
+이번 관찰도 전체 환경이나 Native 완료로 올리지 않는다. IAB의 임시 탭 75만 사용했고 검사 후
+390px/다크/모션 감소 override를 해제하고 닫았다.
+
+| 예제 | 실제 관찰 | 기존 API 대조와 후보 |
+| --- | --- | --- |
+| 검색 폭 전환 | Search notes에 Enter→입력 초점. ‘테마 확인’ 입력 후 Escape는 유지. Back의 Enter→입력 제거·BODY 초점. 재진입→검색어 빈 값. input은 placeholder만 있고 명시 label/aria-label/labelledby 없음 | 기존 SearchField/TextField의 이름·controlled query와 Collapsible의 보존 경로 사용. 원본 uncontrolled/unmount 엔진을 복사하지 않는다. 폭 보간은 기존 계약이 제공한다고 주장하지 않고 추가 축 필요성을 검토 |
+| 선택 후 높이 확장 | User/Messages/Documents/Wallet 모두 Enter로 각 설명을 노출. Messages 재선택·Escape는 접힘 없음. View more의 Enter는 눈에 보이는 변화 없음. 바깥 heading 클릭으로 접힌 뒤 BODY 초점. aria-expanded/controls·toolbar role 없음 | 기존 Collapsible·SegmentedControl·ContentTransition.animateHeight로 역할을 나눔. 원본 선택 상태/고정 maxWidth를 가져오지 않음. 일반 inline Collapsible가 Escape 정책을 이미 제공한다고 주장하지 않음 |
+
+390px·dark·reduced 환경에서 두 페이지의 문서 `scrollWidth=innerWidth=390`을 확인했다.
+검색 입력은 x97·폭240·16px이고 같은 Escape 입력 유지가 보인다. 확장 예제의 Wallet 내용과
+4개 버튼은 좁은 폭에서 보인다. 값은 원본 데모의 샘플이며 거래 버튼은 실행하지 않았다.
+모션 감소의 실제 시간축·큰 글자·RTL·음성·모든 포커스 순서는 검증하지 않았다.
+
+공개 API 대응표와 양 renderer의 Collapsible/SearchField, 양쪽 기존 ContextToolbarPreview를
+읽었다. 현재 배포 `입력을 유지하는 도구`는 작성 입력을 밖에 두고 선택을 유지하므로 별도
+wrapper API를 늘리지 않는다. 연구가 끝난 뒤 표현 비교를
+`실험/구성/입력과 작성/입력을 유지하는 도구`에 등록할 후보로 ledger에 연결했다.
+기존 배포 항목을 승인 없이 이동하지 않으며 새 표현의 Default/Dark/LargeText·사용 지침·
+초안/선택 유지 검토를 함께 제공할 계획이다. 등록 상태는 `proposed-not-registered`다.
+
+증거:
+
+- [검색에서 Escape 후 입력 유지](assets/2026-10-07-motion-toolbar-search-escape.png),
+  SHA-256 `ca248c4063e9feca4ed2fba923063ac20104e6b4b97bb6bb57ef6970d100aa6e`.
+- [390px 다크의 확장 내용](assets/2026-10-07-motion-toolbar-expandable-narrow.png),
+  SHA-256 `4822aaa4f996fa42ee206863b769982b0adb84d671c5a19eb6a174c1a29045b8`.
+  최초 IAB/기본 CDP 캡처의 viewport 스케일이 DOM 측정과 달라 증거로 제외하고, CSS viewport
+  x0/y99.5/390×844 clip을 명시한 최종 캡처로 덮어써 직접 읽었다.
+
 ## 6. 미확인 범위와 후속 조건
 
 - 11개 사이트 전체 검토 미완료. [사이트 목록](../plans/reference-site-inventory.json)의 URL 수는 검토 완료 수가 아니다. canonical 중복·추가 링크 발견·차단 페이지는 별도 추적한다.

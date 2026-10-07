@@ -3269,7 +3269,7 @@
       "priorRationale": "입력 문맥을 유지하는 구성 후보",
       "sourceAudit": "2026-10-07: full Code example read; no Manual implementation tab; all other example code and environment/interaction variants tracked separately.",
       "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
-      "interactionReview": "pending",
+      "interactionReview": "2026-10-07: partial live keyboard flow. Enter opens/focuses input; Korean draft survives Escape but Back returns focus to BODY; reopening resets query. 390px dark/reduced environment repeats open/input/Escape, no horizontal document overflow. Motion timing, 200% text, RTL, spoken AT and Native remain pending.",
       "adoptionDecision": "기존 구성 + 표현 비교 — 98→300px 폭 전환. uncontrolled input이 닫힘 때 unmount되므로 재열기 시 검색어 보존이 없다. 제품 소유 query·responsive 폭·Escape/초점 복귀·44px hit target을 유지한다. 실험 구현/승격/게시 완료 아님.",
       "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
       "exampleSourceExtraction": {
@@ -3300,6 +3300,23 @@
             "screenshotDigest": "d9e02ff7dd5051bef3b36a84e6b36d3ecdd8d65c203daea4c5bf96549e0a5507"
           }
         ]
+      },
+      "liveToolbarReview": {
+        "status": "partial",
+        "checkedAt": "2026-10-07T06:21:00Z",
+        "scope": "1280px desktop/light keyboard entry/back/reopen and 390px dark/reduced input state; reduced-motion animation behavior not measured",
+        "evidence": "../qa/2026-10-07-motion-reference-page-review.md",
+        "proof": "../qa/assets/2026-10-07-motion-toolbar-search-escape.png",
+        "digest": "ca248c4063e9feca4ed2fba923063ac20104e6b4b97bb6bb57ef6970d100aa6e"
+      },
+      "experimentProposal": {
+        "status": "proposed-not-registered",
+        "path": "실험/구성/입력과 작성/입력을 유지하는 도구",
+        "existingPath": "배포/구성/입력과 작성/입력을 유지하는 도구",
+        "approach": "Reuse existing TextField/SearchField, Collapsible and SegmentedControl; ContentTransition.animateHeight for measured content height where needed. Preserve the deployed item; new expression review uses experiments after research. Width animation is a contract gap to assess, not an existing guarantee.",
+        "comparison": "Catalog/API map, both renderer Collapsible/SearchField source and both existing ContextToolbarPreview implementations inspected; retained draft and selection already exist. No new state engine or wrapper API proposed.",
+        "variants": "Search entry/return with retained query; selection-driven measured content expansion; Default/Dark/LargeText plus environment globals and recovery checks",
+        "evidence": "../qa/2026-10-07-motion-reference-page-review.md"
       }
     },
     {
@@ -3309,7 +3326,7 @@
       "priorRationale": "입력 문맥을 유지하는 구성 후보",
       "sourceAudit": "2026-10-07: full Code example read; no Manual implementation tab; all other example code and environment/interaction variants tracked separately.",
       "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
-      "interactionReview": "pending",
+      "interactionReview": "2026-10-07: partial live keyboard flow. All four controls reveal their content, same Messages or Escape does not collapse, View more changes no visible state, outside heading click closes and focus becomes BODY. No aria-expanded/controls or toolbar role. 390px dark/reduced Wallet content fits without document overflow; transition timing/AT/RTL/200%/Native remain pending.",
       "adoptionDecision": "기존 구성 + 표현 비교 — 선택한 도구의 측정 높이 전환. 초기 maxWidth를 한 번만 고정하고 selected/expanded ARIA를 주지 않는다. 입력/선택 유지와 실제 변화하는 폭·큰 글자·선택 의미를 기존 구성에서 제공한다. 실험 구현/승격/게시 완료 아님.",
       "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
       "exampleSourceExtraction": {
@@ -3340,6 +3357,23 @@
             "screenshotDigest": "3201270c97f54e6d857fadade8464ca8a3c908051ba6c0420cf3c5f3bffbf82a"
           }
         ]
+      },
+      "liveToolbarReview": {
+        "status": "partial",
+        "checkedAt": "2026-10-07T06:21:00Z",
+        "scope": "1280px desktop/light four choices/Escape/reselection/outside close; 390px dark/reduced selected Wallet appearance. Demo balance is sample text, no transaction action performed.",
+        "evidence": "../qa/2026-10-07-motion-reference-page-review.md",
+        "proof": "../qa/assets/2026-10-07-motion-toolbar-expandable-narrow.png",
+        "digest": "4822aaa4f996fa42ee206863b769982b0adb84d671c5a19eb6a174c1a29045b8"
+      },
+      "experimentProposal": {
+        "status": "proposed-not-registered",
+        "path": "실험/구성/입력과 작성/입력을 유지하는 도구",
+        "existingPath": "배포/구성/입력과 작성/입력을 유지하는 도구",
+        "approach": "Reuse existing TextField/SearchField, Collapsible and SegmentedControl; ContentTransition.animateHeight for measured content height where needed. Preserve the deployed item; new expression review uses experiments after research. Width animation is a contract gap to assess, not an existing guarantee.",
+        "comparison": "Catalog/API map, both renderer Collapsible/SearchField source and both existing ContextToolbarPreview implementations inspected; retained draft and selection already exist. No new state engine or wrapper API proposed.",
+        "variants": "Search entry/return with retained query; selection-driven measured content expansion; Default/Dark/LargeText plus environment globals and recovery checks",
+        "evidence": "../qa/2026-10-07-motion-reference-page-review.md"
       }
     },
     {
