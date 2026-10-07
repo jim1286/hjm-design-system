@@ -1,4 +1,4 @@
-# 병렬 레퍼런스 검토 B — 진행 중
+# 병렬 레퍼런스 검토 B — 요청 범위 마무리
 
 검토일: 2026-10-07 · 담당: 21st.dev, Aceternity, Magic UI, Motion Primitives.
 범위: 이번 추가 검토만. 수집 HTTP 200을 본문 독해·화면·동작 검토로 계산하지 않는다.
@@ -796,3 +796,55 @@ https://ui.aceternity.com/live-preview/apple-cards-carousel-demo 을1280×720 da
 ## 명령 기록 표시 parent 등록 연결
 
 parent가 `실험/구성/정보 표시/명령 기록 표시`의 MagicTerminal·AceternityCodeBlock 두출처 연결을 main `548f4bd1494515d0c48ef882c4baf4cf00bcd1de` commit/push·remoteSHA 확인으로 알렸다. [실제 등록 QA](2026-10-07-command-records.md): 양 Showcase8변형과 사용지침, Web ClipboardButton 원문변경/언마운트/중복 OS복사 및 Menu 늦은mouseenter 키보드선택 결함을 실제재현/수정한 범위다. 이 후보만 인덱스 등록증거로 연결했다. 다른68후보 전체등록·승급·Native실제기기·게시완료로 확대하지 않는다. 버전1.14.0 유지·미게시다. 21st 후보의 API명도 공개index/사용지침과 대조해 FilePicker를 사용하고 Tree는Web전용으로 기록했다.
+
+## 사용자 범위 제외 — 최대 글자
+
+2026-10-07 갱신 AGENTS에 따라 최대 OS 접근성 글자와 최대값을 모사한 확대 조건은 설계·구현·테스트·검증·후속·완료/릴리스 차단에서 완전 제외한다. 이전 checkpoint의 큰글자/확대 관련 수행 증거는 과거 기록이고, 최대값 검증을 반복하거나 등록 조건으로 삼지 않는다. 인덱스의 향후 요구상태에서 의미가 불명확했던 LargeText도 제거했으며 실제 API/기존 과거 QA는 변경하지 않았다.
+
+연결원본 https://uselayouts.com/docs/components/inline-edit 의 실제 default 입력 화면은 보았으나 Code 선택은 Login to copy 창으로 막혔다. 로그인 상태·구현을 읽었다고 세지 않는다. Aside Vault 지원 확인은 `aside skills list`에서 Aside 미실행으로 실패했다. 자격증명 입력·가입·권한 허용 없이 다른 독립 공개 원문 검토를 계속한다.
+
+## 21st 원문 독해와 누락 확인 후속 checkpoint
+
+새 누락 확인은 B소유 별도 temp `parallel-b-21st-missing-readonly`에서2 URL을 직렬로 읽었다. https://21st.dev/community/components/s/shadow 는HTTP200/본문3141자 전체를 읽었고 title64+ vs본문6·반복목록은 카탈로그 불일치로 남겼다. https://21st.dev/@bee4/components/spray-paint-canvas 는20초 요청TimeoutError이며 접근차단/404/로그인필수로 단정하지 않는다. 공백URL9개는 기존 `21st.dev-repaired-source` 원문byte/hash와 보존 metadata가 일치했다. 새요청 없이 대체원본 링크를 붙였으며 기본원본missing1062snapshot을 정상수집으로 바꾸지 않았다. 기존 원본/crawler에는 변경없다.
+
+추가10URL의 캡처본문을 읽었다. 세theme페이지 Modern Minimal remix/Azure Pro remix/Aurora Circuit는 Loading+제목/설명뿐이므로 실제theme본문/토큰완료가 아니라shell독해3으로 분리한다. Chromatic Lens(https://21st.dev/@16inam06/components/chromatic-lens)29409자TSX/GLSL 전체는 초기batch중간출력이 잘려3중첩구간을 다시읽어 완료했다. 지금새B독해는 공개본문28(처음20+후속7+shadow1), LoadingShell3, 캡처visible구현1이며 실제21st시각/flow0이다. uselayouts InlineEdit default실제화면1은 독립연결원본이라21st완료수에 넣지 않았다.
+
+Lens는ROdisconnect/RAFcancel은있지만 초기화effect의GPU자원dispose·이미지이전src/unmountcallbackguard·접근가능canvaslabel은 보이는source에 없다. uncappedDPR/default무한wobble/mouse-only/localvisibility/reduced부재는SOURCE독해이며 실제GPU/오류재현이 아니다. 기존 이미지표현비교에Image/Asset/EffectSurface계약과 연결하고새WebGL엔진·Native동등성·mpl라이선스승인·고성능보장을 주장하지 않는다. Layouts라이브러리본문은registry0 vs22/24/누락2 컴포넌트의metadata불일치와 GitHub독립원본을 발견했으나 Github구현은미독해다. 전체사이트/숨은모든소스/실제상태완료false를 유지한다.
+
+## 21st URL順 공개 독해 후속 — 43본문 + 8shell
+
+다음20URL 전체 visibletext/Usage/catalogue/readme를 실제로 읽었다. 그중5theme는Loading뿐이라shell로분리해 현재 새B공개본문43·LoadingShell8·캡처visible구현1이다. @21st Agent Elements22unique vs62display, 8starlabs 공개2 vsregistry14 및나머지12소개를 모두읽었다. Paddle Billing Starter의Supabase/Paddle auth/webhook은제품backend범위라디자인시스템엔진으로등록하지않고결제다운로드/명령실행도하지않았다. ASCII Volna/test는루프영상소개이지GPU연산없는접근성·배터리보장의증거가아니다.
+
+연결된 공식공개registry https://ui.8starlabs.com/r/partition-bar.json (SHA256 `9a68d58244183bda0b596e66500586967d9170c22ad100dc0c0509073174adb9`)의4600자TSX와 https://ui.8starlabs.com/r/open-in-chat.json (SHA256 `bb3c494a73c7741a7f081d4db5f598a2a6d427233bc23503f78b1a8e34f43654`)의7969자TSX+3202자SVG파일전체를읽었다. 연결구현2URL/3files로따로센다. Partition은전체부분의비율이지작업진행률이므로HJMProgress로복제하지않는다. StatisticGroup/DescriptionList의이름·값을기반으로지표요약후보에통합하되 비례분할geometry는현행APIgap으로명시한다. 100%flexBasis+4pxgap/flexShrink0의overflow·음수/NaN·라벨비율불일치는SOURCE추정이며실제재현이아니다.
+
+OpenInChat는URL.searchParams encoding·namedlink/iconaria-hidden·noreferrer가있고engine은기존Menu/Button/Link/Tooltip에합칠수있다. 전달할prompt와대상서비스는제품이소유하며원본브랜드SVG를HJM자산으로복사하지않는다.24pxiconlink는기존터치기준대체근거가아니다. 원본추가button/menu/tooltip3파일과서비스URL동작은미독해/미검증이고실제링크를열어prompt를보내지않았다.
+
+중단후CUA재연결시기존browser2가없고inventorybrowsers=[]였다. 사용자가보던탭/DeviceHub는조작하지않았고새실제UI검토는미완으로남겼다. sourceHTTP독해는독립적으로계속가능하다. 최대OS글자/최대모사확대는후속조건에서제외했다. 기존68경로재사용이며전체조사/실험등록완료false다.
+
+## useLayouts 공개 GitHub 연결 구현 — 추가2
+
+사이트Code는로그인창이었으나 Layouts본문에서공개GitHub주소를발견해공식Contents/Tree API를읽었다. treeSHA `07cc4f4fb8e064643168e6fc8792127af92637f5` 고정으로 registry/default/example/inline-edit.tsx(2990byte,SHA256 `86f419edd38e714f316656e8a5139b2bb261d00534bad1e8aff3bd6d1f22150f`)와delete-button.tsx(7684byte,SHA256 `693ce3f55f442f5f9827c224d5fbbd63ab639863cf566428f2d1d479a45029c9`)전체를실제읽었다. 공개연결구현은총4URL/5files이며21st시각/flow완료는늘리지않는다. 현재repo버전을읽은것이고21stlive/복사패널과동일hash를확인한것이아니다.
+
+InlineEdit는readonlyInput/내부value와클릭가능motion.span2개뿐이고keyboardbutton역할/이름/tabindex/취소원문/저장API·성공실패계약이없다. 기존TextField+Button으로편집/저장/취소를명시하고제품async성공까지draft를보존하는기존입력전환후보로합친다. DeleteButton은진짜button이지만type미지정, 전환중pointerEventsnone, 마감0에서삭제callback/완료상태가없고animationguardtimeout정리가없다. UTF16분리·중복layoutId·reduced부재는source판단이다. 캡처description의swipe와현재repo클릭카운트다운도달라같은live동작으로보고하지않는다. 기존Button/Dialog/Notice의실제확인·취소·복구에표현만합치며계정삭제엔진이나실제서버변경을수행하지않았다. 브라우저현재연결없음이므로실제키보드/입력재현은남겼고최대글자제외는유지한다.
+
+## 21st 다음20URL 독해 — 53본문/10shell/8내용없음
+
+URL index52–71의캡처 visible본문/Usage/metadata 전체를실제읽었다. AskAI는4표현 defaultOpen/Default/compact/blobOnly·clipboardfallback 소개, ModelPicker는controlledmodelId+onValueChange, SaveButton은100confetti/spread70 demo설정이다. 실제원격저장성공·클립보드·외부provider전달·선택가능모델정보를검증하지않았다. 마무리행동/목록선택비교/누름표현+완료순간축하 기존후보로합치고상태·제품prompt/provider소유를유지한다.
+
+새2theme는LoadingShell, Ali-Hussein-dev의7componentURL은Component Not Found,1library는Library not found였다. 이는캡처본문의표시이며HTTP404를확인한것이아니다. slug의pattern이름만으로새테마/컴포넌트를제안하거나읽기완료내용으로날조하지않는다. 지금새B본문53/LoadingShell10/내용없음메시지8, 캡처visible구현1·연결공식구현4URL5files이다. 모든실제UI추가0/전체완료false이며최대OS글자제외를유지한다. A의전용브라우저를동시에조작하지않고소스독해를계속한다.
+
+## 사용자 범위 변경에 따른 조사 마무리
+
+최신 요청 `이제 조사 마무리해`·`필요한것만 조사해`에 따라 추가 일괄 독해/URL수집은 중단했다. 현재 확인한 자료와 미확인 원장을 보존하고 실제 필요한 구현 판단으로 범위를 좁혔다. 전체 전수 완료는false이며 숫자를 늘리기 위한 조사는 하지 않는다. main인덱스 finalCandidateDisposition에기존고유68경로각각 disposition·공개API·이유·필수확인·출처를구조화했다. 새source/mapping을68경로에통합했으며제안으로실제등록완료를올리지않았다.
+
+분류수: deferred 9, improve-existing 9, new-experiment 3, reuse-existing 47. reject경로는0이다. 기능후보자체를폐기하지않았다는뜻이며 부적합원본엔진/unsafefallback/가짜저장·지도·협업주장은각URL에서미채택근거로남아있다. 고유신규gap은유한가로다중카드·전체부분비율geometry·측정항목연결선이다. 확대/자유드래그/실시간camera/map의gap은보류이유로보존했다.
+
+| 우선 | 경로 | 현재/필요 행동 | 최소 근거와 확인 |
+| --- | --- | --- | --- |
+| 1 | 실험/구성/비교와 검증/내용 전환 비교 | 기등록 실험 재사용; 새 엔진/중복 스토리 불필요 | docs/qa/2026-10-07-content-transition-comparison.md |
+| 2 | 실험/구성/선택과 필터/날짜와 시각 선택 | 기등록 실험 재사용; 새 엔진/중복 스토리 불필요 | docs/qa/2026-10-07-date-time-selection.md |
+| 3 | 실험/구성/정보 표시/명령 기록 표시 | 기등록 실험 재사용; 새 엔진/중복 스토리 불필요 | docs/qa/2026-10-07-command-records.md |
+| 4 | 실험/구성/정보 표시/고객 후기 탐색 | 유한 다중 가시 가로 목록의 새 공통 계약/구성을 검토하고 기존 Dialog 상세로 연결 | Apple9913Manual + realEnter/Tab/Escape backgroundfocus proof; bothListnohorizontal + Carouselsingleactive |
+| 5 | 실험/구성/정보 표시/기능 카드 묶음 | 기존 Card/Grid action 슬롯의 CTA를 기본/초점/터치에서 보이게 흡수 | MagicBento realTab focusedLink parentopacity0 proof; existingHJM Card/Grid/Button/Link |
+
+기등록3단위는 [내용전환](2026-10-07-content-transition-comparison.md), [날짜와시각](2026-10-07-date-time-selection.md), [명령기록](2026-10-07-command-records.md)이며등록근거는parent확인범위다. Native실제기기·승급·게시완료와구분한다. 내용전환은rootMotion단위여서B기존68경로에69번째로추가하지않았다. 나머지65/66 숫자로등록을역산하지않으며B68전체등록완료는false다. 최대OS글자/최대모사확대는모든필수확인·완료조건에서제외한다. 우선4는Card상세원본실제초점결함을보존한새기능판단이고우선5는MagicBento실제보이지않는CTA확인을기존공개API표현으로흡수하는판단이다.

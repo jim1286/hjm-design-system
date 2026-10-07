@@ -6,7 +6,7 @@
     "generalPages": 52
   },
   "completedCapturedGeneralBodies": 52,
-  "completedStyleBodies": 290,
+  "completedStyleBodies": 317,
   "partiallyReadLiveStyleDetails": [
     "https://styles.refero.design/style/367c0c6e-73a7-441c-a8ff-91d139ac60dc",
     "https://styles.refero.design/style/4e3b4717-84c8-4599-baaf-a343c3d619b6"
@@ -9844,12 +9844,1067 @@
         "S07",
         "G01"
       ]
+    },
+    {
+      "url": "https://styles.refero.design/style/376baf20-9ace-405d-bf4a-086016f2b1e3",
+      "title": "User Interviews design system | Refero Styles",
+      "sourceCaptureAt": "2026-10-07T01:57:42Z",
+      "sourceBodySha256": "542da22c38d2d97e84a1de209029875d837eeed15253ea487427a04c56996a11",
+      "sourceTextCharacters": 33768,
+      "readingRecordedAt": "2026-10-07T08:45:33.659505+00:00",
+      "sourceBodyReading": "complete-in-existing-captured-text",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "finding": "User Interviews — F2F8F7 mint paper, 1C5D5F teal plus 16325A navy product direction; P22 Mackinac/Sofia/IBM Mono; 48 button, 88 nav, 100 tag, 12 card. Filled teal and navy actions have distinct route roles. No-white-canvas rule versus white feature wrappers is context-dependent. Hand-drawn faces/plants and macOS mockups are assets, not CSS paper grain. Sofia 12×.043=.516→.52 and 14×.043=.602 are valid label tracking, while body tracking0 is separate. Mono13×.059=.767 versus card13×.038=.494 conflict;64 preview1.16 versus scale1.2 and50 reverse; P22 italic versus upright metrics and aliases need actual font manifests/licensing. Filter remove X needs a named independent action, not decorative glyph; checklist checkmarks do not establish Checkbox selection. 6 million/1 hour/98% are unverified product claims. Reuse Button/Link/Chip/TagsInput/Steps/List/StatisticGroup/Asset/Card/Heading/Text. Actual signup/recruitment/Research Hub filter/AI assistant/dropdown/checklist/font/mobile/RTL/keyboard flows pending.",
+      "experimentCandidateIds": [
+        "T01",
+        "T02",
+        "T03",
+        "T04",
+        "T05",
+        "T06",
+        "C01",
+        "C02",
+        "C03",
+        "C05",
+        "C06",
+        "C07",
+        "C08",
+        "C09",
+        "C10",
+        "P03",
+        "P05",
+        "P06",
+        "P09",
+        "P13",
+        "S01",
+        "S05",
+        "S06",
+        "S07",
+        "G01"
+      ]
+    },
+    {
+      "url": "https://styles.refero.design/style/3792d0ca-6c74-4667-a64d-76efe9f87076",
+      "title": "Xbox.com design system | Refero Styles",
+      "sourceCaptureAt": "2026-10-07T01:57:45Z",
+      "sourceBodySha256": "32cf89179c9297694219c9d88a78b29ec2590f1fac204ce2b97623a505e138f6",
+      "sourceTextCharacters": 28285,
+      "readingRecordedAt": "2026-10-07T08:45:33.659505+00:00",
+      "sourceBodyReading": "complete-in-existing-captured-text",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "finding": "Xbox — White/107C10 green band/9BF00B lime CTA/FFD800 availability; Segoe46 and ProBlack15; mostly zero radius. Lime-not-CTA palette versus canonical CTA and agent-none conflict. Two-green ban versus green brand band plus lime action needs role scope. Yellow-not-status versus availability badge. 46 display cap is branding, not universal text size;11×.075=.825 and13×.075=.975 coherent;46 tracking-.46 is distinct from default -.01. ProBlack600/900 coverage/licensing unresolved. Graphite-higher-contrast-than-black claim is false for light backgrounds. Header hover black versus no-hover-color rule; hero white text and40% dots on photography need actual composite validation. Reuse Button/Link/Asset/Carousel/Menu/Input/Heading/Text; preserve current slide names and finite boundaries. Actual auth/search/cart/subscription/nav/region/font/responsive/RTL/carousel states pending; no product rights or pricing proof.",
+      "experimentCandidateIds": [
+        "T01",
+        "T02",
+        "T03",
+        "T04",
+        "T05",
+        "T06",
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C08",
+        "C09",
+        "C10",
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P09",
+        "P13",
+        "S01",
+        "S02",
+        "S04",
+        "S06",
+        "S07",
+        "G01"
+      ]
+    },
+    {
+      "url": "https://styles.refero.design/style/37dd9612-4df0-4cdd-b942-bd97dd0efbd2",
+      "title": "Paragraph design system | Refero Styles",
+      "sourceCaptureAt": "2026-10-07T01:57:48Z",
+      "sourceBodySha256": "0bf03178521108eb67d6fd21b61b2046fdd883bf29f1d7839e33e154d8243e5d",
+      "sourceTextCharacters": 25286,
+      "readingRecordedAt": "2026-10-07T08:45:33.659505+00:00",
+      "sourceBodyReading": "complete-in-existing-captured-text",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "finding": "Paragraph — title Paragraph, origin mirror.xyz and Mirror-parent prose are captured provenance, not verified redirect/company history. White/DBD5D2 borders/Ivy Ora64+Google14;24 buttons20 cards28 nav16 images. 4A83F5 not-CTA versus white14 filled action conflict; focusCEDAF3 is separate functional role. No-card-shadow versus article hover10/15+4/6. No-gradient ban versus phone UGC banner content. Ivy18 tracking-.36 versus scale0 lacks paired-family role;24-.528 and64-1.92 coherent; serif u-sans fallback loses genre. Google button600 summary versus500 recipe. Five6px dots require actual named Carousel/current/keyboard target. Arrow4px translation needs RTL direction/reduced-motion/focus parity. Article4-column byline/avatar/date/excerpt requires accessible full-reading route, not only truncation. Reuse Button/Link/Card/Asset/Avatar/Carousel/Heading/Text. Actual article/Explore/Agents/Docs/signin/wallet Collect/comments/arrow/fonts/mobile states pending.",
+      "experimentCandidateIds": [
+        "T01",
+        "T02",
+        "T03",
+        "T04",
+        "T05",
+        "T06",
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C08",
+        "C09",
+        "C10",
+        "P01",
+        "P02",
+        "P03",
+        "P05",
+        "P07",
+        "P08",
+        "P13",
+        "S01",
+        "S04",
+        "S06",
+        "S07",
+        "S08",
+        "G01"
+      ]
+    },
+    {
+      "url": "https://styles.refero.design/style/37e20981-1f35-4314-87c1-fdb61ab2f0c0",
+      "title": "Modern companies are built on design system | Refero Styles",
+      "sourceCaptureAt": "2026-10-07T01:57:51Z",
+      "sourceBodySha256": "9af03b4adee6f00f0b0448b637bf0ffd22315e217653186f9cf257bea199e808",
+      "sourceTextCharacters": 28413,
+      "readingRecordedAt": "2026-10-07T08:45:33.659505+00:00",
+      "sourceBodyReading": "complete-in-existing-captured-text",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "finding": "Capital — capital.xyz, BoneEFECE6/Black/ED5145 Ember, Muoto30072–115/GT Mono12;8 controls16 cards24 labels. Agent9999 white-text CTA differs from canonical8 Bone-text; pressed82403A is a separate state. Canonical orange20 alpha.3 glow differs from black20 drop plus orange1px boundary; 'both 26.4%' claim conflicts. No-light-shadow versus light floating8/24 black26.4%; CSS/TW omit Ember glow/pressed inset. GT12×.08=.96,115×-.02=-2.3,72=-1.44 and28/32 -.012 valid;32 preview1.4 versus1.2 and28 reverse. Smoke8E8C87 cannot serve both light/dark ordinary text unchanged;302F2F on black cannot be sole visible control edge. Bottom48 camera/palette/image/layers/settings toolbar may be presentation tooling rather than original bank chrome. Balance72, Carbon FI and send payment mockups do not prove finance flows. Reuse Button/Input/Card/Asset/StatisticGroup/Heading/Text. Actual CTA/bank/payment/account/founder/toolbar/pressed/fonts/mobile/RTL pending.",
+      "experimentCandidateIds": [
+        "T01",
+        "T02",
+        "T03",
+        "T04",
+        "T05",
+        "T06",
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C08",
+        "C09",
+        "C10",
+        "P03",
+        "P04",
+        "P05",
+        "P07",
+        "P09",
+        "P13",
+        "S01",
+        "S05",
+        "S06",
+        "S07",
+        "G01"
+      ]
+    },
+    {
+      "url": "https://styles.refero.design/style/37f752a0-879e-4451-a4a4-0a82896e3890",
+      "title": "Agronomy Workshop design system | Refero Styles",
+      "sourceCaptureAt": "2026-10-07T01:57:54Z",
+      "sourceBodySha256": "616fb575c1aff49e0e50e938b2506e2b8143afa54d3a3ab3a36f98edd96e220d",
+      "sourceTextCharacters": 26812,
+      "readingRecordedAt": "2026-10-07T08:45:33.659505+00:00",
+      "sourceBodyReading": "complete-in-existing-captured-text",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "finding": "Agronomy Workshop — White/EEEDE8 Bone/0076FF Shop/F4EB59 promo, Gerstner14/SemiSqueezed32–54/MarfaMono10;0 images5 controls. Gerstner serif/typewriter classification is interpretation; OpenType blwf/cv features do not establish actual font metadata/license. 14 tracking-.28,54-1.08,32-.64,10×.1=1 are valid;54 preview.81 versus scale1 and32 inverse are swapped leading. All-nav10 versus12 nav role exception. Blue-CTA canonical versus agent-none; white12/14 blue text contrast needs check. 14–16 round swatches are circle geometry despite no-radius claim; retain named value/selected/stock and independent target. Thumbnail click-swap is reconstruction, not actual flow. Bottom promo X14 with8 padding is30 hit, separate Web/Native target contracts; existing named close, focus recovery, persistence and safe-area composition need original verification. Printed fabric/tape/newsprint photography is an Asset, not global grain. Reuse Asset/Card/Button/Input/Link/Menu/Chip. Actual shop/bag/swatch/thumbnail/stock/price/promo dismiss/font/responsive/RTL pending.",
+      "experimentCandidateIds": [
+        "T01",
+        "T02",
+        "T03",
+        "T04",
+        "T05",
+        "T06",
+        "C01",
+        "C02",
+        "C03",
+        "C05",
+        "C06",
+        "C07",
+        "C08",
+        "C09",
+        "C10",
+        "P01",
+        "P02",
+        "P03",
+        "P07",
+        "P13",
+        "S02",
+        "S03",
+        "S06",
+        "G01"
+      ]
+    },
+    {
+      "url": "https://styles.refero.design/style/3882ed21-8ef8-4bc9-b125-7791c0f136bb",
+      "title": "Wope design system | Refero Styles",
+      "sourceCaptureAt": "2026-10-07T01:57:57Z",
+      "sourceBodySha256": "50334cf7fe83e79b924d665218d9c70d49fa1dc8ea5a59f6a8e94a8b71442cda",
+      "sourceTextCharacters": 27122,
+      "readingRecordedAt": "2026-10-07T08:45:33.659505+00:00",
+      "sourceBodyReading": "complete-in-existing-captured-text",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "finding": "Wope — Night0A0118/Violet713DFF/InterV+Rebond70072/white glass2–4%;999pill16card10overlay0input. All seven CSS/TW leading values export pixel measurements as unitless numbers:14→16,16→21,18→28,24→36,28→48,56→74,72→80. CSS72 line-height80 produces5760px, not80px. Preserve unit provenance; don't guess because56 preview1.14 differs from74px. White04/10 rawFFF surface exports lose alpha versus canonical .04/.1. Horizon stops0/.5/.5/0 at0/50/75/100 differ from Beam0/1/1/0; CSS gradients preserved, TW omitted. Blur4/8 differs from calibrated Material32 and native opaque fallback; no actual GPU/host proof. Violet CTA agent versus canonical white glass. Trailing magic action130px reserved padding requires responsive composition with existing Input trailing action, not global130. InterV semicolon-separated feature lists are not one valid CSS settings value; liga/calt0 must not assume locale shaping. 72 tracking-1.44/56-1.12/28×.08=2.24 label role. Reuse Input/Form/Button/Card/Asset/Heading/Text. Actual signup/login/SEO input pending/error/focus/blur/font/mobile/RTL pending.",
+      "experimentCandidateIds": [
+        "T01",
+        "T02",
+        "T03",
+        "T04",
+        "T05",
+        "T06",
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C08",
+        "C09",
+        "C10",
+        "P03",
+        "P04",
+        "P05",
+        "P09",
+        "P13",
+        "S01",
+        "S05",
+        "S06",
+        "S07",
+        "G01"
+      ]
+    },
+    {
+      "url": "https://styles.refero.design/style/38c8a8c9-4d2e-462a-bff0-80c9d9619ef2",
+      "title": "Rains INT design system | Refero Styles",
+      "sourceCaptureAt": "2026-10-07T01:58:00Z",
+      "sourceBodySha256": "80e4ffca1802fecf89066b12e6b8792fc26cb0206e19e7a4db339af39f637285",
+      "sourceTextCharacters": 24122,
+      "readingRecordedAt": "2026-10-07T08:45:33.659505+00:00",
+      "sourceBodyReading": "complete-in-existing-captured-text",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "finding": "Rains INT — EFEFEF Fog/10100F ink/26292A charcoal/FFFB85 butter; EuropaSH245 plus SB14;9999 buttons0 cards/input.245/232 preview600 versus hero400;232 preview1.02 versus .9 canonical. SH14 overlapping SB12–14 is independent role, not exclusive family proof. Achromatic EFEFEF is not physically warm;1% colorfulness lacks denominator.16 preview.9 versus reading1.2 cannot apply all reading. Butter245 and white20 photography need rendered region contrast; no asset plate checked. AshB3B3B2 on Fog informative inactive text is not disabled exemption; Fog-on-Fog border isn't functional contrast. Square Input0 versus all-interactive-pill rule is scoped exception. Seven nav items32 padding/search/cart mobile reflow unknown. Reuse Asset/Button/Input/Menu/Card/Heading/Text. Actual search/cart/count/product sizes/variants/checkout/hover/focus/fonts/responsive/RTL pending.",
+      "experimentCandidateIds": [
+        "T01",
+        "T02",
+        "T03",
+        "T04",
+        "T05",
+        "T06",
+        "C01",
+        "C02",
+        "C03",
+        "C05",
+        "C06",
+        "C08",
+        "C09",
+        "C10",
+        "P02",
+        "P03",
+        "P07",
+        "P13",
+        "S01",
+        "S02",
+        "S03",
+        "S06",
+        "G01"
+      ]
+    },
+    {
+      "url": "https://styles.refero.design/style/39098e34-b911-4ad3-bcb5-ee80a392cd95",
+      "title": "Clyde design system | Refero Styles",
+      "sourceCaptureAt": "2026-10-07T01:58:03Z",
+      "sourceBodySha256": "92a5aba9f5ba956c2ee1f11e96e5131e2351ab9f0cb8fc4f1fc12d2f95bb30a7",
+      "sourceTextCharacters": 26187,
+      "readingRecordedAt": "2026-10-07T08:45:33.659505+00:00",
+      "sourceBodyReading": "complete-in-existing-captured-text",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "finding": "Clyde — Black/BoneF6F6F4/Recoleta125+Oldschool16;100pill16card38panel4input12link. Solstice FEED7A→FF8400 at48.96→DF91F7 three-stop CSS gradient versus TW flatFF8400 loses structure. Black-not-CTA versus primary on Bone/agent-none. Gradient3D-only ban versus Mint performance chart role; no 3D geometry/lighting kernel. 99% achromatic and20% imagery unmeasured.100-all-interactive versus4 Input/12 Link role exceptions. Recoleta36+ exclusive rule versus Oldschool80/138 source;125 preview1.1 versus scale1; Oldschool16 body missing scale15/21.36 tracking-.36,47-.94,61-1.22,80-2.4,125-3.75 and Oldschool15+.15/16-.16/21-.42 valid. Times(system fallback) literal alias/u-sans serif fallback problem. Performance tabs require actual aria/current/keyboard/panels; running-total/month-over-month/day-over-day require interval/timezone/base and empty-series contract, not chart mockup API. Cover Genius relationship is unverified current history. Reuse Tabs/Card/StatisticGroup/Text/Asset/Button/Input. Actual demo/login/coverage/performance filters/status/fonts/mobile/reduced-motion pending.",
+      "experimentCandidateIds": [
+        "T01",
+        "T02",
+        "T03",
+        "T04",
+        "T05",
+        "T06",
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08",
+        "C09",
+        "C10",
+        "P03",
+        "P04",
+        "P05",
+        "P09",
+        "P13",
+        "S01",
+        "S05",
+        "S06",
+        "S07",
+        "G01"
+      ]
+    },
+    {
+      "url": "https://styles.refero.design/style/390cfba6-8c2f-4273-8c9e-750d470b6e2e",
+      "title": "VITURE design system | Refero Styles",
+      "sourceCaptureAt": "2026-10-07T01:58:06Z",
+      "sourceBodySha256": "8afe1008fc9fc96e7581564e8f37c9fd9295c683211dbe1f358497178482f9d0",
+      "sourceTextCharacters": 31390,
+      "readingRecordedAt": "2026-10-07T08:45:33.659505+00:00",
+      "sourceBodyReading": "complete-in-existing-captured-text",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "finding": "VITURE — White/0C0C0C stage/FF5F34 orange; FontSeasonSans340 mega plus14/16 reading;28 card16 Input9999 button120 hero. Canonical white16 Orange CTA and white12 NEW versus agent0C0C0C text is different foreground role. Orange hoverF31010 and active14 orange/white are meaningful states. Positive tracking12×.012=.144,14=.168,16=.192,32×.026=.832,72×.05=3.6,105=5.25,340=17 valid.340 preview.6 versus scale1,72 preview1 versus1.2,32 preview1 versus1.33.340 responsive clamp is specified, not fixed universal size. Crimson stops-100/0/100 and Cool1.4/80.11/123.55 are valid CSS positions outside0–100: never clamp valid stops. Aurora FF2900→FE7A60 at61→581DFF; CSS gradients exist while TW flat loses all three. White28–60 on gradient needs actual composite; Ash7E7E7F14/SnowF7F7F8 needs ordinary contrast. Product neon/reflection/midnight glass is baked Asset, not CSS shader. Newsletter720 split Dialog X32 glyph/32 hit needs actual name/focus recovery and Web/Native contracts. Eight dots need Carousel names/current/keyboard/reduced-motion; cookie close isn't proof of accept/persistence. CNET2024/specs/10%/XR performance unverified. Reuse Dialog/Sheet/Form/Input/Button/Link/Asset/Card/Carousel/Chip/Menu/Heading/Text/StatisticGroup. Actual purchase/cart/subscribe/cookie/policy/close/carousel/spec/font/mobile/RTL pending.",
+      "experimentCandidateIds": [
+        "T01",
+        "T02",
+        "T03",
+        "T04",
+        "T05",
+        "T06",
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08",
+        "C09",
+        "C10",
+        "P01",
+        "P03",
+        "P04",
+        "P05",
+        "P09",
+        "P13",
+        "S01",
+        "S02",
+        "S06",
+        "S07",
+        "G01"
+      ]
+    },
+    {
+      "url": "https://styles.refero.design/style/39105d96-3cb1-497a-8f9f-507a1bed4d30",
+      "title": "Baggu design system | Refero Styles",
+      "sourceCaptureAt": "2026-10-07T01:58:09Z",
+      "sourceBodySha256": "e8e691ee055d8d8eef29baf6a7d98ba9770dbe2b5e7dc73ca041836d392691f1",
+      "sourceTextCharacters": 22801,
+      "readingRecordedAt": "2026-10-07T08:45:33.659505+00:00",
+      "sourceBodyReading": "complete-in-existing-captured-text",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "finding": "Baggu — F6F4EE Bone/Black/studioPro12–18;24 button4 Input0 image/card/full-bleed triptych and5-up flush catalog. Green298018 palette supporting accent-not-status versus guide exclusive New Arrivals and success/agent focus borders conflicts; new arrival metadata isn't Success. Every-background-cream versus black announcement/white product photograph is role scope. WarmAsh7B7A77 claimed AA against Bone needs calculation. Tracking12-.01px/14-.009px/16-.004px/18-.025px exports em numbers as px; wordmark18×-.025=-.45. Derived12-.12/14-.126/16-.064 requires source role confirmation. studioPro case/ss03/06–09 features/licensing unknown; Times u-sans fallback wrong genre; detectedArial/Metropolis lack role. No-icons rule versus search/accessibility is functional exception.14 button4 vertical padding~27 visual height doesn't define accessible hit area.5-up layout/navigation/wordmark mobile reflow not observed.90% photography unmeasured; warm canvas isn't fiber grain. Reuse Asset/Card/Button/Link/Input/SearchScreen/Heading/Text/Chip. Actual shop/info/search/cart/variants/accessibility menu/promo/fonts/mobile/RTL pending.",
+      "experimentCandidateIds": [
+        "T01",
+        "T02",
+        "T03",
+        "T04",
+        "T05",
+        "T06",
+        "C01",
+        "C02",
+        "C03",
+        "C05",
+        "C06",
+        "C07",
+        "C08",
+        "C09",
+        "C10",
+        "P01",
+        "P02",
+        "P03",
+        "P07",
+        "P13",
+        "S02",
+        "S06",
+        "G01"
+      ]
+    },
+    {
+      "url": "https://styles.refero.design/style/391bd401-06d7-4444-8243-8573e96eab24",
+      "title": "D.S. & DURGA design system | Refero Styles",
+      "sourceCaptureAt": "2026-10-07T01:58:12Z",
+      "sourceBodySha256": "b905d5c84fc386c0e13d20a87c01fa77961c3c7c2e737e20d63f63dbd38288ed",
+      "sourceTextCharacters": 26420,
+      "readingRecordedAt": "2026-10-07T08:45:33.659505+00:00",
+      "sourceBodyReading": "complete-in-existing-captured-text",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "finding": "D.S. & DURGA — F2E9DE Bone/DDC9C0 Rose/Black;SofiaPro800120/.83; zero radii, editorial product collage. Palette black primary fill versus sole ghost/no-filled-button/agent-none conflicts. Tracking .05em becomes .05px in scale:12=.6/14=.7/30=-1.5/60=-3/120=-6.30 uses negative tracking despite rule only60+; retain verified role.120 preview400 versus font800;60 preview600 versus800.18 preview3.22 is independent utility role. '--section-gap:50-60px' isn't a valid single CSS length. Packaging8–10px is photographed label, not UI typography default. Rotated90 side labels preserve logical DOM reading order/RTL;40 chevron needs actual Carousel name/current/keyboard/finite edge state. Torn pink paper imagery is Asset with unknown reuse rights, not CSS kernel. No modal shadow doesn't remove Dialog/Sheet focus and backdrop. Reuse Asset/Card/Button/Link/Heading/Text/Menu/Carousel. Actual currency/cart/search/account/purchase/carousel/font/label-photo contrast/mobile/RTL pending.",
+      "experimentCandidateIds": [
+        "T01",
+        "T02",
+        "T03",
+        "T04",
+        "T05",
+        "T06",
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08",
+        "C09",
+        "C10",
+        "P01",
+        "P02",
+        "P03",
+        "P07",
+        "P12",
+        "P13",
+        "S02",
+        "S03",
+        "S06",
+        "G01"
+      ]
+    },
+    {
+      "url": "https://styles.refero.design/style/3963a727-8dec-4308-80c0-3ae198d15b87",
+      "title": "Apollo design system | Refero Styles",
+      "sourceCaptureAt": "2026-10-07T01:58:15Z",
+      "sourceBodySha256": "419e60c7263de95841c59fd0811859908d1b09ff350535b34f59848e5413b435",
+      "sourceTextCharacters": 25021,
+      "readingRecordedAt": "2026-10-07T08:45:33.659505+00:00",
+      "sourceBodyReading": "complete-in-existing-captured-text",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "finding": "Apollo.io — CCC9C6 Limestone/F7F5F2 Marble/White Paper;SeasonMix55088+Soehne16/Diatype/Mono;8 controls/cards12 images. Palette F8FF2C-not-CTA versus canonical Highlighter CTA; agent EBF2129999 pill versus8 canonical/>12-radius ban. Guide 'PaperF7F5F2' names Marble incorrectly; actual PaperFFF distinct. FlintE5E7EB cool gray versus cool-gray ban; white SSO/Input sole boundary needs contrast/purpose. Pebble736F6C text on Limestone is different from White. Season48 tracking-.48/56-.56/88-.88 valid; serif u-sans fallback wrong genre. Mono+.012/+.014 and Soehne+.009 family tracking missing caption/body exports; don't pair independent summaries by position.550 axis/font license unknown. Warm stone is flat canvas, no actual fiber. Cookie More choices/Reject/Accept are distinct actions; no provider/persistence flow checked. Reuse Button/Form/Input/Card/Accordion/Dialog/Sheet/Asset/Heading/Text/TextAnnotation. Actual signup/Google/Microsoft/email validation/demo/FAQ/cookies/preferences/AI contacts/fonts/mobile/RTL pending.",
+      "experimentCandidateIds": [
+        "T01",
+        "T02",
+        "T03",
+        "T04",
+        "T05",
+        "T06",
+        "C01",
+        "C02",
+        "C03",
+        "C05",
+        "C06",
+        "C07",
+        "C08",
+        "C09",
+        "C10",
+        "C11",
+        "P03",
+        "P04",
+        "P05",
+        "P09",
+        "P13",
+        "S01",
+        "S05",
+        "S06",
+        "S07",
+        "G01"
+      ]
+    },
+    {
+      "url": "https://styles.refero.design/style/398a603a-9ecd-47b2-b25c-26456a0383d0",
+      "title": "Beings design system | Refero Styles",
+      "sourceCaptureAt": "2026-10-07T01:58:18Z",
+      "sourceBodySha256": "09ade2043b17793fd42719a39f232e60551ed3a924404383d71fb91bfbb9ceec",
+      "sourceTextCharacters": 24914,
+      "readingRecordedAt": "2026-10-07T08:45:33.659505+00:00",
+      "sourceBodyReading": "complete-in-existing-captured-text",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "finding": "Beings — White/MilkFFF4EC/Cocoa1B0800/Umber381A06/PeachF6C9A1;Bonto66 and named DieGrotesk B/C cuts all CSS400; zero portrait/control radius plus orbital hairline. Named Bold/SemiBold/Black faces deliberately400: do not automatically convert700/800; actual files/licensing/fallback glyph coverage unknown. Bonto66×-.03=-1.98 versus prose-1.99 is rounding, not systematic em loss. Statement30×1.18=35.4 versus recipe35.25 source precision mismatch. Explicit skip link15/21 White on Cocoa is useful functional pattern, actual focus/target untested. Playback/shortlist12/16.8 zero padding does not establish target size;nav8 padding32.8 versus platform targets separate. FineGrey999 circle decorative only if no meaningful information/aria-hidden/pointer-events-none; circle geometry isn't rounded-card exception. Warm section contexts do not delete semantic status/error messages. Clay78492D/CreamFDF4ED saved talent original persistence pending. Reuse Asset/Button/Link/Heading/Text/Card/Chip. Actual skip link/playback/shortlist/join/talent filter/crop/font/focus/RTL/mobile pending.",
+      "experimentCandidateIds": [
+        "T01",
+        "T02",
+        "T03",
+        "T04",
+        "T05",
+        "T06",
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C08",
+        "C09",
+        "C10",
+        "P02",
+        "P03",
+        "P04",
+        "P07",
+        "P12",
+        "P13",
+        "S02",
+        "S03",
+        "S06",
+        "G01"
+      ]
+    },
+    {
+      "url": "https://styles.refero.design/style/3a331157-f5a5-4640-ada8-8a3ad262ee6a",
+      "title": "Aspelin Reitan design system | Refero Styles",
+      "sourceCaptureAt": "2026-10-07T01:58:21Z",
+      "sourceBodySha256": "92460322a0918d0b5b0522dac100da88fbe8aaef133cc9db3c26be64a73e73ed",
+      "sourceTextCharacters": 23584,
+      "readingRecordedAt": "2026-10-07T08:45:33.659505+00:00",
+      "sourceBodyReading": "complete-in-existing-captured-text",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "finding": "Aspelin Reitan — origin aspelineiendom.no and title are provenance, not actual redirect proof. FFEBD0 Parchment/2F2116 Walnut/ModernEra18–40;8 buttons/links0 images;100 gaps. Parchment 'gray accent' palette versus warm dominant canvas role. Obsidian never-fill versus cream action black-filled hover; every-link border versus plain header Menu/active-only amber conflicts. '--element-gap:12-20px' invalid CSS single length.40 preview1.2 versus1.17 scale,28 preview1.29 versus1.17,24 preview1.17 versus1.2,20 preview1.4 versus1.22,16 preview1.25 versus1.4 caption independent role-leading mismatches. White40 overlay/no tint needs actual photographed region contrast; do not assert no-overlay universally. OutlineParchment/photo contrast unknown; mutedGold987F61/Walnut separate pair. Transparent fixed-or-absolute header strategy unverified;100vh and40 inset require responsive/safe-area context. Architecture candlelit lighting is Asset, not grain. Reuse Asset/Card/Button/Link/Input/Menu/Heading/Text. Actual Menu/portfolio/contact/newsletter/project/hover/focus/fonts/photo text/mobile/RTL pending.",
+      "experimentCandidateIds": [
+        "T01",
+        "T02",
+        "T03",
+        "T04",
+        "T05",
+        "T06",
+        "C01",
+        "C02",
+        "C03",
+        "C05",
+        "C06",
+        "C08",
+        "C09",
+        "C10",
+        "P02",
+        "P03",
+        "P04",
+        "P07",
+        "P13",
+        "S03",
+        "S06",
+        "G01"
+      ]
+    },
+    {
+      "url": "https://styles.refero.design/style/3a398f82-579e-4ec4-a442-9962bf007edf",
+      "title": "zkPass design system | Refero Styles",
+      "sourceCaptureAt": "2026-10-07T01:58:24Z",
+      "sourceBodySha256": "f7f7da8a654ac4f2b0e4a1e2a3c0ad001c77072563e1ec5068226726ac70e2db",
+      "sourceTextCharacters": 31430,
+      "readingRecordedAt": "2026-10-07T08:45:33.659505+00:00",
+      "sourceBodyReading": "complete-in-existing-captured-text",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "finding": "zkPass — Carbon060606/Black/C5FF4A lime;claimed PTSerif30089–130/InterTight/JetBrains13;4 buttons0 cards2 tags9999 status.130/86 previews400 versus mandatory300; actual font300 axis/files/license unverified. LimeBlack17.8 claim calculated separately. Exactly3 lime roles conflicts with status/nav/logo/divider uses; Signed badge isn't cryptographic verification proof. '--section-gap:80-120px/card-padding:32-48px/element-gap:16-20px' invalid CSS length ranges. Caption10×.24em=2.4px versus.24px exported;89×-.035=-3.115≈-3.1,72×-.025=-1.8,20×-.01=-.2 valid;49-.98≈-1/32-.4 unpaired roles. UI all .18–.26 versus CTA.04/.08/tag.06;500 CTA versus600 font summary. Metadata7A7A8A differs from palette7A7A7A; no accidental alias collapse. One-glow CTA only versus outlined Launch and logo tile same0/0/8 alpha.45. Dotted globe1.5 dot/.4–.7 lacks actual geometry/animation/data; existing decorative Asset not map SDK or reach proof. 'No fills' versus white dots contradiction. CodeBlock public subpath reuse preserves copy/overflow/contrast, not proof of protocol. Reuse Asset/Heading/Text/TextAnnotation/Button/Link/Card/Chip/CodeBlock/Tabs/StatisticGroup. Actual extension/SDK copy/verification/wallet/docs/nav/fonts/mobile/RTL/reduced-motion pending.",
+      "experimentCandidateIds": [
+        "T01",
+        "T02",
+        "T03",
+        "T04",
+        "T05",
+        "T06",
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C08",
+        "C09",
+        "C10",
+        "C12",
+        "P03",
+        "P04",
+        "P05",
+        "P07",
+        "P09",
+        "P13",
+        "S01",
+        "S05",
+        "S06",
+        "G01"
+      ]
+    },
+    {
+      "url": "https://styles.refero.design/style/3a4d1008-0bd1-4ebb-9efe-0c146c45a99b",
+      "title": "Kagi design system | Refero Styles",
+      "sourceCaptureAt": "2026-10-07T01:58:27Z",
+      "sourceBodySha256": "68f6fba2960735105b4d8797c5363c370a8e95649ea63ca3d82574a950c2410f",
+      "sourceTextCharacters": 28234,
+      "readingRecordedAt": "2026-10-07T08:45:33.659505+00:00",
+      "sourceBodyReading": "complete-in-existing-captured-text",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "finding": "Kagi — White/Graphite18181A/Lufga60060 and46 headings/system-ui16/Arial14;Violet6C5EDC links/pastelGoldFFB319/LavenderC9C1FF/Mist;24 panel12 image32 Input48 button. Explicit display/reading/FAQ24/500 independent roles useful.60×1.13=67.8 versus recipe67.98 precision mismatch;46×1.13=51.98/24×1.33=31.92 valid;FAQ32 rounded.14×1.6+14 padding=36.4 visual height doesn't establish platform target.48 'full' radius isn't unbounded pill above96 height; extra60/16 radii aren't measured role. Violet links White versus selectedEFECFF need distinct contrast.707077 White placeholder/B7B7BB dark placeholder aren't disabled exemption. Light Input Black boundary versus inverted dark White boundary preserves functional pair; quiet E6E6E8 utility edge isn't sole focus requirement. Exact1/8/30 alpha.09 search shadow and0/0/24 alpha.22 inset screenshot shadow are role-specific. Pastel product families aren't status colors; body454549 pairs need context. FAQ actual aria/arrow/expanded state untested. Lufga license/loading/locale unknown; product screenshots/search/privacy copy isn't actual backend proof. Reuse Input/SearchScreen/Button/Link/Card/Asset/Accordion/Heading/Text. Actual search/clear/submit/empty/error/loading/suggestions/nav/FAQ/product/font/mobile/RTL pending.",
+      "experimentCandidateIds": [
+        "T01",
+        "T02",
+        "T03",
+        "T04",
+        "T05",
+        "T06",
+        "C01",
+        "C02",
+        "C03",
+        "C05",
+        "C06",
+        "C08",
+        "C09",
+        "C10",
+        "C11",
+        "P03",
+        "P04",
+        "P05",
+        "P06",
+        "P09",
+        "P13",
+        "S01",
+        "S04",
+        "S05",
+        "S06",
+        "G01"
+      ]
+    },
+    {
+      "url": "https://styles.refero.design/style/3ad131ed-b603-49a3-9491-7407db6cb423",
+      "title": "Custo design system | Refero Styles",
+      "sourceCaptureAt": "2026-10-07T01:58:30Z",
+      "sourceBodySha256": "e0f2cee6b0570d2f04d5c244984ec3a231f73350629d7c40f25f29a4e76bb66d",
+      "sourceTextCharacters": 23845,
+      "readingRecordedAt": "2026-10-07T08:45:33.659505+00:00",
+      "sourceBodyReading": "complete-in-existing-captured-text",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "finding": "Custo — 9EA29F Gunmetal/White/4B514D Anodized;PPNeueMontreal Medium CSS40057;31.35 primary8 other radii;110 sections. '--radius-buttons:31.35px (pill) for primary action;8px for secondary' prose embedded in CSS invalid computed radius and stray declaration; separate31.35px token is valid. Named Medium400 not automatically500; actual font mapping/licensing unknown. Body19/1.42 missing scale;57 preview1.05 versus1 scale,38 preview1.25 versus1.15,30 preview1 versus1.25,20 three preview leadings versus1.38 table.4px-multiple rule lists18 and section110, neither divisible by4; preserve valid measured sizes rather than force prose. No fill versus hover inversion; all interactive black/white border versus InputD8D8D8. White38/57 on gunmetal large text needs3;Brushed8E9194 ordinary15 White needs4.5. Full-bleed/no padding card versus agent20 inner padding. CES2024 blue/yellow artwork is exception to achromatic/4 radius versus8; not verified current award or rights. Fixed56 badge requires safe-area/content availability, not Toast. Metal mailbox reflectivity is photograph, not CSS metal shader. Reuse Asset/Card/Button/Link/Input/Heading/Text. Actual order/address/register/navscroll/anchor/carousel/mailboxLED/award/font/mobile/RTL pending.",
+      "experimentCandidateIds": [
+        "T01",
+        "T02",
+        "T03",
+        "T04",
+        "T05",
+        "T06",
+        "C01",
+        "C02",
+        "C03",
+        "C05",
+        "C06",
+        "C07",
+        "C08",
+        "C09",
+        "C10",
+        "P01",
+        "P03",
+        "P04",
+        "P05",
+        "P09",
+        "P13",
+        "S01",
+        "S02",
+        "S06",
+        "G01"
+      ]
+    },
+    {
+      "url": "https://styles.refero.design/style/3af36935-8383-49e7-857e-9fb5caa06966",
+      "title": "Jakub Reis design system | Refero Styles",
+      "sourceCaptureAt": "2026-10-07T01:58:33Z",
+      "sourceBodySha256": "cd0c942e28a777974fa9d5e6b10b9848be9bbe85cdc0376c0d5352b746757fc3",
+      "sourceTextCharacters": 19984,
+      "readingRecordedAt": "2026-10-07T08:45:33.659505+00:00",
+      "sourceBodyReading": "complete-in-existing-captured-text",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "finding": "Jakub Reis — F8F8F8/Black/Degular300/40050;zero radii/asymmetric2-column portfolio. Positive16×.033=.528,18=.594,24×.056=1.344,30=1.68,50=2.8 valid: never convert all display tracking to negative.24 lies outside described30–50 role scope.18 preview1.11 versus1.25 scale;24 preview1.33/1.25 versus1.11 scale;50 two preview leadings are unpaired. Black-only versus Ash080808 secondary accessibility claim: both high contrast, lighter isn't intrinsically more accessible. StoneD8 UI versus no extra neutrals/no fill scope conflict; achromaticF8 isn't physical paper warmth. Tilde every list/no comma versus canonical comma categories; content/locale list semantics before ornament.4px base versus5/10/30 and footer120 absent scale. Link opacity.6 needs actual composited contrast and visible focus, underline/route semantics; no-button visual ban doesn't remove functional controls. Variable-height grid needs logical DOM/focus order/RTL/responsive layout. All photography color/texture is Asset. Reuse Asset/Link/Heading/Text/Card. Actual email/social/project/hover/focus/font/responsive/RTL pending.",
+      "experimentCandidateIds": [
+        "T01",
+        "T02",
+        "T03",
+        "T04",
+        "T05",
+        "T06",
+        "C01",
+        "C02",
+        "C03",
+        "C05",
+        "C06",
+        "C08",
+        "C10",
+        "P02",
+        "P03",
+        "P07",
+        "P09",
+        "S03",
+        "S06",
+        "G01"
+      ]
+    },
+    {
+      "url": "https://styles.refero.design/style/3b080dc3-1992-43fe-91d6-2a721f934435",
+      "title": "AATHER design system | Refero Styles",
+      "sourceCaptureAt": "2026-10-07T01:58:36Z",
+      "sourceBodySha256": "c645a0997a0d33d1bcc2c1046118e1d01d2bdd33544d80b4d81fabaab5b524b8",
+      "sourceTextCharacters": 24065,
+      "readingRecordedAt": "2026-10-07T08:45:33.659505+00:00",
+      "sourceBodyReading": "complete-in-existing-captured-text",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "finding": "AATHER — White/Black/MistF7F7F7/Gestura10020035/UntitledSans14;2 rounded0 images and underlined primary. DEC39D UI wash palette versus photography-only prose/Surface; export surface doesn't establish role. Mist section separation versus only Ink hairline/no tint. '--section-gap:30-35px/card-padding:20-25px/element-gap:10-15px' invalid CSS ranges. Gestura ExtraLight/Text/Light aliases and actual100/200 coverage unknown; u-sans fallback contradicts serif substitute.14×.036=.504 versus body.36px;9–11×.042=.378–.462 and16×.056=.896 independent role tracking.9×.78=7.02 line box source microcopy, not annotation default. White35 photo 'light enough' is not a contrast guarantee; actual region/crop/scrim untested. Cart16 no visible label does not prove no AX name; retain named IconButton/independent target. Dropdown6 triangle is indicator, not target. Underlined route is Link and action is Button; visual similarity doesn't merge semantics. Cookie11/OK-only doesn't establish consent persistence/revoke. Graphite808080 metadata light ordinary contrast checked separately. Flat-paper explicit no noise: fabric/hand/candle is Asset. Reuse Asset/Heading/Text/Link/Button/IconButton/Menu/Surface/Dialog/Sheet. Actual shop/menu/cart/checkout/cookie/policy/focus/photo/font/mobile/RTL pending.",
+      "experimentCandidateIds": [
+        "T01",
+        "T02",
+        "T03",
+        "T04",
+        "T05",
+        "T06",
+        "C01",
+        "C02",
+        "C03",
+        "C05",
+        "C06",
+        "C07",
+        "C08",
+        "C09",
+        "C10",
+        "P03",
+        "P04",
+        "P07",
+        "P09",
+        "P13",
+        "S01",
+        "S02",
+        "S06",
+        "G01"
+      ]
+    },
+    {
+      "url": "https://styles.refero.design/style/3b3fa99e-cee4-41f3-ac26-777b4b6a8b12",
+      "title": "Krisp design system | Refero Styles",
+      "sourceCaptureAt": "2026-10-07T01:58:39Z",
+      "sourceBodySha256": "118a4d2088ef841bc1bee55b1fb9e439d119508e544ab113cbcc1625dba25095",
+      "sourceTextCharacters": 29397,
+      "readingRecordedAt": "2026-10-07T08:45:33.659505+00:00",
+      "sourceBodyReading": "complete-in-existing-captured-text",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "finding": "Krisp — F2ECE2 WarmPaper/131032 Midnight/614EFA Violet;PlusJakarta58;8 buttons16 card9999 Tabs12 badges. Slate1A1A22 palette not-CTA versus canonical dark 'Outline' actually filled secondary;agent primary-none versus Iris fill. '--radius-largecards:20-24px' invalid CSS length range.614EFA→98C8FF90deg gradient recipe lacks gradient variables in CSS/TW; Cyan-on-WarmPaper endpoint needs large-text3, not pretty glow assumption.1–2 accent uses per viewport versus four feature icons+header CTA unmeasured. Coral6 dot/conic coral-magenta versus no new saturated colors/only-single-word gradient; timing/stops/geometry absent cannot derive kernel. Fog918F9F ordinary16 White/Paper and inactive Tabs need contrast; placeholder Ash isn't disabled.58 preview1.17 versus1.14 scale,42 preview1.5 versus1.2,36 preview1.5 versus1.33,20 preview1.6 versus1.5,18 preview1.78 versus1.62,16 independent1.2/1.75 versus1.63.600 previews versus700 hero specific role. No-card-shadow versus hover lift/Webby hover; Silver alpha shadow lacks offsets/kernel. Tabs pill slide reuses Tabs/ContentTransition with keyboard/current/reduced-motion static state. Eight gray logos no visible labels do not establish AX absence/customer or rights proof.20th Webby Vote historical sticker isn't current award claim. Warm paper flat color has no physical grain. Reuse Tabs/ContentTransition/Button/Link/Asset/Card/Menu/Heading/Text/Chip. Actual download/signin/demo/dropdown/BeforeDuringAfter Tabs/focus/reduced-motion/award/backend-audio/font/mobile/RTL pending.",
+      "experimentCandidateIds": [
+        "T01",
+        "T02",
+        "T03",
+        "T04",
+        "T05",
+        "T06",
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08",
+        "C09",
+        "C10",
+        "P03",
+        "P04",
+        "P05",
+        "P06",
+        "P09",
+        "P13",
+        "S01",
+        "S05",
+        "S06",
+        "S07",
+        "G01"
+      ]
+    },
+    {
+      "url": "https://styles.refero.design/style/3b46c64e-b733-4d70-8cd0-531ca1f92937",
+      "title": "Threads design system | Refero Styles",
+      "sourceCaptureAt": "2026-10-07T01:58:42Z",
+      "sourceBodySha256": "743edad2515b37b947a667c4a9a2fd983cd2492e5a5b717ca50f773880b6d0b9",
+      "sourceTextCharacters": 22563,
+      "readingRecordedAt": "2026-10-07T08:57:57.977054+00:00",
+      "sourceBodyReading": "complete-in-existing-captured-text",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "finding": "Threads FAFAFA page/feed withEFEFEF describedshadowartifact; system-ui15 body/600 username;640 feed18 radius8 link0 post1000 avatars/buttons. Agent385898 outlinedprimary versus canonicalBlackfilledLogin; allinteractiveborderlessvsLogInfill/linkpreviewD5border/overflowhoverEFEFEF exceptions. MetaBlue filledverified badge only versus nofill rule; don'tinferactualidentityauthorization fromcopiedcheck. 'Frosted glass' metaphor hasnoactualblur/alpha: two CSS shadows0/0/12black.04 plus0/0/0/48FAFAFA; summaryellipsis butfullCSSvalidboth. Mistshadowartifact exportedpaintedsurface needsrole provenance, notallpagesEF fill.13metadataand17rolesmissinggenericScale12/15/20;12preview1.4vscaption1.33. Ash969696 resting meaningfulicon/metadata notDisabledexempt; count424242differentpair.48sidebaractualtargetrecipe separateengagement~40 and20overflowglyphtargetunknown; namedButton/Menu+current/pressed/repost/share functionalityunverified. 3column80rail+640feed+emptyright preservefeedreadingorder/reflow/53fixedheader safearea; no masonry/Carousel UI source. UGC photos/screens/videos notrights-safe bundledassets; embedded8clipnaturalaspect/iconVideoAPIunverified. ReuseFeedScreen/Post/ConversationThread/ChatComposer/Avatar/Asset/Card/Menu/Button/Link/Text; publicexactcomponentAPIrootverify notassumefullsocialbackend. Actuallogin/compose/like/comment/repost/share/menu/mention/verification/feedloadingemptyerror/infinitepaging/media/fonts/responsive/RTL pending.",
+      "experimentCandidateIds": [
+        "T01",
+        "T02",
+        "T03",
+        "T04",
+        "T05",
+        "T06",
+        "C01",
+        "C02",
+        "C03",
+        "C05",
+        "C06",
+        "C08",
+        "C09",
+        "C10",
+        "P03",
+        "P08",
+        "P09",
+        "P10",
+        "P13",
+        "S06",
+        "S07",
+        "S08",
+        "G01"
+      ]
+    },
+    {
+      "url": "https://styles.refero.design/style/3b5ff57f-a371-4c7f-82ae-5fc5485da073",
+      "title": "Suno design system | Refero Styles",
+      "sourceCaptureAt": "2026-10-07T01:58:45Z",
+      "sourceBodySha256": "58feb0c27fd4aab05bd112360328d55e46ddae7f017a54992e39cd8b99c6ef28",
+      "sourceTextCharacters": 27615,
+      "readingRecordedAt": "2026-10-07T08:57:57.977054+00:00",
+      "sourceBodyReading": "complete-in-existing-captured-text",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "finding": "Suno101012/17171A/F7F4EFcream/FD429Ccoral;NeueMontreal300/400/500140+EditorialNew30024summaryvshero72–140;6controls12cards20art24hero. EmbernotCTApalette/agentnone vsCreatecoralcanonical; WhiteprimarytextbanvsWhiteCreate14textscope; exactlyonecoralvsAdvancedactiveborder/focus. DuskgradientCSSend'#1a0a0' invalid5hex whileprose1A0A00/hero1A0A0Econflict: noautocorrectionbyguess; CSScolor-duskWash8A2A3A+gradientseparate/TWdropsgradient. Positionellipse30%20%+45stop sourceprovided vs'everyexactonegradient' smallerCreateorangegradientnoactualwarmendhex/stops; don'tinvent. Heroprompt16radius vs12input/strict6,12,20,24ban; Create9999/play48circle/thumbnail8 contradictstrictradiivocabulary contextualroles. Neue20*.013=-.26/24=-.312≈-.31/40*.026=-1.04/72=-1.872≈-1.87/140=-3.64valid; wordmark16*.16=2.56differentrole,serifEditorialuSansfallbackwronggenre. 24Editorial1.5documented notproof72–140samemetrics;140preview500Neue architectural displaymaybefamilyunpaired. Prompt'#17171a with60% opacity backdrop-blur' noactualblurvalue/hostshader; avoidMaterial32assumption. Functionalcoral.4focusborder/White.08 outline notsolecontrastproof compositeoveractualgradientpending. 240arttilt+25/50/-12shadowand48playaccessible name/state/pause/audio boundsnotdecor. Trackstitle/artist/presslogosrights/license/backendgeneration/costunverified; noMediaPlayerpublicclaim. ReuseInput/Form/Button/Chip/Asset/Card/Heading/Text/Link/P13/MediaLibraryScreenexistingrootverify, actualCreatependingerror/Advancedoptions/fileplus/audioPlayStop/trackstate/auth/font/responsive/RTL/reduced pending.",
+      "experimentCandidateIds": [
+        "T01",
+        "T02",
+        "T03",
+        "T04",
+        "T05",
+        "T06",
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C08",
+        "C09",
+        "C10",
+        "P03",
+        "P05",
+        "P09",
+        "P13",
+        "S01",
+        "S04",
+        "S05",
+        "S06",
+        "S07",
+        "G01"
+      ]
+    },
+    {
+      "url": "https://styles.refero.design/style/3b6a17f0-3bdf-418c-a95e-0b89e5a8b2f8",
+      "title": "Raycast design system | Refero Styles",
+      "sourceCaptureAt": "2026-10-07T01:58:48Z",
+      "sourceBodySha256": "381e85b5d5271dba10db43b66ee43e722d3403826de757029845e39d008dd066",
+      "sourceTextCharacters": 39546,
+      "readingRecordedAt": "2026-10-07T08:57:57.977054+00:00",
+      "sourceBodyReading": "complete-in-existing-captured-text",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "finding": "Raycast040506dark/Inter56regular+GeistMono12/SFglyph stats/MistE6E6E6Iron454647CTA/16cards8controls6badges. Whitepalette 'text reversed on light buttons' vscanonicalIrononMist rolecontradiction. Info/Successpalettebothnotstatusvssemanticnames, source98%achromaticscopeunmeasured; CoralnotgeneralselectedbodyvsAppmockupactiveCoralrowexception. '--surface-badge:#1b1c1' invalid5hex whileGraphite1B1C1Evalid, noautocorrect; section80-120/element8-16 invalidCSSranges. **FullCSS/TW resolve15shadow stacks despiteellipsis summary**, retainexactmulti-layer order/inset/negativeblur? valuesallblurnonnegative; spreadsnegativevalid. KeyWhite.05insettop1 +White.25outer1 +Black.2insetbottom-1 preserveswell/pressedrole. OtherCardshadow0/30/50+purple/blueglowscontradictnooutershadow; Download0/7/3black.03+0/4/4black.25validscope. Blur48nav differshero37.5Elevation/40recipegeometryunknown; pilllabel8radiusnotfullpill. Base8rulelists12not8multiple/224valid28units;6badgevsDo8 context. Inter56*.004=.224→.22/20*.01=.2/11*.073=.803→.8coherent; summarypxclaimactuallyem. Geist12*.017=.204 and10*.05=.5 missingroleexports; SFplatformglyphfontlicensingnotportablegenericAsset. Smoke6A6B6C16Canvasordinary4.5pending; FooterAshclaimvsagentSmokefgseparatepair. Heroabsoluteartgeometry/radialalpha50%26%providedonlypartial, nooriginalmotion. Version1.104.21/macOS13/Windowsbeta arecapturedunverifiedcurrentproduct. ReuseCard/Button/Input/Asset/Heading/Text/TextAnnotation/CodeBlock/P05/S05rootactualAPIcheck. ActualDownload/platformdetect/store/search/commandkeyboard/AIbadge/forms/focus/font/nativeapp/webresponsive/RTL/reduced pending.",
+      "experimentCandidateIds": [
+        "T01",
+        "T02",
+        "T03",
+        "T04",
+        "T05",
+        "T06",
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C08",
+        "C09",
+        "C10",
+        "P03",
+        "P04",
+        "P05",
+        "P09",
+        "P13",
+        "S01",
+        "S05",
+        "S06",
+        "S07",
+        "G01"
+      ]
+    },
+    {
+      "url": "https://styles.refero.design/style/3b742f76-25ad-446c-a942-09b09b93f6a3",
+      "title": "Symbol Audio design system | Refero Styles",
+      "sourceCaptureAt": "2026-10-07T01:58:51Z",
+      "sourceBodySha256": "1f7bf8490da96971204e2d3782677890872ab7f3404f9b39f7da1624ccda8940",
+      "sourceTextCharacters": 25499,
+      "readingRecordedAt": "2026-10-07T08:57:57.977054+00:00",
+      "sourceBodyReading": "complete-in-existing-captured-text",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "finding": "SymbolAudio1C3C27evergreen/FrostFFFFFD/BoneFFFCDA/ChaletLondon+NYclaimedserif/SupremeLLBoldCSS40080;0placard9999control. Evergreenpalette notCTA vsoutlinedprimaryborderexactrole partlyconsistent notfilledaction; Cobalt447CF0palettevioletfocus/tag versusGuidephotographicdecoronly conflict; Ink0E1E14textonEvergreen 'AAA'claimneedcalc dark-on-dark; PewterDFE2E5/Evergreen16:1+claim needopaqueverification. NamedSupremeBold400don'tconvert700withoutfile, Chaletgenre/fallbackRecoleta/uSans contradiction notactualfontmetadata. AllChaletbodyvsBoldFlat15inlineemphasis explicitroleexception. 80tracking-.02=-1.6/52=-1.04/34=-.68valid;80preview1.13vsScale1/34preview1.26vs1.25/15preview1.33vsbody1.5. Heading80bleedbothviewportedgesclaimedwithoutgeometry/transformevidence—logoartnottruncateactualmeaningfulHeading.1280maxwidthtokenvsLayoutno-maxwidthcanvas distinguishesband/contentbutcontextnotmeasured. Fixedbottom13marqueezeroverticalpaddingalwaysscroll actualspeed/pausable/reduced/keyboard/hit name unknown; useexistingstaticnotification+singleLink/duplicateariadecor motionfallback notforcealwaysmoving. Evergreen-on-pewterDontphrase reversescanonicalpewteronEvergreen. ProductbadgeBestseller/NewArrivalnotgenericSuccess. Forestvelvetwall/woodhousing lighting arephotographicAssetnotpapergrain/CSSvelvet. ReuseAsset/Card/Chip/Heading/Text/Button/Link/Surface/P01/P02/P03/P04/S02; actualShop/Learn/Showroom/bookappointment/search/cart/stock/price/currency/marquee/fonts/mobileRTL/reduced pending.",
+      "experimentCandidateIds": [
+        "T01",
+        "T02",
+        "T03",
+        "T04",
+        "T05",
+        "T06",
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08",
+        "C09",
+        "C10",
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "P07",
+        "P09",
+        "P13",
+        "S01",
+        "S02",
+        "S06",
+        "G01"
+      ]
+    },
+    {
+      "url": "https://styles.refero.design/style/3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+      "title": "xAI design system | Refero Styles",
+      "sourceCaptureAt": "2026-10-07T01:58:54Z",
+      "sourceBodySha256": "d0977403e9fa567ba53e1d428801e73bda680d8fc0784444cba0233ff6ac8963",
+      "sourceTextCharacters": 29984,
+      "readingRecordedAt": "2026-10-07T08:57:57.977054+00:00",
+      "sourceBodyReading": "complete-in-existing-captured-text",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "finding": "xAIWhite/F9F8F6Cream/0A0A0AJet/UniversalSansUI+Display72/GeistMono12/9999actions16card6input8small. **EightleadingCSS/TWpx→unitless** caption12→20/body14→20/body16→24/heading24→32/sub30→36/48→48/60→60/display72→72;72×72=5184px lineboxnot72. Tracking12×-.01=-.12/24×-.025=-.6/30=-.75/48=-1.2/60=-1.5/72=-1.8 coherent despitedisplayprosecalltracking-1.8line-height! Preserveunits/provenance notnumericguess. SunbeamFFBD2E Beta palette vscanonicalF2EDE5sand; Terminal '#ffbd2' invalid5hex vsFFBD2Ecorrectelsewhere. Binarypills/card16banvs6Input8small12code/scal3 radiusroleexceptions. No-shadow/sole1pxDove cue vsHeader20/25/-5+8/10/-6 andCreamcard1pxBlack.06+18/40/-24blue.18fullCSSpreserved; don'ttreatelidedsummaryasloststack. FocusringJetalpha.15 vsDoveD5D9E2contradictbothprovenance/functionalcontrast actualhostpending. Warm-whiteintroactuallypureWhitepage, warmCreamcards; no grainkernel. Fog858585ordinarynav/bodyand9D9D9D11metriclabelcontrastLightpending; technicallyinactiveTabnotDisabledexempt. CodeSyntax032F62on151515dark likelylowcontrast, strings91C17A/errorsD73A49meaningfulsyntaxrole, sourcecapturenotsdkdocumentationversionproven. Mono13lh1.85 vsDon't>1.63iscodeversusreadinglegitimatecontext. Coralorbs64blur+linearindigo→pink→orange→amberdecorativecontradictssingleaccentperpage; noexactgeometry/linearstopvalueskernel. Metrics1M/day/<200msnotverifiedperformance. ReuseTabs/CodeBlock/Button/Link/Input/Card/Asset/Heading/Text/StatisticGroup/ConversationThreadrootexactAPIcheck. ActualAPIaccess/login/sales/langtab/copy/code/voicewaveform/pricing/news/navsticky/font/mobileRTL/reduced pending.",
+      "experimentCandidateIds": [
+        "T01",
+        "T02",
+        "T03",
+        "T04",
+        "T05",
+        "T06",
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C08",
+        "C09",
+        "C10",
+        "P03",
+        "P04",
+        "P05",
+        "P09",
+        "P13",
+        "S01",
+        "S05",
+        "S06",
+        "S07",
+        "G01"
+      ]
+    },
+    {
+      "url": "https://styles.refero.design/style/3b9ed801-511c-48b6-b516-68b1aa8a36ea",
+      "title": "B—Line design system | Refero Styles",
+      "sourceCaptureAt": "2026-10-07T01:58:57Z",
+      "sourceBodySha256": "d8fdd453306be4b8d94ef206a97cbf3911029f7215e0f1921344bf784af5133d",
+      "sourceTextCharacters": 21048,
+      "readingRecordedAt": "2026-10-07T08:57:57.977054+00:00",
+      "sourceBodyReading": "complete-in-existing-captured-text",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "finding": "B—LineWhite/Black/595959/HELVMONO14/HelveticaBold40012/System70014/220heavywordmark;0frames4buttons14.4links. PrimaryfontCodeassignedallbody isreadingrole despitemonospace notcode-onlySemantic;facehelvetica-boldCSS400 noauto700withoutmanifest. Code '-apple-system'genericfontquotedlikecustom actualfallbacknotstrictmonospace; HJMdisplay/reading/codefamilyneedsindependentroles. Body14×1.3=18.2 andcaption12×2.5=30 legitimateunitless numbers unlikeWope/xAIpxexport—don'trejectallnumbers>2automatic. system14×2.71=37.94capturedbuttonlineheight nothitconformanceproof. 4basevs5–7gaps/22 validmeasurementsoffgrid; Bodyfontmax14restrictionbrandonly. Shadow0/0/0/1black.15 effectivelyoutline(notzero-spreadwording0spread1CSSactualspread1);notdepthblur. NochromaticUIvsfloatingtealchatbubblefunction/contentexception notsilencechatstate. Link14.4pillabove4containersban scope; productframeblack'surface' actuallyborder notfilledcard. Productnameabsolute14BlackonuniformgrayPhoto requiresactualcomposite/crop nolegibilityplateproof. Fullviewport4squarecolumncontinuousgrid/noheadings preserveDOMfocusorder andmobilecatalognavigation don'tmakevisuallynamedheadingsrequirednone. Oversizedwordmark180–240+wideletterspacing nometry noexactstretch; actualcustomasset/legalnameDash preservednotgeneralcontentdelimiter. IT/ENlanguage + circular'accessibility/dark'purposeuncertainactualname/statepending. ReuseAsset/Card/Link/Button/Input/Heading/Text/Menu/P02/S02/S03; actualproducts/designer/news/pressdownload/registration/contact/langpersist/darkoraccessibilitytoggle/chat/keyboard/font/mobileRTL pending.",
+      "experimentCandidateIds": [
+        "T01",
+        "T02",
+        "T03",
+        "T04",
+        "T05",
+        "T06",
+        "C01",
+        "C02",
+        "C03",
+        "C05",
+        "C06",
+        "C08",
+        "C09",
+        "C10",
+        "P02",
+        "P03",
+        "P07",
+        "P13",
+        "S02",
+        "S03",
+        "S06",
+        "S07",
+        "S08",
+        "G01"
+      ]
+    },
+    {
+      "url": "https://styles.refero.design/style/3c605c8e-daf2-4d46-94d7-2cb705a93b7b",
+      "title": "ARKET design system | Refero Styles",
+      "sourceCaptureAt": "2026-10-07T01:59:00Z",
+      "sourceBodySha256": "9cd35ebbdbd38705ff717124ca855e6e2d23ca9afe9e2ff40aed2597019ecda7",
+      "sourceTextCharacters": 28706,
+      "readingRecordedAt": "2026-10-07T08:57:57.977054+00:00",
+      "sourceBodyReading": "complete-in-existing-captured-text",
+      "visualReview": "pending",
+      "interactionReview": "pending",
+      "finding": "ARKET White/Black/Indigo3860BE;ArketSans/ArketMono/SCMono400;2 controls0grid20contentblock. Spanish captured labels are locale evidence only, not actual international edition/persistence. Indigo decorative palette conflicts with link-only/no-fill guidance; agent primary-none conflicts with Black-filled primary and membership. Section64-80px/cardpadding20-24px invalid CSS ranges. SCMono tracking-.05em gives10=-.5px/12=-.6px/16=-.8px; unqualified-.5 and exportedcaption10/body16 tracking0 lose role context, not automatic all-face correction. smcp/c2sc glyph/locale/font license/loading unverified; uppercase fallback is not actual small caps.24preview1.5 vs scale1.23 and16multiple1/1.38/1.5/1.88 roles; independent reading/heading families need preserved contexts. Search48/12 versus Input40/13+agent48/13 may context variants, do not force one height. Header64+category48+notice sticky safe-area/mobile pending. Membership fixedBlack320square panel with White text describes BlackfilledCTA versus agentWhiteoutlinedCTA; use inverse Button roles/Card/Dialog/Sheet purpose, not Toast. Narrow panel occlusion/dismiss control not tested; absence in source text is not original AX defect. Checklist check is not Checkbox state. Product hover scale needs focus parity/static reduced alternative. Hero70vh no overlay and imagery rights/crop not papergrain. Shadow0/2/10/2Black.1 onlyTooltip scope, not global Card elevation; Web Tooltip verified root/overlays, Native no published Tooltip found in current generated map/root. Reuse Button/Link/Input/Form/Asset/Card/Heading/Text/Chip/Menu/Dialog/Sheet. Actual search/results/clear/account/wishlist/bag/membership/dismiss/categories/locale/variants/checkout/focus/fonts/mobileRTLreduced pending.",
+      "experimentCandidateIds": [
+        "T01",
+        "T02",
+        "T03",
+        "T04",
+        "T05",
+        "T06",
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08",
+        "C09",
+        "C10",
+        "P02",
+        "P03",
+        "P07",
+        "P09",
+        "P13",
+        "S01",
+        "S02",
+        "S03",
+        "S06",
+        "S07",
+        "G01"
+      ]
     }
   ],
-  "remainingStyleBodies": 1052,
-  "nextSortedStyleUrl": "https://styles.refero.design/style/376baf20-9ace-405d-bf4a-086016f2b1e3",
+  "remainingStyleBodies": 1025,
+  "nextSortedStyleUrl": "https://styles.refero.design/style/3cc1d30c-3b08-48af-bbf0-df195d77835f",
   "experimentCandidates": {
-    "checkpointStyleBodies": 290,
+    "checkpointStyleBodies": 317,
     "status": "proposed-not-registered",
     "note": "Manual analyst mapping of already read findings; grouped treatments are not new API obligations. Not exhaustive beyond saved reading checkpoint. Root owns actual registration.",
     "catalog": [
@@ -9859,7 +10914,7 @@
         "status": "proposed-not-registered",
         "decision": "개선 후보",
         "existingApiAndGap": "tokens.fontFamily(ui/code), typography, heading 재사용; display/reading의 독립 family 역할은 현 계약의 ui/code 두 축으로 충분한지 검토",
-        "limitsAndRejectedAlternatives": "대체 serif/mono, 변수 weight·OpenType, 콘텐츠 specimen은 UI와 구분. 라이선스·실제 로딩·큰 글자 미확인",
+        "limitsAndRejectedAlternatives": "대체 serif/mono, 변수 weight·OpenType, 콘텐츠 specimen은 UI와 구분. 라이선스·실제 로딩 미확인 C362: Beings의 Bold/SemiBold/Black face CSS400과 Custo Medium400은 숫자를 임의로700/500으로 바꾸지 않음. Jakub 양수 display tracking, Kagi display/reading/FAQ 역할을 보존; 실제 font 파일·축·glyph·권리는 미확인.",
         "sourceUrls": [
           "https://styles.refero.design/style/001480cb-05f4-4802-be39-84b942169481",
           "https://styles.refero.design/style/002cc5a7-0d34-4d8d-afa0-c5fad69477d5",
@@ -10106,8 +11161,46 @@
           "https://styles.refero.design/style/36fb90f7-3547-4dfd-a34e-592aa140078a",
           "https://styles.refero.design/style/371df039-a090-402b-b2e4-21ab38e07625",
           "https://styles.refero.design/style/3720657f-2b59-475e-a43d-b18cac718325",
-          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263"
-        ]
+          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263",
+          "https://styles.refero.design/style/376baf20-9ace-405d-bf4a-086016f2b1e3",
+          "https://styles.refero.design/style/3792d0ca-6c74-4667-a64d-76efe9f87076",
+          "https://styles.refero.design/style/37dd9612-4df0-4cdd-b942-bd97dd0efbd2",
+          "https://styles.refero.design/style/37e20981-1f35-4314-87c1-fdb61ab2f0c0",
+          "https://styles.refero.design/style/37f752a0-879e-4451-a4a4-0a82896e3890",
+          "https://styles.refero.design/style/3882ed21-8ef8-4bc9-b125-7791c0f136bb",
+          "https://styles.refero.design/style/38c8a8c9-4d2e-462a-bff0-80c9d9619ef2",
+          "https://styles.refero.design/style/39098e34-b911-4ad3-bcb5-ee80a392cd95",
+          "https://styles.refero.design/style/390cfba6-8c2f-4273-8c9e-750d470b6e2e",
+          "https://styles.refero.design/style/39105d96-3cb1-497a-8f9f-507a1bed4d30",
+          "https://styles.refero.design/style/391bd401-06d7-4444-8243-8573e96eab24",
+          "https://styles.refero.design/style/3963a727-8dec-4308-80c0-3ae198d15b87",
+          "https://styles.refero.design/style/398a603a-9ecd-47b2-b25c-26456a0383d0",
+          "https://styles.refero.design/style/3a331157-f5a5-4640-ada8-8a3ad262ee6a",
+          "https://styles.refero.design/style/3a398f82-579e-4ec4-a442-9962bf007edf",
+          "https://styles.refero.design/style/3a4d1008-0bd1-4ebb-9efe-0c146c45a99b",
+          "https://styles.refero.design/style/3ad131ed-b603-49a3-9491-7407db6cb423",
+          "https://styles.refero.design/style/3af36935-8383-49e7-857e-9fb5caa06966",
+          "https://styles.refero.design/style/3b080dc3-1992-43fe-91d6-2a721f934435",
+          "https://styles.refero.design/style/3b3fa99e-cee4-41f3-ac26-777b4b6a8b12",
+          "https://styles.refero.design/style/3b46c64e-b733-4d70-8cd0-531ca1f92937",
+          "https://styles.refero.design/style/3b5ff57f-a371-4c7f-82ae-5fc5485da073",
+          "https://styles.refero.design/style/3b6a17f0-3bdf-418c-a95e-0b89e5a8b2f8",
+          "https://styles.refero.design/style/3b742f76-25ad-446c-a942-09b09b93f6a3",
+          "https://styles.refero.design/style/3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+          "https://styles.refero.design/style/3b9ed801-511c-48b6-b516-68b1aa8a36ea",
+          "https://styles.refero.design/style/3c605c8e-daf2-4d46-94d7-2cb705a93b7b"
+        ],
+        "finalDisposition": "improve-existing",
+        "existingApiReferences": [
+          "HjmDesignProfile.tokens.fontFamily(ui/code) @design-contracts/design-profile",
+          "Heading root/heading; Text typography"
+        ],
+        "dispositionReason": "ui/code 두 family로 display·reading·small-caps 역할을 독립 전파할 수 없음. family 역할과 문맥 tracking을 보강하되 브랜드 font를 번들하지 않음.",
+        "essentialConfirmations": [
+          "display/reading 역할을 Heading·Text와 양 renderer에 연결",
+          "허용 font·fallback·실제 glyph/로딩 확인"
+        ],
+        "priority": 3
       },
       {
         "id": "T02",
@@ -10115,7 +11208,7 @@
         "status": "proposed-not-registered",
         "decision": "검증 구성 후보",
         "existingApiAndGap": "defineHjmDesignProfile 검증과 VQ 재사용; 외부 추출값을 runtime에 즉시 등록하지 않음",
-        "limitsAndRejectedAlternatives": "단위 없는 leading, em→px, invalid hex, prose range, 중복 변수, CSS/Tailwind gradient 손실, unresolved font를 실패 fixture로 표시. 원본 제품 결함으로 보고하지 않음; Eventbrite 반경 값의 괄호 설명이 CSS 값에 섞이는 오류도 정규화 fixture로 보존 C242: physical line-height 누락, range 문자열, CSS 괄호 설명, hex/OKLCH 등가 주장, 미등록 accent, 전역 tracking 누락은 검증 fixture로 유지. C262: object-fit CSS를 font family로 내보내는 오염, 브랜드/출처 불일치, unitless physical leading, invalid hex, gradient→first-stop 손실을 격리. C282: 내부 따옴표가 깨진 font stack, 중복 변수의 덮어쓰기, caption em/px 혼동, source-only font 이름 추론, 역할과 다른 primary radius/label·gradient·shadow export를 격리. C302: primary action/color 역할 모순, 0.10em→0.1px 및 -0.02em→-0.02px 단위 오류, foreground/background 오염, font fallback 분류 오류, gradient interpolation space 누락과 shape-clamping 근거를 격리. C322: Fonts In Use AAA 오류와 Charlie 대비 오류, 145px tracking -29px의 10배 단위 오류, 잘못된 5자리 hex, 크기·반경 범위 문자열, family/role 교차와 부분 export를 URL별 격리. C342: Ameba #00052와 Wiza #615e6의 잘못된 5자리 hex, Halfhelix/Domaine 브랜드·font alias 충돌, em 손실과 gradient stop/alpha export 차이는 URL별 격리. Apple Watch Series 12는 캡처 제목이며 현재 공개 제품·사양 확인 근거가 아님. source reconstruction 대비 검증은 원제품 결함 주장과 분리.",
+        "limitsAndRejectedAlternatives": "단위 없는 leading, em→px, invalid hex, prose range, 중복 변수, CSS/Tailwind gradient 손실, unresolved font를 실패 fixture로 표시. 원본 제품 결함으로 보고하지 않음; Eventbrite 반경 값의 괄호 설명이 CSS 값에 섞이는 오류도 정규화 fixture로 보존 C242: physical line-height 누락, range 문자열, CSS 괄호 설명, hex/OKLCH 등가 주장, 미등록 accent, 전역 tracking 누락은 검증 fixture로 유지. C262: object-fit CSS를 font family로 내보내는 오염, 브랜드/출처 불일치, unitless physical leading, invalid hex, gradient→first-stop 손실을 격리. C282: 내부 따옴표가 깨진 font stack, 중복 변수의 덮어쓰기, caption em/px 혼동, source-only font 이름 추론, 역할과 다른 primary radius/label·gradient·shadow export를 격리. C302: primary action/color 역할 모순, 0.10em→0.1px 및 -0.02em→-0.02px 단위 오류, foreground/background 오염, font fallback 분류 오류, gradient interpolation space 누락과 shape-clamping 근거를 격리. C322: Fonts In Use AAA 오류와 Charlie 대비 오류, 145px tracking -29px의 10배 단위 오류, 잘못된 5자리 hex, 크기·반경 범위 문자열, family/role 교차와 부분 export를 URL별 격리. C342: Ameba #00052와 Wiza #615e6의 잘못된 5자리 hex, Halfhelix/Domaine 브랜드·font alias 충돌, em 손실과 gradient stop/alpha export 차이는 URL별 격리. Apple Watch Series 12는 캡처 제목이며 현재 공개 제품·사양 확인 근거가 아님. source reconstruction 대비 검증은 원제품 결함 주장과 분리. C362: Wope leading7개는 px를 unitless number로 내보내72px×80=5760px line box 오류; White04/10 alpha 손실도 격리. Baggu/D.S.&DURGA em→px와 Agronomy leading 역전, Custo radius prose/세미콜론, Aspelin/zkPass/AATHER/Krisp range 문자열은 유효 CSS 숫자로 추정하지 않음. VITURE -100%/123.55% gradient stop은 유효하므로0–100으로 clamp하지 않음. 자료 재구성 오류이며 원제품 결함을 확정하지 않음.",
         "sourceUrls": [
           "https://styles.refero.design/style/001480cb-05f4-4802-be39-84b942169481",
           "https://styles.refero.design/style/002cc5a7-0d34-4d8d-afa0-c5fad69477d5",
@@ -10405,8 +11498,46 @@
           "https://styles.refero.design/style/36fb90f7-3547-4dfd-a34e-592aa140078a",
           "https://styles.refero.design/style/371df039-a090-402b-b2e4-21ab38e07625",
           "https://styles.refero.design/style/3720657f-2b59-475e-a43d-b18cac718325",
-          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263"
-        ]
+          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263",
+          "https://styles.refero.design/style/376baf20-9ace-405d-bf4a-086016f2b1e3",
+          "https://styles.refero.design/style/3792d0ca-6c74-4667-a64d-76efe9f87076",
+          "https://styles.refero.design/style/37dd9612-4df0-4cdd-b942-bd97dd0efbd2",
+          "https://styles.refero.design/style/37e20981-1f35-4314-87c1-fdb61ab2f0c0",
+          "https://styles.refero.design/style/37f752a0-879e-4451-a4a4-0a82896e3890",
+          "https://styles.refero.design/style/3882ed21-8ef8-4bc9-b125-7791c0f136bb",
+          "https://styles.refero.design/style/38c8a8c9-4d2e-462a-bff0-80c9d9619ef2",
+          "https://styles.refero.design/style/39098e34-b911-4ad3-bcb5-ee80a392cd95",
+          "https://styles.refero.design/style/390cfba6-8c2f-4273-8c9e-750d470b6e2e",
+          "https://styles.refero.design/style/39105d96-3cb1-497a-8f9f-507a1bed4d30",
+          "https://styles.refero.design/style/391bd401-06d7-4444-8243-8573e96eab24",
+          "https://styles.refero.design/style/3963a727-8dec-4308-80c0-3ae198d15b87",
+          "https://styles.refero.design/style/398a603a-9ecd-47b2-b25c-26456a0383d0",
+          "https://styles.refero.design/style/3a331157-f5a5-4640-ada8-8a3ad262ee6a",
+          "https://styles.refero.design/style/3a398f82-579e-4ec4-a442-9962bf007edf",
+          "https://styles.refero.design/style/3a4d1008-0bd1-4ebb-9efe-0c146c45a99b",
+          "https://styles.refero.design/style/3ad131ed-b603-49a3-9491-7407db6cb423",
+          "https://styles.refero.design/style/3af36935-8383-49e7-857e-9fb5caa06966",
+          "https://styles.refero.design/style/3b080dc3-1992-43fe-91d6-2a721f934435",
+          "https://styles.refero.design/style/3b3fa99e-cee4-41f3-ac26-777b4b6a8b12",
+          "https://styles.refero.design/style/3b46c64e-b733-4d70-8cd0-531ca1f92937",
+          "https://styles.refero.design/style/3b5ff57f-a371-4c7f-82ae-5fc5485da073",
+          "https://styles.refero.design/style/3b6a17f0-3bdf-418c-a95e-0b89e5a8b2f8",
+          "https://styles.refero.design/style/3b742f76-25ad-446c-a942-09b09b93f6a3",
+          "https://styles.refero.design/style/3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+          "https://styles.refero.design/style/3b9ed801-511c-48b6-b516-68b1aa8a36ea",
+          "https://styles.refero.design/style/3c605c8e-daf2-4d46-94d7-2cb705a93b7b"
+        ],
+        "finalDisposition": "improve-existing",
+        "existingApiReferences": [
+          "defineHjmDesignProfile @design-contracts/design-profile",
+          "checkPaletteContrast @design-contracts/palette-contrast"
+        ],
+        "dispositionReason": "유효 profile 검증은 있지만 외부 추출값의 단위·출처·역할 충돌을 정규화하는 경로는 별도다. 자료 fixture와 변환 전 검증을 기존 규격에 흡수.",
+        "essentialConfirmations": [
+          "invalid 값·단위·원본URL/role provenance fixture",
+          "정상 unitless leading2.5와 범위 밖 gradient stop 오탐 금지"
+        ],
+        "priority": 2
       },
       {
         "id": "T03",
@@ -10666,8 +11797,45 @@
           "https://styles.refero.design/style/36fb90f7-3547-4dfd-a34e-592aa140078a",
           "https://styles.refero.design/style/371df039-a090-402b-b2e4-21ab38e07625",
           "https://styles.refero.design/style/3720657f-2b59-475e-a43d-b18cac718325",
-          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263"
-        ]
+          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263",
+          "https://styles.refero.design/style/376baf20-9ace-405d-bf4a-086016f2b1e3",
+          "https://styles.refero.design/style/3792d0ca-6c74-4667-a64d-76efe9f87076",
+          "https://styles.refero.design/style/37dd9612-4df0-4cdd-b942-bd97dd0efbd2",
+          "https://styles.refero.design/style/37e20981-1f35-4314-87c1-fdb61ab2f0c0",
+          "https://styles.refero.design/style/37f752a0-879e-4451-a4a4-0a82896e3890",
+          "https://styles.refero.design/style/3882ed21-8ef8-4bc9-b125-7791c0f136bb",
+          "https://styles.refero.design/style/38c8a8c9-4d2e-462a-bff0-80c9d9619ef2",
+          "https://styles.refero.design/style/39098e34-b911-4ad3-bcb5-ee80a392cd95",
+          "https://styles.refero.design/style/390cfba6-8c2f-4273-8c9e-750d470b6e2e",
+          "https://styles.refero.design/style/39105d96-3cb1-497a-8f9f-507a1bed4d30",
+          "https://styles.refero.design/style/391bd401-06d7-4444-8243-8573e96eab24",
+          "https://styles.refero.design/style/3963a727-8dec-4308-80c0-3ae198d15b87",
+          "https://styles.refero.design/style/398a603a-9ecd-47b2-b25c-26456a0383d0",
+          "https://styles.refero.design/style/3a331157-f5a5-4640-ada8-8a3ad262ee6a",
+          "https://styles.refero.design/style/3a398f82-579e-4ec4-a442-9962bf007edf",
+          "https://styles.refero.design/style/3a4d1008-0bd1-4ebb-9efe-0c146c45a99b",
+          "https://styles.refero.design/style/3ad131ed-b603-49a3-9491-7407db6cb423",
+          "https://styles.refero.design/style/3af36935-8383-49e7-857e-9fb5caa06966",
+          "https://styles.refero.design/style/3b080dc3-1992-43fe-91d6-2a721f934435",
+          "https://styles.refero.design/style/3b3fa99e-cee4-41f3-ac26-777b4b6a8b12",
+          "https://styles.refero.design/style/3b46c64e-b733-4d70-8cd0-531ca1f92937",
+          "https://styles.refero.design/style/3b5ff57f-a371-4c7f-82ae-5fc5485da073",
+          "https://styles.refero.design/style/3b6a17f0-3bdf-418c-a95e-0b89e5a8b2f8",
+          "https://styles.refero.design/style/3b742f76-25ad-446c-a942-09b09b93f6a3",
+          "https://styles.refero.design/style/3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+          "https://styles.refero.design/style/3b9ed801-511c-48b6-b516-68b1aa8a36ea",
+          "https://styles.refero.design/style/3c605c8e-daf2-4d46-94d7-2cb705a93b7b"
+        ],
+        "finalDisposition": "reuse-existing",
+        "existingApiReferences": [
+          "HjmProvider root/provider brandPalette",
+          "HjmDesignProfile.palette @design-contracts/design-profile"
+        ],
+        "dispositionReason": "브랜드 악센트와 danger/success/data의 의미를 기존 semantic palette로 분리 가능. 출처의 역할 모순은 채택하지 않음.",
+        "essentialConfirmations": [
+          "기능 foreground/background 쌍과 실제 focus·selected 대비"
+        ],
+        "priority": null
       },
       {
         "id": "T04",
@@ -10938,8 +12106,45 @@
           "https://styles.refero.design/style/36fb90f7-3547-4dfd-a34e-592aa140078a",
           "https://styles.refero.design/style/371df039-a090-402b-b2e4-21ab38e07625",
           "https://styles.refero.design/style/3720657f-2b59-475e-a43d-b18cac718325",
-          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263"
-        ]
+          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263",
+          "https://styles.refero.design/style/376baf20-9ace-405d-bf4a-086016f2b1e3",
+          "https://styles.refero.design/style/3792d0ca-6c74-4667-a64d-76efe9f87076",
+          "https://styles.refero.design/style/37dd9612-4df0-4cdd-b942-bd97dd0efbd2",
+          "https://styles.refero.design/style/37e20981-1f35-4314-87c1-fdb61ab2f0c0",
+          "https://styles.refero.design/style/37f752a0-879e-4451-a4a4-0a82896e3890",
+          "https://styles.refero.design/style/3882ed21-8ef8-4bc9-b125-7791c0f136bb",
+          "https://styles.refero.design/style/38c8a8c9-4d2e-462a-bff0-80c9d9619ef2",
+          "https://styles.refero.design/style/39098e34-b911-4ad3-bcb5-ee80a392cd95",
+          "https://styles.refero.design/style/390cfba6-8c2f-4273-8c9e-750d470b6e2e",
+          "https://styles.refero.design/style/39105d96-3cb1-497a-8f9f-507a1bed4d30",
+          "https://styles.refero.design/style/391bd401-06d7-4444-8243-8573e96eab24",
+          "https://styles.refero.design/style/3963a727-8dec-4308-80c0-3ae198d15b87",
+          "https://styles.refero.design/style/398a603a-9ecd-47b2-b25c-26456a0383d0",
+          "https://styles.refero.design/style/3a331157-f5a5-4640-ada8-8a3ad262ee6a",
+          "https://styles.refero.design/style/3a398f82-579e-4ec4-a442-9962bf007edf",
+          "https://styles.refero.design/style/3a4d1008-0bd1-4ebb-9efe-0c146c45a99b",
+          "https://styles.refero.design/style/3ad131ed-b603-49a3-9491-7407db6cb423",
+          "https://styles.refero.design/style/3af36935-8383-49e7-857e-9fb5caa06966",
+          "https://styles.refero.design/style/3b080dc3-1992-43fe-91d6-2a721f934435",
+          "https://styles.refero.design/style/3b3fa99e-cee4-41f3-ac26-777b4b6a8b12",
+          "https://styles.refero.design/style/3b46c64e-b733-4d70-8cd0-531ca1f92937",
+          "https://styles.refero.design/style/3b5ff57f-a371-4c7f-82ae-5fc5485da073",
+          "https://styles.refero.design/style/3b6a17f0-3bdf-418c-a95e-0b89e5a8b2f8",
+          "https://styles.refero.design/style/3b742f76-25ad-446c-a942-09b09b93f6a3",
+          "https://styles.refero.design/style/3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+          "https://styles.refero.design/style/3b9ed801-511c-48b6-b516-68b1aa8a36ea",
+          "https://styles.refero.design/style/3c605c8e-daf2-4d46-94d7-2cb705a93b7b"
+        ],
+        "finalDisposition": "reuse-existing",
+        "existingApiReferences": [
+          "HjmDesignProfile.tokens.radius @design-contracts/design-profile",
+          "Asset root/asset shape"
+        ],
+        "dispositionReason": "역할별 radius와 Asset shape가 있으며 의미 있는 circle/pill geometry는 보존. 원시9999px scale 추가 불필요.",
+        "essentialConfirmations": [
+          "control/card/asset 역할별 기존 토큰 상속 확인"
+        ],
+        "priority": null
       },
       {
         "id": "T05",
@@ -10947,7 +12152,7 @@
         "status": "proposed-not-registered",
         "decision": "재사용+개선 후보",
         "existingApiAndGap": "기존 spacing/Grid/Stack/ScreenLayout 구성 재사용; section와 inner density 분리 검토",
-        "limitsAndRejectedAlternatives": "캡처 숫자·범위를 전역 grid 규범으로 복사하지 않음. 번역·모바일·큰 글자 확인 필요",
+        "limitsAndRejectedAlternatives": "캡처 숫자·범위를 전역 grid 규범으로 복사하지 않음. 번역·모바일 확인 필요",
         "sourceUrls": [
           "https://styles.refero.design/style/0057e55a-8a66-4ffc-9c21-f0b757e580b3",
           "https://styles.refero.design/style/01b3bfc1-95df-425f-9b7a-15cff09adc5f",
@@ -11199,8 +12404,45 @@
           "https://styles.refero.design/style/36fb90f7-3547-4dfd-a34e-592aa140078a",
           "https://styles.refero.design/style/371df039-a090-402b-b2e4-21ab38e07625",
           "https://styles.refero.design/style/3720657f-2b59-475e-a43d-b18cac718325",
-          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263"
-        ]
+          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263",
+          "https://styles.refero.design/style/376baf20-9ace-405d-bf4a-086016f2b1e3",
+          "https://styles.refero.design/style/3792d0ca-6c74-4667-a64d-76efe9f87076",
+          "https://styles.refero.design/style/37dd9612-4df0-4cdd-b942-bd97dd0efbd2",
+          "https://styles.refero.design/style/37e20981-1f35-4314-87c1-fdb61ab2f0c0",
+          "https://styles.refero.design/style/37f752a0-879e-4451-a4a4-0a82896e3890",
+          "https://styles.refero.design/style/3882ed21-8ef8-4bc9-b125-7791c0f136bb",
+          "https://styles.refero.design/style/38c8a8c9-4d2e-462a-bff0-80c9d9619ef2",
+          "https://styles.refero.design/style/39098e34-b911-4ad3-bcb5-ee80a392cd95",
+          "https://styles.refero.design/style/390cfba6-8c2f-4273-8c9e-750d470b6e2e",
+          "https://styles.refero.design/style/39105d96-3cb1-497a-8f9f-507a1bed4d30",
+          "https://styles.refero.design/style/391bd401-06d7-4444-8243-8573e96eab24",
+          "https://styles.refero.design/style/3963a727-8dec-4308-80c0-3ae198d15b87",
+          "https://styles.refero.design/style/398a603a-9ecd-47b2-b25c-26456a0383d0",
+          "https://styles.refero.design/style/3a331157-f5a5-4640-ada8-8a3ad262ee6a",
+          "https://styles.refero.design/style/3a398f82-579e-4ec4-a442-9962bf007edf",
+          "https://styles.refero.design/style/3a4d1008-0bd1-4ebb-9efe-0c146c45a99b",
+          "https://styles.refero.design/style/3ad131ed-b603-49a3-9491-7407db6cb423",
+          "https://styles.refero.design/style/3af36935-8383-49e7-857e-9fb5caa06966",
+          "https://styles.refero.design/style/3b080dc3-1992-43fe-91d6-2a721f934435",
+          "https://styles.refero.design/style/3b3fa99e-cee4-41f3-ac26-777b4b6a8b12",
+          "https://styles.refero.design/style/3b46c64e-b733-4d70-8cd0-531ca1f92937",
+          "https://styles.refero.design/style/3b5ff57f-a371-4c7f-82ae-5fc5485da073",
+          "https://styles.refero.design/style/3b6a17f0-3bdf-418c-a95e-0b89e5a8b2f8",
+          "https://styles.refero.design/style/3b742f76-25ad-446c-a942-09b09b93f6a3",
+          "https://styles.refero.design/style/3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+          "https://styles.refero.design/style/3b9ed801-511c-48b6-b516-68b1aa8a36ea",
+          "https://styles.refero.design/style/3c605c8e-daf2-4d46-94d7-2cb705a93b7b"
+        ],
+        "finalDisposition": "reuse-existing",
+        "existingApiReferences": [
+          "Grid/Stack/Section Web root/layout; Native root/primitives",
+          "ScreenLayout ./screens"
+        ],
+        "dispositionReason": "기존 spacing·layout으로 section rhythm과 내부 밀도를 비교 가능. 측정된 off-grid 수치를 전역 규칙으로 만들 이유 없음.",
+        "essentialConfirmations": [
+          "모바일·번역·DOM 순서와 surface별 밀도 비교"
+        ],
+        "priority": null
       },
       {
         "id": "T06",
@@ -11208,7 +12450,7 @@
         "status": "proposed-not-registered",
         "decision": "재사용+개선 후보",
         "existingApiAndGap": "material.canvas/card/surface·EffectSurface·shadow 재사용, 배포 질감 비교의 grain/noise와 장식/입력 표면 scope 비교; Web blurStrength1→32px·Native host 보정 및 불투명 fallback 유지; 방향성 빛줄기·희미한 격자·20px frosted badge도 흡수/개선 비교 후보",
-        "limitsAndRejectedAlternatives": "hard offset·soft mockup·inset control을 한 global shadow로 바꾸지 않음. 사진 유리/직물은 CSS재질 근거가 아님. Captions의 grain prose에는 원본 타일/강도 근거 없으며 120px blur를 profile 강도에 그대로 복사하지 않음; 원본 비용/대비/host 검증 별도; V7 빛줄기20%·Qatchup 격자1px는 재구성 묘사뿐이며 타일/간격 미확인. Sequel fill10%는 현 material.surface fillOpacity .85–1과 다름: 접근성/불투명 대안 포함해 실험 검토, 원본 복사 금지; Jeton blur20–40px/fill10%도 현 기본 투명도 계약 밖 비교 후보이며 출처 copy/brain 설명 혼입은 보류 C242: Juicebox 명시적 점 노이즈, Gigantic 포장·어두운 영역의 하프톤/낟알, New Genre 다중 스톱·비대칭 radial은 비교 변형 후보. 밀도·tile·mask·opacity·원본 자산·권리 미확인. 종이·용암·심해 비유만으로 재질을 만들지 않음. C262: Opennote 약40px ruled-line, Adora 반복 유화 자산, DrawHistory 강한 사진 blur와 amp/전자재료 CTA glow를 서로 다른 비교 변형으로 묶음. 원본 asset/밀도/rights/native calibration 미확인. C282: Vana ASCII glyph-density 지도 장식, Shelby 식물 사진10–15% opacity, Schema 기하학 벽화, Recess 구름10–20%·pastel gradient, Yung 흰 선 그림을 각각 장식/이미지 변형으로 분리. 실제 tile·asset·stops·rights·동작·native host는 미확인. C302: 암실·종이·린넨·벨벳·백스테이지·고산 은행의 비유는 실제 grain/fiber와 구분. Dot-matrix/pixel-mapped 사진과 데이터 오류 범위는 asset/data 역할을 따로 보존; glass 8/12px와 불명 alpha를 기존 calibrated host 기본값으로 복사하지 않음. C322: Parallel의 30% white pseudo-data/dithered footer, Browserbase dot/halftone pixel sky, Craft organic flower, Podia flat papercut는 각각 asset/geometry/decorative 역할; 실제 데이터·질감 kernel·모션 미확인. Glass 4/9–20/15px와 opaque export를 공통 기본값으로 복사하지 않음. C342: Aaply 20px dot-grid는 dot radius/alpha 미제공; Hyperliquid organic 3–4 blob과 Ameba edge-dense particle sphere는 geometry/blur/runtime 미제공. Flat paper/sticker/bronze hardware는 자산·그림 표현이며 CSS grain/glass 기본값 아님. Peloton skeleton shimmer는 로딩 역할·reduced-motion/기간 별도 확인.",
+        "limitsAndRejectedAlternatives": "hard offset·soft mockup·inset control을 한 global shadow로 바꾸지 않음. 사진 유리/직물은 CSS재질 근거가 아님. Captions의 grain prose에는 원본 타일/강도 근거 없으며 120px blur를 profile 강도에 그대로 복사하지 않음; 원본 비용/대비/host 검증 별도; V7 빛줄기20%·Qatchup 격자1px는 재구성 묘사뿐이며 타일/간격 미확인. Sequel fill10%는 현 material.surface fillOpacity .85–1과 다름: 접근성/불투명 대안 포함해 실험 검토, 원본 복사 금지; Jeton blur20–40px/fill10%도 현 기본 투명도 계약 밖 비교 후보이며 출처 copy/brain 설명 혼입은 보류 C242: Juicebox 명시적 점 노이즈, Gigantic 포장·어두운 영역의 하프톤/낟알, New Genre 다중 스톱·비대칭 radial은 비교 변형 후보. 밀도·tile·mask·opacity·원본 자산·권리 미확인. 종이·용암·심해 비유만으로 재질을 만들지 않음. C262: Opennote 약40px ruled-line, Adora 반복 유화 자산, DrawHistory 강한 사진 blur와 amp/전자재료 CTA glow를 서로 다른 비교 변형으로 묶음. 원본 asset/밀도/rights/native calibration 미확인. C282: Vana ASCII glyph-density 지도 장식, Shelby 식물 사진10–15% opacity, Schema 기하학 벽화, Recess 구름10–20%·pastel gradient, Yung 흰 선 그림을 각각 장식/이미지 변형으로 분리. 실제 tile·asset·stops·rights·동작·native host는 미확인. C302: 암실·종이·린넨·벨벳·백스테이지·고산 은행의 비유는 실제 grain/fiber와 구분. Dot-matrix/pixel-mapped 사진과 데이터 오류 범위는 asset/data 역할을 따로 보존; glass 8/12px와 불명 alpha를 기존 calibrated host 기본값으로 복사하지 않음. C322: Parallel의 30% white pseudo-data/dithered footer, Browserbase dot/halftone pixel sky, Craft organic flower, Podia flat papercut는 각각 asset/geometry/decorative 역할; 실제 데이터·질감 kernel·모션 미확인. Glass 4/9–20/15px와 opaque export를 공통 기본값으로 복사하지 않음. C342: Aaply 20px dot-grid는 dot radius/alpha 미제공; Hyperliquid organic 3–4 blob과 Ameba edge-dense particle sphere는 geometry/blur/runtime 미제공. Flat paper/sticker/bronze hardware는 자산·그림 표현이며 CSS grain/glass 기본값 아님. Peloton skeleton shimmer는 로딩 역할·reduced-motion/기간 별도 확인. C362: Wope4/8 blur·.02/.04 glass는 calibrated Material32/.85와 다른 자산·host 조건. VITURE neon glass/Capital mockup/Agronomy fabric/Custo anodized finish/AATHER candle cloth는 Asset 표현이며 전역 grain/metal 기본값 아님. zkPass0/0/8 alpha.45 glow는 CTA/outline/logo 역할; Krisp conic/hover shadow kernel은 미제공.",
         "sourceUrls": [
           "https://styles.refero.design/style/004f4856-4b01-4c23-a9fb-866303d5013b",
           "https://styles.refero.design/style/00537a20-e99e-4ef2-b119-c6f532c44cc9",
@@ -11408,8 +12650,46 @@
           "https://styles.refero.design/style/36fb90f7-3547-4dfd-a34e-592aa140078a",
           "https://styles.refero.design/style/371df039-a090-402b-b2e4-21ab38e07625",
           "https://styles.refero.design/style/3720657f-2b59-475e-a43d-b18cac718325",
-          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263"
-        ]
+          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263",
+          "https://styles.refero.design/style/376baf20-9ace-405d-bf4a-086016f2b1e3",
+          "https://styles.refero.design/style/3792d0ca-6c74-4667-a64d-76efe9f87076",
+          "https://styles.refero.design/style/37dd9612-4df0-4cdd-b942-bd97dd0efbd2",
+          "https://styles.refero.design/style/37e20981-1f35-4314-87c1-fdb61ab2f0c0",
+          "https://styles.refero.design/style/37f752a0-879e-4451-a4a4-0a82896e3890",
+          "https://styles.refero.design/style/3882ed21-8ef8-4bc9-b125-7791c0f136bb",
+          "https://styles.refero.design/style/38c8a8c9-4d2e-462a-bff0-80c9d9619ef2",
+          "https://styles.refero.design/style/39098e34-b911-4ad3-bcb5-ee80a392cd95",
+          "https://styles.refero.design/style/390cfba6-8c2f-4273-8c9e-750d470b6e2e",
+          "https://styles.refero.design/style/39105d96-3cb1-497a-8f9f-507a1bed4d30",
+          "https://styles.refero.design/style/391bd401-06d7-4444-8243-8573e96eab24",
+          "https://styles.refero.design/style/3963a727-8dec-4308-80c0-3ae198d15b87",
+          "https://styles.refero.design/style/398a603a-9ecd-47b2-b25c-26456a0383d0",
+          "https://styles.refero.design/style/3a331157-f5a5-4640-ada8-8a3ad262ee6a",
+          "https://styles.refero.design/style/3a398f82-579e-4ec4-a442-9962bf007edf",
+          "https://styles.refero.design/style/3a4d1008-0bd1-4ebb-9efe-0c146c45a99b",
+          "https://styles.refero.design/style/3ad131ed-b603-49a3-9491-7407db6cb423",
+          "https://styles.refero.design/style/3af36935-8383-49e7-857e-9fb5caa06966",
+          "https://styles.refero.design/style/3b080dc3-1992-43fe-91d6-2a721f934435",
+          "https://styles.refero.design/style/3b3fa99e-cee4-41f3-ac26-777b4b6a8b12",
+          "https://styles.refero.design/style/3b46c64e-b733-4d70-8cd0-531ca1f92937",
+          "https://styles.refero.design/style/3b5ff57f-a371-4c7f-82ae-5fc5485da073",
+          "https://styles.refero.design/style/3b6a17f0-3bdf-418c-a95e-0b89e5a8b2f8",
+          "https://styles.refero.design/style/3b742f76-25ad-446c-a942-09b09b93f6a3",
+          "https://styles.refero.design/style/3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+          "https://styles.refero.design/style/3b9ed801-511c-48b6-b516-68b1aa8a36ea",
+          "https://styles.refero.design/style/3c605c8e-daf2-4d46-94d7-2cb705a93b7b"
+        ],
+        "finalDisposition": "improve-existing",
+        "existingApiReferences": [
+          "HjmDesignProfile.material/shadow @design-contracts/design-profile",
+          "EffectSurface ./effect-surface; Surface Web root/layout Native root/primitives"
+        ],
+        "dispositionReason": "grain/noise·blur/fill·inset은 기존 계약에 있음. 원자료의 hard offset, soft mockup, 여러 inset 역할이 동일 전역 depth로 손실되지 않도록 역할별 적용을 보강.",
+        "essentialConfirmations": [
+          "실제 recipe가 있는 역할만 비교",
+          "Web/Native host 비용·불투명 대안·대비; 사진 재질을 CSS로 추론 금지"
+        ],
+        "priority": 4
       },
       {
         "id": "C01",
@@ -11417,7 +12697,7 @@
         "status": "proposed-not-registered",
         "decision": "기존 Button 재사용",
         "existingApiAndGap": "Uiverse thin-owl-11 장식 레이어/press 변형을 기존 Button 상태 계약에 매핑",
-        "limitsAndRejectedAlternatives": "Space/focus만 선택 확인; disabled/loading/held press/reduced-motion 원본 미확인. 새 Button API 중복 금지",
+        "limitsAndRejectedAlternatives": "Space/focus만 선택 확인; disabled/loading/held press/reduced-motion 원본 미확인. 새 Button API 중복 금지 C362: Paragraph arrow4px 이동은 RTL·focus parity·reduced-motion 정적 대안이 필요하며 새로운 action API로 간주하지 않음. Ghost-only 규칙과 filled hover/pressed state는 URL별 역할 충돌로 보존.",
         "sourceUrls": [
           "https://uiverse.io/njesenberger/thin-owl-11",
           "https://styles.refero.design/style/1ae4bcfe-c613-42fc-aab7-f9583381e7cc",
@@ -11534,8 +12814,44 @@
           "https://styles.refero.design/style/36fb90f7-3547-4dfd-a34e-592aa140078a",
           "https://styles.refero.design/style/371df039-a090-402b-b2e4-21ab38e07625",
           "https://styles.refero.design/style/3720657f-2b59-475e-a43d-b18cac718325",
-          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263"
-        ]
+          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263",
+          "https://styles.refero.design/style/376baf20-9ace-405d-bf4a-086016f2b1e3",
+          "https://styles.refero.design/style/3792d0ca-6c74-4667-a64d-76efe9f87076",
+          "https://styles.refero.design/style/37dd9612-4df0-4cdd-b942-bd97dd0efbd2",
+          "https://styles.refero.design/style/37e20981-1f35-4314-87c1-fdb61ab2f0c0",
+          "https://styles.refero.design/style/37f752a0-879e-4451-a4a4-0a82896e3890",
+          "https://styles.refero.design/style/3882ed21-8ef8-4bc9-b125-7791c0f136bb",
+          "https://styles.refero.design/style/38c8a8c9-4d2e-462a-bff0-80c9d9619ef2",
+          "https://styles.refero.design/style/39098e34-b911-4ad3-bcb5-ee80a392cd95",
+          "https://styles.refero.design/style/390cfba6-8c2f-4273-8c9e-750d470b6e2e",
+          "https://styles.refero.design/style/39105d96-3cb1-497a-8f9f-507a1bed4d30",
+          "https://styles.refero.design/style/391bd401-06d7-4444-8243-8573e96eab24",
+          "https://styles.refero.design/style/3963a727-8dec-4308-80c0-3ae198d15b87",
+          "https://styles.refero.design/style/398a603a-9ecd-47b2-b25c-26456a0383d0",
+          "https://styles.refero.design/style/3a331157-f5a5-4640-ada8-8a3ad262ee6a",
+          "https://styles.refero.design/style/3a398f82-579e-4ec4-a442-9962bf007edf",
+          "https://styles.refero.design/style/3a4d1008-0bd1-4ebb-9efe-0c146c45a99b",
+          "https://styles.refero.design/style/3ad131ed-b603-49a3-9491-7407db6cb423",
+          "https://styles.refero.design/style/3af36935-8383-49e7-857e-9fb5caa06966",
+          "https://styles.refero.design/style/3b080dc3-1992-43fe-91d6-2a721f934435",
+          "https://styles.refero.design/style/3b3fa99e-cee4-41f3-ac26-777b4b6a8b12",
+          "https://styles.refero.design/style/3b46c64e-b733-4d70-8cd0-531ca1f92937",
+          "https://styles.refero.design/style/3b5ff57f-a371-4c7f-82ae-5fc5485da073",
+          "https://styles.refero.design/style/3b6a17f0-3bdf-418c-a95e-0b89e5a8b2f8",
+          "https://styles.refero.design/style/3b742f76-25ad-446c-a942-09b09b93f6a3",
+          "https://styles.refero.design/style/3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+          "https://styles.refero.design/style/3b9ed801-511c-48b6-b516-68b1aa8a36ea",
+          "https://styles.refero.design/style/3c605c8e-daf2-4d46-94d7-2cb705a93b7b"
+        ],
+        "finalDisposition": "reuse-existing",
+        "existingApiReferences": [
+          "Button/IconButton root/actions"
+        ],
+        "dispositionReason": "장식 press layer·arrow/hover는 기존 Button 행동 위 표현. 입력 엔진 복제 불필요.",
+        "essentialConfirmations": [
+          "focus/pressed/disabled/pending·RTL·reduced motion"
+        ],
+        "priority": null
       },
       {
         "id": "C02",
@@ -11720,8 +13036,46 @@
           "https://styles.refero.design/style/36fb90f7-3547-4dfd-a34e-592aa140078a",
           "https://styles.refero.design/style/371df039-a090-402b-b2e4-21ab38e07625",
           "https://styles.refero.design/style/3720657f-2b59-475e-a43d-b18cac718325",
-          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263"
-        ]
+          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263",
+          "https://styles.refero.design/style/376baf20-9ace-405d-bf4a-086016f2b1e3",
+          "https://styles.refero.design/style/3792d0ca-6c74-4667-a64d-76efe9f87076",
+          "https://styles.refero.design/style/37dd9612-4df0-4cdd-b942-bd97dd0efbd2",
+          "https://styles.refero.design/style/37e20981-1f35-4314-87c1-fdb61ab2f0c0",
+          "https://styles.refero.design/style/37f752a0-879e-4451-a4a4-0a82896e3890",
+          "https://styles.refero.design/style/3882ed21-8ef8-4bc9-b125-7791c0f136bb",
+          "https://styles.refero.design/style/38c8a8c9-4d2e-462a-bff0-80c9d9619ef2",
+          "https://styles.refero.design/style/39098e34-b911-4ad3-bcb5-ee80a392cd95",
+          "https://styles.refero.design/style/390cfba6-8c2f-4273-8c9e-750d470b6e2e",
+          "https://styles.refero.design/style/39105d96-3cb1-497a-8f9f-507a1bed4d30",
+          "https://styles.refero.design/style/391bd401-06d7-4444-8243-8573e96eab24",
+          "https://styles.refero.design/style/3963a727-8dec-4308-80c0-3ae198d15b87",
+          "https://styles.refero.design/style/398a603a-9ecd-47b2-b25c-26456a0383d0",
+          "https://styles.refero.design/style/3a331157-f5a5-4640-ada8-8a3ad262ee6a",
+          "https://styles.refero.design/style/3a398f82-579e-4ec4-a442-9962bf007edf",
+          "https://styles.refero.design/style/3a4d1008-0bd1-4ebb-9efe-0c146c45a99b",
+          "https://styles.refero.design/style/3ad131ed-b603-49a3-9491-7407db6cb423",
+          "https://styles.refero.design/style/3af36935-8383-49e7-857e-9fb5caa06966",
+          "https://styles.refero.design/style/3b080dc3-1992-43fe-91d6-2a721f934435",
+          "https://styles.refero.design/style/3b3fa99e-cee4-41f3-ac26-777b4b6a8b12",
+          "https://styles.refero.design/style/3b46c64e-b733-4d70-8cd0-531ca1f92937",
+          "https://styles.refero.design/style/3b5ff57f-a371-4c7f-82ae-5fc5485da073",
+          "https://styles.refero.design/style/3b6a17f0-3bdf-418c-a95e-0b89e5a8b2f8",
+          "https://styles.refero.design/style/3b742f76-25ad-446c-a942-09b09b93f6a3",
+          "https://styles.refero.design/style/3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+          "https://styles.refero.design/style/3b9ed801-511c-48b6-b516-68b1aa8a36ea",
+          "https://styles.refero.design/style/3c605c8e-daf2-4d46-94d7-2cb705a93b7b"
+        ],
+        "finalDisposition": "improve-existing",
+        "existingApiReferences": [
+          "Heading root/heading; Text existing",
+          "Web src/text-annotation.tsx is experimental source only, no package export/current map entry; Native implementation absent"
+        ],
+        "dispositionReason": "의미 Heading·Text는 재사용 가능. TextAnnotation은 현재 Web 실험 소스만 있고 공개/Native 경로 없음. 부분 장식과 원형 text-path는 실제 gap이므로 공개 경계와 양 renderer 규격을 보강하는 후보.",
+        "essentialConfirmations": [
+          "실험 소스를 소비 API로 안내하지 않음·Native 구현/공개 사용 지침 필요",
+          "읽기 가능한 DOM·forced colors·자산 실패·정적 대안; orbit/path 원본 미확인"
+        ],
+        "priority": null
       },
       {
         "id": "C03",
@@ -11729,7 +13083,7 @@
         "status": "proposed-not-registered",
         "decision": "기존 Asset/Image 재사용+개선",
         "existingApiAndGap": "AssetDescriptor(shape/meaning)와 이미지 레이아웃 재사용; circle/square/portrait/top-arch 및 scrim scope",
-        "limitsAndRejectedAlternatives": "사진 픽셀/캐릭터/3D/직물/석재 질감을 procedural token으로 추론하지 않음. alt·crop·placeholder·contrast 검증 C242: Playdate 1-bit 이미지의 원본 해상도·픽셀 렌더링을 추가 비교. 실제 원본 해상도·확대 방식·이미지 라이선스 확인 전 제공 완료 아님.",
+        "limitsAndRejectedAlternatives": "사진 픽셀/캐릭터/3D/직물/석재 질감을 procedural token으로 추론하지 않음. alt·crop·placeholder·contrast 검증 C242: Playdate 1-bit 이미지의 원본 해상도·픽셀 렌더링을 추가 비교. 실제 원본 해상도·확대 방식·이미지 라이선스 확인 전 제공 완료 아님. C362: VITURE/Krisp gradient 밝은 중간·끝 색과 Custo gunmetal White 글자, AATHER/Aspelin 사진 overlay는 대비를 보장하지 않음. 실제 crop·합성·프레임 검증 없이 no-scrim 원칙을 공개 token으로 복사하지 않음.",
         "sourceUrls": [
           "https://3dicons.co/explore",
           "https://3dicons.co/icons/628100-notebook?color=clay",
@@ -11977,8 +13331,45 @@
           "https://styles.refero.design/style/36fb90f7-3547-4dfd-a34e-592aa140078a",
           "https://styles.refero.design/style/371df039-a090-402b-b2e4-21ab38e07625",
           "https://styles.refero.design/style/3720657f-2b59-475e-a43d-b18cac718325",
-          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263"
-        ]
+          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263",
+          "https://styles.refero.design/style/376baf20-9ace-405d-bf4a-086016f2b1e3",
+          "https://styles.refero.design/style/3792d0ca-6c74-4667-a64d-76efe9f87076",
+          "https://styles.refero.design/style/37dd9612-4df0-4cdd-b942-bd97dd0efbd2",
+          "https://styles.refero.design/style/37e20981-1f35-4314-87c1-fdb61ab2f0c0",
+          "https://styles.refero.design/style/37f752a0-879e-4451-a4a4-0a82896e3890",
+          "https://styles.refero.design/style/3882ed21-8ef8-4bc9-b125-7791c0f136bb",
+          "https://styles.refero.design/style/38c8a8c9-4d2e-462a-bff0-80c9d9619ef2",
+          "https://styles.refero.design/style/39098e34-b911-4ad3-bcb5-ee80a392cd95",
+          "https://styles.refero.design/style/390cfba6-8c2f-4273-8c9e-750d470b6e2e",
+          "https://styles.refero.design/style/39105d96-3cb1-497a-8f9f-507a1bed4d30",
+          "https://styles.refero.design/style/391bd401-06d7-4444-8243-8573e96eab24",
+          "https://styles.refero.design/style/3963a727-8dec-4308-80c0-3ae198d15b87",
+          "https://styles.refero.design/style/398a603a-9ecd-47b2-b25c-26456a0383d0",
+          "https://styles.refero.design/style/3a331157-f5a5-4640-ada8-8a3ad262ee6a",
+          "https://styles.refero.design/style/3a398f82-579e-4ec4-a442-9962bf007edf",
+          "https://styles.refero.design/style/3a4d1008-0bd1-4ebb-9efe-0c146c45a99b",
+          "https://styles.refero.design/style/3ad131ed-b603-49a3-9491-7407db6cb423",
+          "https://styles.refero.design/style/3af36935-8383-49e7-857e-9fb5caa06966",
+          "https://styles.refero.design/style/3b080dc3-1992-43fe-91d6-2a721f934435",
+          "https://styles.refero.design/style/3b3fa99e-cee4-41f3-ac26-777b4b6a8b12",
+          "https://styles.refero.design/style/3b46c64e-b733-4d70-8cd0-531ca1f92937",
+          "https://styles.refero.design/style/3b5ff57f-a371-4c7f-82ae-5fc5485da073",
+          "https://styles.refero.design/style/3b6a17f0-3bdf-418c-a95e-0b89e5a8b2f8",
+          "https://styles.refero.design/style/3b742f76-25ad-446c-a942-09b09b93f6a3",
+          "https://styles.refero.design/style/3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+          "https://styles.refero.design/style/3b9ed801-511c-48b6-b516-68b1aa8a36ea",
+          "https://styles.refero.design/style/3c605c8e-daf2-4d46-94d7-2cb705a93b7b"
+        ],
+        "finalDisposition": "improve-existing",
+        "existingApiReferences": [
+          "Asset root/asset; Image Web root/display Native root/data-display"
+        ],
+        "dispositionReason": "현재 shape/meaning·기본 crop을 재사용하며 반응형 crop·scrim과 제공되는3D variant manifest 선택을 비교 보강. 신규 Image 복제 불필요.",
+        "essentialConfirmations": [
+          "제품 asset manifest/CC0·alt·crop·실패/placeholder",
+          "실제 합성 프레임 대비; 전체3D 변형 미검증"
+        ],
+        "priority": null
       },
       {
         "id": "C04",
@@ -12089,8 +13480,33 @@
           "https://styles.refero.design/style/36e7c3f9-b7cb-48a2-9695-db726e3dccdb",
           "https://styles.refero.design/style/371df039-a090-402b-b2e4-21ab38e07625",
           "https://styles.refero.design/style/3720657f-2b59-475e-a43d-b18cac718325",
-          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263"
-        ]
+          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263",
+          "https://styles.refero.design/style/3792d0ca-6c74-4667-a64d-76efe9f87076",
+          "https://styles.refero.design/style/37dd9612-4df0-4cdd-b942-bd97dd0efbd2",
+          "https://styles.refero.design/style/37e20981-1f35-4314-87c1-fdb61ab2f0c0",
+          "https://styles.refero.design/style/3882ed21-8ef8-4bc9-b125-7791c0f136bb",
+          "https://styles.refero.design/style/39098e34-b911-4ad3-bcb5-ee80a392cd95",
+          "https://styles.refero.design/style/390cfba6-8c2f-4273-8c9e-750d470b6e2e",
+          "https://styles.refero.design/style/391bd401-06d7-4444-8243-8573e96eab24",
+          "https://styles.refero.design/style/398a603a-9ecd-47b2-b25c-26456a0383d0",
+          "https://styles.refero.design/style/3a398f82-579e-4ec4-a442-9962bf007edf",
+          "https://styles.refero.design/style/3b3fa99e-cee4-41f3-ac26-777b4b6a8b12",
+          "https://styles.refero.design/style/3b5ff57f-a371-4c7f-82ae-5fc5485da073",
+          "https://styles.refero.design/style/3b6a17f0-3bdf-418c-a95e-0b89e5a8b2f8",
+          "https://styles.refero.design/style/3b742f76-25ad-446c-a942-09b09b93f6a3",
+          "https://styles.refero.design/style/3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+          "https://styles.refero.design/style/3c605c8e-daf2-4d46-94d7-2cb705a93b7b"
+        ],
+        "finalDisposition": "reuse-existing",
+        "existingApiReferences": [
+          "shouldAnimateAsset @design-contracts/asset",
+          "ContentTransition ./content-transition"
+        ],
+        "dispositionReason": "장식 drift/wave는 현 모션·정적 fallback 정책을 유지해서 표현 가능.",
+        "essentialConfirmations": [
+          "장식과 실제 재생 행동 분리·pause/static fallback"
+        ],
+        "priority": null
       },
       {
         "id": "C05",
@@ -12220,8 +13636,45 @@
           "https://styles.refero.design/style/36fb90f7-3547-4dfd-a34e-592aa140078a",
           "https://styles.refero.design/style/371df039-a090-402b-b2e4-21ab38e07625",
           "https://styles.refero.design/style/3720657f-2b59-475e-a43d-b18cac718325",
-          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263"
-        ]
+          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263",
+          "https://styles.refero.design/style/376baf20-9ace-405d-bf4a-086016f2b1e3",
+          "https://styles.refero.design/style/3792d0ca-6c74-4667-a64d-76efe9f87076",
+          "https://styles.refero.design/style/37dd9612-4df0-4cdd-b942-bd97dd0efbd2",
+          "https://styles.refero.design/style/37e20981-1f35-4314-87c1-fdb61ab2f0c0",
+          "https://styles.refero.design/style/37f752a0-879e-4451-a4a4-0a82896e3890",
+          "https://styles.refero.design/style/3882ed21-8ef8-4bc9-b125-7791c0f136bb",
+          "https://styles.refero.design/style/38c8a8c9-4d2e-462a-bff0-80c9d9619ef2",
+          "https://styles.refero.design/style/39098e34-b911-4ad3-bcb5-ee80a392cd95",
+          "https://styles.refero.design/style/390cfba6-8c2f-4273-8c9e-750d470b6e2e",
+          "https://styles.refero.design/style/39105d96-3cb1-497a-8f9f-507a1bed4d30",
+          "https://styles.refero.design/style/391bd401-06d7-4444-8243-8573e96eab24",
+          "https://styles.refero.design/style/3963a727-8dec-4308-80c0-3ae198d15b87",
+          "https://styles.refero.design/style/398a603a-9ecd-47b2-b25c-26456a0383d0",
+          "https://styles.refero.design/style/3a331157-f5a5-4640-ada8-8a3ad262ee6a",
+          "https://styles.refero.design/style/3a398f82-579e-4ec4-a442-9962bf007edf",
+          "https://styles.refero.design/style/3a4d1008-0bd1-4ebb-9efe-0c146c45a99b",
+          "https://styles.refero.design/style/3ad131ed-b603-49a3-9491-7407db6cb423",
+          "https://styles.refero.design/style/3af36935-8383-49e7-857e-9fb5caa06966",
+          "https://styles.refero.design/style/3b080dc3-1992-43fe-91d6-2a721f934435",
+          "https://styles.refero.design/style/3b3fa99e-cee4-41f3-ac26-777b4b6a8b12",
+          "https://styles.refero.design/style/3b46c64e-b733-4d70-8cd0-531ca1f92937",
+          "https://styles.refero.design/style/3b5ff57f-a371-4c7f-82ae-5fc5485da073",
+          "https://styles.refero.design/style/3b6a17f0-3bdf-418c-a95e-0b89e5a8b2f8",
+          "https://styles.refero.design/style/3b742f76-25ad-446c-a942-09b09b93f6a3",
+          "https://styles.refero.design/style/3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+          "https://styles.refero.design/style/3b9ed801-511c-48b6-b516-68b1aa8a36ea",
+          "https://styles.refero.design/style/3c605c8e-daf2-4d46-94d7-2cb705a93b7b"
+        ],
+        "finalDisposition": "reuse-existing",
+        "existingApiReferences": [
+          "Field/Form root/forms",
+          "TextArea Web root/forms Native root/inputs; SearchField Web root/forms Native root/inputs"
+        ],
+        "dispositionReason": "underline/pill/inset 표현은 동일 입력·오류·복구 계약을 유지. 새로운 field 엔진 불필요.",
+        "essentialConfirmations": [
+          "label/IME/focus/error 설명·pending·실패 후 입력 유지"
+        ],
+        "priority": null
       },
       {
         "id": "C06",
@@ -12384,8 +13837,45 @@
           "https://styles.refero.design/style/36fb90f7-3547-4dfd-a34e-592aa140078a",
           "https://styles.refero.design/style/371df039-a090-402b-b2e4-21ab38e07625",
           "https://styles.refero.design/style/3720657f-2b59-475e-a43d-b18cac718325",
-          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263"
-        ]
+          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263",
+          "https://styles.refero.design/style/376baf20-9ace-405d-bf4a-086016f2b1e3",
+          "https://styles.refero.design/style/3792d0ca-6c74-4667-a64d-76efe9f87076",
+          "https://styles.refero.design/style/37dd9612-4df0-4cdd-b942-bd97dd0efbd2",
+          "https://styles.refero.design/style/37e20981-1f35-4314-87c1-fdb61ab2f0c0",
+          "https://styles.refero.design/style/37f752a0-879e-4451-a4a4-0a82896e3890",
+          "https://styles.refero.design/style/3882ed21-8ef8-4bc9-b125-7791c0f136bb",
+          "https://styles.refero.design/style/38c8a8c9-4d2e-462a-bff0-80c9d9619ef2",
+          "https://styles.refero.design/style/39098e34-b911-4ad3-bcb5-ee80a392cd95",
+          "https://styles.refero.design/style/390cfba6-8c2f-4273-8c9e-750d470b6e2e",
+          "https://styles.refero.design/style/39105d96-3cb1-497a-8f9f-507a1bed4d30",
+          "https://styles.refero.design/style/391bd401-06d7-4444-8243-8573e96eab24",
+          "https://styles.refero.design/style/3963a727-8dec-4308-80c0-3ae198d15b87",
+          "https://styles.refero.design/style/398a603a-9ecd-47b2-b25c-26456a0383d0",
+          "https://styles.refero.design/style/3a331157-f5a5-4640-ada8-8a3ad262ee6a",
+          "https://styles.refero.design/style/3a398f82-579e-4ec4-a442-9962bf007edf",
+          "https://styles.refero.design/style/3a4d1008-0bd1-4ebb-9efe-0c146c45a99b",
+          "https://styles.refero.design/style/3ad131ed-b603-49a3-9491-7407db6cb423",
+          "https://styles.refero.design/style/3af36935-8383-49e7-857e-9fb5caa06966",
+          "https://styles.refero.design/style/3b080dc3-1992-43fe-91d6-2a721f934435",
+          "https://styles.refero.design/style/3b3fa99e-cee4-41f3-ac26-777b4b6a8b12",
+          "https://styles.refero.design/style/3b46c64e-b733-4d70-8cd0-531ca1f92937",
+          "https://styles.refero.design/style/3b5ff57f-a371-4c7f-82ae-5fc5485da073",
+          "https://styles.refero.design/style/3b6a17f0-3bdf-418c-a95e-0b89e5a8b2f8",
+          "https://styles.refero.design/style/3b742f76-25ad-446c-a942-09b09b93f6a3",
+          "https://styles.refero.design/style/3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+          "https://styles.refero.design/style/3b9ed801-511c-48b6-b516-68b1aa8a36ea",
+          "https://styles.refero.design/style/3c605c8e-daf2-4d46-94d7-2cb705a93b7b"
+        ],
+        "finalDisposition": "reuse-existing",
+        "existingApiReferences": [
+          "CodeBlock ./code-block",
+          "StatisticGroup Web root/display Native root/data-display"
+        ],
+        "dispositionReason": "technical typography와 metric/status를 existing 표시 API로 비교 가능. 테마가 live 데이터를 발명하지 않음.",
+        "essentialConfirmations": [
+          "copy·syntax 의미 대비·실제 수치/단위·읽기 대안"
+        ],
+        "priority": null
       },
       {
         "id": "C07",
@@ -12393,7 +13883,7 @@
         "status": "proposed-not-registered",
         "decision": "기존 피드백/배너 표현 재사용 검토",
         "existingApiAndGap": "고정 하단/상단 배너와 현재 overlay 위치 계약 비교",
-        "limitsAndRejectedAlternatives": "safe area·텍스트 wrap·닫기·포커스·키보드 overlap 필수; 광고/동의/계정 행동은 제품 소유",
+        "limitsAndRejectedAlternatives": "safe area·텍스트 wrap·닫기·포커스·키보드 overlap 필수; 광고/동의/계정 행동은 제품 소유 C362: Agronomy promo dismiss, VITURE/Apollo/AATHER cookie 공지는 기능이 다름. 닫기와 동의 수락·거부·설정의 행동 의미/저장 상태를 합치지 않으며 실제 flow는 미검증; named close/focus recovery/safe-area는 기존 계약 재사용.",
         "sourceUrls": [
           "https://styles.refero.design/style/035a098b-5a27-48a3-8a3a-c68a698e3eab",
           "https://styles.refero.design/style/09b5a06b-29dc-4d17-8722-d29bd93010c8",
@@ -12468,8 +13958,31 @@
           "https://styles.refero.design/style/34788d94-1147-4d38-8df7-6f47ef7efb12",
           "https://styles.refero.design/style/34b4856c-cc2b-4164-ab90-1b87cf8e0213",
           "https://styles.refero.design/style/34baa524-5d5b-4165-bbab-d01f05e6d6b9",
-          "https://styles.refero.design/style/35f89ccd-614d-4f8f-9cce-bb94309df237"
-        ]
+          "https://styles.refero.design/style/35f89ccd-614d-4f8f-9cce-bb94309df237",
+          "https://styles.refero.design/style/376baf20-9ace-405d-bf4a-086016f2b1e3",
+          "https://styles.refero.design/style/37f752a0-879e-4451-a4a4-0a82896e3890",
+          "https://styles.refero.design/style/39098e34-b911-4ad3-bcb5-ee80a392cd95",
+          "https://styles.refero.design/style/390cfba6-8c2f-4273-8c9e-750d470b6e2e",
+          "https://styles.refero.design/style/39105d96-3cb1-497a-8f9f-507a1bed4d30",
+          "https://styles.refero.design/style/391bd401-06d7-4444-8243-8573e96eab24",
+          "https://styles.refero.design/style/3963a727-8dec-4308-80c0-3ae198d15b87",
+          "https://styles.refero.design/style/3ad131ed-b603-49a3-9491-7407db6cb423",
+          "https://styles.refero.design/style/3b080dc3-1992-43fe-91d6-2a721f934435",
+          "https://styles.refero.design/style/3b3fa99e-cee4-41f3-ac26-777b4b6a8b12",
+          "https://styles.refero.design/style/3b742f76-25ad-446c-a942-09b09b93f6a3",
+          "https://styles.refero.design/style/3c605c8e-daf2-4d46-94d7-2cb705a93b7b"
+        ],
+        "finalDisposition": "improve-existing",
+        "existingApiReferences": [
+          "Surface Web root/layout Native root/primitives; Text; Button/Link root/actions",
+          "Dialog/Sheet root/overlays"
+        ],
+        "dispositionReason": "공개 Banner 확인 안 됨. 기존 표면/행동으로 static notice를 구성하되 sticky 위치·닫기·복구 규격 보강; cookie/promo/membership 목적은 분리.",
+        "essentialConfirmations": [
+          "safe area·이름 있는 닫기·초점 복귀",
+          "동의 저장·수락/거부·계정 가입은 제품 소유"
+        ],
+        "priority": null
       },
       {
         "id": "C08",
@@ -12643,8 +14156,45 @@
           "https://styles.refero.design/style/36fb90f7-3547-4dfd-a34e-592aa140078a",
           "https://styles.refero.design/style/371df039-a090-402b-b2e4-21ab38e07625",
           "https://styles.refero.design/style/3720657f-2b59-475e-a43d-b18cac718325",
-          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263"
-        ]
+          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263",
+          "https://styles.refero.design/style/376baf20-9ace-405d-bf4a-086016f2b1e3",
+          "https://styles.refero.design/style/3792d0ca-6c74-4667-a64d-76efe9f87076",
+          "https://styles.refero.design/style/37dd9612-4df0-4cdd-b942-bd97dd0efbd2",
+          "https://styles.refero.design/style/37e20981-1f35-4314-87c1-fdb61ab2f0c0",
+          "https://styles.refero.design/style/37f752a0-879e-4451-a4a4-0a82896e3890",
+          "https://styles.refero.design/style/3882ed21-8ef8-4bc9-b125-7791c0f136bb",
+          "https://styles.refero.design/style/38c8a8c9-4d2e-462a-bff0-80c9d9619ef2",
+          "https://styles.refero.design/style/39098e34-b911-4ad3-bcb5-ee80a392cd95",
+          "https://styles.refero.design/style/390cfba6-8c2f-4273-8c9e-750d470b6e2e",
+          "https://styles.refero.design/style/39105d96-3cb1-497a-8f9f-507a1bed4d30",
+          "https://styles.refero.design/style/391bd401-06d7-4444-8243-8573e96eab24",
+          "https://styles.refero.design/style/3963a727-8dec-4308-80c0-3ae198d15b87",
+          "https://styles.refero.design/style/398a603a-9ecd-47b2-b25c-26456a0383d0",
+          "https://styles.refero.design/style/3a331157-f5a5-4640-ada8-8a3ad262ee6a",
+          "https://styles.refero.design/style/3a398f82-579e-4ec4-a442-9962bf007edf",
+          "https://styles.refero.design/style/3a4d1008-0bd1-4ebb-9efe-0c146c45a99b",
+          "https://styles.refero.design/style/3ad131ed-b603-49a3-9491-7407db6cb423",
+          "https://styles.refero.design/style/3af36935-8383-49e7-857e-9fb5caa06966",
+          "https://styles.refero.design/style/3b080dc3-1992-43fe-91d6-2a721f934435",
+          "https://styles.refero.design/style/3b3fa99e-cee4-41f3-ac26-777b4b6a8b12",
+          "https://styles.refero.design/style/3b46c64e-b733-4d70-8cd0-531ca1f92937",
+          "https://styles.refero.design/style/3b5ff57f-a371-4c7f-82ae-5fc5485da073",
+          "https://styles.refero.design/style/3b6a17f0-3bdf-418c-a95e-0b89e5a8b2f8",
+          "https://styles.refero.design/style/3b742f76-25ad-446c-a942-09b09b93f6a3",
+          "https://styles.refero.design/style/3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+          "https://styles.refero.design/style/3b9ed801-511c-48b6-b516-68b1aa8a36ea",
+          "https://styles.refero.design/style/3c605c8e-daf2-4d46-94d7-2cb705a93b7b"
+        ],
+        "finalDisposition": "reuse-existing",
+        "existingApiReferences": [
+          "NavigationBar ./navigation-bar",
+          "Sidebar Web root/sidebar; Menu Web root/overlays Native root/navigation"
+        ],
+        "dispositionReason": "center/pill/floating presentation을 기존 navigation 상태와 연결. 새 탐색 엔진 불필요.",
+        "essentialConfirmations": [
+          "current/expanded/Escape/RTL/mobile; hover-only 금지"
+        ],
+        "priority": null
       },
       {
         "id": "C09",
@@ -12652,7 +14202,7 @@
         "status": "proposed-not-registered",
         "decision": "기존 Tabs·Select·filter 재사용",
         "existingApiAndGap": "카테고리/size/currency/style/angle/variant의 selected/disabled/unavailable 상태 계약 유지",
-        "limitsAndRejectedAlternatives": "SKU/availability/category color 뜻은 제품 소유. 테마 표현으로 선택 계약 교체 금지",
+        "limitsAndRejectedAlternatives": "SKU/availability/category color 뜻은 제품 소유. 테마 표현으로 선택 계약 교체 금지 C362: Agronomy 상품 swatch/썸네일/재고와 Krisp meeting Tabs는 선택 의미가 다름. 제품 값·selected/focus·키보드 상태를 기존 Input/Tabs 계약과 대조하며 작은 그림 크기를 hit area로 채택하지 않음.",
         "sourceUrls": [
           "https://3dicons.co/explore",
           "https://3dicons.co/icons/628100-notebook?color=clay",
@@ -12819,8 +14369,43 @@
           "https://styles.refero.design/style/36de4683-cce3-4a01-820b-65ef8815747b",
           "https://styles.refero.design/style/371df039-a090-402b-b2e4-21ab38e07625",
           "https://styles.refero.design/style/3720657f-2b59-475e-a43d-b18cac718325",
-          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263"
-        ]
+          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263",
+          "https://styles.refero.design/style/376baf20-9ace-405d-bf4a-086016f2b1e3",
+          "https://styles.refero.design/style/3792d0ca-6c74-4667-a64d-76efe9f87076",
+          "https://styles.refero.design/style/37dd9612-4df0-4cdd-b942-bd97dd0efbd2",
+          "https://styles.refero.design/style/37e20981-1f35-4314-87c1-fdb61ab2f0c0",
+          "https://styles.refero.design/style/37f752a0-879e-4451-a4a4-0a82896e3890",
+          "https://styles.refero.design/style/3882ed21-8ef8-4bc9-b125-7791c0f136bb",
+          "https://styles.refero.design/style/38c8a8c9-4d2e-462a-bff0-80c9d9619ef2",
+          "https://styles.refero.design/style/39098e34-b911-4ad3-bcb5-ee80a392cd95",
+          "https://styles.refero.design/style/390cfba6-8c2f-4273-8c9e-750d470b6e2e",
+          "https://styles.refero.design/style/39105d96-3cb1-497a-8f9f-507a1bed4d30",
+          "https://styles.refero.design/style/391bd401-06d7-4444-8243-8573e96eab24",
+          "https://styles.refero.design/style/3963a727-8dec-4308-80c0-3ae198d15b87",
+          "https://styles.refero.design/style/398a603a-9ecd-47b2-b25c-26456a0383d0",
+          "https://styles.refero.design/style/3a331157-f5a5-4640-ada8-8a3ad262ee6a",
+          "https://styles.refero.design/style/3a398f82-579e-4ec4-a442-9962bf007edf",
+          "https://styles.refero.design/style/3a4d1008-0bd1-4ebb-9efe-0c146c45a99b",
+          "https://styles.refero.design/style/3ad131ed-b603-49a3-9491-7407db6cb423",
+          "https://styles.refero.design/style/3b080dc3-1992-43fe-91d6-2a721f934435",
+          "https://styles.refero.design/style/3b3fa99e-cee4-41f3-ac26-777b4b6a8b12",
+          "https://styles.refero.design/style/3b46c64e-b733-4d70-8cd0-531ca1f92937",
+          "https://styles.refero.design/style/3b5ff57f-a371-4c7f-82ae-5fc5485da073",
+          "https://styles.refero.design/style/3b6a17f0-3bdf-418c-a95e-0b89e5a8b2f8",
+          "https://styles.refero.design/style/3b742f76-25ad-446c-a942-09b09b93f6a3",
+          "https://styles.refero.design/style/3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+          "https://styles.refero.design/style/3b9ed801-511c-48b6-b516-68b1aa8a36ea",
+          "https://styles.refero.design/style/3c605c8e-daf2-4d46-94d7-2cb705a93b7b"
+        ],
+        "finalDisposition": "reuse-existing",
+        "existingApiReferences": [
+          "Tabs root/navigation; Select root/forms; ToggleGroup root/toggle-group"
+        ],
+        "dispositionReason": "상품 값·옵션 선택과 panel navigation을 목적에 맞게 기존 선택 계약으로 표현.",
+        "essentialConfirmations": [
+          "selected/focus/keyboard/disabled/unavailable; 재고/SKU 제품 소유"
+        ],
+        "priority": null
       },
       {
         "id": "P01",
@@ -12878,8 +14463,27 @@
           "https://styles.refero.design/style/355e8465-df7d-486a-9d76-2ace37d076a2",
           "https://styles.refero.design/style/35f89ccd-614d-4f8f-9cce-bb94309df237",
           "https://styles.refero.design/style/3634d5eb-ccfa-4881-b234-3dd735fb7ae4",
-          "https://styles.refero.design/style/36de4683-cce3-4a01-820b-65ef8815747b"
-        ]
+          "https://styles.refero.design/style/36de4683-cce3-4a01-820b-65ef8815747b",
+          "https://styles.refero.design/style/3792d0ca-6c74-4667-a64d-76efe9f87076",
+          "https://styles.refero.design/style/37dd9612-4df0-4cdd-b942-bd97dd0efbd2",
+          "https://styles.refero.design/style/37f752a0-879e-4451-a4a4-0a82896e3890",
+          "https://styles.refero.design/style/390cfba6-8c2f-4273-8c9e-750d470b6e2e",
+          "https://styles.refero.design/style/39105d96-3cb1-497a-8f9f-507a1bed4d30",
+          "https://styles.refero.design/style/391bd401-06d7-4444-8243-8573e96eab24",
+          "https://styles.refero.design/style/3ad131ed-b603-49a3-9491-7407db6cb423",
+          "https://styles.refero.design/style/3b742f76-25ad-446c-a942-09b09b93f6a3"
+        ],
+        "finalDisposition": "new-experiment",
+        "existingApiReferences": [
+          "Carousel root/carousel",
+          "Grid/Stack/Asset/Button existing composition"
+        ],
+        "dispositionReason": "Carousel는 단일 active·inactive hidden/inert다. 여러 항목이 함께 보이는 finite scroll/peek의 focus/scroll/announce는 고유 구성 gap.",
+        "essentialConfirmations": [
+          "visible 항목 전체 focus·whole-frame/nested action 분리",
+          "끝/페이지 이동·scroll·announce·RTL; 실제 Cedar demo 없음"
+        ],
+        "priority": 5
       },
       {
         "id": "P02",
@@ -13052,8 +14656,30 @@
           "https://styles.refero.design/style/3677bc04-7461-4aa4-aec7-5291bac41b0b",
           "https://styles.refero.design/style/36ab47c3-3d47-42a5-af2e-1760bc348bcd",
           "https://styles.refero.design/style/36de4683-cce3-4a01-820b-65ef8815747b",
-          "https://styles.refero.design/style/36fb90f7-3547-4dfd-a34e-592aa140078a"
-        ]
+          "https://styles.refero.design/style/36fb90f7-3547-4dfd-a34e-592aa140078a",
+          "https://styles.refero.design/style/3792d0ca-6c74-4667-a64d-76efe9f87076",
+          "https://styles.refero.design/style/37dd9612-4df0-4cdd-b942-bd97dd0efbd2",
+          "https://styles.refero.design/style/37f752a0-879e-4451-a4a4-0a82896e3890",
+          "https://styles.refero.design/style/38c8a8c9-4d2e-462a-bff0-80c9d9619ef2",
+          "https://styles.refero.design/style/39105d96-3cb1-497a-8f9f-507a1bed4d30",
+          "https://styles.refero.design/style/391bd401-06d7-4444-8243-8573e96eab24",
+          "https://styles.refero.design/style/398a603a-9ecd-47b2-b25c-26456a0383d0",
+          "https://styles.refero.design/style/3a331157-f5a5-4640-ada8-8a3ad262ee6a",
+          "https://styles.refero.design/style/3af36935-8383-49e7-857e-9fb5caa06966",
+          "https://styles.refero.design/style/3b742f76-25ad-446c-a942-09b09b93f6a3",
+          "https://styles.refero.design/style/3b9ed801-511c-48b6-b516-68b1aa8a36ea",
+          "https://styles.refero.design/style/3c605c8e-daf2-4d46-94d7-2cb705a93b7b"
+        ],
+        "finalDisposition": "improve-existing",
+        "existingApiReferences": [
+          "Grid/Section Web root/layout Native root/primitives",
+          "Asset root/asset; Card root/card"
+        ],
+        "dispositionReason": "혼합 aspect·비정형 배치는 현 Grid를 재사용하고 profile rows/cards/grid에서 실제 editorial recipe 전파를 보강.",
+        "essentialConfirmations": [
+          "DOM/읽기/초점 순서·동적 높이·모바일 breakpoint"
+        ],
+        "priority": null
       },
       {
         "id": "P03",
@@ -13268,8 +14894,45 @@
           "https://styles.refero.design/style/36fb90f7-3547-4dfd-a34e-592aa140078a",
           "https://styles.refero.design/style/371df039-a090-402b-b2e4-21ab38e07625",
           "https://styles.refero.design/style/3720657f-2b59-475e-a43d-b18cac718325",
-          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263"
-        ]
+          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263",
+          "https://styles.refero.design/style/376baf20-9ace-405d-bf4a-086016f2b1e3",
+          "https://styles.refero.design/style/3792d0ca-6c74-4667-a64d-76efe9f87076",
+          "https://styles.refero.design/style/37dd9612-4df0-4cdd-b942-bd97dd0efbd2",
+          "https://styles.refero.design/style/37e20981-1f35-4314-87c1-fdb61ab2f0c0",
+          "https://styles.refero.design/style/37f752a0-879e-4451-a4a4-0a82896e3890",
+          "https://styles.refero.design/style/3882ed21-8ef8-4bc9-b125-7791c0f136bb",
+          "https://styles.refero.design/style/38c8a8c9-4d2e-462a-bff0-80c9d9619ef2",
+          "https://styles.refero.design/style/39098e34-b911-4ad3-bcb5-ee80a392cd95",
+          "https://styles.refero.design/style/390cfba6-8c2f-4273-8c9e-750d470b6e2e",
+          "https://styles.refero.design/style/39105d96-3cb1-497a-8f9f-507a1bed4d30",
+          "https://styles.refero.design/style/391bd401-06d7-4444-8243-8573e96eab24",
+          "https://styles.refero.design/style/3963a727-8dec-4308-80c0-3ae198d15b87",
+          "https://styles.refero.design/style/398a603a-9ecd-47b2-b25c-26456a0383d0",
+          "https://styles.refero.design/style/3a331157-f5a5-4640-ada8-8a3ad262ee6a",
+          "https://styles.refero.design/style/3a398f82-579e-4ec4-a442-9962bf007edf",
+          "https://styles.refero.design/style/3a4d1008-0bd1-4ebb-9efe-0c146c45a99b",
+          "https://styles.refero.design/style/3ad131ed-b603-49a3-9491-7407db6cb423",
+          "https://styles.refero.design/style/3af36935-8383-49e7-857e-9fb5caa06966",
+          "https://styles.refero.design/style/3b080dc3-1992-43fe-91d6-2a721f934435",
+          "https://styles.refero.design/style/3b3fa99e-cee4-41f3-ac26-777b4b6a8b12",
+          "https://styles.refero.design/style/3b46c64e-b733-4d70-8cd0-531ca1f92937",
+          "https://styles.refero.design/style/3b5ff57f-a371-4c7f-82ae-5fc5485da073",
+          "https://styles.refero.design/style/3b6a17f0-3bdf-418c-a95e-0b89e5a8b2f8",
+          "https://styles.refero.design/style/3b742f76-25ad-446c-a942-09b09b93f6a3",
+          "https://styles.refero.design/style/3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+          "https://styles.refero.design/style/3b9ed801-511c-48b6-b516-68b1aa8a36ea",
+          "https://styles.refero.design/style/3c605c8e-daf2-4d46-94d7-2cb705a93b7b"
+        ],
+        "finalDisposition": "reuse-existing",
+        "existingApiReferences": [
+          "Section/Grid/Asset existing",
+          "ScreenLayout ./screens"
+        ],
+        "dispositionReason": "본문/이미지 분할을 existing layout과 공개 슬롯으로 구성 가능.",
+        "essentialConfirmations": [
+          "모바일 읽기 순서·crop·대비·번역"
+        ],
+        "priority": null
       },
       {
         "id": "P04",
@@ -13441,8 +15104,33 @@
           "https://styles.refero.design/style/36e7c3f9-b7cb-48a2-9695-db726e3dccdb",
           "https://styles.refero.design/style/36fb90f7-3547-4dfd-a34e-592aa140078a",
           "https://styles.refero.design/style/371df039-a090-402b-b2e4-21ab38e07625",
-          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263"
-        ]
+          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263",
+          "https://styles.refero.design/style/3792d0ca-6c74-4667-a64d-76efe9f87076",
+          "https://styles.refero.design/style/37e20981-1f35-4314-87c1-fdb61ab2f0c0",
+          "https://styles.refero.design/style/3882ed21-8ef8-4bc9-b125-7791c0f136bb",
+          "https://styles.refero.design/style/39098e34-b911-4ad3-bcb5-ee80a392cd95",
+          "https://styles.refero.design/style/390cfba6-8c2f-4273-8c9e-750d470b6e2e",
+          "https://styles.refero.design/style/3963a727-8dec-4308-80c0-3ae198d15b87",
+          "https://styles.refero.design/style/398a603a-9ecd-47b2-b25c-26456a0383d0",
+          "https://styles.refero.design/style/3a331157-f5a5-4640-ada8-8a3ad262ee6a",
+          "https://styles.refero.design/style/3a398f82-579e-4ec4-a442-9962bf007edf",
+          "https://styles.refero.design/style/3a4d1008-0bd1-4ebb-9efe-0c146c45a99b",
+          "https://styles.refero.design/style/3ad131ed-b603-49a3-9491-7407db6cb423",
+          "https://styles.refero.design/style/3b080dc3-1992-43fe-91d6-2a721f934435",
+          "https://styles.refero.design/style/3b3fa99e-cee4-41f3-ac26-777b4b6a8b12",
+          "https://styles.refero.design/style/3b6a17f0-3bdf-418c-a95e-0b89e5a8b2f8",
+          "https://styles.refero.design/style/3b742f76-25ad-446c-a942-09b09b93f6a3",
+          "https://styles.refero.design/style/3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc"
+        ],
+        "finalDisposition": "reuse-existing",
+        "existingApiReferences": [
+          "Surface existing; HjmProvider root/provider"
+        ],
+        "dispositionReason": "한 화면 mixed surface는 global theme toggle과 별도. 기존 semantic surface를 활용.",
+        "essentialConfirmations": [
+          "각 밝고 어두운 band foreground·기능 대비"
+        ],
+        "priority": null
       },
       {
         "id": "P05",
@@ -13583,8 +15271,31 @@
           "https://styles.refero.design/style/36d939b8-e3b5-45c7-8d81-f7c4d7c8fdaa",
           "https://styles.refero.design/style/371df039-a090-402b-b2e4-21ab38e07625",
           "https://styles.refero.design/style/3720657f-2b59-475e-a43d-b18cac718325",
-          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263"
-        ]
+          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263",
+          "https://styles.refero.design/style/376baf20-9ace-405d-bf4a-086016f2b1e3",
+          "https://styles.refero.design/style/37dd9612-4df0-4cdd-b942-bd97dd0efbd2",
+          "https://styles.refero.design/style/37e20981-1f35-4314-87c1-fdb61ab2f0c0",
+          "https://styles.refero.design/style/3882ed21-8ef8-4bc9-b125-7791c0f136bb",
+          "https://styles.refero.design/style/39098e34-b911-4ad3-bcb5-ee80a392cd95",
+          "https://styles.refero.design/style/390cfba6-8c2f-4273-8c9e-750d470b6e2e",
+          "https://styles.refero.design/style/3963a727-8dec-4308-80c0-3ae198d15b87",
+          "https://styles.refero.design/style/3a398f82-579e-4ec4-a442-9962bf007edf",
+          "https://styles.refero.design/style/3a4d1008-0bd1-4ebb-9efe-0c146c45a99b",
+          "https://styles.refero.design/style/3ad131ed-b603-49a3-9491-7407db6cb423",
+          "https://styles.refero.design/style/3b3fa99e-cee4-41f3-ac26-777b4b6a8b12",
+          "https://styles.refero.design/style/3b5ff57f-a371-4c7f-82ae-5fc5485da073",
+          "https://styles.refero.design/style/3b6a17f0-3bdf-418c-a95e-0b89e5a8b2f8",
+          "https://styles.refero.design/style/3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc"
+        ],
+        "finalDisposition": "reuse-existing",
+        "existingApiReferences": [
+          "Asset/Card/Section existing"
+        ],
+        "dispositionReason": "tilt/overlap mockup은 장식 asset/layout 조합이며 새로운 실제 editor/chat 기능이 아님.",
+        "essentialConfirmations": [
+          "좁은 폭 대체 crop·pointer/clip/읽기 순서·asset rights"
+        ],
+        "priority": null
       },
       {
         "id": "P06",
@@ -13641,8 +15352,20 @@
           "https://styles.refero.design/style/369ac603-c1e9-4231-9369-a198493f8e47",
           "https://styles.refero.design/style/36a7e1ed-8d14-456b-b828-ff4f47797a74",
           "https://styles.refero.design/style/36d939b8-e3b5-45c7-8d81-f7c4d7c8fdaa",
-          "https://styles.refero.design/style/3720657f-2b59-475e-a43d-b18cac718325"
-        ]
+          "https://styles.refero.design/style/3720657f-2b59-475e-a43d-b18cac718325",
+          "https://styles.refero.design/style/376baf20-9ace-405d-bf4a-086016f2b1e3",
+          "https://styles.refero.design/style/3a4d1008-0bd1-4ebb-9efe-0c146c45a99b",
+          "https://styles.refero.design/style/3b3fa99e-cee4-41f3-ac26-777b4b6a8b12"
+        ],
+        "finalDisposition": "reuse-existing",
+        "existingApiReferences": [
+          "Grid/Surface/Asset existing"
+        ],
+        "dispositionReason": "pastel card rhythm은 palette/surface·geometry 순서로 표현 가능.",
+        "essentialConfirmations": [
+          "색/shape 외 분류 label; status 색 오용 금지"
+        ],
+        "priority": null
       },
       {
         "id": "P07",
@@ -13791,8 +15514,31 @@
           "https://styles.refero.design/style/36d939b8-e3b5-45c7-8d81-f7c4d7c8fdaa",
           "https://styles.refero.design/style/36de4683-cce3-4a01-820b-65ef8815747b",
           "https://styles.refero.design/style/36e7c3f9-b7cb-48a2-9695-db726e3dccdb",
-          "https://styles.refero.design/style/36fb90f7-3547-4dfd-a34e-592aa140078a"
-        ]
+          "https://styles.refero.design/style/36fb90f7-3547-4dfd-a34e-592aa140078a",
+          "https://styles.refero.design/style/37dd9612-4df0-4cdd-b942-bd97dd0efbd2",
+          "https://styles.refero.design/style/37e20981-1f35-4314-87c1-fdb61ab2f0c0",
+          "https://styles.refero.design/style/37f752a0-879e-4451-a4a4-0a82896e3890",
+          "https://styles.refero.design/style/38c8a8c9-4d2e-462a-bff0-80c9d9619ef2",
+          "https://styles.refero.design/style/39105d96-3cb1-497a-8f9f-507a1bed4d30",
+          "https://styles.refero.design/style/391bd401-06d7-4444-8243-8573e96eab24",
+          "https://styles.refero.design/style/398a603a-9ecd-47b2-b25c-26456a0383d0",
+          "https://styles.refero.design/style/3a331157-f5a5-4640-ada8-8a3ad262ee6a",
+          "https://styles.refero.design/style/3a398f82-579e-4ec4-a442-9962bf007edf",
+          "https://styles.refero.design/style/3af36935-8383-49e7-857e-9fb5caa06966",
+          "https://styles.refero.design/style/3b080dc3-1992-43fe-91d6-2a721f934435",
+          "https://styles.refero.design/style/3b742f76-25ad-446c-a942-09b09b93f6a3",
+          "https://styles.refero.design/style/3b9ed801-511c-48b6-b516-68b1aa8a36ea",
+          "https://styles.refero.design/style/3c605c8e-daf2-4d46-94d7-2cb705a93b7b"
+        ],
+        "finalDisposition": "improve-existing",
+        "existingApiReferences": [
+          "Heading root/heading; Text/Section existing"
+        ],
+        "dispositionReason": "display와 marginal caption 표현은 기존 Heading. responsive 포스터와 title/logo asset 구별을 사용 지침에 보강.",
+        "essentialConfirmations": [
+          "중요 text clipping 금지·반응형 줄바꿈·권리"
+        ],
+        "priority": null
       },
       {
         "id": "P08",
@@ -13840,8 +15586,20 @@
           "https://styles.refero.design/style/35f89ccd-614d-4f8f-9cce-bb94309df237",
           "https://styles.refero.design/style/3677bc04-7461-4aa4-aec7-5291bac41b0b",
           "https://styles.refero.design/style/371df039-a090-402b-b2e4-21ab38e07625",
-          "https://styles.refero.design/style/3720657f-2b59-475e-a43d-b18cac718325"
-        ]
+          "https://styles.refero.design/style/3720657f-2b59-475e-a43d-b18cac718325",
+          "https://styles.refero.design/style/37dd9612-4df0-4cdd-b942-bd97dd0efbd2",
+          "https://styles.refero.design/style/3b46c64e-b733-4d70-8cd0-531ca1f92937"
+        ],
+        "finalDisposition": "improve-existing",
+        "existingApiReferences": [
+          "ScreenLayout ./screens; OverviewScreen ./design-profile",
+          "NavigationBar ./navigation-bar; Sidebar Web root/sidebar"
+        ],
+        "dispositionReason": "shell은 기존 API. feed/보조 rail의 독립 overflow와 좁은 화면 collapse는 현재 overview 선택만으로 보장되지 않아 구성 규격 보강.",
+        "essentialConfirmations": [
+          "논리 지역 순서·모바일 collapse·sticky 도구/키보드 overlap"
+        ],
+        "priority": null
       },
       {
         "id": "P09",
@@ -13989,8 +15747,36 @@
           "https://styles.refero.design/style/36fb90f7-3547-4dfd-a34e-592aa140078a",
           "https://styles.refero.design/style/371df039-a090-402b-b2e4-21ab38e07625",
           "https://styles.refero.design/style/3720657f-2b59-475e-a43d-b18cac718325",
-          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263"
-        ]
+          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263",
+          "https://styles.refero.design/style/376baf20-9ace-405d-bf4a-086016f2b1e3",
+          "https://styles.refero.design/style/3792d0ca-6c74-4667-a64d-76efe9f87076",
+          "https://styles.refero.design/style/37e20981-1f35-4314-87c1-fdb61ab2f0c0",
+          "https://styles.refero.design/style/3882ed21-8ef8-4bc9-b125-7791c0f136bb",
+          "https://styles.refero.design/style/39098e34-b911-4ad3-bcb5-ee80a392cd95",
+          "https://styles.refero.design/style/390cfba6-8c2f-4273-8c9e-750d470b6e2e",
+          "https://styles.refero.design/style/3963a727-8dec-4308-80c0-3ae198d15b87",
+          "https://styles.refero.design/style/3a398f82-579e-4ec4-a442-9962bf007edf",
+          "https://styles.refero.design/style/3a4d1008-0bd1-4ebb-9efe-0c146c45a99b",
+          "https://styles.refero.design/style/3ad131ed-b603-49a3-9491-7407db6cb423",
+          "https://styles.refero.design/style/3af36935-8383-49e7-857e-9fb5caa06966",
+          "https://styles.refero.design/style/3b080dc3-1992-43fe-91d6-2a721f934435",
+          "https://styles.refero.design/style/3b3fa99e-cee4-41f3-ac26-777b4b6a8b12",
+          "https://styles.refero.design/style/3b46c64e-b733-4d70-8cd0-531ca1f92937",
+          "https://styles.refero.design/style/3b5ff57f-a371-4c7f-82ae-5fc5485da073",
+          "https://styles.refero.design/style/3b6a17f0-3bdf-418c-a95e-0b89e5a8b2f8",
+          "https://styles.refero.design/style/3b742f76-25ad-446c-a942-09b09b93f6a3",
+          "https://styles.refero.design/style/3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+          "https://styles.refero.design/style/3c605c8e-daf2-4d46-94d7-2cb705a93b7b"
+        ],
+        "finalDisposition": "reuse-existing",
+        "existingApiReferences": [
+          "Asset/Text/Grid existing; Rating ./rating"
+        ],
+        "dispositionReason": "logo/quote/rating row는 기존 표시 API로 조합.",
+        "essentialConfirmations": [
+          "실제 logo·인용·실적 권리/근거; 정적 marquee 대안"
+        ],
+        "priority": null
       },
       {
         "id": "P10",
@@ -14004,8 +15790,18 @@
           "https://styles.refero.design/style/182f8743-fe22-45d3-98bc-9fd29d058602",
           "https://styles.refero.design/style/1b010453-80df-406a-8b1a-72630c4a5165",
           "https://styles.refero.design/style/1b2aaf14-43b0-4c23-bd25-1d49924fe85e",
-          "https://styles.refero.design/style/2cfd1a08-e5b1-4bd8-9270-29aa08f80aa0"
-        ]
+          "https://styles.refero.design/style/2cfd1a08-e5b1-4bd8-9270-29aa08f80aa0",
+          "https://styles.refero.design/style/3b46c64e-b733-4d70-8cd0-531ca1f92937"
+        ],
+        "finalDisposition": "reuse-existing",
+        "existingApiReferences": [
+          "Button/IconButton/Link root/actions"
+        ],
+        "dispositionReason": "독립 like/comment/share 행동 row는 기존 버튼. 행 전체 클릭으로 행동 의미 합치지 않음.",
+        "essentialConfirmations": [
+          "pressed/count/pending/error·이름/개별 focus"
+        ],
+        "priority": null
       },
       {
         "id": "P11",
@@ -14026,7 +15822,16 @@
           "https://styles.refero.design/style/2cfb738d-6c44-4628-a2f5-e9c9fc92a0ca",
           "https://styles.refero.design/style/2e24c0ca-dd46-4519-b66e-cc03701d3b8c",
           "https://styles.refero.design/style/348c83bc-bed3-4562-841a-26a30ee19a9b"
-        ]
+        ],
+        "finalDisposition": "reuse-existing",
+        "existingApiReferences": [
+          "Text; CodeBlock ./code-block; Asset root/asset"
+        ],
+        "dispositionReason": "specimen/content font는 UI 테마 전파와 별도 data role로 표현 가능.",
+        "essentialConfirmations": [
+          "glyph·필터·설치·font 권리 실제 flow 미검증"
+        ],
+        "priority": null
       },
       {
         "id": "S01",
@@ -14258,8 +16063,36 @@
           "https://styles.refero.design/style/36fb90f7-3547-4dfd-a34e-592aa140078a",
           "https://styles.refero.design/style/371df039-a090-402b-b2e4-21ab38e07625",
           "https://styles.refero.design/style/3720657f-2b59-475e-a43d-b18cac718325",
-          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263"
-        ]
+          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263",
+          "https://styles.refero.design/style/376baf20-9ace-405d-bf4a-086016f2b1e3",
+          "https://styles.refero.design/style/3792d0ca-6c74-4667-a64d-76efe9f87076",
+          "https://styles.refero.design/style/37dd9612-4df0-4cdd-b942-bd97dd0efbd2",
+          "https://styles.refero.design/style/37e20981-1f35-4314-87c1-fdb61ab2f0c0",
+          "https://styles.refero.design/style/3882ed21-8ef8-4bc9-b125-7791c0f136bb",
+          "https://styles.refero.design/style/38c8a8c9-4d2e-462a-bff0-80c9d9619ef2",
+          "https://styles.refero.design/style/39098e34-b911-4ad3-bcb5-ee80a392cd95",
+          "https://styles.refero.design/style/390cfba6-8c2f-4273-8c9e-750d470b6e2e",
+          "https://styles.refero.design/style/3963a727-8dec-4308-80c0-3ae198d15b87",
+          "https://styles.refero.design/style/3a398f82-579e-4ec4-a442-9962bf007edf",
+          "https://styles.refero.design/style/3a4d1008-0bd1-4ebb-9efe-0c146c45a99b",
+          "https://styles.refero.design/style/3ad131ed-b603-49a3-9491-7407db6cb423",
+          "https://styles.refero.design/style/3b080dc3-1992-43fe-91d6-2a721f934435",
+          "https://styles.refero.design/style/3b3fa99e-cee4-41f3-ac26-777b4b6a8b12",
+          "https://styles.refero.design/style/3b5ff57f-a371-4c7f-82ae-5fc5485da073",
+          "https://styles.refero.design/style/3b6a17f0-3bdf-418c-a95e-0b89e5a8b2f8",
+          "https://styles.refero.design/style/3b742f76-25ad-446c-a942-09b09b93f6a3",
+          "https://styles.refero.design/style/3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+          "https://styles.refero.design/style/3c605c8e-daf2-4d46-94d7-2cb705a93b7b"
+        ],
+        "finalDisposition": "reuse-existing",
+        "existingApiReferences": [
+          "ScreenLayout ./screens; Section/Asset/Heading existing"
+        ],
+        "dispositionReason": "hero/증거/features/quote/next action은 기존 화면 지역·구성으로 비교. 원제품 marketing 기능을 보장하지 않음.",
+        "essentialConfirmations": [
+          "제품 목적/필수 행동·모바일·실제 콘텐츠"
+        ],
+        "priority": null
       },
       {
         "id": "S02",
@@ -14330,8 +16163,29 @@
           "https://styles.refero.design/style/35ae81e1-273c-43d7-9bcd-ea186d062c13",
           "https://styles.refero.design/style/367c0c6e-73a7-441c-a8ff-91d139ac60dc",
           "https://styles.refero.design/style/36ab47c3-3d47-42a5-af2e-1760bc348bcd",
-          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263"
-        ]
+          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263",
+          "https://styles.refero.design/style/3792d0ca-6c74-4667-a64d-76efe9f87076",
+          "https://styles.refero.design/style/37f752a0-879e-4451-a4a4-0a82896e3890",
+          "https://styles.refero.design/style/38c8a8c9-4d2e-462a-bff0-80c9d9619ef2",
+          "https://styles.refero.design/style/390cfba6-8c2f-4273-8c9e-750d470b6e2e",
+          "https://styles.refero.design/style/39105d96-3cb1-497a-8f9f-507a1bed4d30",
+          "https://styles.refero.design/style/391bd401-06d7-4444-8243-8573e96eab24",
+          "https://styles.refero.design/style/398a603a-9ecd-47b2-b25c-26456a0383d0",
+          "https://styles.refero.design/style/3ad131ed-b603-49a3-9491-7407db6cb423",
+          "https://styles.refero.design/style/3b080dc3-1992-43fe-91d6-2a721f934435",
+          "https://styles.refero.design/style/3b742f76-25ad-446c-a942-09b09b93f6a3",
+          "https://styles.refero.design/style/3b9ed801-511c-48b6-b516-68b1aa8a36ea",
+          "https://styles.refero.design/style/3c605c8e-daf2-4d46-94d7-2cb705a93b7b"
+        ],
+        "finalDisposition": "reuse-existing",
+        "existingApiReferences": [
+          "ScreenLayout ./screens; Grid/Card/Asset existing; Select/Tabs existing"
+        ],
+        "dispositionReason": "목록/detail fixture는 existing 표시·선택으로 가능. ProductCatalog 전용 API가 있다는 주장은 하지 않음.",
+        "essentialConfirmations": [
+          "가격/옵션/장바구니/거래 product 계약·미구현 흐름 표시"
+        ],
+        "priority": null
       },
       {
         "id": "S03",
@@ -14432,8 +16286,25 @@
           "https://styles.refero.design/style/36cba9c4-9852-4f59-a52d-17be741f6ed8",
           "https://styles.refero.design/style/36de4683-cce3-4a01-820b-65ef8815747b",
           "https://styles.refero.design/style/36e7c3f9-b7cb-48a2-9695-db726e3dccdb",
-          "https://styles.refero.design/style/36fb90f7-3547-4dfd-a34e-592aa140078a"
-        ]
+          "https://styles.refero.design/style/36fb90f7-3547-4dfd-a34e-592aa140078a",
+          "https://styles.refero.design/style/37f752a0-879e-4451-a4a4-0a82896e3890",
+          "https://styles.refero.design/style/38c8a8c9-4d2e-462a-bff0-80c9d9619ef2",
+          "https://styles.refero.design/style/391bd401-06d7-4444-8243-8573e96eab24",
+          "https://styles.refero.design/style/398a603a-9ecd-47b2-b25c-26456a0383d0",
+          "https://styles.refero.design/style/3a331157-f5a5-4640-ada8-8a3ad262ee6a",
+          "https://styles.refero.design/style/3af36935-8383-49e7-857e-9fb5caa06966",
+          "https://styles.refero.design/style/3b9ed801-511c-48b6-b516-68b1aa8a36ea",
+          "https://styles.refero.design/style/3c605c8e-daf2-4d46-94d7-2cb705a93b7b"
+        ],
+        "finalDisposition": "reuse-existing",
+        "existingApiReferences": [
+          "ScreenLayout ./screens; Grid/Asset/Link existing"
+        ],
+        "dispositionReason": "전시 화면은 existing layout·asset를 재사용; P01/P02/P12 고유 gap은 해당 후보로 분리.",
+        "essentialConfirmations": [
+          "권리/목적·locale/menu·모바일; 출처 불일치14번 제외"
+        ],
+        "priority": null
       },
       {
         "id": "S04",
@@ -14473,8 +16344,22 @@
           "https://styles.refero.design/style/348c83bc-bed3-4562-841a-26a30ee19a9b",
           "https://styles.refero.design/style/34c8dbee-f5d9-4495-a0e0-a25c6ca4b95b",
           "https://styles.refero.design/style/35f89ccd-614d-4f8f-9cce-bb94309df237",
-          "https://styles.refero.design/style/36e7c3f9-b7cb-48a2-9695-db726e3dccdb"
-        ]
+          "https://styles.refero.design/style/36e7c3f9-b7cb-48a2-9695-db726e3dccdb",
+          "https://styles.refero.design/style/3792d0ca-6c74-4667-a64d-76efe9f87076",
+          "https://styles.refero.design/style/37dd9612-4df0-4cdd-b942-bd97dd0efbd2",
+          "https://styles.refero.design/style/3a4d1008-0bd1-4ebb-9efe-0c146c45a99b",
+          "https://styles.refero.design/style/3b5ff57f-a371-4c7f-82ae-5fc5485da073"
+        ],
+        "finalDisposition": "reuse-existing",
+        "existingApiReferences": [
+          "ScreenLayout ./screens; Asset/Card existing",
+          "MediaSelectionScreen ./screen-flows"
+        ],
+        "dispositionReason": "라이브러리의 shell/geometry/선택은 existing. MediaPlayer/MediaLibraryScreen 공개 확인 못 함; actual 재생은 제품과 별도, finite rail은P01.",
+        "essentialConfirmations": [
+          "named playback·pause/loading/error·search/계정 product flow"
+        ],
+        "priority": null
       },
       {
         "id": "S05",
@@ -14586,8 +16471,29 @@
           "https://styles.refero.design/style/36a7e1ed-8d14-456b-b828-ff4f47797a74",
           "https://styles.refero.design/style/36d939b8-e3b5-45c7-8d81-f7c4d7c8fdaa",
           "https://styles.refero.design/style/371df039-a090-402b-b2e4-21ab38e07625",
-          "https://styles.refero.design/style/3720657f-2b59-475e-a43d-b18cac718325"
-        ]
+          "https://styles.refero.design/style/3720657f-2b59-475e-a43d-b18cac718325",
+          "https://styles.refero.design/style/376baf20-9ace-405d-bf4a-086016f2b1e3",
+          "https://styles.refero.design/style/37e20981-1f35-4314-87c1-fdb61ab2f0c0",
+          "https://styles.refero.design/style/3882ed21-8ef8-4bc9-b125-7791c0f136bb",
+          "https://styles.refero.design/style/39098e34-b911-4ad3-bcb5-ee80a392cd95",
+          "https://styles.refero.design/style/3963a727-8dec-4308-80c0-3ae198d15b87",
+          "https://styles.refero.design/style/3a398f82-579e-4ec4-a442-9962bf007edf",
+          "https://styles.refero.design/style/3a4d1008-0bd1-4ebb-9efe-0c146c45a99b",
+          "https://styles.refero.design/style/3b3fa99e-cee4-41f3-ac26-777b4b6a8b12",
+          "https://styles.refero.design/style/3b5ff57f-a371-4c7f-82ae-5fc5485da073",
+          "https://styles.refero.design/style/3b6a17f0-3bdf-418c-a95e-0b89e5a8b2f8",
+          "https://styles.refero.design/style/3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc"
+        ],
+        "finalDisposition": "reuse-existing",
+        "existingApiReferences": [
+          "OverviewScreen ./design-profile; ScreenLayout ./screens",
+          "CodeBlock ./code-block; Field/Form existing"
+        ],
+        "dispositionReason": "dashboard/editorial/landscape는 기존 profile·OverviewScreen 선택으로 비교 가능.",
+        "essentialConfirmations": [
+          "정상/로딩/빈 값/오류 fixture·실데이터 표기 구분"
+        ],
+        "priority": null
       },
       {
         "id": "S06",
@@ -14843,8 +16749,46 @@
           "https://styles.refero.design/style/36fb90f7-3547-4dfd-a34e-592aa140078a",
           "https://styles.refero.design/style/371df039-a090-402b-b2e4-21ab38e07625",
           "https://styles.refero.design/style/3720657f-2b59-475e-a43d-b18cac718325",
-          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263"
-        ]
+          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263",
+          "https://styles.refero.design/style/376baf20-9ace-405d-bf4a-086016f2b1e3",
+          "https://styles.refero.design/style/3792d0ca-6c74-4667-a64d-76efe9f87076",
+          "https://styles.refero.design/style/37dd9612-4df0-4cdd-b942-bd97dd0efbd2",
+          "https://styles.refero.design/style/37e20981-1f35-4314-87c1-fdb61ab2f0c0",
+          "https://styles.refero.design/style/37f752a0-879e-4451-a4a4-0a82896e3890",
+          "https://styles.refero.design/style/3882ed21-8ef8-4bc9-b125-7791c0f136bb",
+          "https://styles.refero.design/style/38c8a8c9-4d2e-462a-bff0-80c9d9619ef2",
+          "https://styles.refero.design/style/39098e34-b911-4ad3-bcb5-ee80a392cd95",
+          "https://styles.refero.design/style/390cfba6-8c2f-4273-8c9e-750d470b6e2e",
+          "https://styles.refero.design/style/39105d96-3cb1-497a-8f9f-507a1bed4d30",
+          "https://styles.refero.design/style/391bd401-06d7-4444-8243-8573e96eab24",
+          "https://styles.refero.design/style/3963a727-8dec-4308-80c0-3ae198d15b87",
+          "https://styles.refero.design/style/398a603a-9ecd-47b2-b25c-26456a0383d0",
+          "https://styles.refero.design/style/3a331157-f5a5-4640-ada8-8a3ad262ee6a",
+          "https://styles.refero.design/style/3a398f82-579e-4ec4-a442-9962bf007edf",
+          "https://styles.refero.design/style/3a4d1008-0bd1-4ebb-9efe-0c146c45a99b",
+          "https://styles.refero.design/style/3ad131ed-b603-49a3-9491-7407db6cb423",
+          "https://styles.refero.design/style/3af36935-8383-49e7-857e-9fb5caa06966",
+          "https://styles.refero.design/style/3b080dc3-1992-43fe-91d6-2a721f934435",
+          "https://styles.refero.design/style/3b3fa99e-cee4-41f3-ac26-777b4b6a8b12",
+          "https://styles.refero.design/style/3b46c64e-b733-4d70-8cd0-531ca1f92937",
+          "https://styles.refero.design/style/3b5ff57f-a371-4c7f-82ae-5fc5485da073",
+          "https://styles.refero.design/style/3b6a17f0-3bdf-418c-a95e-0b89e5a8b2f8",
+          "https://styles.refero.design/style/3b742f76-25ad-446c-a942-09b09b93f6a3",
+          "https://styles.refero.design/style/3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+          "https://styles.refero.design/style/3b9ed801-511c-48b6-b516-68b1aa8a36ea",
+          "https://styles.refero.design/style/3c605c8e-daf2-4d46-94d7-2cb705a93b7b"
+        ],
+        "finalDisposition": "improve-existing",
+        "existingApiReferences": [
+          "defineHjmDesignProfile @design-contracts/design-profile",
+          "HjmProvider root/provider; OverviewScreen ./design-profile"
+        ],
+        "dispositionReason": "neutral+10named presets 및 custom extends가 이미 있다. 새 preset registry 복제 없이 지원 축이 component→composition→screen까지 전파하는 기존 실험을 보강.",
+        "essentialConfirmations": [
+          "앱 custom profile 동일 fixture·전환 시 초안/선택 보존",
+          "실제 지원 축만 선택; product theme의 기능 자동 발명 금지"
+        ],
+        "priority": 1
       },
       {
         "id": "G01",
@@ -15048,8 +16992,45 @@
           "https://styles.refero.design/style/36fb90f7-3547-4dfd-a34e-592aa140078a",
           "https://styles.refero.design/style/371df039-a090-402b-b2e4-21ab38e07625",
           "https://styles.refero.design/style/3720657f-2b59-475e-a43d-b18cac718325",
-          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263"
-        ]
+          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263",
+          "https://styles.refero.design/style/376baf20-9ace-405d-bf4a-086016f2b1e3",
+          "https://styles.refero.design/style/3792d0ca-6c74-4667-a64d-76efe9f87076",
+          "https://styles.refero.design/style/37dd9612-4df0-4cdd-b942-bd97dd0efbd2",
+          "https://styles.refero.design/style/37e20981-1f35-4314-87c1-fdb61ab2f0c0",
+          "https://styles.refero.design/style/37f752a0-879e-4451-a4a4-0a82896e3890",
+          "https://styles.refero.design/style/3882ed21-8ef8-4bc9-b125-7791c0f136bb",
+          "https://styles.refero.design/style/38c8a8c9-4d2e-462a-bff0-80c9d9619ef2",
+          "https://styles.refero.design/style/39098e34-b911-4ad3-bcb5-ee80a392cd95",
+          "https://styles.refero.design/style/390cfba6-8c2f-4273-8c9e-750d470b6e2e",
+          "https://styles.refero.design/style/39105d96-3cb1-497a-8f9f-507a1bed4d30",
+          "https://styles.refero.design/style/391bd401-06d7-4444-8243-8573e96eab24",
+          "https://styles.refero.design/style/3963a727-8dec-4308-80c0-3ae198d15b87",
+          "https://styles.refero.design/style/398a603a-9ecd-47b2-b25c-26456a0383d0",
+          "https://styles.refero.design/style/3a331157-f5a5-4640-ada8-8a3ad262ee6a",
+          "https://styles.refero.design/style/3a398f82-579e-4ec4-a442-9962bf007edf",
+          "https://styles.refero.design/style/3a4d1008-0bd1-4ebb-9efe-0c146c45a99b",
+          "https://styles.refero.design/style/3ad131ed-b603-49a3-9491-7407db6cb423",
+          "https://styles.refero.design/style/3af36935-8383-49e7-857e-9fb5caa06966",
+          "https://styles.refero.design/style/3b080dc3-1992-43fe-91d6-2a721f934435",
+          "https://styles.refero.design/style/3b3fa99e-cee4-41f3-ac26-777b4b6a8b12",
+          "https://styles.refero.design/style/3b46c64e-b733-4d70-8cd0-531ca1f92937",
+          "https://styles.refero.design/style/3b5ff57f-a371-4c7f-82ae-5fc5485da073",
+          "https://styles.refero.design/style/3b6a17f0-3bdf-418c-a95e-0b89e5a8b2f8",
+          "https://styles.refero.design/style/3b742f76-25ad-446c-a942-09b09b93f6a3",
+          "https://styles.refero.design/style/3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+          "https://styles.refero.design/style/3b9ed801-511c-48b6-b516-68b1aa8a36ea",
+          "https://styles.refero.design/style/3c605c8e-daf2-4d46-94d7-2cb705a93b7b"
+        ],
+        "finalDisposition": "reuse-existing",
+        "existingApiReferences": [
+          "usage 문서/QA/VQ 기준 existing",
+          "docs/generated/public-component-map.md"
+        ],
+        "dispositionReason": "purpose/source/state/실데이터 구별과 근거표는 기존 지침·QA에 흡수. 새로운 화면 API가 아님.",
+        "essentialConfirmations": [
+          "source독해/캡처/실제flow 분리; 상태 fixture·불채택 근거"
+        ],
+        "priority": null
       },
       {
         "id": "P12",
@@ -15063,8 +17044,19 @@
           "https://styles.refero.design/style/1f204e95-454a-437e-845b-c1b169d35607",
           "https://styles.refero.design/style/2ab2f666-6da7-4cd8-bc91-52a28bd560ad",
           "https://styles.refero.design/style/2fd71e12-12fc-4346-8281-52afe12bb951",
-          "https://styles.refero.design/style/36e7c3f9-b7cb-48a2-9695-db726e3dccdb"
-        ]
+          "https://styles.refero.design/style/36e7c3f9-b7cb-48a2-9695-db726e3dccdb",
+          "https://styles.refero.design/style/391bd401-06d7-4444-8243-8573e96eab24",
+          "https://styles.refero.design/style/398a603a-9ecd-47b2-b25c-26456a0383d0"
+        ],
+        "finalDisposition": "new-experiment",
+        "existingApiReferences": [
+          "Grid/Link/Heading existing"
+        ],
+        "dispositionReason": "세로 브랜드 벽은 같은 Grid/Link를 쓰지만 회전·stacked text와 readable mobile 목록 전환의 고유 구성 recipe 필요.",
+        "essentialConfirmations": [
+          "DOM/읽기 순서·링크 이름·모바일 수평 대안·실제 scroll"
+        ],
+        "priority": null
       },
       {
         "id": "S07",
@@ -15126,8 +17118,33 @@
           "https://styles.refero.design/style/36d939b8-e3b5-45c7-8d81-f7c4d7c8fdaa",
           "https://styles.refero.design/style/371df039-a090-402b-b2e4-21ab38e07625",
           "https://styles.refero.design/style/3720657f-2b59-475e-a43d-b18cac718325",
-          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263"
-        ]
+          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263",
+          "https://styles.refero.design/style/376baf20-9ace-405d-bf4a-086016f2b1e3",
+          "https://styles.refero.design/style/3792d0ca-6c74-4667-a64d-76efe9f87076",
+          "https://styles.refero.design/style/37dd9612-4df0-4cdd-b942-bd97dd0efbd2",
+          "https://styles.refero.design/style/37e20981-1f35-4314-87c1-fdb61ab2f0c0",
+          "https://styles.refero.design/style/3882ed21-8ef8-4bc9-b125-7791c0f136bb",
+          "https://styles.refero.design/style/39098e34-b911-4ad3-bcb5-ee80a392cd95",
+          "https://styles.refero.design/style/390cfba6-8c2f-4273-8c9e-750d470b6e2e",
+          "https://styles.refero.design/style/3963a727-8dec-4308-80c0-3ae198d15b87",
+          "https://styles.refero.design/style/3b3fa99e-cee4-41f3-ac26-777b4b6a8b12",
+          "https://styles.refero.design/style/3b46c64e-b733-4d70-8cd0-531ca1f92937",
+          "https://styles.refero.design/style/3b5ff57f-a371-4c7f-82ae-5fc5485da073",
+          "https://styles.refero.design/style/3b6a17f0-3bdf-418c-a95e-0b89e5a8b2f8",
+          "https://styles.refero.design/style/3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+          "https://styles.refero.design/style/3b9ed801-511c-48b6-b516-68b1aa8a36ea",
+          "https://styles.refero.design/style/3c605c8e-daf2-4d46-94d7-2cb705a93b7b"
+        ],
+        "finalDisposition": "reuse-existing",
+        "existingApiReferences": [
+          "AuthScreenLayout root/auth-screen",
+          "AuthProviderButton root/provider-button"
+        ],
+        "dispositionReason": "인증 화면의 hero/main/footer와 고정 카드 pending 계약이 존재. theme는 canvas/hero만, provider 자산/색과 이름-only 버튼 유지.",
+        "essentialConfirmations": [
+          "제품 provider·동의·로고·권리·실제 인증은 제품 검증"
+        ],
+        "priority": null
       },
       {
         "id": "C10",
@@ -15192,8 +17209,46 @@
           "https://styles.refero.design/style/36fb90f7-3547-4dfd-a34e-592aa140078a",
           "https://styles.refero.design/style/371df039-a090-402b-b2e4-21ab38e07625",
           "https://styles.refero.design/style/3720657f-2b59-475e-a43d-b18cac718325",
-          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263"
-        ]
+          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263",
+          "https://styles.refero.design/style/376baf20-9ace-405d-bf4a-086016f2b1e3",
+          "https://styles.refero.design/style/3792d0ca-6c74-4667-a64d-76efe9f87076",
+          "https://styles.refero.design/style/37dd9612-4df0-4cdd-b942-bd97dd0efbd2",
+          "https://styles.refero.design/style/37e20981-1f35-4314-87c1-fdb61ab2f0c0",
+          "https://styles.refero.design/style/37f752a0-879e-4451-a4a4-0a82896e3890",
+          "https://styles.refero.design/style/3882ed21-8ef8-4bc9-b125-7791c0f136bb",
+          "https://styles.refero.design/style/38c8a8c9-4d2e-462a-bff0-80c9d9619ef2",
+          "https://styles.refero.design/style/39098e34-b911-4ad3-bcb5-ee80a392cd95",
+          "https://styles.refero.design/style/390cfba6-8c2f-4273-8c9e-750d470b6e2e",
+          "https://styles.refero.design/style/39105d96-3cb1-497a-8f9f-507a1bed4d30",
+          "https://styles.refero.design/style/391bd401-06d7-4444-8243-8573e96eab24",
+          "https://styles.refero.design/style/3963a727-8dec-4308-80c0-3ae198d15b87",
+          "https://styles.refero.design/style/398a603a-9ecd-47b2-b25c-26456a0383d0",
+          "https://styles.refero.design/style/3a331157-f5a5-4640-ada8-8a3ad262ee6a",
+          "https://styles.refero.design/style/3a398f82-579e-4ec4-a442-9962bf007edf",
+          "https://styles.refero.design/style/3a4d1008-0bd1-4ebb-9efe-0c146c45a99b",
+          "https://styles.refero.design/style/3ad131ed-b603-49a3-9491-7407db6cb423",
+          "https://styles.refero.design/style/3af36935-8383-49e7-857e-9fb5caa06966",
+          "https://styles.refero.design/style/3b080dc3-1992-43fe-91d6-2a721f934435",
+          "https://styles.refero.design/style/3b3fa99e-cee4-41f3-ac26-777b4b6a8b12",
+          "https://styles.refero.design/style/3b46c64e-b733-4d70-8cd0-531ca1f92937",
+          "https://styles.refero.design/style/3b5ff57f-a371-4c7f-82ae-5fc5485da073",
+          "https://styles.refero.design/style/3b6a17f0-3bdf-418c-a95e-0b89e5a8b2f8",
+          "https://styles.refero.design/style/3b742f76-25ad-446c-a942-09b09b93f6a3",
+          "https://styles.refero.design/style/3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+          "https://styles.refero.design/style/3b9ed801-511c-48b6-b516-68b1aa8a36ea",
+          "https://styles.refero.design/style/3c605c8e-daf2-4d46-94d7-2cb705a93b7b"
+        ],
+        "finalDisposition": "deferred",
+        "existingApiReferences": [
+          "Toast Web root/toast Native root/feedback",
+          "Asset root/asset"
+        ],
+        "dispositionReason": "ToastDescriptor에 identity asset slot은 없다. 브랜드 그림이 실제 알림에 필요한 제품 사례를 확인하기 전 새 asset slot은 보류; 고정 floating card를 Toast로 오인하지 않음.",
+        "essentialConfirmations": [
+          "제품의 실제 identity+tone 사용처",
+          "timer/pause/action/close/announce 유지"
+        ],
+        "priority": null
       },
       {
         "id": "C11",
@@ -15211,8 +17266,19 @@
           "https://styles.refero.design/style/196dc658-219f-4ea0-b150-f9af17cd4c3f",
           "https://styles.refero.design/style/21da2822-cfe3-4a6a-b333-1be48e855e36",
           "https://styles.refero.design/style/295beab5-cd8a-473b-ab7d-3df6cda30231",
-          "https://styles.refero.design/style/36de4683-cce3-4a01-820b-65ef8815747b"
-        ]
+          "https://styles.refero.design/style/36de4683-cce3-4a01-820b-65ef8815747b",
+          "https://styles.refero.design/style/3963a727-8dec-4308-80c0-3ae198d15b87",
+          "https://styles.refero.design/style/3a4d1008-0bd1-4ebb-9efe-0c146c45a99b"
+        ],
+        "finalDisposition": "reuse-existing",
+        "existingApiReferences": [
+          "Collapsible root/collapsible"
+        ],
+        "dispositionReason": "hairline FAQ와 plus→cross 장식은 동일 disclosure open/trigger/panel 계약.",
+        "essentialConfirmations": [
+          "cross는 새 닫기 행동 아님; keyboard/focus/reduced motion"
+        ],
+        "priority": null
       },
       {
         "id": "P13",
@@ -15220,7 +17286,7 @@
         "status": "proposed-not-registered",
         "decision": "기존 입력·선택 API 재사용 후 목적별 구성 보강",
         "existingApiAndGap": "TextArea·Field·IconButton·ToggleGroup 재사용. MessageComposer는 채팅·댓글 목적 계약이므로 생성 입력으로 이름만 바꾸지 않음. 입력 패널·제출·도구 선택·추천 시작점을 별도 목적 구성으로 검토",
-        "limitsAndRejectedAlternatives": "도구·모델·생성 비용·실제 제출과 결과는 제품 소유. 빈 값·IME·disabled·pending·오류·복구·초안 유지·선택 의미·좁은 폭·큰 글자·키보드 확인 필요. 원본 생성 flow 미검증, 장식 mockup을 동작 완료로 세지 않음",
+        "limitsAndRejectedAlternatives": "도구·모델·생성 비용·실제 제출과 결과는 제품 소유. 빈 값·IME·disabled·pending·오류·복구·초안 유지·선택 의미·좁은 폭·키보드 확인 필요. 원본 생성 flow 미검증, 장식 mockup을 동작 완료로 세지 않음",
         "sourceUrls": [
           "https://styles.refero.design/style/17d0a00e-5de6-48c7-9f3b-25b04f7dab4c",
           "https://styles.refero.design/style/196dc658-219f-4ea0-b150-f9af17cd4c3f",
@@ -15302,8 +17368,45 @@
           "https://styles.refero.design/style/36fb90f7-3547-4dfd-a34e-592aa140078a",
           "https://styles.refero.design/style/371df039-a090-402b-b2e4-21ab38e07625",
           "https://styles.refero.design/style/3720657f-2b59-475e-a43d-b18cac718325",
-          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263"
-        ]
+          "https://styles.refero.design/style/375e255f-6e7b-4091-bf73-6df42a094263",
+          "https://styles.refero.design/style/376baf20-9ace-405d-bf4a-086016f2b1e3",
+          "https://styles.refero.design/style/3792d0ca-6c74-4667-a64d-76efe9f87076",
+          "https://styles.refero.design/style/37dd9612-4df0-4cdd-b942-bd97dd0efbd2",
+          "https://styles.refero.design/style/37e20981-1f35-4314-87c1-fdb61ab2f0c0",
+          "https://styles.refero.design/style/37f752a0-879e-4451-a4a4-0a82896e3890",
+          "https://styles.refero.design/style/3882ed21-8ef8-4bc9-b125-7791c0f136bb",
+          "https://styles.refero.design/style/38c8a8c9-4d2e-462a-bff0-80c9d9619ef2",
+          "https://styles.refero.design/style/39098e34-b911-4ad3-bcb5-ee80a392cd95",
+          "https://styles.refero.design/style/390cfba6-8c2f-4273-8c9e-750d470b6e2e",
+          "https://styles.refero.design/style/39105d96-3cb1-497a-8f9f-507a1bed4d30",
+          "https://styles.refero.design/style/391bd401-06d7-4444-8243-8573e96eab24",
+          "https://styles.refero.design/style/3963a727-8dec-4308-80c0-3ae198d15b87",
+          "https://styles.refero.design/style/398a603a-9ecd-47b2-b25c-26456a0383d0",
+          "https://styles.refero.design/style/3a331157-f5a5-4640-ada8-8a3ad262ee6a",
+          "https://styles.refero.design/style/3a398f82-579e-4ec4-a442-9962bf007edf",
+          "https://styles.refero.design/style/3a4d1008-0bd1-4ebb-9efe-0c146c45a99b",
+          "https://styles.refero.design/style/3ad131ed-b603-49a3-9491-7407db6cb423",
+          "https://styles.refero.design/style/3b080dc3-1992-43fe-91d6-2a721f934435",
+          "https://styles.refero.design/style/3b3fa99e-cee4-41f3-ac26-777b4b6a8b12",
+          "https://styles.refero.design/style/3b46c64e-b733-4d70-8cd0-531ca1f92937",
+          "https://styles.refero.design/style/3b5ff57f-a371-4c7f-82ae-5fc5485da073",
+          "https://styles.refero.design/style/3b6a17f0-3bdf-418c-a95e-0b89e5a8b2f8",
+          "https://styles.refero.design/style/3b742f76-25ad-446c-a942-09b09b93f6a3",
+          "https://styles.refero.design/style/3b83dfe4-2f53-4a4d-819d-e6045ca5f7dc",
+          "https://styles.refero.design/style/3b9ed801-511c-48b6-b516-68b1aa8a36ea",
+          "https://styles.refero.design/style/3c605c8e-daf2-4d46-94d7-2cb705a93b7b"
+        ],
+        "finalDisposition": "new-experiment",
+        "existingApiReferences": [
+          "TextArea/Field/IconButton/ToggleGroup existing",
+          "MessageComposer ./screens (채팅 목적)"
+        ],
+        "dispositionReason": "생성 prompt+tool/model 선택+추천 시작점은 MessageComposer 이름 변경으로 충족 안 됨. 기존 입력/선택을 이용하는 목적 구성 추가.",
+        "essentialConfirmations": [
+          "빈 값·IME·submit/pending/error/복구·초안 보존",
+          "비용/권한/모델/실제 결과 product 소유"
+        ],
+        "priority": null
       },
       {
         "id": "S08",
@@ -15323,8 +17426,22 @@
           "https://styles.refero.design/style/2eab438d-32cd-40c2-b160-1e4127dac569",
           "https://styles.refero.design/style/3281b445-805b-4dc7-933f-42b544a6d798",
           "https://styles.refero.design/style/350b1557-56f0-4361-8c8b-b7a88081982b",
-          "https://styles.refero.design/style/355e8465-df7d-486a-9d76-2ace37d076a2"
-        ]
+          "https://styles.refero.design/style/355e8465-df7d-486a-9d76-2ace37d076a2",
+          "https://styles.refero.design/style/37dd9612-4df0-4cdd-b942-bd97dd0efbd2",
+          "https://styles.refero.design/style/3b46c64e-b733-4d70-8cd0-531ca1f92937",
+          "https://styles.refero.design/style/3b9ed801-511c-48b6-b516-68b1aa8a36ea"
+        ],
+        "finalDisposition": "new-experiment",
+        "existingApiReferences": [
+          "ScreenLayout ./screens; CommentThreadScreen/ModerationScreen ./screen-flows",
+          "MessageComposer ./screens; Avatar/Asset/Button existing"
+        ],
+        "dispositionReason": "FeedScreen/Post/ConversationThread 공개 export는 현재 대응표에서 확인되지 않는다. 기존 댓글/신고/작성과 feed 읽기·독립 참여 상태를 잇는 목적 화면은 실제 gap.",
+        "essentialConfirmations": [
+          "읽기·비로그인·pending/error/empty/media fail·모바일 keyboard",
+          "추천/인증/신고/차단/구독은 product 소유"
+        ],
+        "priority": null
       },
       {
         "id": "C12",
@@ -15338,8 +17455,18 @@
           "https://styles.refero.design/style/1a8ba699-24cb-4b35-8db1-c595c578199c",
           "https://styles.refero.design/style/1c2d4a33-7ee4-4b61-a77e-dab91631d19b",
           "https://styles.refero.design/style/2a3cdb2e-effe-406b-932e-37e4dc88ab1d",
-          "https://styles.refero.design/style/367c0c6e-73a7-441c-a8ff-91d139ac60dc"
-        ]
+          "https://styles.refero.design/style/367c0c6e-73a7-441c-a8ff-91d139ac60dc",
+          "https://styles.refero.design/style/3a398f82-579e-4ec4-a442-9962bf007edf"
+        ],
+        "finalDisposition": "deferred",
+        "existingApiReferences": [
+          "Asset/Text/Surface existing"
+        ],
+        "dispositionReason": "정적 세계 지도+읽기 목록은 재사용 가능하나 Geo/Map 전용 API는 없다. 좌표·투영·선택·데이터 제품 요구가 미확인이라 API/SDK 추가 보류.",
+        "essentialConfirmations": [
+          "제품 지리 데이터 요구·경계/투영/권리·대체 읽기 목록"
+        ],
+        "priority": null
       },
       {
         "id": "C13",
@@ -15358,7 +17485,16 @@
           "https://styles.refero.design/style/21b71be3-78a0-4681-a5b9-64cc4b40eb67",
           "https://styles.refero.design/style/2e67105f-9f9a-45b5-9281-29734e753bd6",
           "https://styles.refero.design/style/36d939b8-e3b5-45c7-8d81-f7c4d7c8fdaa"
-        ]
+        ],
+        "finalDisposition": "deferred",
+        "existingApiReferences": [
+          "Statistic/StatisticGroup existing; Text"
+        ],
+        "dispositionReason": "비율 donut/ring 전용 API는 없고 Progress는 진행 의미다. 분포 요구와 동일 데이터 대체 목록 확인 전 차트 API/SDK 보류.",
+        "essentialConfirmations": [
+          "기간/통화/분모/0/음수/누락·계열 이름·읽기 대안"
+        ],
+        "priority": null
       },
       {
         "id": "C14",
@@ -15369,12 +17505,21 @@
         "limitsAndRejectedAlternatives": "Hume AI 재구성 묘사일 뿐 원본 모델·통계·데이터·탭 상태·키보드·모바일 미확인. White12px/C094E4 대비 확인 및 읽을 수 있는 표 대안 필요; 임의 Chart SDK·데이터 정확도 주장 금지",
         "sourceUrls": [
           "https://styles.refero.design/style/2e67105f-9f9a-45b5-9281-29734e753bd6"
-        ]
+        ],
+        "finalDisposition": "deferred",
+        "existingApiReferences": [
+          "Tabs/Card/StatisticGroup/Text/Asset existing"
+        ],
+        "dispositionReason": "순위 막대·수치 축·오차 범위와 동일 데이터 표는 공개 gap. 통계/원데이터/사용 목적이 미확인이라Progress/C13로 축소하지 않고 보류.",
+        "essentialConfirmations": [
+          "실제 값·오차 정의·정렬·축/단위·읽을 표·접근 가능한 선택"
+        ],
+        "priority": null
       }
     ],
     "navigationValidation": {
       "specification": "docs/STORYBOOK_NAVIGATION.md §1.1–1.3",
-      "checkpoint": "C342",
+      "checkpoint": "C362",
       "fourSegments": true,
       "fixedCategories": true,
       "uniqueItemNames": true,
@@ -15383,5 +17528,64 @@
       "actualRegistration": "not-performed",
       "literalStoryTitlesInspected": 439
     }
+  },
+  "scopeExclusions": {
+    "maximumAccessibilityText": {
+      "effectiveDate": "2026-10-07",
+      "basis": "User updated root AGENTS.md: maximum OS accessibility text and expansion simulating that maximum are fully excluded from design, implementation judgment, new tests, verification, follow-ups, completion and release blockers.",
+      "historicalEvidence": "Earlier performed observations are retained as historical evidence only. Earlier pending maximum-text mentions have no active requirement; no repetition or new blocker."
+    }
+  },
+  "researchConclusion": {
+    "status": "closed-at-user-request",
+    "scopeChangeDate": "2026-10-07",
+    "reason": "User: 이제 조사 마무리해; 필요한것만 조사해. Stop sequential corpus reading and decide necessary application from actually read evidence.",
+    "exhaustiveAuditComplete": false,
+    "capturedBodiesActuallyRead": 369,
+    "newOriginalProductVisualChecks": 0,
+    "newOriginalProductFlowChecks": 0,
+    "unreadStyleBodiesRetained": 1025,
+    "candidateCount": 42,
+    "candidateRegistration": "proposed-not-registered; root owns actual registration",
+    "finalDispositionCounts": {
+      "improve-existing": 10,
+      "reuse-existing": 24,
+      "new-experiment": 4,
+      "deferred": 4
+    },
+    "firstApplyCandidateIds": [
+      "S06",
+      "T02",
+      "T01",
+      "T06",
+      "P01"
+    ],
+    "firstApplyIsImplementationComplete": false,
+    "publicApiCrossCheck": {
+      "basis": [
+        "docs/generated/public-component-map.md",
+        "packages/react/src/index.ts",
+        "packages/react-native/src/index.ts",
+        "packages/react/package.json",
+        "packages/react-native/package.json",
+        "packages/design-contracts/src/design-profile.ts"
+      ],
+      "corrections": [
+        "TextAnnotation has Web experimental source only; no current public package export/map entry and no Native implementation.",
+        "FeedScreen/Post/ConversationThread/MediaPlayer/MediaLibraryScreen public APIs not found; do not infer availability from captured prose.",
+        "Tooltip is Web root/overlays; no Native public map entry found.",
+        "Image uses Web root/display and Native root/data-display, not ./image."
+      ]
+    },
+    "invalidExportPolicy": "quarantine before profile registration; source reconstruction conflicts are not original-product defects; preserve URL/unit/role; no auto guessing invalid hex/ranges/font weights",
+    "necessaryThemeSupportAxes": [
+      "independent display/reading/UI/code typography roles and contextual tracking",
+      "existing semantic brand/action/status separation",
+      "role-specific corner/crop/asset-variant manifestation",
+      "role-specific depth/material calibrated per renderer with static/opaque fallback",
+      "explicit collection/layout presentation compatible with screen purpose and focus order",
+      "interaction preset preserves draft/selection/product business state"
+    ],
+    "maximumAccessibilityText": "out-of-scope in all new design/tests/verification/followups/completion/release conditions; prior evidence historical only"
   }
 }

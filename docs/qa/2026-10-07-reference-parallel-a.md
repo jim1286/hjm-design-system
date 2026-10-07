@@ -1,8 +1,11 @@
 # 병렬 레퍼런스 조사 A — Minimal · DesignBookmark · CTA
 
-검토일: 2026-10-07 · 상태: 진행 중, 전수 완료 아님
+검토일: 2026-10-07 · 상태: 사용자 범위 변경에 따른 조사 checkpoint 마무리, 전수 완료 아님
 
 사용자의 병렬 전수 조사 요청으로 세 사이트를 분담했다. 수집된 HTML·소개 문구, 실제 갤러리 이미지, 원제품 동작을 분리한다. URL 수집만으로 독해·시각·상호작용 확인을 주장하지 않는다. 공용 inventory/ledger와 구현 소스는 root 담당이며 이 보고서는 조사 담당자 소유다.
+
+
+2026-10-07 재개 지침: 최대 OS 접근성 글자 및 최대값을 모사한 확대 조건은 설계·검증·추가 테스트·후속·완료/릴리스 차단에서 완전히 제외한다. 아래 과거 checkpoint의 확대 글자 관련 조건은 현재 유효한 후속 조건이 아니며, 이미 수행한 기록만 역사적 근거로 보존한다.
 
 ## 최신 저장 범위
 
@@ -12,9 +15,10 @@
 | --- | --- | --- | --- |
 | CTA snapshot551 | 상세505 소개·분류 + 비상세46 고유 본문 | 상세505(두 preview500·desktop-only5), 비상세46 desktop 첫 viewport | 원제품 흐름은 Unikorns contact anchor 이동만; 나머지 상태/전송/전체 모바일 미완료 |
 | CTA live 신규1 | Numa DOM 소개·분류1 | Numa desktop/mobile1 | 제품 구매·의료 기능 미확인; snapshot 밖 별도 |
-| Minimal snapshot3433 | 상세3199 중 website metadata3006 + template소개193 + 나머지234 고유본문/목록, description510 | 상세desktop252(유효mobile116·미제공135·제공되나실패1) | Mobile switch partial116, keyboard/focus/original 흐름 미완료 |
+| Minimal snapshot3433 | 상세3199 중 website metadata3006 + template소개193 + 나머지234 고유본문/목록, description610 | 상세desktop252(유효mobile116·미제공135·제공되나실패1) | Mobile switch partial116, keyboard/focus/original 흐름 미완료 |
 | Minimal 추가 live 목록 | 추가294 요청(75+78+39+29+25+24+24)·신규canonical252, snapshot포함 소개/metadata층3685 | 이번 추가 목록 시각0 | 목록/소개/탐색label 독해만, discovery closurefalse |
 | Minimal 목록 썸네일 | 기존 소개독해와 중복 URL, source수에 추가안함 | Websites목록10개230 작은desktop썸네일 | detail252/mobile116에 합산안함·세부글자/상태/flow미확인 |
+| DesignBookmark 신규 canonical24 | 23 유효소개 + libraries rendered404 오류1, 기존2656 포함 유효소개2679·오류포함2680canonical | 신규 시각0, 기존 대표desktop24와 중복 합산안함 | sponsor#apply는 기존 페이지 fragment 별도 타깃·직접도착은 클릭 flow 증거 아님 |
 | DesignBookmark queue2657 | snapshot tool2249 + 비tool103 소개/고유본문 + 신규live tool298/비tool7 = known2657 소개층(2656canonical) | 최초 홈·8bitcn panel + 순차대표desktop24, tool mobile0 | retro 검색·drawer·Escape·query 보존 부분 확인 |
 
 등록 제안 후보39개는 기존 API 재사용·부족 가능성·보류를 분리한 목록이다. 실제 실험 등록0, API 교체0이며 조사 전수 완료와 discovery closure를 주장하지 않는다.
@@ -720,3 +724,106 @@ known2657밖에서 발견한6 URL을 actual CUA rendered본문으로 읽었다. 
 기계적으로 발견한19 요청URL을 실제 읽었다. Chrome6/Linux5/Mac7=18 platform 분류의 title/breadcrumb/소개를 읽었고 각platform 총수38/28/278 header를 확인했다. 서로다른분류URL이어도 header전체수가같은지밖에확인하지않았으며 실제category결과filter·시각·동작은미확인이다. 19번째는 `/sponsor#apply`라 이미읽은 sponsor fragment alias로 정정해신규canonical수에서제외했다.
 
 따라서 known2657소개층2656canonical + 새valid분류23(Windows5+이번18)=현재유효소개2679canonical, 별도 `/libraries` visible404 1이다. 원본snapshot2352/knownqueue2657/새request6+19 및alias는서로다른분모다. 원본2352와live330(305+6+19)의anchors를hash/ref/utm 정규화해전체대조한 currentObservedAnchorDiscoveryComparison을저장했다. queue차이가0이어도원제품/모든본문·이미지/로그인상태/숨은경로/discoveryclosure완료로주장하지않는다. 후보39·실험등록0·교체0·시각24는그대로다.
+
+## 재개 checkpoint — 소개610 · Tegaki 원제품 문서7
+
+기존 CUA browser2/tab1 재연결은 `Browser is not available: 2`, enabled browser inventory는 빈 목록이었다. 동일 IAB 새 임시 탭 생성도 `Browser is not available: iab`로 실패했다. 따라서 이번 재개에서 화면·flow 성공 수를 추가하지 않았다. 사용자 탭·다른 세션·collector는 변경하지 않았다.
+
+Minimal 상세 SEO 소개510–609의 실제100개를 읽어 description 독해610/3199로 저장했다. Circa No의 Tools부터 Dan Highbrown의 Portfolio까지 이름·분류·드문 제작자 설명이며, 새 고유 URL 독해 수3685나 상세 시각252·mobile116·썸네일230에 합산하지 않는다. 이100개 소개만으로 새 시각 패턴 후보를 추가하지 않았다.
+
+A-39는 [공식 소개](https://tegaki.ink/), [시작 문서](https://tegaki.ink/getting-started/), [credit](https://tegaki.ink/credits/), [shaping](https://tegaki.ink/guides/shaping/), [renderer API의 props와 초기 plugin 부분](https://tegaki.ink/api/renderer/), [MIT 원문](https://github.com/gkurt/tegaki/blob/main/LICENSE), [React adapter180줄](https://github.com/gkurt/tegaki/blob/main/packages/renderer/src/react/TegakiRenderer.tsx)을 실제 읽었다. 이는 web의 공식 본문 추출 독해이며 라이브 화면·입력·폰트 선택·스크럽·읽기/선택 동작 확인은 아니다. API 페이지는 반환된134–404줄만 읽었고 이후 plugin/helper 전체를 읽었다고 하지 않는다.
+
+- 공식 renderer 문서상 `reducedMotion` 기본은 `never`, uncontrolled clock에서 `user`를 opt-in해야 OS 감속 설정을 따른다. controlled/CSS time은 소비 코드가 처리한다. HJM의 기존 motion 계약과 기본이 달라 그대로 교체하지 않는다. 특정 글자 subset 밖에는 정적인 font fallback을 쓴다고 설명한다.
+- 시작 문서상 bundle별 full-font fallback·선택 import 비용이 다르며 별도 HarfBuzz shaping 설치/등록 경계가 있다. shaping 문서는 SSR의 문자별 fallback과 client WASM shaping을 나눈다. HJM 공용 font token에 engine/data를 숨기는 근거가 아니다.
+- 코드 MIT와 폰트/data 라이선스는 별도다. credits는 OFL/Hershey, KanjiVG CC-BY-SA3, Hanzi Arphic, Letterpaths/Hangul MIT를 구분한다. 실제 배포 subset과 license 파일별 검토는 남았다.
+- React adapter의 SSR 요소 생성·mount adopt·unmount destroy·editable listener 해제를 읽었다. 다만 web 결과는 지난달 crawl이고 `effects` API가 최신 문서의 plugins와 다르다. Raw fetch도 blocked여서 현재 main 전체 코드/정확한 버전 확인으로 세지 않는다.
+
+A-39 `실험/컴포넌트/시각 효과/손글씨 획과 읽기`는 기존 Text/Heading/TextTransition/진행 중 TextAnnotation과 다른 glyph 획 엔진 비교 후보로 보류한다. font·한글/emoji/RTL·선택/읽기·감속·정리/성능·Native 가능성은 아직 실제 확인하지 않았다. 최대 글자 조건은 제외한다. 이번 checkpoint의 후보39·실험등록0·API교체0을 유지한다.
+
+이번 재개 문서의 `pnpm docs:check`는 PASS(587 Markdown)였다. JSON610소개·39후보·경로중복0·4단계/16자 검사도 통과했다. 문서 검사 결과는 UI runtime·원제품 flow·전수 완료 증거가 아니다.
+
+## 원제품 source 비교 — 8bitcn 13 URL
+
+[공식 시작 문서](https://www.8bitcn.com/docs)·[v2 소개](https://www.8bitcn.com/v2)·Button/Card/테마 전환 문서·README·라이선스 및 일부 registry를 읽었다. 상세13 URL와 정확한 독해 범위는 own index에 있다. 기존 DB 소개2679·오류1 및 시각24나 Minimal 검토 수에 합산하지 않는 연결 원제품 source 층이다. registry3331줄 전체 독해는 아니며 raw fetch도 blocked였다. 실제 웹 테마 변경·초점·입력·상태·mobile 흐름은 이번에 확인하지 않았다.
+
+[Button 원본127줄](https://github.com/TheOrcDev/8bitcn-ui/blob/main/components/ui/8bit/button.tsx)은 기존 ShadcnButton과 RadixSlot에 행동을 맡기고, aria-hidden/pointer-events-none span을 버튼 바깥에 배치해 계단 경계를 그린다. 일반 버튼6px, icon5/6px 경계가 다르며 ghost/link는 해당 장식을 생략한다. `active:translate-y-1`과 CSS transition은 코드에 있으나 실제 press/감속/focus 상태는 미확인이다. [Card 원본135줄](https://github.com/TheOrcDev/8bitcn-ui/blob/main/components/ui/8bit/card.tsx)도 ShadcnCard를 감싸6px y경계와 바깥 absolute x경계를 붙인다. 별도 레트로 버튼·카드 행동 엔진을 HJM에 추가할 근거가 아니다.
+
+[retro CSS16줄](https://github.com/TheOrcDev/8bitcn-ui/blob/main/components/ui/8bit/styles/retro.css)은 PressStart2P 외부 CSS import·system fallback·줄간격/글자간격·pixelated 이미지 설정이다. CSS만 읽고 해당 폰트 파일·한글 fallback·폰트 권한을 검증했다고 하지 않는다. [코드 MIT](https://github.com/TheOrcDev/8bitcn-ui/blob/main/license.md) notice와 font/asset권한은 구분한다.
+
+[ThemeSelector 문서](https://www.8bitcn.com/docs/components/theme-selector)의 named palettes와 provider 지침은 A-01/A-04에 합쳤다. [RetroModeSwitcher](https://www.8bitcn.com/docs/components/retro-mode-switcher)의 root provider/hydration 지침을 읽었으나 새 공유 provider 채택·MCP 설정·설치·브라우저 설정을 실행하지 않았다. 여러 palette 이름이 목록에 있다는 사실을 컴포넌트 행동·화면 구조 자동 전환 증거로 세지 않는다.
+
+A-03은 `실험/컴포넌트/시각 효과/계단 모양 테두리`에서 HJM Button/Card 계약을 재사용할 표면 표현 비교로 유지한다. 바깥 장식의 일반 focus/clip·색 대비·Native 표현과 원제품 실제 상태가 미확인이다. 최대 글자 조건은 제외한다. 후보39·실험등록0·API교체0이며 원제품 전수 완료도 아니다.
+
+## 연결 원제품 본문 checkpoint — 8요청/6본문/2도구오류
+
+Minimal 최근 상세에서 실제 관찰한 외부 링크를 통해 원제품8 URL를 시도했다. [AustenEzzell](https://www.austenezzell.com/), [AustenGoodman홈](https://austen.fun/), [About](https://austen.fun/about), [Index](https://austen.fun/list), [Pogo](https://austen.fun/project/pogo), [BocciConfigurator case study](https://austen.fun/project/bocci-configurator)의 추출 고유본문6개를 읽었다. Atrois `/en`과 Automne 홈2개는 web 도구 접근 불가였으며 실제HTTP오류·전체사이트폐쇄·독해완료로 세지 않는다.
+
+Ezzell의2017 gallery는30seconds/5minutes 선택을 보였지만 반환된 원제품source는 짧은 인용과 Nextone, Blog/GuestBook/Email link다. 원제품 현재UI는 root가 별도 확인할 대상으로 전달했다. Goodman홈·Index의 work/role 목록과 소개는 A-24 기존 작업 목록·설명에 흡수한다. Index 결과는1.4년전crawl이라 최신배치/순서를 확정하지 않는다. Case-study본문의 WebGL 설명은 해당 제품의 구현 소개로만 읽었다. 공유3D엔진을 넣거나 HJM Selector만으로 실제 configurator를 완성했다는 증거가 아니다. Image link가 본문에 있다는 이유로 이미지시각독해를 추가하지 않는다.
+
+root 지시로 Playwright 대체 browser의 tool metadata를 읽고 A소유 새 탭 생성을 시도했지만 동일profile `Browser is already in use` 오류로 생성되지 않았다. 공유process·lock은 보존했다. root가 자기 toolserver로 UI 확인을 맡았으며 A는 source-only 범위로 이어간다. CUA/IAB와 다른 browser로 확인한 성공 증거는 아직0이다.
+
+## 최종 적용 판단 — 사용자 범위 변경
+
+사용자가 “이제 조사 마무리해”, “필요한것만 조사해”라고 범위를 좁혀 추가 도메인 발견·전수 소개·일괄 본문 독해를 중단했다. 기존 URL별 원장·미확인 범위·캡처 오류 정정·남은 source/visual/flow를 보존했다. 전수 완료나39개 실험 등록을 뜻하지 않는다. A의 실제 등록/구현/교체는0이며 root가 통합 후보와 공개규격을 판단해 적용한다.
+
+최종39개는 **기존흡수25 · 기존개선5 · 신규실험3 · 보류6**이다. 신규실험은 계단 경계/손그림 경계/폰트 획 쓰기라는 고유요구를 보존한 분류다. 새 API·라이브러리·renderer를 이미 만들었거나 채택했다는 뜻은 아니다. 순수사진/입체asset·단순palette·기존입력/상태/미디어에는 새엔진을 만들지 않는다. 최대OS접근성글자/최대모사확대는 모든 현재조건에서 제외한다.
+
+우선 적용할 최대5개는 다음 순서다.
+
+| 순서 | 후보 | 적용 범위 | 꼭 필요한 확인 |
+| --- | --- | --- | --- |
+| 1 | A-01 테마 조합 | 기존11 profile에서 component→composition→screen을 동일fixture로 연결; 새theme registry 불필요 | 11profile 선택과 앱 custom profile이 기존시맨틱/상태계약을 유지하는지 로컬fixture로 확인 |
+| 2 | A-23 화면 상태와 순서 | 캡처시점/스크롤차이를 theme반응형으로 오인하지 않도록 동일state비교 | 같은데이터·선택·주행동·스크롤기준의 theme표현/구성 비교 |
+| 3 | A-02 종이 표면과 경계 | paper grain/noise 조합은 재사용, 줄무늬·테이프·회전·타공/물결 경계는 기존grain과 구별해 개선 범위로 유지 | 직접 만든 질감/경계 fixture의 대비·일반폭 clip·focus; 실제새경계API는 양renderer표현 가능성 확인 |
+| 4 | A-06 사진 위 입력 카드 | 사진슬롯+Card/Form/Button 조합으로 숲/종이 테마 양식 재사용 | 허가된 자체asset·텍스트대비·HJM pending/error/retry fixture 확인; 원제품 실제전송 복제 안함 |
+| 5 | A-03 계단 모양 테두리 | 일반radius로 계단 경계를 표현할 수 없어 고유 treatment 실험 필요; 행동은 HJM Button/Card 유지 | 원본127/135줄과 다른 자체geometry·focus/외곽clip·semanticstates·Native 대응 확인; 설치/primitive교체 선행 안함 |
+
+기존항목 변형에는 원제품의 전체 가입/구매/전송을 끝내는 조건을 붙이지 않는다. 재사용하는 HJM 계약을 자체fixture에서 확인한다. 계단 경계의 바깥geometry처럼 실제고유요구는 별도실험으로 남기며, 외부코드copy나 sharedbuttonengine교체로 우회하지 않는다.
+
+39개 각각의 결론은 아래와 같고, 정확한경로·기존API·전체출처·필수확인은 index의 각candidate와 `scopeClosureCheckpoint`에 보존했다.
+
+| 후보 | 결론 | 이유·필수확인 |
+| --- | --- | --- |
+| A-01 테마 조합 | 기존 흡수 | 기존11 profile에서 component→composition→screen을 동일fixture로 연결; 새theme registry 불필요. 11profile 선택과 앱 custom profile이 기존시맨틱/상태계약을 유지하는지 로컬fixture로 확인 |
+| A-02 종이 표면과 경계 | 기존 개선 | paper grain/noise 조합은 재사용, 줄무늬·테이프·회전·타공/물결 경계는 기존grain과 구별해 개선 범위로 유지. 직접 만든 질감/경계 fixture의 대비·일반폭 clip·focus; 실제새경계API는 양renderer표현 가능성 확인 |
+| A-03 계단 모양 테두리 | 신규 실험 | 일반radius로 계단 경계를 표현할 수 없어 고유 treatment 실험 필요; 행동은 HJM Button/Card 유지. 원본127/135줄과 다른 자체geometry·focus/외곽clip·semanticstates·Native 대응 확인; 설치/primitive교체 선행 안함 |
+| A-04 색 조합과 대비 | 기존 흡수 | semantic/brandPalette/checkPaletteContrast로 여러 palette를 비교. 채택할 제품팔레트와 표면의 light/dark 대비 확인 |
+| A-05 제목 위계와 줄바꿈 | 기존 흡수 | 제목위계/줄바꿈은 기존typography/profile변형. 폰트권한·한글fallback·일반폭 제목줄바꿈 확인; 최대글자조건 제외 |
+| A-06 사진 위 입력 카드 | 기존 흡수 | 사진슬롯+Card/Form/Button 조합으로 숲/종이 테마 양식 재사용. 허가된 자체asset·텍스트대비·HJM pending/error/retry fixture 확인; 원제품 실제전송 복제 안함 |
+| A-07 비쳐 보이는 표면 | 기존 흡수 | 기존material blur/fill/inset 범위의 표면변형. 채택opacity/blur에서 일반텍스트대비와 해당renderer표현 확인 |
+| A-08 입체 장식과 행동 | 기존 흡수 | 3D장식은 Image/AspectRatio/제품asset슬롯. 실제사용asset권한·장식접근성제외·일반레이아웃 확인; 3D엔진 필요없음 |
+| A-09 버튼 순서와 의도 | 기존 개선 | CTA순서/주행동은 제품intent로 고정하고 테마배치변형에서 보존. 같은선택/결과state에서 desktop/mobile 주행동의미와탭순서 확인 |
+| A-10 구독 정보 입력 | 기존 흡수 | newsletter목적별 기존Form/Field schema변형. fixture유효성·pending/failed/success·동의분리 확인; 외부이메일 전송필요없음 |
+| A-11 관심과 동의 선택 | 기존 흡수 | 관심선택과법적동의는 기존Checkbox/FieldGroup의 다른의미. controlled값·필수동의 문구/에러전달 확인 |
+| A-12 단계별 가입 입력 | 기존 개선 | 첫step정적참조를 짧은가입흐름으로 개선하되 schema는제품소유. 이전입력유지·단계별유효성·뒤로가기·실패복구 fixture 확인 |
+| A-13 팝업 입력과 닫기 | 기존 흡수 | Dialog/Sheet/Form기존오버레이에 목적별폼 연결. Escape/닫기·focusrestore·submit상태 fixture 확인 |
+| A-14 신청 옵션과 비용 | 기존 흡수 | 기존상품소개/가격Card에 신청/구독/구매의미 유지. 비용/약관/주행동label fixture 확인; 실제구매 실행불필요 |
+| A-15 문의와 질문 답변 | 기존 흡수 | FAQ/help는 existingAccordion+Card로 흡수. 열림controlled상태·keyboard·질문/답변순서 fixture 확인 |
+| A-16 자료 검색과 선택 | 기존 흡수 | 기존SearchScreen의 debounce/취소/결과요약 재사용. 0건/loading/error/recovery·검색어보존 fixture 확인 |
+| A-17 목록 옆 상세 보기 | 기존 흡수 | 기존Sheet/Dialog와선택/query소유 분리. 닫은뒤query/선택context·focusrestore fixture 확인 |
+| A-18 기기별 미리보기 | 기존 흡수 | Tabs/SegmentedControl+Image/AspectRatio로 선택의미에 맞게 조합. 패널/값semantics·label·키보드전환·이미지loading/error fixture 확인 |
+| A-19 달력과 문의 안내 | 보류 | 정적날짜표가 입력인지 미확인; 공유달력엔진요구 확정불가. 실제날짜선택이 필요할때만 원본입력행동 확인 |
+| A-20 영상 미리보기 | 기존 흡수 | 이미배포된영상미리보기의 변형; 동명실험 복제 안함. 기존항목변경할경우 Play/닫기·caption/실패상태 fixture 확인 |
+| A-21 앱 받기와 코드 보기 | 기존 흡수 | QRCode/DocumentResource/Link 목적별 기존구성. 실제payload/링크label·권한/만료상태 fixture; 외부다운로드/구매 실행불필요 |
+| A-22 미리보기 실패와 재시도 | 기존 개선 | 캡처광고/blank오인은 원사이트/HJM결함확정아님; 기존media상태fixture 개선. 자체fixture의loading/error/성공재시도·레이아웃공간 유지 확인 |
+| A-23 화면 상태와 순서 | 기존 개선 | 캡처시점/스크롤차이를 theme반응형으로 오인하지 않도록 동일state비교. 같은데이터·선택·주행동·스크롤기준의 theme표현/구성 비교 |
+| A-24 작업 목록과 설명 | 기존 흡수 | collectionrows/cards/grid와작업소개 재사용; Native표지원 확장안함. 실제쓰는list모드의빈/로딩/선택상태 fixture; Web표는Web에만 |
+| A-25 질감과 글자 표현 | 보류 | ASCII/dither생성도구소개만으로 공유질감엔진 필요성 없음. 제품에서그표현이 실제필요할때 원본출력/권한/읽기 확인 |
+| A-26 입력과 상태 구현 비교 | 보류 | 원API/HJM결함비교 없어 상태·입력엔진 교체근거 없음. 구체적HJM결함/기능요구 생길때 해당API/실제focus/paste/autofill 비교 |
+| A-27 아이콘과 아바타 조합 | 기존 흡수 | Icon/Image/Avatar제품asset슬롯 흡수; assets새공유배포 안함. 사용할asset권한·semanticname/장식구분·일반clip 확인 |
+| A-28 대비와 상태 검토 | 기존 흡수 | 기존대비/상태fixture와로컬검토절차 활용. 변경된표면의light/dark/RTL/감속·결과상태 확인; 최대OS글자/모사확대 제외 |
+| A-29 손그림 경계와 배경 | 신규 실험 | 손그림card경계는 grain/문장TextAnnotation과다른고유표현; 새표현실험후 API판단. 자체SVG경계의결정성·focus/일반clip·두renderer·배경대비 확인; 원asset복제 안함 |
+| A-30 점 배열 로딩 표현 | 보류 | 점loader소개만 확인; 기존Spinner/Progress/Skeleton의교체필요성없음. 점표현이 실제요구될때 원코드·감속·loadingannouncement/native 비교 |
+| A-31 움직임 속도와 감속 | 보류 | 외부easing모음은 기존motion계약변형으로 충분할 가능성. 특정motion차이가 실제필요할때만 기존timing/reducedMotion과 원코드비교 |
+| A-32 반사 무늬와 광택 | 보류 | foil은 기존EffectSurface에없지만 실제동적반사요구미확인; bitmapasset부터. 동적광택이 채택요구로확정될때만 원본flow/code/두renderer비용·대비·감속 확인 |
+| A-33 상품 옵션과 미리보기 | 기존 흡수 | 제품옵션/재고데이터를 기존Select/Radio/Image controlled계약으로연결. 옵션→이미지/재고/가격동기화 fixture 확인; 3Dconfigurator엔진 도입안함 |
+| A-34 장소와 기간 신청 | 기존 흡수 | 기존DatePicker/Range/입력구성의 신청목적변형. 장소/기간유효성·controlled값·pending/retry fixture 확인 |
+| A-35 저장한 항목 | 기존 흡수 | 이미배포SavedItemsScreen의북마크/컬렉션사례. 제품data/Undo/빈목록/선택fixture 확인; 동명실험생성 안함 |
+| A-36 보관함과 페이지 이동 | 기존 흡수 | 이미배포페이지이동/보관함; Native기존LoadMore 유지. URL/다음페이지실패복구/초점fixture 확인; WebAPI Native지원 주장안함 |
+| A-37 음원 정보와 재생 | 기존 흡수 | optionalVoiceNote UI와제품음원asset/data 재사용. controlled실제duration/play/seek/error/retry fixture; 가짜timer/스트리밍엔진 안함 |
+| A-38 캐러셀 | 기존 흡수 | 이미배포Carousel singleactive계약; strip과구별. 기존유한패널/labels/감속계약변형; 실제swipe필요시에만optionalmotion 확인 |
+| A-39 손글씨 획과 읽기 | 신규 실험 | fontglyph stroke는 TextTransition/문장장식과다른요구; 별도원제품비교실험 보존. 정확버전/코드·폰트data권한·실제선택/읽기·한글emojiRTL·감속·정리/Native검증 후 도입판단; 지금engine채택 보류 |
+
+최종 근거층은 CTA551본문/505preview+비상세46첫viewport/Numa1, Minimal3685소개·metadata/SEO610/detaildesktop252·mobile116/목록썸네일230, DesignBookmark2679유효소개+rendered오류1/대표desktop24다. 같은URL의소개·썸네일·detail·mobile를 합산하지 않는다. 연결원제품 Tegaki7문서·8bitcn13source URL·Minimal6본문/2도구오류는 별도층이다. CUA/IAB unavailable와Playwright공유profile오류 때문에 이번재개의 새UI/flow성공은0이며 root의 후속UI증거는 별도소유다.
+
+최종 검증: `pnpm docs:check` PASS(587 Markdown), JSON39개 고유ID·허용finalDisposition·최대5개 우선순위·전수완료false·등록0 정합성 PASS. 원격CI·build·릴리스·git은 실행하지 않았다. 최종 수집파일은 A소유 MD/index2개이며 이번재개 신규영구proof는 없다.

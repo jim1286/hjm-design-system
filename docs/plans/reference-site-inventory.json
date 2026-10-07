@@ -19755,8 +19755,10 @@
         "totalRecords": 1471,
         "http200": 1461,
         "errors": 10,
-        "state": "running-confirmed-session",
-        "scope": "Fetched text pending individual source/visual/interaction review; no HTML link closure claim"
+        "state": "historical-source-snapshot",
+        "scope": "Fetched text pending individual source/visual/interaction review; no HTML link closure claim",
+        "previousReportedState": "running-confirmed-session",
+        "currentStateNote": "Earlier timestamped collector observation only. Current research is closed for adoption; no live collector status is inferred from this snapshot."
       },
       "sourceUrlRepairs": {
         "rawSpaceUrls": 9,
@@ -19773,26 +19775,35 @@
         "scope": "Fetched/extracted public source; not source reading, visual or interaction review",
         "lastCapturedAt": "2026-10-07T05:02:02Z",
         "allReviewComplete": false,
-        "status": "running-process-confirmed"
+        "status": "historical-source-snapshot",
+        "previousReportedState": "running-process-confirmed",
+        "currentStateNote": "Earlier timestamped collector observation only. Current research is closed for adoption; no live collector status is inferred from this snapshot."
       },
       "sourceIndexMetadataObservation": {
-        "observedAt": "2026-10-07T08:32:15.355924+00:00",
+        "observedAt": "2026-10-07T09:06:20.753475+00:00",
         "originalIndexPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/pages.json",
         "originalIndexBytesObservedByAgent": 0,
         "currentIndexBytesObservedByRoot": 0,
         "cause": "unconfirmed",
         "independentRecoveryIndex": "docs/qa/2026-10-07-reference-parallel-b-21st-recovery-index.json",
-        "recoveryIndexSha256": "8b447c2741601254f8008f3afb4625b4112cab27c4c0d32e18f774cd00d85acf",
+        "recoveryIndexSha256": "823cfc1f1302471c380d419d17b6b33c1750a00578457bb79ebe49251c7dade5",
         "inventoryUrls": 12460,
         "recoveredRawMetadataCounts": {
           "missing-raw-file": 1062,
           "raw-metadata-verified": 11398
         },
         "readingCountsSeparate": {
-          "newBatchCapturedPublicBodyRead": 20,
-          "implementationRead": 0,
+          "newBatchCapturedPublicBodyRead": 53,
+          "capturedLoadingShellRead": 10,
+          "implementationRead": 1,
           "renderedSelectedPages": 0,
-          "selectedFlowPages": 0
+          "selectedFlowPages": 0,
+          "alternateRepairMetadataVerified": 9,
+          "newMissingHttpSuccess": 1,
+          "newMissingTimeout": 1,
+          "linkedImplementationRead": 4,
+          "linkedImplementationFilesRead": 5,
+          "capturedUnavailableMessageRead": 8
         },
         "scope": "Independent raw file existence/bytes/hash recovery, not restored HTTP status/capture timestamps, content reading, UI or whole-site completion. Original file is preserved. Earlier source counts are historical snapshots.",
         "allReviewComplete": false,
@@ -19821,7 +19832,18 @@
             }
           ],
           "scope": "All recovery metadata is structurally consistent; only three raw gzip samples independently reread by root. This is not content/UI reading."
-        }
+        },
+        "previousMetadataCheckpoint": {
+          "observedAt": "2026-10-07T08:32:15.355924+00:00",
+          "recoveryIndexSha256": "8b447c2741601254f8008f3afb4625b4112cab27c4c0d32e18f774cd00d85acf",
+          "readingCountsSeparate": {
+            "newBatchCapturedPublicBodyRead": 20,
+            "implementationRead": 0,
+            "renderedSelectedPages": 0,
+            "selectedFlowPages": 0
+          }
+        },
+        "currentResearchStatus": "closed-for-adoption"
       }
     },
     {
@@ -22537,5 +22559,20 @@
       "adopted": "Preserve role names while resolving values from product profiles; retain separate sm/md/lg/xl values",
       "allReviewComplete": false
     }
-  ]
+  ],
+  "activeResearchScope": {
+    "changedOn": "2026-10-07",
+    "userInstructions": [
+      "이제 조사 마무리해",
+      "필요한것만 조사해"
+    ],
+    "mode": "adoption-necessary-only",
+    "status": "closed-for-adoption",
+    "decisionDocument": "docs/plans/reference-research-closeout-2026-10-07.md",
+    "reason": "User narrowed exhaustive page review to research necessary for theme and interaction adoption. Preserve historical inventory without treating unreviewed pages as a current completion or release blocker.",
+    "exhaustiveReviewComplete": false,
+    "resumeBroadDiscovery": false,
+    "requirement": "Complete evidence-backed adoption decisions; verify source and live behavior only where required by a selected implementation.",
+    "adoptionDecisions": "docs/plans/reference-adoption-decisions-2026-10-07.json"
+  }
 }

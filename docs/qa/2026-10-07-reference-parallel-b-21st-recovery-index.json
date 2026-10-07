@@ -76,7 +76,10 @@
         "decision": "existing-candidate-source-link-pending-implementation-review",
         "registration": "pending-root-after-research",
         "preconditions": "Metadata Usage only. Read linked uselayouts actual implementation and verify inputs/keyboard/focus/touch/reduced/draft/async before functional adoption; do not add registry packages or duplicate engines based on dependency lists.",
-        "platformScope": "Read public usage/index; API platform support must be preserved. Tree is Web-only, use product Native navigation/list contract rather than claim Native Tree. ContentTransition imported from motion surface."
+        "platformScope": "Read public usage/index; API platform support must be preserved. Tree is Web-only, use product Native navigation/list contract rather than claim Native Tree. ContentTransition imported from motion surface.",
+        "finalDisposition": "reuse-existing",
+        "finalReason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+        "finalRequiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음."
       },
       "linkedSource": "https://uselayouts.com/docs/components/animated-collection"
     },
@@ -103,7 +106,10 @@
         "decision": "existing-candidate-source-link-pending-implementation-review",
         "registration": "pending-root-after-research",
         "preconditions": "Metadata Usage only. Read linked uselayouts actual implementation and verify inputs/keyboard/focus/touch/reduced/draft/async before functional adoption; do not add registry packages or duplicate engines based on dependency lists.",
-        "platformScope": "Read public usage/index; API platform support must be preserved. Tree is Web-only, use product Native navigation/list contract rather than claim Native Tree. ContentTransition imported from motion surface."
+        "platformScope": "Read public usage/index; API platform support must be preserved. Tree is Web-only, use product Native navigation/list contract rather than claim Native Tree. ContentTransition imported from motion surface.",
+        "finalDisposition": "improve-existing",
+        "finalReason": "Magic Bento 실제 Tab 흐름에서 focus된 CTA의 부모 opacity0을 확인했다. 기존 Grid/Card/Button/Link 슬롯의 CTA는 초점·터치에서도 읽고 실행할 수 있게 한다.",
+        "finalRequiredVerification": "항상 노출 또는 focus-within 노출·시각적 초점·키보드 실행·터치; 다른 hover 장식이 클릭을 막지 않는지."
       },
       "linkedSource": "https://uselayouts.com/docs/components/bento-card"
     },
@@ -129,7 +135,10 @@
         "decision": "existing-candidate-source-link-pending-implementation-review",
         "registration": "pending-root-after-research",
         "preconditions": "Metadata Usage only. Read linked uselayouts actual implementation and verify inputs/keyboard/focus/touch/reduced/draft/async before functional adoption; do not add registry packages or duplicate engines based on dependency lists.",
-        "platformScope": "Read public usage/index; API platform support must be preserved. Tree is Web-only, use product Native navigation/list contract rather than claim Native Tree. ContentTransition imported from motion surface."
+        "platformScope": "Read public usage/index; API platform support must be preserved. Tree is Web-only, use product Native navigation/list contract rather than claim Native Tree. ContentTransition imported from motion surface.",
+        "finalDisposition": "reuse-existing",
+        "finalReason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+        "finalRequiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음."
       },
       "linkedSource": "https://uselayouts.com/docs/components/bottom-menu"
     },
@@ -156,7 +165,10 @@
         "decision": "existing-candidate-source-link-pending-implementation-review",
         "registration": "pending-root-after-research",
         "preconditions": "Metadata Usage only. Read linked uselayouts actual implementation and verify inputs/keyboard/focus/touch/reduced/draft/async before functional adoption; do not add registry packages or duplicate engines based on dependency lists.",
-        "platformScope": "Read public usage/index; API platform support must be preserved. Tree is Web-only, use product Native navigation/list contract rather than claim Native Tree. ContentTransition imported from motion surface."
+        "platformScope": "Read public usage/index; API platform support must be preserved. Tree is Web-only, use product Native navigation/list contract rather than claim Native Tree. ContentTransition imported from motion surface.",
+        "finalDisposition": "improve-existing",
+        "finalReason": "FilePicker/UploadItem 선택·제거·오류·재시도 계약을 유지하고 업로드 표현만 통합한다. 원본 decorative FileUpload를 새 엔진으로 복제하지 않는다.",
+        "finalRequiredVerification": "선택 취소·동일 파일 재선택·실패/재시도·키보드·제품 업로드 상태 및 파일 정책."
       },
       "linkedSource": "https://uselayouts.com/docs/components/bucket"
     },
@@ -182,7 +194,10 @@
         "decision": "existing-candidate-source-link-pending-implementation-review",
         "registration": "pending-root-after-research",
         "preconditions": "Metadata Usage only. Read linked uselayouts actual implementation and verify inputs/keyboard/focus/touch/reduced/draft/async before functional adoption; do not add registry packages or duplicate engines based on dependency lists.",
-        "platformScope": "Read public usage/index; API platform support must be preserved. Tree is Web-only, use product Native navigation/list contract rather than claim Native Tree. ContentTransition imported from motion surface."
+        "platformScope": "Read public usage/index; API platform support must be preserved. Tree is Web-only, use product Native navigation/list contract rather than claim Native Tree. ContentTransition imported from motion surface.",
+        "finalDisposition": "reuse-existing",
+        "finalReason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+        "finalRequiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음."
       },
       "linkedSource": "https://uselayouts.com/docs/components/day-picker"
     },
@@ -208,9 +223,23 @@
         "decision": "existing-candidate-source-link-pending-implementation-review",
         "registration": "pending-root-after-research",
         "preconditions": "Metadata Usage only. Read linked uselayouts actual implementation and verify inputs/keyboard/focus/touch/reduced/draft/async before functional adoption; do not add registry packages or duplicate engines based on dependency lists.",
-        "platformScope": "Read public usage/index; API platform support must be preserved. Tree is Web-only, use product Native navigation/list contract rather than claim Native Tree. ContentTransition imported from motion surface."
+        "platformScope": "Read public usage/index; API platform support must be preserved. Tree is Web-only, use product Native navigation/list contract rather than claim Native Tree. ContentTransition imported from motion surface.",
+        "finalDisposition": "improve-existing",
+        "finalReason": "원본 Ripple의 키보드 합성 좌표 문제를 실제 확인했다. Button 요청/disabled/loading 엔진을 유지하고 누름 표현의 선택축만 개선 대상으로 남긴다.",
+        "finalRequiredVerification": "Enter/Space·포인터 좌표·disabled/loading·중복 요청·reduced/lifecycle; 표현 개선 필요시만."
       },
-      "linkedSource": "https://uselayouts.com/docs/components/delete-button"
+      "linkedSource": "https://uselayouts.com/docs/components/delete-button",
+      "linkedImplementation": {
+        "url": "https://github.com/iurvish/uselayouts/blob/07cc4f4fb8e064643168e6fc8792127af92637f5/registry/default/example/delete-button.tsx",
+        "repositoryCommit": "07cc4f4fb8e064643168e6fc8792127af92637f5",
+        "bodySha256": "693ce3f55f442f5f9827c224d5fbbd63ab639863cf566428f2d1d479a45029c9",
+        "rawBytes": 7684,
+        "review": "full-current-pinned-public-repository-source-read",
+        "notes": "PinnedcurrentGitHub7684TSX full read. True buttons lack type; onClicktogglesdelete/cancel,countdowntimeoutcleansup, count0returnswithout anydeletecallback/network/deletedstate; stateAnimationtimeout hasnocleanup; pointerEventsnone duringtransitiondoesnotdisablekeyboard, buttonnodes replace activeelement; UTF16split strings/multiplelayoutId constant/sharedinstance/reducednone. 21st captured description says swipe-to-delete but this currentrepo source is click/countdown; do not claim identicalliveimplementation. Reuse Button/Dialog/Notice actualconfirmed/cancel/recovery protocol; labels/duration/productdeletedata productowned. No accountdeletion engine/remote mutation performed.",
+        "versionRelationship": "Discovered from preservedLayouts library GitHublink; currentcommit not proved identicalto21stlive/copypanel. No authgate bypass/install/execute.",
+        "visualReview": "pending-browser-unavailable",
+        "interactionReview": "pending"
+      }
     },
     {
       "url": "https://21st.dev/@0xUrvish/components/discover-button",
@@ -233,7 +262,10 @@
         "decision": "existing-candidate-source-link-pending-implementation-review",
         "registration": "pending-root-after-research",
         "preconditions": "Metadata Usage only. Read linked uselayouts actual implementation and verify inputs/keyboard/focus/touch/reduced/draft/async before functional adoption; do not add registry packages or duplicate engines based on dependency lists.",
-        "platformScope": "Read public usage/index; API platform support must be preserved. Tree is Web-only, use product Native navigation/list contract rather than claim Native Tree. ContentTransition imported from motion surface."
+        "platformScope": "Read public usage/index; API platform support must be preserved. Tree is Web-only, use product Native navigation/list contract rather than claim Native Tree. ContentTransition imported from motion surface.",
+        "finalDisposition": "improve-existing",
+        "finalReason": "원본 Ripple의 키보드 합성 좌표 문제를 실제 확인했다. Button 요청/disabled/loading 엔진을 유지하고 누름 표현의 선택축만 개선 대상으로 남긴다.",
+        "finalRequiredVerification": "Enter/Space·포인터 좌표·disabled/loading·중복 요청·reduced/lifecycle; 표현 개선 필요시만."
       },
       "linkedSource": "https://uselayouts.com/docs/components/discover-button"
     },
@@ -259,7 +291,10 @@
         "decision": "existing-candidate-source-link-pending-implementation-review",
         "registration": "pending-root-after-research",
         "preconditions": "Metadata Usage only. Read linked uselayouts actual implementation and verify inputs/keyboard/focus/touch/reduced/draft/async before functional adoption; do not add registry packages or duplicate engines based on dependency lists.",
-        "platformScope": "Read public usage/index; API platform support must be preserved. Tree is Web-only, use product Native navigation/list contract rather than claim Native Tree. ContentTransition imported from motion surface."
+        "platformScope": "Read public usage/index; API platform support must be preserved. Tree is Web-only, use product Native navigation/list contract rather than claim Native Tree. ContentTransition imported from motion surface.",
+        "finalDisposition": "improve-existing",
+        "finalReason": "Tabs/ToggleGroup 선택 의미·키보드와 초점은 기존 API가 소유한다. 원본 sliding/glow 표현은 기존 선택 표시의 표현 후보이다.",
+        "finalRequiredVerification": "controlled 선택·키보드/RTL·disabled·초점·reduced; root Tabs 개선과 중복 통합."
       },
       "linkedSource": "https://uselayouts.com/docs/components/discrete-tab"
     },
@@ -286,7 +321,10 @@
         "decision": "existing-candidate-source-link-pending-implementation-review",
         "registration": "pending-root-after-research",
         "preconditions": "Metadata Usage only. Read linked uselayouts actual implementation and verify inputs/keyboard/focus/touch/reduced/draft/async before functional adoption; do not add registry packages or duplicate engines based on dependency lists.",
-        "platformScope": "Read public usage/index; API platform support must be preserved. Tree is Web-only, use product Native navigation/list contract rather than claim Native Tree. ContentTransition imported from motion surface."
+        "platformScope": "Read public usage/index; API platform support must be preserved. Tree is Web-only, use product Native navigation/list contract rather than claim Native Tree. ContentTransition imported from motion surface.",
+        "finalDisposition": "improve-existing",
+        "finalReason": "Tabs/ToggleGroup 선택 의미·키보드와 초점은 기존 API가 소유한다. 원본 sliding/glow 표현은 기존 선택 표시의 표현 후보이다.",
+        "finalRequiredVerification": "controlled 선택·키보드/RTL·disabled·초점·reduced; root Tabs 개선과 중복 통합."
       },
       "linkedSource": "https://uselayouts.com/docs/components/dynamic-toolbar"
     },
@@ -313,7 +351,10 @@
         "decision": "existing-candidate-source-link-pending-implementation-review",
         "registration": "pending-root-after-research",
         "preconditions": "Metadata Usage only. Read linked uselayouts actual implementation and verify inputs/keyboard/focus/touch/reduced/draft/async before functional adoption; do not add registry packages or duplicate engines based on dependency lists.",
-        "platformScope": "Read public usage/index; API platform support must be preserved. Tree is Web-only, use product Native navigation/list contract rather than claim Native Tree. ContentTransition imported from motion surface."
+        "platformScope": "Read public usage/index; API platform support must be preserved. Tree is Web-only, use product Native navigation/list contract rather than claim Native Tree. ContentTransition imported from motion surface.",
+        "finalDisposition": "new-experiment",
+        "finalReason": "동시에 여러 카드를 보여 주는 유한 가로 목록은 현행 단일 활성 Carousel 및 양쪽 List의 horizontal 미지원과 다르다. 기존 카드 상세 연결과 합쳐 새 구성/공통 descriptor의 실제 gap을 보존한다.",
+        "finalRequiredVerification": "다중 노출·끝 경계·폭 변화·키보드/터치·논리적 RTL·stable id, Dialog 초점/배경 비활성/복귀; 최대 글자 제외."
       },
       "linkedSource": "https://uselayouts.com/docs/components/empty-testimonial"
     },
@@ -340,7 +381,10 @@
         "decision": "existing-candidate-source-link-pending-implementation-review",
         "registration": "pending-root-after-research",
         "preconditions": "Metadata Usage only. Read linked uselayouts actual implementation and verify inputs/keyboard/focus/touch/reduced/draft/async before functional adoption; do not add registry packages or duplicate engines based on dependency lists.",
-        "platformScope": "Read public usage/index; API platform support must be preserved. Tree is Web-only, use product Native navigation/list contract rather than claim Native Tree. ContentTransition imported from motion surface."
+        "platformScope": "Read public usage/index; API platform support must be preserved. Tree is Web-only, use product Native navigation/list contract rather than claim Native Tree. ContentTransition imported from motion surface.",
+        "finalDisposition": "reuse-existing",
+        "finalReason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+        "finalRequiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음."
       },
       "linkedSource": "https://uselayouts.com/docs/components/expandable-gallery"
     },
@@ -366,7 +410,10 @@
         "decision": "existing-candidate-source-link-pending-implementation-review",
         "registration": "pending-root-after-research",
         "preconditions": "Metadata Usage only. Read linked uselayouts actual implementation and verify inputs/keyboard/focus/touch/reduced/draft/async before functional adoption; do not add registry packages or duplicate engines based on dependency lists.",
-        "platformScope": "Read public usage/index; API platform support must be preserved. Tree is Web-only, use product Native navigation/list contract rather than claim Native Tree. ContentTransition imported from motion surface."
+        "platformScope": "Read public usage/index; API platform support must be preserved. Tree is Web-only, use product Native navigation/list contract rather than claim Native Tree. ContentTransition imported from motion surface.",
+        "finalDisposition": "new-experiment",
+        "finalReason": "동시에 여러 카드를 보여 주는 유한 가로 목록은 현행 단일 활성 Carousel 및 양쪽 List의 horizontal 미지원과 다르다. 기존 카드 상세 연결과 합쳐 새 구성/공통 descriptor의 실제 gap을 보존한다.",
+        "finalRequiredVerification": "다중 노출·끝 경계·폭 변화·키보드/터치·논리적 RTL·stable id, Dialog 초점/배경 비활성/복귀; 최대 글자 제외."
       },
       "linkedSource": "https://uselayouts.com/docs/components/feature-carousel"
     },
@@ -393,7 +440,10 @@
         "decision": "existing-candidate-source-link-pending-implementation-review",
         "registration": "pending-root-after-research",
         "preconditions": "Metadata Usage only. Read linked uselayouts actual implementation and verify inputs/keyboard/focus/touch/reduced/draft/async before functional adoption; do not add registry packages or duplicate engines based on dependency lists.",
-        "platformScope": "Read public usage/index; API platform support must be preserved. Tree is Web-only, use product Native navigation/list contract rather than claim Native Tree. ContentTransition imported from motion surface."
+        "platformScope": "Read public usage/index; API platform support must be preserved. Tree is Web-only, use product Native navigation/list contract rather than claim Native Tree. ContentTransition imported from motion surface.",
+        "finalDisposition": "reuse-existing",
+        "finalReason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+        "finalRequiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음."
       },
       "linkedSource": "https://uselayouts.com/docs/components/fluid-expanding-grid"
     },
@@ -420,7 +470,10 @@
         "decision": "existing-candidate-source-link-pending-implementation-review",
         "registration": "pending-root-after-research",
         "preconditions": "Metadata Usage only. Read linked uselayouts actual implementation and verify inputs/keyboard/focus/touch/reduced/draft/async before functional adoption; do not add registry packages or duplicate engines based on dependency lists.",
-        "platformScope": "Read public usage/index; API platform support must be preserved. Tree is Web-only, use product Native navigation/list contract rather than claim Native Tree. ContentTransition imported from motion surface."
+        "platformScope": "Read public usage/index; API platform support must be preserved. Tree is Web-only, use product Native navigation/list contract rather than claim Native Tree. ContentTransition imported from motion surface.",
+        "finalDisposition": "reuse-existing",
+        "finalReason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+        "finalRequiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음."
       },
       "linkedSource": "https://uselayouts.com/docs/components/folder-interaction"
     },
@@ -447,9 +500,23 @@
         "decision": "existing-candidate-source-link-pending-implementation-review",
         "registration": "pending-root-after-research",
         "preconditions": "Metadata Usage only. Read linked uselayouts actual implementation and verify inputs/keyboard/focus/touch/reduced/draft/async before functional adoption; do not add registry packages or duplicate engines based on dependency lists.",
-        "platformScope": "Read public usage/index; API platform support must be preserved. Tree is Web-only, use product Native navigation/list contract rather than claim Native Tree. ContentTransition imported from motion surface."
+        "platformScope": "Read public usage/index; API platform support must be preserved. Tree is Web-only, use product Native navigation/list contract rather than claim Native Tree. ContentTransition imported from motion surface.",
+        "finalDisposition": "improve-existing",
+        "finalReason": "입력 vanish/readonly inline edit 표현이 저장 성공·실패 상태를 대신하지 못한다. 기존 controlled TextField/Form/Button으로 draft/IME/실제 요청 상태를 유지한다.",
+        "finalRequiredVerification": "IME/Enter 중복·편집/취소 원문·실패→재시도·unmount/async 결과·실제 성공 전에 draft 삭제 금지."
       },
-      "linkedSource": "https://uselayouts.com/docs/components/inline-edit"
+      "linkedSource": "https://uselayouts.com/docs/components/inline-edit",
+      "linkedImplementation": {
+        "url": "https://github.com/iurvish/uselayouts/blob/07cc4f4fb8e064643168e6fc8792127af92637f5/registry/default/example/inline-edit.tsx",
+        "repositoryCommit": "07cc4f4fb8e064643168e6fc8792127af92637f5",
+        "bodySha256": "86f419edd38e714f316656e8a5139b2bb261d00534bad1e8aff3bd6d1f22150f",
+        "rawBytes": 2990,
+        "review": "full-current-pinned-public-repository-source-read",
+        "notes": "PinnedcurrentGitHub2990TSX full read. ReadonlyInput and mutablelocalvalue; iconactions motion.span onClick with nobuttonrole/tabindex/label/keyboard handlers, noEsc/canceloriginaldraft/asyncsave/APIcallback; input.select called on editingstatechange sameevent; visibleinvalidboxShadowstring andfixedradius60 are expressiondetails nottokens. PublishedInput dependency/currentliveversion notread, so keyboardissue is source finding only. Reuse TextField controlledvalue+Button actualedit/save/cancel and productasyncstate, preserve draft untilsuccess. No new InlineEditengine.",
+        "versionRelationship": "Discovered from preservedLayouts library GitHublink; currentcommit not proved identicalto21stlive/copypanel. No authgate bypass/install/execute.",
+        "visualReview": "pending-browser-unavailable",
+        "interactionReview": "pending"
+      }
     },
     {
       "url": "https://21st.dev/@0xUrvish/components/list-item",
@@ -473,7 +540,10 @@
         "decision": "existing-candidate-source-link-pending-implementation-review",
         "registration": "pending-root-after-research",
         "preconditions": "Metadata Usage only. Read linked uselayouts actual implementation and verify inputs/keyboard/focus/touch/reduced/draft/async before functional adoption; do not add registry packages or duplicate engines based on dependency lists.",
-        "platformScope": "Read public usage/index; API platform support must be preserved. Tree is Web-only, use product Native navigation/list contract rather than claim Native Tree. ContentTransition imported from motion surface."
+        "platformScope": "Read public usage/index; API platform support must be preserved. Tree is Web-only, use product Native navigation/list contract rather than claim Native Tree. ContentTransition imported from motion surface.",
+        "finalDisposition": "reuse-existing",
+        "finalReason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+        "finalRequiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음."
       },
       "linkedSource": "https://uselayouts.com/docs/components/list-item"
     },
@@ -500,7 +570,10 @@
         "decision": "existing-candidate-source-link-pending-implementation-review",
         "registration": "pending-root-after-research",
         "preconditions": "Metadata Usage only. Read linked uselayouts actual implementation and verify inputs/keyboard/focus/touch/reduced/draft/async before functional adoption; do not add registry packages or duplicate engines based on dependency lists.",
-        "platformScope": "Read public usage/index; API platform support must be preserved. Tree is Web-only, use product Native navigation/list contract rather than claim Native Tree. ContentTransition imported from motion surface."
+        "platformScope": "Read public usage/index; API platform support must be preserved. Tree is Web-only, use product Native navigation/list contract rather than claim Native Tree. ContentTransition imported from motion surface.",
+        "finalDisposition": "reuse-existing",
+        "finalReason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+        "finalRequiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음."
       },
       "linkedSource": "https://uselayouts.com/docs/components/magnified-bento"
     },
@@ -527,7 +600,10 @@
         "decision": "existing-candidate-source-link-pending-implementation-review",
         "registration": "pending-root-after-research",
         "preconditions": "Metadata Usage only. Read linked uselayouts actual implementation and verify inputs/keyboard/focus/touch/reduced/draft/async before functional adoption; do not add registry packages or duplicate engines based on dependency lists.",
-        "platformScope": "Read public usage/index; API platform support must be preserved. Tree is Web-only, use product Native navigation/list contract rather than claim Native Tree. ContentTransition imported from motion surface."
+        "platformScope": "Read public usage/index; API platform support must be preserved. Tree is Web-only, use product Native navigation/list contract rather than claim Native Tree. ContentTransition imported from motion surface.",
+        "finalDisposition": "improve-existing",
+        "finalReason": "입력 vanish/readonly inline edit 표현이 저장 성공·실패 상태를 대신하지 못한다. 기존 controlled TextField/Form/Button으로 draft/IME/실제 요청 상태를 유지한다.",
+        "finalRequiredVerification": "IME/Enter 중복·편집/취소 원문·실패→재시도·unmount/async 결과·실제 성공 전에 draft 삭제 금지."
       },
       "linkedSource": "https://uselayouts.com/docs/components/morphing-input"
     },
@@ -554,14 +630,17 @@
         "decision": "existing-candidate-source-link-pending-implementation-review",
         "registration": "pending-root-after-research",
         "preconditions": "Metadata Usage only. Read linked uselayouts actual implementation and verify inputs/keyboard/focus/touch/reduced/draft/async before functional adoption; do not add registry packages or duplicate engines based on dependency lists.",
-        "platformScope": "Read public usage/index; API platform support must be preserved. Tree is Web-only, use product Native navigation/list contract rather than claim Native Tree. ContentTransition imported from motion surface."
+        "platformScope": "Read public usage/index; API platform support must be preserved. Tree is Web-only, use product Native navigation/list contract rather than claim Native Tree. ContentTransition imported from motion surface.",
+        "finalDisposition": "reuse-existing",
+        "finalReason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+        "finalRequiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음."
       },
       "linkedSource": "https://uselayouts.com/docs/components/pricing-card"
     },
     {
       "url": "https://21st.dev/@0xUrvish/components/smooth-dropdown",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/640b21950584691059ed2375f3b2cd4b08900c8de9fae2dca649444303a09d67.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "full-captured-visible-text-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -569,12 +648,26 @@
       "compressedBytes": 70252,
       "rawBytes": 325929,
       "bodySha256": "28e04512ec4ecda360e327fafce75a00c0fd68a3fc863585f20e44d506554ad9",
-      "rawModifiedTimeNs": 1791336273208512847
+      "rawModifiedTimeNs": 1791336273208512847,
+      "readScope": "Full captured nonscript/nonstyle/nonSVG text actually read; implementation only when captured source explicitly present. Hidden state/assets/runtime not read.",
+      "experimentProposal": {
+        "path": "실험/구성/비교와 검증/선택 표시 비교",
+        "existingApis": [
+          "Menu",
+          "Button"
+        ],
+        "decision": "reuse-existing-candidate-expression-pending-runtime",
+        "registration": "pending-root-after-research",
+        "preconditions": "Existing public API/state/platform contract; actual input/visibility/reduced/focus/async/data source remains unverified. No engine copy.",
+        "finalDisposition": "improve-existing",
+        "finalReason": "Tabs/ToggleGroup 선택 의미·키보드와 초점은 기존 API가 소유한다. 원본 sliding/glow 표현은 기존 선택 표시의 표현 후보이다.",
+        "finalRequiredVerification": "controlled 선택·키보드/RTL·disabled·초점·reduced; root Tabs 개선과 중복 통합."
+      }
     },
     {
       "url": "https://21st.dev/@0xUrvish/components/stacked-list",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/8c27defa193eeb6f1c69493bd89f1811c495d2e6c96e55a51547c8a16b043366.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "full-captured-visible-text-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -582,12 +675,27 @@
       "compressedBytes": 64859,
       "rawBytes": 297682,
       "bodySha256": "a8412fce9845b4ff411c828486841756ffefa5fcf705474c96f46ab5c60c4d1f",
-      "rawModifiedTimeNs": 1791336275125126611
+      "rawModifiedTimeNs": 1791336275125126611,
+      "readScope": "Full captured nonscript/nonstyle/nonSVG text actually read; implementation only when captured source explicitly present. Hidden state/assets/runtime not read.",
+      "experimentProposal": {
+        "path": "실험/구성/선택과 필터/목록 선택 비교",
+        "existingApis": [
+          "List",
+          "Card",
+          "TextField"
+        ],
+        "decision": "reuse-existing-candidate-expression-pending-runtime",
+        "registration": "pending-root-after-research",
+        "preconditions": "Existing public API/state/platform contract; actual input/visibility/reduced/focus/async/data source remains unverified. No engine copy.",
+        "finalDisposition": "reuse-existing",
+        "finalReason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+        "finalRequiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음."
+      }
     },
     {
       "url": "https://21st.dev/@0xUrvish/components/vertical-tabs",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/487d305684d4c05a79286630c198ed1f8cd94a5d5bae6f82ab6c1fb57409f23e.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "full-captured-visible-text-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -595,12 +703,26 @@
       "compressedBytes": 64512,
       "rawBytes": 297970,
       "bodySha256": "f1d08c60bc1ea5ae0a062ccd8aca7120dde3e7f8b6ca310ccd8cfa26e8858987",
-      "rawModifiedTimeNs": 1791336277040086906
+      "rawModifiedTimeNs": 1791336277040086906,
+      "readScope": "Full captured nonscript/nonstyle/nonSVG text actually read; implementation only when captured source explicitly present. Hidden state/assets/runtime not read.",
+      "experimentProposal": {
+        "path": "실험/구성/비교와 검증/선택 표시 비교",
+        "existingApis": [
+          "Tabs",
+          "ContentTransition"
+        ],
+        "decision": "reuse-existing-candidate-expression-pending-runtime",
+        "registration": "pending-root-after-research",
+        "preconditions": "Existing public API/state/platform contract; actual input/visibility/reduced/focus/async/data source remains unverified. No engine copy.",
+        "finalDisposition": "improve-existing",
+        "finalReason": "Tabs/ToggleGroup 선택 의미·키보드와 초점은 기존 API가 소유한다. 원본 sliding/glow 표현은 기존 선택 표시의 표현 후보이다.",
+        "finalRequiredVerification": "controlled 선택·키보드/RTL·disabled·초점·reduced; root Tabs 개선과 중복 통합."
+      }
     },
     {
       "url": "https://21st.dev/@0xUrvish/library/layouts",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/3c927b1f1dce025127765bd8948d8ad208d5433caa751684d8638877d98343ed.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "full-captured-visible-text-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -608,12 +730,14 @@
       "compressedBytes": 57887,
       "rawBytes": 451800,
       "bodySha256": "dcbc6c445fe94849c1b36a402412e10139378d1d4200c1d254d8cdc3b8b51723",
-      "rawModifiedTimeNs": 1791336278960251696
+      "rawModifiedTimeNs": 1791336278960251696,
+      "readScope": "Full captured nonscript/nonstyle/nonSVG text actually read; implementation only when captured source explicitly present. Hidden state/assets/runtime not read.",
+      "reviewNotes": "All catalogue/readme/shippinghistory read. Registryclaims0components vs public22/24 discrepancy; fullsource/universalaccessibility claimed by catalogue not verified. GitHub iurvish/uselayouts is discovered independent source; no packageinstall/build/clone executed."
     },
     {
       "url": "https://21st.dev/@0xuser64bit/library/0xuser64bit",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/ea7301364839a5b7afa82916705936fd4e6f39e98be0e8f04c4efce15a72b667.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "full-captured-visible-text-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -621,12 +745,13 @@
       "compressedBytes": 26884,
       "rawBytes": 118687,
       "bodySha256": "10e119934f5bef5a23808689630fca336053a6823f9f8da6f55548ab8195117f",
-      "rawModifiedTimeNs": 1791336281151403044
+      "rawModifiedTimeNs": 1791336281151403044,
+      "readScope": "Full captured nonscript/nonstyle/nonSVG text actually read; implementation only when captured source explicitly present. Hidden state/assets/runtime not read."
     },
     {
       "url": "https://21st.dev/@12a8qnqwen/themes/modern-minimal-remix-1783103238804",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/af7993a796522ab53f2bff7b964e2734c4be58550bf32490f532aabdf041727f.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "captured-loading-shell-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -634,12 +759,14 @@
       "compressedBytes": 22408,
       "rawBytes": 99898,
       "bodySha256": "968179a68890115cc52bc509f078da3313528dac35f57a04a9eca0a45a176c70",
-      "rawModifiedTimeNs": 1791336282943112978
+      "rawModifiedTimeNs": 1791336282943112978,
+      "readScope": "Full captured nonscript/nonstyle/nonSVG text actually read; implementation only when captured source explicitly present. Hidden state/assets/runtime not read.",
+      "reviewNotes": "Captured Loading plus theme title/description only; theme tokens and previews are not in this public body. Do not count as full theme content review."
     },
     {
       "url": "https://21st.dev/@1553577844/themes/azure-pro-remix-1783950931878",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/b694cd0105396a59cd27a64667d7d408d4930a18fcce09a86c24b2e25a67cb44.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "captured-loading-shell-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -647,12 +774,14 @@
       "compressedBytes": 22386,
       "rawBytes": 99730,
       "bodySha256": "806673996976fe660c741e680de5dda4a41572fe1c571b56d34053c967502e26",
-      "rawModifiedTimeNs": 1791336284926141748
+      "rawModifiedTimeNs": 1791336284926141748,
+      "readScope": "Full captured nonscript/nonstyle/nonSVG text actually read; implementation only when captured source explicitly present. Hidden state/assets/runtime not read.",
+      "reviewNotes": "Captured Loading plus theme title/description only; theme tokens and previews are not in this public body. Do not count as full theme content review."
     },
     {
       "url": "https://21st.dev/@16inam06",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/f8555ec9318f9c5a615508769cb4bf3aa747bb977336e05b96618aead3731dd6.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "full-captured-visible-text-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -660,25 +789,42 @@
       "compressedBytes": 32211,
       "rawBytes": 147405,
       "bodySha256": "ce2f44d1f86efec555ac35fc991a5ad3aca4aa264a73919d86203f6cec5ac851",
-      "rawModifiedTimeNs": 1791336287168886373
+      "rawModifiedTimeNs": 1791336287168886373,
+      "readScope": "Full captured nonscript/nonstyle/nonSVG text actually read; implementation only when captured source explicitly present. Hidden state/assets/runtime not read."
     },
     {
       "url": "https://21st.dev/@16inam06/components/chromatic-lens",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/c673e5530d931eff6eac4d442879081ec65ff1434d13a448b4dfbf6c1fe5b575.html.gz",
-      "publicBodyReview": "pending",
-      "implementationReview": "pending",
+      "publicBodyReview": "full-captured-visible-text-read",
+      "implementationReview": "full-captured-visible-tsx-glsl-read",
       "visualReview": "pending",
       "interactionReview": "pending",
       "captureStatus": "raw-metadata-verified",
       "compressedBytes": 101190,
       "rawBytes": 853618,
       "bodySha256": "c6318325b2c4f8411591b28ddcebb7ea6e9fea79554e198506c0407899697426",
-      "rawModifiedTimeNs": 1791336290679067187
+      "rawModifiedTimeNs": 1791336290679067187,
+      "readScope": "Full29409chars captured visibleTSX/GLSL+props/defaults/metadata read in3overlappingchunks [0,10200),[10000,20200),[20000,29409) after initial aggregateoutputtruncated. Dynamic Component.tsx tab/assets/runtime pending.",
+      "experimentProposal": {
+        "path": "실험/구성/비교와 검증/이미지 표현 비교",
+        "existingApis": [
+          "Image",
+          "Asset",
+          "EffectSurface"
+        ],
+        "decision": "reuse-existing-candidate-expression-pending-runtime",
+        "registration": "pending-root-after-research",
+        "preconditions": "Existing public API/state/platform contract; actual input/visibility/reduced/focus/async/data source remains unverified. No engine copy.",
+        "finalDisposition": "reuse-existing",
+        "finalReason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+        "finalRequiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음."
+      },
+      "reviewNotes": "WebGL shader/source full read. RAF cleanup and ROdisconnect present; shader/program/texture/buffer disposal not in shown initialization effect; Image onload/onerror no oldsrc/unmount guard shown; error shows same Loading fallback. UncappedDPR; default wobble1/speed5 keepsloop aftermouseleave; mouse-only handlers, no localvisibility/offscreen/reduced guard; canvas lacks alt/accessible label. DefaultProps onfunction component and framer dependency despite comments removed imports require version/runtime verification, not assumed error. Reuse semanticImage/Asset and bounded optionalexpression; no shared WebGLengine/Nativeequivalence. mpl-2.0 metadata and highperformance claim not adopted licensing/performance proof."
     },
     {
       "url": "https://21st.dev/@1bertogit/themes/aurora-circuit-1784930012228",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/69964b5020dcb9a0e3d4800b035af19577c1ad21104da646bc022ad50b53773b.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "captured-loading-shell-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -686,12 +832,14 @@
       "compressedBytes": 20616,
       "rawBytes": 99640,
       "bodySha256": "7a8be19f01637efe79cb891252c77305d33764bba347c4f9f7ccc6b273b8abd7",
-      "rawModifiedTimeNs": 1791336291198892985
+      "rawModifiedTimeNs": 1791336291198892985,
+      "readScope": "Full captured nonscript/nonstyle/nonSVG text actually read; implementation only when captured source explicitly present. Hidden state/assets/runtime not read.",
+      "reviewNotes": "Captured Loading plus theme title/description only; theme tokens and previews are not in this public body. Do not count as full theme content review."
     },
     {
       "url": "https://21st.dev/@1laruk24",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/b35c7470ddc03d61fdef6346d4343df47a7ade5e84b77000b3a0958307761ce4.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "full-captured-visible-text-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -699,12 +847,13 @@
       "compressedBytes": 29728,
       "rawBytes": 136029,
       "bodySha256": "aff3674566c937a4b413bb55c2eeb557161f10722f106eb731fd5d5a5d4d8e9e",
-      "rawModifiedTimeNs": 1791336293335711954
+      "rawModifiedTimeNs": 1791336293335711954,
+      "readScope": "All captured visible text/Usage/readme/catalogue/metadata in this20URLbatch actually read; implementation/runtime only explicitlinkedfields."
     },
     {
       "url": "https://21st.dev/@1laruk24/components/volna",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/602ca9e04fd17953d8ae63e4e19278b58af1a4b84b6f4d026f32a98918eefe06.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "full-captured-visible-text-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -712,12 +861,27 @@
       "compressedBytes": 57034,
       "rawBytes": 271590,
       "bodySha256": "51e068afe37ba466d36e63e3ce0a1d317f8c38093bfd5c463130ebacbf79b658",
-      "rawModifiedTimeNs": 1791336295328758252
+      "rawModifiedTimeNs": 1791336295328758252,
+      "readScope": "All captured visible text/Usage/readme/catalogue/metadata in this20URLbatch actually read; implementation/runtime only explicitlinkedfields.",
+      "experimentProposal": {
+        "path": "실험/구성/비교와 검증/이미지 표현 비교",
+        "existingApis": [
+          "Asset",
+          "Image",
+          "EffectSurface"
+        ],
+        "decision": "merge-existing-candidate-public-source-review",
+        "registration": "pending-root-after-research",
+        "preconditions": "Read implementation and verify actualstates beforeadoption. Preserve token/semantic/input/async/platformpublicAPIs. No package/sourceenginecopy.",
+        "finalDisposition": "reuse-existing",
+        "finalReason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+        "finalRequiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음."
+      }
     },
     {
       "url": "https://21st.dev/@1myfakename1",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/686966601c3562bd084ff6a7c0aedd3b69a6fcd6a7f572a6c4c459f5385031e6.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "full-captured-visible-text-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -725,12 +889,13 @@
       "compressedBytes": 37565,
       "rawBytes": 197981,
       "bodySha256": "e9f2b7458239e950f8ef363f33badf8a07d89ef401f8ecd9e54f70456cee7b12",
-      "rawModifiedTimeNs": 1791336297775317010
+      "rawModifiedTimeNs": 1791336297775317010,
+      "readScope": "All captured visible text/Usage/readme/catalogue/metadata in this20URLbatch actually read; implementation/runtime only explicitlinkedfields."
     },
     {
       "url": "https://21st.dev/@1myfakename1/components/test",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/db0d088cb0f1e9153138fadd0dadccfff69df53ae327492c8d5cf80bdeacc328.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "full-captured-visible-text-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -738,12 +903,27 @@
       "compressedBytes": 63271,
       "rawBytes": 291457,
       "bodySha256": "f3a8c4708c9db81d3f4f1b87e4f4d38669fd1466aeff42984c7a7330c950e3bd",
-      "rawModifiedTimeNs": 1791336299375641023
+      "rawModifiedTimeNs": 1791336299375641023,
+      "readScope": "All captured visible text/Usage/readme/catalogue/metadata in this20URLbatch actually read; implementation/runtime only explicitlinkedfields.",
+      "experimentProposal": {
+        "path": "실험/구성/비교와 검증/이미지 표현 비교",
+        "existingApis": [
+          "Asset",
+          "Image",
+          "EffectSurface"
+        ],
+        "decision": "merge-existing-candidate-public-source-review",
+        "registration": "pending-root-after-research",
+        "preconditions": "Read implementation and verify actualstates beforeadoption. Preserve token/semantic/input/async/platformpublicAPIs. No package/sourceenginecopy.",
+        "finalDisposition": "reuse-existing",
+        "finalReason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+        "finalRequiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음."
+      }
     },
     {
       "url": "https://21st.dev/@21st",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/9b10f51bfcb900c550bb5717e14568e6db05155bd7abe9124ac79f4cd9602bb2.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "full-captured-visible-text-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -751,12 +931,13 @@
       "compressedBytes": 38765,
       "rawBytes": 343716,
       "bodySha256": "649f7eb946b2a0d4422df2f1b8011b2adb9c829664a439bf0ec66bef05c04405",
-      "rawModifiedTimeNs": 1791336302007543909
+      "rawModifiedTimeNs": 1791336302007543909,
+      "readScope": "All captured visible text/Usage/readme/catalogue/metadata in this20URLbatch actually read; implementation/runtime only explicitlinkedfields."
     },
     {
       "url": "https://21st.dev/@21st/library/agent-elements",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/1c8dfc92b6160e8212233fca2f9723bee207f5ab438099db8ada81aa1d6f44b9.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "full-captured-visible-text-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -764,12 +945,14 @@
       "compressedBytes": 54776,
       "rawBytes": 616274,
       "bodySha256": "87b669c777bc5c85ff1b23e414fd979e5bf439aad222c46de6bf3bdcf2f9cef9",
-      "rawModifiedTimeNs": 1791336307189336192
+      "rawModifiedTimeNs": 1791336307189336192,
+      "readScope": "All captured visible text/Usage/readme/catalogue/metadata in this20URLbatch actually read; implementation/runtime only explicitlinkedfields.",
+      "reviewNotes": "All62displayedcollectionvs22unique publiccatalogue descriptions read; ChatScreen/ChatMessage/TextField/FilePicker/Notice/Button/Spinner reuse to be compared if linked implementation becomes accessible. Tool invocation/execution/reasoning data is productowned; displaydoesnotauthorize runningtools."
     },
     {
       "url": "https://21st.dev/@21st/templates/paddle-billing-starter",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/04104bc0866be1b8bdda80caf52200fcd9f6b4bb7236b1dd89909651d33a444e.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "full-captured-visible-text-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -777,12 +960,17 @@
       "compressedBytes": 23868,
       "rawBytes": 106724,
       "bodySha256": "18e457c0ae40eea3f5a2587b7c898cbf5aa3aeea30092f3f61e439ebbdab5080",
-      "rawModifiedTimeNs": 1791336307618014187
+      "rawModifiedTimeNs": 1791336307618014187,
+      "readScope": "All captured visible text/Usage/readme/catalogue/metadata in this20URLbatch actually read; implementation/runtime only explicitlinkedfields.",
+      "adoptionDecision": {
+        "decision": "do-not-adopt-backend-template-as-design-system",
+        "reason": "Paid rehosted Supabase/Paddle auth/subscription/webhook backend and concrete commit/license metadata are product/library-policy responsibilities. Existing shared pricing/login/notice presentation only; no billing/auth engine registration or paid download executed."
+      }
     },
     {
       "url": "https://21st.dev/@2207377167/themes/a-1784709575911",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/3e4884d232e38a2e31ceb5630556e951396e0c0a0567f132f4be7589480dfd14.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "captured-loading-shell-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -790,12 +978,14 @@
       "compressedBytes": 22332,
       "rawBytes": 99240,
       "bodySha256": "dff4c32d1b8e01838de907c7432fa79ecbe79e0abfb82f06c076f897524dddaa",
-      "rawModifiedTimeNs": 1791336309739328756
+      "rawModifiedTimeNs": 1791336309739328756,
+      "reviewNotes": "Title/description/Loading shell fully read; theme token/preview content not present; remains unresolved live theme review.",
+      "readScope": "All captured visible text/Usage/readme/catalogue/metadata in this20URLbatch actually read; implementation/runtime only explicitlinkedfields."
     },
     {
       "url": "https://21st.dev/@321arifali/themes/indigo-vivid-1789286009384",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/567d035fed1f035c03c5e2a6c0291192ad7fa977733dbda9d362c19bb3edaf9d.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "captured-loading-shell-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -803,12 +993,14 @@
       "compressedBytes": 22362,
       "rawBytes": 99581,
       "bodySha256": "1527461c1ac4ce5d4d3b957513edebbb31c91d4d0d8f4cd8cbf61ab3e0d7b18e",
-      "rawModifiedTimeNs": 1791336311965957062
+      "rawModifiedTimeNs": 1791336311965957062,
+      "reviewNotes": "Title/description/Loading shell fully read; theme token/preview content not present; remains unresolved live theme review.",
+      "readScope": "All captured visible text/Usage/readme/catalogue/metadata in this20URLbatch actually read; implementation/runtime only explicitlinkedfields."
     },
     {
       "url": "https://21st.dev/@369cv/themes/modern-minimal-remix-1783057707880",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/ac59a655bb38159a684f191945c3087af1c4ed042c1f217c34002c8b1d635517.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "captured-loading-shell-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -816,12 +1008,14 @@
       "compressedBytes": 22398,
       "rawBytes": 99883,
       "bodySha256": "6cd6f9a14f14ce7a660dcc96734ec95610cae1b9c0b106709b823a2c8a6f5266",
-      "rawModifiedTimeNs": 1791336313618614315
+      "rawModifiedTimeNs": 1791336313618614315,
+      "reviewNotes": "Title/description/Loading shell fully read; theme token/preview content not present; remains unresolved live theme review.",
+      "readScope": "All captured visible text/Usage/readme/catalogue/metadata in this20URLbatch actually read; implementation/runtime only explicitlinkedfields."
     },
     {
       "url": "https://21st.dev/@40973894",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/e71d844b788e579b471d5ad3b994b0054645ec6f683f75e615015abed20e639b.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "full-captured-visible-text-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -829,12 +1023,13 @@
       "compressedBytes": 30702,
       "rawBytes": 145262,
       "bodySha256": "d83038cea3f895a02dd01db41521b4231b9659f75eb17226953dde575cdb3339",
-      "rawModifiedTimeNs": 1791336316022497608
+      "rawModifiedTimeNs": 1791336316022497608,
+      "readScope": "All captured visible text/Usage/readme/catalogue/metadata in this20URLbatch actually read; implementation/runtime only explicitlinkedfields."
     },
     {
       "url": "https://21st.dev/@40973894/components/siri-wave",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/20fef10b1cbb5031b74698d97c5269965bc7b73d574c22e87511a26960a30fba.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "full-captured-visible-text-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -842,12 +1037,27 @@
       "compressedBytes": 65392,
       "rawBytes": 307357,
       "bodySha256": "8196fb9b8568bc29b43d3f12d46b38259f32c1b764207cbcc542aa65afa05fca",
-      "rawModifiedTimeNs": 1791336318062821361
+      "rawModifiedTimeNs": 1791336318062821361,
+      "readScope": "All captured visible text/Usage/readme/catalogue/metadata in this20URLbatch actually read; implementation/runtime only explicitlinkedfields.",
+      "experimentProposal": {
+        "path": "실험/구성/비교와 검증/표면 빛 표현",
+        "existingApis": [
+          "EffectSurface",
+          "Spinner",
+          "Text"
+        ],
+        "decision": "merge-existing-candidate-public-source-review",
+        "registration": "pending-root-after-research",
+        "preconditions": "Read implementation and verify actualstates beforeadoption. Preserve token/semantic/input/async/platformpublicAPIs. No package/sourceenginecopy.",
+        "finalDisposition": "reuse-existing",
+        "finalReason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+        "finalRequiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음."
+      }
     },
     {
       "url": "https://21st.dev/@4422tc75fy-wq/themes/violet-green-disco-1790422871287",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/ce380aec8def4be3b560a66ec1b83a032359f188a2444e02d2c64478f7ccb75e.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "captured-loading-shell-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -855,12 +1065,14 @@
       "compressedBytes": 22398,
       "rawBytes": 99832,
       "bodySha256": "a7f5b52d16a88dd3cf737ccd1eff00d7d3609df79cdc39cbbbd804a0c7545dd9",
-      "rawModifiedTimeNs": 1791336319781052574
+      "rawModifiedTimeNs": 1791336319781052574,
+      "reviewNotes": "Title/description/Loading shell fully read; theme token/preview content not present; remains unresolved live theme review.",
+      "readScope": "All captured visible text/Usage/readme/catalogue/metadata in this20URLbatch actually read; implementation/runtime only explicitlinkedfields."
     },
     {
       "url": "https://21st.dev/@5d99hgrqzk-wq",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/05c9af7073d2756fcfa36c687c99c92ff6dc521456340c8801fcb42b325babaa.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "full-captured-visible-text-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -868,12 +1080,13 @@
       "compressedBytes": 33290,
       "rawBytes": 153500,
       "bodySha256": "cc56fd597ffda67c55424e64d85ba88fb19f0cb862e484fa72b7402740f4731f",
-      "rawModifiedTimeNs": 1791336321970776496
+      "rawModifiedTimeNs": 1791336321970776496,
+      "readScope": "All captured visible text/Usage/readme/catalogue/metadata in this20URLbatch actually read; implementation/runtime only explicitlinkedfields."
     },
     {
       "url": "https://21st.dev/@5d99hgrqzk-wq/components/manu",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/f0daafa83d603ca007f185775559a422c7e8c7b006fd35e302b25ccaab1331ce.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "full-captured-visible-text-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -881,12 +1094,25 @@
       "compressedBytes": 57712,
       "rawBytes": 277317,
       "bodySha256": "3ee7e3fdf0208c5615bf07bcddecc1b1c21f272e451917161691cd1be0d07168",
-      "rawModifiedTimeNs": 1791336324058945291
+      "rawModifiedTimeNs": 1791336324058945291,
+      "readScope": "All captured visible text/Usage/readme/catalogue/metadata in this20URLbatch actually read; implementation/runtime only explicitlinkedfields.",
+      "experimentProposal": {
+        "path": "실험/토큰/표면과 움직임/입자와 빛",
+        "existingApis": [
+          "EffectSurface"
+        ],
+        "decision": "merge-existing-candidate-public-source-review",
+        "registration": "pending-root-after-research",
+        "preconditions": "Read implementation and verify actualstates beforeadoption. Preserve token/semantic/input/async/platformpublicAPIs. No package/sourceenginecopy.",
+        "finalDisposition": "reuse-existing",
+        "finalReason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+        "finalRequiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음."
+      }
     },
     {
       "url": "https://21st.dev/@8starlabs",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/7bcba749e2d518a43ab9a59c932c597b00fbf572f1d07ff45f82ee11ddb009b2.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "full-captured-visible-text-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -894,12 +1120,13 @@
       "compressedBytes": 31113,
       "rawBytes": 147836,
       "bodySha256": "e91b101a7d02bf636634e003cf60d6ba9c32561ab47ca7d003a2a81e32898679",
-      "rawModifiedTimeNs": 1791336325813476090
+      "rawModifiedTimeNs": 1791336325813476090,
+      "readScope": "All captured visible text/Usage/readme/catalogue/metadata in this20URLbatch actually read; implementation/runtime only explicitlinkedfields."
     },
     {
       "url": "https://21st.dev/@8starlabs/components/open-in-chat",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/125a5f5e82a5f88b0c2d9209064f955df167c298cf751e35359e6fcb5ff55b8c.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "full-captured-visible-text-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -907,12 +1134,37 @@
       "compressedBytes": 58358,
       "rawBytes": 279384,
       "bodySha256": "e4fa761cd1bf09423a6b465cde250fe8f30761f53d121f23ed56b835dcfa7dd4",
-      "rawModifiedTimeNs": 1791336328155660285
+      "rawModifiedTimeNs": 1791336328155660285,
+      "readScope": "All captured visible text/Usage/readme/catalogue/metadata in this20URLbatch actually read; implementation/runtime only explicitlinkedfields.",
+      "experimentProposal": {
+        "path": "실험/구성/정보 표시/마무리 행동",
+        "existingApis": [
+          "Menu",
+          "Button",
+          "Link",
+          "Tooltip"
+        ],
+        "decision": "merge-existing-candidate-public-source-review",
+        "registration": "pending-root-after-research",
+        "preconditions": "Read implementation and verify actualstates beforeadoption. Preserve token/semantic/input/async/platformpublicAPIs. No package/sourceenginecopy.",
+        "finalDisposition": "reuse-existing",
+        "finalReason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+        "finalRequiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음."
+      },
+      "linkedImplementation": {
+        "url": "https://ui.8starlabs.com/r/open-in-chat.json",
+        "httpStatus": 200,
+        "bodySha256": "bb3c494a73c7741a7f081d4db5f598a2a6d427233bc23503f78b1a8e34f43654",
+        "review": "full-registry-files-read",
+        "notes": "Full7969TSX+3202ai-icons read. URL.searchParams encodes prompt, links named and iconsariahidden, noreferrer; brandSVG source is provider-owned and not sharedDSbrandasset. Prompt is productdata and destination/paramencodingproductpolicy, never autoshareprivatecontent. Horizontal24pxiconlinks vsdefaultHJMsize notadopted; dropdown engine/Menu/Tooltip/Button/Link alreadyexist. Registrymetadata includes3dependent UIfiles notread (button/menu/tooltip). Provider URLbehavior notverified; didnotopenlinks/sendprompt.",
+        "visualReview": "pending-browser-unavailable-after-interruption",
+        "interactionReview": "pending"
+      }
     },
     {
       "url": "https://21st.dev/@8starlabs/components/partition-bar",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/419138d34118aef9399a6256da56b0a2db0d07fce09ce6e3c66f0414e1de9f5a.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "full-captured-visible-text-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -920,12 +1172,36 @@
       "compressedBytes": 59069,
       "rawBytes": 291302,
       "bodySha256": "5c2da843e2295e5e9b54ba802100652e92c0bb5aeab30d76bd3750a26171389e",
-      "rawModifiedTimeNs": 1791336330187242478
+      "rawModifiedTimeNs": 1791336330187242478,
+      "readScope": "All captured visible text/Usage/readme/catalogue/metadata in this20URLbatch actually read; implementation/runtime only explicitlinkedfields.",
+      "experimentProposal": {
+        "path": "실험/화면/콘텐츠/지표 요약과 탐색",
+        "existingApis": [
+          "StatisticGroup",
+          "DescriptionList",
+          "Text"
+        ],
+        "decision": "merge-existing-candidate-public-source-review",
+        "registration": "pending-root-after-research",
+        "preconditions": "Read implementation and verify actualstates beforeadoption. Preserve token/semantic/input/async/platformpublicAPIs. No package/sourceenginecopy.",
+        "finalDisposition": "new-experiment",
+        "finalReason": "공식 PartitionBar 원문에서 전체를 나누는 비례 구간을 확인했다. Progress는 작업 진행률이고 StatisticGroup은 수치 묶음이라 이 geometry의 공개 계약을 제공하지 않는다.",
+        "finalRequiredVerification": "부분 합/0/음수/비유한 값·값과 label 일치·gap 포함 폭·색 외 범례·RTL; 실제 필요 데이터 확정 후 구현."
+      },
+      "linkedImplementation": {
+        "url": "https://ui.8starlabs.com/r/partition-bar.json",
+        "httpStatus": 200,
+        "bodySha256": "9a68d58244183bda0b596e66500586967d9170c22ad100dc0c0509073174adb9",
+        "review": "full-registry-files-read",
+        "notes": "Full4600TSX read: immediate-childnum sum, total>0 guard else0, flexBasis shares add100% whilegap default4px andflexShrink0; potential overflow is source inference, not measured. negative/nonfinite/mixedchildren/default0 validation absent inshownsource. ul/li semantic+visiblelabels good; label/value supplied independently maymismatchratio. Physicalleft/right labelalignment, hardcodeds latevaluecolor, propscanoverwrite rootstyle. ExistingProgress measures workdone and lackssegments; StatisticGroup/DescriptionList preservelabels/values but do not expose proportionalpartwholegeometry. Genuine part-whole visualgap needsdescriptor/stableID/finite-nonnegativeinput/zero/legend/RTL/narrow checks, no Progresssemantics misuse/new engine copied.",
+        "visualReview": "pending-browser-unavailable-after-interruption",
+        "interactionReview": "pending"
+      }
     },
     {
       "url": "https://21st.dev/@8starlabs/library/8starlabs-ui",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/42330c0aee72c2a1b24abe4639eb8a8f62afb4c58e567fa13264d99ec49cd98f.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "full-captured-visible-text-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -933,12 +1209,14 @@
       "compressedBytes": 43827,
       "rawBytes": 263863,
       "bodySha256": "ea0ee6ae32f9f20c7e6311b192856e2a899ff33be0bec3fb49559523c4e3bf70",
-      "rawModifiedTimeNs": 1791336332229582079
+      "rawModifiedTimeNs": 1791336332229582079,
+      "readScope": "All captured visible text/Usage/readme/catalogue/metadata in this20URLbatch actually read; implementation/runtime only explicitlinkedfields.",
+      "reviewNotes": "Public2 vsfullregistry14 and all12alsoinregistry/README/buildingblocks/history fullyread; future source paths already discovered. No installation/MCP/settingsmutation."
     },
     {
       "url": "https://21st.dev/@98precent/themes/zachix-mono-remix-1783143905881",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/2292f2d078057d04ccdb646e47b1b0cc914e1c10eab60490043ce90f51cf2d1e.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "captured-loading-shell-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -946,12 +1224,14 @@
       "compressedBytes": 22384,
       "rawBytes": 99789,
       "bodySha256": "734b370d2d4052c530c667e6f794717d3d345d20154f46bffe28475c343f911b",
-      "rawModifiedTimeNs": 1791336333791232530
+      "rawModifiedTimeNs": 1791336333791232530,
+      "reviewNotes": "Title/description/Loading shell fully read; theme token/preview content not present; remains unresolved live theme review.",
+      "readScope": "All captured visible text/Usage/readme/catalogue/metadata in this20URLbatch actually read; implementation/runtime only explicitlinkedfields."
     },
     {
       "url": "https://21st.dev/@98waseem16",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/d646337050fd420a72bf82740ea19d9278ec39223fd42b36d42d2219fc21293d.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "full-captured-visible-text-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -959,12 +1239,13 @@
       "compressedBytes": 29652,
       "rawBytes": 136330,
       "bodySha256": "754148ff07440ce3ab95aedae51db0701412de46896bb03b690e505f78fe1037",
-      "rawModifiedTimeNs": 1791336335980240114
+      "rawModifiedTimeNs": 1791336335980240114,
+      "readScope": "All captured visible body/Usage/metadata in20URLbatch actually read; no dynamic implementation or actualUIclaim."
     },
     {
       "url": "https://21st.dev/@98waseem16/components/sendmarc-blur",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/dd1c27902b8763d5c997035b79333241714222863910d290deb4a6335ad90131.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "full-captured-visible-text-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -972,12 +1253,39 @@
       "compressedBytes": 57013,
       "rawBytes": 272083,
       "bodySha256": "ed8974184b08ffc5173e34c898eeed2bf26a47b96bfda10d84361709d54f3c34",
-      "rawModifiedTimeNs": 1791336338113458641
+      "rawModifiedTimeNs": 1791336338113458641,
+      "readScope": "All captured visible body/Usage/metadata in20URLbatch actually read; no dynamic implementation or actualUIclaim.",
+      "experimentProposal": {
+        "path": "실험/구성/비교와 검증/이미지 표현 비교",
+        "existingApis": [
+          "Asset",
+          "Image",
+          "EffectSurface"
+        ],
+        "decision": "merge-existing-candidate-pending-source-runtime",
+        "registration": "pending-root-after-research",
+        "requiredStates": [
+          "Default",
+          "Dark"
+        ],
+        "conditionalStates": [
+          "Rtl",
+          "ReducedMotion",
+          "Disabled",
+          "Pending",
+          "Failed",
+          "Recovery"
+        ],
+        "preconditions": "Metadata/Usage only; actual implementation, callbacks/input/focus/visibility/reduced and productprovider/data ownership toreview. MaximumOStext/maximumimitatingenlargement excluded.",
+        "finalDisposition": "reuse-existing",
+        "finalReason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+        "finalRequiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음."
+      }
     },
     {
       "url": "https://21st.dev/@99singh.jas/themes/modern-minimal-remix-1783197535050",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/534748784eee1134d61ff9ea5979be729a886e6719cc50fa9170031d2b73a45f.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "captured-loading-shell-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -985,12 +1293,14 @@
       "compressedBytes": 20662,
       "rawBytes": 99901,
       "bodySha256": "743ea54e76598bfa2dbc4db059415a9cba7ffbdfac9ffa4f73188df8355af6ab",
-      "rawModifiedTimeNs": 1791336339843784854
+      "rawModifiedTimeNs": 1791336339843784854,
+      "readScope": "All captured visible body/Usage/metadata in20URLbatch actually read; no dynamic implementation or actualUIclaim.",
+      "reviewNotes": "Loading+title/description only; actualthemetokens/UIremainpending."
     },
     {
       "url": "https://21st.dev/@9fedya",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/134c31e18b79ccdafb0c9f4ae28bb11c7346b4feb50035be832dd68cd73fb121.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "full-captured-visible-text-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -998,12 +1308,13 @@
       "compressedBytes": 32446,
       "rawBytes": 149327,
       "bodySha256": "eb171c2ef16ce405ddfd25b26764ba40bf682d4fc766fd679ca9ccf7260b723e",
-      "rawModifiedTimeNs": 1791336341943286230
+      "rawModifiedTimeNs": 1791336341943286230,
+      "readScope": "All captured visible body/Usage/metadata in20URLbatch actually read; no dynamic implementation or actualUIclaim."
     },
     {
       "url": "https://21st.dev/@9fedya/components/love-story",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/3475458c5049bfc3721fdd1a327a332517666d2b06b178402ab2f90b7bc4b398.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "full-captured-visible-text-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -1011,12 +1322,37 @@
       "compressedBytes": 57767,
       "rawBytes": 278060,
       "bodySha256": "8a0d153a9ed69a3f0cf7f242e24320a407cb014225a49a2906476e7d80c6210d",
-      "rawModifiedTimeNs": 1791336344798525051
+      "rawModifiedTimeNs": 1791336344798525051,
+      "readScope": "All captured visible body/Usage/metadata in20URLbatch actually read; no dynamic implementation or actualUIclaim.",
+      "experimentProposal": {
+        "path": "실험/토큰/표면과 움직임/입자와 빛",
+        "existingApis": [
+          "EffectSurface"
+        ],
+        "decision": "merge-existing-candidate-pending-source-runtime",
+        "registration": "pending-root-after-research",
+        "requiredStates": [
+          "Default",
+          "Dark"
+        ],
+        "conditionalStates": [
+          "Rtl",
+          "ReducedMotion",
+          "Disabled",
+          "Pending",
+          "Failed",
+          "Recovery"
+        ],
+        "preconditions": "Metadata/Usage only; actual implementation, callbacks/input/focus/visibility/reduced and productprovider/data ownership toreview. MaximumOStext/maximumimitatingenlargement excluded.",
+        "finalDisposition": "reuse-existing",
+        "finalReason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+        "finalRequiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음."
+      }
     },
     {
       "url": "https://21st.dev/@9fedya/themes/asdasd-1783503193873",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/d2e90a1dab99c51a86afcebdaf78192b941d88619bc7f9345d07def7eff8aa37.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "captured-loading-shell-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -1024,12 +1360,14 @@
       "compressedBytes": 22341,
       "rawBytes": 99383,
       "bodySha256": "9f18a84ab64c5b7755a17fc0edea36fc9fcbba0744d1c52a2082c3474fb8b78b",
-      "rawModifiedTimeNs": 1791336345831992354
+      "rawModifiedTimeNs": 1791336345831992354,
+      "readScope": "All captured visible body/Usage/metadata in20URLbatch actually read; no dynamic implementation or actualUIclaim.",
+      "reviewNotes": "Loading+title/description only; actualthemetokens/UIremainpending."
     },
     {
       "url": "https://21st.dev/@AdiKodez",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/ce753783c83d99d14c7f522e7cf38145eaff1df0e86578e97c1472c5ef60b18a.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "full-captured-visible-text-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -1037,12 +1375,13 @@
       "compressedBytes": 34981,
       "rawBytes": 172407,
       "bodySha256": "ebe8fb50773e8fd169bd11e59ae9bc7c81c0015aa217a6b425d1faf6377a1a27",
-      "rawModifiedTimeNs": 1791336348050790145
+      "rawModifiedTimeNs": 1791336348050790145,
+      "readScope": "All captured visible body/Usage/metadata in20URLbatch actually read; no dynamic implementation or actualUIclaim."
     },
     {
       "url": "https://21st.dev/@AdiKodez/components/ask-ai",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/232f46e417dbf5ad8c1424da50e847ec18ace017bd7363d2327f5557c7a050a5.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "full-captured-visible-text-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -1050,12 +1389,41 @@
       "compressedBytes": 60352,
       "rawBytes": 306276,
       "bodySha256": "0b5239dd34e0b40115844d998cf63b47a3bc5cdb0168046f9ec1819d26bbf31b",
-      "rawModifiedTimeNs": 1791336350183674629
+      "rawModifiedTimeNs": 1791336350183674629,
+      "readScope": "All captured visible body/Usage/metadata in20URLbatch actually read; no dynamic implementation or actualUIclaim.",
+      "experimentProposal": {
+        "path": "실험/구성/정보 표시/마무리 행동",
+        "existingApis": [
+          "Popover",
+          "Menu",
+          "Button",
+          "ClipboardButton"
+        ],
+        "decision": "merge-existing-candidate-pending-source-runtime",
+        "registration": "pending-root-after-research",
+        "requiredStates": [
+          "Default",
+          "Dark"
+        ],
+        "conditionalStates": [
+          "Rtl",
+          "ReducedMotion",
+          "Disabled",
+          "Pending",
+          "Failed",
+          "Recovery"
+        ],
+        "preconditions": "Metadata/Usage only; actual implementation, callbacks/input/focus/visibility/reduced and productprovider/data ownership toreview. MaximumOStext/maximumimitatingenlargement excluded.",
+        "finalDisposition": "reuse-existing",
+        "finalReason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+        "finalRequiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음."
+      },
+      "reviewNotes": "FullUsage4expressions(defaultOpen/Default/compact/blobOnly)+mascot andclipboardfallback descriptionsread; no implementation/copyprompt/externallinkexecution. Preserve existingPopover/Menu/ClipboardButton and productownedprompt/providers; donottransmit pageprivatecontent automatically."
     },
     {
       "url": "https://21st.dev/@AdiKodez/components/model-picker",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/df00dff3b0d884dd3ba75913e2c02b2bc807b19b7657b8e20cb4c91c75baf372.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "full-captured-visible-text-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -1063,12 +1431,40 @@
       "compressedBytes": 58919,
       "rawBytes": 286380,
       "bodySha256": "670d01db8c9435f9c76876345207d25953a6b133bf5e4ce0a7d90e5d905ab5bb",
-      "rawModifiedTimeNs": 1791336352213339850
+      "rawModifiedTimeNs": 1791336352213339850,
+      "readScope": "All captured visible body/Usage/metadata in20URLbatch actually read; no dynamic implementation or actualUIclaim.",
+      "experimentProposal": {
+        "path": "실험/구성/선택과 필터/목록 선택 비교",
+        "existingApis": [
+          "Select",
+          "Popover",
+          "Button"
+        ],
+        "decision": "merge-existing-candidate-pending-source-runtime",
+        "registration": "pending-root-after-research",
+        "requiredStates": [
+          "Default",
+          "Dark"
+        ],
+        "conditionalStates": [
+          "Rtl",
+          "ReducedMotion",
+          "Disabled",
+          "Pending",
+          "Failed",
+          "Recovery"
+        ],
+        "preconditions": "Metadata/Usage only; actual implementation, callbacks/input/focus/visibility/reduced and productprovider/data ownership toreview. MaximumOStext/maximumimitatingenlargement excluded.",
+        "finalDisposition": "reuse-existing",
+        "finalReason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+        "finalRequiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음."
+      },
+      "reviewNotes": "FullcontrolledmodelId/onValueChangewrapperread, defaultOpen providers catalogue notcapturedsource. Modelname g rok4.6 is demofixture notcurrent modelrecommendation. Keep existingSelect controlledselection/accessibility, productownedprovideravailability and actualrequeststate."
     },
     {
       "url": "https://21st.dev/@Adurotimi",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/893d2f9ae1a8de2033f52bd53a4814153a17c0315ea720b0773b7841aa9d91f0.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "full-captured-visible-text-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -1076,12 +1472,13 @@
       "compressedBytes": 26942,
       "rawBytes": 121367,
       "bodySha256": "310bc70af2ca437fa14272c8b810fced5c91074a2f9d6249cb6a4ea154a68c75",
-      "rawModifiedTimeNs": 1791336354052716991
+      "rawModifiedTimeNs": 1791336354052716991,
+      "readScope": "All captured visible body/Usage/metadata in20URLbatch actually read; no dynamic implementation or actualUIclaim."
     },
     {
       "url": "https://21st.dev/@Adurotimi/components/save-button",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/ca06e20152ace66a53251a83832c72899a9a1d81364a2a3181c678a0c09af20d.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "full-captured-visible-text-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -1089,12 +1486,40 @@
       "compressedBytes": 65976,
       "rawBytes": 302587,
       "bodySha256": "c28903be24e500528eb68f37baa1afa23c71eb6ab2617876c5acc46de2a8be4b",
-      "rawModifiedTimeNs": 1791336356146410034
+      "rawModifiedTimeNs": 1791336356146410034,
+      "readScope": "All captured visible body/Usage/metadata in20URLbatch actually read; no dynamic implementation or actualUIclaim.",
+      "experimentProposal": {
+        "path": "실험/구성/비교와 검증/누름 표현 비교",
+        "existingApis": [
+          "Button",
+          "Notice",
+          "EffectSurface"
+        ],
+        "decision": "merge-existing-candidate-pending-source-runtime",
+        "registration": "pending-root-after-research",
+        "requiredStates": [
+          "Default",
+          "Dark"
+        ],
+        "conditionalStates": [
+          "Rtl",
+          "ReducedMotion",
+          "Disabled",
+          "Pending",
+          "Failed",
+          "Recovery"
+        ],
+        "preconditions": "Metadata/Usage only; actual implementation, callbacks/input/focus/visibility/reduced and productprovider/data ownership toreview. MaximumOStext/maximumimitatingenlargement excluded.",
+        "finalDisposition": "improve-existing",
+        "finalReason": "원본 Ripple의 키보드 합성 좌표 문제를 실제 확인했다. Button 요청/disabled/loading 엔진을 유지하고 누름 표현의 선택축만 개선 대상으로 남긴다.",
+        "finalRequiredVerification": "Enter/Space·포인터 좌표·disabled/loading·중복 요청·reduced/lifecycle; 표현 개선 필요시만."
+      },
+      "reviewNotes": "FullSaveButtonusage settings100confetti/spread70/y.6/scale1 and dependenciesread. Visualsaveeffect not actualdurablesaveproof; preserve Buttonloading/Noticefailure/draft/retry and celebrateonly actualsuccess using existingcompletioncelebrationcandidate. Implementation/lifecycle stillpending."
     },
     {
       "url": "https://21st.dev/@Ali-Hussein-dev",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/946d60b95113a864cfc18c23e9dd6373f12531c79c2b4e0591411a6fcfdb9a37.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "full-captured-visible-text-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -1102,12 +1527,13 @@
       "compressedBytes": 23861,
       "rawBytes": 106152,
       "bodySha256": "ac745ce5ab8bc2e45317509cb23cd2f977bc111a220c021f9d040ee6a08184a5",
-      "rawModifiedTimeNs": 1791336357955507965
+      "rawModifiedTimeNs": 1791336357955507965,
+      "readScope": "All captured visible body/Usage/metadata in20URLbatch actually read; no dynamic implementation or actualUIclaim."
     },
     {
       "url": "https://21st.dev/@Ali-Hussein-dev/components/card",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/6e188d26abba1bcdf3c69628e73207aff8b63c3644f004fec84889700454fef4.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "captured-unavailable-message-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -1115,12 +1541,17 @@
       "compressedBytes": 22416,
       "rawBytes": 147097,
       "bodySha256": "4e0e8d5779df18e736ace137dd2da6f4933884320b7e0ff750f6113845023a58",
-      "rawModifiedTimeNs": 1791336359737566122
+      "rawModifiedTimeNs": 1791336359737566122,
+      "readScope": "All captured visible body/Usage/metadata in20URLbatch actually read; no dynamic implementation or actualUIclaim.",
+      "adoptionDecision": {
+        "decision": "no-candidate-without-content",
+        "reason": "Captured Component Not Found (7URLs) or Library not found (1URL); originalHTTPmetadataunavailable, so notclassifiedasHTTP404. Do not derive visual/sourceproposal from staleURLslug."
+      }
     },
     {
       "url": "https://21st.dev/@Ali-Hussein-dev/components/card-with-cross-patter",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/19b3d84f7b1b81892c0a278314e7b38226ccc826baeae5cb5599df4adf331475.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "captured-unavailable-message-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -1128,12 +1559,17 @@
       "compressedBytes": 22440,
       "rawBytes": 147169,
       "bodySha256": "3cce9e857377134c65eb4f762bb7b73ebb16951226fac1af26251023a1c69718",
-      "rawModifiedTimeNs": 1791336361741790581
+      "rawModifiedTimeNs": 1791336361741790581,
+      "readScope": "All captured visible body/Usage/metadata in20URLbatch actually read; no dynamic implementation or actualUIclaim.",
+      "adoptionDecision": {
+        "decision": "no-candidate-without-content",
+        "reason": "Captured Component Not Found (7URLs) or Library not found (1URL); originalHTTPmetadataunavailable, so notclassifiedasHTTP404. Do not derive visual/sourceproposal from staleURLslug."
+      }
     },
     {
       "url": "https://21st.dev/@Ali-Hussein-dev/components/card-with-ellipsis-pattern",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/46a288d1057304f542468aef6d69e179fb884e1aa5327f5fdb487bb8998438b0.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "captured-unavailable-message-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -1141,12 +1577,17 @@
       "compressedBytes": 22454,
       "rawBytes": 147185,
       "bodySha256": "7a72a145e74320bd01788591ebc5ccd781ca42e9581ea563649a0fedb9fd41d2",
-      "rawModifiedTimeNs": 1791336363826291560
+      "rawModifiedTimeNs": 1791336363826291560,
+      "readScope": "All captured visible body/Usage/metadata in20URLbatch actually read; no dynamic implementation or actualUIclaim.",
+      "adoptionDecision": {
+        "decision": "no-candidate-without-content",
+        "reason": "Captured Component Not Found (7URLs) or Library not found (1URL); originalHTTPmetadataunavailable, so notclassifiedasHTTP404. Do not derive visual/sourceproposal from staleURLslug."
+      }
     },
     {
       "url": "https://21st.dev/@Ali-Hussein-dev/components/card-with-grid-ellipsis-pattern",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/51386fe1bd80dc2a99b1bb58ce945bf3635f92ff272df1ab79d51c1aff596e46.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "captured-unavailable-message-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -1154,12 +1595,17 @@
       "compressedBytes": 22463,
       "rawBytes": 147218,
       "bodySha256": "946d6c390c3b5f169663caccb568a2a167151adf20b9d1e3ed834a5bad0c8030",
-      "rawModifiedTimeNs": 1791336366017134490
+      "rawModifiedTimeNs": 1791336366017134490,
+      "readScope": "All captured visible body/Usage/metadata in20URLbatch actually read; no dynamic implementation or actualUIclaim.",
+      "adoptionDecision": {
+        "decision": "no-candidate-without-content",
+        "reason": "Captured Component Not Found (7URLs) or Library not found (1URL); originalHTTPmetadataunavailable, so notclassifiedasHTTP404. Do not derive visual/sourceproposal from staleURLslug."
+      }
     },
     {
       "url": "https://21st.dev/@Ali-Hussein-dev/components/card-with-grid-pattern",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/60004a9e9f0fae833fcbd4e07cea474c9244eb44ff39fe9ec90f3f46e1b004d1.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "captured-unavailable-message-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -1167,12 +1613,17 @@
       "compressedBytes": 22441,
       "rawBytes": 147169,
       "bodySha256": "7607256d35e2ae767eb7c9ca3eb3fd1944100338cc7d40e90d3be84f27a4d739",
-      "rawModifiedTimeNs": 1791336367845907558
+      "rawModifiedTimeNs": 1791336367845907558,
+      "readScope": "All captured visible body/Usage/metadata in20URLbatch actually read; no dynamic implementation or actualUIclaim.",
+      "adoptionDecision": {
+        "decision": "no-candidate-without-content",
+        "reason": "Captured Component Not Found (7URLs) or Library not found (1URL); originalHTTPmetadataunavailable, so notclassifiedasHTTP404. Do not derive visual/sourceproposal from staleURLslug."
+      }
     },
     {
       "url": "https://21st.dev/@Ali-Hussein-dev/components/card-with-lines-patter",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/89bdde41b62576a96f239d433f4e5f02777c8da5a8e82294383b7e4da231d32a.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "captured-unavailable-message-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -1180,12 +1631,17 @@
       "compressedBytes": 22440,
       "rawBytes": 147169,
       "bodySha256": "4ac10c6e67404f707e93c76c93eb93a64b3f54b5c6bc19ea2fe213bcb28b943d",
-      "rawModifiedTimeNs": 1791336369759339591
+      "rawModifiedTimeNs": 1791336369759339591,
+      "readScope": "All captured visible body/Usage/metadata in20URLbatch actually read; no dynamic implementation or actualUIclaim.",
+      "adoptionDecision": {
+        "decision": "no-candidate-without-content",
+        "reason": "Captured Component Not Found (7URLs) or Library not found (1URL); originalHTTPmetadataunavailable, so notclassifiedasHTTP404. Do not derive visual/sourceproposal from staleURLslug."
+      }
     },
     {
       "url": "https://21st.dev/@Ali-Hussein-dev/components/card-with-noise-patter",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/7c63aa20d4cad1d98a524a95f1562b6dcaac0ca256b182b7c6ec60a0522a9fcd.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "captured-unavailable-message-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -1193,12 +1649,17 @@
       "compressedBytes": 22446,
       "rawBytes": 147169,
       "bodySha256": "05593f8fba91703c633b97db1776315a3699bb17c1c5453591cd112f9bcffc79",
-      "rawModifiedTimeNs": 1791336371777448190
+      "rawModifiedTimeNs": 1791336371777448190,
+      "readScope": "All captured visible body/Usage/metadata in20URLbatch actually read; no dynamic implementation or actualUIclaim.",
+      "adoptionDecision": {
+        "decision": "no-candidate-without-content",
+        "reason": "Captured Component Not Found (7URLs) or Library not found (1URL); originalHTTPmetadataunavailable, so notclassifiedasHTTP404. Do not derive visual/sourceproposal from staleURLslug."
+      }
     },
     {
       "url": "https://21st.dev/@Ali-Hussein-dev/library/indie-ui",
       "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-source/f9c02d14cf8a856277a3bd69f50b4d408de611ef984a4aa05cf4b0fa207e3b66.html.gz",
-      "publicBodyReview": "pending",
+      "publicBodyReview": "captured-unavailable-message-read",
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
@@ -1206,7 +1667,12 @@
       "compressedBytes": 20316,
       "rawBytes": 96474,
       "bodySha256": "ccdc8793aa38b04c832941f48aefe3ddaee03eae1e5c3134c7aec71cc6cde38a",
-      "rawModifiedTimeNs": 1791336373808676630
+      "rawModifiedTimeNs": 1791336373808676630,
+      "readScope": "All captured visible body/Usage/metadata in20URLbatch actually read; no dynamic implementation or actualUIclaim.",
+      "adoptionDecision": {
+        "decision": "no-candidate-without-content",
+        "reason": "Captured Component Not Found (7URLs) or Library not found (1URL); originalHTTPmetadataunavailable, so notclassifiedasHTTP404. Do not derive visual/sourceproposal from staleURLslug."
+      }
     },
     {
       "url": "https://21st.dev/@AliFarooqDev",
@@ -2359,7 +2825,17 @@
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "captureStatus": "missing-raw-file"
+      "captureStatus": "missing-raw-file",
+      "alternateExistingRepair": {
+        "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-repaired-source/887b99de55a0a0af750f195e00167930eba2218024815132d60ceac6372d290a.html.gz",
+        "requestUrl": "https://21st.dev/@Mazyar%20kawa",
+        "statusFromPreservedMetadata": 200,
+        "checkedAtFromPreservedMetadata": "2026-10-07T01:57:15Z",
+        "bodySha256": "871d6b7beb1cd2891c3eb5d97718202c4b30f5eac4a2af100e550c0e73b5762d",
+        "rawBytes": 84813,
+        "match": "preserved-repair-byte-and-sha-match",
+        "publicBodyReview": "pending"
+      }
     },
     {
       "url": "https://21st.dev/@Mazyar kawa/components/activity-dropdown",
@@ -2368,7 +2844,17 @@
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "captureStatus": "missing-raw-file"
+      "captureStatus": "missing-raw-file",
+      "alternateExistingRepair": {
+        "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-repaired-source/dd0fe01b6f0dbd6c601f4667b1d2badbe388eff26eccfb2aab3d2d903701f18c.html.gz",
+        "requestUrl": "https://21st.dev/@Mazyar%20kawa/components/activity-dropdown",
+        "statusFromPreservedMetadata": 200,
+        "checkedAtFromPreservedMetadata": "2026-10-07T01:57:20Z",
+        "bodySha256": "99997e7e22638ab8d737c48cec7f847418d8ebad3946054527df8aeaf03920e8",
+        "rawBytes": 147155,
+        "match": "preserved-repair-byte-and-sha-match",
+        "publicBodyReview": "pending"
+      }
     },
     {
       "url": "https://21st.dev/@Mazyar kawa/components/cpu-architecture",
@@ -2377,7 +2863,17 @@
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "captureStatus": "missing-raw-file"
+      "captureStatus": "missing-raw-file",
+      "alternateExistingRepair": {
+        "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-repaired-source/865c948ed9178cca4b1e7f65c71bb8ad7a43886b2a51626fe074543a1da74896.html.gz",
+        "requestUrl": "https://21st.dev/@Mazyar%20kawa/components/cpu-architecture",
+        "statusFromPreservedMetadata": 200,
+        "checkedAtFromPreservedMetadata": "2026-10-07T01:57:25Z",
+        "bodySha256": "c015d7e11495f5a1bd485118602ec8c3841ba010f6bbdeed96e3060c1de8ca8d",
+        "rawBytes": 147164,
+        "match": "preserved-repair-byte-and-sha-match",
+        "publicBodyReview": "pending"
+      }
     },
     {
       "url": "https://21st.dev/@Mazyar kawa/components/inverted-cursor",
@@ -2386,7 +2882,17 @@
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "captureStatus": "missing-raw-file"
+      "captureStatus": "missing-raw-file",
+      "alternateExistingRepair": {
+        "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-repaired-source/6f9afb03ed73295e038f51b8ad7c95aa396e104f00ffea5f4d0af411d1e1da75.html.gz",
+        "requestUrl": "https://21st.dev/@Mazyar%20kawa/components/inverted-cursor",
+        "statusFromPreservedMetadata": 200,
+        "checkedAtFromPreservedMetadata": "2026-10-07T01:57:30Z",
+        "bodySha256": "f601c5c10a4ba60c17a3b3acf413a316928f227334eaa99b5b77512e495c48f9",
+        "rawBytes": 147107,
+        "match": "preserved-repair-byte-and-sha-match",
+        "publicBodyReview": "pending"
+      }
     },
     {
       "url": "https://21st.dev/@Mazyar kawa/components/location-map",
@@ -2395,7 +2901,17 @@
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "captureStatus": "missing-raw-file"
+      "captureStatus": "missing-raw-file",
+      "alternateExistingRepair": {
+        "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-repaired-source/18dd7cdfc42244a3c79a73e14e852c6e4c1bb3704250530cb1da78e34807fd36.html.gz",
+        "requestUrl": "https://21st.dev/@Mazyar%20kawa/components/location-map",
+        "statusFromPreservedMetadata": 200,
+        "checkedAtFromPreservedMetadata": "2026-10-07T01:57:35Z",
+        "bodySha256": "39a93eb04163eed729c7d5ed96e5fc8a42f3a1c51d0b0594b71fb514e1318300",
+        "rawBytes": 147050,
+        "match": "preserved-repair-byte-and-sha-match",
+        "publicBodyReview": "pending"
+      }
     },
     {
       "url": "https://21st.dev/@Mazyar kawa/components/logo-loop",
@@ -2404,7 +2920,17 @@
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "captureStatus": "missing-raw-file"
+      "captureStatus": "missing-raw-file",
+      "alternateExistingRepair": {
+        "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-repaired-source/2170a9e01782c7b02edbca76f23cc4a8de447a4a472c08ece48fa81d7be59709.html.gz",
+        "requestUrl": "https://21st.dev/@Mazyar%20kawa/components/logo-loop",
+        "statusFromPreservedMetadata": 200,
+        "checkedAtFromPreservedMetadata": "2026-10-07T01:57:40Z",
+        "bodySha256": "382204deae623ea5a3df851662dfca4366be035318a8d19262dd6f19feae3e5f",
+        "rawBytes": 147494,
+        "match": "preserved-repair-byte-and-sha-match",
+        "publicBodyReview": "pending"
+      }
     },
     {
       "url": "https://21st.dev/@Mazyar kawa/components/logo-timeline",
@@ -2413,7 +2939,17 @@
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "captureStatus": "missing-raw-file"
+      "captureStatus": "missing-raw-file",
+      "alternateExistingRepair": {
+        "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-repaired-source/a18b1dc435a4973a7b8bcddb81c0a80e92c4643cbca8d27d4a2287cf0745cb21.html.gz",
+        "requestUrl": "https://21st.dev/@Mazyar%20kawa/components/logo-timeline",
+        "statusFromPreservedMetadata": 200,
+        "checkedAtFromPreservedMetadata": "2026-10-07T01:57:45Z",
+        "bodySha256": "9e053f1be3d09ecb46ad0ff5db6b76f5b6019c78a96179ddb66224d6ac331e23",
+        "rawBytes": 147093,
+        "match": "preserved-repair-byte-and-sha-match",
+        "publicBodyReview": "pending"
+      }
     },
     {
       "url": "https://21st.dev/@Mazyar kawa/components/text-roll",
@@ -2422,7 +2958,17 @@
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "captureStatus": "missing-raw-file"
+      "captureStatus": "missing-raw-file",
+      "alternateExistingRepair": {
+        "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-repaired-source/7afd256aa4d3566e16432972700b6699fcfcca17204a3f79eef1788ea2dad47e.html.gz",
+        "requestUrl": "https://21st.dev/@Mazyar%20kawa/components/text-roll",
+        "statusFromPreservedMetadata": 200,
+        "checkedAtFromPreservedMetadata": "2026-10-07T01:57:50Z",
+        "bodySha256": "65a1160f18dc814528ffd656f4ebf891dfaaa6df3caa32b4fd8c867038bd8bf3",
+        "rawBytes": 147161,
+        "match": "preserved-repair-byte-and-sha-match",
+        "publicBodyReview": "pending"
+      }
     },
     {
       "url": "https://21st.dev/@Mazyar kawa/components/voxel-wall",
@@ -2431,7 +2977,17 @@
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "captureStatus": "missing-raw-file"
+      "captureStatus": "missing-raw-file",
+      "alternateExistingRepair": {
+        "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/21st.dev-repaired-source/c0bc2e928d0a39ae1b69712d125b7173345a81ca446d09d3bd2b5616a4e2c414.html.gz",
+        "requestUrl": "https://21st.dev/@Mazyar%20kawa/components/voxel-wall",
+        "statusFromPreservedMetadata": 200,
+        "checkedAtFromPreservedMetadata": "2026-10-07T01:57:55Z",
+        "bodySha256": "461c08c340e1ffcc21166256c0fa3de0905dfc5900f0d3c1878b4b04eda1efc3",
+        "rawBytes": 147628,
+        "match": "preserved-repair-byte-and-sha-match",
+        "publicBodyReview": "pending"
+      }
     },
     {
       "url": "https://21st.dev/@MrCruzz",
@@ -13035,7 +13591,17 @@
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "captureStatus": "missing-raw-file"
+      "captureStatus": "missing-raw-file",
+      "newIndependentCheck": {
+        "url": "https://21st.dev/@bee4/components/spray-paint-canvas",
+        "checkedAt": "2026-10-07T08:41:44.742572+00:00",
+        "publicBodyReview": "pending-timeout",
+        "implementationReview": "pending",
+        "visualReview": "pending",
+        "interactionReview": "pending",
+        "status": "request-error",
+        "error": "TimeoutError"
+      }
     },
     {
       "url": "https://21st.dev/@beko2210/themes/lime-frost-remix-1782576440278",
@@ -148543,7 +149109,23 @@
       "implementationReview": "pending",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "captureStatus": "missing-raw-file"
+      "captureStatus": "missing-raw-file",
+      "newIndependentCheck": {
+        "url": "https://21st.dev/community/components/s/shadow",
+        "checkedAt": "2026-10-07T08:42:05.434248+00:00",
+        "publicBodyReview": "full-captured-visible-text-read",
+        "implementationReview": "pending",
+        "visualReview": "pending",
+        "interactionReview": "pending",
+        "status": 200,
+        "finalUrl": "https://21st.dev/community/components/s/shadow",
+        "contentType": "text/html; charset=utf-8",
+        "rawPath": "/Users/jimin/.codex/tmp/hjm-reference-full-audit-20261007/parallel-b-21st-missing-readonly/138c66d98cfbbc8de4490dbcedd52f7776dab2c4c481eaea6c24df0cd07166a1.html.gz",
+        "rawBytes": 588976,
+        "bodySha256": "19c54492b91a92ace25b1b424c67e26f9af94a2d3557a51cc784bc437b79244c",
+        "extractedCharacters": 3141
+      },
+      "reviewNotes": "New HTTP200publicshadowcatalogue full3141chars read, counttitle64+vsbody6 and repeatedHeroUIScrollShadow catalogueentries. Descriptive shadow tags are not visual/tokens/implementation proof; existing shadoweditor/surfaceexpression proposals retain actualsource/UIrequirements."
     },
     {
       "url": "https://21st.dev/community/components/s/share",
@@ -158006,9 +158588,36 @@
     }
   ],
   "reviewCounts": {
-    "newBatchCapturedPublicBodyRead": 20,
-    "implementationRead": 0,
+    "newBatchCapturedPublicBodyRead": 53,
+    "capturedLoadingShellRead": 10,
+    "implementationRead": 1,
     "renderedSelectedPages": 0,
-    "selectedFlowPages": 0
-  }
+    "selectedFlowPages": 0,
+    "alternateRepairMetadataVerified": 9,
+    "newMissingHttpSuccess": 1,
+    "newMissingTimeout": 1,
+    "linkedImplementationRead": 4,
+    "linkedImplementationFilesRead": 5,
+    "capturedUnavailableMessageRead": 8
+  },
+  "scopeExclusions": {
+    "maximumAccessibilityText": "Excluded by user2026-10-07: OSmaximumfont and enlargementimitatingmaximum are excluded from design/implementation/tests/remainder/completion/releaseblockers. Historicalevidence preserved; no repeat tests. Ambiguous LargeText proposedrequirements removed; no ordinaryfont API changes."
+  },
+  "linkedSourceChecks": [
+    {
+      "url": "https://uselayouts.com/docs/components/inline-edit",
+      "visualReview": "selected-default-preview-read",
+      "interactionReview": "Codebutton-opens-login-only",
+      "implementationReview": "blocked-login-to-copy",
+      "vaultCheck": "Aside skills list failed because Aside not running; no credentials/signup/permission entry"
+    }
+  ],
+  "browserCheckpoint": "After interruption CUA existingbrowser2 unavailable and inventorybrowsers=[]; no usertabs/DeviceHub changed. Nativeappbrowserfallback notused; sourceHTTPreading continues. Actual UI remainspending.",
+  "scopeDecision": {
+    "userInstruction": "이제 조사 마무리해 / 필요한것만 조사해",
+    "action": "Stop bulkbodyread/newcollection; preserve current53publicbody+10LoadingShell+8NotFoundmsgs and pending12460ledger. Necessary implementation triage only.",
+    "exhaustiveComplete": false,
+    "closedForCurrentRequestedResearchScope": true
+  },
+  "finalCandidateDispositionReference": "2026-10-07-reference-parallel-b-index.json"
 }

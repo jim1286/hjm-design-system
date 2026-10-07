@@ -1,0 +1,4006 @@
+{
+  "schemaVersion": 1,
+  "scopeDecision": {
+    "date": "2026-10-07",
+    "userInstructions": [
+      "이제 조사 마무리해",
+      "필요한것만 조사해"
+    ],
+    "researchStatus": "closed-for-adoption",
+    "exhaustiveReviewComplete": false,
+    "candidateDecisionComplete": true,
+    "automaticBulkResearchResume": false,
+    "reason": "Latest user instruction narrows page research to implementation-needed evidence. Historical unread pages remain evidence boundaries rather than current completion or release blockers."
+  },
+  "counts": {
+    "candidateRecords": 149,
+    "distinctRecordedPaths": 149,
+    "dispositions": {
+      "deferred": 19,
+      "improve-existing": 24,
+      "new-experiment": 10,
+      "reuse-existing": 96
+    },
+    "verifiedRegistrationRecords": 3,
+    "candidateRecordsLinkedToVerifiedRegistration": 2
+  },
+  "countMeaning": "Candidate records and paths are not implemented APIs or registered experiments. Cross-source semantic overlap is preserved through merges. A matching Storybook title alone does not prove that a proposed variant was absorbed.",
+  "sourceIndexes": [
+    {
+      "owner": "A",
+      "path": "docs/qa/2026-10-07-reference-parallel-a-index.json",
+      "sha256": "58d88cb7250a612dfb2a9cb229f6f5b50fe30330442d160e9ace8a5f19e55f47"
+    },
+    {
+      "owner": "B",
+      "path": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "sha256": "219aa3b73aa179802c49dd9b1f13a5460e8deffccb2d1dcffb105645ac91af53"
+    },
+    {
+      "owner": "C",
+      "path": "docs/qa/2026-10-07-reference-parallel-c-ledger.json",
+      "sha256": "564767ae39a5c6ee3b6d362e4af9c3b59ae37b78653b7fb61d4f62d163ebf8fd"
+    }
+  ],
+  "merges": [
+    {
+      "id": "finite-collection-detail",
+      "sourceCandidates": [
+        "B-ba61efa90ab8",
+        "B-550ff79c1956",
+        "C-P01"
+      ],
+      "decision": "One finite multi-visible collection placement contract; compose existing Card.actions and Dialog for optional detail. Testimonials and media are data/purpose variations, not two scroll engines.",
+      "status": "design-confirmed-not-implemented",
+      "designEvidence": "docs/plans/aceternity-interaction-adoption-2026-10-07.md"
+    },
+    {
+      "id": "theme-propagation",
+      "sourceCandidates": [
+        "A-01",
+        "B-9b94fe0ec132",
+        "C-S06"
+      ],
+      "decision": "Existing 10-theme comparison and product-defined profile propagation share one Provider path. A possible Web ViewTransition is a separate optional visual improvement; it is not another registry.",
+      "status": "adoption-target-consolidated-not-all-variants-implemented"
+    },
+    {
+      "id": "palette-and-contrast",
+      "sourceCandidates": [
+        "A-04",
+        "C-T03"
+      ],
+      "decision": "Use one semantic-palette and contrast validation path. Product status meanings and light/dark overrides are preserved.",
+      "status": "adoption-target-consolidated-not-all-variants-implemented"
+    },
+    {
+      "id": "typography-hierarchy-and-roles",
+      "sourceCandidates": [
+        "A-05",
+        "C-T01"
+      ],
+      "decision": "Existing heading metrics/hierarchy can be reused. Independent display/reading font-family roles remain an explicit improvement gap, not fulfilled by resizing ui text.",
+      "status": "adoption-target-consolidated-not-all-variants-implemented"
+    },
+    {
+      "id": "state-and-intent-comparison",
+      "sourceCandidates": [
+        "A-23",
+        "C-G01"
+      ],
+      "decision": "Use the same data/state/viewport fixture for theme comparisons. Screenshot-time differences are not responsive behavior or a new public state engine.",
+      "status": "adoption-target-consolidated-not-all-variants-implemented"
+    },
+    {
+      "id": "video-preview",
+      "sourceCandidates": [
+        "A-20",
+        "B-e0efa05312d5"
+      ],
+      "decision": "Improve the existing deployed video-preview target rather than creating an identically named experimental copy. Original media playback and host capability remain explicit verification boundaries.",
+      "status": "adoption-target-consolidated-not-all-variants-implemented"
+    },
+    {
+      "id": "surface-material-and-depth",
+      "sourceCandidates": [
+        "A-02",
+        "A-07",
+        "C-T06"
+      ],
+      "decision": "Use existing material fill/blur/inset and role-based shadows for paper/glass/depth examples. Torn, taped or hand-drawn boundaries are unsupported shapes and stay explicit improvement/new-treatment candidates.",
+      "status": "adoption-target-consolidated-not-all-variants-implemented"
+    },
+    {
+      "id": "code-and-record-display",
+      "sourceCandidates": [
+        "B-e77524e5a035",
+        "C-C06"
+      ],
+      "decision": "Use the registered command-records CodeBlock/Tabs/ClipboardButton composition for the overlapping technical-value display need. Real command execution, live stream and business status are product-owned.",
+      "status": "adoption-target-consolidated-not-all-variants-implemented"
+    }
+  ],
+  "items": [
+    {
+      "id": "A-01",
+      "owner": "A",
+      "path": "실험/구성/비교와 검증/테마 조합",
+      "proposedPath": "실험/구성/비교와 검증/테마 조합",
+      "finalDisposition": "reuse-existing",
+      "reason": "기존11 profile에서 component→composition→screen을 동일fixture로 연결; 새theme registry 불필요",
+      "existingApiReferences": "HjmDesignProfile/hjmDesignPresets + theme tokens/material/interactions/compositions/screens; 기존11 presets",
+      "requiredVerification": "11profile 선택과 앱 custom profile이 기존시맨틱/상태계약을 유지하는지 로컬fixture로 확인",
+      "sourcePointer": "experimentCandidateCheckpoint.candidates/A-01",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-a-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [
+        "실험/구성/비교와 검증/테마 조합"
+      ],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "A-02",
+      "owner": "A",
+      "path": "실험/구성/비교와 검증/종이 표면과 경계",
+      "proposedPath": "실험/구성/비교와 검증/종이 표면과 경계",
+      "finalDisposition": "improve-existing",
+      "reason": "paper grain/noise 조합은 재사용, 줄무늬·테이프·회전·타공/물결 경계는 기존grain과 구별해 개선 범위로 유지",
+      "existingApiReferences": "EffectSurface grain/noise + Card/Form/Button + paper profile; 기존 배포 질감 비교/티켓",
+      "requiredVerification": "직접 만든 질감/경계 fixture의 대비·일반폭 clip·focus; 실제새경계API는 양renderer표현 가능성 확인",
+      "sourcePointer": "experimentCandidateCheckpoint.candidates/A-02",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-a-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "A-03",
+      "owner": "A",
+      "path": "실험/컴포넌트/시각 효과/계단 모양 테두리",
+      "proposedPath": "실험/컴포넌트/시각 효과/계단 모양 테두리",
+      "finalDisposition": "new-experiment",
+      "reason": "일반radius로 계단 경계를 표현할 수 없어 고유 treatment 실험 필요; 행동은 HJM Button/Card 유지",
+      "existingApiReferences": "retro radius/shadow + Card/Button; 일반radius만으로 stepped outline 동일표현 불가 Official source now confirms behavior delegation to ShadcnButton/Card plus decorative steps; prefer existing HJM Button/Card state contracts with independently compared treatment, not copy-paste state wrappers.",
+      "requiredVerification": "원본127/135줄과 다른 자체geometry·focus/외곽clip·semanticstates·Native 대응 확인; 설치/primitive교체 선행 안함",
+      "sourcePointer": "experimentCandidateCheckpoint.candidates/A-03",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-a-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "A-04",
+      "owner": "A",
+      "path": "실험/토큰/색과 글자/색 조합과 대비",
+      "proposedPath": "실험/토큰/색과 글자/색 조합과 대비",
+      "finalDisposition": "reuse-existing",
+      "reason": "semantic/brandPalette/checkPaletteContrast로 여러 palette를 비교",
+      "existingApiReferences": "semantic palette/brandPalette + checkPaletteContrast + existing profile palette",
+      "requiredVerification": "채택할 제품팔레트와 표면의 light/dark 대비 확인",
+      "sourcePointer": "experimentCandidateCheckpoint.candidates/A-04",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-a-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "A-05",
+      "owner": "A",
+      "path": "실험/토큰/색과 글자/제목 위계와 줄바꿈",
+      "proposedPath": "실험/토큰/색과 글자/제목 위계와 줄바꿈",
+      "finalDisposition": "reuse-existing",
+      "reason": "제목위계/줄바꿈은 기존typography/profile변형",
+      "existingApiReferences": "profile heading/typography/fontFamily + Heading/Text",
+      "requiredVerification": "폰트권한·한글fallback·일반폭 제목줄바꿈 확인; 최대글자조건 제외",
+      "sourcePointer": "experimentCandidateCheckpoint.candidates/A-05",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-a-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "A-06",
+      "owner": "A",
+      "path": "실험/구성/입력과 작성/사진 위 입력 카드",
+      "proposedPath": "실험/구성/입력과 작성/사진 위 입력 카드",
+      "finalDisposition": "reuse-existing",
+      "reason": "사진슬롯+Card/Form/Button 조합으로 숲/종이 테마 양식 재사용",
+      "existingApiReferences": "Card/Image/Form/Field/TextField/Textarea/Button + forest/glass profile",
+      "requiredVerification": "허가된 자체asset·텍스트대비·HJM pending/error/retry fixture 확인; 원제품 실제전송 복제 안함",
+      "sourcePointer": "experimentCandidateCheckpoint.candidates/A-06",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-a-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "A-07",
+      "owner": "A",
+      "path": "실험/컴포넌트/시각 효과/비쳐 보이는 표면",
+      "proposedPath": "실험/컴포넌트/시각 효과/비쳐 보이는 표면",
+      "finalDisposition": "reuse-existing",
+      "reason": "기존material blur/fill/inset 범위의 표면변형",
+      "existingApiReferences": "profile material.surface blurStrength/fillOpacity/insetShadows + Card/EffectSurface",
+      "requiredVerification": "채택opacity/blur에서 일반텍스트대비와 해당renderer표현 확인",
+      "sourcePointer": "experimentCandidateCheckpoint.candidates/A-07",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-a-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "A-08",
+      "owner": "A",
+      "path": "실험/구성/정보 표시/입체 장식과 행동",
+      "proposedPath": "실험/구성/정보 표시/입체 장식과 행동",
+      "finalDisposition": "reuse-existing",
+      "reason": "3D장식은 Image/AspectRatio/제품asset슬롯",
+      "existingApiReferences": "Image/AspectRatio + Card/Button/Heading; clay/forest profile",
+      "requiredVerification": "실제사용asset권한·장식접근성제외·일반레이아웃 확인; 3D엔진 필요없음",
+      "sourcePointer": "experimentCandidateCheckpoint.candidates/A-08",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-a-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "A-09",
+      "owner": "A",
+      "path": "실험/구성/비교와 검증/버튼 순서와 의도",
+      "proposedPath": "실험/구성/비교와 검증/버튼 순서와 의도",
+      "finalDisposition": "improve-existing",
+      "reason": "CTA순서/주행동은 제품intent로 고정하고 테마배치변형에서 보존",
+      "existingApiReferences": "Button/Link + action slots/Grid/Stack + overview/intent recipe",
+      "requiredVerification": "같은선택/결과state에서 desktop/mobile 주행동의미와탭순서 확인",
+      "sourcePointer": "experimentCandidateCheckpoint.candidates/A-09",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-a-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "A-10",
+      "owner": "A",
+      "path": "실험/구성/입력과 작성/구독 정보 입력",
+      "proposedPath": "실험/구성/입력과 작성/구독 정보 입력",
+      "finalDisposition": "reuse-existing",
+      "reason": "newsletter목적별 기존Form/Field schema변형",
+      "existingApiReferences": "Form/Field/TextField/Select/Checkbox/Button + FormState/action recovery",
+      "requiredVerification": "fixture유효성·pending/failed/success·동의분리 확인; 외부이메일 전송필요없음",
+      "sourcePointer": "experimentCandidateCheckpoint.candidates/A-10",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-a-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "A-11",
+      "owner": "A",
+      "path": "실험/구성/선택과 필터/관심과 동의 선택",
+      "proposedPath": "실험/구성/선택과 필터/관심과 동의 선택",
+      "finalDisposition": "reuse-existing",
+      "reason": "관심선택과법적동의는 기존Checkbox/FieldGroup의 다른의미",
+      "existingApiReferences": "Checkbox/FieldGroup/Form + existing controlled selection",
+      "requiredVerification": "controlled값·필수동의 문구/에러전달 확인",
+      "sourcePointer": "experimentCandidateCheckpoint.candidates/A-11",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-a-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "A-12",
+      "owner": "A",
+      "path": "실험/구성/입력과 작성/단계별 가입 입력",
+      "proposedPath": "실험/구성/입력과 작성/단계별 가입 입력",
+      "finalDisposition": "improve-existing",
+      "reason": "첫step정적참조를 짧은가입흐름으로 개선하되 schema는제품소유",
+      "existingApiReferences": "Form/Select/RadioGroup/FieldGroup + FormState; 상태는제품schema",
+      "requiredVerification": "이전입력유지·단계별유효성·뒤로가기·실패복구 fixture 확인",
+      "sourcePointer": "experimentCandidateCheckpoint.candidates/A-12",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-a-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "A-13",
+      "owner": "A",
+      "path": "실험/구성/입력과 작성/팝업 입력과 닫기",
+      "proposedPath": "실험/구성/입력과 작성/팝업 입력과 닫기",
+      "finalDisposition": "reuse-existing",
+      "reason": "Dialog/Sheet/Form기존오버레이에 목적별폼 연결",
+      "existingApiReferences": "Dialog/Sheet/Form/close action + existing overlay contract",
+      "requiredVerification": "Escape/닫기·focusrestore·submit상태 fixture 확인",
+      "sourcePointer": "experimentCandidateCheckpoint.candidates/A-13",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-a-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "A-14",
+      "owner": "A",
+      "path": "실험/화면/소개/신청 옵션과 비용",
+      "proposedPath": "실험/화면/소개/신청 옵션과 비용",
+      "finalDisposition": "reuse-existing",
+      "reason": "기존상품소개/가격Card에 신청/구독/구매의미 유지",
+      "existingApiReferences": "Card/Grid/DescriptionList/Button + 기존티켓/상품소개구성",
+      "requiredVerification": "비용/약관/주행동label fixture 확인; 실제구매 실행불필요",
+      "sourcePointer": "experimentCandidateCheckpoint.candidates/A-14",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-a-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "A-15",
+      "owner": "A",
+      "path": "실험/구성/정보 표시/문의와 질문 답변",
+      "proposedPath": "실험/구성/정보 표시/문의와 질문 답변",
+      "finalDisposition": "reuse-existing",
+      "reason": "FAQ/help는 existingAccordion+Card로 흡수",
+      "existingApiReferences": "Accordion + help/action Card/Stack/Grid; Topic content sections compare existing Accordion (Web id/panel and Native value/content, single-open default, native label) rather than recreating disclosure. Tree is Web-only hierarchical exploration and does not provide free graph layout.",
+      "requiredVerification": "열림controlled상태·keyboard·질문/답변순서 fixture 확인",
+      "sourcePointer": "experimentCandidateCheckpoint.candidates/A-15",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-a-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "A-16",
+      "owner": "A",
+      "path": "실험/화면/검색/자료 검색과 선택",
+      "proposedPath": "실험/화면/검색/자료 검색과 선택",
+      "finalDisposition": "reuse-existing",
+      "reason": "기존SearchScreen의 debounce/취소/결과요약 재사용",
+      "existingApiReferences": "SearchScreen/query/filters/suggestions/resultSummary + Grid/Card + existing300msdebounce/AbortSignal",
+      "requiredVerification": "0건/loading/error/recovery·검색어보존 fixture 확인",
+      "sourcePointer": "experimentCandidateCheckpoint.candidates/A-16",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-a-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "A-17",
+      "owner": "A",
+      "path": "실험/구성/탐색과 이동/목록 옆 상세 보기",
+      "proposedPath": "실험/구성/탐색과 이동/목록 옆 상세 보기",
+      "finalDisposition": "reuse-existing",
+      "reason": "기존Sheet/Dialog와선택/query소유 분리",
+      "existingApiReferences": "Sheet/Dialog + controlled query/selection; list/detail state separation",
+      "requiredVerification": "닫은뒤query/선택context·focusrestore fixture 확인",
+      "sourcePointer": "experimentCandidateCheckpoint.candidates/A-17",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-a-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "A-18",
+      "owner": "A",
+      "path": "실험/구성/정보 표시/기기별 미리보기",
+      "proposedPath": "실험/구성/정보 표시/기기별 미리보기",
+      "finalDisposition": "reuse-existing",
+      "reason": "Tabs/SegmentedControl+Image/AspectRatio로 선택의미에 맞게 조합",
+      "existingApiReferences": "Tabs 또는SegmentedControl + Image/AspectRatio; panel vs scalar semantics선택",
+      "requiredVerification": "패널/값semantics·label·키보드전환·이미지loading/error fixture 확인",
+      "sourcePointer": "experimentCandidateCheckpoint.candidates/A-18",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-a-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "A-19",
+      "owner": "A",
+      "path": "실험/구성/정보 표시/달력과 문의 안내",
+      "proposedPath": "실험/구성/정보 표시/달력과 문의 안내",
+      "finalDisposition": "deferred",
+      "reason": "정적날짜표가 입력인지 미확인; 공유달력엔진요구 확정불가",
+      "existingApiReferences": "DatePicker/DateEntry/DataTable(Web) 또는staticGrid; 기존문의action",
+      "requiredVerification": "실제날짜선택이 필요할때만 원본입력행동 확인",
+      "sourcePointer": "experimentCandidateCheckpoint.candidates/A-19",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-a-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "A-20",
+      "owner": "A",
+      "path": "배포/구성/정보 표시/영상 미리보기",
+      "proposedPath": null,
+      "finalDisposition": "reuse-existing",
+      "reason": "이미배포된영상미리보기의 변형; 동명실험 복제 안함",
+      "existingApiReferences": "기존 배포 VideoDialogPreview + Image/AspectRatio/explicit Play action; Web story id compositions-information-video-preview 유지",
+      "requiredVerification": "기존항목변경할경우 Play/닫기·caption/실패상태 fixture 확인",
+      "sourcePointer": "experimentCandidateCheckpoint.candidates/A-20",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-a-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [
+        "배포/구성/정보 표시/영상 미리보기"
+      ],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "A-21",
+      "owner": "A",
+      "path": "실험/구성/탐색과 이동/앱 받기와 코드 보기",
+      "proposedPath": "실험/구성/탐색과 이동/앱 받기와 코드 보기",
+      "finalDisposition": "reuse-existing",
+      "reason": "QRCode/DocumentResource/Link 목적별 기존구성",
+      "existingApiReferences": "QRCode for actual product-owned payload; Image/AspectRatio for screenshot illustration only; Button/Link; file actions reuse DocumentResource first",
+      "requiredVerification": "실제payload/링크label·권한/만료상태 fixture; 외부다운로드/구매 실행불필요",
+      "sourcePointer": "experimentCandidateCheckpoint.candidates/A-21",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-a-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "A-22",
+      "owner": "A",
+      "path": "실험/구성/피드백과 복구/미리보기 실패와 재시도",
+      "proposedPath": "실험/구성/피드백과 복구/미리보기 실패와 재시도",
+      "finalDisposition": "improve-existing",
+      "reason": "캡처광고/blank오인은 원사이트/HJM결함확정아님; 기존media상태fixture 개선",
+      "existingApiReferences": "Image/AspectRatio/loading/error recovery + existing support/actions",
+      "requiredVerification": "자체fixture의loading/error/성공재시도·레이아웃공간 유지 확인",
+      "sourcePointer": "experimentCandidateCheckpoint.candidates/A-22",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-a-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "A-23",
+      "owner": "A",
+      "path": "실험/구성/비교와 검증/화면 상태와 순서",
+      "proposedPath": "실험/구성/비교와 검증/화면 상태와 순서",
+      "finalDisposition": "improve-existing",
+      "reason": "캡처시점/스크롤차이를 theme반응형으로 오인하지 않도록 동일state비교",
+      "existingApiReferences": "DesignProfile/OverviewScreen + explicit intent/state + samefixture",
+      "requiredVerification": "같은데이터·선택·주행동·스크롤기준의 theme표현/구성 비교",
+      "sourcePointer": "experimentCandidateCheckpoint.candidates/A-23",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-a-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "A-24",
+      "owner": "A",
+      "path": "실험/화면/콘텐츠/작업 목록과 설명",
+      "proposedPath": "실험/화면/콘텐츠/작업 목록과 설명",
+      "finalDisposition": "reuse-existing",
+      "reason": "collectionrows/cards/grid와작업소개 재사용; Native표지원 확장안함",
+      "existingApiReferences": "DataTable(Web)/Card/Grid/Text/Heading + collection rows/cards/grid",
+      "requiredVerification": "실제쓰는list모드의빈/로딩/선택상태 fixture; Web표는Web에만",
+      "sourcePointer": "experimentCandidateCheckpoint.candidates/A-24",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-a-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "A-25",
+      "owner": "A",
+      "path": "실험/구성/비교와 검증/질감과 글자 표현",
+      "proposedPath": "실험/구성/비교와 검증/질감과 글자 표현",
+      "finalDisposition": "deferred",
+      "reason": "ASCII/dither생성도구소개만으로 공유질감엔진 필요성 없음",
+      "existingApiReferences": "EffectSurface grain/noise + typography/profile; ASCII/dither외부소개와 비교",
+      "requiredVerification": "제품에서그표현이 실제필요할때 원본출력/권한/읽기 확인",
+      "sourcePointer": "experimentCandidateCheckpoint.candidates/A-25",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-a-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "A-26",
+      "owner": "A",
+      "path": "실험/구성/비교와 검증/입력과 상태 구현 비교",
+      "proposedPath": "실험/구성/비교와 검증/입력과 상태 구현 비교",
+      "finalDisposition": "deferred",
+      "reason": "원API/HJM결함비교 없어 상태·입력엔진 교체근거 없음",
+      "existingApiReferences": "현재공개입력/상태/오버레이/표면/recipe + 기존사용지침; Input OTP comparison reuses existing OtpField Web/Native numeric OTP contract",
+      "requiredVerification": "구체적HJM결함/기능요구 생길때 해당API/실제focus/paste/autofill 비교",
+      "sourcePointer": "experimentCandidateCheckpoint.candidates/A-26",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-a-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "A-27",
+      "owner": "A",
+      "path": "실험/구성/정보 표시/아이콘과 아바타 조합",
+      "proposedPath": "실험/구성/정보 표시/아이콘과 아바타 조합",
+      "finalDisposition": "reuse-existing",
+      "reason": "Icon/Image/Avatar제품asset슬롯 흡수; assets새공유배포 안함",
+      "existingApiReferences": "Icon/Image/Avatar; AvatarGroup은Webexport + 제품assetrenderer슬롯",
+      "requiredVerification": "사용할asset권한·semanticname/장식구분·일반clip 확인",
+      "sourcePointer": "experimentCandidateCheckpoint.candidates/A-27",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-a-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "A-28",
+      "owner": "A",
+      "path": "실험/구성/비교와 검증/대비와 상태 검토",
+      "proposedPath": "실험/구성/비교와 검증/대비와 상태 검토",
+      "finalDisposition": "reuse-existing",
+      "reason": "기존대비/상태fixture와로컬검토절차 활용",
+      "existingApiReferences": "palettecontrast + existingDark/ReducedMotion/Rtl/statefixtures + Storybook; maximum OS font and simulated maximum enlargement excluded",
+      "requiredVerification": "변경된표면의light/dark/RTL/감속·결과상태 확인; 최대OS글자/모사확대 제외",
+      "sourcePointer": "experimentCandidateCheckpoint.candidates/A-28",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-a-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "A-29",
+      "owner": "A",
+      "path": "실험/컴포넌트/시각 효과/손그림 경계와 배경",
+      "proposedPath": "실험/컴포넌트/시각 효과/손그림 경계와 배경",
+      "finalDisposition": "new-experiment",
+      "reason": "손그림card경계는 grain/문장TextAnnotation과다른고유표현; 새표현실험후 API판단",
+      "existingApiReferences": "기존 paper profile, EffectSurface grain/noise, Card/Image/Icon 슬롯",
+      "requiredVerification": "자체SVG경계의결정성·focus/일반clip·두renderer·배경대비 확인; 원asset복제 안함",
+      "sourcePointer": "experimentCandidateCheckpoint.candidates/A-29",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-a-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "A-30",
+      "owner": "A",
+      "path": "실험/구성/비교와 검증/점 배열 로딩 표현",
+      "proposedPath": "실험/구성/비교와 검증/점 배열 로딩 표현",
+      "finalDisposition": "deferred",
+      "reason": "점loader소개만 확인; 기존Spinner/Progress/Skeleton의교체필요성없음",
+      "existingApiReferences": "Web/Native Spinner·Progress·Skeleton과 pending action 계약",
+      "requiredVerification": "점표현이 실제요구될때 원코드·감속·loadingannouncement/native 비교",
+      "sourcePointer": "experimentCandidateCheckpoint.candidates/A-30",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-a-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "A-31",
+      "owner": "A",
+      "path": "실험/구성/비교와 검증/움직임 속도와 감속",
+      "proposedPath": "실험/구성/비교와 검증/움직임 속도와 감속",
+      "finalDisposition": "deferred",
+      "reason": "외부easing모음은 기존motion계약변형으로 충분할 가능성",
+      "existingApiReferences": "Existing motionPreset micro120/enter200/exit120/context320, easing standard/enter/exit/emphasized, Native spring responsive/expressive; environment reducedMotion; profile transition/selectionMotion",
+      "requiredVerification": "특정motion차이가 실제필요할때만 기존timing/reducedMotion과 원코드비교",
+      "sourcePointer": "experimentCandidateCheckpoint.candidates/A-31",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-a-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "A-32",
+      "owner": "A",
+      "path": "실험/구성/비교와 검증/반사 무늬와 광택",
+      "proposedPath": "실험/구성/비교와 검증/반사 무늬와 광택",
+      "finalDisposition": "deferred",
+      "reason": "foil은 기존EffectSurface에없지만 실제동적반사요구미확인; bitmapasset부터",
+      "existingApiReferences": "EffectSurface mesh/glow/grain/noise, semantic color refs, deterministic seed/intensity, optional active=false; product Image/Icon/SVG decoration 슬롯",
+      "requiredVerification": "동적광택이 채택요구로확정될때만 원본flow/code/두renderer비용·대비·감속 확인",
+      "sourcePointer": "experimentCandidateCheckpoint.candidates/A-32",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-a-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "A-33",
+      "owner": "A",
+      "path": "실험/구성/선택과 필터/상품 옵션과 미리보기",
+      "proposedPath": "실험/구성/선택과 필터/상품 옵션과 미리보기",
+      "finalDisposition": "reuse-existing",
+      "reason": "제품옵션/재고데이터를 기존Select/Radio/Image controlled계약으로연결",
+      "existingApiReferences": "Select/RadioGroup·Image/AspectRatio·Card/Grid·Button; 제품의 size/color/availability/price 데이터와 controlled selection",
+      "requiredVerification": "옵션→이미지/재고/가격동기화 fixture 확인; 3Dconfigurator엔진 도입안함",
+      "sourcePointer": "experimentCandidateCheckpoint.candidates/A-33",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-a-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "A-34",
+      "owner": "A",
+      "path": "실험/구성/입력과 작성/장소와 기간 신청",
+      "proposedPath": "실험/구성/입력과 작성/장소와 기간 신청",
+      "finalDisposition": "reuse-existing",
+      "reason": "기존DatePicker/Range/입력구성의 신청목적변형",
+      "existingApiReferences": "Web/Native DatePicker/DateRangePicker, Select, TextField, Button/FormState; 기존 날짜 입력 구성과 controlled fields를 먼저 비교",
+      "requiredVerification": "장소/기간유효성·controlled값·pending/retry fixture 확인",
+      "sourcePointer": "experimentCandidateCheckpoint.candidates/A-34",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-a-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "A-35",
+      "owner": "A",
+      "path": "배포/화면/콘텐츠/저장한 항목",
+      "proposedPath": null,
+      "finalDisposition": "reuse-existing",
+      "reason": "이미배포SavedItemsScreen의북마크/컬렉션사례",
+      "existingApiReferences": "Web/Native SavedItemsScreen collections/items/selection callbacks, product-owned create Sheet, TextField/IconButton/notice/Undo; existing saved screen and action recovery contracts first",
+      "requiredVerification": "제품data/Undo/빈목록/선택fixture 확인; 동명실험생성 안함",
+      "sourcePointer": "experimentCandidateCheckpoint.candidates/A-35",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-a-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [
+        "배포/화면/콘텐츠/저장한 항목"
+      ],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "A-36",
+      "owner": "A",
+      "path": "배포/구성/탐색과 이동/보관함과 페이지 이동",
+      "proposedPath": null,
+      "finalDisposition": "reuse-existing",
+      "reason": "이미배포페이지이동/보관함; Native기존LoadMore 유지",
+      "existingApiReferences": "Web Breadcrumb/Pagination/List/Section with existing page/async recovery and focus contracts; Native uses existing LoadMore/platform navigation instead of claiming Web-only API support",
+      "requiredVerification": "URL/다음페이지실패복구/초점fixture 확인; WebAPI Native지원 주장안함",
+      "sourcePointer": "experimentCandidateCheckpoint.candidates/A-36",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-a-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [
+        "배포/구성/탐색과 이동/보관함과 페이지 이동"
+      ],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "A-37",
+      "owner": "A",
+      "path": "실험/구성/정보 표시/음원 정보와 재생",
+      "proposedPath": "실험/구성/정보 표시/음원 정보와 재생",
+      "finalDisposition": "reuse-existing",
+      "reason": "optionalVoiceNote UI와제품음원asset/data 재사용",
+      "existingApiReferences": "Existing optional-extension VoiceNote via /voice-note (not root export) with controlled descriptor/play/seek/retry, Asset/Image/AspectRatio, Button/Link/Card/Grid; audio engine, tracks and artwork remain product-owned",
+      "requiredVerification": "controlled실제duration/play/seek/error/retry fixture; 가짜timer/스트리밍엔진 안함",
+      "sourcePointer": "experimentCandidateCheckpoint.candidates/A-37",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-a-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "A-38",
+      "owner": "A",
+      "path": "배포/컴포넌트/데이터 표시/캐러셀",
+      "proposedPath": null,
+      "finalDisposition": "reuse-existing",
+      "reason": "이미배포Carousel singleactive계약; strip과구별",
+      "existingApiReferences": "Web/Native Carousel controlled currentKey/slides/labels, optional CarouselMotion only when actual swipe is required; Image/AspectRatio/Card slots, existing finite single-active-panel and reduced-motion/autoplay contract",
+      "requiredVerification": "기존유한패널/labels/감속계약변형; 실제swipe필요시에만optionalmotion 확인",
+      "sourcePointer": "experimentCandidateCheckpoint.candidates/A-38",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-a-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [
+        "배포/컴포넌트/데이터 표시/캐러셀"
+      ],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "A-39",
+      "owner": "A",
+      "path": "실험/컴포넌트/시각 효과/손글씨 획과 읽기",
+      "proposedPath": "실험/컴포넌트/시각 효과/손글씨 획과 읽기",
+      "finalDisposition": "new-experiment",
+      "reason": "fontglyph stroke는 TextTransition/문장장식과다른요구; 별도원제품비교실험 보존",
+      "existingApiReferences": "Existing Text/Heading preserve semantic readable/selectable content; TextTransition (/content-transition) provides whole-text keyed fade/rise/slide/scale. TextFormat is Web kbd/code/quote. Current in-progress text-annotation geometry draws measured-line decoration, not actual font glyph strokes. Existing motion/reduced-motion contract remains baseline.",
+      "requiredVerification": "정확버전/코드·폰트data권한·실제선택/읽기·한글emojiRTL·감속·정리/Native검증 후 도입판단; 지금engine채택 보류",
+      "sourcePointer": "experimentCandidateCheckpoint.candidates/A-39",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-a-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-169b5bd71d4b",
+      "owner": "B",
+      "path": "실험/구성/비교와 검증/가장자리 흐림",
+      "proposedPath": "실험/구성/비교와 검증/가장자리 흐림",
+      "finalDisposition": "reuse-existing",
+      "reason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+      "existingApiReferences": [
+        "ProgressiveBlur"
+      ],
+      "requiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/비교와 검증/가장자리 흐림",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-34ba1b7faa86",
+      "owner": "B",
+      "path": "실험/구성/비교와 검증/글자 표현 비교",
+      "proposedPath": "실험/구성/비교와 검증/글자 표현 비교",
+      "finalDisposition": "reuse-existing",
+      "reason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+      "existingApiReferences": [
+        "ContentTransition",
+        "Text",
+        "TextTransition"
+      ],
+      "requiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/비교와 검증/글자 표현 비교",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-107b3f9dd48c",
+      "owner": "B",
+      "path": "실험/구성/비교와 검증/기기 액자 비교",
+      "proposedPath": "실험/구성/비교와 검증/기기 액자 비교",
+      "finalDisposition": "reuse-existing",
+      "reason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+      "existingApiReferences": [
+        "AspectRatio",
+        "Asset",
+        "Card",
+        "Image"
+      ],
+      "requiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/비교와 검증/기기 액자 비교",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-dab05082e2c1",
+      "owner": "B",
+      "path": "실험/구성/비교와 검증/누름 표현 비교",
+      "proposedPath": "실험/구성/비교와 검증/누름 표현 비교",
+      "finalDisposition": "improve-existing",
+      "reason": "원본 Ripple의 키보드 합성 좌표 문제를 실제 확인했다. Button 요청/disabled/loading 엔진을 유지하고 누름 표현의 선택축만 개선 대상으로 남긴다.",
+      "existingApiReferences": [
+        "Asset",
+        "Button",
+        "Card",
+        "ContentTransition",
+        "Dialog",
+        "EffectSurface",
+        "HjmNativeProvider",
+        "HjmProvider",
+        "Notice"
+      ],
+      "requiredVerification": "Enter/Space·포인터 좌표·disabled/loading·중복 요청·reduced/lifecycle; 표현 개선 필요시만.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/비교와 검증/누름 표현 비교",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-0801e675488c",
+      "owner": "B",
+      "path": "실험/구성/비교와 검증/선택 표시 비교",
+      "proposedPath": "실험/구성/비교와 검증/선택 표시 비교",
+      "finalDisposition": "improve-existing",
+      "reason": "Tabs/ToggleGroup 선택 의미·키보드와 초점은 기존 API가 소유한다. 원본 sliding/glow 표현은 기존 선택 표시의 표현 후보이다.",
+      "existingApiReferences": [
+        "Button",
+        "ContentTransition",
+        "Menu",
+        "Tabs",
+        "ToggleGroup"
+      ],
+      "requiredVerification": "controlled 선택·키보드/RTL·disabled·초점·reduced; root Tabs 개선과 중복 통합.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/비교와 검증/선택 표시 비교",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-d0e709636d5d",
+      "owner": "B",
+      "path": "실험/구성/비교와 검증/이미지 표현 비교",
+      "proposedPath": "실험/구성/비교와 검증/이미지 표현 비교",
+      "finalDisposition": "reuse-existing",
+      "reason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+      "existingApiReferences": [
+        "Asset",
+        "Button",
+        "ContentTransition",
+        "EffectSurface",
+        "Image"
+      ],
+      "requiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/비교와 검증/이미지 표현 비교",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-951e18d9a528",
+      "owner": "B",
+      "path": "실험/구성/비교와 검증/진행 표시 비교",
+      "proposedPath": "실험/구성/비교와 검증/진행 표시 비교",
+      "finalDisposition": "reuse-existing",
+      "reason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+      "existingApiReferences": [
+        "Progress"
+      ],
+      "requiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/비교와 검증/진행 표시 비교",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-a0e21c8cfc35",
+      "owner": "B",
+      "path": "실험/구성/비교와 검증/카드 깊이 비교",
+      "proposedPath": "실험/구성/비교와 검증/카드 깊이 비교",
+      "finalDisposition": "reuse-existing",
+      "reason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+      "existingApiReferences": [
+        "Card",
+        "ContentTransition",
+        "EffectSurface",
+        "Grid",
+        "Image"
+      ],
+      "requiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/비교와 검증/카드 깊이 비교",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-e43f5998af3f",
+      "owner": "B",
+      "path": "실험/구성/비교와 검증/카메라 화면 표현",
+      "proposedPath": "실험/구성/비교와 검증/카메라 화면 표현",
+      "finalDisposition": "deferred",
+      "reason": "실시간 camera 권한/재시도/late async는 제품 소유이다. 공용 테마의 자동 camera 배경으로 채택하지 않고 Asset fixture/PermissionScreen 근거만 유지한다.",
+      "existingApiReferences": [
+        "Asset",
+        "PermissionScreen"
+      ],
+      "requiredVerification": "제품 기능 요청시에만 권한/거절/복구·track 정리·late callback 및 성능; 현재 camera 허용 없음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/비교와 검증/카메라 화면 표현",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-b500eb78b994",
+      "owner": "B",
+      "path": "실험/구성/비교와 검증/탐색 크기 비교",
+      "proposedPath": "실험/구성/비교와 검증/탐색 크기 비교",
+      "finalDisposition": "reuse-existing",
+      "reason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+      "existingApiReferences": [
+        "BottomNavigation",
+        "Button",
+        "Layout",
+        "Link",
+        "Menu",
+        "SearchField",
+        "Sidebar",
+        "TopBar"
+      ],
+      "requiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/비교와 검증/탐색 크기 비교",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-9b94fe0ec132",
+      "owner": "B",
+      "path": "실험/구성/비교와 검증/테마 전환 비교",
+      "proposedPath": "실험/구성/비교와 검증/테마 전환 비교",
+      "finalDisposition": "improve-existing",
+      "reason": "controlled Provider theme/designProfile 및 draft 보존을 유지하고 Web ViewTransition 표현만 선택적으로 개선한다. 원본은 자체 reduced 검사가 없다.",
+      "existingApiReferences": [
+        "HjmNativeProvider",
+        "HjmProvider"
+      ],
+      "requiredVerification": "테마 변경 중 상태/draft 유지·reduced 즉시전환·Web 미지원 fallback; Native 동일 효과 주장 금지.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/비교와 검증/테마 전환 비교",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-39d16622eca7",
+      "owner": "B",
+      "path": "실험/구성/비교와 검증/표면 빛 표현",
+      "proposedPath": "실험/구성/비교와 검증/표면 빛 표현",
+      "finalDisposition": "reuse-existing",
+      "reason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+      "existingApiReferences": [
+        "Card",
+        "EffectSurface",
+        "Spinner",
+        "Text"
+      ],
+      "requiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/비교와 검증/표면 빛 표현",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-1c10339b6c9c",
+      "owner": "B",
+      "path": "실험/구성/선택과 필터/날짜와 시각 선택",
+      "proposedPath": "실험/구성/선택과 필터/날짜와 시각 선택",
+      "finalDisposition": "reuse-existing",
+      "reason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+      "existingApiReferences": [
+        "Button",
+        "DatePicker",
+        "Notice",
+        "Section",
+        "Select",
+        "Stack",
+        "Text"
+      ],
+      "requiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/선택과 필터/날짜와 시각 선택",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [
+        "실험/구성/선택과 필터/날짜와 시각 선택"
+      ],
+      "implementationStatus": "registered-experimental",
+      "registrationEvidence": "docs/qa/2026-10-07-date-time-selection.md"
+    },
+    {
+      "id": "B-264315e2fbd9",
+      "owner": "B",
+      "path": "실험/구성/선택과 필터/목록 선택 비교",
+      "proposedPath": "실험/구성/선택과 필터/목록 선택 비교",
+      "finalDisposition": "reuse-existing",
+      "reason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+      "existingApiReferences": [
+        "Button",
+        "Card",
+        "CheckboxGroup",
+        "Combobox",
+        "ContentTransition",
+        "Grid",
+        "List",
+        "Menu",
+        "NativeSelect",
+        "Popover",
+        "Select",
+        "TextField",
+        "ToggleGroup",
+        "TransferList"
+      ],
+      "requiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/선택과 필터/목록 선택 비교",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-63ed6f6cdc81",
+      "owner": "B",
+      "path": "실험/구성/선택과 필터/범위 선택 표현",
+      "proposedPath": "실험/구성/선택과 필터/범위 선택 표현",
+      "finalDisposition": "reuse-existing",
+      "reason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+      "existingApiReferences": [
+        "Image",
+        "Slider",
+        "Text"
+      ],
+      "requiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/선택과 필터/범위 선택 표현",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-8dbab728f345",
+      "owner": "B",
+      "path": "실험/구성/입력과 작성/여러 줄 높이 비교",
+      "proposedPath": "실험/구성/입력과 작성/여러 줄 높이 비교",
+      "finalDisposition": "reuse-existing",
+      "reason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+      "existingApiReferences": [
+        "Form",
+        "MessageComposer",
+        "TextArea"
+      ],
+      "requiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/입력과 작성/여러 줄 높이 비교",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-a77ae62f43e7",
+      "owner": "B",
+      "path": "실험/구성/입력과 작성/입력 전환과 유지",
+      "proposedPath": "실험/구성/입력과 작성/입력 전환과 유지",
+      "finalDisposition": "improve-existing",
+      "reason": "입력 vanish/readonly inline edit 표현이 저장 성공·실패 상태를 대신하지 못한다. 기존 controlled TextField/Form/Button으로 draft/IME/실제 요청 상태를 유지한다.",
+      "existingApiReferences": [
+        "Button",
+        "ContentTransition",
+        "Form",
+        "Text",
+        "TextField"
+      ],
+      "requiredVerification": "IME/Enter 중복·편집/취소 원문·실패→재시도·unmount/async 결과·실제 성공 전에 draft 삭제 금지.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/입력과 작성/입력 전환과 유지",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-4d7344533a4f",
+      "owner": "B",
+      "path": "실험/구성/입력과 작성/파일 선택과 복구",
+      "proposedPath": "실험/구성/입력과 작성/파일 선택과 복구",
+      "finalDisposition": "improve-existing",
+      "reason": "FilePicker/UploadItem 선택·제거·오류·재시도 계약을 유지하고 업로드 표현만 통합한다. 원본 decorative FileUpload를 새 엔진으로 복제하지 않는다.",
+      "existingApiReferences": [
+        "Button",
+        "FilePicker",
+        "Notice",
+        "UploadItem"
+      ],
+      "requiredVerification": "선택 취소·동일 파일 재선택·실패/재시도·키보드·제품 업로드 상태 및 파일 정책.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/입력과 작성/파일 선택과 복구",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-805a87b0c53e",
+      "owner": "B",
+      "path": "실험/구성/입력과 작성/펼쳐 쓰는 검색",
+      "proposedPath": "실험/구성/입력과 작성/펼쳐 쓰는 검색",
+      "finalDisposition": "reuse-existing",
+      "reason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+      "existingApiReferences": [
+        "SearchField"
+      ],
+      "requiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/입력과 작성/펼쳐 쓰는 검색",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-ba61efa90ab8",
+      "owner": "B",
+      "path": "실험/구성/정보 표시/고객 후기 탐색",
+      "proposedPath": "실험/구성/정보 표시/고객 후기 탐색",
+      "finalDisposition": "new-experiment",
+      "reason": "동시에 여러 카드를 보여 주는 유한 가로 목록은 현행 단일 활성 Carousel 및 양쪽 List의 horizontal 미지원과 다르다. 기존 카드 상세 연결과 합쳐 새 구성/공통 descriptor의 실제 gap을 보존한다.",
+      "existingApiReferences": [
+        "Avatar",
+        "Button",
+        "Card",
+        "Carousel",
+        "ContentTransition",
+        "Dialog",
+        "EmptyState",
+        "Grid"
+      ],
+      "requiredVerification": "다중 노출·끝 경계·폭 변화·키보드/터치·논리적 RTL·stable id, Dialog 초점/배경 비활성/복귀; 최대 글자 제외.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/정보 표시/고객 후기 탐색",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-2f2e2df08985",
+      "owner": "B",
+      "path": "실험/구성/정보 표시/기능 카드 묶음",
+      "proposedPath": "실험/구성/정보 표시/기능 카드 묶음",
+      "finalDisposition": "improve-existing",
+      "reason": "Magic Bento 실제 Tab 흐름에서 focus된 CTA의 부모 opacity0을 확인했다. 기존 Grid/Card/Button/Link 슬롯의 CTA는 초점·터치에서도 읽고 실행할 수 있게 한다.",
+      "existingApiReferences": [
+        "Asset",
+        "Button",
+        "Card",
+        "Grid",
+        "Image",
+        "Link",
+        "Tabs",
+        "Text"
+      ],
+      "requiredVerification": "항상 노출 또는 focus-within 노출·시각적 초점·키보드 실행·터치; 다른 hover 장식이 클릭을 막지 않는지.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/정보 표시/기능 카드 묶음",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-1a25c1257e7f",
+      "owner": "B",
+      "path": "실험/구성/정보 표시/날짜별 변화 기록",
+      "proposedPath": "실험/구성/정보 표시/날짜별 변화 기록",
+      "finalDisposition": "reuse-existing",
+      "reason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+      "existingApiReferences": [
+        "Tabs",
+        "Timeline"
+      ],
+      "requiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/정보 표시/날짜별 변화 기록",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-81d4b55fbd1b",
+      "owner": "B",
+      "path": "실험/구성/정보 표시/대상 설명과 미리보기",
+      "proposedPath": "실험/구성/정보 표시/대상 설명과 미리보기",
+      "finalDisposition": "reuse-existing",
+      "reason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+      "existingApiReferences": [
+        "Button",
+        "Link",
+        "Menu",
+        "Popover",
+        "Tooltip"
+      ],
+      "requiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/정보 표시/대상 설명과 미리보기",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-e5aadecce1a0",
+      "owner": "B",
+      "path": "실험/구성/정보 표시/마무리 행동",
+      "proposedPath": "실험/구성/정보 표시/마무리 행동",
+      "finalDisposition": "reuse-existing",
+      "reason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+      "existingApiReferences": [
+        "AvatarGroup",
+        "Button",
+        "Card",
+        "ClipboardButton",
+        "EffectSurface",
+        "Grid",
+        "Image",
+        "Link",
+        "Menu",
+        "Popover",
+        "Tooltip"
+      ],
+      "requiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/정보 표시/마무리 행동",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-e77524e5a035",
+      "owner": "B",
+      "path": "실험/구성/정보 표시/명령 기록 표시",
+      "proposedPath": "실험/구성/정보 표시/명령 기록 표시",
+      "finalDisposition": "reuse-existing",
+      "reason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+      "existingApiReferences": [
+        "CodeBlock",
+        "ContentTransition",
+        "Tabs"
+      ],
+      "requiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/정보 표시/명령 기록 표시",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [
+        "실험/구성/정보 표시/명령 기록 표시"
+      ],
+      "implementationStatus": "registered-experimental",
+      "registrationEvidence": "docs/qa/2026-10-07-command-records.md"
+    },
+    {
+      "id": "B-e0992711fb51",
+      "owner": "B",
+      "path": "실험/구성/정보 표시/목적지 카드 강조",
+      "proposedPath": "실험/구성/정보 표시/목적지 카드 강조",
+      "finalDisposition": "improve-existing",
+      "reason": "hover 중심 강조는 기존 Card/Link의 목적지 이름·초점·터치 표현으로 흡수한다. 보이지 않는 대화형 본문을 만들지 않는다.",
+      "existingApiReferences": [
+        "Card",
+        "Link"
+      ],
+      "requiredVerification": "focus-visible/focus-within·터치·기본 내용 노출·중첩 링크/버튼 의미.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/정보 표시/목적지 카드 강조",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-1075976a3b10",
+      "owner": "B",
+      "path": "실험/구성/정보 표시/문구 뒤 강조",
+      "proposedPath": "실험/구성/정보 표시/문구 뒤 강조",
+      "finalDisposition": "reuse-existing",
+      "reason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+      "existingApiReferences": [
+        "EffectSurface",
+        "Text"
+      ],
+      "requiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/정보 표시/문구 뒤 강조",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-d17fc688a38d",
+      "owner": "B",
+      "path": "실험/구성/정보 표시/미리보기 묶음",
+      "proposedPath": "실험/구성/정보 표시/미리보기 묶음",
+      "finalDisposition": "reuse-existing",
+      "reason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+      "existingApiReferences": [
+        "AvatarGroup",
+        "Image"
+      ],
+      "requiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/정보 표시/미리보기 묶음",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-a19a45e44d1f",
+      "owner": "B",
+      "path": "실험/구성/정보 표시/사람 묶음 표시",
+      "proposedPath": "실험/구성/정보 표시/사람 묶음 표시",
+      "finalDisposition": "reuse-existing",
+      "reason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+      "existingApiReferences": [
+        "AvatarGroup"
+      ],
+      "requiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/정보 표시/사람 묶음 표시",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-19a630b7d3c1",
+      "owner": "B",
+      "path": "실험/구성/정보 표시/상단 고정 안내",
+      "proposedPath": "실험/구성/정보 표시/상단 고정 안내",
+      "finalDisposition": "reuse-existing",
+      "reason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+      "existingApiReferences": [
+        "Affix",
+        "Notice"
+      ],
+      "requiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/정보 표시/상단 고정 안내",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-42dd323230c4",
+      "owner": "B",
+      "path": "실험/구성/정보 표시/생성 이미지 진행",
+      "proposedPath": "실험/구성/정보 표시/생성 이미지 진행",
+      "finalDisposition": "reuse-existing",
+      "reason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+      "existingApiReferences": [
+        "GridReveal",
+        "Image",
+        "Progress"
+      ],
+      "requiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/정보 표시/생성 이미지 진행",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-0dcd54d1ac8f",
+      "owner": "B",
+      "path": "실험/구성/정보 표시/수치 변화 표현",
+      "proposedPath": "실험/구성/정보 표시/수치 변화 표현",
+      "finalDisposition": "reuse-existing",
+      "reason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+      "existingApiReferences": [
+        "Card",
+        "ContentTransition",
+        "EffectSurface",
+        "Grid",
+        "Statistic"
+      ],
+      "requiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/정보 표시/수치 변화 표현",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-1f9ae2111a7d",
+      "owner": "B",
+      "path": "실험/구성/정보 표시/아이콘 공간 배치",
+      "proposedPath": "실험/구성/정보 표시/아이콘 공간 배치",
+      "finalDisposition": "deferred",
+      "reason": "3D/icon cloud 장식은 제품 자산·목적이 먼저다. shared semantic Icon/Asset과 동일 기능이라고 가정하지 않으며 지금 필수 적용에서 보류한다.",
+      "existingApiReferences": [
+        "Asset",
+        "Button",
+        "Grid"
+      ],
+      "requiredVerification": "제품 자산/라이선스·정적 의미 설명·reduced/visibility·상호작용 필요성 확정.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/정보 표시/아이콘 공간 배치",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-c036f2cc11b4",
+      "owner": "B",
+      "path": "실험/구성/정보 표시/알림 진입 표현",
+      "proposedPath": "실험/구성/정보 표시/알림 진입 표현",
+      "finalDisposition": "reuse-existing",
+      "reason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+      "existingApiReferences": [
+        "ContentTransition",
+        "List",
+        "NotificationItem"
+      ],
+      "requiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/정보 표시/알림 진입 표현",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-e0efa05312d5",
+      "owner": "B",
+      "path": "실험/구성/정보 표시/영상 미리보기",
+      "proposedPath": "실험/구성/정보 표시/영상 미리보기",
+      "finalDisposition": "improve-existing",
+      "reason": "HeroVideoDialog 실제 Escape/초점 상태의 한계를 보존하고 기존 Button/Dialog/Asset 계약으로 영상 미리보기 표현을 개선한다.",
+      "existingApiReferences": [
+        "Asset",
+        "Button",
+        "Dialog"
+      ],
+      "requiredVerification": "Dialog 이름·초점 이동/복귀·Escape·닫기 후 media 정지·실패/복구·제품 media 소유.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/정보 표시/영상 미리보기",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [
+        "배포/구성/정보 표시/영상 미리보기"
+      ],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-dcd430578216",
+      "owner": "B",
+      "path": "실험/구성/정보 표시/이미지 전후 비교",
+      "proposedPath": "실험/구성/정보 표시/이미지 전후 비교",
+      "finalDisposition": "reuse-existing",
+      "reason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+      "existingApiReferences": [
+        "ImageComparison"
+      ],
+      "requiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/정보 표시/이미지 전후 비교",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-8f4abf6d3e9f",
+      "owner": "B",
+      "path": "실험/구성/정보 표시/이미지 조각 진입",
+      "proposedPath": "실험/구성/정보 표시/이미지 조각 진입",
+      "finalDisposition": "reuse-existing",
+      "reason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+      "existingApiReferences": [
+        "GridReveal",
+        "Image"
+      ],
+      "requiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/정보 표시/이미지 조각 진입",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-a3173bc218f3",
+      "owner": "B",
+      "path": "실험/구성/정보 표시/이미지 확대 비교",
+      "proposedPath": "실험/구성/정보 표시/이미지 확대 비교",
+      "finalDisposition": "deferred",
+      "reason": "현재 Image+Dialog는 표시를 제공하지만 zoom/pan/lens geometry를 제공하지 않는다. 확대 기능 gap을 보존하고 필요성 확정 전 추가 엔진은 보류한다.",
+      "existingApiReferences": [
+        "Dialog",
+        "Image"
+      ],
+      "requiredVerification": "실제 zoom 목적·키보드/터치 대안·중복 interactive child/초점·alt·reduced·플랫폼 API.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/정보 표시/이미지 확대 비교",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-3d623a92338e",
+      "owner": "B",
+      "path": "실험/구성/정보 표시/읽기 진행 표시",
+      "proposedPath": "실험/구성/정보 표시/읽기 진행 표시",
+      "finalDisposition": "reuse-existing",
+      "reason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+      "existingApiReferences": [
+        "ScrollProgress"
+      ],
+      "requiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/정보 표시/읽기 진행 표시",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-20980700373e",
+      "owner": "B",
+      "path": "실험/구성/정보 표시/입력 기기 모형",
+      "proposedPath": "실험/구성/정보 표시/입력 기기 모형",
+      "finalDisposition": "deferred",
+      "reason": "장식 키보드/기기 프레임은 실제 입력 기기나 Native 기능이 아니다. 제품 소개 Asset 용도로만 보존하고 신규 공용 입력 API를 만들지 않는다.",
+      "existingApiReferences": [
+        "Asset",
+        "Button"
+      ],
+      "requiredVerification": "제품 자산/라이선스·장식 aria·필수 입력 정보와 분리; 현재 적용 우선순위 없음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/정보 표시/입력 기기 모형",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-55a51181621a",
+      "owner": "B",
+      "path": "실험/구성/정보 표시/지역과 위치 표시",
+      "proposedPath": "실험/구성/정보 표시/지역과 위치 표시",
+      "finalDisposition": "deferred",
+      "reason": "지도 투영/3D globe/위치 데이터는 제품 optional map 엔진 영역이다. Card/Image/설명만 재사용하고 고유 지도 기능 gap을 억지 축소하지 않는다.",
+      "existingApiReferences": [
+        "Asset",
+        "Card",
+        "Tooltip"
+      ],
+      "requiredVerification": "제품 map 필요시 데이터/투영·이름 있는 위치 목록·theme/reduced·WebGL 자원·지원 플랫폼 확인.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/정보 표시/지역과 위치 표시",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-66b4938a702b",
+      "owner": "B",
+      "path": "실험/구성/정보 표시/질문 답변",
+      "proposedPath": "실험/구성/정보 표시/질문 답변",
+      "finalDisposition": "reuse-existing",
+      "reason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+      "existingApiReferences": [
+        "Accordion",
+        "Button",
+        "EmptyState",
+        "Grid",
+        "Image",
+        "Link",
+        "SearchField",
+        "Tabs",
+        "Text"
+      ],
+      "requiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/정보 표시/질문 답변",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-54914f2facd0",
+      "owner": "B",
+      "path": "실험/구성/정보 표시/코드 전후 비교",
+      "proposedPath": "실험/구성/정보 표시/코드 전후 비교",
+      "finalDisposition": "improve-existing",
+      "reason": "기존 CodeBlock/Grid로 읽고 복사하는 비교를 구성한다. 원본 Shiki 실패시 HTML 연결을 복제하지 않고 안전한 텍스트 fallback을 유지한다.",
+      "existingApiReferences": [
+        "CodeBlock",
+        "Grid"
+      ],
+      "requiredVerification": "원문 escaping·복사 성공/실패·긴 코드 스크롤·동일 locale label·조작 초점.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/정보 표시/코드 전후 비교",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-9ee3c74b2b6e",
+      "owner": "B",
+      "path": "실험/구성/정보 표시/팀 소개",
+      "proposedPath": "실험/구성/정보 표시/팀 소개",
+      "finalDisposition": "reuse-existing",
+      "reason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+      "existingApiReferences": [
+        "Avatar",
+        "Card",
+        "Grid",
+        "Link",
+        "Text"
+      ],
+      "requiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/정보 표시/팀 소개",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-41d5680564ad",
+      "owner": "B",
+      "path": "실험/구성/정보 표시/파일 계층 탐색",
+      "proposedPath": "실험/구성/정보 표시/파일 계층 탐색",
+      "finalDisposition": "reuse-existing",
+      "reason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+      "existingApiReferences": [
+        "Button",
+        "Icon",
+        "Tree"
+      ],
+      "requiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/정보 표시/파일 계층 탐색",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-385577b48e6c",
+      "owner": "B",
+      "path": "실험/구성/정보 표시/항목 연결선",
+      "proposedPath": "실험/구성/정보 표시/항목 연결선",
+      "finalDisposition": "new-experiment",
+      "reason": "기존 Card/Grid의 내용·순서는 재사용하되 측정된 항목 사이의 반응형 연결선 geometry는 EffectSurface 네 장식 layer에 없는 gap이다. 독립 그래프 엔진을 복제하지 않는다.",
+      "existingApiReferences": [
+        "Card",
+        "EffectSurface",
+        "Grid"
+      ],
+      "requiredVerification": "실제 관계 데이터·stable id·크기/위치 변경·장식 aria-hidden·정적 의미 설명·offscreen/reduced; Native 경로 렌더 지원 확인.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/정보 표시/항목 연결선",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-86173c129f83",
+      "owner": "B",
+      "path": "실험/구성/정보 표시/협업 상태 모형",
+      "proposedPath": "실험/구성/정보 표시/협업 상태 모형",
+      "finalDisposition": "deferred",
+      "reason": "원본 collaboration animation은 실제 사용자/동기화/프로세스 증거가 아니다. 백엔드 계약 없는 모형을 기본 구성으로 넣지 않는다.",
+      "existingApiReferences": [
+        "Avatar",
+        "Card",
+        "ContentTransition",
+        "Progress",
+        "Tabs",
+        "Text"
+      ],
+      "requiredVerification": "제품 협업 상태와 실제 이벤트 계약 확정·중복 의미/loop 정리·실패/복구.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/정보 표시/협업 상태 모형",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-7b8f3fa56238",
+      "owner": "B",
+      "path": "실험/구성/정보 표시/흐르는 소개 목록",
+      "proposedPath": "실험/구성/정보 표시/흐르는 소개 목록",
+      "finalDisposition": "deferred",
+      "reason": "무한 이동·복제된 대화형 자식은 기존 정적 List로 기능이 같다고 축소하지 않는다. 필수 제품 목적과 안전한 loop/읽기 계약이 확인되지 않아 보류한다.",
+      "existingApiReferences": [
+        "Asset",
+        "Card",
+        "ContentTransition",
+        "EffectSurface",
+        "List"
+      ],
+      "requiredVerification": "필요성 확정 후 duplicate aria/inert·읽기 순서·pause·reduced·visibility·키보드/터치 조사.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/정보 표시/흐르는 소개 목록",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-5d3a097f5a2c",
+      "owner": "B",
+      "path": "실험/구성/직접 조작과 모션/스크롤 장면 비교",
+      "proposedPath": "실험/구성/직접 조작과 모션/스크롤 장면 비교",
+      "finalDisposition": "reuse-existing",
+      "reason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+      "existingApiReferences": [
+        "Affix",
+        "Card",
+        "ContentTransition",
+        "Image",
+        "ScrollProgress"
+      ],
+      "requiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/직접 조작과 모션/스크롤 장면 비교",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-447a6554f71a",
+      "owner": "B",
+      "path": "실험/구성/직접 조작과 모션/완료 순간 축하",
+      "proposedPath": "실험/구성/직접 조작과 모션/완료 순간 축하",
+      "finalDisposition": "reuse-existing",
+      "reason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+      "existingApiReferences": [
+        "Button",
+        "Celebration"
+      ],
+      "requiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/직접 조작과 모션/완료 순간 축하",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-550ff79c1956",
+      "owner": "B",
+      "path": "실험/구성/직접 조작과 모션/카드 상세 연결",
+      "proposedPath": "실험/구성/직접 조작과 모션/카드 상세 연결",
+      "finalDisposition": "reuse-existing",
+      "reason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+      "existingApiReferences": [
+        "Card",
+        "ContentTransition",
+        "Dialog",
+        "Grid",
+        "Image"
+      ],
+      "requiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/직접 조작과 모션/카드 상세 연결",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-b7d8f12a16af",
+      "owner": "B",
+      "path": "실험/구성/직접 조작과 모션/카드 위치 조작",
+      "proposedPath": "실험/구성/직접 조작과 모션/카드 위치 조작",
+      "finalDisposition": "deferred",
+      "reason": "자유 드래그·정렬은 정적 Card/List와 다른 고유 기능이다. 기존 후보의 gesture/controlled 순서 gap을 유지하고 명확한 제품 목적 전 보류한다.",
+      "existingApiReferences": [
+        "Button",
+        "Card"
+      ],
+      "requiredVerification": "자유 이동 vs 정렬 의미 확정·키보드 대안·경계/scroll·stable id·취소/복귀·Native gesture 지원.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/직접 조작과 모션/카드 위치 조작",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-ca87d244842d",
+      "owner": "B",
+      "path": "실험/구성/탐색과 이동/계속 읽기와 복구",
+      "proposedPath": "실험/구성/탐색과 이동/계속 읽기와 복구",
+      "finalDisposition": "reuse-existing",
+      "reason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+      "existingApiReferences": [
+        "EmptyState",
+        "List",
+        "LoadMore",
+        "Notice",
+        "Pagination",
+        "VirtualList"
+      ],
+      "requiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/탐색과 이동/계속 읽기와 복구",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-08b94a0e87ca",
+      "owner": "B",
+      "path": "실험/구성/탐색과 이동/하단 링크 묶음",
+      "proposedPath": "실험/구성/탐색과 이동/하단 링크 묶음",
+      "finalDisposition": "reuse-existing",
+      "reason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+      "existingApiReferences": [
+        "Asset",
+        "Layout",
+        "Link",
+        "Text"
+      ],
+      "requiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/탐색과 이동/하단 링크 묶음",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-42f084a3019f",
+      "owner": "B",
+      "path": "실험/구성/피드백과 복구/대기 단계와 진행",
+      "proposedPath": "실험/구성/피드백과 복구/대기 단계와 진행",
+      "finalDisposition": "reuse-existing",
+      "reason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+      "existingApiReferences": [
+        "Progress",
+        "Skeleton",
+        "Spinner",
+        "Steps"
+      ],
+      "requiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/피드백과 복구/대기 단계와 진행",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-a12b9395cc49",
+      "owner": "B",
+      "path": "실험/구성/피드백과 복구/첫 사용 선택",
+      "proposedPath": "실험/구성/피드백과 복구/첫 사용 선택",
+      "finalDisposition": "reuse-existing",
+      "reason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+      "existingApiReferences": [
+        "Button",
+        "Card",
+        "EmptyState",
+        "Grid"
+      ],
+      "requiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/구성/피드백과 복구/첫 사용 선택",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-a3607fac19e5",
+      "owner": "B",
+      "path": "실험/컴포넌트/시각 효과/내용 진입 표현",
+      "proposedPath": "실험/컴포넌트/시각 효과/내용 진입 표현",
+      "finalDisposition": "reuse-existing",
+      "reason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+      "existingApiReferences": [
+        "ContentTransition",
+        "List"
+      ],
+      "requiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/컴포넌트/시각 효과/내용 진입 표현",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-c9ca93a9f6e7",
+      "owner": "B",
+      "path": "실험/토큰/편집 도구/그림자 편집",
+      "proposedPath": "실험/토큰/편집 도구/그림자 편집",
+      "finalDisposition": "deferred",
+      "reason": "편집 도구와 런타임 테마 기본값은 별개다. 값 제안은 토큰 정책에 흡수할 수 있으나 지금은 필수 UI 적용이 아니므로 보류한다.",
+      "existingApiReferences": [],
+      "requiredVerification": "기존 shadow token 영역/편집 저장 경계·출력 규격·제품 요구 확정.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/토큰/편집 도구/그림자 편집",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-9657c48bf947",
+      "owner": "B",
+      "path": "실험/토큰/표면과 움직임/반복 무늬",
+      "proposedPath": "실험/토큰/표면과 움직임/반복 무늬",
+      "finalDisposition": "reuse-existing",
+      "reason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+      "existingApiReferences": [
+        "EffectSurface"
+      ],
+      "requiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/토큰/표면과 움직임/반복 무늬",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-64c4d2df2aa7",
+      "owner": "B",
+      "path": "실험/토큰/표면과 움직임/입자와 빛",
+      "proposedPath": "실험/토큰/표면과 움직임/입자와 빛",
+      "finalDisposition": "reuse-existing",
+      "reason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+      "existingApiReferences": [
+        "Asset",
+        "EffectSurface",
+        "Image"
+      ],
+      "requiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/토큰/표면과 움직임/입자와 빛",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-18efcc78b072",
+      "owner": "B",
+      "path": "실험/화면/검색/글 목록과 검색",
+      "proposedPath": "실험/화면/검색/글 목록과 검색",
+      "finalDisposition": "reuse-existing",
+      "reason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+      "existingApiReferences": [
+        "Card",
+        "EmptyState",
+        "Grid",
+        "ScreenLayout",
+        "SearchField"
+      ],
+      "requiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/화면/검색/글 목록과 검색",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-affddaf66890",
+      "owner": "B",
+      "path": "실험/화면/계정/가입 정보 입력",
+      "proposedPath": "실험/화면/계정/가입 정보 입력",
+      "finalDisposition": "reuse-existing",
+      "reason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+      "existingApiReferences": [
+        "AuthScreenLayout",
+        "Button",
+        "Form",
+        "TextField"
+      ],
+      "requiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/화면/계정/가입 정보 입력",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-0888e895d8bd",
+      "owner": "B",
+      "path": "실험/화면/계정/로그인 영역 표현",
+      "proposedPath": "실험/화면/계정/로그인 영역 표현",
+      "finalDisposition": "reuse-existing",
+      "reason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+      "existingApiReferences": [
+        "AuthProviderButton",
+        "AuthScreenLayout",
+        "Form",
+        "TextField"
+      ],
+      "requiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/화면/계정/로그인 영역 표현",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-df9a06cb4465",
+      "owner": "B",
+      "path": "실험/화면/소개/서비스 목적별 소개",
+      "proposedPath": "실험/화면/소개/서비스 목적별 소개",
+      "finalDisposition": "reuse-existing",
+      "reason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+      "existingApiReferences": [
+        "Affix",
+        "Button",
+        "Card",
+        "Grid",
+        "Image",
+        "ScreenLayout",
+        "Section",
+        "Tabs"
+      ],
+      "requiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/화면/소개/서비스 목적별 소개",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-d4e07505e21a",
+      "owner": "B",
+      "path": "실험/화면/소개/요금제 비교",
+      "proposedPath": "실험/화면/소개/요금제 비교",
+      "finalDisposition": "reuse-existing",
+      "reason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+      "existingApiReferences": [
+        "Button",
+        "Card",
+        "Grid",
+        "RadioGroup",
+        "ScreenLayout",
+        "Statistic",
+        "Tabs",
+        "Text"
+      ],
+      "requiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/화면/소개/요금제 비교",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-260b9f7d6203",
+      "owner": "B",
+      "path": "실험/화면/소통/문의 작성",
+      "proposedPath": "실험/화면/소통/문의 작성",
+      "finalDisposition": "reuse-existing",
+      "reason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+      "existingApiReferences": [
+        "Button",
+        "Card",
+        "Form",
+        "ScreenLayout",
+        "TextArea",
+        "TextField"
+      ],
+      "requiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/화면/소통/문의 작성",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-21040cf2eba9",
+      "owner": "B",
+      "path": "실험/화면/콘텐츠/글과 목차",
+      "proposedPath": "실험/화면/콘텐츠/글과 목차",
+      "finalDisposition": "reuse-existing",
+      "reason": "같은 기능·입력·상태를 제공하는 기존 HJM 공개 API를 사용하고 원본은 표현/배치/자산 참고로만 흡수한다. 별도 엔진을 복제하지 않는다.",
+      "existingApiReferences": [
+        "Affix",
+        "Avatar",
+        "Image",
+        "Menu",
+        "ScreenLayout",
+        "Text"
+      ],
+      "requiredVerification": "기존 사용 지침/지원 플랫폼·기본과 dark·keyboard/터치·제품 데이터/자산·필요시 reduced/실패복구 확인; 숨은 source 미확인을 완료로 올리지 않음.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/화면/콘텐츠/글과 목차",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "B-933ff8fe67e6",
+      "owner": "B",
+      "path": "실험/화면/콘텐츠/지표 요약과 탐색",
+      "proposedPath": "실험/화면/콘텐츠/지표 요약과 탐색",
+      "finalDisposition": "new-experiment",
+      "reason": "공식 PartitionBar 원문에서 전체를 나누는 비례 구간을 확인했다. Progress는 작업 진행률이고 StatisticGroup은 수치 묶음이라 이 geometry의 공개 계약을 제공하지 않는다.",
+      "existingApiReferences": [
+        "DataTable",
+        "DateRangePicker",
+        "DescriptionList",
+        "Notice",
+        "ScreenLayout",
+        "Sheet",
+        "Skeleton",
+        "Statistic",
+        "StatisticGroup",
+        "Text"
+      ],
+      "requiredVerification": "부분 합/0/음수/비유한 값·값과 label 일치·gap 포함 폭·색 외 범례·RTL; 실제 필요 데이터 확정 후 구현.",
+      "sourcePointer": "finalCandidateDisposition.items/실험/화면/콘텐츠/지표 요약과 탐색",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-b-index.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "C-T01",
+      "owner": "C",
+      "path": "실험/토큰/색과 글자/표시·읽기·기술 글자",
+      "proposedPath": "실험/토큰/색과 글자/표시·읽기·기술 글자",
+      "finalDisposition": "improve-existing",
+      "reason": "ui/code 두 family로 display·reading·small-caps 역할을 독립 전파할 수 없음. family 역할과 문맥 tracking을 보강하되 브랜드 font를 번들하지 않음.",
+      "existingApiReferences": [
+        "HjmDesignProfile.tokens.fontFamily(ui/code) @design-contracts/design-profile",
+        "Heading root/heading; Text typography"
+      ],
+      "requiredVerification": [
+        "display/reading 역할을 Heading·Text와 양 renderer에 연결",
+        "허용 font·fallback·실제 glyph/로딩 확인"
+      ],
+      "sourcePointer": "experimentCandidates.catalog/T01",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-c-ledger.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "C-T02",
+      "owner": "C",
+      "path": "실험/토큰/편집 도구/외부 값 정규화",
+      "proposedPath": "실험/토큰/편집 도구/외부 값 정규화",
+      "finalDisposition": "improve-existing",
+      "reason": "유효 profile 검증은 있지만 외부 추출값의 단위·출처·역할 충돌을 정규화하는 경로는 별도다. 자료 fixture와 변환 전 검증을 기존 규격에 흡수.",
+      "existingApiReferences": [
+        "defineHjmDesignProfile @design-contracts/design-profile",
+        "checkPaletteContrast @design-contracts/palette-contrast"
+      ],
+      "requiredVerification": [
+        "invalid 값·단위·원본URL/role provenance fixture",
+        "정상 unitless leading2.5와 범위 밖 gradient stop 오탐 금지"
+      ],
+      "sourcePointer": "experimentCandidates.catalog/T02",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-c-ledger.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "C-T03",
+      "owner": "C",
+      "path": "실험/토큰/색과 글자/브랜드와 상태 색",
+      "proposedPath": "실험/토큰/색과 글자/브랜드와 상태 색",
+      "finalDisposition": "reuse-existing",
+      "reason": "브랜드 악센트와 danger/success/data의 의미를 기존 semantic palette로 분리 가능. 출처의 역할 모순은 채택하지 않음.",
+      "existingApiReferences": [
+        "HjmProvider root/provider brandPalette",
+        "HjmDesignProfile.palette @design-contracts/design-profile"
+      ],
+      "requiredVerification": [
+        "기능 foreground/background 쌍과 실제 focus·selected 대비"
+      ],
+      "sourcePointer": "experimentCandidates.catalog/T03",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-c-ledger.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "C-T04",
+      "owner": "C",
+      "path": "실험/토큰/공간과 크기/역할별 라운드",
+      "proposedPath": "실험/토큰/공간과 크기/역할별 라운드",
+      "finalDisposition": "reuse-existing",
+      "reason": "역할별 radius와 Asset shape가 있으며 의미 있는 circle/pill geometry는 보존. 원시9999px scale 추가 불필요.",
+      "existingApiReferences": [
+        "HjmDesignProfile.tokens.radius @design-contracts/design-profile",
+        "Asset root/asset shape"
+      ],
+      "requiredVerification": [
+        "control/card/asset 역할별 기존 토큰 상속 확인"
+      ],
+      "sourcePointer": "experimentCandidates.catalog/T04",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-c-ledger.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "C-T05",
+      "owner": "C",
+      "path": "실험/토큰/공간과 크기/표면 안팎의 밀도",
+      "proposedPath": "실험/토큰/공간과 크기/표면 안팎의 밀도",
+      "finalDisposition": "reuse-existing",
+      "reason": "기존 spacing·layout으로 section rhythm과 내부 밀도를 비교 가능. 측정된 off-grid 수치를 전역 규칙으로 만들 이유 없음.",
+      "existingApiReferences": [
+        "Grid/Stack/Section Web root/layout; Native root/primitives",
+        "ScreenLayout ./screens"
+      ],
+      "requiredVerification": [
+        "모바일·번역·DOM 순서와 surface별 밀도 비교"
+      ],
+      "sourcePointer": "experimentCandidates.catalog/T05",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-c-ledger.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "C-T06",
+      "owner": "C",
+      "path": "실험/토큰/표면과 움직임/역할별 표면 깊이",
+      "proposedPath": "실험/토큰/표면과 움직임/역할별 표면 깊이",
+      "finalDisposition": "improve-existing",
+      "reason": "grain/noise·blur/fill·inset은 기존 계약에 있음. 원자료의 hard offset, soft mockup, 여러 inset 역할이 동일 전역 depth로 손실되지 않도록 역할별 적용을 보강.",
+      "existingApiReferences": [
+        "HjmDesignProfile.material/shadow @design-contracts/design-profile",
+        "EffectSurface ./effect-surface; Surface Web root/layout Native root/primitives"
+      ],
+      "requiredVerification": [
+        "실제 recipe가 있는 역할만 비교",
+        "Web/Native host 비용·불투명 대안·대비; 사진 재질을 CSS로 추론 금지"
+      ],
+      "sourcePointer": "experimentCandidates.catalog/T06",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-c-ledger.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "C-C01",
+      "owner": "C",
+      "path": "실험/컴포넌트/동작/버튼 눌림 표현",
+      "proposedPath": "실험/컴포넌트/동작/버튼 눌림 표현",
+      "finalDisposition": "reuse-existing",
+      "reason": "장식 press layer·arrow/hover는 기존 Button 행동 위 표현. 입력 엔진 복제 불필요.",
+      "existingApiReferences": [
+        "Button/IconButton root/actions"
+      ],
+      "requiredVerification": [
+        "focus/pressed/disabled/pending·RTL·reduced motion"
+      ],
+      "sourcePointer": "experimentCandidates.catalog/C01",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-c-ledger.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "C-C02",
+      "owner": "C",
+      "path": "실험/컴포넌트/글자와 아이콘/헤딩 장식",
+      "proposedPath": "실험/컴포넌트/글자와 아이콘/헤딩 장식",
+      "finalDisposition": "improve-existing",
+      "reason": "의미 Heading·Text는 재사용 가능. TextAnnotation은 현재 Web 실험 소스만 있고 공개/Native 경로 없음. 부분 장식과 원형 text-path는 실제 gap이므로 공개 경계와 양 renderer 규격을 보강하는 후보.",
+      "existingApiReferences": [
+        "Heading root/heading; Text existing",
+        "Web src/text-annotation.tsx is experimental source only, no package export/current map entry; Native implementation absent"
+      ],
+      "requiredVerification": [
+        "실험 소스를 소비 API로 안내하지 않음·Native 구현/공개 사용 지침 필요",
+        "읽기 가능한 DOM·forced colors·자산 실패·정적 대안; orbit/path 원본 미확인"
+      ],
+      "sourcePointer": "experimentCandidates.catalog/C02",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-c-ledger.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "C-C03",
+      "owner": "C",
+      "path": "실험/컴포넌트/데이터 표시/이미지 크롭과 대비",
+      "proposedPath": "실험/컴포넌트/데이터 표시/이미지 크롭과 대비",
+      "finalDisposition": "improve-existing",
+      "reason": "현재 shape/meaning·기본 crop을 재사용하며 반응형 crop·scrim과 제공되는3D variant manifest 선택을 비교 보강. 신규 Image 복제 불필요.",
+      "existingApiReferences": [
+        "Asset root/asset; Image Web root/display Native root/data-display"
+      ],
+      "requiredVerification": [
+        "제품 asset manifest/CC0·alt·crop·실패/placeholder",
+        "실제 합성 프레임 대비; 전체3D 변형 미검증"
+      ],
+      "sourcePointer": "experimentCandidates.catalog/C03",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-c-ledger.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "C-C04",
+      "owner": "C",
+      "path": "실험/컴포넌트/시각 효과/장식 모션의 정적 대안",
+      "proposedPath": "실험/컴포넌트/시각 효과/장식 모션의 정적 대안",
+      "finalDisposition": "reuse-existing",
+      "reason": "장식 drift/wave는 현 모션·정적 fallback 정책을 유지해서 표현 가능.",
+      "existingApiReferences": [
+        "shouldAnimateAsset @design-contracts/asset",
+        "ContentTransition ./content-transition"
+      ],
+      "requiredVerification": [
+        "장식과 실제 재생 행동 분리·pause/static fallback"
+      ],
+      "sourcePointer": "experimentCandidates.catalog/C04",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-c-ledger.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "C-C05",
+      "owner": "C",
+      "path": "실험/컴포넌트/입력/폼 표면과 입력 상태",
+      "proposedPath": "실험/컴포넌트/입력/폼 표면과 입력 상태",
+      "finalDisposition": "reuse-existing",
+      "reason": "underline/pill/inset 표현은 동일 입력·오류·복구 계약을 유지. 새로운 field 엔진 불필요.",
+      "existingApiReferences": [
+        "Field/Form root/forms",
+        "TextArea Web root/forms Native root/inputs; SearchField Web root/forms Native root/inputs"
+      ],
+      "requiredVerification": [
+        "label/IME/focus/error 설명·pending·실패 후 입력 유지"
+      ],
+      "sourcePointer": "experimentCandidates.catalog/C05",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-c-ledger.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "C-C06",
+      "owner": "C",
+      "path": "실험/컴포넌트/데이터 표시/기술값과 상태 표시",
+      "proposedPath": "실험/컴포넌트/데이터 표시/기술값과 상태 표시",
+      "finalDisposition": "reuse-existing",
+      "reason": "technical typography와 metric/status를 existing 표시 API로 비교 가능. 테마가 live 데이터를 발명하지 않음.",
+      "existingApiReferences": [
+        "CodeBlock ./code-block",
+        "StatisticGroup Web root/display Native root/data-display"
+      ],
+      "requiredVerification": [
+        "copy·syntax 의미 대비·실제 수치/단위·읽기 대안"
+      ],
+      "sourcePointer": "experimentCandidates.catalog/C06",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-c-ledger.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "C-C07",
+      "owner": "C",
+      "path": "실험/컴포넌트/상태와 알림/고정 공지 띠",
+      "proposedPath": "실험/컴포넌트/상태와 알림/고정 공지 띠",
+      "finalDisposition": "improve-existing",
+      "reason": "공개 Banner 확인 안 됨. 기존 표면/행동으로 static notice를 구성하되 sticky 위치·닫기·복구 규격 보강; cookie/promo/membership 목적은 분리.",
+      "existingApiReferences": [
+        "Surface Web root/layout Native root/primitives; Text; Button/Link root/actions",
+        "Dialog/Sheet root/overlays"
+      ],
+      "requiredVerification": [
+        "safe area·이름 있는 닫기·초점 복귀",
+        "동의 저장·수락/거부·계정 가입은 제품 소유"
+      ],
+      "sourcePointer": "experimentCandidates.catalog/C07",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-c-ledger.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "C-C08",
+      "owner": "C",
+      "path": "실험/컴포넌트/탐색/떠 있는 내비게이션",
+      "proposedPath": "실험/컴포넌트/탐색/떠 있는 내비게이션",
+      "finalDisposition": "reuse-existing",
+      "reason": "center/pill/floating presentation을 기존 navigation 상태와 연결. 새 탐색 엔진 불필요.",
+      "existingApiReferences": [
+        "NavigationBar ./navigation-bar",
+        "Sidebar Web root/sidebar; Menu Web root/overlays Native root/navigation"
+      ],
+      "requiredVerification": [
+        "current/expanded/Escape/RTL/mobile; hover-only 금지"
+      ],
+      "sourcePointer": "experimentCandidates.catalog/C08",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-c-ledger.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "C-C09",
+      "owner": "C",
+      "path": "실험/컴포넌트/입력/상품 옵션과 분류 선택",
+      "proposedPath": "실험/컴포넌트/입력/상품 옵션과 분류 선택",
+      "finalDisposition": "reuse-existing",
+      "reason": "상품 값·옵션 선택과 panel navigation을 목적에 맞게 기존 선택 계약으로 표현.",
+      "existingApiReferences": [
+        "Tabs root/navigation; Select root/forms; ToggleGroup root/toggle-group"
+      ],
+      "requiredVerification": [
+        "selected/focus/keyboard/disabled/unavailable; 재고/SKU 제품 소유"
+      ],
+      "sourcePointer": "experimentCandidates.catalog/C09",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-c-ledger.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "C-P01",
+      "owner": "C",
+      "path": "실험/구성/정보 표시/여러 항목 필름스트립",
+      "proposedPath": "실험/구성/정보 표시/여러 항목 필름스트립",
+      "finalDisposition": "new-experiment",
+      "reason": "Carousel는 단일 active·inactive hidden/inert다. 여러 항목이 함께 보이는 finite scroll/peek의 focus/scroll/announce는 고유 구성 gap.",
+      "existingApiReferences": [
+        "Carousel root/carousel",
+        "Grid/Stack/Asset/Button existing composition"
+      ],
+      "requiredVerification": [
+        "visible 항목 전체 focus·whole-frame/nested action 분리",
+        "끝/페이지 이동·scroll·announce·RTL; 실제 Cedar demo 없음"
+      ],
+      "sourcePointer": "experimentCandidates.catalog/P01",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-c-ledger.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "C-P02",
+      "owner": "C",
+      "path": "실험/구성/정보 표시/비정형 편집 그리드",
+      "proposedPath": "실험/구성/정보 표시/비정형 편집 그리드",
+      "finalDisposition": "improve-existing",
+      "reason": "혼합 aspect·비정형 배치는 현 Grid를 재사용하고 profile rows/cards/grid에서 실제 editorial recipe 전파를 보강.",
+      "existingApiReferences": [
+        "Grid/Section Web root/layout Native root/primitives",
+        "Asset root/asset; Card root/card"
+      ],
+      "requiredVerification": [
+        "DOM/읽기/초점 순서·동적 높이·모바일 breakpoint"
+      ],
+      "sourcePointer": "experimentCandidates.catalog/P02",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-c-ledger.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "C-P03",
+      "owner": "C",
+      "path": "실험/구성/정보 표시/이미지와 본문 분할",
+      "proposedPath": "실험/구성/정보 표시/이미지와 본문 분할",
+      "finalDisposition": "reuse-existing",
+      "reason": "본문/이미지 분할을 existing layout과 공개 슬롯으로 구성 가능.",
+      "existingApiReferences": [
+        "Section/Grid/Asset existing",
+        "ScreenLayout ./screens"
+      ],
+      "requiredVerification": [
+        "모바일 읽기 순서·crop·대비·번역"
+      ],
+      "sourcePointer": "experimentCandidates.catalog/P03",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-c-ledger.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "C-P04",
+      "owner": "C",
+      "path": "실험/구성/정보 표시/밝고 어두운 섹션 띠",
+      "proposedPath": "실험/구성/정보 표시/밝고 어두운 섹션 띠",
+      "finalDisposition": "reuse-existing",
+      "reason": "한 화면 mixed surface는 global theme toggle과 별도. 기존 semantic surface를 활용.",
+      "existingApiReferences": [
+        "Surface existing; HjmProvider root/provider"
+      ],
+      "requiredVerification": [
+        "각 밝고 어두운 band foreground·기능 대비"
+      ],
+      "sourcePointer": "experimentCandidates.catalog/P04",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-c-ledger.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "C-P05",
+      "owner": "C",
+      "path": "실험/구성/정보 표시/겹친 제품 목업",
+      "proposedPath": "실험/구성/정보 표시/겹친 제품 목업",
+      "finalDisposition": "reuse-existing",
+      "reason": "tilt/overlap mockup은 장식 asset/layout 조합이며 새로운 실제 editor/chat 기능이 아님.",
+      "existingApiReferences": [
+        "Asset/Card/Section existing"
+      ],
+      "requiredVerification": [
+        "좁은 폭 대체 crop·pointer/clip/읽기 순서·asset rights"
+      ],
+      "sourcePointer": "experimentCandidates.catalog/P05",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-c-ledger.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "C-P06",
+      "owner": "C",
+      "path": "실험/구성/정보 표시/파스텔 카드 리듬",
+      "proposedPath": "실험/구성/정보 표시/파스텔 카드 리듬",
+      "finalDisposition": "reuse-existing",
+      "reason": "pastel card rhythm은 palette/surface·geometry 순서로 표현 가능.",
+      "existingApiReferences": [
+        "Grid/Surface/Asset existing"
+      ],
+      "requiredVerification": [
+        "색/shape 외 분류 label; status 색 오용 금지"
+      ],
+      "sourcePointer": "experimentCandidates.catalog/P06",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-c-ledger.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "C-P07",
+      "owner": "C",
+      "path": "실험/구성/정보 표시/글자 중심 포스터",
+      "proposedPath": "실험/구성/정보 표시/글자 중심 포스터",
+      "finalDisposition": "improve-existing",
+      "reason": "display와 marginal caption 표현은 기존 Heading. responsive 포스터와 title/logo asset 구별을 사용 지침에 보강.",
+      "existingApiReferences": [
+        "Heading root/heading; Text/Section existing"
+      ],
+      "requiredVerification": [
+        "중요 text clipping 금지·반응형 줄바꿈·권리"
+      ],
+      "sourcePointer": "experimentCandidates.catalog/P07",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-c-ledger.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "C-P08",
+      "owner": "C",
+      "path": "실험/구성/탐색과 이동/피드와 보조 패널",
+      "proposedPath": "실험/구성/탐색과 이동/피드와 보조 패널",
+      "finalDisposition": "improve-existing",
+      "reason": "shell은 기존 API. feed/보조 rail의 독립 overflow와 좁은 화면 collapse는 현재 overview 선택만으로 보장되지 않아 구성 규격 보강.",
+      "existingApiReferences": [
+        "ScreenLayout ./screens; OverviewScreen ./design-profile",
+        "NavigationBar ./navigation-bar; Sidebar Web root/sidebar"
+      ],
+      "requiredVerification": [
+        "논리 지역 순서·모바일 collapse·sticky 도구/키보드 overlap"
+      ],
+      "sourcePointer": "experimentCandidates.catalog/P08",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-c-ledger.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "C-P09",
+      "owner": "C",
+      "path": "실험/구성/정보 표시/로고·인용·평점 행",
+      "proposedPath": "실험/구성/정보 표시/로고·인용·평점 행",
+      "finalDisposition": "reuse-existing",
+      "reason": "logo/quote/rating row는 기존 표시 API로 조합.",
+      "existingApiReferences": [
+        "Asset/Text/Grid existing; Rating ./rating"
+      ],
+      "requiredVerification": [
+        "실제 logo·인용·실적 권리/근거; 정적 marquee 대안"
+      ],
+      "sourcePointer": "experimentCandidates.catalog/P09",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-c-ledger.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "C-P10",
+      "owner": "C",
+      "path": "실험/구성/입력과 작성/피드 참여 행동",
+      "proposedPath": "실험/구성/입력과 작성/피드 참여 행동",
+      "finalDisposition": "reuse-existing",
+      "reason": "독립 like/comment/share 행동 row는 기존 버튼. 행 전체 클릭으로 행동 의미 합치지 않음.",
+      "existingApiReferences": [
+        "Button/IconButton/Link root/actions"
+      ],
+      "requiredVerification": [
+        "pressed/count/pending/error·이름/개별 focus"
+      ],
+      "sourcePointer": "experimentCandidates.catalog/P10",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-c-ledger.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "C-P11",
+      "owner": "C",
+      "path": "실험/구성/정보 표시/글꼴 견본과 모델 갤러리",
+      "proposedPath": "실험/구성/정보 표시/글꼴 견본과 모델 갤러리",
+      "finalDisposition": "reuse-existing",
+      "reason": "specimen/content font는 UI 테마 전파와 별도 data role로 표현 가능.",
+      "existingApiReferences": [
+        "Text; CodeBlock ./code-block; Asset root/asset"
+      ],
+      "requiredVerification": [
+        "glyph·필터·설치·font 권리 실제 flow 미검증"
+      ],
+      "sourcePointer": "experimentCandidates.catalog/P11",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-c-ledger.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "C-S01",
+      "owner": "C",
+      "path": "실험/화면/소개/제품 증거 소개",
+      "proposedPath": "실험/화면/소개/제품 증거 소개",
+      "finalDisposition": "reuse-existing",
+      "reason": "hero/증거/features/quote/next action은 기존 화면 지역·구성으로 비교. 원제품 marketing 기능을 보장하지 않음.",
+      "existingApiReferences": [
+        "ScreenLayout ./screens; Section/Asset/Heading existing"
+      ],
+      "requiredVerification": [
+        "제품 목적/필수 행동·모바일·실제 콘텐츠"
+      ],
+      "sourcePointer": "experimentCandidates.catalog/S01",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-c-ledger.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "C-S02",
+      "owner": "C",
+      "path": "실험/화면/콘텐츠/상품 목록과 선택",
+      "proposedPath": "실험/화면/콘텐츠/상품 목록과 선택",
+      "finalDisposition": "reuse-existing",
+      "reason": "목록/detail fixture는 existing 표시·선택으로 가능. ProductCatalog 전용 API가 있다는 주장은 하지 않음.",
+      "existingApiReferences": [
+        "ScreenLayout ./screens; Grid/Card/Asset existing; Select/Tabs existing"
+      ],
+      "requiredVerification": [
+        "가격/옵션/장바구니/거래 product 계약·미구현 흐름 표시"
+      ],
+      "sourcePointer": "experimentCandidates.catalog/S02",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-c-ledger.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "C-S03",
+      "owner": "C",
+      "path": "실험/화면/콘텐츠/작품과 프로젝트 전시",
+      "proposedPath": "실험/화면/콘텐츠/작품과 프로젝트 전시",
+      "finalDisposition": "reuse-existing",
+      "reason": "전시 화면은 existing layout·asset를 재사용; P01/P02/P12 고유 gap은 해당 후보로 분리.",
+      "existingApiReferences": [
+        "ScreenLayout ./screens; Grid/Asset/Link existing"
+      ],
+      "requiredVerification": [
+        "권리/목적·locale/menu·모바일; 출처 불일치14번 제외"
+      ],
+      "sourcePointer": "experimentCandidates.catalog/S03",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-c-ledger.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "C-S04",
+      "owner": "C",
+      "path": "실험/화면/콘텐츠/미디어 라이브러리",
+      "proposedPath": "실험/화면/콘텐츠/미디어 라이브러리",
+      "finalDisposition": "reuse-existing",
+      "reason": "라이브러리의 shell/geometry/선택은 existing. MediaPlayer/MediaLibraryScreen 공개 확인 못 함; actual 재생은 제품과 별도, finite rail은P01.",
+      "existingApiReferences": [
+        "ScreenLayout ./screens; Asset/Card existing",
+        "MediaSelectionScreen ./screen-flows"
+      ],
+      "requiredVerification": [
+        "named playback·pause/loading/error·search/계정 product flow"
+      ],
+      "sourcePointer": "experimentCandidates.catalog/S04",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-c-ledger.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "C-S05",
+      "owner": "C",
+      "path": "실험/화면/화면 틀과 도구/운영 작업 화면",
+      "proposedPath": "실험/화면/화면 틀과 도구/운영 작업 화면",
+      "finalDisposition": "reuse-existing",
+      "reason": "dashboard/editorial/landscape는 기존 profile·OverviewScreen 선택으로 비교 가능.",
+      "existingApiReferences": [
+        "OverviewScreen ./design-profile; ScreenLayout ./screens",
+        "CodeBlock ./code-block; Field/Form existing"
+      ],
+      "requiredVerification": [
+        "정상/로딩/빈 값/오류 fixture·실데이터 표기 구분"
+      ],
+      "sourcePointer": "experimentCandidates.catalog/S05",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-c-ledger.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "C-S06",
+      "owner": "C",
+      "path": "실험/구성/비교와 검증/프리셋과 앱 테마 전파",
+      "proposedPath": "실험/구성/비교와 검증/프리셋과 앱 테마 전파",
+      "finalDisposition": "improve-existing",
+      "reason": "neutral+10named presets 및 custom extends가 이미 있다. 새 preset registry 복제 없이 지원 축이 component→composition→screen까지 전파하는 기존 실험을 보강.",
+      "existingApiReferences": [
+        "defineHjmDesignProfile @design-contracts/design-profile",
+        "HjmProvider root/provider; OverviewScreen ./design-profile"
+      ],
+      "requiredVerification": [
+        "앱 custom profile 동일 fixture·전환 시 초안/선택 보존",
+        "실제 지원 축만 선택; product theme의 기능 자동 발명 금지"
+      ],
+      "sourcePointer": "experimentCandidates.catalog/S06",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-c-ledger.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "C-G01",
+      "owner": "C",
+      "path": "실험/구성/비교와 검증/표현 근거와 상태 검증",
+      "proposedPath": "실험/구성/비교와 검증/표현 근거와 상태 검증",
+      "finalDisposition": "reuse-existing",
+      "reason": "purpose/source/state/실데이터 구별과 근거표는 기존 지침·QA에 흡수. 새로운 화면 API가 아님.",
+      "existingApiReferences": [
+        "usage 문서/QA/VQ 기준 existing",
+        "docs/generated/public-component-map.md"
+      ],
+      "requiredVerification": [
+        "source독해/캡처/실제flow 분리; 상태 fixture·불채택 근거"
+      ],
+      "sourcePointer": "experimentCandidates.catalog/G01",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-c-ledger.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "C-P12",
+      "owner": "C",
+      "path": "실험/구성/정보 표시/세로 글자 브랜드 벽",
+      "proposedPath": "실험/구성/정보 표시/세로 글자 브랜드 벽",
+      "finalDisposition": "new-experiment",
+      "reason": "세로 브랜드 벽은 같은 Grid/Link를 쓰지만 회전·stacked text와 readable mobile 목록 전환의 고유 구성 recipe 필요.",
+      "existingApiReferences": [
+        "Grid/Link/Heading existing"
+      ],
+      "requiredVerification": [
+        "DOM/읽기 순서·링크 이름·모바일 수평 대안·실제 scroll"
+      ],
+      "sourcePointer": "experimentCandidates.catalog/P12",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-c-ledger.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "C-S07",
+      "owner": "C",
+      "path": "실험/화면/계정/테마 인증 화면",
+      "proposedPath": "실험/화면/계정/테마 인증 화면",
+      "finalDisposition": "reuse-existing",
+      "reason": "인증 화면의 hero/main/footer와 고정 카드 pending 계약이 존재. theme는 canvas/hero만, provider 자산/색과 이름-only 버튼 유지.",
+      "existingApiReferences": [
+        "AuthScreenLayout root/auth-screen",
+        "AuthProviderButton root/provider-button"
+      ],
+      "requiredVerification": [
+        "제품 provider·동의·로고·권리·실제 인증은 제품 검증"
+      ],
+      "sourcePointer": "experimentCandidates.catalog/S07",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-c-ledger.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "C-C10",
+      "owner": "C",
+      "path": "실험/컴포넌트/상태와 알림/제품 식별과 알림 상태",
+      "proposedPath": "실험/컴포넌트/상태와 알림/제품 식별과 알림 상태",
+      "finalDisposition": "deferred",
+      "reason": "ToastDescriptor에 identity asset slot은 없다. 브랜드 그림이 실제 알림에 필요한 제품 사례를 확인하기 전 새 asset slot은 보류; 고정 floating card를 Toast로 오인하지 않음.",
+      "existingApiReferences": [
+        "Toast Web root/toast Native root/feedback",
+        "Asset root/asset"
+      ],
+      "requiredVerification": [
+        "제품의 실제 identity+tone 사용처",
+        "timer/pause/action/close/announce 유지"
+      ],
+      "sourcePointer": "experimentCandidates.catalog/C10",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-c-ledger.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "C-C11",
+      "owner": "C",
+      "path": "실험/컴포넌트/데이터 표시/인쇄형 아코디언",
+      "proposedPath": "실험/컴포넌트/데이터 표시/인쇄형 아코디언",
+      "finalDisposition": "reuse-existing",
+      "reason": "hairline FAQ와 plus→cross 장식은 동일 disclosure open/trigger/panel 계약.",
+      "existingApiReferences": [
+        "Collapsible root/collapsible"
+      ],
+      "requiredVerification": [
+        "cross는 새 닫기 행동 아님; keyboard/focus/reduced motion"
+      ],
+      "sourcePointer": "experimentCandidates.catalog/C11",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-c-ledger.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "C-P13",
+      "owner": "C",
+      "path": "실험/구성/입력과 작성/입력과 도구 선택",
+      "proposedPath": "실험/구성/입력과 작성/입력과 도구 선택",
+      "finalDisposition": "new-experiment",
+      "reason": "생성 prompt+tool/model 선택+추천 시작점은 MessageComposer 이름 변경으로 충족 안 됨. 기존 입력/선택을 이용하는 목적 구성 추가.",
+      "existingApiReferences": [
+        "TextArea/Field/IconButton/ToggleGroup existing",
+        "MessageComposer ./screens (채팅 목적)"
+      ],
+      "requiredVerification": [
+        "빈 값·IME·submit/pending/error/복구·초안 보존",
+        "비용/권한/모델/실제 결과 product 소유"
+      ],
+      "sourcePointer": "experimentCandidates.catalog/P13",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-c-ledger.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "C-S08",
+      "owner": "C",
+      "path": "실험/화면/소통/피드 읽기와 참여",
+      "proposedPath": "실험/화면/소통/피드 읽기와 참여",
+      "finalDisposition": "new-experiment",
+      "reason": "FeedScreen/Post/ConversationThread 공개 export는 현재 대응표에서 확인되지 않는다. 기존 댓글/신고/작성과 feed 읽기·독립 참여 상태를 잇는 목적 화면은 실제 gap.",
+      "existingApiReferences": [
+        "ScreenLayout ./screens; CommentThreadScreen/ModerationScreen ./screen-flows",
+        "MessageComposer ./screens; Avatar/Asset/Button existing"
+      ],
+      "requiredVerification": [
+        "읽기·비로그인·pending/error/empty/media fail·모바일 keyboard",
+        "추천/인증/신고/차단/구독은 product 소유"
+      ],
+      "sourcePointer": "experimentCandidates.catalog/S08",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-c-ledger.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "C-C12",
+      "owner": "C",
+      "path": "실험/컴포넌트/데이터 표시/지역 도달 범위",
+      "proposedPath": "실험/컴포넌트/데이터 표시/지역 도달 범위",
+      "finalDisposition": "deferred",
+      "reason": "정적 세계 지도+읽기 목록은 재사용 가능하나 Geo/Map 전용 API는 없다. 좌표·투영·선택·데이터 제품 요구가 미확인이라 API/SDK 추가 보류.",
+      "existingApiReferences": [
+        "Asset/Text/Surface existing"
+      ],
+      "requiredVerification": [
+        "제품 지리 데이터 요구·경계/투영/권리·대체 읽기 목록"
+      ],
+      "sourcePointer": "experimentCandidates.catalog/C12",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-c-ledger.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "C-C13",
+      "owner": "C",
+      "path": "실험/컴포넌트/데이터 표시/비율과 합계 표시",
+      "proposedPath": "실험/컴포넌트/데이터 표시/비율과 합계 표시",
+      "finalDisposition": "deferred",
+      "reason": "비율 donut/ring 전용 API는 없고 Progress는 진행 의미다. 분포 요구와 동일 데이터 대체 목록 확인 전 차트 API/SDK 보류.",
+      "existingApiReferences": [
+        "Statistic/StatisticGroup existing; Text"
+      ],
+      "requiredVerification": [
+        "기간/통화/분모/0/음수/누락·계열 이름·읽기 대안"
+      ],
+      "sourcePointer": "experimentCandidates.catalog/C13",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-c-ledger.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    },
+    {
+      "id": "C-C14",
+      "owner": "C",
+      "path": "실험/컴포넌트/데이터 표시/순위와 오차 표시",
+      "proposedPath": "실험/컴포넌트/데이터 표시/순위와 오차 표시",
+      "finalDisposition": "deferred",
+      "reason": "순위 막대·수치 축·오차 범위와 동일 데이터 표는 공개 gap. 통계/원데이터/사용 목적이 미확인이라Progress/C13로 축소하지 않고 보류.",
+      "existingApiReferences": [
+        "Tabs/Card/StatisticGroup/Text/Asset existing"
+      ],
+      "requiredVerification": [
+        "실제 값·오차 정의·정렬·축/단위·읽을 표·접근 가능한 선택"
+      ],
+      "sourcePointer": "experimentCandidates.catalog/C14",
+      "sourceIndex": "docs/qa/2026-10-07-reference-parallel-c-ledger.json",
+      "maximumFontExcluded": true,
+      "matchingStoryTitles": [],
+      "implementationStatus": "adoption-decision-only",
+      "registrationEvidence": null
+    }
+  ],
+  "paths": [
+    {
+      "path": "배포/구성/정보 표시/영상 미리보기",
+      "candidateIds": [
+        "A-20"
+      ]
+    },
+    {
+      "path": "배포/구성/탐색과 이동/보관함과 페이지 이동",
+      "candidateIds": [
+        "A-36"
+      ]
+    },
+    {
+      "path": "배포/컴포넌트/데이터 표시/캐러셀",
+      "candidateIds": [
+        "A-38"
+      ]
+    },
+    {
+      "path": "배포/화면/콘텐츠/저장한 항목",
+      "candidateIds": [
+        "A-35"
+      ]
+    },
+    {
+      "path": "실험/구성/비교와 검증/가장자리 흐림",
+      "candidateIds": [
+        "B-169b5bd71d4b"
+      ]
+    },
+    {
+      "path": "실험/구성/비교와 검증/글자 표현 비교",
+      "candidateIds": [
+        "B-34ba1b7faa86"
+      ]
+    },
+    {
+      "path": "실험/구성/비교와 검증/기기 액자 비교",
+      "candidateIds": [
+        "B-107b3f9dd48c"
+      ]
+    },
+    {
+      "path": "실험/구성/비교와 검증/누름 표현 비교",
+      "candidateIds": [
+        "B-dab05082e2c1"
+      ]
+    },
+    {
+      "path": "실험/구성/비교와 검증/대비와 상태 검토",
+      "candidateIds": [
+        "A-28"
+      ]
+    },
+    {
+      "path": "실험/구성/비교와 검증/반사 무늬와 광택",
+      "candidateIds": [
+        "A-32"
+      ]
+    },
+    {
+      "path": "실험/구성/비교와 검증/버튼 순서와 의도",
+      "candidateIds": [
+        "A-09"
+      ]
+    },
+    {
+      "path": "실험/구성/비교와 검증/선택 표시 비교",
+      "candidateIds": [
+        "B-0801e675488c"
+      ]
+    },
+    {
+      "path": "실험/구성/비교와 검증/움직임 속도와 감속",
+      "candidateIds": [
+        "A-31"
+      ]
+    },
+    {
+      "path": "실험/구성/비교와 검증/이미지 표현 비교",
+      "candidateIds": [
+        "B-d0e709636d5d"
+      ]
+    },
+    {
+      "path": "실험/구성/비교와 검증/입력과 상태 구현 비교",
+      "candidateIds": [
+        "A-26"
+      ]
+    },
+    {
+      "path": "실험/구성/비교와 검증/점 배열 로딩 표현",
+      "candidateIds": [
+        "A-30"
+      ]
+    },
+    {
+      "path": "실험/구성/비교와 검증/종이 표면과 경계",
+      "candidateIds": [
+        "A-02"
+      ]
+    },
+    {
+      "path": "실험/구성/비교와 검증/진행 표시 비교",
+      "candidateIds": [
+        "B-951e18d9a528"
+      ]
+    },
+    {
+      "path": "실험/구성/비교와 검증/질감과 글자 표현",
+      "candidateIds": [
+        "A-25"
+      ]
+    },
+    {
+      "path": "실험/구성/비교와 검증/카드 깊이 비교",
+      "candidateIds": [
+        "B-a0e21c8cfc35"
+      ]
+    },
+    {
+      "path": "실험/구성/비교와 검증/카메라 화면 표현",
+      "candidateIds": [
+        "B-e43f5998af3f"
+      ]
+    },
+    {
+      "path": "실험/구성/비교와 검증/탐색 크기 비교",
+      "candidateIds": [
+        "B-b500eb78b994"
+      ]
+    },
+    {
+      "path": "실험/구성/비교와 검증/테마 전환 비교",
+      "candidateIds": [
+        "B-9b94fe0ec132"
+      ]
+    },
+    {
+      "path": "실험/구성/비교와 검증/테마 조합",
+      "candidateIds": [
+        "A-01"
+      ]
+    },
+    {
+      "path": "실험/구성/비교와 검증/표면 빛 표현",
+      "candidateIds": [
+        "B-39d16622eca7"
+      ]
+    },
+    {
+      "path": "실험/구성/비교와 검증/표현 근거와 상태 검증",
+      "candidateIds": [
+        "C-G01"
+      ]
+    },
+    {
+      "path": "실험/구성/비교와 검증/프리셋과 앱 테마 전파",
+      "candidateIds": [
+        "C-S06"
+      ]
+    },
+    {
+      "path": "실험/구성/비교와 검증/화면 상태와 순서",
+      "candidateIds": [
+        "A-23"
+      ]
+    },
+    {
+      "path": "실험/구성/선택과 필터/관심과 동의 선택",
+      "candidateIds": [
+        "A-11"
+      ]
+    },
+    {
+      "path": "실험/구성/선택과 필터/날짜와 시각 선택",
+      "candidateIds": [
+        "B-1c10339b6c9c"
+      ]
+    },
+    {
+      "path": "실험/구성/선택과 필터/목록 선택 비교",
+      "candidateIds": [
+        "B-264315e2fbd9"
+      ]
+    },
+    {
+      "path": "실험/구성/선택과 필터/범위 선택 표현",
+      "candidateIds": [
+        "B-63ed6f6cdc81"
+      ]
+    },
+    {
+      "path": "실험/구성/선택과 필터/상품 옵션과 미리보기",
+      "candidateIds": [
+        "A-33"
+      ]
+    },
+    {
+      "path": "실험/구성/입력과 작성/구독 정보 입력",
+      "candidateIds": [
+        "A-10"
+      ]
+    },
+    {
+      "path": "실험/구성/입력과 작성/단계별 가입 입력",
+      "candidateIds": [
+        "A-12"
+      ]
+    },
+    {
+      "path": "실험/구성/입력과 작성/사진 위 입력 카드",
+      "candidateIds": [
+        "A-06"
+      ]
+    },
+    {
+      "path": "실험/구성/입력과 작성/여러 줄 높이 비교",
+      "candidateIds": [
+        "B-8dbab728f345"
+      ]
+    },
+    {
+      "path": "실험/구성/입력과 작성/입력 전환과 유지",
+      "candidateIds": [
+        "B-a77ae62f43e7"
+      ]
+    },
+    {
+      "path": "실험/구성/입력과 작성/입력과 도구 선택",
+      "candidateIds": [
+        "C-P13"
+      ]
+    },
+    {
+      "path": "실험/구성/입력과 작성/장소와 기간 신청",
+      "candidateIds": [
+        "A-34"
+      ]
+    },
+    {
+      "path": "실험/구성/입력과 작성/파일 선택과 복구",
+      "candidateIds": [
+        "B-4d7344533a4f"
+      ]
+    },
+    {
+      "path": "실험/구성/입력과 작성/팝업 입력과 닫기",
+      "candidateIds": [
+        "A-13"
+      ]
+    },
+    {
+      "path": "실험/구성/입력과 작성/펼쳐 쓰는 검색",
+      "candidateIds": [
+        "B-805a87b0c53e"
+      ]
+    },
+    {
+      "path": "실험/구성/입력과 작성/피드 참여 행동",
+      "candidateIds": [
+        "C-P10"
+      ]
+    },
+    {
+      "path": "실험/구성/정보 표시/겹친 제품 목업",
+      "candidateIds": [
+        "C-P05"
+      ]
+    },
+    {
+      "path": "실험/구성/정보 표시/고객 후기 탐색",
+      "candidateIds": [
+        "B-ba61efa90ab8"
+      ]
+    },
+    {
+      "path": "실험/구성/정보 표시/글꼴 견본과 모델 갤러리",
+      "candidateIds": [
+        "C-P11"
+      ]
+    },
+    {
+      "path": "실험/구성/정보 표시/글자 중심 포스터",
+      "candidateIds": [
+        "C-P07"
+      ]
+    },
+    {
+      "path": "실험/구성/정보 표시/기기별 미리보기",
+      "candidateIds": [
+        "A-18"
+      ]
+    },
+    {
+      "path": "실험/구성/정보 표시/기능 카드 묶음",
+      "candidateIds": [
+        "B-2f2e2df08985"
+      ]
+    },
+    {
+      "path": "실험/구성/정보 표시/날짜별 변화 기록",
+      "candidateIds": [
+        "B-1a25c1257e7f"
+      ]
+    },
+    {
+      "path": "실험/구성/정보 표시/달력과 문의 안내",
+      "candidateIds": [
+        "A-19"
+      ]
+    },
+    {
+      "path": "실험/구성/정보 표시/대상 설명과 미리보기",
+      "candidateIds": [
+        "B-81d4b55fbd1b"
+      ]
+    },
+    {
+      "path": "실험/구성/정보 표시/로고·인용·평점 행",
+      "candidateIds": [
+        "C-P09"
+      ]
+    },
+    {
+      "path": "실험/구성/정보 표시/마무리 행동",
+      "candidateIds": [
+        "B-e5aadecce1a0"
+      ]
+    },
+    {
+      "path": "실험/구성/정보 표시/명령 기록 표시",
+      "candidateIds": [
+        "B-e77524e5a035"
+      ]
+    },
+    {
+      "path": "실험/구성/정보 표시/목적지 카드 강조",
+      "candidateIds": [
+        "B-e0992711fb51"
+      ]
+    },
+    {
+      "path": "실험/구성/정보 표시/문구 뒤 강조",
+      "candidateIds": [
+        "B-1075976a3b10"
+      ]
+    },
+    {
+      "path": "실험/구성/정보 표시/문의와 질문 답변",
+      "candidateIds": [
+        "A-15"
+      ]
+    },
+    {
+      "path": "실험/구성/정보 표시/미리보기 묶음",
+      "candidateIds": [
+        "B-d17fc688a38d"
+      ]
+    },
+    {
+      "path": "실험/구성/정보 표시/밝고 어두운 섹션 띠",
+      "candidateIds": [
+        "C-P04"
+      ]
+    },
+    {
+      "path": "실험/구성/정보 표시/비정형 편집 그리드",
+      "candidateIds": [
+        "C-P02"
+      ]
+    },
+    {
+      "path": "실험/구성/정보 표시/사람 묶음 표시",
+      "candidateIds": [
+        "B-a19a45e44d1f"
+      ]
+    },
+    {
+      "path": "실험/구성/정보 표시/상단 고정 안내",
+      "candidateIds": [
+        "B-19a630b7d3c1"
+      ]
+    },
+    {
+      "path": "실험/구성/정보 표시/생성 이미지 진행",
+      "candidateIds": [
+        "B-42dd323230c4"
+      ]
+    },
+    {
+      "path": "실험/구성/정보 표시/세로 글자 브랜드 벽",
+      "candidateIds": [
+        "C-P12"
+      ]
+    },
+    {
+      "path": "실험/구성/정보 표시/수치 변화 표현",
+      "candidateIds": [
+        "B-0dcd54d1ac8f"
+      ]
+    },
+    {
+      "path": "실험/구성/정보 표시/아이콘 공간 배치",
+      "candidateIds": [
+        "B-1f9ae2111a7d"
+      ]
+    },
+    {
+      "path": "실험/구성/정보 표시/아이콘과 아바타 조합",
+      "candidateIds": [
+        "A-27"
+      ]
+    },
+    {
+      "path": "실험/구성/정보 표시/알림 진입 표현",
+      "candidateIds": [
+        "B-c036f2cc11b4"
+      ]
+    },
+    {
+      "path": "실험/구성/정보 표시/여러 항목 필름스트립",
+      "candidateIds": [
+        "C-P01"
+      ]
+    },
+    {
+      "path": "실험/구성/정보 표시/영상 미리보기",
+      "candidateIds": [
+        "B-e0efa05312d5"
+      ]
+    },
+    {
+      "path": "실험/구성/정보 표시/음원 정보와 재생",
+      "candidateIds": [
+        "A-37"
+      ]
+    },
+    {
+      "path": "실험/구성/정보 표시/이미지 전후 비교",
+      "candidateIds": [
+        "B-dcd430578216"
+      ]
+    },
+    {
+      "path": "실험/구성/정보 표시/이미지 조각 진입",
+      "candidateIds": [
+        "B-8f4abf6d3e9f"
+      ]
+    },
+    {
+      "path": "실험/구성/정보 표시/이미지 확대 비교",
+      "candidateIds": [
+        "B-a3173bc218f3"
+      ]
+    },
+    {
+      "path": "실험/구성/정보 표시/이미지와 본문 분할",
+      "candidateIds": [
+        "C-P03"
+      ]
+    },
+    {
+      "path": "실험/구성/정보 표시/읽기 진행 표시",
+      "candidateIds": [
+        "B-3d623a92338e"
+      ]
+    },
+    {
+      "path": "실험/구성/정보 표시/입력 기기 모형",
+      "candidateIds": [
+        "B-20980700373e"
+      ]
+    },
+    {
+      "path": "실험/구성/정보 표시/입체 장식과 행동",
+      "candidateIds": [
+        "A-08"
+      ]
+    },
+    {
+      "path": "실험/구성/정보 표시/지역과 위치 표시",
+      "candidateIds": [
+        "B-55a51181621a"
+      ]
+    },
+    {
+      "path": "실험/구성/정보 표시/질문 답변",
+      "candidateIds": [
+        "B-66b4938a702b"
+      ]
+    },
+    {
+      "path": "실험/구성/정보 표시/코드 전후 비교",
+      "candidateIds": [
+        "B-54914f2facd0"
+      ]
+    },
+    {
+      "path": "실험/구성/정보 표시/팀 소개",
+      "candidateIds": [
+        "B-9ee3c74b2b6e"
+      ]
+    },
+    {
+      "path": "실험/구성/정보 표시/파스텔 카드 리듬",
+      "candidateIds": [
+        "C-P06"
+      ]
+    },
+    {
+      "path": "실험/구성/정보 표시/파일 계층 탐색",
+      "candidateIds": [
+        "B-41d5680564ad"
+      ]
+    },
+    {
+      "path": "실험/구성/정보 표시/항목 연결선",
+      "candidateIds": [
+        "B-385577b48e6c"
+      ]
+    },
+    {
+      "path": "실험/구성/정보 표시/협업 상태 모형",
+      "candidateIds": [
+        "B-86173c129f83"
+      ]
+    },
+    {
+      "path": "실험/구성/정보 표시/흐르는 소개 목록",
+      "candidateIds": [
+        "B-7b8f3fa56238"
+      ]
+    },
+    {
+      "path": "실험/구성/직접 조작과 모션/스크롤 장면 비교",
+      "candidateIds": [
+        "B-5d3a097f5a2c"
+      ]
+    },
+    {
+      "path": "실험/구성/직접 조작과 모션/완료 순간 축하",
+      "candidateIds": [
+        "B-447a6554f71a"
+      ]
+    },
+    {
+      "path": "실험/구성/직접 조작과 모션/카드 상세 연결",
+      "candidateIds": [
+        "B-550ff79c1956"
+      ]
+    },
+    {
+      "path": "실험/구성/직접 조작과 모션/카드 위치 조작",
+      "candidateIds": [
+        "B-b7d8f12a16af"
+      ]
+    },
+    {
+      "path": "실험/구성/탐색과 이동/계속 읽기와 복구",
+      "candidateIds": [
+        "B-ca87d244842d"
+      ]
+    },
+    {
+      "path": "실험/구성/탐색과 이동/목록 옆 상세 보기",
+      "candidateIds": [
+        "A-17"
+      ]
+    },
+    {
+      "path": "실험/구성/탐색과 이동/앱 받기와 코드 보기",
+      "candidateIds": [
+        "A-21"
+      ]
+    },
+    {
+      "path": "실험/구성/탐색과 이동/피드와 보조 패널",
+      "candidateIds": [
+        "C-P08"
+      ]
+    },
+    {
+      "path": "실험/구성/탐색과 이동/하단 링크 묶음",
+      "candidateIds": [
+        "B-08b94a0e87ca"
+      ]
+    },
+    {
+      "path": "실험/구성/피드백과 복구/대기 단계와 진행",
+      "candidateIds": [
+        "B-42f084a3019f"
+      ]
+    },
+    {
+      "path": "실험/구성/피드백과 복구/미리보기 실패와 재시도",
+      "candidateIds": [
+        "A-22"
+      ]
+    },
+    {
+      "path": "실험/구성/피드백과 복구/첫 사용 선택",
+      "candidateIds": [
+        "B-a12b9395cc49"
+      ]
+    },
+    {
+      "path": "실험/컴포넌트/글자와 아이콘/헤딩 장식",
+      "candidateIds": [
+        "C-C02"
+      ]
+    },
+    {
+      "path": "실험/컴포넌트/데이터 표시/기술값과 상태 표시",
+      "candidateIds": [
+        "C-C06"
+      ]
+    },
+    {
+      "path": "실험/컴포넌트/데이터 표시/비율과 합계 표시",
+      "candidateIds": [
+        "C-C13"
+      ]
+    },
+    {
+      "path": "실험/컴포넌트/데이터 표시/순위와 오차 표시",
+      "candidateIds": [
+        "C-C14"
+      ]
+    },
+    {
+      "path": "실험/컴포넌트/데이터 표시/이미지 크롭과 대비",
+      "candidateIds": [
+        "C-C03"
+      ]
+    },
+    {
+      "path": "실험/컴포넌트/데이터 표시/인쇄형 아코디언",
+      "candidateIds": [
+        "C-C11"
+      ]
+    },
+    {
+      "path": "실험/컴포넌트/데이터 표시/지역 도달 범위",
+      "candidateIds": [
+        "C-C12"
+      ]
+    },
+    {
+      "path": "실험/컴포넌트/동작/버튼 눌림 표현",
+      "candidateIds": [
+        "C-C01"
+      ]
+    },
+    {
+      "path": "실험/컴포넌트/상태와 알림/고정 공지 띠",
+      "candidateIds": [
+        "C-C07"
+      ]
+    },
+    {
+      "path": "실험/컴포넌트/상태와 알림/제품 식별과 알림 상태",
+      "candidateIds": [
+        "C-C10"
+      ]
+    },
+    {
+      "path": "실험/컴포넌트/시각 효과/계단 모양 테두리",
+      "candidateIds": [
+        "A-03"
+      ]
+    },
+    {
+      "path": "실험/컴포넌트/시각 효과/내용 진입 표현",
+      "candidateIds": [
+        "B-a3607fac19e5"
+      ]
+    },
+    {
+      "path": "실험/컴포넌트/시각 효과/비쳐 보이는 표면",
+      "candidateIds": [
+        "A-07"
+      ]
+    },
+    {
+      "path": "실험/컴포넌트/시각 효과/손그림 경계와 배경",
+      "candidateIds": [
+        "A-29"
+      ]
+    },
+    {
+      "path": "실험/컴포넌트/시각 효과/손글씨 획과 읽기",
+      "candidateIds": [
+        "A-39"
+      ]
+    },
+    {
+      "path": "실험/컴포넌트/시각 효과/장식 모션의 정적 대안",
+      "candidateIds": [
+        "C-C04"
+      ]
+    },
+    {
+      "path": "실험/컴포넌트/입력/상품 옵션과 분류 선택",
+      "candidateIds": [
+        "C-C09"
+      ]
+    },
+    {
+      "path": "실험/컴포넌트/입력/폼 표면과 입력 상태",
+      "candidateIds": [
+        "C-C05"
+      ]
+    },
+    {
+      "path": "실험/컴포넌트/탐색/떠 있는 내비게이션",
+      "candidateIds": [
+        "C-C08"
+      ]
+    },
+    {
+      "path": "실험/토큰/공간과 크기/역할별 라운드",
+      "candidateIds": [
+        "C-T04"
+      ]
+    },
+    {
+      "path": "실험/토큰/공간과 크기/표면 안팎의 밀도",
+      "candidateIds": [
+        "C-T05"
+      ]
+    },
+    {
+      "path": "실험/토큰/색과 글자/브랜드와 상태 색",
+      "candidateIds": [
+        "C-T03"
+      ]
+    },
+    {
+      "path": "실험/토큰/색과 글자/색 조합과 대비",
+      "candidateIds": [
+        "A-04"
+      ]
+    },
+    {
+      "path": "실험/토큰/색과 글자/제목 위계와 줄바꿈",
+      "candidateIds": [
+        "A-05"
+      ]
+    },
+    {
+      "path": "실험/토큰/색과 글자/표시·읽기·기술 글자",
+      "candidateIds": [
+        "C-T01"
+      ]
+    },
+    {
+      "path": "실험/토큰/편집 도구/그림자 편집",
+      "candidateIds": [
+        "B-c9ca93a9f6e7"
+      ]
+    },
+    {
+      "path": "실험/토큰/편집 도구/외부 값 정규화",
+      "candidateIds": [
+        "C-T02"
+      ]
+    },
+    {
+      "path": "실험/토큰/표면과 움직임/반복 무늬",
+      "candidateIds": [
+        "B-9657c48bf947"
+      ]
+    },
+    {
+      "path": "실험/토큰/표면과 움직임/역할별 표면 깊이",
+      "candidateIds": [
+        "C-T06"
+      ]
+    },
+    {
+      "path": "실험/토큰/표면과 움직임/입자와 빛",
+      "candidateIds": [
+        "B-64c4d2df2aa7"
+      ]
+    },
+    {
+      "path": "실험/화면/검색/글 목록과 검색",
+      "candidateIds": [
+        "B-18efcc78b072"
+      ]
+    },
+    {
+      "path": "실험/화면/검색/자료 검색과 선택",
+      "candidateIds": [
+        "A-16"
+      ]
+    },
+    {
+      "path": "실험/화면/계정/가입 정보 입력",
+      "candidateIds": [
+        "B-affddaf66890"
+      ]
+    },
+    {
+      "path": "실험/화면/계정/로그인 영역 표현",
+      "candidateIds": [
+        "B-0888e895d8bd"
+      ]
+    },
+    {
+      "path": "실험/화면/계정/테마 인증 화면",
+      "candidateIds": [
+        "C-S07"
+      ]
+    },
+    {
+      "path": "실험/화면/소개/서비스 목적별 소개",
+      "candidateIds": [
+        "B-df9a06cb4465"
+      ]
+    },
+    {
+      "path": "실험/화면/소개/신청 옵션과 비용",
+      "candidateIds": [
+        "A-14"
+      ]
+    },
+    {
+      "path": "실험/화면/소개/요금제 비교",
+      "candidateIds": [
+        "B-d4e07505e21a"
+      ]
+    },
+    {
+      "path": "실험/화면/소개/제품 증거 소개",
+      "candidateIds": [
+        "C-S01"
+      ]
+    },
+    {
+      "path": "실험/화면/소통/문의 작성",
+      "candidateIds": [
+        "B-260b9f7d6203"
+      ]
+    },
+    {
+      "path": "실험/화면/소통/피드 읽기와 참여",
+      "candidateIds": [
+        "C-S08"
+      ]
+    },
+    {
+      "path": "실험/화면/콘텐츠/글과 목차",
+      "candidateIds": [
+        "B-21040cf2eba9"
+      ]
+    },
+    {
+      "path": "실험/화면/콘텐츠/미디어 라이브러리",
+      "candidateIds": [
+        "C-S04"
+      ]
+    },
+    {
+      "path": "실험/화면/콘텐츠/상품 목록과 선택",
+      "candidateIds": [
+        "C-S02"
+      ]
+    },
+    {
+      "path": "실험/화면/콘텐츠/작업 목록과 설명",
+      "candidateIds": [
+        "A-24"
+      ]
+    },
+    {
+      "path": "실험/화면/콘텐츠/작품과 프로젝트 전시",
+      "candidateIds": [
+        "C-S03"
+      ]
+    },
+    {
+      "path": "실험/화면/콘텐츠/지표 요약과 탐색",
+      "candidateIds": [
+        "B-933ff8fe67e6"
+      ]
+    },
+    {
+      "path": "실험/화면/화면 틀과 도구/운영 작업 화면",
+      "candidateIds": [
+        "C-S05"
+      ]
+    }
+  ],
+  "verifiedRegistrationsSource": "docs/plans/reference-experiment-registrations-2026-10-07.json",
+  "executionPriorities": [
+    {
+      "order": 1,
+      "id": "theme-propagation",
+      "decision": "Improve the existing 10-theme comparison with app-owned profile configuration and preserve tokens→component→composition→screen defaults.",
+      "status": "existing-implementation-followup"
+    },
+    {
+      "order": 2,
+      "id": "surface-material-and-depth",
+      "decision": "Reuse paper/glass/clay material options; isolate invalid exported values; add unsupported treatments only through explicit supported contracts.",
+      "status": "partially-implemented-followup"
+    },
+    {
+      "order": 3,
+      "id": "finite-collection-detail",
+      "decision": "Implement one finite multi-visible collection contract and compose existing Card/Dialog detail and independent actions.",
+      "status": "not-implemented"
+    },
+    {
+      "order": 4,
+      "id": "purpose-state-compositions",
+      "decision": "Absorb necessary form/selection/CTA/media variants into existing targets; keep user intent and pending/failed/retry state ownership intact.",
+      "status": "variant-adoption-pending"
+    },
+    {
+      "order": 5,
+      "id": "registered-experiment-review",
+      "decision": "Review the three verified new compositions and the theme experiment, then promote/publish before consumer dependency adoption.",
+      "status": "registered-not-promoted-or-published"
+    }
+  ]
+}
