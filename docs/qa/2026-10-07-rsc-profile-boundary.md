@@ -2,7 +2,7 @@
 
 ## 1. 최종 판정
 
-확인 범위 통과. Web layout/provider의 client directive 누락을 보완했다. Next의 캐시 없는 실제 build에서 directive가 없는 대조군은 createContext 오류, 두 entry를 선언한 후보는 통과했다. production hydration과 입력 유지도 통과했다. 전체 로컬 gate에서 드러난 기존 테스트/fixture 연결 누락을 보완하고 실패 이후의 미완료 gate를 이어서 모두 통과했다. 단일 ci:check 재실행 성공이나 npm 게시/소비 이관 완료를 뜻하지 않는다.
+확인 범위 통과. Web layout/provider의 client directive 누락을 보완했다. Next의 캐시 없는 실제 build에서 directive가 없는 대조군은 createContext 오류, 두 entry를 선언한 후보는 통과했다. production hydration과 입력 유지도 통과했다. 전체 로컬 gate에서 드러난 기존 테스트/fixture 연결 누락을 보완하고 실패 이후의 미완료 gate를 이어서 모두 통과했다. 단일 ci:check 재실행 성공이나 npm 게시/소비 이관 완료를 뜻하지 않는다. 2026-10-08 00:18 KST 재시도에서는 source 보완과 실패 기록을 포함한 main793a2d26b2ff6c50d67658fe31c357f0be6cadf4의 원격 반영을 확인했다.
 
 ## 2. 대상과 이력
 
@@ -55,10 +55,10 @@ Metro 첫3회는 snapshot의 외부 pnpm symlink를 file map에서 해석하지 
 
 ## 6. 미확인과 게시 경계
 
-다른 RSC framework/version·루트 barrel·다른 granular UI entry·Native/실물/Release UI·VoiceOver·성능은 이 regression의 범위가 아니다. 고정 train 버전 상승·원격 CI dispatch·npm 게시·소비 앱 wrapper 제거를 하지 않는다. 신규8개 실험 승급/게시 명시 승인 대기는 별도이며 기존 배포 API의 버그 보완은 현재 위치에서 한다. 로컬 main source 커밋e0d5b39f804e41a70d8b874cb8e9c51f78a4b7f6은 완성됐지만 HTTPS push3회(HTTP/1.1 포함)가 GitHub Internal Server Error로 거절됐다. SSH 대안은 저장 키 인증 publickey 거절로 끝났다. 조회한 원격 main은f2d77534bd4ca136f554a6833355c0bc70f0e055이므로 마지막 보완의 원격 통합은 미완료다. 이를 게시 승인 대기와 합치지 않는다.
+다른 RSC framework/version·루트 barrel·다른 granular UI entry·Native/실물/Release UI·VoiceOver·성능은 이 regression의 범위가 아니다. 고정 train 버전 상승·원격 CI dispatch·npm 게시·소비 앱 wrapper 제거를 하지 않는다. 신규8개 실험 승급/게시 명시 승인 대기는 별도이며 기존 배포 API의 버그 보완은 현재 위치에서 한다. 로컬 main source 커밋e0d5b39f804e41a70d8b874cb8e9c51f78a4b7f6은 완성됐지만 HTTPS push3회(HTTP/1.1 포함)가 GitHub Internal Server Error로 거절됐다. SSH 대안은 저장 키 인증 publickey 거절로 끝났다. 당시 조회한 원격 main은f2d77534bd4ca136f554a6833355c0bc70f0e055이었다. 이후 HTTPS 재시도가 성공했고00:18 KST 원격 main793a2d26b2ff6c50d67658fe31c357f0be6cadf4을 확인했다. source commit e0d5b39f와 QA 이력 commit793a2d26이 포함되므로 마지막 보완의 원격 통합은 완료다. 원격 통합을 npm 게시/승급 승인으로 취급하지 않는다.
 
 ## 7. 보관 처리
 
 fixture source와 사용 지침·Changeset·의미 있는 기존 regression 보완을 영구 보존한다. 본인 raw log11개/runtime receipt1개, 총223239bytes의 정렬 manifest(name/bytes/SHA-256; canonical JSON)의 SHA-256은06b65206463343ab2ff264d3fe9cfa080fbe3a44688e4837b6aec2b551191786이다. 주요 receipt SHA는 runtime22e7678040ee21dab25fd53ed0d7d60b8d0b9310bcb033f7b4fd5d2402d125f0, Web browser3fa3390557846627512d987d4233f880662651b78b5e2f835ed56f571031eef9, 마지막 실패 local gate659d322e4d83b3f313fa56183ded7f8a8a97c4318049b0f422dd162ab9026f1b이다.
 
-Next output100파일88514113bytes manifest SHA9f1beb95d031eba47ff9bb68dbc457093b0b861ee1b9a3b8b6596dbddfb87b46, Web static464파일13001011bytes manifest SHA6a09a110bc7aad665372db1c1ddc27ce24887d11230d9869d45f0664f367f306. 이 tree digest는 재빌드 재현성을 주장하지 않고 확인했던 산출물을 식별한다. 검증 결과와 digest 보존 뒤 본인 temp app/copy/snapshot/offline deps/cache/raw logs만 제거한다. push 재개에는 원격에 올릴 로컬 Git commit과 영구 fixture를 사용한다. 재사용 fixture와 제품 소스·공유 .next·기기·개발 런타임을 보존한다. primary dependency metadata의 앞서 설명한 갱신을 숨기지 않는다.
+Next output100파일88514113bytes manifest SHA9f1beb95d031eba47ff9bb68dbc457093b0b861ee1b9a3b8b6596dbddfb87b46, Web static464파일13001011bytes manifest SHA6a09a110bc7aad665372db1c1ddc27ce24887d11230d9869d45f0664f367f306. 이 tree digest는 재빌드 재현성을 주장하지 않고 확인했던 산출물을 식별한다. 검증 결과와 digest 보존 뒤 본인 temp app/copy/snapshot/offline deps/cache/raw logs를 제거했고 현재 임시 폴더와 marker가 없음을 확인했다. push 재개에는 로컬 Git commit과 영구 fixture를 사용했다. 재사용 fixture와 제품 소스·공유 .next·기기·개발 런타임을 보존한다. primary dependency metadata의 앞서 설명한 갱신을 숨기지 않는다.

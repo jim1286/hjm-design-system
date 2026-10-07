@@ -568,3 +568,5 @@ CollectionRail 진입점과 renderer Text.fontRole, EffectSurface ruledSpacing�
 
 
 2026-10-08 00:10 KST 후속: Diairy에서 확인한 Web layout/provider RSC 경계를 HJM source에 보완하고 직접-import Next production fixture를 남겼다. 관련 기존 CollectionRail/글자 역할/토큰 표 검사 연결 누락까지 보완한 local gate 구간별 완료는 [완료 감사 §13](../qa/2026-10-07-reference-completion-audit.md#13-공개-web-profile의-rsc-경계와-로컬-gate-정리--2026-10-08-0010-kst)을 따른다. 새 npm train·소비 wrapper 제거·원격 CI는 수행하지 않았다. 필요한 조사 마감 및8개 실험 승급·게시 승인 대기는 유지한다.
+
+2026-10-08 00:18 KST: 일시적인 GitHub push 오류 뒤 재시도가 성공해 마지막 RSC source 보완/검사 연결을 원격 main793a2d26에 통합 확인했다. 실패 이력과 최종 상태는 [완료 감사 §14](../qa/2026-10-07-reference-completion-audit.md#14-마지막-source-보완의-원격-통합-확인--2026-10-08-0018-kst)에 있다. 후속8개 승급·게시 승인은 아직 도착하지 않았다.
