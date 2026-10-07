@@ -38,7 +38,7 @@ GitHub Release 목록은 비어 있었지만 npm 부재의 증거로 쓰지 않�
 
 ## 4. 현재 소비 상태
 
-2026-10-07 23:00 KST 원격 GitHub main의 app.contract.json을 다시 직접 읽었다. 아래 blob은 계약 파일의 Git blob이며 runtime/lock/install/QA 영수증이 아니다. Portfolio Site·Unairplane의 실제 설치와 검사는 §8의 제품 QA를 따른다.
+2026-10-07 23:11 KST 원격 GitHub main의 app.contract.json을 다시 직접 읽었다. 아래 blob은 계약 파일의 Git blob이며 runtime/lock/install/QA 영수증이 아니다. Portfolio Site·Unairplane의 실제 설치와 검사는 §8의 제품 QA를 따른다.
 
 | 제품 | train | contract blob |
 | --- | --- | --- |
@@ -49,8 +49,8 @@ GitHub Release 목록은 비어 있었지만 npm 부재의 증거로 쓰지 않�
 | Diairy | 1.14.0 | 2c3b318e5689fb5f7bece2bd9594c13f87fbb9ce |
 | Mofun | 1.15.0 | bdced754956c5766ab7daeacbedc8c90dd64ec8d |
 | Utilverse | 1.15.0 | f62089d88087d6a3c85215eedf41edd457f4a3dd |
-| Choose Window | 1.14.0 | 4dbfd83cee6ab84f7a52c4006d73ad3948a57859 |
-| Yajalal | 1.14.0 | cd0056c7bd358acf6a31fca5b7c00768b9076a1b |
+| Choose Window | 1.15.0 | 364beeb37e9e8d4bab6bb1e2f1e83c617bbfc42d |
+| Yajalal | 1.15.0 | 460baf15180b5eb8dad69704f97e16beeb314560 |
 
 중앙 remote docs/profiles/hjm-release.json blob b3bde1e6c80521361902ec8da33e3c3c287ffed0은1.15.0이다.
 공유 local 중앙 record와9제품 source는1.14.0이었지만 local refs/worktree 대조로 BurnTok의 완료1.15.0 branch가 있음을 확인한 뒤 원격을 재확인했다.
@@ -60,7 +60,7 @@ GitHub Release 목록은 비어 있었지만 npm 부재의 증거로 쓰지 않�
 
 후속8개 승급·npm 게시 승인 확인 뒤 승인 대상만 첫 마디/usage/승인 기록을 함께 변경한다.
 후속 release는 actual version intent 단계에서 기존 원격 CI/게시 정책을 따른다.
-남은3개 소비 제품(Diairy·Choose Window·Yajalal)은 최신 remote main 기반 분리 checkout에서 manifest/lock/contract/catalog/표준을 정합하게 갱신하고 실제 필요한 회귀를 확인한다.
+남은 소비 제품 Diairy는 최신 remote main 기반 분리 checkout에서 manifest/lock/contract/catalog/표준을 정합하게 갱신하고 실제 필요한 회귀를 확인한다.
 제품 브랜드/폰트 자산·설정 저장·라우팅·서버 확정은 제품 소유다.
 Native Android·실물/Release 성능·VoiceOver 순회와 모든 테마/상태/플랫폼 조합은 미확인이며 현재 조사 마감 조건으로 다시 추가하지 않는다.
 
@@ -123,3 +123,16 @@ Node24.21/pnpm11.24 frozen 설치, 모바일과 공용3개 타입 검사, 모바
 제품의 팔레트·다섯 shell theme·Expo/native 설정·앱/서버 버전은 유지했다. 기존 uuid deprecated와 AdMob 설정 key 무시/환경 color 경고는 제품 QA에 남겼다. 최초 one-off probe의 상대 require 오류는 공식 package subpath로 재확인했으며 최초 iOS 출력이 Android export로 교체된 뒤 플랫폼별 별도 경로를 재확인해 digest를 보존하고 본인 출력만 제거했다. 전체 root/server canonical·Native build·기기/운영/API·배포/스토어는 미실행이다.
 
 일반 커밋/merge에는 [skip ci]를 사용했고 CI dispatch나 package 게시를 하지 않았다. 이번 merge SHA에 해당하는 신규 main workflow run은 관찰되지 않았다. 공유 runtime·dirty source를 보존한다. 현재9개 소비 main 중6개가1.15이며 Diairy·Choose Window·Yajalal3개는 원격 계약 재확인에서도1.14다. 후속8개 실험 승급·게시 승인 대기는 별도다.
+
+## 11. Flutter 두 제품 계약 갱신 — 23:11 KST
+
+두 제품은 native-adapter 계약으로 HJM 의미 catalog를 참조하며 React renderer나 JS profile을 설치하지 않는다. 게시1.15.0의 계약·catalog/release record와 DESIGN·사용표만 맞췄다. 기존 Dart token/theme/widget·pubspec/npm dependency/lock·앱/서버 버전은 그대로다. 이 갱신을 Flutter10종 테마 자동 전환·구성/화면 구현·시각 parity로 주장하지 않으며 planned foundation evidence도 승격하지 않는다.
+
+| 제품 | 실제 통합과 QA | 실행 확인과 한계 |
+| --- | --- | --- |
+| Choose Window | [PR16](https://github.com/jim1286/choose_window/pull/16) MERGED, head4ad80b218c02486ff24486413055c7efc7b4a640 → main80e0365406f2518cde382b304a10a59deb628de0; [QA](https://github.com/jim1286/choose_window/blob/80e0365406f2518cde382b304a10a59deb628de0/docs/qa/2026-10-07-hjm-1-15-upgrade.md) | Node24.20/pnpm11.24 root frozen, Flutter3.44.3/Dart3.12.2 pub enforce-lockfile·canonical standard:check 통과: analyze 오류 없음, test340통과/기존 store capture opt-in2skip, 실제 Flutter bundle. design/docs38·중앙 scaffold/library2manifest/19libraries/0Query 통과 |
+| Yajalal | [PR110](https://github.com/jim1286/yajalal/pull/110) MERGED, heada50b8564697a19495351313fcde9a66ee2ef8c7e → mainb2f93e32fc2c57273663222824ca47dcffed1f5b; [QA](https://github.com/jim1286/yajalal/blob/b2f93e32fc2c57273663222824ca47dcffed1f5b/docs/qa/2026-10-07-hjm-1-15-upgrade.md) | 같은 Node/pnpm/Flutter, root frozen·pub enforce-lockfile·synthetic fixture2개·build_runner30초/81outputs, Flutter analyze 오류 없음·test564통과·실제 bundle. contract/design/docs99·중앙 scaffold/library3manifest/89libraries/0Query 통과. 전체 root/server canonical은 미실행 |
+
+Flutter bundle의 kernel_blob.bin 존재와 각 build tree manifest digest를 제품 QA에 기록한 뒤 본인 출력을 제거했다. 원시 로그 파일·기기 캡처는 생성하지 않았다. Yajalal의 재사용 generated Dart source54개는 보존했다. 기존 generator의 json_annotation/SDK 하한 경고2종과 pub 최신 버전 안내는 유지하며 SDK 변경으로 숨기지 않는다. 처음 Yajalal root의 pub get 경로 오류는 올바른 modules/app에서 enforce-lockfile로 통과했고 문서에 남겼다.
+
+두 제품의 공유 runtime·dirty checkout를 보존하고 OS 최대 글자/최대값 모사 검사·새 기기·Native 서명 바이너리·운영 API·스토어/서비스 공개는 수행하지 않았다. 커밋/merge의 [skip ci]를 유지하고 원격 dispatch를 하지 않았으며 해당 merge SHA의 신규 main workflow run도 관찰되지 않았다. 원격 main 계약9개 재확인에서8개가1.15.0이고 Diairy만1.14.0/blob2c3b318e5689fb5f7bece2bd9594c13f87fbb9ce다. 필요한 조사 마감과 후속8개 실험 승급·게시 승인 대기는 별도다.

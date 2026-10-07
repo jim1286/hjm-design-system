@@ -560,3 +560,5 @@ CollectionRail 진입점과 renderer Text.fontRole, EffectSurface ruledSpacing�
 공유 checkout의 dirty와 stale local refs 때문에 설치/merge를 직접 수행하지 않는다. 22:45 KST 후속: Spint PR19와 Mofun PR6도 게시1.15.0으로 갱신해 main merge와 원격 계약을 확인했다. 검사·경고·메타 PR12 정리는 [완료 감사 §9](../qa/2026-10-07-reference-completion-audit.md#9-spintmofun-소비-반영--2245-kst)를 따른다. 이미 완료된5개 갱신은 중복하지 않으며 Diairy·Utilverse·Choose Window·Yajalal4개를 최신 원격 main에서 분리해 갱신한다.
 
 23:00 KST 후속: Utilverse PR2를 게시1.15.0으로 갱신해 main a08bf0625747649c8c6410dc788a5db50bd41288에 통합했다. 기존 Query factory의 중앙 등록 누락은 메타 PR13에서 해당 export만 등록해 정리했다. 실제 검사·경고·보관 범위는 [완료 감사 §10](../qa/2026-10-07-reference-completion-audit.md#10-utilverse-소비-반영--2300-kst)을 따른다. 원격 main 계약9개 재확인에서6개 완료이며 남은 소비 갱신은 Diairy·Choose Window·Yajalal3개다. 필요한 조사 마감과 후속8개 실험 승급·게시 승인 대기는 그대로 유지한다.
+
+23:11 KST 후속: Choose Window PR16과 Yajalal PR110의 Flutter native-adapter 계약·catalog/release 참조를 게시1.15.0으로 맞춰 main 통합과 원격 계약을 확인했다. Dart UI·10종 테마 자동 전환·시각 parity는 이 metadata 갱신의 완료 주장이 아니다. 실제 Flutter 분석·test340/564건·bundle 및 canonical 범위/한계는 [완료 감사 §11](../qa/2026-10-07-reference-completion-audit.md#11-flutter-두-제품-계약-갱신--2311-kst)을 따른다. 현재9개 원격 소비 계약 중8개 반영이며 남은 것은 Diairy1개다.
