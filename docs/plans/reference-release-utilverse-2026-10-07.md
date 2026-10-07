@@ -489,3 +489,8 @@ Magic UI의 알려진 공개 URL 257개의 source fetch가 exit=0/HTTP200 257로
 2026-10-07 내용 전환 후보 단위: Motion 두 예제 전체 코드·실제 흐름 대조 후 양 플랫폼
 `실험/구성/비교와 검증/내용 전환 비교`에6스토리와 사용 지침을 등록했다.
 [후보별 등록·검증](../qa/2026-10-07-content-transition-comparison.md). 전수 조사·Native 기기·승급·게시 완료 아님.
+
+2026-10-07 날짜와 시각 후보: 기존 DatePicker·시간 선택을 합성해 양 플랫폼 7스토리·사용 지침을
+`실험/구성/선택과 필터/날짜와 시각 선택`에 등록했다.
+[검증과 Form 안내 정정](../qa/2026-10-07-date-time-selection.md),
+[후보별 실제 등록부](reference-experiment-registrations-2026-10-07.json). 전수 조사·Native 기기·승급·게시 완료 아님.

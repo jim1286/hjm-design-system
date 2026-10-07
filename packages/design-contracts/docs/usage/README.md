@@ -187,6 +187,7 @@
 | [입력을 유지하는 도구](compositions/context-toolbar.md) | 입력과 작성 | 작성 중인 입력을 보존한 채 선택적 도구를 펼쳐야 할 때 쓴다. | 배포 | Web · Native |
 | [첫 작업을 만들고 이어하기](compositions/reference-first.md) | 입력과 작성 | 첫 기록을 단계별 작성하고 중단한 초안 이어가기 흐름이 필요할 때 쓴다. | 배포 | Web · Native |
 | [날짜 선택과 예정 목록](compositions/stea-schedule-card.md) | 선택과 필터 | 한 주처럼 짧은 날짜 범위에서 날짜 하나를 고르면 같은 카드 안의 일정 목록이 그 날짜로 바뀌는 요약 카드에 쓴다. | 배포 | Web · Native |
+| [날짜와 시각 선택](compositions/date-time-selection.md) | 선택과 필터 | 기록·알림의 날짜 하나와 하루 안의 시각을 함께 고를 때 쓴다. | 실험 | Web · Native |
 | [대표 항목과 묶음 전체 선택](compositions/selection-scope.md) | 선택과 필터 | 사진 묶음·스레드처럼 대표 항목 하나와 묶음 전체가 같은 모양으로 보일 때, 공유·삭제·이동 전에 대상 범위와 개수를 고르고 문구로 확인한 뒤 적용하게 할 때 쓴다. | 배포 | Web · Native |
 | [사진 촬영과 앨범 선택](compositions/photo-source.md) | 선택과 필터 | 명시적으로 선택 후 플랫폼 picker 실행 흐름이 필요할 때 쓴다. | 배포 | Web · Native |
 | [선택 후 적용·취소](compositions/interaction-flow-apply.md) | 선택과 필터 | 표시 방식·정렬·필터처럼 시트에서 여러 번 바꿔 본 뒤 적용을 눌러야 화면에 반영되고, 취소하거나 닫으면 기존 선택을 유지해야 할 때 쓴다. | 배포 | Web · Native |

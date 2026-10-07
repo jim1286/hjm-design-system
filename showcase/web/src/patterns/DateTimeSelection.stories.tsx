@@ -1,0 +1,12 @@
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { DateTimeSelectionPreview } from "./date-time-selection-preview";
+const meta = { id: "composition-selection-date-time", includeStories: ["Default", "Pending", "Failed", "Disabled", "Dark", "LargeText", "Rtl"], title: "실험/구성/선택과 필터/날짜와 시각 선택", component: DateTimeSelectionPreview } satisfies Meta<typeof DateTimeSelectionPreview>;
+export default meta;
+type Story = StoryObj<typeof meta>;
+export const Default: Story = { name: "기본" };
+export const Pending: Story = { name: "처리 중", args: { initialStatus: "pending" } };
+export const Failed: Story = { name: "실패 후 입력 유지", args: { initialStatus: "failed" } };
+export const Disabled: Story = { name: "비활성", args: { disabled: true } };
+export const Dark: Story = { name: "어두운 테마", globals: { theme: "dark" } };
+export const LargeText: Story = { name: "큰 글자", globals: { textScale: "2" } };
+export const Rtl: Story = { name: "오른쪽에서 왼쪽", globals: { direction: "rtl" } };

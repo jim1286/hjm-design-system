@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "scope": "Verified candidate registrations by root. This does not imply global reference research, promotion, publication or Native device completion. Existing deployed references remain separate.",
+  "items": [
+    {
+      "path": "실험/구성/비교와 검증/내용 전환 비교",
+      "status": "registered-experimental",
+      "sourceUrls": [
+        "https://motion-primitives.com/docs/transition-panel"
+      ],
+      "sourceScope": "Both supplied Code examples read and partial live flows compared; global research remains incomplete.",
+      "webStory": "showcase/web/src/patterns/ContentTransitionComparison.stories.tsx",
+      "nativeStory": "showcase/native/src/ContentTransitionComparison.stories.tsx",
+      "usage": "packages/design-contracts/docs/usage/compositions/content-transition-comparison.md",
+      "evidence": "docs/qa/2026-10-07-content-transition-comparison.md",
+      "variants": [
+        "Default",
+        "StepFlow",
+        "Dark",
+        "LargeText",
+        "ReducedMotion",
+        "Rtl"
+      ]
+    },
+    {
+      "path": "실험/구성/선택과 필터/날짜와 시각 선택",
+      "status": "registered-experimental",
+      "sourceUrls": [
+        "https://magicui.design/blog/time-and-date-picker"
+      ],
+      "sourceScope": "Whole public tutorial read; source supplies interface/prose rather than functioning picker. Existing HJM API composition implemented and locally reviewed.",
+      "webStory": "showcase/web/src/patterns/DateTimeSelection.stories.tsx",
+      "nativeStory": "showcase/native/src/DateTimeSelection.stories.tsx",
+      "usage": "packages/design-contracts/docs/usage/compositions/date-time-selection.md",
+      "evidence": "docs/qa/2026-10-07-date-time-selection.md",
+      "variants": [
+        "Default",
+        "Pending",
+        "Failed",
+        "Disabled",
+        "Dark",
+        "LargeText",
+        "Rtl"
+      ]
+    }
+  ]
+}

@@ -27,14 +27,19 @@ Web 내부 fieldset은 제출 중 잠금을 위한 것이며 그룹 legend를 �
 | 한 번 확인하고 닫히는 위험 행동 | [AlertDialog](alert-dialog.md) |
 | 필드 하나의 라벨·도움말·오류 프레임 | [Field](field.md) |
 | 약관 동의 묶음 | [Agreement](agreement.md) |
-| 하단 고정 제출 버튼이 필요한 긴 화면 | Web: Form 안의 필드 + [BottomCTA](bottom-cta.md)(`actions`는 비운다). Native: Form은 내장 제출 버튼을 항상 그리므로 Form 없이 필드 + BottomCTA로 제품이 제출을 소유한다 |
-| Native에서 return 키로 제출해야 하는 폼(로그인·심사자 폼) | Form 없이 `TextField`(ref) + [Button](button.md)(`loading`). Native Form은 밖에서 제출을 부를 수 없다 |
+
+하단 고정 행동·Native return 키 제출도 기존 Form을 사용한다. Native는 `actions={null}`과
+`ref.current?.submit()`으로 같은 제출 경로를 호출하고 [배치](#배치)의 loading 연결을 따른다.
+2026-10-07 참고 폼 조사에서 초기 선택 표가 이후 배치 안내와 모순된 것을 확인해 오래된
+"내장 버튼 숨김·외부 제출 불가" 안내를 제거했다. Native 1.14.0 게시 타입의 FormHandle/actions/ref를
+직접 대조했으며 새 폼 엔진을 제품에 복제할 이유가 없다. FormHandle·actions는 1.14.0부터다.
 
 ## 공개 이름과 import
 
 | 이름 | 역할 | Web | Native |
 | --- | --- | --- | --- |
 | `Form` | 기본 | `@hjmds/react`, `/forms` | `@hjmds/react-native`, `/forms` |
+| `FormHandle` | 같은 Native 제출을 밖에서 호출하는 ref 타입(1.14.0부터) | — | `/forms` |
 | `createFormSubmitSession` | 보조 — 제출 결과를 값으로 받거나 언마운트 때 정산해야 할 때 쓰는 세션 | `@hjmds/design-contracts/components/form` | 같음 |
 | `resolveFirstInvalidFieldFocusTarget` | 보조 — 필드 순서와 무효 id로 첫 오류 필드를 고른다 | `@hjmds/design-contracts/components/form` | 같음 |
 

@@ -71,3 +71,11 @@ OnboardingScreen 이전/다음/완료를 합성한다. 새 wrapper/상태 엔진
 Native 실제 기기·키보드·VoiceOver/TalkBack·완료 포커스, 정상 모션 각 preset/높이의 수치
 성능, 두 번째 실제 제품 팔레트, 모든 테마의 모든 상태 픽셀, 소비 앱 도입은 후속 검토다.
 등록은 이 후보 한 단위다. 다른 추가/개선/교체 후보의 전수 등록과11사이트 전수 조사는 진행 중이다.
+
+## 미리보기 높이 토큰 감사 후속
+
+2026-10-07 날짜·시각 등록 중 verify:tokens가 이 실험의 minHeight360을 처음 검출했다.
+short viewport에서 OnboardingScreen의 독립 body scroll/footer를 검증하는 fixture 크기는
+제품의 디자인 토큰과 의미가 달라 기존 geometry exception 형식에 file/selector/property/value를
+정확히 한정하고 source·사용 지침에 이유를 기록했다. 화면 크기/동작 변경은 없으며 이전
+실제 화면 증거는 유지한다. 토큰 검사 재실행 결과는 날짜·시각 QA에도 기록한다.

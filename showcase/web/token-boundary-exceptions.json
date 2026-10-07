@@ -552,6 +552,14 @@
       "property": "height",
       "value": "320",
       "reason": "Measured scroll fixture viewport shared with the Native preview; fixed geometry lets boundary and blur-on/off checks use the same content area, not a product sizing token."
+    },
+    {
+      "file": "src/patterns/content-transition-comparison-preview.tsx",
+      "rule": "raw-length",
+      "selector": "ContentTransitionComparison/div[style]",
+      "property": "minHeight",
+      "value": "360",
+      "reason": "A bounded OnboardingScreen preview floor retains a scrollable body and footer at short viewport heights. Products use actual available screen height rather than this fixture; see design-contracts/docs/usage/compositions/content-transition-comparison.md and docs/qa/2026-10-07-content-transition-comparison.md."
     }
   ]
 }

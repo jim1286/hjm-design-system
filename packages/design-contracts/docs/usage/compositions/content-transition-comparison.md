@@ -101,3 +101,8 @@ import { OnboardingScreen } from "@hjmds/react-native/screen-flows";
 동적 패널의 입력은 controlled 제품 상태로 보존한다. DOM identity가 필요한 입력은 전환 바깥에
 두거나 keyed/visited Tabs를 쓴다. 원본의 exit 복제·이름 없는 탭 버튼·마지막 Close의 빈 callback은
 복사하지 않는다. 무거운 내용과 실제 키보드·스크린리더·Native 기기의 높이 전환 검증은 별도다.
+
+2026-10-07 로컬 토큰 감사에서 Web preview 최소 높이360이 raw-length로 검출됐다.
+이는 짧은 viewport에서도 body scroll과 footer를 함께 검증하려는 fixture 한계값이며
+제품의 spacing/width 토큰을 높이로 전용하지 않는다. token-boundary-exceptions.json에
+해당 selector·minHeight·360만 한정해 등록했다. 제품 host는 실제 가용 높이를 공급한다.

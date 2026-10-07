@@ -41,6 +41,9 @@ export function ContentTransitionComparison({ mode = "tabs" }: ContentTransition
     if (failNext) { setFailNext(false); setFailed(true); return; }
     setFailed(false); setDone(true);
   }
+  // This bounded preview floor keeps body scrolling and the footer observable at short
+  // viewport heights. Product layout tokens describe rhythm, not this fixture viewport;
+  // consuming hosts provide available height (see the composition usage guidance).
   const flow = <OnboardingScreen
     steps={transitionSections.map(item => ({ ...item, content: <Stack gap="md">{body(item)}
       {item.id === "review" ? <Stack gap="sm">
