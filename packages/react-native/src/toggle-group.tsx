@@ -70,7 +70,9 @@ export function ToggleGroup<Id extends string = string>({
               alignItems: "center",
               backgroundColor: resolveColorReference(tone.background, theme.palette),
               borderColor: resolveColorReference(tone.border, theme.palette),
-              borderRadius: toggleGroupRecipe.radius,
+              // Keep the neutral recipe fallback; product shapes use the same md
+              // role as Web rather than freezing a second selection component.
+              borderRadius: theme.designProfile?.tokens.radius.md ?? toggleGroupRecipe.radius,
               borderWidth: 1,
               justifyContent: "center",
               minHeight: metrics.minHeight,

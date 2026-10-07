@@ -285,3 +285,14 @@ paper canvas는 grain+ruled/intensity0.06/ruledSpacing24다. 실제 내용은 �
 공통 elevation 해석기를 재사용한다. 0-opacity는 Android 그림자도 제거한다. FAB의 원/pill은
 고정된 행동 geometry라 radius 변경 축으로 흡수하지 않고, 클릭·포커스·접힘·여백은 유지한다.
 새 공개 API 없이 같은 컴포넌트의 소비 경로를 고친 변경이며 npm 게시 상태는 별도다.
+
+## 다중 토글의 모서리 상속
+
+2026-10-07 후속 점검에서 ToggleGroup의 두 renderer가 숫자로 확정된 recipe 모서리를
+읽어 profile 형태 변경을 놓쳤다. `tokens.radius.md`를 소비하며 profile이 없는 기존
+사용과 standalone Web은 recipe 12를 유지한다. Web은 가까운 Provider의 기존 CSS 변수를
+사용해 작은 optional 진입점의 Provider runtime 의존성을 늘리지 않는다. Native는 가까운
+theme에서 역할을 읽는다. 다중 선택·비활성·같은 항목/초점은 그대로이며 새 엔진·prop은 없다.
+Web 10종 light/dark 실제 스타일·키보드와 Native 모의 호스트의 상태 유지, 명시적 중첩
+profile/neutral 복귀를 검증했다. 이 수정의 실제 Native 기기·AT·Release 성능·npm 게시는
+[QA](../../../docs/qa/2026-10-07-design-profile-research.md)와 구분하는 미확인 범위다.

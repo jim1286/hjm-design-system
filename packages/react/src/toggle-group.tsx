@@ -56,7 +56,9 @@ export const ToggleGroup = forwardRef(function ToggleGroup<Id extends string = s
         "--hjm-toggle-min-height": `${metrics.minHeight}px`,
         "--hjm-toggle-padding": `${metrics.paddingHorizontal}px`,
         "--hjm-toggle-gap": `${toggleGroupRecipe.gap}px`,
-        "--hjm-toggle-radius": `${toggleGroupRecipe.radius}px`,
+        // Use the closest Provider's CSS role without adding its runtime graph to
+        // this small entry. Standalone groups retain the numeric recipe fallback.
+        "--hjm-toggle-radius": `var(--hjm-radius-md, ${toggleGroupRecipe.radius}px)`,
       } as CSSProperties}
     >
       {descriptor.items.map((item) => (

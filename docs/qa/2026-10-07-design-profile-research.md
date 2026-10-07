@@ -988,3 +988,41 @@ VQ PNG SHA-256 `9ecd360173d9abeb43a7f5cc6c178c0343139c8be692b3c75f192d0c0378c246
 문서 링크592개 및 `git diff --check` 통과. renderer 코드 변경이 없어 행동 검사를 반복하지 않았다.
 새 원시 캡처·수집 파일·임시 helper는 만들지 않았다. 승급·버전 상승·원격 CI·npm 게시·소비 앱 변경은
 이번 마감 작업의 실행 결과가 아니다. 최대 글자/모사 확대는 검증·후속·차단 조건에서 제외한다.
+
+## ToggleGroup 테마 모서리 누락 수정 — 2026-10-07
+
+main `bdec0ae140171abaaccda2d245de2a4e749f5e85`의 후속 토큰 소비 점검에서 양 renderer가
+`toggleGroupRecipe.radius` 12를 고정해 retro의 md4, forest의 md16, brutalist의 md0 및
+앱 소유 모서리 설정을 무시했다. 기존 다중 선택 계약을 유지하고 `tokens.radius.md`를
+가까운 Provider에서 소비하도록 고쳤다. profile 없는 기존 사용·neutral 복귀는 12다.
+
+수정 전 새 Web2·Native2 회귀 모두 12≠4로 실패했고 수정 후 각2건 통과했다. 각 renderer에서
+10종+neutral·앱 profile md29·기본 복귀를 light/dark로 확인하며 다중 선택과 비활성 상태,
+같은 항목 인스턴스를 유지했다. Web은 실제 Space 키 활성화·같은 DOM 초점·44 최소 높이·
+390px 폭과 standalone fallback을 확인했다. Native는 모의 호스트 행동과 스타일 검사이며
+실제 기기 외형/터치/AT 증거가 아니다. 모든 새 fixture는 textScale1이며 최대 글자 조건을 실행하지 않았다.
+
+Web 초기 구현은 Provider hook을 import해 optional 진입점의 모듈 수를 2→4로 늘렸고
+renderer 경계 검사에서 실패했다. 동일 역할은 기존 `--hjm-radius-md` CSS 변수로 상속할 수
+있으므로 hook 대신 변수를 소비해 최종 2모듈을 유지했다. Native 진입점은 기존 5모듈이다.
+최종 양 renderer build/typecheck와 양 Showcase typecheck, renderer 경계·사용 지침·
+Storybook 규격·공개 API 대응표·문서 링크 검사가 통과했다. 기존 공유 comments dirty는 보존했다.
+
+| 최종 source | SHA-256 |
+| --- | --- |
+| Web toggle-group.tsx | 906d63534205156259b4c7571757c10afa9cb10d83427e7083557066d52f7f04 |
+| Native toggle-group.tsx | c3dac4e706d6b1f935d1a82610ff740314ce79d96561a91d346c11d67a5fa582 |
+| Web profile-toggle-group.browser.test.tsx | 42e4349b202369c1fe361840637098e944358fa3c83f1ffd7727ec5e13046c33 |
+| Native profile-toggle-group.test.tsx | 7b2bed4e2ad045671b491c42026bd75de9a31298264356ee3a6df2acecc46937 |
+
+VQ: Chromium390×420의 10종×light/dark20장 최종 캡처를 한 장에 모아 검토하고 forest-light와
+brutalist-dark 원본을 대조했다. 눌림2·비활성1·기울임 초점 상태에서 각 모서리/색/서체와
+읽기·초점 표시를 확인했다. 다크 Provider 배경은 fixture 내용 높이만큼이며 전체 앱 바탕 검수가 아니다.
+최종 합본 SHA-256 `d380787bce4ab76b3c7fc9de3c440f3cb076015a18b1610acd9d21ee49a61c70`.
+본인 원시 캡처·실패 캡처·경계 로그24파일/347537bytes의 정렬 manifest SHA-256은
+`3422c5c4bb4355b1aeda4426889f82537d228f2ebfa4dc7737841236d093c12f`다.
+검토 후 본인 screenshot 두 하위 폴더와 `/tmp` 합본·경계 로그를 제거하고 부재를 확인했다. 재사용 회귀·source·
+fixture·계약·사용 지침·양 renderer patch Changeset은 보존한다.
+
+새 실험 이름·버전 상승·원격 CI/dispatch·승급·npm 게시·소비 앱 반영은 없다.
+실제 Native 기기·미검수 플랫폼/AT/성능과 전체 컴포넌트 토큰 소비 검수는 이 4건으로 완료 처리하지 않는다.

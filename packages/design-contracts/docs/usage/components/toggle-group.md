@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 1.12.1
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [ToggleGroup](../../toggle-group.md), `src/toggle-group.ts`(`toggleGroupRecipe`)
 - 스토리북: `배포/컴포넌트/입력/토글 그룹`
 
@@ -93,3 +93,11 @@ import { ToggleGroup } from "@hjmds/react-native/toggle-group";
 | 배치 | CSS(`hjm-toggle-group`) | 가로 `flexWrap: "wrap"` |
 | 외부 꾸밈 | `className`, `ref`, `layoutStyle` | `layoutStyle`(`style`은 deprecated) |
 | 키보드 | 항목마다 tab stop(roving 없음) | 해당 없음 |
+
+### 제품 테마의 모서리
+
+2026-10-07 테마 소비 점검에서 양 renderer가 숫자로 확정된 recipe 모서리를 읽어
+제품 profile을 무시했다. profile이 있으면 가장 가까운 Provider의 `tokens.radius.md`를
+사용하고 없으면 기존 `toggleGroupRecipe.radius` 12를 유지한다. 새 style prop이나
+별도 토글 엔진을 추가하지 않는다. 중첩 Provider에서 별도 profile을 생략하면 상속하며,
+명시적인 neutral profile은 중립 모서리로 돌아간다. 테마 변경은 눌린 항목·비활성·초점을 초기화하지 않는다.

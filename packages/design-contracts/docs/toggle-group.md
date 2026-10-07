@@ -16,6 +16,11 @@ single 모드를 넣지 않는 것이 규칙이다.
 
 **상태는 색이 아니라 `aria-pressed`(Native `selected`)가 말한다.** 색은 보강일 뿐이다.
 
+**제품 모서리.** 2026-10-07 테마 소비 점검에서 숫자로 확정된 recipe를 양 renderer가
+그대로 사용해 profile 변경이 누락됐다. 가장 가까운 Provider의 `tokens.radius.md`로
+표현을 해결하고, profile이 없으면 기존 recipe 12를 유지한다. 선택 모델·눌림/비활성·
+키보드 계약은 그대로이며 제품마다 별도 ToggleGroup을 만들 필요가 없다.
+
 **tab stop.** 각 토글이 자기 tab stop이다. 도구 모음식 roving focus를 쓰지 않는 이유는
 묶음이 대개 2~4개로 짧고, roving은 "그룹 안에서 화살표로 이동"이라는 추가 학습을
 요구하기 때문이다. 항목이 많아지는 실제 화면이 나오면 그때 축을 연다.
