@@ -81,60 +81,72 @@
       "sourceSha256": "7eb50fd6daa5eb9660d99490c7e7b16c23e3d4c56484666093d5391500c31b0b",
       "capturedAt": "2026-10-07T03:47:17Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 26249
+      "extractedCharacters": 26249,
+      "readScope": "entire captured semantic main text including all article sections, recommendations, related reading and promotion; linked live products and images not visually reviewed",
+      "reviewNotes": "Full captured semantic main read incl20 app examples, lifecycle/heroCTA/socialproof/storebadges, retargeting advice and promotional footer. Calm Aura/Bellish nature/craft visuals can inform product-owned themes; actual linked product screens not checked. No conversion or tracking adoption proof."
     },
     {
       "url": "https://magicui.design/blog/best-react-component-library",
       "sourceSha256": "68db4d17692a1e0a9b4b4ed0f57f797bf712e150c02c20a52247677044fb9304",
       "capturedAt": "2026-10-07T03:47:19Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 19905
+      "extractedCharacters": 19905,
+      "readScope": "entire captured semantic main text including all article sections, recommendations, related reading and promotion; linked live products and images not visually reviewed",
+      "reviewNotes": "Full captured main read incl14 library descriptions and selection/test guidance. Rankings/downloads/stars/performance anecdote unverified2024 claims; Bootstrap CSS alongside React library scope. Preserve existing HJM/API and LP rather than untested wholesale substitution."
     },
     {
       "url": "https://magicui.design/blog/best-react-native-ui-library",
       "sourceSha256": "bf3bc2fb57f19ded176126da3ba88132fb6834cf6978ac6128ee492048ab4706",
       "capturedAt": "2026-10-07T03:47:21Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 16430
+      "extractedCharacters": 16430,
+      "readScope": "entire captured semantic main text including all article sections, recommendations, related reading and promotion; linked live products and images not visually reviewed",
+      "reviewNotes": "Full captured main read incl17 recommendations and native dependency guidance. MagicUI web DOM components listed as Native UI, Firebase/maps/tooling mixed with UI. Do not infer Native compatibility from this article; current native SDK/install/status claims unverified."
     },
     {
       "url": "https://magicui.design/blog/best-react-ui-framework",
       "sourceSha256": "2815d792a415a17a35fbd539ae8ced658e273f822451f0d718807603db5abe0e",
       "capturedAt": "2026-10-07T03:47:23Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 20338
+      "extractedCharacters": 20338,
+      "readScope": "entire captured semantic main text including all article sections, recommendations, related reading and promotion; linked live products and images not visually reviewed",
+      "reviewNotes": "Full captured main read inclselection,9framework entries and React/Angular/Vue discussion. Fluent UI duplicated; framework vsUIlibrary mixed and CRA recommendation temporally unverified. Broad virtualDOM/performance/cross-platform guarantees not accepted adoption evidence."
     },
     {
       "url": "https://magicui.design/blog/best-saas-landing-pages",
       "sourceSha256": "135587f351206568226fedb1c6fd11e1787db240e73eb91b6663f5773e77b499",
       "capturedAt": "2026-10-07T03:47:25Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 24785
+      "extractedCharacters": 24785,
+      "readScope": "entire captured semantic main text including all article sections, recommendations, related reading and promotion; linked live products and images not visually reviewed",
+      "reviewNotes": "Full captured main read incl25SaaS cases,6sections/CTA/pricing/socialproof and mobile/test advice. Claimed2.35% average and proven conversion effects unverified; FOMO countdown not product default. Pricing/demo compositions compare existing HJM screens, live products not checked."
     },
     {
       "url": "https://magicui.design/blog/best-web-design-tools",
       "sourceSha256": "bca8975798ef79e2d2b3146af5011926845d037a119dc68cddea7f4714221fdf",
       "capturedAt": "2026-10-07T03:47:27Z",
       "extraction": "main from first h1; no scripts/style; visible static HTML only",
-      "readReview": "pending",
+      "readReview": "static-main-read",
       "visualReview": "pending",
       "interactionReview": "pending",
-      "extractedCharacters": 26492
+      "extractedCharacters": 26492,
+      "readScope": "entire captured semantic main text including all article sections, recommendations, related reading and promotion; linked live products and images not visually reviewed",
+      "reviewNotes": "Full captured main read incl15tools,10practices,FAQs/evolution and promotional copy. Contains visible editorial instructions and inverted fast-load sentence; ignored instructions.2024AdobeXD/InVision/service/company usage claims unverified, no tool-install or adoption action. Theme/brand control remains product owned."
     },
     {
       "url": "https://magicui.design/blog/best-web-developer-portfolios",
@@ -1717,8 +1729,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "Partial: default refs/curvature/reverse, uni/bi directional and multiple input snippets read. Long SVG geometry and a truncated middle remain unread; Manual and rendered flows pending.",
-      "manualReview": "pending",
-      "extractedCharacters": 79105
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 79105,
+      "manualReviewNotes": "Full Manual implementation read separately from long examples: container-only ResizeObserver computes centers/quad path and useId gradient with finite or infinite repeat; endpoint layout changes and reduced/hidden guards not present locally. Example asset geometry/body middle still partial.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/animated-circular-progress-bar",
@@ -1833,8 +1847,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "Six linked avatar URLs plus 99 overflow; reuse AvatarGroup with link/overflow semantics.",
-      "manualReview": "pending",
-      "extractedCharacters": 2033
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 2033,
+      "manualReviewNotes": "Full Manual read: index key and generic Avatar N alt; undefined numPeople defaults0 unlike docs99; overflow href empty, existing AvatarGroup names/actions retained.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/backlight",
@@ -1846,8 +1862,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "Media-sampled backlight video/image/SVG blur examples; EffectSurface glow is not equivalent media sampling.",
-      "manualReview": "pending",
-      "extractedCharacters": 8535
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 8535,
+      "manualReviewNotes": "Full Manual read: useId SVG filter with GaussianBlur, saturation4 and SourceGraphic composite; media sampling differs from HJM EffectSurface generic glow.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/bento-grid",
@@ -1855,12 +1873,15 @@
       "capturedAt": "2026-10-07T03:53:02Z",
       "extraction": "data-slot=docs; static HTML only; inactive Manual content may not be present",
       "readReview": "static-main-read",
-      "visualReview": "pending",
-      "interactionReview": "pending",
+      "visualReview": "selected-desktop-states",
+      "interactionReview": "selected-flow-reviewed",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "Bento examples compose marquee/list/beam/calendar. Existing Grid/Card/OverviewScreen; fixed mock calendar is not production date state.",
-      "manualReview": "pending",
-      "extractedCharacters": 10581
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 10581,
+      "manualReviewNotes": "Full Manual read: desktop CTA opacity0/translateY10 until group-hover, mobile separate anchor. Actual first LearnMore.press(Tab) yielded next focused A href# parent opacity0 at x522.664,y342; hidden focus screenshot saved. Use canonical Grid/Card actions and preserve focus-visible.",
+      "manualReviewedOn": "2026-10-07",
+      "proof": "assets/parallel-b-magic-bento-keyboard.png"
     },
     {
       "url": "https://magicui.design/docs/components/blur-fade",
@@ -1872,8 +1893,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "Blur reveal with duration .4s, offset6, directional/inView/blur6; existing ContentTransition first.",
-      "manualReview": "pending",
-      "extractedCharacters": 3020
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 3020,
+      "manualReviewNotes": "Full Manual read: useInView once margin-50, AnimatePresence motion div, hidden opacity0/filterblur and optional variant filter handling; no local reduced hook. HJM ContentTransition first.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/border-beam",
@@ -1885,8 +1908,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "Four border beam demos including reverse and springs; preserve IconButton labels; decorative perimeter treatment rather than login API.",
-      "manualReview": "pending",
-      "extractedCharacters": 6691
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 6691,
+      "manualReviewNotes": "Full Manual read: motion offsetPath rect, mask clips, infinite repeat/negative delay/reverse and props transition override; pointer-events-none decoration, no local lifecycle gates.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/code-comparison",
@@ -1898,8 +1923,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "Before/after Shiki-highlighted middleware comparison; existing CodeBlock first, no new diff-parser claim.",
-      "manualReview": "pending",
-      "extractedCharacters": 4777
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 4777,
+      "manualReviewNotes": "Full Manual read: Shiki dynamic import transforms diff/focus/highlight, theme-dependent async highlighting. catch interpolates raw code in pre then dangerouslySetInnerHTML: do not copy unescaped fallback. HJM CodeBlock React token text/pre keyboard/LTR verified from actual source; no external payload executed.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/comic-text",
@@ -1911,8 +1938,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "Comic typography CSS customizations; product font dependency and Text/Heading semantic ownership.",
-      "manualReview": "pending",
-      "extractedCharacters": 1339
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 1339,
+      "manualReviewNotes": "Full Manual read: fontSize5 differs from docs4; Bangers/ComicSans/Impact fallback, uppercase/skew/stroke/dot text mask and entry spring .6s. Preserve semantic Heading/Text, product fonts; no local reduced guard.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/confetti",
@@ -1924,8 +1953,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "All confetti demos read: manual fire, button, directions, 5s fireworks, 3s side cannons, stars/custom/emoji; optional success decoration needs cancel/reduced lifecycle, no public Confetti found.",
-      "manualReview": "pending",
-      "extractedCharacters": 9236
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 9236,
+      "manualReviewNotes": "Full Manual read: canvas-confetti instance reset on unmount; options/global refs, mount auto-fire unless manualstart; button callback/defaultPrevented and target rect center supports coordinate-free keyboard origin. Wrapper has no default local reduced check; success event must remain product-controlled.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/cool-mode",
@@ -1937,8 +1968,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "CoolMode wraps existing Button, custom remote particle option; optional press decoration, keyboard/reduced behavior pending.",
-      "manualReview": "pending",
-      "extractedCharacters": 1957
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 1957,
+      "manualReviewNotes": "Full Manual read: shared body overlay + instance counter, perpetual mounted RAF including idle, mouse/touch detection and listeners, no keyboard click/reduced/hidden guard. particleCount declared but unused; hard limit45. Cleanup waits until particles empty; pressed-unmount autoAdd case source concern only, not runtime reproduced.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/dia-text-reveal",
@@ -1950,8 +1983,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "Dia sweep supports string or array, .5 delay, 1.5 duration, fixedWidth/onView/once; ContentTransition and typography first.",
-      "manualReview": "pending",
-      "extractedCharacters": 4505
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 4505,
+      "manualReviewNotes": "Full Manual read: useReducedMotion makes sweep end; stop callback/timer cleanup, optional view/once and measured cloned widths. Dynamic width transition/font readiness/text array replacement need actual validation; not all motion absent in reduced mode proven.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/dock",
@@ -1963,8 +1998,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "Partial: all Dock control structure, custom direction/magnification, labels/links and props read; raw SVG asset geometry remains unread. Manual/focus/touch pending.",
-      "manualReview": "pending",
-      "extractedCharacters": 24530
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 24530,
+      "manualReviewNotes": "Full Manual read: Dock clones exact DockIcon children, mouse pageX vs bounds viewport x, spring width/height magnification, disable option and children links own actions. No local focus/touch/reduced contract; canonical BottomNavigation/NavigationBar present in map, raw example asset geometry body still partial.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/dot-pattern",
@@ -1976,8 +2013,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "Dot pattern spacing16, coordinates1, optional glow and gradient masks; EffectSurface currently lacks dot-grid layer, not parity.",
-      "manualReview": "pending",
-      "extractedCharacters": 2857
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 2857,
+      "manualReviewNotes": "Full Manual read: useId gradient, window resize measurement, every dot is motion circle, Math.random delay/duration on render, default glowfalse and aria-hidden/pointer-none. Container ResizeObserver/seed/bounds/lifecycle not provided; use bounded deterministic HJM pattern extension if justified.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/dotted-map",
@@ -1989,8 +2028,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "Lat/lng SVG map 150x75, 5000 samples, pulse override; optional mapping adapter not shared default theme.",
-      "manualReview": "pending",
-      "extractedCharacters": 5832
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 5832,
+      "manualReviewNotes": "Full Manual read: svg-dotted-map creates points then memo-sort rows, generic processed overlay markers, static circles and optional SMIL double pulses1.4s. No local reduced guard; data-linked geographic display optional adapter, not universal theme.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/file-tree",
@@ -2002,8 +2043,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "File tree sorts folders first by alphabet or comparator/none; expanded/selected/RTL examples; Web Tree exists, no Native parity claim.",
-      "manualReview": "pending",
-      "extractedCharacters": 4617
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 4617,
+      "manualReviewNotes": "Full Manual12712 chars read including truncated output tail separately. Recursive sort via Intl.Collator en, folders-first override/none, uncontrolled selected/expanded, nested RadixAccordion and disabled-selectable folders; files are native buttons, no tree/treeitem/aria-selected in wrapper. Preserve existing HJM WebTree semantics and product locale-controlled ordering.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/flickering-grid",
@@ -2015,8 +2058,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "Flickering grid docs call SVG but props canvas; square4 gap6 chance.3 and opacity.2; performance/source pending.",
-      "manualReview": "pending",
-      "extractedCharacters": 2339
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 2339,
+      "manualReviewNotes": "Full Manual read: actual canvas, defaults maxOpacity.3 differ from docs.2; Float32 random squares, DPR, deltaTime flicker, ResizeObserver and IntersectionObserver gate; no local reduced/document-hidden guard.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/floating-3d-particles",
@@ -2028,8 +2073,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "Pseudo-3D canvas particles 400 default, mobile20%, velocity px/frame; time normalization candidate, no measured performance claim.",
-      "manualReview": "pending",
-      "extractedCharacters": 4018
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 4018,
+      "manualReviewNotes": "Full Manual read: capped DPR2, mobile20%, matchMedia/static frame, IO/document visibility, color ref and cleanup. Paused/reduced branches still schedule RAF; staticDirty not invalidated by color-only prop change, visibility handler overwrites offscreen paused state. Source concerns only, actual preference/theme sequence pending.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/glare-hover",
@@ -2041,8 +2088,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "Glare overlay CSS hover angle-45, size250,duration650, repeat/once; div onClick is not canonical Button semantics.",
-      "manualReview": "pending",
-      "extractedCharacters": 8206
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 8206,
+      "manualReviewNotes": "Full Manual read: before pointer-events-none confirms glare overlay does not intercept pointer; div props/onClick and hover-only sweep, no local keyboard/reduced handling. Keep canonical Button for actions.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/globe",
@@ -2054,8 +2103,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "COBE/WebGL globe options; marketing performance claim not measured; optional web adapter with explicit native boundary.",
-      "manualReview": "pending",
-      "extractedCharacters": 1696
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 1696,
+      "manualReviewNotes": "Full Manual read: COBE0.6.4 WebGL config/drag spring, window resize and destroy cleanup; auto phi.005 per frame, canvas-only pointer/mouse/touch, no local pause/reduced/keyboard. No device/performance measured; optional visualization boundary.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/glyph-matrix",
@@ -2067,8 +2118,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "Random glyph canvas cell14, interval90ms, mutation.04, bottom fade.6; preserve reduced-motion/offscreen lifecycle if adopted.",
-      "manualReview": "pending",
-      "extractedCharacters": 2507
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 2507,
+      "manualReviewNotes": "Full Manual read: canvas CSS color probe to RGBA ref, RAF gated tick interval90, ResizeObserver and cleanup. No hidden/reduced guard; mutationRate0 still max1 mutation; glyphs index UTF16; decorative source semantics only.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/grid-pattern",
@@ -2080,8 +2133,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "Grid SVG 40px offsets-1, selected squares/dash patterns; EffectSurface supports mesh/glow/grain/noise only, pattern extension candidate.",
-      "manualReview": "pending",
-      "extractedCharacters": 3070
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 3070,
+      "manualReviewNotes": "Full Manual read: useId SVG pattern with40px cells, optional selected squares, aria-hidden/pointer-none; static tiling portable descriptor candidate instead of duplicate component engine.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/hero-video-dialog",
@@ -2089,12 +2144,15 @@
       "capturedAt": "2026-10-07T03:53:38Z",
       "extraction": "data-slot=docs; static HTML only; inactive Manual content may not be present",
       "readReview": "static-main-read",
-      "visualReview": "pending",
-      "interactionReview": "pending",
+      "visualReview": "selected-desktop-states",
+      "interactionReview": "selected-flow-reviewed",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "Hero video dialog 8 origin animation variants; reuse Dialog motionOrigin/media slots, playback/failure/unmount pending.",
-      "manualReview": "pending",
-      "extractedCharacters": 3545
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 3545,
+      "manualReviewNotes": "Full Manual read: animation variants and iframe overlay rolebutton/tabIndex0, no dialog role/focus trap/initial focus; unnamed X button. Actual dark Play trigger Enter leaves focus at trigger; Escape there leaves overlay+iframe1. Manually focus overlay Escape closes after exit (0/0). Use HJM Dialog, no playback started.",
+      "manualReviewedOn": "2026-10-07",
+      "proof": "assets/parallel-b-magic-hero-dialog-escape.png"
     },
     {
       "url": "https://magicui.design/docs/components/hexagon-pattern",
@@ -2106,8 +2164,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "Hexagon SVG radius40, gap/offset/orientation/highlights and standard SVG attrs; portable pattern candidate, no duplicate engine.",
-      "manualReview": "pending",
-      "extractedCharacters": 3819
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 3819,
+      "manualReviewNotes": "Full Manual read: useId static honeycomb geometry, horizontal/vertical spacing on shared-edge normals, dashed edge dedup and optional filled coordinates; deterministic pattern candidate, bounds/Native actual rendering pending.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/highlighter",
@@ -2119,8 +2179,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "Highlighter supports 7 annotation types, multiline/padding/strokes/timings; preserve real text and semantic meaning.",
-      "manualReview": "pending",
-      "extractedCharacters": 2546
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 2546,
+      "manualReviewNotes": "Full visible TSX plus rough-notation/motion installation read. useLayoutEffect annotation + useInView once; element/body ResizeObserver hides/shows; remove/disconnect cleanup. Manual duration600 vs docs500; no local reduced guard. Text decoration candidate only; Native and dependency annotation accessibility unverified.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/hyper-text",
@@ -2132,8 +2194,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "HyperText 800ms random A-Z hover/startOnView; preserve true accessible text, not localized content mutation.",
-      "manualReview": "pending",
-      "extractedCharacters": 1581
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 1581,
+      "manualReviewNotes": "Full visible TSX read. UTF16 split and uppercased A-Z scrambling changes accessible content itself; hover trigger only; startOnView delayed timeout not retained for cleanup. RAF cleanup present. Changed-length text/empty charset/reduced-motion runtime pending. Preserve HJM semantic Text rather than duplicate engine.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/icon-cloud",
@@ -2145,8 +2209,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "IconCloud all visible demos and props read; source promises reduced-motion pause control, actual Manual/flow pending.",
-      "manualReview": "pending",
-      "extractedCharacters": 15481
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 15481,
+      "manualReviewNotes": "Full visible TSX read. 400x400 canvas Fibonacci sphere, mouse drag/target rotation; role img and named pause/play Button. reduced-motion initial/live pause supported. Pending images cause continued RAF; img.onerror absent. No offscreen/hidden gate or individually accessible icons. Touch/keyboard targets and failed assets runtime pending.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/interactive-grid-pattern",
@@ -2158,8 +2224,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "Interactive grid 24x24 square40; demo80x80 with20px; touch/performance/reduced actual pending.",
-      "manualReview": "pending",
-      "extractedCharacters": 2605
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 2605,
+      "manualReviewNotes": "Full visible TSX read. 24x24 default rects tracked by React hoveredSquare state, mouse enter/leave only; no default aria-hidden/pointer-none. Static pattern descriptor preferable; keyboard/touch and paint performance unverified.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/interactive-hover-button",
@@ -2171,8 +2239,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "Interactive hover button Usage children differs from props text; existing Button before adding duplicated hover-only API.",
-      "manualReview": "pending",
-      "extractedCharacters": 1518
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 1518,
+      "manualReviewNotes": "Full visible TSX read. Native HTML button props spread; type not fixed. Two child labels, second visually opacity0 without aria-hidden. group-hover dot scale100.8 and label swaps, no focus/disabled/reduced condition in local classes. Reuse HJM Button action semantics; source-only concern not runtime reproduced.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/iphone",
@@ -2184,8 +2254,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "iPhone wrapper controls 433/882 aspect ratio; media-only mask/DOM video overlay reason, reuse marketing Asset.",
-      "manualReview": "pending",
-      "extractedCharacters": 2252
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 2252,
+      "manualReviewNotes": "Full visible TSX/SVG geometry read. DOM percentage image/video overlay, empty img alt; autoplay/loop/muted video; fixed screenPunch/roundedCorners ids. Aspect ratio433/882; video lifecycle/reduced/browser/multi-instance pending. Presentation asset wrapper only, not native device implementation.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/kinetic-text",
@@ -2197,8 +2269,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "Kinetic text h1 default variable font weight hover; product font load and semantic heading owned by app.",
-      "manualReview": "pending",
-      "extractedCharacters": 1452
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 1452,
+      "manualReviewNotes": "Full visible TSX read. Semantic heading/p/span wrapper; UTF16 split visible characters aria-hidden with full sr-only text. CSS hover variable weight/stroke/padding alters glyph layout. Font support, multilingual grapheme/focus/reduced pending; text treatment candidate only.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/lens",
@@ -2210,8 +2284,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "Lens dynamic/static/default-position demos, zoom1.3 lens170, ariaLabel; ImageViewer/ImageComparison first, magnifier needs actual input proof.",
-      "manualReview": "pending",
-      "extractedCharacters": 5195
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 5195,
+      "manualReviewNotes": "Full visible TSX read. Mouse lens with role region/tabIndex0 and Escape only; no keyboard movement or focus activation. Children rendered twice in absolute zoom overlay without inert/aria-hidden. Validation permits zoom=1,size=0 despite message. Reduced/touch/interactive child duplicate focus runtime pending. Keep HJM media/viewer semantics.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/light-rays",
@@ -2223,8 +2299,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "Light rays count7 blur36 opacity.65 period14sec behind z10; EffectSurface treatment candidate.",
-      "manualReview": "pending",
-      "extractedCharacters": 2390
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 2390,
+      "manualReviewNotes": "Full visible TSX read. count7 random rays createRays in useEffect, min speed.1, Motion infinite opacity/rotate plus blend/blur gradients. Pointer-none bounded overflow present; random no seed, no local reduced/IO/hidden gate. Existing EffectSurface lifecycle prerequisite; forest lighting style candidate not code-copy.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/line-shadow-text",
@@ -2236,8 +2314,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "Line shadow text supports as span and dark-specific shadow color; typography semantic reuse.",
-      "manualReview": "pending",
-      "extractedCharacters": 1676
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 1676,
+      "manualReviewNotes": "Full visible TSX and required CSS read. Real semantic children plus data-text CSS pseudo shadow, motion element map. Background stripe line animation15s infinite; no local reduced guard. Text shadow treatment candidate; pseudo accessible duplication/browser/reduced runtime pending.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/magic-card",
@@ -2249,8 +2329,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "MagicCard spotlight vs orb modes; separate size/color/opacity and glow geometry props; existing Card + material slots, pointer behavior pending.",
-      "manualReview": "pending",
-      "extractedCharacters": 7878
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 7878,
+      "manualReviewNotes": "Full TSX read. Discriminated gradient/orb, next-themes mounted fallback dark; pointer spring glow with global pointerout/blur/visibility reset. No local reduced or focus feedback; preserve HJM Card+EffectSurface rather than theme provider duplication.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/marquee",
@@ -2262,8 +2344,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "Horizontal/vertical/3D marquee and repeats4; pauseOnHover only public pause option; marketing decoration, not Carousel state replacement.",
-      "manualReview": "pending",
-      "extractedCharacters": 13857
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 13857,
+      "manualReviewNotes": "Full TSX/CSS read. Repeats children4 times, pauseOnHover optional false default; clones not aria-hidden/inert and no focus pause or local reduced. HJM composition should preserve one accessible content and lifecycle.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/meteors",
@@ -2275,8 +2359,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "Meteors20, delay.2..1.2, duration2..10, angle215; optional background treatment with bounded motion.",
-      "manualReview": "pending",
-      "extractedCharacters": 1825
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 1825,
+      "manualReviewNotes": "Full TSX/CSS read. Random20 meteor styles from window.innerWidth, no container resize/seed guard. Infinite CSS travel500px; no local reduced/hidden. Decorative bounded EffectSurface prerequisite.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/morphing-text",
@@ -2288,8 +2374,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "MorphingText string[] only, empty default; preserve accessible content, no source/lifecycle proof.",
-      "manualReview": "pending",
-      "extractedCharacters": 1447
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 1447,
+      "manualReviewNotes": "Full TSX/SVG filter read. Two DOM textContent spans, continuous RAF and fixed threshold/filters ids; modulo texts.length without empty guard. No accessible stable text/reduced/hidden. Existing Text/ContentTransition contracts preserved.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/neon-gradient-card",
@@ -2301,8 +2389,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "NeonGradientCard border5 radius20 dual neon colors; existing Card material treatment, no new semantic card.",
-      "manualReview": "pending",
-      "extractedCharacters": 1899
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 1899,
+      "manualReviewNotes": "Full TSX/CSS read. borderSize Manual2 vs doc5; as prop declared but not rendered. Window resize and children dimension updates, no container ResizeObserver; pseudo glow blur width/3, infinite3s spin. Card material expression only; large blur/mobile unverified.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/noise-texture",
@@ -2314,8 +2404,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "All noise texture examples and Props read: feTurbulence frequency.4 octaves6 slope.15 opacity.6; HJM deterministic grain/noise already exists, avoid SVG-only duplicate.",
-      "manualReview": "pending",
-      "extractedCharacters": 4857
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 4857,
+      "manualReviewNotes": "Full TSX read. useId fractalNoise frequency.4/octaves6/slope.15; static SVG pointer-none. No default aria-hidden, no bounded octave validation; HJM noise existing API preferred.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/number-ticker",
@@ -2327,8 +2419,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "NumberTicker target/start/direction/delay/decimal examples; existing numeric display/Progress conventions first, locale formatting pending.",
-      "manualReview": "pending",
-      "extractedCharacters": 2118
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 2118,
+      "manualReviewNotes": "Full TSX read. once-in-view spring, timeout cleanup; textContent writes Intl.NumberFormat(en-US), down starts markup startValue although motionValue starts value. No stable accessible final-value/reduced guard. Locale/direction/repeated updates runtime pending; data values product owned.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/orbiting-circles",
@@ -2340,8 +2434,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "Orbiting circles two radii/reverse/speed and all inline logos read; 20s duration160radius default; decorative graph not navigation state.",
-      "manualReview": "pending",
-      "extractedCharacters": 11328
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 11328,
+      "manualReviewNotes": "Full TSX/CSS read. angle distributes children; duration/speed infinite orbit. delay declared but not consumed (spread to div); no zero speed validation or local reduced. Path pointer-none; interactive orbit/focus runtime pending.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/particles",
@@ -2353,8 +2449,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "Particles quantity100 staticity50 ease50 size.4 vx/vy; theme color set in useEffect; frame/reduced/source pending.",
-      "manualReview": "pending",
-      "extractedCharacters": 2222
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 2222,
+      "manualReviewNotes": "Full TSX read. initCanvas runs resizeCanvas which clears then creates quantity circles, then drawParticles adds quantity again without reset. Predict2x quantity source path, runtime not reproduced. Continuous RAF, global mouse setState, uncapped DPR, color hex-only; no reduced/IO/hidden. Preserve bounded HJM lifecycle.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/pixel-image",
@@ -2366,8 +2464,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "PixelImage grids and custom rows/cols, random delay1200ms/color1500ms; docs require text alternatives but no alt in listed props; GridReveal+Image first.",
-      "manualReview": "pending",
-      "extractedCharacters": 2290
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 2290,
+      "manualReviewNotes": "Full TSX read. custom rows/cols integer1..16 validation; each clipped piece duplicates img with Pixel image piece N alt; random delays and mounted reveal, no in-view/reduced gate. Existing GridReveal+Image should keep one semantic image.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/pointer",
@@ -2379,8 +2479,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "Pointer custom heart/shape/emoji/color demos; animated decorations per hover, fine-pointer/source lifecycle pending.",
-      "manualReview": "pending",
-      "extractedCharacters": 3500
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 3500,
+      "manualReviewNotes": "Full TSX/SVG read. Parent cursor set none, mouse listeners only; cleanup resets empty instead of previous inline cursor. Fixed Motion custom child, no fine-pointer/reduced guard; product-specific optional presentation only.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/progressive-blur",
@@ -2392,8 +2494,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "ProgressiveBlur 8 levels .5..64, top/bottom/both and children; existing ProgressiveBlur first.",
-      "manualReview": "pending",
-      "extractedCharacters": 2197
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 2197,
+      "manualReviewNotes": "Full TSX read. 8 default backdrop layers, fixed12.5 percent bands irrespective array length; Array(length-2) negative for0/1, declared children unused. Existing HJM ProgressiveBlur preferred; actual unsupported/browser/invalid input pending.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/pulsating-button",
@@ -2405,8 +2509,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "PulsatingButton pulse/ripple, 1.5s distance8 color background; existing Button decoration, persistent attention motion opt-in.",
-      "manualReview": "pending",
-      "extractedCharacters": 1975
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 1975,
+      "manualReviewNotes": "Full TSX/CSS read. HTML button forwardRef, computed background sync observers and focus/pointer events cleanup; infinite pulse/ripple aria-hidden span. No explicit type or disabled/loading/reduced animation guards. Existing Button semantics before visual option.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/rainbow-button",
@@ -2418,8 +2524,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "RainbowButton default/outline sizes default/sm/lg/icon; existing Button variants and semantic states first.",
-      "manualReview": "pending",
-      "extractedCharacters": 1696
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 1696,
+      "manualReviewNotes": "Full TSX/CSS read. Radix Slot optional with cva focus-visible/disabled classes; gradient5 global colors infinite2s. No fixed type or local reduced. Existing HJM Button action engine; no additional RainbowButton API.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/retro-grid",
@@ -2431,8 +2539,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "RetroGrid 65deg cell60 opacity.5 and two mode line colors; retro theme optional pattern treatment.",
-      "manualReview": "pending",
-      "extractedCharacters": 1774
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 1774,
+      "manualReviewNotes": "Full visible 29k TSX/shader/fallback read. WebGL derivatives/LOD premultiplied alpha/DPR2, reduced static frame, IO stop, ResizeObserver/theme/context lost/restored cleanup. CSS fallback reduced stops but offscreen fallback not gated. No document hidden local listener. More robust than simple CSS tile; Native and fallback equivalence remain pending.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/ripple",
@@ -2444,8 +2554,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "Ripple background 8 circles size210 opacity.24; background decoration differs from press feedback.",
-      "manualReview": "pending",
-      "extractedCharacters": 1482
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 1482,
+      "manualReviewNotes": "Full TSX/CSS read. Memo8 rings, sizes+70 opacity-.03, pointer-none infinite scale; no local reduced/hidden. Range validation and all visual variants pending.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/ripple-button",
@@ -2470,8 +2582,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "Safari 1203/753 ratio, image/video/simple examples; removed width/height props, DOM overlay avoids Safari masking; Asset marketing frame.",
-      "manualReview": "pending",
-      "extractedCharacters": 2918
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 2918,
+      "manualReviewNotes": "Full TSX/SVG geometry read.1203x753 percentage DOM media overlay; image empty alt/video autoplay loop. Fixed mask ids safariPunch/path0/roundedBottom; default/simple frame decoration only. Browser implementation not provided; multi-instance/media/reduced pending.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/scroll-based-velocity",
@@ -2483,8 +2597,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "Text/image ScrollVelocityRow duplication + direction1/-1 base5 and scrollReactivitytrue; docs explicitly pause offscreen/hidden and respect reduced motion, runtime pending.",
-      "manualReview": "pending",
-      "extractedCharacters": 4937
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 4937,
+      "manualReviewNotes": "Full TSX read. Shared or local scroll spring, adaptive copies with duplicate aria-hidden, ResizeObserver/IO/document-hidden listeners cleanup. Reduced sets speedMultiplier1; baseVelocity still advances, not static stop. No inert clones for interactive children; direction ref not synced changes. HJM lifecycle/static policy prerequisite.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/scroll-progress",
@@ -2496,8 +2612,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "Page ScrollProgress accepts HTMLDiv props, top navbar offset65; existing ScrollProgress first.",
-      "manualReview": "pending",
-      "extractedCharacters": 1462
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 1462,
+      "manualReviewNotes": "Full TSX read. Fixedtop1px Motion scaleX useScroll, origin-left and hardcoded gradient. No progress aria or RTL/orientation props; use existing HJM ScrollProgress.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/shimmer-button",
@@ -2509,8 +2627,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "ShimmerButton 3s white .05em perimeter/radius100px/background; canonical Button material/press contracts retained.",
-      "manualReview": "pending",
-      "extractedCharacters": 1790
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 1790,
+      "manualReviewNotes": "Full TSX/CSS read. HTML button forwardRef, 100cqw/cqh conic spark+highlight+backdrop, active translate1px; infinite shimmer. No explicit type or local disabled/loading/reduced guards. HJM Button visual treatment candidate only.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/shine-border",
@@ -2522,8 +2642,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "ShineBorder card form/color array and monotone theme example, duration14sec width1; no login state action wired.",
-      "manualReview": "pending",
-      "extractedCharacters": 3896
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 3896,
+      "manualReviewNotes": "Full TSX/CSS read. CSS masked radial border, motion-safe animate-shine pointer-none; static reduced form provided by Tailwind class. Duration14, width1; lifecycle/forced colors/browser pending.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/shiny-button",
@@ -2535,8 +2657,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "ShinyButton theme-dependent shiny styles, children/className only; existing Button first.",
-      "manualReview": "pending",
-      "extractedCharacters": 1260
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 1260,
+      "manualReviewNotes": "Full TSX read. motion.button indefinite spring mask shimmer and whileTap scale. HTMLAttributes<HTMLElement> rather than full button attribute type; no local reduced/disabled/loading/type defaults. Keep existing Button API.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/smooth-cursor",
@@ -2548,8 +2672,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "SmoothCursor spring45/400/1/.001 and fine-pointer/touch suppression; global cursor:none instruction risks keyboard defaults, not shared theme default.",
-      "manualReview": "pending",
-      "extractedCharacters": 3335
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 3335,
+      "manualReviewNotes": "Full TSX/SVG read. any-hover/fine-pointer query, ignores touch, RAF throttled pointer spring/rotation plus150ms reset cleanup. Mutates body cursor none then auto, no previous cursor restoration; no local reduced/hidden/leave handling. Global cursor not default theme candidate.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/sparkles-text",
@@ -2561,8 +2687,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "SparklesText continuous stars10 dualcolors; accessible Text first, stop/reduced policy pending source.",
-      "manualReview": "pending",
-      "extractedCharacters": 1431
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 1431,
+      "manualReviewNotes": "Full TSX/SVG read.10 default random lifespan stars,100ms setState interval + infinite .8s Motion. as prop declared but unused; no local reduced/IO/hidden; children strong semantic. Existing Text+EffectSurface bounded lifecycle prerequisite.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/spinning-text",
@@ -2574,8 +2702,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "SpinningText reverse/radius5 period10/default and4s example; duplicate glyph text needs Manual a11y check.",
-      "manualReview": "pending",
-      "extractedCharacters": 2369
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 2369,
+      "manualReviewNotes": "Full TSX read. String/array validates then UTF16 split circular absolute letters with aria-hidden and full sr-only string. Infinite10s rotation default; inherited div props beyond class/style not spread; no reduced guard. Grapheme/RTL/high zoom pending.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/striped-pattern",
@@ -2587,8 +2717,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "Striped SVG40px offsets-1 left/right, dashed strokes; EffectSurface portable pattern candidate.",
-      "manualReview": "pending",
-      "extractedCharacters": 2511
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 2511,
+      "manualReviewNotes": "Full TSX read. useId static SVG tile left/right diagonal lines, pointer-none/aria-hidden. Number(width/height) can produce NaN for percentage/svg length; numeric bounds Native rendering pending. Strong portable texture descriptor candidate.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/terminal",
@@ -2600,8 +2732,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "Terminal sequences TypingAnimation/AnimatedSpan, onView default, manual delays optional; examples are illustrations, not executed CLI/runtime evidence.",
-      "manualReview": "pending",
-      "extractedCharacters": 4937
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 4937,
+      "manualReviewNotes": "Full visible TSX read. Context sequential children activeIndex driven by completion, once-in-view; Typing timer cleanup UTF16 substring and dynamic partial accessible content. Nonparticipating children may block sequence; props onAnimationComplete can override built-in due spread. pre/code contains div children. Decorative terminal rather than real command engine; CodeBlock composition preferred.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/text-3d-flip",
@@ -2613,8 +2747,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "Text3DFlip four directions, configurable stagger0.05 and center/default p semantics; duplicated letters require actual accessible structure check.",
-      "manualReview": "pending",
-      "extractedCharacters": 3139
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 3139,
+      "manualReviewNotes": "Full TSX read. Intl.Segmenter(en,grapheme) with Array.from fallback, text extraction strips ReactNode formatting. Hover only rotate both faces with scoped useAnimate/stagger/mount guard. sr-only string plus two visible text faces without aria-hidden. No reduced/focus input. Semantic Text and interaction contract prerequisite.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/text-animate",
@@ -2626,8 +2762,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "All 9 TextAnimate examples including custom spring variants; accessibletrue, oncefalse, split word default; ContentTransition/typography reuse with locale grapheme contracts.",
-      "manualReview": "pending",
-      "extractedCharacters": 5579
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 5579,
+      "manualReviewNotes": "Full TSX read.10 presets word/UTF16 character/line/text splitting; semantic motion element; accessible defaults true full sr-only and visible segments aria-hidden plus aria-label. In-view once default false; no reduced guard, empty segments duration division edge pending. Existing ContentTransition semantics retained.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/text-reveal",
@@ -2639,8 +2777,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "Scroll TextReveal duplicated words in static output; Manual/a11y/state pending, existing transition semantics first.",
-      "manualReview": "pending",
-      "extractedCharacters": 1127
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 1127,
+      "manualReviewNotes": "Full TSX read.200vh scrolltarget/sticky region, words split spaces, each word duplicates absolute opacity.3 and motion opacity without aria-hidden. No reduced static reading policy; inherited div props not spread. Screen treatment can lose paragraph semantics; retain canonical reading screen.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/tweet-card",
@@ -2652,8 +2792,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "TweetCard server RSC vs ClientTweetCard, image carousel/meta examples, ReactTweet dependency; optional provider adapter, not core card.",
-      "manualReview": "pending",
-      "extractedCharacters": 2401
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 2401,
+      "manualReviewNotes": "Full TSX read including server/client wrappers and react-tweet dependency. getTweet/useTweet product external data; loading/notfound states. enrichTweet entity text dangerouslySetInnerHTML requires dependency escaping contract (not verified), video autoplay loop, verified || condition shortcircuits true badge path. Foreign provider network/license/locale belongs product; generic Card/media slots preferred.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/typing-animation",
@@ -2665,8 +2807,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "All 8 TypingAnimation variants: words/loop/type-delete-pause/cursor shape/blink/once/onView and semantic as; accessible complete text source pending.",
-      "manualReview": "pending",
-      "extractedCharacters": 5750
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 5750,
+      "manualReviewNotes": "Full TSX read. Typing/pause/deleting state, source-key reset, timeout cleanup, words/loop/cursor options; Array.from called graphemes but only codepoints. Cursor visible text not aria-hidden; no stable accessible final text or reduced/hidden gate. Positive delay re-applies whenever displayedText empty. Existing Text semantics preserve; full runtime variants pending.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/video-text",
@@ -2678,8 +2822,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "VideoText autoplay/muted/loop true preload auto, text SVG mask; optional marketing Asset treatment, reduced/data/pause pending.",
-      "manualReview": "pending",
-      "extractedCharacters": 2068
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 2068,
+      "manualReviewNotes": "Full TSX read. children Children.toArray.join into SVG string content/font attributes then URL encoding; XML escaping absent, so <>& may alter text mask. sr-only preserves derived text but video autoplay/preload auto; no reduced/IO/hidden or error fallback. Use semantic Text/media ownership before optional mask.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/warp-background",
@@ -2691,8 +2837,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "WarpBackground perspective100,3 beams/side size5 delay0..3 duration3; optional surface treatment, no product success state wired.",
-      "manualReview": "pending",
-      "extractedCharacters": 2259
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 2259,
+      "manualReviewNotes": "Full TSX read.4 perspective planes with useMemo beam arrays and random render-time hue/aspect; infinite Motion cqmax travel. No seeded SSR/bounds/reduced/hidden gate. Bounded EffectSurface expression only; Native/performance unverified.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/components/word-rotate",
@@ -2704,8 +2852,10 @@
       "interactionReview": "pending",
       "readScope": "captured docs body including visible examples, Usage and Props; inactive Manual implementation panel excluded",
       "reviewNotes": "WordRotate words[] period2500 motionProps; ContentTransition owns presentation, live-region/source pending.",
-      "manualReview": "pending",
-      "extractedCharacters": 1336
+      "manualReview": "visible-tsx-css-read",
+      "extractedCharacters": 1336,
+      "manualReviewNotes": "Full TSX read. Interval2500 rotates words modulo length, cleanup; fixed motion.h1 with AnimatePresence. No empty guard/stable accessible content/reduced/hidden handling or as semantics. Keep HJM Text/ContentTransition rather than separate word engine.",
+      "manualReviewedOn": "2026-10-07"
     },
     {
       "url": "https://magicui.design/docs/installation",
@@ -2879,11 +3029,11 @@
   ],
   "reviewCounts": {
     "capturedPages": 257,
-    "staticMainRead": 96,
+    "staticMainRead": 102,
     "staticMainPartial": 2,
-    "staticMainPending": 159,
-    "manualImplementationRead": 9,
-    "renderedSelectedPages": 2,
-    "selectedFlowPages": 2
+    "staticMainPending": 153,
+    "manualImplementationRead": 77,
+    "renderedSelectedPages": 4,
+    "selectedFlowPages": 4
   }
 }

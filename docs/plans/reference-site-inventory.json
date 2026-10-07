@@ -6376,7 +6376,7 @@
     {
       "site": "www.cta.gallery",
       "checkedOn": "2026-10-07",
-      "evidence": "sitemap URLs only, not page or visual review",
+      "evidence": "Sitemap queue plus a live related-detail link discovery; discovery closure and complete page/visual/interaction review remain unverified.",
       "sitemaps": [
         "https://www.cta.gallery/sitemap.xml"
       ],
@@ -6565,6 +6565,7 @@
         "https://www.cta.gallery/cta/general-intelligence",
         "https://www.cta.gallery/cta/gerax",
         "https://www.cta.gallery/cta/get-ripe",
+        "https://www.cta.gallery/cta/get-ripe-copy",
         "https://www.cta.gallery/cta/get-zazu",
         "https://www.cta.gallery/cta/getbecoming",
         "https://www.cta.gallery/cta/getboom",
@@ -6942,7 +6943,21 @@
         "errors": 0,
         "state": "finished-sitemap-queue",
         "scope": "Fetched text pending individual source/visual/interaction review; no HTML link closure claim"
-      }
+      },
+      "additionalNavigationFindings": [
+        {
+          "url": "https://www.cta.gallery/cta/get-ripe-copy",
+          "date": "2026-10-07",
+          "foundOn": [
+            "https://www.cta.gallery/cta/compoundplanning",
+            "https://www.cta.gallery/cta/cursor"
+          ],
+          "linkLabel": "Numa",
+          "status": "discovered-pending-source-visual-and-interaction-review",
+          "scope": "Agent A observed the related link on live pages. Earlier sourceExtraction remains the original 551-record snapshot; known URL count is now at least 552.",
+          "evidence": "docs/qa/2026-10-07-reference-parallel-a.md"
+        }
+      ]
     },
     {
       "site": "21st.dev",

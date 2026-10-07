@@ -64,3 +64,58 @@
 ## 검증·산출물 경계
 
 외부 UI는 CUA의 agent-owned 임시 탭 하나에서 확인했다. 기기·네이티브 build·원격 CI·릴리스·git 조작을 실행하지 않았다. 원본 HTML 수집 산출물은 읽기만 했고 소유 crawler/로그를 변경하지 않았다. 유지한 PNG는 실제 원제품 도착의 최소 증거다. package/runtime 검증은 이번 문서 조사 범위가 아니다.
+
+## CTA 전수 독해 checkpoint — 2026-10-07 두 번째 batch
+
+CTA의 알려진 551 URL은 상세 505개(`/cta/<slug>`)와 목록·분류·소개·폼·템플릿 46개로 나뉜다. 상세 **505/505의 고유 소개 및 Category/Industry/Mode**를 실제 순서대로 읽었다. 비상세 **46/46의 고유 추출 본문과 카드 제목**도 읽었다. 비상세는 반복 nav/footer와 responsive 복제 행만 제거했다. 상세 관련 CTA 목록 개별 독해·HTML 구현 코드·원제품 전체 본문과 상태는 이 완료층에 포함하지 않는다. 전체 페이지 검토 완료는 여전히 아니다.
+
+URL별 source SHA, 읽은 범위와 pending 층은 [A 전용 index](2026-10-07-reference-parallel-a-index.json)에 남겼다. known queue의 discovery closure는 확인하지 않았다. CTA 작성 팁의 명확한 행동/이익/위험 감소/사회적 증거 원칙, 광고 페이지의 세 plan 및 quote form, 제출/구독 폼, template 소개도 읽었다. 사이트의 전환율·보안·의료·금융 효능 주장은 소개 문구일 뿐 검증 근거로 채택하지 않는다.
+
+### 캡처 정정과 시각 완료층
+
+초기 의미 기반 Desktop/Mobile 이미지 metadata 84개를 확보했지만 CUA clip PNG 일부가 **광고 영역**을 찍었다. 성공 수에서 제외했고 metadata를 시각 독해로 집계하지 않는다. 전체 화면 PNG를 다시 저장한 뒤 DOM image rect에 맞춰 로컬 QA crop을 만들었다. 교정 batch **0–7의 8/505** desktop/mobile 기본 화면은 실제 이미지 독해를 마쳤다. 교정 PNG 저장 수와 독해 완료 수는 index에서 별도 기록한다. 이 작업은 갤러리의 정적 desktop/mobile 이미지 비교다. 원제품의 breakpoint·키보드·focus·hover·pressed·loading·error·reduced-motion 검증은 아니다.
+
+교정 0–7 관찰: 11x의 좌측 정보/우측 사막 사진은 모바일에서 사진이 아래로 이동한다. 13g는 두 명의 얼굴 portrait와 상담 행동, 247artists는 어두운 원근 grid와 중앙 보라 CTA, 8returns는 청록 패널·라임 제목·primary/secondary·신발 사진을 세로 재배치한다. Aaavatar는 avatar ring와 다운로드, Aboardhr는 파스텔 rainbow와 한 행동, Acctual은 초록 grid/종이 조각과 송장 행동, Adventurenannies는 teal/orange 도형과 채용 행동이다. 이들 각각은 기존 Card/Grid/Button/Image 및 브랜드 asset 구성으로 우선 흡수하며 별도 검색/상호작용 engine 교체 근거는 없다.
+
+### 독해에서 나온 보수적 판단
+
+- `poch-studio`/`poch.studio`, `web-meetcleo`/`web.meetcleo`처럼 유사 소개가 별도 URL로 존재한다. 각각 읽고 두 URL을 남겼으며 중복을 한 페이지로 줄이지 않는다.
+- 일부 상세는 mode/industry/category 값이 비거나, 소개와 산업 분류가 맞지 않아 보인다. `backlog.design`의 Medical, `payy`의 Marketing 등은 테마 선택의 자동 근거로 사용하지 않는다. 분류 tag만으로 화면을 생성하면 원제품 목적을 잘못 추정할 수 있다.
+- pricing/subscribe/form/modal/navigation/download는 의미·상태가 다르다. theme 변경으로 구매/구독/연락/다운로드 동작까지 서로 바꾸지 않는다. 기존 HJM action/form/modal 계약을 유지하며 화면 구성 recipe와 표현 옵션을 조합한다.
+- 종이·숲·retro/pixel·rainbow·cosmic·editorial 표현은 참조할 수 있지만 현재 API를 대조한 재사용 우선 판단이다. 원제품 코드·라이선스·두 renderer·확대 글자 검증 전 새 token/treatment/컴포넌트를 공개 API로 추가하거나 교체하지 않는다.
+
+남은 범위: 상세 기본 시각 497/505, 46 비상세의 전체 시각·실제 동작, 상세마다 related CTA와 연결 원제품 흐름, Minimal 3,433 및 DesignBookmark 2,657 전수 독해/시각/흐름. 이 checkpoint는 문서 조사이며 구현 적용·승급·게시·원격 CI를 수행하지 않았다.
+
+## 교정 시각 checkpoint — 0–103 실제 독해
+
+교정된 fullPage/DOM crop의 상세 **0–103 = 104/505**를 12개씩 contact sheet로 실제 읽었다. 이 층은 기본 배치·색·주/보조 행동 위치·정적 모바일 재배치 확인이며 작은 모든 문구의 판독이나 원제품 동작 검증은 아니다. URL별 corrected PNG SHA 및 읽은 contact-sheet SHA를 A index에 기록했다. 교정 PNG 저장 135개와 시각 독해 104개를 구분한다. metadata상 이미지가 아직 로드되지 않은 106–114는 시각 성공에서 제외하고 재캡처가 필요하다.
+
+![CTA 44–55 교정된 desktop/mobile 기본 배치 비교](assets/parallel-a-cta-044-055.jpg)
+
+새로 확인한 차이: Bouquetinfusions(50)는 노란 sticky note 형태 newsletter와 회전한 종이 표현, Alpbio(14)는 점 기반 픽셀 글자와 rounded 입력, Bluechip(49)는 stepped 경계와 가운데 download 버튼이다. 이들은 종이 rotation이나 pixel outline이라는 시각 옵션 후보지만 accessibility·확대 글자·native clip 검증 없이 공개 treatment로 승급하지 않는다. Forest 이미지 위 newsletter(Blok46), paper/green line contact form(Cultivatefood103), rainbow primary/secondary(Aboardhr5), dark neon single action(Aptosbuild23), 물 표면 위 white newsletter(Augustcollections30)는 기존 semantic surface와 Card/Button/Form/Image 표현 조합을 먼저 비교한다.
+
+Collider(88)는 Yes/No 두 선택과 close, Bloomerang(47)/Cobfoods(81)/Aligne(11)/Chobani(72)는 입력 팝업을 정적으로 보여 준다. 클릭·dismiss/focus trap/전송 상태는 확인하지 않았다. 이를 HJM Dialog 또는 form recovery 교체의 근거로 사용하지 않는다. 일부 작은 글자는 contact sheet에서 정밀 판독할 수 없으므로 그 부분은 미확인이다.
+
+### 알려진 분모 변경 발견
+
+기존 수집 snapshot 551 URL에 없는 [Numa 상세](https://www.cta.gallery/cta/get-ripe-copy)가 현재 [Compoundplanning 상세](https://www.cta.gallery/cta/compoundplanning)와 [Cursor 상세](https://www.cta.gallery/cta/cursor)의 live `Related CTA's` AX에 나타났다. `link Description: Numa, Value: cta.gallery/cta/get-ripe-copy`; 연결 외부 href는 `numa.uprock.pro/`이다. 이 페이지는 아직 열지 않았으며 독해/시각/원제품 모두 pending이다. 따라서 기존 **551 snapshot 독해층**과 현재 **최소 552 known URL** 분모를 구분한다. discovery closure는 false를 유지한다.
+
+## 순서별 시각 checkpoint — 상세 0–209
+
+교정 시각 독해는 **0–209 총 210/505**의 사용 가능한 기본 화면까지 진행했다. 이 중 desktop/mobile 두 이미지 **206개**, desktop preview만 있는 template **4개**(Draftr121, Habitline192, FintechX208, Flexora209)를 분리한다. 106–114는 load 확인 후 재캡처한 9개를 다시 실제 읽었으며 이전 빈 이미지는 근거에서 제외했다. 작은 모든 필드 문구·테마 motion·실제 breakpoint·원제품 상태는 여전히 pending이다. 기본 화면이 210개 확인됐다는 것은 모든 상태/페이지 검토 완료가 아니다.
+
+Debugger110의 연노랑 ruled paper·serrated 경계·name/email newsletter, Data.to.design107의 editor selection handle처럼 보이는 white card와 forest green surface, Dibi113의 paper ticket/perforation 형태 pricing, Heyjay201의 scallop+pink stripe/border 버튼을 확인했다. 종이 계열은 asset/texture·border·rotation·font 조합 후보로 두고 기존 Form/Card/Button 슬롯과 비교한다. 새로운 widget state나 전송 엔진은 필요하다는 근거가 없다. Halo dental193/Henge200/EdSheeran130은 checkbox consent와 입력/submit 순서를 정적 갤러리에서만 보여 준다. 동의 의미·disabled/pending/failed/성공 상태는 제품 기능 계약 소유다. 텍스처의 opacity와 대비는 동작 의미와 분리해야 한다.
+
+## 순서별 시각 checkpoint — 상세 0–299
+
+상세 기본 시각 독해 **300/505**(desktop/mobile 296, desktop-only template4). capture 저장 수와 기본 화면 실제 독해 수가 이 checkpoint에서는300으로 같지만 원제품 동작 층은 별도다. 알려진 snapshot 밖 internal link를 기계적으로 비교한 결과는 **0개**이며 `snapshotInternalLinkDiscovery`로 따로 기록했다. 현재 live Numa 신규 링크는 source snapshot 외부 발견1개다.
+
+상세 210–299에서 form/modal의 의미 차이가 다시 보인다. Janvi217은 date/grid와 contact를 같이 둔 구성, Journa224는 관심 항목 checkbox와 이메일을 둔 sign-up, Michelbeaulieu264는 budget 선택과 email을 가진 listing 구독이다. 이는 theme 하나로 필드나 동의 의미를 바꿀 근거가 아니다. 브랜드/의도별 composition recipe가 field schema와 상태를 받고 theme는 표현 축을 공급하는 구조가 맞는다.
+
+Langbase237은 desktop에서 Start free→Get a demo가 나란하고 mobile에서 demo→free 순서를 바꾼다. 이를 자동 theme interaction 변경으로 복제하지 않고 제품 행동 우선순위를 별도 계약으로 둔다. Katana227은 desktop 장식 object가 mobile에 덜 보이는 두 static 이미지다. 원제품의 실제 viewport 조건·reduced motion과 일치하는지는 확인하지 않았다. Lockerland249의 checkerboard·red grid, Memelord261의 pixel typography·초록 풀 배경·desktop-window motif, Obscura295의 pixel 캐릭터는 레트로 계열 참고다. 원본 상표/캐릭터 자산을 shared token으로 복사하지 않는다.
+
+## 순서별 시각 checkpoint — 상세 0–359
+
+기본 화면 실제 독해 **360/505**(desktop/mobile355, desktop-only5). 모든 상세 원제품 flow는 기존 Unikorns anchor 부분 확인을 제외하면 pending이며, 이 숫자는 정적 이미지 독해만 나타낸다. Rows357의 ruled paper/hand illustration과 yellow CTA는 paper 계열 참고, Ruul359의 좌측 help action+우측 FAQ는 기존 Accordion/FAQ composition 재사용 후보다.
+
+유사 소개인 Poch-studio322와 Poch.studio323의 캡처는 큰 손그림 전화/Call us와 작은 portrait/video 카드로 다르다. 같은 소개라고 시각 검토 URL을 합치지 않았다. Revolut348은 desktop Stocks와 mobile Commodities라는 서로 다른 콘텐츠를 보여 준다. 단순 반응형 reflow로 단정할 수 없어 gallery preview의 서로 다른 state일 수 있다고 기록하며 원제품과의 동일성은 pending으로 둔다.

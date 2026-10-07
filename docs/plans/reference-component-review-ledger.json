@@ -2087,8 +2087,8 @@
       "priorRationale": "현재 carousel 계약·engine 유지",
       "sourceAudit": "2026-10-07: published Manual implementation fully read; all other example code and environment/interaction variants tracked separately.",
       "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
-      "interactionReview": "pending",
-      "adoptionDecision": "기존 API + 표현 비교 — 부분 노출·custom indicator·spring 전환을 비교한다. 8px dot, hover opacity, 비활성 슬라이드 focus/AX 처리와 IntersectionObserver visible count를 실제 상태에서 확인하기 전 engine 교체를 확정하지 않는다. 실험 구현/승격/게시 완료 아님.",
+      "interactionReview": "2026-10-07: partial live review of all four variants: Enter/Space navigation, finite boundaries, hidden keyboard focus, dark, 390px resize, reduced-media transition and one pointer drag. Other drags/touch, RTL/large text/screen reader remain unverified.",
+      "adoptionDecision": "기존 Carousel/CarouselMotion 상태 엔진 유지. 다중 visible/부분 노출은 명시적 collection presentation 후보다. 원본 hover-only 탐색, 현재 위치 ARIA 부재, 폭 변경 뒤 빈 마지막 영역을 실제 확인했다. 원본 engine 복제/실험 구현/승급/게시 완료 아님.",
       "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
       "exampleSourceExtraction": {
         "date": "2026-10-07",
@@ -2141,6 +2141,17 @@
             "screenshotDigest": "7ad8245b402d33fb72cf8e7c7a43317e3428a00438ab5978dda9a351ee72454a"
           }
         ]
+      },
+      "liveVariantReview": {
+        "date": "2026-10-07",
+        "variants": 4,
+        "status": "partial",
+        "environments": [
+          "1280px light and dark LTR",
+          "390x844 dark LTR, prefers-reduced-motion reduce"
+        ],
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "originalImplementationChanged": false
       }
     },
     {
@@ -2431,8 +2442,8 @@
       "priorRationale": "overlay 동작 유지, geometry만 비교",
       "sourceAudit": "2026-10-07: published Manual implementation fully read; all other example code and environment/interaction variants tracked separately.",
       "visualReview": "2026-10-07: default desktop/light page and all captured example sections inspected; static capture only, not dark/mobile/large text/reduced motion or every interaction state. In-view and pointer-dependent effects retain state verification debt.",
-      "interactionReview": "Add Note focuses textarea. After test draft and Escape, popover disappears and activeElement is BODY; reopening shows empty textarea. Submit was not invoked.",
-      "adoptionDecision": "기존 API 유지·표현 흡수 — 원본은 aria-modal=true이지만 focus trap/inert/초점 복귀를 자체 제공하지 않는다. asChild의 onClick도 덮는다. HJM의 non-modal 편집·바깥 클릭·초점 복귀와 제품 draft를 유지한다. 실험 구현/승격/게시 완료 아님.",
+      "interactionReview": "2026-10-07: partial live review of all three variants at 390px/dark/reduced. Basic field editing and Tab outside aria-modal dialog; custom edit/Escape/exit/reopen resets value; note Escape/reopen loses textarea value with caption still hidden; close returns BODY. Other environments and save/network unverified.",
+      "adoptionDecision": "기존 Web Popover.motionOrigin/nonmodal/초점복귀 + 제품 controlled draft 유지. 원본 geometry 표현만 비교한다. 이름/초점/메모 재열기 문제를 재현했으며 원본 엔진으로 교체하지 않는다. Native Popover 제공이나 승급/게시 완료 아님.",
       "implementationBoundary": "2026-10-07: implemented Web Popover motionOrigin and three contextual editing variants within the existing origin-dialog experiment. Chromium regression covers final placement, resize while scaled, rapid reopen, outside-pointer focus and reduced-motion Escape. IAB verified failed save, retained draft after close/reopen, successful retry, light/dark and 390px large-text error layout. Full palette/RTL/frame-performance matrix and promotion remain pending; see docs/qa/2026-10-07-overlay-origin-transition.md.",
       "reviewEvidence": "../qa/2026-10-07-motion-reference-page-review.md",
       "exampleSourceExtraction": {
@@ -2479,6 +2490,16 @@
             "screenshotDigest": "cc0fccbcf829f7b95fb5b301de70f89a465a16f5f62450a415464c2a2f9196fb"
           }
         ]
+      },
+      "liveVariantReview": {
+        "date": "2026-10-07",
+        "variants": 3,
+        "status": "partial",
+        "environments": [
+          "390x844 dark LTR, prefers-reduced-motion reduce"
+        ],
+        "evidence": "docs/qa/2026-10-07-motion-reference-page-review.md",
+        "originalImplementationChanged": false
       }
     },
     {

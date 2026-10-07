@@ -161,6 +161,58 @@ Code와 대응하는 Preview 96패널을 각각 캡처하고 6개씩 모은 16�
 
 위 기록은 특정 시나리오의 관찰이며 모션 감소·모든 변형·접근성 통과 판정이 아니다.
 
+### 병렬 조사 후속: Carousel 네 변형과 MorphingPopover 세 변형
+
+2026-10-07 14:32–14:42 KST, root가 IAB의 실제 사이트를 확인했다(HJM main `e7e418a8`).
+기존 추출본의 두 Manual과 각4/3 예제 전체를 재독해했으며 새로운 페이지 수로 올리지 않는다.
+capture digest는 Carousel `6ff491c72d9de2166751759771f99ad526597d24b324e7284916096f0c0e097a`,
+MorphingPopover `ab41a743dd5d2fdef88b519378f9761f347e668a1530f10f4fca8e5a61168d06`다.
+
+Carousel의 기본·1/3폭·간격·custom indicator 네 변형을1280px/light→dark에서 조작했다.
+기본 Next Enter/첫 dot Space, 1/3폭·간격 Next 여섯 번/끝 disabled, custom4 Enter/Space를
+확인했다. 1/3폭 초기1·2·3에서 끝에는7만 보이고 나머지 폭은 비었다. 기본 dot8×8,
+탐색32×32이고 dot/custom 번호 어느 쪽도 current/pressed/selected ARIA를 제공하지 않았다.
+원본 slide는 inert/aria-hidden 없이 DOM에 남았다. 숫자만 있는 예제이므로 숨겨진 interactive
+child의 focus 누출까지 검증한 것은 아니다. 1/3폭 Next는 키보드 초점이 있어도 opacity0이었다.
+세 번째 Code tab→Shift+Tab, 좁은 화면의 Previous→Tab 양쪽에서 확인했다. hover만 reveal하는
+Manual과 일치한다. Radix tab 자동 선택으로 숨겨진 Preview에 track이 없자 최초 helper가
+실패했으며 Preview를 복원한 뒤 계속했다. 도구 오류를 원본 결함으로 세지 않는다.
+
+390×844/dark, prefers-reduced-motion=reduce(matchMedia=true)에서도 custom indicator가
+translateX -298.728%→-276.594%→0, 0→-2.11085%→-300% 중간 좌표를 보였다.
+이 경로의 공간 이동 관찰이며 사이트 전체 모션 미지원이나 FPS 측정이 아니다. 폭 변경 뒤
+간격 변형의 마지막 상태는 frame308px/translateX -300%/visible card0으로 정착했다.
+Next disabled인데 빈 영역이 보였다. Manual은 observer의 이번 entries 중 visible 개수를
+분모로 쓰고 전체 가시성 map을 유지하지 않는다. 이는 원인 후보이며 callback 전수 계측으로
+원인을 확정하지 않았다. 문서 scrollWidth395/viewport390의 넘침 원인도 미확정이다.
+custom indicator pointer drag는2→3 이동했다. 다른 세 drag·touch 경로는 미확인이다.
+
+MorphingPopover는 같은390px/dark/reduced에서 기본·blur·메모 세 변형을 확인했다.
+첫 예제 Width autoFocus/240px 편집, Max.height→Tab에서 dialog 밖 다음 Preview로 초점이
+이동해도 dialog가 남았다. aria-modal=true지만 aria-label/labelledby가 없었다. custom 변형의
+256px 편집→Escape→exit DOM 제거→재열기는100%이고 닫힌 후 activeElement=BODY였다.
+defaultValue 편집이며 제품 저장 초안이 아니다. 메모 `밤 산책 👩🏽‍💻` 입력→Escape→exit 종료→
+Add Note Enter에서는 textarea가 비었지만 note 상태가 남아 caption opacity0이었다.
+textarea의 aria-label/labelledby/placeholder는 모두 없었다. Close popover Enter 후 DOM은
+제거되고 초점은 BODY였다. Submit/서버 저장은 실행하지 않았다. 빠른 재열기 중 잠시 두
+exit/enter DOM과 중복 field ID가 보였지만 정착 뒤 하나/중복0이라 지속적 중복 결함으로
+판정하지 않는다. defaultValue attribute와 실제 input.value를 구분해 정착 값을 재확인했다.
+
+- [숨은 Next 키보드 초점](assets/2026-10-07-motion-carousel-hidden-focus.png),
+  SHA256 `e0dd6f274753ff980252ab8a51c55a569fda41d17ee95f5c0d4ebf150ef0f9e6`.
+- [폭 변경 뒤 빈 마지막 카드 영역](assets/2026-10-07-motion-carousel-resize.png),
+  SHA256 `b68050f1849ce6e286a79c2011f07c30d05bdb6c0c5dc4d3d700c872a89e11dd`.
+- [메모 재열기의 빈 값/숨은 caption](assets/2026-10-07-motion-popover-reopen.png),
+  SHA256 `01b8168362ada4c02aa42dcc2bc44a4aa1c7af78d317b91c6a6b9833b8083d6f`.
+
+이 PNG는 실제 결과 증거로 보존한다. 임시 viewport/media를 해제하고 System theme을 선택해
+복원한 뒤 본 작업의 탭을 닫았다. 메뉴 조회의 일시 timeout은 같은 살아 있는 탭 재조회로
+복구했으며 새 브라우저/탭을 시작하지 않았다. HJM 소스·CI·릴리스·소비 앱 변경은 없다.
+기존 Carousel의 stable id/선택 의미/44px/inactive hidden·inert/RTL·정지 계약과 Popover의
+nonmodal 편집/초점 복귀/controlled draft를 유지한다. 다중 visible/부분 노출은 명시적
+collection presentation 후보이며 현재 단일 active Carousel이 제공한 것으로 세지 않는다.
+두 URL도 모든 환경/상태/원본 hook·license 검토 완료는 아니다.
+
 ## 6. 미확인 범위와 후속 조건
 
 - 11개 사이트 전체 검토 미완료. [사이트 목록](../plans/reference-site-inventory.json)의 URL 수는 검토 완료 수가 아니다. canonical 중복·추가 링크 발견·차단 페이지는 별도 추적한다.

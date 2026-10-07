@@ -114,3 +114,8 @@ Native 예는 없다(renderer 없음).
 - 공간 전환 실험은 [버튼에서 이어지는 편집](../compositions/origin-dialog.md)의 Web 전용 변형이다.
 
 미게시(1.14.0 이후): 가장 가까운 프로필의 `shadow.floating`을 열린 portal에도 상속한다. 프로필이 없으면 기존 recipe 그림자를 유지한다. 초안과 비모달 초점/닫기 계약은 그대로이며 Native는 기존 Sheet 경로를 쓴다.
+
+[Motion 세 편집 예제 검토](../../../../../docs/qa/2026-10-07-motion-reference-page-review.md)에서
+aria-modal 표시와 실제 초점 경계가 다르고, 닫기 후 defaultValue 편집이 초기화되는 것을 확인했다.
+MorphingPopover 원본 엔진으로 교체하지 않는다. 공개 `motionOrigin`은 이어지는 표현만 맡고,
+제목/field label·nonmodal 의미·초점 복귀는 Popover, 저장 전 초안·실패/재시도는 제품이 소유한다.

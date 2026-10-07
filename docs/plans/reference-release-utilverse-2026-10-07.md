@@ -50,6 +50,30 @@ Manual·실제 화면·상태는 각 보고서의 별도 분모를 따른다. 21
 브랜드와 출처/이미지 불일치는 공식 원제품 구현 근거에서 제외한다. 이 checkpoint는 적용/
 승급 근거를 추적하기 위한 기록이며 사이트 전체 완료나 새 릴리스가 아니다.
 
+### 병렬 조사 checkpoint — 2026-10-07 14:52 KST
+
+아래는 저장된 보고서/URL index와 대조한 시점의 값이다. 조사자는 다음 batch를 계속 읽으며,
+이 수를 이후 전체 완료율로 재해석하지 않는다.
+
+| 대상 | 이번에 보존한 독해 범위 | 아직 별도인 범위 |
+| --- | --- | --- |
+| CTA | snapshot551: 상세505 소개/분류 + 비상세46 고유 추출 본문. 상세 기본 시각360/505(두 view355, desktop-only5) | related 목록·원제품 상태·비상세 전체 시각. live Numa 발견으로 현재 known URL은 최소552이며 새 URL 독해 미완 |
+| Magic UI | main102 전체 +2 부분/257. 보이는 컴포넌트 Manual TSX/CSS77/77 | 나머지 main153, provider 설치 탭·연결 소스·전체 예제 시각/상태. 실제 선택 흐름은4페이지 |
+| Refero | captured 본문105/1394: 일반52 +상세53/1342 | 상세1289 본문, 각 원본 화면/상태. 재구성 수치·출처 불일치는 제품 공식 토큰으로 채택하지 않음 |
+| Motion | Carousel4변형과 MorphingPopover3변형의 실제390px/dark/reduced 및 선택 키보드/입력 경로 | 모든 환경·상태·hook/license 검토는 미완. 기존 본문 독해 수에 중복 가산하지 않음 |
+
+CTA의 기존551 snapshot 내부 anchor 비교에는 새 URL이 없었지만 live related 링크에는 Numa가
+나왔다. 따라서 sitemap/capture 종료를 discovery closure로 취급하지 않는다.
+[A URL별 범위](../qa/2026-10-07-reference-parallel-a-index.json)와
+[Motion 실제 관찰](../qa/2026-10-07-motion-reference-page-review.md)을 중앙 목록/ledger와 연결했다.
+
+버튼 표현 후보도 기존 Button/IconButton의 HTML button·Pressable, loading/disabled/초점 계약과
+대조했다. Ripple/CoolMode의 별도 입력 엔진은 키보드·모션 감소·입자 수명 조건이 다르므로
+그대로 복사하지 않는다. 기존 press opacity는 유지하며 선택적 press feedback descriptor는
+아직 미구현 후보다. Carousel의 다중 visible/부분 노출도 기존 단일 active 계약과 다른
+명시적 기능 후보로 남긴다. Popover는 현재 nonmodal/초점 복귀와 controlled draft를 유지한다.
+이번 checkpoint는 문서·채택 기준 갱신이며 renderer 추가·새 실험 등록·승격·게시가 아니다.
+
 사용자가 여러 테마·질감을 토큰에 넣을지, 공통 기본값은 HJM에 두고 제품별로 관리할지 물었고 후자를 선택했다. 공통 규격으로 제품의 분위기가 같아지는 것을 피하면서 검증·재사용을 유지하기 위한 경계다. 기존 [브랜드 경계](../../packages/design-contracts/docs/brand-boundary.md)를 시작점으로 사용한다.
 
 | HJM이 제공할 것 | 제품이 관리할 것 |

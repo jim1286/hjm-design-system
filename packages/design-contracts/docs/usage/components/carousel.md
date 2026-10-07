@@ -99,6 +99,11 @@ import { Carousel } from "@hjmds/react-native/carousel";
 - 슬라이드 id는 유일하고 앞뒤 공백이 없어야 한다. 빈 배열은 던지므로 로딩·빈 상태는 마운트 전에 제품이 처리한다.
 - `composeAccessibleName`의 어순·조사는 제품 문구다. HJM은 위치 정보만 넘긴다.
 - 슬라이드 안의 시각 콘텐츠(카드·이미지)는 제품 소유다. 컨트롤·점·접근성 구조는 HJM 소유라 다시 만들지 않는다.
+- 2026-10-07 [Motion 네 변형 검토](../../../../../docs/qa/2026-10-07-motion-reference-page-review.md)와
+  [Cedar Filmstrip 대조](../../../../../docs/qa/2026-10-07-reference-parallel-c.md)에서 여러 카드가
+  동시에 보이는 strip은 단일 active panel과 다른 계약임을 확인했다. 현재 Carousel에 임의
+  `basis-1/3`/translate 스타일을 덮어 strip을 제공하지 않는다. 선택 버튼의 초점·현재 위치 의미,
+  끝 정렬·폭 변경·부분 노출 항목의 초점/읽기 순서를 함께 갖춘 명시적 구성 확장이 필요한 후보다.
 - 두 renderer는 숨겨진 슬라이드에도 `renderSlide`를 호출한다. 숨김은 네트워크 요청 취소나
   자식 unmount가 아니다. 권한 확인이 필요한 사진을 현재 페이지만 읽는 제품은 제어된
   `currentKey`와 비교해 선택되지 않은 콘텐츠를 `null`로 반환한다. 2026-10-07 Utilverse의
