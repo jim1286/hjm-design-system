@@ -4,7 +4,20 @@
 
 사용자의 병렬 전수 조사 요청으로 세 사이트를 분담했다. 수집된 HTML·소개 문구, 실제 갤러리 이미지, 원제품 동작을 분리한다. URL 수집만으로 독해·시각·상호작용 확인을 주장하지 않는다. 공용 inventory/ledger와 구현 소스는 root 담당이며 이 보고서는 조사 담당자 소유다.
 
-## 분모와 현재 범위
+## 최신 저장 범위
+
+이 보고서의 아래 기록은 순차 checkpoint 이력이다. 현재 저장값은 A 전용 index를 기준으로 한다.
+
+| 사이트 | 실제 읽은 콘텐츠 | 실제 시각 독해 | 동작 확인 한계 |
+| --- | --- | --- | --- |
+| CTA snapshot551 | 상세505 소개·분류 + 비상세46 고유 본문 | 상세505(두 preview500·desktop-only5), 비상세46 desktop 첫 viewport | 원제품 흐름은 Unikorns contact anchor 이동만; 나머지 상태/전송/전체 모바일 미완료 |
+| CTA live 신규1 | Numa DOM 소개·분류1 | Numa desktop/mobile1 | 제품 구매·의료 기능 미확인; snapshot 밖 별도 |
+| Minimal snapshot3433 | 상세3199 중 website metadata3006 + template소개193 + 나머지234 고유본문/목록, description160 | 상세desktop132(제공mobile66·desktop-only66) | Mobile switch partial66, keyboard/focus/original 흐름 미완료 |
+| DesignBookmark queue2657 | tool About/Features1800 | 최초 홈·8bitcn panel만; tool 순서 전수시각 미완료 | retro 검색·drawer·Escape·query 보존 부분 확인 |
+
+등록 제안 후보38개는 기존 API 재사용·부족 가능성·보류를 분리한 목록이다. 실제 실험 등록0, API 교체0이며 조사 전수 완료와 discovery closure를 주장하지 않는다.
+
+## 최초 checkpoint의 범위
 
 2026-10-07 14:19 KST 읽기 전용 checkpoint. 알려진 URL queue의 discovery closure는 아직 확인하지 않았다.
 
@@ -248,3 +261,141 @@ DesignBookmark ColorLeap406·ColorReview409·ConverlyColors441·Coolors450은역
 현재 소스를 다시 확인하니 영상 미리보기는 양 renderer에서 이미 `배포/구성/정보 표시/영상 미리보기`이며 Web id는 `compositions-information-video-preview`다. A-20은 기존 배포 항목의 변형·개선 후보로 연결하고 같은 이름의 실험을 새로 만들지 않는다. 이전 표의 기존 실험이라는 표현은 이 현재 상태로 정정한다. 등록·승급 완료는 주장하지 않는다.
 
 구독 양식 후보에서 Janvi 연락 달력과 Wrike 무료 체험을 제외했고, 영상 후보에서 정적 장식만으로 영상이라고 확정할 수 없는 출처를 제외했다. 앱/코드 후보도 실제 download/store/QR가 관찰된 출처로 제한했다. Minimal 출처의 mobile 여부는 개별 visual record가 증명하는 경우에만 인정한다. 28개는 현재 기록된 후보 범주이며 이후 미검토 페이지에서 추가 후보가 나올 수 있으므로 목록 전수 완료 플래그는 false다.
+
+## 후속 본문·시각 checkpoint — Minimal1000 / DesignBookmark800
+
+Minimal 상세0–999의 고유 metadata1000/3199를 실제 읽었다. 소개 추가독해는 기존160을 유지하고 related·original·full HTML/code는 제외한다. 처음600–699 출력이 잘렸으므로 이 출력 자체를 완료로 세지 않고600–799를 footer/반복블록만 제외해 다시 전체 읽었다. Denmu688은 creative direction/design/development credit를 나누며 Durup767은 visual identity와development를 나누고 ElenaBorisova798은 brand/illustration/website credit를 나눈다. DDS669/670, DennisAdelmann689–691, Department692/693, Diffusion716/717, Elias801/802, Explose862/863, Feed894/896, Florent931/932와같은domain의별도 URL/date를 합치지 않았다. Type빈값이나도구/제품이름만으로 새로운 UI interaction을 확인했다고 주장하지 않는다.
+
+DesignBookmark tool0–799의 category/pricing/About/Features800개를 실제 읽었다. 현재crawler 수집 1827와tool구조 1724는 읽기 완료 수800과 구분한다. DotMatrix604 loader·Drawably607 손그림UI·EpicEasing652·Eva658·EvilButtons662/EvilCharts663·Float719/Flowbite726/Fluent731·FramePad778/Frameblox779/Framerize796/FramesX798 소개를 읽었으나 원사이트/코드·Native·license는 미확인이라 HJM교체근거가 아니다. Dub620/Endel649는 DesignInspiration분류이지만 실제소개는 linktracking/soundscape라 category자동등록하지 않는다. FramerSupply789 About의 Inmes 문구는도구목적과어긋나 provenance 이상으로남긴다. Fonts directory의 상업이용/free문구도 원license확인으로세지않는다.
+
+Minimal 상세24–35 desktop12를 추가실제 읽고 제공mobile5(25/26/27/28/31)는 click후metadata/image변경까지확인했다. 합계desktop36, 두preview16, desktop-only20이며 originalbreakpoint·keyboard·fullcopy·상태미완료다.24 56은white serif소개/서비스목록/점장식,25 5AM은gray큰type와photo,26 70Materia는concrete제품사진,27 855HOWTOQUIT는paper/grain표면과큰번호/약사진,28 9.8은serif·forest사진,29 AColorBright는큰소개문장,30 Adam은색block/사진collage·상품행동,31 Journal은black3Dbook·RequestACopy,32 AM은black작품2열,33 ASavage는photo와색navigationpanel,34 splash는pastelpink제품소개/newsletter,35 consciouspractice는editorial색columns다.31 desktop닫힌책/mobile열린책 등 다른staticstate는반응형구조변화로단정하지않는다.
+
+후보는기존28에서31범주로 늘렸고 URL별근거는 A index에 연결했다. 모두 proposal-only, 실제등록0이다.
+
+| 후보 | 제안 실험 경로 | 기존 API·판단 | 남음 |
+| --- | --- | --- | --- |
+| A-29 손그림 경계와 배경 | `실험/컴포넌트/시각 효과/손그림 경계와 배경` | paper·EffectSurface·Card/Image/Icon 슬롯 우선, 새경계API 보류 | Drawably/Excalidraw 소개뿐; 실제시각·code/license·두renderer 미확인 |
+| A-30 점 배열 로딩 표현 | `실험/구성/비교와 검증/점 배열 로딩 표현` | 기존 Spinner/Progress/Skeleton·pending 의미 보존 | DotMatrix 소개뿐; originalloader/a11y/reducedmotion/Native 미확인 |
+| A-31 움직임 속도와 감속 | `실험/구성/비교와 검증/움직임 속도와 감속` | 기존 motion token/treatment 비교 우선 | EpicEasing 소개뿐; easing코드·timing/Native 미확인 |
+
+### Minimal 기본시각 후속 — 상세0–47
+
+desktop48/제공mobile21/desktop-only27의 갤러리 기본시각을 실제 읽었다. 새36AAFF는gray3Dbook,37/38AaronShapiro는각각큰sans소개와serifwork목록으로 서로다른URL의별도표현,39AATHER는warmcandle사진과shop행동,40AB/GD는큰type·가로줄과원형graphic,41Abeer는paper표면과serif질문,42Abhay는파란손icon/큰제목,43Abhijit는perspective작품카드열,44AcceptProceed는어두운사진위소개,45Acctual은연한배경·floatingproduct이미지와email/demo행동,46AcidHouse는white공간과studio사진,47ActiveSpaces는lavender문구와곡선장식이다. 제공Mobile40/42/43/45/46는 실제click후image/metadata변경을확인했다.
+
+43의좌우scroll/swipe,44의영상배경재생,47의곡선animation을 실제시험한것은아니다.40의줄무늬graphic은actualstatic시각근거로기존A-25질감비교에추가하고,43의입체카드배열은A-08장식/정보slot후보로추가한다.45의email+demo는구독으로분류하지않고A-09행동의도비교로연결한다. 새API·자동interaction추가근거없음.
+
+### DesignBookmark 후속 본문 — 상세0–999
+
+About/Features독해1000개를완료했고source 수집 1845와tool분모 1742는별도다. GenerativeLoaders833는기존loading의generative표현소개로A-26구현비교에연결한다. Grainient891/halftone921는A-25질감,gradient883–890/HappyHues925/Huemint985는A-04색대비,손그림Funnn821/Highlights956는A-29에연결했다. HoloSticker963 foil설정소개는새A-32반사무늬·광택후보이며actualoriginalappearance/code 미확인이다. 현재EffectSurface layers는mesh/glow/grain/noise 네종류이고 foil/hologram이없으므로asset슬롯으로먼저표현하며새materialAPI추가를승인했다고보지않는다.
+
+이batch는원사이트/추가category 전체/시각·interaction검토완료가아니다. GeminiNotebook830의명칭·license/freeclaims·Gatsby826cloud/Hetzner949cookie문구등은directory원문이고제품계약으로인증하지않는다.등록후보는32범주·실제등록0이며후보32경로는 `실험/구성/비교와 검증/반사 무늬와 광택`이다. 모션사용지침을읽어기존preset micro120/enter200/exit120/context320와easing·Native spring·reducedMotion계약을A-31비교기준으로명시했다.
+
+### Minimal 본문 후속 — 상세0–1399
+
+고유 preview metadata1400/3199를 실제 읽었고description추가160·기본시각48/mobile21은유지한다. 새1000–1399의 소개반복문·Related·원제품은포함하지않는다. GeneralIdea1022의creative direction/art direction/development, HouseYellow1162의developer/designer, Innerwork1219의development/design, KAAN1365의design-development credit를 분리해보존했다. Instrument1228–1230, JoshSender1335–1338처럼다른게시일의동일domain 상세를합치지않는다. Garden1007의finance/law, Hona1155healthcare, IntegratedPodiatry1232 등은분류소개일뿐 새로운HJMinteraction이나제품효능검증이아니다. UI미확인metadata만으로실험에장면을자동복제하지않는다.
+
+### Minimal 기본시각 후속 — 상세0–59
+
+desktop60/제공mobile25/desktop-only35를실제읽었다.48ActualSource는blackserif행사표현,49actualidea는dark굵은work목록,50Ada는white serif작품목록,51Adaline는warmforestlandscape·소개/brandlogos,52Adam은white3Dblock,53Adaptable은bluephoto와명시Play,54ADBC는큰type·사진desktop과whiteintro mobile,55Adcker는paper표면과큰sans/portrait장식,56Adda는3열작품grid,57Adele는interior photo에nav·subscribe,58Admir는whitegraphicwork,59Adoratorio는dark작품카드다. Mobile51/52/54/55를실제click후읽었고54처럼다른state/scroll의static이미지는원제품반응형결함또는재배치로단정하지않는다.53Play는기존배포영상미리보기A-20출처로연결하되실제재생은미확인이다.
+
+### Minimal 본문 후속 — 상세0–1599
+
+고유metadata1600/3199를 실제 읽었다. description160/기본시각60/제공mobile25는별도층을유지한다. KO1400의design/build, KyivCannabis1422의art/brand/web/dev/projectmanagement, LimeIQ1473의design/creativecoding/management, MainRose1547/MandyGraham1562/March20041578의credit를원문단위로보존했다. Literal1485/1486, LoveMoney1512/1513, LowerEast1515/1516, Luca1518/1519, MAD1533/1534, Mambo1559/1560, ManuelMoreale1566–1568은서로다른URL/domain/date에따라개별기록을유지한다. 메타만확인한이batch를새theme표현·동작·시각검토로주장하지않는다.
+
+### Minimal 기본시각 후속 — 상세0–71
+
+desktop72/제공mobile29/desktop-only43을 실제 읽었다.60AdvanceCopy는colored editorial tilegrid,61Aesop은black/white bottleimage,62Aesse는black소개/white글자,63AesseLogos는white소개,64Aesse는gray businesscard,65Afrika는큰sans·설명·bookphoto,66AfterHours는색·글자collage와mobile사진,67AfterParty는bluecustomtype·영상/작품목록,68Agnes는seriflargeheading·fashionphoto,69Agora는serif설명·단일행동·productpreview,70Agronomy는제품사진/size선택처럼보이는control·shopping행동,71Ahmad는cream/photo/projectnavigation이다.
+
+Mobile66/67/69/70를 실제전환후읽었고66의사진/67의logo표현은desktop과state가달라실제반응형동일조건으로인증하지않는다.70은새A-33 `실험/구성/선택과 필터/상품 옵션과 미리보기` 후보이며 기존Select/RadioGroup/Image/AspectRatio/Card/Button과제품controlledoption을재사용한다.옵션전환·동기이미지·가격/재고·구매는실행하지않아새engine/교체는보류한다.후보33·실제등록0이다.
+
+### DesignBookmark 본문 후속 — 상세0–1199
+
+category/pricing/About/Features1200개를순서대로실제읽었다. 소개의accessible/color/license/성능문구는검증주장으로전환하지않는다. InputOTP1041은양renderer이미공개된OtpField와숫자OTP/paste/autofill/failure복구계약부터비교하는A-26출처이며원코드/동작未확인이라교체하지않는다. QR원payload는공개QRCode가있어서A-21재사용표를QRCode우선으로정밀화했고갤러리이미지는Image슬롯에둔다. InclusiveColor1032/Khroma1112/Leonardo1169는A-04대비·색, icon1006–1023은A-27asset/license검토, illustration1026/1062는A-29, Kinetics1117/Lenis1167는A-31motion검토에연결했다.
+
+Mac전용keyboard sound도구Keeby1101/Klack1124는실제HJMtheme동작근거가없어sharedaudioAPI후보로채택하지않고불채택예시에정확한URL/이유를보존했다. Lenis의smoothscroll소개도theme가keyboard/anchor/스크롤동작을강제로바꿔도된다는근거가아니다. InterfacesDS1050 About의Framer/Figma설명차이·Ionicons1059 NoResults문구·Kinde1115CookieSettings는directory source혼입으로유지한다. 후보33·등록0·전수시각/원본flow미완료이다.
+
+### Minimal 본문 후속 — 상세0–1799
+
+고유metadata1800/3199를실제읽었다. description160·기본desktop72/제공mobile29를유지하고metadata만으로material/interaction을선정하지않는다. Melody1653/Minorstep1703의creative direction과design/dev, Misato1709의webdevelopment·creative direction, Molo1723의design/dev와fontSimonMono credit, Mutebox1762의creative direction/visualidentity/development를분리해보존했다. MattCarvalho1619–1621, Matthew1626/1627, Maxim1637/1638, Metalab1659/1660, Moon1733/1734는같은domain별도게시기록으로유지한다. Milkshake1692/1693·Moniker1725/1726은같은이름이지만domain/제품종류도달라병합하지않는다. Metalmorphism1661은도구이름/metadata만읽었으므로실제metal표면이나API를확인한후보로승격하지않는다.
+
+### Minimal 본문 후속 — 상세0–1999
+
+고유metadata2000/3199를실제읽었고Original/Related/소개추가description은이batch에포함하지않는다. 원래먼저확인한Ogon은순서1887에도포함되어source완료수에중복합산하지않는다. NicolasBussière1812의photography/set/copy/motion/front-backdev, Obys1874의design/creative/dev, OnImpulse1912·OriginalSin1940·Otherdays1950의designer/developer credits를그대로보존했다. Nord1847/1848, Norm1850–1852, NotStudio1857/1858, OhMy1889/1890/1892, Olssøn1906/1907, Only1915/1916은domain/게시일/제품다름을합치지않았다. 이름Palette/Paper/Osmo/OrderChaos만으로색·종이texture·interaction실험후보를새로만들지않고시각/원본동작확인queue를유지한다.
+
+### Minimal 기본시각 후속 — 상세0–83
+
+desktop84/제공mobile37/desktop-only47를실제읽었다.72/73AhmedYasser는각각darkprojectgrid와whitephoto/profile,74AIAerobics는darkintro·LaunchExperiment,75Aidan은darkgreen/grid/serif/collage,76Aim은purple3Dphone·QR,77aimpie는dark3Ddoorway/mascot,78/79Aino는서로다른white/dark ASCIIgraphic,80Airvoir는blueairplane/quoteform,81Ajeeb은blackcondensedtype/orangecards,82Akademi는white큰sans,83akeo는whiteembosstype/blackgraphic이다. 제공Mobile72/73/75/76/77/78/79/80을click후실제읽었다. Aino78의TapToContinue는갤러리capture문구일뿐실제로눌러전환한것이아니며originalinteraction미완료다.
+
+A-25에Aino78/79actualASCII기본시각을연결했다. 새A-34 `실험/구성/입력과 작성/장소와 기간 신청`은Airvoir정적장소·날짜·승객·연락처·request구성으로양renderer공개DatePicker/DateRangePicker/Select/TextField와기존날짜입력구성을우선재사용한다. autocomplete/calendar/quote전송·validation/복구를확인하지않아새engine·전송API교체는보류다.등록후보34·실제등록0이다.
+
+### Minimal 본문 후속 — 상세0–2399
+
+고유 metadata2400/3199를 실제 읽었으며 description160·기본desktop84/제공mobile37은 유지한다. Paysages2016·PerformProduce2023·Pihlmann2045·Polecat2076·PPNeueMontreal2101·Provider2121·RAWorkshop2141·Remark2179·RigAI2206·RobertFeasley2213·Rory2231·Roxoseco2235·Savate2298·Scholz2306·Seth2345·SevenGrid2347·Seventeen2348·ShortSentence2374·SideStage2381의 디자인·개발·사진·서체 credit는 개별 원문으로 보존했다. Pavel2012/2013·Pizza2055/2056·Polytechnic2081/2082·Regis2170/2171·RobertToman2215/2216·Roger2222/2223·SamDallyn2267/2268·SamuelMedved2281/2282·Say2301/2302·Scott2309/2310·Sgustok2352/2353·SheOnly2360/2361·ShiftWalk2367/2368·SimonFreund2390/2391은 별도URL/date라 합치지 않았다. Rezo2196/2197의 도메인 차이와 ShaderGradient2354/Shapes2357의 이름·metadata는 원문 범위일 뿐 실제 gradient/shape 동작이나 소유 관계 확인이 아니다.
+
+### Minimal 본문 후속 — 상세0–2799와 상세 종류 구분
+
+Back 구조 상세2800/3199의 실제 독해를 보존했다. 0–2621은 website 고유metadata2622개이고 2622–2799는 template178개의 제목·고유소개·플랫폼·offer이다. 3199를 모두 website metadata라고 부르지 않도록 index에서 종류별 분모/독해수를 나눴다. Template 소개의 CMS·반응형·conversion·접근성·smooth motion 주장은 원소개이며 demo/code/license/실제 동작으로 검증한 것이 아니다. Template Related는 제외했으며 큰 출력 두 번이 잘린 batch는 전부 다시 잘리지 않는 범위로 읽은 뒤 완료수에 넣었다. Sofaknows2431·STAGECREW2466·StudioArvin2509·StudioChen2517·StudioPingPong2550·Sunday2575·SurImpression2583·TForTroels2599·Talgh2604의credit는 역할별로 보존한다.
+
+### Minimal 기본시각 후속 — 상세0–95
+
+desktop96/제공mobile45/desktop-only51을 실제 읽었다.84AKU는 사진작품grid,85AKU는소개/큰sans 프로젝트이름,86Akuto는ChordMachine제품/암석사진·원형mailinglist와mobilepreorder,87Alaa는cream/red소개·serif/sans조합,88AlbumColors는큰type/album/circle/Refresh문구,89Aleksandr는dark손collage·scrollbadge,90Ales는white굵은소개,91AlexAlspaugh는serif소개/phonepreview,92AlexBadovsky는darkblurredwork·floating삼각contactpanel,93AlexEzhov는큰white여백/작은type/sticker,94AlexKalashnikov는sans큰소개와프로젝트설명,95AlexKyritsis는소개+workimage다. Mobile86/87/88/89/91/92/93/94는 click후 실제 이미지로 읽었다.88refresh/89scroll/92panel hide/93graphicinteraction은정적문구만이며누르거나원제품상태전환을실행하지않았다. 새API·후보중복추가없이 기존A-05/08/09/13/24 표현비교범위로 유지한다.
+
+### Minimal Back 상세 소개·metadata층 snapshot 완료 —3199
+
+현재 수집 snapshot의 Back 상세3199개를 모두 순서대로 읽었다. website3006개의 고유이름·외부domain·분류·submitter/credit·게시일·제공preview metadata와 template193개의 제목·고유소개·플랫폼/offer만 완료한 층이다. 비상세234·website 전체description·Related·full HTML/code·라이선스·원제품상태·시각 대부분이 남아 모든페이지 검토 완료가 아니다. website description 추가 독해는160만 유지하고 exact 남은description 개수는 아직 전수분류하지 않았다.
+
+마지막399 중 Trinity2803의 retirement investing소개·template일반광고문·Terminal2820의이름·Wist3127 AI소개·xmcp3155 code소개는 그대로 directory 소개로 기록하며 실제품질/성능/동작증거로쓰지않는다. TheBrandt2834·Tiffany2901·Tillmann2903·TKCreative2921·Topicals2948·TRStudio2953·UnevenObjects3002·Unify3004·UnionBoulangerie3006·UnitedFlags3007·VanGogh3036·Watts3097·Wwake3146·Xanvier3148의credit는역할별로유지한다. template소개만으로 새API를추가하지않으며 기존34후보와범위보류를유지한다.
+
+### Minimal 나머지234 고유본문·목록 소개층 완료
+
+비Back234개는 tool상세106와홈/소개/법률/제출/구독/북마크/collection/platform/tag목록128이다. 각URL의고유본문·tool소개·목록이름/소개·페이지이동문구를 실제읽고 own index `otherRecords`에URL/sourceSHA/읽은excerpt를추가했다. 반복nav/footer·hiddenfiltertaxonomy의동적counter와toolRelated는개별독해층에서제외했다. 이는수집snapshot3433개전부의고유소개또는metadata층을읽은것이며 discoveryclosure·full HTML/code·사이트의전체페이지시각/flow완료가아니다. 목록에131pages같은표기가있지만paginationURL들이snapshot에얼마나포함되었는지는추가발견검사가남았다.
+
+Bookmarks의NoWebsites/collection관리·구독confirmation의24시간만료·제출thanks/접수설명을읽었지만새bookmark쓰기/실제가입·제출/전송은실행하지않았다. Tool소개Pryzm205/Pointilliser199/Displace145는기존A-25질감비교,RealtimeColors207/Hexful169/Picular195는A-04색,icons163/172/190/210은A-27에흡수될소개근거로분류한다. NoCodeFlow188 map기능소개는원동작/UI가미확인이라신규mapengine의추가근거가아니다. Polymer200은Analytics분류와채용dashboard소개의차이를보존한다.
+
+Legal페이지(May2026)의gallery screenshot/thumbnail/public reuse범위를읽어갤러리bitmap을실험asset으로채택하지않는근거를기록했다. 제안실험은자체fixture·제품asset과기존HJM슬롯으로재구성하며단순gallery공개여부를원vendor/code/font라이선스로세지않는다. 현재후보34·등록0이다.
+
+### Minimal 저장·페이지 이동 기존 배포 대응
+
+새범주A-35는기존 `배포/화면/콘텐츠/저장한 항목`의SavedItemsScreen으로, A-36은기존 `배포/구성/탐색과 이동/보관함과 페이지 이동`의Breadcrumb/Pagination으로연결했다. 동명실험을새로추가하지않고기존배포의검토후보로기록한다. 두사용지침전문을읽어SavedItems의제품data/생성Sheet/해제Undo콜백과Pagination의Web전용·포커스/실패범위를대조했다. Minimalcollection빈상태/목록첫페이지/Next문구는본문독해뿐이며원생성·저장·삭제·복구·pagination실행은미확인이다. Native에Breadcrumb/Pagination이있다고주장하지않고LoadMore/플랫폼navigation을먼저고른다.후보36·등록0, API교체없음이다.
+
+### Minimal 기본시각 후속 — 상세0–107
+
+desktop108/제공mobile51/desktop-only57을실제읽었다.96AlexLitovka는white serif큰소개/inlineicon,97AlexNaghavi는dark작은소개/workgrid,98AlexSingh는white소개·영상처럼보이는이미지,99Alexandra는cream/redarrow·언어표시와번역가소개,100Alexandre는darkwatchwork,101Alexey는중앙소개/작은navigation,102Alexis는portrait/소개,103Ali는workphone·gift장식desktop과phoneworkmobile,104James는흰여백/원형logo,105alli는물체사진grid,106Allagi는albumart·track정보/playglyph·외부Spotify/thumbnail줄,107Allan은handdrawn취소표현·링크·worktext다. Mobile96/97/99/102/103/106은click후실제읽었고103의서로다른contentstaticcapture를동일breakpoint재배치로단정하지않았다.
+
+새A-37 `실험/구성/정보 표시/음원 정보와 재생`은기존 optional-extensionVoiceNote(`/voice-note`,rootexport아님)·Asset/Image/Button/Link를먼저활용한다. Asset사용지침전문으로재생기/음원/이미지asset은제품소유·controlledduration/position은실제player값임을확인했다. Allagi정적play/skip glyph만읽었고재생·탐색·track전환·Spotify경로는실행하지않아audioengine/API교체를추가하지않는다. 후보37·실제등록0이다.
+
+### DesignBookmark 후속 본문 — 상세0–1249
+
+About/Features1250개를실제읽었다. Lit1200/Liveblocks1202/Liveline1203소개는현재UI/API비교보류범위로유지한다. Lordicon1224/Lottie1226/Files1227/Lottielab1228/Lucide1235/Animated1236는소개만확인해기존asset/Icon/motion계약으로먼저연결하며원runtime·license·reducedmotion미완료다. LofiSpace1207는Mac음악도구소개이므로theme가배경음악을자동재생하는공유API근거로채택하지않는다. Lummi1239의license주장·Logowik1215Backend분류·Lusha1242DesignInspiration분류는directory원문과검증을구분한다.
+
+### DesignBookmark 후속 본문 — 상세0–1499
+
+50개 단위로 category/pricing/About/Features를 실제 읽어 누계1500으로늘렸다. 반복breadcrumb/title/Visitwebsite만 출력에서줄이고 모든고유소개·featuredFeatures를읽었다. MagicPattern1260/MeshGradients1312/OKLCH1494는A-04/25, ModernFontStacks1361는A-05, Mantine1277/MUI1394/Nexus1436/NumberFlow1477는A-26으로기존token/Text/CounterBadge/입력·상태API비교에흡수한다. NumberFlow의accessibility소개는실제읽은코드/동작근거가아니며 새숫자engine확정이나의존성추가없음이다. Microinteractions1320/Motion1380/Primitives1384는A-31로연결한다. MagicUI1262·MotionPrimitives1384는directory소개층뿐이며원사이트담당자의code/flow전수를대체하지않는다.
+
+Matext1291 CookiePreferences·MicrosoftBookings1321의writing소개·NovaUI1472의Framer/Figma소개차이·NocoDB1442cookie·MonitorControl1372savedsearch문구는source혼입으로보존한다. 무료/상업asset문구(Nappy1416/NegativeSpace1423/NewOldStock1430)나성능/전환율·보안주장은원license/실측으로인증하지않는다. MyKeep1408/mymind1409는기존A-35저장화면의소개근거로연결하고제품storage/permission은검증이남았다.후보37·등록0이다.
+
+### Minimal 기본시각 후속 — 상세0–119
+
+desktop120/제공mobile57/desktop-only63을 실제읽었다.109Alonzo는최초image미로딩blank를성공수에서제외하고별도파일로보존했으며 freshDOMnaturalWidth>0뒤재캡처를실제다시읽었다.108Alleyway는3column소개/서비스/work사진과mobile단일column,109Alonzo는중앙소개/사진,110Aloof는paperbusinesscard,111Alphabet은색회화face,112Alphamark는큰sans/B2B/work,113Alphatek는dark제품graphic,114ALSO는landscape제품bicycle/order와mobile상단reserve,115AltBorder는큰sans/inline사진/feed,116Amateur는긴소개+SelectedWork,117amo는collage/appstore,118Amos는흰여백/큰nav,119Amour는cocktail제품/사진split/arrow/menu다. Mobile108/112/114/115/117/119를click후읽었으며119의mobile제품공백은원제품loading/error라고단정하지않고다른staticcapture조건으로남겼다.114order/reserve·117store·119arrow/menu는실행하지않았다.새API등록없음이다.
+
+### 제품 preview 화살표의 기존 Carousel 대응
+
+A-38은새실험이아닌기존 `배포/컴포넌트/데이터 표시/캐러셀` 개선검토로연결한다. 사용지침전문으로singleactivepanel·finiteid·controlledselection·renderer별swipe·autoplay/reducedmotion과숨긴slide렌더범위를확인했다. Amour정적arrow는원arrow전환/swipe실행증거가아니고Allagi의작은thumbnail줄은multiitem목록이라단일panelAPI동일의근거로쓰지않는다. Carousel에임의stripCSS를덮지않는현재지침과root의별도Filmstrip검토를유지한다.후보38·등록0이다.
+
+
+## DesignBookmark About 1700 checkpoint
+
+기존 순서1500–1699의 200개를 각50개씩 실제 읽은 뒤 URL·원문 SHA·독해 범위를 index에 저장했다. 현재 수집 snapshot2009, tool1906이며 기존 crawler는 보존했다. queue2657에 대한 수집·전체 독해 완료를 뜻하지 않는다.
+
+OpenDoodles/OpenPeeps는 손그림 자산 소개, Phosphor/PixelArtIcons는 아이콘 소개, OriginUI/ParkUI/Polaris는 UI 라이브러리 소개를 읽었다. 기존 Icon/Image 및 입력·상태 계약과 비교하는 기존 후보로 합친다. 라이선스·코드·native·실제 렌더는 아직 확인하지 않았으므로 해당 자산이나 라이브러리 도입을 제안하지 않는다. Paper는 디자인 canvas 도구이고 PaperAnimator/Paperman도 종이 관련 소개만 있으므로 실제 종이 질감 확인으로 세지 않는다. PageFlows·Polypane·Playwright는 기존 검토 절차 참고 소개이며 새 QA 설치나 원격CI 대상이 아니다.
+
+Outseta의 가입 완료 문구, Pixlo의 JavaScript 요구, PixelSnap 항목의 CleanShot 설명, PocketTube의 Payments/Finance 분류와 실제 소개 등 원문 불일치도 보존한다. 도구명과 분류를 근거로 HJM 기능을 추정하지 않는다. 이번 checkpoint는 About/Features 독해만 늘었고 DesignBookmark 시각·원제품 동작은 늘지 않았다.
+
+
+## Minimal 기본 화면132 · DesignBookmark About1800 checkpoint
+
+Minimal120–131의 desktop12/mobile9 이미지를 실제 보며 기본 구성·색·글자 위계·행동 위치를 읽었다. 현재 desktop132/mobile66, desktop-only66이다. 전체 작은 문구와 원제품 상태·동작을 완료한 것은 아니다. amra120은 흰 바탕의 중앙 소개·그라데이션 원·영상 형태 play 행동이고, Amzigo121은 보라 소개/대시보드 이미지 위 cookie panel이 mobile 아래 행동 일부와 겹친 정적 캡처다. 실제 cookie 처리나 현제품 결함으로 판정하지 않는다. An Open Understanding122는 주황 소개와 짙은 보라 작품 구획, Ana Rita Morais123는 desktop 경력/본문 두 열과 mobile 본문 중심이다. Anagram Club124는 검은 배경 큰 소개와 작품 카드, Anagram.paris125는 검은 sans 소개와 민트 손글씨, Anagrama126은 검은 바탕 RESEARCH/DESIGN/DEVELOPMENT 큰 제목이다.
+
+Anatoly Ivanov127는 desktop 검은 laptop 작품 화면과 mobile 흰 소개+작품 카드로 캡처 상태가 다르다. 같은 화면의 breakpoint 증거로 쓰지 않는다. Ancient Ritual128는 나무 sauna 사진과 Reserve Now, AND2ES129는 가운데 책 사진 및 주변 작은 사진 배열·mobile 하단 테두리 탐색, AndAgain130는 검은 바탕 큰 로고·소개 격자, Andermatt131은 설산 사진 위 작은 intro·mobile menu가 보인다. AND2ES의 배열은 실제 선택/스크롤/활성 항목을 확인하지 않아 Carousel 계약과 동일시하지 않는다. 기존 후보 A01/A05/A20/A23/A24/A29로 흡수하며 이번 정적 독해만으로 추가 실험을 만들지 않는다.
+
+DesignBookmark1700–1799는 각50개씩 category/pricing/About/Features를 실제 읽고 URL·SHA·본문을 저장했다. Practical UI/Primer/Preline UI/Radix UI/Rare UI/React Bits 소개는 A26 비교 후보, Radix Colors/Realtime Colors 소개는 A04 색 비교 참고로 합친다. 실제 코드·버전·접근성·Native·라이선스는 미확인이다. Prototype/ProtoPie/Principle 소개만으로 센서/모션 engine을 HJM에 추가하지 않는다. Receipt Maker는 영수증 생성 도구 소개뿐이며 실제 종이 질감 근거로 삼지 않는다. Public Work/pxhere의 무료·저작권 설명도 자산 사용 허가로 확정하지 않는다. Puppeteer/Qampanion 등 검토 도구 소개는 설치·실행 없이 기존 검증 절차 참고로 남긴다. 현재 수집2019/tool1916이며 queue2657 전수 수집·원제품 검토는 계속 미완료다.

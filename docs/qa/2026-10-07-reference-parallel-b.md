@@ -27,9 +27,9 @@ HJM HjmProvider의 controlled theme/designProfile 및 environment.reducedMotion�
 
 | 범위 | 전체 분모 | 이번 독해 | 미확인 |
 | --- | ---: | ---: | --- |
-| Magic UI 수집 페이지 | 257 | 본문 전체 112, 부분 2 | 본문 143개 미검토 |
+| Magic UI 수집 페이지 | 257 | 본문 전체 178, 부분 2 | 본문 77개 미검토 |
 | 그중 docs | 92 | 전체 90, 부분 2 | Animated Beam/Dock의 긴 SVG 원시 geometry 및 일부 잘린 중간 구간 |
-| 그중 홈페이지와 blog | 165 | 홈페이지 및 blog 첫 21개, 총 22 | blog 143개 |
+| 그중 홈페이지와 blog | 165 | 홈페이지 및 blog 첫 87개, 총 88 | blog 77개 |
 | 컴포넌트 Manual 구현 | 77 | 77페이지, URL별 범위와 판단은 인덱스 manualReview/Notes | MCP Manual·설치 provider 탭과 실제 예제 상태 |
 | 실제 화면·선택 흐름 | 별도 | Ripple Button·Animated Theme Toggler·BentoGrid·HeroVideoDialog 4페이지의 데스크톱 선택 상태 | 나머지 페이지·모든 예제·환경 조합 |
 
@@ -79,7 +79,7 @@ default dark preview에서 Play video에 Enter를 보내 overlay/iframe이 1개�
 
 ## Aceternity 본문·Manual 증분 범위
 
-수집 501 URL의 별도 상태를 같은 인덱스 additionalSites에 보존한다. 이번 B의 전체 본문 독해 484, 부분 1(ai-recommendations), 미검토 16이다. Manual 전체 10, 실제 선택 화면/flow 2(FileUpload·AnimatedModal)이며 parent가 이전에 검토한 네 페이지는 중복 완료로 더하지 않는다. ai-recommendations의 427,980자 catalog는 첫 구간 이후 출력이 잘려 전체 완료로 세지 않는다.
+수집 501 URL의 별도 상태를 같은 인덱스 additionalSites에 보존한다. 이번 B의 전체 공개 core 본문 독해 500, 부분 1(ai-recommendations), core 미독해 0이다. Manual 전체 18, 실제 선택 화면 9·flow 3(FileUpload·AnimatedModal)이며 parent가 이전에 검토한 네 페이지는 중복 완료로 더하지 않는다. ai-recommendations의 427,980자 catalog는 첫 구간 이후 출력이 잘려 전체 완료로 세지 않는다.
 
 URL: https://ui.aceternity.com/components/3d-card-effect
 
@@ -292,3 +292,143 @@ Home와 Tailwind/Motion·Background·Bento·AI SaaS·Motion·Minimal 일곱 aggr
 ### Aceternity core 484 checkpoint
 
 Contact·CTA·FAQ·Feature·Footer·Hero aggregate 여섯 페이지의 모든 개별 요약/가이드/FAQ/related를 읽었다. Hero22→실제26, Feature22→실제24, CTA6→실제7 차이를 기록했다. 원문의 SEO·보안·conversion·모든 모션이 transform-only라는 주장을 실제 구현 검증이나 HJM 새 정책으로 승격하지 않는다. linked block별 후보와 중복 등록하지 않는다.
+
+### Aceternity core 500 + 1부분 checkpoint
+
+남은 aggregate/Explore/Pages/Showcase/가격 페이지 16 URL을 모두 공개 core 본문으로 읽었다. 현재 캡처 501 URL 중 **500 전체 core, AI recommendations 한 URL 부분 독해**다. 공통 후기·YouTube·footer는 반복 promotion으로 범위를 명시해 제외하며 본문 전체라는 표현을 전체 DOM·숨겨진 코드·모든 UI 상태 완료로 쓰지 않는다. Manual 구현은 10 URL, 실제 선택 flow는 2 URL 그대로다.
+
+Login의 제공자별 로딩 권고는 포트폴리오 LS의 카드 중앙 단일 로딩과 다르므로 LS를 유지한다. Navbar의 모든 키보드 지원 주장, pricing/marketing의 성과·SEO 문구는 실제 코드/동작 검증이 아니다. 가격표의 Annual은 yearly인데 머리말은 one-time이라 원문 불일치를 기록했다. Pricing6→7, Testimonial7→9, Logo6→7 차이도 남겼다. 외부 Showcase 36개 사이트와 Pro Show more 확장은 아직 조사하지 않았다.
+
+Meeting Notes·SaaS Pages는 각각 9·8 section 목록/공유 브랜드/설치/FAQ를 끝까지 읽고 기존 `실험/화면/소개/서비스 목적별 소개`에 목적별 변형 후보로 매핑했다. 유료 source·live preview·모든 상태가 미확인이므로 실제 화면 등록 완료로 표시하지 않는다.
+
+### Aceternity Blocks 180와 Labs 6 후보 매핑
+
+개별 Blocks 180 URL 전부에 제안 경로·기존 API·표현/구성 범위·선행 조건을 기록했다. Category 22 URL은 중복 등록에서 제외했다. Labs 6개는 Loading playground와 짧은 설명만 있으므로 아이디어 후보로 매핑하고 소스·시각·flow 미확인을 유지한다. 각 URL의 원본 설명과 개별 판단은 index에 있고 아래 묶음은 실험을 새 엔진 180개로 복제하라는 뜻이 아니다. 기존/다른 사이트와 같은 경로는 해당 항목의 변형 스토리로 먼저 합친다. 가입·로그인은 LS pending 정책을 지키며 chat/파일/uptime/device illustration은 실제 업무·OS 상태 엔진으로 등록하지 않는다.
+
+| 제안 경로 | Blocks 변형 수 | URL별 범위 |
+| --- | ---: | --- |
+| 실험/구성/비교와 검증/글자 표현 비교 | 4 | index source 번호 209, 210, 211, 212 |
+| 실험/구성/비교와 검증/기기 액자 비교 | 4 | index source 번호 134, 135, 138, 139 |
+| 실험/구성/비교와 검증/이미지 표현 비교 | 1 | index source 번호 131 |
+| 실험/구성/비교와 검증/카드 깊이 비교 | 6 | index source 번호 39, 40, 42, 126, 136, 143 |
+| 실험/구성/비교와 검증/탐색 크기 비교 | 10 | index source 번호 163, 164, 165, 166, 167, 168, 169, 184, 185, 186 |
+| 실험/구성/선택과 필터/범위 선택 표현 | 1 | index source 번호 142 |
+| 실험/구성/정보 표시/고객 후기 탐색 | 9 | index source 번호 199, 200, 201, 202, 203, 204, 205, 206, 207 |
+| 실험/구성/정보 표시/기능 카드 묶음 | 28 | index source 번호 23, 24, 25, 26, 27, 28, 29, 68, 69, 70, 71, 72, 73, 74, 76, 77, 78, 79, 81, 82, 83, 84, 86, 88, 89, 90, 91, 133 |
+| 실험/구성/정보 표시/날짜별 변화 기록 | 1 | index source 번호 188 |
+| 실험/구성/정보 표시/마무리 행동 | 7 | index source 번호 49, 50, 51, 52, 53, 54, 55 |
+| 실험/구성/정보 표시/명령 기록 표시 | 1 | index source 번호 75 |
+| 실험/구성/정보 표시/수치 변화 표현 | 3 | index source 번호 189, 190, 191 |
+| 실험/구성/정보 표시/입력 기기 모형 | 1 | index source 번호 137 |
+| 실험/구성/정보 표시/지역과 위치 표시 | 1 | index source 번호 146 |
+| 실험/구성/정보 표시/질문 답변 | 5 | index source 번호 63, 64, 65, 66, 80 |
+| 실험/구성/정보 표시/팀 소개 | 4 | index source 번호 194, 195, 196, 197 |
+| 실험/구성/정보 표시/항목 연결선 | 1 | index source 번호 125 |
+| 실험/구성/정보 표시/협업 상태 모형 | 8 | index source 번호 127, 128, 130, 132, 140, 141, 144, 145 |
+| 실험/구성/정보 표시/흐르는 소개 목록 | 7 | index source 번호 155, 156, 157, 158, 159, 160, 161 |
+| 실험/구성/직접 조작과 모션/스크롤 장면 비교 | 2 | index source 번호 85, 87 |
+| 실험/구성/직접 조작과 모션/카드 상세 연결 | 1 | index source 번호 41 |
+| 실험/구성/직접 조작과 모션/카드 위치 조작 | 2 | index source 번호 129, 193 |
+| 실험/구성/탐색과 이동/하단 링크 묶음 | 4 | index source 번호 93, 94, 95, 96 |
+| 실험/구성/피드백과 복구/첫 사용 선택 | 5 | index source 번호 57, 58, 59, 60, 61 |
+| 실험/토큰/표면과 움직임/반복 무늬 | 7 | index source 번호 11, 13, 14, 15, 18, 20, 21 |
+| 실험/토큰/표면과 움직임/입자와 빛 | 7 | index source 번호 12, 17, 19, 179, 180, 181, 182 |
+| 실험/화면/검색/글 목록과 검색 | 4 | index source 번호 34, 35, 36, 37 |
+| 실험/화면/계정/가입 정보 입력 | 1 | index source 번호 152 |
+| 실험/화면/계정/로그인 영역 표현 | 5 | index source 번호 148, 149, 150, 151, 153 |
+| 실험/화면/소개/서비스 목적별 소개 | 27 | index source 번호 16, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123 |
+| 실험/화면/소개/요금제 비교 | 7 | index source 번호 171, 172, 173, 174, 175, 176, 177 |
+| 실험/화면/소통/문의 작성 | 4 | index source 번호 44, 45, 46, 47 |
+| 실험/화면/콘텐츠/글과 목차 | 2 | index source 번호 31, 32 |
+
+이 표는 조사 후 root 등록을 위한 제안이며 Storybook 등록·승격·npm 게시 완료가 아니다. 각 항목은 Default/Dark/LargeText와 해당 입력·motion·RTL·실패/복구 상태, 같은 변경의 사용 지침, 기존 제목/공개 API 확인을 요구한다. 원본 Pro source 재배포를 하지 않고 기존 HJM 엔진에 역할·표현 아이디어를 흡수한다.
+
+공개 API 대응표를 다시 대조해 범위 입력 후보는 실제 `Slider`, 다중행 입력은 실제 `TextArea` 이름으로 매핑했다. `pnpm docs:check`는 577 Markdown 문서의 링크 검사 통과이며 컴포넌트 동작·CI·Storybook 등록 증거로 쓰지 않는다.
+
+### Aceternity Manual 13 · 실제 시각 5 checkpoint
+
+Aurora Background·Background Beams·Background Beams With Collision 세 페이지의 Manual TSX/utils·모든 현재 설정과 각각 한 Usage 예제를 전체 읽었다. Aurora는 Tailwind v4 CSS와 v3 config까지 각각 열어 확인했다. Dark desktop preview도 세 페이지에서 실제 보고 시각 확인은 5 URL로 늘렸지만 선택 flow는 FileUpload·Modal 2 그대로다. 각 배경의 full loop/hidden/offscreen/reduced/native/모바일 상태는 미확인이다.
+
+Aurora는 `main`+100vh wrapper와 literal 색, background-position 무한 이동을 가지므로 토큰 배경으로 그대로 복사하지 않는다. Beams는 인덱스/상수 SVG ID와 render Math.random, 무한 gradient를 가지며 waitlist input은 placeholder-only/type=text이고 제출도 없다. Collision은 beam별50ms geometry polling과 미정리2000ms 두 timeout, 고정 X 위치, 무한 repeat를 가진다. 전부 현재 HJM EffectSurface의 static default/seed/aria-hidden/pointer-none/reduced/offscreen/hidden/cleanup 기준을 유지해 표현만 흡수할 후보이며 원본 엔진을 채택할 근거가 아니다. Source 부재 주장은 읽은 구현 파일 안의 범위이고 사이트 전체 CSS를 확인한 것은 아니다.
+
+### Aceternity Manual 16 · 실제 시각 7 checkpoint
+
+Background Boxes·Background Gradient·Background Gradient Animation의 Manual/단일 Usage를 전부 읽었고 Gradient Animation은 v4/v3 설정을 각각 열었다. 두 Gradient dark preview 실제 시각 확인을 더해 시각7·선택flow2이며 Boxes hover/전체 시각은 아직 미확인이다. Boxes source는150×100 motion cells와3,750SVG를 생성할 구조지만 이 수치는 실제 DOM/성능 실측이 아니다. Boxes 페이지에서는 stale AX와 input timeout이 있었고 fresh AX가 Code 전환을 확인했으므로 무작정 같은 클릭을 재시도하지 않았다.
+
+Gradient는 animate=false가 있지만 기본 true의 두 무한 layer와 literal palette를 복사하지 않는다. Gradient Animation은 mount에서 body CSS 변수10개를 전역 변경하고 props 갱신/cleanup이 없어서 앱별·인스턴스별 테마 분리가 깨질 수 있다. 원본 source의 firstColor triplet가 rgba 없이 gradient에 들어가며 **실제 dark DOM의 첫 layer backgroundImage=none**도 확인했다. 나머지 네 색 layer와 pointer layer는 유효한 radial gradient이고 pointer-events는 여섯 layer 모두 auto였다. HJM scoped EffectSurface/static/고유ID/토큰/cleanup을 유지한 표현만 후보이다.
+
+[Gradient Animation dark 증거](assets/parallel-b-gradient-animation-dark.png). 이 화면은 전체 loop·실제 pointer·Safari fallback·reduced/offscreen/hidden·복수 인스턴스 검증 완료를 뜻하지 않는다.
+
+### Aceternity Manual 18 · 실제 시각 9 · 선택 flow 3
+
+Background Lines Manual18,816자를 겹침 구간으로 끝까지 읽고 Usage/실제 dark 화면을 확인했다. 원본은 무한 path 두 묶음/render random delays이고 wrapper relative·SVG pointer-none·aria-hidden이 없으므로 HJM의 scoped decorative/lifecycle 기준으로 흡수한다.
+
+Background Ripple Effect Manual/CSS/Usage 전체와 실제216개 cell의 클릭 반응을 확인했다. 실제 cell59 클릭 후 중심 delay0/duration200ms, 인접58/60 delay55/duration280ms, cell0 delay296.184/duration630.813ms가 CSS에 적용됐다. sampled DOM은 DIV/role=null/tabIndex=-1이고 source에 키보드 handler가 없다. 이는 pointer 반응 한 흐름이며 키보드·reduced·빠른 반복·offscreen·parameter 경계 전체 검증이 아니다. 기능 입력 엔진이 아니라 선택 가능한 장식 효과 후보로 기존 EffectSurface bounded cost/정적대안을 지킨다.
+
+### AI catalog의 source501 밖 링크 확인
+
+부분 독해 AI catalog에서 추출한332개 exact Aceternity URL 중 source501에 없는12개를 독립 read-only GET으로 확인했으며 **12개 모두HTTP404, redirect 없음**이었다. 해당 route는3d-card/cover/globe/glowing-stars/grid/input/label/lamp/moving-line/parallax-scroll-2/shooting-stars/stars-background다. 원본 crawler/source는 수정하지 않았고 결과를 index의 additionalDiscoveredUrls에 별도로 기록했다. HTTP 상태 확인은 본문/소스/시각/flow 독해를 늘리지 않는다. 카탈로그 installation 이름과 유효한 docs URL이 항상 같다는 가정을 쓰지 않으며501은 성공 캡처 분모다.
+
+### Magic UI core 115 checkpoint
+
+create-next-js-app·create-nextjs-app·create-react-component-library 세 blog의 semantic main과 모든 code/FAQ를 끝까지 읽었다. 첫 긴 batch가 잘렸으므로 앞/뒤 겹침으로 재독해한 후 완료에 올렸다. Magic 전체본문115·부분2·미독해140이며 Manual77·실제4는 그대로다. Card/Shimmer/Bento는 이미 개별 후보 항목이 있어 tutorial마다 중복 등록하지 않는다. 프레임워크 채택률·성과·배포 문구는 원사이트 주장이고 setup/install/publish 명령은 실행하지 않았다. Component library 글의 code block에는 escaped closing markup이 섞여 있어 검증된 build/Storybook recipe가 아니며 HJM의 기존 규격·공개API·사용 지침·release 계약을 유지한다.
+
+### Magic UI core 117 checkpoint
+
+Creating Next JS와 Creative Landing Page의 main을 끝까지 읽었다. 후자는46,715자를 세 겹침 구간으로 나눠45개 브랜드 예시·6개 요소·8단계·주의 사례 전체를 읽었다. 외부45사이트 실제 방문/이미지/flow를 확인한 것은 아니므로 article-summary-only로 남겼다. 고정CTA·조용한 소개·자료가 많은 행사·미디어 중심 소개 등은 기존 `서비스 목적별 소개` 화면의 역할별 변형 후보로 연결하며 브랜드마다 새 엔진/실험45개를 만들지 않는다. 원문의 headline 길이·페이지 단어수·성과 수치는 HJM 토큰·정책 근거가 아니다. 현재 Magic117전체+2부분,138blog 미독해이며 Manual77/실제4는 그대로다.
+
+### Magic UI core 118 checkpoint
+
+CSS Animation on Scroll blog main22,331자와 Observer/CSS/AnimatedSection/구성 snippet·FAQ 전체를 두 겹침 구간으로 읽었다. Existing ContentTransition의 내용 진입 표현 후보에 연결했다. 샘플은 IO 부재 fallback이 없고 기본opacity0이어서 실패시 내용이 숨을 수 있으며, inline options dependency로 observer가 반복 재설정될 수 있다. Prose는 reduced를 권고하지만 샘플 CSS에는 그 fallback이 없다. `@magiclabs/ui` 설치와 BlurIn/ShinyCard import는 검증한 현재 Magic registry API가 아니어서 실행·채택하지 않는다. 성과 수치는 검증 근거가 아니다. 현재118전체+2부분/137미독해·Manual77/실제4.
+
+후속 API 이름 대조: 토큰 편집의 `foundations.elevation`은 컴포넌트 API가 아니라 existingTokenPaths로 분리했고, 테마 공급자 실제 export는 Web `HjmProvider`·Native `HjmNativeProvider`로 기록했다. 제안63경로의4마디·항목16자 제한 검사 통과. 이는 실제 Storybook 등록·사용 지침·모든 플랫폼 지원 검증을 대신하지 않는다.
+
+### Magic UI core 128 · 10개 batch checkpoint
+
+Blog source 번호28~37의 semantic main·모든 code/table/FAQ를 전체 읽었다. 10개 원문을 각각 확보한 뒤 겹침 구간으로 읽었으며, 첫 출력에서 잘린28말미/29앞부분도 다시 읽어 완료에 반영했다. 현재128전체+2부분/127미독해이며 Manual77·실제 시각4·선택flow4는 그대로다. 설치·샘플 실행·외부 예시 사이트 방문은 하지 않았다.
+
+- css-buttons-hover/framer-motion-react: 기존 `누름 표현 비교`에 합친다. Hover-only sample과 draggable div의 키보드·비활성·reduced 동작은 prose 권장과 실제 구현을 구분한다. 별도 Button/drag 엔진을 복사하지 않는다.
+- css-loader-animation/css-loading-animation: 기존 `대기 단계와 진행` 구성에 Spinner/Skeleton/Progress/Steps 변형을 합친다. Source timeout은 cleanup·오류·복구가 없고 width-fill은 실제 진행률이 아니다. 순환 fade를 reduced의 충분한 정적 대안으로 가정하지 않는다.
+- cta-design: 7요소·21원칙·6브랜드 예시를 읽었다. 배치 조언끼리 충돌하므로 기존 `서비스 목적별 소개`의 주 행동 역할부터 정한다. 항상solid/83%성과/긴급성을 토큰·정책으로 고정하지 않는다.
+- dashboard-design-ui: 기존 [대시보드 지침](../../packages/design-contracts/docs/usage/screens/dashboard.md)은 활동요약·히트맵·목록이며 차트·비교·목표가 없다고 명시한다. `실험/화면/콘텐츠/지표 요약과 탐색`은 역할별 요약→기간 선택→정확한 raw-data 탐색의 다른 목적 후보다. 공개 Statistic/DataTable/DateRangePicker/Sheet/ScreenLayout을 사용하며 없는 DashboardScreen·Chart API를 제안하지 않는다.
+- disable-textarea-resize: `실험/구성/입력과 작성/여러 줄 높이 비교`에 기존 TextArea/Form/MessageComposer를 비교한다. [현재 TextArea 지침](../../packages/design-contracts/docs/usage/components/text-area.md)은 입력에 따라 자란다고 적지만 Web forms.tsx는 scrollHeight 처리 없고 multiline CSS에는 field-sizing:content가 없다. Native는 minVisibleLines가 있을 때만 contentHeight로 자란다. 이는 **정적 문서/구현 대조이며 runtime 결함 재현은 아직 아니다**. 전역resize:none, 픽셀고정, 제출 즉시 영구비활성 sample은 채택하지 않는다.
+- drop-down-menu-in-js/dropdown-in-react-js: `실험/구성/선택과 필터/목록 선택 비교`로 Menu·Select·NativeSelect·Combobox·CheckboxGroup·TransferList 역할을 나눈다. Tutorial은 internally-selected를 controlled라 부르고 clickable li와 키보드 설명이 분리됐으며 request cancellation/stale/error/retry 코드가 없다. 기존 상태·접근성 엔진을 그대로 사용한다.
+- faq-template: 10원칙·10외부브랜드 설명을 읽었다. 기존 `질문 답변` 구성에 Accordion/SearchField/Tabs/EmptyState의 분류·검색·문의대안 변형으로 연결한다. 외부 사이트 실제 화면·SEO 효과는 검증하지 않았다.
+
+이번 batch는 신규 엔진 10개가 아니라 기존 역할 후보에 연결하며, 후보 경로는 두 사이트 합계 **66개**다(이전63에 목적이 다른 지표탐색·여러줄높이·목록선택3개 추가). 실제 실험 등록은 여전히0/미완이고 root가 조사 이후 같은 변경에서 사용지침·양 플랫폼 예제·상태를 검토해 등록한다. 모든10URL별 출처·독해/시각/flow 상태·후보 경로는 index에 보존했다.
+
+### Magic UI core 138 · 다음10개 batch
+
+Blog38~47 전체 main·모든 visible code/table/FAQ·promotion을 읽었다. Testimonials는 긴 원문을 겹침 구간으로 끝까지 읽었다. 현재138전체+2부분/117미독해·Manual77·실제 시각4/선택flow4이며 고유후보66개 그대로다. 모든URL별 notes/proposal에 정확한 출처와 남은 범위를 보존했다.
+
+Hero/landing 작성·설계4글은 `서비스 목적별 소개`, drop-down tutorial은 `목록 선택 비교`, HTML nav는 `탐색 크기 비교`, testimonials는 `고객 후기 탐색`, performance animation은 `내용 진입 표현`의 기존그룹에 흡수한다. FreeReact21library/techstack 선택2글은 UI역할 추가가 없는 정보글로 비등록 사유를 기록했다.
+
+코드 수준에서는 hero DockIcon이 span만 있고 실제 목적지 동작이 없으며, dropdown React sample은 focus/Escape/ARIA 구현이 prose와 분리됐다. HTML nav의 CSS-hover-only submenu·클릭하는 i hamburger·전역ul CSS·href#·literal768/z1000은 HJM 계약/토큰으로 복사하지 않는다. 사진필수/8단어헤드라인/5단어CTA/30fps/성과수치도 원사이트 조언과 실제 검증 근거를 구분한다. Testimonials는 정적quote·video·case-study·후기카드의 표시 변형이며 실제 후기서비스·수집·이메일·게시를 실행한 것이 아니다. 외부브랜드/도구사이트·이미지·flow는 미확인이다.
+
+### Magic UI core 148 · 다음10개 batch
+
+Blog48~57의 main 전체·code/table/FAQ를 읽었다(긴 원문은 겹침 구간으로 끝까지). 현재148전체+2부분/107미독해·Manual77·실제시각4/flow4, 후보고유67개다. 출처URL/메모/실험연결/정보글 비등록 판단을 각각 index에 보존했다.
+
+Conversion/interactive 글은 서비스목적별소개, animation은 내용진입, artbackground는 입자와빛/제품자산 경계, image는 이미지표현비교에 합친다. Framework교육·setup·일반hosting/CDN/performance4글은 별도UI역할이 없는 정보글로 남겼다. Tutorial install/config는 실행하지 않았고 v4설명과 구버전init/directives 예시 혼합은 검증된 설치방법으로 채택하지 않는다. Source성과·이미지예산·브라우저지원·통계는 HJM토큰/quality threshold 근거가 아니다.
+
+Infinite Scroll의 새 후보 `실험/구성/탐색과 이동/계속 읽기와 복구`는 **기존 LoadMore**의 requestKey 중복억제·automatic/manual/error/complete와 List/VirtualList/Pagination을 실제 API별로 비교한다. [VirtualList 지침](../../packages/design-contracts/docs/usage/components/virtual-list.md)과 [LoadMore 지침](../../packages/design-contracts/docs/usage/components/load-more.md)을 전체 읽어 고정행 높이·Native VirtualList 끝도달callback 부재·manual 또는 제품FlatList 연결 경계를 확인했다. Footertrap을 막는 제한적자동→수동전환과 오류후행유지/재시도/끝표시를 검토하며 같은scroll/observer/query 엔진은 추가하지 않는다. 데이터cursor·취소·돌아왔을때 위치복구는 제품소유다. 실제 source infinite flow는 미확인이다.
+
+### Magic UI core 158 · 다음10개 batch
+
+Blog58~67의 semantic main·모든 code/table/FAQ·promotion을 전체 읽었다. 긴 CTA/copy/template/sections를 겹침 구간으로 끝까지 읽고 URL별 notes를 index에 남겼다. 현재158전체+2부분/97미독해·Manual77·실제시각4/flow4, 후보고유67개 그대로다. 설치·외부43브랜드 화면·전환 성과·실제 form 흐름을 확인한 수치는 아니다.
+
+Tailwind setup2개와 Mantine/Chakra 비교는 별도UI역할 없는 정보글로 비등록이다. 나머지7개는 `서비스 목적별 소개`의 역할·section 순서·primary action 변형에 흡수한다. 13개section을 모든화면 필수로 만들거나43개브랜드마다 새엔진을 추가하지 않는다. Button class/padding/font 직접override는 공개HJM Button/profile으로 대체하고 product copy·가격·증언·데이터·동의·실제 urgency를 예제에서 정책으로 고정하지 않는다. Headline10단어·color psychology·conversion통계·premium품질 주장은 검증된HJM 기준이 아니다. CLI setup/version/backend/analytics/heatmap 명령을 실행하지 않았다.
+
+출처: [Tailwind React](https://magicui.design/blog/install-tailwind-react), [Tailwind 설치](https://magicui.design/blog/installing-tailwind-css), [인터랙티브 소개](https://magicui.design/blog/interactive-landing-page), [주 행동](https://magicui.design/blog/landing-page-call-to-action), [소개 문구](https://magicui.design/blog/landing-page-copywriting), [템플릿 선택](https://magicui.design/blog/landing-page-design-templates), [43개 소개 예시](https://magicui.design/blog/landing-page-examples), [13개 영역](https://magicui.design/blog/landing-page-sections), [소개 UI](https://magicui.design/blog/landing-page-ui), [라이브러리 비교](https://magicui.design/blog/mantine-vs-chakra).
+
+### Magic UI core 168 · 다음10개 batch
+
+Blog68~77 main·모든code/table/FAQ를 전체 읽었다. 현재168전체+2부분/87미독해·Manual77·실제시각4/flow4, 후보67경로 그대로다. MUI대안·MUIReact·Joy비교·Box·MUI소개5개는 정보글 비등록. Card는 기능카드묶음, Table은 지표요약과탐색, transition은 내용진입, navbar2개는 탐색크기비교 기존그룹으로 연결했다. 각 URL·기존API·기대상태·미확인 범위는 index에 보존했다.
+
+실제본문에는 @material-ui/core 설치와 @mui/system/sx/legacy ReactDOM.render 혼합, 존재검증하지않은 generic Transition/`@magicui/react`/`magic-ui-react` import, 클릭div와 뒤FAQ의 button 접근성 권장 불일치가 있다. Library가 알아서 responsive/accessibility/native parity를 보장한다는 주장으로 HJM검증을 대체하지 않는다. Table의 semantic rowheader와 숫자정렬은 참고하지만 정렬·필터·가상화는 prose만 있고 실행예제는 basic이다. 고정픽셀/색/전역스타일은 HJM token으로 바꾸며 실제router/상태복구/키보드/모션·큰글자 검증은 남았다. 원문 설치나 외부사이트를 실행하지 않았다.
+
+### Magic UI core 178 · 다음10개 batch
+
+Blog78~87의 semantic main·모든code/table/FAQ·promotion을 끝까지 읽었다. 현재178전체+2부분/77미독해, Manual77·실제시각4/flow4·후보67경로는 그대로다. Nav→탐색크기비교, 12개Next템플릿→서비스목적별소개 기존후보에 합쳤다. Next프레임워크/구조7글과 1줄placeholder1글은 정보·미제공 콘텐츠로 비등록이다.
+
+[Next Tailwind 글](https://magicui.design/blog/next-js-tailwind)은19min 가이드라는머리말 뒤에 `Next.js and Tailwind are working!` 한문장만 있어, **캡처본문 전체독해**와 실제가이드확보를 구분했다. 다른원문은 generic package/import·캐시·SSR보장·라우팅버전·TSaliasunderscore·성능 통계의 미검증 상태를 각각 index에 기록했다. Next라우팅/권한/세션/data/cache/deploy는 제품소유이며 HJM컴포넌트교체나 CI·설치·게시를 실행한 것이 아니다. 12개외부템플릿 live/유료source 및 실제navigation state는 미확인이다.
