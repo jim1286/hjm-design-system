@@ -34,10 +34,24 @@ export type MessageComposerDescriptor = Readonly<{
     value: string;
     label: string;
     sendLabel: string;
+    /** Short visual copy may differ from the complete accessible input name. */
+    placeholder?: string;
+    description?: string;
+    error?: string;
+    invalid?: boolean;
+    /** Newline remains the compatible default; desktop chat may explicitly opt into send. */
+    submitMode?: "newline" | "send";
     disabled?: boolean;
     pending?: boolean;
     attachmentCount?: number;
 }>;
+/** Safari may report the final IME Enter as keyCode 229 after isComposing becomes false. */
+export declare function shouldSubmitMessageKey(event: Readonly<{
+    key: string;
+    shiftKey?: boolean;
+    isComposing?: boolean;
+    keyCode?: number;
+}>, mode?: "newline" | "send"): boolean;
 export declare function canSubmitMessage({ value, disabled, pending, attachmentCount }: MessageComposerDescriptor): boolean;
 /** Bubble alignment expresses authorship, not delivery; delivery text always comes from the product receipt. */
 export type ChatMessageDescriptor = Readonly<{
@@ -61,7 +75,8 @@ export declare function validateCommentThread(items: readonly {
 /** Source bytes, permission requests, ordering and upload limits remain product-owned. */
 export type MessageAttachmentDescriptor = Readonly<{
     id: string;
-    removeLabel: string;
+    removeLabel: string; /** Local preparation can lock removal without locking text entry. */
+    disabled?: boolean;
 }>;
 export declare function validateMessageAttachments(attachments: readonly MessageAttachmentDescriptor[]): void;
 /** Require horizontal intent so a timeline scroll cannot accidentally start a reply. */

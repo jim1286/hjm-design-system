@@ -64,6 +64,8 @@ export type MessageComposerProps = Omit<MessageComposerDescriptor, "attachmentCo
     additionalContent?: boolean;
     leadingAction?: ReactNode;
     inputRef?: Ref<TextInput>;
+    /** Release typing presence when the host input loses focus. */
+    onBlur?: () => void;
     onValueChange(value: string): void;
     onSend(value: string): void;
     context?: ReactNode;
@@ -88,7 +90,7 @@ export type MessageComposerProps = Omit<MessageComposerDescriptor, "attachmentCo
     }>)[];
     onRemoveAttachment?: (id: string) => void;
 }>;
-export declare function MessageComposer({ value, label, sendLabel, disabled, pending, onValueChange, onSend, maxLength, sendDisabled, additionalContent, leadingAction, inputRef, context, replyTo, sendIcon, sendPresentation, attachmentAction, attachments, onRemoveAttachment }: MessageComposerProps): import("react").JSX.Element;
+export declare function MessageComposer({ value, label, sendLabel, placeholder, description, error, invalid, submitMode, onBlur, disabled, pending, onValueChange, onSend, maxLength, sendDisabled, additionalContent, leadingAction, inputRef, context, replyTo, sendIcon, sendPresentation, attachmentAction, attachments, onRemoveAttachment }: MessageComposerProps): import("react").JSX.Element;
 export type ChatMessageProps = ChatMessageDescriptor & Readonly<{
     children: ReactNode;
     interactiveContent?: boolean;

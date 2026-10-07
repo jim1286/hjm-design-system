@@ -34,6 +34,10 @@ export const screenPatternRecipe = {
     composerMinLines: 1,
     composerMaxLines: 5,
 };
+/** Safari may report the final IME Enter as keyCode 229 after isComposing becomes false. */
+export function shouldSubmitMessageKey(event, mode = "newline") {
+    return mode === "send" && event.key === "Enter" && !event.shiftKey && !event.isComposing && event.keyCode !== 229;
+}
 export function canSubmitMessage({ value, disabled = false, pending = false, attachmentCount = 0 }) {
     if (!Number.isSafeInteger(attachmentCount) || attachmentCount < 0)
         throw new RangeError("Attachment count must be a nonnegative integer");

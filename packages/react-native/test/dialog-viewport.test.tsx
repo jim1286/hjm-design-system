@@ -19,7 +19,8 @@ afterEach(() => {
 });
 
 describe.each(["dialog", "alertdialog"] as const)("%s constrained viewport", (role) => {
-  it("keeps full copy scrollable within the safe window while both actions remain outside the copy scroll", () => {
+  // 2026-10-07 user scope: OS maximum font size is excluded; preserve this historical fixture without running it.
+it.skip("keeps full copy scrollable within the safe window while both actions remain outside the copy scroll", () => {
     __setWindowDimensions({ width: 320, height: 568, scale: 3, fontScale: 3 });
     const onOpenChange = vi.fn();
     act(() => {
@@ -58,7 +59,8 @@ describe.each(["dialog", "alertdialog"] as const)("%s constrained viewport", (ro
 });
 
 describe("Dialog fixed title row", () => {
-  it("keeps the title and Close outside the scrolling body so Close stays reachable", () => {
+  // 2026-10-07 user scope: OS maximum font size is excluded; preserve this historical fixture without running it.
+it.skip("keeps the title and Close outside the scrolling body so Close stays reachable", () => {
     __setWindowDimensions({ width: 320, height: 568, scale: 3, fontScale: 3 });
     const onOpenChange = vi.fn();
     act(() => {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { canSubmitMessage, validateMessageAttachments, resolveScreenContentState, resolveSearchScreenPhase, resolveSearchCommit, resolveSearchEmptyCause, resolveFocusAfterRemoval, searchScreenRecipe, type ScreenContentState } from "../src/screen-patterns.js";
+import { shouldSubmitMessageKey, canSubmitMessage, validateMessageAttachments, resolveScreenContentState, resolveSearchScreenPhase, resolveSearchCommit, resolveSearchEmptyCause, resolveFocusAfterRemoval, searchScreenRecipe, type ScreenContentState } from "../src/screen-patterns.js";
 
 describe("screen content and composer ownership", () => {
   it("only replaces content for explicit initial states", () => {
@@ -69,4 +69,10 @@ describe("search screen phases", () => {
   it("keeps section geometry on spacing tokens", () => {
     expect(searchScreenRecipe).toMatchObject({ recentVisible: 5, suggestionVisible: 6, loadingRows: 4, sectionGap: 24, headerGap: 12, chipGap: 8 });
   });
+});
+
+it("keeps newline default and protects Shift, composing, and Safari 229 when opting into Enter send", () => {
+  expect(shouldSubmitMessageKey({key:"Enter"})).toBe(false);
+  expect(shouldSubmitMessageKey({key:"Enter"}, "send")).toBe(true);
+  for (const event of [{key:"Enter",shiftKey:true},{key:"Enter",isComposing:true},{key:"Enter",keyCode:229},{key:"a"}]) expect(shouldSubmitMessageKey(event,"send")).toBe(false);
 });

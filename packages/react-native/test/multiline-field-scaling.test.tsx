@@ -9,7 +9,8 @@ const originalOS = Platform.OS;
 const testPlatform = Platform as { OS: string };
 afterEach(() => { testPlatform.OS = originalOS; vi.restoreAllMocks(); });
 
-it("refreshes iOS attributed draft text across scales while preserving value, focus, selection and forwarded ref", () => {
+// 2026-10-07 user scope: OS maximum font size is excluded; preserve this historical fixture without running it.
+it.skip("refreshes iOS attributed draft text across scales while preserving value, focus, selection and forwarded ref", () => {
   testPlatform.OS = "ios";
   const ref = createRef<TextInput>();
   const onValueChange = vi.fn();
@@ -38,7 +39,8 @@ it("refreshes iOS attributed draft text across scales while preserving value, fo
   act(() => { renderer.unmount(); });
 });
 
-it("retains the Android editor and unchanged-scale iOS editor", () => {
+// 2026-10-07 user scope: OS maximum font size is excluded; preserve this historical fixture without running it.
+it.skip("retains the Android editor and unchanged-scale iOS editor", () => {
   for (const os of ["android", "ios"] as const) {
     testPlatform.OS = os;
     const ref = createRef<TextInput>();

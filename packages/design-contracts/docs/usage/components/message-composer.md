@@ -4,7 +4,7 @@
 - 상태: 배포
 - 지원: Web · Native
 - 적용: 미게시(1.12.1 이후)
-- 검토일: 2026-10-06
+- 검토일: 2026-10-07
 - 근거: [반복 화면 조합](../../screen-patterns.md), Web·Native `src/screens.tsx`·`src/screen-flows.tsx`; 기존 개별 지침을 새 규격으로 통합. 예제 스토리는 2026-10-06 사용자 승인으로 스토리북 배포([승인 기록](../../../../../docs/STORYBOOK_NAVIGATION.md#21-2026-10-06-전체-승격과-규격-확정)). 스토리북 배포는 API 게시가 아니다(`적용` 참고)
 - 스토리북: `배포/구성/입력과 작성/메시지 작성`, `배포/구성/입력과 작성/댓글 작성`, `배포/화면/소통/채팅`
 
@@ -74,7 +74,11 @@ import { Image } from "react-native";
 | prop | 값 | 기본값 | 설명 |
 | --- | --- | --- | --- |
 | `value` | `string` | 필수 | 완전 제어형. HJM은 초안을 지우지 않는다 |
-| `label` | `string` | 필수 | placeholder 겸 접근성 이름 |
+| `label` | `string` | 필수 | 접근성 이름; placeholder 생략 시 같은 문구 |
+| `placeholder` | `string` | `label` | 짧은 시각 안내와 전체 접근성 이름을 분리 |
+| `description` · `error` · `invalid` | `string` · `string` · `boolean` | 없음 | TextArea의 안내·오류 연결. Web describedby/invalid, Native hint/오류 표면 |
+| `onBlur` | `() => void` | 없음 | host의 입력 중 상태 해제 |
+| `submitMode` | `"newline"` · `"send"` | `"newline"` | Web Enter 전송은 Shift/IME/229 보호. Native send는 submit, newline은 기존 줄바꿈 |
 | `sendLabel` | `string` | 필수 | 전송 버튼 문구·접근성 이름 |
 | `onValueChange` | `(value: string) => void` | 필수 | 입력 변경 |
 | `onSend` | `(value: string) => void` | 필수 | 현재 문자열만 넘긴다 |
@@ -89,7 +93,7 @@ import { Image } from "react-native";
 | `sendIcon` | `ReactNode` | 없음 | 주면 아이콘 모드: 빈 입력에서는 입력창 안에 `attachmentAction`, 내용이 있거나 `pending`이면 전송 아이콘. 없으면 입력창 옆 텍스트 `Button` |
 | `sendPresentation` | `"inline"` · `"circle"` | `"inline"` | `circle`은 primary 원형 `IconButton size="small"`(댓글·DM 레퍼런스). `sendIcon`이 있을 때만 의미가 있다 |
 | `attachmentAction` | `{ label, icon, onPress(), disabled? }` | 없음 | 첨부 버튼(ghost `IconButton`) |
-| `attachments` | `readonly { id, removeLabel, preview }[]` | `[]` | 첨부 미리보기. 있으면 `onRemoveAttachment` 필수 |
+| `attachments` | `readonly { id, removeLabel, preview, disabled? }[]` | `[]` | 첨부 미리보기. 있으면 `onRemoveAttachment` 필수 |
 | `onRemoveAttachment` | `(id: string) => void` | 없음 | 첨부 제거 |
 | Web `layoutStyle` | `HjmCompositionStyleProp` | 없음 | 작성창 루트 배치(margin·width·flex 등). 미게시(1.12.1 이후) |
 
@@ -107,11 +111,13 @@ import { Image } from "react-native";
 
 ## 꼭 지킬 것
 
-- 문구(`label`은 placeholder 겸 접근성 이름, `sendLabel`, `removeLabel`, `cancelLabel`)는 모두 i18n 키로 넣는다.
+- 문구(`label`은 접근성 이름; placeholder 생략 시 같은 문구, `sendLabel`, `removeLabel`, `cancelLabel`)는 모두 i18n 키로 넣는다.
 - `onSend(value)`는 현재 문자열만 넘긴다. 첨부 목록은 제품 상태에서 읽고, **서버 성공 뒤에만** 제품이 글·첨부·답장 대상을 지운다.
 - 첨부 `id`는 비어 있지 않고 유일해야 하며 `removeLabel`이 필요하다. 첨부가 있으면 `onRemoveAttachment`가 필수다. 어기면 던진다.
 - 사진 권한·선택기·업로드·개수 제한은 제품 소유다. 출처 선택 UI는 [PhotoSourceSheet](photo-source-sheet.md)를 쓴다.
-- Enter는 줄바꿈이다(IME 조합 보호). Enter 전송을 덧붙이지 않는다.
+- Enter는 기본 줄바꿈이다. 데스크톱 채팅만 `submitMode="send"`로 선택할 수 있고 Shift+Enter·IME 조합·Safari keyCode 229는 전송하지 않는다. Native는 별도로 선택하지 않으면 줄바꿈을 유지한다.
+- 2026-10-07 번뚝 채택에서 기존 blur/IME/검증 연결이 누락되어 이 공개 축을 추가했다. 제품이 내부 TextArea를 따로 조립하는 대안 대신 기존 MessageComposer 엔진을 확장한다.
+- 로컬 준비 사진은 `attachments`로 표시하며 UploadItem의 서버 업로드 완료로 가장하지 않는다. 준비 중 해당 항목의 `disabled`와 attachmentAction.disabled를 연결해 편집 가능한 본문과 사진 제거를 분리한다. 서버 성공 전 초안을 지우지 않는다.
 - Web 배치는 `layoutStyle`로 한다. Native는 스타일 통로가 없어 감싸는 레이아웃에서 배치한다.
 
 ## 플랫폼 차이

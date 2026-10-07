@@ -47,10 +47,21 @@ export type MessageComposerDescriptor = Readonly<{
   value: string;
   label: string;
   sendLabel: string;
+  /** Short visual copy may differ from the complete accessible input name. */
+  placeholder?: string;
+  description?: string;
+  error?: string;
+  invalid?: boolean;
+  /** Newline remains the compatible default; desktop chat may explicitly opt into send. */
+  submitMode?: "newline" | "send";
   disabled?: boolean;
   pending?: boolean;
   attachmentCount?: number;
 }>;
+/** Safari may report the final IME Enter as keyCode 229 after isComposing becomes false. */
+export function shouldSubmitMessageKey(event: Readonly<{ key: string; shiftKey?: boolean; isComposing?: boolean; keyCode?: number }>, mode: "newline" | "send" = "newline"): boolean {
+  return mode === "send" && event.key === "Enter" && !event.shiftKey && !event.isComposing && event.keyCode !== 229;
+}
 export function canSubmitMessage({ value, disabled = false, pending = false, attachmentCount = 0 }: MessageComposerDescriptor): boolean {
   if (!Number.isSafeInteger(attachmentCount) || attachmentCount < 0) throw new RangeError("Attachment count must be a nonnegative integer");
   return !disabled && !pending && (value.trim().length > 0 || attachmentCount > 0);
@@ -81,7 +92,7 @@ export function validateCommentThread(items:readonly {id:string;parentId:string|
 }
 
 /** Source bytes, permission requests, ordering and upload limits remain product-owned. */
-export type MessageAttachmentDescriptor = Readonly<{ id: string; removeLabel: string }>;
+export type MessageAttachmentDescriptor = Readonly<{ id: string; removeLabel: string; /** Local preparation can lock removal without locking text entry. */ disabled?: boolean }>;
 export function validateMessageAttachments(attachments: readonly MessageAttachmentDescriptor[]): void {
   const ids = new Set<string>();
   for (const item of attachments) {

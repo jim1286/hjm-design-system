@@ -15,7 +15,8 @@ function inputStyle(renderer: ReactTestRenderer) {
 
 afterEach(() => __setWindowDimensions({ width: 402, height: 874, scale: 3, fontScale: 1 }));
 
-it("resizes the single-line frame with OS text, then shrinks after returning to normal", () => {
+// 2026-10-07 user scope: OS maximum font size is excluded; preserve this historical fixture without running it.
+it.skip("resizes the single-line frame with OS text, then shrinks after returning to normal", () => {
   let renderer!: ReactTestRenderer;
   const node = () => <HjmNativeProvider reducedMotion theme="light"><TextField accessibilityLabel="Folder name" value="QA folder" /></HjmNativeProvider>;
   act(() => { renderer = create(node()); });
@@ -30,7 +31,8 @@ it("resizes the single-line frame with OS text, then shrinks after returning to 
   expect(inputStyle(renderer).minHeight).toBe(normalHeight);
 });
 
-it("uses the controlled scale once when the OS uses a different scale", () => {
+// 2026-10-07 user scope: OS maximum font size is excluded; preserve this historical fixture without running it.
+it.skip("uses the controlled scale once when the OS uses a different scale", () => {
   __setWindowDimensions({ width: 402, height: 874, scale: 3, fontScale: 3 });
   let renderer!: ReactTestRenderer;
   act(() => { renderer = create(<HjmNativeProvider reducedMotion textScale={2} theme="light"><TextField accessibilityLabel="Name" /></HjmNativeProvider>); });
@@ -39,7 +41,8 @@ it("uses the controlled scale once when the OS uses a different scale", () => {
   expect(inputStyle(renderer).minHeight).toBe(typography[fieldRecipe.textVariant].lineHeight * 2 + fieldRecipe.paddingVertical * 2);
 });
 
-it("keeps a non-scaling field at its ordinary frame size", () => {
+// 2026-10-07 user scope: OS maximum font size is excluded; preserve this historical fixture without running it.
+it.skip("keeps a non-scaling field at its ordinary frame size", () => {
   let ordinary!: ReactTestRenderer;
   act(() => { ordinary = create(<HjmNativeProvider reducedMotion theme="light"><TextField accessibilityLabel="Ordinary" /></HjmNativeProvider>); });
   const ordinaryHeight = inputStyle(ordinary).minHeight;
@@ -49,7 +52,8 @@ it("keeps a non-scaling field at its ordinary frame size", () => {
   expect(inputStyle(renderer).minHeight).toBe(ordinaryHeight);
 });
 
-it("matches an explicit native font multiplier limit when sizing the frame", () => {
+// 2026-10-07 user scope: OS maximum font size is excluded; preserve this historical fixture without running it.
+it.skip("matches an explicit native font multiplier limit when sizing the frame", () => {
   __setWindowDimensions({ width: 402, height: 874, scale: 3, fontScale: 3 });
   let capped!: ReactTestRenderer;
   let uncapped!: ReactTestRenderer;
@@ -61,7 +65,8 @@ it("matches an explicit native font multiplier limit when sizing the frame", () 
   expect(inputStyle(capped).minHeight).toBeGreaterThanOrEqual(typography[fieldRecipe.textVariant].lineHeight * 2 + fieldRecipe.paddingVertical * 2);
 });
 
-it("also expands the shared search input frame without changing its text scale", () => {
+// 2026-10-07 user scope: OS maximum font size is excluded; preserve this historical fixture without running it.
+it.skip("also expands the shared search input frame without changing its text scale", () => {
   let renderer!: ReactTestRenderer;
   const node = () => <HjmNativeProvider reducedMotion theme="light"><SearchField accessibilityLabel="Search" clearLabel="Clear search" busyLabel="Searching" value="QA" /></HjmNativeProvider>;
   act(() => { renderer = create(node()); });

@@ -4,7 +4,7 @@ import type { ReactionPickerProps } from "./reaction-picker.js";
 import { Button, IconButton } from "./actions.js";
 import { TextArea } from "./forms.js";
 import { useId, useRef, useState, type Ref, type ReactNode } from "react";
-import { isReplySwipe, canSubmitMessage, validateMessageAttachments, type MessageAttachmentDescriptor, resolveScreenContentState, screenPatternRecipe, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState } from "@hjmds/design-contracts/screen-patterns";
+import { isReplySwipe, shouldSubmitMessageKey, canSubmitMessage, validateMessageAttachments, type MessageAttachmentDescriptor, resolveScreenContentState, screenPatternRecipe, type ChatMessageDescriptor, type MessageComposerDescriptor, type ScreenContentState } from "@hjmds/design-contracts/screen-patterns";
 import { Heading } from "./heading.js";
 import { Spinner } from "./internal/spinner.js";
 import { Section, Stack, Text } from "./layout.js";
@@ -113,6 +113,8 @@ export type MessageComposerProps = Omit<MessageComposerDescriptor, "attachmentCo
   additionalContent?: boolean;
   leadingAction?: ReactNode;
   inputRef?: Ref<HTMLTextAreaElement>;
+  /** Release typing presence when the host input loses focus. */
+  onBlur?: () => void;
   onValueChange(value: string): void;
   onSend(value: string): void;
   context?: ReactNode;
@@ -127,7 +129,7 @@ export type MessageComposerProps = Omit<MessageComposerDescriptor, "attachmentCo
   /** Canonical layout-only placement on the composer root. Controlled visual keys are excluded. */
   layoutStyle?: HjmCompositionStyleProp;
 }>;
-export function MessageComposer({ value, label, sendLabel, disabled = false, pending = false, onValueChange, onSend, maxLength, sendDisabled = false, additionalContent = false, leadingAction, inputRef, context, replyTo, sendIcon, sendPresentation = "inline", attachmentAction, attachments = [], onRemoveAttachment, layoutStyle }: MessageComposerProps) {
+export function MessageComposer({ value, label, sendLabel, placeholder = label, description, error, invalid = false, submitMode = "newline", onBlur, disabled = false, pending = false, onValueChange, onSend, maxLength, sendDisabled = false, additionalContent = false, leadingAction, inputRef, context, replyTo, sendIcon, sendPresentation = "inline", attachmentAction, attachments = [], onRemoveAttachment, layoutStyle }: MessageComposerProps) {
   validateMessageAttachments(attachments);
   if (attachments.length && !onRemoveAttachment) throw new TypeError("Attachments require a removal callback");
   const canSend = !sendDisabled && canSubmitMessage({ value, label, sendLabel, disabled, pending, attachmentCount: attachments.length + (additionalContent ? 1 : 0) });
@@ -136,11 +138,13 @@ export function MessageComposer({ value, label, sendLabel, disabled = false, pen
   const hasContent = !!value.trim() || attachments.length > 0 || additionalContent;
   const attach = attachmentAction ? <IconButton label={attachmentAction.label} tone="ghost" disabled={locked || attachmentAction.disabled} onClick={attachmentAction.onPress}>{attachmentAction.icon}</IconButton> : null;
   const send = sendIcon ? <IconButton label={sendLabel} size={sendPresentation === "circle" ? "small" : "medium"} shape="circle" tone={sendPresentation === "circle" ? "primary" : "ghost"} disabled={!canSend} loading={pending} onClick={() => { if (canSend) onSend(value); }}>{sendIcon}</IconButton> : <Button disabled={!canSend} loading={pending} onClick={() => { if (canSend) onSend(value); }}>{sendLabel}</Button>;
-  // Enter stays a newline for IME; receipt-driven clearing and failed-send recovery belong to the host.
+  // Readonly pending input preserves the keyboard/focus for receipt failure recovery; disabling it would blur desktop chat.
+  // Enter is opt-in and IME-safe; receipt-driven clearing and failed-send recovery belong to the host.
   return <div className="hjm-message-composer" data-send-presentation={sendPresentation} style={{"--hjm-message-composer-gap": `${screenPatternRecipe.itemGap}px`, "--hjm-attachment-size": `${screenPatternRecipe.attachmentSize}px`, "--hjm-attachment-remove-size": `${screenPatternRecipe.attachmentRemoveSize}px`, ...layoutStyle} as React.CSSProperties}>{context}{replyTo ? <Stack axis="inline" gap="sm" align="center"><Stack gap="xxs"><Text variant="caption" emphasis="strong">{replyTo.author}</Text><Text variant="caption" tone="muted">{replyTo.excerpt}</Text></Stack><IconButton label={replyTo.cancelLabel} tone="ghost" disabled={locked} onClick={replyTo.onCancel}><Text>×</Text></IconButton></Stack> : null}
-    {attachments.length ? <div className="hjm-message-composer__attachments">{attachments.map(item => <div key={item.id} className="hjm-message-composer__attachment"><div className="hjm-message-composer__preview">{item.preview}</div><span className="hjm-message-composer__remove"><IconButton label={item.removeLabel} tone="ghost" size="small" disabled={locked} onClick={() => onRemoveAttachment?.(item.id)}><span className="hjm-message-composer__remove-glyph" aria-hidden="true">×</span></IconButton></span></div>)}{attach}</div> : null}
-    <div className="hjm-message-composer__row"><TextArea ref={inputRef} maxLength={maxLength} leadingAction={leadingAction} shape="large" rows={screenPatternRecipe.composerMinLines} aria-label={label} placeholder={label} value={value} disabled={locked}
-      onChange={event => onValueChange(event.currentTarget.value)} minVisibleLines={screenPatternRecipe.composerMinLines} maxVisibleLines={screenPatternRecipe.composerMaxLines}
+    {attachments.length ? <div className="hjm-message-composer__attachments">{attachments.map(item => <div key={item.id} className="hjm-message-composer__attachment"><div className="hjm-message-composer__preview">{item.preview}</div><span className="hjm-message-composer__remove"><IconButton label={item.removeLabel} tone="ghost" size="small" disabled={locked || item.disabled} onClick={() => { if (!locked && !item.disabled) onRemoveAttachment?.(item.id); }}><span className="hjm-message-composer__remove-glyph" aria-hidden="true">×</span></IconButton></span></div>)}{attach}</div> : null}
+    <div className="hjm-message-composer__row"><TextArea ref={inputRef} maxLength={maxLength} leadingAction={leadingAction} shape="large" rows={screenPatternRecipe.composerMinLines} aria-label={label} placeholder={placeholder} description={description} error={error} aria-invalid={invalid || undefined} onBlur={onBlur} value={value} disabled={disabled} readOnly={pending} aria-busy={pending || undefined}
+      onKeyDown={event => { if (shouldSubmitMessageKey({key:event.key, shiftKey:event.shiftKey, isComposing:event.nativeEvent.isComposing, keyCode:event.nativeEvent.keyCode}, submitMode)) { event.preventDefault(); if (canSend) onSend(value); } }}
+      onChange={event => { if (!locked) onValueChange(event.currentTarget.value); }} minVisibleLines={screenPatternRecipe.composerMinLines} maxVisibleLines={screenPatternRecipe.composerMaxLines}
       {...(sendIcon ? { trailing: hasContent || pending ? send : attach } : {})} />
       {sendIcon ? null : send}
     </div></div>;

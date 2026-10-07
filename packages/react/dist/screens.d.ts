@@ -66,6 +66,8 @@ export type MessageComposerProps = Omit<MessageComposerDescriptor, "attachmentCo
     additionalContent?: boolean;
     leadingAction?: ReactNode;
     inputRef?: Ref<HTMLTextAreaElement>;
+    /** Release typing presence when the host input loses focus. */
+    onBlur?: () => void;
     onValueChange(value: string): void;
     onSend(value: string): void;
     context?: ReactNode;
@@ -92,7 +94,7 @@ export type MessageComposerProps = Omit<MessageComposerDescriptor, "attachmentCo
     /** Canonical layout-only placement on the composer root. Controlled visual keys are excluded. */
     layoutStyle?: HjmCompositionStyleProp;
 }>;
-export declare function MessageComposer({ value, label, sendLabel, disabled, pending, onValueChange, onSend, maxLength, sendDisabled, additionalContent, leadingAction, inputRef, context, replyTo, sendIcon, sendPresentation, attachmentAction, attachments, onRemoveAttachment, layoutStyle }: MessageComposerProps): import("react").JSX.Element;
+export declare function MessageComposer({ value, label, sendLabel, placeholder, description, error, invalid, submitMode, onBlur, disabled, pending, onValueChange, onSend, maxLength, sendDisabled, additionalContent, leadingAction, inputRef, context, replyTo, sendIcon, sendPresentation, attachmentAction, attachments, onRemoveAttachment, layoutStyle }: MessageComposerProps): import("react").JSX.Element;
 export type ChatMessageProps = ChatMessageDescriptor & Readonly<{
     children: ReactNode;
     interactiveContent?: boolean;
