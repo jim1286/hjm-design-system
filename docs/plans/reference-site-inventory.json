@@ -6255,11 +6255,13 @@
           "scope": "default gallery thumbnail/card appearances, not linked implementation behavior"
         },
         "scrollViewportRecapture": {
-          "pagesCaptured": 43,
-          "viewportTiles": 510,
-          "state": "running",
+          "pagesCaptured": 66,
+          "viewportTiles": 756,
+          "captureErrors": 0,
+          "unloadedMainImages": 0,
+          "state": "finished",
           "review": "Accordion lower-page viewport tiles 9 inspected; remaining new tiles pending",
-          "checkedAt": "2026-10-07T02:01:11.419748+00:00"
+          "checkedAt": "2026-10-07T02:05:05.921028+00:00"
         },
         "accordionLowerViewportReview": {
           "tiles": 9,
