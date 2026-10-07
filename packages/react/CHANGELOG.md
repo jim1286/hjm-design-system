@@ -1,5 +1,29 @@
 # @hjmds/react
 
+## 1.15.0
+
+### Minor Changes
+
+- ca12e8a: Add ten experimental reference design profiles with validated light/dark palettes, appearance tokens, interaction defaults and composition/screen choices. Products define partial overrides once and pass the normalized profile to their Web or Native provider; explicit component props and brand overrides retain precedence. Add optional OverviewScreen using existing screen/state/grid/disclosure engines, plus persistent inline/collapsible tools. Existing consumers without a profile keep their defaults. Real glass backdrop blur and clay inset shadows remain unsupported; see the design-profile contract and research/QA report for coverage.
+- e6a9ab4: Add portable surface material settings to design profiles and apply real glass backdrop filtering and clay inset shadows to existing Surface/Card. Resolve readable semantic fill from the final product palette, retain opaque unsupported/reduced-transparency fallbacks, and preserve content state independently of decoration. Native products register an optional backdrop host and confirm inset capability once on HjmNativeProvider; no new mandatory peer or wrapper component is added. See docs/design-profile.md for host conditions and device-validation limits.
+- 7c56dbc: Add plain sliding selection feedback to existing Tabs. Inherit the design profile's selectionMotion when appearance is omitted; explicit standard/slide/gooey wins and vertical tabs keep their canonical line. Preserve selection, keyboard activation and panel mounting, and continue interrupted motion from its current visible position. Default consumers without a profile keep standard appearance. No new controller or animation dependency; actual native geometry/performance remain to be verified.
+
+### Patch Changes
+
+- 548f4bd: Keep ClipboardButton copy requests single-flight and announce success only for the current source.
+  Ignore obsolete success/error callbacks after the source changes or the component unmounts, and use
+  Button loading semantics to retain keyboard focus while the OS clipboard write completes.
+  No public props change; see usage/components/code-block.md and docs/qa/2026-10-07-command-records.md.
+- 548f4bd: Preserve Menubar, ContextMenu and CommandPalette keyboard selection when positioning the surface generates a mouse enter under a stationary cursor. Actual mouse movement still selects the hovered enabled item. Public props and keyboard/action contracts are unchanged. Reproduction and local verification: docs/qa/2026-10-07-command-records.md.
+- 21aeab3: Add separate composer placeholder, blur notification, linked validation copy, and opt-in IME-safe Enter sending. Local attachments can disable removal while preparation runs without locking text entry. Existing newline behavior and receipt-owned draft clearing remain the defaults.
+- d6b5439: Let rounded Asset frames inherit the nearest design profile's medium radius.
+  Explicit square/circle geometry, fixed media sizes, labels and media instances remain unchanged.
+- ddceb0b: Connect existing Popover, BottomCTA and Native floating/capsule BottomNavigation shadows to the nearest design profile. Keep BottomCTA's upward shadow direction and remove Android elevation for zero-opacity profiles. Preserve non-profile styling, non-modal focus, drafts, safe-area spacing and product-owned actions/routes; Popover remains Web only. Native geometry/performance still require device validation.
+- d465249: Add all five visual heading levels to optional design profiles. Both renderers consume the selected profile without changing semantic heading levels or text scaling. Partial typography overrides keep their existing level3–5 aliases; explicit heading metrics take precedence. Profiles inherit unchanged foundation sizes unless configured, and ordinary consumers without a profile retain the original scale.
+- 3021ce0: Connect native editor, numeric, slider and code-header text hosts to the product UI font profile. Preserve drafts and neutral OS defaults, and apply controlled text scaling once in TagsInput. Document native font registration ownership and the reference review scope; no new public API or dependency.
+- 6bd405e: Apply design-profile radius and floating-shadow roles to existing overlays, adaptive choices and feedback consumers. Keep ordinary defaults, modal/action/selection state, fixed circle geometry, explicit Skeleton dimensions and managed Liquid Toast presentation. Zero-shadow Native profiles also suppress Android platform elevation. No new public API or peer dependency; custom profiles use the existing Provider input. Native device/accessibility validation and full theme-consumer review remain open.
+- 1bb40eb: Connect existing native form, collection, navigation and optional gesture input presentation to inherited design-profile radius and typography roles. Preserve selection and drafts, grow large password frames from the same scaled metrics, and provide the profile code font on both renderers. Keep code syntax LTR inside RTL shells without altering its original text. No public component, mandatory peer or product-state API changes. See docs/design-profile.md and docs/code-block.md for semantic-role and native font ownership details.
+
 ## 1.14.0
 
 ### Minor Changes
