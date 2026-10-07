@@ -38,7 +38,7 @@ export const productDesign = defineHjmDesignProfile({
 ## 기존 API 비교와 연결 순서
 
 - 기존 Provider/brandPalette/environment는 유지한다. 프리셋은 별도 환경 축이 아니라 네 단계의 표현/배치 기본값이며 명시적인 props가 우선한다.
-- `ContentTransition`의 fade/rise/slide/scale와 `SegmentedControl`의 selectionMotion을 재사용한다. 없는 피드백 엔진을 제공했다고 표시하지 않는다.
+- `ContentTransition`의 fade/rise/slide/scale와 `SegmentedControl`·`Tabs`의 selectionMotion을 재사용한다. Tabs의 명시 appearance가 우선이며 세로는 standard다. 없는 피드백 엔진을 제공했다고 표시하지 않는다.
 - Surface와 Web 테마 변수, Native tokens 및 직접 foundation을 읽는 소비자를 함께 연결한다. `tokens.radius` 값 정의만으로 전체 컴포넌트 적용을 주장하지 않는다.
 - 구성은 기존 Grid/List/Collapsible/도구 묶음과 공개 슬롯을 대조한다. 화면은 기존 ScreenLayout의 제목·본문·상태·주 행동 계약을 유지하며 배치 변형을 추가한다. 같은 화면의 데이터/초안을 variant subtree 안에 저장해 전환 시 버리지 않는다.
 - 질감은 optional EffectSurface renderer의 host/peer 경계를 유지한다. 프로필의 descriptor 정의만으로 native SVG peer 설치나 실제 표시를 보증하지 않는다.
@@ -56,7 +56,7 @@ Provider의 `designProfile`에 `hjmDesignPresets.forest` 또는 `defineHjmDesign
 `brandPalette`는 선택된 프로필의 해당 테마 팔레트 위에 놓인다.
 
 프로필은 현재 양 플랫폼 Provider, 기본 Text/Surface/Button·필드 모서리, ContentTransition,
-SegmentedControl, ScreenLayout 및 optional OverviewScreen에 연결한다. 모든 기존 공개 컴포넌트의
+SegmentedControl·Tabs, ScreenLayout 및 optional OverviewScreen에 연결한다. 모든 기존 공개 컴포넌트의
 정적 recipe 경로까지 자동 반영 완료를 뜻하지 않는다. ScreenLayout의 기존 기본 배치는 프로필이 없으면 유지한다.
 유리의 실제 backdrop blur와 클레이 inset shadow는 아래 Surface 질감 계약으로 연결한다. Native의 선택형 host·OS·architecture 조건과 실제 기기 검증은 별도다.
 

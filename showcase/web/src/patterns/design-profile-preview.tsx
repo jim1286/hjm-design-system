@@ -1,3 +1,4 @@
+import { Tabs, type TabsAppearance } from "@hjmds/react/navigation";
 import { CodeBlock } from "@hjmds/react/code-block";
 import { useRef, useState } from "react";
 import { HjmProvider } from "@hjmds/react/provider";
@@ -62,6 +63,26 @@ function ProfileMaterialSample({ onNextTheme }: { onNextTheme: () => void }) {
   </div></Collapsible>;
 }
 
+function ProfileTabsSample({ onNextTheme }: { onNextTheme: () => void }) {
+  const [value, setValue] = useState("entry");
+  const [draft, setDraft] = useState<string>(copy.initial);
+  const [appearance, setAppearance] = useState<TabsAppearance | "profile">("profile");
+  return <Collapsible trigger={copy.tabs} defaultOpen><Stack gap="md">
+    <SegmentedControl label={copy.tabsAppearance} items={[
+      { value: "profile", label: copy.tabsInherit }, { value: "standard", label: copy.tabsStandard },
+      { value: "slide", label: copy.tabsSlide }, { value: "gooey", label: copy.tabsGooey },
+    ]} value={appearance} onValueChange={next => {
+      if (next === "profile" || next === "standard" || next === "slide" || next === "gooey") setAppearance(next);
+    }} />
+    <Tabs label={copy.tabsLabel} value={value} onValueChange={setValue} mountPolicy="visited"
+      {...(appearance === "profile" ? {} : { appearance })} items={[
+        { id: "entry", label: copy.tabsEntry, panel: <TextField label={copy.tabsDraft} value={draft} onValueChange={setDraft} /> },
+        { id: "history", label: copy.tabsHistory, panel: <Text>{copy.tabsHistoryBody}</Text> },
+      ]} />
+    <Button onClick={onNextTheme}>{copy.nextTheme}</Button><Text tone="muted">{copy.tabsNote}</Text>
+  </Stack></Collapsible>;
+}
+
 export function DesignProfileComparison() {
   const [preset, setPreset] = useState<HjmDesignPreset>("retro");
   return <Stack gap="xl"><Text variant="heading">{copy.title}</Text><Text>{copy.intro}</Text>
@@ -70,6 +91,7 @@ export function DesignProfileComparison() {
       <Collapsible trigger={copy.headingScale} defaultOpen><Stack gap="sm">{profileHeadingSamples.map(sample => <Heading key={sample.level} level={sample.level} semanticLevel={3}>{sample.label}</Heading>)}</Stack></Collapsible>
     </Stack></HjmProvider>
     <HjmProvider designProfile={hjmDesignPresets[preset]}><ProfileMaterialSample onNextTheme={() => setPreset(profileOptions[(profileOptions.findIndex(option => option.id === preset) + 1) % profileOptions.length]!.id)} /></HjmProvider>
+    <HjmProvider designProfile={hjmDesignPresets[preset]}><ProfileTabsSample onNextTheme={() => setPreset(profileOptions[(profileOptions.findIndex(option => option.id === preset) + 1) % profileOptions.length]!.id)} /></HjmProvider>
     <HjmProvider designProfile={hjmDesignPresets[preset]}><CodeBlock label={copy.codeTitle} code={copy.codeSource} wrap /></HjmProvider>
     <HjmProvider designProfile={hjmDesignPresets[preset]}><ProfileChromeSample onNextTheme={() => setPreset(profileOptions[(profileOptions.findIndex(option => option.id === preset) + 1) % profileOptions.length]!.id)} /></HjmProvider>
     <Text tone="muted">{copy.limitation}</Text>

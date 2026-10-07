@@ -760,3 +760,62 @@ typecheck도 exit0으로 통과했다. 첫 harness는 extension 없는 NodeNext 
 못했다. `.d.ts` 파일 경로로 수정한 뒤 같은 예제를 검사했으며 예제 소스를 타입에 맞춰 우회하지
 않았다. 임시 fixture는 TemporaryDirectory 종료로 정리했다. 타입 검증은 실제 열기/초점 복귀
 실행이나 제품 편집 상태 보존 성공을 뜻하지 않는다.
+
+
+## 후속: Tabs 프로필 선택 이동과 표시 중인 좌표 연결
+
+앞 절의 미연결 후보를 기존 Tabs 양쪽 renderer와 공통 gooey-navigation resolver에 구현했다.
+적용 상태는 미게시(1.14.0 이후)이며 실험 테마 비교에만 공개 샘플을 추가했다. 새 controller,
+peer, 버전 bump, 원격 CI, 게시, 소비 앱 변경은 없다. 일반 slide(공통200ms/standard곡선/2점)와
+명시 gooey(기존320ms/늘어남/6점)를 구분한다. 생략 appearance만 profile selectionMotion을 읽고
+명시 값이 우선하며 세로는 standard다. 기존 선택·disabled·키보드·패널 수명 계약은 유지한다.
+
+### 실제 화면과 재현
+
+`design-profile-comparison--default`를 IAB Chromium에서 새 배포 dist를 빌드한 뒤 reload했다.
+처음에는 Showcase JSX만 HMR로 갱신되어 10종 모두 standard인 오래된 renderer를 관찰했다.
+Web build exit0 후 같은 URL reload로 최신 renderer를 검증했고 그 전 관찰을 통과로 세지 않았다.
+
+1280px light/LTR에서 탭 안 초안을 변경하고 보관함을 선택한 뒤 10종을 모두 순회했다.
+forest·glass·aurora·clay만 slide, 나머지6종 standard였다. 모든 순회에서 보관함 선택과
+초안 문자열·입력 DOM id `hjm-_r_f_`가 유지됐다. 명시 밑줄/이동/늘어남/테마 따르기는
+각각 standard/slide/gooey/현재profile slide로 해석됐다. 기록 탭 복귀 뒤 같은 초안도 보였다.
+
+390px에서 처음 OS emulation만 바꿨을 때 Showcase가 명시 light/full을 유지한 것을 확인했다.
+Storybook globals를 `theme:dark;direction:rtl;textScale:2;motion:reduced`로 지정한 별도 조건에서는
+실제 data-theme=dark, data-motion=reduced, computed direction=rtl, 탭글자28px를 확인했다.
+숲 profile의 기록→보관함→기록에서 같은 초안이 유지되며 문서scrollWidth=innerWidth=390이었다.
+read-only CUA DOM에는 getAnimations가 없어 한 관찰식이 실패했으므로 해당 항목은 그 도구로
+확인하지 않았다. 애니메이션 실행/중단은 아래 실제 Chromium 자동 테스트로 검증한다.
+
+- [공개 Tabs의 테마·표시 선택과 같은 초안](assets/2026-10-07-profile-tabs.png)
+- [390px·다크·RTL·200%·동작 줄이기](assets/2026-10-07-profile-tabs-narrow.png)
+
+두 PNG는 실제 로컬 UI의 재현 가능한 결과 증거로 보존한다. SHA256은 각각
+`8f403d992f503d9976735fa6226fb6fede950d2bdd5e855a16cc7ec3ae0e58fd`,
+`ebe060d0df92f930199d7a2e80431aacc5aa9f3b6b3b7573b7b553fd56756cbc`다.
+
+### 로컬 회귀와 수정
+
+- 계약2파일13개: 기존gooey·명시/상속/세로·plain geometry·중간좌표/clamp·profile.
+- Native4파일14개: profile-tabs/gooey-navigation/tabs-actions/navigation-product.
+  Animated listener를 흉내 낸 mock-host 검사이며 실기기 프레임 성능 증거가 아니다.
+  중간progress0.5에서 다음recipe가 보이는x50부터 시작하는 것을 확인했다.
+- Web Chromium3파일5개: profile-tabs/gooey-navigation/tabs-keyboard. manual 방향키는
+  비활성 항목을 건너뛰어 focus만 이동하고 Enter로 선택, visited 입력의 동일 DOM/초안,
+  모든profile/명시/세로/neutral, RTL fitted폭 변경과 동작 줄이기를 확인했다.
+  첫 실행은 paused 중간 WAAPI frame을 running으로만 판정해 다음 시작x312가
+  실제표시273.884와 달랐다. running/paused 양쪽 좌표를 샘플하도록 수정한 뒤5개 모두 통과.
+  해당 실패PNG SHA256 `0a157c250dcc942cb0f7ff7b76b82b83ead2517b136b5e9ec2ca4f08242cf3dd`를
+  여기 보존한 뒤 본 작업의 실패PNG만 제거했다. 다른 세션의 원시파일은 삭제하지 않았다.
+- Web/Native renderer와 양 Showcase typecheck4개 exit0. Web/Native build exit0.
+
+전체 테스트를 새로 돌린 것이 아니며 기존 ContextMenu 관련 전체browser 불일치를
+이번5개 탭 검사 통과로 해소했다고 보고하지 않는다. Native 기기 외형·프레임/JS 성능·
+원본 각 패널과 다른 페이지 모든 상태·사이트 전수 검토·승급·게시·제품 채택은 여전히 남는다.
+
+후속 문서/경계 검사도 통과했다: docs570 Markdown(조사자가 새 문서를 쓰기 전 snapshot),
+usage 토큰12·컴포넌트139·구성54·화면22, API map308 platform names,
+Storybook421파일/Web929 id, renderer evidence 동기화와 양 플랫폼 import-graph/optional
+peer 경계. 첫 usage 검사는 토큰 지침에 규격 밖 새2단계 제목을 추가해 실패했으므로 기존
+플랫폼 절의 설명 문단으로 고친 뒤 통과했다. 계약 최종 build도 exit0. 원격검사는 실행하지 않았다.

@@ -69,3 +69,17 @@ catalog와 [공개 API 대응표](../generated/public-component-map.md), granula
 
 관련 진행: [전수 검토·릴리스·제품 채택 계획](reference-release-utilverse-2026-10-07.md),
 [테마 조사/QA](../qa/2026-10-07-design-profile-research.md).
+
+## 같은 날 후속 구현: Tabs 선택 표시 (미게시)
+
+위 표는 첫 원본 검토 시점의 상태다. 후속 구현에서 새 엔진 없이 공통 resolver와 양쪽
+기존 Tabs에 프로필 상속·명시 slide를 연결했다. appearance를 생략할 때만 selectionMotion을
+읽고, 명시 standard/slide/gooey가 우선하며 세로는 standard를 유지한다. 일반 slide는
+200ms 공통 곡선·2점 표시선, 기존 gooey는 320ms 늘어남·6점 표시선으로 구분한다.
+빠른 재선택은 현재 표시 중인 좌표를 이어받으며 선택/키보드/disabled/패널 수명은 유지한다.
+실험 테마 비교에 공개 Tabs와 visited 초안의 네 표시 선택을 추가했다.
+
+Chromium의 10종 상속·초안/선택 유지·명시 선택, 키보드·중간 프레임 취소·RTL 폭 변경·
+동작 줄이기와 Native mock-host 회귀를 확인했다. 자세한 실행/실패/수정은
+[같은 작업 QA](../qa/2026-10-07-design-profile-research.md)에 기록한다. Native 기기 성능·
+원본 모든 패널 상태·사이트 전수 검토·실험 승급·게시·소비 앱 채택은 여전히 미완료다.

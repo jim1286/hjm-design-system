@@ -1,3 +1,4 @@
+import { Tabs, type TabsAppearance } from "@hjmds/react-native/navigation";
 import { CodeBlock } from "@hjmds/react-native/code-block";
 import { useMemo, useRef, useState } from "react";
 import { Platform, ScrollView, StyleSheet, View } from "react-native";
@@ -83,6 +84,26 @@ function ProfileMaterialSample({ onNextTheme }: { onNextTheme: () => void }) {
   </View></Collapsible>;
 }
 
+function ProfileTabsSample({ onNextTheme }: { onNextTheme: () => void }) {
+  const [value, setValue] = useState("entry");
+  const [draft, setDraft] = useState<string>(copy.initial);
+  const [appearance, setAppearance] = useState<TabsAppearance | "profile">("profile");
+  return <Collapsible trigger={copy.tabs} defaultOpen><Stack gap="md">
+    <SegmentedControl label={copy.tabsAppearance} items={[
+      { value: "profile", label: copy.tabsInherit }, { value: "standard", label: copy.tabsStandard },
+      { value: "slide", label: copy.tabsSlide }, { value: "gooey", label: copy.tabsGooey },
+    ]} value={appearance} onValueChange={next => {
+      if (next === "profile" || next === "standard" || next === "slide" || next === "gooey") setAppearance(next);
+    }} />
+    <Tabs label={copy.tabsLabel} value={value} onValueChange={setValue} mountPolicy="visited"
+      {...(appearance === "profile" ? {} : { appearance })} items={[
+        { id: "entry", label: copy.tabsEntry, panel: <TextField label={copy.tabsDraft} value={draft} onValueChange={setDraft} /> },
+        { id: "history", label: copy.tabsHistory, panel: <Text>{copy.tabsHistoryBody}</Text> },
+      ]} />
+    <Button onPress={onNextTheme}>{copy.nextTheme}</Button><Text tone="muted">{copy.tabsNote}</Text>
+  </Stack></Collapsible>;
+}
+
 export function DesignProfileComparison() {
   const [preset, setPreset] = useState<HjmDesignPreset>("retro");
   return <ScrollView keyboardShouldPersistTaps="handled"><Stack gap="xl"><Text variant="heading">{copy.title}</Text><Text>{copy.intro}</Text>
@@ -90,6 +111,7 @@ export function DesignProfileComparison() {
     <View style={{ height: 640 }}>{/* A comparison tile supplies a bounded route viewport; ScreenLayout owns its inner scrolling. */}<HjmNativeProvider designProfile={hjmDesignPresets[preset]}><RecordSample /></HjmNativeProvider></View>
     <HjmNativeProvider designProfile={hjmDesignPresets[preset]}><Collapsible trigger={copy.headingScale} defaultOpen><Stack gap="sm">{profileHeadingSamples.map(sample => <Heading key={sample.level} level={sample.level} semanticLevel={3}>{sample.label}</Heading>)}</Stack></Collapsible></HjmNativeProvider>
     <HjmNativeProvider designProfile={hjmDesignPresets[preset]}><ProfileMaterialSample onNextTheme={() => setPreset(profileOptions[(profileOptions.findIndex(option => option.id === preset) + 1) % profileOptions.length]!.id)} /></HjmNativeProvider>
+    <HjmNativeProvider designProfile={hjmDesignPresets[preset]}><ProfileTabsSample onNextTheme={() => setPreset(profileOptions[(profileOptions.findIndex(option => option.id === preset) + 1) % profileOptions.length]!.id)} /></HjmNativeProvider>
     <HjmNativeProvider designProfile={hjmDesignPresets[preset]}><CodeBlock label={copy.codeTitle} code={copy.codeSource} wrap /></HjmNativeProvider>
     <HjmNativeProvider designProfile={hjmDesignPresets[preset]}><ProfileChromeSample onNextTheme={() => setPreset(profileOptions[(profileOptions.findIndex(option => option.id === preset) + 1) % profileOptions.length]!.id)} /></HjmNativeProvider>
     <Text tone="muted">{copy.limitation}</Text>

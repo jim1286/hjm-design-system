@@ -5082,6 +5082,14 @@
         "remaining": "Other items/states, viewports, dark, RTL, text scale, reduced motion, accessibility and performance; linked pages remain pending",
         "allReviewComplete": false,
         "adoptionPlan": "aceternity-interaction-adoption-2026-10-07.md"
+      },
+      "implementationFollowUp": {
+        "checkedAt": "2026-10-07",
+        "status": "implemented-unpublished-after-1.14.0",
+        "scope": "Existing Tabs inherits omitted appearance from profile selectionMotion; explicit standard/slide/gooey priority, vertical standard, interrupted frame continuity; existing selection/keyboard/panel mounting retained",
+        "evidence": "../qa/2026-10-07-design-profile-research.md",
+        "nativeDeviceReview": "pending",
+        "allReviewComplete": false
       }
     },
     {

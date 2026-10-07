@@ -1,5 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { resolveGooeyIndicator } from "@hjmds/design-contracts/gooey-navigation";
+import { resolveTabIndicator, resolveTabsAppearance } from "@hjmds/design-contracts/gooey-navigation";
+import { easing } from "@hjmds/design-contracts/foundations";
 import { getTabNavigationIntent, getTabNavigationTarget, resolveInitialTabValue, tabsBehaviorDefaults, } from "@hjmds/design-contracts/behaviors";
 import { iconRecipe, tabsRecipe, } from "@hjmds/design-contracts/recipes";
 import { forwardRef, useEffect, useLayoutEffect, useId, useRef, useState, } from "react";
@@ -80,7 +81,7 @@ export function TabPanel(props) {
     return (_jsx(TabPanelHost, { ...hostProps, id: getTabPanelId(tabsId, value, dynamic ? "dynamic" : "keyed"), labelledBy: getTabId(tabsId, dynamic ? activeValue : value), selected: selected, dynamic: dynamic, children: children }));
 }
 export const Tabs = forwardRef(function Tabs(props, ref) {
-    const { label, items, activationMode = tabsBehaviorDefaults.activationMode, mountPolicy = tabsBehaviorDefaults.mountPolicy, panelMode = tabsBehaviorDefaults.panelMode, appearance = "standard", orientation = tabsBehaviorDefaults.orientation, direction: directionProp, loop = tabsBehaviorDefaults.loop, size = tabsRecipe.defaults.size, layout = tabsRecipe.defaults.layout, overflow = tabsRecipe.defaults.overflow, renderPanels = true, className, id, value: valueProp, defaultValue, onValueChange, layoutStyle, ...rest } = props;
+    const { label, items, activationMode = tabsBehaviorDefaults.activationMode, mountPolicy = tabsBehaviorDefaults.mountPolicy, panelMode = tabsBehaviorDefaults.panelMode, appearance: suppliedAppearance, orientation = tabsBehaviorDefaults.orientation, direction: directionProp, loop = tabsBehaviorDefaults.loop, size = tabsRecipe.defaults.size, layout = tabsRecipe.defaults.layout, overflow = tabsRecipe.defaults.overflow, renderPanels = true, className, id, value: valueProp, defaultValue, onValueChange, layoutStyle, ...rest } = props;
     validateItems(items);
     if (label.trim().length === 0)
         throw new TypeError("Tabs label must not be empty");
@@ -124,18 +125,31 @@ export const Tabs = forwardRef(function Tabs(props, ref) {
     const baseId = id ?? `hjm-${generatedId}`;
     const theme = useOptionalHjmTheme();
     const direction = directionProp ?? theme?.environment.direction ?? tabsBehaviorDefaults.direction;
-    const gooey = appearance === "gooey" && orientation === "horizontal";
+    const appearance = resolveTabsAppearance(suppliedAppearance, theme?.designProfile?.interactions.selectionMotion, orientation);
+    const movingIndicator = appearance !== "standard";
+    // Recreated label/panel elements must not cancel motion on unrelated draft edits;
+    // resize observation covers their geometry, while stable IDs detect reordering.
+    const itemOrder = JSON.stringify(items.map(item => item.id));
     const indicatorRef = useRef(null);
     const previousIndicator = useRef(null);
+    const interruptedIndicator = useRef(null);
     useLayoutEffect(() => {
         const indicator = indicatorRef.current;
         const tab = tabRefs.current.get(value);
-        if (!gooey || !indicator || !tab) {
+        if (appearance === "standard" || !indicator || !tab) {
             previousIndicator.current = null;
+            interruptedIndicator.current = null;
             return;
         }
         let animation;
+        const sample = () => {
+            const style = getComputedStyle(indicator);
+            const rect = { x: Number.parseFloat(style.left), width: Number.parseFloat(style.width) };
+            return Number.isFinite(rect.x) && Number.isFinite(rect.width) && rect.width > 0 ? rect : null;
+        };
         const place = (animate) => {
+            const current = (animation?.playState === "running" || animation?.playState === "paused") ? sample() : interruptedIndicator.current;
+            interruptedIndicator.current = null;
             animation?.cancel();
             const rect = { x: tab.offsetLeft, width: tab.offsetWidth };
             if (rect.width <= 0)
@@ -144,8 +158,8 @@ export const Tabs = forwardRef(function Tabs(props, ref) {
             indicator.style.width = `${rect.width}px`;
             const previous = previousIndicator.current;
             if (animate && previous && previous.value !== value && !theme?.environment.reducedMotion && !document.hidden) {
-                const recipe = resolveGooeyIndicator(previous.rect, rect);
-                animation = indicator.animate(recipe.input.map((offset, index) => ({ offset, left: `${recipe.x[index]}px`, width: `${recipe.width[index]}px` })), { duration: recipe.duration, easing: "ease-out" });
+                const recipe = resolveTabIndicator(current ?? previous.rect, rect, appearance);
+                animation = indicator.animate(recipe.input.map((offset, index) => ({ offset, left: `${recipe.x[index]}px`, width: `${recipe.width[index]}px` })), { duration: recipe.duration, easing: appearance === "slide" ? `cubic-bezier(${easing.standard.join(",")})` : "ease-out" });
             }
             previousIndicator.current = { value, rect };
         };
@@ -163,8 +177,15 @@ export const Tabs = forwardRef(function Tabs(props, ref) {
         const visibility = () => { if (document.hidden)
             animation?.cancel(); };
         document.addEventListener("visibilitychange", visibility);
-        return () => { animation?.cancel(); observer.disconnect(); document.removeEventListener("visibilitychange", visibility); };
-    }, [gooey, value, items, theme?.environment.reducedMotion]);
+        // RTL fitted lists can shift x even when tab widths do not change.
+        observer.observe(list);
+        return () => {
+            interruptedIndicator.current = (animation?.playState === "running" || animation?.playState === "paused") ? sample() : null;
+            animation?.cancel();
+            observer.disconnect();
+            document.removeEventListener("visibilitychange", visibility);
+        };
+    }, [movingIndicator, appearance, value, itemOrder, direction, theme?.environment.reducedMotion]);
     useEffect(() => {
         if (!controlled && !storedSelectionIsValid)
             setValue(collectionFallback);
@@ -220,7 +241,7 @@ export const Tabs = forwardRef(function Tabs(props, ref) {
         }
     };
     const panelId = (value) => getTabPanelId(baseId, value, panelMode);
-    return (_jsxs("div", { ...rest, style: { ...rest.style, ...layoutStyle }, ref: ref, id: baseId, className: classNames("hjm-tabs", className), "data-size": size, "data-layout": layout, "data-overflow": overflow, "data-appearance": gooey ? "gooey" : "standard", "data-orientation": orientation, "data-mount-policy": mountPolicy, "data-panel-mode": panelMode, "data-state": "ready", dir: direction, children: [_jsxs("div", { className: "hjm-tabs__list", role: "tablist", "aria-label": label, "aria-orientation": orientation, children: [gooey ? _jsx("span", { ref: indicatorRef, "aria-hidden": "true", className: "hjm-tabs__gooey" }) : null, items.map((item) => {
+    return (_jsxs("div", { ...rest, style: { ...rest.style, ...layoutStyle }, ref: ref, id: baseId, className: classNames("hjm-tabs", className), "data-size": size, "data-layout": layout, "data-overflow": overflow, "data-appearance": appearance, "data-orientation": orientation, "data-mount-policy": mountPolicy, "data-panel-mode": panelMode, "data-state": "ready", dir: direction, children: [_jsxs("div", { className: "hjm-tabs__list", role: "tablist", "aria-label": label, "aria-orientation": orientation, children: [movingIndicator ? _jsx("span", { ref: indicatorRef, "aria-hidden": "true", className: classNames("hjm-tabs__indicator", appearance === "gooey" && "hjm-tabs__gooey") }) : null, items.map((item) => {
                         const selected = item.id === value;
                         const tabId = getTabId(baseId, item.id);
                         const leadingSize = iconRecipe.sizes[tabsRecipe.icon.glyph];

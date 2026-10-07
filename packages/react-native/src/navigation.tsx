@@ -40,12 +40,15 @@ import {
 } from "@hjmds/design-contracts/components/load-more";
 import {
   backdrop,
+  easing,
   glyph,
   radius,
   spacing,
 } from "@hjmds/design-contracts/foundations";
 import {
-  resolveGooeyIndicator,
+  resolveTabIndicator,
+  resolveTabsAppearance,
+  sampleTabIndicator,
   type GooeyIndicatorRect,
   type TabsAppearance,
 } from "@hjmds/design-contracts/gooey-navigation";
@@ -80,6 +83,7 @@ import {
   ActivityIndicator,
   Animated,
   AppState,
+  Easing,
   Keyboard,
   Modal,
   Platform,
@@ -274,7 +278,7 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
     activationMode = tabsBehaviorDefaults.activationMode,
     mountPolicy = tabsBehaviorDefaults.mountPolicy,
     panelMode = tabsBehaviorDefaults.panelMode,
-    appearance = "standard",
+    appearance: suppliedAppearance,
     orientation = tabsBehaviorDefaults.orientation,
     direction: directionProp,
     loop = tabsBehaviorDefaults.loop,
@@ -328,7 +332,8 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
   const [focusValue, setFocusValue] = useState(selected);
   const [visited, setVisited] = useState<ReadonlySet<Value>>(() => new Set([selected]));
   const tabRefs = useRef(new Map<Value, View>());
-  const gooey = appearance === "gooey" && orientation === "horizontal";
+  const appearance = resolveTabsAppearance(suppliedAppearance, theme.designProfile?.interactions.selectionMotion, orientation);
+  const movingIndicator = appearance !== "standard";
   const [indicatorRects, setIndicatorRects] = useState<Record<string, GooeyIndicatorRect>>({});
   const tabScroll = useRef<ScrollView>(null);
   const [tabViewport, setTabViewport] = useState(0);
@@ -342,24 +347,44 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
   }, [selected, destination, tabViewport, tabContentWidth, direction, orientation, scrollable, fitted]);
   const previousIndicator = useRef<{ value: Value; rect: GooeyIndicatorRect } | null>(null);
   const progress = useRef(new Animated.Value(1)).current;
-  const [indicatorRecipe, setIndicatorRecipe] = useState<ReturnType<typeof resolveGooeyIndicator> | null>(null);
+  const [indicatorRecipe, setIndicatorRecipe] = useState<ReturnType<typeof resolveTabIndicator> | null>(null);
+  const recipeRef = useRef<ReturnType<typeof resolveTabIndicator> | null>(null);
+  const progressFrame = useRef(1);
+  const interruptedIndicator = useRef<GooeyIndicatorRect | null>(null);
   useLayoutEffect(() => {
+    // Track JS-driver presentation in a ref; no React render/layout work per frame.
+    const listener = progress.addListener(({ value }) => { progressFrame.current = value; });
+    return () => progress.removeListener(listener);
+  }, [progress]);
+  useLayoutEffect(() => {
+    const interrupted = interruptedIndicator.current;
+    interruptedIndicator.current = null;
     progress.stopAnimation(); progress.setValue(1);
-    if (!gooey || !destination) { previousIndicator.current = null; setIndicatorRecipe(null); return; }
+    if (appearance === "standard" || !destination) {
+      previousIndicator.current = null; recipeRef.current = null; setIndicatorRecipe(null); return;
+    }
     const previous = previousIndicator.current;
     const animate = previous && previous.value !== selected && !environment.reducedMotion && AppState.currentState === "active";
-    const recipe = resolveGooeyIndicator(animate ? previous.rect : destination, destination);
+    const recipe = resolveTabIndicator(animate ? interrupted ?? previous.rect : destination, destination, appearance);
+    recipeRef.current = recipe;
     setIndicatorRecipe(recipe);
     previousIndicator.current = { value: selected, rect: destination };
     if (!animate) return;
     progress.setValue(0);
     // Width morphing must use the JS driver; transforms alone would distort the pill corners.
-    const animation = Animated.timing(progress, { toValue: 1, duration: recipe.duration, useNativeDriver: false });
+    // Plain sliding translates the shared standard curve; explicit gooey keeps
+    // its established native timing so existing consumers do not change feel.
+    const animation = Animated.timing(progress, { toValue: 1, duration: recipe.duration, useNativeDriver: false,
+      ...(appearance === "slide" ? { easing: Easing.bezier(...easing.standard) } : {}),
+    });
     animation.start();
     const stop = () => { animation.stop(); progress.setValue(1); };
     const subscription = AppState.addEventListener("change", state => { if (state !== "active") stop(); });
-    return () => { stop(); subscription.remove(); };
-  }, [gooey, selected, destination, environment.reducedMotion, progress]);
+    return () => {
+      interruptedIndicator.current = recipeRef.current ? sampleTabIndicator(recipeRef.current, progressFrame.current) : null;
+      stop(); subscription.remove();
+    };
+  }, [appearance, selected, destination, environment.reducedMotion, progress]);
 
   useEffect(() => {
     if (!controlled && !storedValueValid) setSelected(collectionFallback);
@@ -448,8 +473,8 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
           },
         ]}
       >
-        {gooey && indicatorRecipe ? <Animated.View pointerEvents="none" accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{
-          position: "absolute", bottom: 0, height: 6, borderRadius: radius.full,
+        {movingIndicator && indicatorRecipe ? <Animated.View pointerEvents="none" accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{
+          position: "absolute", bottom: 0, height: appearance === "gooey" ? 6 : tabsRecipe.indicatorHeight, borderRadius: theme.tokens.radius.full,
           backgroundColor: resolveColorReference(tabsRecipe.colors.indicator, theme.palette),
           left: progress.interpolate({ inputRange: [...indicatorRecipe.input], outputRange: [...indicatorRecipe.x] }),
           width: progress.interpolate({ inputRange: [...indicatorRecipe.input], outputRange: [...indicatorRecipe.width] }),
@@ -575,7 +600,7 @@ export function Tabs<Value extends string = string>(props: TabsProps<Value>) {
                   <Text align="center" tone="brand" variant="caption">{item.badge}</Text>
                 </View>
               ) : null}
-              {active && !gooey ? (
+              {active && (!movingIndicator || !indicatorRecipe) ? (
                 <View
                   accessibilityElementsHidden
                   accessible={false}

@@ -77,7 +77,7 @@ import { Tabs } from "@hjmds/react-native/navigation";
 | `overflow` | `scroll` · `clip` | `scroll` | — |
 | `orientation` | `horizontal` · `vertical` | `horizontal` | — |
 | `loop` | `boolean` | `true` | — |
-| `appearance` | `standard` · `gooey` | `standard` | `gooey`는 가로일 때만 선택 표시가 늘어나며 이동, 세로는 standard 유지 |
+| `appearance` | `standard` · `slide` · `gooey` | 미지정 시 프로필의 selectionMotion; 없으면 `standard` | 미게시(1.14.0 이후): `slide`는 2점 표시선 이동, `gooey`는 6점 표시선 늘어남. 명시 값 우선, 세로는 standard 유지 |
 | `renderPanels` | `boolean` | `true` | `false`면 패널을 그리지 않는다. 패널을 라우터·스크롤 상태와 함께 따로 둘 때 `TabPanel`에 `tabsId`(Tabs의 `id`와 같게)·`activeValue`·`value`를 넘긴다 |
 | `children`(Native) | `(selectedValue: Value) => ReactNode` | — | 항목 `panel` 대신 선택 값으로 패널을 그린다 |
 | `TabPanel` | `{ tabsId, activeValue, children, mode?: "keyed", value, mountPolicy? }` 또는 `{ mode: "dynamic" }`, Native는 `label` 필수 | — | — |
@@ -131,8 +131,9 @@ import { Tabs } from "@hjmds/react-native/navigation";
 
 - 2026-10-07 [Animated Tabs 대조](../../../../../docs/plans/aceternity-interaction-adoption-2026-10-07.md)에서
   선택 표시의 이동과 겹친 패널의 이동을 구분했다. 현재 `appearance="gooey"`는 표시선만 늘어나며,
-  패널을 겹쳐 복제하거나 순서를 바꾸지 않는다. `designProfile.interactions.selectionMotion`은
-  현재 SegmentedControl에 연결되며 Tabs의 `appearance`를 자동 변경하지 않는다. `slide`와 `gooey`를
+  패널을 겹쳐 복제하거나 순서를 바꾸지 않는다. 미게시(1.14.0 이후) 후속 구현에서
+  `appearance`를 생략하면 `designProfile.interactions.selectionMotion="slide"`가 일반 이동선으로
+  연결된다. 명시 `standard`는 이동을 끄고 명시 `gooey`만 늘어남을 고른다. `slide`와 `gooey`를
   같은 의미로 간주하지 않는다. 전환 표현이 필요하면 [ContentTransition](content-transition.md)의
   단일 콘텐츠 전환과 Tabs의 `mountPolicy`·`panelMode`를 함께 검토한다. 프로필이 탭·패널 수명을
   자동 결정하거나 active 패널의 unmount 후 로컬 초안을 보존한다고 안내하지 않는다.

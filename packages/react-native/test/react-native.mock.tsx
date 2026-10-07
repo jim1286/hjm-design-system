@@ -37,6 +37,8 @@ export const startedAnimatedTimings: { duration: number }[] = [];
 
 class AnimatedValue {
   current: number;
+  private listeners = new Map<string, (event: { value: number }) => void>();
+  private nextListener = 0;
 
   constructor(value: number) {
     this.current = value;
@@ -44,9 +46,14 @@ class AnimatedValue {
 
   setValue(value: number) {
     this.current = value;
+    for (const listener of this.listeners.values()) listener({ value });
   }
 
-  stopAnimation() {}
+  addListener(listener: (event: { value: number }) => void) {
+    const id = String(++this.nextListener); this.listeners.set(id, listener); return id;
+  }
+  removeListener(id: string) { this.listeners.delete(id); }
+  stopAnimation(callback?: (value: number) => void) { callback?.(this.current); }
 
   interpolate(configuration: Readonly<Record<string, unknown>>) {
     return { __animatedValue: this, configuration };

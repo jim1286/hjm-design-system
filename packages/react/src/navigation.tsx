@@ -1,4 +1,5 @@
-import { resolveGooeyIndicator, type TabsAppearance, type GooeyIndicatorRect } from "@hjmds/design-contracts/gooey-navigation";
+import { resolveTabIndicator, resolveTabsAppearance, type TabsAppearance, type GooeyIndicatorRect } from "@hjmds/design-contracts/gooey-navigation";
+import { easing } from "@hjmds/design-contracts/foundations";
 export type { TabsAppearance };
 import {
   getTabNavigationIntent,
@@ -257,7 +258,7 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
     activationMode = tabsBehaviorDefaults.activationMode,
     mountPolicy = tabsBehaviorDefaults.mountPolicy,
     panelMode = tabsBehaviorDefaults.panelMode,
-    appearance = "standard",
+    appearance: suppliedAppearance,
     orientation = tabsBehaviorDefaults.orientation,
     direction: directionProp,
     loop = tabsBehaviorDefaults.loop,
@@ -317,15 +318,27 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
   const baseId = id ?? `hjm-${generatedId}`;
   const theme = useOptionalHjmTheme();
   const direction = directionProp ?? theme?.environment.direction ?? tabsBehaviorDefaults.direction;
-  const gooey = appearance === "gooey" && orientation === "horizontal";
+  const appearance = resolveTabsAppearance(suppliedAppearance, theme?.designProfile?.interactions.selectionMotion, orientation);
+  const movingIndicator = appearance !== "standard";
+  // Recreated label/panel elements must not cancel motion on unrelated draft edits;
+  // resize observation covers their geometry, while stable IDs detect reordering.
+  const itemOrder = JSON.stringify(items.map(item => item.id));
   const indicatorRef = useRef<HTMLSpanElement>(null);
   const previousIndicator = useRef<{ value: string; rect: GooeyIndicatorRect } | null>(null);
+  const interruptedIndicator = useRef<GooeyIndicatorRect | null>(null);
   useLayoutEffect(() => {
     const indicator = indicatorRef.current;
     const tab = tabRefs.current.get(value);
-    if (!gooey || !indicator || !tab) { previousIndicator.current = null; return; }
+    if (appearance === "standard" || !indicator || !tab) { previousIndicator.current = null; interruptedIndicator.current = null; return; }
     let animation: Animation | undefined;
+    const sample = () => {
+      const style = getComputedStyle(indicator);
+      const rect = { x: Number.parseFloat(style.left), width: Number.parseFloat(style.width) };
+      return Number.isFinite(rect.x) && Number.isFinite(rect.width) && rect.width > 0 ? rect : null;
+    };
     const place = (animate: boolean) => {
+      const current = (animation?.playState === "running" || animation?.playState === "paused") ? sample() : interruptedIndicator.current;
+      interruptedIndicator.current = null;
       animation?.cancel();
       const rect = { x: tab.offsetLeft, width: tab.offsetWidth };
       if (rect.width <= 0) return;
@@ -333,8 +346,8 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
       indicator.style.width = `${rect.width}px`;
       const previous = previousIndicator.current;
       if (animate && previous && previous.value !== value && !theme?.environment.reducedMotion && !document.hidden) {
-        const recipe = resolveGooeyIndicator(previous.rect, rect);
-        animation = indicator.animate(recipe.input.map((offset, index) => ({ offset, left: `${recipe.x[index]}px`, width: `${recipe.width[index]}px` })), { duration: recipe.duration, easing: "ease-out" });
+        const recipe = resolveTabIndicator(current ?? previous.rect, rect, appearance);
+        animation = indicator.animate(recipe.input.map((offset, index) => ({ offset, left: `${recipe.x[index]}px`, width: `${recipe.width[index]}px` })), { duration: recipe.duration, easing: appearance === "slide" ? `cubic-bezier(${easing.standard.join(",")})` : "ease-out" });
       }
       previousIndicator.current = { value, rect };
     };
@@ -348,8 +361,13 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
     for (const child of list.children) if (child !== indicator) observer.observe(child);
     const visibility = () => { if (document.hidden) animation?.cancel(); };
     document.addEventListener("visibilitychange", visibility);
-    return () => { animation?.cancel(); observer.disconnect(); document.removeEventListener("visibilitychange", visibility); };
-  }, [gooey, value, items, theme?.environment.reducedMotion]);
+    // RTL fitted lists can shift x even when tab widths do not change.
+    observer.observe(list);
+    return () => {
+      interruptedIndicator.current = (animation?.playState === "running" || animation?.playState === "paused") ? sample() : null;
+      animation?.cancel(); observer.disconnect(); document.removeEventListener("visibilitychange", visibility);
+    };
+  }, [movingIndicator, appearance, value, itemOrder, direction, theme?.environment.reducedMotion]);
 
 
   useEffect(() => {
@@ -423,7 +441,7 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
       data-size={size}
       data-layout={layout}
       data-overflow={overflow}
-      data-appearance={gooey ? "gooey" : "standard"}
+      data-appearance={appearance}
       data-orientation={orientation}
       data-mount-policy={mountPolicy}
       data-panel-mode={panelMode}
@@ -436,7 +454,7 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
         aria-label={label}
         aria-orientation={orientation}
       >
-        {gooey ? <span ref={indicatorRef} aria-hidden="true" className="hjm-tabs__gooey" /> : null}
+        {movingIndicator ? <span ref={indicatorRef} aria-hidden="true" className={classNames("hjm-tabs__indicator", appearance === "gooey" && "hjm-tabs__gooey")} /> : null}
         {items.map((item) => {
           const selected = item.id === value;
           const tabId = getTabId(baseId, item.id);

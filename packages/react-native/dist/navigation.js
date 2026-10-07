@@ -4,11 +4,11 @@ import { resolveColorReference } from "@hjmds/design-contracts/color-references"
 import { resolveBottomNavigationActivation, resolveBottomNavigationConfiguration, resolveBottomNavigationDescriptor, } from "@hjmds/design-contracts/components/bottom-navigation";
 import { flattenCollectionItems, validateCollection, } from "@hjmds/design-contracts/components/collection";
 import { createLoadMoreController, validateLoadMoreDescriptor, } from "@hjmds/design-contracts/components/load-more";
-import { backdrop, glyph, radius, spacing, } from "@hjmds/design-contracts/foundations";
-import { resolveGooeyIndicator, } from "@hjmds/design-contracts/gooey-navigation";
+import { backdrop, easing, glyph, radius, spacing, } from "@hjmds/design-contracts/foundations";
+import { resolveTabIndicator, resolveTabsAppearance, sampleTabIndicator, } from "@hjmds/design-contracts/gooey-navigation";
 import { bottomNavigationRecipe, counterBadgeRecipe, loadMoreRecipe, menuRecipe, spinnerRecipe, tabsRecipe, topBarRecipe, } from "@hjmds/design-contracts/recipes";
 import { Fragment, forwardRef, useCallback, useEffect, useImperativeHandle, useLayoutEffect, useRef, useState, } from "react";
-import { AccessibilityInfo, ActivityIndicator, Animated, AppState, Keyboard, Modal, Platform, Pressable, ScrollView, View, findNodeHandle, } from "react-native";
+import { AccessibilityInfo, ActivityIndicator, Animated, AppState, Easing, Keyboard, Modal, Platform, Pressable, ScrollView, View, findNodeHandle, } from "react-native";
 import { warnDeprecatedStyleProps } from "./internal/deprecated-style.js";
 import { RecipeButton } from "./internal/recipe-button.js";
 import { isWebRenderer, webOnly, webTabProps } from "./internal/web-a11y.js";
@@ -55,7 +55,7 @@ export function TabPanel(props) {
     return (_jsx(View, { nativeID: getTabPanelId(tabsId, value, dynamic ? "dynamic" : "keyed"), accessibilityLabel: label, accessibilityLabelledBy: getTabId(tabsId, dynamic ? activeValue : value), accessibilityElementsHidden: !selected, importantForAccessibility: selected ? "auto" : "no-hide-descendants", pointerEvents: selected ? "auto" : "none", role: "tabpanel", style: [style, layoutStyle, selected ? null : { display: "none" }], children: children }));
 }
 export function Tabs(props) {
-    const { id, label, items, value: valueProp, defaultValue, onValueChange, activationMode = tabsBehaviorDefaults.activationMode, mountPolicy = tabsBehaviorDefaults.mountPolicy, panelMode = tabsBehaviorDefaults.panelMode, appearance = "standard", orientation = tabsBehaviorDefaults.orientation, direction: directionProp, loop = tabsBehaviorDefaults.loop, size = tabsRecipe.defaults.size, layout = tabsRecipe.defaults.layout, overflow = tabsRecipe.defaults.overflow, renderPanels = true, children, layoutStyle, style, tabListStyle, } = props;
+    const { id, label, items, value: valueProp, defaultValue, onValueChange, activationMode = tabsBehaviorDefaults.activationMode, mountPolicy = tabsBehaviorDefaults.mountPolicy, panelMode = tabsBehaviorDefaults.panelMode, appearance: suppliedAppearance, orientation = tabsBehaviorDefaults.orientation, direction: directionProp, loop = tabsBehaviorDefaults.loop, size = tabsRecipe.defaults.size, layout = tabsRecipe.defaults.layout, overflow = tabsRecipe.defaults.overflow, renderPanels = true, children, layoutStyle, style, tabListStyle, } = props;
     warnDeprecatedStyleProps("Tabs", { style, tabListStyle }, "layoutStyle for placement and size/layout/overflow/appearance for the tab list");
     if (!label.trim())
         throw new TypeError("Tabs label must not be empty");
@@ -101,7 +101,8 @@ export function Tabs(props) {
     const [focusValue, setFocusValue] = useState(selected);
     const [visited, setVisited] = useState(() => new Set([selected]));
     const tabRefs = useRef(new Map());
-    const gooey = appearance === "gooey" && orientation === "horizontal";
+    const appearance = resolveTabsAppearance(suppliedAppearance, theme.designProfile?.interactions.selectionMotion, orientation);
+    const movingIndicator = appearance !== "standard";
     const [indicatorRects, setIndicatorRects] = useState({});
     const tabScroll = useRef(null);
     const [tabViewport, setTabViewport] = useState(0);
@@ -117,30 +118,50 @@ export function Tabs(props) {
     const previousIndicator = useRef(null);
     const progress = useRef(new Animated.Value(1)).current;
     const [indicatorRecipe, setIndicatorRecipe] = useState(null);
+    const recipeRef = useRef(null);
+    const progressFrame = useRef(1);
+    const interruptedIndicator = useRef(null);
     useLayoutEffect(() => {
+        // Track JS-driver presentation in a ref; no React render/layout work per frame.
+        const listener = progress.addListener(({ value }) => { progressFrame.current = value; });
+        return () => progress.removeListener(listener);
+    }, [progress]);
+    useLayoutEffect(() => {
+        const interrupted = interruptedIndicator.current;
+        interruptedIndicator.current = null;
         progress.stopAnimation();
         progress.setValue(1);
-        if (!gooey || !destination) {
+        if (appearance === "standard" || !destination) {
             previousIndicator.current = null;
+            recipeRef.current = null;
             setIndicatorRecipe(null);
             return;
         }
         const previous = previousIndicator.current;
         const animate = previous && previous.value !== selected && !environment.reducedMotion && AppState.currentState === "active";
-        const recipe = resolveGooeyIndicator(animate ? previous.rect : destination, destination);
+        const recipe = resolveTabIndicator(animate ? interrupted ?? previous.rect : destination, destination, appearance);
+        recipeRef.current = recipe;
         setIndicatorRecipe(recipe);
         previousIndicator.current = { value: selected, rect: destination };
         if (!animate)
             return;
         progress.setValue(0);
         // Width morphing must use the JS driver; transforms alone would distort the pill corners.
-        const animation = Animated.timing(progress, { toValue: 1, duration: recipe.duration, useNativeDriver: false });
+        // Plain sliding translates the shared standard curve; explicit gooey keeps
+        // its established native timing so existing consumers do not change feel.
+        const animation = Animated.timing(progress, { toValue: 1, duration: recipe.duration, useNativeDriver: false,
+            ...(appearance === "slide" ? { easing: Easing.bezier(...easing.standard) } : {}),
+        });
         animation.start();
         const stop = () => { animation.stop(); progress.setValue(1); };
         const subscription = AppState.addEventListener("change", state => { if (state !== "active")
             stop(); });
-        return () => { stop(); subscription.remove(); };
-    }, [gooey, selected, destination, environment.reducedMotion, progress]);
+        return () => {
+            interruptedIndicator.current = recipeRef.current ? sampleTabIndicator(recipeRef.current, progressFrame.current) : null;
+            stop();
+            subscription.remove();
+        };
+    }, [appearance, selected, destination, environment.reducedMotion, progress]);
     useEffect(() => {
         if (!controlled && !storedValueValid)
             setSelected(collectionFallback);
@@ -213,8 +234,8 @@ export function Tabs(props) {
                         flexGrow: fitted ? 1 : 0,
                         flexDirection: orientation === "vertical" ? "column" : "row",
                     },
-                ], children: [gooey && indicatorRecipe ? _jsx(Animated.View, { pointerEvents: "none", accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: {
-                            position: "absolute", bottom: 0, height: 6, borderRadius: radius.full,
+                ], children: [movingIndicator && indicatorRecipe ? _jsx(Animated.View, { pointerEvents: "none", accessible: false, accessibilityElementsHidden: true, importantForAccessibility: "no-hide-descendants", style: {
+                            position: "absolute", bottom: 0, height: appearance === "gooey" ? 6 : tabsRecipe.indicatorHeight, borderRadius: theme.tokens.radius.full,
                             backgroundColor: resolveColorReference(tabsRecipe.colors.indicator, theme.palette),
                             left: progress.interpolate({ inputRange: [...indicatorRecipe.input], outputRange: [...indicatorRecipe.x] }),
                             width: progress.interpolate({ inputRange: [...indicatorRecipe.input], outputRange: [...indicatorRecipe.width] }),
@@ -296,7 +317,7 @@ export function Tabs(props) {
                                         backgroundColor: colors.bg,
                                         borderRadius: radius.full,
                                         paddingHorizontal: spacing.xs,
-                                    }, children: _jsx(Text, { align: "center", tone: "brand", variant: "caption", children: item.badge }) })) : null, active && !gooey ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", style: {
+                                    }, children: _jsx(Text, { align: "center", tone: "brand", variant: "caption", children: item.badge }) })) : null, active && (!movingIndicator || !indicatorRecipe) ? (_jsx(View, { accessibilityElementsHidden: true, accessible: false, importantForAccessibility: "no-hide-descendants", style: {
                                         backgroundColor: resolveColorReference(tabsRecipe.colors.indicator, theme.palette),
                                         ...(orientation === "horizontal"
                                             ? {

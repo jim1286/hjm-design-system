@@ -19,6 +19,7 @@
 | Provider | 한 번 선택한 프로필 상속 | [프로필 계약](../../design-profile.md) |
 | SegmentedControl | 테마/기간 선택 | [선택 입력](../components/segmented-control.md) |
 | OverviewScreen | 도구·목록·주 행동 | [목록 화면](../components/overview-screen.md) |
+| Tabs | 프로필 상속/명시 표시와 방문한 패널의 초안 유지 | [탭](../components/tabs.md) |
 | Card | 무늬 위의 표면 질감과 초안 | [카드](../components/card.md) |
 | Heading | 선택 테마의 5단계 제목 크기 | [제목](../components/heading.md) |
 | Dialog·Sheet | 열린 초안과 같은 프로필 순회 | [대화상자](../components/dialog.md) · [패널](../components/sheet.md) |
@@ -33,6 +34,7 @@
 선택한 프로필: 헤더 → 저장 상태 → 이름/기간 → 같은 기록 3개 → 저장/실패 재현
 선택한 프로필: 제목 크기 비교(5단계, 문서 단계 h3 유지)
 표면 질감 비교: 장식 무늬 → Card 제목/설명 → 같은 초안 → 다음 테마
+탭 선택 표시 비교: 테마 따르기/밑줄/이동/늘어남 → 기록/보관함 → 같은 초안 → 다음 테마
 입력·알림·오버레이 비교: Notice → Skeleton → Toast → Dialog/Sheet 열기
 오버레이: 제목/닫기 → 같은 초안 → 다음 테마(현재 10종 순환)
 10종 비교: 각 이름 → 같은 화면
@@ -79,3 +81,8 @@ import { OverviewScreen } from "@hjmds/react-native/design-profile";
 제품은 Showcase를 import하지 않고 공개 API에 제품 문구/데이터를 넣는다. 유리 blur·클레이 inset shadow의 플랫폼 조건과 기기 미확인 범위는 [QA](../../../../../docs/qa/2026-10-07-design-profile-research.md)에 남긴다.
 
 코드 비교는 양 플랫폼의 공개 `CodeBlock`을 사용한다. 같은 원문에 프로필 code font·body metrics를 적용하며 RTL에서도 코드 본문은 LTR로 읽는다.
+
+탭 비교는 공개 `Tabs`·`TextField`와 `mountPolicy="visited"`를 사용한다. 테마/표시 방식 변경은
+선택한 탭과 같은 입력 호스트를 유지한다. forest·glass·aurora·clay는 생략한 appearance가
+slide로 해석되고 나머지 6종은 standard다. 명시 값은 프로필보다 우선한다. 실제 제품은
+이 샘플의 패널 수명을 기본값으로 복사하지 않고 초안과 탭의 사용 목적에 맞춰 선택한다.

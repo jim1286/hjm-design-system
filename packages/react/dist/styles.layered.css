@@ -2785,9 +2785,10 @@ button.hjm-list-row, a.hjm-list-row { cursor: pointer; }
 }
 
 /* Measured elastic indicator stays beneath labels; no filter touches text or hit targets. */
-.hjm-tabs[data-appearance="gooey"] .hjm-tabs__list { position: relative; }
-.hjm-tabs[data-appearance="gooey"] .hjm-tabs__tab[data-state="selected"]::after { display: none; }
-.hjm-tabs__gooey { position: absolute; bottom: 0; height: 6px; border-radius: var(--hjm-radius-full); background: var(--hjm-color-content-brand); pointer-events: none; }
+.hjm-tabs:is([data-appearance="gooey"], [data-appearance="slide"]) .hjm-tabs__list { position: relative; }
+.hjm-tabs:is([data-appearance="gooey"], [data-appearance="slide"]) .hjm-tabs__tab[data-state="selected"]::after { display: none; }
+.hjm-tabs__indicator { position: absolute; bottom: 0; height: 2px; border-radius: var(--hjm-radius-full); background: var(--hjm-color-content-brand); pointer-events: none; }
+.hjm-tabs__gooey { height: 6px; }
 
 /* Capsule destinations retain route/link semantics. At larger text sizes we show
    every label vertically instead of shrinking type to mimic the reference. */
